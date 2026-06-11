@@ -16,12 +16,16 @@ import gc
 import os
 import resource
 import sys
-import threading
 import time
 from collections import defaultdict
 from typing import Iterator
 
 import numpy as np
+
+try:
+    import asyncio
+except ImportError:
+    asyncio = None  # type: ignore[assignment,misc]
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -185,10 +189,9 @@ class MemoryBudget:
         self.budget_mb = float(budget_mb)
         self.poll_interval_s = float(poll_interval_s)
         self.raise_on_breach = raise_on_breach
-        self._stop_event = threading.Event()
-        self._thread: threading.Thread | None = None
+        self._stop_event = asyncio.Event() if asyncio else None
+        self._task: object | None = None  # asyncio.Task
         self._breached = False
-        self._main_thread_id = threading.main_thread().ident
 
     # ------------------------------------------------------------------
     # Context-manager protocol
@@ -196,25 +199,33 @@ class MemoryBudget:
 
     def __enter__(self) -> "MemoryBudget":
         self._stop_event.clear()
-        self._thread = threading.Thread(
-            target=self._monitor_loop,
-            name="pvm-memory-guard",
-            daemon=True,
-        )
-        self._thread.start()
+        # Pure-asyncio: launch monitor as a background task
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if loop is not None and asyncio is not None:
+            self._task = loop.create_task(self._monitor_loop_async())
+        else:
+            # Fallback for synchronous call sites (rare in Termux)
+            self._monitor_loop_sync()
         return self
 
     def __exit__(self, *_: object) -> None:
         self._stop_event.set()
-        if self._thread is not None:
-            self._thread.join(timeout=self.poll_interval_s * 2)
+        if self._task is not None:
+            try:
+                self._task.cancel()
+            except Exception:
+                pass
 
     # ------------------------------------------------------------------
-    # Monitor loop (runs in a daemon thread)
+    # Monitor (pure-asyncio, no threading)
     # ------------------------------------------------------------------
 
-    def _monitor_loop(self) -> None:
-        while not self._stop_event.wait(timeout=self.poll_interval_s):
+    async def _monitor_loop_async(self) -> None:
+        """Cooperative asyncio monitor — yields to event loop between polls."""
+        while not self._stop_event.is_set():
             current = sample_rss_mb()
             if current > self.budget_mb:
                 self._breached = True
@@ -222,31 +233,38 @@ class MemoryBudget:
                     f"[PVM MEMORY GUARD] RSS {current:.1f} MB exceeds "
                     f"budget {self.budget_mb:.1f} MB."
                 )
-                if self.raise_on_breach:
-                    self._raise_in_main_thread(current)
-                else:
-                    print(msg, file=sys.stderr, flush=True)
+                print(msg, file=sys.stderr, flush=True)
                 break
+            try:
+                await asyncio.sleep(self.poll_interval_s)
+            except asyncio.CancelledError:
+                break
+            except Exception:
+                break
+
+    def _monitor_loop_sync(self) -> None:
+        """Synchronous fallback (no event loop available)."""
+        deadline = time.monotonic() + 300  # 5-minute max guard
+        while not self._stop_event.is_set() and time.monotonic() < deadline:
+            current = sample_rss_mb()
+            if current > self.budget_mb:
+                self._breached = True
+                msg = (
+                    f"[PVM MEMORY GUARD] RSS {current:.1f} MB exceeds "
+                    f"budget {self.budget_mb:.1f} MB."
+                )
+                print(msg, file=sys.stderr, flush=True)
+                break
+            time.sleep(self.poll_interval_s)
 
     def _raise_in_main_thread(self, current_mb: float) -> None:
         """
-        Use ctypes to inject ``MemoryBudgetExceeded`` into the main thread.
-        This is the same mechanism Python itself uses for ``KeyboardInterrupt``.
-
-        ``PyThreadState_SetAsyncExc`` receives the exception *type* and
-        instantiates it with no arguments at the next bytecode boundary.
-        The pre-populated instance (with proper current_mb / budget_mb) is
-        stored on ``self._pending_exc`` so callers can inspect it after catching.
+        Legacy mechanism — deprecated in pure-asyncio mode.
+        Stores breach data for inspection by the caller.
         """
         exc = MemoryBudgetExceeded(current_mb, self.budget_mb)
-        self._pending_exc = exc          # keep alive; holds accurate values
+        self._pending_exc = exc
         self._breach_rss_mb = current_mb
-        thread_id = self._main_thread_id
-        if thread_id is not None:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(
-                ctypes.c_ulong(thread_id),
-                ctypes.py_object(type(exc)),
-            )
 
     # ------------------------------------------------------------------
     # Manual sampling

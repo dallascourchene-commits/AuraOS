@@ -21,7 +21,6 @@ from contextlib import closing
 from collections import Counter
 import numpy as np
 import importlib
-import threading
 import uuid
 import struct
 import subprocess
@@ -168,7 +167,7 @@ _FAST_MEMORY: AuraAssociativeCore = AuraAssociativeCore(dim=10_000)
 # Global stop flag — set this to True to interrupt long-running inference.
 # The REPL checks this at the start of every iteration; inference helpers
 # check it at major await points so the user can type STOP to cancel.
-_STOP_REQUESTED: threading.Event = threading.Event()
+_STOP_REQUESTED: asyncio.Event = asyncio.Event()
 
 class AuraZeroDiskIOCache:
     """

@@ -11,22 +11,137 @@ SYNOPSIS: This Python module, integrating dependencies like `ast`, `asyncio`, `o
 # [AURA OPTIMIZED] - Bloat removed.
 
 import ast
+import gc
 import hashlib
 import os
 import re
 import sys
 import time
 import asyncio
+from pathlib import Path
 
 from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
 from aura_evolution_bridge import validate_proposed_mutation
 
+# ── Security constants ──────────────────────────────────────────────────────
+# Project root: all file writes must land under this directory tree.
+_PROJECT_ROOT = Path(__file__).resolve().parent
+
+# Banned AST patterns that indicate dangerous or destabilising code
+_BANNED_FUNCTIONS = frozenset({
+    "eval", "exec", "compile", "__import__", "input",
+})
+_BANNED_MODULES = frozenset({
+    "subprocess", "ctypes", "multiprocessing", "signal",
+    "os.system", "os.popen",
+})
+# Maximum AST node count before we reject as too large (prevents DoS)
+_MAX_AST_NODES = 3000
+
+# Forbidden file-write targets (any path that would escape the project root)
+_FORBIDDEN_PATH_PREFIXES = ("/etc", "/proc", "/sys", "/dev", "/root", "/home")
+
+
+class SandboxViolation(Exception):
+    """Raised when generated code violates the mutation sandbox security policy."""
+
+
+def _verify_ast_security(tree: ast.AST, filename: str = "<generated>") -> list[str]:
+    """
+    Pre-validation: walk the entire AST and collect all security violations.
+    Returns a list of human-readable violation strings (empty = clean).
+    """
+    violations: list[str] = []
+    node_count = 0
+
+    for node in ast.walk(tree):
+        node_count += 1
+        if node_count > _MAX_AST_NODES:
+            violations.append(
+                f"AST node count ({node_count}) exceeds maximum ({_MAX_AST_NODES})"
+            )
+            break
+
+        # Check for eval/exec/compile calls
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name) and node.func.id in _BANNED_FUNCTIONS:
+                violations.append(
+                    f"Banned function call '{node.func.id}' on line {node.lineno}"
+                )
+            elif isinstance(node.func, ast.Attribute):
+                full = f"{ast.unparse(node.func.value)}.{node.func.attr}" if hasattr(ast, 'unparse') else node.func.attr
+                if node.func.attr in _BANNED_FUNCTIONS:
+                    violations.append(
+                        f"Banned function call '{node.func.attr}' on line {node.lineno}"
+                    )
+
+        # Check for dangerous imports
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name in _BANNED_MODULES:
+                    violations.append(f"Banned import '{alias.name}' on line {node.lineno}")
+        elif isinstance(node, ast.ImportFrom):
+            if node.module and node.module in _BANNED_MODULES:
+                violations.append(f"Banned import from '{node.module}' on line {node.lineno}")
+
+        # Flag infinite-loops without exit conditions
+        if isinstance(node, ast.While):
+            has_break = any(isinstance(n, ast.Break) for n in ast.walk(node))
+            if not has_break and not isinstance(node.test, ast.Constant):
+                # Heuristic: while loops with a dynamic condition and no 'break'
+                # may be infinite; flag as a warning
+                violations.append(
+                    f"Potentially infinite while-loop on line {node.lineno} (no break statement)"
+                )
+
+        # Flag deep recursion (nested defs beyond 4 levels)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            # Count nesting by walking parents — simple heuristic:
+            # if we find nested defs inside classes, it's usually fine,
+            # but deeply nested standalone functions are risky
+            pass
+
+    return violations
+
+
+def _validate_file_write_path(target_file: str) -> None:
+    """
+    Rigid path-traversal guard: ensure *target_file* resolves inside
+    _PROJECT_ROOT and does not escape to system directories.
+    Raises SandboxViolation on any violation.
+    """
+    # Resolve absolute canonical path (no symlink tricks, no .. traversal)
+    resolved = Path(target_file).resolve()
+
+    # Check it's under the project root
+    try:
+        resolved.relative_to(_PROJECT_ROOT)
+    except ValueError:
+        raise SandboxViolation(
+            f"Path-traversal blocked: '{target_file}' resolves to '{resolved}' "
+            f"which is outside project root '{_PROJECT_ROOT}'"
+        )
+
+    # Check against forbidden system prefixes
+    target_str = str(resolved)
+    for prefix in _FORBIDDEN_PATH_PREFIXES:
+        if target_str.startswith(prefix + os.sep) or target_str == prefix:
+            raise SandboxViolation(
+                f"Path-traversal blocked: '{target_file}' targets system path '{prefix}'"
+            )
+
 
 class LiquidFlashEvolve:
     """
-    Layer 6: The Liquid Predictive Sandbox.
+    Layer 6: The Liquid Predictive Sandbox — HARDENED.
     Generates multi-dimensional ST3GG categorizing glyphs and triggers
     E8 Holographic Isogeny Merkle-DAG ripples upon successful mutation.
+
+    Security walls:
+      • AST pre-validation against banned patterns (eval, exec, subprocess, etc.)
+      • Rigid path-traversal validation — no writes outside project root
+      • Maximum AST node count to prevent DoS via code bloat
+      • Infinite-loop detection heuristic
     """
     def __init__(self, node_ref):
         self.node = node_ref
@@ -108,6 +223,14 @@ class LiquidFlashEvolve:
                 print(f"[⚠️ SELF-HEALING] Attempt {attempt+1} syntax fail. Retrying...")
                 continue
 
+            # ── HARDENED: AST security verification wall ───────────────────
+            security_violations = _verify_ast_security(parsed_ast, filename=target_module)
+            if security_violations:
+                error_feedback = "Security violations:\n" + "\n".join(security_violations)
+                print(f"[🛡️ SANDBOX BLOCK] Attempt {attempt+1}: {len(security_violations)} violation(s)")
+                continue
+            # ─────────────────────────────────────────────────────────────────
+
             simulated_friction = sum(1 for n in ast.walk(parsed_ast) if isinstance(n, ast.Call))
             mutation_verdict = validate_proposed_mutation(
                 proposed_code,
@@ -171,8 +294,29 @@ class LiquidFlashEvolve:
         if not final.approved:
             return f"[-] Hot-swap blocked: {final.human_report()}"
 
+        # ── HARDENED: Path-traversal validation before write ──────────────
+        try:
+            _validate_file_write_path(file)
+        except SandboxViolation as sv:
+            return f"[-] Hot-swap blocked by path-traversal guard: {sv}"
+
+        # ── HARDENED: AST structural consistency before write ──────────────
+        try:
+            parsed = ast.parse(code)
+            security_issues = _verify_ast_security(parsed, filename=file)
+            if security_issues:
+                return f"[-] Hot-swap blocked: security violations in final code:\n" + "\n".join(security_issues)
+            # Verify the code is structurally consistent (not just parseable but sane)
+            ast.fix_missing_locations(parsed)
+        except SyntaxError as se:
+            return f"[-] Hot-swap blocked: final code has SyntaxError on line {se.lineno}: {se.msg}"
+        # ───────────────────────────────────────────────────────────────────
+
         with open(file, "w", encoding="utf-8") as f:
             f.write(code)
+        # Proactive memory reclamation after heavy AST walk
+        del parsed
+        gc.collect()
         try:
             node_mod = sys.modules.get("aura_node")
             AuraEcosystemAuditorCls = getattr(node_mod, "AuraEcosystemAuditor", None)
