@@ -4,9 +4,17 @@ import re
 import hashlib
 import uuid
 
+try:
+    from aura_holographic_manifest import AuraHolographicManifest
+    _HOLO_ENGINE = AuraHolographicManifest()
+except (ImportError, Exception):
+    _HOLO_ENGINE = None  # type: ignore[assignment]
+
+
 class AuraSovereignPatcher:
     def __init__(self, node_ref=None):
         self.node = node_ref
+        self._last_manifest_token: str = ""
 
     def preflight_compile(self, complete_source: str) -> bool:
         """
@@ -73,6 +81,15 @@ class AuraSovereignPatcher:
 
         print(f"[+] [AURA PATCHER] Surgical patch applied successfully to {file_path}.")
 
+        # ── Holographic Manifest Regeneration ──────────────────────────
+        # After every successful surgical patch, regenerate the 1.2 KB
+        # master hologram and inject it into all file headers so that
+        # every file carries an up-to-date topological snapshot of the
+        # entire OS.  This is the core of the HHP (Holographic Header
+        # Protocol) from the gist specification.
+        await self._regenerate_holographic_manifest()
+        # ────────────────────────────────────────────────────────────────
+
         # Update her database audit cache immediately to ensure the new timestamp registers cleanly
         if self.node and hasattr(self.node, 'memory_palace') and self.node.memory_palace:
             stat_metrics = os.stat(file_path)
@@ -87,6 +104,49 @@ class AuraSovereignPatcher:
             print(f"[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
             
         return True
+
+
+        # Update her database audit cache immediately to ensure the new timestamp registers cleanly
+        if self.node and hasattr(self.node, 'memory_palace') and self.node.memory_palace:
+            stat_metrics = os.stat(file_path)
+            # Re-generate a fresh system root hash reference tag
+            fresh_root = f"Q-PATCH-{uuid.uuid4().hex[:6].upper()}"
+            await self.node.memory_palace.update_audit_cache(
+                file_path, 
+                stat_metrics.st_mtime, 
+                stat_metrics.st_size, 
+                f"ST3GG_STAMPED:: {st3gg_synopsis.strip()}"
+            )
+            print(f"[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
+            
+        return True
+
+    async def _regenerate_holographic_manifest(self) -> None:
+        """
+        Regenerate the 1.2 KB master holographic manifest and inject it into
+        all .py file headers via AuraHolographicManifest.
+
+        This implements the Holographic Header Protocol (HHP) described in
+        the architecture gist: after any code mutation, the entire OS
+        topological snapshot is re-computed and stamped into every file
+        header, enabling O(1) per-file integrity verification.
+        """
+        if _HOLO_ENGINE is None:
+            print("[-] [AURA PATCHER] HolographicManifest not available — skipping manifest regeneration.")
+            return
+
+        try:
+            root_dir = os.path.dirname(os.path.abspath(__file__))
+            manifest_token = _HOLO_ENGINE.compile_global_manifest(root_dir)
+            if not manifest_token:
+                print("[-] [AURA PATCHER] Manifest compilation produced empty token.")
+                return
+            _HOLO_ENGINE.inject_holographic_headers(root_dir, manifest_token)
+            self._last_manifest_token = manifest_token
+            token_preview = manifest_token[:40] + "..." if len(manifest_token) > 40 else manifest_token
+            print(f"[+] [AURA PATCHER] Holographic Manifest regenerated ({len(manifest_token)} chars): {token_preview}")
+        except Exception as exc:
+            print(f"[-] [AURA PATCHER] Manifest regeneration failed: {exc}")
 
 
 def optimized_fallback():

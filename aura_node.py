@@ -5079,6 +5079,33 @@ async def main():
     auditor = AuraEcosystemAuditor(node)
     await auditor.execute_unified_audit()
 
+    # 4a-bis. Holographic Header Protocol (HHP) — verify-on-load integrity check
+    # Reads the 1.2 KB master hologram from file headers and spot-checks
+    # structural integrity before the system enters its operational loop.
+    # If drift is detected, triggers !saturn_heal before any code executes.
+    try:
+        from aura_holographic_manifest import verify_holographic_system_integrity
+    except ImportError:
+        verify_holographic_system_integrity = None  # type: ignore[assignment]
+
+    if verify_holographic_system_integrity is not None:
+        try:
+            integrity_result = await verify_holographic_system_integrity(
+                root_dir=".", tolerance=0.85, max_files=50
+            )
+            if integrity_result["status"] == "DRIFT_DETECTED":
+                print("[!] Holographic drift detected — triggering !saturn_heal...")
+                if hasattr(node, 'auto_heal'):
+                    await node.auto_heal()
+                else:
+                    print("[!] auto_heal not bound to node — drift will persist until manual !heal")
+            # Store for runtime access
+            if hasattr(node, 'runtime_metrics'):
+                node.runtime_metrics["holographic_resonance"] = integrity_result["resonance"]
+                node.runtime_metrics["holographic_checked"] = integrity_result["checked"]
+        except Exception as _holo_exc:
+            print(f"[!] Holographic integrity check skipped: {_holo_exc}")
+
     # 4b. Unified QDKT boot — initialises schemas and loads crystal cache
     if _QDKT is not None:
         print("[*] Unified QDKT: schemas verified, crystal cache loaded.")
