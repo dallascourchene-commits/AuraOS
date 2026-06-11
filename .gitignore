@@ -1,0 +1,75 @@
+# Block models and large model binaries
+models/
+*.gguf
+
+# Block package manager installer caches
+.cache/
+.cargo/
+
+# Block private API keys
+aura_secrets.json
+secrets.json
+.env
+
+# Exclude Android system storage mounts
+storage/
+
+# Runtime-generated topology (rescan via compile_unified_graph / aura_topology_manager)
+topology_map.json
+Aura_Memory/live_topology_ast.json
+
+# Runtime-generated auto-router state (calibration ledger + execution log)
+Aura_Memory/aura_calibration.jsonl
+Aura_Memory/aura_executions.jsonl
+
+# Runtime price cache (seeds from aura_pricing.DEFAULT_PRICES; auto-refreshed weekly)
+.aura/pricing.json
+
+# Runtime conversation memory + learned communication profile
+Aura_Memory/aura_conversations.jsonl
+Aura_Memory/aura_comm_profile.json
+__pycache__/
+*.pyc
+*.db-shm
+*.db-wal
+llama.cpp/
+Aura-Project/
+Aura_Memory/self_reflect_baseline.json
+
+# Block local state and memory runtime engines
+Aura_Memory/
+Aura_Sandbox/
+Aura_Staging/
+Aura_Vault/
+__pycache__/
+downloads/
+storage/
+models/
+llama.cpp/
+language_packs/
+Knowledge_Ingest/
+Aura-Project/
+AuraSovereign/
+
+# Block persistent SQLite architecture
+*.db
+*.db-shm
+*.db-wal
+
+# Block local diagnostic logs and mutation dumps
+*.log
+mutation_log.txt
+mutation_logs.txt
+
+# Block compiled native binaries and backups
+*.wasm
+*.cwasm
+*.tar.gz
+dag_executor
+bus_init
+test_forge
+
+# Purge specific broken session fragments from tracking
+[+]
+cat
+ura_=node..*

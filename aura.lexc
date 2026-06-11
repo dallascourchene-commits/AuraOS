@@ -1,0 +1,200 @@
+! [AURA OPTIMIZED] - Lexicon integrity verified.
+! --- AURA PWFST MASTER LEXICON (v4.01) ---
+! Dictates deterministic state-transitions, embedding Hyperdimensional 
+! Sensory Physics and Prime Directives directly into the transducer output.
+
+Multichar_Symbols +NI +NA +SYS +ASI +WEB3 +VTI +VTA +VAI +QUERY +MUTATE +CONVERT +NOBEX_TX +DAO_VOTE +SMART_CON +SUB_CHECK +LIC_CHECK +SYS_ERR +SYS_MOD +SYS_ROUTE +T1_RAM +T2_7D +T3_SEM +EXT_NODE +RUST_VM +EXCEP +TXT +CASH +POLY +NET_SCAN +NOBEX_MATH +GEN_CHAOS +BIND_THERMAL [CLOUD:GEMINI] [CLOUD:MISTRAL] [CLOUD:GROQ] [CLOUD:GITHUB] _STORE _FLUSH _EXEC _VALIDATE _MERGE _SIGN _MINT _DUMP _RESOLVE _PASS _ACTIVE _SUSPEND _UNLOAD _ROLLBACK _EXTRACT_QRW _XOR_MERGE 
+
+! --- SENSORY METADATA & DIRECTIVE TAGS ---
++SHAPE:CUBE +SHAPE:TETRA +SHAPE:SPHERE +SHAPE:OCTA +SHAPE:ICOSA
++TEMP:COLD +TEMP:HOT +TEMP:NEUT
++LUM:HI +LUM:LO +LUM:MID
++FRIC:HI +FRIC:LO +FRIC:MID
++DIR:GIDINAWENDIMIN +DIR:GIWAABAMIN +DIR:GIZAAGIIN +DIR:MIIGWECH
+
+LEXICON Root
+DataGate      GateNI ;
+NetworkGate   GateNA ;       
+Hardware      GateSYS ;      
+Blockchain    GateWEB3 ;     
+Evolution     GateASI ;      
+
+! ==========================================
+! --- TIER 1: THE GATE ENTRYPOINTS ---
+! ==========================================
+LEXICON GateNI
++NI:0         ActionData ;
+
+LEXICON GateNA
++NA:0         ActionNetwork ;
+
+LEXICON GateSYS
++SYS:0        ActionHardware ;
+
+LEXICON GateWEB3
++WEB3:0       ActionCrypto ;
+
+LEXICON GateASI
++ASI:0        ActionEvolve ;
+
+! ==========================================
+! --- TIER 2: ACTION SUB-PROCESSES ---
+! ==========================================
+LEXICON ActionData
++VTI:0        TargetMemory ;
++QUERY:0      TargetMemory ;
+
+LEXICON ActionNetwork
++VTA:0        TargetLedger ;
++VAI:0        TargetLedger ;
+
+LEXICON ActionHardware
++CONVERT:0    TargetPolyBranch ;
++SYS_MOD:0    TargetPolyBranch ;
++SYS_ROUTE:0  TargetLedger ;
++SYS_ERR:0    TargetException ;
+
+LEXICON ActionCrypto
++NOBEX_TX:0   TargetLedger ;
++DAO_VOTE:0   TargetLedger ;
++SMART_CON:0  TargetLedger ;
++LIC_CHECK:0  TargetPermissions ;
++SUB_CHECK:0  TargetPermissions ;
+
+LEXICON ActionEvolve
++MUTATE:0     TargetSandbox ;
+analyze:0     CloudLogicExpert ;    
+refactor:0    CloudCodeExpert ;     
+optimize:0    CloudSpeedExpert ;    
+predict:0     CloudGeneralExpert ;  
+
+! ==========================================
+! --- TIER 3: FUNCTIONAL TARGETS ---
+! ==========================================
+LEXICON TargetPolyBranch
++POLY:0       PhysicsTetrahedron ;
++TXT:0        PhysicsTetrahedron ;
++CASH:0       PhysicsCube ;
++NET_SCAN:0   PhysicsOctahedron ;
++NOBEX_MATH:0 PhysicsCube ;
+
+LEXICON TargetException
++EXCEP:0      PhysicsTetrahedronError ;
+
+LEXICON TargetMemory
++T1_RAM:0     PhysicsTetrahedron ;
++T2_7D:0      PhysicsSphere ;
++T3_SEM:0     PhysicsCube ;
+
+LEXICON TargetLedger
++EXT_NODE:0   PhysicsCube ;
+
+LEXICON TargetPermissions
++T3_SEM:0     PhysicsCube ;
+
+LEXICON TargetSandbox
++MUTATE:0      PhysicsIcosahedron ;
+
+LEXICON PhysicsIcosahedron
++SHAPE:ICOSA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:GIWAABAMI>
+
+! --- CLOUD EXPERT DIRECT TRANSFER ROUTES ---
+LEXICON CloudLogicExpert
+[CLOUD:GEMINI]:0    PhysicsOctahedron ;
+
+LEXICON CloudCodeExpert
+[CLOUD:MISTRAL]:0   PhysicsOctahedron ;
+
+LEXICON CloudSpeedExpert
+[CLOUD:GROQ]:0      PhysicsTetrahedron ;
+
+LEXICON CloudGeneralExpert
+[CLOUD:GITHUB]:0    PhysicsIcosahedron ;
+
+! ==========================================
+! --- TIER 4: SENSORY PHYSICS ALIGNMENT ---
+! Maps the intent to the hyperdimensional weights
+! ==========================================
+LEXICON PhysicsCube
+! Unique routing tags ensure the FST can distinguish the path
++SHAPE:CUBE+TEMP:COLD+LUM:HI+FRIC:LO+DIR:GIDINAWENDIMIN+INTENT:CRYPTO:0     ModifierCrypto ;
++SHAPE:CUBE+TEMP:COLD+LUM:HI+FRIC:LO+DIR:GIDINAWENDIMIN+INTENT:LIC:0        ModifierLicensing ;
++SHAPE:CUBE+TEMP:COLD+LUM:HI+FRIC:LO+DIR:GIDINAWENDIMIN+INTENT:EXEC:0       ModifierExecution ;
++SHAPE:CUBE+TEMP:COLD+LUM:HI+FRIC:LO+DIR:GIDINAWENDIMIN+INTENT:MEM:0        ModifierMemory ;
+
+LEXICON PhysicsTetrahedron
+! Kinetic, High-Energy Execution (e.g. RAM parsing, rapid compilation)
++SHAPE:TETRA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:MIIGWECH:0   ModifierExecution ;
++SHAPE:TETRA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:MIIGWECH:0   ModifierMemory ;
+
+LEXICON PhysicsTetrahedronError
+! High Friction, Structural Anomaly (e.g. Exceptions, System Errors)
++SHAPE:TETRA+TEMP:HOT+LUM:LO+FRIC:HI+DIR:GIWAABAMIN:0   ModifierException ;
+
+LEXICON PhysicsSphere
+! Holistic, Fluid Community Memory (e.g. 7-Day Context, Semantic Networking)
++SHAPE:SPHERE+TEMP:NEUT+LUM:HI+FRIC:LO+DIR:GIZAAGIIN:0  ModifierMemory ;
+
+LEXICON PhysicsOctahedron
+! Network Routing, Bridging & Cloud Offloading
++SHAPE:OCTA+TEMP:COLD+LUM:MID+FRIC:LO+DIR:GIDINAWENDIMIN:0      TerminalCloud ;
++SHAPE:OCTA+TEMP:COLD+LUM:MID+FRIC:LO+DIR:GIDINAWENDIMIN:0      ModifierExecution ;
+
+LEXICON PhysicsIcosahedron
+! Adaptive Evolution & Mutation Sandboxes (e.g. Rust VM, GitHub checks)
++SHAPE:ICOSA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:GIWAABAMIN:0 ModifierEvolve ;
++SHAPE:ICOSA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:GIWAABAMIN:0 TerminalCloud ;
+
+! ==========================================
+! --- TIER 5: TERMINAL MODIFIERS ---
+! ==========================================
+LEXICON ModifierExecution
+_EXEC:0       # ;
+_UNLOAD:0     # ;
+
+LEXICON ModifierMemory
+_STORE:0      # ;
+_FLUSH:0      # ;
+
+LEXICON ModifierException
+_DUMP:0       # ;
+_RESOLVE:0    # ;
+_ROLLBACK:0   # ;
+
+LEXICON ModifierCrypto
+_EXEC:0       # ;
+_SIGN:0       # ;
+_MINT:0       # ;
+
+LEXICON ModifierLicensing
+_PASS:0       # ;
+_ACTIVE:0     # ;
+_SUSPEND:0    # ;
+
+LEXICON ModifierEvolve
+_VALIDATE:0   # ;
+_MERGE:0      # ;
+
+! --- NEW: POLYSYNTHETIC CRYPTO-MORPHEME GENERATORS ---
+LEXICON ActionCrypto
++NOBEX_TX:0        TargetLedger ;
++DAO_VOTE:0        TargetLedger ;
++GEN_CHAOS:0       PhysicsQRW ;
++BIND_THERMAL:0    PhysicsEntropy ;
+
+LEXICON PhysicsQRW
+! Quantum Random Walk perturbation mapping
++SHAPE:OCTA+TEMP:HOT+LUM:HI+FRIC:MID+DIR:MIIGWECH:0   ModifierChaosExtract ;
+
+LEXICON PhysicsEntropy
+! Hardware-rooted entropy from SoC thermal zone
++SHAPE:SPHERE+TEMP:NEUT+LUM:MID+FRIC:LO+DIR:GIZAAGIIN:0 ModifierThermalBind ;
+
+LEXICON ModifierChaosExtract
+_EXTRACT_QRW:0      # ;
+
+LEXICON ModifierThermalBind
+_XOR_MERGE:0        # ;
+
+LEXICON TerminalCloud
+# ;

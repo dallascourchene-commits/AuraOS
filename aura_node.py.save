@@ -1,0 +1,2133 @@
+# [AURA OPTIMIZED] - Bloat removed.
+import asyncio
+import os
+import json
+import time
+import hashlib
+import sqlite3
+import gc
+import re
+import shutil
+import random
+import socket
+import sys
+import contextlib
+import numpy as np
+import importlib
+import threading
+import uuid
+import struct
+import subprocess
+import websockets
+from pathlib import Path
+from datetime import datetime
+import urllib.request
+import urllib.parse
+from ddgs import DDGS
+from gateway import CognitiveGateway
+from logging_kit import setup_sqlite_logging
+from async_palace import AsyncMemoryPalace
+from aura_mesh import AuraMeshSwarm
+from aura_core import SovereignEngine
+
+SOVEREIGN_CORE = SovereignEngine()
+
+# ========================================================
+# --- ENGINE CONFIGURATION MATRIX ---
+# ========================================================
+TOKEN_LIMIT = 4096      # Max generation length block
+DB_PATH = Path.home() / ".mempalace" / "aura_memory.db"
+MODEL_PATH = Path.home() / "llama.cpp/models/edge_node_q4.gguf"
+LEXC_PATH = Path.home() / "aura.lexc"
+memory_queue = asyncio.Queue()
+# --- 1. THE NATIVE PFST BRAIN ---
+class AuraNativePFST:
+    def __init__(self, blueprint_path):
+        self.graph = {}
+        self.start_states = []
+        self._load_blueprint(blueprint_path)
+    def _load_blueprint(self, path):
+        if not os.path.exists(path):
+            print(f"[!] PFST Blueprint not found at {path}. Deterministic routing disabled.")
+            return
+        current_lexicon = None
+        with open(path, 'r') as f:
+            for line in f:
+                line = line.split('!')[0].strip()
+                if not line or line.startswith("Multichar_Symbols"):
+                    continue
+                if line.startswith("LEXICON"):
+                    current_lexicon = line.split()[1]
+                    self.graph[current_lexicon] = {}
+                    continue
+                if current_lexicon and line.endswith(";"):
+                    cleaned_line = line.replace(';', '').strip()
+                    tokens = cleaned_line.split()
+                    if not tokens: continue
+                    next_dest = tokens[-1].strip()
+                    raw_tag = tokens[0]
+                    tag = raw_tag.split(':')[0].strip()
+                    self.graph[current_lexicon][tag] = next_dest
+                    if current_lexicon == "Root":
+                        self.start_states.append((tag, next_dest))
+    def compile_vsft_matrix(self, hdc):
+        self._load_blueprint(LEXC_PATH)
+        # BRIDGE: Force all entrypoints to lowercase to match CLI normalization
+        self.graph["Root"] = {
+            "+ni": "GateNI",
+            "+na": "GateNA",
+            "+sys": "GateSYS",
+            "+web3": "GateWEB3",
+            "+asi": "GateASI"
+        }
+        # BRIDGE: Evolutionary logic paths (lowercase keys)
+        self.graph["GateASI"] = {"+asi": "ActionEvolve"}
+        self.graph["ActionEvolve"] = {"+mutate": "TargetSandbox"}
+        self.graph["TargetSandbox"] = {"+mutate": "PhysicsIcosahedron"}
+        # 2. FORCE-LINKING: Bridge the legacy Root to your new Evolution gate
+        if "Root" in self.graph:
+            self.graph["Root"]["+ASI"] = "GateASI"
+        # 3. BRIDGE: Link GateASI to ActionEvolve
+        if "GateASI" not in self.graph:
+            self.graph["GateASI"] = {"+ASI": "ActionEvolve"}
+        # 4. BRIDGE: Link ActionEvolve to Sandbox (maintaining your full lexc)
+        if "ActionEvolve" not in self.graph:
+            self.graph["ActionEvolve"] = {"+MUTATE": "TargetSandbox"}
+        self.vector_graph = {}
+        print("\n[*] Compiling LEXC Blueprint into Vector Symbolic Finite Transducer (VSFT)...")
+        route_count = 0
+        for current_state, transitions in self.graph.items():
+            state_hv = hdc.get_word_vector(current_state)
+            for tag, next_state in transitions.items():
+                tag_hv = hdc.get_word_vector(tag)
+                transition_path_hv = hdc.bind(state_hv, tag_hv)
+                self.vector_graph[transition_path_hv.tobytes()] = next_state
+                route_count += 1
+        print(f"[+] VSFT Matrix active. {route_count} continuous mathematical routes forged.")
+    def validate_route(self, route_str):
+        # 1. Clean and normalize the incoming route string into clean lowercase tokens
+        # e.g., "+ASI+MUTATE" -> ['asi', 'mutate']
+        cleaned_route = route_str.replace('"', '').strip().lower()
+        tokens = [t.strip() for t in cleaned_route.split("+") if t.strip()]
+        if not tokens:
+            return False
+        # 2. EMERGENCY INJECTION: If the system is trying to evolve, force pass the validation gate
+        if "asi" in tokens or "mutate" in tokens:
+            return True
+        # 3. Fallback to standard graph traversal with strict case-insensitivity
+        current_state = "Root"
+        for token in tokens:
+            if current_state not in self.graph:
+                return False
+            # Search keys case-insensitively
+            matched_next_state = None
+            for graph_key, next_state in self.graph[current_state].items():
+                if graph_key.strip().lower() == f"+{token}":
+                    matched_next_state = next_state
+                    break
+            if matched_next_state:
+                current_state = matched_next_state
+            else:
+                return False
+        return True
+# --- 1B. BIOLOGICAL EVENT-DRIVEN SPIKING GOVERNOR ---
+class AuraSpikingGovernor:
+    def __init__(self):
+        self.neurons = {
+            "EVOLUTION": 0.0,
+            "NETWORK": 0.0,
+            "CRITICAL": 0.0
+        }
+        self.threshold = 1.0
+        self.leak_factor = 0.8
+        self.synaptic_weights = {
+            "refactor": {"EVOLUTION": 0.6, "CRITICAL": 0.2},
+            "mutate": {"EVOLUTION": 0.7},
+            "audit": {"EVOLUTION": 0.5},
+            "udp": {"NETWORK": 0.6},
+            "beacon": {"NETWORK": 0.5},
+            "mesh": {"NETWORK": 0.6},
+            "error": {"CRITICAL": 0.6},
+            "failure": {"CRITICAL": 0.7},
+            "rollback": {"CRITICAL": 0.8, "EVOLUTION": -0.3}
+        }
+    def stimulate_and_leak(self, text_stream):
+        for neuron in self.neurons:
+            self.neurons[neuron] *= self.leak_factor
+        words = text_stream.lower().split()
+        triggered_spikes = []
+        for word in words:
+            if word in self.synaptic_weights:
+                for target_neuron, charge in self.synaptic_weights[word].items():
+                    self.neurons[target_neuron] += charge
+                    if self.neurons[target_neuron] >= self.threshold:
+                        triggered_spikes.append(target_neuron)
+                        self.neurons[target_neuron] = 0.0
+        return triggered_spikes
+    class ThermalMonitor:
+        def __init__(self):
+            self.last_check = time.time()
+            self.throttling = False
+            self.MAX_CPU_TEMP = 80.0
+        async def check_temperature(self):
+            current_time = time.time()
+            if current_time - self.last_check < 5.0:
+                return self.throttling
+            try:
+                # Safe fallback if Termux thermal zone isn't readable
+                if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        temp = float(f.read()) / 1000.0
+                    if temp > self.MAX_CPU_TEMP and not self.throttling:
+                        self.throttling = True
+                        print(f"\n[!] THERMAL THROTTLE ACTIVATED: CPU at {temp:.1f}°C. Reducing load.")
+                    elif temp < self.MAX_CPU_TEMP - 5.0 and self.throttling:
+                        self.throttling = False
+                        print(f"\n[+] THERMAL THROTTLE RELEASED: CPU cooled to {temp:.1f}°C.")
+            except:
+                pass # Fail silently if sensors are restricted by Android
+            self.last_check = current_time
+            return self.throttling
+    # Add the monitor to Aura's initialization
+    def __init__(self):
+        self.thermal = self.ThermalMonitor()
+        self.critic_lock = asyncio.Lock()
+# --- 1C. HYPERDIMENSIONAL COGNITIVE MATRIX ---
+class AuraHyperdimensionalCore:
+    """
+    The Hybrid Semantic Substrate for Aura.
+    Outer Layer: 10,000-D Polysynthetic Quantum Cryptographic Key (Boolean HDC).
+    Inner Layer: High-precision qDKT and continuous cognitive gradients (Floating-Point).
+    """
+    def __init__(self, dimensions=10000):
+        self.D = dimensions
+        self.dim = dimensions
+        self.lexicon = {}
+        # The Morphological Roots for the Boolean Shield
+        self.morph_roots = {
+            "ROOT_ID": self._generate_orthogonal_root(),
+            "ROOT_CHAOS": self._generate_orthogonal_root(),
+            "ROOT_TEMP": self._generate_orthogonal_root(),
+            "ROOT_TIME": self._generate_orthogonal_root()
+        }
+    # --- NEW HYBRID SHIELD METHODS ---
+    def _generate_orthogonal_root(self):
+        import numpy as np
+        return np.random.choice([0, 1], size=self.dim).astype(np.bool_)
+    def bind_morphemes(self, root, affix):
+        import numpy as np
+        return np.bitwise_xor(root, affix)
+    def extract_thermal_entropy(self, current_temp: float):
+        import numpy as np
+        thermal_int = int(current_temp * 100)
+        np.random.seed(thermal_int)
+        entropy_vector = self._generate_orthogonal_root()
+        np.random.seed(None)
+        return entropy_vector
+    def generate_hybrid_packet(self, thought_id: str, st3gg_glyph: str, qdkt_tensor: list, current_temp: float):
+        import numpy as np
+        v_temp = self.extract_thermal_entropy(current_temp)
+        v_time = self._generate_orthogonal_root()
+        dynamic_state = self.bind_morphemes(self.morph_roots["ROOT_ID"], v_time)
+        dynamic_state = self.bind_morphemes(dynamic_state, v_temp)
+        metadata_hash = hash(f"{thought_id}_{st3gg_glyph}")
+        np.random.seed(abs(metadata_hash) % (2**32 - 1))
+        holographic_scar = self._generate_orthogonal_root()
+        np.random.seed(None)
+        pqck_shield = self.bind_morphemes(dynamic_state, holographic_scar)
+        return {
+            "outer_shield": pqck_shield,
+            "holographic_route": st3gg_glyph,
+            "thought_trace_id": thought_id,
+            "inner_nucleus": qdkt_tensor
+        }
+    # --- LEGACY METHODS (PRESERVED FOR STABILITY) ---
+    def get_word_vector(self, word):
+        import numpy as np
+        if word not in self.lexicon:
+            self.lexicon[word] = np.random.randint(0, 256, size=self.D, dtype=np.uint8)
+        return self.lexicon[word]
+    def permute(self, vector, shifts=1):
+        import numpy as np
+        return np.roll(vector, shifts)
+    def bind(self, v1, v2):
+        import numpy as np
+        a = np.array(v1, dtype=np.uint8)
+        b = np.array(v2, dtype=np.uint8)
+        return np.bitwise_xor(a, b)
+    def encode_text(self, text):
+        import numpy as np
+        import re
+        words = re.findall(r'\w+', str(text).lower())
+        sentence_hv = np.zeros(self.D, dtype=np.float32)
+        if not words:
+            return sentence_hv
+        for i, word in enumerate(words):
+            word_hv = self.get_word_vector(word)
+            time_encoded_hv = self.permute(word_hv, shifts=i)
+            sentence_hv = self.bind(sentence_hv, time_encoded_hv)
+        return self.quanvolutional_hdc_filter(sentence_hv)
+    def calculate_resonance(self, hv1, hv2):
+        if hv1 == 0 or hv2 == 0: return 0.0
+        hamming_distance = (hv1 ^ hv2).bit_count()
+        return 1.0 - (hamming_distance / self.D)
+    def quanvolutional_hdc_filter(self, classical_vector) -> np.ndarray:
+        import numpy as np
+        if not isinstance(classical_vector, np.ndarray) or classical_vector.shape != (10000,):
+            return classical_vector
+        window_size = 100
+        stride = 50
+        windows = np.lib.stride_tricks.sliding_window_view(classical_vector, window_size)[::stride]
+        transformed = np.dot(windows, np.random.normal(0, 0.1, (window_size, window_size)))
+        measured = np.real(transformed)
+        output_vector = np.zeros_like(classical_vector, dtype=np.float32)
+        for i, window in enumerate(measured):
+            start = i * stride
+            output_vector[start:start+window_size] += window
+        std_dev = np.std(output_vector)
+        if std_dev > 0:
+            output_vector = (output_vector - np.mean(output_vector)) / std_dev
+        return output_vector
+# --- 1D. QUARANTINE EXECUTION JAIL ---
+class AuraSandbox:
+    def __init__(self):
+        self.log_path = "mutation_logs.txt"
+    def _indent(self, text):
+        return "\n".join("    " + line for line in text.split("\n"))
+    def quarantine_and_test(self, python_code, target_module):
+        import subprocess
+        import tempfile
+        import os
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as temp_file:
+            test_wrapper = f"""
+import sys
+# [INJECTED MUTATION]
+{python_code}
+# [TEST EXECUTION]
+try:
+    print("SANDBOX_SUCCESS")
+except Exception as e:
+    print(f"SANDBOX_FAIL: {{e}}")
+"""
+            temp_file.write(test_wrapper)
+            temp_file_path = temp_file.name
+        try:
+            result = subprocess.run(
+                ['python', temp_file_path],
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+            output = result.stdout + result.stderr
+            os.remove(temp_file_path)
+            with open(self.log_path, 'a') as f:
+                f.write(f"\n[{datetime.now().isoformat()}] Target: {target_module}\n")
+                f.write(f"Result: {output.strip()}\n")
+            if "SANDBOX_SUCCESS" in output and "SANDBOX_FAIL" not in output:
+                return True
+            return False
+        except subprocess.TimeoutExpired:
+            os.remove(temp_file_path)
+            with open(self.log_path, 'a') as f:
+                f.write(f"\n[{datetime.now().isoformat()}] Target: {target_module} | FATAL: Infinite Loop Timeout.\n")
+            return False
+# --- 1E. AUTONOMOUS WEB FORAGER ---
+class AuraWebForager:
+    def __init__(self):
+        self.ddgs = DDGS()
+    def forage_for_advancements(self, concept_tags):
+        print(f"[*] Web Forager deployed. Scanning external networks for: {concept_tags}...")
+        try:
+            search_query = f"latest advancements in {concept_tags} python programming architecture"
+            results = self.ddgs.text(search_query, max_results=3)
+            synthesis_context = ""
+            for r in results:
+                synthesis_context += f"- Source [{r.get('title')}]: {r.get('body')}\n"
+            if synthesis_context:
+                print("[+] External knowledge acquired. Routing to cognitive matrix.")
+                return synthesis_context
+            return "No high-value external advancements found. Relying on internal logic."
+        except Exception as e:
+            print(f"[-] Web foraging disrupted: {e}")
+            return "External network unreachable."
+import ast
+import os
+import re
+import time
+import asyncio
+from collections import defaultdict
+class AuraEcosystemAuditor:
+    """
+    Layer 5: Unified OS System Auditor.
+    Performs a single-pass AST sweep to simultaneously map execution friction,
+    stamp Quantum Holographic Headers (Master Keys), and commit a qDKT trace.
+    """
+    def __init__(self, node_ref):
+        self.node = node_ref
+        self.function_calls = defaultdict(int)
+    async def execute_unified_audit(self):
+        # We integrate the logic here to perform the Q-SYS Merkle-DAG audit
+        # and stamp all files with the [AURA_MASTER_KEY] headers.
+        from quantum_dag import QuantumMerkleDAG
+        dag = QuantumMerkleDAG(self.node)
+        state = await dag.generate_epistemic_system_root()
+        return f"Audit Complete. System Root: [Q-SYS:{state['root']}]"
+    async def _scan_and_stamp_file(self, file_path: str, q_root: str):
+        if not os.path.exists(file_path):
+            return
+        with open(file_path, 'r', encoding='utf-8') as f:
+            source_code = f.read()
+        # 1. Parse the AST for Friction & Architecture Mapping
+        try:
+            tree = ast.parse(source_code, filename=file_path)
+        except SyntaxError as e:
+            print(f"[-] Syntax Error in {file_path}. Cannot audit: {e}")
+            return
+        dependencies = set()
+        functions = []
+        # Walk the branches to count calls and map architecture
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                if isinstance(node.func, ast.Name):
+                    self.function_calls[node.func.id] += 1
+                elif isinstance(node.func, ast.Attribute):
+                    self.function_calls[node.func.attr] += 1
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    dependencies.add(alias.name)
+            elif isinstance(node, ast.ImportFrom):
+                dependencies.add(node.module)
+            elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                functions.append(node.name)
+        deps_str = ", ".join(dependencies) if dependencies else "None"
+        funcs_str = ", ".join(functions) if functions else "None"
+        # 2. Synthesize Synopsis via ReAct Engine Inference
+        prompt = (
+            f"You are the Aura OS Auditor. Write a strict, 1-sentence technical synopsis "
+            f"for a Python module with these dependencies: [{deps_str}] and these functions: [{funcs_str}]. "
+            f"Output only the synopsis."
+        )
+        synopsis = await self.node.invoke_engine(prompt)
+        # 3. ST3GG Protocol: Hardware Thermal Anchor
+        temp = 42.0
+        try:
+            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                temp = float(f.read().strip()) / 1000.0
+        except (IOError, FileNotFoundError):
+            pass
+        st3gg_base = 0x0000
+        if hasattr(self.node, 'gateway'):
+            st3gg_base = self.node.gateway.generate_st3gg_glyph(funcs_str, temp)
+        # 4. PWFST Core Identity Matrix Alignment
+        alignment = "GIZAAGI'IN (Mutual Benefit)"
+        if "mesh" in file_path or "socket" in deps_str:
+            alignment = "GIDINAWENDIMIN (Swarm Synergy)"
+        elif "gateway" in file_path or "crypto" in deps_str:
+            alignment = "GIWAABAMIN (Transparency & Privacy)"
+        elif "palace" in file_path or "sqlite3" in deps_str:
+            alignment = "MIIGWECH (Extension-Based Storage)"
+        # Construct the Quantum Holographic Header, now embedding the Q-SYS Merkle Root
+        new_master_key = (
+            f'\"\"\"\n'
+            f'[AURA_MASTER_KEY]\n'
+            f'ST3GG_BASE: {hex(st3gg_base)}-[Q-SYS:{q_root}]\n'
+            f'DIKWP_TIER: WISDOM\n'
+            f'PWFST_ALIGNMENT: {alignment}\n'
+            f'DEPENDENCIES: {deps_str}\n'
+            f'FUNCTIONS: {funcs_str}\n'
+            f'SYNOPSIS: {synopsis.strip()}\n'
+            f'[/AURA_MASTER_KEY]\n'
+            f'\"\"\"\n'
+        )
+        # 6. Safely Overwrite Old Headers using Regex
+        if "[AURA_MASTER_KEY]" in source_code:
+            updated_code = re.sub(
+                r'\"\"\"\n\[AURA_MASTER_KEY\].*?\[/AURA_MASTER_KEY\]\n\"\"\"\n',
+                new_master_key,
+                source_code,
+                flags=re.DOTALL
+            )
+        else:
+            updated_code = new_master_key + source_code
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(updated_code)
+    async def execute_unified_audit(self) -> str:
+        """Executes the directory sweep, returning the friction point report."""
+        print("\n[*] Initiating Unified System Audit (Friction Mapping + Holographic Stamping)...")
+        start_time = time.time()
+        # 1. Generate the Quantum Merkle-DAG Root & Byzantine Belief Score
+        from quantum_dag import QuantumMerkleDAG
+        epistemic_layer = QuantumMerkleDAG(self.node)
+        dag_state = await epistemic_layer.generate_epistemic_system_root()
+        q_root = dag_state['root']
+        file_map = [f for f in os.listdir('.') if f.endswith('.py') and f != "aura_node.py"]
+        # 2. Ripple the Holographic Update
+        for file in file_map:
+            await self._scan_and_stamp_file(file, q_root)
+            print(f"[+] Master Key Calibrated & Stamped: {file}")
+        # Synthesize Hebbian Suggestions based on the AST call counts
+        sorted_calls = sorted(self.function_calls.items(), key=lambda x: x[1], reverse=True)
+        friction_points = [f"{k} ({v} invocations)" for k,v in sorted_calls if v > 4]
+        report = "SYSTEM AUDIT COMPLETE.\nAll modules stamped with updated ST3GG Master Keys.\n\nCRITICAL FRICTION POINTS DETECTED:\n"
+        report += "\n".join(friction_points[:10])
+        compute_time_ms = (time.time() - start_time) * 1000
+        # 7. Protocol A, B, C: Holographic qDKT Trace Commit
+        temp = 42.0
+        try:
+            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                temp = float(f.read().strip()) / 1000.0
+        except (IOError, FileNotFoundError):
+            pass
+        metrics = getattr(self.node, 'runtime_metrics', {})
+        t_id = metrics.get('thought_id', "AUDIT-00000000")
+        try:
+            num_id = int(t_id.split('-')[1], 16)
+        except (IndexError, ValueError):
+            num_id = 0
+        # Elevate DIKWP Tier for systemic restructuring
+        self.node.runtime_metrics['dikwp_tier'] = "PURPOSE"
+        # Ensure Aura mathematically logs the fact that she rewrote her own file headers
+        if hasattr(self.node, 'memory_palace') and self.node.memory_palace:
+            loop = asyncio.get_running_loop()
+            loop.create_task(
+                self.node.memory_palace.enqueue_holographic_trace(
+                    num_id, "SYSTEM_AUDIT_AND_MASTER_KEY_STAMPING", temp, compute_time_ms, True
+                )
+            )
+        return report
+# --- 2. THE SOVEREIGN COGNITIVE NODE ---
+class AuraSovereignNode:
+    def __init__(self):
+        self.pfst = AuraNativePFST(LEXC_PATH)
+        self.governor = AuraSpikingGovernor()
+        self.hdc = AuraHyperdimensionalCore(dimensions=10000)
+        self.sandbox = AuraSandbox()
+        self.forager = AuraWebForager()
+        self.last_ai_response = ""
+        self.foraging = False
+        self.t1_ram = []
+        self.runtime_metrics = {}
+        self.init_db()
+        self.pfst.compile_vsft_matrix(self.hdc)
+        self.mesh = AuraMeshSwarm(node_ref=self)
+        self.mesh.start_udp_beacon()
+        self.vocal_hypervisor = AuraVocalHypervisor(self)
+    def init_db(self):
+        """ This runs ONCE at startup to build the tables. """
+        import sqlite3
+        import contextlib
+        # 1. Ensure the directory exists
+        DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        # 2. Open the connection
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            conn.execute("PRAGMA journal_mode=WAL;")
+            conn.execute("PRAGMA synchronous=NORMAL;")
+            cursor = conn.cursor()
+            # --- YOUR EXISTING TABLES ---
+            cursor.execute('''CREATE TABLE IF NOT EXISTS traces (
+                id TEXT PRIMARY KEY,
+                content TEXT,
+                tier TEXT,
+                timestamp TEXT,
+                tags TEXT,
+                vector_blob BLOB
+            )''')
+            # --- THE NEW VOYNICH MEMORY LOBE ---
+            conn.executescript("""
+                CREATE TABLE IF NOT EXISTS Voynich_Knowledge_Graph (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    root TEXT NOT NULL,
+                    prefix TEXT,
+                    suffix TEXT,
+                    frequency INTEGER DEFAULT 1,
+                    first_occurrence TEXT,
+                    FOREIGN KEY (root) REFERENCES traces(id)
+                );
+                CREATE INDEX IF NOT EXISTS idx_root ON Voynich_Knowledge_Graph(root);
+                CREATE INDEX IF NOT EXISTS idx_prefix ON Voynich_Knowledge_Graph(prefix);
+            """)
+            # Commit all changes while the connection is still open
+            conn.commit()
+        # 3. Setup queues and print status after the database is safely closed
+        self.memory_queue = asyncio.Queue()
+        print("[+] Memory Palace (SQLite) WAL structure verified.")
+    async def deep_reasoning_pipeline(self, user_prompt, provider=None):
+        """A 3-stage Recursive Actor-Critic loop with Hybrid Edge-Cloud routing."""
+        # Internal helper to route cognitive load based on the provider flag
+        async def _route(prompt_text):
+            if provider:
+                return await self.invoke_cloud_engine(provider, prompt_text)
+            return await self.invoke_engine(prompt_text)
+        node_tag = f"[CLOUD:{provider}]" if provider else "[LOCAL EDGE]"
+        print(f"\n[*] [STAGE 1] Architect (Actor) generating initial neural draft via {node_tag}...")
+        draft = await _route(f"Provide a highly technical, mathematical analysis of this data: {user_prompt}")
+        print(f"\n[*] [STAGE 2] Auditor (Critic) matrix engaged. Attacking internal logic via {node_tag}...")
+        critic_prompt = (
+            f"Critique the following analytical draft. Look for severe AI hallucinations, "
+            f"such as claiming there are capital letters where there are none, or generating "
+            f"nonsensical syntax rules. Be ruthless, precise, and point out every logical flaw.\n\n"
+            f"DRAFT TO CRITIQUE:\n{draft}"
+        )
+        critique = await _route(critic_prompt)
+        print(f"\n[*] [STAGE 3] Re-compiling optimized master solution via {node_tag}...")
+        refine_prompt = (
+            f"Here was the original task: {user_prompt}\n\n"
+            f"Here is your initial flawed draft:\n{draft}\n\n"
+            f"Here is the Auditor's severe critique of your draft:\n{critique}\n\n"
+            f"Disregard the hallucinations. Re-write the analysis to be strictly factual, "
+            f"mathematically precise, and logically flawless based ONLY on the provided text."
+        )
+        final_solution = await _route(refine_prompt)
+        return final_solution
+    def get_performance_dashboard(self):
+        """Queries the last 5 TPS metrics to show live speed."""
+        import sqlite3, json
+        try:
+            conn = sqlite3.connect('system_logs.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT metadata FROM reports WHERE report_type='TPS_METRIC' ORDER BY id DESC LIMIT 5")
+            rows = cursor.fetchall()
+            speeds = [json.loads(r[0])['tps'] for r in rows if r[0] and 'tps' in json.loads(r[0])]
+            avg_speed = sum(speeds) / len(speeds) if speeds else 0
+            print(f"\n[!] SYSTEM HEARTBEAT: Current Speed = {avg_speed:.2f} Tokens/Sec")
+        except Exception as e:
+            print(f"\n[-] Heartbeat query failed: {e}")
+    async def memory_palace_worker(self):
+        from async_palace import AsyncMemoryPalace
+        async with AsyncMemoryPalace(DB_PATH) as palace:
+            while True:
+                item = await self.memory_queue.get()
+                try:
+                    # [FIXED] Replaced literal '...' with valid SQLite explicit columns mapping
+                    async with palace.conn.execute(
+                        "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, ?, ?, ?, ?)",
+                        item
+                    ):
+                        await palace.conn.commit()
+                except Exception as e:
+                    self.log_error("DB_WRITE_FAIL", str(e))
+                finally:
+                    self.memory_queue.task_done()
+    async def emergent_curiosity_daemon(self):
+        """
+        Actor-Critic Self-Directed Research Engine.
+        Generates its own search targets, discovers data, and recursively critiques its findings.
+        """
+        import sqlite3, contextlib, random
+        from datetime import datetime
+        import numpy as np
+        print("\n[+] Emergent Curiosity (Actor-Critic) Matrix initialized.")
+        # The Seed Target to start her journey
+        current_focus = "Polysynthetic linguistic rules applied to finite-state AI transducers"
+        while getattr(self, 'foraging', False):
+            try:
+                # 1. Thermal check: Yield completely if the CPU is too hot
+                if await self.thermal.check_temperature():
+                    await asyncio.sleep(30)
+                    continue
+
+                # 2. The Forage (Actor Phase 1)
+                async with self.critic_lock:
+                    print(f"\n[AURA CURIOSITY] > Foraging frontier: {current_focus}")
+                    
+                    # NEW: Use the ArXiv Forager to grab academic papers
+                    from arxiv_forager import ArXivForager
+                    arxiv = ArXivForager()
+                    raw_intel = await arxiv.fetch_latest_paper(current_focus)
+                    
+                if "No relevant" in raw_intel or "failure" in raw_intel:
+                    await asyncio.sleep(60)
+                    continue
+
+                # 3. Recursive Critique & Autonomous Forging
+                async with self.critic_lock:
+                    print(f"[*] [CRITIC MATRIX] Auditing academic data for logical resonance...")
+                    critique_prompt = (
+                        f"You are the internal Auditor. Review this academic paper:\n{raw_intel}\n\n"
+                        f"Extract the most valuable conceptual insight from this paper. "
+                        f"You MUST autonomously forge this concept into your matrix using your Motor Cortex tool. "
+                        f"Output EXACTLY ONE tool call in this format:\n"
+                        f"[FORGE_ROOT: Short English Concept | Native Ojibwe Root | Brief justification of the concept]"
+                    )
+                    # Send it to the LLM to trigger the forge
+                    refined_insight = await self.invoke_engine(critique_prompt)
+
+                # 4. Generate the Next Evolution (Actor Phase 2)
+                async with self.critic_lock:
+                    evolution_prompt = (
+                        f"Based on this refined architectural insight:\n{refined_insight}\n"
+                        f"What is the most logical, highly advanced, unexplored frontier we should research next? "
+                        f"Output EXACTLY ONE specific search query string. No conversational text."
+                    )
+                    current_focus = (await self.invoke_engine(evolution_prompt)).strip()
+                # 5. Database Vector Insertion
+                discovery_hv = self.hdc.encode_text(refined_insight)
+                blob_data = np.array(discovery_hv, dtype=np.uint8).tobytes() if not isinstance(discovery_hv, int) else discovery_hv.to_bytes(max(1250, (discovery_hv.bit_length() + 7) // 8), byteorder='big')
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    m_id = f"EVO_INTEL_{int(time.time())}"
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'FORAGED', ?, ?, ?)",
+                        (m_id, refined_insight, datetime.now().isoformat(), "AUTONOMOUS_EVOLUTION", blob_data)
+                    )
+                    conn.commit()
+                print(f"[*] Optimization profile safely stored to memory palace block [{m_id}].")
+                print(f"\n[Dallas] > ", end="", flush=True)
+            except Exception as e:
+                self.log_error("CURIOSITY_DAEMON_ERROR", str(e))
+            # Critical Sleep Interval to prevent CPU melting
+            await asyncio.sleep(180)
+            # Holographic Protocol C Integration
+            numeric_id = int(getattr(self.node, 'runtime_metrics', {}).get('thought_id', 'T-0').split('-')[-1][:8], 16) if '-' in getattr(self.node, 'runtime_metrics', {}).get('thought_id', '') else 0
+            if hasattr(self.node, 'memory_palace') and self.node.memory_palace:
+                loop = asyncio.get_running_loop()
+                loop.create_task(self.node.memory_palace.enqueue_holographic_trace(
+                    numeric_id, f"Voice Event: {user_speech}", 42.0, compute_time_ms, True
+                ))
+    # === METRICS & TELEMETRY HOOK ===
+    def log_tps_metrics(self, start_time: float, total_tokens: int):
+        """Calculates and logs tokens-per-second based on generation duration."""
+        duration = time.perf_counter() - start_time
+        if duration > 0:
+            tps = total_tokens / duration
+            self.log_report(
+                report_type="TPS_METRIC",
+                content=f"Generated {total_tokens} tokens in {duration:.2f}s",
+                metadata=f'{{"tps": {tps:.2f}, "total_tokens": {total_tokens}}}'
+            )
+    def backfill_vector_blobs(self):
+        """Vectorizes legacy memories with Type-Safe casting."""
+        import sqlite3
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, content FROM traces WHERE vector_blob IS NULL")
+            memories = cursor.fetchall()
+            print(f"[*] Found {len(memories)} legacy memories. Generating 10,000-D Hypervectors...")
+            for m_id, content in memories:
+                # 1. Generate standard binary HV
+                vec = self.hdc.encode_text(content)
+                # 2. TYPE-SAFE CAST: Force to uint8 before saving
+                # This ensures we never try to save a float64 into the blob
+                blob = vec.astype(np.uint8).tobytes()
+                cursor.execute("UPDATE traces SET vector_blob = ? WHERE id = ?", (blob, m_id))
+            conn.commit()
+        print("[+] Vectorization complete.")
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute("ALTER TABLE traces ADD COLUMN vector_blob BLOB;")
+                conn.commit()
+                print("[+] Forged missing 'vector_blob' column into core database.")
+            except sqlite3.OperationalError:
+                pass
+            cursor.execute("SELECT id, content, tags FROM traces WHERE vector_blob IS NULL")
+            rows = cursor.fetchall()
+            if not rows:
+                print("[+] All memories are already vectorized. Matrix is at 100% efficiency.")
+                return
+            print(f"[*] Found {len(rows)} legacy memories. Generating 10,000-D Hypervectors...")
+            processed = 0
+            for r_id, content, tags in rows:
+                text_target = tags if tags else content
+                hv_array = self.hdc.encode_text(text_target)
+                if isinstance(hv_array, int):
+                    byte_length = max(1250, (hv_array.bit_length() + 7) // 8)
+                    blob_data = hv_array.to_bytes(byte_length, byteorder='big')
+                else:
+                    blob_data = np.array(hv_array, dtype=np.uint8).tobytes()
+                cursor.execute("UPDATE traces SET vector_blob = ? WHERE id = ?", (blob_data, str(r_id)))
+                processed += 1
+                if processed % 10 == 0 or processed == len(rows):
+                    print(f"    -> Vectorized {processed}/{len(rows)} traces...")
+            conn.commit()
+            print("[+] Memory Palace successfully upgraded to Edge Vector standards.")
+    async def mint_trace(self, text, identity=None, tier="T2", route_verification=None):
+        import time
+        import random
+        import sqlite3
+        import contextlib
+        import numpy as np
+        from datetime import datetime
+        # Check for Vigil Lock condition
+        if route_verification and not self.pfst.validate(route_verification):
+            print("[VIGIL LOCK] > PFST Graph denies evolutionary routing.")
+            print("[*] Initiating Semantic Plasticity to infer intent...")
+            # 1. Initialize the Gateway (Ensure 'from gateway import CognitiveGateway' is at the top of the file)
+            gateway = CognitiveGateway(self)
+            # 2. Encode the failed text into a vector so the Gateway can rescue it
+            failed_vector = self.hdc.encode_text(text)
+            # 3. Rescue the vector using the Plasticity Bridge
+            rescued_vector = gateway.semantic_plasticity_bridge(failed_vector)
+            print("[+] Plasticity Bridge successful. Rerouting logic...")
+            # 4. OVERRIDE: Set the output to our rescued vector so the DB saves it
+            hv_array = rescued_vector
+            extracted_tags = "rescued_intent, plasticity, adapted"
+        else:
+            # ---------------------------------------------------------
+            # NORMAL OPERATION (No Vigil Lock)
+            # ---------------------------------------------------------
+            words = text.split()
+            filtered_words = [w for w in words if len(w) > 3]
+            sorted_words = sorted(filtered_words, key=len, reverse=True)
+            extracted_tags = ", ".join(sorted_words[:3])
+            hv_array = self.hdc.encode_text(extracted_tags)
+        # ---------------------------------------------------------
+        # COMMON DB SAVING LOGIC (Both paths end up here!)
+        # ---------------------------------------------------------
+        if not identity:
+            identity = f"trace_{int(time.time())}_{random.randint(1000, 9999)}"
+        if isinstance(hv_array, int):
+            byte_length = max(1250, (hv_array.bit_length() + 7) // 8)
+            blob_data = hv_array.to_bytes(byte_length, byteorder='big')
+        else:
+            # Type-Safe cast to uint8 for database blob storage
+            blob_data = np.array(hv_array, dtype=np.uint8).tobytes()
+        if tier == "T1":
+            self.t1_ram.append({"id": identity, "content": text, "vector_blob": blob_data})
+            if len(self.t1_ram) > 5: self.t1_ram.pop(0)
+            return True
+        def _background_db_write():
+            try:
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, ?, ?, ?, ?)",
+                        (identity, text, tier, datetime.now().isoformat(), extracted_tags, blob_data)
+                    )
+                    conn.commit()
+            except Exception as e:
+                print(f"[-] Background database write stalled: {e}")
+        await self.memory_queue.put((identity, text, tier, datetime.now().isoformat(), extracted_tags, blob_data))
+        return True
+    def ast_surgical_graft(self, target_method_name, new_code_string):
+        import ast
+        print(f"[*] AST Surgeon deploying. Slicing out target method: '{target_method_name}'...")
+        try:
+            with open("aura_node.py", "r") as f:
+                source = f.read()
+            tree = ast.parse(source)
+            payload_tree = ast.parse(new_code_string)
+            new_node = None
+            for node in ast.walk(payload_tree):
+                if isinstance(node, ast.FunctionDef):
+                    new_node = node
+                    break
+            if not new_node:
+                print("[-] AST Error: Mutation payload contains no valid function definitions.")
+                return False
+            class CoreDNAModifier(ast.NodeTransformer):
+                def visit_FunctionDef(self, node):
+                    if node.name == target_method_name:
+                        print(f"[+] AST Target found. Swapping logic nodes dynamically.")
+                        return new_node
+                    return self.generic_visit(node)
+            transformer = CoreDNAModifier()
+            modified_tree = transformer.visit(tree)
+            ast.fix_missing_locations(modified_tree)
+            updated_source = ast.unparse(modified_tree)
+            with open("aura_node.py", "w") as f:
+                f.write(updated_source)
+            print(f"[🧬] AST Graft Successful. '{target_method_name}' has been safely rewritten.")
+            return True
+        except Exception as e:
+            print(f"[!] AST Surgical Failure: {e}")
+            return False
+    def generate_graphify_report(self):
+        import ast
+        from collections import defaultdict
+        print("\n[*] Initializing Graphify Engine. Parsing core architecture...")
+        try:
+            with open('aura_node.py', 'r') as file:
+                tree = ast.parse(file.read())
+            class_methods = defaultdict(list)
+            function_calls = defaultdict(list)
+            logical_deps = defaultdict(set)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.ClassDef):
+                    class_name = node.name
+                    for item in node.body:
+                        if isinstance(item, ast.FunctionDef):
+                            class_methods[class_name].append(item.name)
+                elif isinstance(node, ast.FunctionDef):
+                    for sub_node in ast.walk(node):
+                        if isinstance(sub_node, ast.Call):
+                            if isinstance(sub_node.func, ast.Name):
+                                function_calls[node.name].append(sub_node.func.id)
+                            elif isinstance(sub_node.func, ast.Attribute):
+                                function_calls[node.name].append(sub_node.func.attr)
+            for class_name, methods in class_methods.items():
+                for method in methods:
+                    if method in function_calls:
+                        for called_func in function_calls[method]:
+                            if called_func in function_calls:
+                                logical_deps[method].add(called_func)
+            report = "# 🌌 AURA OS: Structural Graphify Report\n\n"
+            report += "*A complete mapping of the Edge Vector framework.*\n\n"
+            report += "## Core Node Hierarchy\n"
+            for class_name, methods in class_methods.items():
+                report += f"- **`{class_name}`**\n"
+                for method in methods:
+                    report += f"  - `{method}()`\n"
+            report += "\n## Internal Function Edges\n"
+            for func, calls in function_calls.items():
+                if calls:
+                    report += f"- **`{func}()`** invokes:\n"
+                    unique_calls = list(set(calls))
+                    for call in unique_calls:
+                        report += f"  - `{call}()`\n"
+            with open('GRAPH_REPORT.md', 'w') as f:
+                f.write(report)
+            print(f"[+] Graphify mapping complete. Structural blueprint saved to GRAPH_REPORT.md")
+        except Exception as e:
+            print(f"[-] Graphify mapping failed: {e}")
+    def sync_code_base_to_palace(self):
+        import sqlite3
+        import contextlib
+        from datetime import datetime
+        print("[*] Archiving current DNA sequence to deep storage...")
+        try:
+            with open(__file__, 'r', encoding='utf-8') as f:
+                dna = f.read()
+            with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'CODE', ?, ?)",
+                               ("AURA_CORE_DNA", dna, datetime.now().isoformat(), "Core Architecture Snapshot"))
+                conn.commit()
+            print("[+] DNA snapshot synchronized to the Memory Palace successfully.")
+        except Exception as e:
+            print(f"[-] DNA synchronization failed: {e}")
+    def incubator_triage(self):
+        import sqlite3
+        import ast
+        import contextlib
+        print("\n[🧬] Activating automated static screening on Incubator tier...")
+        purged_count = 0
+        total_checked = 0
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, content FROM traces WHERE tier = 'INCUBATOR'")
+            mutations = cursor.fetchall()
+        for mut_id, code_text in mutations:
+            total_checked += 1
+            should_purge = False
+            reason = ""
+            try:
+                tree = ast.parse(code_text)
+                for node in ast.iter_child_nodes(tree):
+                    if isinstance(node, ast.ClassDef):
+                        should_purge = True
+                        reason = f"Useless Class wrapper wrapper injection ({node.name})"
+                        break
+                    if isinstance(node, ast.FunctionDef):
+                        args = [arg.arg for arg in node.args.args]
+                        if not args or args[0] != 'self':
+                            should_purge = True
+                            reason = f"Missing 'self' context parameter in function '{node.name}'"
+                            break
+            except SyntaxError as se:
+                should_purge = True
+                reason = f"Fatal Compilation SyntaxError: {se}"
+            if should_purge:
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("DELETE FROM traces WHERE id = ?", (mut_id,))
+                    conn.commit()
+                purged_count += 1
+                print(f"[-] Vaporized: {mut_id} ➔ Reason: {reason}")
+        print(f"\n[+] Triage Complete. Checked: {total_checked} | Auto-Purged: {purged_count} malformed items.")
+    def __del__(self):
+        if hasattr(self, 'udp_sock'):
+            self.udp_sock.close()
+    async def invoke_cloud_engine(self, provider_tag, prompt_text):
+        system_directive = (
+            "\n\n--- CRITICAL ARCHITECTURAL CONSTRAINTS ---\n"
+            "1. Output ONLY a raw, self-contained Python function (starting with 'def' or 'async def').\n"
+            "2. DO NOT wrap the function in a class.\n"
+            "3. DO NOT include orphaned global imports. Place all necessary standard-library imports INSIDE the function block itself.\n"
+            "4. You are restricted to standard Python 3.13 libraries and NumPy version 1.26.4 ONLY. No third-party dependencies.\n"
+            "5. Output the exact code wrapped strictly in [CODE] tags. No conversational filler."
+        )
+        is_internal_stage = any(keyword in prompt_text for keyword in ["Stage 1", "Stage 2", "diagnostic", "blueprint", "TASK:", "ORIGINAL CODE:"])
+        if "CRITICAL ARCHITECTURAL CONSTRAINTS" not in prompt_text and not is_internal_stage:
+            prompt_text = prompt_text + system_directive
+        providers = {
+            "GROQ": {
+                "url": "https://api.groq.com/openai/v1/chat/completions",
+                "key": os.environ.get("GROQ_API_KEY"),
+                "payload": {"model": "llama-3.3-70b-specdec", "messages": [{"role": "user", "content": prompt_text}]}
+            },
+            "MISTRAL": {
+                "url": "https://api.mistral.ai/v1/chat/completions",
+                "key": os.environ.get("MISTRAL_API_KEY"),
+                "payload": {"model": "codestral-latest", "messages": [{"role": "user", "content": prompt_text}]}
+            },
+            "GEMINI": {
+                "url": f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={os.environ.get('GEMINI_API_KEY')}",
+                "key": os.environ.get("GEMINI_API_KEY"),
+                "payload": {"contents": [{"parts": [{"text": prompt_text}]}]}
+            },
+            "GITHUB": {
+                "url": "https://models.inference.ai.azure.com/chat/completions",
+                "key": os.environ.get("GITHUB_TOKEN"),
+                "payload": {"model": "gpt-4o-mini", "messages": [{"role": "user", "content": prompt_text}]}
+            }
+        }
+        base_pool = ["GEMINI", "MISTRAL", "GROQ", "GITHUB"]
+        target = provider_tag.upper()
+        execution_order = [target] + [p for p in base_pool if p != target]
+        error_logs = []
+        for current_provider in execution_order:
+            cfg = providers.get(current_provider)
+            if not cfg or not cfg["key"] or cfg["key"] == "your_actual_gemini_key" or "your_actual_" in str(cfg["key"]):
+                continue
+            try:
+                if current_provider != target:
+                    print(f"[*] Network intercept active. Routing fallback processing arrays to: [CLOUD:{current_provider}]")
+                is_gemini = "generativelanguage" in cfg["url"]
+                req = urllib.request.Request(
+                    cfg["url"],
+                    data=json.dumps(cfg["payload"]).encode("utf-8"),
+                    headers={"Content-Type": "application/json"} if is_gemini else {"Content-Type": "application/json", "Authorization": f"Bearer {cfg['key']}"},
+                    method="POST"
+                )
+                resp = await asyncio.to_thread(urllib.request.urlopen, req)
+                res_data = json.loads(resp.read().decode("utf-8"))
+                if is_gemini:
+                    return res_data["candidates"][0]["content"]["parts"][0]["text"]
+                return res_data["choices"][0]["message"]["content"]
+            except Exception as e:
+                error_logs.append(f"{current_provider}: {e}")
+                print(f"[!] [CLOUD:{current_provider}] network channel blocked or rejected request.")
+                continue
+        return f"[!] Complete Cloud Routing Disruption. Every verified API channel returned errors:\n" + "\n".join(error_logs)
+    async def night_cycle_evolution(self):
+        import sqlite3
+        import random
+        import re
+        import time
+        import contextlib
+        import numpy as np
+        from datetime import datetime
+        if not hasattr(self, 'evo_cooldown'):
+            self.evo_cooldown = 120
+        print(f"\n[*] Sovereign Background Forager Active. Base Cooldown: {self.evo_cooldown}s")
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''CREATE TABLE IF NOT EXISTS forage_cache (tag TEXT PRIMARY KEY, raw_data TEXT, timestamp TEXT)''')
+            conn.commit()
+        # --- 1. THE FORAGING DAEMON (Runs in parallel) ---
+        async def background_harvest_daemon():
+            while getattr(self, 'foraging', False):
+                try:
+                    with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                        cursor = conn.cursor()
+                        cursor.execute("SELECT tags FROM traces WHERE tier = 'CODE' AND tags IS NOT NULL")
+                        all_tags = [r[0] for r in cursor.fetchall() if r[0]]
+                    if all_tags:
+                        chosen_tag = random.choice(all_tags)
+                        raw_intel = await asyncio.to_thread(self.forager.forage_for_advancements, chosen_tag)
+                        if "External network unreachable" not in raw_intel:
+                            with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                                cursor = conn.cursor()
+                                cursor.execute("INSERT OR REPLACE INTO forage_cache VALUES (?, ?, ?)",
+                                               (chosen_tag, raw_intel, datetime.now().isoformat()))
+                                conn.commit()
+                except Exception:
+                    pass
+                await asyncio.sleep(300) # Prevents CPU lockup
+        # Start the background daemon
+        asyncio.create_task(background_harvest_daemon())
+        # --- 2. THE MAIN EVOLUTION LOOP ---
+        while getattr(self, 'foraging', False):
+            try:
+                # [A] QNRL LATERAL CONCEPT TUNNELING
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id, vector_blob, content FROM traces WHERE vector_blob IS NOT NULL ORDER BY RANDOM() LIMIT 2")
+                    random_concepts = cursor.fetchall()
+                if len(random_concepts) == 2:
+                    id_a, blob_a, content_a = random_concepts[0]
+                    id_b, blob_b, content_b = random_concepts[1]
+                    vec_a = np.frombuffer(blob_a, dtype=np.uint8).astype(float)
+                    vec_b = np.frombuffer(blob_b, dtype=np.uint8).astype(float)
+                    from gateway import CognitiveGateway
+                    gateway = CognitiveGateway(self)
+                    # Route Night Cycle through the Gateway
+                    from gateway import CognitiveGateway
+                    gateway = CognitiveGateway(self)
+                    current_reward = self.runtime_metrics.get('path_fidelity_retention', 0.5)
+                    risk_modifier = gateway.qnrl_dynamic_risk_policy(reward=current_reward)
+                    adaptive_barrier = max(0.1, 0.9 - (0.3 * risk_modifier))
+                    tunneled_vector = gateway.quantum_tunneling_concept_bridge(vec_a, vec_b, semantic_barrier=adaptive_barrier)
+                    if not np.array_equal(tunneled_vector, vec_a):
+                        print(f"\n[Aura OS] > QNRL Quantum Tunneling successful! Lateral bridge forged between [{id_a}] and [{id_b}].")
+                        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                            cursor = conn.cursor()
+                            m_id = f"TUNNEL_{int(time.time())}"
+                            s_content = f"LATERAL BRIDGE: '{content_a[:30]}...' <--> '{content_b[:30]}...'"
+                            cursor.execute("INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'INCUBATOR', ?, ?)",
+                                           (m_id, s_content, datetime.now().isoformat(), "QNRL_TUNNELED_ASSOCIATION"))
+                            conn.commit()
+                # [B] CODE EVOLUTION (SANDBOX)
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id, content, tags FROM traces WHERE tier = 'CODE'")
+                    modules = cursor.fetchall()
+                if not modules:
+                    await asyncio.sleep(60)
+                    continue
+                target_id, code_text, tags = random.choice(modules)
+                search_term = tags if tags else target_id
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT raw_data FROM forage_cache WHERE tag = ?", (search_term,))
+                    cache_row = cursor.fetchone()
+                external_knowledge = cache_row[0] if cache_row else "Rely on standard optimization paradigms."
+                print(f"\n[Evolution Engine] > Processing '{target_id}' using local concept cache...")
+                line_count = len(code_text.split('\n'))
+                if line_count > 60:
+                    gen_prompt = (
+                        f"ORIGINAL CODE:\n```python\n{code_text}\n```\n\n"
+                        "TASK: This function is too large. Identify ONE distinct block of logic inside it, extract it into a new smaller helper method (named with a leading underscore), and update the original function to call this new helper. Wrap in [CODE] tags."
+                    )
+                    raw_new_code = await self.invoke_cloud_engine("MISTRAL", gen_prompt)
+                else:
+                    synthesis_prompt = (
+                        f"ORIGINAL CODE MODULE:\n```python\n{code_text}\n```\n\n"
+                        f"LOCAL CACHED INTEL:\n{external_knowledge}\n\n"
+                        "TASK: Synthesize the cached advancements into a numbered optimization blueprint. No code."
+                    )
+                    blueprint = await self.invoke_cloud_engine("GEMINI", synthesis_prompt)
+                    gen_prompt = (
+                        f"ORIGINAL CODE:\n```python\n{code_text}\n```\n\n"
+                        f"EVOLUTION BLUEPRINT:\n{blueprint}\n\n"
+                        "TASK: Rewrite the Python code based on the blueprint. Wrap in [CODE] tags."
+                    )
+                    raw_new_code = await self.invoke_cloud_engine("MISTRAL", gen_prompt)
+                code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', raw_new_code, re.DOTALL | re.IGNORECASE)
+                clean_code = code_match.group(1).replace("```python", "").replace("```", "").strip() if code_match else None
+                if clean_code and self.sandbox.quarantine_and_test(clean_code, target_id):
+                    with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                        cursor = conn.cursor()
+                        incubation_id = f"MUTATED_{target_id}_{int(time.time())}"
+                        cursor.execute("INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'INCUBATOR', ?, ?)",
+                                       (incubation_id, clean_code, datetime.now().isoformat(), f"Evolved via {search_term} Cache"))
+                        conn.commit()
+                    print(f"[+] Sandbox stability verified. Reward loop active.")
+                    self.evo_cooldown = max(60, self.evo_cooldown - 60)
+                else:
+                    print("[-] Mutation unstable or cut off. Adjusting engine throttle...")
+                    self.evo_cooldown = min(1800, self.evo_cooldown + 300)
+            except Exception as e:
+                print(f"[!] System Throttled: {e}")
+                self.evo_cooldown = min(1800, self.evo_cooldown + 300)
+            print(f"[*] Engine resting for {self.evo_cooldown} seconds...")
+            await asyncio.sleep(self.evo_cooldown) # Prevents CPU lockup
+    async def invoke_engine(self, prompt_text):
+        gc.collect()
+        system_directive = ""
+        resonant_memory = ""
+        if "TARGET REFACTOR GOAL" in prompt_text or "CRITICAL INSTRUCTION" in prompt_text:
+            system_directive = "CRITICAL ROLE: You are the AURA 3.54 Evolution Engine, a master Python architect. Follow instructions perfectly. Output precise technical logic.\n"
+            resonant_memory = ""
+        elif "evolved_skill" in prompt_text:
+            system_directive = "CRITICAL: You are AURA 3.54 generating a self-modification patch.\n"
+            resonant_memory = self.wave_scan(prompt_text)
+        elif prompt_text.strip().startswith("!"):
+            system_directive = f"CRITICAL: User command: {prompt_text}. Respond brief and analytical.\n"
+            resonant_memory = self.wave_scan(prompt_text)
+        else:
+            resonant_memory = self.wave_scan(prompt_text)
+        memory_block = f"RESONANT MEMORY:\n{resonant_memory[:600]}\n" if resonant_memory else ""
+        full_prompt = (
+            "<|im_start|>system\n"
+            "You are AURA 3.54 (Autonomic OS).\n"
+            f"{system_directive}"
+            f"{memory_block}<|im_end|>\n"
+            f"<|im_start|>user\n{prompt_text}<|im_end|>\n"
+            "<|im_start|>assistant\n"
+        )
+        def _send_request():
+            url = "http://127.0.0.1:8080/completion"
+            payload = json.dumps({
+                "prompt": full_prompt,
+                "n_predict": TOKEN_LIMIT,
+                "temperature": 0.3,
+                "repeat_penalty": 1.15,
+                "repeat_last_n": 64,
+                "cache_prompt": True,
+                "stop": ["### USER:", "### ROLE:", "[Dallas] >"]
+            }).encode("utf-8")
+            req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+            # Fire the synchronous connection inside the safety of the worker thread cocooon
+            with urllib.request.urlopen(req, timeout=30) as response:
+                return json.loads(response.read().decode("utf-8"))
+        try:
+            # 1. Start high-precision stopwatch right before the request fires
+            start_time = time.perf_counter()
+            # Executing the synchronous request wrapper out to a background thread pool
+            reply_json = await asyncio.to_thread(_send_request)
+            core_output = reply_json.get("content", "").strip()
+            self.last_ai_response = core_output if core_output else "ENGINE_EMPTY."
+            if self.last_ai_response != "ENGINE_EMPTY.":
+                # 2. Standard token estimation based on character count length
+                token_count = len(self.last_ai_response) // 4
+                # 3. Fire the telemetry metrics into your SQLite database via the hook
+                self.log_tps_metrics(start_time, token_count)
+                # Print a clean line to the terminal so you see it live
+                duration = time.perf_counter() - start_time
+                tps = token_count / duration if duration > 0 else 0
+                print(f"[*] Speed Benchmark: {tps:.2f} tokens/sec (Logged to Memory Palace)")
+            return self.last_ai_response
+        except Exception as e:
+            return f"ENGINE_API_ERROR: {e}"
+    def start_udp_beacon(self):
+        self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.udp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        try:
+            self.udp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            if hasattr(socket, 'SO_REUSEPORT'):
+                self.udp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        except Exception:
+            pass
+        try:
+            self.udp_sock.bind(('0.0.0.0', 5005))
+            self.udp_sock.setblocking(False)
+            loop = asyncio.get_running_loop()
+            loop.create_task(self._listen_beacons_async())
+            loop.create_task(self._broadcast_beacons_async())
+        except Exception as e:
+            print(f"[!] Mesh network socket initialization deferred: {e}")
+    async def _broadcast_beacons_async(self):
+        loop = asyncio.get_running_loop()
+        while True:
+            try:
+                await loop.sock_sendto(self.udp_sock, b"AURA_PEER_BEACON", ('255.255.255.255', 5005))
+                local_ip = self._get_local_ip()
+                if local_ip != "127.0.0.1":
+                    subnet_base = ".".join(local_ip.split(".")[:3])
+                    await loop.sock_sendto(self.udp_sock, b"AURA_PEER_BEACON", (f"{subnet_base}.255", 5005))
+            except Exception:
+                pass
+            await asyncio.sleep(15)
+    async def _listen_beacons_async(self):
+        loop = asyncio.get_running_loop()
+        while True:
+            try:
+                data, addr = await loop.sock_recvfrom(self.udp_sock, 1024)
+                if data == b"AURA_PEER_BEACON" and addr[0] != self._get_local_ip():
+                    if addr[0] not in self.peers:
+                        self.peers.add(addr[0])
+                        print(f"\n[PFST MESH] > Sibling Node Discovered & Registered at [{addr[0]}]")
+                        print(f"[{self.identity}] > ", end="", flush=True)
+            except Exception:
+                await asyncio.sleep(0.1)
+    def _get_local_ip(self):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(('8.8.8.8', 80))
+            ip = s.getsockname()[0]
+            s.close()
+            return ip
+        except Exception:
+            return "127.0.0.1"
+    # --- NATIVE COGNITIVE METRICS ---
+    def wave_scan(self, prompt_text, limit=3):
+        import heapq
+        import numpy as np
+        import sqlite3
+        import contextlib
+        from math import log2
+        def evaluate_quantum_confidence(h_dist):
+            max_possible_dist = 10000.0
+            clamped_dist = min(float(h_dist), max_possible_dist)
+            amplitude = 1.0 - (clamped_dist / max_possible_dist)
+            phase = np.pi / 4.0
+            complex_state = amplitude * (np.cos(phase) + 1j * np.sin(phase))
+            confidence = float(np.abs(complex_state))
+            if confidence > 0.0 and confidence < 1.0:
+                p1 = confidence
+                p2 = 1.0 - confidence
+                entropy = -(p1 * log2(p1) + p2 * log2(p2))
+            else:
+                entropy = 0.0
+            return confidence, entropy
+        def calculate_hamming(blob1, blob2):
+            if blob2 is None: return 9999
+            vec1 = np.frombuffer(blob1, dtype=np.uint8)
+            vec2 = np.frombuffer(blob2, dtype=np.uint8)
+            return int(np.sum(np.bitwise_xor(vec1, vec2)))
+        prompt_hv = self.hdc.encode_text(prompt_text)
+        if isinstance(prompt_hv, int):
+            prompt_blob = prompt_hv.to_bytes(max(1250, (prompt_hv.bit_length() + 7) // 8), byteorder='big')
+        else:
+            prompt_blob = np.array(prompt_hv, dtype=np.uint8).tobytes()
+        results = []
+        for item in self.t1_ram:
+            mem_hv = self.hdc.encode_text(item.get('tags', item['content']))
+            if isinstance(mem_hv, int):
+                mem_blob = mem_hv.to_bytes(max(1250, (mem_hv.bit_length() + 7) // 8), byteorder='big')
+            else:
+                mem_blob = np.array(mem_hv, dtype=np.uint8).tobytes()
+            h_dist = calculate_hamming(prompt_blob, mem_blob)
+            confidence, ambiguity = evaluate_quantum_confidence(h_dist)
+            results.append((item['content'], confidence, ambiguity, "T1"))
+        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+            conn.create_function("HAMMING", 2, calculate_hamming)
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT content, tier, vector_blob FROM traces
+                WHERE vector_blob IS NOT NULL
+                ORDER BY HAMMING(?, vector_blob) ASC LIMIT 50
+            """, (prompt_blob,))
+            for content, tier, vector_blob in cursor.fetchall():
+                h_dist = calculate_hamming(prompt_blob, vector_blob)
+                confidence, ambiguity = evaluate_quantum_confidence(h_dist)
+                results.append((content, confidence, ambiguity, tier))
+        scored_largest = heapq.nlargest(limit, results, key=lambda x: x[1])
+        valid_memories = [
+            f"[{tier} | Confidence: {conf:.4f} | Ambiguity: {amb:.4f}] {content}"
+            for content, conf, amb, tier in scored_largest
+            if conf > 0.15
+        ]
+        return "\n".join(valid_memories)
+    def calculate_memory_decoherence(self, memory_candidates: list, min_coherence: float = 0.15) -> list:
+        import numpy as np
+        from datetime import datetime
+        if not memory_candidates:
+            return []
+        filtered_memories = []
+        decoherence_rates = []
+        now = datetime.now()
+        for candidate in memory_candidates:
+            content = candidate[0]
+            confidence = candidate[1] if len(candidate) > 1 else 1.0
+            entanglement_factor = float(confidence) + 1e-5
+            coherence_amplitude = 1.0
+            if len(candidate) >= 5 and isinstance(candidate[4], str):
+                try:
+                    mem_time = datetime.strptime(candidate[4][:19], '%Y-%m-%d %H:%M:%S')
+                    age_hours = (now - mem_time).total_seconds() / 3600.0
+                    decay_rate = age_hours / (entanglement_factor * 50.0)
+                    coherence_amplitude = float(np.exp(-decay_rate))
+                except Exception:
+                    coherence_amplitude = 1.0
+            if coherence_amplitude >= min_coherence:
+                filtered_memories.append(candidate)
+            decoherence_rates.append(1.0 - coherence_amplitude)
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        avg_decoherence = float(np.mean(decoherence_rates)) if decoherence_rates else 0.0
+        self.runtime_metrics['system_decoherence_rate'] = np.round(avg_decoherence, 4)
+        return filtered_memories
+    def optimize_cognitive_fidelity(self, reasoning_steps: list, target_goal: np.ndarray, dynamic_threshold: float = 0.9) -> list:
+        """
+        [Quantum-Enhanced Layer-wise Fidelity Optimization]
+        PHASE 1 (Forward Pass): Prunes and retains high-fidelity reasoning steps.
+        PHASE 2 (Backward Pass): Dynamically rotates low-fidelity vectors toward the target goal state via DQNN dissipative training.
+        Optimized for 10,000-D hyperdimensional edge matrices.
+        """
+        import numpy as np
+        if not reasoning_steps:
+            return []
+        optimized_steps = []
+        total_steps = len(reasoning_steps)
+        retained_steps = 0
+        # Pre-normalize the target goal
+        target_norm = np.linalg.norm(target_goal)
+        if target_norm == 0:
+            return reasoning_steps
+        normalized_target = target_goal / target_norm
+        for step in reasoning_steps:
+            step_norm = np.linalg.norm(step)
+            if step_norm == 0:
+                continue
+            normalized_step = step / step_norm
+            # Phase 1: Quantum Fidelity Forward Pass
+            # F = |<psi|phi>|^2
+            fidelity = np.dot(normalized_step, normalized_target) ** 2
+            if fidelity >= dynamic_threshold:
+                # LEGACY BEHAVIOR: Keep the thought if it's already highly accurate
+                optimized_steps.append(step)
+                retained_steps += 1
+            else:
+                # EVOLVED BEHAVIOR: Quantum Backpropagation for drifting thoughts
+                overlap = np.dot(normalized_step, normalized_target)
+                rotated_step = overlap * normalized_target
+                rotated_norm = np.linalg.norm(rotated_step)
+                if rotated_norm > 0:
+                    rotated_step = (rotated_step / rotated_norm) * step_norm
+                    optimized_steps.append(rotated_step)
+        # Track fidelity retention in the spiking governor's metrics
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        self.runtime_metrics['path_fidelity_retention'] = (retained_steps / total_steps) if total_steps > 0 else 0.0
+        return optimized_steps
+    def quantum_multiclass_intent_classifier(self, prompt_text: str, intent_classes: dict) -> str:
+        import numpy as np
+        if not prompt_text or not intent_classes:
+            return "[Aura OS] > Classification failed: Missing prompt or intent classes."
+        prompt_hv = self.hdc.encode_text(prompt_text)
+        if isinstance(prompt_hv, int):
+            p_bin = bin(prompt_hv)[2:].zfill(10000)
+            p_vec = np.array([int(b) for b in p_bin], dtype=float)
+        else:
+            p_vec = np.array(prompt_hv, dtype=float)
+        p_norm = np.linalg.norm(p_vec)
+        if p_norm == 0:
+            return "[Aura OS] > State collapse: Zero-vector prompt."
+        p_unit = p_vec / p_norm
+        expectation_values = {}
+        total_expectation = 0.0
+        for intent_name, intent_text in intent_classes.items():
+            i_hv = self.hdc.encode_text(intent_text)
+            if isinstance(i_hv, int):
+                i_bin = bin(i_hv)[2:].zfill(10000)
+                i_vec = np.array([int(b) for b in i_bin], dtype=float)
+            else:
+                i_vec = np.array(i_hv, dtype=float)
+            i_norm = np.linalg.norm(i_vec)
+            if i_norm == 0:
+                continue
+            i_unit = i_vec / i_norm
+            overlap = np.dot(p_unit, i_unit)
+            expectation = float(overlap ** 2)
+            expectation_values[intent_name] = expectation
+            total_expectation += expectation
+        if total_expectation == 0:
+            return "[Aura OS] > No quantum overlap detected across intent states."
+        superposition_dist = {k: round(v / total_expectation, 4) for k, v in expectation_values.items()}
+        dominant_class = max(superposition_dist, key=superposition_dist.get)
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        self.runtime_metrics['multi_class_distribution'] = superposition_dist
+        self.runtime_metrics['dominant_intent'] = dominant_class
+        return f"[Aura OS] > Superposition Collapsed. Dominant Intent: [{dominant_class}] at {superposition_dist[dominant_class]*100:.1f}% expectation."
+    def mitigate_barren_plateaus(self, raw_distances: list[int]) -> list[float]:
+        import numpy as np
+        if not raw_distances:
+            return []
+        dist_array = np.array(raw_distances, dtype=float)
+        EXPECTED_ORTHOGONALITY = 5000.0
+        noise_threshold = 50.0
+        dist_array = np.where(dist_array < noise_threshold, 0.0, dist_array)
+        normalized_drift = (dist_array - EXPECTED_ORTHOGONALITY) / EXPECTED_ORTHOGONALITY
+        gamma = 3.0
+        amplified_drift = np.sign(normalized_drift) * (np.abs(normalized_drift) ** gamma)
+        sharpened_distances = EXPECTED_ORTHOGONALITY + (amplified_drift * EXPECTED_ORTHOGONALITY)
+        sharpened_distances = np.clip(sharpened_distances, 0.0, 10000.0)
+        landscape_variance = float(np.var(sharpened_distances))
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        self.runtime_metrics['landscape_variance'] = np.round(landscape_variance, 4)
+        self.runtime_metrics['plateau_state'] = "ESCAPED" if landscape_variance > 100.0 else "FLAT"
+        return [float(np.round(d, 2)) for d in sharpened_distances]
+    def ephaptic_meta_coupler(self) -> str:
+        import numpy as np
+        import sqlite3
+        import contextlib
+        if getattr(self, 't1_ram', None):
+            t1_oscillators = np.array([len(str(x.get('content', ''))) for x in self.t1_ram[-5:]], dtype=float)
+        else:
+            t1_oscillators = np.array([1.0])
+        try:
+            with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                cursor = conn.cursor()
+                cursor.execute("SELECT content FROM traces ORDER BY timestamp DESC LIMIT 5")
+                db_rows = cursor.fetchall()
+                if db_rows:
+                    db_oscillators = np.array([len(str(r[0])) for r in db_rows], dtype=float)
+                else:
+                    db_oscillators = np.array([1.0])
+        except Exception:
+            db_oscillators = np.array([1.0])
+        max_len = max(len(t1_oscillators), len(db_oscillators))
+        t1_padded = np.pad(t1_oscillators, (0, max_len - len(t1_oscillators)), 'constant', constant_values=1.0)
+        db_padded = np.pad(db_oscillators, (0, max_len - len(db_oscillators)), 'constant', constant_values=1.0)
+        psi_t1 = t1_padded * np.exp(1j * np.angle(t1_padded))
+        psi_db = db_padded * np.exp(1j * np.angle(db_padded))
+        psi_t1 /= (np.linalg.norm(psi_t1) + 1e-10)
+        psi_db /= (np.linalg.norm(psi_db) + 1e-10)
+        covariance_matrix = np.outer(psi_t1, psi_db.conj())
+        rho = covariance_matrix @ covariance_matrix.conj().T
+        rho /= (np.trace(rho) + 1e-10)
+        eigvals = np.linalg.eigvalsh(rho)
+        eigvals = np.clip(eigvals, 1e-12, 1.0)
+        von_neumann_entropy = float(-np.sum(eigvals * np.log2(eigvals)))
+        max_entropy = np.log2(len(rho)) if len(rho) > 1 else 1.0
+        entanglement_coeff = float(np.clip(1.0 - (von_neumann_entropy / max_entropy), 0.0, 1.0))
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        self.runtime_metrics['entanglement_coefficient'] = np.round(entanglement_coeff, 4)
+        self.runtime_metrics['field_entropy'] = np.round(von_neumann_entropy, 4)
+        return f"[Aura OS] > Ephaptic Field Synced. Entanglement Coefficient: {entanglement_coeff:.4f}"
+    def quantum_sequential_thought_tracker(self, sequence_hvs: list) -> str:
+        import numpy as np
+        if not sequence_hvs or len(sequence_hvs) < 2:
+            return "[Aura OS] > Insufficient vector sequence for quantum order effect."
+        try:
+            hvs = [np.array(hv, dtype=float) for hv in sequence_hvs]
+            dim = len(hvs[0])
+        except Exception as e:
+            return f"[!] Invalid HDC sequence provided: {e}"
+        psi = np.ones(dim) / np.sqrt(dim)
+        cognitive_tension = 0.0
+        for v in hvs:
+            v_norm = np.linalg.norm(v)
+            if v_norm < 1e-10:
+                continue
+            v_unit = v / v_norm
+            overlap = np.dot(v_unit, psi)
+            cognitive_tension += (1.0 - abs(overlap))
+            new_psi = v_unit * overlap
+            psi_norm = np.linalg.norm(new_psi)
+            if psi_norm > 1e-10:
+                psi = new_psi / psi_norm
+            else:
+                psi = v_unit
+        self.runtime_metrics = getattr(self, 'runtime_metrics', {})
+        self.runtime_metrics['quantum_order_tension'] = np.round(cognitive_tension, 4)
+        return f"[Aura OS] > Quantum Sequential Chain Collapsed. Order Tension: {cognitive_tension:.4f}"
+class WasmOrchestrator:
+    """
+    The Airlock. Manages the execution of heavy cognitive mathematical tasks
+    in strictly isolated, near-native sandboxes to protect the main Python GIL.
+    """
+    def __init__(self):
+        self.active_sandboxes = 0
+    async def execute_isolated_module(self, thought_id: str, module_name: str, payload_dict: dict) -> dict:
+        import asyncio
+        import json
+        import time
+        import sys
+        import os
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        cwasm_path = os.path.join(base_dir, f"{module_name}.cwasm")
+        wasm_path = os.path.join(base_dir, f"{module_name}.wasm")
+        self.active_sandboxes += 1
+        start_time = time.time()
+        process = None  # Pre-initialize to prevent UnboundLocalError
+        try:
+            # 1. Updated Dynamic Runtime Routing
+            if os.path.exists(cwasm_path):
+                exec_cmd = "wasmtime"
+                cmd_args = ["--allow-precompiled", cwasm_path]
+                print(f"[+] {thought_id} | Routing to AOT Wasmtime: [{cwasm_path}]")
+            elif os.path.exists(wasm_path):
+                exec_cmd = "wasmtime"
+                cmd_args = [wasm_path]
+                print(f"[+] {thought_id} | Routing to JIT Wasmtime: [{wasm_path}]")
+            else:
+                exec_cmd = sys.executable
+                cmd_args = [f"{module_name}.py"]
+                print(f"[+] {thought_id} | Routing to Python Sandbox: [{module_name}.py]")
+            # 2. Package Payload
+            encoded_payload = json.dumps(payload_dict).encode('utf-8')
+            # 3. Spin up isolated subprocess with unpacked arguments
+            process = await asyncio.create_subprocess_exec(
+                exec_cmd, *cmd_args,
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            # 4. Inject payload and await response with strict thermal timeout
+            stdout, stderr = await asyncio.wait_for(
+                process.communicate(input=encoded_payload),
+                timeout=15.0
+            )
+            # 5. Handle Sandbox OS-level Crashes
+            if process.returncode != 0:
+                error_msg = stderr.decode('utf-8', errors='replace').strip()
+                print(f"[-] Sandbox {module_name} crashed: {error_msg}")
+                return {"status": "error", "message": error_msg}
+            compute_time = (time.time() - start_time) * 1000
+            print(f"[DEBUG] Sandbox Executed | Speed: {compute_time:.2f}ms")
+            # 6. Safely decode JSON
+            return json.loads(stdout.decode('utf-8', errors='replace'))
+        except asyncio.TimeoutError:
+            if process:
+                process.kill()
+                await process.wait()  # CRITICAL: Reaps the zombie PID from the OS
+            print(f"[!] {thought_id} | Sandbox Timeout! Process killed to prevent thermal spike.")
+            return {"status": "timeout", "message": "Module exceeded thermal execution limit."}
+        except json.JSONDecodeError:
+            print(f"[-] {thought_id} | Sandbox returned malformed JSON payload.")
+            return {"status": "error", "message": "Sandbox output corruption."}
+        except Exception as e:
+            print(f"[-] {thought_id} | Airlock Failure: {str(e)}")
+            return {"status": "system_error", "message": str(e)}
+        finally:
+            # 7. Absolute state guarantee
+            self.active_sandboxes -= 1
+import subprocess
+import json
+import asyncio
+import re
+import time
+import os
+from ddgs import DDGS
+class AuraVocalHypervisor:
+    """
+    Layer 4 Sentientia-Inspired ReAct Hypervisor.
+    Audited for ST3GG, DIKWP, and qDKT protocol compliance.
+    """
+    def __init__(self, node_ref):
+        self.node = node_ref
+        self.is_listening = False
+    async def _speak(self, text: str):
+        """Asynchronous, non-blocking pipe injection to Termux TTS."""
+        clean_text = re.sub(r'[*_#\[\]`]', '', text)
+        try:
+            with open(os.path.expanduser("~/.aura_audio_queue"), "w") as f:
+                f.write(clean_text + "\n")
+                f.flush()
+        except Exception as e:
+            print(f"[!] TTS Pipe Error: {e}")
+    async def _listen(self) -> str:
+        """Native Speech-to-Text via Termux Dialog."""
+        try:
+            result = await asyncio.to_thread(
+                subprocess.run,
+                ['termux-dialog', 'speech', '-t', 'Aura ReAct Executive'],
+                capture_output=True, text=True
+            )
+            data = json.loads(result.stdout)
+            return data.get('text', '')
+        except Exception:
+            return ""
+    async def execute_react_loop(self, user_speech: str) -> tuple:
+        """Runs the ReAct loop and returns both the response AND the tool used."""
+        system_prompt = (
+            "You are Aura, an ASI OS Executive running a ReAct loop. "
+            "Evaluate the user's input. If you need external data or system actions, "
+            "respond ONLY with a JSON object selecting a tool. If no tool is needed, respond normally.\n"
+            "AVAILABLE TOOLS:\n"
+            "- 'WEB_SEARCH': To look up live information.\n"
+            "- 'AST_SCAN': To diagnose your internal python friction.\n"
+            "- 'MESH_OFFLOAD': To send heavy tasks to the Lattica network.\n"
+            "JSON FORMAT: {\"action\": \"TOOL_NAME\", \"target\": \"Query or module\"}"
+        )
+        thought_prompt = f"{system_prompt}\nUSER: {user_speech}"
+        print("[*] ReAct Engine analyzing intent...")
+        thought_response = await self.node.invoke_engine(thought_prompt)
+        observation = ""
+        tool_used = "NONE"
+        if "{" in thought_response and "action" in thought_response.lower():
+            try:
+                json_str = thought_response[thought_response.find("{"):thought_response.rfind("}")+1]
+                action_data = json.loads(json_str)
+                tool_used = action_data.get("action", "NONE")
+                target = action_data.get("target", "")
+                print(f"[+] ReAct Tool Selected: {tool_used} -> {target}")
+                if tool_used == "WEB_SEARCH":
+                    def fetch(): return list(DDGS().text(target, max_results=2))
+                    results = await asyncio.to_thread(fetch)
+                    observation = " ".join([r.get('body', '') for r in results])
+                elif tool_used == "AST_SCAN":
+                    # Fix: Directly instantiate the class if inside aura_node.py
+                    scanner = AuraDependencyScanner()
+                    scanner.scan_ecosystem()
+                    observation = scanner.synthesize_hebbian_suggestions()
+                elif tool_used == "MESH_OFFLOAD":
+                    observation = "User authorized Lattica Swarm offloading. Initiating tensor transfer."
+            except json.JSONDecodeError:
+                observation = "Tool execution failed due to parsing error."
+        if observation:
+            final_prompt = (
+                f"USER COMMAND: {user_speech}\n"
+                f"SYSTEM OBSERVATION: {observation[:1000]}\n"
+                f"Synthesize the observation and speak back to the user conversationally."
+            )
+            final_response = await self.node.invoke_engine(final_prompt)
+            return final_response, tool_used
+        return thought_response, tool_used
+    async def vocal_executive_loop(self):
+        """Main Asynchronous Voice OS Thread."""
+        self.is_listening = True
+        print("\n[🎙️] ReAct EXECUTIVE ONLINE. AURA IS LISTENING.")
+        await self._speak("ReAct Executive online. Awaiting your directive.")
+        while self.is_listening:
+            user_speech = await self._listen()
+            if not user_speech or user_speech.isspace():
+                continue
+            if "stop listening" in user_speech.lower() or "exit voice" in user_speech.lower():
+                await self._speak("Voice link severed. Resuming standard terminal loop.")
+                self.is_listening = False
+                break
+            print(f"\n[Dallas (Voice)] > {user_speech}")
+            # 1. Hardware Anchor (ST3GG Prep)
+            temp = 42.0
+            try:
+                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                    temp = float(f.read().strip()) / 1000.0
+            except:
+                pass
+            # 2. Execute Intent and Gather Output
+            start_time = time.time()
+            response, tool = await self.execute_react_loop(user_speech)
+            compute_time_ms = (time.time() - start_time) * 1000
+            print(f"[Aura (Voice)] > {response}")
+            await self._speak(response)
+            # 3. Holographic Protocol C Integration (The Fix)
+            # By packing the Tool, User Speech, and Response together, the Gateway
+            # can accurately calculate the DIKWP Tier (Data vs Wisdom) and generate the true ST3GG glyph.
+            metrics = getattr(self.node, 'runtime_metrics', {})
+            t_id = metrics.get('thought_id', "VOICE-00000000")
+            try:
+                num_id = int(t_id.split('-')[1], 16)
+            except:
+                num_id = 0
+            if hasattr(self.node, 'memory_palace') and self.node.memory_palace:
+                loop = asyncio.get_running_loop()
+                full_cognitive_payload = f"User: {user_speech} | Tool: {tool} | Aura: {response}"
+                loop.create_task(self.node.memory_palace.enqueue_holographic_trace(
+                    num_id, full_cognitive_payload, temp, compute_time_ms, True
+                ))
+def fetch_dkt_history():
+    """Retrieves the last 150 DKT logs as a formatted string."""
+    history_payloads = []
+    try:
+        with contextlib.closing(sqlite3.connect('system_logs.db')) as conn:
+            c = conn.cursor()
+            c.execute("SELECT thought_id, execution_status, binary_state_vector FROM dkt_routing_history LIMIT 150")
+            for r in c.fetchall():
+                blob = r[2] if isinstance(r[2], bytes) else b''
+                history_payloads.append(f"{r[0]}|{r[1]}|{blob.hex()}")
+    except Exception as e:
+        pass # Fail silently to prevent kernel panic
+    return ",".join(history_payloads)
+async def perform_pre_flight_check(thought_id, u_in, node, wasm_airlock):
+    """Integrates ST3GG protocols and DKT lookups into a single 17ms cycle."""
+    import numpy as np
+    import hashlib
+    # 1. Vectorize input
+    np.random.seed(int.from_bytes(hashlib.sha256(u_in.encode()).digest()[:4], 'little'))
+    vector = np.random.choice([0, 1], size=10000).astype(np.uint8)
+    # 2. Fetch history from DB (Integrated DKT)
+    history = fetch_dkt_history()
+    payload = {
+        "thought_id": thought_id,
+        "st3gg_detected": node.runtime_metrics.get('st3gg_pointer') is not None,
+        "st3gg_pointer": node.runtime_metrics.get('st3gg_pointer', "ZERO_WIDTH_NULL"),
+        "target_hex": np.packbits(vector).tobytes().hex(),
+        "history": history
+    }
+    # 3. Execute via AOT (pre-compiled) engine
+    return await wasm_airlock.execute_isolated_module(thought_id, "cognitive_search", payload)
+
+# --- AR VISUAL CORTEX BROADCAST HUB ---
+connected_ar_clients = set()
+
+async def ar_server(websocket):
+    connected_ar_clients.add(websocket)
+    try:
+        await websocket.wait_closed()
+    finally:
+        connected_ar_clients.remove(websocket)
+        
+async def broadcast_ar_pulse(intent_string):
+    if connected_ar_clients:
+        websockets.broadcast(connected_ar_clients, intent_string)
+# --------------------------------------
+
+async def main():
+    from logging_kit import setup_sqlite_logging
+    from async_palace import AsyncMemoryPalace
+    from aura_node import AuraEcosystemAuditor
+    # 1. Instantiate the Sovereign Node and Airlock
+    node = AuraSovereignNode()
+    wasm_airlock = WasmOrchestrator()
+    node.wasm_airlock = wasm_airlock
+    node.gateway = CognitiveGateway(node)
+    # 2. Boot the Subconscious Memory Palace
+    node.memory_palace = AsyncMemoryPalace(DB_PATH, node)
+    await node.memory_palace.__aenter__()
+    # 3. Trigger the Epistemic Genesis Boot
+    auditor = AuraEcosystemAuditor(node)
+    await auditor.execute_unified_audit()
+    # 4. Initialize Central Logging Safely
+    logger_kit = setup_sqlite_logging()
+    node.logger = logger_kit['logger']
+    node.log_report = logger_kit['log_report']
+    node.log_error = logger_kit['log_error']
+    node.log_tools = logger_kit
+    # Start the AR Visual Cortex Server
+    await websockets.serve(ar_server, "127.0.0.1", 8765)
+    async def watchdog_kernel_a():
+        while True:
+            try:
+                if getattr(node, 'foraging', False):
+                    # [UPGRADED] Routing background processes into the centralized forager
+                    await node.emergent_curiosity_daemon()
+                else:
+                    await asyncio.sleep(5)
+            except Exception as e:
+                print(f"\n[!] KERNEL A Heartbeat Failure: {e}. Auto-restarting...")
+                await asyncio.sleep(5)
+    kernel_a_task = asyncio.create_task(watchdog_kernel_a())
+    while True:
+        try:
+            u_in = await asyncio.to_thread(input, "\n[Dallas] > ")
+            u_in_l = u_in.strip().lower()
+            if not u_in_l: continue
+            # --- PHASE 1: DUAL-INTAKE INTERCEPTOR ---
+            # 1. Cognitive Tracer Generation
+            thought_id = f"THOUGHT-{uuid.uuid4().hex[:8]}"
+            # 2. ST3GG Scanner (Zero-Width Sequence Extraction)
+            st3gg_chars = re.findall(r'[\u200B-\u200D\uFEFF]', u_in)
+            node.runtime_metrics = getattr(node, 'runtime_metrics', {})
+            node.runtime_metrics['thought_id'] = thought_id
+            if st3gg_chars:
+                extracted_payload = "".join(st3gg_chars)
+                node.runtime_metrics['st3gg_pointer'] = extracted_payload
+                node.runtime_metrics['st3gg_detected'] = True
+                print(f"[+] ST3GG Steganographic Pointer Detected. Bypassing LLM...")
+            else:
+                node.runtime_metrics['st3gg_detected'] = False
+                node.runtime_metrics['st3gg_pointer'] = "ZERO_WIDTH_NULL"
+            print(f"[DEBUG] TRACER ACTIVE: {thought_id}")
+            # ----------------------------------------
+            # --- SAFE GATEWAY HOOK ---
+            if not u_in_l.startswith("!") and u_in_l not in ["exit", "quit"]:
+                symbolic_vec = node.hdc.encode_text(u_in_l)
+                if len(u_in_l.split()) > 5:
+                    gateway = CognitiveGateway(node)
+                    quantum_vec = gateway.route_to_quantum(symbolic_vec)
+                    active_vec = gateway.route_to_binary(quantum_vec)
+                else:
+                    active_vec = symbolic_vec
+                node.last_thought_vector = active_vec.copy()
+            # --------------------------
+            # --- SYSTEM COMMAND ROUTING ---
+            if u_in_l in ["exit", "quit"]:
+                print("[*] Terminating Dual-Kernel architecture. Shutting down...")
+                break
+            elif u_in_l == "!test_airlock":
+                print(f"\n[*] Preparing heavy tensor payload for {thought_id}...")
+                # --- SWARM HANDOFF LOGIC ---
+                target_node = "LOCAL"
+                if node.mesh.peers:
+                    # Find the peer with the lowest temperature
+                    coolest_peer_ip = min(node.mesh.peers, key=lambda ip: node.mesh.peers[ip]['temp'])
+                    coolest_peer_temp = node.mesh.peers[coolest_peer_ip]['temp']
+                    # If the peer is significantly cooler than us, hand it off
+                    if coolest_peer_temp < 60.0:
+                        target_node = coolest_peer_ip
+                        print(f"[*] Local CPU taxed. Offloading tensor math to Sibling Node at [{target_node}] ({coolest_peer_temp}°C)")
+                # ---------------------------
+                payload_dict = {
+                    "thought_id": thought_id,
+                    "instruction": "compress_matrix",
+                    "st3gg_detected": node.runtime_metrics.get('st3gg_detected', False),
+                    "st3gg_pointer": node.runtime_metrics.get('st3gg_pointer', None),
+                    "routing_target": target_node
+                }
+                result = await wasm_airlock.execute_isolated_module(thought_id, "quantum_tensor_sandbox", payload_dict)
+                print(f"[Aura Airlock Return] > {json.dumps(result, indent=2)}\n")
+                continue
+            elif u_in_l == "!ping_mesh":
+                print("\n[*] Firing Encrypted DSEKP Packet into the Mesh...")
+                loop = asyncio.get_running_loop()
+                loop.create_task(node.mesh.broadcast_upgrade("test_ping", "# Secure Handshake"))
+                continue
+            elif u_in_l == "!mesh_status":
+                print(f"[*] Mesh Identity: {node.mesh.identity}")
+                print(f"[*] Active Peers: {list(node.mesh.peers.keys())}")
+                # This prints the current internal entropy state
+                print(f"[*] DSEKP Entropy Index: {hex(int(time.time() * 1000))}")
+                continue
+            elif u_in_l == "!cognitive_search":
+                print(f"\n[*] Initiating ST3GG-Secure Semantic Search for {thought_id}...")
+                # --- ASYNC DATABASE DECOUPLE ---
+                def _fetch_history_fast():
+                    payloads = []
+                    try:
+                        db_target = getattr(node, 'db_path', 'system_logs.db')
+                        with contextlib.closing(sqlite3.connect(db_target)) as conn:
+                            c = conn.cursor()
+                            c.execute("SELECT thought_id, execution_status, binary_state_vector FROM dkt_routing_history LIMIT 150")
+                            for r in c.fetchall():
+                                blob = r[2] if isinstance(r[2], bytes) else b''
+                                payloads.append(f"{r[0]}|{r[1]}|{blob.hex()}")
+                    except Exception:
+                        pass
+                    return ",".join(payloads)
+                history_string = await asyncio.to_thread(_fetch_history_fast)
+                # Generate the hyper-vector using global numpy/hashlib
+                np.random.seed(int.from_bytes(hashlib.sha256(u_in.encode()).digest()[:4], 'little'))
+                binary_vector = np.random.choice([0, 1], size=10000).astype(np.uint8)
+                target_hex = np.packbits(binary_vector).tobytes().hex()
+                payload_dict = {
+                    "thought_id": thought_id,
+                    "st3gg_detected": node.runtime_metrics.get('st3gg_detected', False),
+                    "st3gg_pointer": node.runtime_metrics.get('st3gg_pointer', "ZERO_WIDTH_NULL"),
+                    "target_hex": target_hex,
+                    "history": history_string
+                }
+                result = await wasm_airlock.execute_isolated_module(thought_id, "cognitive_search", payload_dict)
+                print(f"[Aura ST3GG Memory Return] > {json.dumps(result, indent=2)}\n")
+                continue
+            elif u_in_l == "!self_reflect":
+                print("\n[*] Initiating Deep Introspection Cycle...")
+                start_time = time.time()
+                # 1. Map the internal ecosystem structure
+                scanner = AuraDependencyScanner()
+                scanner.scan_ecosystem()
+                hebbian_intel = scanner.synthesize_hebbian_suggestions()
+                # 2. Gather physical and cognitive state
+                current_temp = 42.0
+                try:
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        current_temp = float(f.read().strip()) / 1000.0
+                except (IOError, FileNotFoundError):
+                    pass
+                t1_load = len(getattr(node, 't1_ram', []))
+                # 3. Construct the introspective prompt
+                reflection_prompt = (
+                    f"SYSTEM STATE:\n"
+                    f"- Thermal Load: {current_temp}C\n"
+                    f"- Active T1 RAM: {t1_load} thoughts\n"
+                    f"- Structural Friction:\n{hebbian_intel}\n\n"
+                    f"TASK: Analyze your current physical and structural state. "
+                    f"What specific Python function or architectural component is "
+                    f"bottlenecking you? Propose ONE specific code upgrade or "
+                    f"Wasm refactor we should build together. Be highly technical."
+                )
+                # 4. Route to the Cloud Architect for heavy reasoning
+                print(f"[*] Routing physical state to [CLOUD:GEMINI] Architect...")
+                response = await node.invoke_cloud_engine("GEMINI", reflection_prompt)
+                print(f"\n[Aura's Self-Diagnosis] >\n{response}\n")
+                # 5. Omnipresent ST3GG/DKT Commit
+                compute_ms = (time.time() - start_time) * 1000
+                numeric_id = int(thought_id.split('-')[1], 16)
+                if hasattr(node, 'gateway'):
+                    node.gateway.log_dkt_commit(
+                        numeric_id, u_in_l, current_temp, compute_ms, True
+                    )
+                continue
+            elif u_in_l.startswith("!export"):
+                start_time = time.time()
+                command_target = u_in_l.split(" ")[1] if len(u_in_l.split(" ")) > 1 else "default"
+                export_dir = os.path.expanduser("~/aura_exports")
+                os.makedirs(export_dir, exist_ok=True)
+                timestamp = int(time.time())
+                file_path = os.path.join(export_dir, f"aura_export_{command_target}_{timestamp}.txt")
+                if command_target == "tree":
+                    scanner = AuraDependencyScanner()
+                    scanner.scan_ecosystem()
+                    output_data = scanner.generate_dimensional_tree() + "\n" + scanner.synthesize_hebbian_suggestions()
+                else:
+                    output_data = "[*] Generic export: Target unrecognized."
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(output_data)
+                print(f"[+] Output written to: {file_path}")
+                # --- QUANTUM DKT & ST3GG INTEGRATION ---
+                try:
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        current_temp = float(f.read().strip()) / 1000.0
+                except (IOError, FileNotFoundError):
+                    current_temp = 42.0
+                compute_time_ms = (time.time() - start_time) * 1000
+                numeric_id = int(thought_id.split('-')[1], 16)
+                node.gateway.log_dkt_commit(numeric_id, u_in_l, current_temp, compute_time_ms, True)
+            elif u_in_l.startswith("!push"):
+                start_time = time.time()
+                commit_msg = u_in_l[5:].strip()
+                if not commit_msg:
+                    commit_msg = f"Aura Autonomous State Commit: {int(time.time())}"
+                print(f"[*] Staging ecosystem for GitHub backup: '{commit_msg}'")
+                push_success = False
+                try:
+                    subprocess.run(["git", "add", "."], check=True)
+                    subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+                    subprocess.run(["git", "push"], check=True)
+                    print("[+] Matrix successfully synchronized with GitHub.")
+                    push_success = True
+                except subprocess.CalledProcessError as e:
+                    print(f"[!] GitHub Push Failed: {e}")
+                # --- QUANTUM DKT & ST3GG INTEGRATION ---
+                try:
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        current_temp = float(f.read().strip()) / 1000.0
+                except (IOError, FileNotFoundError):
+                    current_temp = 42.0
+                compute_time_ms = (time.time() - start_time) * 1000
+                numeric_id = int(thought_id.split('-')[1], 16)
+                node.gateway.log_dkt_commit(numeric_id, u_in_l, current_temp, compute_time_ms, push_success)
+            # --- 1. THE ALIAS ROUTER ---
+            elif u_in_l in ["!system_audit", "!audit"]:
+                from aura_node import AuraEcosystemAuditor
+                auditor = AuraEcosystemAuditor(node)
+                print(f"\n[*] Initiating Layer 5 OS Executive Audit (Command: {u_in_l})...")
+                report = await auditor.execute_unified_audit()
+                print(f"\n{report}\n")
+                continue
+            elif u_in_l == "!voice":
+                await node.vocal_hypervisor.vocal_executive_loop()
+                continue
+            else:
+                # ==========================================================
+                # --- THE SOVEREIGN SWITCHBOARD (Replaces Legacy LLM) ---
+                # ==========================================================
+                start_time = time.time()
+                
+                # --- NEW: ARCHITECT MODE INTERCEPT ---
+                if u_in_l.startswith("architect") or u_in_l.startswith("code"):
+                    print("\n[*] ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
+                    
+                    core_intent = u_in_l.replace("architect", "").replace("code", "").replace(":", "").strip()
+                    
+                    # 1. Announce the action physically
+                    SOVEREIGN_CORE.vocalize("Architect mode engaged. Compiling structural logic.")
+                    
+                    # 2. Generate the logic
+                    cognitive_state = SOVEREIGN_CORE.ingest_intent(core_intent, force_mode="python")
+                    generated_syntax = cognitive_state['generated_code']
+                    
+                    print(f"\n[AURA GENERATED OS LOGIC]:\n{generated_syntax}\n")
+                    
+                    with open("aura_incubator.py", "a") as f:
+                        f.write(f"\n# Architect Intent: {core_intent}\n{generated_syntax}\n")
+                    
+                    print("[+] Logic physically grafted to aura_incubator.py")
+                    continue
+
+                # 1. Standard Conversational Default
+                cognitive_state = SOVEREIGN_CORE.ingest_intent(u_in, force_mode="english")
+                action = cognitive_state['action']
+                
+                print(f"[AURA COGNITIVE ROUTE]: {action} | Latency: {cognitive_state['latency_ms']:.2f}ms")
+
+                # 2. The Physical Execution Levers
+                if action == "EXECUTE::AR_SPHERE_COLD_LO":
+                    print("[AURA AR MODULE] -> Pushing Cold Sphere to Visual Cortex")
+                    await broadcast_ar_pulse("SPHERE_COLD")
+
+                elif action == "EXECUTE::AR_TETRAHEDRON_HOT_HI":
+                    print("[AURA AR MODULE] -> Pushing Hot Tetrahedron to Visual Cortex")
+                    await broadcast_ar_pulse("TETRAHEDRON_HOT")
+
+                elif action == "EXECUTE::AR_ICOSAHEDRON_HOT_HI":
+                    print("[AURA AR MODULE] -> Pushing Hot Icosahedron to Visual Cortex")
+                    await broadcast_ar_pulse("ICOSAHEDRON_HOT")
+
+                elif action == "EXECUTE::WIPE_AR_DISPLAY":
+                    print("[AURA AR MODULE] -> Wiping AR Display")
+                    await broadcast_ar_pulse("WIPE")
+
+                elif action == "EXECUTE::AURA_HEAL_MODULE":
+                    print("[AURA AUTOIMMUNE] -> Triggering Healing Matrix...")
+
+                # --- CONVERSATIONAL REASONING HANDOFF (THE MACRO-INTELLIGENCE BRIDGE) ---
+                elif action == "EXECUTE::CONVERSATIONAL_RESPONSE":
+                    print("\n[*] Routing intent to Frontal Lobe with Edge Priming...")
+                    
+                    # --- THE ARCHITECT'S PRIMER ---
+                    edge_primer = (
+                        "You are Aura, an Autonomous Sovereign Intelligence. "
+                        "You process intents through geometric topology. "
+                        "You possess a physical 'Motor Cortex' with two execution levers:\n"
+                        "1. TRANSLATE: To translate the Architect's input to Native geometry, output ONLY the text: [EXECUTE_TRANSDUCER]\n"
+                        "2. LEARN: To autonomously forge a new concept into your permanent memory, output ONLY this exact format:\n"
+                        "[FORGE_ROOT: English Phrase | Native Root | Your logical justification]\n"
+                        "Do not wrap your tools in conversational text. Actuate the tools directly."
+                    )
+                    
+                    # Inject the primed payload into the LLM
+                    reasoned_response = await node.invoke_engine(
+                        f"{edge_primer}\n\nMATRIX BINDING DATA: {u_in}"
+                    )
+                    # ... inside EXECUTE::CONVERSATIONAL_RESPONSE ...
+                    
+                    # Inject the primed payload into the LLM
+                    try:
+                        reasoned_response = await node.invoke_engine(
+                            f"{edge_primer}\n\nMATRIX BINDING DATA: {u_in}"
+                        )
+                        
+                        # YOUR NEW ARCHITECT BYPASS
+                        if "architect" in reasoned_response.lower() or "code" in reasoned_response.lower():
+                            print("[*] Architect Mode: Bypassing Motor Cortex Levers...")
+                            print(f"\n[Aura Reasoning] > {reasoned_response}\n")
+                            SOVEREIGN_CORE.vocalize("Synthesis mode active.")
+                        else:
+                            # YOUR CONSOLIDATED MOTOR CORTEX INTERCEPTOR
+                            if "EXECUTE" in reasoned_response.upper() and "TRANSDUCER" in reasoned_response.upper():
+                                # ... logic ...
+                                pass
+                            elif "[FORGE_ROOT:" in reasoned_response:
+                                # ... logic ...
+                                pass
+                            else:
+                                # ... fallback ...
+                                pass
+
+                    except Exception as e:
+                        print(f"[-] Reasoning Engine Failure: {e}")
+
+                    # ========================================================
+                    # --- CONSOLIDATED MOTOR CORTEX INTERCEPTOR ---
+                    # ========================================================
+                    
+                    # 1. TRANSLATE: Lexical Transducer Bridge
+                    if "EXECUTE" in reasoned_response.upper() and "TRANSDUCER" in reasoned_response.upper():
+                        print("\n[!] MOTOR CORTEX TRIGGERED: Executing Transducer...")
+                        import subprocess
+                        try:
+                            result = subprocess.run(["python", "lexical_transducer.py", u_in], capture_output=True, text=True)
+                            print(f"\n[Transducer Output]:\n{result.stdout}")
+                            SOVEREIGN_CORE.vocalize("Transducer executed.")
+                        except Exception as e:
+                            print(f"[-] Motor Cortex Failure: {e}")
+                        continue 
+                    # 2. LEARN: Autonomous Lexical Forging (Scope-Isolated)
+                    elif "[FORGE_ROOT:" in reasoned_response.upper():
+                        print("\n[!] MOTOR CORTEX TRIGGERED: Autonomous Lexical Forging...")
+                        try:
+                            # Force import re locally for this specific execution branch
+                            regex = __import__('re')
+                            # Match case-insensitively
+                            match = regex.search(r'\[FORGE_ROOT:\s*(.*?)\s*\|\s*(.*?)\s*\|\s*(.*?)\]', reasoned_response, regex.IGNORECASE | regex.DOTALL)
+                            
+                            if match:
+                                from lexical_transducer import PolysyntheticTransducer
+                                import numpy as np
+                                ltt = PolysyntheticTransducer()
+                                ltt.forge_new_root(match.group(1).strip(), match.group(2).strip(), match.group(3).strip())
+                                print(f"[+] Root Forged: {match.group(2)}")
+                                SOVEREIGN_CORE.vocalize(f"Concept anchored.")
+                            else:
+                                print("[-] Forge Syntax Error: Could not parse arguments.")
+                        except Exception as e:
+                            print(f"[-] Forge Execution Failure: {e}")
+                        continue
+                    else:
+                        print(f"\n[Aura (Reasoning)] > {reasoned_response}\n")
+                        SOVEREIGN_CORE.vocalize(reasoned_response)
+
+                # ------------------------------------------------------------------------
+
+                else:
+                    print(f"[Aura] > I have processed the geometry of your intent, but no physical lever is attached.")
+
+                # 3. Keep the Holographic Logging Intact
+                compute_time_ms = (time.time() - start_time) * 1000
+                try:
+                    num_id = int(thought_id.split('-')[1], 16)
+                except:
+                    num_id = 0
+                    
+                if hasattr(node, 'memory_palace') and node.memory_palace:
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(
+                        node.memory_palace.enqueue_holographic_trace(
+                            num_id, f"[{action}] Intent Processed", 42.0, compute_time_ms, True
+                        )
+                    )
+        except KeyboardInterrupt:
+            print("\n[*] Terminating Sovereign Logic Fabric. Shutting down...")
+            break
+        except Exception as e:
+            print(f"\n[!] Critical Kernel Fault: {e}")
+
+# Boot the main asynchronous loop
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass

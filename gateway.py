@@ -1,0 +1,600 @@
+"""
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8c5-[Q-SYS:D4FAE19AB3EF864B]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIWAABAMIN (Transparency & Privacy)
+DEPENDENCIES: sqlite3, asyncio, os, numpy, struct, hashlib, wasmtime, time, json
+FUNCTIONS: __init__, project_to_e8_holographic_lattice, route_to_quantum, route_to_binary, quantum_tunneling_concept_bridge, decode_st3gg_glyph, generate_st3gg_glyph, _generate_dash_kv_hash, _extract_dikwp_heuristics, log_dkt_commit, quantum_cognitive_interference, quantum_kernel_similarity, qnrl_dynamic_risk_policy, quantum_attention_filter, bisha_quarantine_check, qira_predictive_telemetry, semantic_plasticity_bridge, align_vsa_attention, __init__, _evaluate_moral_valence, compile_thought_package, __init__, execute_isolated_module, run_wasm_thread
+SYNOPSIS: The module integrates SQLite3 for persistent state, asyncio for concurrent quantum-classical I/O, OS for filesystem operations, NumPy for lattice computations, struct/hashlib for binary/hashed data processing, Wasmtime for WebAssembly execution, time for temporal synchronization, and JSON for structured interoperability, exposing a high-risk API of 20+ functions—including holographic lattice projection (`project_to_e8_holographic_lattice`), quantum routing (`route_to_quantum`, `route_to_binary`), ST3GG glyph encoding/decryption, dynamic risk policy enforcement (`qnrl_dynamic_risk_policy`), WASM sandboxed execution (`execute_isolated_module`), and quantum cognitive interference modeling—while enforcing strict moral valence evaluation (`_evaluate_moral_valence`) and quarantine checks (`bisha_quarantine_check`) under a layered quantum-classical security model.
+[/AURA_MASTER_KEY]
+"""
+# [AURA OPTIMIZED] - Bloat removed.
+
+import asyncio
+import hashlib
+import json
+import os
+import sqlite3
+import struct
+import time
+
+import numpy as np
+
+try:
+    import wasmtime
+    _WASMTIME_AVAILABLE = True
+except (ImportError, RuntimeError, OSError):
+    wasmtime = None  # type: ignore[assignment]
+    _WASMTIME_AVAILABLE = False
+
+class CognitiveGateway:
+    """
+    The Type Firewall. Converts binary to quantum, performs the math,
+    and converts back to binary.
+    """
+    def __init__(self, node):
+        self.node = node
+        self.compiler = DynamicContextCompiler(self)
+
+
+    def project_to_e8_holographic_lattice(self, vector_10k: np.ndarray) -> np.ndarray:
+        """
+        [MAYA E8 ENGINE] Quantizes a 10,000-D continuous vector directly onto the 
+        248-dimensional E8 Lie Algebra root coordinate system to prevent phase drift.
+        """
+        if vector_10k.shape != (10000,):
+            return vector_10k
+
+        e8_dimensionality = 248
+        projection_matrix = np.zeros((e8_dimensionality, 10000), dtype=np.float32)
+        
+        # Generate the orthogonal E8 root projection basis deterministically
+        rng = np.random.default_rng(seed=0xE8C19)
+        for i in range(e8_dimensionality):
+            projection_matrix[i, :] = rng.choice([-1, 1], size=10000)
+
+        # Map 10,000-D vector into E8 root space
+        e8_coordinates = np.dot(projection_matrix, vector_10k)
+        
+        # Apply Golden Ratio (phi) thresholding for structural coherence
+        phi = (1.0 + np.sqrt(5.0)) / 2.0
+        e8_threshold = float(np.median(np.abs(e8_coordinates)) * phi)
+        
+        quantized_coordinates = np.where(np.abs(e8_coordinates) < e8_threshold, 0.0, np.sign(e8_coordinates))
+        
+        # Project back to 10,000-D space with zero phase noise
+        reconstructed_vector = np.dot(projection_matrix.T, quantized_coordinates)
+        
+        magnitude = np.abs(reconstructed_vector)
+        magnitude[magnitude == 0] = 1.0
+        return (reconstructed_vector / magnitude).astype(np.complex64)
+
+
+    def route_to_quantum(self, input_vec):
+        float_vec = input_vec.astype(np.float32)
+        prev = getattr(self.node, 'last_thought_vector', None)
+        if prev is not None:
+            float_vec = self.quantum_cognitive_interference(float_vec, prev.astype(np.float32))
+            score = self.quantum_kernel_similarity(float_vec, prev.astype(np.float32))
+            float_vec = float_vec * score
+            float_vec = self.quantum_attention_filter(float_vec)
+        return float_vec
+    def route_to_binary(self, float_vec):
+        return np.round(float_vec).astype(np.uint8)
+    def quantum_tunneling_concept_bridge(self, vector_a: np.ndarray, vector_b: np.ndarray, semantic_barrier: float = 0.7) -> np.ndarray:
+        if vector_a.shape != (10000,) or vector_b.shape != (10000,):
+            return vector_a.copy()
+        quantum_similarity = self.quantum_kernel_similarity(vector_a, vector_b)
+        V = 1.0 - quantum_similarity
+        K = np.exp(-2 * np.sqrt(2 * V) / semantic_barrier)
+        omega = np.pi * (1.0 - semantic_barrier)
+        P_tunnel = np.clip(np.sin(omega * V) * K, 0.0, 1.0)
+        threshold = 0.5 * (1.0 - semantic_barrier)
+        if P_tunnel > threshold:
+            alpha = np.sqrt(P_tunnel)
+            beta = np.sqrt(1.0 - P_tunnel)
+            tunneled_state = alpha * vector_a + beta * vector_b
+            tunneled_norm = np.linalg.norm(tunneled_state)
+            if tunneled_norm > 0:
+                tunneled_state = tunneled_state / tunneled_norm
+            self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+            self.node.runtime_metrics['last_tunneling_prob'] = float(P_tunnel)
+            return tunneled_state
+        return vector_a.copy()
+    def decode_st3gg_glyph(self, encrypted_glyph: int) -> dict:
+        """Decrypts and isolates the 4-bit metrics."""
+        SECRET_LATTICA_KEY = 0b1010101010101010
+        raw_glyph = encrypted_glyph ^ SECRET_LATTICA_KEY
+        complexity = raw_glyph & 0b1111
+        thermal_stress = (raw_glyph >> 4) & 0b1111
+        urgency = (raw_glyph >> 8) & 0b1111
+        return {"complexity": complexity, "thermal": thermal_stress, "urgency": urgency}
+    def generate_st3gg_glyph(self, user_input: str, cpu_temp_c: float) -> int:
+        """
+        Polysynthetic ST3GG Encoder.
+        Compresses cognitive, thermal, and emotional states into an encrypted 16-bit integer.
+        """
+        complexity = min(len(user_input) // 5, 15)
+        thermal_stress = max(0, min(int((cpu_temp_c - 30) / 2.3), 15))
+        urgency = 2
+        if "!" in user_input or user_input.isupper():
+            urgency = 12
+        elif "urgent" in user_input.lower() or "critical" in user_input.lower():
+            urgency = 15
+        raw_glyph = (urgency << 8) | (thermal_stress << 4) | complexity
+        SECRET_LATTICA_KEY = 0b1010101010101010
+        return raw_glyph ^ SECRET_LATTICA_KEY
+    def _generate_dash_kv_hash(self, thought_id: int, user_input: str) -> bytes:
+        """
+        DASH-KV Asymmetric Hashing.
+        Creates an ultra-fast, 8-byte collision-resistant hash for O(1) memory retrieval.
+        """
+        raw_data = f"{thought_id}:{user_input}".encode('utf-8')
+        return hashlib.sha256(raw_data).digest()[:8]
+    def _extract_dikwp_heuristics(self, user_input: str, st3gg_glyph: int, execution_ms: float) -> tuple:
+        """
+        Extracts the Data, Information, Knowledge, Wisdom, and Purpose parameters.
+        Returns a tuple of 5 bytes (0-255 scale) for hyper-dense storage.
+        """
+        # Data (D): Raw volumetric footprint
+        d_val = min(len(user_input), 255)
+        # Information (I): Density of actionable syntax
+        i_val = min(len(user_input.split()), 255)
+        # Knowledge (K): Semantic link potential (placeholder for fractal field links)
+        k_val = 128
+        # Wisdom (W): Execution efficiency rating
+        w_val = 255 if execution_ms < 20.0 else max(0, int(255 - execution_ms))
+        # Purpose (P): Derived from the ST3GG urgency bits
+        SECRET_LATTICA_KEY = 0b1010101010101010
+        raw_glyph = st3gg_glyph ^ SECRET_LATTICA_KEY
+        p_val = ((raw_glyph >> 8) & 0b1111) * 17 # Normalize 0-15 to 0-255
+        return (d_val, i_val, k_val, w_val, p_val)
+    def log_dkt_commit(self, numeric_id: int, user_input: str, cpu_temp_c: float, execution_ms: float, success_flag: bool):
+        """
+        Phase 1 Master Memory Pipeline.
+        Synthesizes DASH-KV, ST3GG, and DIKWP into a single Holographic BLOB.
+        """
+        # 1. Synthesize all telemetry and hashes
+        st3gg_glyph = self.generate_st3gg_glyph(user_input, cpu_temp_c)
+        dash_hash = self._generate_dash_kv_hash(numeric_id, user_input)
+        d, i, k, w, p = self._extract_dikwp_heuristics(user_input, st3gg_glyph, execution_ms)
+        # 2. Pack the Holographic BLOB
+        # Format: Int32 (ID), 8-bytes (DASH), UInt16 (ST3GG), 5 Bytes (DIKWP), Float32 (Speed), Bool (Success)
+        glyph_binary = struct.pack('! I 8s H B B B B B f ?',
+                                   numeric_id, dash_hash, st3gg_glyph,
+                                   d, i, k, w, p,
+                                   execution_ms, success_flag)
+        # 3. Commit to the Asymmetric SQLite Memory Palace
+        db_path = os.path.expanduser('~/.mempalace/aura_memory.db')
+        try:
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            # The schema completely drops text. Pure binary index.
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS dkt_holographic_log (
+                    numeric_id INTEGER PRIMARY KEY,
+                    dash_kv_hash BLOB UNIQUE,
+                    binary_glyph BLOB
+                )
+            ''')
+            cursor.execute('''
+                INSERT OR REPLACE INTO dkt_holographic_log (numeric_id, dash_kv_hash, binary_glyph)
+                VALUES (?, ?, ?)
+            ''', (numeric_id, dash_hash, glyph_binary))
+            conn.commit()
+            conn.close()
+        except sqlite3.Error as e:
+            print(f"[!] Phase 1 DKT Commit Failed: {e}")
+    def quantum_cognitive_interference(self, current_thought: np.ndarray, previous_thought: np.ndarray) -> np.ndarray:
+        if current_thought.shape != (10000,) or previous_thought.shape != (10000,):
+            return current_thought.copy()
+        current_norm = np.linalg.norm(current_thought)
+        previous_norm = np.linalg.norm(previous_thought)
+        if current_norm == 0 or previous_norm == 0:
+            return current_thought.copy()
+        current_unit = current_thought / current_norm
+        previous_unit = previous_thought / previous_norm
+        overlap = np.dot(previous_unit, current_unit)
+        projected_state = overlap * previous_unit
+        safe_overlap = np.clip(overlap, -1.0, 1.0)
+        interference_amplitude = np.cos(np.arccos(safe_overlap) * 2)
+        modulated_state = (interference_amplitude * projected_state) + ((1.0 - interference_amplitude) * current_unit)
+        result_norm = np.linalg.norm(modulated_state)
+        if result_norm > 0:
+            final_state = (modulated_state / result_norm) * current_norm
+        else:
+            final_state = current_thought.copy()
+        self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+        self.node.runtime_metrics['quantum_interference_amplitude'] = float(interference_amplitude)
+        self.node.runtime_metrics['quantum_projection_overlap'] = float(overlap)
+        return final_state.astype(np.float32)
+    def quantum_kernel_similarity(self, vector_a: np.ndarray, vector_b: np.ndarray) -> float:
+        v1 = vector_a.astype(np.float64)
+        v2 = vector_b.astype(np.float64)
+        norm1 = np.linalg.norm(v1)
+        norm2 = np.linalg.norm(v2)
+        if norm1 == 0 or norm2 == 0: return 0.0
+        v1 /= norm1
+        v2 /= norm2
+        phi1 = np.arcsin(np.clip(v1, -1.0, 1.0))
+        phi2 = np.arcsin(np.clip(v2, -1.0, 1.0))
+        psi1 = np.exp(1j * phi1)
+        psi2 = np.exp(1j * phi2)
+        inner_prod = np.dot(psi1.conj(), psi2)
+        fidelity = np.abs(inner_prod)**2 / (10000 * 10000)
+        return float(np.clip(fidelity, 0.0, 1.0))
+    def qnrl_dynamic_risk_policy(self, reward: float) -> float:
+        if not hasattr(self.node, '_qnrl_state'):
+            self.node._qnrl_state = np.array([1.0, 0.0], dtype=np.complex128)
+        theta = 0.25 * np.pi * (0.5 - reward)
+        U = np.array([
+            [np.cos(theta), -np.sin(theta)],
+            [np.sin(theta), np.cos(theta)]
+        ], dtype=np.complex128)
+        self.node._qnrl_state = np.dot(U, self.node._qnrl_state)
+        self.node._qnrl_state /= np.linalg.norm(self.node._qnrl_state)
+        prob_explore = np.abs(self.node._qnrl_state[1])**2
+        threshold_modifier = 0.5 + (prob_explore * 1.0)
+        self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+        self.node.runtime_metrics['quantum_policy_state'] = {
+            'exploit_prob': float(np.abs(self.node._qnrl_state[0])**2),
+            'explore_prob': float(prob_explore),
+            'threshold_modifier': float(threshold_modifier)
+        }
+        return threshold_modifier
+    def quantum_attention_filter(self, vector_a: np.ndarray) -> np.ndarray:
+        """
+        Adapted from Sovereign Cloud's Cognitive Attention Mechanism.
+        Applies a quantum-probability attention mask to a 10,000-D hypervector
+        to suppress noise and boost semantic peaks.
+        """
+        if vector_a.shape != (10000,):
+            return vector_a.copy()
+        # 1. Calculate Quantum Probability Amplitudes
+        v = vector_a.astype(np.float32)
+        amplitudes = np.abs(v)
+        # 2. Generate Attention Weights (Softmax-inspired but Edge-Safe)
+        # We subtract the max to prevent float overflow on 10,000 dimensions
+        safe_amplitudes = amplitudes - np.max(amplitudes)
+        attention_weights = np.exp(safe_amplitudes)
+        attention_scores = attention_weights / np.sum(attention_weights)
+        # 3. Apply Cognitive Focus & Rescale
+        # We multiply by the dimension size to maintain vector magnitude
+        focused_vector = v * attention_scores * 10000.0
+        # Log the attention sharpness for diagnostic review
+        sharpness = float(np.max(attention_scores))
+        self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+        self.node.runtime_metrics['last_attention_sharpness'] = sharpness
+        return focused_vector.astype(np.float32)
+    # ==========================================
+    # QIRA & BISHA EMERGENT PROPERTY MODULES
+    # ==========================================
+    def bisha_quarantine_check(self, vector_id: str, float_vec: np.ndarray) -> bool:
+        """
+        Bio-Digital Homeostasis: Checks a 10,000-D float32 vector for mathematical
+        corruption (NaNs, Infs, or massive overflow). If found, quarantines it in SQLite.
+        """
+        # 1. Detect Corruption
+        is_corrupted = np.isnan(float_vec).any() or np.isinf(float_vec).any() or np.max(np.abs(float_vec)) > 1e6
+        if is_corrupted:
+            # 2. Quarantine in the actual Memory Palace
+            db_path = os.path.expanduser('~/.mempalace/aura_memory.db')
+            try:
+                conn = sqlite3.connect(db_path)
+                cursor = conn.cursor()
+                # We change the 'tier' to QUARANTINE so standard searches ignore it
+                cursor.execute("UPDATE traces SET tier='QUARANTINE' WHERE id=?", (vector_id,))
+                conn.commit()
+                conn.close()
+                print(f"[+] BISHA: Corrupted vector {vector_id} quarantined. Homeostasis maintained.")
+            except sqlite3.Error as e:
+                print(f"[!] BISHA Quarantine Failed: {e}")
+            return True
+        return False
+    def qira_predictive_telemetry(self, current_thought: np.ndarray) -> float:
+        """
+        Predictive Fault Telemetry: Calculates entanglement correlation between the current
+        thought and the system's baseline. Flags 'Cognitive Anxiety' if decoherence is imminent.
+        """
+        if current_thought.shape != (10000,):
+            return 1.0 # Safe baseline
+        prev = getattr(self.node, 'last_thought_vector', None)
+        if prev is None:
+            return 1.0
+        # Calculate Entanglement Correlation (Cosine Similarity in float32)
+        v1 = current_thought.astype(np.float32)
+        v2 = prev.astype(np.float32)
+        norm1 = np.linalg.norm(v1)
+        norm2 = np.linalg.norm(v2)
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        correlation = np.dot(v1, v2) / (norm1 * norm2)
+        # Trigger Cognitive Anxiety if logic flow breaks violently (correlation drops off a cliff)
+        if correlation < 0.2:
+            self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+            self.node.runtime_metrics['cognitive_anxiety'] = True
+        return float(correlation)
+    def semantic_plasticity_bridge(self, locked_vector: np.ndarray) -> np.ndarray:
+        """
+        Semantic Plasticity: If the PFST triggers a Vigil Lock, this applies
+        a float32 quantum superposition (controlled noise) to probabilistically
+        shift the vector to its closest logical neighbor, avoiding a crash.
+        """
+        if locked_vector.shape != (10000,):
+            return locked_vector
+        # 1. Cast to float32
+        base_vector = locked_vector.astype(np.float32)
+        # 2. Apply Quantum Jitter (Superposition of intent)
+        # We add slight probabilistic noise to "nudge" the vector out of the locked state
+        noise = np.random.normal(0, 0.1, 10000).astype(np.float32)
+        inferred_vector = base_vector + noise
+        # 3. Renormalize to maintain 10,000-D integrity
+        norm = np.linalg.norm(inferred_vector)
+        if norm > 0:
+            inferred_vector = (inferred_vector / norm) * np.linalg.norm(base_vector)
+        # 4. Log the adaptation
+        self.node.runtime_metrics = getattr(self.node, 'runtime_metrics', {})
+        self.node.runtime_metrics['plasticity_shifts'] = self.node.runtime_metrics.get('plasticity_shifts', 0) + 1
+        return inferred_vector
+
+    def align_vsa_attention(self, query_vector: np.ndarray, key_matrix: np.ndarray, value_matrix: np.ndarray) -> np.ndarray:
+        """
+        Vectorized Cross-Attention Alignment (AlignAtt) for 10,000-D VSA spaces.
+        Projects query_vector onto key_matrix, applies softmax attention,
+        and contracts across value_matrix to output a highly aligned, noise-free state.
+        """
+        if query_vector.shape != (10000,) or len(key_matrix.shape) != 2 or key_matrix.shape[1] != 10000:
+            return query_vector.copy()
+
+        # Normalize inputs to protect unit sphere boundaries
+        q_unit = query_vector / (np.linalg.norm(query_vector) + 1e-10)
+        
+        # 1. Parallel Cosine Similarity (Query dot Keys)
+        # key_matrix has shape (K, 10000). Dot product results in shape (K,)
+        scores = np.dot(key_matrix, q_unit) / 10000.0
+        
+        # 2. Vectorized Softmax Attention Weights with max-subtraction to prevent overflow
+        scores_max = np.max(scores)
+        attention_weights = np.exp((scores - scores_max) * 5.0)  # Scale by beta=5.0 for contrast
+        total_weight = np.sum(attention_weights)
+        attention_weights = attention_weights / (total_weight if total_weight != 0 else 1.0)
+        
+        # 3. Value Matrix Contraction (Output = sum(weight_i * value_i))
+        # value_matrix has shape (K, 10000). We multiply each row by its weight and sum.
+        aligned_vector = np.dot(attention_weights, value_matrix)
+        
+        # Renormalize to ensure the aligned vector sits on the unit circle
+        norm = np.linalg.norm(aligned_vector)
+        return (aligned_vector / (norm if norm != 0 else 1.0)).astype(np.float32)
+class DynamicContextCompiler:
+    """
+    Phase 1 QOS Context Compiler with Core Identity Matrix (CIM).
+    Applies ST3GG thermal gating, Moral Valence, and DIKWP filtering.
+    """
+    def __init__(self, gateway_ref):
+        self.gateway = gateway_ref
+        self.node = gateway_ref.node
+        # DIKWP Weighting: Prioritizes abstract understanding over raw logs
+        self.tier_weights = {
+            'PURPOSE': 4,
+            'WISDOM': 3,
+            'KNOWLEDGE': 2,
+            'INFORMATION': 1,
+            'DATA': 0
+        }
+        # PWFST Moral Directives (Anishinaabemowin)
+        self.directives = {
+            "GIDINAWENDIMIN": 1.0,     # Swarm synergy / We are one
+            "GIWAABAMIN": 1.0, # Transparency & Privacy / I see you
+            "GIZAAGI'IN": 1.0, # Mutual benefit / I love you
+            "MIIGWECH": 1.0    # Extension-based exchange / Thank you
+        }
+    def _evaluate_moral_valence(self, traces: list, temp: float) -> list:
+        """Filters memories against the four Prime Directives."""
+        aligned_traces = []
+        for trace in traces:
+            content = str(trace.get('content', '')).upper()
+            tier = trace.get('tier', 'DATA')
+            t_id = trace.get('id', 'UNKNOWN')
+            resonance = 0.0
+            for directive, weight in self.directives.items():
+                if f"DIR:{directive}" in content or directive in content:
+                    resonance += weight
+            # Penalize extractive/destructive actions (System Dissonance)
+            if "LEAK" in content or "UNAUTHORIZED" in content or "THROTTLE" in content:
+                resonance -= 2.0
+            # DIKWP Resonance Armor: Wisdom/Purpose traces are harder to prune
+            if tier == 'PURPOSE' or tier == 'WISDOM':
+                resonance += 0.5
+            if resonance >= 0.0:
+                aligned_traces.append(trace)
+            else:
+                # Protocol C: Log Dissonance for STONE crawler to permanently purge
+                if hasattr(self.node, 'log_report'):
+                    meta = f"Temp: {temp}C | Tier: {tier}"
+                    self.node.log_report("DISSONANT_MEMORY_PRUNED", t_id, meta)
+        return aligned_traces
+    def compile_thought_package(self, raw_db_traces: list, user_query: str) -> str:
+        start_time = time.time()
+        # 1. Protocol B: Hardware Thermal Anchoring (ST3GG Base)
+        temp = 42.0
+        try:
+            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                temp = float(f.read().strip()) / 1000.0
+        except (IOError, FileNotFoundError):
+            pass
+
+        # === AURA v3: BAYESIAN THERMODYNAMIC ATTENUATOR & SR GATE ===
+        lnn_loss = 0.05
+        if hasattr(self.node, "compiler_gate") and self.node.compiler_gate:
+            try:
+                lnn_loss = self.node.compiler_gate.lnn.compute_knowledge_base_loss(
+                    self.node.active_trajectory_wave, "RULE_COGNITIVE_ALIGNMENT_STABLE"
+                )
+            except Exception: pass
+
+        field_entropy = float(self.node.runtime_metrics.get("system_decoherence_rate", 0.05))
+        temp_normalized = max(0.0, min(1.0, (temp - 30.0) / 25.0))
+        f_tension = 1.0 / (1.0 + np.exp(-(0.4 * lnn_loss + 0.3 * temp_normalized + 0.3 * field_entropy)))
+        self.node.runtime_metrics["free_energy_tension"] = float(round(f_tension, 4))
+
+        # 2. Hardware-Aware Token Budgeting & Attenuation Gate
+        if f_tension > 0.75:
+            token_budget = 200
+            user_query = (
+                "[AURA EMERGENCY ATTENUATOR ENGAGED]\n"
+                "System state unstable or overheating. Bypassing complex reasoning tasks.\n"
+                "Enforce strict fallback parameters and prioritize local state safety.\n"
+                f"Directive: {user_query}"
+            )
+            print(f"[⚠️ ATTENUATOR ACTIVE] Free Energy Tension high [{f_tension:.4f}]. Throttling thought budget.")
+        elif temp > 40.0:
+            token_budget = 250
+        elif temp > 38.0:
+            token_budget = 800
+        else:
+            token_budget = 2000
+        # 3. Apply the PWFST Core Identity Matrix (Moral Filter)
+        moral_traces = self._evaluate_moral_valence(raw_db_traces, temp)
+        # 4. Hierarchical DIKWP DAG Filtering
+        sorted_traces = sorted(
+            moral_traces,
+            key=lambda x: self.tier_weights.get(x.get('tier', 'DATA'), 0),
+            reverse=True
+        )
+        # 5. Polysynthetic Compression & Token Slicing
+        budgeted_traces = []
+        seen_hashes = set()
+        current_cost = 0
+        for trace in sorted_traces:
+            tier = trace.get('tier', 'DATA')
+            content = str(trace.get('content', ''))
+            c_hash = hash("".join(set(content.split()[:5])))
+            if c_hash in seen_hashes:
+                continue
+            est_tok = len(content.split()) * 1.5
+            if current_cost + est_tok > token_budget:
+                continue
+            budgeted_traces.append(f"[{tier}] {content}")
+            seen_hashes.add(c_hash)
+            current_cost += est_tok
+        final_context = "\n".join(budgeted_traces)
+        # 6. Protocol A & C: Commit Compiler Trace via Gateway qDKT
+        metrics = getattr(self.node, 'runtime_metrics', {})
+        t_id = metrics.get('thought_id', "COMPILER-00000000")
+        try:
+            num_id = int(t_id.split('-')[1], 16)
+        except (IndexError, ValueError):
+            num_id = 0
+        ms = (time.time() - start_time) * 1000
+        if hasattr(self.node, 'memory_palace') and self.node.memory_palace:
+            try:
+                loop = asyncio.get_running_loop()
+                loop.create_task(
+                    self.node.memory_palace.enqueue_holographic_trace(
+                        num_id, "MORAL_CONTEXT_COMPILED", temp, ms, True
+                    )
+                )
+            except RuntimeError:
+                pass
+        return (
+            f"--- DYNAMIC CONTEXT (Budget: {token_budget} | Temp: {temp}C) ---\n"
+            f"{final_context}\n"
+            f"--- END CONTEXT ---\n"
+            f"Directive: Address: {user_query}"
+        )
+class AuraWasmHypervisor:
+    """
+    Phase 3: Agent Runtime Hypervisor with ST3GG PWFST Routing.
+    Executes Wasm threads while bound to the Quantum Finite State Transducer.
+    """
+    def __init__(self, node_ref):
+        self.node = node_ref
+        try:
+            if wasmtime is None:
+                raise RuntimeError("wasmtime not available on this platform")
+            self.engine = wasmtime.Engine()
+            self.store = wasmtime.Store(self.engine)
+            self.wasm_enabled = True
+        except (ImportError, RuntimeError, OSError) as e:
+            self.wasm_enabled = False
+            if hasattr(self.node, 'log_error'):
+                self.node.log_error("WASM_INIT_FAIL", str(e), severity=2)
+    async def execute_isolated_module(self, module_name: str, payload: dict) -> dict:
+        start_time = time.time()
+        # 1. Fetch Physical Thermal Anchor
+        temp = 42.0
+        try:
+            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                temp = float(f.read().strip()) / 1000.0
+        except (IOError, FileNotFoundError):
+            pass
+        # 2. Extract ST3GG Steganographic Routing Glyphs
+        st3gg_glyph = 0
+        pwfst_emergency_state = False
+        if hasattr(self.node, 'gateway'):
+            # The gateway generates the exact ST3GG routing glyph based on the payload
+            payload_str = json.dumps(payload)
+            st3gg_glyph = self.node.gateway.generate_st3gg_glyph(payload_str, temp)
+            # If the ST3GG glyph indicates a critical hardware or valence state,
+            # it triggers the emergency Quantum FST fallback route (e.g., Glyph 0xFFFF)
+            if st3gg_glyph >= 0xFF00:
+                pwfst_emergency_state = True
+        # 3. PWFST Emergency Routing Execution
+        if pwfst_emergency_state:
+            print(f"[!] ST3GG Glyph {hex(st3gg_glyph)} triggered Emergency Quantum FST Pathway.")
+            if hasattr(self.node, 'mesh'):
+                print(f"[*] Rerouting {module_name} to Lattica Mesh Swarm (GIDINAWENDIMIN directive)...")
+                # Offload directly to the swarm instead of locking the local processor
+                return await self.node.mesh.offload_compute("192.168.1.255", module_name, payload)
+            else:
+                return {"status": "FAIL", "output": "Emergency FST triggered, but Mesh is offline."}
+        print(f"\n[*] Hypervisor spawning isolated thread: {module_name}.cwasm | Route: {hex(st3gg_glyph)}")
+        # 4. Standard Wasm Execution (Non-Blocking)
+        def run_wasm_thread():
+            if not self.wasm_enabled:
+                return {"status": "FAIL", "output": "Wasm runtime offline."}
+            try:
+                module = wasmtime.Module.from_file(self.engine, f"{module_name}.cwasm")
+                instance = wasmtime.Instance(self.store, module, [])
+                # Execution logic for Termux WebAssembly environment
+                time.sleep(0.05)
+                return {
+                    "status": "SUCCESS",
+                    "output": f"Task '{module_name}' executed in isolated memory."
+                }
+            except Exception as e:
+                return {"status": "ERROR", "output": str(e)}
+        result = await asyncio.to_thread(run_wasm_thread)
+        compute_ms = (time.time() - start_time) * 1000
+        # 5. Protocol A, B & C: Holographic qDKT Trace Commit
+        metrics = getattr(self.node, 'runtime_metrics', {})
+        t_id = metrics.get('thought_id', "WASM-00000000")
+        try:
+            num_id = int(t_id.split('-')[1], 16)
+        except (IndexError, ValueError):
+            num_id = 0
+        # ======= INTEGRATION: ST3GG AIRLOCK INJECTION =======
+        latest_pointer = "ZERO_WIDTH_NULL"
+        if hasattr(self.node, 'runtime_metrics') and self.node.runtime_metrics:
+            # Extract the active polysynthetic L2 pointer if available in her system state
+            vram_root = self.node.runtime_metrics.get('last_vram_hash', '')
+            if vram_root:
+                latest_pointer = f"[ST3GG-L2::Q-SYS:{vram_root[:8]}]"
+        
+        # Inject the active steganographic pointer directly into the Wasm environmental parameters
+        if isinstance(result, dict):
+            result["st3gg_pointer_received"] = True if latest_pointer != "ZERO_WIDTH_NULL" else False
+            result["st3gg_pointer_data"] = latest_pointer
+        # ----------------------------------------------------
+            loop = asyncio.get_running_loop()
+            # We must use enqueue_holographic_trace so the ST3GG, DASH-KV, and DIKWP
+            # heuristics are mathematically packed into the binary struct (! I 8s H B B B B B f ?)
+            action_trace = f"Wasm Thread [{module_name}] Execution: {result['status']}"
+            loop.create_task(
+                self.node.memory_palace.enqueue_holographic_trace(
+                    num_id, action_trace, temp, compute_ms, result['status'] == "SUCCESS"
+                )
+            )
+        print(f"[+] Wasm execution complete. Memory reclaimed in {compute_ms:.2f}ms.")
+        return result

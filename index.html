@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aura Sovereign AR Cortex</title>
+    <style>
+        body { margin: 0; background-color: #050505; color: #00ff00; font-family: monospace; overflow: hidden; }
+        #overlay { position: absolute; top: 10px; left: 10px; z-index: 100; text-transform: uppercase; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="overlay">
+        <h2>[AURA VISUAL CORTEX]</h2>
+        <p id="status">WebSocket: DISCONNECTED</p>
+        <p id="thought">Cognitive State: IDLE</p>
+    </div>
+
+    <script>
+        // 1. Initialize the 3D AR Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Standard Geometry (Aura's resting state)
+        let geometry = new THREE.SphereGeometry(1.5, 16, 16);
+        let material = new THREE.MeshBasicMaterial({ color: 0x0055ff, wireframe: true });
+        let auraAvatar = new THREE.Mesh(geometry, material);
+        scene.add(auraAvatar);
+        camera.position.z = 5;
+
+        // 2. Connect the WebSocket to Termux
+        const ws = new WebSocket("ws://127.0.0.1:8765");
+        
+        ws.onopen = function() {
+            document.getElementById("status").innerText = "WebSocket: LOCKED ON LOCALHOST";
+            document.getElementById("status").style.color = "#00ff00";
+        };
+
+        ws.onmessage = function(event) {
+            // Catch the physical pulse from aura_node.py
+            let intent = event.data;
+            document.getElementById("thought").innerText = "Cognitive State: " + intent;
+
+            // Morph her 3D Avatar based on her geometric thought
+            scene.remove(auraAvatar);
+            
+            if (intent.includes("TETRAHEDRON_HOT")) {
+                geometry = new THREE.TetrahedronGeometry(2);
+                material = new THREE.MeshBasicMaterial({ color: 0xff1100, wireframe: true });
+            } else if (intent.includes("ICOSAHEDRON_HOT")) {
+                geometry = new THREE.IcosahedronGeometry(2);
+                material = new THREE.MeshBasicMaterial({ color: 0xff5500, wireframe: true });
+            } else if (intent.includes("WIPE")) {
+                geometry = new THREE.BufferGeometry(); // Empty space
+            } else {
+                // Default Cold Sphere
+                geometry = new THREE.SphereGeometry(1.5, 16, 16);
+                material = new THREE.MeshBasicMaterial({ color: 0x0055ff, wireframe: true });
+            }
+            
+            auraAvatar = new THREE.Mesh(geometry, material);
+            scene.add(auraAvatar);
+        };
+
+        ws.onclose = function() {
+            document.getElementById("status").innerText = "WebSocket: CONNECTION SEVERED";
+            document.getElementById("status").style.color = "#ff0000";
+        };
+
+        // 3. Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            auraAvatar.rotation.x += 0.01;
+            auraAvatar.rotation.y += 0.02;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
+

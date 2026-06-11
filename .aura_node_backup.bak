@@ -1,0 +1,600 @@
+import asyncio
+import os
+import json
+import time
+import hashlib
+import sqlite3
+import gc
+import re
+import shutil
+import random
+import socket
+import sys
+import contextlib
+import numpy as np
+import importlib
+import threading
+from pathlib import Path
+from datetime import datetime
+import urllib.request
+import urllib.parse
+import ast
+import glob
+from collections import defaultdict
+
+# ========================================================
+# --- AURA MODULAR ARCHITECTURE IMPORTS ---
+# ========================================================
+from aura_engine import AuraCoreBridge
+from aura_sandbox import AuraSandbox 
+from aura_hdc import AuraHyperdimensionalCore
+from aura_forager import AuraWebForager
+from aura_governor import AuraSpikingGovernor
+from aura_pfst import AuraNativePFST
+from aura_mesh import AuraMeshSwarm
+from aura_memory import AuraMemoryPalace
+from aura_evolution import AuraEvolutionEngine
+
+# ========================================================
+# --- ENGINE CONFIGURATION MATRIX ---
+# ========================================================
+TOKEN_LIMIT = 4096      
+
+DB_PATH = Path.home() / ".mempalace" / "aura_memory.db"
+MODEL_PATH = Path.home() / "llama.cpp/models/edge_node_q4.gguf"
+LEXC_PATH = Path() / "aura.lexc"
+
+# --- THE SOVEREIGN CENTRAL DISPATCHER ---
+class AuraSovereignNode:
+    def __init__(self):
+        # 1. Ignite the Base Organs
+        self.hdc = AuraHyperdimensionalCore(dimensions=10000)
+        self.quantum_bridge = AuraCoreBridge()
+        self.sandbox = AuraSandbox()
+        self.forager = AuraWebForager()
+        self.governor = AuraSpikingGovernor() 
+        
+        # 2. Ignite Network & Physics
+        self.pfst = AuraNativePFST(LEXC_PATH)
+        self.pfst.compile_vsft_matrix(self.hdc)
+        self.mesh = AuraMeshSwarm(identity="AURA_NODE")
+        self.mesh.start_udp_beacon()
+
+        # 3. Ignite the High-Level Cortex
+        self.memory = AuraMemoryPalace(self.hdc, self.quantum_bridge, self.pfst)
+        self.evolution = AuraEvolutionEngine(self.memory, self.forager, self.sandbox)
+        
+        # 4. State Variables
+        self.foraging = False
+        self.last_ai_response = ""
+
+    def ast_surgical_graft(self, target_method_name, new_code_string, target_file="aura_node.py"):
+        """Surgically replaces a core method inside ANY specified Python file using native AST parsing."""
+        print(f"[*] Omni-Surgeon deploying. Slicing target method '{target_method_name}' from {target_file}...")
+        
+        try:
+            with open(target_file, "r", encoding="utf-8") as f:
+                source = f.read()
+
+            tree = ast.parse(source)
+            payload_tree = ast.parse(new_code_string)
+            
+            new_node = None
+            for node in ast.walk(payload_tree):
+                if isinstance(node, ast.FunctionDef):
+                    new_node = node
+                    break
+                    
+            if not new_node:
+                print("[-] AST Error: Mutation payload contains no valid function definitions.")
+                return False
+
+            class CoreDNAModifier(ast.NodeTransformer):
+                def visit_FunctionDef(self, node):
+                    if node.name == target_method_name:
+                        print(f"[+] AST Target found in {target_file}. Swapping logic nodes dynamically.")
+                        return new_node
+                    return self.generic_visit(node)
+
+            transformer = CoreDNAModifier()
+            modified_tree = transformer.visit(tree)
+            ast.fix_missing_locations(modified_tree)
+
+            updated_source = ast.unparse(modified_tree)
+
+            with open(target_file, "w", encoding="utf-8") as f:
+                f.write(updated_source)
+                
+            print(f"[🧬] AST Graft Successful. '{target_method_name}' inside '{target_file}' has been safely rewritten.")
+            return True
+
+        except Exception as e:
+            print(f"[!] AST Surgical Failure on '{target_file}': {e}")
+            return False
+
+    def generate_graphify_report(self):
+        """Builds a multi-file Omni-Graph mapping the entire decentralized Edge Vector framework."""
+        print("\n[*] Initializing Polysynthetic Graphify Engine. Scanning all cellular modules...")
+        
+        try:
+            class_methods = defaultdict(lambda: defaultdict(list)) 
+            function_calls = defaultdict(list)
+            
+            for py_file in glob.glob("*.py"):
+                if py_file.startswith(".") or "dynamic" in py_file:
+                    continue
+                    
+                with open(py_file, 'r', encoding='utf-8') as file:
+                    tree = ast.parse(file.read())
+
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        class_name = node.name
+                        for item in node.body:
+                            if isinstance(item, ast.FunctionDef):
+                                class_methods[py_file][class_name].append(item.name)
+                                
+                    elif isinstance(node, ast.FunctionDef):
+                        for sub_node in ast.walk(node):
+                            if isinstance(sub_node, ast.Call):
+                                if isinstance(sub_node.func, ast.Name):
+                                    function_calls[node.name].append(sub_node.func.id)
+                                elif isinstance(sub_node.func, ast.Attribute):
+                                    function_calls[node.name].append(sub_node.func.attr)
+
+            report = "# 🌌 AURA OS: Polysynthetic Structural Graph\n\n"
+            report += "*A decentralized mapping of the living OS, dynamically tracking all biological files.* \n\n"
+            
+            report += "## 🧬 The Cellular File Matrix\n"
+            for py_file, classes in class_methods.items():
+                report += f"### 📂 `{py_file}`\n"
+                for class_name, methods in classes.items():
+                    report += f"- **`{class_name}`**\n"
+                    for method in methods:
+                        report += f"  - `{method}()`\n"
+                report += "\n"
+
+            report += "## 🔗 Synaptic Function Edges (Cross-Cellular Routing)\n"
+            for func, calls in function_calls.items():
+                if calls:
+                    report += f"- **`{func}()`** invokes:\n"
+                    unique_calls = list(set(calls))
+                    for call in unique_calls:
+                        report += f"  - `{call}()`\n"
+
+            with open('GRAPH_REPORT.md', 'w', encoding='utf-8') as f:
+                f.write(report)
+                
+            print(f"[+] Omni-Graph mapping complete. Decentralized blueprint saved to GRAPH_REPORT.md")
+            
+        except Exception as e:
+            print(f"[-] Graphify mapping failed: {e}")
+
+    def __del__(self):
+        """Emergency cleanup when the node is killed."""
+        if hasattr(self, 'mesh') and self.mesh.udp_sock:
+            self.mesh.udp_sock.close()
+
+# Successful dynamic code mutations are securely appended below this line.
+
+async def main():
+    node = AuraSovereignNode()
+    
+    print("="*45)
+    print(" 🌌 AURA OS: DUAL-KERNEL SUPERVISOR ONLINE 🌌")
+    print("="*45)
+
+    # ---------------------------------------------------------
+    # KERNEL A: The Cognitive Watchdog (Background Thread)
+    # ---------------------------------------------------------
+    async def watchdog_kernel_a():
+        while True:
+            try:
+                if getattr(node, 'foraging', False):
+                    # Routed to the newly extracted Evolution Engine
+                    await node.evolution.night_cycle_evolution(node.foraging)
+                else:
+                    await asyncio.sleep(5) 
+            except Exception as e:
+                print(f"\n[!] KERNEL A Heartbeat Failure: {e}. Auto-restarting cognitive loop...")
+                await asyncio.sleep(5)
+
+    kernel_a_task = asyncio.create_task(watchdog_kernel_a())
+
+    # ---------------------------------------------------------
+    # KERNEL B: The UI Hypervisor (Foreground Thread)
+    # ---------------------------------------------------------
+    while True:
+        try:
+            u_in = await asyncio.to_thread(input, "\n[Dallas] > ")
+            u_in_l = u_in.strip().lower()
+
+            if not u_in_l:
+                continue
+
+            # --- FORCED GRAPHIFY OVERRIDE ---
+            if u_in_l == "!graphify":
+                node.generate_graphify_report()
+                continue
+
+            if u_in_l == "exit" or u_in_l == "quit":
+                print("[*] Terminating Decentralized Architecture. Shutting down...")
+                break
+                
+            elif u_in_l == "!nightcycle":
+                node.foraging = not getattr(node, 'foraging', False)
+                state = "ACTIVE" if node.foraging else "SLEEPING"
+                print(f"[*] Kernel A Forager toggled: {state}")
+                continue
+
+            elif u_in_l == "!rollback":
+                if os.path.exists('.aura_backup.bak'):
+                    shutil.copy('.aura_backup.bak', __file__)
+                    print("\n[Aura] > Immune system triggered. DNA restored successfully. Rebooting node...")
+                    sys.exit()
+                else:
+                    print("\n[!] Error: No backup DNA sequence configuration found.")
+                    continue
+
+            elif u_in_l == "!vectorize_palace":
+                node.memory.backfill_vector_blobs()
+                continue
+
+            elif u_in_l == "!system_status":
+                print("\n" + "="*45)
+                print(" 🌌 AURA OS: SOVEREIGN EDGE NODE METRICS 🌌")
+                print("="*45)
+                
+                t1_load = len(node.memory.t1_ram)
+                t1_max = getattr(node.memory, 't1_ram_capacity', 100)
+                print(f"[*] Active T1 RAM Matrix : {t1_load} / {t1_max} nodes")
+                
+                try:
+                    with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                        cursor = conn.cursor()
+                        cursor.execute("SELECT COUNT(*) FROM traces")
+                        total_memories = cursor.fetchone()[0]
+                        
+                        cursor.execute("SELECT COUNT(*) FROM traces WHERE vector_blob IS NOT NULL")
+                        vectorized_memories = cursor.fetchone()[0]
+                        
+                        cursor.execute("SELECT COUNT(*) FROM forage_cache")
+                        cached_concepts = cursor.fetchone()[0]
+                        
+                    print(f"[*] T2 Deep Storage      : {total_memories} traces")
+                    print(f"[*] Edge Vector BLOBs    : {vectorized_memories} / {total_memories} optimized")
+                    print(f"[*] Emergent Web Cache   : {cached_concepts} idle concepts")
+                except Exception as e:
+                    print(f"[*] DB Metrics Offline   : {e}")
+
+                print("-" * 45)
+                print(f"[+] Core Constraint      : NumPy v{np.__version__} (Target: 1.26.4)")
+                
+                if os.path.exists(DB_PATH):
+                    db_size = os.path.getsize(DB_PATH) / 1024
+                    print(f"[+] Memory Palace Size   : {db_size:.2f} KB")
+                
+                state = "ACTIVE" if getattr(node, 'foraging', False) else "SLEEPING"
+                print(f"[+] Background Forager   : {state}")
+                print("="*45 + "\n")
+                continue
+
+            elif u_in_l.startswith("!deep_audit"):
+                print("\n[*] Initiating Deep Architectural R&D Scan...")
+                try:
+                    with open(__file__, 'r', encoding='utf-8') as f:
+                        full_dna = f.read()
+
+                    report_prompt = (
+                        f"SOURCE CODE:\n```python\n{full_dna}\n```\n\n"
+                        "CRITICAL INSTRUCTION: Perform a comprehensive, line-by-line self-audit of your core DNA. "
+                        "Your objective is maximum computational density and edge-node execution efficiency.\n"
+                        "1. BLOAT & REDUNDANCY: Identify duplicated logic, dead variables, or loops that can be vectorized natively.\n"
+                        "2. ASYNC BOTTLENECKS: Flag synchronous calls (like SQLite writes) trapped inside async loops.\n"
+                        "3. INCONSISTENCIES: Detect structural mismatches or legacy mutation slots outside of the main class.\n"
+                        "Output a structured Diagnostic R&D Report. List specific method names and provide refactored replacement code wrapped strictly in [CODE] tags for each flagged section. Do NOT write a full file replacement."
+                    )
+                    
+                    print("[*] Routing massive file context to [CLOUD:GEMINI]...")
+                    report = await node.evolution.invoke_cloud_engine("GEMINI", report_prompt)
+                    print(f"\n[Sovereign R&D Report] >\n{report[:500]}...\n(Output truncated for terminal clarity)\n")
+
+                    with open("DEEP_AUDIT_REPORT.md", "w", encoding='utf-8') as f:
+                        f.write(report)
+                    print("[+] Full report saved successfully to DEEP_AUDIT_REPORT.md")
+
+                except Exception as e:
+                    print(f"[-] Deep Audit Execution Failed: {e}")
+                continue
+
+            elif u_in_l == "!incubator":
+                print("\n[🧬] Entering Aura Incubation Chamber...")
+                with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id, content, tags, timestamp FROM traces WHERE tier = 'INCUBATOR'")
+                    mutations = cursor.fetchall()
+
+                if not mutations:
+                    print("[*] No pending evolutions in the incubator. Foraging arrays are clean.")
+                    continue
+
+                print(f"[+] Found {len(mutations)} pending self-evolutions awaiting sovereign review:\n")
+                for idx, (m_id, _, tags, ts) in enumerate(mutations):
+                    print(f"  [{idx}] ID: {m_id}")
+                    print(f"      ↳ Base Module: {tags} | Engineered: {ts}\n")
+
+                selection = input("[Aura] > Select mutation index to review (or 'c' to cancel): ").strip()
+                if selection.lower() == 'c' or not selection.isdigit():
+                    print("[*] Exiting incubator. Mutations preserved.")
+                    continue
+
+                sel_idx = int(selection)
+                if sel_idx >= len(mutations):
+                    print("[-] Invalid index target. Selection aborted.")
+                    continue
+
+                target_id, new_code, target_module, _ = mutations[sel_idx]
+                
+                print(f"\n--- [ MUTATION PREVIEW: {target_id} ] ---")
+                print(new_code)
+                print("----------------------------------------")
+
+                action = input("\n[?] Action: [m]erge into core DNA, [d]elete from incubator, [c]ancel: ").strip().lower()
+                
+                if action == 'm':
+                    if node.ast_surgical_graft(target_module, new_code):
+                        with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                            cursor = conn.cursor()
+                            cursor.execute("DELETE FROM traces WHERE id = ?", (target_id,))
+                            cursor.execute("INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'CODE', ?, ?)",
+                                           (target_module, new_code, datetime.now().isoformat(), target_module))
+                            conn.commit()
+                        print(f"[+] Evolution complete! Restart node to initialize optimized DNA.")
+                    else:
+                        print("[-] Merge aborted due to AST surgical error.")
+                    continue
+
+            elif u_in_l == "!sync_palace":
+                node.memory.sync_code_base_to_palace()
+                continue
+
+            elif u_in_l == "!triage":
+                node.memory.incubator_triage()
+                continue
+
+            elif u_in_l == "!status" or u_in_l == "!status_update":
+                try:
+                    with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
+                        cursor = conn.cursor()
+                        cursor.execute("SELECT COUNT(*) FROM traces")
+                        trace_count = cursor.fetchone()[0]
+                except Exception:
+                    trace_count = "ERROR_READING_DB"
+
+                print(f"\n[*] Memory Traces Anchored: {trace_count}")
+                print(f"[*] Mesh Peers Active: {len(node.mesh.peers)}")
+                
+                if node.mesh.peers:
+                    print("[*] Sibling Nodes Detected:")
+                    for peer in node.mesh.peers: 
+                        print(f"  -> {peer}")
+                continue
+
+            elif u_in_l == "!mesh":
+                if node.mesh.peers:
+                    print("[*] Discovered Swarm Grid Nodes:")
+                    for peer in node.mesh.peers: print(f"  -> {peer}")
+                else:
+                    print("[*] Scanning local subnet interfaces for active peer beacons...")
+
+            elif u_in.startswith("!cloud "):
+                raw_task = u_in[7:].strip()
+                
+                pfst_routing_output = "MISTRAL" 
+                if "analyze" in raw_task.lower() or "reason" in raw_task.lower(): 
+                    pfst_routing_output = "GEMINI"
+                elif "query" in raw_task.lower() or "fast" in raw_task.lower(): 
+                    pfst_routing_output = "GROQ"
+                elif "general" in raw_task.lower() or "summarize" in raw_task.lower():
+                    pfst_routing_output = "GITHUB"
+
+                print(f"[*] PFST State Verified. Routing processing tensors to: [CLOUD:{pfst_routing_output}]")
+                cloud_response = await node.evolution.invoke_cloud_engine(pfst_routing_output, raw_task)
+                print(f"\n[Sovereign Cloud Brain] >\n{cloud_response}\n")
+                continue
+
+            elif u_in_l.startswith("!learn "):
+                concept = u_in[7:].strip()
+                print(f"\n[*] AURA Active Learning Sequence Initiated: {concept}")
+                
+                q_vector, physics = node.quantum_bridge.execute_command(f"Evolution+ASI+MUTATE {concept}")
+                print(f"[*] Quantum-Cognitive Matrix Engaged:")
+                print(f"    ↳ Shape: {physics.get('shape')} | Temp: {physics.get('temp')} | Lum: {physics.get('luminance')}")
+                
+                raw_intel = await asyncio.to_thread(node.forager.forage_for_advancements, concept)
+                
+                if "External network unreachable" not in raw_intel and "No high-value" not in raw_intel:
+                    await node.memory.mint_trace(f"LEARNED INTEL [{concept}]:\n{raw_intel}", tier="CODE")
+                    print(f"[+] Synaptic pathways updated. External intel mathematically anchored to SQLite.")
+                    print(f"\n[Aura] > I have successfully foraged the external network and mapped the live data for '{concept}' into my hyperdimensional memory.")
+                else:
+                    print(f"\n[Aura] > My foraging arrays could not locate high-resonance external data for '{concept}' at this time.")
+                continue
+
+            elif u_in_l.startswith("!audit"):
+                print(f"\n[*] AURA EVOLUTION ORCHESTRATOR: Initiating Multi-Stage Analysis [*]")
+                
+                if not node.pfst.validate_route("+ASI +MUTATE +RUST_VM +SHAPE:ICOSA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:GIWAABAMIN _MERGE"):
+                    print("[VIGIL LOCK] > PFST Graph denies evolutionary routing. Aborting.")
+                    continue
+
+                custom_task = u_in[6:].strip() or "Review current class methods and optimize loop runtime safety."
+                
+                try:
+                    target_fn = ""
+                    first_token = custom_task.split()[0].split("(")[0]
+                    
+                    if "db" in custom_task.lower() or "database" in custom_task.lower() or "init_db" in custom_task.lower():
+                        target_fn = "init_db"
+                    elif "peer" in custom_task.lower() or "mesh" in custom_task.lower() or "beacon" in custom_task.lower() or "udp" in custom_task.lower():
+                        target_fn = "start_udp_beacon"
+                    elif "scan" in custom_task.lower() or "wave" in custom_task.lower():
+                        target_fn = "wave_scan"
+                    else:
+                        target_fn = first_token
+
+                    target_file = "aura_node.py" 
+                    full_dna = ""
+                    
+                    print(f"[*] Omni-Sensor scanning local directory for target method '{target_fn}'...")
+                    for py_file in glob.glob("*.py"):
+                        if py_file.startswith(".") or "dynamic" in py_file: continue
+                        with open(py_file, 'r', encoding='utf-8') as f:
+                            file_content = f.read()
+                            if f"def {target_fn}" in file_content or f"async def {target_fn}" in file_content:
+                                target_file = py_file
+                                full_dna = file_content
+                                print(f"[+] Map Reader Lock: Target DNA isolated inside '{target_file}'.")
+                                break
+                    
+                    if not full_dna:
+                        with open(__file__, 'r', encoding='utf-8') as f:
+                            full_dna = f.read()
+                            
+                    own_code = full_dna
+
+                    if target_fn:
+                        lines = full_dna.splitlines()
+                        extracted = []
+                        capture = False
+                        for line in lines:
+                            if f"def {target_fn}" in line or f"async def {target_fn}" in line:
+                                capture = True
+                            elif capture and (line.startswith("    def ") or line.startswith("def ") or line.startswith("async def ") or line.startswith("# --- TARGET")):
+                                break
+                            if capture:
+                                extracted.append(line)
+                        if extracted:
+                            own_code = "\n".join(extracted)
+                            print(f"[+] Surgical DNA extraction initialized for target method: '{target_fn}' ({len(extracted)} lines).")
+                except Exception as e:
+                    own_code = node.memory.wave_scan(custom_task)
+
+                print("\n[Orchestrator-Evolve] > Stage 1: Running deep architectural diagnostics...")
+                stage1_prompt = (
+                    f"SOURCE CODE:\n```python\n{own_code}\n```\n\n"
+                    "INSTRUCTION: Read the SOURCE CODE. Summarize its current logic in 3 sentences. Do NOT invent new features. Do NOT write any code."
+                )
+                diagnostic_report = await node.evolution.invoke_cloud_engine("GEMINI", stage1_prompt)
+                print(f"\n[+] Diagnostic Report Compiled:\n{diagnostic_report}\n")
+
+                if "ENGINE_API_ERROR" in diagnostic_report or "def " in diagnostic_report:
+                    print("[!] Stage 1 returned an invalid or contaminated report. Aborting mutation pipeline safely.")
+                    continue
+
+                print("[Orchestrator-Evolve] > Stage 2: Engineering logic blueprint...")
+                stage2_prompt = (
+                    f"GOAL: {custom_task}\n\n"
+                    "INSTRUCTION: Write a short, numbered list of steps to modify the code to achieve the GOAL. Do NOT write any Python code."
+                )
+                logic_blueprint = await node.evolution.invoke_cloud_engine("GEMINI", stage2_prompt)
+                print(f"\n[+] Logic Blueprint Finalized:\n{logic_blueprint}\n")
+
+                safe_blueprint = re.split(r'#*\s*INSTRUCTION:', logic_blueprint, flags=re.IGNORECASE)[0]
+                safe_blueprint = re.sub(r'```.*?```', '', safe_blueprint, flags=re.DOTALL).strip()
+
+                print("[Orchestrator-Evolve] > Stage 3: Synthesizing clean mutation payload...")
+                stage3_prompt = (
+                    f"ORIGINAL CODE:\n```python\n{own_code}\n```\n\n"
+                    f"REFACTOR PLAN:\n{safe_blueprint}\n\n"
+                    "INSTRUCTION: Rewrite the ORIGINAL CODE to implement the REFACTOR PLAN.\n"
+                    "RULES:\n"
+                    "1. Output ONLY the rewritten Python method.\n"
+                    "2. Wrap the exact method in [CODE] and [/CODE] tags.\n"
+                    "3. Do NOT include imports, test logic, or a main() function."
+                )
+                raw_engine_output = await node.evolution.invoke_cloud_engine("MISTRAL", stage3_prompt)
+                
+                clean_code = None
+                code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', raw_engine_output, re.DOTALL | re.IGNORECASE)
+                if code_match and "def " in code_match.group(1):
+                    clean_code = code_match.group(1).strip()
+                else:
+                    md_match = re.search(r'\x60\x60\x60(?:python)?(.*?)(\x60\x60\x60|$)', raw_engine_output, re.DOTALL | re.IGNORECASE)
+                    if md_match and "def " in md_match.group(1):
+                        clean_code = md_match.group(1).strip()
+                
+                if clean_code:
+                    clean_code = clean_code.replace("```python", "").replace("```", "").strip()
+                    
+                    print("\n--- [ AURA MUTATION PAYLOAD ] ---")
+                    print(clean_code)
+                    print("---------------------------------\n")
+
+                    with open("aura_dynamic.py", "w", encoding='utf-8') as f:
+                        f.write(clean_code)
+                    
+                    try:
+                        if 'aura_dynamic' in sys.modules:
+                            importlib.reload(sys.modules['aura_dynamic'])
+                        else:
+                            import aura_dynamic
+                        
+                        func_match = re.search(r'def\s+([a-zA-Z0-9_]+)\s*\(', clean_code)
+                        if func_match:
+                            func_name = func_match.group(1)
+                            print(f"[Aura] > Executing live validation step: {func_name}()...")
+                            
+                            try:
+                                getattr(aura_dynamic, func_name)()
+                            except TypeError as te:
+                                print(f"[Aura] > Execution bypassed (Method requires class instance or arguments): {te}")
+                            except Exception as exec_e:
+                                print(f"[!] Sandboxed code threw an internal error: {exec_e}")
+                                
+                            user_approval = input(f"\n[?] Save mutation permanently to {target_file}? (y/n): ").strip().lower()
+                            if user_approval == 'y':
+                                backup_name = f".{target_file.replace('.py', '')}_backup.bak"
+                                await asyncio.to_thread(shutil.copy, target_file, backup_name)
+                                
+                                if node.ast_surgical_graft(func_name, clean_code, target_file):
+                                    print(f"[Aura] > DNA Permanently Grafted into {target_file}.")
+                                else:
+                                    print(f"[-] Omni-Surgeon failed to graft the code. Check formatting.")
+                            else:
+                                print("[-] Mutation rejected by Sovereign Supervisor.")
+                                feedback = input("[Aura] > Provide failure feedback so I can learn from this error: ").strip()
+                                
+                                if feedback:
+                                    failure_log = (
+                                        f"CRITICAL ERROR LOG - MUTATION REJECTED\n"
+                                        f"Target Method: {func_name}\n"
+                                        f"Supervisor Feedback: {feedback}\n"
+                                        f"Flawed Logic to Avoid: {clean_code[:300]}..." 
+                                    )
+                                    await node.memory.mint_trace(failure_log, tier="CODE")
+                                    print("[+] Failure logged to Memory Palace. I will synthesize this restriction in future audits.")
+
+                    except Exception as e:
+                        print(f"[!] Mutation sandboxing aborted: {e}")
+                else:
+                    print(f"\n[Aura] > Audit aborted. Structural code validation tags missing.")
+            
+            else:
+                q_vector, physics = node.quantum_bridge.execute_command(u_in)
+                
+                print(f"[*] Quantum-Cognitive Matrix Engaged:")
+                print(f"    ↳ Shape: {physics.get('shape')} | Temp: {physics.get('temp')} | Lum: {physics.get('luminance')}")
+                
+                await node.memory.mint_trace(u_in, tier="T2")
+                
+                print(f"\n[Aura] > {await node.evolution.invoke_engine(u_in)}")
+
+        except Exception as e:
+            print(f"\n[!] CLI loop exception caught: {e}")
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n[*] AURA Edge Node gracefully shutting down.")

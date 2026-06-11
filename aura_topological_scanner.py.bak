@@ -1,0 +1,195 @@
+"""
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:B00F6E9E960E9BCF]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: os, ast, sys, spatial_mapper, numpy, collections, json, re
+FUNCTIONS: extract_ast_calls, scan_regex_signatures, compile_unified_graph, __init__, visit_If, visit_Try
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
+import os
+import json
+import ast
+import sys
+import re
+import numpy as np
+from collections import defaultdict
+from spatial_mapper import scan_and_vectorize, DirectoryCache
+
+class LogicalGateVisitor(ast.NodeVisitor):
+    def __init__(self):
+        self.gates = []
+
+    def visit_If(self, node):
+        cond_str = ast.unparse(node.test) if hasattr(ast, 'unparse') else "dynamic_condition"
+        if_calls = []
+        for n in ast.walk(node):
+            if isinstance(n, ast.Call):
+                if isinstance(n.func, ast.Name):
+                    if_calls.append(n.func.id)
+                elif isinstance(n.func, ast.Attribute):
+                    if_calls.append(n.func.attr)
+        self.gates.append({
+            "gate_type": "conditional_branch",
+            "precondition": cond_str,
+            "consequent_calls": list(set(if_calls))
+        })
+        self.generic_visit(node)
+
+    def visit_Try(self, node):
+        handlers = []
+        for h in node.handlers:
+            handlers.append(ast.unparse(h.type) if (hasattr(ast, 'unparse') and h.type) else "Exception")
+        self.gates.append({
+            "gate_type": "exception_guard",
+            "handlers": handlers
+        })
+        self.generic_visit(node)
+
+# Pre-compiled regex patterns to scan for implicit dependencies
+PORT_PATTERN = re.compile(r'(?:port\s*=\s*|connect\(\([^,]+,\s*)(\d{4})')
+SQL_TABLE_PATTERN = re.compile(r'(?:FROM|INTO|UPDATE|TABLE|INDEX|JOIN)\s+([a-zA-Z_][a-zA-Z0-9_]*)', re.IGNORECASE)
+FILESYSTEM_PATTERN = re.compile(r'["\'](Aura_Memory|Aura_Staging|Aura_Staging/\S+|Aura_Memory/\S+)["\']')
+
+# Known tables and ports to filter out standard SQL keywords/unrelated numbers
+VALID_SQL_TABLES = {"traces", "causal_ledger", "morphemic_palace", "ojibwe_dkt_log", "dkt_holographic_log", "Voynich_Knowledge_Graph", "audit_cache"}
+VALID_PORTS = {"8000", "8081", "4444", "8765"}
+
+def extract_ast_calls(file_content: str, filename: str) -> dict:
+    """Extracts explicit function and method calls inside a file using AST."""
+    calls = defaultdict(list)
+    try:
+        tree = ast.parse(file_content, filename=filename)
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                func_name = node.name
+                func_calls = []
+                for sub_node in ast.walk(node):
+                    if isinstance(sub_node, ast.Call):
+                        if isinstance(sub_node.func, ast.Name):
+                            func_calls.append(sub_node.func.id)
+                        elif isinstance(sub_node.func, ast.Attribute):
+                            func_calls.append(sub_node.func.attr)
+                calls[func_name] = list(set(func_calls))
+    except SyntaxError:
+        pass
+    return dict(calls)
+
+def scan_regex_signatures(file_content: str) -> dict:
+    """Scans for implicit, data-driven connections (shared SQLite tables, ports, and filesystems)."""
+    ports = set(PORT_PATTERN.findall(file_content)) & VALID_PORTS
+    tables = set(SQL_TABLE_PATTERN.findall(file_content)) & VALID_SQL_TABLES
+    filesystems = {os.path.basename(p.strip('"\'')) for p in FILESYSTEM_PATTERN.findall(file_content)}
+    
+    return {
+        "ports": list(ports),
+        "tables": list(tables),
+        "filesystems": list(filesystems)
+    }
+
+def compile_unified_graph():
+    current_dir = getattr(sys.modules[__name__], 'current_dir', os.getcwd())
+    from spatial_mapper import scan_and_vectorize
+    
+    # 1. Harvest base layout primitives
+    code_topology = scan_and_vectorize(current_dir)
+    
+    nodes_payload = []
+    edges_payload = []
+    
+    shared_tables = defaultdict(list)
+    port_sharers = defaultdict(list)
+    file_ast_calls = {}
+    
+    # 2. Populate node graph configurations
+    for node in code_topology:
+        nodes_payload.append({
+            "id": node.get("id"),
+            "label": node.get("label"),
+            "shape": node.get("shape", "Sphere"),
+            "color": node.get("color", "#00E5FF"),
+            "vector": node.get("vector", [0.0, 0.0, 0.0])
+        })
+        
+    # 3. Scan signatures and compile AST maps across file components
+    files = list(set([n.get("id", "").split("::")[0] for n in code_topology if "::" in n.get("id", "")]))
+    for file in files:
+        if os.path.exists(file) and file.endswith(".py"):
+            try:
+                with open(file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                
+                # Active Integration: Leverage your high-fidelity regex signature scanner
+                signatures = scan_regex_signatures(content)
+                for table in signatures["tables"]:
+                    shared_tables[table].append(file)
+                for port in signatures["ports"]:
+                    port_sharers[port].append(file)
+                    
+                # Active Integration: Leverage your AST call extractor
+                file_ast_calls[file] = extract_ast_calls(content, file)
+            except Exception:
+                pass
+
+    # 4. Generate relationship links (Implicit Shared Resource Edges)
+    for table_name, files_sharing in shared_tables.items():
+        if len(files_sharing) > 1:
+            for i in range(len(files_sharing)):
+                for j in range(i + 1, len(files_sharing)):
+                    edges_payload.append({
+                        "source": f"{files_sharing[i]}::global_scope",
+                        "target": f"{files_sharing[j]}::global_scope",
+                        "type": f"shared_table_{table_name}",
+                        "color": "#4CAF50",
+                        "strength": 0.8
+                    })
+                    
+    for port, files_sharing in port_sharers.items():
+        if len(files_sharing) > 1:
+            for i in range(len(files_sharing)):
+                for j in range(i + 1, len(files_sharing)):
+                    edges_payload.append({
+                        "source": f"{files_sharing[i]}::global_scope",
+                        "target": f"{files_sharing[j]}::global_scope",
+                        "type": f"shared_port_{port}",
+                        "color": "#FFEB3B",
+                        "strength": 0.9
+                    })
+
+    # 5. Generate Structural functional call edges (Explicit Inter-Node wiring)
+    # Maps internal function execution trajectories cleanly across your 394 components
+    node_labels = {n.get("label"): n.get("id") for n in nodes_payload if n.get("label")}
+    for file, functions_dict in file_ast_calls.items():
+        for func_name, internal_calls in functions_dict.items():
+            source_id = f"{file}::{func_name}"
+            for called_element in internal_calls:
+                if called_element in node_labels and called_element != func_name:
+                    edges_payload.append({
+                        "source": source_id,
+                        "target": node_labels[called_element],
+                        "type": "explicit_function_call",
+                        "color": "#00E5FF",
+                        "strength": 0.7
+                    })
+
+    unified_payload = {
+        "status": "SYS_TOPOLOGY_ACTIVE",
+        "nodes": nodes_payload,
+        "edges": edges_payload
+    }
+
+    # 6. Commit state layout map back to disk
+    target_path = "Aura_Memory/live_topology_ast.json"
+    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+    with open(target_path, "w", encoding="utf-8") as f:
+        json.dump(unified_payload, f, indent=4)
+
+    return unified_payload
+
+if __name__ == "__main__":
+    compile_unified_graph()
+    print("[+] Refined dependency discovery complete. Map output written to Aura_Memory.")

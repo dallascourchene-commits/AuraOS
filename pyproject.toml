@@ -1,0 +1,83 @@
+[project]
+name = "aura-pvm"
+version = "0.1.0"
+description = "AURA — Polysynthetic Virtual Machine (PVM)"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26.4,<3.0",
+    "websockets>=12.0,<17.0",
+    "aiosqlite>=0.20.0,<1.0",
+    "ddgs>=6.0,<10.0",
+    "wasmtime>=20.0,<46.0",
+    "aiohttp>=3.9.0,<4.0",
+    "beautifulsoup4>=4.12.0,<5.0",
+    "httpx>=0.27.0,<1.0",
+    "cryptography>=41.0.0,<45.0",
+]
+
+# ---------------------------------------------------------------------------
+# Ruff — linting and import hygiene
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes (includes F401 unused import, F811 redefinition)
+    "I",    # isort — import ordering
+    "UP",   # pyupgrade — enforce Python 3.10+ syntax
+    "PLC",  # pylint convention
+    "PLE",  # pylint error
+    "PLW",  # pylint warning
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "E501",   # line-length enforced by formatter, not linter
+    "F841",   # local variable assigned but never used (too noisy in large monolith)
+    "PLC0415", # import-outside-toplevel — caught by pvm_arch_checker instead
+]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = [
+    "aura_core", "aura_node", "aura_mesh", "aura_evolve", "aura_patcher",
+    "aura_mitosis", "aura_heal", "aura_dream_engine", "aura_governor",
+    "aura_cognitive_synthesizer", "aura_nesy_sat_reasoner", "aura_meta_ingest",
+    "aura_crypto_puf", "aura_crystallization", "aura_spectral_memory",
+    "aura_privacy_io", "aura_rosetta_memory", "aura_spvm",
+    "aura_topology_analyzer", "aura_topological_scanner",
+    "aura_positional_parser", "aura_vpt_tokenizer", "aura_lexicon_compiler",
+    "aura_english_compiler", "aura_hybrid_linguistic_cortex", "aura_indus_cortex",
+    "aura_background_auditor", "aura_forager", "aura_ingest",
+    "arxiv_forager", "async_palace", "cognitive_router", "dag_executor",
+    "gateway", "liquid_fhrr", "liquid_kernel", "logging_kit", "mint_genesis",
+    "pulse", "pwfst", "quantum_dag", "spatial_mapper", "vsa_resonator",
+    "lexical_transducer",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---------------------------------------------------------------------------
+# Mypy — static type checking (Python 3.10+ strict mode)
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.10"
+strict = false
+warn_unused_imports = true
+warn_redundant_casts = true
+warn_return_any = false
+disallow_untyped_defs = false
+ignore_missing_imports = true
+no_implicit_reexport = true
+show_error_codes = true
+exclude = [
+    "aura_incubator\\.py",   # corrupted file — not valid Python
+    "AuraSovereign/",
+    "storage/",
+    "language_packs/",
+]

@@ -1,0 +1,58 @@
+import numpy as np
+import re
+
+class AuraHyperdimensionalCore:
+    def __init__(self, dimensions=10000):
+        self.D = dimensions
+        # Persistent memory matrix so words maintain the same vector meaning over time
+        self.lexicon = {}
+
+    def get_word_vector(self, word):
+        import numpy as np
+        """Retrieves or initializes a fixed hypervector for a specific token."""
+        if word not in self.lexicon:
+            # Using 0-255 uint8 gives massive density compared to binary 0-1
+            self.lexicon[word] = np.random.randint(0, 256, size=self.D, dtype=np.uint8)
+        return self.lexicon[word]
+
+    def permute(self, vector, shifts=1):
+        import numpy as np
+        """Cyclic bit-shifting: Mathematically encodes chronological sequence and time."""
+        return np.roll(vector, shifts)
+
+    def bind(self, v1, v2):
+        import numpy as np
+        """XOR Binding: Links multi-object concepts together into a unified state."""
+        return np.bitwise_xor(v1, v2)
+
+    def encode_text(self, text):
+        import numpy as np
+        import re
+        """FactorHD Semantic Folding: Retains both meaning AND word sequence."""
+        # Clean and tokenize the input string
+        words = re.findall(r'\w+', str(text).lower())
+        
+        # Base state zero-vector
+        sentence_hv = np.zeros(self.D, dtype=np.uint8)
+        if not words:
+            return sentence_hv
+
+        for i, word in enumerate(words):
+            word_hv = self.get_word_vector(word)
+            
+            # 1. PERMUTE: Shift the vector based on its exact position in the sentence
+            time_encoded_hv = self.permute(word_hv, shifts=i)
+            
+            # 2. BIND: Fold the time-aware word into the main sentence structure
+            sentence_hv = self.bind(sentence_hv, time_encoded_hv)
+
+        return sentence_hv
+
+    def calculate_resonance(self, hv1, hv2):
+        """Calculates structural similarity via Normalized Hamming Distance."""
+        if hv1 == 0 or hv2 == 0: return 0.0
+        # Fast kernel-level bit count of differences
+        hamming_distance = (hv1 ^ hv2).bit_count() 
+        # Convert to a resonance score (1.0 is perfect match, 0.5 is orthogonal/unrelated)
+        return 1.0 - (hamming_distance / self.D)
+

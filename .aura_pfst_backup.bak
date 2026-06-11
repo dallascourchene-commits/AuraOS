@@ -1,0 +1,94 @@
+import os
+
+class AuraNativePFST:
+    def __init__(self, blueprint_path):
+        self.graph = {}
+        self.start_states = []
+        self._load_blueprint(blueprint_path)
+
+    def _load_blueprint(self, path):
+        if not os.path.exists(path):
+            print(f"[!] PFST Blueprint not found at {path}. Deterministic routing disabled.")
+            return
+
+        current_lexicon = None
+        with open(path, 'r') as f:
+            for line in f:
+                line = line.split('!')[0].strip()
+                if not line or line.startswith("Multichar_Symbols"): 
+                    continue
+                if line.startswith("LEXICON"):
+                    current_lexicon = line.split()[1]
+                    self.graph[current_lexicon] = {}
+                    continue
+                
+                if current_lexicon and line.endswith(";"):
+                    cleaned_line = line.replace(';', '').strip()
+                    tokens = cleaned_line.split()
+                    if not tokens: continue
+                        
+                    next_dest = tokens[-1].strip()
+                    raw_tag = tokens[0]
+                    tag = raw_tag.rsplit(':', 1)[0].strip()
+                    
+                    self.graph[current_lexicon][tag] = next_dest
+                    if current_lexicon == "Root":
+                        self.start_states.append((tag, next_dest))
+
+    def compile_vsft_matrix(self, hdc_matrix):
+        """Compiles the text-based LEXC graph into a pure Vector Symbolic Matrix."""
+        self.vector_graph = {}
+        print("\n[*] Compiling LEXC Blueprint into Vector Symbolic Finite Transducer (VSFT)...")
+        
+        route_count = 0
+        for current_state, transitions in self.graph.items():
+            state_hv = hdc_matrix.get_word_vector(current_state)
+            
+            for tag, next_state in transitions.items():
+                tag_hv = hdc_matrix.get_word_vector(tag)
+                
+                # VSFT Core Math: The transition route is the XOR binding of State + Tag
+                transition_path_hv = hdc_matrix.bind(state_hv, tag_hv)
+                
+                # Store the mathematical route instead of the string route
+                self.vector_graph[transition_path_hv.tobytes()] = next_state
+                route_count += 1
+                
+        print(f"[+] VSFT Matrix active. {route_count} continuous mathematical routes forged.")
+
+    def validate_route(self, route_str):
+        if not self.graph: return True
+        tokens = [t.strip() for t in route_str.split() if t.strip()]
+        if not tokens: return False
+
+        first_token = tokens[0]
+        current_state = None
+        for entry, next_state in self.start_states:
+            if entry == first_token or next_state == first_token:
+                current_state = next_state
+                break
+
+        if not current_state:
+            for entry, next_state in self.start_states:
+                if first_token in self.graph.get(next_state, {}):
+                    current_state = self.graph[next_state][first_token]
+                    break
+
+        if not current_state: 
+            print(f"[VIGIL LOCK-OUT] > Origin state '{first_token}' not registered in Root entrypoints.")
+            return False
+
+        for token in tokens[1:]:
+            state_transitions = self.graph.get(current_state, {})
+            if token in state_transitions:
+                current_state = state_transitions[token]
+            else:
+                available = list(state_transitions.keys())
+                print(f"[VIGIL LOCK-OUT] > Action '{token}' rejected at State '{current_state}'. Available: {available}")
+                return False
+        
+        if current_state != '#':
+            print(f"[VIGIL LOCK-OUT] > Route incomplete. Ended at '{current_state}'.")
+            return False
+        return True
+
