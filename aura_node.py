@@ -65,7 +65,8 @@ from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
 from aura_meta_ingest import MetaTelemetryIngestor
 from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
 from aura_crystallization import hypertruth_crystallization_loop
-from arxiv_forager import ArXivForager
+from arxiv_forager import ArXivForager, EnhancedArxivForager, ForagerConfig
+from aura_topology_ws_bridge import AuraARWebSocketServer
 from quantum_dag import QuantumMerkleDAG
 from vsa_resonator import VSAResonator
 from liquid_fhrr import LiquidFHRR
@@ -6032,6 +6033,62 @@ async def main():
                 print("[-] [AURA FORAGER] Background engines deactivated. Resource conservation active.")
                 continue
 
+            # ── AR WebSocket Server Controls ──────────────────────────────────
+            elif u_in_l in ["!ar_start", "!ar_server_start"]:
+                # Start the AuraARWebSocketServer on port 8765 for interactive topology display
+                if not hasattr(node, '_ar_ws_server') or node._ar_ws_server is None:
+                    try:
+                        node._ar_ws_server = AuraARWebSocketServer(host="0.0.0.0", port=8765)
+                        await node._ar_ws_server.start()
+                        print("[+] AR WebSocket server started on ws://0.0.0.0:8765")
+                        print("    Connect from index.html or any WebSocket client.")
+                        print("    Messages: TOPOLOGY_REQUEST, SHAPE_INTERACTION, ADD_SHAPE, HOTSWAP_REQUEST")
+                    except Exception as _ar_e:
+                        print(f"[-] AR server failed to start: {_ar_e}")
+                        node._ar_ws_server = None
+                else:
+                    print("[*] AR WebSocket server is already running on port 8765.")
+                continue
+
+            elif u_in_l in ["!ar_stop", "!ar_server_stop"]:
+                # Stop the AuraARWebSocketServer cleanly
+                if hasattr(node, '_ar_ws_server') and node._ar_ws_server is not None:
+                    try:
+                        await node._ar_ws_server.stop()
+                        node._ar_ws_server = None
+                        print("[-] AR WebSocket server stopped.")
+                    except Exception as _ar_stop_e:
+                        print(f"[-] AR server stop error: {_ar_stop_e}")
+                        node._ar_ws_server = None
+                else:
+                    print("[*] AR WebSocket server is not currently running.")
+                continue
+
+            elif u_in_l.startswith("!search_similar "):
+                # VSA-based similarity search over ingested arXiv papers
+                query_text = u_in[16:].strip()
+                if not query_text:
+                    print("[-] Usage: !search_similar <query>")
+                    print("    Example: !search_similar quantum neural network optimization")
+                    continue
+                print(f"\n[*] Running VSA similarity search for: '{query_text}'...")
+                try:
+                    _enh_forager = EnhancedArxivForager(node)
+                    similar_papers = await _enh_forager.search_similar(query_text, top_k=5)
+                    if not similar_papers:
+                        print("[-] No indexed papers found. Run !forage or !backtrack first to seed the index.")
+                    else:
+                        print(f"\n[+] Top {len(similar_papers)} semantically similar papers:\n")
+                        for idx, paper in enumerate(similar_papers, 1):
+                            print(f"  {idx}. {paper.title}")
+                            print(f"     Published : {paper.published.date() if paper.published else 'unknown'}")
+                            print(f"     Authors   : {', '.join(paper.authors[:3])}")
+                            print(f"     Abstract  : {paper.abstract[:120]}...")
+                            print()
+                except Exception as _sf_e:
+                    print(f"[-] Search failed: {_sf_e}")
+                continue
+
             elif u_in_l.startswith("!curiosity_tree "):
                 seed_concept = u_in[16:].strip()
                 if not seed_concept:
@@ -6775,11 +6832,92 @@ def contingency_harness():
 
             elif u_in_l.startswith("!savings"):
                 # Per-provider / per-aspect tokens + money saved.
+                # Reads from the append-only aura_executions.jsonl (cumulative across all sessions)
+                # and maintains a persistent snapshot at Aura_Memory/aura_savings_total.json
+                # so totals always grow — never showing stale-static data.
                 try:
-                    from aura_router import main as _router_main
-                    _router_main(["savings"])
+                    from aura_router import savings_report as _savings_report, EXEC_LOG_PATH as _EXEC_LOG_PATH
+                    import os as _os_sav
+                    _SAVINGS_SNAPSHOT = _os_sav.path.join("Aura_Memory", "aura_savings_total.json")
+
+                    # 1. Pull live cumulative totals from execution log
+                    rep = _savings_report()
+                    o   = rep["overall"]
+
+                    # 2. Load (or seed) persistent running totals snapshot
+                    _snapshot: dict = {}
+                    if _os_sav.path.exists(_SAVINGS_SNAPSHOT):
+                        try:
+                            with open(_SAVINGS_SNAPSHOT, "r", encoding="utf-8") as _sf:
+                                _snapshot = json.load(_sf)
+                        except Exception:
+                            _snapshot = {}
+
+                    # 3. Accumulate into the snapshot (running totals grow each call)
+                    _snap_overall = _snapshot.get("overall", {})
+                    _snap_calls   = _snap_overall.get("total_calls_logged", 0)
+
+                    # Update snapshot with the latest numbers from the JSONL (source of truth)
+                    _snapshot["overall"] = {
+                        "total_calls_logged" : rep["executions"],
+                        "aura_input_tokens"  : o["aura_input_tokens"],
+                        "aura_output_tokens" : o["aura_output_tokens"],
+                        "aura_cost_usd"      : o["aura_cost_usd"],
+                        "input_tokens_saved" : o["input_tokens_saved"],
+                        "output_tokens_saved": o["output_tokens_saved"],
+                        "est_cost_saved_usd" : o["est_cost_saved_usd"],
+                    }
+                    _snapshot["by_provider"]       = rep["by_provider"]
+                    _snapshot["by_aspect"]         = rep["by_aspect"]
+                    _snapshot["projection"]        = rep.get("projection_if_optimal", {})
+                    _snapshot["prices_updated"]    = rep.get("prices_updated", "unknown")
+                    _snapshot["last_updated"]      = datetime.now().isoformat()
+
+                    # 4. Persist the updated snapshot so totals survive restarts
+                    _os_sav.makedirs("Aura_Memory", exist_ok=True)
+                    with open(_SAVINGS_SNAPSHOT, "w", encoding="utf-8") as _sf:
+                        json.dump(_snapshot, _sf, indent=2)
+
+                    # 5. Pretty-print cumulative savings report
+                    print(f"\n{'='*60}")
+                    print(f" [💰 AURA CUMULATIVE SAVINGS LEDGER]")
+                    print(f"{'='*60}")
+                    print(f"=== OVERALL (over {rep['executions']} logged routed calls) ===")
+                    print(f"  tokens used  (in/out) : {o['aura_input_tokens']:,} / {o['aura_output_tokens']:,}")
+                    print(f"  tokens SAVED (in/out) : {o['input_tokens_saved']:,} / {o['output_tokens_saved']:,}")
+                    print(f"  cost used             : ${o['aura_cost_usd']:.6f}")
+                    print(f"  cost SAVED            : ${o['est_cost_saved_usd']:.6f}")
+                    if rep["by_provider"]:
+                        print("=== PER PROVIDER ===")
+                        for _prov, _v in rep["by_provider"].items():
+                            print(f"  {_prov:10s}  calls={_v['calls']}  used=${_v['aura_cost_usd']:.4f}"
+                                  f"  saved=${_v['est_cost_saved_usd']:.4f}"
+                                  f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
+                    if rep["by_aspect"]:
+                        print("=== PER ASPECT ===")
+                        for _asp, _v in rep["by_aspect"].items():
+                            print(f"  {_asp:14s}  calls={_v['calls']}  saved=${_v['est_cost_saved_usd']:.4f}"
+                                  f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
+                    proj = rep.get("projection_if_optimal", {})
+                    if proj:
+                        print("=== PROJECTION (if every task routed optimally) ===")
+                        for _tt, _pr in proj.items():
+                            print(f"  {_tt}: best={_pr['best']}"
+                                  f"  in-{_pr['input_reduction_pct']}%"
+                                  f"  out-{_pr['output_reduction_pct']}%"
+                                  f"  save/task=${_pr['cost_saving_per_task_usd']}")
+                    print(f"  ({rep.get('note', '')})")
+                    print(f"  [Persistent log: {_SAVINGS_SNAPSHOT}]")
+                    print(f"{'='*60}\n")
+                    print("[TIP] Use !route to auto-route tasks — every !route call adds a record to the savings log.")
                 except Exception as e:
                     print(f"[-] savings failed: {e}")
+                    # Graceful fallback to the CLI main
+                    try:
+                        from aura_router import main as _router_main
+                        _router_main(["savings"])
+                    except Exception:
+                        pass
                 continue
 
             elif u_in_l.startswith("!converse"):
@@ -6801,6 +6939,8 @@ def contingency_harness():
                     "!settings":          ("!settings",            "Print this manifest. Aliases: !manifest, !help"),
                     "!plan <goal>":       ("!plan <goal>",         "Build a DAG execution tree for a stated goal and print the task graph in JSON."),
                     "!approve <method>":  ("!approve <method>",    "Graft the function named <method> from aura_incubator.py into aura_node.py via live AST surgery."),
+                    "!ar_start":          ("!ar_start / !ar_server_start", "Start the interactive AR WebSocket server on port 8765 for 3D topology shape interaction (TOPOLOGY_REQUEST, SHAPE_INTERACTION, ADD_SHAPE, HOTSWAP_REQUEST)."),
+                    "!ar_stop":           ("!ar_stop / !ar_server_stop",   "Stop the AR WebSocket server cleanly, disconnecting all clients."),
                     "!test_airlock":      ("!test_airlock",        "Run the WASM quantum-tensor sandbox. Offloads to a cooler mesh peer if available."),
                     "!ping_mesh":         ("!ping_mesh",           "Broadcast an encrypted DSEKP handshake packet to all Lattica mesh peers on UDP 4444."),
                     "!mesh_status":       ("!mesh_status",         "Show the node's mesh identity, active peers, and current DSEKP entropy index."),
@@ -6820,6 +6960,7 @@ def contingency_harness():
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
                     "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (20 papers) and ingest them."),
                     "!research <concept>":("!research <concept>",  "Query ingested papers for <concept> and synthesize a Python integration helper into aura_incubator.py."),
+                    "!search_similar <query>": ("!search_similar <query>", "VSA cosine-similarity search over the indexed arXiv paper cache using 10,000-D HDC vectors. Run !forage first to populate the index."),
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),
                     "!forage_off":        ("!forage_off / !forager_off", "Disable background foraging to conserve CPU/RAM."),
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),

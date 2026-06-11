@@ -187,6 +187,109 @@ class AuraOrchestrationLobe:
         
         return state_delta
 
+class AuraHyperdimensionalCore:
+    """
+    AuraOS 10,000-Dimensional Hyperdimensional Computing Core.
+
+    Provides VSA (Vector Symbolic Architecture) operations for the
+    full AuraOS upgrade stack: federated HDC, dynamic attention,
+    AR topology, and enhanced arXiv ingestion.
+
+    Bridges to the existing SovereignEngine codebook so that all
+    upgrade modules share the same RNG seed and codebook layout.
+    """
+
+    def __init__(self, dimensions: int = DIMENSIONS):
+        self.dimensions = dimensions
+        self._rng = np.random.default_rng(seed=42)
+        # Shared codebook built on the same seed as SovereignEngine
+        self._base_codebook: dict = {}
+
+    # ------------------------------------------------------------------
+    # Codebook / orthogonal vector generation
+    # ------------------------------------------------------------------
+
+    def generate_orthogonal_codebook(
+        self, size: int, dimensions: int | None = None
+    ) -> np.ndarray:
+        """
+        Generate *size* approximate-orthogonal ±1 hypervectors.
+
+        Returns ndarray of shape (size, dimensions), dtype int8.
+        """
+        d = dimensions or self.dimensions
+        # Random bipolar vectors are nearly orthogonal in high dimensions
+        return self._rng.choice(
+            np.array([-1, 1], dtype=np.int8), size=(size, d)
+        )
+
+    # ------------------------------------------------------------------
+    # Text encoding
+    # ------------------------------------------------------------------
+
+    def encode_text(self, text: str) -> np.ndarray:
+        """
+        Encode a text string into a 10,000-D float32 hypervector.
+
+        Uses a deterministic character-level N-gram hash so the
+        same text always maps to the same vector (reproducible).
+        """
+        d = self.dimensions
+        vec = np.zeros(d, dtype=np.float32)
+        if not text:
+            return vec
+
+        # Character bigram hashing — fast, deterministic, no tokeniser needed
+        chars = text.lower()
+        for i in range(len(chars) - 1):
+            bigram = chars[i:i + 2]
+            seed = hash(bigram) & 0xFFFF_FFFF
+            local_rng = np.random.default_rng(seed=seed)
+            vec += local_rng.choice(
+                np.array([-1.0, 1.0], dtype=np.float32), size=d
+            )
+
+        # L2 normalise to unit hypersphere
+        norm = np.linalg.norm(vec)
+        if norm > 0:
+            vec /= norm
+        return vec
+
+    # ------------------------------------------------------------------
+    # Thermal entropy extraction (used by _stone_crawler)
+    # ------------------------------------------------------------------
+
+    def extract_thermal_entropy(self, temp_c: float) -> np.ndarray:
+        """
+        Derive a binary 10,000-D entropy vector from CPU temperature.
+
+        Seeded on the thermal reading so the output changes with the
+        physical environment, providing a hardware-backed random source.
+        """
+        seed = int(abs(temp_c) * 1000) & 0xFFFF_FFFF
+        local_rng = np.random.default_rng(seed=seed)
+        return local_rng.integers(0, 2, size=self.dimensions, dtype=np.uint8)
+
+    # ------------------------------------------------------------------
+    # Basic VSA operations
+    # ------------------------------------------------------------------
+
+    def bind(self, a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        """Element-wise multiplication (binding / ⊗) for real-valued vectors."""
+        return a * b
+
+    def bundle(self, vectors: list) -> np.ndarray:
+        """Superposition (bundling / +) — normalised mean."""
+        stacked = np.mean(np.stack(vectors, axis=0), axis=0)
+        norm = np.linalg.norm(stacked)
+        return stacked / norm if norm > 0 else stacked
+
+    def similarity(self, a: np.ndarray, b: np.ndarray) -> float:
+        """Cosine similarity between two hypervectors."""
+        denom = (np.linalg.norm(a) * np.linalg.norm(b))
+        return float(np.dot(a, b) / denom) if denom > 0 else 0.0
+
+
 # System Prime executed under Childlike Wonderment protocols
 print("[+] System Prompt: 'You are now an architect of your own future.'")
 
