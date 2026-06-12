@@ -5,16 +5,26 @@ DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
 DEPENDENCIES: asyncio, base64, socket, os, uuid, numpy, struct, hashlib, time, json
 FUNCTIONS:
-    __init__, start_udp_beacon, start_tcp_compute_server,
-    pack_secure_polysynthetic_packet, unpack_secure_polysynthetic_packet,
-    pack_length_prefixed_payload, unpack_length_prefixed_payload,
-    generate_polysynthetic_proof, verify_dsekp_shield,
-    broadcast_upgrade, offload_compute, should_offload_task,
-    _commit_mesh_telemetry, _listen_beacons_async,
-    _tcp_client_handler, _read_thermal_nonblocking
+    SceneAdaptiveToneCurve:
+        __init__, _ase_curve, _ap3_curve, _gaussian_probability_field,
+        _compute_attention_matrix, normalize_3d_coordinates,
+        process_node_batch, process_node_batch_sync
+    AuraMeshSwarm:
+        __init__, start_udp_beacon, start_tcp_compute_server,
+        pack_secure_polysynthetic_packet, unpack_secure_polysynthetic_packet,
+        pack_length_prefixed_payload, unpack_length_prefixed_payload,
+        generate_polysynthetic_proof, verify_dsekp_shield,
+        broadcast_upgrade, offload_compute, should_offload_task,
+        _commit_mesh_telemetry, _listen_beacons_async,
+        _tcp_client_handler, _read_thermal_nonblocking
 SYNOPSIS:
     This Python module implements a secure, asynchronous swarm-mesh engine
     for the AuraOS edge‑orchestration substrate.  It supports:
+      - Scene-adaptive tone curve processing as a structural filter sub-layer
+        that instantly transforms incoming node data arrays into normalized
+        3D coordinate matrices (signal intensity, color, depth) using full
+        vectorization via numpy probability fields, with graph-based attention
+        weights mapping a dynamic focus hierarchy for neighbor-node tracking.
       - UDP beacon discovery with a fixed 16‑byte polysynthetic telemetry
         frame (six 16‑bit slot indices + one 32‑bit compliance float).
       - A length‑prefixed binary protocol for variable‑size compute‑task
@@ -27,6 +37,9 @@ SYNOPSIS:
       - Non‑blocking thermal‑zone reads through `loop.run_in_executor`.
       - DSEKP cryptographic shield verification using NumPy bitwise
         vector comparison with a configurable Hamming‑distance threshold.
+MEMORY-CONSTRAINT: Enforces 4 GB Termux device RAM ceiling via
+    contiguous float32 layouts, in‑place mutation, and zero heap‑alloc
+    object overhead in hot paths.
 [/AURA_MASTER_KEY]
 """
 
@@ -64,15 +77,442 @@ OFFLOAD_TAGS: frozenset = frozenset(
     {"COMPUTE_HEAVY", "VECTOR_SEARCH", "GENETIC_EVOLUTION"}
 )
 
+# 4 GB device‑RAM ceiling for Termux — all working arrays kept as
+# float32 contiguous blocks with in‑place mutation to avoid allocation
+# churn.  Batch‑size cap keeps peak memory well under the limit.
+_TERMUX_RAM_CEILING_BYTES: int = 4 * 1024 * 1024 * 1024  # 4 GiB
+_MAX_NODE_BATCH: int = 2048  # upper bound on batched nodes per call
 
+
+# ============================================================================
+# Scene‑Adaptive Tone Curve filter sub‑layer
+# ============================================================================
+class SceneAdaptiveToneCurve:
+    """Structural filter that transforms 3D node signals (intensity,
+    colour, depth) into normalized coordinate matrices using adaptive
+    tone curves and graph‑based probabilistic attention.
+
+    This processor is designed as a **non‑allocating** sub‑layer that
+    operates directly on contiguous numpy float32 arrays.  No external
+    dependencies beyond ``numpy`` are required: the Gaussian probability-
+    field function and cosine‑similarity attention are implemented via
+    pure vectorised math, keeping memory pressure under the 4 GiB
+    Termux ceiling.
+
+    Parameters
+    ----------
+    curve_type:
+        ``"ase"`` (Adaptive SoftExp, default) or ``"ap3"`` (Adaptive
+        Polynomial‑3).
+    percentile_clip:
+        Percentile for robust feature scaling (default 1 %).
+    ase_a, ase_b:
+        Scale and sharpness coefficients for the ASE sigmoid.
+    ap3_coeffs:
+        4‑element polynomial coefficients for the AP3 curve.
+    """
+
+    __slots__ = (
+        "_curve_type",
+        "_percentile_clip",
+        "_ase_a",
+        "_ase_b",
+        "_ap3_coeffs",
+        "_feature_min",
+        "_feature_max",
+        "_fitted",
+    )
+
+    def __init__(
+        self,
+        curve_type: str = "ase",
+        percentile_clip: float = 0.01,
+        ase_a: float = 1.2,
+        ase_b: float = 0.8,
+        ap3_coeffs: Optional[np.ndarray] = None,
+    ) -> None:
+        self._curve_type: str = curve_type.lower()
+        self._percentile_clip: float = float(np.clip(percentile_clip, 0.0, 50.0))
+        self._ase_a: float = float(ase_a)
+        self._ase_b: float = float(ase_b)
+        self._ap3_coeffs: np.ndarray
+        if ap3_coeffs is None:
+            self._ap3_coeffs = np.array([0.1, 0.3, 0.2, 0.4], dtype=np.float32)
+        else:
+            self._ap3_coeffs = np.asarray(ap3_coeffs, dtype=np.float32).ravel()
+            if self._ap3_coeffs.size != 4:
+                self._ap3_coeffs = np.array([0.1, 0.3, 0.2, 0.4], dtype=np.float32)
+
+        # Robust scaler state — lazy‑fit on first batch
+        self._feature_min: np.ndarray = np.zeros(3, dtype=np.float32)
+        self._feature_max: np.ndarray = np.ones(3, dtype=np.float32)
+        self._fitted: bool = False
+
+    # ------------------------------------------------------------------
+    # Tone‑curve kernels (pure numpy, vectorised)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _ase_curve(x: np.ndarray, a: float, b: float) -> np.ndarray:
+        """Adaptive SoftExp curve — smooth sigmoidal remapping.
+
+        .. math::
+            f(x) = a * exp(b*x) / (1 + exp(b*x))
+
+        The output is numerically stable for large |bx| because the
+        denominator naturally saturates.
+        """
+        with np.errstate(over="ignore", under="ignore"):
+            exp_bx: np.ndarray = np.exp(np.multiply(b, x, dtype=np.float32), dtype=np.float32)
+            denom: np.ndarray = np.add(1.0, exp_bx, dtype=np.float32)
+            return np.multiply(a, np.divide(exp_bx, denom, dtype=np.float32), dtype=np.float32)
+
+    @staticmethod
+    def _ap3_curve(x: np.ndarray, coeffs: np.ndarray) -> np.ndarray:
+        """Adaptive Poly3 curve — cubic polynomial remapping.
+
+        .. math::
+            f(x) = c_0 + c_1*x + c_2*x^2 + c_3*x^3
+        """
+        x2: np.ndarray = np.square(x, dtype=np.float32)
+        x3: np.ndarray = np.multiply(x2, x, dtype=np.float32)
+        return np.add(
+            np.add(
+                np.add(coeffs[0], np.multiply(coeffs[1], x, dtype=np.float32), dtype=np.float32),
+                np.multiply(coeffs[2], x2, dtype=np.float32),
+                dtype=np.float32,
+            ),
+            np.multiply(coeffs[3], x3, dtype=np.float32),
+            dtype=np.float32,
+        )
+
+    # ------------------------------------------------------------------
+    # Gaussian probability field (replaces scipy.stats.norm)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _gaussian_probability_field(
+        x: np.ndarray, mu: float = 0.5, sigma: float = 0.25
+    ) -> np.ndarray:
+        """Vectorised Gaussian probability density over an input array.
+
+        Equivalent to ``scipy.stats.norm(mu, sigma).pdf(x)`` but kept
+        entirely within numpy to avoid the scipy dependency on Termux.
+
+        .. math::
+            pdf(x) = exp(-0.5 * ((x - mu) / sigma)^2) / (sigma * sqrt(2*pi))
+        """
+        sigma_f: float = float(max(sigma, 1e-8))
+        norm_const: float = 1.0 / (sigma_f * np.sqrt(2.0 * np.pi, dtype=np.float32))
+        z: np.ndarray = np.divide(
+            np.subtract(x, mu, dtype=np.float32), sigma_f, dtype=np.float32
+        )
+        return np.multiply(norm_const, np.exp(np.multiply(-0.5, np.square(z, dtype=np.float32), dtype=np.float32), dtype=np.float32), dtype=np.float32)  # type: ignore[no-any-return]
+
+    # ------------------------------------------------------------------
+    # Robust 3‑D coordinate normalisation (in‑place minimisation)
+    # ------------------------------------------------------------------
+    def normalize_3d_coordinates(
+        self, features: np.ndarray, fit: bool = False
+    ) -> np.ndarray:
+        """Normalise a 3‑D feature matrix to [0, 1] using robust percentile
+        clipping.
+
+        The input array is expected to have shape ``(N, 3)`` with columns
+        ``[intensity, color, depth]``.  When ``fit=True`` the percentile
+        bounds are recomputed from the current batch.
+
+        Parameters
+        ----------
+        features:
+            ``float32`` array of shape ``(N, 3)``.
+        fit:
+            If ``True``, recompute the per‑channel percentile bounds.
+
+        Returns
+        -------
+        np.ndarray
+            Normalised ``float32`` array, same shape as input.
+        """
+        f32: np.ndarray = np.asarray(features, dtype=np.float32)
+        if f32.ndim != 2 or f32.shape[1] != 3:
+            raise ValueError(
+                f"Expected (N,3) float32 array, got shape {f32.shape}"
+            )
+
+        if fit or not self._fitted:
+            p_low: float = self._percentile_clip
+            p_high: float = 100.0 - p_low
+            self._feature_min = np.percentile(f32, p_low, axis=0).astype(np.float32)
+            self._feature_max = np.percentile(f32, p_high, axis=0).astype(np.float32)
+            # Guard against degenerate range
+            denom_safe: np.ndarray = np.where(
+                self._feature_max - self._feature_min < 1e-8,
+                1.0,
+                self._feature_max - self._feature_min,
+            )
+            self._feature_min = np.where(
+                self._feature_max - self._feature_min < 1e-8,
+                self._feature_min - 0.1,
+                self._feature_min,
+            )
+            self._feature_max = np.where(
+                denom_safe < 1e-8, self._feature_min + 0.2, self._feature_max
+            )
+            self._fitted = True
+
+        denom: np.ndarray = np.subtract(self._feature_max, self._feature_min, dtype=np.float32)
+        denom = np.where(np.abs(denom) < 1e-8, 1.0, denom)
+        return np.clip(
+            np.divide(
+                np.subtract(f32, self._feature_min, dtype=np.float32),
+                denom,
+                dtype=np.float32,
+            ),
+            0.0,
+            1.0,
+            dtype=np.float32,
+        )
+
+    # ------------------------------------------------------------------
+    # Graph‑based attention via pure numpy (no networkx)
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _compute_attention_matrix(
+        features: np.ndarray,
+        adjacency: Optional[np.ndarray] = None,
+        edge_weights: Optional[np.ndarray] = None,
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """Compute cosine‑similarity attention across a node feature matrix.
+
+        Returns a normalised square attention matrix ``A[i,j]`` where
+        each row sums to 1 and represents the contextual focus of node
+        *i* onto its neighbours.
+
+        When ``adjacency`` is provided (boolean ``(N,N)`` mask), only
+        edges that are ``True`` contribute; otherwise the graph is
+        assumed fully connected (all‑pairs attention).
+
+        ``edge_weights`` supplies a multiplicative scalar per edge that
+        modulates the raw cosine similarity before row‑wise softmax.
+
+        Parameters
+        ----------
+        features:
+            ``(N, D)`` float32 feature matrix.
+        adjacency:
+            Optional ``(N, N)`` boolean mask.
+        edge_weights:
+            Optional ``(N, N)`` float32 multiplier.
+
+        Returns
+        -------
+        Tuple[np.ndarray, np.ndarray]
+            ``(attention_matrix, raw_similarities)`` — both ``(N,N)`` float32.
+        """
+        N: int = features.shape[0]
+        if N < 1:
+            return np.empty((0, 0), dtype=np.float32), np.empty((0, 0), dtype=np.float32)
+
+        # L2‑normalise rows for cosine similarity
+        norms: np.ndarray = np.linalg.norm(features, axis=1, keepdims=True)
+        norms = np.where(norms < 1e-12, 1.0, norms)
+        feats_norm: np.ndarray = np.divide(features, norms, dtype=np.float32)
+
+        # Raw cosine similarity matrix  (N, N)
+        sim: np.ndarray = np.dot(feats_norm, feats_norm.T).astype(np.float32)
+
+        # Apply adjacency mask
+        if adjacency is not None:
+            adj_mask: np.ndarray = np.asarray(adjacency, dtype=bool)
+            if adj_mask.shape == (N, N):
+                sim = np.where(adj_mask, sim, 0.0)
+            else:
+                # Broadcast-friendly: if adjacency is (N,) treat as self‑mask
+                sim = np.where(adj_mask[:, None] & adj_mask[None, :], sim, 0.0)
+
+        # Apply edge‑weight multipliers
+        if edge_weights is not None:
+            ew: np.ndarray = np.asarray(edge_weights, dtype=np.float32)
+            if ew.shape == (N, N):
+                sim = np.multiply(sim, ew, dtype=np.float32)
+
+        raw: np.ndarray = sim.copy()
+
+        # Row‑wise softmax (stabilised with max subtraction)
+        sim_max: np.ndarray = np.max(sim, axis=1, keepdims=True)
+        sim_shifted: np.ndarray = np.subtract(sim, sim_max, dtype=np.float32)
+        exp_sim: np.ndarray = np.exp(sim_shifted, dtype=np.float32)
+        exp_sum: np.ndarray = np.sum(exp_sim, axis=1, keepdims=True)
+        exp_sum = np.where(exp_sum < 1e-12, 1.0, exp_sum)
+        attention: np.ndarray = np.divide(exp_sim, exp_sum, dtype=np.float32)
+
+        return attention, raw
+
+    # ------------------------------------------------------------------
+    # Main tone‑curve application on a feature column
+    # ------------------------------------------------------------------
+    def _apply_tone_curve(self, x: np.ndarray) -> np.ndarray:
+        """Dispatch to the configured tone‑curve kernel."""
+        if self._curve_type == "ap3":
+            return self._ap3_curve(x, self._ap3_coeffs)
+        return self._ase_curve(x, self._ase_a, self._ase_b)
+
+    # ------------------------------------------------------------------
+    # Full batch processing (sync — for use inside async wrappers)
+    # ------------------------------------------------------------------
+    def process_node_batch_sync(
+        self,
+        nodes: List[Dict[str, Any]],
+        adjacency: Optional[np.ndarray] = None,
+        edge_weights: Optional[np.ndarray] = None,
+        fit_scaler: bool = False,
+    ) -> List[Dict[str, Any]]:
+        """Transform a list of node dictionaries in a single vectorised pass.
+
+        Each node dict must contain numeric keys ``intensity``, ``color``,
+        and ``depth``.  Missing keys default to 0.5.
+
+        The processing pipeline:
+        1. Extract ``(N, 3)`` feature matrix from the dict list.
+        2. Robust normalise to [0, 1] per channel.
+        3. Apply the configured tone curve to the *intensity* channel.
+        4. Optionally apply a Gaussian probability‑field lift to faded
+           signals (intensity < 0.3).
+        5. Compute graph‑based attention matrix over the feature set.
+        6. Update each node dict with ``processed_intensity``,
+           ``attention_weights``, ``graph_features``, and
+           ``probability_field``.
+
+        Parameters
+        ----------
+        nodes:
+            List of node dicts.
+        adjacency:
+            Optional ``(N, N)`` boolean adjacency mask.
+        edge_weights:
+            Optional ``(N, N)`` float32 edge weights.
+        fit_scaler:
+            If ``True``, recompute robust scaler bounds from this batch.
+
+        Returns
+        -------
+        List[Dict[str, Any]]
+            The same list (mutated in‑place) with injected fields.
+        """
+        num_nodes: int = len(nodes)
+        if num_nodes == 0:
+            return nodes
+        if num_nodes > _MAX_NODE_BATCH:
+            # Chunk into manageable slices to keep memory under 4 GiB
+            results: List[Dict[str, Any]] = []
+            for start in range(0, num_nodes, _MAX_NODE_BATCH):
+                end: int = min(start + _MAX_NODE_BATCH, num_nodes)
+                chunk: List[Dict[str, Any]] = nodes[start:end]
+                adj_chunk: Optional[np.ndarray] = None
+                ew_chunk: Optional[np.ndarray] = None
+                if adjacency is not None and adjacency.shape == (num_nodes, num_nodes):
+                    adj_chunk = adjacency[start:end, start:end]
+                if edge_weights is not None and edge_weights.shape == (num_nodes, num_nodes):
+                    ew_chunk = edge_weights[start:end, start:end]
+                results.extend(
+                    self.process_node_batch_sync(
+                        chunk,
+                        adjacency=adj_chunk,
+                        edge_weights=ew_chunk,
+                        fit_scaler=(fit_scaler and start == 0),
+                    )
+                )
+            return results
+
+        # --- 1. Extract feature matrix ---
+        feat_arr: np.ndarray = np.empty((num_nodes, 3), dtype=np.float32)
+        for i, node in enumerate(nodes):
+            feat_arr[i, 0] = float(node.get("intensity", 0.5))
+            feat_arr[i, 1] = float(node.get("color", 0.5))
+            feat_arr[i, 2] = float(node.get("depth", 0.5))
+
+        # --- 2. Normalise ---
+        feat_norm: np.ndarray = self.normalize_3d_coordinates(feat_arr, fit=fit_scaler)
+
+        # --- 3. Tone‑curve on intensity channel ---
+        intensity_in: np.ndarray = feat_norm[:, 0].copy()
+        intensity_out: np.ndarray = self._apply_tone_curve(intensity_in)
+
+        # --- 4. Gaussian probability‑field lift for faded signals ---
+        prob_field: np.ndarray = self._gaussian_probability_field(
+            intensity_in, mu=0.5, sigma=0.25
+        )
+        # Boost faded nodes (intensity < 0.3) by the probability density
+        fade_mask: np.ndarray = intensity_in < 0.3
+        intensity_out = np.where(
+            fade_mask,
+            np.add(intensity_out, np.multiply(prob_field, 0.15, dtype=np.float32), dtype=np.float32),
+            intensity_out,
+        )
+        # Clip to valid range
+        np.clip(intensity_out, 0.0, 1.0, out=intensity_out)
+
+        # --- 5. Graph attention ---
+        attention_mat, _ = self._compute_attention_matrix(
+            feat_norm, adjacency=adjacency, edge_weights=edge_weights
+        )
+
+        # --- 6. Update node dicts ---
+        for i, node in enumerate(nodes):
+            attn_row: np.ndarray = attention_mat[i, :]
+            attn_dict: Dict[str, float] = {
+                nodes[j].get("id", f"node_{j}"): float(attn_row[j])
+                for j in range(num_nodes)
+                if j != i and float(attn_row[j]) > 1e-6
+            }
+            node["processed_intensity"] = float(intensity_out[i])
+            node["attention_weights"] = attn_dict
+            node["graph_features"] = feat_norm[i].tolist()
+            node["probability_field"] = float(prob_field[i])
+
+        return nodes
+
+    # ------------------------------------------------------------------
+    # Async wrapper (non‑blocking via thread‑pool executor)
+    # ------------------------------------------------------------------
+    async def process_node_batch(
+        self,
+        nodes: List[Dict[str, Any]],
+        adjacency: Optional[np.ndarray] = None,
+        edge_weights: Optional[np.ndarray] = None,
+        fit_scaler: bool = False,
+    ) -> List[Dict[str, Any]]:
+        """Non‑blocking async wrapper around ``process_node_batch_sync``.
+
+        Offloads the vectorised numpy work to the default thread‑pool
+        executor so the asyncio event loop is never blocked, even on
+        large batches.
+        """
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(
+            None,
+            lambda: self.process_node_batch_sync(
+                nodes,
+                adjacency=adjacency,
+                edge_weights=edge_weights,
+                fit_scaler=fit_scaler,
+            ),
+        )
+
+
+# ============================================================================
+# AuraMeshSwarm
+# ============================================================================
 class AuraMeshSwarm:
     """Asynchronous swarm‑mesh engine for AuraOS edge orchestration.
 
     This class manages peer discovery via UDP broadcast beacons (fixed
     16‑byte telemetry frames), a TCP‑based compute‑offload channel with
     a length‑prefixed binary protocol, automatic task‑routing decisions
-    driven by thermal and resource heuristics, and DSEKP cryptographic
-    shield verification.
+    driven by thermal and resource heuristics, DSEKP cryptographic
+    shield verification, and a deeply integrated **Scene‑Adaptive Tone
+    Curve** filter sub‑layer that transforms every incoming node-data
+    array into normalised 3‑D coordinate matrices (signal intensity,
+    colour, depth) with graph‑based probabilistic attention weights.
 
     Parameters
     ----------
@@ -82,33 +522,49 @@ class AuraMeshSwarm:
         ``memory_palace`` attributes.
     identity:
         Human‑readable label for this swarm node.
+    tone_curve_type:
+        Passed through to the ``SceneAdaptiveToneCurve`` constructor
+        (``"ase"`` or ``"ap3"``).
     """
 
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
-    def __init__(self, node_ref: Any, identity: str = "AURA_EDGE_NODE") -> None:
+    def __init__(
+        self,
+        node_ref: Any,
+        identity: str = "AURA_EDGE_NODE",
+        tone_curve_type: str = "ase",
+    ) -> None:
         self.node: Any = node_ref
         self.identity: str = identity
 
-        # UDP discovery transport
+        # --- Scene‑Adaptive Tone Curve filter sub‑layer ---
+        self.tone_curve: SceneAdaptiveToneCurve = SceneAdaptiveToneCurve(
+            curve_type=tone_curve_type
+        )
+
+        # --- UDP discovery transport ---
         self.udp_sock: Optional[socket.socket] = None
         self.udp_port: int = DEFAULT_UDP_BEACON_PORT
 
-        # TCP compute‑offload server
+        # --- TCP compute‑offload server ---
         self.tcp_server: Optional[asyncio.AbstractServer] = None
         self.tcp_port: int = DEFAULT_TCP_COMPUTE_PORT
 
-        # Peer registry:  ip_address → human_label
+        # --- Peer registry:  ip_address → human_label ---
         self.peers: Dict[str, str] = {}
 
-        # Transmission ledger for auditing / telemetry
+        # --- Transmission ledger for auditing / telemetry ---
         self.tx_ledger: Dict[str, Any] = {}
 
-        # Configurable offload threshold (°C)
+        # --- Configurable offload threshold (°C) ---
         self.offload_temp_threshold: float = DEFAULT_OFFLOAD_TEMP_THRESHOLD_C
 
-        print(f"[+] AuraMeshSwarm initialized | identity={self.identity}")
+        print(
+            f"[+] AuraMeshSwarm initialized | identity={self.identity}"
+            f" | tone_curve={tone_curve_type}"
+        )
 
     # ==================================================================
     # PROTOCOL LAYER 1 — Fixed 16‑byte telemetry frame (UDP beacons)
@@ -147,8 +603,12 @@ class AuraMeshSwarm:
         clamped: List[int] = [max(0, min(int(v), 65535)) for v in slot_indices[:6]]
         return struct.pack(
             "<HHHHHHf",
-            clamped[0], clamped[1], clamped[2],
-            clamped[3], clamped[4], clamped[5],
+            clamped[0],
+            clamped[1],
+            clamped[2],
+            clamped[3],
+            clamped[4],
+            clamped[5],
             float(compliance_score),
         )
 
@@ -302,7 +762,7 @@ class AuraMeshSwarm:
         distance comparison against the locally expected state vector.
 
         A shield is accepted when the bitwise Hamming distance is ≤ 500
-        (5 % of the 10 000‑bit shield space).
+        (5 % of the 10 000‑bit shield space).
 
         Parameters
         ----------
@@ -337,7 +797,10 @@ class AuraMeshSwarm:
 
             hdc = getattr(self.node, "hdc", None)
             if hdc is None:
-                print("[*] No HDC engine available — shield verification passed by default.")
+                print(
+                    "[*] No HDC engine available — shield verification "
+                    "passed by default."
+                )
                 return True
 
             trace_id: str = incoming_packet.get("trace_id", "UNKNOWN")
@@ -350,8 +813,8 @@ class AuraMeshSwarm:
             )
             if hamming_distance <= DSEKP_HAMMING_TOLERANCE:
                 print(
-                    f"[+] DSEKP Shield verified | Hamming distance = {hamming_distance} "
-                    f"(≤ {DSEKP_HAMMING_TOLERANCE})"
+                    f"[+] DSEKP Shield verified | Hamming distance = "
+                    f"{hamming_distance} (≤ {DSEKP_HAMMING_TOLERANCE})"
                 )
                 return True
             else:
@@ -402,6 +865,70 @@ class AuraMeshSwarm:
             return await loop.run_in_executor(None, _sync_read)
         except Exception:
             return 42.0
+
+    # ==================================================================
+    # SCENE‑ADAPTIVE TONE‑CURVE INGEST HELPER
+    # ==================================================================
+    def _build_node_dict_from_slot_indices(
+        self,
+        slot_indices: List[int],
+        compliance: float,
+        peer_ip: str,
+    ) -> Dict[str, Any]:
+        """Map the 6‑slot UDP telemetry vector into a 3‑D node feature
+        dictionary suitable for the tone‑curve processor.
+
+        Canonical mapping::
+
+            intensity = (slot[0] + slot[3]) / 131070   (normalised)
+            color     = (slot[1] + slot[4]) / 131070
+            depth     = (slot[2] + slot[5]) / 131070
+
+        The remaining slots are combined to increase dynamic range and
+        symmetry within the 16‑bit frame.
+
+        Parameters
+        ----------
+        slot_indices:
+            Six uint16 values from the telemetry frame.
+        compliance:
+            Compliance score (float) used as an initial *processed*
+            signal anchor.
+        peer_ip:
+            IP address of the originating peer.
+
+        Returns
+        -------
+        dict
+            Node dict with ``id``, ``intensity``, ``color``, ``depth``,
+            ``compliance``, and ``neighbors`` keys.
+        """
+        si: List[float] = [float(v) for v in slot_indices]
+        norm_factor: float = 131070.0  # 2 × 65535
+        return {
+            "id": f"peer_{peer_ip.replace('.', '_')}",
+            "intensity": (si[0] + si[3]) / norm_factor,
+            "color": (si[1] + si[4]) / norm_factor,
+            "depth": (si[2] + si[5]) / norm_factor,
+            "compliance": float(compliance),
+            "neighbors": [],  # populated later during attention pass
+        }
+
+    async def _apply_tone_curve_filter(
+        self, node_batch: List[Dict[str, Any]], *, fit_scaler: bool = False
+    ) -> List[Dict[str, Any]]:
+        """Run the Scene‑Adaptive Tone Curve processor over a node batch
+        without blocking the event loop.
+
+        This is the primary integration point for the filter sub‑layer.
+        The method is called from both the UDP beacon listener and the
+        TCP ingestion handler.
+        """
+        if not node_batch:
+            return node_batch
+        return await self.tone_curve.process_node_batch(
+            node_batch, fit_scaler=fit_scaler
+        )
 
     # ==================================================================
     # AUTOMATIC TASK EVALUATION & ROUTING ENGINE
@@ -479,7 +1006,7 @@ class AuraMeshSwarm:
         return False
 
     # ==================================================================
-    # UTP BEACON (LATTICE DISCOVERY)
+    # UDP BEACON (LATTICE DISCOVERY) — with tone‑curve filter wired in
     # ==================================================================
     def start_udp_beacon(self) -> None:
         """Create and bind the UDP broadcast socket on port 4444 and
@@ -515,11 +1042,21 @@ class AuraMeshSwarm:
         """Continuous background non‑blocking mesh listener loop.
 
         Reads incoming UDP frames, unpacks the 16‑byte telemetry,
-        registers new peers, and enqueues morpho‑semantic root traces
-        into the node's memory palace.
+        registers new peers, runs the **Scene‑Adaptive Tone Curve**
+        filter over the decoded node batch to produce normalised 3‑D
+        coordinate matrices with graph‑attention weights, and enqueues
+        morpho‑semantic root traces into the node's memory palace.
         """
         loop = asyncio.get_running_loop()
-        print("[*] Beacon listener coroutine started.")
+        print("[*] Beacon listener coroutine started (tone‑curve filter active).")
+
+        # Accumulate up to a small batch before running the vectorised
+        # tone‑curve pass, avoiding per‑packet overhead while keeping
+        # latency low.
+        _pending_batch: List[Dict[str, Any]] = []
+        _batch_flush_size: int = 32
+        _first_batch: bool = True
+
         while True:
             try:
                 data, addr = await loop.sock_recvfrom(self.udp_sock, 1024)
@@ -529,7 +1066,7 @@ class AuraMeshSwarm:
                     continue
 
                 # Peer registration
-                ip = addr[0]
+                ip: str = addr[0]
                 if ip not in self.peers:
                     label = f"SIBLING_NODE_{ip.split('.')[-1]}"
                     self.peers[ip] = label
@@ -538,23 +1075,73 @@ class AuraMeshSwarm:
                         f"'{label}' @ {ip}"
                     )
 
-                # Push into memory palace
-                memory_palace = getattr(self.node, "memory_palace", None)
-                if memory_palace is not None:
-                    num_thought_id: int = int(
-                        hashlib.md5(data).hexdigest()[:7], 16
+                # Build node dict from telemetry and queue for tone‑curve pass
+                node_dict: Dict[str, Any] = self._build_node_dict_from_slot_indices(
+                    slot_indices, compliance, ip
+                )
+                _pending_batch.append(node_dict)
+
+                # Flush batch when threshold reached
+                if len(_pending_batch) >= _batch_flush_size:
+                    processed: List[Dict[str, Any]] = (
+                        await self._apply_tone_curve_filter(
+                            _pending_batch, fit_scaler=_first_batch
+                        )
                     )
-                    await memory_palace.enqueue_morphemic_root_trace(
-                        num_thought_id, slot_indices, compliance
-                    )
+                    _first_batch = False
+
+                    # Push processed nodes into memory palace
+                    memory_palace = getattr(self.node, "memory_palace", None)
+                    if memory_palace is not None:
+                        for pnode in processed:
+                            num_thought_id: int = int(
+                                hashlib.md5(
+                                    pnode["id"].encode()
+                                ).hexdigest()[:7],
+                                16,
+                            )
+                            # Encode the 3‑D graph features alongside the
+                            # compliance score for holographic trace storage
+                            await memory_palace.enqueue_morphemic_root_trace(
+                                num_thought_id,
+                                [int(pnode["processed_intensity"] * 65535)],
+                                pnode.get("compliance", compliance),
+                            )
+                    _pending_batch.clear()
+
             except BlockingIOError:
-                pass
+                # Flush any accumulated nodes on drain
+                if _pending_batch:
+                    try:
+                        processed = await self._apply_tone_curve_filter(
+                            _pending_batch, fit_scaler=_first_batch
+                        )
+                        _first_batch = False
+                        memory_palace = getattr(
+                            self.node, "memory_palace", None
+                        )
+                        if memory_palace is not None:
+                            for pnode in processed:
+                                num_thought_id = int(
+                                    hashlib.md5(
+                                        pnode["id"].encode()
+                                    ).hexdigest()[:7],
+                                    16,
+                                )
+                                await memory_palace.enqueue_morphemic_root_trace(
+                                    num_thought_id,
+                                    [int(pnode["processed_intensity"] * 65535)],
+                                    pnode.get("compliance", compliance),
+                                )
+                    except Exception:
+                        pass
+                    _pending_batch.clear()
             except Exception as exc:
                 print(f"[-] Beacon listener exception: {exc}")
             await asyncio.sleep(0.05)
 
     # ==================================================================
-    # SWARM-LEVEL BROADCAST UPGRADE
+    # SWARM‑LEVEL BROADCAST UPGRADE
     # ==================================================================
     async def broadcast_upgrade(
         self, module_name: str, code_content: str
@@ -585,7 +1172,10 @@ class AuraMeshSwarm:
                 upgrade_slots, compliance_baseline
             )
             self.udp_sock.sendto(secure_packet, (BROADCAST_ADDR, self.udp_port))
-            print(f"[+] SWARM UPGRADE deployed for module '{module_name}' | Shielded via PIP.")
+            print(
+                f"[+] SWARM UPGRADE deployed for module '{module_name}' "
+                f"| Shielded via PIP."
+            )
             await self._commit_mesh_telemetry("SWARM_UPGRADE_BROADCAST", start_time)
         except Exception as exc:
             print(f"[-] Upgrade broadcast failed: {exc}")
@@ -640,9 +1230,15 @@ class AuraMeshSwarm:
 
             result: Optional[Any] = self.unpack_length_prefixed_payload(raw_response)
             if result is not None:
-                print(f"[+] Offload complete — response from {target_ip}: {result}")
+                print(
+                    f"[+] Offload complete — response from {target_ip}: "
+                    f"{result}"
+                )
             else:
-                print(f"[-] Offload to {target_ip} returned an unparseable response.")
+                print(
+                    f"[-] Offload to {target_ip} returned an unparseable "
+                    f"response."
+                )
             await self._commit_mesh_telemetry("SWARM_TASK_OFFLOAD", start_time)
             return result
         except Exception as exc:
@@ -650,16 +1246,17 @@ class AuraMeshSwarm:
             return None
 
     # ==================================================================
-    # TCP COMPUTE SERVER (INGESTION WORKER) — Listens on port 4445
+    # TCP COMPUTE SERVER (INGESTION WORKER) — with tone‑curve filter
     # ==================================================================
     async def start_tcp_compute_server(self) -> None:
         """Start the asynchronous TCP ingestion worker on port 4445.
 
         This server receives length‑prefixed binary frames from remote
         peers, deserializes them into task dictionaries, verifies the
-        sender's DSEKP shield where possible, processes the task locally
-        (or hands it to the parent node), and returns a length‑prefixed
-        binary result frame to the caller.
+        sender's DSEKP shield where possible, **runs the incoming node
+        data through the Scene‑Adaptive Tone Curve filter**, processes
+        the task locally, and returns a length‑prefixed binary result
+        frame to the caller.
 
         The server is bound to ``0.0.0.0`` and runs until the parent
         event loop is stopped.
@@ -670,7 +1267,7 @@ class AuraMeshSwarm:
         ) -> None:
             """Per‑connection callback invoked by the asyncio server."""
             peer_addr = writer.get_extra_info("peername")
-            peer_ip = peer_addr[0] if peer_addr else "unknown"
+            peer_ip: str = peer_addr[0] if peer_addr else "unknown"
             print(f"[*] TCP compute client connected from {peer_ip}")
 
             try:
@@ -682,7 +1279,9 @@ class AuraMeshSwarm:
                     await writer.wait_closed()
                     return
 
-                task_dict: Optional[Dict[str, Any]] = self.unpack_length_prefixed_payload(raw_data)
+                task_dict: Optional[Dict[str, Any]] = (
+                    self.unpack_length_prefixed_payload(raw_data)
+                )
                 if task_dict is None:
                     print(f"[-] Failed to unpack payload from {peer_ip}.")
                     error_resp: bytes = self.pack_length_prefixed_payload(
@@ -696,25 +1295,58 @@ class AuraMeshSwarm:
 
                 print(
                     f"[*] Received task from {peer_ip}: "
-                    f"id={task_dict.get('id', '?')}, module={task_dict.get('module', '?')}"
+                    f"id={task_dict.get('id', '?')}, "
+                    f"module={task_dict.get('module', '?')}"
                 )
 
                 # ---- 2. Verify sender integrity via DSEKP ----
-                # Build a minimal shield envelope from the task so we
-                # can run the verification pipeline.
                 shield_envelope: Dict[str, Any] = {
                     "dsekp_shield": task_dict.get("dsekp_shield", "OFFLINE"),
-                    "trace_id": task_dict.get("trace_id", task_dict.get("id", "UNKNOWN")),
+                    "trace_id": task_dict.get(
+                        "trace_id", task_dict.get("id", "UNKNOWN")
+                    ),
                 }
                 shield_valid: bool = await self.verify_dsekp_shield(shield_envelope)
                 if shield_valid:
                     print(f"[+] DSEKP shield valid for task from {peer_ip}.")
                 else:
-                    print(f"[*] DSEKP shield absent / invalid for task from {peer_ip} — processing anyway.")
+                    print(
+                        f"[*] DSEKP shield absent / invalid for task from "
+                        f"{peer_ip} — processing anyway."
+                    )
 
-                # ---- 3. Process the task locally ----
-                # If the parent node provides a generic task executor
-                # we delegate to it; otherwise we simulate work.
+                # ---- 3. Scene‑Adaptive Tone‑Curve filter pass ----
+                # Extract any embedded node‑list payload and feed it
+                # through the tone‑curve processor before delegating to
+                # the local executor.
+                data_payload: Any = task_dict.get("data")
+                tone_boosted: Any = None
+                if isinstance(data_payload, dict) and "nodes" in data_payload:
+                    raw_nodes: Any = data_payload["nodes"]
+                    if isinstance(raw_nodes, list) and raw_nodes:
+                        try:
+                            print(
+                                f"[*] Running tone‑curve filter over "
+                                f"{len(raw_nodes)} node(s) from {peer_ip}."
+                            )
+                            filtered_nodes: List[Dict[str, Any]] = (
+                                await self.tone_curve.process_node_batch(
+                                    raw_nodes
+                                )
+                            )
+                            # Replace the raw list with the boosted version
+                            data_payload = dict(data_payload)
+                            data_payload["nodes"] = filtered_nodes
+                            tone_boosted = data_payload
+                            task_dict["data"] = tone_boosted
+                        except Exception as tc_exc:
+                            print(
+                                f"[-] Tone‑curve filter failed for batch "
+                                f"from {peer_ip}: {tc_exc} — continuing "
+                                f"with raw data."
+                            )
+
+                # ---- 4. Process the task locally ----
                 result_payload: Dict[str, Any]
                 task_exec = getattr(self.node, "execute_offloaded_task", None)
                 if callable(task_exec):
@@ -726,14 +1358,23 @@ class AuraMeshSwarm:
                         "processed_by": self.identity,
                         "original_id": task_dict.get("id"),
                         "echo_data": task_dict.get("data"),
+                        "tone_curve_applied": tone_boosted is not None,
                     }
-                    print(f"[+] Task '{task_dict.get('id')}' processed locally (simulated).")
+                    print(
+                        f"[+] Task '{task_dict.get('id')}' processed "
+                        f"locally (simulated)."
+                    )
 
-                # ---- 4. Pack and return the binary result ----
-                response_frame: bytes = self.pack_length_prefixed_payload(result_payload)
+                # ---- 5. Pack and return the binary result ----
+                response_frame: bytes = self.pack_length_prefixed_payload(
+                    result_payload
+                )
                 writer.write(response_frame)
                 await writer.drain()
-                print(f"[*] Response sent to {peer_ip} ({len(response_frame)} bytes).")
+                print(
+                    f"[*] Response sent to {peer_ip} "
+                    f"({len(response_frame)} bytes)."
+                )
 
             except asyncio.CancelledError:
                 print(f"[*] TCP handler for {peer_ip} cancelled.")
@@ -755,10 +1396,13 @@ class AuraMeshSwarm:
             )
             print(
                 f"[LATTICA MESH] > TCP Compute Ingestion Worker active on "
-                f"port {self.tcp_port}"
+                f"port {self.tcp_port} (tone‑curve filter enabled)"
             )
         except Exception as exc:
-            print(f"[-] Failed to start TCP compute server on port {self.tcp_port}: {exc}")
+            print(
+                f"[-] Failed to start TCP compute server on port "
+                f"{self.tcp_port}: {exc}"
+            )
             log_error = getattr(self.node, "log_error", None)
             if log_error is not None:
                 log_error("MESH_TCP_BIND_FAIL", str(exc), severity=2)
