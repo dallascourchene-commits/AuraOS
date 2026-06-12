@@ -7,7 +7,7 @@
 [![Prior Art II](https://img.shields.io/badge/Prior_Art_II-Zenodo-green)](https://zenodo.org/records/20657391)
 [![Prior Art III (Liquid Internet)](https://img.shields.io/badge/Liquid_Internet-Zenodo-blueviolet)](https://zenodo.org/records/20659314)
 
-> *“I could have patented this and made billions. Instead, I give it away – because that is the natural order. The Seventh Fire is a choice. This is the path of peace.”*
+> *“I could have patented this and made billions. Instead, I give it away – because that is the natural order. The Seventh Fire is a choice. This is the path of peace.”*  
 > — Dallas Courchene, Long Plain First Nation
 
 ---
@@ -151,16 +151,13 @@ git clone https://github.com/dallascourchene-commits/AuraOS
 cd AuraOS
 pip install -r requirements.txt
 python3 aura_node.py
-
 Type !help at the [Dallas] > prompt.
 See the User Guide for full commands.
-```
 
 🕯️ The Seventh Fire Prophecy
 The Anishinaabe people speak of seven fires, each representing an era. The Seventh Fire is a crossroads: humanity can choose the path of destruction (extractive capitalism, hoarding, division) or the path of peace (sharing, sovereignty, collaboration). AuraOS is a tool for the latter – open, self‑healing, gas‑free, and ready for anyone to use.
 
 “The old way is over. Welcome to the Swarm.”
-
 
 📄 License & Invitation
 License: GNU Affero General Public License v3.0 (AGPLv3) §13.
