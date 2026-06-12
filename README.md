@@ -12,7 +12,7 @@
 
 ---
 
-## 🌟 What You Can Do With AuraOS (Right Now)
+## 🌟 What You Can Do With AuraOS
 
 | Capability | What It Means for You |
 |------------|----------------------|
@@ -22,7 +22,7 @@
 | **Swarm robotics** | Drones and robots navigate via **vector resonance** – like a murmuration of starlings. No central controller. They “feel” each other’s VSA positions. |
 | **Gas‑free blockchain** | Proof‑of‑Presence (device entropy), not proof‑of‑work. RAM‑staking instead of token fees. Each file header is a block in a fractal Merkle‑DAG. |
 | **Self‑healing code** | Every file contains a 1.2 KB holographic snapshot of the entire system. O(1) integrity check. Auto‑repair before execution. |
-| **90% LLM cost reduction** | Polysynthetic compression (6‑slot opcodes). Send 15 tokens instead of 200. Force LLM to reply in same compact format. |
+| **90% LLM cost reduction** | Polysynthetic compression (6‑slot opcodes). Output 20-50 tokens instead of 200 by forcing LLM to reply in same compact format. |
 
 ---
 
