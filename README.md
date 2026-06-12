@@ -199,3 +199,5 @@ An ad-hoc, zero-gas Layer 2 mesh
 
 Defensive publication: Locked AuraOS whitepaper PDF and verified SHA-256 integrity hash:
 5e01e0bb3e1b9856029d6d8c548c0e376658039383f9fd8bd60e941ebcc23ef7
+
+f5bb5f8e4087600479b235ea8bac1cba490d60d42572fc0da69521688bb26267  Second_Paper.pdf
