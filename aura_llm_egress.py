@@ -35,6 +35,7 @@ in `aura_api_rotator.py`, so no new dependency is added.
 from __future__ import annotations
 
 import json
+import os
 import ssl
 import time
 import urllib.error
@@ -47,6 +48,9 @@ from aura_api_rotator import (
     load_secrets,
     openai_compatible_generate,
 )
+
+from aura_savings_db import log_call as _log_call_to_db
+from aura_substrate import estimate_tokens as _estimate_tokens
 
 # External providers only. Internal/local engines are intentionally excluded —
 # Aura must call out, not run a model in-process. Gemini is an allowed external
@@ -212,10 +216,21 @@ def usable_providers(secrets: dict[str, Any] | None = None,
 
 
 class ExternalLLM:
-    """The single external egress. Picks an external provider; never internal/local."""
+    """The single external egress. Picks an external provider; never internal/local.
+
+    Every call to `generate()` or `interpret()` is automatically logged to the
+    savings database (aura_savings_db), recording tokens, cost, latency, and
+    savings vs a naive baseline.
+    """
 
     def __init__(self, provider: str | None = None, model: str | None = None,
-                 secrets: dict[str, Any] | None = None):
+                 secrets: dict[str, Any] | None = None,
+                 # ── call-context for savings logging ──
+                 task: str | None = None,
+                 aspect: str | None = None,
+                 baseline_prompt_tokens: int | None = None,
+                 baseline_output_tokens: int | None = None,
+                 baseline_cost_usd: float | None = None):
         self.secrets = secrets if secrets is not None else load_secrets()
         candidates = [provider] if provider else DEFAULT_PROVIDER_ORDER
         chosen = None
@@ -266,31 +281,74 @@ class ExternalLLM:
         self.is_gemini = (self.api == "gemini")
         self.api_key = self.secrets.get(self.cfg["key"])
 
+        # ─── savings-logging context ───
+        self._task = task
+        self._aspect = aspect
+        self._baseline_prompt = baseline_prompt_tokens
+        self._baseline_output = baseline_output_tokens
+        self._baseline_cost = baseline_cost_usd
+
+    def _log_to_savings(self, call_type: str, prompt: str,
+                         output_text: str | None, latency_sec: float,
+                         error: str | None = None) -> None:
+        """Log this LLM call to the persistent savings database (best-effort)."""
+        try:
+            in_tokens = _estimate_tokens(prompt)
+            out_tokens = _estimate_tokens(output_text) if output_text else 0
+            cost = 0.0 if error else self.cost(in_tokens, out_tokens)
+
+            _log_call_to_db(
+                provider=self.provider,
+                model=self.model,
+                call_type=call_type,
+                task=self._task,
+                aspect=self._aspect,
+                prompt_tokens=in_tokens,
+                output_tokens=out_tokens,
+                cost_usd=cost,
+                latency_sec=latency_sec,
+                baseline_prompt_tokens=self._baseline_prompt,
+                baseline_output_tokens=self._baseline_output,
+                baseline_cost_usd=self._baseline_cost,
+                error=error,
+            )
+        except Exception:
+            pass  # never let logging break the call
+
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1):
-        """Return (text, error, latency_sec). External call only (HTTPS POST)."""
+        """Return (text, error, latency_sec). External call only (HTTPS POST).
+
+        Every call is silently logged to the savings database.
+        """
         t0 = time.time()
+        text = None
+        err = None
         if self.is_gemini:
             text, err = gemini_generate(prompt, secrets=self.secrets)
-            return text, err, time.time() - t0
-        if self.api == "anthropic":
+        elif self.api == "anthropic":
             text, err = _anthropic_generate(self.cfg["url"], self.api_key, self.model,
                                             prompt, max_tokens, timeout=60)
-            return text, err, time.time() - t0
-        payload = {
-            "model": self.model,
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-        }
-        text, err = openai_compatible_generate(self.cfg["url"], self.api_key, payload, timeout=60)
-        return text, err, time.time() - t0
+        else:
+            payload = {
+                "model": self.model,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            }
+            text, err = openai_compatible_generate(self.cfg["url"], self.api_key, payload, timeout=60)
+        latency = time.time() - t0
+        self._log_to_savings("generate", prompt, text, latency, error=err)
+        return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #
     def interpret(self, data: Any, instruction: str, *, max_tokens: int = 400):
         """
         Hand Aura's structured data to the external model purely so it can be
         verbalized / interpreted for a human. Returns (text, error, latency).
+
+        Every call is silently logged to the savings database (logged as
+        'interpret' rather than 'generate' for analytics).
         """
         if not isinstance(data, str):
             data = json.dumps(data, indent=2, default=str)
@@ -300,7 +358,12 @@ class ExternalLLM:
             "model. Below is structured data Aura produced. "
             f"{instruction}\n\n[AURA DATA]\n{data}\n"
         )
-        return self.generate(prompt, max_tokens=max_tokens)
+        t0 = time.time()
+        text, err, latency = self.generate(prompt, max_tokens=max_tokens)
+        # Override the generate-level log with the correct call_type
+        if not err:
+            self._log_to_savings("interpret", prompt, text, latency)
+        return text, err, latency
 
     def cost(self, in_tokens: int, out_tokens: int) -> float:
         # Prefer the central, weekly-refreshable PriceBook; fall back to the

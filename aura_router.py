@@ -225,7 +225,7 @@ class AutoRouter:
                  egress_factory=None, root: str = REPO_ROOT):
         self.ledger = ledger or CalibrationLedger(LEDGER_PATH)
         self.exec_log = exec_log or ExecutionLog(EXEC_LOG_PATH)
-        self.egress_factory = egress_factory or (lambda p: ExternalLLM(provider=p))
+        self.egress_factory = egress_factory or (lambda p, **kw: ExternalLLM(provider=p, **kw))
         self.root = root
         self.selector = ContextSelector(root)
         self.substrate = AuraSubstrate(root)
@@ -296,12 +296,18 @@ class AutoRouter:
             correction = ""
             for attempt in range(max_retries + 1):
                 pkg = self.substrate.compile(task.human_prompt, target_file=task.target_file,
-                                             target_func=task.target_func,
-                                             explicit_tags=task_v.packet_tags, style=cand["style"])
+                                              target_func=task.target_func,
+                                              explicit_tags=task_v.packet_tags, style=cand["style"])
                 prompt = pkg.prompt if not correction else (
                     pkg.prompt + "\n[CORRECTION]\n" + correction +
                     "\nEmit ASCII only (no smart quotes or em-dashes).\n")
                 ain = estimate_tokens(prompt)
+                # Wire savings context into the egress so every call is logged
+                egress._task = task.key
+                egress._aspect = aspect
+                egress._baseline_prompt = raw_in
+                egress._baseline_output = est_raw_out
+                egress._baseline_cost = est_raw_cost
                 text, err, lat = egress.generate(prompt)
                 if err or not text:
                     tried.append({"provider": cand["provider"], "style": cand["style"],

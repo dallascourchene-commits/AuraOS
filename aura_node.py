@@ -6859,9 +6859,12 @@ def contingency_harness():
 
             elif u_in_l.startswith("!savings"):
                 # Per-provider / per-aspect tokens + money saved.
-                # Reads from the append-only aura_executions.jsonl (cumulative across all sessions)
-                # and maintains a persistent snapshot at Aura_Memory/aura_savings_total.json
-                # so totals always grow — never showing stale-static data.
+                # Reads live from the append-only aura_executions.jsonl
+                # (cumulative across all sessions — every !route call
+                # appends one record).  The snapshot file at
+                # Aura_Memory/aura_savings_total.json is a cache that
+                # survives restarts; savings_report() re-reads the
+                # authoritative JSONL every invocation.
                 try:
                     from aura_router import savings_report as _savings_report, EXEC_LOG_PATH as _EXEC_LOG_PATH
                     import os as _os_sav
@@ -6871,70 +6874,68 @@ def contingency_harness():
                     rep = _savings_report()
                     o   = rep["overall"]
 
-                    # 2. Load (or seed) persistent running totals snapshot
-                    _snapshot: dict = {}
-                    if _os_sav.path.exists(_SAVINGS_SNAPSHOT):
-                        try:
-                            with open(_SAVINGS_SNAPSHOT, "r", encoding="utf-8") as _sf:
-                                _snapshot = json.load(_sf)
-                        except Exception:
-                            _snapshot = {}
-
-                    # 3. Accumulate into the snapshot (running totals grow each call)
-                    _snap_overall = _snapshot.get("overall", {})
-                    _snap_calls   = _snap_overall.get("total_calls_logged", 0)
-
-                    # Update snapshot with the latest numbers from the JSONL (source of truth)
-                    _snapshot["overall"] = {
-                        "total_calls_logged" : rep["executions"],
-                        "aura_input_tokens"  : o["aura_input_tokens"],
-                        "aura_output_tokens" : o["aura_output_tokens"],
-                        "aura_cost_usd"      : o["aura_cost_usd"],
-                        "input_tokens_saved" : o["input_tokens_saved"],
-                        "output_tokens_saved": o["output_tokens_saved"],
-                        "est_cost_saved_usd" : o["est_cost_saved_usd"],
-                    }
-                    _snapshot["by_provider"]       = rep["by_provider"]
-                    _snapshot["by_aspect"]         = rep["by_aspect"]
-                    _snapshot["projection"]        = rep.get("projection_if_optimal", {})
-                    _snapshot["prices_updated"]    = rep.get("prices_updated", "unknown")
-                    _snapshot["last_updated"]      = datetime.now().isoformat()
-
-                    # 4. Persist the updated snapshot so totals survive restarts
+                    # 2. Persist snapshot so totals survive restarts
                     _os_sav.makedirs("Aura_Memory", exist_ok=True)
-                    with open(_SAVINGS_SNAPSHOT, "w", encoding="utf-8") as _sf:
-                        json.dump(_snapshot, _sf, indent=2)
+                    try:
+                        _snapshot = {
+                            "overall": {
+                                "total_calls_logged" : rep["executions"],
+                                "aura_input_tokens"  : o["aura_input_tokens"],
+                                "aura_output_tokens" : o["aura_output_tokens"],
+                                "aura_cost_usd"      : o["aura_cost_usd"],
+                                "input_tokens_saved" : o["input_tokens_saved"],
+                                "output_tokens_saved": o["output_tokens_saved"],
+                                "est_cost_saved_usd" : o["est_cost_saved_usd"],
+                            },
+                            "by_provider":     rep["by_provider"],
+                            "by_aspect":       rep["by_aspect"],
+                            "projection":      rep.get("projection_if_optimal", {}),
+                            "prices_updated":  rep.get("prices_updated", "unknown"),
+                            "last_updated":    datetime.now().isoformat(),
+                        }
+                        with open(_SAVINGS_SNAPSHOT, "w", encoding="utf-8") as _sf:
+                            json.dump(_snapshot, _sf, indent=2)
+                    except Exception:
+                        pass  # snapshot is best-effort; report still prints
 
-                    # 5. Pretty-print cumulative savings report
+                    # 3. Pretty-print cumulative savings report
                     print(f"\n{'='*60}")
                     print(f" [💰 AURA CUMULATIVE SAVINGS LEDGER]")
                     print(f"{'='*60}")
-                    print(f"=== OVERALL (over {rep['executions']} logged routed calls) ===")
-                    print(f"  tokens used  (in/out) : {o['aura_input_tokens']:,} / {o['aura_output_tokens']:,}")
-                    print(f"  tokens SAVED (in/out) : {o['input_tokens_saved']:,} / {o['output_tokens_saved']:,}")
-                    print(f"  cost used             : ${o['aura_cost_usd']:.6f}")
-                    print(f"  cost SAVED            : ${o['est_cost_saved_usd']:.6f}")
-                    if rep["by_provider"]:
-                        print("=== PER PROVIDER ===")
-                        for _prov, _v in rep["by_provider"].items():
-                            print(f"  {_prov:10s}  calls={_v['calls']}  used=${_v['aura_cost_usd']:.4f}"
-                                  f"  saved=${_v['est_cost_saved_usd']:.4f}"
-                                  f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
-                    if rep["by_aspect"]:
-                        print("=== PER ASPECT ===")
-                        for _asp, _v in rep["by_aspect"].items():
-                            print(f"  {_asp:14s}  calls={_v['calls']}  saved=${_v['est_cost_saved_usd']:.4f}"
-                                  f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
-                    proj = rep.get("projection_if_optimal", {})
-                    if proj:
-                        print("=== PROJECTION (if every task routed optimally) ===")
-                        for _tt, _pr in proj.items():
-                            print(f"  {_tt}: best={_pr['best']}"
-                                  f"  in-{_pr['input_reduction_pct']}%"
-                                  f"  out-{_pr['output_reduction_pct']}%"
-                                  f"  save/task=${_pr['cost_saving_per_task_usd']}")
-                    print(f"  ({rep.get('note', '')})")
-                    print(f"  [Persistent log: {_SAVINGS_SNAPSHOT}]")
+                    if rep["executions"] == 0:
+                        print("  ⚠️  No routed calls logged yet.")
+                        print("  The savings ledger is driven by the auto-router (!route).")
+                        print("  Every !route call appends an entry to:")
+                        print(f"    {_EXEC_LOG_PATH}")
+                        print("  Run 'python3 aura_router.py route --mock' for a dry-run test.")
+                    else:
+                        print(f"=== OVERALL (over {rep['executions']} logged routed calls) ===")
+                        print(f"  tokens used  (in/out) : {o['aura_input_tokens']:,} / {o['aura_output_tokens']:,}")
+                        print(f"  tokens SAVED (in/out) : {o['input_tokens_saved']:,} / {o['output_tokens_saved']:,}")
+                        print(f"  cost used             : ${o['aura_cost_usd']:.6f}")
+                        print(f"  cost SAVED            : ${o['est_cost_saved_usd']:.6f}")
+                        if rep["by_provider"]:
+                            print("=== PER PROVIDER ===")
+                            for _prov, _v in rep["by_provider"].items():
+                                print(f"  {_prov:10s}  calls={_v['calls']}  used=${_v['aura_cost_usd']:.4f}"
+                                      f"  saved=${_v['est_cost_saved_usd']:.4f}"
+                                      f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
+                        if rep["by_aspect"]:
+                            print("=== PER ASPECT ===")
+                            for _asp, _v in rep["by_aspect"].items():
+                                print(f"  {_asp:14s}  calls={_v['calls']}  saved=${_v['est_cost_saved_usd']:.4f}"
+                                      f"  tok_saved(in/out)={_v['input_tokens_saved']}/{_v['output_tokens_saved']}")
+                        proj = rep.get("projection_if_optimal", {})
+                        if proj:
+                            print("=== PROJECTION (if every task routed optimally) ===")
+                            for _tt, _pr in proj.items():
+                                print(f"  {_tt}: best={_pr['best']}"
+                                      f"  in-{_pr['input_reduction_pct']}%"
+                                      f"  out-{_pr['output_reduction_pct']}%"
+                                      f"  save/task=${_pr['cost_saving_per_task_usd']}")
+                        print(f"  ({rep.get('note', '')})")
+                    print(f"  [Execution log: {_EXEC_LOG_PATH}]")
+                    print(f"  [Snapshot cache: {_SAVINGS_SNAPSHOT}]")
                     print(f"{'='*60}\n")
                     print("[TIP] Use !route to auto-route tasks — every !route call adds a record to the savings log.")
                 except Exception as e:

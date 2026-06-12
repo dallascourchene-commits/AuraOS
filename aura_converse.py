@@ -256,14 +256,21 @@ class Conversationalist:
             egress = self.egress_factory(provider)
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "reason": str(exc)}
+        # Compute the naive baseline token count for savings comparison
+        raw_in = estimate_tokens(
+            "You are a helpful assistant. Answer the user fully.\n\nUser: " + user_input)
+        # Wire savings context into the egress so every call is logged
+        egress._task = "converse"
+        egress._aspect = "conversation"
+        egress._baseline_prompt = raw_in
+        egress._baseline_output = None
+        egress._baseline_cost = None
         text, err, lat = egress.generate(prompt, max_tokens=500)
         if err or not text:
             return {"ok": False, "reason": err or "empty reply"}
 
         interp = interpret_reply(text, mode=display)
         aout = estimate_tokens(text)
-        raw_in = estimate_tokens(
-            "You are a helpful assistant. Answer the user fully.\n\nUser: " + user_input)
 
         turn = {
             "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
