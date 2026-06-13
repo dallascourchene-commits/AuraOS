@@ -14,15 +14,39 @@ import websockets
 import json
 import os
 from liquid_kernel import LiquidWebSocket
+from liquid_attractor_control_plane import auto_boot_attractor, shutdown_attractor
 
 brain = LiquidWebSocket()
 CONNECTED_CLIENTS = set()
 MEMORY_DIR = "Aura_Memory"
 
+# Attractor reference — set by main() on startup
+_attractor = None
+
+
 async def bridge_handler(websocket):
+    global _attractor
     CONNECTED_CLIENTS.add(websocket)
     client_ip = websocket.remote_address[0]
     print(f"[+] AR Deck connected from {client_ip}.")
+
+    # ── Wire this WebSocket client into the attractor broadcast plane ──
+    client_q = asyncio.Queue(maxsize=32)
+    if _attractor is not None:
+        _attractor.graft_module("web_client", client_q)
+
+    # Spawn a pump that forwards attractor frames to this WS client
+    async def _attractor_pump():
+        while True:
+            try:
+                payload = await asyncio.wait_for(client_q.get(), timeout=5.0)
+                await websocket.send(payload)
+            except asyncio.TimeoutError:
+                continue
+            except (websockets.exceptions.ConnectionClosed, Exception):
+                break
+
+    pump_task = asyncio.create_task(_attractor_pump())
 
     try:
         async for message in websocket:
@@ -55,6 +79,17 @@ async def bridge_handler(websocket):
         pass
     finally:
         CONNECTED_CLIENTS.remove(websocket)
+        pump_task.cancel()
+        try:
+            await pump_task
+        except asyncio.CancelledError:
+            pass
+        # Clean up attractor client queue
+        if _attractor is not None:
+            try:
+                _attractor._web_clients = [q for q in _attractor._web_clients if q is not client_q]
+            except Exception:
+                pass
         print(f"[-] AR Deck disconnected.")
 
 async def watch_memory():
@@ -98,10 +133,21 @@ async def watch_memory():
         known_files = current_files
 
 async def main():
+    global _attractor
     print("=========================================")
     print(" 🌐 AURA SOVEREIGN MESH BRIDGE ONLINE 🌐 ")
     print("=========================================")
-    
+
+    # ── Auto-boot the Liquid Spatiotemporal Attractor control plane ──
+    try:
+        _attractor = await auto_boot_attractor(
+            mesh_swarm=None,   # aura_mesh swarms wire themselves separately
+            ar_server=None,    # AR server optional
+            unreal_bridge=None,
+        )
+    except Exception as e:
+        print(f"[-] [PULSE] Attractor auto-boot failed: {e} — continuing without control plane.")
+
     # Corrected: Guard port binding with exception-handling to absorb address conflict panics
     try:
         async with websockets.serve(bridge_handler, "0.0.0.0", 8081):
@@ -114,6 +160,9 @@ async def main():
         print(f"[-] [PULSE] Server bind failed on Port 8081: {e}. Moving to standby mode.")
         while True:
             await asyncio.sleep(3600)  # Idle standby prevents thread exit
+    finally:
+        # Graceful shutdown
+        await shutdown_attractor()
 
 if __name__ == "__main__":
     asyncio.run(main())

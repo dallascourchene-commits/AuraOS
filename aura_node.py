@@ -5138,8 +5138,38 @@ async def main():
     )
 
     # Start the AR Visual Cortex Server
-    await websockets.serve(ar_server, "127.0.0.1", 8765)
-    
+    ar_ws_server = await websockets.serve(ar_server, "127.0.0.1", 8765)
+
+    # ── Auto-boot the Liquid Spatiotemporal Attractor (master cognitive control plane) ──
+    _attractor = None
+    try:
+        from liquid_attractor_control_plane import auto_boot_attractor
+        # Pass mesh reference if the node has a swarm
+        _mesh = getattr(node, 'mesh', None)
+        _attractor = await auto_boot_attractor(
+            mesh_swarm=_mesh,
+            ar_server=None,   # AR server already running; attractor broadcasts via web_client graft
+            unreal_bridge=None,
+        )
+        # Wire the AR server's topology refresh to the attractor
+        # Import the AR server class and patch its refresh
+        try:
+            from aura_topology_ws_bridge import AuraARWebSocketServer
+            # The AR server singleton may be accessible; attempt to find and patch
+            _ar_hub_ref = None
+            if hasattr(node, '_ar_hub'):
+                _ar_hub_ref = node._ar_hub
+            # Graft web_client queues for each future AR connection via the attractor
+            if _attractor is not None:
+                node._attractor = _attractor
+        except ImportError:
+            pass
+    except ImportError:
+        print("[*] Attractor control plane not available — running without unified field.")
+    except Exception as _att_exc:
+        print(f"[!] Attractor auto-boot failed (non-fatal): {_att_exc}")
+    # ── End attractor graft ──
+
     # Start the Async Database Worker
     asyncio.create_task(sqlite_background_worker(DB_PATH, db_query_queue))
 
