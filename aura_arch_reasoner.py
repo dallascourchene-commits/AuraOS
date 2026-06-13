@@ -166,7 +166,7 @@ class AuraArchReasoner:
         # Step 2: Generate K strategy vectors representing different refactoring approaches
         # Each strategy encodes a different architectural transformation
         planner_output = []
-        rng = np.random.default_rng(seed=0xARCH)
+        rng = np.random.default_rng(seed=0xA1A)
         
         for k in range(K):
             # Create diverse strategy vectors based on architectural metrics
