@@ -64,6 +64,7 @@ from aura_crypto_puf import AuraThermodynamicPUF
 from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
 from aura_meta_ingest import MetaTelemetryIngestor
 from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
+from aura_coordinated_solver import CoordinatedSolver, StrategyBuffer
 from aura_crystallization import hypertruth_crystallization_loop
 from arxiv_forager import ArXivForager, EnhancedArxivForager, ForagerConfig
 from aura_topology_ws_bridge import AuraARWebSocketServer
@@ -6835,6 +6836,49 @@ def contingency_harness():
                         print(f" └─> Logical Consistency Score: {confidence:.2%} ({passed}/{total} patches verified)")
                 except Exception as e:
                     print(f"[-] !catalyze failed: {e}")
+                continue
+
+            elif u_in_l.startswith("!coordinated_reason"):
+                # Coordinated Pass@K parallel reasoning with RIS-assisted backhaul recovery
+                query = u_in[19:].strip()
+                if not query:
+                    query = u_in_l
+                print(f"[⚡ COORDINATED REASONING] Pass@K parallel evaluation for: {query[:60]}...")
+                try:
+                    reasoner_nesy = AuraNeuroSymbolicReasoner(node_ref=node)
+                    coordinated_result = await reasoner_nesy.coordinated_reason_dag(
+                        query=query,
+                        K=4,
+                        method_dim=64,
+                    )
+                    print(f"\n[Coordinated Reasoning Report]:")
+                    print(f"  • Success    : {coordinated_result['success']}")
+                    print(f"  • Throughput : {coordinated_result['throughput']:.3f}")
+                    print(f"  • Latency    : {coordinated_result['latency_ms']:.2f}ms")
+                    print(f"  • Top Rewards: {[f'{r:.3f}' for r in coordinated_result.get('top_rewards', [])]}")
+                    buf_stats = coordinated_result.get('buffer_stats', {})
+                    if buf_stats:
+                        print(f"  • Buffer     : {buf_stats.get('valid_count', 0)}/{buf_stats.get('K', 4)} valid, "
+                              f"mean reward={buf_stats.get('mean_reward', 0):.3f}")
+                    print("[+] Coordinated parallel reasoning complete.")
+                except Exception as e:
+                    print(f"[-] Coordinated reasoning failed: {e}")
+                continue
+
+            elif u_in_l == "!strategy_buffer_stats":
+                print("\n[⚡ STRATEGY BUFFER ANALYTICS]")
+                try:
+                    solver = CoordinatedSolver(K=4, method_dim=64, node_ref=node)
+                    stats = solver.strategy_buffer.stats
+                    print(f"  • K (capacity)     : {stats['K']}")
+                    print(f"  • Valid entries     : {stats['valid_count']}")
+                    print(f"  • Mean reward       : {stats['mean_reward']:.4f}")
+                    print(f"  • Best reward       : {stats['best_reward']:.4f}")
+                    print(f"  • Active strategies : {'none' if stats['valid_count'] == 0 else 'ready for coordinated evaluation'}")
+                    if hasattr(node, 'runtime_metrics'):
+                        node.runtime_metrics['strategy_buffer_stats'] = stats
+                except Exception as e:
+                    print(f"[-] Strategy buffer query failed: {e}")
                 continue
 
             elif u_in_l.startswith("!reason"):

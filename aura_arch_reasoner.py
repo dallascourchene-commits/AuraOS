@@ -16,6 +16,8 @@ import os
 
 import numpy as np
 
+from aura_coordinated_solver import CoordinatedSolver, phasor_to_method
+
 # Ideal edge-to-node ratio derived from VSA cognitive processing research.
 # Cognitive efficiency peaks when the manifold tension sits at ~1.5
 # (Bent et al., SPIE 2024; Furlong et al., AAAI).
@@ -134,6 +136,81 @@ class AuraArchReasoner:
 
         report_lines.append(self.suggest_architectural_patch())
         return "\n".join(report_lines)
+
+    async def coordinated_multi_strategy_patches(
+        self,
+        K: int = 4,
+        method_dim: int = 64,
+    ) -> dict:
+        """
+        [Coordinated Pass@K Architecture] Generate K alternative refactoring
+        strategies in parallel and select the best via coordinated solver.
+        
+        Returns top-K architectural patches ranked by resonance improvement.
+        """
+        print(f"[⚡ COORDINATED ARCH] Generating {K} alternative refactoring strategies...")
+        
+        # Step 1: Load topology and compute current state
+        try:
+            with open(self.topology_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {
+                "success": False,
+                "error": "Topology file unavailable",
+                "patches": [],
+            }
+        
+        resonance, tension = self.score_structural_resonance()
+        
+        # Step 2: Generate K strategy vectors representing different refactoring approaches
+        # Each strategy encodes a different architectural transformation
+        planner_output = []
+        rng = np.random.default_rng(seed=0xARCH)
+        
+        for k in range(K):
+            # Create diverse strategy vectors based on architectural metrics
+            strategy_vec = rng.normal(
+                loc=tension,  # Center around current tension
+                scale=0.5,     # Variance in refactoring approaches
+                size=method_dim,
+            ).astype(np.float64)
+            # Normalize to unit sphere for stability
+            strategy_vec = strategy_vec / (np.linalg.norm(strategy_vec) + 1e-9)
+            planner_output.append(strategy_vec)
+        
+        # Step 3: Evaluate strategies via coordinated solver
+        solver = CoordinatedSolver(K=K, method_dim=method_dim, node_ref=self.node)
+        result = await solver.coordinated_pass_k(planner_output)
+        
+        # Step 4: Translate top strategies into human-readable patches
+        patches = []
+        for idx, (method, reward) in enumerate(zip(result["top_methods"], result["top_rewards"])):
+            # Decode strategy vector into refactoring recommendation
+            avg_value = float(np.mean(method))
+            
+            if avg_value > tension:
+                patch_type = "densification"
+                description = "Add bridging interfaces between isolated modules"
+            else:
+                patch_type = "pruning"
+                description = "Remove redundant cross-module dependencies"
+            
+            patches.append({
+                "rank": idx + 1,
+                "type": patch_type,
+                "description": description,
+                "reward": reward,
+                "projected_tension": float(avg_value),
+                "projected_resonance": 1.0 / (1.0 + abs(_IDEAL_TENSION - avg_value)),
+            })
+        
+        result["patches"] = patches
+        result["current_resonance"] = resonance
+        result["current_tension"] = tension
+        
+        print(f"[+] Generated {len(patches)} ranked architectural patches (best reward: {result['top_rewards'][0] if result['top_rewards'] else 0:.3f})")
+        return result
 
     # ------------------------------------------------------------------
     # Resonance as a phasor distance metric (VSA binding)

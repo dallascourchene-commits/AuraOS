@@ -27,6 +27,7 @@ from aura_nesy_unit_interval import (
     build_edge_audit_records,
     records_to_fractures,
 )
+from aura_coordinated_solver import CoordinatedSolver, phasor_to_method
 
 # Edge-local sweep dimension (O(E·D) not O(N²·D)). 512 matches GSB-style screening on Termux.
 _DEFAULT_SWEEP_DIM = int(os.environ.get("AURA_OMNIPATH_SWEEP_DIM", "512"))
@@ -306,6 +307,83 @@ class AuraNeuroSymbolicReasoner:
             self.heuristic_pool["clause_activity_threshold"] = 2.15
             
         return {"current_tuned_heuristics": self.heuristic_pool}
+
+    async def coordinated_reason_dag(
+        self,
+        query: str,
+        K: int = 4,
+        method_dim: int = 64,
+    ) -> dict:
+        """
+        [Coordinated Pass@K Reasoning] Parallel hypothesis evaluation using 
+        RIS-assisted survivable backhaul recovery. Generates K alternative 
+        reasoning paths and selects the best via coordinated solver.
+        
+        Parameters
+        ----------
+        query : str
+            The reasoning query or goal state
+        K : int
+            Number of parallel strategies to evaluate (default 4)
+        method_dim : int
+            Strategy vector dimension (default 64 for Termux)
+            
+        Returns
+        -------
+        dict
+            Contains success status, top strategies, rewards, and throughput
+        """
+        print(f"[⚡ COORDINATED REASONER] Initializing Pass@{K} parallel evaluation...")
+        start_time = time.perf_counter()
+        
+        # Step 1: Load topology and generate K alternative reasoning paths
+        nodes, shapes, adj = self.load_live_topology()
+        if len(nodes) == 0:
+            return {
+                "success": False,
+                "error": "No nodes available for reasoning",
+                "latency_ms": 0.0,
+            }
+        
+        # Step 2: Generate K alternative strategy vectors from the query
+        query_phasor = self.embed_symbolic_state(query)
+        planner_output = []
+        
+        for k in range(K):
+            # Project the 10k-D query phasor to method dimension with k-offset
+            # This creates K diverse strategies from the same query
+            strategy_vec = phasor_to_method(
+                query_phasor,
+                target_dim=method_dim,
+                rng=np.random.default_rng(seed=0xB1AD + k),
+            )
+            planner_output.append(strategy_vec)
+        
+        # Step 3: Initialize coordinated solver and run Pass@K evaluation
+        solver = CoordinatedSolver(K=K, method_dim=method_dim, node_ref=self.node)
+        result = await solver.coordinated_pass_k(planner_output)
+        
+        # Step 4: Enrich result with reasoning metadata
+        latency_ms = (time.perf_counter() - start_time) * 1000
+        result["query"] = query
+        result["latency_ms"] = latency_ms
+        result["K"] = K
+        result["method_dim"] = method_dim
+        result["buffer_stats"] = solver.strategy_buffer.stats
+        
+        # Step 5: Log coordinated reasoning trace to memory palace
+        if self.node is not None and hasattr(self.node, "mint_trace"):
+            try:
+                await self.node.mint_trace(
+                    f"CoordinatedReason::query={query[:50]}  success={result['success']}  throughput={result['throughput']:.3f}",
+                    identity="coord_reason",
+                    tier="T2",
+                )
+            except Exception:
+                pass
+        
+        print(f"[+] Coordinated reasoning complete: success={result['success']}, throughput={result['throughput']:.3f}, latency={latency_ms:.2f}ms")
+        return result
 
     def _llm_invoke_available(self) -> bool:
         if self.node is None:
