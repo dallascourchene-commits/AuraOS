@@ -95,6 +95,17 @@ except (ImportError, RuntimeError, OSError):
 
 from aura_self_reflect import SelfReflectEngine
 
+# ── AI Router for low-token, high-context LLM navigation ─────────────────────
+try:
+    from aura_ai_router import ai_route_command, regenerate_router
+    _AI_ROUTER_AVAILABLE = True
+except ImportError:
+    _AI_ROUTER_AVAILABLE = False
+    async def ai_route_command(node, args):  # type: ignore[misc]
+        return "[AI Router] Not available. Module import failed."
+    def regenerate_router(quiet=False):  # type: ignore[misc]
+        return False
+
 # ── Unified intelligence layer (new modules) ─────────────────────────────────
 try:
     from aura_anthropic_router import AnthropicRouter as _AnthropicRouter
@@ -6619,6 +6630,36 @@ def contingency_harness():
                 except Exception as e:
                     print(f"[-] Execution error: {e}")
                 continue
+
+            # --- AI Router: Low-token, high-context LLM navigation ---
+            elif u_in_l.startswith("!ai_route "):
+                # Query the AI router for task→file mappings
+                task_query = u_in[10:].strip()
+                if not task_query:
+                    print("[-] Usage: !ai_route <task description>")
+                    print("    Example: !ai_route refactor self-optimization pipeline")
+                    continue
+                
+                if _AI_ROUTER_AVAILABLE:
+                    result = await ai_route_command(node, task_query)
+                    print(result)
+                else:
+                    print("[-] AI Router module not available. Check aura_ai_router.py")
+                continue
+
+            elif u_in_l == "!ai_router_regen":
+                # Manually regenerate the AI router index
+                if _AI_ROUTER_AVAILABLE:
+                    print("[*] Regenerating AI Router index from live topology...")
+                    success = regenerate_router(quiet=False)
+                    if success:
+                        print("[+] AI Router index regenerated successfully.")
+                    else:
+                        print("[-] AI Router regeneration failed. Check logs.")
+                else:
+                    print("[-] AI Router module not available.")
+                continue
+
             # --- HOOK 1: Vectorized 3D/AR Hidden Dependency Scanner ---
             elif u_in_l in ["!scan_topology", "!topology", "!topology deep", "!topology_deep"]:
                 # --- HOOK 1: Vectorized 3D/AR Hidden Dependency Scanner ---

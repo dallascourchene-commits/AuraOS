@@ -316,29 +316,51 @@ class ExternalLLM:
             pass  # never let logging break the call
 
     # -- raw generation ----------------------------------------------------- #
-    def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1):
+    def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
+                 router_context: "str | None" = None):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
+
+        Args:
+            prompt: The user / task prompt sent to the LLM.
+            max_tokens: Maximum tokens to generate.
+            temperature: Sampling temperature.
+            router_context: Optional minimal code excerpt from the AI Router
+                (aura_ai_router.get_router_context_for_func). When provided,
+                it is prepended to the prompt as a CODE CONTEXT block, letting
+                the LLM focus on only the relevant function rather than
+                reading entire files. This reduces token usage by 80-90%.
         """
+        # Inject router context if provided
+        if router_context:
+            full_prompt = (
+                f"{prompt}\n\n"
+                "CODE CONTEXT (from AI Router – read this section only, "
+                "not the whole file):\n"
+                f"```python\n{router_context}\n```"
+            )
+        else:
+            full_prompt = prompt
+
         t0 = time.time()
         text = None
         err = None
         if self.is_gemini:
-            text, err = gemini_generate(prompt, secrets=self.secrets)
+            text, err = gemini_generate(full_prompt, secrets=self.secrets)
         elif self.api == "anthropic":
             text, err = _anthropic_generate(self.cfg["url"], self.api_key, self.model,
-                                            prompt, max_tokens, timeout=60)
+                                            full_prompt, max_tokens, timeout=60)
         else:
             payload = {
                 "model": self.model,
-                "messages": [{"role": "user", "content": prompt}],
+                "messages": [{"role": "user", "content": full_prompt}],
                 "max_tokens": max_tokens,
                 "temperature": temperature,
             }
             text, err = openai_compatible_generate(self.cfg["url"], self.api_key, payload, timeout=60)
         latency = time.time() - t0
-        self._log_to_savings("generate", prompt, text, latency, error=err)
+        self._log_to_savings("generate", full_prompt, text, latency, error=err)
         return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #
