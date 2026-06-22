@@ -28,6 +28,8 @@ from dataclasses import dataclass
 from enum import Enum
 import json
 
+from aura_lexc import AuraLexc, SlotName
+
 
 class TierType(Enum):
     """FST hierarchy tiers"""
@@ -85,8 +87,10 @@ class FSTLexiconRoutingCore:
     call graphs with a verified routing lexicon.
     """
     
-    def __init__(self, dimensions: int = 10000):
+    def __init__(self, dimensions: int = 10000, require_complete_slots: bool = False):
         self.dimensions = dimensions
+        self.require_complete_slots = require_complete_slots
+        self.lexc: Optional[AuraLexc] = None
         
         # FST components
         self.states: Dict[str, State] = {}
@@ -192,7 +196,7 @@ class FSTLexiconRoutingCore:
         [DIR]→[ASP]→[CLASS]→[SUBJ]→[VOICE]→[STEM]
         """
         if not path.slot_sequence:
-            return True  # No slot constraints
+            return not self.require_complete_slots
         
         # Check ordering
         prev_slot_idx = -1
@@ -207,7 +211,54 @@ class FSTLexiconRoutingCore:
             
             prev_slot_idx = curr_slot_idx
         
+        if self.require_complete_slots:
+            return path.slot_sequence == self.slot_order
         return True
+
+    @classmethod
+    def from_lexc(
+        cls,
+        path: str,
+        *,
+        dimensions: int = 10000,
+        strict: bool = True,
+    ) -> "FSTLexiconRoutingCore":
+        """Build the weighted routing graph from the repository lexc source."""
+        compiled = AuraLexc.from_path(path, strict=strict)
+        core = cls(dimensions=dimensions, require_complete_slots=True)
+        core.lexc = compiled
+
+        for state_id in sorted(compiled.lexicons | {"#"}):
+            if state_id == "Root" or state_id.startswith("Gate"):
+                tier = TierType.GATE
+            elif state_id.startswith("Action"):
+                tier = TierType.ACTION
+            elif state_id.startswith("Target") or state_id.startswith("Cloud"):
+                tier = TierType.TARGET
+            elif state_id.startswith("Physics"):
+                tier = TierType.PHYSICS
+            else:
+                tier = TierType.MODIFIER
+            core.add_state(state_id, tier, description=f"Compiled from aura.lexc: {state_id}")
+
+        slot_map = {
+            SlotName.DIR: SlotType.DIR,
+            SlotName.ASP: SlotType.ASP,
+            SlotName.CLASS: SlotType.CLASS,
+            SlotName.SUBJ: SlotType.SUBJ,
+            SlotName.VOICE: SlotType.VOICE,
+            SlotName.STEM: SlotType.STEM,
+        }
+        for arc in compiled.arcs:
+            core.add_transition(
+                arc.source,
+                arc.target,
+                arc.lexical,
+                slot_map[arc.slot],
+            )
+        core.start_state = "Root"
+        core.final_states = {"#"}
+        return core
     
     def find_optimal_path(self, start: str, end: str,
                          cpu_temp: float = 55.0) -> Optional[Path]:
@@ -233,17 +284,21 @@ class FSTLexiconRoutingCore:
         
         # Dijkstra's algorithm (since we have weights)
         import heapq
+        import itertools
         
-        # (cost, state, path_states, path_transitions, slot_sequence)
-        queue = [(0.0, start, [start], [], [])]
+        # Counter prevents heap tie-breaking from comparing Transition objects.
+        counter = itertools.count()
+        # (cost, insertion_order, state, path_states, path_transitions, slot_sequence)
+        queue = [(0.0, next(counter), start, [start], [], [])]
         visited = set()
         
         while queue:
-            cost, current, path_states, path_transitions, slot_seq = heapq.heappop(queue)
-            
-            if current in visited:
+            cost, _, current, path_states, path_transitions, slot_seq = heapq.heappop(queue)
+
+            visit_key = (current, tuple(slot_seq))
+            if visit_key in visited:
                 continue
-            visited.add(current)
+            visited.add(visit_key)
             
             # Check if we reached the end
             if current == end:
@@ -265,7 +320,14 @@ class FSTLexiconRoutingCore:
                 for transition in adj[current]:
                     next_state = transition.to_state
                     
-                    if next_state in visited:
+                    next_visit_key = (
+                        next_state,
+                        tuple(
+                            slot_seq
+                            + ([transition.slot_constraint] if transition.slot_constraint else [])
+                        ),
+                    )
+                    if next_visit_key in visited:
                         continue
                     
                     # Compute edge cost
@@ -280,6 +342,7 @@ class FSTLexiconRoutingCore:
                     # Add to queue
                     heapq.heappush(queue, (
                         new_cost,
+                        next(counter),
                         next_state,
                         path_states + [next_state],
                         path_transitions + [transition],
@@ -364,7 +427,13 @@ class FSTLexiconRoutingCore:
                 'target': sum(1 for s in self.states.values() if s.tier == TierType.TARGET),
                 'physics': sum(1 for s in self.states.values() if s.tier == TierType.PHYSICS),
                 'modifier': sum(1 for s in self.states.values() if s.tier == TierType.MODIFIER)
-            }
+            },
+            'source': 'aura.lexc' if self.lexc is not None else 'built_in',
+            'complete_six_slot_routes': (
+                len(self.lexc.complete_routes()) if self.lexc is not None else 0
+            ),
+            'lexc_errors': len(self.lexc.errors) if self.lexc is not None else 0,
+            'lexc_warnings': len(self.lexc.warnings) if self.lexc is not None else 0,
         }
 
 
