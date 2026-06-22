@@ -191,6 +191,64 @@
                         gateEl.innerText = "[RESEARCH GATE] " + decision + " | Score: " + score;
                     }
 
+                } else if (msg.type === "GAUSSIAN_SPLAT_UPDATE") {
+                    // Claim N17: VSA-Addressed Gaussian Splatting over WebSocket
+                    // Render gaussian splats as semi-transparent spheres with
+                    // covariance-driven scale and opacity from the attractor field.
+                    const splats = msg.splats || [];
+                    splats.forEach(function(splat) {
+                        const mean = splat.mean || [0, 0, 0];
+                        const opacity = Math.max(0.05, Math.min(1.0, splat.opacity || 0.5));
+                        const color = splat.color || [0.5, 0.5, 0.8];
+
+                        // Covariance -> scale: diagonal of covariance matrix
+                        let splatScale = 0.3;
+                        if (splat.covariance && Array.isArray(splat.covariance)) {
+                            // Extract diagonal if it's a matrix
+                            if (Array.isArray(splat.covariance[0])) {
+                                const diag = splat.covariance.map(function(row, i) { return Math.abs(row[i] || 0.1); });
+                                splatScale = Math.max(0.1, Math.min(2.0, diag.reduce(function(a,b){return a+b;}, 0) / diag.length));
+                            } else {
+                                splatScale = Math.max(0.1, Math.min(2.0, Math.abs(splat.covariance[0] || 0.3)));
+                            }
+                        }
+
+                        // Create semi-transparent sphere for the splat
+                        const splatGeom = new THREE.SphereGeometry(splatScale, 12, 12);
+                        const splatMat = new THREE.MeshBasicMaterial({
+                            color: new THREE.Color(
+                                Math.abs(color[0]) || 0.5,
+                                Math.abs(color[1]) || 0.5,
+                                Math.abs(color[2]) || 0.8
+                            ),
+                            transparent: true,
+                            opacity: opacity * 0.6,
+                            wireframe: false,
+                            depthWrite: false,
+                        });
+                        const splatMesh = new THREE.Mesh(splatGeom, splatMat);
+                        splatMesh.position.set(mean[0], mean[1], mean[2]);
+
+                        // Tag for cleanup on next frame
+                        splatMesh.userData.isSplat = true;
+                        splatMesh.userData.cycle = msg.cycle || 0;
+                        topologyGroup.add(splatMesh);
+                    });
+
+                    // Clean up old splats (keep only last 2 cycles)
+                    const currentCycle = msg.cycle || 0;
+                    const toRemove = [];
+                    topologyGroup.children.forEach(function(child) {
+                        if (child.userData.isSplat && child.userData.cycle < currentCycle - 2) {
+                            toRemove.push(child);
+                        }
+                    });
+                    toRemove.forEach(function(child) { topologyGroup.remove(child); });
+
+                    document.getElementById("thought").innerText =
+                        "Cognitive State: GAUSSIAN SPLAT | Cycle " + (msg.cycle || 0) +
+                        " | Splats: " + splats.length;
+
                 } else {
                     // Legacy: morph avatar from raw text messages
                     let intent = typeof event.data === "string" ? event.data : "";

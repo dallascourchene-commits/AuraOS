@@ -614,6 +614,20 @@ class AuraARWebSocketServer:
             # SkillWeaver / HIVP can push resonance scores to update node luminance
             await self._handle_resonance_update(session, data)
 
+        elif msg_type == "ATTRACTOR_FRAME":
+            # Claim N17: VSA-Addressed Gaussian Splatting over WebSocket
+            # Forward attractor frames (containing gaussian splat params)
+            # to all connected AR clients for real-time rendering.
+            await self._broadcast_message({
+                "type": "GAUSSIAN_SPLAT_UPDATE",
+                "splats": data.get("gaussian_splats", []),
+                "cycle": data.get("cycle", 0),
+                "temperature": data.get("temperature", 0),
+                "topology": data.get("topology", {}),
+                "transport": "websocket",
+                "addressing": "vsa_phasor_10000d",
+            })
+
         elif msg_type == "PING":
             await session.websocket.send(_json_ar.dumps({"type": "PONG"}))
 
