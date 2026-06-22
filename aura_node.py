@@ -53,6 +53,7 @@ import aura_topological_scanner
 from aura_topological_scanner import compile_unified_graph, compile_topology_map
 from aura_indus_cortex import IndusCortexEngine
 from aura_hybrid_linguistic_cortex import HybridLinguisticCortex
+from aura_lexc import AuraLexc, LexcCompileError
 
 # ======= PVM TOP-LEVEL MODULE IMPORTS (no lazy loading) =======
 from aura_rosetta_memory import RosettaMemoryBuffer
@@ -672,7 +673,9 @@ def enqueue_sqlite_query(query, params=None):
 TOKEN_LIMIT = 4096      # Max generation length block
 DB_PATH = Path.home() / ".mempalace" / "aura_memory.db"
 MODEL_PATH = Path.home() / "llama.cpp/models/qwen2.5-coder-3b.gguf"
-LEXC_PATH = Path.home() / "aura.lexc"
+LEXC_PATH = Path(
+    os.environ.get("AURA_LEXC_PATH", str(Path(__file__).with_name("aura.lexc")))
+)
 memory_queue = asyncio.Queue()
 # Polysynthetic GBNF lives in aura_gbnf_profiles (re-exported as AURA_POLYSYNTHETIC_GBNF)
 # --- 1. THE NATIVE PFST BRAIN ---
@@ -700,6 +703,8 @@ class AuraNativePFST:
         self.graph = {}
         self.start_states = []
         self.vector_graph = {}
+        self.compiled_lexc = None
+        self.diagnostics = ()
         self.loaded = False
 
     async def _load_blueprint_async(self):
@@ -713,45 +718,19 @@ class AuraNativePFST:
             print(f"[!] PFST Blueprint not found at {self.blueprint_path}. Deterministic routing disabled.")
             return
 
-        current_lexicon = None
-        for line in content.splitlines():
-            line = line.split('!')[0].strip()
-            if not line or line.startswith("Multichar_Symbols"):
-                continue
-            if line.startswith("LEXICON"):
-                current_lexicon = line.split()[1]
-                self.graph[current_lexicon] = {}
-                continue
-            if current_lexicon and line.endswith(";"):
-                cleaned_line = line.replace(';', '').strip()
-                tokens = cleaned_line.split()
-                if not tokens: 
-                    continue
-                next_dest = tokens[-1].strip()
-                raw_tag = tokens[0]
-                tag = raw_tag.split(':')[0].strip()
-                self.graph[current_lexicon][tag] = next_dest
-                if current_lexicon == "Root":
-                    self.start_states.append((tag, next_dest))
+        try:
+            compiled = AuraLexc.from_text(content, strict=True)
+        except LexcCompileError as exc:
+            self.diagnostics = exc.diagnostics
+            print(f"[!] PFST Blueprint rejected: {exc}")
+            return
 
-        # lower-case normalization mappings
-        self.graph["Root"] = {
-            "+ni": "GateNI",
-            "+na": "GateNA",
-            "+sys": "GateSYS",
-            "+web3": "GateWEB3",
-            "+asi": "GateASI"
-        }
-        self.graph["GateASI"] = {"+asi": "ActionEvolve"}
-        self.graph["ActionEvolve"] = {"+mutate": "TargetSandbox"}
-        self.graph["TargetSandbox"] = {"+mutate": "PhysicsIcosahedron"}
-        if "Root" in self.graph:
-            self.graph["Root"]["+ASI"] = "GateASI"
-        if "GateASI" not in self.graph:
-            self.graph["GateASI"] = {"+ASI": "ActionEvolve"}
-        if "ActionEvolve" not in self.graph:
-            self.graph["ActionEvolve"] = {"+MUTATE": "TargetSandbox"}
-            
+        self.compiled_lexc = compiled
+        self.diagnostics = compiled.diagnostics
+        self.graph = compiled.graph
+        self.start_states = [
+            (arc.lexical, arc.target) for arc in compiled.graph.get("Root", ())
+        ]
         self.loaded = True
 
     async def compile_vsft_matrix(self, hdc):
@@ -764,34 +743,20 @@ class AuraNativePFST:
         route_count = 0
         for current_state, transitions in self.graph.items():
             state_hv = hdc.get_word_vector(current_state)
-            for tag, next_state in transitions.items():
-                tag_hv = hdc.get_word_vector(tag)
-                transition_path_hv = hdc.bind(state_hv, tag_hv)
-                self.vector_graph[transition_path_hv.tobytes()] = next_state
+            for arc in transitions:
+                tag_hv = hdc.get_word_vector(arc.lexical)
+                target_hv = hdc.get_word_vector(arc.target)
+                transition_path_hv = hdc.bind(hdc.bind(state_hv, tag_hv), target_hv)
+                self.vector_graph[transition_path_hv.tobytes()] = arc.target
                 route_count += 1
         print(f"[+] VSFT Matrix active. {route_count} continuous mathematical routes forged.")
 
     def validate_route(self, route_str):
-        cleaned_route = route_str.replace('"', '').strip().lower()
-        tokens = [t.strip() for t in cleaned_route.split("+") if t.strip()]
-        if not tokens:
+        if self.compiled_lexc is None:
             return False
-        if "asi" in tokens or "mutate" in tokens:
-            return True
-        current_state = "Root"
-        for token in tokens:
-            if current_state not in self.graph:
-                return False
-            matched_next_state = None
-            for graph_key, next_state in self.graph[current_state].items():
-                if graph_key.strip().lower() == f"+{token}":
-                    matched_next_state = next_state
-                    break
-            if matched_next_state:
-                current_state = matched_next_state
-            else:
-                return False
-        return True
+        cleaned_route = route_str.replace('"', '').strip()
+        tokens = [token.strip() for token in cleaned_route.split() if token.strip()]
+        return self.compiled_lexc.validate_symbols(tokens) is not None
 
 # --- 1B. BIOLOGICAL EVENT-DRIVEN SPIKING GOVERNOR ---
 class AuraSpikingGovernor:
@@ -3385,7 +3350,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         print("[+] Memory Palace successfully upgraded to Edge Vector standards.")
     async def mint_trace(self, text, identity=None, tier="T2", route_verification=None):
         # Check for Vigil Lock condition
-        if route_verification and not self.pfst.validate(route_verification):
+        if route_verification and not self.pfst.validate_route(route_verification):
             print("[VIGIL LOCK] > PFST Graph denies evolutionary routing.")
             print("[*] Initiating Semantic Plasticity to infer intent...")
             # 1. Initialize the Gateway (Ensure 'from gateway import CognitiveGateway' is at the top of the file)
