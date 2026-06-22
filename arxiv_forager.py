@@ -16,7 +16,7 @@ import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 import numpy as np
@@ -85,7 +85,11 @@ class ArXivForager:
     async def upgraded_arxiv_backtracker(self, max_results: int = 100, max_retries: int = 3, timeout: float = 12.0) -> bool:
         """
         Chronologically walks backwards through arXiv computer science submissions.
-        Uses direct, non-blocking DB commits and enforces a strict 3.5s rate-limit delay.
+
+        The arXiv API hard-caps pagination at start=9999 (≈10 000 total results).
+        When the crawler hits that wall it automatically resets the offset to 0
+        and narrows the date window — so the crawl can continue indefinitely
+        through earlier time periods without ever getting stuck.
         """
         if self.node is None or not self.node.memory_palace.conn:
             print("[-] Backtracker Error: No active database connection linked to Forager.")
@@ -93,54 +97,93 @@ class ArXivForager:
 
         conn = self.node.memory_palace.conn
 
-        # 1. Load persistent crawler state directly from her database
-        crawler_state = {'crawl_offset_index': 0, 'last_crawl_time': 0.0}
+        # 1. Load persistent crawler state
+        crawler_state = {
+            'crawl_offset_index': 0,
+            'last_crawl_time': 0.0,
+            'crawl_window_end': None,   # ISO date str upper bound (None = wide open)
+        }
         try:
-            async with conn.execute("SELECT content FROM traces WHERE id = 'ARXIV_CRAWLER_STATE';") as cursor:
+            async with conn.execute(
+                "SELECT content FROM traces WHERE id = 'ARXIV_CRAWLER_STATE';"
+            ) as cursor:
                 row = await cursor.fetchone()
                 if row:
-                    crawler_state = json.loads(row[0])
+                    loaded = json.loads(row[0])
+                    crawler_state.update(loaded)
             self.node.runtime_metrics['arxiv_crawler_state'] = crawler_state
         except Exception:
             pass
 
-        # 2. Strict Temporal Pacing Guard (Enforces 3.5-second arXiv compliance delay)
+        # 2. Temporal pacing (3.5 s arXiv compliance)
         current_time = time.time()
         elapsed_time = current_time - crawler_state.get('last_crawl_time', 0.0)
         if elapsed_time < 3.5:
             sleep_needed = 3.5 - elapsed_time
             print(f"[⏳ TEMPORAL PACING] arXiv compliance delay active. Sleeping for {sleep_needed:.2f}s...")
             await asyncio.sleep(sleep_needed)
-            current_time = time.time()
 
         current_offset = crawler_state.get('crawl_offset_index', 0)
+        window_end = crawler_state.get('crawl_window_end')
+
+        # ---- Build query with optional date-window filter ----
+        search_query = 'cat:cs.*'
+        if window_end:
+            # Scope to papers submitted on or before window_end
+            search_query += f'+AND+submittedDate:[*+TO+{window_end}]'
+
         BASE_URL = 'https://export.arxiv.org/api/query'
         params = {
-            'search_query': 'cat:cs.*',
+            'search_query': search_query,
             'sortBy': 'submittedDate',
             'sortOrder': 'descending',
             'max_results': max_results,
-            'start': current_offset
+            'start': current_offset,
         }
         query_url = f"{BASE_URL}?{urlencode(params)}"
-        
-        xml_data = None
+
         headers = {
             "User-Agent": "Mozilla/5.0 (Linux; Android 10; Moto G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
             "Accept": "application/xml,text/xml",
-            "Connection": "close"
+            "Connection": "close",
         }
+
+        # 3. Fetch with retries — detect 10k-cap errors
+        xml_data = None
         for attempt in range(max_retries):
             try:
-                print(f"[*] Fetching arXiv CS backlog at offset: {current_offset}...")
+                print(f"[*] Fetching arXiv CS backlog at offset {current_offset}"
+                      + (f"  (window ≤ {window_end})" if window_end else "")
+                      + "...")
                 req = urllib.request.Request(query_url, headers=headers)
                 response = await asyncio.to_thread(urllib.request.urlopen, req, timeout=timeout)
                 xml_data = response.read()
                 break
             except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ConnectionResetError) as e:
+                err_str = str(e)
+                is_500 = '500' in err_str or 'Internal Server Error' in err_str
+
                 if attempt == max_retries - 1:
+                    # ---- 10k hard-cap recovery: reset offset, narrow date window ----
+                    if is_500 and current_offset >= 9_000:
+                        print("[🔄 10K CAP] arXiv refuses start>=10k. "
+                              "Resetting offset to 0 and narrowing date window...")
+                        self._advance_backtracker_window(crawler_state)
+                        crawler_state['crawl_offset_index'] = 0
+                        crawler_state['last_crawl_time'] = time.time()
+                        await conn.execute(
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
+                            "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
+                            "'arXiv Backtracker Crawler State Offset', NULL)",
+                            (json.dumps(crawler_state), datetime.now().isoformat()),
+                        )
+                        await conn.commit()
+                        print("[+] Date window advanced. Run !backtrack again to continue.")
+                        return True  # state saved, caller re-invokes
+
                     print(f"[-] Backtracker network failed after {max_retries} attempts: {e}")
                     return False
+
                 backoff = (2 ** attempt) * 1.5 + np.random.uniform(0, 0.1)
                 print(f"[⚠️ ARXIV RETRY] Connection error: {e}. Retrying in {backoff:.2f}s...")
                 await asyncio.sleep(backoff)
@@ -148,20 +191,53 @@ class ArXivForager:
         if not xml_data:
             return False
 
+        # 4. Parse and ingest
         try:
             root = ET.fromstring(xml_data)
             entries = root.findall('{http://www.w3.org/2005/Atom}entry')
+
             if not entries:
-                print("[+] Backtracker reached the absolute end of the arXiv CS timeline.")
-                return False
+                if current_offset > 0:
+                    # We're past the last page for this window — advance the window
+                    print("[🔄 WINDOW EDGE] No more results at this offset. "
+                          "Narrowing date window to continue...")
+                    self._advance_backtracker_window(crawler_state)
+                    crawler_state['crawl_offset_index'] = 0
+                else:
+                    # offset == 0 and no entries: either truly done or window is empty
+                    if window_end:
+                        print("[🔄 EMPTY WINDOW] No papers in this date range. "
+                              "Advancing window further back...")
+                        self._advance_backtracker_window(crawler_state)
+                        crawler_state['crawl_offset_index'] = 0
+                    else:
+                        print("[+] Backtracker reached the absolute end of the arXiv CS timeline.")
+                        return False
+
+                crawler_state['last_crawl_time'] = time.time()
+                await conn.execute(
+                    "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
+                    "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
+                    "'arXiv Backtracker Crawler State Offset', NULL)",
+                    (json.dumps(crawler_state), datetime.now().isoformat()),
+                )
+                await conn.commit()
+                print("[+] Date window advanced. Run !backtrack again to continue.")
+                return True
 
             ingest_rows: list[tuple] = []
             stamp_ts = datetime.now().isoformat()
+            earliest_published = None
+
             for entry in entries:
                 title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
                 summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.strip()
                 summary = " ".join(summary.split())
                 published = entry.find('{http://www.w3.org/2005/Atom}published').text.strip()
+
+                # Track the earliest pub date in this batch for window advancement
+                if earliest_published is None or published < earliest_published:
+                    earliest_published = published
 
                 text_block = f"TITLE: {title} | ABSTRACT: {summary} | PUBLISHED: {published}"
                 phasor_wave = self.node.polysynthetic_vram_compress(text_block)
@@ -179,23 +255,68 @@ class ArXivForager:
                 )
             stamped_count = len(ingest_rows)
 
-            # Update and persist crawler offset state inside database
-            crawler_state['crawl_offset_index'] = current_offset + len(entries)
+            # 5. Advance state
+            new_offset = current_offset + len(entries)
+
+            # If the new offset is dangerously close to the 10k cap, pre-emptively
+            # advance the window so the next call doesn't hit the wall
+            if new_offset >= 9_500:
+                print("[🔄 10K GUARD] Approaching arXiv 10k cap. "
+                      "Advancing date window pre-emptively...")
+                self._advance_backtracker_window(crawler_state, earliest_published)
+                crawler_state['crawl_offset_index'] = 0
+            else:
+                crawler_state['crawl_offset_index'] = new_offset
+
             crawler_state['last_crawl_time'] = time.time()
-            
+
             await conn.execute(
-                "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, 'arXiv Backtracker Crawler State Offset', NULL)",
-                (json.dumps(crawler_state), datetime.now().isoformat())
+                "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
+                "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
+                "'arXiv Backtracker Crawler State Offset', NULL)",
+                (json.dumps(crawler_state), datetime.now().isoformat()),
             )
             await conn.commit()
-            
+
             print(f"[+] [ARXIV BACKTRACKER] Successfully vectorized and ingested {stamped_count} papers.")
-            print(f"    New crawl timeline offset index: {crawler_state['crawl_offset_index']}")
+            print(f"    Offset: {new_offset}  |  Window end: {window_end or 'unbounded'}")
             return True
 
         except Exception as e:
             print(f"[-] Backtracker processing error: {e}")
             return False
+
+    def _advance_backtracker_window(self, crawler_state: dict, earliest_published: str = None) -> None:
+        """
+        Push the date window further into the past so the next crawl cycle
+        can continue beyond the arXiv 10k hard cap.
+
+        If *earliest_published* is given (from the most recent batch) the
+        window is set to one day before that paper's date.  Otherwise the
+        existing window_end is pushed back by 30 days.
+        """
+
+        if earliest_published:
+            try:
+                pub_dt = datetime.fromisoformat(earliest_published.rstrip("Z"))
+                new_end = pub_dt - timedelta(days=1)
+            except (ValueError, TypeError):
+                new_end = datetime.now() - timedelta(days=30)
+        else:
+            old_end = crawler_state.get('crawl_window_end')
+            if old_end:
+                try:
+                    old_dt = datetime.fromisoformat(str(old_end).rstrip("Z"))
+                    new_end = old_dt - timedelta(days=30)
+                except (ValueError, TypeError):
+                    new_end = datetime.now() - timedelta(days=30)
+            else:
+                # First time narrowing: start 30 days ago
+                new_end = datetime.now() - timedelta(days=30)
+
+        crawler_state['crawl_window_end'] = new_end.strftime("%Y%m%d%H%M")
+        print(f"[🪟 WINDOW] crawl_window_end set to {crawler_state['crawl_window_end']}"
+              + (f"  (earliest paper: {earliest_published})" if earliest_published else ""))
 
 
 # =============================================================================
