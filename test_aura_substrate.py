@@ -11,6 +11,8 @@ Run:  python3 test_aura_substrate.py
 from __future__ import annotations
 
 import sys
+import tempfile
+from pathlib import Path
 
 import json
 
@@ -92,6 +94,11 @@ def test_substrate_is_llm_free_and_surgical() -> None:
     full_lines = len(ContextSelector().read("aura_mesh.py").splitlines())
     assert pkg.context.exposed_lines < full_lines, "surgical context should be smaller than full file"
     assert estimate_tokens(pkg.prompt) > 0
+    assert pkg.slot_matrix is not None, "substrate must emit the real pre-egress slot matrix"
+    assert str(pkg.slot_matrix.dtype) == "complex64"
+    assert tuple(pkg.slot_matrix.shape) == (6, 10000)
+    assert pkg.meta["pre_egress"]["profile_id"] == "advanced_code_development"
+    assert pkg.meta["pre_egress"]["similarity"] > 0.99
 
 
 def test_packet_styles() -> None:
@@ -298,6 +305,171 @@ def test_savings_by_provider_and_aspect() -> None:
     assert rep["overall"]["input_tokens_saved"] == (2500 - 500) + (1500 - 300)
 
 
+
+
+def test_codebase_navigator_command_query_is_compact() -> None:
+    from aura_codebase_navigator import search_index
+
+    payload = {
+        "command_index": {"!savings": ["aura_node.py:6975"]},
+        "symbol_index": {},
+        "files": [
+            {
+                "path": "aura_node.py",
+                "role": "python_module",
+                "lines": 7356,
+                "tokens_est": 95073,
+                "symbol_count": 217,
+                "commands": ["!savings", "!route"],
+                "command_lines": {"!savings": [6975, 7098]},
+                "digest8": "abc",
+                "vector": [],
+            },
+            {
+                "path": "USER_GUIDE.md",
+                "role": "knowledge_artifact",
+                "lines": 100,
+                "tokens_est": 1000,
+                "symbol_count": 0,
+                "commands": ["!savings"],
+                "command_lines": {"!savings": [175]},
+                "digest8": "def",
+                "vector": [],
+            },
+        ],
+    }
+    hits = search_index(payload, "!savings", limit=2)
+
+    assert hits[0]["path"] == "aura_node.py"
+    assert hits[0]["matched_command_lines"] == {"!savings": [6975, 7098]}
+    assert "commands" not in hits[0], "exact command queries should return compact hits"
+
+
+def test_codebase_navigator_sorts_topology_by_file_degree() -> None:
+    from aura_codebase_navigator import _attach_topology
+
+    records = [
+        {"path": "aura_node.py", "role": "python_module", "lines": 10, "tokens_est": 10, "symbol_count": 1, "digest8": "a", "vector": []},
+        {"path": "aura_router.py", "role": "python_module", "lines": 10, "tokens_est": 10, "symbol_count": 1, "digest8": "b", "vector": []},
+    ]
+    topology = {
+        "nodes": [
+            {"id": "aura_node.py::global_scope", "label": "global_scope", "file": "aura_node.py"},
+            {"id": "aura_node.py::main", "label": "main", "file": "aura_node.py"},
+            {"id": "aura_router.py::global_scope", "label": "global_scope", "file": "aura_router.py"},
+        ],
+        "edges": [
+            {"source": "aura_node.py::main", "target": "aura_router.py::global_scope", "kind": "call"},
+            {"source": "aura_node.py::global_scope", "target": "aura_router.py::global_scope", "type": "import_module"},
+        ],
+    }
+
+    index = _attach_topology(records, topology)
+
+    assert index["aura_node.py"]["degree"] == 2
+    assert index["aura_node.py"]["neighbor_files"] == ["aura_router.py"]
+    assert records[0]["topology"]["symbols"] == ["main"]
+
+
+def test_codebase_navigator_incremental_refresh_keeps_topology_and_semantic_ids() -> None:
+    from aura_codebase_navigator import build_navigation_system, refresh_index_for_paths, write_navigation_artifacts
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        module = root / "module.py"
+        sibling = root / "sibling.py"
+        topo_dir = root / "Aura_Memory"
+        topo_dir.mkdir()
+        module.write_text("def alpha():\n    return 1\n", encoding="utf-8")
+        sibling.write_text("def untouched():\n    return 0\n", encoding="utf-8")
+        (topo_dir / "live_topology_ast.json").write_text(json.dumps({
+            "nodes": [
+                {"id": "module.py::alpha", "label": "alpha", "file": "module.py"},
+                {"id": "sibling.py::untouched", "label": "untouched", "file": "sibling.py"},
+            ],
+            "edges": [
+                {"source": "module.py::alpha", "target": "sibling.py::untouched", "kind": "call"},
+            ],
+        }), encoding="utf-8")
+        index = root / ".aura" / "CODEMAP.json"
+        markdown = root / ".aura" / "CODEMAP.md"
+
+        payload = build_navigation_system(root, refresh_topology=False)
+        write_navigation_artifacts(payload, index, markdown)
+
+        module.write_text("\n\nasync def alpha(value):\n    return value\n\ndef beta():\n    return 2\n", encoding="utf-8")
+        refreshed = refresh_index_for_paths(index, [Path("module.py")], root=root)
+
+        assert refreshed["last_refresh"]["mode"] == "incremental_ast_hook"
+        assert refreshed["last_refresh"]["refreshed_paths"] == ["module.py"]
+        assert refreshed["symbol_index"]["alpha"][0]["line"] == 3
+        assert refreshed["symbol_index"]["alpha"][0]["kind"] == "async_function"
+        assert refreshed["symbol_index"]["alpha"][0]["semantic_id"].startswith("module.py#async_function:alpha:")
+        assert refreshed["symbol_index"]["beta"][0]["line"] == 6
+        assert refreshed["symbol_index"]["untouched"][0]["file"] == "sibling.py"
+        assert refreshed["files"][0]["topology"]["neighbor_files"] == ["sibling.py"]
+
+
+def test_pre_egress_interceptor_routes_code_profile() -> None:
+    from aura_gbnf_profiles import PROFILE_VSA_CODE_DEV
+    from aura_pre_egress_interceptor import (
+        DIMENSIONS,
+        SLOTS,
+        allocate_slot_matrix,
+        compile_intent_slots,
+        intercept_matrix,
+        intercept_prompt,
+    )
+
+    matrix = allocate_slot_matrix()
+    compile_intent_slots("patch the python function with an AST refactor", matrix)
+    decision = intercept_matrix(matrix)
+
+    assert matrix.shape == (SLOTS, DIMENSIONS)
+    assert str(matrix.dtype) == "complex64"
+    assert decision.profile_id == "advanced_code_development"
+    assert decision.gbnf_profile == PROFILE_VSA_CODE_DEV
+    assert decision.similarity > 0.99
+
+    compile_intent_slots("ordinary system prompt", matrix)
+    precompiled = intercept_prompt("patch the python function", slot_matrix=matrix)
+    assert precompiled.profile_id == "core_system_base", "precompiled CLASS row must not be overwritten"
+
+
+def test_savings_report_includes_direct_llm_savings_db() -> None:
+    import os as _os, tempfile
+    from aura_router import CalibrationLedger, ExecutionLog, savings_report
+    from aura_savings_db import SavingsDB
+
+    tmp = tempfile.mkdtemp()
+    db_path = _os.path.join(tmp, "savings.db")
+    SavingsDB(db_path).log_call(
+        provider="mistral",
+        model="mistral-large",
+        call_type="generate",
+        task="converse",
+        aspect="conversation",
+        prompt_tokens=100,
+        output_tokens=40,
+        cost_usd=0.0002,
+        latency_sec=0.01,
+        baseline_prompt_tokens=500,
+        baseline_output_tokens=200,
+        baseline_cost_usd=0.0012,
+    )
+    led = CalibrationLedger(_os.path.join(tmp, "cal.jsonl"))
+    elog = ExecutionLog(_os.path.join(tmp, "exec.jsonl"))
+    rep = savings_report(ledger=led, exec_log=elog, savings_db_path=db_path)
+
+    assert rep["executions"] == 0
+    assert rep["llm_calls"] == 1
+    assert rep["overall"]["aura_input_tokens"] == 100
+    assert rep["overall"]["input_tokens_saved"] == 400
+    assert rep["overall"]["output_tokens_saved"] == 160
+    assert rep["overall"]["est_cost_saved_usd"] == 0.001
+    assert rep["by_provider"]["mistral"]["calls"] == 1
+    assert rep["by_aspect"]["conversation"]["calls"] == 1
+
 def test_sandbox_task_and_no_fake_files() -> None:
     from aura_proxy_benchmark import TASKS, with_output_mode, QualityScorer, _repo_py_files
     from aura_substrate import ContextSelector, existing_import_roots
@@ -354,6 +526,11 @@ def main() -> int:
     _run("pricing book + weekly refresh", test_pricing_book)
     _run("converse mock + learning/DKT", test_converse_mock_and_learning)
     _run("savings by provider + aspect", test_savings_by_provider_and_aspect)
+    _run("savings DB direct LLM calls", test_savings_report_includes_direct_llm_savings_db)
+    _run("codebase navigator compact command query", test_codebase_navigator_command_query_is_compact)
+    _run("codebase navigator topology sorting", test_codebase_navigator_sorts_topology_by_file_degree)
+    _run("codebase navigator incremental topology refresh", test_codebase_navigator_incremental_refresh_keeps_topology_and_semantic_ids)
+    _run("pre-egress interceptor code profile", test_pre_egress_interceptor_routes_code_profile)
     _run("sandbox task + no fake files", test_sandbox_task_and_no_fake_files)
     _run("diff applier + quality scorer", test_diff_applier_and_scorer)
     print(f"\n{_PASS} passed, {_FAIL} failed")

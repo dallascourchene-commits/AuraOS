@@ -51,6 +51,7 @@ from aura_api_rotator import (
 
 from aura_savings_db import log_call as _log_call_to_db
 from aura_substrate import estimate_tokens as _estimate_tokens
+from aura_pre_egress_interceptor import apply_pre_egress_profile
 
 # External providers only. Internal/local engines are intentionally excluded —
 # Aura must call out, not run a model in-process. Gemini is an allowed external
@@ -317,7 +318,8 @@ class ExternalLLM:
 
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
-                 router_context: "str | None" = None):
+                 router_context: "str | None" = None, slot_matrix: Any | None = None,
+                 pre_egress: bool = True):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
@@ -331,6 +333,11 @@ class ExternalLLM:
                 it is prepended to the prompt as a CODE CONTEXT block, letting
                 the LLM focus on only the relevant function rather than
                 reading entire files. This reduces token usage by 80-90%.
+            slot_matrix: Optional precompiled (6, 10000) complex64 Athabaskan
+                buffer. When omitted, the pre-egress interceptor compiles a
+                temporary intent matrix from the prompt.
+            pre_egress: Enable the deterministic HDC profile rotator before
+                network egress.
         """
         # Inject router context if provided
         if router_context:
@@ -342,6 +349,12 @@ class ExternalLLM:
             )
         else:
             full_prompt = prompt
+
+        profile_decision = None
+        if pre_egress:
+            full_prompt, profile_decision = apply_pre_egress_profile(full_prompt, slot_matrix=slot_matrix)
+            if profile_decision.throttled:
+                max_tokens = min(max_tokens, 512)
 
         t0 = time.time()
         text = None
@@ -364,7 +377,8 @@ class ExternalLLM:
         return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #
-    def interpret(self, data: Any, instruction: str, *, max_tokens: int = 400):
+    def interpret(self, data: Any, instruction: str, *, max_tokens: int = 400,
+                  slot_matrix: Any | None = None, pre_egress: bool = True):
         """
         Hand Aura's structured data to the external model purely so it can be
         verbalized / interpreted for a human. Returns (text, error, latency).
@@ -381,7 +395,12 @@ class ExternalLLM:
             f"{instruction}\n\n[AURA DATA]\n{data}\n"
         )
         t0 = time.time()
-        text, err, latency = self.generate(prompt, max_tokens=max_tokens)
+        text, err, latency = self.generate(
+            prompt,
+            max_tokens=max_tokens,
+            slot_matrix=slot_matrix,
+            pre_egress=pre_egress,
+        )
         # Override the generate-level log with the correct call_type
         if not err:
             self._log_to_savings("interpret", prompt, text, latency)
