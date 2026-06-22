@@ -90,7 +90,8 @@ class MockEgress:
         self.model = model
         self.cfg = {"price_in_per_1k": 0.0, "price_out_per_1k": 0.0}
 
-    def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1):
+    def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
+                 **_kwargs):
         is_aura = "[AURA TASK PACKET" in prompt
         wants_edit_plan = "JSON_EDIT_PLAN" in prompt
         if "OP:CONVERSE" in prompt or "POLY_REPLY" in prompt:
@@ -150,12 +151,12 @@ def _is_ratelimit(err: str | None) -> bool:
     return bool(err) and any(m in err.lower() for m in _RATELIMIT_MARKERS)
 
 
-def _generate_with_backoff(egress, prompt: str, rl_retries: int):
+def _generate_with_backoff(egress, prompt: str, rl_retries: int, slot_matrix=None):
     """Single generation that backs off and retries on rate-limit (429) errors."""
     backoff = 5.0
     text, err, lat = None, None, 0.0
     for attempt in range(rl_retries + 1):
-        text, err, lat = egress.generate(prompt)
+        text, err, lat = egress.generate(prompt, slot_matrix=slot_matrix)
         if err and _is_ratelimit(err) and attempt < rl_retries:
             time.sleep(backoff)
             backoff *= 2
@@ -165,12 +166,12 @@ def _generate_with_backoff(egress, prompt: str, rl_retries: int):
 
 
 def _generate_trials(egress, prompt: str, trials: int, rl_retries: int = 2,
-                     delay: float = 0.0) -> dict:
+                     delay: float = 0.0, slot_matrix=None) -> dict:
     """Generate-only: run N trials of one prompt (no scoring; scoring is per-mode)."""
     texts, latencies = [], []
     last_err = None
     for _ in range(max(1, trials)):
-        text, err, lat = _generate_with_backoff(egress, prompt, rl_retries)
+        text, err, lat = _generate_with_backoff(egress, prompt, rl_retries, slot_matrix=slot_matrix)
         last_err = err
         texts.append(text)
         latencies.append(lat)
@@ -230,7 +231,7 @@ def run_cell(egress, task_base, scorer, selector, substrate, style: str,
                             target_func=task.target_func,
                             explicit_tags=task.packet_tags, style=style)
     ain = estimate_tokens(pkg.prompt)
-    agen = _generate_trials(egress, pkg.prompt, trials, rl_retries, delay)
+    agen = _generate_trials(egress, pkg.prompt, trials, rl_retries, delay, slot_matrix=pkg.slot_matrix)
     ascore = _score_texts(agen["texts"], scorer, task)
     a_total_cost = egress.cost(ain, agen["out_tokens"])
 

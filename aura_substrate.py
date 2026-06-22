@@ -41,6 +41,9 @@ import os
 import re
 import time
 from dataclasses import dataclass, field
+from typing import Any
+
+from aura_pre_egress_interceptor import compile_intent_slots, intercept_matrix
 
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 AURA_GUARDRAIL_DIR = os.path.join(REPO_ROOT, ".aura")
@@ -307,6 +310,7 @@ class SubstratePackage:
     directive: str
     prompt: str                 # assembled minimal egress prompt
     compile_ms: float
+    slot_matrix: Any | None = None
     meta: dict = field(default_factory=dict)
 
 
@@ -354,6 +358,10 @@ class AuraSubstrate:
             "[DIRECTIVE]\n"
             f"{self.DIRECTIVE}\n"
         )
+        slot_matrix = compile_intent_slots(
+            "\n".join(part for part in (human_prompt, packet, target_file or "", target_func or "") if part)
+        )
+        pre_egress_decision = intercept_matrix(slot_matrix)
         compile_ms = (time.time() - t0) * 1000.0
         return SubstratePackage(
             packet=packet,
@@ -362,6 +370,7 @@ class AuraSubstrate:
             directive=self.DIRECTIVE,
             prompt=prompt,
             compile_ms=round(compile_ms, 3),
+            slot_matrix=slot_matrix,
             meta={
                 "target_file": target_file,
                 "target_func": target_func,
@@ -370,6 +379,14 @@ class AuraSubstrate:
                 "prompt_tokens": estimate_tokens(prompt),
                 "exposed_lines": ctx.exposed_lines,
                 "llm_used": False,
+                "pre_egress": {
+                    "profile_id": pre_egress_decision.profile_id,
+                    "similarity": pre_egress_decision.similarity,
+                    "gbnf_profile": pre_egress_decision.gbnf_profile,
+                    "grammar_metadata": pre_egress_decision.grammar_metadata,
+                    "thermal_c": pre_egress_decision.thermal_c,
+                    "throttled": pre_egress_decision.throttled,
+                },
             },
         )
 
@@ -417,7 +434,8 @@ def _demo(speak: bool) -> int:
         print(f"\n=== EXTERNAL LLM EGRESS ({egress.provider}/{egress.model}) ===")
         text, err, latency = egress.interpret(
             data, instruction="In one or two sentences, explain to a human what Aura's "
-                              "substrate just prepared and why it is efficient.")
+                              "substrate just prepared and why it is efficient.",
+            slot_matrix=pkg.slot_matrix)
         if err:
             print(f"[!] egress error: {err}")
         else:

@@ -308,7 +308,7 @@ class AutoRouter:
                 egress._baseline_prompt = raw_in
                 egress._baseline_output = est_raw_out
                 egress._baseline_cost = est_raw_cost
-                text, err, lat = egress.generate(prompt)
+                text, err, lat = egress.generate(prompt, slot_matrix=pkg.slot_matrix)
                 if err or not text:
                     tried.append({"provider": cand["provider"], "style": cand["style"],
                                   "output_mode": cand["output_mode"], "error": err or "empty"})
@@ -393,8 +393,53 @@ def _round_acc(acc: dict) -> dict:
             "est_cost_saved_usd": round(acc["cost_saved"], 6)}
 
 
+def _savings_db_rows(db_path: str | None = None) -> list[dict]:
+    """Read every logged LLM call from aura_savings_db in router-compatible shape."""
+    from aura_savings_db import DB_PATH as SAVINGS_DB_PATH
+    import sqlite3
+
+    path = db_path or SAVINGS_DB_PATH
+    if not os.path.exists(path):
+        return []
+    with sqlite3.connect(path) as conn:
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            """SELECT provider, model, task, aspect, prompt_tokens, output_tokens,
+                      cost_usd, baseline_prompt_tokens, baseline_output_tokens,
+                      baseline_cost_usd, tokens_saved, cost_saved_usd
+               FROM llm_calls
+               ORDER BY id ASC"""
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def _accumulate_savings_db_row(acc: dict, row: dict) -> None:
+    """Accumulate the persistent LLM-call savings DB without losing output savings."""
+    prompt_tokens = row.get("prompt_tokens") or 0
+    output_tokens = row.get("output_tokens") or 0
+    cost = row.get("cost_usd") or 0.0
+    acc["calls"] += 1
+    acc["aura_in"] += prompt_tokens
+    acc["aura_out"] += output_tokens
+    acc["aura_cost"] += cost
+
+    baseline_prompt = row.get("baseline_prompt_tokens")
+    baseline_output = row.get("baseline_output_tokens")
+    if baseline_prompt is not None:
+        acc["in_saved"] += baseline_prompt - prompt_tokens
+    if baseline_output is not None:
+        acc["out_saved"] += baseline_output - output_tokens
+    elif row.get("tokens_saved") is not None and baseline_prompt is None:
+        acc["in_saved"] += row["tokens_saved"]
+    if row.get("baseline_cost_usd") is not None:
+        acc["cost_saved"] += row["baseline_cost_usd"] - cost
+    elif row.get("cost_saved_usd") is not None:
+        acc["cost_saved"] += row["cost_saved_usd"]
+
+
 def savings_report(ledger: CalibrationLedger | None = None,
-                   exec_log: ExecutionLog | None = None) -> dict:
+                   exec_log: ExecutionLog | None = None,
+                   savings_db_path: str | None = None) -> dict:
     ledger = ledger or CalibrationLedger(LEDGER_PATH)
     exec_log = exec_log or ExecutionLog(EXEC_LOG_PATH)
     try:
@@ -417,6 +462,17 @@ def savings_report(ledger: CalibrationLedger | None = None,
         if e.get("est_raw_total_cost_usd") is not None:
             counted += 1
 
+    savings_db_rows = _savings_db_rows(savings_db_path)
+    db_counted = 0
+    for row in savings_db_rows:
+        _accumulate_savings_db_row(overall, row)
+        prov = row.get("provider") or "?"
+        asp = row.get("aspect") or "unspecified"
+        _accumulate_savings_db_row(by_provider.setdefault(prov, _blank_acc()), row)
+        _accumulate_savings_db_row(by_aspect.setdefault(asp, _blank_acc()), row)
+        if row.get("baseline_cost_usd") is not None or row.get("cost_saved_usd") is not None:
+            db_counted += 1
+
     # Projected per-task savings if every task_type were routed to its best cell.
     projection: dict[str, dict] = {}
     by_type: dict[str, list[dict]] = {}
@@ -433,12 +489,14 @@ def savings_report(ledger: CalibrationLedger | None = None,
 
     return {
         "executions": len(execs),
+        "llm_calls": len(savings_db_rows),
         "prices_updated": prices_updated,
         "overall": _round_acc(overall),
         "by_provider": {k: _round_acc(v) for k, v in by_provider.items()},
         "by_aspect": {k: _round_acc(v) for k, v in by_aspect.items()},
         "note": f"output/cost baselines estimated from calibration for {counted} of "
-                f"{len(execs)} executions; $ at PriceBook rates (updated {prices_updated})",
+                f"{len(execs)} router executions and {db_counted} of {len(savings_db_rows)} "
+                f"direct LLM calls; $ at PriceBook rates (updated {prices_updated})",
         "projection_if_optimal": projection,
     }
 
@@ -560,7 +618,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "savings":
         rep = savings_report()
         o = rep["overall"]
-        print(f"=== OVERALL (over {rep['executions']} routed calls) ===")
+        print(f"=== OVERALL (over {rep['executions']} routed calls + {rep.get('llm_calls', 0)} direct LLM calls) ===")
         print(f"  tokens used (in/out): {o['aura_input_tokens']}/{o['aura_output_tokens']}")
         print(f"  tokens saved (in/out): {o['input_tokens_saved']}/{o['output_tokens_saved']}")
         print(f"  cost used   : ${o['aura_cost_usd']}")

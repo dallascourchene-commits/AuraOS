@@ -173,6 +173,7 @@ from aura_api_rotator import (
     openai_compatible_generate,
     get_gemini_rotator,
 )
+from aura_pre_egress_interceptor import apply_pre_egress_profile
 
 # Module-level fast-path associative memory (shared across all REPL sessions)
 _FAST_MEMORY: AuraAssociativeCore = AuraAssociativeCore(dim=10_000)
@@ -3641,10 +3642,12 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     f"{context_header}\n\n{prompt_text}" if context_header
                     else prompt_text
                 )
+                full_prompt, pre_egress_decision = apply_pre_egress_profile(full_prompt)
                 text, err, lat, used_provider = await asyncio.to_thread(
                     _ANTHROPIC_ROUTER.generate,
                     full_prompt,
                     timeout=60.0,
+                    max_tokens=512 if pre_egress_decision.throttled else 1024,
                 )
                 if text:
                     breaker["failures"] = 0
@@ -3733,17 +3736,19 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 )
             except Exception:
                 compiled_context = prompt_text
+            compiled_context, pre_egress_decision = apply_pre_egress_profile(compiled_context)
+            max_tokens_for_provider = 512 if pre_egress_decision.throttled else 1024
                 
             providers = {
                 "GROQ": {
                     "url": "https://api.groq.com/openai/v1/chat/completions",
                     "key": secrets.get("GROQ_API_KEY"),
-                    "payload": {"model": "llama-3.3-70b-specdec", "messages": [{"role": "user", "content": compiled_context}]}
+                    "payload": {"model": "llama-3.3-70b-specdec", "messages": [{"role": "user", "content": compiled_context}], "max_tokens": max_tokens_for_provider}
                 },
                 "MISTRAL": {
                     "url": "https://api.mistral.ai/v1/chat/completions",
                     "key": secrets.get("MISTRAL_API_KEY"),
-                    "payload": {"model": "codestral-latest", "messages": [{"role": "user", "content": compiled_context}]}
+                    "payload": {"model": "codestral-latest", "messages": [{"role": "user", "content": compiled_context}], "max_tokens": max_tokens_for_provider}
                 },
                 "GEMINI": {
                     "url": f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={secrets.get('GEMINI_API_KEY')}",
@@ -4117,14 +4122,16 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
             # Groq handles both conversational and code requests well on mobile.
             try:
                 secrets = load_api_secrets()
+                cloud_prompt_text, cloud_pre_egress_decision = apply_pre_egress_profile(prompt_text)
+                cloud_max_tokens = 512 if cloud_pre_egress_decision.throttled else min(TOKEN_LIMIT, 1024)
 
                 # --- 1. Groq (llama-3.3-70b-specdec, lowest latency) ---
                 groq_key = secrets.get("GROQ_API_KEY", "")
                 if groq_key and "your_actual_" not in groq_key:
                     groq_payload = {
                         "model": "llama-3.3-70b-specdec",
-                        "messages": [{"role": "user", "content": prompt_text}],
-                        "max_tokens": min(TOKEN_LIMIT, 1024),
+                        "messages": [{"role": "user", "content": cloud_prompt_text}],
+                        "max_tokens": cloud_max_tokens,
                         "temperature": 0.35,
                     }
                     groq_text, groq_err = await asyncio.to_thread(
@@ -4140,7 +4147,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 if gemini_key_pool(secrets):
                     text, _ = await asyncio.to_thread(
                         gemini_generate,
-                        prompt_text,
+                        cloud_prompt_text,
                         secrets=secrets,
                         rotator=get_gemini_rotator(secrets),
                     )
@@ -4152,8 +4159,8 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 if mistral_key and "your_actual_" not in mistral_key:
                     mistral_payload = {
                         "model": "mistral-small-latest",
-                        "messages": [{"role": "user", "content": prompt_text}],
-                        "max_tokens": min(TOKEN_LIMIT, 1024),
+                        "messages": [{"role": "user", "content": cloud_prompt_text}],
+                        "max_tokens": cloud_max_tokens,
                         "temperature": 0.35,
                     }
                     mistral_text, _ = await asyncio.to_thread(
@@ -6985,7 +6992,7 @@ def contingency_harness():
                     import os as _os_sav
                     _SAVINGS_SNAPSHOT = _os_sav.path.join("Aura_Memory", "aura_savings_total.json")
 
-                    # 1. Pull live cumulative totals from execution log
+                    # 1. Pull live cumulative totals from router log + direct LLM savings DB
                     rep = _savings_report()
                     o   = rep["overall"]
 
@@ -6994,7 +7001,7 @@ def contingency_harness():
                     try:
                         _snapshot = {
                             "overall": {
-                                "total_calls_logged" : rep["executions"],
+                                "total_calls_logged" : rep["executions"] + rep.get("llm_calls", 0),
                                 "aura_input_tokens"  : o["aura_input_tokens"],
                                 "aura_output_tokens" : o["aura_output_tokens"],
                                 "aura_cost_usd"      : o["aura_cost_usd"],
@@ -7017,14 +7024,14 @@ def contingency_harness():
                     print(f"\n{'='*60}")
                     print(f" [💰 AURA CUMULATIVE SAVINGS LEDGER]")
                     print(f"{'='*60}")
-                    if rep["executions"] == 0:
+                    if rep["executions"] == 0 and rep.get("llm_calls", 0) == 0:
                         print("  ⚠️  No routed calls logged yet.")
                         print("  The savings ledger is driven by the auto-router (!route).")
                         print("  Every !route call appends an entry to:")
                         print(f"    {_EXEC_LOG_PATH}")
                         print("  Run 'python3 aura_router.py route --mock' for a dry-run test.")
                     else:
-                        print(f"=== OVERALL (over {rep['executions']} logged routed calls) ===")
+                        print(f"=== OVERALL (over {rep['executions']} routed calls + {rep.get('llm_calls', 0)} direct LLM calls) ===")
                         print(f"  tokens used  (in/out) : {o['aura_input_tokens']:,} / {o['aura_output_tokens']:,}")
                         print(f"  tokens SAVED (in/out) : {o['input_tokens_saved']:,} / {o['output_tokens_saved']:,}")
                         print(f"  cost used             : ${o['aura_cost_usd']:.6f}")

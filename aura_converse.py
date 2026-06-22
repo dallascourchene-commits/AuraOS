@@ -265,7 +265,7 @@ class Conversationalist:
         egress._baseline_prompt = raw_in
         egress._baseline_output = None
         egress._baseline_cost = None
-        text, err, lat = egress.generate(prompt, max_tokens=500)
+        text, err, lat = egress.generate(prompt, max_tokens=500, slot_matrix=pkg.slot_matrix)
         if err or not text:
             return {"ok": False, "reason": err or "empty reply"}
 

@@ -14,6 +14,7 @@ PROFILE_POLYSYNTHETIC = "polysynthetic"
 PROFILE_PYTHON_PATCH = "python_patch"
 PROFILE_UNIT_INTERVAL = "unit_interval"
 PROFILE_MC_LETTER = "mc_letter"
+PROFILE_VSA_CODE_DEV = "vsa_code_dev"
 
 # Polysynthetic trace + [CODE] block (Aura operator / catalyze outputs)
 GRAMMAR_POLYSYNTHETIC = """
@@ -49,11 +50,25 @@ ws     ::= " "
 choice ::= "A" | "B" | "C" | "D" | "E"
 """
 
+GRAMMAR_VSA_CODE_DEV = """
+root       ::= trace formula code estimate
+trace      ::= "### 1. POLYSYNTHETIC PARSING TRACE\\n" json-block "\\n"
+formula    ::= "### 2. ALGEBRAIC TOPOLOGY FORMULA\\n" formula-line "\\n"
+code       ::= "### 3. CODE MATERIALIZATION\\n[CODE]\\n" python-lines "\\n[/CODE]\\n"
+estimate   ::= "### 4. SYSTEMIC EFFICIENCY ESTIMATE\\n" efficiency-line
+json-block ::= "{" json-chars "}"
+json-chars ::= [^\\x00-\\x1F{}]* ( "{" [^\\x00-\\x1F{}]* "}" [^\\x00-\\x1F{}]* )*
+formula-line ::= [A-Za-z0-9_{}\\[\\]()., :;=+*/\\\\⊕⊗Π^|<>-]+
+python-lines ::= [^\\x00-\\x1F\\[\\]]+ ("\\n" [^\\x00-\\x1F\\[\\]]+)*
+efficiency-line ::= "E_system=" [0-9]+ "." [0-9]+
+"""
+
 _PROFILE_TO_GRAMMAR: dict[str, str] = {
     PROFILE_POLYSYNTHETIC: GRAMMAR_POLYSYNTHETIC,
     PROFILE_PYTHON_PATCH: GRAMMAR_PYTHON_PATCH,
     PROFILE_UNIT_INTERVAL: GRAMMAR_UNIT_INTERVAL,
     PROFILE_MC_LETTER: GRAMMAR_MC_LETTER,
+    PROFILE_VSA_CODE_DEV: GRAMMAR_VSA_CODE_DEV,
 }
 
 # Backward-compatible alias used across aura_node
@@ -75,6 +90,6 @@ def get_grammar_string(profile: str) -> str:
 
 def grammar_stop_tokens(profile: str) -> list[str]:
     """Extra stop sequences beyond chat template stops."""
-    if profile in (PROFILE_POLYSYNTHETIC, PROFILE_PYTHON_PATCH):
+    if profile in (PROFILE_POLYSYNTHETIC, PROFILE_PYTHON_PATCH, PROFILE_VSA_CODE_DEV):
         return ["[/CODE]"]
     return []

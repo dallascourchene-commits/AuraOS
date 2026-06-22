@@ -476,9 +476,9 @@ def _repo_py_files() -> set[str]:
 
 def run_arm(arm: str, prompt: str, ctx: ContextBundle, egress: ExternalLLM,
             scorer: QualityScorer, task: TestCase, packet: str | None = None,
-            compile_ms: float = 0.0) -> dict:
+            compile_ms: float = 0.0, slot_matrix=None) -> dict:
     in_tokens = estimate_tokens(prompt)
-    text, err, latency = egress.generate(prompt)
+    text, err, latency = egress.generate(prompt, slot_matrix=slot_matrix)
     out_tokens = estimate_tokens(text or "")
     quality = scorer.score(text, task)
     return {
@@ -539,7 +539,7 @@ def run_benchmark(task_key: str, provider_name: str | None, model: str | None,
     print(f"    raw: {raw['input_tokens']} in-tokens, quality={raw['quality_score']}, err={raw['error']}")
     print("[*] Running AURA arm (substrate packet + guardrails + surgical context)...")
     aura = run_arm("aura", pkg.prompt, pkg.context, egress, scorer, task,
-                   packet=pkg.packet, compile_ms=pkg.compile_ms)
+                   packet=pkg.packet, compile_ms=pkg.compile_ms, slot_matrix=pkg.slot_matrix)
     print(f"    aura: {aura['input_tokens']} in-tokens, quality={aura['quality_score']}, err={aura['error']}")
 
     reduction = 0.0
