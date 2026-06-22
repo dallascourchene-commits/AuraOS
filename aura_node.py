@@ -6040,9 +6040,51 @@ async def main():
                 if not gate_allowed:
                     print(f"\n[SKILLWEAVER] Mutation blocked. {gate_result.decision}: {gate_result.reason[:200]}")
                     SOVEREIGN_CORE.vocalize("Research gate blocked mutation. Source relevance insufficient.")
+                    # Broadcast refusal to AR topology
+                    if hasattr(node, '_ar_ws_server') and node._ar_ws_server is not None:
+                        try:
+                            import json as _gate_json
+                            gate_msg = _gate_json.dumps({
+                                "type": "GATE_DECISION",
+                                "decision": gate_result.decision,
+                                "score": gate_result.final_score,
+                                "query": concept,
+                            })
+                            for sid, session in node._ar_ws_server._sessions.items():
+                                try:
+                                    await session.websocket.send(gate_msg)
+                                except Exception:
+                                    pass
+                        except Exception:
+                            pass
                     continue
 
                 print(f"\n[SKILLWEAVER] Gate PASSED. Proceeding to synthesis with grounded sources.")
+
+                # Broadcast gate decision to AR topology (Claims N2/N19/N22)
+                if hasattr(node, '_ar_ws_server') and node._ar_ws_server is not None:
+                    try:
+                        import json as _gate_json
+                        gate_msg = _gate_json.dumps({
+                            "type": "GATE_DECISION",
+                            "decision": gate_result.decision,
+                            "score": gate_result.final_score,
+                            "query": concept,
+                            "targets": gate_result.target_modules[:5],
+                        })
+                        # Push resonance update to highlight target modules
+                        res_update = {"type": "RESONANCE_UPDATE", "gate_result": {
+                            "decision": gate_result.decision,
+                            "score": gate_result.final_score,
+                            "targets": gate_result.target_modules[:5],
+                        }}
+                        for sid, session in node._ar_ws_server._sessions.items():
+                            try:
+                                await session.websocket.send(gate_msg)
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass  # AR not running, non-fatal
 
                 # 3. Load live 3D Code Topology Map
                 topology_summary = ""

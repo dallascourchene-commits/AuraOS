@@ -301,6 +301,8 @@ class _ARShape:
     scale: float = 1.0
     color: str = "#00E5FF"
     node_type: str = "function"
+    luminance: float = 0.5
+    integrity_resonance: float = 1.0
     metadata: _Dict_ar[str, _Any_ar] = _field_ar(default_factory=dict)
 
     def to_dict(self) -> dict:
@@ -311,6 +313,8 @@ class _ARShape:
             "position": self.position,
             "scale": self.scale,
             "color": self.color,
+            "luminance": self.luminance,
+            "integrityResonance": self.integrity_resonance,
             "metadata": self.metadata,
         }
 
@@ -322,6 +326,8 @@ class _ARConnection:
     target_id: str
     color: str = "#FFFFFF"
     width: float = 0.1
+    resonance: float = 0.0
+    luminance: float = 0.5
 
     def to_dict(self) -> dict:
         return {
@@ -330,6 +336,8 @@ class _ARConnection:
             "targetId": self.target_id,
             "color": self.color,
             "width": self.width,
+            "resonance": self.resonance,
+            "luminance": self.luminance,
         }
 
 
@@ -490,6 +498,39 @@ class AuraARWebSocketServer:
                     )
                 )
 
+            # ── Resonance-weighted edge luminance (Claim N2/N19/N22) ──
+            # Compute VSA cosine resonance between connected nodes.
+            # Edge color encodes semantic similarity: bright = high resonance,
+            # dim = low resonance (Axiom P3: Coherence is the Attractor).
+            import hashlib as _hlib_refresh
+            import numpy as _np_refresh
+            _DIM = 10000
+            _lum_min, _lum_max = 0.1, 1.0
+
+            def _node_phasor(label: str) -> _np_refresh.ndarray:
+                h = _hlib_refresh.blake2b(label.encode("utf-8"), digest_size=8).digest()
+                seed = int.from_bytes(h, byteorder="little")
+                rng = _np_refresh.random.default_rng(seed)
+                phases = rng.uniform(-_np_refresh.pi, _np_refresh.pi, _DIM).astype(_np_refresh.float32)
+                return _np_refresh.exp(1j * phases)
+
+            # Cache phasors per node label
+            _phasor_cache = {}
+            for nid, shape in new_shapes.items():
+                _phasor_cache[nid] = _node_phasor(shape.label)
+
+            for conn in new_connections:
+                src_p = _phasor_cache.get(conn.source_id)
+                tgt_p = _phasor_cache.get(conn.target_id)
+                if src_p is not None and tgt_p is not None:
+                    res = float(_np_refresh.abs(_np_refresh.dot(src_p, _np_refresh.conj(tgt_p))) / _DIM)
+                    conn.resonance = res
+                    conn.luminance = _lum_min + (_lum_max - _lum_min) * min(1.0, res)
+                    # Map luminance to color: dim gray -> bright cyan
+                    bright = int(conn.luminance * 255)
+                    conn.color = f"#{bright:02x}{bright:02x}{min(255, bright + 50):02x}"
+                    conn.width = 0.05 + 0.15 * min(1.0, res)
+
             self._shapes = new_shapes
             self._connections = new_connections
 
@@ -503,6 +544,8 @@ class AuraARWebSocketServer:
                 "node_count": len(self._shapes),
                 "edge_count": len(self._connections),
                 "source": "live_topology_ast.json",
+                "resonance_weighted": True,
+                "luminance_range": [0.1, 1.0],
             },
         }
 
@@ -566,6 +609,10 @@ class AuraARWebSocketServer:
 
         elif msg_type == "UNSUBSCRIBE":
             session.subscribed_topics.discard(data.get("topic", ""))
+
+        elif msg_type == "RESONANCE_UPDATE":
+            # SkillWeaver / HIVP can push resonance scores to update node luminance
+            await self._handle_resonance_update(session, data)
 
         elif msg_type == "PING":
             await session.websocket.send(_json_ar.dumps({"type": "PONG"}))
@@ -643,6 +690,63 @@ class AuraARWebSocketServer:
         })
         _ar_logger.info("Hotswap queued for %s", target_id)
         await self._refresh_topology()
+
+    async def _handle_resonance_update(self, session: _ARSession, data: dict) -> None:
+        """
+        Handle live resonance updates from SkillWeaver / HIVP.
+        
+        Payload:
+          {"type": "RESONANCE_UPDATE", "nodes": {"node_id": {"luminance": 0.8, "integrity": 0.95}}}
+          {"type": "RESONANCE_UPDATE", "edges": {"edge_id": {"resonance": 0.7}}}
+          {"type": "RESONANCE_UPDATE", "gate_result": {"decision": "ALLOW", "score": 0.85, "targets": [...]}}
+        """
+        async with self._topology_lock:
+            # Update node luminance/integrity
+            node_updates = data.get("nodes", {})
+            for node_id, vals in node_updates.items():
+                shape = self._shapes.get(node_id)
+                if shape is not None:
+                    if "luminance" in vals:
+                        shape.luminance = float(vals["luminance"])
+                    if "integrity" in vals:
+                        shape.integrity_resonance = float(vals["integrity"])
+                        # Color shift: high integrity = cyan, low = red
+                        ir = shape.integrity_resonance
+                        r_comp = int((1.0 - ir) * 255)
+                        g_comp = int(ir * 200)
+                        b_comp = int(ir * 255)
+                        shape.color = f"#{r_comp:02x}{g_comp:02x}{b_comp:02x}"
+
+            # Update edge resonance
+            edge_updates = data.get("edges", {})
+            for edge_id, vals in edge_updates.items():
+                for conn in self._connections:
+                    if conn.connection_id == edge_id and "resonance" in vals:
+                        res = float(vals["resonance"])
+                        conn.resonance = res
+                        conn.luminance = 0.1 + 0.9 * min(1.0, res)
+                        bright = int(conn.luminance * 255)
+                        conn.color = f"#{bright:02x}{bright:02x}{min(255, bright + 50):02x}"
+
+            # Handle gate result broadcast (SkillWeaver decision)
+            gate = data.get("gate_result")
+            if gate:
+                targets = gate.get("targets", [])
+                score = float(gate.get("score", 0))
+                decision = gate.get("decision", "")
+                for node_id, shape in self._shapes.items():
+                    # Highlight target modules
+                    if any(t in node_id for t in targets):
+                        if decision == "ALLOW_MUTATION":
+                            shape.color = "#00FF88"  # Bright green = approved
+                            shape.luminance = min(1.0, score + 0.3)
+                        elif decision == "REFUSE_MUTATION":
+                            shape.color = "#FF2200"  # Red = refused
+                            shape.luminance = 0.2
+
+        await self._broadcast_topology()
+        _ar_logger.info("Resonance update applied: %d nodes, %d edges",
+                        len(node_updates), len(edge_updates))
 
     async def _broadcast_topology(self) -> None:
         await self._broadcast_message({

@@ -4,7 +4,11 @@
     <title>Aura Sovereign AR Cortex</title>
     <style>
         body { margin: 0; background-color: #050505; color: #00ff00; font-family: monospace; overflow: hidden; }
-        #overlay { position: absolute; top: 10px; left: 10px; z-index: 100; text-transform: uppercase; }
+        #overlay { position: absolute; top: 10px; left: 10px; z-index: 100; text-transform: uppercase; font-size: 12px; }
+        #gate-status { position: absolute; bottom: 10px; left: 10px; z-index: 100; font-size: 11px; color: #888; max-width: 400px; }
+        .gate-allow { color: #00FF88 !important; }
+        .gate-refuse { color: #FF2200 !important; }
+        .gate-pending { color: #FFAA00 !important; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -13,55 +17,206 @@
         <h2>[AURA VISUAL CORTEX]</h2>
         <p id="status">WebSocket: DISCONNECTED</p>
         <p id="thought">Cognitive State: IDLE</p>
+        <p id="resonance-info">Resonance: --</p>
     </div>
+    <div id="gate-status"></div>
 
     <script>
+        // ═══════════════════════════════════════════════════════════
         // 1. Initialize the 3D AR Scene
+        // ═══════════════════════════════════════════════════════════
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Standard Geometry (Aura's resting state)
+        // Default resting avatar
         let geometry = new THREE.SphereGeometry(1.5, 16, 16);
         let material = new THREE.MeshBasicMaterial({ color: 0x0055ff, wireframe: true });
         let auraAvatar = new THREE.Mesh(geometry, material);
         scene.add(auraAvatar);
-        camera.position.z = 5;
+        camera.position.z = 15;
 
-        // 2. Connect the WebSocket to Termux
+        // Node + edge registries for topology rendering
+        const nodeRegistry = {};   // id -> THREE.Mesh
+        const edgeRegistry = {};   // id -> THREE.Line
+        let topologyGroup = new THREE.Group();
+        scene.add(topologyGroup);
+
+        // ═══════════════════════════════════════════════════════════
+        // 2. Luminance-Driven Topology Renderer (Claims N2/N19/N22)
+        // ═══════════════════════════════════════════════════════════
+
+        const SHAPE_GEOMETRY_MAP = {
+            "Cube":         () => new THREE.BoxGeometry(0.4, 0.4, 0.4),
+            "Sphere":       () => new THREE.SphereGeometry(0.3, 8, 8),
+            "Tetrahedron":  () => new THREE.TetrahedronGeometry(0.3),
+            "Icosahedron":  () => new THREE.IcosahedronGeometry(0.3),
+            "Octahedron":   () => new THREE.OctahedronGeometry(0.3),
+        };
+
+        function hexToColor(hex) {
+            return new THREE.Color(hex || "#888888");
+        }
+
+        function applyLuminance(color, luminance) {
+            // Axiom P3: Coherence is the Attractor
+            // Higher luminance = brighter color = higher resonance
+            const hsl = {};
+            color.getHSL(hsl);
+            hsl.l = Math.max(0.05, Math.min(0.95, luminance * 0.8));
+            color.setHSL(hsl.h, hsl.s, hsl.l);
+            return color;
+        }
+
+        function renderTopology(data) {
+            // Clear previous topology
+            while (topologyGroup.children.length > 0) {
+                topologyGroup.remove(topologyGroup.children[0]);
+            }
+
+            const nodes = data.nodes || [];
+            const edges = data.edges || [];
+            const nodePositions = {};
+
+            // Render nodes
+            nodes.forEach((node, idx) => {
+                const geomFactory = SHAPE_GEOMETRY_MAP[node.type] || SHAPE_GEOMETRY_MAP["Cube"];
+                const geom = geomFactory();
+
+                let baseColor = hexToColor(node.color);
+                const luminance = node.luminance || 0.5;
+                baseColor = applyLuminance(baseColor, luminance);
+
+                const mat = new THREE.MeshBasicMaterial({
+                    color: baseColor,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: Math.max(0.2, luminance),
+                });
+
+                const mesh = new THREE.Mesh(geom, mat);
+                const pos = node.position || [
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 5,
+                ];
+                mesh.position.set(pos[0], pos[1], pos[2]);
+                mesh.scale.setScalar(node.scale || 1.0);
+
+                topologyGroup.add(mesh);
+                nodeRegistry[node.id] = mesh;
+                nodePositions[node.id] = mesh.position;
+            });
+
+            // Render edges with resonance-weighted luminance
+            edges.forEach((edge) => {
+                const srcPos = nodePositions[edge.sourceId];
+                const tgtPos = nodePositions[edge.targetId];
+                if (!srcPos || !tgtPos) return;
+
+                const points = [srcPos.clone(), tgtPos.clone()];
+                const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
+
+                let edgeColor = hexToColor(edge.color);
+                const edgeLuminance = edge.luminance || 0.3;
+                edgeColor = applyLuminance(edgeColor, edgeLuminance);
+
+                const lineMat = new THREE.LineBasicMaterial({
+                    color: edgeColor,
+                    transparent: true,
+                    opacity: Math.max(0.1, edgeLuminance),
+                    linewidth: Math.max(1, (edge.width || 0.1) * 10),
+                });
+
+                const line = new THREE.Line(lineGeom, lineMat);
+                topologyGroup.add(line);
+                edgeRegistry[edge.id] = line;
+            });
+
+            // Update HUD
+            const meta = data.metadata || {};
+            document.getElementById("resonance-info").innerText =
+                "Nodes: " + (meta.node_count || nodes.length) +
+                " | Edges: " + (meta.edge_count || edges.length) +
+                (meta.resonance_weighted ? " | Resonance-Weighted" : "");
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // 3. WebSocket Connection
+        // ═══════════════════════════════════════════════════════════
         const ws = new WebSocket("ws://127.0.0.1:8765");
-        
+
         ws.onopen = function() {
             document.getElementById("status").innerText = "WebSocket: LOCKED ON LOCALHOST";
             document.getElementById("status").style.color = "#00ff00";
+            // Request initial topology
+            ws.send(JSON.stringify({ type: "TOPOLOGY_REQUEST" }));
         };
 
         ws.onmessage = function(event) {
-            // Catch the physical pulse from aura_node.py
-            let intent = event.data;
-            document.getElementById("thought").innerText = "Cognitive State: " + intent;
+            try {
+                const msg = JSON.parse(event.data);
 
-            // Morph her 3D Avatar based on her geometric thought
-            scene.remove(auraAvatar);
-            
-            if (intent.includes("TETRAHEDRON_HOT")) {
-                geometry = new THREE.TetrahedronGeometry(2);
-                material = new THREE.MeshBasicMaterial({ color: 0xff1100, wireframe: true });
-            } else if (intent.includes("ICOSAHEDRON_HOT")) {
-                geometry = new THREE.IcosahedronGeometry(2);
-                material = new THREE.MeshBasicMaterial({ color: 0xff5500, wireframe: true });
-            } else if (intent.includes("WIPE")) {
-                geometry = new THREE.BufferGeometry(); // Empty space
-            } else {
-                // Default Cold Sphere
-                geometry = new THREE.SphereGeometry(1.5, 16, 16);
-                material = new THREE.MeshBasicMaterial({ color: 0x0055ff, wireframe: true });
+                if (msg.type === "TOPOLOGY_UPDATE") {
+                    renderTopology(msg.data);
+                    document.getElementById("thought").innerText = "Cognitive State: TOPOLOGY ACTIVE";
+
+                } else if (msg.type === "SHAPE_UPDATE") {
+                    // Live shape state change (interaction / resonance)
+                    const mesh = nodeRegistry[msg.shapeId];
+                    if (mesh && msg.state) {
+                        if (msg.state.color) mesh.material.color = hexToColor(msg.state.color);
+                        if (msg.state.scale) mesh.scale.setScalar(msg.state.scale);
+                        if (msg.state.luminance !== undefined) {
+                            mesh.material.opacity = Math.max(0.2, msg.state.luminance);
+                        }
+                    }
+
+                } else if (msg.type === "GATE_DECISION") {
+                    // SkillWeaver research gate visual feedback
+                    const gateEl = document.getElementById("gate-status");
+                    const decision = msg.decision || "UNKNOWN";
+                    const score = (msg.score || 0).toFixed(4);
+                    const query = msg.query || "";
+                    if (decision === "ALLOW_MUTATION") {
+                        gateEl.className = "gate-allow";
+                        gateEl.innerText = "[RESEARCH GATE] ALLOW | Score: " + score + " | " + query;
+                    } else if (decision === "REFUSE_MUTATION") {
+                        gateEl.className = "gate-refuse";
+                        gateEl.innerText = "[RESEARCH GATE] REFUSE | Score: " + score + " | " + query;
+                    } else {
+                        gateEl.className = "gate-pending";
+                        gateEl.innerText = "[RESEARCH GATE] " + decision + " | Score: " + score;
+                    }
+
+                } else {
+                    // Legacy: morph avatar from raw text messages
+                    let intent = typeof event.data === "string" ? event.data : "";
+                    document.getElementById("thought").innerText = "Cognitive State: " + intent.substring(0, 60);
+
+                    scene.remove(auraAvatar);
+                    if (intent.includes("TETRAHEDRON_HOT")) {
+                        geometry = new THREE.TetrahedronGeometry(2);
+                        material = new THREE.MeshBasicMaterial({ color: 0xff1100, wireframe: true });
+                    } else if (intent.includes("ICOSAHEDRON_HOT")) {
+                        geometry = new THREE.IcosahedronGeometry(2);
+                        material = new THREE.MeshBasicMaterial({ color: 0xff5500, wireframe: true });
+                    } else if (intent.includes("WIPE")) {
+                        geometry = new THREE.BufferGeometry();
+                        material = new THREE.MeshBasicMaterial();
+                    } else {
+                        geometry = new THREE.SphereGeometry(1.5, 16, 16);
+                        material = new THREE.MeshBasicMaterial({ color: 0x0055ff, wireframe: true });
+                    }
+                    auraAvatar = new THREE.Mesh(geometry, material);
+                    scene.add(auraAvatar);
+                }
+            } catch (e) {
+                // Non-JSON legacy message
+                document.getElementById("thought").innerText = "Cognitive State: " + event.data.substring(0, 60);
             }
-            
-            auraAvatar = new THREE.Mesh(geometry, material);
-            scene.add(auraAvatar);
         };
 
         ws.onclose = function() {
@@ -69,15 +224,24 @@
             document.getElementById("status").style.color = "#ff0000";
         };
 
-        // 3. Animation Loop
+        // ═══════════════════════════════════════════════════════════
+        // 4. Animation Loop
+        // ═══════════════════════════════════════════════════════════
         function animate() {
             requestAnimationFrame(animate);
-            auraAvatar.rotation.x += 0.01;
-            auraAvatar.rotation.y += 0.02;
+            auraAvatar.rotation.x += 0.005;
+            auraAvatar.rotation.y += 0.01;
+            topologyGroup.rotation.y += 0.001;
             renderer.render(scene, camera);
         }
         animate();
+
+        // Handle resize
+        window.addEventListener("resize", function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
-
