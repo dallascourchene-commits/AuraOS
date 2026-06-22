@@ -74,6 +74,7 @@ from aura_tcwaa import ThermalCostWeightedAPIArbitration
 from aura_fst_routing import FSTLexiconRoutingCore, TierType, SlotType
 from aura_resonant_test_oracle import ResonantTestOracle, run_resonant_suite
 from aura_timestep_svd_quantizer import TimestepAwareSVDQuantizer, AsyncExpertQuantizationEngine
+from aura_liquid_internet import LiquidInternetProtocol, VSAAddress
 from aura_topology_ws_bridge import AuraARWebSocketServer
 from quantum_dag import QuantumMerkleDAG
 from vsa_resonator import VSAResonator
