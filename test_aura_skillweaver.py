@@ -319,7 +319,7 @@ class TestDAGPlan:
         ]
         dag = compose_mutation_dag("test query", candidates, ["aura_substrate.py"])
         assert "stages" in dag
-        assert len(dag["stages"]) == 8
+        assert len(dag["stages"]) == 9  # 8 original + HIVP integrity verification
 
     def test_dag_includes_target_files(self):
         """DAG must reference the target files."""
@@ -386,6 +386,8 @@ class TestNoDependency:
             "__future__",
             # already in repo
             "numpy", "np",
+            # aura modules (conditional imports within same repo)
+            "aura_fst_routing",
         }
 
         for node in ast_mod.walk(tree):

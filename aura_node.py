@@ -69,6 +69,9 @@ from aura_coordinated_solver import CoordinatedSolver, StrategyBuffer
 from aura_crystallization import hypertruth_crystallization_loop
 from arxiv_forager import ArXivForager, EnhancedArxivForager, ForagerConfig
 from aura_skillweaver import AuraSkillWeaver, research_gate_intercept
+from aura_hivp import HolographicIntegrityVerificationProtocol
+from aura_tcwaa import ThermalCostWeightedAPIArbitration
+from aura_fst_routing import FSTLexiconRoutingCore, TierType, SlotType
 from aura_topology_ws_bridge import AuraARWebSocketServer
 from quantum_dag import QuantumMerkleDAG
 from vsa_resonator import VSAResonator
