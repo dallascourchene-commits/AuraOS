@@ -72,6 +72,7 @@ from aura_skillweaver import AuraSkillWeaver, research_gate_intercept
 from aura_hivp import HolographicIntegrityVerificationProtocol
 from aura_tcwaa import ThermalCostWeightedAPIArbitration
 from aura_fst_routing import FSTLexiconRoutingCore, TierType, SlotType
+from aura_resonant_test_oracle import ResonantTestOracle, run_resonant_suite
 from aura_topology_ws_bridge import AuraARWebSocketServer
 from quantum_dag import QuantumMerkleDAG
 from vsa_resonator import VSAResonator
@@ -5487,6 +5488,8 @@ async def main():
                 aura_topological_scanner.current_dir = os.getcwd()
                 print("[⚡ AURA SATURN] Initializing Curriculum Training Cycle...")
                 reasoner_core = AuraNeuroSymbolicReasoner(node_ref=node)
+                # Claim N7: Sparse Edge-Local Omni-Path Sweep with Lukasiewicz t-norm
+                # O(E) explicit call edges, not O(N^2) Cartesian. Axiom A5 at topology scale.
                 sweep_summary = await reasoner_core.run_exhaustive_omnipath_sweep()
                 print(f"\n{sweep_summary}\n")
                 continue

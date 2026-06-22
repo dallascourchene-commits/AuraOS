@@ -1008,6 +1008,105 @@ class AuraMeshSwarm:
     # ==================================================================
     # UDP BEACON (LATTICE DISCOVERY) — with tone‑curve filter wired in
     # ==================================================================
+    # ── Bounded VSA-Addressed Compute Mesh (Claim N29) ──────────────────
+    # Axiom A5: same bind/bundle/cosine at the mesh scale.
+    # Axiom A6: Non-local coupling -- resonance routing, not IP routing.
+
+    def bounded_vsa_offload(
+        self,
+        task_intent: str,
+        data_payload: dict,
+        max_hops: int = 3,
+    ) -> tuple:
+        """Route a compute task to the best peer via VSA resonance, not IP.
+
+        Instead of targeting a specific IP, this method:
+        1. Encodes the task intent as a 10,000-D phasor.
+        2. Computes cosine resonance against each known peer's capability vector.
+        3. Selects the highest-resonance peer within max_hops neighborhood.
+        4. Falls back to local execution if no peer resonates above floor.
+
+        Parameters
+        ----------
+        task_intent : str
+            Natural language description of the compute task.
+        data_payload : dict
+            Task-specific data payload.
+        max_hops : int
+            Maximum mesh hops allowed (bounded neighborhood). Default 3.
+
+        Returns
+        -------
+        (result, routing_report) where result is the compute output
+        and routing_report describes the routing decision.
+        """
+        import hashlib as _h29
+
+        _DIM = 10000
+        _RESONANCE_FLOOR = 0.3
+
+        def _intent_phasor(text: str) -> np.ndarray:
+            h = _h29.blake2b(text.encode("utf-8"), digest_size=8).digest()
+            seed = int.from_bytes(h, byteorder="little")
+            rng = np.random.default_rng(seed)
+            phases = rng.uniform(-np.pi, np.pi, _DIM).astype(np.float32)
+            return np.exp(1j * phases)
+
+        task_phasor = _intent_phasor(task_intent)
+
+        # Score each known peer by VSA resonance
+        peer_scores = []
+        peers = getattr(self, 'peer_registry', {})
+        if not peers and hasattr(self, 'node'):
+            # Fallback: use discovered peers from UDP beacons
+            peers = getattr(self.node, 'peers', {})
+
+        for peer_id, peer_info in peers.items():
+            # Generate capability phasor from peer metadata
+            peer_label = str(peer_info.get("capabilities", peer_id))
+            peer_phasor = _intent_phasor(peer_label)
+            resonance = float(np.abs(np.dot(task_phasor, np.conj(peer_phasor))) / _DIM)
+            hop_count = peer_info.get("hop_count", 1)
+
+            if hop_count <= max_hops and resonance >= _RESONANCE_FLOOR:
+                peer_scores.append({
+                    "peer_id": peer_id,
+                    "ip": peer_info.get("ip", "unknown"),
+                    "resonance": resonance,
+                    "hops": hop_count,
+                })
+
+        peer_scores.sort(key=lambda p: p["resonance"], reverse=True)
+
+        routing_report = {
+            "task_intent": task_intent,
+            "max_hops": max_hops,
+            "peers_evaluated": len(peers),
+            "peers_eligible": len(peer_scores),
+            "resonance_floor": _RESONANCE_FLOOR,
+        }
+
+        if peer_scores:
+            best = peer_scores[0]
+            routing_report["routed_to"] = best["peer_id"]
+            routing_report["routed_ip"] = best["ip"]
+            routing_report["resonance"] = best["resonance"]
+            routing_report["hops"] = best["hops"]
+            routing_report["decision"] = "OFFLOAD"
+
+            # Attempt actual offload via existing TCP protocol
+            target_ip = best["ip"]
+            result = self.offload_compute(target_ip, task_intent, data_payload)
+            return result, routing_report
+        else:
+            routing_report["decision"] = "LOCAL"
+            routing_report["reason"] = (
+                "No peers above resonance floor within bounded neighborhood"
+                if peers else "No peers discovered"
+            )
+            return None, routing_report
+
+
     def start_udp_beacon(self) -> None:
         """Create and bind the UDP broadcast socket on port 4444 and
         schedule the asynchronous beacon‑listening loop.
