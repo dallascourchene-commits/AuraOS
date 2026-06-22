@@ -182,10 +182,45 @@ AuraOS works offline with the local LLM server if no cloud keys are provided.
 |---------|-------------|
 | `!forage <topic>` | Crawl arXiv for papers on topic |
 | `!backtrack` | Chronological arXiv backlog crawl (20 papers) |
-| `!research <concept>` | Query ingested papers → synthesize Python helper |
+| `!research <concept>` | Query ingested papers → **SkillWeaver Relevance Gate** → synthesize Python helper (blocks weak matches) |
 | `!curiosity_tree <seed>` | DFS over GitHub + arXiv from seed concept |
 | `!forage_on` | Enable background foraging daemons |
 | `!forage_off` | Disable foraging to conserve CPU/RAM |
+
+
+### SkillWeaver Research Relevance Gate
+
+The `!research` command now includes a **SkillWeaver Relevance Gate** that intercepts the pipeline before the Cloud Synthesizer. This prevents ungrounded code mutations from semantically resonant but conceptually irrelevant research matches.
+
+**How it works:**
+
+1. **Query Decomposition**: Your research query is broken into atomic subtasks.
+2. **Anchor Extraction**: Required conceptual anchors are derived from the query (e.g., "Hopfield networks" → hopfield, associative memory, attractor, energy function).
+3. **Candidate Scoring**: Each retrieved paper is scored on four axes:
+   - VSA resonance (40%): Hyperdimensional cosine similarity
+   - Lexical anchor coverage (35%): Do required terms appear in the paper?
+   - Title/abstract match (15%): Direct query term presence
+   - Domain match (10%): Is the paper in a relevant field?
+4. **Gate Decision**:
+   - `ALLOW_MUTATION`: Sources pass and target modules found → synthesis proceeds
+   - `REFUSE_MUTATION`: Sources fail relevance → synthesis blocked with explanation
+   - `NEED_MORE_SOURCES`: Partial evidence → user advised to ingest more papers
+5. **DAG Plan**: When allowed, a staged mutation plan is composed with target files, security validation, tests, and rollback paths.
+
+**Example refusal output:**
+```
+[RESEARCH_GATE]
+QUERY: Hopfield networks
+DECISION: REFUSE_MUTATION
+REASON: Retrieved papers failed lexical anchor coverage.
+TOP_MATCHES:
+  - [REJECTED] Bell-State Loop-Back: resonance=0.0012, anchors=0.000
+NEXT: Ingest source-sufficient papers before attempting mutation.
+[/RESEARCH_GATE]
+```
+
+**Module**: `aura_skillweaver.py` (see CODEMAP for full API)
+
 | `!synthesize` | Run cognitive synthesizer lifecycle pass |
 | `!indus_decrypt` | Batch resonance decryption of Indus Valley script corpus |
 

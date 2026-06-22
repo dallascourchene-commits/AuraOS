@@ -68,6 +68,7 @@ from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
 from aura_coordinated_solver import CoordinatedSolver, StrategyBuffer
 from aura_crystallization import hypertruth_crystallization_loop
 from arxiv_forager import ArXivForager, EnhancedArxivForager, ForagerConfig
+from aura_skillweaver import AuraSkillWeaver, research_gate_intercept
 from aura_topology_ws_bridge import AuraARWebSocketServer
 from quantum_dag import QuantumMerkleDAG
 from vsa_resonator import VSAResonator
@@ -6008,6 +6009,37 @@ async def main():
                 for idx, (sim, r_id, text) in enumerate(top_resonances, 1):
                     print(f"    {idx}. [Resonance: {sim * 10000:.1f} bp] -> {text[:100]}...")
                     paper_contexts.append(text)
+
+                # 2.5 SkillWeaver Research Relevance Gate
+                # Intercept BEFORE Cloud Synthesizer to prevent ungrounded mutations
+                print(f"\n[*] Running SkillWeaver Research Relevance Gate...")
+                gate_candidates = [
+                    (r_id, text, blob if blob else None)
+                    for (sim, r_id, text) in resonance_results[:5]
+                    for blob in [None]  # blobs already consumed; phasor recomputed from text
+                ]
+                # Re-fetch blobs for gate evaluation
+                gate_candidates_with_blobs = []
+                for (sim, r_id, text) in resonance_results[:5]:
+                    # Find the original blob from the rows
+                    matching_blob = None
+                    for orig_id, orig_content, orig_blob in rows:
+                        if orig_id == r_id:
+                            matching_blob = orig_blob
+                            break
+                    gate_candidates_with_blobs.append((r_id, text, matching_blob))
+
+                gate_allowed, gate_report, gate_result = await research_gate_intercept(
+                    concept, gate_candidates_with_blobs
+                )
+                print(gate_report)
+
+                if not gate_allowed:
+                    print(f"\n[SKILLWEAVER] Mutation blocked. {gate_result.decision}: {gate_result.reason[:200]}")
+                    SOVEREIGN_CORE.vocalize("Research gate blocked mutation. Source relevance insufficient.")
+                    continue
+
+                print(f"\n[SKILLWEAVER] Gate PASSED. Proceeding to synthesis with grounded sources.")
 
                 # 3. Load live 3D Code Topology Map
                 topology_summary = ""
