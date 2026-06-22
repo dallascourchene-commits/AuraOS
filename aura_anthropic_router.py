@@ -192,7 +192,7 @@ class AnthropicRouter:
     transfer to Mistral without surfacing the error to the user.
     """
 
-FAILOVER_ORDER = ["mistral", "anthropic", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
+    FAILOVER_ORDER = ["mistral", "anthropic", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
 
     # OpenAI-compat endpoints and key names (populated at call time from secrets)
     _PROVIDER_META: dict[str, dict] = {

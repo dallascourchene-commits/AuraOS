@@ -1,8 +1,9 @@
 import asyncio
 import json
 import os
+import time
 from aura_substrate import AuraSubstrate, ContextSelector, estimate_tokens
-from aura_減_router import AnthropicRouter  # Refers to your modified aura_anthropic_router.py
+from aura_anthropic_router import AnthropicRouter
 from symbolic_shield import verify_structural_truth
 from aura_node import AuraZeroDiskIOCache
 
@@ -47,8 +48,7 @@ async def execute_secure_mistral_flow(human_intent: str, target_file: str, targe
     
     # 3. Pass output through the Zero-Trust Symbolic Shield Firewall
     # Strip fences and evaluate code safety natively in memory
-    clean_text = text.replace("```json", "").replace("
-```", "").strip()
+    clean_text = text.replace("```json", "").replace("```", "").strip()
     
     # Verify the structure introduces no banned imports or dangerous loops
     is_aligned = verify_structural_truth(clean_text)
