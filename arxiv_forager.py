@@ -82,7 +82,7 @@ class ArXivForager:
         except Exception as e:
             return f"arXiv processing failure: {e}"
 
-    async def upgraded_arxiv_backtracker(self, max_results: int = 20, max_retries: int = 3, timeout: float = 12.0) -> bool:
+    async def upgraded_arxiv_backtracker(self, max_results: int = 100, max_retries: int = 3, timeout: float = 12.0) -> bool:
         """
         Chronologically walks backwards through arXiv computer science submissions.
         Uses direct, non-blocking DB commits and enforces a strict 3.5s rate-limit delay.
@@ -244,14 +244,23 @@ class ArxivPaper:
 
 @_dc
 class ForagerConfig:
-    """Configuration for the enhanced arXiv forager."""
+    """Configuration for the enhanced arXiv forager.
+
+    The arXiv API hard-caps total results at 10 000 per query.  To collect
+    more than that the forager automatically partitions the date range into
+    narrower slices (see ``_search_via_urllib`` and ``forage()``).
+    """
     query: str
-    max_results: int = 50
+    max_results: int = 100               # per-page results (arXiv allows <=2000)
     categories: _Optional[_List[str]] = None
     max_days_old: int = 365
-    batch_size: int = 10
+    batch_size: int = 50                 # papers to process in one async batch
     rate_limit_delay: float = 3.5        # arXiv compliance: 3.5 s between batches
+    max_total: int = 1_000_000           # total papers to collect (date-chunked)
     storage_dir: str = "Aura_Memory/arxiv_cache"
+
+    # --- arXiv API hard cap (do not raise) ---
+    _ARXIV_HARD_LIMIT: int = 10_000      # total results per single query
 
 
 @_dc
@@ -329,20 +338,81 @@ class EnhancedArxivForager(ArXivForager):
         """
         Forage arXiv papers matching *config*.
 
-        Uses the existing fetch_latest_paper / upgraded_arxiv_backtracker
-        infrastructure for network access, adds VSA indexing on top.
+        When ``config.max_total`` exceeds the arXiv 10 000 hard cap the
+        date range is automatically sliced into narrower windows so the
+        API never returns more than ~5 000 results per window — well
+        under the limit.
+
+        Papers are processed in async batches and VSA-indexed.
         """
         self.stats = ForagerStats()
         self.stats.start_time = _dt.now()
+        self._paper_cache.clear()
 
         _eaf_logger.info(
-            "Starting forage: query=%r  max=%d", config.query, config.max_results
+            "Starting forage: query=%r  max_total=%d  max_results=%d",
+            config.query, config.max_total, config.max_results,
         )
 
         try:
-            raw_papers = await self._search_via_urllib(config)
+            # ------------------------------------------------------------------
+            # Date-range partitioning to bypass the arXiv 10k hard cap
+            # ------------------------------------------------------------------
+            now = _dt.now()
+            overall_start = now - _td(days=config.max_days_old)
 
-            # Process in batches with rate-limit spacing
+            # If the total we want is under the hard cap, do a single query.
+            # Otherwise slice into windows that target ~5k results each.
+            if config.max_total <= ForagerConfig._ARXIV_HARD_LIMIT:
+                date_windows = [(overall_start, now)]
+            else:
+                # Estimate: how many windows do we need?
+                # Heuristic: ~5k papers per window to stay safely under 10k
+                safe_per_window = 5_000
+                total_wanted = min(config.max_total, 1_000_000)
+                num_windows = max(1, total_wanted // safe_per_window)
+                window_delta = _td(days=max(1, config.max_days_old // num_windows))
+                date_windows = []
+                cursor = now
+                while cursor > overall_start and len(date_windows) < 200:
+                    w_start = cursor - window_delta
+                    if w_start < overall_start:
+                        w_start = overall_start
+                    date_windows.append((w_start, cursor))
+                    cursor = w_start
+                    if w_start <= overall_start:
+                        break
+
+            _eaf_logger.info(
+                "Date windows: %d  (target ~%d papers/window)",
+                len(date_windows),
+                safe_per_window if config.max_total > ForagerConfig._ARXIV_HARD_LIMIT
+                else config.max_total,
+            )
+
+            raw_papers: _List[dict] = []
+            seen_ids: set = set()
+            for wi, (df, dt_) in enumerate(date_windows):
+                if len(raw_papers) >= config.max_total:
+                    break
+                chunk_papers = await self._search_via_urllib(config, df, dt_)
+                for p in chunk_papers:
+                    if p["paper_id"] not in seen_ids:
+                        seen_ids.add(p["paper_id"])
+                        raw_papers.append(p)
+                _eaf_logger.info(
+                    "Window %d/%d [%s → %s]: +%d papers (total: %d)",
+                    wi + 1, len(date_windows),
+                    df.strftime("%Y-%m-%d"), dt_.strftime("%Y-%m-%d"),
+                    len(chunk_papers), len(raw_papers),
+                )
+                # Rate-limit between date windows
+                if wi + 1 < len(date_windows) and chunk_papers:
+                    await asyncio.sleep(config.rate_limit_delay)
+
+            # ------------------------------------------------------------------
+            # Process in async batches with rate-limit spacing
+            # ------------------------------------------------------------------
             for i in range(0, len(raw_papers), config.batch_size):
                 batch = raw_papers[i:i + config.batch_size]
                 tasks = [self._process_paper_dict(p, config) for p in batch]
@@ -437,20 +507,30 @@ class EnhancedArxivForager(ArXivForager):
     # ------------------------------------------------------------------
 
     async def _search_via_urllib(
-        self, config: ForagerConfig
+        self, config: ForagerConfig,
+        date_from: _Optional[_dt] = None,
+        date_to: _Optional[_dt] = None,
     ) -> _List[dict]:
         """
-        Hit the arXiv Atom API using the existing urllib infrastructure
-        and return a list of raw paper dicts.
+        Hit the arXiv Atom API with full pagination.
+
+        If *date_from* / *date_to* are given the query is scoped to that
+        window so the per-query 10 000 result cap is not hit.
+        Loops through pages of ``config.max_results`` until
+        ``config.max_total`` papers are collected or the API returns empty.
         """
         import xml.etree.ElementTree as _ET
-        query = urllib.parse.quote_plus(config.query)
-        url = (
-            f"https://export.arxiv.org/api/query"
-            f"?search_query=all:{query}"
-            f"&start=0&max_results={config.max_results}"
-            f"&sortBy=submittedDate&sortOrder=descending"
-        )
+
+        # Build the base search query, optionally scoped by date range
+        search_terms = f"all:{urllib.parse.quote_plus(config.query)}"
+        if date_from is not None or date_to is not None:
+            # arXiv date-range syntax: submittedDate:[YYYYMMDDHHMM TO YYYYMMDDHHMM]
+            df_str = date_from.strftime("%Y%m%d%H%M") if date_from else "*"
+            dt_str = date_to.strftime("%Y%m%d%H%M") if date_to else "*"
+            search_terms += (
+                f"+AND+submittedDate:[{df_str}+TO+{dt_str}]"
+            )
+
         headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Linux; Android 10; Moto G) "
@@ -460,65 +540,130 @@ class EnhancedArxivForager(ArXivForager):
             "Accept": "application/xml,text/xml",
             "Connection": "close",
         }
-        xml_data = None
-        for attempt in range(3):
-            try:
-                req = urllib.request.Request(url, headers=headers)
-                response = await asyncio.to_thread(
-                    urllib.request.urlopen, req, timeout=12.0
-                )
-                xml_data = response.read()
-                break
-            except Exception as exc:
-                if attempt == 2:
-                    _eaf_logger.error("arXiv search failed: %s", exc)
-                    return []
-                await asyncio.sleep((2 ** attempt) * 0.5)
 
-        if not xml_data:
-            return []
-
+        NS = "{http://www.w3.org/2005/Atom}"
+        ONS = "{http://a9.com/-/spec/opensearch/1.1/}"
+        cutoff = _dt.now() - _td(days=config.max_days_old)
         papers: _List[dict] = []
-        try:
-            NS = "{http://www.w3.org/2005/Atom}"
-            root = _ET.fromstring(xml_data)
-            cutoff = _dt.now() - _td(days=config.max_days_old)
-            for entry in root.findall(f"{NS}entry"):
-                pub_str = entry.findtext(f"{NS}published", "").strip()
+        seen_ids: set = set()
+        start = 0
+
+        while len(papers) < config.max_total:
+            per_page = min(config.max_results, config.max_total - len(papers))
+            url = (
+                f"https://export.arxiv.org/api/query"
+                f"?search_query={search_terms}"
+                f"&start={start}&max_results={per_page}"
+                f"&sortBy=submittedDate&sortOrder=descending"
+            )
+
+            xml_data = None
+            for attempt in range(3):
                 try:
-                    pub_dt = _dt.fromisoformat(pub_str.rstrip("Z"))
-                except ValueError:
-                    pub_dt = _dt.now()
-                if pub_dt < cutoff:
-                    continue
-                entry_id = entry.findtext(f"{NS}id", "").strip()
-                paper_id = entry_id.split("/abs/")[-1] if "/abs/" in entry_id else entry_id
-                papers.append({
-                    "paper_id": paper_id,
-                    "entry_id": entry_id,
-                    "title": (entry.findtext(f"{NS}title") or "").strip(),
-                    "abstract": " ".join((entry.findtext(f"{NS}summary") or "").split()),
-                    "published": pub_dt,
-                    "authors": [
-                        a.findtext(f"{NS}name", "") for a in entry.findall(f"{NS}author")
-                    ],
-                    "categories": [
-                        t.get("term", "") for t in entry.findall(
-                            "{http://arxiv.org/schemas/atom}primary_category"
+                    req = urllib.request.Request(url, headers=headers)
+                    response = await asyncio.to_thread(
+                        urllib.request.urlopen, req, timeout=12.0
+                    )
+                    xml_data = response.read()
+                    break
+                except Exception as exc:
+                    if attempt == 2:
+                        _eaf_logger.error(
+                            "arXiv search failed [start=%d]: %s", start, exc
                         )
-                    ],
-                    "pdf_url": next(
-                        (
-                            lk.get("href", "")
-                            for lk in entry.findall(f"{NS}link")
-                            if lk.get("type") == "application/pdf"
+                        return papers  # return what we have so far
+                    await asyncio.sleep((2 ** attempt) * 0.5)
+
+            if not xml_data:
+                break
+
+            page_papers = 0
+            try:
+                root = _ET.fromstring(xml_data)
+
+                # Check totalResults from OpenSearch namespace
+                total_str = root.findtext(f"{ONS}totalResults", "")
+                total_available = int(total_str) if total_str else 0
+
+                for entry in root.findall(f"{NS}entry"):
+                    pub_str = entry.findtext(f"{NS}published", "").strip()
+                    try:
+                        pub_dt = _dt.fromisoformat(pub_str.rstrip("Z"))
+                    except ValueError:
+                        pub_dt = _dt.now()
+                    if pub_dt < cutoff:
+                        continue
+
+                    entry_id = entry.findtext(f"{NS}id", "").strip()
+                    paper_id = (
+                        entry_id.split("/abs/")[-1]
+                        if "/abs/" in entry_id
+                        else entry_id
+                    )
+                    if paper_id in seen_ids:
+                        continue
+                    seen_ids.add(paper_id)
+
+                    papers.append({
+                        "paper_id": paper_id,
+                        "entry_id": entry_id,
+                        "title": (entry.findtext(f"{NS}title") or "").strip(),
+                        "abstract": " ".join(
+                            (entry.findtext(f"{NS}summary") or "").split()
                         ),
-                        None,
-                    ),
-                })
-                self.stats.papers_fetched += 1
-        except Exception as exc:
-            _eaf_logger.error("XML parse failed: %s", exc)
+                        "published": pub_dt,
+                        "authors": [
+                            a.findtext(f"{NS}name", "")
+                            for a in entry.findall(f"{NS}author")
+                        ],
+                        "categories": [
+                            t.get("term", "")
+                            for t in entry.findall(
+                                "{http://arxiv.org/schemas/atom}primary_category"
+                            )
+                        ],
+                        "pdf_url": next(
+                            (
+                                lk.get("href", "")
+                                for lk in entry.findall(f"{NS}link")
+                                if lk.get("type") == "application/pdf"
+                            ),
+                            None,
+                        ),
+                    })
+                    self.stats.papers_fetched += 1
+                    page_papers += 1
+
+                _eaf_logger.debug(
+                    "arXiv page start=%d  got=%d  total_available=%s  collected=%d",
+                    start, page_papers, total_str, len(papers),
+                )
+
+                # Stop conditions:
+                # - no papers on this page (past the end or date-cutoff filtered all)
+                # - fewer papers returned than requested AND total_available says we're done
+                if page_papers == 0:
+                    break
+                if page_papers < per_page and start + page_papers >= total_available:
+                    break
+
+                # Hard cap: arXiv won't return results beyond start=ARXIV_HARD_LIMIT
+                if start + per_page >= ForagerConfig._ARXIV_HARD_LIMIT:
+                    _eaf_logger.warning(
+                        "Hit arXiv 10k hard cap for this date window — "
+                        "narrower date chunks are needed for more results."
+                    )
+                    break
+
+            except Exception as exc:
+                _eaf_logger.error("XML parse failed [start=%d]: %s", start, exc)
+                break
+
+            start += per_page
+
+            # Rate-limit pacing between pages
+            if start < config.max_total and page_papers > 0:
+                await asyncio.sleep(config.rate_limit_delay)
 
         return papers
 

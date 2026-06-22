@@ -5961,7 +5961,7 @@ async def main():
                 arxiv = ArXivForager(node)
                 
                 # Walk chronologically backwards, fetch 20, compress, and update offset
-                success = await arxiv.upgraded_arxiv_backtracker(max_results=20)
+                success = await arxiv.upgraded_arxiv_backtracker(max_results=100)
                 if success:
                     print("[+] ArXiv backlog timeline crawl segment successfully completed.")
                 else:
@@ -7155,7 +7155,7 @@ def contingency_harness():
                     "!push <message>":    ("!push <message>",      "Zero-trust verify all .py files, then git add/commit/push with the given commit message."),
                     "!system_audit":      ("!system_audit / !audit","Run a Layer 5 OS executive audit of the AURA ecosystem."),
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
-                    "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (20 papers) and ingest them."),
+                    "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
                     "!research <concept>":("!research <concept>",  "Query ingested papers for <concept> and synthesize a Python integration helper into aura_incubator.py."),
                     "!search_similar <query>": ("!search_similar <query>", "VSA cosine-similarity search over the indexed arXiv paper cache using 10,000-D HDC vectors. Run !forage first to populate the index."),
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),

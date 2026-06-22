@@ -32,7 +32,7 @@ class AuraEpistemicIngestGateway:
         self.storage_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Computer Science API Integrations
-    async def fetch_arxiv_cs_api(self, query: str = "cs.AI", max_results: int = 10):
+    async def fetch_arxiv_cs_api(self, query: str = "cs.AI", max_results: int = 100):
         """Directly queries the arXiv REST API for specific Computer Science domains."""
         encoded_query = urllib.parse.quote(f"cat:{query}")
         url = f"https://export.arxiv.org/api/query?search_query={encoded_query}&max_results={max_results}&sortBy=submittedDate&sortOrder=descending"
