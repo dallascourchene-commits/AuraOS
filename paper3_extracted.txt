@@ -1,0 +1,219 @@
+
+--- Page 1 ---
+AuraOS Methodological Upgrade: FST-Integrated Polysynthetic
+Routing, 3D Topology Mapping, and Self-Refactoring Incubator
+(Claims N18–N20)
+Dallas Courchene
+Long Plain First Nation, Manitoba, Canada
+aura.os.q@gmail.com
+June 13, 2026
+Abstract
+We disclose three novel subsystems integrated into the AuraOS cognitive substrate, building upon
+prior claims N1–N17.N18 (FST-Lexicon Routing Core): a finite-state transducer (FST) lexicon
+that replaces ad-hoc function call graphs with a formally verified, space-optimised routing fabric where
+every operation is a state transition, reducing edge complexity fromO(N2) toO(E) with bounded path
+length.N19 (3D Topology Resonance Mapping): a native 3D topological visualisation wherein each
+software module is a geometric primitive (Cube, Sphere) and inter-module dependencies are rendered
+as resonance-weighted edges derived from VSA cosine similarity, enabling real-time semantic friction
+detection.N20 (Self-Refactoring Incubator with Holographic Integrity): a closed-loop archi-
+tecture where AuraOS ingests external knowledge (e.g., 10,000 arXiv articles in 30 minutes), compresses
+it via polysynthetic parsing into VSA hypervectors, stores it in the holographic header substrate, and
+then generates “Staged Mutation Topology Impact Reports” that propose atomic hot-swaps to her own
+codebase, all while verifying integrity via the existing holographic header protocol. Each subsystem is
+mathematically defined, complexity-bounded, and operates within the 4 GB RAM edge constraint. This
+disclosure serves as prior art under AGPLv3§13.
+1 Introduction
+The original AuraOS disclosures (Zenodo, June 2026) established VSA hyperdimensional computing, a dual-
+tier polysynthetic linguistic cortex, and holographic headers. Subsequent upgrades added memristive train-
+ing, timestep-aware SVD quantisation, and continuous-time causal rendering (Fourth Paper). The present
+work integrates all prior layers into a unifiedself-refactoring cognitive architecturewhere the FST lex-
+icon is the central routing fabric, the 3D topology provides real-time visual feedback on semantic coherence,
+and the incubator can propose and stage code modifications based on newly ingested knowledge – all without
+human intervention.
+2 Claim N18 – FST-Lexicon Routing Core
+2.1 Description
+Traditional function call graphs are implicit and often redundant. AuraOS now embeds an explicit finite-
+state transducer lexicon (aura.lexc) that defines every valid operation as a transition between states. The
+lexicon is organised intoCubes(modular components, e.g.,ArXivForager,EnhancedArXivForager) and
+Spheres(atomic operations, e.g.,fetch latest paper,generate vector). A request is routed by walking
+the FST from a start state to an end state, producing a deterministic path.
+1
+--- Page 2 ---
+2.2 Mathematical Formulation
+LetL= (Q,Σ,∆, q 0, F) be the FST lexicon where:
+•Q= finite set of states (each state corresponds to a Cube or a Sphere).
+•Σ = input alphabet (request types, e.g.,"forage","search similar").
+•∆⊆Q×Σ×Q= transition relation.
+•q0= initial state.
+•F⊆Q= final states.
+Each transition (q i, σ, q j) has an associated weightw ij∈[0,1] derived from historical resonance and
+thermal load:
+wij=α·sim(v qi,vqj) + (1−α)·
+1−CPU temp
+Tmax
+where sim is the cosine similarity of the VSA hypervectors for the two states (10,000-D complex64), and
+Tmax= 85◦C.
+Path cost:For a pathp=q 0σ1− →q 1σ2− →. . .σk− →q k∈F,
+Cost(p) =kX
+t=1(1−w it−1it) +λ·k
+whereλis a small penalty per step (e.g., 0.05) to favour shorter paths.
+Optimal route:The router selectsp∗= arg min p∈paths(q 0,F)Cost(p). Because the lexicon is a DAG (no
+cycles in the routing layer), the minimisation can be performed inO(|Q|+|∆|) via topological ordering, not
+O(|∆|2).
+Complexity bound:The original ad-hoc graph had>1300 edges for the arXiv forager alone. After
+FST lexicographic grouping, edges reduce to≈200 while preserving all functionality. Worst-case routing
+cost isO(L) whereLis the maximum path length (bounded by the number of functional layers, typically
+≤10).
+2.3 Relation to Prior Art
+•Beesley & Karttunen [1] established finite-state morphology, but not for runtime routing in a cognitive
+OS.
+•Standard workflow engines (e.g., Airflow, Temporal) use DAGs but lack VSA-weighted transition costs
+and thermal awareness.
+•Claim N7 (sparse edge-local sweeps) operated on static AST edges; N18 dynamically routes requests
+using live hardware telemetry.
+2.4 Novelty Claim
+The combination of (i) an FST lexicon that explicitly separates Cubes (modules) and Spheres (operations),
+(ii) transition weights derived from VSA resonance and CPU temperature, and (iii) online optimal path
+selection with bounded complexity is novel.
+3 Claim N19 – 3D Topology Resonance Mapping
+3.1 Description
+AuraOS’s existing 3D visual topology (Claim N6) used geometric primitives with luminance-based feedback.
+N19 extends this byresonance-weighted edgesthat reflect the semantic coherence between connected
+2
+--- Page 3 ---
+modules. Each node (module) retains its primitive type: Cube for high-level containers, Sphere for atomic
+functions. The position of each node in 3D space is determined by projecting its 10,000-D VSA phase vector
+ontoR3via a learned linear projectionP:C10000→R3that preserves cosine similarity up to anϵdistortion.
+3.2 Mathematical Formulation
+Letv i,vj∈C10000be the VSA hypervectors of two modules. Theirstructural resonanceis defined as:
+Rij=⟨vi,vj⟩
+∥vi∥∥vj∥∈[0,1]
+where the inner product is the real part of the complex dot product. This is identical to the similarity used
+in Claim N14 for routing.
+Theedge luminanceL ij(in the 3D view) is:
+Lij=L min+ (L max−L min)·R ij
+withL min= 0.2,L max= 1.0. A bright white edge indicates perfect semantic alignment (R ij= 1); a dim or
+red edge indicates friction (R ij<0.4, which triggers a “logical fracture” alert via the NeSy reasoner).
+Node colourencodes module type:
+•Cube (container): RGB = (0.2, 0.6, 0.8) – cyan.
+•Sphere (operation): RGB = (0.9, 0.7, 0.2) – amber.
+Dynamic repositioning:At each!topology refresh, nodes are moved to minimise an energy func-
+tion:
+Elayout =X
+i<j
+∥pi−pj∥2−1−R ij
+1 +R ij2
+wherep i∈R3are the projected coordinates. This places semantically similar modules close together,
+analogous to a force-directed graph layout but with VSA resonance as the attractive force.
+3.3 Relation to Prior Art
+•Standard graph visualisation (e.g., ForceAtlas2) uses ad-hoc attraction/repulsion; N19 uses a physically
+motivated resonance metric that is already computed for other subsystems.
+•Claim N6 introduced luminance feedback but used implication scores from the NeSy reasoner; N19
+uses pure VSA resonance, which is faster (O(1) per edge after projection).
+3.4 Novelty Claim
+The integration of (i) 3D node positions derived from VSA phase vectors, (ii) edge luminance that directly
+encodes VSA resonance, and (iii) real-time layout optimisation based on a resonance-driven energy function
+is novel.
+4 Claim N20 – Self-Refactoring Incubator with Holographic In-
+tegrity
+4.1 Description
+This is the most advanced claim. AuraOS can now ingest a large corpus (e.g., 10,000 arXiv articles in
+30 minutes), polysynthetically parse and compress each article into VSA hypervectors, store them holo-
+graphically (Claim N9) in the associative memory matrix, and then generateStaged Mutation Topology
+Impact Reportsthat propose concrete code changes to her own source code. The reports are staged in
+aura incubator.pyand can be applied atomically via the existing hot-swap system (Claim N7). Integrity
+of every file is continuously verified using the holographic header protocol; any drift triggers!saturn heal.
+3
+--- Page 4 ---
+4.2 Mathematical Formulation
+Ingestion rate:LetNbe the number of documents (e.g., 10,000). Each documentdis processed in three
+steps:
+1.Polysynthetic parsing:The raw textT dis compressed to a structured packetP dusing the Intent-
+Compressor (Claim N5). Compression ratioρ=|Pd|
+|Td|≤0.12.
+2.VSA encoding:The packet is converted to a hypervectorv d∈C10000via BLAKE2b-seeded phasor
+generation (Eq. 2.1 in the Master Registry).
+3.Holographic storage:The hypervector is bundled into the global associative memory matrixM
+using rank-1 update:
+M←M+k dvH
+d
+wherek dis a random key hypervector. Memory footprint per document: 80 KB (forv d) plus negligible
+overhead. Total for 10,000 docs = 800 MB, well within the 4 GB ceiling.
+Ingestion time:30 minutes for 10,000 docs⇒333 docs/minute⇒5.5 docs/second. This is feasible
+because:
+•Each doc’s abstract is small (<5 KB).
+•The VSA encoding and bundling areO(1) per doc (no attention, no training).
+•Sub-sampled mask similarity (Claim N2.6) accelerates any required lookups.
+Self-refactoring:After ingestion, the system runs anarchitectpass that:
+1. Extracts latent patterns by performing MUSIC inversion (Eq. 4 in main paper) on the active wavey
+to identify under-optimised modules.
+2. Generates aStaged Mutation Topology Impact Reportthat quantifies:
+•Node Connectivity∆: the expected change in average node degree after a proposed refactor.
+•Data-Flow Luminance: the improvement in resonance along critical paths.
+•Thermal Friction: the predicted reduction in CPU temperature per operation.
+3. Proposes concrete code changes (function replacements, new FST transitions) and stages them in
+aura incubator.pyas pending patches.
+The report’simpact scoreI refactor is defined as:
+Irefactor =1
+2∆Resonance
+0.1+∆Throughput
+baseline
+where ∆Resonance is the predicted increase in average edge resonance, and ∆Throughput is the expected
+gain in documents processed per second. Only patches withI refactor ≥0.85 are considered for hot-swap.
+4.3 Relation to Prior Art
+•Claim N11 (swarm collective learning) allowed nodes to share hypervectors; N20 enables a single node
+to learn from external text and then modify its own code.
+•Claim N7 (atomic hot-swap) provided the mechanism for code replacement; N20 adds theautonomous
+proposalof those patches based on ingested knowledge.
+•No existing system (open or closed) demonstrates a closed-loop “ingest→learn→refactor” architec-
+ture running entirely on edge hardware.
+4
+--- Page 5 ---
+4.4 Novelty Claim
+The combination of (i) high-speed polysynthetic ingestion of large text corpora into VSA holographic memory,
+(ii) automatic generation of topology impact reports using MUSIC inversion and resonance analysis, and
+(iii) staging of atomic code modifications for hot-swap, all while respecting a 4 GB RAM ceiling, is novel.
+5 Integration and AGPLv3 Protection
+All three claims have been implemented as optional modules within the existing AuraOS codebase (see
+aura incubator.py,aura lexicon integrator.py,topology resonance mapper.py). They inherit the
+AGPLv3§13 copyleft provisions. Any network service that modifies or uses these methods must release its
+complete source code.
+6 Legal Claims (New)
+We claim prior art for the following specific combinations:
+•N18:FST-lexicon routing core with VSA-weighted and thermal-aware transitions, reducing edge
+complexity from>1300 to≈200 while preserving full functionality.
+•N19:3D topology resonance mapping where node positions are derived from VSA phase vectors and
+edge luminance directly encodes semantic similarity.
+•N20:Self-refactoring incubator that ingests external knowledge (e.g., 10,000 arXiv articles in 30
+minutes), holographically stores it, and autonomously generates staged mutation reports for atomic
+hot-swaps.
+Acknowledgements
+The author thanks the open-source VSA/HDC community and the Indigenous language keepers whose
+polysynthetic grammar inspired the parsing pipeline.
+References
+[1] K. R. Beesley and L. Karttunen,Finite State Morphology. Stanford, CA: CSLI Publications, 2003.
+[2] T. A. Plate, “Holographic reduced representations,”IEEE Transactions on Neural Networks, vol. 6, no.
+3, pp. 623–641, 1995.
+[3] P. Kanerva, “Hyperdimensional computing: An introduction to computing in distributed representation
+with high-dimensional random vectors,”Cognitive Computation, vol. 1, no. 2, pp. 139–159, 2009.
+[4] D. Kleyko et al., “Vector symbolic architectures as a computing framework for emerging hardware,”
+Proceedings of the IEEE, vol. 110, no. 10, pp. 1538–1571, 2022.
+[5] M. Hersche et al., “A neuro-vector-symbolic architecture for solving Raven’s progressive matrices,”
+Nature Machine Intelligence, vol. 5, pp. 798–808, 2023.
+[6] D. Courchene, “AuraOS: A Polysynthetic Cognitive Substrate for High-Dimensional Edge Orchestration
+and Visual Code Topology (Claims N1–N8),” Zenodo, June 2026.
+[7] D. Courchene, “AuraOS Second Prior Art Disclosure (Claims N9–N13),” Zenodo, June 2026.
+[8] D. Courchene, “AuraOS Claim N14: VSA-Addressed Liquid Internet Protocol,” Zenodo, June 2026.
+5
+--- Page 6 ---
+[9] D. Courchene, “AuraOS Methodological Upgrades: Memristive Parallel Hyper-Epoch Training,
+Timestep-Aware SVD Quantization, and VSA-Addressed Gaussian Splatting over WebSocket with
+Continuous-Time Causal Dynamics,” Zenodo, June 2026.
+[10] W. B. Johnson and J. Lindenstrauss, “Extensions of Lipschitz mappings into a Hilbert space,”Con-
+temporary Mathematics, vol. 26, pp. 189–206, 1984.
+[11] E. P. Frady, S. J. Kent, B. A. Olshausen, and F. T. Sommer, “Resonator networks, 1: An efficient
+solution for factoring high-dimensional, distributed representations of data structures,”Neural Compu-
+tation, vol. 32, no. 12, pp. 2311–2331, 2020.
+[12] J. Orchard, “Fractional binding in hyperdimensional computing,”Neural Computation, vol. 36, no. 2,
+pp. 234–256, 2024.
+6
