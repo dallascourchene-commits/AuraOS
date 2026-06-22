@@ -12,6 +12,7 @@ SYNOPSIS: Automatic CODEMAP refresh system that tracks file modifications and ba
 from __future__ import annotations
 
 import atexit
+import json
 from pathlib import Path
 import threading
 import time
@@ -48,7 +49,7 @@ def set_refresh_interval(seconds: float) -> None:
 def register_file_change(file_path: str | Path) -> None:
     """Register a file change for batched CODEMAP refresh.
     
-    This should be called after any file write operation (write_to_file, 
+    This should be called after any file write operation (write_to_file,
     apply_diff, insert_content) to keep the CODEMAP synchronized.
     
     Args:
@@ -57,7 +58,19 @@ def register_file_change(file_path: str | Path) -> None:
     if not _auto_refresh_enabled:
         return
     
-    path = Path(file_path)
+    try:
+        path = Path(file_path).resolve()
+    except (OSError, ValueError):
+        # Invalid path, skip
+        return
+    
+    # Validate path is within workspace (basic security check)
+    try:
+        workspace = Path.cwd().resolve()
+        path.relative_to(workspace)
+    except (ValueError, OSError):
+        # Path is outside workspace, skip
+        return
     
     # Skip non-code files and generated artifacts
     if path.suffix not in {".py", ".rs", ".c", ".cpp", ".js", ".ts", ".java", ".go"}:
@@ -72,10 +85,13 @@ def register_file_change(file_path: str | Path) -> None:
 
 
 def _schedule_refresh() -> None:
-    """Schedule a batched refresh after the configured interval."""
+    """Schedule a batched refresh after the configured interval.
+    
+    NOTE: This function must be called while holding _refresh_lock.
+    """
     global _refresh_timer
     
-    # Cancel existing timer if present
+    # Cancel existing timer if present (already holding lock)
     if _refresh_timer is not None:
         _refresh_timer.cancel()
     
@@ -131,26 +147,40 @@ def _execute_refresh() -> None:
             file_list += f" (+{len(changes_to_process) - 3} more)"
         print(f"[CODEMAP] Auto-refreshed: {file_list}")
         
+    except (OSError, IOError, PermissionError) as e:
+        # File I/O errors - recoverable
+        print(f"[CODEMAP] Auto-refresh I/O error: {e}")
+    except (json.JSONDecodeError, KeyError, ValueError) as e:
+        # Data corruption or format errors - critical
+        print(f"[CODEMAP] Auto-refresh data error (critical): {e}")
     except Exception as e:
-        # Don't crash on refresh errors, just log
-        print(f"[CODEMAP] Auto-refresh failed: {e}")
+        # Unexpected errors - log with more detail
+        print(f"[CODEMAP] Auto-refresh unexpected error: {type(e).__name__}: {e}")
 
 
 def flush_pending_refreshes() -> None:
     """Immediately flush all pending CODEMAP refreshes.
     
-    This should be called before critical operations that depend on 
+    This should be called before critical operations that depend on
     up-to-date navigation data, or before program exit.
+    
+    Ensures proper cleanup of timer thread before executing refresh.
     """
     global _refresh_timer
     
-    # Cancel scheduled timer
-    if _refresh_timer is not None:
-        _refresh_timer.cancel()
-        _refresh_timer = None
+    with _refresh_lock:
+        # Cancel and wait for timer thread to complete
+        if _refresh_timer is not None:
+            _refresh_timer.cancel()
+            # Don't join() here as it could deadlock if timer is executing
+            _refresh_timer = None
+        
+        # Check if there are pending changes while holding lock
+        has_pending = len(_pending_changes) > 0
     
     # Execute refresh immediately if there are pending changes
-    if _pending_changes:
+    # (release lock before executing to avoid deadlock)
+    if has_pending:
         _execute_refresh()
 
 
