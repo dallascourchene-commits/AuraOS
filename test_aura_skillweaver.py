@@ -485,6 +485,122 @@ class TestReportFormat:
             report = weaver.format_gate_report(result)
             assert "PLAN:" in report
 
+    def test_report_includes_contradictions_section_when_present(self, weaver):
+        """format_gate_report must emit a CONTRADICTIONS section when conflicts exist."""
+        positive = (
+            "ARXIV_VSA_P",
+            "TITLE: VSA improves associative memory | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations with bundling, binding, permutation, "
+            "superposition, and distributed representation. An empirical "
+            "benchmark improves associative memory recall on edge devices.",
+            None,
+        )
+        negative = (
+            "ARXIV_VSA_N",
+            "TITLE: VSA harms associative memory | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations with bundling, binding, permutation, "
+            "superposition, and distributed representation. An empirical "
+            "benchmark degrades associative memory recall on edge devices.",
+            None,
+        )
+        result = weaver.evaluate_research_gate(
+            "vector symbolic architecture edge memory",
+            [positive, negative],
+        )
+        report = weaver.format_gate_report(result)
+        assert "CONTRADICTIONS:" in report
+
+    def test_contradictions_section_shows_ids_and_polarity(self, weaver):
+        """Contradiction lines must include left_id, right_id, and polarity values."""
+        positive = (
+            "ARXIV_POS",
+            "TITLE: HDC improves edge retrieval | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations. An empirical benchmark improves "
+            "retrieval accuracy on edge devices.",
+            None,
+        )
+        negative = (
+            "ARXIV_NEG",
+            "TITLE: HDC harms edge retrieval | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations. An empirical benchmark degrades "
+            "retrieval accuracy on edge devices.",
+            None,
+        )
+        result = weaver.evaluate_research_gate(
+            "hyperdimensional edge retrieval",
+            [positive, negative],
+        )
+        if result.contradictions:
+            report = weaver.format_gate_report(result)
+            conflict = result.contradictions[0]
+            assert conflict.left_id in report
+            assert conflict.right_id in report
+            assert "positive" in report or "negative" in report
+
+    def test_no_contradictions_section_when_none_present(self, weaver, weak_bellstate_candidate):
+        """When no contradictions exist, report must not contain CONTRADICTIONS:."""
+        result = weaver.evaluate_research_gate("Hopfield networks", [weak_bellstate_candidate])
+        report = weaver.format_gate_report(result)
+        assert "CONTRADICTIONS:" not in report
+
+
+# ---------------------------------------------------------------------------
+# Test: ResearchGateResult contradictions field
+# ---------------------------------------------------------------------------
+
+class TestResearchGateResultContradictions:
+    def test_contradictions_field_defaults_to_empty_list(self):
+        """ResearchGateResult.contradictions should default to empty list."""
+        result = ResearchGateResult(
+            query="test",
+            decision="REFUSE_MUTATION",
+            candidates=[],
+            required_anchors=[],
+            final_score=0.0,
+            reason="No sources.",
+        )
+        assert result.contradictions == []
+
+    def test_contradictions_not_set_when_all_candidates_refused(self, weaver, weak_bellstate_candidate):
+        """When all candidates fail, no contradictions should be reported."""
+        result = weaver.evaluate_research_gate(
+            "Hopfield networks",
+            [weak_bellstate_candidate],
+        )
+        assert result.decision == "REFUSE_MUTATION"
+        # Contradictions are only detected from accepted records,
+        # so when nothing is accepted there can be no contradictions.
+        assert result.contradictions == []
+
+    def test_contradictions_reported_only_for_accepted_candidates(self, weaver):
+        """Only accepted candidates participate in contradiction detection."""
+        accepted = (
+            "ARXIV_VSA_ACC",
+            "TITLE: VSA improves edge | ABSTRACT: Hyperdimensional HDC vector "
+            "symbolic architecture improves accuracy on edge devices. "
+            "Empirical benchmark demonstrates improvement.",
+            None,
+        )
+        rejected = (
+            "ARXIV_OFFTOPIC",
+            "TITLE: Coral reef survey | ABSTRACT: A biological survey "
+            "of coral reefs in tropical waters.",
+            None,
+        )
+        # The off-topic paper should be rejected; its polarity state is irrelevant.
+        result = weaver.evaluate_research_gate(
+            "vector symbolic architecture edge accuracy",
+            [accepted, rejected],
+        )
+        accepted_ids = {c.trace_id for c in result.candidates if c.accepted}
+        for contradiction in result.contradictions:
+            assert contradiction.left_id in accepted_ids
+            assert contradiction.right_id in accepted_ids
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
