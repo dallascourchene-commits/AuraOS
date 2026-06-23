@@ -89,13 +89,36 @@ Create `aura_secrets.json`:
 ```json
 {
   "GEMINI_API_KEY": "your-gemini-key",
+  "OPEN_ROUTER_API_KEY": "your-openrouter-key",
   "MISTRAL_API_KEY": "your-mistral-key",
   "GROQ_API_KEY": "your-groq-key",
-  "GITHUB_TOKEN": "your-github-token"
+  "GITHUB_TOKEN": "your-github-token",
+  "AURA_FUSION_PANEL": [
+    {
+      "name": "thinker_openrouter",
+      "role": "THINKER",
+      "provider": "openrouter",
+      "base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key_name": "OPEN_ROUTER_API_KEY",
+      "model": "anthropic/claude-sonnet-4.5",
+      "max_tokens": 900
+    }
+  ],
+  "AURA_FUSION_JUDGE": {
+    "name": "judge_openrouter",
+    "role": "JUDGE",
+    "provider": "openrouter",
+    "base_url": "https://openrouter.ai/api/v1/chat/completions",
+    "api_key_name": "OPEN_ROUTER_API_KEY",
+    "model": "openai/gpt-4o-mini",
+    "max_tokens": 1200
+  }
 }
 ```
 
-AuraOS works offline with the local LLM server if no cloud keys are provided.
+AuraOS works offline for deterministic substrate functions. Native AuraFusion
+uses only explicitly configured external provider APIs and can be dry-run with
+`python3 aura_fusion.py --mock "Compare these approaches"`.
 
 ---
 
@@ -172,9 +195,36 @@ AuraOS works offline with the local LLM server if no cloud keys are provided.
 |---------|-------------|
 | `!calibrate` | Run full (provider × style × mode) benchmark matrix |
 | `!route <task> [--model M]` | Auto-route to optimal model; `--model` forces priority |
+| `!fusion <task>` | Run native AuraFusion: SkillWeaver gate -> compact capsule -> Thinker/Worker/Verifier panel -> judge synthesis |
 | `!savings` | Show cumulative token + cost savings per provider |
 | `!converse <text>` | Polysynthetic conversation (compress → LLM → interpret) |
 | `!contingency_spawn` | Thermal spike handling + cold-cache pressure report |
+
+### Native AuraFusion
+
+AuraFusion is Aura's internal panel-plus-judge deliberation path. It does not
+depend on OpenRouter's hosted Fusion router as the primary solution. Instead it
+uses Aura's own compact task capsule, CODEMAP epoch, SkillWeaver mutation gate,
+user-owned provider keys, and configured model pool.
+
+Run it directly:
+
+```bash
+python3 aura_fusion.py "Compare router and SkillWeaver integration risks"
+python3 aura_fusion.py --mock "Compare router and SkillWeaver integration risks"
+python3 aura_router.py fusion --task "Compare router and SkillWeaver integration risks" --mock
+```
+
+Run it in the REPL:
+
+```text
+[Dallas] > !fusion Compare router and SkillWeaver integration risks
+```
+
+Runtime logs are appended to `Aura_Memory/aura_fusion_runs.jsonl` and remain
+gitignored. Code-mutation requests are refused when no CODEMAP-grounded
+`target_file` is present; grounded mutation plans still require human review
+before anything is applied.
 
 ### Knowledge & Research
 

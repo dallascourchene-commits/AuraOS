@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f7-[Q-SYS:SKILLWEAVER_GATE]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Disciplined Mutation Gate)
 DEPENDENCIES: numpy, json, os, re, hashlib, time
-FUNCTIONS: AuraSkill, ResearchCandidate, ResearchGateResult, AuraSkillWeaver, extract_required_anchors, score_lexical_anchors, score_concept_fit, evaluate_research_gate, decompose_query, build_skill_registry, compose_mutation_dag
+FUNCTIONS: AuraSkill, ResearchCandidate, ResearchGateResult, AuraSkillWeaver, extract_required_anchors, score_lexical_anchors, score_concept_fit, evaluate_research_gate, decompose_query, build_skill_registry, compose_mutation_dag, gate_fusion_task
 SYNOPSIS: Aura-native skill-aware decomposition, research relevance gating, skill retrieval, and mutation plan composition. Implements the SkillWeaver / Compositional Skill Routing pattern adapted into Aura architecture. Prevents ungrounded code mutations from semantically resonant but conceptually irrelevant research matches.
 [/AURA_MASTER_KEY]
 
@@ -480,6 +480,111 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
             "tau": "thermal friction (1 - thermal_fitness)",
             "epsilon": "extraction cost (estimated API cost)",
         },
+    }
+
+
+FUSION_VALID_OUTPUT_MODES = {
+    "TEXT",
+    "JSON",
+    "JSON_EDIT_PLAN",
+    "UNIFIED_DIFF",
+    "PYTHON",
+}
+
+_MUTATION_WORDS = {
+    "add", "change", "commit", "delete", "edit", "fix", "implement",
+    "modify", "patch", "refactor", "remove", "rewrite", "update", "write",
+}
+
+_NEW_DEP_WORDS = {
+    "pip install", "poetry add", "npm install", "new dependency", "langchain",
+    "networkx", "torch", "pytorch", "faiss", "z3",
+}
+
+
+def _fusion_capsule_constraints(capsule: dict) -> set[str]:
+    return {str(item).upper() for item in capsule.get("constraints", []) if item}
+
+
+def _fusion_target_exists(target_file: str | None, skills: list[AuraSkill]) -> bool:
+    if not target_file:
+        return False
+    normalized = target_file.replace("\\", "/").lstrip("./")
+    for skill in skills or []:
+        if skill.path and skill.path.replace("\\", "/").lstrip("./") == normalized:
+            return True
+    return Path(normalized).exists()
+
+
+def gate_fusion_task(task: str, capsule: dict, skills: list[AuraSkill]) -> dict:
+    """
+    Decide whether AuraFusion should run, refuse, or require human gate.
+
+    Checks:
+    - task has target grounding when code mutation is requested
+    - CODEMAP target exists
+    - output mode is valid
+    - no new deps unless allowed
+    - research evidence is sufficient when task is research-derived
+    """
+    task_text = task or ""
+    task_lower = task_text.lower()
+    output_mode = str(capsule.get("output_mode", "TEXT")).upper()
+    target_file = capsule.get("target_file")
+    constraints = _fusion_capsule_constraints(capsule)
+    checks: dict[str, bool] = {
+        "valid_output_mode": output_mode in FUSION_VALID_OUTPUT_MODES,
+        "target_grounded": True,
+        "no_new_deps": True,
+        "research_sufficient": True,
+    }
+    reasons: list[str] = []
+
+    if not checks["valid_output_mode"]:
+        reasons.append(f"Unsupported AuraFusion output_mode '{output_mode}'.")
+
+    mutation_requested = (
+        output_mode in {"JSON_EDIT_PLAN", "UNIFIED_DIFF", "PYTHON"}
+        or any(re.search(r"\b" + re.escape(word) + r"\b", task_lower) for word in _MUTATION_WORDS)
+    )
+    if mutation_requested:
+        checks["target_grounded"] = _fusion_target_exists(target_file, skills)
+        if not checks["target_grounded"]:
+            reasons.append("Code mutation requested without a CODEMAP-grounded target_file.")
+
+    if "ALLOW_NEW_DEPS" not in constraints and any(word in task_lower for word in _NEW_DEP_WORDS):
+        checks["no_new_deps"] = False
+        reasons.append("Task appears to require a new dependency, but ALLOW_NEW_DEPS is not present.")
+
+    if capsule.get("research_derived") and not capsule.get("source_sufficient"):
+        checks["research_sufficient"] = False
+        reasons.append("Research-derived Fusion mutation lacks source-sufficient evidence.")
+
+    if not all(checks.values()):
+        return {
+            "decision": "REFUSE_FUSION",
+            "allowed": False,
+            "human_gate_required": False,
+            "reason": " ".join(reasons),
+            "checks": checks,
+        }
+
+    risky = mutation_requested and "HUMAN_APPROVED_MUTATION" not in constraints
+    if risky:
+        return {
+            "decision": "HUMAN_GATE_REQUIRED",
+            "allowed": True,
+            "human_gate_required": True,
+            "reason": "Mutation target is grounded; require human review before applying any patch.",
+            "checks": checks,
+        }
+
+    return {
+        "decision": "ALLOW_FUSION",
+        "allowed": True,
+        "human_gate_required": False,
+        "reason": "AuraFusion gate passed.",
+        "checks": checks,
     }
 
 

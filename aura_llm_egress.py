@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8e5-[Q-SYS:2A86BBF77059E372]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit / Honest Communication)
 DEPENDENCIES: json, os, time, aura_api_rotator
-FUNCTIONS: ExternalLLM, interpret, generate
+FUNCTIONS: ExternalLLM, interpret, generate, generate_openai_compatible_payload
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -173,6 +173,63 @@ def _anthropic_generate(url: str, api_key: str, model: str, prompt: str,
         return data["content"][0]["text"].strip(), None
     except Exception as exc:  # noqa: BLE001
         return None, str(exc)
+
+
+def _forbidden_external_url(url: str) -> bool:
+    low = (url or "").strip().lower()
+    return (
+        low.startswith("http://127.")
+        or low.startswith("https://127.")
+        or low.startswith("http://localhost")
+        or low.startswith("https://localhost")
+        or low.startswith("http://0.0.0.0")
+        or low.startswith("https://0.0.0.0")
+    )
+
+
+def generate_openai_compatible_payload(
+    *,
+    provider: str,
+    base_url: str,
+    api_key: str,
+    model: str,
+    messages: list[dict[str, str]],
+    max_tokens: int = 900,
+    temperature: float = 0.0,
+    response_format: dict[str, Any] | None = None,
+    timeout: float = 60,
+) -> tuple[str | None, str | None, float, bool]:
+    """Single egress helper for custom OpenAI-compatible AuraFusion calls.
+
+    Returns (text, error, latency_sec, used_response_format). If a provider
+    rejects JSON schema response_format, the helper retries once without it and
+    lets the caller enforce/repair JSON locally.
+    """
+    if _forbidden_external_url(base_url):
+        return None, "forbidden local/internal model endpoint", 0.0, False
+    if not api_key or not str(api_key).strip():
+        return None, f"missing API key for provider '{provider}'", 0.0, False
+
+    payload: dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+    if response_format:
+        payload["response_format"] = response_format
+
+    t0 = time.time()
+    text, err = openai_compatible_generate(base_url, api_key, payload, timeout=timeout)
+    used_schema = bool(response_format and not err)
+    if err and response_format and any(
+        marker in str(err).lower()
+        for marker in ("response_format", "json_schema", "schema", "400", "unsupported")
+    ):
+        payload.pop("response_format", None)
+        text, err = openai_compatible_generate(base_url, api_key, payload, timeout=timeout)
+        used_schema = False
+    return text, err, time.time() - t0, used_schema
 
 
 def available_providers(secrets: dict[str, Any] | None = None) -> list[str]:
