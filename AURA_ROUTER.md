@@ -142,6 +142,9 @@ python3 aura_router.py calibrate --mock
 # Route a task with the mock egress
 python3 aura_router.py route --task mesh_offload --mock
 
+# Run native AuraFusion without provider calls
+python3 aura_router.py fusion --task "Compare router and SkillWeaver risks" --mock
+
 # Check status after mock calibration
 python3 aura_router.py status
 
@@ -194,7 +197,17 @@ python3 aura_router.py route --task mesh_offload
 python3 aura_router.py route --task mesh_offload --model mistral
 ```
 
-6. Check cumulative savings:
+6. Run native AuraFusion when a task benefits from panel deliberation:
+
+```bash
+python3 aura_router.py fusion --task "Compare router and SkillWeaver risks"
+```
+
+Fusion uses `AURA_FUSION_PANEL` and `AURA_FUSION_JUDGE` from
+`aura_secrets.json`, emits compact capsules to configured external providers,
+and writes run metrics to `Aura_Memory/aura_fusion_runs.jsonl`.
+
+7. Check cumulative savings:
 
 ```bash
 python3 aura_router.py savings

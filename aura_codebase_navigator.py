@@ -35,6 +35,16 @@ DEFAULT_SKIP_DIRS = frozenset({
     ".ruff_cache",
     "node_modules",
     "Aura_Memory",
+    ".venv",
+    "venv",
+    "env",
+    ".tox",
+    ".nox",
+    "site-packages",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg-info",
 })
 BINARY_SUFFIXES = frozenset({".bak", ".db", ".docx", ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".ttf", ".zip"})
 TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".json", ".lexc", ".md", ".py", ".rs", ".sh", ".tex", ".toml", ".txt", ".yml", ".yaml"})
@@ -163,8 +173,15 @@ def _python_symbol_records(text: str, rel_path: str = "") -> list[SymbolRecord]:
 
 def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
     paths: list[Path] = []
+
+    def _skip_part(name: str) -> bool:
+        return name in skip_dirs or any(
+            pattern.startswith("*") and name.endswith(pattern[1:])
+            for pattern in skip_dirs
+        )
+
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = sorted(d for d in dirnames if d not in skip_dirs)
+        dirnames[:] = sorted(d for d in dirnames if not _skip_part(d))
         base = Path(dirpath)
         for filename in sorted(filenames):
             candidate = base / filename
@@ -172,7 +189,7 @@ def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
                 rel = candidate.relative_to(root).as_posix()
             except ValueError:
                 rel = candidate.as_posix()
-            if rel in GENERATED_MAP_FILES:
+            if rel in GENERATED_MAP_FILES or any(_skip_part(part) for part in candidate.relative_to(root).parts):
                 continue
             paths.append(candidate)
     return paths

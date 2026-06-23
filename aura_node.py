@@ -7029,6 +7029,20 @@ def contingency_harness():
                 print(result)
                 continue
 
+            elif u_in_l.startswith("!fusion"):
+                # Native AuraFusion: compact capsule -> gated panel -> judge synthesis.
+                task_text = u_in.partition(" ")[2].strip()
+                if not task_text:
+                    print("[-] Usage: !fusion <task>")
+                    print("    Example: !fusion compare router and SkillWeaver integration risks")
+                    continue
+                try:
+                    from aura_fusion import main as _fusion_main
+                    _fusion_main([task_text])
+                except Exception as e:
+                    print(f"[-] fusion failed: {e}")
+                continue
+
             elif u_in_l.startswith("!calibrate"):
                 # Calibrate external models in the isolated sandbox -> ledger.
                 try:
@@ -7174,6 +7188,7 @@ def contingency_harness():
                     "!saturn":            ("!saturn",              "Initiate a full Neuro-Symbolic curriculum training cycle (exhaustive omnipath sweep)."),
                     "!self_reflect":      ("!self_reflect",        "Deep introspection: VSA resonance analysis + cloud architect diagnosis. (Route fixes through aura_self_optimize for the sanitized, validated, optimal-model pipeline.)"),
                     "!self_optimize":     ("!self_optimize / !optimize", "Audit runtime friction, generate an optimized Python patch via cloud LLM, and stage it in Aura_Staging/. New pipeline: aura_self_optimize.py (substrate -> best model -> json_edit_plan -> ASCII-sanitize -> verify -> retry)."),
+                    "!fusion <task>":     ("!fusion <task>",       "Run native AuraFusion: SkillWeaver-gated compact capsule -> Thinker/Worker/Verifier panel -> judge synthesis. Uses AURA_FUSION_PANEL/JUDGE from aura_secrets.json."),
                     "!calibrate":         ("!calibrate",           "Calibrate external models in the isolated sandbox (provider x packet-style x output-mode) and log results to the calibration ledger. Recalibrate any time."),
                     "!route <task>":      ("!route <task> [--model M]", "Auto-route a task to the most optimal model/packet-style/output-mode from the ledger; --model forces one (reorders priority). Falls back on error."),
                     "!savings":           ("!savings",             "Show tokens + money saved per provider and per aspect (conversation / refactor / self_optimize), at actual PriceBook rates, plus projected savings."),

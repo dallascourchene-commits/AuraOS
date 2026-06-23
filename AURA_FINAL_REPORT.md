@@ -11,6 +11,28 @@ AuraOS is a **production-ready, self-documenting AI system** with comprehensive 
 
 ---
 
+## 2026-06-23 Addendum: Native AuraFusion Refactor
+
+This review branch adds Aura-native Fusion orchestration without depending on
+OpenRouter's hosted Fusion router as the primary path:
+
+- `aura_fusion.py` implements compact task capsules, SkillWeaver gating,
+  parallel Thinker/Worker/Verifier panel dispatch, structured judge synthesis,
+  and `Aura_Memory/aura_fusion_runs.jsonl` metrics logging.
+- `aura_phase_capsule.py` records deterministic continuation metadata for
+  cross-model handoff boundaries.
+- `aura_model_probe_ledger.py` stores black-box behavioral routing profiles for
+  provider/model/role scoring.
+- `aura_codebase_navigator.py` now excludes `.venv`, `site-packages`, build
+  artifacts, and egg metadata from CODEMAP scans.
+- `!fusion <task>` and `python3 aura_router.py fusion --task ...` expose the
+  new route while leaving existing single-model routing as the default.
+
+All provider calls remain behind explicit external API configuration in
+`aura_secrets.json`; no secrets are committed.
+
+---
+
 ## Key Discovery: Self-Documentation System
 
 ### CODEMAP Navigation System
