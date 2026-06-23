@@ -142,7 +142,7 @@ class ArXivForager:
         except Exception as e:
             return f"arXiv processing failure: {e}"
 
-    async def upgraded_arxiv_backtracker(self, max_results: int = 100, max_retries: int = 3, timeout: float = 12.0) -> bool:
+    async def upgraded_arxiv_backtracker(self, max_results: int = 2000, max_retries: int = 3, timeout: float = 12.0) -> bool:
         """
         Asynchronously crawl backwards through arXiv CS submissions, vectorizing and storing papers while managing pagination limits.
         
@@ -469,7 +469,7 @@ class ForagerConfig:
     narrower slices (see ``_search_via_urllib`` and ``forage()``).
     """
     query: str
-    max_results: int = 100               # per-page results (arXiv allows <=2000)
+    max_results: int = 2000              # per-page results (arXiv allows <=2000)
     categories: _Optional[_List[str]] = None
     max_days_old: int = 365
     batch_size: int = 50                 # papers to process in one async batch
@@ -541,6 +541,7 @@ class EnhancedArxivForager(ArXivForager):
         self._scientific_encoder = ScientificPaperEncoder()
         self._scientific_index = ScientificMemoryIndex(self._scientific_encoder)
         self._paper_cache: _Dict[str, ArxivPaper] = {}
+        self._overflow_windows: _List[tuple] = []  # (date_from, date_to) pairs that hit 10K cap
         self._storage_dir = _Path("Aura_Memory/arxiv_cache")
         self._storage_dir.mkdir(parents=True, exist_ok=True)
         self._last_request_time: float = 0.0
@@ -550,6 +551,65 @@ class EnhancedArxivForager(ArXivForager):
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
+
+    async def expand_curiosity_queries(
+        self, base_query: str, max_expansions: int = 5,
+    ) -> _List[str]:
+        """
+        Curiosity-driven query expansion using scientific memory topology.
+
+        Axiom P1 (Null State is Potential): The arXiv corpus is the latent
+        field. Each query is a perturbation. This method generates NEW
+        perturbation vectors from the gaps in the existing knowledge topology.
+
+        Axiom P3 (Coherence is Attractor): We expand toward domains that
+        are adjacent to but not yet covered by the existing cluster topology.
+
+        Returns a list of expanded query strings derived from the scientific
+        memory's domain bundles and detected knowledge gaps.
+        """
+        queries = [base_query]
+
+        # Check what domains are well-covered vs sparse
+        if not self._scientific_index._records:
+            return queries
+
+        domain_counts: _Dict[str, int] = {}
+        for rec in self._scientific_index._records.values():
+            for domain in rec.slots.get("domain"):
+                domain_counts[domain] = domain_counts.get(domain, 0) + 1
+
+        if not domain_counts:
+            return queries
+
+        # Sort domains by coverage (ascending = least explored)
+        sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1])
+
+        # Generate expansion queries for underexplored adjacent domains
+        # Use the base query combined with underexplored domain terms
+        for domain, count in sorted_domains[:max_expansions]:
+            if domain and domain != "general":
+                expanded = f"{base_query} {domain}"
+                if expanded not in queries:
+                    queries.append(expanded)
+
+        # Also check for mechanism gaps — domains with papers but few mechanisms
+        mechanism_counts: _Dict[str, int] = {}
+        for rec in self._scientific_index._records.values():
+            for mech in rec.slots.get("mechanism"):
+                mechanism_counts[mech] = mechanism_counts.get(mech, 0) + 1
+
+        for mech, count in sorted(mechanism_counts.items(), key=lambda x: x[1])[:3]:
+            if mech and len(queries) < max_expansions + 1:
+                expanded = f"{base_query} {mech}"
+                if expanded not in queries:
+                    queries.append(expanded)
+
+        _eaf_logger.info(
+            "Curiosity expansion: %d queries from %d domains, %d mechanisms",
+            len(queries), len(domain_counts), len(mechanism_counts),
+        )
+        return queries[:max_expansions + 1]
 
     async def forage(self, config: ForagerConfig) -> _List[ArxivPaper]:
         """
@@ -629,6 +689,46 @@ class EnhancedArxivForager(ArXivForager):
                 # Rate-limit between date windows
                 if wi + 1 < len(date_windows) and chunk_papers:
                     await asyncio.sleep(config.rate_limit_delay)
+
+            # ------------------------------------------------------------------
+            # Fractal subdivision: recursively split overflowed windows
+            # Axiom A5: same partitioning at every scale
+            # ------------------------------------------------------------------
+            _max_subdivision_depth = 4  # prevent infinite recursion
+            _subdivision_round = 0
+            while self._overflow_windows and _subdivision_round < _max_subdivision_depth:
+                _subdivision_round += 1
+                overflow_copy = list(self._overflow_windows)
+                self._overflow_windows.clear()
+                _eaf_logger.info(
+                    "Fractal subdivision round %d: %d overflowed windows",
+                    _subdivision_round, len(overflow_copy),
+                )
+                for ow_start, ow_end in overflow_copy:
+                    if len(raw_papers) >= config.max_total:
+                        break
+                    # Split the overflowed window in half
+                    if ow_start is not None and ow_end is not None:
+                        mid = ow_start + (ow_end - ow_start) / 2
+                        sub_windows = [(ow_start, mid), (mid, ow_end)]
+                    else:
+                        break
+                    for sw_start, sw_end in sub_windows:
+                        if len(raw_papers) >= config.max_total:
+                            break
+                        chunk = await self._search_via_urllib(config, sw_start, sw_end)
+                        for p in chunk:
+                            if p["paper_id"] not in seen_ids:
+                                seen_ids.add(p["paper_id"])
+                                raw_papers.append(p)
+                        _eaf_logger.info(
+                            "Subdivision [%s -> %s]: +%d papers (total: %d)",
+                            sw_start.strftime("%Y-%m-%d") if sw_start else "?",
+                            sw_end.strftime("%Y-%m-%d") if sw_end else "?",
+                            len(chunk), len(raw_papers),
+                        )
+                        if chunk:
+                            await asyncio.sleep(config.rate_limit_delay)
 
             # ------------------------------------------------------------------
             # Process in async batches with rate-limit spacing
@@ -857,11 +957,15 @@ class EnhancedArxivForager(ArXivForager):
                     break
 
                 # Hard cap: arXiv won't return results beyond start=ARXIV_HARD_LIMIT
+                # Axiom A5 (Fractal Self-Organization): when a window overflows,
+                # recursively subdivide it — the same partitioning at every scale.
                 if start + per_page >= ForagerConfig._ARXIV_HARD_LIMIT:
                     _eaf_logger.warning(
                         "Hit arXiv 10k hard cap for this date window — "
-                        "narrower date chunks are needed for more results."
+                        "triggering fractal subdivision."
                     )
+                    # Signal the caller to subdivide this window
+                    self._overflow_windows.append((date_from, date_to))
                     break
 
             except Exception as exc:
