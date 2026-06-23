@@ -85,7 +85,14 @@ from aura_topology_analyzer import diagnose_fractures
 
 
 async def _cached_scientific_index(node, conn):
-    """Build once per DB snapshot, then keep research queries millisecond-scale."""
+    """
+    Build and cache a scientific index from ARXIV traces in the database.
+    
+    Maintains cache validity by tracking a signature (row count and max timestamp of ARXIV traces). When the signature changes, rebuilds the index by querying all ARXIV traces and offloading index construction to a thread pool. Returns the cached index for subsequent research queries.
+    
+    Returns:
+    	The cached scientific index of ARXIV traces.
+    """
     async with conn.execute(
         "SELECT COUNT(*), COALESCE(MAX(timestamp), '') FROM traces "
         "WHERE id LIKE 'ARXIV_%';"
@@ -5055,6 +5062,21 @@ async def markovian_workspace_reconstruction(node, palace, max_raw_logs: int = 2
 async def main():
 
     # 0. Boot the llama-server subprocess (orphan-safe, spec §2)
+    """
+    Initialize and run the complete AURA sovereign operating system.
+    
+    Boots the llama-server backend, instantiates the AuraSovereignNode with all
+    subsystems (memory palace, hyperdimensional cores, safety validators, mesh
+    networking), starts background daemons (DAG walker, memory consolidation,
+    meta-learning), verifies ecosystem integrity (holographic manifest, QDKT,
+    benchmarks), and enters the main CLI command loop for interactive operation.
+    
+    The function orchestrates Layer 7 cognitive modules (QFCS gate, DIKWP
+    semantic engine, LNN validator, morphemic airlock, compiler gate, friction
+    optimizer) and manages long-running tasks including background foraging,
+    topology scanning, AR WebSocket server, and SQLite worker threads. It also
+    implements a signal handler for graceful shutdown on user interrupt.
+    """
     _llama_mgr = LlamaServerManager(
         model_path=str(MODEL_PATH),
         port=8081,
