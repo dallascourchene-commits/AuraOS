@@ -13,6 +13,7 @@ import base64
 from datetime import datetime, timedelta
 import hashlib
 import json
+import socket
 import time
 import urllib.error
 from urllib.parse import urlencode
@@ -31,6 +32,12 @@ from aura_scientific_memory import (
 )
 
 _SCIENTIFIC_ENCODER = ScientificPaperEncoder()
+_ARXIV_API_URL = "https://export.arxiv.org/api/query"
+_ARXIV_OAI_URL = "https://export.arxiv.org/oai2"
+_ARXIV_USER_AGENT = "AuraOS/1.0 (mailto:aura.os.q@gmail.com)"
+_ARXIV_MIN_REQUEST_DELAY = 3.5
+_ARXIV_SAFE_PAGE_SIZE = 200
+_ARXIV_BACKTRACK_WINDOW = timedelta(days=1)
 
 
 def _scientific_record(
@@ -72,8 +79,272 @@ class ArXivForager:
         	node_ref: Optional node object providing database persistence via memory_palace.conn.
         """
         self.node = node_ref  # Bind the main node reference
+        self._last_request_time = 0.0
 
-    async def fetch_latest_paper(self, topic: str, max_retries: int = 3, timeout: float = 12.0) -> str:
+    async def _fetch_arxiv_xml(
+        self,
+        search_query: str,
+        *,
+        start: int = 0,
+        max_results: int = 100,
+        sort_by: str = "submittedDate",
+        sort_order: str = "descending",
+        max_retries: int = 3,
+        timeout: float = 30.0,
+        min_delay: float = _ARXIV_MIN_REQUEST_DELAY,
+    ) -> tuple[bytes, int]:
+        """Fetch one Atom page without blocking the event loop.
+
+        arXiv recommends at least three seconds between requests and smaller
+        result slices for broad queries.  Retries therefore pace themselves,
+        increase the socket timeout, and halve the requested page after a
+        timeout, throttle response, or transient server failure.
+        """
+        page_size = max(1, min(int(max_results), 2_000))
+        retries = max(1, int(max_retries))
+        base_timeout = max(1.0, float(timeout))
+        request_delay = max(3.0, float(min_delay))
+        last_error: Exception | None = None
+
+        for attempt in range(retries):
+            elapsed = time.monotonic() - self._last_request_time
+            if elapsed < request_delay:
+                await asyncio.sleep(request_delay - elapsed)
+
+            params = {
+                "search_query": search_query,
+                "start": max(0, int(start)),
+                "max_results": page_size,
+                "sortBy": sort_by,
+                "sortOrder": sort_order,
+            }
+            request = urllib.request.Request(
+                f"{_ARXIV_API_URL}?{urlencode(params)}",
+                headers={
+                    "User-Agent": _ARXIV_USER_AGENT,
+                    "Accept": "application/atom+xml,application/xml,text/xml",
+                    "Accept-Encoding": "identity",
+                    "Connection": "close",
+                },
+            )
+            attempt_timeout = min(90.0, base_timeout * (1.5 ** attempt))
+
+            def _read_response() -> bytes:
+                with urllib.request.urlopen(
+                    request, timeout=attempt_timeout
+                ) as response:
+                    return response.read()
+
+            try:
+                payload = await asyncio.to_thread(_read_response)
+                self._last_request_time = time.monotonic()
+                if not payload:
+                    raise ValueError("arXiv returned an empty response")
+                return payload, page_size
+            except urllib.error.HTTPError as exc:
+                self._last_request_time = time.monotonic()
+                last_error = exc
+                transient = exc.code in {408, 425, 429, 500, 502, 503, 504}
+                if not transient or attempt == retries - 1:
+                    raise
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+                try:
+                    delay = max(request_delay, float(retry_after))
+                except (TypeError, ValueError):
+                    if exc.code == 429:
+                        delay = min(120.0, 15.0 * (2 ** attempt))
+                    else:
+                        delay = request_delay * (2 ** attempt)
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                socket.timeout,
+                ConnectionResetError,
+                OSError,
+                ValueError,
+            ) as exc:
+                self._last_request_time = time.monotonic()
+                last_error = exc
+                if attempt == retries - 1:
+                    raise
+                delay = request_delay * (2 ** attempt)
+
+            page_size = max(1, page_size // 2)
+            print(
+                f"[⚠️ ARXIV RETRY] {last_error}. "
+                f"Retrying in {delay:.2f}s with {page_size} results..."
+            )
+            await asyncio.sleep(delay)
+
+        assert last_error is not None
+        raise last_error
+
+    async def _fetch_arxiv_oai_xml(
+        self,
+        *,
+        date_from: datetime | None = None,
+        date_to: datetime | None = None,
+        resumption_token: str | None = None,
+        max_retries: int = 3,
+        timeout: float = 60.0,
+        min_delay: float = _ARXIV_MIN_REQUEST_DELAY,
+    ) -> bytes:
+        """Fetch one official OAI-PMH metadata page as an API fallback."""
+        if resumption_token:
+            params = {
+                "verb": "ListRecords",
+                "resumptionToken": resumption_token,
+            }
+        else:
+            params = {
+                "verb": "ListRecords",
+                "set": "cs",
+                "metadataPrefix": "arXiv",
+                "from": (date_from or datetime.utcnow()).strftime("%Y-%m-%d"),
+                "until": (date_to or datetime.utcnow()).strftime("%Y-%m-%d"),
+            }
+
+        retries = max(1, int(max_retries))
+        base_timeout = max(1.0, float(timeout))
+        request_delay = max(3.0, float(min_delay))
+        last_error: Exception | None = None
+
+        for attempt in range(retries):
+            elapsed = time.monotonic() - self._last_request_time
+            if elapsed < request_delay:
+                await asyncio.sleep(request_delay - elapsed)
+
+            request = urllib.request.Request(
+                f"{_ARXIV_OAI_URL}?{urlencode(params)}",
+                headers={
+                    "User-Agent": _ARXIV_USER_AGENT,
+                    "Accept": "application/xml,text/xml",
+                    "Accept-Encoding": "identity",
+                    "Connection": "close",
+                },
+            )
+            attempt_timeout = min(120.0, base_timeout * (1.5 ** attempt))
+
+            def _read_response() -> bytes:
+                with urllib.request.urlopen(
+                    request, timeout=attempt_timeout
+                ) as response:
+                    return response.read()
+
+            try:
+                payload = await asyncio.to_thread(_read_response)
+                self._last_request_time = time.monotonic()
+                if not payload:
+                    raise ValueError("arXiv OAI-PMH returned an empty response")
+                return payload
+            except urllib.error.HTTPError as exc:
+                self._last_request_time = time.monotonic()
+                last_error = exc
+                if (
+                    exc.code not in {408, 425, 429, 500, 502, 503, 504}
+                    or attempt == retries - 1
+                ):
+                    raise
+                delay = (
+                    min(120.0, 15.0 * (2 ** attempt))
+                    if exc.code == 429
+                    else request_delay * (2 ** attempt)
+                )
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                socket.timeout,
+                ConnectionResetError,
+                OSError,
+                ValueError,
+            ) as exc:
+                self._last_request_time = time.monotonic()
+                last_error = exc
+                if attempt == retries - 1:
+                    raise
+                delay = request_delay * (2 ** attempt)
+
+            print(
+                f"[⚠️ ARXIV OAI RETRY] {last_error}. "
+                f"Retrying in {delay:.2f}s..."
+            )
+            await asyncio.sleep(delay)
+
+        assert last_error is not None
+        raise last_error
+
+    @staticmethod
+    def _parse_arxiv_oai_records(
+        xml_data: bytes,
+    ) -> tuple[list[dict], str | None]:
+        """Convert an OAI-PMH arXiv page to the enhanced-forager record shape."""
+        oai_ns = "http://www.openarchives.org/OAI/2.0/"
+        arxiv_ns = "http://arxiv.org/OAI/arXiv/"
+        root = ET.fromstring(xml_data)
+        papers: list[dict] = []
+
+        for record in root.findall(f".//{{{oai_ns}}}record"):
+            header = record.find(f"{{{oai_ns}}}header")
+            if header is not None and header.get("status") == "deleted":
+                continue
+            metadata = record.find(f"{{{oai_ns}}}metadata")
+            if metadata is None:
+                continue
+            paper = metadata.find(f"{{{arxiv_ns}}}arXiv")
+            if paper is None:
+                continue
+
+            paper_id = (paper.findtext(f"{{{arxiv_ns}}}id") or "").strip()
+            if not paper_id:
+                continue
+            created = (paper.findtext(f"{{{arxiv_ns}}}created") or "").strip()
+            published = None
+            for date_format in ("%Y-%m-%d", "%d-%b-%Y"):
+                try:
+                    published = datetime.strptime(created, date_format)
+                    break
+                except ValueError:
+                    continue
+            if published is None:
+                published = datetime.utcnow()
+            authors = []
+            for author in paper.findall(
+                f"{{{arxiv_ns}}}authors/{{{arxiv_ns}}}author"
+            ):
+                forenames = (
+                    author.findtext(f"{{{arxiv_ns}}}forenames") or ""
+                ).strip()
+                keyname = (
+                    author.findtext(f"{{{arxiv_ns}}}keyname") or ""
+                ).strip()
+                name = " ".join(part for part in (forenames, keyname) if part)
+                if name:
+                    authors.append(name)
+
+            papers.append({
+                "paper_id": paper_id,
+                "entry_id": f"https://arxiv.org/abs/{paper_id}",
+                "title": " ".join(
+                    (paper.findtext(f"{{{arxiv_ns}}}title") or "").split()
+                ),
+                "abstract": " ".join(
+                    (paper.findtext(f"{{{arxiv_ns}}}abstract") or "").split()
+                ),
+                "published": published,
+                "authors": authors,
+                "categories": (
+                    paper.findtext(f"{{{arxiv_ns}}}categories") or ""
+                ).split(),
+                "pdf_url": f"https://arxiv.org/pdf/{paper_id}",
+            })
+
+        token = root.findtext(
+            f".//{{{oai_ns}}}resumptionToken",
+            default="",
+        ).strip()
+        return papers, token or None
+
+    async def fetch_latest_paper(self, topic: str, max_retries: int = 3, timeout: float = 30.0) -> str:
         """
         Fetch the most relevant arXiv paper for a given topic.
         
@@ -82,35 +353,24 @@ class ArXivForager:
         Parameters:
             topic (str): The search topic to query on arXiv.
             max_retries (int): Maximum number of retry attempts on network failures. Default 3.
-            timeout (float): Request timeout in seconds. Default 12.0.
+            timeout (float): Initial request timeout in seconds. Default 30.0.
         
         Returns:
             str: A formatted string containing the paper's title and abstract on success, or an error message on failure.
         """
-        query = urllib.parse.quote_plus(topic)
-        url = f"https://export.arxiv.org/api/query?search_query=all:{query}&start=0&max_results=1&sortBy=relevance"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Linux; Android 10; Moto G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
-            "Accept": "application/xml,text/xml",
-            "Connection": "close"
-        }
-
-        xml_data = None
-        for attempt in range(max_retries):
-            try:
-                req = urllib.request.Request(url, headers=headers)
-                response = await asyncio.to_thread(urllib.request.urlopen, req, timeout=timeout)
-                xml_data = response.read()
-                break
-            except (urllib.error.URLError, TimeoutError, ConnectionResetError) as e:
-                if attempt == max_retries - 1:
-                    return f"arXiv API connection failed after {max_retries} attempts: {e}"
-                backoff = (2 ** attempt) * 0.5 + np.random.uniform(0, 0.1)
-                print(f"[⚠️ ARXIV RETRY] Timeout or connection error: {e}. Retrying in {backoff:.2f}s...")
-                await asyncio.sleep(backoff)
-
-        if not xml_data:
-            return "arXiv API returned empty payload or failed entirely."
+        try:
+            xml_data, _ = await self._fetch_arxiv_xml(
+                f"all:{topic.strip()}",
+                max_results=1,
+                sort_by="relevance",
+                max_retries=max_retries,
+                timeout=timeout,
+            )
+        except Exception as exc:
+            return (
+                f"arXiv API connection failed after "
+                f"{max(1, int(max_retries))} attempts: {exc}"
+            )
 
         try:
             root = ET.fromstring(xml_data)
@@ -142,22 +402,22 @@ class ArXivForager:
         except Exception as e:
             return f"arXiv processing failure: {e}"
 
-    async def upgraded_arxiv_backtracker(self, max_results: int = 2000, max_retries: int = 3, timeout: float = 12.0) -> bool:
+    async def upgraded_arxiv_backtracker(self, max_results: int = 200, max_retries: int = 3, timeout: float = 30.0) -> bool:
         """
         Asynchronously crawl backwards through arXiv CS submissions, vectorizing and storing papers while managing pagination limits.
         
-        This method maintains persistent crawler state (offset, timestamp, date window) in the database.
-        It enforces a 3.5-second rate limit per arXiv compliance and automatically recovers from the API's
-        10,000-result pagination limit by resetting the offset and narrowing the date window, allowing
-        indefinite continuation through earlier time periods. Fetched papers are vectorized via
-        `_scientific_record`, packed, and inserted into the database.
+        This method maintains a persistent offset inside a bounded one-day
+        submission window. Bounded windows keep the server-side result set
+        small, and the shared request helper performs paced, adaptive retries.
+        Fetched papers are vectorized via `_scientific_record`, packed, and
+        inserted into the database.
         
         Requires an active database connection via `self.node.memory_palace.conn`.
         
         Parameters:
-            max_results (int): Number of papers to fetch per API request. Defaults to 100.
+            max_results (int): Number of papers to fetch per API request. Defaults to 200.
             max_retries (int): Number of retry attempts for network failures. Defaults to 3.
-            timeout (float): Request timeout in seconds. Defaults to 12.0.
+            timeout (float): Initial request timeout in seconds. Defaults to 30.0.
         
         Returns:
             `True` if papers were successfully ingested, the 10k limit was recovered, or the date window
@@ -175,8 +435,10 @@ class ArXivForager:
         crawler_state = {
             'crawl_offset_index': 0,
             'last_crawl_time': 0.0,
-            'crawl_window_end': None,   # ISO date str upper bound (None = wide open)
+            'crawl_window_start': None,
+            'crawl_window_end': None,
         }
+        loaded_had_window_start = False
         try:
             async with conn.execute(
                 "SELECT content FROM traces WHERE id = 'ARXIV_CRAWLER_STATE';"
@@ -184,118 +446,153 @@ class ArXivForager:
                 row = await cursor.fetchone()
                 if row:
                     loaded = json.loads(row[0])
+                    loaded_had_window_start = bool(
+                        loaded.get('crawl_window_start')
+                    )
                     crawler_state.update(loaded)
-            self.node.runtime_metrics['arxiv_crawler_state'] = crawler_state
         except Exception:
             pass
 
-        # 2. Temporal pacing (3.5 s arXiv compliance)
+        window_start, window_end = self._normalise_backtracker_window(
+            crawler_state
+        )
+        if not loaded_had_window_start:
+            # A legacy offset belonged to an unbounded query and cannot be
+            # reused safely inside the new bounded window.
+            crawler_state['crawl_offset_index'] = 0
+        runtime_metrics = getattr(self.node, "runtime_metrics", None)
+        if isinstance(runtime_metrics, dict):
+            runtime_metrics['arxiv_crawler_state'] = crawler_state
+
+        # 2. Temporal pacing across separate !backtrack invocations
         current_time = time.time()
         elapsed_time = current_time - crawler_state.get('last_crawl_time', 0.0)
-        if elapsed_time < 3.5:
-            sleep_needed = 3.5 - elapsed_time
+        if elapsed_time < _ARXIV_MIN_REQUEST_DELAY:
+            sleep_needed = _ARXIV_MIN_REQUEST_DELAY - elapsed_time
             print(f"[⏳ TEMPORAL PACING] arXiv compliance delay active. Sleeping for {sleep_needed:.2f}s...")
             await asyncio.sleep(sleep_needed)
 
-        current_offset = crawler_state.get('crawl_offset_index', 0)
-        window_end = crawler_state.get('crawl_window_end')
+        current_offset = max(
+            0, int(crawler_state.get('crawl_offset_index', 0) or 0)
+        )
+        search_query = (
+            "cat:cs.* AND "
+            f"submittedDate:[{window_start} TO {window_end}]"
+        )
 
-        # ---- Build query with optional date-window filter ----
-        search_query = 'cat:cs.*'
-        if window_end:
-            # Scope to papers submitted on or before window_end
-            search_query += f'+AND+submittedDate:[*+TO+{window_end}]'
+        # 3. Fetch with adaptive retries. If the query API is throttled,
+        # continue through arXiv's official OAI-PMH metadata endpoint.
+        print(
+            f"[*] Fetching arXiv CS backlog at offset {current_offset}  "
+            f"(window {window_start}..{window_end})..."
+        )
+        raw_papers: list[dict] = []
+        total_available = 0
+        requested_page_size = min(
+            max(1, int(max_results)), _ARXIV_SAFE_PAGE_SIZE
+        )
+        oai_next_token = None
+        using_oai = bool(crawler_state.get('oai_resumption_token'))
 
-        BASE_URL = 'https://export.arxiv.org/api/query'
-        params = {
-            'search_query': search_query,
-            'sortBy': 'submittedDate',
-            'sortOrder': 'descending',
-            'max_results': max_results,
-            'start': current_offset,
-        }
-        query_url = f"{BASE_URL}?{urlencode(params)}"
-
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Linux; Android 10; Moto G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36",
-            "Accept": "application/xml,text/xml",
-            "Connection": "close",
-        }
-
-        # 3. Fetch with retries — detect 10k-cap errors
-        xml_data = None
-        for attempt in range(max_retries):
+        if not using_oai:
             try:
-                print(f"[*] Fetching arXiv CS backlog at offset {current_offset}"
-                      + (f"  (window ≤ {window_end})" if window_end else "")
-                      + "...")
-                req = urllib.request.Request(query_url, headers=headers)
-                response = await asyncio.to_thread(urllib.request.urlopen, req, timeout=timeout)
-                xml_data = response.read()
-                break
-            except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ConnectionResetError) as e:
-                err_str = str(e)
-                is_500 = '500' in err_str or 'Internal Server Error' in err_str
-
-                if attempt == max_retries - 1:
-                    # ---- 10k hard-cap recovery: reset offset, narrow date window ----
-                    if is_500 and current_offset >= 9_000:
-                        print("[🔄 10K CAP] arXiv refuses start>=10k. "
-                              "Resetting offset to 0 and narrowing date window...")
-                        self._advance_backtracker_window(crawler_state)
-                        crawler_state['crawl_offset_index'] = 0
-                        crawler_state['last_crawl_time'] = time.time()
-                        await conn.execute(
-                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
-                            "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
-                            "'arXiv Backtracker Crawler State Offset', NULL)",
-                            (json.dumps(crawler_state), datetime.now().isoformat()),
+                xml_data, requested_page_size = await self._fetch_arxiv_xml(
+                    search_query,
+                    start=current_offset,
+                    max_results=requested_page_size,
+                    max_retries=max_retries,
+                    timeout=timeout,
+                )
+                root = ET.fromstring(xml_data)
+                entries = root.findall('{http://www.w3.org/2005/Atom}entry')
+                total_text = root.findtext(
+                    '{http://a9.com/-/spec/opensearch/1.1/}totalResults',
+                    '0',
+                )
+                try:
+                    total_available = int(total_text)
+                except (TypeError, ValueError):
+                    total_available = 0
+                for entry in entries:
+                    published = (
+                        entry.findtext(
+                            '{http://www.w3.org/2005/Atom}published'
+                        ) or ""
+                    ).strip()
+                    try:
+                        published_dt = datetime.fromisoformat(
+                            published.rstrip("Z")
                         )
-                        await conn.commit()
-                        print("[+] Date window advanced. Run !backtrack again to continue.")
-                        return True  # state saved, caller re-invokes
+                    except ValueError:
+                        published_dt = datetime.utcnow()
+                    raw_papers.append({
+                        "title": (
+                            entry.findtext(
+                                '{http://www.w3.org/2005/Atom}title'
+                            ) or ""
+                        ).strip(),
+                        "abstract": " ".join(
+                            (
+                                entry.findtext(
+                                    '{http://www.w3.org/2005/Atom}summary'
+                                ) or ""
+                            ).split()
+                        ),
+                        "published": published_dt,
+                        "categories": [
+                            category.get("term", "")
+                            for category in entry.findall(
+                                '{http://www.w3.org/2005/Atom}category'
+                            )
+                        ],
+                    })
+            except Exception as api_exc:
+                print(
+                    f"[⚠️ ARXIV FALLBACK] Query API unavailable ({api_exc}); "
+                    "switching to official OAI-PMH metadata."
+                )
+                using_oai = True
 
-                    print(f"[-] Backtracker network failed after {max_retries} attempts: {e}")
-                    return False
-
-                backoff = (2 ** attempt) * 1.5 + np.random.uniform(0, 0.1)
-                print(f"[⚠️ ARXIV RETRY] Connection error: {e}. Retrying in {backoff:.2f}s...")
-                await asyncio.sleep(backoff)
-
-        if not xml_data:
-            return False
+        if using_oai:
+            try:
+                oai_xml = await self._fetch_arxiv_oai_xml(
+                    date_from=self._parse_backtracker_timestamp(window_start),
+                    date_to=self._parse_backtracker_timestamp(window_end),
+                    resumption_token=crawler_state.get(
+                        'oai_resumption_token'
+                    ),
+                    max_retries=max_retries,
+                    timeout=max(60.0, timeout),
+                )
+                raw_papers, oai_next_token = self._parse_arxiv_oai_records(
+                    oai_xml
+                )
+            except Exception as oai_exc:
+                print(
+                    f"[-] Backtracker network failed on both arXiv endpoints: "
+                    f"{oai_exc}"
+                )
+                crawler_state['last_crawl_time'] = time.time()
+                await self._save_backtracker_state(conn, crawler_state)
+                return False
 
         # 4. Parse and ingest
         try:
-            root = ET.fromstring(xml_data)
-            entries = root.findall('{http://www.w3.org/2005/Atom}entry')
-
-            if not entries:
-                if current_offset > 0:
-                    # We're past the last page for this window — advance the window
-                    print("[🔄 WINDOW EDGE] No more results at this offset. "
-                          "Narrowing date window to continue...")
-                    self._advance_backtracker_window(crawler_state)
-                    crawler_state['crawl_offset_index'] = 0
-                else:
-                    # offset == 0 and no entries: either truly done or window is empty
-                    if window_end:
-                        print("[🔄 EMPTY WINDOW] No papers in this date range. "
-                              "Advancing window further back...")
-                        self._advance_backtracker_window(crawler_state)
-                        crawler_state['crawl_offset_index'] = 0
-                    else:
-                        print("[+] Backtracker reached the absolute end of the arXiv CS timeline.")
-                        return False
-
+            if not raw_papers:
+                if using_oai and oai_next_token:
+                    crawler_state['oai_resumption_token'] = oai_next_token
+                    crawler_state['last_crawl_time'] = time.time()
+                    await self._save_backtracker_state(conn, crawler_state)
+                    return True
+                if datetime.strptime(window_end, "%Y%m%d%H%M").year < 1991:
+                    print("[+] Backtracker reached the start of the arXiv timeline.")
+                    return False
+                print("[🔄 WINDOW EDGE] Advancing to the previous bounded window...")
+                crawler_state.pop('oai_resumption_token', None)
+                self._advance_backtracker_window(crawler_state)
+                crawler_state['crawl_offset_index'] = 0
                 crawler_state['last_crawl_time'] = time.time()
-                await conn.execute(
-                    "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
-                    "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
-                    "'arXiv Backtracker Crawler State Offset', NULL)",
-                    (json.dumps(crawler_state), datetime.now().isoformat()),
-                )
-                await conn.commit()
+                await self._save_backtracker_state(conn, crawler_state)
                 print("[+] Date window advanced. Run !backtrack again to continue.")
                 return True
 
@@ -303,11 +600,11 @@ class ArXivForager:
             stamp_ts = datetime.now().isoformat()
             earliest_published = None
 
-            for entry in entries:
-                title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
-                summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.strip()
-                summary = " ".join(summary.split())
-                published = entry.find('{http://www.w3.org/2005/Atom}published').text.strip()
+            for paper in raw_papers:
+                title = paper.get("title", "").strip()
+                summary = " ".join(paper.get("abstract", "").split())
+                published_dt = paper.get("published") or datetime.utcnow()
+                published = published_dt.isoformat()
 
                 # Track the earliest pub date in this batch for window advancement
                 if earliest_published is None or published < earliest_published:
@@ -319,6 +616,7 @@ class ArXivForager:
                     engram_hash,
                     title,
                     summary,
+                    categories=paper.get("categories", ()),
                     published=published,
                 )
                 blob_data = pack_vector(record.vector)
@@ -335,67 +633,113 @@ class ArXivForager:
             stamped_count = len(ingest_rows)
 
             # 5. Advance state
-            new_offset = current_offset + len(entries)
+            new_offset = current_offset + len(raw_papers)
 
-            # If the new offset is dangerously close to the 10k cap, pre-emptively
-            # advance the window so the next call doesn't hit the wall
-            if new_offset >= 9_500:
+            if using_oai and oai_next_token:
+                crawler_state['oai_resumption_token'] = oai_next_token
+                crawler_state['crawl_offset_index'] = 0
+            elif using_oai:
+                crawler_state.pop('oai_resumption_token', None)
+                self._advance_backtracker_window(crawler_state)
+                crawler_state['crawl_offset_index'] = 0
+            elif new_offset >= 9_500:
                 print("[🔄 10K GUARD] Approaching arXiv 10k cap. "
                       "Advancing date window pre-emptively...")
                 self._advance_backtracker_window(crawler_state, earliest_published)
+                crawler_state['crawl_offset_index'] = 0
+            elif (
+                (total_available > 0 and new_offset >= total_available)
+                or len(raw_papers) < requested_page_size
+            ):
+                self._advance_backtracker_window(crawler_state)
                 crawler_state['crawl_offset_index'] = 0
             else:
                 crawler_state['crawl_offset_index'] = new_offset
 
             crawler_state['last_crawl_time'] = time.time()
-
-            await conn.execute(
-                "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
-                "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
-                "'arXiv Backtracker Crawler State Offset', NULL)",
-                (json.dumps(crawler_state), datetime.now().isoformat()),
-            )
-            await conn.commit()
+            await self._save_backtracker_state(conn, crawler_state)
 
             print(f"[+] [ARXIV BACKTRACKER] Successfully vectorized and ingested {stamped_count} papers.")
-            print(f"    Offset: {new_offset}  |  Window end: {window_end or 'unbounded'}")
+            print(
+                f"    Next offset: {crawler_state['crawl_offset_index']}  |  "
+                f"Window: {crawler_state['crawl_window_start']}.."
+                f"{crawler_state['crawl_window_end']}"
+            )
             return True
 
         except Exception as e:
             print(f"[-] Backtracker processing error: {e}")
             return False
 
+    @staticmethod
+    def _parse_backtracker_timestamp(value) -> datetime | None:
+        if not value:
+            return None
+        text = str(value).strip().rstrip("Z")
+        try:
+            if len(text) == 12 and text.isdigit():
+                return datetime.strptime(text, "%Y%m%d%H%M")
+            return datetime.fromisoformat(text)
+        except (TypeError, ValueError):
+            return None
+
+    def _normalise_backtracker_window(
+        self, crawler_state: dict
+    ) -> tuple[str, str]:
+        """Upgrade legacy unbounded state to a contiguous one-day window."""
+        end_dt = self._parse_backtracker_timestamp(
+            crawler_state.get('crawl_window_end')
+        ) or datetime.utcnow()
+        start_dt = self._parse_backtracker_timestamp(
+            crawler_state.get('crawl_window_start')
+        )
+        if start_dt is None or start_dt >= end_dt:
+            start_dt = end_dt - _ARXIV_BACKTRACK_WINDOW
+        crawler_state['crawl_window_start'] = start_dt.strftime("%Y%m%d%H%M")
+        crawler_state['crawl_window_end'] = end_dt.strftime("%Y%m%d%H%M")
+        return (
+            crawler_state['crawl_window_start'],
+            crawler_state['crawl_window_end'],
+        )
+
+    async def _save_backtracker_state(self, conn, crawler_state: dict) -> None:
+        await conn.execute(
+            "INSERT OR REPLACE INTO traces "
+            "(id, content, tier, timestamp, tags, vector_blob) "
+            "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
+            "'arXiv Backtracker Crawler State Offset', NULL)",
+            (json.dumps(crawler_state), datetime.now().isoformat()),
+        )
+        await conn.commit()
+
     def _advance_backtracker_window(self, crawler_state: dict, earliest_published: str = None) -> None:
         """
         Push the date window further into the past so the next crawl cycle
         can continue beyond the arXiv 10k hard cap.
 
-        If *earliest_published* is given (from the most recent batch) the
-        window is set to one day before that paper's date.  Otherwise the
-        existing window_end is pushed back by 30 days.
+        If *earliest_published* is given, continue at that paper's minute.
+        Otherwise continue at the current window start. The shared
+        boundary minute is intentionally re-read so no same-minute submission
+        can be skipped; stable trace IDs make those duplicates harmless.
         """
-
-        if earliest_published:
-            try:
-                pub_dt = datetime.fromisoformat(earliest_published.rstrip("Z"))
-                new_end = pub_dt - timedelta(days=1)
-            except (ValueError, TypeError):
-                new_end = datetime.now() - timedelta(days=30)
-        else:
-            old_end = crawler_state.get('crawl_window_end')
-            if old_end:
-                try:
-                    old_dt = datetime.fromisoformat(str(old_end).rstrip("Z"))
-                    new_end = old_dt - timedelta(days=30)
-                except (ValueError, TypeError):
-                    new_end = datetime.now() - timedelta(days=30)
-            else:
-                # First time narrowing: start 30 days ago
-                new_end = datetime.now() - timedelta(days=30)
-
+        new_end = self._parse_backtracker_timestamp(earliest_published)
+        if new_end is None:
+            new_end = self._parse_backtracker_timestamp(
+                crawler_state.get('crawl_window_start')
+            )
+        if new_end is None:
+            old_end = self._parse_backtracker_timestamp(
+                crawler_state.get('crawl_window_end')
+            ) or datetime.utcnow()
+            new_end = old_end - _ARXIV_BACKTRACK_WINDOW
+        new_start = new_end - _ARXIV_BACKTRACK_WINDOW
+        crawler_state['crawl_window_start'] = new_start.strftime("%Y%m%d%H%M")
         crawler_state['crawl_window_end'] = new_end.strftime("%Y%m%d%H%M")
-        print(f"[🪟 WINDOW] crawl_window_end set to {crawler_state['crawl_window_end']}"
-              + (f"  (earliest paper: {earliest_published})" if earliest_published else ""))
+        print(
+            f"[🪟 WINDOW] crawl window set to "
+            f"{crawler_state['crawl_window_start']}.."
+            f"{crawler_state['crawl_window_end']}"
+        )
 
 
 # =============================================================================
@@ -469,7 +813,7 @@ class ForagerConfig:
     narrower slices (see ``_search_via_urllib`` and ``forage()``).
     """
     query: str
-    max_results: int = 2000              # per-page results (arXiv allows <=2000)
+    max_results: int = 200               # reliable page size for broad queries
     categories: _Optional[_List[str]] = None
     max_days_old: int = 365
     batch_size: int = 50                 # papers to process in one async batch
@@ -615,16 +959,16 @@ class EnhancedArxivForager(ArXivForager):
         """
         Forage arXiv papers matching *config*.
 
-        When ``config.max_total`` exceeds the arXiv 10 000 hard cap the
-        date range is automatically sliced into narrower windows so the
-        API never returns more than ~5 000 results per window — well
-        under the limit.
+        The requested history is always sliced into bounded date windows.
+        This prevents even small result requests from forcing arXiv to sort
+        an entire year of matches before returning the first page.
 
         Papers are processed in async batches and VSA-indexed.
         """
         self.stats = ForagerStats()
         self.stats.start_time = _dt.now()
         self._paper_cache.clear()
+        self._overflow_windows.clear()
         self._scientific_index = ScientificMemoryIndex(self._scientific_encoder)
         self._storage_dir = _Path(config.storage_dir)
         self._storage_dir.mkdir(parents=True, exist_ok=True)
@@ -636,38 +980,31 @@ class EnhancedArxivForager(ArXivForager):
 
         try:
             # ------------------------------------------------------------------
-            # Date-range partitioning to bypass the arXiv 10k hard cap
+            # Bounded date windows keep each server-side query tractable.
             # ------------------------------------------------------------------
             now = _dt.now()
             overall_start = now - _td(days=config.max_days_old)
-
-            # If the total we want is under the hard cap, do a single query.
-            # Otherwise slice into windows that target ~5k results each.
-            if config.max_total <= ForagerConfig._ARXIV_HARD_LIMIT:
+            broad_query = config.query.strip() in {"", "*"}
+            window_days = 1 if broad_query else 7
+            window_delta = _td(days=window_days)
+            max_windows = max(
+                1,
+                (max(0, int(config.max_days_old)) + window_days - 1)
+                // window_days,
+            )
+            date_windows = []
+            cursor = now
+            while cursor > overall_start and len(date_windows) < max_windows:
+                w_start = max(overall_start, cursor - window_delta)
+                date_windows.append((w_start, cursor))
+                cursor = w_start
+            if not date_windows:
                 date_windows = [(overall_start, now)]
-            else:
-                # Estimate: how many windows do we need?
-                # Heuristic: ~5k papers per window to stay safely under 10k
-                safe_per_window = 5_000
-                total_wanted = min(config.max_total, 1_000_000)
-                num_windows = max(1, total_wanted // safe_per_window)
-                window_delta = _td(days=max(1, config.max_days_old // num_windows))
-                date_windows = []
-                cursor = now
-                while cursor > overall_start and len(date_windows) < 200:
-                    w_start = cursor - window_delta
-                    if w_start < overall_start:
-                        w_start = overall_start
-                    date_windows.append((w_start, cursor))
-                    cursor = w_start
-                    if w_start <= overall_start:
-                        break
 
             _eaf_logger.info(
-                "Date windows: %d  (target ~%d papers/window)",
-                len(date_windows),
-                safe_per_window if config.max_total > ForagerConfig._ARXIV_HARD_LIMIT
-                else config.max_total,
+                "Date windows: %d  (%d day%s each)",
+                len(date_windows), window_days,
+                "" if window_days == 1 else "s",
             )
 
             raw_papers: _List[dict] = []
@@ -686,9 +1023,6 @@ class EnhancedArxivForager(ArXivForager):
                     df.strftime("%Y-%m-%d"), dt_.strftime("%Y-%m-%d"),
                     len(chunk_papers), len(raw_papers),
                 )
-                # Rate-limit between date windows
-                if wi + 1 < len(date_windows) and chunk_papers:
-                    await asyncio.sleep(config.rate_limit_delay)
 
             # ------------------------------------------------------------------
             # Fractal subdivision: recursively split overflowed windows
@@ -727,19 +1061,14 @@ class EnhancedArxivForager(ArXivForager):
                             sw_end.strftime("%Y-%m-%d") if sw_end else "?",
                             len(chunk), len(raw_papers),
                         )
-                        if chunk:
-                            await asyncio.sleep(config.rate_limit_delay)
 
             # ------------------------------------------------------------------
-            # Process in async batches with rate-limit spacing
+            # Process in async batches; network pacing is handled at fetch time
             # ------------------------------------------------------------------
             for i in range(0, len(raw_papers), config.batch_size):
                 batch = raw_papers[i:i + config.batch_size]
                 tasks = [self._process_paper_dict(p, config) for p in batch]
                 await asyncio.gather(*tasks, return_exceptions=True)
-
-                if i + config.batch_size < len(raw_papers):
-                    await asyncio.sleep(config.rate_limit_delay)
 
             self.stats.end_time = _dt.now()
             _eaf_logger.info(
@@ -828,27 +1157,18 @@ class EnhancedArxivForager(ArXivForager):
         Loops through pages of ``config.max_results`` until
         ``config.max_total`` papers are collected or the API returns empty.
         """
-        import xml.etree.ElementTree as _ET
-
         # Build the base search query, optionally scoped by date range
-        search_terms = f"all:{urllib.parse.quote_plus(config.query)}"
+        search_terms = f"all:{config.query.strip()}"
+        if config.categories:
+            category_terms = " OR ".join(
+                f"cat:{category}" for category in config.categories
+            )
+            search_terms = f"({category_terms}) AND ({search_terms})"
         if date_from is not None or date_to is not None:
             # arXiv date-range syntax: submittedDate:[YYYYMMDDHHMM TO YYYYMMDDHHMM]
             df_str = date_from.strftime("%Y%m%d%H%M") if date_from else "*"
             dt_str = date_to.strftime("%Y%m%d%H%M") if date_to else "*"
-            search_terms += (
-                f"+AND+submittedDate:[{df_str}+TO+{dt_str}]"
-            )
-
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Linux; Android 10; Moto G) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Mobile Safari/537.36"
-            ),
-            "Accept": "application/xml,text/xml",
-            "Connection": "close",
-        }
+            search_terms += f" AND submittedDate:[{df_str} TO {dt_str}]"
 
         NS = "{http://www.w3.org/2005/Atom}"
         ONS = "{http://a9.com/-/spec/opensearch/1.1/}"
@@ -858,43 +1178,41 @@ class EnhancedArxivForager(ArXivForager):
         start = 0
 
         while len(papers) < config.max_total:
-            per_page = min(config.max_results, config.max_total - len(papers))
-            url = (
-                f"https://export.arxiv.org/api/query"
-                f"?search_query={search_terms}"
-                f"&start={start}&max_results={per_page}"
-                f"&sortBy=submittedDate&sortOrder=descending"
+            per_page = min(
+                max(1, int(config.max_results)),
+                _ARXIV_SAFE_PAGE_SIZE,
+                config.max_total - len(papers),
             )
 
-            xml_data = None
-            for attempt in range(3):
-                try:
-                    req = urllib.request.Request(url, headers=headers)
-                    response = await asyncio.to_thread(
-                        urllib.request.urlopen, req, timeout=12.0
-                    )
-                    xml_data = response.read()
-                    break
-                except Exception as exc:
-                    if attempt == 2:
-                        _eaf_logger.error(
-                            "arXiv search failed [start=%d]: %s", start, exc
-                        )
-                        return papers  # return what we have so far
-                    await asyncio.sleep((2 ** attempt) * 0.5)
-
-            if not xml_data:
-                break
+            try:
+                xml_data, requested_page_size = await self._fetch_arxiv_xml(
+                    search_terms,
+                    start=start,
+                    max_results=per_page,
+                    max_retries=3,
+                    timeout=30.0,
+                    min_delay=config.rate_limit_delay,
+                )
+            except Exception as exc:
+                _eaf_logger.warning(
+                    "arXiv query API failed [start=%d]: %s; using OAI-PMH",
+                    start, exc,
+                )
+                return await self._search_via_oai(
+                    config, date_from, date_to
+                )
 
             page_papers = 0
             try:
-                root = _ET.fromstring(xml_data)
+                root = ET.fromstring(xml_data)
+                entries = root.findall(f"{NS}entry")
+                returned_count = len(entries)
 
                 # Check totalResults from OpenSearch namespace
                 total_str = root.findtext(f"{ONS}totalResults", "")
                 total_available = int(total_str) if total_str else 0
 
-                for entry in root.findall(f"{NS}entry"):
+                for entry in entries:
                     pub_str = entry.findtext(f"{NS}published", "").strip()
                     try:
                         pub_dt = _dt.fromisoformat(pub_str.rstrip("Z"))
@@ -927,9 +1245,7 @@ class EnhancedArxivForager(ArXivForager):
                         ],
                         "categories": [
                             t.get("term", "")
-                            for t in entry.findall(
-                                "{http://arxiv.org/schemas/atom}primary_category"
-                            )
+                            for t in entry.findall(f"{NS}category")
                         ],
                         "pdf_url": next(
                             (
@@ -951,32 +1267,100 @@ class EnhancedArxivForager(ArXivForager):
                 # Stop conditions:
                 # - no papers on this page (past the end or date-cutoff filtered all)
                 # - fewer papers returned than requested AND total_available says we're done
-                if page_papers == 0:
+                if returned_count == 0:
                     break
-                if page_papers < per_page and start + page_papers >= total_available:
+                start += returned_count
+                if (
+                    returned_count < requested_page_size
+                    or (total_available > 0 and start >= total_available)
+                ):
                     break
 
                 # Hard cap: arXiv won't return results beyond start=ARXIV_HARD_LIMIT
                 # Axiom A5 (Fractal Self-Organization): when a window overflows,
                 # recursively subdivide it — the same partitioning at every scale.
-                if start + per_page >= ForagerConfig._ARXIV_HARD_LIMIT:
+                if start >= ForagerConfig._ARXIV_HARD_LIMIT:
                     _eaf_logger.warning(
                         "Hit arXiv 10k hard cap for this date window — "
                         "triggering fractal subdivision."
                     )
                     # Signal the caller to subdivide this window
-                    self._overflow_windows.append((date_from, date_to))
+                    overflow_window = (date_from, date_to)
+                    if overflow_window not in self._overflow_windows:
+                        self._overflow_windows.append(overflow_window)
                     break
 
             except Exception as exc:
                 _eaf_logger.error("XML parse failed [start=%d]: %s", start, exc)
                 break
 
-            start += per_page
+        return papers
 
-            # Rate-limit pacing between pages
-            if start < config.max_total and page_papers > 0:
-                await asyncio.sleep(config.rate_limit_delay)
+    async def _search_via_oai(
+        self,
+        config: ForagerConfig,
+        date_from: _Optional[_dt],
+        date_to: _Optional[_dt],
+    ) -> _List[dict]:
+        """Fallback search over official OAI-PMH metadata, filtered locally."""
+        cutoff = _dt.now() - _td(days=config.max_days_old)
+        query_terms = [
+            "".join(ch for ch in term.lower() if ch.isalnum())
+            for term in config.query.split()
+        ]
+        query_terms = [
+            term for term in query_terms
+            if term and term not in {"and", "or", "not"}
+        ]
+        wanted_categories = set(config.categories or ())
+        papers: _List[dict] = []
+        seen_ids: set = set()
+        token = None
+
+        for _page in range(20):
+            try:
+                xml_data = await self._fetch_arxiv_oai_xml(
+                    date_from=date_from,
+                    date_to=date_to,
+                    resumption_token=token,
+                    max_retries=3,
+                    timeout=60.0,
+                    min_delay=config.rate_limit_delay,
+                )
+                records, token = self._parse_arxiv_oai_records(xml_data)
+            except Exception as exc:
+                self.stats.errors += 1
+                _eaf_logger.error("arXiv OAI-PMH fallback failed: %s", exc)
+                break
+
+            for record in records:
+                if len(papers) >= config.max_total:
+                    break
+                if record["paper_id"] in seen_ids:
+                    continue
+                if record["published"] < cutoff:
+                    continue
+                if (
+                    wanted_categories
+                    and not wanted_categories.intersection(
+                        record.get("categories", ())
+                    )
+                ):
+                    continue
+                searchable = (
+                    f"{record.get('title', '')} "
+                    f"{record.get('abstract', '')}"
+                ).lower()
+                if query_terms and not all(
+                    term in searchable for term in query_terms
+                ):
+                    continue
+                seen_ids.add(record["paper_id"])
+                papers.append(record)
+                self.stats.papers_fetched += 1
+
+            if len(papers) >= config.max_total or not token:
+                break
 
         return papers
 
