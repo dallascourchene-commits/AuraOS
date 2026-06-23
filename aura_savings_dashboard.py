@@ -296,6 +296,7 @@ async function refresh() {
         (r.task || '') + (r.aspect ? ':' + r.aspect + ' ' : ' ') +
         'in=' + r.prompt_tokens + ' out=' + r.output_tokens + ' ' +
         'cost=' + fmtUSD(r.cost_usd) + ' ' +
+        '<span class="' + savedClass + '">tok_saved=' + fmtNum(r.tokens_saved || 0) + '</span> ' +
         '<span class="' + savedClass + '">saved=' + fmtUSD(r.cost_saved_usd) + '</span> ' +
         'lat=' + fmtLat(r.latency_sec) +
         (r.error ? '<span' + errClass + '> ERR: ' + r.error + '</span>' : '') +

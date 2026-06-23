@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa8e5-[Q-SYS:2A86BBF77059E372]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit / Honest Communication)
-DEPENDENCIES: json, os, time, aura_api_rotator
+DEPENDENCIES: json, os, time, aura_api_rotator, aura_llm_call_logger
 FUNCTIONS: ExternalLLM, interpret, generate, generate_openai_compatible_payload
 SYNOPSIS: [CODE]
 def optimized_fallback():
@@ -49,8 +49,7 @@ from aura_api_rotator import (
     openai_compatible_generate,
 )
 
-from aura_savings_db import log_call as _log_call_to_db
-from aura_substrate import estimate_tokens as _estimate_tokens
+from aura_llm_call_logger import log_llm_call
 from aura_pre_egress_interceptor import apply_pre_egress_profile
 
 # External providers only. Internal/local engines are intentionally excluded —
@@ -198,6 +197,11 @@ def generate_openai_compatible_payload(
     temperature: float = 0.0,
     response_format: dict[str, Any] | None = None,
     timeout: float = 60,
+    task: str | None = "aura_fusion",
+    aspect: str | None = "fusion",
+    baseline_prompt_tokens: int | None = None,
+    baseline_output_tokens: int | None = None,
+    baseline_cost_usd: float | None = None,
 ) -> tuple[str | None, str | None, float, bool]:
     """Single egress helper for custom OpenAI-compatible AuraFusion calls.
 
@@ -220,14 +224,36 @@ def generate_openai_compatible_payload(
         payload["response_format"] = response_format
 
     t0 = time.time()
-    text, err = openai_compatible_generate(base_url, api_key, payload, timeout=timeout)
+    text, err = openai_compatible_generate(
+        base_url,
+        api_key,
+        payload,
+        timeout=timeout,
+        task=task,
+        aspect=aspect,
+        baseline_prompt_tokens=baseline_prompt_tokens,
+        baseline_output_tokens=baseline_output_tokens,
+        baseline_cost_usd=baseline_cost_usd,
+        savings_metadata={"provider": provider, "response_format": bool(response_format)},
+    )
     used_schema = bool(response_format and not err)
     if err and response_format and any(
         marker in str(err).lower()
         for marker in ("response_format", "json_schema", "schema", "400", "unsupported")
     ):
         payload.pop("response_format", None)
-        text, err = openai_compatible_generate(base_url, api_key, payload, timeout=timeout)
+        text, err = openai_compatible_generate(
+            base_url,
+            api_key,
+            payload,
+            timeout=timeout,
+            task=task,
+            aspect=aspect,
+            baseline_prompt_tokens=baseline_prompt_tokens,
+            baseline_output_tokens=baseline_output_tokens,
+            baseline_cost_usd=baseline_cost_usd,
+            savings_metadata={"provider": provider, "response_format": False, "schema_retry": True},
+        )
         used_schema = False
     return text, err, time.time() - t0, used_schema
 
@@ -350,33 +376,26 @@ class ExternalLLM:
                          output_text: str | None, latency_sec: float,
                          error: str | None = None) -> None:
         """Log this LLM call to the persistent savings database (best-effort)."""
-        try:
-            in_tokens = _estimate_tokens(prompt)
-            out_tokens = _estimate_tokens(output_text) if output_text else 0
-            cost = 0.0 if error else self.cost(in_tokens, out_tokens)
-
-            _log_call_to_db(
-                provider=self.provider,
-                model=self.model,
-                call_type=call_type,
-                task=self._task,
-                aspect=self._aspect,
-                prompt_tokens=in_tokens,
-                output_tokens=out_tokens,
-                cost_usd=cost,
-                latency_sec=latency_sec,
-                baseline_prompt_tokens=self._baseline_prompt,
-                baseline_output_tokens=self._baseline_output,
-                baseline_cost_usd=self._baseline_cost,
-                error=error,
-            )
-        except Exception:
-            pass  # never let logging break the call
+        log_llm_call(
+            provider=self.provider,
+            model=self.model,
+            call_type=call_type,
+            prompt_text=prompt,
+            output_text=output_text,
+            latency_sec=latency_sec,
+            error=error,
+            task=self._task,
+            aspect=self._aspect,
+            baseline_prompt_tokens=self._baseline_prompt,
+            baseline_output_tokens=self._baseline_output,
+            baseline_cost_usd=self._baseline_cost,
+            metadata={"source": "ExternalLLM._log_to_savings"},
+        )
 
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
                  router_context: "str | None" = None, slot_matrix: Any | None = None,
-                 pre_egress: bool = True):
+                 pre_egress: bool = True, call_type: str = "generate"):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
@@ -416,8 +435,25 @@ class ExternalLLM:
         t0 = time.time()
         text = None
         err = None
+        logged_by_helper = False
+        savings_meta = {
+            "source": "ExternalLLM.generate",
+            "pre_egress": pre_egress,
+            "pre_egress_profile": getattr(profile_decision, "profile_id", None),
+        }
         if self.is_gemini:
-            text, err = gemini_generate(full_prompt, secrets=self.secrets)
+            text, err = gemini_generate(
+                full_prompt,
+                secrets=self.secrets,
+                call_type=call_type,
+                task=self._task,
+                aspect=self._aspect,
+                baseline_prompt_tokens=self._baseline_prompt,
+                baseline_output_tokens=self._baseline_output,
+                baseline_cost_usd=self._baseline_cost,
+                savings_metadata=savings_meta,
+            )
+            logged_by_helper = True
         elif self.api == "anthropic":
             text, err = _anthropic_generate(self.cfg["url"], self.api_key, self.model,
                                             full_prompt, max_tokens, timeout=60)
@@ -428,9 +464,23 @@ class ExternalLLM:
                 "max_tokens": max_tokens,
                 "temperature": temperature,
             }
-            text, err = openai_compatible_generate(self.cfg["url"], self.api_key, payload, timeout=60)
+            text, err = openai_compatible_generate(
+                self.cfg["url"],
+                self.api_key,
+                payload,
+                timeout=60,
+                call_type=call_type,
+                task=self._task,
+                aspect=self._aspect,
+                baseline_prompt_tokens=self._baseline_prompt,
+                baseline_output_tokens=self._baseline_output,
+                baseline_cost_usd=self._baseline_cost,
+                savings_metadata=savings_meta,
+            )
+            logged_by_helper = True
         latency = time.time() - t0
-        self._log_to_savings("generate", full_prompt, text, latency, error=err)
+        if not logged_by_helper:
+            self._log_to_savings(call_type, full_prompt, text, latency, error=err)
         return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #
@@ -457,10 +507,8 @@ class ExternalLLM:
             max_tokens=max_tokens,
             slot_matrix=slot_matrix,
             pre_egress=pre_egress,
+            call_type="interpret",
         )
-        # Override the generate-level log with the correct call_type
-        if not err:
-            self._log_to_savings("interpret", prompt, text, latency)
         return text, err, latency
 
     def cost(self, in_tokens: int, out_tokens: int) -> float:

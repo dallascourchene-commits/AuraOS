@@ -220,7 +220,9 @@ class SavingsDB:
             rows = conn.execute(
                 """SELECT ts, provider, model, call_type, task, aspect,
                           prompt_tokens, output_tokens, cost_usd, latency_sec,
-                          tokens_saved, cost_saved_usd, error
+                          baseline_prompt_tokens, baseline_output_tokens,
+                          baseline_cost_usd, tokens_saved, cost_saved_usd,
+                          error, metadata
                    FROM llm_calls
                    ORDER BY id DESC
                    LIMIT ?""", (limit,)
