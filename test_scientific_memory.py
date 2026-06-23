@@ -3,11 +3,20 @@
 import asyncio
 import base64
 from datetime import datetime
+import json
+from types import SimpleNamespace
+from urllib.parse import parse_qs, urlsplit
+import urllib.request
 
 import numpy as np
 import pytest
 
-from arxiv_forager import ArxivPaper, EnhancedArxivForager, ForagerConfig
+from arxiv_forager import (
+    ArXivForager,
+    ArxivPaper,
+    EnhancedArxivForager,
+    ForagerConfig,
+)
 from aura_scientific_memory import (
     DIMENSIONS,
     ScientificMemoryIndex,
@@ -1051,3 +1060,318 @@ def test_load_disk_cache_skips_already_cached_paper(tmp_path):
     forager._load_disk_cache()
     # Should not change the existing entry
     assert forager._paper_cache["2401.77777"] is paper
+
+
+class _FakeArxivResponse:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, traceback):
+        return False
+
+    def read(self):
+        return self.payload
+
+
+def test_arxiv_request_retries_with_smaller_page(monkeypatch):
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"></feed>"""
+    calls = []
+
+    def fake_urlopen(request, timeout):
+        calls.append((request.full_url, timeout))
+        if len(calls) == 1:
+            raise TimeoutError("read timed out")
+        return _FakeArxivResponse(payload)
+
+    async def no_sleep(_delay):
+        return None
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(asyncio, "sleep", no_sleep)
+
+    forager = ArXivForager()
+    xml_data, page_size = asyncio.run(
+        forager._fetch_arxiv_xml(
+            "cat:cs.AI",
+            max_results=100,
+            max_retries=2,
+            timeout=1.0,
+        )
+    )
+
+    first = parse_qs(urlsplit(calls[0][0]).query)
+    second = parse_qs(urlsplit(calls[1][0]).query)
+    assert xml_data == payload
+    assert first["max_results"] == ["100"]
+    assert second["max_results"] == ["50"]
+    assert page_size == 50
+    assert calls[1][1] > calls[0][1]
+
+
+def test_backtracker_window_upgrade_is_bounded_and_contiguous():
+    state = {
+        "crawl_offset_index": 900,
+        "crawl_window_end": "202605232202",
+    }
+    forager = ArXivForager()
+
+    start, end = forager._normalise_backtracker_window(state)
+    assert start == "202605222202"
+    assert end == "202605232202"
+
+    forager._advance_backtracker_window(state)
+    assert state["crawl_window_end"] == "202605222202"
+    assert state["crawl_window_start"] == "202605212202"
+
+
+def test_backtracker_reuses_earliest_paper_boundary_minute():
+    state = {
+        "crawl_window_start": "202605222202",
+        "crawl_window_end": "202605232202",
+    }
+    forager = ArXivForager()
+    forager._advance_backtracker_window(
+        state, "2026-05-23T04:15:00Z"
+    )
+
+    assert state["crawl_window_end"] == "202605230415"
+    assert state["crawl_window_start"] == "202605220415"
+
+
+class _FakeExecuteResult:
+    def __init__(self, row=None):
+        self.row = row
+
+    def __await__(self):
+        async def _done():
+            return self
+
+        return _done().__await__()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, traceback):
+        return False
+
+    async def fetchone(self):
+        return self.row
+
+
+class _FakeBacktrackerConnection:
+    def __init__(self, state):
+        self.state = state
+        self.saved_states = []
+        self.ingested_rows = []
+        self.commits = 0
+
+    def execute(self, query, params=None):
+        if query.lstrip().startswith("SELECT"):
+            return _FakeExecuteResult((json.dumps(self.state),))
+        if params and params[0].startswith("{"):
+            self.saved_states.append(json.loads(params[0]))
+        return _FakeExecuteResult()
+
+    async def executemany(self, _query, rows):
+        self.ingested_rows.extend(rows)
+
+    async def commit(self):
+        self.commits += 1
+
+
+def test_backtracker_upgrades_legacy_state_before_fetch(monkeypatch):
+    state = {
+        "crawl_offset_index": 900,
+        "last_crawl_time": 0.0,
+        "crawl_window_end": "202605232202",
+    }
+    conn = _FakeBacktrackerConnection(state)
+    node = SimpleNamespace(
+        memory_palace=SimpleNamespace(conn=conn),
+        runtime_metrics={},
+    )
+    forager = ArXivForager(node)
+    captured = {}
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+      <opensearch:totalResults>1</opensearch:totalResults>
+      <entry>
+        <title>Bounded Backtracking</title>
+        <summary>Reliable metadata harvesting.</summary>
+        <published>2026-05-23T04:15:00Z</published>
+      </entry>
+    </feed>"""
+
+    async def fake_fetch(search_query, **kwargs):
+        captured["search_query"] = search_query
+        captured.update(kwargs)
+        return payload, kwargs["max_results"]
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", fake_fetch)
+    assert asyncio.run(
+        forager.upgraded_arxiv_backtracker(max_results=100)
+    )
+
+    assert captured["start"] == 0
+    assert captured["search_query"] == (
+        "cat:cs.* AND "
+        "submittedDate:[202605222202 TO 202605232202]"
+    )
+    assert len(conn.ingested_rows) == 1
+    assert conn.saved_states[-1]["crawl_offset_index"] == 0
+    assert conn.commits == 1
+
+
+_OAI_PAYLOAD = b"""<?xml version="1.0"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
+         xmlns:arXiv="http://arxiv.org/OAI/arXiv/">
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>oai:arXiv.org:2601.00001</identifier>
+        <datestamp>2026-01-02</datestamp>
+        <setSpec>cs</setSpec>
+      </header>
+      <metadata>
+        <arXiv:arXiv>
+          <arXiv:id>2601.00001</arXiv:id>
+          <arXiv:created>02-Jan-2026</arXiv:created>
+          <arXiv:authors>
+            <arXiv:author>
+              <arXiv:keyname>Researcher</arXiv:keyname>
+              <arXiv:forenames>A.</arXiv:forenames>
+            </arXiv:author>
+          </arXiv:authors>
+          <arXiv:title>Edge Vector Symbolic Memory</arXiv:title>
+          <arXiv:categories>cs.AI cs.LG</arXiv:categories>
+          <arXiv:abstract>
+            Hyperdimensional computing improves retrieval on edge devices.
+          </arXiv:abstract>
+        </arXiv:arXiv>
+      </metadata>
+    </record>
+    <resumptionToken/>
+  </ListRecords>
+</OAI-PMH>"""
+
+
+def test_oai_parser_returns_forager_record_shape():
+    records, token = ArXivForager._parse_arxiv_oai_records(_OAI_PAYLOAD)
+
+    assert token is None
+    assert records[0]["paper_id"] == "2601.00001"
+    assert records[0]["authors"] == ["A. Researcher"]
+    assert records[0]["categories"] == ["cs.AI", "cs.LG"]
+    assert records[0]["pdf_url"].endswith("/2601.00001")
+    assert records[0]["published"] == datetime(2026, 1, 2)
+
+
+def test_backtracker_falls_back_to_oai(monkeypatch):
+    state = {
+        "crawl_offset_index": 0,
+        "last_crawl_time": 0.0,
+        "crawl_window_start": "202601010000",
+        "crawl_window_end": "202601030000",
+    }
+    conn = _FakeBacktrackerConnection(state)
+    node = SimpleNamespace(
+        memory_palace=SimpleNamespace(conn=conn),
+        runtime_metrics={},
+    )
+    forager = ArXivForager(node)
+
+    async def failed_atom(*_args, **_kwargs):
+        raise TimeoutError("Atom API unavailable")
+
+    async def healthy_oai(**_kwargs):
+        return _OAI_PAYLOAD
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", failed_atom)
+    monkeypatch.setattr(forager, "_fetch_arxiv_oai_xml", healthy_oai)
+
+    assert asyncio.run(forager.upgraded_arxiv_backtracker(max_results=100))
+    assert len(conn.ingested_rows) == 1
+    assert conn.saved_states[-1]["crawl_window_end"] == "202601010000"
+
+
+def test_enhanced_search_uses_raw_query_and_safe_page_size(monkeypatch):
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+      <opensearch:totalResults>1</opensearch:totalResults>
+      <entry>
+        <id>https://arxiv.org/abs/2601.00001</id>
+        <title>Edge VSA</title>
+        <summary>Hyperdimensional retrieval on edge devices.</summary>
+        <published>2026-01-02T00:00:00Z</published>
+        <author><name>A. Researcher</name></author>
+        <category term="cs.AI"/>
+        <link href="https://arxiv.org/pdf/2601.00001" type="application/pdf"/>
+      </entry>
+    </feed>"""
+    captured = {}
+
+    async def fake_fetch(search_query, **kwargs):
+        captured["search_query"] = search_query
+        captured.update(kwargs)
+        return payload, kwargs["max_results"]
+
+    forager = EnhancedArxivForager()
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", fake_fetch)
+    config = ForagerConfig(
+        query="vector symbolic",
+        categories=["cs.AI"],
+        max_results=2_000,
+        max_total=500,
+        max_days_old=365,
+    )
+    papers = asyncio.run(
+        forager._search_via_urllib(
+            config,
+            datetime(2026, 1, 1),
+            datetime(2026, 1, 3),
+        )
+    )
+
+    assert captured["max_results"] == 200
+    assert captured["search_query"] == (
+        "(cat:cs.AI) AND (all:vector symbolic) AND "
+        "submittedDate:[202601010000 TO 202601030000]"
+    )
+    assert papers[0]["paper_id"] == "2601.00001"
+    assert papers[0]["categories"] == ["cs.AI"]
+
+
+def test_enhanced_search_falls_back_to_oai(monkeypatch):
+    forager = EnhancedArxivForager()
+
+    async def failed_atom(*_args, **_kwargs):
+        raise TimeoutError("Atom API unavailable")
+
+    async def healthy_oai(**_kwargs):
+        return _OAI_PAYLOAD
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", failed_atom)
+    monkeypatch.setattr(forager, "_fetch_arxiv_oai_xml", healthy_oai)
+    config = ForagerConfig(
+        query="vector symbolic",
+        categories=["cs.AI"],
+        max_total=1,
+        max_days_old=365,
+    )
+
+    papers = asyncio.run(
+        forager._search_via_urllib(
+            config,
+            datetime(2026, 1, 1),
+            datetime(2026, 1, 3),
+        )
+    )
+
+    assert papers[0]["paper_id"] == "2601.00001"
+    assert forager.stats.errors == 0
