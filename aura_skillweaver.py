@@ -28,16 +28,18 @@ No new dependencies beyond numpy (already in repo).
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import hashlib
 import json
 import os
+from pathlib import Path
 import re
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Optional
 
 import numpy as np
+
+from aura_scientific_memory import detect_contradictions, record_from_content
 
 # ---------------------------------------------------------------------------
 # Core Data Structures
@@ -83,6 +85,7 @@ class ResearchGateResult:
     reason: str = ""
     target_modules: list = field(default_factory=list)
     mutation_dag: Optional[dict] = None
+    contradictions: list = field(default_factory=list)
 
 
 @dataclass
@@ -582,14 +585,24 @@ class AuraSkillWeaver:
 
     def evaluate_research_gate(self, query, candidates_data):
         """
-        Full research relevance gate evaluation.
-
-        Args:
-            query: The user research query string
-            candidates_data: List of (trace_id, content, vector_blob) tuples
-
+        Evaluate research evidence and determine if code mutation should be allowed.
+        
+        Assesses candidate research traces against the query, checks for contradictions
+        in accepted sources, and makes a gating decision based on evidence quality and
+        target module availability. Returns ALLOW_MUTATION when sufficient evidence is
+        present with coherent findings and target modules identified, REFUSE_MUTATION
+        when no candidates meet relevance thresholds, or NEED_MORE_SOURCES when
+        evidence conflicts or target grounding is missing.
+        
+        Parameters:
+            query: The user research query string.
+            candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
+        
         Returns:
-            ResearchGateResult with decision and rationale
+            ResearchGateResult containing the gating decision (ALLOW_MUTATION,
+            REFUSE_MUTATION, or NEED_MORE_SOURCES), evaluated candidates ranked by
+            relevance, identified target modules, detected contradictions, and a
+            mutation DAG when mutation is allowed.
         """
         anchors = _derive_anchors_for_query(query)
         query_phasor = self._text_to_phasor(query)
@@ -622,6 +635,13 @@ class AuraSkillWeaver:
         subtasks = refine_decomposition(subtasks, evaluated, target_modules)
 
         accepted = [c for c in evaluated if c.accepted]
+        accepted_ids = {candidate.trace_id for candidate in accepted}
+        accepted_records = [
+            record_from_content(trace_id, content, blob)
+            for trace_id, content, blob in candidates_data
+            if trace_id in accepted_ids
+        ]
+        contradictions = detect_contradictions(accepted_records)
 
         if not accepted:
             decision = "REFUSE_MUTATION"
@@ -631,6 +651,20 @@ class AuraSkillWeaver:
                       + anchor_list + ". "
                       "ACTION: Ingest stronger source-sufficient papers before mutation.")
             final_score = max((c.concept_fit_score for c in evaluated), default=0.0)
+            dag = None
+
+        elif contradictions:
+            decision = "NEED_MORE_SOURCES"
+            pairs = ", ".join(
+                contradiction.left_id + " vs " + contradiction.right_id
+                for contradiction in contradictions[:3]
+            )
+            reason = (
+                "Accepted sources contain polarity conflicts on the same "
+                "mechanism/effect (" + pairs + "). ACTION: resolve the evidence "
+                "conflict before generating a mutation."
+            )
+            final_score = sum(c.concept_fit_score for c in accepted) / len(accepted)
             dag = None
 
         elif not target_modules:
@@ -657,6 +691,7 @@ class AuraSkillWeaver:
             reason=reason,
             target_modules=target_modules,
             mutation_dag=dag,
+            contradictions=contradictions,
         )
 
     def format_gate_report(self, result):
@@ -686,6 +721,17 @@ class AuraSkillWeaver:
             lines.append("TARGET_MODULES:")
             for mod in result.target_modules:
                 lines.append("  - " + mod)
+
+        if result.contradictions:
+            lines.append("CONTRADICTIONS:")
+            for conflict in result.contradictions:
+                lines.append(
+                    "  - " + conflict.left_id + " vs " + conflict.right_id
+                    + ": topic_similarity="
+                    + str(round(conflict.topic_similarity, 4))
+                    + ", polarity=" + conflict.left_polarity
+                    + "/" + conflict.right_polarity
+                )
 
         if result.mutation_dag:
             lines.append("PLAN:")

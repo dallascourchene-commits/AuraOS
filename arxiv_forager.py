@@ -9,24 +9,84 @@ SYNOPSIS: The `AuraArxivSynopsis` module, a strict Python 3.10+ dependency-heavy
 [/AURA_MASTER_KEY]
 """
 import asyncio
+import base64
+from datetime import datetime, timedelta
 import hashlib
 import json
-import os
 import time
 import urllib.error
+from urllib.parse import urlencode
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
-from urllib.parse import urlencode
 
 import numpy as np
 
+from aura_scientific_memory import (
+    ScientificMemoryIndex,
+    ScientificPaperEncoder,
+    ScientificRecord,
+    ScientificSlots,
+    pack_vector,
+    unpack_vector,
+)
+
+_SCIENTIFIC_ENCODER = ScientificPaperEncoder()
+
+
+def _scientific_record(
+    record_id: str,
+    title: str,
+    abstract: str,
+    *,
+    categories=(),
+    published=None,
+):
+    """
+    Encodes a scientific paper record using VSA-based vectorization.
+    
+    Parameters:
+    	record_id (str): Unique identifier for the record
+    	published: Optional publication date, either as a datetime object or ISO-like string
+    
+    Returns:
+    	ScientificRecord: Encoded record with vector representation and semantic slots
+    """
+    year = getattr(published, "year", None)
+    if year is None and isinstance(published, str):
+        year = published[:4] if len(published) >= 4 else None
+    return _SCIENTIFIC_ENCODER.encode_document(
+        record_id,
+        title,
+        abstract,
+        categories=categories,
+        year=year,
+    )
+
+
 class ArXivForager:
     def __init__(self, node_ref=None):
+        """
+        Initialize the forager with an optional node reference for database operations.
+        
+        Parameters:
+        	node_ref: Optional node object providing database persistence via memory_palace.conn.
+        """
         self.node = node_ref  # Bind the main node reference
 
     async def fetch_latest_paper(self, topic: str, max_retries: int = 3, timeout: float = 12.0) -> str:
-        """Hits the arXiv API with an asynchronous, non-blocking retry loop, HTTPS, and custom browser headers."""
+        """
+        Fetch the most relevant arXiv paper for a given topic.
+        
+        Queries the arXiv API with retry logic, parses the result, and optionally encodes and persists a scientific record to the database if a node is available.
+        
+        Parameters:
+            topic (str): The search topic to query on arXiv.
+            max_retries (int): Maximum number of retry attempts on network failures. Default 3.
+            timeout (float): Request timeout in seconds. Default 12.0.
+        
+        Returns:
+            str: A formatted string containing the paper's title and abstract on success, or an error message on failure.
+        """
         query = urllib.parse.quote_plus(topic)
         url = f"https://export.arxiv.org/api/query?search_query=all:{query}&start=0&max_results=1&sortBy=relevance"
         headers = {
@@ -34,21 +94,21 @@ class ArXivForager:
             "Accept": "application/xml,text/xml",
             "Connection": "close"
         }
-        
+
         xml_data = None
         for attempt in range(max_retries):
             try:
                 req = urllib.request.Request(url, headers=headers)
                 response = await asyncio.to_thread(urllib.request.urlopen, req, timeout=timeout)
                 xml_data = response.read()
-                break  
+                break
             except (urllib.error.URLError, TimeoutError, ConnectionResetError) as e:
                 if attempt == max_retries - 1:
                     return f"arXiv API connection failed after {max_retries} attempts: {e}"
                 backoff = (2 ** attempt) * 0.5 + np.random.uniform(0, 0.1)
                 print(f"[⚠️ ARXIV RETRY] Timeout or connection error: {e}. Retrying in {backoff:.2f}s...")
                 await asyncio.sleep(backoff)
-                
+
         if not xml_data:
             return "arXiv API returned empty payload or failed entirely."
 
@@ -57,7 +117,7 @@ class ArXivForager:
             entries = root.findall('{http://www.w3.org/2005/Atom}entry')
             if not entries:
                 return f"No relevant arXiv papers found for: {topic}"
-                
+
             entry = entries[0]
             title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
             summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.strip()
@@ -65,31 +125,45 @@ class ArXivForager:
             full_text = f"TITLE: {title} | ABSTRACT: {summary}"
 
             if self.node is not None:
-                phasor_wave = self.node.polysynthetic_vram_compress(full_text)
-                blob_data = np.array(phasor_wave, dtype=np.complex64).tobytes()
+                record = _scientific_record("", title, summary)
+                blob_data = pack_vector(record.vector)
                 try:
                     conn = self.node.memory_palace.conn
                     trace_id = f"ARXIV_{hashlib.sha256(full_text.encode()).hexdigest()[:8].upper()}"
                     await conn.execute(
-                        "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'CRYSTAL', ?, 'Academic arXiv Paper Ingest', ?)",
+                        "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
                         (trace_id, full_text, datetime.now().isoformat(), blob_data)
                     )
                     await conn.commit()
                 except Exception as e:
                     print(f"[-] Local DB write failed: {e}")
-            
+
             return f"TITLE: {title}\nABSTRACT: {summary}"
         except Exception as e:
             return f"arXiv processing failure: {e}"
 
     async def upgraded_arxiv_backtracker(self, max_results: int = 100, max_retries: int = 3, timeout: float = 12.0) -> bool:
         """
-        Chronologically walks backwards through arXiv computer science submissions.
-
-        The arXiv API hard-caps pagination at start=9999 (≈10 000 total results).
-        When the crawler hits that wall it automatically resets the offset to 0
-        and narrows the date window — so the crawl can continue indefinitely
-        through earlier time periods without ever getting stuck.
+        Asynchronously crawl backwards through arXiv CS submissions, vectorizing and storing papers while managing pagination limits.
+        
+        This method maintains persistent crawler state (offset, timestamp, date window) in the database.
+        It enforces a 3.5-second rate limit per arXiv compliance and automatically recovers from the API's
+        10,000-result pagination limit by resetting the offset and narrowing the date window, allowing
+        indefinite continuation through earlier time periods. Fetched papers are vectorized via
+        `_scientific_record`, packed, and inserted into the database.
+        
+        Requires an active database connection via `self.node.memory_palace.conn`.
+        
+        Parameters:
+            max_results (int): Number of papers to fetch per API request. Defaults to 100.
+            max_retries (int): Number of retry attempts for network failures. Defaults to 3.
+            timeout (float): Request timeout in seconds. Defaults to 12.0.
+        
+        Returns:
+            `True` if papers were successfully ingested, the 10k limit was recovered, or the date window
+            was advanced; `False` if the absolute end of the timeline was reached or a final network
+            error occurred without recovery. When `True` is returned after recovery, the caller should
+            re-invoke to continue ingestion.
         """
         if self.node is None or not self.node.memory_palace.conn:
             print("[-] Backtracker Error: No active database connection linked to Forager.")
@@ -240,9 +314,14 @@ class ArXivForager:
                     earliest_published = published
 
                 text_block = f"TITLE: {title} | ABSTRACT: {summary} | PUBLISHED: {published}"
-                phasor_wave = self.node.polysynthetic_vram_compress(text_block)
-                blob_data = np.array(phasor_wave, dtype=np.complex64).tobytes()
                 engram_hash = f"ARXIV_{hashlib.sha256(text_block.encode()).hexdigest()[:8].upper()}"
+                record = _scientific_record(
+                    engram_hash,
+                    title,
+                    summary,
+                    published=published,
+                )
+                blob_data = pack_vector(record.vector)
                 ingest_rows.append(
                     (engram_hash, text_block, stamp_ts, blob_data)
                 )
@@ -250,7 +329,7 @@ class ArXivForager:
             if ingest_rows:
                 await conn.executemany(
                     "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
-                    "VALUES (?, ?, 'CRYSTAL', ?, 'Academic arXiv Paper Ingest', ?)",
+                    "VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
                     ingest_rows,
                 )
             stamped_count = len(ingest_rows)
@@ -326,12 +405,15 @@ class ArXivForager:
 # Extends ArXivForager so existing aura_node.py code continues to work.
 # =============================================================================
 
-import re as _re
+from dataclasses import dataclass as _dc
+from dataclasses import field as _dcfield
+from datetime import datetime as _dt
+from datetime import timedelta as _td
 import logging as _logging
-from dataclasses import dataclass as _dc, field as _dcfield
-from datetime import datetime as _dt, timedelta as _td
 from pathlib import Path as _Path
-from typing import List as _List, Optional as _Optional, Dict as _Dict, Set as _Set
+from typing import Dict as _Dict
+from typing import List as _List
+from typing import Optional as _Optional
 
 _eaf_logger = _logging.getLogger("aura.arxiv_forager")
 
@@ -348,9 +430,18 @@ class ArxivPaper:
     pdf_url: _Optional[str] = None
     full_text: _Optional[str] = None
     vector: _Optional[np.ndarray] = None
+    slots: _Dict = _dcfield(default_factory=dict)
     metadata: _Dict = _dcfield(default_factory=dict)
 
     def to_dict(self) -> dict:
+        """
+        Serialize the paper to a JSON-compatible dictionary.
+        
+        The vector field is base64-encoded after packing; if no vector exists, it is set to None.
+        
+        Returns:
+        	dict: Dictionary containing paper_id, title, authors, abstract, published (ISO format), categories, pdf_url, slots, vector (base64-encoded if present), and metadata.
+        """
         return {
             "paper_id": self.paper_id,
             "title": self.title,
@@ -359,6 +450,12 @@ class ArxivPaper:
             "published": self.published.isoformat(),
             "categories": self.categories,
             "pdf_url": self.pdf_url,
+            "slots": self.slots,
+            "vector": (
+                base64.b64encode(pack_vector(self.vector)).decode("ascii")
+                if self.vector is not None
+                else None
+            ),
             "metadata": self.metadata,
         }
 
@@ -402,17 +499,16 @@ class ForagerStats:
 
     @property
     def papers_per_second(self) -> float:
+        """
+        Calculates the rate of papers fetched per second.
+        
+        Returns:
+        	float: The number of papers fetched per second, or 0.0 if duration is unavailable or non-positive.
+        """
         d = self.duration
         if d and d.total_seconds() > 0:
             return self.papers_fetched / d.total_seconds()
         return 0.0
-
-
-_STOPWORDS: _Set[str] = {
-    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for",
-    "of", "with", "by", "from", "as", "is", "was", "are", "be", "been",
-    "this", "that", "these", "those", "we", "they", "our", "their",
-}
 
 
 class EnhancedArxivForager(ArXivForager):
@@ -421,10 +517,10 @@ class EnhancedArxivForager(ArXivForager):
 
     Extends the existing ArXivForager (so aura_node.py's ArXivForager(self)
     calls still work) and adds:
-    - Per-paper AuraHyperdimensionalCore vector indexing
+    - Shared 10-slot scientific vector indexing for papers and queries
     - Async batch processing with rate-limiting
-    - Cosine similarity search over the in-memory VSA index
-    - Disk cache for parsed papers (JSON, no vector)
+    - Hierarchical and LSH-routed scientific-memory search
+    - Disk cache with compact bit-packed 10,000-D vectors
     - Structured logging
 
     Usage
@@ -435,15 +531,15 @@ class EnhancedArxivForager(ArXivForager):
     """
 
     def __init__(self, node_ref=None) -> None:
+        """
+        Initialize the enhanced arXiv forager with vector encoding and caching.
+        
+        Sets up a scientific paper encoder and vector index for similarity search, in-memory paper caching, disk-based storage, rate limiting, and statistics tracking.
+        """
         super().__init__(node_ref)
 
-        # Import HDC core lazily to avoid circular imports at module load time
-        try:
-            from aura_core import AuraHyperdimensionalCore as _HDC
-            self._hdc = _HDC()
-        except Exception:
-            self._hdc = None
-
+        self._scientific_encoder = ScientificPaperEncoder()
+        self._scientific_index = ScientificMemoryIndex(self._scientific_encoder)
         self._paper_cache: _Dict[str, ArxivPaper] = {}
         self._storage_dir = _Path("Aura_Memory/arxiv_cache")
         self._storage_dir.mkdir(parents=True, exist_ok=True)
@@ -469,6 +565,9 @@ class EnhancedArxivForager(ArXivForager):
         self.stats = ForagerStats()
         self.stats.start_time = _dt.now()
         self._paper_cache.clear()
+        self._scientific_index = ScientificMemoryIndex(self._scientific_encoder)
+        self._storage_dir = _Path(config.storage_dir)
+        self._storage_dir.mkdir(parents=True, exist_ok=True)
 
         _eaf_logger.info(
             "Starting forage: query=%r  max_total=%d  max_results=%d",
@@ -562,40 +661,39 @@ class EnhancedArxivForager(ArXivForager):
         self, query: str, top_k: int = 5
     ) -> _List[ArxivPaper]:
         """
-        Return the *top_k* most similar cached papers to *query*.
-
-        Uses cosine similarity over 10,000-D HDC vectors — O(N) scan
-        (N = len(paper_cache), typically small under 4 GB ceiling).
+        Search for papers most similar to a query string.
+        
+        Automatically loads papers from disk cache if the in-memory cache is empty.
+        Performs a vector similarity search and returns matching papers that exist
+        in the cache.
+        
+        Returns:
+            A list of up to `top_k` ArxivPaper objects ranked by similarity to the query.
         """
-        if not self._hdc:
-            _eaf_logger.warning("HDC core not available; returning empty results")
-            return []
-
-        q_vec = self._hdc.encode_text(self._preprocess(query))
-        q_norm = np.linalg.norm(q_vec)
-        if q_norm == 0:
-            return []
-
-        sims: _List[tuple] = []
-        for pid, paper in self._paper_cache.items():
-            if paper.vector is not None:
-                p_norm = np.linalg.norm(paper.vector)
-                if p_norm > 0:
-                    sim = float(np.dot(q_vec, paper.vector) / (q_norm * p_norm))
-                    sims.append((pid, sim))
-
-        sims.sort(key=lambda x: x[1], reverse=True)
-        results = [self._paper_cache[pid] for pid, _ in sims[:top_k]]
+        if not self._paper_cache:
+            await asyncio.to_thread(self._load_disk_cache)
+        hits = self._scientific_index.search(query, top_k=top_k)
+        results = [
+            self._paper_cache[hit.record_id]
+            for hit in hits
+            if hit.record_id in self._paper_cache
+        ]
         _eaf_logger.info(
-            "search_similar(%r): %d results from %d indexed papers",
+            "search_similar(%r): %d results from %d indexed papers (%d candidates)",
             query[:50],
             len(results),
             len(self._paper_cache),
+            self._scientific_index.last_candidates_considered,
         )
         return results
 
     async def get_paper(self, paper_id: str) -> _Optional[ArxivPaper]:
-        """Get a paper by ID from cache or disk."""
+        """
+        Retrieves a paper by ID from cache or disk.
+        
+        Returns:
+            ArxivPaper if found in memory or on disk, None otherwise.
+        """
         if paper_id in self._paper_cache:
             return self._paper_cache[paper_id]
 
@@ -605,19 +703,9 @@ class EnhancedArxivForager(ArXivForager):
                 import json as _j
                 with open(cache_path, encoding="utf-8") as fh:
                     d = _j.load(fh)
-                paper = ArxivPaper(
-                    paper_id=d["paper_id"],
-                    title=d["title"],
-                    authors=d["authors"],
-                    abstract=d["abstract"],
-                    published=_dt.fromisoformat(d["published"]),
-                    categories=d["categories"],
-                    pdf_url=d.get("pdf_url"),
-                    metadata=d.get("metadata", {}),
-                )
-                if self._hdc:
-                    paper.vector = self._generate_vector(paper)
+                paper = self._paper_from_dict(d)
                 self._paper_cache[paper_id] = paper
+                self._scientific_index.add(self._record_for_paper(paper))
                 return paper
             except Exception as exc:
                 _eaf_logger.error("Disk cache load failed: %s", exc)
@@ -791,7 +879,15 @@ class EnhancedArxivForager(ArXivForager):
     async def _process_paper_dict(
         self, raw: dict, config: ForagerConfig
     ) -> None:
-        """Process a single paper dict: vectorise, cache, persist."""
+        """
+        Transform a raw paper dictionary into a cached and indexed ArxivPaper.
+        
+        Encodes the paper into a vector and slots using the scientific encoder, caches it in memory, adds it to the search index, and persists it to disk. If a memory palace node is available, also writes the vector to the database. Skips processing if the paper is already cached.
+        
+        Parameters:
+            raw (dict): Paper data containing paper_id, title, abstract, authors, categories, published, pdf_url, and entry_id.
+            config (ForagerConfig): Configuration specifying storage location for disk cache.
+        """
         paper_id = raw.get("paper_id", "")
         if paper_id in self._paper_cache:
             return
@@ -807,23 +903,24 @@ class EnhancedArxivForager(ArXivForager):
                 pdf_url=raw.get("pdf_url"),
                 metadata={"entry_id": raw.get("entry_id", "")},
             )
-            if self._hdc:
-                paper.vector = self._generate_vector(paper)
+            record = self._record_for_paper(paper)
+            paper.vector = record.vector
+            paper.slots = record.slots.to_jsonable()
             self._paper_cache[paper_id] = paper
+            self._scientific_index.add(record)
             self.stats.papers_parsed += 1
 
             # Persist to existing memory palace via node reference (same as ArXivForager)
-            if self.node is not None and hasattr(self.node, "polysynthetic_vram_compress"):
+            if self.node is not None and getattr(self.node, "memory_palace", None):
                 text_block = f"TITLE: {paper.title} | ABSTRACT: {paper.abstract}"
-                phasor = self.node.polysynthetic_vram_compress(text_block)
-                blob = np.array(phasor, dtype=np.complex64).tobytes()
+                blob = pack_vector(record.vector)
                 engram = f"ARXIV_{hashlib.sha256(text_block.encode()).hexdigest()[:8].upper()}"
                 try:
                     conn = self.node.memory_palace.conn
                     await conn.execute(
                         "INSERT OR REPLACE INTO traces "
                         "(id, content, tier, timestamp, tags, vector_blob) "
-                        "VALUES (?, ?, 'CRYSTAL', ?, 'Enhanced arXiv Ingest', ?)",
+                        "VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
                         (engram, text_block, _dt.now().isoformat(), blob),
                     )
                     await conn.commit()
@@ -831,7 +928,7 @@ class EnhancedArxivForager(ArXivForager):
                 except Exception as db_exc:
                     _eaf_logger.warning("DB write skipped: %s", db_exc)
 
-            # Disk cache (no vector — too large for JSON)
+            # Disk cache includes the compact 1,250-byte packed vector.
             await self._save_to_disk(paper, config.storage_dir)
 
         except Exception as exc:
@@ -839,31 +936,104 @@ class EnhancedArxivForager(ArXivForager):
             _eaf_logger.error("Paper processing failed [%s]: %s", paper_id, exc)
 
     def _generate_vector(self, paper: ArxivPaper) -> _Optional[np.ndarray]:
-        """Generate a 10,000-D HDC vector for a paper."""
-        if self._hdc is None:
-            return None
-        text = " ".join(filter(None, [
+        """
+        Encode a vector for a paper and update its slots.
+        
+        Returns:
+        	The encoded vector, or `None` if encoding yields no vector.
+        """
+        record = self._record_for_paper(paper)
+        paper.slots = record.slots.to_jsonable()
+        return record.vector
+
+    def _record_for_paper(self, paper: ArxivPaper) -> ScientificRecord:
+        """
+        Obtains a ScientificRecord for a paper, reusing cached vectors if available.
+        
+        If the paper has cached vector and slots data, returns a reconstructed record using those values. Otherwise, encodes a fresh record from the paper's title, abstract, categories, and publication year.
+        
+        Parameters:
+        	paper (ArxivPaper): The paper to encode or reconstruct.
+        
+        Returns:
+        	ScientificRecord: The paper's vector encoding and semantic slots.
+        """
+        if paper.vector is not None and paper.slots:
+            return ScientificRecord(
+                paper.paper_id,
+                paper.title,
+                paper.abstract,
+                ScientificSlots.from_jsonable(paper.slots),
+                np.asarray(paper.vector, dtype=np.int8),
+                paper.metadata,
+            )
+        return self._scientific_encoder.encode_document(
+            paper.paper_id,
             paper.title,
             paper.abstract,
-            " ".join(paper.categories),
-        ]))
-        return self._hdc.encode_text(self._preprocess(text))
+            categories=paper.categories,
+            year=paper.published.year if paper.published else None,
+            metadata=paper.metadata,
+        )
 
-    def _preprocess(self, text: str) -> str:
-        """Lowercase, strip non-alphanumeric, remove stopwords."""
-        text = _re.sub(r"[^a-z0-9\s]", " ", text.lower())
-        words = [w for w in text.split() if w not in _STOPWORDS and len(w) > 2]
-        return " ".join(words)
+    def _paper_from_dict(self, data: dict) -> ArxivPaper:
+        """
+        Reconstruct an ArxivPaper from cached JSON data.
+        
+        Parameters:
+            data (dict): Serialized paper dictionary from disk cache
+        
+        Returns:
+            ArxivPaper: The deserialized paper with vector and slots
+        """
+        paper = ArxivPaper(
+            paper_id=data["paper_id"],
+            title=data["title"],
+            authors=data.get("authors", []),
+            abstract=data.get("abstract", ""),
+            published=_dt.fromisoformat(data["published"]),
+            categories=data.get("categories", []),
+            pdf_url=data.get("pdf_url"),
+            slots=data.get("slots", {}),
+            metadata=data.get("metadata", {}),
+        )
+        packed = data.get("vector")
+        if packed:
+            try:
+                paper.vector = unpack_vector(base64.b64decode(packed))
+            except Exception:
+                paper.vector = None
+        if paper.vector is None or not paper.slots:
+            paper.vector = self._generate_vector(paper)
+        return paper
+
+    def _load_disk_cache(self) -> None:
+        """
+        Load cached papers from disk storage and index them.
+        
+        Loads papers from the storage directory and makes them available in the
+        in-memory cache for similarity search. Existing cached papers are skipped,
+        and load failures are silently logged at debug level.
+        """
+        for path in self._storage_dir.glob("*.json"):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                paper = self._paper_from_dict(data)
+                if paper.paper_id in self._paper_cache:
+                    continue
+                self._paper_cache[paper.paper_id] = paper
+                self._scientific_index.add(self._record_for_paper(paper))
+            except Exception as exc:
+                _eaf_logger.debug("Disk cache entry skipped [%s]: %s", path, exc)
 
     async def _save_to_disk(self, paper: ArxivPaper, storage_dir: str) -> None:
-        """Persist paper metadata to disk (JSON, no vector blob)."""
+        """Persist paper metadata and its compact packed scientific vector."""
         try:
             import json as _j
             _Path(storage_dir).mkdir(parents=True, exist_ok=True)
             safe_id = paper.paper_id.replace("/", "_")
             path = _Path(storage_dir) / f"{safe_id}.json"
             d = paper.to_dict()
-            d.pop("vector", None)
             path.write_text(_j.dumps(d, indent=2), encoding="utf-8")
         except Exception as exc:
             _eaf_logger.debug("Disk save skipped: %s", exc)
