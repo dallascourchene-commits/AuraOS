@@ -23,6 +23,9 @@ OpenRouter's hosted Fusion router as the primary path:
   cross-model handoff boundaries.
 - `aura_model_probe_ledger.py` stores black-box behavioral routing profiles for
   provider/model/role scoring.
+- `aura_llm_call_logger.py` routes every external LLM helper path into
+  `Aura_Memory/aura_savings.db`, allowing the live dashboard to quantify
+  calls, cost, latency, token savings, and dollar savings beyond `!route`.
 - `aura_codebase_navigator.py` now excludes `.venv`, `site-packages`, build
   artifacts, and egg metadata from CODEMAP scans.
 - `!fusion <task>` and `python3 aura_router.py fusion --task ...` expose the

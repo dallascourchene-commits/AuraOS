@@ -207,7 +207,10 @@ Fusion uses `AURA_FUSION_PANEL` and `AURA_FUSION_JUDGE` from
 `aura_secrets.json`, emits compact capsules to configured external providers,
 and writes run metrics to `Aura_Memory/aura_fusion_runs.jsonl`.
 
-7. Check cumulative savings:
+7. Check cumulative savings. This report reads both the router execution
+ledger and the universal LLM-call SQLite ledger, so direct conversation,
+Fusion, Gemini/OpenAI-compatible helper, and Anthropic-router calls are
+included even when they were not launched through `!route`:
 
 ```bash
 python3 aura_router.py savings
@@ -223,6 +226,7 @@ The following files are created at runtime and are listed in `.gitignore`:
 |---|---|
 | `Aura_Memory/aura_calibration.jsonl` | Append-only calibration ledger (newest record per key supersedes) |
 | `Aura_Memory/aura_executions.jsonl` | Execution log for savings accounting |
+| `Aura_Memory/aura_savings.db` | Rolling SQLite call ledger for every external LLM call Aura records |
 
 These files grow over time. Delete them to reset calibration state.
 

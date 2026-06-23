@@ -196,9 +196,28 @@ uses only explicitly configured external provider APIs and can be dry-run with
 | `!calibrate` | Run full (provider × style × mode) benchmark matrix |
 | `!route <task> [--model M]` | Auto-route to optimal model; `--model` forces priority |
 | `!fusion <task>` | Run native AuraFusion: SkillWeaver gate -> compact capsule -> Thinker/Worker/Verifier panel -> judge synthesis |
-| `!savings` | Show cumulative token + cost savings per provider |
+| `!savings` | Show cumulative token + cost savings from all logged LLM calls, not only `!route` |
 | `!converse <text>` | Polysynthetic conversation (compress → LLM → interpret) |
 | `!contingency_spawn` | Thermal spike handling + cold-cache pressure report |
+
+### Universal LLM Savings Ledger
+
+Every external LLM call that passes through Aura's API helpers is logged to
+`Aura_Memory/aura_savings.db`, including `!route`, `!converse`, AuraFusion
+panel/judge calls, direct Gemini/OpenAI-compatible helper calls, and the
+Anthropic-first router path. When a raw/no-Aura baseline is known, the row
+records token and dollar savings; when no baseline is known, the row still
+records spend, latency, provider, model, and a zero-savings baseline so metrics
+remain honest.
+
+Start the live dashboard:
+
+```bash
+python3 aura_savings_dashboard.py
+```
+
+Then open `http://localhost:8700` to watch rolling call logs, token savings,
+cost savings, latency, provider breakdowns, and recent-call feed updates.
 
 ### Native AuraFusion
 
