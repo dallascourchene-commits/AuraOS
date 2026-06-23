@@ -67,7 +67,8 @@ from aura_meta_ingest import MetaTelemetryIngestor
 from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
 from aura_coordinated_solver import CoordinatedSolver, StrategyBuffer
 from aura_crystallization import hypertruth_crystallization_loop
-from arxiv_forager import ArXivForager, EnhancedArxivForager, ForagerConfig
+from arxiv_forager import ArXivForager, ForagerConfig
+from aura_scientific_memory import index_from_rows
 from aura_skillweaver import AuraSkillWeaver, research_gate_intercept
 from aura_hivp import HolographicIntegrityVerificationProtocol
 from aura_tcwaa import ThermalCostWeightedAPIArbitration
@@ -81,6 +82,24 @@ from vsa_resonator import VSAResonator
 from liquid_fhrr import LiquidFHRR
 from spatial_mapper import CodeTopologyMapper, DirectoryCache
 from aura_topology_analyzer import diagnose_fractures
+
+
+async def _cached_scientific_index(node, conn):
+    """Build once per DB snapshot, then keep research queries millisecond-scale."""
+    async with conn.execute(
+        "SELECT COUNT(*), COALESCE(MAX(timestamp), '') FROM traces "
+        "WHERE id LIKE 'ARXIV_%';"
+    ) as cursor:
+        signature = tuple(await cursor.fetchone())
+    if getattr(node, "_scientific_memory_signature", None) != signature:
+        async with conn.execute(
+            "SELECT id, content, vector_blob FROM traces "
+            "WHERE id LIKE 'ARXIV_%';"
+        ) as cursor:
+            rows = await cursor.fetchall()
+        node._scientific_memory_index = await asyncio.to_thread(index_from_rows, rows)
+        node._scientific_memory_signature = signature
+    return node._scientific_memory_index
 
 # Optional heavy dependencies — may not be present or loadable on all targets
 # (Termux/ARM: RuntimeError from shared-library ABI mismatch is expected)
@@ -5982,27 +6001,23 @@ async def main():
 
                 print(f"\n[*] Querying database for ingested papers resonant with: '{concept}'...")
                 
-                # 1. Fetch all arXiv engrams from traces table
+                # 1. Load or reuse the index for the current DB snapshot.
                 conn = node.memory_palace.conn
-                async with conn.execute("SELECT id, content, vector_blob FROM traces WHERE id LIKE 'ARXIV_%';") as cursor:
-                    rows = await cursor.fetchall()
-                    
-                if not rows:
+                scientific_index = await _cached_scientific_index(node, conn)
+                if not scientific_index.records:
                     print("[-] No academic engrams found in DB. Run '!backtrack' first to seed her memory.")
                     continue
 
-                # 2. Encode the query and calculate complex vector resonance
-                query_hv = node.hdc.encode_text(concept)
+                # 2. Route the query through the same structured encoder used
+                # at ingestion. Legacy 80 KB phasors are migrated from text.
+                scientific_hits = scientific_index.search(concept, top_k=5)
                 resonance_results = []
-                
-                for r_id, content, blob in rows:
-                    if blob:
-                        # Reconstruct the complex64 phasor wave natively
-                        wave = np.frombuffer(blob, dtype=np.complex64)
-                        if len(wave) == 10000:
-                            # High-speed Cosine Similarity: Re(dot(A, B*))
-                            sim = float(np.abs(np.dot(query_hv, np.conj(wave))) / 10000.0)
-                            resonance_results.append((sim, r_id, content))
+                for hit in scientific_hits:
+                    content = (
+                        f"TITLE: {hit.record.title} | "
+                        f"ABSTRACT: {hit.record.abstract}"
+                    )
+                    resonance_results.append((hit.score, hit.record_id, content))
 
                 if not resonance_results:
                     print("[-] No valid vector engrams parsed. Sweeps deferred.")
@@ -6010,32 +6025,20 @@ async def main():
 
                 # Sort by highest resonance
                 resonance_results.sort(key=lambda x: x[0], reverse=True)
-                top_resonances = resonance_results[:2]
+                top_resonances = resonance_results[:5]
                 
                 print(f"[+] Isolated {len(top_resonances)} highly resonant academic papers:")
                 paper_contexts = []
                 for idx, (sim, r_id, text) in enumerate(top_resonances, 1):
-                    print(f"    {idx}. [Resonance: {sim * 10000:.1f} bp] -> {text[:100]}...")
+                    print(f"    {idx}. [Structured relevance: {sim:.3f}] -> {text[:100]}...")
                     paper_contexts.append(text)
 
                 # 2.5 SkillWeaver Research Relevance Gate
                 # Intercept BEFORE Cloud Synthesizer to prevent ungrounded mutations
                 print(f"\n[*] Running SkillWeaver Research Relevance Gate...")
-                gate_candidates = [
-                    (r_id, text, blob if blob else None)
-                    for (sim, r_id, text) in resonance_results[:5]
-                    for blob in [None]  # blobs already consumed; phasor recomputed from text
-                ]
-                # Re-fetch blobs for gate evaluation
                 gate_candidates_with_blobs = []
                 for (sim, r_id, text) in resonance_results[:5]:
-                    # Find the original blob from the rows
-                    matching_blob = None
-                    for orig_id, orig_content, orig_blob in rows:
-                        if orig_id == r_id:
-                            matching_blob = orig_blob
-                            break
-                    gate_candidates_with_blobs.append((r_id, text, matching_blob))
+                    gate_candidates_with_blobs.append((r_id, text, None))
 
                 gate_allowed, gate_report, gate_result = await research_gate_intercept(
                     concept, gate_candidates_with_blobs
@@ -6196,17 +6199,19 @@ async def main():
                     continue
                 print(f"\n[*] Running VSA similarity search for: '{query_text}'...")
                 try:
-                    _enh_forager = EnhancedArxivForager(node)
-                    similar_papers = await _enh_forager.search_similar(query_text, top_k=5)
-                    if not similar_papers:
+                    search_index = await _cached_scientific_index(
+                        node,
+                        node.memory_palace.conn,
+                    )
+                    similar_hits = search_index.search(query_text, top_k=5)
+                    if not similar_hits:
                         print("[-] No indexed papers found. Run !forage or !backtrack first to seed the index.")
                     else:
-                        print(f"\n[+] Top {len(similar_papers)} semantically similar papers:\n")
-                        for idx, paper in enumerate(similar_papers, 1):
-                            print(f"  {idx}. {paper.title}")
-                            print(f"     Published : {paper.published.date() if paper.published else 'unknown'}")
-                            print(f"     Authors   : {', '.join(paper.authors[:3])}")
-                            print(f"     Abstract  : {paper.abstract[:120]}...")
+                        print(f"\n[+] Top {len(similar_hits)} structured scientific matches:\n")
+                        for idx, hit in enumerate(similar_hits, 1):
+                            print(f"  {idx}. {hit.record.title}")
+                            print(f"     Relevance: {hit.score:.3f}")
+                            print(f"     Abstract : {hit.record.abstract[:120]}...")
                             print()
                 except Exception as _sf_e:
                     print(f"[-] Search failed: {_sf_e}")
@@ -7157,7 +7162,11 @@ def contingency_harness():
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
                     "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
                     "!research <concept>":("!research <concept>",  "Query ingested papers for <concept> and synthesize a Python integration helper into aura_incubator.py."),
-                    "!search_similar <query>": ("!search_similar <query>", "VSA cosine-similarity search over the indexed arXiv paper cache using 10,000-D HDC vectors. Run !forage first to populate the index."),
+                    "!search_similar <query>": (
+                        "!search_similar <query>",
+                        "Structured 10-slot VSA search over ingested arXiv "
+                        "papers using hierarchy and LSH candidate routing.",
+                    ),
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),
                     "!forage_off":        ("!forage_off / !forager_off", "Disable background foraging to conserve CPU/RAM."),
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),

@@ -13,11 +13,12 @@ Test suite for aura_skillweaver.py
 Covers the 8 required test categories from the SkillWeaver implementation brief.
 """
 
+import json
 import os
 import sys
-import json
-import pytest
+
 import numpy as np
+import pytest
 
 # Ensure repo root is on path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -39,7 +40,6 @@ from aura_skillweaver import (
     score_lexical_anchors,
     score_title_abstract_match,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -164,6 +164,36 @@ class TestStrongSourceAllow:
         )
         # With matching modules, should allow or at least not refuse outright
         assert result.decision in ("ALLOW_MUTATION", "NEED_MORE_SOURCES")
+
+    def test_opposed_relevant_sources_pause_mutation(self, weaver):
+        """Relevant but contradictory papers require evidence resolution."""
+        positive = (
+            "ARXIV_VSA_POSITIVE",
+            "TITLE: VSA improves associative memory | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations with bundling, binding, permutation, "
+            "superposition, and distributed representation. An empirical "
+            "benchmark improves associative memory recall on edge devices.",
+            None,
+        )
+        negative = (
+            "ARXIV_VSA_NEGATIVE",
+            "TITLE: VSA harms associative memory | ABSTRACT: This vector "
+            "symbolic architecture uses hyperdimensional HDC holographic "
+            "reduced representations with bundling, binding, permutation, "
+            "superposition, and distributed representation. An empirical "
+            "benchmark degrades associative memory recall on edge devices.",
+            None,
+        )
+
+        result = weaver.evaluate_research_gate(
+            "vector symbolic architecture edge memory",
+            [positive, negative],
+        )
+
+        assert result.decision == "NEED_MORE_SOURCES"
+        assert result.mutation_dag is None
+        assert result.contradictions
 
 
 # ---------------------------------------------------------------------------
@@ -388,6 +418,7 @@ class TestNoDependency:
             "numpy", "np",
             # aura modules (conditional imports within same repo)
             "aura_fst_routing",
+            "aura_scientific_memory",
         }
 
         for node in ast_mod.walk(tree):

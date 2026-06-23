@@ -28,16 +28,18 @@ No new dependencies beyond numpy (already in repo).
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import hashlib
 import json
 import os
+from pathlib import Path
 import re
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Optional
 
 import numpy as np
+
+from aura_scientific_memory import detect_contradictions, record_from_content
 
 # ---------------------------------------------------------------------------
 # Core Data Structures
@@ -83,6 +85,7 @@ class ResearchGateResult:
     reason: str = ""
     target_modules: list = field(default_factory=list)
     mutation_dag: Optional[dict] = None
+    contradictions: list = field(default_factory=list)
 
 
 @dataclass
@@ -622,6 +625,13 @@ class AuraSkillWeaver:
         subtasks = refine_decomposition(subtasks, evaluated, target_modules)
 
         accepted = [c for c in evaluated if c.accepted]
+        accepted_ids = {candidate.trace_id for candidate in accepted}
+        accepted_records = [
+            record_from_content(trace_id, content, blob)
+            for trace_id, content, blob in candidates_data
+            if trace_id in accepted_ids
+        ]
+        contradictions = detect_contradictions(accepted_records)
 
         if not accepted:
             decision = "REFUSE_MUTATION"
@@ -631,6 +641,20 @@ class AuraSkillWeaver:
                       + anchor_list + ". "
                       "ACTION: Ingest stronger source-sufficient papers before mutation.")
             final_score = max((c.concept_fit_score for c in evaluated), default=0.0)
+            dag = None
+
+        elif contradictions:
+            decision = "NEED_MORE_SOURCES"
+            pairs = ", ".join(
+                contradiction.left_id + " vs " + contradiction.right_id
+                for contradiction in contradictions[:3]
+            )
+            reason = (
+                "Accepted sources contain polarity conflicts on the same "
+                "mechanism/effect (" + pairs + "). ACTION: resolve the evidence "
+                "conflict before generating a mutation."
+            )
+            final_score = sum(c.concept_fit_score for c in accepted) / len(accepted)
             dag = None
 
         elif not target_modules:
@@ -657,6 +681,7 @@ class AuraSkillWeaver:
             reason=reason,
             target_modules=target_modules,
             mutation_dag=dag,
+            contradictions=contradictions,
         )
 
     def format_gate_report(self, result):
@@ -686,6 +711,17 @@ class AuraSkillWeaver:
             lines.append("TARGET_MODULES:")
             for mod in result.target_modules:
                 lines.append("  - " + mod)
+
+        if result.contradictions:
+            lines.append("CONTRADICTIONS:")
+            for conflict in result.contradictions:
+                lines.append(
+                    "  - " + conflict.left_id + " vs " + conflict.right_id
+                    + ": topic_similarity="
+                    + str(round(conflict.topic_similarity, 4))
+                    + ", polarity=" + conflict.left_polarity
+                    + "/" + conflict.right_polarity
+                )
 
         if result.mutation_dag:
             lines.append("PLAN:")

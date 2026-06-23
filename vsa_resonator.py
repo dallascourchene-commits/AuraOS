@@ -10,19 +10,23 @@ SYNOPSIS: This Python module provides high-performance numerical processing and 
 """
 # [AURA OPTIMIZED] - Bloat removed.
 
+import hashlib
+
 import numpy as np
+
 
 class VSAResonator:
     def __init__(self, dim=10000, sample_ratio=0.05):
         self.dim = dim
         self.sample_ratio = sample_ratio
         self.sample_size = int(self.dim * self.sample_ratio)  # 5% target: 500 coordinates
-        
+
         # Pre-allocate a deterministic sampling mask to prevent runtime generator overhead
         rng = np.random.default_rng(seed=0x53E6E)
         self._sampling_indices = rng.choice(self.dim, size=self.sample_size, replace=False)
-        
-        # Zero-copy object-identity cache to completely eliminate redundant GSB calculations
+
+        # Codebooks are quantized once inside resonate(). Caching arbitrary
+        # temporary arrays by id is unsafe because NumPy object ids are reused.
         self._gsb_cache = {}
 
     def bind(self, v1, v2):
@@ -32,23 +36,14 @@ class VSAResonator:
     def bundle(self, vectors):
         """Bundling is element-wise addition followed by sign thresholding."""
         summed = np.sum(vectors, axis=0)
-        summed[summed == 0] = 1 
+        summed[summed == 0] = 1
         return np.sign(summed)
 
     def gsb_quantize(self, vector_10k: np.ndarray) -> tuple:
         """
-        [GSB DECOMPOSITION WITH O(1) CACHING] Decomposes a 10,000-D vector into 
-        scalar gain (g), shape array (s), and scalar bias (b). Caches results by 
-        memory address to bypass redundant float calculations.
+        Decomposes a 10,000-D vector into scalar gain (g), shape array (s),
+        and scalar bias (b). Codebooks are quantized once by ``resonate``.
         """
-        vec_id = id(vector_10k)
-        if vec_id in self._gsb_cache:
-            return self._gsb_cache[vec_id]
-
-        # Prevent cache bloat over long horizons to protect her RAM limits
-        if len(self._gsb_cache) > 5000:
-            self._gsb_cache.clear()
-
         if np.iscomplexobj(vector_10k):
             vector_10k = np.angle(vector_10k).astype(np.float32)
         bias = float(np.mean(vector_10k))
@@ -58,10 +53,8 @@ class VSAResonator:
             gain = 1.0
         shape = np.sign(centered).astype(np.int8)
         shape[shape == 0] = 1
-        
-        result = (gain, shape, bias)
-        self._gsb_cache[vec_id] = result
-        return result
+
+        return gain, shape, bias
 
     def sampled_similarity(self, q_gain: float, q_shape: np.ndarray, q_bias: float,
                            c_gain: float, c_shape: np.ndarray, c_bias: float) -> float:
@@ -70,12 +63,16 @@ class VSAResonator:
         sampled 5% subset of the GSB-decomposed vectors to bypass the memory wall.
         """
         # Zero-copy slice read directly over the pre-allocated L2-cache sampling mask
-        q_slice = q_shape[self._sampling_indices]
-        c_slice = c_shape[self._sampling_indices]
-        
-        # Low-precision integer dot-product in L2 cache
-        dot_product = np.dot(q_slice, c_slice)
-        
+        q_slice = np.real(q_shape[self._sampling_indices])
+        c_slice = np.real(c_shape[self._sampling_indices])
+
+        # Accumulate outside int8. NumPy's int8 dot wraps at 127, which made
+        # identical 10,000-D vectors appear almost orthogonal.
+        dot_product = np.dot(
+            q_slice.astype(np.float32, copy=False),
+            c_slice.astype(np.float32, copy=False),
+        )
+
         # Scale and rehydrate with continuous physical gain and bias
         normalized_sim = float(dot_product) / self.sample_size
         return (q_gain * c_gain * normalized_sim) + (q_bias * c_bias)
@@ -89,7 +86,7 @@ class VSAResonator:
         for idx, vec in enumerate(node_vectors):
             permuted_vec = np.roll(vec, shift=idx + 1)
             bound_interaction = np.multiply(bound_interaction, permuted_vec)
-            
+
         return bound_interaction
 
     def decode_hit_member(self, hit_vector: np.ndarray, index_to_extract: int, known_vectors: list) -> int:
@@ -102,7 +99,7 @@ class VSAResonator:
 
         extracted_vector = np.roll(unbound_state, shift=-(index_to_extract + 1))
         eg, es, eb = self.gsb_quantize(extracted_vector)
-        
+
         best_idx = 0
         best_sim = -float('inf')
         for idx, v in enumerate(known_vectors):
@@ -113,8 +110,39 @@ class VSAResonator:
                 best_idx = idx
         return best_idx
 
+    @staticmethod
+    def _bipolar_digest(vector: np.ndarray) -> bytes:
+        """Stable compact key for exact self-inverse bipolar factorization."""
+        packed = np.packbits(np.asarray(vector).reshape(-1) > 0, bitorder="little")
+        return hashlib.blake2b(packed.tobytes(), digest_size=16).digest()
+
+    def _exact_bipolar_factorization(self, composite_vector, book_a, book_b):
+        """Recover exact A*B factors in O((|A|+|B|)D), not O(|A||B|D)."""
+        if not book_a or not book_b:
+            return None
+        composite = np.asarray(composite_vector)
+        if not np.all(np.isin(composite, (-1, 1))):
+            return None
+        lookup_a = {
+            self._bipolar_digest(vector): index
+            for index, vector in enumerate(book_a)
+        }
+        for index_b, vector_b in enumerate(book_b):
+            candidate_a = np.multiply(composite, vector_b)
+            index_a = lookup_a.get(self._bipolar_digest(candidate_a))
+            if index_a is not None and np.array_equal(
+                np.multiply(book_a[index_a], vector_b),
+                composite,
+            ):
+                return index_a, index_b
+        return None
+
     def resonate(self, composite_vector, book_a, book_b, max_iters=10):
-        """Factorizes a composite vector (A * B) using fast, sampled guess tracking and cached codebooks."""
+        """Factorize a bound vector with an exact path and noisy fallback."""
+        exact = self._exact_bipolar_factorization(composite_vector, book_a, book_b)
+        if exact is not None:
+            return exact
+
         est_a = self.bundle(book_a)
         est_b = self.bundle(book_b)
 
@@ -128,7 +156,7 @@ class VSAResonator:
         for i in range(max_iters):
             guess_a = self.bind(composite_vector, est_b)
             geg, ges, geb = self.gsb_quantize(guess_a)
-            
+
             # Fast, sampled similarity scan over Codebook A
             best_idx_a = 0
             best_sim_a = -float('inf')
@@ -137,11 +165,11 @@ class VSAResonator:
                 if sim > best_sim_a:
                     best_sim_a = sim
                     best_idx_a = idx
-            est_a = book_a[best_idx_a] 
-            
+            est_a = book_a[best_idx_a]
+
             guess_b = self.bind(composite_vector, est_a)
             geg_b, ges_b, geb_b = self.gsb_quantize(guess_b)
-            
+
             # Fast, sampled similarity scan over Codebook B
             best_idx_b = 0
             best_sim_b = -float('inf')
@@ -150,8 +178,8 @@ class VSAResonator:
                 if sim > best_sim_b:
                     best_sim_b = sim
                     best_idx_b = idx
-            est_b = book_b[best_idx_b] 
-            
+            est_b = book_b[best_idx_b]
+
             if best_sim_a > 0.95 and best_sim_b > 0.95:
                 return best_idx_a, best_idx_b
 
