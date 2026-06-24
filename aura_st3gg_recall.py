@@ -82,10 +82,14 @@ def _digest(content: str, *, size: int) -> str:
 
 def compile_st3gg_pointer(content: str, *, namespace: str = "CCR", seed: int = 0xA901) -> tuple[str, str, str, str]:
     """Return (pointer, dash_key, glyph, holographic_header) for visible O(1) recall."""
-    material = f"{seed}:{namespace}:{content}"
+    safe_namespace = "".join(
+        ch if ch.isascii() and (ch.isalnum() or ch in "_-") else "_"
+        for ch in namespace.upper()
+    ) or "CCR"
+    material = f"{seed}:{safe_namespace}:{content}"
     dash_key = _digest(material, size=8)
     glyph = _digest(f"GLYPH:{material}", size=2).upper()
-    pointer = f"ST3GG-L2::{namespace}:{glyph}:{dash_key}"
+    pointer = f"ST3GG-L2::{safe_namespace}:{glyph}:{dash_key}"
     header_raw = hashlib.blake2b(f"HOLO:{material}".encode("utf-8", errors="replace"), digest_size=48).digest()
     holographic_header = base64.urlsafe_b64encode(header_raw).decode("ascii").rstrip("=")
     return pointer, dash_key, glyph, holographic_header
