@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa901-[Q-SYS:ST3GG_RECALL]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Holographic O(1) Recall)
 DEPENDENCIES: base64, dataclasses, hashlib, json, pathlib, struct, time, typing, urllib.parse
-FUNCTIONS: ST3GGRecallRecord, compile_st3gg_pointer, compile_visible_st3gg_capsule, compute_compaction_efficiency, hash_table_path_for_ledger, index_path_for_ledger, lookup_st3gg_recall, st3gg_recall_index_stats, store_path_for_ledger, upsert_st3gg_recall
+FUNCTIONS: ST3GGRecallRecord, compile_st3gg_pointer, compile_visible_st3gg_capsule, compute_compaction_efficiency, decode_st3gg_compaction_blob, hash_table_path_for_ledger, index_path_for_ledger, lookup_st3gg_recall, st3gg_recall_index_stats, store_path_for_ledger, upsert_st3gg_recall
 SYNOPSIS: Visible ST3GG recall primitives inspired by GLOSSOPETRAE's seeded-symbol insight and modern persistent hash-table retrieval. Converts content into deterministic DASH/ST3GG pointers and maintains a local hash sidecar for bounded O(1)-style recall without invisible Unicode carriers or covert-channel payloads.
 [/AURA_MASTER_KEY]
 """
@@ -26,6 +26,11 @@ ST3GG_RECALL_VERSION = "AURA_ST3GG_RECALL_V1"
 DEFAULT_HASH_CAPACITY = 2048
 MAX_HASH_LOAD = 0.68
 FROZEN_COMPACTION_ALIAS_THRESHOLD = 4096
+ST3GG_COMPACTION_MAGIC = b"AST3CMP1"
+ST3GG_COMPACTION_VERSION = 1
+ST3GG_COMPACTION_TABLE_SCALE = 2
+ST3GG_COMPACTION_HASH_PROFILE_DJB2_SEED8 = 1
+_ST3GG_COMPACTION_HEADER = struct.Struct("<8sIIIII")
 _HASH_MAGIC = b"AST3GGH1"
 _HASH_HEADER = struct.Struct("<8sII")
 _HASH_SLOT = struct.Struct("<QQII")
@@ -168,6 +173,37 @@ def _file_size(path: Path) -> int:
         return path.stat().st_size
     except OSError:
         return 0
+
+
+def decode_st3gg_compaction_blob(blob: bytes) -> dict[str, Any]:
+    """Decode and validate the Stage 2 Rust compactor binary output."""
+    if len(blob) < _ST3GG_COMPACTION_HEADER.size:
+        raise ValueError("st3gg_compaction_blob_truncated")
+    magic, version, key_count, table_size, table_scale, hash_profile = _ST3GG_COMPACTION_HEADER.unpack_from(blob)
+    if magic != ST3GG_COMPACTION_MAGIC:
+        raise ValueError("st3gg_compaction_bad_magic")
+    if version != ST3GG_COMPACTION_VERSION:
+        raise ValueError("st3gg_compaction_unsupported_version")
+    if table_scale != ST3GG_COMPACTION_TABLE_SCALE:
+        raise ValueError("st3gg_compaction_table_scale_mismatch")
+    if hash_profile != ST3GG_COMPACTION_HASH_PROFILE_DJB2_SEED8:
+        raise ValueError("st3gg_compaction_hash_profile_mismatch")
+    pilots = blob[_ST3GG_COMPACTION_HEADER.size:]
+    if len(pilots) != key_count:
+        raise ValueError("st3gg_compaction_pilot_count_mismatch")
+    expected_table = key_count * table_scale
+    if table_size != expected_table:
+        raise ValueError("st3gg_compaction_table_size_mismatch")
+    return {
+        "magic": magic.decode("ascii"),
+        "version": version,
+        "key_count": key_count,
+        "table_size": table_size,
+        "table_scale": table_scale,
+        "hash_profile": hash_profile,
+        "hash_profile_name": "djb2_u64_seed8",
+        "pilots": tuple(pilots),
+    }
 
 
 def compute_compaction_efficiency(

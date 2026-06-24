@@ -14,21 +14,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 210
-- **total_bytes**: 61755780
-- **text_tokens_est**: 895712
+- **total_bytes**: 61763041
+- **text_tokens_est**: 897527
 - **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 136, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782319112
+- **last_incremental_refresh_unix**: 1782320731
 
 ## Coverage
 
 - **included_file_count**: 210
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=165, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=99
+- **skipped_dir_file_counts**: `.git`=174, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=99
 
 ## Command Index
 
@@ -206,7 +206,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `liquid_attractor_control_plane.py` (python_module): 34 symbols, degree 0, ~9969 tokens
 - `aura_paper_memory.py` (python_module): 32 symbols, degree 0, ~4562 tokens
 - `aura_codebase_navigator.py` (python_module): 31 symbols, degree 0, ~8836 tokens
-- `aura_mesh.py` (python_module): 30 symbols, degree 0, ~14759 tokens
+- `aura_st3gg_recall.py` (python_module): 31 symbols, degree 0, ~4878 tokens
 
 ## Topology Integration
 
