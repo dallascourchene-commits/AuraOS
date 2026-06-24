@@ -8,6 +8,7 @@ from aura_context_crusher import (
     compute_cache_prefix_report,
     retrieve_context_crush,
 )
+from aura_st3gg_recall import index_path_for_ledger
 
 
 def test_json_context_crush_is_reversible(tmp_path: Path):
@@ -22,10 +23,19 @@ def test_json_context_crush_is_reversible(tmp_path: Path):
 
     assert result.was_compressed is True
     assert result.content_type == "json"
+    assert result.st3gg_pointer.startswith("ST3GG-L2::JSON:")
     assert result.token_savings_estimate > 0
     assert result.original_hash in result.compressed_payload
     restored = retrieve_context_crush(result.original_hash, ledger_path=ledger)
     assert restored == raw
+    ledger.unlink()
+    restored_from_sidecar = retrieve_context_crush(result.original_hash, ledger_path=ledger)
+    restored_from_pointer = retrieve_context_crush(result.st3gg_pointer, ledger_path=ledger)
+    assert restored_from_sidecar == raw
+    assert restored_from_pointer == raw
+    index_path_for_ledger(ledger).unlink()
+    restored_from_hash_sidecar = retrieve_context_crush(result.st3gg_pointer, ledger_path=ledger)
+    assert restored_from_hash_sidecar == raw
 
 
 def test_log_context_crush_preserves_error_lines(tmp_path: Path):
@@ -77,6 +87,36 @@ def test_message_crush_never_mutates_system_prompt(tmp_path: Path):
     assert batch.cache_prefix.stable_prefix_hash
 
 
+def test_context_crusher_sanitizes_hidden_carriers_without_compression(tmp_path: Path):
+    result = apply_context_crush_to_prompt(
+        "A\u200bB\U000e0001C",
+        ledger_path=tmp_path / "context_crush.jsonl",
+        min_chars=9999,
+        enable_wasm=False,
+    )
+
+    assert result.was_compressed is False
+    assert result.compressed_payload == "ABC"
+    assert dict(result.sanitizer_removed)["format_control"] == 1
+    assert dict(result.sanitizer_removed)["tag_char"] == 1
+    assert "tokenizer_guard_removed_format_control:1" in result.warnings
+
+
+def test_message_crush_sanitizes_system_prompt_only_when_hidden(tmp_path: Path):
+    batch = apply_context_crush_to_messages(
+        [
+            {"role": "system", "content": "strict\u200b system"},
+            {"role": "user", "content": "short prompt"},
+        ],
+        ledger_path=tmp_path / "context_crush.jsonl",
+        min_chars=9999,
+        enable_wasm=False,
+    )
+
+    assert batch.messages[0]["content"] == "strict system"
+    assert batch.messages[1]["content"] == "short prompt"
+
+
 def test_openai_compatible_helper_applies_context_crush(monkeypatch, tmp_path: Path):
     import aura_llm_egress
 
@@ -109,6 +149,34 @@ def test_openai_compatible_helper_applies_context_crush(monkeypatch, tmp_path: P
     assert "[AURA_CCR" in outbound[1]["content"]
     meta = captured["kwargs"]["savings_metadata"]["context_crush"]
     assert meta["compressed_message_count"] == 1
+
+
+def test_openai_compatible_helper_sanitizes_when_context_crush_disabled(monkeypatch):
+    import aura_llm_egress
+
+    captured = {}
+
+    def fake_generate(url, api_key, payload, **kwargs):
+        captured["payload"] = payload
+        captured["kwargs"] = kwargs
+        return "ok", None
+
+    monkeypatch.setattr(aura_llm_egress, "openai_compatible_generate", fake_generate)
+
+    text, err, _lat, _schema = aura_llm_egress.generate_openai_compatible_payload(
+        provider="openrouter",
+        base_url="https://openrouter.ai/api/v1/chat/completions",
+        api_key="sk-test",
+        model="model",
+        messages=[{"role": "user", "content": "visible\u200b text"}],
+        context_crush=False,
+    )
+
+    assert err is None
+    assert text == "ok"
+    assert captured["payload"]["messages"][0]["content"] == "visible text"
+    guard_meta = captured["kwargs"]["savings_metadata"]["tokenizer_guard"]
+    assert guard_meta["changed_message_count"] == 1
 
 
 def test_context_crusher_uses_rust_wasm_bridge_when_candidate_wins(monkeypatch, tmp_path: Path):
