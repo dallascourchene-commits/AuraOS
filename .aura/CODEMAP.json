@@ -5,17 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 194,
+    "included_file_count": 196,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 44,
+      ".git": 58,
       ".pytest_cache": 4,
-      "Aura_Memory": 1,
-      "__pycache__": 15
+      "Aura_Memory": 2,
+      "__pycache__": 27
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -143,6 +143,7 @@
       "aura_self_reflect.py",
       "aura_skillweaver.py",
       "aura_spectral_memory.py",
+      "aura_spectral_topology.py",
       "aura_spvm.py",
       "aura_substrate.py",
       "aura_token_economics.py",
@@ -198,6 +199,7 @@
       "test_aura_model_probe_ledger.py",
       "test_aura_paper_memory.py",
       "test_aura_phase_capsule.py",
+      "test_aura_spectral_topology.py",
       "test_aura_substrate.py",
       "test_codemap_slimming.py",
       "test_forge.py",
@@ -215,16 +217,16 @@
     ]
   },
   "summary": {
-    "file_count": 194,
-    "total_bytes": 16536,
-    "text_tokens_est": 856360,
+    "file_count": 196,
+    "total_bytes": 51920,
+    "text_tokens_est": 866948,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
       "native_accelerator": 6,
       "operator_script": 4,
-      "python_module": 122,
+      "python_module": 124,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
@@ -232,7 +234,7 @@
     "topology_edges": 0,
     "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782271961
+    "last_incremental_refresh_unix": 1782274432
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -265,10 +267,12 @@
       "aura_paper_memory.py",
       "aura_rosetta_memory.py",
       "aura_spectral_memory.py",
+      "aura_spectral_topology.py",
       "cognitive_router.py",
       "cognitive_search.rs",
       "pvm_memory_guard.py",
       "test_aura_paper_memory.py",
+      "test_aura_spectral_topology.py",
       "test_memory_guard_leak.py"
     ],
     "mesh_and_routing": [
@@ -495,8 +499,8 @@
     {
       "path": "aura_topology_ws_bridge.py",
       "role": "python_module",
-      "symbols": 35,
-      "tokens_est": 6408,
+      "symbols": 36,
+      "tokens_est": 8086,
       "topology_degree": 0
     },
     {
@@ -580,7 +584,7 @@
       "path": "aura_fusion.py",
       "role": "python_module",
       "symbols": 26,
-      "tokens_est": 5531,
+      "tokens_est": 5629,
       "topology_degree": 0
     },
     {
@@ -614,22 +618,22 @@
       "aura_node.py:5413"
     ],
     "!ar_server_start": [
-      "USER_GUIDE.md:345",
+      "USER_GUIDE.md:368",
       "aura_node.py:6185"
     ],
     "!ar_server_stop": [
-      "USER_GUIDE.md:346",
+      "USER_GUIDE.md:369",
       "aura_node.py:6201"
     ],
     "!ar_start": [
       "AURA_FINAL_REPORT.md:168",
-      "USER_GUIDE.md:345",
+      "USER_GUIDE.md:368",
       "aura_node.py:6185",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!ar_stop": [
       "AURA_FINAL_REPORT.md:169",
-      "USER_GUIDE.md:346",
+      "USER_GUIDE.md:369",
       "aura_node.py:6201",
       "refactored-auraos-upgrades.md:2572"
     ],
@@ -643,8 +647,8 @@
     ],
     "!backtrack": [
       "AURA_FINAL_REPORT.md:143",
-      "README.md:79",
-      "USER_GUIDE.md:277",
+      "README.md:80",
+      "USER_GUIDE.md:300",
       "arxiv_forager.py:599",
       "aura_node.py:6000"
     ],
@@ -659,7 +663,7 @@
     ],
     "!calibrate": [
       "AURA_FINAL_REPORT.md:163",
-      "README.md:78",
+      "README.md:79",
       "USER_GUIDE.md:220",
       "aura_node.py:7046"
     ],
@@ -695,16 +699,16 @@
     ],
     "!crystallize": [
       "AURA_FINAL_REPORT.md:141",
-      "USER_GUIDE.md:284",
+      "USER_GUIDE.md:307",
       "aura_node.py:6820"
     ],
     "!curiosity_tree": [
       "AURA_FINAL_REPORT.md:174",
-      "USER_GUIDE.md:280",
+      "USER_GUIDE.md:303",
       "aura_node.py:6242"
     ],
     "!db_repair": [
-      "USER_GUIDE.md:349",
+      "USER_GUIDE.md:372",
       "aura_node.py:2982"
     ],
     "!evolve_reasoning": [
@@ -713,7 +717,7 @@
       "aura_node.py:6815"
     ],
     "!export": [
-      "USER_GUIDE.md:347",
+      "USER_GUIDE.md:370",
       "aura_node.py:5803"
     ],
     "!fast_path": [
@@ -723,24 +727,24 @@
       "test_aura_functions.py:900"
     ],
     "!forage": [
-      "USER_GUIDE.md:276",
+      "USER_GUIDE.md:299",
       "aura_node.py:5986",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!forage_off": [
-      "USER_GUIDE.md:282",
+      "USER_GUIDE.md:305",
       "aura_node.py:6179"
     ],
     "!forage_on": [
-      "USER_GUIDE.md:281",
+      "USER_GUIDE.md:304",
       "aura_node.py:6173"
     ],
     "!forager_off": [
-      "USER_GUIDE.md:282",
+      "USER_GUIDE.md:305",
       "aura_node.py:6179"
     ],
     "!forager_on": [
-      "USER_GUIDE.md:281",
+      "USER_GUIDE.md:304",
       "aura_node.py:6173"
     ],
     "!fusion": [
@@ -756,9 +760,12 @@
       "USER_GUIDE.md:166",
       "aura_node.py:7171"
     ],
+    "!important": [
+      "index.html:9"
+    ],
     "!indus_decrypt": [
       "AURA_FINAL_REPORT.md:175",
-      "USER_GUIDE.md:286",
+      "USER_GUIDE.md:309",
       "aura_node.py:6827"
     ],
     "!manifest": [
@@ -768,12 +775,12 @@
     ],
     "!markov": [
       "AURA_FINAL_REPORT.md:144",
-      "USER_GUIDE.md:350",
+      "USER_GUIDE.md:373",
       "aura_node.py:7018"
     ],
     "!mesh_status": [
       "AURA_FINAL_REPORT.md:167",
-      "USER_GUIDE.md:344",
+      "USER_GUIDE.md:367",
       "aura_node.py:5439"
     ],
     "!meta_analyze": [
@@ -793,14 +800,14 @@
     ],
     "!ping_mesh": [
       "AURA_FINAL_REPORT.md:166",
-      "USER_GUIDE.md:343",
+      "USER_GUIDE.md:366",
       "aura_node.py:5434"
     ],
     "!plan": [
       "aura_node.py:5377"
     ],
     "!push": [
-      "USER_GUIDE.md:348",
+      "USER_GUIDE.md:371",
       "aura_node.py:5090",
       "test_aura_functions.py:208"
     ],
@@ -808,7 +815,7 @@
       "aura_hv_cache.py:373",
       "aura_savings_dashboard.py:229",
       "aura_substrate.py:123",
-      "aura_topology_ws_bridge.py:587"
+      "aura_topology_ws_bridge.py:658"
     ],
     "!reason": [
       "AURA_FINAL_REPORT.md:154",
@@ -816,13 +823,13 @@
       "aura_node.py:7006"
     ],
     "!repair_db": [
-      "USER_GUIDE.md:349",
+      "USER_GUIDE.md:372",
       "aura_node.py:6493"
     ],
     "!research": [
       "AURA_FINAL_REPORT.md:142",
-      "README.md:80",
-      "USER_GUIDE.md:278",
+      "README.md:81",
+      "USER_GUIDE.md:301",
       "aura_node.py:6012",
       "aura_skillweaver.py:14",
       "systems_check.py:250"
@@ -839,7 +846,7 @@
     "!route": [
       "AURA_FINAL_REPORT.md:28",
       "AURA_ROUTER.md:213",
-      "README.md:81",
+      "README.md:82",
       "USER_GUIDE.md:221",
       "aura_node.py:7055",
       "test_aura_substrate.py:323"
@@ -869,7 +876,7 @@
       "aura_node.py:6662"
     ],
     "!search_similar": [
-      "USER_GUIDE.md:279",
+      "USER_GUIDE.md:302",
       "aura_node.py:6215",
       "refactored-auraos-upgrades.md:2573"
     ],
@@ -888,7 +895,7 @@
       "aura_node.py:5539"
     ],
     "!settings": [
-      "README.md:75",
+      "README.md:76",
       "USER_GUIDE.md:166",
       "aura_node.py:7171",
       "daily_digest_2026-06-06.md:14"
@@ -900,6 +907,9 @@
     ],
     "!something": [
       "aura_node.py:4893"
+    ],
+    "!srcPos": [
+      "index.html:120"
     ],
     "!stage": [
       "AURA_FINAL_REPORT.md:149",
@@ -930,7 +940,7 @@
       "aura_node.py:6990"
     ],
     "!synthesize": [
-      "USER_GUIDE.md:285",
+      "USER_GUIDE.md:308",
       "aura_associative_core.py:138",
       "aura_node.py:6410",
       "test_aura_functions.py:886"
@@ -949,19 +959,22 @@
       "USER_GUIDE.md:201",
       "aura_node.py:5389"
     ],
+    "!tgtPos": [
+      "index.html:120"
+    ],
     "!timeline": [
-      "USER_GUIDE.md:283",
+      "USER_GUIDE.md:306",
       "aura_node.py:6254"
     ],
     "!topology": [
       "AURA_FINAL_REPORT.md:48",
-      "README.md:76",
+      "README.md:39",
       "USER_GUIDE.md:179",
       "aura_ai_router.py:143",
       "aura_codebase_navigator.py:213",
       "aura_node.py:6745",
-      "aura_topological_scanner.py:334",
-      "aura_topology_ws_bridge.py:189",
+      "aura_topological_scanner.py:340",
+      "aura_topology_ws_bridge.py:195",
       "daily_digest_2026-06-06.md:14",
       "generate_ai_router.py:236",
       "test_aura_functions.py:453"
@@ -974,7 +987,7 @@
       "aura_savings_dashboard.py:224"
     ],
     "!voice": [
-      "USER_GUIDE.md:351",
+      "USER_GUIDE.md:374",
       "aura_node.py:7227"
     ]
   },
@@ -1089,8 +1102,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "class",
-        "line": 343,
-        "end_line": 661,
+        "line": 361,
+        "end_line": 789,
         "semantic_id": "aura_topology_ws_bridge.py#class:AuraARWebSocketServer:9dca0b3216362eb6",
         "signature_hash": "06c81cdf3232a8d6"
       }
@@ -1179,8 +1192,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "class",
-        "line": 83,
-        "end_line": 102,
+        "line": 84,
+        "end_line": 103,
         "semantic_id": "aura_fusion.py#class:AuraFusionAgent:73a3b7fcbefb773d",
         "signature_hash": "fa965ec0eb2954c4"
       }
@@ -1189,8 +1202,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "class",
-        "line": 240,
-        "end_line": 518,
+        "line": 249,
+        "end_line": 528,
         "semantic_id": "aura_fusion.py#class:AuraFusionCoordinator:3aef25f95ef7d83b",
         "signature_hash": "736faa61594a4142"
       }
@@ -1199,8 +1212,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "class",
-        "line": 120,
-        "end_line": 131,
+        "line": 121,
+        "end_line": 132,
         "semantic_id": "aura_fusion.py#class:AuraFusionResult:3cb95b6ae5664059",
         "signature_hash": "07562ddefc73a738"
       }
@@ -1327,8 +1340,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "class",
-        "line": 106,
-        "end_line": 116,
+        "line": 107,
+        "end_line": 117,
         "semantic_id": "aura_fusion.py#class:AuraPanelOutput:4d2a9ff7e88f2aea",
         "signature_hash": "488acc0a5773e31b"
       }
@@ -2551,8 +2564,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "class",
-        "line": 53,
-        "end_line": 207,
+        "line": 59,
+        "end_line": 213,
         "semantic_id": "aura_topology_ws_bridge.py#class:TopologyBroadcastHub:b97e4896e225fdcf",
         "signature_hash": "f41c55251ef79e52"
       }
@@ -2562,7 +2575,7 @@
         "file": "aura_topology_manager.py",
         "kind": "class",
         "line": 64,
-        "end_line": 308,
+        "end_line": 314,
         "semantic_id": "aura_topology_manager.py#class:TopologyBuilder:9b7c21fe8e834297",
         "signature_hash": "cb16920162e70cb7"
       }
@@ -2681,8 +2694,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "class",
-        "line": 319,
-        "end_line": 333,
+        "line": 333,
+        "end_line": 351,
         "semantic_id": "aura_topology_ws_bridge.py#class:_ARConnection:03402ff957f8ebae",
         "signature_hash": "9c4ab6c2bddfd0dd"
       }
@@ -2691,8 +2704,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "class",
-        "line": 337,
-        "end_line": 340,
+        "line": 355,
+        "end_line": 358,
         "semantic_id": "aura_topology_ws_bridge.py#class:_ARSession:3ee7c1cae635932e",
         "signature_hash": "7fed367fc0872e5e"
       }
@@ -2701,8 +2714,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "class",
-        "line": 296,
-        "end_line": 315,
+        "line": 302,
+        "end_line": 329,
         "semantic_id": "aura_topology_ws_bridge.py#class:_ARShape:d726cd32d3c202bd",
         "signature_hash": "fc9645240a16cbae"
       }
@@ -3173,8 +3186,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 241,
-        "end_line": 261,
+        "line": 250,
+        "end_line": 270,
         "semantic_id": "aura_fusion.py#function:__init__:d73728dbcaa9c1e4",
         "signature_hash": "904a4580d34bc594"
       },
@@ -3573,16 +3586,16 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 64,
-        "end_line": 70,
+        "line": 70,
+        "end_line": 76,
         "semantic_id": "aura_topology_ws_bridge.py#function:__init__:37d28ed31716cc57",
         "signature_hash": "3d77650513b79756"
       },
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 365,
-        "end_line": 383,
+        "line": 383,
+        "end_line": 402,
         "semantic_id": "aura_topology_ws_bridge.py#function:__init__:ecb915c1f638f699",
         "signature_hash": "91f648194a3f09df"
       },
@@ -4023,8 +4036,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 108,
-        "end_line": 111,
+        "line": 114,
+        "end_line": 117,
         "semantic_id": "aura_topology_manager.py#function:_add_edge:4d3ea5d48f99ec31",
         "signature_hash": "fc9839964969900f"
       }
@@ -4033,8 +4046,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 97,
-        "end_line": 106,
+        "line": 103,
+        "end_line": 112,
         "semantic_id": "aura_topology_manager.py#function:_add_node:da63f2183ddebaf1",
         "signature_hash": "75e04e4ac97d60c5"
       }
@@ -4113,8 +4126,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 263,
-        "end_line": 269,
+        "line": 272,
+        "end_line": 278,
         "semantic_id": "aura_fusion.py#function:_api_key_for:f33804e3d7280bac",
         "signature_hash": "1af73f1603dd8a05"
       }
@@ -4133,8 +4146,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 435,
-        "end_line": 438,
+        "line": 444,
+        "end_line": 447,
         "semantic_id": "aura_fusion.py#function:_append_log:5c349d549acfc821",
         "signature_hash": "406fd3415607701e"
       }
@@ -4391,8 +4404,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 653,
-        "end_line": 661,
+        "line": 781,
+        "end_line": 789,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_broadcast_message:a400e6aba8fd4598",
         "signature_hash": "987139729424f087"
       }
@@ -4401,8 +4414,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 647,
-        "end_line": 651,
+        "line": 775,
+        "end_line": 779,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_broadcast_topology:8bf062a9a8715127",
         "signature_hash": "b9c6ed266b2ca710"
       }
@@ -4411,8 +4424,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 95,
-        "end_line": 125,
+        "line": 101,
+        "end_line": 131,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_broadcast_worker:938e96d5ef0200d1",
         "signature_hash": "7695992f42200075"
       },
@@ -4489,8 +4502,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 304,
-        "end_line": 346,
+        "line": 313,
+        "end_line": 355,
         "semantic_id": "aura_fusion.py#function:_call_agent:c0efd54d40df9630",
         "signature_hash": "353f3596cc89d092"
       }
@@ -4589,8 +4602,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 30,
-        "end_line": 50,
+        "line": 36,
+        "end_line": 56,
         "semantic_id": "aura_topology_ws_bridge.py#function:_chunk_json_fixed_frame:d0c98d677f5577fe",
         "signature_hash": "3c1a5eeb0aa7b840"
       }
@@ -4603,6 +4616,14 @@
         "end_line": 71,
         "semantic_id": "aura_model_probe_ledger.py#function:_clamp:7d3b3ede5070d6c8",
         "signature_hash": "1267945434b24724"
+      },
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "aura_spectral_topology.py#function:_clamp:d89d535e92472344",
+        "signature_hash": "3f221156eb9c7648"
       }
     ],
     "_class_state_for_text": [
@@ -4639,8 +4660,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 197,
-        "end_line": 207,
+        "line": 198,
+        "end_line": 208,
         "semantic_id": "aura_fusion.py#function:_codemap_epoch:66402f8e126ac203",
         "signature_hash": "ec65cd6b54b2c8c3"
       }
@@ -4649,8 +4670,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 239,
-        "end_line": 263,
+        "line": 245,
+        "end_line": 269,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_combined_handler:4d857f14e20d13b4",
         "signature_hash": "2ef1a9d847bd4e63"
       }
@@ -4719,8 +4740,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 278,
-        "end_line": 308,
+        "line": 284,
+        "end_line": 314,
         "semantic_id": "aura_topology_manager.py#function:_compute_diagnostics:5faa6a543fef99d8",
         "signature_hash": "4cb768aa1eddbeac"
       }
@@ -4775,6 +4796,16 @@
         "signature_hash": "b3b04bc97b15ebf0"
       }
     ],
+    "_copy_mapping": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "aura_spectral_topology.py#function:_copy_mapping:0042ce098a67ef12",
+        "signature_hash": "ed2ebc1db91dac8e"
+      }
+    ],
     "_cos": [
       {
         "file": "cognitive_router.py",
@@ -4823,6 +4854,16 @@
         "end_line": 272,
         "semantic_id": "aura_blockchain/node.py#function:_current_phasor:f7fe1ef2afe0760d",
         "signature_hash": "6ee046083f7f10d2"
+      }
+    ],
+    "_cyclic_nodes": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 158,
+        "semantic_id": "aura_spectral_topology.py#function:_cyclic_nodes:c2ce9cf11f09bd34",
+        "signature_hash": "53f6f763c20d7e2f"
       }
     ],
     "_db": [
@@ -4899,10 +4940,20 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 380,
-        "end_line": 396,
+        "line": 389,
+        "end_line": 405,
         "semantic_id": "aura_fusion.py#function:_dispatch_panel:17ef0871b467360c",
         "signature_hash": "682eb9bf7f57308d"
+      }
+    ],
+    "_edge_weight": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 111,
+        "semantic_id": "aura_spectral_topology.py#function:_edge_weight:dfb7167a7bbf7c76",
+        "signature_hash": "bf8bde6dbf462afb"
       }
     ],
     "_egress_factory": [
@@ -5009,8 +5060,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 218,
-        "end_line": 224,
+        "line": 224,
+        "end_line": 230,
         "semantic_id": "aura_topology_manager.py#function:_extract_calls:7c56411670b1ebcd",
         "signature_hash": "fd7423367eddded7"
       }
@@ -5439,8 +5490,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 606,
-        "end_line": 629,
+        "line": 677,
+        "end_line": 700,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_add_shape:70028244da85f235",
         "signature_hash": "8ab7c250bf109df4"
       }
@@ -5449,8 +5500,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 511,
-        "end_line": 541,
+        "line": 564,
+        "end_line": 594,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_connection:b015825da199589b",
         "signature_hash": "63344293a9a7a9f5"
       }
@@ -5459,8 +5510,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 631,
-        "end_line": 645,
+        "line": 702,
+        "end_line": 716,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_hotswap_request:ae602ba532f21fcd",
         "signature_hash": "e515c75ce5dbb98c"
       }
@@ -5469,8 +5520,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 543,
-        "end_line": 576,
+        "line": 596,
+        "end_line": 647,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_message:bc2a386871137d56",
         "signature_hash": "ed2e8c33aeb94dcb"
       },
@@ -5483,12 +5534,22 @@
         "signature_hash": "b04f365a5c9842d9"
       }
     ],
+    "_handle_resonance_update": [
+      {
+        "file": "aura_topology_ws_bridge.py",
+        "kind": "async_function",
+        "line": 718,
+        "end_line": 773,
+        "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_resonance_update:d26a1a257ee1a4bb",
+        "signature_hash": "8741046d4d50c11f"
+      }
+    ],
     "_handle_shape_interaction": [
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 578,
-        "end_line": 604,
+        "line": 649,
+        "end_line": 675,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_handle_shape_interaction:59aaca9b863c941c",
         "signature_hash": "090874721657a34c"
       }
@@ -5507,8 +5568,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 210,
-        "end_line": 212,
+        "line": 211,
+        "end_line": 213,
         "semantic_id": "aura_fusion.py#function:_hash_payload:cba6c3652c6b238b",
         "signature_hash": "3403c8182515448e"
       }
@@ -5731,12 +5792,22 @@
         "signature_hash": "09027c944a79f4e2"
       }
     ],
+    "_layout_coordinates": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 241,
+        "semantic_id": "aura_spectral_topology.py#function:_layout_coordinates:67c3a22239bdd489",
+        "signature_hash": "d0082ceca80f440a"
+      }
+    ],
     "_link_import_graph": [
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 253,
-        "end_line": 276,
+        "line": 259,
+        "end_line": 282,
         "semantic_id": "aura_topology_manager.py#function:_link_import_graph:13271a0e72651a16",
         "signature_hash": "69328c30cef9198c"
       }
@@ -5859,6 +5930,16 @@
         "signature_hash": "c0cd1f9b2c4b660f"
       }
     ],
+    "_load_topology_payload": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 387,
+        "end_line": 397,
+        "semantic_id": "aura_spectral_topology.py#function:_load_topology_payload:40ed303053c8f9e0",
+        "signature_hash": "719908b8b0487ca8"
+      }
+    ],
     "_log_to_savings": [
       {
         "file": "aura_llm_egress.py",
@@ -5977,6 +6058,16 @@
         "end_line": 390,
         "semantic_id": "test_synthesis_upgrades.py#async_function:_markov_returns_string:0865dc12bf6ace46",
         "signature_hash": "17995289b70e8ad3"
+      }
+    ],
+    "_matches_target": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 400,
+        "end_line": 407,
+        "semantic_id": "aura_spectral_topology.py#function:_matches_target:70430d43d3e649a1",
+        "signature_hash": "0970ca0044a459ba"
       }
     ],
     "_mb_to_floats": [
@@ -6103,8 +6194,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 290,
-        "end_line": 302,
+        "line": 299,
+        "end_line": 311,
         "semantic_id": "aura_fusion.py#function:_mock_judge:b9d25a347b2231bd",
         "signature_hash": "e38a911660344c08"
       }
@@ -6113,8 +6204,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 278,
-        "end_line": 288,
+        "line": 287,
+        "end_line": 297,
         "semantic_id": "aura_fusion.py#function:_mock_panel:5a43167a8f4090b2",
         "signature_hash": "71910bdb42ecef58"
       }
@@ -6209,6 +6300,26 @@
         "signature_hash": "9962a67c41d9a6bf"
       }
     ],
+    "_node_group_key": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 192,
+        "semantic_id": "aura_spectral_topology.py#function:_node_group_key:aaff4cfccac906a9",
+        "signature_hash": "0c67cb680cb27791"
+      }
+    ],
+    "_node_visual_state": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 244,
+        "end_line": 251,
+        "semantic_id": "aura_spectral_topology.py#function:_node_visual_state:2d595546a5fe32e3",
+        "signature_hash": "5d0442db72da02bb"
+      }
+    ],
     "_normalise_backtracker_window": [
       {
         "file": "arxiv_forager.py",
@@ -6219,6 +6330,16 @@
         "signature_hash": "0695f09076037be0"
       }
     ],
+    "_normalise_edge_items": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 68,
+        "semantic_id": "aura_spectral_topology.py#function:_normalise_edge_items:9d4c902fd81fa2d7",
+        "signature_hash": "a31840fb0828e3f4"
+      }
+    ],
     "_normalise_import_name": [
       {
         "file": "aura_namespace_sanitizer.py",
@@ -6227,6 +6348,16 @@
         "end_line": 42,
         "semantic_id": "aura_namespace_sanitizer.py#function:_normalise_import_name:7bbca08abddd6973",
         "signature_hash": "3d230cfa7411c907"
+      }
+    ],
+    "_normalise_node_items": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 50,
+        "semantic_id": "aura_spectral_topology.py#function:_normalise_node_items:046167d190a1b8ce",
+        "signature_hash": "eebaceec21fff9fd"
       }
     ],
     "_normalize_node_id": [
@@ -6331,8 +6462,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 210,
-        "end_line": 216,
+        "line": 216,
+        "end_line": 222,
         "semantic_id": "aura_topology_manager.py#function:_parent_name:dbd06e9c7b7e2524",
         "signature_hash": "a17873f1144aeff9"
       }
@@ -6651,8 +6782,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 271,
-        "end_line": 276,
+        "line": 280,
+        "end_line": 285,
         "semantic_id": "aura_fusion.py#function:_rank_panel:669f9b00d3abad13",
         "signature_hash": "e0b366560a875789"
       }
@@ -6809,8 +6940,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 148,
+        "line": 142,
+        "end_line": 149,
         "semantic_id": "aura_fusion.py#function:_redact_error:ec5866b0f0adb23c",
         "signature_hash": "45e5c7315a4cb6a5"
       }
@@ -6839,8 +6970,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 444,
-        "end_line": 496,
+        "line": 463,
+        "end_line": 545,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_refresh_topology:91c7941dfbcc19de",
         "signature_hash": "b8bf787b1d858e9a"
       }
@@ -6879,8 +7010,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 226,
-        "end_line": 251,
+        "line": 232,
+        "end_line": 257,
         "semantic_id": "aura_topology_manager.py#function:_resolve_call:d2989e90b6d50b23",
         "signature_hash": "ba7a9c9853977081"
       }
@@ -7115,8 +7246,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 398,
-        "end_line": 433,
+        "line": 407,
+        "end_line": 442,
         "semantic_id": "aura_fusion.py#function:_run_judge:2e789cdc684022a5",
         "signature_hash": "d1a4b9fdf24415fb"
       }
@@ -7125,8 +7256,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 348,
-        "end_line": 378,
+        "line": 357,
+        "end_line": 387,
         "semantic_id": "aura_fusion.py#function:_run_panel_agent:1bc1fd58e5bdc2aa",
         "signature_hash": "e6b5d32f98c1fbfe"
       }
@@ -7149,6 +7280,16 @@
         "end_line": 210,
         "semantic_id": "aura_anthropic_router.py#function:_sambanova_call:77592ad512e3f897",
         "signature_hash": "3d926bb2bf3cce46"
+      }
+    ],
+    "_sample_payload": [
+      {
+        "file": "test_aura_spectral_topology.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 23,
+        "semantic_id": "test_aura_spectral_topology.py#function:_sample_payload:7ac0fcfb42aed7b8",
+        "signature_hash": "5b2bb9f3e4cf23b7"
       }
     ],
     "_sat_score": [
@@ -7265,8 +7406,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 113,
-        "end_line": 207,
+        "line": 119,
+        "end_line": 213,
         "semantic_id": "aura_topology_manager.py#function:_scan_module:c7bdd18fefd7a3c5",
         "signature_hash": "53875436a2f53133"
       }
@@ -7275,8 +7416,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 151,
-        "end_line": 159,
+        "line": 152,
+        "end_line": 160,
         "semantic_id": "aura_fusion.py#function:_schema_response_format:4d704b29287743bb",
         "signature_hash": "140878ce52ca6074"
       }
@@ -7405,8 +7546,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 110,
-        "end_line": 116,
+        "line": 116,
+        "end_line": 122,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_send_to_one:d7c7d1f67715835f",
         "signature_hash": "8be58c74bc0d63cb"
       }
@@ -7469,6 +7610,26 @@
         "end_line": 207,
         "semantic_id": "aura_paper_memory.py#function:_slot_safe:0224e24dfa982b43",
         "signature_hash": "f142f5ce726d22b9"
+      }
+    ],
+    "_snapshot_node": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 410,
+        "end_line": 418,
+        "semantic_id": "aura_spectral_topology.py#function:_snapshot_node:4659bdf5b8ebde4f",
+        "signature_hash": "bcc1fd6220d9e512"
+      }
+    ],
+    "_spectral_coordinates": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 182,
+        "semantic_id": "aura_spectral_topology.py#function:_spectral_coordinates:855cb0479f4ef4a8",
+        "signature_hash": "c825c48ea2f0e350"
       }
     ],
     "_stage_indexing": [
@@ -7603,8 +7764,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 668,
-        "end_line": 675,
+        "line": 796,
+        "end_line": 803,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_test:4aeb47846ba879d6",
         "signature_hash": "484636f7f3a7f004"
       }
@@ -8321,8 +8482,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 498,
-        "end_line": 507,
+        "line": 547,
+        "end_line": 560,
         "semantic_id": "aura_topology_ws_bridge.py#function:_topology_dict:18762daea7cc8075",
         "signature_hash": "623f6b4fbdb733b5"
       }
@@ -8341,8 +8502,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 243,
-        "end_line": 251,
+        "line": 249,
+        "end_line": 257,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_topology_pump:de5795712d20b79c",
         "signature_hash": "f1af64ee8e8208d2"
       }
@@ -8351,8 +8512,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 433,
-        "end_line": 442,
+        "line": 452,
+        "end_line": 461,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_topology_refresh_loop:5e9be5e30eb222f1",
         "signature_hash": "10a85900d2420047"
       }
@@ -8361,8 +8522,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 128,
-        "end_line": 160,
+        "line": 134,
+        "end_line": 166,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:_topology_watch_loop:086d71bcffd583bd",
         "signature_hash": "d90e4d31f3848c55"
       }
@@ -8491,8 +8652,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 134,
-        "end_line": 138,
+        "line": 135,
+        "end_line": 139,
         "semantic_id": "aura_fusion.py#function:_valid_secret:59ee1b298966195f",
         "signature_hash": "5921547fc8410764"
       }
@@ -8983,6 +9144,16 @@
         "signature_hash": "c35c4fe8d98b8eea"
       }
     ],
+    "augment_topology_payload": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 254,
+        "end_line": 384,
+        "semantic_id": "aura_spectral_topology.py#function:augment_topology_payload:32164727bbad21e1",
+        "signature_hash": "544cfa00e37f2b8b"
+      }
+    ],
     "aura_tmm_server": [
       {
         "file": "spatial_mapper.py",
@@ -9197,8 +9368,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 187,
-        "end_line": 207,
+        "line": 193,
+        "end_line": 213,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:broadcast_topology_now:9c60ba4d0e2723d0",
         "signature_hash": "c6f0faa9e0f2e6b8"
       }
@@ -9273,6 +9444,16 @@
         "signature_hash": "1713cb6ae3263494"
       }
     ],
+    "build_fusion_topology_snapshot": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 421,
+        "end_line": 467,
+        "semantic_id": "aura_spectral_topology.py#function:build_fusion_topology_snapshot:7b3229267b1e5ee2",
+        "signature_hash": "264898f72e63fac0"
+      }
+    ],
     "build_leaderboard": [
       {
         "file": "aura_matrix_benchmark.py",
@@ -9337,10 +9518,10 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 215,
-        "end_line": 237,
-        "semantic_id": "aura_fusion.py#function:build_task_capsule:7c380dd0355cf3bc",
-        "signature_hash": "7e7045612e6c8b8c"
+        "line": 216,
+        "end_line": 246,
+        "semantic_id": "aura_fusion.py#function:build_task_capsule:db23bab86b095e0e",
+        "signature_hash": "0ec6f04818ae15e3"
       }
     ],
     "bundle": [
@@ -9851,8 +10032,8 @@
       {
         "file": "aura_topological_scanner.py",
         "kind": "function",
-        "line": 330,
-        "end_line": 394,
+        "line": 336,
+        "end_line": 401,
         "semantic_id": "aura_topological_scanner.py#function:compile_topology_map:aeba088fc72611a6",
         "signature_hash": "814a62bf51b94bed"
       }
@@ -9862,7 +10043,7 @@
         "file": "aura_topological_scanner.py",
         "kind": "function",
         "line": 129,
-        "end_line": 328,
+        "end_line": 334,
         "semantic_id": "aura_topological_scanner.py#function:compile_unified_graph:c67ee3c5d9644070",
         "signature_hash": "133b744f1e2bb7ad"
       }
@@ -11225,8 +11406,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 102,
+        "line": 96,
+        "end_line": 103,
         "semantic_id": "aura_fusion.py#function:from_dict:504505853048a9c7",
         "signature_hash": "a8a6f67afd3f5bf2"
       },
@@ -11715,8 +11896,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 215,
-        "end_line": 223,
+        "line": 221,
+        "end_line": 229,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:get_topology_hub:bc25edbdf6e46806",
         "signature_hash": "6635528f59b3be9e"
       }
@@ -12351,8 +12532,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 336,
-        "end_line": 342,
+        "line": 342,
+        "end_line": 348,
         "semantic_id": "aura_topology_manager.py#function:load_fracture_report:5ffbc84a6feb581b",
         "signature_hash": "8e2a4767f199d289"
       }
@@ -12361,8 +12542,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 183,
-        "end_line": 194,
+        "line": 184,
+        "end_line": 195,
         "semantic_id": "aura_fusion.py#function:load_fusion_config:5e132867d560b904",
         "signature_hash": "61d2509493d18ae1"
       }
@@ -12677,8 +12858,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 521,
-        "end_line": 546,
+        "line": 531,
+        "end_line": 556,
         "semantic_id": "aura_fusion.py#function:main:f5afbe64ee3c2b2e",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -12757,8 +12938,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 350,
-        "end_line": 383,
+        "line": 356,
+        "end_line": 389,
         "semantic_id": "aura_topology_manager.py#function:main:8847f177eb5aa3c7",
         "signature_hash": "1107cedc597d81be"
       },
@@ -13005,6 +13186,16 @@
         "signature_hash": "3a847d6cc5344061"
       }
     ],
+    "normalize_topology_payload": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 100,
+        "semantic_id": "aura_spectral_topology.py#function:normalize_topology_payload:6954058d61e53f59",
+        "signature_hash": "79c41bbb14a51012"
+      }
+    ],
     "observe": [
       {
         "file": "aura_qdkt.py",
@@ -13159,8 +13350,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 162,
-        "end_line": 180,
+        "line": 163,
+        "end_line": 181,
         "semantic_id": "aura_fusion.py#function:parse_json_object:b5fd763230d6c0d0",
         "signature_hash": "cd2510ec348f67e3"
       }
@@ -13953,8 +14144,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 325,
-        "end_line": 333,
+        "line": 331,
+        "end_line": 339,
         "semantic_id": "aura_topology_manager.py#function:refresh_live_topology:7e59650c6ff54e35",
         "signature_hash": "7a950a227cdb8030"
       }
@@ -13981,8 +14172,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 73,
-        "end_line": 77,
+        "line": 79,
+        "end_line": 83,
         "semantic_id": "aura_topology_ws_bridge.py#function:register_client:b5abd8be999f33ff",
         "signature_hash": "3f9d856c89ba376d"
       }
@@ -14225,8 +14416,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 440,
-        "end_line": 518,
+        "line": 449,
+        "end_line": 528,
         "semantic_id": "aura_fusion.py#function:run:2469ab371f4550f4",
         "signature_hash": "3a9d07de8a60e9b2"
       },
@@ -14234,7 +14425,7 @@
         "file": "aura_topology_manager.py",
         "kind": "function",
         "line": 73,
-        "end_line": 95,
+        "end_line": 101,
         "semantic_id": "aura_topology_manager.py#function:run:cc5f0c0f9124e701",
         "signature_hash": "059588ce65dc390d"
       },
@@ -14259,8 +14450,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 311,
-        "end_line": 322,
+        "line": 317,
+        "end_line": 328,
         "semantic_id": "aura_topology_manager.py#function:run_arch_checker:4b54f7a1670df6b8",
         "signature_hash": "bcb44a46195a273c"
       },
@@ -14923,16 +15114,16 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 163,
-        "end_line": 169,
+        "line": 169,
+        "end_line": 175,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:start:83986462b8d51780",
         "signature_hash": "d0f1f01d61d138fb"
       },
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 387,
-        "end_line": 404,
+        "line": 406,
+        "end_line": 423,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:start:83986462b8d51780",
         "signature_hash": "d0f1f01d61d138fb"
       },
@@ -15097,16 +15288,16 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 171,
-        "end_line": 185,
+        "line": 177,
+        "end_line": 191,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:stop:83820da7e2cb4d1e",
         "signature_hash": "0c036f53fb3cb423"
       },
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 406,
-        "end_line": 429,
+        "line": 425,
+        "end_line": 448,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:stop:83820da7e2cb4d1e",
         "signature_hash": "0c036f53fb3cb423"
       },
@@ -15153,8 +15344,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "async_function",
-        "line": 226,
-        "end_line": 266,
+        "line": 232,
+        "end_line": 272,
         "semantic_id": "aura_topology_ws_bridge.py#async_function:stream_to_clients:a1474ae8e849def6",
         "signature_hash": "25888cd259f02716"
       }
@@ -15207,6 +15398,16 @@
         "end_line": 153,
         "semantic_id": "aura_namespace_sanitizer.py#function:strip_redundant_imports:4eaa7bfc314d5642",
         "signature_hash": "a88956208b4eba35"
+      }
+    ],
+    "strongconnect": [
+      {
+        "file": "aura_spectral_topology.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 153,
+        "semantic_id": "aura_spectral_topology.py#function:strongconnect:6387d297d8b73f15",
+        "signature_hash": "8c48c4d4b1c5a523"
       }
     ],
     "structural_resonance": [
@@ -15381,6 +15582,26 @@
         "end_line": 98,
         "semantic_id": "liquid_math_reference.py#function:ternary_quantize_tensor:b027304bdbfa6152",
         "signature_hash": "1df0b7dc427c2e5a"
+      }
+    ],
+    "test_augment_topology_payload_adds_spectral_coordinates_and_warnings": [
+      {
+        "file": "test_aura_spectral_topology.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 39,
+        "semantic_id": "test_aura_spectral_topology.py#function:test_augment_topology_payload_adds_spectral_coordinates_and_warnings:c325907d8ab05797",
+        "signature_hash": "eb6e856cd7eb46c3"
+      }
+    ],
+    "test_build_fusion_topology_snapshot_limits_to_target_neighbors": [
+      {
+        "file": "test_aura_spectral_topology.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 82,
+        "semantic_id": "test_aura_spectral_topology.py#function:test_build_fusion_topology_snapshot_limits_to_target_neighbors:853bb0e23cb60235",
+        "signature_hash": "2f42e077ece7987c"
       }
     ],
     "test_capsule_has_stable_phase_hash_and_required_fields": [
@@ -15601,6 +15822,16 @@
         "end_line": 28,
         "semantic_id": "test_aura_model_probe_ledger.py#function:test_model_probe_score_uses_weighted_equation:14c725d14091d0fe",
         "signature_hash": "1830ced60effc839"
+      }
+    ],
+    "test_normalize_topology_payload_accepts_dict_payloads": [
+      {
+        "file": "test_aura_spectral_topology.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 59,
+        "semantic_id": "test_aura_spectral_topology.py#function:test_normalize_topology_payload_accepts_dict_payloads:f8c5873b4e2eef75",
+        "signature_hash": "6accabf8073530b2"
       }
     ],
     "test_openai_compatible_generate_logs_direct_call": [
@@ -15865,8 +16096,8 @@
       {
         "file": "aura_fusion.py",
         "kind": "function",
-        "line": 130,
-        "end_line": 131,
+        "line": 131,
+        "end_line": 132,
         "semantic_id": "aura_fusion.py#function:to_dict:cd23d0072a499f07",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -15889,16 +16120,16 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 315,
+        "line": 314,
+        "end_line": 329,
         "semantic_id": "aura_topology_ws_bridge.py#function:to_dict:a0580158bee55112",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 326,
-        "end_line": 333,
+        "line": 342,
+        "end_line": 351,
         "semantic_id": "aura_topology_ws_bridge.py#function:to_dict:a0580158bee55112",
         "signature_hash": "5c1a69a9659e2089"
       }
@@ -15985,8 +16216,8 @@
       {
         "file": "aura_topology_ws_bridge.py",
         "kind": "function",
-        "line": 79,
-        "end_line": 92,
+        "line": 85,
+        "end_line": 98,
         "semantic_id": "aura_topology_ws_bridge.py#function:unregister_client:b82b001a1b93393f",
         "signature_hash": "53036abaf11ad3a0"
       }
@@ -16533,8 +16764,8 @@
       {
         "file": "aura_topology_manager.py",
         "kind": "function",
-        "line": 345,
-        "end_line": 347,
+        "line": 351,
+        "end_line": 353,
         "semantic_id": "aura_topology_manager.py#function:write_json:364637eaa75d6503",
         "signature_hash": "a69da0a38127a8a6"
       }
@@ -18350,8 +18581,8 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "lines": 108,
-      "tokens_est": 1935,
+      "lines": 109,
+      "tokens_est": 2007,
       "symbol_count": 0,
       "commands": [
         "!backtrack",
@@ -18364,64 +18595,65 @@
       ],
       "command_lines": {
         "!backtrack": [
-          79
+          80
         ],
         "!benchmark": [
           26,
           31,
-          77
-        ],
-        "!calibrate": [
           78
         ],
-        "!research": [
-          80
+        "!calibrate": [
+          79
         ],
-        "!route": [
+        "!research": [
           81
         ],
+        "!route": [
+          82
+        ],
         "!settings": [
-          75
+          76
         ],
         "!topology": [
-          76
+          39,
+          77
         ]
       },
       "topology": {},
-      "digest8": "b54046afdf0defd8",
+      "digest8": "bff28b4e57ebac14",
       "vector": [
-        -0.151349,
-        -0.142106,
-        0.019641,
-        0.273814,
-        0.195252,
-        0.232222,
-        -0.093582,
-        -0.001155,
-        -0.019641,
-        0.107446,
-        0.276125,
-        0.160592,
-        -0.132864,
-        -0.197562,
-        -0.287679,
-        -0.248397,
-        -0.241465,
-        0.22529,
-        0.176766,
-        -0.176766,
-        0.278436,
-        -0.22529,
-        -0.070475,
-        0.070475,
-        0.040437,
-        0.061233,
-        0.031194,
-        -0.105136,
-        -0.038126,
-        0.2923,
-        0.22298,
-        -0.042747
+        0.302234,
+        -0.115201,
+        -0.177545,
+        0.204651,
+        0.131465,
+        0.177545,
+        0.275127,
+        0.071831,
+        -0.060989,
+        0.090806,
+        -0.11249,
+        0.017619,
+        0.345603,
+        -0.096227,
+        0.337471,
+        0.304944,
+        -0.10978,
+        0.10978,
+        0.025751,
+        -0.082674,
+        0.188388,
+        0.261574,
+        -0.294102,
+        -0.172124,
+        0.201941,
+        -0.047436,
+        0.107069,
+        0.033883,
+        -0.107069,
+        0.10978,
+        0.006777,
+        0.031172
       ]
     },
     {
@@ -18517,8 +18749,8 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "lines": 1596,
-      "tokens_est": 18436,
+      "lines": 1619,
+      "tokens_est": 18786,
       "symbol_count": 0,
       "commands": [
         "!ai_route",
@@ -18601,31 +18833,31 @@
           213
         ],
         "!ar_server_start": [
-          345,
-          842
+          368,
+          865
         ],
         "!ar_server_stop": [
-          346
+          369
         ],
         "!ar_start": [
-          345,
-          783,
-          842,
-          846,
-          1179,
-          1193,
-          1266,
-          1267,
-          1269,
-          1279,
-          1314,
-          1316,
-          1590
+          368,
+          806,
+          865,
+          869,
+          1202,
+          1216,
+          1289,
+          1290,
+          1292,
+          1302,
+          1337,
+          1339,
+          1613
         ],
         "!ar_stop": [
-          346,
-          847,
-          1267
+          369,
+          870,
+          1290
         ],
         "!attention": [
           185
@@ -18634,20 +18866,20 @@
           200
         ],
         "!backtrack": [
-          277,
-          278,
-          299,
-          1128
+          300,
+          301,
+          322,
+          1151
         ],
         "!benchmark": [
           199,
-          1245,
-          1285
+          1268,
+          1308
         ],
         "!calibrate": [
           220,
-          1162,
-          1259
+          1185,
+          1282
         ],
         "!catalyze": [
           181
@@ -18669,62 +18901,62 @@
           192
         ],
         "!crystallize": [
-          284
+          307
         ],
         "!curiosity_tree": [
-          280
+          303
         ],
         "!db_repair": [
-          349,
-          1240
+          372,
+          1263
         ],
         "!evolve_reasoning": [
           194
         ],
         "!export": [
-          347,
-          1577
+          370,
+          1600
         ],
         "!fast_path": [
           183
         ],
         "!forage": [
-          276,
-          278,
-          297
+          299,
+          301,
+          320
         ],
         "!forage_off": [
-          282
+          305
         ],
         "!forage_on": [
-          281
+          304
         ],
         "!forager_off": [
-          282
+          305
         ],
         "!forager_on": [
-          281
+          304
         ],
         "!fusion": [
           222,
-          264
+          268
         ],
         "!help": [
           166,
           176
         ],
         "!indus_decrypt": [
-          286
+          309
         ],
         "!manifest": [
           166,
           176
         ],
         "!markov": [
-          350
+          373
         ],
         "!mesh_status": [
-          344
+          367
         ],
         "!meta_analyze": [
           195
@@ -18736,23 +18968,23 @@
           209
         ],
         "!ping_mesh": [
-          343
+          366
         ],
         "!push": [
-          348
+          371
         ],
         "!reason": [
           191
         ],
         "!repair_db": [
-          349
+          372
         ],
         "!research": [
-          278,
-          292,
           301,
-          308,
-          1131
+          315,
+          324,
+          331,
+          1154
         ],
         "!review": [
           210
@@ -18763,7 +18995,7 @@
         "!route": [
           221,
           230,
-          1165
+          1188
         ],
         "!saturn": [
           197
@@ -18773,23 +19005,23 @@
         ],
         "!savings": [
           223,
-          1168
+          1191
         ],
         "!scan_topology": [
           179
         ],
         "!search_similar": [
-          279,
-          292,
-          301
+          302,
+          315,
+          324
         ],
         "!self_optimize": [
           209,
-          1147
+          1170
         ],
         "!self_reflect": [
           208,
-          1144
+          1167
         ],
         "!settings": [
           166,
@@ -18800,13 +19032,13 @@
         ],
         "!stage": [
           210,
-          1134,
-          1150
+          1157,
+          1173
         ],
         "!stage_merge": [
           211,
-          1137,
-          1153
+          1160,
+          1176
         ],
         "!stage_purge": [
           212
@@ -18818,70 +19050,70 @@
           193
         ],
         "!synthesize": [
-          285
+          308
         ],
         "!system_audit": [
           200,
-          1286
+          1309
         ],
         "!test_airlock": [
           201
         ],
         "!timeline": [
-          283
+          306
         ],
         "!topology": [
           179,
           180,
-          1125,
-          1176,
-          1268,
-          1269,
-          1272,
-          1310
+          1148,
+          1199,
+          1291,
+          1292,
+          1295,
+          1333
         ],
         "!topology_deep": [
           180
         ],
         "!voice": [
-          351
+          374
         ]
       },
       "topology": {},
-      "digest8": "d7f103e9fde4a6cc",
+      "digest8": "2b84e90ebe77392a",
       "vector": [
-        0.156585,
-        0.031871,
-        0.034643,
-        0.015243,
-        0.212013,
-        0.261898,
-        -0.037414,
-        0.170442,
-        -0.289613,
-        -0.16767,
-        0.015243,
-        0.004157,
-        -0.256356,
-        0.0291,
-        0.126099,
-        0.347812,
-        0.103928,
-        -0.115014,
-        0.278527,
-        0.261898,
-        -0.212013,
-        0.115014,
-        -0.012471,
-        0.24527,
-        0.081757,
-        0.015243,
-        0.090071,
-        -0.328412,
-        -0.026328,
-        -0.175985,
-        0.195385,
-        0.178756
+        0.01427,
+        -0.220387,
+        -0.020612,
+        0.04598,
+        0.175993,
+        0.141111,
+        0.030125,
+        0.039638,
+        0.061835,
+        0.087204,
+        0.19819,
+        0.217216,
+        0.077691,
+        0.331374,
+        0.090375,
+        -0.052322,
+        -0.011099,
+        0.134769,
+        -0.153796,
+        -0.261611,
+        -0.065006,
+        0.096717,
+        -0.252098,
+        -0.090375,
+        0.112572,
+        0.163309,
+        0.391624,
+        -0.296492,
+        -0.033296,
+        0.103059,
+        0.401137,
+        0.147453
       ]
     },
     {
@@ -20754,46 +20986,46 @@
     {
       "path": "aura_fusion.py",
       "role": "python_module",
-      "lines": 551,
-      "tokens_est": 5531,
+      "lines": 561,
+      "tokens_est": 5629,
       "symbol_count": 26,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "fbfdce88388b2c09",
+      "digest8": "745c66fddd1f11b7",
       "vector": [
-        -0.083949,
-        0.041263,
-        0.212007,
-        0.274614,
-        0.180704,
-        0.172167,
-        -0.052646,
-        -0.098178,
-        -0.308762,
-        -0.112407,
-        0.155093,
-        -0.334374,
-        0.027034,
-        -0.212007,
-        0.16363,
-        0.058338,
-        0.157938,
-        -0.146555,
-        0.041263,
-        -0.334374,
-        -0.004269,
-        0.189241,
-        -0.083949,
-        0.061183,
-        0.271768,
-        0.078258,
-        -0.058338,
-        -0.226236,
-        -0.169321,
-        -0.266076,
-        -0.189241,
-        -0.00996
+        -0.203801,
+        0.07859,
+        -0.171832,
+        0.198473,
+        -0.067934,
+        -0.273066,
+        0.225113,
+        0.26241,
+        -0.017316,
+        0.118551,
+        -0.147856,
+        -0.003996,
+        -0.126543,
+        -0.102566,
+        0.270402,
+        0.137199,
+        -0.070598,
+        -0.251754,
+        -0.070598,
+        0.190481,
+        -0.305035,
+        0.033301,
+        -0.102566,
+        0.26241,
+        -0.299707,
+        -0.187816,
+        0.097238,
+        0.147856,
+        -0.227777,
+        0.142527,
+        -0.027973,
+        0.131871
       ]
     },
     {
@@ -23266,6 +23498,51 @@
       ]
     },
     {
+      "path": "aura_spectral_topology.py",
+      "role": "python_module",
+      "lines": 468,
+      "tokens_est": 4472,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "acfb1614488dd41c",
+      "vector": [
+        -0.053577,
+        0.055958,
+        -0.027384,
+        -0.151207,
+        0.229787,
+        0.15835,
+        -0.127395,
+        -0.19645,
+        0.244074,
+        -0.170256,
+        -0.175019,
+        0.086914,
+        0.277411,
+        -0.146444,
+        -0.115489,
+        -0.110726,
+        0.060721,
+        -0.270267,
+        0.113107,
+        0.025003,
+        -0.11787,
+        -0.07977,
+        -0.041671,
+        0.015478,
+        -0.279792,
+        0.241693,
+        -0.258361,
+        0.072627,
+        0.282173,
+        -0.303604,
+        0.086914,
+        -0.294079
+      ]
+    },
+    {
       "path": "aura_spvm.py",
       "role": "python_module",
       "lines": 134,
@@ -23409,53 +23686,53 @@
     {
       "path": "aura_topological_scanner.py",
       "role": "python_module",
-      "lines": 400,
-      "tokens_est": 4377,
+      "lines": 407,
+      "tokens_est": 4440,
       "symbol_count": 10,
       "commands": [
         "!topology"
       ],
       "command_lines": {
         "!topology": [
-          334,
-          338
+          340,
+          344
         ]
       },
       "topology": {},
-      "digest8": "668591c9d5948fbc",
+      "digest8": "febac38fdbd8b25e",
       "vector": [
-        0.073553,
-        -0.040002,
-        -0.181947,
-        -0.076134,
-        -0.205174,
-        0.060649,
-        0.109684,
-        -0.060649,
-        -0.295502,
-        0.300663,
-        -0.024518,
-        -0.083876,
-        0.040002,
-        0.316148,
-        0.241305,
-        0.027098,
-        -0.243886,
-        -0.236143,
-        0.027098,
-        -0.176785,
-        0.104522,
-        -0.187108,
-        -0.243886,
-        0.016775,
-        0.06581,
-        -0.243886,
-        0.277436,
-        0.210335,
-        0.238724,
-        0.014194,
-        0.024518,
-        0.22582
+        0.047215,
+        -0.01647,
+        -0.271213,
+        -0.130665,
+        0.266821,
+        -0.170194,
+        0.279997,
+        0.174587,
+        0.146038,
+        -0.229488,
+        -0.152626,
+        -0.200939,
+        0.258037,
+        0.157018,
+        -0.200939,
+        0.082352,
+        0.209724,
+        0.2229,
+        -0.260233,
+        -0.027451,
+        0.119685,
+        -0.097725,
+        -0.216312,
+        0.014274,
+        0.196547,
+        -0.163606,
+        -0.216312,
+        0.062588,
+        0.121881,
+        0.012078,
+        0.029647,
+        0.238272
       ]
     },
     {
@@ -23557,101 +23834,101 @@
     {
       "path": "aura_topology_manager.py",
       "role": "python_module",
-      "lines": 388,
-      "tokens_est": 3790,
+      "lines": 394,
+      "tokens_est": 3836,
       "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "75eb243413d9bf97",
+      "digest8": "e70dbf20f393f626",
       "vector": [
-        -0.201124,
-        0.090793,
-        0.293067,
-        0.228707,
-        0.265484,
-        0.099988,
-        0.106883,
-        -0.11148,
-        -0.056315,
-        -0.058613,
-        -0.113779,
-        -0.141362,
-        -0.270081,
-        -0.242499,
-        0.120675,
-        -0.106883,
-        0.047121,
-        -0.263186,
-        0.093092,
-        -0.283873,
-        -0.150556,
-        0.281574,
-        0.286171,
-        0.042523,
-        0.17584,
-        -0.212617,
-        -0.125272,
-        0.070106,
-        0.166646,
-        -0.150556,
-        -0.021836,
-        0.132167
+        -0.212029,
+        0.05151,
+        0.065885,
+        -0.209633,
+        -0.12578,
+        0.101822,
+        0.077864,
+        -0.202445,
+        -0.207237,
+        -0.228799,
+        0.120988,
+        -0.257549,
+        0.12578,
+        -0.135363,
+        0.00599,
+        -0.252757,
+        -0.176091,
+        0.044322,
+        -0.017969,
+        0.24557,
+        0.001198,
+        0.010781,
+        -0.015573,
+        0.231195,
+        0.295882,
+        0.049114,
+        -0.305465,
+        0.180883,
+        -0.298277,
+        0.02276,
+        0.176091,
+        0.269528
       ]
     },
     {
       "path": "aura_topology_ws_bridge.py",
       "role": "python_module",
-      "lines": 678,
-      "tokens_est": 6408,
-      "symbol_count": 35,
+      "lines": 807,
+      "tokens_est": 8086,
+      "symbol_count": 36,
       "commands": [
         "!r",
         "!topology"
       ],
       "command_lines": {
         "!r": [
-          587
+          658
         ],
         "!topology": [
-          189
+          195
         ]
       },
       "topology": {},
-      "digest8": "e2a7fec96d38a63f",
+      "digest8": "397648c6a9a4688f",
       "vector": [
-        -0.066042,
-        0.036939,
-        -0.236184,
-        0.08619,
-        0.164545,
-        -0.08619,
-        0.184694,
-        -0.198126,
-        0.258571,
-        0.240661,
-        0.162307,
-        0.209319,
-        -0.021268,
-        0.010074,
-        -0.272003,
-        0.272003,
-        0.207081,
-        0.041416,
-        0.05261,
-        0.151113,
-        0.211558,
-        0.081713,
-        0.1735,
-        0.263049,
-        0.090668,
-        -0.153352,
-        0.285436,
-        -0.12201,
-        -0.26081,
-        -0.1041,
-        -0.014552,
-        0.227229
+        -0.137012,
+        -0.258536,
+        -0.179903,
+        -0.022637,
+        0.268067,
+        -0.263301,
+        -0.239473,
+        -0.005957,
+        -0.1942,
+        -0.275215,
+        0.251387,
+        -0.051231,
+        -0.14416,
+        -0.218028,
+        -0.022637,
+        0.125098,
+        -0.08459,
+        0.189434,
+        -0.137012,
+        0.034551,
+        -0.215645,
+        -0.215645,
+        0.229942,
+        0.034551,
+        -0.23709,
+        0.003574,
+        -0.16084,
+        -0.096504,
+        0.232325,
+        -0.227559,
+        -0.096504,
+        -0.051231
       ]
     },
     {
@@ -24464,52 +24741,66 @@
     {
       "path": "index.html",
       "role": "interface_surface",
-      "lines": 84,
-      "tokens_est": 850,
+      "lines": 322,
+      "tokens_est": 3898,
       "symbol_count": 0,
       "commands": [
-        "!DOCTYPE"
+        "!DOCTYPE",
+        "!important",
+        "!srcPos",
+        "!tgtPos"
       ],
       "command_lines": {
         "!DOCTYPE": [
           1
+        ],
+        "!important": [
+          9,
+          10,
+          11
+        ],
+        "!srcPos": [
+          120
+        ],
+        "!tgtPos": [
+          120
         ]
       },
       "topology": {},
-      "digest8": "1ddba426d96b0231",
+      "digest8": "ef676da6e3938efa",
       "vector": [
-        -0.104655,
-        0.056538,
-        -0.222542,
-        0.073379,
-        0.126308,
-        0.217731,
-        0.275471,
-        -0.306748,
-        -0.275471,
-        0.133525,
-        0.176831,
-        -0.150366,
-        -0.123902,
-        0.289906,
-        -0.220136,
-        0.126308,
-        0.083002,
-        0.066161,
-        -0.215325,
-        -0.037291,
-        -0.13112,
-        -0.193672,
-        0.15999,
-        0.133525,
-        0.133525,
-        0.025262,
-        0.179237,
-        -0.232166,
-        0.301936,
-        0.126308,
-        0.13112,
-        0.015638
+        0.257369,
+        -0.067488,
+        0.108667,
+        -0.13612,
+        -0.072063,
+        -0.172723,
+        0.236779,
+        -0.138407,
+        -0.261944,
+        -0.069776,
+        0.271095,
+        -0.081214,
+        -0.026309,
+        0.147558,
+        0.232204,
+        -0.097228,
+        -0.239067,
+        -0.044611,
+        -0.101804,
+        0.044611,
+        0.273383,
+        0.291685,
+        -0.088077,
+        0.003432,
+        -0.030884,
+        -0.273383,
+        -0.076639,
+        -0.291685,
+        0.033172,
+        0.259657,
+        -0.241355,
+        -0.129256
       ]
     },
     {
@@ -25885,6 +26176,51 @@
       ]
     },
     {
+      "path": "test_aura_spectral_topology.py",
+      "role": "python_module",
+      "lines": 83,
+      "tokens_est": 761,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0b58bb28484168c7",
+      "vector": [
+        -0.065941,
+        0.202996,
+        -0.174551,
+        0.179723,
+        -0.241785,
+        -0.053012,
+        -0.027152,
+        -0.285746,
+        0.065941,
+        -0.104731,
+        -0.265059,
+        0.078871,
+        -0.148692,
+        -0.290918,
+        0.076285,
+        0.063356,
+        -0.024566,
+        0.11766,
+        -0.306434,
+        -0.164207,
+        0.20041,
+        0.122832,
+        -0.208168,
+        0.177137,
+        -0.019395,
+        -0.223684,
+        0.303848,
+        0.050426,
+        0.241785,
+        0.169379,
+        -0.027152,
+        0.202996
+      ]
+    },
+    {
       "path": "test_aura_substrate.py",
       "role": "python_module",
       "lines": 542,
@@ -26543,10 +26879,11 @@
   "last_refresh": {
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
-      "aura_paper_memory.py"
+      "aura_spectral_topology.py",
+      "aura_topology_ws_bridge.py"
     ],
     "removed_paths": [],
-    "changed_path_count": 1,
+    "changed_path_count": 2,
     "topology_refreshed": false
   }
 }

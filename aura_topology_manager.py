@@ -92,6 +92,12 @@ class TopologyBuilder:
             "constraints": self.constraints,
             "diagnostics": diagnostics,
         }
+        try:
+            from aura_spectral_topology import augment_topology_payload
+
+            payload = augment_topology_payload(payload)
+        except Exception:
+            pass
         return payload
 
     def _add_node(self, node: dict[str, Any]) -> None:

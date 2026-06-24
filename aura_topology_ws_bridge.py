@@ -18,6 +18,12 @@ import json
 import os
 from pathlib import Path
 
+try:
+    from aura_spectral_topology import augment_topology_payload, normalize_topology_payload
+except ImportError:
+    augment_topology_payload = None  # type: ignore[assignment]
+    normalize_topology_payload = None  # type: ignore[assignment]
+
 # ── Fixed-frame chunking constants ──────────────────────────────────────────
 _FRAME_SIZE_BYTES = 4096       # 4 KB per chunk — fits in a single WebSocket frame
 _MAX_BROADCAST_QUEUE = 128     # backpressure ceiling: drop oldest if full
@@ -306,6 +312,7 @@ class _ARShape:
     metadata: _Dict_ar[str, _Any_ar] = _field_ar(default_factory=dict)
 
     def to_dict(self) -> dict:
+        spectral = self.metadata.get("ast_data", {}).get("spectral", {})
         return {
             "id": self.shape_id,
             "type": self.shape_type,
@@ -315,6 +322,9 @@ class _ARShape:
             "color": self.color,
             "luminance": self.luminance,
             "integrityResonance": self.integrity_resonance,
+            "structuralHealth": spectral.get("structural_health", self.luminance),
+            "validationState": spectral.get("validation_state", "unknown"),
+            "phaseShiftWarning": bool(spectral.get("phase_shift_warning", False)),
             "metadata": self.metadata,
         }
 
@@ -383,6 +393,7 @@ class AuraARWebSocketServer:
         self._sessions: _Dict_ar[str, _ARSession] = {}
         self._shapes: _Dict_ar[str, _ARShape] = {}
         self._connections: _List_ar[_ARConnection] = []
+        self._topology_metadata: _Dict_ar[str, _Any_ar] = {}
         self._topology_lock = asyncio.Lock()
         self._shutdown_event = asyncio.Event()
         self._server = None
@@ -455,7 +466,7 @@ class AuraARWebSocketServer:
         Falls back gracefully if the file is missing or malformed.
         """
         async with self._topology_lock:
-            topology_path = _TOPOLOGY_PATH    # reuse existing constant
+            topology_path = _TOPOLOGY_PATH
             if not topology_path.exists():
                 return
             try:
@@ -465,71 +476,68 @@ class AuraARWebSocketServer:
                 _ar_logger.warning("Could not load topology: %s", exc)
                 return
 
-            nodes_data = payload.get("nodes", {})
-            edges_data = payload.get("edges", {})
+            if augment_topology_payload is not None:
+                try:
+                    payload = augment_topology_payload(payload)
+                except Exception as exc:
+                    _ar_logger.debug("Spectral topology augmentation skipped: %s", exc)
+            if normalize_topology_payload is not None:
+                nodes_data, edges_data = normalize_topology_payload(payload)
+            else:
+                nodes_data = list(payload.get("nodes", []) or [])
+                edges_data = list(payload.get("edges", []) or [])
+            self._topology_metadata = {
+                **(payload.get("meta", {}) or {}),
+                "spectral_topology": payload.get("spectral_topology", {}),
+            }
 
-            # Rebuild shape registry from AST
             new_shapes: _Dict_ar[str, _ARShape] = {}
-            for node_id, node_data in nodes_data.items():
-                node_type = str(node_data.get("type", "function")).lower()
+            for node_data in nodes_data:
+                node_id = str(node_data.get("id") or node_data.get("label") or "")
+                if not node_id:
+                    continue
+                node_type = str(
+                    node_data.get("node_type")
+                    or node_data.get("kind")
+                    or node_data.get("ast_type")
+                    or "function"
+                ).lower()
                 shape_type, color = _AR_SHAPE_TYPE_MAP.get(
                     node_type, ("Cube", "#9E9E9E")
                 )
+                if str(node_data.get("type", "")) in {
+                    "Cube", "Sphere", "Tetrahedron", "Icosahedron", "Octahedron"
+                }:
+                    shape_type = str(node_data["type"])
+                luminance = float(node_data.get("luminance", node_data.get("structural_health", 0.5)))
+                integrity = float(node_data.get("integrity_resonance", node_data.get("structural_health", 1.0)))
                 new_shapes[node_id] = _ARShape(
                     shape_id=node_id,
                     shape_type=shape_type,
-                    label=node_data.get("name", node_id),
+                    label=node_data.get("name") or node_data.get("label") or node_id,
                     position=node_data.get("position", [0.0, 0.0, 0.0]),
                     scale=float(node_data.get("scale", 1.0)),
-                    color=color,
+                    color=node_data.get("color") or color,
                     node_type=node_type,
+                    luminance=luminance,
+                    integrity_resonance=integrity,
                     metadata={"ast_data": node_data},
                 )
 
             new_connections: _List_ar[_ARConnection] = []
-            for edge_id, edge_data in edges_data.items():
+            for idx, edge_data in enumerate(edges_data):
+                edge_id = str(edge_data.get("id") or f"edge_{idx}")
                 new_connections.append(
                     _ARConnection(
                         connection_id=edge_id,
-                        source_id=edge_data.get("source", ""),
-                        target_id=edge_data.get("target", ""),
+                        source_id=edge_data.get("source") or edge_data.get("sourceId") or "",
+                        target_id=edge_data.get("target") or edge_data.get("targetId") or "",
                         color=edge_data.get("color", "#FFFFFF"),
                         width=float(edge_data.get("width", 0.1)),
+                        resonance=float(edge_data.get("resonance", 0.0)),
+                        luminance=float(edge_data.get("luminance", 0.5)),
                     )
                 )
-
-            # ── Resonance-weighted edge luminance (Claim N2/N19/N22) ──
-            # Compute VSA cosine resonance between connected nodes.
-            # Edge color encodes semantic similarity: bright = high resonance,
-            # dim = low resonance (Axiom P3: Coherence is the Attractor).
-            import hashlib as _hlib_refresh
-            import numpy as _np_refresh
-            _DIM = 10000
-            _lum_min, _lum_max = 0.1, 1.0
-
-            def _node_phasor(label: str) -> _np_refresh.ndarray:
-                h = _hlib_refresh.blake2b(label.encode("utf-8"), digest_size=8).digest()
-                seed = int.from_bytes(h, byteorder="little")
-                rng = _np_refresh.random.default_rng(seed)
-                phases = rng.uniform(-_np_refresh.pi, _np_refresh.pi, _DIM).astype(_np_refresh.float32)
-                return _np_refresh.exp(1j * phases)
-
-            # Cache phasors per node label
-            _phasor_cache = {}
-            for nid, shape in new_shapes.items():
-                _phasor_cache[nid] = _node_phasor(shape.label)
-
-            for conn in new_connections:
-                src_p = _phasor_cache.get(conn.source_id)
-                tgt_p = _phasor_cache.get(conn.target_id)
-                if src_p is not None and tgt_p is not None:
-                    res = float(_np_refresh.abs(_np_refresh.dot(src_p, _np_refresh.conj(tgt_p))) / _DIM)
-                    conn.resonance = res
-                    conn.luminance = _lum_min + (_lum_max - _lum_min) * min(1.0, res)
-                    # Map luminance to color: dim gray -> bright cyan
-                    bright = int(conn.luminance * 255)
-                    conn.color = f"#{bright:02x}{bright:02x}{min(255, bright + 50):02x}"
-                    conn.width = 0.05 + 0.15 * min(1.0, res)
 
             self._shapes = new_shapes
             self._connections = new_connections
@@ -545,6 +553,8 @@ class AuraARWebSocketServer:
                 "edge_count": len(self._connections),
                 "source": "live_topology_ast.json",
                 "resonance_weighted": True,
+                "spectral_layout": bool(self._topology_metadata.get("spectral_layout")),
+                "spectral_topology": self._topology_metadata.get("spectral_topology", {}),
                 "luminance_range": [0.1, 1.0],
             },
         }

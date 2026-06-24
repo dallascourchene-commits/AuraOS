@@ -318,6 +318,12 @@ def compile_unified_graph():
         "nodes": nodes_payload,
         "edges": edges_payload
     }
+    try:
+        from aura_spectral_topology import augment_topology_payload
+
+        unified_payload = augment_topology_payload(unified_payload)
+    except Exception:
+        pass
 
     # 5. Commit state layout map safely back to disk
     target_path = "Aura_Memory/live_topology_ast.json"
@@ -383,6 +389,7 @@ def compile_topology_map(deep: bool = False) -> dict:
             "edges": payload["edges"],
             "diagnostics": payload.get("diagnostics", {}),
             "meta": payload.get("meta", {}),
+            "spectral_topology": payload.get("spectral_topology", {}),
         }
         with open(target_path, "w", encoding="utf-8") as f:
             json.dump(live_compatible, f, indent=4)
