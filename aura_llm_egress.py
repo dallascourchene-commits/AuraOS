@@ -42,6 +42,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+from aura_context_crusher import apply_context_crush_to_messages, apply_context_crush_to_prompt
 from aura_api_rotator import (
     gemini_generate,
     gemini_key_pool,
@@ -208,6 +209,8 @@ def generate_openai_compatible_payload(
     baseline_prompt_tokens: int | None = None,
     baseline_output_tokens: int | None = None,
     baseline_cost_usd: float | None = None,
+    context_crush: bool = True,
+    context_crush_ledger: str | None = None,
 ) -> tuple[str | None, str | None, float, bool]:
     """Single egress helper for custom OpenAI-compatible AuraFusion calls.
 
@@ -219,10 +222,18 @@ def generate_openai_compatible_payload(
         return None, "forbidden local/internal model endpoint", 0.0, False
     if not api_key or not str(api_key).strip():
         return None, f"missing API key for provider '{provider}'", 0.0, False
+    crush_batch = None
+    outbound_messages = messages
+    if context_crush:
+        crush_batch = apply_context_crush_to_messages(
+            messages,
+            ledger_path=context_crush_ledger,
+        )
+        outbound_messages = crush_batch.messages
 
     payload: dict[str, Any] = {
         "model": model,
-        "messages": messages,
+        "messages": outbound_messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
     }
@@ -240,7 +251,11 @@ def generate_openai_compatible_payload(
         baseline_prompt_tokens=baseline_prompt_tokens,
         baseline_output_tokens=baseline_output_tokens,
         baseline_cost_usd=baseline_cost_usd,
-        savings_metadata={"provider": provider, "response_format": bool(response_format)},
+        savings_metadata={
+            "provider": provider,
+            "response_format": bool(response_format),
+            "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+        },
     )
     used_schema = bool(response_format and not err)
     if err and response_format and any(
@@ -258,7 +273,12 @@ def generate_openai_compatible_payload(
             baseline_prompt_tokens=baseline_prompt_tokens,
             baseline_output_tokens=baseline_output_tokens,
             baseline_cost_usd=baseline_cost_usd,
-            savings_metadata={"provider": provider, "response_format": False, "schema_retry": True},
+            savings_metadata={
+                "provider": provider,
+                "response_format": False,
+                "schema_retry": True,
+                "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+            },
         )
         used_schema = False
     return text, err, time.time() - t0, used_schema
@@ -380,7 +400,8 @@ class ExternalLLM:
 
     def _log_to_savings(self, call_type: str, prompt: str,
                          output_text: str | None, latency_sec: float,
-                         error: str | None = None) -> None:
+                         error: str | None = None,
+                         metadata: dict[str, Any] | None = None) -> None:
         """Log this LLM call to the persistent savings database (best-effort)."""
         log_llm_call(
             provider=self.provider,
@@ -395,7 +416,7 @@ class ExternalLLM:
             baseline_prompt_tokens=self._baseline_prompt,
             baseline_output_tokens=self._baseline_output,
             baseline_cost_usd=self._baseline_cost,
-            metadata={"source": "ExternalLLM._log_to_savings"},
+            metadata={"source": "ExternalLLM._log_to_savings", **(metadata or {})},
         )
 
     # -- raw generation ----------------------------------------------------- #
@@ -404,7 +425,9 @@ class ExternalLLM:
                  pre_egress: bool = True, call_type: str = "generate",
                  paper_ledger: str | None = None,
                  resonance_egress: bool = True,
-                 grammar_stencil: str = "root ::="):
+                 grammar_stencil: str = "root ::=",
+                 context_crush: bool = True,
+                 context_crush_ledger: str | None = None):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
@@ -428,6 +451,8 @@ class ExternalLLM:
                 Aura_Memory paper ledger.
             resonance_egress: Enable the stateless Resonance-Augmented Egress
                 Core context gate.
+            context_crush: Enable Aura's local Headroom-style reversible
+                context compression before network egress.
         """
         # Inject router context if provided
         if router_context:
@@ -439,6 +464,16 @@ class ExternalLLM:
             )
         else:
             full_prompt = prompt
+
+        resonance_intent = full_prompt
+        crush_result = None
+        if context_crush:
+            crush_result = apply_context_crush_to_prompt(
+                full_prompt,
+                source_hint="external_llm.generate",
+                ledger_path=context_crush_ledger,
+            )
+            full_prompt = crush_result.compressed_payload
 
         raec_payload = None
         raec_metrics: dict[str, Any] | None = None
@@ -454,7 +489,7 @@ class ExternalLLM:
                 if profiles:
                     gate = AuraResonanceEgressGate()
                     raec_payload = gate.inject_latent_context(
-                        full_prompt,
+                        resonance_intent,
                         profiles,
                         self.provider,
                     )
@@ -496,7 +531,13 @@ class ExternalLLM:
                 if raec_payload is not None
                 else ""
             ),
+            "raec_lift_dispatch_count": len(
+                raec_payload.lift_dispatch
+                if raec_payload is not None
+                else ()
+            ),
             "raec_efficiency": raec_metrics,
+            "context_crush": crush_result.to_jsonable() if crush_result is not None else None,
         }
         if self.is_gemini:
             text, err = gemini_generate(
@@ -537,7 +578,7 @@ class ExternalLLM:
             logged_by_helper = True
         latency = time.time() - t0
         if not logged_by_helper:
-            self._log_to_savings(call_type, full_prompt, text, latency, error=err)
+            self._log_to_savings(call_type, full_prompt, text, latency, error=err, metadata=savings_meta)
         return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #

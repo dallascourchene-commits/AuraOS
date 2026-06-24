@@ -3,9 +3,9 @@
 ST3GG_BASE: 0xa8fa-[Q-SYS:AURA_FUSION]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / User-Owned Deliberation)
-DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_llm_egress, aura_model_probe_ledger, aura_skillweaver, aura_substrate
+DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_llm_egress, aura_model_probe_ledger, aura_single_seed_lift, aura_skillweaver, aura_substrate
 FUNCTIONS: AuraFusionAgent, AuraPanelOutput, AuraFusionResult, load_fusion_config, build_task_capsule, parse_json_object, AuraFusionCoordinator, main
-SYNOPSIS: Aura-native multi-model deliberation: compact task capsule, SkillWeaver gate, parallel Thinker/Worker/Verifier panel, structured judge synthesis, and phase-hashable run metrics using user-owned provider keys.
+SYNOPSIS: Aura-native multi-model deliberation: compact task capsule, cached single-seed context lift, SkillWeaver gate, parallel Thinker/Worker/Verifier panel, structured judge synthesis, and phase-hashable run metrics using user-owned provider keys.
 [/AURA_MASTER_KEY]
 """
 
@@ -24,6 +24,7 @@ from typing import Any, Callable
 from aura_api_rotator import load_secrets
 from aura_llm_egress import generate_openai_compatible_payload
 from aura_model_probe_ledger import AuraModelProbeLedger
+from aura_single_seed_lift import compact_lift_capsule, compile_text_single_seed_lift
 from aura_skillweaver import AuraSkillWeaver, gate_fusion_task
 from aura_spectral_topology import build_fusion_topology_snapshot
 from aura_substrate import REPO_ROOT, estimate_tokens
@@ -213,6 +214,27 @@ def _hash_payload(payload: dict[str, Any]) -> str:
     return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
 
 
+def _build_single_seed_context_lift(capsule: dict[str, Any]) -> dict[str, Any]:
+    topology_snapshot = capsule.get("topology_snapshot")
+    blocks = [
+        str(capsule.get("task", "")),
+        str(capsule.get("target_file", "")),
+        str(capsule.get("target_symbol", "")),
+        str(capsule.get("output_mode", "")),
+        " ".join(str(item) for item in capsule.get("constraints", ()) or ()),
+    ]
+    if topology_snapshot:
+        blocks.append(json.dumps(topology_snapshot, sort_keys=True, default=str))
+    lift = compile_text_single_seed_lift(
+        f"fusion:{capsule.get('target_file') or 'repo'}:{capsule.get('target_symbol') or ''}",
+        blocks,
+        top_trace_count=4,
+    )
+    profile = lift.profile.to_jsonable()
+    profile["slot_capsule"] = compact_lift_capsule(lift.profile, limit=260)
+    return profile
+
+
 def build_task_capsule(
     task: str,
     *,
@@ -242,6 +264,7 @@ def build_task_capsule(
         capsule["topology_snapshot"] = topology_snapshot
     if extra:
         capsule.update(extra)
+    capsule["single_seed_context_lift"] = _build_single_seed_context_lift(capsule)
     capsule["phase_hash"] = _hash_payload(capsule)
     return capsule
 
