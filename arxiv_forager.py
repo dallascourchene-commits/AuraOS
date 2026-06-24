@@ -13,6 +13,7 @@ import base64
 from datetime import datetime, timedelta
 import hashlib
 import json
+import os
 import socket
 import time
 import urllib.error
@@ -30,6 +31,12 @@ from aura_scientific_memory import (
     pack_vector,
     unpack_vector,
 )
+from aura_paper_memory import (
+    compile_paper_memory_record,
+    extract_pdf_text_from_bytes,
+    record_to_trace_content,
+    upsert_paper_memory_record,
+)
 
 _SCIENTIFIC_ENCODER = ScientificPaperEncoder()
 _ARXIV_API_URL = "https://export.arxiv.org/api/query"
@@ -38,6 +45,8 @@ _ARXIV_USER_AGENT = "AuraOS/1.0 (mailto:aura.os.q@gmail.com)"
 _ARXIV_MIN_REQUEST_DELAY = 3.5
 _ARXIV_SAFE_PAGE_SIZE = 200
 _ARXIV_BACKTRACK_WINDOW = timedelta(days=1)
+_ARXIV_MAX_PDF_BYTES = 15_000_000
+_PAPER_MEMORY_LEDGER = "Aura_Memory/paper_memory_ledger.jsonl"
 
 
 def _scientific_record(
@@ -80,6 +89,81 @@ class ArXivForager:
         """
         self.node = node_ref  # Bind the main node reference
         self._last_request_time = 0.0
+        self.paper_memory_ledger_path = _PAPER_MEMORY_LEDGER
+
+    async def _fetch_pdf_text(
+        self,
+        pdf_url: str | None,
+        *,
+        timeout: float = 45.0,
+        max_bytes: int = _ARXIV_MAX_PDF_BYTES,
+    ) -> str:
+        if not pdf_url:
+            return ""
+
+        request = urllib.request.Request(
+            pdf_url,
+            headers={
+                "User-Agent": _ARXIV_USER_AGENT,
+                "Accept": "application/pdf",
+                "Accept-Encoding": "identity",
+                "Connection": "close",
+            },
+        )
+
+        def _read_pdf() -> bytes:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                length = response.headers.get("Content-Length")
+                if length and int(length) > max_bytes:
+                    return b""
+                payload = response.read(max_bytes + 1)
+                if len(payload) > max_bytes:
+                    return b""
+                return payload
+
+        try:
+            payload = await asyncio.to_thread(_read_pdf)
+            if not payload:
+                return ""
+            return await asyncio.to_thread(extract_pdf_text_from_bytes, payload)
+        except Exception:
+            return ""
+
+    async def _persist_paper_memory(
+        self,
+        *,
+        doc_id: str,
+        title: str,
+        abstract: str,
+        full_text: str = "",
+        authors=(),
+        categories=(),
+        published: str = "",
+        source_url: str = "",
+        pdf_url: str = "",
+        metadata: dict | None = None,
+    ):
+        record = compile_paper_memory_record(
+            doc_id=doc_id,
+            title=title,
+            abstract=abstract,
+            full_text=full_text,
+            authors=authors,
+            categories=categories,
+            published=published,
+            source_url=source_url,
+            pdf_url=pdf_url,
+            metadata=metadata or {},
+        )
+        try:
+            await asyncio.to_thread(
+                upsert_paper_memory_record,
+                record,
+                self.paper_memory_ledger_path,
+            )
+        except Exception as exc:
+            print(f"[-] Paper memory ledger write skipped: {exc}")
+        return record
 
     async def _fetch_arxiv_xml(
         self,
@@ -379,30 +463,78 @@ class ArXivForager:
                 return f"No relevant arXiv papers found for: {topic}"
 
             entry = entries[0]
-            title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
-            summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.strip()
+            atom_ns = "{http://www.w3.org/2005/Atom}"
+            title = (entry.findtext(f"{atom_ns}title") or "").strip()
+            summary = (entry.findtext(f"{atom_ns}summary") or "").strip()
             summary = " ".join(summary.split())
-            full_text = f"TITLE: {title} | ABSTRACT: {summary}"
+            entry_id = (entry.findtext(f"{atom_ns}id") or "").strip()
+            paper_id = entry_id.rstrip("/").split("/")[-1] if entry_id else ""
+            pdf_url = next(
+                (
+                    link.get("href")
+                    for link in entry.findall(f"{atom_ns}link")
+                    if link.get("type") == "application/pdf"
+                ),
+                f"https://arxiv.org/pdf/{paper_id}" if paper_id else "",
+            )
+            authors = [
+                (author.findtext(f"{atom_ns}name") or "").strip()
+                for author in entry.findall(f"{atom_ns}author")
+                if (author.findtext(f"{atom_ns}name") or "").strip()
+            ]
+            categories = [
+                category.get("term", "")
+                for category in entry.findall(f"{atom_ns}category")
+                if category.get("term")
+            ]
+            published = (entry.findtext(f"{atom_ns}published") or "").strip()
+            doc_id = f"ARXIV_{paper_id.replace('/', '_')}" if paper_id else (
+                f"ARXIV_{hashlib.sha256((title + summary).encode()).hexdigest()[:8].upper()}"
+            )
+            pdf_text = await self._fetch_pdf_text(pdf_url)
+            paper_memory = await self._persist_paper_memory(
+                doc_id=doc_id,
+                title=title,
+                abstract=summary,
+                full_text=pdf_text,
+                authors=authors,
+                categories=categories,
+                published=published,
+                source_url=entry_id,
+                pdf_url=pdf_url,
+                metadata={"ingest_path": "fetch_latest_paper"},
+            )
+            full_text = record_to_trace_content(paper_memory)
 
             if self.node is not None:
-                record = _scientific_record("", title, summary)
+                record = _scientific_record(doc_id, title, summary)
                 blob_data = pack_vector(record.vector)
                 try:
                     conn = self.node.memory_palace.conn
-                    trace_id = f"ARXIV_{hashlib.sha256(full_text.encode()).hexdigest()[:8].upper()}"
                     await conn.execute(
                         "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
-                        (trace_id, full_text, datetime.now().isoformat(), blob_data)
+                        (doc_id, full_text, datetime.now().isoformat(), blob_data)
                     )
                     await conn.commit()
                 except Exception as e:
                     print(f"[-] Local DB write failed: {e}")
 
-            return f"TITLE: {title}\nABSTRACT: {summary}"
+            points = "\n".join(
+                f"POINT {idx + 1}: {point}"
+                for idx, point in enumerate(paper_memory.three_main_points)
+                if point
+            )
+            return f"TITLE: {title}\nABSTRACT: {summary}\n{points}"
         except Exception as e:
             return f"arXiv processing failure: {e}"
 
-    async def upgraded_arxiv_backtracker(self, max_results: int = 200, max_retries: int = 3, timeout: float = 30.0) -> bool:
+    async def upgraded_arxiv_backtracker(
+        self,
+        max_results: int = 200,
+        max_retries: int = 3,
+        timeout: float = 30.0,
+        pdf_fetch_limit: int | None = None,
+    ) -> bool:
         """
         Asynchronously crawl backwards through arXiv CS submissions, vectorizing and storing papers while managing pagination limits.
         
@@ -491,6 +623,13 @@ class ArXivForager:
         requested_page_size = min(
             max(1, int(max_results)), _ARXIV_SAFE_PAGE_SIZE
         )
+        if pdf_fetch_limit is None:
+            try:
+                pdf_fetch_limit = int(os.environ.get("AURA_BACKTRACK_PDF_LIMIT", "3"))
+            except ValueError:
+                pdf_fetch_limit = 3
+        pdf_fetch_limit = max(0, int(pdf_fetch_limit))
+        pdf_fetch_count = 0
         oai_next_token = None
         using_oai = bool(crawler_state.get('oai_resumption_token'))
 
@@ -514,9 +653,14 @@ class ArXivForager:
                 except (TypeError, ValueError):
                     total_available = 0
                 for entry in entries:
+                    atom_ns = "{http://www.w3.org/2005/Atom}"
+                    entry_id = (
+                        entry.findtext(f"{atom_ns}id") or ""
+                    ).strip()
+                    paper_id = entry_id.rstrip("/").split("/")[-1] if entry_id else ""
                     published = (
                         entry.findtext(
-                            '{http://www.w3.org/2005/Atom}published'
+                            f'{atom_ns}published'
                         ) or ""
                     ).strip()
                     try:
@@ -526,25 +670,41 @@ class ArXivForager:
                     except ValueError:
                         published_dt = datetime.utcnow()
                     raw_papers.append({
+                        "paper_id": paper_id,
+                        "entry_id": entry_id,
                         "title": (
                             entry.findtext(
-                                '{http://www.w3.org/2005/Atom}title'
+                                f'{atom_ns}title'
                             ) or ""
                         ).strip(),
                         "abstract": " ".join(
                             (
                                 entry.findtext(
-                                    '{http://www.w3.org/2005/Atom}summary'
+                                    f'{atom_ns}summary'
                                 ) or ""
                             ).split()
                         ),
+                        "authors": [
+                            (author.findtext(f"{atom_ns}name") or "").strip()
+                            for author in entry.findall(f"{atom_ns}author")
+                            if (author.findtext(f"{atom_ns}name") or "").strip()
+                        ],
                         "published": published_dt,
                         "categories": [
                             category.get("term", "")
                             for category in entry.findall(
-                                '{http://www.w3.org/2005/Atom}category'
+                                f'{atom_ns}category'
                             )
+                            if category.get("term")
                         ],
+                        "pdf_url": next(
+                            (
+                                link.get("href")
+                                for link in entry.findall(f"{atom_ns}link")
+                                if link.get("type") == "application/pdf"
+                            ),
+                            f"https://arxiv.org/pdf/{paper_id}" if paper_id else "",
+                        ),
                     })
             except Exception as api_exc:
                 print(
@@ -604,16 +764,43 @@ class ArXivForager:
                 title = paper.get("title", "").strip()
                 summary = " ".join(paper.get("abstract", "").split())
                 published_dt = paper.get("published") or datetime.utcnow()
-                published = published_dt.isoformat()
+                published = (
+                    published_dt.isoformat()
+                    if hasattr(published_dt, "isoformat")
+                    else str(published_dt)
+                )
 
                 # Track the earliest pub date in this batch for window advancement
                 if earliest_published is None or published < earliest_published:
                     earliest_published = published
 
-                text_block = f"TITLE: {title} | ABSTRACT: {summary} | PUBLISHED: {published}"
-                engram_hash = f"ARXIV_{hashlib.sha256(text_block.encode()).hexdigest()[:8].upper()}"
+                paper_id = str(paper.get("paper_id") or "").strip()
+                doc_id = f"ARXIV_{paper_id.replace('/', '_')}" if paper_id else (
+                    f"ARXIV_{hashlib.sha256((title + summary).encode()).hexdigest()[:8].upper()}"
+                )
+                pdf_url = paper.get("pdf_url") or (
+                    f"https://arxiv.org/pdf/{paper_id}" if paper_id else ""
+                )
+                pdf_text = ""
+                if pdf_fetch_count < pdf_fetch_limit:
+                    pdf_fetch_count += 1
+                    pdf_text = await self._fetch_pdf_text(pdf_url, timeout=max(45.0, timeout))
+
+                paper_memory = await self._persist_paper_memory(
+                    doc_id=doc_id,
+                    title=title,
+                    abstract=summary,
+                    full_text=pdf_text,
+                    authors=paper.get("authors", ()),
+                    categories=paper.get("categories", ()),
+                    published=published,
+                    source_url=paper.get("entry_id", ""),
+                    pdf_url=pdf_url,
+                    metadata={"ingest_path": "upgraded_arxiv_backtracker"},
+                )
+                text_block = record_to_trace_content(paper_memory)
                 record = _scientific_record(
-                    engram_hash,
+                    doc_id,
                     title,
                     summary,
                     categories=paper.get("categories", ()),
@@ -621,7 +808,7 @@ class ArXivForager:
                 )
                 blob_data = pack_vector(record.vector)
                 ingest_rows.append(
-                    (engram_hash, text_block, stamp_ts, blob_data)
+                    (doc_id, text_block, stamp_ts, blob_data)
                 )
 
             if ingest_rows:
@@ -659,7 +846,10 @@ class ArXivForager:
             crawler_state['last_crawl_time'] = time.time()
             await self._save_backtracker_state(conn, crawler_state)
 
-            print(f"[+] [ARXIV BACKTRACKER] Successfully vectorized and ingested {stamped_count} papers.")
+            print(
+                f"[+] [ARXIV BACKTRACKER] Successfully vectorized and ingested "
+                f"{stamped_count} papers ({pdf_fetch_count} PDF VSA fetch attempts)."
+            )
             print(
                 f"    Next offset: {crawler_state['crawl_offset_index']}  |  "
                 f"Window: {crawler_state['crawl_window_start']}.."
@@ -1376,21 +1566,46 @@ class EnhancedArxivForager(ArXivForager):
             raw (dict): Paper data containing paper_id, title, abstract, authors, categories, published, pdf_url, and entry_id.
             config (ForagerConfig): Configuration specifying storage location for disk cache.
         """
-        paper_id = raw.get("paper_id", "")
+        title = str(raw.get("title", "")).strip()
+        abstract = " ".join(str(raw.get("abstract", "")).split())
+        paper_id = str(raw.get("paper_id", "")).strip()
+        if not paper_id:
+            paper_id = hashlib.sha256((title + abstract).encode()).hexdigest()[:8].upper()
         if paper_id in self._paper_cache:
             return
 
         try:
             paper = ArxivPaper(
                 paper_id=paper_id,
-                title=raw["title"],
+                title=title,
                 authors=raw.get("authors", []),
-                abstract=raw.get("abstract", ""),
+                abstract=abstract,
                 published=raw.get("published", _dt.now()),
                 categories=raw.get("categories", []),
                 pdf_url=raw.get("pdf_url"),
+                full_text=raw.get("full_text") or "",
                 metadata={"entry_id": raw.get("entry_id", "")},
             )
+            doc_id = f"ARXIV_{paper_id.replace('/', '_')}"
+            paper_memory = await self._persist_paper_memory(
+                doc_id=doc_id,
+                title=paper.title,
+                abstract=paper.abstract,
+                full_text=paper.full_text or "",
+                authors=paper.authors,
+                categories=paper.categories,
+                published=paper.published.isoformat() if paper.published else "",
+                source_url=raw.get("entry_id", ""),
+                pdf_url=paper.pdf_url or "",
+                metadata={"ingest_path": "EnhancedArxivForager"},
+            )
+            paper.metadata.update({
+                "paper_memory_doc_id": paper_memory.doc_id,
+                "paper_memory_ledger": self.paper_memory_ledger_path,
+                "paper_memory_header": paper_memory.holographic_header,
+                "paper_memory_points": list(paper_memory.three_main_points),
+                "full_text_sha256": paper_memory.full_text_sha256,
+            })
             record = self._record_for_paper(paper)
             paper.vector = record.vector
             paper.slots = record.slots.to_jsonable()
@@ -1400,16 +1615,15 @@ class EnhancedArxivForager(ArXivForager):
 
             # Persist to existing memory palace via node reference (same as ArXivForager)
             if self.node is not None and getattr(self.node, "memory_palace", None):
-                text_block = f"TITLE: {paper.title} | ABSTRACT: {paper.abstract}"
+                text_block = record_to_trace_content(paper_memory)
                 blob = pack_vector(record.vector)
-                engram = f"ARXIV_{hashlib.sha256(text_block.encode()).hexdigest()[:8].upper()}"
                 try:
                     conn = self.node.memory_palace.conn
                     await conn.execute(
                         "INSERT OR REPLACE INTO traces "
                         "(id, content, tier, timestamp, tags, vector_blob) "
                         "VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
-                        (engram, text_block, _dt.now().isoformat(), blob),
+                        (doc_id, text_block, _dt.now().isoformat(), blob),
                     )
                     await conn.commit()
                     self.stats.papers_stored += 1

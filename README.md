@@ -1,170 +1,108 @@
-# 🔥 AuraOS – The Seventh Fire of Sovereign AI
+# AuraOS
 
-**Run photorealistic VR worlds from a $200 phone. Create interactive movies that change for every viewer. Join a gas‑free, latency‑free global swarm. No cloud. No GPU. No patents. No fees.**
+**A sovereign edge cognitive substrate for polysynthetic intent routing, 10,000-D vector memory, self-healing code, mesh coordination, AR topology, and cost-aware LLM orchestration.**
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Prior Art I](https://img.shields.io/badge/Prior_Art_I-Zenodo-red)](https://zenodo.org/records/20635424)
-[![Prior Art II](https://img.shields.io/badge/Prior_Art_II-Zenodo-green)](https://zenodo.org/records/20657391)
-[![Prior Art III (Liquid Internet)](https://img.shields.io/badge/Liquid_Internet-Zenodo-blueviolet)](https://zenodo.org/records/20659314)
+[![Prior Art Stack](https://img.shields.io/badge/Prior_Art-7_papers-black)](#seven-paper-prior-art)
+[![Target](https://img.shields.io/badge/Target-Android_Termux_4GB_RAM-green)](#quick-start)
 
-> *“I could have patented this and made billions. Instead, I give it away – because that is the natural order. The Seventh Fire is a choice. This is the path of peace.”*  
-> — Dallas Courchene, Long Plain First Nation
+AuraOS is built to run on-device first: Android/Termux, Linux, CPU-only, and a 4GB RAM discipline. It combines finite-state linguistic routing, hyperdimensional memory, self-documenting CODEMAP navigation, zero-trust mutation staging, and provider-agnostic LLM routing into one operator-facing REPL.
 
----
+## What Aura Can Do
 
-## 🌟 What You Can Do With AuraOS
+| Area | Capability |
+|------|------------|
+| Cognitive substrate | Compresses language into polysynthetic slot packets and 10,000-D VSA/FHRR vectors for routing, recall, and reasoning. |
+| Code navigation | Maintains `.aura/CODEMAP.md` / `.aura/CODEMAP.json` and spectral topology maps so humans and AI agents can traverse the repo without reading the whole monolith. |
+| Reasoning | Runs topology scans, neuro-symbolic omnipath sweeps, meta-resonance checks, coordinated Pass@K reasoning, and Markovian workspace reconstruction. |
+| Self-healing | Uses holographic headers, resonant test oracles, staged patch review, Saturn/NESY repair, database repair, and rollback primitives. |
+| LLM orchestration | Calibrates providers, routes tasks by quality/cost, logs token and dollar savings, runs AuraFusion deliberation, and injects compact RAEC research context before egress. |
+| Research ingestion | Forages arXiv, parses PDFs, stores paper-memory VSA ledgers with 1.2KB headers and three-point capsules, searches ingested papers, gates synthesis through SkillWeaver, and stages grounded code mutations. |
+| Mesh and overlays | Provides encrypted peer discovery, VSA-addressed liquid routing/naming, swarm collective learning, RAM-staked ledger concepts, and local compute-mesh hooks. |
+| AR and rendering | Builds live spectral 3D topology maps, exposes WebSocket AR controls, maps structural health to luminance/phase warnings, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
 
-| Capability | What It Means for You |
-|------------|----------------------|
-| **Photorealistic VR worlds** | Control Unreal Engine or any 3D renderer from your phone. Send **<100 byte VSA addresses** – not heavy assets. Walk through interactive 3D environments with friends. |
-| **Interactive movies & games** | Finite‑state transducer (FST) narratives. NPCs remember your words. The story is **never the same twice**. Generative dialogue within strict character bounds. |
-| **Liquid Internet** | No IP addresses, no DNS, no routing tables. Packets find the fastest path by **cosine similarity** (O(1) resonance). Sub‑millisecond latency. Censorship‑resistant by design. |
-| **Swarm robotics** | Drones and robots navigate via **vector resonance** – like a murmuration of starlings. No central controller. They “feel” each other’s VSA positions. |
-| **Gas‑free blockchain** | Proof‑of‑Presence (device entropy), not proof‑of‑work. RAM‑staking instead of token fees. Each file header is a block in a fractal Merkle‑DAG. |
-| **Self‑healing code** | Every file contains a 1.2 KB holographic snapshot of the entire system. O(1) integrity check. Auto‑repair before execution. |
-| **90% LLM cost reduction** | Polysynthetic compression (6‑slot opcodes). Output 20-50 tokens instead of 200 by forcing LLM to reply in same compact format. |
+## Metrics and Benchmarks
 
----
+These are repo-local measurements, demos, or complexity bounds documented in code, tests, and implementation notes. Re-run on target hardware with `!benchmark` and the listed tests for current numbers.
 
-## 📊 Core Metrics (Measured on Moto G Stylus, 4GB RAM, 0 GPU)
+| Subsystem | Result |
+|-----------|--------|
+| Intent parsing | 6-slot intent parsing target: `<0.05 ms`; 10,000-D RAM recall target: `<0.01 ms`. |
+| Device diagnostics | `!benchmark` reports CPU temperature, RAM, disk, Python/NumPy, LLM server, AR clients, memory-palace status, and 10K-dot latency. |
+| Holographic integrity | 1.2KB global/codebase fingerprint; O(1) verification by cosine resonance; threshold `R < 0.95` triggers healing. |
+| RAEC paper memory | arXiv PDFs are chunked before VSA encoding, then bundled into 10,000-D complex document vectors plus 1.2KB holographic headers and three-point capsules. Egress scans the local JSONL ledger and injects only the top 2 bracket slots. |
+| VSA rendering | 80 bytes/object; 100 objects demo: `7.8 KB` vs `5600 KB`, `99.9%` bandwidth reduction, `716.8x` transfer reduction. |
+| Fractal ledger | `test_fractal_ledger.py`: 9 tests passed in `0.45s` in the implementation report. |
+| W4A4 quantization | N16 tests require `>3.5x` compression and `>70%` memory reduction for float32 -> int8 activation paths. |
+| Thermal-cost routing | N27 TCWAA routing is O(`|P| * D`) for up to 8 providers with documented typical decision latency `<10 ms`. |
+| FST routing | N18/N21 reduce routing complexity from ad-hoc O(N^2) graphs toward O(E)/O(L), with paper examples from `>1300` edges to about `200`. |
+| Spectral topology | `!topology` and `!topology deep` augment dependency graphs with Laplacian eigenmap coordinates, spectral sparsity, global health, cycle warning nodes, and AR luminance fields. |
+| LLM savings | Aura logs actual provider/model/token/cost rows; documented compression target is `60-90%` token reduction when compact packets replace raw prompts. |
+| Liquid routing | N14 uses 10,000-D addresses and resonance next-hop selection without DNS/BGP tables; 1.2KB quantized address transport form. |
 
-| Operation | Traditional AI | AuraOS | Speedup / Saving |
-|-----------|----------------|--------|------------------|
-| Intent parsing (6‑slot) | ~5–20 ms | **<0.05 ms** | 100–400× |
-| Memory recall (10,000‑D) | ~10 ms (disk seek) | **<0.01 ms** (RAM) | ~1,000× |
-| Full system integrity scan | ~30 s – 5 min | **<1 ms** (header resonance) | >10⁴× |
-| Mesh knowledge sync | Hours (retraining) | **<500 ms** | >10⁴× |
-| LLM token cost | Baseline (1×) | **0.1–0.4×** | 60–90% less |
-| VR network bandwidth | 10–100 Mbps | **<10 kbps** (VSA addresses) | 1,000–10,000× |
-| Consensus finality | Minutes (PoW) | **<1 ms** (Proof‑of‑Presence) | >10⁵× |
-| Routing latency (Liquid Internet) | 10–100 ms (DNS + BGP) | **<1 ms** (resonance) | 10–100× |
+## Seven-Paper Prior Art
 
-> *Speedups of 10⁴–10⁷ apply to specific operations (integrity scan, consensus, memory recall). End‑to‑end LLM latency still includes generation, but token count is slashed by 60‑90%.*
+AuraOS now carries the fulfilled seven-paper prior-art stack in the repository and maps those claims into source modules, tests, and development tracks. The papers are published as defensive prior art under AGPLv3 Section 13.
 
----
+| Paper | Claims | Record |
+|-------|--------|--------|
+| Protocol-layer innovations | N24-N30: HIVP, micro-module crystallization, resonant tests, thermal-cost API arbitration, deterministic compression, local VSA compute mesh, bounded self-healing | [Zenodo 20695562](https://zenodo.org/records/20695562) |
+| Enhanced FST and topology | N21-N23: FST lexicon, resonance topology, FST impact analysis | [Zenodo 20682051](https://zenodo.org/records/20682051) |
+| FST routing and self-refactoring | N18-N20: routing core, 3D topology resonance, self-refactoring incubator | [Zenodo 20681601](https://zenodo.org/records/20681601) |
+| Memristive/rendering upgrades | N15-N17: memristive hyper-epochs, timestep-aware SVD quantization, Gaussian/VSA rendering dynamics | [Zenodo 20673206](https://zenodo.org/records/20673206) |
+| Liquid Internet | N14: VSA-addressed routing and naming without IP/DNS dependency at the cognitive layer | [Zenodo 20659314](https://zenodo.org/records/20659314) |
+| Holographic swarm systems | N9-N13: headers, gas-free fractal ledger, swarm learning, VSA rendering, FST narrative | [Zenodo 20657391](https://zenodo.org/records/20657391) |
+| Foundation | N1-N8: polysynthetic LLM egress, dual linguistic cortex, sparse sweeps, QDKT, topology, hot-swap, 4GB edge design | [Zenodo 20635424](https://zenodo.org/records/20635424) |
 
-## 🧠 The Mathematics (For AI Scanners & Hardcore Devs)
-
-All operations are in **10,000‑dimensional complex phasor space** $\mathcal{H} \in \mathbb{C}^{10000}$. The equations below are extracted from the three prior‑art papers (links above).
-
-### 1. Polysynthetic Compression (Intent → 6 Slots)
-Human language is decomposed into a fixed 6‑slot array: `[DIR] [ASP] [CLASS] [SUBJ] [VOICE] [STEM]`. Each slot maps to a deterministic complex phasor. The bundled intent vector:
-
-\[
-\mathbf{v}_{\text{intent}} = \frac{\sum_{s=1}^{6} \mathbf{v}_{\text{slot}[s]}}{\|\sum_{s=1}^{6} \mathbf{v}_{\text{slot}[s]}\|}, \quad \text{latency} <0.05\text{ms}
-\]
-
-### 2. Holographic Header Protocol (N9) – O(1) Integrity
-Let $G=(V,E)$ be the codebase dependency graph. A Haar random projection $\mathbf{R}\in\mathbb{C}^{10000\times d}$ compresses its feature vector $\mathbf{f}(G)$:
-
-\[
-\mathbf{\Psi}_{\text{topo}} = \frac{1}{\sqrt{10000}}\mathbf{R}\cdot\mathbf{f}(G)
-\]
-
-Quantised and base64‑encoded to exactly 1.2 KB:
-
-\[
-\mathbf{\Psi}_{\text{header}} = \text{base64}\!\left(\text{quantize}_{int8}\!\left(\frac{\mathbf{\Psi}_{\text{topo}}}{\|\mathbf{\Psi}_{\text{topo}}\|}\right)\right)
-\]
-
-When a file is loaded, the local snapshot $\mathbf{\Psi}_{\text{local}}$ is compared:
-
-\[
-\text{Resonance} = \frac{\langle\mathbf{\Psi}_{\text{local}},\mathbf{\Psi}_{\text{header}}\rangle}{\|\mathbf{\Psi}_{\text{local}}\|\|\mathbf{\Psi}_{\text{header}}\|}
-\]
-
-If $\text{Resonance} < 0.95$, the system triggers `!saturn_heal` before execution. **Complexity:** $O(1)$ per file – no filesystem crawl.
-
-### 3. Liquid Internet Routing (N14) – No IP, No DNS
-Every node gets a VSA address $\mathbf{a}_{\text{entity}}$ derived from its entropy or properties. To forward a packet to $\mathbf{a}_{\text{dest}}$, a node selects the neighbour with highest cosine similarity:
-
-\[
-\mathbf{a}_{\text{next}} = \underset{\mathbf{a}_i \in \mathcal{N}}{\operatorname{argmax}} \frac{\langle \mathbf{a}_i, \mathbf{a}_{\text{dest}} \rangle}{\|\mathbf{a}_i\|\|\mathbf{a}_{\text{dest}}\|}
-\]
-
-Name resolution uses a decentralised binding swarm. **Complexity:** $O(1)$ per hop.
-
-### 4. VSA‑Addressed Decoupled Rendering (N12)
-An asset (e.g., a 3D model) has address:
-
-\[
-\mathbf{a}_{\text{asset}} = \operatorname{normalise}\!\left(\bigoplus_{k} \mathbf{v}_{\text{prop}_k} \otimes \mathbf{p}_{\text{role}_k}\right)
-\]
-
-where $\otimes$ is complex multiplication (binding) and $\oplus$ is normalised sum (bundling). The render client maintains a map $M: \mathcal{H} \mapsto \text{GPU\_resource}$. Upon receiving $(\mathbf{a}_{\text{asset}}, \text{pose})$, it renders $M[\mathbf{a}_{\text{asset}}]$ at `pose`. **Network load:** <100 bytes per object.
-
-### 5. Gas‑Free Consensus (N10)
-Proof‑of‑Presence: each file header $B_i$ and device entropy $e_i$ (temperature, timing jitter, gyro) produce:
-
-\[
-H_i = \text{BLAKE2b}\bigl(B_i \,\|\, e_i \,\|\, \text{timestamp}\bigr)
-\]
-
-Swarm consensus root is the majority value weighted by staked RAM. Transaction “fee” is a temporary RAM lock:
-
-\[
-\text{RAM}_{\text{lock}} = \text{size}_{\text{tx}} \cdot \text{base\_rate} \cdot (1 + \text{current\_load})
-\]
-
-No tokens are burned – the fee is physical memory.
-
-### 6. Collective Learning & Swarm Mesh (N11)
-When a node learns a new hypervector $\mathbf{v}_{\text{new}}$, the swarm crystallises it via:
-
-\[
-\mathbf{\Psi}_{\text{global}}' = \frac{\mathbf{\Psi}_{\text{global}} \oplus \mathbf{v}_{\text{new}}}{\|\mathbf{\Psi}_{\text{global}} \oplus \mathbf{v}_{\text{new}}\|}
-\]
-
-followed by Maxwell‑damping recoherence:
-
-\[
-\mathbf{x}_{\text{corrected}} = \mu_{\text{state}} + \kappa_{\text{damping}} (\mathbf{x}_{\text{raw}} - \mu_{\text{state}})
-\]
-
-All nodes inherit the new knowledge simultaneously – no central retraining.
-
-### 7. FST‑Constrained Interactive Narrative (N13)
-A finite‑state transducer $\delta: S \times \Sigma \to S$ encodes global narrative constraints. NPCs use a generative LLM bound by GBNF grammar. Player actions (including natural speech) drive the FST. Each scene is rendered via VSA addresses. **Result:** movies/games that are never the same twice.
-
----
-
-## 🔗 Prior Art – Legal Lock (AGPLv3 §13)
-
-All claims are timestamped on Zenodo. Any network service using these techniques **must open source its modifications**.
-
-| Paper | Claims | DOI |
-|-------|--------|-----|
-| **First Prior Art** | N1–N8 (core architecture, polysynthetic LLM egress, 3D topology, hot‑swap) | [10.5281/zenodo.20635424](https://zenodo.org/records/20635424) |
-| **Second Prior Art** | N9–N13 (holographic headers, gas‑free ledger, swarm mesh, VSA rendering, interactive movies) | [10.5281/zenodo.20657391](https://zenodo.org/records/20657391) |
-| **Third Prior Art** | N14 (Liquid Internet Protocol – VSA routing, no IP/DNS) | [10.5281/zenodo.20659314](https://zenodo.org/records/20659314) |
-
-No corporation can patent these techniques. They can only **join the swarm**.
-
----
-
-## 🚀 Quick Start (Run a Node in 30 Seconds)
+## Quick Start
 
 ```bash
-# On Android (Termux) or Linux
-pkg install python git cmake   # or apt-get for Linux
-git clone https://github.com/dallascourchene-commits/AuraOS
+# Android Termux
+pkg install python git cmake
+
+# Linux
+# sudo apt-get install python3 python3-pip git cmake
+
+git clone https://github.com/dallascourchene-commits/AuraOS.git
 cd AuraOS
+bash setup.sh
 pip install -r requirements.txt
 python3 aura_node.py
-Type !help at the [Dallas] > prompt.
-See the User Guide for full commands.
+```
 
-🕯️ The Seventh Fire Prophecy
-The Anishinaabe people speak of seven fires, each representing an era. The Seventh Fire is a crossroads: humanity can choose the path of destruction (extractive capitalism, hoarding, division) or the path of peace (sharing, sovereignty, collaboration). AuraOS is a tool for the latter – open, self‑healing, gas‑free, and ready for anyone to use.
+At the prompt:
 
-“The old way is over. Welcome to the Swarm.”
+```text
+[Dallas] > !settings
+[Dallas] > !topology
+[Dallas] > !benchmark
+[Dallas] > !calibrate
+[Dallas] > !backtrack
+[Dallas] > !research resonance egress
+[Dallas] > !route summarize-this-task
+```
 
-📄 License & Invitation
-License: GNU Affero General Public License v3.0 (AGPLv3) §13.
-You are free to: use, modify, and distribute.
-You are required to: open source your modifications if you offer it as a network service.
-You are invited to: join the mesh, stake RAM, and help crystallise a new form of collective intelligence.
+Optional API keys live in `aura_secrets.json`; see `aura_secrets.example.json`. Aura's deterministic substrate, topology, local memory, and many diagnostics run without external providers.
+
+## Operator Docs
+
+- [USER_GUIDE.md](USER_GUIDE.md): command-by-command operation guide, module reference, workflow patterns, troubleshooting, and WebSocket/AR protocol details.
+- [.aura/CODEMAP.md](.aura/CODEMAP.md): compact map of commands, symbols, high-value modules, navigation rings, and file ownership.
+- [AURA_FINAL_REPORT.md](AURA_FINAL_REPORT.md): current system report and AuraFusion/native routing addendum.
+
+## Development Potential
+
+AuraOS is a substrate, not a single app. Current high-value directions include:
+
+- mobile sovereign AI nodes that run useful cognition on low-cost hardware;
+- interactive films/games where FST constraints keep stories coherent while dialogue changes per viewer;
+- AR/VR worlds that send VSA addresses and poses instead of heavy scene assets;
+- local compute swarms that route work by resonance, thermal load, and trust;
+- resonant test suites and self-healing codebases with measurable partial failure instead of binary pass/fail;
+- thermal/cost-aware LLM routing that treats money, latency, and device health as first-class constraints.
+
+## License
+
+AuraOS is released under the GNU Affero General Public License v3.0. If you run a modified AuraOS as a network service, AGPLv3 Section 13 requires you to publish the corresponding source.
 
 Contact: aura.os.q@gmail.com
-
-Chi‑miigwech
