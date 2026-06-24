@@ -169,11 +169,11 @@ def _resonance_with_cached_inverse(lhs: np.ndarray, inverse_rhs: np.ndarray, *, 
 
 def _normalise_vectors(vectors: Iterable[np.ndarray], *, dimensions: int) -> list[np.ndarray]:
     normalised: list[np.ndarray] = []
-    for vector in vectors:
+    for idx, vector in enumerate(vectors):
         try:
             normalised.append(_unit_phase(vector, dimensions=dimensions))
-        except Exception:
-            continue
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid single-seed lift vector at index {idx}") from exc
     return normalised
 
 
