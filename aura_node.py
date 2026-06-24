@@ -7170,10 +7170,12 @@ def contingency_harness():
 
             elif u_in_l in ["!settings", "!manifest", "!help"]:
                 # ── Static command catalogue ──────────────────────────────────
-                # Each entry: command → (usage hint, description)
+                # Each entry: command -> (usage hint, description)
                 COMMAND_DOCS = {
-                    "!topology":          ("!topology",            "Scan all Python modules into a 3D dependency graph. Saves to Aura_Memory/live_topology_ast.json. Run this first before !catalyze or !evolve_reasoning."),
+                    "!topology":          ("!topology / !scan_topology", "Scan all Python modules into a 3D dependency graph. Saves to Aura_Memory/live_topology_ast.json. Run this first before !catalyze or !evolve_reasoning."),
                     "!topology deep":     ("!topology deep / !topology_deep", "Deep scan using TopologyBuilder — includes hub diagnostics, isolated-node counts and dangling-edge detection."),
+                    "!ai_route <task>":   ("!ai_route <task>",     "Ask the compact AI router which files and symbols matter for a task before opening the full monolith."),
+                    "!ai_router_regen":   ("!ai_router_regen",     "Regenerate the AI router index from the live topology after code or CODEMAP changes."),
                     "!settings":          ("!settings",            "Print this manifest. Aliases: !manifest, !help"),
                     "!plan <goal>":       ("!plan <goal>",         "Build a DAG execution tree for a stated goal and print the task graph in JSON."),
                     "!approve <method>":  ("!approve <method>",    "Graft the function named <method> from aura_incubator.py into aura_node.py via live AST surgery."),
@@ -7207,6 +7209,7 @@ def contingency_harness():
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),
                     "!forage_off":        ("!forage_off / !forager_off", "Disable background foraging to conserve CPU/RAM."),
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),
+                    "!crystallize":        ("!crystallize",         "Initialize the epistemic knowledge crystallization hub for permanent memory alignment."),
                     "!timeline":          ("!timeline",            "Show the epistemic consensus ledger from aura_quantum_memory.db."),
                     "!stage":             ("!stage / !stage_review / !review", "Preview the patch currently staged in Aura_Staging/pending_patches.json."),
                     "!stage_merge":       ("!stage_merge",         "Merge the staged patch into aura_incubator.py after safety sentinel check and human alignment scoring."),
@@ -7221,6 +7224,8 @@ def contingency_harness():
                     "!fast_path <query>": ("!fast_path <query>",   "O(1) associative intent lookup in the in-memory hypervector matrix. Also primes the matrix."),
                     "!catalyze":          ("!catalyze",            "Validate pending patches against the live topology (requires !topology to have run first)."),
                     "!reason":            ("!reason",              "Neuro-symbolic exhaustive omnipath sweep to verify reasoning trajectory."),
+                    "!coordinated_reason <query>": ("!coordinated_reason <query>", "Run Pass@K parallel neuro-symbolic reasoning and report throughput, latency, rewards, and buffer health."),
+                    "!strategy_buffer_stats": ("!strategy_buffer_stats", "Print coordinated-solver strategy-buffer capacity, valid entries, mean reward, and best reward."),
                     "!markov [N]":        ("!markov [N]",          "Markovian workspace reconstruction over the last N raw execution logs (default 256)."),
                     "!rollback <root>":   ("!rollback <root>",     "Phase-conjugate rollback to the Q-SYS root token <root> to undo a cognitive trajectory."),
                     "!indus_decrypt":     ("!indus_decrypt",       "Run batch resonance decryption on a synthetic Indus Valley script corpus (3700 glyphs)."),
@@ -7271,6 +7276,7 @@ def contingency_harness():
                 print("\n📦  ACTIVE MODULE METADATA (from [AURA_MASTER_KEY] headers):\n")
                 target_modules = sorted(f for f in os.listdir('.') if f.endswith('.py'))
                 found_any = False
+                function_index = []
                 for module_file in target_modules:
                     try:
                         with open(module_file, 'r', encoding='utf-8') as f:
@@ -7285,7 +7291,13 @@ def contingency_harness():
                             print(f"  📦 {module_file}")
                             if p_alignment: print(f"      PWFST : {p_alignment.group(1).strip()}")
                             if p_deps:      print(f"      DEPS  : {p_deps.group(1).strip()}")
-                            if p_funcs:     print(f"      FUNCS : {p_funcs.group(1).strip()}")
+                            if p_funcs:
+                                funcs_text = p_funcs.group(1).strip()
+                                print(f"      FUNCS : {funcs_text}")
+                                for func_name in re.split(r'\s*,\s*', funcs_text):
+                                    clean_name = func_name.strip()
+                                    if clean_name:
+                                        function_index.append((clean_name, module_file))
                             if p_synopsis:  print(f"      USE   : {p_synopsis.group(1).strip()}")
                             print()
                             found_any = True
@@ -7293,6 +7305,14 @@ def contingency_harness():
                         continue
                 if not found_any:
                     print("  (No [AURA_MASTER_KEY] metadata found in current directory.)")
+                elif function_index:
+                    print("─" * 66)
+                    print("\n🧭  MODULE FUNCTION QUICK INDEX:\n")
+                    print("  Use this bottom index to jump from a capability name to")
+                    print("  the module that owns it. Run !ai_route <task> for a")
+                    print("  CODEMAP-guided file/symbol path before editing.\n")
+                    for func_name, module_file in sorted(function_index, key=lambda item: (item[0].lower(), item[1].lower())):
+                        print(f"  {func_name:<38} -> {module_file}")
 
                 print("=" * 66 + "\n")
                 continue
