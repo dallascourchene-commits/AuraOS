@@ -454,20 +454,7 @@ class AuraContextCrusher:
         source_hint: str | None,
     ) -> None:
         self.ledger_path.parent.mkdir(parents=True, exist_ok=True)
-        rows: dict[str, dict[str, Any]] = {}
-        if self.ledger_path.exists():
-            with self.ledger_path.open(encoding="utf-8") as handle:
-                for line in handle:
-                    if not line.strip():
-                        continue
-                    try:
-                        payload = json.loads(line)
-                    except json.JSONDecodeError:
-                        continue
-                    key = str(payload.get("hash", ""))
-                    if key:
-                        rows[key] = payload
-        rows[original_hash] = {
+        record = {
             "version": CONTEXT_CRUSH_VERSION,
             "hash": original_hash,
             "content_type": content_type,
@@ -478,9 +465,8 @@ class AuraContextCrusher:
             "original": original,
             "compressed": compressed,
         }
-        with self.ledger_path.open("w", encoding="utf-8") as handle:
-            for key in sorted(rows):
-                handle.write(json.dumps(rows[key], sort_keys=True, separators=(",", ":")) + "\n")
+        with self.ledger_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n")
 
 
 def apply_context_crush_to_prompt(
