@@ -5,17 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 208,
+    "included_file_count": 210,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 148,
+      ".git": 165,
       ".pytest_cache": 5,
       "Aura_Memory": 3,
-      "__pycache__": 97
+      "__pycache__": 99
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,7 @@
       "aura_spectral_memory.py",
       "aura_spectral_topology.py",
       "aura_spvm.py",
+      "aura_st3gg_compact.rs",
       "aura_st3gg_recall.py",
       "aura_substrate.py",
       "aura_token_economics.py",
@@ -209,6 +210,7 @@
       "test_aura_phase_capsule.py",
       "test_aura_single_seed_lift.py",
       "test_aura_spectral_topology.py",
+      "test_aura_st3gg_compact.py",
       "test_aura_st3gg_recall.py",
       "test_aura_substrate.py",
       "test_aura_tokenizer_guard.py",
@@ -229,16 +231,16 @@
     ]
   },
   "summary": {
-    "file_count": 208,
-    "total_bytes": 61751249,
-    "text_tokens_est": 894578,
+    "file_count": 210,
+    "total_bytes": 61755780,
+    "text_tokens_est": 895712,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
-      "native_accelerator": 7,
+      "native_accelerator": 8,
       "operator_script": 4,
-      "python_module": 135,
+      "python_module": 136,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
@@ -246,7 +248,7 @@
     "topology_edges": 0,
     "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782318113
+    "last_incremental_refresh_unix": 1782319112
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -425,6 +427,7 @@
       "aura_single_seed_lift.py",
       "aura_skillweaver.py",
       "aura_spvm.py",
+      "aura_st3gg_compact.rs",
       "aura_st3gg_recall.py",
       "aura_token_economics.py",
       "aura_unifier.sh",
@@ -462,6 +465,7 @@
       "test_aura_fusion.py",
       "test_aura_phase_capsule.py",
       "test_aura_single_seed_lift.py",
+      "test_aura_st3gg_compact.py",
       "test_aura_st3gg_recall.py",
       "test_aura_wasm_bridge.py",
       "test_codemap_slimming.py",
@@ -5258,6 +5262,16 @@
         "end_line": 428,
         "semantic_id": "aura_fusion.py#function:_dispatch_panel:17ef0871b467360c",
         "signature_hash": "682eb9bf7f57308d"
+      }
+    ],
+    "_djb2_hash": [
+      {
+        "file": "test_aura_st3gg_compact.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 17,
+        "semantic_id": "test_aura_st3gg_compact.py#function:_djb2_hash:07e0b7c7261f67d5",
+        "signature_hash": "b4f3683653789a61"
       }
     ],
     "_edge_weight": [
@@ -17164,6 +17178,26 @@
         "signature_hash": "a80caa3446aac5d4"
       }
     ],
+    "test_st3gg_compactor_compiles_and_emits_pilots": [
+      {
+        "file": "test_aura_st3gg_compact.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 61,
+        "semantic_id": "test_aura_st3gg_compact.py#function:test_st3gg_compactor_compiles_and_emits_pilots:e715e01f91c6a6c9",
+        "signature_hash": "ba4af831f2a65f13"
+      }
+    ],
+    "test_st3gg_compactor_source_is_std_only": [
+      {
+        "file": "test_aura_st3gg_compact.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 27,
+        "semantic_id": "test_aura_st3gg_compact.py#function:test_st3gg_compactor_source_is_std_only:42719b3e7ff1dc13",
+        "signature_hash": "c65a7900875913e6"
+      }
+    ],
     "test_st3gg_hash_sidecar_survives_without_json_index": [
       {
         "file": "test_aura_st3gg_recall.py",
@@ -20028,9 +20062,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 10253,
+      "bytes": 10233,
       "lines": 125,
-      "tokens_est": 2534,
+      "tokens_est": 2529,
       "symbol_count": 0,
       "commands": [
         "!backtrack",
@@ -20068,40 +20102,40 @@
         ]
       },
       "topology": {},
-      "digest8": "cb8c071c43f6acf0",
+      "digest8": "8c01e92e0c2b3431",
       "vector": [
-        -0.241463,
-        0.155969,
-        0.077407,
-        0.153658,
-        -0.179075,
-        0.149037,
-        0.049679,
-        -0.218356,
-        -0.021951,
-        0.255326,
-        -0.100513,
-        0.155969,
-        -0.031194,
-        -0.202182,
-        0.128241,
-        -0.234531,
-        0.158279,
-        -0.257637,
-        -0.095892,
-        0.234531,
-        0.206803,
-        -0.255326,
-        -0.262258,
-        0.072785,
-        -0.109756,
-        0.257637,
-        -0.028883,
-        -0.075096,
-        0.061232,
-        -0.289986,
-        0.183696,
-        -0.16059
+        0.070919,
+        -0.215246,
+        -0.197827,
+        0.304828,
+        -0.063454,
+        0.11571,
+        0.03857,
+        0.103268,
+        -0.120687,
+        0.051012,
+        -0.120687,
+        -0.314782,
+        0.25506,
+        -0.011198,
+        0.220223,
+        0.309805,
+        -0.284921,
+        -0.003733,
+        0.222711,
+        0.02364,
+        -0.073408,
+        0.073408,
+        -0.058477,
+        -0.0535,
+        0.160501,
+        -0.232665,
+        0.130641,
+        -0.110734,
+        0.262526,
+        0.033593,
+        0.140594,
+        0.314782
       ]
     },
     {
@@ -20199,9 +20233,9 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "bytes": 88053,
-      "lines": 1735,
-      "tokens_est": 20839,
+      "bytes": 88328,
+      "lines": 1736,
+      "tokens_est": 20908,
       "symbol_count": 0,
       "commands": [
         "!ai_route",
@@ -20285,30 +20319,30 @@
         ],
         "!ar_server_start": [
           420,
-          981
+          982
         ],
         "!ar_server_stop": [
           421
         ],
         "!ar_start": [
           420,
-          922,
-          981,
-          985,
-          1318,
-          1332,
-          1405,
+          923,
+          982,
+          986,
+          1319,
+          1333,
           1406,
-          1408,
-          1418,
-          1453,
-          1455,
-          1729
+          1407,
+          1409,
+          1419,
+          1454,
+          1456,
+          1730
         ],
         "!ar_stop": [
           421,
-          986,
-          1406
+          987,
+          1407
         ],
         "!attention": [
           189
@@ -20320,17 +20354,17 @@
           320,
           321,
           349,
-          1267
+          1268
         ],
         "!benchmark": [
           203,
-          1384,
-          1424
+          1385,
+          1425
         ],
         "!calibrate": [
           224,
-          1301,
-          1398
+          1302,
+          1399
         ],
         "!catalyze": [
           185
@@ -20359,14 +20393,14 @@
         ],
         "!db_repair": [
           424,
-          1379
+          1380
         ],
         "!evolve_reasoning": [
           198
         ],
         "!export": [
           422,
-          1716
+          1717
         ],
         "!fast_path": [
           187
@@ -20435,7 +20469,7 @@
           335,
           351,
           383,
-          1270
+          1271
         ],
         "!review": [
           214
@@ -20446,7 +20480,7 @@
         "!route": [
           225,
           234,
-          1304
+          1305
         ],
         "!saturn": [
           201
@@ -20456,7 +20490,7 @@
         ],
         "!savings": [
           227,
-          1307
+          1308
         ],
         "!scan_topology": [
           183
@@ -20468,11 +20502,11 @@
         ],
         "!self_optimize": [
           213,
-          1286
+          1287
         ],
         "!self_reflect": [
           212,
-          1283
+          1284
         ],
         "!settings": [
           170,
@@ -20483,13 +20517,13 @@
         ],
         "!stage": [
           214,
-          1273,
-          1289
+          1274,
+          1290
         ],
         "!stage_merge": [
           215,
-          1276,
-          1292
+          1277,
+          1293
         ],
         "!stage_purge": [
           216
@@ -20505,7 +20539,7 @@
         ],
         "!system_audit": [
           204,
-          1425
+          1426
         ],
         "!test_airlock": [
           205
@@ -20516,12 +20550,12 @@
         "!topology": [
           183,
           184,
-          1264,
-          1315,
-          1407,
+          1265,
+          1316,
           1408,
-          1411,
-          1449
+          1409,
+          1412,
+          1450
         ],
         "!topology_deep": [
           184
@@ -20531,40 +20565,40 @@
         ]
       },
       "topology": {},
-      "digest8": "2b5514132f060f86",
+      "digest8": "5199cb0e271a1e7d",
       "vector": [
-        0.262119,
-        0.073393,
-        -0.108342,
-        -0.129312,
-        0.012815,
-        -0.047764,
-        0.040774,
-        -0.082713,
-        0.21785,
-        0.173581,
-        -0.276099,
-        0.236489,
-        -0.068733,
-        -0.119992,
-        0.292408,
-        -0.085043,
-        0.257459,
-        -0.159601,
-        -0.087373,
-        0.236489,
-        0.075723,
-        -0.129312,
-        -0.012815,
-        -0.20853,
-        -0.250469,
-        -0.078053,
-        0.171251,
-        -0.23416,
-        0.245809,
-        -0.243479,
-        -0.250469,
-        0.089703
+        -0.223718,
+        -0.003407,
+        -0.114698,
+        0.239617,
+        -0.198734,
+        0.098799,
+        -0.248702,
+        0.289584,
+        0.262329,
+        0.023848,
+        -0.162394,
+        -0.216904,
+        0.219176,
+        0.185107,
+        0.023848,
+        -0.255516,
+        -0.221447,
+        -0.239617,
+        0.032933,
+        -0.151038,
+        -0.132868,
+        0.042018,
+        0.039747,
+        0.110156,
+        -0.289584,
+        -0.198734,
+        0.094257,
+        0.028391,
+        0.114698,
+        -0.160123,
+        -0.053374,
+        0.235074
       ]
     },
     {
@@ -25265,6 +25299,52 @@
       ]
     },
     {
+      "path": "aura_st3gg_compact.rs",
+      "role": "native_accelerator",
+      "bytes": 2585,
+      "lines": 85,
+      "tokens_est": 647,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5f6c27d0c7a3c97a",
+      "vector": [
+        -0.196377,
+        0.218076,
+        -0.207226,
+        0.029294,
+        -0.090051,
+        -0.270153,
+        -0.187697,
+        0.011934,
+        0.228925,
+        0.270153,
+        0.237605,
+        0.196377,
+        0.174678,
+        -0.040143,
+        -0.085711,
+        0.270153,
+        0.144299,
+        0.081372,
+        -0.044483,
+        -0.246284,
+        -0.129109,
+        -0.048823,
+        0.224585,
+        0.003255,
+        0.270153,
+        -0.12477,
+        0.155148,
+        0.174678,
+        -0.11175,
+        -0.189867,
+        -0.239775,
+        0.10958
+      ]
+    },
+    {
       "path": "aura_st3gg_recall.py",
       "role": "python_module",
       "bytes": 17863,
@@ -28187,6 +28267,52 @@
       ]
     },
     {
+      "path": "test_aura_st3gg_compact.py",
+      "role": "python_module",
+      "bytes": 1691,
+      "lines": 62,
+      "tokens_est": 423,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5cf1d806c0f7fd13",
+      "vector": [
+        0.114039,
+        -0.274446,
+        -0.299509,
+        0.109026,
+        0.046368,
+        0.109026,
+        -0.046368,
+        0.126571,
+        0.204268,
+        -0.304522,
+        0.033836,
+        0.276952,
+        -0.066418,
+        0.006266,
+        -0.011279,
+        -0.156647,
+        -0.181711,
+        0.18923,
+        -0.116545,
+        -0.269433,
+        0.169179,
+        -0.119052,
+        0.254395,
+        -0.081456,
+        -0.083963,
+        -0.109026,
+        0.053887,
+        -0.221812,
+        0.317054,
+        0.031329,
+        0.279458,
+        -0.129077
+      ]
+    },
+    {
       "path": "test_aura_st3gg_recall.py",
       "role": "python_module",
       "bytes": 3699,
@@ -28997,8 +29123,8 @@
   "last_refresh": {
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
-      "aura_st3gg_recall.py",
-      "test_aura_st3gg_recall.py",
+      "aura_st3gg_compact.rs",
+      "test_aura_st3gg_compact.py",
       "README.md",
       "USER_GUIDE.md"
     ],

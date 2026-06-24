@@ -760,6 +760,7 @@ Related modules:
 | `aura_st3gg_recall.py` | `upsert_st3gg_recall(...)` / `lookup_st3gg_recall(key)` | Maintains `.st3gg_hash.bin`, `.st3gg_store.jsonl`, and `.st3gg_index.json` sidecars so Aura can recall a compressed original by CCR hash, ST3GG pointer, or DASH key without scanning or loading the JSONL ledger first. |
 | `aura_st3gg_recall.py` | `st3gg_recall_index_stats(ledger_path)` | Reports active sidecar capacity, load factor, bits/key, byte footprint, and whether the ledger is large enough to justify a future frozen PtrHash/perfect-hash segment. |
 | `aura_st3gg_recall.py` | `compute_compaction_efficiency(keys, bytes, latency)` | Scores a recall index against the 1.44 bits/key MPHF lower-bound target while labeling the current Python path as bounded active hashing, not frozen perfect hashing. |
+| `aura_st3gg_compact.rs` | `rustc -O aura_st3gg_compact.rs -o Aura_Memory/st3gg_compact` | Builds the zero-dependency Stage 2 pilot compiler. It reads newline-separated unique CCR/ST3GG/DASH keys from stdin and writes little-endian `u32 N` plus `N` pilot bytes to stdout. |
 | `aura_tokenizer_guard.py` | `sanitize_tokenizer_channels(text)` | Removes tag chars, private-use chars, variation selectors, bidi controls, and hidden format controls before LLM egress. |
 | `aura_tokenizer_guard.py` | `sanitize_message_payloads(messages)` | Applies the same guard to OpenAI-compatible message lists while leaving non-string structured content alone. |
 

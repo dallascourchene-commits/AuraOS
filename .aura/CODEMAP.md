@@ -13,22 +13,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 208
-- **total_bytes**: 61751249
-- **text_tokens_est**: 894578
-- **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 7, 'operator_script': 4, 'python_module': 135, 'schema_or_lexicon': 9, 'support_file': 13}
+- **file_count**: 210
+- **total_bytes**: 61755780
+- **text_tokens_est**: 895712
+- **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 136, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782318113
+- **last_incremental_refresh_unix**: 1782319112
 
 ## Coverage
 
-- **included_file_count**: 208
+- **included_file_count**: 210
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=148, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=97
+- **skipped_dir_file_counts**: `.git`=165, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=99
 
 ## Command Index
 
@@ -191,7 +191,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura_pfst_backup.bak`
 - `.gitignore`
 - `.termux/colors.properties`
-- ... 133 more; query CODEMAP.json for exact file cards
+- ... 135 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
