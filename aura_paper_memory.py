@@ -422,7 +422,12 @@ class AuraResonanceEgressGate:
             if node.single_seed_lift is not None:
                 lift_capsule = compact_lift_capsule(node.single_seed_lift, limit=260)
                 if lift_capsule:
-                    constraints = _slot_safe(f"{constraints}|LIFT={lift_capsule}", limit=720)
+                    lift_marker = f"|LIFT={lift_capsule}"
+                    summary_limit = max(1, 720 - len(lift_marker))
+                    constraints = (
+                        f"{_slot_safe(node.summary_capsule, limit=summary_limit)}"
+                        f"{lift_marker}"
+                    )
                     lift_dispatch.append(node.single_seed_lift.to_jsonable())
             slots.append(
                 f"[ANCHOR_ID:{_slot_safe(node.doc_id, limit=96)}]"
