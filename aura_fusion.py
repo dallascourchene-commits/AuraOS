@@ -25,6 +25,7 @@ from aura_api_rotator import load_secrets
 from aura_llm_egress import generate_openai_compatible_payload
 from aura_model_probe_ledger import AuraModelProbeLedger
 from aura_skillweaver import AuraSkillWeaver, gate_fusion_task
+from aura_spectral_topology import build_fusion_topology_snapshot
 from aura_substrate import REPO_ROOT, estimate_tokens
 
 
@@ -220,6 +221,7 @@ def build_task_capsule(
     output_mode: str = "TEXT",
     constraints: list[str] | None = None,
     codemap_epoch: str | None = None,
+    repo_root: str = REPO_ROOT,
     extra: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     capsule = {
@@ -231,6 +233,13 @@ def build_task_capsule(
         "constraints": constraints or list(DEFAULT_CONSTRAINTS),
         "codemap_epoch": codemap_epoch or _codemap_epoch(),
     }
+    topology_snapshot = build_fusion_topology_snapshot(
+        repo_root=repo_root,
+        target_file=target_file,
+        target_symbol=target_symbol,
+    )
+    if topology_snapshot is not None:
+        capsule["topology_snapshot"] = topology_snapshot
     if extra:
         capsule.update(extra)
     capsule["phase_hash"] = _hash_payload(capsule)
@@ -455,6 +464,7 @@ class AuraFusionCoordinator:
             output_mode=output_mode,
             constraints=constraints,
             codemap_epoch=_codemap_epoch(self.repo_root),
+            repo_root=self.repo_root,
             extra=extra_capsule,
         )
         gate = gate_fusion_task(task, capsule, AuraSkillWeaver(repo_root=self.repo_root).skills)

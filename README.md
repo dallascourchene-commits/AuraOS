@@ -13,13 +13,13 @@ AuraOS is built to run on-device first: Android/Termux, Linux, CPU-only, and a 4
 | Area | Capability |
 |------|------------|
 | Cognitive substrate | Compresses language into polysynthetic slot packets and 10,000-D VSA/FHRR vectors for routing, recall, and reasoning. |
-| Code navigation | Maintains `.aura/CODEMAP.md` / `.aura/CODEMAP.json` so humans and AI agents can traverse the repo without reading the whole monolith. |
+| Code navigation | Maintains `.aura/CODEMAP.md` / `.aura/CODEMAP.json` and spectral topology maps so humans and AI agents can traverse the repo without reading the whole monolith. |
 | Reasoning | Runs topology scans, neuro-symbolic omnipath sweeps, meta-resonance checks, coordinated Pass@K reasoning, and Markovian workspace reconstruction. |
 | Self-healing | Uses holographic headers, resonant test oracles, staged patch review, Saturn/NESY repair, database repair, and rollback primitives. |
 | LLM orchestration | Calibrates providers, routes tasks by quality/cost, logs token and dollar savings, runs AuraFusion deliberation, and injects compact RAEC research context before egress. |
 | Research ingestion | Forages arXiv, parses PDFs, stores paper-memory VSA ledgers with 1.2KB headers and three-point capsules, searches ingested papers, gates synthesis through SkillWeaver, and stages grounded code mutations. |
 | Mesh and overlays | Provides encrypted peer discovery, VSA-addressed liquid routing/naming, swarm collective learning, RAM-staked ledger concepts, and local compute-mesh hooks. |
-| AR and rendering | Builds live 3D topology maps, exposes WebSocket AR controls, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
+| AR and rendering | Builds live spectral 3D topology maps, exposes WebSocket AR controls, maps structural health to luminance/phase warnings, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
 
 ## Metrics and Benchmarks
 
@@ -36,6 +36,7 @@ These are repo-local measurements, demos, or complexity bounds documented in cod
 | W4A4 quantization | N16 tests require `>3.5x` compression and `>70%` memory reduction for float32 -> int8 activation paths. |
 | Thermal-cost routing | N27 TCWAA routing is O(`|P| * D`) for up to 8 providers with documented typical decision latency `<10 ms`. |
 | FST routing | N18/N21 reduce routing complexity from ad-hoc O(N^2) graphs toward O(E)/O(L), with paper examples from `>1300` edges to about `200`. |
+| Spectral topology | `!topology` and `!topology deep` augment dependency graphs with Laplacian eigenmap coordinates, spectral sparsity, global health, cycle warning nodes, and AR luminance fields. |
 | LLM savings | Aura logs actual provider/model/token/cost rows; documented compression target is `60-90%` token reduction when compact packets replace raw prompts. |
 | Liquid routing | N14 uses 10,000-D addresses and resonance next-hop selection without DNS/BGP tables; 1.2KB quantized address transport form. |
 

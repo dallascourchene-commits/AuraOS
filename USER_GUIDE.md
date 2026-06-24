@@ -176,8 +176,8 @@ smallest useful file/symbol path.
 | `!settings` / `!manifest` / `!help` | You need the live command map or bottom function index. | Prints command usage, polysynthetic slots, module metadata, and a function-to-module quick index. |
 | `!ai_route <task>` | You know the job but not the file to open. | Queries `aura_ai_router.py` for CODEMAP-grounded file and symbol candidates. |
 | `!ai_router_regen` | CODEMAP/topology changed after edits. | Rebuilds the AI router index from current topology data. |
-| `!topology` / `!scan_topology` | You need the current code graph before analysis, AR viewing, or patch validation. | Scans Python AST/import/resource edges and writes `Aura_Memory/live_topology_ast.json`. |
-| `!topology deep` / `!topology_deep` | You need hub diagnostics or fracture clues. | Runs the deeper topology builder and reports isolated nodes, dead ends, dangling edges, and top hubs. |
+| `!topology` / `!scan_topology` | You need the current code graph before analysis, AR viewing, or patch validation. | Scans Python AST/import/resource edges, augments the graph with Laplacian eigenmap coordinates and luminance health fields, and writes `Aura_Memory/live_topology_ast.json`. |
+| `!topology deep` / `!topology_deep` | You need hub diagnostics or fracture clues. | Runs the deeper topology builder and reports isolated nodes, dead ends, dangling edges, top hubs, spectral sparsity, cycle warnings, and global structural health. |
 | `!catalyze` | A staged patch exists and needs structural proof. | Reads `Aura_Staging/pending_patches.json` plus live topology and validates proposed patches with mutation guards. |
 | `!simulate <target>` | You want to test a route through the live topology. | Sends a target path into the SPVM/Rust simulator and reports bridges, fractures, and coherence drops. |
 | `!fast_path <query>` | You want a very fast associative intent lookup. | Performs O(1)-style hypervector lookup in the RAM matrix and stores the query as a future probe. |
@@ -248,7 +248,11 @@ cost savings, latency, provider breakdowns, and recent-call feed updates.
 AuraFusion is Aura's internal panel-plus-judge deliberation path. It does not
 depend on OpenRouter's hosted Fusion router as the primary solution. Instead it
 uses Aura's own compact task capsule, CODEMAP epoch, SkillWeaver mutation gate,
-user-owned provider keys, and configured model pool.
+user-owned provider keys, configured model pool, and a compact spectral topology
+snapshot when a target file or symbol is known. The snapshot includes target
+coordinates, immediate graph neighbors, luminance health, spectral sparsity, and
+cycle counts so panel agents stay close to the relevant code geometry instead of
+inventing distant paths.
 
 Run it directly:
 
@@ -268,6 +272,25 @@ Runtime logs are appended to `Aura_Memory/aura_fusion_runs.jsonl` and remain
 gitignored. Code-mutation requests are refused when no CODEMAP-grounded
 `target_file` is present; grounded mutation plans still require human review
 before anything is applied.
+
+### Spectral AR Topology
+
+`aura_spectral_topology.py` augments topology payloads with a local graph
+Laplacian (`L = D - A`) and projects the dependency graph into 3-D coordinates.
+The AR WebSocket bridge consumes those coordinates directly, so nearby shapes
+represent nearby dependency structure instead of arbitrary layout noise.
+
+Each node receives:
+
+- `position`: 3-D spectral coordinate for AR rendering.
+- `luminance` / `structural_health`: brighter means cleaner local structure.
+- `phaseShiftWarning`: true when the node participates in a directed cycle.
+- `validationState`: `clean_luminous`, `coupled_watch`, `dim_architectural_debt`, or `phase_shift_warning`.
+
+The browser renderer pulses phase-shift warning nodes, dims high-friction
+modules, and displays spectral sparsity/global health in the HUD. WebSocket
+clients receive the same fields through `TOPOLOGY_UPDATE`, so external AR clients
+can use the health state without recomputing the graph.
 
 ### Knowledge and Research
 
