@@ -58,6 +58,7 @@ from aura_paper_memory import (
     verify_egress_contract,
 )
 from aura_pre_egress_interceptor import apply_pre_egress_profile
+from aura_tokenizer_guard import sanitize_message_payloads, sanitize_tokenizer_channels
 
 # External providers only. Internal/local engines are intentionally excluded —
 # Aura must call out, not run a model in-process. Gemini is an allowed external
@@ -223,6 +224,7 @@ def generate_openai_compatible_payload(
     if not api_key or not str(api_key).strip():
         return None, f"missing API key for provider '{provider}'", 0.0, False
     crush_batch = None
+    tokenizer_guard = None
     outbound_messages = messages
     if context_crush:
         crush_batch = apply_context_crush_to_messages(
@@ -230,6 +232,9 @@ def generate_openai_compatible_payload(
             ledger_path=context_crush_ledger,
         )
         outbound_messages = crush_batch.messages
+    else:
+        tokenizer_guard = sanitize_message_payloads(messages)
+        outbound_messages = tokenizer_guard.messages
 
     payload: dict[str, Any] = {
         "model": model,
@@ -255,6 +260,7 @@ def generate_openai_compatible_payload(
             "provider": provider,
             "response_format": bool(response_format),
             "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+            "tokenizer_guard": tokenizer_guard.to_jsonable() if tokenizer_guard is not None else None,
         },
     )
     used_schema = bool(response_format and not err)
@@ -278,6 +284,7 @@ def generate_openai_compatible_payload(
                 "response_format": False,
                 "schema_retry": True,
                 "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+                "tokenizer_guard": tokenizer_guard.to_jsonable() if tokenizer_guard is not None else None,
             },
         )
         used_schema = False
@@ -514,6 +521,8 @@ class ExternalLLM:
             full_prompt, profile_decision = apply_pre_egress_profile(full_prompt, slot_matrix=slot_matrix)
             if profile_decision.throttled:
                 max_tokens = min(max_tokens, 512)
+        tokenizer_guard = sanitize_tokenizer_channels(full_prompt)
+        full_prompt = tokenizer_guard.sanitized_text
 
         t0 = time.time()
         text = None
@@ -538,6 +547,7 @@ class ExternalLLM:
             ),
             "raec_efficiency": raec_metrics,
             "context_crush": crush_result.to_jsonable() if crush_result is not None else None,
+            "tokenizer_guard": tokenizer_guard.to_jsonable(),
         }
         if self.is_gemini:
             text, err = gemini_generate(

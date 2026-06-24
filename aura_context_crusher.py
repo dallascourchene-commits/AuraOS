@@ -3,9 +3,9 @@
 ST3GG_BASE: 0xa8fc-[Q-SYS:CONTEXT_CRUSHER]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Reversible Context Compression)
-DEPENDENCIES: ast, dataclasses, hashlib, json, os, re, time, pathlib, typing, aura_wasm_bridge
+DEPENDENCIES: ast, dataclasses, hashlib, json, os, re, time, pathlib, typing, aura_st3gg_recall, aura_tokenizer_guard, aura_wasm_bridge
 FUNCTIONS: ContextCrushResult, ContextCrushBatch, CachePrefixReport, AuraContextCrusher, apply_context_crush_to_messages, apply_context_crush_to_prompt, retrieve_context_crush
-SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Routes JSON, logs, search results, and code through deterministic lightweight compressors, optionally lets a local Rust/WASI accelerator compete for shorter payloads, stores originals in a local CCR ledger for retrieval, and emits cache-prefix stability metrics without mutating system prompts.
+SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Routes JSON, logs, search results, and code through deterministic lightweight compressors, strips tokenizer-survival carriers, optionally emits visible ST3GG machine capsules, optionally lets a local Rust/WASI accelerator compete for shorter payloads, stores originals in a local CCR ledger plus O(1)-style ST3GG recall index, and emits cache-prefix stability metrics without mutating system prompts.
 [/AURA_MASTER_KEY]
 """
 
@@ -21,6 +21,12 @@ import re
 import time
 from typing import Any, Iterable
 
+from aura_st3gg_recall import (
+    compile_visible_st3gg_capsule,
+    lookup_st3gg_recall,
+    upsert_st3gg_recall,
+)
+from aura_tokenizer_guard import sanitize_message_payloads, sanitize_tokenizer_channels
 from aura_wasm_bridge import AuraRustWasmBridge
 
 CONTEXT_CRUSH_VERSION = "AURA_CONTEXT_CRUSH_V1"
@@ -82,6 +88,8 @@ class ContextCrushResult:
     accelerator: str = "python"
     retrieval_marker: str = ""
     warnings: tuple[str, ...] = ()
+    sanitizer_removed: tuple[tuple[str, int], ...] = ()
+    st3gg_pointer: str = ""
 
     @property
     def savings_ratio(self) -> float:
@@ -102,6 +110,8 @@ class ContextCrushResult:
             "accelerator": self.accelerator,
             "retrieval_marker": self.retrieval_marker,
             "warnings": list(self.warnings),
+            "sanitizer_removed": dict(self.sanitizer_removed),
+            "st3gg_pointer": self.st3gg_pointer,
         }
 
 
@@ -266,16 +276,18 @@ class AuraContextCrusher:
 
     def compress_context_stream(self, raw_content: str, *, source_hint: str | None = None) -> ContextCrushResult:
         raw = raw_content or ""
+        guard = sanitize_tokenizer_channels(raw)
+        safe_raw = guard.sanitized_text
         original_hash = f"aura_ccr_{_short_hash(raw, size=10)}"
-        content_type = self.detect_content_type(raw, source_hint)
-        compressed = self._compress_by_type(raw, content_type, original_hash)
+        content_type = self.detect_content_type(safe_raw, source_hint)
+        compressed = self._compress_by_type(safe_raw, content_type, original_hash)
         accelerator = "python"
-        warnings: tuple[str, ...] = ()
-        accelerated = self.wasm_bridge.accelerate(raw, content_type)
+        warnings: tuple[str, ...] = guard.warnings()
+        accelerated = self.wasm_bridge.accelerate(safe_raw, content_type)
         if accelerated and len(accelerated.compressed_payload) < len(compressed):
             compressed = accelerated.compressed_payload
             accelerator = accelerated.accelerator
-            warnings = accelerated.warnings
+            warnings = warnings + accelerated.warnings
         candidate = self._with_marker(
             compressed,
             original_hash=original_hash,
@@ -288,15 +300,18 @@ class AuraContextCrusher:
         ratio = 1.0 - (len(candidate) / max(1, len(raw)))
 
         if len(raw) < self.min_chars or savings <= 0 or ratio < self.min_savings_ratio:
+            safe_tokens = _estimate_tokens(safe_raw)
             return ContextCrushResult(
-                compressed_payload=raw,
+                compressed_payload=safe_raw,
                 original_hash=original_hash,
                 content_type=content_type,
                 original_chars=len(raw),
-                compressed_chars=len(raw),
-                token_savings_estimate=0,
+                compressed_chars=len(safe_raw),
+                token_savings_estimate=max(0, raw_tokens - safe_tokens),
                 was_compressed=False,
                 accelerator="python",
+                warnings=warnings,
+                sanitizer_removed=guard.removed_counts,
             )
 
         self._upsert_record(
@@ -305,6 +320,14 @@ class AuraContextCrusher:
             original=raw,
             compressed=candidate,
             source_hint=source_hint,
+        )
+        recall = upsert_st3gg_recall(
+            ledger_path=self.ledger_path,
+            original_hash=original_hash,
+            content_type=content_type,
+            original=raw,
+            compressed=candidate,
+            source_hint=source_hint or "",
         )
         return ContextCrushResult(
             compressed_payload=candidate,
@@ -317,6 +340,8 @@ class AuraContextCrusher:
             accelerator=accelerator,
             retrieval_marker=f"<<aura_ccr:{original_hash}>>",
             warnings=warnings,
+            sanitizer_removed=guard.removed_counts,
+            st3gg_pointer=recall.pointer,
         )
 
     def _looks_like_code(self, content: str) -> bool:
@@ -352,19 +377,23 @@ class AuraContextCrusher:
             keys = sorted({str(key) for item in data for key in item.keys()})
             rows = [[_safe_cell(item.get(key, "")) for key in keys] for item in data[: self.max_rows]]
             omitted = max(0, len(data) - len(rows))
-            return json.dumps(
+            matrix = json.dumps(
                 {"kind": "json_matrix", "keys": keys, "rows": rows, "omitted_rows": omitted},
                 separators=(",", ":"),
                 sort_keys=True,
             )
+            st3gg = compile_visible_st3gg_capsule(data, max_rows=self.max_rows)
+            return st3gg if st3gg and len(st3gg) < len(matrix) else matrix
         if isinstance(data, dict):
             items = [[str(key), _safe_cell(value)] for key, value in sorted(data.items())[: self.max_rows]]
             omitted = max(0, len(data) - len(items))
-            return json.dumps(
+            kv = json.dumps(
                 {"kind": "json_kv", "items": items, "omitted_keys": omitted},
                 separators=(",", ":"),
                 sort_keys=True,
             )
+            st3gg = compile_visible_st3gg_capsule(data, max_rows=self.max_rows)
+            return st3gg if st3gg and len(st3gg) < len(kv) else kv
         return json.dumps(data, separators=(",", ":"), sort_keys=True, default=str)
 
     def _compress_log(self, raw: str) -> str:
@@ -495,6 +524,7 @@ def apply_context_crush_to_messages(
     skip_roles: Iterable[str] = ("system",),
     enable_wasm: bool | None = None,
 ) -> ContextCrushBatch:
+    sanitized_batch = sanitize_message_payloads(messages)
     crusher = AuraContextCrusher(
         ledger_path=ledger_path,
         min_chars=min_chars,
@@ -503,7 +533,7 @@ def apply_context_crush_to_messages(
     skip = {role.lower() for role in skip_roles}
     rewritten: list[dict[str, Any]] = []
     results: list[ContextCrushResult] = []
-    for message in messages:
+    for message in sanitized_batch.messages:
         item = dict(message)
         role = str(item.get("role", "")).lower()
         content = item.get("content")
@@ -515,7 +545,7 @@ def apply_context_crush_to_messages(
     return ContextCrushBatch(
         messages=rewritten,
         results=tuple(results),
-        cache_prefix=compute_cache_prefix_report(messages),
+        cache_prefix=compute_cache_prefix_report(sanitized_batch.messages),
     )
 
 
@@ -527,6 +557,18 @@ def retrieve_context_crush(
     max_chars: int = 8_000,
 ) -> str:
     path = Path(ledger_path or os.environ.get("AURA_CONTEXT_CRUSH_LEDGER") or DEFAULT_LEDGER_PATH)
+    hit = lookup_st3gg_recall(original_hash, ledger_path=path)
+    if hit is not None:
+        original = hit.original
+        query_terms = [term.lower() for term in (query or "").split() if term.strip()]
+        if not query_terms:
+            return original[:max_chars]
+        hits = [
+            text_line
+            for text_line in original.splitlines()
+            if all(term in text_line.lower() for term in query_terms)
+        ]
+        return "\n".join(hits)[:max_chars]
     if not path.exists():
         return ""
     query_terms = [term.lower() for term in (query or "").split() if term.strip()]

@@ -157,7 +157,7 @@ uses only explicitly configured external provider APIs and can be dry-run with
 ### Key Concepts
 
 - **Polysynthetic**: Input is decomposed into 6 morphemic slots (SPATIAL, ASPECT, CLASS, SUBJECT, VOICE, STEM) before routing
-- **ST3GG**: Steganographic glyph system — thermal/moral/friction categorization embedded in all operations
+- **ST3GG**: Holographic glyph/stamp system — thermal/moral/friction categorization plus visible DASH recall pointers. Aura's egress-memory path uses auditable ST3GG capsules and strips hidden tokenizer carriers before outbound calls.
 - **DIKWP**: Data → Information → Knowledge → Wisdom → Purpose — cognitive hierarchy
 - **PWFST**: Ojibwe governance principles enforced across all modules
 - **Hyperdimensional (HDC)**: 10,000-bit binary vectors provide noise-tolerant associative memory
@@ -267,10 +267,12 @@ the prompt into a long narrative.
 
 AuraFusion and direct OpenAI-compatible calls also pass mutable user/tool
 payloads through `aura_context_crusher.py`. The system-prompt prefix is never
-rewritten; Aura only records a stable prefix hash and volatile-content findings
-so cache drift is observable. Large JSON, logs, search results, diffs, code, or
-plain text are compressed locally and their originals are stored in
-`Aura_Memory/context_crush_ledger.jsonl` behind `AURA_CCR` retrieval markers.
+compressed; Aura records a stable prefix hash and volatile-content findings so
+cache drift is observable. Hidden tokenizer-survival carriers are stripped at
+the outbound boundary, including when context crushing is disabled. Large JSON,
+logs, search results, diffs, code, or plain text are compressed locally and
+their originals are stored in `Aura_Memory/context_crush_ledger.jsonl` behind
+`AURA_CCR` retrieval markers plus visible `ST3GG-L2` recall pointers.
 
 Run it directly:
 
@@ -738,13 +740,30 @@ Headroom-inspired, Aura-native compression before LLM egress. It is
 dependency-free, local-first, reversible through the CCR ledger, and can
 optionally hand JSON/log/text byte sweeps to `aura_crush_core.rs` through the
 Rust/WASI bridge. If no accelerator is present, Aura stays on the Python path.
+GLOSSOPETRAE-inspired ST3GG logic is used only as visible, signed recall
+metadata: no invisible Unicode carriers, no covert payloads, and no guardrail
+evasion machinery.
 
 | Function | Description |
 |----------|-------------|
-| `apply_context_crush_to_prompt(prompt)` | Routes one prompt through JSON/log/search/code/text compression and stores the original when the compressed form wins. |
-| `apply_context_crush_to_messages(messages)` | Compresses non-system messages while preserving system prompt bytes for cache stability. |
+| `apply_context_crush_to_prompt(prompt)` | Strips tokenizer-survival carriers, routes one prompt through JSON/log/search/code/text compression, and stores the original when the compressed form wins. |
+| `apply_context_crush_to_messages(messages)` | Sanitizes all string messages, compresses non-system messages, and preserves normal system prompt bytes for cache stability. |
 | `compute_cache_prefix_report(messages)` | Emits stable prefix hash, byte/token estimate, and volatile-content findings. |
-| `retrieve_context_crush(hash, query)` | Retrieves the full original or query-matching lines from the local CCR ledger. |
+| `retrieve_context_crush(hash, query)` | Retrieves the full original or query-matching lines from the visible ST3GG sidecar index first, then falls back to the local CCR ledger. |
+
+Related modules:
+
+| Module | Function | When needed |
+|--------|----------|-------------|
+| `aura_st3gg_recall.py` | `compile_st3gg_pointer(content)` | Generates a deterministic visible `ST3GG-L2::<namespace>:<glyph>:<dash>` pointer and holographic header for local recall. |
+| `aura_st3gg_recall.py` | `compile_visible_st3gg_capsule(data)` | Converts compact JSON-like rows or dictionaries into a visible ASCII machine capsule when that is shorter than normal JSON sketches. |
+| `aura_st3gg_recall.py` | `upsert_st3gg_recall(...)` / `lookup_st3gg_recall(key)` | Maintains `.st3gg_hash.bin`, `.st3gg_store.jsonl`, and `.st3gg_index.json` sidecars so Aura can recall a compressed original by CCR hash, ST3GG pointer, or DASH key without scanning or loading the JSONL ledger first. |
+| `aura_st3gg_recall.py` | `st3gg_recall_index_stats(ledger_path)` | Reports active sidecar capacity, load factor, bits/key, byte footprint, and whether the ledger is large enough to justify a future frozen PtrHash/perfect-hash segment. |
+| `aura_st3gg_recall.py` | `compute_compaction_efficiency(keys, bytes, latency)` | Scores a recall index against the 1.44 bits/key MPHF lower-bound target while labeling the current Python path as bounded active hashing, not frozen perfect hashing. |
+| `aura_st3gg_compact.rs` | `rustc -O aura_st3gg_compact.rs -o Aura_Memory/st3gg_compact` | Builds the zero-dependency Stage 2 pilot compiler. It reads newline-separated unique CCR/ST3GG/DASH keys from stdin and writes a versioned binary header (`AST3CMP1`, version, key count, table size, table scale, hash profile) plus `N` pilot bytes to stdout. |
+| `aura_st3gg_recall.py` | `decode_st3gg_compaction_blob(blob)` | Validates the Stage 2 compactor header before Aura accepts frozen pilot bytes. Rejects bad magic, unsupported versions, table-scale/hash-profile mismatches, and pilot-count mismatches. |
+| `aura_tokenizer_guard.py` | `sanitize_tokenizer_channels(text)` | Removes tag chars, private-use chars, variation selectors, bidi controls, and hidden format controls before LLM egress. |
+| `aura_tokenizer_guard.py` | `sanitize_message_payloads(messages)` | Applies the same guard to OpenAI-compatible message lists while leaving non-string structured content alone. |
 
 ### 8.11 `aura_wasm_bridge.py` - Rust/WASI Accelerator Bridge
 
