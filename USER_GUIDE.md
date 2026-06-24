@@ -65,6 +65,10 @@ pip install -r requirements.txt
 # 4. Optional: Build aria2c + wasmtime native accelerators
 bash build_aura.sh
 
+# 4b. Optional: build the Rust context-crush accelerator
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core
+
 # 5. Generate the genesis block (IP minting)
 python3 mint_genesis.py
 
@@ -254,6 +258,20 @@ coordinates, immediate graph neighbors, luminance health, spectral sparsity, and
 cycle counts so panel agents stay close to the relevant code geometry instead of
 inventing distant paths.
 
+Each task capsule also carries a compact single-seed context-lift profile from
+`aura_single_seed_lift.py`. This borrows the transferable idea from
+arXiv:2606.20633: choose one seed, cache its inverse/profile once, and dispatch
+trace metadata to the consumers that need it. In AuraFusion this gives panel
+agents a bounded context anchor for the task/topology capsule without expanding
+the prompt into a long narrative.
+
+AuraFusion and direct OpenAI-compatible calls also pass mutable user/tool
+payloads through `aura_context_crusher.py`. The system-prompt prefix is never
+rewritten; Aura only records a stable prefix hash and volatile-content findings
+so cache drift is observable. Large JSON, logs, search results, diffs, code, or
+plain text are compressed locally and their originals are stored in
+`Aura_Memory/context_crush_ledger.jsonl` behind `AURA_CCR` retrieval markers.
+
 Run it directly:
 
 ```bash
@@ -313,18 +331,50 @@ can use the health state without recomputing the graph.
 Aura now keeps two coordinated memories for arXiv papers:
 
 - SQLite scientific traces in `.mempalace/`, keyed as `ARXIV_<paper_id>` when arXiv provides an ID. These keep the existing int8 scientific vectors used by `!research` and `!search_similar`.
-- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, and chunk-level VSA vectors.
+- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, chunk-level VSA vectors, and a compact single-seed lift profile.
 
-The PDF path is intentionally chunked. Aura does not unroll an entire raw PDF into one giant matrix slice; `aura_paper_memory.py` extracts text, chunks it, encodes each chunk as a complex phasor, and bundles those chunks into a document vector. This keeps ingestion compatible with the existing edge-memory architecture while preserving deeper recall hooks.
+The PDF path is intentionally chunked. Aura does not unroll an entire raw PDF into one giant matrix slice; `aura_paper_memory.py` extracts text, chunks it, encodes each chunk as a complex phasor, chooses a deterministic seed chunk, caches the inverse seed profile once, and lifts that seed through bounded residual layers into the document vector. This keeps ingestion compatible with the existing edge-memory architecture while preserving deeper recall hooks.
+
+The single-seed lift is an Aura VSA adaptation, not a claim that Aura performs
+literal polynomial factorization over `Z_p^e`. The source paper's useful
+engineering pattern is separation of seed discovery, cached inverse lifting, and
+trace dispatch. Aura uses that pattern for paper chunks, RAEC slots, and
+AuraFusion capsules so later egress calls can reuse compact trace metadata
+instead of rebuilding global context.
 
 `!forage <topic>` is best when you need one targeted source right now. It attempts the PDF, writes the paper-memory ledger, updates the SQLite scientific trace, and returns the three extracted points for quick inspection.
 
 `!backtrack` is best when Aura needs a broader research substrate. It crawls by date window, keeps arXiv pacing, and stores every returned paper as a searchable scientific trace. Full PDF VSA ingestion is budgeted by `AURA_BACKTRACK_PDF_LIMIT` and defaults to `3` fetch attempts per run, so large backtracks do not overheat or flood storage.
 
-`!research <concept>` and `!search_similar <query>` continue to use the fast SQLite scientific index. External LLM egress automatically uses RAEC when a paper-memory ledger exists: `aura_llm_egress.py` scans the ledger, selects the top two resonant paper capsules, verifies the `root ::= ...` contract, and injects compact `[ANCHOR_ID:...][CONSTRAINTS:...]` slots before provider egress.
+`!research <concept>` and `!search_similar <query>` continue to use the fast SQLite scientific index. External LLM egress automatically uses RAEC when a paper-memory ledger exists: `aura_llm_egress.py` scans the ledger, selects the top two resonant paper capsules, verifies the `root ::= ...` contract, and injects compact `[ANCHOR_ID:...][CONSTRAINTS:...]` slots before provider egress. When available, those constraints include `LIFT=SEED=...` trace metadata from the cached single-seed profile, and the LLM savings log records the lift dispatch count.
 
 Set `AURA_PAPER_MEMORY_LEDGER=/path/to/paper_memory_ledger.jsonl` to point RAEC at another ledger. Use `python3 extract_pdf_text.py <paper.pdf>` when you want the standalone PDF text-extraction compatibility CLI.
 
+
+### Headroom-Style Context Crushing
+
+Aura adapts the lightweight ideas from `headroomlabs-ai/headroom` without
+importing its heavy proxy/Rust/ML stack. The accepted pieces are deterministic
+content routing, schema-aware JSON compaction, log/search/code sketches, local
+CCR storage, and detector-only cache-prefix reporting. The rejected pieces are
+prompt padding, cache-hot system prompt rewrites, background proxying, and
+optional ML compressors that would violate Aura's low-dependency edge profile.
+
+Where it operates:
+
+- `ExternalLLM.generate()` crushes the mutable prompt before network egress, but
+  keeps the original prompt for RAEC resonance scoring.
+- `generate_openai_compatible_payload()` crushes non-system messages before
+  AuraFusion panel/judge calls.
+- Savings metadata records `context_crush` summaries beside provider, RAEC, and
+  response-schema fields.
+- Originals are retrievable locally with
+  `retrieve_context_crush(hash, query=None)`.
+
+The cache-prefix rule is strict: system prompts are treated as cache-hot and
+never modified. If Aura sees volatile UUIDs, timestamps, JWT-shaped tokens, or
+hex digests inside system text, it records an alignment warning instead of
+rewriting the prompt.
 
 ### SkillWeaver Research Relevance Gate
 
@@ -668,19 +718,68 @@ Class: `BenchmarkSandbox` — `scan_and_run()` — detects new/updated API keys 
 | `ConversationLog` | Polysynthetic turn logging |
 | `Conversationalist` | Main conversation engine: compress → LLM → interpret |
 
-### 8.9 `aura_pricing.py` — Price Book
+### 8.9 `aura_single_seed_lift.py` - Single-Seed Context Lift
+
+Portable context-lift primitive inspired by arXiv:2606.20633. The paper reports
+a cofactor-free lift with one cached inverse, `O(m^2)` per precision layer, and
+`33.5x` speedup in a high-precision benchmark. Aura adapts the pattern to local
+VSA context as one deterministic seed vector, one cached inverse digest, bounded
+residual lift layers, and compact trace dispatch.
+
+| Function | Description |
+|----------|-------------|
+| `compile_single_seed_lift(label, vectors, base_vector)` | Selects the best local seed vector, caches its inverse profile, lifts it through bounded residual layers, and returns a lifted 10,000-D phasor plus metadata. |
+| `compile_text_single_seed_lift(label, text_blocks)` | Builds the same profile from text blocks for Fusion capsules or other local summaries. |
+| `compact_lift_capsule(profile)` | Converts the profile to a short `SEED=...\|TRACE=...` capsule suitable for RAEC slots and task capsules. |
+
+### 8.10 `aura_context_crusher.py` - Reversible Context Crushing
+
+Headroom-inspired, Aura-native compression before LLM egress. It is
+dependency-free, local-first, reversible through the CCR ledger, and can
+optionally hand JSON/log/text byte sweeps to `aura_crush_core.rs` through the
+Rust/WASI bridge. If no accelerator is present, Aura stays on the Python path.
+
+| Function | Description |
+|----------|-------------|
+| `apply_context_crush_to_prompt(prompt)` | Routes one prompt through JSON/log/search/code/text compression and stores the original when the compressed form wins. |
+| `apply_context_crush_to_messages(messages)` | Compresses non-system messages while preserving system prompt bytes for cache stability. |
+| `compute_cache_prefix_report(messages)` | Emits stable prefix hash, byte/token estimate, and volatile-content findings. |
+| `retrieve_context_crush(hash, query)` | Retrieves the full original or query-matching lines from the local CCR ledger. |
+
+### 8.11 `aura_wasm_bridge.py` - Rust/WASI Accelerator Bridge
+
+Optional no-daemon native bridge for Rust accelerators. It reads
+`AURA_CRUSH_ACCELERATOR_PATH`, supports native binaries plus `.wasm` / `.cwasm`
+through the `wasmtime` CLI, and returns `None` when unavailable so callers can
+fall back cleanly.
+
+| Function | Description |
+|----------|-------------|
+| `AuraRustWasmBridge.from_env()` | Discovers an explicit or repo-local context-crush accelerator without forcing a dependency. |
+| `AuraRustWasmBridge.accelerate(raw, content_type)` | Sends a hex-encoded payload over stdin and reads a compressed hex result over stdout. |
+| `accelerator_runtime_status(root)` | Reports whether Aura is using native/WASM acceleration or the Python fallback. |
+
+`aura_crush_core.rs` is the matching Rust source. Build it as either a native
+binary or a WASI module:
+
+```bash
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+rustc --target wasm32-wasip1 -O aura_crush_core.rs -o Aura_Memory/aura_crush_core.wasm
+```
+
+### 8.12 `aura_pricing.py` — Price Book
 
 Class: `PriceBook` — maintains per-model pricing ($/1M tokens) for accurate savings calculation. `get_pricebook()` returns the current snapshot.
 
-### 8.10 `aura_proxy_benchmark.py` — Quality Scoring
+### 8.13 `aura_proxy_benchmark.py` — Quality Scoring
 
 Class: `QualityScorer` — validates LLM output quality by diff, token count, and structural compliance.
 
-### 8.11 `aura_token_economics.py` — Token Economics
+### 8.14 `aura_token_economics.py` — Token Economics
 
 Class: `TokenEconomics` — `compute_delta(model, raw_in, raw_out, aura_in, aura_out)` — computes cost savings from Aura's compression. `log_call(delta, task, provider)` — records in ledger.
 
-### 8.12 `aura_self_optimize.py` — Autonomous Self-Optimization
+### 8.15 `aura_self_optimize.py` — Autonomous Self-Optimization
 
 | Function | Description |
 |----------|-------------|

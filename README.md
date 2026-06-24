@@ -16,8 +16,8 @@ AuraOS is built to run on-device first: Android/Termux, Linux, CPU-only, and a 4
 | Code navigation | Maintains `.aura/CODEMAP.md` / `.aura/CODEMAP.json` and spectral topology maps so humans and AI agents can traverse the repo without reading the whole monolith. |
 | Reasoning | Runs topology scans, neuro-symbolic omnipath sweeps, meta-resonance checks, coordinated Pass@K reasoning, and Markovian workspace reconstruction. |
 | Self-healing | Uses holographic headers, resonant test oracles, staged patch review, Saturn/NESY repair, database repair, and rollback primitives. |
-| LLM orchestration | Calibrates providers, routes tasks by quality/cost, logs token and dollar savings, runs AuraFusion deliberation, and injects compact RAEC research context before egress. |
-| Research ingestion | Forages arXiv, parses PDFs, stores paper-memory VSA ledgers with 1.2KB headers and three-point capsules, searches ingested papers, gates synthesis through SkillWeaver, and stages grounded code mutations. |
+| LLM orchestration | Calibrates providers, routes tasks by quality/cost, logs token and dollar savings, runs AuraFusion deliberation, applies reversible Headroom-style context crushing with optional Rust/WASI acceleration, and injects compact RAEC research context with cached single-seed lift profiles before egress. |
+| Research ingestion | Forages arXiv, parses PDFs, stores paper-memory VSA ledgers with 1.2KB headers, three-point capsules, chunk vectors, and single-seed trace dispatch profiles, then gates synthesis through SkillWeaver. |
 | Mesh and overlays | Provides encrypted peer discovery, VSA-addressed liquid routing/naming, swarm collective learning, RAM-staked ledger concepts, and local compute-mesh hooks. |
 | AR and rendering | Builds live spectral 3D topology maps, exposes WebSocket AR controls, maps structural health to luminance/phase warnings, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
 
@@ -30,7 +30,9 @@ These are repo-local measurements, demos, or complexity bounds documented in cod
 | Intent parsing | 6-slot intent parsing target: `<0.05 ms`; 10,000-D RAM recall target: `<0.01 ms`. |
 | Device diagnostics | `!benchmark` reports CPU temperature, RAM, disk, Python/NumPy, LLM server, AR clients, memory-palace status, and 10K-dot latency. |
 | Holographic integrity | 1.2KB global/codebase fingerprint; O(1) verification by cosine resonance; threshold `R < 0.95` triggers healing. |
-| RAEC paper memory | arXiv PDFs are chunked before VSA encoding, then bundled into 10,000-D complex document vectors plus 1.2KB holographic headers and three-point capsules. Egress scans the local JSONL ledger and injects only the top 2 bracket slots. |
+| RAEC paper memory | arXiv PDFs are chunked before VSA encoding, then lifted through a cached single-seed context profile, 10,000-D complex document vector, 1.2KB holographic header, and three-point capsule. Egress scans the local JSONL ledger and injects only the top 2 bracket slots. |
+| Single-seed context lift | Adapts the cache-once/dispatch pattern from arXiv:2606.20633. The source paper reports `O(m^2)` per precision layer and a `33.5x` high-precision lift speedup; Aura applies the transferable pattern to VSA context as `O(C*D + e*D)` local vector work. |
+| Context crushing | Adapts the deterministic, local-first parts of Headroom: content routing, JSON/log/search/code compression, CCR retrieval markers, detector-only cache-prefix metrics, and a no-daemon Rust/WASI accelerator bridge. Headroom reports real workload savings from `47%` to `92%`; Aura stores originals locally and logs actual savings per egress call. |
 | VSA rendering | 80 bytes/object; 100 objects demo: `7.8 KB` vs `5600 KB`, `99.9%` bandwidth reduction, `716.8x` transfer reduction. |
 | Fractal ledger | `test_fractal_ledger.py`: 9 tests passed in `0.45s` in the implementation report. |
 | W4A4 quantization | N16 tests require `>3.5x` compression and `>70%` memory reduction for float32 -> int8 activation paths. |
@@ -68,6 +70,17 @@ cd AuraOS
 bash setup.sh
 pip install -r requirements.txt
 python3 aura_node.py
+```
+
+Optional native context-crush acceleration:
+
+```bash
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core
+
+# Or build a WASI module when wasm32-wasip1 + wasmtime CLI are available:
+rustc --target wasm32-wasip1 -O aura_crush_core.rs -o Aura_Memory/aura_crush_core.wasm
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core.wasm
 ```
 
 At the prompt:

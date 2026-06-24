@@ -65,6 +65,8 @@ def test_capsule_has_stable_phase_hash_and_required_fields():
 
     assert capsule["capsule_version"] == "AURA_FUSION_CAPSULE_V1"
     assert capsule["target_file"] == "aura_router.py"
+    assert capsule["single_seed_context_lift"]["version"] == "AURA_SINGLE_SEED_LIFT_V1"
+    assert "single_seed_cached_inverse_dispatch" in capsule["single_seed_context_lift"]["slot_capsule"]
     assert len(capsule["phase_hash"]) == 32
 
 

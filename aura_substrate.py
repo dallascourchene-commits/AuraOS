@@ -75,10 +75,17 @@ def parse_master_key_header(content: str) -> dict[str, str]:
         return {}
     body = block.group(1)
     out: dict[str, str] = {}
-    for field_name in ("PWFST_ALIGNMENT", "DIKWP_TIER", "DEPENDENCIES", "FUNCTIONS", "TOPOLOGY_HYPERVECTOR"):
-        m = re.search(rf"{field_name}:\s*(.+)", body)
-        if m:
-            out[field_name] = m.group(1).strip()
+    wanted = {"PWFST_ALIGNMENT", "DIKWP_TIER", "DEPENDENCIES", "FUNCTIONS", "TOPOLOGY_HYPERVECTOR"}
+    matches = list(re.finditer(r"^([A-Z][A-Z0-9_-]+):\s*(.*)$", body, flags=re.MULTILINE))
+    for idx, match in enumerate(matches):
+        field_name = match.group(1)
+        if field_name not in wanted:
+            continue
+        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(body)
+        tail = body[match.end():end]
+        parts = [match.group(2).strip()]
+        parts.extend(line.strip() for line in tail.splitlines() if line.strip())
+        out[field_name] = " ".join(part for part in parts if part)
     return out
 
 

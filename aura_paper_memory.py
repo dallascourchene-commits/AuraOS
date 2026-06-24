@@ -3,9 +3,9 @@
 ST3GG_BASE: 0xa8f7-[Q-SYS:PAPER_MEMORY_RAEC]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Resonant Recall)
-DEPENDENCIES: base64, dataclasses, hashlib, io, json, math, re, time, typing, numpy
+DEPENDENCIES: base64, dataclasses, hashlib, io, json, math, re, time, typing, numpy, aura_single_seed_lift
 FUNCTIONS: EgressResonancePayload, ResearchProfileVector, PaperMemoryRecord, AuraResonanceEgressGate, compile_paper_memory_record, extract_pdf_text_from_bytes, load_research_profiles_from_jsonl, record_to_research_profile, record_to_trace_content, track_egress_savings, upsert_paper_memory_record, verify_egress_contract
-SYNOPSIS: Stateless paper-memory and RAEC middleware primitives. Scientific documents are chunked into 10,000-D complex phasor fields, bundled into a document vector, stamped with a 1.2KB holographic header, summarized into three deterministic points, and exposed to egress as compact bracket slots.
+SYNOPSIS: Stateless paper-memory and RAEC middleware primitives. Scientific documents are chunked into 10,000-D complex phasor fields, lifted through a cached single-seed dispatch profile, stamped with a 1.2KB holographic header, summarized into three deterministic points, and exposed to egress as compact bracket slots.
 [/AURA_MASTER_KEY]
 """
 
@@ -24,6 +24,12 @@ from typing import Any, Iterable, List, Sequence
 
 import numpy as np
 
+from aura_single_seed_lift import (
+    SingleSeedLiftProfile,
+    compact_lift_capsule,
+    compile_single_seed_lift,
+)
+
 DIMENSIONS = 10_000
 HEADER_BYTES = 1_200
 DEFAULT_CHUNK_CHARS = 1_800
@@ -36,6 +42,7 @@ class EgressResonancePayload:
     base_prompt: str
     slot_matrix_string: str
     target_provider: str
+    lift_dispatch: tuple[dict[str, Any], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -43,6 +50,7 @@ class ResearchProfileVector:
     doc_id: str
     summary_capsule: str
     structural_vector: np.ndarray
+    single_seed_lift: SingleSeedLiftProfile | None = None
 
 
 @dataclass(frozen=True)
@@ -61,6 +69,7 @@ class PaperMemoryRecord:
     holographic_header: str = ""
     structural_vector: np.ndarray = field(default_factory=lambda: _empty_phasor())
     chunk_vectors: tuple[np.ndarray, ...] = ()
+    single_seed_lift: SingleSeedLiftProfile | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_jsonable(self) -> dict[str, Any]:
@@ -79,8 +88,13 @@ class PaperMemoryRecord:
             "holographic_header": self.holographic_header,
             "structural_vector": _phasor_to_b64(self.structural_vector),
             "chunk_vectors": [_phasor_to_b64(v) for v in self.chunk_vectors],
+            "single_seed_lift": (
+                self.single_seed_lift.to_jsonable()
+                if self.single_seed_lift is not None
+                else {}
+            ),
             "metadata": self.metadata,
-            "version": "paper-memory-v1",
+            "version": "paper-memory-v2",
         }
 
     @classmethod
@@ -101,6 +115,9 @@ class PaperMemoryRecord:
             structural_vector=_b64_to_phasor(payload.get("structural_vector", "")),
             chunk_vectors=tuple(
                 _b64_to_phasor(v) for v in payload.get("chunk_vectors", ()) or ()
+            ),
+            single_seed_lift=SingleSeedLiftProfile.from_jsonable(
+                payload.get("single_seed_lift")
             ),
             metadata=dict(payload.get("metadata", {}) or {}),
         )
@@ -269,6 +286,13 @@ def compile_paper_memory_record(
         structural_vector = _unit_phase(np.sum(np.stack(chunk_vectors), axis=0))
     else:
         structural_vector = encode_text_as_phasor(body)
+    lift = compile_single_seed_lift(
+        doc_id or title or "AURA_PAPER_MEMORY",
+        chunk_vectors or (structural_vector,),
+        base_vector=structural_vector,
+        dimensions=DIMENSIONS,
+    )
+    structural_vector = _unit_phase(lift.lifted_vector)
     points = extract_three_main_points(title, abstract, full_text)
     full_hash = hashlib.sha256((full_text or abstract or title).encode("utf-8")).hexdigest()
     temp = {
@@ -283,6 +307,10 @@ def compile_paper_memory_record(
         "full_text_chars": len(full_text or ""),
         "abstract_chars": len(abstract or ""),
         "holographic_header_bytes": HEADER_BYTES,
+        "single_seed_lift_version": lift.profile.version,
+        "single_seed_lift_layers": lift.profile.lift_layers,
+        "single_seed_lift_seed": lift.profile.seed_id,
+        "single_seed_trace_count": len(lift.profile.top_traces),
     })
     return PaperMemoryRecord(
         doc_id=doc_id,
@@ -299,6 +327,7 @@ def compile_paper_memory_record(
         holographic_header=_holographic_header(structural_vector),
         structural_vector=structural_vector,
         chunk_vectors=chunk_vectors,
+        single_seed_lift=lift.profile,
         metadata=meta,
     )
 
@@ -318,6 +347,7 @@ def record_to_research_profile(record: PaperMemoryRecord) -> ResearchProfileVect
         doc_id=record.doc_id,
         summary_capsule=record.summary_capsule or compile_summary_capsule(record),
         structural_vector=record.structural_vector,
+        single_seed_lift=record.single_seed_lift,
     )
 
 
@@ -386,15 +416,28 @@ class AuraResonanceEgressGate:
             scored.append((resonance, node))
         scored.sort(key=lambda item: item[0], reverse=True)
         slots = []
+        lift_dispatch: list[dict[str, Any]] = []
         for _, node in scored[:2]:
+            constraints = _slot_safe(node.summary_capsule)
+            if node.single_seed_lift is not None:
+                lift_capsule = compact_lift_capsule(node.single_seed_lift, limit=260)
+                if lift_capsule:
+                    lift_marker = f"|LIFT={lift_capsule}"
+                    summary_limit = max(1, 720 - len(lift_marker))
+                    constraints = (
+                        f"{_slot_safe(node.summary_capsule, limit=summary_limit)}"
+                        f"{lift_marker}"
+                    )
+                    lift_dispatch.append(node.single_seed_lift.to_jsonable())
             slots.append(
                 f"[ANCHOR_ID:{_slot_safe(node.doc_id, limit=96)}]"
-                f"[CONSTRAINTS:{_slot_safe(node.summary_capsule)}]"
+                f"[CONSTRAINTS:{constraints}]"
             )
         return EgressResonancePayload(
             base_prompt=user_intent,
             slot_matrix_string="".join(slots),
             target_provider=provider,
+            lift_dispatch=tuple(lift_dispatch),
         )
 
 
