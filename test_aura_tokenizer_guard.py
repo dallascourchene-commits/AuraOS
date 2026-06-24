@@ -17,7 +17,7 @@ def test_tokenizer_guard_strips_survival_carriers():
 
 
 def test_tokenizer_guard_nfkc_normalizes_visible_text():
-    report = sanitize_tokenizer_channels("Ａura")
+    report = sanitize_tokenizer_channels("\uFF21ura")
 
     assert report.sanitized_text == "Aura"
     assert report.normalized is True
