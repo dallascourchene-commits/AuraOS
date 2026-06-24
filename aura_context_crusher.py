@@ -3,9 +3,9 @@
 ST3GG_BASE: 0xa8fc-[Q-SYS:CONTEXT_CRUSHER]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Reversible Context Compression)
-DEPENDENCIES: ast, dataclasses, hashlib, json, os, re, time, pathlib, typing
+DEPENDENCIES: ast, dataclasses, hashlib, json, os, re, time, pathlib, typing, aura_wasm_bridge
 FUNCTIONS: ContextCrushResult, ContextCrushBatch, CachePrefixReport, AuraContextCrusher, apply_context_crush_to_messages, apply_context_crush_to_prompt, retrieve_context_crush
-SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Routes JSON, logs, search results, and code through deterministic lightweight compressors, stores originals in a local CCR ledger for retrieval, and emits cache-prefix stability metrics without mutating system prompts.
+SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Routes JSON, logs, search results, and code through deterministic lightweight compressors, optionally lets a local Rust/WASI accelerator compete for shorter payloads, stores originals in a local CCR ledger for retrieval, and emits cache-prefix stability metrics without mutating system prompts.
 [/AURA_MASTER_KEY]
 """
 
@@ -21,6 +21,7 @@ import re
 import time
 from typing import Any, Iterable
 
+from aura_wasm_bridge import AuraRustWasmBridge
 
 CONTEXT_CRUSH_VERSION = "AURA_CONTEXT_CRUSH_V1"
 DEFAULT_LEDGER_PATH = "Aura_Memory/context_crush_ledger.jsonl"
@@ -78,6 +79,7 @@ class ContextCrushResult:
     compressed_chars: int
     token_savings_estimate: int
     was_compressed: bool
+    accelerator: str = "python"
     retrieval_marker: str = ""
     warnings: tuple[str, ...] = ()
 
@@ -97,6 +99,7 @@ class ContextCrushResult:
             "token_savings_estimate": self.token_savings_estimate,
             "savings_ratio": round(self.savings_ratio, 4),
             "was_compressed": self.was_compressed,
+            "accelerator": self.accelerator,
             "retrieval_marker": self.retrieval_marker,
             "warnings": list(self.warnings),
         }
@@ -220,6 +223,7 @@ class AuraContextCrusher:
         min_savings_ratio: float = DEFAULT_MIN_SAVINGS_RATIO,
         max_rows: int = DEFAULT_MAX_ROWS,
         max_lines: int = DEFAULT_MAX_LINES,
+        enable_wasm: bool | None = None,
     ) -> None:
         self.ledger_path = Path(
             ledger_path
@@ -230,6 +234,10 @@ class AuraContextCrusher:
         self.min_savings_ratio = max(0.0, float(min_savings_ratio))
         self.max_rows = max(3, int(max_rows))
         self.max_lines = max(10, int(max_lines))
+        if enable_wasm is None:
+            mode = os.environ.get("AURA_CONTEXT_CRUSH_WASM", "auto").strip().lower()
+            enable_wasm = mode not in {"0", "false", "off", "disabled", "python"}
+        self.wasm_bridge = AuraRustWasmBridge.from_env() if enable_wasm else AuraRustWasmBridge(None)
 
     def detect_content_type(self, raw_content: str, source_hint: str | None = None) -> str:
         hint = (source_hint or "").lower()
@@ -261,6 +269,13 @@ class AuraContextCrusher:
         original_hash = f"aura_ccr_{_short_hash(raw, size=10)}"
         content_type = self.detect_content_type(raw, source_hint)
         compressed = self._compress_by_type(raw, content_type, original_hash)
+        accelerator = "python"
+        warnings: tuple[str, ...] = ()
+        accelerated = self.wasm_bridge.accelerate(raw, content_type)
+        if accelerated and len(accelerated.compressed_payload) < len(compressed):
+            compressed = accelerated.compressed_payload
+            accelerator = accelerated.accelerator
+            warnings = accelerated.warnings
         candidate = self._with_marker(
             compressed,
             original_hash=original_hash,
@@ -281,6 +296,7 @@ class AuraContextCrusher:
                 compressed_chars=len(raw),
                 token_savings_estimate=0,
                 was_compressed=False,
+                accelerator="python",
             )
 
         self._upsert_record(
@@ -298,7 +314,9 @@ class AuraContextCrusher:
             compressed_chars=len(candidate),
             token_savings_estimate=savings,
             was_compressed=True,
+            accelerator=accelerator,
             retrieval_marker=f"<<aura_ccr:{original_hash}>>",
+            warnings=warnings,
         )
 
     def _looks_like_code(self, content: str) -> bool:
@@ -471,8 +489,13 @@ def apply_context_crush_to_prompt(
     source_hint: str | None = None,
     ledger_path: str | Path | None = None,
     min_chars: int = DEFAULT_MIN_CHARS,
+    enable_wasm: bool | None = None,
 ) -> ContextCrushResult:
-    return AuraContextCrusher(ledger_path=ledger_path, min_chars=min_chars).compress_context_stream(
+    return AuraContextCrusher(
+        ledger_path=ledger_path,
+        min_chars=min_chars,
+        enable_wasm=enable_wasm,
+    ).compress_context_stream(
         prompt,
         source_hint=source_hint,
     )
@@ -484,8 +507,13 @@ def apply_context_crush_to_messages(
     ledger_path: str | Path | None = None,
     min_chars: int = DEFAULT_MIN_CHARS,
     skip_roles: Iterable[str] = ("system",),
+    enable_wasm: bool | None = None,
 ) -> ContextCrushBatch:
-    crusher = AuraContextCrusher(ledger_path=ledger_path, min_chars=min_chars)
+    crusher = AuraContextCrusher(
+        ledger_path=ledger_path,
+        min_chars=min_chars,
+        enable_wasm=enable_wasm,
+    )
     skip = {role.lower() for role in skip_roles}
     rewritten: list[dict[str, Any]] = []
     results: list[ContextCrushResult] = []

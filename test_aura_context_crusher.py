@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import textwrap
 
 from aura_context_crusher import (
     apply_context_crush_to_messages,
@@ -108,3 +109,38 @@ def test_openai_compatible_helper_applies_context_crush(monkeypatch, tmp_path: P
     assert "[AURA_CCR" in outbound[1]["content"]
     meta = captured["kwargs"]["savings_metadata"]["context_crush"]
     assert meta["compressed_message_count"] == 1
+
+
+def test_context_crusher_uses_rust_wasm_bridge_when_candidate_wins(monkeypatch, tmp_path: Path):
+    fake = tmp_path / "fake_accel.py"
+    fake.write_text(
+        textwrap.dedent(
+            """
+            import json
+            import sys
+
+            envelope = json.loads(sys.stdin.read())
+            compressed = b"[RUST_ACCELERATED_LOG]"
+            print(json.dumps({
+                "status": "success",
+                "accelerator": "rust:fake",
+                "operation": envelope["operation"],
+                "compressed_hex": compressed.hex(),
+            }))
+            """
+        ).strip(),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("AURA_CRUSH_ACCELERATOR_PATH", str(fake))
+    raw = "\n".join(f"2026-06-24 10:00:{idx % 60:02d} ERROR noisy line {idx}" for idx in range(180))
+
+    result = apply_context_crush_to_prompt(
+        raw,
+        source_hint="log",
+        ledger_path=tmp_path / "context_crush.jsonl",
+    )
+
+    assert result.was_compressed is True
+    assert result.accelerator == "rust:fake"
+    assert "[RUST_ACCELERATED_LOG]" in result.compressed_payload
+    assert result.to_jsonable()["accelerator"] == "rust:fake"

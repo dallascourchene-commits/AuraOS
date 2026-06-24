@@ -65,6 +65,10 @@ pip install -r requirements.txt
 # 4. Optional: Build aria2c + wasmtime native accelerators
 bash build_aura.sh
 
+# 4b. Optional: build the Rust context-crush accelerator
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core
+
 # 5. Generate the genesis block (IP minting)
 python3 mint_genesis.py
 
@@ -731,7 +735,9 @@ residual lift layers, and compact trace dispatch.
 ### 8.10 `aura_context_crusher.py` - Reversible Context Crushing
 
 Headroom-inspired, Aura-native compression before LLM egress. It is
-dependency-free, local-first, and reversible through the CCR ledger.
+dependency-free, local-first, reversible through the CCR ledger, and can
+optionally hand JSON/log/text byte sweeps to `aura_crush_core.rs` through the
+Rust/WASI bridge. If no accelerator is present, Aura stays on the Python path.
 
 | Function | Description |
 |----------|-------------|
@@ -740,19 +746,40 @@ dependency-free, local-first, and reversible through the CCR ledger.
 | `compute_cache_prefix_report(messages)` | Emits stable prefix hash, byte/token estimate, and volatile-content findings. |
 | `retrieve_context_crush(hash, query)` | Retrieves the full original or query-matching lines from the local CCR ledger. |
 
-### 8.11 `aura_pricing.py` — Price Book
+### 8.11 `aura_wasm_bridge.py` - Rust/WASI Accelerator Bridge
+
+Optional no-daemon native bridge for Rust accelerators. It reads
+`AURA_CRUSH_ACCELERATOR_PATH`, supports native binaries plus `.wasm` / `.cwasm`
+through the `wasmtime` CLI, and returns `None` when unavailable so callers can
+fall back cleanly.
+
+| Function | Description |
+|----------|-------------|
+| `AuraRustWasmBridge.from_env()` | Discovers an explicit or repo-local context-crush accelerator without forcing a dependency. |
+| `AuraRustWasmBridge.accelerate(raw, content_type)` | Sends a hex-encoded payload over stdin and reads a compressed hex result over stdout. |
+| `accelerator_runtime_status(root)` | Reports whether Aura is using native/WASM acceleration or the Python fallback. |
+
+`aura_crush_core.rs` is the matching Rust source. Build it as either a native
+binary or a WASI module:
+
+```bash
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+rustc --target wasm32-wasip1 -O aura_crush_core.rs -o Aura_Memory/aura_crush_core.wasm
+```
+
+### 8.12 `aura_pricing.py` — Price Book
 
 Class: `PriceBook` — maintains per-model pricing ($/1M tokens) for accurate savings calculation. `get_pricebook()` returns the current snapshot.
 
-### 8.12 `aura_proxy_benchmark.py` — Quality Scoring
+### 8.13 `aura_proxy_benchmark.py` — Quality Scoring
 
 Class: `QualityScorer` — validates LLM output quality by diff, token count, and structural compliance.
 
-### 8.13 `aura_token_economics.py` — Token Economics
+### 8.14 `aura_token_economics.py` — Token Economics
 
 Class: `TokenEconomics` — `compute_delta(model, raw_in, raw_out, aura_in, aura_out)` — computes cost savings from Aura's compression. `log_call(delta, task, provider)` — records in ledger.
 
-### 8.14 `aura_self_optimize.py` — Autonomous Self-Optimization
+### 8.15 `aura_self_optimize.py` — Autonomous Self-Optimization
 
 | Function | Description |
 |----------|-------------|

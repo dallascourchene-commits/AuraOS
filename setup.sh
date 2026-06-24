@@ -46,9 +46,21 @@ else
     export AURA_MEMORY_TIER="EDGE"
 fi
 
-# 6. File System Permissions
+# 6. Optional Rust native context-crush accelerator
+echo "[*] Preparing optional Rust context-crush accelerator..."
+mkdir -p Aura_Memory
+if [ -f "aura_crush_core.rs" ] && command -v rustc >/dev/null 2>&1; then
+    rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core || true
+    echo "  -> Native accelerator target: Aura_Memory/aura_crush_core"
+else
+    echo "  -> rustc unavailable; Aura will use the Python context crusher."
+fi
+
+# 7. File System Permissions
 echo "[*] Locking execution permissions..."
-chmod 755 wasm_binaries/*.cwasm
+if [ -d "wasm_binaries" ]; then
+    chmod 755 wasm_binaries/*.cwasm 2>/dev/null || true
+fi
 
 echo "========================================="
 echo "[+] Installation Complete." 

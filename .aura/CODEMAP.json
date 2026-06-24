@@ -5,17 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 201,
+    "included_file_count": 204,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 84,
+      ".git": 106,
       ".pytest_cache": 5,
       "Aura_Memory": 3,
-      "__pycache__": 91
+      "__pycache__": 93
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -88,6 +88,7 @@
       "aura_coordinated_solver.py",
       "aura_core.py",
       "aura_core/.aura_bus",
+      "aura_crush_core.rs",
       "aura_crypto_puf.py",
       "aura_crystallization.py",
       "aura_dream_engine.py",
@@ -159,6 +160,7 @@
       "aura_upgrade_spec.docx",
       "aura_validation.py",
       "aura_vpt_tokenizer.py",
+      "aura_wasm_bridge.py",
       "build_aura.sh",
       "bus_init.cpp",
       "cognitive_router.py",
@@ -206,6 +208,7 @@
       "test_aura_single_seed_lift.py",
       "test_aura_spectral_topology.py",
       "test_aura_substrate.py",
+      "test_aura_wasm_bridge.py",
       "test_codemap_slimming.py",
       "test_forge.py",
       "test_memory_guard_leak.py",
@@ -222,16 +225,16 @@
     ]
   },
   "summary": {
-    "file_count": 201,
-    "total_bytes": 142694,
-    "text_tokens_est": 880985,
+    "file_count": 204,
+    "total_bytes": 61714831,
+    "text_tokens_est": 885682,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
-      "native_accelerator": 6,
+      "native_accelerator": 7,
       "operator_script": 4,
-      "python_module": 129,
+      "python_module": 131,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
@@ -239,7 +242,7 @@
     "topology_edges": 0,
     "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782312173
+    "last_incremental_refresh_unix": 1782313426
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -367,6 +370,7 @@
       "aura_converse.py",
       "aura_coordinated_solver.py",
       "aura_core/.aura_bus",
+      "aura_crush_core.rs",
       "aura_crystallization.py",
       "aura_english_compiler.py",
       "aura_epistemic_ingest.py",
@@ -419,6 +423,7 @@
       "aura_unifier.sh",
       "aura_upgrade_spec.docx",
       "aura_vpt_tokenizer.py",
+      "aura_wasm_bridge.py",
       "build_aura.sh",
       "bus_init.cpp",
       "dag_executor.py",
@@ -450,6 +455,7 @@
       "test_aura_fusion.py",
       "test_aura_phase_capsule.py",
       "test_aura_single_seed_lift.py",
+      "test_aura_wasm_bridge.py",
       "test_codemap_slimming.py",
       "test_forge.py",
       "test_pvm_logic.py",
@@ -517,7 +523,7 @@
       "path": "aura_context_crusher.py",
       "role": "python_module",
       "symbols": 36,
-      "tokens_est": 4964,
+      "tokens_est": 5270,
       "topology_degree": 0
     },
     {
@@ -538,7 +544,7 @@
       "path": "aura_codebase_navigator.py",
       "role": "python_module",
       "symbols": 31,
-      "tokens_est": 8761,
+      "tokens_est": 8836,
       "topology_degree": 0
     },
     {
@@ -617,57 +623,57 @@
       "index.html:1"
     ],
     "!ai_route": [
-      "USER_GUIDE.md:169",
+      "USER_GUIDE.md:173",
       "aura_ai_router.py:22",
       "aura_node.py:6716"
     ],
     "!ai_router_regen": [
-      "USER_GUIDE.md:178",
+      "USER_GUIDE.md:182",
       "aura_node.py:6731"
     ],
     "!approve": [
       "AURA_FINAL_REPORT.md:151",
-      "USER_GUIDE.md:213",
+      "USER_GUIDE.md:217",
       "aura_node.py:5413"
     ],
     "!ar_server_start": [
-      "USER_GUIDE.md:414",
+      "USER_GUIDE.md:418",
       "aura_node.py:6185"
     ],
     "!ar_server_stop": [
-      "USER_GUIDE.md:415",
+      "USER_GUIDE.md:419",
       "aura_node.py:6201"
     ],
     "!ar_start": [
       "AURA_FINAL_REPORT.md:168",
-      "USER_GUIDE.md:414",
+      "USER_GUIDE.md:418",
       "aura_node.py:6185",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!ar_stop": [
       "AURA_FINAL_REPORT.md:169",
-      "USER_GUIDE.md:415",
+      "USER_GUIDE.md:419",
       "aura_node.py:6201",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!attention": [
-      "USER_GUIDE.md:185",
+      "USER_GUIDE.md:189",
       "aura_node.py:5476"
     ],
     "!audit": [
-      "USER_GUIDE.md:200",
+      "USER_GUIDE.md:204",
       "aura_node.py:5980"
     ],
     "!backtrack": [
       "AURA_FINAL_REPORT.md:143",
-      "README.md:82",
-      "USER_GUIDE.md:314",
+      "README.md:93",
+      "USER_GUIDE.md:318",
       "arxiv_forager.py:599",
       "aura_node.py:6000"
     ],
     "!benchmark": [
       "README.md:26",
-      "USER_GUIDE.md:199",
+      "USER_GUIDE.md:203",
       "aura_node.py:2982",
       "daily_digest_2026-06-06.md:14"
     ],
@@ -676,8 +682,8 @@
     ],
     "!calibrate": [
       "AURA_FINAL_REPORT.md:163",
-      "README.md:81",
-      "USER_GUIDE.md:220",
+      "README.md:92",
+      "USER_GUIDE.md:224",
       "aura_node.py:7046"
     ],
     "!canvas": [
@@ -685,84 +691,84 @@
     ],
     "!catalyze": [
       "AURA_FINAL_REPORT.md:156",
-      "USER_GUIDE.md:181",
+      "USER_GUIDE.md:185",
       "aura_node.py:6753",
       "generate_ai_router.py:357",
       "test_aura_functions.py:893"
     ],
     "!cognitive_search": [
-      "USER_GUIDE.md:184",
+      "USER_GUIDE.md:188",
       "aura_node.py:5445"
     ],
     "!commands": [
-      "USER_GUIDE.md:130"
+      "USER_GUIDE.md:134"
     ],
     "!contingency_spawn": [
-      "USER_GUIDE.md:225",
+      "USER_GUIDE.md:229",
       "aura_node.py:6520"
     ],
     "!converse": [
       "AURA_FINAL_REPORT.md:161",
-      "USER_GUIDE.md:224",
+      "USER_GUIDE.md:228",
       "aura_node.py:7161"
     ],
     "!coordinated_reason": [
-      "USER_GUIDE.md:192",
+      "USER_GUIDE.md:196",
       "aura_node.py:6963"
     ],
     "!crystallize": [
       "AURA_FINAL_REPORT.md:141",
-      "USER_GUIDE.md:321",
+      "USER_GUIDE.md:325",
       "aura_node.py:6820"
     ],
     "!curiosity_tree": [
       "AURA_FINAL_REPORT.md:174",
-      "USER_GUIDE.md:317",
+      "USER_GUIDE.md:321",
       "aura_node.py:6242"
     ],
     "!db_repair": [
-      "USER_GUIDE.md:418",
+      "USER_GUIDE.md:422",
       "aura_node.py:2982"
     ],
     "!evolve_reasoning": [
       "AURA_FINAL_REPORT.md:157",
-      "USER_GUIDE.md:194",
+      "USER_GUIDE.md:198",
       "aura_node.py:6815"
     ],
     "!export": [
-      "USER_GUIDE.md:416",
+      "USER_GUIDE.md:420",
       "aura_node.py:5803"
     ],
     "!fast_path": [
       "AURA_FINAL_REPORT.md:173",
-      "USER_GUIDE.md:183",
+      "USER_GUIDE.md:187",
       "aura_node.py:6905",
       "test_aura_functions.py:900"
     ],
     "!forage": [
-      "USER_GUIDE.md:313",
+      "USER_GUIDE.md:317",
       "aura_node.py:5986",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!forage_off": [
-      "USER_GUIDE.md:319",
+      "USER_GUIDE.md:323",
       "aura_node.py:6179"
     ],
     "!forage_on": [
-      "USER_GUIDE.md:318",
+      "USER_GUIDE.md:322",
       "aura_node.py:6173"
     ],
     "!forager_off": [
-      "USER_GUIDE.md:319",
+      "USER_GUIDE.md:323",
       "aura_node.py:6179"
     ],
     "!forager_on": [
-      "USER_GUIDE.md:318",
+      "USER_GUIDE.md:322",
       "aura_node.py:6173"
     ],
     "!fusion": [
       "AURA_FINAL_REPORT.md:31",
-      "USER_GUIDE.md:222",
+      "USER_GUIDE.md:226",
       "aura_node.py:7032"
     ],
     "!heal": [
@@ -770,7 +776,7 @@
     ],
     "!help": [
       "AURA_FINAL_REPORT.md:48",
-      "USER_GUIDE.md:166",
+      "USER_GUIDE.md:170",
       "aura_node.py:7171"
     ],
     "!important": [
@@ -778,49 +784,49 @@
     ],
     "!indus_decrypt": [
       "AURA_FINAL_REPORT.md:175",
-      "USER_GUIDE.md:323",
+      "USER_GUIDE.md:327",
       "aura_node.py:6827"
     ],
     "!manifest": [
       "AURA_FINAL_REPORT.md:138",
-      "USER_GUIDE.md:166",
+      "USER_GUIDE.md:170",
       "aura_node.py:7171"
     ],
     "!markov": [
       "AURA_FINAL_REPORT.md:144",
-      "USER_GUIDE.md:419",
+      "USER_GUIDE.md:423",
       "aura_node.py:7018"
     ],
     "!mesh_status": [
       "AURA_FINAL_REPORT.md:167",
-      "USER_GUIDE.md:413",
+      "USER_GUIDE.md:417",
       "aura_node.py:5439"
     ],
     "!meta_analyze": [
-      "USER_GUIDE.md:195",
+      "USER_GUIDE.md:199",
       "aura_node.py:6866"
     ],
     "!meta_reason": [
       "AURA_FINAL_REPORT.md:155",
-      "USER_GUIDE.md:196",
+      "USER_GUIDE.md:200",
       "aura_arch_reasoner.py:91",
       "aura_node.py:6891"
     ],
     "!optimize": [
       "AURA_FINAL_REPORT.md:172",
-      "USER_GUIDE.md:209",
+      "USER_GUIDE.md:213",
       "aura_node.py:5726"
     ],
     "!ping_mesh": [
       "AURA_FINAL_REPORT.md:166",
-      "USER_GUIDE.md:412",
+      "USER_GUIDE.md:416",
       "aura_node.py:5434"
     ],
     "!plan": [
       "aura_node.py:5377"
     ],
     "!push": [
-      "USER_GUIDE.md:417",
+      "USER_GUIDE.md:421",
       "aura_node.py:5090",
       "test_aura_functions.py:208"
     ],
@@ -832,48 +838,48 @@
     ],
     "!reason": [
       "AURA_FINAL_REPORT.md:154",
-      "USER_GUIDE.md:191",
+      "USER_GUIDE.md:195",
       "aura_node.py:7006"
     ],
     "!repair_db": [
-      "USER_GUIDE.md:418",
+      "USER_GUIDE.md:422",
       "aura_node.py:6493"
     ],
     "!research": [
       "AURA_FINAL_REPORT.md:142",
-      "README.md:83",
-      "USER_GUIDE.md:315",
+      "README.md:94",
+      "USER_GUIDE.md:319",
       "aura_node.py:6012",
       "aura_skillweaver.py:14",
       "systems_check.py:250"
     ],
     "!review": [
-      "USER_GUIDE.md:210",
+      "USER_GUIDE.md:214",
       "aura_node.py:6306",
       "mistral_gate.py:78"
     ],
     "!rollback": [
-      "USER_GUIDE.md:214",
+      "USER_GUIDE.md:218",
       "aura_node.py:6291"
     ],
     "!route": [
       "AURA_FINAL_REPORT.md:28",
       "AURA_ROUTER.md:213",
-      "README.md:84",
-      "USER_GUIDE.md:221",
+      "README.md:95",
+      "USER_GUIDE.md:225",
       "aura_node.py:7055",
       "test_aura_substrate.py:323"
     ],
     "!saturn": [
       "AURA_FINAL_REPORT.md:147",
       "AuraOS.tex:212",
-      "USER_GUIDE.md:197",
+      "USER_GUIDE.md:201",
       "aura_node.py:5526",
       "aura_topology_analyzer.py:122"
     ],
     "!saturn_heal": [
       "AURA_FINAL_REPORT.md:148",
-      "USER_GUIDE.md:198",
+      "USER_GUIDE.md:202",
       "aura_holographic_manifest.py:248",
       "aura_node.py:5117",
       "aura_substrate.py:268"
@@ -881,21 +887,21 @@
     "!savings": [
       "AURA_FINAL_REPORT.md:162",
       "AuraOS.tex:185",
-      "USER_GUIDE.md:223",
+      "USER_GUIDE.md:227",
       "aura_node.py:7070",
       "test_aura_substrate.py:314"
     ],
     "!scan_topology": [
-      "USER_GUIDE.md:179",
+      "USER_GUIDE.md:183",
       "aura_node.py:6662"
     ],
     "!search_similar": [
-      "USER_GUIDE.md:316",
+      "USER_GUIDE.md:320",
       "aura_node.py:6215",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!self_optimize": [
-      "USER_GUIDE.md:209",
+      "USER_GUIDE.md:213",
       "aura_dynamic_attention.py:210",
       "aura_node.py:5726",
       "refactored-auraos-upgrades.md:826"
@@ -903,19 +909,19 @@
     "!self_reflect": [
       "DAILY_DIGEST_Jun7-8_2026.md:19",
       "DAILY_DIGEST_Jun7_2026.md:30",
-      "USER_GUIDE.md:208",
+      "USER_GUIDE.md:212",
       "aura_arch_reasoner.py:228",
       "aura_hv_cache.py:36",
       "aura_node.py:5539"
     ],
     "!settings": [
-      "README.md:78",
-      "USER_GUIDE.md:166",
+      "README.md:89",
+      "USER_GUIDE.md:170",
       "aura_node.py:7171",
       "daily_digest_2026-06-06.md:14"
     ],
     "!simulate": [
-      "USER_GUIDE.md:182",
+      "USER_GUIDE.md:186",
       "aura_node.py:6656",
       "cognitive_router.py:220"
     ],
@@ -927,21 +933,21 @@
     ],
     "!stage": [
       "AURA_FINAL_REPORT.md:149",
-      "USER_GUIDE.md:210",
+      "USER_GUIDE.md:214",
       "aura_node.py:6306"
     ],
     "!stage_merge": [
       "AURA_FINAL_REPORT.md:150",
-      "USER_GUIDE.md:211",
+      "USER_GUIDE.md:215",
       "aura_node.py:6328",
       "mistral_gate.py:78"
     ],
     "!stage_purge": [
-      "USER_GUIDE.md:212",
+      "USER_GUIDE.md:216",
       "aura_node.py:6380"
     ],
     "!stage_review": [
-      "USER_GUIDE.md:210",
+      "USER_GUIDE.md:214",
       "aura_node.py:6306"
     ],
     "!status": [
@@ -949,18 +955,18 @@
       "aura_node.py:5090"
     ],
     "!strategy_buffer_stats": [
-      "USER_GUIDE.md:193",
+      "USER_GUIDE.md:197",
       "aura_coordinated_solver.py:66",
       "aura_node.py:6990"
     ],
     "!synthesize": [
-      "USER_GUIDE.md:322",
+      "USER_GUIDE.md:326",
       "aura_associative_core.py:138",
       "aura_node.py:6410",
       "test_aura_functions.py:886"
     ],
     "!system_audit": [
-      "USER_GUIDE.md:200",
+      "USER_GUIDE.md:204",
       "aura_node.py:5980"
     ],
     "!target_bytes": [
@@ -970,20 +976,20 @@
       "AuraOS.tex:533"
     ],
     "!test_airlock": [
-      "USER_GUIDE.md:201",
+      "USER_GUIDE.md:205",
       "aura_node.py:5389"
     ],
     "!tgtPos": [
       "index.html:120"
     ],
     "!timeline": [
-      "USER_GUIDE.md:320",
+      "USER_GUIDE.md:324",
       "aura_node.py:6254"
     ],
     "!topology": [
       "AURA_FINAL_REPORT.md:48",
       "README.md:41",
-      "USER_GUIDE.md:179",
+      "USER_GUIDE.md:183",
       "aura_ai_router.py:143",
       "aura_codebase_navigator.py:213",
       "aura_node.py:6745",
@@ -994,14 +1000,14 @@
       "test_aura_functions.py:453"
     ],
     "!topology_deep": [
-      "USER_GUIDE.md:180",
+      "USER_GUIDE.md:184",
       "aura_node.py:6745"
     ],
     "!total": [
       "aura_savings_dashboard.py:224"
     ],
     "!voice": [
-      "USER_GUIDE.md:420",
+      "USER_GUIDE.md:424",
       "aura_node.py:7227"
     ]
   },
@@ -1176,8 +1182,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "class",
-        "line": 214,
-        "end_line": 465,
+        "line": 217,
+        "end_line": 483,
         "semantic_id": "aura_context_crusher.py#class:AuraContextCrusher:f527d430c00dc7ea",
         "signature_hash": "0ba32f08169cc9a4"
       }
@@ -1400,6 +1406,16 @@
         "signature_hash": "ea9ea149d385e2d9"
       }
     ],
+    "AuraRustWasmBridge": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 176,
+        "semantic_id": "aura_wasm_bridge.py#class:AuraRustWasmBridge:9c89dbe5fb6a2fbf",
+        "signature_hash": "58cc6d812bce4728"
+      }
+    ],
     "AuraSafetySentinel": [
       {
         "file": "aura_node.py",
@@ -1602,8 +1618,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "class",
-        "line": 52,
-        "end_line": 69,
+        "line": 53,
+        "end_line": 70,
         "semantic_id": "aura_context_crusher.py#class:CachePrefixReport:3143115fcf431c2d",
         "signature_hash": "04772859247bc63b"
       }
@@ -1722,8 +1738,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "class",
-        "line": 106,
-        "end_line": 118,
+        "line": 109,
+        "end_line": 121,
         "semantic_id": "aura_context_crusher.py#class:ContextCrushBatch:382b921a7efd9d15",
         "signature_hash": "21df556643f3d604"
       }
@@ -1732,8 +1748,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "class",
-        "line": 73,
-        "end_line": 102,
+        "line": 74,
+        "end_line": 105,
         "semantic_id": "aura_context_crusher.py#class:ContextCrushResult:a26f9066b9c681b2",
         "signature_hash": "70649b349c6247b3"
       }
@@ -2758,10 +2774,20 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "class",
-        "line": 43,
-        "end_line": 48,
+        "line": 44,
+        "end_line": 49,
         "semantic_id": "aura_context_crusher.py#class:VolatileFinding:9df402eaa2904379",
         "signature_hash": "d7d62e22fd82e9c1"
+      }
+    ],
+    "WasmAccelerationResult": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 58,
+        "semantic_id": "aura_wasm_bridge.py#class:WasmAccelerationResult:e4db3b8903838a2a",
+        "signature_hash": "450b3b90cd35ec7b"
       }
     ],
     "ZeroCopyMemoryOrchestrator": [
@@ -3152,10 +3178,10 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 215,
-        "end_line": 232,
-        "semantic_id": "aura_context_crusher.py#function:__init__:13b4f6f85192f8c4",
-        "signature_hash": "c69f7506757ffa76"
+        "line": 218,
+        "end_line": 240,
+        "semantic_id": "aura_context_crusher.py#function:__init__:451df7a39d927e2f",
+        "signature_hash": "f68a541d16737698"
       },
       {
         "file": "aura_converse.py",
@@ -3718,6 +3744,14 @@
         "signature_hash": "ec762d3753e4c4f9"
       },
       {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 73,
+        "semantic_id": "aura_wasm_bridge.py#function:__init__:65977309f4882cd8",
+        "signature_hash": "ca4e227e1084f870"
+      },
+      {
         "file": "cognitive_router.py",
         "kind": "function",
         "line": 26,
@@ -4104,6 +4138,16 @@
         "signature_hash": "a9b5ebc4cf007b63"
       }
     ],
+    "_accelerator_label": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 176,
+        "semantic_id": "aura_wasm_bridge.py#function:_accelerator_label:ee312d9def42bf13",
+        "signature_hash": "09f436035cddcdb2"
+      }
+    ],
     "_accumulate": [
       {
         "file": "aura_router.py",
@@ -4338,8 +4382,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 556,
-        "end_line": 560,
+        "line": 563,
+        "end_line": 567,
         "semantic_id": "aura_codebase_navigator.py#function:_attach_topology:5a8476dd6cb7340c",
         "signature_hash": "28ccc708f386b4e2"
       }
@@ -4798,12 +4842,22 @@
         "signature_hash": "2ef1a9d847bd4e63"
       }
     ],
+    "_command": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 168,
+        "semantic_id": "aura_wasm_bridge.py#function:_command:d1de113137092534",
+        "signature_hash": "aba7bd14fc993cf0"
+      }
+    ],
     "_command_index": [
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 519,
-        "end_line": 524,
+        "line": 525,
+        "end_line": 530,
         "semantic_id": "aura_codebase_navigator.py#function:_command_index:0cd700cc71ee9d47",
         "signature_hash": "6aa0083ff56504c7"
       }
@@ -4842,8 +4896,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 538,
-        "end_line": 553,
+        "line": 544,
+        "end_line": 560,
         "semantic_id": "aura_codebase_navigator.py#function:_compact_file_cards:8debbe1dda24945a",
         "signature_hash": "da86e45c6c7cc1f5"
       }
@@ -4852,8 +4906,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 315,
-        "end_line": 326,
+        "line": 333,
+        "end_line": 344,
         "semantic_id": "aura_context_crusher.py#function:_compress_by_type:1bee57c8838008b5",
         "signature_hash": "5aa0127945a6812d"
       }
@@ -4862,8 +4916,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 380,
-        "end_line": 395,
+        "line": 398,
+        "end_line": 413,
         "semantic_id": "aura_context_crusher.py#function:_compress_code:9e12beab415341a4",
         "signature_hash": "cd21fb43a347e536"
       }
@@ -4872,8 +4926,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 397,
-        "end_line": 406,
+        "line": 415,
+        "end_line": 424,
         "semantic_id": "aura_context_crusher.py#function:_compress_diff:0856da3c845c3fd1",
         "signature_hash": "f19eef2a299d8be8"
       }
@@ -4882,8 +4936,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 328,
-        "end_line": 350,
+        "line": 346,
+        "end_line": 368,
         "semantic_id": "aura_context_crusher.py#function:_compress_json:b2adfe923c118704",
         "signature_hash": "8b4ae7858a674e10"
       }
@@ -4892,8 +4946,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 352,
-        "end_line": 365,
+        "line": 370,
+        "end_line": 383,
         "semantic_id": "aura_context_crusher.py#function:_compress_log:171f69dc5d92161b",
         "signature_hash": "3940c4273f7caa27"
       }
@@ -4902,8 +4956,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 367,
-        "end_line": 378,
+        "line": 385,
+        "end_line": 396,
         "semantic_id": "aura_context_crusher.py#function:_compress_search:36eea633ca967ff2",
         "signature_hash": "ba5fe25f76880722"
       }
@@ -4912,8 +4966,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 408,
-        "end_line": 413,
+        "line": 426,
+        "end_line": 431,
         "semantic_id": "aura_context_crusher.py#function:_compress_text:e3d0351c88302c64",
         "signature_hash": "eb1fa4a0179c6b81"
       }
@@ -5202,8 +5256,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 124,
+        "line": 124,
+        "end_line": 127,
         "semantic_id": "aura_context_crusher.py#function:_estimate_tokens:29697c43ffb12396",
         "signature_hash": "31f45b49f9f31c4b"
       }
@@ -5918,8 +5972,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 170,
-        "end_line": 177,
+        "line": 173,
+        "end_line": 180,
         "semantic_id": "aura_context_crusher.py#function:_is_hex_hash:08672114ec8c4880",
         "signature_hash": "87667ea9e2f09a86"
       }
@@ -5928,8 +5982,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 157,
-        "end_line": 167,
+        "line": 160,
+        "end_line": 170,
         "semantic_id": "aura_context_crusher.py#function:_is_iso8601:fce6947b17716220",
         "signature_hash": "12b2182104f32b56"
       }
@@ -5998,8 +6052,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 145,
-        "end_line": 154,
+        "line": 148,
+        "end_line": 157,
         "semantic_id": "aura_context_crusher.py#function:_is_uuid:a2390269f497af1d",
         "signature_hash": "9c74f569546ca42d"
       }
@@ -6136,8 +6190,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 717,
-        "end_line": 718,
+        "line": 724,
+        "end_line": 725,
         "semantic_id": "aura_codebase_navigator.py#function:_load_json:59f4d2f1ae311f5f",
         "signature_hash": "e16edca9b4e963c1"
       }
@@ -6196,8 +6250,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 304,
-        "end_line": 313,
+        "line": 322,
+        "end_line": 331,
         "semantic_id": "aura_context_crusher.py#function:_looks_like_code:89690615e20e738d",
         "signature_hash": "bf09660d3de3fd32"
       }
@@ -7193,9 +7247,9 @@
         "file": "aura_codebase_navigator.py",
         "kind": "function",
         "line": 410,
-        "end_line": 432,
-        "semantic_id": "aura_codebase_navigator.py#function:_records_from_cards:0a618e4e263009d8",
-        "signature_hash": "7a9fa4436fad9d50"
+        "end_line": 438,
+        "semantic_id": "aura_codebase_navigator.py#function:_records_from_cards:2addacfa2abc32a4",
+        "signature_hash": "68086f1b95715849"
       }
     ],
     "_recover_from_diff": [
@@ -7558,8 +7612,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 131,
-        "end_line": 138,
+        "line": 134,
+        "end_line": 141,
         "semantic_id": "aura_context_crusher.py#function:_safe_cell:04a669d2d94b7faf",
         "signature_hash": "afdcf5551cd9d65a"
       }
@@ -7588,8 +7642,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 142,
+        "line": 144,
+        "end_line": 145,
         "semantic_id": "aura_context_crusher.py#function:_safe_sample:272910e11b3f8058",
         "signature_hash": "db83f01b665c97c2"
       }
@@ -7898,8 +7952,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 127,
-        "end_line": 128,
+        "line": 130,
+        "end_line": 131,
         "semantic_id": "aura_context_crusher.py#function:_short_hash:b4b7bbb50ce755c0",
         "signature_hash": "846f5eb0ff1656ea"
       }
@@ -8814,8 +8868,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 527,
-        "end_line": 535,
+        "line": 533,
+        "end_line": 541,
         "semantic_id": "aura_codebase_navigator.py#function:_top_hubs:390ed53cb7dc3a63",
         "signature_hash": "a403be28da39af92"
       }
@@ -8992,8 +9046,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 429,
-        "end_line": 465,
+        "line": 447,
+        "end_line": 483,
         "semantic_id": "aura_context_crusher.py#function:_upsert_record:613085f823fc80bc",
         "signature_hash": "47d540802742cbf3"
       }
@@ -9042,8 +9096,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 180,
-        "end_line": 197,
+        "line": 183,
+        "end_line": 200,
         "semantic_id": "aura_context_crusher.py#function:_volatile_findings:b02ade93f6fcdb4c",
         "signature_hash": "b05094dbb1ca81bf"
       }
@@ -9052,8 +9106,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 415,
-        "end_line": 427,
+        "line": 433,
+        "end_line": 445,
         "semantic_id": "aura_context_crusher.py#function:_with_marker:4a00fed3a5c7e4e5",
         "signature_hash": "1f97d12da4f6e2ca"
       }
@@ -9124,6 +9178,26 @@
         "end_line": 547,
         "semantic_id": "aura_qdkt.py#function:_write_workspace_event:e887243d76a4a48f",
         "signature_hash": "d90e6d5a88108ebc"
+      }
+    ],
+    "accelerate": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 148,
+        "semantic_id": "aura_wasm_bridge.py#function:accelerate:87640b2100fa8ed5",
+        "signature_hash": "170854cd668dd86e"
+      }
+    ],
+    "accelerator_runtime_status": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 188,
+        "semantic_id": "aura_wasm_bridge.py#function:accelerator_runtime_status:721839ce44888a54",
+        "signature_hash": "3fe3bf82bd40c914"
       }
     ],
     "account_phasor": [
@@ -9246,8 +9320,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 60,
+        "end_line": 61,
         "semantic_id": "aura_context_crusher.py#function:alignment_score:0bbbf8de76f27724",
         "signature_hash": "a6b671ceb391e6ca"
       }
@@ -9358,20 +9432,20 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 481,
-        "end_line": 505,
-        "semantic_id": "aura_context_crusher.py#function:apply_context_crush_to_messages:093522214497aea1",
-        "signature_hash": "c2dc12d98518ccb7"
+        "line": 504,
+        "end_line": 533,
+        "semantic_id": "aura_context_crusher.py#function:apply_context_crush_to_messages:c3cee6195f5e4888",
+        "signature_hash": "113b8bbd7db86adc"
       }
     ],
     "apply_context_crush_to_prompt": [
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 468,
-        "end_line": 478,
-        "semantic_id": "aura_context_crusher.py#function:apply_context_crush_to_prompt:1748c69300ce410f",
-        "signature_hash": "4353e402a0eaedf4"
+        "line": 486,
+        "end_line": 501,
+        "semantic_id": "aura_context_crusher.py#function:apply_context_crush_to_prompt:fef0d770002ab50e",
+        "signature_hash": "8f787f3f73306644"
       }
     ],
     "apply_convolution": [
@@ -9886,8 +9960,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 563,
-        "end_line": 615,
+        "line": 570,
+        "end_line": 622,
         "semantic_id": "aura_codebase_navigator.py#function:build_navigation_system:04c48697fa86012e",
         "signature_hash": "9a0f9c33632e5cdc"
       }
@@ -10528,8 +10602,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 259,
-        "end_line": 302,
+        "line": 267,
+        "end_line": 320,
         "semantic_id": "aura_context_crusher.py#function:compress_context_stream:fa359700e5441973",
         "signature_hash": "39a6a679cb8ba9df"
       }
@@ -10548,8 +10622,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 200,
-        "end_line": 211,
+        "line": 203,
+        "end_line": 214,
         "semantic_id": "aura_context_crusher.py#function:compute_cache_prefix_report:effd48cf2050485b",
         "signature_hash": "ab9a4b180c383514"
       }
@@ -10916,8 +10990,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 234,
-        "end_line": 257,
+        "line": 242,
+        "end_line": 265,
         "semantic_id": "aura_context_crusher.py#function:detect_content_type:96abe710c4cc000b",
         "signature_hash": "9edcffc074374ef9"
       }
@@ -11126,6 +11200,16 @@
         "end_line": 62,
         "semantic_id": "logging_kit.py#function:emit:bd30d0495954fe80",
         "signature_hash": "47547763a5c65cf4"
+      }
+    ],
+    "enabled": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 98,
+        "semantic_id": "aura_wasm_bridge.py#function:enabled:575ddc283d6170b3",
+        "signature_hash": "d9d11878adde7e8d"
       }
     ],
     "encode_file": [
@@ -11624,8 +11708,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 84,
-        "end_line": 87,
+        "line": 85,
+        "end_line": 88,
         "semantic_id": "test_aura_context_crusher.py#function:fake_generate:1268b44cdb62ccd6",
         "signature_hash": "56d3681a0d15db5e"
       },
@@ -11924,6 +12008,16 @@
         "end_line": 46,
         "semantic_id": "aura_phase_capsule.py#function:from_dict:7a5779ef112aa885",
         "signature_hash": "48e7d0eef39f516a"
+      }
+    ],
+    "from_env": [
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 94,
+        "semantic_id": "aura_wasm_bridge.py#function:from_env:96208ab1d147eac4",
+        "signature_hash": "a0d7f9e72dadcf36"
       }
     ],
     "from_jsonable": [
@@ -13366,8 +13460,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 721,
-        "end_line": 768,
+        "line": 728,
+        "end_line": 775,
         "semantic_id": "aura_codebase_navigator.py#function:main:bfd4a433008ad4af",
         "signature_hash": "1107cedc597d81be"
       },
@@ -14666,8 +14760,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 435,
-        "end_line": 516,
+        "line": 441,
+        "end_line": 522,
         "semantic_id": "aura_codebase_navigator.py#function:refresh_index_for_paths:36eecf8f7caeeb3e",
         "signature_hash": "ca1672e057cfcc68"
       }
@@ -14858,8 +14952,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 508,
-        "end_line": 538,
+        "line": 536,
+        "end_line": 566,
         "semantic_id": "aura_context_crusher.py#function:retrieve_context_crush:25f6aa96c4ee576c",
         "signature_hash": "ecc6aa98c00b0624"
       }
@@ -15234,8 +15328,8 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 85,
-        "end_line": 88,
+        "line": 87,
+        "end_line": 90,
         "semantic_id": "aura_context_crusher.py#function:savings_ratio:1e3abd7d9b7a5598",
         "signature_hash": "a4f421c004fb0615"
       }
@@ -15412,8 +15506,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 618,
-        "end_line": 654,
+        "line": 625,
+        "end_line": 661,
         "semantic_id": "aura_codebase_navigator.py#function:search_index:69053bd1f1203673",
         "signature_hash": "1589c19f6a6953b5"
       }
@@ -16160,8 +16254,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 45,
-        "end_line": 59,
+        "line": 46,
+        "end_line": 60,
         "semantic_id": "test_aura_context_crusher.py#function:test_cache_prefix_report_detects_volatile_system_prompt:41ac4c1884033874",
         "signature_hash": "02fb947d1434755b"
       }
@@ -16214,6 +16308,16 @@
         "end_line": 49,
         "semantic_id": "test_aura_paper_memory.py#function:test_compile_paper_memory_record_builds_header_points_and_vectors:637f3eba284449bb",
         "signature_hash": "73d93b0d6d732f0b"
+      }
+    ],
+    "test_context_crusher_uses_rust_wasm_bridge_when_candidate_wins": [
+      {
+        "file": "test_aura_context_crusher.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 146,
+        "semantic_id": "test_aura_context_crusher.py#function:test_context_crusher_uses_rust_wasm_bridge_when_candidate_wins:6937564a0a5c9e39",
+        "signature_hash": "aa0f39c192dbfe30"
       }
     ],
     "test_converse_mock_and_learning": [
@@ -16340,8 +16444,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 12,
-        "end_line": 27,
+        "line": 13,
+        "end_line": 28,
         "semantic_id": "test_aura_context_crusher.py#function:test_json_context_crush_is_reversible:cb676d5d3183597d",
         "signature_hash": "9c541724bf2150b1"
       }
@@ -16370,8 +16474,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 30,
-        "end_line": 42,
+        "line": 31,
+        "end_line": 43,
         "semantic_id": "test_aura_context_crusher.py#function:test_log_context_crush_preserves_error_lines:c6d413a7d73b48ff",
         "signature_hash": "6abcc7420d1f748d"
       }
@@ -16380,8 +16484,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 62,
-        "end_line": 76,
+        "line": 63,
+        "end_line": 77,
         "semantic_id": "test_aura_context_crusher.py#function:test_message_crush_never_mutates_system_prompt:148510e751784df0",
         "signature_hash": "0148bc55e8f37de2"
       }
@@ -16450,8 +16554,8 @@
       {
         "file": "test_aura_context_crusher.py",
         "kind": "function",
-        "line": 79,
-        "end_line": 110,
+        "line": 80,
+        "end_line": 111,
         "semantic_id": "test_aura_context_crusher.py#function:test_openai_compatible_helper_applies_context_crush:3bbe340f64307b1a",
         "signature_hash": "28466d2021add600"
       }
@@ -16596,6 +16700,16 @@
         "signature_hash": "35d2c5c135bad469"
       }
     ],
+    "test_runtime_status_reports_python_fallback": [
+      {
+        "file": "test_aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "test_aura_wasm_bridge.py#function:test_runtime_status_reports_python_fallback:18a3d0428e513c14",
+        "signature_hash": "405afe98cd066da5"
+      }
+    ],
     "test_sandbox_task_and_no_fake_files": [
       {
         "file": "test_aura_substrate.py",
@@ -16696,6 +16810,16 @@
         "signature_hash": "3badf77f0e97d8c6"
       }
     ],
+    "test_wasm_bridge_runs_stdio_accelerator": [
+      {
+        "file": "test_aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 35,
+        "semantic_id": "test_aura_wasm_bridge.py#function:test_wasm_bridge_runs_stdio_accelerator:1d400bbd6fd03f16",
+        "signature_hash": "b7c1234c94a4bcf0"
+      }
+    ],
     "thermal_damping_safe_batch": [
       {
         "file": "aura_blockchain/memory_staking.py",
@@ -16770,32 +16894,32 @@
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 47,
-        "end_line": 48,
+        "line": 48,
+        "end_line": 49,
         "semantic_id": "aura_context_crusher.py#function:to_jsonable:568b17de639862f7",
         "signature_hash": "d35c70ed7eb422c7"
       },
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 62,
-        "end_line": 69,
+        "line": 63,
+        "end_line": 70,
         "semantic_id": "aura_context_crusher.py#function:to_jsonable:568b17de639862f7",
         "signature_hash": "d35c70ed7eb422c7"
       },
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 90,
-        "end_line": 102,
+        "line": 92,
+        "end_line": 105,
         "semantic_id": "aura_context_crusher.py#function:to_jsonable:568b17de639862f7",
         "signature_hash": "d35c70ed7eb422c7"
       },
       {
         "file": "aura_context_crusher.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 118,
+        "line": 114,
+        "end_line": 121,
         "semantic_id": "aura_context_crusher.py#function:to_jsonable:568b17de639862f7",
         "signature_hash": "d35c70ed7eb422c7"
       },
@@ -16821,6 +16945,14 @@
         "line": 68,
         "end_line": 80,
         "semantic_id": "aura_single_seed_lift.py#function:to_jsonable:8d982ec919b5ae10",
+        "signature_hash": "d35c70ed7eb422c7"
+      },
+      {
+        "file": "aura_wasm_bridge.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "aura_wasm_bridge.py#function:to_jsonable:af5608fbdbcf0c67",
         "signature_hash": "d35c70ed7eb422c7"
       }
     ],
@@ -17474,8 +17606,8 @@
       {
         "file": "aura_codebase_navigator.py",
         "kind": "function",
-        "line": 657,
-        "end_line": 714,
+        "line": 664,
+        "end_line": 721,
         "semantic_id": "aura_codebase_navigator.py#function:write_navigation_artifacts:66ad39a4ff186e48",
         "signature_hash": "2d0af940641bddc5"
       }
@@ -17543,6 +17675,7 @@
     {
       "path": ".aura/ARCHITECTURE.md",
       "role": "knowledge_artifact",
+      "bytes": 1455,
       "lines": 26,
       "tokens_est": 355,
       "symbol_count": 0,
@@ -17588,6 +17721,7 @@
     {
       "path": ".aura/AURA.md",
       "role": "knowledge_artifact",
+      "bytes": 1280,
       "lines": 26,
       "tokens_est": 313,
       "symbol_count": 0,
@@ -17633,6 +17767,7 @@
     {
       "path": ".aura/CONVERSE.md",
       "role": "knowledge_artifact",
+      "bytes": 1412,
       "lines": 31,
       "tokens_est": 341,
       "symbol_count": 0,
@@ -17678,6 +17813,7 @@
     {
       "path": ".aura/OUTPUT_FORMATS.md",
       "role": "knowledge_artifact",
+      "bytes": 2359,
       "lines": 66,
       "tokens_est": 573,
       "symbol_count": 0,
@@ -17723,6 +17859,7 @@
     {
       "path": ".aura/ROLES.md",
       "role": "knowledge_artifact",
+      "bytes": 736,
       "lines": 17,
       "tokens_est": 180,
       "symbol_count": 0,
@@ -17768,6 +17905,7 @@
     {
       "path": ".aura/SECURITY.md",
       "role": "knowledge_artifact",
+      "bytes": 875,
       "lines": 17,
       "tokens_est": 215,
       "symbol_count": 0,
@@ -17813,6 +17951,7 @@
     {
       "path": ".aura_backup.bak",
       "role": "binary_artifact",
+      "bytes": 73707,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -17858,6 +17997,7 @@
     {
       "path": ".aura_forager_backup.bak",
       "role": "binary_artifact",
+      "bytes": 1220,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -17903,6 +18043,7 @@
     {
       "path": ".aura_hdc_backup.bak",
       "role": "binary_artifact",
+      "bytes": 2331,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -17948,6 +18089,7 @@
     {
       "path": ".aura_node_backup.bak",
       "role": "binary_artifact",
+      "bytes": 30670,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -17993,6 +18135,7 @@
     {
       "path": ".aura_pfst_backup.bak",
       "role": "binary_artifact",
+      "bytes": 3981,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18038,8 +18181,9 @@
     {
       "path": ".gitignore",
       "role": "support_file",
-      "lines": 77,
-      "tokens_est": 360,
+      "bytes": 1540,
+      "lines": 79,
+      "tokens_est": 369,
       "symbol_count": 0,
       "commands": [
         "!Aura_Sandbox"
@@ -18050,45 +18194,46 @@
         ]
       },
       "topology": {},
-      "digest8": "c1aad30239171249",
+      "digest8": "996777c660228bcb",
       "vector": [
-        0.184275,
-        -0.038339,
-        -0.018551,
-        0.060601,
-        0.117491,
-        0.293109,
-        -0.043286,
-        -0.030919,
-        -0.283215,
-        0.263427,
-        0.075441,
-        -0.174381,
-        0.090282,
-        0.263427,
-        -0.105123,
-        -0.191695,
-        -0.134805,
-        0.223851,
-        -0.006184,
-        0.31537,
-        -0.243639,
-        0.132332,
-        0.204063,
-        0.213957,
-        0.233745,
-        -0.013604,
-        0.157067,
-        -0.134805,
-        0.263427,
-        0.154593,
-        -0.127385,
-        -0.087809
+        0.032939,
+        0.11472,
+        0.257836,
+        -0.251021,
+        -0.080645,
+        -0.067015,
+        0.257836,
+        0.248749,
+        0.232848,
+        -0.162425,
+        0.226032,
+        -0.273738,
+        -0.144252,
+        -0.082916,
+        -0.035211,
+        0.27601,
+        -0.273738,
+        -0.044298,
+        0.262379,
+        0.210131,
+        -0.148795,
+        -0.010223,
+        -0.019309,
+        0.12835,
+        0.021581,
+        -0.253293,
+        0.062471,
+        -0.08746,
+        0.098818,
+        0.110177,
+        0.026124,
+        0.278281
       ]
     },
     {
       "path": ".mempalace/aura_memory.db.corrupt.bak",
       "role": "binary_artifact",
+      "bytes": 24870912,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18134,6 +18279,7 @@
     {
       "path": ".mempalace/aura_thought.txt",
       "role": "support_file",
+      "bytes": 2366,
       "lines": 57,
       "tokens_est": 578,
       "symbol_count": 0,
@@ -18179,6 +18325,7 @@
     {
       "path": ".mempalace/lexicon.json",
       "role": "schema_or_lexicon",
+      "bytes": 4392,
       "lines": 1,
       "tokens_est": 1098,
       "symbol_count": 0,
@@ -18224,6 +18371,7 @@
     {
       "path": ".mempalace/nexus.json",
       "role": "schema_or_lexicon",
+      "bytes": 8383,
       "lines": 1,
       "tokens_est": 2096,
       "symbol_count": 0,
@@ -18269,6 +18417,7 @@
     {
       "path": ".mempalace/temp_prompt.txt",
       "role": "support_file",
+      "bytes": 691,
       "lines": 8,
       "tokens_est": 171,
       "symbol_count": 0,
@@ -18314,6 +18463,7 @@
     {
       "path": ".termux/colors.properties",
       "role": "support_file",
+      "bytes": 28,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18359,6 +18509,7 @@
     {
       "path": ".termux/font.ttf",
       "role": "binary_artifact",
+      "bytes": 2133976,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18404,6 +18555,7 @@
     {
       "path": ".termux/termux.properties",
       "role": "support_file",
+      "bytes": 6227,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18449,6 +18601,7 @@
     {
       "path": "AURA_FINAL_REPORT.md",
       "role": "knowledge_artifact",
+      "bytes": 14156,
       "lines": 417,
       "tokens_est": 3398,
       "symbol_count": 0,
@@ -18624,6 +18777,7 @@
     {
       "path": "AURA_GENESIS_BLOCK.json",
       "role": "schema_or_lexicon",
+      "bytes": 381,
       "lines": 8,
       "tokens_est": 94,
       "symbol_count": 0,
@@ -18669,6 +18823,7 @@
     {
       "path": "AURA_ROUTER.md",
       "role": "knowledge_artifact",
+      "bytes": 8315,
       "lines": 250,
       "tokens_est": 1998,
       "symbol_count": 0,
@@ -18720,6 +18875,7 @@
     {
       "path": "AuraOS.tex",
       "role": "knowledge_artifact",
+      "bytes": 70268,
       "lines": 748,
       "tokens_est": 17292,
       "symbol_count": 0,
@@ -18779,6 +18935,7 @@
     {
       "path": "AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf",
       "role": "knowledge_artifact",
+      "bytes": 562244,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -18824,6 +18981,7 @@
     {
       "path": "Aura_Sandbox/sample_target.py",
       "role": "python_module",
+      "bytes": 551,
       "lines": 22,
       "tokens_est": 138,
       "symbol_count": 3,
@@ -18869,6 +19027,7 @@
     {
       "path": "DAILY_DIGEST_JUN_6.md",
       "role": "knowledge_artifact",
+      "bytes": 3804,
       "lines": 66,
       "tokens_est": 929,
       "symbol_count": 0,
@@ -18914,6 +19073,7 @@
     {
       "path": "DAILY_DIGEST_JUN_7.md",
       "role": "knowledge_artifact",
+      "bytes": 2808,
       "lines": 78,
       "tokens_est": 677,
       "symbol_count": 0,
@@ -18959,6 +19119,7 @@
     {
       "path": "DAILY_DIGEST_JUN_7_8_FINAL.md",
       "role": "knowledge_artifact",
+      "bytes": 11836,
       "lines": 231,
       "tokens_est": 2886,
       "symbol_count": 0,
@@ -19004,6 +19165,7 @@
     {
       "path": "DAILY_DIGEST_JUN_7_BRIEF.md",
       "role": "knowledge_artifact",
+      "bytes": 2653,
       "lines": 59,
       "tokens_est": 639,
       "symbol_count": 0,
@@ -19049,6 +19211,7 @@
     {
       "path": "DAILY_DIGEST_JUN_8.md",
       "role": "knowledge_artifact",
+      "bytes": 4428,
       "lines": 109,
       "tokens_est": 1070,
       "symbol_count": 0,
@@ -19094,6 +19257,7 @@
     {
       "path": "DAILY_DIGEST_JUN_8_CORRECTED.md",
       "role": "knowledge_artifact",
+      "bytes": 6957,
       "lines": 132,
       "tokens_est": 1694,
       "symbol_count": 0,
@@ -19139,6 +19303,7 @@
     {
       "path": "DAILY_DIGEST_Jun7-8_2026.md",
       "role": "knowledge_artifact",
+      "bytes": 7191,
       "lines": 137,
       "tokens_est": 1748,
       "symbol_count": 0,
@@ -19190,6 +19355,7 @@
     {
       "path": "DAILY_DIGEST_Jun7_2026.md",
       "role": "knowledge_artifact",
+      "bytes": 5345,
       "lines": 82,
       "tokens_est": 1305,
       "symbol_count": 0,
@@ -19242,6 +19408,7 @@
     {
       "path": "DEEP_AUDIT_REPORT.md",
       "role": "knowledge_artifact",
+      "bytes": 6903,
       "lines": 176,
       "tokens_est": 1682,
       "symbol_count": 0,
@@ -19287,6 +19454,7 @@
     {
       "path": "GRAPH_REPORT.md",
       "role": "knowledge_artifact",
+      "bytes": 15338,
       "lines": 716,
       "tokens_est": 3655,
       "symbol_count": 0,
@@ -19332,8 +19500,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "lines": 111,
-      "tokens_est": 2188,
+      "bytes": 9342,
+      "lines": 122,
+      "tokens_est": 2310,
       "symbol_count": 0,
       "commands": [
         "!backtrack",
@@ -19346,70 +19515,71 @@
       ],
       "command_lines": {
         "!backtrack": [
-          82
+          93
         ],
         "!benchmark": [
           26,
           31,
-          80
+          91
         ],
         "!calibrate": [
-          81
+          92
         ],
         "!research": [
-          83
+          94
         ],
         "!route": [
-          84
+          95
         ],
         "!settings": [
-          78
+          89
         ],
         "!topology": [
           41,
-          79
+          90
         ]
       },
       "topology": {},
-      "digest8": "7a06b58b16c0909f",
+      "digest8": "7e5b01f2e6c5fa01",
       "vector": [
-        -0.02603,
-        -0.089049,
-        -0.245228,
-        0.108229,
-        -0.209609,
-        0.05891,
-        0.00137,
-        0.127409,
-        -0.250708,
-        0.105489,
-        0.00685,
-        0.01507,
-        -0.124669,
-        0.234269,
-        0.223309,
-        -0.06987,
-        0.160289,
-        -0.245228,
-        0.349348,
-        -0.04247,
-        -0.201389,
-        -0.193169,
-        0.097269,
-        -0.135629,
-        -0.338388,
-        0.02055,
-        -0.105489,
-        -0.201389,
-        -0.313728,
-        -0.105489,
-        0.242489,
-        0.07809
+        -0.270147,
+        -0.136994,
+        0.142115,
+        0.295754,
+        0.195889,
+        0.093463,
+        -0.152358,
+        0.096024,
+        0.014084,
+        -0.257344,
+        -0.277829,
+        -0.113948,
+        0.224056,
+        -0.113948,
+        0.08066,
+        -0.259905,
+        -0.034569,
+        -0.277829,
+        0.062736,
+        -0.326481,
+        -0.042251,
+        0.044811,
+        -0.154919,
+        -0.060175,
+        0.026887,
+        -0.021765,
+        -0.206131,
+        0.270147,
+        0.008962,
+        0.070418,
+        -0.116509,
+        0.267587
       ]
     },
     {
       "path": "Second_Paper.pdf",
       "role": "knowledge_artifact",
+      "bytes": 242594,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -19455,6 +19625,7 @@
     {
       "path": "Third_Paper.pdf",
       "role": "knowledge_artifact",
+      "bytes": 216308,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -19500,8 +19671,9 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "lines": 1691,
-      "tokens_est": 19943,
+      "bytes": 85713,
+      "lines": 1718,
+      "tokens_est": 20282,
       "symbol_count": 0,
       "commands": [
         "!ai_route",
@@ -19574,302 +19746,303 @@
       ],
       "command_lines": {
         "!ai_route": [
-          169,
-          177
-        ],
-        "!ai_router_regen": [
-          178
-        ],
-        "!approve": [
-          213
-        ],
-        "!ar_server_start": [
-          414,
-          937
-        ],
-        "!ar_server_stop": [
-          415
-        ],
-        "!ar_start": [
-          414,
-          878,
-          937,
-          941,
-          1274,
-          1288,
-          1361,
-          1362,
-          1364,
-          1374,
-          1409,
-          1411,
-          1685
-        ],
-        "!ar_stop": [
-          415,
-          942,
-          1362
-        ],
-        "!attention": [
-          185
-        ],
-        "!audit": [
-          200
-        ],
-        "!backtrack": [
-          314,
-          315,
-          343,
-          1223
-        ],
-        "!benchmark": [
-          199,
-          1340,
-          1380
-        ],
-        "!calibrate": [
-          220,
-          1257,
-          1354
-        ],
-        "!catalyze": [
+          173,
           181
         ],
-        "!cognitive_search": [
-          184
-        ],
-        "!commands": [
-          130
-        ],
-        "!contingency_spawn": [
-          225
-        ],
-        "!converse": [
-          224,
-          230
-        ],
-        "!coordinated_reason": [
-          192
-        ],
-        "!crystallize": [
-          321
-        ],
-        "!curiosity_tree": [
-          317
-        ],
-        "!db_repair": [
-          418,
-          1335
-        ],
-        "!evolve_reasoning": [
-          194
-        ],
-        "!export": [
-          416,
-          1672
-        ],
-        "!fast_path": [
-          183
-        ],
-        "!forage": [
-          313,
-          315,
-          341
-        ],
-        "!forage_off": [
-          319
-        ],
-        "!forage_on": [
-          318
-        ],
-        "!forager_off": [
-          319
-        ],
-        "!forager_on": [
-          318
-        ],
-        "!fusion": [
-          222,
-          282
-        ],
-        "!help": [
-          166,
-          176
-        ],
-        "!indus_decrypt": [
-          323
-        ],
-        "!manifest": [
-          166,
-          176
-        ],
-        "!markov": [
-          419
-        ],
-        "!mesh_status": [
-          413
-        ],
-        "!meta_analyze": [
-          195
-        ],
-        "!meta_reason": [
-          196
-        ],
-        "!optimize": [
-          209
-        ],
-        "!ping_mesh": [
-          412
-        ],
-        "!push": [
-          417
-        ],
-        "!reason": [
-          191
-        ],
-        "!repair_db": [
-          418
-        ],
-        "!research": [
-          315,
-          329,
-          345,
-          377,
-          1226
-        ],
-        "!review": [
-          210
-        ],
-        "!rollback": [
-          214
-        ],
-        "!route": [
-          221,
-          230,
-          1260
-        ],
-        "!saturn": [
-          197
-        ],
-        "!saturn_heal": [
-          198
-        ],
-        "!savings": [
-          223,
-          1263
-        ],
-        "!scan_topology": [
-          179
-        ],
-        "!search_similar": [
-          316,
-          329,
-          345
-        ],
-        "!self_optimize": [
-          209,
-          1242
-        ],
-        "!self_reflect": [
-          208,
-          1239
-        ],
-        "!settings": [
-          166,
-          176
-        ],
-        "!simulate": [
+        "!ai_router_regen": [
           182
         ],
-        "!stage": [
-          210,
-          1229,
-          1245
+        "!approve": [
+          217
         ],
-        "!stage_merge": [
-          211,
-          1232,
-          1248
+        "!ar_server_start": [
+          418,
+          964
         ],
-        "!stage_purge": [
-          212
+        "!ar_server_stop": [
+          419
         ],
-        "!stage_review": [
-          210
+        "!ar_start": [
+          418,
+          905,
+          964,
+          968,
+          1301,
+          1315,
+          1388,
+          1389,
+          1391,
+          1401,
+          1436,
+          1438,
+          1712
         ],
-        "!strategy_buffer_stats": [
-          193
+        "!ar_stop": [
+          419,
+          969,
+          1389
         ],
-        "!synthesize": [
-          322
+        "!attention": [
+          189
         ],
-        "!system_audit": [
-          200,
+        "!audit": [
+          204
+        ],
+        "!backtrack": [
+          318,
+          319,
+          347,
+          1250
+        ],
+        "!benchmark": [
+          203,
+          1367,
+          1407
+        ],
+        "!calibrate": [
+          224,
+          1284,
           1381
         ],
-        "!test_airlock": [
-          201
+        "!catalyze": [
+          185
         ],
-        "!timeline": [
-          320
+        "!cognitive_search": [
+          188
         ],
-        "!topology": [
-          179,
-          180,
-          1220,
-          1271,
-          1363,
-          1364,
-          1367,
-          1405
+        "!commands": [
+          134
         ],
-        "!topology_deep": [
+        "!contingency_spawn": [
+          229
+        ],
+        "!converse": [
+          228,
+          234
+        ],
+        "!coordinated_reason": [
+          196
+        ],
+        "!crystallize": [
+          325
+        ],
+        "!curiosity_tree": [
+          321
+        ],
+        "!db_repair": [
+          422,
+          1362
+        ],
+        "!evolve_reasoning": [
+          198
+        ],
+        "!export": [
+          420,
+          1699
+        ],
+        "!fast_path": [
+          187
+        ],
+        "!forage": [
+          317,
+          319,
+          345
+        ],
+        "!forage_off": [
+          323
+        ],
+        "!forage_on": [
+          322
+        ],
+        "!forager_off": [
+          323
+        ],
+        "!forager_on": [
+          322
+        ],
+        "!fusion": [
+          226,
+          286
+        ],
+        "!help": [
+          170,
           180
         ],
+        "!indus_decrypt": [
+          327
+        ],
+        "!manifest": [
+          170,
+          180
+        ],
+        "!markov": [
+          423
+        ],
+        "!mesh_status": [
+          417
+        ],
+        "!meta_analyze": [
+          199
+        ],
+        "!meta_reason": [
+          200
+        ],
+        "!optimize": [
+          213
+        ],
+        "!ping_mesh": [
+          416
+        ],
+        "!push": [
+          421
+        ],
+        "!reason": [
+          195
+        ],
+        "!repair_db": [
+          422
+        ],
+        "!research": [
+          319,
+          333,
+          349,
+          381,
+          1253
+        ],
+        "!review": [
+          214
+        ],
+        "!rollback": [
+          218
+        ],
+        "!route": [
+          225,
+          234,
+          1287
+        ],
+        "!saturn": [
+          201
+        ],
+        "!saturn_heal": [
+          202
+        ],
+        "!savings": [
+          227,
+          1290
+        ],
+        "!scan_topology": [
+          183
+        ],
+        "!search_similar": [
+          320,
+          333,
+          349
+        ],
+        "!self_optimize": [
+          213,
+          1269
+        ],
+        "!self_reflect": [
+          212,
+          1266
+        ],
+        "!settings": [
+          170,
+          180
+        ],
+        "!simulate": [
+          186
+        ],
+        "!stage": [
+          214,
+          1256,
+          1272
+        ],
+        "!stage_merge": [
+          215,
+          1259,
+          1275
+        ],
+        "!stage_purge": [
+          216
+        ],
+        "!stage_review": [
+          214
+        ],
+        "!strategy_buffer_stats": [
+          197
+        ],
+        "!synthesize": [
+          326
+        ],
+        "!system_audit": [
+          204,
+          1408
+        ],
+        "!test_airlock": [
+          205
+        ],
+        "!timeline": [
+          324
+        ],
+        "!topology": [
+          183,
+          184,
+          1247,
+          1298,
+          1390,
+          1391,
+          1394,
+          1432
+        ],
+        "!topology_deep": [
+          184
+        ],
         "!voice": [
-          420
+          424
         ]
       },
       "topology": {},
-      "digest8": "8583f0b3e2efe604",
+      "digest8": "d3d8ea2b6c5e13b9",
       "vector": [
-        -0.095683,
-        0.023012,
-        -0.236181,
-        0.117485,
-        -0.241025,
-        -0.265249,
-        0.207112,
-        0.042391,
-        0.211957,
-        0.226491,
-        0.185311,
-        -0.003634,
-        -0.141708,
-        -0.069037,
-        -0.24587,
-        0.214379,
-        0.066615,
-        0.308852,
-        0.056926,
-        0.257982,
-        -0.248292,
-        -0.083572,
-        0.243448,
-        0.190156,
-        -0.226491,
-        -0.001211,
-        -0.001211,
-        -0.161087,
-        0.069037,
-        0.262827,
-        -0.025435,
-        -0.018168
+        -0.123544,
+        -0.211615,
+        -0.089294,
+        -0.069723,
+        0.155347,
+        -0.033027,
+        0.285007,
+        -0.162687,
+        0.294793,
+        0.118651,
+        0.248311,
+        -0.170026,
+        0.018348,
+        0.06483,
+        -0.094187,
+        -0.174919,
+        -0.211615,
+        0.270329,
+        0.214061,
+        -0.309471,
+        0.170026,
+        0.045259,
+        0.094187,
+        -0.118651,
+        0.150454,
+        0.260543,
+        0.055044,
+        0.177365,
+        -0.018348,
+        -0.045259,
+        0.167579,
+        0.299686
       ]
     },
     {
       "path": "[+]",
       "role": "support_file",
+      "bytes": 0,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -19915,6 +20088,7 @@
     {
       "path": "apply_graft.py",
       "role": "python_module",
+      "bytes": 2874,
       "lines": 70,
       "tokens_est": 701,
       "symbol_count": 4,
@@ -19960,6 +20134,7 @@
     {
       "path": "arch_reasoner_accel",
       "role": "support_file",
+      "bytes": 3917760,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -20005,6 +20180,7 @@
     {
       "path": "arch_reasoner_accel.py",
       "role": "python_module",
+      "bytes": 3197,
       "lines": 93,
       "tokens_est": 777,
       "symbol_count": 4,
@@ -20050,6 +20226,7 @@
     {
       "path": "arch_reasoner_accel.rs",
       "role": "native_accelerator",
+      "bytes": 2866,
       "lines": 88,
       "tokens_est": 695,
       "symbol_count": 0,
@@ -20101,6 +20278,7 @@
     {
       "path": "arxiv_forager.py",
       "role": "python_module",
+      "bytes": 73025,
       "lines": 1742,
       "tokens_est": 17900,
       "symbol_count": 37,
@@ -20153,6 +20331,7 @@
     {
       "path": "async_palace.py",
       "role": "python_module",
+      "bytes": 39360,
       "lines": 888,
       "tokens_est": 9606,
       "symbol_count": 36,
@@ -20198,6 +20377,7 @@
     {
       "path": "aura.lexc",
       "role": "schema_or_lexicon",
+      "bytes": 6410,
       "lines": 201,
       "tokens_est": 1567,
       "symbol_count": 0,
@@ -20243,6 +20423,7 @@
     {
       "path": "aura_ai_router.py",
       "role": "python_module",
+      "bytes": 12211,
       "lines": 315,
       "tokens_est": 2802,
       "symbol_count": 6,
@@ -20305,6 +20486,7 @@
     {
       "path": "aura_anthropic_router.py",
       "role": "python_module",
+      "bytes": 16118,
       "lines": 442,
       "tokens_est": 3914,
       "symbol_count": 9,
@@ -20350,6 +20532,7 @@
     {
       "path": "aura_api_rotator.py",
       "role": "python_module",
+      "bytes": 14051,
       "lines": 383,
       "tokens_est": 3416,
       "symbol_count": 21,
@@ -20395,6 +20578,7 @@
     {
       "path": "aura_arch_reasoner.py",
       "role": "python_module",
+      "bytes": 10835,
       "lines": 248,
       "tokens_est": 2641,
       "symbol_count": 8,
@@ -20450,6 +20634,7 @@
     {
       "path": "aura_associative_core.py",
       "role": "python_module",
+      "bytes": 6632,
       "lines": 162,
       "tokens_est": 1611,
       "symbol_count": 9,
@@ -20501,6 +20686,7 @@
     {
       "path": "aura_attention_palace.py",
       "role": "python_module",
+      "bytes": 9159,
       "lines": 217,
       "tokens_est": 2228,
       "symbol_count": 11,
@@ -20546,6 +20732,7 @@
     {
       "path": "aura_background_auditor.py",
       "role": "python_module",
+      "bytes": 2393,
       "lines": 58,
       "tokens_est": 584,
       "symbol_count": 5,
@@ -20591,6 +20778,7 @@
     {
       "path": "aura_benchmark_sandbox.py",
       "role": "python_module",
+      "bytes": 12886,
       "lines": 310,
       "tokens_est": 3134,
       "symbol_count": 13,
@@ -20636,6 +20824,7 @@
     {
       "path": "aura_blockchain/__init__.py",
       "role": "python_module",
+      "bytes": 108,
       "lines": 2,
       "tokens_est": 27,
       "symbol_count": 0,
@@ -20681,6 +20870,7 @@
     {
       "path": "aura_blockchain/block.py",
       "role": "python_module",
+      "bytes": 5908,
       "lines": 159,
       "tokens_est": 1434,
       "symbol_count": 13,
@@ -20726,6 +20916,7 @@
     {
       "path": "aura_blockchain/consensus.py",
       "role": "python_module",
+      "bytes": 13711,
       "lines": 350,
       "tokens_est": 3158,
       "symbol_count": 22,
@@ -20771,6 +20962,7 @@
     {
       "path": "aura_blockchain/demo.py",
       "role": "python_module",
+      "bytes": 24831,
       "lines": 522,
       "tokens_est": 5155,
       "symbol_count": 14,
@@ -20816,6 +21008,7 @@
     {
       "path": "aura_blockchain/memory_staking.py",
       "role": "python_module",
+      "bytes": 6706,
       "lines": 173,
       "tokens_est": 1539,
       "symbol_count": 13,
@@ -20861,6 +21054,7 @@
     {
       "path": "aura_blockchain/node.py",
       "role": "python_module",
+      "bytes": 12679,
       "lines": 308,
       "tokens_est": 2752,
       "symbol_count": 19,
@@ -20906,6 +21100,7 @@
     {
       "path": "aura_blockchain/phasor_ledger.py",
       "role": "python_module",
+      "bytes": 6128,
       "lines": 151,
       "tokens_est": 1331,
       "symbol_count": 11,
@@ -20951,8 +21146,9 @@
     {
       "path": "aura_codebase_navigator.py",
       "role": "python_module",
-      "lines": 773,
-      "tokens_est": 8761,
+      "bytes": 36102,
+      "lines": 780,
+      "tokens_est": 8836,
       "symbol_count": 31,
       "commands": [
         "!topology"
@@ -20961,50 +21157,51 @@
         "!topology": [
           213,
           216,
-          730,
-          731
+          737,
+          738
         ]
       },
       "topology": {},
-      "digest8": "a0914fd372861b6d",
+      "digest8": "afab606fd9ff0e3a",
       "vector": [
-        -0.021167,
-        -0.050133,
-        -0.016711,
-        0.038992,
-        0.223928,
-        -0.088011,
-        0.243981,
-        0.092468,
-        0.177137,
-        -0.152628,
-        -0.284088,
-        0.139259,
-        -0.108065,
-        0.088011,
-        0.099152,
-        0.210559,
-        -0.248437,
-        0.074643,
-        0.228384,
-        -0.12589,
-        -0.235069,
-        0.027852,
-        -0.210559,
-        -0.174909,
-        0.09024,
-        0.264034,
-        -0.277403,
-        -0.034536,
-        -0.19719,
-        -0.250666,
-        0.237297,
-        0.246209
+        0.204991,
+        -0.066713,
+        -0.253509,
+        -0.137065,
+        -0.248658,
+        -0.124935,
+        0.260787,
+        0.100676,
+        -0.168602,
+        -0.204991,
+        0.185583,
+        0.027898,
+        0.052157,
+        0.030324,
+        -0.214695,
+        -0.219546,
+        -0.09825,
+        0.149195,
+        0.093398,
+        0.302028,
+        0.061861,
+        -0.003639,
+        0.270491,
+        -0.090972,
+        0.08612,
+        0.001213,
+        0.22925,
+        0.309306,
+        0.076417,
+        0.064287,
+        0.253509,
+        -0.253509
       ]
     },
     {
       "path": "aura_cognitive_synthesizer.py",
       "role": "python_module",
+      "bytes": 8309,
       "lines": 163,
       "tokens_est": 2037,
       "symbol_count": 7,
@@ -21050,51 +21247,53 @@
     {
       "path": "aura_context_crusher.py",
       "role": "python_module",
-      "lines": 539,
-      "tokens_est": 4964,
+      "bytes": 21079,
+      "lines": 567,
+      "tokens_est": 5270,
       "symbol_count": 36,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "df614f324ae2b6be",
+      "digest8": "32381e891a1f036d",
       "vector": [
-        -0.049878,
-        0.064476,
-        0.130168,
-        0.205593,
-        -0.040145,
-        0.244522,
-        0.212892,
-        0.190995,
-        -0.069342,
-        -0.305348,
-        -0.076641,
-        0.188562,
-        0.225057,
-        0.242089,
-        0.05961,
-        -0.220191,
-        -0.210459,
-        -0.285884,
-        0.037712,
-        -0.042578,
-        -0.227491,
-        -0.161798,
-        0.300482,
-        -0.074208,
-        -0.229924,
-        -0.154499,
-        0.156932,
-        -0.166664,
-        0.122869,
-        -0.020681,
-        0.015815,
-        -0.205593
+        -0.153948,
+        -0.113234,
+        -0.179393,
+        0.080154,
+        -0.128502,
+        0.288811,
+        -0.064887,
+        0.131046,
+        0.212473,
+        0.19975,
+        -0.013995,
+        -0.235374,
+        0.281177,
+        -0.001272,
+        0.064887,
+        0.120868,
+        0.113234,
+        -0.059798,
+        -0.245553,
+        -0.062342,
+        0.141225,
+        -0.207384,
+        -0.2939,
+        0.133591,
+        -0.161581,
+        -0.255731,
+        -0.141225,
+        0.072521,
+        -0.288811,
+        0.103056,
+        0.270999,
+        -0.181938
       ]
     },
     {
       "path": "aura_converse.py",
       "role": "python_module",
+      "bytes": 15849,
       "lines": 357,
       "tokens_est": 3872,
       "symbol_count": 21,
@@ -21140,6 +21339,7 @@
     {
       "path": "aura_coordinated_solver.py",
       "role": "python_module",
+      "bytes": 8181,
       "lines": 202,
       "tokens_est": 1995,
       "symbol_count": 16,
@@ -21191,6 +21391,7 @@
     {
       "path": "aura_core.py",
       "role": "python_module",
+      "bytes": 13761,
       "lines": 319,
       "tokens_est": 3359,
       "symbol_count": 20,
@@ -21236,6 +21437,7 @@
     {
       "path": "aura_core/.aura_bus",
       "role": "support_file",
+      "bytes": 16384,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -21279,8 +21481,55 @@
       ]
     },
     {
+      "path": "aura_crush_core.rs",
+      "role": "native_accelerator",
+      "bytes": 5876,
+      "lines": 210,
+      "tokens_est": 1469,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7387f13232642520",
+      "vector": [
+        0.239414,
+        -0.071448,
+        -0.043872,
+        -0.2344,
+        0.204316,
+        -0.129108,
+        -0.048886,
+        -0.106545,
+        0.031337,
+        -0.041365,
+        0.033844,
+        0.066434,
+        -0.231893,
+        -0.131615,
+        0.236907,
+        0.186768,
+        -0.043872,
+        -0.181754,
+        0.091504,
+        -0.272004,
+        -0.317129,
+        0.031337,
+        -0.056406,
+        -0.314622,
+        0.297074,
+        -0.221865,
+        -0.006267,
+        0.219358,
+        0.161698,
+        -0.226879,
+        0.199303,
+        -0.11908
+      ]
+    },
+    {
       "path": "aura_crypto_puf.py",
       "role": "python_module",
+      "bytes": 2049,
       "lines": 49,
       "tokens_est": 501,
       "symbol_count": 3,
@@ -21326,6 +21575,7 @@
     {
       "path": "aura_crystallization.py",
       "role": "python_module",
+      "bytes": 4160,
       "lines": 96,
       "tokens_est": 1016,
       "symbol_count": 1,
@@ -21371,6 +21621,7 @@
     {
       "path": "aura_dream_engine.py",
       "role": "python_module",
+      "bytes": 14625,
       "lines": 331,
       "tokens_est": 3568,
       "symbol_count": 6,
@@ -21416,6 +21667,7 @@
     {
       "path": "aura_dynamic_attention.py",
       "role": "python_module",
+      "bytes": 17037,
       "lines": 479,
       "tokens_est": 4111,
       "symbol_count": 17,
@@ -21467,6 +21719,7 @@
     {
       "path": "aura_english_compiler.py",
       "role": "python_module",
+      "bytes": 4261,
       "lines": 91,
       "tokens_est": 1042,
       "symbol_count": 1,
@@ -21512,6 +21765,7 @@
     {
       "path": "aura_epistemic_ingest.py",
       "role": "python_module",
+      "bytes": 6721,
       "lines": 124,
       "tokens_est": 1648,
       "symbol_count": 5,
@@ -21557,6 +21811,7 @@
     {
       "path": "aura_evolution_bridge.py",
       "role": "python_module",
+      "bytes": 5009,
       "lines": 145,
       "tokens_est": 1217,
       "symbol_count": 4,
@@ -21602,6 +21857,7 @@
     {
       "path": "aura_evolve.py",
       "role": "python_module",
+      "bytes": 15409,
       "lines": 331,
       "tokens_est": 3643,
       "symbol_count": 10,
@@ -21647,6 +21903,7 @@
     {
       "path": "aura_exports/aura_export_default_1780273977.txt",
       "role": "support_file",
+      "bytes": 40,
       "lines": 1,
       "tokens_est": 10,
       "symbol_count": 0,
@@ -21692,6 +21949,7 @@
     {
       "path": "aura_federated_hdc.py",
       "role": "python_module",
+      "bytes": 14884,
       "lines": 405,
       "tokens_est": 3592,
       "symbol_count": 15,
@@ -21737,6 +21995,7 @@
     {
       "path": "aura_forager.py",
       "role": "python_module",
+      "bytes": 3199,
       "lines": 68,
       "tokens_est": 783,
       "symbol_count": 5,
@@ -21782,6 +22041,7 @@
     {
       "path": "aura_fusion.py",
       "role": "python_module",
+      "bytes": 24124,
       "lines": 584,
       "tokens_est": 5896,
       "symbol_count": 27,
@@ -21827,6 +22087,7 @@
     {
       "path": "aura_gbnf_profiles.py",
       "role": "python_module",
+      "bytes": 3875,
       "lines": 96,
       "tokens_est": 943,
       "symbol_count": 3,
@@ -21872,6 +22133,7 @@
     {
       "path": "aura_governor.py",
       "role": "python_module",
+      "bytes": 7652,
       "lines": 152,
       "tokens_est": 1873,
       "symbol_count": 7,
@@ -21917,6 +22179,7 @@
     {
       "path": "aura_heal.py",
       "role": "python_module",
+      "bytes": 21442,
       "lines": 524,
       "tokens_est": 5220,
       "symbol_count": 10,
@@ -21962,6 +22225,7 @@
     {
       "path": "aura_holographic_manifest.py",
       "role": "python_module",
+      "bytes": 14562,
       "lines": 354,
       "tokens_est": 3525,
       "symbol_count": 10,
@@ -22013,6 +22277,7 @@
     {
       "path": "aura_hv_cache.py",
       "role": "python_module",
+      "bytes": 25621,
       "lines": 675,
       "tokens_est": 6220,
       "symbol_count": 26,
@@ -22071,6 +22336,7 @@
     {
       "path": "aura_hybrid_linguistic_cortex.py",
       "role": "python_module",
+      "bytes": 15855,
       "lines": 321,
       "tokens_est": 3872,
       "symbol_count": 11,
@@ -22116,6 +22382,7 @@
     {
       "path": "aura_incubator.py",
       "role": "python_module",
+      "bytes": 2819,
       "lines": 77,
       "tokens_est": 686,
       "symbol_count": 0,
@@ -22161,6 +22428,7 @@
     {
       "path": "aura_indus_cortex.py",
       "role": "python_module",
+      "bytes": 12467,
       "lines": 258,
       "tokens_est": 3045,
       "symbol_count": 8,
@@ -22206,6 +22474,7 @@
     {
       "path": "aura_ingest.py",
       "role": "python_module",
+      "bytes": 2981,
       "lines": 74,
       "tokens_est": 727,
       "symbol_count": 1,
@@ -22251,6 +22520,7 @@
     {
       "path": "aura_lexicon.json",
       "role": "schema_or_lexicon",
+      "bytes": 62782,
       "lines": 1680,
       "tokens_est": 15276,
       "symbol_count": 0,
@@ -22296,6 +22566,7 @@
     {
       "path": "aura_lexicon_compiler.py",
       "role": "python_module",
+      "bytes": 3181,
       "lines": 89,
       "tokens_est": 774,
       "symbol_count": 7,
@@ -22341,6 +22612,7 @@
     {
       "path": "aura_llm_call_logger.py",
       "role": "python_module",
+      "bytes": 7381,
       "lines": 221,
       "tokens_est": 1791,
       "symbol_count": 8,
@@ -22386,6 +22658,7 @@
     {
       "path": "aura_llm_egress.py",
       "role": "python_module",
+      "bytes": 25679,
       "lines": 622,
       "tokens_est": 6297,
       "symbol_count": 13,
@@ -22431,6 +22704,7 @@
     {
       "path": "aura_matrix_benchmark.py",
       "role": "python_module",
+      "bytes": 28724,
       "lines": 621,
       "tokens_est": 7018,
       "symbol_count": 20,
@@ -22476,6 +22750,7 @@
     {
       "path": "aura_mesh.py",
       "role": "python_module",
+      "bytes": 65055,
       "lines": 1443,
       "tokens_est": 14759,
       "symbol_count": 30,
@@ -22521,6 +22796,7 @@
     {
       "path": "aura_meta_ingest.py",
       "role": "python_module",
+      "bytes": 1570,
       "lines": 36,
       "tokens_est": 384,
       "symbol_count": 4,
@@ -22566,6 +22842,7 @@
     {
       "path": "aura_mitosis.py",
       "role": "python_module",
+      "bytes": 10068,
       "lines": 205,
       "tokens_est": 2466,
       "symbol_count": 7,
@@ -22611,6 +22888,7 @@
     {
       "path": "aura_model_probe_ledger.py",
       "role": "python_module",
+      "bytes": 7385,
       "lines": 198,
       "tokens_est": 1797,
       "symbol_count": 14,
@@ -22656,6 +22934,7 @@
     {
       "path": "aura_namespace_sanitizer.py",
       "role": "python_module",
+      "bytes": 11713,
       "lines": 315,
       "tokens_est": 2820,
       "symbol_count": 13,
@@ -22701,6 +22980,7 @@
     {
       "path": "aura_nesy_sat_reasoner.py",
       "role": "python_module",
+      "bytes": 29017,
       "lines": 603,
       "tokens_est": 7100,
       "symbol_count": 15,
@@ -22752,6 +23032,7 @@
     {
       "path": "aura_nesy_unit_interval.py",
       "role": "python_module",
+      "bytes": 11216,
       "lines": 308,
       "tokens_est": 2723,
       "symbol_count": 15,
@@ -22797,6 +23078,7 @@
     {
       "path": "aura_node.bak",
       "role": "binary_artifact",
+      "bytes": 70234,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -22842,6 +23124,7 @@
     {
       "path": "aura_node.py",
       "role": "python_module",
+      "bytes": 389789,
       "lines": 7456,
       "tokens_est": 96568,
       "symbol_count": 80,
@@ -23279,6 +23562,7 @@
     {
       "path": "aura_node.py.bak",
       "role": "binary_artifact",
+      "bytes": 318400,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -23324,6 +23608,7 @@
     {
       "path": "aura_node.py.save",
       "role": "support_file",
+      "bytes": 113841,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -23369,6 +23654,7 @@
     {
       "path": "aura_node.py.save.1",
       "role": "support_file",
+      "bytes": 108426,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -23414,6 +23700,7 @@
     {
       "path": "aura_ontology_circuit.py",
       "role": "python_module",
+      "bytes": 6037,
       "lines": 171,
       "tokens_est": 1467,
       "symbol_count": 10,
@@ -23459,6 +23746,7 @@
     {
       "path": "aura_paper_memory.py",
       "role": "python_module",
+      "bytes": 18245,
       "lines": 507,
       "tokens_est": 4562,
       "symbol_count": 32,
@@ -23504,6 +23792,7 @@
     {
       "path": "aura_patcher.py",
       "role": "python_module",
+      "bytes": 7036,
       "lines": 154,
       "tokens_est": 1675,
       "symbol_count": 6,
@@ -23549,6 +23838,7 @@
     {
       "path": "aura_phase_capsule.py",
       "role": "python_module",
+      "bytes": 4634,
       "lines": 134,
       "tokens_est": 1126,
       "symbol_count": 8,
@@ -23594,6 +23884,7 @@
     {
       "path": "aura_positional_parser.py",
       "role": "python_module",
+      "bytes": 4325,
       "lines": 91,
       "tokens_est": 1059,
       "symbol_count": 5,
@@ -23639,6 +23930,7 @@
     {
       "path": "aura_pre_egress_interceptor.py",
       "role": "python_module",
+      "bytes": 7863,
       "lines": 207,
       "tokens_est": 1913,
       "symbol_count": 14,
@@ -23684,6 +23976,7 @@
     {
       "path": "aura_pricing.py",
       "role": "python_module",
+      "bytes": 5117,
       "lines": 135,
       "tokens_est": 1245,
       "symbol_count": 11,
@@ -23729,6 +24022,7 @@
     {
       "path": "aura_privacy_io.py",
       "role": "python_module",
+      "bytes": 6954,
       "lines": 139,
       "tokens_est": 1704,
       "symbol_count": 6,
@@ -23774,6 +24068,7 @@
     {
       "path": "aura_proxy_benchmark.py",
       "role": "python_module",
+      "bytes": 32070,
       "lines": 739,
       "tokens_est": 7827,
       "symbol_count": 27,
@@ -23819,6 +24114,7 @@
     {
       "path": "aura_qdkt.py",
       "role": "python_module",
+      "bytes": 23500,
       "lines": 619,
       "tokens_est": 5719,
       "symbol_count": 26,
@@ -23864,6 +24160,7 @@
     {
       "path": "aura_rosetta_memory.py",
       "role": "python_module",
+      "bytes": 9784,
       "lines": 212,
       "tokens_est": 2383,
       "symbol_count": 5,
@@ -23909,6 +24206,7 @@
     {
       "path": "aura_router.py",
       "role": "python_module",
+      "bytes": 32016,
       "lines": 685,
       "tokens_est": 7829,
       "symbol_count": 29,
@@ -23954,6 +24252,7 @@
     {
       "path": "aura_savings_dashboard.py",
       "role": "python_module",
+      "bytes": 16949,
       "lines": 417,
       "tokens_est": 4018,
       "symbol_count": 7,
@@ -24017,6 +24316,7 @@
     {
       "path": "aura_savings_db.py",
       "role": "python_module",
+      "bytes": 11162,
       "lines": 264,
       "tokens_est": 2698,
       "symbol_count": 12,
@@ -24062,6 +24362,7 @@
     {
       "path": "aura_secrets.example.json",
       "role": "schema_or_lexicon",
+      "bytes": 1789,
       "lines": 60,
       "tokens_est": 433,
       "symbol_count": 0,
@@ -24107,6 +24408,7 @@
     {
       "path": "aura_self_optimize.py",
       "role": "python_module",
+      "bytes": 8365,
       "lines": 154,
       "tokens_est": 2004,
       "symbol_count": 5,
@@ -24152,6 +24454,7 @@
     {
       "path": "aura_self_reflect.py",
       "role": "python_module",
+      "bytes": 18050,
       "lines": 376,
       "tokens_est": 4418,
       "symbol_count": 19,
@@ -24197,6 +24500,7 @@
     {
       "path": "aura_single_seed_lift.py",
       "role": "python_module",
+      "bytes": 11324,
       "lines": 298,
       "tokens_est": 2831,
       "symbol_count": 19,
@@ -24242,6 +24546,7 @@
     {
       "path": "aura_skillweaver.py",
       "role": "python_module",
+      "bytes": 38374,
       "lines": 923,
       "tokens_est": 9363,
       "symbol_count": 27,
@@ -24296,6 +24601,7 @@
     {
       "path": "aura_spectral_memory.py",
       "role": "python_module",
+      "bytes": 6841,
       "lines": 161,
       "tokens_est": 1669,
       "symbol_count": 10,
@@ -24341,6 +24647,7 @@
     {
       "path": "aura_spectral_topology.py",
       "role": "python_module",
+      "bytes": 18354,
       "lines": 468,
       "tokens_est": 4472,
       "symbol_count": 17,
@@ -24386,6 +24693,7 @@
     {
       "path": "aura_spvm.py",
       "role": "python_module",
+      "bytes": 5983,
       "lines": 134,
       "tokens_est": 1463,
       "symbol_count": 3,
@@ -24431,6 +24739,7 @@
     {
       "path": "aura_substrate.py",
       "role": "python_module",
+      "bytes": 25968,
       "lines": 647,
       "tokens_est": 6327,
       "symbol_count": 27,
@@ -24486,6 +24795,7 @@
     {
       "path": "aura_token_economics.py",
       "role": "python_module",
+      "bytes": 9332,
       "lines": 252,
       "tokens_est": 2270,
       "symbol_count": 8,
@@ -24531,6 +24841,7 @@
     {
       "path": "aura_topological_scanner.py",
       "role": "python_module",
+      "bytes": 18190,
       "lines": 407,
       "tokens_est": 4440,
       "symbol_count": 10,
@@ -24583,6 +24894,7 @@
     {
       "path": "aura_topological_scanner.py.bak",
       "role": "binary_artifact",
+      "bytes": 8269,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -24628,6 +24940,7 @@
     {
       "path": "aura_topology_analyzer.py",
       "role": "python_module",
+      "bytes": 5512,
       "lines": 135,
       "tokens_est": 1345,
       "symbol_count": 2,
@@ -24679,6 +24992,7 @@
     {
       "path": "aura_topology_manager.py",
       "role": "python_module",
+      "bytes": 15739,
       "lines": 394,
       "tokens_est": 3836,
       "symbol_count": 16,
@@ -24724,6 +25038,7 @@
     {
       "path": "aura_topology_ws_bridge.py",
       "role": "python_module",
+      "bytes": 34155,
       "lines": 807,
       "tokens_est": 8086,
       "symbol_count": 36,
@@ -24779,6 +25094,7 @@
     {
       "path": "aura_unifier.sh",
       "role": "operator_script",
+      "bytes": 26881,
       "lines": 171,
       "tokens_est": 6674,
       "symbol_count": 0,
@@ -24824,6 +25140,7 @@
     {
       "path": "aura_upgrade_spec.docx",
       "role": "knowledge_artifact",
+      "bytes": 29314,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -24869,6 +25186,7 @@
     {
       "path": "aura_validation.py",
       "role": "python_module",
+      "bytes": 6648,
       "lines": 194,
       "tokens_est": 1607,
       "symbol_count": 6,
@@ -24914,6 +25232,7 @@
     {
       "path": "aura_vpt_tokenizer.py",
       "role": "python_module",
+      "bytes": 8866,
       "lines": 202,
       "tokens_est": 2165,
       "symbol_count": 11,
@@ -24957,8 +25276,55 @@
       ]
     },
     {
+      "path": "aura_wasm_bridge.py",
+      "role": "python_module",
+      "bytes": 6476,
+      "lines": 189,
+      "tokens_est": 1619,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c5e6618d813e12ff",
+      "vector": [
+        0.299888,
+        0.069934,
+        0.105494,
+        -0.202691,
+        -0.010668,
+        -0.231139,
+        -0.12683,
+        -0.138683,
+        -0.05334,
+        -0.100753,
+        -0.143425,
+        -0.174243,
+        -0.302258,
+        0.264328,
+        -0.003556,
+        -0.020151,
+        -0.23588,
+        -0.157648,
+        0.029633,
+        -0.010668,
+        -0.036745,
+        0.060452,
+        -0.214544,
+        -0.280922,
+        0.193208,
+        -0.254845,
+        0.186096,
+        -0.05571,
+        0.285664,
+        0.077046,
+        -0.16476,
+        -0.269069
+      ]
+    },
+    {
       "path": "build_aura.sh",
       "role": "operator_script",
+      "bytes": 11390,
       "lines": 289,
       "tokens_est": 2776,
       "symbol_count": 0,
@@ -25004,6 +25370,7 @@
     {
       "path": "bus_init.cpp",
       "role": "native_accelerator",
+      "bytes": 545,
       "lines": 17,
       "tokens_est": 133,
       "symbol_count": 0,
@@ -25049,6 +25416,7 @@
     {
       "path": "cognitive_router.py",
       "role": "python_module",
+      "bytes": 10751,
       "lines": 240,
       "tokens_est": 2624,
       "symbol_count": 11,
@@ -25100,6 +25468,7 @@
     {
       "path": "cognitive_search.rs",
       "role": "native_accelerator",
+      "bytes": 4072,
       "lines": 103,
       "tokens_est": 993,
       "symbol_count": 0,
@@ -25151,6 +25520,7 @@
     {
       "path": "dag_executor.py",
       "role": "python_module",
+      "bytes": 3044,
       "lines": 85,
       "tokens_est": 740,
       "symbol_count": 1,
@@ -25196,6 +25566,7 @@
     {
       "path": "dag_executor.rs",
       "role": "native_accelerator",
+      "bytes": 1411,
       "lines": 39,
       "tokens_est": 344,
       "symbol_count": 0,
@@ -25241,6 +25612,7 @@
     {
       "path": "daily_digest_2026-06-06.md",
       "role": "knowledge_artifact",
+      "bytes": 2581,
       "lines": 37,
       "tokens_est": 626,
       "symbol_count": 0,
@@ -25302,6 +25674,7 @@
     {
       "path": "english_lexicon.json",
       "role": "schema_or_lexicon",
+      "bytes": 128139,
       "lines": 4098,
       "tokens_est": 31011,
       "symbol_count": 0,
@@ -25347,6 +25720,7 @@
     {
       "path": "extract_pdf_text.py",
       "role": "python_module",
+      "bytes": 1301,
       "lines": 41,
       "tokens_est": 326,
       "symbol_count": 3,
@@ -25392,6 +25766,7 @@
     {
       "path": "fix_db.py",
       "role": "python_module",
+      "bytes": 802,
       "lines": 26,
       "tokens_est": 195,
       "symbol_count": 0,
@@ -25437,6 +25812,7 @@
     {
       "path": "forged_roots_audit.md",
       "role": "knowledge_artifact",
+      "bytes": 4101,
       "lines": 92,
       "tokens_est": 1003,
       "symbol_count": 0,
@@ -25482,6 +25858,7 @@
     {
       "path": "gateway.py",
       "role": "python_module",
+      "bytes": 31502,
       "lines": 601,
       "tokens_est": 7724,
       "symbol_count": 27,
@@ -25527,6 +25904,7 @@
     {
       "path": "generate_ai_router.py",
       "role": "python_module",
+      "bytes": 17417,
       "lines": 386,
       "tokens_est": 3939,
       "symbol_count": 6,
@@ -25586,6 +25964,7 @@
     {
       "path": "index.html",
       "role": "interface_surface",
+      "bytes": 16855,
       "lines": 322,
       "tokens_est": 3898,
       "symbol_count": 0,
@@ -25651,6 +26030,7 @@
     {
       "path": "lexical_transducer.py",
       "role": "python_module",
+      "bytes": 5641,
       "lines": 126,
       "tokens_est": 1379,
       "symbol_count": 6,
@@ -25696,6 +26076,7 @@
     {
       "path": "liquid_attractor_control_plane.py",
       "role": "python_module",
+      "bytes": 43141,
       "lines": 963,
       "tokens_est": 9969,
       "symbol_count": 34,
@@ -25741,6 +26122,7 @@
     {
       "path": "liquid_fhrr.py",
       "role": "python_module",
+      "bytes": 1515,
       "lines": 40,
       "tokens_est": 369,
       "symbol_count": 8,
@@ -25786,6 +26168,7 @@
     {
       "path": "liquid_kernel.py",
       "role": "python_module",
+      "bytes": 16828,
       "lines": 399,
       "tokens_est": 4089,
       "symbol_count": 41,
@@ -25831,6 +26214,7 @@
     {
       "path": "liquid_math_reference.py",
       "role": "python_module",
+      "bytes": 9654,
       "lines": 231,
       "tokens_est": 2356,
       "symbol_count": 30,
@@ -25876,6 +26260,7 @@
     {
       "path": "llama_server_manager.py",
       "role": "python_module",
+      "bytes": 9697,
       "lines": 263,
       "tokens_est": 2355,
       "symbol_count": 9,
@@ -25921,6 +26306,7 @@
     {
       "path": "logging_kit.py",
       "role": "python_module",
+      "bytes": 5821,
       "lines": 166,
       "tokens_est": 1414,
       "symbol_count": 7,
@@ -25966,6 +26352,7 @@
     {
       "path": "mint_genesis.py",
       "role": "python_module",
+      "bytes": 3649,
       "lines": 96,
       "tokens_est": 887,
       "symbol_count": 3,
@@ -26011,6 +26398,7 @@
     {
       "path": "mistral_gate.py",
       "role": "python_module",
+      "bytes": 3530,
       "lines": 85,
       "tokens_est": 869,
       "symbol_count": 0,
@@ -26066,6 +26454,7 @@
     {
       "path": "myproject.zip",
       "role": "binary_artifact",
+      "bytes": 21528611,
       "lines": 0,
       "tokens_est": 0,
       "symbol_count": 0,
@@ -26111,6 +26500,7 @@
     {
       "path": "pulse.py",
       "role": "python_module",
+      "bytes": 6641,
       "lines": 169,
       "tokens_est": 1612,
       "symbol_count": 6,
@@ -26156,6 +26546,7 @@
     {
       "path": "pvm_arch_checker.py",
       "role": "python_module",
+      "bytes": 18880,
       "lines": 473,
       "tokens_est": 4477,
       "symbol_count": 24,
@@ -26201,6 +26592,7 @@
     {
       "path": "pvm_memory_guard.py",
       "role": "python_module",
+      "bytes": 12053,
       "lines": 323,
       "tokens_est": 2931,
       "symbol_count": 18,
@@ -26246,6 +26638,7 @@
     {
       "path": "pwfst.py",
       "role": "python_module",
+      "bytes": 2375,
       "lines": 56,
       "tokens_est": 580,
       "symbol_count": 4,
@@ -26291,51 +26684,53 @@
     {
       "path": "pyproject.toml",
       "role": "schema_or_lexicon",
+      "bytes": 3020,
       "lines": 84,
-      "tokens_est": 728,
+      "tokens_est": 733,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bfebcd32a738e9b8",
+      "digest8": "967aa3207e351bdb",
       "vector": [
-        0.017111,
-        -0.198753,
-        0.043436,
-        0.209283,
-        0.211915,
-        -0.009214,
-        0.167163,
-        0.275095,
-        -0.317215,
-        -0.24877,
-        0.035539,
-        -0.140838,
-        -0.314583,
-        0.101351,
-        -0.061864,
-        0.148736,
-        -0.025009,
-        0.161898,
-        -0.080291,
-        0.314583,
-        0.056599,
-        -0.172428,
-        -0.151368,
-        -0.059231,
-        -0.177693,
-        -0.067129,
-        0.056599,
-        -0.201386,
-        -0.025009,
-        0.28036,
-        0.027641,
-        0.309318
+        -0.275968,
+        -0.122515,
+        -0.085389,
+        0.154691,
+        0.164591,
+        -0.142315,
+        -0.006188,
+        -0.266068,
+        -0.283393,
+        -0.288343,
+        -0.142315,
+        -0.102715,
+        -0.201717,
+        -0.13489,
+        -0.273493,
+        0.219042,
+        -0.253693,
+        -0.063114,
+        -0.068064,
+        0.206667,
+        0.11509,
+        -0.040838,
+        0.159641,
+        0.038363,
+        -0.018563,
+        0.003713,
+        -0.280918,
+        -0.092814,
+        0.142315,
+        0.251218,
+        0.122515,
+        -0.199242
       ]
     },
     {
       "path": "quantum_dag.py",
       "role": "python_module",
+      "bytes": 5651,
       "lines": 127,
       "tokens_est": 1382,
       "symbol_count": 6,
@@ -26381,6 +26776,7 @@
     {
       "path": "quantum_tensor_sandbox.rs",
       "role": "native_accelerator",
+      "bytes": 3043,
       "lines": 80,
       "tokens_est": 741,
       "symbol_count": 0,
@@ -26426,6 +26822,7 @@
     {
       "path": "refactored-auraos-upgrades.md",
       "role": "knowledge_artifact",
+      "bytes": 89226,
       "lines": 2597,
       "tokens_est": 21629,
       "symbol_count": 0,
@@ -26493,6 +26890,7 @@
     {
       "path": "requirements.txt",
       "role": "support_file",
+      "bytes": 401,
       "lines": 17,
       "tokens_est": 91,
       "symbol_count": 0,
@@ -26538,51 +26936,53 @@
     {
       "path": "setup.sh",
       "role": "operator_script",
-      "lines": 57,
-      "tokens_est": 499,
+      "bytes": 2549,
+      "lines": 69,
+      "tokens_est": 623,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2c12215864e1770b",
+      "digest8": "711ef24dee6dcd45",
       "vector": [
-        -0.063136,
-        0.120921,
-        -0.266454,
-        -0.071697,
-        -0.018192,
-        0.067416,
-        0.11022,
-        0.234351,
-        -0.22151,
-        0.082397,
-        -0.255753,
-        -0.236491,
-        -0.195828,
-        0.159444,
-        0.075977,
-        0.230071,
-        -0.082397,
-        0.236491,
-        -0.264314,
-        0.065276,
-        0.174426,
-        0.200108,
-        0.22151,
-        0.185127,
-        -0.21937,
-        0.120921,
-        -0.013911,
-        0.21723,
-        -0.007491,
-        0.232211,
-        -0.266454,
-        -0.088818
+        0.232587,
+        -0.105721,
+        0.283778,
+        -0.034498,
+        0.183621,
+        0.094593,
+        0.083464,
+        0.021144,
+        0.063433,
+        0.225909,
+        0.076787,
+        -0.234812,
+        -0.277101,
+        -0.030047,
+        0.161364,
+        0.261521,
+        0.11685,
+        0.025596,
+        0.174718,
+        0.003339,
+        0.114624,
+        -0.143558,
+        0.223684,
+        -0.263747,
+        0.219232,
+        0.188072,
+        -0.239264,
+        0.283778,
+        0.243715,
+        0.188072,
+        -0.02337,
+        0.001113
       ]
     },
     {
       "path": "setup_aura.sh",
       "role": "operator_script",
+      "bytes": 8688,
       "lines": 204,
       "tokens_est": 2122,
       "symbol_count": 0,
@@ -26628,6 +27028,7 @@
     {
       "path": "spatial_mapper.py",
       "role": "python_module",
+      "bytes": 7249,
       "lines": 166,
       "tokens_est": 1771,
       "symbol_count": 15,
@@ -26673,6 +27074,7 @@
     {
       "path": "symbolic_shield.py",
       "role": "python_module",
+      "bytes": 8456,
       "lines": 221,
       "tokens_est": 2054,
       "symbol_count": 8,
@@ -26718,6 +27120,7 @@
     {
       "path": "systems_check.py",
       "role": "python_module",
+      "bytes": 12582,
       "lines": 377,
       "tokens_est": 3046,
       "symbol_count": 13,
@@ -26769,51 +27172,53 @@
     {
       "path": "test_aura_context_crusher.py",
       "role": "python_module",
-      "lines": 111,
-      "tokens_est": 987,
-      "symbol_count": 6,
+      "bytes": 5135,
+      "lines": 147,
+      "tokens_est": 1284,
+      "symbol_count": 7,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d8191356b3ef0f82",
+      "digest8": "7ea3fa6378799a29",
       "vector": [
-        -0.098469,
-        -0.043149,
-        -0.058639,
-        0.049788,
-        0.160427,
-        -0.116171,
-        0.215747,
-        0.129448,
-        -0.27328,
-        -0.215747,
-        -0.180342,
-        0.043149,
-        0.260003,
-        0.021022,
-        0.268854,
-        0.255577,
-        0.242301,
-        0.06749,
-        -0.253364,
-        -0.251152,
-        -0.040937,
-        -0.116171,
-        -0.211321,
-        0.131661,
-        0.195832,
-        0.186981,
-        -0.098469,
-        0.222385,
-        0.215747,
-        -0.215747,
-        -0.021022,
-        0.158214
+        0.242597,
+        0.054616,
+        -0.029213,
+        -0.077479,
+        0.016512,
+        -0.18163,
+        0.290862,
+        0.306104,
+        -0.318805,
+        -0.085099,
+        -0.191791,
+        0.059697,
+        0.255298,
+        0.301023,
+        0.082559,
+        -0.186711,
+        0.18163,
+        0.00381,
+        0.041915,
+        0.168929,
+        -0.105422,
+        0.019052,
+        -0.148606,
+        -0.247677,
+        -0.039374,
+        -0.153687,
+        -0.021592,
+        -0.161308,
+        0.100341,
+        0.204493,
+        -0.323886,
+        -0.080019
       ]
     },
     {
       "path": "test_aura_functions.py",
       "role": "python_module",
+      "bytes": 38725,
       "lines": 987,
       "tokens_est": 9398,
       "symbol_count": 80,
@@ -26888,6 +27293,7 @@
     {
       "path": "test_aura_fusion.py",
       "role": "python_module",
+      "bytes": 4833,
       "lines": 137,
       "tokens_est": 1176,
       "symbol_count": 8,
@@ -26933,6 +27339,7 @@
     {
       "path": "test_aura_model_probe_ledger.py",
       "role": "python_module",
+      "bytes": 1109,
       "lines": 39,
       "tokens_est": 268,
       "symbol_count": 2,
@@ -26978,6 +27385,7 @@
     {
       "path": "test_aura_paper_memory.py",
       "role": "python_module",
+      "bytes": 5891,
       "lines": 163,
       "tokens_est": 1473,
       "symbol_count": 7,
@@ -27023,6 +27431,7 @@
     {
       "path": "test_aura_phase_capsule.py",
       "role": "python_module",
+      "bytes": 1195,
       "lines": 39,
       "tokens_est": 290,
       "symbol_count": 2,
@@ -27068,6 +27477,7 @@
     {
       "path": "test_aura_single_seed_lift.py",
       "role": "python_module",
+      "bytes": 1112,
       "lines": 31,
       "tokens_est": 278,
       "symbol_count": 1,
@@ -27113,6 +27523,7 @@
     {
       "path": "test_aura_spectral_topology.py",
       "role": "python_module",
+      "bytes": 3126,
       "lines": 83,
       "tokens_est": 761,
       "symbol_count": 4,
@@ -27158,6 +27569,7 @@
     {
       "path": "test_aura_substrate.py",
       "role": "python_module",
+      "bytes": 24883,
       "lines": 542,
       "tokens_est": 6086,
       "symbol_count": 25,
@@ -27217,8 +27629,55 @@
       ]
     },
     {
+      "path": "test_aura_wasm_bridge.py",
+      "role": "python_module",
+      "bytes": 1328,
+      "lines": 45,
+      "tokens_est": 332,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d74ad513aacfef78",
+      "vector": [
+        0.124359,
+        0.210756,
+        -0.158394,
+        -0.181957,
+        0.221228,
+        -0.161012,
+        0.037962,
+        0.053671,
+        0.278826,
+        -0.158394,
+        0.045817,
+        -0.163631,
+        0.229083,
+        -0.037962,
+        0.32857,
+        0.043198,
+        0.13745,
+        0.056289,
+        -0.022254,
+        -0.079852,
+        -0.284063,
+        -0.003927,
+        -0.02749,
+        -0.286681,
+        0.31548,
+        -0.134832,
+        -0.106033,
+        -0.163631,
+        0.048435,
+        0.289299,
+        -0.129595,
+        0.236937
+      ]
+    },
+    {
       "path": "test_codemap_slimming.py",
       "role": "python_module",
+      "bytes": 997,
       "lines": 20,
       "tokens_est": 245,
       "symbol_count": 1,
@@ -27264,6 +27723,7 @@
     {
       "path": "test_forge.py",
       "role": "python_module",
+      "bytes": 907,
       "lines": 21,
       "tokens_est": 222,
       "symbol_count": 0,
@@ -27309,6 +27769,7 @@
     {
       "path": "test_memory_guard_leak.py",
       "role": "python_module",
+      "bytes": 13324,
       "lines": 306,
       "tokens_est": 3041,
       "symbol_count": 6,
@@ -27354,6 +27815,7 @@
     {
       "path": "test_pvm_logic.py",
       "role": "python_module",
+      "bytes": 19943,
       "lines": 449,
       "tokens_est": 4613,
       "symbol_count": 12,
@@ -27399,6 +27861,7 @@
     {
       "path": "test_self_repair.py",
       "role": "python_module",
+      "bytes": 1202,
       "lines": 31,
       "tokens_est": 293,
       "symbol_count": 1,
@@ -27444,6 +27907,7 @@
     {
       "path": "test_synthesis_upgrades.py",
       "role": "python_module",
+      "bytes": 20011,
       "lines": 473,
       "tokens_est": 4864,
       "symbol_count": 51,
@@ -27489,6 +27953,7 @@
     {
       "path": "test_universal_llm_logging.py",
       "role": "python_module",
+      "bytes": 5055,
       "lines": 148,
       "tokens_est": 1227,
       "symbol_count": 9,
@@ -27534,6 +27999,7 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
+      "bytes": 4749201,
       "lines": 30827,
       "tokens_est": 230001,
       "symbol_count": 0,
@@ -27579,6 +28045,7 @@
     {
       "path": "universal_decipher.rs",
       "role": "native_accelerator",
+      "bytes": 1645,
       "lines": 48,
       "tokens_est": 400,
       "symbol_count": 0,
@@ -27624,6 +28091,7 @@
     {
       "path": "unreal_bridge.py",
       "role": "python_module",
+      "bytes": 10474,
       "lines": 254,
       "tokens_est": 2430,
       "symbol_count": 10,
@@ -27669,6 +28137,7 @@
     {
       "path": "verify_os.py",
       "role": "python_module",
+      "bytes": 774,
       "lines": 33,
       "tokens_est": 185,
       "symbol_count": 0,
@@ -27714,6 +28183,7 @@
     {
       "path": "vsa_resonator.py",
       "role": "python_module",
+      "bytes": 11231,
       "lines": 159,
       "tokens_est": 1705,
       "symbol_count": 9,
@@ -27759,6 +28229,7 @@
     {
       "path": "~-AuraSovereign",
       "role": "support_file",
+      "bytes": 25478,
       "lines": 499,
       "tokens_est": 6245,
       "symbol_count": 0,
@@ -27814,14 +28285,20 @@
   "last_refresh": {
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
+      "aura_codebase_navigator.py",
+      "aura_crush_core.rs",
+      "aura_wasm_bridge.py",
       "aura_context_crusher.py",
-      "aura_llm_egress.py",
+      "test_aura_wasm_bridge.py",
+      "test_aura_context_crusher.py",
       "README.md",
       "USER_GUIDE.md",
-      "test_aura_context_crusher.py"
+      "setup.sh",
+      "pyproject.toml",
+      ".gitignore"
     ],
     "removed_paths": [],
-    "changed_path_count": 5,
+    "changed_path_count": 11,
     "topology_refreshed": false
   }
 }

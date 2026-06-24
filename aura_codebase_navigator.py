@@ -407,12 +407,18 @@ def _symbol_index(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any
     return dict(sorted(index.items()))
 
 
-def _records_from_cards(payload: dict[str, Any]) -> list[dict[str, Any]]:
+def _records_from_cards(payload: dict[str, Any], root: Path | None = None) -> list[dict[str, Any]]:
     """Return mutable file records from a payload that may only contain compact cards."""
     records = [dict(card) for card in payload.get("files", [])]
     by_path = {record["path"]: record for record in records}
     for record in records:
-        record.setdefault("bytes", 0)
+        if "bytes" not in record and root is not None:
+            try:
+                record["bytes"] = (root / record["path"]).stat().st_size
+            except OSError:
+                record["bytes"] = 0
+        else:
+            record.setdefault("bytes", 0)
         record.setdefault("symbols", [])
     for name, hits in payload.get("symbol_index", {}).items():
         for hit in hits:
@@ -455,7 +461,7 @@ def refresh_index_for_paths(
     
     payload = _load_json(index_path)
     root = (root or Path(payload.get("root", "."))).resolve()
-    by_path = {record["path"]: record for record in _records_from_cards(payload)}
+    by_path = {record["path"]: record for record in _records_from_cards(payload, root=root)}
     refreshed: list[str] = []
     removed: list[str] = []
 
@@ -541,6 +547,7 @@ def _compact_file_cards(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         cards.append({
             "path": rec["path"],
             "role": rec["role"],
+            "bytes": rec["bytes"],
             "lines": rec["lines"],
             "tokens_est": rec["tokens_est"],
             "symbol_count": rec.get("symbol_count", 0),
