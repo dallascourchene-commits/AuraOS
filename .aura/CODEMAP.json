@@ -5,16 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 191,
+    "included_file_count": 194,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".pytest_cache": 5,
-      "Aura_Memory": 0,
-      "__pycache__": 36
+      ".git": 44,
+      ".pytest_cache": 4,
+      "Aura_Memory": 1,
+      "__pycache__": 15
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -124,6 +125,7 @@
       "aura_node.py.save",
       "aura_node.py.save.1",
       "aura_ontology_circuit.py",
+      "aura_paper_memory.py",
       "aura_patcher.py",
       "aura_phase_capsule.py",
       "aura_positional_parser.py",
@@ -161,6 +163,7 @@
       "dag_executor.rs",
       "daily_digest_2026-06-06.md",
       "english_lexicon.json",
+      "extract_pdf_text.py",
       "fix_db.py",
       "forged_roots_audit.md",
       "gateway.py",
@@ -193,6 +196,7 @@
       "test_aura_functions.py",
       "test_aura_fusion.py",
       "test_aura_model_probe_ledger.py",
+      "test_aura_paper_memory.py",
       "test_aura_phase_capsule.py",
       "test_aura_substrate.py",
       "test_codemap_slimming.py",
@@ -211,24 +215,24 @@
     ]
   },
   "summary": {
-    "file_count": 191,
-    "total_bytes": 179976,
-    "text_tokens_est": 837054,
+    "file_count": 194,
+    "total_bytes": 16536,
+    "text_tokens_est": 856360,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
       "native_accelerator": 6,
       "operator_script": 4,
-      "python_module": 119,
+      "python_module": 122,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
     "topology_nodes": 0,
     "topology_edges": 0,
-    "topology_source": "unknown",
+    "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782235926
+    "last_incremental_refresh_unix": 1782271961
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -258,11 +262,13 @@
       "aura_cognitive_synthesizer.py",
       "aura_dream_engine.py",
       "aura_dynamic_attention.py",
+      "aura_paper_memory.py",
       "aura_rosetta_memory.py",
       "aura_spectral_memory.py",
       "cognitive_router.py",
       "cognitive_search.rs",
       "pvm_memory_guard.py",
+      "test_aura_paper_memory.py",
       "test_memory_guard_leak.py"
     ],
     "mesh_and_routing": [
@@ -407,6 +413,7 @@
       "dag_executor.rs",
       "daily_digest_2026-06-06.md",
       "english_lexicon.json",
+      "extract_pdf_text.py",
       "fix_db.py",
       "index.html",
       "lexical_transducer.py",
@@ -472,6 +479,13 @@
       "topology_degree": 0
     },
     {
+      "path": "arxiv_forager.py",
+      "role": "python_module",
+      "symbols": 37,
+      "tokens_est": 17900,
+      "topology_degree": 0
+    },
+    {
       "path": "async_palace.py",
       "role": "python_module",
       "symbols": 36,
@@ -490,6 +504,13 @@
       "role": "python_module",
       "symbols": 34,
       "tokens_est": 9969,
+      "topology_degree": 0
+    },
+    {
+      "path": "aura_paper_memory.py",
+      "role": "python_module",
+      "symbols": 32,
+      "tokens_est": 4134,
       "topology_degree": 0
     },
     {
@@ -568,20 +589,6 @@
       "symbols": 25,
       "tokens_est": 6086,
       "topology_degree": 0
-    },
-    {
-      "path": "pvm_arch_checker.py",
-      "role": "python_module",
-      "symbols": 24,
-      "tokens_est": 4477,
-      "topology_degree": 0
-    },
-    {
-      "path": "aura_substrate.py",
-      "role": "python_module",
-      "symbols": 24,
-      "tokens_est": 4468,
-      "topology_degree": 0
     }
   ],
   "command_index": {
@@ -593,49 +600,57 @@
       "index.html:1"
     ],
     "!ai_route": [
+      "USER_GUIDE.md:169",
       "aura_ai_router.py:22",
       "aura_node.py:6716"
     ],
     "!ai_router_regen": [
+      "USER_GUIDE.md:178",
       "aura_node.py:6731"
     ],
     "!approve": [
       "AURA_FINAL_REPORT.md:151",
-      "USER_GUIDE.md:187",
+      "USER_GUIDE.md:213",
       "aura_node.py:5413"
     ],
     "!ar_server_start": [
-      "USER_GUIDE.md:813",
+      "USER_GUIDE.md:345",
       "aura_node.py:6185"
     ],
     "!ar_server_stop": [
+      "USER_GUIDE.md:346",
       "aura_node.py:6201"
     ],
     "!ar_start": [
       "AURA_FINAL_REPORT.md:168",
-      "USER_GUIDE.md:323",
+      "USER_GUIDE.md:345",
       "aura_node.py:6185",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!ar_stop": [
       "AURA_FINAL_REPORT.md:169",
-      "USER_GUIDE.md:324",
+      "USER_GUIDE.md:346",
       "aura_node.py:6201",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!attention": [
+      "USER_GUIDE.md:185",
       "aura_node.py:5476"
     ],
     "!audit": [
+      "USER_GUIDE.md:200",
       "aura_node.py:5980"
     ],
     "!backtrack": [
       "AURA_FINAL_REPORT.md:143",
-      "USER_GUIDE.md:253",
+      "README.md:79",
+      "USER_GUIDE.md:277",
+      "arxiv_forager.py:599",
       "aura_node.py:6000"
     ],
     "!benchmark": [
-      "USER_GUIDE.md:310",
+      "README.md:26",
+      "USER_GUIDE.md:199",
       "aura_node.py:2982",
       "daily_digest_2026-06-06.md:14"
     ],
@@ -644,7 +659,8 @@
     ],
     "!calibrate": [
       "AURA_FINAL_REPORT.md:163",
-      "USER_GUIDE.md:196",
+      "README.md:78",
+      "USER_GUIDE.md:220",
       "aura_node.py:7046"
     ],
     "!canvas": [
@@ -652,79 +668,84 @@
     ],
     "!catalyze": [
       "AURA_FINAL_REPORT.md:156",
-      "USER_GUIDE.md:171",
+      "USER_GUIDE.md:181",
       "aura_node.py:6753",
       "generate_ai_router.py:357",
       "test_aura_functions.py:893"
     ],
     "!cognitive_search": [
+      "USER_GUIDE.md:184",
       "aura_node.py:5445"
     ],
     "!commands": [
       "USER_GUIDE.md:130"
     ],
     "!contingency_spawn": [
-      "USER_GUIDE.md:201",
+      "USER_GUIDE.md:225",
       "aura_node.py:6520"
     ],
     "!converse": [
       "AURA_FINAL_REPORT.md:161",
-      "USER_GUIDE.md:200",
+      "USER_GUIDE.md:224",
       "aura_node.py:7161"
     ],
     "!coordinated_reason": [
+      "USER_GUIDE.md:192",
       "aura_node.py:6963"
     ],
     "!crystallize": [
       "AURA_FINAL_REPORT.md:141",
+      "USER_GUIDE.md:284",
       "aura_node.py:6820"
     ],
     "!curiosity_tree": [
       "AURA_FINAL_REPORT.md:174",
-      "USER_GUIDE.md:255",
+      "USER_GUIDE.md:280",
       "aura_node.py:6242"
     ],
     "!db_repair": [
-      "USER_GUIDE.md:313",
+      "USER_GUIDE.md:349",
       "aura_node.py:2982"
     ],
     "!evolve_reasoning": [
       "AURA_FINAL_REPORT.md:157",
-      "USER_GUIDE.md:172",
+      "USER_GUIDE.md:194",
       "aura_node.py:6815"
     ],
     "!export": [
-      "USER_GUIDE.md:302",
+      "USER_GUIDE.md:347",
       "aura_node.py:5803"
     ],
     "!fast_path": [
       "AURA_FINAL_REPORT.md:173",
-      "USER_GUIDE.md:176",
+      "USER_GUIDE.md:183",
       "aura_node.py:6905",
       "test_aura_functions.py:900"
     ],
     "!forage": [
-      "USER_GUIDE.md:252",
+      "USER_GUIDE.md:276",
       "aura_node.py:5986",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!forage_off": [
-      "USER_GUIDE.md:257",
+      "USER_GUIDE.md:282",
       "aura_node.py:6179"
     ],
     "!forage_on": [
-      "USER_GUIDE.md:256",
+      "USER_GUIDE.md:281",
       "aura_node.py:6173"
     ],
     "!forager_off": [
+      "USER_GUIDE.md:282",
       "aura_node.py:6179"
     ],
     "!forager_on": [
+      "USER_GUIDE.md:281",
       "aura_node.py:6173"
     ],
     "!fusion": [
       "AURA_FINAL_REPORT.md:31",
-      "USER_GUIDE.md:198",
+      "USER_GUIDE.md:222",
       "aura_node.py:7032"
     ],
     "!heal": [
@@ -732,52 +753,54 @@
     ],
     "!help": [
       "AURA_FINAL_REPORT.md:48",
-      "README.md:154",
+      "USER_GUIDE.md:166",
       "aura_node.py:7171"
     ],
     "!indus_decrypt": [
       "AURA_FINAL_REPORT.md:175",
-      "USER_GUIDE.md:294",
+      "USER_GUIDE.md:286",
       "aura_node.py:6827"
     ],
     "!manifest": [
       "AURA_FINAL_REPORT.md:138",
+      "USER_GUIDE.md:166",
       "aura_node.py:7171"
     ],
     "!markov": [
       "AURA_FINAL_REPORT.md:144",
-      "USER_GUIDE.md:314",
+      "USER_GUIDE.md:350",
       "aura_node.py:7018"
     ],
     "!mesh_status": [
       "AURA_FINAL_REPORT.md:167",
-      "USER_GUIDE.md:301",
+      "USER_GUIDE.md:344",
       "aura_node.py:5439"
     ],
     "!meta_analyze": [
-      "USER_GUIDE.md:173",
+      "USER_GUIDE.md:195",
       "aura_node.py:6866"
     ],
     "!meta_reason": [
       "AURA_FINAL_REPORT.md:155",
-      "USER_GUIDE.md:174",
+      "USER_GUIDE.md:196",
       "aura_arch_reasoner.py:91",
       "aura_node.py:6891"
     ],
     "!optimize": [
       "AURA_FINAL_REPORT.md:172",
+      "USER_GUIDE.md:209",
       "aura_node.py:5726"
     ],
     "!ping_mesh": [
       "AURA_FINAL_REPORT.md:166",
-      "USER_GUIDE.md:300",
+      "USER_GUIDE.md:343",
       "aura_node.py:5434"
     ],
     "!plan": [
       "aura_node.py:5377"
     ],
     "!push": [
-      "USER_GUIDE.md:303",
+      "USER_GUIDE.md:348",
       "aura_node.py:5090",
       "test_aura_functions.py:208"
     ],
@@ -789,64 +812,69 @@
     ],
     "!reason": [
       "AURA_FINAL_REPORT.md:154",
-      "USER_GUIDE.md:175",
+      "USER_GUIDE.md:191",
       "aura_node.py:7006"
     ],
     "!repair_db": [
+      "USER_GUIDE.md:349",
       "aura_node.py:6493"
     ],
     "!research": [
       "AURA_FINAL_REPORT.md:142",
-      "USER_GUIDE.md:254",
+      "README.md:80",
+      "USER_GUIDE.md:278",
       "aura_node.py:6012",
       "aura_skillweaver.py:14",
       "systems_check.py:250"
     ],
     "!review": [
+      "USER_GUIDE.md:210",
       "aura_node.py:6306",
       "mistral_gate.py:78"
     ],
     "!rollback": [
-      "USER_GUIDE.md:315",
+      "USER_GUIDE.md:214",
       "aura_node.py:6291"
     ],
     "!route": [
       "AURA_FINAL_REPORT.md:28",
       "AURA_ROUTER.md:213",
-      "USER_GUIDE.md:197",
+      "README.md:81",
+      "USER_GUIDE.md:221",
       "aura_node.py:7055",
       "test_aura_substrate.py:323"
     ],
     "!saturn": [
       "AURA_FINAL_REPORT.md:147",
       "AuraOS.tex:212",
-      "USER_GUIDE.md:188",
+      "USER_GUIDE.md:197",
       "aura_node.py:5526",
       "aura_topology_analyzer.py:122"
     ],
     "!saturn_heal": [
       "AURA_FINAL_REPORT.md:148",
-      "README.md:76",
-      "USER_GUIDE.md:189",
+      "USER_GUIDE.md:198",
       "aura_holographic_manifest.py:248",
       "aura_node.py:5117"
     ],
     "!savings": [
       "AURA_FINAL_REPORT.md:162",
       "AuraOS.tex:185",
-      "USER_GUIDE.md:199",
+      "USER_GUIDE.md:223",
       "aura_node.py:7070",
       "test_aura_substrate.py:314"
     ],
     "!scan_topology": [
+      "USER_GUIDE.md:179",
       "aura_node.py:6662"
     ],
     "!search_similar": [
+      "USER_GUIDE.md:279",
       "aura_node.py:6215",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!self_optimize": [
-      "USER_GUIDE.md:183",
+      "USER_GUIDE.md:209",
       "aura_dynamic_attention.py:210",
       "aura_node.py:5726",
       "refactored-auraos-upgrades.md:826"
@@ -854,17 +882,19 @@
     "!self_reflect": [
       "DAILY_DIGEST_Jun7-8_2026.md:19",
       "DAILY_DIGEST_Jun7_2026.md:30",
-      "USER_GUIDE.md:182",
+      "USER_GUIDE.md:208",
       "aura_arch_reasoner.py:228",
       "aura_hv_cache.py:36",
       "aura_node.py:5539"
     ],
     "!settings": [
-      "USER_GUIDE.md:309",
+      "README.md:75",
+      "USER_GUIDE.md:166",
       "aura_node.py:7171",
       "daily_digest_2026-06-06.md:14"
     ],
     "!simulate": [
+      "USER_GUIDE.md:182",
       "aura_node.py:6656",
       "cognitive_router.py:220"
     ],
@@ -873,20 +903,21 @@
     ],
     "!stage": [
       "AURA_FINAL_REPORT.md:149",
-      "USER_GUIDE.md:184",
+      "USER_GUIDE.md:210",
       "aura_node.py:6306"
     ],
     "!stage_merge": [
       "AURA_FINAL_REPORT.md:150",
-      "USER_GUIDE.md:185",
+      "USER_GUIDE.md:211",
       "aura_node.py:6328",
       "mistral_gate.py:78"
     ],
     "!stage_purge": [
-      "USER_GUIDE.md:186",
+      "USER_GUIDE.md:212",
       "aura_node.py:6380"
     ],
     "!stage_review": [
+      "USER_GUIDE.md:210",
       "aura_node.py:6306"
     ],
     "!status": [
@@ -894,17 +925,18 @@
       "aura_node.py:5090"
     ],
     "!strategy_buffer_stats": [
+      "USER_GUIDE.md:193",
       "aura_coordinated_solver.py:66",
       "aura_node.py:6990"
     ],
     "!synthesize": [
-      "USER_GUIDE.md:293",
+      "USER_GUIDE.md:285",
       "aura_associative_core.py:138",
       "aura_node.py:6410",
       "test_aura_functions.py:886"
     ],
     "!system_audit": [
-      "USER_GUIDE.md:311",
+      "USER_GUIDE.md:200",
       "aura_node.py:5980"
     ],
     "!target_bytes": [
@@ -914,14 +946,17 @@
       "AuraOS.tex:533"
     ],
     "!test_airlock": [
+      "USER_GUIDE.md:201",
       "aura_node.py:5389"
     ],
     "!timeline": [
+      "USER_GUIDE.md:283",
       "aura_node.py:6254"
     ],
     "!topology": [
       "AURA_FINAL_REPORT.md:48",
-      "USER_GUIDE.md:169",
+      "README.md:76",
+      "USER_GUIDE.md:179",
       "aura_ai_router.py:143",
       "aura_codebase_navigator.py:213",
       "aura_node.py:6745",
@@ -932,13 +967,14 @@
       "test_aura_functions.py:453"
     ],
     "!topology_deep": [
+      "USER_GUIDE.md:180",
       "aura_node.py:6745"
     ],
     "!total": [
       "aura_savings_dashboard.py:224"
     ],
     "!voice": [
-      "USER_GUIDE.md:312",
+      "USER_GUIDE.md:351",
       "aura_node.py:7227"
     ]
   },
@@ -985,8 +1021,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "class",
-        "line": 24,
-        "end_line": 198,
+        "line": 82,
+        "end_line": 932,
         "semantic_id": "arxiv_forager.py#class:ArXivForager:a948edf18757f12d",
         "signature_hash": "6a5fbfda0887b67a"
       }
@@ -995,8 +1031,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "class",
-        "line": 219,
-        "end_line": 242,
+        "line": 956,
+        "end_line": 994,
         "semantic_id": "arxiv_forager.py#class:ArxivPaper:18513563f354dd99",
         "signature_hash": "eb2dd13151e86f04"
       }
@@ -1315,6 +1351,16 @@
         "end_line": 116,
         "semantic_id": "aura_privacy_io.py#class:AuraPrivacyIOOrchestrator:c09ba40ace7f33e1",
         "signature_hash": "c41722416a9c318d"
+      }
+    ],
+    "AuraResonanceEgressGate": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "class",
+        "line": 366,
+        "end_line": 398,
+        "semantic_id": "aura_paper_memory.py#class:AuraResonanceEgressGate:0b8daf90ed8b7ced",
+        "signature_hash": "ea9ea149d385e2d9"
       }
     ],
     "AuraSafetySentinel": [
@@ -1755,12 +1801,22 @@
         "signature_hash": "0bb2f12c948f1d86"
       }
     ],
+    "EgressResonancePayload": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "aura_paper_memory.py#class:EgressResonancePayload:b044defcb5b95f62",
+        "signature_hash": "3bb428e3233753a3"
+      }
+    ],
     "EnhancedArxivForager": [
       {
         "file": "arxiv_forager.py",
         "kind": "class",
-        "line": 288,
-        "end_line": 603,
+        "line": 1048,
+        "end_line": 1741,
         "semantic_id": "arxiv_forager.py#class:EnhancedArxivForager:a045320d6a061c5d",
         "signature_hash": "d32d2730c6801ed8"
       }
@@ -1779,8 +1835,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "class",
-        "line": 302,
-        "end_line": 523,
+        "line": 308,
+        "end_line": 580,
         "semantic_id": "aura_llm_egress.py#class:ExternalLLM:1d2dc4525613b73f",
         "signature_hash": "dea14056103e8c43"
       }
@@ -1799,8 +1855,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "class",
-        "line": 246,
-        "end_line": 254,
+        "line": 998,
+        "end_line": 1015,
         "semantic_id": "arxiv_forager.py#class:ForagerConfig:451532a275b245e9",
         "signature_hash": "89ac4ac6235d2dba"
       }
@@ -1809,8 +1865,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "class",
-        "line": 258,
-        "end_line": 278,
+        "line": 1019,
+        "end_line": 1045,
         "semantic_id": "arxiv_forager.py#class:ForagerStats:cd3130fe51e708e4",
         "signature_hash": "caa3a2ad4a7e4ca1"
       }
@@ -2155,6 +2211,16 @@
         "signature_hash": "90f25e9b4d3ef3b4"
       }
     ],
+    "PaperMemoryRecord": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 106,
+        "semantic_id": "aura_paper_memory.py#class:PaperMemoryRecord:213c5a9754bcb012",
+        "signature_hash": "9d96221152839854"
+      }
+    ],
     "PhysicsInformedCorrection": [
       {
         "file": "liquid_kernel.py",
@@ -2241,6 +2307,16 @@
         "end_line": 88,
         "semantic_id": "aura_skillweaver.py#class:ResearchGateResult:d787b9ef3c6911ea",
         "signature_hash": "d5c201fa76822e6a"
+      }
+    ],
+    "ResearchProfileVector": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "aura_paper_memory.py#class:ResearchProfileVector:ef287c444f9e9553",
+        "signature_hash": "eb3766d069527503"
       }
     ],
     "ResourceEfficientFederatedHDC": [
@@ -2809,16 +2885,16 @@
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 25,
-        "end_line": 26,
+        "line": 83,
+        "end_line": 92,
         "semantic_id": "arxiv_forager.py#function:__init__:8151e5c41e87f10f",
         "signature_hash": "88a0c2995bf7fb50"
       },
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 307,
-        "end_line": 322,
+        "line": 1067,
+        "end_line": 1083,
         "semantic_id": "arxiv_forager.py#function:__init__:8151e5c41e87f10f",
         "signature_hash": "88a0c2995bf7fb50"
       },
@@ -3169,8 +3245,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 310,
-        "end_line": 373,
+        "line": 316,
+        "end_line": 379,
         "semantic_id": "aura_llm_egress.py#function:__init__:929e0e3084d045d6",
         "signature_hash": "4a341e3042ffb1e2"
       },
@@ -3349,6 +3425,14 @@
         "end_line": 57,
         "semantic_id": "aura_ontology_circuit.py#function:__init__:b08d3fbcc0c2aac4",
         "signature_hash": "5d30f9aa4d2592fa"
+      },
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 367,
+        "end_line": 368,
+        "semantic_id": "aura_paper_memory.py#function:__init__:6418ae9d06f29bce",
+        "signature_hash": "aeb181be81b1fdc3"
       },
       {
         "file": "aura_patcher.py",
@@ -3955,6 +4039,16 @@
         "signature_hash": "75e04e4ac97d60c5"
       }
     ],
+    "_advance_backtracker_window": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 905,
+        "end_line": 932,
+        "semantic_id": "arxiv_forager.py#function:_advance_backtracker_window:ba98cf74a9159a5f",
+        "signature_hash": "38d4a5f4ab74f13d"
+      }
+    ],
     "_aggregate_hdc_results": [
       {
         "file": "aura_federated_hdc.py",
@@ -3999,8 +4093,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 154,
-        "end_line": 174,
+        "line": 160,
+        "end_line": 180,
         "semantic_id": "aura_llm_egress.py#function:_anthropic_generate:89d78b27bada0685",
         "signature_hash": "3350f35774dfcc27"
       }
@@ -4183,6 +4277,16 @@
         "end_line": 138,
         "semantic_id": "aura_api_rotator.py#function:_available_keys:f988194ad0c89dad",
         "signature_hash": "0ee393154f4e8c4b"
+      }
+    ],
+    "_b64_to_phasor": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 249,
+        "semantic_id": "aura_paper_memory.py#function:_b64_to_phasor:5fa94f2e0b74d778",
+        "signature_hash": "ce285cac6734a221"
       }
     ],
     "_background_flush": [
@@ -4811,6 +4915,16 @@
         "signature_hash": "3cbb4f54784fe50b"
       }
     ],
+    "_empty_phasor": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "aura_paper_memory.py#function:_empty_phasor:37c4c365c599cd86",
+        "signature_hash": "de11875c2621db3b"
+      }
+    ],
     "_ensure_dir": [
       {
         "file": "aura_savings_db.py",
@@ -4991,6 +5105,36 @@
         "signature_hash": "ce939fcf74a5fa37"
       }
     ],
+    "_fetch_arxiv_oai_xml": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 266,
+        "end_line": 358,
+        "semantic_id": "arxiv_forager.py#async_function:_fetch_arxiv_oai_xml:339c6f11a5199458",
+        "signature_hash": "68ab2bcff8eef7d8"
+      }
+    ],
+    "_fetch_arxiv_xml": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 168,
+        "end_line": 264,
+        "semantic_id": "arxiv_forager.py#async_function:_fetch_arxiv_xml:668f36342e75eadb",
+        "signature_hash": "cd3886bcab69d7a0"
+      }
+    ],
+    "_fetch_pdf_text": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 94,
+        "end_line": 130,
+        "semantic_id": "arxiv_forager.py#async_function:_fetch_pdf_text:a11d46ee0c7ab537",
+        "signature_hash": "914a48a3eb8cc513"
+      }
+    ],
     "_fi_pop": [
       {
         "file": "aura_attention_palace.py",
@@ -5035,8 +5179,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 177,
-        "end_line": 186,
+        "line": 183,
+        "end_line": 192,
         "semantic_id": "aura_llm_egress.py#function:_forbidden_external_url:e302e89b365422d4",
         "signature_hash": "4c87e04c57b84e59"
       }
@@ -5185,8 +5329,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 575,
-        "end_line": 584,
+        "line": 1640,
+        "end_line": 1649,
         "semantic_id": "arxiv_forager.py#function:_generate_vector:66d289560a6b73c3",
         "signature_hash": "579214b1ca6a890c"
       }
@@ -5353,8 +5497,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 143,
-        "end_line": 151,
+        "line": 149,
+        "end_line": 157,
         "semantic_id": "aura_llm_egress.py#function:_has_key:1c9c465ea5f274bf",
         "signature_hash": "1015d31bd331d279"
       }
@@ -5385,6 +5529,16 @@
         "end_line": 50,
         "semantic_id": "test_synthesis_upgrades.py#function:_header:01bc555c9f1df4e9",
         "signature_hash": "7b3492a50f524075"
+      }
+    ],
+    "_holographic_header": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 229,
+        "end_line": 234,
+        "semantic_id": "aura_paper_memory.py#function:_holographic_header:07dec6d13ef48767",
+        "signature_hash": "573b1ade99458cc5"
       }
     ],
     "_hv_bytes": [
@@ -5445,6 +5599,16 @@
         "end_line": 29,
         "semantic_id": "quantum_dag.py#function:_integer_log_odds:6ac5964407ab247e",
         "signature_hash": "5644d829dfee5dd0"
+      }
+    ],
+    "_intent_vector": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 370,
+        "end_line": 371,
+        "semantic_id": "aura_paper_memory.py#function:_intent_vector:8d41d79983bbc741",
+        "signature_hash": "72571bf2f229c822"
       }
     ],
     "_invoke_patch_engine": [
@@ -5645,6 +5809,16 @@
         "signature_hash": "bb0fadd683b06d81"
       }
     ],
+    "_load_disk_cache": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 1712,
+        "end_line": 1729,
+        "semantic_id": "arxiv_forager.py#function:_load_disk_cache:df228c959b1a1c1e",
+        "signature_hash": "b274dfdcfd5279e3"
+      }
+    ],
     "_load_json": [
       {
         "file": "aura_codebase_navigator.py",
@@ -5689,8 +5863,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 375,
-        "end_line": 393,
+        "line": 381,
+        "end_line": 399,
         "semantic_id": "aura_llm_egress.py#function:_log_to_savings:b4445d12c330b50b",
         "signature_hash": "269902bf5ac81a0b"
       }
@@ -6035,6 +6209,16 @@
         "signature_hash": "9962a67c41d9a6bf"
       }
     ],
+    "_normalise_backtracker_window": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 876,
+        "end_line": 893,
+        "semantic_id": "arxiv_forager.py#function:_normalise_backtracker_window:96bc607f564304e0",
+        "signature_hash": "0695f09076037be0"
+      }
+    ],
     "_normalise_import_name": [
       {
         "file": "aura_namespace_sanitizer.py",
@@ -6133,6 +6317,16 @@
         "signature_hash": "4460abac2c58b275"
       }
     ],
+    "_paper_from_dict": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 1681,
+        "end_line": 1710,
+        "semantic_id": "arxiv_forager.py#function:_paper_from_dict:8dfce3dc5bd2d1cc",
+        "signature_hash": "c4a09bca45999dc5"
+      }
+    ],
     "_parent_name": [
       {
         "file": "aura_topology_manager.py",
@@ -6141,6 +6335,26 @@
         "end_line": 216,
         "semantic_id": "aura_topology_manager.py#function:_parent_name:dbd06e9c7b7e2524",
         "signature_hash": "a17873f1144aeff9"
+      }
+    ],
+    "_parse_arxiv_oai_records": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 361,
+        "end_line": 429,
+        "semantic_id": "arxiv_forager.py#function:_parse_arxiv_oai_records:d2edb6b669de99be",
+        "signature_hash": "d1d009ae5d59f983"
+      }
+    ],
+    "_parse_backtracker_timestamp": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 865,
+        "end_line": 874,
+        "semantic_id": "arxiv_forager.py#function:_parse_backtracker_timestamp:3a56e1d00cf338a1",
+        "signature_hash": "9030eef007df8134"
       }
     ],
     "_parses_ok": [
@@ -6163,6 +6377,16 @@
         "signature_hash": "75eb557e09b81795"
       }
     ],
+    "_persist_paper_memory": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 132,
+        "end_line": 166,
+        "semantic_id": "arxiv_forager.py#async_function:_persist_paper_memory:0a559a70b47f48fb",
+        "signature_hash": "6e7a6370e9cdd177"
+      }
+    ],
     "_phase_hash": [
       {
         "file": "aura_phase_capsule.py",
@@ -6181,6 +6405,16 @@
         "end_line": 78,
         "semantic_id": "test_aura_functions.py#function:_phasor:38921bd4da8a0ab2",
         "signature_hash": "d5a461d6e98f94db"
+      }
+    ],
+    "_phasor_to_b64": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 239,
+        "semantic_id": "aura_paper_memory.py#function:_phasor_to_b64:6a7a3f8798cdba7d",
+        "signature_hash": "0f570c226a40df97"
       }
     ],
     "_pick_provider": [
@@ -6253,16 +6487,6 @@
         "signature_hash": "e2dcc7ef24634735"
       }
     ],
-    "_preprocess": [
-      {
-        "file": "arxiv_forager.py",
-        "kind": "function",
-        "line": 586,
-        "end_line": 590,
-        "semantic_id": "arxiv_forager.py#function:_preprocess:eff5907bd2b595c8",
-        "signature_hash": "1024597d88febaa3"
-      }
-    ],
     "_preserves_signature": [
       {
         "file": "aura_proxy_benchmark.py",
@@ -6327,8 +6551,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 525,
-        "end_line": 573,
+        "line": 1557,
+        "end_line": 1638,
         "semantic_id": "arxiv_forager.py#async_function:_process_paper_dict:ec82242e2338588d",
         "signature_hash": "f2344d5f4150ff94"
       }
@@ -6453,6 +6677,34 @@
         "signature_hash": "699a4ae8f9297d54"
       }
     ],
+    "_read_pdf": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 122,
+        "semantic_id": "arxiv_forager.py#function:_read_pdf:db70b3eff0eafa0f",
+        "signature_hash": "dff690d298e5b434"
+      }
+    ],
+    "_read_response": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 216,
+        "end_line": 220,
+        "semantic_id": "arxiv_forager.py#function:_read_response:39f55bb875473988",
+        "signature_hash": "4b9a6a7c5be6d7cb"
+      },
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 316,
+        "semantic_id": "arxiv_forager.py#function:_read_response:39f55bb875473988",
+        "signature_hash": "4b9a6a7c5be6d7cb"
+      }
+    ],
     "_read_thermal": [
       {
         "file": "liquid_attractor_control_plane.py",
@@ -6521,6 +6773,16 @@
         "end_line": 94,
         "semantic_id": "spatial_mapper.py#function:_record_callable:d186551103c377ad",
         "signature_hash": "bd92e365df5a6aaf"
+      }
+    ],
+    "_record_for_paper": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 1651,
+        "end_line": 1679,
+        "semantic_id": "arxiv_forager.py#function:_record_for_paper:6c14ebdcc5720c90",
+        "signature_hash": "32caa53f7537fd47"
       }
     ],
     "_records_from_cards": [
@@ -6909,6 +7171,16 @@
         "signature_hash": "2f0943b26e308c43"
       }
     ],
+    "_save_backtracker_state": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 895,
+        "end_line": 903,
+        "semantic_id": "arxiv_forager.py#async_function:_save_backtracker_state:18b992ef683068c2",
+        "signature_hash": "ff4e4db1751dc67e"
+      }
+    ],
     "_save_baseline": [
       {
         "file": "aura_benchmark_sandbox.py",
@@ -6963,8 +7235,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 592,
-        "end_line": 603,
+        "line": 1731,
+        "end_line": 1741,
         "semantic_id": "arxiv_forager.py#async_function:_save_to_disk:79340b8499b6b43d",
         "signature_hash": "202bcc66c2b023da"
       }
@@ -7009,6 +7281,16 @@
         "signature_hash": "140878ce52ca6074"
       }
     ],
+    "_scientific_record": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 79,
+        "semantic_id": "arxiv_forager.py#function:_scientific_record:0c2ed7a333a404a6",
+        "signature_hash": "64d1a79c95da8ca4"
+      }
+    ],
     "_score_texts": [
       {
         "file": "aura_matrix_benchmark.py",
@@ -7029,14 +7311,24 @@
         "signature_hash": "43fabe1c8e8461b2"
       }
     ],
+    "_search_via_oai": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 1489,
+        "end_line": 1555,
+        "semantic_id": "arxiv_forager.py#async_function:_search_via_oai:0331e09951e81014",
+        "signature_hash": "cc1f8170662deeaf"
+      }
+    ],
     "_search_via_urllib": [
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 439,
-        "end_line": 523,
-        "semantic_id": "arxiv_forager.py#async_function:_search_via_urllib:c27dcb19b3d892d8",
-        "signature_hash": "d0f4d5b14918a5eb"
+        "line": 1337,
+        "end_line": 1487,
+        "semantic_id": "arxiv_forager.py#async_function:_search_via_urllib:23d1b7754ce8a924",
+        "signature_hash": "0aa0f3fc004bf4e1"
       }
     ],
     "_secrets_search_paths": [
@@ -7067,6 +7359,16 @@
         "end_line": 38,
         "semantic_id": "aura_pre_egress_interceptor.py#function:_seeded_hv:b0edfd1591a48133",
         "signature_hash": "4245abba332bdd02"
+      }
+    ],
+    "_seeded_phasor": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 127,
+        "semantic_id": "aura_paper_memory.py#function:_seeded_phasor:10b8135c58bfcbd4",
+        "signature_hash": "7bba4509142bf7fe"
       }
     ],
     "_semantic_id": [
@@ -7109,6 +7411,16 @@
         "signature_hash": "8be58c74bc0d63cb"
       }
     ],
+    "_sentence_candidates": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 178,
+        "semantic_id": "aura_paper_memory.py#function:_sentence_candidates:4991047639bf74f9",
+        "signature_hash": "1acd02c25aa402b9"
+      }
+    ],
     "_simulate_pruning_reduces_count": [
       {
         "file": "test_synthesis_upgrades.py",
@@ -7147,6 +7459,16 @@
         "end_line": 181,
         "semantic_id": "aura_codebase_navigator.py#function:_skip_part:30e0718c3c9542a7",
         "signature_hash": "397e0f91bf26b3c2"
+      }
+    ],
+    "_slot_safe": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 207,
+        "semantic_id": "aura_paper_memory.py#function:_slot_safe:0224e24dfa982b43",
+        "signature_hash": "f142f5ce726d22b9"
       }
     ],
     "_stage_indexing": [
@@ -7965,6 +8287,16 @@
         "signature_hash": "415435f4598b5d91"
       }
     ],
+    "_three_tuple": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 113,
+        "semantic_id": "aura_paper_memory.py#function:_three_tuple:cc2b32c37dd4b9dc",
+        "signature_hash": "1330c09b58a47872"
+      }
+    ],
     "_token_to_phasor": [
       {
         "file": "aura_positional_parser.py",
@@ -8123,6 +8455,16 @@
         "end_line": 308,
         "semantic_id": "test_synthesis_upgrades.py#function:_tst_unit_magnitude:e15060dc704e4859",
         "signature_hash": "e38bf6dada465c73"
+      }
+    ],
+    "_unit_phase": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 138,
+        "semantic_id": "aura_paper_memory.py#function:_unit_phase:01680a83c4fac968",
+        "signature_hash": "9288b1c012c1f7a1"
       }
     ],
     "_update_token_matrix": [
@@ -8665,8 +9007,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 261,
-        "end_line": 269,
+        "line": 267,
+        "end_line": 275,
         "semantic_id": "aura_llm_egress.py#function:available_providers:3e1bd6640889eccc",
         "signature_hash": "aabc58745ddf9ab1"
       }
@@ -9261,6 +9603,16 @@
         "signature_hash": "f2c7b42d1883dc62"
       }
     ],
+    "chunk_text": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 164,
+        "semantic_id": "aura_paper_memory.py#function:chunk_text:b1d392df3c61f041",
+        "signature_hash": "795c83fbb785ca5d"
+      }
+    ],
     "classify_edge_zone": [
       {
         "file": "aura_nesy_unit_interval.py",
@@ -9285,8 +9637,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 272,
-        "end_line": 288,
+        "line": 278,
+        "end_line": 294,
         "semantic_id": "aura_llm_egress.py#function:classify_providers:0decc5b8db9dcb7d",
         "signature_hash": "da15a66a32a4cf83"
       }
@@ -9445,6 +9797,16 @@
         "signature_hash": "de639f0f5bdc1ace"
       }
     ],
+    "compile_paper_memory_record": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 252,
+        "end_line": 303,
+        "semantic_id": "aura_paper_memory.py#function:compile_paper_memory_record:4d0846551b2899a6",
+        "signature_hash": "50f330c9655d7f6d"
+      }
+    ],
     "compile_positional_block": [
       {
         "file": "aura_positional_parser.py",
@@ -9453,6 +9815,16 @@
         "end_line": 90,
         "semantic_id": "aura_positional_parser.py#function:compile_positional_block:ae50b07230990935",
         "signature_hash": "0f9b5747c2222999"
+      }
+    ],
+    "compile_summary_capsule": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 210,
+        "end_line": 226,
+        "semantic_id": "aura_paper_memory.py#function:compile_summary_capsule:71d05a3239c91ee8",
+        "signature_hash": "a34826978f538f3a"
       }
     ],
     "compile_thought_package": [
@@ -9693,8 +10065,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 514,
-        "end_line": 523,
+        "line": 571,
+        "end_line": 580,
         "semantic_id": "aura_llm_egress.py#function:cost:a83843adc9395d32",
         "signature_hash": "cfc27ac4c219d8d9"
       },
@@ -10013,8 +10385,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 268,
-        "end_line": 271,
+        "line": 1029,
+        "end_line": 1032,
         "semantic_id": "arxiv_forager.py#function:duration:9945d895a3ed4ab9",
         "signature_hash": "4c01b73ef096f741"
       }
@@ -10143,6 +10515,16 @@
         "end_line": 987,
         "semantic_id": "aura_node.py#function:encode_text:f0b2786dd9757798",
         "signature_hash": "36527131a4cea126"
+      }
+    ],
+    "encode_text_as_phasor": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 149,
+        "semantic_id": "aura_paper_memory.py#function:encode_text_as_phasor:4c46b3f671d9d771",
+        "signature_hash": "2e0ed6b05d650cd3"
       }
     ],
     "enqueue_holographic_trace": [
@@ -10431,6 +10813,16 @@
         "signature_hash": "497e3c994d5306c1"
       }
     ],
+    "expand_curiosity_queries": [
+      {
+        "file": "arxiv_forager.py",
+        "kind": "async_function",
+        "line": 1089,
+        "end_line": 1146,
+        "semantic_id": "arxiv_forager.py#async_function:expand_curiosity_queries:418df3185773aa88",
+        "signature_hash": "0e780ef78c7c2cba"
+      }
+    ],
     "extract_ast_calls": [
       {
         "file": "aura_topological_scanner.py",
@@ -10471,6 +10863,26 @@
         "signature_hash": "d6839e3b9839cd53"
       }
     ],
+    "extract_pdf_text_from_bytes": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 430,
+        "end_line": 455,
+        "semantic_id": "aura_paper_memory.py#function:extract_pdf_text_from_bytes:694fd798b03b918d",
+        "signature_hash": "c7860cd34bdd1c9e"
+      }
+    ],
+    "extract_pdf_text_from_path": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 458,
+        "end_line": 468,
+        "semantic_id": "aura_paper_memory.py#function:extract_pdf_text_from_path:ccc3e868fb84e794",
+        "signature_hash": "3426a93ba4f457f9"
+      }
+    ],
     "extract_psml_header": [
       {
         "file": "generate_ai_router.py",
@@ -10497,6 +10909,36 @@
         "end_line": 937,
         "semantic_id": "aura_node.py#function:extract_thermal_entropy:36b7fc5311361f96",
         "signature_hash": "15a73e7ca37e0fd4"
+      }
+    ],
+    "extract_three_main_points": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 201,
+        "semantic_id": "aura_paper_memory.py#function:extract_three_main_points:1163fd35893e28a4",
+        "signature_hash": "cd1fa25c6ed0d054"
+      }
+    ],
+    "extract_with_pdfplumber": [
+      {
+        "file": "extract_pdf_text.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "extract_pdf_text.py#function:extract_with_pdfplumber:142fef666c8970d8",
+        "signature_hash": "2e8ad75af581232c"
+      }
+    ],
+    "extract_with_pypdf2": [
+      {
+        "file": "extract_pdf_text.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "extract_pdf_text.py#function:extract_with_pypdf2:f232b85c8b17df96",
+        "signature_hash": "f7d4a596ca8e59d5"
       }
     ],
     "fake_generate": [
@@ -10571,10 +11013,10 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 28,
-        "end_line": 83,
-        "semantic_id": "arxiv_forager.py#async_function:fetch_latest_paper:7da7fa236736c9cd",
-        "signature_hash": "7a792d6b853ff3f2"
+        "line": 431,
+        "end_line": 529,
+        "semantic_id": "arxiv_forager.py#async_function:fetch_latest_paper:79c12d4cf85abe5b",
+        "signature_hash": "c4872499e77db552"
       }
     ],
     "find_cycles": [
@@ -10669,8 +11111,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 328,
-        "end_line": 368,
+        "line": 1148,
+        "end_line": 1277,
         "semantic_id": "arxiv_forager.py#async_function:forage:48968679127c8ea4",
         "signature_hash": "f0628873e105a849"
       }
@@ -10797,6 +11239,16 @@
         "signature_hash": "48e7d0eef39f516a"
       }
     ],
+    "from_jsonable": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 106,
+        "semantic_id": "aura_paper_memory.py#function:from_jsonable:82bdf8174dce77ff",
+        "signature_hash": "1b89c93f4de54458"
+      }
+    ],
     "from_row": [
       {
         "file": "aura_router.py",
@@ -10889,10 +11341,10 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 396,
-        "end_line": 484,
-        "semantic_id": "aura_llm_egress.py#function:generate:9fe07da71b882b86",
-        "signature_hash": "c85b47188041869a"
+        "line": 402,
+        "end_line": 541,
+        "semantic_id": "aura_llm_egress.py#function:generate:3ad2560e94143e40",
+        "signature_hash": "85868b875087eefd"
       },
       {
         "file": "aura_matrix_benchmark.py",
@@ -10967,8 +11419,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 189,
-        "end_line": 258,
+        "line": 195,
+        "end_line": 264,
         "semantic_id": "aura_llm_egress.py#function:generate_openai_compatible_payload:797175841211eade",
         "signature_hash": "eaf8a68316807e89"
       }
@@ -11165,8 +11617,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 406,
-        "end_line": 433,
+        "line": 1309,
+        "end_line": 1331,
         "semantic_id": "arxiv_forager.py#async_function:get_paper:bd0993e18225be98",
         "signature_hash": "bcca1adec4aeda26"
       }
@@ -11607,6 +12059,16 @@
         "signature_hash": "856ba8d38b09e14f"
       }
     ],
+    "inject_latent_context": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 373,
+        "end_line": 398,
+        "semantic_id": "aura_paper_memory.py#function:inject_latent_context:b0ee8bf6e9595dd1",
+        "signature_hash": "d342150f47a1c318"
+      }
+    ],
     "intercept_matrix": [
       {
         "file": "aura_pre_egress_interceptor.py",
@@ -11631,8 +12093,8 @@
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 487,
-        "end_line": 512,
+        "line": 544,
+        "end_line": 569,
         "semantic_id": "aura_llm_egress.py#function:interpret:8362b5dbb9e41348",
         "signature_hash": "654aaf892d9e64ab"
       }
@@ -11933,6 +12395,26 @@
         "end_line": 245,
         "semantic_id": "aura_codebase_navigator.py#function:load_or_compile_topology:3e49e2de669d3db3",
         "signature_hash": "d5ff4a2deb3b8cd6"
+      }
+    ],
+    "load_paper_memory_records": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 346,
+        "end_line": 359,
+        "semantic_id": "aura_paper_memory.py#function:load_paper_memory_records:3a79992dd9c48c68",
+        "signature_hash": "9a3c9d425cf26e5e"
+      }
+    ],
+    "load_research_profiles_from_jsonl": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 362,
+        "end_line": 363,
+        "semantic_id": "aura_paper_memory.py#function:load_research_profiles_from_jsonl:1e10af68807aa543",
+        "signature_hash": "8e8de8a05c39965f"
       }
     ],
     "load_router_index": [
@@ -12279,6 +12761,14 @@
         "end_line": 383,
         "semantic_id": "aura_topology_manager.py#function:main:8847f177eb5aa3c7",
         "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "extract_pdf_text.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 36,
+        "semantic_id": "extract_pdf_text.py#function:main:a686bd63e1f8e29c",
+        "signature_hash": "6fc0a07b1bb79796"
       },
       {
         "file": "generate_ai_router.py",
@@ -12629,8 +13119,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 274,
-        "end_line": 278,
+        "line": 1035,
+        "end_line": 1045,
         "semantic_id": "arxiv_forager.py#function:papers_per_second:b75b6586df8457ca",
         "signature_hash": "96988cf557f9f60e"
       }
@@ -13409,6 +13899,26 @@
         "signature_hash": "934562887743df0e"
       }
     ],
+    "record_to_research_profile": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 316,
+        "end_line": 321,
+        "semantic_id": "aura_paper_memory.py#function:record_to_research_profile:f523c58dec4c49c9",
+        "signature_hash": "40e02f1af17f1d12"
+      }
+    ],
+    "record_to_trace_content": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 306,
+        "end_line": 313,
+        "semantic_id": "aura_paper_memory.py#function:record_to_trace_content:781320532eb4b597",
+        "signature_hash": "efbbf64713e0494a"
+      }
+    ],
     "records_to_fractures": [
       {
         "file": "aura_nesy_unit_interval.py",
@@ -14169,8 +14679,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 370,
-        "end_line": 404,
+        "line": 1279,
+        "end_line": 1307,
         "semantic_id": "arxiv_forager.py#async_function:search_similar:1a9410d7d1d4b804",
         "signature_hash": "e5e7222eb9b333a8"
       }
@@ -14913,6 +15423,16 @@
         "signature_hash": "c73c802906e57d33"
       }
     ],
+    "test_compile_paper_memory_record_builds_header_points_and_vectors": [
+      {
+        "file": "test_aura_paper_memory.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 45,
+        "semantic_id": "test_aura_paper_memory.py#function:test_compile_paper_memory_record_builds_header_points_and_vectors:637f3eba284449bb",
+        "signature_hash": "73d93b0d6d732f0b"
+      }
+    ],
     "test_converse_mock_and_learning": [
       {
         "file": "test_aura_substrate.py",
@@ -15113,6 +15633,16 @@
         "signature_hash": "bbdf9a057f0ec991"
       }
     ],
+    "test_paper_memory_ledger_round_trips_research_profiles": [
+      {
+        "file": "test_aura_paper_memory.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 61,
+        "semantic_id": "test_aura_paper_memory.py#function:test_paper_memory_ledger_round_trips_research_profiles:10f8f4402a57d96a",
+        "signature_hash": "e194e6a775ebd9fb"
+      }
+    ],
     "test_parse_json_object_handles_fenced_json": [
       {
         "file": "test_aura_fusion.py",
@@ -15171,6 +15701,16 @@
         "end_line": 183,
         "semantic_id": "test_aura_substrate.py#function:test_provider_classification:026ce2421a5ba34e",
         "signature_hash": "36db9e35e88bdf0f"
+      }
+    ],
+    "test_raec_gate_selects_highest_resonance_profile": [
+      {
+        "file": "test_aura_paper_memory.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 85,
+        "semantic_id": "test_aura_paper_memory.py#function:test_raec_gate_selects_highest_resonance_profile:3d3831cf14307da2",
+        "signature_hash": "72c291ad5c011670"
       }
     ],
     "test_recent_calls_exposes_baseline_fields": [
@@ -15263,6 +15803,16 @@
         "signature_hash": "e8fb91be7231f57f"
       }
     ],
+    "test_trace_content_and_savings_report_are_compact": [
+      {
+        "file": "test_aura_paper_memory.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 116,
+        "semantic_id": "test_aura_paper_memory.py#function:test_trace_content_and_savings_report_are_compact:331cfe4827e83591",
+        "signature_hash": "6487529765dd598a"
+      }
+    ],
     "test_unknown_baseline_logs_call_with_zero_savings": [
       {
         "file": "test_universal_llm_logging.py",
@@ -15271,6 +15821,16 @@
         "end_line": 31,
         "semantic_id": "test_universal_llm_logging.py#function:test_unknown_baseline_logs_call_with_zero_savings:41a3dc01424fbbd4",
         "signature_hash": "7d31864c89b2cad0"
+      }
+    ],
+    "test_verify_egress_contract_rejects_incomplete_payloads": [
+      {
+        "file": "test_aura_paper_memory.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 100,
+        "semantic_id": "test_aura_paper_memory.py#function:test_verify_egress_contract_rejects_incomplete_payloads:6208993e161b8544",
+        "signature_hash": "3badf77f0e97d8c6"
       }
     ],
     "thermal_damping_safe_batch": [
@@ -15297,8 +15857,8 @@
       {
         "file": "arxiv_forager.py",
         "kind": "function",
-        "line": 232,
-        "end_line": 242,
+        "line": 970,
+        "end_line": 994,
         "semantic_id": "arxiv_forager.py#function:to_dict:90aff1772b8cca4c",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -15343,6 +15903,16 @@
         "signature_hash": "5c1a69a9659e2089"
       }
     ],
+    "to_jsonable": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 84,
+        "semantic_id": "aura_paper_memory.py#function:to_jsonable:421dd58d684d6b6c",
+        "signature_hash": "d35c70ed7eb422c7"
+      }
+    ],
     "topology_to_phase_vector": [
       {
         "file": "aura_self_reflect.py",
@@ -15351,6 +15921,16 @@
         "end_line": 125,
         "semantic_id": "aura_self_reflect.py#function:topology_to_phase_vector:33087701b026c19f",
         "signature_hash": "4af97d6b2b597a0f"
+      }
+    ],
+    "track_egress_savings": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 411,
+        "end_line": 427,
+        "semantic_id": "aura_paper_memory.py#function:track_egress_savings:280f56ed56043e11",
+        "signature_hash": "9055d42770205955"
       }
     ],
     "transduce_intent": [
@@ -15479,18 +16059,28 @@
       {
         "file": "arxiv_forager.py",
         "kind": "async_function",
-        "line": 85,
-        "end_line": 198,
-        "semantic_id": "arxiv_forager.py#async_function:upgraded_arxiv_backtracker:3cccb5d099537514",
-        "signature_hash": "e3c06aa931d66ba3"
+        "line": 531,
+        "end_line": 862,
+        "semantic_id": "arxiv_forager.py#async_function:upgraded_arxiv_backtracker:1337524bf829057f",
+        "signature_hash": "75af545a8749ae78"
+      }
+    ],
+    "upsert_paper_memory_record": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 324,
+        "end_line": 343,
+        "semantic_id": "aura_paper_memory.py#function:upsert_paper_memory_record:9ac3392c3713a714",
+        "signature_hash": "8a56a3be9ce61625"
       }
     ],
     "usable_providers": [
       {
         "file": "aura_llm_egress.py",
         "kind": "function",
-        "line": 291,
-        "end_line": 299,
+        "line": 297,
+        "end_line": 305,
         "semantic_id": "aura_llm_egress.py#function:usable_providers:fdbbaa23a6726cb5",
         "signature_hash": "50e53e65f132cc51"
       }
@@ -15603,6 +16193,16 @@
         "end_line": 828,
         "semantic_id": "aura_mesh.py#async_function:verify_dsekp_shield:bdba9a03193db502",
         "signature_hash": "ea067dcdf0d768ba"
+      }
+    ],
+    "verify_egress_contract": [
+      {
+        "file": "aura_paper_memory.py",
+        "kind": "function",
+        "line": 401,
+        "end_line": 408,
+        "semantic_id": "aura_paper_memory.py#function:verify_egress_contract:0ffe674c95710a0f",
+        "signature_hash": "6561bff00d828af3"
       }
     ],
     "verify_file_integrity": [
@@ -17750,56 +18350,78 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "lines": 171,
-      "tokens_est": 2338,
+      "lines": 108,
+      "tokens_est": 1935,
       "symbol_count": 0,
       "commands": [
-        "!help",
-        "!saturn_heal"
+        "!backtrack",
+        "!benchmark",
+        "!calibrate",
+        "!research",
+        "!route",
+        "!settings",
+        "!topology"
       ],
       "command_lines": {
-        "!help": [
-          154
+        "!backtrack": [
+          79
         ],
-        "!saturn_heal": [
+        "!benchmark": [
+          26,
+          31,
+          77
+        ],
+        "!calibrate": [
+          78
+        ],
+        "!research": [
+          80
+        ],
+        "!route": [
+          81
+        ],
+        "!settings": [
+          75
+        ],
+        "!topology": [
           76
         ]
       },
       "topology": {},
-      "digest8": "b82a6bd0c17070d9",
+      "digest8": "b54046afdf0defd8",
       "vector": [
-        -0.207558,
-        -0.219153,
-        0.230749,
-        0.093923,
-        -0.042903,
-        0.193643,
-        -0.22611,
-        0.207558,
-        0.054498,
-        0.270173,
-        -0.182048,
-        0.253939,
-        -0.117114,
-        0.059137,
-        -0.098561,
-        0.267854,
-        0.028989,
-        0.114795,
-        0.295683,
-        -0.170452,
-        0.165814,
-        0.110156,
-        0.175091,
-        -0.172772,
-        -0.098561,
-        0.022031,
-        0.288726,
-        -0.096242,
-        0.179729,
-        -0.045222,
-        0.191324,
-        0.191324
+        -0.151349,
+        -0.142106,
+        0.019641,
+        0.273814,
+        0.195252,
+        0.232222,
+        -0.093582,
+        -0.001155,
+        -0.019641,
+        0.107446,
+        0.276125,
+        0.160592,
+        -0.132864,
+        -0.197562,
+        -0.287679,
+        -0.248397,
+        -0.241465,
+        0.22529,
+        0.176766,
+        -0.176766,
+        0.278436,
+        -0.22529,
+        -0.070475,
+        0.070475,
+        0.040437,
+        0.061233,
+        0.031194,
+        -0.105136,
+        -0.038126,
+        0.2923,
+        0.22298,
+        -0.042747
       ]
     },
     {
@@ -17895,21 +18517,29 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "lines": 1567,
-      "tokens_est": 16265,
+      "lines": 1596,
+      "tokens_est": 18436,
       "symbol_count": 0,
       "commands": [
+        "!ai_route",
+        "!ai_router_regen",
         "!approve",
         "!ar_server_start",
+        "!ar_server_stop",
         "!ar_start",
         "!ar_stop",
+        "!attention",
+        "!audit",
         "!backtrack",
         "!benchmark",
         "!calibrate",
         "!catalyze",
+        "!cognitive_search",
         "!commands",
         "!contingency_spawn",
         "!converse",
+        "!coordinated_reason",
+        "!crystallize",
         "!curiosity_tree",
         "!db_repair",
         "!evolve_reasoning",
@@ -17918,244 +18548,340 @@
         "!forage",
         "!forage_off",
         "!forage_on",
+        "!forager_off",
+        "!forager_on",
         "!fusion",
+        "!help",
         "!indus_decrypt",
+        "!manifest",
         "!markov",
         "!mesh_status",
         "!meta_analyze",
         "!meta_reason",
+        "!optimize",
         "!ping_mesh",
         "!push",
         "!reason",
+        "!repair_db",
         "!research",
+        "!review",
         "!rollback",
         "!route",
         "!saturn",
         "!saturn_heal",
         "!savings",
+        "!scan_topology",
+        "!search_similar",
         "!self_optimize",
         "!self_reflect",
         "!settings",
+        "!simulate",
         "!stage",
         "!stage_merge",
         "!stage_purge",
+        "!stage_review",
+        "!strategy_buffer_stats",
         "!synthesize",
         "!system_audit",
+        "!test_airlock",
+        "!timeline",
         "!topology",
+        "!topology_deep",
         "!voice"
       ],
       "command_lines": {
+        "!ai_route": [
+          169,
+          177
+        ],
+        "!ai_router_regen": [
+          178
+        ],
         "!approve": [
-          187
+          213
         ],
         "!ar_server_start": [
-          813
+          345,
+          842
+        ],
+        "!ar_server_stop": [
+          346
         ],
         "!ar_start": [
-          323,
-          754,
-          813,
-          817,
-          1150,
-          1164,
-          1237,
-          1238,
-          1240,
-          1250,
-          1285,
-          1287,
-          1561
+          345,
+          783,
+          842,
+          846,
+          1179,
+          1193,
+          1266,
+          1267,
+          1269,
+          1279,
+          1314,
+          1316,
+          1590
         ],
         "!ar_stop": [
-          324,
-          818,
-          1238
+          346,
+          847,
+          1267
+        ],
+        "!attention": [
+          185
+        ],
+        "!audit": [
+          200
         ],
         "!backtrack": [
-          253,
-          1099
+          277,
+          278,
+          299,
+          1128
         ],
         "!benchmark": [
-          310,
-          1216,
-          1256
+          199,
+          1245,
+          1285
         ],
         "!calibrate": [
-          196,
-          1133,
-          1230
+          220,
+          1162,
+          1259
         ],
         "!catalyze": [
-          171
+          181
+        ],
+        "!cognitive_search": [
+          184
         ],
         "!commands": [
           130
         ],
         "!contingency_spawn": [
-          201
+          225
         ],
         "!converse": [
-          200,
-          206
+          224,
+          230
+        ],
+        "!coordinated_reason": [
+          192
+        ],
+        "!crystallize": [
+          284
         ],
         "!curiosity_tree": [
-          255
+          280
         ],
         "!db_repair": [
-          313,
-          1211
+          349,
+          1240
         ],
         "!evolve_reasoning": [
-          172
+          194
         ],
         "!export": [
-          302,
-          1548
+          347,
+          1577
         ],
         "!fast_path": [
-          176
+          183
         ],
         "!forage": [
-          252
+          276,
+          278,
+          297
         ],
         "!forage_off": [
-          257
+          282
         ],
         "!forage_on": [
-          256
+          281
+        ],
+        "!forager_off": [
+          282
+        ],
+        "!forager_on": [
+          281
         ],
         "!fusion": [
-          198,
-          240
+          222,
+          264
+        ],
+        "!help": [
+          166,
+          176
         ],
         "!indus_decrypt": [
-          294
+          286
+        ],
+        "!manifest": [
+          166,
+          176
         ],
         "!markov": [
-          314
+          350
         ],
         "!mesh_status": [
-          301
+          344
         ],
         "!meta_analyze": [
-          173
+          195
         ],
         "!meta_reason": [
-          174
+          196
+        ],
+        "!optimize": [
+          209
         ],
         "!ping_mesh": [
-          300
+          343
         ],
         "!push": [
-          303
+          348
         ],
         "!reason": [
-          175
+          191
+        ],
+        "!repair_db": [
+          349
         ],
         "!research": [
-          254,
-          262,
-          1102
+          278,
+          292,
+          301,
+          308,
+          1131
+        ],
+        "!review": [
+          210
         ],
         "!rollback": [
-          315
+          214
         ],
         "!route": [
-          197,
-          199,
-          206,
-          1136
+          221,
+          230,
+          1165
         ],
         "!saturn": [
-          188
+          197
         ],
         "!saturn_heal": [
-          189
+          198
         ],
         "!savings": [
-          199,
-          1139
+          223,
+          1168
+        ],
+        "!scan_topology": [
+          179
+        ],
+        "!search_similar": [
+          279,
+          292,
+          301
         ],
         "!self_optimize": [
-          183,
-          1118
+          209,
+          1147
         ],
         "!self_reflect": [
-          182,
-          1115
+          208,
+          1144
         ],
         "!settings": [
-          309
+          166,
+          176
+        ],
+        "!simulate": [
+          182
         ],
         "!stage": [
-          184,
-          1105,
-          1121
+          210,
+          1134,
+          1150
         ],
         "!stage_merge": [
-          185,
-          1108,
-          1124
+          211,
+          1137,
+          1153
         ],
         "!stage_purge": [
-          186
+          212
+        ],
+        "!stage_review": [
+          210
+        ],
+        "!strategy_buffer_stats": [
+          193
         ],
         "!synthesize": [
-          293
+          285
         ],
         "!system_audit": [
-          311,
-          1257
+          200,
+          1286
+        ],
+        "!test_airlock": [
+          201
+        ],
+        "!timeline": [
+          283
         ],
         "!topology": [
-          169,
-          170,
-          1096,
-          1147,
-          1239,
-          1240,
-          1243,
-          1281
+          179,
+          180,
+          1125,
+          1176,
+          1268,
+          1269,
+          1272,
+          1310
+        ],
+        "!topology_deep": [
+          180
         ],
         "!voice": [
-          312
+          351
         ]
       },
       "topology": {},
-      "digest8": "57df9266a2d9e5d4",
+      "digest8": "d7f103e9fde4a6cc",
       "vector": [
-        -0.050826,
-        -0.121201,
-        0.295836,
-        0.2411,
-        0.230674,
-        -0.155086,
-        -0.079498,
-        0.009123,
-        -0.298442,
-        -0.00391,
-        -0.019549,
-        -0.115989,
-        -0.269771,
-        -0.194183,
-        -0.087317,
-        0.071678,
-        0.123808,
-        0.14466,
-        0.235887,
-        0.191577,
-        -0.097743,
-        -0.061252,
-        -0.168118,
-        -0.097743,
-        -0.105563,
-        -0.13684,
-        0.32972,
-        0.10035,
-        0.295836,
-        -0.152479,
-        0.123808,
-        0.269771
+        0.156585,
+        0.031871,
+        0.034643,
+        0.015243,
+        0.212013,
+        0.261898,
+        -0.037414,
+        0.170442,
+        -0.289613,
+        -0.16767,
+        0.015243,
+        0.004157,
+        -0.256356,
+        0.0291,
+        0.126099,
+        0.347812,
+        0.103928,
+        -0.115014,
+        0.278527,
+        0.261898,
+        -0.212013,
+        0.115014,
+        -0.012471,
+        0.24527,
+        0.081757,
+        0.015243,
+        0.090071,
+        -0.328412,
+        -0.026328,
+        -0.175985,
+        0.195385,
+        0.178756
       ]
     },
     {
@@ -18392,46 +19118,53 @@
     {
       "path": "arxiv_forager.py",
       "role": "python_module",
-      "lines": 604,
-      "tokens_est": 6398,
-      "symbol_count": 20,
-      "commands": [],
-      "command_lines": {},
+      "lines": 1742,
+      "tokens_est": 17900,
+      "symbol_count": 37,
+      "commands": [
+        "!backtrack"
+      ],
+      "command_lines": {
+        "!backtrack": [
+          599,
+          756
+        ]
+      },
       "topology": {},
-      "digest8": "d33ea1cd87d7ef76",
+      "digest8": "565be5b16cc3dd3d",
       "vector": [
-        0.320629,
-        0.029856,
-        0.024664,
-        -0.193416,
-        0.146684,
-        0.068799,
-        0.247936,
-        0.105146,
-        0.123319,
-        -0.042837,
-        -0.11553,
-        0.138896,
-        0.112934,
-        0.172646,
-        0.089568,
-        -0.253128,
-        -0.02726,
-        0.06101,
-        -0.234955,
-        -0.234955,
-        0.079184,
-        -0.183031,
-        -0.211589,
-        0.022068,
-        0.201204,
-        0.177839,
-        0.058414,
-        -0.328417,
-        -0.042837,
-        -0.242743,
-        0.250532,
-        -0.297263
+        -0.10892,
+        0.145586,
+        0.087352,
+        0.223233,
+        0.262056,
+        -0.119704,
+        0.169312,
+        0.083038,
+        0.007549,
+        -0.156371,
+        -0.091666,
+        -0.266369,
+        -0.23186,
+        0.201664,
+        0.080881,
+        -0.23186,
+        -0.23186,
+        0.037745,
+        -0.009706,
+        0.128332,
+        -0.139116,
+        -0.111077,
+        0.070097,
+        0.259899,
+        -0.244801,
+        0.173625,
+        0.266369,
+        -0.177939,
+        -0.177939,
+        0.145586,
+        0.19088,
+        0.27284
       ]
     },
     {
@@ -20625,46 +21358,46 @@
     {
       "path": "aura_llm_egress.py",
       "role": "python_module",
-      "lines": 524,
-      "tokens_est": 5303,
+      "lines": 581,
+      "tokens_est": 5872,
       "symbol_count": 13,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6ace7fe2d3b35d1b",
+      "digest8": "7be1393cb6e45114",
       "vector": [
-        -0.081373,
-        -0.166501,
-        -0.244118,
-        -0.043816,
-        -0.043816,
-        -0.271659,
-        -0.131448,
-        0.176516,
-        0.289186,
-        0.266652,
-        -0.153982,
-        -0.06635,
-        0.289186,
-        0.013771,
-        0.166501,
-        -0.271659,
-        0.201554,
-        -0.063846,
-        0.001252,
-        -0.289186,
-        0.186531,
-        0.156486,
-        -0.271659,
-        0.04632,
-        -0.056335,
-        0.141463,
-        0.189035,
-        -0.033801,
-        0.081373,
-        -0.04632,
-        0.256637,
-        -0.116425
+        0.237445,
+        -0.003653,
+        -0.066972,
+        -0.169256,
+        -0.032877,
+        -0.310505,
+        -0.09376,
+        -0.178997,
+        0.08889,
+        0.205786,
+        -0.137596,
+        -0.247186,
+        0.105937,
+        -0.215527,
+        -0.079148,
+        -0.20335,
+        0.13029,
+        -0.120549,
+        -0.213092,
+        -0.013394,
+        0.273975,
+        0.283716,
+        0.074278,
+        -0.210656,
+        0.118114,
+        0.147338,
+        -0.227704,
+        -0.222833,
+        -0.091325,
+        0.037748,
+        0.178997,
+        0.273975
       ]
     },
     {
@@ -21693,6 +22426,51 @@
         0.190758,
         -0.053162,
         0.084434
+      ]
+    },
+    {
+      "path": "aura_paper_memory.py",
+      "role": "python_module",
+      "lines": 469,
+      "tokens_est": 4134,
+      "symbol_count": 32,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "87c4b6747b22e894",
+      "vector": [
+        -0.224529,
+        -0.122932,
+        0.18389,
+        -0.24688,
+        0.206241,
+        -0.151379,
+        0.141219,
+        -0.165603,
+        -0.141219,
+        -0.18389,
+        -0.23672,
+        0.100581,
+        0.185922,
+        0.23672,
+        0.196082,
+        -0.13106,
+        -0.129028,
+        0.031495,
+        -0.25704,
+        0.043687,
+        -0.011176,
+        0.24688,
+        0.232656,
+        0.25704,
+        -0.206241,
+        0.187954,
+        -0.045718,
+        0.212337,
+        0.096517,
+        0.061974,
+        0.230624,
+        -0.049782
       ]
     },
     {
@@ -23445,6 +24223,51 @@
       ]
     },
     {
+      "path": "extract_pdf_text.py",
+      "role": "python_module",
+      "lines": 41,
+      "tokens_est": 326,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4fafb4b941feb77f",
+      "vector": [
+        -0.185273,
+        0.001123,
+        0.194256,
+        -0.138113,
+        0.259382,
+        -0.178536,
+        0.225696,
+        -0.19201,
+        -0.140358,
+        -0.230188,
+        -0.232433,
+        0.081969,
+        0.005614,
+        0.171799,
+        -0.151587,
+        -0.135867,
+        0.189765,
+        -0.158324,
+        -0.212222,
+        0.212222,
+        -0.286331,
+        0.151587,
+        0.225696,
+        -0.064003,
+        0.200993,
+        -0.167307,
+        -0.043792,
+        0.227942,
+        0.153833,
+        0.099935,
+        0.203239,
+        -0.095444
+      ]
+    },
+    {
       "path": "fix_db.py",
       "role": "python_module",
       "lines": 26,
@@ -24972,6 +25795,51 @@
       ]
     },
     {
+      "path": "test_aura_paper_memory.py",
+      "role": "python_module",
+      "lines": 117,
+      "tokens_est": 1007,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0773a69967a666f4",
+      "vector": [
+        0.177997,
+        0.06381,
+        0.12874,
+        0.113067,
+        0.048138,
+        0.137696,
+        -0.155608,
+        -0.166802,
+        -0.265317,
+        0.256361,
+        0.077244,
+        -0.269794,
+        -0.095156,
+        0.045899,
+        0.231732,
+        0.274272,
+        -0.023509,
+        0.204865,
+        0.081722,
+        0.204865,
+        -0.175758,
+        -0.254122,
+        -0.267555,
+        0.119784,
+        0.225015,
+        0.27875,
+        0.034704,
+        -0.032465,
+        0.211582,
+        0.169041,
+        0.039182,
+        0.169041
+      ]
+    },
+    {
       "path": "test_aura_phase_capsule.py",
       "role": "python_module",
       "lines": 39,
@@ -25664,10 +26532,10 @@
     }
   ],
   "topology": {
-    "source": "unknown",
+    "source": "disabled",
     "diagnostics": {},
     "meta": {
-      "source": "missing_topology_json"
+      "source": "disabled"
     },
     "file_index": {},
     "top_files_by_degree": []
@@ -25675,19 +26543,10 @@
   "last_refresh": {
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
-      "aura_llm_call_logger.py",
-      "aura_api_rotator.py",
-      "aura_llm_egress.py",
-      "aura_anthropic_router.py",
-      "aura_savings_db.py",
-      "aura_savings_dashboard.py",
-      "USER_GUIDE.md",
-      "AURA_ROUTER.md",
-      "AURA_FINAL_REPORT.md",
-      "test_universal_llm_logging.py"
+      "aura_paper_memory.py"
     ],
     "removed_paths": [],
-    "changed_path_count": 10,
+    "changed_path_count": 1,
     "topology_refreshed": false
   }
 }

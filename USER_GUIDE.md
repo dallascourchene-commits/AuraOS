@@ -273,10 +273,10 @@ before anything is applied.
 
 | Command | Use when | Operation and output |
 |---------|----------|----------------------|
-| `!forage <topic>` | You need a new arXiv source on one topic. | Fetches the latest paper for the topic, compresses it, and ingests it into memory. |
-| `!backtrack` | The research memory needs a wider seed set. | Crawls up to 100 chronological arXiv papers and updates the ingestion offset. |
-| `!research <concept>` | You want source-grounded code synthesis. | Searches ingested papers, runs the SkillWeaver relevance gate, and only stages synthesis when sources pass. |
-| `!search_similar <query>` | You need nearest ingested papers without mutation. | Searches the structured scientific index and prints top paper matches with relevance scores. |
+| `!forage <topic>` | You need a new arXiv source on one topic. | Fetches the latest matching paper, parses the PDF when available, stores a compact scientific trace, writes a paper-memory VSA ledger record, and prints title/abstract plus three main points. |
+| `!backtrack` | The research memory needs a wider seed set. | Crawls chronological arXiv CS papers, updates the ingestion offset, stores legacy scientific vectors for search, and refreshes a bounded number of full PDF VSA records per run. |
+| `!research <concept>` | You want source-grounded code synthesis. | Searches ingested papers, runs the SkillWeaver relevance gate, and only stages synthesis when sources pass. It benefits from `!forage` and `!backtrack` records. |
+| `!search_similar <query>` | You need nearest ingested papers without mutation. | Searches the structured scientific SQLite index and prints top paper matches with relevance scores. |
 | `!curiosity_tree <seed>` | You want autonomous discovery from one concept. | Runs bounded DFS over GitHub and arXiv and prints the discovery tree as JSON. |
 | `!forage_on` / `!forager_on` | You want background curiosity enabled. | Starts background foraging daemons. |
 | `!forage_off` / `!forager_off` | You need to conserve CPU/RAM/heat. | Suspends background foraging daemons. |
@@ -284,6 +284,23 @@ before anything is applied.
 | `!crystallize` | You want to start permanent knowledge crystallization. | Initializes the epistemic ingest gateway for unified crystallization. |
 | `!synthesize` | You want a cognitive synthesizer lifecycle pass. | Runs `AuraCognitiveSynthesizer.execution_lifecycle_pass()` and prints the summary. |
 | `!indus_decrypt` | You want the Indus script resonance demo. | Generates a synthetic 3,700-glyph corpus, runs resonance decryption, and prints hypothesis weights. |
+
+### Paper Memory and RAEC Recall
+
+Aura now keeps two coordinated memories for arXiv papers:
+
+- SQLite scientific traces in `.mempalace/`, keyed as `ARXIV_<paper_id>` when arXiv provides an ID. These keep the existing int8 scientific vectors used by `!research` and `!search_similar`.
+- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, and chunk-level VSA vectors.
+
+The PDF path is intentionally chunked. Aura does not unroll an entire raw PDF into one giant matrix slice; `aura_paper_memory.py` extracts text, chunks it, encodes each chunk as a complex phasor, and bundles those chunks into a document vector. This keeps ingestion compatible with the existing edge-memory architecture while preserving deeper recall hooks.
+
+`!forage <topic>` is best when you need one targeted source right now. It attempts the PDF, writes the paper-memory ledger, updates the SQLite scientific trace, and returns the three extracted points for quick inspection.
+
+`!backtrack` is best when Aura needs a broader research substrate. It crawls by date window, keeps arXiv pacing, and stores every returned paper as a searchable scientific trace. Full PDF VSA ingestion is budgeted by `AURA_BACKTRACK_PDF_LIMIT` and defaults to `3` fetch attempts per run, so large backtracks do not overheat or flood storage.
+
+`!research <concept>` and `!search_similar <query>` continue to use the fast SQLite scientific index. External LLM egress automatically uses RAEC when a paper-memory ledger exists: `aura_llm_egress.py` scans the ledger, selects the top two resonant paper capsules, verifies the `root ::= ...` contract, and injects compact `[ANCHOR_ID:...][CONSTRAINTS:...]` slots before provider egress.
+
+Set `AURA_PAPER_MEMORY_LEDGER=/path/to/paper_memory_ledger.jsonl` to point RAEC at another ledger. Use `python3 extract_pdf_text.py <paper.pdf>` when you want the standalone PDF text-extraction compatibility CLI.
 
 
 ### SkillWeaver Research Relevance Gate
