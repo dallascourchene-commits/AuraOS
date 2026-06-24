@@ -730,7 +730,7 @@ residual lift layers, and compact trace dispatch.
 |----------|-------------|
 | `compile_single_seed_lift(label, vectors, base_vector)` | Selects the best local seed vector, caches its inverse profile, lifts it through bounded residual layers, and returns a lifted 10,000-D phasor plus metadata. |
 | `compile_text_single_seed_lift(label, text_blocks)` | Builds the same profile from text blocks for Fusion capsules or other local summaries. |
-| `compact_lift_capsule(profile)` | Converts the profile to a short `SEED=...|TRACE=...` capsule suitable for RAEC slots and task capsules. |
+| `compact_lift_capsule(profile)` | Converts the profile to a short `SEED=...\|TRACE=...` capsule suitable for RAEC slots and task capsules. |
 
 ### 8.10 `aura_context_crusher.py` - Reversible Context Crushing
 
