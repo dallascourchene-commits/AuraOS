@@ -50,6 +50,12 @@ from aura_api_rotator import (
 )
 
 from aura_llm_call_logger import log_llm_call
+from aura_paper_memory import (
+    AuraResonanceEgressGate,
+    load_research_profiles_from_jsonl,
+    track_egress_savings,
+    verify_egress_contract,
+)
 from aura_pre_egress_interceptor import apply_pre_egress_profile
 
 # External providers only. Internal/local engines are intentionally excluded —
@@ -395,7 +401,10 @@ class ExternalLLM:
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
                  router_context: "str | None" = None, slot_matrix: Any | None = None,
-                 pre_egress: bool = True, call_type: str = "generate"):
+                 pre_egress: bool = True, call_type: str = "generate",
+                 paper_ledger: str | None = None,
+                 resonance_egress: bool = True,
+                 grammar_stencil: str = "root ::="):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
@@ -414,6 +423,11 @@ class ExternalLLM:
                 temporary intent matrix from the prompt.
             pre_egress: Enable the deterministic HDC profile rotator before
                 network egress.
+            paper_ledger: Optional JSONL paper-memory ledger to scan for RAEC
+                context. Defaults to AURA_PAPER_MEMORY_LEDGER or the local
+                Aura_Memory paper ledger.
+            resonance_egress: Enable the stateless Resonance-Augmented Egress
+                Core context gate.
         """
         # Inject router context if provided
         if router_context:
@@ -425,6 +439,40 @@ class ExternalLLM:
             )
         else:
             full_prompt = prompt
+
+        raec_payload = None
+        raec_metrics: dict[str, Any] | None = None
+        if resonance_egress:
+            raec_start = time.time()
+            ledger_path = (
+                paper_ledger
+                or os.environ.get("AURA_PAPER_MEMORY_LEDGER")
+                or "Aura_Memory/paper_memory_ledger.jsonl"
+            )
+            try:
+                profiles = load_research_profiles_from_jsonl(ledger_path)
+                if profiles:
+                    gate = AuraResonanceEgressGate()
+                    raec_payload = gate.inject_latent_context(
+                        full_prompt,
+                        profiles,
+                        self.provider,
+                    )
+                    if verify_egress_contract(raec_payload, grammar_stencil):
+                        full_prompt = (
+                            f"{full_prompt}\n\n"
+                            "[AURA_RAEC]\n"
+                            f"{raec_payload.slot_matrix_string}\n"
+                            "[/AURA_RAEC]"
+                        )
+                raec_metrics = track_egress_savings(
+                    len(full_prompt),
+                    0,
+                    time.time() - raec_start,
+                )
+            except Exception:
+                raec_payload = None
+                raec_metrics = None
 
         profile_decision = None
         if pre_egress:
@@ -440,6 +488,15 @@ class ExternalLLM:
             "source": "ExternalLLM.generate",
             "pre_egress": pre_egress,
             "pre_egress_profile": getattr(profile_decision, "profile_id", None),
+            "resonance_egress": bool(
+                raec_payload and raec_payload.slot_matrix_string
+            ),
+            "raec_slot_chars": len(
+                raec_payload.slot_matrix_string
+                if raec_payload is not None
+                else ""
+            ),
+            "raec_efficiency": raec_metrics,
         }
         if self.is_gemini:
             text, err = gemini_generate(
