@@ -46,17 +46,26 @@ fn from_hex_digit(byte: u8) -> Option<u8> {
     }
 }
 
-fn decode_hex(raw: &str) -> Vec<u8> {
+fn decode_hex(raw: &str) -> Result<Vec<u8>, &'static str> {
     let bytes = raw.as_bytes();
+    if bytes.len() % 2 != 0 {
+        return Err("payload_hex_odd_length");
+    }
     let mut out = Vec::with_capacity(bytes.len() / 2);
     let mut idx = 0;
-    while idx + 1 < bytes.len() {
-        let high = from_hex_digit(bytes[idx]).unwrap_or(0);
-        let low = from_hex_digit(bytes[idx + 1]).unwrap_or(0);
+    while idx < bytes.len() {
+        let high = match from_hex_digit(bytes[idx]) {
+            Some(value) => value,
+            None => return Err("payload_hex_invalid_digit"),
+        };
+        let low = match from_hex_digit(bytes[idx + 1]) {
+            Some(value) => value,
+            None => return Err("payload_hex_invalid_digit"),
+        };
         out.push((high << 4) | low);
         idx += 2;
     }
-    out
+    Ok(out)
 }
 
 fn encode_hex(bytes: &[u8]) -> String {
@@ -194,7 +203,13 @@ fn main() {
         emit_error("missing_operation_or_payload");
         return;
     }
-    let payload = decode_hex(&payload_hex);
+    let payload = match decode_hex(&payload_hex) {
+        Ok(payload) => payload,
+        Err(message) => {
+            emit_error(message);
+            return;
+        }
+    };
     let input = String::from_utf8_lossy(&payload);
     let compressed = match operation.as_str() {
         "crush_json" => crush_json(&input),

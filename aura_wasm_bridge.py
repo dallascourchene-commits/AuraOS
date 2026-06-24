@@ -27,8 +27,6 @@ DEFAULT_ACCELERATOR_NAMES = (
     "Aura_Memory/aura_crush_core.wasm",
     "Aura_Memory/aura_crush_core",
     "Aura_Memory/aura_crush_core.exe",
-    "aura_crush_core",
-    "aura_crush_core.exe",
 )
 
 _OPERATION_BY_CONTENT_TYPE = {
