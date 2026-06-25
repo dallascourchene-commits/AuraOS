@@ -1,9 +1,11 @@
 import asyncio
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from aura_live_architect import (
     ArchitectModelRouter,
+    compute_temp_workspace_topology_delta,
     render_live_architect_summary,
     run_live_architect_transaction,
 )
@@ -324,6 +326,24 @@ def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(
     assert transaction.verification.hotswap_ready is False
     assert transaction.fusion_council["judge_decision"]["approved"] is False
     assert any(item.get("stage") == "council_plan_judge" for item in transaction.verification.failures)
+
+
+def test_topology_delta_rejects_affected_files_outside_repo(tmp_path: Path):
+    repo = tmp_path / "repo"
+    workspace = tmp_path / "workspace"
+    repo.mkdir()
+    workspace.mkdir()
+    (tmp_path / "outside.py").write_text("def leaked_symbol():\n    return 1\n", encoding="utf-8")
+
+    delta = compute_temp_workspace_topology_delta(
+        SimpleNamespace(affected_files=["../outside.py"]),
+        repo_root=repo,
+        workspace=workspace,
+    )
+
+    assert delta["status"] == "failed"
+    assert delta["summary"]["files_checked"] == 0
+    assert delta["failures"][0]["reason"] == "path_escapes_repo"
 
 
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):

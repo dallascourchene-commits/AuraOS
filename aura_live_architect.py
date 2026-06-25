@@ -365,6 +365,25 @@ def _set_delta(before: list[str], after: list[str]) -> dict[str, list[str]]:
     }
 
 
+def _safe_topology_file_paths(repo_root: Path, workspace: Path, raw_path: str) -> tuple[tuple[str, Path, Path] | None, dict[str, Any] | None]:
+    normalized = _diff_path_token(raw_path)
+    if not normalized or not normalized.endswith(".py"):
+        return None, None
+    if Path(normalized).is_absolute():
+        return None, {"path": raw_path, "normalized_path": normalized, "reason": "absolute_path"}
+
+    resolved_repo = repo_root.resolve()
+    resolved_workspace = workspace.resolve()
+    before = (resolved_repo / normalized).resolve()
+    after = (resolved_workspace / normalized).resolve()
+    try:
+        before.relative_to(resolved_repo)
+        after.relative_to(resolved_workspace)
+    except ValueError:
+        return None, {"path": raw_path, "normalized_path": normalized, "reason": "path_escapes_repo"}
+    return (normalized, before, after), None
+
+
 def compute_temp_workspace_topology_delta(
     arena: RefactorArenaTransaction,
     *,
@@ -374,9 +393,16 @@ def compute_temp_workspace_topology_delta(
     """Compare affected Python file topology before and after temp patch application."""
     files: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
-    for rel in sorted({str(item) for item in arena.affected_files if str(item).endswith(".py")}):
-        before = _python_topology_signature(repo_root / rel)
-        after = _python_topology_signature(workspace / rel)
+    for raw_path in sorted({str(item) for item in arena.affected_files}):
+        safe_paths, boundary_failure = _safe_topology_file_paths(repo_root, workspace, raw_path)
+        if boundary_failure:
+            failures.append(boundary_failure)
+            continue
+        if not safe_paths:
+            continue
+        rel, before_path, after_path = safe_paths
+        before = _python_topology_signature(before_path)
+        after = _python_topology_signature(after_path)
         if before.get("parse_error") or after.get("parse_error"):
             failures.append(
                 {

@@ -6389,7 +6389,7 @@ async def main():
                         )
 
                         dag = QuantumMerkleDAG(node)
-                        state_snapshot = dag.generate_epistemic_system_root("AURA_PRE_HOTSWAP_APPROVAL", 37.9)
+                        state_snapshot = await dag.generate_epistemic_system_root()
                         approval = {
                             "approval_version": "AURA_HOTSWAP_APPROVAL_V1",
                             "timestamp": datetime.now().isoformat(),

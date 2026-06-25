@@ -14,21 +14,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 214
-- **total_bytes**: 61920519
-- **text_tokens_est**: 935125
+- **total_bytes**: 61922547
+- **text_tokens_est**: 935632
 - **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 140, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782399098
+- **last_incremental_refresh_unix**: 1782399546
 
 ## Coverage
 
 - **included_file_count**: 214
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=76, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=109
+- **skipped_dir_file_counts**: `.git`=83, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=109
 
 ## Command Index
 
@@ -98,9 +98,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!simulate` -> `USER_GUIDE.md:186`, `aura_node.py:6755`, `cognitive_router.py:220`
 - `!something` -> `aura_node.py:4901`
 - `!srcPos` -> `index.html:120`
-- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_live_architect.py:1058`, `aura_node.py:6319`
-- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_live_architect.py:1059`, `aura_node.py:6349`
-- `!stage_purge` -> `USER_GUIDE.md:216`, `aura_node.py:6349`
+- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_live_architect.py:1084`, `aura_node.py:6319`
+- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_live_architect.py:1085`, `aura_node.py:6366`
+- `!stage_purge` -> `USER_GUIDE.md:216`, `aura_node.py:6460`
 - `!stage_review` -> `USER_GUIDE.md:214`, `aura_node.py:6319`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `aura_node.py:5098`
 - `!strategy_buffer_stats` -> `USER_GUIDE.md:197`, `aura_coordinated_solver.py:66`, `aura_node.py:7089`
@@ -195,10 +195,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Hubs
 
-- `aura_node.py` (python_module): 80 symbols, degree 0, ~99172 tokens
+- `aura_node.py` (python_module): 219 symbols, degree 0, ~99165 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 0, ~9398 tokens
 - `aura_architect_loop.py` (python_module): 64 symbols, degree 0, ~14791 tokens
-- `aura_live_architect.py` (python_module): 62 symbols, degree 0, ~13120 tokens
+- `aura_live_architect.py` (python_module): 63 symbols, degree 0, ~13402 tokens
 - `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 0, ~4864 tokens
 - `liquid_kernel.py` (python_module): 41 symbols, degree 0, ~4089 tokens
 - `arxiv_forager.py` (python_module): 37 symbols, degree 0, ~17900 tokens
@@ -221,15 +221,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AdaptiveLiquidTimeConstant` -> `liquid_kernel.py:56`, `liquid_math_reference.py:35`
 - `AnthropicRouter` -> `aura_anthropic_router.py:271`
 - `ArXivForager` -> `arxiv_forager.py:82`
-- `ArchitectBuilderBridge` -> `aura_live_architect.py:930`
+- `ArchitectBuilderBridge` -> `aura_live_architect.py:956`
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:77`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:275`
-- `ArchitectFusionCouncil` -> `aura_live_architect.py:735`
+- `ArchitectFusionCouncil` -> `aura_live_architect.py:761`
 - `ArchitectFusionLoop` -> `aura_architect_loop.py:1427`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:242`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:257`
 - `ArchitectModelProfile` -> `aura_live_architect.py:52`
-- `ArchitectModelRouter` -> `aura_live_architect.py:523`
+- `ArchitectModelRouter` -> `aura_live_architect.py:549`
 - `ArenaPatch` -> `aura_architect_loop.py:195`
 - `ArxivPaper` -> `arxiv_forager.py:956`
 - `AsyncMemoryPalace` -> `async_palace.py:378`, `aura_attention_palace.py:44`
