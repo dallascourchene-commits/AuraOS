@@ -14,107 +14,107 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 214
-- **total_bytes**: 61884872
-- **text_tokens_est**: 926208
+- **total_bytes**: 61923200
+- **text_tokens_est**: 935795
 - **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 140, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782397376
+- **last_incremental_refresh_unix**: 1782400520
 
 ## Coverage
 
 - **included_file_count**: 214
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=273, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=109
+- **skipped_dir_file_counts**: `.git`=92, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=109
 
 ## Command Index
 
 - `!Aura_Sandbox` -> `.gitignore:42`
 - `!CORE_AXIOM_VALID` -> `aura_nesy_sat_reasoner.py:280`
 - `!DOCTYPE` -> `aura_savings_dashboard.py:50`, `index.html:1`
-- `!ai_route` -> `USER_GUIDE.md:173`, `aura_ai_router.py:22`, `aura_node.py:6729`
-- `!ai_router_regen` -> `USER_GUIDE.md:182`, `aura_node.py:6744`
+- `!ai_route` -> `USER_GUIDE.md:173`, `aura_ai_router.py:22`, `aura_node.py:6815`
+- `!ai_router_regen` -> `USER_GUIDE.md:182`, `aura_node.py:6830`
 - `!approve` -> `AURA_FINAL_REPORT.md:151`, `USER_GUIDE.md:217`, `aura_node.py:5426`
-- `!ar_server_start` -> `USER_GUIDE.md:443`, `aura_node.py:6198`
-- `!ar_server_stop` -> `USER_GUIDE.md:444`, `aura_node.py:6214`
-- `!ar_start` -> `AURA_FINAL_REPORT.md:168`, `USER_GUIDE.md:443`, `aura_node.py:6198`, `refactored-auraos-upgrades.md:2572`
-- `!ar_stop` -> `AURA_FINAL_REPORT.md:169`, `USER_GUIDE.md:444`, `aura_node.py:6214`, `refactored-auraos-upgrades.md:2572`
+- `!ar_server_start` -> `USER_GUIDE.md:447`, `aura_node.py:6198`
+- `!ar_server_stop` -> `USER_GUIDE.md:448`, `aura_node.py:6214`
+- `!ar_start` -> `AURA_FINAL_REPORT.md:168`, `USER_GUIDE.md:447`, `aura_node.py:6198`, `refactored-auraos-upgrades.md:2572`
+- `!ar_stop` -> `AURA_FINAL_REPORT.md:169`, `USER_GUIDE.md:448`, `aura_node.py:6214`, `refactored-auraos-upgrades.md:2572`
 - `!attention` -> `USER_GUIDE.md:189`, `aura_node.py:5489`
 - `!audit` -> `USER_GUIDE.md:204`, `aura_node.py:5993`
-- `!backtrack` -> `AURA_FINAL_REPORT.md:143`, `README.md:97`, `USER_GUIDE.md:343`, `arxiv_forager.py:599`
+- `!backtrack` -> `AURA_FINAL_REPORT.md:143`, `README.md:97`, `USER_GUIDE.md:347`, `arxiv_forager.py:599`
 - `!benchmark` -> `README.md:26`, `USER_GUIDE.md:203`, `aura_node.py:2990`, `daily_digest_2026-06-06.md:14`
 - `!c` -> `arch_reasoner_accel.rs:14`
-- `!calibrate` -> `AURA_FINAL_REPORT.md:163`, `README.md:96`, `USER_GUIDE.md:224`, `aura_node.py:7059`
+- `!calibrate` -> `AURA_FINAL_REPORT.md:163`, `README.md:96`, `USER_GUIDE.md:224`, `aura_node.py:7145`
 - `!canvas` -> `aura_savings_dashboard.py:175`
-- `!catalyze` -> `AURA_FINAL_REPORT.md:156`, `USER_GUIDE.md:185`, `aura_node.py:6766`, `generate_ai_router.py:357`
+- `!catalyze` -> `AURA_FINAL_REPORT.md:156`, `USER_GUIDE.md:185`, `aura_node.py:6852`, `generate_ai_router.py:357`
 - `!cognitive_search` -> `USER_GUIDE.md:188`, `aura_node.py:5458`
 - `!commands` -> `USER_GUIDE.md:134`
-- `!contingency_spawn` -> `USER_GUIDE.md:229`, `aura_node.py:6533`
-- `!converse` -> `AURA_FINAL_REPORT.md:161`, `USER_GUIDE.md:228`, `aura_node.py:7174`
-- `!coordinated_reason` -> `USER_GUIDE.md:196`, `aura_node.py:6976`
-- `!crystallize` -> `AURA_FINAL_REPORT.md:141`, `USER_GUIDE.md:350`, `aura_node.py:6833`
-- `!curiosity_tree` -> `AURA_FINAL_REPORT.md:174`, `USER_GUIDE.md:346`, `aura_node.py:6255`
-- `!db_repair` -> `USER_GUIDE.md:447`, `aura_node.py:2990`
-- `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `USER_GUIDE.md:198`, `aura_node.py:6828`
-- `!export` -> `USER_GUIDE.md:445`, `aura_node.py:5816`
-- `!fast_path` -> `AURA_FINAL_REPORT.md:173`, `USER_GUIDE.md:187`, `aura_node.py:6918`, `test_aura_functions.py:900`
-- `!forage` -> `USER_GUIDE.md:342`, `aura_node.py:5999`, `refactored-auraos-upgrades.md:2573`
-- `!forage_off` -> `USER_GUIDE.md:348`, `aura_node.py:6192`
-- `!forage_on` -> `USER_GUIDE.md:347`, `aura_node.py:6186`
-- `!forager_off` -> `USER_GUIDE.md:348`, `aura_node.py:6192`
-- `!forager_on` -> `USER_GUIDE.md:347`, `aura_node.py:6186`
-- `!fusion` -> `AURA_FINAL_REPORT.md:31`, `USER_GUIDE.md:226`, `aura_node.py:7045`
+- `!contingency_spawn` -> `USER_GUIDE.md:229`, `aura_node.py:6619`
+- `!converse` -> `AURA_FINAL_REPORT.md:161`, `USER_GUIDE.md:228`, `aura_node.py:7260`
+- `!coordinated_reason` -> `USER_GUIDE.md:196`, `aura_node.py:7062`
+- `!crystallize` -> `AURA_FINAL_REPORT.md:141`, `USER_GUIDE.md:354`, `aura_node.py:6919`
+- `!curiosity_tree` -> `AURA_FINAL_REPORT.md:174`, `USER_GUIDE.md:350`, `aura_node.py:6255`
+- `!db_repair` -> `USER_GUIDE.md:451`, `aura_node.py:2990`
+- `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `USER_GUIDE.md:198`, `aura_node.py:6914`
+- `!export` -> `USER_GUIDE.md:449`, `aura_node.py:5816`
+- `!fast_path` -> `AURA_FINAL_REPORT.md:173`, `USER_GUIDE.md:187`, `aura_node.py:7004`, `test_aura_functions.py:900`
+- `!forage` -> `USER_GUIDE.md:346`, `aura_node.py:5999`, `refactored-auraos-upgrades.md:2573`
+- `!forage_off` -> `USER_GUIDE.md:352`, `aura_node.py:6192`
+- `!forage_on` -> `USER_GUIDE.md:351`, `aura_node.py:6186`
+- `!forager_off` -> `USER_GUIDE.md:352`, `aura_node.py:6192`
+- `!forager_on` -> `USER_GUIDE.md:351`, `aura_node.py:6186`
+- `!fusion` -> `AURA_FINAL_REPORT.md:31`, `USER_GUIDE.md:226`, `aura_node.py:7131`
 - `!heal` -> `aura_node.py:5141`
-- `!help` -> `AURA_FINAL_REPORT.md:48`, `USER_GUIDE.md:170`, `aura_node.py:7184`
+- `!help` -> `AURA_FINAL_REPORT.md:48`, `USER_GUIDE.md:170`, `aura_node.py:7270`
 - `!important` -> `index.html:9`
-- `!indus_decrypt` -> `AURA_FINAL_REPORT.md:175`, `USER_GUIDE.md:352`, `aura_node.py:6840`
-- `!manifest` -> `AURA_FINAL_REPORT.md:138`, `USER_GUIDE.md:170`, `aura_node.py:7184`
-- `!markov` -> `AURA_FINAL_REPORT.md:144`, `USER_GUIDE.md:448`, `aura_node.py:7031`
-- `!mesh_status` -> `AURA_FINAL_REPORT.md:167`, `USER_GUIDE.md:442`, `aura_node.py:5452`
-- `!meta_analyze` -> `USER_GUIDE.md:199`, `aura_node.py:6879`
-- `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `USER_GUIDE.md:200`, `aura_arch_reasoner.py:91`, `aura_node.py:6904`
+- `!indus_decrypt` -> `AURA_FINAL_REPORT.md:175`, `USER_GUIDE.md:356`, `aura_node.py:6926`
+- `!manifest` -> `AURA_FINAL_REPORT.md:138`, `USER_GUIDE.md:170`, `aura_node.py:7270`
+- `!markov` -> `AURA_FINAL_REPORT.md:144`, `USER_GUIDE.md:452`, `aura_node.py:7117`
+- `!mesh_status` -> `AURA_FINAL_REPORT.md:167`, `USER_GUIDE.md:446`, `aura_node.py:5452`
+- `!meta_analyze` -> `USER_GUIDE.md:199`, `aura_node.py:6965`
+- `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `USER_GUIDE.md:200`, `aura_arch_reasoner.py:91`, `aura_node.py:6990`
 - `!optimize` -> `AURA_FINAL_REPORT.md:172`, `USER_GUIDE.md:213`, `aura_node.py:5739`
-- `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `USER_GUIDE.md:441`, `aura_node.py:5447`
+- `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `USER_GUIDE.md:445`, `aura_node.py:5447`
 - `!plan` -> `aura_node.py:5390`
-- `!push` -> `USER_GUIDE.md:446`, `aura_node.py:5098`, `test_aura_functions.py:208`
+- `!push` -> `USER_GUIDE.md:450`, `aura_node.py:5098`, `test_aura_functions.py:208`
 - `!r` -> `aura_hv_cache.py:373`, `aura_savings_dashboard.py:229`, `aura_substrate.py:134`, `aura_topology_ws_bridge.py:658`
-- `!reason` -> `AURA_FINAL_REPORT.md:154`, `USER_GUIDE.md:195`, `aura_node.py:7019`
-- `!repair_db` -> `USER_GUIDE.md:447`, `aura_node.py:6506`
-- `!research` -> `AURA_FINAL_REPORT.md:142`, `README.md:98`, `USER_GUIDE.md:344`, `aura_node.py:6025`
+- `!reason` -> `AURA_FINAL_REPORT.md:154`, `USER_GUIDE.md:195`, `aura_node.py:7105`
+- `!repair_db` -> `USER_GUIDE.md:451`, `aura_node.py:6592`
+- `!research` -> `AURA_FINAL_REPORT.md:142`, `README.md:98`, `USER_GUIDE.md:348`, `aura_node.py:6025`
 - `!review` -> `USER_GUIDE.md:214`, `aura_node.py:6319`, `mistral_gate.py:78`
 - `!rollback` -> `USER_GUIDE.md:218`, `aura_node.py:6304`
 - `!route` -> `AURA_FINAL_REPORT.md:28`, `AURA_ROUTER.md:213`, `README.md:99`, `USER_GUIDE.md:225`
 - `!saturn` -> `AURA_FINAL_REPORT.md:147`, `AuraOS.tex:212`, `USER_GUIDE.md:201`, `aura_node.py:5539`
 - `!saturn_heal` -> `AURA_FINAL_REPORT.md:148`, `USER_GUIDE.md:202`, `aura_holographic_manifest.py:248`, `aura_node.py:5125`
-- `!savings` -> `AURA_FINAL_REPORT.md:162`, `AuraOS.tex:185`, `USER_GUIDE.md:227`, `aura_node.py:7083`
-- `!scan_topology` -> `USER_GUIDE.md:183`, `aura_node.py:6675`
-- `!search_similar` -> `USER_GUIDE.md:345`, `aura_node.py:6228`, `refactored-auraos-upgrades.md:2573`
+- `!savings` -> `AURA_FINAL_REPORT.md:162`, `AuraOS.tex:185`, `USER_GUIDE.md:227`, `aura_node.py:7169`
+- `!scan_topology` -> `USER_GUIDE.md:183`, `aura_node.py:6761`
+- `!search_similar` -> `USER_GUIDE.md:349`, `aura_node.py:6228`, `refactored-auraos-upgrades.md:2573`
 - `!self_optimize` -> `USER_GUIDE.md:213`, `aura_dynamic_attention.py:210`, `aura_node.py:5739`, `refactored-auraos-upgrades.md:826`
 - `!self_reflect` -> `DAILY_DIGEST_Jun7-8_2026.md:19`, `DAILY_DIGEST_Jun7_2026.md:30`, `USER_GUIDE.md:212`, `aura_arch_reasoner.py:228`
-- `!settings` -> `README.md:93`, `USER_GUIDE.md:170`, `aura_node.py:7184`, `daily_digest_2026-06-06.md:14`
-- `!simulate` -> `USER_GUIDE.md:186`, `aura_node.py:6669`, `cognitive_router.py:220`
+- `!settings` -> `README.md:93`, `USER_GUIDE.md:170`, `aura_node.py:7270`, `daily_digest_2026-06-06.md:14`
+- `!simulate` -> `USER_GUIDE.md:186`, `aura_node.py:6755`, `cognitive_router.py:220`
 - `!something` -> `aura_node.py:4901`
 - `!srcPos` -> `index.html:120`
-- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_node.py:6319`
-- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_node.py:6341`, `mistral_gate.py:78`
-- `!stage_purge` -> `USER_GUIDE.md:216`, `aura_node.py:6393`
+- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_live_architect.py:1094`, `aura_node.py:6319`
+- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_live_architect.py:1095`, `aura_node.py:6366`
+- `!stage_purge` -> `USER_GUIDE.md:216`, `aura_node.py:6460`
 - `!stage_review` -> `USER_GUIDE.md:214`, `aura_node.py:6319`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `aura_node.py:5098`
-- `!strategy_buffer_stats` -> `USER_GUIDE.md:197`, `aura_coordinated_solver.py:66`, `aura_node.py:7003`
-- `!synthesize` -> `USER_GUIDE.md:351`, `aura_associative_core.py:138`, `aura_node.py:6423`, `test_aura_functions.py:886`
+- `!strategy_buffer_stats` -> `USER_GUIDE.md:197`, `aura_coordinated_solver.py:66`, `aura_node.py:7089`
+- `!synthesize` -> `USER_GUIDE.md:355`, `aura_associative_core.py:138`, `aura_node.py:6509`, `test_aura_functions.py:886`
 - `!system_audit` -> `USER_GUIDE.md:204`, `aura_node.py:5993`
 - `!target_bytes` -> `cognitive_search.rs:72`
 - `!test` -> `AuraOS.tex:533`
 - `!test_airlock` -> `USER_GUIDE.md:205`, `aura_node.py:5402`
 - `!tgtPos` -> `index.html:120`
-- `!timeline` -> `USER_GUIDE.md:349`, `aura_node.py:6267`
+- `!timeline` -> `USER_GUIDE.md:353`, `aura_node.py:6267`
 - `!topology` -> `AURA_FINAL_REPORT.md:48`, `README.md:45`, `USER_GUIDE.md:183`, `aura_ai_router.py:143`
-- `!topology_deep` -> `USER_GUIDE.md:184`, `aura_node.py:6758`
+- `!topology_deep` -> `USER_GUIDE.md:184`, `aura_node.py:6844`
 - `!total` -> `aura_savings_dashboard.py:224`
-- `!voice` -> `USER_GUIDE.md:449`, `aura_node.py:7245`
+- `!voice` -> `USER_GUIDE.md:453`, `aura_node.py:7331`
 
 ## Navigation Rings
 
@@ -195,16 +195,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Hubs
 
-- `aura_node.py` (python_module): 219 symbols, degree 0, ~97520 tokens
+- `aura_node.py` (python_module): 80 symbols, degree 0, ~99165 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 0, ~9398 tokens
 - `aura_architect_loop.py` (python_module): 64 symbols, degree 0, ~14791 tokens
+- `aura_live_architect.py` (python_module): 64 symbols, degree 0, ~13511 tokens
 - `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 0, ~4864 tokens
 - `liquid_kernel.py` (python_module): 41 symbols, degree 0, ~4089 tokens
 - `arxiv_forager.py` (python_module): 37 symbols, degree 0, ~17900 tokens
 - `async_palace.py` (python_module): 36 symbols, degree 0, ~9606 tokens
 - `aura_topology_ws_bridge.py` (python_module): 36 symbols, degree 0, ~8086 tokens
 - `aura_context_crusher.py` (python_module): 36 symbols, degree 0, ~5647 tokens
-- `aura_live_architect.py` (python_module): 35 symbols, degree 0, ~7437 tokens
 - `liquid_attractor_control_plane.py` (python_module): 34 symbols, degree 0, ~9969 tokens
 - `aura_paper_memory.py` (python_module): 32 symbols, degree 0, ~4562 tokens
 
@@ -221,13 +221,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AdaptiveLiquidTimeConstant` -> `liquid_kernel.py:56`, `liquid_math_reference.py:35`
 - `AnthropicRouter` -> `aura_anthropic_router.py:271`
 - `ArXivForager` -> `arxiv_forager.py:82`
-- `ArchitectBuilderBridge` -> `aura_live_architect.py:552`
+- `ArchitectBuilderBridge` -> `aura_live_architect.py:966`
+- `ArchitectCouncilDecision` -> `aura_live_architect.py:77`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:275`
+- `ArchitectFusionCouncil` -> `aura_live_architect.py:771`
 - `ArchitectFusionLoop` -> `aura_architect_loop.py:1427`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:242`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:257`
-- `ArchitectModelProfile` -> `aura_live_architect.py:51`
-- `ArchitectModelRouter` -> `aura_live_architect.py:366`
+- `ArchitectModelProfile` -> `aura_live_architect.py:52`
+- `ArchitectModelRouter` -> `aura_live_architect.py:559`
 - `ArenaPatch` -> `aura_architect_loop.py:195`
 - `ArxivPaper` -> `arxiv_forager.py:956`
 - `AsyncMemoryPalace` -> `async_palace.py:378`, `aura_attention_palace.py:44`
@@ -294,5 +296,3 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `CommProfile` -> `aura_converse.py:60`
 - `ConsensusError` -> `aura_blockchain/consensus.py:348`
 - `ConsensusState` -> `aura_blockchain/consensus.py:91`
-- `ContextBundle` -> `aura_substrate.py:422`
-- `ContextCrushBatch` -> `aura_context_crusher.py:119`

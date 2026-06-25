@@ -3,14 +3,15 @@
 ST3GG_BASE: 0xa903-[Q-SYS:LIVE_ARCHITECT]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Live / Bounded Refactor Execution)
-DEPENDENCIES: dataclasses, inspect, json, pathlib, shutil, subprocess, tempfile, typing, aura_architect_loop, aura_substrate
-FUNCTIONS: ArchitectModelProfile, ArchitectModelRouter, ArchitectBuilderBridge, TempWorkspaceResult, LiveArchitectTransaction, run_live_architect_transaction, render_live_architect_summary, verify_arena_in_temp_workspace
-SYNOPSIS: Live bridge for Architect mode. Routes a user intent through premium planning, cheap bounded Act workers, temp-workspace patch application, verifier-gated hot-swap readiness, rollback, and ledger output without writing model code directly to production or aura_incubator.py.
+DEPENDENCIES: ast, dataclasses, inspect, json, pathlib, shutil, subprocess, tempfile, typing, aura_architect_loop, aura_substrate
+FUNCTIONS: ArchitectModelProfile, ArchitectFusionCouncil, ArchitectModelRouter, ArchitectBuilderBridge, TempWorkspaceResult, LiveArchitectTransaction, run_live_architect_transaction, render_live_architect_summary, verify_arena_in_temp_workspace
+SYNOPSIS: Live bridge for Architect mode. Routes a user intent through multi-candidate premium planning, cheap Shadow critics, premium judge selection, cheap bounded Act workers, temp-workspace patch application, topology delta verification, verifier-gated hot-swap readiness, rollback, and ledger output without writing model code directly to production or aura_incubator.py.
 [/AURA_MASTER_KEY]
 """
 
 from __future__ import annotations
 
+import ast
 from dataclasses import asdict, dataclass, field
 import hashlib
 import inspect
@@ -66,6 +67,20 @@ class TempWorkspaceResult:
     failures: list[dict[str, Any]]
     test_results: dict[str, dict[str, Any]]
     workspace_path: str | None = None
+    topology_delta: dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class ArchitectCouncilDecision:
+    selected_plan: dict[str, Any]
+    candidates: list[dict[str, Any]]
+    critic_reports: list[dict[str, Any]]
+    judge_decision: dict[str, Any]
+    budget_route: dict[str, Any]
+    phase_hash: str
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -82,6 +97,7 @@ class LiveArchitectTransaction:
     ledger_record: ArchitectLedgerRecord
     staging_path: str
     model_route: dict[str, Any] = field(default_factory=dict)
+    fusion_council: dict[str, Any] = field(default_factory=dict)
 
     def to_execution_result(self) -> ArchitectExecutionResult:
         return ArchitectExecutionResult(
@@ -103,6 +119,7 @@ class LiveArchitectTransaction:
             "ledger_record": self.ledger_record.to_dict(),
             "staging_path": self.staging_path,
             "model_route": self.model_route,
+            "fusion_council": self.fusion_council,
         }
 
 
@@ -286,6 +303,150 @@ def _default_test_commands(arena: RefactorArenaTransaction, repo_root: Path) -> 
     return commands
 
 
+def _python_topology_signature(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"exists": False, "definitions": [], "imports": [], "calls": [], "parse_error": None}
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except Exception as exc:
+        return {"exists": True, "definitions": [], "imports": [], "calls": [], "parse_error": str(exc)}
+
+    definitions: set[str] = set()
+    imports: set[str] = set()
+    calls: set[str] = set()
+
+    class TopologyVisitor(ast.NodeVisitor):
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
+            definitions.add(node.name)
+            self.generic_visit(node)
+
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> Any:
+            definitions.add(node.name)
+            self.generic_visit(node)
+
+        def visit_ClassDef(self, node: ast.ClassDef) -> Any:
+            definitions.add(node.name)
+            self.generic_visit(node)
+
+        def visit_Import(self, node: ast.Import) -> Any:
+            for alias in node.names:
+                imports.add(alias.name.split(".", 1)[0])
+            self.generic_visit(node)
+
+        def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
+            if node.module:
+                imports.add(node.module.split(".", 1)[0])
+            self.generic_visit(node)
+
+        def visit_Call(self, node: ast.Call) -> Any:
+            if isinstance(node.func, ast.Name):
+                calls.add(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                calls.add(node.func.attr)
+            self.generic_visit(node)
+
+    TopologyVisitor().visit(tree)
+    return {
+        "exists": True,
+        "definitions": sorted(definitions),
+        "imports": sorted(imports),
+        "calls": sorted(calls),
+        "parse_error": None,
+    }
+
+
+def _set_delta(before: list[str], after: list[str]) -> dict[str, list[str]]:
+    before_set = set(before)
+    after_set = set(after)
+    return {
+        "added": sorted(after_set - before_set),
+        "removed": sorted(before_set - after_set),
+        "stable": sorted(before_set & after_set),
+    }
+
+
+def _normalize_judge_approval(value: Any, *, default: bool) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"true", "yes", "1", "approved"}
+    return False
+
+
+def _safe_topology_file_paths(repo_root: Path, workspace: Path, raw_path: str) -> tuple[tuple[str, Path, Path] | None, dict[str, Any] | None]:
+    normalized = _diff_path_token(raw_path)
+    if not normalized or not normalized.endswith(".py"):
+        return None, None
+    if Path(normalized).is_absolute():
+        return None, {"path": raw_path, "normalized_path": normalized, "reason": "absolute_path"}
+
+    resolved_repo = repo_root.resolve()
+    resolved_workspace = workspace.resolve()
+    before = (resolved_repo / normalized).resolve()
+    after = (resolved_workspace / normalized).resolve()
+    try:
+        before.relative_to(resolved_repo)
+        after.relative_to(resolved_workspace)
+    except ValueError:
+        return None, {"path": raw_path, "normalized_path": normalized, "reason": "path_escapes_repo"}
+    return (normalized, before, after), None
+
+
+def compute_temp_workspace_topology_delta(
+    arena: RefactorArenaTransaction,
+    *,
+    repo_root: Path,
+    workspace: Path,
+) -> dict[str, Any]:
+    """Compare affected Python file topology before and after temp patch application."""
+    files: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    for raw_path in sorted({str(item) for item in arena.affected_files}):
+        safe_paths, boundary_failure = _safe_topology_file_paths(repo_root, workspace, raw_path)
+        if boundary_failure:
+            failures.append(boundary_failure)
+            continue
+        if not safe_paths:
+            continue
+        rel, before_path, after_path = safe_paths
+        before = _python_topology_signature(before_path)
+        after = _python_topology_signature(after_path)
+        if before.get("parse_error") or after.get("parse_error"):
+            failures.append(
+                {
+                    "path": rel,
+                    "before_error": before.get("parse_error"),
+                    "after_error": after.get("parse_error"),
+                }
+            )
+        files.append(
+            {
+                "path": rel,
+                "before_exists": before.get("exists"),
+                "after_exists": after.get("exists"),
+                "definitions": _set_delta(before.get("definitions", []), after.get("definitions", [])),
+                "imports": _set_delta(before.get("imports", []), after.get("imports", [])),
+                "calls": _set_delta(before.get("calls", []), after.get("calls", [])),
+            }
+        )
+    summary = {
+        "files_checked": len(files),
+        "files_with_definition_delta": sum(1 for item in files if item["definitions"]["added"] or item["definitions"]["removed"]),
+        "files_with_import_delta": sum(1 for item in files if item["imports"]["added"] or item["imports"]["removed"]),
+        "files_with_call_delta": sum(1 for item in files if item["calls"]["added"] or item["calls"]["removed"]),
+    }
+    payload = {
+        "stage": "topology_delta",
+        "status": "passed" if not failures else "failed",
+        "summary": summary,
+        "files": files,
+        "failures": failures,
+    }
+    return {**payload, "phase_hash": _hash_payload(payload)}
+
+
 def _merge_workspace_result(
     verification: VerificationResult,
     workspace: TempWorkspaceResult,
@@ -363,6 +524,38 @@ def _merge_act_stage_result(
     )
 
 
+def _merge_council_plan_judgement(
+    verification: VerificationResult,
+    council_decision: ArchitectCouncilDecision,
+) -> VerificationResult:
+    judge_decision = council_decision.judge_decision
+    if _normalize_judge_approval(judge_decision.get("approved"), default=True):
+        return verification
+    failure = {
+        "stage": "council_plan_judge",
+        "status": "failed",
+        "message": "Premium Judge rejected the selected plan before patch execution.",
+        "judgement": judge_decision,
+    }
+    failures = [*verification.failures, failure]
+    checks = [*verification.checks, failure]
+    phase_payload = {
+        "base_phase_hash": verification.phase_hash,
+        "council_phase_hash": council_decision.phase_hash,
+        "judge_decision": judge_decision,
+        "failures": failures,
+    }
+    return VerificationResult(
+        verification_version=verification.verification_version,
+        ok=False,
+        stage="blocked",
+        checks=checks,
+        failures=failures,
+        hotswap_ready=False,
+        phase_hash=_hash_payload(phase_payload),
+    )
+
+
 class ArchitectModelRouter:
     """Select premium/cheap model roles and keep ledger-informed routing hints."""
 
@@ -383,6 +576,13 @@ class ArchitectModelRouter:
                 model_class="premium_planner",
                 cost_tier="premium",
                 purpose="fractal plan capsule synthesis",
+            ),
+            "planner_alt": ArchitectModelProfile(
+                role="planner_alt",
+                provider=os.getenv("AURA_ARCHITECT_ALT_PLANNER_PROVIDER", "KIMI"),
+                model_class="premium_alternate_planner",
+                cost_tier="premium",
+                purpose="alternate fractal plan capsule synthesis",
             ),
             "worker": ArchitectModelProfile(
                 role="worker",
@@ -457,6 +657,26 @@ class ArchitectModelRouter:
             return None
         return str(result) if result is not None else None
 
+    def budget_route(self, hints: dict[str, Any], *, target_file: str | None = None) -> dict[str, Any]:
+        mode = os.getenv("AURA_ARCHITECT_PREMIUM_BUDGET", "auto").strip().lower() or "auto"
+        premium_allowed = mode not in {"off", "free", "cheap", "local"}
+        high_risk_target = target_file in {"aura_node.py", "aura_architect_loop.py", "aura_live_architect.py"}
+        planner_roles = ["planner", "planner_alt"] if premium_allowed and self.model_caller is not None else []
+        return {
+            "mode": mode,
+            "free_first": True,
+            "free_candidates": ["deterministic_codemap_plan"],
+            "premium_allowed": premium_allowed,
+            "premium_planner_roles": planner_roles,
+            "cheap_shadow_critics": ["scope", "tests", "cost"],
+            "premium_judge": bool(premium_allowed and self.model_caller is not None and (hints.get("prefer_premium") or high_risk_target or len(planner_roles) > 1)),
+            "reasons": {
+                "ledger_prefer_premium": bool(hints.get("prefer_premium")),
+                "high_risk_target": high_risk_target,
+                "model_caller_available": self.model_caller is not None,
+            },
+        }
+
     def infer_target_file(self, intent: str, *, fallback: str = "aura_node.py") -> str | None:
         lowered = intent.lower()
         for match in re.findall(r"[\w./\\-]+\.py", intent):
@@ -483,36 +703,16 @@ class ArchitectModelRouter:
                 return sorted(scored, reverse=True)[0][1]
         return fallback if (self.repo_root / fallback).exists() else None
 
-    async def plan_intent(
+    def deterministic_plan_spec(
         self,
         intent: str,
         *,
         target_file: str | None = None,
         target_symbol: str | None = None,
+        source: str = "deterministic_fallback",
     ) -> dict[str, Any]:
-        hints = self.ledger_hints()
         inferred_file = target_file or self.infer_target_file(intent)
-        prompt = (
-            "Return JSON only for a bounded Aura Architect refactor plan. "
-            "Fields: architecture_decision, target_file, target_symbol, act_tasks. "
-            "Each act task must include task_id, objective, target_file, target_symbol, acceptance, expected_output=UNIFIED_DIFF. "
-            "Never write code directly to production. "
-            f"Ledger hints: {json.dumps(hints, sort_keys=True)}. "
-            f"Intent: {intent}. Suggested target_file: {inferred_file or 'unknown'}."
-        )
-        response = await self.call_model("planner", prompt, intensity=4 if hints.get("prefer_premium") else 1)
-        data = _extract_json_object(response or "") if response else None
-        if data:
-            tasks = data.get("act_tasks") if isinstance(data.get("act_tasks"), list) else []
-            if tasks:
-                return {
-                    "architecture_decision": str(data.get("architecture_decision") or "Use the live Architect loop."),
-                    "target_file": str(data.get("target_file") or inferred_file) if data.get("target_file") or inferred_file else None,
-                    "target_symbol": str(data.get("target_symbol") or target_symbol) if data.get("target_symbol") or target_symbol else None,
-                    "act_tasks": tasks,
-                    "source": "premium_planner",
-                    "ledger_hints": hints,
-                }
+        hints = self.ledger_hints()
         if inferred_file is None:
             return {
                 "architecture_decision": "Prepare a blocked live Architect transaction until a concrete target file is known.",
@@ -526,7 +726,7 @@ class ArchitectModelRouter:
                         "acceptance": "Resolve target file before Builder execution.",
                     }
                 ],
-                "source": "deterministic_fallback_blocked",
+                "source": "deterministic_fallback_blocked" if source == "deterministic_fallback" else source,
                 "ledger_hints": hints,
             }
         return {
@@ -544,9 +744,223 @@ class ArchitectModelRouter:
                     "expected_output": "UNIFIED_DIFF",
                 }
             ],
-            "source": "deterministic_fallback",
+            "source": source,
             "ledger_hints": hints,
         }
+
+    async def plan_with_council(
+        self,
+        intent: str,
+        *,
+        target_file: str | None = None,
+        target_symbol: str | None = None,
+    ) -> ArchitectCouncilDecision:
+        council = ArchitectFusionCouncil(self)
+        return await council.select_plan(intent, target_file=target_file, target_symbol=target_symbol)
+
+    async def plan_intent(
+        self,
+        intent: str,
+        *,
+        target_file: str | None = None,
+        target_symbol: str | None = None,
+    ) -> dict[str, Any]:
+        return (await self.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)).selected_plan
+
+
+class ArchitectFusionCouncil:
+    """Orchestrate multi-candidate planning, cheap critique, and premium judging."""
+
+    def __init__(self, router: ArchitectModelRouter):
+        self.router = router
+
+    def _normalize_plan_spec(
+        self,
+        data: dict[str, Any],
+        *,
+        intent: str,
+        inferred_file: str | None,
+        target_symbol: str | None,
+        source: str,
+    ) -> dict[str, Any] | None:
+        tasks = data.get("act_tasks") if isinstance(data.get("act_tasks"), list) else []
+        if not tasks:
+            return None
+        return {
+            "architecture_decision": str(data.get("architecture_decision") or "Use the live Architect loop."),
+            "target_file": str(data.get("target_file") or inferred_file) if data.get("target_file") or inferred_file else None,
+            "target_symbol": str(data.get("target_symbol") or target_symbol) if data.get("target_symbol") or target_symbol else None,
+            "act_tasks": tasks,
+            "source": source,
+            "ledger_hints": self.router.ledger_hints(),
+            "objective": intent,
+        }
+
+    def _candidate(self, candidate_id: str, plan: dict[str, Any], *, cost_tier: str, source: str) -> dict[str, Any]:
+        base_score = 0.42 if cost_tier == "free" else 0.62
+        task_count = len(plan.get("act_tasks", []) or [])
+        if plan.get("target_file"):
+            base_score += 0.12
+        if task_count:
+            base_score += min(0.18, task_count * 0.06)
+        payload = {
+            "candidate_id": candidate_id,
+            "source": source,
+            "cost_tier": cost_tier,
+            "score": round(base_score, 4),
+            "plan": plan,
+            "critic_reports": [],
+        }
+        return {**payload, "phase_hash": _hash_payload(payload)}
+
+    def _parse_critic_report(self, response: str | None, candidate: dict[str, Any], critic_id: str) -> dict[str, Any]:
+        data = _extract_json_object(response or "") if response else None
+        blockers = []
+        score = candidate["score"]
+        approved = True
+        rationale = "Local cheap-shadow heuristic accepted the candidate."
+        if data:
+            raw_blockers = data.get("blockers", [])
+            blockers = [str(item) for item in raw_blockers] if isinstance(raw_blockers, list) else []
+            try:
+                score = float(data.get("score", score))
+            except (TypeError, ValueError):
+                score = candidate["score"]
+            approved = bool(data.get("approved", not blockers))
+            rationale = str(data.get("rationale") or rationale)
+        elif not candidate.get("plan", {}).get("target_file"):
+            approved = False
+            blockers = ["missing_target_file"]
+            score = min(score, 0.2)
+            rationale = "Candidate has no grounded target file."
+        report = {
+            "critic_id": critic_id,
+            "role": "cheap_shadow_critic",
+            "candidate_id": candidate["candidate_id"],
+            "approved": approved,
+            "score": max(0.0, min(1.0, score)),
+            "blockers": blockers,
+            "rationale": rationale,
+        }
+        return {**report, "phase_hash": _hash_payload(report)}
+
+    async def _run_shadow_critics(self, candidates: list[dict[str, Any]], budget_route: dict[str, Any]) -> list[dict[str, Any]]:
+        reports: list[dict[str, Any]] = []
+        for candidate in candidates:
+            candidate_reports = []
+            for critic_id in budget_route.get("cheap_shadow_critics", []):
+                prompt = (
+                    "You are an Aura cheap Shadow critic. Return JSON only with approved, score, blockers, rationale. "
+                    f"Critic lane: {critic_id}. Candidate: {json.dumps(candidate['plan'], sort_keys=True)}"
+                )
+                response = await self.router.call_model(
+                    "shadow",
+                    prompt,
+                    intensity=0,
+                    meta={"candidate_id": candidate["candidate_id"], "critic_id": critic_id, "council_phase": "plan_shadow"},
+                )
+                report = self._parse_critic_report(response, candidate, critic_id)
+                candidate_reports.append(report)
+                reports.append(report)
+            candidate["critic_reports"] = candidate_reports
+            if candidate_reports:
+                average = sum(item["score"] for item in candidate_reports) / len(candidate_reports)
+                blockers = sum(1 for item in candidate_reports if item.get("blockers"))
+                candidate["score"] = round((candidate["score"] + average) / 2 - blockers * 0.12, 4)
+        return reports
+
+    async def _judge_candidates(self, candidates: list[dict[str, Any]], budget_route: dict[str, Any]) -> dict[str, Any]:
+        fallback = max(candidates, key=lambda item: item.get("score", 0.0))
+        decision = {
+            "role": "premium_judge" if budget_route.get("premium_judge") else "local_judge",
+            "selected_candidate_id": fallback["candidate_id"],
+            "approved": not any(report.get("blockers") for report in fallback.get("critic_reports", [])),
+            "rationale": "Selected the highest-scoring candidate after cheap Shadow critique.",
+            "premium_called": False,
+        }
+        if budget_route.get("premium_judge") and len(candidates) > 1:
+            prompt = (
+                "You are Aura's premium Judge. Return JSON only with selected_candidate_id, approved, rationale. "
+                "Compare these candidate plans and choose the safest staged refactor path: "
+                f"{json.dumps([{k: v for k, v in candidate.items() if k != 'plan'} | {'plan': candidate['plan']} for candidate in candidates], sort_keys=True)}"
+            )
+            response = await self.router.call_model(
+                "judge",
+                prompt,
+                intensity=4,
+                meta={"candidate_ids": [item["candidate_id"] for item in candidates], "council_phase": "plan_judge"},
+            )
+            data = _extract_json_object(response or "") if response else None
+            if data:
+                selected = str(data.get("selected_candidate_id") or decision["selected_candidate_id"])
+                known = {item["candidate_id"] for item in candidates}
+                if selected in known:
+                    decision["selected_candidate_id"] = selected
+                decision["approved"] = _normalize_judge_approval(data.get("approved"), default=bool(decision["approved"]))
+                decision["rationale"] = str(data.get("rationale") or decision["rationale"])
+                decision["premium_called"] = True
+        return {**decision, "phase_hash": _hash_payload(decision)}
+
+    async def select_plan(
+        self,
+        intent: str,
+        *,
+        target_file: str | None = None,
+        target_symbol: str | None = None,
+    ) -> ArchitectCouncilDecision:
+        hints = self.router.ledger_hints()
+        inferred_file = target_file or self.router.infer_target_file(intent)
+        budget_route = self.router.budget_route(hints, target_file=inferred_file)
+        local_plan = self.router.deterministic_plan_spec(
+            intent,
+            target_file=inferred_file,
+            target_symbol=target_symbol,
+            source="deterministic_codemap_plan",
+        )
+        candidates = [self._candidate("local_free", local_plan, cost_tier="free", source=local_plan.get("source", "deterministic_codemap_plan"))]
+        prompt = (
+            "Return JSON only for a bounded Aura Architect refactor plan. "
+            "Fields: architecture_decision, target_file, target_symbol, act_tasks. "
+            "Each act task must include task_id, objective, target_file, target_symbol, acceptance, expected_output=UNIFIED_DIFF. "
+            "Never write code directly to production. "
+            f"Ledger hints: {json.dumps(hints, sort_keys=True)}. "
+            f"Intent: {intent}. Suggested target_file: {inferred_file or 'unknown'}."
+        )
+        for index, role in enumerate(budget_route.get("premium_planner_roles", []), start=1):
+            candidate_id = f"{role}_{index}"
+            response = await self.router.call_model(
+                role,
+                f"{prompt} Candidate id: {candidate_id}. Produce an alternative plan from your model perspective.",
+                intensity=4 if hints.get("prefer_premium") else 2,
+                meta={"candidate_id": candidate_id, "council_phase": "plan_candidate"},
+            )
+            data = _extract_json_object(response or "") if response else None
+            plan = self._normalize_plan_spec(
+                data or {},
+                intent=intent,
+                inferred_file=inferred_file,
+                target_symbol=target_symbol,
+                source=f"premium_{role}",
+            )
+            if plan:
+                candidates.append(self._candidate(candidate_id, plan, cost_tier="premium", source=plan["source"]))
+
+        critic_reports = await self._run_shadow_critics(candidates, budget_route)
+        judge_decision = await self._judge_candidates(candidates, budget_route)
+        selected_id = judge_decision["selected_candidate_id"]
+        selected = next((item for item in candidates if item["candidate_id"] == selected_id), candidates[0])
+        selected_plan = dict(selected["plan"])
+        selected_plan["source"] = selected.get("source", selected_plan.get("source", "fusion_council"))
+        selected_plan["council_candidate_id"] = selected["candidate_id"]
+        selected_plan["ledger_hints"] = hints
+        payload = {
+            "selected_plan": selected_plan,
+            "candidates": candidates,
+            "critic_reports": critic_reports,
+            "judge_decision": judge_decision,
+            "budget_route": budget_route,
+        }
+        return ArchitectCouncilDecision(phase_hash=_hash_payload(payload), **payload)
 
 
 class ArchitectBuilderBridge:
@@ -584,6 +998,107 @@ class ArchitectBuilderBridge:
         return submissions
 
 
+async def judge_patch_bundle(
+    router: ArchitectModelRouter,
+    prepared: ArchitectLoopResult,
+    patch_submissions: list[dict[str, Any]],
+    stage_results: list[PatchStageResult],
+    council_decision: ArchitectCouncilDecision,
+) -> dict[str, Any]:
+    expected_task_ids = [act.task_id for act in prepared.plan.act_capsules]
+    staged_task_ids = [result.patch.task_id for result in stage_results if result.ok and result.patch]
+    stage_failures = [
+        finding.to_dict()
+        for result in stage_results
+        if not result.ok
+        for finding in result.findings
+    ]
+    base_decision = {
+        "role": "premium_judge",
+        "phase": "patch_bundle_judge",
+        "approved": sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures,
+        "premium_called": False,
+        "selected_candidate_id": council_decision.judge_decision.get("selected_candidate_id"),
+        "rationale": "Local Judge accepted staged patch coverage." if sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures else "Patch bundle is incomplete or has staging failures.",
+        "expected_task_ids": expected_task_ids,
+        "staged_task_ids": staged_task_ids,
+        "stage_failures": stage_failures,
+    }
+    budget_route = council_decision.budget_route
+    if budget_route.get("premium_judge") and patch_submissions:
+        prompt = (
+            "You are Aura's premium Judge. Return JSON only with approved and rationale. "
+            "Compare the selected plan, staged patch bundle, and cheap Shadow critique before hot-swap promotion. "
+            f"Plan: {json.dumps(prepared.plan.to_dict(), sort_keys=True)}\n"
+            f"Patch submissions: {json.dumps(patch_submissions, sort_keys=True)}\n"
+            f"Stage results: {json.dumps([item.to_dict() for item in stage_results], sort_keys=True, default=str)}\n"
+            f"Council: {json.dumps(council_decision.to_dict(), sort_keys=True, default=str)}"
+        )
+        response = await router.call_model(
+            "judge",
+            prompt,
+            intensity=prepared.intensity,
+            meta={"council_phase": "patch_bundle_judge", "candidate_id": council_decision.judge_decision.get("selected_candidate_id")},
+        )
+        data = _extract_json_object(response or "") if response else None
+        if data:
+            base_decision["approved"] = _normalize_judge_approval(data.get("approved"), default=bool(base_decision["approved"]))
+            base_decision["rationale"] = str(data.get("rationale") or base_decision["rationale"])
+            base_decision["premium_called"] = True
+    return {**base_decision, "phase_hash": _hash_payload(base_decision)}
+
+
+def _merge_council_patch_judgement(
+    verification: VerificationResult,
+    patch_judgement: dict[str, Any],
+) -> VerificationResult:
+    if _normalize_judge_approval(patch_judgement.get("approved"), default=False):
+        return verification
+    failure = {
+        "stage": "council_judge",
+        "status": "failed",
+        "message": "Premium Judge blocked hot-swap promotion for the staged patch bundle.",
+        "judgement": patch_judgement,
+    }
+    failures = [*verification.failures, failure]
+    checks = [*verification.checks, failure]
+    phase_payload = {
+        "base_phase_hash": verification.phase_hash,
+        "patch_judgement": patch_judgement,
+        "failures": failures,
+    }
+    return VerificationResult(
+        verification_version=verification.verification_version,
+        ok=False,
+        stage="blocked",
+        checks=checks,
+        failures=failures,
+        hotswap_ready=False,
+        phase_hash=_hash_payload(phase_payload),
+    )
+
+
+def _augment_live_hotswap_capsule(
+    capsule: dict[str, Any],
+    *,
+    council_decision: ArchitectCouncilDecision,
+    patch_judgement: dict[str, Any],
+    topology_delta: dict[str, Any],
+) -> dict[str, Any]:
+    payload = {
+        **{key: value for key, value in capsule.items() if key != "phase_hash"},
+        "fusion_council_phase_hash": council_decision.phase_hash,
+        "patch_judge_phase_hash": patch_judgement.get("phase_hash"),
+        "topology_delta": topology_delta,
+        "promotion_entrypoint": {
+            "review_command": "!stage",
+            "promote_command": "!stage_merge",
+            "staging_file": "Aura_Staging/architect_live_transaction.json",
+        },
+    }
+    return {**payload, "phase_hash": _hash_payload(payload)}
+
+
 def verify_arena_in_temp_workspace(
     arena: RefactorArenaTransaction,
     *,
@@ -617,6 +1132,18 @@ def verify_arena_in_temp_workspace(
                 failures.append(result)
                 return TempWorkspaceResult(ok=False, checks=checks, failures=failures, test_results=test_results, workspace_path=str(workspace))
 
+        topology_delta = compute_temp_workspace_topology_delta(arena, repo_root=root, workspace=workspace)
+        checks.append(topology_delta)
+        if topology_delta.get("status") != "passed":
+            failures.append(
+                {
+                    "stage": "topology_delta",
+                    "status": "failed",
+                    "message": "Temporary workspace topology delta could not be parsed.",
+                    "failures": topology_delta.get("failures", []),
+                }
+            )
+
         commands = test_commands if test_commands is not None else _default_test_commands(arena, workspace)
         if not commands:
             checks.append({"stage": "temp_workspace_tests", "status": "passed", "cmd": []})
@@ -631,7 +1158,7 @@ def verify_arena_in_temp_workspace(
             test_results[test_name] = {"status": status, "workspace_checks": checks[-len(commands):] if commands else []}
         if not test_results:
             test_results["temp_workspace"] = {"status": status, "workspace_checks": checks}
-        return TempWorkspaceResult(ok=not failures, checks=checks, failures=failures, test_results=test_results, workspace_path=str(workspace))
+        return TempWorkspaceResult(ok=not failures, checks=checks, failures=failures, test_results=test_results, workspace_path=str(workspace), topology_delta=topology_delta)
     finally:
         if not keep_workspace:
             shutil.rmtree(temp_root, ignore_errors=True)
@@ -654,7 +1181,8 @@ async def run_live_architect_transaction(
     effective_staging_path = Path(staging_path) if staging_path is not None else effective_root / "Aura_Staging" / "architect_live_transaction.json"
 
     router = ArchitectModelRouter(repo_root=effective_root, model_caller=model_caller, ledger_path=effective_ledger_path)
-    plan_spec = await router.plan_intent(intent, target_file=target_file, target_symbol=target_symbol)
+    council_decision = await router.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)
+    plan_spec = council_decision.selected_plan
     loop = ArchitectFusionLoop(repo_root=effective_root)
     prepared = loop.prepare(
         intent,
@@ -692,6 +1220,7 @@ async def run_live_architect_transaction(
         )
         for submission in patch_submissions
     ]
+    patch_judgement = await judge_patch_bundle(router, prepared, patch_submissions, stage_results, council_decision)
     workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=effective_root, test_commands=test_commands)
 
     def runner(test_name: str) -> dict[str, Any]:
@@ -699,8 +1228,16 @@ async def run_live_architect_transaction(
 
     verification = verify_refactor_arena(prepared.arena, repo_root=effective_root, runner=runner)
     verification = _merge_act_stage_result(verification, prepared, stage_results)
+    verification = _merge_council_plan_judgement(verification, council_decision)
+    verification = _merge_council_patch_judgement(verification, patch_judgement)
     verification = _merge_workspace_result(verification, workspace)
     hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=effective_root)
+    hotswap_capsule = _augment_live_hotswap_capsule(
+        hotswap_capsule,
+        council_decision=council_decision,
+        patch_judgement=patch_judgement,
+        topology_delta=workspace.topology_delta,
+    )
     ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
     append_architect_ledger(ledger_record, ledger_path=effective_ledger_path)
 
@@ -719,6 +1256,11 @@ async def run_live_architect_transaction(
             "plan_source": plan_spec.get("source"),
             "profiles": {name: profile.to_dict() for name, profile in router.profiles.items()},
             "ledger_hints": plan_spec.get("ledger_hints", {}),
+            "budget_route": council_decision.budget_route,
+        },
+        fusion_council={
+            **council_decision.to_dict(),
+            "patch_judgement": patch_judgement,
         },
     )
     output_path.write_text(json.dumps(transaction.to_dict(), indent=2, sort_keys=True, default=str), encoding="utf-8")
@@ -730,6 +1272,9 @@ def render_live_architect_summary(transaction: LiveArchitectTransaction) -> str:
     staged = sum(1 for item in transaction.stage_results if item.ok)
     blocked = len(transaction.verification.failures)
     target_files = ", ".join(transaction.prepared.arena.affected_files) or "none"
+    council = transaction.fusion_council or {}
+    judge = council.get("judge_decision", {})
+    topology_summary = transaction.workspace.topology_delta.get("summary", {}) if transaction.workspace.topology_delta else {}
     return (
         "LIVE ARCHITECT TRANSACTION\n"
         f"Status        : {status}\n"
@@ -737,6 +1282,9 @@ def render_live_architect_summary(transaction: LiveArchitectTransaction) -> str:
         f"Target files  : {target_files}\n"
         f"Patches staged: {staged}\n"
         f"Verifier fails: {blocked}\n"
+        f"Council pick  : {judge.get('selected_candidate_id', 'n/a')}\n"
+        f"Judge path    : {judge.get('role', 'n/a')}\n"
+        f"Topology delta: {topology_summary.get('files_checked', 0)} files checked\n"
         f"Staging file  : {transaction.staging_path}\n"
         f"Ledger hash   : {transaction.ledger_record.phase_hash}\n"
     )

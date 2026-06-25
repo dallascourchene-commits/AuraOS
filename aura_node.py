@@ -6321,8 +6321,33 @@ async def main():
                 print(" [📁 AURA COGNITIVE STAGING AREA: PENDING BREAKTHROUGHS]")
                 print("==================================================================")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                
-                if os.path.exists(manifest_path):
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+
+                if os.path.exists(architect_manifest_path):
+                    with open(architect_manifest_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    verification = data.get("verification", {})
+                    hotswap = data.get("hotswap_capsule", {})
+                    council = data.get("fusion_council", {})
+                    judge = council.get("judge_decision", {})
+                    topology_summary = hotswap.get("topology_delta", {}).get("summary", {})
+                    print(f" * Live Architect Status : {'HOTSWAP READY' if verification.get('hotswap_ready') else 'BLOCKED'}")
+                    print(f" * Selected Candidate    : {judge.get('selected_candidate_id', 'n/a')}")
+                    print(f" * Judge Path            : {judge.get('role', 'n/a')}")
+                    print(f" * Hotswap Phase Hash    : {hotswap.get('phase_hash', 'n/a')}")
+                    print(f" * Topology Delta Files  : {topology_summary.get('files_checked', 0)}")
+                    print(f" * Staged Patches        : {len(hotswap.get('patches', []))}")
+                    print(f"  " + "-" * 60)
+                    for patch in hotswap.get("patches", []):
+                        print(f"   - {patch.get('task_id')} :: {', '.join(patch.get('affected_files', []))}")
+                    if verification.get("failures"):
+                        print(f"  " + "-" * 60)
+                        print(" [BLOCKERS]:")
+                        for failure in verification.get("failures", [])[:5]:
+                            print(f"   - {failure.get('stage')}: {failure.get('message')}")
+                    print(f"  " + "-" * 60)
+                    print(" [Levers]: !stage_merge approves the hot-swap capsule; !stage_purge rejects it.")
+                elif os.path.exists(manifest_path):
                     with open(manifest_path, "r", encoding="utf-8") as f:
                         data = json.load(f)
                     print(f" • Staged Timestamp : {data.get('timestamp')}")
@@ -6341,7 +6366,49 @@ async def main():
             elif u_in_l == "!stage_merge":
                 print("\n[*] Initializing Feedback-Driven Staging Integration...")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                if os.path.exists(manifest_path):
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+                if os.path.exists(architect_manifest_path):
+                    try:
+                        with open(architect_manifest_path, "r", encoding="utf-8") as f:
+                            data = json.load(f)
+                        verification = data.get("verification", {})
+                        if not verification.get("hotswap_ready"):
+                            print("[-] Live Architect transaction is blocked. Run !stage to inspect verifier and council failures.")
+                            continue
+
+                        rating_str = await asyncio.to_thread(input, "[Dallas (Hot-Swap Alignment Score 1-10)] > ")
+                        feedback_str = await asyncio.to_thread(input, "[Dallas (Hot-Swap Technical Rationale)] > ")
+                        feedback_hv = node.polysynthetic_vram_compress(feedback_str)
+                        feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
+                        hotswap = data.get("hotswap_capsule", {})
+                        target = ",".join(hotswap.get("affected_files", [])) or "Live Architect Hot-Swap"
+                        f_id = f"ALIGN_HOTSWAP_{int(time.time())}"
+                        enqueue_sqlite_query(
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'HOTSWAP_APPROVAL', ?)",
+                            (f_id, f"TARGET: {target} | SCORE: {rating_str} | DESIGN_RULE: {feedback_str}", datetime.now().isoformat(), feedback_blob)
+                        )
+
+                        dag = QuantumMerkleDAG(node)
+                        state_snapshot = await dag.generate_epistemic_system_root()
+                        approval = {
+                            "approval_version": "AURA_HOTSWAP_APPROVAL_V1",
+                            "timestamp": datetime.now().isoformat(),
+                            "alignment_score": rating_str,
+                            "technical_rationale": feedback_str,
+                            "state_snapshot": state_snapshot,
+                            "transaction_phase_hash": data.get("ledger_record", {}).get("phase_hash"),
+                            "hotswap_capsule": hotswap,
+                            "fusion_council": data.get("fusion_council", {}),
+                        }
+                        approved_path = "Aura_Staging/approved_hotswap_capsule.json"
+                        os.makedirs(os.path.dirname(approved_path), exist_ok=True)
+                        with open(approved_path, "w", encoding="utf-8") as f_out:
+                            json.dump(approval, f_out, indent=2, sort_keys=True, default=str)
+                        print(f"[+] [HOT-SWAP APPROVED] Capsule staged for promotion at {approved_path}.")
+                        print("[+] Production files were not modified; approved capsule is ready for the hot-swap consumer.")
+                    except Exception as e:
+                        print(f"[-] Hot-swap approval aborted: {e}")
+                elif os.path.exists(manifest_path):
                     try:
                         with open(manifest_path, "r", encoding="utf-8") as f:
                             data = json.load(f)
@@ -6393,7 +6460,26 @@ async def main():
             elif u_in_l == "!stage_purge":
                 print("\n[*] Initializing Staging Workspace Flush with Negative Alignment...")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                if os.path.exists(manifest_path):
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+                if os.path.exists(architect_manifest_path):
+                    try:
+                        feedback_str = await asyncio.to_thread(input, "[Dallas (Live Architect Rejection Rationale)] > ")
+                        with open(architect_manifest_path, "r", encoding="utf-8") as f:
+                            data = json.load(f)
+                        hotswap = data.get("hotswap_capsule", {})
+                        frontier_target = ",".join(hotswap.get("affected_files", [])) or "Live Architect Hot-Swap"
+                        feedback_hv = node.polysynthetic_vram_compress(feedback_str)
+                        feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
+                        f_id = f"ALIGN_NEG_HOTSWAP_{int(time.time())}"
+                        enqueue_sqlite_query(
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'ANTI_PATTERN_REJECTION', ?)",
+                            (f_id, f"REJECTED TARGET: {frontier_target} | FAULT: {feedback_str}", datetime.now().isoformat(), feedback_blob)
+                        )
+                        os.remove(architect_manifest_path)
+                        print("[+] Live Architect transaction rejected and cleared. Negative alignment logged.")
+                    except Exception as e:
+                        print(f"[-] Failed to clear live Architect transaction: {e}")
+                elif os.path.exists(manifest_path):
                     try:
                         # Collect qualitative critique data to define structural anti-patterns
                         feedback_str = await asyncio.to_thread(input, "[Dallas (Rejection Rationale)] > ")
@@ -7224,8 +7310,8 @@ def contingency_harness():
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),
                     "!crystallize":        ("!crystallize",         "Initialize the epistemic knowledge crystallization hub for permanent memory alignment."),
                     "!timeline":          ("!timeline",            "Show the epistemic consensus ledger from aura_quantum_memory.db."),
-                    "!stage":             ("!stage / !stage_review / !review", "Preview the patch currently staged in Aura_Staging/pending_patches.json."),
-                    "!stage_merge":       ("!stage_merge",         "Merge the staged patch into aura_incubator.py after safety sentinel check and human alignment scoring."),
+                    "!stage":             ("!stage / !stage_review / !review", "Preview live Architect hot-swap transactions or legacy pending patches in Aura_Staging."),
+                    "!stage_merge":       ("!stage_merge",         "Approve a verified live Architect hot-swap capsule, or merge a legacy staged patch into aura_incubator.py."),
                     "!stage_purge":       ("!stage_purge",         "Reject and delete the staged patch; log it as a negative anti-pattern."),
                     "!synthesize":        ("!synthesize",          "Run a full cognitive synthesizer lifecycle pass to distil new knowledge principles."),
                     "!benchmark":         ("!benchmark",           "Run hardware runtime diagnostics: CPU, RAM, thermal, and inference throughput."),
@@ -7247,7 +7333,7 @@ def contingency_harness():
                     "!db_repair":         ("!db_repair",           "Check all AURA SQLite databases for corruption and auto-rebuild any that are malformed. Alias: !repair_db"),
                     "STOP":               ("STOP",                 "Immediately cancel any active inference or long-running process and return to the prompt."),
                     "exit / quit":        ("exit / quit",          "Gracefully shut down all kernels and exit AURA."),
-                    "architect <intent>": ("architect <intent>",   "Engage live Architect mode: route <intent> through Plan/Act, Refactor Arena, temp-workspace verification, hot-swap/rollback capsules, and ledgered staging."),
+                    "architect <intent>": ("architect <intent>",   "Engage live Architect mode: route <intent> through the Fusion Council, Plan/Act, Refactor Arena, temp-workspace verification, topology delta, hot-swap/rollback capsules, and ledgered staging."),
                 }
 
                 print("\n" + "=" * 66)
