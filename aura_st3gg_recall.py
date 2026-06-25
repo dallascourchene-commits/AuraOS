@@ -3,8 +3,8 @@
 ST3GG_BASE: 0xa901-[Q-SYS:ST3GG_RECALL]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Holographic O(1) Recall)
-DEPENDENCIES: base64, dataclasses, hashlib, json, pathlib, struct, time, typing, urllib.parse
-FUNCTIONS: ST3GGRecallRecord, compile_st3gg_pointer, compile_visible_st3gg_capsule, compute_compaction_efficiency, decode_st3gg_compaction_blob, hash_table_path_for_ledger, index_path_for_ledger, lookup_st3gg_recall, st3gg_recall_index_stats, store_path_for_ledger, upsert_st3gg_recall
+DEPENDENCIES: base64, dataclasses, hashlib, json, pathlib, struct, time, typing, urllib.parse, aura_dream_retrieval
+FUNCTIONS: ST3GGRecallRecord, compile_st3gg_pointer, compile_visible_st3gg_capsule, compute_compaction_efficiency, decode_st3gg_compaction_blob, hash_table_path_for_ledger, index_path_for_ledger, lookup_st3gg_recall, rerank_st3gg_recall_candidates, st3gg_recall_index_stats, store_path_for_ledger, upsert_st3gg_recall
 SYNOPSIS: Visible ST3GG recall primitives inspired by GLOSSOPETRAE's seeded-symbol insight and modern persistent hash-table retrieval. Converts content into deterministic DASH/ST3GG pointers and maintains a local hash sidecar for bounded O(1)-style recall without invisible Unicode carriers or covert-channel payloads.
 [/AURA_MASTER_KEY]
 """
@@ -20,6 +20,8 @@ import struct
 import time
 from typing import Any
 from urllib.parse import quote
+
+from aura_dream_retrieval import DREAM_LEDGER_PATH, DreamCandidate, rerank_for_arena
 
 ST3GG_RECALL_VERSION = "AURA_ST3GG_RECALL_V1"
 DEFAULT_HASH_CAPACITY = 2048
@@ -506,3 +508,41 @@ def lookup_st3gg_recall(
     if not isinstance(record, dict):
         return None
     return ST3GGRecallRecord.from_jsonable(record)
+
+
+def rerank_st3gg_recall_candidates(
+    query: str,
+    records: list[ST3GGRecallRecord | dict[str, Any]],
+    *,
+    target_type: str = "st3gg_memory",
+    ledger_path: str | Path | None = None,
+    record: bool = False,
+) -> dict[str, Any]:
+    """Rank existing ST3GG recall records by downstream usefulness without changing storage."""
+    candidates: list[DreamCandidate] = []
+    for item in records:
+        record_obj = item if isinstance(item, ST3GGRecallRecord) else ST3GGRecallRecord.from_jsonable(dict(item))
+        candidates.append(
+            DreamCandidate(
+                candidate_id=record_obj.pointer,
+                candidate_type=f"st3gg_{record_obj.content_type or 'memory'}",
+                source=record_obj.source_hint or "ST3GG",
+                content=record_obj.compressed or record_obj.original,
+                semantic_score=0.68,
+                truth_boundary="ST3GG pointer retrieves memory; DREAM only reranks usefulness",
+                metadata={
+                    "dash_key": record_obj.dash_key,
+                    "glyph": record_obj.glyph,
+                    "original_hash": record_obj.original_hash,
+                    "content_type": record_obj.content_type,
+                },
+            )
+        )
+    return rerank_for_arena(
+        query,
+        candidates,
+        target_type,
+        arena_domain="memory",
+        ledger_path=ledger_path or DREAM_LEDGER_PATH,
+        record=record,
+    )

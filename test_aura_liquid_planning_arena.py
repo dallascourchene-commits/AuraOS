@@ -23,10 +23,14 @@ def test_civic_and_travel_adapters_define_domain_neutral_action_capsules():
     )
 
     assert "legal_constraints" in civic.schema()["domain_objects"]
+    assert "dream_evidence_scores" in civic.schema()["domain_objects"]
     assert "claim legal approval" in civic_action.forbidden_actions
+    assert "rank evidence by downstream usefulness" in civic_action.allowed_actions
     assert civic_action.expected_output == "CIVIC_INTERVENTION_PLAN"
     assert "bookable_options" in travel.schema()["domain_objects"]
+    assert "dream_usefulness_scores" in travel.schema()["domain_objects"]
     assert "book without approval" in travel_action.forbidden_actions
+    assert "rank semantic pointers by downstream usefulness" in travel_action.allowed_actions
     assert travel_action.expected_output == "TRAVEL_PLAN_OPTIONS"
 
 

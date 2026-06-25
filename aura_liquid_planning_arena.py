@@ -322,7 +322,7 @@ class BaseArenaAdapter:
 
 class CodeArenaAdapter(BaseArenaAdapter):
     domain = "code"
-    domain_objects = ("files", "symbols", "diffs", "tests", "topology_deltas")
+    domain_objects = ("files", "symbols", "diffs", "tests", "topology_deltas", "dream_usefulness_scores")
 
     def _regions_for_act(self, act: Any, evidence: Any | None) -> list[dict[str, Any]]:
         writable_files = _stable_list([getattr(act, "target_file", None), *list(getattr(act, "related_files", []) or [])])
@@ -402,6 +402,7 @@ class CodeArenaAdapter(BaseArenaAdapter):
             metadata={
                 "source_capsule_version": getattr(act, "capsule_version", ""),
                 "size": getattr(act, "size", ""),
+                "dream_context_scores": list(getattr(evidence, "dream_scores", []) or [])[:8] if evidence is not None else [],
             },
         )
 
@@ -459,7 +460,7 @@ class CodeArenaAdapter(BaseArenaAdapter):
 
 class CivicArenaAdapter(BaseArenaAdapter):
     domain = "civic"
-    domain_objects = ("neighborhoods", "services", "funding", "legal_constraints", "intervention_modules", "community_governance")
+    domain_objects = ("neighborhoods", "services", "funding", "legal_constraints", "intervention_modules", "community_governance", "dream_evidence_scores")
 
     def action_capsule_from_intent(
         self,
@@ -476,7 +477,7 @@ class CivicArenaAdapter(BaseArenaAdapter):
             objective=objective,
             target=dict(target or {}),
             scope={"regions": [{"region_type": "civic_scope", "id": key, "value": value} for key, value in dict(target or {}).items()]},
-            allowed_actions=["propose interventions", "request missing data", "draft BoundaryContract placeholders"],
+            allowed_actions=["propose interventions", "request missing data", "rank evidence by downstream usefulness", "draft BoundaryContract placeholders"],
             forbidden_actions=["claim legal approval", "allocate funding", "promise service delivery"],
             acceptance_checks=["surface funding, legal, service, and governance constraints"],
             expected_output="CIVIC_INTERVENTION_PLAN",
@@ -496,6 +497,7 @@ class TravelArenaAdapter(BaseArenaAdapter):
         "price_observations",
         "raw_snapshots",
         "vsa_sidecar_pointers",
+        "dream_usefulness_scores",
         "media_assets",
     )
 
@@ -518,6 +520,7 @@ class TravelArenaAdapter(BaseArenaAdapter):
                 "compare routes",
                 "rank options",
                 "resolve VSA pointers into exact sidecar records",
+                "rank semantic pointers by downstream usefulness",
                 "request live bookability check",
                 "draft BoundaryContract placeholders",
             ],

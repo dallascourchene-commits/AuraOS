@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa902-[Q-SYS:ARCHITECT_LOOP]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Grounded Refactor Orchestration)
-DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
+DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_dream_retrieval, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
 FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArenaPatch, PatchStageResult, VerificationResult, ArchitectLedgerRecord, ArchitectLoopResult, ArchitectExecutionResult, CodemapLoadError, architect_capability_cards, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, stage_arena_patch, verify_refactor_arena, judge_refactor_arena, build_rollback_capsule, build_hotswap_capsule, build_architect_ledger_record, append_architect_ledger, route_intensity, ArchitectFusionLoop
 SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, a bounded refactor arena projected into the Liquid Planning Arena substrate, verifier-gated hot-swap capsule, rollback capsule, and append-only ledger record before any patch is promoted.
 [/AURA_MASTER_KEY]
@@ -18,6 +18,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from aura_dream_retrieval import DreamCandidate, rerank_for_arena
 from aura_fusion import DEFAULT_CONSTRAINTS, build_task_capsule
 from aura_liquid_planning_arena import CodeArenaAdapter
 from aura_phase_capsule import AuraPhaseCapsule, capture_phase_capsule
@@ -142,6 +143,7 @@ class GroundingEvidence:
     codemap_symbol_hits: list[dict[str, Any]]
     test_files: list[str]
     neighbor_files: list[str]
+    dream_scores: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -596,6 +598,68 @@ def _test_candidates(repo_root: str | Path, target_file: str | None) -> list[str
     return [candidate for candidate in candidates if (root / candidate).exists()]
 
 
+def _dream_candidates_for_grounding(
+    *,
+    target_file: str | None,
+    target_symbol: str | None,
+    symbol_hits: list[dict[str, Any]],
+    test_files: list[str],
+    neighbor_files: list[str],
+) -> list[DreamCandidate]:
+    candidates: list[DreamCandidate] = []
+    if target_file:
+        candidates.append(
+            DreamCandidate(
+                candidate_id=f"file:{target_file}",
+                candidate_type="codemap_file",
+                source="CODEMAP",
+                content=target_file,
+                semantic_score=0.82,
+                truth_boundary="code truth remains in repository files and tests",
+                metadata={"path": target_file, "target_symbol": target_symbol},
+            )
+        )
+    for hit in symbol_hits:
+        symbol_name = str(hit.get("name") or target_symbol or "")
+        hit_file = _normalize_path(hit.get("file")) or target_file or ""
+        candidates.append(
+            DreamCandidate(
+                candidate_id=f"symbol:{hit_file}:{symbol_name}",
+                candidate_type="codemap_symbol",
+                source="CODEMAP",
+                content=f"{hit_file} {symbol_name}",
+                semantic_score=0.78,
+                truth_boundary="symbol truth remains in CODEMAP and parsed source",
+                metadata=hit,
+            )
+        )
+    for test_file in test_files:
+        candidates.append(
+            DreamCandidate(
+                candidate_id=f"test:{test_file}",
+                candidate_type="nearby_test",
+                source="CODEMAP/test-neighbor surface",
+                content=test_file,
+                semantic_score=0.72,
+                truth_boundary="test truth remains in executable test files",
+                metadata={"path": test_file},
+            )
+        )
+    for neighbor_file in neighbor_files:
+        candidates.append(
+            DreamCandidate(
+                candidate_id=f"neighbor:{neighbor_file}",
+                candidate_type="neighbor_file",
+                source="CODEMAP/topology",
+                content=neighbor_file,
+                semantic_score=0.58,
+                truth_boundary="neighbor context is read-only unless leased",
+                metadata={"path": neighbor_file},
+            )
+        )
+    return candidates
+
+
 def _classify_act_size(task: dict[str, Any]) -> str:
     files = {
         _normalize_path(task.get("target_file")),
@@ -811,6 +875,23 @@ def ground_plan_capsule(
             for item in topology.get("neighbor_files", []) or []
             if _normalize_path(item)
         ]
+        test_files = _test_candidates(root, grounded_target_file if in_repo else None)
+        dream_candidates = _dream_candidates_for_grounding(
+            target_file=grounded_target_file if in_repo else target_file,
+            target_symbol=act.target_symbol,
+            symbol_hits=symbol_hits,
+            test_files=test_files,
+            neighbor_files=neighbor_files,
+        )
+        dream_result = rerank_for_arena(
+            plan.objective,
+            dream_candidates,
+            "code_context",
+            arena_domain="code",
+            expected_output=act.expected_output,
+            record=False,
+            metadata={"task_id": act.task_id, "plan_phase_hash": plan.phase_hash},
+        ) if dream_candidates else {"scores": []}
         evidence.append(
             GroundingEvidence(
                 task_id=act.task_id,
@@ -820,8 +901,9 @@ def ground_plan_capsule(
                 codemap_file_hit=codemap_file_hit,
                 symbol_exists=bool(symbol_hits) if act.target_symbol else True,
                 codemap_symbol_hits=symbol_hits,
-                test_files=_test_candidates(root, grounded_target_file if in_repo else None),
+                test_files=test_files,
                 neighbor_files=neighbor_files,
+                dream_scores=dream_result.get("scores", []),
             )
         )
     return evidence
