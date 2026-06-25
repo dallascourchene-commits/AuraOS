@@ -55,6 +55,16 @@ def test_architect_loop_builds_grounded_plan_act_arena():
     assert result.shadow_report.ok is True
     assert result.arena.ready_for_incubator is True
     assert result.arena.boundary_contracts[0]["invariant"].startswith("preserve phase_hash")
+    assert result.arena.boundary_contracts[0]["contract_version"] == "AURA_BOUNDARY_CONTRACT_V1"
+    assert result.arena.agent_leases[0]["capsule_id"] == "A1"
+    assert result.arena.liquid_arena["domain"] == "code"
+    forbidden_actions = set(result.arena.liquid_arena["action_capsules"][0]["forbidden_actions"])
+    assert {
+        "mutate production files directly",
+        "touch files outside leased regions",
+        "write aura_incubator.py in live Architect mode",
+        "invent behavior across a boundary without a BoundaryContract",
+    } <= forbidden_actions
     assert result.intensity == 1
 
 
@@ -235,8 +245,10 @@ def test_refactor_arena_stages_only_assigned_patch_scope():
     assert staged.ok is True
     assert staged.patch is not None
     assert result.arena.shared_patch_queue[0]["patch_id"] == staged.patch.patch_id
+    assert result.arena.liquid_arena["shared_action_queue"][0]["action_type"] == "patch_staged"
+    assert result.arena.liquid_arena["shared_action_queue"][0]["patch_id"] == staged.patch.patch_id
     assert blocked.ok is False
-    assert {finding.shadow_type for finding in blocked.findings} >= {"cross_boundary_patch"}
+    assert {finding.shadow_type for finding in blocked.findings} >= {"cross_boundary_patch", "lease_scope_violation"}
 
 
 def test_refactor_arena_rejects_diff_paths_that_do_not_match_metadata():
@@ -323,6 +335,9 @@ def test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule():
     assert verified.hotswap_ready is True
     assert capsule["status"] == "ready"
     assert capsule["judge"]["decision"] == "promote_hotswap"
+    assert capsule["liquid_arena"]["domain"] == "code"
+    assert capsule["liquid_arena"]["lease_count"] == 1
+    assert capsule["liquid_arena"]["shared_action_count"] == 1
     assert capsule["rollback_capsule"]["files"][0]["path"] == "aura_fusion.py"
 
 

@@ -273,6 +273,8 @@ def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
     assert transaction.hotswap_capsule["promotion_entrypoint"]["promote_command"] == "!stage_merge"
     assert transaction.hotswap_capsule["topology_delta"]["summary"]["files_checked"] == 1
     assert transaction.hotswap_capsule["topology_delta"]["files"][0]["calls"]["added"] == []
+    assert transaction.hotswap_capsule["topology_delta"]["world_state_delta"]["domain"] == "code"
+    assert transaction.hotswap_capsule["liquid_arena"]["domain"] == "code"
 
 
 def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(tmp_path: Path):
@@ -347,6 +349,7 @@ def test_topology_delta_rejects_affected_files_outside_repo(tmp_path: Path):
 
     assert delta["status"] == "failed"
     assert delta["summary"]["files_checked"] == 0
+    assert delta["world_state_delta"]["before_count"] == 0
     assert delta["failures"][0]["reason"] == "path_escapes_repo"
 
 
