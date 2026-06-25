@@ -365,6 +365,16 @@ def _set_delta(before: list[str], after: list[str]) -> dict[str, list[str]]:
     }
 
 
+def _normalize_judge_approval(value: Any, *, default: bool) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"true", "yes", "1", "approved"}
+    return False
+
+
 def _safe_topology_file_paths(repo_root: Path, workspace: Path, raw_path: str) -> tuple[tuple[str, Path, Path] | None, dict[str, Any] | None]:
     normalized = _diff_path_token(raw_path)
     if not normalized or not normalized.endswith(".py"):
@@ -519,7 +529,7 @@ def _merge_council_plan_judgement(
     council_decision: ArchitectCouncilDecision,
 ) -> VerificationResult:
     judge_decision = council_decision.judge_decision
-    if judge_decision.get("approved", True):
+    if _normalize_judge_approval(judge_decision.get("approved"), default=True):
         return verification
     failure = {
         "stage": "council_plan_judge",
@@ -886,7 +896,7 @@ class ArchitectFusionCouncil:
                 known = {item["candidate_id"] for item in candidates}
                 if selected in known:
                     decision["selected_candidate_id"] = selected
-                decision["approved"] = bool(data.get("approved", decision["approved"]))
+                decision["approved"] = _normalize_judge_approval(data.get("approved"), default=bool(decision["approved"]))
                 decision["rationale"] = str(data.get("rationale") or decision["rationale"])
                 decision["premium_called"] = True
         return {**decision, "phase_hash": _hash_payload(decision)}
@@ -1032,7 +1042,7 @@ async def judge_patch_bundle(
         )
         data = _extract_json_object(response or "") if response else None
         if data:
-            base_decision["approved"] = bool(data.get("approved", base_decision["approved"]))
+            base_decision["approved"] = _normalize_judge_approval(data.get("approved"), default=bool(base_decision["approved"]))
             base_decision["rationale"] = str(data.get("rationale") or base_decision["rationale"])
             base_decision["premium_called"] = True
     return {**base_decision, "phase_hash": _hash_payload(base_decision)}
@@ -1042,7 +1052,7 @@ def _merge_council_patch_judgement(
     verification: VerificationResult,
     patch_judgement: dict[str, Any],
 ) -> VerificationResult:
-    if patch_judgement.get("approved"):
+    if _normalize_judge_approval(patch_judgement.get("approved"), default=False):
         return verification
     failure = {
         "stage": "council_judge",

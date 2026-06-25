@@ -277,8 +277,10 @@ def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
 
 def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(tmp_path: Path):
     _write_demo_repo(tmp_path)
+    calls = []
 
     async def model_caller(provider: str, prompt: str, meta: dict):
+        calls.append((meta.get("role"), meta.get("council_phase")))
         if meta["role"] in {"planner", "planner_alt"}:
             return json.dumps(
                 {
@@ -300,9 +302,9 @@ def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(
         if meta["role"] == "shadow":
             return json.dumps({"approved": True, "score": 0.9, "blockers": [], "rationale": "No cheap blocker."})
         if meta["role"] == "judge" and meta.get("council_phase") == "plan_judge":
-            return json.dumps({"selected_candidate_id": "planner_1", "approved": False, "rationale": "Plan needs human redesign."})
+            return json.dumps({"selected_candidate_id": "planner_1", "approved": "false", "rationale": "Plan needs human redesign."})
         if meta["role"] == "judge" and meta.get("council_phase") == "patch_bundle_judge":
-            return json.dumps({"approved": True, "rationale": "Patch itself applies."})
+            return json.dumps({"approved": "true", "rationale": "Patch itself applies."})
         assert provider
         assert "Act Capsule" in prompt
         return (
@@ -325,6 +327,8 @@ def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(
 
     assert transaction.verification.hotswap_ready is False
     assert transaction.fusion_council["judge_decision"]["approved"] is False
+    assert ("judge", "patch_bundle_judge") in calls
+    assert transaction.fusion_council["patch_judgement"]["approved"] is True
     assert any(item.get("stage") == "council_plan_judge" for item in transaction.verification.failures)
 
 
