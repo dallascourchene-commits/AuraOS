@@ -15,7 +15,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
-
 TRAVEL_PRICE_VERIFIER_VERSION = "AURA_TRAVEL_PRICE_VERIFIER_V1"
 BLOCKED_FRESHNESS = {"stale", "expired", "unverified", "denied", "outdated_cache_replica", "vector_only"}
 
@@ -112,6 +111,17 @@ class TravelPriceVerifier:
             blockers.append("invalid_date_range")
         elif checkout <= checkin:
             blockers.append("checkout_not_after_checkin")
+        else:
+            computed_nights = (checkout.date() - checkin.date()).days
+            try:
+                nights = int(price.get("nights", 0))
+            except (TypeError, ValueError):
+                blockers.append("invalid_nights_field")
+            else:
+                if nights <= 0:
+                    blockers.append("nights_must_be_positive")
+                elif nights != computed_nights:
+                    blockers.append(f"nights_mismatch_expected_{computed_nights}_got_{nights}")
         try:
             confidence = float(price.get("confidence", 0.0))
         except (TypeError, ValueError):

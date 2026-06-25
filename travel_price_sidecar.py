@@ -13,14 +13,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 import hashlib
 import json
 import os
 from pathlib import Path
 import sqlite3
 from typing import Any
-
 
 TRAVEL_SIDECAR_VERSION = "AURA_TRAVEL_PRICE_SIDECAR_V1"
 DEFAULT_TRAVEL_DATA_ROOT = "Aura_Memory/travel_sidecar"
@@ -47,17 +46,21 @@ def resolve_travel_data_root(root: str | Path | None = None) -> Path:
     return Path(root or os.environ.get("AURA_TRAVEL_DATA_ROOT") or DEFAULT_TRAVEL_DATA_ROOT)
 
 
-def money_to_minor(value: Any) -> int | None:
+def money_to_minor(value: Any, *, already_minor: bool = False) -> int | None:
     if value is None or value == "":
         return None
     if isinstance(value, bool):
         raise ValueError("money values cannot be booleans")
     if isinstance(value, int):
-        return value
+        if already_minor:
+            return value
+        return value * 100
     try:
         amount = Decimal(str(value).replace(",", "").strip())
     except (InvalidOperation, ValueError) as exc:
         raise ValueError(f"invalid money value: {value!r}") from exc
+    if already_minor:
+        return int(amount.quantize(Decimal("1"), rounding=ROUND_HALF_UP))
     return int((amount * Decimal("100")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
 
@@ -90,7 +93,7 @@ def _row_to_dict(row: sqlite3.Row | None) -> dict[str, Any] | None:
         return None
     item = dict(row)
     for key in ("metadata_json", "provenance_json", "semantic_tags_json"):
-        if key in item and item[key]:
+        if item.get(key):
             target_key = key[:-5] if key.endswith("_json") else key
             item[target_key] = json.loads(item[key])
     return item
@@ -107,7 +110,7 @@ class TravelSidecarPaths:
     vsa_pointer_jsonl: Path
 
     @classmethod
-    def for_root(cls, root: str | Path | None = None) -> "TravelSidecarPaths":
+    def for_root(cls, root: str | Path | None = None) -> TravelSidecarPaths:
         base = resolve_travel_data_root(root)
         segments = base / "segments"
         return cls(
@@ -131,6 +134,9 @@ class TravelPriceSidecar:
 
     def close(self) -> None:
         self.conn.close()
+
+    def commit(self) -> None:
+        self.conn.commit()
 
     def _ensure_layout(self) -> None:
         self.paths.raw_snapshots_dir.mkdir(parents=True, exist_ok=True)
@@ -312,7 +318,6 @@ class TravelPriceSidecar:
                 now,
             ),
         )
-        self.conn.commit()
         return resort_id
 
     def upsert_room_type(self, room: dict[str, Any]) -> str:
@@ -345,7 +350,6 @@ class TravelPriceSidecar:
                 _json_dumps(room.get("amenities", [])),
             ),
         )
-        self.conn.commit()
         return room_type_id
 
     def upsert_rate_plan(self, rate_plan: dict[str, Any]) -> str:
@@ -377,11 +381,20 @@ class TravelPriceSidecar:
                 _json_dumps(rate_plan.get("inclusions", [])),
             ),
         )
-        self.conn.commit()
         return rate_plan_id
 
     def upsert_source(self, source: dict[str, Any]) -> str:
-        source_id = str(source.get("source_id") or f"source_{_hash_payload(source)[:12]}")
+        if source.get("source_id"):
+            source_id = str(source["source_id"])
+        else:
+            identity_keys = {
+                "source_type": source.get("source_type"),
+                "scraper_kind": source.get("scraper_kind"),
+                "source_url": source.get("source_url"),
+                "repo": source.get("repo"),
+                "resort_id": source.get("resort_id"),
+            }
+            source_id = f"source_{_hash_payload(identity_keys)[:12]}"
         self.conn.execute(
             """
             INSERT INTO resort_sources (
@@ -419,7 +432,6 @@ class TravelPriceSidecar:
                 _json_dumps(source.get("metadata", {})),
             ),
         )
-        self.conn.commit()
         return source_id
 
     def record_raw_snapshot(
@@ -470,7 +482,6 @@ class TravelPriceSidecar:
                 _json_dumps(row["metadata"]),
             ),
         )
-        self.conn.commit()
         return row
 
     def insert_price_observation(self, observation: dict[str, Any]) -> str:
@@ -478,12 +489,32 @@ class TravelPriceSidecar:
         missing = [key for key in required if not observation.get(key)]
         if missing:
             raise ValueError(f"missing price observation fields: {', '.join(missing)}")
-        nightly = money_to_minor(observation.get("nightly_price_minor", observation.get("nightly_price")))
-        total = money_to_minor(observation.get("total_price_minor", observation.get("total_price")))
-        taxes = money_to_minor(observation.get("taxes_fees_minor", observation.get("taxes_fees")))
+        nightly = (
+            money_to_minor(observation.get("nightly_price_minor"), already_minor=True)
+            if "nightly_price_minor" in observation
+            else money_to_minor(observation.get("nightly_price"))
+        )
+        total = (
+            money_to_minor(observation.get("total_price_minor"), already_minor=True)
+            if "total_price_minor" in observation
+            else money_to_minor(observation.get("total_price"))
+        )
+        taxes = (
+            money_to_minor(observation.get("taxes_fees_minor"), already_minor=True)
+            if "taxes_fees_minor" in observation
+            else money_to_minor(observation.get("taxes_fees"))
+        )
         if nightly is None and total is None:
             raise ValueError("price observation requires nightly_price or total_price")
-        nights = int(observation.get("nights") or _date_nights(observation["checkin_date"], observation["checkout_date"]) or 1)
+        derived_nights = _date_nights(observation["checkin_date"], observation["checkout_date"])
+        explicit_nights = observation.get("nights")
+        if derived_nights is None:
+            raise ValueError(f"cannot compute stay duration from checkin_date={observation.get('checkin_date')} and checkout_date={observation.get('checkout_date')}")
+        if explicit_nights is not None:
+            explicit_nights = int(explicit_nights)
+            if explicit_nights != derived_nights:
+                raise ValueError(f"nights field ({explicit_nights}) does not match computed duration ({derived_nights} nights)")
+        nights = derived_nights
         price_id = str(
             observation.get("price_id")
             or f"price_{_hash_payload([observation.get('resort_id'), observation.get('checkin_date'), observation.get('checkout_date'), total, nightly, observation.get('source_id')])[:16]}"
@@ -542,7 +573,6 @@ class TravelPriceSidecar:
                 _json_dumps(observation.get("provenance", {})),
             ),
         )
-        self.conn.commit()
         return price_id
 
     def upsert_vsa_pointer(self, pointer: dict[str, Any]) -> str:
@@ -576,7 +606,6 @@ class TravelPriceSidecar:
                 pointer.get("updated_at") or _utc_now(),
             ),
         )
-        self.conn.commit()
         self.append_vsa_pointer(dict(pointer, semantic_tags=semantic_tags))
         return vsa_id
 
@@ -607,7 +636,6 @@ class TravelPriceSidecar:
                 asset.get("created_at") or _utc_now(),
             ),
         )
-        self.conn.commit()
         return asset_id
 
     def write_resort_segments(
@@ -682,4 +710,4 @@ class TravelPriceSidecar:
             f"SELECT * FROM price_observations WHERE {' AND '.join(clauses)} ORDER BY observed_at DESC",
             args,
         ).fetchall()
-        return [dict(row) for row in rows]
+        return [_row_to_dict(row) for row in rows]

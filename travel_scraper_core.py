@@ -11,15 +11,15 @@ SYNOPSIS: Local-first scraper ingestion core for Option B GitHub scraper output.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 import json
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from travel_extractors import NormalizedTravelRecord, extract_option_b_record
 from travel_price_sidecar import TravelPriceSidecar
-from travel_source_registry import TravelSourceProfile, TravelSourceRegistry
-
+from travel_source_registry import TravelSourceRegistry
 
 TRAVEL_SCRAPER_CORE_VERSION = "AURA_TRAVEL_SCRAPER_CORE_V1"
 
@@ -66,76 +66,91 @@ class TravelScraperCore:
         profile = self.registry.profiles[scraper_kind]
         if profile.allow_state == "denied" and not allow_unreviewed:
             raise PermissionError(f"source profile is denied: {scraper_kind}")
-        source_id = self.registry.register_profile(
-            scraper_kind,
-            source_url=source_url or record.get("source_url") or record.get("url"),
-            overrides={
-                "allow_state": profile.allow_state,
-                "metadata": {"ingest_core": TRAVEL_SCRAPER_CORE_VERSION},
-            },
-        )
-        raw_payload = json.dumps(record, sort_keys=True, ensure_ascii=True, indent=2)
-        snapshot = self.sidecar.record_raw_snapshot(
-            source_id=source_id,
-            url=source_url or record.get("source_url") or record.get("url"),
-            content=raw_payload,
-            parser_version=profile.parser_version,
-            http_status=record.get("http_status"),
-            metadata={"scraper_kind": scraper_kind, "ingest_core": TRAVEL_SCRAPER_CORE_VERSION},
-        )
-        normalized = extract_option_b_record(
-            record,
-            profile=profile,
-            source_id=source_id,
-            snapshot_id=snapshot["snapshot_id"],
-        )
-        resort_id = self.sidecar.upsert_resort(normalized.resort)
-        self.sidecar.upsert_source(
-            {
-                **normalized.source,
-                "resort_id": resort_id,
-                "allow_state": profile.allow_state,
-                "terms_status": profile.terms_status,
-                "robots_allowed": profile.robots_allowed,
-                "priority": profile.priority,
-                "rate_limit_seconds": profile.rate_limit_seconds,
-                "metadata": normalized.snapshot_metadata,
-            }
-        )
-        room_ids = [self.sidecar.upsert_room_type(dict(item, resort_id=resort_id)) for item in normalized.room_types]
-        rate_ids = [self.sidecar.upsert_rate_plan(dict(item, resort_id=resort_id)) for item in normalized.rate_plans]
-        price_ids = []
-        for price in normalized.price_observations:
-            enriched = dict(price, resort_id=resort_id)
-            if not enriched.get("room_type_id") and room_ids:
-                enriched["room_type_id"] = room_ids[0]
-            if not enriched.get("rate_plan_id") and rate_ids:
-                enriched["rate_plan_id"] = rate_ids[0]
-            price_ids.append(self.sidecar.insert_price_observation(enriched))
-        media_ids = [self.sidecar.upsert_media_asset(dict(item, resort_id=resort_id)) for item in normalized.media_assets]
-        self.sidecar.write_resort_segments(
-            resort_id=resort_id,
-            semantic_metadata=normalized.semantic_metadata,
-            deterministic_truth=normalized.deterministic_truth,
-            source_id=source_id,
-            snapshot_id=snapshot["snapshot_id"],
-        )
-        warnings: list[str] = []
-        if not price_ids:
-            warnings.append("no price observations extracted")
-        if profile.allow_state == "operator_review_required":
-            warnings.append("source compliance requires operator review")
-        return TravelIngestResult(
-            resort_id=resort_id,
-            source_id=source_id,
-            snapshot_id=snapshot["snapshot_id"],
-            price_ids=tuple(price_ids),
-            room_type_ids=tuple(room_ids),
-            rate_plan_ids=tuple(rate_ids),
-            media_asset_ids=tuple(media_ids),
-            warnings=tuple(warnings),
-            normalized=normalized,
-        )
+        self.sidecar.conn.execute("SAVEPOINT ingest_record")
+        try:
+            source_id = self.registry.register_profile(
+                scraper_kind,
+                source_url=source_url or record.get("source_url") or record.get("url"),
+                overrides={
+                    "allow_state": profile.allow_state,
+                    "metadata": {"ingest_core": TRAVEL_SCRAPER_CORE_VERSION},
+                },
+            )
+            raw_payload = json.dumps(record, sort_keys=True, ensure_ascii=True, indent=2)
+            snapshot = self.sidecar.record_raw_snapshot(
+                source_id=source_id,
+                url=source_url or record.get("source_url") or record.get("url"),
+                content=raw_payload,
+                parser_version=profile.parser_version,
+                http_status=record.get("http_status"),
+                metadata={"scraper_kind": scraper_kind, "ingest_core": TRAVEL_SCRAPER_CORE_VERSION},
+            )
+            normalized = extract_option_b_record(
+                record,
+                profile=profile,
+                source_id=source_id,
+                snapshot_id=snapshot["snapshot_id"],
+            )
+            resort_id = self.sidecar.upsert_resort(normalized.resort)
+            existing_source = self.sidecar.conn.execute(
+                "SELECT metadata_json FROM resort_sources WHERE source_id = ?", (source_id,)
+            ).fetchone()
+            existing_metadata = {}
+            if existing_source and existing_source["metadata_json"]:
+                existing_metadata = json.loads(existing_source["metadata_json"])
+            merged_metadata = {**existing_metadata, **normalized.snapshot_metadata}
+            self.sidecar.upsert_source(
+                {
+                    **normalized.source,
+                    "resort_id": resort_id,
+                    "allow_state": profile.allow_state,
+                    "terms_status": profile.terms_status,
+                    "robots_allowed": profile.robots_allowed,
+                    "priority": profile.priority,
+                    "rate_limit_seconds": profile.rate_limit_seconds,
+                    "metadata": merged_metadata,
+                }
+            )
+            room_ids = [self.sidecar.upsert_room_type(dict(item, resort_id=resort_id)) for item in normalized.room_types]
+            rate_ids = [self.sidecar.upsert_rate_plan(dict(item, resort_id=resort_id)) for item in normalized.rate_plans]
+            price_ids = []
+            for price in normalized.price_observations:
+                enriched = dict(price, resort_id=resort_id)
+                if not enriched.get("room_type_id") and room_ids:
+                    enriched["room_type_id"] = room_ids[0]
+                if not enriched.get("rate_plan_id") and rate_ids:
+                    enriched["rate_plan_id"] = rate_ids[0]
+                price_ids.append(self.sidecar.insert_price_observation(enriched))
+            media_ids = [self.sidecar.upsert_media_asset(dict(item, resort_id=resort_id)) for item in normalized.media_assets]
+            self.sidecar.write_resort_segments(
+                resort_id=resort_id,
+                semantic_metadata=normalized.semantic_metadata,
+                deterministic_truth=normalized.deterministic_truth,
+                source_id=source_id,
+                snapshot_id=snapshot["snapshot_id"],
+            )
+            warnings: list[str] = []
+            if not price_ids:
+                warnings.append("no price observations extracted")
+            if profile.allow_state == "operator_review_required":
+                warnings.append("source compliance requires operator review")
+            result = TravelIngestResult(
+                resort_id=resort_id,
+                source_id=source_id,
+                snapshot_id=snapshot["snapshot_id"],
+                price_ids=tuple(price_ids),
+                room_type_ids=tuple(room_ids),
+                rate_plan_ids=tuple(rate_ids),
+                media_asset_ids=tuple(media_ids),
+                warnings=tuple(warnings),
+                normalized=normalized,
+            )
+            self.sidecar.conn.execute("RELEASE SAVEPOINT ingest_record")
+            self.sidecar.commit()
+            return result
+        except Exception:
+            self.sidecar.conn.execute("ROLLBACK TO SAVEPOINT ingest_record")
+            raise
 
     def ingest_option_b_records(
         self,

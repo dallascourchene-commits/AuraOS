@@ -19,7 +19,6 @@ from typing import Any
 
 from travel_price_sidecar import TravelPriceSidecar
 
-
 TRAVEL_VSA_POINTER_VERSION = "AURA_TRAVEL_VSA_POINTER_V1"
 PRICE_FORBIDDEN_KEYS = {
     "price",
@@ -56,7 +55,7 @@ def _stable_tags(tags: list[str] | tuple[str, ...] | set[str] | None) -> list[st
         if text and text not in seen:
             seen.add(text)
             result.append(text)
-    return result
+    return sorted(result)
 
 
 def reject_exact_price_payload(payload: Any, *, path: str = "payload") -> None:
@@ -164,18 +163,19 @@ class TravelVSAPointerIndex:
         checkin_date: str | None = None,
         checkout_date: str | None = None,
     ) -> str:
+        stable_tags = _stable_tags(semantic_tags)
         pointer = self.build_pointer(
             entity_type="price_offer",
             entity_id=price_id,
             sidecar_table="price_observations",
             sidecar_key=price_id,
-            semantic_tags=semantic_tags,
+            semantic_tags=stable_tags,
             scope=f"{resort_id}:{checkin_date or ''}:{checkout_date or ''}",
             semantic_payload={
                 "resort_id": resort_id,
                 "checkin_date": checkin_date,
                 "checkout_date": checkout_date,
-                "tags": semantic_tags,
+                "tags": stable_tags,
             },
         )
         return self.upsert_pointer(pointer)
