@@ -168,7 +168,6 @@ class UnifiedQDKT:
             print(f"[QDKT] Workspace schema init warning: {exc}")
 
     def _load_crystal_cache(self) -> None:
-        global _CRYSTAL_CACHE
         if _CRYSTAL_JSON.exists():
             try:
                 with open(_CRYSTAL_JSON, encoding="utf-8") as f:
@@ -259,12 +258,12 @@ class UnifiedQDKT:
         candidate_id = str(score_row.get("candidate_id") or "")
         target_type = str(score_row.get("target_type") or "")
         phase_hash = str(score_row.get("phase_hash") or "")
+        ts = float(score_row.get("ts") or time.time())
         event_id = str(
             score_row.get("event_id")
             or "QDKT-DREAM-"
-            + hashlib.sha256(f"{query}:{candidate_id}:{target_type}:{phase_hash}".encode("utf-8")).hexdigest()[:16]
+            + hashlib.sha256(f"{query}:{candidate_id}:{target_type}:{phase_hash}:{ts}".encode()).hexdigest()[:16]
         )
-        ts = float(score_row.get("ts") or time.time())
         usefulness = float(score_row.get("usefulness_score") or 0.0)
         semantic = float(score_row.get("semantic_score") or 0.0)
         row = {
@@ -676,7 +675,7 @@ _INSTANCE: UnifiedQDKT | None = None
 
 
 def get_qdkt() -> UnifiedQDKT:
-    global _INSTANCE
+    global _INSTANCE  # noqa: PLW0603
     if _INSTANCE is None:
         _INSTANCE = UnifiedQDKT()
     return _INSTANCE

@@ -11,14 +11,14 @@ SYNOPSIS: DREAM-lite retrieval substrate. Scores ST3GG, CODEMAP, paper-memory, t
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import Path
 import re
 import time
-from typing import Any, Callable
-
+from typing import Any
 
 DREAM_RETRIEVAL_VERSION = "AURA_DREAM_RETRIEVAL_V1"
 DREAM_LEDGER_PATH = Path("Aura_Memory") / "dream_retrieval_ledger.jsonl"
@@ -104,13 +104,15 @@ class DreamCandidate:
         for key in ("path", "file", "symbol", "semantic_tags", "sidecar_table", "sidecar_key", "domain"):
             if key in data and key not in metadata:
                 metadata[key] = data[key]
+        semantic_score_value = data.get("semantic_score")
+        final_semantic_score = semantic_score_value if semantic_score_value is not None else data.get("score")
         return cls(
             candidate_id=candidate_id,
             candidate_type=candidate_type,
             source=source,
             content=content,
             metadata=metadata,
-            semantic_score=_clamp01(data.get("semantic_score") or data.get("score"), 0.0),
+            semantic_score=_clamp01(final_semantic_score, 0.0),
             truth_boundary=str(data.get("truth_boundary") or ""),
             exact_lookup_required=bool(data.get("exact_lookup_required", False)),
             verifier_result=data.get("verifier_result"),
