@@ -280,6 +280,19 @@ remembers. The initial adapters define code, civic, and travel domain objects so
 later planners can stage civic interventions or travel options without pretending
 those domains are code patches.
 
+Aura Travel is wired as a planner-verifier subsystem, not a chatbot price source.
+`travel_scraper_core.py` ingests local Option B scraper output, saves immutable
+raw snapshots under `Aura_Memory/travel_sidecar/raw_snapshots`, and splits data
+into deterministic truth segments and semantic VSA segments. Exact prices, dates,
+currencies, taxes, occupancy, source URLs, parser versions, and freshness live in
+`travel_price_sidecar.py` SQLite sidecar rows using integer minor money units.
+`travel_vsa_pointer_index.py` stores only semantic addresses and sidecar keys;
+`travel_package_arena.py` resolves those pointers back to exact price rows and
+`travel_price_verifier.py` rejects stale, missing, unverified, or vector-only
+prices before any package can be displayed. The rule is: VSA retrieves meaning,
+sidecar retrieves truth, Arena composes packages, verifier blocks stale or
+invented prices, and a human approves booking/payment boundaries.
+
 `aura_live_architect.py` is the live command bridge for that substrate. The REPL
 `architect <intent>` and `code <intent>` paths now call it instead of writing
 cloud output to `aura_incubator.py`. The bridge starts with a local CODEMAP plan

@@ -5,17 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 216,
+    "included_file_count": 226,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 101,
+      ".git": 116,
       ".pytest_cache": 5,
       "Aura_Memory": 3,
-      "__pycache__": 112
+      "__pycache__": 121
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -227,8 +227,18 @@
       "test_pvm_logic.py",
       "test_self_repair.py",
       "test_synthesis_upgrades.py",
+      "test_travel_sidecar_stack.py",
       "test_universal_llm_logging.py",
       "topology_map.json",
+      "travel_extractors/__init__.py",
+      "travel_extractors/option_b.py",
+      "travel_media_assets.py",
+      "travel_package_arena.py",
+      "travel_price_sidecar.py",
+      "travel_price_verifier.py",
+      "travel_scraper_core.py",
+      "travel_source_registry.py",
+      "travel_vsa_pointer_index.py",
       "universal_decipher.rs",
       "unreal_bridge.py",
       "verify_os.py",
@@ -237,16 +247,16 @@
     ]
   },
   "summary": {
-    "file_count": 216,
-    "total_bytes": 61956352,
-    "text_tokens_est": 943632,
+    "file_count": 226,
+    "total_bytes": 62038513,
+    "text_tokens_est": 964043,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
       "native_accelerator": 8,
       "operator_script": 4,
-      "python_module": 142,
+      "python_module": 152,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
@@ -254,7 +264,7 @@
     "topology_edges": 0,
     "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782403022
+    "last_incremental_refresh_unix": 1782407068
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -485,7 +495,17 @@
       "test_pvm_logic.py",
       "test_self_repair.py",
       "test_synthesis_upgrades.py",
+      "test_travel_sidecar_stack.py",
       "test_universal_llm_logging.py",
+      "travel_extractors/__init__.py",
+      "travel_extractors/option_b.py",
+      "travel_media_assets.py",
+      "travel_package_arena.py",
+      "travel_price_sidecar.py",
+      "travel_price_verifier.py",
+      "travel_scraper_core.py",
+      "travel_source_registry.py",
+      "travel_vsa_pointer_index.py",
       "universal_decipher.rs",
       "unreal_bridge.py",
       "verify_os.py",
@@ -572,6 +592,13 @@
       "topology_degree": 0
     },
     {
+      "path": "travel_price_sidecar.py",
+      "role": "python_module",
+      "symbols": 34,
+      "tokens_est": 6941,
+      "topology_degree": 0
+    },
+    {
       "path": "aura_paper_memory.py",
       "role": "python_module",
       "symbols": 32,
@@ -589,7 +616,7 @@
       "path": "aura_liquid_planning_arena.py",
       "role": "python_module",
       "symbols": 31,
-      "tokens_est": 5025,
+      "tokens_est": 5255,
       "topology_degree": 0
     },
     {
@@ -626,13 +653,6 @@
       "symbols": 27,
       "tokens_est": 9363,
       "topology_degree": 0
-    },
-    {
-      "path": "aura_proxy_benchmark.py",
-      "role": "python_module",
-      "symbols": 27,
-      "tokens_est": 7827,
-      "topology_degree": 0
     }
   ],
   "command_index": {
@@ -661,22 +681,22 @@
       "aura_node.py:5426"
     ],
     "!ar_server_start": [
-      "USER_GUIDE.md:457",
+      "USER_GUIDE.md:470",
       "aura_node.py:6198"
     ],
     "!ar_server_stop": [
-      "USER_GUIDE.md:458",
+      "USER_GUIDE.md:471",
       "aura_node.py:6214"
     ],
     "!ar_start": [
       "AURA_FINAL_REPORT.md:168",
-      "USER_GUIDE.md:457",
+      "USER_GUIDE.md:470",
       "aura_node.py:6198",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!ar_stop": [
       "AURA_FINAL_REPORT.md:169",
-      "USER_GUIDE.md:458",
+      "USER_GUIDE.md:471",
       "aura_node.py:6214",
       "refactored-auraos-upgrades.md:2572"
     ],
@@ -690,8 +710,8 @@
     ],
     "!backtrack": [
       "AURA_FINAL_REPORT.md:143",
-      "README.md:97",
-      "USER_GUIDE.md:357",
+      "README.md:98",
+      "USER_GUIDE.md:370",
       "arxiv_forager.py:599",
       "aura_node.py:6013"
     ],
@@ -706,7 +726,7 @@
     ],
     "!calibrate": [
       "AURA_FINAL_REPORT.md:163",
-      "README.md:96",
+      "README.md:97",
       "USER_GUIDE.md:224",
       "aura_node.py:7145"
     ],
@@ -742,16 +762,16 @@
     ],
     "!crystallize": [
       "AURA_FINAL_REPORT.md:141",
-      "USER_GUIDE.md:364",
+      "USER_GUIDE.md:377",
       "aura_node.py:6919"
     ],
     "!curiosity_tree": [
       "AURA_FINAL_REPORT.md:174",
-      "USER_GUIDE.md:360",
+      "USER_GUIDE.md:373",
       "aura_node.py:6255"
     ],
     "!db_repair": [
-      "USER_GUIDE.md:461",
+      "USER_GUIDE.md:474",
       "aura_node.py:2990"
     ],
     "!evolve_reasoning": [
@@ -760,7 +780,7 @@
       "aura_node.py:6914"
     ],
     "!export": [
-      "USER_GUIDE.md:459",
+      "USER_GUIDE.md:472",
       "aura_node.py:5816"
     ],
     "!fast_path": [
@@ -770,24 +790,24 @@
       "test_aura_functions.py:900"
     ],
     "!forage": [
-      "USER_GUIDE.md:356",
+      "USER_GUIDE.md:369",
       "aura_node.py:5999",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!forage_off": [
-      "USER_GUIDE.md:362",
+      "USER_GUIDE.md:375",
       "aura_node.py:6192"
     ],
     "!forage_on": [
-      "USER_GUIDE.md:361",
+      "USER_GUIDE.md:374",
       "aura_node.py:6186"
     ],
     "!forager_off": [
-      "USER_GUIDE.md:362",
+      "USER_GUIDE.md:375",
       "aura_node.py:6192"
     ],
     "!forager_on": [
-      "USER_GUIDE.md:361",
+      "USER_GUIDE.md:374",
       "aura_node.py:6186"
     ],
     "!fusion": [
@@ -808,7 +828,7 @@
     ],
     "!indus_decrypt": [
       "AURA_FINAL_REPORT.md:175",
-      "USER_GUIDE.md:366",
+      "USER_GUIDE.md:379",
       "aura_node.py:6926"
     ],
     "!manifest": [
@@ -818,12 +838,12 @@
     ],
     "!markov": [
       "AURA_FINAL_REPORT.md:144",
-      "USER_GUIDE.md:462",
+      "USER_GUIDE.md:475",
       "aura_node.py:7117"
     ],
     "!mesh_status": [
       "AURA_FINAL_REPORT.md:167",
-      "USER_GUIDE.md:456",
+      "USER_GUIDE.md:469",
       "aura_node.py:5452"
     ],
     "!meta_analyze": [
@@ -843,14 +863,14 @@
     ],
     "!ping_mesh": [
       "AURA_FINAL_REPORT.md:166",
-      "USER_GUIDE.md:455",
+      "USER_GUIDE.md:468",
       "aura_node.py:5447"
     ],
     "!plan": [
       "aura_node.py:5390"
     ],
     "!push": [
-      "USER_GUIDE.md:460",
+      "USER_GUIDE.md:473",
       "aura_node.py:5098",
       "test_aura_functions.py:208"
     ],
@@ -858,7 +878,8 @@
       "aura_hv_cache.py:373",
       "aura_savings_dashboard.py:229",
       "aura_substrate.py:134",
-      "aura_topology_ws_bridge.py:658"
+      "aura_topology_ws_bridge.py:658",
+      "travel_price_sidecar.py:60"
     ],
     "!reason": [
       "AURA_FINAL_REPORT.md:154",
@@ -866,13 +887,13 @@
       "aura_node.py:7105"
     ],
     "!repair_db": [
-      "USER_GUIDE.md:461",
+      "USER_GUIDE.md:474",
       "aura_node.py:6592"
     ],
     "!research": [
       "AURA_FINAL_REPORT.md:142",
-      "README.md:98",
-      "USER_GUIDE.md:358",
+      "README.md:99",
+      "USER_GUIDE.md:371",
       "aura_node.py:6025",
       "aura_skillweaver.py:14",
       "systems_check.py:250"
@@ -889,7 +910,7 @@
     "!route": [
       "AURA_FINAL_REPORT.md:28",
       "AURA_ROUTER.md:213",
-      "README.md:99",
+      "README.md:100",
       "USER_GUIDE.md:225",
       "aura_node.py:7154",
       "test_aura_substrate.py:323"
@@ -920,7 +941,7 @@
       "aura_node.py:6761"
     ],
     "!search_similar": [
-      "USER_GUIDE.md:359",
+      "USER_GUIDE.md:372",
       "aura_node.py:6228",
       "refactored-auraos-upgrades.md:2573"
     ],
@@ -939,7 +960,7 @@
       "aura_node.py:5552"
     ],
     "!settings": [
-      "README.md:93",
+      "README.md:94",
       "USER_GUIDE.md:170",
       "aura_node.py:7270",
       "daily_digest_2026-06-06.md:14"
@@ -987,7 +1008,7 @@
       "aura_node.py:7089"
     ],
     "!synthesize": [
-      "USER_GUIDE.md:365",
+      "USER_GUIDE.md:378",
       "aura_associative_core.py:138",
       "aura_node.py:6509",
       "test_aura_functions.py:886"
@@ -1010,12 +1031,12 @@
       "index.html:120"
     ],
     "!timeline": [
-      "USER_GUIDE.md:363",
+      "USER_GUIDE.md:376",
       "aura_node.py:6267"
     ],
     "!topology": [
       "AURA_FINAL_REPORT.md:48",
-      "README.md:45",
+      "README.md:46",
       "USER_GUIDE.md:183",
       "aura_ai_router.py:143",
       "aura_codebase_navigator.py:213",
@@ -1034,7 +1055,7 @@
       "aura_savings_dashboard.py:224"
     ],
     "!voice": [
-      "USER_GUIDE.md:463",
+      "USER_GUIDE.md:476",
       "aura_node.py:7331"
     ]
   },
@@ -2541,6 +2562,16 @@
         "signature_hash": "b3e85c3cb5084926"
       }
     ],
+    "NormalizedTravelRecord": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "class",
+        "line": 87,
+        "end_line": 102,
+        "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
+        "signature_hash": "e05678872d723255"
+      }
+    ],
     "PVMArchChecker": [
       {
         "file": "pvm_arch_checker.py",
@@ -3062,9 +3093,139 @@
         "file": "aura_liquid_planning_arena.py",
         "kind": "class",
         "line": 488,
-        "end_line": 512,
+        "end_line": 549,
         "semantic_id": "aura_liquid_planning_arena.py#class:TravelArenaAdapter:9036a489be5ec96c",
         "signature_hash": "830347095f7a16ec"
+      }
+    ],
+    "TravelIngestResult": [
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 50,
+        "semantic_id": "travel_scraper_core.py#class:TravelIngestResult:c4dfcbcaed40b70b",
+        "signature_hash": "5affe6ab4c326fba"
+      }
+    ],
+    "TravelMediaAssetRegistry": [
+      {
+        "file": "travel_media_assets.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 79,
+        "semantic_id": "travel_media_assets.py#class:TravelMediaAssetRegistry:1946700288f870f5",
+        "signature_hash": "ad2bde3577aafa1e"
+      }
+    ],
+    "TravelPackageArena": [
+      {
+        "file": "travel_package_arena.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 174,
+        "semantic_id": "travel_package_arena.py#class:TravelPackageArena:1ae09205ffaa2824",
+        "signature_hash": "f3e91d55d53b3408"
+      }
+    ],
+    "TravelPackageCandidate": [
+      {
+        "file": "travel_package_arena.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 62,
+        "semantic_id": "travel_package_arena.py#class:TravelPackageCandidate:d8a373090f1f5d97",
+        "signature_hash": "6854fedd7b75e98f"
+      }
+    ],
+    "TravelPriceSidecar": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 685,
+        "semantic_id": "travel_price_sidecar.py#class:TravelPriceSidecar:2267a80f2db4221c",
+        "signature_hash": "ee772072162cc9e9"
+      }
+    ],
+    "TravelPriceVerification": [
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 63,
+        "semantic_id": "travel_price_verifier.py#class:TravelPriceVerification:9fa03e8dafdd56f0",
+        "signature_hash": "220ba42e51db1b9c"
+      }
+    ],
+    "TravelPriceVerifier": [
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 128,
+        "semantic_id": "travel_price_verifier.py#class:TravelPriceVerifier:dc51a6ee014b67f0",
+        "signature_hash": "859cb5ad3f952551"
+      }
+    ],
+    "TravelScraperCore": [
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 157,
+        "semantic_id": "travel_scraper_core.py#class:TravelScraperCore:46076993ffdbfcc3",
+        "signature_hash": "7dc4e9e91c2d34f0"
+      }
+    ],
+    "TravelSidecarPaths": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 121,
+        "semantic_id": "travel_price_sidecar.py#class:TravelSidecarPaths:4cb83bd9b8b2f908",
+        "signature_hash": "86b9fc45c56a3f6c"
+      }
+    ],
+    "TravelSourceProfile": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 66,
+        "semantic_id": "travel_source_registry.py#class:TravelSourceProfile:175b3b13f1b22522",
+        "signature_hash": "1114855a92d236ca"
+      }
+    ],
+    "TravelSourceRegistry": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 152,
+        "semantic_id": "travel_source_registry.py#class:TravelSourceRegistry:4b9755940438abec",
+        "signature_hash": "2ec92427f2041824"
+      }
+    ],
+    "TravelVSAPointer": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 103,
+        "semantic_id": "travel_vsa_pointer_index.py#class:TravelVSAPointer:7387467e77ba3c35",
+        "signature_hash": "0ca97cbb24a9473a"
+      }
+    ],
+    "TravelVSAPointerIndex": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 184,
+        "semantic_id": "travel_vsa_pointer_index.py#class:TravelVSAPointerIndex:6ea836befb1df4f1",
+        "signature_hash": "486ceb0c8da1c3f5"
       }
     ],
     "UnifiedPWFST": [
@@ -4439,6 +4600,62 @@
         "signature_hash": "fff7b69dbc75cb54"
       },
       {
+        "file": "travel_media_assets.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "travel_media_assets.py#function:__init__:af8a0d84069412cd",
+        "signature_hash": "545c2d3808ff0a58"
+      },
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 77,
+        "semantic_id": "travel_package_arena.py#function:__init__:cd4c9e4b89c17e77",
+        "signature_hash": "a537f562b32f0580"
+      },
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 130,
+        "semantic_id": "travel_price_sidecar.py#function:__init__:ee0a83dcc603014c",
+        "signature_hash": "1ec21eed4b82070a"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 70,
+        "semantic_id": "travel_price_verifier.py#function:__init__:0f5adf1c5f3bcb15",
+        "signature_hash": "df4e4b3842188971"
+      },
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "travel_scraper_core.py#function:__init__:50d6e159dcbcef90",
+        "signature_hash": "7b1d56d4926ec258"
+      },
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 124,
+        "semantic_id": "travel_source_registry.py#function:__init__:6e8f0019b0a529f2",
+        "signature_hash": "545c2d3808ff0a58"
+      },
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "travel_vsa_pointer_index.py#function:__init__:5ac2c23d8c6b2b89",
+        "signature_hash": "545c2d3808ff0a58"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 46,
@@ -4797,6 +5014,16 @@
         "signature_hash": "637e991c09a11c73"
       }
     ],
+    "_as_list": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 59,
+        "semantic_id": "travel_extractors/option_b.py#function:_as_list:33600c3f331be697",
+        "signature_hash": "b3d4663b23e34af5"
+      }
+    ],
     "_ase_curve": [
       {
         "file": "aura_mesh.py",
@@ -5003,6 +5230,16 @@
         "end_line": 269,
         "semantic_id": "liquid_attractor_control_plane.py#function:_bootstrap_attractor_field:9a2f6566748399d8",
         "signature_hash": "778385372f8b8143"
+      }
+    ],
+    "_boundary_contracts": [
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 112,
+        "semantic_id": "travel_package_arena.py#function:_boundary_contracts:151bd56e9d526787",
+        "signature_hash": "eb2b1cc596105c7e"
       }
     ],
     "_broadcast_message": [
@@ -5541,6 +5778,16 @@
         "signature_hash": "b3b04bc97b15ebf0"
       }
     ],
+    "_coordinates": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 68,
+        "semantic_id": "travel_extractors/option_b.py#function:_coordinates:7e062a04494252ee",
+        "signature_hash": "4fbf5deb4d059737"
+      }
+    ],
     "_copy_mapping": [
       {
         "file": "aura_spectral_topology.py",
@@ -5609,6 +5856,16 @@
         "end_line": 158,
         "semantic_id": "aura_spectral_topology.py#function:_cyclic_nodes:c2ce9cf11f09bd34",
         "signature_hash": "53f6f763c20d7e2f"
+      }
+    ],
+    "_date_nights": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "travel_price_sidecar.py#function:_date_nights:4fd70db41ef92d9b",
+        "signature_hash": "122ef197c84ca784"
       }
     ],
     "_db": [
@@ -5805,6 +6062,16 @@
         "end_line": 67,
         "semantic_id": "aura_savings_db.py#function:_ensure_dir:92c689fafc5104b0",
         "signature_hash": "44d943eb2a457577"
+      }
+    ],
+    "_ensure_layout": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "travel_price_sidecar.py#function:_ensure_layout:148089e6add6a484",
+        "signature_hash": "888ff8986cb695c2"
       }
     ],
     "_ensure_memmap_dir": [
@@ -6115,6 +6382,16 @@
         "end_line": 71,
         "semantic_id": "aura_benchmark_sandbox.py#function:_fingerprint_secrets:e1fa543a6ff335d4",
         "signature_hash": "e3de8418e388b674"
+      }
+    ],
+    "_first": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "travel_extractors/option_b.py#function:_first:c29c6501ba9e58ff",
+        "signature_hash": "1659855483032f50"
       }
     ],
     "_forbidden_external_url": [
@@ -6507,6 +6784,38 @@
         "end_line": 129,
         "semantic_id": "aura_live_architect.py#function:_hash_payload:8f5502590d3cc080",
         "signature_hash": "3403c8182515448e"
+      },
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "travel_extractors/option_b.py#function:_hash_payload:9833a1aa1769197f",
+        "signature_hash": "bf535f3b1015b4f3"
+      },
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "travel_package_arena.py#function:_hash_payload:dffd730d71dfa1d5",
+        "signature_hash": "bf535f3b1015b4f3"
+      },
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "travel_price_sidecar.py#function:_hash_payload:1382eb6e2f0dfe23",
+        "signature_hash": "edc97bafba8f5e9d"
+      },
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "travel_vsa_pointer_index.py#function:_hash_payload:f96e240560f4fa50",
+        "signature_hash": "edc97bafba8f5e9d"
       }
     ],
     "_hazard_label": [
@@ -6605,6 +6914,16 @@
         "end_line": 288,
         "semantic_id": "aura_st3gg_recall.py#function:_init_hash_table:8bc078c8c0584663",
         "signature_hash": "af5bec5048739502"
+      }
+    ],
+    "_init_schema": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 255,
+        "semantic_id": "travel_price_sidecar.py#function:_init_schema:474c54916bad75fe",
+        "signature_hash": "83115eff30146182"
       }
     ],
     "_init_schemas": [
@@ -6785,6 +7104,24 @@
         "end_line": 195,
         "semantic_id": "aura_codebase_navigator.py#function:_iter_repo_files:39320c276a155f5b",
         "signature_hash": "d1ec406c53b58f2a"
+      }
+    ],
+    "_json_dumps": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "travel_price_sidecar.py#function:_json_dumps:f54d1d01af752abf",
+        "signature_hash": "c8ee7adc34267616"
+      },
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "travel_vsa_pointer_index.py#function:_json_dumps:8bf0392694d1b47a",
+        "signature_hash": "c8ee7adc34267616"
       }
     ],
     "_judge_candidates": [
@@ -7543,6 +7880,16 @@
         "signature_hash": "ae30c24846e7b1be"
       }
     ],
+    "_now": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "test_travel_sidecar_stack.py#function:_now:c3b418b44275c500",
+        "signature_hash": "2c72b9bcad25974e"
+      }
+    ],
     "_np_memmap": [
       {
         "file": "liquid_attractor_control_plane.py",
@@ -7681,6 +8028,34 @@
         "end_line": 880,
         "semantic_id": "aura_live_architect.py#function:_parse_critic_report:4d6609b59b560c33",
         "signature_hash": "db7bbc89fbae9063"
+      }
+    ],
+    "_parse_date": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 76,
+        "semantic_id": "travel_price_sidecar.py#function:_parse_date:e94c2913106e187a",
+        "signature_hash": "ba096aa8302c69d8"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 44,
+        "semantic_id": "travel_price_verifier.py#function:_parse_date:edbff9d897cca7a7",
+        "signature_hash": "ba096aa8302c69d8"
+      }
+    ],
+    "_parse_time": [
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 35,
+        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
+        "signature_hash": "92dd7ff707cc8d43"
       }
     ],
     "_parses_ok": [
@@ -7831,6 +8206,16 @@
         "end_line": 435,
         "semantic_id": "aura_proxy_benchmark.py#function:_preserves_signature:ac602b52d1fda2f5",
         "signature_hash": "6f052fcdf6cd39d0"
+      }
+    ],
+    "_price_items": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 83,
+        "semantic_id": "travel_extractors/option_b.py#function:_price_items:c83b8c82c93f0775",
+        "signature_hash": "d8f7bdc74c8611f3"
       }
     ],
     "_price_per_m": [
@@ -8391,6 +8776,16 @@
         "signature_hash": "f3200c7567f1e8f7"
       }
     ],
+    "_row_to_dict": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 96,
+        "semantic_id": "travel_price_sidecar.py#function:_row_to_dict:e8cdf407e45ccaab",
+        "signature_hash": "e819ce67f941f957"
+      }
+    ],
     "_rows": [
       {
         "file": "test_universal_llm_logging.py",
@@ -8645,6 +9040,16 @@
         "end_line": 210,
         "semantic_id": "aura_anthropic_router.py#function:_sambanova_call:77592ad512e3f897",
         "signature_hash": "3d926bb2bf3cce46"
+      }
+    ],
+    "_sample_option_b_record": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 51,
+        "semantic_id": "test_travel_sidecar_stack.py#function:_sample_option_b_record:c08f9b3492466a5e",
+        "signature_hash": "e16ebc4a83d2d681"
       }
     ],
     "_sample_payload": [
@@ -9017,6 +9422,24 @@
         "signature_hash": "f142f5ce726d22b9"
       }
     ],
+    "_slug": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "travel_extractors/option_b.py#function:_slug:8eb04f7ea17d599e",
+        "signature_hash": "e0951e0d86520da7"
+      },
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "travel_price_sidecar.py#function:_slug:3e7ffdbdc879db56",
+        "signature_hash": "e0951e0d86520da7"
+      }
+    ],
     "_snapshot_node": [
       {
         "file": "aura_spectral_topology.py",
@@ -9045,6 +9468,16 @@
         "end_line": 42,
         "semantic_id": "aura_liquid_planning_arena.py#function:_stable_list:8aee70137b9e11be",
         "signature_hash": "eae5f4829bc493b8"
+      }
+    ],
+    "_stable_tags": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "travel_vsa_pointer_index.py#function:_stable_tags:56aef2d9b3d9ca00",
+        "signature_hash": "b4eace0becf81ab4"
       }
     ],
     "_stage_indexing": [
@@ -10131,6 +10564,48 @@
         "signature_hash": "47d540802742cbf3"
       }
     ],
+    "_utc_now": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "travel_extractors/option_b.py#function:_utc_now:2cf7f1431a46a59c",
+        "signature_hash": "0854d8b3d4afe61c"
+      },
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "travel_package_arena.py#function:_utc_now:4105237ba0d9c5cc",
+        "signature_hash": "0854d8b3d4afe61c"
+      },
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "travel_price_sidecar.py#function:_utc_now:6ed81f533f0866a5",
+        "signature_hash": "0854d8b3d4afe61c"
+      },
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "travel_source_registry.py#function:_utc_now:1eb0f02d48a75f79",
+        "signature_hash": "0854d8b3d4afe61c"
+      },
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "travel_vsa_pointer_index.py#function:_utc_now:cb5975004ca7fb95",
+        "signature_hash": "0854d8b3d4afe61c"
+      }
+    ],
     "_valid_edit": [
       {
         "file": "aura_proxy_benchmark.py",
@@ -10349,8 +10824,8 @@
       {
         "file": "aura_liquid_planning_arena.py",
         "kind": "function",
-        "line": 492,
-        "end_line": 512,
+        "line": 503,
+        "end_line": 549,
         "semantic_id": "aura_liquid_planning_arena.py#function:action_capsule_from_intent:d258b4e295f9bf71",
         "signature_hash": "83e0ab04339e530d"
       }
@@ -10557,6 +11032,26 @@
         "signature_hash": "4e50d6e060b66de9"
       }
     ],
+    "append_deterministic_truth": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 263,
+        "semantic_id": "travel_price_sidecar.py#function:append_deterministic_truth:76ceae4d5b3029de",
+        "signature_hash": "1df499ba644f9643"
+      }
+    ],
+    "append_jsonl": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 257,
+        "end_line": 260,
+        "semantic_id": "travel_price_sidecar.py#function:append_jsonl:0c7b45bfe6fab4f1",
+        "signature_hash": "27286f4b648bb5a0"
+      }
+    ],
     "append_record": [
       {
         "file": "async_palace.py",
@@ -10581,6 +11076,26 @@
         "end_line": 163,
         "semantic_id": "aura_attention_palace.py#async_function:append_record:1a3f67a1da00d58d",
         "signature_hash": "2858006f93283fb3"
+      }
+    ],
+    "append_semantic_metadata": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 265,
+        "end_line": 266,
+        "semantic_id": "travel_price_sidecar.py#function:append_semantic_metadata:e5e6dfd7b204c747",
+        "signature_hash": "35e81a337cdd3b61"
+      }
+    ],
+    "append_vsa_pointer": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 269,
+        "semantic_id": "travel_price_sidecar.py#function:append_vsa_pointer:f671f22acf345533",
+        "signature_hash": "7605ff47555ffe1e"
       }
     ],
     "apply_block": [
@@ -10721,6 +11236,16 @@
         "end_line": 91,
         "semantic_id": "lexical_transducer.py#function:architect_to_vector:52cc8949d396c601",
         "signature_hash": "43859e428ff88e70"
+      }
+    ],
+    "arena_action_for_intent": [
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 174,
+        "semantic_id": "travel_package_arena.py#function:arena_action_for_intent:5a75bf8687e4a6c0",
+        "signature_hash": "e3eae36cb991198b"
       }
     ],
     "assert_zero_copy": [
@@ -11101,6 +11626,16 @@
         "signature_hash": "93ead6d9f1a342cb"
       }
     ],
+    "build_candidate_from_vsa_price": [
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 165,
+        "semantic_id": "travel_package_arena.py#function:build_candidate_from_vsa_price:2f49ca7231e4fcfc",
+        "signature_hash": "7ff2f4707b2d4fd2"
+      }
+    ],
     "build_dual_mode_block": [
       {
         "file": "aura_hv_cache.py",
@@ -11209,6 +11744,16 @@
         "end_line": 1033,
         "semantic_id": "aura_live_architect.py#async_function:build_patch_submissions:a4afd7b7b9b667c9",
         "signature_hash": "6ff80c5d5969296c"
+      }
+    ],
+    "build_pointer": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 135,
+        "semantic_id": "travel_vsa_pointer_index.py#function:build_pointer:970b2bc13fd4aa57",
+        "signature_hash": "2cd9189610d6e674"
       }
     ],
     "build_refactor_arena": [
@@ -11599,6 +12144,16 @@
         "end_line": 321,
         "semantic_id": "aura_llm_egress.py#function:classify_providers:0decc5b8db9dcb7d",
         "signature_hash": "da15a66a32a4cf83"
+      }
+    ],
+    "close": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "travel_price_sidecar.py#function:close:7661a12cf0c2570f",
+        "signature_hash": "818fdb66f3084fa5"
       }
     ],
     "close_connection": [
@@ -13009,6 +13564,16 @@
         "signature_hash": "d6839e3b9839cd53"
       }
     ],
+    "extract_option_b_record": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 239,
+        "semantic_id": "travel_extractors/option_b.py#function:extract_option_b_record:bb881ff0374dd51d",
+        "signature_hash": "7dd7ede3efe555eb"
+      }
+    ],
     "extract_pdf_text_from_bytes": [
       {
         "file": "aura_paper_memory.py",
@@ -13277,6 +13842,16 @@
         "end_line": 614,
         "semantic_id": "aura_proxy_benchmark.py#function:fmt_checks:3c5d5c384a79fa81",
         "signature_hash": "992df3a467209cd7"
+      }
+    ],
+    "for_root": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 121,
+        "semantic_id": "travel_price_sidecar.py#function:for_root:58d0faeb7122103a",
+        "signature_hash": "f91fdaaf6748dd11"
       }
     ],
     "forage": [
@@ -13855,6 +14430,16 @@
         "signature_hash": "bcca1adec4aeda26"
       }
     ],
+    "get_price": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 647,
+        "end_line": 649,
+        "semantic_id": "travel_price_sidecar.py#function:get_price:d9c31b3547278156",
+        "signature_hash": "dc4260bc33037ba6"
+      }
+    ],
     "get_pricebook": [
       {
         "file": "aura_pricing.py",
@@ -13883,6 +14468,16 @@
         "end_line": 582,
         "semantic_id": "aura_qdkt.py#function:get_qdkt:55cb18aae5bc6151",
         "signature_hash": "ea348e2be5c2f0a0"
+      }
+    ],
+    "get_resort": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 643,
+        "end_line": 645,
+        "semantic_id": "travel_price_sidecar.py#function:get_resort:e9b2690bf9d74c5c",
+        "signature_hash": "406e396f64fc6659"
       }
     ],
     "get_router_context_for_func": [
@@ -14241,6 +14836,26 @@
         "signature_hash": "676c23b8d3fd01c7"
       }
     ],
+    "index_price_offer": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 181,
+        "semantic_id": "travel_vsa_pointer_index.py#function:index_price_offer:5f183c99adf0e09e",
+        "signature_hash": "79d35ef92358a7d8"
+      }
+    ],
+    "index_resort": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 156,
+        "semantic_id": "travel_vsa_pointer_index.py#function:index_resort:556ebe8c4a02fb71",
+        "signature_hash": "63bfc4ea5576b038"
+      }
+    ],
     "infer_provider_from_url": [
       {
         "file": "aura_llm_call_logger.py",
@@ -14289,6 +14904,36 @@
         "end_line": 164,
         "semantic_id": "aura_core.py#function:ingest_intent:bce9cad46e318d68",
         "signature_hash": "de702044f6d482af"
+      }
+    ],
+    "ingest_option_b_file": [
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 157,
+        "semantic_id": "travel_scraper_core.py#function:ingest_option_b_file:5e5d72d3eb6e7703",
+        "signature_hash": "852b68956b7975ae"
+      }
+    ],
+    "ingest_option_b_record": [
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 138,
+        "semantic_id": "travel_scraper_core.py#function:ingest_option_b_record:684d3cf4c5fa2580",
+        "signature_hash": "2b5429ceb49e2de3"
+      }
+    ],
+    "ingest_option_b_records": [
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 147,
+        "semantic_id": "travel_scraper_core.py#function:ingest_option_b_records:0b2730392c6973c9",
+        "signature_hash": "1182c18303b7afd7"
       }
     ],
     "ingest_thermal_cycle": [
@@ -14349,6 +14994,16 @@
         "end_line": 436,
         "semantic_id": "aura_paper_memory.py#function:inject_latent_context:b0ee8bf6e9595dd1",
         "signature_hash": "d342150f47a1c318"
+      }
+    ],
+    "insert_price_observation": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 476,
+        "end_line": 546,
+        "semantic_id": "travel_price_sidecar.py#function:insert_price_observation:8e437a8c3a36fbf3",
+        "signature_hash": "3281970a2e8f93e9"
       }
     ],
     "intercept_matrix": [
@@ -15159,6 +15814,16 @@
         "signature_hash": "621c1ef8c88e571d"
       }
     ],
+    "make_travel_vsa_id": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "travel_vsa_pointer_index.py#function:make_travel_vsa_id:499223aa5b086399",
+        "signature_hash": "23ac911b42eb130f"
+      }
+    ],
     "map_inscription_to_slots": [
       {
         "file": "aura_indus_cortex.py",
@@ -15319,6 +15984,16 @@
         "signature_hash": "2875c0f7cb3c70d3"
       }
     ],
+    "money_to_minor": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 61,
+        "semantic_id": "travel_price_sidecar.py#function:money_to_minor:0199b81e3d4033fb",
+        "signature_hash": "1567c70f855dc56c"
+      }
+    ],
     "mount_fst_schema": [
       {
         "file": "aura_hybrid_linguistic_cortex.py",
@@ -15467,6 +16142,16 @@
         "end_line": 478,
         "semantic_id": "aura_dynamic_attention.py#async_function:optimized_hybrid_processor:4b7cfb46a5260972",
         "signature_hash": "a51cad3beeccf42b"
+      }
+    ],
+    "option_b_source_profiles": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 118,
+        "semantic_id": "travel_source_registry.py#function:option_b_source_profiles:2d3b5aa2f7c6a129",
+        "signature_hash": "1848ec090be91226"
       }
     ],
     "pack_length_prefixed_payload": [
@@ -15827,6 +16512,16 @@
         "signature_hash": "3dbf95873c9aa9d5"
       }
     ],
+    "premium_media_contract": [
+      {
+        "file": "travel_media_assets.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 79,
+        "semantic_id": "travel_media_assets.py#function:premium_media_contract:a2b0baf10be16585",
+        "signature_hash": "99aada8e7caadce4"
+      }
+    ],
     "prepare": [
       {
         "file": "aura_architect_loop.py",
@@ -16169,6 +16864,16 @@
         "signature_hash": "8a82a16c03aa5594"
       }
     ],
+    "query_prices": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 661,
+        "end_line": 685,
+        "semantic_id": "travel_price_sidecar.py#function:query_prices:b2be0797f79c3f35",
+        "signature_hash": "b4c46a087d4d5110"
+      }
+    ],
     "query_router": [
       {
         "file": "aura_ai_router.py",
@@ -16341,6 +17046,16 @@
         "signature_hash": "921ff074f45a4050"
       }
     ],
+    "record_raw_snapshot": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 425,
+        "end_line": 474,
+        "semantic_id": "travel_price_sidecar.py#function:record_raw_snapshot:e4bc28cc07c7e51e",
+        "signature_hash": "7a1fcc812f71e964"
+      }
+    ],
     "record_success": [
       {
         "file": "aura_api_rotator.py",
@@ -16429,6 +17144,16 @@
         "signature_hash": "a649a3d8e5efaba3"
       }
     ],
+    "register_asset": [
+      {
+        "file": "travel_media_assets.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 53,
+        "semantic_id": "travel_media_assets.py#function:register_asset:972cdac2c6d4617b",
+        "signature_hash": "065a9e1d4a81dad9"
+      }
+    ],
     "register_client": [
       {
         "file": "aura_topology_ws_bridge.py",
@@ -16437,6 +17162,46 @@
         "end_line": 83,
         "semantic_id": "aura_topology_ws_bridge.py#function:register_client:b5abd8be999f33ff",
         "signature_hash": "3f9d856c89ba376d"
+      }
+    ],
+    "register_gaussian_splat": [
+      {
+        "file": "travel_media_assets.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 69,
+        "semantic_id": "travel_media_assets.py#function:register_gaussian_splat:33acd0b3d068da63",
+        "signature_hash": "a8d37efef083feba"
+      }
+    ],
+    "register_option_b_defaults": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 145,
+        "semantic_id": "travel_source_registry.py#function:register_option_b_defaults:4727349760d5a0dc",
+        "signature_hash": "a036ab88c63c261d"
+      }
+    ],
+    "register_profile": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 142,
+        "semantic_id": "travel_source_registry.py#function:register_profile:02de9372dffb8915",
+        "signature_hash": "6ec52d7d93727323"
+      }
+    ],
+    "reject_exact_price_payload": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 70,
+        "semantic_id": "travel_vsa_pointer_index.py#function:reject_exact_price_payload:1e2c1cb90441e8f7",
+        "signature_hash": "5462dcc64e6c05d1"
       }
     ],
     "reload": [
@@ -16571,6 +17336,46 @@
         "end_line": 296,
         "semantic_id": "aura_topological_scanner.py#function:resolve_call_target:92287626fee90cfc",
         "signature_hash": "88d4acc93cf328c8"
+      }
+    ],
+    "resolve_exact_price": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 184,
+        "semantic_id": "travel_vsa_pointer_index.py#function:resolve_exact_price:66b58a2658555683",
+        "signature_hash": "58d0dc4f6b4ce437"
+      }
+    ],
+    "resolve_pointer": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 651,
+        "end_line": 653,
+        "semantic_id": "travel_price_sidecar.py#function:resolve_pointer:d98bf89482dd8327",
+        "signature_hash": "0105b2bcea60a994"
+      }
+    ],
+    "resolve_travel_data_root": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "travel_price_sidecar.py#function:resolve_travel_data_root:c323aba9eb3a1618",
+        "signature_hash": "4b0bd5b32af3a002"
+      }
+    ],
+    "resolve_vsa_price": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 655,
+        "end_line": 659,
+        "semantic_id": "travel_price_sidecar.py#function:resolve_vsa_price:20db8774013484a3",
+        "signature_hash": "1fe5ddf98e69ab4a"
       }
     ],
     "resonate": [
@@ -17267,6 +18072,16 @@
         "signature_hash": "4dec3784a691a821"
       }
     ],
+    "semantic_tags": [
+      {
+        "file": "travel_extractors/option_b.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 102,
+        "semantic_id": "travel_extractors/option_b.py#function:semantic_tags:fd27efbe77a04b07",
+        "signature_hash": "a311354d920d3c90"
+      }
+    ],
     "send_simd_ar_pulse": [
       {
         "file": "aura_node.py",
@@ -17419,6 +18234,16 @@
         "end_line": 616,
         "semantic_id": "aura_skillweaver.py#function:skills:642a083992dc51cc",
         "signature_hash": "1473b7ba7c6b7a16"
+      }
+    ],
+    "source_manifest": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 152,
+        "semantic_id": "travel_source_registry.py#function:source_manifest:9627c0a014e78419",
+        "signature_hash": "4f1c7fbc87006696"
       }
     ],
     "speak": [
@@ -18395,6 +19220,16 @@
         "signature_hash": "6abcc7420d1f748d"
       }
     ],
+    "test_media_registry_accepts_gaussian_splat_references": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 143,
+        "semantic_id": "test_travel_sidecar_stack.py#function:test_media_registry_accepts_gaussian_splat_references:546de6d1eb890c6b",
+        "signature_hash": "c03b0c10d06231d7"
+      }
+    ],
     "test_message_crush_never_mutates_system_prompt": [
       {
         "file": "test_aura_context_crusher.py",
@@ -18503,6 +19338,16 @@
         "end_line": 179,
         "semantic_id": "test_aura_context_crusher.py#function:test_openai_compatible_helper_sanitizes_when_context_crush_disabled:1ff11b720af9e0da",
         "signature_hash": "a7eba37d4b638eaa"
+      }
+    ],
+    "test_option_b_ingestion_preserves_raw_snapshot_and_sidecar_segments": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 73,
+        "semantic_id": "test_travel_sidecar_stack.py#function:test_option_b_ingestion_preserves_raw_snapshot_and_sidecar_segments:7669216fe18a851b",
+        "signature_hash": "baf6d39a53ab53c6"
       }
     ],
     "test_packet_styles": [
@@ -18815,6 +19660,16 @@
         "signature_hash": "886487b92774493a"
       }
     ],
+    "test_stale_price_is_blocked_before_package_display": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 121,
+        "semantic_id": "test_travel_sidecar_stack.py#function:test_stale_price_is_blocked_before_package_display:5c4a5ab32e11007e",
+        "signature_hash": "8c5373d21adcebaa"
+      }
+    ],
     "test_substrate_is_llm_free_and_surgical": [
       {
         "file": "test_aura_substrate.py",
@@ -18933,6 +19788,26 @@
         "end_line": 74,
         "semantic_id": "test_aura_st3gg_recall.py#function:test_visible_st3gg_capsule_is_ascii_and_structural:02e16a187156522b",
         "signature_hash": "0674cd6ed1b9bafe"
+      }
+    ],
+    "test_vsa_pointer_resolves_exact_price_without_storing_money_in_vector_payload": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 106,
+        "semantic_id": "test_travel_sidecar_stack.py#function:test_vsa_pointer_resolves_exact_price_without_storing_money_in_vector_payload:bf90c5ed16d6f0e2",
+        "signature_hash": "5af48151c6ad3b15"
+      }
+    ],
+    "test_vsa_rejects_exact_price_payloads": [
+      {
+        "file": "test_travel_sidecar_stack.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 126,
+        "semantic_id": "test_travel_sidecar_stack.py#function:test_vsa_rejects_exact_price_payloads:86b54b5c5b49a119",
+        "signature_hash": "7ba95e9790a1b0b7"
       }
     ],
     "test_wasm_bridge_runs_stdio_accelerator": [
@@ -19191,6 +20066,46 @@
         "end_line": 351,
         "semantic_id": "aura_topology_ws_bridge.py#function:to_dict:a0580158bee55112",
         "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "travel_package_arena.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 62,
+        "semantic_id": "travel_package_arena.py#function:to_dict:4747b7a81c8f37df",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 63,
+        "semantic_id": "travel_price_verifier.py#function:to_dict:2185210de6914b84",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "travel_scraper_core.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 50,
+        "semantic_id": "travel_scraper_core.py#function:to_dict:566147f373527a4e",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "travel_source_registry.py#function:to_dict:c30c430d278bb748",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 103,
+        "semantic_id": "travel_vsa_pointer_index.py#function:to_dict:5f8ca4ae3d1620fd",
+        "signature_hash": "5c1a69a9659e2089"
       }
     ],
     "to_execution_result": [
@@ -19291,6 +20206,16 @@
         "end_line": 58,
         "semantic_id": "aura_wasm_bridge.py#function:to_jsonable:af5608fbdbcf0c67",
         "signature_hash": "d35c70ed7eb422c7"
+      }
+    ],
+    "to_source_record": [
+      {
+        "file": "travel_source_registry.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 63,
+        "semantic_id": "travel_source_registry.py#function:to_source_record:4a26f7056aa9afdc",
+        "signature_hash": "ae5d20fd892556f1"
       }
     ],
     "topology_to_phase_vector": [
@@ -19455,6 +20380,16 @@
         "signature_hash": "75af545a8749ae78"
       }
     ],
+    "upsert_media_asset": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 583,
+        "end_line": 611,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_media_asset:74a85f22b7566124",
+        "signature_hash": "9c9a035795bce278"
+      }
+    ],
     "upsert_paper_memory_record": [
       {
         "file": "aura_paper_memory.py",
@@ -19465,6 +20400,56 @@
         "signature_hash": "8a56a3be9ce61625"
       }
     ],
+    "upsert_pointer": [
+      {
+        "file": "travel_vsa_pointer_index.py",
+        "kind": "function",
+        "line": 137,
+        "end_line": 138,
+        "semantic_id": "travel_vsa_pointer_index.py#function:upsert_pointer:e9837d6365709775",
+        "signature_hash": "7c907534928fe417"
+      }
+    ],
+    "upsert_rate_plan": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 351,
+        "end_line": 381,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_rate_plan:dcb07ec066ef67b6",
+        "signature_hash": "d576e21a744df9d7"
+      }
+    ],
+    "upsert_resort": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 271,
+        "end_line": 316,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_resort:c86ce5fe517c84fd",
+        "signature_hash": "3065b87187bdb7de"
+      }
+    ],
+    "upsert_room_type": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 318,
+        "end_line": 349,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_room_type:2e3c8604d286b0b3",
+        "signature_hash": "5a6e2685908694bf"
+      }
+    ],
+    "upsert_source": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 383,
+        "end_line": 423,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_source:fa398d46111618e2",
+        "signature_hash": "96da60d1909ff4b8"
+      }
+    ],
     "upsert_st3gg_recall": [
       {
         "file": "aura_st3gg_recall.py",
@@ -19473,6 +20458,16 @@
         "end_line": 487,
         "semantic_id": "aura_st3gg_recall.py#function:upsert_st3gg_recall:f70d035cf1e6892b",
         "signature_hash": "41cfc9a496ca4474"
+      }
+    ],
+    "upsert_vsa_pointer": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 548,
+        "end_line": 581,
+        "semantic_id": "travel_price_sidecar.py#function:upsert_vsa_pointer:c37e02d8c6fcd2f6",
+        "signature_hash": "8c6a69f488ca9d7c"
       }
     ],
     "usable_providers": [
@@ -19683,6 +20678,16 @@
         "end_line": 1163,
         "semantic_id": "aura_node.py#function:verify_patch_integrity_asi:762a3c5a107d1869",
         "signature_hash": "0c6e376b97b67ece"
+      }
+    ],
+    "verify_price": [
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 128,
+        "semantic_id": "travel_price_verifier.py#function:verify_price:a5e88432bdfb8f98",
+        "signature_hash": "daa0ae2dd980d052"
       }
     ],
     "verify_refactor_arena": [
@@ -20053,6 +21058,16 @@
         "end_line": 683,
         "semantic_id": "aura_proxy_benchmark.py#function:write_reports:db95b1a359321095",
         "signature_hash": "bc203676cb143bbe"
+      }
+    ],
+    "write_resort_segments": [
+      {
+        "file": "travel_price_sidecar.py",
+        "kind": "function",
+        "line": 613,
+        "end_line": 641,
+        "semantic_id": "travel_price_sidecar.py#function:write_resort_segments:abb6909437d181f4",
+        "signature_hash": "9a4bdbbdb4141b76"
       }
     ],
     "write_simd_frame": [
@@ -21925,9 +22940,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 11197,
-      "lines": 126,
-      "tokens_est": 2769,
+      "bytes": 11749,
+      "lines": 127,
+      "tokens_est": 2907,
       "symbol_count": 0,
       "commands": [
         "!backtrack",
@@ -21940,65 +22955,65 @@
       ],
       "command_lines": {
         "!backtrack": [
-          97
+          98
         ],
         "!benchmark": [
           26,
           31,
-          95
-        ],
-        "!calibrate": [
           96
         ],
-        "!research": [
-          98
+        "!calibrate": [
+          97
         ],
-        "!route": [
+        "!research": [
           99
         ],
+        "!route": [
+          100
+        ],
         "!settings": [
-          93
+          94
         ],
         "!topology": [
-          45,
-          94
+          46,
+          95
         ]
       },
       "topology": {},
-      "digest8": "faa4d59fc96c7980",
+      "digest8": "ba93c61bea626f2d",
       "vector": [
-        0.21824,
-        0.129376,
-        0.257444,
-        -0.040512,
-        0.152898,
-        0.192103,
-        0.126762,
-        0.103239,
-        -0.231308,
-        0.124148,
-        -0.079716,
-        -0.309717,
-        0.241763,
-        0.213012,
-        0.126762,
-        -0.048353,
-        -0.30449,
-        0.171194,
-        -0.045739,
-        -0.006534,
-        -0.118921,
-        0.069262,
-        -0.071875,
-        0.273126,
-        -0.001307,
-        0.226081,
-        -0.257444,
-        0.11108,
-        -0.071875,
-        0.202558,
-        0.265285,
-        -0.134603
+        0.109016,
+        0.136556,
+        0.104425,
+        0.154917,
+        0.221474,
+        0.249014,
+        -0.226064,
+        0.143441,
+        0.109016,
+        0.292621,
+        -0.10672,
+        -0.212293,
+        -0.111311,
+        0.285735,
+        -0.044754,
+        -0.212293,
+        -0.095245,
+        -0.086065,
+        0.113606,
+        0.27426,
+        -0.010328,
+        0.244424,
+        0.127376,
+        -0.198523,
+        0.060819,
+        -0.113606,
+        0.003443,
+        0.28803,
+        -0.205408,
+        -0.120491,
+        -0.28344,
+        -0.005738
       ]
     },
     {
@@ -22096,9 +23111,9 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "bytes": 92024,
-      "lines": 1774,
-      "tokens_est": 21822,
+      "bytes": 92990,
+      "lines": 1787,
+      "tokens_est": 22058,
       "symbol_count": 0,
       "commands": [
         "!ai_route",
@@ -22181,31 +23196,31 @@
           217
         ],
         "!ar_server_start": [
-          457,
-          1020
+          470,
+          1033
         ],
         "!ar_server_stop": [
-          458
+          471
         ],
         "!ar_start": [
-          457,
-          961,
-          1020,
-          1024,
-          1357,
-          1371,
-          1444,
-          1445,
-          1447,
+          470,
+          974,
+          1033,
+          1037,
+          1370,
+          1384,
           1457,
-          1492,
-          1494,
-          1768
+          1458,
+          1460,
+          1470,
+          1505,
+          1507,
+          1781
         ],
         "!ar_stop": [
-          458,
-          1025,
-          1445
+          471,
+          1038,
+          1458
         ],
         "!attention": [
           189
@@ -22214,20 +23229,20 @@
           204
         ],
         "!backtrack": [
-          357,
-          358,
-          386,
-          1306
+          370,
+          371,
+          399,
+          1319
         ],
         "!benchmark": [
           203,
-          1423,
-          1463
+          1436,
+          1476
         ],
         "!calibrate": [
           224,
-          1340,
-          1437
+          1353,
+          1450
         ],
         "!catalyze": [
           185
@@ -22249,62 +23264,62 @@
           196
         ],
         "!crystallize": [
-          364
+          377
         ],
         "!curiosity_tree": [
-          360
+          373
         ],
         "!db_repair": [
-          461,
-          1418
+          474,
+          1431
         ],
         "!evolve_reasoning": [
           198
         ],
         "!export": [
-          459,
-          1755
+          472,
+          1768
         ],
         "!fast_path": [
           187
         ],
         "!forage": [
-          356,
-          358,
-          384
+          369,
+          371,
+          397
         ],
         "!forage_off": [
-          362
+          375
         ],
         "!forage_on": [
-          361
+          374
         ],
         "!forager_off": [
-          362
+          375
         ],
         "!forager_on": [
-          361
+          374
         ],
         "!fusion": [
           226,
-          325
+          338
         ],
         "!help": [
           170,
           180
         ],
         "!indus_decrypt": [
-          366
+          379
         ],
         "!manifest": [
           170,
           180
         ],
         "!markov": [
-          462
+          475
         ],
         "!mesh_status": [
-          456
+          469
         ],
         "!meta_analyze": [
           199
@@ -22316,23 +23331,23 @@
           213
         ],
         "!ping_mesh": [
-          455
+          468
         ],
         "!push": [
-          460
+          473
         ],
         "!reason": [
           195
         ],
         "!repair_db": [
-          461
+          474
         ],
         "!research": [
-          358,
-          372,
-          388,
-          420,
-          1309
+          371,
+          385,
+          401,
+          433,
+          1322
         ],
         "!review": [
           214
@@ -22343,7 +23358,7 @@
         "!route": [
           225,
           234,
-          1343
+          1356
         ],
         "!saturn": [
           201
@@ -22353,23 +23368,23 @@
         ],
         "!savings": [
           227,
-          1346
+          1359
         ],
         "!scan_topology": [
           183
         ],
         "!search_similar": [
-          359,
           372,
-          388
+          385,
+          401
         ],
         "!self_optimize": [
           213,
-          1325
+          1338
         ],
         "!self_reflect": [
           212,
-          1322
+          1335
         ],
         "!settings": [
           170,
@@ -22380,15 +23395,15 @@
         ],
         "!stage": [
           214,
-          294,
-          1312,
-          1328
+          307,
+          1325,
+          1341
         ],
         "!stage_merge": [
           215,
-          294,
-          1315,
-          1331
+          307,
+          1328,
+          1344
         ],
         "!stage_purge": [
           216
@@ -22400,70 +23415,70 @@
           197
         ],
         "!synthesize": [
-          365
+          378
         ],
         "!system_audit": [
           204,
-          1464
+          1477
         ],
         "!test_airlock": [
           205
         ],
         "!timeline": [
-          363
+          376
         ],
         "!topology": [
           183,
           184,
-          1303,
-          1354,
-          1446,
-          1447,
-          1450,
-          1488
+          1316,
+          1367,
+          1459,
+          1460,
+          1463,
+          1501
         ],
         "!topology_deep": [
           184
         ],
         "!voice": [
-          463
+          476
         ]
       },
       "topology": {},
-      "digest8": "9bb29a5c7e65eba2",
+      "digest8": "e6b44691599ba8b2",
       "vector": [
-        0.168799,
-        -0.341853,
-        -0.100712,
-        0.035462,
-        0.151777,
-        -0.154614,
-        -0.035462,
-        0.327668,
-        0.086527,
-        -0.177309,
-        -0.245396,
-        0.140429,
-        -0.273766,
-        -0.356037,
-        0.055321,
-        0.200005,
-        -0.012766,
-        -0.100712,
-        -0.248233,
-        -0.200005,
-        -0.049647,
-        0.21419,
-        0.123407,
-        0.058157,
-        0.117733,
-        0.126244,
-        0.191494,
-        -0.11206,
-        -0.234048,
-        -0.075179,
-        -0.007092,
-        -0.075179
+        0.097641,
+        0.129805,
+        -0.288328,
+        0.286031,
+        0.037908,
+        -0.008041,
+        -0.24238,
+        -0.079262,
+        0.086154,
+        0.178051,
+        -0.074667,
+        -0.06318,
+        0.1344,
+        -0.148185,
+        -0.060882,
+        0.164267,
+        -0.180349,
+        -0.219405,
+        0.168862,
+        -0.286031,
+        0.267651,
+        -0.070072,
+        0.187241,
+        -0.05399,
+        -0.12521,
+        -0.187241,
+        0.093046,
+        -0.281436,
+        -0.15278,
+        -0.203323,
+        -0.258462,
+        0.217108
       ]
     },
     {
@@ -25085,47 +26100,47 @@
     {
       "path": "aura_liquid_planning_arena.py",
       "role": "python_module",
-      "bytes": 20100,
-      "lines": 520,
-      "tokens_est": 5025,
+      "bytes": 21523,
+      "lines": 557,
+      "tokens_est": 5255,
       "symbol_count": 31,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "01cc7a59e6c3c86d",
+      "digest8": "622306b7f78824e6",
       "vector": [
-        -0.11201,
-        -0.205142,
-        -0.11201,
-        0.041532,
-        -0.288206,
-        0.225279,
-        -0.06922,
-        0.018878,
-        0.00881,
-        -0.19004,
-        0.247932,
-        0.310859,
-        -0.283171,
-        0.149766,
-        -0.013844,
-        -0.230313,
-        -0.187522,
-        0.147249,
-        -0.217727,
-        -0.054117,
-        0.142215,
-        0.179971,
-        0.013844,
-        -0.001259,
-        0.285689,
-        0.013844,
-        0.013844,
-        -0.288206,
-        0.273103,
-        -0.104459,
-        0.028946,
-        -0.174937
+        -0.120395,
+        -0.124896,
+        -0.277922,
+        0.212661,
+        -0.26667,
+        0.03038,
+        0.196908,
+        0.057385,
+        0.26667,
+        -0.073137,
+        -0.059635,
+        -0.160902,
+        -0.26667,
+        -0.244166,
+        -0.122646,
+        0.032631,
+        0.282423,
+        0.26442,
+        0.023629,
+        0.043882,
+        0.1474,
+        -0.250917,
+        0.037131,
+        0.199159,
+        -0.160902,
+        0.113644,
+        -0.1474,
+        -0.226163,
+        0.001125,
+        0.277922,
+        0.057385,
+        0.102392
       ]
     },
     {
@@ -30956,6 +31971,52 @@
       ]
     },
     {
+      "path": "test_travel_sidecar_stack.py",
+      "role": "python_module",
+      "bytes": 6248,
+      "lines": 145,
+      "tokens_est": 1562,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3d3e563e6f228615",
+      "vector": [
+        -0.152328,
+        -0.118478,
+        0.058588,
+        -0.035153,
+        0.097646,
+        0.037757,
+        0.170556,
+        -0.287731,
+        0.259088,
+        -0.321582,
+        -0.035153,
+        -0.079419,
+        -0.121081,
+        0.329394,
+        -0.10025,
+        0.196595,
+        -0.095042,
+        0.097646,
+        -0.264296,
+        -0.123685,
+        -0.144517,
+        -0.131497,
+        -0.303355,
+        0.076815,
+        0.141913,
+        -0.035153,
+        -0.069003,
+        -0.217426,
+        -0.246069,
+        -0.10025,
+        0.227841,
+        -0.222634
+      ]
+    },
+    {
       "path": "test_universal_llm_logging.py",
       "role": "python_module",
       "bytes": 5055,
@@ -31045,6 +32106,426 @@
         0.064599,
         -0.007933,
         0.236862
+      ]
+    },
+    {
+      "path": "travel_extractors/__init__.py",
+      "role": "python_module",
+      "bytes": 232,
+      "lines": 6,
+      "tokens_est": 58,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e8332ba091040d82",
+      "vector": [
+        0.188051,
+        -0.150204,
+        0.24009,
+        -0.204609,
+        -0.015375,
+        0.024837,
+        0.005914,
+        -0.254283,
+        -0.232994,
+        -0.214071,
+        0.204609,
+        -0.086338,
+        -0.176224,
+        -0.117088,
+        0.140743,
+        0.228263,
+        0.074511,
+        -0.081607,
+        0.159666,
+        0.277937,
+        0.275572,
+        -0.124185,
+        0.12655,
+        0.020106,
+        0.270841,
+        -0.277937,
+        0.057953,
+        -0.188051,
+        -0.176224,
+        0.18332,
+        0.143108,
+        0.117088
+      ]
+    },
+    {
+      "path": "travel_extractors/option_b.py",
+      "role": "python_module",
+      "bytes": 10790,
+      "lines": 240,
+      "tokens_est": 2698,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fde2a07717b0e8d5",
+      "vector": [
+        -0.021952,
+        -0.047778,
+        0.244055,
+        -0.303455,
+        -0.104595,
+        -0.006456,
+        -0.014204,
+        -0.241472,
+        0.233725,
+        -0.225977,
+        0.076186,
+        -0.166577,
+        0.073604,
+        0.215646,
+        0.04003,
+        -0.231142,
+        -0.277629,
+        0.295707,
+        -0.104595,
+        0.112343,
+        0.236307,
+        0.045195,
+        -0.045195,
+        -0.30862,
+        0.047778,
+        -0.120091,
+        -0.156247,
+        -0.034865,
+        -0.107178,
+        -0.218229,
+        -0.047778,
+        -0.287959
+      ]
+    },
+    {
+      "path": "travel_media_assets.py",
+      "role": "python_module",
+      "bytes": 2780,
+      "lines": 81,
+      "tokens_est": 695,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "800753e16b16cac0",
+      "vector": [
+        -0.255004,
+        -0.264071,
+        -0.146203,
+        -0.239137,
+        -0.200603,
+        0.069135,
+        0.139402,
+        -0.264071,
+        -0.0238,
+        -0.221004,
+        0.273138,
+        -0.0102,
+        0.221004,
+        -0.248204,
+        -0.035134,
+        0.279938,
+        0.051001,
+        0.087268,
+        -0.232337,
+        0.143936,
+        -0.243671,
+        -0.227804,
+        0.044201,
+        -0.087268,
+        -0.103135,
+        -0.055534,
+        -0.100868,
+        0.071401,
+        -0.153003,
+        -0.248204,
+        0.080468,
+        -0.109935
+      ]
+    },
+    {
+      "path": "travel_package_arena.py",
+      "role": "python_module",
+      "bytes": 7710,
+      "lines": 176,
+      "tokens_est": 1928,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3a3e2302c3ea1087",
+      "vector": [
+        -0.062352,
+        -0.137174,
+        -0.037411,
+        0.278506,
+        -0.084522,
+        -0.317302,
+        -0.054038,
+        -0.178742,
+        0.031869,
+        0.19537,
+        0.189827,
+        -0.031869,
+        -0.117776,
+        0.325616,
+        -0.270192,
+        0.181514,
+        0.090064,
+        0.214768,
+        0.095606,
+        0.042954,
+        -0.145488,
+        -0.200912,
+        -0.076208,
+        -0.078979,
+        0.248022,
+        -0.336701,
+        0.15103,
+        0.181514,
+        0.261878,
+        -0.120547,
+        -0.029098,
+        0.01247
+      ]
+    },
+    {
+      "path": "travel_price_sidecar.py",
+      "role": "python_module",
+      "bytes": 27763,
+      "lines": 686,
+      "tokens_est": 6941,
+      "symbol_count": 34,
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          60
+        ]
+      },
+      "topology": {},
+      "digest8": "db2b6a8954b69906",
+      "vector": [
+        0.276287,
+        0.158374,
+        -0.054333,
+        -0.137566,
+        0.181494,
+        0.241607,
+        -0.216175,
+        0.13063,
+        0.093637,
+        0.107509,
+        -0.072829,
+        -0.260103,
+        -0.260103,
+        0.239295,
+        -0.257791,
+        0.095949,
+        0.019652,
+        0.220799,
+        0.269351,
+        -0.008092,
+        0.105197,
+        -0.137566,
+        -0.13063,
+        0.098261,
+        -0.024276,
+        -0.18843,
+        -0.146814,
+        0.29016,
+        -0.045085,
+        -0.253167,
+        -0.162998,
+        0.121382
+      ]
+    },
+    {
+      "path": "travel_price_verifier.py",
+      "role": "python_module",
+      "bytes": 4713,
+      "lines": 130,
+      "tokens_est": 1179,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4889988f242c3b51",
+      "vector": [
+        0.058187,
+        0.260193,
+        -0.130645,
+        0.260193,
+        0.110884,
+        -0.249214,
+        0.229453,
+        0.277758,
+        -0.231648,
+        -0.058187,
+        -0.099905,
+        0.17456,
+        0.069165,
+        0.020859,
+        0.141624,
+        0.218474,
+        0.11308,
+        -0.15919,
+        -0.042817,
+        0.172364,
+        -0.073557,
+        0.165777,
+        -0.007685,
+        -0.273367,
+        0.277758,
+        0.172364,
+        0.183343,
+        -0.207495,
+        -0.141624,
+        0.119667,
+        0.268976,
+        -0.042817
+      ]
+    },
+    {
+      "path": "travel_scraper_core.py",
+      "role": "python_module",
+      "bytes": 6728,
+      "lines": 158,
+      "tokens_est": 1682,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0293f18273ccabb8",
+      "vector": [
+        0.149494,
+        -0.164771,
+        0.156041,
+        0.075293,
+        0.225878,
+        0.238972,
+        0.038192,
+        0.214966,
+        0.252067,
+        -0.156041,
+        -0.221513,
+        -0.208419,
+        -0.02728,
+        0.103664,
+        -0.005456,
+        -0.016368,
+        -0.193142,
+        0.164771,
+        -0.254249,
+        0.153859,
+        -0.088387,
+        -0.016368,
+        0.241155,
+        0.206237,
+        0.020733,
+        -0.210601,
+        0.193142,
+        -0.140765,
+        -0.265161,
+        -0.193142,
+        0.162589,
+        -0.273891
+      ]
+    },
+    {
+      "path": "travel_source_registry.py",
+      "role": "python_module",
+      "bytes": 5844,
+      "lines": 154,
+      "tokens_est": 1461,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "86620e40440c55e0",
+      "vector": [
+        -0.209076,
+        -0.114937,
+        0.265997,
+        -0.073341,
+        0.184994,
+        0.051448,
+        0.233158,
+        -0.176237,
+        -0.145587,
+        0.195941,
+        0.255051,
+        -0.22659,
+        -0.195941,
+        0.130262,
+        0.261619,
+        0.176237,
+        -0.174048,
+        0.222212,
+        -0.187183,
+        -0.217833,
+        -0.184994,
+        0.009852,
+        -0.134641,
+        0.189373,
+        -0.027366,
+        -0.088666,
+        -0.235348,
+        -0.184994,
+        0.180616,
+        -0.049259,
+        -0.123694,
+        0.121505
+      ]
+    },
+    {
+      "path": "travel_vsa_pointer_index.py",
+      "role": "python_module",
+      "bytes": 6412,
+      "lines": 186,
+      "tokens_est": 1603,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a84e23733adf88fb",
+      "vector": [
+        -0.021726,
+        0.08587,
+        -0.193467,
+        -0.137599,
+        -0.042418,
+        0.172775,
+        0.054833,
+        -0.243127,
+        -0.13553,
+        -0.154153,
+        -0.236919,
+        0.255542,
+        0.147945,
+        -0.220366,
+        0.241058,
+        0.253473,
+        -0.228643,
+        0.236919,
+        -0.230712,
+        0.027934,
+        0.129323,
+        0.040349,
+        -0.241058,
+        0.191398,
+        -0.06311,
+        -0.178983,
+        0.212089,
+        -0.001035,
+        -0.205882,
+        0.01345,
+        -0.228643,
+        -0.18519
       ]
     },
     {
@@ -31291,12 +32772,21 @@
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
       "aura_liquid_planning_arena.py",
-      "aura_live_architect.py",
-      "test_aura_liquid_planning_arena.py",
-      "test_aura_live_architect.py"
+      "travel_price_sidecar.py",
+      "travel_source_registry.py",
+      "travel_scraper_core.py",
+      "travel_extractors/__init__.py",
+      "travel_extractors/option_b.py",
+      "travel_vsa_pointer_index.py",
+      "travel_price_verifier.py",
+      "travel_package_arena.py",
+      "travel_media_assets.py",
+      "test_travel_sidecar_stack.py",
+      "README.md",
+      "USER_GUIDE.md"
     ],
     "removed_paths": [],
-    "changed_path_count": 4,
+    "changed_path_count": 13,
     "topology_refreshed": false
   }
 }
