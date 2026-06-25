@@ -42,8 +42,8 @@ import os
 import re
 import time
 
-from aura_substrate import AuraSubstrate, estimate_tokens, sanitize_code
 from aura_llm_egress import ExternalLLM, usable_providers
+from aura_substrate import AuraSubstrate, estimate_tokens, sanitize_code
 
 MEMORY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Aura_Memory")
 CONVO_LOG_PATH = os.path.join(MEMORY_DIR, "aura_conversations.jsonl")
@@ -74,9 +74,9 @@ class CommProfile:
     def _load(self) -> dict:
         if os.path.exists(self.path):
             try:
-                with open(self.path, "r", encoding="utf-8") as f:
+                with open(self.path, encoding="utf-8") as f:
                     return {**self._default(), **json.load(f)}
-            except Exception:  # noqa: BLE001
+            except Exception:
                 pass
         return self._default()
 
@@ -200,7 +200,7 @@ class ConversationLog:
         if not os.path.exists(self.path):
             return []
         out = []
-        with open(self.path, "r", encoding="utf-8") as f:
+        with open(self.path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -229,7 +229,7 @@ class Conversationalist:
             try:
                 from aura_router import ExecutionLog
                 self.exec_log = ExecutionLog(EXEC_LOG_PATH)
-            except Exception:  # noqa: BLE001
+            except Exception:
                 self.exec_log = None
 
     def _pick_provider(self, forced: str | None) -> str | None:
@@ -254,7 +254,7 @@ class Conversationalist:
 
         try:
             egress = self.egress_factory(provider)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             return {"ok": False, "reason": str(exc)}
         # Compute the naive baseline token count for savings comparison
         raw_in = estimate_tokens(

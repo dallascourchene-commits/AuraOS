@@ -12,15 +12,15 @@ SYNOPSIS: Stateless paper-memory and RAEC middleware primitives. Scientific docu
 from __future__ import annotations
 
 import base64
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 import hashlib
 import io
 import json
 import math
-import re
-import time
 from pathlib import Path
-from typing import Any, Iterable, List, Sequence
+import re
+from typing import Any
 
 import numpy as np
 
@@ -98,7 +98,7 @@ class PaperMemoryRecord:
         }
 
     @classmethod
-    def from_jsonable(cls, payload: dict[str, Any]) -> "PaperMemoryRecord":
+    def from_jsonable(cls, payload: dict[str, Any]) -> PaperMemoryRecord:
         return cls(
             doc_id=str(payload.get("doc_id", "")),
             title=str(payload.get("title", "")),
@@ -403,7 +403,7 @@ class AuraResonanceEgressGate:
     def inject_latent_context(
         self,
         user_intent: str,
-        local_ledger: List[ResearchProfileVector],
+        local_ledger: list[ResearchProfileVector],
         provider: str,
     ) -> EgressResonancePayload:
         intent_vector = self._intent_vector(user_intent)

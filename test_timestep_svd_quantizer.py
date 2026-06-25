@@ -9,24 +9,24 @@ SYNOPSIS: Test suite for Claim N16 -- Timestep-Aware SVD Quantization with dynam
 [/AURA_MASTER_KEY]
 """
 
+import asyncio
 import os
 import sys
-import asyncio
-import pytest
+
 import numpy as np
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from aura_timestep_svd_quantizer import (
-    SVDOutlierCompensator,
-    DynamicClippingTracker,
-    TimestepAwareSVDQuantizer,
     AsyncExpertQuantizationEngine,
-    quantize_w4a4,
-    dequantize_w4a4,
+    DynamicClippingTracker,
+    SVDOutlierCompensator,
+    TimestepAwareSVDQuantizer,
     compute_compression_efficiency,
+    dequantize_w4a4,
+    quantize_w4a4,
 )
-
 
 # ── SVD Outlier Compensation ──
 
@@ -241,7 +241,7 @@ class TestNoDeps:
     def test_only_stdlib_and_numpy(self):
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "aura_timestep_svd_quantizer.py")
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             source = f.read()
 
         import ast

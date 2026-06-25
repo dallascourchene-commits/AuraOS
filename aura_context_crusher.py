@@ -12,14 +12,15 @@ SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Ro
 from __future__ import annotations
 
 import ast
-from dataclasses import dataclass, field
+from collections.abc import Iterable
+from dataclasses import dataclass
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
 import time
-from typing import Any, Iterable
+from typing import Any
 
 from aura_st3gg_recall import (
     compile_visible_st3gg_capsule,

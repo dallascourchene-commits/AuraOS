@@ -21,7 +21,6 @@ import sys
 import time
 from typing import Any
 
-
 DEFAULT_ACCELERATOR_NAMES = (
     "Aura_Memory/aura_crush_core.cwasm",
     "Aura_Memory/aura_crush_core.wasm",
@@ -71,7 +70,7 @@ class AuraRustWasmBridge:
         self.wasmtime_bin = wasmtime_bin
 
     @classmethod
-    def from_env(cls, *, root: str | Path | None = None) -> "AuraRustWasmBridge":
+    def from_env(cls, *, root: str | Path | None = None) -> AuraRustWasmBridge:
         mode = os.environ.get("AURA_CRUSH_ACCELERATOR", "auto").strip().lower()
         if mode in {"0", "false", "off", "disabled", "python"}:
             return cls(None)

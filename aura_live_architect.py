@@ -12,6 +12,7 @@ SYNOPSIS: Live bridge for Architect mode. Routes a user intent through multi-can
 from __future__ import annotations
 
 import ast
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 import hashlib
 import inspect
@@ -23,7 +24,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Callable
+from typing import Any
 
 from aura_architect_loop import (
     ARCHITECT_LEDGER_PATH,
@@ -42,7 +43,6 @@ from aura_architect_loop import (
 )
 from aura_liquid_planning_arena import build_world_state_delta
 from aura_substrate import REPO_ROOT
-
 
 ARCHITECT_LIVE_VERSION = "AURA_LIVE_ARCHITECT_V1"
 ARCHITECT_STAGING_PATH = Path(REPO_ROOT) / "Aura_Staging" / "architect_live_transaction.json"

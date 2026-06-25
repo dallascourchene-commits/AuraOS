@@ -38,11 +38,9 @@ Backward compatibility
 * ``metadata`` list — unchanged type (Python list of dicts or None); only
   the parallel ``_occupied`` numpy bool array is new.
 """
-import os
-import json
-import time
-import numpy as np
 from datetime import datetime
+
+import numpy as np
 
 
 class RosettaMemoryBuffer:

@@ -69,13 +69,10 @@ from __future__ import annotations
 import asyncio
 import base64
 import gc
-import hashlib
 import json
-import os
-import struct
-import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+import time
+from typing import Any
 
 import numpy as np
 
@@ -155,23 +152,23 @@ class LiquidSpatiotemporalAttractor:
     """
 
     __slots__ = (
-        "_dim",
-        "_phi",               # State-space vector φ(t) — np.memmap (D,)
-        "_grad_buffer",       # ∇E(φ) buffer — np.memmap (D,)
+        "_ar_server_ref",     # Reference to AuraARWebSocketServer
         "_basin_centres",     # Attractor basin centres — np.memmap (K, D)
         "_basin_weights",     # Basin coupling weights — np.memmap (K,)
-        "_token_matrix",      # 6-slot × 4 prefix token matrix — np.memmap (6, 4)
+        "_broadcast_queue",   # Outgoing frame queue (max 128)
+        "_cycle_count",       # Monotonic cycle counter
+        "_device_temp_cb",    # Async temperature callback
+        "_dim",
+        "_grad_buffer",       # ∇E(φ) buffer — np.memmap (D,)
+        "_loop_task",         # asyncio Task handle
+        "_mesh_ref",          # Reference to AuraMeshSwarm
+        "_phi",               # State-space vector φ(t) — np.memmap (D,)
         "_projection_eigenvectors",  # AR projection basis — np.memmap (3, D)
         "_projection_mean",   # AR projection mean — np.memmap (3,)
+        "_running",           # Control loop active flag
         "_splat_covariance",  # Gaussian splat covariance — np.memmap (3, 3)
         "_thermal_noise_eps", # Current thermal noise scale
-        "_device_temp_cb",    # Async temperature callback
-        "_running",           # Control loop active flag
-        "_loop_task",         # asyncio Task handle
-        "_cycle_count",       # Monotonic cycle counter
-        "_broadcast_queue",   # Outgoing frame queue (max 128)
-        "_mesh_ref",          # Reference to AuraMeshSwarm
-        "_ar_server_ref",     # Reference to AuraARWebSocketServer
+        "_token_matrix",      # 6-slot × 4 prefix token matrix — np.memmap (6, 4)
         "_unreal_bridge_ref", # Reference to UnrealBridge
         "_web_clients",       # Set of active WebSocket send queues
     )
@@ -185,13 +182,13 @@ class LiquidSpatiotemporalAttractor:
         self._device_temp_cb = device_temp_callback
         self._thermal_noise_eps: float = 0.005
         self._running: bool = False
-        self._loop_task: Optional[asyncio.Task] = None
+        self._loop_task: asyncio.Task | None = None
         self._cycle_count: int = 0
         self._broadcast_queue: asyncio.Queue = asyncio.Queue(maxsize=128)
         self._mesh_ref: Any = None
         self._ar_server_ref: Any = None
         self._unreal_bridge_ref: Any = None
-        self._web_clients: List[asyncio.Queue] = []
+        self._web_clients: list[asyncio.Queue] = []
 
         # ── Allocate persistent memmapped arrays (zero heap in hot path) ──
         print(f"[ATTRACTOR] Allocating memmapped field arrays ({dim}‑D) …")
@@ -401,7 +398,7 @@ class LiquidSpatiotemporalAttractor:
     # ========================================================================
     # PROJECTION OPERATORS — All modalities from φ(t) simultaneously
     # ========================================================================
-    def _project_to_ar_topology(self) -> Dict[str, Any]:
+    def _project_to_ar_topology(self) -> dict[str, Any]:
         """
         Project the attractor state φ onto 3-D AR topology coordinates.
 
@@ -436,7 +433,7 @@ class LiquidSpatiotemporalAttractor:
             )),
         }
 
-    def _project_to_mesh_telemetry(self) -> Tuple[List[int], float]:
+    def _project_to_mesh_telemetry(self) -> tuple[list[int], float]:
         """
         Harvest 6-slot telemetry from the token matrix.
 
@@ -481,7 +478,7 @@ class LiquidSpatiotemporalAttractor:
         shield_bytes = np.packbits(shield_bits).tobytes()
         return shield_bytes
 
-    def _project_to_gaussian_splats(self) -> Dict[str, Any]:
+    def _project_to_gaussian_splats(self) -> dict[str, Any]:
         """
         Produce VSA-addressed Gaussian Splatting parameters directly from
         the attractor field curvature (Claim N17).
@@ -521,7 +518,6 @@ class LiquidSpatiotemporalAttractor:
             np.stack([vsa_phasor.real * 127, vsa_phasor.imag * 127], axis=-1),
             -127, 127
         ).astype(np.int8)
-        import base64
         vsa_address_b64 = base64.b64encode(quantized.tobytes()).decode("ascii")
 
         return {
@@ -754,7 +750,7 @@ class LiquidSpatiotemporalAttractor:
                 pass
         print("[ATTRACTOR] Control plane shut down. Memmaps flushed.")
 
-    def get_state_snapshot(self) -> Dict[str, Any]:
+    def get_state_snapshot(self) -> dict[str, Any]:
         """
         Return a lightweight snapshot of the attractor state for
         diagnostics / monitoring (read-only, no allocation in hot path).
@@ -793,7 +789,7 @@ class AuraGraftOrchestrator:
     """
 
     def __init__(self) -> None:
-        self._attractor: Optional[LiquidSpatiotemporalAttractor] = None
+        self._attractor: LiquidSpatiotemporalAttractor | None = None
         self._mesh: Any = None
         self._ar_server: Any = None
         self._unreal_bridge: Any = None
@@ -823,7 +819,7 @@ class AuraGraftOrchestrator:
                 loop = asyncio.get_running_loop()
 
                 def _sync_read():
-                    with open(path, "r") as fh:
+                    with open(path) as fh:
                         return float(fh.read().strip()) / 1000.0
 
                 return await loop.run_in_executor(None, _sync_read)
@@ -947,8 +943,8 @@ async def _standalone_main() -> None:
 # ============================================================================
 # AUTO-BOOT HOOK — Called by pulse.py on AuraOS startup
 # ============================================================================
-_attractor_singleton: Optional[LiquidSpatiotemporalAttractor] = None
-_orchestrator_singleton: Optional[AuraGraftOrchestrator] = None
+_attractor_singleton: LiquidSpatiotemporalAttractor | None = None
+_orchestrator_singleton: AuraGraftOrchestrator | None = None
 _auto_boot_lock = asyncio.Lock()
 
 

@@ -36,7 +36,6 @@ Backward compatibility
   deprecated.
 """
 import asyncio
-from typing import Dict, List, Optional
 
 import numpy as np
 
@@ -49,7 +48,7 @@ class AsyncMemoryPalace:
     """
 
     def __init__(self, capacity: int = 1024):
-        self._buffer: Dict[str, np.ndarray] = {}
+        self._buffer: dict[str, np.ndarray] = {}
         self._capacity = capacity
         self._lock = asyncio.Lock()
 
@@ -58,7 +57,7 @@ class AsyncMemoryPalace:
         self._dual_attention_matrix = np.zeros((capacity, capacity), dtype=np.int8)
 
         # Spatial Drift Shield: Fixed lookup maps that maintain absolute coordinates
-        self._id_map: Dict[str, int] = {}
+        self._id_map: dict[str, int] = {}
 
         # ------------------------------------------------------------------
         # Zero-copy O(1) free-index ring buffer
@@ -108,7 +107,7 @@ class AsyncMemoryPalace:
     # ------------------------------------------------------------------
 
     @property
-    def _free_indices(self) -> List[int]:
+    def _free_indices(self) -> list[int]:
         """
         Legacy bridge: any subsystem that reads ``self._free_indices``
         receives a correct Python list snapshot of available slot indices.
@@ -133,8 +132,8 @@ class AsyncMemoryPalace:
         self,
         key: str,
         value: np.ndarray,
-        positive_relations: Optional[List[str]] = None,
-        negative_relations: Optional[List[str]] = None,
+        positive_relations: list[str] | None = None,
+        negative_relations: list[str] | None = None,
     ) -> None:
         """Non-blocking record insertion with O(1) stable coordinate allocation."""
         async with self._lock:
@@ -162,7 +161,7 @@ class AsyncMemoryPalace:
                         rel_idx = self._id_map[rel_key]
                         self._dual_attention_matrix[idx, rel_idx] = -1
 
-    async def flush_and_clear(self) -> Dict[str, np.ndarray]:
+    async def flush_and_clear(self) -> dict[str, np.ndarray]:
         """Non-blocking buffer flush with complete structural matrix reset."""
         async with self._lock:
             flushed = self._buffer.copy()

@@ -14,10 +14,8 @@ SYNOPSIS: Process-supervised Rubric Reward Matrix (R_rubric) for AuraOS patch va
 from __future__ import annotations
 
 import ast
-import gc
 import math
-import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 import numpy as np
 
@@ -71,7 +69,7 @@ def _ast_gate(code_str: str) -> float:
         return 0.0
 
 
-def _sat_score(context: Dict[str, Any]) -> float:
+def _sat_score(context: dict[str, Any]) -> float:
     """
     F_SAT(τ): Satisfiability score from truth resonance.
 
@@ -116,11 +114,11 @@ def _sat_score(context: Dict[str, Any]) -> float:
 # ---------------------------------------------------------------------------
 
 def calculate_rubric_score(
-    context: Dict[str, Any],
-    code_str: Optional[str] = None,
+    context: dict[str, Any],
+    code_str: str | None = None,
     memory_peak_mb: float = 0.0,
     cpu_temp_c: float = _BASELINE_CPU_TEMP_C,
-    weights: Optional[Dict[str, float]] = None,
+    weights: dict[str, float] | None = None,
 ) -> float:
     """
     Compute the multi-tiered Rubric Reward Matrix score R_rubric(τ).
@@ -165,7 +163,7 @@ def calculate_rubric_score(
 
 def validate_patch_candidate(
     patch_code: str,
-    context: Optional[Dict[str, Any]] = None,
+    context: dict[str, Any] | None = None,
     memory_peak_mb: float = 0.0,
     cpu_temp_c: float = _BASELINE_CPU_TEMP_C,
 ) -> tuple[bool, float]:

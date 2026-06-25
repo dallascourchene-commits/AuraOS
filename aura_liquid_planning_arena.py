@@ -16,7 +16,6 @@ import hashlib
 import json
 from typing import Any
 
-
 LIQUID_ARENA_VERSION = "AURA_LIQUID_PLANNING_ARENA_V1"
 ACTION_CAPSULE_VERSION = "AURA_ACTION_CAPSULE_V1"
 BOUNDARY_CONTRACT_VERSION = "AURA_BOUNDARY_CONTRACT_V1"
@@ -82,7 +81,7 @@ class BoundaryContract:
         escalation_triggers: list[str],
         invariant: str,
         metadata: dict[str, Any] | None = None,
-    ) -> "BoundaryContract":
+    ) -> BoundaryContract:
         payload = {
             "contract_version": BOUNDARY_CONTRACT_VERSION,
             "domain": domain,
@@ -143,7 +142,7 @@ class ActionCapsule:
         escalation_triggers: list[str],
         boundary_contract_ids: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
-    ) -> "ActionCapsule":
+    ) -> ActionCapsule:
         payload = {
             "capsule_version": ACTION_CAPSULE_VERSION,
             "capsule_id": capsule_id,
@@ -195,7 +194,7 @@ class ArenaLease:
         mode: str = "exclusive_write",
         conflict_policy: str = "judge_then_reground",
         metadata: dict[str, Any] | None = None,
-    ) -> "ArenaLease":
+    ) -> ArenaLease:
         payload = {
             "lease_version": ARENA_LEASE_VERSION,
             "domain": domain,
@@ -487,7 +486,18 @@ class CivicArenaAdapter(BaseArenaAdapter):
 
 class TravelArenaAdapter(BaseArenaAdapter):
     domain = "travel"
-    domain_objects = ("traveler_preferences", "destinations", "routes", "budget", "time_windows", "bookable_options")
+    domain_objects = (
+        "traveler_preferences",
+        "destinations",
+        "routes",
+        "budget",
+        "time_windows",
+        "bookable_options",
+        "price_observations",
+        "raw_snapshots",
+        "vsa_sidecar_pointers",
+        "media_assets",
+    )
 
     def action_capsule_from_intent(
         self,
@@ -504,11 +514,39 @@ class TravelArenaAdapter(BaseArenaAdapter):
             objective=objective,
             target=dict(target or {}),
             scope={"regions": [{"region_type": "travel_scope", "id": key, "value": value} for key, value in dict(target or {}).items()]},
-            allowed_actions=["compare routes", "rank options", "request live bookability check", "draft BoundaryContract placeholders"],
-            forbidden_actions=["book without approval", "invent prices", "ignore visa or time-window constraints"],
-            acceptance_checks=["preserve budget, dates, traveler preferences, and approval requirements"],
+            allowed_actions=[
+                "compare routes",
+                "rank options",
+                "resolve VSA pointers into exact sidecar records",
+                "request live bookability check",
+                "draft BoundaryContract placeholders",
+            ],
+            forbidden_actions=[
+                "book without approval",
+                "invent prices",
+                "show vector-only prices",
+                "store exact prices only in VSA",
+                "ignore visa or time-window constraints",
+            ],
+            acceptance_checks=[
+                "preserve budget, dates, traveler preferences, and approval requirements",
+                "every displayed price resolves to sidecar price_observations",
+                "block stale, missing, unverified, or vector-only prices",
+            ],
             expected_output="TRAVEL_PLAN_OPTIONS",
-            escalation_triggers=list(constraints or ["price unavailable", "visa ambiguity", "booking policy mismatch"]),
+            escalation_triggers=list(
+                dict.fromkeys(
+                    [
+                        "price unavailable",
+                        "stale sidecar price",
+                        "missing source provenance",
+                        "visa ambiguity",
+                        "booking policy mismatch",
+                        "payment or legal boundary",
+                        *(constraints or []),
+                    ]
+                )
+            ),
         )
 
 

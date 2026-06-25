@@ -21,7 +21,6 @@ from aura_scientific_memory import (
     DIMENSIONS,
     ScientificMemoryIndex,
     ScientificPaperEncoder,
-    ScientificRecord,
     ScientificSlots,
     detect_contradictions,
     index_from_rows,

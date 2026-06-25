@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 [AURA_MASTER_KEY]
 ST3GG_BASE: 0xa891-[Q-SYS:D4FAE19AB3EF864B]
@@ -7,19 +8,15 @@ DEPENDENCIES: typing, math, sys, numpy, __future__, json
 FUNCTIONS: structural_resonance, procrustes_alignment, handle, main
 SYNOPSIS: This Python module integrates `typing`, `math`, `sys`, `numpy`, `__future__` annotations, and `json` to implement `structural_resonance` for harmonic analysis, `procrustes_alignment` for geometric transformation, `handle` for input processing, and `main` for execution flow, ensuring strict type safety and numerical precision.
 [/AURA_MASTER_KEY]
-"""
-from __future__ import annotations
 
-#!/usr/bin/env python3
-"""
 WASM / subprocess fallback accelerator for aura_arch_reasoner heavy metrics.
 
 Reads JSON from stdin, writes JSON to stdout. Used by WasmOrchestrator when
 no precompiled .cwasm is present (arch_reasoner_accel.cwasm).
 """
+from __future__ import annotations
 
 import json
-import math
 import sys
 from typing import Any
 

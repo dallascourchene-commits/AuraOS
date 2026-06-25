@@ -31,20 +31,19 @@ Public API:
 from __future__ import annotations
 
 import ast
-import json
 import os
-import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+import re
+from typing import Any
 
 ROUTER_PATH = Path("AURA_AI_ROUTER.md")
-_INDEX_CACHE: Optional[Dict[str, Any]] = None
+_INDEX_CACHE: dict[str, Any] | None = None
 _INDEX_MTIME: float = 0.0
 
 
 # ── Index loader ──────────────────────────────────────────────────────────────
 
-def load_router_index(force_reload: bool = False) -> Dict[str, Any]:
+def load_router_index(force_reload: bool = False) -> dict[str, Any]:
     """
     Parse AURA_AI_ROUTER.md into a structured dict. Results are cached in
     memory and invalidated when the file's mtime changes.
@@ -64,9 +63,9 @@ def load_router_index(force_reload: bool = False) -> Dict[str, Any]:
     if not force_reload and _INDEX_CACHE is not None and mtime == _INDEX_MTIME:
         return _INDEX_CACHE
 
-    result: Dict[str, Any] = {"tasks": {}, "files": {}}
+    result: dict[str, Any] = {"tasks": {}, "files": {}}
 
-    with open(ROUTER_PATH, "r", encoding="utf-8") as f:
+    with open(ROUTER_PATH, encoding="utf-8") as f:
         content = f.read()
 
     # ── Parse Task → File Mapping table ──────────────────────────────────────
@@ -97,7 +96,7 @@ def load_router_index(force_reload: bool = False) -> Dict[str, Any]:
     for m in file_sections:
         filename = m.group(1)
         body = m.group(2)
-        info: Dict[str, Any] = {"purpose": "", "dependencies": [], "functions": []}
+        info: dict[str, Any] = {"purpose": "", "dependencies": [], "functions": []}
         purpose_m = re.search(r"\*\*Purpose\*\*:\s*(.+)", body)
         if purpose_m:
             info["purpose"] = purpose_m.group(1).strip()
@@ -115,7 +114,7 @@ def load_router_index(force_reload: bool = False) -> Dict[str, Any]:
 
 # ── Query router ──────────────────────────────────────────────────────────────
 
-def query_router(task_description: str) -> Dict[str, Any]:
+def query_router(task_description: str) -> dict[str, Any]:
     """
     Return routing info for a natural-language task description.
 
@@ -146,7 +145,7 @@ def query_router(task_description: str) -> Dict[str, Any]:
     task_lower = task_description.lower()
     query_words = set(task_lower.split())
 
-    best_task: Optional[str] = None
+    best_task: str | None = None
     best_score: float = 0.0
 
     for task_key in tasks:
@@ -202,7 +201,7 @@ def get_router_context_for_func(filepath: str, func_name: str,
     idx = load_router_index()
     file_info = idx.get("files", {}).get(filepath, {})
 
-    header_lines: List[str] = []
+    header_lines: list[str] = []
     if file_info.get("purpose"):
         header_lines.append(f"# {filepath}")
         header_lines.append(f"# Purpose: {file_info['purpose']}")
@@ -221,7 +220,7 @@ def get_router_context_for_func(filepath: str, func_name: str,
 
 
 def _extract_function_source(filepath: str, func_name: str,
-                              max_lines: int = 60) -> Optional[str]:
+                              max_lines: int = 60) -> str | None:
     """
     Return the source text of `func_name` in `filepath`, capped at max_lines.
     Uses ast.get_source_segment if available (Python 3.8+), else line slicing.
@@ -229,7 +228,7 @@ def _extract_function_source(filepath: str, func_name: str,
     if not os.path.exists(filepath):
         return None
     try:
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        with open(filepath, encoding="utf-8", errors="ignore") as f:
             source = f.read()
         lines = source.splitlines()
         tree = ast.parse(source)
@@ -298,7 +297,7 @@ def regenerate_router(quiet: bool = False) -> bool:
     Returns True on success, False on error.
     """
     try:
-        import generate_ai_router  # noqa: PLC0415
+        import generate_ai_router
         md = generate_ai_router.build_router_md()
         with open(generate_ai_router.OUTPUT_MD, "w", encoding="utf-8") as f:
             f.write(md)
@@ -308,7 +307,7 @@ def regenerate_router(quiet: bool = False) -> bool:
             print(f"[+] AURA_AI_ROUTER.md regenerated "
                   f"({len(md.splitlines())} lines)")
         return True
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         if not quiet:
             print(f"[-] AI Router regeneration failed: {exc}")
         return False

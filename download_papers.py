@@ -1,6 +1,7 @@
-import requests
-import time
 import sys
+import time
+
+import requests
 
 # Fix Windows console encoding
 if sys.platform == 'win32':
@@ -25,7 +26,7 @@ for url, filename in papers:
             # Try to find PDF link in the page
             file_url = f"{url}/files/article.pdf?download=1"
             print(f"Attempting to download from {file_url}")
-            
+
             file_response = requests.get(file_url, timeout=60, stream=True)
             if file_response.status_code == 200:
                 with open(filename, 'wb') as f:
@@ -36,7 +37,7 @@ for url, filename in papers:
                 print(f"[FAIL] Failed to download {filename}: Status {file_response.status_code}")
         else:
             print(f"[FAIL] Failed to access {url}: Status {response.status_code}")
-        
+
         time.sleep(2)  # Be nice to the server
     except Exception as e:
         print(f"[ERROR] Error downloading {filename}: {e}")

@@ -10,8 +10,8 @@ SYNOPSIS: This Python module integrates `atexit`, `asyncio`, `signal`, `os`, `ht
 """
 from __future__ import annotations
 
-import atexit
 import asyncio
+import atexit
 import os
 import signal
 import subprocess

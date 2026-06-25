@@ -181,7 +181,7 @@ class UnrealBridge:
             payload = {"type": "TOPOLOGY_UPDATE", "data": {"nodes": [], "edges": []}}
         else:
             try:
-                with open(topology_path, "r", encoding="utf-8") as f:
+                with open(topology_path, encoding="utf-8") as f:
                     topology_data = json.load(f)
             except (json.JSONDecodeError, OSError):
                 topology_data = {"nodes": [], "edges": []}

@@ -9,25 +9,25 @@ SYNOPSIS: This Python module integrates asynchronous event loops (`asyncio`), in
 [/AURA_MASTER_KEY]
 """
 
-import os
-import json
-import time
-import hashlib
 import asyncio
 from collections import Counter, defaultdict
+import hashlib
+import json
+import os
+import time
 
 import numpy as np
 
-from aura_spvm import evaluate_implication, get_semantic_vector
+from aura_coordinated_solver import CoordinatedSolver, phasor_to_method
 from aura_nesy_unit_interval import (
-    FRACTURE_FLOOR,
     _LLM_AUDIT_MAX,
-    classify_edge_zone,
+    FRACTURE_FLOOR,
     batch_llm_audit_edges,
     build_edge_audit_records,
+    classify_edge_zone,
     records_to_fractures,
 )
-from aura_coordinated_solver import CoordinatedSolver, phasor_to_method
+from aura_spvm import get_semantic_vector
 
 # Edge-local sweep dimension (O(E·D) not O(N²·D)). 512 matches GSB-style screening on Termux.
 _DEFAULT_SWEEP_DIM = int(os.environ.get("AURA_OMNIPATH_SWEEP_DIM", "512"))
@@ -63,12 +63,12 @@ class AuraNeuroSymbolicReasoner:
         self.sweep_dim = sweep_dim if sweep_dim is not None else _DEFAULT_SWEEP_DIM
         self.node = node_ref
         self.rng = np.random.default_rng(seed=0xDEED3)
-        
+
         # Core data paths matching the ecosystem footprint
         self.topology_path = "Aura_Memory/live_topology_ast.json"
         self.output_state_path = "Aura_Memory/nesy_sat_reasoner_state.json"
         self.patches_output_path = "Aura_Staging/pending_patches.json"
-        
+
         # AutoModSAT Shared Heuristic State Pool Configuration
         self.heuristic_pool = {
             "vids_decay": 0.92,
@@ -91,7 +91,7 @@ class AuraNeuroSymbolicReasoner:
 
     @staticmethod
     def _is_test_scope(node_id: str) -> bool:
-        base = node_id.split("::")[0].split("/")[-1]
+        base = node_id.split("::", maxsplit=1)[0].rsplit("/", maxsplit=1)[-1]
         return base.startswith("test_") or base.endswith("_test.py")
 
     def _build_sweep_phasors(self, nodes: list[str]) -> dict[str, np.ndarray]:
@@ -112,12 +112,12 @@ class AuraNeuroSymbolicReasoner:
 
         if os.path.exists(self.topology_path):
             try:
-                with open(self.topology_path, "r", encoding="utf-8") as f:
+                with open(self.topology_path, encoding="utf-8") as f:
                     payload = json.load(f)
-                
+
                 raw_nodes = payload.get("nodes", [])
                 raw_edges = payload.get("edges", [])
-                
+
                 # Extract identifiers and morphological geometries (Shapes)
                 self._edge_types = {}
                 self._node_vectors = {}
@@ -136,11 +136,11 @@ class AuraNeuroSymbolicReasoner:
                             self._node_vectors[node_id] = [float(v) for v in vec[:3]]
                         except (TypeError, ValueError):
                             self._node_vectors[node_id] = [0.0, 0.0, 0.0]
-                
+
                 num_nodes = len(nodes_list)
                 adj_matrix = np.zeros((num_nodes, num_nodes), dtype=np.float32)
                 node_to_idx = {nid: idx for idx, nid in enumerate(nodes_list)}
-                
+
                 # Construct standard adjacency layout
                 for edge in raw_edges:
                     src = self._normalize_node_id(edge.get("source", ""))
@@ -164,7 +164,7 @@ class AuraNeuroSymbolicReasoner:
                     src_mod, tgt_mod = s.split("::")[0], t.split("::")[0]
                     if src_mod == tgt_mod or tgt_mod in module_imports.get(src_mod, set()):
                         self._explicit_edges.append((s, t))
-                        
+
                 print(f"[+] [NeSy HARVEST] Ingested {num_nodes} real system nodes from live_topology_ast.json.")
                 return nodes_list, node_shapes, adj_matrix
             except Exception as e:
@@ -176,14 +176,14 @@ class AuraNeuroSymbolicReasoner:
             scope_id = f"{file}::global_scope"
             nodes_list.append(scope_id)
             node_shapes[scope_id] = "Sphere"
-            
+
         num_nodes = len(nodes_list)
         adj_matrix = np.zeros((num_nodes, num_nodes), dtype=np.float32)
-        
+
         # Build logical linear chain dependency loop for localized simulation safety
         for i in range(num_nodes - 1):
             adj_matrix[i, i + 1] = 1.0
-            
+
         print(f"[!] [NeSy HARVEST] Topology file absent. Built baseline grid from {num_nodes} workspace files.")
         return nodes_list, node_shapes, adj_matrix
 
@@ -194,12 +194,12 @@ class AuraNeuroSymbolicReasoner:
         """
         if not identifier_text:
             return np.ones(self.dim, dtype=np.complex64)
-        
+
         # Generate invariant spatial seed using cryptographic blake2b hashing
         h_bytes = hashlib.blake2b(identifier_text.encode('utf-8'), digest_size=8).digest()
         seed_value = int.from_bytes(h_bytes, byteorder='little')
         local_rng = np.random.default_rng(seed_value)
-        
+
         # Continuous phase matrix theta mapping bounds
         phase_angles = local_rng.uniform(-np.pi, np.pi, self.dim).astype(np.float32)
         return np.exp(1j * phase_angles)
@@ -211,7 +211,7 @@ class AuraNeuroSymbolicReasoner:
         """
         start_time = time.perf_counter()
         num_nodes = len(node_states)
-        
+
         if num_nodes == 0:
             return {"node_resonances": [], "edges_pruned": 0, "structural_coherence": 0.0, "latency_ms": 0.0}
 
@@ -228,11 +228,11 @@ class AuraNeuroSymbolicReasoner:
                 magnitude = np.abs(bundled_parents)
                 magnitude[magnitude == 0.0] = 1.0
                 normalized_parent = bundled_parents / magnitude
-                
+
                 # Compute logical implication alignment using dot products
                 conjugate_product = phasor_deck[i] * np.conj(normalized_parent)
                 resonance = float(np.mean(np.real(conjugate_product)))
-                
+
                 # Prune weak pathways to optimize CPU scheduling
                 if resonance < pruning_threshold:
                     pruned_edge_count += len(parents)
@@ -257,13 +257,13 @@ class AuraNeuroSymbolicReasoner:
         """
         clause_count = int(variable_count * (complexity_tier * 1.35))
         generated_clauses = []
-        
+
         for _ in range(clause_count):
             variables = self.rng.choice(variable_count, size=min(3, variable_count), replace=False)
             signs = self.rng.choice([-1, 1], size=len(variables))
             clause_structure = [(int(v), int(s)) for v, s in zip(variables, signs)]
             generated_clauses.append(clause_structure)
-            
+
         return {
             "curriculum_difficulty_index": variable_count * complexity_tier,
             "generated_clauses_count": len(generated_clauses),
@@ -278,13 +278,13 @@ class AuraNeuroSymbolicReasoner:
         """
         sat_formula = f"{target_logic_path} && CORE_AXIOM_VALID"
         unsat_formula = f"{target_logic_path} && CORE_AXIOM_VALID && !CORE_AXIOM_VALID"
-        
+
         phasor_sat = self.embed_symbolic_state(sat_formula)
         phasor_unsat = self.embed_symbolic_state(unsat_formula)
-        
+
         divergence = float(np.mean(np.abs(phasor_sat - phasor_unsat)))
         adr_score = 1.0 if divergence > 1.2 else (divergence / 1.2)
-        
+
         return {
             "tested_logic_path": target_logic_path,
             "structural_phase_divergence": divergence,
@@ -305,7 +305,7 @@ class AuraNeuroSymbolicReasoner:
             self.heuristic_pool["vids_decay"] = 0.92
             self.heuristic_pool["restart_increment"] = 80
             self.heuristic_pool["clause_activity_threshold"] = 2.15
-            
+
         return {"current_tuned_heuristics": self.heuristic_pool}
 
     async def coordinated_reason_dag(
@@ -335,7 +335,7 @@ class AuraNeuroSymbolicReasoner:
         """
         print(f"[⚡ COORDINATED REASONER] Initializing Pass@{K} parallel evaluation...")
         start_time = time.perf_counter()
-        
+
         # Step 1: Load topology and generate K alternative reasoning paths
         nodes, shapes, adj = self.load_live_topology()
         if len(nodes) == 0:
@@ -344,11 +344,11 @@ class AuraNeuroSymbolicReasoner:
                 "error": "No nodes available for reasoning",
                 "latency_ms": 0.0,
             }
-        
+
         # Step 2: Generate K alternative strategy vectors from the query
         query_phasor = self.embed_symbolic_state(query)
         planner_output = []
-        
+
         for k in range(K):
             # Project the 10k-D query phasor to method dimension with k-offset
             # This creates K diverse strategies from the same query
@@ -358,11 +358,11 @@ class AuraNeuroSymbolicReasoner:
                 rng=np.random.default_rng(seed=0xB1AD + k),
             )
             planner_output.append(strategy_vec)
-        
+
         # Step 3: Initialize coordinated solver and run Pass@K evaluation
         solver = CoordinatedSolver(K=K, method_dim=method_dim, node_ref=self.node)
         result = await solver.coordinated_pass_k(planner_output)
-        
+
         # Step 4: Enrich result with reasoning metadata
         latency_ms = (time.perf_counter() - start_time) * 1000
         result["query"] = query
@@ -370,7 +370,7 @@ class AuraNeuroSymbolicReasoner:
         result["K"] = K
         result["method_dim"] = method_dim
         result["buffer_stats"] = solver.strategy_buffer.stats
-        
+
         # Step 5: Log coordinated reasoning trace to memory palace
         if self.node is not None and hasattr(self.node, "mint_trace"):
             try:
@@ -381,7 +381,7 @@ class AuraNeuroSymbolicReasoner:
                 )
             except Exception:
                 pass
-        
+
         print(f"[+] Coordinated reasoning complete: success={result['success']}, throughput={result['throughput']:.3f}, latency={latency_ms:.2f}ms")
         return result
 
@@ -401,17 +401,17 @@ class AuraNeuroSymbolicReasoner:
         """
         print("[⚡ AURA NESY-CORE] Initializing Sparse Omni-Path System Mapping...")
         start_time = time.perf_counter()
-        
+
         # Step 1: Load live topology graph
         nodes, shapes, adj = self.load_live_topology()
         num_nodes = len(nodes)
-        
+
         if num_nodes == 0:
             return "[-] Omni-Path Sweep aborted: No operational system nodes detected."
 
         # Step 2: Compact phasors for edge-local SPVM (Termux-friendly)
         phasor_map = self._build_sweep_phasors(nodes)
-        
+
         fractures_detected = []
         emergent_shortcuts = []
         shortcut_patches = {}
@@ -577,7 +577,7 @@ class AuraNeuroSymbolicReasoner:
         os.makedirs(os.path.dirname(self.output_state_path), exist_ok=True)
         with open(self.output_state_path, "w", encoding="utf-8") as f:
             json.dump(unified_synthesis, f, indent=4)
-            
+
         if shortcut_patches:
             os.makedirs(os.path.dirname(self.patches_output_path), exist_ok=True)
             with open(self.patches_output_path, "w", encoding="utf-8") as f:

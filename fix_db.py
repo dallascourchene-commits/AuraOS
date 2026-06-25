@@ -10,8 +10,9 @@ SYNOPSIS: The module is a lightweight Python utility leveraging `pathlib` for fi
 """
 # [AURA OPTIMIZED] - Bloat removed.
 
-import sqlite3
 from pathlib import Path
+import sqlite3
+
 db_path = Path.home() / ".mempalace" / "aura_memory.db"
 conn = sqlite3.connect(db_path)
 conn.execute('''

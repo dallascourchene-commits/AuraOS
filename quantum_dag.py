@@ -19,6 +19,7 @@ import uuid
 
 import numpy as np
 
+
 class QuantumMerkleDAG:
     def __init__(self, node_ref):
         self.node = node_ref
@@ -35,15 +36,15 @@ class QuantumMerkleDAG:
         """
         vec_a = np.frombuffer(bytes.fromhex(hash_a), dtype=np.uint8)
         vec_b = np.frombuffer(bytes.fromhex(hash_b), dtype=np.uint8)
-        
+
         # Corrected: Symmetrical slicing prevents broadcast failures when hash sizes mismatch
         min_len = min(len(vec_a), len(vec_b))
         if min_len == 0:
             return 1.0  # Maximum discount / no correlation if either array is empty
-            
+
         vec_a_sliced = vec_a[:min_len]
         vec_b_sliced = vec_b[:min_len]
-        
+
         # Symmetrical overlap comparison
         similarity = np.sum(vec_a_sliced == vec_b_sliced) / min_len
         return max(0.0, 1.0 - (similarity ** 2))
@@ -71,9 +72,9 @@ class QuantumMerkleDAG:
         """Constructs the system Merkle-DAG with correlation-aware Byzantine Belief Aggregation."""
         temp = 42.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
 
         file_map = sorted([f for f in os.listdir('.') if f.endswith('.py')])
@@ -83,11 +84,11 @@ class QuantumMerkleDAG:
         # 1. Compile Leaf Node States
         for file in file_map:
             try:
-                content = await asyncio.to_thread(lambda: open(file, 'r', encoding='utf-8').read())
-                    
+                content = await asyncio.to_thread(lambda: open(file, encoding='utf-8').read())
+
                 if "[/AURA_MASTER_KEY]" in content:
                     content = content.split("[/AURA_MASTER_KEY]")[1]
-                
+
                 file_hash = self._polysynthetic_haar_hash(content.encode('utf-8'), temp, system_thought_id)
                 dag_nodes[file] = {
                     "hash": file_hash,
@@ -99,17 +100,17 @@ class QuantumMerkleDAG:
         # 2. Apply Correlation-Aware Belief Aggregation
         keys = list(dag_nodes.keys())
         discounted_belief_score = 0
-        
+
         for i, file_a in enumerate(keys):
             node_a = dag_nodes[file_a]
             max_correlation = 0.0
-            
+
             for j in range(i):
                 file_b = keys[j]
                 node_b = dag_nodes[file_b]
                 correlation = self.calculate_correlation_discount(node_a["hash"][:16], node_b["hash"][:16])
                 max_correlation = max(max_correlation, 1.0 - correlation)
-            
+
             discount_factor = 1.0 - max_correlation
             discounted_belief_score += int(node_a["raw_belief"] * discount_factor)
 
@@ -119,7 +120,7 @@ class QuantumMerkleDAG:
             edge_data = f"{file}:{data['hash'][:16]}:{data['raw_belief']}"
             root_hasher.update(edge_data.encode('utf-8'))
         global_root = root_hasher.hexdigest()[:16].upper()
-        
+
         return {
             "root": global_root,
             "belief": discounted_belief_score

@@ -1,8 +1,8 @@
 import os
+from pathlib import Path
 import shutil
 import struct
 import subprocess
-from pathlib import Path
 
 import pytest
 
@@ -13,7 +13,6 @@ from aura_st3gg_recall import (
     ST3GG_COMPACTION_VERSION,
     decode_st3gg_compaction_blob,
 )
-
 
 SOURCE = Path("aura_st3gg_compact.rs")
 

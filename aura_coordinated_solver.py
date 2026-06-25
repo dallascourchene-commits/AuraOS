@@ -11,11 +11,9 @@ SYNOPSIS: The `AuraOS CoordinatedSolver` Python module, leveraging `asyncio`, `n
 from __future__ import annotations
 
 import asyncio
+from dataclasses import dataclass
 import json
 import time
-from typing import List, Dict, Tuple, Optional
-from dataclasses import dataclass
-from functools import partial
 
 import numpy as np
 
@@ -33,7 +31,7 @@ class StrategyBuffer:
         self.rewards[idx] = reward
         self.valid_mask[idx] = valid
 
-    def get_top_k(self, k: int) -> Tuple[np.ndarray, np.ndarray]:
+    def get_top_k(self, k: int) -> tuple[np.ndarray, np.ndarray]:
         """Non-blocking top-k selection with masking"""
         valid_indices = np.where(self.valid_mask)[0]
         if len(valid_indices) == 0:
@@ -52,7 +50,7 @@ class StrategyBuffer:
         }
 
     @classmethod
-    def deserialize(cls, data: dict, method_dim: int = 64) -> "StrategyBuffer":
+    def deserialize(cls, data: dict, method_dim: int = 64) -> StrategyBuffer:
         """Restore buffer from serialized state"""
         K = len(data["rewards"])
         return cls(
@@ -89,7 +87,7 @@ class CoordinatedSolver:
         self._rng = np.random.default_rng(seed=0xC00D)
         self._execution_log: list[dict] = []
 
-    async def _async_solve(self, method: np.ndarray) -> Tuple[bool, float]:
+    async def _async_solve(self, method: np.ndarray) -> tuple[bool, float]:
         """Simulate RIS-assisted wireless backhaul redistribution"""
         await asyncio.sleep(0.01)  # Simulate processing delay
         success = np.random.rand() > 0.3  # 70% success rate
@@ -101,14 +99,14 @@ class CoordinatedSolver:
         success, reward = await self._async_solve(method)
         async with self.lock:  # Non-blocking lock acquisition
             self.strategy_buffer.update(idx, method, reward, success)
-        
+
         self._execution_log.append({
             "idx": idx,
             "success": success,
             "reward": reward,
             "timestamp": time.time(),
         })
-        
+
         # Fire-and-forget holographic trace when node is available
         if self.node is not None and hasattr(self.node, "mint_trace"):
             try:
@@ -119,10 +117,10 @@ class CoordinatedSolver:
                 )
             except Exception:
                 pass  # Trace is best-effort on 4GB mobile
-        
+
         return success, reward
 
-    async def coordinated_pass_k(self, planner_output: List[np.ndarray]) -> Dict:
+    async def coordinated_pass_k(self, planner_output: list[np.ndarray]) -> dict:
         """Joint optimization of strategy selection and execution"""
         tasks = []
         async with self.lock:  # Non-blocking lock acquisition
@@ -149,7 +147,7 @@ class CoordinatedSolver:
         })
 
     @classmethod
-    def deserialize(cls, data: str, node_ref=None) -> "CoordinatedSolver":
+    def deserialize(cls, data: str, node_ref=None) -> CoordinatedSolver:
         """Restore solver from memory-palace holographic trace"""
         payload = json.loads(data)
         solver = cls(

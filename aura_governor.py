@@ -11,9 +11,9 @@ SYNOPSIS: The Python module, leveraging `random`, `asyncio`, `math`, and `collec
 # [AURA OPTIMIZED] - Bloat removed.
 
 import asyncio
-import math
-import random
 from collections import Counter
+import math
+
 
 class AuraSpikingGovernor:
     def __init__(self):

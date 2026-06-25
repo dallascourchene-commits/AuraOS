@@ -36,20 +36,18 @@ from __future__ import annotations
 
 import json
 import os
-import ssl
 import time
+from typing import Any
 import urllib.error
 import urllib.request
-from typing import Any
 
-from aura_context_crusher import apply_context_crush_to_messages, apply_context_crush_to_prompt
 from aura_api_rotator import (
     gemini_generate,
     gemini_key_pool,
     load_secrets,
     openai_compatible_generate,
 )
-
+from aura_context_crusher import apply_context_crush_to_messages, apply_context_crush_to_prompt
 from aura_llm_call_logger import log_llm_call
 from aura_paper_memory import (
     AuraResonanceEgressGate,
@@ -178,7 +176,7 @@ def _anthropic_generate(url: str, api_key: str, model: str, prompt: str,
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         return data["content"][0]["text"].strip(), None
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return None, str(exc)
 
 
@@ -374,15 +372,15 @@ class ExternalLLM:
             raise RuntimeError(f"No usable external provider. Last error: {last_err}")
         self.provider = chosen
         self.cfg = PROVIDERS[chosen]
-        
+
         # Comprehensive dynamic routing for all Anthropic layers
         if chosen == "anthropic":
             default_str = self.secrets.get("CLAUDE_DEFAULT_MODEL", "claude-sonnet-4-6")
             premium_str = self.secrets.get("CLAUDE_PREMIUM_MODEL", "claude-opus-4-8")
-            
+
             # Normalize the incoming request token to match shorthand choices
             model_query = str(model).strip().lower() if model else ""
-            
+
             if model_query in ("premium", "opus", "claude-opus-4-8", premium_str.lower()):
                 self.model = premium_str
             elif model_query in ("default", "sonnet", "claude-sonnet-4-6", default_str.lower()) or not model:
@@ -391,9 +389,9 @@ class ExternalLLM:
                 self.model = model  # Transparent pass-through if an explicit unmapped variant is used
         else:
             self.model = model or self.cfg["model"]
-            
+
         self.api = self.cfg.get("api", "openai")
-        
+
         # ─── UNIVERSAL KEY BINDING ───
         self.is_gemini = (self.api == "gemini")
         self.api_key = self.secrets.get(self.cfg["key"])
@@ -428,7 +426,7 @@ class ExternalLLM:
 
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
-                 router_context: "str | None" = None, slot_matrix: Any | None = None,
+                 router_context: str | None = None, slot_matrix: Any | None = None,
                  pre_egress: bool = True, call_type: str = "generate",
                  paper_ledger: str | None = None,
                  resonance_egress: bool = True,
@@ -625,7 +623,7 @@ class ExternalLLM:
         try:
             from aura_pricing import get_pricebook
             return get_pricebook().cost(self.provider, in_tokens, out_tokens)
-        except Exception:  # noqa: BLE001
+        except Exception:
             return round(
                 in_tokens / 1000 * self.cfg["price_in_per_1k"]
                 + out_tokens / 1000 * self.cfg["price_out_per_1k"], 6)

@@ -40,15 +40,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-import time
 from pathlib import Path
+import time
 from typing import Any
 
 import numpy as np
 
 from aura_api_rotator import load_secrets
-from aura_hv_cache import HVCacheSubstrate, _HV_DIM, _str_to_hv
+from aura_hv_cache import _HV_DIM, HVCacheSubstrate, _str_to_hv
 from aura_token_economics import TokenEconomics
 
 _BASELINE_PATH = Path("Aura_Memory/benchmark_baseline.json")
@@ -291,7 +290,7 @@ class BenchmarkSandbox:
         if not _BASELINE_PATH.exists():
             return {}
         try:
-            with open(_BASELINE_PATH, "r", encoding="utf-8") as f:
+            with open(_BASELINE_PATH, encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             return {}

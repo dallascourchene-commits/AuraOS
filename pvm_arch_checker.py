@@ -22,11 +22,10 @@ Exit code 0 = no violations.  Non-zero = violations found.
 
 import argparse
 import ast
+from collections import defaultdict
 import json
-import os
-import sys
-from collections import defaultdict, deque
 from pathlib import Path
+import sys
 from typing import NamedTuple
 
 # ---------------------------------------------------------------------------
@@ -104,7 +103,7 @@ _STDLIB_NAMES: frozenset[str] = frozenset({
 
 
 def _is_stdlib(name: str) -> bool:
-    return name.split(".")[0] in _STDLIB_NAMES
+    return name.split(".", maxsplit=1)[0] in _STDLIB_NAMES
 
 
 def _module_name(path: Path, root: Path) -> str:

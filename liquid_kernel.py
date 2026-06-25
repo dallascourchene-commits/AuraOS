@@ -9,8 +9,9 @@ SYNOPSIS: The `AuraOS.TernaryNeuralCore` module, dependent on `typing` and `nump
 [/AURA_MASTER_KEY]
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Dict, Any
 
 dataclass_stub_replacement = True
 class LiquidConfig:
@@ -43,11 +44,11 @@ def ternary_activation(x: np.ndarray, threshold: float = 0.0, toggle_prob: float
     """Zero-allocation real-valued ternary activation."""
     if rng is None:
         rng = np.random.default_rng(seed=101)
-        
+
     abs_x = np.abs(x)
     # 100% Vectorized single-pass sign mapping replaces legacy loops
     ternary = np.where(abs_x >= threshold, np.sign(x) * 1.58, 0.0).astype(np.float32)
-    
+
     if toggle_prob > 0.0:
         mask = rng.random(x.shape) < toggle_prob
         return np.where(mask, ternary, x)
@@ -336,7 +337,7 @@ class TernaryQuantizer:
     def ternary_quantize_array(self, arr: np.ndarray) -> np.ndarray:
         return ternary_activation(arr, self.config.ternary_threshold, self.config.stochastic_toggle_prob, self.rng)
 
-    def quantize_state(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    def quantize_state(self, state: dict[str, Any]) -> dict[str, Any]:
         quantized = {}
         for k, v in state.items():
             if isinstance(v, (int, float)):
@@ -348,10 +349,10 @@ class TernaryQuantizer:
 class LiquidState:
     def __init__(self, config: LiquidConfig):
         self.config = config
-        
+
         # Initialize single thread-safe random state generator shared across sub-modules
         self._rng = np.random.default_rng(seed=101)
-        
+
         self.ltc_solver = AdaptiveLiquidTimeConstant(config)
         self.lsm = LiquidStateMachine(input_dim=3, hidden_dim=64, output_dim=3, config=config, rng=self._rng)
         self.physics_correction = PhysicsInformedCorrection(config)
@@ -365,7 +366,7 @@ class LiquidState:
         except ValueError:
             return float(hash(str(val)) % 100) / 100.0
 
-    def update(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def update(self, input_data: dict[str, Any]) -> dict[str, Any]:
         encoded_values = [self.encode_input(v) for v in input_data.values()]
         np_state = np.array(encoded_values, dtype=np.float32)
 
@@ -387,7 +388,7 @@ class LiquidWebSocket:
         self.liquid_state = LiquidState(self.config)
         self.quantizer = TernaryQuantizer(self.config, rng=self.liquid_state._rng)
 
-    async def process_command(self, command: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_command(self, command: dict[str, Any]) -> dict[str, Any]:
         liquid_state = self.liquid_state.update(command)
         quantized_state = self.quantizer.quantize_state(liquid_state)
 

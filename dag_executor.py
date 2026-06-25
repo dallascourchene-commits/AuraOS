@@ -8,10 +8,11 @@ FUNCTIONS: execute_dag_plan
 SYNOPSIS: `Aura OS Auditor: The Python module provides a strict, single-sentence technical synopsis for a Python module with dependencies [sys, collections, struct, json] and functions [execute_dag_plan].`
 [/AURA_MASTER_KEY]
 """
-import sys
+from collections import deque
 import json
 import struct
-from collections import deque
+import sys
+
 
 def execute_dag_plan():
     # STEP 1: Binary IPC Strict Ingestion
@@ -27,23 +28,23 @@ def execute_dag_plan():
         if not prefix or len(prefix) < 4:
             sys.stderr.write("Error: Empty or invalid binary input prefix\n")
             sys.exit(1)
-        
+
         # Unpack the 4-byte unsigned int to get the exact payload size
         payload_len = struct.unpack('<I', prefix)[0]
-        
+
         # Read the exact payload bytes directly from the buffer
         raw_data = sys.stdin.buffer.read(payload_len)
-        
+
         # Decode the bytes back to a dictionary
         dag_data = json.loads(raw_data.decode('utf-8'))
         nodes_data = dag_data.get("nodes", [])
         edges_data = dag_data.get("edges", [])
-        
+
     except json.JSONDecodeError as e:
-        sys.stderr.write(f"Error: Invalid JSON structure ({str(e)})\n")
+        sys.stderr.write(f"Error: Invalid JSON structure ({e!s})\n")
         sys.exit(1)
     except Exception as e:
-        sys.stderr.write(f"Error: Ingestion exception ({str(e)})\n")
+        sys.stderr.write(f"Error: Ingestion exception ({e!s})\n")
         sys.exit(1)
 
     # STEP 2: Kahn's Algorithm (Mathematical Execution Tree)
@@ -58,7 +59,7 @@ def execute_dag_plan():
         if v not in adj: adj[v] = []
         if u not in in_degree: in_degree[u] = 0
         if v not in in_degree: in_degree[v] = 0
-        
+
         adj[u].append(v)
         in_degree[v] += 1
 

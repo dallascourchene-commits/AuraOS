@@ -12,12 +12,12 @@ from __future__ import annotations
 
 import argparse
 import ast
-import re
-import subprocess
-import sys
 from collections import Counter
 from math import log2
 from pathlib import Path
+import re
+import subprocess
+import sys
 
 try:
     from aura_topological_scanner import compile_unified_graph as _compile_unified_graph
@@ -201,7 +201,7 @@ def git_sync(root: Path = ROOT) -> int:
     current = branch.stdout.strip()
 
     # Prefer origin/main; fall back to origin/master for legacy Termux clones.
-    upstream_candidates = [f"origin/main", f"origin/master"]
+    upstream_candidates = ["origin/main", "origin/master"]
     chosen = None
     for candidate in upstream_candidates:
         remote, remote_branch = candidate.split("/", 1)

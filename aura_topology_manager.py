@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import argparse
 import ast
-import json
-import subprocess
-import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
+import json
 from pathlib import Path
+import subprocess
+import sys
 from typing import Any
 
 try:

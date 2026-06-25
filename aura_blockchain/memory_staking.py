@@ -13,9 +13,9 @@ Key properties:
 """
 
 import hashlib
-import os
 import struct
 import time
+
 import numpy as np
 
 # ── RSS measurement ──────────────────────────────────────────────────────
@@ -23,7 +23,7 @@ import numpy as np
 def sample_rss_mb() -> float:
     """Measure current process resident set size in MB via /proc/self/statm."""
     try:
-        with open("/proc/self/statm", "r") as f:
+        with open("/proc/self/statm") as f:
             fields = f.read().split()
         # statm[1] = resident set size in pages (usually 4 KB pages)
         pages = int(fields[1])
@@ -167,7 +167,7 @@ def thermal_damping_safe_batch(
 def read_cpu_temp() -> float:
     """Read CPU temperature (Linux thermal zone)."""
     try:
-        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        with open("/sys/class/thermal/thermal_zone0/temp") as f:
             return float(f.read().strip()) / 1000.0
     except Exception:
         return 38.0  # fallback for non-Linux / containers

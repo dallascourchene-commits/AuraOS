@@ -11,16 +11,16 @@ SYNOPSIS: This Python module, leveraging `asyncio`, `numpy`, and `aura_arch_reas
 from __future__ import annotations
 
 import asyncio
-import json
-import os
-import time
 from collections import defaultdict
+from collections.abc import Callable
+import json
 from pathlib import Path
-from typing import Any, Callable, Optional
+import time
+from typing import Any
 
 import numpy as np
 
-from aura_arch_reasoner import AuraArchReasoner, _IDEAL_TENSION, _RESONANCE_FLOOR
+from aura_arch_reasoner import _IDEAL_TENSION, _RESONANCE_FLOOR, AuraArchReasoner
 
 _BASELINE_PATH = Path("Aura_Memory/self_reflect_baseline.json")
 _TOPOLOGY_OUT = Path("Aura_Memory/live_topology_ast.json")
@@ -56,7 +56,7 @@ class SelfReflectEngine:
     def gather_physical_state(node: Any) -> dict[str, float | int]:
         current_temp = 42.0
         try:
-            with open("/sys/class/thermal/thermal_zone0/temp", "r", encoding="utf-8") as f:
+            with open("/sys/class/thermal/thermal_zone0/temp", encoding="utf-8") as f:
                 current_temp = float(f.read().strip()) / 1000.0
         except (OSError, ValueError):
             pass
@@ -124,11 +124,11 @@ class SelfReflectEngine:
         phases = np.exp(1j * (tiled / (np.abs(tiled).max() + 1e-6) * np.pi))
         return phases.reshape(1, -1).astype(np.complex64)
 
-    def load_baseline_phase(self) -> Optional[np.ndarray]:
+    def load_baseline_phase(self) -> np.ndarray | None:
         if not self.baseline_path.exists():
             return None
         try:
-            with open(self.baseline_path, "r", encoding="utf-8") as f:
+            with open(self.baseline_path, encoding="utf-8") as f:
                 data = json.load(f)
             real = np.asarray(data.get("phase_real", []), dtype=np.float32)
             imag = np.asarray(data.get("phase_imag", []), dtype=np.float32)
@@ -215,9 +215,9 @@ class SelfReflectEngine:
         self,
         nodes: int,
         edges: int,
-        phase_a: Optional[np.ndarray] = None,
-        phase_b: Optional[np.ndarray] = None,
-    ) -> Optional[dict[str, Any]]:
+        phase_a: np.ndarray | None = None,
+        phase_b: np.ndarray | None = None,
+    ) -> dict[str, Any] | None:
         """Route structural / Procrustes work to WasmOrchestrator when node count is high."""
         if nodes < _WASM_OFFLOAD_NODE_THRESHOLD:
             return None
@@ -261,7 +261,7 @@ class SelfReflectEngine:
         links_str: str,
         arch_report: dict[str, Any],
         drift_score: float,
-        wasm_metrics: Optional[dict[str, Any]] = None,
+        wasm_metrics: dict[str, Any] | None = None,
     ) -> str:
         wasm_line = ""
         if wasm_metrics and wasm_metrics.get("status") == "success":
@@ -303,7 +303,7 @@ class SelfReflectEngine:
     async def execute_cycle(
         self,
         compile_graph_fn: Callable[[], dict],
-        invoke_cloud: Optional[Callable[[str, str], Any]] = None,
+        invoke_cloud: Callable[[str, str], Any] | None = None,
         cloud_engine: str = "GEMINI",
     ) -> dict[str, Any]:
         """

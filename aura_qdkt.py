@@ -16,17 +16,13 @@ SYNOPSIS: Pure-asyncio unified QDKT hub (lock-free, single-threaded). Routes
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import hashlib
 import json
-import os
-import sqlite3
-import struct
-import time
-from contextlib import contextmanager
 from pathlib import Path
+import sqlite3
+import time
 from typing import Any
-
-import numpy as np
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -147,7 +143,7 @@ class UnifiedQDKT:
         global _CRYSTAL_CACHE
         if _CRYSTAL_JSON.exists():
             try:
-                with open(_CRYSTAL_JSON, "r", encoding="utf-8") as f:
+                with open(_CRYSTAL_JSON, encoding="utf-8") as f:
                     data = json.load(f)
                 _CRYSTAL_CACHE.update(data)
             except Exception:

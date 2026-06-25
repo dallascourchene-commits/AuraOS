@@ -28,12 +28,9 @@ No API strings are hardcoded in this file.
 from __future__ import annotations
 
 import json
-import os
 import time
 import urllib.error
 import urllib.request
-from pathlib import Path
-from typing import Any
 
 from aura_api_rotator import (
     gemini_generate,
@@ -125,7 +122,7 @@ def _anthropic_call(
             metadata={"source": "AnthropicRouter._anthropic_call"},
         )
         return None, err, latency
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         latency = time.time() - t0
         err = str(exc)
         log_llm_call(
@@ -194,7 +191,7 @@ def _sambanova_call(
             metadata={"source": "AnthropicRouter._sambanova_call", "quota_hit": quota_hit},
         )
         return None, err, latency, quota_hit
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         latency = time.time() - t0
         err = str(exc)
         log_llm_call(
@@ -248,7 +245,7 @@ def _openai_compat_call(
             metadata={"source": "AnthropicRouter._openai_compat_call"},
         )
         return text or None, None, latency
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         latency = time.time() - t0
         err = str(exc)
         log_llm_call(

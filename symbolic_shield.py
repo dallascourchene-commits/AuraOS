@@ -14,7 +14,6 @@ import ast
 import re
 from typing import NamedTuple
 
-
 # ---------------------------------------------------------------------------
 # Prohibited patterns (namespace / side-channel risks on Termux/Android)
 # ---------------------------------------------------------------------------

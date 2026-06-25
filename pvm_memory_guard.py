@@ -11,14 +11,12 @@ SYNOPSIS: This Python module provides memory management utilities, including RSS
 [/AURA_MASTER_KEY]
 """
 
-import ctypes
+from collections import defaultdict
 import gc
 import os
 import resource
 import sys
 import time
-from collections import defaultdict
-from typing import Iterator
 
 import numpy as np
 
@@ -60,7 +58,7 @@ _ALLOWED_DTYPES: frozenset[np.dtype] = frozenset({
 def sample_rss_mb() -> float:
     """Return current process RSS in megabytes (Linux/macOS/Termux)."""
     try:
-        with open(f"/proc/{os.getpid()}/status", "r", encoding="ascii") as f:
+        with open(f"/proc/{os.getpid()}/status", encoding="ascii") as f:
             for line in f:
                 if line.startswith("VmRSS:"):
                     kb = int(line.split()[1])
@@ -197,7 +195,7 @@ class MemoryBudget:
     # Context-manager protocol
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> "MemoryBudget":
+    def __enter__(self) -> MemoryBudget:
         self._stop_event.clear()
         # Pure-asyncio: launch monitor as a background task
         try:

@@ -20,13 +20,8 @@ Fork detection:
   If alignment < 0.85 → local chain is a fork → resync from quorum.
 """
 
-import hashlib
-import time
-import struct
-import numpy as np
 from dataclasses import dataclass, field
-from . import phasor_ledger as pl
-from .block import Block, Transaction, ALIGNMENT_THRESHOLD
+import hashlib
 
 # -----------------------------------------------------------------------
 # Ed25519-like signature scheme using HMAC-SHA512
@@ -35,8 +30,12 @@ from .block import Block, Transaction, ALIGNMENT_THRESHOLD
 # Uses the same 32-byte seed → keypair derivation pattern as Ed25519
 # but with HMAC-based signing for zero-dependency correctness.
 # Signature format: 32-byte public key prefix + 64-byte HMAC tag = 96 bytes
-
 import hmac as _hmac
+import time
+
+import numpy as np
+
+from .block import ALIGNMENT_THRESHOLD, Block, Transaction
 
 
 class Ed25519KeyPair:

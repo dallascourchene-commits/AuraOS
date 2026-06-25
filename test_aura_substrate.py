@@ -10,11 +10,10 @@ Run:  python3 test_aura_substrate.py
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import sys
 import tempfile
-from pathlib import Path
-
-import json
 
 from aura_substrate import (
     PACKET_STYLES,
@@ -41,7 +40,7 @@ def _run(name: str, fn) -> None:
     except AssertionError as e:
         print(f"  [FAIL] {name}: {e}")
         _FAIL += 1
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         print(f"  [ERR ] {name}: {type(e).__name__}: {e}")
         _FAIL += 1
 
@@ -147,8 +146,12 @@ def test_mock_matrix_offline() -> None:
 
 def test_json_edit_plan_scoring() -> None:
     from aura_proxy_benchmark import (
-        parse_edit_plan, apply_edit_plan, edit_plan_to_unified_diff,
-        QualityScorer, TASKS, with_output_mode,
+        TASKS,
+        QualityScorer,
+        apply_edit_plan,
+        edit_plan_to_unified_diff,
+        parse_edit_plan,
+        with_output_mode,
     )
     original = ContextSelector().read("aura_mesh.py")
     good = ('{"edits": [{"file": "aura_mesh.py", "start_line": 174, "end_line": 174, '
@@ -173,7 +176,7 @@ def test_json_edit_plan_scoring() -> None:
 
 
 def test_provider_classification() -> None:
-    from aura_llm_egress import classify_providers, usable_providers, PROVIDERS
+    from aura_llm_egress import PROVIDERS, classify_providers, usable_providers
     # placeholder + non-placeholder keys
     secrets = {"MISTRAL_API_KEY": "real-key", "OPENAI_API_KEY": "your_key_here"}
     buckets = classify_providers(secrets)
@@ -184,8 +187,10 @@ def test_provider_classification() -> None:
 
 
 def test_router_ledger_selection() -> None:
-    import tempfile, os as _os
-    from aura_router import CalibrationLedger, DEFAULT_STYLE, DEFAULT_MODE
+    import os as _os
+    import tempfile
+
+    from aura_router import DEFAULT_MODE, DEFAULT_STYLE, CalibrationLedger
     tmp = tempfile.mkdtemp()
     led = CalibrationLedger(_os.path.join(tmp, "cal.jsonl"))
     # two providers calibrated for task_type 'patch'
@@ -213,9 +218,11 @@ def test_router_ledger_selection() -> None:
 
 
 def test_router_mock_route_and_savings() -> None:
-    import tempfile, os as _os
-    from aura_router import CalibrationLedger, ExecutionLog, calibrate, AutoRouter, savings_report
+    import os as _os
+    import tempfile
+
     from aura_matrix_benchmark import MockEgress
+    from aura_router import AutoRouter, CalibrationLedger, ExecutionLog, calibrate, savings_report
     tmp = tempfile.mkdtemp()
     led = CalibrationLedger(_os.path.join(tmp, "cal.jsonl"))
     elog = ExecutionLog(_os.path.join(tmp, "exec.jsonl"))
@@ -245,7 +252,9 @@ def test_sanitize_code() -> None:
 
 
 def test_pricing_book() -> None:
-    import tempfile, os as _os, time as _time
+    import os as _os
+    import tempfile
+
     from aura_pricing import PriceBook
     pb = PriceBook(_os.path.join(tempfile.mkdtemp(), "pricing.json"))
     pin, pout = pb.price("mistral")
@@ -260,10 +269,12 @@ def test_pricing_book() -> None:
 
 
 def test_converse_mock_and_learning() -> None:
-    import tempfile, os as _os
-    from aura_converse import Conversationalist, CommProfile, ConversationLog, parse_feedback
-    from aura_router import ExecutionLog
+    import os as _os
+    import tempfile
+
+    from aura_converse import CommProfile, Conversationalist, ConversationLog, parse_feedback
     from aura_matrix_benchmark import MockEgress
+    from aura_router import ExecutionLog
     tmp = tempfile.mkdtemp()
     prof = CommProfile(_os.path.join(tmp, "profile.json"))
     convo = ConversationLog(_os.path.join(tmp, "convo.jsonl"))
@@ -285,8 +296,10 @@ def test_converse_mock_and_learning() -> None:
 
 
 def test_savings_by_provider_and_aspect() -> None:
-    import tempfile, os as _os
-    from aura_router import ExecutionLog, CalibrationLedger, savings_report
+    import os as _os
+    import tempfile
+
+    from aura_router import CalibrationLedger, ExecutionLog, savings_report
     tmp = tempfile.mkdtemp()
     elog = ExecutionLog(_os.path.join(tmp, "exec.jsonl"))
     elog.append({"chosen_provider": "mistral", "aspect": "refactor", "aura_input_tokens": 500,
@@ -437,7 +450,9 @@ def test_pre_egress_interceptor_routes_code_profile() -> None:
 
 
 def test_savings_report_includes_direct_llm_savings_db() -> None:
-    import os as _os, tempfile
+    import os as _os
+    import tempfile
+
     from aura_router import CalibrationLedger, ExecutionLog, savings_report
     from aura_savings_db import SavingsDB
 
@@ -471,7 +486,7 @@ def test_savings_report_includes_direct_llm_savings_db() -> None:
     assert rep["by_aspect"]["conversation"]["calls"] == 1
 
 def test_sandbox_task_and_no_fake_files() -> None:
-    from aura_proxy_benchmark import TASKS, with_output_mode, QualityScorer, _repo_py_files
+    from aura_proxy_benchmark import TASKS, QualityScorer, _repo_py_files, with_output_mode
     from aura_substrate import ContextSelector, existing_import_roots
     assert "sandbox_score" in TASKS
     assert "sample_target.py" in _repo_py_files(), "sandbox files must be allowed refs"
@@ -487,7 +502,7 @@ def test_sandbox_task_and_no_fake_files() -> None:
 
 
 def test_diff_applier_and_scorer() -> None:
-    from aura_proxy_benchmark import _apply_unified_diff, QualityScorer, TASKS
+    from aura_proxy_benchmark import TASKS, QualityScorer, _apply_unified_diff
     sel = ContextSelector()
     original = sel.read("aura_mesh.py")
     diff = (

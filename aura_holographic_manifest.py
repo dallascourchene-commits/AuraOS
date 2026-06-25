@@ -10,11 +10,11 @@ SYNOPSIS: Generates a 1.2 KB continuous phase codebase hologram for constant-tim
           filesystem crawling. Every file header carries the entire OS state.
 [/AURA_MASTER_KEY]
 """
+import base64
+import hashlib
 import os
 import re
-import base64
-import struct
-import hashlib
+
 import numpy as np
 
 DIMENSION = 10000
@@ -76,7 +76,7 @@ class AuraHolographicManifest:
                 file_phasor = self._string_to_phasor(file)
 
                 try:
-                    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                    with open(filepath, encoding='utf-8', errors='ignore') as f:
                         for line_idx, line_content in enumerate(f, start=1):
                             # 1. Compute content vector
                             line_phasor = self._string_to_phasor(line_content)
@@ -117,7 +117,7 @@ class AuraHolographicManifest:
                 filepath = os.path.join(root, file)
 
                 try:
-                    with open(filepath, 'r', encoding='utf-8') as f:
+                    with open(filepath, encoding='utf-8') as f:
                         content = f.read()
 
                     # Only touch files that already carry the master key block
@@ -144,7 +144,7 @@ class AuraHolographicManifest:
         manifest token if present. Returns None if no manifest is embedded.
         """
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding='utf-8') as f:
                 content = f.read()
         except Exception:
             return None
@@ -189,7 +189,7 @@ class AuraHolographicManifest:
         local_accumulator = np.zeros(DIMENSION, dtype=np.complex64)
 
         try:
-            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(filepath, encoding='utf-8', errors='ignore') as f:
                 for line_idx, line_content in enumerate(f, start=1):
                     line_phasor = self._string_to_phasor(line_content)
                     pos_phases = self._base_phases * (line_idx / 1000.0)

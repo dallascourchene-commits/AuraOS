@@ -29,10 +29,10 @@ from __future__ import annotations
 
 import json
 import os
-import time
 from pathlib import Path
-from typing import Any
 import sqlite3
+from typing import Any
+
 from logging_kit import log_error, log_report
 
 MEMORY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Aura_Memory")
@@ -128,7 +128,7 @@ class TokenEconomics:
             conn.commit()
             conn.close()
         except Exception as e:
-            log_error("DB_INIT_FAIL", f"Failed to initialize token economics table: {str(e)}")
+            log_error("DB_INIT_FAIL", f"Failed to initialize token economics table: {e!s}")
 
     # ------------------------------------------------------------------
     # Delta computation
@@ -187,18 +187,18 @@ class TokenEconomics:
             conn = sqlite3.connect(DB_PATH)
             conn.execute("PRAGMA journal_mode=WAL;")
             cursor = conn.cursor()
-            
+
             cursor.execute('''
                 INSERT INTO token_operations (operation_name, token_delta, cost_delta)
                 VALUES (?, ?, ?)
             ''', (operation_name, token_delta, cost_delta))
-            
+
             conn.commit()
             conn.close()
-            
+
             log_report("TOKEN_ECONOMICS", f"Logged running totals entry for {operation_name}")
         except Exception as e:
-            log_error("TOKEN_LOG_FAIL", f"Failed to record execution transaction delta: {str(e)}")
+            log_error("TOKEN_LOG_FAIL", f"Failed to record execution transaction delta: {e!s}")
             raise
 
     # ------------------------------------------------------------------
@@ -209,20 +209,20 @@ class TokenEconomics:
         try:
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
-            
+
             cursor.execute('SELECT SUM(token_delta), SUM(cost_delta) FROM token_operations')
             result = cursor.fetchone()
             conn.close()
-            
+
             if result and result[0] is not None and result[1] is not None:
                 return {
                     'total_token_delta': float(result[0]),
                     'total_cost_delta': float(result[1])
                 }
-            
+
             return {'total_token_delta': 0.0, 'total_cost_delta': 0.0}
         except Exception as e:
-            log_error("TOKEN_QUERY_FAIL", f"Failed to aggregate cumulative historical summary: {str(e)}")
+            log_error("TOKEN_QUERY_FAIL", f"Failed to aggregate cumulative historical summary: {e!s}")
             raise
 
     def historical_summary(self) -> dict[str, Any]:
@@ -232,7 +232,7 @@ class TokenEconomics:
         totals: dict[str, float] = {
             "calls": 0, "raw_cost_usd": 0.0, "aura_cost_usd": 0.0, "saved_usd": 0.0,
         }
-        with open(self.log_path, "r", encoding="utf-8") as f:
+        with open(self.log_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:

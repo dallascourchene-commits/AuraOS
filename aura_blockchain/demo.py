@@ -19,21 +19,26 @@ Run:
 
 import sys
 import time
+
 import numpy as np
 
 # Make sure we can import the package
 sys.path.insert(0, "/workspaces/AuraOS")
 
 from aura_blockchain import phasor_ledger as pl
-from aura_blockchain.block import Block, Transaction, ALIGNMENT_THRESHOLD
+from aura_blockchain.block import ALIGNMENT_THRESHOLD
 from aura_blockchain.consensus import (
-    AuraConsensus, Ed25519KeyPair, ConsensusError, PROCRUSTES_THRESHOLD,
+    PROCRUSTES_THRESHOLD,
+    AuraConsensus,
+    ConsensusError,
+    Ed25519KeyPair,
+)
+from aura_blockchain.memory_staking import (
+    headroom_mb,
+    read_cpu_temp,
+    thermal_damping_safe_batch,
 )
 from aura_blockchain.node import AuraNode
-from aura_blockchain.memory_staking import (
-    MemoryStake, sample_rss_mb, headroom_mb, thermal_damping_safe_batch,
-    read_cpu_temp,
-)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Colour helpers (terminal)
@@ -100,7 +105,7 @@ def setup():
             f"stake_commitment={node.stake_commitment[:16]}...")
 
     ok(f"All {len(nodes)} validators online with RAM stakes")
-    ok(f"Genesis phasor committed — chain height: 0")
+    ok("Genesis phasor committed — chain height: 0")
 
     # ── Verify Ed25519 sign/verify works ──
     test_kp = consensus.get_keypair("VAL-ALPHA")
@@ -333,7 +338,7 @@ def phase3_fork_and_heal(consensus: AuraConsensus, nodes: dict[str, AuraNode],
     rogue.heal(quorum_phasor, honest_balances)
 
     # Verify healed
-    ok(f"Rogue node healed. New balances:")
+    ok("Rogue node healed. New balances:")
     for aid in sorted(rogue.accounts.keys()):
         bal = rogue.accounts[aid].balance
         honest_bal = honest_balances.get(aid, 0)
@@ -473,10 +478,10 @@ def summary(consensus: AuraConsensus, nodes: dict[str, AuraNode]):
 
     print(f"\n  {C['G']}All core claims from the gist demonstrated successfully.{C['X']}")
     print(f"  {C['Y']}Critical gaps identified in analysis now filled:{C['X']}")
-    print(f"    • BFT consensus (PBFT + Ed25519) instead of handwaved 'phasor rotation'")
+    print("    • BFT consensus (PBFT + Ed25519) instead of handwaved 'phasor rotation'")
     print(f"    • Procrustes fork detection with concrete threshold ({PROCRUSTES_THRESHOLD})")
-    print(f"    • RAM attestation via RSS measurement (not fake PUF)")
-    print(f"    • Verifiable block validation (O(1) 5% subsample)")
+    print("    • RAM attestation via RSS measurement (not fake PUF)")
+    print("    • Verifiable block validation (O(1) 5% subsample)")
     print()
 
 

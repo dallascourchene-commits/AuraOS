@@ -21,12 +21,12 @@ Loads keys from ~/aura_secrets.json:
 
 import json
 import os
+from pathlib import Path
 import ssl
 import time
+from typing import Any
 import urllib.error
 import urllib.request
-from pathlib import Path
-from typing import Any
 
 from aura_llm_call_logger import log_gemini_call, log_openai_compatible_call
 
@@ -49,11 +49,11 @@ def load_secrets(path: Path | str | None = None) -> dict[str, Any]:
         secrets_path = Path(path)
         if not secrets_path.exists():
             return {}
-        with open(secrets_path, "r", encoding="utf-8") as f:
+        with open(secrets_path, encoding="utf-8") as f:
             return json.load(f)
     for secrets_path in _secrets_search_paths():
         if secrets_path.exists():
-            with open(secrets_path, "r", encoding="utf-8") as f:
+            with open(secrets_path, encoding="utf-8") as f:
                 return json.load(f)
     return {}
 

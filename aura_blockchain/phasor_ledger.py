@@ -16,6 +16,7 @@ Based on the mathematics in AuraOS/liquid_fhrr.py and vsa_resonator.py
 """
 
 import hashlib
+
 import numpy as np
 
 DIMENSIONS = 10000

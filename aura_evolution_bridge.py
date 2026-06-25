@@ -10,14 +10,14 @@ SYNOPSIS: The `aura_os_audit_core` module provides strict structural validation 
 """
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import json
 import os
-from dataclasses import dataclass, field
 
 import numpy as np
 
-from aura_ontology_circuit import CircuitVerdict, get_ontology_circuit
 from aura_nesy_sat_reasoner import batch_evaluate_implication
+from aura_ontology_circuit import CircuitVerdict, get_ontology_circuit
 from aura_spvm import get_semantic_vector
 
 
@@ -58,7 +58,7 @@ def speculative_topology_check(
     if not os.path.exists(topo_path):
         return True, "topology_absent_skip"
 
-    with open(topo_path, "r", encoding="utf-8") as f:
+    with open(topo_path, encoding="utf-8") as f:
         topo = json.load(f)
 
     nodes = topo.get("nodes", [])

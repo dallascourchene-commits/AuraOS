@@ -11,14 +11,14 @@ SYNOPSIS: Cofactor-free single-seed context-lift primitives for Aura's VSA memor
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 import hashlib
 import math
 import re
-from typing import Any, Iterable, Sequence
+from typing import Any
 
 import numpy as np
-
 
 LIFT_PROFILE_VERSION = "AURA_SINGLE_SEED_LIFT_V1"
 DEFAULT_DIMENSIONS = 10_000
@@ -43,7 +43,7 @@ class SingleSeedTrace:
         }
 
     @classmethod
-    def from_jsonable(cls, payload: dict[str, Any]) -> "SingleSeedTrace":
+    def from_jsonable(cls, payload: dict[str, Any]) -> SingleSeedTrace:
         return cls(
             trace_id=str(payload.get("trace_id", "")),
             resonance=float(payload.get("resonance", 0.0) or 0.0),
@@ -80,7 +80,7 @@ class SingleSeedLiftProfile:
         }
 
     @classmethod
-    def from_jsonable(cls, payload: dict[str, Any] | None) -> "SingleSeedLiftProfile | None":
+    def from_jsonable(cls, payload: dict[str, Any] | None) -> SingleSeedLiftProfile | None:
         if not isinstance(payload, dict) or not payload:
             return None
         return cls(
@@ -214,7 +214,7 @@ def compile_single_seed_lift(
         residual += (1.0 - max(-1.0, min(1.0, trace_resonance))) * vector
         traces.append(
             SingleSeedTrace(
-                trace_id=_digest_bytes(f"{label}:{idx}:{trace_resonance:.8f}".encode("utf-8"), size=8),
+                trace_id=_digest_bytes(f"{label}:{idx}:{trace_resonance:.8f}".encode(), size=8),
                 resonance=round(trace_resonance, 6),
                 dispatch_index=idx,
                 lift_layer=1 + (idx % layers),

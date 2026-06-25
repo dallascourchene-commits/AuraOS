@@ -5,9 +5,9 @@ import pytest
 
 from aura_architect_loop import (
     ARCHITECT_LOOP_VERSION,
+    PLAN_CAPSULE_VERSION,
     ArchitectFusionLoop,
     CodemapLoadError,
-    PLAN_CAPSULE_VERSION,
     append_architect_ledger,
     architect_capability_cards,
     build_fractal_plan_capsule,
@@ -18,7 +18,6 @@ from aura_architect_loop import (
     stage_arena_patch,
     verify_refactor_arena,
 )
-
 
 REPO_ROOT = Path(__file__).resolve().parent
 

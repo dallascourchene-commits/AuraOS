@@ -14,7 +14,6 @@ from datetime import datetime, timedelta
 import hashlib
 import json
 import os
-import socket
 import time
 import urllib.error
 from urllib.parse import urlencode
@@ -23,6 +22,12 @@ import xml.etree.ElementTree as ET
 
 import numpy as np
 
+from aura_paper_memory import (
+    compile_paper_memory_record,
+    extract_pdf_text_from_bytes,
+    record_to_trace_content,
+    upsert_paper_memory_record,
+)
 from aura_scientific_memory import (
     ScientificMemoryIndex,
     ScientificPaperEncoder,
@@ -30,12 +35,6 @@ from aura_scientific_memory import (
     ScientificSlots,
     pack_vector,
     unpack_vector,
-)
-from aura_paper_memory import (
-    compile_paper_memory_record,
-    extract_pdf_text_from_bytes,
-    record_to_trace_content,
-    upsert_paper_memory_record,
 )
 
 _SCIENTIFIC_ENCODER = ScientificPaperEncoder()
@@ -59,13 +58,13 @@ def _scientific_record(
 ):
     """
     Encodes a scientific paper record using VSA-based vectorization.
-    
+
     Parameters:
-    	record_id (str): Unique identifier for the record
-    	published: Optional publication date, either as a datetime object or ISO-like string
-    
+        record_id (str): Unique identifier for the record
+        published: Optional publication date, either as a datetime object or ISO-like string
+
     Returns:
-    	ScientificRecord: Encoded record with vector representation and semantic slots
+        ScientificRecord: Encoded record with vector representation and semantic slots
     """
     year = getattr(published, "year", None)
     if year is None and isinstance(published, str):
@@ -239,14 +238,7 @@ class ArXivForager:
                         delay = min(120.0, 15.0 * (2 ** attempt))
                     else:
                         delay = request_delay * (2 ** attempt)
-            except (
-                urllib.error.URLError,
-                TimeoutError,
-                socket.timeout,
-                ConnectionResetError,
-                OSError,
-                ValueError,
-            ) as exc:
+            except (urllib.error.URLError, TimeoutError, ConnectionResetError, OSError, ValueError) as exc:
                 self._last_request_time = time.monotonic()
                 last_error = exc
                 if attempt == retries - 1:
@@ -334,14 +326,7 @@ class ArXivForager:
                     if exc.code == 429
                     else request_delay * (2 ** attempt)
                 )
-            except (
-                urllib.error.URLError,
-                TimeoutError,
-                socket.timeout,
-                ConnectionResetError,
-                OSError,
-                ValueError,
-            ) as exc:
+            except (urllib.error.URLError, TimeoutError, ConnectionResetError, OSError, ValueError) as exc:
                 self._last_request_time = time.monotonic()
                 last_error = exc
                 if attempt == retries - 1:
@@ -945,9 +930,6 @@ from datetime import datetime as _dt
 from datetime import timedelta as _td
 import logging as _logging
 from pathlib import Path as _Path
-from typing import Dict as _Dict
-from typing import List as _List
-from typing import Optional as _Optional
 
 _eaf_logger = _logging.getLogger("aura.arxiv_forager")
 
@@ -957,15 +939,15 @@ class ArxivPaper:
     """Structured representation of an arXiv paper with VSA vector support."""
     paper_id: str
     title: str
-    authors: _List[str]
+    authors: list[str]
     abstract: str
     published: _dt
-    categories: _List[str]
-    pdf_url: _Optional[str] = None
-    full_text: _Optional[str] = None
-    vector: _Optional[np.ndarray] = None
-    slots: _Dict = _dcfield(default_factory=dict)
-    metadata: _Dict = _dcfield(default_factory=dict)
+    categories: list[str]
+    pdf_url: str | None = None
+    full_text: str | None = None
+    vector: np.ndarray | None = None
+    slots: dict = _dcfield(default_factory=dict)
+    metadata: dict = _dcfield(default_factory=dict)
 
     def to_dict(self) -> dict:
         """
@@ -1004,7 +986,7 @@ class ForagerConfig:
     """
     query: str
     max_results: int = 200               # reliable page size for broad queries
-    categories: _Optional[_List[str]] = None
+    categories: list[str] | None = None
     max_days_old: int = 365
     batch_size: int = 50                 # papers to process in one async batch
     rate_limit_delay: float = 3.5        # arXiv compliance: 3.5 s between batches
@@ -1022,11 +1004,11 @@ class ForagerStats:
     papers_parsed: int = 0
     papers_stored: int = 0
     errors: int = 0
-    start_time: _Optional[_dt] = None
-    end_time: _Optional[_dt] = None
+    start_time: _dt | None = None
+    end_time: _dt | None = None
 
     @property
-    def duration(self) -> _Optional[_td]:
+    def duration(self) -> _td | None:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
@@ -1074,8 +1056,8 @@ class EnhancedArxivForager(ArXivForager):
 
         self._scientific_encoder = ScientificPaperEncoder()
         self._scientific_index = ScientificMemoryIndex(self._scientific_encoder)
-        self._paper_cache: _Dict[str, ArxivPaper] = {}
-        self._overflow_windows: _List[tuple] = []  # (date_from, date_to) pairs that hit 10K cap
+        self._paper_cache: dict[str, ArxivPaper] = {}
+        self._overflow_windows: list[tuple] = []  # (date_from, date_to) pairs that hit 10K cap
         self._storage_dir = _Path("Aura_Memory/arxiv_cache")
         self._storage_dir.mkdir(parents=True, exist_ok=True)
         self._last_request_time: float = 0.0
@@ -1088,7 +1070,7 @@ class EnhancedArxivForager(ArXivForager):
 
     async def expand_curiosity_queries(
         self, base_query: str, max_expansions: int = 5,
-    ) -> _List[str]:
+    ) -> list[str]:
         """
         Curiosity-driven query expansion using scientific memory topology.
 
@@ -1108,7 +1090,7 @@ class EnhancedArxivForager(ArXivForager):
         if not self._scientific_index._records:
             return queries
 
-        domain_counts: _Dict[str, int] = {}
+        domain_counts: dict[str, int] = {}
         for rec in self._scientific_index._records.values():
             for domain in rec.slots.get("domain"):
                 domain_counts[domain] = domain_counts.get(domain, 0) + 1
@@ -1128,7 +1110,7 @@ class EnhancedArxivForager(ArXivForager):
                     queries.append(expanded)
 
         # Also check for mechanism gaps — domains with papers but few mechanisms
-        mechanism_counts: _Dict[str, int] = {}
+        mechanism_counts: dict[str, int] = {}
         for rec in self._scientific_index._records.values():
             for mech in rec.slots.get("mechanism"):
                 mechanism_counts[mech] = mechanism_counts.get(mech, 0) + 1
@@ -1145,7 +1127,7 @@ class EnhancedArxivForager(ArXivForager):
         )
         return queries[:max_expansions + 1]
 
-    async def forage(self, config: ForagerConfig) -> _List[ArxivPaper]:
+    async def forage(self, config: ForagerConfig) -> list[ArxivPaper]:
         """
         Forage arXiv papers matching *config*.
 
@@ -1197,7 +1179,7 @@ class EnhancedArxivForager(ArXivForager):
                 "" if window_days == 1 else "s",
             )
 
-            raw_papers: _List[dict] = []
+            raw_papers: list[dict] = []
             seen_ids: set = set()
             for wi, (df, dt_) in enumerate(date_windows):
                 if len(raw_papers) >= config.max_total:
@@ -1278,7 +1260,7 @@ class EnhancedArxivForager(ArXivForager):
 
     async def search_similar(
         self, query: str, top_k: int = 5
-    ) -> _List[ArxivPaper]:
+    ) -> list[ArxivPaper]:
         """
         Search for papers most similar to a query string.
         
@@ -1306,7 +1288,7 @@ class EnhancedArxivForager(ArXivForager):
         )
         return results
 
-    async def get_paper(self, paper_id: str) -> _Optional[ArxivPaper]:
+    async def get_paper(self, paper_id: str) -> ArxivPaper | None:
         """
         Retrieves a paper by ID from cache or disk.
         
@@ -1336,9 +1318,9 @@ class EnhancedArxivForager(ArXivForager):
 
     async def _search_via_urllib(
         self, config: ForagerConfig,
-        date_from: _Optional[_dt] = None,
-        date_to: _Optional[_dt] = None,
-    ) -> _List[dict]:
+        date_from: _dt | None = None,
+        date_to: _dt | None = None,
+    ) -> list[dict]:
         """
         Hit the arXiv Atom API with full pagination.
 
@@ -1363,7 +1345,7 @@ class EnhancedArxivForager(ArXivForager):
         NS = "{http://www.w3.org/2005/Atom}"
         ONS = "{http://a9.com/-/spec/opensearch/1.1/}"
         cutoff = _dt.now() - _td(days=config.max_days_old)
-        papers: _List[dict] = []
+        papers: list[dict] = []
         seen_ids: set = set()
         start = 0
 
@@ -1489,9 +1471,9 @@ class EnhancedArxivForager(ArXivForager):
     async def _search_via_oai(
         self,
         config: ForagerConfig,
-        date_from: _Optional[_dt],
-        date_to: _Optional[_dt],
-    ) -> _List[dict]:
+        date_from: _dt | None,
+        date_to: _dt | None,
+    ) -> list[dict]:
         """Fallback search over official OAI-PMH metadata, filtered locally."""
         cutoff = _dt.now() - _td(days=config.max_days_old)
         query_terms = [
@@ -1503,7 +1485,7 @@ class EnhancedArxivForager(ArXivForager):
             if term and term not in {"and", "or", "not"}
         ]
         wanted_categories = set(config.categories or ())
-        papers: _List[dict] = []
+        papers: list[dict] = []
         seen_ids: set = set()
         token = None
 
@@ -1637,7 +1619,7 @@ class EnhancedArxivForager(ArXivForager):
             self.stats.errors += 1
             _eaf_logger.error("Paper processing failed [%s]: %s", paper_id, exc)
 
-    def _generate_vector(self, paper: ArxivPaper) -> _Optional[np.ndarray]:
+    def _generate_vector(self, paper: ArxivPaper) -> np.ndarray | None:
         """
         Encode a vector for a paper and update its slots.
         

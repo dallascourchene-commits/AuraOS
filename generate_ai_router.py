@@ -10,12 +10,11 @@ Usage:
 
 import argparse
 import ast
+from collections import defaultdict
 import json
 import os
 import re
-from collections import defaultdict
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 TOPOLOGY_PATH = "Aura_Memory/live_topology_ast.json"
 LEXICON_PATH = "aura.lexc"
@@ -23,7 +22,7 @@ OUTPUT_MD = "AURA_AI_ROUTER.md"
 
 # ── Task → File mapping table ────────────────────────────────────────────────
 # This is the manual/static "intent index" – extend as the project grows.
-TASK_MAPPING: Dict[str, Dict[str, Any]] = {
+TASK_MAPPING: dict[str, dict[str, Any]] = {
     "forage new papers": {
         "primary": "arxiv_forager.py",
         "secondary": ["aura_forager.py", "aura_ingest.py"],
@@ -79,13 +78,13 @@ TASK_MAPPING: Dict[str, Dict[str, Any]] = {
 
 # ── Lexicon reader ────────────────────────────────────────────────────────────
 
-def read_lexicon_states() -> Dict[str, str]:
+def read_lexicon_states() -> dict[str, str]:
     """Parse aura.lexc to get state→type mapping (simplified)."""
     if not os.path.exists(LEXICON_PATH):
         return {}
-    states: Dict[str, str] = {}
+    states: dict[str, str] = {}
     current_lexicon = ""
-    with open(LEXICON_PATH, "r", encoding="utf-8", errors="ignore") as f:
+    with open(LEXICON_PATH, encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
             if line.startswith("!") or not line:
@@ -105,7 +104,7 @@ def read_lexicon_states() -> Dict[str, str]:
 
 # ── PSML header extractor ─────────────────────────────────────────────────────
 
-def extract_psml_header(filepath: str) -> Dict[str, Any]:
+def extract_psml_header(filepath: str) -> dict[str, Any]:
     """
     Extract or auto-generate a minimal PSML header for a Python file.
 
@@ -114,7 +113,7 @@ def extract_psml_header(filepath: str) -> Dict[str, Any]:
       2. [FILE HEADER] block (gist-style)
       3. AST fallback – function and class names
     """
-    header: Dict[str, Any] = {
+    header: dict[str, Any] = {
         "purpose": "",
         "dependencies": [],
         "primary_functions": [],
@@ -125,7 +124,7 @@ def extract_psml_header(filepath: str) -> Dict[str, Any]:
         return header
 
     try:
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        with open(filepath, encoding="utf-8", errors="ignore") as f:
             content = f.read()
     except OSError:
         return header
@@ -167,7 +166,7 @@ def extract_psml_header(filepath: str) -> Dict[str, Any]:
     if not header["primary_functions"]:
         try:
             tree = ast.parse(content)
-            names: List[str] = []
+            names: list[str] = []
             for node in ast.walk(tree):
                 if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
                     # Skip private helpers (underscore prefix) to keep list concise
@@ -183,13 +182,13 @@ def extract_psml_header(filepath: str) -> Dict[str, Any]:
     return header
 
 
-def _extract_line_ranges(filepath: str, function_names: List[str]) -> Dict[str, int]:
+def _extract_line_ranges(filepath: str, function_names: list[str]) -> dict[str, int]:
     """Return {func_name: start_line} using AST for the given functions."""
-    ranges: Dict[str, int] = {}
+    ranges: dict[str, int] = {}
     if not os.path.exists(filepath):
         return ranges
     try:
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        with open(filepath, encoding="utf-8", errors="ignore") as f:
             content = f.read()
         tree = ast.parse(content)
         for node in ast.walk(tree):
@@ -203,13 +202,13 @@ def _extract_line_ranges(filepath: str, function_names: List[str]) -> Dict[str, 
 
 # ── Shared resource detector ──────────────────────────────────────────────────
 
-def _detect_shared_resources(nodes: List[Dict], edges: List[Dict],
-                              node_by_id: Dict[str, Dict]) -> Dict[str, List[str]]:
+def _detect_shared_resources(nodes: list[dict], edges: list[dict],
+                              node_by_id: dict[str, dict]) -> dict[str, list[str]]:
     """
     Detect shared resources (ports, databases, etc.) from topology nodes.
     Returns {resource_type: [name, ...]}.
     """
-    resources: Dict[str, List[str]] = defaultdict(list)
+    resources: dict[str, list[str]] = defaultdict(list)
     for n in nodes:
         label = n.get("label", "")
         nid = n.get("id", "")
@@ -235,7 +234,7 @@ def build_router_md(topology_path: str = TOPOLOGY_PATH,
     If topology_path does not exist yet, a minimal skeleton is produced so the
     file is always valid Markdown even before the first `!topology` run.
     """
-    lines: List[str] = []
+    lines: list[str] = []
 
     lines.append("# AURA AI ROUTER – v4.01\n")
     lines.append("> **Read-only** navigation index for AI agents. Regenerate with "
@@ -262,18 +261,18 @@ def build_router_md(topology_path: str = TOPOLOGY_PATH,
         return "\n".join(lines)
 
     try:
-        with open(topology_path, "r", encoding="utf-8") as f:
+        with open(topology_path, encoding="utf-8") as f:
             topo = json.load(f)
     except (json.JSONDecodeError, OSError) as exc:
         lines.append(f"\n_Error loading topology: {exc}_\n")
         return "\n".join(lines)
 
-    nodes: List[Dict] = topo.get("nodes", [])
-    edges: List[Dict] = topo.get("edges", [])
-    node_by_id: Dict[str, Dict] = {n["id"]: n for n in nodes}
+    nodes: list[dict] = topo.get("nodes", [])
+    edges: list[dict] = topo.get("edges", [])
+    node_by_id: dict[str, dict] = {n["id"]: n for n in nodes}
 
     # Group nodes by file
-    file_nodes: Dict[str, List[Dict]] = defaultdict(list)
+    file_nodes: dict[str, list[dict]] = defaultdict(list)
     for n in nodes:
         file = n.get("file") or (n["id"].split("::")[0] if "::" in n["id"] else "unknown")
         file_nodes[file].append(n)
@@ -362,7 +361,7 @@ def build_router_md(topology_path: str = TOPOLOGY_PATH,
     return "\n".join(lines)
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Generate AURA_AI_ROUTER.md from live topology")
     p.add_argument("--topology", default=TOPOLOGY_PATH,
                    help="Path to live_topology_ast.json")

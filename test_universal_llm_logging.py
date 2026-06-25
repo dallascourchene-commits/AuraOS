@@ -1,5 +1,5 @@
-import sqlite3
 from pathlib import Path
+import sqlite3
 
 from aura_llm_call_logger import log_llm_call
 from aura_savings_db import SavingsDB
@@ -83,8 +83,8 @@ def test_gemini_generate_logs_direct_call(monkeypatch, tmp_path: Path):
 
 
 def test_external_llm_interpret_logs_once_as_interpret(monkeypatch, tmp_path: Path):
-    import aura_llm_egress
     from aura_llm_call_logger import log_openai_compatible_call
+    import aura_llm_egress
     from aura_llm_egress import ExternalLLM
 
     db_path = tmp_path / "savings.db"
