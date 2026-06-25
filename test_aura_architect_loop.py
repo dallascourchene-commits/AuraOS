@@ -218,6 +218,53 @@ def test_refactor_arena_stages_only_assigned_patch_scope():
     assert {finding.shadow_type for finding in blocked.findings} >= {"cross_boundary_patch"}
 
 
+def test_refactor_arena_rejects_diff_paths_that_do_not_match_metadata():
+    result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
+        "Reject dishonest Architect patch metadata",
+        architecture_decision="Verifier must parse diff headers, not just trust affected_files.",
+        target_file="aura_fusion.py",
+        target_symbol="build_task_capsule",
+        act_tasks=[
+            {
+                "task_id": "A-DIFF-PATH",
+                "objective": "Patch only the fusion capsule helper.",
+                "target_file": "aura_fusion.py",
+                "target_symbol": "build_task_capsule",
+            }
+        ],
+    )
+
+    staged = stage_arena_patch(
+        result.arena,
+        task_id="A-DIFF-PATH",
+        owner="cheap_builder",
+        diff="diff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n",
+        affected_files=["aura_fusion.py"],
+        tests=["test_aura_fusion.py"],
+    )
+    result.arena.shared_patch_queue.append(
+        {
+            "patch_id": "manual-lie",
+            "task_id": "A-DIFF-PATH",
+            "owner": "cheap_builder",
+            "diff": "diff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n",
+            "affected_files": ["aura_fusion.py"],
+            "status": "staged",
+            "tests": ["test_aura_fusion.py"],
+        }
+    )
+    verified = verify_refactor_arena(
+        result.arena,
+        repo_root=REPO_ROOT,
+        runner=lambda test_name: {"status": "passed", "test": test_name},
+    )
+
+    assert staged.ok is False
+    assert {finding.shadow_type for finding in staged.findings} >= {"undeclared_diff_file"}
+    assert verified.hotswap_ready is False
+    assert any(failure["stage"] == "patch_diff_files" for failure in verified.failures)
+
+
 def test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule():
     result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
         "Verify a staged Architect patch",

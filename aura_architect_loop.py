@@ -334,6 +334,54 @@ def _normalized_path_list(values: Any) -> list[str]:
     return normalized
 
 
+def _diff_path_token(path: str) -> str | None:
+    token = path.strip().strip('"').strip("'")
+    if not token or token == "/dev/null":
+        return None
+    if "\t" in token:
+        token = token.split("\t", 1)[0]
+    for prefix in ("a/", "b/"):
+        if token.startswith(prefix):
+            token = token[2:]
+            break
+    return _normalize_path(token)
+
+
+def _add_diff_file(files: list[str], seen: set[str], path: str) -> None:
+    normalized = _diff_path_token(path)
+    if normalized and normalized not in seen:
+        files.append(normalized)
+        seen.add(normalized)
+
+
+def _diff_touched_files(diff: str) -> list[str]:
+    files: list[str] = []
+    seen: set[str] = set()
+    previous_was_minus_header = False
+    for line in str(diff or "").splitlines():
+        if line.startswith("diff --git "):
+            parts = line.split()
+            if len(parts) >= 4:
+                _add_diff_file(files, seen, parts[2])
+                _add_diff_file(files, seen, parts[3])
+            previous_was_minus_header = False
+            continue
+        if line.startswith("--- "):
+            _add_diff_file(files, seen, line[4:])
+            previous_was_minus_header = True
+            continue
+        if line.startswith("+++ ") and previous_was_minus_header:
+            _add_diff_file(files, seen, line[4:])
+            previous_was_minus_header = False
+            continue
+        previous_was_minus_header = False
+        for marker in ("*** Update File: ", "*** Add File: ", "*** Delete File: "):
+            if line.startswith(marker):
+                _add_diff_file(files, seen, line[len(marker):])
+                break
+    return files
+
+
 def _agent_capsule_for_task(arena: RefactorArenaTransaction, task_id: str) -> dict[str, Any] | None:
     for capsule in arena.agent_capsules:
         if str(capsule.get("task_id")) == str(task_id):
@@ -916,6 +964,8 @@ def stage_arena_patch(
     normalized_symbols = [str(item) for item in affected_symbols or [] if str(item).strip()]
     owner_name = str(owner or "cheap_builder").strip() or "cheap_builder"
     task_name = str(task_id)
+    diff_files = _diff_touched_files(diff)
+    all_patch_files = _normalized_path_list([*normalized_files, *diff_files])
     findings: list[ShadowFinding] = []
     capsule = _agent_capsule_for_task(arena, task_name)
     if capsule is None:
@@ -936,8 +986,39 @@ def stage_arena_patch(
                 task_id=task_name,
             )
         )
+    if normalized_files and not diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="unparseable_patch_diff",
+                severity="blocker",
+                message="Patch diff must include file headers that can be matched against affected_files.",
+                task_id=task_name,
+            )
+        )
+    undeclared_diff_files = sorted(file for file in diff_files if file not in normalized_files)
+    if undeclared_diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="undeclared_diff_file",
+                severity="blocker",
+                message=f"Patch diff touches files not declared in affected_files: {', '.join(undeclared_diff_files)}",
+                task_id=task_name,
+                target_file=undeclared_diff_files[0],
+            )
+        )
+    declared_without_diff = sorted(file for file in normalized_files if file not in diff_files)
+    if declared_without_diff and diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="declared_file_missing_from_diff",
+                severity="blocker",
+                message=f"Patch affected_files includes paths absent from diff headers: {', '.join(declared_without_diff)}",
+                task_id=task_name,
+                target_file=declared_without_diff[0],
+            )
+        )
     arena_files = set(arena.affected_files)
-    outside_arena = sorted(file for file in normalized_files if file not in arena_files)
+    outside_arena = sorted(file for file in all_patch_files if file not in arena_files)
     if outside_arena:
         findings.append(
             ShadowFinding(
@@ -949,7 +1030,7 @@ def stage_arena_patch(
             )
         )
     allowed_files = _arena_files_for_task(arena, task_name)
-    outside_task = sorted(file for file in normalized_files if allowed_files and file not in allowed_files)
+    outside_task = sorted(file for file in all_patch_files if allowed_files and file not in allowed_files)
     if outside_task:
         findings.append(
             ShadowFinding(
@@ -1053,6 +1134,8 @@ def verify_refactor_arena(
         task_id = str(patch.get("task_id") or "")
         owner = str(patch.get("owner") or "")
         patch_files = _normalized_path_list(patch.get("affected_files", []))
+        diff_files = _diff_touched_files(str(patch.get("diff") or ""))
+        all_patch_files = _normalized_path_list([*patch_files, *diff_files])
         all_tests.update(_normalized_path_list(patch.get("tests", [])))
         if patch.get("status") != "staged":
             fail("patch_status", "Patch is not in staged status.", patch_id=patch_id, status=patch.get("status"))
@@ -1062,16 +1145,36 @@ def verify_refactor_arena(
             fail("patch_owner", "Patch has no owner.", patch_id=patch_id, task_id=task_id)
         if not patch_files:
             fail("patch_files", "Patch has no affected files.", patch_id=patch_id, task_id=task_id)
-        outside_arena = sorted(file for file in patch_files if file not in arena_files)
+        if patch_files and not diff_files:
+            fail("patch_diff_files", "Patch diff has no parseable file headers.", patch_id=patch_id, task_id=task_id)
+        undeclared_diff_files = sorted(file for file in diff_files if file not in patch_files)
+        if undeclared_diff_files:
+            fail(
+                "patch_diff_files",
+                "Patch diff touches files not declared in affected_files.",
+                patch_id=patch_id,
+                task_id=task_id,
+                files=undeclared_diff_files,
+            )
+        declared_without_diff = sorted(file for file in patch_files if file not in diff_files)
+        if declared_without_diff and diff_files:
+            fail(
+                "patch_diff_files",
+                "Patch affected_files includes paths absent from diff headers.",
+                patch_id=patch_id,
+                task_id=task_id,
+                files=declared_without_diff,
+            )
+        outside_arena = sorted(file for file in all_patch_files if file not in arena_files)
         if outside_arena:
             fail("patch_boundary", "Patch touches files outside the arena.", patch_id=patch_id, files=outside_arena)
         allowed_files = _arena_files_for_task(arena, task_id)
-        outside_task = sorted(file for file in patch_files if allowed_files and file not in allowed_files)
+        outside_task = sorted(file for file in all_patch_files if allowed_files and file not in allowed_files)
         if outside_task:
             fail("patch_task_boundary", "Patch touches files outside its Act Capsule.", patch_id=patch_id, files=outside_task)
         if not str(patch.get("diff") or "").strip():
             fail("patch_diff", "Patch has no diff body.", patch_id=patch_id, task_id=task_id)
-        for file in patch_files:
+        for file in all_patch_files:
             lock = file_locks.get(file)
             next_lock = (owner, task_id)
             if lock and lock != next_lock:
@@ -1087,7 +1190,7 @@ def verify_refactor_arena(
             else:
                 file_locks[file] = next_lock
         if patch_files:
-            record("patch_scope", "passed", patch_id=patch_id, files=patch_files)
+            record("patch_scope", "passed", patch_id=patch_id, files=patch_files, diff_files=diff_files)
 
     root = Path(repo_root)
     for file in sorted(arena_files):

@@ -14,21 +14,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 212
-- **total_bytes**: 61829805
-- **text_tokens_est**: 914037
+- **total_bytes**: 61835913
+- **text_tokens_est**: 915563
 - **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 138, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782349043
+- **last_incremental_refresh_unix**: 1782349460
 
 ## Coverage
 
 - **included_file_count**: 212
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=231, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=105
+- **skipped_dir_file_counts**: `.git`=241, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=105
 
 ## Command Index
 
@@ -197,7 +197,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - `aura_node.py` (python_module): 80 symbols, degree 0, ~96568 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 0, ~9398 tokens
-- `aura_architect_loop.py` (python_module): 61 symbols, degree 0, ~13387 tokens
+- `aura_architect_loop.py` (python_module): 64 symbols, degree 0, ~14463 tokens
 - `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 0, ~4864 tokens
 - `liquid_kernel.py` (python_module): 41 symbols, degree 0, ~4089 tokens
 - `arxiv_forager.py` (python_module): 37 symbols, degree 0, ~17900 tokens
@@ -222,7 +222,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AnthropicRouter` -> `aura_anthropic_router.py:271`
 - `ArXivForager` -> `arxiv_forager.py:82`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:275`
-- `ArchitectFusionLoop` -> `aura_architect_loop.py:1294`
+- `ArchitectFusionLoop` -> `aura_architect_loop.py:1397`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:242`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:257`
 - `ArenaPatch` -> `aura_architect_loop.py:195`
