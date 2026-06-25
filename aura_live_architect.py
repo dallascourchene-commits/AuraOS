@@ -318,6 +318,51 @@ def _merge_workspace_result(
     )
 
 
+def _merge_act_stage_result(
+    verification: VerificationResult,
+    prepared: ArchitectLoopResult,
+    stage_results: list[PatchStageResult],
+) -> VerificationResult:
+    expected_task_ids = {act.task_id for act in prepared.plan.act_capsules}
+    staged_task_ids = {result.patch.task_id for result in stage_results if result.ok and result.patch}
+    missing_task_ids = sorted(expected_task_ids - staged_task_ids)
+    failed_task_ids = sorted(
+        {
+            finding.task_id
+            for result in stage_results
+            if not result.ok
+            for finding in result.findings
+        }
+    )
+    if not missing_task_ids and not failed_task_ids:
+        return verification
+
+    failure = {
+        "stage": "act_stage",
+        "status": "failed",
+        "message": "Every planned Act Capsule must produce one staged patch before hot-swap readiness.",
+        "missing_task_ids": missing_task_ids,
+        "failed_task_ids": failed_task_ids,
+    }
+    failures = [*verification.failures, failure]
+    checks = [*verification.checks, failure]
+    phase_payload = {
+        "base_phase_hash": verification.phase_hash,
+        "expected_task_ids": sorted(expected_task_ids),
+        "staged_task_ids": sorted(staged_task_ids),
+        "failures": failures,
+    }
+    return VerificationResult(
+        verification_version=verification.verification_version,
+        ok=False,
+        stage="blocked",
+        checks=checks,
+        failures=failures,
+        hotswap_ready=False,
+        phase_hash=_hash_payload(phase_payload),
+    )
+
+
 class ArchitectModelRouter:
     """Select premium/cheap model roles and keep ledger-informed routing hints."""
 
@@ -599,14 +644,18 @@ async def run_live_architect_transaction(
     model_caller: ModelCaller | None = None,
     target_file: str | None = None,
     target_symbol: str | None = None,
-    ledger_path: str | Path = ARCHITECT_LEDGER_PATH,
-    staging_path: str | Path = ARCHITECT_STAGING_PATH,
+    ledger_path: str | Path | None = None,
+    staging_path: str | Path | None = None,
     test_commands: list[list[str]] | None = None,
 ) -> LiveArchitectTransaction:
     """Run the live Architect path without direct production or incubator writes."""
-    router = ArchitectModelRouter(repo_root=repo_root, model_caller=model_caller, ledger_path=ledger_path)
+    effective_root = Path(repo_root).resolve()
+    effective_ledger_path = Path(ledger_path) if ledger_path is not None else effective_root / "Aura_Memory" / "architect_loop_ledger.jsonl"
+    effective_staging_path = Path(staging_path) if staging_path is not None else effective_root / "Aura_Staging" / "architect_live_transaction.json"
+
+    router = ArchitectModelRouter(repo_root=effective_root, model_caller=model_caller, ledger_path=effective_ledger_path)
     plan_spec = await router.plan_intent(intent, target_file=target_file, target_symbol=target_symbol)
-    loop = ArchitectFusionLoop(repo_root=repo_root)
+    loop = ArchitectFusionLoop(repo_root=effective_root)
     prepared = loop.prepare(
         intent,
         architecture_decision=plan_spec["architecture_decision"],
@@ -643,15 +692,19 @@ async def run_live_architect_transaction(
         )
         for submission in patch_submissions
     ]
-    workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=repo_root, test_commands=test_commands)
-    runner = lambda test_name: workspace.test_results.get(test_name, {"status": "passed" if workspace.ok else "failed"})
-    verification = verify_refactor_arena(prepared.arena, repo_root=repo_root, runner=runner)
-    verification = _merge_workspace_result(verification, workspace)
-    hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=repo_root)
-    ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
-    append_architect_ledger(ledger_record, ledger_path=ledger_path)
+    workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=effective_root, test_commands=test_commands)
 
-    output_path = Path(staging_path)
+    def runner(test_name: str) -> dict[str, Any]:
+        return workspace.test_results.get(test_name, {"status": "passed" if workspace.ok else "failed"})
+
+    verification = verify_refactor_arena(prepared.arena, repo_root=effective_root, runner=runner)
+    verification = _merge_act_stage_result(verification, prepared, stage_results)
+    verification = _merge_workspace_result(verification, workspace)
+    hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=effective_root)
+    ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
+    append_architect_ledger(ledger_record, ledger_path=effective_ledger_path)
+
+    output_path = effective_staging_path
     output_path.parent.mkdir(parents=True, exist_ok=True)
     transaction = LiveArchitectTransaction(
         live_version=ARCHITECT_LIVE_VERSION,

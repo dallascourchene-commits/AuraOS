@@ -273,8 +273,9 @@ with `ArchitectFusionLoop.execute`.
 `aura_live_architect.py` is the live command bridge for that substrate. The REPL
 `architect <intent>` and `code <intent>` paths now call it instead of writing
 cloud output to `aura_incubator.py`. The bridge selects premium planner and
-judge roles, cheap Act worker and Shadow roles, asks workers for unified diffs,
-stages those diffs in the Refactor Arena, copies the repo into a temporary
+bounded Act worker roles, then asks workers for unified diffs. Shadow gating and
+Judge/promotion decisions remain local to `aura_architect_loop.py`. The bridge
+stages worker diffs in the Refactor Arena, copies the repo into a temporary
 workspace, applies the staged patches there, runs local verification commands,
 then writes `Aura_Staging/architect_live_transaction.json` plus the Architect
 ledger record. `aura_incubator.py` remains only as a valid legacy quarantine

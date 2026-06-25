@@ -95,6 +95,115 @@ def test_live_architect_routes_model_patch_through_temp_workspace(tmp_path: Path
     assert "HOTSWAP READY" in render_live_architect_summary(transaction)
 
 
+def test_live_architect_defaults_outputs_under_effective_repo_root(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+    expected_ledger_path = tmp_path / "Aura_Memory" / "architect_loop_ledger.jsonl"
+    expected_staging_path = tmp_path / "Aura_Staging" / "architect_live_transaction.json"
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        if meta["role"] == "planner":
+            return json.dumps(
+                {
+                    "architecture_decision": "Patch demo.answer through the live Architect arena.",
+                    "target_file": "demo.py",
+                    "target_symbol": "answer",
+                    "act_tasks": [
+                        {
+                            "task_id": "A-LIVE-DEMO",
+                            "objective": "Change demo.answer to return the verified value.",
+                            "target_file": "demo.py",
+                            "target_symbol": "answer",
+                            "acceptance": "test_demo.py passes in the temp workspace.",
+                            "expected_output": "UNIFIED_DIFF",
+                        }
+                    ],
+                }
+            )
+        assert provider
+        assert "Act Capsule" in prompt
+        return (
+            "diff --git a/demo.py b/demo.py\n"
+            "--- a/demo.py\n"
+            "+++ b/demo.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            " def answer():\n"
+            "-    return 1\n"
+            "+    return 2\n"
+        )
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    assert transaction.verification.hotswap_ready is True
+    assert expected_staging_path.exists()
+    assert expected_ledger_path.exists()
+    assert Path(transaction.staging_path) == expected_staging_path
+
+
+def test_live_architect_blocks_partial_act_stage(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        if meta["role"] == "planner":
+            return json.dumps(
+                {
+                    "architecture_decision": "Patch demo.answer through a complete multi-Act plan.",
+                    "target_file": "demo.py",
+                    "target_symbol": "answer",
+                    "act_tasks": [
+                        {
+                            "task_id": "A-LIVE-DEMO",
+                            "objective": "Change demo.answer to return the verified value.",
+                            "target_file": "demo.py",
+                            "target_symbol": "answer",
+                            "acceptance": "test_demo.py passes in the temp workspace.",
+                            "expected_output": "UNIFIED_DIFF",
+                        },
+                        {
+                            "task_id": "A-LIVE-SKIP",
+                            "objective": "Confirm the same helper received the paired Act implementation.",
+                            "target_file": "demo.py",
+                            "target_symbol": "answer",
+                            "acceptance": "A second staged patch is present for this Act Capsule.",
+                            "expected_output": "UNIFIED_DIFF",
+                        },
+                    ],
+                }
+            )
+        assert provider
+        assert "Act Capsule" in prompt
+        if meta.get("task_id") == "A-LIVE-SKIP":
+            return ""
+        return (
+            "diff --git a/demo.py b/demo.py\n"
+            "--- a/demo.py\n"
+            "+++ b/demo.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            " def answer():\n"
+            "-    return 1\n"
+            "+    return 2\n"
+        )
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two with a paired Act",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    act_stage_failure = next(
+        item for item in transaction.verification.failures if item.get("stage") == "act_stage"
+    )
+    assert transaction.verification.hotswap_ready is False
+    assert act_stage_failure["missing_task_ids"] == ["A-LIVE-SKIP"]
+
+
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):
     _write_demo_repo(tmp_path)
     router = ArchitectModelRouter(repo_root=tmp_path)
