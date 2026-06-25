@@ -20,7 +20,6 @@ from typing import Any
 
 from aura_substrate import REPO_ROOT
 
-
 MODEL_PROBE_LEDGER_PATH = os.path.join(REPO_ROOT, "Aura_Memory", "aura_model_probe_ledger.jsonl")
 
 
@@ -124,7 +123,7 @@ class AuraModelProbeLedger:
         if not os.path.exists(self.path):
             return []
         rows: list[dict[str, Any]] = []
-        with open(self.path, "r", encoding="utf-8") as handle:
+        with open(self.path, encoding="utf-8") as handle:
             for line in handle:
                 line = line.strip()
                 if not line:

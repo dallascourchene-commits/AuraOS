@@ -8,19 +8,20 @@ FUNCTIONS: __new__, __init__, wave_scan, quantum_multiclass_intent_classifier, m
 SYNOPSIS: This Python module integrates **sqlite3** for persistent quantum state caching, **shutil**/**pathlib**/**os** for filesystem operations, **contextlib** for resource management, **numpy** for numerical optimization, and implements a **wave_scan**-based quantum state initializer, a **quantum_multiclass_intent_classifier** with **mitigate_barren_plateaus** gradient stabilization, **astar_bis_score**/**astar_prune_gate** for gate pruning via A* search, **simulate_with_astar_pruning** for hybrid quantum-classical simulation, **calculate_hamming** for state fidelity metrics, and **_cos** for quantum kernel computations, all instantiated via **__new__**/**__init__** with strict type enforcement.
 [/AURA_MASTER_KEY]
 """
-import numpy as np
-import sqlite3
 import contextlib
-import shutil
-import os
 from pathlib import Path
+import shutil
+import sqlite3
+
+import numpy as np
+
 
 class CognitiveRouter:
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(CognitiveRouter, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self):
@@ -33,20 +34,20 @@ class CognitiveRouter:
         prompt_blob = prompt_hv.astype(np.uint8).tobytes()
 
         def calculate_hamming(blob1, blob2):
-            if blob2 is None: 
+            if blob2 is None:
                 return 9999
-            
+
             # Reconstruct byte views dynamically without copying underlying allocations
             vec1 = np.frombuffer(blob1, dtype=np.uint8)
             vec2 = np.frombuffer(blob2, dtype=np.uint8)
-            
-            # If lengths mismatch due to heterogeneous database storage profiles, 
+
+            # If lengths mismatch due to heterogeneous database storage profiles,
             # slice arrays symmetrically to ensure safe vector operations
             if len(vec1) != len(vec2):
                 target_boundary = min(len(vec1), len(vec2))
                 vec1 = vec1[:target_boundary]
                 vec2 = vec2[:target_boundary]
-            
+
             # Pure numpy XOR reduce for speed
             return int(np.sum(np.bitwise_xor(vec1, vec2)))
 
@@ -87,23 +88,23 @@ class CognitiveRouter:
         p_norm = np.linalg.norm(prompt_vec)
         if p_norm == 0:
             return "[Aura OS] > State collapse: Zero-vector prompt."
-        
+
         p_unit = prompt_vec / p_norm
-        
+
         # Extract dictionary into parallel numpy arrays
         class_names = list(class_matrix.keys())
         class_vectors = np.array(list(class_matrix.values()), dtype=float)
-        
+
         # Single-pass matrix multiplication (The Cloud Brain's optimization)
         class_norms = np.linalg.norm(class_vectors, axis=1)
         valid_mask = class_norms > 0
-        
+
         if not np.any(valid_mask):
             return "[Aura OS] > No quantum overlap detected across intent states."
-            
+
         class_units = np.zeros_like(class_vectors)
         class_units[valid_mask] = class_vectors[valid_mask] / class_norms[valid_mask][:, np.newaxis]
-        
+
         # F = |<psi|phi>|^2 computed for all classes simultaneously
         overlaps = np.dot(class_units, p_unit)
         expectations = overlaps ** 2
@@ -123,20 +124,20 @@ class CognitiveRouter:
         """Sharpens gradient landscapes to prevent AI plateauing using pure NumPy."""
         if not raw_distances:
             return []
-            
+
         dist_array = np.array(raw_distances, dtype=float)
         EXPECTED_ORTHOGONALITY = 5000.0
-        
+
         # Vectorized noise floor clipping
         dist_array = np.where(dist_array < 50.0, 0.0, dist_array)
-        
+
         # Vectorized drift amplification
         normalized_drift = (dist_array - EXPECTED_ORTHOGONALITY) / EXPECTED_ORTHOGONALITY
         amplified_drift = np.sign(normalized_drift) * (np.abs(normalized_drift) ** 3.0)
-        
+
         sharpened_distances = EXPECTED_ORTHOGONALITY + (amplified_drift * EXPECTED_ORTHOGONALITY)
         sharpened_distances = np.clip(sharpened_distances, 0.0, 10000.0)
-        
+
         return [float(np.round(d, 2)) for d in sharpened_distances]
 
     # ------------------------------------------------------------------

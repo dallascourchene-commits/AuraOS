@@ -12,9 +12,8 @@ SYNOPSIS: Defensive tokenizer-boundary guard inspired by GLOSSOPETRAE's tokenize
 from __future__ import annotations
 
 from dataclasses import dataclass
-import unicodedata
 from typing import Any
-
+import unicodedata
 
 _TAG_RANGE = range(0xE0000, 0xE0080)
 _VARIATION_RANGES = (range(0xFE00, 0xFE10), range(0xE0100, 0xE01F0))

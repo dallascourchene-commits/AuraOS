@@ -21,7 +21,6 @@ import time
 from typing import Any
 from urllib.parse import quote
 
-
 ST3GG_RECALL_VERSION = "AURA_ST3GG_RECALL_V1"
 DEFAULT_HASH_CAPACITY = 2048
 MAX_HASH_LOAD = 0.68
@@ -66,7 +65,7 @@ class ST3GGRecallRecord:
         }
 
     @classmethod
-    def from_jsonable(cls, payload: dict[str, Any]) -> "ST3GGRecallRecord":
+    def from_jsonable(cls, payload: dict[str, Any]) -> ST3GGRecallRecord:
         return cls(
             pointer=str(payload.get("pointer", "")),
             dash_key=str(payload.get("dash_key", "")),
@@ -101,7 +100,7 @@ def compile_st3gg_pointer(content: str, *, namespace: str = "CCR", seed: int = 0
 
 
 def _key_token(key: str, seed: int, index: int) -> str:
-    digest = hashlib.blake2b(f"{seed}:{index}:{key}".encode("utf-8"), digest_size=2).hexdigest().upper()
+    digest = hashlib.blake2b(f"{seed}:{index}:{key}".encode(), digest_size=2).hexdigest().upper()
     return f"K{index:X}{digest[:2]}"
 
 
@@ -317,11 +316,11 @@ def _write_hash_count(handle: Any, capacity: int, count: int) -> None:
     handle.write(_HASH_HEADER.pack(_HASH_MAGIC, capacity, count))
 
 
-def _record_matches_key(record: "ST3GGRecallRecord", key: str) -> bool:
+def _record_matches_key(record: ST3GGRecallRecord, key: str) -> bool:
     return key in {record.pointer, record.dash_key, record.original_hash}
 
 
-def _append_store_record(store_path: Path, record: "ST3GGRecallRecord") -> tuple[int, int]:
+def _append_store_record(store_path: Path, record: ST3GGRecallRecord) -> tuple[int, int]:
     store_path.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(record.to_jsonable(), sort_keys=True, separators=(",", ":")).encode("utf-8") + b"\n"
     with store_path.open("ab") as handle:

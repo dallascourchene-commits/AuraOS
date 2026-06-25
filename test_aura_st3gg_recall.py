@@ -2,8 +2,8 @@ from pathlib import Path
 
 from aura_st3gg_recall import (
     FROZEN_COMPACTION_ALIAS_THRESHOLD,
-    ST3GGRecallRecord,
     ST3GG_RECALL_VERSION,
+    ST3GGRecallRecord,
     compile_st3gg_pointer,
     compile_visible_st3gg_capsule,
     compute_compaction_efficiency,

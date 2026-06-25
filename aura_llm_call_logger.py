@@ -79,7 +79,7 @@ def _cost(provider: str, in_tokens: int, out_tokens: int) -> float:
     try:
         from aura_pricing import get_pricebook
         return get_pricebook().cost(provider, in_tokens, out_tokens)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return 0.0
 
 

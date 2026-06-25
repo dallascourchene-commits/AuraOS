@@ -11,25 +11,23 @@ SYNOPSIS: Test suite for Claims N7/N26/N29 -- Resonant Test Oracle, Lukasiewicz 
 
 import os
 import sys
-import pytest
+
 import numpy as np
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from aura_resonant_test_oracle import (
-    ResonantAssertion,
     ResonantTestOracle,
-    ResonantSuiteResult,
-    resonate_equal,
+    _cosine_resonance,
+    _lukasiewicz_implication,
+    _text_to_phasor,
     resonate_contains,
+    resonate_equal,
     resonate_structure,
     resonate_type,
     run_resonant_suite,
-    _lukasiewicz_implication,
-    _text_to_phasor,
-    _cosine_resonance,
 )
-
 
 # ── N26: Resonant Test Oracle ──
 
@@ -188,7 +186,7 @@ class TestPhasorCodec:
         """aura_resonant_test_oracle.py uses only numpy + stdlib."""
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "aura_resonant_test_oracle.py")
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             source = f.read()
 
         import ast as ast_mod

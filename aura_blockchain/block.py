@@ -10,10 +10,12 @@ Block validity is checked via phasor alignment:
   similarity(expected_rotation, actual_phasor) >= ALIGNMENT_THRESHOLD
 """
 
-import time
 import hashlib
 import struct
+import time
+
 import numpy as np
+
 from . import phasor_ledger as pl
 
 ALIGNMENT_THRESHOLD = 0.95  # Must be ≥ 0.95 for block to be valid
@@ -23,7 +25,7 @@ MAX_TXNS_PER_BLOCK = 256
 class Transaction:
     """A single transfer within a block."""
 
-    __slots__ = ("sender", "receiver", "amount", "nonce", "timestamp", "sig")
+    __slots__ = ("amount", "nonce", "receiver", "sender", "sig", "timestamp")
 
     def __init__(self, sender: str, receiver: str, amount: float,
                  nonce: int = 0):
@@ -63,9 +65,17 @@ class Block:
         signatures: Collected Ed25519 signatures (from consensus).
     """
 
-    __slots__ = ("index", "prev_phasor", "transactions", "state_phasor",
-                 "phasor_delta", "timestamp", "proposer", "signatures",
-                 "_hash")
+    __slots__ = (
+        "_hash",
+        "index",
+        "phasor_delta",
+        "prev_phasor",
+        "proposer",
+        "signatures",
+        "state_phasor",
+        "timestamp",
+        "transactions",
+    )
 
     def __init__(self, index: int, prev_phasor: np.ndarray,
                  transactions: list[Transaction], proposer: str = ""):

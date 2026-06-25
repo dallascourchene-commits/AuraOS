@@ -50,8 +50,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import time
 from pathlib import Path
+import time
 from typing import Any
 
 import numpy as np
@@ -153,7 +153,7 @@ class ChangeLogStore:
         if not self.meta_path.exists():
             return {"n_entries": 0}
         try:
-            with open(self.meta_path, "r", encoding="utf-8") as f:
+            with open(self.meta_path, encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             return {"n_entries": 0}
@@ -239,7 +239,7 @@ class ChangeLogStore:
         if not self.log_path.exists():
             return []
         records = []
-        with open(self.log_path, "r", encoding="utf-8") as f:
+        with open(self.log_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -303,7 +303,7 @@ class RationaleQueryEngine:
     def __init__(
         self,
         changelog: ChangeLogStore | None = None,
-        hv_substrate: "HVCacheSubstrate | None" = None,
+        hv_substrate: HVCacheSubstrate | None = None,
     ) -> None:
         self.changelog = changelog or ChangeLogStore()
         self.hv = hv_substrate or HVCacheSubstrate()
@@ -365,7 +365,7 @@ class RationaleQueryEngine:
         ]
         for rank, (score, rec) in enumerate(top, 1):
             lines += [
-                f"",
+                "",
                 f"  [{rank}] {rec.get('ts', '?')} — {rec.get('file_path', '?')} "
                 f"lines {rec.get('line_start', '?')}–{rec.get('line_end', '?')}",
                 f"       Author   : {rec.get('author', '?')}",
@@ -464,7 +464,7 @@ class HVCacheSubstrate:
         if not mp.exists():
             return {}
         try:
-            with open(mp, "r", encoding="utf-8") as f:
+            with open(mp, encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             return {}

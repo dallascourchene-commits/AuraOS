@@ -8,11 +8,13 @@
 # [/AURA_MASTER_KEY]
 
 import asyncio
-import os
 import json
+import os
+
 import numpy as np
-from typing import Optional, Dict, Tuple, Any
+
 from aura_node import AuraZeroDiskIOCache
+
 
 class AuraPrivacyIOOrchestrator:
     """
@@ -22,7 +24,7 @@ class AuraPrivacyIOOrchestrator:
     """
     def __init__(self, node_ref=None):
         self.node = node_ref
-        self._metadata_cache: Dict[Tuple[str, str], np.ndarray] = {}
+        self._metadata_cache: dict[tuple[str, str], np.ndarray] = {}
         # Dynamic backpressure guard
         self._semaphore = asyncio.Semaphore(15)
 
@@ -40,14 +42,14 @@ class AuraPrivacyIOOrchestrator:
         """Injects privacy-robust noise natively (VSA Research Engram 1) to block side-channel leakage."""
         if data.size == 0:
             return data
-        
+
         # Generate Gaussian noise matching the input array dimensions
         rng = np.random.default_rng()
         noise = rng.normal(0.0, noise_scale, data.shape).astype(data.dtype)
-        
+
         # Superimpose the noise vector to mask high-frequency processing signatures
         noisy_data = data + noise
-        
+
         # Apply strict threshold clipping to filter out low-resonance perturbations
         return noisy_data[noisy_data > threshold]
 
@@ -61,7 +63,7 @@ class AuraPrivacyIOOrchestrator:
 
             # Phase 2: Determine topological centrality & Free Energy Tension (F) to scale privacy noise dynamically
             noise_scale = 0.005  # Baseline noise
-            
+
             # Extract Free Energy Tension (F) and Cytoelectric Field Potential (Psi)
             f_tension = 0.05
             psi_field = 0.05
@@ -72,11 +74,11 @@ class AuraPrivacyIOOrchestrator:
             topo_path = "Aura_Memory/live_topology_ast.json"
             if os.path.exists(topo_path):
                 try:
-                    with open(topo_path, "r", encoding="utf-8") as topo_f:
+                    with open(topo_path, encoding="utf-8") as topo_f:
                         topo_data = json.load(topo_f)
                         file_name = os.path.basename(input_path)
                         connections = sum(
-                            1 for e in topo_data.get("edges", []) 
+                            1 for e in topo_data.get("edges", [])
                             if file_name in e.get("source", "") or file_name in e.get("target", "")
                         )
                         # Dynamically scale noise: high-tension, high-traffic nodes receive higher obfuscation
@@ -86,7 +88,7 @@ class AuraPrivacyIOOrchestrator:
 
             # Fetch and align metadata hull
             hull_metadata = await self.get_aligned_metadata(table, column)
-            
+
             # Phase 3: Cast raw bytes directly to float32 without duplicating memory
             float_data = np.frombuffer(raw_bytes, dtype=np.float32).copy()
             if float_data.size == 0:
@@ -95,15 +97,15 @@ class AuraPrivacyIOOrchestrator:
             # Phase 4: Apply the differential privacy filter with dynamic topological noise scaling
             dynamic_threshold = float(np.mean(hull_metadata))
             processed_data = await self.apply_differential_privacy_noise(
-                float_data, 
-                threshold=dynamic_threshold, 
+                float_data,
+                threshold=dynamic_threshold,
                 noise_scale=noise_scale
             )
 
             # Phase 5: Non-blocking write back to local disk
             serialized_bytes = processed_data.tobytes()
             success = await AuraZeroDiskIOCache.write_file_contents(output_path, serialized_bytes, binary=True)
-            
+
             pruning_ratio = len(processed_data) / max(1, len(float_data))
             print(f"[+] [PRIVACY I/O] Pipeline completed. Pruning ratio: {pruning_ratio:.2%}")
 
@@ -117,21 +119,21 @@ class AuraPrivacyIOOrchestrator:
 
 if __name__ == "__main__":
     import tempfile
-    
+
     async def run_test():
         # Generate dummy binary inputs
         temp_in = tempfile.NamedTemporaryFile(delete=False)
         temp_out = tempfile.NamedTemporaryFile(delete=False)
-        
+
         dummy_data = np.random.rand(100).astype(np.float32)
         temp_in.write(dummy_data.tobytes())
         temp_in.close()
         temp_out.close()
-        
+
         orchestrator = AuraPrivacyIOOrchestrator()
         result = await orchestrator.execute_optimized_io_pipeline(temp_in.name, temp_out.name, "user_traces", "vector_blob")
         print(f"[+] Test execution metrics: {json.dumps(result, indent=2)}")
-        
+
         os.remove(temp_in.name)
         os.remove(temp_out.name)
 

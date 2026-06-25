@@ -17,17 +17,15 @@ import asyncio
 import io
 import json
 import os
-import sys
-import time
-import traceback
 from pathlib import Path
+import sys
 
 import numpy as np
 
-from aura_dream_engine import AuraDreamEngine, homeostatic_decay_pass
 from aura_associative_core import AuraAssociativeCore
-from symbolic_shield import verify_structural_truth
+from aura_dream_engine import AuraDreamEngine
 from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
+from symbolic_shield import verify_structural_truth
 
 # ---------------------------------------------------------------------------
 # Test harness
@@ -84,9 +82,7 @@ def _phasor(seed: int = 0, dim: int = DIM) -> np.ndarray:
 _header("1. symbolic_shield — Formal AST Verification (Youvan Sound Shield)")
 
 from symbolic_shield import (
-    verify_structural_truth, full_report,
-    check_syntax, check_loop_decay, check_import_safety,
-    check_memory_safety, check_banned_calls, ShieldReport,
+    full_report,
 )
 
 _run("shield", "verify_structural_truth: valid code",
@@ -118,6 +114,7 @@ _header("2. VSA / Hypervector Primitives")
 
 from vsa_resonator import VSAResonator
 
+
 def _test_vsa_resonator():
     r = VSAResonator(dim=DIM)
     a = _phasor(0)
@@ -134,6 +131,7 @@ def _test_vsa_resonator():
 _run("vsa", "VSAResonator: bind / bundle / sampled_similarity", _test_vsa_resonator)
 
 from liquid_fhrr import LiquidFHRR
+
 
 def _test_fhrr():
     fhrr = LiquidFHRR(dim=DIM)
@@ -153,7 +151,8 @@ _run("vsa", "LiquidFHRR: generate_phasor / bind / similarity", _test_fhrr)
 # ---------------------------------------------------------------------------
 _header("3. aura_spvm — Polysynthetic VM Logic Gates")
 
-from aura_spvm import get_semantic_vector, evaluate_implication
+from aura_spvm import evaluate_implication, get_semantic_vector
+
 
 def _test_spvm_self_implication():
     v = get_semantic_vector("gidinawendimin", dim=DIM)
@@ -223,6 +222,7 @@ _header("5. aura_arch_reasoner — VSA Structural Resonance")
 
 from aura_arch_reasoner import AuraArchReasoner
 
+
 def _test_reasoner_score():
     r = AuraArchReasoner()
     res, tension = r.score_structural_resonance()
@@ -264,8 +264,8 @@ _run("arch", "verify_truth_resonance + recalibrate (async)", _test_reasoner_asyn
 # ---------------------------------------------------------------------------
 _header("5b. aura_self_reflect — Introspection + arch_reasoner_accel")
 
-from aura_self_reflect import SelfReflectEngine
 import arch_reasoner_accel as _accel
+from aura_self_reflect import SelfReflectEngine
 
 
 def _test_accel_structural():
@@ -302,9 +302,12 @@ _run("self_reflect", "SelfReflectEngine: drift + arch report (async)", _test_sel
 _header("6. liquid_kernel — Closed-Form CfC + LTC-NDE")
 
 from liquid_kernel import (
-    LiquidConfig, AdaptiveLiquidTimeConstant, ClosedFormContinuousCore,
-    LiquidState, TernaryLinear, ternary_activation,
+    AdaptiveLiquidTimeConstant,
+    ClosedFormContinuousCore,
+    LiquidConfig,
+    LiquidState,
 )
+
 
 def _test_cfc_forward():
     cfc = ClosedFormContinuousCore(units=64)
@@ -354,6 +357,7 @@ _run("liquid", "LiquidState.update: returns dict", _test_liquid_state)
 _header("7. aura_spectral_memory — SVD Filter + MQCR Recoherence")
 
 from aura_spectral_memory import AuraSpectralMemoryOrchestrator
+
 
 async def _test_spectral_filter():
     orch = AuraSpectralMemoryOrchestrator()
@@ -405,6 +409,7 @@ _header("8. aura_governor — Spiking Governor + Energy Ceiling")
 
 from aura_governor import AuraSpikingGovernor
 
+
 def _test_stimulate_leak():
     g = AuraSpikingGovernor()
     for _ in range(5):
@@ -441,6 +446,7 @@ _header("9. cognitive_router — Quantum Multiclass Intent Classifier")
 
 from cognitive_router import CognitiveRouter
 
+
 def _test_router_wave_scan():
     cr = CognitiveRouter()
     probe = np.random.randn(cr.D if hasattr(cr, "D") else 10000).astype(np.float32)
@@ -463,8 +469,9 @@ _run("router", "quantum_multiclass_intent_classifier: returns dict", _test_route
 # ---------------------------------------------------------------------------
 _header("10. Topology & Spatial Mapper — compile_unified_graph + scan_and_vectorize")
 
-from spatial_mapper import scan_and_vectorize, DirectoryCache
 from aura_topological_scanner import compile_unified_graph
+from spatial_mapper import DirectoryCache, scan_and_vectorize
+
 
 def _test_scan_vectorize():
     nodes = scan_and_vectorize(os.getcwd())
@@ -475,7 +482,7 @@ def _test_compile_graph():
     payload = compile_unified_graph()
     assert "nodes" in payload and "edges" in payload
     assert len(payload["nodes"]) > 0, "no nodes"
-    assert len(payload["edges"]) > 0, f"0 edges (schema mismatch?)"
+    assert len(payload["edges"]) > 0, "0 edges (schema mismatch?)"
 
 def _test_directory_cache():
     dc = DirectoryCache()
@@ -494,6 +501,7 @@ _header("11. quantum_dag — QuantumMerkleDAG epistemic root")
 
 from quantum_dag import QuantumMerkleDAG
 
+
 async def _test_qdag():
     class _FakeNode:
         runtime_metrics = {}
@@ -509,8 +517,10 @@ _run("qdag", "generate_epistemic_system_root: returns dict (async)", _test_qdag)
 # ---------------------------------------------------------------------------
 _header("12. async_palace — MorphemicBatchQueue + BF-Tree view")
 
-from async_palace import MorphemicBatchQueue
 import struct
+
+from async_palace import MorphemicBatchQueue
+
 
 def _test_morphemic_queue():
     q = MorphemicBatchQueue(max_records=4)
@@ -545,6 +555,7 @@ _header("13. aura_crystallization + aura_nesy_sat_reasoner")
 
 from aura_crystallization import hypertruth_crystallization_loop
 
+
 def _test_crystallization():
     # hypertruth_crystallization_loop expects a dict as node_topology
     nodes = {f"fn_{i}": {"label": f"fn_{i}", "shape": "Sphere"} for i in range(5)}
@@ -569,6 +580,7 @@ _header("14. aura_positional_parser + aura_vpt_tokenizer")
 
 from aura_positional_parser import AthabaskanPositionalParser
 
+
 def _test_positional():
     parser = AthabaskanPositionalParser()
     # compile_positional_block(spatial, aspect, classifier, subject, voice, stem_intent)
@@ -581,6 +593,7 @@ def _test_positional():
 _run("parser", "compile_positional_block: returns ndarray", _test_positional)
 
 from aura_vpt_tokenizer import HeightBoundedVPTTokenizer
+
 
 def _test_vpt_tokenizer():
     tok = HeightBoundedVPTTokenizer()
@@ -598,6 +611,7 @@ _run("vpt", "stream_tokenize_buffer + compile_to_phasor_lattice", _test_vpt_toke
 _header("15. lexical_transducer — Polysynthetic Forge")
 
 from lexical_transducer import PolysyntheticTransducer
+
 
 def _test_transducer_forge():
     t = PolysyntheticTransducer()
@@ -621,6 +635,7 @@ _run("transducer", "cosine_distance: ∈ [0, 2]", _test_transducer_cosine)
 _header("16. pwfst — Polysynthetic VSF Transducer")
 
 from pwfst import UnifiedPWFST
+
 
 def _test_pwfst_compile():
     fsm = UnifiedPWFST()
@@ -646,6 +661,7 @@ _run("pwfst", "transduce_intent: returns output", _test_pwfst_transduce)
 _header("17. gateway — CognitiveGateway functions")
 
 from gateway import CognitiveGateway
+
 
 class _MockNode:
     runtime_metrics = {"thought_id": "THOUGHT-AABBCCDD"}
@@ -691,6 +707,7 @@ _header("18. aura_rosetta_memory — Adaptive Write + Contrastive Query")
 
 from aura_rosetta_memory import RosettaMemoryBuffer
 
+
 async def _test_rosetta_write_query():
     rm = RosettaMemoryBuffer(capacity=20, dimension=DIM)
     v = get_semantic_vector("neuro-symbolic", dim=DIM)
@@ -709,6 +726,7 @@ _run("rosetta", "adaptive_write + query_contrastive: completes", _test_rosetta_w
 _header("19. dag_executor — Topological Sort + Execute")
 
 from dag_executor import execute_dag_plan
+
 
 def _test_dag_simple():
     # execute_dag_plan() reads JSON from stdin — test via JSON roundtrip
@@ -739,6 +757,7 @@ _header("20. aura_evolve — LiquidFlashEvolve sandbox")
 
 from aura_evolve import LiquidFlashEvolve
 
+
 class _FakeNodeForEvolve:
     runtime_metrics = {}
     def log_error(self, *a, **kw): pass
@@ -763,6 +782,7 @@ _header("21. aura_mitosis — Hopfield energy landscape")
 
 from aura_mitosis import AuraMitosisEngine
 
+
 def _test_mitosis():
     engine = AuraMitosisEngine()
     wave = np.random.randn(10).astype(np.float32)
@@ -780,6 +800,7 @@ _header("22. aura_crypto_puf — Thermodynamic PUF key derivation")
 
 from aura_crypto_puf import AuraThermodynamicPUF
 
+
 def _test_puf():
     puf = AuraThermodynamicPUF()
     key = puf.distill_liquid_key(system_tension=0.5, physics_error=0.02, geo_coordinate=37.5)
@@ -794,10 +815,15 @@ _run("puf", "distill_liquid_key(37.5): returns non-None", _test_puf)
 _header("23. pvm_memory_guard — Budget + Zero-Copy Assertions")
 
 from pvm_memory_guard import (
-    MemoryBudget, assert_zero_copy, zero_copy_zeros,
-    zero_copy_frombuffer, sample_rss_mb, heap_snapshot,
-    MemoryBudgetExceeded, ZeroCopyViolation, PVM_RAM_CEILING_MB,
+    PVM_RAM_CEILING_MB,
+    MemoryBudget,
+    ZeroCopyViolation,
+    assert_zero_copy,
+    heap_snapshot,
+    sample_rss_mb,
+    zero_copy_zeros,
 )
+
 
 def _test_memory_rss():
     rss = sample_rss_mb()
@@ -843,6 +869,7 @@ _run("memguard", "heap_snapshot: returns dict", _test_heap_snapshot)
 _header("24. pvm_arch_checker — Static Rule Enforcement")
 
 from pvm_arch_checker import PVMArchChecker
+
 
 def _test_checker_passes_on_workspace():
     checker = PVMArchChecker(root=Path("."))
@@ -913,11 +940,14 @@ _run("repl", "!fast_path logic — fast_path_lookup confidence > 0.5", _test_fas
 # ---------------------------------------------------------------------------
 _header("22. evolution — GBNF profiles + ontology circuit + bridge")
 
+from aura_evolution_bridge import speculative_topology_check, validate_proposed_mutation
 from aura_gbnf_profiles import (
-    list_profiles, get_grammar_string, PROFILE_PYTHON_PATCH, PROFILE_UNIT_INTERVAL,
+    PROFILE_PYTHON_PATCH,
+    PROFILE_UNIT_INTERVAL,
+    get_grammar_string,
+    list_profiles,
 )
 from aura_ontology_circuit import AuraOntologyCircuit
-from aura_evolution_bridge import validate_proposed_mutation, speculative_topology_check
 
 _run("evolution", "list_profiles includes python_patch",
      lambda: PROFILE_PYTHON_PATCH in list_profiles())
@@ -975,7 +1005,7 @@ print(f"  FAIL   : {fails}")
 print(f"  SKIP   : {skips}")
 
 if fails:
-    print(f"\n  Failed tests:")
+    print("\n  Failed tests:")
     for cat, name, status in _results:
         if status == _FAIL:
             print(f"    [{cat}] {name}")

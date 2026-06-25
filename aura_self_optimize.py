@@ -36,14 +36,14 @@ from __future__ import annotations
 
 import argparse
 
+from aura_llm_egress import ExternalLLM
+from aura_matrix_benchmark import MockEgress
 from aura_proxy_benchmark import TestCase
 from aura_router import AutoRouter
-from aura_matrix_benchmark import MockEgress
-from aura_llm_egress import ExternalLLM
 
 # AI Router integration – provides targeted context to reduce LLM token usage.
 try:
-    from aura_ai_router import query_router, get_router_context_for_func
+    from aura_ai_router import get_router_context_for_func, query_router
     _AI_ROUTER_AVAILABLE = True
 except ImportError:
     _AI_ROUTER_AVAILABLE = False
@@ -110,7 +110,7 @@ def self_optimize(target_file: str, target_func: str, instruction: str,
                           f"(confidence {route.get('confidence', 0):.2f})")
             else:
                 augmented_instruction = f"{instruction}\n\n{AURA_CORE_GUARDRAILS}"
-        except Exception:  # noqa: BLE001
+        except Exception:
             augmented_instruction = f"{instruction}\n\n{AURA_CORE_GUARDRAILS}"
     else:
         augmented_instruction = f"{instruction}\n\n{AURA_CORE_GUARDRAILS}"

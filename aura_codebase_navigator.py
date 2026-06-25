@@ -458,7 +458,7 @@ def refresh_index_for_paths(
     # Early return if no changes to process
     if not changed_paths:
         return _load_json(index_path)
-    
+
     payload = _load_json(index_path)
     root = (root or Path(payload.get("root", "."))).resolve()
     by_path = {record["path"]: record for record in _records_from_cards(payload, root=root)}

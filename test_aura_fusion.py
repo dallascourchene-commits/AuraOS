@@ -2,10 +2,10 @@ import json
 from pathlib import Path
 
 from aura_fusion import (
-    AuraFusionAgent,
-    AuraFusionCoordinator,
     JUDGE_SCHEMA,
     PANEL_SCHEMA,
+    AuraFusionAgent,
+    AuraFusionCoordinator,
     build_task_capsule,
     load_fusion_config,
     parse_json_object,

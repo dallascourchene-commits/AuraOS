@@ -20,7 +20,6 @@ from typing import Any
 from travel_price_sidecar import money_to_minor
 from travel_source_registry import TravelSourceProfile
 
-
 OPTION_B_EXTRACTOR_VERSION = "AURA_TRAVEL_OPTION_B_EXTRACTOR_V1"
 
 

@@ -10,6 +10,7 @@ SYNOPSIS: The `AuraPhasor` Python module provides phasor-based quantum-inspired 
 """
 import numpy as np
 
+
 class LiquidFHRR:
     def __init__(self, dim=10000):
         self.dim = dim
@@ -32,7 +33,7 @@ class LiquidFHRR:
     def similarity(self, v1, v2):
         conjugate_product = v1 * np.conj(v2)
         return np.mean(np.real(conjugate_product))
-        
+
     def bundle(self, vectors):
         # Sum the complex vectors and normalize back to the unit circle
         summed = np.sum(vectors, axis=0)

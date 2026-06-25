@@ -8,20 +8,22 @@ FUNCTIONS: __init__, _gen_orthogonal, _token_to_phasor, compile_positional_block
 SYNOPSIS: The `aura_os_auditor` Python module, dependent on `os`, `numpy`, and `json`, provides a strict, single-sentence technical synopsis encapsulating its core functionality: a lightweight, orthogonally-compiled positional block system for phasor-based token analysis and orthogonal vector generation.
 [/AURA_MASTER_KEY]
 """
-import os
 import json
+import os
+
 import numpy as np
+
 
 class AthabaskanPositionalParser:
     def __init__(self, dimension: int = 10000):
         self.dim = dimension
         self.rng = np.random.default_rng(seed=101)
-        
+
         # Load the stable 12-bit cross-boot dictionary blueprint
         self.lexicon = {}
         lexicon_path = "english_lexicon.json"
         if os.path.exists(lexicon_path):
-            with open(lexicon_path, "r", encoding="utf-8") as f:
+            with open(lexicon_path, encoding="utf-8") as f:
                 raw_data = json.load(f)
                 # Invert the dictionary so we can search by text string key: {"the": 0, "of": 1...}
                 self.lexicon = {word: int(binary_key, 2) for binary_key, word in raw_data.items()}
@@ -50,14 +52,14 @@ class AthabaskanPositionalParser:
         phase angle, and returns its unit-circle complex coordinate.
         """
         clean_token = token.lower().strip()
-        
+
         # Step 2: Extract 12-bit index or fall back to an invariant byte-level checksum
         if clean_token in self.lexicon:
             index = self.lexicon[clean_token]
         else:
             # Deterministic backup: Sum the ASCII byte characters of the unknown word
             index = sum(ord(char) for char in clean_token)
-            
+
         # Step 3: Map to fixed phase angle on the complex unit circle
         angle = (index % 4096) * (2.0 * np.pi / 4096.0)
         return np.exp(1j * angle)
@@ -85,6 +87,6 @@ class AthabaskanPositionalParser:
 
         # Step 5: Combine into a single unified complex phasor trajectory vector
         composite_instruction = b1 + b2 + b3 + b4 + b5 + b6
-        
+
         # Normalize back to the exact unit circle boundary to eliminate scaling inflation
         return composite_instruction / np.abs(composite_instruction)

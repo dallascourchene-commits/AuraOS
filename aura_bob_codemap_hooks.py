@@ -12,10 +12,9 @@ Usage in Bob's tool handlers:
 """
 
 from pathlib import Path
-from typing import Optional
 
 try:
-    from aura_codemap_auto_refresh import register_file_change, flush_pending_refreshes
+    from aura_codemap_auto_refresh import flush_pending_refreshes, register_file_change
     _CODEMAP_AVAILABLE = True
     _register_file_change = register_file_change
     _flush_pending_refreshes = flush_pending_refreshes
@@ -36,7 +35,7 @@ def notify_file_modified(file_path: str | Path) -> None:
     """
     if not _CODEMAP_AVAILABLE or _register_file_change is None:
         return
-    
+
     try:
         _register_file_change(file_path)
     except Exception:
@@ -52,7 +51,7 @@ def notify_files_modified(file_paths: list[str | Path]) -> None:
     """
     if not _CODEMAP_AVAILABLE:
         return
-    
+
     for path in file_paths:
         notify_file_modified(path)
 
@@ -65,7 +64,7 @@ def force_codemap_refresh() -> None:
     """
     if not _CODEMAP_AVAILABLE or _flush_pending_refreshes is None:
         return
-    
+
     try:
         _flush_pending_refreshes()
     except Exception:
@@ -88,10 +87,10 @@ def auto_refresh_codemap(func):
     """
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
-        
+
         # Try to extract file path from result or kwargs
-        file_path: Optional[str | Path] = None
-        
+        file_path: str | Path | None = None
+
         if isinstance(result, (str, Path)):
             file_path = result
         elif isinstance(result, dict) and 'path' in result:
@@ -100,12 +99,12 @@ def auto_refresh_codemap(func):
             file_path = kwargs['path']
         elif len(args) > 0 and isinstance(args[0], (str, Path)):
             file_path = args[0]
-        
+
         if file_path:
             notify_file_modified(file_path)
-        
+
         return result
-    
+
     return wrapper
 
 
@@ -118,43 +117,43 @@ def integrate_with_bob_tools():
     tool functions with automatic CODEMAP refresh.
     """
     # This is a template - actual integration would depend on Bob's architecture
-    
+
     # Example: Wrap write_to_file
     # original_write_to_file = bob.tools.write_to_file
     # bob.tools.write_to_file = auto_refresh_codemap(original_write_to_file)
-    
+
     # Example: Wrap apply_diff
     # original_apply_diff = bob.tools.apply_diff
     # bob.tools.apply_diff = auto_refresh_codemap(original_apply_diff)
-    
+
     # Example: Wrap insert_content
     # original_insert_content = bob.tools.insert_content
     # bob.tools.insert_content = auto_refresh_codemap(original_insert_content)
-    
+
     pass
 
 
 if __name__ == "__main__":
     # Test the integration hooks
     print("Testing Bob CODEMAP integration hooks...")
-    
+
     if _CODEMAP_AVAILABLE:
         print("✅ CODEMAP auto-refresh is available")
-        
+
         # Test notification
         notify_file_modified("test_file.py")
         print("✅ File modification notification sent")
-        
+
         # Test batch notification
         notify_files_modified(["file1.py", "file2.py", "file3.py"])
         print("✅ Batch file modification notifications sent")
-        
+
         # Test force refresh
         force_codemap_refresh()
         print("✅ Force refresh completed")
     else:
         print("⚠️  CODEMAP auto-refresh not available (missing dependencies)")
-    
+
     print("Test complete!")
 
 # Made with Bob

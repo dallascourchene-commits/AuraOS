@@ -7,8 +7,10 @@
 # SYNOPSIS: Executes a hypertruth crystallization loop projected into a 10,000-D complex VSA phase space.
 # [/AURA_MASTER_KEY]
 
-import numpy as np
 from collections import defaultdict
+
+import numpy as np
+
 
 def hypertruth_crystallization_loop(node_topology, shared_edges, constraints):
     """
@@ -23,7 +25,7 @@ def hypertruth_crystallization_loop(node_topology, shared_edges, constraints):
         Tuple of (crystallized_state, validation_report)
     """
     validation = {"constraints_met": True, "errors": []}
-    
+
     # 1. Map node keys to O(1) index mappings to bypass list index search bottlenecks
     node_keys = list(node_topology.keys())
     node_to_idx = {node: idx for idx, node in enumerate(node_keys)}
@@ -41,7 +43,7 @@ def hypertruth_crystallization_loop(node_topology, shared_edges, constraints):
     # 2. Project geometric primitives into 10,000-D Complex Phase Space
     state = defaultdict(dict)
     dim = 10000
-    
+
     for node, primitive in node_topology.items():
         # Establish stable, non-drifting phase coordinates on the unit circle
         if primitive == "Sphere":
@@ -52,7 +54,7 @@ def hypertruth_crystallization_loop(node_topology, shared_edges, constraints):
             angle = np.pi
         else:
             angle = np.random.uniform(-np.pi, np.pi)
-            
+
         # Formulate as a clean 10,000-D complex phasor wave
         state[node]["geometry"] = np.exp(1j * np.ones(dim, dtype=np.float32) * angle)
 
@@ -88,7 +90,7 @@ if __name__ == "__main__":
     dummy_topology = {"aura_node.py": "Sphere", "async_palace.py": "Cube", "aura_mesh.py": "Tetrahedron"}
     dummy_edges = [("aura_node.py", "async_palace.py"), ("async_palace.py", "aura_mesh.py")]
     dummy_constraints = ["Sphere", "Cube", "Tetrahedron"]
-    
+
     state, report = hypertruth_crystallization_loop(dummy_topology, dummy_edges, dummy_constraints)
     print(f"[+] Crystallization verification: {report}")
     if report["constraints_met"]:

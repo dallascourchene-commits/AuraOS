@@ -45,23 +45,23 @@ Backward compatibility
 """
 # [AURA OPTIMIZED] - Bloat removed.
 from __future__ import annotations
-from dataclasses import dataclass
-from logging_kit import log_error, log_report
+
 import asyncio
-import aiofiles
-from typing import Any, AsyncIterator, Optional
+from collections import deque
+from collections.abc import AsyncIterator
+from dataclasses import dataclass
+from datetime import datetime
 import gc
 import hashlib
-import os
+from pathlib import Path
 import shutil
-import sqlite3
 import struct
 import time
-from collections import deque
-from datetime import datetime
-from pathlib import Path
+from typing import Any
 
 import numpy as np
+
+from logging_kit import log_error
 
 try:
     import aiosqlite
@@ -69,7 +69,8 @@ except ImportError:
     aiosqlite = None  # type: ignore[assignment,misc]
 
 try:
-    from pvm_memory_guard import MemoryBudget as _MemoryBudget, PVM_RAM_CEILING_MB as _RAM_CEILING_MB
+    from pvm_memory_guard import PVM_RAM_CEILING_MB as _RAM_CEILING_MB
+    from pvm_memory_guard import MemoryBudget as _MemoryBudget
 except ImportError:
     _MemoryBudget = None   # type: ignore[assignment,misc]
     _RAM_CEILING_MB = 4096
@@ -132,7 +133,7 @@ class TransactionalBatchWriter:
         """Appends to the in-memory deque in O(1) time."""
         async with self._lock:
             self.queue.append((time.time(), module, str(payload)))
-            
+
             if len(self.queue) >= self.config.max_batch_size:
                 asyncio.create_task(self.flush())
 
@@ -158,7 +159,7 @@ class TransactionalBatchWriter:
                 )
                 await db.commit()
         except Exception as e:
-            log_error("BATCH_WRITE_FAIL", f"Contention or write failure during batch commit: {str(e)}")
+            log_error("BATCH_WRITE_FAIL", f"Contention or write failure during batch commit: {e!s}")
 
 class MorphemicBatchQueue:
     """
@@ -285,7 +286,7 @@ class MorphemicBatchQueue:
     # BF-Tree matrix view
     # ------------------------------------------------------------------
 
-    def compile_bftree_matrix_view(self, linear_frames: "list | None" = None) -> np.ndarray:
+    def compile_bftree_matrix_view(self, linear_frames: list | None = None) -> np.ndarray:
         """
         BF-Tree VPM Optimization (VLDB 2024 synthesis).
 
@@ -517,7 +518,7 @@ class AsyncMemoryPalace:
                     await task
                 except asyncio.CancelledError:
                     pass
-        
+
         # Synchronous flushing of remaining memory buffers on exit
         if self.conn:
             # 0. Flush the new transactional batch writer
@@ -572,7 +573,7 @@ class AsyncMemoryPalace:
             '! I 8s H B B B B B f ?',
             num_id, dash, st3gg, d, i, k, w, p, ms, ok
         )
-        
+
         async with self.lock:
             self.holographic_buffer.append((num_id, dash, glyph))
             # Event-driven background task trigger: Flush when buffer hits 50 records
@@ -685,7 +686,7 @@ class AsyncMemoryPalace:
             # Poll rapidly under heavy load, decelerate to conserve battery during idle periods
             interval = 0.2 if queue_len > 64 else 2.0
             await asyncio.sleep(interval)
-            
+
             if self.conn and queue_len > 0:
                 staged_records = []
                 async with self.lock:
@@ -706,9 +707,9 @@ class AsyncMemoryPalace:
         while self.is_running:
             temp = 42.0
             try:
-                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                with open('/sys/class/thermal/thermal_zone0/temp') as f:
                     temp = float(f.read().strip()) / 1000.0
-            except (IOError, FileNotFoundError):
+            except (OSError, FileNotFoundError):
                 pass
             # Moto G Stylus Natural Idle Threshold
             if temp <= 38.0:
@@ -784,14 +785,14 @@ class AsyncMemoryPalace:
         # Cast to flat float32 phase angles to protect memory boundaries
         frozen_angles = np.angle(fluid_phase_wave).astype(np.float32)
         packed_blob = frozen_angles.tobytes()
-        
+
         query = """
             INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob)
             VALUES (?, 'CRYSTAL_LATTICE_LOCKED', 'CRYSTAL', ?, 'Atomic Frequency Comb Enriched', ?);
         """
         await self.conn.execute(query, (
-            trace_id, 
-            datetime.now().isoformat(), 
+            trace_id,
+            datetime.now().isoformat(),
             packed_blob
         ))
         await self.conn.commit()
@@ -830,7 +831,7 @@ class AsyncMemoryPalace:
         """
         if not self.conn:
             return "0000000000000000"
-        
+
         # Dual-index query cross-referencing trace ID and text content natively
         query = "SELECT timestamp, tags, vector_blob FROM traces WHERE id = ? OR content = ? LIMIT 1;"
         try:
@@ -838,12 +839,12 @@ class AsyncMemoryPalace:
                 row = await cursor.fetchone()
                 if not row or not row["vector_blob"]:
                     return "INVALID_PROVENANCE"
-                
+
                 # Core LWC Hash calculation over the data object parameters
                 hasher = hashlib.blake2b(digest_size=8)
                 hasher.update(f"{cognitive_object_id}:{row['timestamp']}:{row['tags']}".encode())
                 hasher.update(row["vector_blob"])
-                
+
                 # The resulting 16-character hex sequence forms her valid verification proof
                 return hasher.hexdigest().upper()
         except Exception:

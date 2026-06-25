@@ -56,9 +56,9 @@ class PriceBook:
     def _load(self) -> dict:
         if os.path.exists(self.path):
             try:
-                with open(self.path, "r", encoding="utf-8") as f:
+                with open(self.path, encoding="utf-8") as f:
                     return json.load(f)
-            except Exception:  # noqa: BLE001
+            except Exception:
                 pass
         data = {"updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 "prices": dict(DEFAULT_PRICES)}
@@ -113,7 +113,7 @@ class PriceBook:
             return False
         try:
             fresh = fetcher() or {}
-        except Exception:  # noqa: BLE001
+        except Exception:
             return False
         if not isinstance(fresh, dict) or not fresh:
             return False

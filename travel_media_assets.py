@@ -16,7 +16,6 @@ from typing import Any
 
 from travel_price_sidecar import TravelPriceSidecar
 
-
 TRAVEL_MEDIA_ASSET_VERSION = "AURA_TRAVEL_MEDIA_ASSET_V1"
 
 

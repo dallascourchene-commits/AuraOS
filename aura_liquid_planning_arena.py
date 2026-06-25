@@ -16,7 +16,6 @@ import hashlib
 import json
 from typing import Any
 
-
 LIQUID_ARENA_VERSION = "AURA_LIQUID_PLANNING_ARENA_V1"
 ACTION_CAPSULE_VERSION = "AURA_ACTION_CAPSULE_V1"
 BOUNDARY_CONTRACT_VERSION = "AURA_BOUNDARY_CONTRACT_V1"
@@ -82,7 +81,7 @@ class BoundaryContract:
         escalation_triggers: list[str],
         invariant: str,
         metadata: dict[str, Any] | None = None,
-    ) -> "BoundaryContract":
+    ) -> BoundaryContract:
         payload = {
             "contract_version": BOUNDARY_CONTRACT_VERSION,
             "domain": domain,
@@ -143,7 +142,7 @@ class ActionCapsule:
         escalation_triggers: list[str],
         boundary_contract_ids: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
-    ) -> "ActionCapsule":
+    ) -> ActionCapsule:
         payload = {
             "capsule_version": ACTION_CAPSULE_VERSION,
             "capsule_id": capsule_id,
@@ -195,7 +194,7 @@ class ArenaLease:
         mode: str = "exclusive_write",
         conflict_policy: str = "judge_then_reground",
         metadata: dict[str, Any] | None = None,
-    ) -> "ArenaLease":
+    ) -> ArenaLease:
         payload = {
             "lease_version": ARENA_LEASE_VERSION,
             "domain": domain,

@@ -67,10 +67,12 @@ class TravelScraperCore:
         if profile.allow_state == "denied" and not allow_unreviewed:
             raise PermissionError(f"source profile is denied: {scraper_kind}")
         self.sidecar.conn.execute("SAVEPOINT ingest_record")
+        savepoint_active = True
         try:
+            effective_source_url = source_url or record.get("source_url") or record.get("url")
             source_id = self.registry.register_profile(
                 scraper_kind,
-                source_url=source_url or record.get("source_url") or record.get("url"),
+                source_url=effective_source_url,
                 overrides={
                     "allow_state": profile.allow_state,
                     "metadata": {"ingest_core": TRAVEL_SCRAPER_CORE_VERSION},
@@ -79,7 +81,7 @@ class TravelScraperCore:
             raw_payload = json.dumps(record, sort_keys=True, ensure_ascii=True, indent=2)
             snapshot = self.sidecar.record_raw_snapshot(
                 source_id=source_id,
-                url=source_url or record.get("source_url") or record.get("url"),
+                url=effective_source_url,
                 content=raw_payload,
                 parser_version=profile.parser_version,
                 http_status=record.get("http_status"),
@@ -99,26 +101,27 @@ class TravelScraperCore:
             if existing_source and existing_source["metadata_json"]:
                 existing_metadata = json.loads(existing_source["metadata_json"])
             merged_metadata = {**existing_metadata, **normalized.snapshot_metadata}
-            self.sidecar.upsert_source(
-                {
-                    **normalized.source,
-                    "resort_id": resort_id,
-                    "allow_state": profile.allow_state,
-                    "terms_status": profile.terms_status,
-                    "robots_allowed": profile.robots_allowed,
-                    "priority": profile.priority,
-                    "rate_limit_seconds": profile.rate_limit_seconds,
-                    "metadata": merged_metadata,
-                }
-            )
+            source_dict = {
+                **normalized.source,
+                "resort_id": resort_id,
+                "allow_state": profile.allow_state,
+                "terms_status": profile.terms_status,
+                "robots_allowed": profile.robots_allowed,
+                "priority": profile.priority,
+                "rate_limit_seconds": profile.rate_limit_seconds,
+                "metadata": merged_metadata,
+            }
+            if effective_source_url and "url" not in normalized.source:
+                source_dict["url"] = effective_source_url
+            self.sidecar.upsert_source(source_dict)
             room_ids = [self.sidecar.upsert_room_type(dict(item, resort_id=resort_id)) for item in normalized.room_types]
             rate_ids = [self.sidecar.upsert_rate_plan(dict(item, resort_id=resort_id)) for item in normalized.rate_plans]
             price_ids = []
             for price in normalized.price_observations:
                 enriched = dict(price, resort_id=resort_id)
-                if not enriched.get("room_type_id") and room_ids:
+                if not enriched.get("room_type_id") and len(room_ids) == 1:
                     enriched["room_type_id"] = room_ids[0]
-                if not enriched.get("rate_plan_id") and rate_ids:
+                if not enriched.get("rate_plan_id") and len(rate_ids) == 1:
                     enriched["rate_plan_id"] = rate_ids[0]
                 price_ids.append(self.sidecar.insert_price_observation(enriched))
             media_ids = [self.sidecar.upsert_media_asset(dict(item, resort_id=resort_id)) for item in normalized.media_assets]
@@ -146,10 +149,13 @@ class TravelScraperCore:
                 normalized=normalized,
             )
             self.sidecar.conn.execute("RELEASE SAVEPOINT ingest_record")
+            savepoint_active = False
             self.sidecar.commit()
             return result
         except Exception:
-            self.sidecar.conn.execute("ROLLBACK TO SAVEPOINT ingest_record")
+            if savepoint_active:
+                self.sidecar.conn.execute("ROLLBACK TO SAVEPOINT ingest_record")
+                self.sidecar.conn.execute("RELEASE SAVEPOINT ingest_record")
             raise
 
     def ingest_option_b_records(

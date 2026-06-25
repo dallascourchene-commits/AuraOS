@@ -13,9 +13,10 @@ SYNOPSIS: The `aura_os_auditor` Python module provides a cryptographically secur
 import asyncio
 import gc
 import hashlib
-import time
-import os
 import json
+import os
+import time
+
 
 async def _write_genesis_block_async(block: dict, path: str) -> None:
     """Non-blocking, memory-buffered genesis block write."""
@@ -44,7 +45,7 @@ async def generate_genesis_block_async() -> str | None:
     for file in core_files:
         if os.path.exists(file):
             try:
-                with open(file, "r", encoding="utf-8") as f:
+                with open(file, encoding="utf-8") as f:
                     dna_parts.append(f.read())
             except OSError:
                 print(f"[!] Warning: Could not read {file}.")
@@ -81,8 +82,8 @@ async def generate_genesis_block_async() -> str | None:
     print("\n[+] GENESIS BLOCK SUCCESSFULLY MINTED!")
     print(f"[+] Cryptographic IP Signature: {genesis_hash}")
     print("\n[*] TO CEMENT YOUR IP LEGALLY:")
-    print(f"[*] Send a transaction on any public blockchain (Polygon, Arweave, etc.)")
-    print(f"[*] and paste this exact hash into the 'Memo' or 'Data' field:")
+    print("[*] Send a transaction on any public blockchain (Polygon, Arweave, etc.)")
+    print("[*] and paste this exact hash into the 'Memo' or 'Data' field:")
     print(f"[*] --> {genesis_hash} <--")
     print("=========================================")
     return genesis_hash

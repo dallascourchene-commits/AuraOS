@@ -33,12 +33,12 @@ Also fixes:
   np.stack() is marginally faster on ARM NEON because it dispatches
   a single C-level gather operation.
 """
-import json
+from datetime import datetime
 import os
 import time
-from datetime import datetime
 
 import numpy as np
+
 from vsa_resonator import VSAResonator
 
 try:
@@ -70,16 +70,16 @@ class AuraDreamEngine:
             return "[-] Dream Engine: No active database connection linked."
 
         conn = self.node.memory_palace.conn
-        
+
         # 1. Check Thermals (Only dream when the CPU is running cool)
         temp = 42.0
         try:
             if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                with open('/sys/class/thermal/thermal_zone0/temp') as f:
                     temp = float(f.read().strip()) / 1000.0
         except Exception:
             pass
-            
+
         if temp > 38.0:
             return f"[-] Dream Phase aborted: CPU thermals too high ({temp:.1f}C). Rest is deferred."
 
@@ -103,7 +103,7 @@ class AuraDreamEngine:
         # Extract contents and reconstruct the 2D VSA matrix in-place
         content_ids = [t[0] for t in traces]
         contents = [t[1] for t in traces]
-        
+
         raw_vectors = []
         valid_indices = []
         for idx, t in enumerate(traces):
@@ -176,7 +176,7 @@ class AuraDreamEngine:
             ]
             cluster_ids = [content_ids[valid_indices[j]] for j in similar_indices if j not in assigned]
             cluster_texts = [contents[valid_indices[j]] for j in similar_indices if j not in assigned]
-            
+
             if len(cluster_texts) > 1:
                 clusters.append((cluster_ids, cluster_texts))
             assigned.update(similar_indices)
@@ -185,15 +185,15 @@ class AuraDreamEngine:
         consolidated_count = 0
         for cluster_ids, cluster_texts in clusters:
             synthesis_prompt = (
-                f"You are Aura's REM sleep consolidator. Synthesize these fragmented, similar episodic memories "
-                f"into a single, profound generalized principle or lesson:\n" + 
+                "You are Aura's REM sleep consolidator. Synthesize these fragmented, similar episodic memories "
+                "into a single, profound generalized principle or lesson:\n" +
                 "\n".join([f"• {txt}" for txt in cluster_texts]) +
-                f"\nOutput only the generalized lesson/principle. No conversational filler."
+                "\nOutput only the generalized lesson/principle. No conversational filler."
             )
-            
+
             # Execute non-blocking synthesis via cloud/local engine
             principle = (await self.node.invoke_engine(synthesis_prompt)).strip()
-            
+
             # Compress and encode the new principle
             principle_hv = self.node.polysynthetic_vram_compress(principle)
 
@@ -217,13 +217,13 @@ class AuraDreamEngine:
 
             principle_blob = np.asarray(principle_hv, dtype=np.complex64).tobytes()
             p_id = f"PRINCIPLE_{int(time.time())}_{np.random.randint(1000)}"
-            
+
             # Save the distilled principle
             await conn.execute(
                 "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'PRINCIPLE', ?, 'Condensed Core Memory', ?)",
                 (p_id, principle, datetime.now().isoformat(), principle_blob)
             )
-            
+
             # Prune the raw, redundant episodic traces to prevent DB bloat
             placeholders = ','.join(['?'] * len(cluster_ids))
             await conn.execute(f"DELETE FROM traces WHERE id IN ({placeholders})", tuple(cluster_ids))
@@ -272,9 +272,9 @@ async def homeostatic_decay_pass(node, resonance_floor: float = 0.15) -> str:
     # Safety: only run when thermals are cool
     current_temp = 42.0
     try:
-        with open('/sys/class/thermal/thermal_zone0/temp', 'r') as _f:
+        with open('/sys/class/thermal/thermal_zone0/temp') as _f:
             current_temp = float(_f.read().strip()) / 1000.0
-    except (IOError, FileNotFoundError):
+    except (OSError, FileNotFoundError):
         pass
 
     if current_temp > 40.0:

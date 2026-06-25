@@ -16,7 +16,6 @@ import hashlib
 import json
 import zlib
 
-
 CAPSULE_VERSION = "AURA_PHASE_CAPSULE_V1"
 PHASE_LOCK_POWER = 4097
 
@@ -42,7 +41,7 @@ class AuraPhaseCapsule:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict) -> "AuraPhaseCapsule":
+    def from_dict(cls, data: dict) -> AuraPhaseCapsule:
         return cls(**data)
 
 

@@ -10,11 +10,11 @@ SYNOPSIS: The `AuraOSLogging` module provides SQLite-backed logging with strict 
 """
 # [AURA OPTIMIZED] - Bloat removed.
 
-import sqlite3
 from datetime import datetime
 import logging
-import sys
 import os
+import sqlite3
+import sys
 
 # Global connection instance mapped to the module level
 _conn = None
@@ -29,19 +29,19 @@ def setup_sqlite_logging():
     # 1. Initialize SQLite database with busy-wait timeout and strict pathing
     _conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=10.0)
     conn = _conn  # Keep local reference mapping safely to the handlers
-    
+
     # Enable non-blocking, high-speed WAL mode for concurrent write thread-safety
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA synchronous=NORMAL;")
-    
+
     cursor = conn.cursor()
-    
+
     # 2. Define the Thread-Safe Handler
     class SQLiteHandler(logging.Handler):
         def __init__(self, connection):
             super().__init__()
             self.connection = connection
-            
+
         def emit(self, record):
             try:
                 # Use a local cursor for isolated thread safety
@@ -60,7 +60,7 @@ def setup_sqlite_logging():
             except Exception as e:
                 sys.stderr.write(f"[-] SQLite Logging Handler Error: {e}\n")
                 self.handleError(record)
-                
+
     # 3. Create the Database Architecture
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS logs (
@@ -101,18 +101,18 @@ def setup_sqlite_logging():
         )
     ''')
     conn.commit()
-    
+
     # 4. CREATE THE LOGGER FIRST
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    
+
     # 5. ATTACH THE HANDLERS SECOND
     sqlite_handler = SQLiteHandler(conn)
     logger.addHandler(sqlite_handler)
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(logging.INFO)
     logger.addHandler(console_handler)
-    
+
     # 6. Return the completed toolset
     return {
         'logger': logger,
@@ -138,7 +138,7 @@ def log_report(report_type, content, metadata=None):
         _conn.commit()
     except Exception as ex:
         sys.stderr.write(f"[-] Logging Kit: Failed to write report: {ex}\n")
-        
+
 def log_error(error_type, message, traceback=None, severity=1):
     if not _conn:
         return
@@ -156,7 +156,7 @@ def log_error(error_type, message, traceback=None, severity=1):
         _conn.commit()
     except Exception as ex:
         sys.stderr.write(f"[-] Logging Kit: Failed to write error: {ex}\n")
-        
+
 def close_connection():
     global _conn
     if _conn:

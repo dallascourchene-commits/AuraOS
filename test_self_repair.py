@@ -1,6 +1,8 @@
 import asyncio
-from aura_node import AuraSovereignNode
+
 from aura_evolve import LiquidFlashEvolve
+from aura_node import AuraSovereignNode
+
 
 async def run_evaluation():
     print("[*] Initializing active node context...")

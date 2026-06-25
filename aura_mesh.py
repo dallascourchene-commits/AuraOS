@@ -49,12 +49,11 @@ import asyncio
 import base64
 import hashlib
 import json
-import os
 import socket
 import struct
 import time
+from typing import Any
 import uuid
-from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -113,14 +112,14 @@ class SceneAdaptiveToneCurve:
     """
 
     __slots__ = (
-        "_curve_type",
-        "_percentile_clip",
+        "_ap3_coeffs",
         "_ase_a",
         "_ase_b",
-        "_ap3_coeffs",
-        "_feature_min",
+        "_curve_type",
         "_feature_max",
+        "_feature_min",
         "_fitted",
+        "_percentile_clip",
     )
 
     def __init__(
@@ -129,7 +128,7 @@ class SceneAdaptiveToneCurve:
         percentile_clip: float = 0.01,
         ase_a: float = 1.2,
         ase_b: float = 0.8,
-        ap3_coeffs: Optional[np.ndarray] = None,
+        ap3_coeffs: np.ndarray | None = None,
     ) -> None:
         self._curve_type: str = curve_type.lower()
         self._percentile_clip: float = float(np.clip(percentile_clip, 0.0, 50.0))
@@ -278,9 +277,9 @@ class SceneAdaptiveToneCurve:
     @staticmethod
     def _compute_attention_matrix(
         features: np.ndarray,
-        adjacency: Optional[np.ndarray] = None,
-        edge_weights: Optional[np.ndarray] = None,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        adjacency: np.ndarray | None = None,
+        edge_weights: np.ndarray | None = None,
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Compute cosine‑similarity attention across a node feature matrix.
 
         Returns a normalised square attention matrix ``A[i,j]`` where
@@ -361,11 +360,11 @@ class SceneAdaptiveToneCurve:
     # ------------------------------------------------------------------
     def process_node_batch_sync(
         self,
-        nodes: List[Dict[str, Any]],
-        adjacency: Optional[np.ndarray] = None,
-        edge_weights: Optional[np.ndarray] = None,
+        nodes: list[dict[str, Any]],
+        adjacency: np.ndarray | None = None,
+        edge_weights: np.ndarray | None = None,
         fit_scaler: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Transform a list of node dictionaries in a single vectorised pass.
 
         Each node dict must contain numeric keys ``intensity``, ``color``,
@@ -403,12 +402,12 @@ class SceneAdaptiveToneCurve:
             return nodes
         if num_nodes > _MAX_NODE_BATCH:
             # Chunk into manageable slices to keep memory under 4 GiB
-            results: List[Dict[str, Any]] = []
+            results: list[dict[str, Any]] = []
             for start in range(0, num_nodes, _MAX_NODE_BATCH):
                 end: int = min(start + _MAX_NODE_BATCH, num_nodes)
-                chunk: List[Dict[str, Any]] = nodes[start:end]
-                adj_chunk: Optional[np.ndarray] = None
-                ew_chunk: Optional[np.ndarray] = None
+                chunk: list[dict[str, Any]] = nodes[start:end]
+                adj_chunk: np.ndarray | None = None
+                ew_chunk: np.ndarray | None = None
                 if adjacency is not None and adjacency.shape == (num_nodes, num_nodes):
                     adj_chunk = adjacency[start:end, start:end]
                 if edge_weights is not None and edge_weights.shape == (num_nodes, num_nodes):
@@ -459,7 +458,7 @@ class SceneAdaptiveToneCurve:
         # --- 6. Update node dicts ---
         for i, node in enumerate(nodes):
             attn_row: np.ndarray = attention_mat[i, :]
-            attn_dict: Dict[str, float] = {
+            attn_dict: dict[str, float] = {
                 nodes[j].get("id", f"node_{j}"): float(attn_row[j])
                 for j in range(num_nodes)
                 if j != i and float(attn_row[j]) > 1e-6
@@ -476,11 +475,11 @@ class SceneAdaptiveToneCurve:
     # ------------------------------------------------------------------
     async def process_node_batch(
         self,
-        nodes: List[Dict[str, Any]],
-        adjacency: Optional[np.ndarray] = None,
-        edge_weights: Optional[np.ndarray] = None,
+        nodes: list[dict[str, Any]],
+        adjacency: np.ndarray | None = None,
+        edge_weights: np.ndarray | None = None,
         fit_scaler: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Non‑blocking async wrapper around ``process_node_batch_sync``.
 
         Offloads the vectorised numpy work to the default thread‑pool
@@ -545,18 +544,18 @@ class AuraMeshSwarm:
         )
 
         # --- UDP discovery transport ---
-        self.udp_sock: Optional[socket.socket] = None
+        self.udp_sock: socket.socket | None = None
         self.udp_port: int = DEFAULT_UDP_BEACON_PORT
 
         # --- TCP compute‑offload server ---
-        self.tcp_server: Optional[asyncio.AbstractServer] = None
+        self.tcp_server: asyncio.AbstractServer | None = None
         self.tcp_port: int = DEFAULT_TCP_COMPUTE_PORT
 
         # --- Peer registry:  ip_address → human_label ---
-        self.peers: Dict[str, str] = {}
+        self.peers: dict[str, str] = {}
 
         # --- Transmission ledger for auditing / telemetry ---
-        self.tx_ledger: Dict[str, Any] = {}
+        self.tx_ledger: dict[str, Any] = {}
 
         # --- Configurable offload threshold (°C) ---
         self.offload_temp_threshold: float = DEFAULT_OFFLOAD_TEMP_THRESHOLD_C
@@ -571,7 +570,7 @@ class AuraMeshSwarm:
     # ==================================================================
     @staticmethod
     def pack_secure_polysynthetic_packet(
-        slot_indices: List[int], compliance_score: float
+        slot_indices: list[int], compliance_score: float
     ) -> bytes:
         """Pack six 16‑bit slot indices and one 32‑bit compliance float
         into a fixed‑size 16‑byte binary telemetry frame.
@@ -600,7 +599,7 @@ class AuraMeshSwarm:
         if len(slot_indices) < 6:
             slot_indices = list(slot_indices) + [0] * (6 - len(slot_indices))
         # Clamp to valid uint16 range
-        clamped: List[int] = [max(0, min(int(v), 65535)) for v in slot_indices[:6]]
+        clamped: list[int] = [max(0, min(int(v), 65535)) for v in slot_indices[:6]]
         return struct.pack(
             "<HHHHHHf",
             clamped[0],
@@ -615,7 +614,7 @@ class AuraMeshSwarm:
     @staticmethod
     def unpack_secure_polysynthetic_packet(
         raw_bytes: bytes,
-    ) -> Tuple[Optional[List[int]], float]:
+    ) -> tuple[list[int] | None, float]:
         """Unpack a fixed 16‑byte telemetry frame.
 
         Parameters
@@ -669,7 +668,7 @@ class AuraMeshSwarm:
         return length_prefix + json_bytes
 
     @staticmethod
-    def unpack_length_prefixed_payload(raw_bytes: bytes) -> Optional[Any]:
+    def unpack_length_prefixed_payload(raw_bytes: bytes) -> Any | None:
         """Deserialize a length‑prefixed binary frame back into a Python
         object.
 
@@ -706,8 +705,8 @@ class AuraMeshSwarm:
     # DSEKP CRYPTOGRAPHIC SHIELD
     # ==================================================================
     def generate_polysynthetic_proof(
-        self, payload_dict: Dict[str, Any], current_temp: float
-    ) -> Dict[str, Any]:
+        self, payload_dict: dict[str, Any], current_temp: float
+    ) -> dict[str, Any]:
         """Generate a DSEKP cryptographic proof envelope for an outgoing
         swarm message.
 
@@ -757,7 +756,7 @@ class AuraMeshSwarm:
             print(f"[-] Polysynthetic proof generation failed: {exc}")
             return {"dsekp_shield": "OFFLINE", "data": payload_dict}
 
-    async def verify_dsekp_shield(self, incoming_packet: Dict[str, Any]) -> bool:
+    async def verify_dsekp_shield(self, incoming_packet: dict[str, Any]) -> bool:
         """Verify an incoming DSEKP cryptographic shield via Hamming‑
         distance comparison against the locally expected state vector.
 
@@ -775,7 +774,7 @@ class AuraMeshSwarm:
         bool
             ``True`` if the shield is cryptographically valid.
         """
-        shield_b64: Optional[str] = incoming_packet.get("dsekp_shield")
+        shield_b64: str | None = incoming_packet.get("dsekp_shield")
         if not shield_b64 or shield_b64 == "OFFLINE":
             print("[*] DSEKP shield offline or absent — verification skipped.")
             return False
@@ -849,14 +848,14 @@ class AuraMeshSwarm:
         except RuntimeError:
             # No running event loop — fall back to synchronous read
             try:
-                with open(THERMAL_PATH, "r") as fh:
+                with open(THERMAL_PATH) as fh:
                     return float(fh.read().strip()) / 1000.0
             except (OSError, ValueError):
                 return 42.0
 
         def _sync_read() -> float:
             try:
-                with open(THERMAL_PATH, "r") as fh:
+                with open(THERMAL_PATH) as fh:
                     return float(fh.read().strip()) / 1000.0
             except (OSError, ValueError):
                 return 42.0
@@ -871,10 +870,10 @@ class AuraMeshSwarm:
     # ==================================================================
     def _build_node_dict_from_slot_indices(
         self,
-        slot_indices: List[int],
+        slot_indices: list[int],
         compliance: float,
         peer_ip: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Map the 6‑slot UDP telemetry vector into a 3‑D node feature
         dictionary suitable for the tone‑curve processor.
 
@@ -903,7 +902,7 @@ class AuraMeshSwarm:
             Node dict with ``id``, ``intensity``, ``color``, ``depth``,
             ``compliance``, and ``neighbors`` keys.
         """
-        si: List[float] = [float(v) for v in slot_indices]
+        si: list[float] = [float(v) for v in slot_indices]
         norm_factor: float = 131070.0  # 2 × 65535
         return {
             "id": f"peer_{peer_ip.replace('.', '_')}",
@@ -915,8 +914,8 @@ class AuraMeshSwarm:
         }
 
     async def _apply_tone_curve_filter(
-        self, node_batch: List[Dict[str, Any]], *, fit_scaler: bool = False
-    ) -> List[Dict[str, Any]]:
+        self, node_batch: list[dict[str, Any]], *, fit_scaler: bool = False
+    ) -> list[dict[str, Any]]:
         """Run the Scene‑Adaptive Tone Curve processor over a node batch
         without blocking the event loop.
 
@@ -933,7 +932,7 @@ class AuraMeshSwarm:
     # ==================================================================
     # AUTOMATIC TASK EVALUATION & ROUTING ENGINE
     # ==================================================================
-    def should_offload_task(self, task_metadata: Dict[str, Any]) -> bool:
+    def should_offload_task(self, task_metadata: dict[str, Any]) -> bool:
         """Determine whether a task should be transparently offloaded to
         a remote peer instead of being executed locally.
 
@@ -970,7 +969,7 @@ class AuraMeshSwarm:
         if not self.peers:
             return False
 
-        tags: List[str] = task_metadata.get("tags", [])
+        tags: list[str] = task_metadata.get("tags", [])
         if any(tag in OFFLOAD_TAGS for tag in tags):
             print(
                 f"[*] Offload triggered by task tag intersection: "
@@ -983,7 +982,7 @@ class AuraMeshSwarm:
         if current_temp == 42.0:
             # Attempt synchronous read as fallback (called from sync context)
             try:
-                with open(THERMAL_PATH, "r") as fh:
+                with open(THERMAL_PATH) as fh:
                     current_temp = float(fh.read().strip()) / 1000.0
             except (OSError, ValueError):
                 pass
@@ -995,7 +994,7 @@ class AuraMeshSwarm:
             return True
 
         # Resource‑cost guard
-        estimated_cost: Optional[float] = task_metadata.get("estimated_cost")
+        estimated_cost: float | None = task_metadata.get("estimated_cost")
         if estimated_cost is not None and estimated_cost > 1.0:
             print(
                 f"[*] Offload triggered by estimated cost: "
@@ -1152,7 +1151,7 @@ class AuraMeshSwarm:
         # Accumulate up to a small batch before running the vectorised
         # tone‑curve pass, avoiding per‑packet overhead while keeping
         # latency low.
-        _pending_batch: List[Dict[str, Any]] = []
+        _pending_batch: list[dict[str, Any]] = []
         _batch_flush_size: int = 32
         _first_batch: bool = True
 
@@ -1167,7 +1166,7 @@ class AuraMeshSwarm:
                 # Peer registration
                 ip: str = addr[0]
                 if ip not in self.peers:
-                    label = f"SIBLING_NODE_{ip.split('.')[-1]}"
+                    label = f"SIBLING_NODE_{ip.rsplit('.', maxsplit=1)[-1]}"
                     self.peers[ip] = label
                     print(
                         f"\n[~] MESH SYNERGY: Registered new peer "
@@ -1175,14 +1174,14 @@ class AuraMeshSwarm:
                     )
 
                 # Build node dict from telemetry and queue for tone‑curve pass
-                node_dict: Dict[str, Any] = self._build_node_dict_from_slot_indices(
+                node_dict: dict[str, Any] = self._build_node_dict_from_slot_indices(
                     slot_indices, compliance, ip
                 )
                 _pending_batch.append(node_dict)
 
                 # Flush batch when threshold reached
                 if len(_pending_batch) >= _batch_flush_size:
-                    processed: List[Dict[str, Any]] = (
+                    processed: list[dict[str, Any]] = (
                         await self._apply_tone_curve_filter(
                             _pending_batch, fit_scaler=_first_batch
                         )
@@ -1265,7 +1264,7 @@ class AuraMeshSwarm:
         self.node.runtime_metrics["dikwp_tier"] = "PURPOSE"
         try:
             # Canonical upgrade‑pulse slot vector
-            upgrade_slots: List[int] = [707, 707, 303, 909, 505, 808]
+            upgrade_slots: list[int] = [707, 707, 303, 909, 505, 808]
             compliance_baseline: float = 1.0
             secure_packet: bytes = self.pack_secure_polysynthetic_packet(
                 upgrade_slots, compliance_baseline
@@ -1283,8 +1282,8 @@ class AuraMeshSwarm:
     # COMPUTE OFFLOAD (TCP CLIENT SIDE)
     # ==================================================================
     async def offload_compute(
-        self, target_ip: str, module: str, data_payload: Dict[str, Any]
-    ) -> Optional[Any]:
+        self, target_ip: str, module: str, data_payload: dict[str, Any]
+    ) -> Any | None:
         """Transparently offload a compute task to a remote swarm peer
         over TCP port 4445 using the length‑prefixed protocol.
 
@@ -1306,7 +1305,7 @@ class AuraMeshSwarm:
         start_time: float = time.time()
         self.node.runtime_metrics["dikwp_tier"] = "KNOWLEDGE"
 
-        payload_obj: Dict[str, Any] = {
+        payload_obj: dict[str, Any] = {
             "id": f"JOB-{int(time.time())}",
             "module": module,
             "data": data_payload,
@@ -1327,7 +1326,7 @@ class AuraMeshSwarm:
             writer.close()
             await writer.wait_closed()
 
-            result: Optional[Any] = self.unpack_length_prefixed_payload(raw_response)
+            result: Any | None = self.unpack_length_prefixed_payload(raw_response)
             if result is not None:
                 print(
                     f"[+] Offload complete — response from {target_ip}: "
@@ -1378,7 +1377,7 @@ class AuraMeshSwarm:
                     await writer.wait_closed()
                     return
 
-                task_dict: Optional[Dict[str, Any]] = (
+                task_dict: dict[str, Any] | None = (
                     self.unpack_length_prefixed_payload(raw_data)
                 )
                 if task_dict is None:
@@ -1399,7 +1398,7 @@ class AuraMeshSwarm:
                 )
 
                 # ---- 2. Verify sender integrity via DSEKP ----
-                shield_envelope: Dict[str, Any] = {
+                shield_envelope: dict[str, Any] = {
                     "dsekp_shield": task_dict.get("dsekp_shield", "OFFLINE"),
                     "trace_id": task_dict.get(
                         "trace_id", task_dict.get("id", "UNKNOWN")
@@ -1428,7 +1427,7 @@ class AuraMeshSwarm:
                                 f"[*] Running tone‑curve filter over "
                                 f"{len(raw_nodes)} node(s) from {peer_ip}."
                             )
-                            filtered_nodes: List[Dict[str, Any]] = (
+                            filtered_nodes: list[dict[str, Any]] = (
                                 await self.tone_curve.process_node_batch(
                                     raw_nodes
                                 )
@@ -1446,7 +1445,7 @@ class AuraMeshSwarm:
                             )
 
                 # ---- 4. Process the task locally ----
-                result_payload: Dict[str, Any]
+                result_payload: dict[str, Any]
                 task_exec = getattr(self.node, "execute_offloaded_task", None)
                 if callable(task_exec):
                     result_payload = await task_exec(task_dict)
@@ -1524,7 +1523,7 @@ class AuraMeshSwarm:
             ``time.time()`` captured at action initiation, used to
             compute latency.
         """
-        metrics: Dict[str, Any] = getattr(self.node, "runtime_metrics", {})
+        metrics: dict[str, Any] = getattr(self.node, "runtime_metrics", {})
         t_id: str = metrics.get("thought_id", "MESH-00000000")
         try:
             num_id: int = int(t_id.split("-")[1], 16)

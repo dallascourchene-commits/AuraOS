@@ -17,7 +17,6 @@ from typing import Any
 
 from travel_price_sidecar import TravelPriceSidecar
 
-
 OPTION_B_REGISTRY_VERSION = "AURA_TRAVEL_OPTION_B_SOURCE_REGISTRY_V1"
 
 

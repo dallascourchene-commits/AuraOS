@@ -7,15 +7,25 @@ DEPENDENCIES: pytest, numpy, aura_liquid_internet
 SYNOPSIS: Tests for Claim N14 - VSA-Addressed Liquid Internet Protocol.
 [/AURA_MASTER_KEY]
 """
-import os, sys, pytest
+import os
+import sys
+
 import numpy as np
+import pytest
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from aura_liquid_internet import (
-    VSAAddress, PeerRecord, NameBinding, LiquidInternetProtocol,
-    _seeded_phasor, _cosine_res, _bind, _bundle,
-    _quantize_address, _dequantize_address,
+    LiquidInternetProtocol,
+    VSAAddress,
+    _bind,
+    _bundle,
+    _cosine_res,
+    _dequantize_address,
+    _quantize_address,
+    _seeded_phasor,
 )
+
 
 class TestVSAAddress:
     def test_deterministic(self):
@@ -147,7 +157,7 @@ class TestNoDeps:
     def test_only_stdlib_and_numpy(self):
         fp = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           "aura_liquid_internet.py")
-        with open(fp, "r", encoding="utf-8") as f:
+        with open(fp, encoding="utf-8") as f:
             source = f.read()
         import ast
         tree = ast.parse(source)

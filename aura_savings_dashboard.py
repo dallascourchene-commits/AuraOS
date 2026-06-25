@@ -32,11 +32,10 @@ Then open http://localhost:8700 in any browser.
 from __future__ import annotations
 
 import argparse
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os
-import sys
 import time
-from http.server import HTTPServer, BaseHTTPRequestHandler
 from typing import Any
 
 MEMORY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Aura_Memory")
@@ -375,7 +374,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
 
         elif path == "/api/recent":
             try:
-                from urllib.parse import urlparse, parse_qs
+                from urllib.parse import parse_qs, urlparse
                 qs = parse_qs(urlparse(self.path).query)
                 limit = int(qs.get("limit", [50])[0])
                 db = self._get_db()

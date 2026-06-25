@@ -49,6 +49,22 @@ import json
 import os
 import time
 
+from aura_llm_egress import (
+    KNOWN_WORKING,
+    ExternalLLM,
+    classify_providers,
+    usable_providers,
+)
+from aura_matrix_benchmark import MockEgress, run_matrix
+from aura_proxy_benchmark import (
+    OUTPUT_MODES,
+    TASKS,
+    QualityScorer,
+    _repo_py_files,
+    edit_plan_to_unified_diff,
+    parse_edit_plan,
+    with_output_mode,
+)
 from aura_substrate import (
     REPO_ROOT,
     AuraSubstrate,
@@ -57,23 +73,6 @@ from aura_substrate import (
     existing_import_roots,
     sanitize_code,
 )
-from aura_llm_egress import (
-    ExternalLLM,
-    KNOWN_WORKING,
-    classify_providers,
-    usable_providers,
-)
-from aura_proxy_benchmark import (
-    OUTPUT_MODES,
-    QualityScorer,
-    TASKS,
-    _repo_py_files,
-    apply_edit_plan,
-    edit_plan_to_unified_diff,
-    parse_edit_plan,
-    with_output_mode,
-)
-from aura_matrix_benchmark import MockEgress, run_matrix
 
 MEMORY_DIR = os.path.join(REPO_ROOT, "Aura_Memory")
 LEDGER_PATH = os.path.join(MEMORY_DIR, "aura_calibration.jsonl")
@@ -113,7 +112,7 @@ class _JsonlStore:
         if not os.path.exists(self.path):
             return []
         out = []
-        with open(self.path, "r", encoding="utf-8") as f:
+        with open(self.path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -290,7 +289,7 @@ class AutoRouter:
         for cand in candidates[:max_fallbacks]:
             try:
                 egress = self.egress_factory(cand["provider"])
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 tried.append({"provider": cand["provider"], "error": str(exc)})
                 continue
             task_v = with_output_mode(task, cand["output_mode"])
@@ -411,8 +410,9 @@ def _round_acc(acc: dict) -> dict:
 
 def _savings_db_rows(db_path: str | None = None) -> list[dict]:
     """Read every logged LLM call from aura_savings_db in router-compatible shape."""
-    from aura_savings_db import DB_PATH as SAVINGS_DB_PATH
     import sqlite3
+
+    from aura_savings_db import DB_PATH as SAVINGS_DB_PATH
 
     path = db_path or SAVINGS_DB_PATH
     if not os.path.exists(path):
@@ -461,7 +461,7 @@ def savings_report(ledger: CalibrationLedger | None = None,
     try:
         from aura_pricing import get_pricebook
         prices_updated = get_pricebook().updated_at()
-    except Exception:  # noqa: BLE001
+    except Exception:
         prices_updated = "unknown"
 
     execs = exec_log.read_all()

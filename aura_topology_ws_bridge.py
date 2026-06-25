@@ -15,7 +15,6 @@ SYNOPSIS: Pure-asyncio broadcast bridge that reads Aura_Memory/live_topology_ast
 import asyncio
 import gc
 import json
-import os
 from pathlib import Path
 
 try:
@@ -279,11 +278,12 @@ async def stream_to_clients(ws_handler_coro, host: str = "0.0.0.0", port: int = 
 # both the AR display and the topology watcher share one broadcast pipeline.
 # ============================================================================
 
+from dataclasses import dataclass as _dataclass_ar
+from dataclasses import field as _field_ar
 import json as _json_ar
-import uuid as _uuid_ar
 import logging as _logging_ar
-from dataclasses import dataclass as _dataclass_ar, field as _field_ar
-from typing import Dict as _Dict_ar, List as _List_ar, Set as _Set_ar, Any as _Any_ar, Optional as _Optional_ar
+from typing import Any as _Any_ar
+import uuid as _uuid_ar
 
 _ar_logger = _logging_ar.getLogger("aura.ar_websocket")
 
@@ -303,13 +303,13 @@ class _ARShape:
     shape_id: str
     shape_type: str
     label: str
-    position: _List_ar[float]
+    position: list[float]
     scale: float = 1.0
     color: str = "#00E5FF"
     node_type: str = "function"
     luminance: float = 0.5
     integrity_resonance: float = 1.0
-    metadata: _Dict_ar[str, _Any_ar] = _field_ar(default_factory=dict)
+    metadata: dict[str, _Any_ar] = _field_ar(default_factory=dict)
 
     def to_dict(self) -> dict:
         spectral = self.metadata.get("ast_data", {}).get("spectral", {})
@@ -355,7 +355,7 @@ class _ARConnection:
 class _ARSession:
     session_id: str
     websocket: object          # websockets.WebSocketServerProtocol
-    subscribed_topics: _Set_ar[str] = _field_ar(default_factory=set)
+    subscribed_topics: set[str] = _field_ar(default_factory=set)
 
 
 class AuraARWebSocketServer:
@@ -390,14 +390,14 @@ class AuraARWebSocketServer:
         self.port = port
         self.topology_refresh_interval = topology_refresh_interval
 
-        self._sessions: _Dict_ar[str, _ARSession] = {}
-        self._shapes: _Dict_ar[str, _ARShape] = {}
-        self._connections: _List_ar[_ARConnection] = []
-        self._topology_metadata: _Dict_ar[str, _Any_ar] = {}
+        self._sessions: dict[str, _ARSession] = {}
+        self._shapes: dict[str, _ARShape] = {}
+        self._connections: list[_ARConnection] = []
+        self._topology_metadata: dict[str, _Any_ar] = {}
         self._topology_lock = asyncio.Lock()
         self._shutdown_event = asyncio.Event()
         self._server = None
-        self._refresh_task: _Optional_ar[asyncio.Task] = None
+        self._refresh_task: asyncio.Task | None = None
 
         _ar_logger.info("AuraARWebSocketServer init: %s:%d", host, port)
 
@@ -491,7 +491,7 @@ class AuraARWebSocketServer:
                 "spectral_topology": payload.get("spectral_topology", {}),
             }
 
-            new_shapes: _Dict_ar[str, _ARShape] = {}
+            new_shapes: dict[str, _ARShape] = {}
             for node_data in nodes_data:
                 node_id = str(node_data.get("id") or node_data.get("label") or "")
                 if not node_id:
@@ -524,7 +524,7 @@ class AuraARWebSocketServer:
                     metadata={"ast_data": node_data},
                 )
 
-            new_connections: _List_ar[_ARConnection] = []
+            new_connections: list[_ARConnection] = []
             for idx, edge_data in enumerate(edges_data):
                 edge_id = str(edge_data.get("id") or f"edge_{idx}")
                 new_connections.append(

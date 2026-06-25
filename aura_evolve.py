@@ -14,14 +14,13 @@ import ast
 import gc
 import hashlib
 import os
+from pathlib import Path
 import re
 import sys
 import time
-import asyncio
-from pathlib import Path
 
-from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
 from aura_evolution_bridge import validate_proposed_mutation
+from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
 
 # ── Security constants ──────────────────────────────────────────────────────
 # Project root: all file writes must land under this directory tree.
@@ -182,7 +181,7 @@ class LiquidFlashEvolve:
 
         temp = 42.0
         try:
-            with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+            with open("/sys/class/thermal/thermal_zone0/temp") as f:
                 temp = float(f.read().strip()) / 1000.0
         except OSError:
             pass
@@ -190,7 +189,7 @@ class LiquidFlashEvolve:
         baseline_friction = 0
         if os.path.exists(target_file):
             try:
-                with open(target_file, "r", encoding="utf-8") as f:
+                with open(target_file, encoding="utf-8") as f:
                     tree = ast.parse(f.read())
                     baseline_friction = sum(1 for n in ast.walk(tree) if isinstance(n, ast.Call))
             except Exception:
@@ -305,7 +304,7 @@ class LiquidFlashEvolve:
             parsed = ast.parse(code)
             security_issues = _verify_ast_security(parsed, filename=file)
             if security_issues:
-                return f"[-] Hot-swap blocked: security violations in final code:\n" + "\n".join(security_issues)
+                return "[-] Hot-swap blocked: security violations in final code:\n" + "\n".join(security_issues)
             # Verify the code is structurally consistent (not just parseable but sane)
             ast.fix_missing_locations(parsed)
         except SyntaxError as se:

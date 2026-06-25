@@ -10,11 +10,13 @@ SYNOPSIS: The module implements an asynchronous WebSocket bridge using `asyncio`
 """
 
 import asyncio
-import websockets
 import json
 import os
-from liquid_kernel import LiquidWebSocket
+
+import websockets
+
 from liquid_attractor_control_plane import auto_boot_attractor, shutdown_attractor
+from liquid_kernel import LiquidWebSocket
 
 brain = LiquidWebSocket()
 CONNECTED_CLIENTS = set()
@@ -51,10 +53,10 @@ async def bridge_handler(websocket):
     try:
         async for message in websocket:
             raw_payload = json.loads(message)
-            
+
             # 1. Process through the Native Liquid Kernel
             processed_payload = await brain.process_command(raw_payload)
-            
+
             # 2. ST3GG Stenography: Find the latest quantum memory (Offloaded to thread pool)
             def _get_latest_st3():
                 if not os.path.exists(MEMORY_DIR):
@@ -67,14 +69,14 @@ async def bridge_handler(websocket):
 
             latest_engram = await asyncio.to_thread(_get_latest_st3)
             latest_st3gg = latest_engram if latest_engram is not None else "AWAITING_ENGRAM"
-            
+
             # 3. Inject the hidden holographic stamp into the payload
             processed_payload["__st3gg__"] = latest_st3gg
-            
+
             # Broadcast to the visual matrix
             if CONNECTED_CLIENTS:
                 websockets.broadcast(CONNECTED_CLIENTS, json.dumps(processed_payload))
-                
+
     except websockets.exceptions.ConnectionClosed:
         pass
     finally:
@@ -90,19 +92,19 @@ async def bridge_handler(websocket):
                 _attractor._web_clients = [q for q in _attractor._web_clients if q is not client_q]
             except Exception:
                 pass
-        print(f"[-] AR Deck disconnected.")
+        print("[-] AR Deck disconnected.")
 
 async def watch_memory():
     """Background loop: Watches for new DKT mutations and triggers AR Glyphs"""
     if not os.path.exists(MEMORY_DIR):
         return
-        
+
     # Non-blocking initial dir load
     known_files = await asyncio.to_thread(lambda: set(os.listdir(MEMORY_DIR)))
-    
+
     while True:
         await asyncio.sleep(1.0) # Check memory every second
-        
+
         # Offload file scanning to prevent main thread event loop stalls
         def _get_files():
             try:
@@ -112,24 +114,24 @@ async def watch_memory():
 
         current_files = await asyncio.to_thread(_get_files)
         new_files = current_files - known_files
-        
+
         for file in new_files:
             if file.endswith('.st3'):
                 thought_id = file.replace('.st3', '')
                 print(f"[*] Memory Watcher detected new engram: {thought_id}")
-                
+
                 # The payload that triggers the holographic stamp in your Chrome UI
                 glyph_payload = {
-                    "shape": "HolographicEngram", 
-                    "lum": "MAX", 
+                    "shape": "HolographicEngram",
+                    "lum": "MAX",
                     "temp": "HOT",
                     "mutation_id": thought_id,
                     "status": "SYS_HEAL_COMPLETE"
                 }
-                
+
                 if CONNECTED_CLIENTS:
                     websockets.broadcast(CONNECTED_CLIENTS, json.dumps(glyph_payload))
-                    
+
         known_files = current_files
 
 async def main():

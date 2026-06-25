@@ -1,8 +1,8 @@
 from types import SimpleNamespace
 
 from aura_liquid_planning_arena import (
-    CodeArenaAdapter,
     CivicArenaAdapter,
+    CodeArenaAdapter,
     TravelArenaAdapter,
     build_world_state_delta,
 )

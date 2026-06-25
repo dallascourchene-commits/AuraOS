@@ -8,15 +8,16 @@ FUNCTIONS: _record_call, extract_ast_calls, scan_regex_signatures, compile_unifi
 SYNOPSIS: The `aura_analyzer` module integrates AST parsing (`ast`, `numpy`), filesystem traversal (`pathlib`, `os`, `sys`), topology mapping (`spatial_mapper`, `aura_topology_manager`), regex analysis (`re`), data structures (`collections`), and JSON I/O (`json`) to construct a unified dependency graph via `_record_call`, `extract_ast_calls`, `scan_regex_signatures`, `compile_unified_graph`, and `compile_topology_map`, while enforcing strict control-flow validation through `visit_If`, `visit_Try`, and `resolve_call_target` during static analysis.
 [/AURA_MASTER_KEY]
 """
-import os
-import json
 import ast
-import sys
-import re
-import numpy as np
 from collections import defaultdict
+import json
+import os
 from pathlib import Path
-from spatial_mapper import scan_and_vectorize, DirectoryCache
+import re
+import sys
+
+from spatial_mapper import scan_and_vectorize
+
 
 class LogicalGateVisitor(ast.NodeVisitor):
     def __init__(self):
@@ -119,7 +120,7 @@ def scan_regex_signatures(file_content: str) -> dict:
     ports = set(PORT_PATTERN.findall(file_content)) & VALID_PORTS
     tables = set(SQL_TABLE_PATTERN.findall(file_content)) & VALID_SQL_TABLES
     filesystems = {os.path.basename(p.strip('"\'')) for p in FILESYSTEM_PATTERN.findall(file_content)}
-    
+
     return {
         "ports": list(ports),
         "tables": list(tables),
@@ -130,14 +131,14 @@ def compile_unified_graph():
     current_dir = getattr(sys.modules[__name__], 'current_dir', os.getcwd())
     # 1. Harvest base layout primitives safely avoiding NoneType allocations
     code_topology = scan_and_vectorize(current_dir) or []
-    
+
     nodes_payload = []
     edges_payload = []
-    
+
     shared_tables = defaultdict(list)
     port_sharers = defaultdict(list)
     file_ast_calls = {}
-    
+
     # 2. Populate node graph configurations with Zero-Trust Type Guards.
     # scan_and_vectorize() returns {name, file, type, vector, line} — map to
     # the canonical {id, label, shape, color, vector, file} format so that the
@@ -197,16 +198,16 @@ def compile_unified_graph():
     for file in sorted(files):
         if file.endswith(".py") and os.path.exists(file):
             try:
-                with open(file, "r", encoding="utf-8") as f:
+                with open(file, encoding="utf-8") as f:
                     content = f.read()
-                
+
                 # Active Integration: Extracting verified database and networking signals
                 signatures = scan_regex_signatures(content)
                 for table in signatures.get("tables", []):
                     shared_tables[table].append(file)
                 for port in signatures.get("ports", []):
                     port_sharers[port].append(file)
-                    
+
                 # Active Integration: Extracting code block internal functional dependencies
                 file_ast_calls[file] = extract_ast_calls(content, file)
             except Exception:
@@ -225,7 +226,7 @@ def compile_unified_graph():
                         "color": "#4CAF50",
                         "strength": 0.8
                     })
-                    
+
     # Core Network Layer Links: Shared Port Infrastructures
     for port, files_sharing in port_sharers.items():
         if len(files_sharing) > 1:
@@ -367,7 +368,7 @@ def compile_topology_map(deep: bool = False) -> dict:
     try:
         # Intentional function-scoped import: aura_topology_manager imports this
         # module at file scope, so a top-level binding would create a circular import.
-        from aura_topology_manager import TopologyBuilder, write_json, OUTPUT_PATH  # noqa: nested-import
+        from aura_topology_manager import OUTPUT_PATH, TopologyBuilder, write_json  # noqa: nested-import
 
         builder = TopologyBuilder(root=Path("."))
         payload  = builder.run()

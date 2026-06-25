@@ -22,7 +22,6 @@ from travel_price_sidecar import TravelPriceSidecar
 from travel_price_verifier import TravelPriceVerifier
 from travel_vsa_pointer_index import TravelVSAPointerIndex
 
-
 TRAVEL_PACKAGE_ARENA_VERSION = "AURA_TRAVEL_PACKAGE_ARENA_V1"
 
 

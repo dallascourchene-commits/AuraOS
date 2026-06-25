@@ -11,18 +11,18 @@ SYNOPSIS: The `AuraOSScanner` Python module is a strict static-analysis and runt
 from __future__ import annotations
 
 import ast
+from dataclasses import dataclass, field
 import json
 import os
 import re
-from dataclasses import dataclass, field
 from typing import Any
 
 from symbolic_shield import (
-    check_syntax,
-    check_loop_decay,
-    check_import_safety,
-    check_memory_safety,
     check_banned_calls,
+    check_import_safety,
+    check_loop_decay,
+    check_memory_safety,
+    check_syntax,
 )
 
 _SHIELD_GATES = (
@@ -66,7 +66,7 @@ class AuraOntologyCircuit:
                 "max_single_alloc_mb": 512,
             }
             return
-        with open(self.ontology_path, "r", encoding="utf-8") as f:
+        with open(self.ontology_path, encoding="utf-8") as f:
             self._spec = json.load(f)
 
     def _check_imports(self, source: str) -> list[str]:

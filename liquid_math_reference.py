@@ -10,13 +10,14 @@ SYNOPSIS: The module integrates asynchronous WebSocket communication (`asyncio`,
 """
 
 import asyncio
-import websockets
 import json
-from typing import Dict, Any, List, Tuple
+from typing import Any
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
+import websockets
+
 
 # Fallback stub to prevent dataclass decorator crashes
 class LiquidConfig:
@@ -97,7 +98,7 @@ class TernaryQuantizer:
         toggle_mask = torch.rand_like(tensor) < self.config.stochastic_toggle_prob
         return torch.where(toggle_mask, ternary, tensor)
 
-    def quantize_state(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    def quantize_state(self, state: dict[str, Any]) -> dict[str, Any]:
         quantized = {}
         for k, v in state.items():
             if isinstance(v, (int, float)):
@@ -190,7 +191,7 @@ class LiquidState:
         self.state = {}
         self.dt = 0.01
 
-    def update(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def update(self, input_data: dict[str, Any]) -> dict[str, Any]:
         torch_state = torch.tensor([float(v) for v in input_data.values()], dtype=torch.float32)
 
         with torch.no_grad():
@@ -207,7 +208,7 @@ class LiquidWebSocket:
         self.liquid_state = LiquidState(self.config)
         self.quantizer = TernaryQuantizer(self.config)
 
-    async def process_command(self, command: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_command(self, command: dict[str, Any]) -> dict[str, Any]:
         liquid_state = self.liquid_state.update(command)
         quantized_state = self.quantizer.quantize_state(liquid_state)
         return quantized_state

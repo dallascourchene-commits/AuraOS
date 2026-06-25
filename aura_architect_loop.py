@@ -11,18 +11,18 @@ SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect int
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from aura_fusion import DEFAULT_CONSTRAINTS, build_task_capsule
 from aura_liquid_planning_arena import CodeArenaAdapter
 from aura_phase_capsule import AuraPhaseCapsule, capture_phase_capsule
 from aura_st3gg_recall import compile_st3gg_pointer, compile_visible_st3gg_capsule
 from aura_substrate import REPO_ROOT, estimate_tokens
-
 
 ARCHITECT_LOOP_VERSION = "AURA_ARCHITECT_LOOP_V1"
 PLAN_CAPSULE_VERSION = "AURA_FRACTAL_PLAN_CAPSULE_V1"
@@ -95,7 +95,7 @@ class ActCapsule:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "ActCapsule":
+    def from_dict(cls, data: dict[str, Any]) -> ActCapsule:
         return cls(**data)
 
 
@@ -123,7 +123,7 @@ class FractalPlanCapsule:
         return payload
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "FractalPlanCapsule":
+    def from_dict(cls, data: dict[str, Any]) -> FractalPlanCapsule:
         payload = dict(data)
         payload["act_capsules"] = [ActCapsule.from_dict(item) for item in payload.get("act_capsules", [])]
         if payload.get("continuity_capsule"):

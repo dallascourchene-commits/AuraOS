@@ -34,8 +34,6 @@ import json
 import os
 from pathlib import Path
 import re
-import time
-from typing import Any, Optional
 
 import numpy as np
 
@@ -50,8 +48,8 @@ class AuraSkill:
     """Registry entry representing a capability in the Aura codebase."""
     name: str
     kind: str          # command | module | function | paper | output_mode
-    path: Optional[str]
-    symbol: Optional[str]
+    path: str | None
+    symbol: str | None
     description: str
     categories: list = field(default_factory=list)
     inputs: list = field(default_factory=list)
@@ -71,7 +69,7 @@ class ResearchCandidate:
     lexical_anchor_score: float
     concept_fit_score: float
     accepted: bool
-    rejection_reason: Optional[str] = None
+    rejection_reason: str | None = None
 
 
 @dataclass
@@ -84,7 +82,7 @@ class ResearchGateResult:
     final_score: float = 0.0
     reason: str = ""
     target_modules: list = field(default_factory=list)
-    mutation_dag: Optional[dict] = None
+    mutation_dag: dict | None = None
     contradictions: list = field(default_factory=list)
 
 
@@ -253,7 +251,7 @@ def build_skill_registry(repo_root=None):
     codemap_json = os.path.join(repo_root, ".aura", "CODEMAP.json")
     if os.path.exists(codemap_json):
         try:
-            with open(codemap_json, "r", encoding="utf-8") as f:
+            with open(codemap_json, encoding="utf-8") as f:
                 cmap = json.load(f)
 
             for entry in cmap.get("files", []):
@@ -289,7 +287,7 @@ def build_skill_registry(repo_root=None):
     codemap_md = os.path.join(repo_root, ".aura", "CODEMAP.md")
     if os.path.exists(codemap_md):
         try:
-            with open(codemap_md, "r", encoding="utf-8") as f:
+            with open(codemap_md, encoding="utf-8") as f:
                 md_content = f.read()
 
             for m in re.finditer(r"- `(!\w+)` -> (.+)", md_content):
@@ -312,7 +310,7 @@ def build_skill_registry(repo_root=None):
     outfmt = os.path.join(repo_root, ".aura", "OUTPUT_FORMATS.md")
     if os.path.exists(outfmt):
         try:
-            with open(outfmt, "r", encoding="utf-8") as f:
+            with open(outfmt, encoding="utf-8") as f:
                 content = f.read()
             for m in re.finditer(r"## `\[OUTPUT:(\w+)\]`", content):
                 skills.append(AuraSkill(

@@ -12,6 +12,7 @@ SYNOPSIS: Aura-native multi-model deliberation: compact task capsule, cached sin
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 import hashlib
@@ -19,7 +20,7 @@ import json
 import os
 import re
 import time
-from typing import Any, Callable
+from typing import Any
 
 from aura_api_rotator import load_secrets
 from aura_llm_egress import generate_openai_compatible_payload
@@ -28,7 +29,6 @@ from aura_single_seed_lift import compact_lift_capsule, compile_text_single_seed
 from aura_skillweaver import AuraSkillWeaver, gate_fusion_task
 from aura_spectral_topology import build_fusion_topology_snapshot
 from aura_substrate import REPO_ROOT, estimate_tokens
-
 
 FUSION_CAPSULE_VERSION = "AURA_FUSION_CAPSULE_V1"
 FUSION_LOG_PATH = os.path.join(REPO_ROOT, "Aura_Memory", "aura_fusion_runs.jsonl")
@@ -94,7 +94,7 @@ class AuraFusionAgent:
     enabled: bool = True
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "AuraFusionAgent":
+    def from_dict(cls, data: dict[str, Any]) -> AuraFusionAgent:
         allowed = {field for field in cls.__dataclass_fields__}
         payload = {key: value for key, value in data.items() if key in allowed}
         agent = cls(**payload)
@@ -199,7 +199,7 @@ def load_fusion_config(secrets: dict[str, Any] | None = None) -> tuple[list[Aura
 def _codemap_epoch(repo_root: str = REPO_ROOT) -> str:
     path = os.path.join(repo_root, ".aura", "CODEMAP.json")
     try:
-        with open(path, "r", encoding="utf-8") as handle:
+        with open(path, encoding="utf-8") as handle:
             data = json.load(handle)
         return "unix:{generated_at_unix}|files:{included_file_count}".format(
             generated_at_unix=data.get("generated_at_unix", "unknown"),
@@ -382,14 +382,14 @@ class AuraFusionCoordinator:
             text, err, latency, used_schema, input_est = self._call_agent(
                 agent, capsule, schema_name="aura_panel_output", schema=PANEL_SCHEMA
             )
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             text, err, latency, used_schema, input_est = None, _redact_error(str(exc), self.secrets), 0.0, False, 0
         parsed: dict[str, Any] = {}
         parse_error = None
         if text:
             try:
                 parsed = parse_json_object(text)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 parse_error = str(exc)
         ok = bool(text and not err and not parse_error and all(field in parsed for field in PANEL_SCHEMA["required"]))
         output = AuraPanelOutput(
@@ -447,7 +447,7 @@ class AuraFusionCoordinator:
         if text:
             try:
                 parsed = parse_json_object(text)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 parse_error = str(exc)
         ok = bool(text and not err and not parse_error and all(field in parsed for field in JUDGE_SCHEMA["required"]))
         return {
@@ -523,7 +523,7 @@ class AuraFusionCoordinator:
                 "estimated_cost_usd": 0.0,
                 "log_path": self.log_path,
             }
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             panel_outputs = []
             judge_output = {}
             ok = False
