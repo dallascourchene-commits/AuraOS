@@ -417,8 +417,23 @@ def _runner_status(outcome: Any) -> tuple[bool, dict[str, Any]]:
         status = str(outcome.get("status", "")).lower()
         returncode = outcome.get("returncode")
         ok = outcome.get("ok")
-        passed = bool(ok) or status in {"ok", "pass", "passed", "success"} or returncode == 0
+        if ok is not None:
+            passed = bool(ok)
+        elif status in {"ok", "pass", "passed", "success"}:
+            passed = True
+        elif status in {"fail", "failed", "failure", "error"}:
+            passed = False
+        else:
+            passed = returncode == 0
         return passed, outcome
+    if isinstance(outcome, bool):
+        return outcome, {"status": "passed" if outcome else "failed"}
+    if isinstance(outcome, str):
+        status = outcome.strip().lower()
+        if status in {"ok", "pass", "passed", "success"}:
+            return True, {"status": status}
+        if status in {"fail", "failed", "failure", "error"}:
+            return False, {"status": status}
     if isinstance(outcome, tuple) and outcome:
         passed, details = _runner_status(outcome[0])
         if len(outcome) > 1:
