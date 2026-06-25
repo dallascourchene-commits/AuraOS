@@ -273,6 +273,8 @@ def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
     assert transaction.hotswap_capsule["promotion_entrypoint"]["promote_command"] == "!stage_merge"
     assert transaction.hotswap_capsule["topology_delta"]["summary"]["files_checked"] == 1
     assert transaction.hotswap_capsule["topology_delta"]["files"][0]["calls"]["added"] == []
+    assert transaction.hotswap_capsule["topology_delta"]["world_state_delta"]["domain"] == "code"
+    assert transaction.hotswap_capsule["liquid_arena"]["domain"] == "code"
 
 
 def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(tmp_path: Path):
@@ -347,7 +349,27 @@ def test_topology_delta_rejects_affected_files_outside_repo(tmp_path: Path):
 
     assert delta["status"] == "failed"
     assert delta["summary"]["files_checked"] == 0
+    assert delta["world_state_delta"]["before_count"] == 0
     assert delta["failures"][0]["reason"] == "path_escapes_repo"
+
+
+def test_topology_delta_tracks_created_and_deleted_files_as_world_objects(tmp_path: Path):
+    repo = tmp_path / "repo"
+    workspace = tmp_path / "workspace"
+    repo.mkdir()
+    workspace.mkdir()
+    (repo / "deleted.py").write_text("def old_symbol():\n    return 1\n", encoding="utf-8")
+    (workspace / "added.py").write_text("def new_symbol():\n    return 2\n", encoding="utf-8")
+
+    delta = compute_temp_workspace_topology_delta(
+        SimpleNamespace(affected_files=["added.py", "deleted.py"]),
+        repo_root=repo,
+        workspace=workspace,
+    )
+
+    assert delta["world_state_delta"]["added"] == ["added.py"]
+    assert delta["world_state_delta"]["removed"] == ["deleted.py"]
+    assert delta["world_state_delta"]["changed"] == []
 
 
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):

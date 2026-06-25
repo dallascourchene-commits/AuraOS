@@ -5,7 +5,7 @@ DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Grounded Refactor Orchestration)
 DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
 FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArenaPatch, PatchStageResult, VerificationResult, ArchitectLedgerRecord, ArchitectLoopResult, ArchitectExecutionResult, CodemapLoadError, architect_capability_cards, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, stage_arena_patch, verify_refactor_arena, judge_refactor_arena, build_rollback_capsule, build_hotswap_capsule, build_architect_ledger_record, append_architect_ledger, route_intensity, ArchitectFusionLoop
-SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, a bounded refactor arena, verifier-gated hot-swap capsule, rollback capsule, and append-only ledger record before any patch is promoted.
+SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, a bounded refactor arena projected into the Liquid Planning Arena substrate, verifier-gated hot-swap capsule, rollback capsule, and append-only ledger record before any patch is promoted.
 [/AURA_MASTER_KEY]
 """
 
@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from aura_fusion import DEFAULT_CONSTRAINTS, build_task_capsule
+from aura_liquid_planning_arena import CodeArenaAdapter
 from aura_phase_capsule import AuraPhaseCapsule, capture_phase_capsule
 from aura_st3gg_recall import compile_st3gg_pointer, compile_visible_st3gg_capsule
 from aura_substrate import REPO_ROOT, estimate_tokens
@@ -186,6 +187,8 @@ class RefactorArenaTransaction:
     verification_ledger: list[dict[str, Any]]
     ready_for_incubator: bool
     rollback_hint: str
+    agent_leases: list[dict[str, Any]] = field(default_factory=list)
+    liquid_arena: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -400,6 +403,19 @@ def _arena_files_for_task(arena: RefactorArenaTransaction, task_id: str) -> set[
     scoped.discard(None)
     arena_files = set(arena.affected_files)
     return {str(item) for item in scoped if item in arena_files}
+
+
+def _lease_files_for_task(arena: RefactorArenaTransaction, task_id: str) -> set[str]:
+    files = set()
+    for lease in arena.agent_leases:
+        if str(lease.get("capsule_id")) != str(task_id):
+            continue
+        for region in lease.get("regions", []) or []:
+            if region.get("region_type") == "file" and region.get("mode") == "write":
+                normalized = _normalize_path(region.get("id"))
+                if normalized:
+                    files.add(normalized)
+    return files
 
 
 def _file_digest(path: Path) -> str | None:
@@ -930,25 +946,33 @@ def build_refactor_arena(
     shadow_report: ShadowReport,
 ) -> RefactorArenaTransaction:
     """Create the shared bounded workspace metadata for Builder, Verifier, and Incubator."""
-    by_task = {item.task_id: item for item in grounding}
     affected_files = sorted({
         evidence.target_file
         for evidence in grounding
         if evidence.target_file and evidence.file_exists
     })
+    liquid_arena = CodeArenaAdapter().build_arena(
+        objective=plan.objective,
+        plan_phase_hash=plan.phase_hash,
+        act_capsules=plan.act_capsules,
+        grounding=grounding,
+        shadow_report=shadow_report,
+    )
     boundary_contracts = []
-    for act in plan.act_capsules:
-        evidence = by_task.get(act.task_id)
-        boundary_contracts.append({
-            "task_id": act.task_id,
-            "target_file": act.target_file,
-            "target_symbol": act.target_symbol,
-            "upstream": "aura_fusion.build_task_capsule",
-            "downstream": "aura_phase_capsule.capture_phase_capsule",
-            "invariant": "preserve phase_hash, codemap_epoch, target_file, and target_symbol",
-            "agent_scope": act.allowed_scope,
-            "neighbor_files": evidence.neighbor_files if evidence else [],
-        })
+    for contract in liquid_arena.boundary_contracts:
+        metadata = dict(contract.get("metadata", {}) or {})
+        boundary_contracts.append(
+            {
+                **contract,
+                "task_id": metadata.get("task_id"),
+                "target_file": metadata.get("target_file"),
+                "target_symbol": metadata.get("target_symbol"),
+                "upstream": metadata.get("upstream"),
+                "downstream": metadata.get("downstream"),
+                "agent_scope": next((act.allowed_scope for act in plan.act_capsules if act.task_id == metadata.get("task_id")), ""),
+                "neighbor_files": metadata.get("neighbor_files", []),
+            }
+        )
     ready = shadow_report.ok and all(item.file_exists for item in grounding if item.target_file)
     return RefactorArenaTransaction(
         arena_version=REFACTOR_ARENA_VERSION,
@@ -958,19 +982,23 @@ def build_refactor_arena(
         agent_capsules=[act.to_dict() for act in plan.act_capsules],
         shared_patch_queue=[],
         conflict_resolver={
-            "mode": "diff_owner_lock",
+            "mode": "liquid_region_lease",
             "cross_boundary_edit": "escalate_to_shadow",
             "same_file_conflict": "judge_then_reground",
+            "lease_violation": "block_transaction",
         },
         shadow_report=shadow_report.to_dict(),
         verification_ledger=[
             {"stage": "ground", "status": "passed" if all(item.file_exists for item in grounding if item.target_file) else "blocked"},
             {"stage": "shadow", "status": "passed" if shadow_report.ok else "blocked", "gate": shadow_report.gate},
+            {"stage": "liquid_arena", "status": "leased", "domain": liquid_arena.domain, "lease_count": len(liquid_arena.agent_leases)},
             {"stage": "tests", "status": "pending", "test_files": sorted({name for item in grounding for name in item.test_files})},
             {"stage": "codemap_refresh", "status": "pending", "files_to_refresh": affected_files},
         ],
         ready_for_incubator=ready,
         rollback_hint="Keep patches staged in the arena until verifier passes; use the plan phase hash to discard the transaction.",
+        agent_leases=liquid_arena.agent_leases,
+        liquid_arena=liquid_arena.to_dict(),
     )
 
 
@@ -1067,6 +1095,18 @@ def stage_arena_patch(
                 target_file=outside_task[0],
             )
         )
+    leased_files = _lease_files_for_task(arena, task_name)
+    outside_lease = sorted(file for file in all_patch_files if leased_files and file not in leased_files)
+    if outside_lease:
+        findings.append(
+            ShadowFinding(
+                shadow_type="lease_scope_violation",
+                severity="blocker",
+                message=f"Patch touches files outside the Action Capsule lease: {', '.join(outside_lease)}",
+                task_id=task_name,
+                target_file=outside_lease[0],
+            )
+        )
     if not str(diff or "").strip():
         findings.append(
             ShadowFinding(
@@ -1104,6 +1144,18 @@ def stage_arena_patch(
         phase_hash=_hash_payload({**patch_payload, "patch_id": _hash_payload(patch_payload)}),
     )
     arena.shared_patch_queue.append(patch.to_dict())
+    if isinstance(arena.liquid_arena, dict):
+        arena.liquid_arena.setdefault("shared_action_queue", []).append(
+            {
+                "action_type": "patch_staged",
+                "task_id": task_name,
+                "owner": owner_name,
+                "patch_id": patch.patch_id,
+                "affected_files": normalized_files,
+                "lease_files": sorted(_lease_files_for_task(arena, task_name)),
+                "phase_hash": patch.phase_hash,
+            }
+        )
     arena.verification_ledger.append(
         {
             "stage": "patch_stage",
@@ -1149,6 +1201,13 @@ def verify_refactor_arena(
 
     known_tasks = {str(item.get("task_id")) for item in arena.agent_capsules}
     arena_files = set(arena.affected_files)
+    lease_tasks = {str(item.get("capsule_id")) for item in arena.agent_leases}
+    if arena.agent_leases:
+        missing_leases = sorted(task for task in known_tasks if task not in lease_tasks)
+        if missing_leases:
+            fail("arena_lease", "Act Capsules are missing scoped Arena leases.", task_ids=missing_leases)
+        else:
+            record("arena_lease", "passed", lease_count=len(arena.agent_leases))
     file_locks: dict[str, tuple[str, str]] = {}
     all_tests: set[str] = set()
     for item in arena.verification_ledger:
@@ -1198,6 +1257,10 @@ def verify_refactor_arena(
         outside_task = sorted(file for file in all_patch_files if allowed_files and file not in allowed_files)
         if outside_task:
             fail("patch_task_boundary", "Patch touches files outside its Act Capsule.", patch_id=patch_id, files=outside_task)
+        lease_files = _lease_files_for_task(arena, task_id)
+        outside_lease = sorted(file for file in all_patch_files if lease_files and file not in lease_files)
+        if outside_lease:
+            fail("patch_lease_boundary", "Patch touches files outside its Arena lease.", patch_id=patch_id, files=outside_lease)
         if not str(patch.get("diff") or "").strip():
             fail("patch_diff", "Patch has no diff body.", patch_id=patch_id, task_id=task_id)
         for file in all_patch_files:
@@ -1339,6 +1402,14 @@ def build_hotswap_capsule(
         "verification_phase_hash": verification.phase_hash,
         "judge": judge,
         "affected_files": list(arena.affected_files),
+        "liquid_arena": {
+            "arena_id": arena.liquid_arena.get("arena_id") if isinstance(arena.liquid_arena, dict) else None,
+            "domain": arena.liquid_arena.get("domain") if isinstance(arena.liquid_arena, dict) else None,
+            "phase_hash": arena.liquid_arena.get("phase_hash") if isinstance(arena.liquid_arena, dict) else None,
+            "lease_count": len(arena.agent_leases),
+            "boundary_contract_count": len(arena.boundary_contracts),
+            "shared_action_count": len(arena.liquid_arena.get("shared_action_queue", [])) if isinstance(arena.liquid_arena, dict) else 0,
+        },
         "patches": [
             {
                 "patch_id": patch.get("patch_id"),

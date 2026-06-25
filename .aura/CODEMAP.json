@@ -5,17 +5,17 @@
   "root": "/workspace/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 214,
+    "included_file_count": 216,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 92,
+      ".git": 101,
       ".pytest_cache": 5,
       "Aura_Memory": 3,
-      "__pycache__": 109
+      "__pycache__": 112
     },
     "all_included_paths_sorted": [
       ".aura/ARCHITECTURE.md",
@@ -113,6 +113,7 @@
       "aura_ingest.py",
       "aura_lexicon.json",
       "aura_lexicon_compiler.py",
+      "aura_liquid_planning_arena.py",
       "aura_live_architect.py",
       "aura_llm_call_logger.py",
       "aura_llm_egress.py",
@@ -208,6 +209,7 @@
       "test_aura_context_crusher.py",
       "test_aura_functions.py",
       "test_aura_fusion.py",
+      "test_aura_liquid_planning_arena.py",
       "test_aura_live_architect.py",
       "test_aura_model_probe_ledger.py",
       "test_aura_paper_memory.py",
@@ -235,16 +237,16 @@
     ]
   },
   "summary": {
-    "file_count": 214,
-    "total_bytes": 61923200,
-    "text_tokens_est": 935795,
+    "file_count": 216,
+    "total_bytes": 61956352,
+    "text_tokens_est": 943632,
     "role_counts": {
       "binary_artifact": 11,
       "interface_surface": 1,
       "knowledge_artifact": 28,
       "native_accelerator": 8,
       "operator_script": 4,
-      "python_module": 140,
+      "python_module": 142,
       "schema_or_lexicon": 9,
       "support_file": 13
     },
@@ -252,7 +254,7 @@
     "topology_edges": 0,
     "topology_source": "disabled",
     "elapsed_ms": 7610.86,
-    "last_incremental_refresh_unix": 1782400520
+    "last_incremental_refresh_unix": 1782403022
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -303,6 +305,7 @@
       "aura_blockchain/demo.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_liquid_planning_arena.py",
       "aura_mesh.py",
       "aura_model_probe_ledger.py",
       "aura_router.py",
@@ -311,6 +314,7 @@
       "liquid_fhrr.py",
       "liquid_kernel.py",
       "liquid_math_reference.py",
+      "test_aura_liquid_planning_arena.py",
       "test_aura_model_probe_ledger.py"
     ],
     "topology_and_navigation": [
@@ -507,15 +511,15 @@
     {
       "path": "aura_architect_loop.py",
       "role": "python_module",
-      "symbols": 64,
-      "tokens_est": 14791,
+      "symbols": 65,
+      "tokens_est": 15727,
       "topology_degree": 0
     },
     {
       "path": "aura_live_architect.py",
       "role": "python_module",
       "symbols": 64,
-      "tokens_est": 13511,
+      "tokens_est": 13902,
       "topology_degree": 0
     },
     {
@@ -582,6 +586,13 @@
       "topology_degree": 0
     },
     {
+      "path": "aura_liquid_planning_arena.py",
+      "role": "python_module",
+      "symbols": 31,
+      "tokens_est": 5025,
+      "topology_degree": 0
+    },
+    {
       "path": "aura_st3gg_recall.py",
       "role": "python_module",
       "symbols": 31,
@@ -622,13 +633,6 @@
       "symbols": 27,
       "tokens_est": 7827,
       "topology_degree": 0
-    },
-    {
-      "path": "gateway.py",
-      "role": "python_module",
-      "symbols": 27,
-      "tokens_est": 7724,
-      "topology_degree": 0
     }
   ],
   "command_index": {
@@ -657,22 +661,22 @@
       "aura_node.py:5426"
     ],
     "!ar_server_start": [
-      "USER_GUIDE.md:447",
+      "USER_GUIDE.md:457",
       "aura_node.py:6198"
     ],
     "!ar_server_stop": [
-      "USER_GUIDE.md:448",
+      "USER_GUIDE.md:458",
       "aura_node.py:6214"
     ],
     "!ar_start": [
       "AURA_FINAL_REPORT.md:168",
-      "USER_GUIDE.md:447",
+      "USER_GUIDE.md:457",
       "aura_node.py:6198",
       "refactored-auraos-upgrades.md:2572"
     ],
     "!ar_stop": [
       "AURA_FINAL_REPORT.md:169",
-      "USER_GUIDE.md:448",
+      "USER_GUIDE.md:458",
       "aura_node.py:6214",
       "refactored-auraos-upgrades.md:2572"
     ],
@@ -687,7 +691,7 @@
     "!backtrack": [
       "AURA_FINAL_REPORT.md:143",
       "README.md:97",
-      "USER_GUIDE.md:347",
+      "USER_GUIDE.md:357",
       "arxiv_forager.py:599",
       "aura_node.py:6013"
     ],
@@ -738,16 +742,16 @@
     ],
     "!crystallize": [
       "AURA_FINAL_REPORT.md:141",
-      "USER_GUIDE.md:354",
+      "USER_GUIDE.md:364",
       "aura_node.py:6919"
     ],
     "!curiosity_tree": [
       "AURA_FINAL_REPORT.md:174",
-      "USER_GUIDE.md:350",
+      "USER_GUIDE.md:360",
       "aura_node.py:6255"
     ],
     "!db_repair": [
-      "USER_GUIDE.md:451",
+      "USER_GUIDE.md:461",
       "aura_node.py:2990"
     ],
     "!evolve_reasoning": [
@@ -756,7 +760,7 @@
       "aura_node.py:6914"
     ],
     "!export": [
-      "USER_GUIDE.md:449",
+      "USER_GUIDE.md:459",
       "aura_node.py:5816"
     ],
     "!fast_path": [
@@ -766,24 +770,24 @@
       "test_aura_functions.py:900"
     ],
     "!forage": [
-      "USER_GUIDE.md:346",
+      "USER_GUIDE.md:356",
       "aura_node.py:5999",
       "refactored-auraos-upgrades.md:2573"
     ],
     "!forage_off": [
-      "USER_GUIDE.md:352",
+      "USER_GUIDE.md:362",
       "aura_node.py:6192"
     ],
     "!forage_on": [
-      "USER_GUIDE.md:351",
+      "USER_GUIDE.md:361",
       "aura_node.py:6186"
     ],
     "!forager_off": [
-      "USER_GUIDE.md:352",
+      "USER_GUIDE.md:362",
       "aura_node.py:6192"
     ],
     "!forager_on": [
-      "USER_GUIDE.md:351",
+      "USER_GUIDE.md:361",
       "aura_node.py:6186"
     ],
     "!fusion": [
@@ -804,7 +808,7 @@
     ],
     "!indus_decrypt": [
       "AURA_FINAL_REPORT.md:175",
-      "USER_GUIDE.md:356",
+      "USER_GUIDE.md:366",
       "aura_node.py:6926"
     ],
     "!manifest": [
@@ -814,12 +818,12 @@
     ],
     "!markov": [
       "AURA_FINAL_REPORT.md:144",
-      "USER_GUIDE.md:452",
+      "USER_GUIDE.md:462",
       "aura_node.py:7117"
     ],
     "!mesh_status": [
       "AURA_FINAL_REPORT.md:167",
-      "USER_GUIDE.md:446",
+      "USER_GUIDE.md:456",
       "aura_node.py:5452"
     ],
     "!meta_analyze": [
@@ -839,14 +843,14 @@
     ],
     "!ping_mesh": [
       "AURA_FINAL_REPORT.md:166",
-      "USER_GUIDE.md:445",
+      "USER_GUIDE.md:455",
       "aura_node.py:5447"
     ],
     "!plan": [
       "aura_node.py:5390"
     ],
     "!push": [
-      "USER_GUIDE.md:450",
+      "USER_GUIDE.md:460",
       "aura_node.py:5098",
       "test_aura_functions.py:208"
     ],
@@ -862,13 +866,13 @@
       "aura_node.py:7105"
     ],
     "!repair_db": [
-      "USER_GUIDE.md:451",
+      "USER_GUIDE.md:461",
       "aura_node.py:6592"
     ],
     "!research": [
       "AURA_FINAL_REPORT.md:142",
       "README.md:98",
-      "USER_GUIDE.md:348",
+      "USER_GUIDE.md:358",
       "aura_node.py:6025",
       "aura_skillweaver.py:14",
       "systems_check.py:250"
@@ -916,7 +920,7 @@
       "aura_node.py:6761"
     ],
     "!search_similar": [
-      "USER_GUIDE.md:349",
+      "USER_GUIDE.md:359",
       "aura_node.py:6228",
       "refactored-auraos-upgrades.md:2573"
     ],
@@ -954,13 +958,13 @@
     "!stage": [
       "AURA_FINAL_REPORT.md:149",
       "USER_GUIDE.md:214",
-      "aura_live_architect.py:1094",
+      "aura_live_architect.py:1129",
       "aura_node.py:6319"
     ],
     "!stage_merge": [
       "AURA_FINAL_REPORT.md:150",
       "USER_GUIDE.md:215",
-      "aura_live_architect.py:1095",
+      "aura_live_architect.py:1130",
       "aura_node.py:6366",
       "mistral_gate.py:78",
       "test_aura_live_architect.py:273"
@@ -983,7 +987,7 @@
       "aura_node.py:7089"
     ],
     "!synthesize": [
-      "USER_GUIDE.md:355",
+      "USER_GUIDE.md:365",
       "aura_associative_core.py:138",
       "aura_node.py:6509",
       "test_aura_functions.py:886"
@@ -1006,7 +1010,7 @@
       "index.html:120"
     ],
     "!timeline": [
-      "USER_GUIDE.md:353",
+      "USER_GUIDE.md:363",
       "aura_node.py:6267"
     ],
     "!topology": [
@@ -1030,7 +1034,7 @@
       "aura_savings_dashboard.py:224"
     ],
     "!voice": [
-      "USER_GUIDE.md:453",
+      "USER_GUIDE.md:463",
       "aura_node.py:7331"
     ]
   },
@@ -1049,10 +1053,20 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 77,
-        "end_line": 98,
+        "line": 78,
+        "end_line": 99,
         "semantic_id": "aura_architect_loop.py#class:ActCapsule:f27d4e840d50a195",
         "signature_hash": "a4cbb32ea5a81b1d"
+      }
+    ],
+    "ActionCapsule": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 163,
+        "semantic_id": "aura_liquid_planning_arena.py#class:ActionCapsule:5d2d1c12d60b7a9f",
+        "signature_hash": "1b158d1f7fd738ec"
       }
     ],
     "AdaptiveLiquidTimeConstant": [
@@ -1097,8 +1111,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 966,
-        "end_line": 998,
+        "line": 1001,
+        "end_line": 1033,
         "semantic_id": "aura_live_architect.py#class:ArchitectBuilderBridge:71a3ef37cd78c57c",
         "signature_hash": "a21b096ce74502f0"
       }
@@ -1107,8 +1121,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 77,
-        "end_line": 86,
+        "line": 78,
+        "end_line": 87,
         "semantic_id": "aura_live_architect.py#class:ArchitectCouncilDecision:c1ca47da72eb2ddd",
         "signature_hash": "01c299f1fa0733ef"
       }
@@ -1117,8 +1131,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 275,
-        "end_line": 289,
+        "line": 278,
+        "end_line": 292,
         "semantic_id": "aura_architect_loop.py#class:ArchitectExecutionResult:2768c6d2e43f0263",
         "signature_hash": "3500277f8375006d"
       }
@@ -1127,8 +1141,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 771,
-        "end_line": 963,
+        "line": 806,
+        "end_line": 998,
         "semantic_id": "aura_live_architect.py#class:ArchitectFusionCouncil:ebffc39b9c8c8765",
         "signature_hash": "b9233289cc74c84a"
       }
@@ -1137,8 +1151,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 1427,
-        "end_line": 1529,
+        "line": 1498,
+        "end_line": 1600,
         "semantic_id": "aura_architect_loop.py#class:ArchitectFusionLoop:0687f5175b609bfa",
         "signature_hash": "79667254361edcda"
       }
@@ -1147,8 +1161,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 242,
-        "end_line": 253,
+        "line": 245,
+        "end_line": 256,
         "semantic_id": "aura_architect_loop.py#class:ArchitectLedgerRecord:9d0b614d48dd067b",
         "signature_hash": "b70a4856b3f11275"
       }
@@ -1157,8 +1171,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 257,
-        "end_line": 271,
+        "line": 260,
+        "end_line": 274,
         "semantic_id": "aura_architect_loop.py#class:ArchitectLoopResult:2584e747ebeccb80",
         "signature_hash": "cfd12476a5c1231f"
       }
@@ -1167,8 +1181,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 52,
-        "end_line": 60,
+        "line": 53,
+        "end_line": 61,
         "semantic_id": "aura_live_architect.py#class:ArchitectModelProfile:df8d246e55921691",
         "signature_hash": "779f1b1fb7181348"
       }
@@ -1177,18 +1191,28 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 559,
-        "end_line": 768,
+        "line": 594,
+        "end_line": 803,
         "semantic_id": "aura_live_architect.py#class:ArchitectModelRouter:ee0f7eb1768501ae",
         "signature_hash": "9f36ec2e8089bc91"
+      }
+    ],
+    "ArenaLease": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 214,
+        "semantic_id": "aura_liquid_planning_arena.py#class:ArenaLease:3fb7797d0209eefa",
+        "signature_hash": "806f52a028444d06"
       }
     ],
     "ArenaPatch": [
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 195,
-        "end_line": 208,
+        "line": 198,
+        "end_line": 211,
         "semantic_id": "aura_architect_loop.py#class:ArenaPatch:05a1d28cf57a3c22",
         "signature_hash": "7cd9dff990f43841"
       }
@@ -1707,6 +1731,16 @@
         "signature_hash": "b99c30daed3419a4"
       }
     ],
+    "BaseArenaAdapter": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 302,
+        "end_line": 321,
+        "semantic_id": "aura_liquid_planning_arena.py#class:BaseArenaAdapter:7460629e12a14737",
+        "signature_hash": "d1c6c7efc3d1e34f"
+      }
+    ],
     "BatchWriterConfig": [
       {
         "file": "async_palace.py",
@@ -1735,6 +1769,16 @@
         "end_line": 156,
         "semantic_id": "aura_blockchain/block.py#class:Block:bb8ed0fbbaa092d7",
         "signature_hash": "c4cf27768d362f63"
+      }
+    ],
+    "BoundaryContract": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 105,
+        "semantic_id": "aura_liquid_planning_arena.py#class:BoundaryContract:f7046ca6a5b3a6de",
+        "signature_hash": "c954001cea000752"
       }
     ],
     "BoundedKnowledgeEngine": [
@@ -1787,6 +1831,16 @@
         "signature_hash": "3ee871a60cf077fa"
       }
     ],
+    "CivicArenaAdapter": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 461,
+        "end_line": 485,
+        "semantic_id": "aura_liquid_planning_arena.py#class:CivicArenaAdapter:7d0ff60dcae0d94c",
+        "signature_hash": "0a7916dd4e288752"
+      }
+    ],
     "ClosedFormContinuousCore": [
       {
         "file": "liquid_kernel.py",
@@ -1795,6 +1849,16 @@
         "end_line": 195,
         "semantic_id": "liquid_kernel.py#class:ClosedFormContinuousCore:a7f1e883145453a6",
         "signature_hash": "f3d50b018779d980"
+      }
+    ],
+    "CodeArenaAdapter": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 324,
+        "end_line": 458,
+        "semantic_id": "aura_liquid_planning_arena.py#class:CodeArenaAdapter:d4274a8ff6c16b95",
+        "signature_hash": "56ff81d82f75ddeb"
       }
     ],
     "CodeTopologyMapper": [
@@ -1811,8 +1875,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 72,
-        "end_line": 73,
+        "line": 73,
+        "end_line": 74,
         "semantic_id": "aura_architect_loop.py#class:CodemapLoadError:eebe0e479afcff44",
         "signature_hash": "88ce37134ee789f5"
       }
@@ -2101,8 +2165,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 102,
-        "end_line": 130,
+        "line": 103,
+        "end_line": 131,
         "semantic_id": "aura_architect_loop.py#class:FractalPlanCapsule:84d453d842c4254b",
         "signature_hash": "69a1f9b83bbc1ccb"
       }
@@ -2121,8 +2185,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 134,
-        "end_line": 146,
+        "line": 135,
+        "end_line": 147,
         "semantic_id": "aura_architect_loop.py#class:GroundingEvidence:11232ccf20124c65",
         "signature_hash": "47858686db8364cf"
       }
@@ -2273,6 +2337,16 @@
         "signature_hash": "b278ac13eede8bef"
       }
     ],
+    "LiquidPlanningArena": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 236,
+        "end_line": 252,
+        "semantic_id": "aura_liquid_planning_arena.py#class:LiquidPlanningArena:28d4ef791d53fd19",
+        "signature_hash": "8062455cc2535227"
+      }
+    ],
     "LiquidSpatiotemporalAttractor": [
       {
         "file": "liquid_attractor_control_plane.py",
@@ -2341,8 +2415,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 90,
-        "end_line": 123,
+        "line": 91,
+        "end_line": 124,
         "semantic_id": "aura_live_architect.py#class:LiveArchitectTransaction:bc476e9ab0198b46",
         "signature_hash": "be6811ef1ac9335b"
       }
@@ -2491,8 +2565,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 212,
-        "end_line": 224,
+        "line": 215,
+        "end_line": 227,
         "semantic_id": "aura_architect_loop.py#class:PatchStageResult:0e1126ac0ba3195f",
         "signature_hash": "b934513f3dd1b1c0"
       }
@@ -2569,8 +2643,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 177,
-        "end_line": 191,
+        "line": 178,
+        "end_line": 194,
         "semantic_id": "aura_architect_loop.py#class:RefactorArenaTransaction:ae1e22490cf13d53",
         "signature_hash": "7abe6435b7b75fdf"
       }
@@ -2689,8 +2763,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 150,
-        "end_line": 159,
+        "line": 151,
+        "end_line": 160,
         "semantic_id": "aura_architect_loop.py#class:ShadowFinding:5db63975da6166c6",
         "signature_hash": "b59565d695bc3678"
       }
@@ -2699,8 +2773,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 163,
-        "end_line": 173,
+        "line": 164,
+        "end_line": 174,
         "semantic_id": "aura_architect_loop.py#class:ShadowReport:e0ca30a68531b0e9",
         "signature_hash": "9e8c0bea4de1b63f"
       }
@@ -2819,8 +2893,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 64,
-        "end_line": 73,
+        "line": 65,
+        "end_line": 74,
         "semantic_id": "aura_live_architect.py#class:TempWorkspaceResult:38b66a39786e3758",
         "signature_hash": "a6c86a8def9fdc31"
       }
@@ -2937,8 +3011,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "class",
-        "line": 318,
-        "end_line": 346,
+        "line": 319,
+        "end_line": 347,
         "semantic_id": "aura_live_architect.py#class:TopologyVisitor:5aa1abbe5158a2d8",
         "signature_hash": "f1bcdfaf8d0bb192"
       }
@@ -2981,6 +3055,16 @@
         "end_line": 259,
         "semantic_id": "aura_dynamic_attention.py#class:TransparencyAdaptiveProcessor:0f25b0fb9d71e9ee",
         "signature_hash": "07c9d12c74bf6c08"
+      }
+    ],
+    "TravelArenaAdapter": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 488,
+        "end_line": 512,
+        "semantic_id": "aura_liquid_planning_arena.py#class:TravelArenaAdapter:9036a489be5ec96c",
+        "signature_hash": "830347095f7a16ec"
       }
     ],
     "UnifiedPWFST": [
@@ -3027,8 +3111,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "class",
-        "line": 228,
-        "end_line": 238,
+        "line": 231,
+        "end_line": 241,
         "semantic_id": "aura_architect_loop.py#class:VerificationResult:10a55e3658720c06",
         "signature_hash": "41e187fcde609427"
       }
@@ -3061,6 +3145,16 @@
         "end_line": 58,
         "semantic_id": "aura_wasm_bridge.py#class:WasmAccelerationResult:e4db3b8903838a2a",
         "signature_hash": "450b3b90cd35ec7b"
+      }
+    ],
+    "WorldStateDelta": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "class",
+        "line": 218,
+        "end_line": 232,
+        "semantic_id": "aura_liquid_planning_arena.py#class:WorldStateDelta:d6822633f2f831e2",
+        "signature_hash": "9bbb271c61deed23"
       }
     ],
     "ZeroCopyMemoryOrchestrator": [
@@ -3355,8 +3449,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1430,
-        "end_line": 1431,
+        "line": 1501,
+        "end_line": 1502,
         "semantic_id": "aura_architect_loop.py#function:__init__:4ede86b567389449",
         "signature_hash": "57000b96e39880e0"
       },
@@ -3667,24 +3761,24 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 562,
-        "end_line": 608,
+        "line": 597,
+        "end_line": 643,
         "semantic_id": "aura_live_architect.py#function:__init__:91d20825840ce695",
         "signature_hash": "596c08a636dd810b"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 774,
-        "end_line": 775,
+        "line": 809,
+        "end_line": 810,
         "semantic_id": "aura_live_architect.py#function:__init__:d95cc97f4129f285",
         "signature_hash": "ade94022c7fdd73d"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 969,
-        "end_line": 970,
+        "line": 1004,
+        "end_line": 1005,
         "semantic_id": "aura_live_architect.py#function:__init__:d95cc97f4129f285",
         "signature_hash": "ade94022c7fdd73d"
       },
@@ -4477,8 +4571,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 605,
-        "end_line": 616,
+        "line": 621,
+        "end_line": 632,
         "semantic_id": "aura_architect_loop.py#function:_act_context_ref:7c2540d76630425a",
         "signature_hash": "b1591d478ebf690f"
       }
@@ -4497,8 +4591,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 350,
-        "end_line": 354,
+        "line": 353,
+        "end_line": 357,
         "semantic_id": "aura_architect_loop.py#function:_add_diff_file:6760d40d4d38782a",
         "signature_hash": "0c59e4dd1bf8ca3f"
       }
@@ -4537,8 +4631,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 385,
-        "end_line": 389,
+        "line": 388,
+        "end_line": 392,
         "semantic_id": "aura_architect_loop.py#function:_agent_capsule_for_task:ca2fcddf703393c5",
         "signature_hash": "13ad2cb09b35b4b4"
       }
@@ -4697,8 +4791,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 392,
-        "end_line": 402,
+        "line": 395,
+        "end_line": 405,
         "semantic_id": "aura_architect_loop.py#function:_arena_files_for_task:b8afb7317b895ce7",
         "signature_hash": "637e991c09a11c73"
       }
@@ -4767,8 +4861,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 1081,
-        "end_line": 1099,
+        "line": 1116,
+        "end_line": 1134,
         "semantic_id": "aura_live_architect.py#function:_augment_live_hotswap_capsule:2d5e1018b581f380",
         "signature_hash": "95d8afee038e519b"
       }
@@ -4953,8 +5047,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 619,
-        "end_line": 653,
+        "line": 635,
+        "end_line": 669,
         "semantic_id": "aura_architect_loop.py#function:_build_act_capsule:0fbf6bda3022596f",
         "signature_hash": "cd0a495b99ac5dcb"
       }
@@ -5043,8 +5137,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 799,
-        "end_line": 814,
+        "line": 834,
+        "end_line": 849,
         "semantic_id": "aura_live_architect.py#function:_candidate:3b9e3115dfdabf12",
         "signature_hash": "e6dd21327d71f6c0"
       }
@@ -5181,8 +5275,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 583,
-        "end_line": 602,
+        "line": 599,
+        "end_line": 618,
         "semantic_id": "aura_architect_loop.py#function:_classify_act_size:79c59ff16e625844",
         "signature_hash": "5ddf303212f1b7dc"
       }
@@ -5221,8 +5315,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 531,
-        "end_line": 542,
+        "line": 547,
+        "end_line": 558,
         "semantic_id": "aura_architect_loop.py#function:_codemap_paths:37df2b231d7cbb28",
         "signature_hash": "efceaef3c98750b9"
       }
@@ -5551,8 +5645,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 291,
-        "end_line": 303,
+        "line": 292,
+        "end_line": 304,
         "semantic_id": "aura_live_architect.py#function:_default_test_commands:6db7f2201611bb54",
         "signature_hash": "db3eebdc3ef02f39"
       }
@@ -5601,16 +5695,16 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 337,
-        "end_line": 347,
+        "line": 340,
+        "end_line": 350,
         "semantic_id": "aura_architect_loop.py#function:_diff_path_token:aa506b9ed3b5a0c4",
         "signature_hash": "7fe5fb3838828a93"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 155,
-        "end_line": 166,
+        "line": 156,
+        "end_line": 167,
         "semantic_id": "aura_live_architect.py#function:_diff_path_token:2469816558d68271",
         "signature_hash": "7fe5fb3838828a93"
       }
@@ -5619,16 +5713,16 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 357,
-        "end_line": 382,
+        "line": 360,
+        "end_line": 385,
         "semantic_id": "aura_architect_loop.py#function:_diff_touched_files:9b96cff3e78456fe",
         "signature_hash": "40dd8d6eda453863"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 169,
-        "end_line": 201,
+        "line": 170,
+        "end_line": 202,
         "semantic_id": "aura_live_architect.py#function:_diff_touched_files:ea520d0e837815c7",
         "signature_hash": "40dd8d6eda453863"
       }
@@ -5837,8 +5931,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 204,
-        "end_line": 222,
+        "line": 205,
+        "end_line": 223,
         "semantic_id": "aura_live_architect.py#function:_extract_diff:049e6757d35507f3",
         "signature_hash": "cd0edbc3f35571f8"
       }
@@ -5877,8 +5971,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 139,
-        "end_line": 152,
+        "line": 140,
+        "end_line": 153,
         "semantic_id": "aura_live_architect.py#function:_extract_json_object:06ad2009d2203e6e",
         "signature_hash": "7e54332e88fcb66c"
       }
@@ -5987,8 +6081,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 545,
-        "end_line": 552,
+        "line": 561,
+        "end_line": 568,
         "semantic_id": "aura_architect_loop.py#function:_file_card:2f80bfb9bddbcf02",
         "signature_hash": "1457ca9e71d9bde8"
       }
@@ -5997,8 +6091,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 405,
-        "end_line": 412,
+        "line": 421,
+        "end_line": 428,
         "semantic_id": "aura_architect_loop.py#function:_file_digest:98d7620cd2b3313e",
         "signature_hash": "1827bcb03d26d0c0"
       }
@@ -6277,8 +6371,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 225,
-        "end_line": 232,
+        "line": 226,
+        "end_line": 233,
         "semantic_id": "aura_live_architect.py#function:_git_executable:b3069f0f7c6ddecc",
         "signature_hash": "872b88fd1ac495bd"
       }
@@ -6385,8 +6479,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 292,
-        "end_line": 294,
+        "line": 295,
+        "end_line": 297,
         "semantic_id": "aura_architect_loop.py#function:_hash_payload:d0727239132a17ae",
         "signature_hash": "3403c8182515448e"
       },
@@ -6399,10 +6493,18 @@
         "signature_hash": "3403c8182515448e"
       },
       {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "aura_liquid_planning_arena.py#function:_hash_payload:aa3dde4d38ac28fe",
+        "signature_hash": "3403c8182515448e"
+      },
+      {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 126,
-        "end_line": 128,
+        "line": 127,
+        "end_line": 129,
         "semantic_id": "aura_live_architect.py#function:_hash_payload:8f5502590d3cc080",
         "signature_hash": "3403c8182515448e"
       }
@@ -6689,8 +6791,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 872,
-        "end_line": 902,
+        "line": 907,
+        "end_line": 937,
         "semantic_id": "aura_live_architect.py#async_function:_judge_candidates:2d51b7f507c53501",
         "signature_hash": "f960cc80eed868f6"
       }
@@ -6723,6 +6825,16 @@
         "end_line": 241,
         "semantic_id": "aura_spectral_topology.py#function:_layout_coordinates:67c3a22239bdd489",
         "signature_hash": "d0082ceca80f440a"
+      }
+    ],
+    "_lease_files_for_task": [
+      {
+        "file": "aura_architect_loop.py",
+        "kind": "function",
+        "line": 408,
+        "end_line": 418,
+        "semantic_id": "aura_architect_loop.py#function:_lease_files_for_task:86b7602cd6715205",
+        "signature_hash": "54faeb707629374f"
       }
     ],
     "_link_import_graph": [
@@ -6797,8 +6909,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 317,
+        "line": 309,
+        "end_line": 320,
         "semantic_id": "aura_architect_loop.py#function:_load_codemap:e5100e01978cff95",
         "signature_hash": "d569c6a71d75a415"
       }
@@ -7057,8 +7169,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 482,
-        "end_line": 524,
+        "line": 517,
+        "end_line": 559,
         "semantic_id": "aura_live_architect.py#function:_merge_act_stage_result:1bbd367cad578872",
         "signature_hash": "1577ab522beb8d98"
       }
@@ -7067,8 +7179,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 1051,
-        "end_line": 1078,
+        "line": 1086,
+        "end_line": 1113,
         "semantic_id": "aura_live_architect.py#function:_merge_council_patch_judgement:6a696508e0833b91",
         "signature_hash": "5600941f72258b2e"
       }
@@ -7077,8 +7189,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 527,
-        "end_line": 556,
+        "line": 562,
+        "end_line": 591,
         "semantic_id": "aura_live_architect.py#function:_merge_council_plan_judgement:6d80681bd6894716",
         "signature_hash": "a94da7268887cc68"
       }
@@ -7087,8 +7199,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 450,
-        "end_line": 479,
+        "line": 485,
+        "end_line": 514,
         "semantic_id": "aura_live_architect.py#function:_merge_workspace_result:dffa48400691308c",
         "signature_hash": "5abe57b5b3deec33"
       }
@@ -7377,8 +7489,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 368,
-        "end_line": 375,
+        "line": 369,
+        "end_line": 376,
         "semantic_id": "aura_live_architect.py#function:_normalize_judge_approval:632a38196a616907",
         "signature_hash": "d4c9dc616065accc"
       }
@@ -7405,8 +7517,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 297,
-        "end_line": 303,
+        "line": 300,
+        "end_line": 306,
         "semantic_id": "aura_architect_loop.py#function:_normalize_path:6abcd98cabd32a71",
         "signature_hash": "101e6257a60158f0"
       }
@@ -7415,8 +7527,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 777,
-        "end_line": 797,
+        "line": 812,
+        "end_line": 832,
         "semantic_id": "aura_live_architect.py#function:_normalize_plan_spec:a2eafeca340c2947",
         "signature_hash": "a0d0dcdd6fb10db1"
       }
@@ -7425,8 +7537,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 320,
-        "end_line": 334,
+        "line": 323,
+        "end_line": 337,
         "semantic_id": "aura_architect_loop.py#function:_normalized_path_list:5900e25658996884",
         "signature_hash": "ae30c24846e7b1be"
       }
@@ -7449,6 +7561,26 @@
         "end_line": 411,
         "semantic_id": "async_palace.py#function:_nuke_corrupt_db:86b644622be66f06",
         "signature_hash": "b9650fbd15f703d0"
+      }
+    ],
+    "_object_key": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 255,
+        "end_line": 256,
+        "semantic_id": "aura_liquid_planning_arena.py#function:_object_key:d6659e1ad08eb0d2",
+        "signature_hash": "f5d2b2e7dcdbcfb3"
+      }
+    ],
+    "_object_type": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 260,
+        "semantic_id": "aura_liquid_planning_arena.py#function:_object_type:7c8c459a4c678cc6",
+        "signature_hash": "c9602e6ee57b1051"
       }
     ],
     "_ok": [
@@ -7545,8 +7677,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 816,
-        "end_line": 845,
+        "line": 851,
+        "end_line": 880,
         "semantic_id": "aura_live_architect.py#function:_parse_critic_report:4d6609b59b560c33",
         "signature_hash": "db7bbc89fbae9063"
       }
@@ -7845,8 +7977,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 355,
+        "line": 307,
+        "end_line": 356,
         "semantic_id": "aura_live_architect.py#function:_python_topology_signature:6876e0100256380c",
         "signature_hash": "884af63f674015b6"
       }
@@ -8109,6 +8241,16 @@
         "signature_hash": "7fc926f6a48398f8"
       }
     ],
+    "_regions_for_act": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 328,
+        "end_line": 338,
+        "semantic_id": "aura_liquid_planning_arena.py#function:_regions_for_act:0a239ccc909bf30d",
+        "signature_hash": "11554a6564591598"
+      }
+    ],
     "_rel_module_path": [
       {
         "file": "spatial_mapper.py",
@@ -8123,8 +8265,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 258,
-        "end_line": 269,
+        "line": 259,
+        "end_line": 270,
         "semantic_id": "aura_live_architect.py#function:_repo_copy_ignore:6be0731b1855b3a0",
         "signature_hash": "44d89801182f40b0"
       }
@@ -8399,8 +8541,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 235,
-        "end_line": 255,
+        "line": 236,
+        "end_line": 256,
         "semantic_id": "aura_live_architect.py#function:_run_command:babc4395e2e27822",
         "signature_hash": "2e6913f74029619b"
       }
@@ -8429,8 +8571,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 847,
-        "end_line": 870,
+        "line": 882,
+        "end_line": 905,
         "semantic_id": "aura_live_architect.py#async_function:_run_shadow_critics:c437c52834be8aef",
         "signature_hash": "46cd9888ebebd3ab"
       }
@@ -8439,8 +8581,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 415,
-        "end_line": 445,
+        "line": 431,
+        "end_line": 461,
         "semantic_id": "aura_architect_loop.py#function:_runner_status:088317da986fe0f2",
         "signature_hash": "a26b38f7b68a390e"
       }
@@ -8489,8 +8631,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 378,
-        "end_line": 394,
+        "line": 379,
+        "end_line": 395,
         "semantic_id": "aura_live_architect.py#function:_safe_topology_file_paths:a8c076b84739e882",
         "signature_hash": "c1887c01cfb08a8d"
       }
@@ -8799,8 +8941,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 358,
-        "end_line": 365,
+        "line": 359,
+        "end_line": 366,
         "semantic_id": "aura_live_architect.py#function:_set_delta:b75eb0712f2743cf",
         "signature_hash": "a5da781ea9915a5c"
       }
@@ -8895,6 +9037,16 @@
         "signature_hash": "c825c48ea2f0e350"
       }
     ],
+    "_stable_list": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 42,
+        "semantic_id": "aura_liquid_planning_arena.py#function:_stable_list:8aee70137b9e11be",
+        "signature_hash": "eae5f4829bc493b8"
+      }
+    ],
     "_stage_indexing": [
       {
         "file": "aura_benchmark_sandbox.py",
@@ -8969,8 +9121,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 131,
-        "end_line": 136,
+        "line": 132,
+        "end_line": 137,
         "semantic_id": "aura_live_architect.py#function:_strip_code_fences:912eb5c00fe5b814",
         "signature_hash": "33ccfa23ddda14ec"
       }
@@ -8989,8 +9141,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 555,
-        "end_line": 567,
+        "line": 571,
+        "end_line": 583,
         "semantic_id": "aura_architect_loop.py#function:_symbol_hits:b7aad92f05b16a17",
         "signature_hash": "0a83d01cc9456329"
       }
@@ -9167,8 +9319,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 570,
-        "end_line": 580,
+        "line": 586,
+        "end_line": 596,
         "semantic_id": "aura_architect_loop.py#function:_test_candidates:f77af9c57446e8ec",
         "signature_hash": "b6cf49005cabfe4e"
       }
@@ -9347,8 +9499,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 272,
-        "end_line": 288,
+        "line": 273,
+        "end_line": 289,
         "semantic_id": "aura_live_architect.py#function:_test_files_from_arena:a8f234842abc4946",
         "signature_hash": "22a626310723f863"
       }
@@ -10167,6 +10319,42 @@
         "signature_hash": "6ca04fed6452f9db"
       }
     ],
+    "action_capsule_from_act": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 376,
+        "end_line": 407,
+        "semantic_id": "aura_liquid_planning_arena.py#function:action_capsule_from_act:ffd96afa0e0a1637",
+        "signature_hash": "ecc97f3e5dbe6cc7"
+      }
+    ],
+    "action_capsule_from_intent": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 313,
+        "end_line": 321,
+        "semantic_id": "aura_liquid_planning_arena.py#function:action_capsule_from_intent:d258b4e295f9bf71",
+        "signature_hash": "83e0ab04339e530d"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 465,
+        "end_line": 485,
+        "semantic_id": "aura_liquid_planning_arena.py#function:action_capsule_from_intent:d258b4e295f9bf71",
+        "signature_hash": "83e0ab04339e530d"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 492,
+        "end_line": 512,
+        "semantic_id": "aura_liquid_planning_arena.py#function:action_capsule_from_intent:d258b4e295f9bf71",
+        "signature_hash": "83e0ab04339e530d"
+      }
+    ],
     "activate": [
       {
         "file": "liquid_attractor_control_plane.py",
@@ -10211,8 +10399,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 173,
-        "end_line": 177,
+        "line": 174,
+        "end_line": 178,
         "semantic_id": "aura_live_architect.py#function:add:4abc0bf1621b29d7",
         "signature_hash": "6594a426868cf832"
       }
@@ -10363,8 +10551,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1395,
-        "end_line": 1407,
+        "line": 1466,
+        "end_line": 1478,
         "semantic_id": "aura_architect_loop.py#function:append_architect_ledger:35b8c1ec072fe07e",
         "signature_hash": "4e50d6e060b66de9"
       }
@@ -10519,8 +10707,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 448,
-        "end_line": 528,
+        "line": 464,
+        "end_line": 544,
         "semantic_id": "aura_architect_loop.py#function:architect_capability_cards:f20cfd97d0701d1c",
         "signature_hash": "49ea256ac34e9b0e"
       }
@@ -10803,6 +10991,16 @@
         "signature_hash": "49a15e5481ed9cfb"
       }
     ],
+    "boundary_contract_for_act": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 340,
+        "end_line": 374,
+        "semantic_id": "aura_liquid_planning_arena.py#function:boundary_contract_for_act:c9063ff9363ad543",
+        "signature_hash": "544ebab18c31f627"
+      }
+    ],
     "bridge_handler": [
       {
         "file": "pulse.py",
@@ -10857,8 +11055,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 660,
-        "end_line": 678,
+        "line": 695,
+        "end_line": 713,
         "semantic_id": "aura_live_architect.py#function:budget_route:42cdd009194fb73b",
         "signature_hash": "7fece046ec130a64"
       }
@@ -10877,10 +11075,20 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1358,
-        "end_line": 1392,
+        "line": 1429,
+        "end_line": 1463,
         "semantic_id": "aura_architect_loop.py#function:build_architect_ledger_record:25bbd465a0809da2",
         "signature_hash": "8f900ac7bdf0d08f"
+      }
+    ],
+    "build_arena": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 420,
+        "end_line": 458,
+        "semantic_id": "aura_liquid_planning_arena.py#function:build_arena:c920fb5574c895bd",
+        "signature_hash": "b7c8a75a18a05b76"
       }
     ],
     "build_block": [
@@ -10937,8 +11145,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 656,
-        "end_line": 760,
+        "line": 672,
+        "end_line": 776,
         "semantic_id": "aura_architect_loop.py#function:build_fractal_plan_capsule:7c44e63b61d8e9b7",
         "signature_hash": "6a3cef55a6310775"
       }
@@ -10957,8 +11165,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1326,
-        "end_line": 1355,
+        "line": 1389,
+        "end_line": 1426,
         "semantic_id": "aura_architect_loop.py#function:build_hotswap_capsule:158883b3e9cd7955",
         "signature_hash": "bc3cbee7bb4d6556"
       }
@@ -10997,8 +11205,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 972,
-        "end_line": 998,
+        "line": 1007,
+        "end_line": 1033,
         "semantic_id": "aura_live_architect.py#async_function:build_patch_submissions:a4afd7b7b9b667c9",
         "signature_hash": "6ff80c5d5969296c"
       }
@@ -11007,8 +11215,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 927,
-        "end_line": 974,
+        "line": 943,
+        "end_line": 1002,
         "semantic_id": "aura_architect_loop.py#function:build_refactor_arena:19f91999032e08d8",
         "signature_hash": "f06f5e11ba3fa614"
       }
@@ -11027,8 +11235,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1291,
-        "end_line": 1323,
+        "line": 1354,
+        "end_line": 1386,
         "semantic_id": "aura_architect_loop.py#function:build_rollback_capsule:d69e1214e1233a4b",
         "signature_hash": "10f0a3a6e5e606e2"
       }
@@ -11061,6 +11269,16 @@
         "end_line": 269,
         "semantic_id": "aura_fusion.py#function:build_task_capsule:db23bab86b095e0e",
         "signature_hash": "0ec6f04818ae15e3"
+      }
+    ],
+    "build_world_state_delta": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 299,
+        "semantic_id": "aura_liquid_planning_arena.py#function:build_world_state_delta:76d1708409c725ab",
+        "signature_hash": "1c62bcf96039a34f"
       }
     ],
     "bundle": [
@@ -11229,8 +11447,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 647,
-        "end_line": 658,
+        "line": 682,
+        "end_line": 693,
         "semantic_id": "aura_live_architect.py#async_function:call_model:33bc8b260538c175",
         "signature_hash": "6ea2ec533c04e05f"
       }
@@ -11807,8 +12025,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 397,
-        "end_line": 447,
+        "line": 398,
+        "end_line": 482,
         "semantic_id": "aura_live_architect.py#function:compute_temp_workspace_topology_delta:f67adec7c6d70a90",
         "signature_hash": "0ef9e37451922599"
       }
@@ -11953,6 +12171,24 @@
         "end_line": 140,
         "semantic_id": "aura_savings_db.py#function:count:f19a2a16d43f9225",
         "signature_hash": "e4a0c22aa2ac1b3c"
+      }
+    ],
+    "create": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 163,
+        "semantic_id": "aura_liquid_planning_arena.py#function:create:3293c5278e5853a1",
+        "signature_hash": "9ea8579e6142287e"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 186,
+        "end_line": 214,
+        "semantic_id": "aura_liquid_planning_arena.py#function:create:6a8e5d3e84244cca",
+        "signature_hash": "381a3ce7c1bf3bf9"
       }
     ],
     "crystallize": [
@@ -12155,8 +12391,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 706,
-        "end_line": 749,
+        "line": 741,
+        "end_line": 784,
         "semantic_id": "aura_live_architect.py#function:deterministic_plan_spec:4b488fb748281296",
         "signature_hash": "98b4037ae1201cc4"
       }
@@ -12567,8 +12803,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1473,
-        "end_line": 1529,
+        "line": 1544,
+        "end_line": 1600,
         "semantic_id": "aura_architect_loop.py#function:execute:7daaa75cd031ba93",
         "signature_hash": "3eeb3026a2329288"
       }
@@ -12855,8 +13091,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1134,
-        "end_line": 1137,
+        "line": 1186,
+        "end_line": 1189,
         "semantic_id": "aura_architect_loop.py#function:fail:3e9a280025a9e1c8",
         "signature_hash": "a52bbec8b4aa8f9b"
       }
@@ -13161,16 +13397,16 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 97,
-        "end_line": 98,
+        "line": 98,
+        "end_line": 99,
         "semantic_id": "aura_architect_loop.py#function:from_dict:82d77b906ce35168",
         "signature_hash": "a8a6f67afd3f5bf2"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 125,
-        "end_line": 130,
+        "line": 126,
+        "end_line": 131,
         "semantic_id": "aura_architect_loop.py#function:from_dict:82d77b906ce35168",
         "signature_hash": "a8a6f67afd3f5bf2"
       },
@@ -13791,8 +14027,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 763,
-        "end_line": 811,
+        "line": 779,
+        "end_line": 827,
         "semantic_id": "aura_architect_loop.py#function:ground_plan_capsule:072c952f6f4dbe87",
         "signature_hash": "169678624dc71c2a"
       }
@@ -14019,8 +14255,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 680,
-        "end_line": 704,
+        "line": 715,
+        "end_line": 739,
         "semantic_id": "aura_live_architect.py#function:infer_target_file:1d40724e515e1e20",
         "signature_hash": "140805300138cc77"
       }
@@ -14267,8 +14503,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 1001,
-        "end_line": 1048,
+        "line": 1036,
+        "end_line": 1083,
         "semantic_id": "aura_live_architect.py#async_function:judge_patch_bundle:eeedf88f33e0aadd",
         "signature_hash": "434d671574554dd4"
       }
@@ -14277,8 +14513,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1271,
-        "end_line": 1288,
+        "line": 1334,
+        "end_line": 1351,
         "semantic_id": "aura_architect_loop.py#function:judge_refactor_arena:e2412220b42a3c2b",
         "signature_hash": "312bad6a9c49ac22"
       }
@@ -14363,12 +14599,22 @@
         "signature_hash": "dcf4e413cb34a650"
       }
     ],
+    "lease_for_action": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 409,
+        "end_line": 418,
+        "semantic_id": "aura_liquid_planning_arena.py#function:lease_for_action:d07bbc2794ea08f3",
+        "signature_hash": "9e87b25af3baeb9a"
+      }
+    ],
     "ledger_hints": [
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 610,
-        "end_line": 634,
+        "line": 645,
+        "end_line": 669,
         "semantic_id": "aura_live_architect.py#function:ledger_hints:a631dbdb0d3cb199",
         "signature_hash": "e5dd8418ea166f52"
       }
@@ -15067,8 +15313,8 @@
       {
         "file": "test_aura_live_architect.py",
         "kind": "async_function",
-        "line": 282,
-        "end_line": 318,
+        "line": 284,
+        "end_line": 320,
         "semantic_id": "test_aura_live_architect.py#async_function:model_caller:3d2df2f45a3c4abf",
         "signature_hash": "2875c0f7cb3c70d3"
       }
@@ -15531,6 +15777,16 @@
         "signature_hash": "5f6c668713ffec8f"
       }
     ],
+    "placeholder": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 105,
+        "semantic_id": "aura_liquid_planning_arena.py#function:placeholder:3cbe5df96084c5dd",
+        "signature_hash": "6c1aca67f4ed5c95"
+      }
+    ],
     "plan": [
       {
         "file": "test_aura_live_architect.py",
@@ -15545,8 +15801,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 761,
-        "end_line": 768,
+        "line": 796,
+        "end_line": 803,
         "semantic_id": "aura_live_architect.py#async_function:plan_intent:507e4302e0ca80a5",
         "signature_hash": "dfb4c4db08db6737"
       }
@@ -15555,8 +15811,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 751,
-        "end_line": 759,
+        "line": 786,
+        "end_line": 794,
         "semantic_id": "aura_live_architect.py#async_function:plan_with_council:9694b76af87d31f9",
         "signature_hash": "06193304cc70b24b"
       }
@@ -15575,8 +15831,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1433,
-        "end_line": 1471,
+        "line": 1504,
+        "end_line": 1542,
         "semantic_id": "aura_architect_loop.py#function:prepare:7ebab26766abbb3a",
         "signature_hash": "2866e68d113363f7"
       },
@@ -15691,8 +15947,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 636,
-        "end_line": 645,
+        "line": 671,
+        "end_line": 680,
         "semantic_id": "aura_live_architect.py#function:profile_for:fc8598cc28662a34",
         "signature_hash": "3935debd5715dff3"
       }
@@ -16059,8 +16315,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1131,
-        "end_line": 1132,
+        "line": 1183,
+        "end_line": 1184,
         "semantic_id": "aura_architect_loop.py#function:record:ec15f24e885faa32",
         "signature_hash": "647f6970a3f1a3ce"
       }
@@ -16197,8 +16453,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 1270,
-        "end_line": 1290,
+        "line": 1305,
+        "end_line": 1325,
         "semantic_id": "aura_live_architect.py#function:render_live_architect_summary:d36c4a45ceee036b",
         "signature_hash": "6e7d6d902209ce61"
       }
@@ -16391,8 +16647,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1410,
-        "end_line": 1424,
+        "line": 1481,
+        "end_line": 1495,
         "semantic_id": "aura_architect_loop.py#function:route_intensity:81d1d18807c5b571",
         "signature_hash": "1de4d5146fba7abd"
       }
@@ -16573,8 +16829,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 1167,
-        "end_line": 1267,
+        "line": 1202,
+        "end_line": 1302,
         "semantic_id": "aura_live_architect.py#async_function:run_live_architect_transaction:623bc82ba98c0a24",
         "signature_hash": "2cee83645467366b"
       }
@@ -16641,8 +16897,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 1226,
-        "end_line": 1227,
+        "line": 1261,
+        "end_line": 1262,
         "semantic_id": "aura_live_architect.py#function:runner:2bd8fd6efb47d24f",
         "signature_hash": "86d9d67fcba578a9"
       }
@@ -16843,6 +17099,16 @@
         "signature_hash": "789f3747afb2d6de"
       }
     ],
+    "schema": [
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 306,
+        "end_line": 311,
+        "semantic_id": "aura_liquid_planning_arena.py#function:schema:d988aba8ca17f561",
+        "signature_hash": "07d6c0aa224edc34"
+      }
+    ],
     "score": [
       {
         "file": "aura_proxy_benchmark.py",
@@ -16975,8 +17241,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "async_function",
-        "line": 904,
-        "end_line": 963,
+        "line": 939,
+        "end_line": 998,
         "semantic_id": "aura_live_architect.py#async_function:select_plan:e97f990634325c5e",
         "signature_hash": "54e32f7a20fc3e66"
       }
@@ -17053,8 +17319,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 814,
-        "end_line": 924,
+        "line": 830,
+        "end_line": 940,
         "semantic_id": "aura_architect_loop.py#function:shadow_plan_capsule:42584dd610c1164c",
         "signature_hash": "867c20def80bfe1c"
       }
@@ -17209,8 +17475,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 977,
-        "end_line": 1118,
+        "line": 1005,
+        "end_line": 1170,
         "semantic_id": "aura_architect_loop.py#function:stage_arena_patch:09eb085c74915b2b",
         "signature_hash": "7ae158480bd145fe"
       }
@@ -17723,8 +17989,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 364,
-        "end_line": 367,
+        "line": 379,
+        "end_line": 382,
         "semantic_id": "test_aura_architect_loop.py#function:test_append_architect_ledger_accepts_dict_payload:0f4731ac27879503",
         "signature_hash": "7115779d6a48f300"
       }
@@ -17733,8 +17999,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 178,
-        "end_line": 199,
+        "line": 188,
+        "end_line": 209,
         "semantic_id": "test_aura_architect_loop.py#function:test_architect_capability_cards_cover_final_loop:4284dadbf67c46b7",
         "signature_hash": "105004142dc46e39"
       }
@@ -17743,8 +18009,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 329,
-        "end_line": 361,
+        "line": 344,
+        "end_line": 376,
         "semantic_id": "test_aura_architect_loop.py#function:test_architect_execute_appends_ledger_record:713e6433dc280954",
         "signature_hash": "a3c200db6ecda678"
       }
@@ -17754,7 +18020,7 @@
         "file": "test_aura_architect_loop.py",
         "kind": "function",
         "line": 26,
-        "end_line": 58,
+        "end_line": 68,
         "semantic_id": "test_aura_architect_loop.py#function:test_architect_loop_builds_grounded_plan_act_arena:7831501989314480",
         "signature_hash": "867cbf0bc330ba5e"
       }
@@ -17797,6 +18063,26 @@
         "end_line": 70,
         "semantic_id": "test_aura_fusion.py#function:test_capsule_has_stable_phase_hash_and_required_fields:ddb4881332c1daaa",
         "signature_hash": "5162c053c8e5f416"
+      }
+    ],
+    "test_civic_and_travel_adapters_define_domain_neutral_action_capsules": [
+      {
+        "file": "test_aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 30,
+        "semantic_id": "test_aura_liquid_planning_arena.py#function:test_civic_and_travel_adapters_define_domain_neutral_action_capsules:8a8425cc2b67d0fa",
+        "signature_hash": "01c7024f740c3fa3"
+      }
+    ],
+    "test_code_adapter_skips_missing_target_file_in_scope_lists": [
+      {
+        "file": "test_aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 54,
+        "semantic_id": "test_aura_liquid_planning_arena.py#function:test_code_adapter_skips_missing_target_file_in_scope_lists:15f5e0b8a2e5d7fc",
+        "signature_hash": "334457c8ef9180a2"
       }
     ],
     "test_codebase_navigator_command_query_is_compact": [
@@ -17953,8 +18239,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 87,
-        "end_line": 103,
+        "line": 97,
+        "end_line": 113,
         "semantic_id": "test_aura_architect_loop.py#function:test_grounder_fails_closed_without_codemap:bda4284b89f7ce26",
         "signature_hash": "20c530289a667f8f"
       }
@@ -17983,8 +18269,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 152,
-        "end_line": 175,
+        "line": 162,
+        "end_line": 185,
         "semantic_id": "test_aura_architect_loop.py#function:test_high_context_pressure_attaches_phase_continuity_capsule:4e8536e392865c8c",
         "signature_hash": "b60122a1bd67dad8"
       }
@@ -18053,8 +18339,8 @@
       {
         "file": "test_aura_live_architect.py",
         "kind": "function",
-        "line": 278,
-        "end_line": 332,
+        "line": 280,
+        "end_line": 334,
         "semantic_id": "test_aura_live_architect.py#function:test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves:fb3b74a815323f50",
         "signature_hash": "6ff528ee9014d77d"
       }
@@ -18073,8 +18359,8 @@
       {
         "file": "test_aura_live_architect.py",
         "kind": "function",
-        "line": 353,
-        "end_line": 356,
+        "line": 375,
+        "end_line": 378,
         "semantic_id": "test_aura_live_architect.py#function:test_live_architect_falls_back_to_codemap_target:1a7326bb09468620",
         "signature_hash": "29d47142acf81d15"
       }
@@ -18094,7 +18380,7 @@
         "file": "test_aura_live_architect.py",
         "kind": "function",
         "line": 209,
-        "end_line": 275,
+        "end_line": 277,
         "semantic_id": "test_aura_live_architect.py#function:test_live_architect_runs_fusion_council_shadow_and_judge:a74b16d793ee533a",
         "signature_hash": "03c77ed1b75d1724"
       }
@@ -18343,8 +18629,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 242,
-        "end_line": 286,
+        "line": 254,
+        "end_line": 298,
         "semantic_id": "test_aura_architect_loop.py#function:test_refactor_arena_rejects_diff_paths_that_do_not_match_metadata:30c37b4529e5d747",
         "signature_hash": "458ef366d83884bc"
       }
@@ -18353,8 +18639,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 202,
-        "end_line": 239,
+        "line": 212,
+        "end_line": 251,
         "semantic_id": "test_aura_architect_loop.py#function:test_refactor_arena_stages_only_assigned_patch_scope:8f2b73e9bf0777e5",
         "signature_hash": "6ad67dee2cfb6b80"
       }
@@ -18433,8 +18719,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 61,
-        "end_line": 84,
+        "line": 71,
+        "end_line": 94,
         "semantic_id": "test_aura_architect_loop.py#function:test_shadow_report_blocks_fake_file_and_symbol:930a7133a5b1bcac",
         "signature_hash": "d220a12de1075eb9"
       }
@@ -18443,8 +18729,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 131,
-        "end_line": 149,
+        "line": 141,
+        "end_line": 159,
         "semantic_id": "test_aura_architect_loop.py#function:test_shadow_report_blocks_legacy_incubator_target:942b933447c38e12",
         "signature_hash": "f18c86fcdf9da064"
       }
@@ -18453,8 +18739,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 106,
-        "end_line": 128,
+        "line": 116,
+        "end_line": 138,
         "semantic_id": "test_aura_architect_loop.py#function:test_shadow_report_blocks_out_of_repo_existing_file:7ad4b0678daeb8bc",
         "signature_hash": "0ddd866080fb924d"
       }
@@ -18583,10 +18869,20 @@
       {
         "file": "test_aura_live_architect.py",
         "kind": "function",
-        "line": 335,
-        "end_line": 350,
+        "line": 337,
+        "end_line": 353,
         "semantic_id": "test_aura_live_architect.py#function:test_topology_delta_rejects_affected_files_outside_repo:4d72926c2b85c3f8",
         "signature_hash": "4dbefbb9ee797fc4"
+      }
+    ],
+    "test_topology_delta_tracks_created_and_deleted_files_as_world_objects": [
+      {
+        "file": "test_aura_live_architect.py",
+        "kind": "function",
+        "line": 356,
+        "end_line": 372,
+        "semantic_id": "test_aura_live_architect.py#function:test_topology_delta_tracks_created_and_deleted_files_as_world_objects:e6136b9c5a17cb50",
+        "signature_hash": "e4e67ee290a12304"
       }
     ],
     "test_trace_content_and_savings_report_are_compact": [
@@ -18613,8 +18909,8 @@
       {
         "file": "test_aura_architect_loop.py",
         "kind": "function",
-        "line": 289,
-        "end_line": 326,
+        "line": 301,
+        "end_line": 341,
         "semantic_id": "test_aura_architect_loop.py#function:test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule:cd6bf2d7d273d5db",
         "signature_hash": "30994a2c051d853f"
       }
@@ -18649,6 +18945,16 @@
         "signature_hash": "b7c1234c94a4bcf0"
       }
     ],
+    "test_world_state_delta_tracks_added_removed_changed_and_stable_objects": [
+      {
+        "file": "test_aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 76,
+        "semantic_id": "test_aura_liquid_planning_arena.py#function:test_world_state_delta_tracks_added_removed_changed_and_stable_objects:615552049496d91c",
+        "signature_hash": "b3f1cf43bdd853a9"
+      }
+    ],
     "thermal_damping_safe_batch": [
       {
         "file": "aura_blockchain/memory_staking.py",
@@ -18681,96 +18987,96 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 94,
+        "line": 94,
+        "end_line": 95,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 122,
+        "line": 119,
+        "end_line": 123,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 145,
-        "end_line": 146,
+        "line": 146,
+        "end_line": 147,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 158,
-        "end_line": 159,
+        "line": 159,
+        "end_line": 160,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 170,
-        "end_line": 173,
+        "line": 171,
+        "end_line": 174,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 190,
-        "end_line": 191,
+        "line": 193,
+        "end_line": 194,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 207,
-        "end_line": 208,
+        "line": 210,
+        "end_line": 211,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 218,
-        "end_line": 224,
+        "line": 221,
+        "end_line": 227,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 237,
-        "end_line": 238,
+        "line": 240,
+        "end_line": 241,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 252,
-        "end_line": 253,
+        "line": 255,
+        "end_line": 256,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 264,
-        "end_line": 271,
+        "line": 267,
+        "end_line": 274,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 282,
-        "end_line": 289,
+        "line": 285,
+        "end_line": 292,
         "semantic_id": "aura_architect_loop.py#function:to_dict:eb6366470a5866e2",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -18783,34 +19089,74 @@
         "signature_hash": "5c1a69a9659e2089"
       },
       {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "aura_liquid_planning_arena.py#function:to_dict:d11bb4cc7acd956c",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 127,
+        "semantic_id": "aura_liquid_planning_arena.py#function:to_dict:d11bb4cc7acd956c",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 183,
+        "semantic_id": "aura_liquid_planning_arena.py#function:to_dict:d11bb4cc7acd956c",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 231,
+        "end_line": 232,
+        "semantic_id": "aura_liquid_planning_arena.py#function:to_dict:d11bb4cc7acd956c",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "aura_liquid_planning_arena.py",
+        "kind": "function",
+        "line": 251,
+        "end_line": 252,
+        "semantic_id": "aura_liquid_planning_arena.py#function:to_dict:d11bb4cc7acd956c",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 60,
+        "end_line": 61,
         "semantic_id": "aura_live_architect.py#function:to_dict:8c3f9fe39190c11f",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 73,
+        "line": 73,
+        "end_line": 74,
         "semantic_id": "aura_live_architect.py#function:to_dict:8c3f9fe39190c11f",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 85,
-        "end_line": 86,
+        "line": 86,
+        "end_line": 87,
         "semantic_id": "aura_live_architect.py#function:to_dict:8c3f9fe39190c11f",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 123,
+        "line": 112,
+        "end_line": 124,
         "semantic_id": "aura_live_architect.py#function:to_dict:8c3f9fe39190c11f",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -18851,8 +19197,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 102,
-        "end_line": 109,
+        "line": 103,
+        "end_line": 110,
         "semantic_id": "aura_live_architect.py#function:to_execution_result:d1108a295cd8d2f3",
         "signature_hash": "2a78e7134c45c71e"
       }
@@ -19223,8 +19569,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 1102,
-        "end_line": 1164,
+        "line": 1137,
+        "end_line": 1199,
         "semantic_id": "aura_live_architect.py#function:verify_arena_in_temp_workspace:e13935b7da81b588",
         "signature_hash": "0cc78281cf4374a8"
       }
@@ -19343,8 +19689,8 @@
       {
         "file": "aura_architect_loop.py",
         "kind": "function",
-        "line": 1121,
-        "end_line": 1268,
+        "line": 1173,
+        "end_line": 1331,
         "semantic_id": "aura_architect_loop.py#function:verify_refactor_arena:501c50b241005280",
         "signature_hash": "d40d51b7daa552b4"
       }
@@ -19399,8 +19745,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 323,
-        "end_line": 325,
+        "line": 324,
+        "end_line": 326,
         "semantic_id": "aura_live_architect.py#function:visit_AsyncFunctionDef:0e25d9bc88cfe29e",
         "signature_hash": "0461785a3234df22"
       },
@@ -19443,8 +19789,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 341,
-        "end_line": 346,
+        "line": 342,
+        "end_line": 347,
         "semantic_id": "aura_live_architect.py#function:visit_Call:3884c55df25faa88",
         "signature_hash": "d6c5f430996c42d1"
       }
@@ -19461,8 +19807,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 327,
-        "end_line": 329,
+        "line": 328,
+        "end_line": 330,
         "semantic_id": "aura_live_architect.py#function:visit_ClassDef:491633d65d9a8885",
         "signature_hash": "5dea728162aab33d"
       },
@@ -19503,8 +19849,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 319,
-        "end_line": 321,
+        "line": 320,
+        "end_line": 322,
         "semantic_id": "aura_live_architect.py#function:visit_FunctionDef:087ef8f2dba3413f",
         "signature_hash": "b97504dce4b3c9a6"
       },
@@ -19539,8 +19885,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 331,
-        "end_line": 334,
+        "line": 332,
+        "end_line": 335,
         "semantic_id": "aura_live_architect.py#function:visit_Import:49381e77c3ba69c0",
         "signature_hash": "16d91089da3e5479"
       },
@@ -19557,8 +19903,8 @@
       {
         "file": "aura_live_architect.py",
         "kind": "function",
-        "line": 336,
-        "end_line": 339,
+        "line": 337,
+        "end_line": 340,
         "semantic_id": "aura_live_architect.py#function:visit_ImportFrom:5900f554641179b6",
         "signature_hash": "eca3fa48123ac971"
       },
@@ -21579,9 +21925,9 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 10943,
+      "bytes": 11197,
       "lines": 126,
-      "tokens_est": 2705,
+      "tokens_est": 2769,
       "symbol_count": 0,
       "commands": [
         "!backtrack",
@@ -21619,40 +21965,40 @@
         ]
       },
       "topology": {},
-      "digest8": "c4fb1a3d760cd36f",
+      "digest8": "faa4d59fc96c7980",
       "vector": [
-        0.191291,
-        0.320507,
-        0.110214,
-        -0.257166,
-        0.110214,
-        -0.171021,
-        -0.209026,
-        0.229295,
-        0.016469,
-        -0.046873,
-        -0.097546,
-        0.036738,
-        0.292637,
-        0.209026,
-        -0.282502,
-        0.23943,
-        -0.178622,
-        -0.168488,
-        -0.001267,
-        -0.231829,
-        0.062074,
-        0.016469,
-        0.23943,
-        -0.234363,
-        0.181156,
-        -0.112748,
-        -0.001267,
-        0.102613,
-        -0.140618,
-        0.186223,
-        0.127949,
-        0.087411
+        0.21824,
+        0.129376,
+        0.257444,
+        -0.040512,
+        0.152898,
+        0.192103,
+        0.126762,
+        0.103239,
+        -0.231308,
+        0.124148,
+        -0.079716,
+        -0.309717,
+        0.241763,
+        0.213012,
+        0.126762,
+        -0.048353,
+        -0.30449,
+        0.171194,
+        -0.045739,
+        -0.006534,
+        -0.118921,
+        0.069262,
+        -0.071875,
+        0.273126,
+        -0.001307,
+        0.226081,
+        -0.257444,
+        0.11108,
+        -0.071875,
+        0.202558,
+        0.265285,
+        -0.134603
       ]
     },
     {
@@ -21750,9 +22096,9 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "bytes": 91266,
-      "lines": 1764,
-      "tokens_est": 21634,
+      "bytes": 92024,
+      "lines": 1774,
+      "tokens_est": 21822,
       "symbol_count": 0,
       "commands": [
         "!ai_route",
@@ -21835,31 +22181,31 @@
           217
         ],
         "!ar_server_start": [
-          447,
-          1010
+          457,
+          1020
         ],
         "!ar_server_stop": [
-          448
+          458
         ],
         "!ar_start": [
-          447,
-          951,
-          1010,
-          1014,
-          1347,
-          1361,
-          1434,
-          1435,
-          1437,
+          457,
+          961,
+          1020,
+          1024,
+          1357,
+          1371,
+          1444,
+          1445,
           1447,
-          1482,
-          1484,
-          1758
+          1457,
+          1492,
+          1494,
+          1768
         ],
         "!ar_stop": [
-          448,
-          1015,
-          1435
+          458,
+          1025,
+          1445
         ],
         "!attention": [
           189
@@ -21868,20 +22214,20 @@
           204
         ],
         "!backtrack": [
-          347,
-          348,
-          376,
-          1296
+          357,
+          358,
+          386,
+          1306
         ],
         "!benchmark": [
           203,
-          1413,
-          1453
+          1423,
+          1463
         ],
         "!calibrate": [
           224,
-          1330,
-          1427
+          1340,
+          1437
         ],
         "!catalyze": [
           185
@@ -21903,62 +22249,62 @@
           196
         ],
         "!crystallize": [
-          354
+          364
         ],
         "!curiosity_tree": [
-          350
+          360
         ],
         "!db_repair": [
-          451,
-          1408
+          461,
+          1418
         ],
         "!evolve_reasoning": [
           198
         ],
         "!export": [
-          449,
-          1745
+          459,
+          1755
         ],
         "!fast_path": [
           187
         ],
         "!forage": [
-          346,
-          348,
-          374
+          356,
+          358,
+          384
         ],
         "!forage_off": [
-          352
+          362
         ],
         "!forage_on": [
-          351
+          361
         ],
         "!forager_off": [
-          352
+          362
         ],
         "!forager_on": [
-          351
+          361
         ],
         "!fusion": [
           226,
-          315
+          325
         ],
         "!help": [
           170,
           180
         ],
         "!indus_decrypt": [
-          356
+          366
         ],
         "!manifest": [
           170,
           180
         ],
         "!markov": [
-          452
+          462
         ],
         "!mesh_status": [
-          446
+          456
         ],
         "!meta_analyze": [
           199
@@ -21970,23 +22316,23 @@
           213
         ],
         "!ping_mesh": [
-          445
+          455
         ],
         "!push": [
-          450
+          460
         ],
         "!reason": [
           195
         ],
         "!repair_db": [
-          451
+          461
         ],
         "!research": [
-          348,
-          362,
-          378,
-          410,
-          1299
+          358,
+          372,
+          388,
+          420,
+          1309
         ],
         "!review": [
           214
@@ -21997,7 +22343,7 @@
         "!route": [
           225,
           234,
-          1333
+          1343
         ],
         "!saturn": [
           201
@@ -22007,23 +22353,23 @@
         ],
         "!savings": [
           227,
-          1336
+          1346
         ],
         "!scan_topology": [
           183
         ],
         "!search_similar": [
-          349,
-          362,
-          378
+          359,
+          372,
+          388
         ],
         "!self_optimize": [
           213,
-          1315
+          1325
         ],
         "!self_reflect": [
           212,
-          1312
+          1322
         ],
         "!settings": [
           170,
@@ -22034,15 +22380,15 @@
         ],
         "!stage": [
           214,
-          284,
-          1302,
-          1318
+          294,
+          1312,
+          1328
         ],
         "!stage_merge": [
           215,
-          284,
-          1305,
-          1321
+          294,
+          1315,
+          1331
         ],
         "!stage_purge": [
           216
@@ -22054,70 +22400,70 @@
           197
         ],
         "!synthesize": [
-          355
+          365
         ],
         "!system_audit": [
           204,
-          1454
+          1464
         ],
         "!test_airlock": [
           205
         ],
         "!timeline": [
-          353
+          363
         ],
         "!topology": [
           183,
           184,
-          1293,
-          1344,
-          1436,
-          1437,
-          1440,
-          1478
+          1303,
+          1354,
+          1446,
+          1447,
+          1450,
+          1488
         ],
         "!topology_deep": [
           184
         ],
         "!voice": [
-          453
+          463
         ]
       },
       "topology": {},
-      "digest8": "20b6eb5068f1ba7f",
+      "digest8": "9bb29a5c7e65eba2",
       "vector": [
-        0.259572,
-        -0.222679,
-        -0.249031,
-        -0.07774,
-        0.0224,
-        -0.164703,
-        0.035576,
-        -0.111998,
-        0.006588,
-        -0.291195,
-        -0.003953,
-        0.280654,
-        0.180515,
-        0.109363,
-        -0.014494,
-        -0.054023,
-        0.185785,
-        0.264843,
-        -0.227949,
-        -0.241125,
-        -0.072469,
-        -0.088281,
-        -0.119904,
-        0.122539,
-        -0.148892,
-        0.254302,
-        0.101457,
-        -0.285925,
-        -0.111998,
-        0.067199,
-        -0.317548,
-        -0.090916
+        0.168799,
+        -0.341853,
+        -0.100712,
+        0.035462,
+        0.151777,
+        -0.154614,
+        -0.035462,
+        0.327668,
+        0.086527,
+        -0.177309,
+        -0.245396,
+        0.140429,
+        -0.273766,
+        -0.356037,
+        0.055321,
+        0.200005,
+        -0.012766,
+        -0.100712,
+        -0.248233,
+        -0.200005,
+        -0.049647,
+        0.21419,
+        0.123407,
+        0.058157,
+        0.117733,
+        0.126244,
+        0.191494,
+        -0.11206,
+        -0.234048,
+        -0.075179,
+        -0.007092,
+        -0.075179
       ]
     },
     {
@@ -22715,47 +23061,47 @@
     {
       "path": "aura_architect_loop.py",
       "role": "python_module",
-      "bytes": 60669,
-      "lines": 1530,
-      "tokens_est": 14791,
-      "symbol_count": 64,
+      "bytes": 64336,
+      "lines": 1601,
+      "tokens_est": 15727,
+      "symbol_count": 65,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6083526bcf5fe457",
+      "digest8": "d723fa708f3663e8",
       "vector": [
-        0.148391,
-        0.302915,
-        0.23669,
-        0.261218,
-        0.001226,
-        -0.268576,
-        0.295556,
+        0.168016,
+        -0.101791,
+        0.305373,
+        -0.28575,
+        -0.266128,
+        -0.217072,
+        0.079716,
+        0.067452,
+        -0.084621,
+        -0.266128,
+        -0.096885,
+        0.023302,
+        -0.199903,
+        -0.025754,
+        -0.290656,
+        -0.128772,
+        0.038018,
+        -0.03066,
+        -0.293109,
+        0.104244,
         -0.015943,
-        0.290651,
-        -0.226879,
-        -0.239143,
-        -0.096884,
-        -0.128769,
-        0.001226,
-        -0.04047,
-        -0.302915,
-        -0.192541,
-        -0.033112,
-        0.006132,
-        -0.079714,
-        -0.118958,
-        -0.091978,
-        -0.1116,
-        -0.131222,
-        -0.101789,
-        -0.18273,
-        -0.190088,
-        0.106695,
-        -0.060092,
-        -0.251407,
-        0.047829,
-        0.180277
+        0.069905,
+        -0.057641,
+        0.234242,
+        0.060093,
+        -0.224431,
+        0.246506,
+        -0.052735,
+        0.055188,
+        0.094433,
+        -0.280845,
+        -0.239147
       ]
     },
     {
@@ -24737,11 +25083,57 @@
       ]
     },
     {
+      "path": "aura_liquid_planning_arena.py",
+      "role": "python_module",
+      "bytes": 20100,
+      "lines": 520,
+      "tokens_est": 5025,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "01cc7a59e6c3c86d",
+      "vector": [
+        -0.11201,
+        -0.205142,
+        -0.11201,
+        0.041532,
+        -0.288206,
+        0.225279,
+        -0.06922,
+        0.018878,
+        0.00881,
+        -0.19004,
+        0.247932,
+        0.310859,
+        -0.283171,
+        0.149766,
+        -0.013844,
+        -0.230313,
+        -0.187522,
+        0.147249,
+        -0.217727,
+        -0.054117,
+        0.142215,
+        0.179971,
+        0.013844,
+        -0.001259,
+        0.285689,
+        0.013844,
+        0.013844,
+        -0.288206,
+        0.273103,
+        -0.104459,
+        0.028946,
+        -0.174937
+      ]
+    },
+    {
       "path": "aura_live_architect.py",
       "role": "python_module",
-      "bytes": 54043,
-      "lines": 1291,
-      "tokens_est": 13511,
+      "bytes": 56863,
+      "lines": 1326,
+      "tokens_est": 13902,
       "symbol_count": 64,
       "commands": [
         "!stage",
@@ -24749,47 +25141,47 @@
       ],
       "command_lines": {
         "!stage": [
-          1094
+          1129
         ],
         "!stage_merge": [
-          1095
+          1130
         ]
       },
       "topology": {},
-      "digest8": "5e76d651625e4576",
+      "digest8": "5399691002018a22",
       "vector": [
-        -0.229311,
-        0.03768,
-        -0.220698,
-        0.255149,
-        -0.175482,
-        0.261608,
-        0.067824,
-        0.046293,
-        0.261608,
-        0.231464,
-        -0.192707,
-        -0.259455,
-        -0.246536,
-        -0.220698,
-        -0.076437,
-        -0.136725,
-        0.197014,
-        -0.125959,
-        -0.039833,
-        -0.106581,
-        -0.162563,
-        0.246536,
-        -0.108734,
-        0.141032,
-        0.175482,
-        0.261608,
-        0.091509,
-        -0.067824,
-        -0.164716,
-        0.054905,
-        0.132419,
-        0.138878
+        0.287579,
+        -0.119351,
+        0.248932,
+        -0.262572,
+        0.169365,
+        0.071611,
+        0.196645,
+        0.144358,
+        0.262572,
+        -0.082977,
+        0.035237,
+        0.287579,
+        -0.219378,
+        -0.164818,
+        0.178458,
+        0.201191,
+        0.019323,
+        -0.169365,
+        -0.132991,
+        -0.233018,
+        -0.214832,
+        0.267119,
+        0.082977,
+        -0.164818,
+        -0.05797,
+        0.164818,
+        0.05797,
+        -0.280759,
+        -0.005683,
+        0.00341,
+        0.062517,
+        -0.046604
       ]
     },
     {
@@ -29503,47 +29895,47 @@
     {
       "path": "test_aura_architect_loop.py",
       "role": "python_module",
-      "bytes": 13918,
-      "lines": 368,
-      "tokens_est": 3460,
+      "bytes": 15162,
+      "lines": 383,
+      "tokens_est": 3702,
       "symbol_count": 12,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f05cb5b1f1d6d645",
+      "digest8": "9f5d37b59942a3d9",
       "vector": [
-        0.206421,
-        -0.119747,
-        -0.28169,
-        0.090095,
-        0.158522,
-        0.012545,
-        0.144837,
-        -0.199578,
-        0.220106,
-        -0.119747,
-        -0.210983,
-        -0.220106,
-        -0.185893,
-        -0.090095,
-        -0.049039,
-        0.242915,
-        0.163084,
-        0.039916,
-        -0.078691,
-        -0.17905,
-        0.220106,
-        -0.199578,
-        -0.247477,
-        0.283971,
-        0.160803,
-        0.017107,
-        0.147118,
-        -0.110623,
-        -0.135713,
-        0.135713,
-        0.25432,
-        -0.226949
+        -0.117878,
+        -0.199772,
+        0.150139,
+        0.281666,
+        0.289111,
+        0.22707,
+        -0.122841,
+        0.040947,
+        0.001241,
+        -0.127805,
+        -0.018612,
+        -0.249405,
+        -0.0608,
+        0.140213,
+        0.162548,
+        -0.110433,
+        0.160066,
+        0.100506,
+        0.070727,
+        0.21218,
+        0.160066,
+        -0.028539,
+        0.311446,
+        0.236997,
+        0.063282,
+        -0.308964,
+        0.174956,
+        -0.155103,
+        -0.117878,
+        -0.102988,
+        0.274221,
+        -0.179919
       ]
     },
     {
@@ -29714,12 +30106,58 @@
       ]
     },
     {
+      "path": "test_aura_liquid_planning_arena.py",
+      "role": "python_module",
+      "bytes": 2979,
+      "lines": 77,
+      "tokens_est": 745,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "447bf4d54e604d0a",
+      "vector": [
+        -0.150838,
+        0.141336,
+        0.167466,
+        0.036819,
+        -0.184093,
+        0.138961,
+        0.055822,
+        0.0772,
+        -0.269608,
+        -0.267232,
+        -0.19597,
+        0.005938,
+        -0.286235,
+        -0.127084,
+        -0.141336,
+        -0.022566,
+        0.229226,
+        0.174592,
+        -0.262481,
+        -0.255355,
+        0.067699,
+        -0.122333,
+        0.020191,
+        -0.10333,
+        0.245854,
+        0.108081,
+        -0.13421,
+        -0.067699,
+        -0.032068,
+        -0.28386,
+        0.271983,
+        -0.257731
+      ]
+    },
+    {
       "path": "test_aura_live_architect.py",
       "role": "python_module",
-      "bytes": 14435,
-      "lines": 357,
-      "tokens_est": 3609,
-      "symbol_count": 15,
+      "bytes": 15765,
+      "lines": 379,
+      "tokens_est": 3855,
+      "symbol_count": 16,
       "commands": [
         "!stage_merge"
       ],
@@ -29729,40 +30167,40 @@
         ]
       },
       "topology": {},
-      "digest8": "28594282db6ea3e1",
+      "digest8": "cf6915301d53b054",
       "vector": [
-        0.017208,
-        -0.001147,
-        0.205354,
-        0.086042,
-        0.191587,
-        0.099809,
-        0.134226,
-        -0.131931,
-        0.072275,
-        0.161759,
-        0.13652,
-        0.072275,
-        -0.024092,
-        0.287955,
-        -0.278777,
-        -0.152582,
-        -0.086042,
-        0.069981,
-        -0.104398,
-        -0.242065,
-        0.07457,
-        -0.209943,
-        0.283366,
-        -0.040153,
-        0.251243,
-        0.260421,
-        0.170937,
-        -0.205354,
-        -0.173232,
-        -0.267305,
-        -0.164054,
-        -0.290249
+        -0.023377,
+        -0.030759,
+        -0.185786,
+        -0.119346,
+        0.171022,
+        0.252226,
+        0.020916,
+        0.06767,
+        0.102121,
+        -0.19809,
+        -0.006152,
+        0.020916,
+        -0.109503,
+        -0.313745,
+        0.082435,
+        -0.212854,
+        0.301441,
+        -0.190707,
+        0.259608,
+        -0.077513,
+        -0.212854,
+        -0.102121,
+        0.227619,
+        -0.178404,
+        0.215315,
+        0.129189,
+        -0.227619,
+        -0.247305,
+        -0.072592,
+        -0.116885,
+        -0.121807,
+        -0.29898
       ]
     },
     {
@@ -30852,11 +31290,13 @@
   "last_refresh": {
     "mode": "incremental_ast_hook",
     "refreshed_paths": [
+      "aura_liquid_planning_arena.py",
       "aura_live_architect.py",
+      "test_aura_liquid_planning_arena.py",
       "test_aura_live_architect.py"
     ],
     "removed_paths": [],
-    "changed_path_count": 2,
+    "changed_path_count": 4,
     "topology_refreshed": false
   }
 }

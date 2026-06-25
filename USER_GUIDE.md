@@ -208,7 +208,7 @@ smallest useful file/symbol path.
 
 | Command | Use when | Operation and output |
 |---------|----------|----------------------|
-| `architect <intent>` / `code <intent>` | You want Aura to plan and stage a bounded refactor. | Runs the live Architect bridge: local/free plan fallback, multiple premium plan candidates, cheap Shadow critics, premium Judge selection, bounded Act workers, Refactor Arena staging, temp-workspace patch application, topology delta capture, verifier-gated hot-swap/rollback capsules, and a JSONL ledger row. It stages the transaction in `Aura_Staging/architect_live_transaction.json` instead of writing model output to `aura_incubator.py`. |
+| `architect <intent>` / `code <intent>` | You want Aura to plan and stage a bounded refactor. | Runs the live Architect bridge: local/free plan fallback, multiple premium plan candidates, cheap Shadow critics, premium Judge selection, bounded Act workers, Refactor Arena staging projected into the Liquid Planning Arena substrate, temp-workspace patch application, topology/world-state delta capture, verifier-gated hot-swap/rollback capsules, and a JSONL ledger row. It stages the transaction in `Aura_Staging/architect_live_transaction.json` instead of writing model output to `aura_incubator.py`. |
 | `!self_reflect` | You want introspection before changing code. | Runs VSA resonance analysis, WASM/offload metrics, and cloud architect diagnosis. |
 | `!self_optimize` / `!optimize` | You want a staged optimization patch. | Audits runtime friction, asks the selected model for one optimized patch, sanitizes it, and writes `Aura_Staging/pending_patches.json`. |
 | `!stage` / `!stage_review` / `!review` | You need to inspect pending code before merge. | For live Architect transactions, prints status, selected council candidate, Judge path, hot-swap phase hash, topology-delta stats, staged patches, and blockers from `Aura_Staging/architect_live_transaction.json`. Legacy pending patches still show the older timestamp, target, confidence, and proposed-code preview. |
@@ -270,6 +270,16 @@ working-tree files, and tests through `verify_refactor_arena`, produce a
 hot-swap capsule with rollback digests, and append an Architect JSONL ledger row
 with `ArchitectFusionLoop.execute`.
 
+`aura_liquid_planning_arena.py` generalizes that Refactor Arena into a bounded
+Liquid Planning Arena. In code mode, the current files/symbols/diffs/tests flow
+is preserved and projected into domain-neutral Action Capsules, first-class
+BoundaryContract placeholders, scoped agent leases, and a shared action queue.
+The invariant is the same for future domains: models propose, the Arena stages,
+Shadow critiques, Judge decides, verifier proves, human approves, and the ledger
+remembers. The initial adapters define code, civic, and travel domain objects so
+later planners can stage civic interventions or travel options without pretending
+those domains are code patches.
+
 `aura_live_architect.py` is the live command bridge for that substrate. The REPL
 `architect <intent>` and `code <intent>` paths now call it instead of writing
 cloud output to `aura_incubator.py`. The bridge starts with a local CODEMAP plan
@@ -278,8 +288,8 @@ allows it, runs cheap Shadow critic lanes across each candidate, and calls the
 premium Judge to select the safest plan and review the staged patch bundle. It
 then asks bounded Act workers for unified diffs, stages those diffs in the
 Refactor Arena, copies the repo into a temporary workspace, applies the staged
-patches there, records a real AST topology delta for affected Python files, runs
-local verification commands, and writes
+patches there, records AST topology plus generic world-state deltas for affected
+Python files, runs local verification commands, and writes
 `Aura_Staging/architect_live_transaction.json` plus the Architect ledger record.
 The existing `!stage` / `!stage_merge` UX now reviews and approves that verified
 hot-swap capsule without production writes. `aura_incubator.py` remains only as a

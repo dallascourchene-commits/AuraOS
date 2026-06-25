@@ -40,6 +40,7 @@ from aura_architect_loop import (
     stage_arena_patch,
     verify_refactor_arena,
 )
+from aura_liquid_planning_arena import build_world_state_delta
 from aura_substrate import REPO_ROOT
 
 
@@ -403,6 +404,8 @@ def compute_temp_workspace_topology_delta(
     """Compare affected Python file topology before and after temp patch application."""
     files: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
+    before_objects: list[dict[str, Any]] = []
+    after_objects: list[dict[str, Any]] = []
     for raw_path in sorted({str(item) for item in arena.affected_files}):
         safe_paths, boundary_failure = _safe_topology_file_paths(repo_root, workspace, raw_path)
         if boundary_failure:
@@ -413,6 +416,30 @@ def compute_temp_workspace_topology_delta(
         rel, before_path, after_path = safe_paths
         before = _python_topology_signature(before_path)
         after = _python_topology_signature(after_path)
+        if before.get("exists"):
+            before_objects.append(
+                {
+                    "id": rel,
+                    "object_type": "python_file_topology",
+                    "exists": before.get("exists"),
+                    "definitions": before.get("definitions", []),
+                    "imports": before.get("imports", []),
+                    "calls": before.get("calls", []),
+                    "parse_error": before.get("parse_error"),
+                }
+            )
+        if after.get("exists"):
+            after_objects.append(
+                {
+                    "id": rel,
+                    "object_type": "python_file_topology",
+                    "exists": after.get("exists"),
+                    "definitions": after.get("definitions", []),
+                    "imports": after.get("imports", []),
+                    "calls": after.get("calls", []),
+                    "parse_error": after.get("parse_error"),
+                }
+            )
         if before.get("parse_error") or after.get("parse_error"):
             failures.append(
                 {
@@ -431,17 +458,25 @@ def compute_temp_workspace_topology_delta(
                 "calls": _set_delta(before.get("calls", []), after.get("calls", [])),
             }
         )
+    world_state_delta = build_world_state_delta(
+        domain="code",
+        before_objects=before_objects,
+        after_objects=after_objects,
+        metadata={"source": "compute_temp_workspace_topology_delta", "arena_plan_phase_hash": getattr(arena, "plan_phase_hash", None)},
+    ).to_dict()
     summary = {
         "files_checked": len(files),
         "files_with_definition_delta": sum(1 for item in files if item["definitions"]["added"] or item["definitions"]["removed"]),
         "files_with_import_delta": sum(1 for item in files if item["imports"]["added"] or item["imports"]["removed"]),
         "files_with_call_delta": sum(1 for item in files if item["calls"]["added"] or item["calls"]["removed"]),
+        "world_objects_changed": len(world_state_delta["changed"]),
     }
     payload = {
         "stage": "topology_delta",
         "status": "passed" if not failures else "failed",
         "summary": summary,
         "files": files,
+        "world_state_delta": world_state_delta,
         "failures": failures,
     }
     return {**payload, "phase_hash": _hash_payload(payload)}
