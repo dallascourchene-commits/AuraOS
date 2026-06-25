@@ -204,6 +204,75 @@ def test_live_architect_blocks_partial_act_stage(tmp_path: Path):
     assert act_stage_failure["missing_task_ids"] == ["A-LIVE-SKIP"]
 
 
+def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+    calls: list[tuple[str, str]] = []
+
+    def plan(task_id: str, decision: str) -> str:
+        return json.dumps(
+            {
+                "architecture_decision": decision,
+                "target_file": "demo.py",
+                "target_symbol": "answer",
+                "act_tasks": [
+                    {
+                        "task_id": task_id,
+                        "objective": "Change demo.answer to return the verified value.",
+                        "target_file": "demo.py",
+                        "target_symbol": "answer",
+                        "acceptance": "test_demo.py passes in the temp workspace.",
+                        "expected_output": "UNIFIED_DIFF",
+                    }
+                ],
+            }
+        )
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        calls.append((meta["role"], meta.get("council_phase", "")))
+        if meta["role"] == "planner":
+            return plan("A-PRIMARY", "Primary premium planner candidate.")
+        if meta["role"] == "planner_alt":
+            return plan("A-ALT", "Alternate premium planner candidate.")
+        if meta["role"] == "shadow":
+            return json.dumps({"approved": True, "score": 0.91, "blockers": [], "rationale": "Scope and tests are bounded."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "plan_judge":
+            return json.dumps({"selected_candidate_id": "planner_alt_2", "approved": True, "rationale": "Alternate plan has the cleaner boundary."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "patch_bundle_judge":
+            return json.dumps({"approved": True, "rationale": "Patch bundle covers the selected Act Capsule."})
+        assert provider
+        assert meta["role"] == "worker"
+        assert meta["task_id"] == "A-ALT"
+        assert "Act Capsule" in prompt
+        return (
+            "diff --git a/demo.py b/demo.py\n"
+            "--- a/demo.py\n"
+            "+++ b/demo.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            " def answer():\n"
+            "-    return 1\n"
+            "+    return 2\n"
+        )
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two through a judged council",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    roles = {role for role, _phase in calls}
+    phases = {phase for _role, phase in calls}
+    assert {"planner", "planner_alt", "shadow", "judge", "worker"} <= roles
+    assert {"plan_candidate", "plan_shadow", "plan_judge", "patch_bundle_judge"} <= phases
+    assert transaction.verification.hotswap_ready is True
+    assert transaction.fusion_council["judge_decision"]["selected_candidate_id"] == "planner_alt_2"
+    assert transaction.fusion_council["patch_judgement"]["premium_called"] is True
+    assert transaction.hotswap_capsule["promotion_entrypoint"]["promote_command"] == "!stage_merge"
+    assert transaction.hotswap_capsule["topology_delta"]["summary"]["files_checked"] == 1
+    assert transaction.hotswap_capsule["topology_delta"]["files"][0]["calls"]["added"] == []
+
+
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):
     _write_demo_repo(tmp_path)
     router = ArchitectModelRouter(repo_root=tmp_path)
