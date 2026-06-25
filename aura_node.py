@@ -5270,6 +5270,94 @@ async def main():
 
     kernel_a_task = asyncio.create_task(watchdog_kernel_a())
 
+    async def dispatch_live_architect_command(raw_input: str) -> bool:
+        """Route code/architect commands before generic cognitive processing."""
+        architect_match = re.match(r"^\s*(architect|code)\b\s*:?\s*(.*)$", raw_input, re.IGNORECASE)
+        if not architect_match:
+            return False
+
+        print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
+
+        core_intent = architect_match.group(2).strip()
+        if not core_intent:
+            print("[-] Usage: architect <intent>")
+            return True
+        live_architect_task = getattr(node, "_live_architect_task", None)
+        if live_architect_task and not live_architect_task.done():
+            print("[-] Live Architect transaction already running. Type STOP to cancel it.")
+            SOVEREIGN_CORE.vocalize("Live Architect is already running.")
+            return True
+        SOVEREIGN_CORE.vocalize("Live Architect mode engaged. Routing through Refactor Arena.")
+
+        async def run_live_architect():
+            try:
+                if (
+                    not _LIVE_ARCHITECT_AVAILABLE
+                    or run_live_architect_transaction is None
+                    or render_live_architect_summary is None
+                ):
+                    print("[-] Live Architect bridge is unavailable. Check aura_live_architect.py.")
+                    SOVEREIGN_CORE.vocalize("Live Architect bridge unavailable.")
+                    return
+                print("[*] Building Plan/Act capsules, model route, and bounded Refactor Arena...")
+
+                topology_context = ""
+                map_path = "Aura_Memory/live_topology_ast.json"
+                if os.path.exists(map_path):
+                    try:
+                        with open(map_path, encoding="utf-8") as map_f:
+                            t_data = json.load(map_f)
+                            nodes = t_data.get("nodes", []) if isinstance(t_data, dict) else []
+                            edges = t_data.get("edges", []) if isinstance(t_data, dict) else []
+                            nodes_summary = ", ".join(
+                                f"{n.get('label', 'unknown')} ({n.get('shape', 'unknown')})"
+                                for n in nodes[:20]
+                                if isinstance(n, dict)
+                            )
+                            edges_count = len(edges)
+                            topology_context = (
+                                "\n[NATIVE 3D TOPOLOGY]: "
+                                f"Mapped Nodes: [{nodes_summary}...], "
+                                f"Mapped Shared-Resource Connections: [{edges_count} edges].\n"
+                            )
+                            print("[+] Real-time 3D topology loaded into Architect Context.")
+                    except (OSError, json.JSONDecodeError) as exc:
+                        print(f"[!] Live Architect topology context skipped: {exc}")
+
+                async def call_architect_model(provider_tag, prompt_text, meta):
+                    prompt_with_topology = f"{prompt_text}\n{topology_context}"
+                    profile = meta.get("profile", {})
+                    print(f"[*] {meta.get('role', 'model')} -> {provider_tag} ({profile.get('model_class', 'unknown')})")
+                    return await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+
+                transaction = await run_live_architect_transaction(
+                    core_intent,
+                    repo_root=Path.cwd(),
+                    model_caller=call_architect_model,
+                )
+                print("\n====================================================================")
+                print(" LIVE ARCHITECT REFACTOR ARENA REPORT")
+                print("====================================================================")
+                print(render_live_architect_summary(transaction))
+                print("====================================================================\n")
+                if transaction.verification.hotswap_ready:
+                    SOVEREIGN_CORE.vocalize(
+                        "Live Architect transaction verified. Hot-swap capsule is ready for review."
+                    )
+                else:
+                    SOVEREIGN_CORE.vocalize("Live Architect transaction blocked safely. Review the staged transaction.")
+            except asyncio.CancelledError:
+                print("[-] Live Architect transaction stopped by user request.")
+                SOVEREIGN_CORE.vocalize("Live Architect transaction stopped.")
+            except Exception as e:
+                print(f"[-] Live Architect transaction failed safely: {e}")
+            finally:
+                if getattr(node, "_live_architect_task", None) is asyncio.current_task():
+                    node._live_architect_task = None
+
+        node._live_architect_task = asyncio.create_task(run_live_architect())
+        return True
+
     while True:
         try:
             u_in = await asyncio.to_thread(input, "\n[Dallas] > ")
@@ -5289,6 +5377,9 @@ async def main():
 
             # Clear stop flag at the start of each new command
             _STOP_REQUESTED.clear()
+
+            if await dispatch_live_architect_command(u_in):
+                continue
 
             # ------------------------------------------------------------------------
             # [LAYER 7 AUTOMATED COGNITIVE LIFECYCLE HOOK]
