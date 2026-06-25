@@ -258,6 +258,14 @@ coordinates, immediate graph neighbors, luminance health, spectral sparsity, and
 cycle counts so panel agents stay close to the relevant code geometry instead of
 inventing distant paths.
 
+`aura_architect_loop.py` adds the deterministic Plan/Act shell around that
+deliberation path. It turns an Architect objective into a Fractal Plan Capsule,
+pre-shards the work into bounded Act Capsules, grounds each capsule against
+CODEMAP files and symbols, emits Shadow findings for fake files, fake symbols,
+missing nearby tests, or oversized work packets, and then creates a Refactor
+Arena transaction. Builder and Incubator layers should consume that arena only
+after the Shadow gate permits it.
+
 Each task capsule also carries a compact single-seed context-lift profile from
 `aura_single_seed_lift.py`. This borrows the transferable idea from
 arXiv:2606.20633: choose one seed, cache its inverse/profile once, and dispatch
