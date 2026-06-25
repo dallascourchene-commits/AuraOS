@@ -33,6 +33,8 @@ def _stable_list(values: list[Any] | tuple[Any, ...] | None) -> list[str]:
     seen = set()
     result = []
     for value in values or []:
+        if value is None:
+            continue
         item = str(value).strip()
         if item and item not in seen:
             result.append(item)

@@ -353,6 +353,25 @@ def test_topology_delta_rejects_affected_files_outside_repo(tmp_path: Path):
     assert delta["failures"][0]["reason"] == "path_escapes_repo"
 
 
+def test_topology_delta_tracks_created_and_deleted_files_as_world_objects(tmp_path: Path):
+    repo = tmp_path / "repo"
+    workspace = tmp_path / "workspace"
+    repo.mkdir()
+    workspace.mkdir()
+    (repo / "deleted.py").write_text("def old_symbol():\n    return 1\n", encoding="utf-8")
+    (workspace / "added.py").write_text("def new_symbol():\n    return 2\n", encoding="utf-8")
+
+    delta = compute_temp_workspace_topology_delta(
+        SimpleNamespace(affected_files=["added.py", "deleted.py"]),
+        repo_root=repo,
+        workspace=workspace,
+    )
+
+    assert delta["world_state_delta"]["added"] == ["added.py"]
+    assert delta["world_state_delta"]["removed"] == ["deleted.py"]
+    assert delta["world_state_delta"]["changed"] == []
+
+
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):
     _write_demo_repo(tmp_path)
     router = ArchitectModelRouter(repo_root=tmp_path)

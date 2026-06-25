@@ -1,4 +1,7 @@
+from types import SimpleNamespace
+
 from aura_liquid_planning_arena import (
+    CodeArenaAdapter,
     CivicArenaAdapter,
     TravelArenaAdapter,
     build_world_state_delta,
@@ -25,6 +28,30 @@ def test_civic_and_travel_adapters_define_domain_neutral_action_capsules():
     assert "bookable_options" in travel.schema()["domain_objects"]
     assert "book without approval" in travel_action.forbidden_actions
     assert travel_action.expected_output == "TRAVEL_PLAN_OPTIONS"
+
+
+def test_code_adapter_skips_missing_target_file_in_scope_lists():
+    adapter = CodeArenaAdapter()
+    act = SimpleNamespace(
+        task_id="A-1",
+        role="cheap_builder",
+        objective="Patch only the declared file.",
+        target_file=None,
+        target_symbol=None,
+        related_files=[None, " demo.py ", "demo.py"],
+        allowed_scope="demo.py",
+        acceptance="demo test passes",
+        expected_output="UNIFIED_DIFF",
+        constraints=[],
+        escalate_if=[],
+    )
+
+    contract = adapter.boundary_contract_for_act(act, None)
+    action = adapter.action_capsule_from_act(act, None, contract)
+    file_regions = [item["id"] for item in action.scope["regions"] if item["region_type"] == "file"]
+
+    assert file_regions == ["demo.py"]
+    assert contract.owned_scope == ["demo.py"]
 
 
 def test_world_state_delta_tracks_added_removed_changed_and_stable_objects():

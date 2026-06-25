@@ -14,21 +14,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 216
-- **total_bytes**: 61954494
-- **text_tokens_est**: 943168
+- **total_bytes**: 61956352
+- **text_tokens_est**: 943632
 - **role_counts**: {'binary_artifact': 11, 'interface_surface': 1, 'knowledge_artifact': 28, 'native_accelerator': 8, 'operator_script': 4, 'python_module': 142, 'schema_or_lexicon': 9, 'support_file': 13}
 - **topology_nodes**: 0
 - **topology_edges**: 0
 - **topology_source**: disabled
 - **elapsed_ms**: 7610.86
-- **last_incremental_refresh_unix**: 1782402207
+- **last_incremental_refresh_unix**: 1782403022
 
 ## Coverage
 
 - **included_file_count**: 216
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=102, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=112
+- **skipped_dir_file_counts**: `.git`=101, `.pytest_cache`=5, `Aura_Memory`=3, `__pycache__`=112
 
 ## Command Index
 
@@ -98,8 +98,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!simulate` -> `USER_GUIDE.md:186`, `aura_node.py:6755`, `cognitive_router.py:220`
 - `!something` -> `aura_node.py:4901`
 - `!srcPos` -> `index.html:120`
-- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_live_architect.py:1127`, `aura_node.py:6319`
-- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_live_architect.py:1128`, `aura_node.py:6366`
+- `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:214`, `aura_live_architect.py:1129`, `aura_node.py:6319`
+- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:215`, `aura_live_architect.py:1130`, `aura_node.py:6366`
 - `!stage_purge` -> `USER_GUIDE.md:216`, `aura_node.py:6460`
 - `!stage_review` -> `USER_GUIDE.md:214`, `aura_node.py:6319`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `aura_node.py:5098`
@@ -198,7 +198,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_node.py` (python_module): 80 symbols, degree 0, ~99165 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 0, ~9398 tokens
 - `aura_architect_loop.py` (python_module): 65 symbols, degree 0, ~15727 tokens
-- `aura_live_architect.py` (python_module): 64 symbols, degree 0, ~13864 tokens
+- `aura_live_architect.py` (python_module): 64 symbols, degree 0, ~13902 tokens
 - `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 0, ~4864 tokens
 - `liquid_kernel.py` (python_module): 41 symbols, degree 0, ~4089 tokens
 - `arxiv_forager.py` (python_module): 37 symbols, degree 0, ~17900 tokens
@@ -218,20 +218,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - `AccountState` -> `aura_blockchain/node.py:26`
 - `ActCapsule` -> `aura_architect_loop.py:78`
-- `ActionCapsule` -> `aura_liquid_planning_arena.py:107`
+- `ActionCapsule` -> `aura_liquid_planning_arena.py:109`
 - `AdaptiveLiquidTimeConstant` -> `liquid_kernel.py:56`, `liquid_math_reference.py:35`
 - `AnthropicRouter` -> `aura_anthropic_router.py:271`
 - `ArXivForager` -> `arxiv_forager.py:82`
-- `ArchitectBuilderBridge` -> `aura_live_architect.py:999`
+- `ArchitectBuilderBridge` -> `aura_live_architect.py:1001`
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:78`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:278`
-- `ArchitectFusionCouncil` -> `aura_live_architect.py:804`
+- `ArchitectFusionCouncil` -> `aura_live_architect.py:806`
 - `ArchitectFusionLoop` -> `aura_architect_loop.py:1498`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:245`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:260`
 - `ArchitectModelProfile` -> `aura_live_architect.py:53`
-- `ArchitectModelRouter` -> `aura_live_architect.py:592`
-- `ArenaLease` -> `aura_liquid_planning_arena.py:165`
+- `ArchitectModelRouter` -> `aura_live_architect.py:594`
+- `ArenaLease` -> `aura_liquid_planning_arena.py:167`
 - `ArenaPatch` -> `aura_architect_loop.py:198`
 - `ArxivPaper` -> `arxiv_forager.py:956`
 - `AsyncMemoryPalace` -> `async_palace.py:378`, `aura_attention_palace.py:44`
@@ -282,17 +282,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraWebForager` -> `aura_node.py:1073`
 - `AuraZeroDiskIOCache` -> `aura_node.py:228`
 - `AutoRouter` -> `aura_router.py:223`
-- `BaseArenaAdapter` -> `aura_liquid_planning_arena.py:300`
+- `BaseArenaAdapter` -> `aura_liquid_planning_arena.py:302`
 - `BatchWriterConfig` -> `async_palace.py:110`
 - `BenchmarkSandbox` -> `aura_benchmark_sandbox.py:118`
 - `Block` -> `aura_blockchain/block.py:51`
-- `BoundaryContract` -> `aura_liquid_planning_arena.py:44`
+- `BoundaryContract` -> `aura_liquid_planning_arena.py:46`
 - `BoundedKnowledgeEngine` -> `aura_forager.py:18`
 - `CachePrefixReport` -> `aura_context_crusher.py:59`
 - `CalibrationLedger` -> `aura_router.py:127`
 - `ChangeLogStore` -> `aura_hv_cache.py:107`
 - `CircuitVerdict` -> `aura_ontology_circuit.py:41`
-- `CivicArenaAdapter` -> `aura_liquid_planning_arena.py:458`
+- `CivicArenaAdapter` -> `aura_liquid_planning_arena.py:461`
 - `ClosedFormContinuousCore` -> `liquid_kernel.py:151`
-- `CodeArenaAdapter` -> `aura_liquid_planning_arena.py:322`
+- `CodeArenaAdapter` -> `aura_liquid_planning_arena.py:324`
 - `CodeTopologyMapper` -> `spatial_mapper.py:55`

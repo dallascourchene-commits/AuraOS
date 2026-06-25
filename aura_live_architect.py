@@ -416,28 +416,30 @@ def compute_temp_workspace_topology_delta(
         rel, before_path, after_path = safe_paths
         before = _python_topology_signature(before_path)
         after = _python_topology_signature(after_path)
-        before_objects.append(
-            {
-                "id": rel,
-                "object_type": "python_file_topology",
-                "exists": before.get("exists"),
-                "definitions": before.get("definitions", []),
-                "imports": before.get("imports", []),
-                "calls": before.get("calls", []),
-                "parse_error": before.get("parse_error"),
-            }
-        )
-        after_objects.append(
-            {
-                "id": rel,
-                "object_type": "python_file_topology",
-                "exists": after.get("exists"),
-                "definitions": after.get("definitions", []),
-                "imports": after.get("imports", []),
-                "calls": after.get("calls", []),
-                "parse_error": after.get("parse_error"),
-            }
-        )
+        if before.get("exists"):
+            before_objects.append(
+                {
+                    "id": rel,
+                    "object_type": "python_file_topology",
+                    "exists": before.get("exists"),
+                    "definitions": before.get("definitions", []),
+                    "imports": before.get("imports", []),
+                    "calls": before.get("calls", []),
+                    "parse_error": before.get("parse_error"),
+                }
+            )
+        if after.get("exists"):
+            after_objects.append(
+                {
+                    "id": rel,
+                    "object_type": "python_file_topology",
+                    "exists": after.get("exists"),
+                    "definitions": after.get("definitions", []),
+                    "imports": after.get("imports", []),
+                    "calls": after.get("calls", []),
+                    "parse_error": after.get("parse_error"),
+                }
+            )
         if before.get("parse_error") or after.get("parse_error"):
             failures.append(
                 {
