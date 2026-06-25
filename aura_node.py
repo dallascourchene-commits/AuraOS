@@ -5307,18 +5307,22 @@ async def main():
                     try:
                         with open(map_path, encoding="utf-8") as map_f:
                             t_data = json.load(map_f)
+                            nodes = t_data.get("nodes", []) if isinstance(t_data, dict) else []
+                            edges = t_data.get("edges", []) if isinstance(t_data, dict) else []
                             nodes_summary = ", ".join(
-                                [f"{n['label']} ({n['shape']})" for n in t_data.get("nodes", [])[:20]]
+                                f"{n.get('label', 'unknown')} ({n.get('shape', 'unknown')})"
+                                for n in nodes[:20]
+                                if isinstance(n, dict)
                             )
-                            edges_count = len(t_data.get("edges", []))
+                            edges_count = len(edges)
                             topology_context = (
                                 "\n[NATIVE 3D TOPOLOGY]: "
                                 f"Mapped Nodes: [{nodes_summary}...], "
                                 f"Mapped Shared-Resource Connections: [{edges_count} edges].\n"
                             )
                             print("[+] Real-time 3D topology loaded into Architect Context.")
-                    except Exception:
-                        pass
+                    except (OSError, json.JSONDecodeError) as exc:
+                        print(f"[!] Live Architect topology context skipped: {exc}")
 
                 async def call_architect_model(provider_tag, prompt_text, meta):
                     prompt_with_topology = f"{prompt_text}\n{topology_context}"
