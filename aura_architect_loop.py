@@ -452,9 +452,29 @@ def ground_plan_capsule(
     codemap_paths = _codemap_paths(codemap)
     evidence = []
     for act in plan.act_capsules:
+def ground_plan_capsule(
+    plan: FractalPlanCapsule,
+    *,
+    repo_root: str | Path = REPO_ROOT,
+) -> list[GroundingEvidence]:
+    """Map every Act Capsule to actual CODEMAP files, symbols, and nearby tests."""
+    root = Path(repo_root)
+    resolved_root = root.resolve()
+    codemap = _load_codemap(root)
+    codemap_paths = _codemap_paths(codemap)
+    evidence = []
+    for act in plan.act_capsules:
         target_file = _normalize_path(act.target_file)
-        file_exists = bool(target_file and (root / target_file).exists())
-        codemap_file_hit = bool(target_file and target_file in codemap_paths)
+        resolved_target = (root / target_file).resolve() if target_file else None
+        in_repo = False
+        if resolved_target is not None:
+            try:
+                resolved_target.relative_to(resolved_root)
+                in_repo = True
+            except ValueError:
+                in_repo = False
+        file_exists = bool(target_file and in_repo and resolved_target and resolved_target.exists())
+        codemap_file_hit = bool(target_file and in_repo and target_file in codemap_paths)
         symbol_hits = _symbol_hits(codemap, act.target_symbol, target_file)
         card = _file_card(codemap, target_file)
         topology = card.get("topology", {}) if isinstance(card, dict) else {}
