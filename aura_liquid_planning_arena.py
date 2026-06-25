@@ -536,15 +536,17 @@ class TravelArenaAdapter(BaseArenaAdapter):
             ],
             expected_output="TRAVEL_PLAN_OPTIONS",
             escalation_triggers=list(
-                constraints
-                or [
-                    "price unavailable",
-                    "stale sidecar price",
-                    "missing source provenance",
-                    "visa ambiguity",
-                    "booking policy mismatch",
-                    "payment or legal boundary",
-                ]
+                dict.fromkeys(
+                    [
+                        "price unavailable",
+                        "stale sidecar price",
+                        "missing source provenance",
+                        "visa ambiguity",
+                        "booking policy mismatch",
+                        "payment or legal boundary",
+                        *(constraints or []),
+                    ]
+                )
             ),
         )
 
