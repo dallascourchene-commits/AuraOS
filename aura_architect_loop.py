@@ -1225,7 +1225,11 @@ def verify_refactor_arena(
             fail("tests", "Verifier requires a test runner before hot-swap.", test_files=sorted(all_tests))
         else:
             for test_name in sorted(all_tests):
-                passed, details = _runner_status(runner(test_name))
+                try:
+                    passed, details = _runner_status(runner(test_name))
+                except Exception as exc:
+                    fail("tests", "Verifier test runner raised.", test=test_name, details={"error": str(exc)})
+                    continue
                 if passed:
                     record("tests", "passed", test=test_name, details=details)
                 else:
