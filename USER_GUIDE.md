@@ -264,7 +264,11 @@ pre-shards the work into bounded Act Capsules, grounds each capsule against
 CODEMAP files and symbols, emits Shadow findings for fake files, fake symbols,
 missing nearby tests, or oversized work packets, and then creates a Refactor
 Arena transaction. Builder and Incubator layers should consume that arena only
-after the Shadow gate permits it.
+after the Shadow gate permits it. The complete transaction path can then stage
+owned Builder diffs through `stage_arena_patch`, verify boundaries, conflicts,
+working-tree files, and tests through `verify_refactor_arena`, produce a
+hot-swap capsule with rollback digests, and append an Architect JSONL ledger row
+with `ArchitectFusionLoop.execute`.
 
 Each task capsule also carries a compact single-seed context-lift profile from
 `aura_single_seed_lift.py`. This borrows the transferable idea from

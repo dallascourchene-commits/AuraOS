@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -7,10 +8,15 @@ from aura_architect_loop import (
     ArchitectFusionLoop,
     CodemapLoadError,
     PLAN_CAPSULE_VERSION,
+    append_architect_ledger,
+    architect_capability_cards,
     build_fractal_plan_capsule,
+    build_hotswap_capsule,
     ground_plan_capsule,
     route_intensity,
     shadow_plan_capsule,
+    stage_arena_patch,
+    verify_refactor_arena,
 )
 
 
@@ -146,3 +152,148 @@ def test_high_context_pressure_attaches_phase_continuity_capsule():
     assert continuity.target_file == "aura_phase_capsule.py"
     assert continuity.target_symbol == "capture_phase_capsule"
     assert len(continuity.phase_hash) == 32
+
+
+def test_architect_capability_cards_cover_final_loop():
+    cards = architect_capability_cards()
+    assert [card["capability"] for card in cards] == [
+        "plan",
+        "act",
+        "ground",
+        "shadow",
+        "verify",
+        "escalate",
+        "handoff",
+        "judge",
+        "hotswap",
+        "rollback",
+        "ledger",
+    ]
+    assert {card["function"] for card in cards} >= {
+        "build_fractal_plan_capsule",
+        "stage_arena_patch",
+        "verify_refactor_arena",
+        "build_hotswap_capsule",
+        "append_architect_ledger",
+    }
+
+
+def test_refactor_arena_stages_only_assigned_patch_scope():
+    result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
+        "Stage a bounded Architect patch",
+        architecture_decision="Builder patches must stay inside their Act Capsule scope.",
+        target_file="aura_fusion.py",
+        target_symbol="build_task_capsule",
+        act_tasks=[
+            {
+                "task_id": "A-STAGE",
+                "objective": "Patch only the fusion capsule helper.",
+                "target_file": "aura_fusion.py",
+                "target_symbol": "build_task_capsule",
+            }
+        ],
+    )
+
+    staged = stage_arena_patch(
+        result.arena,
+        task_id="A-STAGE",
+        owner="cheap_builder",
+        diff="diff --git a/aura_fusion.py b/aura_fusion.py\n--- a/aura_fusion.py\n+++ b/aura_fusion.py\n",
+        affected_files=["aura_fusion.py"],
+        affected_symbols=["build_task_capsule"],
+        tests=["test_aura_fusion.py"],
+    )
+    blocked = stage_arena_patch(
+        result.arena,
+        task_id="A-STAGE",
+        owner="cheap_builder",
+        diff="diff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n",
+        affected_files=["README.md"],
+    )
+
+    assert staged.ok is True
+    assert staged.patch is not None
+    assert result.arena.shared_patch_queue[0]["patch_id"] == staged.patch.patch_id
+    assert blocked.ok is False
+    assert {finding.shadow_type for finding in blocked.findings} >= {"cross_boundary_patch"}
+
+
+def test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule():
+    result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
+        "Verify a staged Architect patch",
+        architecture_decision="Hot-swap must wait for verifier-owned tests.",
+        target_file="aura_fusion.py",
+        target_symbol="build_task_capsule",
+        act_tasks=[
+            {
+                "task_id": "A-VERIFY",
+                "objective": "Patch only the fusion capsule helper.",
+                "target_file": "aura_fusion.py",
+                "target_symbol": "build_task_capsule",
+            }
+        ],
+    )
+    stage_arena_patch(
+        result.arena,
+        task_id="A-VERIFY",
+        owner="cheap_builder",
+        diff="diff --git a/aura_fusion.py b/aura_fusion.py\n--- a/aura_fusion.py\n+++ b/aura_fusion.py\n",
+        affected_files=["aura_fusion.py"],
+        tests=["test_aura_fusion.py"],
+    )
+
+    pending = verify_refactor_arena(result.arena, repo_root=REPO_ROOT)
+    verified = verify_refactor_arena(
+        result.arena,
+        repo_root=REPO_ROOT,
+        runner=lambda test_name: {"status": "passed", "test": test_name},
+    )
+    capsule = build_hotswap_capsule(result.arena, verified, repo_root=REPO_ROOT)
+
+    assert pending.hotswap_ready is False
+    assert any(failure["stage"] == "tests" for failure in pending.failures)
+    assert verified.hotswap_ready is True
+    assert capsule["status"] == "ready"
+    assert capsule["judge"]["decision"] == "promote_hotswap"
+    assert capsule["rollback_capsule"]["files"][0]["path"] == "aura_fusion.py"
+
+
+def test_architect_execute_appends_ledger_record(tmp_path: Path):
+    ledger_path = tmp_path / "architect_loop.jsonl"
+    execution = ArchitectFusionLoop(repo_root=REPO_ROOT).execute(
+        "Execute a complete Architect transaction",
+        architecture_decision="Stage, verify, hot-swap, and ledger the bounded patch.",
+        target_file="aura_fusion.py",
+        target_symbol="build_task_capsule",
+        act_tasks=[
+            {
+                "task_id": "A-LEDGER",
+                "objective": "Patch only the fusion capsule helper.",
+                "target_file": "aura_fusion.py",
+                "target_symbol": "build_task_capsule",
+            }
+        ],
+        patch_submissions=[
+            {
+                "task_id": "A-LEDGER",
+                "owner": "cheap_builder",
+                "diff": "diff --git a/aura_fusion.py b/aura_fusion.py\n--- a/aura_fusion.py\n+++ b/aura_fusion.py\n",
+                "affected_files": ["aura_fusion.py"],
+                "tests": ["test_aura_fusion.py"],
+            }
+        ],
+        runner=lambda test_name: {"status": "passed", "test": test_name},
+        ledger_path=ledger_path,
+    )
+    rows = [line for line in ledger_path.read_text(encoding="utf-8").splitlines() if line]
+
+    assert execution.verification.hotswap_ready is True
+    assert execution.hotswap_capsule["status"] == "ready"
+    assert len(rows) == 1
+    assert json.loads(rows[0])["phase_hash"] == execution.ledger_record.phase_hash
+
+
+def test_append_architect_ledger_accepts_dict_payload(tmp_path: Path):
+    ledger_path = tmp_path / "manual.jsonl"
+    append_architect_ledger({"event": "manual", "phase_hash": "abc123"}, ledger_path=ledger_path)
+    assert ledger_path.read_text(encoding="utf-8").strip() == '{"event": "manual", "phase_hash": "abc123"}'
