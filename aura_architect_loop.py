@@ -4,8 +4,8 @@ ST3GG_BASE: 0xa902-[Q-SYS:ARCHITECT_LOOP]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Grounded Refactor Orchestration)
 DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
-FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArchitectLoopResult, CodemapLoadError, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, route_intensity, ArchitectFusionLoop
-SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, and a bounded refactor arena before any builder or incubator patch can run.
+FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArenaPatch, PatchStageResult, VerificationResult, ArchitectLedgerRecord, ArchitectLoopResult, ArchitectExecutionResult, CodemapLoadError, architect_capability_cards, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, stage_arena_patch, verify_refactor_arena, judge_refactor_arena, build_rollback_capsule, build_hotswap_capsule, build_architect_ledger_record, append_architect_ledger, route_intensity, ArchitectFusionLoop
+SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, a bounded refactor arena, verifier-gated hot-swap capsule, rollback capsule, and append-only ledger record before any patch is promoted.
 [/AURA_MASTER_KEY]
 """
 
@@ -15,7 +15,7 @@ from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from aura_fusion import DEFAULT_CONSTRAINTS, build_task_capsule
 from aura_phase_capsule import AuraPhaseCapsule, capture_phase_capsule
@@ -28,6 +28,26 @@ PLAN_CAPSULE_VERSION = "AURA_FRACTAL_PLAN_CAPSULE_V1"
 ACT_CAPSULE_VERSION = "AURA_ACT_CAPSULE_V1"
 SHADOW_REPORT_VERSION = "AURA_SHADOW_REPORT_V1"
 REFACTOR_ARENA_VERSION = "AURA_REFACTOR_ARENA_V1"
+ARENA_PATCH_VERSION = "AURA_ARENA_PATCH_V1"
+ARCHITECT_VERIFICATION_VERSION = "AURA_ARCHITECT_VERIFICATION_V1"
+ARCHITECT_HOTSWAP_VERSION = "AURA_ARCHITECT_HOTSWAP_V1"
+ARCHITECT_ROLLBACK_VERSION = "AURA_ARCHITECT_ROLLBACK_V1"
+ARCHITECT_LEDGER_VERSION = "AURA_ARCHITECT_LEDGER_V1"
+ARCHITECT_LEDGER_PATH = Path(REPO_ROOT) / "Aura_Memory" / "architect_loop_ledger.jsonl"
+
+ARCHITECT_CAPABILITY_ORDER = [
+    "plan",
+    "act",
+    "ground",
+    "shadow",
+    "verify",
+    "escalate",
+    "handoff",
+    "judge",
+    "hotswap",
+    "rollback",
+    "ledger",
+]
 
 DEFAULT_ESCALATION_RULES = [
     "missing_file_or_symbol -> run Shadow before Builder",
@@ -172,6 +192,68 @@ class RefactorArenaTransaction:
 
 
 @dataclass
+class ArenaPatch:
+    patch_version: str
+    patch_id: str
+    task_id: str
+    owner: str
+    diff: str
+    affected_files: list[str]
+    affected_symbols: list[str] = field(default_factory=list)
+    tests: list[str] = field(default_factory=list)
+    status: str = "staged"
+    phase_hash: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class PatchStageResult:
+    ok: bool
+    arena: RefactorArenaTransaction
+    patch: ArenaPatch | None
+    findings: list[ShadowFinding]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "ok": self.ok,
+            "arena": self.arena.to_dict(),
+            "patch": self.patch.to_dict() if self.patch else None,
+            "findings": [finding.to_dict() for finding in self.findings],
+        }
+
+
+@dataclass
+class VerificationResult:
+    verification_version: str
+    ok: bool
+    stage: str
+    checks: list[dict[str, Any]]
+    failures: list[dict[str, Any]]
+    hotswap_ready: bool
+    phase_hash: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
+class ArchitectLedgerRecord:
+    ledger_version: str
+    event: str
+    plan_phase_hash: str
+    intensity: int
+    stage_results: list[dict[str, Any]]
+    verification: dict[str, Any]
+    hotswap_capsule: dict[str, Any]
+    phase_hash: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass
 class ArchitectLoopResult:
     plan: FractalPlanCapsule
     grounding: list[GroundingEvidence]
@@ -186,6 +268,24 @@ class ArchitectLoopResult:
             "shadow_report": self.shadow_report.to_dict(),
             "arena": self.arena.to_dict(),
             "intensity": self.intensity,
+        }
+
+
+@dataclass
+class ArchitectExecutionResult:
+    prepared: ArchitectLoopResult
+    stage_results: list[PatchStageResult]
+    verification: VerificationResult
+    hotswap_capsule: dict[str, Any]
+    ledger_record: ArchitectLedgerRecord
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "prepared": self.prepared.to_dict(),
+            "stage_results": [item.to_dict() for item in self.stage_results],
+            "verification": self.verification.to_dict(),
+            "hotswap_capsule": self.hotswap_capsule,
+            "ledger_record": self.ledger_record.to_dict(),
         }
 
 
@@ -215,6 +315,217 @@ def _load_codemap(repo_root: str | Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise CodemapLoadError(f"CODEMAP artifact must be a JSON object at {path}")
     return data
+
+
+def _normalized_path_list(values: Any) -> list[str]:
+    if values is None:
+        return []
+    if isinstance(values, str):
+        raw_values = [values]
+    else:
+        raw_values = list(values)
+    normalized = []
+    seen = set()
+    for value in raw_values:
+        item = _normalize_path(str(value))
+        if item and item not in seen:
+            normalized.append(item)
+            seen.add(item)
+    return normalized
+
+
+def _diff_path_token(path: str) -> str | None:
+    token = path.strip().strip('"').strip("'")
+    if not token or token == "/dev/null":
+        return None
+    if "\t" in token:
+        token = token.split("\t", 1)[0]
+    for prefix in ("a/", "b/"):
+        if token.startswith(prefix):
+            token = token[2:]
+            break
+    return _normalize_path(token)
+
+
+def _add_diff_file(files: list[str], seen: set[str], path: str) -> None:
+    normalized = _diff_path_token(path)
+    if normalized and normalized not in seen:
+        files.append(normalized)
+        seen.add(normalized)
+
+
+def _diff_touched_files(diff: str) -> list[str]:
+    files: list[str] = []
+    seen: set[str] = set()
+    previous_was_minus_header = False
+    for line in str(diff or "").splitlines():
+        if line.startswith("diff --git "):
+            parts = line.split()
+            if len(parts) >= 4:
+                _add_diff_file(files, seen, parts[2])
+                _add_diff_file(files, seen, parts[3])
+            previous_was_minus_header = False
+            continue
+        if line.startswith("--- "):
+            _add_diff_file(files, seen, line[4:])
+            previous_was_minus_header = True
+            continue
+        if line.startswith("+++ ") and previous_was_minus_header:
+            _add_diff_file(files, seen, line[4:])
+            previous_was_minus_header = False
+            continue
+        previous_was_minus_header = False
+        for marker in ("*** Update File: ", "*** Add File: ", "*** Delete File: "):
+            if line.startswith(marker):
+                _add_diff_file(files, seen, line[len(marker):])
+                break
+    return files
+
+
+def _agent_capsule_for_task(arena: RefactorArenaTransaction, task_id: str) -> dict[str, Any] | None:
+    for capsule in arena.agent_capsules:
+        if str(capsule.get("task_id")) == str(task_id):
+            return capsule
+    return None
+
+
+def _arena_files_for_task(arena: RefactorArenaTransaction, task_id: str) -> set[str]:
+    capsule = _agent_capsule_for_task(arena, task_id)
+    if capsule is None:
+        return set()
+    scoped = {
+        _normalize_path(capsule.get("target_file")),
+        *(_normalize_path(item) for item in capsule.get("related_files", []) or []),
+    }
+    scoped.discard(None)
+    arena_files = set(arena.affected_files)
+    return {str(item) for item in scoped if item in arena_files}
+
+
+def _file_digest(path: Path) -> str | None:
+    if not path.exists() or not path.is_file():
+        return None
+    digest = hashlib.blake2b(digest_size=16)
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _runner_status(outcome: Any) -> tuple[bool, dict[str, Any]]:
+    if isinstance(outcome, dict):
+        status = str(outcome.get("status", "")).lower()
+        returncode = outcome.get("returncode")
+        ok = outcome.get("ok")
+        if ok is not None:
+            passed = bool(ok)
+        elif status in {"ok", "pass", "passed", "success"}:
+            passed = True
+        elif status in {"fail", "failed", "failure", "error"}:
+            passed = False
+        else:
+            passed = returncode == 0
+        return passed, outcome
+    if isinstance(outcome, bool):
+        return outcome, {"status": "passed" if outcome else "failed"}
+    if isinstance(outcome, str):
+        status = outcome.strip().lower()
+        if status in {"ok", "pass", "passed", "success"}:
+            return True, {"status": status}
+        if status in {"fail", "failed", "failure", "error"}:
+            return False, {"status": status}
+    if isinstance(outcome, tuple) and outcome:
+        passed, details = _runner_status(outcome[0])
+        if len(outcome) > 1:
+            details = dict(details)
+            details["detail"] = outcome[1]
+        return passed, details
+    if isinstance(outcome, int):
+        return outcome == 0, {"returncode": outcome}
+    return bool(outcome), {"status": "passed" if outcome else "failed"}
+
+
+def architect_capability_cards() -> list[dict[str, Any]]:
+    """Return the callable capability map for the final Architect loop."""
+    return [
+        {
+            "capability": "plan",
+            "function": "build_fractal_plan_capsule",
+            "input": "architect objective, constraints, risk map, requested Act shards",
+            "output": "FractalPlanCapsule",
+            "gate": "PLAN mode",
+        },
+        {
+            "capability": "act",
+            "function": "stage_arena_patch",
+            "input": "Builder diff emitted from a bounded Act Capsule",
+            "output": "ArenaPatch in the shared patch queue",
+            "gate": "one owner, one bounded scope",
+        },
+        {
+            "capability": "ground",
+            "function": "ground_plan_capsule",
+            "input": "FractalPlanCapsule and CODEMAP",
+            "output": "GroundingEvidence",
+            "gate": "fail closed when CODEMAP is unavailable",
+        },
+        {
+            "capability": "shadow",
+            "function": "shadow_plan_capsule",
+            "input": "Plan Capsule plus GroundingEvidence",
+            "output": "ShadowReport",
+            "gate": "blocks fake files, fake symbols, oversized work, and weak local truth",
+        },
+        {
+            "capability": "verify",
+            "function": "verify_refactor_arena",
+            "input": "RefactorArenaTransaction with staged patches",
+            "output": "VerificationResult",
+            "gate": "no hot-swap until patch ownership, boundaries, conflicts, and tests pass",
+        },
+        {
+            "capability": "escalate",
+            "function": "route_intensity",
+            "input": "Plan Capsule and ShadowReport",
+            "output": "0-5 orchestration intensity",
+            "gate": "premium planner or judge required for blockers and high-risk shards",
+        },
+        {
+            "capability": "handoff",
+            "function": "capture_phase_capsule",
+            "input": "high context pressure plan state",
+            "output": "AuraPhaseCapsule",
+            "gate": "context rollover keeps target and phase hash stable",
+        },
+        {
+            "capability": "judge",
+            "function": "judge_refactor_arena",
+            "input": "VerificationResult",
+            "output": "promote, repair, or escalate decision",
+            "gate": "conflicts and failed tests must not be promoted",
+        },
+        {
+            "capability": "hotswap",
+            "function": "build_hotswap_capsule",
+            "input": "verified RefactorArenaTransaction",
+            "output": "hot-swap capsule",
+            "gate": "verifier hotswap_ready must be true",
+        },
+        {
+            "capability": "rollback",
+            "function": "build_rollback_capsule",
+            "input": "affected files before promotion",
+            "output": "file digest rollback capsule",
+            "gate": "phase-hash anchored discard/revert path",
+        },
+        {
+            "capability": "ledger",
+            "function": "append_architect_ledger",
+            "input": "ArchitectLedgerRecord",
+            "output": "append-only JSONL record",
+            "gate": "verified or blocked outcome is recorded",
+        },
+    ]
 
 
 def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
@@ -652,6 +963,439 @@ def build_refactor_arena(
     )
 
 
+def stage_arena_patch(
+    arena: RefactorArenaTransaction,
+    *,
+    task_id: str,
+    owner: str,
+    diff: str,
+    affected_files: list[str],
+    affected_symbols: list[str] | None = None,
+    tests: list[str] | None = None,
+) -> PatchStageResult:
+    """Stage one Builder patch only if it stays inside the task's arena boundary."""
+    normalized_files = _normalized_path_list(affected_files)
+    normalized_tests = _normalized_path_list(tests)
+    normalized_symbols = [str(item) for item in affected_symbols or [] if str(item).strip()]
+    owner_name = str(owner or "cheap_builder").strip() or "cheap_builder"
+    task_name = str(task_id)
+    diff_files = _diff_touched_files(diff)
+    all_patch_files = _normalized_path_list([*normalized_files, *diff_files])
+    findings: list[ShadowFinding] = []
+    capsule = _agent_capsule_for_task(arena, task_name)
+    if capsule is None:
+        findings.append(
+            ShadowFinding(
+                shadow_type="unassigned_patch_task",
+                severity="blocker",
+                message="Patch submission does not match an Act Capsule in this arena.",
+                task_id=task_name,
+            )
+        )
+    if not normalized_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="missing_patch_files",
+                severity="blocker",
+                message="Patch submission must name at least one affected file.",
+                task_id=task_name,
+            )
+        )
+    if normalized_files and not diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="unparseable_patch_diff",
+                severity="blocker",
+                message="Patch diff must include file headers that can be matched against affected_files.",
+                task_id=task_name,
+            )
+        )
+    undeclared_diff_files = sorted(file for file in diff_files if file not in normalized_files)
+    if undeclared_diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="undeclared_diff_file",
+                severity="blocker",
+                message=f"Patch diff touches files not declared in affected_files: {', '.join(undeclared_diff_files)}",
+                task_id=task_name,
+                target_file=undeclared_diff_files[0],
+            )
+        )
+    declared_without_diff = sorted(file for file in normalized_files if file not in diff_files)
+    if declared_without_diff and diff_files:
+        findings.append(
+            ShadowFinding(
+                shadow_type="declared_file_missing_from_diff",
+                severity="blocker",
+                message=f"Patch affected_files includes paths absent from diff headers: {', '.join(declared_without_diff)}",
+                task_id=task_name,
+                target_file=declared_without_diff[0],
+            )
+        )
+    arena_files = set(arena.affected_files)
+    outside_arena = sorted(file for file in all_patch_files if file not in arena_files)
+    if outside_arena:
+        findings.append(
+            ShadowFinding(
+                shadow_type="cross_boundary_patch",
+                severity="blocker",
+                message=f"Patch touches files outside the Refactor Arena: {', '.join(outside_arena)}",
+                task_id=task_name,
+                target_file=outside_arena[0],
+            )
+        )
+    allowed_files = _arena_files_for_task(arena, task_name)
+    outside_task = sorted(file for file in all_patch_files if allowed_files and file not in allowed_files)
+    if outside_task:
+        findings.append(
+            ShadowFinding(
+                shadow_type="cross_task_boundary_patch",
+                severity="blocker",
+                message=f"Patch touches files outside the Act Capsule scope: {', '.join(outside_task)}",
+                task_id=task_name,
+                target_file=outside_task[0],
+            )
+        )
+    if not str(diff or "").strip():
+        findings.append(
+            ShadowFinding(
+                shadow_type="empty_patch",
+                severity="blocker",
+                message="Patch submission has no diff body.",
+                task_id=task_name,
+            )
+        )
+
+    if findings:
+        return PatchStageResult(ok=False, arena=arena, patch=None, findings=findings)
+
+    patch_payload = {
+        "patch_version": ARENA_PATCH_VERSION,
+        "plan_phase_hash": arena.plan_phase_hash,
+        "task_id": task_name,
+        "owner": owner_name,
+        "diff": diff,
+        "affected_files": normalized_files,
+        "affected_symbols": normalized_symbols,
+        "tests": normalized_tests,
+        "status": "staged",
+    }
+    patch = ArenaPatch(
+        patch_version=ARENA_PATCH_VERSION,
+        patch_id=_hash_payload(patch_payload),
+        task_id=task_name,
+        owner=owner_name,
+        diff=diff,
+        affected_files=normalized_files,
+        affected_symbols=normalized_symbols,
+        tests=normalized_tests,
+        status="staged",
+        phase_hash=_hash_payload({**patch_payload, "patch_id": _hash_payload(patch_payload)}),
+    )
+    arena.shared_patch_queue.append(patch.to_dict())
+    arena.verification_ledger.append(
+        {
+            "stage": "patch_stage",
+            "status": "staged",
+            "task_id": task_name,
+            "patch_id": patch.patch_id,
+            "owner": owner_name,
+            "affected_files": normalized_files,
+            "tests": normalized_tests,
+        }
+    )
+    return PatchStageResult(ok=True, arena=arena, patch=patch, findings=[])
+
+
+def verify_refactor_arena(
+    arena: RefactorArenaTransaction,
+    *,
+    repo_root: str | Path = REPO_ROOT,
+    runner: Callable[[str], Any] | None = None,
+) -> VerificationResult:
+    """Verify staged arena patches before hot-swap authority is granted."""
+    checks: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+
+    def record(stage: str, status: str, **extra: Any) -> None:
+        checks.append({"stage": stage, "status": status, **extra})
+
+    def fail(stage: str, message: str, **extra: Any) -> None:
+        failure = {"stage": stage, "status": "failed", "message": message, **extra}
+        failures.append(failure)
+        checks.append(failure)
+
+    shadow_ok = bool(arena.shadow_report.get("ok"))
+    if arena.ready_for_incubator and shadow_ok:
+        record("arena_gate", "passed", plan_phase_hash=arena.plan_phase_hash)
+    else:
+        fail("arena_gate", "Arena is not ready for patch promotion.", shadow_gate=arena.shadow_report.get("gate"))
+
+    if arena.shared_patch_queue:
+        record("patch_queue", "passed", patch_count=len(arena.shared_patch_queue))
+    else:
+        fail("patch_queue", "No Builder patches have been staged in the arena.")
+
+    known_tasks = {str(item.get("task_id")) for item in arena.agent_capsules}
+    arena_files = set(arena.affected_files)
+    file_locks: dict[str, tuple[str, str]] = {}
+    all_tests: set[str] = set()
+    for item in arena.verification_ledger:
+        if item.get("stage") == "tests":
+            all_tests.update(_normalized_path_list(item.get("test_files", [])))
+
+    for patch in arena.shared_patch_queue:
+        patch_id = str(patch.get("patch_id") or "")
+        task_id = str(patch.get("task_id") or "")
+        owner = str(patch.get("owner") or "")
+        patch_files = _normalized_path_list(patch.get("affected_files", []))
+        diff_files = _diff_touched_files(str(patch.get("diff") or ""))
+        all_patch_files = _normalized_path_list([*patch_files, *diff_files])
+        all_tests.update(_normalized_path_list(patch.get("tests", [])))
+        if patch.get("status") != "staged":
+            fail("patch_status", "Patch is not in staged status.", patch_id=patch_id, status=patch.get("status"))
+        if task_id not in known_tasks:
+            fail("patch_task", "Patch task is not owned by an Act Capsule.", patch_id=patch_id, task_id=task_id)
+        if not owner:
+            fail("patch_owner", "Patch has no owner.", patch_id=patch_id, task_id=task_id)
+        if not patch_files:
+            fail("patch_files", "Patch has no affected files.", patch_id=patch_id, task_id=task_id)
+        if patch_files and not diff_files:
+            fail("patch_diff_files", "Patch diff has no parseable file headers.", patch_id=patch_id, task_id=task_id)
+        undeclared_diff_files = sorted(file for file in diff_files if file not in patch_files)
+        if undeclared_diff_files:
+            fail(
+                "patch_diff_files",
+                "Patch diff touches files not declared in affected_files.",
+                patch_id=patch_id,
+                task_id=task_id,
+                files=undeclared_diff_files,
+            )
+        declared_without_diff = sorted(file for file in patch_files if file not in diff_files)
+        if declared_without_diff and diff_files:
+            fail(
+                "patch_diff_files",
+                "Patch affected_files includes paths absent from diff headers.",
+                patch_id=patch_id,
+                task_id=task_id,
+                files=declared_without_diff,
+            )
+        outside_arena = sorted(file for file in all_patch_files if file not in arena_files)
+        if outside_arena:
+            fail("patch_boundary", "Patch touches files outside the arena.", patch_id=patch_id, files=outside_arena)
+        allowed_files = _arena_files_for_task(arena, task_id)
+        outside_task = sorted(file for file in all_patch_files if allowed_files and file not in allowed_files)
+        if outside_task:
+            fail("patch_task_boundary", "Patch touches files outside its Act Capsule.", patch_id=patch_id, files=outside_task)
+        if not str(patch.get("diff") or "").strip():
+            fail("patch_diff", "Patch has no diff body.", patch_id=patch_id, task_id=task_id)
+        for file in all_patch_files:
+            lock = file_locks.get(file)
+            next_lock = (owner, task_id)
+            if lock and lock != next_lock:
+                fail(
+                    "patch_conflict",
+                    "Multiple owners/tasks staged patches for the same file.",
+                    file=file,
+                    first_owner=lock[0],
+                    first_task=lock[1],
+                    next_owner=owner,
+                    next_task=task_id,
+                )
+            else:
+                file_locks[file] = next_lock
+        if patch_files:
+            record("patch_scope", "passed", patch_id=patch_id, files=patch_files, diff_files=diff_files)
+
+    root = Path(repo_root)
+    for file in sorted(arena_files):
+        target = (root / file).resolve()
+        try:
+            target.relative_to(root.resolve())
+        except ValueError:
+            fail("repo_boundary", "Arena affected file resolves outside repo_root.", file=file)
+            continue
+        if target.exists():
+            record("repo_boundary", "passed", file=file)
+        else:
+            fail("repo_boundary", "Arena affected file is missing from the working tree.", file=file)
+
+    if all_tests:
+        if runner is None:
+            fail("tests", "Verifier requires a test runner before hot-swap.", test_files=sorted(all_tests))
+        else:
+            for test_name in sorted(all_tests):
+                try:
+                    passed, details = _runner_status(runner(test_name))
+                except Exception as exc:
+                    fail("tests", "Verifier test runner raised.", test=test_name, details={"error": str(exc)})
+                    continue
+                if passed:
+                    record("tests", "passed", test=test_name, details=details)
+                else:
+                    fail("tests", "Verifier test failed.", test=test_name, details=details)
+    else:
+        record("tests", "passed", test_files=[])
+
+    hotswap_ready = not failures and bool(arena.shared_patch_queue) and arena.ready_for_incubator
+    phase_payload = {
+        "verification_version": ARCHITECT_VERIFICATION_VERSION,
+        "plan_phase_hash": arena.plan_phase_hash,
+        "patch_ids": [patch.get("patch_id") for patch in arena.shared_patch_queue],
+        "checks": checks,
+        "failures": failures,
+        "hotswap_ready": hotswap_ready,
+    }
+    return VerificationResult(
+        verification_version=ARCHITECT_VERIFICATION_VERSION,
+        ok=hotswap_ready,
+        stage="verified" if hotswap_ready else "blocked",
+        checks=checks,
+        failures=failures,
+        hotswap_ready=hotswap_ready,
+        phase_hash=_hash_payload(phase_payload),
+    )
+
+
+def judge_refactor_arena(verification: VerificationResult) -> dict[str, Any]:
+    """Return the deterministic Judge decision for a verified or blocked arena."""
+    if verification.hotswap_ready:
+        decision = "promote_hotswap"
+    elif any(item.get("stage") in {"patch_boundary", "patch_task_boundary", "patch_conflict"} for item in verification.failures):
+        decision = "escalate_to_judge"
+    elif any(item.get("stage") == "tests" for item in verification.failures):
+        decision = "repair_with_builder"
+    elif any(item.get("stage") == "patch_queue" for item in verification.failures):
+        decision = "wait_for_builder"
+    else:
+        decision = "block_transaction"
+    return {
+        "decision": decision,
+        "verification_phase_hash": verification.phase_hash,
+        "failure_count": len(verification.failures),
+        "next_gate": "HOTSWAP" if decision == "promote_hotswap" else "REPAIR_OR_ESCALATE",
+    }
+
+
+def build_rollback_capsule(
+    arena: RefactorArenaTransaction,
+    *,
+    repo_root: str | Path = REPO_ROOT,
+) -> dict[str, Any]:
+    """Capture a compact rollback capsule for every file in the arena."""
+    root = Path(repo_root).resolve()
+    file_snapshots = []
+    for file in arena.affected_files:
+        normalized = _normalize_path(file)
+        target = (root / normalized).resolve() if normalized else root
+        in_repo = False
+        if normalized:
+            try:
+                target.relative_to(root)
+                in_repo = True
+            except ValueError:
+                in_repo = False
+        file_snapshots.append(
+            {
+                "path": normalized,
+                "in_repo": in_repo,
+                "exists": bool(in_repo and target.exists()),
+                "digest": _file_digest(target) if in_repo else None,
+            }
+        )
+    payload = {
+        "rollback_version": ARCHITECT_ROLLBACK_VERSION,
+        "plan_phase_hash": arena.plan_phase_hash,
+        "files": file_snapshots,
+        "rollback_hint": arena.rollback_hint,
+    }
+    return {**payload, "phase_hash": _hash_payload(payload)}
+
+
+def build_hotswap_capsule(
+    arena: RefactorArenaTransaction,
+    verification: VerificationResult,
+    *,
+    repo_root: str | Path = REPO_ROOT,
+) -> dict[str, Any]:
+    """Build the promotion capsule only after Verifier grants hot-swap readiness."""
+    rollback_capsule = build_rollback_capsule(arena, repo_root=repo_root)
+    judge = judge_refactor_arena(verification)
+    payload = {
+        "hotswap_version": ARCHITECT_HOTSWAP_VERSION,
+        "status": "ready" if verification.hotswap_ready else "blocked",
+        "plan_phase_hash": arena.plan_phase_hash,
+        "verification_phase_hash": verification.phase_hash,
+        "judge": judge,
+        "affected_files": list(arena.affected_files),
+        "patches": [
+            {
+                "patch_id": patch.get("patch_id"),
+                "task_id": patch.get("task_id"),
+                "owner": patch.get("owner"),
+                "affected_files": patch.get("affected_files", []),
+                "phase_hash": patch.get("phase_hash"),
+            }
+            for patch in arena.shared_patch_queue
+        ],
+        "rollback_capsule": rollback_capsule,
+        "failures": verification.failures,
+    }
+    return {**payload, "phase_hash": _hash_payload(payload)}
+
+
+def build_architect_ledger_record(
+    prepared: ArchitectLoopResult,
+    stage_results: list[PatchStageResult],
+    verification: VerificationResult,
+    hotswap_capsule: dict[str, Any],
+) -> ArchitectLedgerRecord:
+    """Build the append-only Architect ledger row for this transaction."""
+    stage_summaries = [
+        {
+            "ok": result.ok,
+            "patch_id": result.patch.patch_id if result.patch else None,
+            "task_id": result.patch.task_id if result.patch else None,
+            "findings": [finding.to_dict() for finding in result.findings],
+        }
+        for result in stage_results
+    ]
+    payload = {
+        "ledger_version": ARCHITECT_LEDGER_VERSION,
+        "event": "architect_transaction",
+        "plan_phase_hash": prepared.plan.phase_hash,
+        "intensity": prepared.intensity,
+        "stage_results": stage_summaries,
+        "verification": verification.to_dict(),
+        "hotswap_capsule": hotswap_capsule,
+    }
+    return ArchitectLedgerRecord(
+        ledger_version=ARCHITECT_LEDGER_VERSION,
+        event="architect_transaction",
+        plan_phase_hash=prepared.plan.phase_hash,
+        intensity=prepared.intensity,
+        stage_results=stage_summaries,
+        verification=verification.to_dict(),
+        hotswap_capsule=hotswap_capsule,
+        phase_hash=_hash_payload(payload),
+    )
+
+
+def append_architect_ledger(
+    record: ArchitectLedgerRecord | dict[str, Any],
+    *,
+    ledger_path: str | Path = ARCHITECT_LEDGER_PATH,
+) -> Path:
+    """Append one Architect transaction row to the local JSONL ledger."""
+    path = Path(ledger_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = record.to_dict() if isinstance(record, ArchitectLedgerRecord) else dict(record)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True, default=str))
+        handle.write("\n")
+    return path
+
+
 def route_intensity(plan: FractalPlanCapsule, shadow_report: ShadowReport) -> int:
     """Choose a 0-5 orchestration intensity from local risk signals."""
     blocker_count = sum(1 for finding in shadow_report.findings if finding.severity == "blocker")
@@ -713,4 +1457,62 @@ class ArchitectFusionLoop:
             shadow_report=shadow_report,
             arena=arena,
             intensity=route_intensity(plan, shadow_report),
+        )
+
+    def execute(
+        self,
+        objective: str,
+        *,
+        architecture_decision: str,
+        act_tasks: list[str | dict[str, Any]],
+        patch_submissions: list[dict[str, Any]] | None = None,
+        target_file: str | None = None,
+        target_symbol: str | None = None,
+        acceptance_criteria: list[str] | None = None,
+        rollback_conditions: list[str] | None = None,
+        risk_map: list[str] | None = None,
+        constraints: list[str] | None = None,
+        escalation_rules: list[str] | None = None,
+        context_pressure: float = 0.0,
+        runner: Callable[[str], Any] | None = None,
+        ledger_path: str | Path | None = None,
+    ) -> ArchitectExecutionResult:
+        """Run the complete Plan/Act/Ground/Shadow/Arena/Verify/Hot-swap/Ledger loop."""
+        prepared = self.prepare(
+            objective,
+            architecture_decision=architecture_decision,
+            act_tasks=act_tasks,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            acceptance_criteria=acceptance_criteria,
+            rollback_conditions=rollback_conditions,
+            risk_map=risk_map,
+            constraints=constraints,
+            escalation_rules=escalation_rules,
+            context_pressure=context_pressure,
+        )
+        stage_results = []
+        for submission in patch_submissions or []:
+            stage_results.append(
+                stage_arena_patch(
+                    prepared.arena,
+                    task_id=str(submission.get("task_id", "")),
+                    owner=str(submission.get("owner", "cheap_builder")),
+                    diff=str(submission.get("diff", "")),
+                    affected_files=_normalized_path_list(submission.get("affected_files", [])),
+                    affected_symbols=[str(item) for item in submission.get("affected_symbols", []) or []],
+                    tests=_normalized_path_list(submission.get("tests", [])),
+                )
+            )
+        verification = verify_refactor_arena(prepared.arena, repo_root=self.repo_root, runner=runner)
+        hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=self.repo_root)
+        ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
+        if ledger_path is not None:
+            append_architect_ledger(ledger_record, ledger_path=ledger_path)
+        return ArchitectExecutionResult(
+            prepared=prepared,
+            stage_results=stage_results,
+            verification=verification,
+            hotswap_capsule=hotswap_capsule,
+            ledger_record=ledger_record,
         )
