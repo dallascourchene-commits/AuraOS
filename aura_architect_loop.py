@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa902-[Q-SYS:ARCHITECT_LOOP]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Grounded Refactor Orchestration)
 DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
-FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArchitectLoopResult, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, route_intensity, ArchitectFusionLoop
+FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArchitectLoopResult, CodemapLoadError, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, route_intensity, ArchitectFusionLoop
 SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, and a bounded refactor arena before any builder or incubator patch can run.
 [/AURA_MASTER_KEY]
 """
@@ -47,6 +47,10 @@ DEFAULT_ACT_ESCALATIONS = [
 
 ACT_SIZE_ORDER = {"S": 0, "M": 1, "L": 2, "XL": 3}
 PATCH_OUTPUT_MODES = {"PATCH", "UNIFIED_DIFF", "JSON_EDIT_PLAN", "PYTHON"}
+
+
+class CodemapLoadError(RuntimeError):
+    """Raised when Architect grounding cannot load a usable CODEMAP artifact."""
 
 
 @dataclass
@@ -204,9 +208,13 @@ def _load_codemap(repo_root: str | Path) -> dict[str, Any]:
     try:
         with path.open("r", encoding="utf-8") as handle:
             data = json.load(handle)
-        return data if isinstance(data, dict) else {}
-    except (OSError, json.JSONDecodeError):
-        return {}
+    except OSError as exc:
+        raise CodemapLoadError(f"CODEMAP artifact is unavailable at {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise CodemapLoadError(f"CODEMAP artifact is not valid JSON at {path}") from exc
+    if not isinstance(data, dict):
+        raise CodemapLoadError(f"CODEMAP artifact must be a JSON object at {path}")
+    return data
 
 
 def _codemap_paths(codemap: dict[str, Any]) -> set[str]:
@@ -448,35 +456,28 @@ def ground_plan_capsule(
 ) -> list[GroundingEvidence]:
     """Map every Act Capsule to actual CODEMAP files, symbols, and nearby tests."""
     root = Path(repo_root)
-    codemap = _load_codemap(root)
-    codemap_paths = _codemap_paths(codemap)
-    evidence = []
-    for act in plan.act_capsules:
-def ground_plan_capsule(
-    plan: FractalPlanCapsule,
-    *,
-    repo_root: str | Path = REPO_ROOT,
-) -> list[GroundingEvidence]:
-    """Map every Act Capsule to actual CODEMAP files, symbols, and nearby tests."""
-    root = Path(repo_root)
     resolved_root = root.resolve()
-    codemap = _load_codemap(root)
+    try:
+        codemap = _load_codemap(root)
+    except CodemapLoadError as exc:
+        raise CodemapLoadError(f"Cannot ground Architect plan without CODEMAP: {exc}") from exc
     codemap_paths = _codemap_paths(codemap)
     evidence = []
     for act in plan.act_capsules:
         target_file = _normalize_path(act.target_file)
         resolved_target = (root / target_file).resolve() if target_file else None
         in_repo = False
+        grounded_target_file = target_file
         if resolved_target is not None:
             try:
-                resolved_target.relative_to(resolved_root)
+                grounded_target_file = resolved_target.relative_to(resolved_root).as_posix()
                 in_repo = True
             except ValueError:
                 in_repo = False
         file_exists = bool(target_file and in_repo and resolved_target and resolved_target.exists())
-        codemap_file_hit = bool(target_file and in_repo and target_file in codemap_paths)
-        symbol_hits = _symbol_hits(codemap, act.target_symbol, target_file)
-        card = _file_card(codemap, target_file)
+        codemap_file_hit = bool(grounded_target_file and in_repo and grounded_target_file in codemap_paths)
+        symbol_hits = _symbol_hits(codemap, act.target_symbol, grounded_target_file if in_repo else target_file)
+        card = _file_card(codemap, grounded_target_file if in_repo else None)
         topology = card.get("topology", {}) if isinstance(card, dict) else {}
         neighbor_files = [
             _normalize_path(item)
@@ -486,13 +487,13 @@ def ground_plan_capsule(
         evidence.append(
             GroundingEvidence(
                 task_id=act.task_id,
-                target_file=target_file,
+                target_file=grounded_target_file,
                 target_symbol=act.target_symbol,
                 file_exists=file_exists,
                 codemap_file_hit=codemap_file_hit,
                 symbol_exists=bool(symbol_hits) if act.target_symbol else True,
                 codemap_symbol_hits=symbol_hits,
-                test_files=_test_candidates(root, target_file),
+                test_files=_test_candidates(root, grounded_target_file if in_repo else None),
                 neighbor_files=neighbor_files,
             )
         )

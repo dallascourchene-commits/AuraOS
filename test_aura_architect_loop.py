@@ -1,8 +1,11 @@
 from pathlib import Path
 
+import pytest
+
 from aura_architect_loop import (
     ARCHITECT_LOOP_VERSION,
     ArchitectFusionLoop,
+    CodemapLoadError,
     PLAN_CAPSULE_VERSION,
     build_fractal_plan_capsule,
     ground_plan_capsule,
@@ -73,6 +76,50 @@ def test_shadow_report_blocks_fake_file_and_symbol():
     assert "fake_symbol" in shadow_types
     assert report.gate == "BLOCK_BUILDER"
     assert route_intensity(plan, report) == 4
+
+
+def test_grounder_fails_closed_without_codemap(tmp_path: Path):
+    (tmp_path / "aura_fusion.py").write_text("# local file without CODEMAP\n", encoding="utf-8")
+    plan = build_fractal_plan_capsule(
+        "Try to ground without a CODEMAP artifact",
+        architecture_decision="Grounder must fail closed when CODEMAP is unavailable.",
+        repo_root=tmp_path,
+        act_tasks=[
+            {
+                "task_id": "A-CODEMAP",
+                "objective": "Patch an existing file in a repo with no CODEMAP.",
+                "target_file": "aura_fusion.py",
+            }
+        ],
+    )
+
+    with pytest.raises(CodemapLoadError, match="Cannot ground Architect plan without CODEMAP"):
+        ground_plan_capsule(plan, repo_root=tmp_path)
+
+
+def test_shadow_report_blocks_out_of_repo_existing_file(tmp_path: Path):
+    outside = tmp_path / "outside.py"
+    outside.write_text("# outside repo boundary\n", encoding="utf-8")
+    plan = build_fractal_plan_capsule(
+        "Try an out-of-repo target",
+        architecture_decision="Resolved targets must stay inside repo_root.",
+        repo_root=REPO_ROOT,
+        act_tasks=[
+            {
+                "task_id": "A-OUT",
+                "objective": "Patch a file outside the Aura repo.",
+                "target_file": str(outside),
+            }
+        ],
+    )
+
+    grounding = ground_plan_capsule(plan, repo_root=REPO_ROOT)
+    report = shadow_plan_capsule(plan, grounding)
+
+    assert grounding[0].file_exists is False
+    assert grounding[0].codemap_file_hit is False
+    assert report.ok is False
+    assert {finding.shadow_type for finding in report.findings} >= {"fake_file"}
 
 
 def test_high_context_pressure_attaches_phase_continuity_capsule():
