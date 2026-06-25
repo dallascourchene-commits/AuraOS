@@ -140,6 +140,14 @@ except ImportError:
     def regenerate_router(quiet=False):  # type: ignore[misc]
         return False
 
+try:
+    from aura_live_architect import render_live_architect_summary, run_live_architect_transaction
+    _LIVE_ARCHITECT_AVAILABLE = True
+except (ImportError, RuntimeError, OSError):
+    _LIVE_ARCHITECT_AVAILABLE = False
+    render_live_architect_summary = None  # type: ignore[assignment]
+    run_live_architect_transaction = None  # type: ignore[assignment]
+
 # ── Unified intelligence layer (new modules) ─────────────────────────────────
 try:
     from aura_anthropic_router import AnthropicRouter as _AnthropicRouter
@@ -7234,7 +7242,7 @@ def contingency_harness():
                     "!db_repair":         ("!db_repair",           "Check all AURA SQLite databases for corruption and auto-rebuild any that are malformed. Alias: !repair_db"),
                     "STOP":               ("STOP",                 "Immediately cancel any active inference or long-running process and return to the prompt."),
                     "exit / quit":        ("exit / quit",          "Gracefully shut down all kernels and exit AURA."),
-                    "architect <intent>": ("architect <intent>",   "Engage Architect mode: generate a Python tool for <intent> using cloud LLM + live topology context, staged to aura_incubator.py."),
+                    "architect <intent>": ("architect <intent>",   "Engage live Architect mode: route <intent> through Plan/Act, Refactor Arena, temp-workspace verification, hot-swap/rollback capsules, and ledgered staging."),
                 }
 
                 print("\n" + "=" * 66)
@@ -7328,12 +7336,18 @@ def contingency_harness():
                 
                 # --- NEW: ARCHITECT MODE INTERCEPT ---
                 if u_in_l.startswith("architect") or u_in_l.startswith("code"):
-                    print("\n[*] ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
+                    print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
                     
                     core_intent = u_in_l.replace("architect", "").replace("code", "").replace(":", "").strip()
-                    SOVEREIGN_CORE.vocalize("Architect mode engaged. Accessing 3D topology...")
+                    SOVEREIGN_CORE.vocalize("Live Architect mode engaged. Routing through Refactor Arena.")
                     
-                    async def draft_tool_cloud():
+                    async def run_live_architect():
+                        if not _LIVE_ARCHITECT_AVAILABLE or run_live_architect_transaction is None:
+                            print("[-] Live Architect bridge is unavailable. Check aura_live_architect.py.")
+                            SOVEREIGN_CORE.vocalize("Live Architect bridge unavailable.")
+                            return
+                        print("[*] Building Plan/Act capsules, model route, and bounded Refactor Arena...")
+
                         # Read the real-time spatial map if it exists
                         topology_context = ""
                         map_path = "Aura_Memory/live_topology_ast.json"
@@ -7349,34 +7363,34 @@ def contingency_harness():
                             except Exception:
                                 pass
                         
-                        prompt_with_topology = f"{core_intent}\n{topology_context}"
-                        print(f"[*] Dispatching intent to Cloud Synthesizer for targeted refactoring...")
+                        async def call_architect_model(provider_tag, prompt_text, meta):
+                            prompt_with_topology = f"{prompt_text}\n{topology_context}"
+                            profile = meta.get("profile", {})
+                            print(f"[*] {meta.get('role', 'model')} -> {provider_tag} ({profile.get('model_class', 'unknown')})")
+                            return await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+
                         try:
-                            # Route with system-level spatial awareness
-                            code = await node.invoke_cloud_engine("MISTRAL", prompt_with_topology)
-                            
-                            # Isolate the code output cleanly from conversational tokens
-                            code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', code, re.DOTALL | re.IGNORECASE)
-                            clean_source = code_match.group(1).replace("```python", "").replace("```", "").strip() if code_match else code.strip()
-                            
-                            with open("aura_incubator.py", "w") as f:
-                                f.write(clean_source)
-                                
-                            print(f"\n====================================================================")
-                            print(f" 🌐 STAGED MUTATION TOPOLOGY IMPACT REPORT (AURA_INCUBATOR)")
-                            print(f"====================================================================")
-                            print(f" ├─ Target Objective       : {core_intent[:60]}...")
-                            print(f" ├─ Node Connectivity Δ    : Redefining targeted functional coordinates")
-                            print(f" ├─ Data-Flow Luminance    : Optimizing shared variable routes to reduce heap bloat")
-                            print(f" ├─ Thermal Friction       : Lowering GC pressure under 4GB RAM boundary")
-                            print(f"====================================================================\n")
-                            
-                            print("[+] Code drafted and staged inside aura_incubator.py for your review.")
-                            SOVEREIGN_CORE.vocalize("Code mutation staged in the incubator. Review the topology report on your screen.")
+                            transaction = await run_live_architect_transaction(
+                                core_intent,
+                                repo_root=Path.cwd(),
+                                model_caller=call_architect_model,
+                            )
+                            print("\n====================================================================")
+                            print(" LIVE ARCHITECT REFACTOR ARENA REPORT")
+                            print("====================================================================")
+                            print(render_live_architect_summary(transaction))
+                            print("====================================================================\n")
+                            if transaction.verification.hotswap_ready:
+                                SOVEREIGN_CORE.vocalize("Live Architect transaction verified. Hot-swap capsule is ready for review.")
+                            else:
+                                SOVEREIGN_CORE.vocalize("Live Architect transaction blocked safely. Review the staged transaction.")
+                            return
                         except Exception as e:
-                            print(f"[-] Cloud Brain failed to draft tool: {e}")
+                            print(f"[-] Live Architect transaction failed safely: {e}")
+                            return
+
                             
-                    asyncio.create_task(draft_tool_cloud())
+                    asyncio.create_task(run_live_architect())
                     continue
 
                 # 1. Standard Conversational Default

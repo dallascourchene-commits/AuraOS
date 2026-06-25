@@ -128,6 +128,27 @@ def test_shadow_report_blocks_out_of_repo_existing_file(tmp_path: Path):
     assert {finding.shadow_type for finding in report.findings} >= {"fake_file"}
 
 
+def test_shadow_report_blocks_legacy_incubator_target():
+    plan = build_fractal_plan_capsule(
+        "Try to route live Architect through the legacy incubator",
+        architecture_decision="Live Architect must stage through the Refactor Arena.",
+        repo_root=REPO_ROOT,
+        act_tasks=[
+            {
+                "task_id": "A-INCUBATOR",
+                "objective": "Write a generated patch to the legacy incubator.",
+                "target_file": "aura_incubator.py",
+            }
+        ],
+    )
+
+    grounding = ground_plan_capsule(plan, repo_root=REPO_ROOT)
+    report = shadow_plan_capsule(plan, grounding)
+
+    assert report.ok is False
+    assert "legacy_incubator_target" in {finding.shadow_type for finding in report.findings}
+
+
 def test_high_context_pressure_attaches_phase_continuity_capsule():
     result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
         "Preserve Architect continuity across context rollover",

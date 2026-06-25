@@ -843,6 +843,17 @@ def shadow_plan_capsule(
                     target_symbol=act.target_symbol,
                 )
             )
+        if _normalize_path(act.target_file) == "aura_incubator.py":
+            findings.append(
+                ShadowFinding(
+                    shadow_type="legacy_incubator_target",
+                    severity="blocker",
+                    message="Live Architect patches must use the Refactor Arena; aura_incubator.py is legacy quarantine only.",
+                    task_id=act.task_id,
+                    target_file=act.target_file,
+                    target_symbol=act.target_symbol,
+                )
+            )
         if act.target_file and not evidence.file_exists:
             findings.append(
                 ShadowFinding(

@@ -56,7 +56,7 @@ known-first-party = [
     "gateway", "liquid_fhrr", "liquid_kernel", "logging_kit", "mint_genesis",
     "pulse", "pwfst", "quantum_dag", "spatial_mapper", "vsa_resonator",
     "lexical_transducer", "aura_wasm_bridge", "aura_st3gg_recall",
-    "aura_tokenizer_guard",
+    "aura_tokenizer_guard", "aura_live_architect",
 ]
 
 [tool.ruff.format]
@@ -77,7 +77,6 @@ ignore_missing_imports = true
 no_implicit_reexport = true
 show_error_codes = true
 exclude = [
-    "aura_incubator\\.py",   # corrupted file — not valid Python
     "AuraSovereign/",
     "storage/",
     "language_packs/",
