@@ -208,7 +208,7 @@ smallest useful file/symbol path.
 
 | Command | Use when | Operation and output |
 |---------|----------|----------------------|
-| `architect <intent>` / `code <intent>` | You want Aura to draft a new Python tool or mutation. | Uses cloud synthesis plus live topology context and writes the draft to `aura_incubator.py`. |
+| `architect <intent>` / `code <intent>` | You want Aura to plan and stage a bounded refactor. | Runs the live Architect bridge: premium planning, bounded Act workers, Refactor Arena staging, temp-workspace patch application, verifier-gated hot-swap/rollback capsules, and a JSONL ledger row. It stages the transaction in `Aura_Staging/architect_live_transaction.json` instead of writing model output to `aura_incubator.py`. |
 | `!self_reflect` | You want introspection before changing code. | Runs VSA resonance analysis, WASM/offload metrics, and cloud architect diagnosis. |
 | `!self_optimize` / `!optimize` | You want a staged optimization patch. | Audits runtime friction, asks the selected model for one optimized patch, sanitizes it, and writes `Aura_Staging/pending_patches.json`. |
 | `!stage` / `!stage_review` / `!review` | You need to inspect pending code before merge. | Prints staged timestamp, target, resonance confidence, and proposed code. |
@@ -269,6 +269,17 @@ owned Builder diffs through `stage_arena_patch`, verify boundaries, conflicts,
 working-tree files, and tests through `verify_refactor_arena`, produce a
 hot-swap capsule with rollback digests, and append an Architect JSONL ledger row
 with `ArchitectFusionLoop.execute`.
+
+`aura_live_architect.py` is the live command bridge for that substrate. The REPL
+`architect <intent>` and `code <intent>` paths now call it instead of writing
+cloud output to `aura_incubator.py`. The bridge selects premium planner and
+bounded Act worker roles, then asks workers for unified diffs. Shadow gating and
+Judge/promotion decisions remain local to `aura_architect_loop.py`. The bridge
+stages worker diffs in the Refactor Arena, copies the repo into a temporary
+workspace, applies the staged patches there, runs local verification commands,
+then writes `Aura_Staging/architect_live_transaction.json` plus the Architect
+ledger record. `aura_incubator.py` remains only as a valid legacy quarantine
+stub.
 
 Each task capsule also carries a compact single-seed context-lift profile from
 `aura_single_seed_lift.py`. This borrows the transferable idea from
