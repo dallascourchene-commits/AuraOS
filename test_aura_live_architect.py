@@ -273,6 +273,59 @@ def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
     assert transaction.hotswap_capsule["topology_delta"]["files"][0]["calls"]["added"] == []
 
 
+def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        if meta["role"] in {"planner", "planner_alt"}:
+            return json.dumps(
+                {
+                    "architecture_decision": "Patch demo.answer through a council candidate.",
+                    "target_file": "demo.py",
+                    "target_symbol": "answer",
+                    "act_tasks": [
+                        {
+                            "task_id": "A-REJECTED-PLAN",
+                            "objective": "Change demo.answer to return the verified value.",
+                            "target_file": "demo.py",
+                            "target_symbol": "answer",
+                            "acceptance": "test_demo.py passes in the temp workspace.",
+                            "expected_output": "UNIFIED_DIFF",
+                        }
+                    ],
+                }
+            )
+        if meta["role"] == "shadow":
+            return json.dumps({"approved": True, "score": 0.9, "blockers": [], "rationale": "No cheap blocker."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "plan_judge":
+            return json.dumps({"selected_candidate_id": "planner_1", "approved": False, "rationale": "Plan needs human redesign."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "patch_bundle_judge":
+            return json.dumps({"approved": True, "rationale": "Patch itself applies."})
+        assert provider
+        assert "Act Capsule" in prompt
+        return (
+            "diff --git a/demo.py b/demo.py\n"
+            "--- a/demo.py\n"
+            "+++ b/demo.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            " def answer():\n"
+            "-    return 1\n"
+            "+    return 2\n"
+        )
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two but reject the plan",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    assert transaction.verification.hotswap_ready is False
+    assert transaction.fusion_council["judge_decision"]["approved"] is False
+    assert any(item.get("stage") == "council_plan_judge" for item in transaction.verification.failures)
+
+
 def test_live_architect_falls_back_to_codemap_target(tmp_path: Path):
     _write_demo_repo(tmp_path)
     router = ArchitectModelRouter(repo_root=tmp_path)

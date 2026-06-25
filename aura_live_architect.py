@@ -488,6 +488,38 @@ def _merge_act_stage_result(
     )
 
 
+def _merge_council_plan_judgement(
+    verification: VerificationResult,
+    council_decision: ArchitectCouncilDecision,
+) -> VerificationResult:
+    judge_decision = council_decision.judge_decision
+    if judge_decision.get("approved", True):
+        return verification
+    failure = {
+        "stage": "council_plan_judge",
+        "status": "failed",
+        "message": "Premium Judge rejected the selected plan before patch execution.",
+        "judgement": judge_decision,
+    }
+    failures = [*verification.failures, failure]
+    checks = [*verification.checks, failure]
+    phase_payload = {
+        "base_phase_hash": verification.phase_hash,
+        "council_phase_hash": council_decision.phase_hash,
+        "judge_decision": judge_decision,
+        "failures": failures,
+    }
+    return VerificationResult(
+        verification_version=verification.verification_version,
+        ok=False,
+        stage="blocked",
+        checks=checks,
+        failures=failures,
+        hotswap_ready=False,
+        phase_hash=_hash_payload(phase_payload),
+    )
+
+
 class ArchitectModelRouter:
     """Select premium/cheap model roles and keep ledger-informed routing hints."""
 
@@ -1160,6 +1192,7 @@ async def run_live_architect_transaction(
 
     verification = verify_refactor_arena(prepared.arena, repo_root=effective_root, runner=runner)
     verification = _merge_act_stage_result(verification, prepared, stage_results)
+    verification = _merge_council_plan_judgement(verification, council_decision)
     verification = _merge_council_patch_judgement(verification, patch_judgement)
     verification = _merge_workspace_result(verification, workspace)
     hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=effective_root)
