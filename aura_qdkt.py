@@ -5,7 +5,7 @@ DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Unified Knowledge)
 DEPENDENCIES: __future__, hashlib, json, os, pathlib, sqlite3, struct, time,
               asyncio, typing, numpy, aura_hv_cache, aura_token_economics
-FUNCTIONS: UnifiedQDKT, observe, query, crystallize, promote_to_crystal,
+FUNCTIONS: UnifiedQDKT, observe, observe_retrieval_usefulness, query, crystallize, promote_to_crystal,
            _route_to_holographic, _route_to_cognitive_evolution,
            _route_to_causal_ledger, _check_crystallization
 SYNOPSIS: Pure-asyncio unified QDKT hub (lock-free, single-threaded). Routes
@@ -83,6 +83,20 @@ CREATE TABLE IF NOT EXISTS qdkt_crystal_cache (
     last_confirmed      REAL,
     hv_blob             BLOB
 );
+CREATE TABLE IF NOT EXISTS qdkt_retrieval_usefulness (
+    event_id            TEXT PRIMARY KEY,
+    query               TEXT,
+    target_type         TEXT,
+    candidate_id        TEXT,
+    candidate_type      TEXT,
+    source              TEXT,
+    usefulness_score    REAL,
+    semantic_score      REAL,
+    verifier_result     TEXT,
+    phase_hash          TEXT,
+    failure_reason      TEXT,
+    ts                  REAL
+);
 """
 
 _SCHEMA_WORKSPACE = """
@@ -100,6 +114,20 @@ CREATE TABLE IF NOT EXISTS qdkt_crystals (
     confidence      REAL,
     count           INTEGER,
     last_confirmed  REAL
+);
+CREATE TABLE IF NOT EXISTS qdkt_retrieval_usefulness (
+    event_id            TEXT PRIMARY KEY,
+    query               TEXT,
+    target_type         TEXT,
+    candidate_id        TEXT,
+    candidate_type      TEXT,
+    source              TEXT,
+    usefulness_score    REAL,
+    semantic_score      REAL,
+    verifier_result     TEXT,
+    phase_hash          TEXT,
+    failure_reason      TEXT,
+    ts                  REAL
 );
 """
 
@@ -223,6 +251,56 @@ class UnifiedQDKT:
                                     confidence, ts)
         self._check_crystallization(concept_str, confidence, payload)
 
+        return event_id
+
+    def observe_retrieval_usefulness(self, score_row: dict[str, Any]) -> str:
+        """Record DREAM-lite retrieval usefulness as first-class QDKT feedback."""
+        query = str(score_row.get("query") or "")
+        candidate_id = str(score_row.get("candidate_id") or "")
+        target_type = str(score_row.get("target_type") or "")
+        phase_hash = str(score_row.get("phase_hash") or "")
+        event_id = str(
+            score_row.get("event_id")
+            or "QDKT-DREAM-"
+            + hashlib.sha256(f"{query}:{candidate_id}:{target_type}:{phase_hash}".encode("utf-8")).hexdigest()[:16]
+        )
+        ts = float(score_row.get("ts") or time.time())
+        usefulness = float(score_row.get("usefulness_score") or 0.0)
+        semantic = float(score_row.get("semantic_score") or 0.0)
+        row = {
+            "event_id": event_id,
+            "query": query[:512],
+            "target_type": target_type[:128],
+            "candidate_id": candidate_id[:256],
+            "candidate_type": str(score_row.get("candidate_type") or "")[:128],
+            "source": str(score_row.get("source") or "")[:128],
+            "usefulness_score": usefulness,
+            "semantic_score": semantic,
+            "verifier_result": json.dumps(score_row.get("verifier_result"), sort_keys=True, default=str)[:1024],
+            "phase_hash": phase_hash[:128],
+            "failure_reason": str(score_row.get("failure_reason") or "")[:512],
+            "ts": ts,
+        }
+        self._write_retrieval_usefulness(row)
+        refs = {"retrieval_usefulness": f"dream:{event_id}"}
+        self._write_knowledge_index(
+            event_id,
+            "retrieval_usefulness",
+            f"{target_type}:{candidate_id}",
+            str(score_row.get("rationale") or "DREAM-lite downstream usefulness feedback"),
+            _hv_bytes(query + candidate_id + target_type),
+            usefulness,
+            refs,
+            ts,
+        )
+        self._write_workspace_event(
+            event_id,
+            "retrieval_usefulness",
+            f"{target_type}:{candidate_id}",
+            str(score_row.get("rationale") or ""),
+            usefulness,
+            ts,
+        )
         return event_id
 
     def query(
@@ -392,6 +470,14 @@ class UnifiedQDKT:
         except Exception:
             pass
         try:
+            with _db(_WORKSPACE_DB) as conn:
+                n_dream = conn.execute(
+                    "SELECT COUNT(*) FROM qdkt_retrieval_usefulness"
+                ).fetchone()[0]
+            lines.append(f"  DREAM retrieval rows  : {n_dream}")
+        except Exception:
+            pass
+        try:
             from aura_hv_cache import ChangeLogStore
             n_cl = len(ChangeLogStore().all_records())
             lines.append(f"  Change log entries    : {n_cl}")
@@ -541,6 +627,24 @@ class UnifiedQDKT:
                 )
         except Exception:
             pass
+
+    def _write_retrieval_usefulness(self, row: dict[str, Any]) -> None:
+        columns = (
+            "event_id", "query", "target_type", "candidate_id",
+            "candidate_type", "source", "usefulness_score", "semantic_score",
+            "verifier_result", "phase_hash", "failure_reason", "ts",
+        )
+        values = tuple(row.get(column) for column in columns)
+        sql = (
+            "INSERT OR REPLACE INTO qdkt_retrieval_usefulness "
+            f"({', '.join(columns)}) VALUES ({', '.join(['?'] * len(columns))})"
+        )
+        for path in (_MEMPALACE_DB, _WORKSPACE_DB):
+            try:
+                with _db(path) as conn:
+                    conn.execute(sql, values)
+            except Exception:
+                pass
 
     def _check_crystallization(self, concept, confidence, payload):
         key = _concept_key(concept)

@@ -98,6 +98,10 @@ def test_vsa_pointer_resolves_exact_price_without_storing_money_in_vector_payloa
     )
     assert candidate.exact_price["total_price_minor"] == 327444
     assert candidate.status == "verified_pending_human_approval"
+    assert candidate.semantic_match["dream_usefulness"]["target_type"] == "travel_vsa_pointer"
+    dream_blob = json.dumps(candidate.semantic_match["dream_usefulness"], sort_keys=True)
+    assert "327444" not in dream_blob
+    assert "total_price_minor" not in dream_blob
     assert {item["boundary_type"] for item in candidate.boundary_contracts} == {
         "price_freshness",
         "booking_payment",
@@ -141,4 +145,3 @@ def test_media_registry_accepts_gaussian_splat_references(tmp_path):
     assert contract["requires_rights_review"] is True
     assert contract["premium_listing_surface"] == "360/video/gaussian_splat"
     sidecar.close()
-

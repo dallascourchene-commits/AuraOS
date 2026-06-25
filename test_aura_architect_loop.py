@@ -51,12 +51,15 @@ def test_architect_loop_builds_grounded_plan_act_arena():
     assert result.grounding[0].codemap_file_hit is True
     assert result.grounding[0].symbol_exists is True
     assert result.grounding[0].test_files == ["test_aura_fusion.py"]
+    assert result.grounding[0].dream_scores
+    assert result.grounding[0].dream_scores[0]["target_type"] == "code_context"
     assert result.shadow_report.ok is True
     assert result.arena.ready_for_incubator is True
     assert result.arena.boundary_contracts[0]["invariant"].startswith("preserve phase_hash")
     assert result.arena.boundary_contracts[0]["contract_version"] == "AURA_BOUNDARY_CONTRACT_V1"
     assert result.arena.agent_leases[0]["capsule_id"] == "A1"
     assert result.arena.liquid_arena["domain"] == "code"
+    assert result.arena.liquid_arena["action_capsules"][0]["metadata"]["dream_context_scores"]
     forbidden_actions = set(result.arena.liquid_arena["action_capsules"][0]["forbidden_actions"])
     assert {
         "mutate production files directly",

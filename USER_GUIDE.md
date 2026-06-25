@@ -280,6 +280,18 @@ remembers. The initial adapters define code, civic, and travel domain objects so
 later planners can stage civic interventions or travel options without pretending
 those domains are code patches.
 
+`aura_dream_retrieval.py` adds a DREAM-lite retrieval usefulness layer inspired
+by Dense Retrieval Embeddings via Autoregressive Modeling. Aura does not replace
+VSA, ST3GG, CODEMAP, paper memory, or sidecars with DREAM. Instead, normal
+retrieval still proposes candidates, and DREAM-lite reranks them by whether they
+help the downstream task, verifier, or Arena outcome. Candidate scores are
+written to `Aura_Memory/dream_retrieval_ledger.jsonl` when recording is enabled,
+and QDKT stores the same signal in `qdkt_retrieval_usefulness`. Architect
+grounding attaches DREAM scores to CODEMAP files, symbols, nearby tests, and
+topology neighbors; ST3GG recall can rerank already-resolved memory records; the
+Travel Arena ranks VSA pointers while exact prices remain exclusively in the
+sidecar and verifier path.
+
 Aura Travel is wired as a planner-verifier subsystem, not a chatbot price source.
 `travel_scraper_core.py` ingests local Option B scraper output, saves immutable
 raw snapshots under `Aura_Memory/travel_sidecar/raw_snapshots`, and splits data

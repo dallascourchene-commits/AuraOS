@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa90c-[Q-SYS:TRAVEL_PACKAGE_ARENA]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Planner-Verifier Travel Arena)
-DEPENDENCIES: dataclasses, hashlib, json, typing, aura_liquid_planning_arena, travel_price_sidecar, travel_price_verifier, travel_vsa_pointer_index
+DEPENDENCIES: dataclasses, hashlib, json, typing, aura_dream_retrieval, aura_liquid_planning_arena, travel_price_sidecar, travel_price_verifier, travel_vsa_pointer_index
 FUNCTIONS: TravelPackageArena, TravelPackageCandidate
 SYNOPSIS: Sidecar-aware Travel Arena that resolves VSA semantic pointers into exact price records, verifies freshness/provenance, attaches BoundaryContracts, and rejects stale or vector-only prices.
 [/AURA_MASTER_KEY]
@@ -17,6 +17,7 @@ import hashlib
 import json
 from typing import Any
 
+from aura_dream_retrieval import DreamCandidate, rerank_for_arena
 from aura_liquid_planning_arena import BoundaryContract, TravelArenaAdapter
 from travel_price_sidecar import TravelPriceSidecar
 from travel_price_verifier import TravelPriceVerifier
@@ -151,6 +152,33 @@ class TravelPackageArena:
             "semantic_tags": pointer.get("semantic_tags", []),
             "match_reason": list(match_reason or pointer.get("semantic_tags", []) or []),
         }
+        dream_result = rerank_for_arena(
+            json.dumps(traveler_intent, sort_keys=True, default=str),
+            [
+                DreamCandidate(
+                    candidate_id=vsa_id,
+                    candidate_type="travel_vsa_pointer",
+                    source="travel_vsa_pointer_index",
+                    content=" ".join(str(item) for item in pointer.get("semantic_tags", []) or []),
+                    semantic_score=0.74,
+                    truth_boundary="DREAM ranks the pointer; sidecar returns exact price truth",
+                    exact_lookup_required=True,
+                    verifier_result=verification.to_dict(),
+                    metadata={
+                        "entity_type": pointer.get("entity_type"),
+                        "entity_id": pointer.get("entity_id"),
+                        "sidecar_table": pointer.get("sidecar_table"),
+                        "sidecar_key": pointer.get("sidecar_key"),
+                        "semantic_tags": pointer.get("semantic_tags", []),
+                    },
+                )
+            ],
+            "travel_vsa_pointer",
+            arena_domain="travel",
+            record=False,
+            metadata={"package_id": package_id},
+        )
+        semantic_match["dream_usefulness"] = dream_result["scores"][0] if dream_result.get("scores") else {}
         return TravelPackageCandidate(
             package_id=package_id,
             traveler_intent=traveler_intent,
