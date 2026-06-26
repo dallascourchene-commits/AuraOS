@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8c5-[Q-SYS:CODEBASE_NAVIGATOR]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Navigable Context)
 DEPENDENCIES: argparse, ast, hashlib, json, math, os, pathlib, re, time, aura_substrate, aura_topological_scanner
-FUNCTIONS: stable_unit_vector, cosine, classify_file, scan_repository, build_navigation_system, load_or_compile_topology, refresh_index_for_paths, write_navigation_artifacts, search_index, main
+FUNCTIONS: stable_unit_vector, cosine, classify_file, scan_repository, build_navigation_system, load_or_compile_topology, refresh_index_for_paths, refresh_codemap_for_paths, write_navigation_artifacts, search_index, main
 SYNOPSIS: Deterministic Aura-native codebase navigation index that scans once, writes a compact map, and answers surgical navigation queries from that map so agents do not need to re-read the entire repository.
 [/AURA_MASTER_KEY]
 """
@@ -723,6 +723,32 @@ def write_navigation_artifacts(payload: dict[str, Any], json_path: Path = DEFAUL
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def refresh_codemap_for_paths(
+    changed_paths: list[str | Path],
+    *,
+    root: Path | str | None = None,
+    index_path: Path = DEFAULT_INDEX_PATH,
+    markdown_path: Path = DEFAULT_MARKDOWN_PATH,
+    include_topology: bool = True,
+    refresh_topology: bool = False,
+) -> dict[str, Any] | None:
+    """Refresh CODEMAP branches for concrete paths and rewrite JSON/Markdown artifacts."""
+    repo_root = Path(root or ".").resolve()
+    resolved_index = index_path if index_path.is_absolute() else repo_root / index_path
+    resolved_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path
+    if not resolved_index.exists():
+        return None
+    payload = refresh_index_for_paths(
+        resolved_index,
+        [Path(path) for path in changed_paths],
+        root=repo_root,
+        include_topology=include_topology,
+        refresh_topology=refresh_topology,
+    )
+    write_navigation_artifacts(payload, resolved_index, resolved_markdown)
+    return payload
 
 
 def main() -> int:

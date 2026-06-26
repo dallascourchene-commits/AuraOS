@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa8fa-[Q-SYS:AURA_FUSION]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / User-Owned Deliberation)
-DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_llm_egress, aura_model_probe_ledger, aura_single_seed_lift, aura_skillweaver, aura_substrate
+DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_codebase_navigator, aura_llm_egress, aura_model_probe_ledger, aura_single_seed_lift, aura_skillweaver, aura_substrate
 FUNCTIONS: AuraFusionAgent, AuraPanelOutput, AuraFusionResult, load_fusion_config, build_task_capsule, parse_json_object, AuraFusionCoordinator, main
 SYNOPSIS: Aura-native multi-model deliberation: compact task capsule, cached single-seed context lift, SkillWeaver gate, parallel Thinker/Worker/Verifier panel, structured judge synthesis, and phase-hashable run metrics using user-owned provider keys.
 [/AURA_MASTER_KEY]
@@ -24,6 +24,7 @@ import time
 from typing import Any
 
 from aura_api_rotator import load_secrets
+from aura_codebase_navigator import refresh_codemap_for_paths
 from aura_llm_egress import generate_openai_compatible_payload
 from aura_model_probe_ledger import AuraModelProbeLedger
 from aura_single_seed_lift import compact_lift_capsule, compile_text_single_seed_lift
@@ -389,6 +390,21 @@ def infer_fusion_target(task: str, *, repo_root: str = REPO_ROOT, codemap: dict[
     return {"source": None, "target_file": None, "target_symbol": None}
 
 
+def _refresh_codemap_targets(repo_root: str, target_files: list[str | None]) -> dict[str, Any] | None:
+    paths = sorted({
+        _normalize_repo_path(path) or ""
+        for path in target_files
+        if _normalize_repo_path(path)
+    })
+    if not paths:
+        return None
+    try:
+        payload = refresh_codemap_for_paths(paths, root=Path(repo_root), include_topology=True)
+    except Exception as exc:
+        return {"ok": False, "paths": paths, "error": type(exc).__name__}
+    return {"ok": payload is not None, "paths": paths}
+
+
 def _codemap_epoch(repo_root: str = REPO_ROOT) -> str:
     path = os.path.join(repo_root, ".aura", "CODEMAP.json")
     try:
@@ -674,15 +690,39 @@ class AuraFusionCoordinator:
         extra_capsule: dict[str, Any] | None = None,
     ) -> AuraFusionResult:
         target_inference: dict[str, Any] = {"source": None, "target_file": target_file, "target_symbol": target_symbol}
+        codemap_refreshes: list[dict[str, Any]] = []
         if not target_file:
+            commands = [
+                command
+                for command in re.findall(r"(?<!\w)![A-Za-z_][\w-]*", task or "")
+                if command.lower() != "!fusion"
+            ]
+            if commands:
+                preflight_targets = ["aura_node.py"]
+                codemap = _load_codemap(self.repo_root)
+                for command in commands:
+                    for location in _command_locations(codemap, command):
+                        path, _line = _split_codemap_location(location)
+                        if path:
+                            preflight_targets.append(path)
+                refresh = _refresh_codemap_targets(self.repo_root, preflight_targets)
+                if refresh:
+                    refresh["phase"] = "command_index_preflight"
+                    codemap_refreshes.append(refresh)
             target_inference = infer_fusion_target(task, repo_root=self.repo_root)
             target_file = target_inference.get("target_file") or None
             if not target_symbol:
                 target_symbol = target_inference.get("target_symbol") or None
+        refresh = _refresh_codemap_targets(self.repo_root, [target_file])
+        if refresh:
+            refresh["phase"] = "target_branch_preflight"
+            codemap_refreshes.append(refresh)
 
         capsule_extra = dict(extra_capsule or {})
         if target_inference.get("source"):
             capsule_extra["target_inference"] = target_inference
+        if codemap_refreshes:
+            capsule_extra["codemap_refreshes"] = codemap_refreshes
 
         capsule = build_task_capsule(
             task,
@@ -711,6 +751,7 @@ class AuraFusionCoordinator:
                     "target_file": target_file,
                     "target_symbol": target_symbol,
                     "target_inference": target_inference,
+                    "codemap_refreshes": codemap_refreshes,
                     "log_path": self.log_path,
                 },
             )
@@ -736,6 +777,7 @@ class AuraFusionCoordinator:
                 "target_file": target_file,
                 "target_symbol": target_symbol,
                 "target_inference": target_inference,
+                "codemap_refreshes": codemap_refreshes,
                 "log_path": self.log_path,
             }
         except Exception as exc:
@@ -752,6 +794,7 @@ class AuraFusionCoordinator:
                 "target_file": target_file,
                 "target_symbol": target_symbol,
                 "target_inference": target_inference,
+                "codemap_refreshes": codemap_refreshes,
                 "log_path": self.log_path,
             }
 

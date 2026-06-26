@@ -5513,23 +5513,8 @@ async def main():
                 continue
 
             elif u_in_l.startswith("!approve"):
-                target_method = u_in_l.replace("!approve", "").strip()
-                print(f"\n[*] ARCHITECT OVERRIDE: Approving mutation [{target_method}]")
-                SOVEREIGN_CORE.vocalize("Mutation approved. Attempting AST graft.")
-
-                try:
-                    with open("aura_incubator.py") as f:
-                        new_code = f.read()
-
-                    # Execute her native AST Surgeon to permanently rewrite aura_node.py
-                    success = node.ast_surgical_graft(target_method, new_code)
-
-                    if success:
-                        SOVEREIGN_CORE.vocalize("Mutation grafted. My DNA is updated.")
-                    else:
-                        SOVEREIGN_CORE.vocalize("Graft failed. Syntax anomaly detected.")
-                except FileNotFoundError:
-                    print("[-] Error: aura_incubator.py is empty or missing.")
+                print("[-] !approve is disabled for alignment safety.")
+                print("    Use Architect/Refactor Arena verification and an explicit hot-swap capsule instead.")
                 continue
 
 
@@ -5930,6 +5915,9 @@ async def main():
                 continue
 
             elif u_in_l.startswith("!push"):
+                print("[-] !push is disabled inside Aura's REPL for alignment safety.")
+                print("    Run git from the operator shell after tests, or use the verified PR workflow.")
+                continue
                 start_time = time.time()
                 commit_msg = u_in_l[5:].strip()
                 if not commit_msg:
@@ -6254,11 +6242,8 @@ async def main():
                     code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', response, re.DOTALL | re.IGNORECASE)
                     clean_source = code_match.group(1).replace("```python", "").replace("```", "").strip() if code_match else response.strip()
 
-                    with open("aura_incubator.py", "w", encoding="utf-8") as f:
-                        f.write(clean_source)
-
                     print("\n====================================================================")
-                    print(" 🌐 STAGED MUTATION TOPOLOGY IMPACT REPORT (AURA_INCUBATOR)")
+                    print(" * MUTATION TOPOLOGY IMPACT REPORT (REFACTOR ARENA REQUIRED)")
                     print("====================================================================")
                     print(f" • Targeted Concept       : {concept}")
                     print(" • Synthesis Base          : Ingested Academic Engrams")
@@ -6266,8 +6251,9 @@ async def main():
                     print(" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
                     print("====================================================================\n")
 
-                    print("[+] Theoretical synthesis complete. Code staged inside aura_incubator.py.")
-                    SOVEREIGN_CORE.vocalize("Synthesis complete. Review the staged patch in the incubator.")
+                    print("[-] Legacy aura_incubator.py staging is disabled.")
+                    print("[blocked] Route synthesized code through Architect/Refactor Arena before disk mutation.")
+                    SOVEREIGN_CORE.vocalize("Synthesis complete. Refactor Arena verification is required before mutation.")
                 except Exception as e:
                     print(f"[-] Comparative synthesis failed: {e}")
                 continue
@@ -6534,12 +6520,8 @@ async def main():
                         dag = QuantumMerkleDAG(node)
                         state_snapshot = dag.generate_epistemic_system_root("AURA_PRE_MERGE_REFACTOR", 37.9)
 
-                        with open("aura_incubator.py", "w", encoding="utf-8") as f_inc:
-                            f_inc.write(proposed_code)
-
-                        print("[+] [MERGE COMPLETE] Staged patch written cleanly to aura_incubator.py.")
-                        print("[+] Alignment metrics and architectural rationale safely committed to core memory.")
-                        os.remove(manifest_path)
+                        print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
+                        print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
                     except Exception as e:
                         print(f"[-] Merge operations aborted: {e}")
                 else:
@@ -7368,7 +7350,7 @@ def contingency_harness():
                     "!ai_router_regen":   ("!ai_router_regen",     "Regenerate the AI router index from the live topology after code or CODEMAP changes."),
                     "!settings":          ("!settings",            "Print this manifest. Aliases: !manifest, !help"),
                     "!plan <goal>":       ("!plan <goal>",         "Build a DAG execution tree for a stated goal and print the task graph in JSON."),
-                    "!approve <method>":  ("!approve <method>",    "Graft the function named <method> from aura_incubator.py into aura_node.py via live AST surgery."),
+                    "!approve <method>":  ("!approve <method>",    "Disabled legacy graft path; use Architect/Refactor Arena hot-swap verification instead."),
                     "!ar_start":          ("!ar_start / !ar_server_start", "Start the interactive AR WebSocket server on port 8765 for 3D topology shape interaction (TOPOLOGY_REQUEST, SHAPE_INTERACTION, ADD_SHAPE, HOTSWAP_REQUEST)."),
                     "!ar_stop":           ("!ar_stop / !ar_server_stop",   "Stop the AR WebSocket server cleanly, disconnecting all clients."),
                     "!test_airlock":      ("!test_airlock",        "Run the WASM quantum-tensor sandbox. Offloads to a cooler mesh peer if available."),
@@ -7386,11 +7368,11 @@ def contingency_harness():
                     "!savings":           ("!savings",             "Show tokens + money saved per provider and per aspect (conversation / refactor / self_optimize), at actual PriceBook rates, plus projected savings."),
                     "!converse <text>":   ("!converse <text>",     "Uniform polysynthetic conversation: compress input -> external LLM -> compact reply -> interpret. Learns your style over time; logs turns polysynthetically."),
                     "!export":            ("!export [tree]",       "Export data to ~/aura_exports/. Use 'tree' to export the dependency tree."),
-                    "!push <message>":    ("!push <message>",      "Zero-trust verify all .py files, then git add/commit/push with the given commit message."),
+                    "!push <message>":    ("!push <message>",      "Disabled inside Aura's REPL; run git from the operator shell after verification."),
                     "!system_audit":      ("!system_audit / !audit","Run a Layer 5 OS executive audit of the AURA ecosystem."),
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
                     "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
-                    "!research <concept>":("!research <concept>",  "Query ingested papers for <concept> and synthesize a Python integration helper into aura_incubator.py."),
+                    "!research <concept>":("!research <concept>",  "Query ingested papers for <concept>; Refactor Arena is required before any code mutation."),
                     "!search_similar <query>": (
                         "!search_similar <query>",
                         "Structured 10-slot VSA search over ingested arXiv "
@@ -7402,7 +7384,7 @@ def contingency_harness():
                     "!crystallize":        ("!crystallize",         "Initialize the epistemic knowledge crystallization hub for permanent memory alignment."),
                     "!timeline":          ("!timeline",            "Show the epistemic consensus ledger from aura_quantum_memory.db."),
                     "!stage":             ("!stage / !stage_review / !review", "Preview live Architect hot-swap transactions or legacy pending patches in Aura_Staging."),
-                    "!stage_merge":       ("!stage_merge",         "Approve a verified live Architect hot-swap capsule, or merge a legacy staged patch into aura_incubator.py."),
+                    "!stage_merge":       ("!stage_merge",         "Approve a verified live Architect hot-swap capsule; legacy incubator merge is blocked."),
                     "!stage_purge":       ("!stage_purge",         "Reject and delete the staged patch; log it as a negative anti-pattern."),
                     "!synthesize":        ("!synthesize",          "Run a full cognitive synthesizer lifecycle pass to distil new knowledge principles."),
                     "!benchmark":         ("!benchmark",           "Run hardware runtime diagnostics: CPU, RAM, thermal, and inference throughput."),

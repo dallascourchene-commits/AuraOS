@@ -31,6 +31,30 @@ _last_refresh_time = 0.0
 _refresh_interval = 2.0  # Batch changes within 2 seconds
 _auto_refresh_enabled = True
 _refresh_timer: threading.Timer | None = None
+INDEXABLE_SUFFIXES = frozenset({
+    "",
+    ".c",
+    ".cpp",
+    ".css",
+    ".html",
+    ".json",
+    ".go",
+    ".java",
+    ".js",
+    ".jsx",
+    ".lexc",
+    ".md",
+    ".py",
+    ".rs",
+    ".sh",
+    ".tex",
+    ".toml",
+    ".txt",
+    ".ts",
+    ".tsx",
+    ".yml",
+    ".yaml",
+})
 
 
 def enable_auto_refresh(enabled: bool = True) -> None:
@@ -71,8 +95,8 @@ def register_file_change(file_path: str | Path) -> None:
         # Path is outside workspace, skip
         return
 
-    # Skip non-code files and generated artifacts
-    if path.suffix not in {".py", ".rs", ".c", ".cpp", ".js", ".ts", ".java", ".go"}:
+    # Skip files that the compact CODEMAP scanner cannot parse usefully.
+    if path.suffix.lower() not in INDEXABLE_SUFFIXES:
         return
 
     if ".aura" in path.parts or "__pycache__" in path.parts:

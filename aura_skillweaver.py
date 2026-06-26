@@ -467,7 +467,7 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
             {"stage": 7, "action": "refresh_codemap", "files_to_refresh": target_modules},
             {"stage": 8, "action": "stage_mutation_report",
              "thermal_risk": "LOW",
-             "rollback_path": "git checkout -- " + " ".join(target_modules)},
+             "rollback_path": "Use the Refactor Arena rollback capsule; do not emit destructive shell commands."},
         ],
         "mutation_eligibility_score": sum(c.concept_fit_score for c in accepted_candidates) / max(1, len(accepted_candidates)),
         "expected_token_savings": "60-90% via polysynthetic compression",
