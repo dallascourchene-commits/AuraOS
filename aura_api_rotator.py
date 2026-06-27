@@ -99,6 +99,9 @@ def _load_secret_file(secrets_path: Path) -> dict[str, Any]:
     except UnicodeDecodeError as exc:
         _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
         return {}
+    except UnicodeDecodeError as exc:
+        _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
+        return {}
 
 
 def load_secrets(path: Path | str | None = None) -> dict[str, Any]:
