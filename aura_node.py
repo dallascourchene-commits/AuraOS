@@ -6251,7 +6251,23 @@ async def main():
                     print(" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
                     print("====================================================================\n")
 
+                    review_path = os.path.join("Aura_Staging", "research_refactor_request.json")
+                    os.makedirs(os.path.dirname(review_path), exist_ok=True)
+                    with open(review_path, "w", encoding="utf-8") as f_out:
+                        json.dump({
+                            "capsule_version": "AURA_RESEARCH_REFACTOR_REQUEST_V1",
+                            "timestamp": datetime.now().isoformat(),
+                            "concept": concept,
+                            "proposed_patch": clean_source,
+                            "target_modules": list(getattr(gate_result, "target_modules", []) or [])[:5],
+                            "gate_decision": getattr(gate_result, "decision", ""),
+                            "gate_score": getattr(gate_result, "final_score", None),
+                            "source": "ingested_academic_engrams",
+                            "mutation_policy": "refactor_arena_required",
+                        }, f_out, indent=2, sort_keys=True, default=str)
+
                     print("[-] Legacy aura_incubator.py staging is disabled.")
+                    print(f"[+] Review capsule written to {review_path}")
                     print("[blocked] Route synthesized code through Architect/Refactor Arena before disk mutation.")
                     SOVEREIGN_CORE.vocalize("Synthesis complete. Refactor Arena verification is required before mutation.")
                 except Exception as e:
@@ -6484,6 +6500,9 @@ async def main():
                     except Exception as e:
                         print(f"[-] Hot-swap approval aborted: {e}")
                 elif os.path.exists(manifest_path):
+                    print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
+                    print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
+                    continue
                     try:
                         with open(manifest_path, encoding="utf-8") as f:
                             data = json.load(f)

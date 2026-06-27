@@ -438,6 +438,22 @@ def _records_from_cards(payload: dict[str, Any], root: Path | None = None) -> li
     return records
 
 
+def _incremental_record_fingerprint(record: dict[str, Any]) -> dict[str, Any]:
+    symbols = sorted(
+        record.get("symbols", []),
+        key=lambda item: (
+            item.get("name", ""),
+            item.get("kind", ""),
+            item.get("line", 0),
+            item.get("end_line", 0),
+        ),
+    )
+    return {
+        "card": _compact_file_cards([record])[0],
+        "symbols": symbols,
+    }
+
+
 def refresh_index_for_paths(
     index_path: Path,
     changed_paths: list[Path],
@@ -446,6 +462,7 @@ def refresh_index_for_paths(
     include_topology: bool = True,
     topology_path: Path = DEFAULT_TOPOLOGY_PATH,
     refresh_topology: bool = False,
+    write_index: bool = True,
 ) -> dict[str, Any]:
     """Closed-loop AST hook: update changed/deleted file branches in an existing map.
 
@@ -474,11 +491,17 @@ def refresh_index_for_paths(
         if rel in GENERATED_MAP_FILES or any(part in DEFAULT_SKIP_DIRS for part in Path(rel).parts):
             continue
         if path.exists() and path.is_file():
-            by_path[rel] = _scan_file(root, path)
-            refreshed.append(rel)
+            scanned = _scan_file(root, path)
+            existing = by_path.get(rel)
+            if existing is None or _incremental_record_fingerprint(existing) != _incremental_record_fingerprint(scanned):
+                by_path[rel] = scanned
+                refreshed.append(rel)
         elif rel in by_path:
             by_path.pop(rel, None)
             removed.append(rel)
+
+    if not refreshed and not removed:
+        return payload
 
     topology = load_or_compile_topology(root, include_topology=include_topology, topology_path=topology_path, refresh=refresh_topology)
     records = [by_path[path] for path in sorted(by_path)]
@@ -518,7 +541,8 @@ def refresh_index_for_paths(
         "changed_path_count": len(refreshed) + len(removed),
         "topology_refreshed": refresh_topology,
     }
-    index_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    if write_index:
+        index_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return payload
 
 
@@ -661,11 +685,18 @@ def search_index(payload: dict[str, Any], query: str, *, limit: int = 8) -> list
     return sorted(ranked, key=lambda item: item["score"], reverse=True)[:limit]
 
 
-def write_navigation_artifacts(payload: dict[str, Any], json_path: Path = DEFAULT_INDEX_PATH, md_path: Path = DEFAULT_MARKDOWN_PATH) -> tuple[Path, Path]:
+def write_navigation_artifacts(
+    payload: dict[str, Any],
+    json_path: Path = DEFAULT_INDEX_PATH,
+    md_path: Path = DEFAULT_MARKDOWN_PATH,
+    *,
+    write_json: bool = True,
+) -> tuple[Path, Path]:
     """Write compact machine and human maps; do not emit full topology/file payloads in Markdown."""
     json_path.parent.mkdir(parents=True, exist_ok=True)
     md_path.parent.mkdir(parents=True, exist_ok=True)
-    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    if write_json:
+        json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     lines = [
         "# Aura Compact Code Map",
         "",
@@ -732,6 +763,7 @@ def refresh_codemap_for_paths(
     index_path: Path = DEFAULT_INDEX_PATH,
     markdown_path: Path = DEFAULT_MARKDOWN_PATH,
     include_topology: bool = True,
+    topology_path: Path = DEFAULT_TOPOLOGY_PATH,
     refresh_topology: bool = False,
 ) -> dict[str, Any] | None:
     """Refresh CODEMAP branches for concrete paths and rewrite JSON/Markdown artifacts."""
@@ -740,13 +772,18 @@ def refresh_codemap_for_paths(
     resolved_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path
     if not resolved_index.exists():
         return None
+    before_payload = _load_json(resolved_index)
     payload = refresh_index_for_paths(
         resolved_index,
         [Path(path) for path in changed_paths],
         root=repo_root,
         include_topology=include_topology,
+        topology_path=topology_path,
         refresh_topology=refresh_topology,
+        write_index=False,
     )
+    if payload == before_payload:
+        return payload
     write_navigation_artifacts(payload, resolved_index, resolved_markdown)
     return payload
 
@@ -769,16 +806,16 @@ def main() -> int:
     if args.refresh is not None:
         if not index_path.exists():
             raise SystemExit(f"Missing {index_path}; build it first with python aura_codebase_navigator.py")
-        payload = refresh_index_for_paths(
-            index_path,
-            [Path(path) for path in args.refresh],
+        payload = refresh_codemap_for_paths(
+            args.refresh,
             root=Path(args.root).resolve(),
+            index_path=index_path,
+            markdown_path=Path(args.markdown),
             include_topology=not args.no_topology,
             topology_path=Path(args.topology_json),
             refresh_topology=args.refresh_topology,
         )
-        write_navigation_artifacts(payload, index_path, Path(args.markdown))
-        print(json.dumps(payload.get("last_refresh", {}), indent=2))
+        print(json.dumps((payload or {}).get("last_refresh", {}), indent=2))
         return 0
 
     if args.query:

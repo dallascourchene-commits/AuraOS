@@ -19,9 +19,9 @@ import time
 
 from aura_codebase_navigator import (
     DEFAULT_INDEX_PATH,
+    DEFAULT_MARKDOWN_PATH,
     DEFAULT_TOPOLOGY_PATH,
-    refresh_index_for_paths,
-    write_navigation_artifacts,
+    refresh_codemap_for_paths,
 )
 
 # Global state for tracking pending refreshes
@@ -146,20 +146,13 @@ def _execute_refresh() -> None:
             # CODEMAP doesn't exist yet, skip auto-refresh
             return
 
-        # Refresh the index for changed files
-        updated_payload = refresh_index_for_paths(
+        updated_payload = refresh_codemap_for_paths(
+            changes_to_process,
             index_path=index_path,
-            changed_paths=changes_to_process,
+            markdown_path=Path(DEFAULT_MARKDOWN_PATH),
             include_topology=True,
             topology_path=Path(DEFAULT_TOPOLOGY_PATH),
-            refresh_topology=False,  # Don't rebuild full topology on every change
-        )
-
-        # Write updated artifacts
-        write_navigation_artifacts(
-            payload=updated_payload,
-            json_path=index_path,
-            md_path=Path(".aura/CODEMAP.md"),
+            refresh_topology=False,
         )
 
         _last_refresh_time = time.time()

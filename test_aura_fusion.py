@@ -47,40 +47,26 @@ def _fusion_config():
 
 
 def _write_fusion_codemap(root: Path) -> None:
+    from aura_codebase_navigator import build_navigation_system, write_navigation_artifacts
+
     aura_dir = root / ".aura"
     aura_dir.mkdir()
-    codemap = {
-        "generated_at_unix": 123,
-        "coverage": {
-            "included_file_count": 3,
-            "all_included_paths_sorted": ["arxiv_forager.py", "aura_node.py", "USER_GUIDE.md"],
-        },
-        "files": [
-            {"path": "arxiv_forager.py", "role": "python_module"},
-            {"path": "aura_node.py", "role": "python_module"},
-            {"path": "USER_GUIDE.md", "role": "knowledge_artifact"},
-        ],
-        "command_index": {
-            "!backtrack": ["USER_GUIDE.md:370", "arxiv_forager.py:599", "aura_node.py:6013"]
-        },
-        "symbols": [
-            {
-                "name": "upgraded_arxiv_backtracker",
-                "file": "arxiv_forager.py",
-                "kind": "async_function",
-                "line": 520,
-                "end_line": 780,
-            },
-            {
-                "name": "main",
-                "file": "aura_node.py",
-                "kind": "async_function",
-                "line": 5000,
-                "end_line": 7300,
-            },
-        ],
-    }
-    (aura_dir / "CODEMAP.json").write_text(json.dumps(codemap), encoding="utf-8")
+    (root / "arxiv_forager.py").write_text(
+        "async def upgraded_arxiv_backtracker():\n"
+        "    command = '!backtrack'\n"
+        "    return command\n",
+        encoding="utf-8",
+    )
+    (root / "aura_node.py").write_text(
+        "async def main():\n"
+        "    command = '!backtrack'\n"
+        "    return command\n",
+        encoding="utf-8",
+    )
+    (root / "USER_GUIDE.md").write_text("Use `!backtrack` to crawl the backlog.\n", encoding="utf-8")
+
+    payload = build_navigation_system(root, include_topology=False, refresh_topology=False)
+    write_navigation_artifacts(payload, aura_dir / "CODEMAP.json", aura_dir / "CODEMAP.md")
 
 
 def test_fusion_config_loads_from_aura_secrets_style_dict():
@@ -169,6 +155,7 @@ def test_mock_fusion_run_infers_command_target_before_mutation_gate(tmp_path: Pa
     assert result.metrics["panel_count"] == 3
     assert result.metrics["target_file"] == "arxiv_forager.py"
     assert result.metrics["target_symbol"] == "upgraded_arxiv_backtracker"
+    assert result.metrics["codemap_refreshes"][0]["ok"] is True
     assert result.metrics["gate"]["human_gate_required"] is True
 
 

@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa902-[Q-SYS:ARCHITECT_LOOP]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Grounded Refactor Orchestration)
-DEPENDENCIES: dataclasses, hashlib, json, pathlib, typing, aura_codebase_navigator, aura_dream_retrieval, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
+DEPENDENCIES: dataclasses, hashlib, json, logging, pathlib, typing, aura_codebase_navigator, aura_dream_retrieval, aura_fusion, aura_phase_capsule, aura_st3gg_recall, aura_substrate
 FUNCTIONS: ActCapsule, FractalPlanCapsule, GroundingEvidence, ShadowFinding, ShadowReport, RefactorArenaTransaction, ArenaPatch, PatchStageResult, VerificationResult, ArchitectLedgerRecord, ArchitectLoopResult, ArchitectExecutionResult, CodemapLoadError, architect_capability_cards, build_fractal_plan_capsule, ground_plan_capsule, shadow_plan_capsule, build_refactor_arena, stage_arena_patch, verify_refactor_arena, judge_refactor_arena, build_rollback_capsule, build_hotswap_capsule, build_architect_ledger_record, append_architect_ledger, route_intensity, ArchitectFusionLoop
 SYNOPSIS: Deterministic ArchitectFusionLoop substrate. Converts an architect intent into a sharded Plan Capsule, CODEMAP-grounded Act Capsules, Shadow findings, intensity routing, continuity handoff metadata, a bounded refactor arena projected into the Liquid Planning Arena substrate, verifier-gated hot-swap capsule, rollback capsule, and append-only ledger record before any patch is promoted.
 [/AURA_MASTER_KEY]
@@ -15,6 +15,7 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +38,7 @@ ARCHITECT_HOTSWAP_VERSION = "AURA_ARCHITECT_HOTSWAP_V1"
 ARCHITECT_ROLLBACK_VERSION = "AURA_ARCHITECT_ROLLBACK_V1"
 ARCHITECT_LEDGER_VERSION = "AURA_ARCHITECT_LEDGER_V1"
 ARCHITECT_LEDGER_PATH = Path(REPO_ROOT) / "Aura_Memory" / "architect_loop_ledger.jsonl"
+_LOG = logging.getLogger(__name__)
 
 ARCHITECT_CAPABILITY_ORDER = [
     "plan",
@@ -333,7 +335,8 @@ def _refresh_plan_codemap_targets(plan: FractalPlanCapsule, repo_root: str | Pat
         return
     try:
         refresh_codemap_for_paths(targets, root=Path(repo_root), include_topology=True)
-    except Exception:
+    except Exception as exc:
+        _LOG.debug("CODEMAP target preflight refresh skipped: %s", type(exc).__name__)
         return
 
 

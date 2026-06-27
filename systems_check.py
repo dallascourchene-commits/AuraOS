@@ -261,10 +261,14 @@ def _run_capture(
     )
 
 
-def _tracked_codemap_candidates(root: Path = ROOT) -> list[str]:
-    result = _run_capture(["git", "ls-files"], root=root)
+def _tracked_codemap_candidates(root: Path = ROOT) -> tuple[list[str], str]:
+    try:
+        result = _run_capture(["git", "ls-files"], root=root)
+    except OSError as exc:
+        return [], f"Unable to enumerate tracked files: {exc}"
     if result.returncode != 0:
-        return []
+        detail = (result.stderr or result.stdout).strip()
+        return [], f"Unable to enumerate tracked files: {detail or 'git ls-files failed'}"
     generated = {CODEMAP_PATH.as_posix(), ".aura/CODEMAP.md"}
     candidates: list[str] = []
     for raw in result.stdout.splitlines():
@@ -279,7 +283,7 @@ def _tracked_codemap_candidates(root: Path = ROOT) -> list[str]:
         if any(part in CODEMAP_SKIP_PARTS or part.endswith(".egg-info") for part in rel_path.parts):
             continue
         candidates.append(rel)
-    return sorted(set(candidates))
+    return sorted(set(candidates)), ""
 
 
 def check_codemap_drift(root: Path = ROOT) -> dict[str, object]:
@@ -306,7 +310,16 @@ def check_codemap_drift(root: Path = ROOT) -> dict[str, object]:
         for card in files
         if isinstance(card, dict) and card.get("path")
     }
-    tracked = _tracked_codemap_candidates(root)
+    tracked, discovery_error = _tracked_codemap_candidates(root)
+    if discovery_error:
+        return {
+            "ok": False,
+            "error": discovery_error,
+            "missing_tracked": [],
+            "stale_entries": [],
+            "tracked_candidate_count": 0,
+            "codemap_file_count": len(codemap_files),
+        }
     generated = {CODEMAP_PATH.as_posix(), ".aura/CODEMAP.md"}
     missing = [path for path in tracked if path not in codemap_files and (root / path).exists()]
     stale = [path for path in sorted(codemap_files) if path not in generated and not (root / path).exists()]
@@ -370,6 +383,9 @@ def run_arch_checker(root: Path = ROOT, *, strict: bool = False) -> int:
         return result.returncode or 1
     if not isinstance(violations, list):
         print("[!] pvm_arch_checker returned malformed JSON.")
+        return result.returncode or 1
+    if not all(isinstance(item, dict) for item in violations):
+        print("[!] pvm_arch_checker returned malformed JSON entries.")
         return result.returncode or 1
 
     hard_rules = {"SYNTAX_ERROR", "WILDCARD_IMPORT", "CIRCULAR_IMPORT", "NAMESPACE_INJECTION"}
@@ -596,9 +612,11 @@ def main() -> None:
 
     # Run health check after repairs, or when no action flags were given.
     run_health = (
-        not args.git_sync
-        or args.fix_imports
-        or (not args.fix_imports and not args.git_sync)
+        args.fix_imports
+        or args.quick
+        or args.strict_arch
+        or args.strict_codemap
+        or not args.git_sync
     )
     if run_health:
         exit_code = max(
