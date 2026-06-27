@@ -16,7 +16,7 @@ def hypertruth_crystallization_loop(node_topology, shared_edges, constraints):
     """
     Executes a hypertruth crystallization loop with native 3D topology preservation,
     projected into a 10,000-D complex VSA phase space to prevent data loss.
-    
+
     Args:
         node_topology: Dict of node names to their geometric primitives (Sphere/Cube/Tetrahedron)
         shared_edges: List of tuples representing shared-resource connections

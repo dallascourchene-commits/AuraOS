@@ -82,7 +82,7 @@ class TestResonanceRouting:
         lip = LiquidInternetProtocol()
         peer = lip.register_peer("10.0.0.1", label="far",
             properties={"type": "node"})
-        peer_rec = list(lip._peers.values())[0]
+        peer_rec = next(iter(lip._peers.values()))
         peer_rec.hop_count = 99
         dest = VSAAddress.from_properties({"type": "node"})
         result_peer, report = lip.route(dest, max_hops=3)
@@ -108,7 +108,7 @@ class TestDecentralizedNaming:
         lip.publish_name("compute_node", addr)
         lip.register_peer("10.0.0.1", label="c",
             properties={"type": "compute"})
-        peer, report = lip.route_by_name("compute_node")
+        _peer, report = lip.route_by_name("compute_node")
         # Should resolve the name and then route
         assert report["decision"] in ("ROUTE", "NO_ROUTE")
 

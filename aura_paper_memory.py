@@ -67,7 +67,7 @@ class PaperMemoryRecord:
     three_main_points: tuple[str, str, str] = ("", "", "")
     summary_capsule: str = ""
     holographic_header: str = ""
-    structural_vector: np.ndarray = field(default_factory=lambda: _empty_phasor())
+    structural_vector: np.ndarray = field(default_factory=_empty_phasor)
     chunk_vectors: tuple[np.ndarray, ...] = ()
     single_seed_lift: SingleSeedLiftProfile | None = None
     metadata: dict[str, Any] = field(default_factory=dict)

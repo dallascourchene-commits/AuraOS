@@ -467,7 +467,7 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
             {"stage": 7, "action": "refresh_codemap", "files_to_refresh": target_modules},
             {"stage": 8, "action": "stage_mutation_report",
              "thermal_risk": "LOW",
-             "rollback_path": "git checkout -- " + " ".join(target_modules)},
+             "rollback_path": "Use the Refactor Arena rollback capsule; do not emit destructive shell commands."},
         ],
         "mutation_eligibility_score": sum(c.concept_fit_score for c in accepted_candidates) / max(1, len(accepted_candidates)),
         "expected_token_savings": "60-90% via polysynthetic compression",
@@ -689,18 +689,18 @@ class AuraSkillWeaver:
     def evaluate_research_gate(self, query, candidates_data):
         """
         Evaluate research evidence and determine if code mutation should be allowed.
-        
+
         Assesses candidate research traces against the query, checks for contradictions
         in accepted sources, and makes a gating decision based on evidence quality and
         target module availability. Returns ALLOW_MUTATION when sufficient evidence is
         present with coherent findings and target modules identified, REFUSE_MUTATION
         when no candidates meet relevance thresholds, or NEED_MORE_SOURCES when
         evidence conflicts or target grounding is missing.
-        
+
         Parameters:
             query: The user research query string.
             candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
-        
+
         Returns:
             ResearchGateResult containing the gating decision (ALLOW_MUTATION,
             REFUSE_MUTATION, or NEED_MORE_SOURCES), evaluated candidates ranked by

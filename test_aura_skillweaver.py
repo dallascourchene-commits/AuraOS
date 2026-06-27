@@ -453,7 +453,7 @@ class TestDecomposition:
             )
         ]
         refined = refine_decomposition(tasks, candidates, [])
-        gate_task = [t for t in refined if t.task_type == "gate_check"][0]
+        gate_task = next(t for t in refined if t.task_type == "gate_check")
         assert gate_task.status == "failed"
 
 

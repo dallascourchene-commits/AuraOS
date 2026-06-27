@@ -48,7 +48,7 @@ class AthabaskanPositionalParser:
     def _token_to_phasor(self, token: str) -> complex:
         """
         [STEP 3 IMPLEMENTATION]
-        Maps a token to its invariant dictionary position, calculates its fixed 
+        Maps a token to its invariant dictionary position, calculates its fixed
         phase angle, and returns its unit-circle complex coordinate.
         """
         clean_token = token.lower().strip()

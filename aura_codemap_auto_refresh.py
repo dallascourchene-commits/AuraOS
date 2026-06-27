@@ -19,9 +19,9 @@ import time
 
 from aura_codebase_navigator import (
     DEFAULT_INDEX_PATH,
+    DEFAULT_MARKDOWN_PATH,
     DEFAULT_TOPOLOGY_PATH,
-    refresh_index_for_paths,
-    write_navigation_artifacts,
+    refresh_codemap_for_paths,
 )
 
 # Global state for tracking pending refreshes
@@ -31,6 +31,30 @@ _last_refresh_time = 0.0
 _refresh_interval = 2.0  # Batch changes within 2 seconds
 _auto_refresh_enabled = True
 _refresh_timer: threading.Timer | None = None
+INDEXABLE_SUFFIXES = frozenset({
+    "",
+    ".c",
+    ".cpp",
+    ".css",
+    ".html",
+    ".json",
+    ".go",
+    ".java",
+    ".js",
+    ".jsx",
+    ".lexc",
+    ".md",
+    ".py",
+    ".rs",
+    ".sh",
+    ".tex",
+    ".toml",
+    ".txt",
+    ".ts",
+    ".tsx",
+    ".yml",
+    ".yaml",
+})
 
 
 def enable_auto_refresh(enabled: bool = True) -> None:
@@ -47,10 +71,10 @@ def set_refresh_interval(seconds: float) -> None:
 
 def register_file_change(file_path: str | Path) -> None:
     """Register a file change for batched CODEMAP refresh.
-    
+
     This should be called after any file write operation (write_to_file,
     apply_diff, insert_content) to keep the CODEMAP synchronized.
-    
+
     Args:
         file_path: Path to the file that was modified
     """
@@ -71,8 +95,8 @@ def register_file_change(file_path: str | Path) -> None:
         # Path is outside workspace, skip
         return
 
-    # Skip non-code files and generated artifacts
-    if path.suffix not in {".py", ".rs", ".c", ".cpp", ".js", ".ts", ".java", ".go"}:
+    # Skip files that the compact CODEMAP scanner cannot parse usefully.
+    if path.suffix.lower() not in INDEXABLE_SUFFIXES:
         return
 
     if ".aura" in path.parts or "__pycache__" in path.parts:
@@ -85,7 +109,7 @@ def register_file_change(file_path: str | Path) -> None:
 
 def _schedule_refresh() -> None:
     """Schedule a batched refresh after the configured interval.
-    
+
     NOTE: This function must be called while holding _refresh_lock.
     """
     global _refresh_timer
@@ -122,20 +146,13 @@ def _execute_refresh() -> None:
             # CODEMAP doesn't exist yet, skip auto-refresh
             return
 
-        # Refresh the index for changed files
-        updated_payload = refresh_index_for_paths(
+        updated_payload = refresh_codemap_for_paths(
+            changes_to_process,
             index_path=index_path,
-            changed_paths=changes_to_process,
+            markdown_path=Path(DEFAULT_MARKDOWN_PATH),
             include_topology=True,
             topology_path=Path(DEFAULT_TOPOLOGY_PATH),
-            refresh_topology=False,  # Don't rebuild full topology on every change
-        )
-
-        # Write updated artifacts
-        write_navigation_artifacts(
-            payload=updated_payload,
-            json_path=index_path,
-            md_path=Path(".aura/CODEMAP.md"),
+            refresh_topology=False,
         )
 
         _last_refresh_time = time.time()
@@ -159,10 +176,10 @@ def _execute_refresh() -> None:
 
 def flush_pending_refreshes() -> None:
     """Immediately flush all pending CODEMAP refreshes.
-    
+
     This should be called before critical operations that depend on
     up-to-date navigation data, or before program exit.
-    
+
     Ensures proper cleanup of timer thread before executing refresh.
     """
     global _refresh_timer
@@ -196,7 +213,7 @@ atexit.register(flush_pending_refreshes)
 # Convenience function for direct use
 def auto_refresh_codemap(file_path: str | Path) -> None:
     """Convenience function: register file change and optionally flush immediately.
-    
+
     Args:
         file_path: Path to the file that was modified
     """

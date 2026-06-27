@@ -100,7 +100,7 @@ def _classify_zone(resonance: float) -> str:
 def resonate_equal(name: str, expected: Any, actual: Any) -> ResonantAssertion:
     """
     Resonance-based equality check.
-    
+
     Encodes both values as phasors and measures cosine resonance.
     Exact equality -> resonance ~1.0 (deterministic phasors from same text).
     Partial match -> intermediate resonance.
@@ -135,7 +135,7 @@ def resonate_equal(name: str, expected: Any, actual: Any) -> ResonantAssertion:
 def resonate_contains(name: str, haystack: str, needle: str) -> ResonantAssertion:
     """
     Resonant containment check.
-    
+
     If needle is literally in haystack, resonance = 1.0.
     Otherwise, measure semantic resonance between their phasors,
     boosted by substring overlap.
@@ -178,7 +178,7 @@ def resonate_contains(name: str, haystack: str, needle: str) -> ResonantAssertio
 def resonate_structure(name: str, expected_keys: list, actual_dict: dict) -> ResonantAssertion:
     """
     Resonant structural check -- does a dict have the expected shape?
-    
+
     Resonance = fraction of expected keys present, with phasor-weighted
     bonus for semantically similar key names.
     """
@@ -228,7 +228,7 @@ def resonate_structure(name: str, expected_keys: list, actual_dict: dict) -> Res
 def resonate_type(name: str, expected_type: type, actual: Any) -> ResonantAssertion:
     """
     Resonant type check.
-    
+
     Exact type match = 1.0. Subclass = 0.95. Same category = 0.7.
     Total mismatch = phasor resonance of type names.
     """
@@ -277,7 +277,7 @@ class ResonantSuiteResult:
 class ResonantTestOracle:
     """
     Resonant Test Oracle (N26).
-    
+
     Collects resonant assertions and produces a continuous-valued
     test report instead of a boolean pass/fail summary.
     """

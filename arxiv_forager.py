@@ -82,9 +82,9 @@ class ArXivForager:
     def __init__(self, node_ref=None):
         """
         Initialize the forager with an optional node reference for database operations.
-        
+
         Parameters:
-        	node_ref: Optional node object providing database persistence via memory_palace.conn.
+            node_ref: Optional node object providing database persistence via memory_palace.conn.
         """
         self.node = node_ref  # Bind the main node reference
         self._last_request_time = 0.0
@@ -416,14 +416,14 @@ class ArXivForager:
     async def fetch_latest_paper(self, topic: str, max_retries: int = 3, timeout: float = 30.0) -> str:
         """
         Fetch the most relevant arXiv paper for a given topic.
-        
+
         Queries the arXiv API with retry logic, parses the result, and optionally encodes and persists a scientific record to the database if a node is available.
-        
+
         Parameters:
             topic (str): The search topic to query on arXiv.
             max_retries (int): Maximum number of retry attempts on network failures. Default 3.
             timeout (float): Initial request timeout in seconds. Default 30.0.
-        
+
         Returns:
             str: A formatted string containing the paper's title and abstract on success, or an error message on failure.
         """
@@ -522,20 +522,20 @@ class ArXivForager:
     ) -> bool:
         """
         Asynchronously crawl backwards through arXiv CS submissions, vectorizing and storing papers while managing pagination limits.
-        
+
         This method maintains a persistent offset inside a bounded one-day
         submission window. Bounded windows keep the server-side result set
         small, and the shared request helper performs paced, adaptive retries.
         Fetched papers are vectorized via `_scientific_record`, packed, and
         inserted into the database.
-        
+
         Requires an active database connection via `self.node.memory_palace.conn`.
-        
+
         Parameters:
             max_results (int): Number of papers to fetch per API request. Defaults to 200.
             max_retries (int): Number of retry attempts for network failures. Defaults to 3.
             timeout (float): Initial request timeout in seconds. Defaults to 30.0.
-        
+
         Returns:
             `True` if papers were successfully ingested, the 10k limit was recovered, or the date window
             was advanced; `False` if the absolute end of the timeline was reached or a final network
@@ -887,7 +887,7 @@ class ArXivForager:
         )
         await conn.commit()
 
-    def _advance_backtracker_window(self, crawler_state: dict, earliest_published: str = None) -> None:
+    def _advance_backtracker_window(self, crawler_state: dict, earliest_published: str | None = None) -> None:
         """
         Push the date window further into the past so the next crawl cycle
         can continue beyond the arXiv 10k hard cap.
@@ -952,11 +952,11 @@ class ArxivPaper:
     def to_dict(self) -> dict:
         """
         Serialize the paper to a JSON-compatible dictionary.
-        
+
         The vector field is base64-encoded after packing; if no vector exists, it is set to None.
-        
+
         Returns:
-        	dict: Dictionary containing paper_id, title, authors, abstract, published (ISO format), categories, pdf_url, slots, vector (base64-encoded if present), and metadata.
+            dict: Dictionary containing paper_id, title, authors, abstract, published (ISO format), categories, pdf_url, slots, vector (base64-encoded if present), and metadata.
         """
         return {
             "paper_id": self.paper_id,
@@ -1017,9 +1017,9 @@ class ForagerStats:
     def papers_per_second(self) -> float:
         """
         Calculates the rate of papers fetched per second.
-        
+
         Returns:
-        	float: The number of papers fetched per second, or 0.0 if duration is unavailable or non-positive.
+            float: The number of papers fetched per second, or 0.0 if duration is unavailable or non-positive.
         """
         d = self.duration
         if d and d.total_seconds() > 0:
@@ -1049,7 +1049,7 @@ class EnhancedArxivForager(ArXivForager):
     def __init__(self, node_ref=None) -> None:
         """
         Initialize the enhanced arXiv forager with vector encoding and caching.
-        
+
         Sets up a scientific paper encoder and vector index for similarity search, in-memory paper caching, disk-based storage, rate limiting, and statistics tracking.
         """
         super().__init__(node_ref)
@@ -1263,11 +1263,11 @@ class EnhancedArxivForager(ArXivForager):
     ) -> list[ArxivPaper]:
         """
         Search for papers most similar to a query string.
-        
+
         Automatically loads papers from disk cache if the in-memory cache is empty.
         Performs a vector similarity search and returns matching papers that exist
         in the cache.
-        
+
         Returns:
             A list of up to `top_k` ArxivPaper objects ranked by similarity to the query.
         """
@@ -1291,7 +1291,7 @@ class EnhancedArxivForager(ArXivForager):
     async def get_paper(self, paper_id: str) -> ArxivPaper | None:
         """
         Retrieves a paper by ID from cache or disk.
-        
+
         Returns:
             ArxivPaper if found in memory or on disk, None otherwise.
         """
@@ -1541,9 +1541,9 @@ class EnhancedArxivForager(ArXivForager):
     ) -> None:
         """
         Transform a raw paper dictionary into a cached and indexed ArxivPaper.
-        
+
         Encodes the paper into a vector and slots using the scientific encoder, caches it in memory, adds it to the search index, and persists it to disk. If a memory palace node is available, also writes the vector to the database. Skips processing if the paper is already cached.
-        
+
         Parameters:
             raw (dict): Paper data containing paper_id, title, abstract, authors, categories, published, pdf_url, and entry_id.
             config (ForagerConfig): Configuration specifying storage location for disk cache.
@@ -1622,7 +1622,7 @@ class EnhancedArxivForager(ArXivForager):
     def _generate_vector(self, paper: ArxivPaper) -> np.ndarray | None:
         """
         Encode a vector for a paper and update its slots.
-        
+
         Returns:
         	The encoded vector, or `None` if encoding yields no vector.
         """
@@ -1633,12 +1633,12 @@ class EnhancedArxivForager(ArXivForager):
     def _record_for_paper(self, paper: ArxivPaper) -> ScientificRecord:
         """
         Obtains a ScientificRecord for a paper, reusing cached vectors if available.
-        
+
         If the paper has cached vector and slots data, returns a reconstructed record using those values. Otherwise, encodes a fresh record from the paper's title, abstract, categories, and publication year.
-        
+
         Parameters:
         	paper (ArxivPaper): The paper to encode or reconstruct.
-        
+
         Returns:
         	ScientificRecord: The paper's vector encoding and semantic slots.
         """
@@ -1663,10 +1663,10 @@ class EnhancedArxivForager(ArXivForager):
     def _paper_from_dict(self, data: dict) -> ArxivPaper:
         """
         Reconstruct an ArxivPaper from cached JSON data.
-        
+
         Parameters:
             data (dict): Serialized paper dictionary from disk cache
-        
+
         Returns:
             ArxivPaper: The deserialized paper with vector and slots
         """
@@ -1694,7 +1694,7 @@ class EnhancedArxivForager(ArXivForager):
     def _load_disk_cache(self) -> None:
         """
         Load cached papers from disk storage and index them.
-        
+
         Loads papers from the storage directory and makes them available in the
         in-memory cache for similarity search. Existing cached papers are skipped,
         and load failures are silently logged at debug level.

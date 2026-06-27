@@ -28,6 +28,19 @@ from pathlib import Path
 import sys
 from typing import NamedTuple
 
+
+def _configure_stdio() -> None:
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
+
+
+_configure_stdio()
+
 # ---------------------------------------------------------------------------
 # Data types
 # ---------------------------------------------------------------------------
@@ -72,7 +85,7 @@ class DepGraph:
                     dfs(neighbour, stack, on_stack)
                 elif neighbour in on_stack:
                     idx = stack.index(neighbour)
-                    cycles.append(stack[idx:] + [neighbour])
+                    cycles.append([*stack[idx:], neighbour])
             stack.pop()
             on_stack.discard(node)
 

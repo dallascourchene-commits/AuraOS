@@ -68,7 +68,7 @@ class AuraMitosisEngine:
     def execute_music_inversion(self, active_wave, sample_resolution=100):
         """
         [MUSIC INVERSION ENGINE]
-        Mathematically projects the active trajectory wave onto its noise subspace, 
+        Mathematically projects the active trajectory wave onto its noise subspace,
         inverting the matrix elements to isolate hidden periodic truths (peaks).
         Operates entirely matrix-free to respect the 4GB RAM boundary.
         """
@@ -164,8 +164,8 @@ class AuraMitosisEngine:
     async def execute_morphemic_mitosis(self, db_connection) -> str:
         """
         [LAYER 2: BINARY MORPHEMIC WORKSPACE METABOLISM]
-        Directly queries the 'morphemic_palace' table blocks. Unpacks packed 
-        short arrays via struct.unpack, evaluates structural tension profiles 
+        Directly queries the 'morphemic_palace' table blocks. Unpacks packed
+        short arrays via struct.unpack, evaluates structural tension profiles
         using zero-copy NumPy arithmetic, and purges logically conflicted rows.
         """
         try:

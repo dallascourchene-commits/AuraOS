@@ -788,7 +788,7 @@ def test_gsb_quantize_constant_vector_gain_is_one():
     resonator = VSAResonator(dim=DIMENSIONS)
     # A constant vector has std=0 → gain should be set to 1.0
     constant = np.full(DIMENSIONS, 5.0, dtype=np.float32)
-    gain, shape, bias = resonator.gsb_quantize(constant)
+    gain, _shape, _bias = resonator.gsb_quantize(constant)
     assert gain == 1.0
 
 
@@ -796,7 +796,7 @@ def test_gsb_quantize_complex_input_uses_angle():
     resonator = VSAResonator(dim=100)
     # A purely imaginary vector: angle = pi/2 everywhere
     complex_v = np.full(100, 1j, dtype=np.complex64)
-    gain, shape, bias = resonator.gsb_quantize(complex_v)
+    gain, _shape, _bias = resonator.gsb_quantize(complex_v)
     # angle(1j) = pi/2 ≈ 1.5708, so the vector is constant; gain=1.0
     assert gain == 1.0
 

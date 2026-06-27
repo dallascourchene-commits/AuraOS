@@ -47,13 +47,13 @@ class SwarmNode:
 class SwarmCollectiveLearning:
     """
     Swarm Mesh Fabric implementing Claim N11.
-    
+
     Features:
     - Collective learning via VSA crystallization broadcast
     - Maxwell-damping recoherence (κ = 0.85)
     - Energy landscape-based task sharding
     - Zero-trust routing with header resonance verification
-    
+
     Attributes:
         global_consensus: Current swarm consensus hypervector
         discovered_nodes: Dict of known nodes {node_id → SwarmNode}
@@ -73,15 +73,15 @@ class SwarmCollectiveLearning:
     ) -> np.ndarray:
         """
         Broadcast new hypervector to swarm with Maxwell-damping.
-        
+
         Implements the paper's formula:
         Ψ'_global = (Ψ_global ⊕ v_new) / ||Ψ_global ⊕ v_new||
         x_corrected = μ_state + κ_damping(x_raw - μ_state)
-        
+
         Args:
             v_new: New knowledge hypervector to broadcast
             node_id: Identifier of node contributing knowledge
-            
+
         Returns:
             Updated global consensus vector
         """
@@ -112,13 +112,13 @@ class SwarmCollectiveLearning:
     def compute_energy_landscape(self, task_vector: np.ndarray) -> float:
         """
         Compute Hopfield energy to determine if task should be sharded.
-        
+
         Implements the paper's formula:
         E(y) = -1/|C| Σ_c∈C [1/D Σ_j ℜ(y_j · c_j)]²
-        
+
         Args:
             task_vector: Task representation in VSA space
-            
+
         Returns:
             Energy value (negative = aligned with anchors)
         """
@@ -143,10 +143,10 @@ class SwarmCollectiveLearning:
     def should_shard_task(self, task_vector: np.ndarray) -> bool:
         """
         Determine if task should be sharded across swarm.
-        
+
         Args:
             task_vector: Task representation
-            
+
         Returns:
             True if task should be distributed
         """
@@ -160,16 +160,16 @@ class SwarmCollectiveLearning:
     ) -> str | None:
         """
         Route packet through swarm without revealing IP addresses.
-        
+
         Uses resonance-based forwarding:
         1. Compute resonance with all neighbors
         2. Forward to highest-resonance peer
         3. Verify header resonance at each hop
-        
+
         Args:
             dest_address: Destination VSA address (10,000-D)
             payload: Packet payload
-            
+
         Returns:
             Next hop node_id, or None if no route
         """
@@ -201,10 +201,10 @@ class SwarmCollectiveLearning:
     def detect_resonance_drift(self, node_id: str) -> bool:
         """
         Check if node's header resonance has drifted.
-        
+
         Args:
             node_id: Node to check
-            
+
         Returns:
             True if drift detected (needs healing)
         """
@@ -229,7 +229,7 @@ class SwarmCollectiveLearning:
     def trigger_self_healing(self, node_id: str):
         """
         Broadcast re-alignment packet to drifted node.
-        
+
         Args:
             node_id: Node that needs healing
         """
@@ -254,7 +254,7 @@ class SwarmCollectiveLearning:
     ):
         """
         Register a discovered node in the swarm.
-        
+
         Args:
             node_id: Unique node identifier
             address: VSA address of node

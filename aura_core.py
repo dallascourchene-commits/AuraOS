@@ -174,7 +174,7 @@ class AuraOrchestrationLobe:
 
     def backward_chain_manifest(self, goal_vector, current_vector):
         """
-        Calculates the exact state transitions backwards from global scale 
+        Calculates the exact state transitions backwards from global scale
         to the immediate physical action.
         [EDGE OPTIMIZED]: Stripped PyTorch OOM hazards.
         """

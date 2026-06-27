@@ -333,7 +333,7 @@ class DynamicConvolutionAttention:
             processed_data, agg_meta = self._aggregate_heads(head_results)
 
             # Transparency gate
-            processed_meta, confidence, resonance = (
+            _processed_meta, confidence, resonance = (
                 await self.transparency_processor.process_with_warning(
                     metadata or {}, context=agg_meta
                 )

@@ -39,7 +39,7 @@ class CognitiveGateway:
 
     def project_to_e8_holographic_lattice(self, vector_10k: np.ndarray) -> np.ndarray:
         """
-        [MAYA E8 ENGINE] Quantizes a 10,000-D continuous vector directly onto the 
+        [MAYA E8 ENGINE] Quantizes a 10,000-D continuous vector directly onto the
         248-dimensional E8 Lie Algebra root coordinate system to prevent phase drift.
         """
         if vector_10k.shape != (10000,):

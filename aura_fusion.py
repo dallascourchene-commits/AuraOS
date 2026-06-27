@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa8fa-[Q-SYS:AURA_FUSION]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / User-Owned Deliberation)
-DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_llm_egress, aura_model_probe_ledger, aura_single_seed_lift, aura_skillweaver, aura_substrate
+DEPENDENCIES: argparse, concurrent.futures, dataclasses, hashlib, json, os, re, time, uuid, aura_api_rotator, aura_codebase_navigator, aura_llm_egress, aura_model_probe_ledger, aura_single_seed_lift, aura_skillweaver, aura_substrate
 FUNCTIONS: AuraFusionAgent, AuraPanelOutput, AuraFusionResult, load_fusion_config, build_task_capsule, parse_json_object, AuraFusionCoordinator, main
 SYNOPSIS: Aura-native multi-model deliberation: compact task capsule, cached single-seed context lift, SkillWeaver gate, parallel Thinker/Worker/Verifier panel, structured judge synthesis, and phase-hashable run metrics using user-owned provider keys.
 [/AURA_MASTER_KEY]
@@ -18,11 +18,13 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 import os
+from pathlib import Path
 import re
 import time
 from typing import Any
 
 from aura_api_rotator import load_secrets
+from aura_codebase_navigator import refresh_codemap_for_paths
 from aura_llm_egress import generate_openai_compatible_payload
 from aura_model_probe_ledger import AuraModelProbeLedger
 from aura_single_seed_lift import compact_lift_capsule, compile_text_single_seed_lift
@@ -35,6 +37,8 @@ FUSION_LOG_PATH = os.path.join(REPO_ROOT, "Aura_Memory", "aura_fusion_runs.jsonl
 ALLOWED_ROLES = {"THINKER", "WORKER", "VERIFIER", "RESEARCHER", "JUDGE"}
 DEFAULT_CONSTRAINTS = ["NO_NEW_DEPS", "NO_FAKE_FILES", "PRESERVE_SIGNATURES", "ASCII_ONLY"]
 PLACEHOLDER_MARKERS = ("your_", "paste_", "changeme", "_here", "xxxx")
+FUSION_TARGET_EXTENSIONS = ("py", "rs", "js", "ts", "tsx", "jsx", "md", "json", "toml", "yaml", "yml")
+DOC_TARGET_EXTENSIONS = {".md", ".txt", ".pdf", ".tex"}
 
 
 PANEL_SCHEMA: dict[str, Any] = {
@@ -194,6 +198,211 @@ def load_fusion_config(secrets: dict[str, Any] | None = None) -> tuple[list[Aura
     judge_raw = cfg.get("AURA_FUSION_JUDGE")
     judge = AuraFusionAgent.from_dict(judge_raw) if isinstance(judge_raw, dict) else None
     return panel, judge
+
+
+def _normalize_repo_path(value: str | None) -> str | None:
+    if not value:
+        return None
+    token = str(value).strip().strip("`\"'")
+    token = token.rstrip(".,;:)]}")
+    token = token.replace("\\", "/")
+    while token.startswith("./"):
+        token = token[2:]
+    return token.lstrip("/") or None
+
+
+def _load_codemap(repo_root: str = REPO_ROOT) -> dict[str, Any]:
+    path = Path(repo_root) / ".aura" / "CODEMAP.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _iter_codemap_symbols(codemap: dict[str, Any]) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    for key in ("symbols", "symbol_index", "function_index"):
+        symbols = codemap.get(key, {})
+        if isinstance(symbols, list):
+            items.extend(item for item in symbols if isinstance(item, dict))
+            continue
+        if not isinstance(symbols, dict):
+            continue
+        for name, entries in symbols.items():
+            if isinstance(entries, dict):
+                entries = [entries]
+            if not isinstance(entries, list):
+                continue
+            for entry in entries:
+                if isinstance(entry, dict):
+                    payload = dict(entry)
+                    payload.setdefault("name", name)
+                    items.append(payload)
+    return items
+
+
+def _codemap_known_paths(codemap: dict[str, Any]) -> set[str]:
+    paths: set[str] = set()
+    coverage = codemap.get("coverage", {})
+    if isinstance(coverage, dict):
+        for item in coverage.get("all_included_paths_sorted", []) or []:
+            normalized = _normalize_repo_path(str(item))
+            if normalized:
+                paths.add(normalized)
+    for entry in codemap.get("files", []) or []:
+        if isinstance(entry, dict):
+            normalized = _normalize_repo_path(str(entry.get("path", "")))
+            if normalized:
+                paths.add(normalized)
+    for entry in _iter_codemap_symbols(codemap):
+        normalized = _normalize_repo_path(str(entry.get("file", "")))
+        if normalized:
+            paths.add(normalized)
+    return paths
+
+
+def _resolve_codemap_file(candidate: str, codemap: dict[str, Any], repo_root: str = REPO_ROOT) -> str | None:
+    normalized = _normalize_repo_path(candidate)
+    if not normalized:
+        return None
+    known_paths = _codemap_known_paths(codemap)
+    if normalized in known_paths:
+        return normalized
+    lowered = normalized.lower()
+    for path in known_paths:
+        if path.lower() == lowered:
+            return path
+    basename_matches = [path for path in known_paths if Path(path).name.lower() == Path(normalized).name.lower()]
+    if basename_matches:
+        return sorted(basename_matches, key=lambda path: (path.count("/"), len(path), path))[0]
+    if (Path(repo_root) / normalized).exists():
+        return normalized
+    return None
+
+
+def _split_codemap_location(location: str) -> tuple[str | None, int | None]:
+    token = str(location or "").strip().strip("`")
+    match = re.match(r"^(.+?):(\d+)$", token)
+    if match:
+        return _normalize_repo_path(match.group(1)), int(match.group(2))
+    return _normalize_repo_path(token), None
+
+
+def _symbol_for_location(codemap: dict[str, Any], target_file: str, line: int | None) -> str | None:
+    if line is None:
+        return None
+    normalized_file = _normalize_repo_path(target_file)
+    candidates: list[tuple[int, int, str]] = []
+    for entry in _iter_codemap_symbols(codemap):
+        if _normalize_repo_path(str(entry.get("file", ""))) != normalized_file:
+            continue
+        try:
+            start = int(entry.get("line", 0) or 0)
+            end = int(entry.get("end_line", start) or start)
+        except (TypeError, ValueError):
+            continue
+        if start <= line <= end:
+            kind = str(entry.get("kind", ""))
+            priority = 0 if "function" in kind else 1
+            span = max(0, end - start)
+            candidates.append((span, priority, str(entry.get("name", ""))))
+    if not candidates:
+        return None
+    return sorted(candidates)[0][2] or None
+
+
+def _command_locations(codemap: dict[str, Any], command: str) -> list[str]:
+    index = codemap.get("command_index", {})
+    if not isinstance(index, dict):
+        return []
+    locations = index.get(command) or index.get(command.lower()) or index.get(command.upper()) or []
+    if isinstance(locations, str):
+        return [locations]
+    return [str(item) for item in locations if item]
+
+
+def _resolve_command_target(command: str, codemap: dict[str, Any], repo_root: str = REPO_ROOT) -> dict[str, Any] | None:
+    scored: list[tuple[int, int, str, int | None, str | None, str]] = []
+    for idx, location in enumerate(_command_locations(codemap, command)):
+        path, line = _split_codemap_location(location)
+        target_file = _resolve_codemap_file(path or "", codemap, repo_root=repo_root)
+        if not target_file:
+            continue
+        suffix = Path(target_file).suffix.lower()
+        score = 0
+        if suffix == ".py":
+            score += 100
+        elif suffix in {".rs", ".js", ".ts", ".tsx", ".jsx"}:
+            score += 80
+        elif suffix in DOC_TARGET_EXTENSIONS:
+            score -= 100
+        else:
+            score += 20
+        if Path(target_file).name == "aura_node.py":
+            score -= 20
+        elif suffix == ".py":
+            score += 20
+        symbol = _symbol_for_location(codemap, target_file, line)
+        if symbol:
+            score += 5
+        scored.append((score, -idx, target_file, line, symbol, location))
+    if not scored:
+        return None
+    score, _order, target_file, line, symbol, location = sorted(scored, reverse=True)[0]
+    return {
+        "source": "command_mention",
+        "matched": command,
+        "target_file": target_file,
+        "target_symbol": symbol,
+        "line": line,
+        "location": location,
+        "score": score,
+    }
+
+
+def infer_fusion_target(task: str, *, repo_root: str = REPO_ROOT, codemap: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Infer a CODEMAP-grounded Fusion target from file or REPL command mentions."""
+    codemap_data = codemap if codemap is not None else _load_codemap(repo_root)
+    if not codemap_data:
+        return {"source": None, "target_file": None, "target_symbol": None}
+
+    extensions = "|".join(re.escape(ext) for ext in FUSION_TARGET_EXTENSIONS)
+    file_pattern = rf"(?<![\w./\\-])[\w./\\-]+\.({extensions})(?![\w./\\-])"
+    for match in re.finditer(file_pattern, task or "", flags=re.IGNORECASE):
+        token = match.group(0)
+        target_file = _resolve_codemap_file(token, codemap_data, repo_root=repo_root)
+        if target_file:
+            return {
+                "source": "file_mention",
+                "matched": token,
+                "target_file": target_file,
+                "target_symbol": None,
+            }
+
+    for command in re.findall(r"(?<!\w)![A-Za-z_][\w-]*", task or ""):
+        if command.lower() == "!fusion":
+            continue
+        resolved = _resolve_command_target(command, codemap_data, repo_root=repo_root)
+        if resolved:
+            return resolved
+
+    return {"source": None, "target_file": None, "target_symbol": None}
+
+
+def _refresh_codemap_targets(repo_root: str, target_files: list[str | None]) -> dict[str, Any] | None:
+    paths = sorted({
+        _normalize_repo_path(path) or ""
+        for path in target_files
+        if _normalize_repo_path(path)
+    })
+    if not paths:
+        return None
+    try:
+        payload = refresh_codemap_for_paths(paths, root=Path(repo_root), include_topology=True)
+    except Exception as exc:
+        return {"ok": False, "paths": paths, "error": type(exc).__name__}
+    return {"ok": payload is not None, "paths": paths}
 
 
 def _codemap_epoch(repo_root: str = REPO_ROOT) -> str:
@@ -480,6 +689,41 @@ class AuraFusionCoordinator:
         constraints: list[str] | None = None,
         extra_capsule: dict[str, Any] | None = None,
     ) -> AuraFusionResult:
+        target_inference: dict[str, Any] = {"source": None, "target_file": target_file, "target_symbol": target_symbol}
+        codemap_refreshes: list[dict[str, Any]] = []
+        if not target_file:
+            commands = [
+                command
+                for command in re.findall(r"(?<!\w)![A-Za-z_][\w-]*", task or "")
+                if command.lower() != "!fusion"
+            ]
+            if commands:
+                preflight_targets = ["aura_node.py"]
+                codemap = _load_codemap(self.repo_root)
+                for command in commands:
+                    for location in _command_locations(codemap, command):
+                        path, _line = _split_codemap_location(location)
+                        if path:
+                            preflight_targets.append(path)
+                refresh = _refresh_codemap_targets(self.repo_root, preflight_targets)
+                if refresh:
+                    refresh["phase"] = "command_index_preflight"
+                    codemap_refreshes.append(refresh)
+            target_inference = infer_fusion_target(task, repo_root=self.repo_root)
+            target_file = target_inference.get("target_file") or None
+            if not target_symbol:
+                target_symbol = target_inference.get("target_symbol") or None
+        refresh = _refresh_codemap_targets(self.repo_root, [target_file])
+        if refresh:
+            refresh["phase"] = "target_branch_preflight"
+            codemap_refreshes.append(refresh)
+
+        capsule_extra = dict(extra_capsule or {})
+        if target_inference.get("source"):
+            capsule_extra["target_inference"] = target_inference
+        if codemap_refreshes:
+            capsule_extra["codemap_refreshes"] = codemap_refreshes
+
         capsule = build_task_capsule(
             task,
             target_file=target_file,
@@ -488,7 +732,7 @@ class AuraFusionCoordinator:
             constraints=constraints,
             codemap_epoch=_codemap_epoch(self.repo_root),
             repo_root=self.repo_root,
-            extra=extra_capsule,
+            extra=capsule_extra,
         )
         gate = gate_fusion_task(task, capsule, AuraSkillWeaver(repo_root=self.repo_root).skills)
         if not gate["allowed"]:
@@ -500,7 +744,16 @@ class AuraFusionCoordinator:
                 panel_outputs=[],
                 judge_output={},
                 final_answer=gate["reason"],
-                metrics={"gate": gate, "panel_count": 0, "estimated_cost_usd": 0.0},
+                metrics={
+                    "gate": gate,
+                    "panel_count": 0,
+                    "estimated_cost_usd": 0.0,
+                    "target_file": target_file,
+                    "target_symbol": target_symbol,
+                    "target_inference": target_inference,
+                    "codemap_refreshes": codemap_refreshes,
+                    "log_path": self.log_path,
+                },
             )
             self._append_log(result)
             return result
@@ -521,6 +774,10 @@ class AuraFusionCoordinator:
                 "output_tokens_est": sum(item.get("output_tokens_est", 0) for item in panel_outputs) + judge_output.get("output_tokens_est", 0),
                 "latency_sec": round(time.time() - t0, 3),
                 "estimated_cost_usd": 0.0,
+                "target_file": target_file,
+                "target_symbol": target_symbol,
+                "target_inference": target_inference,
+                "codemap_refreshes": codemap_refreshes,
                 "log_path": self.log_path,
             }
         except Exception as exc:
@@ -534,6 +791,10 @@ class AuraFusionCoordinator:
                 "latency_sec": round(time.time() - t0, 3),
                 "estimated_cost_usd": 0.0,
                 "error": final_answer,
+                "target_file": target_file,
+                "target_symbol": target_symbol,
+                "target_inference": target_inference,
+                "codemap_refreshes": codemap_refreshes,
                 "log_path": self.log_path,
             }
 
@@ -574,6 +835,10 @@ def main(argv: list[str] | None = None) -> int:
     else:
         status = "[+]" if result.ok else "[-]"
         print(f"{status} AuraFusion phase={result.phase_hash} panel={result.metrics.get('panel_count', 0)}")
+        if result.metrics.get("target_file"):
+            symbol = result.metrics.get("target_symbol")
+            suffix = f"::{symbol}" if symbol else ""
+            print(f"[target] {result.metrics['target_file']}{suffix}")
         print(result.final_answer)
         print(f"[log] {result.metrics.get('log_path', FUSION_LOG_PATH)}")
     return 0 if result.ok else 1

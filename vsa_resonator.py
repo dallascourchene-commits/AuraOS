@@ -19,10 +19,10 @@ class VSAResonator:
     def __init__(self, dim=10000, sample_ratio=0.05):
         """
         Initialize a VSAResonator instance with specified dimensionality and sampling configuration.
-        
+
         Precomputes deterministic sampling indices for efficient sampled similarity evaluation
         and initializes internal state.
-        
+
         Parameters:
         	dim (int): Vector dimensionality. Default is 10000.
         	sample_ratio (float): Fraction of coordinates to sample for similarity evaluation (0 to 1). Default is 0.05.
@@ -42,7 +42,7 @@ class VSAResonator:
     def bind(self, v1, v2):
         """
         Bind two vectors in bipolar Vector Symbolic Architecture.
-        
+
         Returns:
             np.ndarray: The bound vector.
         """
@@ -51,10 +51,10 @@ class VSAResonator:
     def bundle(self, vectors):
         """
         Combine multiple vectors into a single bundled vector through element-wise addition and sign thresholding.
-        
+
         Parameters:
         	vectors (array-like): A sequence of vectors to bundle together.
-        
+
         Returns:
         	np.ndarray: A bipolar vector where each element is -1 or 1.
         """
@@ -65,9 +65,9 @@ class VSAResonator:
     def gsb_quantize(self, vector_10k: np.ndarray) -> tuple:
         """
         Decompose a vector into gain, shape, and bias components.
-        
+
         For complex inputs, extracts the phase angle before decomposition.
-        
+
         Returns:
         	A tuple of (gain, shape, bias) where gain is the standard deviation of the
         	centered vector with a minimum of 1.0, shape is an int8 array of the signs
@@ -89,7 +89,7 @@ class VSAResonator:
                            c_gain: float, c_shape: np.ndarray, c_bias: float) -> float:
         """
                            Compute similarity between two GSB-quantized vectors using sampled coordinates.
-                           
+
                            Parameters:
                                q_gain (float): Gain component of the query vector
                                q_shape (np.ndarray): Shape component of the query vector
@@ -97,7 +97,7 @@ class VSAResonator:
                                c_gain (float): Gain component of the candidate vector
                                c_shape (np.ndarray): Shape component of the candidate vector
                                c_bias (float): Bias component of the candidate vector
-                           
+
                            Returns:
                                float: Similarity score combining shape alignment with gain and bias adjustments
                            """
@@ -119,10 +119,10 @@ class VSAResonator:
     def encode_hit_interaction(self, node_vectors: list) -> np.ndarray:
         """
         Encode an N-way node interaction sequence into a single holographic vector.
-        
-        Each node vector is position-shifted and bound cumulatively into the result. 
+
+        Each node vector is position-shifted and bound cumulatively into the result.
         An empty sequence returns a vector of ones.
-        
+
         Returns:
             np.ndarray: The bound interaction vector with dtype int8.
         """
@@ -139,12 +139,12 @@ class VSAResonator:
     def decode_hit_member(self, hit_vector: np.ndarray, index_to_extract: int, known_vectors: list) -> int:
         """
         Identify which vector from a known set best matches the member at a specified position in an encoded interaction.
-        
+
         Parameters:
             hit_vector (np.ndarray): An encoded N-way interaction vector.
             index_to_extract (int): The position in the original sequence to decode.
             known_vectors (list): Reference vectors to match against.
-        
+
         Returns:
             int: The index of the best-matching vector from known_vectors.
         """
@@ -171,7 +171,7 @@ class VSAResonator:
     def _bipolar_digest(vector: np.ndarray) -> bytes:
         """
         Hash a bipolar vector into a compact digest for dictionary lookups.
-        
+
         Returns:
             bytes: A 16-byte blake2b digest of the vector's bipolar encoding.
         """
@@ -181,12 +181,12 @@ class VSAResonator:
     def _exact_bipolar_factorization(self, composite_vector, book_a, book_b):
         """
         Find factor indices whose product equals the composite vector.
-        
+
         Parameters:
             composite_vector: Vector to factorize.
             book_a: First codebook.
             book_b: Second codebook.
-        
+
         Returns:
             (index_a, index_b) if book_a[index_a] * book_b[index_b] equals
             composite_vector, None otherwise.
@@ -213,7 +213,7 @@ class VSAResonator:
     def resonate(self, composite_vector, book_a, book_b, max_iters=10):
         """
         Factorize the composite vector by identifying the factors from two codebooks that reconstruct it.
-        
+
         Returns:
             Tuple of (index_a, index_b) from book_a and book_b respectively that best reconstruct the composite vector.
         """

@@ -49,8 +49,8 @@ def batch_evaluate_implication(
 
 class AuraNeuroSymbolicReasoner:
     """
-    Third-Wave Hybrid Neuro-Symbolic Core. Combines continuous-phase VSA 
-    superpositions with discrete logic path reachability verification, 
+    Third-Wave Hybrid Neuro-Symbolic Core. Combines continuous-phase VSA
+    superpositions with discrete logic path reachability verification,
     optimized for tight mobile hardware envelopes (4GB physical RAM limit).
     """
     def __init__(
@@ -189,7 +189,7 @@ class AuraNeuroSymbolicReasoner:
 
     def embed_symbolic_state(self, identifier_text: str) -> np.ndarray:
         """
-        [Greg Robison Stage 2] Maps textual rule constraints or function signatures 
+        [Greg Robison Stage 2] Maps textual rule constraints or function signatures
         into complex exponential phasor dimensions resting perfectly on the unit circle.
         """
         if not identifier_text:
@@ -206,7 +206,7 @@ class AuraNeuroSymbolicReasoner:
 
     def execute_reason_dag(self, node_states: list[str], adj_matrix: np.ndarray, pruning_threshold: float = 0.45) -> dict:
         """
-        [REASON Accelerated Logic Core] Resolves irregular computational intensity by 
+        [REASON Accelerated Logic Core] Resolves irregular computational intensity by
         propagating and bundling structural VSA phasons over topological steps with adaptive pruning.
         """
         start_time = time.perf_counter()
@@ -273,7 +273,7 @@ class AuraNeuroSymbolicReasoner:
 
     def audit_matched_pairs(self, target_logic_path: str) -> dict:
         """
-        [Matched-Pair ADR Protocol] Validates heuristic paths by building minimal 
+        [Matched-Pair ADR Protocol] Validates heuristic paths by building minimal
         SAT/UNSAT constraint differences and evaluating phase divergence scores.
         """
         sat_formula = f"{target_logic_path} && CORE_AXIOM_VALID"
@@ -294,7 +294,7 @@ class AuraNeuroSymbolicReasoner:
 
     def discover_automodsat_heuristics(self, system_friction: float) -> dict:
         """
-        [AutoModSAT Optimization] Adjusts decay rates and backtracking checkpoints 
+        [AutoModSAT Optimization] Adjusts decay rates and backtracking checkpoints
         based on runtime hardware friction metrics.
         """
         if system_friction > 0.80:
@@ -315,10 +315,10 @@ class AuraNeuroSymbolicReasoner:
         method_dim: int = 64,
     ) -> dict:
         """
-        [Coordinated Pass@K Reasoning] Parallel hypothesis evaluation using 
-        RIS-assisted survivable backhaul recovery. Generates K alternative 
+        [Coordinated Pass@K Reasoning] Parallel hypothesis evaluation using
+        RIS-assisted survivable backhaul recovery. Generates K alternative
         reasoning paths and selects the best via coordinated solver.
-        
+
         Parameters
         ----------
         query : str
@@ -327,7 +327,7 @@ class AuraNeuroSymbolicReasoner:
             Number of parallel strategies to evaluate (default 4)
         method_dim : int
             Strategy vector dimension (default 64 for Termux)
-            
+
         Returns
         -------
         dict
@@ -337,7 +337,7 @@ class AuraNeuroSymbolicReasoner:
         start_time = time.perf_counter()
 
         # Step 1: Load topology and generate K alternative reasoning paths
-        nodes, shapes, adj = self.load_live_topology()
+        nodes, _shapes, _adj = self.load_live_topology()
         if len(nodes) == 0:
             return {
                 "success": False,
@@ -403,7 +403,7 @@ class AuraNeuroSymbolicReasoner:
         start_time = time.perf_counter()
 
         # Step 1: Load live topology graph
-        nodes, shapes, adj = self.load_live_topology()
+        nodes, _shapes, adj = self.load_live_topology()
         num_nodes = len(nodes)
 
         if num_nodes == 0:

@@ -190,14 +190,14 @@ class CodeMapWatcher:
 
 def start_watcher(workspace_path: str | Path = ".", debounce_seconds: float = 0.5) -> CodeMapWatcher:
     """Start the global CODEMAP file system watcher.
-    
+
     Args:
         workspace_path: Path to workspace directory to monitor
         debounce_seconds: Minimum time between events for same file
-    
+
     Returns:
         CodeMapWatcher instance
-    
+
     Raises:
         ImportError: If watchdog library is not installed
         ValueError: If workspace path doesn't exist

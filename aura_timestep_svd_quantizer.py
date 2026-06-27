@@ -79,7 +79,7 @@ class SVDOutlierCompensator:
         if activation.ndim == 1:
             activation = activation.reshape(1, -1)
 
-        m, n = activation.shape
+        _m, _n = activation.shape
 
         # SVD decomposition (same as spectral_memory line 25)
         U, S, Vh = np.linalg.svd(activation, full_matrices=False)
@@ -281,7 +281,7 @@ class TimestepAwareSVDQuantizer:
         t0 = time.perf_counter()
 
         # 1. SVD outlier compensation
-        compensated, residual, svd_stats = self.compensator.compensate(activation)
+        compensated, _residual, svd_stats = self.compensator.compensate(activation)
 
         # 2. Get per-expert clipping ratio
         tracker = self._get_tracker(expert_id)

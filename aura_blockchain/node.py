@@ -237,7 +237,7 @@ class AuraNode:
 
         # Cross-correlation matrix (200×200, tractable)
         M = theta_local.reshape(-1, 1) @ theta_quorum.reshape(1, -1)
-        U, S, Vh = np.linalg.svd(M, full_matrices=False)
+        U, _S, Vh = np.linalg.svd(M, full_matrices=False)
         R = U @ Vh
 
         residual = np.linalg.norm(

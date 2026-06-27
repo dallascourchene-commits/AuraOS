@@ -89,13 +89,13 @@ class LedgerBlock:
 class FractalLedger:
     """
     Gas-Free Fractal Ledger implementing Claim N10.
-    
+
     Unlike traditional blockchains:
     - No linear chain (Merkle-DAG allows multiple parents)
     - No gas fees (RAM-staking as opportunity cost)
     - No mining (Proof-of-Presence via device entropy)
     - No tokens (physical resource commitment only)
-    
+
     Attributes:
         db_path: Path to SQLite database
         ram_stakes: Active RAM locks per node {node_id → bytes}
@@ -133,12 +133,12 @@ class FractalLedger:
         """)
 
         self.db.execute("""
-            CREATE INDEX IF NOT EXISTS idx_timestamp 
+            CREATE INDEX IF NOT EXISTS idx_timestamp
             ON ledger_blocks(timestamp DESC)
         """)
 
         self.db.execute("""
-            CREATE INDEX IF NOT EXISTS idx_node_id 
+            CREATE INDEX IF NOT EXISTS idx_node_id
             ON ledger_blocks(node_id)
         """)
 
@@ -162,16 +162,16 @@ class FractalLedger:
     ) -> str:
         """
         Add file change as ledger transaction with RAM staking.
-        
+
         Args:
             file_path: Path to file being modified
             content: New file content
             node_id: Identifier of node making change
             parent_hashes: Previous block hashes (for DAG structure)
-            
+
         Returns:
             Block hash of new transaction
-            
+
         Raises:
             ValueError: If node doesn't have enough free RAM
         """
@@ -204,7 +204,7 @@ class FractalLedger:
         if parent_hashes is None:
             # Default: link to most recent block
             cursor = self.db.execute("""
-                SELECT block_hash FROM ledger_blocks 
+                SELECT block_hash FROM ledger_blocks
                 ORDER BY timestamp DESC LIMIT 1
             """)
             row = cursor.fetchone()
@@ -220,8 +220,8 @@ class FractalLedger:
 
         # 8. Store in ledger
         self.db.execute("""
-            INSERT INTO ledger_blocks 
-            (block_hash, file_path, content_hash, entropy_signature, 
+            INSERT INTO ledger_blocks
+            (block_hash, file_path, content_hash, entropy_signature,
              timestamp, parent_hashes, ram_stake, node_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
@@ -246,12 +246,12 @@ class FractalLedger:
     ) -> bool:
         """
         Verify node holds current global hologram via Proof-of-Presence.
-        
+
         Args:
             node_id: Node claiming to hold consensus
             claimed_root: Root hash node claims to have
             entropy_proof: Device entropy signature
-            
+
         Returns:
             True if node proves presence, False otherwise
         """
@@ -273,13 +273,13 @@ class FractalLedger:
     def compute_consensus_root(self) -> str:
         """
         Compute majority consensus weighted by RAM stakes.
-        
+
         Returns:
             Block hash with highest total stake
         """
         # Get recent blocks (last 100)
         cursor = self.db.execute("""
-            SELECT block_hash, ram_stake FROM ledger_blocks 
+            SELECT block_hash, ram_stake FROM ledger_blocks
             WHERE released = 0
             ORDER BY timestamp DESC LIMIT 100
         """)
@@ -298,7 +298,7 @@ class FractalLedger:
         # Store consensus root
         total_stake = sum(weighted_votes.values())
         self.db.execute("""
-            INSERT OR REPLACE INTO consensus_roots 
+            INSERT OR REPLACE INTO consensus_roots
             (root_hash, timestamp, total_stake, node_count)
             VALUES (?, ?, ?, ?)
         """, (consensus_root, time.time(), total_stake, len(weighted_votes)))
@@ -309,14 +309,14 @@ class FractalLedger:
     def release_ram_stake(self, node_id: str, block_hash: str):
         """
         Release RAM stake after transaction confirmation.
-        
+
         Args:
             node_id: Node that staked RAM
             block_hash: Block to release stake for
         """
         # Get stake amount
         cursor = self.db.execute("""
-            SELECT ram_stake FROM ledger_blocks 
+            SELECT ram_stake FROM ledger_blocks
             WHERE block_hash = ? AND node_id = ? AND released = 0
         """, (block_hash, node_id))
 
@@ -332,8 +332,8 @@ class FractalLedger:
 
         # Mark as released
         self.db.execute("""
-            UPDATE ledger_blocks 
-            SET released = 1 
+            UPDATE ledger_blocks
+            SET released = 1
             WHERE block_hash = ?
         """, (block_hash,))
         self.db.commit()
@@ -346,8 +346,8 @@ class FractalLedger:
         cutoff_time = time.time() - self.stake_duration
 
         cursor = self.db.execute("""
-            SELECT block_hash, node_id, ram_stake 
-            FROM ledger_blocks 
+            SELECT block_hash, node_id, ram_stake
+            FROM ledger_blocks
             WHERE timestamp < ? AND released = 0
         """, (cutoff_time,))
 
@@ -359,8 +359,8 @@ class FractalLedger:
 
         # Mark all as released
         self.db.execute("""
-            UPDATE ledger_blocks 
-            SET released = 1 
+            UPDATE ledger_blocks
+            SET released = 1
             WHERE timestamp < ? AND released = 0
         """, (cutoff_time,))
         self.db.commit()
@@ -370,7 +370,7 @@ class FractalLedger:
     def get_ledger_stats(self) -> dict:
         """Get current ledger statistics"""
         cursor = self.db.execute("""
-            SELECT 
+            SELECT
                 COUNT(*) as total_blocks,
                 SUM(ram_stake) as total_stake,
                 COUNT(DISTINCT node_id) as unique_nodes,
@@ -442,12 +442,12 @@ def get_global_ledger() -> FractalLedger:
 def commit_file_change(file_path: str, content: bytes, node_id: str = "local") -> str:
     """
     Convenience function to commit a file change to the ledger.
-    
+
     Args:
         file_path: Path to file
         content: File content
         node_id: Node identifier (default: "local")
-        
+
     Returns:
         Block hash
     """

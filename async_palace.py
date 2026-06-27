@@ -115,7 +115,7 @@ class BatchWriterConfig:
 
 class TransactionalBatchWriter:
     """
-    Non-blocking, zero-copy transactional batch writer designed to prevent 
+    Non-blocking, zero-copy transactional batch writer designed to prevent
     SQLite lock contention across multiple async producers.
     """
     def __init__(self, config: BatchWriterConfig = BatchWriterConfig()):
