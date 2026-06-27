@@ -439,6 +439,7 @@ def _records_from_cards(payload: dict[str, Any], root: Path | None = None) -> li
 
 
 def _incremental_record_fingerprint(record: dict[str, Any]) -> dict[str, Any]:
+    """Return the branch fields that determine whether a file card changed."""
     symbols = sorted(
         record.get("symbols", []),
         key=lambda item: (
@@ -766,7 +767,7 @@ def refresh_codemap_for_paths(
     topology_path: Path = DEFAULT_TOPOLOGY_PATH,
     refresh_topology: bool = False,
 ) -> dict[str, Any] | None:
-    """Refresh CODEMAP branches for concrete paths and rewrite JSON/Markdown artifacts."""
+    """Refresh CODEMAP branches and leave JSON/Markdown untouched on no-op scans."""
     repo_root = Path(root or ".").resolve()
     resolved_index = index_path if index_path.is_absolute() else repo_root / index_path
     resolved_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path

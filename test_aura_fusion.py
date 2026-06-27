@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
+import time
 
+from aura_codebase_navigator import refresh_codemap_for_paths
 from aura_fusion import (
     JUDGE_SCHEMA,
     PANEL_SCHEMA,
@@ -125,6 +127,25 @@ def test_infer_fusion_target_from_bang_command_prefers_implementation(tmp_path: 
     assert target["target_symbol"] == "upgraded_arxiv_backtracker"
 
 
+def test_codemap_refresh_skips_artifact_write_when_payload_unchanged(tmp_path: Path):
+    _write_fusion_codemap(tmp_path)
+    json_path = tmp_path / ".aura" / "CODEMAP.json"
+    md_path = tmp_path / ".aura" / "CODEMAP.md"
+    before_json = json_path.read_text(encoding="utf-8")
+    before_md = md_path.read_text(encoding="utf-8")
+    before_json_mtime = json_path.stat().st_mtime_ns
+    before_md_mtime = md_path.stat().st_mtime_ns
+
+    time.sleep(0.05)
+    payload = refresh_codemap_for_paths(["arxiv_forager.py"], root=tmp_path, include_topology=False)
+
+    assert payload is not None
+    assert json_path.read_text(encoding="utf-8") == before_json
+    assert md_path.read_text(encoding="utf-8") == before_md
+    assert json_path.stat().st_mtime_ns == before_json_mtime
+    assert md_path.stat().st_mtime_ns == before_md_mtime
+
+
 def test_panel_and_judge_schema_required_fields_are_explicit():
     assert "confidence" in PANEL_SCHEMA["required"]
     assert "final_answer" in JUDGE_SCHEMA["required"]
@@ -155,7 +176,12 @@ def test_mock_fusion_run_infers_command_target_before_mutation_gate(tmp_path: Pa
     assert result.metrics["panel_count"] == 3
     assert result.metrics["target_file"] == "arxiv_forager.py"
     assert result.metrics["target_symbol"] == "upgraded_arxiv_backtracker"
-    assert result.metrics["codemap_refreshes"][0]["ok"] is True
+    refreshes = result.metrics["codemap_refreshes"]
+    assert {refresh["phase"] for refresh in refreshes} == {
+        "command_index_preflight",
+        "target_branch_preflight",
+    }
+    assert all(refresh["ok"] is True and "error" not in refresh for refresh in refreshes)
     assert result.metrics["gate"]["human_gate_required"] is True
 
 
