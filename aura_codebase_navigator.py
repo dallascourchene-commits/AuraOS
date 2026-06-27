@@ -757,6 +757,12 @@ def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _codemap_payload_hash(payload: dict[str, Any]) -> str:
+    """Create deterministic hash of codemap payload to detect content changes."""
+    body = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
+
+
 def refresh_codemap_for_paths(
     changed_paths: list[str | Path],
     *,
@@ -774,6 +780,7 @@ def refresh_codemap_for_paths(
     if not resolved_index.exists():
         return None
     before_payload = _load_json(resolved_index)
+    before_hash = _codemap_payload_hash(before_payload)
     payload = refresh_index_for_paths(
         resolved_index,
         [Path(path) for path in changed_paths],
@@ -783,7 +790,8 @@ def refresh_codemap_for_paths(
         refresh_topology=refresh_topology,
         write_index=False,
     )
-    if payload == before_payload:
+    after_hash = _codemap_payload_hash(payload)
+    if before_hash == after_hash:
         return payload
     write_navigation_artifacts(payload, resolved_index, resolved_markdown)
     return payload

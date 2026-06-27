@@ -144,7 +144,7 @@ class AuraArchReasoner:
         """
         [Coordinated Pass@K Architecture] Generate K alternative refactoring
         strategies in parallel and select the best via coordinated solver.
-        
+
         Returns top-K architectural patches ranked by resonance improvement.
         """
         print(f"[⚡ COORDINATED ARCH] Generating {K} alternative refactoring strategies...")

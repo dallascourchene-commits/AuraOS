@@ -457,7 +457,7 @@ class AuraContextCrusher:
         paragraphs = [part.strip() for part in re.split(r"\n\s*\n", raw) if part.strip()]
         if len(paragraphs) <= 6:
             return raw[:1800] + ("\n...[truncated]..." if len(raw) > 1800 else "")
-        selected = paragraphs[:3] + [f"[... {max(0, len(paragraphs) - 6)} paragraphs omitted ...]"] + paragraphs[-3:]
+        selected = [*paragraphs[:3], f"[... {max(0, len(paragraphs) - 6)} paragraphs omitted ...]", *paragraphs[-3:]]
         return "\n\n".join(selected)
 
     def _with_marker(

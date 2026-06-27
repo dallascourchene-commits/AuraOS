@@ -300,7 +300,7 @@ def main():
         "voices": {"an": "[VOICE][1SG_SUFFIX]"},
         "spatials": {"bi": "[DIR][HITHER]"},
         "classifiers": {"identity_node": "[CLASS][NEUT]"},
-        "epenthesis_rules": lambda parts: "-".join(parts) # Simplified Cree epenthesis hook
+        "epenthesis_rules": "-".join # Simplified Cree epenthesis hook
     }
 
     cortex.mount_fst_schema(cree_schema)

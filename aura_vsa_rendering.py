@@ -55,7 +55,7 @@ class RenderObject:
 class VSAAssetAddressGenerator:
     """
     Generate VSA addresses for 3D assets
-    
+
     Address = normalize(⊗_k v_prop_k ⊗ p_role_k)
     where:
     - v_prop_k = property vectors (type, geohash, hash, LOD, tags)
@@ -94,7 +94,7 @@ class VSAAssetAddressGenerator:
     def generate_address(self, props: AssetProperties) -> np.ndarray:
         """
         Generate VSA address from asset properties
-        
+
         Returns:
             10,000-D complex hypervector (normalized)
         """
@@ -132,11 +132,11 @@ class VSAAssetAddressGenerator:
 class DecoupledRenderProtocol:
     """
     Decoupled rendering protocol for VR/AR
-    
+
     Control Node:
     - Maintains world state as VSA addresses
     - Transmits only (address, pose, timestamp)
-    
+
     Render Client:
     - Maps addresses to GPU resources
     - Performs actual rendering
@@ -166,7 +166,7 @@ class DecoupledRenderProtocol:
     def transmit_frame(self) -> bytes:
         """
         Transmit frame as packed binary data
-        
+
         Format per object (80 bytes):
         - Asset address hash: 32 bytes (SHA-256 of full address)
         - Position: 12 bytes (3 floats)
@@ -174,7 +174,7 @@ class DecoupledRenderProtocol:
         - Timestamp: 8 bytes (double)
         - LOD hint: 1 byte
         - Padding: 11 bytes
-        
+
         Returns:
             Packed binary frame data
         """
@@ -204,7 +204,7 @@ class DecoupledRenderProtocol:
 class RenderClient:
     """
     Render client that maps VSA addresses to GPU resources
-    
+
     Maintains:
     - Address → GPU resource mapping
     - Asset cache for frequently used objects
@@ -240,7 +240,7 @@ class RenderClient:
     def compute_lod_from_attention(self, object_position: tuple[float, float]) -> int:
         """
         Compute LOD based on distance from fovea center
-        
+
         Foveated rendering:
         - Center (fovea): LOD 0 (highest detail)
         - Periphery: LOD 7 (lowest detail)
@@ -275,13 +275,13 @@ class VSARenderingBenchmark:
     def compare_bandwidth(num_objects: int) -> dict[str, float]:
         """
         Compare bandwidth usage
-        
+
         Traditional:
         - Mesh: ~5KB
         - Textures: ~50KB
         - Materials: ~1KB
         - Total: ~56KB per object
-        
+
         VSA-addressed:
         - Address + pose: 80 bytes per object
         """

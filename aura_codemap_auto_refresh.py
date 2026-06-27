@@ -71,10 +71,10 @@ def set_refresh_interval(seconds: float) -> None:
 
 def register_file_change(file_path: str | Path) -> None:
     """Register a file change for batched CODEMAP refresh.
-    
+
     This should be called after any file write operation (write_to_file,
     apply_diff, insert_content) to keep the CODEMAP synchronized.
-    
+
     Args:
         file_path: Path to the file that was modified
     """
@@ -109,7 +109,7 @@ def register_file_change(file_path: str | Path) -> None:
 
 def _schedule_refresh() -> None:
     """Schedule a batched refresh after the configured interval.
-    
+
     NOTE: This function must be called while holding _refresh_lock.
     """
     global _refresh_timer
@@ -176,10 +176,10 @@ def _execute_refresh() -> None:
 
 def flush_pending_refreshes() -> None:
     """Immediately flush all pending CODEMAP refreshes.
-    
+
     This should be called before critical operations that depend on
     up-to-date navigation data, or before program exit.
-    
+
     Ensures proper cleanup of timer thread before executing refresh.
     """
     global _refresh_timer
@@ -213,7 +213,7 @@ atexit.register(flush_pending_refreshes)
 # Convenience function for direct use
 def auto_refresh_codemap(file_path: str | Path) -> None:
     """Convenience function: register file change and optionally flush immediately.
-    
+
     Args:
         file_path: Path to the file that was modified
     """

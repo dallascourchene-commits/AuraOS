@@ -236,7 +236,7 @@ class AutoRouter:
         pool = usable_providers(prefer_working=False)  # working + configured (have keys)
         if forced and forced.lower() not in pool:
             # forced model has no usable key — still surface it so we can warn
-            pool = [forced.lower()] + pool
+            pool = [forced.lower(), *pool]
         return pool
 
     def _raw_baseline(self, task) -> tuple[int, int | None, float | None]:

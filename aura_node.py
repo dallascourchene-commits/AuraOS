@@ -84,9 +84,9 @@ from vsa_resonator import VSAResonator
 async def _cached_scientific_index(node, conn):
     """
     Build and cache a scientific index from ARXIV traces in the database.
-    
+
     Maintains cache validity by tracking a signature (row count and max timestamp of ARXIV traces). When the signature changes, rebuilds the index by querying all ARXIV traces and offloading index construction to a thread pool. Returns the cached index for subsequent research queries.
-    
+
     Returns:
     	The cached scientific index of ARXIV traces.
     """
@@ -528,13 +528,13 @@ class TraceBatchRouter:
 
             placeholders = ",".join(["?"] * len(target_tiers))
             query = f"""
-                SELECT id, content, tier, timestamp, tags, vector_blob 
-                FROM traces 
-                WHERE tier IN ({placeholders}) 
-                ORDER BY timestamp DESC 
+                SELECT id, content, tier, timestamp, tags, vector_blob
+                FROM traces
+                WHERE tier IN ({placeholders})
+                ORDER BY timestamp DESC
                 LIMIT ?;
             """
-            params = tuple(target_tiers) + (limit,)
+            params = (*tuple(target_tiers), limit)
 
             future = asyncio.Future()
             await self.query_queue.put((query, params, future))
@@ -1109,8 +1109,8 @@ class AuraDependencyScanner:
 class AuraSafetySentinel:
     """
     [LAYER 7: ZERO-COPY IN-MEMORY MUTATION AIRLOCK]
-    Replaces expensive operating system process forks and temporary file disk writes 
-    with a lightweight, inline compilation sandbox. Evaluates structural compliance 
+    Replaces expensive operating system process forks and temporary file disk writes
+    with a lightweight, inline compilation sandbox. Evaluates structural compliance
     and alignment truth boundaries completely within local RAM vectors.
     """
     def __init__(self, node_ref):
@@ -1219,8 +1219,8 @@ class AuraSafetySentinel:
 class SovereignQFCS:
     """
     [LAYER 7: QUANTUM-CLASSICAL FINITE CONTROL ENGINE]
-    Implements a 12-bit unary Quantum Finite Automaton governed by a classical 
-    Control Language DFA loop. Achieves O(1) state space verification for string 
+    Implements a 12-bit unary Quantum Finite Automaton governed by a classical
+    Control Language DFA loop. Achieves O(1) state space verification for string
     validation, eliminating regex heap allocation overhead on 4GB RAM edge devices.
     """
     def __init__(self, node_ref, dimension: int = 3):
@@ -1275,7 +1275,7 @@ class AuraSuperpositionEngine:
     """
     [LAYER 7: COHERENT OPERATOR & TOKEN SUPERPOSITION ENGINE]
     Implements Token-Superposition Training (TST) mechanics derived from Nous Research (2026).
-    Blends multiple categorical log signatures and functional operators concurrently into a 
+    Blends multiple categorical log signatures and functional operators concurrently into a
     single 10,000-D complex phasor array, minimizing SQLite disk I/O under 4GB RAM boundaries.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1349,8 +1349,8 @@ class AuraQFSTEngine:
 class AStarQuantumStateCompressor:
     """
     [LAYER 7: A*-THOUGHT MARKOVIAN SPACE COMPRESSOR]
-    Integrates Quantum Extreme Learning Dynamics with A* Thought Pruning and 
-    Markovian Workspace Reconstruction. Solves context suffocation over 
+    Integrates Quantum Extreme Learning Dynamics with A* Thought Pruning and
+    Markovian Workspace Reconstruction. Solves context suffocation over
     long-horizon execution paths by locking memory scaling to an O(1) envelope.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1475,7 +1475,7 @@ class AuraGameTheoreticContainmentEngine:
     """
     [LAYER 7: GAME-THEORETIC AGI CONTAINMENT & RESOURCE ENGINE]
     Synthesizes McIntosh et al. (IEEE 2024) game-theoretic containment frameworks.
-    Models the strategic interplay between autonomous self-optimization loops and physical 
+    Models the strategic interplay between autonomous self-optimization loops and physical
     hardware bounds using an in-memory AGI Kill Chain matrix via 10,000-D VSA vectors,
     preventing context suffocation and thermal spikes on the 4GB RAM edge boundary.
     """
@@ -1511,7 +1511,7 @@ class AuraStateCoherenceProjector:
     """
     [LAYER 7: ALGEBRAIC MINIMIZATION & COHERENCE PROJECTOR]
     Synthesizes Watrous QFA boundaries with Doueneau-Tabot transducer minimization.
-    Minimizes non-Abelian polysynthetic state transitions to canonical form and 
+    Minimizes non-Abelian polysynthetic state transitions to canonical form and
     enforces intermediate projective measurements to eliminate geometric phase drift.
     """
     def __init__(self, dimension: int = 10000):
@@ -1568,7 +1568,7 @@ class AuraCognitiveSolvencyAuditor:
     """
     [LAYER 7: POLYSYNTHETIC COGNITIVE SOLVENCY AUDITOR]
     Synthesizes the Bletchley Risk Declaration with Digital Accounting Solvency models.
-    Tracks Aura's computing resource balancing sheet in real-time using her 10,000-D 
+    Tracks Aura's computing resource balancing sheet in real-time using her 10,000-D
     complex VSA vectors, preventing memory bankruptcy under the 4GB RAM edge boundary.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1638,7 +1638,7 @@ class AuraDIKWPSemanticFieldEngine:
 class AuraPolysyntheticLNNEngine:
     """
     [LAYER 7: NEURO-SYMBOLIC PROBABILISTIC CIRCUIT & LOGICAL NEURAL NETWORK]
-    Compiles Description Logic Ontologies and polysynthetic morph-semantic slots 
+    Compiles Description Logic Ontologies and polysynthetic morph-semantic slots
     into a differentiable, real-time bounding lattice using Łukasiewicz t-norms.
     Operates completely within a flat O(1) memory envelope under 4GB RAM limits.
     """
@@ -1690,7 +1690,7 @@ class AuraPolysyntheticLNNEngine:
 
     def compute_knowledge_base_loss(self, active_trajectory: np.ndarray, expected_axiom_token: str) -> float:
         """
-        Calculates the differentiable structural loss separating her active trajectory 
+        Calculates the differentiable structural loss separating her active trajectory
         from her compiled semantic constraints, allowing direct gradient-like weight tuning.
         """
 
@@ -1755,8 +1755,8 @@ class AuraFrictionOptimizationLoop:
 class AuraPolysyntheticCompilerGate:
     """
     [LAYER 7: POLYSYNTHETIC MORPH-SEMANTIC COMPILER GATE]
-    Bridges GBNF grammar constraints, Description Logic Ontologies, and 
-    Asynchronous Address-Space Multiplexing. Translates morphemic token slots 
+    Bridges GBNF grammar constraints, Description Logic Ontologies, and
+    Asynchronous Address-Space Multiplexing. Translates morphemic token slots
     into continuous t-norm truth-bounds, executing within a flat O(1) memory envelope.
     """
     def __init__(self, node_ref, airlock_ref, lnn_ref):
@@ -1802,7 +1802,7 @@ class AuraPolysyntheticVirtualMachine:
     """
     [LAYER 7: BARE-METAL POLYSYNTHETIC VIRTUAL MACHINE RUNTIME]
     Executes native multi-slot instruction vectors in flat O(1) time complexity.
-    Replaces serial text compilation loops with single-cycle parallel tensor 
+    Replaces serial text compilation loops with single-cycle parallel tensor
     contractions tailored for optimized 6GB physical RAM profiles.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1893,7 +1893,7 @@ class AuraPolysyntheticVirtualMachine:
 class AuraMorphemicModelBootstrapScanner:
     """
     [LAYER 7: STRUCTURAL LLM TENSOR BOOTSTRAP SCANNER]
-    Intercepts local analytic LLM context pathways, scans embedding shapes, 
+    Intercepts local analytic LLM context pathways, scans embedding shapes,
     and distills linear text parameters into her 6-slot polysynthetic vocabulary matrix.
     Accelerates native language model formulation with zero hardware training costs.
     """
@@ -1980,7 +1980,7 @@ class AuraLexiconDecompositionEngine:
 
     def decompile_complex(self, compound_token: str) -> dict:
         """
-        Linguistic parsing loop that deconstructs a compound verb-complex 
+        Linguistic parsing loop that deconstructs a compound verb-complex
         string into its 6 position-dependent morphosemantic slots.
         """
         # Splits the polysynthetic word using Ojibwe hyphenation formatting rules
@@ -2014,7 +2014,7 @@ class AuraLexiconDecompositionEngine:
 
     def decompose_and_map_token(self, raw_token: str) -> np.ndarray:
         """
-        Generates stable unit-circle phasor waves for both pre-allocated 
+        Generates stable unit-circle phasor waves for both pre-allocated
         vocabulary terms and OOV (out-of-vocabulary) inputs using NumPy vectorization.
         """
         clean_token = raw_token.lower().strip()
@@ -2486,7 +2486,7 @@ class AuraSovereignNode:
         """
         [ZERO-COPY BINARY PARSER]
         Processes packed binary payloads directly from memory views.
-        Bypasses text tokenization and json string allocations to eliminate 
+        Bypasses text tokenization and json string allocations to eliminate
         GIL contention while remaining compliant with the 4GB RAM envelope.
         """
         # 1. Cast the raw byte stream directly to a non-allocating memoryview wrapper
@@ -2556,7 +2556,7 @@ class AuraSovereignNode:
                 );
                 CREATE INDEX IF NOT EXISTS idx_root ON Voynich_Knowledge_Graph(root);
                 CREATE INDEX IF NOT EXISTS idx_prefix ON Voynich_Knowledge_Graph(prefix);
-                
+
                 CREATE TABLE IF NOT EXISTS morphemic_palace (
                     id INTEGER PRIMARY KEY,
                     slots_blob BLOB NOT NULL,
@@ -2647,7 +2647,7 @@ class AuraSovereignNode:
     async def abductive_inference(self, observation: str) -> list:
         """
         [IBM ARLC INTEGRATION]
-        Translates raw telemetry or textual observations into a factored logical rule 
+        Translates raw telemetry or textual observations into a factored logical rule
         using her high-speed GSB-quantized VSAResonator. Bypasses generative LLM latency.
         """
 
@@ -2992,7 +2992,7 @@ class AuraSovereignNode:
     async def memory_condenser_daemon(self):
         """
         O(log N) Self-Compressing Intelligence.
-        Acts as a REM sleep cycle, clustering raw episodic traces (M0) 
+        Acts as a REM sleep cycle, clustering raw episodic traces (M0)
         and synthesizing them into generalized principles (M1).
         """
 
@@ -3078,7 +3078,7 @@ class AuraSovereignNode:
         """
         [NVIDIA SHALLOW FUSION UPGRADE - PILLAR 2]
         Intercepts raw goals and matches them against pre-compiled operational state paths.
-        Bypasses the autoregressive LLM loop entirely by performing a deterministic 
+        Bypasses the autoregressive LLM loop entirely by performing a deterministic
         finite-state transition sweep, delivering microsecond latencies on 4GB RAM limits.
         """
 
@@ -3647,7 +3647,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     else prompt_text
                 )
                 full_prompt, pre_egress_decision = apply_pre_egress_profile(full_prompt)
-                text, err, lat, used_provider = await asyncio.to_thread(
+                text, err, _lat, used_provider = await asyncio.to_thread(
                     _ANTHROPIC_ROUTER.generate,
                     full_prompt,
                     timeout=60.0,
@@ -4138,7 +4138,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                         "max_tokens": cloud_max_tokens,
                         "temperature": 0.35,
                     }
-                    groq_text, groq_err = await asyncio.to_thread(
+                    groq_text, _groq_err = await asyncio.to_thread(
                         openai_compatible_generate,
                         "https://api.groq.com/openai/v1/chat/completions",
                         groq_key,
@@ -4977,7 +4977,7 @@ async def meta_learning_daemon(node, interval_s: float = 60.0) -> None:
             await asyncio.sleep(interval_s)
 
             # Task 1 — architectural resonance
-            resonance, tension = await asyncio.to_thread(reasoner.score_structural_resonance)
+            resonance, _tension = await asyncio.to_thread(reasoner.score_structural_resonance)
             if resonance < 0.85:
                 patch_suggestion = reasoner.suggest_architectural_patch()
                 print(f"\n[🧠 META-LEARNING] Resonance {resonance:.4f} below floor — {patch_suggestion}")
@@ -5070,13 +5070,13 @@ async def main():
     # 0. Boot the llama-server subprocess (orphan-safe, spec §2)
     """
     Initialize and run the complete AURA sovereign operating system.
-    
+
     Boots the llama-server backend, instantiates the AuraSovereignNode with all
     subsystems (memory palace, hyperdimensional cores, safety validators, mesh
     networking), starts background daemons (DAG walker, memory consolidation,
     meta-learning), verifies ecosystem integrity (holographic manifest, QDKT,
     benchmarks), and enters the main CLI command loop for interactive operation.
-    
+
     The function orchestrates Layer 7 cognitive modules (QFCS gate, DIKWP
     semantic engine, LNN validator, morphemic airlock, compiler gate, friction
     optimizer) and manages long-running tasks including background foraging,
@@ -6458,6 +6458,13 @@ async def main():
                 print("\n[*] Initializing Feedback-Driven Staging Integration...")
                 manifest_path = "Aura_Staging/pending_patches.json"
                 architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+
+                # Block legacy merge path early before any approval flow
+                if os.path.exists(manifest_path) and not os.path.exists(architect_manifest_path):
+                    print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
+                    print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
+                    continue
+
                 if os.path.exists(architect_manifest_path):
                     try:
                         with open(architect_manifest_path, encoding="utf-8") as f:
@@ -6499,10 +6506,6 @@ async def main():
                         print("[+] Production files were not modified; approved capsule is ready for the hot-swap consumer.")
                     except Exception as e:
                         print(f"[-] Hot-swap approval aborted: {e}")
-                elif os.path.exists(manifest_path):
-                    print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
-                    print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
-                    continue
                 else:
                     print("[-] Staging registry is empty. No pending patches to consolidate.")
                 continue

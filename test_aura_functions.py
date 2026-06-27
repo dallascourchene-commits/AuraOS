@@ -89,19 +89,19 @@ _run("shield", "verify_structural_truth: valid code",
      verify_structural_truth, "import os\nx = 1\n")
 
 _run("shield", "verify_structural_truth: syntax error rejected",
-     lambda: verify_structural_truth("def :\n    pass") == False)
+     lambda: not verify_structural_truth("def :\n    pass"))
 
 _run("shield", "verify_structural_truth: banned import (nxsdk) rejected",
-     lambda: verify_structural_truth("import nxsdk\n") == False)
+     lambda: not verify_structural_truth("import nxsdk\n"))
 
 _run("shield", "verify_structural_truth: infinite loop without decay rejected",
-     lambda: verify_structural_truth("while True:\n    x = 1\n") == False)
+     lambda: not verify_structural_truth("while True:\n    x = 1\n"))
 
 _run("shield", "verify_structural_truth: while True + break accepted",
      verify_structural_truth, "while True:\n    break\n")
 
 _run("shield", "verify_structural_truth: eval() rejected",
-     lambda: verify_structural_truth("eval('x')\n") == False)
+     lambda: not verify_structural_truth("eval('x')\n"))
 
 _run("shield", "full_report: returns 5 ShieldReport items",
      lambda: len(full_report("import os\n")) == 5)
@@ -285,7 +285,7 @@ async def _test_self_reflect_local():
     engine = SelfReflectEngine()
     nodes = [{"id": "a.py::f", "label": "f", "shape": "Sphere", "vector": [1, 0, 0]}]
     phase = engine.topology_to_phase_vector(nodes)
-    score, updated = engine.measure_drift(phase)
+    score, _updated = engine.measure_drift(phase)
     assert 0.0 <= score <= 1.0
     report = await engine.run_arch_reasoning_report()
     assert "resonance" in report and "patch" in report
@@ -559,7 +559,7 @@ from aura_crystallization import hypertruth_crystallization_loop
 def _test_crystallization():
     # hypertruth_crystallization_loop expects a dict as node_topology
     nodes = {f"fn_{i}": {"label": f"fn_{i}", "shape": "Sphere"} for i in range(5)}
-    state, report = hypertruth_crystallization_loop(nodes, [], [])
+    _state, report = hypertruth_crystallization_loop(nodes, [], [])
     assert "constraints_met" in report
 
 _run("crystal", "hypertruth_crystallization_loop: returns report with constraints_met", _test_crystallization)

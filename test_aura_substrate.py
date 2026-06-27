@@ -159,7 +159,7 @@ def test_json_edit_plan_scoring() -> None:
             'self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"}]}')
     plan, note = parse_edit_plan(good)
     assert plan is not None and note == "ok"
-    patched, n = apply_edit_plan(original, plan)
+    patched, _n = apply_edit_plan(original, plan)
     assert patched is not None and "[0, 0, 0, 0, 0, 0], 1.0" in patched
     diff = edit_plan_to_unified_diff(original, plan, "aura_mesh.py")
     assert diff.startswith("--- a/aura_mesh.py") and "@@" in diff

@@ -81,7 +81,7 @@ class Path:
 class FSTLexiconRoutingCore:
     """
     FST-Lexicon Routing Core
-    
+
     Formal finite-state transducer that replaces ad-hoc function
     call graphs with a verified routing lexicon.
     """
@@ -162,7 +162,7 @@ class FSTLexiconRoutingCore:
                                   cpu_temp: float = 55.0) -> float:
         """
         Compute transition weight
-        
+
         w_ij = α·sim(v_i, v_j) + (1-α)·(1 - T_CPU/T_max)
         """
         state_i = self.states[from_state]
@@ -191,7 +191,7 @@ class FSTLexiconRoutingCore:
     def validate_slot_sequence(self, path: Path) -> bool:
         """
         Validate that path respects six-slot constraint
-        
+
         [DIR]→[ASP]→[CLASS]→[SUBJ]→[VOICE]→[STEM]
         """
         if not path.slot_sequence:
@@ -263,9 +263,9 @@ class FSTLexiconRoutingCore:
                          cpu_temp: float = 55.0) -> Path | None:
         """
         Find optimal path from start to end state
-        
+
         Cost(p) = Σ(1 - w_ij) + λ·k
-        
+
         Uses topological ordering for O(|Q| + |Δ|) complexity
         """
         if start not in self.states or end not in self.states:
@@ -343,8 +343,8 @@ class FSTLexiconRoutingCore:
                         new_cost,
                         next(counter),
                         next_state,
-                        path_states + [next_state],
-                        path_transitions + [transition],
+                        [*path_states, next_state],
+                        [*path_transitions, transition],
                         new_slot_seq
                     ))
 
@@ -353,7 +353,7 @@ class FSTLexiconRoutingCore:
     def build_standard_lexicon(self):
         """
         Build standard AuraOS FST lexicon
-        
+
         Hierarchy:
         1. Gates (Root, DataGate, NetworkGate, HardwareGate, etc.)
         2. Actions (ActionData, ActionNetwork, etc.)

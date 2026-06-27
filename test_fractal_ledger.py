@@ -134,8 +134,8 @@ def test_consensus_computation():
 
     # Check that consensus was stored
     cursor = ledger.db.execute("""
-        SELECT root_hash, total_stake, node_count 
-        FROM consensus_roots 
+        SELECT root_hash, total_stake, node_count
+        FROM consensus_roots
         ORDER BY timestamp DESC LIMIT 1
     """)
     row = cursor.fetchone()

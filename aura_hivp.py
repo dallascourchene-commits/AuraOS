@@ -29,7 +29,7 @@ import numpy as np
 class HolographicIntegrityVerificationProtocol:
     """
     HIVP - O(1) codebase integrity verification
-    
+
     Generates a fixed-size hypervector fingerprint (1.2 KB) of an
     arbitrary codebase, enabling O(1) integrity verification
     independent of repository size.
@@ -46,7 +46,7 @@ class HolographicIntegrityVerificationProtocol:
     def _positional_phasor(self, line_content: bytes, line_number: int) -> complex:
         """
         Generate positional phasor for a single line
-        
+
         φ_k(f_i) = e^(j·(BLAKE2b_32(f_i[k]) + θ_pos(k)))
         θ_pos(k) = 2πk / 4096
         """
@@ -65,9 +65,9 @@ class HolographicIntegrityVerificationProtocol:
     def generate_file_fingerprint(self, file_path: str) -> np.ndarray:
         """
         Generate hypervector fingerprint for a single file
-        
+
         Ψ_f_i = (1/√D) · Σ_k φ_k(f_i)
-        
+
         Returns:
             10,000-D complex hypervector (normalized)
         """
@@ -113,11 +113,11 @@ class HolographicIntegrityVerificationProtocol:
     def generate_global_header(self, file_paths: list[str]) -> np.ndarray:
         """
         Generate global holographic header for entire codebase
-        
+
         H_global = (1/N) · ⊕_{i=1}^N Ψ_f_i
-        
+
         where ⊕ is the bundling operation (normalized sum)
-        
+
         Returns:
             10,000-D complex hypervector (normalized)
         """
@@ -142,9 +142,9 @@ class HolographicIntegrityVerificationProtocol:
                         stored_header: np.ndarray) -> tuple[float, bool]:
         """
         Verify codebase integrity via O(1) resonance check
-        
+
         R = ⟨H_local, H_stored⟩ / (||H_local|| · ||H_stored||)
-        
+
         Returns:
             (resonance, is_valid) where is_valid = (R >= threshold)
         """
@@ -166,11 +166,11 @@ class HolographicIntegrityVerificationProtocol:
                      extensions: list[str] = ['.py', '.rs', '.cpp', '.c', '.h']) -> list[str]:
         """
         Scan codebase directory for source files
-        
+
         Args:
             root_dir: Root directory to scan
             extensions: File extensions to include
-        
+
         Returns:
             List of file paths
         """
@@ -214,7 +214,7 @@ class HolographicIntegrityVerificationProtocol:
                                   stored_header_path: str | None = None) -> dict:
         """
         Generate comprehensive integrity report
-        
+
         Returns:
             Dictionary with:
             - file_count: Number of files scanned

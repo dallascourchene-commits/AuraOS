@@ -689,18 +689,18 @@ class AuraSkillWeaver:
     def evaluate_research_gate(self, query, candidates_data):
         """
         Evaluate research evidence and determine if code mutation should be allowed.
-        
+
         Assesses candidate research traces against the query, checks for contradictions
         in accepted sources, and makes a gating decision based on evidence quality and
         target module availability. Returns ALLOW_MUTATION when sufficient evidence is
         present with coherent findings and target modules identified, REFUSE_MUTATION
         when no candidates meet relevance thresholds, or NEED_MORE_SOURCES when
         evidence conflicts or target grounding is missing.
-        
+
         Parameters:
             query: The user research query string.
             candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
-        
+
         Returns:
             ResearchGateResult containing the gating decision (ALLOW_MUTATION,
             REFUSE_MUTATION, or NEED_MORE_SOURCES), evaluated candidates ranked by

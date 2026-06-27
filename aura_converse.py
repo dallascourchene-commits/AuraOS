@@ -245,7 +245,7 @@ class Conversationalist:
         if provider is None:
             return {"ok": False, "reason": "no usable provider (add a key or use --mock)"}
 
-        tags = ["ENV:CHAT", "OP:CONVERSE", "OUTPUT:POLY_REPLY"] + self.profile.packet_tags()
+        tags = ["ENV:CHAT", "OP:CONVERSE", "OUTPUT:POLY_REPLY", *self.profile.packet_tags()]
         pkg = self.substrate.compile(user_input, explicit_tags=tags, style="bracket")
         # uniform packet + base guardrails + the conversation protocol
         from aura_substrate import load_guardrails

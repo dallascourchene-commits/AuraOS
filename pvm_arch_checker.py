@@ -85,7 +85,7 @@ class DepGraph:
                     dfs(neighbour, stack, on_stack)
                 elif neighbour in on_stack:
                     idx = stack.index(neighbour)
-                    cycles.append(stack[idx:] + [neighbour])
+                    cycles.append([*stack[idx:], neighbour])
             stack.pop()
             on_stack.discard(node)
 

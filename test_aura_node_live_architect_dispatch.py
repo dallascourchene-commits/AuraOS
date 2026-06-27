@@ -1,5 +1,5 @@
-import re
 from pathlib import Path
+import re
 
 
 def test_code_prefix_routes_to_live_architect_before_cognitive_lifecycle():

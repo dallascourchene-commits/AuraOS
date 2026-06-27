@@ -21,7 +21,7 @@ except ImportError:
 
 class DirectoryCache:
     """
-    Singleton cache to share walked directory results between the 
+    Singleton cache to share walked directory results between the
     topological scanner and the spatial mapper, eliminating redundant disk I/O.
     """
     _instance = None

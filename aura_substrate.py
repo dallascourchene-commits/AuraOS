@@ -159,11 +159,11 @@ def existing_import_roots(content: str) -> set[str]:
 def generate_topology_hypervector() -> str:
     """
     Generate 1.2KB base64-encoded topology snapshot for [AURA_MASTER_KEY] headers.
-    
+
     This implements Claim N9 from the AuraOS prior art papers: every file contains
     a compressed 10,000-D hypervector representing the entire system topology,
     enabling O(1) integrity verification and instant mesh synchronization.
-    
+
     Returns:
         Base64-encoded string of exactly 1200 bytes containing quantized topology
     """
@@ -220,15 +220,15 @@ def generate_topology_hypervector() -> str:
 def verify_module_integrity(module_path: str, verbose: bool = False) -> float:
     """
     Verify module header resonance against current topology (Claim N9).
-    
+
     Computes cosine similarity between the topology hypervector embedded in the
     module's [AURA_MASTER_KEY] header and the current live topology. If resonance
     falls below 0.95, triggers healing routine.
-    
+
     Args:
         module_path: Path to Python module to verify
         verbose: Print detailed resonance information
-        
+
     Returns:
         Resonance score [0.0, 1.0] where 1.0 = perfect alignment
     """
@@ -282,7 +282,7 @@ def verify_module_integrity(module_path: str, verbose: bool = False) -> float:
 def update_all_headers_with_topology():
     """
     Scan all Python files and update [AURA_MASTER_KEY] headers with current topology.
-    
+
     This is a maintenance utility to ensure all files have the holographic header
     protocol implemented. Should be run after significant topology changes.
     """
@@ -437,7 +437,7 @@ class ContextSelector:
             return f.read()
 
     def raw_context(self, target_file: str, extra_files: list[str] | None = None) -> ContextBundle:
-        files = [target_file] + list(extra_files or [])
+        files = [target_file, *list(extra_files or [])]
         chunks, total_lines, total_chars, exposed = [], 0, 0, []
         for rel in files:
             content = self.read(rel)

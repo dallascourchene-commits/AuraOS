@@ -240,8 +240,7 @@ def _run_command(command: list[str], *, cwd: Path, stdin: str | None = None, tim
             cwd=str(cwd),
             input=stdin,
             text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             timeout=timeout,
             check=False,
         )

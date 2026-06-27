@@ -50,7 +50,7 @@ class Task:
 class ThermalCostWeightedAPIArbitration:
     """
     TCWAA - Multi-provider LLM routing with thermal awareness
-    
+
     Optimizes across three objectives:
     1. Semantic resonance: sim(task, provider_capability)
     2. Cost efficiency: 1 - (cost / max_cost)
@@ -97,7 +97,7 @@ class ThermalCostWeightedAPIArbitration:
                          capabilities: list[str], quality_score: float = 0.85):
         """
         Register LLM provider with capability profile
-        
+
         Args:
             name: Provider identifier
             model: Model name
@@ -132,7 +132,7 @@ class ThermalCostWeightedAPIArbitration:
                    priority: str = "medium") -> Task:
         """
         Create task with intent hypervector
-        
+
         Args:
             intent: Natural language task description
             estimated_tokens: Estimated response length
@@ -150,7 +150,7 @@ class ThermalCostWeightedAPIArbitration:
     def get_cpu_temperature(self) -> float:
         """
         Get CPU temperature in Celsius
-        
+
         Note: This is a simplified implementation. In production:
         - Linux: Read from /sys/class/thermal/thermal_zone*/temp
         - Windows: Use WMI or OpenHardwareMonitor
@@ -181,7 +181,7 @@ class ThermalCostWeightedAPIArbitration:
                                estimated_tokens: int) -> float:
         """
         Compute cost efficiency score (0-1, higher is better)
-        
+
         Normalized by maximum cost in provider pool
         """
         max_cost = max(p.cost_per_1k_tokens for p in self.providers.values())
@@ -197,7 +197,7 @@ class ThermalCostWeightedAPIArbitration:
     def compute_thermal_fitness(self, cpu_temp: float) -> float:
         """
         Compute thermal fitness score (0-1, higher is better)
-        
+
         Lower temperature = higher fitness
         """
         if cpu_temp >= self.max_temp:
@@ -209,13 +209,13 @@ class ThermalCostWeightedAPIArbitration:
     def route_task(self, task: Task, user_budget: float | None = None) -> tuple[Provider | None, dict]:
         """
         Route task to optimal provider
-        
+
         p* = arg max_p [α·sim(g, v_p) + β·(1 - C_p/C_max) + γ·(1 - T_CPU/T_max)]
-        
+
         Subject to:
         - sim(g, v_p) ≥ τ_min (quality floor)
         - C_p ≤ B_user (budget ceiling)
-        
+
         Returns:
             (selected_provider, routing_details)
         """
@@ -298,7 +298,7 @@ class ThermalCostWeightedAPIArbitration:
     def adjust_weights(self, alpha: float, beta: float, gamma: float):
         """
         Adjust optimization weights
-        
+
         Must sum to 1.0
         """
         total = alpha + beta + gamma

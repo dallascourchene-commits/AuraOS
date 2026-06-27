@@ -202,7 +202,7 @@ class AuraConsensus:
             return False, f"Wrong proposer: {block.proposer} != {expected}"
 
         # Check phasor alignment (O(1) via 5% subsample)
-        sam_sim, full_sim = block.validate_sampled(cs.block.state_phasor)
+        sam_sim, _full_sim = block.validate_sampled(cs.block.state_phasor)
 
         if sam_sim < ALIGNMENT_THRESHOLD:
             return False, f"Sampled alignment {sam_sim:.4f} < {ALIGNMENT_THRESHOLD}"
@@ -315,7 +315,7 @@ class AuraConsensus:
 
         # Cross-correlation matrix (200×200, tractable)
         M = theta_local.reshape(-1, 1) @ theta_quorum.reshape(1, -1)
-        U, S, Vh = np.linalg.svd(M, full_matrices=False)
+        U, _S, Vh = np.linalg.svd(M, full_matrices=False)
         R = U @ Vh  # Optimal rotation
 
         # Frobenius residual

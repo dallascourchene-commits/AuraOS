@@ -358,11 +358,11 @@ async def agentic_optimization(filename, original_code, external_knowledge):
     plan_prompt = f"""
     You are an Edge AI Architect manipulating a 3D structural graph of a Python system.
     Read this episodic external knowledge: {safe_knowledge}
-    
+
     Instead of flat code, here is the Abstract Syntax Tree (AST) node map of the target:
     {vector_map}
-    
-    Identify EXACTLY which Node/Function needs to be mutated to integrate the new knowledge. 
+
+    Identify EXACTLY which Node/Function needs to be mutated to integrate the new knowledge.
     Provide a step-by-step plan. State the exact class and function name to target. DO NOT write full code.
     """
 
@@ -386,8 +386,8 @@ async def agentic_optimization(filename, original_code, external_knowledge):
     code_prompt = f"""
     You are a precise Python coder. Follow this plan to rewrite the target code.
     CRITICAL HARDWARE LIMIT: You are deploying to a Motorola Moto G Stylus via Termux.
-    DO NOT use `nxsdk`, `loihi`, or any proprietary hardware libraries. 
-    Use ONLY standard Python libraries, `numpy`, or `torch`. 
+    DO NOT use `nxsdk`, `loihi`, or any proprietary hardware libraries.
+    Use ONLY standard Python libraries, `numpy`, or `torch`.
     If the plan asks for spiking libraries, simulate them mathematically using standard Python.
     PLAN: {plan}
     ORIGINAL CODE: {original_code}

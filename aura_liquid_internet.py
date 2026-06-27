@@ -188,8 +188,8 @@ class LiquidInternetProtocol:
     # ── Peer Management ──
 
     def register_peer(self, ip: str, port: int = 4445,
-                      label: str = "", capabilities: list = None,
-                      properties: dict = None) -> PeerRecord:
+                      label: str = "", capabilities: list | None = None,
+                      properties: dict | None = None) -> PeerRecord:
         """Register a peer with its VSA address derived from properties."""
         if properties is None:
             properties = {"identity": ip, "type": "node", "label": label}

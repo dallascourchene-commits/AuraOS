@@ -6,7 +6,7 @@ refresh the CODEMAP after file modification operations.
 
 Usage in Bob's tool handlers:
     from aura_bob_codemap_hooks import notify_file_modified
-    
+
     # After write_to_file, apply_diff, or insert_content:
     notify_file_modified(file_path)
 """
@@ -26,10 +26,10 @@ except ImportError:
 
 def notify_file_modified(file_path: str | Path) -> None:
     """Notify the CODEMAP system that a file has been modified.
-    
+
     This should be called after any file write operation to keep
     the navigation index synchronized.
-    
+
     Args:
         file_path: Path to the file that was modified
     """
@@ -45,7 +45,7 @@ def notify_file_modified(file_path: str | Path) -> None:
 
 def notify_files_modified(file_paths: list[str | Path]) -> None:
     """Notify the CODEMAP system that multiple files have been modified.
-    
+
     Args:
         file_paths: List of paths to files that were modified
     """
@@ -58,7 +58,7 @@ def notify_files_modified(file_paths: list[str | Path]) -> None:
 
 def force_codemap_refresh() -> None:
     """Force an immediate CODEMAP refresh of all pending changes.
-    
+
     This should be called before operations that depend on up-to-date
     navigation data, such as codebase searches or topology analysis.
     """
@@ -75,13 +75,13 @@ def force_codemap_refresh() -> None:
 # Convenience decorator for Bob's tool functions
 def auto_refresh_codemap(func):
     """Decorator to automatically refresh CODEMAP after a tool operation.
-    
+
     Usage:
         @auto_refresh_codemap
         def write_to_file(path: str, content: str):
             # ... write file ...
             return path
-    
+
     The decorator will extract the file path from the return value or
     from the 'path' parameter.
     """
@@ -112,7 +112,7 @@ def auto_refresh_codemap(func):
 def integrate_with_bob_tools():
     """
     Example of how to integrate CODEMAP auto-refresh with Bob's tools.
-    
+
     This would be called during Bob's initialization to wrap existing
     tool functions with automatic CODEMAP refresh.
     """

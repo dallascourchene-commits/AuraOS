@@ -718,7 +718,7 @@ class AuraARWebSocketServer:
     async def _handle_resonance_update(self, session: _ARSession, data: dict) -> None:
         """
         Handle live resonance updates from SkillWeaver / HIVP.
-        
+
         Payload:
           {"type": "RESONANCE_UPDATE", "nodes": {"node_id": {"luminance": 0.8, "integrity": 0.95}}}
           {"type": "RESONANCE_UPDATE", "edges": {"edge_id": {"resonance": 0.7}}}

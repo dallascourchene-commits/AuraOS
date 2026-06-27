@@ -124,11 +124,11 @@ def _rubric_eval_injection():
     assert s < _RUBRIC_FLOOR
 
 def _rubric_nxsdk_import():
-    s, b = compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
+    _s, b = compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
     assert not b["passed"], f"banned import must fail: {b}"
 
 def _rubric_hot_device_blocks():
-    s, b = compute_rubric_reward("x=1\n", 55.0)
+    _s, b = compute_rubric_reward("x=1\n", 55.0)
     # F_thermal = exp(-0.15*(55-40)) ≈ 0.105 → total < 0.85 unless F_RAM makes up for it
     assert b["F_thermal"] < 0.2, f"F_thermal at 55°C should be < 0.2: {b}"
 
@@ -402,7 +402,7 @@ _header("7. Integration — meta_learning_daemon + Markovian + AuraArchReasoner"
 
 def _meta_reasoner_scores_workspace():
     r = AuraArchReasoner()
-    res, tension = r.score_structural_resonance()
+    res, _tension = r.score_structural_resonance()
     assert 0.0 < res <= 1.0
     patch = r.suggest_architectural_patch()
     assert "STABLE" in patch or "REFACTOR" in patch
@@ -429,7 +429,7 @@ def _pipeline_tst_to_rubric():
 
     # Validate a real code stub through rubric
     code = f"# morpheme={','.join(morphemes)}\nx = {len(morphemes)}\n"
-    s, b = compute_rubric_reward(code, 38.0)
+    _s, b = compute_rubric_reward(code, 38.0)
     assert b["passed"], f"TST-generated stub failed rubric: {b}"
 
 def _pipeline_mlstm_bis():
