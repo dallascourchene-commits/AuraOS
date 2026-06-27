@@ -6257,14 +6257,23 @@ async def main():
                         json.dump({
                             "capsule_version": "AURA_RESEARCH_REFACTOR_REQUEST_V1",
                             "timestamp": datetime.now().isoformat(),
+                    print(" * MUTATION TOPOLOGY IMPACT REPORT (REFACTOR ARENA REQUIRED)")
+                    print("====================================================================")
+                    print(f" • Targeted Concept       : {concept}")
+                    print(" • Synthesis Base          : Ingested Academic Engrams")
+                    print(" • Node Connectivity Δ     : Consolidating and streamlining target paths")
+                    print(" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
+                    print("====================================================================\n")
+
+                    review_path = os.path.join("Aura_Staging", "research_refactor_request.json")
+                    os.makedirs(os.path.dirname(review_path), exist_ok=True)
+                    with open(review_path, "w", encoding="utf-8") as f_out:
+                        json.dump({
                             "concept": concept,
                             "proposed_patch": clean_source,
-                            "target_modules": list(getattr(gate_result, "target_modules", []) or [])[:5],
-                            "gate_decision": getattr(gate_result, "decision", ""),
-                            "gate_score": getattr(gate_result, "final_score", None),
+                            "target_modules": gate_result.target_modules[:5],
                             "source": "ingested_academic_engrams",
-                            "mutation_policy": "refactor_arena_required",
-                        }, f_out, indent=2, sort_keys=True, default=str)
+                        }, f_out, indent=2)
 
                     print("[-] Legacy aura_incubator.py staging is disabled.")
                     print(f"[+] Review capsule written to {review_path}")
