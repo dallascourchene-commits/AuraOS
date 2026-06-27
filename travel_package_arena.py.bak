@@ -15,7 +15,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
 
 from aura_dream_retrieval import DreamCandidate, rerank_for_arena
@@ -200,86 +199,4 @@ class TravelPackageArena:
             constraints=["exact sidecar price required", "human approval before booking/payment"],
         )
         return action.to_dict()
-
-    def export_candidate_to_icm(
-        self,
-        candidate: TravelPackageCandidate,
-        workspace_root: str | Path,
-        *,
-        qdkt: Any = None,
-        metadata: dict[str, Any] | None = None,
-    ) -> Any:
-        """Export a verified travel package candidate into an ICM workspace.
-
-        Creates a single-stage ICM workspace with the candidate's exact price
-        references, boundary contracts, and verifier report. Exact truth
-        remains in the sidecar; ICM stores audit artifacts and references.
-        """
-        from aura_icm_workspace import (
-            ICMStageDescriptor,
-            export_arena_transaction,
-        )
-        from aura_dream_retrieval import DreamCandidate
-
-        capsule = self.adapter.action_capsule_from_intent(
-            objective=str(candidate.traveler_intent.get("objective") or "Build verified travel package options."),
-            capsule_id=candidate.package_id,
-            target=dict(candidate.traveler_intent),
-            constraints=["exact sidecar price required", "human approval before booking/payment"],
-        )
-        contracts = [BoundaryContract(**c) if isinstance(c, dict) else c for c in candidate.boundary_contracts]
-        stage = ICMStageDescriptor(
-            stage_number=1,
-            stage_name="travel_package",
-            capsule=capsule,
-            contracts=contracts,
-            inputs=["traveler_intent", "vsa_id", "sidecar_price"],
-            process="resolve VSA pointer → verify sidecar → attach contracts",
-            outputs=["verified_package_candidate"],
-            allowed_actions=["rank options", "resolve VSA pointers into exact sidecar records"],
-            forbidden_actions=["book without approval", "invent prices", "show vector-only prices"],
-            verifier_gates=["price_freshness", "booking_payment", "legal_travel"],
-            human_review_status="pending",
-            references={
-                "vsa_pointer": {"vsa_id": candidate.vsa_id},
-                "resort": candidate.resort,
-            },
-            artifacts={
-                "exact_price": candidate.exact_price,
-                "verification": candidate.verification,
-                "semantic_match": candidate.semantic_match,
-            },
-        )
-        dream_candidates = [
-            DreamCandidate(
-                candidate_id=candidate.vsa_id,
-                candidate_type="travel_vsa_pointer",
-                source="travel_vsa_pointer_index",
-                content=" ".join(str(item) for item in candidate.semantic_match.get("semantic_tags", []) or []),
-                semantic_score=candidate.semantic_match.get("dream_usefulness", {}).get("semantic_score", 0.5),
-                verifier_result=candidate.verification,
-            ),
-        ]
-        return export_arena_transaction(
-            {
-                "objective": str(candidate.traveler_intent.get("objective") or "travel_package"),
-                "domain": "travel",
-                "arena_id": f"TRAVEL-ARENA-{candidate.package_id}",
-            },
-            workspace_root,
-            domain="travel",
-            arena_id=f"TRAVEL-ARENA-{candidate.package_id}",
-            stages=[stage],
-            verifier_report=candidate.verification,
-            dream_candidates=dream_candidates,
-            dream_query=str(candidate.traveler_intent.get("objective") or ""),
-            dream_target_type="travel_vsa_pointer",
-            qdkt=qdkt,
-            metadata={
-                "package_id": candidate.package_id,
-                "status": candidate.status,
-                **(dict(metadata or {})),
-            },
-        )
-
 

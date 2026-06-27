@@ -14,7 +14,6 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
 
 LIQUID_ARENA_VERSION = "AURA_LIQUID_PLANNING_ARENA_V1"
@@ -559,82 +558,3 @@ ARENA_ADAPTERS = {
     "civic": CivicArenaAdapter,
     "travel": TravelArenaAdapter,
 }
-
-
-# ---------------------------------------------------------------------------
-# ICM export bridge (Aura-ICM workspace control surface)
-# ---------------------------------------------------------------------------
-
-def export_arena_to_icm(
-    arena: "LiquidPlanningArena",
-    workspace_root: str | Path,
-    *,
-    qdkt: Any = None,
-    dream_candidates: list[Any] | None = None,
-    metadata: dict[str, Any] | None = None,
-) -> Any:
-    """Export an arena run into an ICM-compatible workspace.
-
-    This is a thin bridge: ICM stores references, reports, and audit
-    artifacts; exact truth remains in the arena's own ledger and sidecars.
-    """
-    from aura_icm_workspace import (
-        ICMStageDescriptor,
-        export_arena_transaction,
-        _hash_payload,
-    )
-
-    stages: list[ICMStageDescriptor] = []
-    all_contracts: list[Any] = []
-    for idx, capsule in enumerate(arena.action_capsules, start=1):
-        contracts = []
-        for c in arena.boundary_contracts:
-            if c.get("capsule_id") == capsule.get("capsule_id"):
-                contracts.append(c)
-        stage = ICMStageDescriptor(
-            stage_number=idx,
-            stage_name=capsule.get("capsule_id", f"stage_{idx}"),
-            capsule=capsule,
-            contracts=contracts,
-            inputs=capsule.get("required_inputs", []),
-            process=capsule.get("role", ""),
-            outputs=capsule.get("promised_outputs", []),
-            allowed_actions=capsule.get("allowed_actions", []),
-            forbidden_actions=capsule.get("forbidden_actions", []),
-            verifier_gates=[
-                v.get("verifier_id", "")
-                for v in arena.verification_ledger
-                if v.get("capsule_id") == capsule.get("capsule_id")
-            ],
-            human_review_status="pending",
-            references={"adapter_schema": arena.adapter},
-            artifacts={
-                "lease": arena.agent_leases[idx - 1] if idx <= len(arena.agent_leases) else {}
-            },
-        )
-        stages.append(stage)
-        all_contracts.extend(contracts)
-
-    txn = {
-        "objective": arena.intent,
-        "domain": arena.domain,
-        "arena_id": arena.arena_id,
-        "arena_version": arena.arena_version,
-        "phase_hash": arena.phase_hash,
-    }
-    return export_arena_transaction(
-        txn,
-        workspace_root,
-        domain=arena.domain,
-        arena_id=arena.arena_id,
-        arena_version=arena.arena_version,
-        stages=stages,
-        qdkt=qdkt,
-        dream_candidates=dream_candidates,
-        metadata={
-            "adapter_type": arena.adapter.get("domain", arena.domain),
-            "action_capsule_count": len(arena.action_capsules),
-            **(dict(metadata or {})),
-        },
-    )
-
