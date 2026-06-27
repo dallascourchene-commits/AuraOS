@@ -6503,46 +6503,6 @@ async def main():
                     print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
                     print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
                     continue
-                    try:
-                        with open(manifest_path, encoding="utf-8") as f:
-                            data = json.load(f)
-                        proposed_code = data.get("proposed_patch", "")
-                        frontier_target = data.get("frontier_target", "Unknown Target")
-
-                        # Intercept and run the code through the Triple-Grounded Sandbox Sentinel
-                        sentinel = AuraSafetySentinel(node)
-                        is_safe, validation_message = sentinel.verify_patch_integrity(proposed_code)
-
-                        if not is_safe:
-                            print("\n[🛑 CRITICAL SECURITY BLOCKADE]")
-                            print(" └─> Safety Sentinel actively intercepted a malformed code mutation pass.")
-                            print(f" └─> Rejection Reason: {validation_message}")
-                            print(" [!] System file architecture protected from corruption. Merge aborted.\n")
-                            continue
-
-                        # Capture non-blocking interactive human evaluation metrics once safety is assured
-                        rating_str = await asyncio.to_thread(input, "[Dallas (Alignment Score 1-10)] > ")
-                        feedback_str = await asyncio.to_thread(input, "[Dallas (Technical Rationale)] > ")
-
-                        # Compress human architectural choices down to her native geometric framework
-                        feedback_hv = node.polysynthetic_vram_compress(feedback_str)
-                        feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
-
-                        # Store structural feedback vectors into her active database ledger
-                        f_id = f"ALIGN_POS_{int(time.time())}"
-                        enqueue_sqlite_query(
-                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'APPROVED_PATTERN', ?)",
-                            (f_id, f"TARGET: {frontier_target} | SCORE: {rating_str} | DESIGN_RULE: {feedback_str}", datetime.now().isoformat(), feedback_blob)
-                        )
-
-                        # Generate a temporal rollback anchor token before writing changes to disk
-                        dag = QuantumMerkleDAG(node)
-                        state_snapshot = dag.generate_epistemic_system_root("AURA_PRE_MERGE_REFACTOR", 37.9)
-
-                        print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
-                        print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
-                    except Exception as e:
-                        print(f"[-] Merge operations aborted: {e}")
                 else:
                     print("[-] Staging registry is empty. No pending patches to consolidate.")
                 continue
