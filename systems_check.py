@@ -388,6 +388,10 @@ def run_arch_checker(root: Path = ROOT, *, strict: bool = False) -> int:
         print("[!] pvm_arch_checker returned malformed JSON entries.")
         return result.returncode or 1
 
+    if not all(isinstance(item, dict) for item in violations):
+        print("[!] pvm_arch_checker returned malformed JSON entries.")
+        return result.returncode or 1
+
     hard_rules = {"SYNTAX_ERROR", "WILDCARD_IMPORT", "CIRCULAR_IMPORT", "NAMESPACE_INJECTION"}
     hard = [item for item in violations if item.get("rule") in hard_rules]
     warnings = [item for item in violations if item.get("rule") not in hard_rules]
