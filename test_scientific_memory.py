@@ -1142,8 +1142,9 @@ def test_backtracker_reuses_earliest_paper_boundary_minute():
 
 
 class _FakeExecuteResult:
-    def __init__(self, row=None):
+    def __init__(self, row=None, rows=None):
         self.row = row
+        self.rows = rows or []
 
     def __await__(self):
         async def _done():
@@ -1160,23 +1161,38 @@ class _FakeExecuteResult:
     async def fetchone(self):
         return self.row
 
+    async def fetchall(self):
+        return self.rows
+
 
 class _FakeBacktrackerConnection:
-    def __init__(self, state):
+    def __init__(self, state, columns=None):
         self.state = state
         self.saved_states = []
         self.ingested_rows = []
         self.commits = 0
+        self.columns = set(
+            columns
+            or {"id", "content", "tier", "timestamp", "tags", "vector_blob"}
+        )
 
     def execute(self, query, params=None):
-        if query.lstrip().startswith("SELECT"):
+        stripped = query.lstrip()
+        if stripped.startswith("PRAGMA table_info"):
+            rows = [(idx, name, "", 0, None, 0) for idx, name in enumerate(self.columns)]
+            return _FakeExecuteResult(rows=rows)
+        if stripped.startswith("ALTER TABLE traces ADD COLUMN"):
+            self.columns.add(stripped.split()[5])
+            return _FakeExecuteResult()
+        if stripped.startswith("SELECT"):
             return _FakeExecuteResult((json.dumps(self.state),))
         if params and params[0].startswith("{"):
             self.saved_states.append(json.loads(params[0]))
         return _FakeExecuteResult()
 
-    async def executemany(self, _query, rows):
-        self.ingested_rows.extend(rows)
+    async def executemany(self, query, rows):
+        if query.lstrip().startswith("INSERT"):
+            self.ingested_rows.extend(rows)
 
     async def commit(self):
         self.commits += 1
@@ -1223,7 +1239,50 @@ def test_backtracker_upgrades_legacy_state_before_fetch(monkeypatch):
     )
     assert len(conn.ingested_rows) == 1
     assert conn.saved_states[-1]["crawl_offset_index"] == 0
-    assert conn.commits == 1
+    assert conn.commits == 2
+
+
+def test_backtracker_migrates_legacy_traces_table_missing_vector_blob(monkeypatch):
+    state = {
+        "crawl_offset_index": 0,
+        "last_crawl_time": 0.0,
+        "crawl_window_start": "202601010000",
+        "crawl_window_end": "202601020000",
+    }
+    conn = _FakeBacktrackerConnection(
+        state,
+        columns={"id", "content", "tier", "timestamp", "tags"},
+    )
+    node = SimpleNamespace(
+        memory_palace=SimpleNamespace(conn=conn),
+        runtime_metrics={},
+    )
+    forager = ArXivForager(node)
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+      <opensearch:totalResults>1</opensearch:totalResults>
+      <entry>
+        <id>https://arxiv.org/abs/2601.00001</id>
+        <title>Legacy Backtracker Migration</title>
+        <summary>Scientific memory rows need vector blobs.</summary>
+        <published>2026-01-02T00:00:00Z</published>
+        <author><name>A. Researcher</name></author>
+        <category term="cs.AI"/>
+        <link href="https://arxiv.org/pdf/2601.00001" type="application/pdf"/>
+      </entry>
+    </feed>"""
+
+    async def fake_fetch(_search_query, **kwargs):
+        return payload, kwargs["max_results"]
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", fake_fetch)
+
+    assert asyncio.run(
+        forager.upgraded_arxiv_backtracker(max_results=1, pdf_fetch_limit=0)
+    )
+    assert "vector_blob" in conn.columns
+    assert len(conn.ingested_rows) == 1
 
 
 _OAI_PAYLOAD = b"""<?xml version="1.0"?>
