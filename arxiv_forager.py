@@ -164,6 +164,43 @@ class ArXivForager:
             print(f"[-] Paper memory ledger write skipped: {exc}")
         return record
 
+    async def _ensure_backtracker_schema(self, conn) -> None:
+        """Ensure legacy Aura memory DBs can accept scientific backtrack rows."""
+        await conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS traces (
+                id TEXT PRIMARY KEY,
+                content TEXT,
+                tier TEXT,
+                timestamp TEXT,
+                tags TEXT,
+                vector_blob BLOB
+            )
+            """
+        )
+        required_columns = {
+            "id": "TEXT",
+            "content": "TEXT",
+            "tier": "TEXT",
+            "timestamp": "TEXT",
+            "tags": "TEXT",
+            "vector_blob": "BLOB",
+        }
+        async with conn.execute("PRAGMA table_info(traces);") as cursor:
+            rows = await cursor.fetchall()
+        existing = {str(row[1]) for row in rows}
+        for name, declaration in required_columns.items():
+            if name in existing:
+                continue
+            try:
+                await conn.execute(
+                    f"ALTER TABLE traces ADD COLUMN {name} {declaration};"
+                )
+            except Exception as exc:
+                if "duplicate column" not in str(exc).lower():
+                    raise
+        await conn.commit()
+
     async def _fetch_arxiv_xml(
         self,
         search_query: str,
@@ -547,6 +584,11 @@ class ArXivForager:
             return False
 
         conn = self.node.memory_palace.conn
+        try:
+            await self._ensure_backtracker_schema(conn)
+        except Exception as schema_exc:
+            print(f"[-] Backtracker DB schema error: {schema_exc}")
+            return False
 
         # 1. Load persistent crawler state
         crawler_state = {
@@ -798,7 +840,11 @@ class ArXivForager:
 
             if ingest_rows:
                 await conn.executemany(
-                    "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) "
+                    "DELETE FROM traces WHERE id = ?",
+                    [(row[0],) for row in ingest_rows],
+                )
+                await conn.executemany(
+                    "INSERT INTO traces (id, content, tier, timestamp, tags, vector_blob) "
                     "VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
                     ingest_rows,
                 )
@@ -879,7 +925,11 @@ class ArXivForager:
 
     async def _save_backtracker_state(self, conn, crawler_state: dict) -> None:
         await conn.execute(
-            "INSERT OR REPLACE INTO traces "
+            "DELETE FROM traces WHERE id = ?",
+            ("ARXIV_CRAWLER_STATE",),
+        )
+        await conn.execute(
+            "INSERT INTO traces "
             "(id, content, tier, timestamp, tags, vector_blob) "
             "VALUES ('ARXIV_CRAWLER_STATE', ?, 'SYSTEM_STATE', ?, "
             "'arXiv Backtracker Crawler State Offset', NULL)",
