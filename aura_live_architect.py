@@ -47,6 +47,27 @@ from aura_architect_loop import (
 from aura_liquid_planning_arena import build_world_state_delta
 from aura_substrate import REPO_ROOT
 
+from aura_builder_context import build_builder_context_packet, BuilderContextPacket
+from aura_patch_quality_gate import (
+    generate_unified_diff_from_before_after,
+    parse_before_after_response,
+    preflight_patch,
+    PatchPreflightResult,
+)
+from aura_patch_repair import repair_patch_format, PatchRepairResult
+from aura_test_gap_filler import fill_test_gap, detect_missing_test_findings, TestGapFillerResult
+
+try:
+    from aura_qdkt import get_qdkt
+except Exception:
+    get_qdkt = None  # type: ignore[assignment]
+
+try:
+    from aura_dream_retrieval import record_arena_retrieval_feedback, DreamCandidate
+except Exception:
+    record_arena_retrieval_feedback = None  # type: ignore[assignment]
+    DreamCandidate = None  # type: ignore[assignment]
+
 ARCHITECT_LIVE_VERSION = "AURA_LIVE_ARCHITECT_V1"
 ARCHITECT_STAGING_PATH = Path(REPO_ROOT) / "Aura_Staging" / "architect_live_transaction.json"
 ModelCaller = Callable[[str, str, dict[str, Any]], Any]
@@ -102,6 +123,7 @@ class LiveArchitectTransaction:
     staging_path: str
     model_route: dict[str, Any] = field(default_factory=dict)
     fusion_council: dict[str, Any] = field(default_factory=dict)
+    patch_quality: dict[str, Any] = field(default_factory=dict)
 
     def to_execution_result(self) -> ArchitectExecutionResult:
         return ArchitectExecutionResult(
@@ -124,6 +146,7 @@ class LiveArchitectTransaction:
             "staging_path": self.staging_path,
             "model_route": self.model_route,
             "fusion_council": self.fusion_council,
+            "patch_quality": self.patch_quality,
         }
 
 
@@ -1001,26 +1024,124 @@ class ArchitectFusionCouncil:
 
 
 class ArchitectBuilderBridge:
-    """Calls bounded Act workers and converts model replies into patch submissions."""
+    """Calls bounded Act workers with grounded context and converts model replies into patch submissions.
+
+    Research basis: SWE-agent/RepoGraph source grounding; Agentless patch validation;
+    Self-Refine bounded repair; Context Engineering survey's retrieve-then-ground pattern.
+    """
 
     def __init__(self, router: ArchitectModelRouter):
         self.router = router
+        self.patch_quality: dict[str, Any] = {}
+
+    def _load_codemap(self) -> dict[str, Any] | None:
+        codemap_path = self.router.repo_root / ".aura" / "CODEMAP.json"
+        if not codemap_path.exists():
+            return None
+        try:
+            return json.loads(codemap_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return None
+
+    def _record_qdkt(self, event_type: str, task_id: str, status: str, extra: dict[str, Any]) -> None:
+        if get_qdkt is None:
+            return
+        try:
+            get_qdkt().observe(
+                event_type,
+                {"task_id": task_id, "status": status, **extra},
+                rationale=f"Patch attempt {task_id}: {status}",
+                concept=f"patch_quality:{task_id}",
+                confidence=0.8 if status == "staged" else 0.3,
+                subsystem="aura_live_architect",
+            )
+        except Exception:
+            pass
 
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
             return []
+        codemap = self._load_codemap()
         submissions: list[dict[str, Any]] = []
+        patch_attempts: list[dict[str, Any]] = []
         for act in prepared.plan.act_capsules:
+            # Find grounding evidence for this act
+            grounding_dict: dict[str, Any] = {}
+            for evidence in prepared.grounding:
+                if evidence.task_id == act.task_id:
+                    grounding_dict = evidence.to_dict()
+                    break
+
+            # Build grounded context packet from CODEMAP/Graphify
+            context_packet = build_builder_context_packet(
+                target_file=act.target_file,
+                target_symbol=act.target_symbol,
+                grounding_evidence=grounding_dict,
+                codemap=codemap,
+                repo_root=self.router.repo_root,
+                objective=objective,
+                task_id=act.task_id,
+            )
+
             prompt = (
-                "You are an Aura cheap Act worker. Return one unified diff only. "
+                "You are an Aura Act worker. Return one unified diff OR a before/after JSON object. "
                 "Do not write files. Do not include prose. "
                 f"Objective: {objective}\n"
-                f"Act Capsule: {json.dumps(act.to_dict(), sort_keys=True)}"
+                f"Act Capsule: {json.dumps(act.to_dict(), sort_keys=True)}\n"
+                f"{context_packet.to_prompt_section()}"
             )
             response = await self.router.call_model("worker", prompt, intensity=prepared.intensity, meta={"task_id": act.task_id})
             if not response:
+                patch_attempts.append({"task_id": act.task_id, "status": "no_response", "preflight": None})
                 continue
-            diff = _extract_diff(response)
+
+            # Check for before/after replacement object (requirement 3 & 4)
+            before_after = parse_before_after_response(response)
+            if before_after is not None:
+                diff = generate_unified_diff_from_before_after(before_after, repo_root=self.router.repo_root)
+                if not diff.strip():
+                    patch_attempts.append({"task_id": act.task_id, "status": "before_after_diff_generation_failed", "preflight": None})
+                    continue
+            else:
+                diff = _extract_diff(response)
+
+            # Run patch preflight before premium patch judge (requirement 5)
+            preflight = preflight_patch(diff, repo_root=self.router.repo_root)
+            attempt_record: dict[str, Any] = {
+                "task_id": act.task_id,
+                "status": "preflight_passed" if preflight.ok else "preflight_failed",
+                "preflight": preflight.to_dict(),
+                "repair": None,
+            }
+
+            # If preflight fails, run exactly one PATCH_FORMAT_REPAIR attempt (requirement 6 & 7)
+            if not preflight.ok:
+                stderr = ""
+                if preflight.git_check_result:
+                    stderr = str(preflight.git_check_result.get("stderr") or preflight.git_check_result.get("error") or "")
+                repair_result = await repair_patch_format(
+                    diff,
+                    stderr,
+                    context_packet,
+                    self.router.model_caller,
+                    role="worker",
+                    repo_root=str(self.router.repo_root),
+                    rejections=preflight.rejections,
+                    intensity=prepared.intensity,
+                )
+                attempt_record["repair"] = repair_result.to_dict()
+                if repair_result.ok:
+                    diff = repair_result.repaired_diff
+                    attempt_record["status"] = "repair_succeeded"
+                else:
+                    attempt_record["status"] = "repair_failed_blocked"
+                    patch_attempts.append(attempt_record)
+                    self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                        "preflight_rejections": preflight.rejections,
+                        "repair_rejections": repair_result.rejections_after_repair,
+                    })
+                    continue  # Do not hot-swap — skip this submission
+
             touched = _diff_touched_files(diff)
             submissions.append(
                 {
@@ -1032,6 +1153,19 @@ class ArchitectBuilderBridge:
                     "tests": [],
                 }
             )
+            self._record_qdkt("patch_attempt", act.task_id, "staged", {
+                "preflight_ok": preflight.ok,
+                "rejections": preflight.rejections,
+            })
+            patch_attempts.append(attempt_record)
+
+        self.patch_quality = {
+            "attempts": patch_attempts,
+            "total_attempts": len(patch_attempts),
+            "preflight_passed": sum(1 for a in patch_attempts if a.get("status") == "preflight_passed"),
+            "repair_succeeded": sum(1 for a in patch_attempts if a.get("status") == "repair_succeeded"),
+            "repair_failed_blocked": sum(1 for a in patch_attempts if a.get("status") == "repair_failed_blocked"),
+        }
         return submissions
 
 
@@ -1041,6 +1175,7 @@ async def judge_patch_bundle(
     patch_submissions: list[dict[str, Any]],
     stage_results: list[PatchStageResult],
     council_decision: ArchitectCouncilDecision,
+    workspace_result: TempWorkspaceResult | None = None,
 ) -> dict[str, Any]:
     expected_task_ids = [act.task_id for act in prepared.plan.act_capsules]
     staged_task_ids = [result.patch.task_id for result in stage_results if result.ok and result.patch]
@@ -1050,25 +1185,36 @@ async def judge_patch_bundle(
         if not result.ok
         for finding in result.findings
     ]
+    workspace_ok = workspace_result.ok if workspace_result is not None else True
     base_decision = {
         "role": "premium_judge",
         "phase": "patch_bundle_judge",
-        "approved": sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures,
+        "approved": sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures and workspace_ok,
         "premium_called": False,
         "selected_candidate_id": council_decision.judge_decision.get("selected_candidate_id"),
-        "rationale": "Local Judge accepted staged patch coverage." if sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures else "Patch bundle is incomplete or has staging failures.",
+        "rationale": "Local Judge accepted staged patch coverage and workspace verification." if sorted(expected_task_ids) == sorted(staged_task_ids) and not stage_failures and workspace_ok else "Patch bundle is incomplete, has staging failures, or workspace verification failed.",
         "expected_task_ids": expected_task_ids,
         "staged_task_ids": staged_task_ids,
         "stage_failures": stage_failures,
+        "workspace_ok": workspace_ok,
     }
     budget_route = council_decision.budget_route
     if budget_route.get("premium_judge") and patch_submissions:
+        workspace_summary: dict[str, Any] = {}
+        if workspace_result is not None:
+            workspace_summary = {
+                "workspace_ok": workspace_result.ok,
+                "workspace_failures": workspace_result.failures,
+                "topology_delta_summary": workspace_result.topology_delta.get("summary", {}) if workspace_result.topology_delta else {},
+                "test_results": workspace_result.test_results,
+            }
         prompt = (
             "You are Aura's premium Judge. Return JSON only with approved and rationale. "
-            "Compare the selected plan, staged patch bundle, and cheap Shadow critique before hot-swap promotion. "
+            "Compare the selected plan, staged patch bundle, temp workspace apply/test/topology results, and cheap Shadow critique before hot-swap promotion. "
             f"Plan: {json.dumps(prepared.plan.to_dict(), sort_keys=True)}\n"
             f"Patch submissions: {json.dumps(patch_submissions, sort_keys=True)}\n"
             f"Stage results: {json.dumps([item.to_dict() for item in stage_results], sort_keys=True, default=str)}\n"
+            f"Temp workspace result: {json.dumps(workspace_summary, sort_keys=True, default=str)}\n"
             f"Council: {json.dumps(council_decision.to_dict(), sort_keys=True, default=str)}"
         )
         response = await router.call_model(
@@ -1201,6 +1347,90 @@ def verify_arena_in_temp_workspace(
             shutil.rmtree(temp_root, ignore_errors=True)
 
 
+def _record_patch_dream_usefulness(
+    intent: str,
+    context_packets: list[BuilderContextPacket],
+    workspace: TempWorkspaceResult,
+    verification: VerificationResult,
+    phase_hash: str,
+) -> None:
+    """Record DREAM usefulness rows for source context, tests, graph nodes, and verifier diagnostics.
+
+    Research basis: DREAM usefulness tracking; CoverUp test-usefulness; Context Engineering survey.
+    """
+    if record_arena_retrieval_feedback is None or DreamCandidate is None:
+        return
+    verifier_result = {"approved": verification.ok, "hotswap_ready": verification.hotswap_ready}
+    candidates: list[Any] = []
+    for packet in context_packets:
+        if packet.source_excerpt:
+            candidates.append(DreamCandidate(
+                candidate_id=f"source:{packet.target_file}",
+                candidate_type="source_excerpt",
+                source="CODEMAP/source_file",
+                content=packet.source_excerpt[:200],
+                semantic_score=0.85,
+                verifier_result=verifier_result,
+            ))
+        for test in packet.nearby_tests:
+            candidates.append(DreamCandidate(
+                candidate_id=f"test:{test}",
+                candidate_type="nearby_test",
+                source="CODEMAP/test-neighbor",
+                content=test,
+                semantic_score=0.72,
+                verifier_result=verifier_result,
+            ))
+        for caller in packet.callers:
+            candidates.append(DreamCandidate(
+                candidate_id=f"caller:{caller}",
+                candidate_type="graph_node",
+                source="CODEMAP/topology",
+                content=caller,
+                semantic_score=0.65,
+                verifier_result=verifier_result,
+            ))
+        for neighbor in packet.neighbors:
+            candidates.append(DreamCandidate(
+                candidate_id=f"neighbor:{neighbor}",
+                candidate_type="graph_node",
+                source="CODEMAP/topology",
+                content=neighbor,
+                semantic_score=0.58,
+                verifier_result=verifier_result,
+            ))
+    if workspace.failures:
+        candidates.append(DreamCandidate(
+            candidate_id="verifier:workspace_failures",
+            candidate_type="verifier_diagnostic",
+            source="temp_workspace",
+            content=json.dumps(workspace.failures[:3], default=str)[:200],
+            semantic_score=0.70,
+            verifier_result=verifier_result,
+        ))
+    if workspace.topology_delta and workspace.topology_delta.get("summary"):
+        candidates.append(DreamCandidate(
+            candidate_id="verifier:topology_delta",
+            candidate_type="verifier_diagnostic",
+            source="temp_workspace_topology",
+            content=json.dumps(workspace.topology_delta.get("summary"), default=str)[:200],
+            semantic_score=0.68,
+            verifier_result=verifier_result,
+        ))
+    if not candidates:
+        return
+    try:
+        record_arena_retrieval_feedback(
+            intent,
+            candidates,
+            target_type="code_context",
+            verifier_result=verifier_result,
+            arena_domain="code",
+        )
+    except Exception:
+        pass
+
+
 async def run_live_architect_transaction(
     intent: str,
     *,
@@ -1257,8 +1487,55 @@ async def run_live_architect_transaction(
         )
         for submission in patch_submissions
     ]
-    patch_judgement = await judge_patch_bundle(router, prepared, patch_submissions, stage_results, council_decision)
+
+    # Run workspace verification BEFORE judge so the premium judge sees apply/test/topology results (requirement 8)
     workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=effective_root, test_commands=test_commands)
+
+    # Test gap filling: if Shadow reports missing tests, generate minimal regression tests in temp workspace only (requirement 9)
+    test_gap_result: TestGapFillerResult | None = None
+    shadow_findings_dicts = [finding.to_dict() for finding in prepared.shadow_report.findings]
+    missing_test_findings = detect_missing_test_findings(shadow_findings_dicts)
+    if missing_test_findings:
+        gap_filler_temp = Path(tempfile.mkdtemp(prefix="aura_test_gap_"))
+        try:
+            first_finding = missing_test_findings[0]
+            gap_target_file = first_finding.get("target_file") or plan_spec.get("target_file")
+            gap_target_symbol = first_finding.get("target_symbol") or plan_spec.get("target_symbol")
+            gap_grounding: dict[str, Any] = {}
+            for evidence in prepared.grounding:
+                if evidence.target_file == gap_target_file:
+                    gap_grounding = evidence.to_dict()
+                    break
+            codemap_path = effective_root / ".aura" / "CODEMAP.json"
+            gap_codemap: dict[str, Any] | None = None
+            if codemap_path.exists():
+                try:
+                    gap_codemap = json.loads(codemap_path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError:
+                    gap_codemap = None
+            gap_context_packet = build_builder_context_packet(
+                target_file=gap_target_file,
+                target_symbol=gap_target_symbol,
+                grounding_evidence=gap_grounding,
+                codemap=gap_codemap,
+                repo_root=effective_root,
+                objective=intent,
+                task_id="test_gap_filler",
+            )
+            test_gap_result = await fill_test_gap(
+                shadow_findings_dicts,
+                gap_context_packet,
+                gap_filler_temp,
+                model_caller,
+                role="worker",
+            )
+        finally:
+            shutil.rmtree(gap_filler_temp, ignore_errors=True)
+
+    # Premium patch judge now sees temp workspace apply/test/topology results before approving hot-swap (requirement 8)
+    patch_judgement = await judge_patch_bundle(
+        router, prepared, patch_submissions, stage_results, council_decision, workspace_result=workspace,
+    )
 
     def runner(test_name: str) -> dict[str, Any]:
         return workspace.test_results.get(test_name, {"status": "passed" if workspace.ok else "failed"})
@@ -1277,6 +1554,63 @@ async def run_live_architect_transaction(
     )
     ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
     append_architect_ledger(ledger_record, ledger_path=effective_ledger_path)
+
+    # Record final verifier decision to QDKT (requirement 10)
+    if get_qdkt is not None:
+        try:
+            get_qdkt().observe(
+                "patch_verifier_decision",
+                {
+                    "hotswap_ready": verification.hotswap_ready,
+                    "failures_count": len(verification.failures),
+                    "stage": verification.stage,
+                },
+                rationale=f"Final verifier decision: {'hotswap_ready' if verification.hotswap_ready else 'blocked'}",
+                concept=f"verifier_decision:{prepared.plan.phase_hash}",
+                confidence=0.9 if verification.hotswap_ready else 0.4,
+                subsystem="aura_live_architect",
+            )
+        except Exception:
+            pass
+
+    # Record DREAM usefulness rows for source context, tests, graph nodes, and verifier diagnostics (requirement 11)
+    context_packets_for_dream: list[BuilderContextPacket] = []
+    dream_codemap: dict[str, Any] | None = None
+    dream_codemap_path = effective_root / ".aura" / "CODEMAP.json"
+    if dream_codemap_path.exists():
+        try:
+            dream_codemap = json.loads(dream_codemap_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            dream_codemap = None
+    for act in prepared.plan.act_capsules:
+        act_grounding: dict[str, Any] = {}
+        for evidence in prepared.grounding:
+            if evidence.task_id == act.task_id:
+                act_grounding = evidence.to_dict()
+                break
+        context_packets_for_dream.append(
+            build_builder_context_packet(
+                target_file=act.target_file,
+                target_symbol=act.target_symbol,
+                grounding_evidence=act_grounding,
+                codemap=dream_codemap,
+                repo_root=effective_root,
+                objective=intent,
+                task_id=act.task_id,
+            )
+        )
+    _record_patch_dream_usefulness(intent, context_packets_for_dream, workspace, verification, prepared.plan.phase_hash)
+
+    # Assemble patch quality metadata
+    patch_quality = {
+        **builder.patch_quality,
+        "test_gap_filler": test_gap_result.to_dict() if test_gap_result else None,
+        "verifier_decision": {
+            "hotswap_ready": verification.hotswap_ready,
+            "stage": verification.stage,
+            "failures_count": len(verification.failures),
+        },
+    }
 
     output_path = effective_staging_path
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1299,6 +1633,7 @@ async def run_live_architect_transaction(
             **council_decision.to_dict(),
             "patch_judgement": patch_judgement,
         },
+        patch_quality=patch_quality,
     )
     output_path.write_text(json.dumps(transaction.to_dict(), indent=2, sort_keys=True, default=str), encoding="utf-8")
     return transaction
