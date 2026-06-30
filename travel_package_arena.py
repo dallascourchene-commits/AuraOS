@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa90c-[Q-SYS:TRAVEL_PACKAGE_ARENA]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Planner-Verifier Travel Arena)
-DEPENDENCIES: dataclasses, hashlib, json, typing, aura_dream_retrieval, aura_liquid_planning_arena, travel_price_sidecar, travel_price_verifier, travel_vsa_pointer_index
-FUNCTIONS: TravelPackageArena, TravelPackageCandidate
-SYNOPSIS: Sidecar-aware Travel Arena that resolves VSA semantic pointers into exact price records, verifies freshness/provenance, attaches BoundaryContracts, and rejects stale or vector-only prices.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_dream_retrieval, __future__, aura_icm_workspace, typing, travel_vsa_pointer_index, travel_price_verifier, pathlib, travel_price_sidecar, aura_liquid_planning_arena, dataclasses, hashlib, datetime
+FUNCTIONS: _utc_now, _hash_payload, to_dict, __init__, _boundary_contracts, build_candidate_from_vsa_price, arena_action_for_intent, export_candidate_to_icm
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

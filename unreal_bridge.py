@@ -1,14 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f1-[Q-SYS:2A86BBF77059E372]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: MINWAAJIMO (Logic-to-Light Bridge)
-DEPENDENCIES: asyncio, json, websockets, aura_topological_scanner, aura_topology_ws_bridge
-FUNCTIONS: UnrealBridge, broadcast_topology, start_bridge_server
-SYNOPSIS: WebSocket bridge that maps AuraOS polysynthetic topology data to 3D
-          viewport coordinates for Unreal Engine, Unity, or WebGL clients.
-          Implements the "Logic-to-Light" pattern: Aura is the brain,
-          external renderers are passive canvases receiving coordinate updates.
+PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
+DEPENDENCIES: json, asyncio, websockets, aura_topology_ws_bridge, os
+FUNCTIONS: main, __init__, map_topology_to_viewport, _client_handler, _handle_message, broadcast_current_topology, broadcast_topology, start, stop
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import asyncio

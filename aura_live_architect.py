@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa903-[Q-SYS:LIVE_ARCHITECT]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Live / Bounded Refactor Execution)
-DEPENDENCIES: ast, dataclasses, inspect, json, pathlib, shutil, subprocess, tempfile, typing, aura_architect_loop, aura_substrate
-FUNCTIONS: ArchitectModelProfile, ArchitectFusionCouncil, ArchitectModelRouter, ArchitectBuilderBridge, TempWorkspaceResult, LiveArchitectTransaction, run_live_architect_transaction, render_live_architect_summary, verify_arena_in_temp_workspace
-SYNOPSIS: Live bridge for Architect mode. Routes a user intent through multi-candidate premium planning, cheap Shadow critics, premium judge selection, cheap bounded Act workers, temp-workspace patch application, topology delta verification, verifier-gated hot-swap readiness, rollback, and ledger output without writing model code directly to production or aura_incubator.py.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, sys, ast, re, subprocess, aura_architect_loop, collections.abc, tempfile, aura_substrate, typing, aura_liquid_planning_arena, os, pathlib, inspect, shutil, dataclasses, hashlib
+FUNCTIONS: _hash_payload, _strip_code_fences, _extract_json_object, _diff_path_token, _diff_touched_files, _extract_diff, _git_executable, _run_command, _repo_copy_ignore, _test_files_from_arena, _default_test_commands, _python_topology_signature, _set_delta, _normalize_judge_approval, _safe_topology_file_paths, compute_temp_workspace_topology_delta, _merge_workspace_result, _merge_act_stage_result, _merge_council_plan_judgement, judge_patch_bundle, _merge_council_patch_judgement, _augment_live_hotswap_capsule, verify_arena_in_temp_workspace, run_live_architect_transaction, render_live_architect_summary, to_dict, to_dict, to_dict, to_execution_result, to_dict, add, __init__, ledger_hints, profile_for, call_model, budget_route, infer_target_file, deterministic_plan_spec, plan_with_council, plan_intent, __init__, _normalize_plan_spec, _candidate, _parse_critic_report, _run_shadow_critics, _judge_candidates, select_plan, __init__, build_patch_submissions, runner, visit_FunctionDef, visit_AsyncFunctionDef, visit_ClassDef, visit_Import, visit_ImportFrom, visit_Call
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

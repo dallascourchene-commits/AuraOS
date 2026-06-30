@@ -1,18 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f6-[Q-SYS:AURA_METAHARNESS]
-DIKWP_TIER: PURPOSE
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Unified Meta-Harness)
-DEPENDENCIES: dataclasses, hashlib, json, time, typing,
-              aura_mcp_gateway, aura_plugin_registry, aura_goal_planner,
-              aura_background_workers, aura_metaharness_audit, aura_federation
-FUNCTIONS: MetaHarness, build_default_metaharness
-SYNOPSIS: Orchestrator that wires the six meta-harness modules into one
-          Aura-native layer. Preserves the Aura invariant: VSA maps meaning,
-          sidecars store exact truth, Arena stages actions, verifiers prove,
-          humans/governance approve, QDKT remembers. The meta-harness is
-          strictly upstream/proposal-only — it never mutates production or
-          bypasses Architect, Shadow, Judge, or Verifier.
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_federation, __future__, aura_plugin_registry, aura_mcp_gateway, aura_background_workers, argparse, aura_metaharness_audit, typing, time, aura_goal_planner, dataclasses, hashlib
+FUNCTIONS: _hash_payload, build_default_metaharness, main, to_dict, __init__, call_tool, plan_goal, install_organ, export_federated_capsule, import_federated_capsule, audit, snapshot, assert_invariants
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

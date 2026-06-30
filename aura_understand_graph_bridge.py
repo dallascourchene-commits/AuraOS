@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f0-[Q-SYS:UNDERSTAND_GRAPH_BRIDGE]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Teach, Don't Override)
-DEPENDENCIES: __future__, ast, hashlib, json, os, pathlib, re, time, typing, collections, itertools
-FUNCTIONS: AuraUnderstandGraph, GraphNode, GraphEdge, GraphLayer, DiffImpactAnalyzer, GuidedTourBuilder, GraphDashboardExport, QDKTGraphObserver, DREAMLiteGraphScorer, build_graph_packet, analyze_diff_impact, export_dashboard_json
-SYNOPSIS: Aura-native understanding graph layer inspired by Egonex-Understand-Anything. Reads CODEMAP/topology/arena artifacts and produces deterministic structural graph packets, diff-impact analysis, guided tours, and dashboard-ready JSON. LLM summaries are strictly optional/semantic. The graph teaches; it does not override deterministic truth.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_dream_retrieval, __future__, ast, re, collections.abc, argparse, typing, os, itertools, time, aura_qdkt, pathlib, collections, dataclasses, hashlib
+FUNCTIONS: _hash_payload, _stable_id, _slug, _load_json, _now_iso, _spectral_coordinate, _classify_complexity, _extract_list, _count_by, _viz_radius, build_graph_packet, analyze_diff_impact, export_dashboard_json, export_tour_json, main, __post_init__, to_dict, __post_init__, to_dict, to_dict, to_dict, __init__, build, _reset, _add_node, _add_edge, _ingest_codemap, _ingest_topology, _ingest_tests, _ingest_sidecars, _ingest_verifiers, _ingest_arena_metadata, _ingest_qdkt_events, _ingest_domain_flows, _deduplicate_edges, _build_layers, _project_meta, __init__, analyze, _risk_text, __init__, _compute_fan_in, build_tours, _ranked_nodes, _build_tour, __init__, export, __init__, observe_navigation, observe_correction, _append_jsonl, __init__, score_task, _fallback_score
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9e0-[Q-SYS:ICM_WORKSPACE]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Audit/Edit/Review Control Surface)
-DEPENDENCIES: __future__, dataclasses, hashlib, json, os, pathlib, re, time, typing, aura_liquid_planning_arena, aura_qdkt, aura_dream_retrieval
-FUNCTIONS: ICMStageDescriptor, ICMWorkspaceExport, ICMTransactionRef, export_arena_transaction, import_workspace, record_human_edit, record_dream_scores, build_icm_aura_md, build_icm_context_md
-SYNOPSIS: ICM-compatible workspace export/import layer. Human-readable filesystem control surface for Arena runs. NOT a replacement for Liquid Planning Arena, Fusion Council, QDKT, DREAM-lite, sidecars, or verifier gates. Stores references, reports, and audit artifacts while exact truth remains in sidecars.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_dream_retrieval, __future__, re, typing, time, aura_qdkt, pathlib, aura_liquid_planning_arena, dataclasses, hashlib
+FUNCTIONS: _slug, _now_iso, _hash_payload, _capsule_to_dict, _contract_to_dict, _ensure_list, _next_workspace_number, build_icm_aura_md, build_icm_context_md, build_stage_context_md, export_arena_transaction, record_human_edit, record_dream_scores, import_workspace, to_dict, to_dict, _bullets_after, _extract_section
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

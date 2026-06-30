@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:CODEBASE_NAVIGATOR]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Navigable Context)
-DEPENDENCIES: argparse, ast, hashlib, json, math, os, pathlib, re, time, aura_substrate, aura_topological_scanner
-FUNCTIONS: stable_unit_vector, cosine, classify_file, scan_repository, build_navigation_system, load_or_compile_topology, refresh_index_for_paths, refresh_codemap_for_paths, write_navigation_artifacts, search_index, main
-SYNOPSIS: Deterministic Aura-native codebase navigation index that scans once, writes a compact map, and answers surgical navigation queries from that map so agents do not need to re-read the entire repository.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, ast, aura_topological_scanner, re, argparse, aura_substrate, typing, os, pathlib, time, math, collections, dataclasses, hashlib
+FUNCTIONS: _symbol_signature, _semantic_id, stable_unit_vector, cosine, _is_probably_binary, classify_file, _python_symbol_records, _iter_repo_files, _command_mentions, _command_locations, load_or_compile_topology, _node_file, _topology_file_index, scan_repository, _scan_file, _coverage_report, _navigation_rings, _symbol_index, _records_from_cards, _incremental_record_fingerprint, refresh_index_for_paths, _command_index, _top_hubs, _compact_file_cards, _attach_topology, build_navigation_system, search_index, write_navigation_artifacts, _load_json, _codemap_payload_hash, refresh_codemap_for_paths, main, _skip_part
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

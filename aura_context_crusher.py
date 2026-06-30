@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8fc-[Q-SYS:CONTEXT_CRUSHER]
-DIKWP_TIER: PURPOSE
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Reversible Context Compression)
-DEPENDENCIES: ast, dataclasses, hashlib, json, os, re, time, pathlib, typing, aura_st3gg_recall, aura_tokenizer_guard, aura_wasm_bridge
-FUNCTIONS: ContextCrushResult, ContextCrushBatch, CachePrefixReport, AuraContextCrusher, apply_context_crush_to_messages, apply_context_crush_to_prompt, retrieve_context_crush
-SYNOPSIS: Aura-native adaptation of Headroom-style local context compression. Routes JSON, logs, search results, and code through deterministic lightweight compressors, strips tokenizer-survival carriers, optionally emits visible ST3GG machine capsules, optionally lets a local Rust/WASI accelerator compete for shorter payloads, stores originals in a local CCR ledger plus O(1)-style ST3GG recall index, and emits cache-prefix stability metrics without mutating system prompts.
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, uuid, ast, re, aura_tokenizer_guard, collections.abc, aura_wasm_bridge, typing, os, time, pathlib, aura_st3gg_recall, dataclasses, hashlib, datetime
+FUNCTIONS: _estimate_tokens, _short_hash, _safe_cell, _safe_sample, _is_uuid, _is_iso8601, _is_hex_hash, _volatile_findings, compute_cache_prefix_report, apply_context_crush_to_prompt, apply_context_crush_to_messages, retrieve_context_crush, to_jsonable, alignment_score, to_jsonable, savings_ratio, to_jsonable, to_jsonable, __init__, detect_content_type, compress_context_stream, _looks_like_code, _compress_by_type, _compress_json, _compress_log, _compress_search, _compress_code, _compress_diff, _compress_text, _with_marker, _upsert_record
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

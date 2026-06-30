@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9e2-[Q-SYS:ICM_CLI]
+ST3GG_BASE: 0xa8f0-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Human-Readable Control Surface)
-DEPENDENCIES: __future__, argparse, json, pathlib, sys, aura_icm_workspace, aura_liquid_planning_arena, aura_qdkt
-FUNCTIONS: main, export_cli, import_cli, list_cli
-SYNOPSIS: Command-line interface for ICM workspace export and import. Provides human-readable filesystem control surface operations for Arena runs without replacing live routing or multi-agent orchestration.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_dream_retrieval, __future__, sys, aura_icm_workspace, argparse, pathlib, aura_qdkt
+FUNCTIONS: _resolve_path, export_cli, import_cli, list_cli, main
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

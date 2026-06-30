@@ -1,66 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: asyncio, numpy, os, time, json, struct, base64, hashlib, gc
-FUNCTIONS:
-    LiquidSpatiotemporalAttractor:
-        __init__, _build_token_matrix, _bootstrap_attractor_field,
-        _continuous_field_energy, _compute_field_gradient,
-        _euler_integrate_step, _project_to_ar_topology,
-        _project_to_mesh_telemetry, _project_to_dsekp_shield,
-        _project_to_gaussian_splats, _execute_unified_cycle,
-        _broadcast_ar_frame, _broadcast_mesh_beacon,
-        _verify_security_shield, start_control_loop, stop_control_loop,
-        graft_module, get_state_snapshot
-SYNOPSIS:
-    This module implements the **Liquid Spatiotemporal Attractor State Space
-    Abstraction** as AuraOS's master cognitive control plane.  It replaces
-    the previously fragmented logic layers (VSA resonator, memristive synapse,
-    topology scanner, mesh swarm, and AR/Unreal bridge) with a *single*
-    continuous field equation that unifies:
-
-      • AR topology projection — eigen-decomposition of the attractor
-        basin yields live 3-D coordinates for Gaussian Splatting and
-        Unreal Engine streaming, driven directly by the resultant
-        state-space vector φ(t) rather than pre-calculated simulation
-        frames.
-      • Network packet routing — the 6-slot prefix token matrix is
-        harvested from φ(t) via bilinear interpolation on the
-        continuous attractor manifold, producing the telemetry frames
-        consumed by aura_mesh.py's UDP beacon layer.
-      • Hardware-security verification — DSEKP shield bits are derived
-        from the Hamming-distance-to-basin-centre metric, so packet
-        integrity is a direct geometric property of the attractor.
-
-    The entire execution cycle is **non-blocking**: every iteration
-    computes ∇E(φ), performs one Euler step, projects onto all output
-    modalities simultaneously, and pushes results to the existing
-    asynchronous network bus (aura_mesh.py) and WebSocket broadcast
-    layers (aura_topology_ws_bridge.py, unreal_bridge.py, pulse.py)
-    without allocating a single Python object on the hot path.
-
-    Memory is enforced strictly within the 4 GiB Termux ceiling via:
-      - np.memmap for the attractor field, gradient buffer, and all
-        projection scratch arrays.
-      - In-place mutation with ``out=`` kwargs on every numpy call.
-      - Zero heap-alloc object instantiation inside the control loop.
-      - Explicit ``gc.collect()`` calls at cycle boundaries only when
-        the Python heap watermark crosses a configurable threshold.
-
-    The 6-slot prefix token matrix layout (Section 6.3 of the AuraOS
-    specification) is encoded as a (6, 4) float32 memmap where:
-        slot[0] = intensity anchor    (φ magnitude norm)
-        slot[1] = colour coherence    (φ angular dispersion)
-        slot[2] = depth confidence    (φ basin radius)
-        slot[3] = compliance scalar   (φ energy value)
-        slot[4] = topology index      (φ eigen-index 0)
-        slot[5] = security nonce      (φ basin-centre distance)
-
-MEMORY-CONSTRAINT: 4 GiB Termux RAM ceiling enforced through contiguous
-    float32 np.memmap layouts, in-place mutation, and zero heap-alloc
-    object overhead in the control loop.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, asyncio, numpy, aura_topology_ws_bridge, gc, tracemalloc, typing, time, pathlib, base64, hashlib
+FUNCTIONS: _ensure_memmap_dir, _np_memmap, _gc_if_needed, _standalone_main, auto_boot_attractor, shutdown_attractor, __init__, _bootstrap_attractor_field, _build_token_matrix, _update_token_matrix, _continuous_field_energy, _compute_field_gradient, _euler_integrate_step, _project_to_ar_topology, _project_to_mesh_telemetry, _project_to_dsekp_shield, _project_to_gaussian_splats, _execute_unified_cycle, _broadcast_worker, graft_module, start_control_loop, stop_control_loop, get_state_snapshot, __init__, wire_existing_modules, activate, _patch_ar_topology_source, deactivate, _loop_forever, _read_thermal, _attractor_driven_topology_refresh, _sync_read
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

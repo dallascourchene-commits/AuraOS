@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8f8-[Q-SYS:SPECTRAL_TOPOLOGY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Structural Health)
-DEPENDENCIES: json, math, pathlib, typing, numpy
-FUNCTIONS: augment_topology_payload, normalize_topology_payload, build_fusion_topology_snapshot
-SYNOPSIS: Graph-Laplacian topology augmentation for Aura's AR and Fusion layers. Converts code dependency graphs into 3-D spectral coordinates, derives structural-health luminance from spectral sparsity, and emits compact neighbor snapshots for panel reasoning.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, numpy, typing, pathlib, math
+FUNCTIONS: _clamp, _copy_mapping, _normalise_node_items, _normalise_edge_items, normalize_topology_payload, _edge_weight, _cyclic_nodes, _spectral_coordinates, _node_group_key, _layout_coordinates, _node_visual_state, augment_topology_payload, _load_topology_payload, _matches_target, _snapshot_node, build_fusion_topology_snapshot, strongconnect
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

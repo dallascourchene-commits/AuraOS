@@ -1,5 +1,16 @@
-"""Compatibility CLI for Aura paper PDF text extraction."""
-
+"""
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f0-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: pathlib, __future__, sys, aura_paper_memory
+FUNCTIONS: extract_with_pypdf2, extract_with_pdfplumber, main
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
 from __future__ import annotations
 
 from pathlib import Path

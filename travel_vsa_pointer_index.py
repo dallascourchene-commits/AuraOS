@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa90a-[Q-SYS:TRAVEL_VSA_POINTERS]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Meaning Pointers, Exact Truth Elsewhere)
-DEPENDENCIES: dataclasses, hashlib, json, typing, travel_price_sidecar
-FUNCTIONS: TravelVSAPointerIndex, make_travel_vsa_id, reject_exact_price_payload
-SYNOPSIS: Deterministic VSA-style semantic address registry for Aura Travel. VSA rows store semantic tags and sidecar keys only; exact prices stay in the sidecar.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, typing, travel_price_sidecar, dataclasses, hashlib, datetime
+FUNCTIONS: _utc_now, _json_dumps, _hash_payload, _stable_tags, reject_exact_price_payload, make_travel_vsa_id, to_dict, __init__, build_pointer, upsert_pointer, index_resort, index_price_offer, resolve_exact_price
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

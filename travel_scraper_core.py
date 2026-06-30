@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa909-[Q-SYS:TRAVEL_SCRAPER_CORE]
-DIKWP_TIER: KNOWLEDGE
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Evidence Before Extraction)
-DEPENDENCIES: dataclasses, json, pathlib, typing, travel_extractors, travel_price_sidecar, travel_source_registry
-FUNCTIONS: TravelIngestResult, TravelScraperCore
-SYNOPSIS: Local-first scraper ingestion core for Option B GitHub scraper output. Raw snapshots are preserved before parsing, then exact truth and VSA-safe semantic metadata are written to the travel sidecar.
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, travel_extractors, travel_source_registry, collections.abc, typing, pathlib, travel_price_sidecar, dataclasses
+FUNCTIONS: to_dict, __init__, ingest_option_b_record, ingest_option_b_records, ingest_option_b_file
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

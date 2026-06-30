@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c7-[Q-SYS:CODEMAP_FILE_WATCHER]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Universal File Monitoring)
-DEPENDENCIES: pathlib, time, threading, watchdog
-FUNCTIONS: start_watcher, stop_watcher, CodeMapFileWatcher
-SYNOPSIS: Universal file system watcher that monitors workspace for code changes from ANY source (Bob, VS Code, Cline, manual edits) and automatically triggers CODEMAP refresh.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: threading, watchdog.observers, __future__, sys, watchdog.events, argparse, time, pathlib, aura_bob_codemap_hooks
+FUNCTIONS: start_watcher, stop_watcher, get_watcher, __init__, should_process, debounce_event, on_modified, on_created, on_moved, __init__, start, stop, run_forever
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

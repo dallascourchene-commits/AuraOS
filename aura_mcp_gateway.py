@@ -1,14 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f0-[Q-SYS:AURA_MCP_GATEWAY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIWAABAMIN (Transparency & Privacy / Aura-Safe Tool Surface)
-DEPENDENCIES: dataclasses, hashlib, json, time, typing
-FUNCTIONS: AuraMCPTool, AuraMCPToolResult, AuraMCPGateway, build_default_gateway
-SYNOPSIS: Aura-safe MCP tool gateway. Exposes exactly nine read/proposal tools that
-          delegate to existing Arena, sidecar, verifier, QDKT, ICM, and travel package
-          surfaces. No tool mutates production. Every call is logged to QDKT. No raw
-          sidecar dumps or raw private memory may leave the gateway.
+PWFST_ALIGNMENT: GIWAABAMIN (Transparency & Privacy)
+DEPENDENCIES: json, __future__, aura_icm_workspace, collections.abc, argparse, typing, os, time, travel_price_verifier, pathlib, travel_price_sidecar, travel_package_arena, aura_liquid_planning_arena, dataclasses, hashlib
+FUNCTIONS: _hash_payload, _utc_now, _assert_aura_safe, _handler_run_arena, _handler_stage_action_capsule, _validate_capsule_safety, _handler_verify_sidecar_truth, _handler_query_qdkt, _redact_unsafe_response, _handler_observe_retrieval_usefulness, _handler_export_icm_workspace, _handler_build_travel_package, _handler_scan_social_luminance, _handler_verify_fintech_ledger, build_default_gateway, main, to_dict, to_dict, __init__, register, list_tools, has_tool, call, _record_call, call_log
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

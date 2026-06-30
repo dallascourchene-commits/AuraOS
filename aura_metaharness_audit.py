@@ -1,15 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f4-[Q-SYS:AURA_METAHARNESS_AUDIT]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIWAABAMIN (Transparency / Coverage Scoring)
-DEPENDENCIES: dataclasses, hashlib, json, os, pathlib, time, typing
-FUNCTIONS: MetaHarnessAudit, AuraMetaHarnessAuditor, audit_metaharness
-SYNOPSIS: Scores the meta-harness layer across eight dimensions: verifier
-          coverage, sidecar truth separation, QDKT coverage, DREAM usefulness
-          coverage, stale-data risk, unresolved BoundaryContracts, secret
-          exposure, and plugin permission risk. Emits a scored report to QDKT
-          and writes JSONL to Aura_Memory/metaharness_audit.jsonl.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, sys, re, argparse, typing, os, time, pathlib, dataclasses, hashlib
+FUNCTIONS: _get_store_value, _hash_payload, _clamp01, audit_metaharness, main, to_dict, overall_score, __init__, audit, _score_verifier_coverage, _score_sidecar_truth_separation, _score_qdkt_coverage, _score_dream_usefulness_coverage, _score_stale_data_risk, _count_unresolved_boundary_contracts, _score_secret_exposure, _score_plugin_permission_risk, _record, _has_raw_fields
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

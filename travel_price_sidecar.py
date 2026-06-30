@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa906-[Q-SYS:TRAVEL_SIDECAR]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Exact Travel Truth Sidecar)
-DEPENDENCIES: dataclasses, datetime, decimal, hashlib, json, os, pathlib, sqlite3, typing
-FUNCTIONS: TravelSidecarPaths, TravelPriceSidecar, money_to_minor, resolve_travel_data_root
-SYNOPSIS: Local-disk travel sidecar for immutable raw scraper snapshots, exact price/date truth, JSONL semantic segments, and VSA pointer resolution. VSA retrieves meaning; sidecar retrieves truth.
+PWFST_ALIGNMENT: MIIGWECH (Extension-Based Storage)
+DEPENDENCIES: json, __future__, sqlite3, typing, os, pathlib, decimal, dataclasses, hashlib, datetime
+FUNCTIONS: _utc_now, _json_dumps, _hash_payload, _slug, resolve_travel_data_root, money_to_minor, _parse_date, _date_nights, _row_to_dict, for_root, __init__, close, commit, _ensure_layout, _init_schema, append_jsonl, append_deterministic_truth, append_semantic_metadata, append_vsa_pointer, upsert_resort, upsert_room_type, upsert_rate_plan, upsert_source, record_raw_snapshot, insert_price_observation, upsert_vsa_pointer, upsert_media_asset, write_resort_segments, get_resort, get_price, resolve_pointer, resolve_vsa_price, query_prices
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

@@ -1,17 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f3-[Q-SYS:AURA_BACKGROUND_WORKERS]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Observe and Propose)
-DEPENDENCIES: asyncio, dataclasses, hashlib, json, time, typing
-FUNCTIONS: WorkerProposal, BackgroundWorker, StaleDataWorker,
-           BoundaryContractWorker, VerifierCoverageWorker, DreamUsefulnessWorker,
-           BackgroundWorkerSupervisor
-SYNOPSIS: Observe-only background workers. They read system state and propose
-          ActionCapsule-shaped dicts into an asyncio proposal queue. They CANNOT
-          mutate production directly. Every proposal carries status="proposed"
-          and forbidden_actions=["mutate_production"]. Worker outcomes are
-          recorded in QDKT.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, asyncio, argparse, typing, time, dataclasses, hashlib
+FUNCTIONS: _hash_payload, build_default_supervisor, main, to_dict, __init__, observe, _make_proposal, _record_outcome, run_once, loop, __init__, observe, __init__, observe, __init__, observe, __init__, observe, __init__, add_worker, list_workers, start, stop, run_once_all, drain_proposals, drained_history, _fetch_rows
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

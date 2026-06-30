@@ -1,16 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9d0-[Q-SYS:2A86BBF77059E372]
-DIKWP_TIER: PURPOSE
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Unified Knowledge)
-DEPENDENCIES: __future__, hashlib, json, os, pathlib, sqlite3, struct, time,
-              asyncio, typing, numpy, aura_hv_cache, aura_token_economics
-FUNCTIONS: UnifiedQDKT, observe, observe_retrieval_usefulness, query, crystallize, promote_to_crystal,
-           _route_to_holographic, _route_to_cognitive_evolution,
-           _route_to_causal_ledger, _check_crystallization
-SYNOPSIS: Pure-asyncio unified QDKT hub (lock-free, single-threaded). Routes
-          knowledge events across all five pre-existing DKT subsystems and the
-          new semantic-bridge tables.
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: MIIGWECH (Extension-Based Storage)
+DEPENDENCIES: json, __future__, aura_token_economics, contextlib, sqlite3, typing, time, pathlib, aura_hv_cache, hashlib
+FUNCTIONS: _get_hv_substrate, _get_token_economics, _concept_key, _hv_bytes, _db, get_qdkt, commit_to_dkt_shim, log_dkt_commit_shim, __init__, _init_schemas, _load_crystal_cache, _save_crystal_cache, observe, observe_retrieval_usefulness, query, crystallize, fast_path, learning_summary, _route_to_holographic, _route_to_cognitive_evolution, _route_to_causal_ledger, _route_to_changelog, _route_to_token_economics, _write_knowledge_index, _write_workspace_event, _write_retrieval_usefulness, _check_crystallization
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

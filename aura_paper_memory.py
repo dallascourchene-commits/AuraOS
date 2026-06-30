@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8f7-[Q-SYS:PAPER_MEMORY_RAEC]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Resonant Recall)
-DEPENDENCIES: base64, dataclasses, hashlib, io, json, math, re, time, typing, numpy, aura_single_seed_lift
-FUNCTIONS: EgressResonancePayload, ResearchProfileVector, PaperMemoryRecord, AuraResonanceEgressGate, compile_paper_memory_record, extract_pdf_text_from_bytes, load_research_profiles_from_jsonl, record_to_research_profile, record_to_trace_content, track_egress_savings, upsert_paper_memory_record, verify_egress_contract
-SYNOPSIS: Stateless paper-memory and RAEC middleware primitives. Scientific documents are chunked into 10,000-D complex phasor fields, lifted through a cached single-seed dispatch profile, stamped with a 1.2KB holographic header, summarized into three deterministic points, and exposed to egress as compact bracket slots.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, aura_single_seed_lift, numpy, re, collections.abc, PyPDF2, io, typing, pathlib, pdfplumber, math, base64, dataclasses, hashlib
+FUNCTIONS: _empty_phasor, _three_tuple, _seeded_phasor, _unit_phase, encode_text_as_phasor, chunk_text, _sentence_candidates, extract_three_main_points, _slot_safe, compile_summary_capsule, _holographic_header, _phasor_to_b64, _b64_to_phasor, compile_paper_memory_record, record_to_trace_content, record_to_research_profile, upsert_paper_memory_record, load_paper_memory_records, load_research_profiles_from_jsonl, verify_egress_contract, track_egress_savings, extract_pdf_text_from_bytes, extract_pdf_text_from_path, to_jsonable, from_jsonable, __init__, _intent_vector, inject_latent_context
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 
@@ -35,6 +38,10 @@ HEADER_BYTES = 1_200
 DEFAULT_CHUNK_CHARS = 1_800
 DEFAULT_CHUNK_OVERLAP = 160
 DEFAULT_MAX_TEXT_CHARS = 220_000
+
+
+def _empty_phasor() -> np.ndarray:
+    return np.ones(DIMENSIONS, dtype=np.complex64)
 
 
 @dataclass(frozen=True)
@@ -128,10 +135,6 @@ def _three_tuple(values: Iterable[Any]) -> tuple[str, str, str]:
     while len(items) < 3:
         items.append("")
     return items[0], items[1], items[2]
-
-
-def _empty_phasor() -> np.ndarray:
-    return np.ones(DIMENSIONS, dtype=np.complex64)
 
 
 def _seeded_phasor(label: str, dimensions: int = DIMENSIONS) -> np.ndarray:

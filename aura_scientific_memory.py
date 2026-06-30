@@ -1,11 +1,16 @@
-"""Structured VSA memory for scientific papers.
-
-The original research path stored papers and queries with different encoders.
-This module provides one deterministic representation for both, compact
-bit-packed storage, hierarchical routing, approximate LSH candidate retrieval,
-and polarity-aware contradiction detection.
 """
-
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, numpy, re, collections.abc, functools, pathlib, base64, collections, dataclasses, hashlib
+FUNCTIONS: _normalise_text, _stable_bipolar, _canonical_token, _match_rules, _content_terms, _special_polarity_vector, pack_vector, unpack_vector, vector_similarity, slot_similarity, split_title_abstract, record_from_content, index_from_rows, detect_contradictions, get, without, to_jsonable, from_jsonable, vector_array, __init__, extract_slots, encode_slots, encode_document, encode_query, __init__, _keys, add, query, __init__, add, _bundle_from_sum, domain_bundle, mechanism_bundle, _hierarchical_candidates, search, save_jsonl, load_jsonl, assign
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
 from __future__ import annotations
 
 import base64

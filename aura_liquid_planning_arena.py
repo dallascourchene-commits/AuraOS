@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa904-[Q-SYS:LIQUID_ARENA]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Bounded Shared Planning Substrate)
-DEPENDENCIES: dataclasses, hashlib, json, typing
-FUNCTIONS: BoundaryContract, ActionCapsule, ArenaLease, LiquidPlanningArena, WorldStateDelta, CodeArenaAdapter, CivicArenaAdapter, TravelArenaAdapter, build_world_state_delta
-SYNOPSIS: Domain-neutral Liquid Planning Arena primitives. Models propose, the Arena stages, Shadow critiques, Judge decides, verifier proves, human approves, and ledger remembers without direct production mutation.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, aura_icm_workspace, typing, pathlib, dataclasses, hashlib
+FUNCTIONS: _hash_payload, _stable_list, _object_key, _object_type, build_world_state_delta, export_arena_to_icm, to_dict, placeholder, to_dict, create, to_dict, create, to_dict, to_dict, schema, action_capsule_from_intent, _regions_for_act, boundary_contract_for_act, action_capsule_from_act, lease_for_action, build_arena, action_capsule_from_intent, action_capsule_from_intent
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8fb-[Q-SYS:SINGLE_SEED_LIFT]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Cached Context Lift)
-DEPENDENCIES: dataclasses, hashlib, math, re, typing, numpy
-FUNCTIONS: SingleSeedTrace, SingleSeedLiftProfile, SingleSeedLiftResult, compile_single_seed_lift, compile_text_single_seed_lift, compact_lift_capsule, encode_text_as_unit_phasor
-SYNOPSIS: Cofactor-free single-seed context-lift primitives for Aura's VSA memory and egress paths. Inspired by arXiv:2606.20633, the module derives one deterministic seed vector, caches its inverse once, lifts the seed through bounded local residual layers, and dispatches compact trace metadata to downstream consumers.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: __future__, numpy, re, collections.abc, typing, dataclasses, math, hashlib
+FUNCTIONS: _digest_bytes, _safe_label, _unit_phase, _seeded_unit_phasor, encode_text_as_unit_phasor, _phasor_digest, _resonance, _resonance_with_cached_inverse, _normalise_vectors, compile_single_seed_lift, compile_text_single_seed_lift, compact_lift_capsule, to_jsonable, from_jsonable, to_jsonable, from_jsonable
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

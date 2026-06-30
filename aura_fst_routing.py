@@ -1,3 +1,16 @@
+"""
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: numpy, aura_lexc, itertools, enum, heapq, dataclasses, hashlib
+FUNCTIONS: __init__, _hash_to_hypervector, add_state, add_transition, _compute_transition_weight, update_transition_weights, validate_slot_sequence, from_lexc, find_optimal_path, build_standard_lexicon, get_stats
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
 #!/usr/bin/env python3
 """
 Aura FST-Lexicon Routing Core (N18/N21)

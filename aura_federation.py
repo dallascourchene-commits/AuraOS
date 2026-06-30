@@ -1,14 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f5-[Q-SYS:AURA_FEDERATION]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Sovereignty-First Federation)
-DEPENDENCIES: dataclasses, hashlib, hmac, json, time, typing
-FUNCTIONS: FederatedCapsule, FederationTrust, AuraFederation, build_default_federation
-SYNOPSIS: Sovereignty-first federation. Exports redacted signed capsules only —
-          no raw private memory, no raw sidecar dumps. All remote results pass
-          the local verifier before acceptance. Federation trust is recorded in
-          QDKT and repeated successful patterns crystallize.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, hmac, argparse, typing, time, dataclasses, hashlib
+FUNCTIONS: _hash_payload, _utc_now, build_default_federation, main, to_dict, to_dict, __init__, export_capsule, _redact_private_memory, _redact_sidecar_dump, _sign, verify_signature, import_capsule, _local_verify, _quarantine, _update_trust, trust_record, trust_table, _crystallize_trust, _record, exported_capsules, imported_capsules, quarantined_capsules, _normalize_key, _check_and_redact
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

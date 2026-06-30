@@ -1,15 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f1-[Q-SYS:AURA_PLUGIN_REGISTRY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy / Installable Organs)
-DEPENDENCIES: dataclasses, hashlib, json, time, typing
-FUNCTIONS: AuraPluginManifest, AuraPluginRegistry, build_default_registry
-SYNOPSIS: Packages Aura domains as installable organs with explicit permission
-          manifests. Each organ declares its Arena adapter, sidecar tables,
-          verifier gates, and boundary invariant. Permissions that would bypass
-          a verifier or export raw private memory are denied. Install/uninstall
-          events are recorded in QDKT.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, argparse, typing, time, dataclasses, hashlib
+FUNCTIONS: _hash_payload, build_default_registry, main, to_dict, permission_risk, __init__, register, list_organs, get_manifest, install, _sanitize_record, uninstall, is_installed, installed_organs, permission_audit, _observe, record_reliability
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

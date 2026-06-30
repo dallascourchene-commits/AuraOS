@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa90d-[Q-SYS:TRAVEL_MEDIA_ASSETS]
-DIKWP_TIER: KNOWLEDGE
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Premium Resort Media References)
-DEPENDENCIES: dataclasses, pathlib, typing, travel_price_sidecar
-FUNCTIONS: TravelMediaAssetRegistry
-SYNOPSIS: Registers travel media references, including 360/video/Gaussian splat assets, as sidecar-backed premium resort media without embedding large media payloads in VSA.
+ST3GG_BASE: 0xa8f4-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: pathlib, travel_price_sidecar, typing, __future__
+FUNCTIONS: __init__, register_asset, register_gaussian_splat, premium_media_contract
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 

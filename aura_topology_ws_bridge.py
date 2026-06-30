@@ -1,15 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:BRIDGE_WS_TOPOLOGY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: asyncio, json, os, gc, pathlib
-FUNCTIONS: TopologyBroadcastHub, broadcast_topology_chunks, stream_to_clients,
-           _chunk_json_fixed_frame, register_client, unregister_client, background_topology_watch
-SYNOPSIS: Pure-asyncio broadcast bridge that reads Aura_Memory/live_topology_ast.json,
-          chunks structural tokens into fixed-frame 4KB payloads, and non-blockingly
-          streams to all connected WebSocket clients without blocking the main runtime
-          loop or causing socket drops under Termux 4GB RAM constraints.
+DEPENDENCIES: json, asyncio, websockets, uuid, aura_spectral_topology, logging, gc, typing, pathlib, dataclasses
+FUNCTIONS: _chunk_json_fixed_frame, get_topology_hub, stream_to_clients, __init__, register_client, unregister_client, _broadcast_worker, _topology_watch_loop, start, stop, broadcast_topology_now, _combined_handler, to_dict, to_dict, __init__, start, stop, _topology_refresh_loop, _refresh_topology, _topology_dict, _handle_connection, _handle_message, _handle_shape_interaction, _handle_add_shape, _handle_hotswap_request, _handle_resonance_update, _broadcast_topology, _broadcast_message, _test, _send_to_one, _topology_pump
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import asyncio

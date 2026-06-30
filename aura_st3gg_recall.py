@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa901-[Q-SYS:ST3GG_RECALL]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Holographic O(1) Recall)
-DEPENDENCIES: base64, dataclasses, hashlib, json, pathlib, struct, time, typing, urllib.parse, aura_dream_retrieval
-FUNCTIONS: ST3GGRecallRecord, compile_st3gg_pointer, compile_visible_st3gg_capsule, compute_compaction_efficiency, decode_st3gg_compaction_blob, hash_table_path_for_ledger, index_path_for_ledger, lookup_st3gg_recall, rerank_st3gg_recall_candidates, st3gg_recall_index_stats, store_path_for_ledger, upsert_st3gg_recall
-SYNOPSIS: Visible ST3GG recall primitives inspired by GLOSSOPETRAE's seeded-symbol insight and modern persistent hash-table retrieval. Converts content into deterministic DASH/ST3GG pointers and maintains a local hash sidecar for bounded O(1)-style recall without invisible Unicode carriers or covert-channel payloads.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, aura_dream_retrieval, __future__, typing, time, pathlib, base64, dataclasses, hashlib, urllib.parse, struct
+FUNCTIONS: _digest, compile_st3gg_pointer, _key_token, _esc, compile_visible_st3gg_capsule, index_path_for_ledger, store_path_for_ledger, hash_table_path_for_ledger, _load_index, _file_size, decode_st3gg_compaction_blob, compute_compaction_efficiency, st3gg_recall_index_stats, _target_capacity, _hash_key, _init_hash_table, _read_hash_header, _slot_offset, _write_hash_count, _record_matches_key, _append_store_record, _read_store_record, _insert_hash_alias, _lookup_hash_recall, _rebuild_hash_sidecar, _upsert_hash_sidecar, upsert_st3gg_recall, lookup_st3gg_recall, rerank_st3gg_recall_candidates, to_jsonable, from_jsonable
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 
