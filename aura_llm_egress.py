@@ -58,83 +58,17 @@ from aura_paper_memory import (
 from aura_pre_egress_interceptor import apply_pre_egress_profile
 from aura_tokenizer_guard import sanitize_message_payloads, sanitize_tokenizer_channels
 
-# External providers only. Internal/local engines are intentionally excluded —
-# Aura must call out, not run a model in-process. Gemini is an allowed external
-# provider (routed via the Gemini REST path); all others are OpenAI-compatible.
-PROVIDERS: dict[str, dict] = {
-    "mistral": {
-        "url": "https://api.mistral.ai/v1/chat/completions",
-        "key": "MISTRAL_API_KEY",
-        "model": "mistral-small-latest",
-        "price_in_per_1k": 0.0002,
-        "price_out_per_1k": 0.0006,
-    },
-    "sambanova": {
-        "url": "https://api.sambanova.ai/v1/chat/completions",
-        "key": "SAMBANOVA_API_KEY",
-        "model": "Meta-Llama-3.3-70B-Instruct",
-        "price_in_per_1k": 0.0006,
-        "price_out_per_1k": 0.0012,
-    },
-    "groq": {
-        "url": "https://api.groq.com/openai/v1/chat/completions",
-        "key": "GROQ_API_KEY",
-        "model": "llama-3.3-70b-versatile",
-        "price_in_per_1k": 0.00059,
-        "price_out_per_1k": 0.00079,
-    },
-    "cerebras": {
-        "url": "https://api.cerebras.ai/v1/chat/completions",
-        "key": "CEREBRAS_API_KEY",
-        "model": "llama-3.3-70b",
-        "price_in_per_1k": 0.00085,
-        "price_out_per_1k": 0.0012,
-    },
-    "openrouter": {
-        "url": "https://openrouter.ai/api/v1/chat/completions",
-        "key": "OPEN_ROUTER_API_KEY",
-        "model": "meta-llama/llama-3.3-70b-instruct",
-        "price_in_per_1k": 0.0006,
-        "price_out_per_1k": 0.0006,
-    },
-    "github": {
-        "url": "https://models.inference.ai.azure.com/chat/completions",
-        "key": "GITHUB_TOKEN",
-        "model": "gpt-4o-mini",
-        "price_in_per_1k": 0.00015,
-        "price_out_per_1k": 0.0006,
-    },
-    # --- placeholders for future keys (skipped cleanly until configured) ---
-    "openai": {
-        "url": "https://api.openai.com/v1/chat/completions",
-        "key": "OPENAI_API_KEY",
-        "model": "gpt-4o-mini",
-        "price_in_per_1k": 0.00015,
-        "price_out_per_1k": 0.0006,
-    },
-    "anthropic": {
-        "api": "anthropic",       # uses the Anthropic Messages API, not OpenAI-compatible
-        "url": "https://api.anthropic.com/v1/messages",
-        "key": "ANTHROPIC_API_KEY",
-        "model": "claude-sonnet-4-6",
-        "price_in_per_1k": 0.0008,
-        "price_out_per_1k": 0.004,
-    },
-    "gemini": {
-        "api": "gemini",          # uses the Gemini REST path, not OpenAI-compatible
-        "url": "(gemini-rest)",
-        "key": "GEMINI_API_KEY",
-        "model": "gemini-1.5-flash",
-        "price_in_per_1k": 0.00007,
-        "price_out_per_1k": 0.0003,
-    },
-}
-DEFAULT_PROVIDER_ORDER = ["anthropic", "mistral", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
+from aura_provider_registry import ProviderRegistry
+
+# External providers only. Populated configuration-driven from ProviderRegistry.
+PROVIDERS: dict[str, dict] = ProviderRegistry().providers
+
+DEFAULT_PROVIDER_ORDER = ["anthropic", "fireworks", "mistral", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
 
 # Providers verified to work with the currently-configured keys. The benchmark
 # defaults to these so we never burn calls on providers whose keys are absent or
 # rejected. Everything else in PROVIDERS is a placeholder until a key is added.
-KNOWN_WORKING = ("anthropic", "sambanova", "mistral", "groq", "cerebras", "openrouter", "github", "gemini")
+KNOWN_WORKING = ("anthropic", "fireworks", "sambanova", "mistral", "groq", "cerebras", "openrouter", "github", "gemini")
 
 # Names that must never be used here — Aura does not run her own model. Only
 # local/internal in-process engines are forbidden; Gemini is an allowed external

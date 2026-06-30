@@ -25,6 +25,7 @@ ModelCaller = Callable[[str, str, dict[str, Any]], Any]
 @dataclass
 class TestGapFillerResult:
     """Result of generating a minimal regression test for a missing-test gap."""
+    __test__ = False
     ok: bool
     test_file_path: str = ""
     test_content: str = ""
@@ -156,6 +157,15 @@ async def fill_test_gap(
             ok=False,
             error="no_target_file_in_context",
             target_symbol=target_symbol,
+        )
+
+    # Prevent fake test generation if source excerpt or target symbol is missing
+    if not target_symbol or not getattr(context_packet, "source_excerpt", None):
+        return TestGapFillerResult(
+            ok=False,
+            error="missing_symbol_or_source_excerpt",
+            target_symbol=target_symbol,
+            target_file=target_file,
         )
 
     # Determine test file name
