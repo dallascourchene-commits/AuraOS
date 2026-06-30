@@ -70,6 +70,13 @@ from aura_positional_parser import AthabaskanPositionalParser
 from aura_rosetta_memory import RosettaMemoryBuffer
 from aura_scientific_memory import index_from_rows
 from aura_skillweaver import research_gate_intercept
+from aura_coding_arena_workflow import (
+    convert_research_proposal_to_action_capsule,
+    enforce_research_no_direct_mutation,
+    validate_research_staging_gate,
+    get_coding_arena_memory,
+    WorkflowOutcome,
+)
 
 # ======= INTEGRATION: ARCHAEOLOGICAL & COGNITIVE CORTEX IMPORTS =======
 import aura_topological_scanner
@@ -6251,25 +6258,95 @@ async def main():
                     print(" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
                     print("====================================================================\n")
 
-                    review_path = os.path.join("Aura_Staging", "research_refactor_request.json")
-                    os.makedirs(os.path.dirname(review_path), exist_ok=True)
-                    with open(review_path, "w", encoding="utf-8") as f_out:
-                        json.dump({
-                            "capsule_version": "AURA_RESEARCH_REFACTOR_REQUEST_V1",
-                            "timestamp": datetime.now().isoformat(),
-                            "concept": concept,
-                            "proposed_patch": clean_source,
-                            "target_modules": list(getattr(gate_result, "target_modules", []) or [])[:5],
-                            "gate_decision": getattr(gate_result, "decision", ""),
-                            "gate_score": getattr(gate_result, "final_score", None),
-                            "source": "ingested_academic_engrams",
-                            "mutation_policy": "refactor_arena_required",
-                        }, f_out, indent=2, sort_keys=True, default=str)
+                    # Enforce research no-direct-mutation policy (req 7)
+                    research_output = {
+                        "concept": concept,
+                        "proposed_patch": clean_source,
+                        "target_modules": list(getattr(gate_result, "target_modules", []) or [])[:5],
+                        "gate_decision": getattr(gate_result, "decision", ""),
+                        "gate_score": getattr(gate_result, "final_score", None),
+                    }
+                    staging_envelope = enforce_research_no_direct_mutation(research_output)
 
-                    print("[-] Legacy aura_incubator.py staging is disabled.")
-                    print(f"[+] Review capsule written to {review_path}")
-                    print("[blocked] Route synthesized code through Architect/Refactor Arena before disk mutation.")
-                    SOVEREIGN_CORE.vocalize("Synthesis complete. Refactor Arena verification is required before mutation.")
+
+                    # Convert research proposal to ActionCapsule first (req 9).
+                    # Only proceed with writing the staging envelope if conversion
+                    # succeeds and `action_capsule` is present in the envelope.
+                    action_capsule = None
+                    try:
+                        action_capsule = convert_research_proposal_to_action_capsule(research_output)
+                        staging_envelope["action_capsule"] = (
+                            action_capsule.to_dict() if hasattr(action_capsule, "to_dict") else dict(action_capsule)
+                        )
+                        print("[+] Research proposal converted to ActionCapsule for Arena staging.")
+                    except Exception as capsule_err:
+                        print(f"[!] ActionCapsule conversion deferred/failed: {capsule_err}")
+
+                    # Gate the actual disk staging on presence of a valid action_capsule
+                    if staging_envelope.get("action_capsule"):
+                        review_path = os.path.join("Aura_Staging", "research_refactor_request.json")
+                        os.makedirs(os.path.dirname(review_path), exist_ok=True)
+                        with open(review_path, "w", encoding="utf-8") as f_out:
+                            json.dump(staging_envelope, f_out, indent=2, sort_keys=True, default=str)
+                        print("[-] Legacy aura_incubator.py staging is disabled.")
+                        print(f"[+] Review capsule written to {review_path}")
+                        print("[blocked] Route synthesized code through Architect/Refactor Arena before disk mutation.")
+                        print(f"[+] Mutation policy: {staging_envelope.get('mutation_policy', 'arena_staging_required')}")
+                        print(f"[+] Direct mutation allowed: {staging_envelope.get('direct_mutation_allowed', False)}")
+                        SOVEREIGN_CORE.vocalize("Synthesis complete. Refactor Arena verification is required before mutation.")
+                    else:
+                        print("[!] ActionCapsule conversion missing; skipping staging and Arena write.")
+                        SOVEREIGN_CORE.vocalize("Synthesis complete. Staging skipped due to ActionCapsule conversion failure.")
+
+                    # (duplicate logging removed) - single consolidated log above is sufficient
+
+                    # Record research workflow event to Coding Arena workflow memory
+                    try:
+                        arena_memory = get_coding_arena_memory()
+                        wf_id = arena_memory.begin_workflow(
+                            f"research:{concept}",
+                            research_output.get("target_modules", [""])[0] if research_output.get("target_modules") else "",
+                        )
+                        arena_memory.record_event(
+                            wf_id,
+                            "research_synthesis",
+                            "research",
+                            {
+                                "concept": concept,
+                                "gate_decision": research_output.get("gate_decision", ""),
+                                "gate_score": research_output.get("gate_score"),
+                                "target_modules": research_output.get("target_modules", []),
+                                "mutation_policy": staging_envelope.get("mutation_policy", ""),
+                                "direct_mutation_allowed": staging_envelope.get("direct_mutation_allowed", False),
+                            },
+                        )
+
+                        # Emit a terminal workflow outcome for this one-off research run
+                        try:
+                            succeeded = bool(staging_envelope.get("action_capsule"))
+                            outcome = WorkflowOutcome(
+                                workflow_id=wf_id,
+                                success=succeeded,
+                                hotswap_ready=False,
+                                failures_count=(0 if succeeded else 1),
+                                stage="research",
+                                phase_hash="",
+                                intent=f"research:{concept}",
+                                target_file=(research_output.get("target_modules", [""])[0] if research_output.get("target_modules") else ""),
+                                outcome_summary=("Research synthesis staged for Arena" if succeeded else "Research synthesis skipped / conversion failed"),
+                            )
+                            arena_memory.record_outcome(wf_id, outcome)
+                        except Exception:
+                            pass
+
+                        # Ensure we do not retain a stale active workflow entry
+                        try:
+                            if hasattr(arena_memory, "_active_workflows") and wf_id in arena_memory._active_workflows:
+                                arena_memory._active_workflows.pop(wf_id, None)
+                        except Exception:
+                            pass
+                    except Exception:
+                        pass
                 except Exception as e:
                     print(f"[-] Comparative synthesis failed: {e}")
                 continue

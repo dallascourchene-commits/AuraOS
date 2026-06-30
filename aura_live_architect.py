@@ -68,6 +68,17 @@ except Exception:
     record_arena_retrieval_feedback = None  # type: ignore[assignment]
     DreamCandidate = None  # type: ignore[assignment]
 
+try:
+    from aura_coding_arena_workflow import (
+        CodingArenaWorkflowMemory,
+        WorkflowOutcome,
+        get_coding_arena_memory,
+    )
+except Exception:
+    CodingArenaWorkflowMemory = None  # type: ignore[assignment]
+    WorkflowOutcome = None  # type: ignore[assignment]
+    get_coding_arena_memory = None  # type: ignore[assignment]
+
 ARCHITECT_LIVE_VERSION = "AURA_LIVE_ARCHITECT_V1"
 ARCHITECT_STAGING_PATH = Path(REPO_ROOT) / "Aura_Staging" / "architect_live_transaction.json"
 ModelCaller = Callable[[str, str, dict[str, Any]], Any]
@@ -1030,9 +1041,11 @@ class ArchitectBuilderBridge:
     Self-Refine bounded repair; Context Engineering survey's retrieve-then-ground pattern.
     """
 
-    def __init__(self, router: ArchitectModelRouter):
+    def __init__(self, router: ArchitectModelRouter, *, workflow_memory: Any = None, workflow_id: str = ""):
         self.router = router
         self.patch_quality: dict[str, Any] = {}
+        self._workflow_memory = workflow_memory
+        self._workflow_id = workflow_id
 
     def _load_codemap(self) -> dict[str, Any] | None:
         codemap_path = self.router.repo_root / ".aura" / "CODEMAP.json"
@@ -1083,6 +1096,13 @@ class ArchitectBuilderBridge:
                 task_id=act.task_id,
             )
 
+            # Record builder context packet to workflow memory
+            if self._workflow_memory is not None and self._workflow_id:
+                try:
+                    self._workflow_memory.record_builder_context(self._workflow_id, context_packet, act.task_id)
+                except Exception:
+                    pass
+
             prompt = (
                 "You are an Aura Act worker. Return one unified diff OR a before/after JSON object. "
                 "Do not write files. Do not include prose. "
@@ -1114,6 +1134,13 @@ class ArchitectBuilderBridge:
                 "repair": None,
             }
 
+            # Record patch preflight result to workflow memory
+            if self._workflow_memory is not None and self._workflow_id:
+                try:
+                    self._workflow_memory.record_patch_preflight(self._workflow_id, act.task_id, preflight)
+                except Exception:
+                    pass
+
             # If preflight fails, run exactly one PATCH_FORMAT_REPAIR attempt (requirement 6 & 7)
             if not preflight.ok:
                 stderr = ""
@@ -1130,6 +1157,14 @@ class ArchitectBuilderBridge:
                     intensity=prepared.intensity,
                 )
                 attempt_record["repair"] = repair_result.to_dict()
+
+                # Record repair attempt to workflow memory
+                if self._workflow_memory is not None and self._workflow_id:
+                    try:
+                        self._workflow_memory.record_repair_attempt(self._workflow_id, act.task_id, repair_result)
+                    except Exception:
+                        pass
+
                 if repair_result.ok:
                     diff = repair_result.repaired_diff
                     attempt_record["status"] = "repair_succeeded"
@@ -1143,16 +1178,23 @@ class ArchitectBuilderBridge:
                     continue  # Do not hot-swap — skip this submission
 
             touched = _diff_touched_files(diff)
-            submissions.append(
-                {
-                    "task_id": act.task_id,
-                    "owner": self.router.profile_for("worker", intensity=prepared.intensity).model_class,
-                    "diff": diff,
-                    "affected_files": touched or ([act.target_file] if act.target_file else []),
-                    "affected_symbols": [act.target_symbol] if act.target_symbol else [],
-                    "tests": [],
-                }
-            )
+            submission = {
+                "task_id": act.task_id,
+                "owner": self.router.profile_for("worker", intensity=prepared.intensity).model_class,
+                "diff": diff,
+                "affected_files": touched or ([act.target_file] if act.target_file else []),
+                "affected_symbols": [act.target_symbol] if act.target_symbol else [],
+                "tests": [],
+            }
+            submissions.append(submission)
+
+            # Record patch submission to workflow memory
+            if self._workflow_memory is not None and self._workflow_id:
+                try:
+                    self._workflow_memory.record_patch_submission(self._workflow_id, submission)
+                except Exception:
+                    pass
+
             self._record_qdkt("patch_attempt", act.task_id, "staged", {
                 "preflight_ok": preflight.ok,
                 "rejections": preflight.rejections,
@@ -1448,7 +1490,30 @@ async def run_live_architect_transaction(
     effective_staging_path = Path(staging_path) if staging_path is not None else effective_root / "Aura_Staging" / "architect_live_transaction.json"
 
     router = ArchitectModelRouter(repo_root=effective_root, model_caller=model_caller, ledger_path=effective_ledger_path)
+
+    # Begin Coding Arena workflow memory tracking (scope ledger to repo root)
+    workflow_memory = None
+    workflow_id = ""
+    if CodingArenaWorkflowMemory is not None:
+        try:
+            ledger = effective_root / "Aura_Memory" / "coding_arena_workflows.jsonl"
+            workflow_memory = CodingArenaWorkflowMemory(ledger_path=ledger)
+            workflow_id = workflow_memory.begin_workflow(intent, target_file or "")
+        except Exception:
+            workflow_memory = None
+
     council_decision = await router.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)
+
+    # Record plan candidates and shadow critiques to workflow memory
+    if workflow_memory is not None and workflow_id:
+        try:
+            for candidate in council_decision.candidates:
+                workflow_memory.record_plan_candidate(workflow_id, candidate)
+            for critic_report in council_decision.critic_reports:
+                workflow_memory.record_shadow_critique(workflow_id, critic_report)
+        except Exception:
+            pass
+
     plan_spec = council_decision.selected_plan
     loop = ArchitectFusionLoop(repo_root=effective_root)
     prepared = loop.prepare(
@@ -1473,7 +1538,7 @@ async def run_live_architect_transaction(
             "local verifier decides hot-swap readiness",
         ],
     )
-    builder = ArchitectBuilderBridge(router)
+    builder = ArchitectBuilderBridge(router, workflow_memory=workflow_memory, workflow_id=workflow_id)
     patch_submissions = await builder.build_patch_submissions(prepared, objective=intent)
     stage_results = [
         stage_arena_patch(
@@ -1490,6 +1555,14 @@ async def run_live_architect_transaction(
 
     # Run workspace verification BEFORE judge so the premium judge sees apply/test/topology results (requirement 8)
     workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=effective_root, test_commands=test_commands)
+
+    # Record temp workspace apply and py_compile/test/topology_delta results to workflow memory
+    if workflow_memory is not None and workflow_id:
+        try:
+            workflow_memory.record_temp_workspace_apply(workflow_id, workspace)
+            workflow_memory.record_py_compile_test_topology(workflow_id, workspace)
+        except Exception:
+            pass
 
     # Test gap filling: if Shadow reports missing tests, generate minimal regression tests in temp workspace only (requirement 9)
     test_gap_result: TestGapFillerResult | None = None
@@ -1537,6 +1610,13 @@ async def run_live_architect_transaction(
         router, prepared, patch_submissions, stage_results, council_decision, workspace_result=workspace,
     )
 
+    # Record premium judge decision to workflow memory
+    if workflow_memory is not None and workflow_id:
+        try:
+            workflow_memory.record_premium_judge_decision(workflow_id, patch_judgement)
+        except Exception:
+            pass
+
     def runner(test_name: str) -> dict[str, Any]:
         return workspace.test_results.get(test_name, {"status": "passed" if workspace.ok else "failed"})
 
@@ -1552,6 +1632,14 @@ async def run_live_architect_transaction(
         patch_judgement=patch_judgement,
         topology_delta=workspace.topology_delta,
     )
+
+    # Record hotswap decision to workflow memory
+    if workflow_memory is not None and workflow_id:
+        try:
+            workflow_memory.record_hotswap_decision(workflow_id, hotswap_capsule)
+        except Exception:
+            pass
+
     ledger_record = build_architect_ledger_record(prepared, stage_results, verification, hotswap_capsule)
     append_architect_ledger(ledger_record, ledger_path=effective_ledger_path)
 
@@ -1636,6 +1724,25 @@ async def run_live_architect_transaction(
         patch_quality=patch_quality,
     )
     output_path.write_text(json.dumps(transaction.to_dict(), indent=2, sort_keys=True, default=str), encoding="utf-8")
+
+    # Record final workflow outcome to Coding Arena workflow memory (wires to QDKT + DREAM)
+    if workflow_memory is not None and workflow_id and WorkflowOutcome is not None:
+        try:
+            outcome = WorkflowOutcome(
+                workflow_id=workflow_id,
+                success=verification.hotswap_ready,
+                hotswap_ready=verification.hotswap_ready,
+                failures_count=len(verification.failures),
+                stage=verification.stage,
+                phase_hash=prepared.plan.phase_hash,
+                intent=intent,
+                target_file=plan_spec.get("target_file") or "",
+                outcome_summary=f"{'hotswap_ready' if verification.hotswap_ready else 'blocked'}: {verification.stage}",
+            )
+            workflow_memory.record_outcome(workflow_id, outcome, context_packets=context_packets_for_dream)
+        except Exception:
+            pass
+
     return transaction
 
 

@@ -76,7 +76,7 @@ class ResearchCandidate:
 class ResearchGateResult:
     """Final gate decision for a research query."""
     query: str
-    decision: str  # ALLOW_MUTATION | REFUSE_MUTATION | NEED_MORE_SOURCES
+    decision: str  # ALLOW_ARENA_STAGING | REFUSE_MUTATION | NEED_MORE_SOURCES
     candidates: list = field(default_factory=list)
     required_anchors: list = field(default_factory=list)
     final_score: float = 0.0
@@ -692,7 +692,7 @@ class AuraSkillWeaver:
 
         Assesses candidate research traces against the query, checks for contradictions
         in accepted sources, and makes a gating decision based on evidence quality and
-        target module availability. Returns ALLOW_MUTATION when sufficient evidence is
+        target module availability. Returns ALLOW_ARENA_STAGING when sufficient evidence is
         present with coherent findings and target modules identified, REFUSE_MUTATION
         when no candidates meet relevance thresholds, or NEED_MORE_SOURCES when
         evidence conflicts or target grounding is missing.
@@ -702,7 +702,7 @@ class AuraSkillWeaver:
             candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
 
         Returns:
-            ResearchGateResult containing the gating decision (ALLOW_MUTATION,
+            ResearchGateResult containing the gating decision (ALLOW_ARENA_STAGING,
             REFUSE_MUTATION, or NEED_MORE_SOURCES), evaluated candidates ranked by
             relevance, identified target modules, detected contradictions, and a
             mutation DAG when mutation is allowed.
@@ -778,7 +778,7 @@ class AuraSkillWeaver:
             dag = None
 
         else:
-            decision = "ALLOW_MUTATION"
+            decision = "ALLOW_ARENA_STAGING"
             reason = (str(len(accepted)) + " source(s) passed relevance gate with "
                       + str(len(target_modules)) + " target module(s) identified. "
                       "Sources contain direct anchors and match Aura modules.")
@@ -873,7 +873,7 @@ async def research_gate_intercept(query, candidates_data, repo_root=None):
     weaver = AuraSkillWeaver(repo_root=repo_root)
     result = weaver.evaluate_research_gate(query, candidates_data)
     report = weaver.format_gate_report(result)
-    allowed = result.decision == "ALLOW_MUTATION"
+    allowed = result.decision == "ALLOW_ARENA_STAGING"
     return allowed, report, result
 
 
