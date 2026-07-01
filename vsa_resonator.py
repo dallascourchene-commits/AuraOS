@@ -10,6 +10,7 @@ SYNOPSIS: This Python module provides high-performance numerical processing and 
 """
 # [AURA OPTIMIZED] - Bloat removed.
 
+import ast
 import hashlib
 
 import numpy as np
@@ -262,3 +263,48 @@ class VSAResonator:
                 return best_idx_a, best_idx_b
 
         return best_idx_a, best_idx_b
+
+    def _text_to_phasor(self, text: str) -> np.ndarray:
+        """Deterministic text -> complex phasor (same codec as aura_skillweaver.py)."""
+        if not text:
+            return np.ones(self.dim, dtype=np.complex64)
+        h = hashlib.blake2b(text.encode("utf-8"), digest_size=8).digest()
+        seed = int.from_bytes(h, byteorder="little")
+        rng = np.random.default_rng(seed)
+        phases = rng.uniform(-np.pi, np.pi, self.dim).astype(np.float32)
+        return np.exp(1j * phases)
+
+    def encode_ast_node(self, node: ast.AST) -> np.ndarray:
+        """Recursively encode an AST node as a permutation-bound hypervector."""
+        import ast
+        node_type = type(node).__name__
+        hv = self._text_to_phasor(node_type)
+        
+        # Bind children with positional rotation (roll)
+        for k, child in enumerate(ast.iter_child_nodes(node), start=1):
+            child_hv = self.encode_ast_node(child)
+            rotated = np.roll(child_hv, k)
+            hv = hv * rotated  # complex multiplication = phase binding
+            
+        norm = np.linalg.norm(hv)
+        if norm > 0:
+            hv = hv / norm
+        return hv
+
+    def encode_ast_file(self, source: str) -> np.ndarray:
+        """Encode entire source file AST as a single fixed-dimension hypervector."""
+        import ast
+        try:
+            tree = ast.parse(source)
+            return self.encode_ast_node(tree)
+        except SyntaxError:
+            return np.ones(self.dim, dtype=np.complex64)
+
+    def binarize_hv(self, hv: np.ndarray) -> np.ndarray:
+        """Project complex64 phasor to binary sign-based hypervector."""
+        return (np.real(hv) > 0).astype(np.uint8)
+
+    def hamming_resonance(self, a_bin: np.ndarray, b_bin: np.ndarray) -> float:
+        """High-speed resonance calculation via bitwise Hamming distance."""
+        return 1.0 - float(np.count_nonzero(a_bin != b_bin)) / len(a_bin)
+

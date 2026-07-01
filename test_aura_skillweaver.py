@@ -412,13 +412,14 @@ class TestNoDependency:
         allowed_modules = {
             # stdlib
             "hashlib", "json", "os", "re", "time", "pathlib",
-            "dataclasses", "typing",
+            "dataclasses", "typing", "ast",
             "__future__",
             # already in repo
             "numpy", "np",
             # aura modules (conditional imports within same repo)
             "aura_fst_routing",
             "aura_scientific_memory",
+            "aura_resonant_test_oracle",
         }
 
         for node in ast_mod.walk(tree):

@@ -54,6 +54,8 @@
             "Tetrahedron":  () => new THREE.TetrahedronGeometry(0.3),
             "Icosahedron":  () => new THREE.IcosahedronGeometry(0.3),
             "Octahedron":   () => new THREE.OctahedronGeometry(0.3),
+            "Pyramid":      () => new THREE.ConeGeometry(0.3, 0.5, 4),
+            "Cylinder":     () => new THREE.CylinderGeometry(0.2, 0.2, 0.5, 8),
         };
 
         function hexToColor(hex) {
@@ -173,6 +175,32 @@
                             mesh.material.opacity = Math.max(0.2, msg.state.luminance);
                         }
                     }
+
+                } else if (msg.type === "ARENA_CAPSULE_UPDATE") {
+                    // Update single node luminance live based on test/worker resonance
+                    const mesh = nodeRegistry[msg.capsule_id];
+                    if (mesh) {
+                        if (msg.state && msg.state.color) {
+                            mesh.material.color = hexToColor(msg.state.color);
+                        }
+                        if (msg.resonance !== undefined) {
+                            mesh.material.opacity = Math.max(0.2, msg.resonance);
+                            mesh.scale.setScalar(1.0 + msg.resonance * 0.5);
+                        }
+                        document.getElementById("resonance-info").innerText =
+                            "Capsule: " + msg.capsule_id + " | Resonance: " + msg.resonance.toFixed(3);
+                    }
+
+                } else if (msg.type === "ARENA_GLOW_COMPLETE") {
+                    // All capsules passed — make everything glow white briefly
+                    topologyGroup.children.forEach(function(child) {
+                        if (child.material) {
+                            child.material.color = hexToColor("#FFFFFF");
+                            child.material.opacity = 1.0;
+                            child.scale.setScalar(1.5);
+                        }
+                    });
+                    document.getElementById("thought").innerText = "Cognitive State: HOT-SWAP GATE UNLOCKED";
 
                 } else if (msg.type === "GATE_DECISION") {
                     // SkillWeaver research gate visual feedback

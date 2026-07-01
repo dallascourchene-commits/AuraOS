@@ -196,7 +196,7 @@ class TestPhasorCodec:
 
         allowed = {
             "__future__", "hashlib", "json", "os", "time",
-            "dataclasses", "typing", "numpy", "np",
+            "dataclasses", "typing", "numpy", "np", "ast", "vsa_resonator",
         }
 
         for node in ast_mod.walk(tree):

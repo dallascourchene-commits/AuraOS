@@ -3086,6 +3086,29 @@ class AuraSovereignNode:
         # Instead of guessing, we use a pre-compiled finite state routing layout matching her capabilities
         dag_payload = {"nodes": [], "edges": []}
         
+        # Route via FST resonance instead of keywords (GAP 6)
+        try:
+            from aura_fst_routing import FSTLexiconRoutingCore
+            lexc_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aura.lexc")
+            if os.path.exists(lexc_path):
+                fst = FSTLexiconRoutingCore.from_lexc(lexc_path, strict=False)
+                best_state = None
+                best_res = -1.0
+                for state_id in fst.states.keys():
+                    state_hv = fst._hash_to_hypervector(state_id.encode())
+                    res = float(np.abs(np.dot(goal_hv, np.conj(state_hv))) / len(goal_hv))
+                    if res > best_res:
+                        best_res = res
+                        best_state = state_id
+                
+                # Map resolved FST state to DAG payload
+                if best_state and ("compile" in best_state.lower() or "hardware" in best_state.lower()):
+                    clean_goal = "hardware " + clean_goal
+                elif best_state and ("network" in best_state.lower() or "mesh" in best_state.lower()):
+                    clean_goal = "mesh " + clean_goal
+        except Exception:
+            pass
+
         if any(kw in clean_goal for kw in ["hardware", "compile", "wasm", "simd", "optimize"]):
             dag_payload = {
                 "nodes": [
@@ -3172,10 +3195,65 @@ class AuraSovereignNode:
             # Bind the action to that exact continuous timestamp
             bound_concept = self.liquid_vsa.bind(time_point, action_phasor)
             composite_steps.append(bound_concept)
+
+            # GAP 7: Test execution feedback & WebSocket update (ARENA_CAPSULE_UPDATE)
+            exec_res = 1.0
+            if "test" in action_text.lower():
+                try:
+                    import subprocess
+                    test_run = subprocess.run(
+                        ["python", "-m", "unittest", "discover", "-s", "C:\\Users\\pjtra\\AuraOS", "-p", "test_resonant_oracle.py"],
+                        capture_output=True, text=True, timeout=5
+                    )
+                    exec_res = 1.0 if test_run.returncode == 0 else 0.4
+                    print(f"[+] [TEST RESONANCE] Action: {action_text} -> Return code: {test_run.returncode} -> Resonance: {exec_res}")
+                except Exception as ex:
+                    print(f"[-] [TEST RESONANCE] Run skipped: {ex}")
+                    exec_res = 0.5
+
+            if hasattr(self, '_ar_ws_server') and self._ar_ws_server is not None:
+                try:
+                    import json as _ws_json
+                    msg = _ws_json.dumps({
+                        "type": "ARENA_CAPSULE_UPDATE",
+                        "capsule_id": f"cap_{node_id}",
+                        "resonance": exec_res,
+                        "state": {
+                            "color": "#00FF88" if exec_res >= 0.85 else "#FF2200" if exec_res < 0.5 else "#FFAA00",
+                            "scale": 1.2,
+                            "luminance": exec_res
+                        }
+                    })
+                    for sid, session in self._ar_ws_server._sessions.items():
+                        try:
+                            # Use asyncio.create_task to send non-blocking
+                            import asyncio
+                            asyncio.create_task(session.websocket.send(msg))
+                        except Exception:
+                            pass
+                except Exception:
+                    pass
             
         # Compress the entire timeline into ONE complex array
         plan_vector = self.liquid_vsa.bundle(composite_steps)
         await self.execution_queue.put(plan_vector)
+
+        # Broadcast completion to visual cortex
+        if hasattr(self, '_ar_ws_server') and self._ar_ws_server is not None:
+            try:
+                import json as _ws_json
+                completion_msg = _ws_json.dumps({
+                    "type": "ARENA_GLOW_COMPLETE",
+                    "glow": True
+                })
+                for sid, session in self._ar_ws_server._sessions.items():
+                    try:
+                        import asyncio
+                        asyncio.create_task(session.websocket.send(completion_msg))
+                    except Exception:
+                        pass
+            except Exception:
+                pass
         
         # ======= INTEGRATION: PLAN MATRIX V-RAM OFFLOADING =======
         print("[AURA L2 V-RAM] Compressing long-term execution graph into state-chain footprint...")
@@ -6021,6 +6099,16 @@ async def main():
                     print("[-] Please specify a concept, e.g., '!research vector symbolic architecture'")
                     continue
 
+                import hashlib
+                from aura_qdkt import UnifiedQDKT
+                qdkt = UnifiedQDKT()
+                concept_hash = hashlib.sha256(concept.lower().strip().encode("utf-8")).hexdigest()[:12]
+                prior_refusal = qdkt.fast_path(f"refusal:{concept_hash}")
+                if prior_refusal and prior_refusal.get("confidence", 0) > 0.8:
+                    print(f"\n[QDKT] Fast-path refusal: {prior_refusal['action']}")
+                    SOVEREIGN_CORE.vocalize("Fast path refusal check blocked mutation.")
+                    continue
+
                 print(f"\n[*] Querying database for ingested papers resonant with: '{concept}'...")
                 
                 # 1. Load or reuse the index for the current DB snapshot.
@@ -6063,12 +6151,24 @@ async def main():
                     gate_candidates_with_blobs.append((r_id, text, None))
 
                 gate_allowed, gate_report, gate_result = await research_gate_intercept(
-                    concept, gate_candidates_with_blobs
+                    concept, gate_candidates_with_blobs, qdkt=qdkt
                 )
                 print(gate_report)
 
                 if not gate_allowed:
                     print(f"\n[SKILLWEAVER] Mutation blocked. {gate_result.decision}: {gate_result.reason[:200]}")
+                    qdkt.observe(
+                        event_type="gate_refusal",
+                        payload={
+                            "query": concept,
+                            "reason": gate_result.reason,
+                            "top_candidate_score": gate_result.final_score,
+                            "missing_anchors": gate_result.required_anchors
+                        },
+                        concept=f"refusal:{concept_hash}",
+                        confidence=1.0 - gate_result.final_score,
+                        rationale=gate_result.reason[:256],
+                    )
                     SOVEREIGN_CORE.vocalize("Research gate blocked mutation. Source relevance insufficient.")
                     # Broadcast refusal to AR topology
                     if hasattr(node, '_ar_ws_server') and node._ar_ws_server is not None:

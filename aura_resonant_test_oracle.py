@@ -27,6 +27,7 @@ This is Axiom A5 -- fractal self-organization. One algebra, every scale.
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
@@ -35,6 +36,7 @@ from dataclasses import dataclass, field
 from typing import Any, Optional
 
 import numpy as np
+from vsa_resonator import VSAResonator
 
 # ── Constants ──
 _DIM = 10000
@@ -411,3 +413,42 @@ if __name__ == "__main__":
     oracle.assert_type("wrong_type", dict, [1, 2, 3])
     
     print(oracle.format_report())
+
+
+def diagnose_structural_shadow(oracle_source: str, submission_source: str, dim: int = 10000) -> dict:
+    """
+    Compute AST-structural shadow between oracle and submission.
+    Returns a diagnosis dict the Worker Agent can act on directly.
+    """
+    resonator = VSAResonator(dim=dim)
+    oracle_hv = resonator.encode_ast_file(oracle_source)
+    submission_hv = resonator.encode_ast_file(submission_source)
+    vshadow = oracle_hv - submission_hv
+    
+    # Count node types in each to identify what's missing
+    def count_nodes(source):
+        try:
+            return {type(n).__name__: 0 for n in ast.walk(ast.parse(source))}
+        except SyntaxError:
+            return {}
+            
+    oracle_nodes = count_nodes(oracle_source)
+    sub_nodes = count_nodes(submission_source)
+    
+    missing = [k for k in oracle_nodes if k not in sub_nodes]
+    extra = [k for k in sub_nodes if k not in oracle_nodes]
+    
+    shadow_norm = float(np.linalg.norm(vshadow))
+    
+    return {
+        "shadow_norm": shadow_norm,
+        "structural_resonance": 1.0 - min(1.0, shadow_norm / 10.0),
+        "missing_node_types": missing,
+        "extra_node_types": extra,
+        "diagnosis": (
+            f"Missing structure: {missing[:3]}" if missing
+            else f"Extra structure: {extra[:3]}" if extra
+            else "Structure matches - semantic gap only"
+        )
+    }
+

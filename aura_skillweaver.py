@@ -96,6 +96,9 @@ class SubTask:
     task_type: str   # retrieve_sources | identify_mechanism | find_modules | gate_check | generate_plan
     status: str = "pending"  # pending | passed | failed | skipped
     result: str = ""
+    resonance: float = 0.0        # continuous N26 score
+    shadow_norm: float = 1.0      # ‖vshadow‖ — how much gap remains
+    depth: int = 0                # recursion depth (N30 bound ≤ 5)
 
 
 # ---------------------------------------------------------------------------
@@ -222,19 +225,31 @@ def score_domain_match(text, target_domains=None):
 
 
 def compute_final_relevance(vsa_resonance, lexical_anchor_coverage,
-                            title_abstract_score, domain_score):
+                             title_abstract_score, domain_score, qdkt=None, query_concept=""):
     """
-    Weighted composite relevance score.
-    0.40 * normalized_vsa_resonance
-    + 0.35 * lexical_anchor_coverage
-    + 0.15 * title_or_abstract_direct_match
-    + 0.10 * domain/category_match
+    Weighted composite relevance score, dynamically adapted from QDKT history if available.
     """
+    # Default weights
+    w = {"res": 0.40, "lex": 0.35, "ta": 0.15, "dom": 0.10}
+    
+    # Adapt from QDKT history if available
+    if qdkt and query_concept:
+        try:
+            concept_key = f"gate_weights:{query_concept[:20]}"
+            crystal = qdkt.fast_path(query_concept)
+            if not crystal:
+                crystal = qdkt.fast_path(concept_key)
+            if crystal and crystal.get("confidence", 0) > 0.75:
+                import json
+                w.update(json.loads(crystal.get("action", "{}")))
+        except Exception:
+            pass
+
     return (
-        0.40 * min(1.0, vsa_resonance)
-        + 0.35 * lexical_anchor_coverage
-        + 0.15 * title_abstract_score
-        + 0.10 * domain_score
+        w["res"] * min(1.0, vsa_resonance)
+        + w["lex"] * lexical_anchor_coverage
+        + w["ta"] * title_abstract_score
+        + w["dom"] * domain_score
     )
 
 
@@ -400,6 +415,9 @@ def decompose_query(query):
 
 def refine_decomposition(subtasks, candidates, target_modules):
     """One-iteration decomposition refinement based on retrieved evidence."""
+    from aura_resonant_test_oracle import ResonantTestOracle
+    oracle = ResonantTestOracle("decomposition_refinement")
+
     strong_sources = [c for c in candidates if c.accepted]
     weak_sources = [c for c in candidates if not c.accepted]
 
@@ -408,22 +426,27 @@ def refine_decomposition(subtasks, candidates, target_modules):
             if strong_sources:
                 task.status = "passed"
                 task.result = str(len(strong_sources)) + " source(s) accepted, " + str(len(weak_sources)) + " rejected"
+                task.resonance = 1.0
             else:
                 task.status = "failed"
                 task.result = "No sources passed relevance gate. " + str(len(weak_sources)) + " candidate(s) rejected."
+                task.resonance = 0.2
 
         elif task.task_type == "find_modules":
             if target_modules:
                 task.status = "passed"
                 task.result = "Found " + str(len(target_modules)) + " target module(s)"
+                task.resonance = 1.0
             else:
                 task.status = "failed"
                 task.result = "No matching Aura modules found via CODEMAP"
+                task.resonance = 0.1
 
         elif task.task_type == "gate_check":
             if strong_sources and target_modules:
                 task.status = "passed"
                 task.result = "Sources and targets both verified"
+                task.resonance = sum(c.concept_fit_score for c in strong_sources) / len(strong_sources)
             else:
                 task.status = "failed"
                 reasons = []
@@ -432,14 +455,20 @@ def refine_decomposition(subtasks, candidates, target_modules):
                 if not target_modules:
                     reasons.append("no target modules identified")
                 task.result = "Gate FAILED: " + "; ".join(reasons)
+                task.resonance = 0.3
 
         elif task.task_type == "generate_plan":
             gate_tasks = [t for t in subtasks if t.task_type in ("retrieve_sources", "find_modules", "gate_check")]
             if all(t.status == "passed" for t in gate_tasks):
                 task.status = "passed"
+                task.resonance = sum(t.resonance for t in gate_tasks) / len(gate_tasks)
             else:
                 task.status = "skipped"
                 task.result = "Mutation plan suppressed: prerequisite gates failed"
+                task.resonance = 0.0
+
+        oracle.assert_equal(f"task_{task.id}_status", "passed", task.status)
+        task.shadow_norm = 1.0 - task.resonance
 
     return subtasks
 
@@ -453,21 +482,21 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
     return {
         "query": query,
         "stages": [
-            {"stage": 1, "action": "retrieve_source_traces",
+            {"stage": 1, "action": "retrieve_source_traces", "depends_on": [],
              "sources": [{"trace_id": c.trace_id, "title": c.title,
                           "score": c.concept_fit_score} for c in accepted_candidates]},
-            {"stage": 2, "action": "validate_source_relevance", "status": "PASSED"},
-            {"stage": 3, "action": "retrieve_target_modules",
+            {"stage": 2, "action": "validate_source_relevance", "status": "PASSED", "depends_on": [1]},
+            {"stage": 3, "action": "retrieve_target_modules", "depends_on": [2],
              "target_files": target_modules, "target_symbols": []},
-            {"stage": 4, "action": "generate_minimal_patch",
+            {"stage": 4, "action": "generate_minimal_patch", "depends_on": [2],
              "dependencies": [], "new_third_party_deps": False},
-            {"stage": 5, "action": "validate_security_and_roles",
+            {"stage": 5, "action": "validate_security_and_roles", "depends_on": [3, 4],
              "checks": [".aura/SECURITY.md", ".aura/ROLES.md"]},
-            {"stage": 5.5, "action": "hivp_integrity_verification",
+            {"stage": 5.5, "action": "hivp_integrity_verification", "depends_on": [5],
              "description": "O(1) holographic codebase attestation before/after mutation"},
-            {"stage": 6, "action": "run_tests", "test_file": "test_aura_functions.py"},
-            {"stage": 7, "action": "refresh_codemap", "files_to_refresh": target_modules},
-            {"stage": 8, "action": "stage_mutation_report",
+            {"stage": 6, "action": "run_tests", "depends_on": [5.5], "test_file": "test_aura_functions.py"},
+            {"stage": 7, "action": "refresh_codemap", "depends_on": [5.5], "files_to_refresh": target_modules},
+            {"stage": 8, "action": "stage_mutation_report", "depends_on": [6, 7],
              "thermal_risk": "LOW",
              "rollback_path": "git checkout -- " + " ".join(target_modules)},
         ],
@@ -529,7 +558,7 @@ class AuraSkillWeaver:
         return float(np.abs(np.dot(a, np.conj(b))) / self.dim)
 
     def evaluate_candidate(self, trace_id, content, query, anchors,
-                           query_phasor, trace_phasor=None):
+                           query_phasor, trace_phasor=None, qdkt=None):
         """Evaluate a single research trace against relevance criteria."""
         title = ""
         abstract = content
@@ -554,7 +583,7 @@ class AuraSkillWeaver:
         lex_score = score_lexical_anchors(full_text, anchors)
         ta_score = score_title_abstract_match(title, abstract, query)
         dom_score = score_domain_match(full_text)
-        concept_fit = compute_final_relevance(resonance, lex_score, ta_score, dom_score)
+        concept_fit = compute_final_relevance(resonance, lex_score, ta_score, dom_score, qdkt=qdkt, query_concept=query)
 
         accepted = True
         rejection_reason = None
@@ -583,7 +612,7 @@ class AuraSkillWeaver:
             rejection_reason=rejection_reason,
         )
 
-    def evaluate_research_gate(self, query, candidates_data):
+    def evaluate_research_gate(self, query, candidates_data, qdkt=None):
         """
         Evaluate research evidence and determine if code mutation should be allowed.
         
@@ -597,6 +626,7 @@ class AuraSkillWeaver:
         Parameters:
             query: The user research query string.
             candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
+            qdkt: Optional UnifiedQDKT instance.
         
         Returns:
             ResearchGateResult containing the gating decision (ALLOW_MUTATION,
@@ -626,6 +656,7 @@ class AuraSkillWeaver:
                 anchors=anchors,
                 query_phasor=query_phasor,
                 trace_phasor=trace_phasor,
+                qdkt=qdkt,
             )
             evaluated.append(candidate)
 
@@ -753,7 +784,7 @@ class AuraSkillWeaver:
 # Integration helper: drop-in for the !research path in aura_node.py
 # ---------------------------------------------------------------------------
 
-async def research_gate_intercept(query, candidates_data, repo_root=None):
+async def research_gate_intercept(query, candidates_data, repo_root=None, qdkt=None):
     """
     Drop-in intercept for the !research pipeline.
 
@@ -763,12 +794,13 @@ async def research_gate_intercept(query, candidates_data, repo_root=None):
         query: research query string
         candidates_data: [(trace_id, content, vector_blob), ...]
         repo_root: path to repo root (defaults to this file directory)
+        qdkt: Optional UnifiedQDKT instance
 
     Returns:
         (allowed: bool, report: str, result: ResearchGateResult)
     """
     weaver = AuraSkillWeaver(repo_root=repo_root)
-    result = weaver.evaluate_research_gate(query, candidates_data)
+    result = weaver.evaluate_research_gate(query, candidates_data, qdkt=qdkt)
     report = weaver.format_gate_report(result)
     allowed = result.decision == "ALLOW_MUTATION"
     return allowed, report, result

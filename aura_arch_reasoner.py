@@ -163,20 +163,15 @@ class AuraArchReasoner:
         
         resonance, tension = self.score_structural_resonance()
         
-        # Step 2: Generate K strategy vectors representing different refactoring approaches
-        # Each strategy encodes a different architectural transformation
-        planner_output = []
+        # Step 2: Generate K strategy vectors representing diverse refactoring approaches
+        # Enforce orthogonal strategy seeding via QR decomposition to guarantee maximum diversity (GAP 1)
         rng = np.random.default_rng(seed=0xA1A)
+        raw_matrix = rng.normal(loc=tension, scale=0.5, size=(method_dim, K))
+        Q, _ = np.linalg.qr(raw_matrix)
         
+        planner_output = []
         for k in range(K):
-            # Create diverse strategy vectors based on architectural metrics
-            strategy_vec = rng.normal(
-                loc=tension,  # Center around current tension
-                scale=0.5,     # Variance in refactoring approaches
-                size=method_dim,
-            ).astype(np.float64)
-            # Normalize to unit sphere for stability
-            strategy_vec = strategy_vec / (np.linalg.norm(strategy_vec) + 1e-9)
+            strategy_vec = Q[:, k].astype(np.float64)
             planner_output.append(strategy_vec)
         
         # Step 3: Evaluate strategies via coordinated solver

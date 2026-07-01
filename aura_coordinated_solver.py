@@ -124,13 +124,27 @@ class CoordinatedSolver:
 
     async def coordinated_pass_k(self, planner_output: List[np.ndarray]) -> Dict:
         """Joint optimization of strategy selection and execution"""
+        dynamic_k = self.K
+        if self.node is not None:
+            try:
+                temp = 42.0
+                import os
+                if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        temp = float(f.read().strip()) / 1000.0
+                if temp > 39.0:
+                    dynamic_k = max(2, self.K // 2)
+                    print(f"[*] [DYNAMIC WORKER SIZING] CPU hot ({temp:.1f}C). Throttling pool: {self.K} -> {dynamic_k}")
+            except Exception:
+                pass
+
         tasks = []
         async with self.lock:  # Non-blocking lock acquisition
-            for idx, method in enumerate(planner_output[:self.K]):
+            for idx, method in enumerate(planner_output[:dynamic_k]):
                 tasks.append(self._process_method(idx, method))
 
         results = await asyncio.gather(*tasks)
-        top_methods, top_rewards = self.strategy_buffer.get_top_k(self.K)
+        top_methods, top_rewards = self.strategy_buffer.get_top_k(dynamic_k)
 
         return {
             "success": any(r[0] for r in results),
