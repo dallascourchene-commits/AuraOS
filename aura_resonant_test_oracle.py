@@ -451,4 +451,3 @@ def diagnose_structural_shadow(oracle_source: str, submission_source: str, dim: 
             else "Structure matches - semantic gap only"
         )
     }
-

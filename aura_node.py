@@ -3202,7 +3202,7 @@ class AuraSovereignNode:
                 try:
                     import subprocess
                     test_run = subprocess.run(
-                        ["python", "-m", "unittest", "discover", "-s", "C:\\Users\\pjtra\\AuraOS", "-p", "test_resonant_oracle.py"],
+                        ["python", "-m", "unittest", "discover", "-s", os.path.dirname(os.path.abspath(__file__)), "-p", "test_resonant_oracle.py"],
                         capture_output=True, text=True, timeout=5
                     )
                     exec_res = 1.0 if test_run.returncode == 0 else 0.4

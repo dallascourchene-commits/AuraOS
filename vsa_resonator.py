@@ -276,7 +276,6 @@ class VSAResonator:
 
     def encode_ast_node(self, node: ast.AST) -> np.ndarray:
         """Recursively encode an AST node as a permutation-bound hypervector."""
-        import ast
         node_type = type(node).__name__
         hv = self._text_to_phasor(node_type)
         
@@ -293,7 +292,6 @@ class VSAResonator:
 
     def encode_ast_file(self, source: str) -> np.ndarray:
         """Encode entire source file AST as a single fixed-dimension hypervector."""
-        import ast
         try:
             tree = ast.parse(source)
             return self.encode_ast_node(tree)
@@ -307,4 +305,3 @@ class VSAResonator:
     def hamming_resonance(self, a_bin: np.ndarray, b_bin: np.ndarray) -> float:
         """High-speed resonance calculation via bitwise Hamming distance."""
         return 1.0 - float(np.count_nonzero(a_bin != b_bin)) / len(a_bin)
-
