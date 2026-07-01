@@ -16,6 +16,8 @@ from __future__ import annotations
 import ast
 import re
 from typing import NamedTuple
+import numpy as np
+from vsa_resonator import VSAResonator
 
 # ---------------------------------------------------------------------------
 # Prohibited patterns (namespace / side-channel risks on Termux/Android)
@@ -186,15 +188,54 @@ def check_banned_calls(source_code: str) -> ShieldReport:
     return ShieldReport(True, "BANNED_CALLS_OK")
 
 
+def check_topology_invariants(
+    source_code: str,
+    old_source: str = "",
+    topology_graph: dict = None,
+    module_name: str = ""
+) -> ShieldReport:
+    """
+    Gate 5 — structural topology invariant preservation.
+    """
+    if not old_source:
+        return ShieldReport(True, "SKIP — no baseline source provided")
+    
+    resonator = VSAResonator()
+    old_hv = resonator.encode_ast_file(old_source)
+    new_hv = resonator.encode_ast_file(source_code)
+    
+    old_bin = resonator.binarize_hv(old_hv)
+    new_bin = resonator.binarize_hv(new_hv)
+    
+    structural_drift = 1.0 - resonator.hamming_resonance(old_bin, new_bin)
+    
+    if structural_drift > 0.30:  # >30% structural change
+        if topology_graph and module_name:
+            dependents = [e for e in topology_graph.get("edges", [])
+                          if e.get("target", "").startswith(module_name)]
+            if dependents:
+                return ShieldReport(
+                    False,
+                    f"TOPOLOGY_FRACTURE: {structural_drift:.1%} structural drift "
+                    f"detected. {len(dependents)} dependent module(s) at risk: "
+                    f"{[e.get('source', '')[:30] for e in dependents[:3]]}"
+                )
+    return ShieldReport(True, f"TOPOLOGY_INVARIANT_OK (drift={structural_drift:.1%})")
+
+
 # ---------------------------------------------------------------------------
 # Primary public entry point
 # ---------------------------------------------------------------------------
 
-def verify_structural_truth(source_code: str) -> bool:
+def verify_structural_truth(
+    source_code: str,
+    old_source: str = "",
+    topology_graph: dict = None,
+    module_name: str = ""
+) -> bool:
     """
-    Run all four shield gates in sequence.  Returns ``True`` only when
-    every gate passes.  Prints a rejection rationale to stdout on failure
-    so the aura_heal agentic loop can route it back into the LLM prompt.
+    Run all structural shield gates in sequence. Returns ``True`` only when
+    every gate passes.
     """
     gates = [
         check_syntax,
@@ -208,10 +249,22 @@ def verify_structural_truth(source_code: str) -> bool:
         if not report.passed:
             print(f"[🛡️ SYMBOLIC SHIELD] REJECTED — {report.reason}")
             return False
+            
+    # Run topology check
+    topo_report = check_topology_invariants(source_code, old_source, topology_graph, module_name)
+    if not topo_report.passed:
+        print(f"[🛡️ SYMBOLIC SHIELD] REJECTED — {topo_report.reason}")
+        return False
+        
     return True
 
 
-def full_report(source_code: str) -> list[ShieldReport]:
+def full_report(
+    source_code: str,
+    old_source: str = "",
+    topology_graph: dict = None,
+    module_name: str = ""
+) -> list[ShieldReport]:
     """Return the result of every gate (for diagnostic/logging use)."""
     return [
         check_syntax(source_code),
@@ -219,4 +272,6 @@ def full_report(source_code: str) -> list[ShieldReport]:
         check_import_safety(source_code),
         check_memory_safety(source_code),
         check_banned_calls(source_code),
+        check_topology_invariants(source_code, old_source, topology_graph, module_name),
     ]
+

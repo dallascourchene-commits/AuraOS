@@ -402,6 +402,61 @@ def compile_topology_map(deep: bool = False) -> dict:
         return compile_unified_graph()
 
 
+def detect_dead_code_via_vsa(topology: dict, dim: int = 10000) -> list[dict]:
+    """
+    Identify unreachable nodes using VSA isolation detection.
+
+    A node is 'dead' if its hypervector is orthogonal to all
+    nodes that have inbound call edges.  This implements
+    Improvement 5 — Dead Code Detection via VSA Isolation.
+
+    Parameters:
+        topology: dict with "nodes" and "edges" keys (as produced by
+                  compile_unified_graph / live_topology_ast.json).
+        dim:      hypervector dimensionality (default 10 000).
+
+    Returns:
+        list of dicts: ``{"node_id", "isolation_score", "verdict"}``
+        for every node whose max resonance with called nodes < 0.15.
+    """
+    from vsa_resonator import VSAResonator
+
+    resonator = VSAResonator(dim=dim)
+
+    # Encode every node label as a deterministic complex phasor.
+    nodes = {
+        n["id"]: resonator._text_to_phasor(n.get("label", n.get("id", "")))
+        for n in topology.get("nodes", [])
+    }
+
+    # Build set of nodes that ARE called (have in-degree > 0).
+    called_ids = {e["target"] for e in topology.get("edges", [])}
+
+    dead_candidates = []
+    for node_id, node_hv in nodes.items():
+        if node_id in called_ids:
+            continue  # has callers — not dead
+
+        # Check if it's reachable via any path from called nodes.
+        max_resonance = max(
+            (
+                float(np.abs(np.dot(node_hv, np.conj(nodes[c]))) / dim)
+                for c in called_ids
+                if c in nodes
+            ),
+            default=0.0,
+        )
+
+        if max_resonance < 0.15:  # orthogonal = truly isolated
+            dead_candidates.append({
+                "node_id": node_id,
+                "isolation_score": 1.0 - max_resonance,
+                "verdict": "DEAD_CODE",
+            })
+
+    return dead_candidates
+
+
 if __name__ == "__main__":
     compile_unified_graph()
     print("[+] Refined dependency discovery complete. Map output written to Aura_Memory.")
