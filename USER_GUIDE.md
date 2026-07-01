@@ -65,6 +65,10 @@ pip install -r requirements.txt
 # 4. Optional: Build aria2c + wasmtime native accelerators
 bash build_aura.sh
 
+# 4b. Optional: build the Rust context-crush accelerator
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core
+
 # 5. Generate the genesis block (IP minting)
 python3 mint_genesis.py
 
@@ -89,13 +93,36 @@ Create `aura_secrets.json`:
 ```json
 {
   "GEMINI_API_KEY": "your-gemini-key",
+  "OPEN_ROUTER_API_KEY": "your-openrouter-key",
   "MISTRAL_API_KEY": "your-mistral-key",
   "GROQ_API_KEY": "your-groq-key",
-  "GITHUB_TOKEN": "your-github-token"
+  "GITHUB_TOKEN": "your-github-token",
+  "AURA_FUSION_PANEL": [
+    {
+      "name": "thinker_openrouter",
+      "role": "THINKER",
+      "provider": "openrouter",
+      "base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key_name": "OPEN_ROUTER_API_KEY",
+      "model": "anthropic/claude-sonnet-4.5",
+      "max_tokens": 900
+    }
+  ],
+  "AURA_FUSION_JUDGE": {
+    "name": "judge_openrouter",
+    "role": "JUDGE",
+    "provider": "openrouter",
+    "base_url": "https://openrouter.ai/api/v1/chat/completions",
+    "api_key_name": "OPEN_ROUTER_API_KEY",
+    "model": "openai/gpt-4o-mini",
+    "max_tokens": 1200
+  }
 }
 ```
 
-AuraOS works offline with the local LLM server if no cloud keys are provided.
+AuraOS works offline for deterministic substrate functions. Native AuraFusion
+uses only explicitly configured external provider APIs and can be dry-run with
+`python3 aura_fusion.py --mock "Compare these approaches"`.
 
 ---
 
@@ -130,7 +157,7 @@ AuraOS works offline with the local LLM server if no cloud keys are provided.
 ### Key Concepts
 
 - **Polysynthetic**: Input is decomposed into 6 morphemic slots (SPATIAL, ASPECT, CLASS, SUBJECT, VOICE, STEM) before routing
-- **ST3GG**: Steganographic glyph system — thermal/moral/friction categorization embedded in all operations
+- **ST3GG**: Holographic glyph/stamp system — thermal/moral/friction categorization plus visible DASH recall pointers. Aura's egress-memory path uses auditable ST3GG capsules and strips hidden tokenizer carriers before outbound calls.
 - **DIKWP**: Data → Information → Knowledge → Wisdom → Purpose — cognitive hierarchy
 - **PWFST**: Ojibwe governance principles enforced across all modules
 - **Hyperdimensional (HDC)**: 10,000-bit binary vectors provide noise-tolerant associative memory
@@ -139,54 +166,279 @@ AuraOS works offline with the local LLM server if no cloud keys are provided.
 
 ## 4. REPL Commands Reference
 
-### Topology & Analysis
+Type commands at the `[Dallas] >` prompt after `python3 aura_node.py` starts.
+Run `!settings`, `!manifest`, or `!help` at any time for the live manifest.
+The live manifest is generated from `aura_node.py` and includes a bottom
+function index from `[AURA_MASTER_KEY]` headers. For implementation lookup,
+read `.aura/CODEMAP.md` first, then use `!ai_route <task>` to find the
+smallest useful file/symbol path.
 
-| Command | Description |
-|---------|-------------|
-| `!topology` | Standard AST scan → `Aura_Memory/live_topology_ast.json` |
-| `!topology deep` | Deep scan with hub diagnostics, isolated nodes, dangling edges |
-| `!catalyze` | Validate pending patches against the live topology graph |
-| `!evolve_reasoning` | Crystallise topology into hypertruth manifold |
-| `!meta_analyze` | Meta-learning crystallization audit |
-| `!meta_reason` | Recursive VSA truth resonance verification (triggers recalibration if < 0.85) |
-| `!reason` | Neuro-symbolic exhaustive omnipath sweep |
-| `!fast_path <query>` | O(1) associative intent lookup in hypervector matrix |
+### Navigation, Topology, and Code Search
 
-### Self-Modification
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `!settings` / `!manifest` / `!help` | You need the live command map or bottom function index. | Prints command usage, polysynthetic slots, module metadata, and a function-to-module quick index. |
+| `!ai_route <task>` | You know the job but not the file to open. | Queries `aura_ai_router.py` for CODEMAP-grounded file and symbol candidates. |
+| `!ai_router_regen` | CODEMAP/topology changed after edits. | Rebuilds the AI router index from current topology data. |
+| `!topology` / `!scan_topology` | You need the current code graph before analysis, AR viewing, or patch validation. | Scans Python AST/import/resource edges, augments the graph with Laplacian eigenmap coordinates and luminance health fields, and writes `Aura_Memory/live_topology_ast.json`. |
+| `!topology deep` / `!topology_deep` | You need hub diagnostics or fracture clues. | Runs the deeper topology builder and reports isolated nodes, dead ends, dangling edges, top hubs, spectral sparsity, cycle warnings, and global structural health. |
+| `!catalyze` | A staged patch exists and needs structural proof. | Reads `Aura_Staging/pending_patches.json` plus live topology and validates proposed patches with mutation guards. |
+| `!simulate <target>` | You want to test a route through the live topology. | Sends a target path into the SPVM/Rust simulator and reports bridges, fractures, and coherence drops. |
+| `!fast_path <query>` | You want a very fast associative intent lookup. | Performs O(1)-style hypervector lookup in the RAM matrix and stores the query as a future probe. |
+| `!cognitive_search` | You need semantic search over holographic DKT logs. | Builds a 10,000-D query vector and runs the WASM cognitive search module over recent log history. |
+| `!attention` | You want the current thought vector kept in working memory. | Stores the active vector in the dual-attention buffer and reports occupancy/link count. |
 
-| Command | Description |
-|---------|-------------|
-| `!self_reflect` | Deep VSA resonance analysis + cloud architect diagnosis |
-| `!self_optimize` | Audit friction → generate optimized patch → stage in Aura_Staging/ |
-| `!stage` | Preview the currently staged patch |
-| `!stage_merge` | Merge staged patch after safety sentinel + human alignment scoring |
-| `!stage_purge` | Reject staged patch, log as negative anti-pattern |
-| `!approve <method>` | Graft a function from `aura_incubator.py` into `aura_node.py` |
-| `!saturn` | Full NESY curriculum training cycle |
-| `!saturn_heal` | Auto-repair logic fractures from NESY state log |
-| `architect <intent>` | Generate a Python tool for your intent using cloud LLM + topology |
+### Reasoning and Verification
 
-### LLM Routing
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `!reason` | You need a full neuro-symbolic consistency sweep. | Runs the NESY omnipath verifier and prints the symbolic logic result. |
+| `!coordinated_reason <query>` | A hard query needs parallel Pass@K reasoning. | Runs four coordinated strategies, then reports success, throughput, latency, top rewards, and buffer health. |
+| `!strategy_buffer_stats` | You need solver readiness/quality metrics. | Prints strategy capacity, valid entries, mean reward, best reward, and active-strategy state. |
+| `!evolve_reasoning` | The topology should become a stronger reasoning manifold. | Crystallizes nodes into a hypertruth manifold and reports whether constraints held. |
+| `!meta_analyze` | You want a structural integrity audit of the active manifold. | Runs meta-learning crystallization with constraints and prints the integrity result. |
+| `!meta_reason` | Truth resonance may be unstable. | Verifies recursive VSA resonance; if resonance is below 0.85, triggers symbolic recalibration. |
+| `!saturn` | You need the full NESY curriculum/training cycle. | Runs the exhaustive omnipath sweep and records state for later healing. |
+| `!saturn_heal` | Saturn/NESY logs show fractures or boot drift was detected. | Reads `Aura_Memory/nesy_sat_reasoner_state.json`, applies non-destructive repair stubs where needed, and regenerates topology. |
+| `!benchmark` | You need device/runtime health. | Reports CPU temperature, RAM, CPU count, Python/NumPy, disk, 10K-dot latency, LLM server, AR clients, and memory-palace status. |
+| `!system_audit` / `!audit` | You need an ecosystem audit. | Runs the Layer 5 auditor and prints the unified health/report output. |
+| `!test_airlock` | You need to test isolated WASM/tensor execution. | Runs `quantum_tensor_sandbox`; offloads to a cooler mesh peer if one is available. |
 
-| Command | Description |
-|---------|-------------|
-| `!calibrate` | Run full (provider × style × mode) benchmark matrix |
-| `!route <task> [--model M]` | Auto-route to optimal model; `--model` forces priority |
-| `!savings` | Show cumulative token + cost savings per provider |
-| `!converse <text>` | Polysynthetic conversation (compress → LLM → interpret) |
-| `!contingency_spawn` | Thermal spike handling + cold-cache pressure report |
+### Self-Modification and Staging
 
-### Knowledge & Research
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `architect <intent>` / `code <intent>` | You want Aura to plan and stage a bounded refactor. | Runs the live Architect bridge: local/free plan fallback, multiple premium plan candidates, cheap Shadow critics, premium Judge selection, bounded Act workers, Refactor Arena staging projected into the Liquid Planning Arena substrate, temp-workspace patch application, topology/world-state delta capture, verifier-gated hot-swap/rollback capsules, and a JSONL ledger row. It stages the transaction in `Aura_Staging/architect_live_transaction.json` instead of writing model output to `aura_incubator.py`. |
+| `!self_reflect` | You want introspection before changing code. | Runs VSA resonance analysis, WASM/offload metrics, and cloud architect diagnosis. |
+| `!self_optimize` / `!optimize` | You want a staged optimization patch. | Audits runtime friction, asks the selected model for one optimized patch, sanitizes it, and writes `Aura_Staging/pending_patches.json`. |
+| `!stage` / `!stage_review` / `!review` | You need to inspect pending code before merge. | For live Architect transactions, prints status, selected council candidate, Judge path, hot-swap phase hash, topology-delta stats, staged patches, and blockers from `Aura_Staging/architect_live_transaction.json`. Legacy pending patches still show the older timestamp, target, confidence, and proposed-code preview. |
+| `!stage_merge` | You approve staged work. | For live Architect transactions, records human alignment and promotes the verified hot-swap capsule into `Aura_Staging/approved_hotswap_capsule.json` without production writes. Legacy pending patches still use the older incubator quarantine path. |
+| `!stage_purge` | The staged patch is wrong or unsafe. | Deletes the pending patch and logs the rejection as an anti-pattern for future routing. |
+| `!approve <method>` | A function in `aura_incubator.py` should become live. | Grafts the named function into `aura_node.py` through AST surgery. |
+| `!rollback <root>` | You need to neutralize a bad cognitive trajectory. | Applies phase-conjugate rollback to the supplied Q-SYS root token. |
 
-| Command | Description |
-|---------|-------------|
-| `!forage <topic>` | Crawl arXiv for papers on topic |
-| `!backtrack` | Chronological arXiv backlog crawl (20 papers) |
-| `!research <concept>` | Query ingested papers → **SkillWeaver Relevance Gate** → synthesize Python helper (blocks weak matches) |
-| `!curiosity_tree <seed>` | DFS over GitHub + arXiv from seed concept |
-| `!forage_on` | Enable background foraging daemons |
-| `!forage_off` | Disable foraging to conserve CPU/RAM |
+### LLM Routing and Conversation
 
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `!calibrate` | Provider keys changed or routing quality is stale. | Runs the provider x packet-style x output-mode benchmark matrix and updates the calibration ledger. |
+| `!route <task> [--model M]` | You want Aura to pick the cheapest/highest-fit model path. | Sends the task through `aura_router.py`; `--model` forces priority while preserving fallback behavior. |
+| `!fusion <task>` | A task benefits from panel deliberation. | Runs AuraFusion: SkillWeaver gate, compact capsule, Thinker/Worker/Verifier panel, and judge synthesis. |
+| `!savings` | You want token/cost accounting. | Reads router logs and `aura_savings.db`, prints provider/aspect totals, and refreshes `Aura_Memory/aura_savings_total.json`. |
+| `!converse <text>` | You want normal conversation with compact memory logging. | Compresses input, calls the configured external/local route, interprets the compact reply, and learns style over time. |
+| `!contingency_spawn` | The device feels hot, cache pressure is high, or staging state is unclear. | Reports thermal load, cache evictions, staged-patch status, and applies safe immediate mitigations. |
+
+### Universal LLM Savings Ledger
+
+Every external LLM call that passes through Aura's API helpers is logged to
+`Aura_Memory/aura_savings.db`, including `!route`, `!converse`, AuraFusion
+panel/judge calls, direct Gemini/OpenAI-compatible helper calls, and the
+Anthropic-first router path. When a raw/no-Aura baseline is known, the row
+records token and dollar savings; when no baseline is known, the row still
+records spend, latency, provider, model, and a zero-savings baseline so metrics
+remain honest.
+
+Start the live dashboard:
+
+```bash
+python3 aura_savings_dashboard.py
+```
+
+Then open `http://localhost:8700` to watch rolling call logs, token savings,
+cost savings, latency, provider breakdowns, and recent-call feed updates.
+
+### Native AuraFusion
+
+AuraFusion is Aura's internal panel-plus-judge deliberation path. It does not
+depend on OpenRouter's hosted Fusion router as the primary solution. Instead it
+uses Aura's own compact task capsule, CODEMAP epoch, SkillWeaver mutation gate,
+user-owned provider keys, configured model pool, and a compact spectral topology
+snapshot when a target file or symbol is known. The snapshot includes target
+coordinates, immediate graph neighbors, luminance health, spectral sparsity, and
+cycle counts so panel agents stay close to the relevant code geometry instead of
+inventing distant paths.
+
+`aura_architect_loop.py` adds the deterministic Plan/Act shell around that
+deliberation path. It turns an Architect objective into a Fractal Plan Capsule,
+pre-shards the work into bounded Act Capsules, grounds each capsule against
+CODEMAP files and symbols, emits Shadow findings for fake files, fake symbols,
+missing nearby tests, or oversized work packets, and then creates a Refactor
+Arena transaction. Builder and Incubator layers should consume that arena only
+after the Shadow gate permits it. The complete transaction path can then stage
+owned Builder diffs through `stage_arena_patch`, verify boundaries, conflicts,
+working-tree files, and tests through `verify_refactor_arena`, produce a
+hot-swap capsule with rollback digests, and append an Architect JSONL ledger row
+with `ArchitectFusionLoop.execute`.
+
+`aura_liquid_planning_arena.py` generalizes that Refactor Arena into a bounded
+Liquid Planning Arena. In code mode, the current files/symbols/diffs/tests flow
+is preserved and projected into domain-neutral Action Capsules, first-class
+BoundaryContract placeholders, scoped agent leases, and a shared action queue.
+The invariant is the same for future domains: models propose, the Arena stages,
+Shadow critiques, Judge decides, verifier proves, human approves, and the ledger
+remembers. The initial adapters define code, civic, and travel domain objects so
+later planners can stage civic interventions or travel options without pretending
+those domains are code patches.
+
+`aura_dream_retrieval.py` adds a DREAM-lite retrieval usefulness layer inspired
+by Dense Retrieval Embeddings via Autoregressive Modeling. Aura does not replace
+VSA, ST3GG, CODEMAP, paper memory, or sidecars with DREAM. Instead, normal
+retrieval still proposes candidates, and DREAM-lite reranks them by whether they
+help the downstream task, verifier, or Arena outcome. Candidate scores are
+written to `Aura_Memory/dream_retrieval_ledger.jsonl` when recording is enabled,
+and QDKT stores the same signal in `qdkt_retrieval_usefulness`. Architect
+grounding attaches DREAM scores to CODEMAP files, symbols, nearby tests, and
+topology neighbors; ST3GG recall can rerank already-resolved memory records; the
+Travel Arena ranks VSA pointers while exact prices remain exclusively in the
+sidecar and verifier path.
+
+Aura Travel is wired as a planner-verifier subsystem, not a chatbot price source.
+`travel_scraper_core.py` ingests local Option B scraper output, saves immutable
+raw snapshots under `Aura_Memory/travel_sidecar/raw_snapshots`, and splits data
+into deterministic truth segments and semantic VSA segments. Exact prices, dates,
+currencies, taxes, occupancy, source URLs, parser versions, and freshness live in
+`travel_price_sidecar.py` SQLite sidecar rows using integer minor money units.
+`travel_vsa_pointer_index.py` stores only semantic addresses and sidecar keys;
+`travel_package_arena.py` resolves those pointers back to exact price rows and
+`travel_price_verifier.py` rejects stale, missing, unverified, or vector-only
+prices before any package can be displayed. The rule is: VSA retrieves meaning,
+sidecar retrieves truth, Arena composes packages, verifier blocks stale or
+invented prices, and a human approves booking/payment boundaries.
+
+`aura_live_architect.py` is the live command bridge for that substrate. The REPL
+`architect <intent>` and `code <intent>` paths now call it instead of writing
+cloud output to `aura_incubator.py`. The bridge starts with a local CODEMAP plan
+candidate, escalates to multiple premium planner candidates when the budget route
+allows it, runs cheap Shadow critic lanes across each candidate, and calls the
+premium Judge to select the safest plan and review the staged patch bundle. It
+then asks bounded Act workers for unified diffs, stages those diffs in the
+Refactor Arena, copies the repo into a temporary workspace, applies the staged
+patches there, records AST topology plus generic world-state deltas for affected
+Python files, runs local verification commands, and writes
+`Aura_Staging/architect_live_transaction.json` plus the Architect ledger record.
+The existing `!stage` / `!stage_merge` UX now reviews and approves that verified
+hot-swap capsule without production writes. `aura_incubator.py` remains only as a
+valid legacy quarantine stub.
+
+Each task capsule also carries a compact single-seed context-lift profile from
+`aura_single_seed_lift.py`. This borrows the transferable idea from
+arXiv:2606.20633: choose one seed, cache its inverse/profile once, and dispatch
+trace metadata to the consumers that need it. In AuraFusion this gives panel
+agents a bounded context anchor for the task/topology capsule without expanding
+the prompt into a long narrative.
+
+AuraFusion and direct OpenAI-compatible calls also pass mutable user/tool
+payloads through `aura_context_crusher.py`. The system-prompt prefix is never
+compressed; Aura records a stable prefix hash and volatile-content findings so
+cache drift is observable. Hidden tokenizer-survival carriers are stripped at
+the outbound boundary, including when context crushing is disabled. Large JSON,
+logs, search results, diffs, code, or plain text are compressed locally and
+their originals are stored in `Aura_Memory/context_crush_ledger.jsonl` behind
+`AURA_CCR` retrieval markers plus visible `ST3GG-L2` recall pointers.
+
+Run it directly:
+
+```bash
+python3 aura_fusion.py "Compare router and SkillWeaver integration risks"
+python3 aura_fusion.py --mock "Compare router and SkillWeaver integration risks"
+python3 aura_router.py fusion --task "Compare router and SkillWeaver integration risks" --mock
+```
+
+Run it in the REPL:
+
+```text
+[Dallas] > !fusion Compare router and SkillWeaver integration risks
+```
+
+Runtime logs are appended to `Aura_Memory/aura_fusion_runs.jsonl` and remain
+gitignored. Code-mutation requests are refused when no CODEMAP-grounded
+`target_file` is present; grounded mutation plans still require human review
+before anything is applied.
+
+### Spectral AR Topology
+
+`aura_spectral_topology.py` augments topology payloads with a local graph
+Laplacian (`L = D - A`) and projects the dependency graph into 3-D coordinates.
+The AR WebSocket bridge consumes those coordinates directly, so nearby shapes
+represent nearby dependency structure instead of arbitrary layout noise.
+
+Each node receives:
+
+- `position`: 3-D spectral coordinate for AR rendering.
+- `luminance` / `structural_health`: brighter means cleaner local structure.
+- `phaseShiftWarning`: true when the node participates in a directed cycle.
+- `validationState`: `clean_luminous`, `coupled_watch`, `dim_architectural_debt`, or `phase_shift_warning`.
+
+The browser renderer pulses phase-shift warning nodes, dims high-friction
+modules, and displays spectral sparsity/global health in the HUD. WebSocket
+clients receive the same fields through `TOPOLOGY_UPDATE`, so external AR clients
+can use the health state without recomputing the graph.
+
+### Knowledge and Research
+
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `!forage <topic>` | You need a new arXiv source on one topic. | Fetches the latest matching paper, parses the PDF when available, stores a compact scientific trace, writes a paper-memory VSA ledger record, and prints title/abstract plus three main points. |
+| `!backtrack` | The research memory needs a wider seed set. | Crawls chronological arXiv CS papers, updates the ingestion offset, stores legacy scientific vectors for search, and refreshes a bounded number of full PDF VSA records per run. |
+| `!research <concept>` | You want source-grounded code synthesis. | Searches ingested papers, runs the SkillWeaver relevance gate, and only stages synthesis when sources pass. It benefits from `!forage` and `!backtrack` records. |
+| `!search_similar <query>` | You need nearest ingested papers without mutation. | Searches the structured scientific SQLite index and prints top paper matches with relevance scores. |
+| `!curiosity_tree <seed>` | You want autonomous discovery from one concept. | Runs bounded DFS over GitHub and arXiv and prints the discovery tree as JSON. |
+| `!forage_on` / `!forager_on` | You want background curiosity enabled. | Starts background foraging daemons. |
+| `!forage_off` / `!forager_off` | You need to conserve CPU/RAM/heat. | Suspends background foraging daemons. |
+| `!timeline` | You want the recent epistemic ledger. | Reads `aura_quantum_memory.db` and prints recent FORAGED/GAP roots. |
+| `!crystallize` | You want to start permanent knowledge crystallization. | Initializes the epistemic ingest gateway for unified crystallization. |
+| `!synthesize` | You want a cognitive synthesizer lifecycle pass. | Runs `AuraCognitiveSynthesizer.execution_lifecycle_pass()` and prints the summary. |
+| `!indus_decrypt` | You want the Indus script resonance demo. | Generates a synthetic 3,700-glyph corpus, runs resonance decryption, and prints hypothesis weights. |
+
+### Paper Memory and RAEC Recall
+
+Aura now keeps two coordinated memories for arXiv papers:
+
+- SQLite scientific traces in `.mempalace/`, keyed as `ARXIV_<paper_id>` when arXiv provides an ID. These keep the existing int8 scientific vectors used by `!research` and `!search_similar`.
+- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, chunk-level VSA vectors, and a compact single-seed lift profile.
+
+The PDF path is intentionally chunked. Aura does not unroll an entire raw PDF into one giant matrix slice; `aura_paper_memory.py` extracts text, chunks it, encodes each chunk as a complex phasor, chooses a deterministic seed chunk, caches the inverse seed profile once, and lifts that seed through bounded residual layers into the document vector. This keeps ingestion compatible with the existing edge-memory architecture while preserving deeper recall hooks.
+
+The single-seed lift is an Aura VSA adaptation, not a claim that Aura performs
+literal polynomial factorization over `Z_p^e`. The source paper's useful
+engineering pattern is separation of seed discovery, cached inverse lifting, and
+trace dispatch. Aura uses that pattern for paper chunks, RAEC slots, and
+AuraFusion capsules so later egress calls can reuse compact trace metadata
+instead of rebuilding global context.
+
+`!forage <topic>` is best when you need one targeted source right now. It attempts the PDF, writes the paper-memory ledger, updates the SQLite scientific trace, and returns the three extracted points for quick inspection.
+
+`!backtrack` is best when Aura needs a broader research substrate. It crawls by date window, keeps arXiv pacing, and stores every returned paper as a searchable scientific trace. Full PDF VSA ingestion is budgeted by `AURA_BACKTRACK_PDF_LIMIT` and defaults to `3` fetch attempts per run, so large backtracks do not overheat or flood storage.
+
+`!research <concept>` and `!search_similar <query>` continue to use the fast SQLite scientific index. External LLM egress automatically uses RAEC when a paper-memory ledger exists: `aura_llm_egress.py` scans the ledger, selects the top two resonant paper capsules, verifies the `root ::= ...` contract, and injects compact `[ANCHOR_ID:...][CONSTRAINTS:...]` slots before provider egress. When available, those constraints include `LIFT=SEED=...` trace metadata from the cached single-seed profile, and the LLM savings log records the lift dispatch count.
+
+Set `AURA_PAPER_MEMORY_LEDGER=/path/to/paper_memory_ledger.jsonl` to point RAEC at another ledger. Use `python3 extract_pdf_text.py <paper.pdf>` when you want the standalone PDF text-extraction compatibility CLI.
+
+
+### Headroom-Style Context Crushing
+
+Aura adapts the lightweight ideas from `headroomlabs-ai/headroom` without
+importing its heavy proxy/Rust/ML stack. The accepted pieces are deterministic
+content routing, schema-aware JSON compaction, log/search/code sketches, local
+CCR storage, and detector-only cache-prefix reporting. The rejected pieces are
+prompt padding, cache-hot system prompt rewrites, background proxying, and
+optional ML compressors that would violate Aura's low-dependency edge profile.
+
+Where it operates:
+
+- `ExternalLLM.generate()` crushes the mutable prompt before network egress, but
+  keeps the original prompt for RAEC resonance scoring.
+- `generate_openai_compatible_payload()` crushes non-system messages before
+  AuraFusion panel/judge calls.
+- Savings metadata records `context_crush` summaries beside provider, RAEC, and
+  response-schema fields.
+- Originals are retrievable locally with
+  `retrieve_context_crush(hash, query=None)`.
+
+The cache-prefix rule is strict: system prompts are treated as cache-hot and
+never modified. If Aura sees volatile UUIDs, timestamps, JWT-shaped tokens, or
+hex digests inside system text, it records an alignment warning instead of
+rewriting the prompt.
 
 ### SkillWeaver Research Relevance Gate
 
@@ -221,38 +473,21 @@ NEXT: Ingest source-sufficient papers before attempting mutation.
 
 **Module**: `aura_skillweaver.py` (see CODEMAP for full API)
 
-| `!synthesize` | Run cognitive synthesizer lifecycle pass |
-| `!indus_decrypt` | Batch resonance decryption of Indus Valley script corpus |
+### Mesh, AR, Export, and System Control
 
-### Networking
-
-| Command | Description |
-|---------|-------------|
-| `!ping_mesh` | Broadcast encrypted DSEKP handshake on UDP 4444 |
-| `!mesh_status` | Show node identity, active peers, DSEKP entropy index |
-| `!export [tree]` | Export data to ~/aura_exports/ |
-| `!push <message>` | Zero-trust verify all .py files → git add/commit/push |
-
-### System Management
-
-| Command | Description |
-|---------|-------------|
-| `!settings` | Print the full manifest (this list) |
-| `!benchmark` | CPU temp, RAM, disk, inference throughput |
-| `!system_audit` | Layer 5 OS executive audit |
-| `!voice` | Start vocal executive loop (requires termux-api) |
-| `!db_repair` | Check + auto-rebuild all SQLite databases |
-| `!markov [N]` | Markovian workspace reconstruction over N logs (default 256) |
-| `!rollback <root>` | Phase-conjugate rollback to Q-SYS root token |
-| `STOP` | Immediately cancel any active inference |
-| `exit` | Graceful shutdown |
-
-### AR Server Commands
-
-| Command | Description |
-|---------|-------------|
-| `!ar_start` | Start the interactive AR WebSocket server on port 8765 (TOPOLOGY_REQUEST, SHAPE_INTERACTION, ADD_SHAPE, HOTSWAP_REQUEST) |
-| `!ar_stop` | Stop the AR WebSocket server cleanly, disconnecting all clients |
+| Command | Use when | Operation and output |
+|---------|----------|----------------------|
+| `!ping_mesh` | You want to discover or wake peers. | Broadcasts an encrypted DSEKP handshake packet on UDP 4444. |
+| `!mesh_status` | You need mesh identity and peer state. | Prints local mesh identity, active peer IPs, and DSEKP entropy index. |
+| `!ar_start` / `!ar_server_start` | You want interactive 3D topology controls. | Starts `AuraARWebSocketServer` on port 8765 for topology, shape interaction, add-shape, and hotswap messages. |
+| `!ar_stop` / `!ar_server_stop` | You need to restart or free the AR port. | Stops the AR WebSocket server and disconnects clients cleanly. |
+| `!export [tree]` | You need a local export artifact. | Writes export output to `~/aura_exports/`; `!export tree` emits the dependency tree. |
+| `!push <message>` | You want zero-trust GitHub backup from inside Aura. | Verifies Python files, attempts healing on failure, then runs git add/commit/push with the message. |
+| `!db_repair` / `!repair_db` | SQLite databases are corrupt or malformed. | Checks known Aura databases and rebuilds any malformed files. |
+| `!markov [N]` | You need to reconstruct state from logs. | Runs Markovian workspace reconstruction over the last N raw logs, default 256. |
+| `!voice` | You want the Termux vocal executive loop. | Starts voice/TTS control; requires `termux-api`. |
+| `STOP` | A long inference needs to end now. | Sets the stop flag and cancels active inference watchers. |
+| `exit` / `quit` | You are done with the node. | Gracefully shuts down kernels and exits the REPL. |
 
 ---
 
@@ -547,19 +782,85 @@ Class: `BenchmarkSandbox` — `scan_and_run()` — detects new/updated API keys 
 | `ConversationLog` | Polysynthetic turn logging |
 | `Conversationalist` | Main conversation engine: compress → LLM → interpret |
 
-### 8.9 `aura_pricing.py` — Price Book
+### 8.9 `aura_single_seed_lift.py` - Single-Seed Context Lift
+
+Portable context-lift primitive inspired by arXiv:2606.20633. The paper reports
+a cofactor-free lift with one cached inverse, `O(m^2)` per precision layer, and
+`33.5x` speedup in a high-precision benchmark. Aura adapts the pattern to local
+VSA context as one deterministic seed vector, one cached inverse digest, bounded
+residual lift layers, and compact trace dispatch.
+
+| Function | Description |
+|----------|-------------|
+| `compile_single_seed_lift(label, vectors, base_vector)` | Selects the best local seed vector, caches its inverse profile, lifts it through bounded residual layers, and returns a lifted 10,000-D phasor plus metadata. |
+| `compile_text_single_seed_lift(label, text_blocks)` | Builds the same profile from text blocks for Fusion capsules or other local summaries. |
+| `compact_lift_capsule(profile)` | Converts the profile to a short `SEED=...\|TRACE=...` capsule suitable for RAEC slots and task capsules. |
+
+### 8.10 `aura_context_crusher.py` - Reversible Context Crushing
+
+Headroom-inspired, Aura-native compression before LLM egress. It is
+dependency-free, local-first, reversible through the CCR ledger, and can
+optionally hand JSON/log/text byte sweeps to `aura_crush_core.rs` through the
+Rust/WASI bridge. If no accelerator is present, Aura stays on the Python path.
+GLOSSOPETRAE-inspired ST3GG logic is used only as visible, signed recall
+metadata: no invisible Unicode carriers, no covert payloads, and no guardrail
+evasion machinery.
+
+| Function | Description |
+|----------|-------------|
+| `apply_context_crush_to_prompt(prompt)` | Strips tokenizer-survival carriers, routes one prompt through JSON/log/search/code/text compression, and stores the original when the compressed form wins. |
+| `apply_context_crush_to_messages(messages)` | Sanitizes all string messages, compresses non-system messages, and preserves normal system prompt bytes for cache stability. |
+| `compute_cache_prefix_report(messages)` | Emits stable prefix hash, byte/token estimate, and volatile-content findings. |
+| `retrieve_context_crush(hash, query)` | Retrieves the full original or query-matching lines from the visible ST3GG sidecar index first, then falls back to the local CCR ledger. |
+
+Related modules:
+
+| Module | Function | When needed |
+|--------|----------|-------------|
+| `aura_st3gg_recall.py` | `compile_st3gg_pointer(content)` | Generates a deterministic visible `ST3GG-L2::<namespace>:<glyph>:<dash>` pointer and holographic header for local recall. |
+| `aura_st3gg_recall.py` | `compile_visible_st3gg_capsule(data)` | Converts compact JSON-like rows or dictionaries into a visible ASCII machine capsule when that is shorter than normal JSON sketches. |
+| `aura_st3gg_recall.py` | `upsert_st3gg_recall(...)` / `lookup_st3gg_recall(key)` | Maintains `.st3gg_hash.bin`, `.st3gg_store.jsonl`, and `.st3gg_index.json` sidecars so Aura can recall a compressed original by CCR hash, ST3GG pointer, or DASH key without scanning or loading the JSONL ledger first. |
+| `aura_st3gg_recall.py` | `st3gg_recall_index_stats(ledger_path)` | Reports active sidecar capacity, load factor, bits/key, byte footprint, and whether the ledger is large enough to justify a future frozen PtrHash/perfect-hash segment. |
+| `aura_st3gg_recall.py` | `compute_compaction_efficiency(keys, bytes, latency)` | Scores a recall index against the 1.44 bits/key MPHF lower-bound target while labeling the current Python path as bounded active hashing, not frozen perfect hashing. |
+| `aura_st3gg_compact.rs` | `rustc -O aura_st3gg_compact.rs -o Aura_Memory/st3gg_compact` | Builds the zero-dependency Stage 2 pilot compiler. It reads newline-separated unique CCR/ST3GG/DASH keys from stdin and writes a versioned binary header (`AST3CMP1`, version, key count, table size, table scale, hash profile) plus `N` pilot bytes to stdout. |
+| `aura_st3gg_recall.py` | `decode_st3gg_compaction_blob(blob)` | Validates the Stage 2 compactor header before Aura accepts frozen pilot bytes. Rejects bad magic, unsupported versions, table-scale/hash-profile mismatches, and pilot-count mismatches. |
+| `aura_tokenizer_guard.py` | `sanitize_tokenizer_channels(text)` | Removes tag chars, private-use chars, variation selectors, bidi controls, and hidden format controls before LLM egress. |
+| `aura_tokenizer_guard.py` | `sanitize_message_payloads(messages)` | Applies the same guard to OpenAI-compatible message lists while leaving non-string structured content alone. |
+
+### 8.11 `aura_wasm_bridge.py` - Rust/WASI Accelerator Bridge
+
+Optional no-daemon native bridge for Rust accelerators. It reads
+`AURA_CRUSH_ACCELERATOR_PATH`, supports native binaries plus `.wasm` / `.cwasm`
+through the `wasmtime` CLI, and returns `None` when unavailable so callers can
+fall back cleanly.
+
+| Function | Description |
+|----------|-------------|
+| `AuraRustWasmBridge.from_env()` | Discovers an explicit or repo-local context-crush accelerator without forcing a dependency. |
+| `AuraRustWasmBridge.accelerate(raw, content_type)` | Sends a hex-encoded payload over stdin and reads a compressed hex result over stdout. |
+| `accelerator_runtime_status(root)` | Reports whether Aura is using native/WASM acceleration or the Python fallback. |
+
+`aura_crush_core.rs` is the matching Rust source. Build it as either a native
+binary or a WASI module:
+
+```bash
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+rustc --target wasm32-wasip1 -O aura_crush_core.rs -o Aura_Memory/aura_crush_core.wasm
+```
+
+### 8.12 `aura_pricing.py` — Price Book
 
 Class: `PriceBook` — maintains per-model pricing ($/1M tokens) for accurate savings calculation. `get_pricebook()` returns the current snapshot.
 
-### 8.10 `aura_proxy_benchmark.py` — Quality Scoring
+### 8.13 `aura_proxy_benchmark.py` — Quality Scoring
 
 Class: `QualityScorer` — validates LLM output quality by diff, token count, and structural compliance.
 
-### 8.11 `aura_token_economics.py` — Token Economics
+### 8.14 `aura_token_economics.py` — Token Economics
 
 Class: `TokenEconomics` — `compute_delta(model, raw_in, raw_out, aura_in, aura_out)` — computes cost savings from Aura's compression. `log_call(delta, task, provider)` — records in ledger.
 
-### 8.12 `aura_self_optimize.py` — Autonomous Self-Optimization
+### 8.15 `aura_self_optimize.py` — Autonomous Self-Optimization
 
 | Function | Description |
 |----------|-------------|

@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8e5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: ast, asyncio, os, aura_evolution_bridge, sys, re, aura_gbnf_profiles, hashlib, time
-FUNCTIONS: __init__, _generate_process_glyph, _extract_code_block, _invoke_patch_engine, sandbox_and_evaluate, execute_hot_swap
-SYNOPSIS: This Python module, integrating dependencies like `ast`, `asyncio`, `os`, `aura_evolution_bridge`, and others, provides a secure, AST-based code analysis and runtime patching framework via functions such as `_generate_process_glyph`, `_invoke_patch_engine`, and `sandbox_and_evaluate`, enabling controlled execution and dynamic code modification within an isolated environment.
+DEPENDENCIES: aura_evolution_bridge, sys, ast, re, gc, os, time, aura_gbnf_profiles, pathlib, hashlib
+FUNCTIONS: _verify_ast_security, _validate_file_write_path, __init__, _generate_process_glyph, _extract_code_block, _invoke_patch_engine, sandbox_and_evaluate, execute_hot_swap
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 # [AURA OPTIMIZED] - Bloat removed.
@@ -14,14 +17,13 @@ import ast
 import gc
 import hashlib
 import os
+from pathlib import Path
 import re
 import sys
 import time
-import asyncio
-from pathlib import Path
 
-from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
 from aura_evolution_bridge import validate_proposed_mutation
+from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
 
 # ── Security constants ──────────────────────────────────────────────────────
 # Project root: all file writes must land under this directory tree.
@@ -182,7 +184,7 @@ class LiquidFlashEvolve:
 
         temp = 42.0
         try:
-            with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+            with open("/sys/class/thermal/thermal_zone0/temp") as f:
                 temp = float(f.read().strip()) / 1000.0
         except OSError:
             pass
@@ -190,7 +192,7 @@ class LiquidFlashEvolve:
         baseline_friction = 0
         if os.path.exists(target_file):
             try:
-                with open(target_file, "r", encoding="utf-8") as f:
+                with open(target_file, encoding="utf-8") as f:
                     tree = ast.parse(f.read())
                     baseline_friction = sum(1 for n in ast.walk(tree) if isinstance(n, ast.Call))
             except Exception:
@@ -305,7 +307,7 @@ class LiquidFlashEvolve:
             parsed = ast.parse(code)
             security_issues = _verify_ast_security(parsed, filename=file)
             if security_issues:
-                return f"[-] Hot-swap blocked: security violations in final code:\n" + "\n".join(security_issues)
+                return "[-] Hot-swap blocked: security violations in final code:\n" + "\n".join(security_issues)
             # Verify the code is structurally consistent (not just parseable but sane)
             ast.fix_missing_locations(parsed)
         except SyntaxError as se:

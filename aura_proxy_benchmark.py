@@ -42,13 +42,14 @@ from __future__ import annotations
 
 import argparse
 import ast
+from dataclasses import dataclass, field, replace
 import json
 import os
 import re
 import sys
 import time
-from dataclasses import dataclass, field, replace
 
+from aura_llm_egress import ExternalLLM
 from aura_substrate import (
     REPO_ROOT,
     AuraSubstrate,
@@ -59,7 +60,6 @@ from aura_substrate import (
     extract_function_source,
     sanitize_code,
 )
-from aura_llm_egress import ExternalLLM
 
 REPORT_DIR = os.path.join(REPO_ROOT, "Aura_Memory", "benchmarks")
 
@@ -655,13 +655,13 @@ def write_reports(results: dict) -> tuple[str, str]:
 ## RAW model output
 
 ```
-{(raw['output'] or '(empty / error: %s)' % raw['error'])[:4000]}
+{(raw['output'] or '(empty / error: {})'.format(raw['error']))[:4000]}
 ```
 
 ## AURA model output
 
 ```
-{(aura['output'] or '(empty / error: %s)' % aura['error'])[:4000]}
+{(aura['output'] or '(empty / error: {})'.format(aura['error']))[:4000]}
 ```
 
 ## Interpretation
@@ -688,7 +688,7 @@ dependencies, signature/protocol preservation, and blast radius.
 # --------------------------------------------------------------------------- #
 
 def _print_providers() -> None:
-    from aura_llm_egress import classify_providers, PROVIDERS
+    from aura_llm_egress import PROVIDERS, classify_providers
     buckets = classify_providers()
     print("catalog:", ", ".join(PROVIDERS.keys()))
     print("working (have keys, verified):", ", ".join(buckets["working"]) or "(none)")

@@ -3,8 +3,8 @@
 ST3GG_BASE: 0xa8e5-[Q-SYS:2A86BBF77059E372]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit / Honest Communication)
-DEPENDENCIES: json, os, time, aura_api_rotator
-FUNCTIONS: ExternalLLM, interpret, generate
+DEPENDENCIES: json, os, time, aura_api_rotator, aura_llm_call_logger
+FUNCTIONS: ExternalLLM, interpret, generate, generate_openai_compatible_payload
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -36,11 +36,10 @@ from __future__ import annotations
 
 import json
 import os
-import ssl
 import time
+from typing import Any
 import urllib.error
 import urllib.request
-from typing import Any
 
 from aura_api_rotator import (
     gemini_generate,
@@ -48,88 +47,28 @@ from aura_api_rotator import (
     load_secrets,
     openai_compatible_generate,
 )
-
-from aura_savings_db import log_call as _log_call_to_db
-from aura_substrate import estimate_tokens as _estimate_tokens
+from aura_context_crusher import apply_context_crush_to_messages, apply_context_crush_to_prompt
+from aura_llm_call_logger import log_llm_call
+from aura_paper_memory import (
+    AuraResonanceEgressGate,
+    load_research_profiles_from_jsonl,
+    track_egress_savings,
+    verify_egress_contract,
+)
 from aura_pre_egress_interceptor import apply_pre_egress_profile
+from aura_tokenizer_guard import sanitize_message_payloads, sanitize_tokenizer_channels
 
-# External providers only. Internal/local engines are intentionally excluded —
-# Aura must call out, not run a model in-process. Gemini is an allowed external
-# provider (routed via the Gemini REST path); all others are OpenAI-compatible.
-PROVIDERS: dict[str, dict] = {
-    "mistral": {
-        "url": "https://api.mistral.ai/v1/chat/completions",
-        "key": "MISTRAL_API_KEY",
-        "model": "mistral-small-latest",
-        "price_in_per_1k": 0.0002,
-        "price_out_per_1k": 0.0006,
-    },
-    "sambanova": {
-        "url": "https://api.sambanova.ai/v1/chat/completions",
-        "key": "SAMBANOVA_API_KEY",
-        "model": "Meta-Llama-3.3-70B-Instruct",
-        "price_in_per_1k": 0.0006,
-        "price_out_per_1k": 0.0012,
-    },
-    "groq": {
-        "url": "https://api.groq.com/openai/v1/chat/completions",
-        "key": "GROQ_API_KEY",
-        "model": "llama-3.3-70b-versatile",
-        "price_in_per_1k": 0.00059,
-        "price_out_per_1k": 0.00079,
-    },
-    "cerebras": {
-        "url": "https://api.cerebras.ai/v1/chat/completions",
-        "key": "CEREBRAS_API_KEY",
-        "model": "llama-3.3-70b",
-        "price_in_per_1k": 0.00085,
-        "price_out_per_1k": 0.0012,
-    },
-    "openrouter": {
-        "url": "https://openrouter.ai/api/v1/chat/completions",
-        "key": "OPEN_ROUTER_API_KEY",
-        "model": "meta-llama/llama-3.3-70b-instruct",
-        "price_in_per_1k": 0.0006,
-        "price_out_per_1k": 0.0006,
-    },
-    "github": {
-        "url": "https://models.inference.ai.azure.com/chat/completions",
-        "key": "GITHUB_TOKEN",
-        "model": "gpt-4o-mini",
-        "price_in_per_1k": 0.00015,
-        "price_out_per_1k": 0.0006,
-    },
-    # --- placeholders for future keys (skipped cleanly until configured) ---
-    "openai": {
-        "url": "https://api.openai.com/v1/chat/completions",
-        "key": "OPENAI_API_KEY",
-        "model": "gpt-4o-mini",
-        "price_in_per_1k": 0.00015,
-        "price_out_per_1k": 0.0006,
-    },
-    "anthropic": {
-        "api": "anthropic",       # uses the Anthropic Messages API, not OpenAI-compatible
-        "url": "https://api.anthropic.com/v1/messages",
-        "key": "ANTHROPIC_API_KEY",
-        "model": "claude-sonnet-4-6",
-        "price_in_per_1k": 0.0008,
-        "price_out_per_1k": 0.004,
-    },
-    "gemini": {
-        "api": "gemini",          # uses the Gemini REST path, not OpenAI-compatible
-        "url": "(gemini-rest)",
-        "key": "GEMINI_API_KEY",
-        "model": "gemini-1.5-flash",
-        "price_in_per_1k": 0.00007,
-        "price_out_per_1k": 0.0003,
-    },
-}
-DEFAULT_PROVIDER_ORDER = ["anthropic", "mistral", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
+from aura_provider_registry import ProviderRegistry
+
+# External providers only. Populated configuration-driven from ProviderRegistry.
+PROVIDERS: dict[str, dict] = ProviderRegistry().providers
+
+DEFAULT_PROVIDER_ORDER = ["anthropic", "fireworks", "mistral", "sambanova", "groq", "cerebras", "openrouter", "gemini"]
 
 # Providers verified to work with the currently-configured keys. The benchmark
 # defaults to these so we never burn calls on providers whose keys are absent or
 # rejected. Everything else in PROVIDERS is a placeholder until a key is added.
-KNOWN_WORKING = ("anthropic", "sambanova", "mistral", "groq", "cerebras", "openrouter", "github", "gemini")
+KNOWN_WORKING = ("anthropic", "fireworks", "sambanova", "mistral", "groq", "cerebras", "openrouter", "github", "gemini")
 
 # Names that must never be used here — Aura does not run her own model. Only
 # local/internal in-process engines are forbidden; Gemini is an allowed external
@@ -171,8 +110,117 @@ def _anthropic_generate(url: str, api_key: str, model: str, prompt: str,
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         return data["content"][0]["text"].strip(), None
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         return None, str(exc)
+
+
+def _forbidden_external_url(url: str) -> bool:
+    low = (url or "").strip().lower()
+    return (
+        low.startswith("http://127.")
+        or low.startswith("https://127.")
+        or low.startswith("http://localhost")
+        or low.startswith("https://localhost")
+        or low.startswith("http://0.0.0.0")
+        or low.startswith("https://0.0.0.0")
+    )
+
+
+def generate_openai_compatible_payload(
+    *,
+    provider: str,
+    base_url: str,
+    api_key: str,
+    model: str,
+    messages: list[dict[str, str]],
+    max_tokens: int = 900,
+    temperature: float = 0.0,
+    response_format: dict[str, Any] | None = None,
+    timeout: float = 60,
+    task: str | None = "aura_fusion",
+    aspect: str | None = "fusion",
+    baseline_prompt_tokens: int | None = None,
+    baseline_output_tokens: int | None = None,
+    baseline_cost_usd: float | None = None,
+    context_crush: bool = True,
+    context_crush_ledger: str | None = None,
+) -> tuple[str | None, str | None, float, bool]:
+    """Single egress helper for custom OpenAI-compatible AuraFusion calls.
+
+    Returns (text, error, latency_sec, used_response_format). If a provider
+    rejects JSON schema response_format, the helper retries once without it and
+    lets the caller enforce/repair JSON locally.
+    """
+    if _forbidden_external_url(base_url):
+        return None, "forbidden local/internal model endpoint", 0.0, False
+    if not api_key or not str(api_key).strip():
+        return None, f"missing API key for provider '{provider}'", 0.0, False
+    crush_batch = None
+    tokenizer_guard = None
+    outbound_messages = messages
+    if context_crush:
+        crush_batch = apply_context_crush_to_messages(
+            messages,
+            ledger_path=context_crush_ledger,
+        )
+        outbound_messages = crush_batch.messages
+    else:
+        tokenizer_guard = sanitize_message_payloads(messages)
+        outbound_messages = tokenizer_guard.messages
+
+    payload: dict[str, Any] = {
+        "model": model,
+        "messages": outbound_messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+    if response_format:
+        payload["response_format"] = response_format
+
+    t0 = time.time()
+    text, err = openai_compatible_generate(
+        base_url,
+        api_key,
+        payload,
+        timeout=timeout,
+        task=task,
+        aspect=aspect,
+        baseline_prompt_tokens=baseline_prompt_tokens,
+        baseline_output_tokens=baseline_output_tokens,
+        baseline_cost_usd=baseline_cost_usd,
+        savings_metadata={
+            "provider": provider,
+            "response_format": bool(response_format),
+            "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+            "tokenizer_guard": tokenizer_guard.to_jsonable() if tokenizer_guard is not None else None,
+        },
+    )
+    used_schema = bool(response_format and not err)
+    if err and response_format and any(
+        marker in str(err).lower()
+        for marker in ("response_format", "json_schema", "schema", "400", "unsupported")
+    ):
+        payload.pop("response_format", None)
+        text, err = openai_compatible_generate(
+            base_url,
+            api_key,
+            payload,
+            timeout=timeout,
+            task=task,
+            aspect=aspect,
+            baseline_prompt_tokens=baseline_prompt_tokens,
+            baseline_output_tokens=baseline_output_tokens,
+            baseline_cost_usd=baseline_cost_usd,
+            savings_metadata={
+                "provider": provider,
+                "response_format": False,
+                "schema_retry": True,
+                "context_crush": crush_batch.to_jsonable() if crush_batch is not None else None,
+                "tokenizer_guard": tokenizer_guard.to_jsonable() if tokenizer_guard is not None else None,
+            },
+        )
+        used_schema = False
+    return text, err, time.time() - t0, used_schema
 
 
 def available_providers(secrets: dict[str, Any] | None = None) -> list[str]:
@@ -258,15 +306,15 @@ class ExternalLLM:
             raise RuntimeError(f"No usable external provider. Last error: {last_err}")
         self.provider = chosen
         self.cfg = PROVIDERS[chosen]
-        
+
         # Comprehensive dynamic routing for all Anthropic layers
         if chosen == "anthropic":
             default_str = self.secrets.get("CLAUDE_DEFAULT_MODEL", "claude-sonnet-4-6")
             premium_str = self.secrets.get("CLAUDE_PREMIUM_MODEL", "claude-opus-4-8")
-            
+
             # Normalize the incoming request token to match shorthand choices
             model_query = str(model).strip().lower() if model else ""
-            
+
             if model_query in ("premium", "opus", "claude-opus-4-8", premium_str.lower()):
                 self.model = premium_str
             elif model_query in ("default", "sonnet", "claude-sonnet-4-6", default_str.lower()) or not model:
@@ -275,9 +323,9 @@ class ExternalLLM:
                 self.model = model  # Transparent pass-through if an explicit unmapped variant is used
         else:
             self.model = model or self.cfg["model"]
-            
+
         self.api = self.cfg.get("api", "openai")
-        
+
         # ─── UNIVERSAL KEY BINDING ───
         self.is_gemini = (self.api == "gemini")
         self.api_key = self.secrets.get(self.cfg["key"])
@@ -291,35 +339,34 @@ class ExternalLLM:
 
     def _log_to_savings(self, call_type: str, prompt: str,
                          output_text: str | None, latency_sec: float,
-                         error: str | None = None) -> None:
+                         error: str | None = None,
+                         metadata: dict[str, Any] | None = None) -> None:
         """Log this LLM call to the persistent savings database (best-effort)."""
-        try:
-            in_tokens = _estimate_tokens(prompt)
-            out_tokens = _estimate_tokens(output_text) if output_text else 0
-            cost = 0.0 if error else self.cost(in_tokens, out_tokens)
-
-            _log_call_to_db(
-                provider=self.provider,
-                model=self.model,
-                call_type=call_type,
-                task=self._task,
-                aspect=self._aspect,
-                prompt_tokens=in_tokens,
-                output_tokens=out_tokens,
-                cost_usd=cost,
-                latency_sec=latency_sec,
-                baseline_prompt_tokens=self._baseline_prompt,
-                baseline_output_tokens=self._baseline_output,
-                baseline_cost_usd=self._baseline_cost,
-                error=error,
-            )
-        except Exception:
-            pass  # never let logging break the call
+        log_llm_call(
+            provider=self.provider,
+            model=self.model,
+            call_type=call_type,
+            prompt_text=prompt,
+            output_text=output_text,
+            latency_sec=latency_sec,
+            error=error,
+            task=self._task,
+            aspect=self._aspect,
+            baseline_prompt_tokens=self._baseline_prompt,
+            baseline_output_tokens=self._baseline_output,
+            baseline_cost_usd=self._baseline_cost,
+            metadata={"source": "ExternalLLM._log_to_savings", **(metadata or {})},
+        )
 
     # -- raw generation ----------------------------------------------------- #
     def generate(self, prompt: str, *, max_tokens: int = 1300, temperature: float = 0.1,
-                 router_context: "str | None" = None, slot_matrix: Any | None = None,
-                 pre_egress: bool = True):
+                 router_context: str | None = None, slot_matrix: Any | None = None,
+                 pre_egress: bool = True, call_type: str = "generate",
+                 paper_ledger: str | None = None,
+                 resonance_egress: bool = True,
+                 grammar_stencil: str = "root ::=",
+                 context_crush: bool = True,
+                 context_crush_ledger: str | None = None):
         """Return (text, error, latency_sec). External call only (HTTPS POST).
 
         Every call is silently logged to the savings database.
@@ -338,6 +385,13 @@ class ExternalLLM:
                 temporary intent matrix from the prompt.
             pre_egress: Enable the deterministic HDC profile rotator before
                 network egress.
+            paper_ledger: Optional JSONL paper-memory ledger to scan for RAEC
+                context. Defaults to AURA_PAPER_MEMORY_LEDGER or the local
+                Aura_Memory paper ledger.
+            resonance_egress: Enable the stateless Resonance-Augmented Egress
+                Core context gate.
+            context_crush: Enable Aura's local Headroom-style reversible
+                context compression before network egress.
         """
         # Inject router context if provided
         if router_context:
@@ -350,17 +404,96 @@ class ExternalLLM:
         else:
             full_prompt = prompt
 
+        resonance_intent = full_prompt
+        crush_result = None
+        if context_crush:
+            crush_result = apply_context_crush_to_prompt(
+                full_prompt,
+                source_hint="external_llm.generate",
+                ledger_path=context_crush_ledger,
+            )
+            full_prompt = crush_result.compressed_payload
+
+        raec_payload = None
+        raec_metrics: dict[str, Any] | None = None
+        if resonance_egress:
+            raec_start = time.time()
+            ledger_path = (
+                paper_ledger
+                or os.environ.get("AURA_PAPER_MEMORY_LEDGER")
+                or "Aura_Memory/paper_memory_ledger.jsonl"
+            )
+            try:
+                profiles = load_research_profiles_from_jsonl(ledger_path)
+                if profiles:
+                    gate = AuraResonanceEgressGate()
+                    raec_payload = gate.inject_latent_context(
+                        resonance_intent,
+                        profiles,
+                        self.provider,
+                    )
+                    if verify_egress_contract(raec_payload, grammar_stencil):
+                        full_prompt = (
+                            f"{full_prompt}\n\n"
+                            "[AURA_RAEC]\n"
+                            f"{raec_payload.slot_matrix_string}\n"
+                            "[/AURA_RAEC]"
+                        )
+                raec_metrics = track_egress_savings(
+                    len(full_prompt),
+                    0,
+                    time.time() - raec_start,
+                )
+            except Exception:
+                raec_payload = None
+                raec_metrics = None
+
         profile_decision = None
         if pre_egress:
             full_prompt, profile_decision = apply_pre_egress_profile(full_prompt, slot_matrix=slot_matrix)
             if profile_decision.throttled:
                 max_tokens = min(max_tokens, 512)
+        tokenizer_guard = sanitize_tokenizer_channels(full_prompt)
+        full_prompt = tokenizer_guard.sanitized_text
 
         t0 = time.time()
         text = None
         err = None
+        logged_by_helper = False
+        savings_meta = {
+            "source": "ExternalLLM.generate",
+            "pre_egress": pre_egress,
+            "pre_egress_profile": getattr(profile_decision, "profile_id", None),
+            "resonance_egress": bool(
+                raec_payload and raec_payload.slot_matrix_string
+            ),
+            "raec_slot_chars": len(
+                raec_payload.slot_matrix_string
+                if raec_payload is not None
+                else ""
+            ),
+            "raec_lift_dispatch_count": len(
+                raec_payload.lift_dispatch
+                if raec_payload is not None
+                else ()
+            ),
+            "raec_efficiency": raec_metrics,
+            "context_crush": crush_result.to_jsonable() if crush_result is not None else None,
+            "tokenizer_guard": tokenizer_guard.to_jsonable(),
+        }
         if self.is_gemini:
-            text, err = gemini_generate(full_prompt, secrets=self.secrets)
+            text, err = gemini_generate(
+                full_prompt,
+                secrets=self.secrets,
+                call_type=call_type,
+                task=self._task,
+                aspect=self._aspect,
+                baseline_prompt_tokens=self._baseline_prompt,
+                baseline_output_tokens=self._baseline_output,
+                baseline_cost_usd=self._baseline_cost,
+                savings_metadata=savings_meta,
+            )
+            logged_by_helper = True
         elif self.api == "anthropic":
             text, err = _anthropic_generate(self.cfg["url"], self.api_key, self.model,
                                             full_prompt, max_tokens, timeout=60)
@@ -371,9 +504,23 @@ class ExternalLLM:
                 "max_tokens": max_tokens,
                 "temperature": temperature,
             }
-            text, err = openai_compatible_generate(self.cfg["url"], self.api_key, payload, timeout=60)
+            text, err = openai_compatible_generate(
+                self.cfg["url"],
+                self.api_key,
+                payload,
+                timeout=60,
+                call_type=call_type,
+                task=self._task,
+                aspect=self._aspect,
+                baseline_prompt_tokens=self._baseline_prompt,
+                baseline_output_tokens=self._baseline_output,
+                baseline_cost_usd=self._baseline_cost,
+                savings_metadata=savings_meta,
+            )
+            logged_by_helper = True
         latency = time.time() - t0
-        self._log_to_savings("generate", full_prompt, text, latency, error=err)
+        if not logged_by_helper:
+            self._log_to_savings(call_type, full_prompt, text, latency, error=err, metadata=savings_meta)
         return text, err, latency
 
     # -- "speak" / interpret Aura's structured data ------------------------- #
@@ -400,10 +547,8 @@ class ExternalLLM:
             max_tokens=max_tokens,
             slot_matrix=slot_matrix,
             pre_egress=pre_egress,
+            call_type="interpret",
         )
-        # Override the generate-level log with the correct call_type
-        if not err:
-            self._log_to_savings("interpret", prompt, text, latency)
         return text, err, latency
 
     def cost(self, in_tokens: int, out_tokens: int) -> float:
@@ -412,7 +557,7 @@ class ExternalLLM:
         try:
             from aura_pricing import get_pricebook
             return get_pricebook().cost(self.provider, in_tokens, out_tokens)
-        except Exception:  # noqa: BLE001
+        except Exception:
             return round(
                 in_tokens / 1000 * self.cfg["price_in_per_1k"]
                 + out_tokens / 1000 * self.cfg["price_out_per_1k"], 6)

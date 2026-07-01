@@ -28,13 +28,10 @@ Axiom P4: Retrieval by resonance alignment, not traversal.
 
 from __future__ import annotations
 
-import asyncio
-import hashlib
-import json
-import os
-import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+import hashlib
+import time
+from typing import Any
 
 import numpy as np
 
@@ -100,11 +97,11 @@ def _dequantize_address(raw: bytes) -> np.ndarray:
 class VSAAddress:
     """A VSA phasor address for any entity."""
     phasor: np.ndarray         # 10,000-D complex unit phasor
-    properties: Dict[str, str] # semantic properties used to derive it
+    properties: dict[str, str] # semantic properties used to derive it
     quantized: bytes = b""     # 1.2 KB transport form
 
     @staticmethod
-    def from_properties(properties: Dict[str, str]) -> "VSAAddress":
+    def from_properties(properties: dict[str, str]) -> VSAAddress:
         """Generate address from semantic properties (Claim N14 Section 2.1).
         a_entity = normalize(bundle(v_prop_k bind role_k for k in properties))
         """
@@ -123,11 +120,11 @@ class VSAAddress:
         return VSAAddress(phasor=phasor, properties=properties, quantized=quantized)
 
     @staticmethod
-    def from_label(label: str) -> "VSAAddress":
+    def from_label(label: str) -> VSAAddress:
         """Quick address from a single label string."""
         return VSAAddress.from_properties({"identity": label})
 
-    def resonance_with(self, other: "VSAAddress") -> float:
+    def resonance_with(self, other: VSAAddress) -> float:
         return _cosine_res(self.phasor, other.phasor)
 
 
@@ -138,7 +135,7 @@ class PeerRecord:
     ip: str                    # underlying TCP/IP address (transport layer)
     port: int = 4445
     label: str = ""
-    capabilities: List[str] = field(default_factory=list)
+    capabilities: list[str] = field(default_factory=list)
     last_seen: float = 0.0
     hop_count: int = 1
 
@@ -183,16 +180,16 @@ class LiquidInternetProtocol:
         self.self_port = self_port
 
         # Peer registry: vsa_address_hash -> PeerRecord
-        self._peers: Dict[str, PeerRecord] = {}
+        self._peers: dict[str, PeerRecord] = {}
 
         # Decentralized name bindings
-        self._name_bindings: List[NameBinding] = []
+        self._name_bindings: list[NameBinding] = []
 
     # ── Peer Management ──
 
     def register_peer(self, ip: str, port: int = 4445,
-                      label: str = "", capabilities: list = None,
-                      properties: dict = None) -> PeerRecord:
+                      label: str = "", capabilities: list | None = None,
+                      properties: dict | None = None) -> PeerRecord:
         """Register a peer with its VSA address derived from properties."""
         if properties is None:
             properties = {"identity": ip, "type": "node", "label": label}
@@ -222,7 +219,7 @@ class LiquidInternetProtocol:
     # ── Resonance Routing (Claim N14 Section 2.2) ──
 
     def route(self, destination: VSAAddress,
-              max_hops: int = _MAX_HOPS) -> Tuple[Optional[PeerRecord], Dict]:
+              max_hops: int = _MAX_HOPS) -> tuple[PeerRecord | None, dict]:
         """
         Route to a destination by resonance. No routing table.
 
@@ -265,7 +262,7 @@ class LiquidInternetProtocol:
             return None, report
 
     def route_by_name(self, name: str,
-                      max_hops: int = _MAX_HOPS) -> Tuple[Optional[PeerRecord], Dict]:
+                      max_hops: int = _MAX_HOPS) -> tuple[PeerRecord | None, dict]:
         """Route to a named entity: resolve name then route."""
         resolved = self.resolve_name(name)
         if resolved is None:
@@ -288,7 +285,7 @@ class LiquidInternetProtocol:
         self._name_bindings.append(binding)
         return binding
 
-    def resolve_name(self, name: str) -> Optional[VSAAddress]:
+    def resolve_name(self, name: str) -> VSAAddress | None:
         """
         Resolve a human-readable name to a VSA address.
         Uses resonance search, not hierarchical DNS lookup.
@@ -316,7 +313,7 @@ class LiquidInternetProtocol:
 
         return best_addr
 
-    def list_names(self) -> List[Dict[str, Any]]:
+    def list_names(self) -> list[dict[str, Any]]:
         """List all published name bindings."""
         return [
             {"name": b.name, "timestamp": b.timestamp,
@@ -326,7 +323,7 @@ class LiquidInternetProtocol:
 
     # ── Integration with aura_mesh.py ──
 
-    def import_mesh_peers(self, mesh_peers: Dict[str, str]) -> int:
+    def import_mesh_peers(self, mesh_peers: dict[str, str]) -> int:
         """Import peers from aura_mesh.py peer registry (ip -> label)."""
         count = 0
         for ip, label in mesh_peers.items():
@@ -349,7 +346,7 @@ class LiquidInternetProtocol:
             f"NAME_BINDINGS: {len(self._name_bindings)}",
             f"ROUTING_TABLE_SIZE: {self.get_routing_table_size()} (by design)",
             f"ADDRESSING: vsa_phasor_{_DIM}d",
-            f"TRANSPORT: tcp/ip overlay",
+            "TRANSPORT: tcp/ip overlay",
         ]
         if self._peers:
             lines.append("PEER_REGISTRY:")
@@ -391,7 +388,7 @@ if __name__ == "__main__":
         "type": "node", "capabilities": "compute,research"
     })
     peer, report = lip.route(dest)
-    print(f"Route to 'compute+research' node:")
+    print("Route to 'compute+research' node:")
     print(f"  Decision: {report['decision']}")
     if peer:
         print(f"  Next hop: {peer.ip} ({peer.label})")
@@ -405,7 +402,7 @@ if __name__ == "__main__":
     print(f"Resolve 'alpha_compute': {'FOUND' if resolved else 'NOT FOUND'}")
 
     peer2, report2 = lip.route_by_name("alpha_compute")
-    print(f"Route by name 'alpha_compute':")
+    print("Route by name 'alpha_compute':")
     print(f"  Decision: {report2.get('decision', 'NONE')}\n")
 
     print(lip.format_report())

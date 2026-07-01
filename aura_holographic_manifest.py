@@ -1,20 +1,21 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa9f5-[Q-SYS:72EB1B1A46BFD24F]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: MINWAAJIMO (Zero-Copy Codebase Hologram)
-DEPENDENCIES: numpy, hashlib, os, re, base64, struct
-FUNCTIONS: generate_line_phasor, compile_global_manifest, inject_holographic_headers
-SYNOPSIS: Generates a 1.2 KB continuous phase codebase hologram for constant-time
-          line validation, enabling O(1) per-file integrity verification without
-          filesystem crawling. Every file header carries the entire OS state.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: numpy, re, random, os, base64, hashlib
+FUNCTIONS: generate_and_inject, verify_holographic_system_integrity, __init__, _string_to_phasor, compile_global_manifest, inject_holographic_headers, extract_manifest_from_header, decode_manifest_to_phasor, verify_file_integrity
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
+import base64
+import hashlib
 import os
 import re
-import base64
-import struct
-import hashlib
+
 import numpy as np
 
 DIMENSION = 10000
@@ -76,7 +77,7 @@ class AuraHolographicManifest:
                 file_phasor = self._string_to_phasor(file)
 
                 try:
-                    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                    with open(filepath, encoding='utf-8', errors='ignore') as f:
                         for line_idx, line_content in enumerate(f, start=1):
                             # 1. Compute content vector
                             line_phasor = self._string_to_phasor(line_content)
@@ -117,7 +118,7 @@ class AuraHolographicManifest:
                 filepath = os.path.join(root, file)
 
                 try:
-                    with open(filepath, 'r', encoding='utf-8') as f:
+                    with open(filepath, encoding='utf-8') as f:
                         content = f.read()
 
                     # Only touch files that already carry the master key block
@@ -144,7 +145,7 @@ class AuraHolographicManifest:
         manifest token if present. Returns None if no manifest is embedded.
         """
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding='utf-8') as f:
                 content = f.read()
         except Exception:
             return None
@@ -189,7 +190,7 @@ class AuraHolographicManifest:
         local_accumulator = np.zeros(DIMENSION, dtype=np.complex64)
 
         try:
-            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(filepath, encoding='utf-8', errors='ignore') as f:
                 for line_idx, line_content in enumerate(f, start=1):
                     line_phasor = self._string_to_phasor(line_content)
                     pos_phases = self._base_phases * (line_idx / 1000.0)

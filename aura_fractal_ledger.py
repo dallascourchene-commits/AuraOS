@@ -28,14 +28,13 @@ Key innovations:
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import hashlib
 import json
+from pathlib import Path
 import sqlite3
 import struct
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Optional
 
 # Lazy import to avoid circular dependency
 _puf_module = None
@@ -60,16 +59,16 @@ def _get_puf():
 def _generate_entropy_signature(challenge: bytes) -> str:
     """Generate entropy signature from challenge using thermodynamic PUF"""
     puf = _get_puf()
-    
+
     # Convert challenge to physical parameters
     challenge_hash = hashlib.sha256(challenge).digest()
     tension = struct.unpack('f', challenge_hash[:4])[0] % 100.0
     error = struct.unpack('f', challenge_hash[4:8])[0] % 10.0
     geo = struct.unpack('f', challenge_hash[8:12])[0] % 360.0
-    
+
     # Get PUF key
     puf_key = puf.distill_liquid_key(tension, error, geo)
-    
+
     # Return BLAKE2b hash of PUF key
     return hashlib.blake2b(puf_key.encode()).hexdigest()
 
@@ -90,20 +89,20 @@ class LedgerBlock:
 class FractalLedger:
     """
     Gas-Free Fractal Ledger implementing Claim N10.
-    
+
     Unlike traditional blockchains:
     - No linear chain (Merkle-DAG allows multiple parents)
     - No gas fees (RAM-staking as opportunity cost)
     - No mining (Proof-of-Presence via device entropy)
     - No tokens (physical resource commitment only)
-    
+
     Attributes:
         db_path: Path to SQLite database
         ram_stakes: Active RAM locks per node {node_id → bytes}
         base_rate: Base RAM cost per byte (default: 1024)
         stake_duration: How long RAM stays locked (seconds)
     """
-    
+
     def __init__(
         self,
         db_path: str = "aura_ledger.db",
@@ -116,7 +115,7 @@ class FractalLedger:
         self.base_rate = base_rate
         self.stake_duration = stake_duration
         self._init_schema()
-    
+
     def _init_schema(self):
         """Initialize database schema for fractal ledger"""
         self.db.execute("""
@@ -132,17 +131,17 @@ class FractalLedger:
                 released INTEGER DEFAULT 0
             )
         """)
-        
+
         self.db.execute("""
-            CREATE INDEX IF NOT EXISTS idx_timestamp 
+            CREATE INDEX IF NOT EXISTS idx_timestamp
             ON ledger_blocks(timestamp DESC)
         """)
-        
+
         self.db.execute("""
-            CREATE INDEX IF NOT EXISTS idx_node_id 
+            CREATE INDEX IF NOT EXISTS idx_node_id
             ON ledger_blocks(node_id)
         """)
-        
+
         self.db.execute("""
             CREATE TABLE IF NOT EXISTS consensus_roots (
                 root_hash TEXT PRIMARY KEY,
@@ -151,43 +150,43 @@ class FractalLedger:
                 node_count INTEGER NOT NULL
             )
         """)
-        
+
         self.db.commit()
-    
+
     def append_transaction(
         self,
         file_path: str,
         content: bytes,
         node_id: str,
-        parent_hashes: Optional[list[str]] = None
+        parent_hashes: list[str] | None = None
     ) -> str:
         """
         Add file change as ledger transaction with RAM staking.
-        
+
         Args:
             file_path: Path to file being modified
             content: New file content
             node_id: Identifier of node making change
             parent_hashes: Previous block hashes (for DAG structure)
-            
+
         Returns:
             Block hash of new transaction
-            
+
         Raises:
             ValueError: If node doesn't have enough free RAM
         """
         # 1. Compute content hash
         content_hash = hashlib.sha256(content).hexdigest()
-        
+
         # 2. Get device entropy for Proof-of-Presence
         challenge = f"{file_path}:{content_hash}:{time.time()}".encode()
         entropy_sig = _generate_entropy_signature(challenge)
-        
+
         # 3. Calculate RAM stake
         size_bytes = len(content)
         current_load = len(self.ram_stakes) / 1000  # Simple load metric
         ram_stake = int(size_bytes * self.base_rate * (1 + current_load))
-        
+
         # 4. Check if node can afford stake
         current_stake = self.ram_stakes.get(node_id, 0)
         # Assume 4GB limit per node (Termux constraint)
@@ -197,20 +196,20 @@ class FractalLedger:
                 f"Insufficient RAM: need {ram_stake}, "
                 f"have {max_stake - current_stake} available"
             )
-        
+
         # 5. Lock RAM
         self.ram_stakes[node_id] = current_stake + ram_stake
-        
+
         # 6. Get parent hashes (for DAG structure)
         if parent_hashes is None:
             # Default: link to most recent block
             cursor = self.db.execute("""
-                SELECT block_hash FROM ledger_blocks 
+                SELECT block_hash FROM ledger_blocks
                 ORDER BY timestamp DESC LIMIT 1
             """)
             row = cursor.fetchone()
             parent_hashes = [row[0]] if row else []
-        
+
         # 7. Create block
         timestamp = time.time()
         block_data = (
@@ -218,11 +217,11 @@ class FractalLedger:
             f"{timestamp}||{','.join(parent_hashes)}"
         )
         block_hash = hashlib.blake2b(block_data.encode()).hexdigest()
-        
+
         # 8. Store in ledger
         self.db.execute("""
-            INSERT INTO ledger_blocks 
-            (block_hash, file_path, content_hash, entropy_signature, 
+            INSERT INTO ledger_blocks
+            (block_hash, file_path, content_hash, entropy_signature,
              timestamp, parent_hashes, ram_stake, node_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
@@ -236,9 +235,9 @@ class FractalLedger:
             node_id
         ))
         self.db.commit()
-        
+
         return block_hash
-    
+
     def verify_proof_of_presence(
         self,
         node_id: str,
@@ -247,147 +246,147 @@ class FractalLedger:
     ) -> bool:
         """
         Verify node holds current global hologram via Proof-of-Presence.
-        
+
         Args:
             node_id: Node claiming to hold consensus
             claimed_root: Root hash node claims to have
             entropy_proof: Device entropy signature
-            
+
         Returns:
             True if node proves presence, False otherwise
         """
         # 1. Compute actual consensus root
         actual_root = self.compute_consensus_root()
-        
+
         # 2. Check if claimed root matches
         if claimed_root != actual_root:
             return False
-        
+
         # 3. Verify entropy signature is fresh (< 60 seconds old)
         # This prevents replay attacks
         challenge = f"{node_id}:{actual_root}:{int(time.time() / 60)}".encode()
         expected_sig = _generate_entropy_signature(challenge)
-        
+
         # Allow some tolerance for timing
         return entropy_proof.hex() == expected_sig
-    
+
     def compute_consensus_root(self) -> str:
         """
         Compute majority consensus weighted by RAM stakes.
-        
+
         Returns:
             Block hash with highest total stake
         """
         # Get recent blocks (last 100)
         cursor = self.db.execute("""
-            SELECT block_hash, ram_stake FROM ledger_blocks 
+            SELECT block_hash, ram_stake FROM ledger_blocks
             WHERE released = 0
             ORDER BY timestamp DESC LIMIT 100
         """)
-        
+
         # Weight votes by RAM stake
         weighted_votes: dict[str, int] = {}
         for block_hash, ram_stake in cursor:
             weighted_votes[block_hash] = weighted_votes.get(block_hash, 0) + ram_stake
-        
+
         if not weighted_votes:
             return ""
-        
+
         # Return hash with highest stake
         consensus_root = max(weighted_votes.items(), key=lambda x: x[1])[0]
-        
+
         # Store consensus root
         total_stake = sum(weighted_votes.values())
         self.db.execute("""
-            INSERT OR REPLACE INTO consensus_roots 
+            INSERT OR REPLACE INTO consensus_roots
             (root_hash, timestamp, total_stake, node_count)
             VALUES (?, ?, ?, ?)
         """, (consensus_root, time.time(), total_stake, len(weighted_votes)))
         self.db.commit()
-        
+
         return consensus_root
-    
+
     def release_ram_stake(self, node_id: str, block_hash: str):
         """
         Release RAM stake after transaction confirmation.
-        
+
         Args:
             node_id: Node that staked RAM
             block_hash: Block to release stake for
         """
         # Get stake amount
         cursor = self.db.execute("""
-            SELECT ram_stake FROM ledger_blocks 
+            SELECT ram_stake FROM ledger_blocks
             WHERE block_hash = ? AND node_id = ? AND released = 0
         """, (block_hash, node_id))
-        
+
         row = cursor.fetchone()
         if not row:
             return
-        
+
         ram_stake = row[0]
-        
+
         # Release RAM
         if node_id in self.ram_stakes:
             self.ram_stakes[node_id] = max(0, self.ram_stakes[node_id] - ram_stake)
-        
+
         # Mark as released
         self.db.execute("""
-            UPDATE ledger_blocks 
-            SET released = 1 
+            UPDATE ledger_blocks
+            SET released = 1
             WHERE block_hash = ?
         """, (block_hash,))
         self.db.commit()
-    
+
     def auto_release_expired_stakes(self):
         """
         Automatically release stakes older than stake_duration.
         Should be called periodically.
         """
         cutoff_time = time.time() - self.stake_duration
-        
+
         cursor = self.db.execute("""
-            SELECT block_hash, node_id, ram_stake 
-            FROM ledger_blocks 
+            SELECT block_hash, node_id, ram_stake
+            FROM ledger_blocks
             WHERE timestamp < ? AND released = 0
         """, (cutoff_time,))
-        
+
         released_count = 0
         for block_hash, node_id, ram_stake in cursor:
             if node_id in self.ram_stakes:
                 self.ram_stakes[node_id] = max(0, self.ram_stakes[node_id] - ram_stake)
             released_count += 1
-        
+
         # Mark all as released
         self.db.execute("""
-            UPDATE ledger_blocks 
-            SET released = 1 
+            UPDATE ledger_blocks
+            SET released = 1
             WHERE timestamp < ? AND released = 0
         """, (cutoff_time,))
         self.db.commit()
-        
+
         return released_count
-    
+
     def get_ledger_stats(self) -> dict:
         """Get current ledger statistics"""
         cursor = self.db.execute("""
-            SELECT 
+            SELECT
                 COUNT(*) as total_blocks,
                 SUM(ram_stake) as total_stake,
                 COUNT(DISTINCT node_id) as unique_nodes,
                 MAX(timestamp) as latest_timestamp
             FROM ledger_blocks
         """)
-        
+
         row = cursor.fetchone()
-        
+
         active_cursor = self.db.execute("""
             SELECT COUNT(*), SUM(ram_stake)
             FROM ledger_blocks
             WHERE released = 0
         """)
         active_row = active_cursor.fetchone()
-        
+
         return {
             "total_blocks": row[0] or 0,
             "total_stake_bytes": row[1] or 0,
@@ -397,7 +396,7 @@ class FractalLedger:
             "active_stake_bytes": active_row[1] or 0,
             "current_ram_stakes": dict(self.ram_stakes)
         }
-    
+
     def get_node_history(self, node_id: str, limit: int = 10) -> list[LedgerBlock]:
         """Get transaction history for a specific node"""
         cursor = self.db.execute("""
@@ -408,7 +407,7 @@ class FractalLedger:
             ORDER BY timestamp DESC
             LIMIT ?
         """, (node_id, limit))
-        
+
         blocks = []
         for row in cursor:
             blocks.append(LedgerBlock(
@@ -421,16 +420,16 @@ class FractalLedger:
                 ram_stake=row[6],
                 node_id=row[7]
             ))
-        
+
         return blocks
-    
+
     def close(self):
         """Close database connection"""
         self.db.close()
 
 
 # Convenience functions for global ledger instance
-_global_ledger: Optional[FractalLedger] = None
+_global_ledger: FractalLedger | None = None
 
 def get_global_ledger() -> FractalLedger:
     """Get or create global ledger instance"""
@@ -443,12 +442,12 @@ def get_global_ledger() -> FractalLedger:
 def commit_file_change(file_path: str, content: bytes, node_id: str = "local") -> str:
     """
     Convenience function to commit a file change to the ledger.
-    
+
     Args:
         file_path: Path to file
         content: File content
         node_id: Node identifier (default: "local")
-        
+
     Returns:
         Block hash
     """
@@ -459,10 +458,10 @@ def commit_file_change(file_path: str, content: bytes, node_id: str = "local") -
 if __name__ == "__main__":
     # Demo usage
     print("=== Aura Fractal Ledger Demo ===\n")
-    
+
     # Create ledger
     ledger = FractalLedger(db_path=":memory:")  # In-memory for demo
-    
+
     # Simulate file changes
     print("1. Committing file changes...")
     block1 = ledger.append_transaction(
@@ -471,34 +470,34 @@ if __name__ == "__main__":
         "node_alpha"
     )
     print(f"   Block 1: {block1[:16]}...")
-    
+
     block2 = ledger.append_transaction(
         "aura_mesh.py",
         b"# Updated mesh code",
         "node_beta"
     )
     print(f"   Block 2: {block2[:16]}...")
-    
+
     # Check stats
     print("\n2. Ledger statistics:")
     stats = ledger.get_ledger_stats()
     for key, value in stats.items():
         if key != "current_ram_stakes":
             print(f"   {key}: {value}")
-    
+
     # Compute consensus
     print("\n3. Computing consensus root...")
     root = ledger.compute_consensus_root()
     print(f"   Consensus: {root[:16]}...")
-    
+
     # Release stakes
     print("\n4. Releasing stakes...")
     ledger.release_ram_stake("node_alpha", block1)
-    print(f"   Released stake for block 1")
-    
+    print("   Released stake for block 1")
+
     stats = ledger.get_ledger_stats()
     print(f"   Active stake: {stats['active_stake_bytes']} bytes")
-    
+
     print("\n✓ Demo complete")
 
 # Made with Bob

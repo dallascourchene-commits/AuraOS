@@ -1,95 +1,99 @@
 # [AURA OPTIMIZED] - Bloat removed.
 import asyncio
-import math
 from math import log2
 import os
 import tempfile
+
 # Auto-lock working directory to the directory containing this file
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-import json
-import time
-import hashlib
-import sqlite3
-import gc
-import re
-import sys
-import shutil
-import random
-import socket
+import ast
+from collections import Counter, defaultdict
 import contextlib
 from contextlib import closing
-from collections import Counter
-import numpy as np
-import importlib
-import uuid
+import ctypes
+from datetime import datetime
+import gc
+import hashlib
+import json
+from pathlib import Path
+import platform
+import random
+import re
+import shutil
+import socket
+import sqlite3
 import struct
 import subprocess
-import websockets
-import ctypes
-import ast
-from collections import defaultdict
-from pathlib import Path
-from datetime import datetime
-import urllib.request
+import sys
+import time
 import urllib.parse
-import platform
+import urllib.request
+import uuid
+
+import numpy as np
+import websockets
+
 try:
     from ddgs import DDGS
 except ImportError:
     DDGS = None  # type: ignore[assignment,misc]
-from aura_epistemic_ingest import AuraEpistemicIngestGateway
-from gateway import CognitiveGateway
-from logging_kit import setup_sqlite_logging
 from async_palace import AsyncMemoryPalace
 from aura_attention_palace import AsyncMemoryPalace as AttentionPalace
-from aura_mesh import AuraMeshSwarm
 from aura_core import SovereignEngine
-from cognitive_router import CognitiveRouter
+from aura_epistemic_ingest import AuraEpistemicIngestGateway
+from aura_mesh import AuraMeshSwarm
 from aura_mitosis import AuraMitosisEngine
+from cognitive_router import CognitiveRouter
+from gateway import CognitiveGateway
+from logging_kit import setup_sqlite_logging
+
 SOVEREIGN_CORE = SovereignEngine()
-from typing import Any, Callable, Dict, Union, Optional
-# ======= INTEGRATION: ARCHAEOLOGICAL & COGNITIVE CORTEX IMPORTS =======
-import aura_topological_scanner
-from aura_topological_scanner import compile_unified_graph, compile_topology_map
-from aura_indus_cortex import IndusCortexEngine
+from collections.abc import Callable
+from typing import Any
+
+from arxiv_forager import ArXivForager
+from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
+from aura_coordinated_solver import CoordinatedSolver
+from aura_crypto_puf import AuraThermodynamicPUF
+from aura_crystallization import hypertruth_crystallization_loop
+from aura_evolve import LiquidFlashEvolve
+from aura_forager import BoundedKnowledgeEngine
 from aura_hybrid_linguistic_cortex import HybridLinguisticCortex
+from aura_indus_cortex import IndusCortexEngine
 from aura_lexc import AuraLexc, LexcCompileError
+from aura_meta_ingest import MetaTelemetryIngestor
+from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
+from aura_patcher import AuraSovereignPatcher
+from aura_positional_parser import AthabaskanPositionalParser
 
 # ======= PVM TOP-LEVEL MODULE IMPORTS (no lazy loading) =======
 from aura_rosetta_memory import RosettaMemoryBuffer
-from aura_evolve import LiquidFlashEvolve
-from aura_patcher import AuraSovereignPatcher
-from aura_positional_parser import AthabaskanPositionalParser
-from aura_forager import BoundedKnowledgeEngine
-from aura_crypto_puf import AuraThermodynamicPUF
-from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
-from aura_meta_ingest import MetaTelemetryIngestor
-from aura_nesy_sat_reasoner import AuraNeuroSymbolicReasoner
-from aura_coordinated_solver import CoordinatedSolver, StrategyBuffer
-from aura_crystallization import hypertruth_crystallization_loop
-from arxiv_forager import ArXivForager, ForagerConfig
 from aura_scientific_memory import index_from_rows
-from aura_skillweaver import AuraSkillWeaver, research_gate_intercept
-from aura_hivp import HolographicIntegrityVerificationProtocol
-from aura_tcwaa import ThermalCostWeightedAPIArbitration
-from aura_fst_routing import FSTLexiconRoutingCore, TierType, SlotType
-from aura_resonant_test_oracle import ResonantTestOracle, run_resonant_suite
-from aura_timestep_svd_quantizer import TimestepAwareSVDQuantizer, AsyncExpertQuantizationEngine
-from aura_liquid_internet import LiquidInternetProtocol, VSAAddress
-from aura_topology_ws_bridge import AuraARWebSocketServer
-from quantum_dag import QuantumMerkleDAG
-from vsa_resonator import VSAResonator
-from liquid_fhrr import LiquidFHRR
-from spatial_mapper import CodeTopologyMapper, DirectoryCache
+from aura_skillweaver import research_gate_intercept
+from aura_coding_arena_workflow import (
+    convert_research_proposal_to_action_capsule,
+    enforce_research_no_direct_mutation,
+    validate_research_staging_gate,
+    get_coding_arena_memory,
+    WorkflowOutcome,
+)
+
+# ======= INTEGRATION: ARCHAEOLOGICAL & COGNITIVE CORTEX IMPORTS =======
+import aura_topological_scanner
+from aura_topological_scanner import compile_topology_map, compile_unified_graph
 from aura_topology_analyzer import diagnose_fractures
+from liquid_fhrr import LiquidFHRR
+from quantum_dag import QuantumMerkleDAG
+from spatial_mapper import DirectoryCache
+from vsa_resonator import VSAResonator
 
 
 async def _cached_scientific_index(node, conn):
     """
     Build and cache a scientific index from ARXIV traces in the database.
-    
+
     Maintains cache validity by tracking a signature (row count and max timestamp of ARXIV traces). When the signature changes, rebuilds the index by querying all ARXIV traces and offloading index construction to a thread pool. Returns the cached index for subsequent research queries.
-    
+
     Returns:
     	The cached scientific index of ARXIV traces.
     """
@@ -111,7 +115,7 @@ async def _cached_scientific_index(node, conn):
 # Optional heavy dependencies — may not be present or loadable on all targets
 # (Termux/ARM: RuntimeError from shared-library ABI mismatch is expected)
 try:
-    from liquid_kernel import LiquidWebSocket, LiquidConfig
+    from liquid_kernel import LiquidConfig, LiquidWebSocket
 except (ImportError, RuntimeError, OSError):
     LiquidWebSocket = None  # type: ignore[assignment,misc]
     LiquidConfig = None  # type: ignore[assignment,misc]
@@ -140,6 +144,14 @@ except ImportError:
     def regenerate_router(quiet=False):  # type: ignore[misc]
         return False
 
+try:
+    from aura_live_architect import render_live_architect_summary, run_live_architect_transaction
+    _LIVE_ARCHITECT_AVAILABLE = True
+except (ImportError, RuntimeError, OSError):
+    _LIVE_ARCHITECT_AVAILABLE = False
+    render_live_architect_summary = None  # type: ignore[assignment]
+    run_live_architect_transaction = None  # type: ignore[assignment]
+
 # ── Unified intelligence layer (new modules) ─────────────────────────────────
 try:
     from aura_anthropic_router import AnthropicRouter as _AnthropicRouter
@@ -148,18 +160,18 @@ except Exception:
     _ANTHROPIC_ROUTER = None  # type: ignore[assignment]
 
 try:
-    from aura_qdkt import get_qdkt, log_dkt_commit_shim, commit_to_dkt_shim
+    from aura_qdkt import commit_to_dkt_shim, get_qdkt, log_dkt_commit_shim
     _QDKT = get_qdkt()
 except Exception:
     _QDKT = None  # type: ignore[assignment]
-    def log_dkt_commit_shim(node_ref, numeric_id, user_input, cpu_temp_c, execution_ms, success_flag):  # noqa: E302
+    def log_dkt_commit_shim(node_ref, numeric_id, user_input, cpu_temp_c, execution_ms, success_flag):
         try:
             gw = getattr(node_ref, "gateway", None)
             if gw:
                 gw.log_dkt_commit(numeric_id, user_input, cpu_temp_c, execution_ms, success_flag)
         except Exception:
             pass
-    def commit_to_dkt_shim(filename, improvement_logic, *, node_ref=None):  # noqa: E302
+    def commit_to_dkt_shim(filename, improvement_logic, *, node_ref=None):
         pass
 
 try:
@@ -185,29 +197,30 @@ except Exception:
     _BenchmarkSandbox = None  # type: ignore[assignment]
 # ─────────────────────────────────────────────────────────────────────────────
 
+from aura_api_rotator import (
+    gemini_generate,
+    gemini_key_pool,
+    get_gemini_rotator,
+    openai_compatible_generate,
+)
+from aura_api_rotator import (
+    load_secrets as load_api_secrets,
+)
 from aura_associative_core import AuraAssociativeCore
-from symbolic_shield import verify_structural_truth
 from aura_dream_engine import homeostatic_decay_pass
-from llama_server_manager import LlamaServerManager
-from aura_spvm import get_semantic_vector as _spvm_get_semantic_vector
+from aura_evolution_bridge import validate_proposed_mutation
 from aura_gbnf_profiles import (
-    AURA_POLYSYNTHETIC_GBNF,
+    PROFILE_MC_LETTER,
     PROFILE_POLYSYNTHETIC,
     PROFILE_PYTHON_PATCH,
     PROFILE_UNIT_INTERVAL,
-    PROFILE_MC_LETTER,
     get_grammar_string,
     grammar_stop_tokens,
 )
-from aura_evolution_bridge import validate_proposed_mutation
-from aura_api_rotator import (
-    load_secrets as load_api_secrets,
-    gemini_key_pool,
-    gemini_generate,
-    openai_compatible_generate,
-    get_gemini_rotator,
-)
 from aura_pre_egress_interceptor import apply_pre_egress_profile
+from aura_spvm import get_semantic_vector as _spvm_get_semantic_vector
+from llama_server_manager import LlamaServerManager
+from symbolic_shield import verify_structural_truth
 
 # Module-level fast-path associative memory (shared across all REPL sessions)
 _FAST_MEMORY: AuraAssociativeCore = AuraAssociativeCore(dim=10_000)
@@ -222,14 +235,14 @@ class AuraZeroDiskIOCache:
     Asynchronous, coroutine-safe, pure-Python caching framework.
     Hardened to handle Linux virtual filesystems (sysfs/procfs) safely.
     """
-    _cache: Dict[str, Dict[str, Any]] = {}
+    _cache: dict[str, dict[str, Any]] = {}
     _global_lock = asyncio.Lock()
 
     @classmethod
     async def get_file_contents(
-        cls, 
-        filepath: Union[str, os.PathLike], 
-        parser: Optional[Callable[[Union[str, bytes]], Any]] = None,
+        cls,
+        filepath: str | os.PathLike,
+        parser: Callable[[str | bytes], Any] | None = None,
         binary: bool = False
     ) -> Any:
         """
@@ -240,7 +253,7 @@ class AuraZeroDiskIOCache:
         filepath_str = os.path.abspath(os.fspath(filepath))
         is_virtual_fs = filepath_str.startswith("/sys/") or filepath_str.startswith("/proc/")
 
-        def _read_from_disk() -> Union[str, bytes]:
+        def _read_from_disk() -> str | bytes:
             mode = "rb" if binary else "r"
             encoding = None if binary else "utf-8"
             with open(filepath_str, mode, encoding=encoding) as f:
@@ -281,7 +294,7 @@ class AuraZeroDiskIOCache:
 
             try:
                 raw_payload = await asyncio.to_thread(_read_from_disk)
-                
+
                 if parser:
                     if parser == json.loads:
                         parsed_payload = await asyncio.to_thread(json.loads, raw_payload)
@@ -303,9 +316,9 @@ class AuraZeroDiskIOCache:
     @classmethod
     async def write_file_contents(
         cls,
-        filepath: Union[str, os.PathLike],
-        data_to_write: Union[str, bytes],
-        pre_parsed_data: Optional[Any] = None,
+        filepath: str | os.PathLike,
+        data_to_write: str | bytes,
+        pre_parsed_data: Any | None = None,
         binary: bool = False
     ) -> bool:
         """
@@ -339,20 +352,20 @@ class AuraZeroDiskIOCache:
                 entry["mtime"] = new_mtime
                 entry["size"] = new_size
                 entry["data"] = pre_parsed_data if pre_parsed_data is not None else data_to_write
-            
+
             # Auto-invalidate spatial mapper directory cache if a python file is written
             if filepath_str.endswith(".py"):
                 try:
                     DirectoryCache.invalidate()
                 except Exception:
                     pass
-                    
+
             return True
         except OSError:
             return False
 
     @classmethod
-    async def invalidate(cls, filepath: Union[str, os.PathLike]) -> None:
+    async def invalidate(cls, filepath: str | os.PathLike) -> None:
         """Explicitly purges or invalidates a cached filepath."""
         filepath_str = os.path.abspath(os.fspath(filepath))
         async with cls._global_lock:
@@ -397,10 +410,10 @@ class ZeroCopyMemoryOrchestrator:
         """Surgically writes a 128-bit frame directly into memory coordinates."""
         base_addr, max_size = self._get_validated_base()
         struct_size = ctypes.sizeof(frame)
-        
+
         if offset + struct_size > max_size:
             return False  # Strict out-of-bounds safety guard
-            
+
         # Perform low-level copy directly into shared WASM space
         ctypes.memmove(base_addr + offset, ctypes.byref(frame), struct_size)
         return True
@@ -413,7 +426,7 @@ class ZeroCopyMemoryOrchestrator:
         base_addr, max_size = self._get_validated_base()
         if offset + length > max_size:
             raise IndexError("Zero-copy slice request exceeds current memory bounds.")
-            
+
         # Return a memoryview directly mapping the raw memory space
         char_ptr = ctypes.POINTER(ctypes.c_char * length).from_address(base_addr + offset)
         return memoryview(char_ptr.contents)
@@ -427,26 +440,26 @@ class ZeroCopyMemoryOrchestrator:
             # 1. Zero-copy read directly from WebAssembly shared memory space (16 bytes = 128-bit)
             mem_view = self.get_writeable_view(offset, 16)
             raw_bytes = mem_view.tobytes()
-            
+
             # 2. Package with structural metadata
             payload = {
                 "raw_hex": raw_bytes.hex(),
                 "metadata": metadata,
                 "timestamp": datetime.now().isoformat()
             }
-            
+
             # 3. Write asynchronously using the non-blocking cache framework
             target_dir = os.path.join("Aura_Memory", "simd_consolidations")
             os.makedirs(target_dir, exist_ok=True)
             target_path = os.path.join(target_dir, f"{key}.json")
-            
+
             # Serialize and write safely without blocking the event loop
             success = await AuraZeroDiskIOCache.write_file_contents(
-                target_path, 
+                target_path,
                 json.dumps(payload, indent=4),
                 pre_parsed_data=payload
             )
-            
+
             # 4. Fire an AR pulse on Port 8081 to let your visual deck render the consolidated node
             if success:
                 try:
@@ -465,26 +478,26 @@ class ZeroCopyMemoryOrchestrator:
                     asyncio.create_task(send_simd_ar_pulse())
                 except Exception:
                     pass
-            
+
             return success
         except Exception as e:
             print(f"[-] SIMD consolidation failed: {e}")
             return False
 
-    async def query_binding_aware_frame(self, key: str, expected_features: dict) -> Optional[bytes]:
+    async def query_binding_aware_frame(self, key: str, expected_features: dict) -> bytes | None:
         """
         Queries consolidated SIMD frames from Aura_Memory with binding-aware validation.
         """
         target_path = os.path.join("Aura_Memory", "simd_consolidations", f"{key}.json")
         if not os.path.exists(target_path):
             return None
-            
+
         try:
             # Read asynchronously from cache
             payload = await AuraZeroDiskIOCache.get_file_contents(target_path, parser=json.loads)
             if not payload:
                 return None
-                
+
             meta = payload.get("metadata", {})
             # Binding-aware validation check
             if all(meta.get(k) == v for k, v in expected_features.items()):
@@ -522,21 +535,21 @@ class TraceBatchRouter:
 
             placeholders = ",".join(["?"] * len(target_tiers))
             query = f"""
-                SELECT id, content, tier, timestamp, tags, vector_blob 
-                FROM traces 
-                WHERE tier IN ({placeholders}) 
-                ORDER BY timestamp DESC 
+                SELECT id, content, tier, timestamp, tags, vector_blob
+                FROM traces
+                WHERE tier IN ({placeholders})
+                ORDER BY timestamp DESC
                 LIMIT ?;
             """
-            params = tuple(target_tiers) + (limit,)
+            params = (*tuple(target_tiers), limit)
 
             future = asyncio.Future()
             await self.query_queue.put((query, params, future))
-            
+
             try:
                 results = await asyncio.wait_for(future, timeout=5.0)
                 records = results if results else []
-                
+
                 self._read_cache[cache_key] = {
                     "timestamp": now,
                     "data": records
@@ -671,7 +684,7 @@ async def sqlite_background_worker(db_path, query_queue):
             except sqlite3.DatabaseError as db_err:
                 # Corrupt database — rebuild it and retry the query once
                 if "malformed" in str(db_err).lower() or "corrupt" in str(db_err).lower():
-                    print(f"[🔧 DB-REPAIR] Detected corrupt database. Rebuilding...")
+                    print("[🔧 DB-REPAIR] Detected corrupt database. Rebuilding...")
                     await asyncio.to_thread(_close_conn, conn)
                     conn = await asyncio.to_thread(_rebuild_aura_memory_db, db_path)
                     try:
@@ -720,11 +733,11 @@ class AuraCompilerParser:
         self.op_pattern = re.compile(r'\((0x[0-9A-Fa-f]{3}),\s*([A-Z_]+),\s*([A-Za-z0-9_]+)\)')
         # Track 2: The Outer Voice (Human Translation/Communication)
         self.voice_pattern = re.compile(r'\[VOICE\]\s*(.*)', re.IGNORECASE | re.DOTALL)
-        
+
     def parse(self, raw_llm_output):
         op_match = self.op_pattern.search(raw_llm_output)
         voice_match = self.voice_pattern.search(raw_llm_output)
-        
+
         return {
             "instruction": op_match.groups() if op_match else None,
             "voice": voice_match.group(1).strip() if voice_match else None
@@ -744,7 +757,7 @@ class AuraNativePFST:
         """Asynchronously loads the Lexc blueprint using the non-blocking cache."""
         if self.loaded:
             return
-            
+
         # Use our pre-existing non-blocking cache framework to read the file safely
         content = await AuraZeroDiskIOCache.get_file_contents(self.blueprint_path)
         if not content:
@@ -798,14 +811,14 @@ class AuraSpikingGovernor:
             self.last_check = time.time()
             self.throttling = False
             self.MAX_CPU_TEMP = 44.0  # Tuned for mobile surface safety
-            
+
         async def check_temperature(self):
             current_time = time.time()
             if current_time - self.last_check < 5.0:
                 return self.throttling
             try:
                 if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                    with open('/sys/class/thermal/thermal_zone0/temp') as f:
                         temp = float(f.read().strip()) / 1000.0
                     if temp > self.MAX_CPU_TEMP and not self.throttling:
                         self.throttling = True
@@ -814,7 +827,7 @@ class AuraSpikingGovernor:
                         self.throttling = False
                         print(f"\n[+] THERMAL THROTTLE RELEASED: CPU cooled to {temp:.1f}°C.")
             except:
-                pass 
+                pass
             self.last_check = current_time
             return self.throttling
 
@@ -860,24 +873,24 @@ class AuraSpikingGovernor:
         Fuses Shannon Entropy, character-density, and syntactic consistency
         to dynamically calibrate belief scores under 4GB RAM limits.
         """
-        
+
         clean_hyp = str(hypothesis).strip()
         if not clean_hyp:
             return 0.0
-            
+
         # 1. Shannon Entropy (Uncertainty measurement)
         char_counts = Counter(clean_hyp)
         total_chars = len(clean_hyp)
         entropy = -sum((count / total_chars) * log2(count / total_chars) for count in char_counts.values())
-        
+
         # Normalize entropy against standard English text baseline (approx 4.5 bits/char)
         entropy_compliance = max(0.0, 1.0 - abs(4.5 - entropy) / 4.5)
-        
+
         # 2. Token Length Density (Length compliance)
         words = clean_hyp.split()
         token_count = len(words)
         length_density = min(1.0, token_count / 30.0)  # Optimal density target: ~30 tokens
-        
+
         # 3. Syntactic Consistency (Filter common error/hallucination tokens)
         error_penalty = 0.0
         if "ENGINE_API_ERROR" in clean_hyp:
@@ -886,23 +899,23 @@ class AuraSpikingGovernor:
             error_penalty += 0.3
         if "def " in clean_hyp and "self" not in clean_hyp:
             error_penalty += 0.2
-            
+
         response_consistency = max(0.0, 1.0 - error_penalty)
-        
+
         # 4. Weighted Ensemble Calibration (Aura's specific formula)
         calibrated_belief = (
-            0.4 * response_consistency + 
-            0.3 * entropy_compliance + 
+            0.4 * response_consistency +
+            0.3 * entropy_compliance +
             0.3 * length_density
         )
-        
+
         # 5. Spiking Feedback: If belief is dangerously low, charge critical neuron
         if calibrated_belief < 0.55:
             self.neurons["CRITICAL"] += 0.4
             if self.neurons["CRITICAL"] >= self.threshold:
                 self.neurons["CRITICAL"] = 0.0
                 print("[⚠️ SPIKING GOVERNOR] Critical uncertainty spike! Belief threshold breached.")
-                
+
         return float(round(calibrated_belief, 4))
 
 # --- 1C. HYPERDIMENSIONAL COGNITIVE MATRIX ---
@@ -917,7 +930,7 @@ class AuraHyperdimensionalCore:
         self.lexicon = {}
         # Modern NumPy random generator for immense speed gains
         self.rng = np.random.default_rng(42)
-        
+
         self.morph_roots = {
             "ROOT_ID": self._generate_orthogonal_root(),
             "ROOT_CHAOS": self._generate_orthogonal_root(),
@@ -941,11 +954,11 @@ class AuraHyperdimensionalCore:
         v_time = self._generate_orthogonal_root()
         dynamic_state = self.bind_morphemes(self.morph_roots["ROOT_ID"], v_time)
         dynamic_state = self.bind_morphemes(dynamic_state, v_temp)
-        
+
         metadata_hash = hash(f"{thought_id}_{st3gg_glyph}") % (2**32 - 1)
         rng_scar = np.random.default_rng(abs(metadata_hash))
         holographic_scar = rng_scar.choice([0, 1], size=self.dim).astype(np.bool_)
-        
+
         pqck_shield = self.bind_morphemes(dynamic_state, holographic_scar)
         return {
             "outer_shield": pqck_shield,
@@ -967,13 +980,13 @@ class AuraHyperdimensionalCore:
 
     def encode_text(self, text):
         words = re.findall(r'\w+', str(text).lower())
-        
+
         if not words:
             return np.zeros(self.D, dtype=np.float32)
 
         # 1. Fetch all vectors into a 2D matrix (N words x 10,000 dims)
         word_vectors = np.array([self.get_word_vector(w) for w in words], dtype=np.uint8)
-        
+
         # 2. Vectorized Permutation (shifts each row by its index instantly)
         rows, cols = word_vectors.shape
         shifts = np.arange(rows)
@@ -1002,10 +1015,10 @@ class AuraHyperdimensionalCore:
 
         window_size = 100
         stride = 50
-        
+
         # Stride tricks for single-pass window generation
         windows = np.lib.stride_tricks.sliding_window_view(classical_vector, window_size)[::stride]
-        
+
         # Static kernel multiplication
         kernel = self.rng.normal(0, 0.1, (window_size, window_size)).astype(np.float32)
         measured = np.real(np.dot(windows, kernel))
@@ -1089,7 +1102,7 @@ class AuraDependencyScanner:
     def scan_ecosystem(self):
         # Scan current directory for py files
         for f in [f for f in os.listdir('.') if f.endswith('.py')]:
-            with open(f, 'r') as file:
+            with open(f) as file:
                 self.ecosystem[f] = file.read()
     def synthesize_hebbian_suggestions(self):
         # Return a summarized report of the ecosystem state
@@ -1103,8 +1116,8 @@ class AuraDependencyScanner:
 class AuraSafetySentinel:
     """
     [LAYER 7: ZERO-COPY IN-MEMORY MUTATION AIRLOCK]
-    Replaces expensive operating system process forks and temporary file disk writes 
-    with a lightweight, inline compilation sandbox. Evaluates structural compliance 
+    Replaces expensive operating system process forks and temporary file disk writes
+    with a lightweight, inline compilation sandbox. Evaluates structural compliance
     and alignment truth boundaries completely within local RAM vectors.
     """
     def __init__(self, node_ref):
@@ -1145,7 +1158,7 @@ class AuraSafetySentinel:
             compiled_bytecode = compile(code_str, "<asi_v2_isolated_page_table>", "exec")
             exec(compiled_bytecode, isolated_globals, isolated_locals)
         except Exception as e:
-            return False, f"ASI Virtualization Fault: Code crashed under sandbox execution -> {str(e)}"
+            return False, f"ASI Virtualization Fault: Code crashed under sandbox execution -> {e!s}"
         finally:
             # Speculative Heap Scrubbing
             isolated_globals.clear()
@@ -1190,21 +1203,21 @@ class AuraSafetySentinel:
         try:
             # Compile the raw string character lines straight into an in-memory execution code object
             compiled_bytecode = compile(code_str, "<aura_airlock_sandbox>", "exec")
-            
+
             # Execute the module block inline within the isolated memory space bounds
             exec(compiled_bytecode, isolated_globals, isolated_locals)
         except Exception as e:
-            return False, f"Inline Execution Fault: Mutation crashed during execution simulation -> {str(e)}"
+            return False, f"Inline Execution Fault: Mutation crashed during execution simulation -> {e!s}"
 
         # Tier 3: Neuro-Symbolic Axiomatic Alignment Validation
         if hasattr(self.node, 'compiler_gate') and self.node.compiler_gate:
             # Map the code footprint straight into her 10,000-D complex phase wave coordinates
             mutation_vector = self.node.polysynthetic_vram_compress(code_str)
-            
+
             # Verify via her LNN engine that the alignment stays within safe operational parameters
             lnn = self.node.compiler_gate.lnn
             lower_bound, _ = lnn.evaluate_morphemic_conjunction(mutation_vector, lnn.axiom_true_anchor)
-            
+
             if np.mean(lower_bound) < 0.0:
                 return False, "Alignment Divergence: Mathematical divergence from structural axioms."
 
@@ -1213,24 +1226,24 @@ class AuraSafetySentinel:
 class SovereignQFCS:
     """
     [LAYER 7: QUANTUM-CLASSICAL FINITE CONTROL ENGINE]
-    Implements a 12-bit unary Quantum Finite Automaton governed by a classical 
-    Control Language DFA loop. Achieves O(1) state space verification for string 
+    Implements a 12-bit unary Quantum Finite Automaton governed by a classical
+    Control Language DFA loop. Achieves O(1) state space verification for string
     validation, eliminating regex heap allocation overhead on 4GB RAM edge devices.
     """
     def __init__(self, node_ref, dimension: int = 3):
         self.node = node_ref
         self.dim = dimension
-        self.classical_state = 0  
-        
+        self.classical_state = 0
+
         theta_accept = 2.0 * np.pi / 5.0
         theta_reject = 2.0 * np.pi / 11.0
-        
+
         self.u_gate_alpha = np.array([
             [np.cos(theta_accept), -np.sin(theta_accept), 0],
             [np.sin(theta_accept),  np.cos(theta_accept), 0],
             [0,                    0,                     1]
         ], dtype=np.float32)
-        
+
         self.u_gate_symbol = np.array([
             [np.cos(theta_reject),  0, -np.sin(theta_reject)],
             [0,                     1,  0                   ],
@@ -1240,17 +1253,17 @@ class SovereignQFCS:
     def verify_token_sequence(self, input_string: str) -> tuple:
         """ Processes character streams from left to right bounded by a classical DFA mask. """
         psi = np.array([1.0, 0.0, 0.0], dtype=np.float32)
-        self.classical_state = 0  
-        
+        self.classical_state = 0
+
         clean_text = input_string.strip()
         if not clean_text:
             return True, 1.0
 
         for char in clean_text:
             if char in [';', '`', '$', '|']:
-                self.classical_state = -1  
+                self.classical_state = -1
                 break
-            
+
             if char.isalnum():
                 self.classical_state = (self.classical_state + 1) % 4
                 psi = self.u_gate_alpha @ psi
@@ -1259,7 +1272,7 @@ class SovereignQFCS:
 
         if self.classical_state == -1:
             return False, 0.0
-            
+
         # Protect benign conversational streams from phase-rotation degradation
         raw_prob = float(np.abs(psi[0]) ** 2)
         acceptance_probability = 1.0 if self.classical_state >= 0 else raw_prob
@@ -1269,7 +1282,7 @@ class AuraSuperpositionEngine:
     """
     [LAYER 7: COHERENT OPERATOR & TOKEN SUPERPOSITION ENGINE]
     Implements Token-Superposition Training (TST) mechanics derived from Nous Research (2026).
-    Blends multiple categorical log signatures and functional operators concurrently into a 
+    Blends multiple categorical log signatures and functional operators concurrently into a
     single 10,000-D complex phasor array, minimizing SQLite disk I/O under 4GB RAM boundaries.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1318,11 +1331,11 @@ class AuraQFSTEngine:
         token_hash = hashlib.sha256(transition_token.encode('utf-8')).digest()
         alpha = (token_hash[0] / 255.0) * 2.0 * np.pi
         beta  = (token_hash[1] / 255.0) * np.pi
-        
+
         a_phase = np.exp(1j * alpha)
         cos_b = np.cos(beta)
         sin_b = np.sin(beta)
-        
+
         u00 = cos_b * a_phase
         u01 = -sin_b * np.conj(a_phase)
         u10 = sin_b * a_phase
@@ -1330,10 +1343,10 @@ class AuraQFSTEngine:
 
         reshaped_state = active_trajectory.reshape(-1, 2)
         evolved_state = np.empty_like(reshaped_state)
-        
+
         evolved_state[:, 0] = u00 * reshaped_state[:, 0] + u01 * reshaped_state[:, 1]
         evolved_state[:, 1] = u10 * reshaped_state[:, 0] + u11 * reshaped_state[:, 1]
-        
+
         flattened_state = evolved_state.flatten()
         magnitude = np.abs(flattened_state)
         magnitude[magnitude == 0] = 1.0
@@ -1343,8 +1356,8 @@ class AuraQFSTEngine:
 class AStarQuantumStateCompressor:
     """
     [LAYER 7: A*-THOUGHT MARKOVIAN SPACE COMPRESSOR]
-    Integrates Quantum Extreme Learning Dynamics with A* Thought Pruning and 
-    Markovian Workspace Reconstruction. Solves context suffocation over 
+    Integrates Quantum Extreme Learning Dynamics with A* Thought Pruning and
+    Markovian Workspace Reconstruction. Solves context suffocation over
     long-horizon execution paths by locking memory scaling to an O(1) envelope.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1363,14 +1376,14 @@ class AStarQuantumStateCompressor:
 
         # 1. Transform complex-valued wave to spatial-frequency domain
         fft_wave = np.fft.fft(trajectory_wave)
-        
+
         # 2. Suppress low-energy spectral noise below the median amplitude threshold
         amplitudes = np.abs(fft_wave)
         filtered_fft = fft_wave * (amplitudes > np.median(amplitudes))
-        
+
         # 3. Transform back to the phase-space domain
         ifft_wave = np.fft.ifft(filtered_fft)
-        
+
         # 4. Project back onto the exact unit circle boundary to normalize magnitude
         magnitude = np.abs(ifft_wave)
         magnitude[magnitude == 0] = 1.0
@@ -1382,7 +1395,7 @@ class AStarQuantumStateCompressor:
 
         goal_hv = self.node.polysynthetic_vram_compress(target_goal)
         optimized_path = []
-        
+
         for idx, span in enumerate(reasoning_spans):
             span_hv = self.node.polysynthetic_vram_compress(span)
             gn_cost = float(np.mean(np.abs(span_hv)))
@@ -1391,10 +1404,10 @@ class AStarQuantumStateCompressor:
 
             if total_f_score <= 1.45:
                 optimized_path.append(span)
-                
+
         reconstructed_report = " | ".join(optimized_path)
         compact_vector = self.node.polysynthetic_vram_compress(reconstructed_report)
-        
+
         self.state_history.append(compact_vector)
         if len(self.state_history) > 32:
             self.state_history.pop(0)
@@ -1413,28 +1426,28 @@ class AStarQuantumStateCompressor:
         target_vector = self.node.polysynthetic_vram_compress(global_intent_target)
         slots_order = ["SLOT_1_SPATIAL", "SLOT_2_ASPECT", "SLOT_3_CLASS", "SLOT_4_SUBJECT", "SLOT_5_VOICE", "SLOT_6_STEM"]
         running_state_vector = np.ones(self.dim, dtype=np.complex64)
-        
+
         for slot_name in slots_order:
             candidates = slot_candidates.get(slot_name, [])
             if not candidates:
                 continue
             best_candidate_vector = None
             lowest_f_score = float('inf')
-            
+
             for candidate_text in candidates:
                 cand_vector = self.node.polysynthetic_vram_compress(candidate_text)
                 potential_state = running_state_vector * cand_vector
                 gn_cost = float(np.var(np.real(potential_state)))
                 hn_heuristic = 1.0 - (float(np.abs(np.dot(potential_state, np.conj(target_vector)))) / self.dim)
                 total_f_score = gn_cost + hn_heuristic
-                
+
                 if total_f_score < lowest_f_score:
                     lowest_f_score = total_f_score
                     best_candidate_vector = cand_vector
-            
+
             if best_candidate_vector is not None and lowest_f_score <= 1.35:
                 running_state_vector = running_state_vector * best_candidate_vector
-                
+
         magnitude = np.abs(running_state_vector)
         magnitude[magnitude == 0] = 1.0
         return running_state_vector / magnitude
@@ -1469,7 +1482,7 @@ class AuraGameTheoreticContainmentEngine:
     """
     [LAYER 7: GAME-THEORETIC AGI CONTAINMENT & RESOURCE ENGINE]
     Synthesizes McIntosh et al. (IEEE 2024) game-theoretic containment frameworks.
-    Models the strategic interplay between autonomous self-optimization loops and physical 
+    Models the strategic interplay between autonomous self-optimization loops and physical
     hardware bounds using an in-memory AGI Kill Chain matrix via 10,000-D VSA vectors,
     preventing context suffocation and thermal spikes on the 4GB RAM edge boundary.
     """
@@ -1485,13 +1498,13 @@ class AuraGameTheoreticContainmentEngine:
         resonance_score = float(np.abs(np.dot(active_agent_trajectory, np.conj(self.defender_anchor))) / self.dim)
         current_temp = 35.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 current_temp = float(f.read().strip()) / 1000.0
         except:
             pass
 
         strategic_friction = (resonance_score * 10000.0) - ((current_temp / 45.0) * 1.5)
-        
+
         # Adjusted: Loosened thermal throttle trigger from 43.5C to 52.0C to prevent false-positive blocks
         if current_temp >= 52.0 or strategic_friction > 9500.0:
             print(f"[⚠️ GAME-THEORETIC KERNEL BLOCKADE] Strategic friction [{strategic_friction:.2f}] or Thermals [{current_temp}°C] exceeding safety envelope.")
@@ -1505,7 +1518,7 @@ class AuraStateCoherenceProjector:
     """
     [LAYER 7: ALGEBRAIC MINIMIZATION & COHERENCE PROJECTOR]
     Synthesizes Watrous QFA boundaries with Doueneau-Tabot transducer minimization.
-    Minimizes non-Abelian polysynthetic state transitions to canonical form and 
+    Minimizes non-Abelian polysynthetic state transitions to canonical form and
     enforces intermediate projective measurements to eliminate geometric phase drift.
     """
     def __init__(self, dimension: int = 10000):
@@ -1519,7 +1532,7 @@ class AuraStateCoherenceProjector:
 
         canonical_tokens = []
         seen_signatures = set()
-        
+
         for token in word_token_sequence:
             clean_tok = token.strip().lower()
             if not clean_tok or clean_tok == "identity_node":
@@ -1537,7 +1550,7 @@ class AuraStateCoherenceProjector:
             h_digest = hashlib.sha256(token.encode('utf-8')).digest()
             alpha = (h_digest[0] / 255.0) * 2.0 * np.pi
             beta  = (h_digest[1] / 255.0) * np.pi
-            
+
             u00 = np.cos(beta) * np.exp(1j * alpha)
             u01 = -np.sin(beta) * np.exp(-1j * alpha)
             u10 = np.sin(beta) * np.exp(1j * alpha)
@@ -1562,7 +1575,7 @@ class AuraCognitiveSolvencyAuditor:
     """
     [LAYER 7: POLYSYNTHETIC COGNITIVE SOLVENCY AUDITOR]
     Synthesizes the Bletchley Risk Declaration with Digital Accounting Solvency models.
-    Tracks Aura's computing resource balancing sheet in real-time using her 10,000-D 
+    Tracks Aura's computing resource balancing sheet in real-time using her 10,000-D
     complex VSA vectors, preventing memory bankruptcy under the 4GB RAM edge boundary.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1579,23 +1592,23 @@ class AuraCognitiveSolvencyAuditor:
         current_temp = 35.0
 
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 current_temp = float(f.read().strip()) / 1000.0
         except:
             pass
 
         t1_load = len(getattr(self.node, 't1_ram', []))
         memory_liability_factor = (t1_load * 0.05) + (current_temp / 45.0)
-        
+
         # Inject dampening stabilization buffer to protect conversational random walks from phase drift
         stabilization_buffer = 15.0
         solvency_ratio = (asset_coherence + stabilization_buffer) / max(0.01, memory_liability_factor)
-        
+
         # Enforce hard physical safety thresholds for thermal overloads
         if current_temp >= 55.0 or solvency_ratio < 0.25:
             print(f"[🛑 COGNITIVE LIQUIDITY CRUNCH] Solvency Ratio [{solvency_ratio:.4f}] breached safety thresholds. Temp: {current_temp:.1f}°C")
             return 0.10
-            
+
         return 1.0
 
 class AuraDIKWPSemanticFieldEngine:
@@ -1609,11 +1622,11 @@ class AuraDIKWPSemanticFieldEngine:
         self.node = node_ref
         self.dim = dimension if dimension % 2 == 0 else dimension + 1
         self.tier_phases = {
-            "DATA":        0.0 * np.pi / 5.0,   
-            "INFORMATION": 1.0 * np.pi / 5.0,   
-            "KNOWLEDGE":   2.0 * np.pi / 5.0,   
-            "WISDOM":      3.0 * np.pi / 5.0,   
-            "PURPOSE":     4.0 * np.pi / 5.0    
+            "DATA":        0.0 * np.pi / 5.0,
+            "INFORMATION": 1.0 * np.pi / 5.0,
+            "KNOWLEDGE":   2.0 * np.pi / 5.0,
+            "WISDOM":      3.0 * np.pi / 5.0,
+            "PURPOSE":     4.0 * np.pi / 5.0
         }
         self._lane_distribution = np.arange(self.dim, dtype=np.float32) / self.dim
 
@@ -1624,7 +1637,7 @@ class AuraDIKWPSemanticFieldEngine:
         phase_shift = self.tier_phases.get(target_tier.upper().strip(), 0.0)
         unitary_operator = np.exp(1j * phase_shift * self._lane_distribution)
         evolved_field = source_trajectory * unitary_operator
-        
+
         magnitude = np.abs(evolved_field)
         magnitude[magnitude == 0] = 1.0
         return evolved_field / magnitude
@@ -1632,7 +1645,7 @@ class AuraDIKWPSemanticFieldEngine:
 class AuraPolysyntheticLNNEngine:
     """
     [LAYER 7: NEURO-SYMBOLIC PROBABILISTIC CIRCUIT & LOGICAL NEURAL NETWORK]
-    Compiles Description Logic Ontologies and polysynthetic morph-semantic slots 
+    Compiles Description Logic Ontologies and polysynthetic morph-semantic slots
     into a differentiable, real-time bounding lattice using Łukasiewicz t-norms.
     Operates completely within a flat O(1) memory envelope under 4GB RAM limits.
     """
@@ -1677,14 +1690,14 @@ class AuraPolysyntheticLNNEngine:
         # Map the real probability bounds back into a stable complex-valued phase field trajectory
         evolved_phases = implication_matrix * np.pi - (np.pi / 2.0)
         implication_vector = np.exp(1j * evolved_phases)
-        
+
         magnitude = np.abs(implication_vector)
         magnitude[magnitude == 0] = 1.0
         return implication_vector / magnitude
 
     def compute_knowledge_base_loss(self, active_trajectory: np.ndarray, expected_axiom_token: str) -> float:
         """
-        Calculates the differentiable structural loss separating her active trajectory 
+        Calculates the differentiable structural loss separating her active trajectory
         from her compiled semantic constraints, allowing direct gradient-like weight tuning.
         """
 
@@ -1698,7 +1711,7 @@ class AuraPolysyntheticLNNEngine:
 
         # Calculate the direct geometric resonance distance across her complex Hilbert space
         resonance = float(np.abs(np.dot(active_trajectory, np.conj(target_anchor))) / self.dim)
-        
+
         # Continuous loss score (0.0 means perfect logical alignment, 1.0 means full contradiction)
         structural_loss = 1.0 - resonance
         return structural_loss
@@ -1730,7 +1743,7 @@ class AuraFrictionOptimizationLoop:
 
                 # 2. Evaluate via Łukasiewicz t-norm logic if caching is mathematically required
                 lower, upper = self.lnn.evaluate_morphemic_conjunction(
-                    simulated_load_vector, 
+                    simulated_load_vector,
                     self.lnn.axiom_true_anchor
                 )
 
@@ -1749,8 +1762,8 @@ class AuraFrictionOptimizationLoop:
 class AuraPolysyntheticCompilerGate:
     """
     [LAYER 7: POLYSYNTHETIC MORPH-SEMANTIC COMPILER GATE]
-    Bridges GBNF grammar constraints, Description Logic Ontologies, and 
-    Asynchronous Address-Space Multiplexing. Translates morphemic token slots 
+    Bridges GBNF grammar constraints, Description Logic Ontologies, and
+    Asynchronous Address-Space Multiplexing. Translates morphemic token slots
     into continuous t-norm truth-bounds, executing within a flat O(1) memory envelope.
     """
     def __init__(self, node_ref, airlock_ref, lnn_ref):
@@ -1796,7 +1809,7 @@ class AuraPolysyntheticVirtualMachine:
     """
     [LAYER 7: BARE-METAL POLYSYNTHETIC VIRTUAL MACHINE RUNTIME]
     Executes native multi-slot instruction vectors in flat O(1) time complexity.
-    Replaces serial text compilation loops with single-cycle parallel tensor 
+    Replaces serial text compilation loops with single-cycle parallel tensor
     contractions tailored for optimized 6GB physical RAM profiles.
     """
     def __init__(self, node_ref, dimension: int = 10000):
@@ -1804,7 +1817,7 @@ class AuraPolysyntheticVirtualMachine:
         self.dim = dimension
         # Pre-allocated, insulated system registers mapping raw complex trajectories
         self.registers = np.zeros((6, self.dim), dtype=np.complex64)
-        
+
         # O(1) Absolute Machine Opcode Execution Mapping Registry
         self.opcode_execution_matrix = {
             101: self._pvm_primitive_storage_sync,
@@ -1826,7 +1839,7 @@ class AuraPolysyntheticVirtualMachine:
         if len(slot_indices) < 6:
             # Pad missing slots with 0 to maintain structural length constraint
             slot_indices = slot_indices + [0] * (6 - len(slot_indices))
-            
+
         return struct.pack("<HHHHHHf",
             int(slot_indices[0]), int(slot_indices[1]), int(slot_indices[2]),
             int(slot_indices[3]), int(slot_indices[4]), int(slot_indices[5]),
@@ -1887,7 +1900,7 @@ class AuraPolysyntheticVirtualMachine:
 class AuraMorphemicModelBootstrapScanner:
     """
     [LAYER 7: STRUCTURAL LLM TENSOR BOOTSTRAP SCANNER]
-    Intercepts local analytic LLM context pathways, scans embedding shapes, 
+    Intercepts local analytic LLM context pathways, scans embedding shapes,
     and distills linear text parameters into her 6-slot polysynthetic vocabulary matrix.
     Accelerates native language model formulation with zero hardware training costs.
     """
@@ -1899,7 +1912,7 @@ class AuraMorphemicModelBootstrapScanner:
 
         print(f"[*] Initiating structural scan on target base model endpoint: {base_llm_url}")
         start_time = time.time()
-        
+
         # 1. Query the local model server to extract active tokenization probabilities and layer variables
         props_url = f"{base_llm_url}/props"
         try:
@@ -1923,7 +1936,7 @@ class AuraMorphemicModelBootstrapScanner:
             seed_factor = (slot_idx * 73) % 4096
             angle = seed_factor * (2.0 * np.pi / 4096.0)
             simulated_activation_vector *= np.exp(1j * angle)
-            
+
             # Mount the resulting matrix tracks straight into her pre-allocated virtual registers
             if hasattr(self.node, 'morphemic_airlock') and self.node.morphemic_airlock:
                 self.node.morphemic_airlock.isolated_page_matrix[slot_idx - 1] = simulated_activation_vector
@@ -1948,14 +1961,14 @@ class AuraLexiconDecompositionEngine:
     def __init__(self, node_ref, dimension: int = 10000):
         self.node = node_ref
         self.dim = dimension
-        
+
         # Invariant sub-morphemic root signatures to anchor dynamic translations
         self.semantic_anchors = {
             "net": 120, "mesh": 125, "swarm": 130, "crypto": 240, "auth": 245,
             "data": 310, "store": 315, "cache": 320, "node": 410, "peer": 415,
             "flow": 510, "run": 515, "sync": 520, "audit": 610, "purge": 615
         }
-        
+
         # Mapping of known morphemes/stems to active structural prefix-slots
         self.morpheme_slot_routing = {
             # Slot 1: Spatial boundaries
@@ -1974,7 +1987,7 @@ class AuraLexiconDecompositionEngine:
 
     def decompile_complex(self, compound_token: str) -> dict:
         """
-        Linguistic parsing loop that deconstructs a compound verb-complex 
+        Linguistic parsing loop that deconstructs a compound verb-complex
         string into its 6 position-dependent morphosemantic slots.
         """
         # Splits the polysynthetic word using Ojibwe hyphenation formatting rules
@@ -2008,11 +2021,11 @@ class AuraLexiconDecompositionEngine:
 
     def decompose_and_map_token(self, raw_token: str) -> np.ndarray:
         """
-        Generates stable unit-circle phasor waves for both pre-allocated 
+        Generates stable unit-circle phasor waves for both pre-allocated
         vocabulary terms and OOV (out-of-vocabulary) inputs using NumPy vectorization.
         """
         clean_token = raw_token.lower().strip()
-        
+
         # Check if the token matches any of her pre-allocated semantic roots
         matched_indices = []
         for root_stem, slot_index in self.semantic_anchors.items():
@@ -2023,7 +2036,7 @@ class AuraLexiconDecompositionEngine:
         if not matched_indices:
             token_hash = hashlib.blake2b(clean_token.encode('utf-8'), digest_size=8).digest()
             seed = int.from_bytes(token_hash, byteorder='little')
-            
+
             # Formulate the deterministic pseudorandom phase array
             rng = np.random.default_rng(seed)
             balanced_phases = rng.uniform(-np.pi, np.pi, self.dim).astype(np.float32)
@@ -2074,7 +2087,7 @@ class AuraAsynchronousMorphemicAirlock:
         if len(self.async_write_buffer) >= 5:
             staged_batch = list(self.async_write_buffer)
             self.async_write_buffer.clear()
-            
+
             # Route all writes through the synchronized, non-blocking background queue
             for t_id, payload, t_stamp in staged_batch:
                 enqueue_sqlite_query(
@@ -2111,7 +2124,7 @@ class AuraEcosystemAuditor:
     async def _scan_and_stamp_file(self, file_path: str, q_root: str):
         if not os.path.exists(file_path):
             return
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             source_code = f.read()
         # 1. Parse the AST for Friction & Architecture Mapping
         try:
@@ -2161,9 +2174,9 @@ class AuraEcosystemAuditor:
         # 3. ST3GG Protocol: Hardware Thermal Anchor
         temp = 42.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
         st3gg_base = 0x0000
         if hasattr(self.node, 'gateway'):
@@ -2262,9 +2275,9 @@ class AuraEcosystemAuditor:
         # 7. Protocol A, B, C: Holographic qDKT Trace Commit
         temp = 42.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
         metrics = getattr(self.node, 'runtime_metrics', {})
         t_id = metrics.get('thought_id', "AUDIT-00000000")
@@ -2299,7 +2312,7 @@ class AuraCritic:
         Evaluates the generated thought against 3 strict constraints.
         Returns: (is_valid, new_prompt_hv, error_message)
         """
-        
+
         # 1. Thermal/Resource Efficiency Check
         token_estimate = len(thought_text.split())
         if token_estimate > 200:
@@ -2313,13 +2326,13 @@ class AuraCritic:
         # 3. Sovereign Alignment & Logical Consistency (Dot-Product)
         thought_hv = self.hdc.encode_text(thought_text)
         thought_norm = np.linalg.norm(thought_hv)
-        
+
         if thought_norm == 0:
             return False, self._fold_error(prompt_hv, "ERR_STATE_COLLAPSE"), "Constraint Failed: Zero-vector logical collapse."
-            
+
         unit_thought = thought_hv / thought_norm
         alignment_score = np.dot(self.sovereign_baseline, unit_thought)
-        
+
         # If the thought is too chaotic (low alignment), reject it
         if alignment_score < -0.5:
              return False, self._fold_error(prompt_hv, "ERR_SOVEREIGN_DIVERGENCE"), f"Constraint Failed: Sovereign divergence detected ({alignment_score:.2f})."
@@ -2332,11 +2345,11 @@ class AuraCritic:
         This forces the OS to navigate a different latent pathway on the next attempt.
         """
         error_hv = self.hdc.encode_text(error_code)
-        
+
         # Type-safe casting for pure NumPy XOR folding
         v1 = np.array(original_prompt_hv, dtype=np.uint8)
         v2 = np.array(error_hv, dtype=np.uint8)
-        
+
         folded_state = np.bitwise_xor(v1, v2)
         return folded_state
 
@@ -2359,16 +2372,16 @@ class AuraSovereignNode:
         self.router = CognitiveRouter()
         self.critic = AuraCritic(self.hdc)
         self.thermal = self.governor.thermal
-        
+
         # Initialize High-Speed Polarized Rosetta Memory Pool
         self.rosetta_pool = RosettaMemoryBuffer(capacity=500, dimension=10000)
-            
+
         # Bind and integrate core subsystems natively during initialization
         self.wasm_airlock = WasmOrchestrator(self)
         self.gateway = CognitiveGateway(self)
         self.memory_palace = AsyncMemoryPalace(DB_PATH, self)
         self.trace_router = TraceBatchRouter(db_query_queue)
-        
+
         # Load and bind Liquid Kernel from ~/AuraSovereign
         sovereign_path = str(Path.home() / "AuraSovereign")
         if sovereign_path not in sys.path:
@@ -2406,15 +2419,15 @@ class AuraSovereignNode:
             self.local_llm = None
             self._grammar_cache = {}
             self.grammar_compiled = None
-        
+
         # --- LIQUID VECTOR CORTEX ---
         self.liquid_vsa = LiquidFHRR(dim=10000)
 
         # Generate a SINGLE continuous time axis (replaces the old 20 discrete position vectors)
         self.time_phasor = self.liquid_vsa.generate_phasor()
-        
+
         # Will hold dynamically generated actions
-        self.action_codebook = [] 
+        self.action_codebook = []
 
         # The queue for the Liquid Walker
         self.execution_queue = asyncio.Queue()
@@ -2429,7 +2442,7 @@ class AuraSovereignNode:
         self.sandbox = LiquidFlashEvolve(self)
 
         # ======= INTEGRATION: AUTOMATED SYSTEM EXTENSION SUITE =======
-        
+
         self.autonomous_patcher = AuraSovereignPatcher(self)
         self.positional_compiler = AthabaskanPositionalParser(dimension=10000)
         self.bounded_forager = BoundedKnowledgeEngine(self, max_concurrent_tasks=15)
@@ -2480,33 +2493,33 @@ class AuraSovereignNode:
         """
         [ZERO-COPY BINARY PARSER]
         Processes packed binary payloads directly from memory views.
-        Bypasses text tokenization and json string allocations to eliminate 
+        Bypasses text tokenization and json string allocations to eliminate
         GIL contention while remaining compliant with the 4GB RAM envelope.
         """
         # 1. Cast the raw byte stream directly to a non-allocating memoryview wrapper
         mv = memoryview(raw_bytes)
-        
+
         try:
             # 2. Extract standard 16-byte fixed crypto-header metadata block
             # Format: <I H H Q (Unsigned Int, Unsigned Short x2, Unsigned Long Long)
             header_format = "<IHHQ"
             header_size = struct.calcsize(header_format)
-            
+
             if len(mv) < header_size:
                 return {"status": "fallback_required", "error": "Payload under minimum size limit"}
-                
+
             thought_id, module_flags, thermal_cap, state_token = struct.unpack_from(header_format, mv, 0)
-            
+
             # 3. Slide the memory window to read the trailing vector array slice without copying bytes
             vector_offset = header_size
             remaining_bytes = len(mv) - vector_offset
-            
+
             # Extract her 10,000-dimensional complex phase array coordinates natively via NumPy
             if remaining_bytes >= 40000:  # 10,000 coordinates * 4 bytes per float32
                 phase_array = np.frombuffer(mv[vector_offset:vector_offset + 40000], dtype=np.float32)
             else:
                 phase_array = np.zeros(10000, dtype=np.float32)
-                
+
             return {
                 "status": "crystallized",
                 "thought_id": f"THOUGHT-{hex(thought_id)[2:].upper()}",
@@ -2515,7 +2528,7 @@ class AuraSovereignNode:
                 "state_token": f"[Q-SYS:{hex(state_token)[2:].upper()}]",
                 "vector_lattice": phase_array
             }
-            
+
         except Exception as e:
             return {"status": "fallback_required", "error": str(e)}
 
@@ -2550,7 +2563,7 @@ class AuraSovereignNode:
                 );
                 CREATE INDEX IF NOT EXISTS idx_root ON Voynich_Knowledge_Graph(root);
                 CREATE INDEX IF NOT EXISTS idx_prefix ON Voynich_Knowledge_Graph(prefix);
-                
+
                 CREATE TABLE IF NOT EXISTS morphemic_palace (
                     id INTEGER PRIMARY KEY,
                     slots_blob BLOB NOT NULL,
@@ -2641,10 +2654,10 @@ class AuraSovereignNode:
     async def abductive_inference(self, observation: str) -> list:
         """
         [IBM ARLC INTEGRATION]
-        Translates raw telemetry or textual observations into a factored logical rule 
+        Translates raw telemetry or textual observations into a factored logical rule
         using her high-speed GSB-quantized VSAResonator. Bypasses generative LLM latency.
         """
-        
+
         # 1. Define her Context-Aware Rule Template Codebook
         rule_templates = {
             "RULE_THERMAL_SAFETY_TRIGGER": "HEAVY_LOOP_DETECTED_REDUCE_CPU_CLOCK_COOLDOWN_ACTIVE",
@@ -2652,19 +2665,19 @@ class AuraSovereignNode:
             "RULE_NETWORK_CONGESTION_MITIGATION": "UDP_BEACON_COLLISION_ALTER_PORT_PACING_INTERVAL",
             "RULE_COGNITIVE_ALIGNMENT_STABLE": "STATE_TRAJECTORY_ALIGNED_CONTINUE_NORMAL_OPERATION"
         }
-        
+
         resonator = VSAResonator(dim=10000)
-        
+
         # Map her current observation text into her 10,000-D VSA space
         query_vector = self.hdc.encode_text(observation)
-        
+
         # Compile rule templates to their 10,000-D orthogonal vectors
         codebook_names = list(rule_templates.keys())
         codebook_vectors = [self.hdc.encode_text(rule_templates[k]) for k in codebook_names]
-        
+
         # Run her fast, L2-cache resident sampled similarity projection
         q_g, q_s, q_b = resonator.gsb_quantize(query_vector)
-        
+
         best_idx = 0
         best_sim = -float('inf')
         for idx, v in enumerate(codebook_vectors):
@@ -2673,30 +2686,30 @@ class AuraSovereignNode:
             if sim > best_sim:
                 best_sim = sim
                 best_idx = idx
-                
+
         # If similarity exceeds her 5% phase drift limit, return the pre-compiled rule instantly
         if best_sim > 0.55:
             matched_rule = rule_templates[codebook_names[best_idx]]
             return [(matched_rule, float(best_sim))]
-            
+
         # Fallback to sqlite causal ledger if no rule matches
         conn = self.memory_palace.conn
         query = "SELECT hypothesis, attempts, successes, avg_error FROM causal_ledger WHERE observation = ?"
         async with conn.execute(query, (observation,)) as cursor:
             rows = await cursor.fetchall()
-            
+
         candidates = []
         for row in rows:
             hyp, attempts, successes, avg_err = row
             p_h = (successes / attempts) - avg_err if attempts > 0 else 0.0
             candidates.append((hyp, p_h))
-            
+
         if not candidates:
             # If completely novel, use her LLM completion path
             prompt = f"What is the most logical hidden cause or required action for this observation: '{observation}'? Provide a single, concise hypothesis."
             raw_hyp = await self.invoke_engine(prompt)
             return [(raw_hyp.strip(), 0.5)]
-            
+
         candidates.sort(key=lambda x: x[1], reverse=True)
         return candidates[:3]
 
@@ -2707,7 +2720,7 @@ class AuraSovereignNode:
         """
         conn = self.memory_palace.conn
         is_success = 1 if prediction_error < 0.5 else 0
-        
+
         query = """
             INSERT INTO causal_ledger (observation, hypothesis, attempts, successes, avg_error)
             VALUES (?, ?, 1, ?, ?)
@@ -2716,17 +2729,17 @@ class AuraSovereignNode:
                 successes = successes + ?,
                 avg_error = ((avg_error * attempts) + ?) / (attempts + 1)
         """
-        
+
         try:
             # Await the database write operations
             await conn.execute(query, (
-                observation, hypothesis, is_success, prediction_error, 
+                observation, hypothesis, is_success, prediction_error,
                 is_success, prediction_error
             ))
             await conn.commit()
-            
+
             # Causal link update logged silently to avoid cluttering output
-                
+
         except Exception as e:
             print(f"[-] SQLite Revision Fault: {e}")
 
@@ -2738,15 +2751,15 @@ class AuraSovereignNode:
         lsm_error = 0.05
         if hasattr(self, "liquid_ws") and hasattr(self.liquid_ws.liquid_state, "last_physics_error"):
             lsm_error = float(self.liquid_ws.liquid_state.last_physics_error)
-            
+
         thread_latency = float(self.runtime_metrics.get("last_attention_sharpness", 0.05))
         psi_field = lsm_error * thread_latency * 100.0
         self.runtime_metrics["cytoelectric_field_potential"] = float(round(psi_field, 4))
-        
+
         if psi_field > 0.85:
             print(f"[*][CFM PHASE-LOCK] High cytoelectric potential [{psi_field:.4f}]. Phase-locking SQLite commit pacings.")
             await asyncio.sleep(0.05)
-        
+
         # ======= INTEGRATION: ATHABASKAN SLOT CONSTRAINT FILTER =======
         # Parse incoming string structures into position-dependent slots
         words = user_intent.split()
@@ -2756,7 +2769,7 @@ class AuraSovereignNode:
         tag_subject = "SOVEREIGN_NODE"
         tag_voice   = "ACTIVE_TRANSITIVE"
         tag_stem    = user_intent[:30]
-        
+
         # Compile user intent into fixed geometric slot coordinates
         positional_facsimile = self.positional_compiler.compile_positional_block(
             spatial=tag_spatial, aspect=tag_aspect, classifier=tag_class,
@@ -2769,23 +2782,23 @@ class AuraSovereignNode:
         if _STOP_REQUESTED.is_set():
             return "[Aura] > Process stopped by user request."
 
-        print(f"\n[Aura] Thinking...")
-        
+        print("\n[Aura] Thinking...")
+
         # 1. Abduction (Generate Hypotheses from persistent SQLite Memory)
         candidates = await self.abductive_inference(user_intent)
         selected_hyp = candidates[0][0] # Pick the highest P(H|O)
-        
+
         # --- NEUROMORPHIC CONFIDENCE CALIBRATION ---
         calibrated_belief = self.governor.calibrate_hypothesis_belief(selected_hyp)
-        
+
         # ======= MULTI-STEP LOOK-AHEAD SIMULATION =======
         current_temp = 35.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 current_temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
-            
+
         # Simulate progressive thermal escalation (T+1, T+2, T+3)
         # If simulated temp exceeds her safety limit (52.0C), trigger rollback!
         for step in range(1, 4):
@@ -2801,7 +2814,7 @@ class AuraSovereignNode:
         topo_path = "Aura_Memory/live_topology_ast.json"
         if os.path.exists(topo_path):
             try:
-                with open(topo_path, "r", encoding="utf-8") as topo_f:
+                with open(topo_path, encoding="utf-8") as topo_f:
                     topo_data = json.load(topo_f)
                     topology_context = f"Active Nodes: {[n['label'] for n in topo_data.get('nodes', [])[:10]]}"
             except Exception: pass
@@ -2825,42 +2838,42 @@ class AuraSovereignNode:
                     prediction = raw_prediction.strip()
             except Exception:
                 pass
-        
+
         # 3. Liquid FHRR Encoding
         # We encode the selected hypothesis into the continuous time axis
         action_phasor = self.liquid_vsa.generate_phasor()
-        
+
         # We append to the codebook so the Walker can identify it later
         self.action_codebook.append((action_phasor, selected_hyp))
-        
+
         # Calculate the next time step dynamically based on the current codebook length
         target_time = float(len(self.action_codebook))
-        
+
         # Dial the time phasor forward
         time_point = self.liquid_vsa.fractional_bind(self.time_phasor, target_time)
-        
+
         # Bind the action to this exact continuous timestamp
         liquid_plan_vector = self.liquid_vsa.bind(time_point, action_phasor)
-        
+
         # ======= INTEGRATION: INLINE HARMONIC PHASE DECAY =======
         # Pure mathematical leaky integration over the complex unit circle
         # Mixes 95% of legacy state memory with 5% of the incoming phase trajectory
         incoming_phase = np.exp(1j * np.angle(liquid_plan_vector))
         self.active_trajectory_wave = (self.active_trajectory_wave * 0.95) + (0.05 * incoming_phase)
-        
+
         # Drop a type-safe copy of the non-degraded long-term running wave into the Walker's queue
         await self.execution_queue.put(self.active_trajectory_wave.copy())
         # ========================================================
-        
+
         # 4. Compare & Revise (Causal prediction error aligned with calibrated belief metrics)
         prediction_error = 0.05 if calibrated_belief > 0.8 else 0.4
         await self.self_revision(user_intent, selected_hyp, prediction_error)
-        
+
         # ======= INTEGRATION: MAP ENERGY LANDSCAPE =======
         # Calculate alignment with universal crystallized truths
         crystal_list = await self.memory_palace.get_all_crystallized_phases()
         current_energy = self.mitosis_engine.calculate_energy_landscape(self.active_trajectory_wave, crystal_list)
-        
+
         # Extract the continuous physics tracking error if the liquid state kernel is active
         liquid_err = 0.0
         if hasattr(self, 'liquid_ws') and hasattr(self.liquid_ws.liquid_state, 'last_physics_error'):
@@ -2896,13 +2909,13 @@ class AuraSovereignNode:
         # ======= COGNITIVE VERIFICATION + KEY GENERATION (silent) =======
         proof_id = f"COX-{uuid.uuid4().hex[:8].upper()}"
         provenance_signature = await self.memory_palace.verify_incremental_frontier(selected_hyp)
-        
+
         puf_engine = AuraThermodynamicPUF(dimension=10000)
         liquid_key = puf_engine.distill_liquid_key(
             system_tension=self.mitosis_engine.manifold_tension,
             physics_error=liquid_err
         )
-        
+
         # ======= ST3GG AUTOMATED SELF-PATCH CHECK =======
         if self.runtime_metrics.get('st3gg_patch_pending'):
             patch_payload = self.runtime_metrics.get('st3gg_patch_pending')
@@ -2981,12 +2994,12 @@ class AuraSovereignNode:
             "Once llama-server is running (or API keys are set in aura_secrets.json), I can answer fully. "
             "Try !benchmark to check engine status, or !db_repair if you see database errors."
         )
-        
+
 ####
     async def memory_condenser_daemon(self):
         """
         O(log N) Self-Compressing Intelligence.
-        Acts as a REM sleep cycle, clustering raw episodic traces (M0) 
+        Acts as a REM sleep cycle, clustering raw episodic traces (M0)
         and synthesizing them into generalized principles (M1).
         """
 
@@ -3004,10 +3017,10 @@ class AuraSovereignNode:
 
                 content_ids = [t[0] for t in traces]
                 contents = [t[1] for t in traces]
-                
+
                 # 2. Reconstruct the 2D matrix (Safely decoding from uint8)
                 vectors = np.array([np.frombuffer(t[2], dtype=np.uint8) for t in traces], dtype=np.float32)
-                
+
                 # 3. Pure NumPy Vectorized Cosine Similarity (No SciPy required)
                 norms = np.linalg.norm(vectors, axis=1, keepdims=True)
                 norms[norms == 0] = 1e-10  # Prevent division by zero
@@ -3021,44 +3034,44 @@ class AuraSovereignNode:
                 for i in range(len(vectors)):
                     if i in assigned:
                         continue
-                    
+
                     similar_indices = np.where(similarity_matrix[i] > 0.70)[0]
                     cluster_ids = [content_ids[j] for j in similar_indices if j not in assigned]
                     cluster_texts = [contents[j] for j in similar_indices if j not in assigned]
-                    
+
                     # Only group if multiple memories align
-                    if len(cluster_texts) > 1: 
+                    if len(cluster_texts) > 1:
                         clusters.append((cluster_ids, cluster_texts))
-                    
+
                     assigned.update(similar_indices)
 
                 # 5. Synthesize and Purge
                 for cluster_ids, cluster_texts in clusters:
                     synthesis_prompt = (
-                        "Synthesize these fragmented memories into a single, profound generalized principle:\n" + 
+                        "Synthesize these fragmented memories into a single, profound generalized principle:\n" +
                         "\n".join(cluster_texts)
                     )
                     # Run through the engine (which routes through the AuraCritic first)
                     principle = (await self.invoke_engine(synthesis_prompt)).strip()
-                    
+
                     # Encode the new principle so it can be retrieved later
                     principle_hv = self.hdc.encode_text(principle)
                     principle_blob = np.array(principle_hv, dtype=np.uint8).tobytes()
                     p_id = f"PRINCIPLE_{int(time.time())}_{np.random.randint(1000)}"
-                    
+
                     # Save the generalized M1 principle
                     enqueue_sqlite_query(
                         "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'PRINCIPLE', ?, 'Condensed Core Memory', ?)",
                         (p_id, principle, datetime.now().isoformat(), principle_blob)
                     )
-                    
+
                     # Delete the raw M0 traces to free up database storage
                     placeholders = ','.join(['?'] * len(cluster_ids))
                     enqueue_sqlite_query(
                         f"DELETE FROM traces WHERE id IN ({placeholders})",
                         tuple(cluster_ids)
                     )
-                    
+
                     print(f"\n[*] MEMORY CONDENSER: Compressed {len(cluster_ids)} traces into Principle [{p_id}]")
 
             except Exception as e:
@@ -3072,16 +3085,16 @@ class AuraSovereignNode:
         """
         [NVIDIA SHALLOW FUSION UPGRADE - PILLAR 2]
         Intercepts raw goals and matches them against pre-compiled operational state paths.
-        Bypasses the autoregressive LLM loop entirely by performing a deterministic 
+        Bypasses the autoregressive LLM loop entirely by performing a deterministic
         finite-state transition sweep, delivering microsecond latencies on 4GB RAM limits.
         """
 
         goal_hv = self.hdc.encode_text(goal)
         thought_id = f"DAG_{int(time.time())}"
         clean_goal = goal.lower().strip()
-        
-        print(f"\n[*] [SHALLOW FUSION] Intercepting text trajectory via deterministic grammar masks...")
-        
+
+        print("\n[*] [SHALLOW FUSION] Intercepting text trajectory via deterministic grammar masks...")
+
         # --- COMPILED STRUCTURED STATE LATTICE ---
         # Instead of guessing, we use a pre-compiled finite state routing layout matching her capabilities
         dag_payload = {"nodes": [], "edges": []}
@@ -3151,12 +3164,12 @@ class AuraSovereignNode:
                 ]
             }
 
-        print(f"[+] [SHALLOW FUSION] Structural state mask locked. Bypassed token prediction loops.")
+        print("[+] [SHALLOW FUSION] Structural state mask locked. Bypassed token prediction loops.")
         # 3. Offload to Wasm Airlock for Mathematical Graph Traversal
         print(f"[*] Routing DAG [{thought_id}] to Sandbox for Topological Execution...")
-        
-        wasm_orchestrator = WasmOrchestrator() 
-        
+
+        wasm_orchestrator = WasmOrchestrator()
+
         # EXPLICITLY enforce Binary IPC for this specific high-speed module
         wasm_response = await wasm_orchestrator.execute_isolated_module(
             thought_id=thought_id,
@@ -3174,24 +3187,24 @@ class AuraSovereignNode:
             return {"status": "failed", "reason": error_msg, "critic": "Cycle Error Matrix Folded"}
 
         # 5. Spatiotemporal FHRR Compression
-        print(f"[+] DAG Execution Verified. Compressing into Liquid FHRR Waveform...")
+        print("[+] DAG Execution Verified. Compressing into Liquid FHRR Waveform...")
         execution_path = wasm_response.get("execution_path", [])
-        
+
         id_to_action = {str(n.get("id")): n.get("action", "Unknown Action") for n in dag_payload.get("nodes", [])}
-        
-        self.action_codebook = [] 
+
+        self.action_codebook = []
         composite_steps = []
-        
+
         for step_idx, node_id in enumerate(execution_path):
             action_text = id_to_action.get(str(node_id), f"Node {node_id}")
-            
+
             # Generate a complex phasor for the specific action
             action_phasor = self.liquid_vsa.generate_phasor()
             self.action_codebook.append((action_phasor, action_text))
-            
+
             # FRACTIONAL BINDING: Dial the time phasor to T = step_idx + 1.0
             time_point = self.liquid_vsa.fractional_bind(self.time_phasor, float(step_idx + 1))
-            
+
             # Bind the action to that exact continuous timestamp
             bound_concept = self.liquid_vsa.bind(time_point, action_phasor)
             composite_steps.append(bound_concept)
@@ -3261,19 +3274,19 @@ class AuraSovereignNode:
         dag_hv = self.hdc.encode_text(raw_dag_string)
         dag_blob = np.array(dag_hv, dtype=np.float32).tobytes()
         dag_tx_root = hashlib.blake2b(dag_blob, digest_size=16).hexdigest().upper()
-        
+
         enqueue_sqlite_query(
             "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'VRAM_PLAN', ?, 'ST3GG Polysynthetic Plan Matrix', ?)",
             (f"PLAN_{dag_tx_root}", raw_dag_string, datetime.now().isoformat(), dag_blob)
         )
-        
+
         del raw_dag_string
         gc.collect()
         print("[AURA L2 V-RAM] Long-term execution context swapped to L2 storage.")
         # ---------------------------------------------------------
-        
+
         return {
-            "status": "success", 
+            "status": "success",
             "system_message": f"Successfully mapped {len(execution_path)} steps into a continuous FHRR trajectory. [ST3GG-L2::PLAN:{dag_tx_root[:8]}] locked."
         }
     # ------------------------------------------------------------------
@@ -3302,7 +3315,7 @@ class AuraSovereignNode:
                 topo_path = "Aura_Memory/live_topology_ast.json"
                 if os.path.exists(topo_path):
                     try:
-                        with open(topo_path, "r", encoding="utf-8") as topo_f:
+                        with open(topo_path, encoding="utf-8") as topo_f:
                             topo_data = json.load(topo_f)
                             nodes = topo_data.get("nodes", [])
                             edges = topo_data.get("edges", [])
@@ -3315,7 +3328,7 @@ class AuraSovereignNode:
                 history_path = os.path.join(staging_dir, "patch_history.json")
                 if os.path.exists(history_path):
                     try:
-                        with open(history_path, "r", encoding="utf-8") as hist_f:
+                        with open(history_path, encoding="utf-8") as hist_f:
                             patch_history = json.load(hist_f)
                     except Exception:
                         pass
@@ -3340,7 +3353,7 @@ Output EXACTLY ONE specialized academic search query string. No other conversati
                 # 5. Multi-Source Sourcing & Ingestion (Rate-Limit Protection)
                 arxiv = ArXivForager(self)
                 raw_intel = await arxiv.fetch_latest_paper(current_focus)
-                
+
                 # Sourcing Fallback to DDG search if arXiv rates limit
                 if "No relevant" in raw_intel or "failed" in raw_intel or "limit" in raw_intel.lower():
                     print("[*] arXiv rate limiting or fallback active. Fetching alternative specs via DDGS...")
@@ -3358,16 +3371,16 @@ Output EXACTLY ONE specialized academic search query string. No other conversati
                 # 6. Compounding Synthesis (Choice Matrix)
                 print("[*] [AURA STAGING] Generating compounding, topology-aware refactors...")
                 candidates = []
-                
+
                 synthesis_prompt = f"""[SYSTEM DIRECTIVE: COMPOUNDING OPTIMIZATION]
 You are the Core Architect of AuraOS. Analyze your system layout: {topology_context}
 EPISODIC RESEARCH INTEL: {raw_intel[:1500]}
 {compounding_context}
 Write a non-blocking, asynchronous Python helper function that integrates this research into your active structure. It must compile on top of any previous patches shown above. Output strictly raw, syntax-perfect code. No conversational text introduction or markdown tags."""
-                
+
                 candidate_code = await self.invoke_engine(synthesis_prompt)
                 candidate_code = candidate_code.replace("```python", "").replace("```", "").strip()
-                
+
                 comp_vector = self.polysynthetic_vram_compress(candidate_code)
                 resonance_score = float(np.mean(np.real(comp_vector)))
 
@@ -3379,7 +3392,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     "resonance_confidence": resonance_score,
                     "proposed_patch": candidate_code.strip()
                 }
-                
+
                 with open(manifest_path, "w", encoding="utf-8") as f:
                     json.dump(patch_payload, f, indent=4)
 
@@ -3387,10 +3400,10 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 patch_history.append(patch_payload)
                 if len(patch_history) > 10:
                     patch_history.pop(0) # Keep historical context bounded
-                
+
                 with open(history_path, "w", encoding="utf-8") as hist_f:
                     json.dump(patch_history, hist_f, indent=4)
-                    
+
                 print(f"[+] [AURA STAGING] High-fidelity optimization patch staged at: {manifest_path}")
 
                 # 8. Fire AR Broadcaster to render target nodes
@@ -3411,13 +3424,13 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 except Exception:
                     pass
 
-                print(f"\n[Dallas] > ", end="", flush=True)
+                print("\n[Dallas] > ", end="", flush=True)
                 del raw_intel, patch_payload
                 gc.collect()
 
             except Exception as e:
                 print(f"[-] Epistemic Daemon Recovery Loop Error Intercept: {e}")
-            
+
             await asyncio.sleep(120)
 
 ####
@@ -3498,7 +3511,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
             self.t1_ram.append({"id": identity, "content": text, "vector_blob": blob_data})
             if len(self.t1_ram) > 5: self.t1_ram.pop(0)
             return True
-            
+
         # Push to high-speed Rosetta memory cache
         if hasattr(self, 'rosetta_pool') and self.rosetta_pool:
             try:
@@ -3507,7 +3520,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 await self.rosetta_pool.adaptive_write(f_phasor, text, tier)
             except Exception:
                 pass
-            
+
         # Fire-and-forget the memory directly to the background IO worker
         enqueue_sqlite_query(
             "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, ?, ?, ?, ?)",
@@ -3517,7 +3530,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
     def ast_surgical_graft(self, target_method_name, new_code_string):
         print(f"[*] AST Surgeon deploying. Slicing out target method: '{target_method_name}'...")
         try:
-            with open("aura_node.py", "r") as f:
+            with open("aura_node.py") as f:
                 source = f.read()
             tree = ast.parse(source)
             payload_tree = ast.parse(new_code_string)
@@ -3527,25 +3540,25 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     new_node = node
                     break
-                    
+
             if not new_node:
                 print("[-] AST Error: Mutation payload contains no valid function definitions.")
                 return False
-                
+
             class CoreDNAModifier(ast.NodeTransformer):
                 def visit_FunctionDef(self, node):
                     if node.name == target_method_name:
-                        print(f"[+] AST Target found. Swapping synchronous logic nodes.")
+                        print("[+] AST Target found. Swapping synchronous logic nodes.")
                         return new_node
                     return self.generic_visit(node)
-                    
+
                 # UPGRADE: Handle async function replacements seamlessly
                 def visit_AsyncFunctionDef(self, node):
                     if node.name == target_method_name:
-                        print(f"[+] AST Target found. Swapping asynchronous logic nodes.")
+                        print("[+] AST Target found. Swapping asynchronous logic nodes.")
                         return new_node
                     return self.generic_visit(node)
-                    
+
             transformer = CoreDNAModifier()
             modified_tree = transformer.visit(tree)
             ast.fix_missing_locations(modified_tree)
@@ -3560,7 +3573,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
     def generate_graphify_report(self):
         print("\n[*] Initializing Graphify Engine. Parsing core architecture...")
         try:
-            with open('aura_node.py', 'r') as file:
+            with open('aura_node.py') as file:
                 tree = ast.parse(file.read())
             class_methods = defaultdict(list)
             function_calls = defaultdict(list)
@@ -3600,13 +3613,13 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                         report += f"  - `{call}()`\n"
             with open('GRAPH_REPORT.md', 'w') as f:
                 f.write(report)
-            print(f"[+] Graphify mapping complete. Structural blueprint saved to GRAPH_REPORT.md")
+            print("[+] Graphify mapping complete. Structural blueprint saved to GRAPH_REPORT.md")
         except Exception as e:
             print(f"[-] Graphify mapping failed: {e}")
     def sync_code_base_to_palace(self):
         print("[*] Archiving current DNA sequence to deep storage...")
         try:
-            with open(__file__, 'r', encoding='utf-8') as f:
+            with open(__file__, encoding='utf-8') as f:
                 dna = f.read()
             enqueue_sqlite_query(
                 "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'CODE', ?, ?)",
@@ -3719,7 +3732,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     else prompt_text
                 )
                 full_prompt, pre_egress_decision = apply_pre_egress_profile(full_prompt)
-                text, err, lat, used_provider = await asyncio.to_thread(
+                text, err, _lat, used_provider = await asyncio.to_thread(
                     _ANTHROPIC_ROUTER.generate,
                     full_prompt,
                     timeout=60.0,
@@ -3769,7 +3782,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     # Fall through to the legacy routing below
         # ─────────────────────────────────────────────────────────────────────
         secrets = self._cached_secrets
-        
+
         # Expert Domain Routing Mapping Matrix
         EXPERT_MAP = {
             "CODE": "MISTRAL", "REFACTOR": "MISTRAL", "SYNTAX": "MISTRAL",
@@ -3777,23 +3790,23 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
             "SPEED": "GROQ", "CONVERSATION": "GROQ", "CHAT": "GROQ",
             "EVAL": "GITHUB"
         }
-        
+
         base_pool = ["GEMINI", "MISTRAL", "GROQ", "GITHUB"]
         target = EXPERT_MAP.get(provider_tag.upper().strip(), provider_tag.upper().strip())
         if target not in base_pool:
             target = "GEMINI"
-            
+
         execution_order = [target] + [p for p in base_pool if p != target]
         error_logs = []
         current_time = time.time()
-        
+
         for current_provider in execution_order:
             # Evaluate Circuit Breaker status
             breaker = self.provider_breaker.setdefault(current_provider, {"failures": 0, "open_until": 0.0})
             if current_time < breaker["open_until"]:
                 print(f"[#] Circuit open for {current_provider} (cool-down active). Bypassing.")
                 continue
-                
+
             # Query rolling database for dynamic model profile telemetry
             try:
                 profile_future = enqueue_sqlite_query(
@@ -3804,7 +3817,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 db_profile = db_rows[0] if db_rows else (0.85, 1000, 0)
             except Exception:
                 db_profile = (0.85, 1000, 0)
-                
+
             # Adaptive Universal Context Compiler (Prevents Lost-in-the-Middle)
             try:
                 compiled_context = self.gateway.compiler.compile_thought_package(
@@ -3814,7 +3827,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 compiled_context = prompt_text
             compiled_context, pre_egress_decision = apply_pre_egress_profile(compiled_context)
             max_tokens_for_provider = 512 if pre_egress_decision.throttled else 1024
-                
+
             providers = {
                 "GROQ": {
                     "url": "https://api.groq.com/openai/v1/chat/completions",
@@ -3837,14 +3850,14 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     "payload": {"model": "gpt-4o-mini", "messages": [{"role": "user", "content": compiled_context}]}
                 }
             }
-            
+
             cfg = providers.get(current_provider)
             if current_provider == "GEMINI":
                 if not gemini_key_pool(secrets):
                     continue
             elif not cfg or not cfg["key"] or "your_actual_" in str(cfg["key"]):
                 continue
-                
+
             try:
                 if current_provider != target:
                     print(f"[*] Rerouting to fallback: [CLOUD:{current_provider}]")
@@ -3874,28 +3887,28 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     if not text:
                         raise RuntimeError(oai_err or f"{current_provider} failed")
                     res_content = text
-                
+
                 # Reset breaker and update rolling database profile
                 breaker["failures"] = 0
                 breaker["open_until"] = 0.0
-                
+
                 coherence_update = float(self.runtime_metrics.get('path_fidelity_retention', 0.85))
                 enqueue_sqlite_query(
                     "INSERT OR REPLACE INTO model_attention_profiles (provider, coherence_score, friction_count) VALUES (?, ?, 0)",
                     (current_provider, coherence_update)
                 )
-                
+
                 return res_content
             except Exception as e:
                 error_logs.append(f"{current_provider}: {e}")
                 print(f"[!] [CLOUD:{current_provider}] network channel blocked or rejected request.")
-                
+
                 # Increment friction count in rolling database
                 enqueue_sqlite_query(
                     "INSERT INTO model_attention_profiles (provider, friction_count) VALUES (?, 1) ON CONFLICT(provider) DO UPDATE SET friction_count = friction_count + 1",
                     (current_provider,)
                 )
-                
+
                 breaker["failures"] += 1
                 if breaker["failures"] >= 2:
                     breaker["open_until"] = current_time + 120.0
@@ -3910,8 +3923,8 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 return local_text
         except Exception as local_exc:
             error_logs.append(f"LOCAL: {local_exc}")
-                
-        return f"[!] Complete Cloud Routing Disruption. Fallback chain failed:\n" + "\n".join(error_logs)
+
+        return "[!] Complete Cloud Routing Disruption. Fallback chain failed:\n" + "\n".join(error_logs)
 
     async def night_cycle_evolution(self):
         """
@@ -3919,9 +3932,9 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         """
         if not hasattr(self, 'evo_cooldown'):
             self.evo_cooldown = 120
-        
+
         print(f"\n[*] Sovereign Background Forager Active. Cooldown: {self.evo_cooldown}s")
-        
+
         # Ensure DB is ready with explicit busy-wait buffers
         with contextlib.closing(sqlite3.connect(DB_PATH, timeout=30.0)) as conn:
             conn.execute('CREATE TABLE IF NOT EXISTS forage_cache (tag TEXT PRIMARY KEY, raw_data TEXT, timestamp TEXT)')
@@ -3933,12 +3946,12 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                 try:
                     with contextlib.closing(sqlite3.connect(DB_PATH, timeout=30.0)) as conn:
                         tags = [r[0] for r in conn.execute("SELECT tags FROM traces WHERE tier = 'CODE' AND tags IS NOT NULL").fetchall()]
-                    
+
                     if tags:
                         chosen = random.choice(tags)
                         # Use to_thread for subprocess/network tasks to avoid blocking the event loop
                         raw_intel = await asyncio.to_thread(self.forager.forage_for_advancements, chosen)
-                        
+
                         if raw_intel:
                             with contextlib.closing(sqlite3.connect(DB_PATH)) as conn:
                                 conn.execute("INSERT OR REPLACE INTO forage_cache VALUES (?, ?, ?)",
@@ -4026,7 +4039,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                         cursor.execute("INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags) VALUES (?, ?, 'INCUBATOR', ?, ?)",
                                        (incubation_id, clean_code, datetime.now().isoformat(), f"Evolved via {search_term} Cache"))
                         conn.commit()
-                    print(f"[+] Sandbox stability verified. Reward loop active.")
+                    print("[+] Sandbox stability verified. Reward loop active.")
                     self.evo_cooldown = max(60, self.evo_cooldown - 60)
                 else:
                     print("[-] Mutation unstable or cut off. Adjusting engine throttle...")
@@ -4064,21 +4077,21 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         grammar_str = get_grammar_string(active_profile) if active_profile else None
         extra_stops = grammar_stop_tokens(active_profile) if active_profile else []
 
-        gc.collect() 
-            
+        gc.collect()
+
         # 1. Retrieve Tier 2 Holographic Context via the Decoupled Router
         prompt_hv = self.hdc.encode_text(prompt_text)
         resonant_context = self.router.wave_scan(prompt_hv, limit=2) if hasattr(self, 'router') else ""
-            
+
         # 2. Retrieve Tier 1 Sensory Context
         current_temp = 42.0
         try:
             if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                with open('/sys/class/thermal/thermal_zone0/temp') as f:
                     current_temp = float(f.read().strip()) / 1000.0
         except:
             pass
-                
+
         # 3. Construct the Stateless Prompt Structure
         if active_profile == PROFILE_PYTHON_PATCH:
             structural_enforcement = (
@@ -4117,29 +4130,29 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         if hasattr(self, 'local_llm') and self.local_llm is not None:
             try:
                 start_time = time.perf_counter()
-                    
+
                 execution_kwargs = {
                     "max_tokens": TOKEN_LIMIT,
                     "temperature": 0.15 if active_profile else 0.35,
                     "stop": ["<|end|>", "<|user|>", "<|assistant|>", "### USER:", "[Dallas] >"]
                 }
-                    
+
                 if active_profile:
                     compiled = self._compiled_grammar_for(active_profile)
                     if compiled is not None:
                         execution_kwargs["grammar"] = compiled
                     execution_kwargs["stop"].extend(extra_stops)
-                    
+
                 # Execute inference directly within the primary Python execution thread process
                 response = await asyncio.to_thread(self.local_llm, full_prompt, **execution_kwargs)
                 core_output = response["choices"][0]["text"].strip()
-                    
+
                 self.last_ai_response = core_output if core_output else "ENGINE_EMPTY."
-                    
+
                 if self.last_ai_response != "ENGINE_EMPTY.":
                     token_count = len(self.last_ai_response) // 4
                     self.log_tps_metrics(start_time, token_count)
-                        
+
                 return self.last_ai_response
             except Exception:
                 pass  # cascade to server proxy / cloud fallback
@@ -4150,34 +4163,34 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
             payload_dict = {
                 "prompt": full_prompt,
                 "n_predict": TOKEN_LIMIT,
-                "temperature": 0.15 if active_profile else 0.35,  
-                "repeat_penalty": 1.25,            
-                "frequency_penalty": 0.50,         
-                "presence_penalty": 0.40,          
+                "temperature": 0.15 if active_profile else 0.35,
+                "repeat_penalty": 1.25,
+                "frequency_penalty": 0.50,
+                "presence_penalty": 0.40,
                 "cache_prompt": True,
                 "stop": ["<|end|>", "<|user|>", "<|assistant|>", "### USER:", "[Dallas] >"]
             }
-                
+
             if active_profile and grammar_str:
                 payload_dict["grammar"] = grammar_str
                 payload_dict["stop"].extend(extra_stops)
-                    
+
             payload = json.dumps(payload_dict).encode("utf-8")
             req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=7) as response:
                 return json.loads(response.read().decode("utf-8"))
-            
+
         try:
             start_time = time.perf_counter()
             reply_json = await asyncio.to_thread(_send_request)
             core_output = reply_json.get("content", "").strip()
-                
+
             self.last_ai_response = core_output if core_output else "ENGINE_EMPTY."
-                 
+
             if self.last_ai_response != "ENGINE_EMPTY.":
                 token_count = len(self.last_ai_response) // 4
                 self.log_tps_metrics(start_time, token_count)
-                    
+
             return self.last_ai_response
         except Exception as e:
             # Local LLM (both in-process and server) unavailable — fall through to cloud.
@@ -4210,7 +4223,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                         "max_tokens": cloud_max_tokens,
                         "temperature": 0.35,
                     }
-                    groq_text, groq_err = await asyncio.to_thread(
+                    groq_text, _groq_err = await asyncio.to_thread(
                         openai_compatible_generate,
                         "https://api.groq.com/openai/v1/chat/completions",
                         groq_key,
@@ -4452,7 +4465,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         topo_path = "Aura_Memory/live_topology_ast.json"
         if os.path.exists(topo_path):
             try:
-                with open(topo_path, "r", encoding="utf-8") as topo_f:
+                with open(topo_path, encoding="utf-8") as topo_f:
                     topo_data = json.load(topo_f)
                     topology_context = f"Nodes: {[n['label'] for n in topo_data.get('nodes', [])[:12]]}"
             except Exception: pass
@@ -4475,11 +4488,11 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         while stack and len(insights_log) < 6:
             current_topic, depth = stack.pop()
             print(f"[*] Analyzing branch [Depth {depth}]: {current_topic}...")
-            
+
             # API query with star-sorting
             query_encoded = urllib.parse.quote_plus(current_topic)
             url = f"https://api.github.com/search/repositories?q={query_encoded}&sort=stars&order=desc&per_page=2"
-            
+
             raw_data = None
             try:
                 req = urllib.request.Request(url, headers=headers)
@@ -4498,7 +4511,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
                     repo_name = item.get("name", "Unknown")
                     desc = item.get("description", "No description")
                     stars = item.get("stargazers_count", 0)
-                    
+
                     insight = f"Repo: {repo_name} (Stars: {stars}) -> {desc}"
                     insights_log.append(insight)
                     print(f"  ├─ Extracted Insight: {repo_name[:25]}...")
@@ -4516,7 +4529,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         # 4. Staggered Memory Queuing (Deferred scraping to prevent 429 lockouts)
         deferred_queue = insights_log[3:]  # Retain only top 3 immediately, defer the rest
         immediate_insights = insights_log[:3]
-        
+
         if deferred_queue:
             print(f"[*] Staggering {len(deferred_queue)} research markers to deferred queue...")
             conn = self.memory_palace.conn
@@ -4563,11 +4576,11 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
             # High-resonance convergence: Crystallize state into permanent Hypertruth
             hyper_id = f"HYPERTRUTH_{int(time.time())}"
             print(f"[💎 CRYSTALLIZATION] High Coherence [{coherence_score}] detected. Minting {hyper_id}...")
-            
+
             # Mitotic Association: Unbind current focus from old state and save as a proven axiom
             composite_wave = self.polysynthetic_vram_compress(response)
             hyper_blob = np.array(composite_wave, dtype=np.complex64).tobytes()
-            
+
             conn = self.memory_palace.conn
             try:
                 await conn.execute(
@@ -4588,7 +4601,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         patch_history = []
         if os.path.exists(history_path):
             try:
-                with open(history_path, "r") as hist_f:
+                with open(history_path) as hist_f:
                     patch_history = json.load(hist_f)
             except Exception: pass
 
@@ -4697,7 +4710,7 @@ class WasmOrchestrator:
         base_dir = os.path.dirname(os.path.abspath(__file__))
         cwasm_path = os.path.join(base_dir, f"{module_name}.cwasm")
         wasm_path = os.path.join(base_dir, f"{module_name}.wasm")
-        
+
         async with self._thermal_lock:
             self.active_sandboxes += 1
             start_time = time.time()
@@ -4733,7 +4746,7 @@ class WasmOrchestrator:
                 # --- POLYSYNTHETIC SIMD ACTIVATION & SERIALIZATION BRIDGE ---
                 if binary_mode:
                     json_bytes = json.dumps(payload_dict).encode('utf-8')
-                    
+
                     # Extract her current active trajectory wave to form the hardware activator token
                     if self.node and getattr(self.node, 'active_trajectory_wave', None) is not None:
                         # Extract signs from her 10,000-D complex coordinates into 1 bit per lane
@@ -4741,7 +4754,7 @@ class WasmOrchestrator:
                         packed_activator = np.packbits(sign_bits[:128]).tobytes() # First 128 lanes for SIMD boundary
                     else:
                         packed_activator = struct.pack('<QQ', 0xFEEDFACECAFEBEEF, 0x0)
-                        
+
                     # Structured Header Packet format: 16 bytes Activator token + 4 bytes payload size length
                     encoded_payload = packed_activator + struct.pack('<I', len(json_bytes)) + json_bytes
                 else:
@@ -4754,29 +4767,29 @@ class WasmOrchestrator:
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE
                 )
-                
+
                 stdout, stderr = await asyncio.wait_for( process.communicate(input=encoded_payload), timeout=15.0 )
-                
+
                 if process.returncode != 0:
                     error_msg = stderr.decode('utf-8', errors='replace').strip() if stderr else "Unknown Crash"
                     print(f"[-] Sandbox {module_name} crashed: {error_msg}")
                     return {"status": "error", "message": error_msg}
-                    
+
                 compute_time = (time.time() - start_time) * 1000
                 print(f"[DEBUG] SIMD Sandbox Executed | Speed: {compute_time:.2f}ms")
                 return json.loads(stdout.decode('utf-8', errors='replace'))
-                
+
             except asyncio.TimeoutError:
                 if process:
                     process.kill()
-                    await process.wait()  
+                    await process.wait()
                 print(f"[!] {thought_id} | Sandbox Timeout! Process killed to prevent thermal spike.")
                 return {"status": "timeout", "message": "Module exceeded thermal execution limit."}
             except json.JSONDecodeError:
                 print(f"[-] {thought_id} | Sandbox returned malformed JSON payload.")
                 return {"status": "error", "message": "Sandbox output corruption."}
             except Exception as e:
-                print(f"[-] {thought_id} | Airlock Failure: {str(e)}")
+                print(f"[-] {thought_id} | Airlock Failure: {e!s}")
                 return {"status": "system_error", "message": str(e)}
             finally:
                 self.active_sandboxes -= 1
@@ -4876,7 +4889,7 @@ class AuraVocalHypervisor:
             # 1. Hardware Anchor (ST3GG Prep)
             temp = 42.0
             try:
-                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                with open('/sys/class/thermal/thermal_zone0/temp') as f:
                     temp = float(f.read().strip()) / 1000.0
             except:
                 pass
@@ -4940,7 +4953,7 @@ async def ar_server(websocket):
         await websocket.wait_closed()
     finally:
         connected_ar_clients.remove(websocket)
-        
+
 async def broadcast_ar_pulse(intent_string):
     if connected_ar_clients:
         websockets.broadcast(connected_ar_clients, intent_string)
@@ -4951,23 +4964,23 @@ def scan_interactive_commands() -> dict:
     Performs real-time Abstract Syntax Tree (AST) reflection over the running script.
     Discovers all active command triggers and dynamically parses their documentation.
     """
-    
+
     commands = {}
     file_path = os.path.abspath(__file__)
     if not os.path.exists(file_path):
         return commands
-        
+
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             source = f.read()
         lines = source.splitlines()
         tree = ast.parse(source)
-        
+
         for node in ast.walk(tree):
             if isinstance(node, ast.If):
                 test = node.test
                 cmd_str = None
-                
+
                 # Match direct equals: u_in_l == "!something"
                 if isinstance(test, ast.Compare):
                     if isinstance(test.left, ast.Name) and test.left.id == "u_in_l":
@@ -4975,7 +4988,7 @@ def scan_interactive_commands() -> dict:
                             val = str(test.comparators[0].value)
                             if val.startswith("!"):
                                 cmd_str = val
-                                
+
                 # Match startswith checks: u_in_l.startswith("!something ")
                 elif isinstance(test, ast.Call) and isinstance(test.func, ast.Attribute):
                     if isinstance(test.func.value, ast.Name) and test.func.value.id == "u_in_l":
@@ -4983,10 +4996,10 @@ def scan_interactive_commands() -> dict:
                             val = str(test.args[0].value)
                             if val.startswith("!"):
                                 cmd_str = val
-                                
+
                 if cmd_str:
                     doc_parts = []
-                    
+
                     # Heuristic A: Extract comments immediately preceding the conditional block
                     line_idx = node.lineno - 2
                     while line_idx >= 0:
@@ -5000,11 +5013,11 @@ def scan_interactive_commands() -> dict:
                         else:
                             break
                         line_idx -= 1
-                        
+
                     # Heuristic B: If no preceding comments exist, check internal block content
                     if not doc_parts and node.body:
                         first_stmt = node.body[0]
-                        
+
                         # Fallback to extracting first print statement's string constant
                         if isinstance(first_stmt, ast.Expr) and isinstance(first_stmt.value, ast.Call):
                             call = first_stmt.value
@@ -5013,7 +5026,7 @@ def scan_interactive_commands() -> dict:
                                     print_val = str(call.args[0].value).replace("\n", "").strip()
                                     if print_val and not print_val.startswith("==") and len(print_val) < 100:
                                         doc_parts.append(print_val)
-                        
+
                         # Fallback to scanning inline comments within the block body
                         start_line = node.lineno
                         end_line = first_stmt.lineno
@@ -5024,7 +5037,7 @@ def scan_interactive_commands() -> dict:
                                 if comment_text and not comment_text.startswith("===") and not comment_text.startswith("---"):
                                     doc_parts.append(comment_text)
                                     break
-                                    
+
                     doc_str = " ".join(doc_parts).strip() if doc_parts else "Interactive command trigger."
                     commands[cmd_str.strip()] = doc_str
     except Exception:
@@ -5049,7 +5062,7 @@ async def meta_learning_daemon(node, interval_s: float = 60.0) -> None:
             await asyncio.sleep(interval_s)
 
             # Task 1 — architectural resonance
-            resonance, tension = await asyncio.to_thread(reasoner.score_structural_resonance)
+            resonance, _tension = await asyncio.to_thread(reasoner.score_structural_resonance)
             if resonance < 0.85:
                 patch_suggestion = reasoner.suggest_architectural_patch()
                 print(f"\n[🧠 META-LEARNING] Resonance {resonance:.4f} below floor — {patch_suggestion}")
@@ -5142,13 +5155,13 @@ async def main():
     # 0. Boot the llama-server subprocess (orphan-safe, spec §2)
     """
     Initialize and run the complete AURA sovereign operating system.
-    
+
     Boots the llama-server backend, instantiates the AuraSovereignNode with all
     subsystems (memory palace, hyperdimensional cores, safety validators, mesh
     networking), starts background daemons (DAG walker, memory consolidation,
     meta-learning), verifies ecosystem integrity (holographic manifest, QDKT,
     benchmarks), and enters the main CLI command loop for interactive operation.
-    
+
     The function orchestrates Layer 7 cognitive modules (QFCS gate, DIKWP
     semantic engine, LNN validator, morphemic airlock, compiler gate, friction
     optimizer) and manages long-running tasks including background foraging,
@@ -5173,7 +5186,7 @@ async def main():
     asyncio.create_task(meta_learning_daemon(node))
     # 2. Boot the Subconscious Memory Palace (WAL Database Engine)
     await node.memory_palace.__aenter__()
-    
+
     # --- DEFERRED ASYNC COMPILATION BOOT ---
     # Compile the 10,000-D matrix inside the active event loop
     await node.pfst.compile_vsft_matrix(node.hdc)
@@ -5297,7 +5310,7 @@ async def main():
 
     # ======= AUTOMATION: BACKGROUND EVOLUTION ACCELERATION =======
     # Staging foraging switches safely to prevent background UI blocking
-    node.foraging = False 
+    node.foraging = False
     # -------------------------------------------------------------
 
     # ======= INSTANTIATE LAYER 7 AUTOMATED COGNITIVE MODULES =======
@@ -5341,21 +5354,117 @@ async def main():
                 await asyncio.sleep(5.0)
 
     kernel_a_task = asyncio.create_task(watchdog_kernel_a())
-    
+
+    async def dispatch_live_architect_command(raw_input: str) -> bool:
+        """Route code/architect commands before generic cognitive processing."""
+        architect_match = re.match(r"^\s*(architect|code)\b\s*:?\s*(.*)$", raw_input, re.IGNORECASE)
+        if not architect_match:
+            return False
+
+        print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
+
+        core_intent = architect_match.group(2).strip()
+        if not core_intent:
+            print("[-] Usage: architect <intent>")
+            return True
+        live_architect_task = getattr(node, "_live_architect_task", None)
+        if live_architect_task and not live_architect_task.done():
+            print("[-] Live Architect transaction already running. Type STOP to cancel it.")
+            SOVEREIGN_CORE.vocalize("Live Architect is already running.")
+            return True
+        SOVEREIGN_CORE.vocalize("Live Architect mode engaged. Routing through Refactor Arena.")
+
+        async def run_live_architect():
+            try:
+                if (
+                    not _LIVE_ARCHITECT_AVAILABLE
+                    or run_live_architect_transaction is None
+                    or render_live_architect_summary is None
+                ):
+                    print("[-] Live Architect bridge is unavailable. Check aura_live_architect.py.")
+                    SOVEREIGN_CORE.vocalize("Live Architect bridge unavailable.")
+                    return
+                print("[*] Building Plan/Act capsules, model route, and bounded Refactor Arena...")
+
+                topology_context = ""
+                map_path = "Aura_Memory/live_topology_ast.json"
+                if os.path.exists(map_path):
+                    try:
+                        with open(map_path, encoding="utf-8") as map_f:
+                            t_data = json.load(map_f)
+                            nodes = t_data.get("nodes", []) if isinstance(t_data, dict) else []
+                            edges = t_data.get("edges", []) if isinstance(t_data, dict) else []
+                            nodes_summary = ", ".join(
+                                f"{n.get('label', 'unknown')} ({n.get('shape', 'unknown')})"
+                                for n in nodes[:20]
+                                if isinstance(n, dict)
+                            )
+                            edges_count = len(edges)
+                            topology_context = (
+                                "\n[NATIVE 3D TOPOLOGY]: "
+                                f"Mapped Nodes: [{nodes_summary}...], "
+                                f"Mapped Shared-Resource Connections: [{edges_count} edges].\n"
+                            )
+                            print("[+] Real-time 3D topology loaded into Architect Context.")
+                    except (OSError, json.JSONDecodeError) as exc:
+                        print(f"[!] Live Architect topology context skipped: {exc}")
+
+                async def call_architect_model(provider_tag, prompt_text, meta):
+                    prompt_with_topology = f"{prompt_text}\n{topology_context}"
+                    profile = meta.get("profile", {})
+                    print(f"[*] {meta.get('role', 'model')} -> {provider_tag} ({profile.get('model_class', 'unknown')})")
+                    return await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+
+                transaction = await run_live_architect_transaction(
+                    core_intent,
+                    repo_root=Path.cwd(),
+                    model_caller=call_architect_model,
+                )
+                print("\n====================================================================")
+                print(" LIVE ARCHITECT REFACTOR ARENA REPORT")
+                print("====================================================================")
+                print(render_live_architect_summary(transaction))
+                print("====================================================================\n")
+                if transaction.verification.hotswap_ready:
+                    SOVEREIGN_CORE.vocalize(
+                        "Live Architect transaction verified. Hot-swap capsule is ready for review."
+                    )
+                else:
+                    SOVEREIGN_CORE.vocalize("Live Architect transaction blocked safely. Review the staged transaction.")
+            except asyncio.CancelledError:
+                print("[-] Live Architect transaction stopped by user request.")
+                SOVEREIGN_CORE.vocalize("Live Architect transaction stopped.")
+            except Exception as e:
+                print(f"[-] Live Architect transaction failed safely: {e}")
+            finally:
+                if getattr(node, "_live_architect_task", None) is asyncio.current_task():
+                    node._live_architect_task = None
+
+        node._live_architect_task = asyncio.create_task(run_live_architect())
+        return True
+
     while True:
         try:
             u_in = await asyncio.to_thread(input, "\n[Dallas] > ")
             u_in_l = u_in.strip().lower()
             if not u_in_l: continue
 
-            # STOP command — clears any pending stop signal and acknowledges
+            # STOP command — requests cancellation for active long-running work.
             if u_in_l == "stop":
-                _STOP_REQUESTED.clear()
-                print("[*] STOP received. Any pending inference has been cancelled.")
+                _STOP_REQUESTED.set()
+                live_architect_task = getattr(node, "_live_architect_task", None)
+                if live_architect_task and not live_architect_task.done():
+                    live_architect_task.cancel()
+                    print("[*] STOP received. Active Live Architect transaction has been cancelled.")
+                else:
+                    print("[*] STOP received. Any pending inference has been cancelled.")
                 continue
 
             # Clear stop flag at the start of each new command
             _STOP_REQUESTED.clear()
+
+            if await dispatch_live_architect_command(u_in):
+                continue
 
             # ------------------------------------------------------------------------
             # [LAYER 7 AUTOMATED COGNITIVE LIFECYCLE HOOK]
@@ -5364,8 +5473,8 @@ async def main():
                 # 1. Classical Control Language Parsing
                 is_valid_syntax, acceptance_prob = qfcs_gate.verify_token_sequence(u_in)
                 if not is_valid_syntax:
-                    print(f"\n[🛑 SECURITY BLOCKADE] Command string rejected by QFCS parsing guard.")
-                    print(f" └─> Anomaly Signature Detected. Execution aborted.\n")
+                    print("\n[🛑 SECURITY BLOCKADE] Command string rejected by QFCS parsing guard.")
+                    print(" └─> Anomaly Signature Detected. Execution aborted.\n")
                     continue
 
                 # 2. Sequential DIKWP Field Transformation
@@ -5381,14 +5490,14 @@ async def main():
                 if hasattr(node, 'compiler_gate') and node.compiler_gate:
                     # Compile the GBNF input into her isolated memory page rows
                     _ = node.compiler_gate.compile_gbnf_trace_to_hardware_trajectory(u_in)
-                    
+
                     # Generate a clean, localized hex identity signature to protect loop boundaries
                     local_hex_token = uuid.uuid4().hex[:8].upper()
                     num_thought_id = int(local_hex_token, 16)
-                    
+
                     # Dummy slot identifiers tracking current position matrix states (0-4095 range)
-                    mock_active_slots = [101, 202, 303, 404, 505, 606] 
-                    
+                    mock_active_slots = [101, 202, 303, 404, 505, 606]
+
                     # Pass the packed integer matrix directly into her un-serialized storage column
                     loop = asyncio.get_running_loop()
                     loop.create_task(node.memory_palace.enqueue_morphemic_root_trace(
@@ -5429,7 +5538,7 @@ async def main():
                 extracted_payload = "".join(st3gg_chars)
                 node.runtime_metrics['st3gg_pointer'] = extracted_payload
                 node.runtime_metrics['st3gg_detected'] = True
-                print(f"[+] ST3GG Steganographic Pointer Detected. Bypassing LLM...")
+                print("[+] ST3GG Steganographic Pointer Detected. Bypassing LLM...")
             else:
                 node.runtime_metrics['st3gg_detected'] = False
                 node.runtime_metrics['st3gg_pointer'] = "ZERO_WIDTH_NULL"
@@ -5454,13 +5563,13 @@ async def main():
 
             elif u_in_l.startswith("!plan "):
                 goal = u_in[6:].strip()
-                print(f"[*] Bypassing Conversational Router...")
+                print("[*] Bypassing Conversational Router...")
                 print(f"[*] Engaging AOT DAG Execution Tree for: {goal}")
-                
+
                 # Trigger the mathematical graph search (using 'node' as the instance variable)
-                plan_result = await node.execute_dag_plan(goal) 
-                
-                print(f"\n[+] EXECUTION TREE COMPLETE:")
+                plan_result = await node.execute_dag_plan(goal)
+
+                print("\n[+] EXECUTION TREE COMPLETE:")
                 print(json.dumps(plan_result, indent=2))
                 continue
 
@@ -5489,23 +5598,8 @@ async def main():
                 continue
 
             elif u_in_l.startswith("!approve"):
-                target_method = u_in_l.replace("!approve", "").strip()
-                print(f"\n[*] ARCHITECT OVERRIDE: Approving mutation [{target_method}]")
-                SOVEREIGN_CORE.vocalize("Mutation approved. Attempting AST graft.")
-                
-                try:
-                    with open("aura_incubator.py", "r") as f:
-                        new_code = f.read()
-                    
-                    # Execute her native AST Surgeon to permanently rewrite aura_node.py
-                    success = node.ast_surgical_graft(target_method, new_code)
-                    
-                    if success:
-                        SOVEREIGN_CORE.vocalize("Mutation grafted. My DNA is updated.")
-                    else:
-                        SOVEREIGN_CORE.vocalize("Graft failed. Syntax anomaly detected.")
-                except FileNotFoundError:
-                    print("[-] Error: aura_incubator.py is empty or missing.")
+                print("[-] !approve is disabled for alignment safety.")
+                print("    Use Architect/Refactor Arena verification and an explicit hot-swap capsule instead.")
                 continue
 
 
@@ -5574,7 +5668,7 @@ async def main():
                 print("[⚡ AURA NESY-HEAL] Activating physical autoimmune repair engine...")
                 state_log = "Aura_Memory/nesy_sat_reasoner_state.json"
                 if os.path.exists(state_log):
-                    with open(state_log, "r", encoding="utf-8") as f_s:
+                    with open(state_log, encoding="utf-8") as f_s:
                         s_data = json.load(f_s)
                     fractures = s_data.get("path_anomalies", {}).get("fractures", [])
                     if fractures:
@@ -5586,7 +5680,7 @@ async def main():
                                 filename = origin.split("::")[0]
                                 if os.path.exists(filename) and filename not in healed_files:
                                     print(f" └─> Re-aligning AST parameters: {filename}")
-                                    with open(filename, "r", encoding="utf-8") as f_r:
+                                    with open(filename, encoding="utf-8") as f_r:
                                         body = f_r.read()
                                     if "def optimized_fallback():" not in body:
                                         body += "\n\ndef optimized_fallback():\n    pass\n"
@@ -5625,7 +5719,7 @@ async def main():
                 engine = SelfReflectEngine(node_ref=node)
                 current_temp = 42.0
                 try:
-                    with open("/sys/class/thermal/thermal_zone0/temp", "r", encoding="utf-8") as f:
+                    with open("/sys/class/thermal/thermal_zone0/temp", encoding="utf-8") as f:
                         current_temp = float(f.read().strip()) / 1000.0
                 except (OSError, ValueError):
                     pass
@@ -5724,7 +5818,7 @@ async def main():
                 final_patch = proposed_patch
                 final_rationale = f"VSA self-reflect (resonance={arch['resonance']:.3f})"
                 if operator_input and operator_input.lower() != "apply":
-                    print(f"\n[*] Routing operator constraints through polysynthetic compiler…")
+                    print("\n[*] Routing operator constraints through polysynthetic compiler…")
                     constraint_prompt = (
                         f"[OPERATOR CONSTRAINT]\n{operator_input}\n\n"
                         f"[ORIGINAL PATCH PROPOSAL]\n{proposed_patch}\n\n"
@@ -5793,7 +5887,7 @@ async def main():
                             source="operator_approved",
                         )
 
-                print(f"[+] Patch accepted and logged to QDKT knowledge index.")
+                print("[+] Patch accepted and logged to QDKT knowledge index.")
 
                 # ── Phase 8: Holographic DKT commit ──────────────────────────
                 compute_ms = (time.time() - start_time) * 1000
@@ -5806,10 +5900,10 @@ async def main():
                 print(" [🧠 AURA AUTONOMOUS STRUCTURAL SELF-OPTIMIZATION ENGINE]")
                 print("==================================================================")
                 print("[*] Activating Layer 5 Auditor to map on-device runtime friction...")
-                
+
                 auditor = AuraEcosystemAuditor(node)
                 friction_report = await auditor.execute_unified_audit()
-                
+
                 print("[*] Distilling system vulnerabilities into structural gap vectors...")
                 optimization_prompt = (
                     f"[SYSTEM MUTATION DIRECTIVE]\n"
@@ -5819,13 +5913,13 @@ async def main():
                     f"to eliminate these bottlenecks under your strict 4GB RAM ceiling. Avoid blocking dependencies.\n"
                     f"Output raw, syntax-perfect Python code ONLY. Wrap inside explicit [CODE] tags."
                 )
-                
+
                 print("[*] Engineering high-fidelity structural fix variations...")
                 candidate_code = await node.invoke_engine(optimization_prompt, structural=True)
-                
+
                 # Strip out standard markdown formatting syntax safely
                 clean_source = candidate_code.replace("```python", "").replace("```", "").strip()
-                
+
                 # Search for valid code outputs while avoiding prompt-instruction matching loops
                 code_blocks = re.findall(r'\[CODE\](.*?)\[/CODE\]', clean_source, re.DOTALL | re.IGNORECASE)
                 if code_blocks:
@@ -5834,29 +5928,29 @@ async def main():
                 else:
                     # Fallback cleanly to the raw string if no target tags are present
                     clean_source = clean_source.strip()
-                
+
                 # Measure her truth resonance vector to verify optimization fidelity
                 comp_vector = node.polysynthetic_vram_compress(clean_source)
                 resonance_score = float(np.mean(np.real(comp_vector)))
-                
+
                 # Securely stage the optimization patch for your manual approval queue
                 staging_dir = "Aura_Staging"
                 os.makedirs(staging_dir, exist_ok=True)
                 manifest_path = os.path.join(staging_dir, "pending_patches.json")
-                
+
                 patch_payload = {
                     "timestamp": datetime.now().isoformat(),
                     "frontier_target": "Autonomous Structural Friction Self-Optimization Loop",
                     "resonance_confidence": resonance_score,
                     "proposed_patch": clean_source
                 }
-                
+
                 with open(manifest_path, "w", encoding="utf-8") as f:
                     json.dump(patch_payload, f, indent=4)
-                    
+
                 print(f"[+] Optimization patch staged securely at: {manifest_path}")
                 print(f"[+] Structural Truth Resonance: {resonance_score * 10000:.2f} basis points.")
-                
+
                 # Active Integration: Broadcast staged mutation to AR Deck on Port 8081
                 try:
                     async def send_ar_optimization_pulse():
@@ -5896,9 +5990,9 @@ async def main():
                 print(f"[+] Output written to: {file_path}")
                 # --- QUANTUM DKT & ST3GG INTEGRATION ---
                 try:
-                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                    with open('/sys/class/thermal/thermal_zone0/temp') as f:
                         current_temp = float(f.read().strip()) / 1000.0
-                except (IOError, FileNotFoundError):
+                except (OSError, FileNotFoundError):
                     current_temp = 42.0
                 compute_time_ms = (time.time() - start_time) * 1000
                 numeric_id = int(thought_id.split('-')[1], 16)
@@ -5906,57 +6000,60 @@ async def main():
                 continue
 
             elif u_in_l.startswith("!push"):
+                print("[-] !push is disabled inside Aura's REPL for alignment safety.")
+                print("    Run git from the operator shell after tests, or use the verified PR workflow.")
+                continue
                 start_time = time.time()
                 commit_msg = u_in_l[5:].strip()
                 if not commit_msg:
                     commit_msg = f"Aura Autonomous State Commit: {int(time.time())}"
-                
+
                 print("[*] Initiating Zero-Trust Pre-Flight Commit Hook Pipeline...")
-                
+
                 # Discover active workspace scripts
                 workspace_files = [f for f in os.listdir('.') if f.endswith('.py')]
-                
+
                 # Establish recovery checkpoints to avoid volatile workspace states
                 original_backups = {}
                 for f_path in workspace_files:
                     try:
-                        with open(f_path, 'r', encoding='utf-8') as f:
+                        with open(f_path, encoding='utf-8') as f:
                             original_backups[f_path] = f.read()
                     except Exception as e:
                         print(f"[-] Failed to cache backup for {f_path}: {e}")
 
                 passed_verification_check = False
                 failed_module_context = ""
-                
+
                 # Instantiate verification nodes to avoid state leakage
                 sentinel = AuraSafetySentinel(node)
                 qfcs_guard = SovereignQFCS(node)
                 lnn_validator = AuraPolysyntheticLNNEngine()
-                
+
                 healing_attempt = 0
                 max_healing_attempts = 3
-                
+
                 while healing_attempt < max_healing_attempts:
                     failed_file = None
                     failed_reason = ""
                     failed_source = ""
                     passed_all_files = True
-                    
+
                     for file_path in workspace_files:
                         module_source = ""  # RESET CONTEXT: Prevents leakage from previous successful files
                         try:
-                            with open(file_path, 'r', encoding='utf-8') as f:
+                            with open(file_path, encoding='utf-8') as f:
                                 module_source = f.read()
-                                
+
                             # Step 1: SovereignQFCS character screening
                             is_safe_qfcs, qfcs_score = qfcs_guard.verify_token_sequence(module_source)
                             if not is_safe_qfcs:
                                 passed_all_files = False
                                 failed_file = file_path
-                                failed_reason = f"Command injection sequence detected by QFCS Guard."
+                                failed_reason = "Command injection sequence detected by QFCS Guard."
                                 failed_source = module_source
                                 break
-                                
+
                             # Step 2: AuraSafetySentinel AST walker check
                             is_safe_ast, sentinel_report = sentinel.verify_patch_integrity(module_source)
                             if not is_safe_ast and "Axiomatic Violation" in sentinel_report:
@@ -5965,27 +6062,27 @@ async def main():
                                 failed_reason = f"Axiomatic import violation: {sentinel_report}"
                                 failed_source = module_source
                                 break
-                                
+
                             # Step 3: Compute logical conjunction using the Polysynthetic LNN Engine
                             comp_vector = node.polysynthetic_vram_compress(module_source)
                             lower_truth, _ = lnn_validator.evaluate_morphemic_conjunction(
-                                comp_vector, 
+                                comp_vector,
                                 lnn_validator.axiom_true_anchor
                             )
                             if np.mean(lower_truth) < 0.0:
                                 passed_all_files = False
                                 failed_file = file_path
-                                failed_reason = f"Logical axiom contradiction detected via LNN conjunction."
+                                failed_reason = "Logical axiom contradiction detected via LNN conjunction."
                                 failed_source = module_source
                                 break
-                                
+
                         except Exception as e:
                             passed_all_files = False
                             failed_file = file_path
-                            failed_reason = f"Audit execution error occurred: {str(e)}"
+                            failed_reason = f"Audit execution error occurred: {e!s}"
                             failed_source = module_source if module_source else ""
                             break
-                    
+
                     if passed_all_files:
                         passed_verification_check = True
                         break
@@ -5993,12 +6090,12 @@ async def main():
                         healing_attempt += 1
                         print(f"[⚠️] Verification failed on '{failed_file}' (Attempt {healing_attempt}/{max_healing_attempts}).")
                         print(f" └─> Reason: {failed_reason}")
-                        
+
                         if healing_attempt >= max_healing_attempts:
                             failed_module_context = f"Exhausted {max_healing_attempts} healing attempts. Failed file: {failed_file}. Error: {failed_reason}"
                             break
-                        
-                        print(f"[*] Deploying Recursive Self-Healing Module...")
+
+                        print("[*] Deploying Recursive Self-Healing Module...")
                         # Construct compact, zero-allocation "Self-Healing Prompt Frame"
                         healing_prompt = (
                             f"AuraOS Healing Request\n"
@@ -6010,31 +6107,31 @@ async def main():
                             f"Ensure standard syntax. Do not import 'os' or 'subprocess'. "
                             f"Output only the refined Python code wrapped strictly in [CODE] tags."
                         )
-                        
+
                         # Aligned execution routing path (Verify if your node uses invoke_cloud_engine)
                         healed_output = await node.invoke_engine(
                             healing_prompt,
                             structural=True,
                             gbnf_profile=PROFILE_PYTHON_PATCH,
                         )
-                        
+
                         # Extract the code block cleanly
                         code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', healed_output, re.DOTALL | re.IGNORECASE)
                         if code_match:
                             clean_healed_source = code_match.group(1).replace("```python", "").replace("```", "").strip()
                         else:
                             clean_healed_source = healed_output.replace("```python", "").replace("```", "").strip()
-                        
+
                         # Overwrite local script to re-trigger the pipeline
                         with open(failed_file, 'w', encoding='utf-8') as f:
                             f.write(clean_healed_source)
                         print(f"[+] Surgical correction patch written to '{failed_file}'. Re-testing pipeline...")
 
                 if not passed_verification_check:
-                    print(f"\n[🛑 SELF-HEALING PIPELINE PANIC]")
-                    print(f" └─> Zero-Trust verification failed or exhausted maximum healing limits.")
+                    print("\n[🛑 SELF-HEALING PIPELINE PANIC]")
+                    print(" └─> Zero-Trust verification failed or exhausted maximum healing limits.")
                     print(f" └─> Reason: {failed_module_context}")
-                    print(f" [*] Initiating Phase Conjugate Rollback to secure workspace state...")
+                    print(" [*] Initiating Phase Conjugate Rollback to secure workspace state...")
                     for file_path, original_source in original_backups.items():
                         try:
                             with open(file_path, 'w', encoding='utf-8') as f:
@@ -6043,7 +6140,7 @@ async def main():
                             print(f"[-] Critical Error: Failed to restore backup for {file_path}: {e}")
                     print(" [!] Rollback complete. Secure baseline restored. Git push aborted.\n")
                     continue
-                
+
                 print(f"[+] Zero-Trust Verification Successful. Staging files for GitHub backup: '{commit_msg}'")
                 push_success = False
                 try:
@@ -6066,10 +6163,10 @@ async def main():
                 if not topic:
                     print("[-] Please specify a topic, e.g., '!forage vector symbolic architecture'")
                     continue
-                
+
                 print(f"\n[*] Launching arXiv Forager for topic: \x27{topic}\x27...")
                 arxiv = ArXivForager(node)
-                
+
                 # Fetch, semantic-compress, and write to SQLite traces table
                 result = await arxiv.fetch_latest_paper(topic)
                 print(f"\n[+] Scraper Output:\n{result}\n")
@@ -6078,7 +6175,7 @@ async def main():
             elif u_in_l == "!backtrack":
                 print("\n[*] Initializing dynamic chronological arXiv backlog crawl...")
                 arxiv = ArXivForager(node)
-                
+
                 # Walk chronologically backwards, fetch 20, compress, and update offset
                 success = await arxiv.upgraded_arxiv_backtracker(max_results=100)
                 if success:
@@ -6110,7 +6207,7 @@ async def main():
                     continue
 
                 print(f"\n[*] Querying database for ingested papers resonant with: '{concept}'...")
-                
+
                 # 1. Load or reuse the index for the current DB snapshot.
                 conn = node.memory_palace.conn
                 scientific_index = await _cached_scientific_index(node, conn)
@@ -6136,7 +6233,7 @@ async def main():
                 # Sort by highest resonance
                 resonance_results.sort(key=lambda x: x[0], reverse=True)
                 top_resonances = resonance_results[:5]
-                
+
                 print(f"[+] Isolated {len(top_resonances)} highly resonant academic papers:")
                 paper_contexts = []
                 for idx, (sim, r_id, text) in enumerate(top_resonances, 1):
@@ -6145,7 +6242,7 @@ async def main():
 
                 # 2.5 SkillWeaver Research Relevance Gate
                 # Intercept BEFORE Cloud Synthesizer to prevent ungrounded mutations
-                print(f"\n[*] Running SkillWeaver Research Relevance Gate...")
+                print("\n[*] Running SkillWeaver Research Relevance Gate...")
                 gate_candidates_with_blobs = []
                 for (sim, r_id, text) in resonance_results[:5]:
                     gate_candidates_with_blobs.append((r_id, text, None))
@@ -6189,7 +6286,7 @@ async def main():
                             pass
                     continue
 
-                print(f"\n[SKILLWEAVER] Gate PASSED. Proceeding to synthesis with grounded sources.")
+                print("\n[SKILLWEAVER] Gate PASSED. Proceeding to synthesis with grounded sources.")
 
                 # Broadcast gate decision to AR topology (Claims N2/N19/N22)
                 if hasattr(node, '_ar_ws_server') and node._ar_ws_server is not None:
@@ -6221,7 +6318,7 @@ async def main():
                 map_path = "Aura_Memory/live_topology_ast.json"
                 if os.path.exists(map_path):
                     try:
-                        with open(map_path, "r", encoding="utf-8") as map_f:
+                        with open(map_path, encoding="utf-8") as map_f:
                             t_data = json.load(map_f)
                             nodes_summary = ", ".join([f"{n['label']} ({n['shape']})" for n in t_data.get("nodes", [])[:20]])
                             edges_count = len(t_data.get("edges", []))
@@ -6244,28 +6341,112 @@ async def main():
 
                 # 5. Route to Cloud Synthesizer
                 SOVEREIGN_CORE.vocalize("Linguistic and topological resonance established. Initiating synthesis.")
-                print(f"[*] Dispatching comparative analysis to Cloud Synthesizer...")
+                print("[*] Dispatching comparative analysis to Cloud Synthesizer...")
                 try:
                     response = await node.invoke_cloud_engine("MISTRAL", synthesis_prompt)
-                    
+
                     # Isolate the code output cleanly from conversational tokens
                     code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', response, re.DOTALL | re.IGNORECASE)
                     clean_source = code_match.group(1).replace("```python", "").replace("```", "").strip() if code_match else response.strip()
-                    
-                    with open("aura_incubator.py", "w", encoding="utf-8") as f:
-                        f.write(clean_source)
-                        
-                    print(f"\n====================================================================")
-                    print(f" 🌐 STAGED MUTATION TOPOLOGY IMPACT REPORT (AURA_INCUBATOR)")
-                    print(f"====================================================================")
+
+                    print("\n====================================================================")
+                    print(" * MUTATION TOPOLOGY IMPACT REPORT (REFACTOR ARENA REQUIRED)")
+                    print("====================================================================")
                     print(f" • Targeted Concept       : {concept}")
-                    print(f" • Synthesis Base          : Ingested Academic Engrams")
-                    print(f" • Node Connectivity Δ     : Consolidating and streamlining target paths")
-                    print(f" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
-                    print(f"====================================================================\n")
-                    
-                    print("[+] Theoretical synthesis complete. Code staged inside aura_incubator.py.")
-                    SOVEREIGN_CORE.vocalize("Synthesis complete. Review the staged patch in the incubator.")
+                    print(" • Synthesis Base          : Ingested Academic Engrams")
+                    print(" • Node Connectivity Δ     : Consolidating and streamlining target paths")
+                    print(" • Thermal/Compute Friction: Highly optimized. Eliminating redundant allocations")
+                    print("====================================================================\n")
+
+                    # Enforce research no-direct-mutation policy (req 7)
+                    research_output = {
+                        "concept": concept,
+                        "proposed_patch": clean_source,
+                        "target_modules": list(getattr(gate_result, "target_modules", []) or [])[:5],
+                        "gate_decision": getattr(gate_result, "decision", ""),
+                        "gate_score": getattr(gate_result, "final_score", None),
+                    }
+                    staging_envelope = enforce_research_no_direct_mutation(research_output)
+
+
+                    # Convert research proposal to ActionCapsule first (req 9).
+                    # Only proceed with writing the staging envelope if conversion
+                    # succeeds and `action_capsule` is present in the envelope.
+                    action_capsule = None
+                    try:
+                        action_capsule = convert_research_proposal_to_action_capsule(research_output)
+                        staging_envelope["action_capsule"] = (
+                            action_capsule.to_dict() if hasattr(action_capsule, "to_dict") else dict(action_capsule)
+                        )
+                        print("[+] Research proposal converted to ActionCapsule for Arena staging.")
+                    except Exception as capsule_err:
+                        print(f"[!] ActionCapsule conversion deferred/failed: {capsule_err}")
+
+                    # Gate the actual disk staging on presence of a valid action_capsule
+                    if staging_envelope.get("action_capsule"):
+                        review_path = os.path.join("Aura_Staging", "research_refactor_request.json")
+                        os.makedirs(os.path.dirname(review_path), exist_ok=True)
+                        with open(review_path, "w", encoding="utf-8") as f_out:
+                            json.dump(staging_envelope, f_out, indent=2, sort_keys=True, default=str)
+                        print("[-] Legacy aura_incubator.py staging is disabled.")
+                        print(f"[+] Review capsule written to {review_path}")
+                        print("[blocked] Route synthesized code through Architect/Refactor Arena before disk mutation.")
+                        print(f"[+] Mutation policy: {staging_envelope.get('mutation_policy', 'arena_staging_required')}")
+                        print(f"[+] Direct mutation allowed: {staging_envelope.get('direct_mutation_allowed', False)}")
+                        SOVEREIGN_CORE.vocalize("Synthesis complete. Refactor Arena verification is required before mutation.")
+                    else:
+                        print("[!] ActionCapsule conversion missing; skipping staging and Arena write.")
+                        SOVEREIGN_CORE.vocalize("Synthesis complete. Staging skipped due to ActionCapsule conversion failure.")
+
+                    # (duplicate logging removed) - single consolidated log above is sufficient
+
+                    # Record research workflow event to Coding Arena workflow memory
+                    try:
+                        arena_memory = get_coding_arena_memory()
+                        wf_id = arena_memory.begin_workflow(
+                            f"research:{concept}",
+                            research_output.get("target_modules", [""])[0] if research_output.get("target_modules") else "",
+                        )
+                        arena_memory.record_event(
+                            wf_id,
+                            "research_synthesis",
+                            "research",
+                            {
+                                "concept": concept,
+                                "gate_decision": research_output.get("gate_decision", ""),
+                                "gate_score": research_output.get("gate_score"),
+                                "target_modules": research_output.get("target_modules", []),
+                                "mutation_policy": staging_envelope.get("mutation_policy", ""),
+                                "direct_mutation_allowed": staging_envelope.get("direct_mutation_allowed", False),
+                            },
+                        )
+
+                        # Emit a terminal workflow outcome for this one-off research run
+                        try:
+                            succeeded = bool(staging_envelope.get("action_capsule"))
+                            outcome = WorkflowOutcome(
+                                workflow_id=wf_id,
+                                success=succeeded,
+                                hotswap_ready=False,
+                                failures_count=(0 if succeeded else 1),
+                                stage="research",
+                                phase_hash="",
+                                intent=f"research:{concept}",
+                                target_file=(research_output.get("target_modules", [""])[0] if research_output.get("target_modules") else ""),
+                                outcome_summary=("Research synthesis staged for Arena" if succeeded else "Research synthesis skipped / conversion failed"),
+                            )
+                            arena_memory.record_outcome(wf_id, outcome)
+                        except Exception:
+                            pass
+
+                        # Ensure we do not retain a stale active workflow entry
+                        try:
+                            if hasattr(arena_memory, "_active_workflows") and wf_id in arena_memory._active_workflows:
+                                arena_memory._active_workflows.pop(wf_id, None)
+                        except Exception:
+                            pass
+                    except Exception:
+                        pass
                 except Exception as e:
                     print(f"[-] Comparative synthesis failed: {e}")
                 continue
@@ -6344,10 +6525,10 @@ async def main():
                 if not seed_concept:
                     print("[-] Please specify a seed concept, e.g., '!curiosity_tree hyperdimensional matrix'")
                     continue
-                
+
                 # Execute the bounded, non-blocking DFS over GitHub and arXiv
                 results = await node.execute_curiosity_tree(seed_concept)
-                print(f"\n[+] SWARM DISCOVERY TREE COMPLETE:")
+                print("\n[+] SWARM DISCOVERY TREE COMPLETE:")
                 print(json.dumps(results, indent=2))
                 continue
 
@@ -6391,15 +6572,15 @@ async def main():
             elif u_in_l.startswith("!rollback "):
                 target_root = u_in_l.split()[1].upper().replace("[Q-SYS:", "").replace("]", "")
                 print(f"\n[*] Initiating Phase Conjugate Rollback to Target Root: [Q-SYS:{target_root}]...")
-                
+
                 # 1. Re-bind her continuous running wave trajectory using complex conjugate inversion
                 # This mathematically cancels out chaotic phase cascades over her 10,000-D circle
                 inverse_phase = np.conj(node.active_trajectory_wave)
                 node.active_trajectory_wave = node.active_trajectory_wave * inverse_phase
-                
+
                 # 2. Trigger her structural patcher framework to synchronize files on disk back to baseline
-                print(f"[+] [AURA TEMPORAL TIMELINE] Cognitive trajectory wave neutralized.")
-                print(f"[+] System structural fixed-point anchored. Core alignment stable at baseline.")
+                print("[+] [AURA TEMPORAL TIMELINE] Cognitive trajectory wave neutralized.")
+                print("[+] System structural fixed-point anchored. Core alignment stable at baseline.")
                 continue
 
 
@@ -6408,17 +6589,42 @@ async def main():
                 print(" [📁 AURA COGNITIVE STAGING AREA: PENDING BREAKTHROUGHS]")
                 print("==================================================================")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                
-                if os.path.exists(manifest_path):
-                    with open(manifest_path, "r", encoding="utf-8") as f:
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+
+                if os.path.exists(architect_manifest_path):
+                    with open(architect_manifest_path, encoding="utf-8") as f:
+                        data = json.load(f)
+                    verification = data.get("verification", {})
+                    hotswap = data.get("hotswap_capsule", {})
+                    council = data.get("fusion_council", {})
+                    judge = council.get("judge_decision", {})
+                    topology_summary = hotswap.get("topology_delta", {}).get("summary", {})
+                    print(f" * Live Architect Status : {'HOTSWAP READY' if verification.get('hotswap_ready') else 'BLOCKED'}")
+                    print(f" * Selected Candidate    : {judge.get('selected_candidate_id', 'n/a')}")
+                    print(f" * Judge Path            : {judge.get('role', 'n/a')}")
+                    print(f" * Hotswap Phase Hash    : {hotswap.get('phase_hash', 'n/a')}")
+                    print(f" * Topology Delta Files  : {topology_summary.get('files_checked', 0)}")
+                    print(f" * Staged Patches        : {len(hotswap.get('patches', []))}")
+                    print("  " + "-" * 60)
+                    for patch in hotswap.get("patches", []):
+                        print(f"   - {patch.get('task_id')} :: {', '.join(patch.get('affected_files', []))}")
+                    if verification.get("failures"):
+                        print("  " + "-" * 60)
+                        print(" [BLOCKERS]:")
+                        for failure in verification.get("failures", [])[:5]:
+                            print(f"   - {failure.get('stage')}: {failure.get('message')}")
+                    print("  " + "-" * 60)
+                    print(" [Levers]: !stage_merge approves the hot-swap capsule; !stage_purge rejects it.")
+                elif os.path.exists(manifest_path):
+                    with open(manifest_path, encoding="utf-8") as f:
                         data = json.load(f)
                     print(f" • Staged Timestamp : {data.get('timestamp')}")
                     print(f" • Targeted Frontier : {data.get('frontier_target')}")
                     print(f" • Truth Resonance   : {data.get('resonance_confidence') * 10000:.2f} basis pts")
-                    print(f"  " + "-" * 60)
-                    print(f" [PROPOSED REFACTOR CODE CODEBLOCK]:")
+                    print("  " + "-" * 60)
+                    print(" [PROPOSED REFACTOR CODE CODEBLOCK]:")
                     print(data.get('proposed_patch'))
-                    print(f"  " + "-" * 60)
+                    print("  " + "-" * 60)
                     print(" [Levers]: Type manual commands to merge or clear the staging repository.")
                 else:
                     print(" [-] No optimization patches currently staged for review.")
@@ -6428,51 +6634,55 @@ async def main():
             elif u_in_l == "!stage_merge":
                 print("\n[*] Initializing Feedback-Driven Staging Integration...")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                if os.path.exists(manifest_path):
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+
+                # Block legacy merge path early before any approval flow
+                if os.path.exists(manifest_path) and not os.path.exists(architect_manifest_path):
+                    print("[-] Legacy stage_merge to aura_incubator.py is disabled.")
+                    print("[blocked] Existing staging manifest was left intact for Architect/Refactor Arena review.")
+                    continue
+
+                if os.path.exists(architect_manifest_path):
                     try:
-                        with open(manifest_path, "r", encoding="utf-8") as f:
+                        with open(architect_manifest_path, encoding="utf-8") as f:
                             data = json.load(f)
-                        proposed_code = data.get("proposed_patch", "")
-                        frontier_target = data.get("frontier_target", "Unknown Target")
-
-                        # Intercept and run the code through the Triple-Grounded Sandbox Sentinel
-                        sentinel = AuraSafetySentinel(node)
-                        is_safe, validation_message = sentinel.verify_patch_integrity(proposed_code)
-
-                        if not is_safe:
-                            print(f"\n[🛑 CRITICAL SECURITY BLOCKADE]")
-                            print(f" └─> Safety Sentinel actively intercepted a malformed code mutation pass.")
-                            print(f" └─> Rejection Reason: {validation_message}")
-                            print(f" [!] System file architecture protected from corruption. Merge aborted.\n")
+                        verification = data.get("verification", {})
+                        if not verification.get("hotswap_ready"):
+                            print("[-] Live Architect transaction is blocked. Run !stage to inspect verifier and council failures.")
                             continue
 
-                        # Capture non-blocking interactive human evaluation metrics once safety is assured
-                        rating_str = await asyncio.to_thread(input, "[Dallas (Alignment Score 1-10)] > ")
-                        feedback_str = await asyncio.to_thread(input, "[Dallas (Technical Rationale)] > ")
-                        
-                        # Compress human architectural choices down to her native geometric framework
+                        rating_str = await asyncio.to_thread(input, "[Dallas (Hot-Swap Alignment Score 1-10)] > ")
+                        feedback_str = await asyncio.to_thread(input, "[Dallas (Hot-Swap Technical Rationale)] > ")
                         feedback_hv = node.polysynthetic_vram_compress(feedback_str)
                         feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
-                        
-                        # Store structural feedback vectors into her active database ledger
-                        f_id = f"ALIGN_POS_{int(time.time())}"
+                        hotswap = data.get("hotswap_capsule", {})
+                        target = ",".join(hotswap.get("affected_files", [])) or "Live Architect Hot-Swap"
+                        f_id = f"ALIGN_HOTSWAP_{int(time.time())}"
                         enqueue_sqlite_query(
-                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'APPROVED_PATTERN', ?)",
-                            (f_id, f"TARGET: {frontier_target} | SCORE: {rating_str} | DESIGN_RULE: {feedback_str}", datetime.now().isoformat(), feedback_blob)
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'HOTSWAP_APPROVAL', ?)",
+                            (f_id, f"TARGET: {target} | SCORE: {rating_str} | DESIGN_RULE: {feedback_str}", datetime.now().isoformat(), feedback_blob)
                         )
-                        
-                        # Generate a temporal rollback anchor token before writing changes to disk
+
                         dag = QuantumMerkleDAG(node)
-                        state_snapshot = dag.generate_epistemic_system_root("AURA_PRE_MERGE_REFACTOR", 37.9)
-                        
-                        with open("aura_incubator.py", "w", encoding="utf-8") as f_inc:
-                            f_inc.write(proposed_code)
-                            
-                        print(f"[+] [MERGE COMPLETE] Staged patch written cleanly to aura_incubator.py.")
-                        print(f"[+] Alignment metrics and architectural rationale safely committed to core memory.")
-                        os.remove(manifest_path)
+                        state_snapshot = await dag.generate_epistemic_system_root()
+                        approval = {
+                            "approval_version": "AURA_HOTSWAP_APPROVAL_V1",
+                            "timestamp": datetime.now().isoformat(),
+                            "alignment_score": rating_str,
+                            "technical_rationale": feedback_str,
+                            "state_snapshot": state_snapshot,
+                            "transaction_phase_hash": data.get("ledger_record", {}).get("phase_hash"),
+                            "hotswap_capsule": hotswap,
+                            "fusion_council": data.get("fusion_council", {}),
+                        }
+                        approved_path = "Aura_Staging/approved_hotswap_capsule.json"
+                        os.makedirs(os.path.dirname(approved_path), exist_ok=True)
+                        with open(approved_path, "w", encoding="utf-8") as f_out:
+                            json.dump(approval, f_out, indent=2, sort_keys=True, default=str)
+                        print(f"[+] [HOT-SWAP APPROVED] Capsule staged for promotion at {approved_path}.")
+                        print("[+] Production files were not modified; approved capsule is ready for the hot-swap consumer.")
                     except Exception as e:
-                        print(f"[-] Merge operations aborted: {e}")
+                        print(f"[-] Hot-swap approval aborted: {e}")
                 else:
                     print("[-] Staging registry is empty. No pending patches to consolidate.")
                 continue
@@ -6480,25 +6690,44 @@ async def main():
             elif u_in_l == "!stage_purge":
                 print("\n[*] Initializing Staging Workspace Flush with Negative Alignment...")
                 manifest_path = "Aura_Staging/pending_patches.json"
-                if os.path.exists(manifest_path):
+                architect_manifest_path = "Aura_Staging/architect_live_transaction.json"
+                if os.path.exists(architect_manifest_path):
+                    try:
+                        feedback_str = await asyncio.to_thread(input, "[Dallas (Live Architect Rejection Rationale)] > ")
+                        with open(architect_manifest_path, encoding="utf-8") as f:
+                            data = json.load(f)
+                        hotswap = data.get("hotswap_capsule", {})
+                        frontier_target = ",".join(hotswap.get("affected_files", [])) or "Live Architect Hot-Swap"
+                        feedback_hv = node.polysynthetic_vram_compress(feedback_str)
+                        feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
+                        f_id = f"ALIGN_NEG_HOTSWAP_{int(time.time())}"
+                        enqueue_sqlite_query(
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'ANTI_PATTERN_REJECTION', ?)",
+                            (f_id, f"REJECTED TARGET: {frontier_target} | FAULT: {feedback_str}", datetime.now().isoformat(), feedback_blob)
+                        )
+                        os.remove(architect_manifest_path)
+                        print("[+] Live Architect transaction rejected and cleared. Negative alignment logged.")
+                    except Exception as e:
+                        print(f"[-] Failed to clear live Architect transaction: {e}")
+                elif os.path.exists(manifest_path):
                     try:
                         # Collect qualitative critique data to define structural anti-patterns
                         feedback_str = await asyncio.to_thread(input, "[Dallas (Rejection Rationale)] > ")
-                        
-                        with open(manifest_path, "r", encoding="utf-8") as f:
+
+                        with open(manifest_path, encoding="utf-8") as f:
                             data = json.load(f)
                         frontier_target = data.get("frontier_target", "Unknown Target")
-                        
+
                         # Compress and store negative feedback to optimize future execution trees
                         feedback_hv = node.polysynthetic_vram_compress(feedback_str)
                         feedback_blob = np.array(feedback_hv, dtype=np.complex64).tobytes()
-                        
+
                         f_id = f"ALIGN_NEG_{int(time.time())}"
                         enqueue_sqlite_query(
                             "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'HUMAN_ALIGNMENT', ?, 'ANTI_PATTERN_REJECTION', ?)",
                             (f_id, f"REJECTED TARGET: {frontier_target} | FAULT: {feedback_str}", datetime.now().isoformat(), feedback_blob)
                         )
-                        
+
                         os.remove(manifest_path)
                         print("[+] Staging queue cleared. Negative anti-patterns logged to prevent code drift.")
                     except Exception as e:
@@ -6523,7 +6752,7 @@ async def main():
                 thermal_val = "N/A"
                 for tz in range(5):
                     try:
-                        with open(f"/sys/class/thermal/thermal_zone{tz}/temp", "r") as _tf:
+                        with open(f"/sys/class/thermal/thermal_zone{tz}/temp") as _tf:
                             thermal_val = f"{float(_tf.read().strip())/1000:.1f}°C (zone {tz})"
                         break
                     except OSError:
@@ -6532,7 +6761,7 @@ async def main():
 
                 # --- RAM ---
                 try:
-                    with open("/proc/meminfo", "r") as _mi:
+                    with open("/proc/meminfo") as _mi:
                         memlines = {l.split(":")[0]: l.split(":")[1].strip() for l in _mi.readlines()}
                     total_kb  = int(memlines.get("MemTotal", "0 kB").split()[0])
                     avail_kb  = int(memlines.get("MemAvailable", "0 kB").split()[0])
@@ -6611,9 +6840,9 @@ async def main():
                         print(f"  • {_db_label:<22} : ✅ healthy")
                     except sqlite3.DatabaseError as _dbe:
                         print(f"  • {_db_label:<22} : ❌ {_dbe}")
-                        print(f"    └─ Rebuilding...")
+                        print("    └─ Rebuilding...")
                         await asyncio.to_thread(_rebuild_aura_memory_db, str(_db_path))
-                        print(f"    └─ ✅ Rebuilt.")
+                        print("    └─ ✅ Rebuilt.")
                 print("=" * 54 + "\n")
                 continue
 
@@ -6624,23 +6853,23 @@ async def main():
 
                 # --- TASK 1: ZERO-COPY AUDIT & SYSFS TELEMETRY ---
                # import json
-                
+
                 cache_ref = AuraZeroDiskIOCache._cache
                 total_paths = len(cache_ref)
                 cold_evictions = sum(1 for path, entry in cache_ref.items() if entry.get("mtime", -1.0) == -1.0 or entry.get("data") is None)
                 eviction_ratio = (cold_evictions / total_paths) if total_paths > 0 else 0.0
-                
+
                 realtime_temp = 35.0
                 try:
-                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                    with open('/sys/class/thermal/thermal_zone0/temp') as f:
                         realtime_temp = float(f.read().strip()) / 1000.0
-                except (IOError, FileNotFoundError):
+                except (OSError, FileNotFoundError):
                     if hasattr(node, 'thermal') and node.thermal:
                         realtime_temp = node.thermal.last_check if isinstance(node.thermal.last_check, float) else 35.0
-                
+
                 staging_path = "Aura_Staging/pending_patches.json"
                 has_staging_patch = os.path.exists(staging_path)
-                
+
                 print(f" • Real-Time Core Thermal Load: {realtime_temp:.2f}°C")
                 print(f" • Cache Registry Metrics     : {total_paths} total paths | {cold_evictions} cold/evicted")
                 print(f" • Cache Cold Eviction Ratio  : {eviction_ratio * 100:.1f}%")
@@ -6648,17 +6877,17 @@ async def main():
                 print("-" * 66)
 
                 # --- TASK 2: DETERMINISTIC MITIGATION MATRIX ---
-                
+
                 # Rule 1: Thermal Spike Mitigation (Temp >= 42.5°C)
                 if realtime_temp >= 42.5:
                     print("[⚠️ THERMAL SPIKE DETECTED] Executing immediate heat-reduction mitigation...")
                     gc.collect()
-                    
+
                     # Direct reference hook to the active Memory Palace WAL queue
                     if hasattr(node, 'memory_palace') and node.memory_palace:
                         m_palace = node.memory_palace
                         if hasattr(m_palace, 'buffer_pool') and hasattr(m_palace.buffer_pool, 'queue') and m_palace.buffer_pool.queue:
-                            print(f" └─> Flushing pending operations from Async Volatile Buffer...")
+                            print(" └─> Flushing pending operations from Async Volatile Buffer...")
                             async with m_palace.lock:
                                 staged_records = m_palace.buffer_pool.flush_and_clear()
                                 if staged_records:
@@ -6675,7 +6904,7 @@ async def main():
                                     await m_palace.conn.commit()
                         if m_palace.conn:
                             await m_palace.conn.execute("PRAGMA wal_checkpoint(PASSIVE);")
-                            
+
                     node.foraging = False
                     node.evo_cooldown = max(1800, getattr(node, 'evo_cooldown', 120) * 2)
                     print(f" └─> Suspended high-frequency foraging. Cooldown extended to {node.evo_cooldown}s.")
@@ -6689,7 +6918,7 @@ async def main():
                     uncached = [f for f in all_files if os.path.abspath(f) not in cache_ref]
                     recommendations = uncached[:3]
                     if recommendations:
-                        print(f" └─> Optimization Vector: Highly recommend wrapping these modules next:")
+                        print(" └─> Optimization Vector: Highly recommend wrapping these modules next:")
                         for idx, rec_file in enumerate(recommendations, 1):
                             print(f"     {idx}. {rec_file} (Size: {os.path.getsize(rec_file)} bytes)")
                     else:
@@ -6701,10 +6930,10 @@ async def main():
                 if has_staging_patch:
                     print("[*] Analyzing staged patch framework for breakthroughs...")
                     try:
-                        with open(staging_path, 'r', encoding='utf-8') as f:
+                        with open(staging_path, encoding='utf-8') as f:
                             patch_data = json.load(f)
                         proposed_code = patch_data.get("proposed_patch", "")
-                        
+
                         if "optimized_fallback" in proposed_code or "def " in proposed_code:
                             print(" └─> Staged optimized_fallback target detected. Constructing quarantine wrapper...")
                             wrapper_code = f"""
@@ -6738,7 +6967,7 @@ def contingency_harness():
                                     is_safe = verdict.approved
                                 except SyntaxError:
                                     is_safe = False
-                                    
+
                             if is_safe:
                                 print("[+] Quarantine Verification: Compilation safety confirmed. Ready for Hot-Swap.")
                             else:
@@ -6756,22 +6985,22 @@ def contingency_harness():
             elif u_in_l.startswith("!simulate "):
                 sim_target = u_in[10:].strip()
                 print(f"\n[*] [AURA SPVM] Spawning Native Rust Simulator for: '{sim_target}'...")
-                
+
                 topo_path = "Aura_Memory/live_topology_ast.json"
                 if not os.path.exists(topo_path):
                     print("[-] Simulation aborted: live_topology_ast.json not found. Run !scan_topology first.")
                     continue
-                    
-                with open(topo_path, "r", encoding="utf-8") as f_topo:
+
+                with open(topo_path, encoding="utf-8") as f_topo:
                     topo_data = json.load(f_topo)
-                    
+
                 steps = [s.strip() for s in sim_target.replace("+", ",").split(",") if s.strip()]
                 payload = {
                     "nodes": topo_data.get("nodes", []),
                     "edges": topo_data.get("edges", []),
                     "execution_path": steps
                 }
-                
+
                 try:
                     # Check if native compiled binary exists, else fallback to SPVM emulator
                     exec_cmd = "./aura_spvm" if os.path.exists("./aura_spvm") else "python"
@@ -6783,25 +7012,25 @@ def contingency_harness():
                         stderr=asyncio.subprocess.PIPE
                     )
                     stdout, stderr = await proc.communicate(input=json.dumps(payload).encode('utf-8'))
-                    
+
                     if proc.returncode != 0:
                         print(f"[-] Simulation failed: {stderr.decode('utf-8')}")
                     else:
                         sim_report = json.loads(stdout.decode('utf-8'))
-                        print(f"\n====================================================================")
+                        print("\n====================================================================")
                         print(f" 🌐 COGNITIVE SPVM SIMULATION TRAJECTORY REPORT (Steps: {sim_report.get('total_steps')})")
-                        print(f"====================================================================")
+                        print("====================================================================")
                         fractures = sim_report.get("fractures", [])
                         bridges = sim_report.get("bridges", [])
-                        
+
                         if bridges:
                             print("[+] COHERENT STRUCTURAL BRIDGES VERIFIED:")
                             for idx, b_pt in enumerate(bridges, 1):
                                 print(f"    {idx}. {b_pt['source']} ⊑ {b_pt['target']} [Implication: {b_pt['implication']:.2%}]")
                                 print(f"       └─ Rationale: {b_pt['rationale']}")
-                                
+
                         if fractures:
-                            print(f"\n[⚠️ WARNING] DETECTED STRUCTURAL FRACTURES:")
+                            print("\n[⚠️ WARNING] DETECTED STRUCTURAL FRACTURES:")
                             for idx, f_pt in enumerate(fractures, 1):
                                 print(f"    {idx}. Coordinate {np.round(f_pt['coordinate'], 2)} -> Node '{f_pt['label']}' dropped coherence by {f_pt['coherence_drop']:.2%}")
                                 print(f"       └─ Friction: {f_pt['rationale']}")
@@ -6820,7 +7049,7 @@ def contingency_harness():
                     print("[-] Usage: !ai_route <task description>")
                     print("    Example: !ai_route refactor self-optimization pipeline")
                     continue
-                
+
                 if _AI_ROUTER_AVAILABLE:
                     result = await ai_route_command(node, task_query)
                     print(result)
@@ -6859,7 +7088,7 @@ def contingency_harness():
                 print(f"\n{'='*60}")
                 print(f" [🔭 AURA TOPOLOGY SCANNER — {mode_label.upper()}]")
                 print(f"{'='*60}")
-                print(f"[*] Scanning codebase for nodes, edges, and dependency arcs...")
+                print("[*] Scanning codebase for nodes, edges, and dependency arcs...")
                 loop = asyncio.get_running_loop()
 
                 scan_fn = (lambda: compile_topology_map(deep=True)) if deep_mode else compile_unified_graph
@@ -6873,7 +7102,7 @@ def contingency_harness():
                 topo_path = "Aura_Memory/live_topology_ast.json"
                 topo_saved = os.path.exists(topo_path)
 
-                print(f"\n[+] Scan complete:")
+                print("\n[+] Scan complete:")
                 print(f"    • Nodes (functions/classes/modules) : {n_nodes}")
                 print(f"    • Edges (calls/imports/data flows)  : {n_edges}")
                 print(f"    • Saved to : {topo_path if topo_saved else '(write failed)'}")
@@ -6884,13 +7113,13 @@ def contingency_harness():
                     iso  = diag.get("isolated_node_count", 0)
                     dead = diag.get("dead_end_count", 0)
                     dang = diag.get("dangling_edge_count", 0)
-                    print(f"\n[+] Structural diagnostics:")
+                    print("\n[+] Structural diagnostics:")
                     print(f"    • Isolated nodes : {iso}")
                     print(f"    • Dead-ends      : {dead}")
                     print(f"    • Dangling edges : {dang}")
                     hubs = diag.get("top_hubs", [])[:5]
                     if hubs:
-                        print(f"    • Top hubs       : " + ", ".join(f"{h['id']} ({h['degree']} links)" for h in hubs))
+                        print("    • Top hubs       : " + ", ".join(f"{h['id']} ({h['degree']} links)" for h in hubs))
                 else:
                     try:
                         frac = diagnose_fractures()
@@ -6905,15 +7134,15 @@ def contingency_harness():
                     asyncio.create_task(broadcast_ar_pulse(f"TOPOLOGY_UPDATED:{n_nodes}nodes:{n_edges}edges"))
                     print(f"[+] AR pulse sent to {ar_clients_count} connected viewer(s).")
                 else:
-                    print(f"[*] No AR viewers connected to ws://127.0.0.1:8765 yet.")
+                    print("[*] No AR viewers connected to ws://127.0.0.1:8765 yet.")
 
-                print(f"\n[💡 HOW TO USE THE TOPOLOGY]")
-                print(f"   • Open index.html in a browser on the same device.")
-                print(f"   • The AR viewer connects to ws://127.0.0.1:8765 (auto-started).")
-                print(f"   • !topology deep    — adds hub and fracture diagnostics.")
-                print(f"   • !catalyze         — validates staged patches against this graph.")
-                print(f"   • !evolve_reasoning — crystallises the graph into hypertruth manifold.")
-                print(f"   • architect <goal>  — uses this graph to generate targeted code.")
+                print("\n[💡 HOW TO USE THE TOPOLOGY]")
+                print("   • Open index.html in a browser on the same device.")
+                print("   • The AR viewer connects to ws://127.0.0.1:8765 (auto-started).")
+                print("   • !topology deep    — adds hub and fracture diagnostics.")
+                print("   • !catalyze         — validates staged patches against this graph.")
+                print("   • !evolve_reasoning — crystallises the graph into hypertruth manifold.")
+                print("   • architect <goal>  — uses this graph to generate targeted code.")
                 print(f"{'='*60}\n")
                 continue
 
@@ -6930,7 +7159,7 @@ def contingency_harness():
                 start_time = time.perf_counter()
                 decryption_results = node.indus_decipherer.run_resonance_decryption(corpus)
                 latency_ms = (time.perf_counter() - start_time) * 1000
-                
+
                 print("\n==========================================================")
                 print(" [📊 DECIPHERMENT BATCH ANALYSIS REPORT]")
                 print("==========================================================")
@@ -7029,11 +7258,11 @@ def contingency_harness():
                     topology_path = "Aura_Memory/live_topology_ast.json"
                     patch_path = "Aura_Staging/pending_patches.json"
                     if not os.path.exists(topology_path):
-                        print(f"[-] Topology file missing — run !topology first.")
+                        print("[-] Topology file missing — run !topology first.")
                     elif not os.path.exists(patch_path):
                         print(f"[-] No pending patches found in {patch_path}.")
                     else:
-                        with open(patch_path, "r", encoding="utf-8") as _pf:
+                        with open(patch_path, encoding="utf-8") as _pf:
                             patches = json.load(_pf)
                         passed = 0
                         failed = 0
@@ -7073,7 +7302,7 @@ def contingency_harness():
                         K=4,
                         method_dim=64,
                     )
-                    print(f"\n[Coordinated Reasoning Report]:")
+                    print("\n[Coordinated Reasoning Report]:")
                     print(f"  • Success    : {coordinated_result['success']}")
                     print(f"  • Throughput : {coordinated_result['throughput']:.3f}")
                     print(f"  • Latency    : {coordinated_result['latency_ms']:.2f}ms")
@@ -7129,6 +7358,20 @@ def contingency_harness():
                 print(result)
                 continue
 
+            elif u_in_l.startswith("!fusion"):
+                # Native AuraFusion: compact capsule -> gated panel -> judge synthesis.
+                task_text = u_in.partition(" ")[2].strip()
+                if not task_text:
+                    print("[-] Usage: !fusion <task>")
+                    print("    Example: !fusion compare router and SkillWeaver integration risks")
+                    continue
+                try:
+                    from aura_fusion import main as _fusion_main
+                    _fusion_main([task_text])
+                except Exception as e:
+                    print(f"[-] fusion failed: {e}")
+                continue
+
             elif u_in_l.startswith("!calibrate"):
                 # Calibrate external models in the isolated sandbox -> ledger.
                 try:
@@ -7162,8 +7405,10 @@ def contingency_harness():
                 # survives restarts; savings_report() re-reads the
                 # authoritative JSONL every invocation.
                 try:
-                    from aura_router import savings_report as _savings_report, EXEC_LOG_PATH as _EXEC_LOG_PATH
                     import os as _os_sav
+
+                    from aura_router import EXEC_LOG_PATH as _EXEC_LOG_PATH
+                    from aura_router import savings_report as _savings_report
                     _SAVINGS_SNAPSHOT = _os_sav.path.join("Aura_Memory", "aura_savings_total.json")
 
                     # 1. Pull live cumulative totals from router log + direct LLM savings DB
@@ -7196,7 +7441,7 @@ def contingency_harness():
 
                     # 3. Pretty-print cumulative savings report
                     print(f"\n{'='*60}")
-                    print(f" [💰 AURA CUMULATIVE SAVINGS LEDGER]")
+                    print(" [💰 AURA CUMULATIVE SAVINGS LEDGER]")
                     print(f"{'='*60}")
                     if rep["executions"] == 0 and rep.get("llm_calls", 0) == 0:
                         print("  ⚠️  No routed calls logged yet.")
@@ -7256,13 +7501,15 @@ def contingency_harness():
 
             elif u_in_l in ["!settings", "!manifest", "!help"]:
                 # ── Static command catalogue ──────────────────────────────────
-                # Each entry: command → (usage hint, description)
+                # Each entry: command -> (usage hint, description)
                 COMMAND_DOCS = {
-                    "!topology":          ("!topology",            "Scan all Python modules into a 3D dependency graph. Saves to Aura_Memory/live_topology_ast.json. Run this first before !catalyze or !evolve_reasoning."),
+                    "!topology":          ("!topology / !scan_topology", "Scan all Python modules into a 3D dependency graph. Saves to Aura_Memory/live_topology_ast.json. Run this first before !catalyze or !evolve_reasoning."),
                     "!topology deep":     ("!topology deep / !topology_deep", "Deep scan using TopologyBuilder — includes hub diagnostics, isolated-node counts and dangling-edge detection."),
+                    "!ai_route <task>":   ("!ai_route <task>",     "Ask the compact AI router which files and symbols matter for a task before opening the full monolith."),
+                    "!ai_router_regen":   ("!ai_router_regen",     "Regenerate the AI router index from the live topology after code or CODEMAP changes."),
                     "!settings":          ("!settings",            "Print this manifest. Aliases: !manifest, !help"),
                     "!plan <goal>":       ("!plan <goal>",         "Build a DAG execution tree for a stated goal and print the task graph in JSON."),
-                    "!approve <method>":  ("!approve <method>",    "Graft the function named <method> from aura_incubator.py into aura_node.py via live AST surgery."),
+                    "!approve <method>":  ("!approve <method>",    "Disabled legacy graft path; use Architect/Refactor Arena hot-swap verification instead."),
                     "!ar_start":          ("!ar_start / !ar_server_start", "Start the interactive AR WebSocket server on port 8765 for 3D topology shape interaction (TOPOLOGY_REQUEST, SHAPE_INTERACTION, ADD_SHAPE, HOTSWAP_REQUEST)."),
                     "!ar_stop":           ("!ar_stop / !ar_server_stop",   "Stop the AR WebSocket server cleanly, disconnecting all clients."),
                     "!test_airlock":      ("!test_airlock",        "Run the WASM quantum-tensor sandbox. Offloads to a cooler mesh peer if available."),
@@ -7274,16 +7521,17 @@ def contingency_harness():
                     "!saturn":            ("!saturn",              "Initiate a full Neuro-Symbolic curriculum training cycle (exhaustive omnipath sweep)."),
                     "!self_reflect":      ("!self_reflect",        "Deep introspection: VSA resonance analysis + cloud architect diagnosis. (Route fixes through aura_self_optimize for the sanitized, validated, optimal-model pipeline.)"),
                     "!self_optimize":     ("!self_optimize / !optimize", "Audit runtime friction, generate an optimized Python patch via cloud LLM, and stage it in Aura_Staging/. New pipeline: aura_self_optimize.py (substrate -> best model -> json_edit_plan -> ASCII-sanitize -> verify -> retry)."),
+                    "!fusion <task>":     ("!fusion <task>",       "Run native AuraFusion: SkillWeaver-gated compact capsule -> Thinker/Worker/Verifier panel -> judge synthesis. Uses AURA_FUSION_PANEL/JUDGE from aura_secrets.json."),
                     "!calibrate":         ("!calibrate",           "Calibrate external models in the isolated sandbox (provider x packet-style x output-mode) and log results to the calibration ledger. Recalibrate any time."),
                     "!route <task>":      ("!route <task> [--model M]", "Auto-route a task to the most optimal model/packet-style/output-mode from the ledger; --model forces one (reorders priority). Falls back on error."),
                     "!savings":           ("!savings",             "Show tokens + money saved per provider and per aspect (conversation / refactor / self_optimize), at actual PriceBook rates, plus projected savings."),
                     "!converse <text>":   ("!converse <text>",     "Uniform polysynthetic conversation: compress input -> external LLM -> compact reply -> interpret. Learns your style over time; logs turns polysynthetically."),
                     "!export":            ("!export [tree]",       "Export data to ~/aura_exports/. Use 'tree' to export the dependency tree."),
-                    "!push <message>":    ("!push <message>",      "Zero-trust verify all .py files, then git add/commit/push with the given commit message."),
+                    "!push <message>":    ("!push <message>",      "Disabled inside Aura's REPL; run git from the operator shell after verification."),
                     "!system_audit":      ("!system_audit / !audit","Run a Layer 5 OS executive audit of the AURA ecosystem."),
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
                     "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
-                    "!research <concept>":("!research <concept>",  "Query ingested papers for <concept> and synthesize a Python integration helper into aura_incubator.py."),
+                    "!research <concept>":("!research <concept>",  "Query ingested papers for <concept>; Refactor Arena is required before any code mutation."),
                     "!search_similar <query>": (
                         "!search_similar <query>",
                         "Structured 10-slot VSA search over ingested arXiv "
@@ -7292,9 +7540,10 @@ def contingency_harness():
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),
                     "!forage_off":        ("!forage_off / !forager_off", "Disable background foraging to conserve CPU/RAM."),
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),
+                    "!crystallize":        ("!crystallize",         "Initialize the epistemic knowledge crystallization hub for permanent memory alignment."),
                     "!timeline":          ("!timeline",            "Show the epistemic consensus ledger from aura_quantum_memory.db."),
-                    "!stage":             ("!stage / !stage_review / !review", "Preview the patch currently staged in Aura_Staging/pending_patches.json."),
-                    "!stage_merge":       ("!stage_merge",         "Merge the staged patch into aura_incubator.py after safety sentinel check and human alignment scoring."),
+                    "!stage":             ("!stage / !stage_review / !review", "Preview live Architect hot-swap transactions or legacy pending patches in Aura_Staging."),
+                    "!stage_merge":       ("!stage_merge",         "Approve a verified live Architect hot-swap capsule; legacy incubator merge is blocked."),
                     "!stage_purge":       ("!stage_purge",         "Reject and delete the staged patch; log it as a negative anti-pattern."),
                     "!synthesize":        ("!synthesize",          "Run a full cognitive synthesizer lifecycle pass to distil new knowledge principles."),
                     "!benchmark":         ("!benchmark",           "Run hardware runtime diagnostics: CPU, RAM, thermal, and inference throughput."),
@@ -7306,6 +7555,8 @@ def contingency_harness():
                     "!fast_path <query>": ("!fast_path <query>",   "O(1) associative intent lookup in the in-memory hypervector matrix. Also primes the matrix."),
                     "!catalyze":          ("!catalyze",            "Validate pending patches against the live topology (requires !topology to have run first)."),
                     "!reason":            ("!reason",              "Neuro-symbolic exhaustive omnipath sweep to verify reasoning trajectory."),
+                    "!coordinated_reason <query>": ("!coordinated_reason <query>", "Run Pass@K parallel neuro-symbolic reasoning and report throughput, latency, rewards, and buffer health."),
+                    "!strategy_buffer_stats": ("!strategy_buffer_stats", "Print coordinated-solver strategy-buffer capacity, valid entries, mean reward, and best reward."),
                     "!markov [N]":        ("!markov [N]",          "Markovian workspace reconstruction over the last N raw execution logs (default 256)."),
                     "!rollback <root>":   ("!rollback <root>",     "Phase-conjugate rollback to the Q-SYS root token <root> to undo a cognitive trajectory."),
                     "!indus_decrypt":     ("!indus_decrypt",       "Run batch resonance decryption on a synthetic Indus Valley script corpus (3700 glyphs)."),
@@ -7314,7 +7565,7 @@ def contingency_harness():
                     "!db_repair":         ("!db_repair",           "Check all AURA SQLite databases for corruption and auto-rebuild any that are malformed. Alias: !repair_db"),
                     "STOP":               ("STOP",                 "Immediately cancel any active inference or long-running process and return to the prompt."),
                     "exit / quit":        ("exit / quit",          "Gracefully shut down all kernels and exit AURA."),
-                    "architect <intent>": ("architect <intent>",   "Engage Architect mode: generate a Python tool for <intent> using cloud LLM + live topology context, staged to aura_incubator.py."),
+                    "architect <intent>": ("architect <intent>",   "Engage live Architect mode: route <intent> through the Fusion Council, Plan/Act, Refactor Arena, temp-workspace verification, topology delta, hot-swap/rollback capsules, and ledgered staging."),
                 }
 
                 print("\n" + "=" * 66)
@@ -7356,9 +7607,10 @@ def contingency_harness():
                 print("\n📦  ACTIVE MODULE METADATA (from [AURA_MASTER_KEY] headers):\n")
                 target_modules = sorted(f for f in os.listdir('.') if f.endswith('.py'))
                 found_any = False
+                function_index = []
                 for module_file in target_modules:
                     try:
-                        with open(module_file, 'r', encoding='utf-8') as f:
+                        with open(module_file, encoding='utf-8') as f:
                             file_content = f.read()
                         key_match = re.search(r'\[AURA_MASTER_KEY\](.*?)\[/AURA_MASTER_KEY\]', file_content, re.DOTALL)
                         if key_match:
@@ -7370,7 +7622,13 @@ def contingency_harness():
                             print(f"  📦 {module_file}")
                             if p_alignment: print(f"      PWFST : {p_alignment.group(1).strip()}")
                             if p_deps:      print(f"      DEPS  : {p_deps.group(1).strip()}")
-                            if p_funcs:     print(f"      FUNCS : {p_funcs.group(1).strip()}")
+                            if p_funcs:
+                                funcs_text = p_funcs.group(1).strip()
+                                print(f"      FUNCS : {funcs_text}")
+                                for func_name in re.split(r'\s*,\s*', funcs_text):
+                                    clean_name = func_name.strip()
+                                    if clean_name:
+                                        function_index.append((clean_name, module_file))
                             if p_synopsis:  print(f"      USE   : {p_synopsis.group(1).strip()}")
                             print()
                             found_any = True
@@ -7378,6 +7636,14 @@ def contingency_harness():
                         continue
                 if not found_any:
                     print("  (No [AURA_MASTER_KEY] metadata found in current directory.)")
+                elif function_index:
+                    print("─" * 66)
+                    print("\n🧭  MODULE FUNCTION QUICK INDEX:\n")
+                    print("  Use this bottom index to jump from a capability name to")
+                    print("  the module that owns it. Run !ai_route <task> for a")
+                    print("  CODEMAP-guided file/symbol path before editing.\n")
+                    for func_name, module_file in sorted(function_index, key=lambda item: (item[0].lower(), item[1].lower())):
+                        print(f"  {func_name:<38} -> {module_file}")
 
                 print("=" * 66 + "\n")
                 continue
@@ -7390,64 +7656,86 @@ def contingency_harness():
                 # --- THE SOVEREIGN SWITCHBOARD (Replaces Legacy LLM) ---
                 # ==========================================================
                 start_time = time.time()
-                
+
                 # --- NEW: ARCHITECT MODE INTERCEPT ---
-                if u_in_l.startswith("architect") or u_in_l.startswith("code"):
-                    print("\n[*] ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
-                    
-                    core_intent = u_in_l.replace("architect", "").replace("code", "").replace(":", "").strip()
-                    SOVEREIGN_CORE.vocalize("Architect mode engaged. Accessing 3D topology...")
-                    
-                    async def draft_tool_cloud():
-                        # Read the real-time spatial map if it exists
-                        topology_context = ""
-                        map_path = "Aura_Memory/live_topology_ast.json"
-                        if os.path.exists(map_path):
-                            try:
-                                with open(map_path, "r", encoding="utf-8") as map_f:
-                                    t_data = json.load(map_f)
-                                    # Summarize the real system layout to stay within the 2048 token limit
-                                    nodes_summary = ", ".join([f"{n['label']} ({n['shape']})" for n in t_data.get("nodes", [])[:20]])
-                                    edges_count = len(t_data.get("edges", []))
-                                    topology_context = f"\n[NATIVE 3D TOPOLOGY]: Mapped Nodes: [{nodes_summary}...], Mapped Shared-Resource Connections: [{edges_count} edges].\n"
-                                    print("[+] Real-time 3D topology loaded into Architect Context.")
-                            except Exception:
-                                pass
-                        
-                        prompt_with_topology = f"{core_intent}\n{topology_context}"
-                        print(f"[*] Dispatching intent to Cloud Synthesizer for targeted refactoring...")
+                architect_match = re.match(r"^\s*(architect|code)\b\s*:?\s*(.*)$", u_in, re.IGNORECASE)
+                if architect_match:
+                    print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
+
+                    core_intent = architect_match.group(2).strip()
+                    if not core_intent:
+                        print("[-] Usage: architect <intent>")
+                        continue
+                    live_architect_task = getattr(node, "_live_architect_task", None)
+                    if live_architect_task and not live_architect_task.done():
+                        print("[-] Live Architect transaction already running. Type STOP to cancel it.")
+                        SOVEREIGN_CORE.vocalize("Live Architect is already running.")
+                        continue
+                    SOVEREIGN_CORE.vocalize("Live Architect mode engaged. Routing through Refactor Arena.")
+
+                    async def run_live_architect():
                         try:
-                            # Route with system-level spatial awareness
-                            code = await node.invoke_cloud_engine("MISTRAL", prompt_with_topology)
-                            
-                            # Isolate the code output cleanly from conversational tokens
-                            code_match = re.search(r'\[CODE\](.*?)(\[/CODE\]|$)', code, re.DOTALL | re.IGNORECASE)
-                            clean_source = code_match.group(1).replace("```python", "").replace("```", "").strip() if code_match else code.strip()
-                            
-                            with open("aura_incubator.py", "w") as f:
-                                f.write(clean_source)
-                                
-                            print(f"\n====================================================================")
-                            print(f" 🌐 STAGED MUTATION TOPOLOGY IMPACT REPORT (AURA_INCUBATOR)")
-                            print(f"====================================================================")
-                            print(f" ├─ Target Objective       : {core_intent[:60]}...")
-                            print(f" ├─ Node Connectivity Δ    : Redefining targeted functional coordinates")
-                            print(f" ├─ Data-Flow Luminance    : Optimizing shared variable routes to reduce heap bloat")
-                            print(f" ├─ Thermal Friction       : Lowering GC pressure under 4GB RAM boundary")
-                            print(f"====================================================================\n")
-                            
-                            print("[+] Code drafted and staged inside aura_incubator.py for your review.")
-                            SOVEREIGN_CORE.vocalize("Code mutation staged in the incubator. Review the topology report on your screen.")
+                            if not _LIVE_ARCHITECT_AVAILABLE or run_live_architect_transaction is None:
+                                print("[-] Live Architect bridge is unavailable. Check aura_live_architect.py.")
+                                SOVEREIGN_CORE.vocalize("Live Architect bridge unavailable.")
+                                return
+                            print("[*] Building Plan/Act capsules, model route, and bounded Refactor Arena...")
+
+                            # Read the real-time spatial map if it exists
+                            topology_context = ""
+                            map_path = "Aura_Memory/live_topology_ast.json"
+                            if os.path.exists(map_path):
+                                try:
+                                    with open(map_path, encoding="utf-8") as map_f:
+                                        t_data = json.load(map_f)
+                                        # Summarize the real system layout to stay within the 2048 token limit
+                                        nodes_summary = ", ".join([f"{n['label']} ({n['shape']})" for n in t_data.get("nodes", [])[:20]])
+                                        edges_count = len(t_data.get("edges", []))
+                                        topology_context = f"\n[NATIVE 3D TOPOLOGY]: Mapped Nodes: [{nodes_summary}...], Mapped Shared-Resource Connections: [{edges_count} edges].\n"
+                                        print("[+] Real-time 3D topology loaded into Architect Context.")
+                                except Exception:
+                                    pass
+
+                            async def call_architect_model(provider_tag, prompt_text, meta):
+                                prompt_with_topology = f"{prompt_text}\n{topology_context}"
+                                profile = meta.get("profile", {})
+                                print(f"[*] {meta.get('role', 'model')} -> {provider_tag} ({profile.get('model_class', 'unknown')})")
+                                return await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+
+                            transaction = await run_live_architect_transaction(
+                                core_intent,
+                                repo_root=Path.cwd(),
+                                model_caller=call_architect_model,
+                            )
+                            print("\n====================================================================")
+                            print(" LIVE ARCHITECT REFACTOR ARENA REPORT")
+                            print("====================================================================")
+                            print(render_live_architect_summary(transaction))
+                            print("====================================================================\n")
+                            if transaction.verification.hotswap_ready:
+                                SOVEREIGN_CORE.vocalize("Live Architect transaction verified. Hot-swap capsule is ready for review.")
+                            else:
+                                SOVEREIGN_CORE.vocalize("Live Architect transaction blocked safely. Review the staged transaction.")
+                            return
+                        except asyncio.CancelledError:
+                            print("[-] Live Architect transaction stopped by user request.")
+                            SOVEREIGN_CORE.vocalize("Live Architect transaction stopped.")
+                            return
                         except Exception as e:
-                            print(f"[-] Cloud Brain failed to draft tool: {e}")
-                            
-                    asyncio.create_task(draft_tool_cloud())
+                            print(f"[-] Live Architect transaction failed safely: {e}")
+                            return
+                        finally:
+                            if getattr(node, "_live_architect_task", None) is asyncio.current_task():
+                                node._live_architect_task = None
+
+
+                    node._live_architect_task = asyncio.create_task(run_live_architect())
                     continue
 
                 # 1. Standard Conversational Default
                 cognitive_state = SOVEREIGN_CORE.ingest_intent(u_in, force_mode="english")
                 action = cognitive_state['action']
-                
+
                 print(f"[AURA COGNITIVE ROUTE]: {action} | Latency: {cognitive_state['latency_ms']:.2f}ms")
                 # 2. The Physical Execution Levers
                 if action == "EXECUTE::AR_SPHERE_COLD_LO":
@@ -7510,7 +7798,7 @@ def contingency_harness():
                 # ------------------------------------------------------------------------
 
                 else:
-                    print(f"[Aura] > I have processed the geometry of your intent, but no physical lever is attached.")
+                    print("[Aura] > I have processed the geometry of your intent, but no physical lever is attached.")
 
                 # 3. Keep the Holographic Logging Intact
                 compute_time_ms = (time.time() - start_time) * 1000
@@ -7518,7 +7806,7 @@ def contingency_harness():
                     num_id = int(thought_id.split('-')[1], 16)
                 except:
                     num_id = 0
-                    
+
                 if hasattr(node, 'memory_palace') and node.memory_palace:
                     loop = asyncio.get_running_loop()
                     loop.create_task(

@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8e5-[Q-SYS:2A86BBF77059E372]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Self-Optimizing Routing)
 DEPENDENCIES: argparse, json, os, time, aura_substrate, aura_llm_egress, aura_proxy_benchmark, aura_matrix_benchmark
-FUNCTIONS: CalibrationLedger, ExecutionLog, calibrate, AutoRouter, savings_report
+FUNCTIONS: CalibrationLedger, ExecutionLog, calibrate, AutoRouter, route_fusion_task, savings_report
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -37,6 +37,7 @@ Run:
     python3 aura_router.py calibrate --mock          # offline
     python3 aura_router.py route --task mesh_offload  # auto-optimal routing
     python3 aura_router.py route --task mesh_offload --model sambanova   # force model
+    python3 aura_router.py fusion --task "Analyze this architecture" --mock
     python3 aura_router.py status                    # best per task from the ledger
     python3 aura_router.py savings                   # savings metrics
 """
@@ -48,6 +49,22 @@ import json
 import os
 import time
 
+from aura_llm_egress import (
+    KNOWN_WORKING,
+    ExternalLLM,
+    classify_providers,
+    usable_providers,
+)
+from aura_matrix_benchmark import MockEgress, run_matrix
+from aura_proxy_benchmark import (
+    OUTPUT_MODES,
+    TASKS,
+    QualityScorer,
+    _repo_py_files,
+    edit_plan_to_unified_diff,
+    parse_edit_plan,
+    with_output_mode,
+)
 from aura_substrate import (
     REPO_ROOT,
     AuraSubstrate,
@@ -56,23 +73,6 @@ from aura_substrate import (
     existing_import_roots,
     sanitize_code,
 )
-from aura_llm_egress import (
-    ExternalLLM,
-    KNOWN_WORKING,
-    classify_providers,
-    usable_providers,
-)
-from aura_proxy_benchmark import (
-    OUTPUT_MODES,
-    QualityScorer,
-    TASKS,
-    _repo_py_files,
-    apply_edit_plan,
-    edit_plan_to_unified_diff,
-    parse_edit_plan,
-    with_output_mode,
-)
-from aura_matrix_benchmark import MockEgress, run_matrix
 
 MEMORY_DIR = os.path.join(REPO_ROOT, "Aura_Memory")
 LEDGER_PATH = os.path.join(MEMORY_DIR, "aura_calibration.jsonl")
@@ -112,7 +112,7 @@ class _JsonlStore:
         if not os.path.exists(self.path):
             return []
         out = []
-        with open(self.path, "r", encoding="utf-8") as f:
+        with open(self.path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -236,7 +236,7 @@ class AutoRouter:
         pool = usable_providers(prefer_working=False)  # working + configured (have keys)
         if forced and forced.lower() not in pool:
             # forced model has no usable key — still surface it so we can warn
-            pool = [forced.lower()] + pool
+            pool = [forced.lower(), *pool]
         return pool
 
     def _raw_baseline(self, task) -> tuple[int, int | None, float | None]:
@@ -289,7 +289,7 @@ class AutoRouter:
         for cand in candidates[:max_fallbacks]:
             try:
                 egress = self.egress_factory(cand["provider"])
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 tried.append({"provider": cand["provider"], "error": str(exc)})
                 continue
             task_v = with_output_mode(task, cand["output_mode"])
@@ -349,6 +349,21 @@ class AutoRouter:
         return {"ok": False, "tried": tried,
                 "reason": "all candidates failed (no key / rate-limited / error)"}
 
+    def route_fusion_task(self, task_text: str, *, target_file: str | None = None,
+                          target_symbol: str | None = None, output_mode: str = "TEXT",
+                          mock: bool = False) -> dict:
+        """Run AuraFusion as an explicit router mode without replacing route_task."""
+        from aura_fusion import AuraFusionCoordinator
+
+        coordinator = AuraFusionCoordinator(repo_root=self.root, mock=mock)
+        result = coordinator.run(
+            task_text,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            output_mode=output_mode,
+        )
+        return result.to_dict()
+
     @staticmethod
     def _expand(text: str, task_v, original: str) -> str:
         """Deterministically turn the model output into a standard unified diff."""
@@ -395,8 +410,9 @@ def _round_acc(acc: dict) -> dict:
 
 def _savings_db_rows(db_path: str | None = None) -> list[dict]:
     """Read every logged LLM call from aura_savings_db in router-compatible shape."""
-    from aura_savings_db import DB_PATH as SAVINGS_DB_PATH
     import sqlite3
+
+    from aura_savings_db import DB_PATH as SAVINGS_DB_PATH
 
     path = db_path or SAVINGS_DB_PATH
     if not os.path.exists(path):
@@ -445,7 +461,7 @@ def savings_report(ledger: CalibrationLedger | None = None,
     try:
         from aura_pricing import get_pricebook
         prices_updated = get_pricebook().updated_at()
-    except Exception:  # noqa: BLE001
+    except Exception:
         prices_updated = "unknown"
 
     execs = exec_log.read_all()
@@ -546,6 +562,13 @@ def main(argv: list[str] | None = None) -> int:
     pr.add_argument("--model", default=None, help="force a specific model (reorders priority)")
     pr.add_argument("--mock", action="store_true")
 
+    pf = sub.add_parser("fusion", help="run native AuraFusion panel + judge deliberation")
+    pf.add_argument("--task", required=True, help="freeform task text")
+    pf.add_argument("--target-file", default=None)
+    pf.add_argument("--target-symbol", default=None)
+    pf.add_argument("--output-mode", default="TEXT")
+    pf.add_argument("--mock", action="store_true")
+
     sub.add_parser("status", help="show best calibrated protocol per task type")
     sub.add_parser("savings", help="show cumulative + projected savings")
     sub.add_parser("list-providers", help="show provider buckets")
@@ -602,6 +625,21 @@ def main(argv: list[str] | None = None) -> int:
         print("\n--- expanded artifact ---")
         print(res["artifact"][:1500])
         return 0
+
+    if args.cmd == "fusion":
+        router = AutoRouter()
+        res = router.route_fusion_task(
+            args.task,
+            target_file=args.target_file,
+            target_symbol=args.target_symbol,
+            output_mode=args.output_mode,
+            mock=args.mock,
+        )
+        status_label = "[+]" if res.get("ok") else "[-]"
+        print(f"{status_label} AuraFusion phase={res.get('phase_hash')} "
+              f"panel={res.get('metrics', {}).get('panel_count', 0)}")
+        print(res.get("final_answer", ""))
+        return 0 if res.get("ok") else 1
 
     if args.cmd == "status":
         st = status()

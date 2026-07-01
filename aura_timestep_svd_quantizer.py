@@ -33,13 +33,11 @@ Axiom mapping:
 from __future__ import annotations
 
 import asyncio
-import hashlib
+from dataclasses import dataclass
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
-
 
 # ── Constants ──
 _DEFAULT_BITS = 4          # W4A4
@@ -65,7 +63,7 @@ class SVDOutlierCompensator:
     def compensate(
         self,
         activation: np.ndarray,
-    ) -> Tuple[np.ndarray, np.ndarray, Dict[str, float]]:
+    ) -> tuple[np.ndarray, np.ndarray, dict[str, float]]:
         """
         SVD outlier compensation for a single activation matrix.
 
@@ -81,7 +79,7 @@ class SVDOutlierCompensator:
         if activation.ndim == 1:
             activation = activation.reshape(1, -1)
 
-        m, n = activation.shape
+        _m, _n = activation.shape
 
         # SVD decomposition (same as spectral_memory line 25)
         U, S, Vh = np.linalg.svd(activation, full_matrices=False)
@@ -135,7 +133,7 @@ class DynamicClippingTracker:
     def __init__(self, initial_ratio: float = 0.95, alpha: float = 0.9):
         self.rho = initial_ratio
         self.alpha = alpha
-        self.history: List[float] = []
+        self.history: list[float] = []
         self._search_grid = np.linspace(0.5, 1.0, 11)  # [0.5, 0.55, ..., 1.0]
 
     def update(self, activation: np.ndarray, quantized: np.ndarray) -> float:
@@ -198,7 +196,7 @@ def _dequantize_array(q: np.ndarray, abs_max: float) -> np.ndarray:
 def quantize_w4a4(
     activation: np.ndarray,
     clipping_ratio: float = 0.95,
-) -> Tuple[np.ndarray, float]:
+) -> tuple[np.ndarray, float]:
     """
     W4A4 quantization with clipping.
 
@@ -231,7 +229,7 @@ class QuantizationResult:
     quantized: np.ndarray          # int8 quantized values
     scale: float                   # dequantization scale factor
     clipping_ratio: float          # rho_t used
-    svd_stats: Dict[str, float]    # SVD compensation diagnostics
+    svd_stats: dict[str, float]    # SVD compensation diagnostics
     reconstruction_mse: float      # error metric
     timestep: int
     expert_id: str
@@ -251,7 +249,7 @@ class TimestepAwareSVDQuantizer:
 
     def __init__(self, initial_clipping_ratio: float = 0.95, ema_alpha: float = 0.9):
         self.compensator = SVDOutlierCompensator()
-        self._expert_trackers: Dict[str, DynamicClippingTracker] = {}
+        self._expert_trackers: dict[str, DynamicClippingTracker] = {}
         self._initial_ratio = initial_clipping_ratio
         self._ema_alpha = ema_alpha
         self._total_quantized = 0
@@ -283,7 +281,7 @@ class TimestepAwareSVDQuantizer:
         t0 = time.perf_counter()
 
         # 1. SVD outlier compensation
-        compensated, residual, svd_stats = self.compensator.compensate(activation)
+        compensated, _residual, svd_stats = self.compensator.compensate(activation)
 
         # 2. Get per-expert clipping ratio
         tracker = self._get_tracker(expert_id)
@@ -313,7 +311,7 @@ class TimestepAwareSVDQuantizer:
             elapsed_ms=elapsed,
         )
 
-    def get_expert_stats(self) -> Dict[str, Any]:
+    def get_expert_stats(self) -> dict[str, Any]:
         """Get per-expert clipping ratio history and stats."""
         return {
             eid: {
@@ -345,16 +343,16 @@ class AsyncExpertQuantizationEngine:
     """
 
     def __init__(self, num_experts: int = 2, **kwargs):
-        self.quantizers: Dict[str, TimestepAwareSVDQuantizer] = {
+        self.quantizers: dict[str, TimestepAwareSVDQuantizer] = {
             f"expert_{i}": TimestepAwareSVDQuantizer(**kwargs)
             for i in range(num_experts)
         }
 
     async def quantize_expert_activations(
         self,
-        expert_activations: Dict[str, np.ndarray],
+        expert_activations: dict[str, np.ndarray],
         timestep: int = 0,
-    ) -> Dict[str, QuantizationResult]:
+    ) -> dict[str, QuantizationResult]:
         """
         Quantize all experts' activations concurrently.
 
@@ -392,7 +390,7 @@ class AsyncExpertQuantizationEngine:
 
         return results
 
-    def get_all_stats(self) -> Dict[str, Any]:
+    def get_all_stats(self) -> dict[str, Any]:
         """Aggregate stats across all experts."""
         return {
             eid: q.get_expert_stats()
@@ -407,7 +405,7 @@ class AsyncExpertQuantizationEngine:
 def compute_compression_efficiency(
     original: np.ndarray,
     result: QuantizationResult,
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """
     Compute the RHFT efficiency equation for quantization.
 

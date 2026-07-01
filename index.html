@@ -106,6 +106,9 @@
                 ];
                 mesh.position.set(pos[0], pos[1], pos[2]);
                 mesh.scale.setScalar(node.scale || 1.0);
+                mesh.userData.phaseShiftWarning = Boolean(node.phaseShiftWarning);
+                mesh.userData.baseLuminance = luminance;
+                mesh.userData.validationState = node.validationState || "unknown";
 
                 topologyGroup.add(mesh);
                 nodeRegistry[node.id] = mesh;
@@ -139,10 +142,13 @@
 
             // Update HUD
             const meta = data.metadata || {};
+            const spectral = meta.spectral_topology || data.spectral_topology || {};
             document.getElementById("resonance-info").innerText =
                 "Nodes: " + (meta.node_count || nodes.length) +
                 " | Edges: " + (meta.edge_count || edges.length) +
-                (meta.resonance_weighted ? " | Resonance-Weighted" : "");
+                (meta.resonance_weighted ? " | Resonance-Weighted" : "") +
+                (spectral.spectral_sparsity !== undefined ? " | Phi: " + Number(spectral.spectral_sparsity).toFixed(3) : "") +
+                (spectral.global_health !== undefined ? " | Health: " + Number(spectral.global_health).toFixed(3) : "");
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -318,6 +324,16 @@
             auraAvatar.rotation.x += 0.005;
             auraAvatar.rotation.y += 0.01;
             topologyGroup.rotation.y += 0.001;
+            const phase = Math.abs(Math.sin(Date.now() * 0.006));
+            topologyGroup.children.forEach(function(child) {
+                if (child.userData && child.userData.phaseShiftWarning && child.material) {
+                    const pulse = 0.25 + 0.65 * phase;
+                    child.material.opacity = Math.max(0.2, pulse);
+                    child.material.color.setHSL(0.09, 1.0, 0.35 + 0.35 * phase);
+                    child.rotation.x += 0.02;
+                    child.rotation.y -= 0.015;
+                }
+            });
             renderer.render(scene, camera);
         }
         animate();

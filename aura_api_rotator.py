@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa895-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: urllib.error, typing, pathlib, urllib.request, os, ssl, __future__, time, json
-FUNCTIONS: _secrets_search_paths, load_secrets, _is_valid_key, gemini_key_pool, _is_retryable, _gemini_url, _post_json, _extract_gemini_text, _extract_openai_text, gemini_generate, openai_compatible_generate, get_gemini_rotator, _add, __init__, key_count, keys, _available_keys, record_success, record_failure, iter_keys
-SYNOPSIS: This Python module, leveraging dependencies including `urllib.error`, `typing`, `pathlib`, `urllib.request`, `os`, `ssl`, `time`, `json`, and `__future__`, implements a secure secrets management and API interaction system with functions for key validation, rotation, retry logic, and response parsing for Gemini and OpenAI-compatible models.
+DEPENDENCIES: json, __future__, sys, urllib.request, typing, urllib.error, os, time, pathlib, ssl, aura_llm_call_logger
+FUNCTIONS: _secrets_search_paths, _warn_secret_load, _parse_secret_json, _load_secret_file, load_secrets, _is_valid_key, gemini_key_pool, _is_retryable, _gemini_url, _post_json, _extract_gemini_text, _extract_openai_text, gemini_generate, openai_compatible_generate, get_gemini_rotator, _add, __init__, key_count, keys, _available_keys, record_success, record_failure, iter_keys
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 from __future__ import annotations
@@ -21,12 +24,15 @@ Loads keys from ~/aura_secrets.json:
 
 import json
 import os
+from pathlib import Path
 import ssl
+import sys
 import time
+from typing import Any
 import urllib.error
 import urllib.request
-from pathlib import Path
-from typing import Any
+
+from aura_llm_call_logger import log_gemini_call, log_openai_compatible_call
 
 _DEFAULT_SECRETS = Path.home() / "aura_secrets.json"
 
@@ -42,17 +48,74 @@ def _secrets_search_paths() -> list[Path]:
     return paths
 
 
+def _warn_secret_load(path: Path, message: str) -> None:
+    print(f"[!] Secret load warning (non-fatal): {path.name}: {message}", file=sys.stderr)
+
+
+def _parse_secret_json(raw: str, secrets_path: Path) -> dict[str, Any]:
+    text = raw.lstrip("\ufeff").strip()
+    if not text:
+        return {}
+    try:
+        data = json.loads(text)
+        if isinstance(data, dict):
+            return data
+        _warn_secret_load(secrets_path, "top-level JSON must be an object; ignoring file")
+        return {}
+    except json.JSONDecodeError as original_exc:
+        decoder = json.JSONDecoder()
+        idx = 0
+        merged: dict[str, Any] = {}
+        fragments = 0
+        while idx < len(text):
+            while idx < len(text) and text[idx].isspace():
+                idx += 1
+            if idx >= len(text):
+                break
+            try:
+                item, idx = decoder.raw_decode(text, idx)
+            except json.JSONDecodeError:
+                _warn_secret_load(
+                    secrets_path,
+                    f"invalid JSON at line {original_exc.lineno}, column {original_exc.colno}; ignoring file",
+                )
+                return {}
+            if not isinstance(item, dict):
+                _warn_secret_load(secrets_path, "all top-level JSON fragments must be objects; ignoring file")
+                return {}
+            merged.update(item)
+            fragments += 1
+        if fragments > 1:
+            _warn_secret_load(
+                secrets_path,
+                "merged multiple top-level objects; move all keys inside one outer JSON object",
+            )
+        return merged
+
+
+def _load_secret_file(secrets_path: Path) -> dict[str, Any]:
+    try:
+        return _parse_secret_json(secrets_path.read_text(encoding="utf-8"), secrets_path)
+    except OSError as exc:
+        _warn_secret_load(secrets_path, f"cannot read file: {exc}")
+        return {}
+    except UnicodeDecodeError as exc:
+        _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
+        return {}
+    except UnicodeDecodeError as exc:
+        _warn_secret_load(secrets_path, f"file is not valid UTF-8: {exc}")
+        return {}
+
+
 def load_secrets(path: Path | str | None = None) -> dict[str, Any]:
     if path is not None:
         secrets_path = Path(path)
         if not secrets_path.exists():
             return {}
-        with open(secrets_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        return _load_secret_file(secrets_path)
     for secrets_path in _secrets_search_paths():
         if secrets_path.exists():
-            with open(secrets_path, "r", encoding="utf-8") as f:
-                return json.load(f)
+            return _load_secret_file(secrets_path)
     return {}
 
 _RETRYABLE_FRAGMENTS = (
@@ -218,6 +281,15 @@ def gemini_generate(
     rotator: GeminiKeyRotator | None = None,
     timeout: float | None = None,
     retries_per_key: int | None = None,
+    log_savings: bool = True,
+    call_type: str = "generate",
+    savings_metadata: dict[str, Any] | None = None,
+    task: str | None = None,
+    aspect: str | None = None,
+    baseline_prompt_tokens: int | None = None,
+    baseline_output_tokens: int | None = None,
+    baseline_cost_usd: float | None = None,
+    savings_db_path: str | None = None,
 ) -> tuple[str | None, str | None]:
     """
     Try every Gemini key with retries. Returns (text, None) or (None, error_summary).
@@ -231,15 +303,34 @@ def gemini_generate(
     per_key_retries = retries_per_key if retries_per_key is not None else _CLOUD_RETRIES_PER_KEY
     errors: list[str] = []
     payload = {"contents": [{"parts": [{"text": prompt_text}]}]}
+    t0 = time.time()
+    attempts = 0
 
     for key in keys:
         url = _gemini_url(key)
         masked = f"...{key[-6:]}" if len(key) > 6 else "***"
         for attempt in range(per_key_retries):
+            attempts += 1
             try:
                 data = _post_json(url, payload, timeout=timeout_sec)
                 text = _extract_gemini_text(data).strip()
                 rot.record_success(key)
+                if log_savings:
+                    log_gemini_call(
+                        prompt_text=prompt_text,
+                        output_text=text,
+                        error=None,
+                        latency_sec=time.time() - t0,
+                        model=_GEMINI_MODEL,
+                        call_type=call_type,
+                        task=task,
+                        aspect=aspect,
+                        baseline_prompt_tokens=baseline_prompt_tokens,
+                        baseline_output_tokens=baseline_output_tokens,
+                        baseline_cost_usd=baseline_cost_usd,
+                        metadata={"attempts": attempts, **(savings_metadata or {})},
+                        db_path=savings_db_path,
+                    )
                 return text, None
             except Exception as exc:
                 err = f"GEMINI[{masked}] attempt {attempt + 1}: {exc}"
@@ -250,7 +341,24 @@ def gemini_generate(
                     continue
                 break
 
-    return None, "GEMINI_ROTATION_EXHAUSTED:\n" + "\n".join(errors[-6:])
+    error = "GEMINI_ROTATION_EXHAUSTED:\n" + "\n".join(errors[-6:])
+    if log_savings:
+        log_gemini_call(
+            prompt_text=prompt_text,
+            output_text=None,
+            error=error,
+            latency_sec=time.time() - t0,
+            model=_GEMINI_MODEL,
+            call_type=call_type,
+            task=task,
+            aspect=aspect,
+            baseline_prompt_tokens=baseline_prompt_tokens,
+            baseline_output_tokens=baseline_output_tokens,
+            baseline_cost_usd=baseline_cost_usd,
+            metadata={"attempts": attempts, **(savings_metadata or {})},
+            db_path=savings_db_path,
+        )
+    return None, error
 
 
 def openai_compatible_generate(
@@ -260,20 +368,64 @@ def openai_compatible_generate(
     *,
     timeout: float | None = None,
     retries: int = 2,
+    log_savings: bool = True,
+    call_type: str = "generate",
+    savings_metadata: dict[str, Any] | None = None,
+    task: str | None = None,
+    aspect: str | None = None,
+    baseline_prompt_tokens: int | None = None,
+    baseline_output_tokens: int | None = None,
+    baseline_cost_usd: float | None = None,
+    savings_db_path: str | None = None,
 ) -> tuple[str | None, str | None]:
     timeout_sec = timeout if timeout is not None else _CLOUD_TIMEOUT
     errors: list[str] = []
+    t0 = time.time()
     for attempt in range(retries):
         try:
             data = _post_json(url, payload, timeout=timeout_sec, bearer=api_key)
-            return _extract_openai_text(data).strip(), None
+            text = _extract_openai_text(data).strip()
+            if log_savings:
+                log_openai_compatible_call(
+                    url=url,
+                    payload=payload,
+                    output_text=text,
+                    error=None,
+                    latency_sec=time.time() - t0,
+                    call_type=call_type,
+                    task=task,
+                    aspect=aspect,
+                    baseline_prompt_tokens=baseline_prompt_tokens,
+                    baseline_output_tokens=baseline_output_tokens,
+                    baseline_cost_usd=baseline_cost_usd,
+                    metadata={"attempts": attempt + 1, **(savings_metadata or {})},
+                    db_path=savings_db_path,
+                )
+            return text, None
         except Exception as exc:
             errors.append(str(exc))
             if attempt + 1 < retries and _is_retryable(exc):
                 time.sleep(1.0 * (attempt + 1))
                 continue
             break
-    return None, "; ".join(errors)
+    error = "; ".join(errors)
+    if log_savings:
+        log_openai_compatible_call(
+            url=url,
+            payload=payload,
+            output_text=None,
+            error=error,
+            latency_sec=time.time() - t0,
+            call_type=call_type,
+            task=task,
+            aspect=aspect,
+            baseline_prompt_tokens=baseline_prompt_tokens,
+            baseline_output_tokens=baseline_output_tokens,
+            baseline_cost_usd=baseline_cost_usd,
+            metadata={"attempts": len(errors), **(savings_metadata or {})},
+            db_path=savings_db_path,
+        )
+    return None, error
 
 
 # Process-wide rotator (persists cooldown state across calls in one session)

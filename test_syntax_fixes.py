@@ -14,7 +14,7 @@ all_passed = True
 
 for filepath in files_to_test:
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, encoding='utf-8') as f:
             source = f.read()
         ast.parse(source, filename=filepath)
         print(f"✅ {filepath}: OK")

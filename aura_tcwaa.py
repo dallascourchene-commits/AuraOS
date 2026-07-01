@@ -21,13 +21,10 @@ Performance:
 - Typical latency: <10ms
 """
 
-import numpy as np
-import hashlib
-import json
-import time
-from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
-import platform
+import hashlib
+
+import numpy as np
 
 
 @dataclass
@@ -53,28 +50,28 @@ class Task:
 class ThermalCostWeightedAPIArbitration:
     """
     TCWAA - Multi-provider LLM routing with thermal awareness
-    
+
     Optimizes across three objectives:
     1. Semantic resonance: sim(task, provider_capability)
     2. Cost efficiency: 1 - (cost / max_cost)
     3. Thermal fitness: 1 - (T_CPU / T_max)
     """
-    
+
     def __init__(self, dimensions: int = 10000):
         self.dimensions = dimensions
-        
+
         # Optimization weights (must sum to 1.0)
         self.alpha = 0.5  # Semantic resonance weight
         self.beta = 0.3   # Cost efficiency weight
         self.gamma = 0.2  # Thermal fitness weight
-        
+
         # Constraints
         self.min_similarity = 0.70  # Quality floor
         self.max_temp = 85.0  # °C
-        
+
         # Provider registry
-        self.providers: Dict[str, Provider] = {}
-        
+        self.providers: dict[str, Provider] = {}
+
         # Price book (simulated - in production, fetch from APIs)
         self.price_book = {
             'gpt-4': 0.03,
@@ -86,7 +83,7 @@ class ThermalCostWeightedAPIArbitration:
             'llama-3-70b': 0.0006,
             'mistral-large': 0.004
         }
-    
+
     def _hash_to_hypervector(self, data: bytes) -> np.ndarray:
         """Convert hash to hypervector using deterministic seeding"""
         seed = int.from_bytes(hashlib.sha256(data).digest()[:4], 'big')
@@ -95,12 +92,12 @@ class ThermalCostWeightedAPIArbitration:
         imag = rng.randn(self.dimensions)
         vec = real + 1j * imag
         return vec / np.linalg.norm(vec)
-    
-    def register_provider(self, name: str, model: str, 
-                         capabilities: List[str], quality_score: float = 0.85):
+
+    def register_provider(self, name: str, model: str,
+                         capabilities: list[str], quality_score: float = 0.85):
         """
         Register LLM provider with capability profile
-        
+
         Args:
             name: Provider identifier
             model: Model name
@@ -112,13 +109,13 @@ class ThermalCostWeightedAPIArbitration:
         for cap in capabilities:
             cap_vec = self._hash_to_hypervector(cap.encode())
             capability_vec += cap_vec
-        
+
         if len(capabilities) > 0:
             capability_vec /= np.linalg.norm(capability_vec)
-        
+
         # Get cost from price book
         cost = self.price_book.get(model, 0.01)  # Default $0.01 per 1K tokens
-        
+
         provider = Provider(
             name=name,
             model=model,
@@ -127,33 +124,33 @@ class ThermalCostWeightedAPIArbitration:
             max_tokens=8192,  # Default
             quality_score=quality_score
         )
-        
+
         self.providers[name] = provider
         print(f"Registered provider: {name} ({model}) - ${cost}/1K tokens")
-    
+
     def create_task(self, intent: str, estimated_tokens: int = 1000,
                    priority: str = "medium") -> Task:
         """
         Create task with intent hypervector
-        
+
         Args:
             intent: Natural language task description
             estimated_tokens: Estimated response length
             priority: Task priority level
         """
         intent_vec = self._hash_to_hypervector(intent.encode())
-        
+
         return Task(
             intent=intent,
             intent_vector=intent_vec,
             estimated_tokens=estimated_tokens,
             priority=priority
         )
-    
+
     def get_cpu_temperature(self) -> float:
         """
         Get CPU temperature in Celsius
-        
+
         Note: This is a simplified implementation. In production:
         - Linux: Read from /sys/class/thermal/thermal_zone*/temp
         - Windows: Use WMI or OpenHardwareMonitor
@@ -164,102 +161,102 @@ class ThermalCostWeightedAPIArbitration:
             # In production, use actual hardware sensors
             import psutil
             cpu_percent = psutil.cpu_percent(interval=0.1)
-            
+
             # Estimate temperature (very rough approximation)
             # Idle: ~40°C, Full load: ~80°C
             estimated_temp = 40 + (cpu_percent / 100) * 40
-            
+
             return estimated_temp
         except:
             # Fallback: assume moderate temperature
             return 55.0
-    
-    def compute_semantic_similarity(self, task_vec: np.ndarray, 
+
+    def compute_semantic_similarity(self, task_vec: np.ndarray,
                                    provider_vec: np.ndarray) -> float:
         """Compute cosine similarity between task and provider capability"""
         similarity = np.abs(np.vdot(task_vec, provider_vec))
         return float(similarity)
-    
-    def compute_cost_efficiency(self, provider: Provider, 
+
+    def compute_cost_efficiency(self, provider: Provider,
                                estimated_tokens: int) -> float:
         """
         Compute cost efficiency score (0-1, higher is better)
-        
+
         Normalized by maximum cost in provider pool
         """
         max_cost = max(p.cost_per_1k_tokens for p in self.providers.values())
-        
+
         if max_cost == 0:
             return 1.0
-        
+
         # Invert so lower cost = higher score
         cost_score = 1.0 - (provider.cost_per_1k_tokens / max_cost)
-        
+
         return cost_score
-    
+
     def compute_thermal_fitness(self, cpu_temp: float) -> float:
         """
         Compute thermal fitness score (0-1, higher is better)
-        
+
         Lower temperature = higher fitness
         """
         if cpu_temp >= self.max_temp:
             return 0.0
-        
+
         thermal_score = 1.0 - (cpu_temp / self.max_temp)
         return thermal_score
-    
-    def route_task(self, task: Task, user_budget: Optional[float] = None) -> Tuple[Optional[Provider], Dict]:
+
+    def route_task(self, task: Task, user_budget: float | None = None) -> tuple[Provider | None, dict]:
         """
         Route task to optimal provider
-        
+
         p* = arg max_p [α·sim(g, v_p) + β·(1 - C_p/C_max) + γ·(1 - T_CPU/T_max)]
-        
+
         Subject to:
         - sim(g, v_p) ≥ τ_min (quality floor)
         - C_p ≤ B_user (budget ceiling)
-        
+
         Returns:
             (selected_provider, routing_details)
         """
         if not self.providers:
             return None, {'error': 'No providers registered'}
-        
+
         # Get current CPU temperature
         cpu_temp = self.get_cpu_temperature()
         thermal_fitness = self.compute_thermal_fitness(cpu_temp)
-        
+
         # Evaluate each provider
         candidates = []
-        
+
         for provider_name, provider in self.providers.items():
             # Compute semantic similarity
             similarity = self.compute_semantic_similarity(
                 task.intent_vector,
                 provider.capability_vector
             )
-            
+
             # Apply quality floor constraint
             if similarity < self.min_similarity:
                 continue
-            
+
             # Compute cost efficiency
             cost_efficiency = self.compute_cost_efficiency(provider, task.estimated_tokens)
-            
+
             # Estimate total cost
             estimated_cost = (task.estimated_tokens / 1000) * provider.cost_per_1k_tokens
-            
+
             # Apply budget constraint
             if user_budget is not None and estimated_cost > user_budget:
                 continue
-            
+
             # Compute weighted score
             score = (
                 self.alpha * similarity +
                 self.beta * cost_efficiency +
                 self.gamma * thermal_fitness
             )
-            
+
             candidates.append({
                 'provider': provider,
                 'score': score,
@@ -268,17 +265,17 @@ class ThermalCostWeightedAPIArbitration:
                 'thermal_fitness': thermal_fitness,
                 'estimated_cost': estimated_cost
             })
-        
+
         if not candidates:
             return None, {
                 'error': 'No providers meet constraints',
                 'cpu_temp': cpu_temp,
                 'thermal_fitness': thermal_fitness
             }
-        
+
         # Select best candidate
         best = max(candidates, key=lambda x: x['score'])
-        
+
         routing_details = {
             'selected_provider': best['provider'].name,
             'model': best['provider'].model,
@@ -295,36 +292,36 @@ class ThermalCostWeightedAPIArbitration:
             },
             'all_candidates': len(candidates)
         }
-        
+
         return best['provider'], routing_details
-    
+
     def adjust_weights(self, alpha: float, beta: float, gamma: float):
         """
         Adjust optimization weights
-        
+
         Must sum to 1.0
         """
         total = alpha + beta + gamma
         if abs(total - 1.0) > 0.001:
             raise ValueError(f"Weights must sum to 1.0, got {total}")
-        
+
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
-        
+
         print(f"Updated weights: alpha={alpha}, beta={beta}, gamma={gamma}")
 
 
 # Demo
 if __name__ == "__main__":
     print("=== Aura Thermal-Cost Weighted API Arbitration Demo ===\n")
-    
+
     tcwaa = ThermalCostWeightedAPIArbitration()
-    
+
     # 1. Register providers
     print("1. Registering LLM providers...")
-    tcwaa.register_provider("openai-gpt4", "gpt-4", 
-                           ["reasoning", "code", "math", "creative"], 
+    tcwaa.register_provider("openai-gpt4", "gpt-4",
+                           ["reasoning", "code", "math", "creative"],
                            quality_score=0.95)
     tcwaa.register_provider("openai-gpt35", "gpt-3.5-turbo",
                            ["general", "code", "fast"],
@@ -338,7 +335,7 @@ if __name__ == "__main__":
     tcwaa.register_provider("google-gemini", "gemini-pro",
                            ["multimodal", "general", "fast"],
                            quality_score=0.82)
-    
+
     # 2. Create tasks
     print("\n2. Creating tasks...")
     task_code = tcwaa.create_task(
@@ -346,18 +343,18 @@ if __name__ == "__main__":
         estimated_tokens=500,
         priority="high"
     )
-    print(f"   Task 1: Code generation (500 tokens)")
-    
+    print("   Task 1: Code generation (500 tokens)")
+
     task_reasoning = tcwaa.create_task(
         "Analyze the philosophical implications of artificial consciousness and provide a structured argument",
         estimated_tokens=2000,
         priority="medium"
     )
-    print(f"   Task 2: Deep reasoning (2000 tokens)")
-    
+    print("   Task 2: Deep reasoning (2000 tokens)")
+
     # 3. Route tasks
     print("\n3. Routing tasks...")
-    
+
     print("\n   Task 1 (Code generation):")
     provider1, details1 = tcwaa.route_task(task_code, user_budget=0.05)
     if provider1:
@@ -368,7 +365,7 @@ if __name__ == "__main__":
         print(f"   - Thermal fitness: {details1['thermal_fitness']:.4f}")
         print(f"   Estimated cost: ${details1['estimated_cost']:.4f}")
         print(f"   CPU temp: {details1['cpu_temp']:.1f}°C")
-    
+
     print("\n   Task 2 (Deep reasoning):")
     provider2, details2 = tcwaa.route_task(task_reasoning, user_budget=0.10)
     if provider2:
@@ -379,26 +376,26 @@ if __name__ == "__main__":
         print(f"   - Thermal fitness: {details2['thermal_fitness']:.4f}")
         print(f"   Estimated cost: ${details2['estimated_cost']:.4f}")
         print(f"   CPU temp: {details2['cpu_temp']:.1f}°C")
-    
+
     # 4. Test weight adjustment
     print("\n4. Testing weight adjustment...")
     print("   Scenario: Prioritize cost over quality")
     tcwaa.adjust_weights(alpha=0.3, beta=0.6, gamma=0.1)
-    
+
     provider3, details3 = tcwaa.route_task(task_code, user_budget=0.05)
     if provider3:
         print(f"   Selected: {details3['selected_provider']} ({details3['model']})")
         print(f"   Score: {details3['score']:.4f}")
         print(f"   Estimated cost: ${details3['estimated_cost']:.4f}")
-    
+
     # 5. Comparison with traditional routing
     print("\n5. Comparison with traditional routing:")
     print("   Traditional: Static provider selection (no thermal awareness)")
     print("   TCWAA: Dynamic 3-objective optimization")
     if provider1 and 'all_candidates' in details1:
         print(f"   Providers evaluated: {details1['all_candidates']}")
-    print(f"   Decision latency: <10ms")
-    
+    print("   Decision latency: <10ms")
+
     print("\nDemo complete")
 
 # Made with Bob

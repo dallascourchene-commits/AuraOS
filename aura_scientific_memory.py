@@ -1,11 +1,16 @@
-"""Structured VSA memory for scientific papers.
-
-The original research path stored papers and queries with different encoders.
-This module provides one deterministic representation for both, compact
-bit-packed storage, hierarchical routing, approximate LSH candidate retrieval,
-and polarity-aware contradiction detection.
 """
-
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, numpy, re, collections.abc, functools, pathlib, base64, collections, dataclasses, hashlib
+FUNCTIONS: _normalise_text, _stable_bipolar, _canonical_token, _match_rules, _content_terms, _special_polarity_vector, pack_vector, unpack_vector, vector_similarity, slot_similarity, split_title_abstract, record_from_content, index_from_rows, detect_contradictions, get, without, to_jsonable, from_jsonable, vector_array, __init__, extract_slots, encode_slots, encode_document, encode_query, __init__, _keys, add, query, __init__, add, _bundle_from_sum, domain_bundle, mechanism_bundle, _hierarchical_candidates, search, save_jsonl, load_jsonl, assign
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
 from __future__ import annotations
 
 import base64
@@ -146,7 +151,7 @@ _SCALE_RULES = {
 def _normalise_text(text: str) -> str:
     """
     Normalize text by lowercasing and extracting valid tokens.
-    
+
     Returns a space-separated string of tokens containing only alphanumeric characters, hyphens, and underscores.
     """
     return " ".join(re.findall(r"[a-z0-9][a-z0-9_-]*", text.lower()))
@@ -156,7 +161,7 @@ def _normalise_text(text: str) -> str:
 def _stable_bipolar(label: str, dimensions: int = DIMENSIONS) -> np.ndarray:
     """
     Generate a deterministic bipolar vector from a label.
-    
+
     Returns:
     	np.ndarray: A read-only bipolar vector with values of ±1. Identical labels always produce identical vectors.
     """
@@ -171,10 +176,10 @@ def _stable_bipolar(label: str, dimensions: int = DIMENSIONS) -> np.ndarray:
 def _canonical_token(token: str) -> str:
     """
     Normalize and canonicalize a token by applying established aliases.
-    
+
     Parameters:
     	token (str): The token to canonicalize.
-    
+
     Returns:
     	The canonicalized token string.
     """
@@ -194,11 +199,11 @@ def _canonical_token(token: str) -> str:
 def _match_rules(text: str, rules: dict[str, tuple[str, ...]]) -> tuple[str, ...]:
     """
     Identify rule labels whose keywords appear as substrings in the text.
-    
+
     Parameters:
     	text (str): The text to scan for keyword matches
     	rules (dict[str, tuple[str, ...]]): A mapping of rule labels to tuples of keywords
-    
+
     Returns:
     	tuple[str, ...]: Distinct rule labels whose keywords matched, in rule-dictionary order
     """
@@ -213,11 +218,11 @@ def _match_rules(text: str, rules: dict[str, tuple[str, ...]]) -> tuple[str, ...
 def _content_terms(text: str, limit: int = 8) -> tuple[str, ...]:
     """
     Extract the most frequently occurring content words from text.
-    
+
     Parameters:
     	text (str): Source text to analyze.
     	limit (int): Maximum number of words to return. Defaults to 8.
-    
+
     Returns:
     	tuple[str, ...]: Up to `limit` content words, ranked by frequency (descending) then alphabetically for ties.
     """
@@ -237,11 +242,11 @@ def _content_terms(text: str, limit: int = 8) -> tuple[str, ...]:
 def _special_polarity_vector(value: str, dimensions: int) -> np.ndarray:
     """
     Generate a deterministic bipolar vector for the given polarity value.
-    
+
     Parameters:
     	value (str): The polarity value; expected values are 'positive', 'negative', or other (treated as neutral).
     	dimensions (int): The dimensionality of the bipolar vector.
-    
+
     Returns:
     	A bipolar vector corresponding to 'positive' (positive axis), 'negative' (negated axis), or neutral axis for other values.
     """
@@ -260,10 +265,10 @@ class ScientificSlots:
     def get(self, slot: str) -> tuple[str, ...]:
         """
         Retrieve the terms associated with a given slot.
-        
+
         Parameters:
         	slot (str): The slot name.
-        
+
         Returns:
         	tuple[str, ...]: The terms for the slot, or an empty tuple if the slot does not exist.
         """
@@ -272,10 +277,10 @@ class ScientificSlots:
     def without(self, *slots: str) -> ScientificSlots:
         """
         Create a new instance excluding the specified slots.
-        
+
         Parameters:
         	slots (str): Slot names to exclude.
-        
+
         Returns:
         	ScientificSlots: A new instance with the specified slots removed.
         """
@@ -285,7 +290,7 @@ class ScientificSlots:
     def to_jsonable(self) -> dict[str, list[str]]:
         """
         Serialize slot values as a JSON-compatible dictionary.
-        
+
         Returns:
             Dictionary with slot names as keys and lists of slot values.
         """
@@ -295,10 +300,10 @@ class ScientificSlots:
     def from_jsonable(cls, value: dict[str, list[str]]) -> ScientificSlots:
         """
         Reconstruct ScientificSlots from a JSON-compatible dictionary.
-        
+
         Parameters:
         	value (dict[str, list[str]]): Dictionary mapping slot names to term lists.
-        
+
         Returns:
         	ScientificSlots: A new instance, excluding slots with empty term lists.
         """
@@ -317,7 +322,7 @@ class ScientificRecord:
     def vector_array(self) -> np.ndarray:
         """
         Return the vector as a bipolar int8 numpy array.
-        
+
         Returns:
         	np.ndarray: The vector in unpacked bipolar int8 format.
         """
@@ -350,7 +355,7 @@ class ScientificPaperEncoder:
     def __init__(self, dimensions: int = DIMENSIONS) -> None:
         """
         Initialize the encoder with deterministic slot anchor vectors.
-        
+
         Parameters:
             dimensions (int): The dimensionality of the bipolar hypervectors. Defaults to DIMENSIONS.
         """
@@ -370,20 +375,20 @@ class ScientificPaperEncoder:
     ) -> ScientificSlots:
         """
         Extracts structured slot annotations and inferred metadata from text.
-        
-        Parses explicit slot annotations in bracketed form (e.g., `[DOMAIN: value1, value2]`) and 
+
+        Parses explicit slot annotations in bracketed form (e.g., `[DOMAIN: value1, value2]`) and
         infers remaining slot values. Explicit annotations always take precedence over inferred values.
-        
+
         Parameters:
             text (str): The input text to process.
             categories (Iterable[str]): Additional category terms to include in slot extraction.
-            year (int | str | None): A year value for the YEAR slot. If not provided, searches the text 
+            year (int | str | None): A year value for the YEAR slot. If not provided, searches the text
                 for a year pattern.
-            query (bool): When False, POLARITY defaults to "neutral" if not explicitly set or inferred. 
+            query (bool): When False, POLARITY defaults to "neutral" if not explicitly set or inferred.
                 When True, POLARITY is only included if explicitly specified or inferred from text.
-        
+
         Returns:
-            ScientificSlots: Extracted slot values, potentially including DOMAIN, MECHANISM, EFFECT, 
+            ScientificSlots: Extracted slot values, potentially including DOMAIN, MECHANISM, EFFECT,
                 EVIDENCE, RELATION, METHOD, SCALE, POLARITY, ENTITY, and YEAR.
         """
         explicit = {
@@ -446,7 +451,7 @@ class ScientificPaperEncoder:
     def encode_slots(self, slots: ScientificSlots) -> np.ndarray:
         """
         Encode semantic slots into a bipolar hypervector representation.
-        
+
         Returns:
             np.ndarray: A bipolar vector of dtype int8, with all values in {-1, 1}.
         """
@@ -483,12 +488,12 @@ class ScientificPaperEncoder:
     ) -> ScientificRecord:
         """
         Encode a scientific paper into a structured record with extracted slots and vector representation.
-        
+
         Parameters:
         	categories: Additional category terms to include in slot extraction.
         	year: Publication year to use for the YEAR slot.
         	metadata: Additional metadata to attach to the record.
-        
+
         Returns:
         	A ScientificRecord containing the document metadata, extracted slots, and encoded bipolar vector.
         """
@@ -506,10 +511,10 @@ class ScientificPaperEncoder:
     def encode_query(self, query: str) -> tuple[ScientificSlots, np.ndarray]:
         """
         Encode a query for retrieval by extracting semantic slots and computing their vector representation.
-        
+
         Parameters:
         	query (str): The query string to encode
-        
+
         Returns:
         	tuple: A tuple of (ScientificSlots, np.ndarray) containing the extracted slots and their bipolar vector encoding
         """
@@ -520,13 +525,13 @@ class ScientificPaperEncoder:
 def pack_vector(vector: np.ndarray | bytes) -> bytes:
     """
     Ensure a bipolar vector is in packed byte form.
-    
+
     If the input is already bytes, validates its size. If it is an array, converts
     it to a compact bit-packed representation.
-    
+
     Returns:
         Packed byte representation of the bipolar vector.
-    
+
     Raises:
         ValueError: If a bytes input does not match the expected packed size.
     """
@@ -541,11 +546,11 @@ def pack_vector(vector: np.ndarray | bytes) -> bytes:
 def unpack_vector(raw: bytes, dimensions: int = DIMENSIONS) -> np.ndarray:
     """
     Converts packed bytes into a bipolar hypervector.
-    
+
     Parameters:
         raw (bytes): Packed binary representation of a bipolar vector.
         dimensions (int): Number of dimensions to unpack. Defaults to DIMENSIONS.
-    
+
     Returns:
         np.ndarray: Bipolar vector of shape (dimensions,) with values ±1 in int8 dtype.
     """
@@ -559,7 +564,7 @@ def vector_similarity(
 ) -> float:
     """
     Compute cosine similarity between two vectors.
-    
+
     Returns:
         Cosine similarity score ranging from -1 to 1, or 0 if either vector has zero norm.
     """
@@ -592,7 +597,7 @@ _SLOT_WEIGHTS = {
 def slot_similarity(query: ScientificSlots, candidate: ScientificSlots) -> float:
     """
     Measures the weighted overlap of slot terms between a query and a candidate record.
-    
+
     Returns:
         A similarity score between 0.0 and 1.0, weighted by slot importance. Returns 0.0
         if the query has no requested slots.
@@ -636,7 +641,7 @@ class RandomHyperplaneLSH:
     def _keys(self, vector: np.ndarray) -> tuple[int, ...]:
         """
         Compute LSH hash keys for the vector across all hash tables.
-        
+
         Returns:
             Tuple of integer keys, one per hash table.
         """
@@ -661,13 +666,13 @@ class RandomHyperplaneLSH:
     def query(self, vector: np.ndarray, minimum: int = 16) -> set[str]:
         """
         Retrieve candidate record IDs using locality-sensitive hashing with multi-probe fallback.
-        
+
         Returns record IDs matched by exact hash keys across all tables. If fewer than the minimum number of candidates are found, performs multi-probe search by checking nearby hash buckets created by bit-flipping individual key positions.
-        
+
         Parameters:
             vector (np.ndarray): Bipolar hypervector to query.
             minimum (int): Minimum number of candidates to retrieve before terminating multi-probe search. Defaults to 16.
-        
+
         Returns:
             set[str]: Record IDs of candidate documents.
         """
@@ -690,7 +695,7 @@ class ScientificMemoryIndex:
     def __init__(self, encoder: ScientificPaperEncoder | None = None) -> None:
         """
         Initialize a hierarchical memory index for scientific papers with indexed slots and approximate vector retrieval.
-        
+
         Parameters:
             encoder: Slot encoder for document content. Defaults to a new ScientificPaperEncoder if not provided.
         """
@@ -708,11 +713,11 @@ class ScientificMemoryIndex:
     def add(self, record: ScientificRecord) -> None:
         """
         Add a record to the index.
-        
+
         Updates all slot-based indexes, domain and mechanism aggregations, and LSH index.
         Accumulates the record's vector into domain and domain-mechanism bundles for hierarchical
         search, and converts the vector to packed bytes for compact storage.
-        
+
         Parameters:
             record (ScientificRecord): The record to add.
         """
@@ -751,10 +756,10 @@ class ScientificMemoryIndex:
     def _bundle_from_sum(total: np.ndarray | None) -> np.ndarray | None:
         """
         Convert an accumulated sum to a normalized bipolar vector.
-        
+
         Parameters:
             total: Sum array to normalize, or None to return None.
-        
+
         Returns:
             Bipolar array with values ±1 (zeros forced to 1), or None.
         """
@@ -767,7 +772,7 @@ class ScientificMemoryIndex:
     def domain_bundle(self, domain: str) -> np.ndarray | None:
         """
         Retrieve the bundled bipolar vector for a domain.
-        
+
         Returns:
             np.ndarray | None: The bundled bipolar vector for the domain, or None if the domain has not been indexed.
         """
@@ -776,11 +781,11 @@ class ScientificMemoryIndex:
     def mechanism_bundle(self, domain: str, mechanism: str) -> np.ndarray | None:
         """
         Return the bundled bipolar vector for a domain-mechanism pair.
-        
+
         Parameters:
         	domain (str): The domain name
         	mechanism (str): The mechanism name
-        
+
         Returns:
         	np.ndarray | None: A bipolar vector representing the aggregated signal for the pair, or None if the pair does not exist in the index
         """
@@ -791,7 +796,7 @@ class ScientificMemoryIndex:
     def _hierarchical_candidates(self, slots: ScientificSlots) -> set[str]:
         """
         Return records matching the given slots through hierarchical filtering and fallback strategies.
-        
+
         Returns:
         	set[str]: Record IDs satisfying the slot constraints.
         """
@@ -831,7 +836,7 @@ class ScientificMemoryIndex:
     def search(self, query: str, top_k: int = 5) -> list[SearchHit]:
         """
         Find papers in the index matching the given query.
-        
+
         Returns:
             A list of SearchHit objects sorted by relevance score in descending order.
         """
@@ -869,10 +874,10 @@ class ScientificMemoryIndex:
     def save_jsonl(self, path: str | Path) -> None:
         """
         Save all records in the index to a JSONL file.
-        
+
         Each record is written as a single JSON line containing the record ID, title,
         abstract, extracted slots, packed vector (base64-encoded), metadata, and encoding version.
-        
+
         Parameters:
         	path (str | Path): File path where the JSONL will be written
         """
@@ -895,10 +900,10 @@ class ScientificMemoryIndex:
     def load_jsonl(cls, path: str | Path) -> ScientificMemoryIndex:
         """
         Load scientific records from a JSONL file into a new index.
-        
+
         Parameters:
         	path (str | Path): Path to the JSONL file containing serialized records.
-        
+
         Returns:
         	ScientificMemoryIndex: An index containing the loaded records, or an empty index if the file does not exist.
         """
@@ -927,7 +932,7 @@ class ScientificMemoryIndex:
 def split_title_abstract(content: str) -> tuple[str, str]:
     """
     Extracts title and abstract components from a content string.
-    
+
     Returns:
     	(str, str): Title and abstract strings, respectively.
     """
@@ -949,10 +954,10 @@ def record_from_content(
 ) -> ScientificRecord:
     """
     Constructs a scientific record from content text, optionally using a pre-computed vector.
-    
+
     Parameters:
         blob (bytes | None): Pre-computed packed vector; if correctly sized, replaces the encoded vector
-    
+
     Returns:
         The constructed record with extracted slots and encoded vector.
     """
@@ -970,18 +975,18 @@ def index_from_rows(
 ) -> ScientificMemoryIndex:
     """
     Constructs a memory index from record tuples, filtering invalid entries.
-    
+
     Iterates through rows of (record_id, content, blob) tuples, skipping entries with
     missing or empty record_id, a record_id of "ARXIV_CRAWLER_STATE", or missing/empty
     content. For valid rows, encodes each record and adds it to the index.
-    
+
     Parameters:
     	rows: An iterable of tuples containing (record_id, content, blob), where
     		record_id is the document identifier, content is the title and abstract text,
     		and blob is optional packed vector data.
     	encoder: An optional ScientificPaperEncoder instance. If not provided, a new
     		encoder is created.
-    
+
     Returns:
     	A populated ScientificMemoryIndex containing the valid records.
     """
@@ -997,12 +1002,12 @@ def index_from_rows(
 def detect_contradictions(records: Iterable[ScientificRecord], threshold: float = 0.55) -> list[Contradiction]:
     """
     Identify pairs of records that discuss similar topics with opposite polarities.
-    
+
     Records are considered contradictory if they express opposing polarities (one positive, one negative) and their topic similarity meets or exceeds the specified threshold.
-    
+
     Parameters:
     	threshold (float): Minimum similarity score (range 0.0 to 1.0) required to classify records as contradictory.
-    
+
     Returns:
     	list[Contradiction]: Detected contradictions, each containing the two record IDs, their topic similarity, and opposing polarities.
     """

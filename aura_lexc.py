@@ -1,10 +1,16 @@
-"""Compile Aura's ``aura.lexc`` source into a validated six-slot route graph.
-
-The repository previously had two independent, lossy parsers for the same
-lexicon.  This module is deliberately dependency-light so both the runtime PFST
-and the claim-facing routing core can share one source of truth.
 """
-
+[AURA_MASTER_KEY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
+DIKWP_TIER: WISDOM
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: __future__, collections.abc, enum, pathlib, dataclasses
+FUNCTIONS: slot_for_source, _split_mapping, slots, symbols, is_complete, packet, __init__, __init__, from_path, from_text, errors, warnings, complete_routes, validate_symbols, stats, visit
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
+[/AURA_MASTER_KEY]
+"""
 from __future__ import annotations
 
 from collections.abc import Iterable

@@ -1,30 +1,33 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8ce-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8fe-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: urllib.error, os, ssl, urllib.request, json
+DEPENDENCIES: json, urllib.request, urllib.error, os, ssl
 FUNCTIONS: compile_english_lexicon
-SYNOPSIS: `compile_english_lexicon` is a Python module that strictly validates and compiles an English lexicon by resolving network requests via `urllib.request` with `urllib.error` handling, local file operations via `os`, secure SSL/TLS connections via `ssl`, and JSON data parsing via `json`.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import json
-import urllib.request
-import urllib.error
 import os
 import ssl
+import urllib.error
+import urllib.request
 
 OUTPUT_LEXICON = "english_lexicon.json"
 
 OFFLINE_CORE = [
-    "the", "of", "to", "and", "a", "in", "is", "it", "you", "that", "he", "was", "for", "on", "are", 
-    "as", "with", "his", "they", "i", "at", "be", "this", "have", "from", "or", "one", "had", "by", 
-    "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use", 
-    "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out", 
-    "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into", 
-    "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could", 
-    "people", "my", "than", "first", "water", "been", "call", "who", "oil", "its", "now", "find", 
-    "long", "down", "day", "did", "get", "come", "made", "may", "part", "system", "node", "mesh", 
+    "the", "of", "to", "and", "a", "in", "is", "it", "you", "that", "he", "was", "for", "on", "are",
+    "as", "with", "his", "they", "i", "at", "be", "this", "have", "from", "or", "one", "had", "by",
+    "word", "but", "not", "what", "all", "were", "we", "when", "your", "can", "said", "there", "use",
+    "an", "each", "which", "she", "do", "how", "their", "if", "will", "up", "other", "about", "out",
+    "many", "then", "them", "these", "so", "some", "her", "would", "make", "like", "him", "into",
+    "time", "has", "look", "two", "more", "write", "go", "see", "number", "no", "way", "could",
+    "people", "my", "than", "first", "water", "been", "call", "who", "oil", "its", "now", "find",
+    "long", "down", "day", "did", "get", "come", "made", "may", "part", "system", "node", "mesh",
     "state", "vector", "matrix", "tensor", "physics", "error", "critical", "evolution", "mutate"
 ]
 
@@ -32,11 +35,11 @@ def compile_english_lexicon():
     print("[AURA] Initiating English Lexical Compiler...")
     url = "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-no-swears.txt"
     words = []
-    
+
     # 1. Non-blocking network fetch with Termux SSL context fallback
     try:
         req = urllib.request.Request(
-            url, 
+            url,
             headers={"User-Agent": "Mozilla/5.0 (Linux; Android 10) AuraOS/1.0"}
         )
         try:
@@ -51,15 +54,15 @@ def compile_english_lexicon():
             ctx.verify_mode = ssl.CERT_NONE
             with urllib.request.urlopen(req, timeout=12.0, context=ctx) as response:
                 words = response.read().decode('utf-8').splitlines()
-                
+
     except Exception as e:
         print(f"[-] Network fetch failed: {e}.")
-        
+
         # 2. Local-First Fallback Sequence
         if os.path.exists(OUTPUT_LEXICON):
             print("[+] Retaining existing local English lexicon. Compilation bypassed.")
             return
-            
+
         print("[*] Reverting to edge-native semantic fallback dictionary...")
         words = list(OFFLINE_CORE)
 
@@ -69,7 +72,7 @@ def compile_english_lexicon():
         diff = 4096 - len(words)
         for i in range(diff):
             words.append(f"primitive_{i:04d}")
-            
+
     words = words[:4096]
     print(f"[+] Operational vocabulary baseline locked at: {len(words)} primitives.")
 
@@ -83,7 +86,7 @@ def compile_english_lexicon():
     with open(OUTPUT_LEXICON, 'w', encoding='utf-8', newline='') as f:
         json.dump(semantic_decoder, f, indent=4)
 
-    print(f"[+] Conversational Matrix Absolute. 4,096 English words vectorized.")
+    print("[+] Conversational Matrix Absolute. 4,096 English words vectorized.")
     print(f"[+] Output locked to {OUTPUT_LEXICON}")
 
 if __name__ == "__main__":

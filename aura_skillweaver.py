@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f7-[Q-SYS:SKILLWEAVER_GATE]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Disciplined Mutation Gate)
 DEPENDENCIES: numpy, json, os, re, hashlib, time
-FUNCTIONS: AuraSkill, ResearchCandidate, ResearchGateResult, AuraSkillWeaver, extract_required_anchors, score_lexical_anchors, score_concept_fit, evaluate_research_gate, decompose_query, build_skill_registry, compose_mutation_dag
+FUNCTIONS: AuraSkill, ResearchCandidate, ResearchGateResult, AuraSkillWeaver, extract_required_anchors, score_lexical_anchors, score_concept_fit, evaluate_research_gate, decompose_query, build_skill_registry, compose_mutation_dag, gate_fusion_task
 SYNOPSIS: Aura-native skill-aware decomposition, research relevance gating, skill retrieval, and mutation plan composition. Implements the SkillWeaver / Compositional Skill Routing pattern adapted into Aura architecture. Prevents ungrounded code mutations from semantically resonant but conceptually irrelevant research matches.
 [/AURA_MASTER_KEY]
 
@@ -34,8 +34,6 @@ import json
 import os
 from pathlib import Path
 import re
-import time
-from typing import Any, Optional
 
 import numpy as np
 
@@ -50,8 +48,8 @@ class AuraSkill:
     """Registry entry representing a capability in the Aura codebase."""
     name: str
     kind: str          # command | module | function | paper | output_mode
-    path: Optional[str]
-    symbol: Optional[str]
+    path: str | None
+    symbol: str | None
     description: str
     categories: list = field(default_factory=list)
     inputs: list = field(default_factory=list)
@@ -71,20 +69,20 @@ class ResearchCandidate:
     lexical_anchor_score: float
     concept_fit_score: float
     accepted: bool
-    rejection_reason: Optional[str] = None
+    rejection_reason: str | None = None
 
 
 @dataclass
 class ResearchGateResult:
     """Final gate decision for a research query."""
     query: str
-    decision: str  # ALLOW_MUTATION | REFUSE_MUTATION | NEED_MORE_SOURCES
+    decision: str  # ALLOW_ARENA_STAGING | REFUSE_MUTATION | NEED_MORE_SOURCES
     candidates: list = field(default_factory=list)
     required_anchors: list = field(default_factory=list)
     final_score: float = 0.0
     reason: str = ""
     target_modules: list = field(default_factory=list)
-    mutation_dag: Optional[dict] = None
+    mutation_dag: dict | None = None
     contradictions: list = field(default_factory=list)
 
 
@@ -268,7 +266,7 @@ def build_skill_registry(repo_root=None):
     codemap_json = os.path.join(repo_root, ".aura", "CODEMAP.json")
     if os.path.exists(codemap_json):
         try:
-            with open(codemap_json, "r", encoding="utf-8") as f:
+            with open(codemap_json, encoding="utf-8") as f:
                 cmap = json.load(f)
 
             for entry in cmap.get("files", []):
@@ -304,7 +302,7 @@ def build_skill_registry(repo_root=None):
     codemap_md = os.path.join(repo_root, ".aura", "CODEMAP.md")
     if os.path.exists(codemap_md):
         try:
-            with open(codemap_md, "r", encoding="utf-8") as f:
+            with open(codemap_md, encoding="utf-8") as f:
                 md_content = f.read()
 
             for m in re.finditer(r"- `(!\w+)` -> (.+)", md_content):
@@ -327,7 +325,7 @@ def build_skill_registry(repo_root=None):
     outfmt = os.path.join(repo_root, ".aura", "OUTPUT_FORMATS.md")
     if os.path.exists(outfmt):
         try:
-            with open(outfmt, "r", encoding="utf-8") as f:
+            with open(outfmt, encoding="utf-8") as f:
                 content = f.read()
             for m in re.finditer(r"## `\[OUTPUT:(\w+)\]`", content):
                 skills.append(AuraSkill(
@@ -498,7 +496,7 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
             {"stage": 7, "action": "refresh_codemap", "depends_on": [5.5], "files_to_refresh": target_modules},
             {"stage": 8, "action": "stage_mutation_report", "depends_on": [6, 7],
              "thermal_risk": "LOW",
-             "rollback_path": "git checkout -- " + " ".join(target_modules)},
+             "rollback_path": "Use the Refactor Arena rollback capsule; do not emit destructive shell commands."},
         ],
         "mutation_eligibility_score": sum(c.concept_fit_score for c in accepted_candidates) / max(1, len(accepted_candidates)),
         "expected_token_savings": "60-90% via polysynthetic compression",
@@ -509,6 +507,111 @@ def compose_mutation_dag(query, accepted_candidates, target_modules, skills=None
             "tau": "thermal friction (1 - thermal_fitness)",
             "epsilon": "extraction cost (estimated API cost)",
         },
+    }
+
+
+FUSION_VALID_OUTPUT_MODES = {
+    "TEXT",
+    "JSON",
+    "JSON_EDIT_PLAN",
+    "UNIFIED_DIFF",
+    "PYTHON",
+}
+
+_MUTATION_WORDS = {
+    "add", "change", "commit", "delete", "edit", "fix", "implement",
+    "modify", "patch", "refactor", "remove", "rewrite", "update", "write",
+}
+
+_NEW_DEP_WORDS = {
+    "pip install", "poetry add", "npm install", "new dependency", "langchain",
+    "networkx", "torch", "pytorch", "faiss", "z3",
+}
+
+
+def _fusion_capsule_constraints(capsule: dict) -> set[str]:
+    return {str(item).upper() for item in capsule.get("constraints", []) if item}
+
+
+def _fusion_target_exists(target_file: str | None, skills: list[AuraSkill]) -> bool:
+    if not target_file:
+        return False
+    normalized = target_file.replace("\\", "/").lstrip("./")
+    for skill in skills or []:
+        if skill.path and skill.path.replace("\\", "/").lstrip("./") == normalized:
+            return True
+    return Path(normalized).exists()
+
+
+def gate_fusion_task(task: str, capsule: dict, skills: list[AuraSkill]) -> dict:
+    """
+    Decide whether AuraFusion should run, refuse, or require human gate.
+
+    Checks:
+    - task has target grounding when code mutation is requested
+    - CODEMAP target exists
+    - output mode is valid
+    - no new deps unless allowed
+    - research evidence is sufficient when task is research-derived
+    """
+    task_text = task or ""
+    task_lower = task_text.lower()
+    output_mode = str(capsule.get("output_mode", "TEXT")).upper()
+    target_file = capsule.get("target_file")
+    constraints = _fusion_capsule_constraints(capsule)
+    checks: dict[str, bool] = {
+        "valid_output_mode": output_mode in FUSION_VALID_OUTPUT_MODES,
+        "target_grounded": True,
+        "no_new_deps": True,
+        "research_sufficient": True,
+    }
+    reasons: list[str] = []
+
+    if not checks["valid_output_mode"]:
+        reasons.append(f"Unsupported AuraFusion output_mode '{output_mode}'.")
+
+    mutation_requested = (
+        output_mode in {"JSON_EDIT_PLAN", "UNIFIED_DIFF", "PYTHON"}
+        or any(re.search(r"\b" + re.escape(word) + r"\b", task_lower) for word in _MUTATION_WORDS)
+    )
+    if mutation_requested:
+        checks["target_grounded"] = _fusion_target_exists(target_file, skills)
+        if not checks["target_grounded"]:
+            reasons.append("Code mutation requested without a CODEMAP-grounded target_file.")
+
+    if "ALLOW_NEW_DEPS" not in constraints and any(word in task_lower for word in _NEW_DEP_WORDS):
+        checks["no_new_deps"] = False
+        reasons.append("Task appears to require a new dependency, but ALLOW_NEW_DEPS is not present.")
+
+    if capsule.get("research_derived") and not capsule.get("source_sufficient"):
+        checks["research_sufficient"] = False
+        reasons.append("Research-derived Fusion mutation lacks source-sufficient evidence.")
+
+    if not all(checks.values()):
+        return {
+            "decision": "REFUSE_FUSION",
+            "allowed": False,
+            "human_gate_required": False,
+            "reason": " ".join(reasons),
+            "checks": checks,
+        }
+
+    risky = mutation_requested and "HUMAN_APPROVED_MUTATION" not in constraints
+    if risky:
+        return {
+            "decision": "HUMAN_GATE_REQUIRED",
+            "allowed": True,
+            "human_gate_required": True,
+            "reason": "Mutation target is grounded; require human review before applying any patch.",
+            "checks": checks,
+        }
+
+    return {
+        "decision": "ALLOW_FUSION",
+        "allowed": True,
+        "human_gate_required": False,
+        "reason": "AuraFusion gate passed.",
+        "checks": checks,
     }
 
 
@@ -615,21 +718,20 @@ class AuraSkillWeaver:
     def evaluate_research_gate(self, query, candidates_data, qdkt=None):
         """
         Evaluate research evidence and determine if code mutation should be allowed.
-        
+
         Assesses candidate research traces against the query, checks for contradictions
         in accepted sources, and makes a gating decision based on evidence quality and
-        target module availability. Returns ALLOW_MUTATION when sufficient evidence is
+        target module availability. Returns ALLOW_ARENA_STAGING when sufficient evidence is
         present with coherent findings and target modules identified, REFUSE_MUTATION
         when no candidates meet relevance thresholds, or NEED_MORE_SOURCES when
         evidence conflicts or target grounding is missing.
-        
+
         Parameters:
             query: The user research query string.
             candidates_data: List of (trace_id, content, vector_blob) tuples to evaluate.
-            qdkt: Optional UnifiedQDKT instance.
-        
+
         Returns:
-            ResearchGateResult containing the gating decision (ALLOW_MUTATION,
+            ResearchGateResult containing the gating decision (ALLOW_ARENA_STAGING,
             REFUSE_MUTATION, or NEED_MORE_SOURCES), evaluated candidates ranked by
             relevance, identified target modules, detected contradictions, and a
             mutation DAG when mutation is allowed.
@@ -706,7 +808,7 @@ class AuraSkillWeaver:
             dag = None
 
         else:
-            decision = "ALLOW_MUTATION"
+            decision = "ALLOW_ARENA_STAGING"
             reason = (str(len(accepted)) + " source(s) passed relevance gate with "
                       + str(len(target_modules)) + " target module(s) identified. "
                       "Sources contain direct anchors and match Aura modules.")
@@ -802,7 +904,7 @@ async def research_gate_intercept(query, candidates_data, repo_root=None, qdkt=N
     weaver = AuraSkillWeaver(repo_root=repo_root)
     result = weaver.evaluate_research_gate(query, candidates_data, qdkt=qdkt)
     report = weaver.format_gate_report(result)
-    allowed = result.decision == "ALLOW_MUTATION"
+    allowed = result.decision == "ALLOW_ARENA_STAGING"
     return allowed, report, result
 
 

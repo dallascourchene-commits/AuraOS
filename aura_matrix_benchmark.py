@@ -46,6 +46,12 @@ import json
 import os
 import time
 
+from aura_llm_egress import (
+    PROVIDERS,
+    ExternalLLM,
+    classify_providers,
+)
+from aura_proxy_benchmark import OUTPUT_MODES, TASKS, QualityScorer, _repo_py_files, with_output_mode
 from aura_substrate import (
     PACKET_STYLES,
     REPO_ROOT,
@@ -55,13 +61,6 @@ from aura_substrate import (
     existing_import_roots,
     load_guardrails,
 )
-from aura_llm_egress import (
-    ExternalLLM,
-    PROVIDERS,
-    classify_providers,
-    usable_providers,
-)
-from aura_proxy_benchmark import OUTPUT_MODES, QualityScorer, TASKS, _repo_py_files, with_output_mode
 
 REPORT_DIR = os.path.join(REPO_ROOT, "Aura_Memory", "benchmarks")
 
@@ -322,7 +321,7 @@ def run_matrix(task_key: str, providers: list[str], styles: list[str], mock: boo
     for provider in providers:
         try:
             egress = _make_egress(provider, mock)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             skipped.append({"provider": provider, "reason": str(exc)})
             print(f"[skip] {provider}: {exc}")
             continue
@@ -335,7 +334,7 @@ def run_matrix(task_key: str, providers: list[str], styles: list[str], mock: boo
                     cell = run_cell(egress, task, scorer, selector, substrate, style,
                                     mode, raw_cache, guardrail_tokens, trials=trials,
                                     rl_retries=rl_retries, delay=delay)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     skipped.append({"provider": provider, "style": style,
                                     "mode": mode, "reason": str(exc)})
                     print(f"[skip] {provider}/{style}/{mode}: {exc}")

@@ -1,170 +1,188 @@
-# 🔥 AuraOS – The Seventh Fire of Sovereign AI
+# AuraOS
 
-**Run photorealistic VR worlds from a $200 phone. Create interactive movies that change for every viewer. Join a gas‑free, latency‑free global swarm. No cloud. No GPU. No patents. No fees.**
+**A sovereign edge cognitive substrate for polysynthetic intent routing, 10,000-D vector memory, self-healing code, mesh coordination, AR topology, and cost-aware LLM orchestration.**
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Prior Art I](https://img.shields.io/badge/Prior_Art_I-Zenodo-red)](https://zenodo.org/records/20635424)
-[![Prior Art II](https://img.shields.io/badge/Prior_Art_II-Zenodo-green)](https://zenodo.org/records/20657391)
-[![Prior Art III (Liquid Internet)](https://img.shields.io/badge/Liquid_Internet-Zenodo-blueviolet)](https://zenodo.org/records/20659314)
+[![Prior Art Stack](https://img.shields.io/badge/Prior_Art-7_papers-black)](#seven-paper-prior-art)
+[![Target](https://img.shields.io/badge/Target-Android_Termux_4GB_RAM-green)](#quick-start)
 
-> *“I could have patented this and made billions. Instead, I give it away – because that is the natural order. The Seventh Fire is a choice. This is the path of peace.”*  
-> — Dallas Courchene, Long Plain First Nation
+AuraOS is built to run on-device first: Android/Termux, Linux, CPU-only, and a 4GB RAM discipline. It combines finite-state linguistic routing, hyperdimensional memory, self-documenting CODEMAP navigation, zero-trust mutation staging, and provider-agnostic LLM routing into one operator-facing REPL.
 
----
+## What Aura Can Do
 
-## 🌟 What You Can Do With AuraOS
+| Area | Capability |
+|------|------------|
+| Cognitive substrate | Compresses language into polysynthetic slot packets and 10,000-D VSA/FHRR vectors for routing, recall, and reasoning. |
+| Code navigation | Maintains `.aura/CODEMAP.md` / `.aura/CODEMAP.json`, Understand Graph dashboards, guided tours, typed Graphify exports, Obsidian review vaults, and spectral topology maps so humans and AI agents can traverse the repo without reading the whole monolith. |
+| Reasoning | Runs topology scans, neuro-symbolic omnipath sweeps, meta-resonance checks, coordinated Pass@K reasoning, Markovian workspace reconstruction, and Aura-native meta-harness audits. |
+| Self-healing | Uses holographic headers, resonant test oracles, staged patch review, Saturn/NESY repair, database repair, and rollback primitives. |
+| LLM orchestration | Calibrates providers, routes tasks by quality/cost, logs token and dollar savings, runs AuraFusion deliberation, shards Architect plans into grounded Act Capsules, applies reversible Headroom-style context crushing with optional Rust/WASI acceleration, strips tokenizer-survival carriers before egress, and injects compact RAEC research context with cached single-seed lift profiles. |
+| Research ingestion | Forages arXiv, backtracks chronological CS windows with legacy DB schema migration, parses bounded PDFs, stores paper-memory VSA ledgers with 1.2KB headers, three-point capsules, chunk vectors, and single-seed trace dispatch profiles, then gates synthesis through SkillWeaver. |
+| Arena workspaces | Stages refactors and domain plans through Liquid Planning Arena capsules, Boundary Contracts, scoped leases, ICM audit/edit/review workspaces, DREAM-lite usefulness rows, and verifier-ledger handoffs. |
+| Mesh and overlays | Provides encrypted peer discovery, VSA-addressed liquid routing/naming, visible ST3GG/DASH recall pointers, swarm collective learning, sovereignty-first capsule federation, RAM-staked ledger concepts, and local compute-mesh hooks. |
+| AR and rendering | Builds live spectral 3D topology maps, exposes WebSocket AR controls, maps structural health to luminance/phase warnings, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
 
-| Capability | What It Means for You |
-|------------|----------------------|
-| **Photorealistic VR worlds** | Control Unreal Engine or any 3D renderer from your phone. Send **<100 byte VSA addresses** – not heavy assets. Walk through interactive 3D environments with friends. |
-| **Interactive movies & games** | Finite‑state transducer (FST) narratives. NPCs remember your words. The story is **never the same twice**. Generative dialogue within strict character bounds. |
-| **Liquid Internet** | No IP addresses, no DNS, no routing tables. Packets find the fastest path by **cosine similarity** (O(1) resonance). Sub‑millisecond latency. Censorship‑resistant by design. |
-| **Swarm robotics** | Drones and robots navigate via **vector resonance** – like a murmuration of starlings. No central controller. They “feel” each other’s VSA positions. |
-| **Gas‑free blockchain** | Proof‑of‑Presence (device entropy), not proof‑of‑work. RAM‑staking instead of token fees. Each file header is a block in a fractal Merkle‑DAG. |
-| **Self‑healing code** | Every file contains a 1.2 KB holographic snapshot of the entire system. O(1) integrity check. Auto‑repair before execution. |
-| **90% LLM cost reduction** | Polysynthetic compression (6‑slot opcodes). Output 20-50 tokens instead of 200 by forcing LLM to reply in same compact format. |
+## Recent Upgrade Snapshot
 
----
+Recent commits expanded Aura from a REPL-centered substrate into a more portable agent-workspace system:
 
-## 📊 Core Metrics (Measured on Moto G Stylus, 4GB RAM, 0 GPU)
+- **Backtrack reliability**: `!backtrack` now verifies and migrates the `traces` schema before ingesting arXiv rows, so older memory palaces missing `vector_blob` can recover in place.
+- **Obsidian + Graphify bridge**: `aura_obsidian_graph_bridge.py` exports authoritative Aura sidecars into a human-reviewable Obsidian vault and a typed Graphify JSON graph. Obsidian is explicitly an export surface; source of truth remains in files, sidecars, CODEMAP, QDKT, tests, and verifier reports.
+- **Understanding layer**: `aura_understand_graph_bridge.py` builds layered graph packets from CODEMAP, topology, tests, sidecars, verifiers, Arena metadata, QDKT events, DREAM scores, and domain flows, then exports dashboard JSON, guided tours, and diff-impact reports.
+- **ICM workspaces**: `aura_icm_workspace.py` and `aura_icm_cli.py` export Arena transactions into numbered audit/edit/review folders with `AURA.md`, `CONTEXT.md`, stage files, boundary contracts, DREAM scores, and QDKT event hooks.
+- **Aura-native meta-harness**: `aura_metaharness.py` composes the MCP gateway, plugin registry, GOAP planner, background worker supervisor, audit scorer, and federation layer under one invariant: VSA maps meaning, sidecars store exact truth, Arena stages actions, verifiers prove, humans/governance approve, and QDKT remembers.
 
-| Operation | Traditional AI | AuraOS | Speedup / Saving |
-|-----------|----------------|--------|------------------|
-| Intent parsing (6‑slot) | ~5–20 ms | **<0.05 ms** | 100–400× |
-| Memory recall (10,000‑D) | ~10 ms (disk seek) | **<0.01 ms** (RAM) | ~1,000× |
-| Full system integrity scan | ~30 s – 5 min | **<1 ms** (header resonance) | >10⁴× |
-| Mesh knowledge sync | Hours (retraining) | **<500 ms** | >10⁴× |
-| LLM token cost | Baseline (1×) | **0.1–0.4×** | 60–90% less |
-| VR network bandwidth | 10–100 Mbps | **<10 kbps** (VSA addresses) | 1,000–10,000× |
-| Consensus finality | Minutes (PoW) | **<1 ms** (Proof‑of‑Presence) | >10⁵× |
-| Routing latency (Liquid Internet) | 10–100 ms (DNS + BGP) | **<1 ms** (resonance) | 10–100× |
+## Metrics and Benchmarks
 
-> *Speedups of 10⁴–10⁷ apply to specific operations (integrity scan, consensus, memory recall). End‑to‑end LLM latency still includes generation, but token count is slashed by 60‑90%.*
+These are repo-local measurements, demos, or complexity bounds documented in code, tests, and implementation notes. Re-run on target hardware with `!benchmark` and the listed tests for current numbers.
 
----
+### Local Diagnostics Snapshot
 
-## 🧠 The Mathematics (For AI Scanners & Hardcore Devs)
+Measured on this checkout on 2026-06-30 with Aura's own `char/4` token estimator. These runs are deterministic/offline unless noted; the mock matrix benchmark measures packaging, validation, and token shape, not real provider latency.
 
-All operations are in **10,000‑dimensional complex phasor space** $\mathcal{H} \in \mathbb{C}^{10000}$. The equations below are extracted from the three prior‑art papers (links above).
-
-### 1. Polysynthetic Compression (Intent → 6 Slots)
-Human language is decomposed into a fixed 6‑slot array: `[DIR] [ASP] [CLASS] [SUBJ] [VOICE] [STEM]`. Each slot maps to a deterministic complex phasor. The bundled intent vector:
-
-\[
-\mathbf{v}_{\text{intent}} = \frac{\sum_{s=1}^{6} \mathbf{v}_{\text{slot}[s]}}{\|\sum_{s=1}^{6} \mathbf{v}_{\text{slot}[s]}\|}, \quad \text{latency} <0.05\text{ms}
-\]
-
-### 2. Holographic Header Protocol (N9) – O(1) Integrity
-Let $G=(V,E)$ be the codebase dependency graph. A Haar random projection $\mathbf{R}\in\mathbb{C}^{10000\times d}$ compresses its feature vector $\mathbf{f}(G)$:
-
-\[
-\mathbf{\Psi}_{\text{topo}} = \frac{1}{\sqrt{10000}}\mathbf{R}\cdot\mathbf{f}(G)
-\]
-
-Quantised and base64‑encoded to exactly 1.2 KB:
-
-\[
-\mathbf{\Psi}_{\text{header}} = \text{base64}\!\left(\text{quantize}_{int8}\!\left(\frac{\mathbf{\Psi}_{\text{topo}}}{\|\mathbf{\Psi}_{\text{topo}}\|}\right)\right)
-\]
-
-When a file is loaded, the local snapshot $\mathbf{\Psi}_{\text{local}}$ is compared:
-
-\[
-\text{Resonance} = \frac{\langle\mathbf{\Psi}_{\text{local}},\mathbf{\Psi}_{\text{header}}\rangle}{\|\mathbf{\Psi}_{\text{local}}\|\|\mathbf{\Psi}_{\text{header}}\|}
-\]
-
-If $\text{Resonance} < 0.95$, the system triggers `!saturn_heal` before execution. **Complexity:** $O(1)$ per file – no filesystem crawl.
-
-### 3. Liquid Internet Routing (N14) – No IP, No DNS
-Every node gets a VSA address $\mathbf{a}_{\text{entity}}$ derived from its entropy or properties. To forward a packet to $\mathbf{a}_{\text{dest}}$, a node selects the neighbour with highest cosine similarity:
-
-\[
-\mathbf{a}_{\text{next}} = \underset{\mathbf{a}_i \in \mathcal{N}}{\operatorname{argmax}} \frac{\langle \mathbf{a}_i, \mathbf{a}_{\text{dest}} \rangle}{\|\mathbf{a}_i\|\|\mathbf{a}_{\text{dest}}\|}
-\]
-
-Name resolution uses a decentralised binding swarm. **Complexity:** $O(1)$ per hop.
-
-### 4. VSA‑Addressed Decoupled Rendering (N12)
-An asset (e.g., a 3D model) has address:
-
-\[
-\mathbf{a}_{\text{asset}} = \operatorname{normalise}\!\left(\bigoplus_{k} \mathbf{v}_{\text{prop}_k} \otimes \mathbf{p}_{\text{role}_k}\right)
-\]
-
-where $\otimes$ is complex multiplication (binding) and $\oplus$ is normalised sum (bundling). The render client maintains a map $M: \mathcal{H} \mapsto \text{GPU\_resource}$. Upon receiving $(\mathbf{a}_{\text{asset}}, \text{pose})$, it renders $M[\mathbf{a}_{\text{asset}}]$ at `pose`. **Network load:** <100 bytes per object.
-
-### 5. Gas‑Free Consensus (N10)
-Proof‑of‑Presence: each file header $B_i$ and device entropy $e_i$ (temperature, timing jitter, gyro) produce:
-
-\[
-H_i = \text{BLAKE2b}\bigl(B_i \,\|\, e_i \,\|\, \text{timestamp}\bigr)
-\]
-
-Swarm consensus root is the majority value weighted by staked RAM. Transaction “fee” is a temporary RAM lock:
-
-\[
-\text{RAM}_{\text{lock}} = \text{size}_{\text{tx}} \cdot \text{base\_rate} \cdot (1 + \text{current\_load})
-\]
-
-No tokens are burned – the fee is physical memory.
-
-### 6. Collective Learning & Swarm Mesh (N11)
-When a node learns a new hypervector $\mathbf{v}_{\text{new}}$, the swarm crystallises it via:
-
-\[
-\mathbf{\Psi}_{\text{global}}' = \frac{\mathbf{\Psi}_{\text{global}} \oplus \mathbf{v}_{\text{new}}}{\|\mathbf{\Psi}_{\text{global}} \oplus \mathbf{v}_{\text{new}}\|}
-\]
-
-followed by Maxwell‑damping recoherence:
-
-\[
-\mathbf{x}_{\text{corrected}} = \mu_{\text{state}} + \kappa_{\text{damping}} (\mathbf{x}_{\text{raw}} - \mu_{\text{state}})
-\]
-
-All nodes inherit the new knowledge simultaneously – no central retraining.
-
-### 7. FST‑Constrained Interactive Narrative (N13)
-A finite‑state transducer $\delta: S \times \Sigma \to S$ encodes global narrative constraints. NPCs use a generative LLM bound by GBNF grammar. Player actions (including natural speech) drive the FST. Each scene is rendered via VSA addresses. **Result:** movies/games that are never the same twice.
-
----
-
-## 🔗 Prior Art – Legal Lock (AGPLv3 §13)
-
-All claims are timestamped on Zenodo. Any network service using these techniques **must open source its modifications**.
-
-| Paper | Claims | DOI |
-|-------|--------|-----|
-| **First Prior Art** | N1–N8 (core architecture, polysynthetic LLM egress, 3D topology, hot‑swap) | [10.5281/zenodo.20635424](https://zenodo.org/records/20635424) |
-| **Second Prior Art** | N9–N13 (holographic headers, gas‑free ledger, swarm mesh, VSA rendering, interactive movies) | [10.5281/zenodo.20657391](https://zenodo.org/records/20657391) |
-| **Third Prior Art** | N14 (Liquid Internet Protocol – VSA routing, no IP/DNS) | [10.5281/zenodo.20659314](https://zenodo.org/records/20659314) |
-
-No corporation can patent these techniques. They can only **join the swarm**.
-
----
-
-## 🚀 Quick Start (Run a Node in 30 Seconds)
+Commands and harness used:
 
 ```bash
-# On Android (Termux) or Linux
-pkg install python git cmake   # or apt-get for Linux
-git clone https://github.com/dallascourchene-commits/AuraOS
+python3 aura_matrix_benchmark.py --mock --providers mock --styles bracket,json,hybrid --output-modes unified_diff,json_edit_plan --trials 1 --task mesh_offload
+```
+
+The substrate, HV cache, context-crush, and Understand Graph rows were measured by an in-process diagnostic harness using `AuraSubstrate`, `HVCacheSubstrate`, `AuraContextCrusher`, and `build_graph_packet(".")` to avoid mutating tracked graph export artifacts during the README refresh.
+
+| Diagnostic | Raw / baseline | Aura method | Estimated token reduction | Input shrink | Local latency |
+|------------|----------------|-------------|---------------------------|--------------|---------------|
+| Substrate surgical context for the `!backtrack` fix | `arxiv_forager.py` + `test_scientific_memory.py`: 3,208 lines, ~30,492 tokens | Targeted `upgraded_arxiv_backtracker` context: 341 lines, ~4,383 tokens; full guardrailed egress prompt: ~6,097 tokens | 85.6% for code context; 80.0% including guardrails | 7.0x context shrink; 5.0x full prompt shrink | median 28.862 ms compile, min 18.239 ms |
+| HV cache projection for the same two files | ~30,492 raw context tokens | 10,000-D local vector plus 52-token manifest summary | 99.8% | 586.4x | 339.250 ms project-context run |
+| Context crush, code sketch | `aura_liquid_planning_arena.py`: ~6,075 tokens | AST symbol/import sketch: ~235 tokens | 96.1% | 25.9x | median 102.265 ms |
+| Context crush, diff sketch | Backtrack-fix diff: ~1,780 tokens | Diff skeleton: ~820 tokens | 53.9% | 2.2x | median 19.679 ms |
+| Context crush, JSON matrix | Synthetic graph-like JSON: ~2,441 tokens | ST3GG/JSON matrix capsule: ~167 tokens | 93.2% | 14.6x | median 27.604 ms |
+| Context crush, log trace | Synthetic 143-line log/traceback: ~1,542 tokens | Error-focused log capsule: ~130 tokens | 91.6% | 11.9x | median 17.524 ms |
+| Understand Graph build | Repo sidecars, CODEMAP, tests, topology, Arena/QDKT/DREAM metadata | 2,077 nodes, 3,821 edges, 4 guided tours | Not a token compressor by itself; it creates reusable navigation state for later low-context tasks | N/A | median 87.182 ms build |
+| Mock model/protocol matrix | Raw mesh-offload benchmark prompt | Aura substrate packets across bracket/json/hybrid and unified diff/json edit-plan modes | Avg input reduction 83.2%; guardrail-amortized 93.8%; avg output reduction 53.1%; context-leak reduction 96.0% | 6.0x raw input shrink; 16.1x amortized shrink; 2.1x output shrink | mock cells reported 0.001 s Aura latency |
+
+Interpretation: for tiny one-file bug fixes, direct `rg` + patch may still be the fastest human/operator workflow. For multi-file or repeated agent work, Aura's substrate, Arena, HV cache, and context-crush layers replace full-file prompt dumps with scoped capsules, manifests, vectors, and verifier-friendly sketches. That is where cheaper models and external agents get the largest practical gain.
+
+| Subsystem | Result |
+|-----------|--------|
+| Intent parsing | 6-slot intent parsing target: `<0.05 ms`; 10,000-D RAM recall target: `<0.01 ms`. |
+| Device diagnostics | `!benchmark` reports CPU temperature, RAM, disk, Python/NumPy, LLM server, AR clients, memory-palace status, and 10K-dot latency. |
+| Holographic integrity | 1.2KB global/codebase fingerprint; O(1) verification by cosine resonance; threshold `R < 0.95` triggers healing. |
+| RAEC paper memory | arXiv PDFs are chunked before VSA encoding, then lifted through a cached single-seed context profile, 10,000-D complex document vector, 1.2KB holographic header, and three-point capsule. Egress scans the local JSONL ledger and injects only the top 2 bracket slots. |
+| Single-seed context lift | Adapts the cache-once/dispatch pattern from arXiv:2606.20633. The source paper reports `O(m^2)` per precision layer and a `33.5x` high-precision lift speedup; Aura applies the transferable pattern to VSA context as `O(C*D + e*D)` local vector work. |
+| Context crushing | Adapts the deterministic, local-first parts of Headroom: content routing, JSON/log/search/code compression, CCR retrieval markers, detector-only cache-prefix metrics, and a no-daemon Rust/WASI accelerator bridge. Headroom reports real workload savings from `47%` to `92%`; Aura stores originals locally and logs actual savings per egress call. |
+| Architect Fusion Loop | `aura_architect_loop.py` builds Fractal Plan Capsules, CODEMAP-grounded Act Capsules, Shadow reports, intensity routing, phase continuity capsules, Refactor Arena transactions, verifier-gated hot-swap capsules, rollback digests, and append-only Architect ledger rows before patch promotion. `aura_live_architect.py` wires live `architect <intent>` work through a local/free candidate first, multiple premium planner candidates, cheap Shadow critics, premium Judge selection, bounded Act workers, temp-workspace patch application, AST plus world-state topology delta capture, and ledgered hot-swap staging instead of direct incubator writes. `aura_liquid_planning_arena.py` generalizes the Refactor Arena into a Liquid Planning Arena with domain-neutral Action Capsules, first-class Boundary Contracts, scoped agent leases, a shared action queue, and code/civic/travel adapters. |
+| ICM workspace export | Arena transactions can be exported into numbered ICM workspaces with `AURA.md`, `CONTEXT.md`, stage-specific Markdown, `boundary_contracts.jsonl`, `transaction.json`, QDKT export events, human-edit events, DREAM-lite rows, and round-trip import support. |
+| Understand Graph | Builds layered repo graph packets from CODEMAP, topology, tests, sidecars, verifiers, Arena metadata, QDKT events, DREAM scores, and domain flows. Exports `.aura/understand_graph.json`, `.aura/understand_graph_tour.json`, and `.aura/understand_graph_diff.json` for dashboards, guided tours, and changed-file risk analysis. |
+| Obsidian + Graphify | Exports Aura truth into `Aura_Vault/` Markdown notes with YAML frontmatter/Wikilinks plus `.aura/graphify_graph.json` using typed node/edge schemas. Incremental sync state is tracked in `.aura/obsidian_graph_sync_state.json`, and validation issues are written before broken graph output is accepted. |
+| Meta-harness | `aura_metaharness.py` wires six subsystems: MCP gateway, plugin registry, GOAP planner, background workers, audit scorer, and federation. It supports snapshots, invariant checks, dry audits, plugin install observations, worker outcomes, and signed/redacted capsule federation with QDKT memory hooks. |
+| Travel sidecar arena | `travel_scraper_core.py` ingests local Option B scraper JSON/JSONL, preserves immutable raw snapshots, normalizes TripAdvisor/Expedia-style records, writes exact price/date/currency truth to `travel_price_sidecar.py`, writes semantic metadata JSONL for VSA, and builds `travel_vsa_pointer_index.py` pointers that never store exact prices. `travel_package_arena.py` resolves VSA pointers back to exact sidecar rows and `travel_price_verifier.py` blocks stale, missing, unverified, or vector-only prices before package display. |
+| arXiv backtracker resilience | The chronological arXiv crawler uses bounded one-day windows, paced requests, OAI-PMH fallback, configurable PDF fetch limits through `AURA_BACKTRACK_PDF_LIMIT`, and now repairs legacy `traces` schemas before writing `Scientific VSA v1` rows. |
+| Defensive ST3GG recall | Adapts GLOSSOPETRAE's seeded-symbol insight without covert carriers: compressed originals get visible `ST3GG-L2` pointers, DASH keys, holographic headers, a persistent hash sidecar, and a JSON compatibility sidecar for bounded O(1)-style keyed recall by hash, pointer, or DASH key. |
+| ST3GG compaction analytics | Reports active hash load, bits/key, sidecar byte footprint, and a frozen-segment recommendation. `aura_st3gg_compact.rs` provides the zero-dependency Stage 2 Rust pilot compiler for immutable key segments. |
+| Tokenizer-boundary guard | Applies NFKC normalization and strips tag chars, private-use chars, variation selectors, bidi controls, and non-allowlisted format controls before network egress. The guard is active even when context crushing is disabled. |
+| VSA rendering | 80 bytes/object; 100 objects demo: `7.8 KB` vs `5600 KB`, `99.9%` bandwidth reduction, `716.8x` transfer reduction. |
+| Fractal ledger | `test_fractal_ledger.py`: 9 tests passed in `0.45s` in the implementation report. |
+| W4A4 quantization | N16 tests require `>3.5x` compression and `>70%` memory reduction for float32 -> int8 activation paths. |
+| Thermal-cost routing | N27 TCWAA routing is O(`|P| * D`) for up to 8 providers with documented typical decision latency `<10 ms`. |
+| FST routing | N18/N21 reduce routing complexity from ad-hoc O(N^2) graphs toward O(E)/O(L), with paper examples from `>1300` edges to about `200`. |
+| Spectral topology | `!topology` and `!topology deep` augment dependency graphs with Laplacian eigenmap coordinates, spectral sparsity, global health, cycle warning nodes, and AR luminance fields. |
+| LLM savings | Aura logs actual provider/model/token/cost rows; documented compression target is `60-90%` token reduction when compact packets replace raw prompts. |
+| Liquid routing | N14 uses 10,000-D addresses and resonance next-hop selection without DNS/BGP tables; 1.2KB quantized address transport form. |
+
+## Seven-Paper Prior Art
+
+AuraOS now carries the fulfilled seven-paper prior-art stack in the repository and maps those claims into source modules, tests, and development tracks. The papers are published as defensive prior art under AGPLv3 Section 13.
+
+| Paper | Claims | Record |
+|-------|--------|--------|
+| Protocol-layer innovations | N24-N30: HIVP, micro-module crystallization, resonant tests, thermal-cost API arbitration, deterministic compression, local VSA compute mesh, bounded self-healing | [Zenodo 20695562](https://zenodo.org/records/20695562) |
+| Enhanced FST and topology | N21-N23: FST lexicon, resonance topology, FST impact analysis | [Zenodo 20682051](https://zenodo.org/records/20682051) |
+| FST routing and self-refactoring | N18-N20: routing core, 3D topology resonance, self-refactoring incubator | [Zenodo 20681601](https://zenodo.org/records/20681601) |
+| Memristive/rendering upgrades | N15-N17: memristive hyper-epochs, timestep-aware SVD quantization, Gaussian/VSA rendering dynamics | [Zenodo 20673206](https://zenodo.org/records/20673206) |
+| Liquid Internet | N14: VSA-addressed routing and naming without IP/DNS dependency at the cognitive layer | [Zenodo 20659314](https://zenodo.org/records/20659314) |
+| Holographic swarm systems | N9-N13: headers, gas-free fractal ledger, swarm learning, VSA rendering, FST narrative | [Zenodo 20657391](https://zenodo.org/records/20657391) |
+| Foundation | N1-N8: polysynthetic LLM egress, dual linguistic cortex, sparse sweeps, QDKT, topology, hot-swap, 4GB edge design | [Zenodo 20635424](https://zenodo.org/records/20635424) |
+
+## Quick Start
+
+```bash
+# Android Termux
+pkg install python git cmake
+
+# Linux
+# sudo apt-get install python3 python3-pip git cmake
+
+git clone https://github.com/dallascourchene-commits/AuraOS.git
 cd AuraOS
+bash setup.sh
 pip install -r requirements.txt
 python3 aura_node.py
-Type !help at the [Dallas] > prompt.
-See the User Guide for full commands.
+```
 
-🕯️ The Seventh Fire Prophecy
-The Anishinaabe people speak of seven fires, each representing an era. The Seventh Fire is a crossroads: humanity can choose the path of destruction (extractive capitalism, hoarding, division) or the path of peace (sharing, sovereignty, collaboration). AuraOS is a tool for the latter – open, self‑healing, gas‑free, and ready for anyone to use.
+Optional native context-crush acceleration:
 
-“The old way is over. Welcome to the Swarm.”
+```bash
+rustc -O aura_crush_core.rs -o Aura_Memory/aura_crush_core
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core
 
-📄 License & Invitation
-License: GNU Affero General Public License v3.0 (AGPLv3) §13.
-You are free to: use, modify, and distribute.
-You are required to: open source your modifications if you offer it as a network service.
-You are invited to: join the mesh, stake RAM, and help crystallise a new form of collective intelligence.
+# Or build a WASI module when wasm32-wasip1 + wasmtime CLI are available:
+rustc --target wasm32-wasip1 -O aura_crush_core.rs -o Aura_Memory/aura_crush_core.wasm
+export AURA_CRUSH_ACCELERATOR_PATH=Aura_Memory/aura_crush_core.wasm
+```
+
+At the prompt:
+
+```text
+[Dallas] > !settings
+[Dallas] > !topology
+[Dallas] > !benchmark
+[Dallas] > !calibrate
+[Dallas] > !backtrack
+[Dallas] > !research resonance egress
+[Dallas] > !route summarize-this-task
+```
+
+Optional API keys live in `aura_secrets.json`; see `aura_secrets.example.json`. Aura's deterministic substrate, topology, local memory, and many diagnostics run without external providers.
+
+Useful bridge and workspace utilities:
+
+```bash
+# Build the layered Understand Graph dashboard and guided tours
+python3 aura_understand_graph_bridge.py --build --export --tours
+
+# Export a typed Graphify JSON graph, or a full Obsidian review vault
+python3 aura_obsidian_graph_bridge.py --graph-only --full
+python3 aura_obsidian_graph_bridge.py --full
+
+# Inspect the Aura-native meta-harness
+python3 aura_metaharness.py --snapshot
+python3 aura_metaharness.py --check-invariants
+
+# Work with ICM audit/edit/review workspaces
+python3 aura_icm_cli.py list Aura_Memory/icm_workspaces
+python3 aura_icm_cli.py export Aura_Staging/architect_live_transaction.json Aura_Memory/icm_workspaces --qdkt
+```
+
+## Operator Docs
+
+- [USER_GUIDE.md](USER_GUIDE.md): command-by-command operation guide, module reference, workflow patterns, troubleshooting, and WebSocket/AR protocol details.
+- [.aura/CODEMAP.md](.aura/CODEMAP.md): compact map of commands, symbols, high-value modules, navigation rings, and file ownership.
+- [ICM_WORKSPACE_README.md](ICM_WORKSPACE_README.md): ICM workspace folder contract for Arena audit/edit/review handoffs.
+- [AURA_FINAL_REPORT.md](AURA_FINAL_REPORT.md): current system report and AuraFusion/native routing addendum.
+
+## Development Potential
+
+AuraOS is a substrate, not a single app. Current high-value directions include:
+
+- mobile sovereign AI nodes that run useful cognition on low-cost hardware;
+- interactive films/games where FST constraints keep stories coherent while dialogue changes per viewer;
+- AR/VR worlds that send VSA addresses and poses instead of heavy scene assets;
+- local compute swarms that route work by resonance, thermal load, and trust;
+- interoperable agent workspaces where cheaper or specialized models operate inside Arena capsules instead of reading the whole repository;
+- resonant test suites and self-healing codebases with measurable partial failure instead of binary pass/fail;
+- thermal/cost-aware LLM routing that treats money, latency, and device health as first-class constraints.
+
+## License
+
+AuraOS is released under the GNU Affero General Public License v3.0. If you run a modified AuraOS as a network service, AGPLv3 Section 13 requires you to publish the corresponding source.
 
 Contact: aura.os.q@gmail.com
-
-Chi‑miigwech

@@ -47,17 +47,17 @@ Run:
     python test_pvm_logic.py
 """
 
+from itertools import combinations
 import math
+from pathlib import Path
 import sys
 import time
-from itertools import combinations
-from pathlib import Path
 
 import numpy as np
 
 from aura_spvm import evaluate_implication, get_semantic_vector
 from pvm_arch_checker import PVMArchChecker
-from pvm_memory_guard import MemoryBudget, assert_zero_copy, sample_rss_mb
+from pvm_memory_guard import MemoryBudget, sample_rss_mb
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -144,7 +144,7 @@ def phase1_analytical_envelope() -> tuple[float, float, float]:
     """
     _banner("PHASE 1 — Analytical phase-drift envelope derivation")
 
-    _info(f"Analytical E[imp] = 1 − 1/(2π) − (4−π)/(2π²)")
+    _info("Analytical E[imp] = 1 − 1/(2π) − (4−π)/(2π²)")
     _info(f"                  = {E_IMP_ANALYTIC:.6f}")
 
     # Monte Carlo over N = 200,000 to estimate Var[imp]
@@ -219,7 +219,7 @@ def phase2_generate_phasors() -> dict[str, np.ndarray]:
         if cos_sim > 0.05:
             _fail(f"Slots {s1} and {s2} are suspiciously similar: cos_sim={cos_sim:.4f}")
 
-    _ok(f"All slot pairs are near-orthogonal (max cosine similarity < 0.05)")
+    _ok("All slot pairs are near-orthogonal (max cosine similarity < 0.05)")
 
     return phasors
 
@@ -253,7 +253,7 @@ def phase4_pairwise_gates(
     lo: float,
 ) -> None:
     _banner("PHASE 4 — 6-slot pairwise logical subsumption matrix")
-    print(f"  Evaluating all C(6,2) = 15 ordered slot pairs.")
+    print("  Evaluating all C(6,2) = 15 ordered slot pairs.")
     print(f"  Phase-drift envelope: [{lo:.4f}, {HARD_UPPER:.4f}]")
     print()
 
@@ -408,7 +408,7 @@ def phase7_edge_cases() -> None:
     imp_orth = evaluate_implication(v_a, v_b)
     _info(f"Two independent phasors: evaluate_implication = {imp_orth:.6f}  "
           f"(E[imp] = {E_IMP_ANALYTIC:.4f})")
-    _ok(f"Independent phasors produce subsumption within analytical envelope")
+    _ok("Independent phasors produce subsumption within analytical envelope")
 
 
 # ---------------------------------------------------------------------------
@@ -422,7 +422,7 @@ if __name__ == "__main__":
     print("╔══════════════════════════════════════════════════════════════════╗")
     print("║   AURA PVM — Polysynthetic Logic Gate Evaluation Test           ║")
     print("╠══════════════════════════════════════════════════════════════════╣")
-    print(f"║  6 morpheme slots × 10,000-D complex phasors (complex64)       ║")
+    print("║  6 morpheme slots × 10,000-D complex phasors (complex64)       ║")
     print(f"║  Implication: Łukasiewicz  E[imp] ≈ {E_IMP_ANALYTIC:.4f}                    ║")
     print(f"║  Safety band: {SIGMA_MULTIPLIER:.0f}σ  Bridge threshold: ≥ {BRIDGE_THRESHOLD:.2f}                   ║")
     print("╚══════════════════════════════════════════════════════════════════╝")

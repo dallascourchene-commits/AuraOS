@@ -1,16 +1,20 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8f5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: typing, numpy
+DEPENDENCIES: numpy, typing
 FUNCTIONS: ternary_activation, __init__, __init__, __call__, ternary_quantize, __init__, _f_network, dynamic_time_constant, step, evaluate_energy_ceiling, __init__, forward, reset, __init__, __call__, __init__, step, reset, __init__, __call__, __init__, maxwell_correction, __init__, ternary_quantize_array, quantize_state, __init__, encode_input, update, __init__, process_command
-SYNOPSIS: The `AuraOS.TernaryNeuralCore` module, dependent on `typing` and `numpy`, implements a ternary neural network framework with functions for activation (`ternary_activation`), initialization (`__init__`), quantization (`ternary_quantize`, `ternary_quantize_array`), state management (`quantize_state`, `reset`), dynamic adaptation (`dynamic_time_constant`, `maxwell_correction`), forward propagation (`forward`, `_f_network`), energy evaluation (`evaluate_energy_ceiling`), command processing (`process_command`, `encode_input`), and step-wise execution (`step`, `__call__`), while enforcing strict type hints and numerical precision via NumPy.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 
+from typing import Any
+
 import numpy as np
-from typing import Dict, Any
 
 dataclass_stub_replacement = True
 class LiquidConfig:
@@ -43,11 +47,11 @@ def ternary_activation(x: np.ndarray, threshold: float = 0.0, toggle_prob: float
     """Zero-allocation real-valued ternary activation."""
     if rng is None:
         rng = np.random.default_rng(seed=101)
-        
+
     abs_x = np.abs(x)
     # 100% Vectorized single-pass sign mapping replaces legacy loops
     ternary = np.where(abs_x >= threshold, np.sign(x) * 1.58, 0.0).astype(np.float32)
-    
+
     if toggle_prob > 0.0:
         mask = rng.random(x.shape) < toggle_prob
         return np.where(mask, ternary, x)
@@ -336,7 +340,7 @@ class TernaryQuantizer:
     def ternary_quantize_array(self, arr: np.ndarray) -> np.ndarray:
         return ternary_activation(arr, self.config.ternary_threshold, self.config.stochastic_toggle_prob, self.rng)
 
-    def quantize_state(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    def quantize_state(self, state: dict[str, Any]) -> dict[str, Any]:
         quantized = {}
         for k, v in state.items():
             if isinstance(v, (int, float)):
@@ -348,10 +352,10 @@ class TernaryQuantizer:
 class LiquidState:
     def __init__(self, config: LiquidConfig):
         self.config = config
-        
+
         # Initialize single thread-safe random state generator shared across sub-modules
         self._rng = np.random.default_rng(seed=101)
-        
+
         self.ltc_solver = AdaptiveLiquidTimeConstant(config)
         self.lsm = LiquidStateMachine(input_dim=3, hidden_dim=64, output_dim=3, config=config, rng=self._rng)
         self.physics_correction = PhysicsInformedCorrection(config)
@@ -365,7 +369,7 @@ class LiquidState:
         except ValueError:
             return float(hash(str(val)) % 100) / 100.0
 
-    def update(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def update(self, input_data: dict[str, Any]) -> dict[str, Any]:
         encoded_values = [self.encode_input(v) for v in input_data.values()]
         np_state = np.array(encoded_values, dtype=np.float32)
 
@@ -387,7 +391,7 @@ class LiquidWebSocket:
         self.liquid_state = LiquidState(self.config)
         self.quantizer = TernaryQuantizer(self.config, rng=self.liquid_state._rng)
 
-    async def process_command(self, command: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_command(self, command: dict[str, Any]) -> dict[str, Any]:
         liquid_state = self.liquid_state.update(command)
         quantized_state = self.quantizer.quantize_state(liquid_state)
 

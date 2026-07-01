@@ -2,23 +2,24 @@ from __future__ import annotations
 
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa885-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: typing, collections, resource, os, gc, sys, numpy, __future__, ctypes, time, threading
-FUNCTIONS: sample_rss_mb, heap_snapshot, assert_zero_copy, zero_copy_zeros, zero_copy_frombuffer, __init__, __init__, __enter__, __exit__, _monitor_loop, _raise_in_main_thread, current_mb, headroom_mb, __repr__
-SYNOPSIS: This Python module provides memory management utilities, including RSS sampling, heap snapshotting, zero-copy operations, and resource monitoring, with strict thread-safety and deterministic cleanup mechanisms enforced via `typing`, `collections`, `resource`, `os`, `gc`, `sys`, `numpy`, `__future__`, `ctypes`, `time`, and `threading` dependencies.
+DEPENDENCIES: __future__, sys, asyncio, numpy, gc, os, time, collections, resource
+FUNCTIONS: sample_rss_mb, heap_snapshot, assert_zero_copy, zero_copy_zeros, zero_copy_frombuffer, __init__, __init__, __enter__, __exit__, _monitor_loop_async, _monitor_loop_sync, _raise_in_main_thread, current_mb, headroom_mb, __repr__
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 
-import ctypes
+from collections import defaultdict
 import gc
 import os
 import resource
 import sys
 import time
-from collections import defaultdict
-from typing import Iterator
 
 import numpy as np
 
@@ -60,7 +61,7 @@ _ALLOWED_DTYPES: frozenset[np.dtype] = frozenset({
 def sample_rss_mb() -> float:
     """Return current process RSS in megabytes (Linux/macOS/Termux)."""
     try:
-        with open(f"/proc/{os.getpid()}/status", "r", encoding="ascii") as f:
+        with open(f"/proc/{os.getpid()}/status", encoding="ascii") as f:
             for line in f:
                 if line.startswith("VmRSS:"):
                     kb = int(line.split()[1])
@@ -197,7 +198,7 @@ class MemoryBudget:
     # Context-manager protocol
     # ------------------------------------------------------------------
 
-    def __enter__(self) -> "MemoryBudget":
+    def __enter__(self) -> MemoryBudget:
         self._stop_event.clear()
         # Pure-asyncio: launch monitor as a background task
         try:

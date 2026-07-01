@@ -43,7 +43,7 @@ ignore = [
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
 known-first-party = [
-    "aura_core", "aura_node", "aura_mesh", "aura_evolve", "aura_patcher",
+    "aura_architect_loop", "aura_core", "aura_node", "aura_mesh", "aura_evolve", "aura_patcher",
     "aura_mitosis", "aura_heal", "aura_dream_engine", "aura_governor",
     "aura_cognitive_synthesizer", "aura_nesy_sat_reasoner", "aura_meta_ingest",
     "aura_crypto_puf", "aura_crystallization", "aura_spectral_memory",
@@ -55,7 +55,8 @@ known-first-party = [
     "arxiv_forager", "async_palace", "cognitive_router", "dag_executor",
     "gateway", "liquid_fhrr", "liquid_kernel", "logging_kit", "mint_genesis",
     "pulse", "pwfst", "quantum_dag", "spatial_mapper", "vsa_resonator",
-    "lexical_transducer",
+    "lexical_transducer", "aura_wasm_bridge", "aura_st3gg_recall",
+    "aura_tokenizer_guard", "aura_live_architect",
 ]
 
 [tool.ruff.format]
@@ -76,7 +77,6 @@ ignore_missing_imports = true
 no_implicit_reexport = true
 show_error_codes = true
 exclude = [
-    "aura_incubator\\.py",   # corrupted file — not valid Python
     "AuraSovereign/",
     "storage/",
     "language_packs/",

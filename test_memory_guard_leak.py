@@ -122,7 +122,7 @@ def phase1_warn_only() -> None:
     print(f"  Stderr warning fired : {'YES ✓' if warned else 'NO ✗'}")
     if warned:
         print(f"  Warning message      : {warning_text.strip()}")
-    print(f"  Process still alive  : YES ✓  (no exception raised)")
+    print("  Process still alive  : YES ✓  (no exception raised)")
     print(f"  Elapsed              : {elapsed * 1000:.0f} ms")
     result = "PASS" if warned else "FAIL"
     print(f"\n  Phase 1 result: {result}")
@@ -181,7 +181,7 @@ def phase2_exception_injection() -> None:
         overshoot = breach_rss - budget
         print()
         print(_DIVIDER)
-        print(f"  MemoryBudgetExceeded caught ✓")
+        print("  MemoryBudgetExceeded caught ✓")
         print(f"  RSS when monitor fired     : {breach_rss:.1f} MB  (from _breach_rss_mb)")
         print(f"  RSS at Python catch point  : {intercepted_rss:.1f} MB")
         print(f"  Budget ceiling             : {budget:.1f} MB")

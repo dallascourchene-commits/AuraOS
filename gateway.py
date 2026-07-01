@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIWAABAMIN (Transparency & Privacy)
-DEPENDENCIES: sqlite3, asyncio, os, numpy, struct, hashlib, wasmtime, time, json
+DEPENDENCIES: json, asyncio, numpy, wasmtime, sqlite3, os, time, hashlib, struct
 FUNCTIONS: __init__, project_to_e8_holographic_lattice, route_to_quantum, route_to_binary, quantum_tunneling_concept_bridge, decode_st3gg_glyph, generate_st3gg_glyph, _generate_dash_kv_hash, _extract_dikwp_heuristics, log_dkt_commit, quantum_cognitive_interference, quantum_kernel_similarity, qnrl_dynamic_risk_policy, quantum_attention_filter, bisha_quarantine_check, qira_predictive_telemetry, semantic_plasticity_bridge, align_vsa_attention, __init__, _evaluate_moral_valence, compile_thought_package, __init__, execute_isolated_module, run_wasm_thread
-SYNOPSIS: The module integrates SQLite3 for persistent state, asyncio for concurrent quantum-classical I/O, OS for filesystem operations, NumPy for lattice computations, struct/hashlib for binary/hashed data processing, Wasmtime for WebAssembly execution, time for temporal synchronization, and JSON for structured interoperability, exposing a high-risk API of 20+ functions—including holographic lattice projection (`project_to_e8_holographic_lattice`), quantum routing (`route_to_quantum`, `route_to_binary`), ST3GG glyph encoding/decryption, dynamic risk policy enforcement (`qnrl_dynamic_risk_policy`), WASM sandboxed execution (`execute_isolated_module`), and quantum cognitive interference modeling—while enforcing strict moral valence evaluation (`_evaluate_moral_valence`) and quarantine checks (`bisha_quarantine_check`) under a layered quantum-classical security model.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 # [AURA OPTIMIZED] - Bloat removed.
@@ -39,7 +42,7 @@ class CognitiveGateway:
 
     def project_to_e8_holographic_lattice(self, vector_10k: np.ndarray) -> np.ndarray:
         """
-        [MAYA E8 ENGINE] Quantizes a 10,000-D continuous vector directly onto the 
+        [MAYA E8 ENGINE] Quantizes a 10,000-D continuous vector directly onto the
         248-dimensional E8 Lie Algebra root coordinate system to prevent phase drift.
         """
         if vector_10k.shape != (10000,):
@@ -47,7 +50,7 @@ class CognitiveGateway:
 
         e8_dimensionality = 248
         projection_matrix = np.zeros((e8_dimensionality, 10000), dtype=np.float32)
-        
+
         # Generate the orthogonal E8 root projection basis deterministically
         rng = np.random.default_rng(seed=0xE8C19)
         for i in range(e8_dimensionality):
@@ -55,16 +58,16 @@ class CognitiveGateway:
 
         # Map 10,000-D vector into E8 root space
         e8_coordinates = np.dot(projection_matrix, vector_10k)
-        
+
         # Apply Golden Ratio (phi) thresholding for structural coherence
         phi = (1.0 + np.sqrt(5.0)) / 2.0
         e8_threshold = float(np.median(np.abs(e8_coordinates)) * phi)
-        
+
         quantized_coordinates = np.where(np.abs(e8_coordinates) < e8_threshold, 0.0, np.sign(e8_coordinates))
-        
+
         # Project back to 10,000-D space with zero phase noise
         reconstructed_vector = np.dot(projection_matrix.T, quantized_coordinates)
-        
+
         magnitude = np.abs(reconstructed_vector)
         magnitude[magnitude == 0] = 1.0
         return (reconstructed_vector / magnitude).astype(np.complex64)
@@ -129,7 +132,7 @@ class CognitiveGateway:
         DASH-KV Asymmetric Hashing.
         Creates an ultra-fast, 8-byte collision-resistant hash for O(1) memory retrieval.
         """
-        raw_data = f"{thought_id}:{user_input}".encode('utf-8')
+        raw_data = f"{thought_id}:{user_input}".encode()
         return hashlib.sha256(raw_data).digest()[:8]
     def _extract_dikwp_heuristics(self, user_input: str, st3gg_glyph: int, execution_ms: float) -> tuple:
         """
@@ -348,21 +351,21 @@ class CognitiveGateway:
 
         # Normalize inputs to protect unit sphere boundaries
         q_unit = query_vector / (np.linalg.norm(query_vector) + 1e-10)
-        
+
         # 1. Parallel Cosine Similarity (Query dot Keys)
         # key_matrix has shape (K, 10000). Dot product results in shape (K,)
         scores = np.dot(key_matrix, q_unit) / 10000.0
-        
+
         # 2. Vectorized Softmax Attention Weights with max-subtraction to prevent overflow
         scores_max = np.max(scores)
         attention_weights = np.exp((scores - scores_max) * 5.0)  # Scale by beta=5.0 for contrast
         total_weight = np.sum(attention_weights)
         attention_weights = attention_weights / (total_weight if total_weight != 0 else 1.0)
-        
+
         # 3. Value Matrix Contraction (Output = sum(weight_i * value_i))
         # value_matrix has shape (K, 10000). We multiply each row by its weight and sum.
         aligned_vector = np.dot(attention_weights, value_matrix)
-        
+
         # Renormalize to ensure the aligned vector sits on the unit circle
         norm = np.linalg.norm(aligned_vector)
         return (aligned_vector / (norm if norm != 0 else 1.0)).astype(np.float32)
@@ -419,9 +422,9 @@ class DynamicContextCompiler:
         # 1. Protocol B: Hardware Thermal Anchoring (ST3GG Base)
         temp = 42.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
 
         # === AURA v3: BAYESIAN THERMODYNAMIC ATTENUATOR & SR GATE ===
@@ -525,9 +528,9 @@ class AuraWasmHypervisor:
         # 1. Fetch Physical Thermal Anchor
         temp = 42.0
         try:
-            with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+            with open('/sys/class/thermal/thermal_zone0/temp') as f:
                 temp = float(f.read().strip()) / 1000.0
-        except (IOError, FileNotFoundError):
+        except (OSError, FileNotFoundError):
             pass
         # 2. Extract ST3GG Steganographic Routing Glyphs
         st3gg_glyph = 0
@@ -581,7 +584,7 @@ class AuraWasmHypervisor:
             vram_root = self.node.runtime_metrics.get('last_vram_hash', '')
             if vram_root:
                 latest_pointer = f"[ST3GG-L2::Q-SYS:{vram_root[:8]}]"
-        
+
         # Inject the active steganographic pointer directly into the Wasm environmental parameters
         if isinstance(result, dict):
             result["st3gg_pointer_received"] = True if latest_pointer != "ZERO_WIDTH_NULL" else False

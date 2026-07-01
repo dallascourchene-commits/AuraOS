@@ -1,24 +1,23 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8d1-[Q-SYS:DYNAMIC_ATTENTION_CORE]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: asyncio, numpy, aura_core, aura_validation
-FUNCTIONS: DynamicConvolutionKernel, TransparencyAdaptiveProcessor,
-           DynamicConvolutionAttention, optimized_hybrid_processor
-SYNOPSIS: Dynamic convolution attention with transparency adaptive processing.
-          Integrates with AuraOS's 10,000-D VSA for neuro-symbolic attention.
-          Fixes DEEP_AUDIT_REPORT issues: deprecated asyncio.get_event_loop(),
-          placeholder convolution, no AuraOS VSA integration, no error handling.
+DEPENDENCIES: __future__, asyncio, numpy, aura_core, logging, typing, time, aura_validation, dataclasses
+FUNCTIONS: optimized_hybrid_processor, __init__, adapt_kernel, apply_convolution, __init__, retrieve_hint, process_with_warning, reset, __init__, apply_dynamic_conv, _process_head, _aggregate_heads
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 from __future__ import annotations
 
 import asyncio
+from dataclasses import dataclass
 import logging
 import time
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -47,7 +46,7 @@ class AttentionConfig:
 class AttentionResult:
     """Result container for attention processing."""
     processed_data: np.ndarray
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     confidence: float
     hint_requests: int
     processing_time_ms: float
@@ -122,7 +121,7 @@ class DynamicConvolutionKernel:
     def apply_convolution(
         self,
         x: np.ndarray,
-        adapted_kernels: Optional[np.ndarray] = None,
+        adapted_kernels: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Apply dynamic 1-D convolution along the sequence dimension.
@@ -178,7 +177,7 @@ class TransparencyAdaptiveProcessor:
         self.max_hint_requests = max_hint_requests
         self.hint_requests: int = 0
         self.hdc_core = AuraHyperdimensionalCore()
-        self._hint_cache: Dict[str, str] = {}
+        self._hint_cache: dict[str, str] = {}
 
         logger.debug(
             "TransparencyAdaptiveProcessor: threshold=%.2f  max_hints=%d",
@@ -186,7 +185,7 @@ class TransparencyAdaptiveProcessor:
             max_hint_requests,
         )
 
-    async def retrieve_hint(self, query: str) -> Optional[str]:
+    async def retrieve_hint(self, query: str) -> str | None:
         """
         Retrieve a contextual hint.
 
@@ -219,9 +218,9 @@ class TransparencyAdaptiveProcessor:
 
     async def process_with_warning(
         self,
-        data: Dict[str, Any],
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, Any], float, float]:
+        data: dict[str, Any],
+        context: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, Any], float, float]:
         """
         Process data with dynamic hint-seeking based on confidence warnings.
 
@@ -291,7 +290,7 @@ class DynamicConvolutionAttention:
             confidence_threshold=confidence_threshold
         )
         # Per-head kernels (each gets its own orthogonal basis)
-        self.head_kernels: List[DynamicConvolutionKernel] = [
+        self.head_kernels: list[DynamicConvolutionKernel] = [
             DynamicConvolutionKernel(embed_dim, kernel_size)
             for _ in range(num_heads)
         ]
@@ -306,8 +305,8 @@ class DynamicConvolutionAttention:
     async def apply_dynamic_conv(
         self,
         x: np.ndarray,
-        metadata: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[np.ndarray, float]:
+        metadata: dict[str, Any] | None = None,
+    ) -> tuple[np.ndarray, float]:
         """
         Non-blocking dynamic convolution for input-dependent filtering.
 
@@ -333,7 +332,7 @@ class DynamicConvolutionAttention:
             processed_data, agg_meta = self._aggregate_heads(head_results)
 
             # Transparency gate
-            processed_meta, confidence, resonance = (
+            _processed_meta, confidence, resonance = (
                 await self.transparency_processor.process_with_warning(
                     metadata or {}, context=agg_meta
                 )
@@ -357,8 +356,8 @@ class DynamicConvolutionAttention:
         self,
         x: np.ndarray,
         head_idx: int,
-        metadata: Optional[Dict[str, Any]],
-    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        metadata: dict[str, Any] | None,
+    ) -> tuple[np.ndarray, dict[str, Any]]:
         """Process a single attention head."""
         kernel = self.head_kernels[head_idx]
         adapted = kernel.adapt_kernel(x)
@@ -373,8 +372,8 @@ class DynamicConvolutionAttention:
 
     def _aggregate_heads(
         self,
-        head_results: List[Tuple[np.ndarray, Dict[str, Any]]],
-    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        head_results: list[tuple[np.ndarray, dict[str, Any]]],
+    ) -> tuple[np.ndarray, dict[str, Any]]:
         """Average across all head outputs (simple mean pooling)."""
         outputs = np.stack([r[0] for r in head_results], axis=0)
         aggregated = np.mean(outputs, axis=0)
@@ -392,9 +391,9 @@ class DynamicConvolutionAttention:
 
 async def optimized_hybrid_processor(
     input_data: np.ndarray,
-    metadata: Optional[Dict[str, Any]] = None,
-    attention: Optional[DynamicConvolutionAttention] = None,
-    processor: Optional[TransparencyAdaptiveProcessor] = None,
+    metadata: dict[str, Any] | None = None,
+    attention: DynamicConvolutionAttention | None = None,
+    processor: TransparencyAdaptiveProcessor | None = None,
 ) -> AttentionResult:
     """
     Non-blocking hybrid processor combining dynamic convolutions and

@@ -1,30 +1,29 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8f1-[Q-SYS:FEDERATED_HDC_CORE]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: asyncio, numpy, concurrent.futures, aura_core, async_palace, aura_validation
-FUNCTIONS: ResourceEfficientFederatedHDC, HDCSubModel, FederatedHDCResult
-SYNOPSIS: Resource-efficient federated HDC processor with pure asyncio.
-          Integrates with AuraHyperdimensionalCore for 10,000-D VSA operations.
-          Addresses DEEP_AUDIT_REPORT issues: ProcessPoolExecutor (not Thread),
-          proper error handling, logging, and AsyncMemoryPalace persistence.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: __future__, asyncio, numpy, aura_core, logging, aiosqlite, typing, pathlib, time, aura_validation, dataclasses, concurrent.futures
+FUNCTIONS: _refine_submodel_worker, __post_init__, __init__, initialize, shutdown, _refine_submodel, _process_batch, _aggregate_hdc_results, _store_trace, async_pipeline, start_background_task, _worker
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 from __future__ import annotations
 
 import asyncio
+from concurrent.futures import ProcessPoolExecutor
+from dataclasses import dataclass
 import logging
 import time
-from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
 # ── AuraOS native imports ────────────────────────────────────────────────────
 from aura_core import AuraHyperdimensionalCore
-from async_palace import AsyncMemoryPalace
 from aura_validation import calculate_rubric_score
 
 logger = logging.getLogger("aura.federated_hdc")
@@ -69,7 +68,7 @@ class FederatedHDCResult:
 
     final_weights: np.ndarray
     total_processed: int
-    submodel_results: List[Dict[str, Any]]
+    submodel_results: list[dict[str, Any]]
     resonance_score: float
     processing_time_ms: float
 
@@ -84,7 +83,7 @@ def _refine_submodel_worker(
     dropout_rate: float,
     dimensionality: int,
     batch_len: int,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     CPU-bound submodel refinement.  Runs in a ProcessPoolExecutor worker to
     avoid GIL contention.  Module-level so it is picklable.
@@ -158,10 +157,10 @@ class ResourceEfficientFederatedHDC:
         self._shutdown_event = asyncio.Event()
 
         # Process pool for CPU-bound work (not ThreadPoolExecutor)
-        self._process_executor: Optional[ProcessPoolExecutor] = None
+        self._process_executor: ProcessPoolExecutor | None = None
 
         # Submodels populated in initialize()
-        self.submodels: List[HDCSubModel] = []
+        self.submodels: list[HDCSubModel] = []
 
         # Metrics
         self.total_processed: int = 0
@@ -224,8 +223,8 @@ class ResourceEfficientFederatedHDC:
     async def _refine_submodel(
         self,
         submodel: HDCSubModel,
-        batch: List[Dict[str, Any]],
-    ) -> Dict[str, Any]:
+        batch: list[dict[str, Any]],
+    ) -> dict[str, Any]:
         """Async wrapper — offloads CPU work to the process pool."""
         loop = asyncio.get_running_loop()
         try:
@@ -244,7 +243,7 @@ class ResourceEfficientFederatedHDC:
             return {"submodel_id": submodel.submodel_id, "error": str(exc), "processed_count": 0}
 
     async def _process_batch(
-        self, batch: List[Dict[str, Any]]
+        self, batch: list[dict[str, Any]]
     ) -> FederatedHDCResult:
         """Non-blocking batch processing with federated HDC refinement."""
         t0 = time.perf_counter()
@@ -252,7 +251,7 @@ class ResourceEfficientFederatedHDC:
         tasks = [self._refine_submodel(sm, batch) for sm in self.submodels]
         raw_results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        valid: List[Dict[str, Any]] = []
+        valid: list[dict[str, Any]] = []
         for r in raw_results:
             if isinstance(r, Exception):
                 logger.error("Submodel exception: %s", r)
@@ -300,7 +299,7 @@ class ResourceEfficientFederatedHDC:
         )
 
     def _aggregate_hdc_results(
-        self, results: List[Dict[str, Any]]
+        self, results: list[dict[str, Any]]
     ) -> np.ndarray:
         """
         Aggregate submodel results using AuraOS HDC bundling + permutation.
@@ -320,10 +319,10 @@ class ResourceEfficientFederatedHDC:
 
     async def _store_trace(
         self,
-        batch: List[Dict[str, Any]],
+        batch: list[dict[str, Any]],
         aggregated: np.ndarray,
         resonance: float,
-        results: List[Dict[str, Any]],
+        results: list[dict[str, Any]],
     ) -> None:
         """Persist batch trace to memory palace (non-fatal on failure)."""
         try:
@@ -365,7 +364,7 @@ class ResourceEfficientFederatedHDC:
 
         Aligns with async_palace.py's async_pipeline pattern.
         """
-        batch: List[Dict[str, Any]] = []
+        batch: list[dict[str, Any]] = []
         while not self._shutdown_event.is_set():
             try:
                 item = await asyncio.wait_for(input_stream.get(), timeout=0.1)

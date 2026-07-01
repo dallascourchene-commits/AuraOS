@@ -1,24 +1,18 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:SANITIZER_NODE]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: ast, os, sys, re, pathlib, gc
-FUNCTIONS: sanitize_module, strip_redundant_imports, hoist_imports_to_top,
-           NamespaceSanitizer, sanitize_all_modules
-SYNOPSIS: AST-based namespace sanitization engine that inspects self-repaired
-          Python modules, strips out duplicate/redundant local-scope imports
-          (os, sys, time, shutil, etc.), and hoists all required namespaces
-          cleanly to the top-level module scope before serialization to disk.
-          Prevents the mutation pipeline from generating bloated, unparseable
-          imports during iterative code generation under Termux 4GB RAM.
+DEPENDENCIES: pathlib, gc, argparse, ast
+FUNCTIONS: _normalise_import_name, _is_stdlib_import, strip_redundant_imports, hoist_imports_to_top, sanitize_module, sanitize_all_modules, __init__, visit_FunctionDef, visit_AsyncFunctionDef, visit_ClassDef, visit_Import, visit_ImportFrom
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import ast
 import gc
-import os
-import re
-import sys
 from pathlib import Path
 
 # Standard-library modules that must NOT be duplicated or nested
@@ -44,7 +38,7 @@ def _normalise_import_name(alias: ast.alias) -> str:
 
 def _is_stdlib_import(target: str) -> bool:
     """Check if a top-level import target is a stdlib module (no false positives)."""
-    return target in _STDLIB_NAMES or target.split(".")[0] in _STDLIB_NAMES
+    return target in _STDLIB_NAMES or target.split(".", maxsplit=1)[0] in _STDLIB_NAMES
 
 
 class _ImportCollector(ast.NodeVisitor):

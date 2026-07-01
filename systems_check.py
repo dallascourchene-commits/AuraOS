@@ -12,12 +12,14 @@ from __future__ import annotations
 
 import argparse
 import ast
+from collections import Counter
+import json
+from math import log2
+import os
+from pathlib import Path
 import re
 import subprocess
 import sys
-from collections import Counter
-from math import log2
-from pathlib import Path
 
 try:
     from aura_topological_scanner import compile_unified_graph as _compile_unified_graph
@@ -31,6 +33,64 @@ except ImportError:
     _LIQUID_KERNEL_OK = False
 
 ROOT = Path(".").resolve()
+CODEMAP_PATH = Path(".aura/CODEMAP.json")
+CODEMAP_REFRESH_HINT = "python aura_codebase_navigator.py --refresh-topology"
+CODEMAP_TRACKED_SUFFIXES = frozenset({
+    "",
+    ".c",
+    ".cpp",
+    ".css",
+    ".html",
+    ".json",
+    ".go",
+    ".java",
+    ".js",
+    ".jsx",
+    ".lexc",
+    ".md",
+    ".py",
+    ".rs",
+    ".sh",
+    ".tex",
+    ".toml",
+    ".txt",
+    ".ts",
+    ".tsx",
+    ".yml",
+    ".yaml",
+})
+CODEMAP_SKIP_PARTS = frozenset({
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "node_modules",
+    "Aura_Memory",
+    ".venv",
+    "venv",
+    "env",
+    ".tox",
+    ".nox",
+    "site-packages",
+    "build",
+    "dist",
+    ".eggs",
+})
+
+
+def _configure_stdio() -> None:
+    """Keep Windows consoles from crashing on Aura's UTF-8 diagnostic glyphs."""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
+
+
+_configure_stdio()
 
 # Files the holographic auditor must never stamp (tests + boot tooling).
 STAMP_EXEMPT = frozenset({
@@ -166,7 +226,7 @@ def check_syntax(root: Path = ROOT) -> list[tuple[str, str]]:
     return errors
 
 
-def run_arch_checker(root: Path = ROOT) -> int:
+def _run_arch_checker_legacy(root: Path = ROOT) -> int:
     """Run pvm_arch_checker and return its exit code."""
     checker = root / "pvm_arch_checker.py"
     if not checker.exists():
@@ -184,6 +244,175 @@ def run_arch_checker(root: Path = ROOT) -> int:
     return result.returncode
 
 
+def _run_capture(
+    args: list[str],
+    *,
+    root: Path = ROOT,
+    env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        cwd=root,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=env,
+    )
+
+
+def _tracked_codemap_candidates(root: Path = ROOT) -> tuple[list[str], str]:
+    try:
+        result = _run_capture(["git", "ls-files"], root=root)
+    except OSError as exc:
+        return [], f"Unable to enumerate tracked files: {exc}"
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        return [], f"Unable to enumerate tracked files: {detail or 'git ls-files failed'}"
+    generated = {CODEMAP_PATH.as_posix(), ".aura/CODEMAP.md"}
+    candidates: list[str] = []
+    for raw in result.stdout.splitlines():
+        rel = raw.strip().replace("\\", "/")
+        if not rel or rel in generated:
+            continue
+        rel_path = Path(rel)
+        if not (root / rel_path).is_file():
+            continue
+        if rel_path.suffix.lower() not in CODEMAP_TRACKED_SUFFIXES:
+            continue
+        if any(part in CODEMAP_SKIP_PARTS or part.endswith(".egg-info") for part in rel_path.parts):
+            continue
+        candidates.append(rel)
+    return sorted(set(candidates)), ""
+
+
+def check_codemap_drift(root: Path = ROOT) -> dict[str, object]:
+    codemap_path = root / CODEMAP_PATH
+    if not codemap_path.exists():
+        return {
+            "ok": False,
+            "error": f"CODEMAP is missing at {CODEMAP_PATH.as_posix()}",
+            "missing_tracked": [],
+            "stale_entries": [],
+        }
+    try:
+        payload = json.loads(codemap_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {
+            "ok": False,
+            "error": f"CODEMAP is invalid JSON at line {exc.lineno} column {exc.colno}",
+            "missing_tracked": [],
+            "stale_entries": [],
+        }
+    files = payload.get("files", []) if isinstance(payload, dict) else []
+    codemap_files = {
+        str(card.get("path", "")).replace("\\", "/")
+        for card in files
+        if isinstance(card, dict) and card.get("path")
+    }
+    tracked, discovery_error = _tracked_codemap_candidates(root)
+    if discovery_error:
+        return {
+            "ok": False,
+            "error": discovery_error,
+            "missing_tracked": [],
+            "stale_entries": [],
+            "tracked_candidate_count": 0,
+            "codemap_file_count": len(codemap_files),
+        }
+    generated = {CODEMAP_PATH.as_posix(), ".aura/CODEMAP.md"}
+    missing = [path for path in tracked if path not in codemap_files and (root / path).exists()]
+    stale = [path for path in sorted(codemap_files) if path not in generated and not (root / path).exists()]
+    return {
+        "ok": not missing and not stale,
+        "error": "",
+        "missing_tracked": missing,
+        "stale_entries": stale,
+        "tracked_candidate_count": len(tracked),
+        "codemap_file_count": len(codemap_files),
+    }
+
+
+def run_codemap_drift_check(root: Path = ROOT, *, strict: bool = False) -> int:
+    drift = check_codemap_drift(root)
+    if drift.get("ok"):
+        print(
+            "[+] CODEMAP coverage check passed "
+            f"({drift.get('codemap_file_count', 0)} indexed file cards)"
+        )
+        return 0
+
+    print("\n[!] CODEMAP coverage drift detected.")
+    if drift.get("error"):
+        print(f"    {drift['error']}")
+    missing = list(drift.get("missing_tracked", []))
+    stale = list(drift.get("stale_entries", []))
+    if missing:
+        print(f"    Missing tracked files: {len(missing)}")
+        for path in missing[:12]:
+            print(f"      - {path}")
+        if len(missing) > 12:
+            print(f"      ... and {len(missing) - 12} more")
+    if stale:
+        print(f"    Stale CODEMAP entries: {len(stale)}")
+        for path in stale[:12]:
+            print(f"      - {path}")
+        if len(stale) > 12:
+            print(f"      ... and {len(stale) - 12} more")
+    print(f"    Refresh hint: {CODEMAP_REFRESH_HINT}")
+    return 1 if strict else 0
+
+
+def run_arch_checker(root: Path = ROOT, *, strict: bool = False) -> int:
+    """Run pvm_arch_checker and return its exit code."""
+    checker = root / "pvm_arch_checker.py"
+    if not checker.exists():
+        print("[!] pvm_arch_checker.py not found - skipping arch check.")
+        return 0
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+    cmd = [sys.executable, str(checker), "--path", str(root), "--json"]
+    if strict:
+        cmd.append("--strict")
+    result = _run_capture(cmd, root=root, env=env)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+    try:
+        violations = json.loads(result.stdout or "[]")
+    except json.JSONDecodeError:
+        print(result.stdout)
+        return result.returncode or 1
+    if not isinstance(violations, list):
+        print("[!] pvm_arch_checker returned malformed JSON.")
+        return result.returncode or 1
+    if not all(isinstance(item, dict) for item in violations):
+        print("[!] pvm_arch_checker returned malformed JSON entries.")
+        return result.returncode or 1
+
+    if not all(isinstance(item, dict) for item in violations):
+        print("[!] pvm_arch_checker returned malformed JSON entries.")
+        return result.returncode or 1
+
+    hard_rules = {"SYNTAX_ERROR", "WILDCARD_IMPORT", "CIRCULAR_IMPORT", "NAMESPACE_INJECTION"}
+    hard = [item for item in violations if item.get("rule") in hard_rules]
+    warnings = [item for item in violations if item.get("rule") not in hard_rules]
+    if violations:
+        by_rule = Counter(str(item.get("rule", "UNKNOWN")) for item in violations)
+        print("\n[!] Architectural findings:")
+        for rule, count in by_rule.most_common():
+            print(f"    {rule}: {count}")
+        print(f"    Hard violations: {len(hard)}")
+        print(f"    Warnings: {len(warnings)}")
+        print("    Detail: python pvm_arch_checker.py --path . --strict")
+    else:
+        print("[+] Architectural rule check passed.")
+
+    if hard or (strict and violations):
+        return result.returncode or 1
+    if warnings:
+        print("[!] Architectural warnings are non-blocking unless --strict-arch is used.")
+    return result.returncode
+
+
 def git_sync(root: Path = ROOT) -> int:
     """Configure upstream tracking and pull the latest changes."""
     def run(*args: str) -> subprocess.CompletedProcess[str]:
@@ -192,6 +421,8 @@ def git_sync(root: Path = ROOT) -> int:
             cwd=root,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
         )
 
     branch = run("git", "rev-parse", "--abbrev-ref", "HEAD")
@@ -201,7 +432,7 @@ def git_sync(root: Path = ROOT) -> int:
     current = branch.stdout.strip()
 
     # Prefer origin/main; fall back to origin/master for legacy Termux clones.
-    upstream_candidates = [f"origin/main", f"origin/master"]
+    upstream_candidates = ["origin/main", "origin/master"]
     chosen = None
     for candidate in upstream_candidates:
         remote, remote_branch = candidate.split("/", 1)
@@ -291,7 +522,13 @@ def boot_smoke(root: Path = ROOT) -> int:
     return 0
 
 
-def full_check(root: Path = ROOT, *, quick: bool = False) -> int:
+def full_check(
+    root: Path = ROOT,
+    *,
+    quick: bool = False,
+    strict_arch: bool = False,
+    strict_codemap: bool = False,
+) -> int:
     """Run the complete pre-flight sequence. Returns process exit code."""
     print("═" * 68)
     print("  AURA PVM — Systems Check")
@@ -308,16 +545,23 @@ def full_check(root: Path = ROOT, *, quick: bool = False) -> int:
     if quick:
         return 0
 
-    code = run_arch_checker(root)
+    code = run_arch_checker(root, strict=strict_arch)
     if code != 0:
         print("\n[!] Architectural violations detected (see report above).")
         return code
+
+    codemap_code = run_codemap_drift_check(root, strict=strict_codemap)
+    if codemap_code != 0:
+        return codemap_code
 
     smoke_code = boot_smoke(root)
     if smoke_code != 0:
         return smoke_code
 
-    print("\n[+] All systems check phases passed.")
+    if not strict_arch and not strict_codemap:
+        print("\n[+] All systems check phases completed. Warnings above may still require alignment work.")
+    else:
+        print("\n[+] All systems check phases passed.")
     return 0
 
 
@@ -337,6 +581,16 @@ def main() -> None:
         "--quick",
         action="store_true",
         help="Syntax check only (skip arch checker)",
+    )
+    parser.add_argument(
+        "--strict-arch",
+        action="store_true",
+        help="Fail when architectural warnings are present, not only hard violations",
+    )
+    parser.add_argument(
+        "--strict-codemap",
+        action="store_true",
+        help="Fail when tracked files are missing from CODEMAP or stale CODEMAP entries remain",
     )
     parser.add_argument(
         "--dry-run",
@@ -362,12 +616,21 @@ def main() -> None:
 
     # Run health check after repairs, or when no action flags were given.
     run_health = (
-        not args.git_sync
-        or args.fix_imports
-        or (not args.fix_imports and not args.git_sync)
+        args.fix_imports
+        or args.quick
+        or args.strict_arch
+        or args.strict_codemap
+        or not args.git_sync
     )
     if run_health:
-        exit_code = max(exit_code, full_check(quick=args.quick))
+        exit_code = max(
+            exit_code,
+            full_check(
+                quick=args.quick,
+                strict_arch=args.strict_arch,
+                strict_codemap=args.strict_codemap,
+            ),
+        )
 
     sys.exit(exit_code)
 

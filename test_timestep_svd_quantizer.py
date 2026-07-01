@@ -9,24 +9,24 @@ SYNOPSIS: Test suite for Claim N16 -- Timestep-Aware SVD Quantization with dynam
 [/AURA_MASTER_KEY]
 """
 
+import asyncio
 import os
 import sys
-import asyncio
-import pytest
+
 import numpy as np
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from aura_timestep_svd_quantizer import (
-    SVDOutlierCompensator,
-    DynamicClippingTracker,
-    TimestepAwareSVDQuantizer,
     AsyncExpertQuantizationEngine,
-    quantize_w4a4,
-    dequantize_w4a4,
+    DynamicClippingTracker,
+    SVDOutlierCompensator,
+    TimestepAwareSVDQuantizer,
     compute_compression_efficiency,
+    dequantize_w4a4,
+    quantize_w4a4,
 )
-
 
 # ── SVD Outlier Compensation ──
 
@@ -61,7 +61,7 @@ class TestSVDCompensation:
     def test_compensation_handles_1d(self):
         act = np.random.randn(64).astype(np.float32)
         comp = SVDOutlierCompensator()
-        compensated, residual, stats = comp.compensate(act)
+        compensated, _residual, _stats = comp.compensate(act)
         assert compensated.ndim == 2  # Reshaped to (1, 64)
 
     def test_svd_median_threshold_matches_spectral_memory(self):
@@ -71,7 +71,7 @@ class TestSVDCompensation:
 
         # Our implementation
         comp = SVDOutlierCompensator()
-        compensated, _, stats = comp.compensate(act)
+        compensated, _, _stats = comp.compensate(act)
 
         # Direct spectral_memory style
         U, S, Vh = np.linalg.svd(act, full_matrices=False)
@@ -91,7 +91,7 @@ class TestDynamicClipping:
 
         for _ in range(5):
             act = rng.standard_normal((16, 32)).astype(np.float32)
-            q, scale = quantize_w4a4(act, tracker.current_ratio)
+            q, _scale = quantize_w4a4(act, tracker.current_ratio)
             tracker.update(act, q)
 
         assert tracker.current_ratio != 0.95  # Should have adapted
@@ -135,7 +135,7 @@ class TestW4A4:
 
     def test_zero_input(self):
         act = np.zeros((10,), dtype=np.float32)
-        q, scale = quantize_w4a4(act)
+        q, _scale = quantize_w4a4(act)
         assert np.all(q == 0)
 
 
@@ -241,7 +241,7 @@ class TestNoDeps:
     def test_only_stdlib_and_numpy(self):
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "aura_timestep_svd_quantizer.py")
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             source = f.read()
 
         import ast

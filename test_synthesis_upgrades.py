@@ -11,18 +11,17 @@ Run:
 """
 
 import asyncio
-import importlib
 import math
 import sys
 import time
-from pathlib import Path
 
 import numpy as np
+
+from aura_arch_reasoner import AuraArchReasoner
+from aura_associative_core import AuraAssociativeCore as _AC_check
 from aura_node import markovian_workspace_reconstruction, meta_learning_daemon
 from llama_server_manager import LlamaServerManager
-from aura_arch_reasoner import AuraArchReasoner
-from aura_associative_core import AuraAssociativeCore as _AC_check  # noqa: F811
-from symbolic_shield import verify_structural_truth as _VST_check  # noqa: F811
+from symbolic_shield import verify_structural_truth as _VST_check
 
 # ---------------------------------------------------------------------------
 # Harness
@@ -99,7 +98,8 @@ _run("lsm", "async_start with missing model: returns False", _lsm_async_start_no
 # ---------------------------------------------------------------------------
 _header("2. RubricRewardMatrix — compute_rubric_reward")
 
-from aura_heal import compute_rubric_reward, _RUBRIC_FLOOR, _PVM_RAM_CEILING_MB
+from aura_heal import _RUBRIC_FLOOR, compute_rubric_reward
+
 
 def _rubric_valid_code():
     s, b = compute_rubric_reward("import os\nx = os.getcwd()\n", 38.0)
@@ -124,11 +124,11 @@ def _rubric_eval_injection():
     assert s < _RUBRIC_FLOOR
 
 def _rubric_nxsdk_import():
-    s, b = compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
+    _s, b = compute_rubric_reward("import nxsdk\nx=1\n", 38.0)
     assert not b["passed"], f"banned import must fail: {b}"
 
 def _rubric_hot_device_blocks():
-    s, b = compute_rubric_reward("x=1\n", 55.0)
+    _s, b = compute_rubric_reward("x=1\n", 55.0)
     # F_thermal = exp(-0.15*(55-40)) ≈ 0.105 → total < 0.85 unless F_RAM makes up for it
     assert b["F_thermal"] < 0.2, f"F_thermal at 55°C should be < 0.2: {b}"
 
@@ -238,6 +238,7 @@ _header("4. mLSTMCell (xLSTM NeurIPS 2024)")
 
 from liquid_kernel import mLSTMCell
 
+
 def _mlstm_output_shape():
     cell = mLSTMCell(d=32)
     h = cell.step(np.ones(32, dtype=np.float32))
@@ -301,6 +302,7 @@ _run("mlstm", "C matrix updates on each step", _mlstm_memory_matrix_updates)
 _header("5. TokenSuperpositionEncoder (TST arXiv:2605.06546)")
 
 from aura_vpt_tokenizer import TokenSuperpositionEncoder
+
 
 def _tst_unit_magnitude():
     enc = TokenSuperpositionEncoder(dim=512, bag_size=4)
@@ -368,7 +370,6 @@ _run("tst", "cache speedup: 500 calls < 500ms", _tst_cache_speedup)
 # ---------------------------------------------------------------------------
 _header("6. markovian_workspace_reconstruction (arXiv:2511.07327)")
 
-from aura_node import markovian_workspace_reconstruction
 
 class _MockPalace:
     conn = None
@@ -401,7 +402,7 @@ _header("7. Integration — meta_learning_daemon + Markovian + AuraArchReasoner"
 
 def _meta_reasoner_scores_workspace():
     r = AuraArchReasoner()
-    res, tension = r.score_structural_resonance()
+    res, _tension = r.score_structural_resonance()
     assert 0.0 < res <= 1.0
     patch = r.suggest_architectural_patch()
     assert "STABLE" in patch or "REFACTOR" in patch
@@ -428,7 +429,7 @@ def _pipeline_tst_to_rubric():
 
     # Validate a real code stub through rubric
     code = f"# morpheme={','.join(morphemes)}\nx = {len(morphemes)}\n"
-    s, b = compute_rubric_reward(code, 38.0)
+    _s, b = compute_rubric_reward(code, 38.0)
     assert b["passed"], f"TST-generated stub failed rubric: {b}"
 
 def _pipeline_mlstm_bis():
@@ -463,7 +464,7 @@ print(f"  Total : {total}")
 print(f"  PASS  : {passes}  ({passes/total*100:.1f}%)")
 print(f"  FAIL  : {fails}")
 if fails:
-    print(f"\n  Failed:")
+    print("\n  Failed:")
     for cat, name, st in _results:
         if st == _FAIL:
             print(f"    [{cat}] {name}")

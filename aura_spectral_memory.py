@@ -8,8 +8,10 @@
 # [/AURA_MASTER_KEY]
 
 import asyncio
+from typing import Any
+
 import numpy as np
-from typing import Optional, Dict, Any
+
 
 class AuraSpectralMemoryOrchestrator:
     def __init__(self):
@@ -26,7 +28,7 @@ class AuraSpectralMemoryOrchestrator:
         filtered_S = S * (S > np.median(S))  # Suppress small singular values
         return U @ np.diag(filtered_S) @ Vh
 
-    async def _generate_pseudo_labels(self, data: np.ndarray) -> Dict[str, Any]:
+    async def _generate_pseudo_labels(self, data: np.ndarray) -> dict[str, Any]:
         """Generate semantic pseudo-labels natively."""
         if data.size == 0:
             return {}
@@ -44,11 +46,11 @@ class AuraSpectralMemoryOrchestrator:
         """Lie Algebra Exponential Map: Projects flat tangent phase angles back onto the complex unit circle."""
         return np.exp(1j * phase_angles)
 
-    async def optimize_memory_view(self, data: np.ndarray, metadata: Optional[Dict] = None) -> Dict[str, Any]:
+    async def optimize_memory_view(self, data: np.ndarray, metadata: dict | None = None) -> dict[str, Any]:
         """Async function combining SVD filtering, Lie LogMap, and Geometry-Corrected Orthogonal Procrustes."""
         if metadata is None:
             metadata = {}
-            
+
         # Phase 1: Spectral filtering
         filtered_data = await self._apply_spectral_filter(data)
 
@@ -66,15 +68,15 @@ class AuraSpectralMemoryOrchestrator:
                 # M = A.T @ B
                 M = np.dot(tangent_A.T, tangent_B)
                 U, _, Vt = np.linalg.svd(M, full_matrices=False)
-                
+
                 # Optimal rotation matrix R = U @ V.T (Schönemann, 1966)
                 R = np.dot(U, Vt)
                 rotated_tangent = np.dot(tangent_A, R)
-                
+
                 # Post-hoc Geometry-Corrected translation vector to eliminate residual directional mismatch
                 t_corr = np.mean(tangent_B - rotated_tangent, axis=0)
                 final_tangent_aligned = rotated_tangent + t_corr
-                
+
                 # Project back to complex phasor space via ExpMap
                 filtered_data = self.exp_map(final_tangent_aligned)
 
@@ -153,8 +155,8 @@ if __name__ == "__main__":
         orchestrator = AuraSpectralMemoryOrchestrator()
         test_data = np.random.rand(100, 100)
         ref_data = np.random.rand(100, 100)
-        
+
         result = await orchestrator.optimize_memory_view(test_data, {"reference_matrix": ref_data})
         print(f"[+] Native Spectral Optimization verified. Array Shape: {result['filtered_data'].shape}")
-        
+
     asyncio.run(run_test())

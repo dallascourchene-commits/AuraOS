@@ -29,13 +29,14 @@ Design
 3. fuse_spvm_llm() combines scores; fracture decision uses fused value.
 """
 
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
+from enum import Enum
 import json
 import os
 import re
 import time
-from dataclasses import dataclass
-from enum import Enum
-from typing import Any, Callable, Awaitable
+from typing import Any
 
 import numpy as np
 
@@ -130,8 +131,8 @@ def is_fracture(fused_score: float, floor: float = _FRACTURE_FLOOR) -> bool:
 
 def build_edge_audit_prompt(src: str, tgt: str, spvm_implication: float) -> str:
     """Minimal prompt for unit_interval GBNF — score logical entailment only."""
-    src_short = src.split("::")[-1]
-    tgt_short = tgt.split("::")[-1]
+    src_short = src.rsplit("::", maxsplit=1)[-1]
+    tgt_short = tgt.rsplit("::", maxsplit=1)[-1]
     return (
         f"Rate how logically sound this Python call edge is from 0.0 (broken) to 1.0 (sound).\n"
         f"Caller: {src_short}\n"
@@ -166,7 +167,7 @@ def _load_llm_cache() -> dict[str, Any]:
     if not os.path.exists(_LLM_CACHE_PATH):
         return {}
     try:
-        with open(_LLM_CACHE_PATH, "r", encoding="utf-8") as f:
+        with open(_LLM_CACHE_PATH, encoding="utf-8") as f:
             return json.load(f)
     except (OSError, json.JSONDecodeError):
         return {}

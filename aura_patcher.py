@@ -1,7 +1,6 @@
-import os
 import ast
+import os
 import re
-import hashlib
 import uuid
 
 try:
@@ -38,16 +37,16 @@ class AuraSovereignPatcher:
             print(f"[-] [AURA PATCHER] Target file not found: {file_path}")
             return False
 
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, encoding='utf-8') as f:
             source_code = f.read()
 
         # Escape the raw anchors to safely map white spaces and characters
         escaped_start = re.escape(start_anchor.strip())
         escaped_end = re.escape(end_anchor.strip())
-        
+
         # Pattern captures everything between the precise start and end anchors
         patch_pattern = rf"({escaped_start})(.*?)({escaped_end})"
-        
+
         # Check if the file contains the designated target region
         if not re.search(patch_pattern, source_code, flags=re.DOTALL):
             print("[-] [AURA PATCHER] Target text block anchors could not be located in source.")
@@ -96,13 +95,13 @@ class AuraSovereignPatcher:
             # Re-generate a fresh system root hash reference tag
             fresh_root = f"Q-PATCH-{uuid.uuid4().hex[:6].upper()}"
             await self.node.memory_palace.update_audit_cache(
-                file_path, 
-                stat_metrics.st_mtime, 
-                stat_metrics.st_size, 
+                file_path,
+                stat_metrics.st_mtime,
+                stat_metrics.st_size,
                 f"ST3GG_STAMPED:: {st3gg_synopsis.strip()}"
             )
-            print(f"[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
-            
+            print("[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
+
         return True
 
 
@@ -112,13 +111,13 @@ class AuraSovereignPatcher:
             # Re-generate a fresh system root hash reference tag
             fresh_root = f"Q-PATCH-{uuid.uuid4().hex[:6].upper()}"
             await self.node.memory_palace.update_audit_cache(
-                file_path, 
-                stat_metrics.st_mtime, 
-                stat_metrics.st_size, 
+                file_path,
+                stat_metrics.st_mtime,
+                stat_metrics.st_size,
                 f"ST3GG_STAMPED:: {st3gg_synopsis.strip()}"
             )
-            print(f"[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
-            
+            print("[+] [AURA PATCHER] Audit cache updated with fresh ST3GG signature.")
+
         return True
 
     async def _regenerate_holographic_manifest(self) -> None:

@@ -13,32 +13,26 @@ Test suite for aura_skillweaver.py
 Covers the 8 required test categories from the SkillWeaver implementation brief.
 """
 
-import json
 import os
 import sys
 
-import numpy as np
 import pytest
 
 # Ensure repo root is on path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from aura_skillweaver import (
-    AuraSkill,
     AuraSkillWeaver,
     ResearchCandidate,
     ResearchGateResult,
     SubTask,
     _derive_anchors_for_query,
-    build_skill_registry,
     compose_mutation_dag,
     compute_final_relevance,
     decompose_query,
-    find_target_modules,
     refine_decomposition,
     score_domain_match,
     score_lexical_anchors,
-    score_title_abstract_match,
 )
 
 # ---------------------------------------------------------------------------
@@ -403,7 +397,7 @@ class TestNoDependency:
         """aura_skillweaver.py must not import packages beyond numpy + stdlib."""
         filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "aura_skillweaver.py")
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             source = f.read()
 
         import ast as ast_mod
@@ -460,7 +454,7 @@ class TestDecomposition:
             )
         ]
         refined = refine_decomposition(tasks, candidates, [])
-        gate_task = [t for t in refined if t.task_type == "gate_check"][0]
+        gate_task = next(t for t in refined if t.task_type == "gate_check")
         assert gate_task.status == "failed"
 
 

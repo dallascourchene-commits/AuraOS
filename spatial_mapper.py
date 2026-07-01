@@ -1,20 +1,21 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: ast, asyncio, websockets, os, numpy, hashlib, json
+DEPENDENCIES: json, asyncio, websockets, ast, os, hashlib
 FUNCTIONS: _rel_module_path, scan_and_vectorize, aura_tmm_server, main, __new__, get_cached_walk, invalidate, __init__, compute_cortical_rf_alignment, visit_FunctionDef, visit_AsyncFunctionDef, _record_callable, visit_ClassDef
-SYNOPSIS: The Python module integrates AST parsing, asynchronous networking, filesystem operations, numerical computation, cryptographic hashing, and JSON serialization via `ast`, `asyncio`, `websockets`, `os`, `numpy`, `hashlib`, and `json`, exposing functions for module path resolution (`_rel_module_path`), filesystem scanning and vectorization (`scan_and_vectorize`), WebSocket server initialization (`aura_tmm_server`), CLI entry (`main`), singleton instantiation (`__new__`), filesystem traversal caching (`get_cached_walk`, `invalidate`), class and function AST analysis (`visit_FunctionDef`, `visit_AsyncFunctionDef`, `_record_callable`, `visit_ClassDef`), cortical alignment computation (`compute_cortical_rf_alignment`), and constructor logic (`__init__`).
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
-import asyncio
 import ast
+import asyncio
 import hashlib
 import json
 import os
-
-import numpy as np  # Ensure environment is using numpy==1.26.4 across the stack
 
 try:
     import websockets
@@ -23,7 +24,7 @@ except ImportError:
 
 class DirectoryCache:
     """
-    Singleton cache to share walked directory results between the 
+    Singleton cache to share walked directory results between the
     topological scanner and the spatial mapper, eliminating redundant disk I/O.
     """
     _instance = None
@@ -117,13 +118,13 @@ def scan_and_vectorize(directory):
         if file.endswith('.py'):
             filepath = os.path.join(directory, file)
             rel_file = _rel_module_path(filepath)
-            
+
             # Generate stable geometric coordinates based on file path
             base_x = int(hashlib.md5(directory.encode()).hexdigest(), 16) % 100
             base_y = int(hashlib.md5(file.encode()).hexdigest(), 16) % 100
-            
+
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
+                with open(filepath, encoding='utf-8') as f:
                     tree = ast.parse(f.read())
                     mapper = CodeTopologyMapper(rel_file, base_x, base_y)
                     mapper.visit(tree)
@@ -134,15 +135,15 @@ def scan_and_vectorize(directory):
 
 # Aura's Step 4 & 5: WebSocket and Interaction Layer
 async def aura_tmm_server(websocket):
-    print(f"[AURA-TMM] VR/AR Client Connected. Broadcasting Topological Map...")
+    print("[AURA-TMM] VR/AR Client Connected. Broadcasting Topological Map...")
     current_dir = os.getcwd()
-    
+
     # Generate the 3D map
     code_topology = scan_and_vectorize(current_dir)
-    
+
     # Broadcast the map to the interface
     await websocket.send(json.dumps({"action": "init_map", "data": code_topology}))
-    
+
     # Interaction Layer (Node-Manipulation API)
     async for message in websocket:
         request = json.loads(message)

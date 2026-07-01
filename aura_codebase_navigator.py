@@ -1,11 +1,14 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:CODEBASE_NAVIGATOR]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
-PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Integrity / Navigable Context)
-DEPENDENCIES: argparse, ast, hashlib, json, math, os, pathlib, re, time, aura_substrate, aura_topological_scanner
-FUNCTIONS: stable_unit_vector, cosine, classify_file, scan_repository, build_navigation_system, load_or_compile_topology, refresh_index_for_paths, write_navigation_artifacts, search_index, main
-SYNOPSIS: Deterministic Aura-native codebase navigation index that scans once, writes a compact map, and answers surgical navigation queries from that map so agents do not need to re-read the entire repository.
+PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
+DEPENDENCIES: json, __future__, ast, aura_topological_scanner, re, argparse, aura_substrate, typing, os, pathlib, time, math, collections, dataclasses, hashlib
+FUNCTIONS: _symbol_signature, _semantic_id, stable_unit_vector, cosine, _is_probably_binary, classify_file, _python_symbol_records, _iter_repo_files, _command_mentions, _command_locations, load_or_compile_topology, _node_file, _topology_file_index, scan_repository, _scan_file, _coverage_report, _navigation_rings, _symbol_index, _records_from_cards, _incremental_record_fingerprint, refresh_index_for_paths, _command_index, _top_hubs, _compact_file_cards, _attach_topology, build_navigation_system, search_index, write_navigation_artifacts, _load_json, _codemap_payload_hash, refresh_codemap_for_paths, main, _skip_part
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 
@@ -35,6 +38,16 @@ DEFAULT_SKIP_DIRS = frozenset({
     ".ruff_cache",
     "node_modules",
     "Aura_Memory",
+    ".venv",
+    "venv",
+    "env",
+    ".tox",
+    ".nox",
+    "site-packages",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg-info",
 })
 BINARY_SUFFIXES = frozenset({".bak", ".db", ".docx", ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".ttf", ".zip"})
 TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".json", ".lexc", ".md", ".py", ".rs", ".sh", ".tex", ".toml", ".txt", ".yml", ".yaml"})
@@ -163,8 +176,15 @@ def _python_symbol_records(text: str, rel_path: str = "") -> list[SymbolRecord]:
 
 def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
     paths: list[Path] = []
+
+    def _skip_part(name: str) -> bool:
+        return name in skip_dirs or any(
+            pattern.startswith("*") and name.endswith(pattern[1:])
+            for pattern in skip_dirs
+        )
+
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = sorted(d for d in dirnames if d not in skip_dirs)
+        dirnames[:] = sorted(d for d in dirnames if not _skip_part(d))
         base = Path(dirpath)
         for filename in sorted(filenames):
             candidate = base / filename
@@ -172,7 +192,7 @@ def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
                 rel = candidate.relative_to(root).as_posix()
             except ValueError:
                 rel = candidate.as_posix()
-            if rel in GENERATED_MAP_FILES:
+            if rel in GENERATED_MAP_FILES or any(_skip_part(part) for part in candidate.relative_to(root).parts):
                 continue
             paths.append(candidate)
     return paths
@@ -390,12 +410,18 @@ def _symbol_index(records: list[dict[str, Any]]) -> dict[str, list[dict[str, Any
     return dict(sorted(index.items()))
 
 
-def _records_from_cards(payload: dict[str, Any]) -> list[dict[str, Any]]:
+def _records_from_cards(payload: dict[str, Any], root: Path | None = None) -> list[dict[str, Any]]:
     """Return mutable file records from a payload that may only contain compact cards."""
     records = [dict(card) for card in payload.get("files", [])]
     by_path = {record["path"]: record for record in records}
     for record in records:
-        record.setdefault("bytes", 0)
+        if "bytes" not in record and root is not None:
+            try:
+                record["bytes"] = (root / record["path"]).stat().st_size
+            except OSError:
+                record["bytes"] = 0
+        else:
+            record.setdefault("bytes", 0)
         record.setdefault("symbols", [])
     for name, hits in payload.get("symbol_index", {}).items():
         for hit in hits:
@@ -415,6 +441,23 @@ def _records_from_cards(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return records
 
 
+def _incremental_record_fingerprint(record: dict[str, Any]) -> dict[str, Any]:
+    """Return the branch fields that determine whether a file card changed."""
+    symbols = sorted(
+        record.get("symbols", []),
+        key=lambda item: (
+            item.get("name", ""),
+            item.get("kind", ""),
+            item.get("line", 0),
+            item.get("end_line", 0),
+        ),
+    )
+    return {
+        "card": _compact_file_cards([record])[0],
+        "symbols": symbols,
+    }
+
+
 def refresh_index_for_paths(
     index_path: Path,
     changed_paths: list[Path],
@@ -423,6 +466,7 @@ def refresh_index_for_paths(
     include_topology: bool = True,
     topology_path: Path = DEFAULT_TOPOLOGY_PATH,
     refresh_topology: bool = False,
+    write_index: bool = True,
 ) -> dict[str, Any]:
     """Closed-loop AST hook: update changed/deleted file branches in an existing map.
 
@@ -435,10 +479,10 @@ def refresh_index_for_paths(
     # Early return if no changes to process
     if not changed_paths:
         return _load_json(index_path)
-    
+
     payload = _load_json(index_path)
     root = (root or Path(payload.get("root", "."))).resolve()
-    by_path = {record["path"]: record for record in _records_from_cards(payload)}
+    by_path = {record["path"]: record for record in _records_from_cards(payload, root=root)}
     refreshed: list[str] = []
     removed: list[str] = []
 
@@ -451,11 +495,17 @@ def refresh_index_for_paths(
         if rel in GENERATED_MAP_FILES or any(part in DEFAULT_SKIP_DIRS for part in Path(rel).parts):
             continue
         if path.exists() and path.is_file():
-            by_path[rel] = _scan_file(root, path)
-            refreshed.append(rel)
+            scanned = _scan_file(root, path)
+            existing = by_path.get(rel)
+            if existing is None or _incremental_record_fingerprint(existing) != _incremental_record_fingerprint(scanned):
+                by_path[rel] = scanned
+                refreshed.append(rel)
         elif rel in by_path:
             by_path.pop(rel, None)
             removed.append(rel)
+
+    if not refreshed and not removed:
+        return payload
 
     topology = load_or_compile_topology(root, include_topology=include_topology, topology_path=topology_path, refresh=refresh_topology)
     records = [by_path[path] for path in sorted(by_path)]
@@ -495,7 +545,8 @@ def refresh_index_for_paths(
         "changed_path_count": len(refreshed) + len(removed),
         "topology_refreshed": refresh_topology,
     }
-    index_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    if write_index:
+        index_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return payload
 
 
@@ -524,6 +575,7 @@ def _compact_file_cards(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         cards.append({
             "path": rec["path"],
             "role": rec["role"],
+            "bytes": rec["bytes"],
             "lines": rec["lines"],
             "tokens_est": rec["tokens_est"],
             "symbol_count": rec.get("symbol_count", 0),
@@ -637,11 +689,18 @@ def search_index(payload: dict[str, Any], query: str, *, limit: int = 8) -> list
     return sorted(ranked, key=lambda item: item["score"], reverse=True)[:limit]
 
 
-def write_navigation_artifacts(payload: dict[str, Any], json_path: Path = DEFAULT_INDEX_PATH, md_path: Path = DEFAULT_MARKDOWN_PATH) -> tuple[Path, Path]:
+def write_navigation_artifacts(
+    payload: dict[str, Any],
+    json_path: Path = DEFAULT_INDEX_PATH,
+    md_path: Path = DEFAULT_MARKDOWN_PATH,
+    *,
+    write_json: bool = True,
+) -> tuple[Path, Path]:
     """Write compact machine and human maps; do not emit full topology/file payloads in Markdown."""
     json_path.parent.mkdir(parents=True, exist_ok=True)
     md_path.parent.mkdir(parents=True, exist_ok=True)
-    json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    if write_json:
+        json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     lines = [
         "# Aura Compact Code Map",
         "",
@@ -701,6 +760,46 @@ def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _codemap_payload_hash(payload: dict[str, Any]) -> str:
+    """Create deterministic hash of codemap payload to detect content changes."""
+    body = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
+
+
+def refresh_codemap_for_paths(
+    changed_paths: list[str | Path],
+    *,
+    root: Path | str | None = None,
+    index_path: Path = DEFAULT_INDEX_PATH,
+    markdown_path: Path = DEFAULT_MARKDOWN_PATH,
+    include_topology: bool = True,
+    topology_path: Path = DEFAULT_TOPOLOGY_PATH,
+    refresh_topology: bool = False,
+) -> dict[str, Any] | None:
+    """Refresh CODEMAP branches and leave JSON/Markdown untouched on no-op scans."""
+    repo_root = Path(root or ".").resolve()
+    resolved_index = index_path if index_path.is_absolute() else repo_root / index_path
+    resolved_markdown = markdown_path if markdown_path.is_absolute() else repo_root / markdown_path
+    if not resolved_index.exists():
+        return None
+    before_payload = _load_json(resolved_index)
+    before_hash = _codemap_payload_hash(before_payload)
+    payload = refresh_index_for_paths(
+        resolved_index,
+        [Path(path) for path in changed_paths],
+        root=repo_root,
+        include_topology=include_topology,
+        topology_path=topology_path,
+        refresh_topology=refresh_topology,
+        write_index=False,
+    )
+    after_hash = _codemap_payload_hash(payload)
+    if before_hash == after_hash:
+        return payload
+    write_navigation_artifacts(payload, resolved_index, resolved_markdown)
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build/query Aura's compact code map.")
     parser.add_argument("--root", default=".", help="Repository root to scan when building")
@@ -719,16 +818,16 @@ def main() -> int:
     if args.refresh is not None:
         if not index_path.exists():
             raise SystemExit(f"Missing {index_path}; build it first with python aura_codebase_navigator.py")
-        payload = refresh_index_for_paths(
-            index_path,
-            [Path(path) for path in args.refresh],
+        payload = refresh_codemap_for_paths(
+            args.refresh,
             root=Path(args.root).resolve(),
+            index_path=index_path,
+            markdown_path=Path(args.markdown),
             include_topology=not args.no_topology,
             topology_path=Path(args.topology_json),
             refresh_topology=args.refresh_topology,
         )
-        write_navigation_artifacts(payload, index_path, Path(args.markdown))
-        print(json.dumps(payload.get("last_refresh", {}), indent=2))
+        print(json.dumps((payload or {}).get("last_refresh", {}), indent=2))
         return 0
 
     if args.query:

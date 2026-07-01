@@ -1,19 +1,22 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: os, numpy, struct, subprocess, time, json
+DEPENDENCIES: numpy, subprocess, os, time
 FUNCTIONS: main, __init__, _default_saulteaux_schema, _resolve_saulteaux_epenthesis, _recompile_vsa_vocabulary, mount_fst_schema, dialect_resonance_test, query_fst_gateway, map_to_vsa, process_pipeline
-SYNOPSIS: The `saulteaux_vsa` Python module is a strict, dependency-heavy (os, numpy, struct, subprocess, time, json) utility for compiling and querying Variable State Automata (VSA) schemas, featuring core functions (main, __init__, _default_saulteaux_schema, _resolve_saulteaux_epenthesis, _recompile_vsa_vocabulary, mount_fst_schema, dialect_resonance_test, query_fst_gateway, map_to_vsa, process_pipeline) designed for high-fidelity phonetic and linguistic processing.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import os
-import json
-import time
-import struct
 import subprocess
+import time
+
 import numpy as np
+
 
 class HybridLinguisticCortex:
     """
@@ -23,11 +26,11 @@ class HybridLinguisticCortex:
     """
     def __init__(self, dimension: int = 10000):
         self.dim = dimension
-        
+
         # Pre-allocated slot buffer to enforce zero-copy operations across the VSA Core
         # Shape (6, 10000) maps directly to the 6-Slot Token Matrix
         self.slot_buffer = np.zeros((6, self.dim), dtype=np.complex64)
-        
+
         # Dialectal Fingerprinting Prototypes (10,000-D Bipolar Vector Matrix)
         rng = np.random.default_rng(seed=101)
         self.dialect_prototypes = {
@@ -35,14 +38,14 @@ class HybridLinguisticCortex:
             "Eastern": rng.choice([-1, 1], size=self.dim).astype(np.int8),
             "Southern": rng.choice([-1, 1], size=self.dim).astype(np.int8)
         }
-        
+
         # Diagnostic feature maps used to project input streams into dialect spaces
         self.dialect_features = {
             "aandi": "Saulteaux", "awenen": "Saulteaux", "niinawind": "Saulteaux",
             "wenesh": "Eastern", "aapiish": "Eastern", "waabm": "Eastern",
             "ni": "Southern", "giizis": "Southern", "anishinaabe": "Southern"
         }
-        
+
         # Default Mounted Schema: Plains Ojibwe (Saulteaux / Treaty 1)
         self.active_schema = None
         self._default_saulteaux_schema()
@@ -79,11 +82,11 @@ class HybridLinguisticCortex:
                 assembled += "-" + part
         return assembled.replace("--", "-")
 
-    def _recompile_vsa_vocabulary(self): 
+    def _recompile_vsa_vocabulary(self):
         """Generates deterministic phase vectors using low-discrepancy phase offsets to prevent phase-drift."""
         self.vsa_vocabulary = {}
         idx = 0
-        
+
         # Flatten all grammatical morphemes inside the active schema
         for key in ["subjects", "aspects", "stems", "voices", "spatials", "classifiers"]:
             for morpheme, tag in self.active_schema[key].items():
@@ -92,7 +95,7 @@ class HybridLinguisticCortex:
                 angle = seed_factor * (2.0 * np.pi / 4096.0)
                 self.vsa_vocabulary[tag] = np.exp(1j * np.ones(self.dim, dtype=np.float32) * angle)
                 idx += 1
-                
+
         # Neutral identity node phasor mapping
         self.vsa_vocabulary["identity_node"] = np.ones(self.dim, dtype=np.complex64)
 
@@ -112,31 +115,31 @@ class HybridLinguisticCortex:
         Employs contrast-sharpened softmax to resolve class ambiguities.
         """
         tokens = input_stream.lower().replace("-", " ").split()
-        
+
         # Build local feature signature vector
         feature_vector = np.zeros(self.dim, dtype=np.int8)
         rng = np.random.default_rng(seed=404)
-        
+
         for tok in tokens:
             if tok in self.dialect_features:
                 dialect_match = self.dialect_features[tok]
                 # Modulate feature vector based on dialect correlation
                 seed_offset = hash(dialect_match) % 1000
                 feature_vector ^= rng.choice([-1, 1], size=self.dim).astype(np.int8)
-                
+
         # Calculate dot-product similarities
         similarities = {}
         for dialect, prototype in self.dialect_prototypes.items():
             sim = float(np.mean(feature_vector * prototype))
             similarities[dialect] = sim
-            
+
         # Monotonic single-pass softmax with contrast sharpening (beta = 10)
         beta = 10.0
         exp_results = {k: np.exp(v * beta) for k, v in similarities.items()}
         total_exp = sum(exp_results.values())
         total_exp = total_exp if total_exp != 0.0 else 1.0
         probabilities = {k: (v / total_exp) for k, v in exp_results.items()}
-        
+
         return {
             "resonance_scores": similarities,
             "relative_probabilities": probabilities,
@@ -164,17 +167,17 @@ class HybridLinguisticCortex:
                     return lines[0].split("+")
             except Exception:
                 pass # Gracefully fall back to internal symbolic pipeline if process fails
-                
+
         # B. Symbolic Python Fallback Transition Compiler
         normalized = input_word.lower().strip()
-        
+
         # Syncopation rehydration check (enforcing Plains Ojibwe non-syncopating baseline)
         if normalized.startswith("n-") or "n-g" in normalized:
             normalized = normalized.replace("n-", "ni-")
-            
+
         parts = [p for p in normalized.split("-") if p]
         canonical_tags = []
-        
+
         for part in parts:
             # Strip epenthetic consonants to isolate canonical morphological roots
             clean_part = part
@@ -182,7 +185,7 @@ class HybridLinguisticCortex:
                 clean_part = part[1:]
             elif part.startswith("y") and len(part) > 1:
                 clean_part = part[1:]
-                
+
             # Scan matching schema mappings
             matched = False
             for category in ["subjects", "aspects", "stems", "voices", "spatials", "classifiers"]:
@@ -192,7 +195,7 @@ class HybridLinguisticCortex:
                     break
             if not matched:
                 canonical_tags.append(f"[UNKNOWN][{clean_part.upper()}]")
-                
+
         return canonical_tags
 
     def map_to_vsa(self, canonical_tags: list) -> np.ndarray:
@@ -203,12 +206,12 @@ class HybridLinguisticCortex:
         """
         # Reset the pre-allocated slot buffer in-place
         self.slot_buffer.fill(0)
-        
+
         # Slot Mapping positions
         slot_indices = {
             "[DIR]": 0, "[ASP]": 1, "[CLASS]": 2, "[SUBJ]": 3, "[VOICE]": 4, "[STEM]": 5
         }
-        
+
         # Load and write vector segments into self.slot_buffer using in-place slice mutation
         for tag in canonical_tags:
             # Detect tag category prefix to resolve slot coordinates
@@ -218,7 +221,7 @@ class HybridLinguisticCortex:
                 if tag.startswith(prefix):
                     slot_idx = idx
                     break
-                    
+
             if slot_idx is not None and tag in self.vsa_vocabulary:
                 # Direct C-level memory copy without object creation
                 self.slot_buffer[slot_idx, :] = self.vsa_vocabulary[tag]
@@ -226,7 +229,7 @@ class HybridLinguisticCortex:
                 # Write identity node phasor to unassigned slots
                 unassigned_idx = slot_idx if slot_idx is not None else 2
                 self.slot_buffer[unassigned_idx, :] = self.vsa_vocabulary["identity_node"]
-                
+
         # Fill any remaining unassigned slots with identity node vectors
         for i in range(6):
             if np.all(self.slot_buffer[i, :] == 0):
@@ -236,24 +239,24 @@ class HybridLinguisticCortex:
         summed = np.sum(self.slot_buffer, axis=0)
         magnitude = np.abs(summed)
         magnitude[magnitude == 0] = 1.0
-        
+
         return summed / magnitude
 
     def process_pipeline(self, input_word: str) -> dict:
         """Executes the dual-tier processing pipeline, tracking latency via monotonic timers."""
         start_time = time.perf_counter()
-        
+
         # 1. Dialectal Resonance test
         dialect_data = self.dialect_resonance_test(input_word)
-        
+
         # 2. Tier 1: FST parsing
         tags = self.query_fst_gateway(input_word)
-        
+
         # 3. Tier 2: VSA transformation
         trajectory_wave = self.map_to_vsa(tags)
-        
+
         latency_ms = (time.perf_counter() - start_time) * 1000.0
-        
+
         return {
             "input": input_word,
             "detected_dialect": dialect_data["detected_dialect"],
@@ -267,10 +270,10 @@ def main():
     print("==================================================================")
     print(" [🛡️ AURAOS HYBRID FST-VSA COGNITIVE LINGUISTIC CORTEX INTERFACE]")
     print("==================================================================")
-    
+
     # 1. Initialize Hybrid Cortex
     cortex = HybridLinguisticCortex()
-    
+
     # 2. Execute Dialectal Resonance Test
     sample_stream = "ni-gii-waabam-in aandi awenen"
     print(f"[*] Analyzing dialectal fingerprint of input: '{sample_stream}'")
@@ -284,7 +287,7 @@ def main():
     test_word = "nit-anokii-min"
     print(f"\n[*] Processing Saulteaux verb through Dual-Tier Pipeline: '{test_word}'")
     pipeline_results = cortex.process_pipeline(test_word)
-    
+
     print(f" ├─ Step 1 (Dialect Classification) : {pipeline_results['detected_dialect']}")
     print(f" ├─ Step 2 (Tier 1 FST Tag Output)   : {pipeline_results['canonical_tags']}")
     print(f" ├─ Step 3 (Tier 2 VSA Vector Shape) : {pipeline_results['trajectory_wave_shape']}")
@@ -300,18 +303,18 @@ def main():
         "voices": {"an": "[VOICE][1SG_SUFFIX]"},
         "spatials": {"bi": "[DIR][HITHER]"},
         "classifiers": {"identity_node": "[CLASS][NEUT]"},
-        "epenthesis_rules": lambda parts: "-".join(parts) # Simplified Cree epenthesis hook
+        "epenthesis_rules": "-".join # Simplified Cree epenthesis hook
     }
-    
+
     cortex.mount_fst_schema(cree_schema)
     cree_test_word = "ni-ki-asam-an"
     print(f"[*] Processing Plains Cree verb through pipeline: '{cree_test_word}'")
     cree_results = cortex.process_pipeline(cree_test_word)
-    
+
     print(f" ├─ Step 1 (Tier 1 FST Tag Output)   : {cree_results['canonical_tags']}")
     print(f" ├─ Step 2 (Tier 2 VSA Vector Shape) : {cree_results['trajectory_wave_shape']}")
     print(f" └─ Execution Latency Metrics        : {cree_results['pipeline_latency_ms']:.4f} ms")
-    
+
     print("\n==================================================================")
     print(" [💎 HYBRID COGNITIVE CORTEX SYSTEM BENCHMARKS OPTIMAL]")
     print("==================================================================")

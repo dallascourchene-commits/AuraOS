@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa9c1-[Q-SYS:2A86BBF77059E372]
 DIKWP_TIER: PURPOSE
 PWFST_ALIGNMENT: MINWAAJIMO (Respectful Transmission)
-DEPENDENCIES: __future__, json, os, time, urllib.request, urllib.error, aura_api_rotator
+DEPENDENCIES: __future__, json, os, time, urllib.request, urllib.error, aura_api_rotator, aura_llm_call_logger
 FUNCTIONS: AnthropicRouter, _anthropic_call, _sambanova_call, _openai_compat_call
 SYNOPSIS: [CODE]
 def optimized_fallback():
@@ -28,12 +28,9 @@ No API strings are hardcoded in this file.
 from __future__ import annotations
 
 import json
-import os
 import time
 import urllib.error
 import urllib.request
-from pathlib import Path
-from typing import Any
 
 from aura_api_rotator import (
     gemini_generate,
@@ -41,6 +38,7 @@ from aura_api_rotator import (
     get_gemini_rotator,
     load_secrets,
 )
+from aura_llm_call_logger import infer_provider_from_url, log_llm_call
 
 # ---------------------------------------------------------------------------
 # Model constants (keys, not strings exposed to users)
@@ -99,11 +97,45 @@ def _anthropic_call(
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         text = data.get("content", [{}])[0].get("text", "").strip()
-        return text or None, None, time.time() - t0
+        latency = time.time() - t0
+        log_llm_call(
+            provider="anthropic",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=text or None,
+            latency_sec=latency,
+            metadata={"source": "AnthropicRouter._anthropic_call"},
+        )
+        return text or None, None, latency
     except urllib.error.HTTPError as exc:
-        return None, f"HTTP {exc.code}: {exc.reason}", time.time() - t0
-    except Exception as exc:  # noqa: BLE001
-        return None, str(exc), time.time() - t0
+        latency = time.time() - t0
+        err = f"HTTP {exc.code}: {exc.reason}"
+        log_llm_call(
+            provider="anthropic",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=None,
+            latency_sec=latency,
+            error=err,
+            metadata={"source": "AnthropicRouter._anthropic_call"},
+        )
+        return None, err, latency
+    except Exception as exc:
+        latency = time.time() - t0
+        err = str(exc)
+        log_llm_call(
+            provider="anthropic",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=None,
+            latency_sec=latency,
+            error=err,
+            metadata={"source": "AnthropicRouter._anthropic_call"},
+        )
+        return None, err, latency
 
 
 def _sambanova_call(
@@ -133,12 +165,46 @@ def _sambanova_call(
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         text = data["choices"][0]["message"]["content"].strip()
-        return text or None, None, time.time() - t0, False
+        latency = time.time() - t0
+        log_llm_call(
+            provider="sambanova",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=text or None,
+            latency_sec=latency,
+            metadata={"source": "AnthropicRouter._sambanova_call"},
+        )
+        return text or None, None, latency, False
     except urllib.error.HTTPError as exc:
         quota_hit = exc.code in _SAMBANOVA_QUOTA_CODES
-        return None, f"HTTP {exc.code}: {exc.reason}", time.time() - t0, quota_hit
-    except Exception as exc:  # noqa: BLE001
-        return None, str(exc), time.time() - t0, False
+        latency = time.time() - t0
+        err = f"HTTP {exc.code}: {exc.reason}"
+        log_llm_call(
+            provider="sambanova",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=None,
+            latency_sec=latency,
+            error=err,
+            metadata={"source": "AnthropicRouter._sambanova_call", "quota_hit": quota_hit},
+        )
+        return None, err, latency, quota_hit
+    except Exception as exc:
+        latency = time.time() - t0
+        err = str(exc)
+        log_llm_call(
+            provider="sambanova",
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=None,
+            latency_sec=latency,
+            error=err,
+            metadata={"source": "AnthropicRouter._sambanova_call"},
+        )
+        return None, err, latency, False
 
 
 def _openai_compat_call(
@@ -168,9 +234,31 @@ def _openai_compat_call(
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         text = data["choices"][0]["message"]["content"].strip()
-        return text or None, None, time.time() - t0
-    except Exception as exc:  # noqa: BLE001
-        return None, str(exc), time.time() - t0
+        latency = time.time() - t0
+        log_llm_call(
+            provider=infer_provider_from_url(url),
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=text or None,
+            latency_sec=latency,
+            metadata={"source": "AnthropicRouter._openai_compat_call"},
+        )
+        return text or None, None, latency
+    except Exception as exc:
+        latency = time.time() - t0
+        err = str(exc)
+        log_llm_call(
+            provider=infer_provider_from_url(url),
+            model=model,
+            call_type="generate",
+            prompt_text=prompt,
+            output_text=None,
+            latency_sec=latency,
+            error=err,
+            metadata={"source": "AnthropicRouter._openai_compat_call"},
+        )
+        return None, err, latency
 
 
 # ---------------------------------------------------------------------------

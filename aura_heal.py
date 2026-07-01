@@ -1,35 +1,38 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8f5-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: sqlite3, websockets, math, ssl, urllib.parse, subprocess, bs4, urllib.error, asyncio, pvm_memory_guard, shutil, PyPDF2, hashlib, symbolic_shield, os, time, io, ast, re, aura_api_rotator, urllib.request, json
+DEPENDENCIES: urllib.request, sqlite3, urllib.error, aura_api_rotator, ssl, shutil, hashlib, subprocess, symbolic_shield, io, os, time, urllib.parse, ast, bs4, re, json, asyncio, websockets, PyPDF2, pvm_memory_guard, math
 FUNCTIONS: compute_rubric_reward, load_api_keys, map_neural_architecture, speak, update_ar_state, commit_to_dkt, call_llm, agentic_optimization, forage_knowledge_from_links, heal_system
-SYNOPSIS: This Python module integrates cryptographic, networking, and AI-driven processing capabilities—leveraging SQLite for data persistence, WebSockets for real-time communication, and libraries like `PyPDF2`, `bs4`, and `urllib` for document parsing and web interactions—while enforcing memory safety via `pvm_memory_guard` and `symbolic_shield`, executing system commands securely with `subprocess`, and interfacing with external APIs through `aura_api_rotator`, all orchestrated asynchronously via `asyncio` to deliver functions such as `compute_rubric_reward`, `agentic_optimization`, and `heal_system` for dynamic knowledge acquisition, state management, and system recovery.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
-import os
+import ast
 import asyncio
-import websockets
-import json
-import shutil
-import subprocess
 import hashlib
-import time
+import io
+import json
+import math
+import os
+import re
+import shutil
 import sqlite3
-import urllib.request
+import ssl
+import subprocess
+import time
 import urllib.error
 import urllib.parse
-import io
-import ast
-import re
-import ssl
+import urllib.request
 
-import math
+import websockets
 
-from symbolic_shield import verify_structural_truth
-from pvm_memory_guard import sample_rss_mb
 from aura_api_rotator import gemini_generate, gemini_key_pool, load_secrets
+from pvm_memory_guard import sample_rss_mb
+from symbolic_shield import verify_structural_truth
 
 # ---------------------------------------------------------------------------
 # Rubric Reward Matrix  (arXiv:2605.31584 — LongTraceRL process supervision)
@@ -120,42 +123,42 @@ API_PROVIDERS = [
         "name": "Gemini",
         "url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
         "key_var": "GEMINI_KEY",
-        "model": "gemini-1.5-flash", 
+        "model": "gemini-1.5-flash",
         "schema": "openai"
     },
     {
         "name": "Cerebras",
         "url": "https://api.cerebras.ai/v1/chat/completions",
-        "key_var": "CEREBRAS_KEY", 
-        "model": "llama3.1-70b", 
+        "key_var": "CEREBRAS_KEY",
+        "model": "llama3.1-70b",
         "schema": "openai"
     },
     {
         "name": "SambaNova",
         "url": "https://api.sambanova.ai/v1/chat/completions",
         "key_var": "SAMBANOVA_KEY",
-        "model": "Meta-Llama-3.1-70B-Instruct", 
+        "model": "Meta-Llama-3.1-70B-Instruct",
         "schema": "openai"
     },
     {
         "name": "OpenRouter",
         "url": "https://openrouter.ai/api/v1/chat/completions",
         "key_var": "OPENROUTER_KEY",
-        "model": "meta-llama/llama-3-8b-instruct:free", 
+        "model": "meta-llama/llama-3-8b-instruct:free",
         "schema": "openai"
     },
     {
         "name": "Mistral",
         "url": "https://api.mistral.ai/v1/chat/completions",
         "key_var": "MISTRAL_KEY",
-        "model": "mistral-small-latest", 
+        "model": "mistral-small-latest",
         "schema": "openai"
     },
     {
         "name": "Groq",
         "url": "https://api.groq.com/openai/v1/chat/completions",
         "key_var": "GROQ_KEY",
-        "model": "mixtral-8x7b-32768", 
+        "model": "mixtral-8x7b-32768",
         "schema": "openai"
     }
 ]
@@ -195,7 +198,7 @@ def map_neural_architecture(filepath, original_code):
         "file_target": filepath,
         "nodes": []
     }
-    
+
     for node in tree.body:
         if isinstance(node, ast.ClassDef):
             decorators = [d.id for d in node.decorator_list if isinstance(d, ast.Name)]
@@ -215,7 +218,7 @@ def map_neural_architecture(filepath, original_code):
                         "lines": f"{sub_node.lineno}-{sub_node.end_lineno}"
                     })
             architecture_map["nodes"].append(class_node)
-            
+
         elif isinstance(node, ast.FunctionDef):
             decorators = [d.id for d in node.decorator_list if isinstance(d, ast.Name)]
             architecture_map["nodes"].append({
@@ -225,7 +228,7 @@ def map_neural_architecture(filepath, original_code):
                 "args": [arg.arg for arg in node.args.args],
                 "lines": f"{node.lineno}-{node.end_lineno}"
             })
-            
+
     return json.dumps(architecture_map, indent=2)
 
 # --- HARDWARE & AR BRIDGES ---
@@ -242,7 +245,7 @@ async def update_ar_state(shape, lum, temp):
             await ws.send(json.dumps({"shape": shape, "lum": lum, "temp": temp}))
             await asyncio.sleep(0.5)
     except Exception:
-        pass 
+        pass
 
 # --- COGNITIVE MEMORY ---
 def commit_to_dkt(filename, improvement_logic):
@@ -260,7 +263,7 @@ def commit_to_dkt(filename, improvement_logic):
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS cognitive_evolution
                      (thought_id TEXT, timestamp TEXT, target_file TEXT, logic TEXT)''')
-        c.execute("INSERT INTO cognitive_evolution VALUES (?, ?, ?, ?)", 
+        c.execute("INSERT INTO cognitive_evolution VALUES (?, ?, ?, ?)",
                   (thought_id, timestamp, filename, improvement_logic))
         conn.commit()
         conn.close()
@@ -269,10 +272,10 @@ def commit_to_dkt(filename, improvement_logic):
 
     st3_path = os.path.join(MEMORY_DIR, f"{thought_id}.st3")
     gge_path = os.path.join(MEMORY_DIR, f"{thought_id}.gge")
-    
+
     with open(st3_path, 'w', encoding='utf-8', newline='') as f:
         f.write(f"STATE-SPACE TENSOR MAP\nTHOUGHT: {thought_id}\nFILE: {filename}\nSTATUS: +MUTATE OPTIMAL")
-        
+
     with open(gge_path, 'w', encoding='utf-8', newline='') as f:
         f.write(f"GRAPH-GRAMMAR ENCODING\nNODE: Edge_MotoG\nLOGIC_SHIFT:\n{improvement_logic}")
 
@@ -296,19 +299,19 @@ def call_llm(prompt):
         key_val = api_keys.get(key_var)
         if not key_val or key_val.startswith("YOUR_") or "your_actual_" in key_val.lower():
             continue
-            
+
         try:
             print(f"[*] Routing thought to {provider['name']}...")
             headers = {
-                "Content-Type": "application/json", 
+                "Content-Type": "application/json",
                 "Authorization": f"Bearer {key_val}"
             }
             payload = {
-                "model": provider["model"], 
-                "messages": [{"role": "user", "content": prompt}], 
+                "model": provider["model"],
+                "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.1
             }
-            
+
             req_data = json.dumps(payload).encode('utf-8')
             req_obj = urllib.request.Request(
                 provider["url"],
@@ -316,7 +319,7 @@ def call_llm(prompt):
                 headers=headers,
                 method="POST"
             )
-            
+
             # Handle Termux SSL Handshake Fallback context gracefully
             try:
                 with urllib.request.urlopen(req_obj, timeout=30) as resp:
@@ -327,42 +330,42 @@ def call_llm(prompt):
                 ctx.verify_mode = ssl.CERT_NONE
                 with urllib.request.urlopen(req_obj, timeout=30, context=ctx) as resp:
                     res_data = json.loads(resp.read().decode('utf-8'))
-            
+
             content = res_data["choices"][0]["message"]["content"].strip()
-            if content.startswith("```"): 
+            if content.startswith("```"):
                 content = "\n".join(content.split("\n")[1:-1])
-                
+
             return content
-            
+
         except Exception as e:
             print(f"[!] {provider['name']} failed/timeout: {e}. Cascading to next layer...")
-            
+
     return None
 
 # --- RECURSIVE SUB-AGENT WORKFLOW ---
 async def agentic_optimization(filename, original_code, external_knowledge):
     speak(f"Stage 1. Architect mapping Liquid logic against {filename}.")
     await update_ar_state("PhysicsTetrahedron", "HI", "HOT")
-    
+
     # 1. Generate the 3D Graph Skeleton
     vector_map = map_neural_architecture(filename, original_code)
-    
+
     # Save the 3D map to Memory so pulse.py and Chrome AR can render it!
     ast_filepath = os.path.join(MEMORY_DIR, f"{filename.replace('.py', '')}_ast.json")
     with open(ast_filepath, "w", encoding='utf-8', newline='') as f:
         f.write(vector_map)
 
-    safe_knowledge = external_knowledge[:80000] 
+    safe_knowledge = external_knowledge[:80000]
 
     # 2. DEFINE the Architect's prompt FIRST
     plan_prompt = f"""
     You are an Edge AI Architect manipulating a 3D structural graph of a Python system.
     Read this episodic external knowledge: {safe_knowledge}
-    
+
     Instead of flat code, here is the Abstract Syntax Tree (AST) node map of the target:
     {vector_map}
-    
-    Identify EXACTLY which Node/Function needs to be mutated to integrate the new knowledge. 
+
+    Identify EXACTLY which Node/Function needs to be mutated to integrate the new knowledge.
     Provide a step-by-step plan. State the exact class and function name to target. DO NOT write full code.
     """
 
@@ -386,8 +389,8 @@ async def agentic_optimization(filename, original_code, external_knowledge):
     code_prompt = f"""
     You are a precise Python coder. Follow this plan to rewrite the target code.
     CRITICAL HARDWARE LIMIT: You are deploying to a Motorola Moto G Stylus via Termux.
-    DO NOT use `nxsdk`, `loihi`, or any proprietary hardware libraries. 
-    Use ONLY standard Python libraries, `numpy`, or `torch`. 
+    DO NOT use `nxsdk`, `loihi`, or any proprietary hardware libraries.
+    Use ONLY standard Python libraries, `numpy`, or `torch`.
     If the plan asks for spiking libraries, simulate them mathematically using standard Python.
     PLAN: {plan}
     ORIGINAL CODE: {original_code}
@@ -401,9 +404,9 @@ async def agentic_optimization(filename, original_code, external_knowledge):
     # Read current device temperature for F_thermal component
     _temp = 42.0
     try:
-        with open('/sys/class/thermal/thermal_zone0/temp', 'r') as _tf:
+        with open('/sys/class/thermal/thermal_zone0/temp') as _tf:
             _temp = float(_tf.read().strip()) / 1000.0
-    except (IOError, FileNotFoundError):
+    except (OSError, FileNotFoundError):
         pass
 
     rubric_score, rubric_breakdown = compute_rubric_reward(new_code, current_temp_c=_temp)
@@ -424,11 +427,11 @@ async def agentic_optimization(filename, original_code, external_knowledge):
         subprocess.run(['python3', '-m', 'py_compile', staging_file], check=True, capture_output=True)
         shutil.copy(filename, f"{filename}.bak")
         shutil.move(staging_file, filename)
-        
-        commit_to_dkt(filename, plan[:100] + "...") 
-        
+
+        commit_to_dkt(filename, plan[:100] + "...")
+
         speak("Integration successful. Architecture optimal.")
-        await update_ar_state("PhysicsSphere", "HI", "COLD") 
+        await update_ar_state("PhysicsSphere", "HI", "COLD")
         return True
 
     except subprocess.CalledProcessError:
@@ -442,11 +445,11 @@ async def agentic_optimization(filename, original_code, external_knowledge):
 def forage_knowledge_from_links(link_file_path):
     speak("Foraging external knowledge from URLs.")
     extracted_knowledge = "--- KNOWLEDGE L1 CACHE ---\n"
-    
+
     if not os.path.exists(link_file_path):
         return extracted_knowledge
-        
-    with open(link_file_path, 'r', encoding='utf-8') as f:
+
+    with open(link_file_path, encoding='utf-8') as f:
         urls = [line.strip() for line in f if line.strip() and line.startswith("http")]
 
     for url in urls:
@@ -454,7 +457,7 @@ def forage_knowledge_from_links(link_file_path):
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AuraOS/1.0'}
             req_obj = urllib.request.Request(url, headers=headers)
-            
+
             # Non-blocking read with adaptive Termux SSL context fallback
             try:
                 with urllib.request.urlopen(req_obj, timeout=15) as response_obj:
@@ -477,19 +480,19 @@ def forage_knowledge_from_links(link_file_path):
                 pages_to_read = min(15, len(reader.pages))
                 for i in range(pages_to_read):
                     extracted_knowledge += reader.pages[i].extract_text() + "\n"
-                print(f"  [+] PDF indexed.")
+                print("  [+] PDF indexed.")
             elif BeautifulSoup is not None:
                 soup = BeautifulSoup(content_bytes.decode('utf-8', errors='ignore'), 'html.parser')
                 text = soup.get_text(separator=' ', strip=True)
                 extracted_knowledge += text[:5000] + "\n"
-                print(f"  [+] Web text indexed.")
+                print("  [+] Web text indexed.")
             else:
                 # Raw regex HTML tag-stripper acts as a zero-dependency fallback
                 raw_text = content_bytes.decode('utf-8', errors='ignore')
                 clean_text = re.sub(r'<[^>]+>', ' ', raw_text)
                 extracted_knowledge += " ".join(clean_text.split())[:5000] + "\n"
-                print(f"  [+] Plain text extracted (Parsers offline).")
-                
+                print("  [+] Plain text extracted (Parsers offline).")
+
         except Exception as e:
             print(f"  [!] Failed to forage {url}: {e}")
 
@@ -497,22 +500,22 @@ def forage_knowledge_from_links(link_file_path):
 
 async def heal_system():
     speak("Autoimmune sequence initiated. Scanning knowledge ingest sector.")
-    
+
     external_knowledge = ""
     for k_file in os.listdir(INGEST_DIR):
         filepath = os.path.join(INGEST_DIR, k_file)
-        
+
         if k_file == "links.txt":
             external_knowledge += forage_knowledge_from_links(filepath)
         elif k_file.endswith(('.txt', '.md')) and k_file != "links.txt":
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding='utf-8') as f:
                 external_knowledge += f"\n=== EPISODE SOURCE: LOCAL FILE ({k_file}) ===\n"
                 external_knowledge += f.read() + "\n"
 
     files_to_heal = [f for f in os.listdir(ROOT_DIR) if f.endswith('.py') and f not in ["aura_heal.py", "pulse.py"]]
-    
+
     for file in files_to_heal:
-        with open(file, 'r', encoding='utf-8') as f:
+        with open(file, encoding='utf-8') as f:
             original_code = f.read()
         await agentic_optimization(file, original_code, external_knowledge)
 

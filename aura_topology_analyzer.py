@@ -1,18 +1,21 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c6-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f6-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: os, collections, json
+DEPENDENCIES: json, collections, os
 FUNCTIONS: analyze_topology_and_suggest_optimizations, diagnose_fractures
-SYNOPSIS: The `aura_os_auditor` Python module, leveraging `os`, `collections`, and `json`, provides strict system topology analysis and fracture diagnostics via the `analyze_topology_and_suggest_optimizations` and `diagnose_fractures` functions.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 # [AURA OPTIMIZED] - Bloat removed.
 
+from collections import defaultdict
 import json
 import os
-from collections import defaultdict
 
 
 def analyze_topology_and_suggest_optimizations(topology_data=None):
@@ -34,13 +37,13 @@ def analyze_topology_and_suggest_optimizations(topology_data=None):
             node_id = f"legacy::{label}"
             nodes_list.append({"id": node_id, "label": label, "shape": shape})
             node_shapes[node_id] = shape
-            
+
         raw_edges_val = topology_data.get('Mapped Shared-Resource Connections', '0')
         try:
             edges_count = int(str(raw_edges_val).split()[0])
         except Exception:
             edges_count = 0
-            
+
         for i in range(edges_count):
             edges_list.append({"source": "dummy_src", "target": "dummy_dst"})
 
@@ -49,7 +52,7 @@ def analyze_topology_and_suggest_optimizations(topology_data=None):
         topo_path = "Aura_Memory/live_topology_ast.json"
         if os.path.exists(topo_path):
             try:
-                with open(topo_path, "r", encoding="utf-8") as f:
+                with open(topo_path, encoding="utf-8") as f:
                     data = json.load(f)
                 nodes_list = data.get("nodes", [])
                 edges_list = data.get("edges", [])
@@ -77,12 +80,12 @@ def analyze_topology_and_suggest_optimizations(topology_data=None):
         label = node.get("label", node_id)
         shape = node_shapes.get(node_id, "Sphere")
         node_types[shape] += 1
-        
+
         # Identify critical bottlenecks (degree centrality >= 4)
         degree = node_degrees.get(node_id, 0)
         if degree >= 4:
             bottlenecks.append(f"{label} ({shape})")
-            
+
             # Shape-specific optimization recommendations
             if shape == "Sphere":
                 recommendations.append(
@@ -120,7 +123,7 @@ def diagnose_fractures(state_path: str = "Aura_Memory/nesy_sat_reasoner_state.js
   """
     if not os.path.exists(state_path):
         return {"error": "Run !saturn or omnipath sweep first.", "fractures": []}
-    with open(state_path, "r", encoding="utf-8") as f:
+    with open(state_path, encoding="utf-8") as f:
         data = json.load(f)
     fractures = data.get("path_anomalies", {}).get("fractures", [])
     by_kind = defaultdict(list)

@@ -1,22 +1,26 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa8c5-[Q-SYS:BRIDGE_WS_TOPOLOGY]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIDINAWENDIMIN (Swarm Synergy)
-DEPENDENCIES: asyncio, json, os, gc, pathlib
-FUNCTIONS: TopologyBroadcastHub, broadcast_topology_chunks, stream_to_clients,
-           _chunk_json_fixed_frame, register_client, unregister_client, background_topology_watch
-SYNOPSIS: Pure-asyncio broadcast bridge that reads Aura_Memory/live_topology_ast.json,
-          chunks structural tokens into fixed-frame 4KB payloads, and non-blockingly
-          streams to all connected WebSocket clients without blocking the main runtime
-          loop or causing socket drops under Termux 4GB RAM constraints.
+DEPENDENCIES: json, asyncio, websockets, uuid, aura_spectral_topology, logging, gc, typing, pathlib, dataclasses
+FUNCTIONS: _chunk_json_fixed_frame, get_topology_hub, stream_to_clients, __init__, register_client, unregister_client, _broadcast_worker, _topology_watch_loop, start, stop, broadcast_topology_now, _combined_handler, to_dict, to_dict, __init__, start, stop, _topology_refresh_loop, _refresh_topology, _topology_dict, _handle_connection, _handle_message, _handle_shape_interaction, _handle_add_shape, _handle_hotswap_request, _handle_resonance_update, _broadcast_topology, _broadcast_message, _test, _send_to_one, _topology_pump
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 import asyncio
 import gc
 import json
-import os
 from pathlib import Path
+
+try:
+    from aura_spectral_topology import augment_topology_payload, normalize_topology_payload
+except ImportError:
+    augment_topology_payload = None  # type: ignore[assignment]
+    normalize_topology_payload = None  # type: ignore[assignment]
 
 # ── Fixed-frame chunking constants ──────────────────────────────────────────
 _FRAME_SIZE_BYTES = 4096       # 4 KB per chunk — fits in a single WebSocket frame
@@ -273,11 +277,12 @@ async def stream_to_clients(ws_handler_coro, host: str = "0.0.0.0", port: int = 
 # both the AR display and the topology watcher share one broadcast pipeline.
 # ============================================================================
 
+from dataclasses import dataclass as _dataclass_ar
+from dataclasses import field as _field_ar
 import json as _json_ar
-import uuid as _uuid_ar
 import logging as _logging_ar
-from dataclasses import dataclass as _dataclass_ar, field as _field_ar
-from typing import Dict as _Dict_ar, List as _List_ar, Set as _Set_ar, Any as _Any_ar, Optional as _Optional_ar
+from typing import Any as _Any_ar
+import uuid as _uuid_ar
 
 _ar_logger = _logging_ar.getLogger("aura.ar_websocket")
 
@@ -297,15 +302,16 @@ class _ARShape:
     shape_id: str
     shape_type: str
     label: str
-    position: _List_ar[float]
+    position: list[float]
     scale: float = 1.0
     color: str = "#00E5FF"
     node_type: str = "function"
     luminance: float = 0.5
     integrity_resonance: float = 1.0
-    metadata: _Dict_ar[str, _Any_ar] = _field_ar(default_factory=dict)
+    metadata: dict[str, _Any_ar] = _field_ar(default_factory=dict)
 
     def to_dict(self) -> dict:
+        spectral = self.metadata.get("ast_data", {}).get("spectral", {})
         return {
             "id": self.shape_id,
             "type": self.shape_type,
@@ -315,6 +321,9 @@ class _ARShape:
             "color": self.color,
             "luminance": self.luminance,
             "integrityResonance": self.integrity_resonance,
+            "structuralHealth": spectral.get("structural_health", self.luminance),
+            "validationState": spectral.get("validation_state", "unknown"),
+            "phaseShiftWarning": bool(spectral.get("phase_shift_warning", False)),
             "metadata": self.metadata,
         }
 
@@ -345,7 +354,7 @@ class _ARConnection:
 class _ARSession:
     session_id: str
     websocket: object          # websockets.WebSocketServerProtocol
-    subscribed_topics: _Set_ar[str] = _field_ar(default_factory=set)
+    subscribed_topics: set[str] = _field_ar(default_factory=set)
 
 
 class AuraARWebSocketServer:
@@ -380,13 +389,14 @@ class AuraARWebSocketServer:
         self.port = port
         self.topology_refresh_interval = topology_refresh_interval
 
-        self._sessions: _Dict_ar[str, _ARSession] = {}
-        self._shapes: _Dict_ar[str, _ARShape] = {}
-        self._connections: _List_ar[_ARConnection] = []
+        self._sessions: dict[str, _ARSession] = {}
+        self._shapes: dict[str, _ARShape] = {}
+        self._connections: list[_ARConnection] = []
+        self._topology_metadata: dict[str, _Any_ar] = {}
         self._topology_lock = asyncio.Lock()
         self._shutdown_event = asyncio.Event()
         self._server = None
-        self._refresh_task: _Optional_ar[asyncio.Task] = None
+        self._refresh_task: asyncio.Task | None = None
 
         _ar_logger.info("AuraARWebSocketServer init: %s:%d", host, port)
 
@@ -455,7 +465,7 @@ class AuraARWebSocketServer:
         Falls back gracefully if the file is missing or malformed.
         """
         async with self._topology_lock:
-            topology_path = _TOPOLOGY_PATH    # reuse existing constant
+            topology_path = _TOPOLOGY_PATH
             if not topology_path.exists():
                 return
             try:
@@ -465,71 +475,68 @@ class AuraARWebSocketServer:
                 _ar_logger.warning("Could not load topology: %s", exc)
                 return
 
-            nodes_data = payload.get("nodes", {})
-            edges_data = payload.get("edges", {})
+            if augment_topology_payload is not None:
+                try:
+                    payload = augment_topology_payload(payload)
+                except Exception as exc:
+                    _ar_logger.debug("Spectral topology augmentation skipped: %s", exc)
+            if normalize_topology_payload is not None:
+                nodes_data, edges_data = normalize_topology_payload(payload)
+            else:
+                nodes_data = list(payload.get("nodes", []) or [])
+                edges_data = list(payload.get("edges", []) or [])
+            self._topology_metadata = {
+                **(payload.get("meta", {}) or {}),
+                "spectral_topology": payload.get("spectral_topology", {}),
+            }
 
-            # Rebuild shape registry from AST
-            new_shapes: _Dict_ar[str, _ARShape] = {}
-            for node_id, node_data in nodes_data.items():
-                node_type = str(node_data.get("type", "function")).lower()
+            new_shapes: dict[str, _ARShape] = {}
+            for node_data in nodes_data:
+                node_id = str(node_data.get("id") or node_data.get("label") or "")
+                if not node_id:
+                    continue
+                node_type = str(
+                    node_data.get("node_type")
+                    or node_data.get("kind")
+                    or node_data.get("ast_type")
+                    or "function"
+                ).lower()
                 shape_type, color = _AR_SHAPE_TYPE_MAP.get(
                     node_type, ("Cube", "#9E9E9E")
                 )
+                if str(node_data.get("type", "")) in {
+                    "Cube", "Sphere", "Tetrahedron", "Icosahedron", "Octahedron"
+                }:
+                    shape_type = str(node_data["type"])
+                luminance = float(node_data.get("luminance", node_data.get("structural_health", 0.5)))
+                integrity = float(node_data.get("integrity_resonance", node_data.get("structural_health", 1.0)))
                 new_shapes[node_id] = _ARShape(
                     shape_id=node_id,
                     shape_type=shape_type,
-                    label=node_data.get("name", node_id),
+                    label=node_data.get("name") or node_data.get("label") or node_id,
                     position=node_data.get("position", [0.0, 0.0, 0.0]),
                     scale=float(node_data.get("scale", 1.0)),
-                    color=color,
+                    color=node_data.get("color") or color,
                     node_type=node_type,
+                    luminance=luminance,
+                    integrity_resonance=integrity,
                     metadata={"ast_data": node_data},
                 )
 
-            new_connections: _List_ar[_ARConnection] = []
-            for edge_id, edge_data in edges_data.items():
+            new_connections: list[_ARConnection] = []
+            for idx, edge_data in enumerate(edges_data):
+                edge_id = str(edge_data.get("id") or f"edge_{idx}")
                 new_connections.append(
                     _ARConnection(
                         connection_id=edge_id,
-                        source_id=edge_data.get("source", ""),
-                        target_id=edge_data.get("target", ""),
+                        source_id=edge_data.get("source") or edge_data.get("sourceId") or "",
+                        target_id=edge_data.get("target") or edge_data.get("targetId") or "",
                         color=edge_data.get("color", "#FFFFFF"),
                         width=float(edge_data.get("width", 0.1)),
+                        resonance=float(edge_data.get("resonance", 0.0)),
+                        luminance=float(edge_data.get("luminance", 0.5)),
                     )
                 )
-
-            # ── Resonance-weighted edge luminance (Claim N2/N19/N22) ──
-            # Compute VSA cosine resonance between connected nodes.
-            # Edge color encodes semantic similarity: bright = high resonance,
-            # dim = low resonance (Axiom P3: Coherence is the Attractor).
-            import hashlib as _hlib_refresh
-            import numpy as _np_refresh
-            _DIM = 10000
-            _lum_min, _lum_max = 0.1, 1.0
-
-            def _node_phasor(label: str) -> _np_refresh.ndarray:
-                h = _hlib_refresh.blake2b(label.encode("utf-8"), digest_size=8).digest()
-                seed = int.from_bytes(h, byteorder="little")
-                rng = _np_refresh.random.default_rng(seed)
-                phases = rng.uniform(-_np_refresh.pi, _np_refresh.pi, _DIM).astype(_np_refresh.float32)
-                return _np_refresh.exp(1j * phases)
-
-            # Cache phasors per node label
-            _phasor_cache = {}
-            for nid, shape in new_shapes.items():
-                _phasor_cache[nid] = _node_phasor(shape.label)
-
-            for conn in new_connections:
-                src_p = _phasor_cache.get(conn.source_id)
-                tgt_p = _phasor_cache.get(conn.target_id)
-                if src_p is not None and tgt_p is not None:
-                    res = float(_np_refresh.abs(_np_refresh.dot(src_p, _np_refresh.conj(tgt_p))) / _DIM)
-                    conn.resonance = res
-                    conn.luminance = _lum_min + (_lum_max - _lum_min) * min(1.0, res)
-                    # Map luminance to color: dim gray -> bright cyan
-                    bright = int(conn.luminance * 255)
-                    conn.color = f"#{bright:02x}{bright:02x}{min(255, bright + 50):02x}"
-                    conn.width = 0.05 + 0.15 * min(1.0, res)
 
             self._shapes = new_shapes
             self._connections = new_connections
@@ -545,6 +552,8 @@ class AuraARWebSocketServer:
                 "edge_count": len(self._connections),
                 "source": "live_topology_ast.json",
                 "resonance_weighted": True,
+                "spectral_layout": bool(self._topology_metadata.get("spectral_layout")),
+                "spectral_topology": self._topology_metadata.get("spectral_topology", {}),
                 "luminance_range": [0.1, 1.0],
             },
         }
@@ -708,7 +717,7 @@ class AuraARWebSocketServer:
     async def _handle_resonance_update(self, session: _ARSession, data: dict) -> None:
         """
         Handle live resonance updates from SkillWeaver / HIVP.
-        
+
         Payload:
           {"type": "RESONANCE_UPDATE", "nodes": {"node_id": {"luminance": 0.8, "integrity": 0.95}}}
           {"type": "RESONANCE_UPDATE", "edges": {"edge_id": {"resonance": 0.7}}}

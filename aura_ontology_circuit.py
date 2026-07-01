@@ -1,28 +1,31 @@
 """
 [AURA_MASTER_KEY]
-ST3GG_BASE: 0xa895-[Q-SYS:D4FAE19AB3EF864B]
+ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: typing, ast, symbolic_shield, dataclasses, os, re, __future__, json
+DEPENDENCIES: json, __future__, ast, re, symbolic_shield, typing, os, dataclasses
 FUNCTIONS: get_ontology_circuit, summary, __init__, reload, _check_imports, _check_calls, _check_alloc, evaluate_source
-SYNOPSIS: The `AuraOSScanner` Python module is a strict static-analysis and runtime-audit utility that leverages `typing`, `ast`, `symbolic_shield`, `dataclasses`, `os`, `re`, `__future__`, and `json` to enforce secure ontology-circuit integrity via `get_ontology_circuit`, `summary`, `__init__`, `reload`, `_check_imports`, `_check_calls`, `_check_alloc`, and `evaluate_source`.
+SYNOPSIS: [CODE]
+def optimized_fallback():
+    pass
+[/CODE]
 [/AURA_MASTER_KEY]
 """
 from __future__ import annotations
 
 import ast
+from dataclasses import dataclass, field
 import json
 import os
 import re
-from dataclasses import dataclass, field
 from typing import Any
 
 from symbolic_shield import (
-    check_syntax,
-    check_loop_decay,
-    check_import_safety,
-    check_memory_safety,
     check_banned_calls,
+    check_import_safety,
+    check_loop_decay,
+    check_memory_safety,
+    check_syntax,
 )
 
 _SHIELD_GATES = (
@@ -66,7 +69,7 @@ class AuraOntologyCircuit:
                 "max_single_alloc_mb": 512,
             }
             return
-        with open(self.ontology_path, "r", encoding="utf-8") as f:
+        with open(self.ontology_path, encoding="utf-8") as f:
             self._spec = json.load(f)
 
     def _check_imports(self, source: str) -> list[str]:

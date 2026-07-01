@@ -20,13 +20,8 @@ Fork detection:
   If alignment < 0.85 → local chain is a fork → resync from quorum.
 """
 
-import hashlib
-import time
-import struct
-import numpy as np
 from dataclasses import dataclass, field
-from . import phasor_ledger as pl
-from .block import Block, Transaction, ALIGNMENT_THRESHOLD
+import hashlib
 
 # -----------------------------------------------------------------------
 # Ed25519-like signature scheme using HMAC-SHA512
@@ -35,8 +30,12 @@ from .block import Block, Transaction, ALIGNMENT_THRESHOLD
 # Uses the same 32-byte seed → keypair derivation pattern as Ed25519
 # but with HMAC-based signing for zero-dependency correctness.
 # Signature format: 32-byte public key prefix + 64-byte HMAC tag = 96 bytes
-
 import hmac as _hmac
+import time
+
+import numpy as np
+
+from .block import ALIGNMENT_THRESHOLD, Block, Transaction
 
 
 class Ed25519KeyPair:
@@ -203,7 +202,7 @@ class AuraConsensus:
             return False, f"Wrong proposer: {block.proposer} != {expected}"
 
         # Check phasor alignment (O(1) via 5% subsample)
-        sam_sim, full_sim = block.validate_sampled(cs.block.state_phasor)
+        sam_sim, _full_sim = block.validate_sampled(cs.block.state_phasor)
 
         if sam_sim < ALIGNMENT_THRESHOLD:
             return False, f"Sampled alignment {sam_sim:.4f} < {ALIGNMENT_THRESHOLD}"
@@ -316,7 +315,7 @@ class AuraConsensus:
 
         # Cross-correlation matrix (200×200, tractable)
         M = theta_local.reshape(-1, 1) @ theta_quorum.reshape(1, -1)
-        U, S, Vh = np.linalg.svd(M, full_matrices=False)
+        U, _S, Vh = np.linalg.svd(M, full_matrices=False)
         R = U @ Vh  # Optimal rotation
 
         # Frobenius residual

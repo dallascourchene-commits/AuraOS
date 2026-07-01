@@ -11,15 +11,16 @@ A complete validator node that:
   - Self-heals by resyncing from quorum phasor
 """
 
+from dataclasses import dataclass
 import hashlib
 import time
+
 import numpy as np
-from dataclasses import dataclass, field
 
 from . import phasor_ledger as pl
 from .block import Block, Transaction
-from .consensus import AuraConsensus, Ed25519KeyPair, ConsensusError, PROCRUSTES_THRESHOLD
-from .memory_staking import MemoryStake, sample_rss_mb, verify_memory_stake
+from .consensus import PROCRUSTES_THRESHOLD, AuraConsensus, Ed25519KeyPair
+from .memory_staking import MemoryStake, sample_rss_mb
 
 
 @dataclass
@@ -236,7 +237,7 @@ class AuraNode:
 
         # Cross-correlation matrix (200×200, tractable)
         M = theta_local.reshape(-1, 1) @ theta_quorum.reshape(1, -1)
-        U, S, Vh = np.linalg.svd(M, full_matrices=False)
+        U, _S, Vh = np.linalg.svd(M, full_matrices=False)
         R = U @ Vh
 
         residual = np.linalg.norm(

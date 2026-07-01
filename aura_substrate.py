@@ -37,12 +37,12 @@ from __future__ import annotations
 import argparse
 import ast
 import base64
+from dataclasses import dataclass, field
 import json
 import os
+from pathlib import Path
 import re
 import time
-from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -75,10 +75,17 @@ def parse_master_key_header(content: str) -> dict[str, str]:
         return {}
     body = block.group(1)
     out: dict[str, str] = {}
-    for field_name in ("PWFST_ALIGNMENT", "DIKWP_TIER", "DEPENDENCIES", "FUNCTIONS", "TOPOLOGY_HYPERVECTOR"):
-        m = re.search(rf"{field_name}:\s*(.+)", body)
-        if m:
-            out[field_name] = m.group(1).strip()
+    wanted = {"PWFST_ALIGNMENT", "DIKWP_TIER", "DEPENDENCIES", "FUNCTIONS", "TOPOLOGY_HYPERVECTOR"}
+    matches = list(re.finditer(r"^([A-Z][A-Z0-9_-]+):\s*(.*)$", body, flags=re.MULTILINE))
+    for idx, match in enumerate(matches):
+        field_name = match.group(1)
+        if field_name not in wanted:
+            continue
+        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(body)
+        tail = body[match.end():end]
+        parts = [match.group(2).strip()]
+        parts.extend(line.strip() for line in tail.splitlines() if line.strip())
+        out[field_name] = " ".join(part for part in parts if part)
     return out
 
 
@@ -152,11 +159,11 @@ def existing_import_roots(content: str) -> set[str]:
 def generate_topology_hypervector() -> str:
     """
     Generate 1.2KB base64-encoded topology snapshot for [AURA_MASTER_KEY] headers.
-    
+
     This implements Claim N9 from the AuraOS prior art papers: every file contains
     a compressed 10,000-D hypervector representing the entire system topology,
     enabling O(1) integrity verification and instant mesh synchronization.
-    
+
     Returns:
         Base64-encoded string of exactly 1200 bytes containing quantized topology
     """
@@ -165,12 +172,12 @@ def generate_topology_hypervector() -> str:
         from aura_topology_manager import TopologyBuilder
         builder = TopologyBuilder(root=Path(REPO_ROOT))
         graph = builder.run()
-        
+
         # 2. Extract graph features
         node_count = len(graph.get("nodes", []))
         edge_count = len(graph.get("edges", []))
         edge_to_node_ratio = edge_count / max(1, node_count)
-        
+
         # Create feature vector
         features = np.array([
             node_count / 100.0,  # Normalize to ~0-10 range
@@ -178,21 +185,21 @@ def generate_topology_hypervector() -> str:
             edge_to_node_ratio,
             len(graph.get("constraints", {})) / 10.0
         ], dtype=np.float32)
-        
+
         # 3. Haar random projection to 10,000-D complex space
         # Use deterministic seed for reproducibility
         rng = np.random.default_rng(seed=0x53E6E)
         real_part = rng.standard_normal((10000, len(features)), dtype=np.float32)
         imag_part = rng.standard_normal((10000, len(features)), dtype=np.float32)
         R = (real_part + 1j * imag_part) / np.sqrt(10000)
-        
+
         # Project features to hyperdimensional space
         Ψ_topo = R @ features
-        
+
         # 4. Quantize to int8 for compression
         # Take real part and scale to [-128, 127]
         quantized = np.clip(Ψ_topo.real * 127, -128, 127).astype(np.int8)
-        
+
         # 5. Base64 encode (10000 bytes → 13336 base64 chars, we store first 1200)
         # Note: This is lossy compression - we only store ~900 values in 1200 chars
         # For full fidelity, would need 13336 chars, but header size constraint is 1.2KB
@@ -201,7 +208,7 @@ def generate_topology_hypervector() -> str:
         if len(encoded) < 1200:
             encoded = encoded.ljust(1200, '=')
         return encoded[:1200]
-        
+
     except Exception as e:
         # Fallback: return zero vector if topology unavailable
         print(f"Warning: Could not generate topology hypervector: {e}")
@@ -213,59 +220,59 @@ def generate_topology_hypervector() -> str:
 def verify_module_integrity(module_path: str, verbose: bool = False) -> float:
     """
     Verify module header resonance against current topology (Claim N9).
-    
+
     Computes cosine similarity between the topology hypervector embedded in the
     module's [AURA_MASTER_KEY] header and the current live topology. If resonance
     falls below 0.95, triggers healing routine.
-    
+
     Args:
         module_path: Path to Python module to verify
         verbose: Print detailed resonance information
-        
+
     Returns:
         Resonance score [0.0, 1.0] where 1.0 = perfect alignment
     """
     try:
-        with open(module_path, 'r', encoding='utf-8') as f:
+        with open(module_path, encoding='utf-8') as f:
             content = f.read()
-        
+
         # Parse header
         header = parse_master_key_header(content)
         if 'TOPOLOGY_HYPERVECTOR' not in header:
             if verbose:
                 print(f"⚠️  No TOPOLOGY_HYPERVECTOR in {module_path}")
             return 0.0
-        
+
         # Compute current topology
         Ψ_local = generate_topology_hypervector()
         Ψ_header = header['TOPOLOGY_HYPERVECTOR']
-        
+
         # Decode both vectors
         local_vec = np.frombuffer(base64.b64decode(Ψ_local), dtype=np.int8)
         header_vec = np.frombuffer(base64.b64decode(Ψ_header), dtype=np.int8)
-        
+
         # Compute cosine similarity (resonance)
         dot_product = np.dot(local_vec, header_vec)
         norm_local = np.linalg.norm(local_vec)
         norm_header = np.linalg.norm(header_vec)
-        
+
         if norm_local == 0 or norm_header == 0:
             return 0.0
-            
+
         resonance = float(dot_product / (norm_local * norm_header))
-        
+
         # Trigger healing if resonance too low
         if resonance < 0.95:
             if verbose:
                 print(f"⚠️  Low resonance ({resonance:.3f}) in {module_path}")
-                print(f"    Triggering !saturn_heal to regenerate topology...")
+                print("    Triggering !saturn_heal to regenerate topology...")
             # Note: Actual healing would be triggered here in production
             # For now, just warn
         elif verbose:
             print(f"✓ Good resonance ({resonance:.3f}) in {module_path}")
-        
+
         return resonance
-        
+
     except Exception as e:
         if verbose:
             print(f"✗ Error verifying {module_path}: {e}")
@@ -275,22 +282,22 @@ def verify_module_integrity(module_path: str, verbose: bool = False) -> float:
 def update_all_headers_with_topology():
     """
     Scan all Python files and update [AURA_MASTER_KEY] headers with current topology.
-    
+
     This is a maintenance utility to ensure all files have the holographic header
     protocol implemented. Should be run after significant topology changes.
     """
     topology_vec = generate_topology_hypervector()
     updated_count = 0
-    
+
     for py_file in Path(REPO_ROOT).glob("*.py"):
         try:
-            with open(py_file, 'r', encoding='utf-8') as f:
+            with open(py_file, encoding='utf-8') as f:
                 content = f.read()
-            
+
             # Check if file has AURA_MASTER_KEY
             if '[AURA_MASTER_KEY]' not in content:
                 continue
-            
+
             # Check if it already has TOPOLOGY_HYPERVECTOR
             if 'TOPOLOGY_HYPERVECTOR:' in content:
                 # Update existing
@@ -306,17 +313,17 @@ def update_all_headers_with_topology():
                     f'\\1TOPOLOGY_HYPERVECTOR: {topology_vec}\n',
                     content
                 )
-            
+
             # Write back
             with open(py_file, 'w', encoding='utf-8') as f:
                 f.write(content)
-            
+
             updated_count += 1
             print(f"✓ Updated {py_file.name}")
-            
+
         except Exception as e:
             print(f"✗ Error updating {py_file.name}: {e}")
-    
+
     print(f"\nUpdated {updated_count} files with topology hypervectors")
     return updated_count
 
@@ -426,11 +433,11 @@ class ContextSelector:
         self.root = root
 
     def read(self, rel: str) -> str:
-        with open(os.path.join(self.root, rel), "r", encoding="utf-8") as f:
+        with open(os.path.join(self.root, rel), encoding="utf-8") as f:
             return f.read()
 
     def raw_context(self, target_file: str, extra_files: list[str] | None = None) -> ContextBundle:
-        files = [target_file] + list(extra_files or [])
+        files = [target_file, *list(extra_files or [])]
         chunks, total_lines, total_chars, exposed = [], 0, 0, []
         for rel in files:
             content = self.read(rel)
@@ -472,7 +479,7 @@ def load_guardrails(extra_files: list[str] | None = None) -> str:
     for name in list(GUARDRAIL_ORDER) + list(extra_files or []):
         path = os.path.join(AURA_GUARDRAIL_DIR, name)
         if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 parts.append(f.read().strip())
     return "\n\n".join(parts)
 
@@ -601,7 +608,7 @@ def _demo(speak: bool) -> int:
     if speak:
         try:
             from aura_llm_egress import ExternalLLM
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"\n[!] egress unavailable: {exc}")
             return 0
         egress = ExternalLLM()
