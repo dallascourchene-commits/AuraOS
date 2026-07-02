@@ -3,8 +3,8 @@
 ST3GG_BASE: 0xa9b2-[Q-SYS:BUILDER_CONTEXT]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Grounded Builder Context)
-DEPENDENCIES: __future__, ast, dataclasses, hashlib, json, pathlib, typing, aura_graphify_schema
-FUNCTIONS: BuilderContextPacket, build_builder_context_packet, render_context_packet_prompt, _extract_source_excerpt, _extract_nearby_imports, _extract_callers_from_topology
+DEPENDENCIES: __future__, ast, dataclasses, hashlib, pathlib, typing, aura_graphify_schema, aura_st3gg_codec
+FUNCTIONS: BuilderContextPacket, build_builder_context_packet, attach_st3gg_summary, render_context_packet_prompt, _extract_source_excerpt, _extract_nearby_imports, _extract_callers_from_topology
 SYNOPSIS: Constructs a grounded BuilderContextPacket from CODEMAP/Graphify before the Builder model is called. Provides exact source excerpts, symbol line ranges, nearby imports, callers/neighbors, nearby tests, acceptance criteria, forbidden actions, and source_refs — preventing the model from hallucinating file contents or hand-writing fragile hunk headers.
 [/AURA_MASTER_KEY]
 """
@@ -14,11 +14,11 @@ from __future__ import annotations
 import ast
 from dataclasses import asdict, dataclass, field
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
 
 from aura_graphify_schema import SourceRef
+from aura_st3gg_codec import ST3GGCodec, ST3GGProfile, choose_profile_for_phase
 
 
 @dataclass
@@ -34,6 +34,7 @@ class BuilderContextPacket:
     symbol_start_line: int = 0
     symbol_end_line: int = 0
     source_excerpt: str = ""
+    st3gg_context: dict[str, Any] = field(default_factory=dict)
     nearby_imports: list[str] = field(default_factory=list)
     callers: list[str] = field(default_factory=list)
     neighbors: list[str] = field(default_factory=list)
@@ -92,10 +93,7 @@ def _extract_nearby_imports(file_path: Path, *, max_imports: int = 20) -> list[s
                 imports.append(f"import {alias.name}" + (f" as {alias.asname}" if alias.asname else ""))
         elif isinstance(node, ast.ImportFrom):
             module = node.module or ""
-            names = ", ".join(
-                (alias.name + (f" as {alias.asname}" if alias.asname else ""))
-                for alias in node.names
-            )
+            names = ", ".join((alias.name + (f" as {alias.asname}" if alias.asname else "")) for alias in node.names)
             imports.append(f"from {module} import {names}")
         if len(imports) >= max_imports:
             break
@@ -249,16 +247,73 @@ def build_builder_context_packet(
         callers=callers,
         neighbors=all_neighbors,
         nearby_tests=nearby_tests,
-        acceptance_criteria=list(acceptance_criteria or [
-            "Patch applies cleanly in the temporary workspace.",
-            "Patch passes local verification (py_compile + pytest).",
-            "Patch does not introduce topology regressions.",
-        ]),
+        acceptance_criteria=list(
+            acceptance_criteria
+            or [
+                "Patch applies cleanly in the temporary workspace.",
+                "Patch passes local verification (py_compile + pytest).",
+                "Patch does not introduce topology regressions.",
+            ]
+        ),
         forbidden_actions=list(forbidden_actions or default_forbidden),
         source_refs=source_refs,
         objective=objective,
         task_id=task_id,
     )
+
+
+def attach_st3gg_summary(
+    packet: BuilderContextPacket,
+    *,
+    source: str | None = None,
+    repo_root: str | Path | None = None,
+    profile: ST3GGProfile | str | None = None,
+) -> BuilderContextPacket:
+    """Attach compact ST3GG context without replacing Builder's exact source excerpt."""
+    selected_profile = (
+        ST3GGProfile.coerce(profile) if profile is not None else choose_profile_for_phase("builder_patch")
+    )
+    source_text = source
+    attach_warnings: list[str] = []
+
+    if source_text is None and packet.target_file:
+        root = Path(repo_root) if repo_root is not None else Path.cwd()
+        target_path = Path(packet.target_file)
+        file_path = target_path if target_path.is_absolute() else root / target_path
+        try:
+            source_text = file_path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            attach_warnings.append(f"st3gg_source_read_failed:{type(exc).__name__}")
+
+    if source_text is None and packet.source_excerpt:
+        source_text = packet.source_excerpt
+        attach_warnings.append("st3gg_source_from_line_marked_excerpt")
+
+    if source_text is None:
+        packet.st3gg_context = {
+            "version": "AURA_ST3GG_CODEC_V1",
+            "profile": selected_profile.value,
+            "source_file": packet.target_file,
+            "target_symbol": packet.target_symbol,
+            "encoded": "",
+            "symbols": [],
+            "spans": [],
+            "metrics": {},
+            "warnings": [*attach_warnings, "st3gg_attach_no_source"],
+        }
+        return packet
+
+    frame = ST3GGCodec().encode_source(
+        source_text,
+        source_file=packet.target_file,
+        target_symbol=packet.target_symbol,
+        profile=selected_profile,
+    )
+    payload = frame.to_dict()
+    if attach_warnings:
+        payload["warnings"] = [*payload.get("warnings", []), *attach_warnings]
+    packet.st3gg_context = payload
+    return packet
 
 
 def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
@@ -277,6 +332,49 @@ def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
         lines.append("--- source_excerpt (exact lines from repository) ---")
         lines.append(packet.source_excerpt)
         lines.append("--- end source_excerpt ---")
+        lines.append("")
+
+    if packet.st3gg_context:
+        st3gg = packet.st3gg_context
+        metrics = st3gg.get("metrics", {}) if isinstance(st3gg.get("metrics", {}), dict) else {}
+        lines.append("--- st3gg_compact_context (advisory; exact source_excerpt remains authoritative) ---")
+        lines.append(f"profile: {st3gg.get('profile', '')}")
+        lines.append(f"source_hash: {st3gg.get('source_hash', '')}")
+        if metrics:
+            lines.append(
+                "metrics: "
+                f"raw_tokens={metrics.get('raw_token_estimate', 0)} "
+                f"encoded_tokens={metrics.get('encoded_token_estimate', 0)} "
+                f"compression_ratio={metrics.get('compression_ratio', 0)} "
+                f"fidelity={metrics.get('fidelity_score', 0)}"
+            )
+        warnings = list(st3gg.get("warnings", []) or [])
+        if warnings:
+            lines.append("warnings: " + "; ".join(str(item) for item in warnings))
+        symbols = list(st3gg.get("symbols", []) or [])[:30]
+        if symbols:
+            symbol_line = "; ".join(
+                f"{item.get('id')}={item.get('name')}#{item.get('count')}" for item in symbols if isinstance(item, dict)
+            )
+            if symbol_line:
+                lines.append("symbols: " + symbol_line)
+        encoded = str(st3gg.get("encoded", "") or "")
+        if encoded:
+            lines.append(encoded)
+        spans = list(st3gg.get("spans", []) or [])[:8]
+        if spans:
+            lines.append("st3gg_exact_spans:")
+            for span in spans:
+                if not isinstance(span, dict):
+                    continue
+                lines.append(
+                    f"  {span.get('id')} {span.get('kind')} {span.get('name', '')} "
+                    f"lines={span.get('line_start', 0)}-{span.get('line_end', 0)}"
+                )
+                text = str(span.get("text", "") or "")
+                if text:
+                    lines.append(text)
+        lines.append("--- end st3gg_compact_context ---")
         lines.append("")
 
     if packet.nearby_imports:
@@ -318,7 +416,9 @@ def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
     lines.append("=== OUTPUT FORMAT ===")
     lines.append("Return EITHER:")
     lines.append("  1. A full valid unified diff (with correct @@ hunk headers), OR")
-    lines.append("  2. A JSON object: {\"before_text\": \"...\", \"after_text\": \"...\"} where before_text is the exact text to replace and after_text is the replacement.")
+    lines.append(
+        '  2. A JSON object: {"before_text": "...", "after_text": "..."} where before_text is the exact text to replace and after_text is the replacement.'
+    )
     lines.append("Do NOT include prose, explanations, or commentary.")
     lines.append("=== END BUILDER CONTEXT PACKET ===")
 
