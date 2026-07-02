@@ -249,6 +249,106 @@ def test_live_architect_blocks_partial_act_stage(tmp_path: Path):
     assert act_stage_failure["missing_task_ids"] == ["A-LIVE-SKIP"]
 
 
+def test_live_architect_reports_builder_failure_when_no_patch_is_staged(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        if meta["role"] == "planner":
+            return json.dumps(
+                {
+                    "architecture_decision": "Patch demo.answer through the live Architect arena.",
+                    "target_file": "demo.py",
+                    "target_symbol": "answer",
+                    "act_tasks": [
+                        {
+                            "task_id": "A-NO-PATCH",
+                            "objective": "Change demo.answer to return the verified value.",
+                            "target_file": "demo.py",
+                            "target_symbol": "answer",
+                            "acceptance": "test_demo.py passes in the temp workspace.",
+                            "expected_output": "UNIFIED_DIFF",
+                        }
+                    ],
+                }
+            )
+        if meta["role"] == "shadow":
+            return json.dumps({"approved": True, "score": 0.9, "blockers": [], "rationale": "No cheap blocker."})
+        if meta["role"] == "judge":
+            return json.dumps({"approved": True, "rationale": "Patch judge observed no patch."})
+        assert provider
+        assert "Act Capsule" in prompt
+        return ""
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two but worker refuses",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    assert transaction.verification.hotswap_ready is False
+    assert transaction.patch_quality["no_patch_staged"] is True
+    failure = transaction.patch_quality["builder_failures"][0]
+    assert failure["failed_task_id"] == "A-NO-PATCH"
+    assert failure["builder_refusal"] is True
+    assert "builder_refusal" in failure["reason_codes"]
+    assert "missing_context_excerpt" in failure
+    assert "missing_tests" in failure
+
+
+def test_live_architect_reports_shadow_gate_when_arena_blocks_builder(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+    worker_called = False
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        nonlocal worker_called
+        if meta["role"] in {"planner", "planner_alt"}:
+            return json.dumps(
+                {
+                    "architecture_decision": "Patch a fake demo symbol through the live Architect arena.",
+                    "target_file": "demo.py",
+                    "target_symbol": "missing_symbol",
+                    "act_tasks": [
+                        {
+                            "task_id": "A-FAKE-SYMBOL",
+                            "objective": "Change the missing symbol with a bounded patch.",
+                            "target_file": "demo.py",
+                            "target_symbol": "missing_symbol",
+                            "acceptance": "test_demo.py passes in the temp workspace.",
+                            "expected_output": "UNIFIED_DIFF",
+                        }
+                    ],
+                }
+            )
+        if meta["role"] == "shadow":
+            return json.dumps({"approved": True, "score": 0.9, "blockers": [], "rationale": "Council critic accepts."})
+        if meta["role"] == "judge":
+            return json.dumps({"approved": True, "selected_candidate_id": "planner_1", "rationale": "Judge accepts the plan."})
+        worker_called = True
+        assert provider
+        assert "Act Capsule" in prompt
+        return ""
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.missing_symbol change but report the block",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    assert worker_called is False
+    assert transaction.patch_quality["no_patch_staged"] is True
+    failure = transaction.patch_quality["builder_failures"][0]
+    assert failure["status"] == "arena_not_ready"
+    assert failure["shadow_gate"] == "BLOCK_BUILDER"
+    assert failure["shadow_gate_blocked"] is True
+    assert "shadow_gate_blocked" in failure["reason_codes"]
+    assert "missing_target_symbol" in failure["reason_codes"]
+    assert any(item["shadow_type"] == "fake_symbol" for item in failure["shadow_findings"])
+
+
 def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
     _write_demo_repo(tmp_path)
     calls: list[tuple[str, str]] = []

@@ -1051,6 +1051,8 @@ class ArchitectFusionCouncil:
                         "candidate_id": candidate_id,
                         "selected_research": related.get("selected_research", {}),
                         "synthesis": related.get("synthesis", ""),
+                        "classification": related.get("classification", ""),
+                        "grounding": related.get("grounding", {}),
                         "builder_hint": (
                             "MUSIC_MITOSIS: "
                             f"{related.get('synthesis', '')} Keep the patch scoped to the selected Act Capsule and preserve verifier gates."
@@ -1143,8 +1145,97 @@ class ArchitectBuilderBridge:
         except Exception:
             pass
 
+    def _builder_failure_report(
+        self,
+        act: Any,
+        grounding_dict: dict[str, Any],
+        context_packet: BuilderContextPacket | None,
+        *,
+        status: str,
+        response: str = "",
+        preflight: PatchPreflightResult | None = None,
+        repair_result: PatchRepairResult | None = None,
+        shadow_report: Any | None = None,
+    ) -> dict[str, Any]:
+        acceptance = str(getattr(act, "acceptance", "") or "")
+        acceptance_lower = acceptance.lower()
+        objective = str(getattr(act, "objective", "") or "")
+        music_context = "MUSIC_MITOSIS" in objective or "music_mitosis" in objective.lower()
+        shadow_payload = shadow_report.to_dict() if hasattr(shadow_report, "to_dict") else {}
+        shadow_findings = list(shadow_payload.get("findings", []) or []) if isinstance(shadow_payload, dict) else []
+        report = {
+            "failed_task_id": getattr(act, "task_id", ""),
+            "status": status,
+            "missing_target_file": not getattr(act, "target_file", None) or grounding_dict.get("file_exists") is False,
+            "missing_target_symbol": bool(getattr(act, "target_symbol", None) and grounding_dict.get("symbol_exists") is False),
+            "missing_context_excerpt": not bool(context_packet and context_packet.source_excerpt),
+            "missing_module_overlap": bool(music_context and "module_overlap" not in objective.lower()),
+            "missing_acceptance_test": not acceptance.strip() or "acceptance" not in acceptance_lower and "test" not in acceptance_lower and "verifier" not in acceptance_lower,
+            "missing_tests": not bool(context_packet and context_packet.nearby_tests),
+            "output_format_failure": status in {"before_after_diff_generation_failed", "preflight_failed", "repair_failed_blocked"},
+            "builder_refusal": status in {"no_response", "builder_refusal"} or "refus" in str(response or "").lower(),
+            "preflight_rejections": preflight.rejections if preflight is not None else [],
+            "repair_rejections": repair_result.rejections_after_repair if repair_result is not None else [],
+            "shadow_gate": shadow_payload.get("gate", "") if isinstance(shadow_payload, dict) else "",
+            "shadow_findings": shadow_findings,
+        }
+        report["shadow_gate_blocked"] = bool(
+            status == "arena_not_ready"
+            and isinstance(shadow_payload, dict)
+            and shadow_payload.get("ok") is False
+            and shadow_payload.get("gate")
+        )
+        report["reason_codes"] = [
+            key
+            for key in (
+                "shadow_gate_blocked",
+                "missing_target_file",
+                "missing_target_symbol",
+                "missing_context_excerpt",
+                "missing_module_overlap",
+                "missing_acceptance_test",
+                "missing_tests",
+                "output_format_failure",
+                "builder_refusal",
+            )
+            if report[key]
+        ]
+        if not report["reason_codes"]:
+            report["reason_codes"] = ["no_patch_staged"]
+        return report
+
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
+            builder_failures = []
+            grounding_by_task = {item.task_id: item.to_dict() for item in prepared.grounding}
+            for act in prepared.plan.act_capsules:
+                grounding_dict = grounding_by_task.get(act.task_id, {})
+                builder_failures.append(
+                    self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        None,
+                        status="arena_not_ready",
+                        shadow_report=prepared.shadow_report,
+                    )
+                )
+            self.patch_quality = {
+                "attempts": [
+                    {
+                        "task_id": failure["failed_task_id"],
+                        "status": "arena_not_ready",
+                        "preflight": None,
+                        "failure_reason": failure,
+                    }
+                    for failure in builder_failures
+                ],
+                "builder_failures": builder_failures,
+                "total_attempts": len(builder_failures),
+                "preflight_passed": 0,
+                "repair_succeeded": 0,
+                "repair_failed_blocked": 0,
+                "no_patch_staged": True,
+            }
             return []
         codemap = self._load_codemap()
         submissions: list[dict[str, Any]] = []
@@ -1184,7 +1275,8 @@ class ArchitectBuilderBridge:
             )
             response = await self.router.call_model("worker", prompt, intensity=prepared.intensity, meta={"task_id": act.task_id})
             if not response:
-                patch_attempts.append({"task_id": act.task_id, "status": "no_response", "preflight": None})
+                failure = self._builder_failure_report(act, grounding_dict, context_packet, status="no_response")
+                patch_attempts.append({"task_id": act.task_id, "status": "no_response", "preflight": None, "failure_reason": failure})
                 continue
 
             # Check for before/after replacement object (requirement 3 & 4)
@@ -1192,7 +1284,14 @@ class ArchitectBuilderBridge:
             if before_after is not None:
                 diff = generate_unified_diff_from_before_after(before_after, repo_root=self.router.repo_root)
                 if not diff.strip():
-                    patch_attempts.append({"task_id": act.task_id, "status": "before_after_diff_generation_failed", "preflight": None})
+                    failure = self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        context_packet,
+                        status="before_after_diff_generation_failed",
+                        response=response,
+                    )
+                    patch_attempts.append({"task_id": act.task_id, "status": "before_after_diff_generation_failed", "preflight": None, "failure_reason": failure})
                     continue
             else:
                 diff = _extract_diff(response)
@@ -1242,6 +1341,15 @@ class ArchitectBuilderBridge:
                     attempt_record["status"] = "repair_succeeded"
                 else:
                     attempt_record["status"] = "repair_failed_blocked"
+                    attempt_record["failure_reason"] = self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        context_packet,
+                        status="repair_failed_blocked",
+                        response=response,
+                        preflight=preflight,
+                        repair_result=repair_result,
+                    )
                     patch_attempts.append(attempt_record)
                     self._record_qdkt("patch_attempt", act.task_id, "failed", {
                         "preflight_rejections": preflight.rejections,
@@ -1273,12 +1381,26 @@ class ArchitectBuilderBridge:
             })
             patch_attempts.append(attempt_record)
 
+        builder_failures = [attempt["failure_reason"] for attempt in patch_attempts if attempt.get("failure_reason")]
+        if not submissions and not builder_failures:
+            grounding_by_task = {item.task_id: item.to_dict() for item in prepared.grounding}
+            for act in prepared.plan.act_capsules:
+                builder_failures.append(
+                    self._builder_failure_report(
+                        act,
+                        grounding_by_task.get(act.task_id, {}),
+                        None,
+                        status="no_patch_staged",
+                    )
+                )
         self.patch_quality = {
             "attempts": patch_attempts,
+            "builder_failures": builder_failures,
             "total_attempts": len(patch_attempts),
             "preflight_passed": sum(1 for a in patch_attempts if a.get("status") == "preflight_passed"),
             "repair_succeeded": sum(1 for a in patch_attempts if a.get("status") == "repair_succeeded"),
             "repair_failed_blocked": sum(1 for a in patch_attempts if a.get("status") == "repair_failed_blocked"),
+            "no_patch_staged": not bool(submissions),
         }
         return submissions
 
