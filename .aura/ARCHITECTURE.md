@@ -16,6 +16,12 @@ architectural context an Aura packet should need for a surgical edit.
   writes `Aura_Memory/live_topology_ast.json` (`nodes`, `edges`).
 - **`gateway.py`** — VSA routing + `compile_thought_package` context compressor.
 
+- **`aura_empirical_software_lab.py`** - ERA-for-Aura layer. Defines
+  scorable subsystem tasks over patch repair, repo localization, context
+  compression, hotswap safety, and research retrieval utility. It reads
+  CODEMAP/MODULE_MANIFEST/repair-KG evidence, scores local verifier artifacts,
+  records a JSONL candidate tree, and only recommends human-reviewed promotion.
+
 ### Protocol invariants (do not break)
 
 - The mesh binary frame is `struct.pack("<HHHHHHf", *six_uint16, float)` =
@@ -23,3 +29,6 @@ architectural context an Aura packet should need for a surgical edit.
 - Topology JSON node id format is `"<file>::<symbol>"`.
 - `[AURA_MASTER_KEY]` header docstrings carry `DEPENDENCIES` and `FUNCTIONS`
   lists used as a cheap symbol index.
+- Empirical lab candidates are experiments, not production mutations. They may
+  score and recommend, but Refactor Arena verification and human approval remain
+  the promotion boundary.

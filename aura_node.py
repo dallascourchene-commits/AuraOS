@@ -6194,6 +6194,59 @@ async def main():
                 print("    Run '!backtrack' first if no academic engrams are in memory.")
                 continue
 
+            elif u_in_l == "!empirical_lab":
+                print("[-] Usage:")
+                print("    !empirical_lab patch_repair")
+                print("    !empirical_lab localizer")
+                print("    !empirical_lab context")
+                print("    !empirical_lab hotswap")
+                print("    !empirical_lab research")
+                print("    Defines a CODEMAP-grounded scorable task and scores the latest Live Architect transaction if present.")
+                continue
+
+            elif u_in_l.startswith("!empirical_lab "):
+                task_arg = u_in[15:].strip().split()[0].lower() if u_in[15:].strip() else ""
+                task_aliases = {
+                    "localizer": "repo_localization",
+                    "localization": "repo_localization",
+                    "context": "context_compression",
+                    "hotswap": "hotswap_safety",
+                    "research": "research_retrieval_utility",
+                }
+                task_type = task_aliases.get(task_arg, task_arg)
+                try:
+                    from aura_empirical_software_lab import (
+                        analyze_empirical_candidate,
+                        define_empirical_task,
+                        generate_candidate,
+                        record_empirical_result,
+                        recommend_promotion,
+                    )
+
+                    task = define_empirical_task(task_type, Path.cwd())
+                    candidate = generate_candidate(task)
+                    packet = {
+                        "task": task.to_dict(),
+                        "candidate": candidate.to_dict(),
+                        "message": "No Live Architect transaction found to score yet.",
+                    }
+                    transaction_path = Path("Aura_Staging") / "architect_live_transaction.json"
+                    if transaction_path.exists():
+                        transaction = json.loads(transaction_path.read_text(encoding="utf-8"))
+                        result = analyze_empirical_candidate(
+                            task=task,
+                            candidate=candidate,
+                            transaction_or_metrics=transaction,
+                        )
+                        record_empirical_result(result, Path.cwd())
+                        packet["result"] = result.to_dict()
+                        packet["recommendation"] = recommend_promotion(candidate.candidate_id, Path.cwd())
+                        packet["message"] = "Scored latest Live Architect transaction and recorded empirical evidence."
+                    print(json.dumps(packet, indent=2, sort_keys=True, default=str))
+                except Exception as exc:
+                    print(f"[-] Empirical lab failed: {exc}")
+                continue
+
             elif u_in_l.startswith("!research "):
                 subcmd_args = u_in[10:].strip()
                 if not subcmd_args:
@@ -7568,6 +7621,7 @@ def contingency_harness():
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
                     "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
                     "!research <concept>":("!research <concept>",  "Query ingested papers for <concept>; Refactor Arena is required before any code mutation."),
+                    "!empirical_lab <task>":("!empirical_lab <patch_repair|localizer|context|hotswap|research>", "Define a CODEMAP-grounded scorable Aura task, score latest verifier artifacts if present, and record a candidate-tree row without production mutation."),
                     "!search_similar <query>": (
                         "!search_similar <query>",
                         "Structured 10-slot VSA search over ingested arXiv "
