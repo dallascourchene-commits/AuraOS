@@ -32,6 +32,8 @@ class PatchRepairResult:
     """Result of a bounded one-shot patch format repair attempt."""
     ok: bool
     repaired_diff: str = ""
+    candidate_diff: str = ""
+    raw_response: str = ""
     repair_prompt: str = ""
     attempt_number: int = 1  # Always 1 — we only try once
     stderr_used: str = ""
@@ -115,6 +117,8 @@ async def repair_patch_format(
         return PatchRepairResult(
             ok=False,
             repaired_diff="",
+            candidate_diff="",
+            raw_response="",
             repair_prompt="",
             stderr_used=stderr,
             original_rejections=original_rejections,
@@ -133,6 +137,8 @@ async def repair_patch_format(
         return PatchRepairResult(
             ok=False,
             repaired_diff="",
+            candidate_diff="",
+            raw_response="",
             repair_prompt=repair_prompt,
             stderr_used=stderr,
             original_rejections=original_rejections,
@@ -144,6 +150,8 @@ async def repair_patch_format(
         return PatchRepairResult(
             ok=False,
             repaired_diff="",
+            candidate_diff="",
+            raw_response=response_text,
             repair_prompt=repair_prompt,
             stderr_used=stderr,
             original_rejections=original_rejections,
@@ -158,6 +166,8 @@ async def repair_patch_format(
             return PatchRepairResult(
                 ok=False,
                 repaired_diff="",
+                candidate_diff="",
+                raw_response=response_text,
                 repair_prompt=repair_prompt,
                 stderr_used=stderr,
                 original_rejections=original_rejections,
@@ -191,6 +201,8 @@ async def repair_patch_format(
     return PatchRepairResult(
         ok=preflight.ok,
         repaired_diff=repaired_diff if preflight.ok else "",
+        candidate_diff=repaired_diff,
+        raw_response=response_text,
         repair_prompt=repair_prompt,
         stderr_used=stderr,
         original_rejections=original_rejections,
