@@ -52,6 +52,7 @@ from collections.abc import Callable
 from typing import Any
 
 from arxiv_forager import ArXivForager
+from aura_research_manifest import ingest_research_manifest
 from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
 from aura_coordinated_solver import CoordinatedSolver
 from aura_crypto_puf import AuraThermodynamicPUF
@@ -6107,17 +6108,53 @@ async def main():
                 continue
 
             elif u_in_l == "!research":
-                print("[-] Usage: !research <concept>")
+                print("[-] Usage:")
+                print("    !research <concept>                        - Query resonant papers in memory")
+                print("    !research ingest <id1> <id2> ...            - Mass ingest papers by arXiv ID")
+                print("    !research manifest <manifest_path>         - Mass ingest papers from a JSON manifest")
                 print("    Example: !research vector symbolic architecture")
                 print("    Run '!backtrack' first if no academic engrams are in memory.")
                 continue
 
             elif u_in_l.startswith("!research "):
-                concept = u_in[10:].strip()
-                if not concept:
-                    print("[-] Please specify a concept, e.g., '!research vector symbolic architecture'")
+                subcmd_args = u_in[10:].strip()
+                if not subcmd_args:
+                    print("[-] Please specify a concept or subcommand.")
                     continue
 
+                if subcmd_args.lower().startswith("ingest "):
+                    raw_ids = subcmd_args[7:].strip().split()
+                    if not raw_ids:
+                        print("[-] Please specify one or more arXiv IDs, e.g., '!research ingest 2407.01489 2404.05427'")
+                        continue
+                    print(f"\n[*] Initiating mass ingestion of {len(raw_ids)} arXiv IDs...")
+                    arxiv = ArXivForager(node)
+                    result = await arxiv.ingest_arxiv_ids(raw_ids)
+                    if result.get("status") == "success":
+                        print(f"[+] Ingestion complete. Successfully ingested: {result['ingested']}")
+                        if result.get("failed"):
+                            print(f"[⚠️] Failed/Skipped: {result['failed']}")
+                    else:
+                        print(f"[-] Ingest failed: {result.get('message')}")
+                    continue
+
+                elif subcmd_args.lower().startswith("manifest "):
+                    manifest_path = subcmd_args[9:].strip()
+                    if not manifest_path:
+                        print("[-] Please specify a manifest file path, e.g., '!research manifest .aura/RESEARCH_MANIFEST.json'")
+                        continue
+                    print(f"\n[*] Initiating mass ingestion from manifest: {manifest_path}...")
+                    result = await ingest_research_manifest(manifest_path, node_ref=node)
+                    if result.get("status") == "success":
+                        print(f"[+] Ingestion complete. Successfully ingested: {result['ingested']}")
+                        if result.get("failed"):
+                            print(f"[⚠️] Failed/Skipped: {result['failed']}")
+                    else:
+                        print(f"[-] Ingest failed: {result.get('message')}")
+                    continue
+
+                # Fallback to standard concept query search
+                concept = subcmd_args
                 print(f"\n[*] Querying database for ingested papers resonant with: '{concept}'...")
 
                 # 1. Load or reuse the index for the current DB snapshot.

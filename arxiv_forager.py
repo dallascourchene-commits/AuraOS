@@ -19,6 +19,7 @@ import urllib.error
 from urllib.parse import urlencode
 import urllib.request
 import xml.etree.ElementTree as ET
+from typing import Any
 
 import numpy as np
 
@@ -203,8 +204,9 @@ class ArXivForager:
 
     async def _fetch_arxiv_xml(
         self,
-        search_query: str,
+        search_query: str = "",
         *,
+        id_list: str | None = None,
         start: int = 0,
         max_results: int = 100,
         sort_by: str = "submittedDate",
@@ -232,12 +234,15 @@ class ArXivForager:
                 await asyncio.sleep(request_delay - elapsed)
 
             params = {
-                "search_query": search_query,
                 "start": max(0, int(start)),
                 "max_results": page_size,
                 "sortBy": sort_by,
                 "sortOrder": sort_order,
             }
+            if search_query:
+                params["search_query"] = search_query
+            if id_list:
+                params["id_list"] = id_list
             request = urllib.request.Request(
                 f"{_ARXIV_API_URL}?{urlencode(params)}",
                 headers={
@@ -965,6 +970,152 @@ class ArXivForager:
             f"{crawler_state['crawl_window_start']}.."
             f"{crawler_state['crawl_window_end']}"
         )
+
+    async def ingest_arxiv_ids(self, arxiv_ids: list[str]) -> dict[str, Any]:
+        """
+        Mass ingest papers by their arXiv IDs.
+        """
+        if not arxiv_ids:
+            return {"status": "success", "count": 0, "ingested": [], "failed": []}
+
+        # sanitize the list of ids (remove spaces/prefixes like cs/ etc. if needed, keep basic arxiv format)
+        sanitized_ids = []
+        for raw_id in arxiv_ids:
+            clean_id = raw_id.strip()
+            # If ID is full url, extract final component
+            if "arxiv.org/abs/" in clean_id:
+                clean_id = clean_id.split("arxiv.org/abs/")[-1]
+            elif "arxiv.org/pdf/" in clean_id:
+                clean_id = clean_id.split("arxiv.org/pdf/")[-1].replace(".pdf", "")
+            if clean_id:
+                sanitized_ids.append(clean_id)
+
+        if not sanitized_ids:
+            return {"status": "success", "count": 0, "ingested": [], "failed": []}
+
+        id_str = ",".join(sanitized_ids)
+        try:
+            xml_data, _ = await self._fetch_arxiv_xml(
+                "",
+                id_list=id_str,
+                max_results=len(sanitized_ids),
+                sort_by="submittedDate",
+                sort_order="descending",
+            )
+        except Exception as exc:
+            return {
+                "status": "error",
+                "message": f"arXiv API fetch failed: {exc}",
+                "count": 0,
+                "ingested": [],
+                "failed": sanitized_ids
+            }
+
+        try:
+            root = ET.fromstring(xml_data)
+            entries = root.findall('{http://www.w3.org/2005/Atom}entry')
+            if not entries:
+                return {
+                    "status": "error",
+                    "message": "No papers found in arXiv response",
+                    "count": 0,
+                    "ingested": [],
+                    "failed": sanitized_ids
+                }
+
+            ingested = []
+            failed = list(sanitized_ids)
+            conn = self.node.memory_palace.conn if self.node else None
+            if conn:
+                try:
+                    await self._ensure_backtracker_schema(conn)
+                except Exception as e:
+                    print(f"[-] Database schema validation failed: {e}")
+
+            for entry in entries:
+                atom_ns = "{http://www.w3.org/2005/Atom}"
+                title = (entry.findtext(f"{atom_ns}title") or "").strip()
+                summary = (entry.findtext(f"{atom_ns}summary") or "").strip()
+                summary = " ".join(summary.split())
+                entry_id = (entry.findtext(f"{atom_ns}id") or "").strip()
+                paper_id = entry_id.rstrip("/").split("/")[-1] if entry_id else ""
+                
+                if not paper_id:
+                    continue
+
+                # Remove from failed list if found (check partial matching just in case version suffixes exist, e.g. v1)
+                found_id = None
+                for raw_id in failed:
+                    if raw_id in paper_id or paper_id in raw_id:
+                        found_id = raw_id
+                        break
+                if found_id:
+                    failed.remove(found_id)
+                
+                pdf_url = next(
+                    (
+                        link.get("href")
+                        for link in entry.findall(f"{atom_ns}link")
+                        if link.get("type") == "application/pdf"
+                    ),
+                    f"https://arxiv.org/pdf/{paper_id}" if paper_id else "",
+                )
+                authors = [
+                    (author.findtext(f"{atom_ns}name") or "").strip()
+                    for author in entry.findall(f"{atom_ns}author")
+                    if (author.findtext(f"{atom_ns}name") or "").strip()
+                ]
+                categories = [
+                    category.get("term", "")
+                    for category in entry.findall(f"{atom_ns}category")
+                    if category.get("term")
+                ]
+                published = (entry.findtext(f"{atom_ns}published") or "").strip()
+                doc_id = f"ARXIV_{paper_id.replace('/', '_')}"
+
+                pdf_text = await self._fetch_pdf_text(pdf_url)
+                paper_memory = await self._persist_paper_memory(
+                    doc_id=doc_id,
+                    title=title,
+                    abstract=summary,
+                    full_text=pdf_text,
+                    authors=authors,
+                    categories=categories,
+                    published=published,
+                    source_url=entry_id,
+                    pdf_url=pdf_url,
+                    metadata={"ingest_path": "ingest_arxiv_ids"},
+                )
+                full_text = record_to_trace_content(paper_memory)
+
+                if conn is not None:
+                    record = _scientific_record(doc_id, title, summary, categories=categories, published=published)
+                    blob_data = pack_vector(record.vector)
+                    try:
+                        await conn.execute(
+                            "INSERT OR REPLACE INTO traces (id, content, tier, timestamp, tags, vector_blob) VALUES (?, ?, 'CRYSTAL', ?, 'Scientific VSA v1', ?)",
+                            (doc_id, full_text, datetime.now().isoformat(), blob_data)
+                        )
+                        await conn.commit()
+                    except Exception as e:
+                        print(f"[-] Local DB write failed: {e}")
+
+                ingested.append(paper_id)
+
+            return {
+                "status": "success",
+                "count": len(ingested),
+                "ingested": ingested,
+                "failed": failed
+            }
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": f"arXiv processing failure: {e}",
+                "count": 0,
+                "ingested": [],
+                "failed": sanitized_ids
+            }
 
 
 # =============================================================================

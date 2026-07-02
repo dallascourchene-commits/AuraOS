@@ -1,0 +1,33 @@
+{
+  "manifest_version": "1.0",
+  "created_for": "Codex AuraOS vNext upgrade",
+  "papers": [
+    {
+      "arxiv_id": "2407.01489",
+      "label": "Agentless",
+      "target_modules": ["aura_repo_localizer.py", "aura_architect_loop.py"],
+      "implementation_lesson": "Use a deterministic localize-first fallback when Council debate fails or produces no staged patches.",
+      "acceptance_test": "When Council produces no staged patches, Aura runs repo localization and returns <=5 candidate files without any model call.",
+      "future_ingest": true,
+      "priority": 1
+    },
+    {
+      "arxiv_id": "2404.05427",
+      "label": "AutoCodeRover",
+      "target_modules": ["aura_repo_localizer.py"],
+      "implementation_lesson": "AST/program-structure search + fault localization.",
+      "acceptance_test": "Localizer uses AST parser to extract symbols, classes, functions and resolves their dependencies.",
+      "future_ingest": true,
+      "priority": 2
+    },
+    {
+      "arxiv_id": "2405.15793",
+      "label": "SWE-agent",
+      "target_modules": ["aura_builder_context.py"],
+      "implementation_lesson": "ACI design: every Act Capsule exposes bounded commands.",
+      "acceptance_test": "Worker context provides constrained editing tools and diff generation guidelines.",
+      "future_ingest": true,
+      "priority": 3
+    }
+  ]
+}
