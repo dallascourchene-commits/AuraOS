@@ -147,7 +147,7 @@ def ast_symbol_index(repo_root: str | Path) -> dict[str, list[dict[str, Any]]]:
             tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"), filename=str(path))
         except Exception:
             continue
-        for node in tree.body:
+        for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 kind = "class" if isinstance(node, ast.ClassDef) else "function"
                 index.setdefault(node.name, []).append(
@@ -226,6 +226,8 @@ def localize_fault(intent: str, repo_root: str | Path) -> list[LocalizedFile]:
     for path, entry in entry_by_path.items():
         if not path.endswith(".py"):
             continue
+        if not (root / path).exists():
+            continue
         tests = _tests_for_file(path, root, entry)
         score = _generated_penalty(path)
         reasons: list[str] = []
@@ -266,6 +268,8 @@ def localize_fault(intent: str, repo_root: str | Path) -> list[LocalizedFile]:
             file_path = _normalize_path(occurrence.get("file") or occurrence.get("path") or "")
             if not file_path or not file_path.endswith(".py"):
                 continue
+            if not (root / file_path).exists():
+                continue
             _add_match(
                 matches,
                 file_path,
@@ -282,7 +286,7 @@ def localize_fault(intent: str, repo_root: str | Path) -> list[LocalizedFile]:
         neighbors = topology.get("neighbor_files", []) if isinstance(topology, dict) else []
         for neighbor in neighbors or []:
             neighbor_path = _normalize_path(neighbor)
-            if neighbor_path.endswith(".py") and neighbor_path in entry_by_path:
+            if neighbor_path.endswith(".py") and neighbor_path in entry_by_path and (root / neighbor_path).exists():
                 _add_match(
                     matches,
                     neighbor_path,

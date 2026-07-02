@@ -87,8 +87,8 @@ def record_harness_prediction(
                     confidence=0.9,
                     subsystem="aura_harness_evolver",
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            event["qdkt_observation_failed"] = type(e).__name__
 
     _append_jsonl(_ledger_path(repo_root), event)
     return entry
@@ -156,6 +156,7 @@ def _read_predictions(repo_root: str | Path) -> list[dict[str, Any]]:
         try:
             row = json.loads(line)
         except Exception:
+            rows.append({"event_class": "harness_evolution_prediction", "status": "inconclusive", "parse_error": True})
             continue
         if row.get("event_class") == "harness_evolution_prediction":
             rows.append(row)
@@ -196,6 +197,16 @@ def verify_harness_predictions(repo_root: str | Path) -> dict[str, Any]:
     verified = failed = inconclusive = 0
 
     for row in predictions:
+        existing_status = row.get("status")
+        if existing_status in {"verified", "failed"}:
+            status = existing_status
+            if status == "verified":
+                verified += 1
+            elif status == "failed":
+                failed += 1
+            results.append({**row, "status": status})
+            continue
+
         observed = row.get("observed_value")
         metric_target = str(row.get("metric_target", ""))
         if observed is None and metric_target in metrics:

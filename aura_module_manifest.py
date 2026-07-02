@@ -50,7 +50,10 @@ EXCLUDE_DIRS = {
 
 
 def _normalize_manifest_path(path: str | Path) -> str:
-    return Path(str(path).replace("\\", "/")).as_posix().lstrip("./")
+    normalized = Path(str(path).replace("\\", "/")).as_posix()
+    if normalized.startswith("./"):
+        return normalized[2:]
+    return normalized
 
 
 def _manifest_hash(manifest: dict[str, Any]) -> str:
@@ -115,8 +118,8 @@ def generate_module_manifest(repo_root: str | Path) -> dict[str, Any]:
             manifest["modules"].append(
                 {
                     "path": relative.as_posix(),
-                    "public_symbols": public_symbols[:10],
-                    "imports": sorted(set(imports))[:10],
+                    "public_symbols": public_symbols,
+                    "imports": sorted(set(imports)),
                     "test_file": relative.parent.joinpath(test_file).as_posix() if has_test else None,
                     "hotswap_risk": "high" if "threading" in content or "asyncio" in content else "low",
                 }

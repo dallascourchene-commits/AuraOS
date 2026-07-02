@@ -326,7 +326,10 @@ def _as_metrics(transaction_or_metrics: dict[str, Any]) -> dict[str, Any]:
     return dict(transaction_or_metrics)
 
 
-def _bool_metric(metrics: dict[str, Any], key: str) -> bool:
+def _bool_metric(metrics: dict[str, Any], key: str) -> bool | None:
+    """Return True if metric is present and truthy, False if present and falsy, None if absent."""
+    if key not in metrics:
+        return None
     return bool(metrics.get(key))
 
 
@@ -397,16 +400,24 @@ def score_candidate(
             (_bool_metric(metrics, "stale_line_range"), "stale_line_range"),
         ]
     elif task_type == "hotswap_safety":
+        importlib_reload = _bool_metric(metrics, "importlib_reload_pass")
+        global_state = _bool_metric(metrics, "global_state_delta")
+        thread_side_effect = _bool_metric(metrics, "running_thread_side_effect")
+        sig_stable = _bool_metric(metrics, "public_signature_stable")
+        hotswap_ready_val = _bool_metric(metrics, "hotswap_ready")
+        restart_req = _bool_metric(metrics, "restart_required")
+        hierarchy_change = _bool_metric(metrics, "class_hierarchy_change")
+
         positive = [
-            (_bool_metric(metrics, "importlib_reload_pass"), "importlib_reload_pass"),
-            (not _bool_metric(metrics, "global_state_delta"), "no_global_state_delta"),
-            (not _bool_metric(metrics, "running_thread_side_effect"), "no_running_thread_side_effect"),
-            (_bool_metric(metrics, "public_signature_stable"), "public_signature_stable"),
-            (_bool_metric(metrics, "hotswap_ready"), "hotswap_ready"),
+            (importlib_reload is True, "importlib_reload_pass"),
+            (global_state is False, "no_global_state_delta"),
+            (thread_side_effect is False, "no_running_thread_side_effect"),
+            (sig_stable is True, "public_signature_stable"),
+            (hotswap_ready_val is True, "hotswap_ready"),
         ]
         negative = [
-            (_bool_metric(metrics, "restart_required"), "restart_required"),
-            (_bool_metric(metrics, "class_hierarchy_change"), "class_hierarchy_change"),
+            (restart_req is True, "restart_required"),
+            (hierarchy_change is True, "class_hierarchy_change"),
             (int(metrics.get("test_fail_count", 0) or 0) > 0, "test_failures"),
         ]
     elif task_type == "research_retrieval_utility":
@@ -541,7 +552,12 @@ def recommend_promotion(candidate_id: str, repo_root: str | Path) -> dict[str, A
     metrics = score_card.get("metrics", {}) or {}
     failures = row.get("failures", []) or []
     verifier_green = metrics.get("workspace_ok") is True and not failures
-    hotswap_green = metrics.get("hotswap_ready") is True or metrics.get("public_signature_stable") is True
+    has_hotswap_metrics = "hotswap_ready" in metrics or "public_signature_stable" in metrics
+    hotswap_green = (
+        (metrics.get("hotswap_ready") is True or metrics.get("public_signature_stable") is True)
+        if has_hotswap_metrics
+        else True
+    )
     recommended = bool(row.get("ok")) and bool(score_card.get("passed")) and verifier_green and hotswap_green
     return {
         "candidate_id": candidate_id,

@@ -76,12 +76,12 @@ class RepositoryKnowledgeGraph:
 
     def _load_codemap_json(self) -> dict[str, Any] | None:
         codemap_path = self.root / ".aura" / "CODEMAP.json"
-        if not codemap_path.exists() or codemap_path.stat().st_size == 0:
-            return None
         try:
+            if not codemap_path.exists() or codemap_path.stat().st_size == 0:
+                return None
             data = json.loads(codemap_path.read_text(encoding="utf-8"))
             return data if isinstance(data, dict) else None
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             return None
 
     def _codemap_file_entries(self, codemap: dict[str, Any]) -> list[dict[str, Any]]:
@@ -238,12 +238,12 @@ class RepositoryKnowledgeGraph:
     def add_node(self, node_id: str, properties: dict[str, Any]) -> None:
         node_type = properties.get("type")
         if node_type is not None and node_type not in NODE_TYPES:
-            properties = {**properties, "type": str(node_type)}
+            raise ValueError(f"Node type '{node_type}' is not in allowed NODE_TYPES: {NODE_TYPES}")
         self.nodes[node_id] = properties
 
     def add_edge(self, source_id: str, target_id: str, edge_type: str, metadata: dict[str, Any] | None = None) -> None:
         if edge_type not in EDGE_TYPES:
-            metadata = {"edge_type_alias": edge_type, **(metadata or {})}
+            raise ValueError(f"Edge type '{edge_type}' is not in allowed EDGE_TYPES: {EDGE_TYPES}")
         edge = {
             "target": target_id,
             "type": edge_type,
