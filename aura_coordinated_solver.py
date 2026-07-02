@@ -20,6 +20,8 @@ import time
 
 import numpy as np
 
+from aura_thermal import read_cpu_temp_c
+
 
 @dataclass
 class StrategyBuffer:
@@ -128,11 +130,7 @@ class CoordinatedSolver:
         dynamic_k = self.K
         if self.node is not None:
             try:
-                temp = 42.0
-                import os
-                if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
-                        temp = float(f.read().strip()) / 1000.0
+                temp = read_cpu_temp_c()
                 if temp > 39.0:
                     dynamic_k = max(2, self.K // 2)
                     print(f"[*] [DYNAMIC WORKER SIZING] CPU hot ({temp:.1f}C). Throttling pool: {self.K} -> {dynamic_k}")

@@ -40,6 +40,7 @@ import time
 import numpy as np
 
 from vsa_resonator import VSAResonator
+from aura_thermal import read_cpu_temp_c
 
 try:
     from aura_spectral_memory import AuraSpectralMemoryOrchestrator as _SpectralOrch
@@ -72,13 +73,7 @@ class AuraDreamEngine:
         conn = self.node.memory_palace.conn
 
         # 1. Check Thermals (Only dream when the CPU is running cool)
-        temp = 42.0
-        try:
-            if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                    temp = float(f.read().strip()) / 1000.0
-        except Exception:
-            pass
+        temp = read_cpu_temp_c()
 
         if temp > 38.0:
             return f"[-] Dream Phase aborted: CPU thermals too high ({temp:.1f}C). Rest is deferred."
@@ -270,12 +265,7 @@ async def homeostatic_decay_pass(node, resonance_floor: float = 0.15) -> str:
     A human-readable summary string.
     """
     # Safety: only run when thermals are cool
-    current_temp = 42.0
-    try:
-        with open('/sys/class/thermal/thermal_zone0/temp') as _f:
-            current_temp = float(_f.read().strip()) / 1000.0
-    except (OSError, FileNotFoundError):
-        pass
+    current_temp = read_cpu_temp_c()
 
     if current_temp > 40.0:
         return f"[-] Homeostatic decay skipped — thermals {current_temp:.1f}°C > 40.0°C."

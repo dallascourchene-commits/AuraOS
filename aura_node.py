@@ -51,7 +51,11 @@ SOVEREIGN_CORE = SovereignEngine()
 from collections.abc import Callable
 from typing import Any
 
-from arxiv_forager import ArXivForager
+from arxiv_forager import (
+    ARXIV_INTERACTIVE_BACKTRACK_PAGE_SIZE,
+    ARXIV_INTERACTIVE_BACKTRACK_TIMEOUT,
+    ArXivForager,
+)
 from aura_research_manifest import ingest_research_manifest
 from aura_cognitive_synthesizer import AuraCognitiveSynthesizer
 from aura_coordinated_solver import CoordinatedSolver
@@ -71,6 +75,7 @@ from aura_positional_parser import AthabaskanPositionalParser
 from aura_rosetta_memory import RosettaMemoryBuffer
 from aura_scientific_memory import index_from_rows
 from aura_skillweaver import research_gate_intercept
+from aura_thermal import read_cpu_temp_c
 from aura_coding_arena_workflow import (
     convert_research_proposal_to_action_capsule,
     enforce_research_no_direct_mutation,
@@ -2173,12 +2178,7 @@ class AuraEcosystemAuditor:
             synopsis = await self.node.invoke_engine(prompt)
 
         # 3. ST3GG Protocol: Hardware Thermal Anchor
-        temp = 42.0
-        try:
-            with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                temp = float(f.read().strip()) / 1000.0
-        except (OSError, FileNotFoundError):
-            pass
+        temp = read_cpu_temp_c()
         st3gg_base = 0x0000
         if hasattr(self.node, 'gateway'):
             st3gg_base = self.node.gateway.generate_st3gg_glyph(funcs_str, temp)
@@ -2274,12 +2274,7 @@ class AuraEcosystemAuditor:
         # ------------------------------------------------------------------------
         compute_time_ms = (time.time() - start_time) * 1000
         # 7. Protocol A, B, C: Holographic qDKT Trace Commit
-        temp = 42.0
-        try:
-            with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                temp = float(f.read().strip()) / 1000.0
-        except (OSError, FileNotFoundError):
-            pass
+        temp = read_cpu_temp_c()
         metrics = getattr(self.node, 'runtime_metrics', {})
         t_id = metrics.get('thought_id', "AUDIT-00000000")
         try:
@@ -4085,13 +4080,7 @@ Write a non-blocking, asynchronous Python helper function that integrates this r
         resonant_context = self.router.wave_scan(prompt_hv, limit=2) if hasattr(self, 'router') else ""
 
         # 2. Retrieve Tier 1 Sensory Context
-        current_temp = 42.0
-        try:
-            if os.path.exists('/sys/class/thermal/thermal_zone0/temp'):
-                with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                    current_temp = float(f.read().strip()) / 1000.0
-        except:
-            pass
+        current_temp = read_cpu_temp_c()
 
         # 3. Construct the Stateless Prompt Structure
         if active_profile == PROFILE_PYTHON_PATCH:
@@ -4888,12 +4877,7 @@ class AuraVocalHypervisor:
                 break
             print(f"\n[Dallas (Voice)] > {user_speech}")
             # 1. Hardware Anchor (ST3GG Prep)
-            temp = 42.0
-            try:
-                with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                    temp = float(f.read().strip()) / 1000.0
-            except:
-                pass
+            temp = read_cpu_temp_c()
             # 2. Execute Intent and Gather Output
             start_time = time.time()
             response, tool = await self.execute_react_loop(user_speech)
@@ -5718,12 +5702,7 @@ async def main():
                 start_time = time.time()
 
                 engine = SelfReflectEngine(node_ref=node)
-                current_temp = 42.0
-                try:
-                    with open("/sys/class/thermal/thermal_zone0/temp", encoding="utf-8") as f:
-                        current_temp = float(f.read().strip()) / 1000.0
-                except (OSError, ValueError):
-                    pass
+                current_temp = read_cpu_temp_c()
 
                 # ── Phase 1: Run the VSA + architecture analysis cycle ────────
                 result = await engine.execute_cycle(
@@ -5990,11 +5969,7 @@ async def main():
                     f.write(output_data)
                 print(f"[+] Output written to: {file_path}")
                 # --- QUANTUM DKT & ST3GG INTEGRATION ---
-                try:
-                    with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                        current_temp = float(f.read().strip()) / 1000.0
-                except (OSError, FileNotFoundError):
-                    current_temp = 42.0
+                current_temp = read_cpu_temp_c()
                 compute_time_ms = (time.time() - start_time) * 1000
                 numeric_id = int(thought_id.split('-')[1], 16)
                 log_dkt_commit_shim(node, numeric_id, u_in_l, current_temp, compute_time_ms, True)
@@ -6177,8 +6152,13 @@ async def main():
                 print("\n[*] Initializing dynamic chronological arXiv backlog crawl...")
                 arxiv = ArXivForager(node)
 
-                # Walk chronologically backwards, fetch 20, compress, and update offset
-                success = await arxiv.upgraded_arxiv_backtracker(max_results=100)
+                # Interactive path is metadata-only and bounded so the REPL never appears hung on slow PDF/OAI fetches.
+                success = await arxiv.upgraded_arxiv_backtracker(
+                    max_results=ARXIV_INTERACTIVE_BACKTRACK_PAGE_SIZE,
+                    max_retries=1,
+                    timeout=ARXIV_INTERACTIVE_BACKTRACK_TIMEOUT,
+                    pdf_fetch_limit=0,
+                )
                 if success:
                     print("[+] ArXiv backlog timeline crawl segment successfully completed.")
                 else:
@@ -7901,7 +7881,7 @@ def contingency_harness():
                     loop = asyncio.get_running_loop()
                     loop.create_task(
                         node.memory_palace.enqueue_holographic_trace(
-                            num_id, f"[{action}] Intent Processed", 42.0, compute_time_ms, True
+                            num_id, f"[{action}] Intent Processed", read_cpu_temp_c(), compute_time_ms, True
                         )
                     )
         except KeyboardInterrupt:

@@ -24,6 +24,7 @@ import time
 
 from aura_evolution_bridge import validate_proposed_mutation
 from aura_gbnf_profiles import PROFILE_PYTHON_PATCH
+from aura_thermal import read_cpu_temp_c
 
 # ── Security constants ──────────────────────────────────────────────────────
 # Project root: all file writes must land under this directory tree.
@@ -182,12 +183,7 @@ class LiquidFlashEvolve:
         start_time = time.time()
         proposal_str = str(user_proposal)
 
-        temp = 42.0
-        try:
-            with open("/sys/class/thermal/thermal_zone0/temp") as f:
-                temp = float(f.read().strip()) / 1000.0
-        except OSError:
-            pass
+        temp = read_cpu_temp_c()
 
         baseline_friction = 0
         if os.path.exists(target_file):

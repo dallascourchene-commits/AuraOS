@@ -31,6 +31,7 @@ import urllib.request
 import websockets
 
 from aura_api_rotator import gemini_generate, gemini_key_pool, load_secrets
+from aura_thermal import read_cpu_temp_c
 from pvm_memory_guard import sample_rss_mb
 from symbolic_shield import verify_structural_truth
 
@@ -402,12 +403,7 @@ async def agentic_optimization(filename, original_code, external_knowledge):
 
     # --- RUBRIC REWARD GATE (arXiv:2605.31584) + YOUVAN SOUND SHIELD ---
     # Read current device temperature for F_thermal component
-    _temp = 42.0
-    try:
-        with open('/sys/class/thermal/thermal_zone0/temp') as _tf:
-            _temp = float(_tf.read().strip()) / 1000.0
-    except (OSError, FileNotFoundError):
-        pass
+    _temp = read_cpu_temp_c()
 
     rubric_score, rubric_breakdown = compute_rubric_reward(new_code, current_temp_c=_temp)
     if rubric_score < _RUBRIC_FLOOR:

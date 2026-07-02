@@ -44,6 +44,8 @@ _ARXIV_OAI_URL = "https://export.arxiv.org/oai2"
 _ARXIV_USER_AGENT = "AuraOS/1.0 (mailto:aura.os.q@gmail.com)"
 _ARXIV_MIN_REQUEST_DELAY = 3.5
 _ARXIV_SAFE_PAGE_SIZE = 200
+ARXIV_INTERACTIVE_BACKTRACK_PAGE_SIZE = 25
+ARXIV_INTERACTIVE_BACKTRACK_TIMEOUT = 12.0
 _ARXIV_BACKTRACK_WINDOW = timedelta(days=1)
 _ARXIV_MAX_PDF_BYTES = 15_000_000
 _PAPER_MEMORY_LEDGER = "Aura_Memory/paper_memory_ledger.jsonl"
@@ -657,9 +659,9 @@ class ArXivForager:
         )
         if pdf_fetch_limit is None:
             try:
-                pdf_fetch_limit = int(os.environ.get("AURA_BACKTRACK_PDF_LIMIT", "3"))
+                pdf_fetch_limit = int(os.environ.get("AURA_BACKTRACK_PDF_LIMIT", "0"))
             except ValueError:
-                pdf_fetch_limit = 3
+                pdf_fetch_limit = 0
         pdf_fetch_limit = max(0, int(pdf_fetch_limit))
         pdf_fetch_count = 0
         oai_next_token = None
@@ -754,7 +756,7 @@ class ArXivForager:
                         'oai_resumption_token'
                     ),
                     max_retries=max_retries,
-                    timeout=max(60.0, timeout),
+                    timeout=max(20.0, timeout),
                 )
                 raw_papers, oai_next_token = self._parse_arxiv_oai_records(
                     oai_xml
