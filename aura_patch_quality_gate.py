@@ -224,26 +224,28 @@ def preflight_patch(
     Research basis: Agentless's "patch validation" step; SWE-agent's format repair;
     PracRepair's preflight checks.
     """
-    body = str(diff or "").strip()
+    body = str(diff or "")
+    stripped_body = body.strip()
     rejections: list[str] = []
 
     # 1. Empty diff
-    if not body:
+    if not stripped_body:
         return PatchPreflightResult(ok=False, rejections=["empty_diff"], diff=diff)
 
     # 2. Prose-only
-    if _is_prose_only(body):
+    if _is_prose_only(stripped_body):
         rejections.append("prose_only_output")
 
     # 3. Malformed hunk headers
-    hunk_errors = _validate_hunk_headers(body)
+    hunk_errors = _validate_hunk_headers(stripped_body)
     if hunk_errors:
         rejections.extend(hunk_errors)
 
     # 4. git apply --check
     git_check_result: dict[str, Any] | None = None
     if run_git_check and not rejections:
-        git_check_result = _git_apply_check(body, repo_root=Path(repo_root).resolve())
+        git_body = body if body.endswith("\n") else body + "\n"
+        git_check_result = _git_apply_check(git_body, repo_root=Path(repo_root).resolve())
         if git_check_result.get("returncode") != 0:
             stderr = str(git_check_result.get("stderr") or git_check_result.get("error") or "")
             rejections.append(f"git_apply_check_failed: {stderr[:200]}")

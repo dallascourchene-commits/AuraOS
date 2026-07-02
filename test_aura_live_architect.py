@@ -42,6 +42,49 @@ def _write_demo_repo(root: Path) -> None:
     (root / "aura_incubator.py").write_text("SENTINEL = 'unchanged'\n", encoding="utf-8")
 
 
+def _write_demo_research_manifest(root: Path) -> None:
+    aura_dir = root / ".aura"
+    aura_dir.mkdir(exist_ok=True)
+    (aura_dir / "RESEARCH_MANIFEST.json").write_text(
+        json.dumps(
+            {
+                "manifest_version": "1.0",
+                "created_for": "live architect music test",
+                "papers": [
+                    {
+                        "arxiv_id": "2407.01489",
+                        "label": "Agentless",
+                        "target_modules": ["demo.py"],
+                        "implementation_lesson": "Keep fallback localization deterministic when the council disagrees.",
+                        "acceptance_test": "The demo test still passes after the staged patch.",
+                        "future_ingest": True,
+                        "priority": 2,
+                    },
+                    {
+                        "arxiv_id": "2405.15793",
+                        "label": "SWE-agent",
+                        "target_modules": ["demo.py"],
+                        "implementation_lesson": "Constrain the worker to a small action interface and diff-only output.",
+                        "acceptance_test": "The worker prompt keeps the patch scoped to demo.py.",
+                        "future_ingest": True,
+                        "priority": 1,
+                    },
+                    {
+                        "arxiv_id": "2509.06503",
+                        "label": "Empirical Research Assistance",
+                        "target_modules": ["demo.py"],
+                        "implementation_lesson": "Prefer candidates with reproducible local verifier evidence.",
+                        "acceptance_test": "Workspace verification records a green pytest result.",
+                        "future_ingest": True,
+                        "priority": 0,
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_live_architect_routes_model_patch_through_temp_workspace(tmp_path: Path):
     _write_demo_repo(tmp_path)
     ledger_path = tmp_path / "Aura_Memory" / "architect_loop_ledger.jsonl"
@@ -275,6 +318,74 @@ def test_live_architect_runs_fusion_council_shadow_and_judge(tmp_path: Path):
     assert transaction.hotswap_capsule["topology_delta"]["files"][0]["calls"]["added"] == []
     assert transaction.hotswap_capsule["topology_delta"]["world_state_delta"]["domain"] == "code"
     assert transaction.hotswap_capsule["liquid_arena"]["domain"] == "code"
+
+
+def test_live_architect_exposes_music_mitosis_fused_plan_to_judge_and_worker(tmp_path: Path):
+    _write_demo_repo(tmp_path)
+    _write_demo_research_manifest(tmp_path)
+    worker_prompts: list[str] = []
+
+    def plan(task_id: str, decision: str, objective: str) -> str:
+        return json.dumps(
+            {
+                "architecture_decision": decision,
+                "target_file": "demo.py",
+                "target_symbol": "answer",
+                "act_tasks": [
+                    {
+                        "task_id": task_id,
+                        "objective": objective,
+                        "target_file": "demo.py",
+                        "target_symbol": "answer",
+                        "acceptance": "test_demo.py passes in the temp workspace.",
+                        "expected_output": "UNIFIED_DIFF",
+                    }
+                ],
+            }
+        )
+
+    async def model_caller(provider: str, prompt: str, meta: dict):
+        if meta["role"] == "planner":
+            return plan("A-PRIMARY", "Primary premium planner candidate.", "Change demo.answer to two.")
+        if meta["role"] == "planner_alt":
+            return plan("A-ALT", "Alternate premium planner with stronger verifier evidence.", "Change demo.answer and preserve pytest evidence.")
+        if meta["role"] == "shadow":
+            return json.dumps({"approved": True, "score": 0.92, "blockers": [], "rationale": "Candidate is bounded."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "plan_judge":
+            assert "music_mitosis_fusion" in prompt
+            return json.dumps({"selected_candidate_id": "music_mitosis_fusion", "approved": True, "rationale": "Fused plan incorporates both council paths and research evidence."})
+        if meta["role"] == "judge" and meta.get("council_phase") == "patch_bundle_judge":
+            return json.dumps({"approved": True, "rationale": "Fused patch bundle verifies."})
+        assert provider
+        assert meta["role"] == "worker"
+        worker_prompts.append(prompt)
+        assert "MUSIC_MITOSIS" in prompt
+        return (
+            "diff --git a/demo.py b/demo.py\n"
+            "--- a/demo.py\n"
+            "+++ b/demo.py\n"
+            "@@ -1,2 +1,2 @@\n"
+            " def answer():\n"
+            "-    return 1\n"
+            "+    return 2\n"
+        )
+
+    transaction = asyncio.run(
+        run_live_architect_transaction(
+            "make demo.answer return two through music mitosis fusion",
+            repo_root=tmp_path,
+            model_caller=model_caller,
+        )
+    )
+
+    candidate_ids = [candidate["candidate_id"] for candidate in transaction.fusion_council["candidates"]]
+    assert "music_mitosis_fusion" in candidate_ids
+    assert transaction.fusion_council["judge_decision"]["selected_candidate_id"] == "music_mitosis_fusion"
+    assert transaction.fusion_council["music_mitosis"]["status"] == "ready"
+    assert transaction.prepared.plan.act_capsules[0].role == "music_mitosis_builder"
+    assert transaction.patch_quality["music_mitosis"]["fusion_candidate_id"] == "music_mitosis_fusion"
+    assert transaction.verification.hotswap_ready is True
+    assert worker_prompts
 
 
 def test_live_architect_blocks_rejected_plan_judge_even_if_patch_judge_approves(tmp_path: Path):

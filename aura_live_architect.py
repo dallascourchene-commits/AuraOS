@@ -79,6 +79,17 @@ except Exception:
     WorkflowOutcome = None  # type: ignore[assignment]
     get_coding_arena_memory = None  # type: ignore[assignment]
 
+try:
+    from aura_music_coding_arena import (
+        augment_act_tasks_with_music,
+        fuse_music_council_plan,
+        music_builder_objective,
+    )
+except Exception:
+    augment_act_tasks_with_music = None  # type: ignore[assignment]
+    fuse_music_council_plan = None  # type: ignore[assignment]
+    music_builder_objective = None  # type: ignore[assignment]
+
 ARCHITECT_LIVE_VERSION = "AURA_LIVE_ARCHITECT_V1"
 ARCHITECT_STAGING_PATH = Path(REPO_ROOT) / "Aura_Staging" / "architect_live_transaction.json"
 ModelCaller = Callable[[str, str, dict[str, Any]], Any]
@@ -117,6 +128,7 @@ class ArchitectCouncilDecision:
     judge_decision: dict[str, Any]
     budget_route: dict[str, Any]
     phase_hash: str
+    music_mitosis: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -1016,6 +1028,57 @@ class ArchitectFusionCouncil:
             if plan:
                 candidates.append(self._candidate(candidate_id, plan, cost_tier="premium", source=plan["source"]))
 
+        music_mitosis: dict[str, Any] = {"status": "disabled", "reason": "music_coding_arena_unavailable"}
+        if fuse_music_council_plan is not None:
+            try:
+                music_mitosis = fuse_music_council_plan(
+                    intent,
+                    candidates,
+                    repo_root=self.router.repo_root,
+                    target_file=inferred_file,
+                    target_symbol=target_symbol,
+                )
+            except Exception as exc:
+                music_mitosis = {"status": "failed", "reason": type(exc).__name__}
+        if music_mitosis.get("status") == "ready":
+            best_by_candidate = music_mitosis.get("best_by_candidate", {}) or {}
+            for candidate in candidates:
+                candidate_id = str(candidate.get("candidate_id", ""))
+                related = best_by_candidate.get(candidate_id)
+                if related:
+                    candidate["music_mitosis"] = {
+                        "status": "ready",
+                        "candidate_id": candidate_id,
+                        "selected_research": related.get("selected_research", {}),
+                        "synthesis": related.get("synthesis", ""),
+                        "builder_hint": (
+                            "MUSIC_MITOSIS: "
+                            f"{related.get('synthesis', '')} Keep the patch scoped to the selected Act Capsule and preserve verifier gates."
+                        ),
+                        "acceptance_test": related.get("selected_research", {}).get("acceptance_test", ""),
+                        "combined_score": related.get("combined_score", 0.0),
+                    }
+                    candidate["phase_hash"] = _hash_payload(candidate)
+            fused_plan = music_mitosis.get("fused_plan")
+            if isinstance(fused_plan, dict):
+                fused_candidate = self._candidate(
+                    str(music_mitosis.get("fusion_candidate_id") or "music_mitosis_fusion"),
+                    fused_plan,
+                    cost_tier="free",
+                    source="music_mitosis_fusion",
+                )
+                try:
+                    fused_candidate["score"] = max(float(fused_candidate.get("score", 0.0)), float(music_mitosis.get("fused_score", 0.0)))
+                except Exception:
+                    pass
+                fused_candidate["music_mitosis"] = {
+                    key: value
+                    for key, value in music_mitosis.items()
+                    if key not in {"fused_plan", "ranked_pairs", "best_by_candidate"}
+                }
+                fused_candidate["phase_hash"] = _hash_payload(fused_candidate)
+                candidates.append(fused_candidate)
+
         critic_reports = await self._run_shadow_critics(candidates, budget_route)
         judge_decision = await self._judge_candidates(candidates, budget_route)
         selected_id = judge_decision["selected_candidate_id"]
@@ -1024,12 +1087,21 @@ class ArchitectFusionCouncil:
         selected_plan["source"] = selected.get("source", selected_plan.get("source", "fusion_council"))
         selected_plan["council_candidate_id"] = selected["candidate_id"]
         selected_plan["ledger_hints"] = hints
+        if selected.get("music_mitosis"):
+            selected_plan["music_mitosis"] = selected["music_mitosis"]
+        elif music_mitosis.get("status") == "ready":
+            selected_plan["music_mitosis"] = {
+                key: value
+                for key, value in music_mitosis.items()
+                if key not in {"fused_plan", "ranked_pairs", "best_by_candidate"}
+            }
         payload = {
             "selected_plan": selected_plan,
             "candidates": candidates,
             "critic_reports": critic_reports,
             "judge_decision": judge_decision,
             "budget_route": budget_route,
+            "music_mitosis": music_mitosis,
         }
         return ArchitectCouncilDecision(phase_hash=_hash_payload(payload), **payload)
 
@@ -1567,13 +1639,26 @@ async def run_live_architect_transaction(
             pass
 
     plan_spec = council_decision.selected_plan
+    selected_music_mitosis = plan_spec.get("music_mitosis") or council_decision.music_mitosis
+    arena_objective = intent
+    if music_builder_objective is not None:
+        try:
+            arena_objective = music_builder_objective(intent, selected_music_mitosis)
+        except Exception:
+            arena_objective = intent
+    act_tasks = plan_spec["act_tasks"]
+    if augment_act_tasks_with_music is not None:
+        try:
+            act_tasks = augment_act_tasks_with_music(act_tasks, selected_music_mitosis)
+        except Exception:
+            act_tasks = plan_spec["act_tasks"]
     loop = ArchitectFusionLoop(repo_root=effective_root)
     prepared = loop.prepare(
-        intent,
+        arena_objective,
         architecture_decision=plan_spec["architecture_decision"],
         target_file=plan_spec.get("target_file"),
         target_symbol=plan_spec.get("target_symbol"),
-        act_tasks=plan_spec["act_tasks"],
+        act_tasks=act_tasks,
         acceptance_criteria=[
             "Builder output is staged as a patch submission, never written directly to production.",
             "Patch applies in a temporary workspace before hot-swap readiness.",
@@ -1591,7 +1676,7 @@ async def run_live_architect_transaction(
         ],
     )
     builder = ArchitectBuilderBridge(router, workflow_memory=workflow_memory, workflow_id=workflow_id)
-    patch_submissions = await builder.build_patch_submissions(prepared, objective=intent)
+    patch_submissions = await builder.build_patch_submissions(prepared, objective=arena_objective)
     stage_results = [
         stage_arena_patch(
             prepared.arena,
@@ -1644,7 +1729,7 @@ async def run_live_architect_transaction(
                 grounding_evidence=gap_grounding,
                 codemap=gap_codemap,
                 repo_root=effective_root,
-                objective=intent,
+                objective=arena_objective,
                 task_id="test_gap_filler",
             )
             test_gap_result = await fill_test_gap(
@@ -1735,7 +1820,7 @@ async def run_live_architect_transaction(
                 grounding_evidence=act_grounding,
                 codemap=dream_codemap,
                 repo_root=effective_root,
-                objective=intent,
+                objective=arena_objective,
                 task_id=act.task_id,
             )
         )
@@ -1744,6 +1829,7 @@ async def run_live_architect_transaction(
     # Assemble patch quality metadata
     patch_quality = {
         **builder.patch_quality,
+        "music_mitosis": selected_music_mitosis,
         "test_gap_filler": test_gap_result.to_dict() if test_gap_result else None,
         "verifier_decision": {
             "hotswap_ready": verification.hotswap_ready,
@@ -1768,6 +1854,7 @@ async def run_live_architect_transaction(
             "profiles": {name: profile.to_dict() for name, profile in router.profiles.items()},
             "ledger_hints": plan_spec.get("ledger_hints", {}),
             "budget_route": council_decision.budget_route,
+            "music_mitosis": selected_music_mitosis,
         },
         fusion_council={
             **council_decision.to_dict(),

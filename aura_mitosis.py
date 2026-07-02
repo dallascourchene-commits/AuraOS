@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: numpy, struct
+DEPENDENCIES: numpy, struct, aura_music_inversion
 FUNCTIONS: __init__, calculate_energy_landscape, execute_music_inversion, process_ledger_update, execute_mitotic_purge, execute_morphemic_mitosis
 SYNOPSIS: [CODE]
 def optimized_fallback():
@@ -14,6 +14,8 @@ def optimized_fallback():
 import struct
 
 import numpy as np
+
+from aura_music_inversion import dominant_music_angle
 
 
 class AuraMitosisEngine:
@@ -71,33 +73,20 @@ class AuraMitosisEngine:
     def execute_music_inversion(self, active_wave, sample_resolution=100):
         """
         [MUSIC INVERSION ENGINE]
-        Mathematically projects the active trajectory wave onto its noise subspace,
-        inverting the matrix elements to isolate hidden periodic truths (peaks).
-        Operates entirely matrix-free to respect the 4GB RAM boundary.
+        Runs bounded MUSIC subspace search over the active trajectory wave.
+        The 10,000-D wave is converted into small Hankel snapshots; SVD only sees
+        the projected covariance, never a full-dimensional matrix.
         """
-        y_wave = np.asarray(active_wave, dtype=np.complex64)
-        inverted_spectrum = np.zeros(sample_resolution, dtype=np.float32)
-
-        # Scan across her phase distribution spectrum (0 to 2*pi)
-        scan_angles = np.linspace(0, 2 * np.pi, sample_resolution, dtype=np.float32)
-        inv_dim = np.float32(1.0 / self.dim)
-
-        for idx, angle in enumerate(scan_angles):
-            # Form a steering test vector at this exact frequency channel
-            steering_phase = np.exp(1j * np.ones(self.dim, dtype=np.float32) * angle, dtype=np.complex64)
-
-            # Calculate signal projection overlap
-            overlap = np.real(np.sum(y_wave * np.conj(steering_phase))) * inv_dim
-
-            # MUSIC Matrix Inversion: 1 / (1 - |overlap|^2)
-            # As overlap approaches 1.0 (perfect resonance), denominator drops to 0,
-            # causing the inverted spectrum value to skyrocket into a sharp truth peak.
-            denom = np.float32(1.0001) - (overlap ** 2)
-            inverted_spectrum[idx] = np.float32(1.0) / denom
-
-        # Extract the dominant peak frequency index (The crystallized truth anchor)
-        dominant_truth_angle = scan_angles[np.argmax(inverted_spectrum)]
-        return dominant_truth_angle
+        y_wave = np.asarray(active_wave, dtype=np.complex64).reshape(-1)
+        if y_wave.size < 4:
+            return np.float32(np.angle(np.mean(y_wave))) if y_wave.size else np.float32(0.0)
+        dominant_truth_angle = dominant_music_angle(
+            y_wave,
+            sample_resolution=sample_resolution,
+            signal_count=1,
+            max_subspace_dim=min(64, max(8, sample_resolution // 2)),
+        )
+        return np.float32(dominant_truth_angle)
 
     def process_ledger_update(self, delta_W_array, continuous_physics_error=0.0):
         """
