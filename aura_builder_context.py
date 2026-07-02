@@ -280,8 +280,20 @@ def attach_st3gg_summary(
         root = Path(repo_root) if repo_root is not None else Path.cwd()
         target_path = Path(packet.target_file)
         file_path = target_path if target_path.is_absolute() else root / target_path
+        # Path traversal check: ensure resolved file_path stays inside resolved root
         try:
-            source_text = file_path.read_text(encoding="utf-8", errors="replace")
+            resolved_root = root.resolve()
+            resolved_file = file_path.resolve()
+            # Manual prefix check for cross-version compatibility (is_relative_to needs Python 3.9+)
+            try:
+                resolved_file.relative_to(resolved_root)
+                path_is_safe = True
+            except ValueError:
+                path_is_safe = False
+            if not path_is_safe:
+                attach_warnings.append("st3gg_source_path_outside_repo_root")
+            else:
+                source_text = resolved_file.read_text(encoding="utf-8", errors="replace")
         except OSError as exc:
             attach_warnings.append(f"st3gg_source_read_failed:{type(exc).__name__}")
 

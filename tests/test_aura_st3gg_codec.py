@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from pathlib import Path
 import sys
 
@@ -152,11 +153,35 @@ def test_fidelity_score_decreases_when_exact_spans_are_omitted() -> None:
     assert summary_frame.spans == ()
 
 
+def _check_forbidden_imports(source: str, forbidden_names: tuple[str, ...]) -> bool:
+    """Check if source imports any forbidden modules using AST parsing.
+
+    Returns True if a forbidden import is found, False otherwise.
+    """
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return False
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                for forbidden_name in forbidden_names:
+                    if alias.name == forbidden_name or alias.name.startswith(f"{forbidden_name}."):
+                        return True
+        elif isinstance(node, ast.ImportFrom):
+            if node.module:
+                for forbidden_name in forbidden_names:
+                    if node.module == forbidden_name or node.module.startswith(f"{forbidden_name}."):
+                        return True
+    return False
+
+
 def test_no_new_dependencies_are_required() -> None:
     source = Path(REPO_ROOT / "aura_st3gg_codec.py").read_text(encoding="utf-8")
     forbidden = ("numpy", "zlib", "tree_sitter", "tiktoken")
 
-    assert all(f"import {name}" not in source and f"from {name}" not in source for name in forbidden)
+    assert not _check_forbidden_imports(source, forbidden)
 
 
 def test_builder_hook_attaches_st3gg_beside_exact_excerpt() -> None:
