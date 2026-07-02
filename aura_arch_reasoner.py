@@ -171,14 +171,7 @@ class AuraArchReasoner:
         rng = np.random.default_rng(seed=0xA1A)
 
         for k in range(K):
-            # Create diverse strategy vectors based on architectural metrics
-            strategy_vec = rng.normal(
-                loc=tension,  # Center around current tension
-                scale=0.5,     # Variance in refactoring approaches
-                size=method_dim,
-            ).astype(np.float64)
-            # Normalize to unit sphere for stability
-            strategy_vec = strategy_vec / (np.linalg.norm(strategy_vec) + 1e-9)
+            strategy_vec = Q[:, k].astype(np.float64)
             planner_output.append(strategy_vec)
 
         # Step 3: Evaluate strategies via coordinated solver
