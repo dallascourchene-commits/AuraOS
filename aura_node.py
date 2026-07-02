@@ -5386,6 +5386,7 @@ async def main():
                     SOVEREIGN_CORE.vocalize("Live Architect bridge unavailable.")
                     return
                 print("[*] Building Plan/Act capsules, model route, and bounded Refactor Arena...")
+                node._live_architect_model_trace = []
 
                 topology_context = ""
                 map_path = "Aura_Memory/live_topology_ast.json"
@@ -5411,10 +5412,29 @@ async def main():
                         print(f"[!] Live Architect topology context skipped: {exc}")
 
                 async def call_architect_model(provider_tag, prompt_text, meta):
+                    model_trace = getattr(node, "_live_architect_model_trace", [])
                     prompt_with_topology = f"{prompt_text}\n{topology_context}"
                     profile = meta.get("profile", {})
                     print(f"[*] {meta.get('role', 'model')} -> {provider_tag} ({profile.get('model_class', 'unknown')})")
-                    return await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+                    trace_row = {
+                        "role": meta.get("role", "model"),
+                        "provider": provider_tag,
+                        "profile": profile,
+                        "meta": {k: v for k, v in meta.items() if k != "profile"},
+                        "prompt": prompt_with_topology[:50000],
+                        "status": "pending",
+                    }
+                    model_trace.append(trace_row)
+                    node._live_architect_model_trace = model_trace
+                    try:
+                        response = await node.invoke_cloud_engine(provider_tag, prompt_with_topology)
+                        trace_row["status"] = "ok"
+                        trace_row["response"] = str(response)[:100000]
+                        return response
+                    except Exception as exc:
+                        trace_row["status"] = "error"
+                        trace_row["error"] = repr(exc)
+                        raise
 
                 transaction = await run_live_architect_transaction(
                     core_intent,
@@ -5436,8 +5456,41 @@ async def main():
                 print("[-] Live Architect transaction stopped by user request.")
                 SOVEREIGN_CORE.vocalize("Live Architect transaction stopped.")
             except Exception as e:
+                staging_path = Path("Aura_Staging") / "architect_live_transaction.json"
+                staging_path.parent.mkdir(parents=True, exist_ok=True)
+                failure_packet = {
+                    "live_version": "AURA_LIVE_ARCHITECT_FATAL_REVIEW_V1",
+                    "status": "fatal_error",
+                    "intent": core_intent,
+                    "verification": {
+                        "hotswap_ready": False,
+                        "stage": "fatal_error",
+                        "failures": [
+                            {
+                                "stage": "live_architect_exception",
+                                "message": str(e),
+                                "exception_type": type(e).__name__,
+                            }
+                        ],
+                    },
+                    "hotswap_capsule": {"status": "blocked", "patches": []},
+                    "fusion_council": {},
+                    "patch_quality": {
+                        "attempts": [],
+                        "review_artifacts": [],
+                        "model_trace": getattr(node, "_live_architect_model_trace", []),
+                    },
+                    "review_artifacts": {
+                        "model_trace": getattr(node, "_live_architect_model_trace", []),
+                        "message": "Live Architect crashed before a full transaction could be assembled. Model prompts/responses captured above for review.",
+                    },
+                    "staging_path": str(staging_path),
+                }
+                staging_path.write_text(json.dumps(failure_packet, indent=2, sort_keys=True, default=str), encoding="utf-8")
                 print(f"[-] Live Architect transaction failed safely: {e}")
+                print(f"[+] Failure review packet written to {staging_path}. Run !stage to inspect model outputs.")
             finally:
+                node._live_architect_model_trace = []
                 if getattr(node, "_live_architect_task", None) is asyncio.current_task():
                     node._live_architect_task = None
 
@@ -6702,6 +6755,41 @@ async def main():
                         print(" [BLOCKERS]:")
                         for failure in verification.get("failures", [])[:5]:
                             print(f"   - {failure.get('stage')}: {failure.get('message')}")
+                    patch_quality = data.get("patch_quality", {}) if isinstance(data.get("patch_quality"), dict) else {}
+                    attempts = patch_quality.get("review_artifacts") or patch_quality.get("attempts") or []
+                    if attempts:
+                        print("  " + "-" * 60)
+                        print(" [BUILDER OUTPUTS / REJECTED CODE]:")
+                        for attempt in attempts:
+                            print(f"   - {attempt.get('task_id')} :: {attempt.get('status')} :: {attempt.get('target_file', 'n/a')}")
+                            raw_output = str(attempt.get("raw_model_response") or "")
+                            extracted_diff = str(attempt.get("extracted_diff") or "")
+                            repair = attempt.get("repair") if isinstance(attempt.get("repair"), dict) else {}
+                            repair_candidate = str(repair.get("candidate_diff") or repair.get("repaired_diff") or "")
+                            repair_raw = str(repair.get("raw_response") or "")
+                            if raw_output:
+                                print("     [raw worker output]")
+                                print(raw_output)
+                            if extracted_diff and extracted_diff != raw_output:
+                                print("     [extracted diff]")
+                                print(extracted_diff)
+                            if repair_candidate:
+                                print("     [repair candidate diff]")
+                                print(repair_candidate)
+                            elif repair_raw:
+                                print("     [raw repair output]")
+                                print(repair_raw)
+                    model_trace = patch_quality.get("model_trace") or data.get("review_artifacts", {}).get("model_trace", [])
+                    if model_trace:
+                        print("  " + "-" * 60)
+                        print(" [MODEL TRACE]:")
+                        for row in model_trace:
+                            print(f"   - {row.get('role')} -> {row.get('provider')} :: {row.get('status')}")
+                            if row.get("error"):
+                                print(f"     error: {row.get('error')}")
+                            if row.get("response"):
+                                print("     [response]")
+                                print(row.get("response"))
                     print("  " + "-" * 60)
                     print(" [Levers]: !stage_merge approves the hot-swap capsule; !stage_purge rejects it.")
                 elif os.path.exists(manifest_path):
