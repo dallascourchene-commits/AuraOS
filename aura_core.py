@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: numpy, json, subprocess, time
+DEPENDENCIES: numpy, json, subprocess, time, aura_music_inversion
 FUNCTIONS: __init__, continuous_tda_filtration, match_vsom, bind_intent_to_action, _syntax_weaver, music_inversion, vocalize, ingest_intent, __init__, backward_chain_manifest, __init__, generate_orthogonal_codebook, encode_text, extract_thermal_entropy, bind, bundle, similarity
 SYNOPSIS: [CODE]
 def optimized_fallback():
@@ -16,6 +16,8 @@ import subprocess
 import time
 
 import numpy as np
+
+from aura_music_inversion import music_frequency_search
 
 # Structural Configuration
 DIMENSIONS = 10000
@@ -107,23 +109,42 @@ class SovereignEngine:
         prototype_vector = self.vsom_codebook[coordinate[0], coordinate[1]]
         interference_pattern = np.multiply(prototype_vector, intent_vector)
 
-        # Expanded to 384 bits (generates 32 tokens per thought)
-        segment_size = DIMENSIONS // 384
-        binary_signature = ""
-        for i in range(384):
-            segment_sum = np.sum(interference_pattern[i*segment_size : (i+1)*segment_size])
-            binary_signature += "1" if segment_sum > 0 else "0"
-
         decoder = self.english_decoder if mode == "english" else self.semantic_decoder
         valid_keys = list(decoder.keys())
         num_primitives = len(valid_keys)
 
         generated_syntax = ""
         if num_primitives > 0:
-            for i in range(0, len(binary_signature), 12):
-                chunk = binary_signature[i:i+12]
-                chunk_int = int(chunk, 2)
-                wrapped_index = chunk_int % num_primitives
+            music_result = music_frequency_search(
+                interference_pattern.astype(np.complex64),
+                sample_resolution=384,
+                signal_count=1,
+                top_k=min(32, num_primitives),
+                max_subspace_dim=48,
+                max_snapshots=384,
+            )
+            self.last_music_inversion = music_result.to_dict()
+            if music_result.peaks:
+                peak_indices = [
+                    int((peak.frequency * 4096.0) + peak.index) % num_primitives
+                    for peak in music_result.peaks
+                ]
+            else:
+                peak_indices = []
+
+            # Edge fallback keeps the old VSOM/lexicon behavior if the spectrum is empty.
+            if not peak_indices:
+                segment_size = DIMENSIONS // 384
+                binary_signature = ""
+                for i in range(384):
+                    segment_sum = np.sum(interference_pattern[i * segment_size:(i + 1) * segment_size])
+                    binary_signature += "1" if segment_sum > 0 else "0"
+                peak_indices = [
+                    int(binary_signature[i:i + 12], 2) % num_primitives
+                    for i in range(0, len(binary_signature), 12)
+                ]
+
+            for wrapped_index in peak_indices[:32]:
                 actual_key = valid_keys[wrapped_index]
                 generated_syntax += decoder[actual_key] + " "
 

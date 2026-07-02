@@ -143,11 +143,15 @@ class TestValidUnifiedDiffAcceptance:
             "diff --git a/sample_module.py b/sample_module.py\n"
             "--- a/sample_module.py\n"
             "+++ b/sample_module.py\n"
-            "@@ -6,4 +6,4 @@\n"
+            "@@ -5,7 +5,7 @@ from typing import Any\n"
+            " \n"
             " def greet(name: str) -> str:\n"
             '     """Greet someone."""\n'
             '-    return f"Hello, {name}!"\n'
             '+    return f"Hi, {name}!"\n'
+            " \n"
+            " def add(a: int, b: int) -> int:\n"
+            '     """Add two numbers."""\n'
         )
         result = preflight_patch(valid_diff, repo_root=temp_repo_with_git)
         assert result.ok, f"Valid unified diff should pass preflight, rejections: {result.rejections}"
@@ -252,11 +256,15 @@ class TestOneShotPatchRepair:
             "diff --git a/sample_module.py b/sample_module.py\n"
             "--- a/sample_module.py\n"
             "+++ b/sample_module.py\n"
-            "@@ -6,4 +6,4 @@\n"
+            "@@ -5,7 +5,7 @@ from typing import Any\n"
+            " \n"
             " def greet(name: str) -> str:\n"
             '     """Greet someone."""\n'
             '-    return f"Hello, {name}!"\n'
             '+    return f"Hi, {name}!"\n'
+            " \n"
+            " def add(a: int, b: int) -> int:\n"
+            '     """Add two numbers."""\n'
         )
 
         def mock_caller(provider: str, prompt: str, payload: dict[str, Any]) -> str:
@@ -553,11 +561,15 @@ class TestPreflightRepairFlow:
             "diff --git a/sample_module.py b/sample_module.py\n"
             "--- a/sample_module.py\n"
             "+++ b/sample_module.py\n"
-            "@@ -6,4 +6,4 @@\n"
+            "@@ -5,7 +5,7 @@ from typing import Any\n"
+            " \n"
             " def greet(name: str) -> str:\n"
             '     """Greet someone."""\n'
             '-    return f"Hello, {name}!"\n'
             '+    return f"Hi, {name}!"\n'
+            " \n"
+            " def add(a: int, b: int) -> int:\n"
+            '     """Add two numbers."""\n'
         )
         result = preflight_patch(valid_diff, repo_root=temp_repo_with_git)
         assert result.ok, "Valid diff should pass preflight without repair"
