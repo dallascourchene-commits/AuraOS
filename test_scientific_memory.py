@@ -1285,6 +1285,48 @@ def test_backtracker_migrates_legacy_traces_table_missing_vector_blob(monkeypatc
     assert len(conn.ingested_rows) == 1
 
 
+def test_backtracker_skips_pdf_fetches_by_default(monkeypatch, tmp_path):
+    state = {
+        "crawl_offset_index": 0,
+        "last_crawl_time": 0.0,
+        "crawl_window_start": "202601010000",
+        "crawl_window_end": "202601020000",
+    }
+    conn = _FakeBacktrackerConnection(state)
+    node = SimpleNamespace(
+        memory_palace=SimpleNamespace(conn=conn),
+        runtime_metrics={},
+    )
+    forager = ArXivForager(node)
+    forager.paper_memory_ledger_path = str(tmp_path / "paper_memory.jsonl")
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+      <opensearch:totalResults>1</opensearch:totalResults>
+      <entry>
+        <id>https://arxiv.org/abs/2601.00002</id>
+        <title>Metadata Only Backtracking</title>
+        <summary>Backtrack should not block on PDFs by default.</summary>
+        <published>2026-01-02T00:00:00Z</published>
+        <author><name>A. Researcher</name></author>
+        <category term="cs.AI"/>
+        <link href="https://arxiv.org/pdf/2601.00002" type="application/pdf"/>
+      </entry>
+    </feed>"""
+
+    async def fake_fetch(_search_query, **kwargs):
+        return payload, kwargs["max_results"]
+
+    async def fail_pdf_fetch(*_args, **_kwargs):
+        raise AssertionError("PDF fetch should be opt-in for backtracking")
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", fake_fetch)
+    monkeypatch.setattr(forager, "_fetch_pdf_text", fail_pdf_fetch)
+
+    assert asyncio.run(forager.upgraded_arxiv_backtracker(max_results=1))
+    assert len(conn.ingested_rows) == 1
+
+
 _OAI_PAYLOAD = b"""<?xml version="1.0"?>
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"
          xmlns:arXiv="http://arxiv.org/OAI/arXiv/">

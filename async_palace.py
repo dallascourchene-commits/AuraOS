@@ -62,6 +62,7 @@ from typing import Any
 import numpy as np
 
 from logging_kit import log_error
+from aura_thermal import read_cpu_temp_c
 
 try:
     import aiosqlite
@@ -705,12 +706,7 @@ class AsyncMemoryPalace:
         latent Quantum Random Walk (QRW) entropy reserves for the PQCK shield.
         """
         while self.is_running:
-            temp = 42.0
-            try:
-                with open('/sys/class/thermal/thermal_zone0/temp') as f:
-                    temp = float(f.read().strip()) / 1000.0
-            except (OSError, FileNotFoundError):
-                pass
+            temp = read_cpu_temp_c()
             # Moto G Stylus Natural Idle Threshold
             if temp <= 38.0:
                 try:

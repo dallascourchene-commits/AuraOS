@@ -26,6 +26,8 @@ import uuid
 
 import numpy as np
 
+from aura_thermal import read_cpu_temp_c
+
 # ---------------------------------------------------------------------------
 # Module‑level constants
 # ---------------------------------------------------------------------------
@@ -816,23 +818,15 @@ class AuraMeshSwarm:
             loop = asyncio.get_running_loop()
         except RuntimeError:
             # No running event loop — fall back to synchronous read
-            try:
-                with open(THERMAL_PATH) as fh:
-                    return float(fh.read().strip()) / 1000.0
-            except (OSError, ValueError):
-                return 42.0
+            return read_cpu_temp_c(paths=(THERMAL_PATH,))
 
         def _sync_read() -> float:
-            try:
-                with open(THERMAL_PATH) as fh:
-                    return float(fh.read().strip()) / 1000.0
-            except (OSError, ValueError):
-                return 42.0
+            return read_cpu_temp_c(paths=(THERMAL_PATH,))
 
         try:
             return await loop.run_in_executor(None, _sync_read)
         except Exception:
-            return 42.0
+            return read_cpu_temp_c(paths=())
 
     # ==================================================================
     # SCENE‑ADAPTIVE TONE‑CURVE INGEST HELPER
@@ -947,14 +941,10 @@ class AuraMeshSwarm:
             return True
 
         # Thermal guard
-        current_temp: float = task_metadata.get("temperature", 42.0)
-        if current_temp == 42.0:
+        current_temp = task_metadata.get("temperature")
+        if current_temp is None:
             # Attempt synchronous read as fallback (called from sync context)
-            try:
-                with open(THERMAL_PATH) as fh:
-                    current_temp = float(fh.read().strip()) / 1000.0
-            except (OSError, ValueError):
-                pass
+            current_temp = read_cpu_temp_c(paths=(THERMAL_PATH,))
         if current_temp > self.offload_temp_threshold:
             print(
                 f"[*] Offload triggered by thermal threshold: "
