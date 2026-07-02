@@ -1051,6 +1051,8 @@ class ArchitectFusionCouncil:
                         "candidate_id": candidate_id,
                         "selected_research": related.get("selected_research", {}),
                         "synthesis": related.get("synthesis", ""),
+                        "classification": related.get("classification", ""),
+                        "grounding": related.get("grounding", {}),
                         "builder_hint": (
                             "MUSIC_MITOSIS: "
                             f"{related.get('synthesis', '')} Keep the patch scoped to the selected Act Capsule and preserve verifier gates."
@@ -1175,6 +1177,36 @@ class ArchitectBuilderBridge:
 
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
+            builder_failures = []
+            grounding_by_task = {item.task_id: item.to_dict() for item in prepared.grounding}
+            for act in prepared.plan.act_capsules:
+                grounding_dict = grounding_by_task.get(act.task_id, {})
+                builder_failures.append(
+                    self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        None,
+                        status="arena_not_ready",
+                        shadow_report=prepared.shadow_report,
+                    )
+                )
+            self.patch_quality = {
+                "attempts": [
+                    {
+                        "task_id": failure["failed_task_id"],
+                        "status": "arena_not_ready",
+                        "preflight": None,
+                        "failure_reason": failure,
+                    }
+                    for failure in builder_failures
+                ],
+                "builder_failures": builder_failures,
+                "total_attempts": len(builder_failures),
+                "preflight_passed": 0,
+                "repair_succeeded": 0,
+                "repair_failed_blocked": 0,
+                "no_patch_staged": True,
+            }
             return []
         codemap = self._load_codemap()
         submissions: list[dict[str, Any]] = []
@@ -1293,6 +1325,15 @@ class ArchitectBuilderBridge:
                     attempt_record["status"] = "repair_succeeded"
                 else:
                     attempt_record["status"] = "repair_failed_blocked"
+                    attempt_record["failure_reason"] = self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        context_packet,
+                        status="repair_failed_blocked",
+                        response=response,
+                        preflight=preflight,
+                        repair_result=repair_result,
+                    )
                     patch_attempts.append(attempt_record)
                     self._record_qdkt("patch_attempt", act.task_id, "failed", {
                         "preflight_rejections": preflight.rejections,
@@ -1324,6 +1365,18 @@ class ArchitectBuilderBridge:
             })
             patch_attempts.append(attempt_record)
 
+        builder_failures = [attempt["failure_reason"] for attempt in patch_attempts if attempt.get("failure_reason")]
+        if not submissions and not builder_failures:
+            grounding_by_task = {item.task_id: item.to_dict() for item in prepared.grounding}
+            for act in prepared.plan.act_capsules:
+                builder_failures.append(
+                    self._builder_failure_report(
+                        act,
+                        grounding_by_task.get(act.task_id, {}),
+                        None,
+                        status="no_patch_staged",
+                    )
+                )
         self.patch_quality = {
             "attempts": patch_attempts,
             "review_artifacts": patch_attempts,
@@ -1331,6 +1384,7 @@ class ArchitectBuilderBridge:
             "preflight_passed": sum(1 for a in patch_attempts if a.get("status") == "preflight_passed"),
             "repair_succeeded": sum(1 for a in patch_attempts if a.get("status") == "repair_succeeded"),
             "repair_failed_blocked": sum(1 for a in patch_attempts if a.get("status") == "repair_failed_blocked"),
+            "no_patch_staged": not bool(submissions),
         }
         return submissions
 

@@ -4,8 +4,9 @@ ST3GG_BASE: 0xa9c9-[Q-SYS:MUSIC_CODING_ARENA]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Research-Grounded Arena Resonance)
 DEPENDENCIES: dataclasses, hashlib, json, pathlib, re, typing, numpy, aura_music_inversion
-FUNCTIONS: ArenaResearchIdea, load_arena_research_ideas, score_music_arena_synthesis,
-fuse_music_council_plan, music_builder_objective, augment_act_tasks_with_music
+FUNCTIONS: ArenaResearchIdea, load_arena_research_ideas, classify_music_result,
+score_music_arena_synthesis, fuse_music_council_plan, music_builder_objective,
+augment_act_tasks_with_music
 SYNOPSIS: Uses bounded MUSIC component search to pair Coding Arena plan
 candidates with related local arXiv/research-memory ideas, then proposes a
 bounded council-fusion candidate. This never bypasses Arena verification.
@@ -28,6 +29,52 @@ from aura_music_inversion import music_component_search
 
 DEFAULT_FEATURE_DIMENSIONS = 256
 DEFAULT_PROJECTION_DIM = 64
+RESEARCH_POLICY_VERSION = "AURA_MUSIC_RESEARCH_POLICY_V2"
+PATCH_ELIGIBLE = "PATCH_ELIGIBLE"
+RESEARCH_ANALOGY_ONLY = "RESEARCH_ANALOGY_ONLY"
+BLOCKED = "BLOCKED"
+_CLASSIFICATION_WEIGHT = {
+    PATCH_ELIGIBLE: 2,
+    RESEARCH_ANALOGY_ONLY: 1,
+    BLOCKED: 0,
+}
+
+_GENERIC_ACCEPTANCE_FRAGMENTS = (
+    "extract a concrete verifier-facing acceptance check",
+    "translate the retrieved arxiv idea",
+    "add or preserve a local verifier check",
+    "local regression or verifier metric before promotion",
+)
+_CONCRETE_ACCEPTANCE_TERMS = (
+    "test_",
+    "pytest",
+    "assert",
+    "regression",
+    "verifier",
+    "workspace verification",
+    "preflight",
+    "passes",
+)
+_BROAD_SCOPE_TERMS = (
+    "rewrite",
+    "entire",
+    "whole",
+    "all modules",
+    "multi-file",
+    "new subsystem",
+    "architecture-wide",
+    "public api",
+    "schema",
+)
+_VAGUE_PLAN_TERMS = ("improve", "enhance", "optimize", "refactor", "upgrade")
+_VERIFIER_ALIGNMENT_TERMS = (
+    "pytest",
+    "assert",
+    "regression",
+    "verifier",
+    "workspace verification",
+    "preflight",
+)
 
 
 @dataclass(frozen=True)
@@ -155,6 +202,405 @@ def _module_overlap(candidate: Mapping[str, Any], idea: ArenaResearchIdea, targe
 
 def _priority_score(priority: int) -> float:
     return 1.0 / (1.0 + max(0, int(priority)))
+
+
+def _load_json(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _normalize_path(path: Any) -> str:
+    normalized = str(path or "").replace("\\", "/").strip()
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
+
+
+def _codemap_paths(codemap: Mapping[str, Any] | None) -> set[str]:
+    if not codemap:
+        return set()
+    paths: set[str] = set()
+    coverage = codemap.get("coverage", {}) if isinstance(codemap.get("coverage"), Mapping) else {}
+    for item in coverage.get("all_included_paths_sorted", []) or []:
+        normalized = _normalize_path(item)
+        if normalized:
+            paths.add(normalized)
+    for key in ("file_cards", "files"):
+        for card in codemap.get(key, []) or []:
+            if isinstance(card, Mapping):
+                normalized = _normalize_path(card.get("path"))
+                if normalized:
+                    paths.add(normalized)
+    return paths
+
+
+def _module_manifest_paths(manifest: Mapping[str, Any] | None) -> set[str]:
+    if not manifest:
+        return set()
+    paths: set[str] = set()
+
+    def visit(value: Any) -> None:
+        if isinstance(value, Mapping):
+            for key in ("path", "file", "module", "target_file"):
+                normalized = _normalize_path(value.get(key))
+                if normalized.endswith(".py") or "/" in normalized:
+                    paths.add(normalized)
+            for nested in value.values():
+                visit(nested)
+        elif isinstance(value, list):
+            for item in value:
+                visit(item)
+        elif isinstance(value, str):
+            normalized = _normalize_path(value)
+            if normalized.endswith(".py"):
+                paths.add(normalized)
+
+    visit(manifest)
+    return paths
+
+
+def _file_card(codemap: Mapping[str, Any] | None, target_file: str) -> Mapping[str, Any]:
+    if not codemap:
+        return {}
+    for key in ("file_cards", "files"):
+        for card in codemap.get(key, []) or []:
+            if isinstance(card, Mapping) and _normalize_path(card.get("path")) == target_file:
+                return card
+    return {}
+
+
+def _symbol_exists(codemap: Mapping[str, Any] | None, target_file: str, target_symbol: str | None) -> bool:
+    if not target_symbol:
+        return True
+    if not codemap:
+        return False
+    symbol_index = codemap.get("symbol_index", {}) if isinstance(codemap.get("symbol_index"), Mapping) else {}
+    for hit in symbol_index.get(str(target_symbol), []) or []:
+        if isinstance(hit, Mapping) and _normalize_path(hit.get("file")) == target_file:
+            return True
+    card = _file_card(codemap, target_file)
+    for symbol in card.get("symbols", []) or []:
+        if isinstance(symbol, Mapping) and str(symbol.get("name", "")) == str(target_symbol):
+            return True
+    return False
+
+
+def _test_files_for_target(root: Path, codemap: Mapping[str, Any] | None, target_file: str) -> list[str]:
+    stem = Path(target_file).stem
+    candidates = [f"test_{stem}.py", f"tests/test_{stem}.py"]
+    card = _file_card(codemap, target_file)
+    topology = card.get("topology", {}) if isinstance(card, Mapping) else {}
+    for item in topology.get("neighbor_files", []) or []:
+        normalized = _normalize_path(item)
+        if normalized and ("test" in Path(normalized).name.lower() or normalized.startswith("tests/")):
+            candidates.append(normalized)
+    seen: set[str] = set()
+    tests: list[str] = []
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        if (root / candidate).exists():
+            tests.append(candidate)
+    return tests
+
+
+def _generic_acceptance(text: str) -> bool:
+    lowered = str(text or "").strip().lower()
+    if not lowered:
+        return True
+    return any(fragment in lowered for fragment in _GENERIC_ACCEPTANCE_FRAGMENTS)
+
+
+def _concrete_acceptance(text: str) -> bool:
+    lowered = str(text or "").strip().lower()
+    if _generic_acceptance(lowered):
+        return False
+    return len(lowered) >= 16 and any(term in lowered for term in _CONCRETE_ACCEPTANCE_TERMS)
+
+
+def _candidate_plan(candidate: Mapping[str, Any]) -> Mapping[str, Any]:
+    plan = candidate.get("plan", {}) if isinstance(candidate, Mapping) else {}
+    return plan if isinstance(plan, Mapping) else {}
+
+
+def _candidate_target(candidate: Mapping[str, Any], target_file: str | None, target_symbol: str | None) -> tuple[str, str | None]:
+    plan = _candidate_plan(candidate)
+    file_value = _normalize_path(plan.get("target_file") or target_file)
+    symbol_value = plan.get("target_symbol") or target_symbol
+    for task in plan.get("act_tasks", []) or []:
+        if not isinstance(task, Mapping):
+            continue
+        if not file_value:
+            file_value = _normalize_path(task.get("target_file"))
+        if symbol_value is None and task.get("target_symbol"):
+            symbol_value = str(task.get("target_symbol"))
+    return file_value, str(symbol_value) if symbol_value else None
+
+
+def _plan_acceptance(candidate: Mapping[str, Any], idea: ArenaResearchIdea) -> str:
+    plan = _candidate_plan(candidate)
+    parts = [idea.acceptance_test]
+    for task in plan.get("act_tasks", []) or []:
+        if isinstance(task, Mapping):
+            parts.append(str(task.get("acceptance", "")))
+    return " ".join(part for part in parts if part)
+
+
+def _generated_test_plan(acceptance: str) -> bool:
+    lowered = acceptance.lower()
+    return any(term in lowered for term in ("generated test", "add regression test", "create test", "test plan"))
+
+
+def _acceptance_alignment(
+    acceptance: str,
+    *,
+    target_file: str,
+    target_symbol: str | None,
+    test_files: list[str],
+) -> dict[str, Any]:
+    lowered = str(acceptance or "").lower()
+    hits: list[str] = []
+    known_tests = {_normalize_path(item).lower() for item in test_files}
+    known_test_names = {Path(item).name.lower() for item in known_tests}
+    mentioned_tests = {
+        _normalize_path(match).lower()
+        for match in re.findall(r"(?:[\w./-]+/)?test_[\w.-]+\.py", lowered)
+    }
+    matched_tests = sorted(
+        test
+        for test in mentioned_tests
+        if test in known_tests or Path(test).name.lower() in known_test_names
+    )
+    if matched_tests:
+        hits.extend(f"test_file:{item}" for item in matched_tests)
+    if mentioned_tests and not matched_tests:
+        return {
+            "ok": False,
+            "hits": hits,
+            "mentioned_test_files": sorted(mentioned_tests),
+            "missing_test_files": sorted(mentioned_tests),
+        }
+
+    target_file_lower = target_file.lower()
+    target_stem = Path(target_file).stem.lower() if target_file else ""
+    if target_file_lower and (target_file_lower in lowered or (target_stem and target_stem in lowered)):
+        hits.append("target_file")
+    if target_symbol and target_symbol.lower() in lowered:
+        hits.append("target_symbol")
+    for term in _VERIFIER_ALIGNMENT_TERMS:
+        if term in lowered:
+            hits.append(f"verifier:{term}")
+    return {
+        "ok": bool(hits),
+        "hits": sorted(set(hits)),
+        "mentioned_test_files": sorted(mentioned_tests),
+        "missing_test_files": [],
+    }
+
+
+def _critic_report_policy(candidate: Mapping[str, Any]) -> dict[str, Any]:
+    reports = candidate.get("critic_reports", []) if isinstance(candidate, Mapping) else []
+    rejected_domains: list[str] = []
+    blocking_domains: list[str] = []
+    penalties: list[str] = []
+    for report in reports or []:
+        if not isinstance(report, Mapping):
+            continue
+        approved = report.get("approved")
+        approved_bool = approved is True or str(approved).strip().lower() == "true"
+        if approved_bool:
+            continue
+        critic_id = str(report.get("critic_id") or "critic").strip().lower()
+        rejected_domains.append(critic_id)
+        blockers = " ".join(str(item) for item in report.get("blockers", []) or []).lower()
+        if critic_id in {"scope", "tests"} or "scope" in blockers or "test" in blockers or "verifier" in blockers:
+            blocking_domains.append(critic_id)
+        if critic_id:
+            penalties.append(f"critic_rejected_{critic_id}")
+    return {
+        "rejected_domains": sorted(set(rejected_domains)),
+        "blocking_domains": sorted(set(blocking_domains)),
+        "penalties": sorted(set(penalties)),
+        "hard_block": bool(blocking_domains),
+    }
+
+
+def _scope_stats(candidate: Mapping[str, Any]) -> dict[str, Any]:
+    plan = _candidate_plan(candidate)
+    tasks = [task for task in plan.get("act_tasks", []) or [] if isinstance(task, Mapping)]
+    files = {
+        _normalize_path(plan.get("target_file")),
+        *(_normalize_path(task.get("target_file")) for task in tasks),
+    }
+    files.discard("")
+    text = " ".join(
+        [
+            str(plan.get("architecture_decision", "")),
+            str(plan.get("objective", "")),
+            *(str(task.get(key, "")) for task in tasks for key in ("objective", "acceptance", "allowed_scope", "size")),
+        ]
+    ).lower()
+    broad_hits = [term for term in _BROAD_SCOPE_TERMS if term in text]
+    vague_hits = [term for term in _VAGUE_PLAN_TERMS if term in text]
+    large_topology_terms = re.findall(r"\b\d{4,}\s+(?:edges|nodes|files|modules|symbols|functions)\b", text)
+    task_sizes = [str(task.get("size", "")).upper() for task in tasks]
+    too_broad = (
+        len(tasks) > 2
+        or len(files) > 2
+        or len(broad_hits) >= 2
+        or bool(large_topology_terms)
+        or any(size in {"L", "XL"} for size in task_sizes)
+    )
+    vague = bool(vague_hits) and not any(str(task.get("target_symbol", "")).strip() for task in tasks)
+    return {
+        "task_count": len(tasks),
+        "target_file_count": len(files),
+        "broad_terms": broad_hits,
+        "vague_terms": vague_hits,
+        "large_topology_terms": large_topology_terms,
+        "too_broad": too_broad,
+        "vague": vague,
+    }
+
+
+def classify_music_result(
+    candidate: Mapping[str, Any],
+    idea: ArenaResearchIdea | Mapping[str, Any],
+    *,
+    repo_root: str | Path,
+    target_file: str | None = None,
+    target_symbol: str | None = None,
+    module_overlap: float = 0.0,
+    normalized_music_score: float = 0.0,
+) -> dict[str, Any]:
+    """Classify MUSIC-ranked candidate::research pairings before Act creation."""
+    root = Path(repo_root).resolve()
+    codemap = _load_json(root / ".aura" / "CODEMAP.json")
+    manifest = _load_json(root / ".aura" / "MODULE_MANIFEST.json")
+    if isinstance(idea, ArenaResearchIdea):
+        research = idea
+    else:
+        research = ArenaResearchIdea(
+            idea_id=str(idea.get("idea_id") or idea.get("research_id") or "research"),
+            label=str(idea.get("label") or idea.get("arxiv_id") or "research"),
+            source=str(idea.get("source") or "research"),
+            arxiv_id=str(idea.get("arxiv_id") or ""),
+            target_modules=tuple(str(item) for item in idea.get("target_modules", []) or []),
+            implementation_lesson=str(idea.get("implementation_lesson") or ""),
+            acceptance_test=str(idea.get("acceptance_test") or ""),
+            priority=int(idea.get("priority", 5) or 5),
+        )
+
+    resolved_file, resolved_symbol = _candidate_target(candidate, target_file, target_symbol)
+    codemap_paths = _codemap_paths(codemap)
+    manifest_paths = _module_manifest_paths(manifest)
+    acceptance = _plan_acceptance(candidate, research)
+    concrete_acceptance = _concrete_acceptance(acceptance)
+    test_files = _test_files_for_target(root, codemap, resolved_file) if resolved_file else []
+    has_generated_test_plan = _generated_test_plan(acceptance)
+    acceptance_alignment = _acceptance_alignment(
+        acceptance,
+        target_file=resolved_file,
+        target_symbol=resolved_symbol,
+        test_files=test_files,
+    )
+    scope = _scope_stats(candidate)
+    critic_policy = _critic_report_policy(candidate)
+    target_exists = bool(resolved_file and (root / resolved_file).exists())
+    codemap_file_hit = bool(resolved_file and resolved_file in codemap_paths)
+    manifest_file_hit = True if manifest is None else bool(resolved_file and resolved_file in manifest_paths)
+    symbol_exists = _symbol_exists(codemap, resolved_file, resolved_symbol)
+    target_modules = {_normalize_path(item) for item in research.target_modules if _normalize_path(item)}
+    target_basenames = {Path(item).name for item in target_modules}
+    repo_grounded_path = bool(
+        target_modules
+        and module_overlap > 0.0
+        and resolved_file
+        and (resolved_file in target_modules or Path(resolved_file).name in target_basenames)
+    )
+
+    reasons: list[str] = []
+    penalties: list[str] = []
+    blockers: list[str] = []
+    analogies: list[str] = []
+
+    if codemap is None:
+        blockers.append("codemap_unavailable")
+    if not resolved_file or not target_exists or not codemap_file_hit or not manifest_file_hit:
+        blockers.append("target_file_unresolved")
+    if resolved_symbol and not symbol_exists:
+        blockers.append("target_symbol_unresolved")
+    if not test_files and not has_generated_test_plan:
+        blockers.append("missing_tests_or_verifier_evidence")
+    if scope["too_broad"]:
+        blockers.append("act_capsule_too_broad")
+    if critic_policy["hard_block"]:
+        blockers.append("critic_reports_rejected_scope_or_tests")
+
+    if not research.target_modules:
+        analogies.append("research_has_no_target_modules")
+    if module_overlap <= 0.0:
+        analogies.append("missing_module_overlap")
+    if not concrete_acceptance:
+        analogies.append("missing_concrete_acceptance_test")
+    if concrete_acceptance and not acceptance_alignment["ok"]:
+        analogies.append("acceptance_not_aligned_to_target_or_verifier")
+    if _generic_acceptance(research.acceptance_test):
+        analogies.append("generic_research_acceptance")
+    if not repo_grounded_path:
+        analogies.append("no_repo_grounded_implementation_path")
+
+    if scope["vague"]:
+        penalties.append("vague_plan")
+    if resolved_file == "aura_node.py" and "aura_node.py" not in target_modules:
+        penalties.append("defaulting_new_subsystem_to_aura_node")
+    if normalized_music_score >= 0.75 and module_overlap <= 0.0:
+        penalties.append("high_music_score_without_module_overlap")
+    if analogies:
+        penalties.append("research_analogy_not_implementation_evidence")
+    penalties.extend(str(item) for item in critic_policy["penalties"])
+
+    if blockers:
+        classification = BLOCKED
+        reasons.extend(blockers)
+        reasons.extend(item for item in analogies if item not in reasons)
+    elif analogies:
+        classification = RESEARCH_ANALOGY_ONLY
+        reasons.extend(analogies)
+    else:
+        classification = PATCH_ELIGIBLE
+        reasons.append("grounded_patch_candidate")
+
+    return {
+        "policy_version": RESEARCH_POLICY_VERSION,
+        "classification": classification,
+        "reasons": reasons,
+        "blockers": blockers,
+        "analogy_reasons": analogies,
+        "penalties": penalties,
+        "research_source": research.source,
+        "target_file": resolved_file,
+        "target_symbol": resolved_symbol,
+        "module_overlap": round(float(module_overlap), 6),
+        "concrete_acceptance": concrete_acceptance,
+        "acceptance_alignment": acceptance_alignment,
+        "acceptance_test": research.acceptance_test,
+        "test_files": test_files,
+        "generated_test_plan": has_generated_test_plan,
+        "codemap_file_hit": codemap_file_hit,
+        "module_manifest_checked": manifest is not None,
+        "module_manifest_file_hit": manifest_file_hit,
+        "symbol_exists": symbol_exists,
+        "repo_grounded_path": repo_grounded_path,
+        "critic_evidence": critic_policy,
+        "scope": scope,
+    }
 
 
 def _manifest_ideas(root: Path) -> list[ArenaResearchIdea]:
@@ -552,7 +998,21 @@ def score_music_arena_synthesis(
             candidate_score = 0.0
         priority = _priority_score(idea.priority)
         overlap = float(meta["module_overlap"])
+        policy = classify_music_result(
+            candidate,
+            idea,
+            repo_root=repo_root,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            module_overlap=overlap,
+            normalized_music_score=normalized_music,
+        )
         combined = min(1.0, normalized_music * 0.72 + candidate_score * 0.16 + overlap * 0.09 + priority * 0.03)
+        combined = max(0.0, combined - len(policy["penalties"]) * 0.07)
+        if policy["classification"] == RESEARCH_ANALOGY_ONLY:
+            combined = min(combined, 0.49)
+        elif policy["classification"] == BLOCKED:
+            combined = min(combined, 0.05)
         ranked.append(
             {
                 "pair_id": key,
@@ -564,11 +1024,21 @@ def score_music_arena_synthesis(
                 "module_overlap": round(overlap, 6),
                 "priority_score": round(priority, 6),
                 "combined_score": round(combined, 6),
+                "classification": policy["classification"],
+                "grounding": policy,
                 "selected_research": idea.to_dict(),
                 "synthesis": _synthesis_line(candidate, idea),
             }
         )
-    ranked.sort(key=lambda item: (item["combined_score"], item["module_overlap"], item["priority_score"]), reverse=True)
+    ranked.sort(
+        key=lambda item: (
+            _CLASSIFICATION_WEIGHT.get(str(item.get("classification")), 0),
+            item["combined_score"],
+            item["module_overlap"],
+            item["priority_score"],
+        ),
+        reverse=True,
+    )
 
     best_by_candidate: dict[str, dict[str, Any]] = {}
     for item in ranked:
@@ -586,6 +1056,8 @@ def score_music_arena_synthesis(
         "version": "AURA_MUSIC_CODING_ARENA_V1",
         "selected_candidate_id": selected["candidate_id"],
         "selected_research_id": selected["research_id"],
+        "classification": selected["classification"],
+        "grounding": selected["grounding"],
         "selected_research": selected["selected_research"],
         "synthesis": selected["synthesis"],
         "builder_hint": (
@@ -619,6 +1091,13 @@ def fuse_music_council_plan(
     )
     if synthesis.get("status") != "ready":
         return synthesis
+    if synthesis.get("classification") != PATCH_ELIGIBLE:
+        return {
+            **synthesis,
+            "fusion_candidate_id": "music_mitosis_fusion",
+            "fusion_blocked": True,
+            "fused_score": 0.0,
+        }
 
     selected_id = str(synthesis.get("selected_candidate_id", ""))
     ranked_ids = _ranked_candidate_ids(candidates, selected_id)
@@ -638,7 +1117,8 @@ def fuse_music_council_plan(
         target_file=target_file,
         target_symbol=target_symbol,
     )
-    fused_score = min(0.97, max(candidate_scores or [0.5]) + 0.08)
+    selected_score = float((synthesis.get("ranked_pairs") or [{"combined_score": 0.0}])[0].get("combined_score", 0.0))
+    fused_score = min(0.97, max(candidate_scores or [0.5]) + 0.08, selected_score)
     return {
         **synthesis,
         "fusion_candidate_id": "music_mitosis_fusion",
@@ -649,7 +1129,7 @@ def fuse_music_council_plan(
 
 
 def music_builder_objective(objective: str, synthesis: Mapping[str, Any] | None) -> str:
-    if not synthesis or synthesis.get("status") != "ready":
+    if not synthesis or synthesis.get("status") != "ready" or synthesis.get("classification") != PATCH_ELIGIBLE:
         return objective
     hint = str(synthesis.get("builder_hint") or "").strip()
     if not hint or hint in objective:
@@ -662,7 +1142,7 @@ def augment_act_tasks_with_music(
     synthesis: Mapping[str, Any] | None,
 ) -> list[str | dict[str, Any]]:
     """Return Act tasks with the selected MUSIC research hint folded into objectives."""
-    if not synthesis or synthesis.get("status") != "ready":
+    if not synthesis or synthesis.get("status") != "ready" or synthesis.get("classification") != PATCH_ELIGIBLE:
         return list(act_tasks)
     hint = str(synthesis.get("builder_hint") or synthesis.get("synthesis") or "").strip()
     acceptance_test = str(synthesis.get("acceptance_test") or "").strip()
