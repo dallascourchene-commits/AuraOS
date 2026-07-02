@@ -14,6 +14,11 @@ Aura's job is to:
 3. Inject deterministic Markdown guardrails (the files in this `.aura/` folder).
 4. Forward the guarded, minimal prompt to the external model.
 
+Aura may also define local empirical software tasks for her own subsystems.
+Those tasks must be CODEMAP/MODULE_MANIFEST-grounded, sandbox-scored, and
+recorded as evidence. They may recommend a better patch, policy, prompt, or
+routing rule, but they may not mutate production files or bypass verifier gates.
+
 The model receiving an Aura packet is expected to:
 
 - Treat the bracketed packet as the authoritative task specification.

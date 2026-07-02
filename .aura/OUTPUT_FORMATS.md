@@ -58,6 +58,25 @@ Python AST (`ast.parse`). No prose outside the block.
 
 A single JSON object. Must parse with `json.loads`. No prose outside it.
 
+For empirical software lab scorecards, use this shape:
+
+```json
+{
+  "candidate_id": "PATCH_REPAIR-abc123",
+  "task_type": "patch_repair",
+  "metric_name": "patch_repair_score",
+  "score": 0.8,
+  "metrics": {},
+  "passed": true,
+  "reasons": [],
+  "penalties": []
+}
+```
+
+Scores must be reproducible from local verifier, sandbox, CODEMAP, manifest, or
+ledger artifacts. Do not claim promotion; output only a recommendation field
+when the requested schema asks for one.
+
 ## `[OUTPUT:TEXT]`
 
 Plain prose. Keep it under the length implied by the packet.
