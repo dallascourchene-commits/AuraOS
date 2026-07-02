@@ -1071,6 +1071,36 @@ class ArchitectBuilderBridge:
         except Exception:
             pass
 
+    def _reviewable_attempt(
+        self,
+        *,
+        act: Any,
+        context_packet: BuilderContextPacket,
+        status: str,
+        raw_response: str = "",
+        extracted_diff: str = "",
+        before_after: Any = None,
+        preflight: PatchPreflightResult | None = None,
+        repair: PatchRepairResult | None = None,
+        builder_prompt: str = "",
+    ) -> dict[str, Any]:
+        """Build a durable review packet for successful and failed builder attempts."""
+        return {
+            "task_id": act.task_id,
+            "target_file": act.target_file,
+            "target_symbol": act.target_symbol,
+            "objective": act.objective,
+            "status": status,
+            "builder_prompt": builder_prompt,
+            "builder_context": context_packet.to_dict(),
+            "raw_model_response": raw_response,
+            "extracted_diff": extracted_diff,
+            "before_after": before_after.to_dict() if before_after is not None else None,
+            "preflight": preflight.to_dict() if preflight is not None else None,
+            "repair": repair.to_dict() if repair is not None else None,
+            "review_hint": "Review raw_model_response, extracted_diff, and repair.candidate_diff even when the transaction is blocked.",
+        }
+
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
             return []
@@ -1112,7 +1142,14 @@ class ArchitectBuilderBridge:
             )
             response = await self.router.call_model("worker", prompt, intensity=prepared.intensity, meta={"task_id": act.task_id})
             if not response:
-                patch_attempts.append({"task_id": act.task_id, "status": "no_response", "preflight": None})
+                patch_attempts.append(
+                    self._reviewable_attempt(
+                        act=act,
+                        context_packet=context_packet,
+                        status="no_response",
+                        builder_prompt=prompt,
+                    )
+                )
                 continue
 
             # Check for before/after replacement object (requirement 3 & 4)
@@ -1120,19 +1157,33 @@ class ArchitectBuilderBridge:
             if before_after is not None:
                 diff = generate_unified_diff_from_before_after(before_after, repo_root=self.router.repo_root)
                 if not diff.strip():
-                    patch_attempts.append({"task_id": act.task_id, "status": "before_after_diff_generation_failed", "preflight": None})
+                    patch_attempts.append(
+                        self._reviewable_attempt(
+                            act=act,
+                            context_packet=context_packet,
+                            status="before_after_diff_generation_failed",
+                            raw_response=str(response),
+                            extracted_diff=diff,
+                            before_after=before_after,
+                            builder_prompt=prompt,
+                        )
+                    )
                     continue
             else:
                 diff = _extract_diff(response)
 
             # Run patch preflight before premium patch judge (requirement 5)
             preflight = preflight_patch(diff, repo_root=self.router.repo_root)
-            attempt_record: dict[str, Any] = {
-                "task_id": act.task_id,
-                "status": "preflight_passed" if preflight.ok else "preflight_failed",
-                "preflight": preflight.to_dict(),
-                "repair": None,
-            }
+            attempt_record = self._reviewable_attempt(
+                act=act,
+                context_packet=context_packet,
+                status="preflight_passed" if preflight.ok else "preflight_failed",
+                raw_response=str(response),
+                extracted_diff=diff,
+                before_after=before_after,
+                preflight=preflight,
+                builder_prompt=prompt,
+            )
 
             # Record patch preflight result to workflow memory
             if self._workflow_memory is not None and self._workflow_id:
@@ -1203,6 +1254,7 @@ class ArchitectBuilderBridge:
 
         self.patch_quality = {
             "attempts": patch_attempts,
+            "review_artifacts": patch_attempts,
             "total_attempts": len(patch_attempts),
             "preflight_passed": sum(1 for a in patch_attempts if a.get("status") == "preflight_passed"),
             "repair_succeeded": sum(1 for a in patch_attempts if a.get("status") == "repair_succeeded"),
