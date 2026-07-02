@@ -337,8 +337,10 @@ def _copy_task(task: Any, *, index: int, fallback_target: str | None, fallback_s
     else:
         copied = {"objective": str(task)}
     copied.setdefault("task_id", f"MUSIC-FUSED-{index + 1}")
-    copied.setdefault("target_file", fallback_target)
-    copied.setdefault("target_symbol", fallback_symbol)
+    if copied.get("target_file") is None:
+        copied["target_file"] = fallback_target
+    if copied.get("target_symbol") is None:
+        copied["target_symbol"] = fallback_symbol
     copied.setdefault("allowed_scope", "single music-mitosis fused Act Capsule")
     copied.setdefault("expected_output", "UNIFIED_DIFF")
     return copied

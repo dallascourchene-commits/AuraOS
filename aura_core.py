@@ -147,6 +147,8 @@ class SovereignEngine:
             for wrapped_index in peak_indices[:32]:
                 actual_key = valid_keys[wrapped_index]
                 generated_syntax += decoder[actual_key] + " "
+        else:
+            self.last_music_inversion = None
 
         raw_output = generated_syntax.strip()
 
