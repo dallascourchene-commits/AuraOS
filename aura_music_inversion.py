@@ -294,7 +294,10 @@ def music_component_search(
     epsilon: float = 1e-9,
 ) -> MusicComponentResult:
     """Score named candidate components against the noise subspace."""
-    raw_snapshots = _limit_snapshot_count(np.asarray(snapshots, dtype=np.complex64), max_snapshots)
+    raw_snapshots = np.asarray(snapshots, dtype=np.complex64)
+    if raw_snapshots.ndim != 2:
+        raise ValueError("snapshots must be a 2D matrix shaped (dimension, snapshot_count)")
+    raw_snapshots = _limit_snapshot_count(raw_snapshots, max_snapshots)
     projected, plan, source_dimension = _project_snapshots(
         raw_snapshots,
         projection_dim=projection_dim,
