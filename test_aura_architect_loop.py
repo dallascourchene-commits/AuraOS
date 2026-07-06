@@ -55,6 +55,8 @@ def test_architect_loop_builds_grounded_plan_act_arena():
     assert result.grounding[0].dream_scores[0]["target_type"] == "code_context"
     assert result.shadow_report.ok is True
     assert result.arena.ready_for_incubator is True
+    assert result.arena.routing_decisions[0]["route"] == "BUILDER_PATCH"
+    assert result.arena.routing_decisions[0]["symbol_output"] == "O:BUILD|M:L|K:PAT|E:OK|V:1"
     assert result.arena.boundary_contracts[0]["invariant"].startswith("preserve phase_hash")
     assert result.arena.boundary_contracts[0]["contract_version"] == "AURA_BOUNDARY_CONTRACT_V1"
     assert result.arena.agent_leases[0]["capsule_id"] == "A1"
@@ -251,6 +253,38 @@ def test_refactor_arena_stages_only_assigned_patch_scope():
     assert result.arena.liquid_arena["shared_action_queue"][0]["patch_id"] == staged.patch.patch_id
     assert blocked.ok is False
     assert {finding.shadow_type for finding in blocked.findings} >= {"cross_boundary_patch", "lease_scope_violation"}
+
+
+def test_refactor_arena_blocks_builder_when_router_selects_test_gap():
+    result = ArchitectFusionLoop(repo_root=REPO_ROOT).prepare(
+        "Patch a grounded symbol that lacks nearby tests",
+        architecture_decision="Routing DSL must ask for test coverage before Builder authority.",
+        target_file="aura_fst_routing.py",
+        target_symbol="FSTLexiconRoutingCore",
+        act_tasks=[
+            {
+                "task_id": "A-TEST-GAP",
+                "objective": "Patch only the FST router class.",
+                "target_file": "aura_fst_routing.py",
+                "target_symbol": "FSTLexiconRoutingCore",
+            }
+        ],
+    )
+
+    staged = stage_arena_patch(
+        result.arena,
+        task_id="A-TEST-GAP",
+        owner="cheap_builder",
+        diff="diff --git a/aura_fst_routing.py b/aura_fst_routing.py\n--- a/aura_fst_routing.py\n+++ b/aura_fst_routing.py\n",
+        affected_files=["aura_fst_routing.py"],
+    )
+
+    assert result.shadow_report.ok is True
+    assert result.arena.ready_for_incubator is False
+    assert result.arena.routing_decisions[0]["route"] == "TEST_GAP_FILL"
+    assert result.arena.routing_decisions[0]["reason"] == "missing_tests"
+    assert staged.ok is False
+    assert "arena_route_blocks_builder" in {finding.shadow_type for finding in staged.findings}
 
 
 def test_refactor_arena_rejects_diff_paths_that_do_not_match_metadata():
