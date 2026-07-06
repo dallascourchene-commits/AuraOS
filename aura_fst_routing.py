@@ -485,6 +485,36 @@ class AuraCodingArenaRouter:
                 True,
                 priority=90,
             ),
+            RoutingRule(
+                "grounded_file_scope_cannot_patch",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.scope == "file"
+                    and (f.has_grounding("file_exists") or f.has_grounding("codemap_grounded"))
+                ),
+                "PLAN_ONLY",
+                "cheap_first",
+                "SUMMARY",
+                "scope_too_broad_for_act_capsule",
+                True,
+                priority=91,
+            ),
+            RoutingRule(
+                "grounded_high_risk_requires_tests",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.risk == "high"
+                    and (f.has_grounding("symbol_exists") or f.has_grounding("codemap_grounded"))
+                ),
+                "VERIFY_ONLY",
+                "no_model",
+                "VERIFIER",
+                "live_risk_requires_verification",
+                True,
+                priority=92,
+            ),
         ]
         self.rules = sorted(self.rules, key=lambda rule: rule.priority)
 
