@@ -3,8 +3,8 @@
 ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
-DEPENDENCIES: numpy, aura_lexc, itertools, enum, heapq, dataclasses, hashlib
-FUNCTIONS: __init__, _hash_to_hypervector, add_state, add_transition, _compute_transition_weight, update_transition_weights, validate_slot_sequence, from_lexc, find_optimal_path, build_standard_lexicon, get_stats
+DEPENDENCIES: numpy, aura_lexc, itertools, enum, heapq, dataclasses, hashlib, collections.abc
+FUNCTIONS: __init__, _hash_to_hypervector, add_state, add_transition, _compute_transition_weight, update_transition_weights, validate_slot_sequence, from_lexc, find_optimal_path, build_standard_lexicon, get_stats, has_grounding, symbol_input, symbol_output, to_dict, route, weighted_route_scores
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -34,7 +34,8 @@ Performance:
 - Routing: O(L) where L ≤ 10 (path length)
 """
 
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 from enum import Enum
 import hashlib
 
@@ -89,6 +90,489 @@ class Path:
     transitions: list[Transition]
     total_cost: float
     slot_sequence: list[SlotType]
+
+
+INTENT_SYMBOLS = {
+    "code_refactor": "I:REF",
+    "localize": "I:LOC",
+    "test_generate": "I:TST",
+    "verify": "I:VER",
+    "repair": "I:REP",
+    "benchmark": "I:BEN",
+    "research_rank": "I:RSR",
+    "explain": "I:EXP",
+    "hotswap": "I:HOT",
+}
+
+ARTIFACT_SYMBOLS = {
+    "python_module": "A:PY",
+    "test_file": "A:TF",
+    "codemap": "A:CM",
+    "manifest": "A:MF",
+    "patch": "A:PT",
+    "transaction_log": "A:TX",
+    "research_item": "A:RI",
+    "documentation": "A:DC",
+}
+
+ACTION_SYMBOLS = {
+    "inspect": "X:IN",
+    "create": "X:CR",
+    "modify": "X:MO",
+    "rank": "X:RK",
+    "verify": "X:VR",
+    "repair": "X:RP",
+    "rollback": "X:RB",
+    "promote": "X:PR",
+}
+
+SCOPE_SYMBOLS = {
+    "symbol": "S:SYM",
+    "file": "S:FIL",
+    "capsule": "S:CAP",
+    "subsystem": "S:SUB",
+    "repo": "S:REP",
+}
+
+RISK_SYMBOLS = {
+    "low": "R:L",
+    "medium": "R:M",
+    "high": "R:H",
+    "live": "R:V",
+}
+
+GROUNDING_SYMBOLS = {
+    "none": "0",
+    "file_exists": "F",
+    "symbol_exists": "S",
+    "tests_exist": "T",
+    "manifest_owner": "M",
+    "codemap_grounded": "C",
+    "full": "FULL",
+}
+
+TEST_SYMBOLS = {
+    "none": "T:0",
+    "existing": "T:1",
+    "generated": "T:G",
+    "required": "T:R",
+}
+
+QUALITY_SYMBOLS = {
+    "fast": "Q:F",
+    "balanced": "Q:B",
+    "accuracy_first": "Q:A",
+    "verifier_required": "Q:V",
+}
+
+COST_SYMBOLS = {
+    "no_model": "C:0",
+    "local_first": "C:L",
+    "cheap_first": "C:C",
+    "premium_allowed": "C:P",
+    "premium_required": "C:PR",
+}
+
+CONTEXT_SYMBOLS = {
+    "SUMMARY": "K:SUM",
+    "SYMBOLIC": "K:SYM",
+    "PATCH": "K:PAT",
+    "TEST": "K:TST",
+    "VERIFIER": "K:VER",
+}
+
+MODEL_SYMBOLS = {
+    "no_model": "M:0",
+    "local_first": "M:L",
+    "local_model": "M:L",
+    "cheap_first": "M:C",
+    "cheap_model": "M:C",
+    "premium_allowed": "M:P",
+    "premium_required": "M:P",
+    "premium_model": "M:P",
+}
+
+ROUTE_SYMBOLS = {
+    "LOCALIZE_FIRST": "O:LOC",
+    "PLAN_ONLY": "O:PLAN",
+    "MUSIC_RANK_ONLY": "O:MUSIC",
+    "BUILDER_PATCH": "O:BUILD",
+    "TEST_GAP_FILL": "O:TEST",
+    "VERIFY_ONLY": "O:VERIFY",
+    "REPAIR_PATCH": "O:REPAIR",
+    "BLOCKED_WITH_REASON": "O:BLOCK",
+}
+
+REASON_SYMBOLS = {
+    "target_symbol_unresolved": "E:SYM0",
+    "missing_tests": "E:TEST0",
+    "research_not_patch_evidence": "E:RG0",
+    "scope_too_broad_for_act_capsule": "E:SCOPE",
+    "live_risk_requires_verification": "E:LIVE",
+    "hotswap_requires_full_grounding": "E:HOT0",
+    "missing_grounding": "E:GROUND0",
+    "route_valid": "E:OK",
+    "benchmark_before_optimization": "E:BENCH",
+    "repair_after_failed_patch": "E:REPAIR",
+}
+
+
+def _slot_symbol(table: dict[str, str], value: str, fallback: str) -> str:
+    return table.get(str(value or "").strip().lower(), fallback)
+
+
+@dataclass(frozen=True)
+class RoutingFrame:
+    """Canonical Coding Arena routing frame from Aura's structural layer."""
+
+    intent: str
+    artifact: str = "python_module"
+    action: str = "modify"
+    scope: str = "symbol"
+    risk: str = "medium"
+    grounding: tuple[str, ...] = ()
+    tests: str = "none"
+    quality: str = "balanced"
+    cost: str = "local_first"
+    target_file: str | None = None
+    target_symbol: str | None = None
+    failure_reason: str | None = None
+
+    def __post_init__(self) -> None:
+        normalized_grounding = tuple(
+            item
+            for item in (
+                str(value).strip().lower()
+                for value in self.grounding
+                if str(value).strip()
+            )
+            if item != "none"
+        )
+        if not normalized_grounding:
+            normalized_grounding = ("none",)
+        object.__setattr__(self, "intent", str(self.intent).strip().lower())
+        object.__setattr__(self, "artifact", str(self.artifact).strip().lower())
+        object.__setattr__(self, "action", str(self.action).strip().lower())
+        object.__setattr__(self, "scope", str(self.scope).strip().lower())
+        object.__setattr__(self, "risk", str(self.risk).strip().lower())
+        object.__setattr__(self, "grounding", normalized_grounding)
+        object.__setattr__(self, "tests", str(self.tests).strip().lower())
+        object.__setattr__(self, "quality", str(self.quality).strip().lower())
+        object.__setattr__(self, "cost", str(self.cost).strip().lower())
+
+    def has_grounding(self, value: str) -> bool:
+        """Return true when the structural layer established a grounding fact."""
+        item = str(value).strip().lower()
+        return "full" in self.grounding or item in self.grounding
+
+    def grounding_symbol(self) -> str:
+        if self.has_grounding("full"):
+            return "G:FULL"
+        ordered = [
+            "file_exists",
+            "symbol_exists",
+            "tests_exist",
+            "manifest_owner",
+            "codemap_grounded",
+        ]
+        parts = [GROUNDING_SYMBOLS[item] for item in ordered if item in self.grounding]
+        return f"G:{'+'.join(parts)}" if parts else "G:0"
+
+    def symbol_input(self) -> str:
+        return "|".join(
+            [
+                _slot_symbol(INTENT_SYMBOLS, self.intent, f"I:{self.intent.upper()}"),
+                _slot_symbol(ARTIFACT_SYMBOLS, self.artifact, f"A:{self.artifact.upper()}"),
+                _slot_symbol(ACTION_SYMBOLS, self.action, f"X:{self.action.upper()}"),
+                _slot_symbol(SCOPE_SYMBOLS, self.scope, f"S:{self.scope.upper()}"),
+                _slot_symbol(RISK_SYMBOLS, self.risk, f"R:{self.risk.upper()}"),
+                self.grounding_symbol(),
+                _slot_symbol(TEST_SYMBOLS, self.tests, f"T:{self.tests.upper()}"),
+                _slot_symbol(QUALITY_SYMBOLS, self.quality, f"Q:{self.quality.upper()}"),
+                _slot_symbol(COST_SYMBOLS, self.cost, f"C:{self.cost.upper()}"),
+            ]
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "intent": self.intent,
+            "artifact": self.artifact,
+            "action": self.action,
+            "scope": self.scope,
+            "risk": self.risk,
+            "grounding": list(self.grounding),
+            "tests": self.tests,
+            "quality": self.quality,
+            "cost": self.cost,
+            "target_file": self.target_file,
+            "target_symbol": self.target_symbol,
+            "failure_reason": self.failure_reason,
+            "symbol_input": self.symbol_input(),
+        }
+
+
+@dataclass(frozen=True)
+class RouteDecision:
+    """Deterministic route selected for a Coding Arena task."""
+
+    rule_name: str
+    route: str
+    model: str
+    context: str
+    reason: str
+    verifier_required: bool
+    symbol_input: str
+    rule_priority: int = 100
+    classification: str | None = None
+    weighted_alternatives: list[dict[str, object]] = field(default_factory=list)
+
+    def symbol_output(self) -> str:
+        return "|".join(
+            [
+                ROUTE_SYMBOLS.get(self.route, f"O:{self.route}"),
+                MODEL_SYMBOLS.get(self.model, f"M:{self.model}"),
+                CONTEXT_SYMBOLS.get(self.context, f"K:{self.context}"),
+                REASON_SYMBOLS.get(self.reason, f"E:{self.reason}"),
+                "V:1" if self.verifier_required else "V:0",
+            ]
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        payload = {
+            "rule_name": self.rule_name,
+            "route": self.route,
+            "model": self.model,
+            "context": self.context,
+            "reason": self.reason,
+            "verifier_required": self.verifier_required,
+            "rule_priority": self.rule_priority,
+            "symbol_input": self.symbol_input,
+            "symbol_output": self.symbol_output(),
+            "weighted_alternatives": list(self.weighted_alternatives),
+        }
+        if self.classification:
+            payload["classification"] = self.classification
+        return payload
+
+
+@dataclass(frozen=True)
+class RoutingRule:
+    name: str
+    predicate: Callable[[RoutingFrame], bool]
+    route: str
+    model: str
+    context: str
+    reason: str
+    verifier_required: bool = False
+    classification: str | None = None
+    priority: int = 100
+
+
+class AuraCodingArenaRouter:
+    """
+    Deterministic structural router for the Coding Arena DSL.
+
+    Hard gates fire in priority order. Weighted route scores are emitted as
+    diagnostics only, so cost/quality preferences cannot override grounding,
+    test, live-risk, or hotswap blockers.
+    """
+
+    def __init__(self) -> None:
+        self.rules = [
+            RoutingRule(
+                "missing_grounding_blocks_hotswap",
+                lambda f: f.intent == "hotswap" and not f.has_grounding("full"),
+                "BLOCKED_WITH_REASON",
+                "no_model",
+                "VERIFIER",
+                "hotswap_requires_full_grounding",
+                True,
+                priority=10,
+            ),
+            RoutingRule(
+                "fake_symbol_blocks_builder",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and bool(f.target_symbol)
+                    and not f.has_grounding("symbol_exists")
+                ),
+                "LOCALIZE_FIRST",
+                "no_model",
+                "SUMMARY",
+                "target_symbol_unresolved",
+                priority=20,
+            ),
+            RoutingRule(
+                "broad_subsystem_cannot_patch",
+                lambda f: f.intent == "code_refactor" and f.scope in {"subsystem", "repo"} and f.action == "modify",
+                "PLAN_ONLY",
+                "cheap_first",
+                "SUMMARY",
+                "scope_too_broad_for_act_capsule",
+                True,
+                priority=30,
+            ),
+            RoutingRule(
+                "research_without_grounding_is_analogy",
+                lambda f: f.intent == "research_rank" and not f.has_grounding("manifest_owner"),
+                "MUSIC_RANK_ONLY",
+                "no_model",
+                "SYMBOLIC",
+                "research_not_patch_evidence",
+                False,
+                "RESEARCH_ANALOGY_ONLY",
+                priority=40,
+            ),
+            RoutingRule(
+                "failed_patch_routes_to_repair",
+                lambda f: f.intent == "repair" and f.artifact == "patch" and f.action == "repair",
+                "REPAIR_PATCH",
+                "cheap_first",
+                "PATCH",
+                "repair_after_failed_patch",
+                True,
+                priority=50,
+            ),
+            RoutingRule(
+                "benchmark_request_routes_to_measurement",
+                lambda f: f.intent == "benchmark",
+                "PLAN_ONLY",
+                "local_first",
+                "SYMBOLIC",
+                "benchmark_before_optimization",
+                priority=60,
+            ),
+            RoutingRule(
+                "no_tests_routes_to_test_gap",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.tests == "none"
+                    and f.risk in {"medium", "high", "live"}
+                ),
+                "TEST_GAP_FILL",
+                "local_first",
+                "TEST",
+                "missing_tests",
+                priority=70,
+            ),
+            RoutingRule(
+                "grounded_symbol_can_patch",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.scope == "symbol"
+                    and f.has_grounding("symbol_exists")
+                    and f.has_grounding("codemap_grounded")
+                    and f.tests in {"existing", "generated"}
+                    and f.risk in {"low", "medium"}
+                ),
+                "BUILDER_PATCH",
+                "local_first",
+                "PATCH",
+                "route_valid",
+                True,
+                priority=80,
+            ),
+            RoutingRule(
+                "live_change_requires_verifier",
+                lambda f: f.risk == "live",
+                "VERIFY_ONLY",
+                "no_model",
+                "VERIFIER",
+                "live_risk_requires_verification",
+                True,
+                priority=90,
+            ),
+            RoutingRule(
+                "grounded_file_scope_cannot_patch",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.scope == "file"
+                    and (f.has_grounding("file_exists") or f.has_grounding("codemap_grounded"))
+                ),
+                "PLAN_ONLY",
+                "cheap_first",
+                "SUMMARY",
+                "scope_too_broad_for_act_capsule",
+                True,
+                priority=91,
+            ),
+            RoutingRule(
+                "grounded_high_risk_requires_tests",
+                lambda f: (
+                    f.intent == "code_refactor"
+                    and f.action == "modify"
+                    and f.risk == "high"
+                    and (f.has_grounding("symbol_exists") or f.has_grounding("codemap_grounded"))
+                ),
+                "VERIFY_ONLY",
+                "no_model",
+                "VERIFIER",
+                "live_risk_requires_verification",
+                True,
+                priority=92,
+            ),
+        ]
+        self.rules = sorted(self.rules, key=lambda rule: rule.priority)
+
+    def route(self, frame: RoutingFrame) -> RouteDecision:
+        alternatives = self.weighted_route_scores(frame)
+        for rule in self.rules:
+            if rule.predicate(frame):
+                return RouteDecision(
+                    rule_name=rule.name,
+                    route=rule.route,
+                    model=rule.model,
+                    context=rule.context,
+                    reason=rule.reason,
+                    verifier_required=rule.verifier_required or frame.quality == "verifier_required" or frame.risk in {"high", "live"},
+                    rule_priority=rule.priority,
+                    classification=rule.classification,
+                    symbol_input=frame.symbol_input(),
+                    weighted_alternatives=alternatives,
+                )
+        return RouteDecision(
+            rule_name="no_grounded_route",
+            route="BLOCKED_WITH_REASON",
+            model="no_model",
+            context="SUMMARY",
+            reason="missing_grounding",
+            verifier_required=frame.quality == "verifier_required" or frame.risk in {"high", "live"},
+            rule_priority=999,
+            symbol_input=frame.symbol_input(),
+            weighted_alternatives=alternatives,
+        )
+
+    def weighted_route_scores(self, frame: RoutingFrame) -> list[dict[str, object]]:
+        """Score soft route affinity without replacing deterministic hard gates."""
+        grounded = (
+            0.30 * float(frame.has_grounding("file_exists"))
+            + 0.25 * float(frame.has_grounding("symbol_exists"))
+            + 0.25 * float(frame.has_grounding("codemap_grounded"))
+            + 0.20 * float(frame.tests in {"existing", "generated"})
+        )
+        broad = float(frame.scope in {"subsystem", "repo"})
+        missing_tests = float(frame.tests == "none")
+        live = float(frame.risk == "live")
+        failed_patch = float(frame.intent == "repair" and frame.artifact == "patch")
+        research = float(frame.intent == "research_rank")
+        scores = {
+            "BUILDER_PATCH": max(0.0, grounded - 0.35 * broad - 0.30 * live),
+            "LOCALIZE_FIRST": max(0.0, 1.0 - float(frame.has_grounding("symbol_exists")) if frame.target_symbol else 0.25),
+            "TEST_GAP_FILL": missing_tests * (0.45 + 0.35 * float(frame.risk in {"medium", "high", "live"})),
+            "PLAN_ONLY": max(0.0, 0.30 + 0.45 * broad + 0.20 * float(frame.intent == "benchmark")),
+            "VERIFY_ONLY": max(0.0, 0.20 + 0.70 * live),
+            "REPAIR_PATCH": max(0.0, failed_patch),
+            "MUSIC_RANK_ONLY": max(0.0, research * (1.0 - float(frame.has_grounding("manifest_owner")))),
+            "BLOCKED_WITH_REASON": max(0.0, 1.0 - grounded),
+        }
+        return [
+            {"route": route, "score": round(score, 4)}
+            for route, score in sorted(scores.items(), key=lambda item: (-item[1], item[0]))
+        ]
 
 
 class FSTLexiconRoutingCore:

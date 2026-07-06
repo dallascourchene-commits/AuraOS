@@ -21,6 +21,7 @@ from typing import Any
 
 from aura_codebase_navigator import refresh_codemap_for_paths
 from aura_dream_retrieval import DreamCandidate, rerank_for_arena
+from aura_fst_routing import AuraCodingArenaRouter, RoutingFrame
 from aura_fusion import DEFAULT_CONSTRAINTS, build_task_capsule
 from aura_liquid_planning_arena import CodeArenaAdapter
 from aura_phase_capsule import AuraPhaseCapsule, capture_phase_capsule
@@ -39,6 +40,7 @@ ARCHITECT_ROLLBACK_VERSION = "AURA_ARCHITECT_ROLLBACK_V1"
 ARCHITECT_LEDGER_VERSION = "AURA_ARCHITECT_LEDGER_V1"
 ARCHITECT_LEDGER_PATH = Path(REPO_ROOT) / "Aura_Memory" / "architect_loop_ledger.jsonl"
 _LOG = logging.getLogger(__name__)
+_CODING_ARENA_ROUTER = AuraCodingArenaRouter()
 
 ARCHITECT_CAPABILITY_ORDER = [
     "plan",
@@ -194,6 +196,7 @@ class RefactorArenaTransaction:
     rollback_hint: str
     agent_leases: list[dict[str, Any]] = field(default_factory=list)
     liquid_arena: dict[str, Any] = field(default_factory=dict)
+    routing_decisions: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -436,6 +439,13 @@ def _lease_files_for_task(arena: RefactorArenaTransaction, task_id: str) -> set[
                 if normalized:
                     files.add(normalized)
     return files
+
+
+def _routing_decision_for_task(arena: RefactorArenaTransaction, task_id: str) -> dict[str, Any] | None:
+    for decision in arena.routing_decisions:
+        if str(decision.get("task_id")) == str(task_id):
+            return decision
+    return None
 
 
 def _file_digest(path: Path) -> str | None:
@@ -751,6 +761,72 @@ def _build_act_capsule(
     )
 
 
+def _artifact_for_target(target_file: str | None, expected_output: str) -> str:
+    path = _normalize_path(target_file)
+    if path and Path(path).name.startswith("test_"):
+        return "test_file"
+    if path and path.endswith(".py"):
+        return "python_module"
+    if path and path.endswith((".md", ".txt", ".rst")):
+        return "documentation"
+    if expected_output.upper() in PATCH_OUTPUT_MODES:
+        return "patch"
+    return "documentation"
+
+
+def _scope_for_act(act: ActCapsule) -> str:
+    scope_text = " ".join([act.allowed_scope, act.objective, act.acceptance]).lower()
+    if "repo" in scope_text or "repository" in scope_text:
+        return "repo"
+    if "subsystem" in scope_text or "multi-file" in scope_text or act.size in {"L", "XL"}:
+        return "subsystem"
+    if act.target_symbol:
+        return "symbol"
+    return "file"
+
+
+def _risk_for_act(plan: FractalPlanCapsule, act: ActCapsule) -> str:
+    text = " ".join([plan.objective, act.objective, act.allowed_scope, " ".join(plan.risk_map)]).lower()
+    if any(term in text for term in ("live", "hot-swap", "hotswap", "promote")):
+        return "live"
+    if act.size in {"L", "XL"} or any(term in text for term in ("high risk", "public api", "dependency", "schema", "rewrite")):
+        return "high"
+    if any(term in text for term in ("read-only", "explain", "inspect")):
+        return "low"
+    return "medium"
+
+
+def _routing_frame_for_act(plan: FractalPlanCapsule, act: ActCapsule, evidence: GroundingEvidence | None) -> RoutingFrame:
+    grounding: list[str] = []
+    if evidence is not None:
+        if evidence.file_exists:
+            grounding.append("file_exists")
+        if evidence.symbol_exists:
+            grounding.append("symbol_exists")
+        if evidence.test_files:
+            grounding.append("tests_exist")
+        if evidence.codemap_file_hit and (not act.target_symbol or evidence.symbol_exists):
+            grounding.append("codemap_grounded")
+        if evidence.file_exists and evidence.codemap_file_hit and evidence.symbol_exists and evidence.test_files:
+            grounding.append("full")
+    tests = "existing" if evidence is not None and evidence.test_files else "none"
+    expected_output = str(act.expected_output or "UNIFIED_DIFF").upper()
+    action = "modify" if expected_output in PATCH_OUTPUT_MODES else "inspect"
+    return RoutingFrame(
+        intent="code_refactor",
+        artifact=_artifact_for_target(act.target_file, expected_output),
+        action=action,
+        scope=_scope_for_act(act),
+        risk=_risk_for_act(plan, act),
+        grounding=tuple(grounding),
+        tests=tests,
+        quality="balanced",
+        cost="local_first",
+        target_file=act.target_file,
+        target_symbol=act.target_symbol,
+    )
+
+
 def build_fractal_plan_capsule(
     objective: str,
     *,
@@ -1047,6 +1123,20 @@ def build_refactor_arena(
     shadow_report: ShadowReport,
 ) -> RefactorArenaTransaction:
     """Create the shared bounded workspace metadata for Builder, Verifier, and Incubator."""
+    by_task = {item.task_id: item for item in grounding}
+    routing_decisions = []
+    for act in plan.act_capsules:
+        frame = _routing_frame_for_act(plan, act, by_task.get(act.task_id))
+        decision = _CODING_ARENA_ROUTER.route(frame).to_dict()
+        routing_decisions.append(
+            {
+                **decision,
+                "task_id": act.task_id,
+                "target_file": act.target_file,
+                "target_symbol": act.target_symbol,
+                "frame": frame.to_dict(),
+            }
+        )
     affected_files = sorted({
         evidence.target_file
         for evidence in grounding
@@ -1074,7 +1164,15 @@ def build_refactor_arena(
                 "neighbor_files": metadata.get("neighbor_files", []),
             }
         )
-    ready = shadow_report.ok and all(item.file_exists for item in grounding if item.target_file)
+    builder_authorized = bool(routing_decisions) and all(
+        decision.get("route") == "BUILDER_PATCH"
+        for decision in routing_decisions
+    )
+    ready = (
+        shadow_report.ok
+        and all(item.file_exists for item in grounding if item.target_file)
+        and builder_authorized
+    )
     return RefactorArenaTransaction(
         arena_version=REFACTOR_ARENA_VERSION,
         plan_phase_hash=plan.phase_hash,
@@ -1092,6 +1190,19 @@ def build_refactor_arena(
         verification_ledger=[
             {"stage": "ground", "status": "passed" if all(item.file_exists for item in grounding if item.target_file) else "blocked"},
             {"stage": "shadow", "status": "passed" if shadow_report.ok else "blocked", "gate": shadow_report.gate},
+            {
+                "stage": "arena_router",
+                "status": "passed" if builder_authorized else "routed",
+                "routes": [
+                    {
+                        "task_id": item.get("task_id"),
+                        "route": item.get("route"),
+                        "reason": item.get("reason"),
+                        "symbol_output": item.get("symbol_output"),
+                    }
+                    for item in routing_decisions
+                ],
+            },
             {"stage": "liquid_arena", "status": "leased", "domain": liquid_arena.domain, "lease_count": len(liquid_arena.agent_leases)},
             {"stage": "tests", "status": "pending", "test_files": sorted({name for item in grounding for name in item.test_files})},
             {"stage": "codemap_refresh", "status": "pending", "files_to_refresh": affected_files},
@@ -1100,6 +1211,7 @@ def build_refactor_arena(
         rollback_hint="Keep patches staged in the arena until verifier passes; use the plan phase hash to discard the transaction.",
         agent_leases=liquid_arena.agent_leases,
         liquid_arena=liquid_arena.to_dict(),
+        routing_decisions=routing_decisions,
     )
 
 
@@ -1130,6 +1242,20 @@ def stage_arena_patch(
                 severity="blocker",
                 message="Patch submission does not match an Act Capsule in this arena.",
                 task_id=task_name,
+            )
+        )
+    route_decision = _routing_decision_for_task(arena, task_name)
+    if route_decision is not None and route_decision.get("route") != "BUILDER_PATCH":
+        route = str(route_decision.get("route") or "BLOCKED_WITH_REASON")
+        reason = str(route_decision.get("reason") or "missing_grounding")
+        findings.append(
+            ShadowFinding(
+                shadow_type="arena_route_blocks_builder",
+                severity="blocker",
+                message=f"Aura Routing DSL selected {route}; Builder patch is not authorized until route reason is resolved: {reason}.",
+                task_id=task_name,
+                target_file=route_decision.get("target_file") or (capsule or {}).get("target_file"),
+                target_symbol=route_decision.get("target_symbol") or (capsule or {}).get("target_symbol"),
             )
         )
     if not normalized_files:
@@ -1301,6 +1427,11 @@ def verify_refactor_arena(
         fail("patch_queue", "No Builder patches have been staged in the arena.")
 
     known_tasks = {str(item.get("task_id")) for item in arena.agent_capsules}
+    route_by_task = {
+        str(item.get("task_id")): item
+        for item in arena.routing_decisions
+        if item.get("task_id") is not None
+    }
     arena_files = set(arena.affected_files)
     lease_tasks = {str(item.get("capsule_id")) for item in arena.agent_leases}
     if arena.agent_leases:
@@ -1327,6 +1458,17 @@ def verify_refactor_arena(
             fail("patch_status", "Patch is not in staged status.", patch_id=patch_id, status=patch.get("status"))
         if task_id not in known_tasks:
             fail("patch_task", "Patch task is not owned by an Act Capsule.", patch_id=patch_id, task_id=task_id)
+        route_decision = route_by_task.get(task_id)
+        if route_decision is not None and route_decision.get("route") != "BUILDER_PATCH":
+            fail(
+                "arena_route",
+                "Routing decision does not authorize Builder patch.",
+                patch_id=patch_id,
+                task_id=task_id,
+                route=route_decision.get("route"),
+                reason=route_decision.get("reason"),
+                symbol_output=route_decision.get("symbol_output"),
+            )
         if not owner:
             fail("patch_owner", "Patch has no owner.", patch_id=patch_id, task_id=task_id)
         if not patch_files:

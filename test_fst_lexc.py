@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from aura_fst_routing import FSTLexiconRoutingCore, SlotType
+from aura_fst_routing import AuraCodingArenaRouter, FSTLexiconRoutingCore, RoutingFrame, SlotType
 from aura_lexc import SLOT_ORDER, AuraLexc, LexcCompileError
 
 ROOT = Path(__file__).resolve().parent
@@ -61,3 +61,86 @@ def test_weighted_router_uses_repository_lexicon_and_requires_all_slots() -> Non
     assert stats["source"] == "aura.lexc"
     assert stats["complete_six_slot_routes"] > 0
     assert stats["lexc_errors"] == 0
+
+
+def test_coding_arena_router_compiles_structural_layer_hard_rules() -> None:
+    router = AuraCodingArenaRouter()
+
+    fake_symbol = router.route(
+        RoutingFrame(
+            intent="code_refactor",
+            artifact="python_module",
+            action="modify",
+            scope="symbol",
+            risk="medium",
+            grounding=("file_exists",),
+            tests="none",
+            target_symbol="MissingArchitect",
+        )
+    )
+    missing_tests = router.route(
+        RoutingFrame(
+            intent="code_refactor",
+            action="modify",
+            scope="symbol",
+            risk="medium",
+            grounding=("file_exists", "symbol_exists", "codemap_grounded"),
+            tests="none",
+            target_symbol="build_task_capsule",
+        )
+    )
+    research = router.route(
+        RoutingFrame(intent="research_rank", artifact="research_item", action="rank", scope="capsule", cost="no_model")
+    )
+    broad = router.route(
+        RoutingFrame(intent="code_refactor", action="modify", scope="subsystem", risk="high", grounding=("file_exists",))
+    )
+    grounded = router.route(
+        RoutingFrame(
+            intent="code_refactor",
+            action="modify",
+            scope="symbol",
+            risk="medium",
+            grounding=("file_exists", "symbol_exists", "codemap_grounded", "tests_exist"),
+            tests="existing",
+            target_symbol="build_task_capsule",
+        )
+    )
+    live = router.route(RoutingFrame(intent="code_refactor", action="inspect", risk="live", grounding=("full",), tests="existing"))
+    live_missing_tests = router.route(
+        RoutingFrame(
+            intent="code_refactor",
+            action="modify",
+            risk="live",
+            grounding=("file_exists", "symbol_exists", "codemap_grounded"),
+            tests="none",
+            target_symbol="build_task_capsule",
+        )
+    )
+    repair = router.route(RoutingFrame(intent="repair", artifact="patch", action="repair", grounding=("file_exists",)))
+    benchmark = router.route(RoutingFrame(intent="benchmark", action="inspect"))
+    hotswap = router.route(
+        RoutingFrame(
+            intent="hotswap",
+            artifact="patch",
+            action="promote",
+            risk="live",
+            grounding=("symbol_exists", "codemap_grounded"),
+            tests="existing",
+        )
+    )
+
+    assert fake_symbol.route == "LOCALIZE_FIRST"
+    assert fake_symbol.symbol_output() == "O:LOC|M:0|K:SUM|E:SYM0|V:0"
+    assert missing_tests.route == "TEST_GAP_FILL"
+    assert research.route == "MUSIC_RANK_ONLY"
+    assert research.classification == "RESEARCH_ANALOGY_ONLY"
+    assert broad.route == "PLAN_ONLY"
+    assert grounded.route == "BUILDER_PATCH"
+    assert grounded.symbol_output() == "O:BUILD|M:L|K:PAT|E:OK|V:1"
+    assert live.route == "VERIFY_ONLY"
+    assert live_missing_tests.route == "TEST_GAP_FILL"
+    assert live_missing_tests.verifier_required is True
+    assert repair.route == "REPAIR_PATCH"
+    assert benchmark.route == "PLAN_ONLY"
+    assert hotswap.route == "BLOCKED_WITH_REASON"
