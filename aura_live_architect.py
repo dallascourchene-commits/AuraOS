@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
 DEPENDENCIES: json, __future__, sys, ast, re, subprocess, aura_architect_loop, collections.abc, tempfile, aura_substrate, typing, aura_liquid_planning_arena, os, pathlib, inspect, shutil, dataclasses, hashlib
-FUNCTIONS: _hash_payload, _strip_code_fences, _extract_json_object, _diff_path_token, _diff_touched_files, _extract_diff, _git_executable, _run_command, _repo_copy_ignore, _test_files_from_arena, _default_test_commands, _python_topology_signature, _set_delta, _normalize_judge_approval, _safe_topology_file_paths, compute_temp_workspace_topology_delta, _merge_workspace_result, _merge_act_stage_result, _merge_council_plan_judgement, judge_patch_bundle, _merge_council_patch_judgement, _augment_live_hotswap_capsule, verify_arena_in_temp_workspace, run_live_architect_transaction, render_live_architect_summary, to_dict, to_dict, to_dict, to_execution_result, to_dict, add, __init__, ledger_hints, profile_for, call_model, budget_route, infer_target_file, deterministic_plan_spec, plan_with_council, plan_intent, __init__, _normalize_plan_spec, _candidate, _parse_critic_report, _run_shadow_critics, _judge_candidates, select_plan, __init__, build_patch_submissions, runner, visit_FunctionDef, visit_AsyncFunctionDef, visit_ClassDef, visit_Import, visit_ImportFrom, visit_Call
+FUNCTIONS: _hash_payload, _strip_code_fences, _extract_json_object, _diff_path_token, _diff_touched_files, _extract_diff, _git_executable, _run_command, _repo_copy_ignore, _test_files_from_arena, _default_test_commands, _python_topology_signature, _set_delta, _normalize_judge_approval, _safe_topology_file_paths, compute_temp_workspace_topology_delta, _merge_workspace_result, _merge_act_stage_result, _merge_council_plan_judgement, judge_patch_bundle, _merge_council_patch_judgement, _augment_live_hotswap_capsule, verify_arena_in_temp_workspace, run_live_architect_transaction, render_live_architect_summary, to_dict, to_dict, to_dict, to_execution_result, to_dict, add, __init__, ledger_hints, profile_for, call_model, budget_route, infer_target_file, deterministic_plan_spec, plan_with_council, plan_intent, __init__, _normalize_plan_spec, _candidate, _parse_critic_report, _run_shadow_critics, _judge_candidates, select_plan, __init__, _reviewable_attempt, _builder_failure_report, build_patch_submissions, runner, visit_FunctionDef, visit_AsyncFunctionDef, visit_ClassDef, visit_Import, visit_ImportFrom, visit_Call
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -1175,6 +1175,95 @@ class ArchitectBuilderBridge:
             "review_hint": "Review raw_model_response, extracted_diff, and repair.candidate_diff even when the transaction is blocked.",
         }
 
+    def _builder_failure_report(
+        self,
+        act: Any,
+        grounding: dict[str, Any] | None,
+        context_packet: BuilderContextPacket | None,
+        *,
+        status: str,
+        shadow_report: Any = None,
+        response: Any = None,
+        preflight: PatchPreflightResult | None = None,
+        repair_result: PatchRepairResult | None = None,
+    ) -> dict[str, Any]:
+        """Normalize Builder blocks into one reviewable failure packet."""
+        grounding_dict = dict(grounding or {})
+        shadow_payload: dict[str, Any] = {}
+        if shadow_report is not None:
+            if hasattr(shadow_report, "to_dict"):
+                shadow_payload = shadow_report.to_dict()
+            elif isinstance(shadow_report, dict):
+                shadow_payload = dict(shadow_report)
+        shadow_findings = list(shadow_payload.get("findings", []) or [])
+        missing_context_excerpt = not bool(context_packet and str(context_packet.source_excerpt or "").strip())
+        missing_tests = not bool(grounding_dict.get("test_files") or (context_packet.nearby_tests if context_packet else []))
+        reason_codes: list[str] = []
+
+        def add_reason(code: str) -> None:
+            if code and code not in reason_codes:
+                reason_codes.append(code)
+
+        if status == "arena_not_ready":
+            add_reason("arena_not_ready")
+        if status == "repair_failed_blocked":
+            add_reason("repair_failed_blocked")
+        if status == "no_patch_staged" or response == "":
+            add_reason("builder_refusal")
+        if missing_context_excerpt:
+            add_reason("missing_context_excerpt")
+        if missing_tests:
+            add_reason("missing_tests")
+        if grounding_dict.get("file_exists") is False:
+            add_reason("missing_target_file")
+        if grounding_dict.get("symbol_exists") is False:
+            add_reason("missing_target_symbol")
+
+        shadow_gate = str(shadow_payload.get("gate") or "")
+        shadow_gate_blocked = shadow_gate == "BLOCK_BUILDER" or bool(shadow_findings and not shadow_payload.get("ok", True))
+        if shadow_gate_blocked:
+            add_reason("shadow_gate_blocked")
+        for finding in shadow_findings:
+            shadow_type = str(finding.get("shadow_type") or "")
+            if shadow_type == "fake_symbol":
+                add_reason("missing_target_symbol")
+            elif shadow_type == "fake_file":
+                add_reason("missing_target_file")
+            elif shadow_type == "missing_test":
+                add_reason("missing_tests")
+            elif shadow_type:
+                add_reason(shadow_type)
+        if preflight is not None and not preflight.ok:
+            add_reason("preflight_failed")
+            for rejection in preflight.rejections:
+                add_reason(str(rejection))
+        if repair_result is not None and not repair_result.ok:
+            for rejection in repair_result.rejections_after_repair:
+                add_reason(str(rejection))
+
+        report = {
+            "failed_task_id": act.task_id,
+            "target_file": act.target_file,
+            "target_symbol": act.target_symbol,
+            "objective": act.objective,
+            "status": status,
+            "builder_refusal": "builder_refusal" in reason_codes,
+            "shadow_gate": shadow_gate,
+            "shadow_gate_blocked": shadow_gate_blocked,
+            "shadow_findings": shadow_findings,
+            "missing_context_excerpt": missing_context_excerpt,
+            "missing_tests": missing_tests,
+            "grounding": grounding_dict,
+            "context_available": context_packet is not None,
+            "context_source_refs": list(context_packet.source_refs if context_packet else []),
+            "reason_codes": reason_codes,
+            "response_empty": response == "",
+            "preflight": preflight.to_dict() if preflight is not None else None,
+            "repair": repair_result.to_dict() if repair_result is not None else None,
+        }
+        report["phase_hash"] = _hash_payload(report)
+        return report
+
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
             builder_failures = []
@@ -1380,6 +1469,7 @@ class ArchitectBuilderBridge:
         self.patch_quality = {
             "attempts": patch_attempts,
             "review_artifacts": patch_attempts,
+            "builder_failures": builder_failures,
             "total_attempts": len(patch_attempts),
             "preflight_passed": sum(1 for a in patch_attempts if a.get("status") == "preflight_passed"),
             "repair_succeeded": sum(1 for a in patch_attempts if a.get("status") == "repair_succeeded"),

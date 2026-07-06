@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa9c3-[Q-SYS:REPO_LOCALIZER]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Deterministic Fault Localization)
 DEPENDENCIES: ast, dataclasses, json, pathlib, re, typing
-FUNCTIONS: LocalizedFile, parse_traceback_targets, ast_symbol_index, localize_fault, run_agentless_fallback
+FUNCTIONS: LocalizedFile, parse_traceback_targets, ast_symbol_index, localize_fault, topological_context_fallback_candidates, run_agentless_fallback
 SYNOPSIS: Analyzes the intent and repo structure deterministically without LLM queries
 to localize target files. Used as the Agentless-style fallback loop when Council debate fails.
 [/AURA_MASTER_KEY]
@@ -308,9 +308,92 @@ def localize_fault(intent: str, repo_root: str | Path) -> list[LocalizedFile]:
     return ranked[:5]
 
 
+def _python_sources_for_topological_anchor(root: Path) -> dict[str, str]:
+    files: dict[str, str] = {}
+    for path in sorted(root.glob("**/*.py")):
+        relative = path.relative_to(root)
+        if any(part in EXCLUDE_DIRS for part in relative.parts):
+            continue
+        try:
+            files[relative.as_posix()] = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+    return files
+
+
+def topological_context_fallback_candidates(
+    intent: str,
+    repo_root: str | Path,
+    *,
+    limit: int = 5,
+) -> list[LocalizedFile]:
+    """Return no-model fallback file candidates using exact topology plus advisory affinity."""
+    root = Path(repo_root).resolve()
+    try:
+        from aura_topological_context_anchor import CodeTopoAnchor, query_terms
+    except Exception:
+        return []
+
+    files = _python_sources_for_topological_anchor(root)
+    if not files:
+        return []
+    anchor = CodeTopoAnchor.build_from_files(files)
+    terms = set(query_terms(intent))
+    lowered_intent = str(intent or "").lower()
+    matches: dict[str, LocalizedFile] = {}
+
+    def add(node_path: str, score: float, reason: str, *, symbol: str = "") -> None:
+        if not node_path or not (root / node_path).exists():
+            return
+        _add_match(
+            matches,
+            node_path,
+            score,
+            reason,
+            symbol=symbol,
+            tests=[],
+        )
+
+    for symbol_name, node_ids in anchor.symbol_index.items():
+        symbol_lower = symbol_name.lower()
+        if symbol_lower not in terms and symbol_lower not in lowered_intent:
+            continue
+        for node_id in node_ids:
+            node = anchor.nodes.get(node_id)
+            if node:
+                add(node.file_path, 13.0, f"topological_symbol_match:{symbol_name}", symbol=symbol_name)
+
+    patchable_nodes = [node for node in anchor.nodes.values() if node.kind != "module"]
+    for node, affinity in anchor.rank_affinity(intent, patchable_nodes)[:20]:
+        if affinity <= 0.0:
+            continue
+        add(
+            node.file_path,
+            max(0.5, affinity * 4.0),
+            "topological_affinity_rank",
+            symbol=node.symbol,
+        )
+
+    for item in matches.values():
+        item.score += _generated_penalty(item.path)
+        item.reasons = item.reasons[:8]
+        item.symbols = sorted(set(item.symbols))[:8]
+        item.tests = sorted(set(item.tests))[:5]
+
+    ranked = sorted(
+        (item for item in matches.values() if item.score > 0),
+        key=lambda item: (-item.score, item.path),
+    )
+    return ranked[: max(1, min(5, int(limit)))]
+
+
 def run_agentless_fallback(intent: str, repo_root: str | Path) -> dict[str, Any]:
     """Generate a structured fallback Act Capsule evidence packet when Council fails."""
     files = localize_fault(intent, repo_root)
+    source = "codemap_ast_localizer"
+    if not files:
+        files = topological_context_fallback_candidates(intent, repo_root, limit=5)
+        source = "topological_context_anchor"
     if not files:
         return {
             "ok": False,
@@ -322,4 +405,5 @@ def run_agentless_fallback(intent: str, repo_root: str | Path) -> dict[str, Any]
         "localized_files": [asdict(item) for item in files],
         "suggested_task_id": "fallback_localize_repair",
         "objective": f"Resolve following issue: {intent} in {', '.join(item.path for item in files)}",
+        "source": source,
     }

@@ -786,12 +786,15 @@ def _scope_for_act(act: ActCapsule) -> str:
 
 
 def _risk_for_act(plan: FractalPlanCapsule, act: ActCapsule) -> str:
-    text = " ".join([plan.objective, act.objective, act.allowed_scope, " ".join(plan.risk_map)]).lower()
-    if any(term in text for term in ("live", "hot-swap", "hotswap", "promote")):
+    task_text = " ".join([plan.objective, act.objective, act.allowed_scope]).lower()
+    explicit_risk_text = " ".join(plan.risk_map).lower()
+    if any(term in task_text for term in ("live", "hot-swap", "hotswap", "promote")):
         return "live"
-    if act.size in {"L", "XL"} or any(term in text for term in ("high risk", "public api", "dependency", "schema", "rewrite")):
+    if any(term in explicit_risk_text for term in ("live traffic", "production", "customer-facing", "promote immediately")):
+        return "live"
+    if act.size in {"L", "XL"} or any(term in f"{task_text} {explicit_risk_text}" for term in ("high risk", "public api", "dependency", "schema", "rewrite")):
         return "high"
-    if any(term in text for term in ("read-only", "explain", "inspect")):
+    if any(term in task_text for term in ("read-only", "explain", "inspect")):
         return "low"
     return "medium"
 
