@@ -91,6 +91,7 @@ class ActCapsule:
     related_files: list[str] = field(default_factory=list)
     allowed_scope: str = "single bounded edit"
     context_ref: str = ""
+    topological_grounding: dict[str, Any] = field(default_factory=dict)
     acceptance: str = "Return a bounded patch or a refusal reason."
     escalate_if: list[str] = field(default_factory=list)
     constraints: list[str] = field(default_factory=list)
@@ -753,6 +754,7 @@ def _build_act_capsule(
         related_files=related_files,
         allowed_scope=str(task.get("allowed_scope", "single bounded edit")),
         context_ref=str(task.get("context_ref") or _act_context_ref(objective, task_id, target_file, target_symbol)),
+        topological_grounding=dict(task.get("topological_grounding", {}) if isinstance(task.get("topological_grounding"), dict) else {}),
         acceptance=str(task.get("acceptance", "Return a bounded patch or a refusal reason.")),
         escalate_if=list(task.get("escalate_if", DEFAULT_ACT_ESCALATIONS)),
         constraints=list(task.get("constraints", constraints)),

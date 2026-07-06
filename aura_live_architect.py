@@ -48,6 +48,7 @@ from aura_liquid_planning_arena import build_world_state_delta
 from aura_substrate import REPO_ROOT
 
 from aura_builder_context import build_builder_context_packet, BuilderContextPacket
+from aura_coding_arena_grounding import ground_coding_arena_intent
 from aura_patch_quality_gate import (
     generate_unified_diff_from_before_after,
     parse_before_after_response,
@@ -55,6 +56,7 @@ from aura_patch_quality_gate import (
     PatchPreflightResult,
 )
 from aura_patch_repair import repair_patch_format, PatchRepairResult
+from aura_repo_localizer import run_agentless_fallback
 from aura_test_gap_filler import fill_test_gap, detect_missing_test_findings, TestGapFillerResult
 
 try:
@@ -129,6 +131,7 @@ class ArchitectCouncilDecision:
     budget_route: dict[str, Any]
     phase_hash: str
     music_mitosis: dict[str, Any] = field(default_factory=dict)
+    topological_grounding: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -792,9 +795,11 @@ class ArchitectModelRouter:
         *,
         target_file: str | None = None,
         target_symbol: str | None = None,
+        topological_grounding: dict[str, Any] | None = None,
         source: str = "deterministic_fallback",
     ) -> dict[str, Any]:
-        inferred_file = target_file or self.infer_target_file(intent)
+        grounding_packet = dict(topological_grounding or {})
+        inferred_file = target_file or grounding_packet.get("target_file") or self.infer_target_file(intent)
         hints = self.ledger_hints()
         if inferred_file is None:
             return {
@@ -807,26 +812,30 @@ class ArchitectModelRouter:
                         "objective": intent,
                         "expected_output": "UNIFIED_DIFF",
                         "acceptance": "Resolve target file before Builder execution.",
+                        "topological_grounding": grounding_packet,
                     }
                 ],
+                "topological_grounding": grounding_packet,
                 "source": "deterministic_fallback_blocked" if source == "deterministic_fallback" else source,
                 "ledger_hints": hints,
             }
         return {
             "architecture_decision": "Route live Architect intent through Plan/Act, temp verification, hot-swap, rollback, and ledger gates.",
             "target_file": inferred_file,
-            "target_symbol": target_symbol,
+            "target_symbol": target_symbol or grounding_packet.get("target_symbol"),
             "act_tasks": [
                 {
                     "task_id": "A-LIVE-1",
                     "objective": intent,
                     "target_file": inferred_file,
-                    "target_symbol": target_symbol,
+                    "target_symbol": target_symbol or grounding_packet.get("target_symbol"),
                     "allowed_scope": "single live Architect Act Capsule",
                     "acceptance": "Return a unified diff that applies cleanly in the temporary workspace and passes local verification.",
                     "expected_output": "UNIFIED_DIFF",
+                    "topological_grounding": grounding_packet,
                 }
             ],
+            "topological_grounding": grounding_packet,
             "source": source,
             "ledger_hints": hints,
         }
@@ -851,6 +860,63 @@ class ArchitectModelRouter:
         return (await self.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)).selected_plan
 
 
+def _planner_grounding_summary(grounding: dict[str, Any]) -> dict[str, Any]:
+    source_spans = list(grounding.get("source_spans", []) or [])
+    return {
+        "route": grounding.get("route"),
+        "target_file": grounding.get("target_file"),
+        "target_symbol": grounding.get("target_symbol"),
+        "exact_hit_count": len(grounding.get("exact_hits", []) or []),
+        "external_call_count": len(grounding.get("external_calls", []) or []),
+        "candidate_files": [
+            item.get("path")
+            for item in list(grounding.get("candidate_files", []) or [])[:5]
+            if isinstance(item, dict)
+        ],
+        "source_spans": [
+            {
+                "file_path": item.get("file_path"),
+                "symbol": item.get("symbol"),
+                "start_line": item.get("start_line"),
+                "end_line": item.get("end_line"),
+                "source_hash": item.get("source_hash"),
+            }
+            for item in source_spans[:6]
+            if isinstance(item, dict)
+        ],
+        "tests": list(grounding.get("tests", []) or [])[:5],
+        "route_reasons": list(grounding.get("route_reasons", []) or [])[:8],
+        "patch_authority": "exact_source_spans_and_hashes_only",
+        "vsa_patch_authority": False,
+    }
+
+
+def _attach_grounding_to_plan(plan: dict[str, Any], grounding: dict[str, Any]) -> dict[str, Any]:
+    packet = dict(grounding or {})
+    if not packet:
+        return plan
+    updated = dict(plan)
+    updated["topological_grounding"] = packet
+    if not updated.get("target_file") and packet.get("target_file"):
+        updated["target_file"] = packet.get("target_file")
+    if not updated.get("target_symbol") and packet.get("target_symbol"):
+        updated["target_symbol"] = packet.get("target_symbol")
+    tasks: list[Any] = []
+    for raw_task in updated.get("act_tasks", []) or []:
+        if isinstance(raw_task, dict):
+            task = dict(raw_task)
+            task.setdefault("topological_grounding", packet)
+            if not task.get("target_file") and updated.get("target_file"):
+                task["target_file"] = updated.get("target_file")
+            if not task.get("target_symbol") and updated.get("target_symbol"):
+                task["target_symbol"] = updated.get("target_symbol")
+            tasks.append(task)
+        else:
+            tasks.append(raw_task)
+    updated["act_tasks"] = tasks
+    return updated
+
+
 class ArchitectFusionCouncil:
     """Orchestrate multi-candidate planning, cheap critique, and premium judging."""
 
@@ -864,12 +930,13 @@ class ArchitectFusionCouncil:
         intent: str,
         inferred_file: str | None,
         target_symbol: str | None,
+        topological_grounding: dict[str, Any] | None = None,
         source: str,
     ) -> dict[str, Any] | None:
         tasks = data.get("act_tasks") if isinstance(data.get("act_tasks"), list) else []
         if not tasks:
             return None
-        return {
+        plan = {
             "architecture_decision": str(data.get("architecture_decision") or "Use the live Architect loop."),
             "target_file": str(data.get("target_file") or inferred_file) if data.get("target_file") or inferred_file else None,
             "target_symbol": str(data.get("target_symbol") or target_symbol) if data.get("target_symbol") or target_symbol else None,
@@ -878,6 +945,7 @@ class ArchitectFusionCouncil:
             "ledger_hints": self.router.ledger_hints(),
             "objective": intent,
         }
+        return _attach_grounding_to_plan(plan, topological_grounding or {})
 
     def _candidate(self, candidate_id: str, plan: dict[str, Any], *, cost_tier: str, source: str) -> dict[str, Any]:
         base_score = 0.42 if cost_tier == "free" else 0.62
@@ -992,21 +1060,31 @@ class ArchitectFusionCouncil:
         target_symbol: str | None = None,
     ) -> ArchitectCouncilDecision:
         hints = self.router.ledger_hints()
-        inferred_file = target_file or self.router.infer_target_file(intent)
+        topological_grounding = ground_coding_arena_intent(
+            intent,
+            self.router.repo_root,
+            target_symbol=target_symbol,
+        )
+        inferred_file = target_file or topological_grounding.get("target_file") or self.router.infer_target_file(intent)
         budget_route = self.router.budget_route(hints, target_file=inferred_file)
         local_plan = self.router.deterministic_plan_spec(
             intent,
             target_file=inferred_file,
-            target_symbol=target_symbol,
+            target_symbol=target_symbol or topological_grounding.get("target_symbol"),
+            topological_grounding=topological_grounding,
             source="deterministic_codemap_plan",
         )
+        local_plan = _attach_grounding_to_plan(local_plan, topological_grounding)
         candidates = [self._candidate("local_free", local_plan, cost_tier="free", source=local_plan.get("source", "deterministic_codemap_plan"))]
+        grounding_summary = _planner_grounding_summary(topological_grounding)
         prompt = (
             "Return JSON only for a bounded Aura Architect refactor plan. "
             "Fields: architecture_decision, target_file, target_symbol, act_tasks. "
             "Each act task must include task_id, objective, target_file, target_symbol, acceptance, expected_output=UNIFIED_DIFF. "
+            "Every patch task must preserve the supplied topological_grounding packet; exact source spans and source_hash values are patch authority, and VSA/MUSIC resonance is advisory only. "
             "Never write code directly to production. "
             f"Ledger hints: {json.dumps(hints, sort_keys=True)}. "
+            f"Topological grounding: {json.dumps(grounding_summary, sort_keys=True)}. "
             f"Intent: {intent}. Suggested target_file: {inferred_file or 'unknown'}."
         )
         for index, role in enumerate(budget_route.get("premium_planner_roles", []), start=1):
@@ -1022,7 +1100,8 @@ class ArchitectFusionCouncil:
                 data or {},
                 intent=intent,
                 inferred_file=inferred_file,
-                target_symbol=target_symbol,
+                target_symbol=target_symbol or topological_grounding.get("target_symbol"),
+                topological_grounding=topological_grounding,
                 source=f"premium_{role}",
             )
             if plan:
@@ -1086,6 +1165,7 @@ class ArchitectFusionCouncil:
         selected_id = judge_decision["selected_candidate_id"]
         selected = next((item for item in candidates if item["candidate_id"] == selected_id), candidates[0])
         selected_plan = dict(selected["plan"])
+        selected_plan = _attach_grounding_to_plan(selected_plan, topological_grounding)
         selected_plan["source"] = selected.get("source", selected_plan.get("source", "fusion_council"))
         selected_plan["council_candidate_id"] = selected["candidate_id"]
         selected_plan["ledger_hints"] = hints
@@ -1104,6 +1184,7 @@ class ArchitectFusionCouncil:
             "judge_decision": judge_decision,
             "budget_route": budget_route,
             "music_mitosis": music_mitosis,
+            "topological_grounding": topological_grounding,
         }
         return ArchitectCouncilDecision(phase_hash=_hash_payload(payload), **payload)
 
@@ -1175,6 +1256,46 @@ class ArchitectBuilderBridge:
             "review_hint": "Review raw_model_response, extracted_diff, and repair.candidate_diff even when the transaction is blocked.",
         }
 
+    def _builder_patch_grounding_eligibility(
+        self,
+        context_packet: BuilderContextPacket,
+    ) -> dict[str, Any]:
+        topology = context_packet.topological_context or {}
+        packet = topology.get("packet") if isinstance(topology.get("packet"), dict) else {}
+        route_diagnostics = packet.get("route_diagnostics", {}) if isinstance(packet, dict) else {}
+        route = str(route_diagnostics.get("route") or "")
+        spans = [item for item in packet.get("source_spans", []) or [] if isinstance(item, dict)] if isinstance(packet, dict) else []
+        target_spans = [
+            item
+            for item in spans
+            if item.get("role") == "target"
+            and item.get("file_path")
+            and item.get("start_line")
+            and item.get("end_line")
+            and item.get("source_hash")
+        ]
+        tests = list(packet.get("tests", []) or []) if isinstance(packet, dict) else []
+        reasons: list[str] = []
+        if not target_spans:
+            reasons.append("missing_exact_topological_span")
+        if context_packet.target_symbol and not context_packet.target_file:
+            reasons.append("missing_exact_target_file")
+        if context_packet.target_symbol and not any(span.get("symbol") == context_packet.target_symbol for span in target_spans):
+            reasons.append("missing_exact_target_symbol")
+        if route != "TEST_GAP_FILL" and not tests:
+            reasons.append("missing_test_neighbors")
+        if route not in {"BUILDER_PATCH", "TEST_GAP_FILL"}:
+            reasons.append(f"patch_route_not_authorized:{route or 'unknown'}")
+        return {
+            "ok": not reasons and route == "BUILDER_PATCH",
+            "route": route,
+            "reasons": reasons,
+            "tests": tests,
+            "source_spans": target_spans,
+            "patch_authority": "exact_source_spans_and_hashes_only",
+            "vsa_patch_authority": False,
+        }
+
     def _builder_failure_report(
         self,
         act: Any,
@@ -1208,6 +1329,8 @@ class ArchitectBuilderBridge:
             add_reason("arena_not_ready")
         if status == "repair_failed_blocked":
             add_reason("repair_failed_blocked")
+        if status == "topological_grounding_blocked":
+            add_reason("topological_grounding_blocked")
         if status == "no_patch_staged" or response == "":
             add_reason("builder_refusal")
         if missing_context_excerpt:
@@ -1256,6 +1379,7 @@ class ArchitectBuilderBridge:
             "grounding": grounding_dict,
             "context_available": context_packet is not None,
             "context_source_refs": list(context_packet.source_refs if context_packet else []),
+            "topological_context": context_packet.topological_context if context_packet else {},
             "reason_codes": reason_codes,
             "response_empty": response == "",
             "preflight": preflight.to_dict() if preflight is not None else None,
@@ -1318,6 +1442,29 @@ class ArchitectBuilderBridge:
                 objective=objective,
                 task_id=act.task_id,
             )
+            grounding_eligibility = self._builder_patch_grounding_eligibility(context_packet)
+            if not grounding_eligibility["ok"]:
+                failure = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status="topological_grounding_blocked",
+                )
+                for reason in grounding_eligibility.get("reasons", []):
+                    if reason not in failure["reason_codes"]:
+                        failure["reason_codes"].append(reason)
+                failure["grounding_eligibility"] = grounding_eligibility
+                attempt_record = self._reviewable_attempt(
+                    act=act,
+                    context_packet=context_packet,
+                    status="topological_grounding_blocked",
+                )
+                attempt_record["failure_reason"] = failure
+                patch_attempts.append(attempt_record)
+                self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                    "grounding_reasons": grounding_eligibility.get("reasons", []),
+                })
+                continue
 
             # Record builder context packet to workflow memory
             if self._workflow_memory is not None and self._workflow_id:
@@ -1821,6 +1968,11 @@ async def run_live_architect_transaction(
     )
     builder = ArchitectBuilderBridge(router, workflow_memory=workflow_memory, workflow_id=workflow_id)
     patch_submissions = await builder.build_patch_submissions(prepared, objective=arena_objective)
+    agentless_fallback: dict[str, Any] | None = None
+    if not patch_submissions:
+        agentless_fallback = run_agentless_fallback(intent, effective_root)
+        if agentless_fallback.get("localized_files"):
+            agentless_fallback["localized_files"] = list(agentless_fallback.get("localized_files", []) or [])[:5]
     stage_results = [
         stage_arena_patch(
             prepared.arena,
@@ -1973,6 +2125,7 @@ async def run_live_architect_transaction(
     # Assemble patch quality metadata
     patch_quality = {
         **builder.patch_quality,
+        "agentless_fallback": agentless_fallback,
         "music_mitosis": selected_music_mitosis,
         "test_gap_filler": test_gap_result.to_dict() if test_gap_result else None,
         "verifier_decision": {
@@ -1999,6 +2152,7 @@ async def run_live_architect_transaction(
             "ledger_hints": plan_spec.get("ledger_hints", {}),
             "budget_route": council_decision.budget_route,
             "music_mitosis": selected_music_mitosis,
+            "topological_grounding": plan_spec.get("topological_grounding", {}),
         },
         fusion_council={
             **council_decision.to_dict(),
