@@ -35,6 +35,7 @@ class BuilderContextPacket:
     symbol_end_line: int = 0
     source_excerpt: str = ""
     st3gg_context: dict[str, Any] = field(default_factory=dict)
+    topological_context: dict[str, Any] = field(default_factory=dict)
     nearby_imports: list[str] = field(default_factory=list)
     callers: list[str] = field(default_factory=list)
     neighbors: list[str] = field(default_factory=list)
@@ -127,6 +128,80 @@ def _extract_callers_from_topology(
     return callers[:15], neighbors[:15]
 
 
+def _resolve_repo_python_file(root: Path, candidate: str | Path | None) -> tuple[str, Path] | None:
+    if not candidate:
+        return None
+    raw = Path(str(candidate))
+    file_path = raw if raw.is_absolute() else root / raw
+    try:
+        resolved_root = root.resolve()
+        resolved_file = file_path.resolve()
+        rel = resolved_file.relative_to(resolved_root).as_posix()
+    except (OSError, ValueError):
+        return None
+    if resolved_file.suffix != ".py" or not resolved_file.exists():
+        return None
+    return rel, resolved_file
+
+
+def _build_topological_context_payload(
+    *,
+    target_file: str,
+    target_symbol: str | None,
+    repo_root: Path,
+    candidate_files: list[str],
+) -> dict[str, Any]:
+    """Attach a small exact topology packet without replacing source_excerpt."""
+    try:
+        from aura_topological_context_anchor import CodeTopoAnchor, render_builder_context
+    except Exception as exc:
+        return {
+            "ok": False,
+            "warnings": [f"topological_context_anchor_unavailable:{type(exc).__name__}"],
+        }
+
+    files: dict[str, str] = {}
+    for candidate in [target_file, *candidate_files]:
+        resolved = _resolve_repo_python_file(repo_root, candidate)
+        if not resolved:
+            continue
+        rel, path = resolved
+        if rel in files:
+            continue
+        try:
+            files[rel] = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if len(files) >= 10:
+            break
+
+    if not files:
+        return {
+            "ok": False,
+            "warnings": ["topological_context_no_python_sources"],
+        }
+
+    anchor = CodeTopoAnchor.build_from_files(files)
+    warnings = list(anchor.warnings)
+    if not target_symbol:
+        return {
+            "ok": False,
+            "version": anchor.metadata.get("version"),
+            "warnings": [*warnings, "topological_context_target_symbol_missing"],
+            "anchor_metadata": anchor.metadata,
+        }
+
+    packet = anchor.nearest_context(target_symbol, radius=1)
+    return {
+        "ok": bool(packet.target_nodes),
+        "version": anchor.metadata.get("version"),
+        "anchor_metadata": anchor.metadata,
+        "packet": packet.to_dict(),
+        "rendered": render_builder_context(packet),
+        "warnings": list(dict.fromkeys([*warnings, *packet.warnings])),
+    }
+
+
 def build_builder_context_packet(
     *,
     target_file: str | None,
@@ -196,6 +271,12 @@ def build_builder_context_packet(
 
     # Merge neighbors from grounding and topology
     all_neighbors = list(dict.fromkeys([*neighbors, *topology_neighbors]))
+    topological_context = _build_topological_context_payload(
+        target_file=normalized_file,
+        target_symbol=target_symbol,
+        repo_root=root,
+        candidate_files=[*all_neighbors[:5], *nearby_tests[:4]],
+    )
 
     # Build source_refs for Graphify grounding
     source_refs: list[dict[str, Any]] = []
@@ -243,6 +324,7 @@ def build_builder_context_packet(
         symbol_start_line=start_line,
         symbol_end_line=end_line,
         source_excerpt=source_excerpt,
+        topological_context=topological_context,
         nearby_imports=nearby_imports,
         callers=callers,
         neighbors=all_neighbors,
@@ -388,6 +470,20 @@ def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
                     lines.append(text)
         lines.append("--- end st3gg_compact_context ---")
         lines.append("")
+
+    if packet.topological_context:
+        rendered_topology = str(packet.topological_context.get("rendered") or "")
+        if rendered_topology:
+            lines.append(rendered_topology)
+            lines.append("")
+        else:
+            warnings = list(packet.topological_context.get("warnings", []) or [])
+            lines.append("--- topological_context_anchor ---")
+            lines.append("status: unavailable")
+            if warnings:
+                lines.append("warnings: " + "; ".join(str(item) for item in warnings))
+            lines.append("--- end topological_context_anchor ---")
+            lines.append("")
 
     if packet.nearby_imports:
         lines.append("--- nearby_imports ---")

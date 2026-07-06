@@ -842,6 +842,17 @@ def _build_fused_plan(
 
     target = anchor_plan.get("target_file") or target_file
     symbol = anchor_plan.get("target_symbol") or target_symbol
+    for candidate_id in supporting_ids:
+        candidate = _candidate_by_id(candidates, candidate_id)
+        if not candidate:
+            continue
+        candidate_target, candidate_symbol = _candidate_target(candidate, target, symbol)
+        if not target and candidate_target:
+            target = candidate_target
+        if not symbol and candidate_symbol:
+            symbol = candidate_symbol
+        if target and symbol:
+            break
     plan_decisions = _merge_plan_text(candidates, supporting_ids, "architecture_decision")
     supporting_tasks = _supporting_task_summaries(candidates, supporting_ids[1:] or supporting_ids)
     research_label = str(research.get("label") or research.get("arxiv_id") or "local research")
@@ -891,7 +902,13 @@ def _build_fused_plan(
             acceptance_parts.append("Preserve the complementary council constraints while staying within the declared target scope.")
         copied["acceptance"] = " ".join(item for item in acceptance_parts if item)
         copied["role"] = copied.get("role", "music_mitosis_builder")
-        copied["allowed_scope"] = copied.get("allowed_scope") or "single music-mitosis fused Act Capsule"
+        copied_scope = str(copied.get("allowed_scope") or "").strip()
+        if not copied_scope or copied_scope == "single live Architect Act Capsule":
+            copied["allowed_scope"] = (
+                "single music-mitosis fused symbol Act Capsule"
+                if copied.get("target_symbol")
+                else "single music-mitosis fused file Act Capsule"
+            )
         fused_tasks.append(copied)
 
     return {
