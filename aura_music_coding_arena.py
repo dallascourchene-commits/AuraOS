@@ -903,7 +903,7 @@ def _build_fused_plan(
         copied["acceptance"] = " ".join(item for item in acceptance_parts if item)
         copied["role"] = copied.get("role", "music_mitosis_builder")
         copied_scope = str(copied.get("allowed_scope") or "").strip()
-        if not copied_scope or copied_scope == "single live Architect Act Capsule":
+        if not copied_scope or copied_scope == "single live Architect Act Capsule" or copied_scope == "single music-mitosis fused Act Capsule":
             copied["allowed_scope"] = (
                 "single music-mitosis fused symbol Act Capsule"
                 if copied.get("target_symbol")
