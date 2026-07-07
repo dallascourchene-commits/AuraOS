@@ -35,6 +35,7 @@ AuraOS is a **polysynthetic cognitive substrate** — an autonomous, self-repair
 - **Hyperdimensional vector memory** — 10,000-dimensional binary vectors for associative reasoning
 - **Autonomous code evolution** — self-modifying architecture with sandboxed mutation control
 - **3D/AR topology visualization** — real-time dependency graph of the entire codebase
+- **Human-first 3D coding arena** — browser-based CODEMAP/topology micro-arena for selecting exact source facts, compiling action capsules, and simulating model routes before workers act
 - **Multi-provider LLM routing** — intelligent failover across Gemini, Mistral, Groq, Anthropic, and local models
 - **UDP mesh networking** — peer discovery and compute offloading via encrypted DSEKP packets
 
@@ -336,6 +337,19 @@ the outbound boundary, including when context crushing is disabled. Large JSON,
 logs, search results, diffs, code, or plain text are compressed locally and
 their originals are stored in `Aura_Memory/context_crush_ledger.jsonl` behind
 `AURA_CCR` retrieval markers plus visible `ST3GG-L2` recall pointers.
+
+`aura_coding_arena_3d.py` and `aura_coding_arena_server.py` add the
+Human-First 3D Coding Arena for operator-led code work. It loads local
+`.aura/CODEMAP.json` topology or an offline demo graph, lets a human select a
+small micro-arena in the browser, shows exact file/symbol/test facts, flags
+candidate wiring faults, compiles deterministic action capsules, and simulates
+model route scorecards without making provider calls. The visual graph is an
+interface only; worker authority remains the capsule's text-native source paths,
+line ranges, hashes, constraints, and verifier context. The MVP verification
+run loaded the real CODEMAP as 600 nodes / 1,225 links in 334.382 ms, compiled
+the demo router capsule in 2.529 ms, produced a 97.6% complete-capsule savings
+estimate against the demo raw baseline, and passed the maintained `tests/`
+package with 61 tests in 1.98 s.
 
 Run it directly:
 
@@ -1168,7 +1182,63 @@ Client-side WebGL visualizer using Three.js r128 that connects to `ws://127.0.0.
 
 **Controls**: None. This is a pure display — the 3D avatar morphs automatically based on server-sent text messages.
 
-### 11.7 `aura_topological_scanner.py` — Topology Scanner
+### 11.7 `aura_coding_arena_server.py` - Human-First 3D Coding Arena
+
+The Human-First 3D Coding Arena is a local HTTP control surface for code work,
+separate from the legacy AR/WebSocket viewer. It serves a dependency-free Canvas
+3D graph and local JSON APIs. Use it when you want to inspect topology, select a
+bounded micro-arena, compile an action capsule, or simulate model routing before
+asking a worker to patch.
+
+**Start**:
+
+```bash
+python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080
+python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080 --demo
+```
+
+Open `http://127.0.0.1:8080`.
+
+**Phone/LAN demo**:
+
+```bash
+python3 aura_coding_arena_server.py --host 0.0.0.0 --port 8080 --demo
+```
+
+Open `http://<your-computer-lan-ip>:8080` from the phone on a trusted network.
+The MVP has no authentication, so do not expose it to an untrusted network.
+
+**Local API routes**:
+
+| Route | Purpose |
+|-------|---------|
+| `GET /api/topology?demo=1` | Load CODEMAP-backed topology or the offline demo graph. |
+| `POST /api/select` | Select a node and return a depth-1 micro-arena. |
+| `POST /api/expand` | Expand the selected node neighborhood. |
+| `POST /api/compile-capsule` | Emit the deterministic action capsule for exact worker context. |
+| `POST /api/simulate-route` | Score local/model/provider route candidates without calling providers. |
+| `POST /api/mark-edge` | Add a human-marked candidate missing edge to the in-memory graph. |
+| `POST /api/voice-intent` | Interpret supported voice/text commands through local routing only. |
+
+**Supported UI commands**: `isolate this class`, `show dependencies`,
+`compile capsule`, `mark missing route`, `send to worker`, and
+`simulate route`. Browser speech input is optional; typing the command is the
+deterministic fallback.
+
+**MVP benchmarks**:
+
+| Check | Result |
+|-------|--------|
+| Real CODEMAP load | 600 nodes / 1,225 links in 334.382 ms. |
+| Demo capsule compile | 1,163-token emitted capsule in 2.529 ms. |
+| Capsule savings | 97.6% complete capsule savings; 99.3% compact context nucleus savings against the demo baseline. |
+| Route scorecard | 0.039 ms, selected `LOCAL_DETERMINISTIC`, `network_calls_made=false`. |
+| Browser/mobile smoke | Desktop Canvas rendered nonblank; 390x844 mobile viewport had no horizontal overflow. |
+
+See `AURA_CODING_ARENA_README.md` for the full runbook, metrics, and research
+notes.
+
+### 11.8 `aura_topological_scanner.py` — Topology Scanner
 
 | Function | Description |
 |----------|-------------|
@@ -1177,15 +1247,15 @@ Client-side WebGL visualizer using Three.js r128 that connects to `ws://127.0.0.
 | `compile_unified_graph()` | Full scan: spatial_mapper → AST calls → regex signatures → shared-resource edges |
 | `compile_topology_map(deep=False)` | Fast or deep scan mode |
 
-### 11.8 `aura_topology_manager.py` — Deep Topology Manager
+### 11.9 `aura_topology_manager.py` — Deep Topology Manager
 
 Class: `TopologyBuilder(root)` — `run()` produces enriched topology payload with: proper node IDs (no '?' orphans), deduplication, import-level edges, per-file metrics, hub diagnostics.
 
-### 11.9 `aura_topology_analyzer.py` — Fracture Analysis
+### 11.10 `aura_topology_analyzer.py` — Fracture Analysis
 
 Function: `diagnose_fractures()` — returns dict with total fracture count and by-kind breakdown.
 
-### 11.10 `spatial_mapper.py` — Spatial Mapper
+### 11.11 `spatial_mapper.py` — Spatial Mapper
 
 | Class/Function | Purpose |
 |----------------|---------|
@@ -1194,7 +1264,7 @@ Function: `diagnose_fractures()` — returns dict with total fracture count and 
 | `scan_and_vectorize(root_dir)` | Full directory scan returning node topology list |
 | `aura_tmm_server(websocket)` | WebSocket server for Topology Map Manager (port 8000) |
 
-### 11.11 `liquid_kernel.py` — Liquid Kernel
+### 11.12 `liquid_kernel.py` — Liquid Kernel
 
 Class: `LiquidWebSocket` — WebSocket-connectable liquid state machine implementing:
 - `LiquidStateMachine` with 3 `LiquidNeuron` instances, ternary quantization, excitatory/inhibitory pathways
@@ -1207,7 +1277,7 @@ Class: `LiquidWebSocket` — WebSocket-connectable liquid state machine implemen
 |--------|-------------|
 | `process_command(command: dict) → dict` | Full pipeline: LiquidState update → quantize → return state (non-string values quantized to ternary) |
 
-### 11.12 `liquid_fhrr.py` — Liquid FHRR
+### 11.13 `liquid_fhrr.py` — Liquid FHRR
 
 Class: `LiquidFHRR(dim)` — Fractional Holographic Reduced Representation engine.
 
@@ -1220,7 +1290,7 @@ Class: `LiquidFHRR(dim)` — Fractional Holographic Reduced Representation engin
 | `similarity(v1, v2)` | Cosine similarity in complex space |
 | `fractional_bind(phasor, t)` | Bind at continuous real-valued time t |
 
-### 11.13 `vsa_resonator.py` — VSA Resonator
+### 11.14 `vsa_resonator.py` — VSA Resonator
 
 Class: `VSAResonator(dim)` — GSB (Gold-Silver-Bronze) quantized vector resonator.
 
@@ -1433,6 +1503,30 @@ python3 pulse.py
 # with ST3GG holographic signatures, and broadcast to all clients.
 ```
 
+### Human-First 3D Coding Arena Workflow
+
+```bash
+# 1. Start the local arena server
+python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080 --demo
+
+# 2. Open the browser control surface
+# http://127.0.0.1:8080
+
+# 3. Select a node, expand if needed, then Compile
+# The capsule output is the worker context authority.
+
+# 4. Use Route to simulate model/provider fit
+# No external provider call is made by the route scorecard.
+
+# 5. Mark Edge when a human spots a missing route
+# The edge is added to the in-memory graph for the current session.
+```
+
+Use this workflow before sending bounded code work to an external or local
+worker. The UI can orient the operator visually, but exact file paths, line
+ranges, symbols, tests, constraints, and fault records in the capsule remain the
+source of truth.
+
 ---
 
 ## 14. Troubleshooting
@@ -1472,6 +1566,8 @@ python3 aura_router.py list-providers  # Check which keys are detected
 | `!topology` says "No AR viewers connected" | Open `index.html` in a browser on the same device. The page auto-connects to `ws://127.0.0.1:8765`. |
 | AR shapes don't update after `!topology` | Run `!ar_start` to enable the interactive topology server that auto-refreshes every 1 second. The simple AR server only gets updates when `broadcast_ar_pulse()` is explicitly called. |
 | pulse.py won't bind to port 8081 | Check if another process is using port 8081: `lsof -i :8081`. The LLM server also uses port 8081 for its HTTP API — ensure `pulse.py` and `llama_server_manager.py` aren't both trying to bind the same port. |
+| Coding Arena page does not load | Start `python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080 --demo`, then open `http://127.0.0.1:8080`. If port 8080 is busy, choose another port and open that URL. |
+| Coding Arena on phone cannot connect | Start with `--host 0.0.0.0`, use the computer's LAN IP, and stay on a trusted network because the MVP has no authentication. |
 | WebSocket connection refused | Verify the port: simple AR = `8765`, AR shape server = `8765` (same port, different server instance), pulse bridge = `8081`, TMM = `8000`. |
 | Shapes are all gray cubes | The topology JSON at `Aura_Memory/live_topology_ast.json` may be missing or malformed. Run `!topology` to regenerate it. |
 
@@ -1481,6 +1577,7 @@ python3 aura_router.py list-providers  # Check which keys are detected
 |------|--------|-------------|-----------|---------|
 | 8765 | Simple AR (`ar_server`) | `127.0.0.1` | Auto at boot | Receives text pulses → 3D avatar morphing |
 | 8765 | Interactive AR (`AuraARWebSocketServer`) | `0.0.0.0` | `!ar_start` | Shape interaction, topology browsing, hotswap |
+| 8080 | Human-First 3D Coding Arena (`aura_coding_arena_server.py`) | `127.0.0.1` or `0.0.0.0` | Standalone | CODEMAP micro-arena, capsule compiler, local route scorecard |
 | 8081 | AR Pulse Bridge (`pulse.py`) | `0.0.0.0` | Standalone / integrated | LiquidKernel processing, ST3GG stamps, memory watching |
 | 8000 | Topology Map Manager (`spatial_mapper.py`) | unspecified | On-demand | 3D spatial vector topology mapping |
 

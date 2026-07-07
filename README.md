@@ -22,6 +22,7 @@ AuraOS is built to run on-device first: Android/Termux, Linux, CPU-only, and a 4
 | Empirical software lab | Defines ERA-style scorable Aura tasks for patch repair, repo localization, context compression, hotswap safety, and research retrieval utility; scores local verifier artifacts; records a candidate tree; and recommends promotion only through existing verifier/human gates. |
 | Mesh and overlays | Provides encrypted peer discovery, VSA-addressed liquid routing/naming, visible ST3GG/DASH recall pointers, swarm collective learning, sovereignty-first capsule federation, RAM-staked ledger concepts, and local compute-mesh hooks. |
 | AR and rendering | Builds live spectral 3D topology maps, exposes WebSocket AR controls, maps structural health to luminance/phase warnings, and implements VSA-addressed decoupled rendering at 80 bytes/object. |
+| Human-first coding arena | Serves a local browser-based 3D micro-arena that lets a human select CODEMAP/topology nodes, inspect exact file/symbol/test facts, detect candidate wiring faults, compile deterministic action capsules, and simulate route scorecards before any worker model acts. |
 
 ## Recent Upgrade Snapshot
 
@@ -32,6 +33,7 @@ Recent commits expanded Aura from a REPL-centered substrate into a more portable
 - **Understanding layer**: `aura_understand_graph_bridge.py` builds layered graph packets from CODEMAP, topology, tests, sidecars, verifiers, Arena metadata, QDKT events, DREAM scores, and domain flows, then exports dashboard JSON, guided tours, and diff-impact reports.
 - **ICM workspaces**: `aura_icm_workspace.py` and `aura_icm_cli.py` export Arena transactions into numbered audit/edit/review folders with `AURA.md`, `CONTEXT.md`, stage files, boundary contracts, DREAM scores, and QDKT event hooks.
 - **Aura-native meta-harness**: `aura_metaharness.py` composes the MCP gateway, plugin registry, GOAP planner, background worker supervisor, audit scorer, and federation layer under one invariant: VSA maps meaning, sidecars store exact truth, Arena stages actions, verifiers prove, humans/governance approve, and QDKT remembers.
+- **Human-first 3D Coding Arena**: `aura_coding_arena_3d.py`, `aura_coding_arena_server.py`, and `aura_coding_arena/` add a dependency-free local Canvas control deck for topology selection, capsule compilation, fault detection, route simulation, LAN/phone demo mode, and Docker packaging.
 
 ## Metrics and Benchmarks
 
@@ -51,6 +53,10 @@ The substrate, HV cache, context-crush, and Understand Graph rows were measured 
 
 | Diagnostic | Raw / baseline | Aura method | Estimated token reduction | Input shrink | Local latency |
 |------------|----------------|-------------|---------------------------|--------------|---------------|
+| Human-first 3D Coding Arena, real CODEMAP load | Existing `.aura/CODEMAP.json` | Browser/API topology packet built from local CODEMAP | N/A; this is topology loading, not compression | 600 nodes, 1,225 links | 334.382 ms load |
+| Human-first 3D Coding Arena, demo capsule | 50,000-token raw demo baseline | Deterministic action capsule with exact selected node facts, constraints, faults, and route scorecard | 97.6% using the complete emitted capsule; 99.3% for the compact context nucleus | 5-node/4-link demo graph to 1,163-token worker capsule | 2.529 ms compile; 0.039 ms route scorecard |
+| Human-first 3D Coding Arena, browser/mobile smoke | Local demo server and dependency-free Canvas UI | Desktop screenshot rendered 1,278 sampled colors; mobile 390x844 viewport stacked canvas/panel with no horizontal overflow | N/A | Selected node facts visible on desktop and mobile | API/UI smoke passed; route simulation kept `network_calls_made=false` |
+| Human-first 3D Coding Arena, tests | New arena tests plus existing `tests/` package | Capsule, fault detector, route, no-secret, fallback, frontend fixture, related topology tests, and current PR #44 grounding/auditor regressions | N/A | 61 tests in `tests/` | 61 passed in 1.98 s |
 | Substrate surgical context for the `!backtrack` fix | `arxiv_forager.py` + `test_scientific_memory.py`: 3,208 lines, ~30,492 tokens | Targeted `upgraded_arxiv_backtracker` context: 341 lines, ~4,383 tokens; full guardrailed egress prompt: ~6,097 tokens | 85.6% for code context; 80.0% including guardrails | 7.0x context shrink; 5.0x full prompt shrink | median 28.862 ms compile, min 18.239 ms |
 | HV cache projection for the same two files | ~30,492 raw context tokens | 10,000-D local vector plus 52-token manifest summary | 99.8% | 586.4x | 339.250 ms project-context run |
 | Context crush, code sketch | `aura_liquid_planning_arena.py`: ~6,075 tokens | AST symbol/import sketch: ~235 tokens | 96.1% | 25.9x | median 102.265 ms |
@@ -162,12 +168,17 @@ python3 aura_metaharness.py --check-invariants
 # Work with ICM audit/edit/review workspaces
 python3 aura_icm_cli.py list Aura_Memory/icm_workspaces
 python3 aura_icm_cli.py export Aura_Staging/architect_live_transaction.json Aura_Memory/icm_workspaces --qdkt
+
+# Run the Human-First 3D Coding Arena locally
+python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080
+python3 aura_coding_arena_server.py --host 127.0.0.1 --port 8080 --demo
 ```
 
 ## Operator Docs
 
 - [USER_GUIDE.md](USER_GUIDE.md): command-by-command operation guide, module reference, workflow patterns, troubleshooting, and WebSocket/AR protocol details.
 - [.aura/CODEMAP.md](.aura/CODEMAP.md): compact map of commands, symbols, high-value modules, navigation rings, and file ownership.
+- [AURA_CODING_ARENA_README.md](AURA_CODING_ARENA_README.md): local 3D Coding Arena runbook, API behavior, route simulation notes, benchmarks, and LAN/phone demo guidance.
 - [ICM_WORKSPACE_README.md](ICM_WORKSPACE_README.md): ICM workspace folder contract for Arena audit/edit/review handoffs.
 - [AURA_FINAL_REPORT.md](AURA_FINAL_REPORT.md): current system report and AuraFusion/native routing addendum.
 
