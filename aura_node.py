@@ -7843,7 +7843,6 @@ def contingency_harness():
                             continue
                     except Exception as e:
                         print(f"[-] Emergent potential routing check failed: {e}")
-                        continue
 
                 # --- NEW: ARCHITECT MODE INTERCEPT ---
                 architect_match = re.match(r"^\s*(architect|code)\b\s*:?\s*(.*)$", u_in, re.IGNORECASE)
@@ -7870,7 +7869,6 @@ def contingency_harness():
                                 continue
                         except Exception as e:
                             print(f"[-] Emergent potential routing check failed: {e}")
-                            continue
 
                     print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
                     live_architect_task = getattr(node, "_live_architect_task", None)

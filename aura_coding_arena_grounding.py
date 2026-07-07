@@ -51,12 +51,8 @@ _CAPABILITY_AUDIT_TERMS = {
     "abilities",
     "capability",
     "capabilities",
-    "combine",
     "emergent",
-    "future",
-    "overview",
     "potential",
-    "properties",
     "unwired",
     "wired",
 }

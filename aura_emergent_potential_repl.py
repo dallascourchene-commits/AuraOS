@@ -845,7 +845,7 @@ def _project_new_function_connections(
             _make_connection(
                 proposed,
                 target,
-                missing_wire="proposed_function_requires_design_and_source_span_before wiring",
+                missing_wire="proposed_function_requires_design_and_source_span_before_wiring",
                 emergent_ability=f"{description} + {target.symbol}",
                 rule_roles=("proposed", *_roles_for_atom(target)[:1]),
                 confidence=min(0.68, 0.32 + _new_function_affinity(target, description)),
