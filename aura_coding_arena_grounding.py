@@ -3,8 +3,8 @@
 ST3GG_BASE: 0xa9e1-[Q-SYS:CODING_ARENA_GROUNDING]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Pre-Planning Code Grounding Gate)
-DEPENDENCIES: __future__, dataclasses, pathlib, re, typing, aura_repo_localizer, aura_topological_context_anchor
-FUNCTIONS: ground_coding_arena_intent, query_coding_arena_external_calls
+DEPENDENCIES: __future__, dataclasses, pathlib, re, typing, aura_emergent_capability_auditor, aura_repo_localizer, aura_topological_context_anchor
+FUNCTIONS: ground_coding_arena_intent, query_coding_arena_external_calls, query_coding_arena_capability_audit
 SYNOPSIS: Mandatory Coding Arena pre-planning grounding facade over the existing Topological Context Anchor. Exact spans and source hashes are patch authority; affinity and resonance remain advisory only.
 [/AURA_MASTER_KEY]
 """
@@ -31,6 +31,7 @@ from aura_topological_context_anchor import (
 
 GROUNDING_VERSION = "AURA_CODING_ARENA_GROUNDING_V1"
 EXTERNAL_CALL_ROUTE = "EXTERNAL_CALL_CONTEXT"
+CAPABILITY_AUDIT_ROUTE = "EMERGENT_CAPABILITY_AUDIT"
 _EXTERNAL_QUERY_TERMS = {
     "api",
     "apis",
@@ -44,6 +45,17 @@ _EXTERNAL_QUERY_TERMS = {
     "requests",
     "subprocess",
 }
+_CAPABILITY_AUDIT_TERMS = {
+    "audit",
+    "auditor",
+    "capability",
+    "capabilities",
+    "emergent",
+    "future",
+    "potential",
+    "unwired",
+    "wired",
+}
 
 
 def ground_coding_arena_intent(
@@ -54,6 +66,9 @@ def ground_coding_arena_intent(
 ) -> dict[str, Any]:
     """Ground Coding Arena planning in exact repository topology before any Builder patch."""
     root = Path(repo_root).resolve()
+    if not target_symbol and external_call is None and _asks_for_capability_audit(intent):
+        return query_coding_arena_capability_audit(intent, root)
+
     anchor = _build_repo_anchor(root)
     warnings = list(anchor.warnings)
     external_result: CodeTopoResult | None = None
@@ -155,6 +170,16 @@ def query_coding_arena_external_calls(
     )
 
 
+def query_coding_arena_capability_audit(
+    intent: str,
+    repo_root: str | Path,
+) -> dict[str, Any]:
+    """Return a read-only emergent capability audit for Coding Arena query intents."""
+    from aura_emergent_capability_auditor import query_capability_audit
+
+    return query_capability_audit(intent, repo_root)
+
+
 def _build_repo_anchor(root: Path) -> CodeTopoAnchor:
     return CodeTopoAnchor.build_from_files(_repo_python_sources(root))
 
@@ -190,6 +215,21 @@ def _asks_for_external_calls(intent: str) -> bool:
         return True
     tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*", lowered))
     return bool(tokens & _EXTERNAL_QUERY_TERMS) and bool({"where", "list", "show", "find", "all"} & tokens)
+
+
+def _asks_for_capability_audit(intent: str) -> bool:
+    lowered = str(intent or "").lower()
+    tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*", lowered))
+    patch_terms = {"add", "build", "create", "fix", "implement", "patch", "update", "wire", "write"}
+    if tokens & patch_terms:
+        return False
+    query_terms = {"audit", "auditor", "discover", "find", "list", "query", "report", "show"}
+    if ("emergent capability" in lowered or "capability audit" in lowered) and tokens & query_terms:
+        return True
+    if ("future potential" in lowered or "future potentials" in lowered) and tokens & query_terms:
+        return True
+    capability_terms = _CAPABILITY_AUDIT_TERMS - {"audit", "auditor"}
+    return bool(tokens & query_terms) and bool(tokens & capability_terms)
 
 
 def _fallback_candidates(intent: str, root: Path) -> list[dict[str, Any]]:
