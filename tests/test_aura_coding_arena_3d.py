@@ -112,8 +112,9 @@ def test_server_dispatch_returns_topology_and_capsule_without_socket(tmp_path: P
 
 
 def test_frontend_loads_sample_topology_in_demo_mode():
-    index = Path("aura_coding_arena/index.html").read_text(encoding="utf-8")
-    script = Path("aura_coding_arena/main.js").read_text(encoding="utf-8")
+    repo_root = Path(__file__).parent.parent
+    index = (repo_root / "aura_coding_arena/index.html").read_text(encoding="utf-8")
+    script = (repo_root / "aura_coding_arena/main.js").read_text(encoding="utf-8")
 
     assert "arena-canvas" in index
     assert "/api/topology" in script
