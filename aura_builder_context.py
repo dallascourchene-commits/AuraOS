@@ -284,20 +284,24 @@ def build_builder_context_packet(
         topological_context["preplanning_grounding"] = preplanning
         if preplanning.get("builder_context") and not topological_context.get("rendered"):
             topological_context["rendered"] = str(preplanning.get("builder_context") or "")
+        preplanning_route_diagnostics = dict(preplanning.get("route_diagnostics", {}) or {})
+        preplanning_tests = list(preplanning.get("tests", []) or [])
         if preplanning.get("source_spans") and not topological_context.get("packet"):
             topological_context["packet"] = {
                 "source_spans": list(preplanning.get("source_spans", []) or []),
-                "tests": list(preplanning.get("tests", []) or []),
+                "tests": preplanning_tests,
                 "hashes": dict(preplanning.get("hashes", {}) or {}),
                 "warnings": list(preplanning.get("warnings", []) or []),
-                "route_diagnostics": dict(preplanning.get("route_diagnostics", {}) or {}),
+                "route_diagnostics": preplanning_route_diagnostics,
                 "safety_policy": preplanning.get("safety_policy", "exact_source_spans_and_hashes_only"),
             }
         elif isinstance(topological_context.get("packet"), dict):
             packet = dict(topological_context["packet"])
-            packet["preplanning_route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
-            if preplanning.get("route_diagnostics") and not packet.get("route_diagnostics"):
-                packet["route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
+            packet["preplanning_route_diagnostics"] = preplanning_route_diagnostics
+            if preplanning_route_diagnostics:
+                packet["route_diagnostics"] = preplanning_route_diagnostics
+            if preplanning_tests:
+                packet["tests"] = list(dict.fromkeys([*list(packet.get("tests", []) or []), *preplanning_tests]))
             topological_context["packet"] = packet
 
     # Build source_refs for Graphify grounding

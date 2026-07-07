@@ -680,8 +680,14 @@ def _subsystem_from_intent(intent: str) -> str | None:
     lowered = str(intent or "").replace("-", "_").lower()
     if "all" in _tokens(lowered):
         return "all"
-    for subsystem in SUBSYSTEM_KEYWORDS:
-        if subsystem in lowered:
+    explicit_names = sorted(
+        SUBSYSTEM_KEYWORDS,
+        key=lambda item: (item.count("_"), len(item)),
+        reverse=True,
+    )
+    phrase_text = lowered.replace("_", " ")
+    for subsystem in explicit_names:
+        if subsystem in lowered or subsystem.replace("_", " ") in phrase_text:
             return subsystem
     for subsystem, keywords in SUBSYSTEM_KEYWORDS.items():
         if any(keyword in lowered for keyword in keywords):

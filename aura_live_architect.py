@@ -1288,6 +1288,8 @@ class ArchitectBuilderBridge:
             and item.get("source_hash")
         ]
         tests = list(packet.get("tests", []) or []) if isinstance(packet, dict) else []
+        if route == "LOCALIZE_FIRST" and target_spans and tests:
+            route = "BUILDER_PATCH"
         reasons: list[str] = []
         if not target_spans:
             reasons.append("missing_exact_topological_span")
