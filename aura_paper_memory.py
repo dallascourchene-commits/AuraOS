@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa8f5-[Q-SYS:6C2848D106FBD645]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GIZAAGI'IN (Mutual Benefit)
 DEPENDENCIES: json, __future__, aura_single_seed_lift, numpy, re, collections.abc, PyPDF2, io, typing, pathlib, pdfplumber, math, base64, dataclasses, hashlib
-FUNCTIONS: _empty_phasor, _three_tuple, _seeded_phasor, _unit_phase, encode_text_as_phasor, chunk_text, _sentence_candidates, extract_three_main_points, _slot_safe, compile_summary_capsule, _holographic_header, _phasor_to_b64, _b64_to_phasor, compile_paper_memory_record, record_to_trace_content, record_to_research_profile, upsert_paper_memory_record, load_paper_memory_records, load_research_profiles_from_jsonl, verify_egress_contract, track_egress_savings, extract_pdf_text_from_bytes, extract_pdf_text_from_path, to_jsonable, from_jsonable, __init__, _intent_vector, inject_latent_context
+FUNCTIONS: _empty_phasor, _three_tuple, _seeded_phasor, _unit_phase, encode_text_as_phasor, chunk_text, _sentence_candidates, extract_three_main_points, _slot_safe, compile_summary_capsule, _holographic_header, _phasor_to_b64, _b64_to_phasor, extract_mathematical_formulas, compile_paper_memory_record, record_to_trace_content, record_to_research_profile, upsert_paper_memory_record, load_paper_memory_records, load_research_profiles_from_jsonl, verify_egress_contract, track_egress_savings, extract_pdf_text_from_bytes, extract_pdf_text_from_path, to_jsonable, from_jsonable, __init__, _intent_vector, inject_latent_context
 SYNOPSIS: [CODE]
 def optimized_fallback():
     pass
@@ -269,6 +269,107 @@ def _b64_to_phasor(value: str) -> np.ndarray:
         return _empty_phasor()
 
 
+_MATH_ENV_RE = re.compile(
+    r"\\begin\{(?P<env>equation\*?|align\*?|gather\*?|multline\*?|"
+    r"eqnarray\*?|split|cases|array|matrix|pmatrix|bmatrix|vmatrix)\}"
+    r"(?P<body>.*?)\\end\{(?P=env)\}",
+    re.DOTALL,
+)
+_DISPLAY_MATH_RE = re.compile(r"\$\$(.*?)\$\$|\\\[(.*?)\\\]", re.DOTALL)
+_INLINE_MATH_RE = re.compile(r"(?<!\\)\$(?!\$)(.*?)(?<!\\)\$|\\\((.*?)\\\)", re.DOTALL)
+_TEX_MATH_COMMAND_RE = re.compile(
+    r"\\(?:frac|sum|prod|int|oint|sqrt|lim|log|exp|sin|cos|tan|"
+    r"alpha|beta|gamma|delta|epsilon|theta|lambda|mu|pi|rho|sigma|tau|"
+    r"phi|omega|mathbb|mathbf|mathrm|operatorname|leq|geq|neq|approx|"
+    r"sim|propto|infty|partial|nabla|forall|exists|in|notin|subset|supset)"
+)
+_MATH_SYMBOL_RE = re.compile(r"[=<>≤≥≈≠∑∫√∞∂∇∀∃∈∉⊂⊃±×÷]")
+_BIG_O_RE = re.compile(r"\b(?:O|Theta|Omega|Θ|Ω)\s*\([^)]+\)")
+_BARE_FORMULA_RE = re.compile(
+    r"(?<![A-Za-z])"
+    r"([A-Za-z][A-Za-z0-9_\\]*(?:\s*\([^)]{1,80}\))?"
+    r"(?:\s*(?:\^|_)\{?[-+A-Za-z0-9_\\]+\}?)?\s*"
+    r"(?:=|<=|>=|<|>|≤|≥|≈|≠|\\leq|\\geq|\\approx|\\neq)\s*"
+    r"[^.;\n]{1,240})"
+)
+_FORMULA_LINE_RE = re.compile(
+    r"(?:(?:[A-Za-z0-9_\)\]\}])\s*(?:=|<=|>=|<|>|≤|≥|≈|≠|\\leq|\\geq|\\approx|\\neq)\s*"
+    r"(?:[-+A-Za-z0-9_\\\(\[\{]))"
+)
+_FORMULA_PROSE_TAIL_RE = re.compile(
+    r"\s+\b(?:and|where|with|when|which|that|then|while|using|under|"
+    r"prove|proves|show|shows|yield|yields)\b.*$",
+    re.IGNORECASE,
+)
+
+
+def _clean_formula(value: str, *, trim_prose: bool = False) -> str:
+    clean = re.sub(r"\s+", " ", value or "").strip()
+    if trim_prose:
+        clean = _FORMULA_PROSE_TAIL_RE.sub("", clean)
+    return clean.strip(" .;,")
+
+
+def _append_formula(
+    output: list[str],
+    seen: set[str],
+    formula: str,
+    *,
+    trim_prose: bool = False,
+) -> None:
+    clean = _clean_formula(formula, trim_prose=trim_prose)
+    if len(clean) < 3:
+        return
+    key = clean.casefold()
+    if key in seen:
+        return
+    seen.add(key)
+    output.append(clean)
+
+
+def extract_mathematical_formulas(text: str) -> list[str]:
+    """Extract TeX-delimited and plain-text mathematical formula candidates."""
+    source = str(text or "")
+    formulas: list[str] = []
+    seen: set[str] = set()
+
+    for match in _MATH_ENV_RE.finditer(source):
+        _append_formula(
+            formulas,
+            seen,
+            f"\\begin{{{match.group('env')}}}{match.group('body')}\\end{{{match.group('env')}}}",
+        )
+    for pattern in (_DISPLAY_MATH_RE, _INLINE_MATH_RE):
+        for match in pattern.finditer(source):
+            _append_formula(formulas, seen, next((group for group in match.groups() if group), ""))
+
+    plain_source = _MATH_ENV_RE.sub(" ", source)
+    plain_source = _DISPLAY_MATH_RE.sub(" ", plain_source)
+    plain_source = _INLINE_MATH_RE.sub(" ", plain_source)
+
+    for match in _BIG_O_RE.finditer(source):
+        _append_formula(formulas, seen, match.group(0))
+
+    for line in plain_source.splitlines():
+        candidate = line.strip()
+        if not candidate:
+            continue
+        matched_bare_formula = False
+        for match in _BARE_FORMULA_RE.finditer(candidate):
+            _append_formula(formulas, seen, match.group(1), trim_prose=True)
+            matched_bare_formula = True
+        if not matched_bare_formula and len(candidate) <= 240 and (
+            _TEX_MATH_COMMAND_RE.search(candidate)
+            or (
+                _FORMULA_LINE_RE.search(candidate)
+                and _MATH_SYMBOL_RE.search(candidate)
+            )
+        ):
+            _append_formula(formulas, seen, candidate)
+
+    return formulas
+
+
 def compile_paper_memory_record(
     *,
     doc_id: str,
@@ -298,6 +399,7 @@ def compile_paper_memory_record(
     structural_vector = _unit_phase(lift.lifted_vector)
     points = extract_three_main_points(title, abstract, full_text)
     full_hash = hashlib.sha256((full_text or abstract or title).encode("utf-8")).hexdigest()
+    formulas = extract_mathematical_formulas(body)
     temp = {
         "three_main_points": points,
         "categories": tuple(categories),
@@ -305,10 +407,20 @@ def compile_paper_memory_record(
     }
     capsule = compile_summary_capsule(temp)
     meta = dict(metadata or {})
+    existing_formulas = meta.get("mathematical_formulas", [])
+    if isinstance(existing_formulas, str):
+        existing_formulas = [existing_formulas]
+    merged_formulas: list[str] = []
+    seen_formulas: set[str] = set()
+    for formula in [*list(existing_formulas or []), *formulas]:
+        _append_formula(merged_formulas, seen_formulas, str(formula))
     meta.update({
         "chunk_count": len(chunks),
         "full_text_chars": len(full_text or ""),
         "abstract_chars": len(abstract or ""),
+        "mathematical_formulas": merged_formulas,
+        "mathematical_formula_count": len(merged_formulas),
+        "mathematical_formula_parser": "aura_math_formula_v1",
         "holographic_header_bytes": HEADER_BYTES,
         "single_seed_lift_version": lift.profile.version,
         "single_seed_lift_layers": lift.profile.lift_layers,
@@ -337,9 +449,15 @@ def compile_paper_memory_record(
 
 def record_to_trace_content(record: PaperMemoryRecord) -> str:
     points = " ; ".join(p for p in record.three_main_points if p)
+    formulas = record.metadata.get("mathematical_formulas", [])
+    if isinstance(formulas, str):
+        formulas = [formulas]
+    formula_text = " ; ".join(str(formula) for formula in formulas if str(formula).strip())
+    formula_segment = f" | FORMULAS: {formula_text}" if formula_text else ""
     return (
         f"TITLE: {record.title} | ABSTRACT: {record.abstract} | "
         f"PUBLISHED: {record.published} | POINTS: {points} | "
+        f"FORMULA_COUNT: {len(formulas or [])}{formula_segment} | "
         f"HEADER: {record.holographic_header[:32]} | "
         f"SHA256: {record.full_text_sha256}"
     )

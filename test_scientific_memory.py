@@ -17,6 +17,11 @@ from arxiv_forager import (
     EnhancedArxivForager,
     ForagerConfig,
 )
+from aura_paper_memory import (
+    compile_paper_memory_record,
+    extract_mathematical_formulas,
+    record_to_trace_content,
+)
 from aura_scientific_memory import (
     DIMENSIONS,
     ScientificMemoryIndex,
@@ -903,6 +908,32 @@ def test_arxiv_paper_to_dict_vector_none_when_not_set():
     assert d["vector"] is None
 
 
+def test_paper_memory_preserves_mathematical_formulas_in_metadata_and_trace():
+    abstract = (
+        r"We minimize $L(\theta)=\sum_i (y_i-f_\theta(x_i))^2$ and prove "
+        r"\[x_{t+1}=Ax_t+Bu_t\]. The runtime is O(n^2)."
+    )
+
+    formulas = extract_mathematical_formulas(abstract)
+    bare_formulas = extract_mathematical_formulas(
+        r"We optimize J(\theta)=\sum_i x_i^2 and prove O(n^2)."
+    )
+    record = compile_paper_memory_record(
+        doc_id="ARXIV_FORMULA",
+        title="Formula Preserving Parser",
+        abstract=abstract,
+    )
+    trace = record_to_trace_content(record)
+
+    assert r"L(\theta)=\sum_i (y_i-f_\theta(x_i))^2" in formulas
+    assert r"J(\theta)=\sum_i x_i^2" in bare_formulas
+    assert all("and prove" not in formula for formula in bare_formulas)
+    assert r"x_{t+1}=Ax_t+Bu_t" in record.metadata["mathematical_formulas"]
+    assert "O(n^2)" in record.metadata["mathematical_formulas"]
+    assert "FORMULAS:" in trace
+    assert r"L(\theta)=\sum_i (y_i-f_\theta(x_i))^2" in trace
+
+
 # ---------------------------------------------------------------------------
 # EnhancedArxivForager._paper_from_dict tests
 # ---------------------------------------------------------------------------
@@ -1109,6 +1140,39 @@ def test_arxiv_request_retries_with_smaller_page(monkeypatch):
     assert second["max_results"] == ["50"]
     assert page_size == 50
     assert calls[1][1] > calls[0][1]
+
+
+def test_arxiv_request_retries_after_outer_read_deadline(monkeypatch):
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"></feed>"""
+    calls = []
+
+    async def fake_bounded_read(read_fn, *, timeout, label):
+        calls.append((timeout, label))
+        if len(calls) == 1:
+            raise TimeoutError("arXiv Atom API exceeded read deadline")
+        return payload
+
+    async def no_sleep(_delay):
+        return None
+
+    forager = ArXivForager()
+    monkeypatch.setattr(forager, "_bounded_blocking_read", fake_bounded_read)
+    monkeypatch.setattr(asyncio, "sleep", no_sleep)
+
+    xml_data, page_size = asyncio.run(
+        forager._fetch_arxiv_xml(
+            "cat:cs.AI",
+            max_results=100,
+            max_retries=2,
+            timeout=1.0,
+        )
+    )
+
+    assert xml_data == payload
+    assert page_size == 50
+    assert calls[0][1] == "arXiv Atom API"
+    assert calls[1][0] > calls[0][0]
 
 
 def test_backtracker_window_upgrade_is_bounded_and_contiguous():
@@ -1325,6 +1389,46 @@ def test_backtracker_skips_pdf_fetches_by_default(monkeypatch, tmp_path):
 
     assert asyncio.run(forager.upgraded_arxiv_backtracker(max_results=1))
     assert len(conn.ingested_rows) == 1
+
+
+def test_backtracker_trace_content_includes_math_formulas(monkeypatch, tmp_path):
+    state = {
+        "crawl_offset_index": 0,
+        "last_crawl_time": 0.0,
+        "crawl_window_start": "202601010000",
+        "crawl_window_end": "202601020000",
+    }
+    conn = _FakeBacktrackerConnection(state)
+    node = SimpleNamespace(
+        memory_palace=SimpleNamespace(conn=conn),
+        runtime_metrics={},
+    )
+    forager = ArXivForager(node)
+    forager.paper_memory_ledger_path = str(tmp_path / "paper_memory.jsonl")
+    payload = b"""<?xml version="1.0"?>
+    <feed xmlns="http://www.w3.org/2005/Atom"
+          xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+      <opensearch:totalResults>1</opensearch:totalResults>
+      <entry>
+        <id>https://arxiv.org/abs/2601.00003</id>
+        <title>Formula Aware Backtracking</title>
+        <summary>We optimize $J(\\theta)=\\sum_i x_i^2$ and prove O(n^2).</summary>
+        <published>2026-01-02T00:00:00Z</published>
+        <author><name>A. Researcher</name></author>
+        <category term="cs.AI"/>
+      </entry>
+    </feed>"""
+
+    async def fake_fetch(_search_query, **kwargs):
+        return payload, kwargs["max_results"]
+
+    monkeypatch.setattr(forager, "_fetch_arxiv_xml", fake_fetch)
+
+    assert asyncio.run(forager.upgraded_arxiv_backtracker(max_results=1))
+    trace_text = conn.ingested_rows[0][1]
+    assert "FORMULAS:" in trace_text
+    assert r"J(\theta)=\sum_i x_i^2" in trace_text
+    assert "O(n^2)" in trace_text
 
 
 _OAI_PAYLOAD = b"""<?xml version="1.0"?>

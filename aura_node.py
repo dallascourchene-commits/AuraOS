@@ -7687,7 +7687,7 @@ def contingency_harness():
                     "!push <message>":    ("!push <message>",      "Disabled inside Aura's REPL; run git from the operator shell after verification."),
                     "!system_audit":      ("!system_audit / !audit","Run a Layer 5 OS executive audit of the AURA ecosystem."),
                     "!forage <topic>":    ("!forage <topic>",      "Crawl arXiv for <topic>, ingest findings into the knowledge base."),
-                    "!backtrack":         ("!backtrack",           "Crawl the chronological arXiv backlog (100 papers) and ingest them."),
+                    "!backtrack":         ("!backtrack",           "Crawl one bounded arXiv backlog segment (25 metadata records) and ingest it."),
                     "!research <concept>":("!research <concept>",  "Query ingested papers for <concept>; Refactor Arena is required before any code mutation."),
                     "!empirical_lab <task>":("!empirical_lab <patch_repair|localizer|context|hotswap|research>", "Define a CODEMAP-grounded scorable Aura task, score latest verifier artifacts if present, and record a candidate-tree row without production mutation."),
                     "!search_similar <query>": (
