@@ -160,8 +160,9 @@ def test_capability_audit_query_routes_to_read_only_report(tmp_path: Path):
     assert packet["route"] == "EMERGENT_CAPABILITY_AUDIT"
     assert packet["safe_to_patch"] is False
     assert packet["target_file"] is None
-    assert "=== AURA EMERGENT CAPABILITY AUDIT ===" in packet["rendered"]
-    assert packet["report"]["summary"]["safe_to_patch"] is False
+    assert packet["rendered"].startswith("# Emergent Properties and Future Potential")
+    assert packet["report"]["safe_to_patch"] is False
+    assert packet["report"]["summary"]["read_only"] is True
 
 
 def test_capability_patch_intent_does_not_route_to_audit(tmp_path: Path):
@@ -181,7 +182,7 @@ def test_api_patch_intent_does_not_route_to_external_call_context(tmp_path: Path
     assert packet["route"] in {"BUILDER_PATCH", "TEST_GAP_FILL", "LOCALIZE_FIRST"}
 
 
-def test_direct_capability_audit_query_preserves_report_shape(tmp_path: Path):
+def test_direct_capability_audit_query_returns_emergent_potential_shape(tmp_path: Path):
     (tmp_path / "aura_music_coding_arena.py").write_text(
         "def rank_music_candidates():\n    return 'music resonance ranking'\n",
         encoding="utf-8",
@@ -194,7 +195,8 @@ def test_direct_capability_audit_query_preserves_report_shape(tmp_path: Path):
     packet = query_coding_arena_capability_audit("audit capability wiring for music", tmp_path)
 
     assert packet["route"] == "EMERGENT_CAPABILITY_AUDIT"
-    assert packet["report"]["subsystem"] == "music"
+    assert packet["report"]["version"] == "AURA_EMERGENT_POTENTIAL_REPL_V1"
+    assert packet["report"]["summary"]["read_only"] is True
     assert packet["safe_to_patch"] is False
 
 

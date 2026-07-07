@@ -203,6 +203,7 @@ smallest useful file/symbol path.
 | `!saturn_heal` | Saturn/NESY logs show fractures or boot drift was detected. | Reads `Aura_Memory/nesy_sat_reasoner_state.json`, applies non-destructive repair stubs where needed, and regenerates topology. |
 | `!benchmark` | You need device/runtime health. | Reports CPU temperature, RAM, CPU count, Python/NumPy, disk, 10K-dot latency, LLM server, AR clients, and memory-palace status. |
 | `!system_audit` / `!audit` | You need an ecosystem audit. | Runs the Layer 5 auditor and prints the unified health/report output. |
+| `emerge` / `emergent` / `future` / `potential` | You need a read-only overview of unwired capabilities or future combinations. | Runs the Emergent Properties and Future Potential audit over local topology/CODEMAP evidence and prints Markdown by default or JSON with `--json`. It never writes code, stages patches, calls external APIs, or emits unified diffs. |
 | `!test_airlock` | You need to test isolated WASM/tensor execution. | Runs `quantum_tensor_sandbox`; offloads to a cooler mesh peer if one is available. |
 
 ### Self-Modification and Staging
@@ -350,6 +351,17 @@ run loaded the real CODEMAP as 600 nodes / 1,225 links in 334.382 ms, compiled
 the demo router capsule in 2.529 ms, produced a 97.6% complete-capsule savings
 estimate against the demo raw baseline, and passed the maintained `tests/`
 package with 61 tests in 1.98 s.
+
+`aura_emergent_potential_repl.py` adds a report-only companion command for
+asking what Aura could become without asking Architect to patch anything. Use
+`emerge`, `emergent`, `future`, or `potential` to scan local topology,
+CODEMAP-adjacent evidence, tests, manifests, and ledgers for unwired abilities.
+Each candidate is scored transparently and classified as `READY_TO_DOCUMENT`,
+`READY_TO_TEST`, `FUTURE_PATCHABLE`, `NEEDS_GROUNDING`, `TOO_RISKY`, or
+`DREAM_ONLY`. Proposed new-function mode marks combinations as
+`NEEDS_GROUNDING` until the new function has exact source spans. Broad
+Architect-style prompts such as "find emergent properties" are routed here
+instead of into Live Architect patch mode.
 
 Run it directly:
 
@@ -1526,6 +1538,30 @@ Use this workflow before sending bounded code work to an external or local
 worker. The UI can orient the operator visually, but exact file paths, line
 ranges, symbols, tests, constraints, and fault records in the capsule remain the
 source of truth.
+
+### Emergent Properties Workflow
+
+```text
+[Dallas] > emerge
+  # Markdown report of unwired local capability candidates
+
+[Dallas] > emerge --top 25 --json
+  # Machine-readable AbilityAtom / EmergentConnection output
+
+[Dallas] > emerge --focus "coding arena"
+  # Restrict candidate ranking to matching local evidence
+
+[Dallas] > emerge --patchable-only
+  # Show only candidates with exact spans and test evidence
+
+[Dallas] > emerge --new "voice command router" --with aura_coding_arena_server.py,aura_capsule_compiler.py
+  # Report possible combinations for a proposed function; no patch is staged
+```
+
+Only explicit later requests such as `wire this`, `implement candidate X`,
+`create tests for candidate X`, or `patch candidate X` should enter a
+test-or-patch workflow. The audit itself carries `NO_PATCHES`,
+`NO_CODE_WRITES`, `NO_UNIFIED_DIFF`, `NO_AUTOWIRING`, and `REPORT_ONLY`.
 
 ---
 

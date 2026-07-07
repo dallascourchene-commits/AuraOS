@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xa9e1-[Q-SYS:CODING_ARENA_GROUNDING]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Pre-Planning Code Grounding Gate)
-DEPENDENCIES: __future__, dataclasses, pathlib, re, typing, aura_emergent_capability_auditor, aura_repo_localizer, aura_topological_context_anchor
+DEPENDENCIES: __future__, dataclasses, pathlib, re, typing, aura_emergent_capability_auditor, aura_emergent_potential_repl, aura_repo_localizer, aura_topological_context_anchor
 FUNCTIONS: ground_coding_arena_intent, query_coding_arena_external_calls, query_coding_arena_capability_audit
 SYNOPSIS: Mandatory Coding Arena pre-planning grounding facade over the existing Topological Context Anchor. Exact spans and source hashes are patch authority; affinity and resonance remain advisory only.
 [/AURA_MASTER_KEY]
@@ -48,11 +48,15 @@ _EXTERNAL_QUERY_TERMS = {
 _CAPABILITY_AUDIT_TERMS = {
     "audit",
     "auditor",
+    "abilities",
     "capability",
     "capabilities",
+    "combine",
     "emergent",
     "future",
+    "overview",
     "potential",
+    "properties",
     "unwired",
     "wired",
 }
@@ -175,9 +179,9 @@ def query_coding_arena_capability_audit(
     repo_root: str | Path,
 ) -> dict[str, Any]:
     """Return a read-only emergent capability audit for Coding Arena query intents."""
-    from aura_emergent_capability_auditor import query_capability_audit
+    from aura_emergent_potential_repl import query_emergent_potential_packet
 
-    return query_capability_audit(intent, repo_root)
+    return query_emergent_potential_packet(intent, repo_root)
 
 
 def _build_repo_anchor(root: Path) -> CodeTopoAnchor:
@@ -222,6 +226,13 @@ def _asks_for_external_calls(intent: str) -> bool:
 
 def _asks_for_capability_audit(intent: str) -> bool:
     lowered = str(intent or "").lower()
+    try:
+        from aura_emergent_potential_repl import is_emergent_potential_intent
+
+        if is_emergent_potential_intent(lowered):
+            return True
+    except Exception:
+        pass
     tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*", lowered))
     patch_terms = {"add", "build", "create", "fix", "implement", "patch", "update", "wire", "write"}
     if tokens & patch_terms:

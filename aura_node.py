@@ -7656,6 +7656,15 @@ def contingency_harness():
                     print(f"[-] converse failed: {e}")
                 continue
 
+            elif re.match(r"^\s*!?(emerge|emergent|future|potential)\b", u_in_l):
+                try:
+                    from aura_emergent_potential_repl import handle_emergent_potential_command
+
+                    print(handle_emergent_potential_command(u_in, repo_root=Path.cwd()))
+                except Exception as e:
+                    print(f"[-] emergent potential audit failed: {e}")
+                continue
+
             elif u_in_l in ["!settings", "!manifest", "!help"]:
                 # ── Static command catalogue ──────────────────────────────────
                 # Each entry: command -> (usage hint, description)
@@ -7695,6 +7704,7 @@ def contingency_harness():
                         "Structured 10-slot VSA search over ingested arXiv "
                         "papers using hierarchy and LSH candidate routing.",
                     ),
+                    "emerge":             ("emerge / emergent / future / potential [--top N] [--json] [--focus TEXT] [--patchable-only] [--new TEXT] [--with files]", "Read-only Emergent Properties and Future Potential audit. Reports unwired connections and possible new-function combinations; never writes code, stages patches, or emits unified diffs."),
                     "!forage_on":         ("!forage_on / !forager_on",  "Enable background curiosity and foraging daemons."),
                     "!forage_off":        ("!forage_off / !forager_off", "Disable background foraging to conserve CPU/RAM."),
                     "!curiosity_tree <seed>":("!curiosity_tree <seed>", "DFS discovery over GitHub + arXiv seeded from <seed> concept."),
@@ -7815,15 +7825,54 @@ def contingency_harness():
                 # ==========================================================
                 start_time = time.time()
 
+                if re.search(r"\b(emerge|emergent|future|potential|unwired|abilities|capabilities)\b", u_in_l):
+                    try:
+                        from aura_emergent_potential_repl import (
+                            handle_emergent_potential_command,
+                            is_emergent_potential_intent,
+                        )
+
+                        if is_emergent_potential_intent(u_in):
+                            print("\n[*] Routing to read-only Emergent Properties and Future Potential audit.")
+                            print(
+                                handle_emergent_potential_command(
+                                    ["emerge", "--focus", u_in],
+                                    repo_root=Path.cwd(),
+                                )
+                            )
+                            continue
+                    except Exception as e:
+                        print(f"[-] Emergent potential routing check failed: {e}")
+                        continue
+
                 # --- NEW: ARCHITECT MODE INTERCEPT ---
                 architect_match = re.match(r"^\s*(architect|code)\b\s*:?\s*(.*)$", u_in, re.IGNORECASE)
                 if architect_match:
-                    print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
-
                     core_intent = architect_match.group(2).strip()
                     if not core_intent:
                         print("[-] Usage: architect <intent>")
                         continue
+                    if re.search(r"\b(emerge|emergent|future|potential|unwired|abilities|capabilities)\b", core_intent.lower()):
+                        try:
+                            from aura_emergent_potential_repl import (
+                                handle_emergent_potential_command,
+                                is_emergent_potential_intent,
+                            )
+
+                            if is_emergent_potential_intent(core_intent):
+                                print("\n[*] Routing to read-only Emergent Properties and Future Potential audit.")
+                                print(
+                                    handle_emergent_potential_command(
+                                        ["emerge", "--focus", core_intent],
+                                        repo_root=Path.cwd(),
+                                    )
+                                )
+                                continue
+                        except Exception as e:
+                            print(f"[-] Emergent potential routing check failed: {e}")
+                            continue
+
+                    print("\n[*] LIVE ARCHITECT MODE ENGAGED. Bypassing conversational matrix...")
                     live_architect_task = getattr(node, "_live_architect_task", None)
                     if live_architect_task and not live_architect_task.done():
                         print("[-] Live Architect transaction already running. Type STOP to cancel it.")
