@@ -211,6 +211,7 @@ def build_builder_context_packet(
     repo_root: str | Path,
     objective: str = "",
     task_id: str = "",
+    topological_grounding: dict[str, Any] | None = None,
     acceptance_criteria: list[str] | None = None,
     forbidden_actions: list[str] | None = None,
 ) -> BuilderContextPacket:
@@ -277,6 +278,27 @@ def build_builder_context_packet(
         repo_root=root,
         candidate_files=[*all_neighbors[:5], *nearby_tests[:4]],
     )
+    if topological_grounding:
+        preplanning = dict(topological_grounding)
+        topological_context = dict(topological_context or {})
+        topological_context["preplanning_grounding"] = preplanning
+        if preplanning.get("builder_context") and not topological_context.get("rendered"):
+            topological_context["rendered"] = str(preplanning.get("builder_context") or "")
+        if preplanning.get("source_spans") and not topological_context.get("packet"):
+            topological_context["packet"] = {
+                "source_spans": list(preplanning.get("source_spans", []) or []),
+                "tests": list(preplanning.get("tests", []) or []),
+                "hashes": dict(preplanning.get("hashes", {}) or {}),
+                "warnings": list(preplanning.get("warnings", []) or []),
+                "route_diagnostics": dict(preplanning.get("route_diagnostics", {}) or {}),
+                "safety_policy": preplanning.get("safety_policy", "exact_source_spans_and_hashes_only"),
+            }
+        elif isinstance(topological_context.get("packet"), dict):
+            packet = dict(topological_context["packet"])
+            packet["preplanning_route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
+            if preplanning.get("route_diagnostics") and not packet.get("route_diagnostics"):
+                packet["route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
+            topological_context["packet"] = packet
 
     # Build source_refs for Graphify grounding
     source_refs: list[dict[str, Any]] = []

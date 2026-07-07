@@ -748,6 +748,7 @@ def render_builder_context(packet: CodeTopoContextPacket) -> str:
         f"safety_policy: {packet.safety_policy}",
         "patch_authority: exact source spans with source_hash only",
         "vsa_similarity: advisory ranking only; never patch evidence",
+        "VSA similarity advisory only.",
     ]
     if packet.route_diagnostics:
         lines.append(f"route: {packet.route_diagnostics.get('route', '')}")

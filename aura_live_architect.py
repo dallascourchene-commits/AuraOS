@@ -48,6 +48,7 @@ from aura_liquid_planning_arena import build_world_state_delta
 from aura_substrate import REPO_ROOT
 
 from aura_builder_context import build_builder_context_packet, BuilderContextPacket
+from aura_coding_arena_grounding import ground_coding_arena_intent
 from aura_patch_quality_gate import (
     generate_unified_diff_from_before_after,
     parse_before_after_response,
@@ -55,6 +56,7 @@ from aura_patch_quality_gate import (
     PatchPreflightResult,
 )
 from aura_patch_repair import repair_patch_format, PatchRepairResult
+from aura_repo_localizer import run_agentless_fallback
 from aura_test_gap_filler import fill_test_gap, detect_missing_test_findings, TestGapFillerResult
 
 try:
@@ -129,6 +131,7 @@ class ArchitectCouncilDecision:
     budget_route: dict[str, Any]
     phase_hash: str
     music_mitosis: dict[str, Any] = field(default_factory=dict)
+    topological_grounding: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -270,6 +273,19 @@ def _extract_diff(text: str) -> str:
         diff = body[min(marker_positions):].strip()
         return diff + ("\n" if diff else "")
     return body + ("\n" if body else "")
+
+
+def _patch_submission_is_patchable(submission: dict[str, Any]) -> bool:
+    diff = str(submission.get("diff") or "")
+    return bool(diff.strip() and _diff_touched_files(diff))
+
+
+def _patchable_submissions(submissions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [submission for submission in submissions if _patch_submission_is_patchable(submission)]
+
+
+def _has_patchable_submission(submissions: list[dict[str, Any]]) -> bool:
+    return bool(_patchable_submissions(submissions))
 
 
 def _git_executable() -> str | None:
@@ -792,9 +808,11 @@ class ArchitectModelRouter:
         *,
         target_file: str | None = None,
         target_symbol: str | None = None,
+        topological_grounding: dict[str, Any] | None = None,
         source: str = "deterministic_fallback",
     ) -> dict[str, Any]:
-        inferred_file = target_file or self.infer_target_file(intent)
+        grounding_packet = dict(topological_grounding or {})
+        inferred_file = target_file or grounding_packet.get("target_file") or self.infer_target_file(intent)
         hints = self.ledger_hints()
         if inferred_file is None:
             return {
@@ -807,26 +825,30 @@ class ArchitectModelRouter:
                         "objective": intent,
                         "expected_output": "UNIFIED_DIFF",
                         "acceptance": "Resolve target file before Builder execution.",
+                        "topological_grounding": grounding_packet,
                     }
                 ],
+                "topological_grounding": grounding_packet,
                 "source": "deterministic_fallback_blocked" if source == "deterministic_fallback" else source,
                 "ledger_hints": hints,
             }
         return {
             "architecture_decision": "Route live Architect intent through Plan/Act, temp verification, hot-swap, rollback, and ledger gates.",
             "target_file": inferred_file,
-            "target_symbol": target_symbol,
+            "target_symbol": target_symbol or grounding_packet.get("target_symbol"),
             "act_tasks": [
                 {
                     "task_id": "A-LIVE-1",
                     "objective": intent,
                     "target_file": inferred_file,
-                    "target_symbol": target_symbol,
+                    "target_symbol": target_symbol or grounding_packet.get("target_symbol"),
                     "allowed_scope": "single live Architect Act Capsule",
                     "acceptance": "Return a unified diff that applies cleanly in the temporary workspace and passes local verification.",
                     "expected_output": "UNIFIED_DIFF",
+                    "topological_grounding": grounding_packet,
                 }
             ],
+            "topological_grounding": grounding_packet,
             "source": source,
             "ledger_hints": hints,
         }
@@ -851,6 +873,63 @@ class ArchitectModelRouter:
         return (await self.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)).selected_plan
 
 
+def _planner_grounding_summary(grounding: dict[str, Any]) -> dict[str, Any]:
+    source_spans = list(grounding.get("source_spans", []) or [])
+    return {
+        "route": grounding.get("route"),
+        "target_file": grounding.get("target_file"),
+        "target_symbol": grounding.get("target_symbol"),
+        "exact_hit_count": len(grounding.get("exact_hits", []) or []),
+        "external_call_count": len(grounding.get("external_calls", []) or []),
+        "candidate_files": [
+            item.get("path")
+            for item in list(grounding.get("candidate_files", []) or [])[:5]
+            if isinstance(item, dict)
+        ],
+        "source_spans": [
+            {
+                "file_path": item.get("file_path"),
+                "symbol": item.get("symbol"),
+                "start_line": item.get("start_line"),
+                "end_line": item.get("end_line"),
+                "source_hash": item.get("source_hash"),
+            }
+            for item in source_spans[:6]
+            if isinstance(item, dict)
+        ],
+        "tests": list(grounding.get("tests", []) or [])[:5],
+        "route_reasons": list(grounding.get("route_reasons", []) or [])[:8],
+        "patch_authority": "exact_source_spans_and_hashes_only",
+        "vsa_patch_authority": False,
+    }
+
+
+def _attach_grounding_to_plan(plan: dict[str, Any], grounding: dict[str, Any]) -> dict[str, Any]:
+    packet = dict(grounding or {})
+    if not packet:
+        return plan
+    updated = dict(plan)
+    updated["topological_grounding"] = packet
+    if not updated.get("target_file") and packet.get("target_file"):
+        updated["target_file"] = packet.get("target_file")
+    if not updated.get("target_symbol") and packet.get("target_symbol"):
+        updated["target_symbol"] = packet.get("target_symbol")
+    tasks: list[Any] = []
+    for raw_task in updated.get("act_tasks", []) or []:
+        if isinstance(raw_task, dict):
+            task = dict(raw_task)
+            task["topological_grounding"] = packet
+            if not task.get("target_file") and updated.get("target_file"):
+                task["target_file"] = updated.get("target_file")
+            if not task.get("target_symbol") and updated.get("target_symbol"):
+                task["target_symbol"] = updated.get("target_symbol")
+            tasks.append(task)
+        else:
+            tasks.append(raw_task)
+    updated["act_tasks"] = tasks
+    return updated
+
+
 class ArchitectFusionCouncil:
     """Orchestrate multi-candidate planning, cheap critique, and premium judging."""
 
@@ -864,12 +943,13 @@ class ArchitectFusionCouncil:
         intent: str,
         inferred_file: str | None,
         target_symbol: str | None,
+        topological_grounding: dict[str, Any] | None = None,
         source: str,
     ) -> dict[str, Any] | None:
         tasks = data.get("act_tasks") if isinstance(data.get("act_tasks"), list) else []
         if not tasks:
             return None
-        return {
+        plan = {
             "architecture_decision": str(data.get("architecture_decision") or "Use the live Architect loop."),
             "target_file": str(data.get("target_file") or inferred_file) if data.get("target_file") or inferred_file else None,
             "target_symbol": str(data.get("target_symbol") or target_symbol) if data.get("target_symbol") or target_symbol else None,
@@ -878,6 +958,7 @@ class ArchitectFusionCouncil:
             "ledger_hints": self.router.ledger_hints(),
             "objective": intent,
         }
+        return _attach_grounding_to_plan(plan, topological_grounding or {})
 
     def _candidate(self, candidate_id: str, plan: dict[str, Any], *, cost_tier: str, source: str) -> dict[str, Any]:
         base_score = 0.42 if cost_tier == "free" else 0.62
@@ -992,21 +1073,31 @@ class ArchitectFusionCouncil:
         target_symbol: str | None = None,
     ) -> ArchitectCouncilDecision:
         hints = self.router.ledger_hints()
-        inferred_file = target_file or self.router.infer_target_file(intent)
+        topological_grounding = ground_coding_arena_intent(
+            intent,
+            self.router.repo_root,
+            target_symbol=target_symbol,
+        )
+        inferred_file = target_file or topological_grounding.get("target_file") or self.router.infer_target_file(intent)
         budget_route = self.router.budget_route(hints, target_file=inferred_file)
         local_plan = self.router.deterministic_plan_spec(
             intent,
             target_file=inferred_file,
-            target_symbol=target_symbol,
+            target_symbol=target_symbol or topological_grounding.get("target_symbol"),
+            topological_grounding=topological_grounding,
             source="deterministic_codemap_plan",
         )
+        local_plan = _attach_grounding_to_plan(local_plan, topological_grounding)
         candidates = [self._candidate("local_free", local_plan, cost_tier="free", source=local_plan.get("source", "deterministic_codemap_plan"))]
+        grounding_summary = _planner_grounding_summary(topological_grounding)
         prompt = (
             "Return JSON only for a bounded Aura Architect refactor plan. "
             "Fields: architecture_decision, target_file, target_symbol, act_tasks. "
             "Each act task must include task_id, objective, target_file, target_symbol, acceptance, expected_output=UNIFIED_DIFF. "
+            "Every patch task must preserve the supplied topological_grounding packet; exact source spans and source_hash values are patch authority, and VSA/MUSIC resonance is advisory only. "
             "Never write code directly to production. "
             f"Ledger hints: {json.dumps(hints, sort_keys=True)}. "
+            f"Topological grounding: {json.dumps(grounding_summary, sort_keys=True)}. "
             f"Intent: {intent}. Suggested target_file: {inferred_file or 'unknown'}."
         )
         for index, role in enumerate(budget_route.get("premium_planner_roles", []), start=1):
@@ -1022,7 +1113,8 @@ class ArchitectFusionCouncil:
                 data or {},
                 intent=intent,
                 inferred_file=inferred_file,
-                target_symbol=target_symbol,
+                target_symbol=target_symbol or topological_grounding.get("target_symbol"),
+                topological_grounding=topological_grounding,
                 source=f"premium_{role}",
             )
             if plan:
@@ -1086,6 +1178,7 @@ class ArchitectFusionCouncil:
         selected_id = judge_decision["selected_candidate_id"]
         selected = next((item for item in candidates if item["candidate_id"] == selected_id), candidates[0])
         selected_plan = dict(selected["plan"])
+        selected_plan = _attach_grounding_to_plan(selected_plan, topological_grounding)
         selected_plan["source"] = selected.get("source", selected_plan.get("source", "fusion_council"))
         selected_plan["council_candidate_id"] = selected["candidate_id"]
         selected_plan["ledger_hints"] = hints
@@ -1104,6 +1197,7 @@ class ArchitectFusionCouncil:
             "judge_decision": judge_decision,
             "budget_route": budget_route,
             "music_mitosis": music_mitosis,
+            "topological_grounding": topological_grounding,
         }
         return ArchitectCouncilDecision(phase_hash=_hash_payload(payload), **payload)
 
@@ -1175,6 +1269,46 @@ class ArchitectBuilderBridge:
             "review_hint": "Review raw_model_response, extracted_diff, and repair.candidate_diff even when the transaction is blocked.",
         }
 
+    def _builder_patch_grounding_eligibility(
+        self,
+        context_packet: BuilderContextPacket,
+    ) -> dict[str, Any]:
+        topology = context_packet.topological_context or {}
+        packet = topology.get("packet") if isinstance(topology.get("packet"), dict) else {}
+        route_diagnostics = packet.get("route_diagnostics", {}) if isinstance(packet, dict) else {}
+        route = str(route_diagnostics.get("route") or "")
+        spans = [item for item in packet.get("source_spans", []) or [] if isinstance(item, dict)] if isinstance(packet, dict) else []
+        target_spans = [
+            item
+            for item in spans
+            if item.get("role") == "target"
+            and item.get("file_path")
+            and item.get("start_line")
+            and item.get("end_line")
+            and item.get("source_hash")
+        ]
+        tests = list(packet.get("tests", []) or []) if isinstance(packet, dict) else []
+        reasons: list[str] = []
+        if not target_spans:
+            reasons.append("missing_exact_topological_span")
+        if context_packet.target_symbol and not context_packet.target_file:
+            reasons.append("missing_exact_target_file")
+        if context_packet.target_symbol and not any(span.get("symbol") == context_packet.target_symbol for span in target_spans):
+            reasons.append("missing_exact_target_symbol")
+        if route != "TEST_GAP_FILL" and not tests:
+            reasons.append("missing_test_neighbors")
+        if route not in {"BUILDER_PATCH", "TEST_GAP_FILL"}:
+            reasons.append(f"patch_route_not_authorized:{route or 'unknown'}")
+        return {
+            "ok": not reasons and route == "BUILDER_PATCH",
+            "route": route,
+            "reasons": reasons,
+            "tests": tests,
+            "source_spans": target_spans,
+            "patch_authority": "exact_source_spans_and_hashes_only",
+            "vsa_patch_authority": False,
+        }
+
     def _builder_failure_report(
         self,
         act: Any,
@@ -1208,6 +1342,22 @@ class ArchitectBuilderBridge:
             add_reason("arena_not_ready")
         if status == "repair_failed_blocked":
             add_reason("repair_failed_blocked")
+        if status == "topological_grounding_blocked":
+            add_reason("topological_grounding_blocked")
+        if status == "external_call_context":
+            add_reason("external_call_context")
+        if status == "localize_first":
+            add_reason("localize_first")
+        if status == "test_gap_fill_required":
+            add_reason("test_gap_fill_required")
+        if status == "emergent_capability_audit":
+            add_reason("emergent_capability_audit")
+        if status == "missing_patch_diff":
+            add_reason("missing_patch_diff")
+        if status == "before_after_diff_generation_failed":
+            add_reason("before_after_diff_generation_failed")
+        if status == "no_response":
+            add_reason("no_response")
         if status == "no_patch_staged" or response == "":
             add_reason("builder_refusal")
         if missing_context_excerpt:
@@ -1256,6 +1406,7 @@ class ArchitectBuilderBridge:
             "grounding": grounding_dict,
             "context_available": context_packet is not None,
             "context_source_refs": list(context_packet.source_refs if context_packet else []),
+            "topological_context": context_packet.topological_context if context_packet else {},
             "reason_codes": reason_codes,
             "response_empty": response == "",
             "preflight": preflight.to_dict() if preflight is not None else None,
@@ -1264,26 +1415,53 @@ class ArchitectBuilderBridge:
         report["phase_hash"] = _hash_payload(report)
         return report
 
+    def _non_patch_grounding_status(
+        self,
+        act: Any,
+        grounding: dict[str, Any],
+        grounding_eligibility: dict[str, Any],
+    ) -> str | None:
+        route = str(grounding.get("route") or "").strip()
+        if route == "EXTERNAL_CALL_CONTEXT":
+            return "external_call_context"
+        if route == "EMERGENT_CAPABILITY_AUDIT":
+            return "emergent_capability_audit"
+        if route == "TEST_GAP_FILL":
+            return "test_gap_fill_required"
+        if route == "BLOCKED_WITH_REASON":
+            return "topological_grounding_blocked"
+        if route == "LOCALIZE_FIRST" and not grounding_eligibility.get("ok"):
+            return "localize_first"
+        return None
+
     async def build_patch_submissions(self, prepared: ArchitectLoopResult, *, objective: str) -> list[dict[str, Any]]:
         if not prepared.arena.ready_for_incubator:
             builder_failures = []
             grounding_by_task = {item.task_id: item.to_dict() for item in prepared.grounding}
             for act in prepared.plan.act_capsules:
                 grounding_dict = grounding_by_task.get(act.task_id, {})
-                builder_failures.append(
-                    self._builder_failure_report(
-                        act,
-                        grounding_dict,
-                        None,
-                        status="arena_not_ready",
-                        shadow_report=prepared.shadow_report,
-                    )
+                raw_topological_grounding = getattr(act, "topological_grounding", {})
+                topological_grounding = dict(raw_topological_grounding if isinstance(raw_topological_grounding, dict) else {})
+                route = str(topological_grounding.get("route") or "").strip()
+                non_patch_status = None
+                if route in {"EXTERNAL_CALL_CONTEXT", "EMERGENT_CAPABILITY_AUDIT", "TEST_GAP_FILL", "BLOCKED_WITH_REASON"}:
+                    non_patch_status = self._non_patch_grounding_status(act, topological_grounding, {"ok": False, "reasons": [route]})
+                elif route == "LOCALIZE_FIRST" and not (act.target_file and act.target_symbol):
+                    non_patch_status = "localize_first"
+                failure = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    None,
+                    status=non_patch_status or "arena_not_ready",
+                    shadow_report=prepared.shadow_report,
                 )
+                failure["act_topological_grounding"] = topological_grounding
+                builder_failures.append(failure)
             self.patch_quality = {
                 "attempts": [
                     {
                         "task_id": failure["failed_task_id"],
-                        "status": "arena_not_ready",
+                        "status": failure.get("status", "arena_not_ready"),
                         "preflight": None,
                         "failure_reason": failure,
                     }
@@ -1307,6 +1485,8 @@ class ArchitectBuilderBridge:
                 if evidence.task_id == act.task_id:
                     grounding_dict = evidence.to_dict()
                     break
+            raw_topological_grounding = getattr(act, "topological_grounding", {})
+            topological_grounding = dict(raw_topological_grounding if isinstance(raw_topological_grounding, dict) else {})
 
             # Build grounded context packet from CODEMAP/Graphify
             context_packet = build_builder_context_packet(
@@ -1317,7 +1497,57 @@ class ArchitectBuilderBridge:
                 repo_root=self.router.repo_root,
                 objective=objective,
                 task_id=act.task_id,
+                topological_grounding=topological_grounding,
             )
+            grounding_eligibility = self._builder_patch_grounding_eligibility(context_packet)
+            non_patch_status = self._non_patch_grounding_status(act, topological_grounding, grounding_eligibility)
+            if non_patch_status:
+                failure = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status=non_patch_status,
+                )
+                for reason in grounding_eligibility.get("reasons", []):
+                    if reason not in failure["reason_codes"]:
+                        failure["reason_codes"].append(reason)
+                failure["grounding_eligibility"] = grounding_eligibility
+                failure["act_topological_grounding"] = topological_grounding
+                attempt_record = self._reviewable_attempt(
+                    act=act,
+                    context_packet=context_packet,
+                    status=non_patch_status,
+                )
+                attempt_record["failure_reason"] = failure
+                patch_attempts.append(attempt_record)
+                self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                    "grounding_route": topological_grounding.get("route"),
+                    "grounding_status": non_patch_status,
+                })
+                continue
+
+            if not grounding_eligibility["ok"]:
+                failure = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status="topological_grounding_blocked",
+                )
+                for reason in grounding_eligibility.get("reasons", []):
+                    if reason not in failure["reason_codes"]:
+                        failure["reason_codes"].append(reason)
+                failure["grounding_eligibility"] = grounding_eligibility
+                attempt_record = self._reviewable_attempt(
+                    act=act,
+                    context_packet=context_packet,
+                    status="topological_grounding_blocked",
+                )
+                attempt_record["failure_reason"] = failure
+                patch_attempts.append(attempt_record)
+                self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                    "grounding_reasons": grounding_eligibility.get("reasons", []),
+                })
+                continue
 
             # Record builder context packet to workflow memory
             if self._workflow_memory is not None and self._workflow_id:
@@ -1335,14 +1565,20 @@ class ArchitectBuilderBridge:
             )
             response = await self.router.call_model("worker", prompt, intensity=prepared.intensity, meta={"task_id": act.task_id})
             if not response:
-                patch_attempts.append(
-                    self._reviewable_attempt(
-                        act=act,
-                        context_packet=context_packet,
-                        status="no_response",
-                        builder_prompt=prompt,
-                    )
+                attempt_record = self._reviewable_attempt(
+                    act=act,
+                    context_packet=context_packet,
+                    status="no_response",
+                    builder_prompt=prompt,
                 )
+                attempt_record["failure_reason"] = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status="no_response",
+                    response="",
+                )
+                patch_attempts.append(attempt_record)
                 continue
 
             # Check for before/after replacement object (requirement 3 & 4)
@@ -1350,20 +1586,50 @@ class ArchitectBuilderBridge:
             if before_after is not None:
                 diff = generate_unified_diff_from_before_after(before_after, repo_root=self.router.repo_root)
                 if not diff.strip():
-                    patch_attempts.append(
-                        self._reviewable_attempt(
-                            act=act,
-                            context_packet=context_packet,
-                            status="before_after_diff_generation_failed",
-                            raw_response=str(response),
-                            extracted_diff=diff,
-                            before_after=before_after,
-                            builder_prompt=prompt,
-                        )
+                    attempt_record = self._reviewable_attempt(
+                        act=act,
+                        context_packet=context_packet,
+                        status="before_after_diff_generation_failed",
+                        raw_response=str(response),
+                        extracted_diff=diff,
+                        before_after=before_after,
+                        builder_prompt=prompt,
                     )
+                    attempt_record["failure_reason"] = self._builder_failure_report(
+                        act,
+                        grounding_dict,
+                        context_packet,
+                        status="before_after_diff_generation_failed",
+                        response=response,
+                    )
+                    patch_attempts.append(attempt_record)
                     continue
             else:
                 diff = _extract_diff(response)
+
+            touched = _diff_touched_files(diff)
+            if not diff.strip() or not touched:
+                attempt_record = self._reviewable_attempt(
+                    act=act,
+                    context_packet=context_packet,
+                    status="missing_patch_diff",
+                    raw_response=str(response),
+                    extracted_diff=diff,
+                    before_after=before_after,
+                    builder_prompt=prompt,
+                )
+                attempt_record["failure_reason"] = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status="missing_patch_diff",
+                    response=response,
+                )
+                patch_attempts.append(attempt_record)
+                self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                    "missing_patch_diff": True,
+                })
+                continue
 
             # Run patch preflight before premium patch judge (requirement 5)
             preflight = preflight_patch(diff, repo_root=self.router.repo_root)
@@ -1386,6 +1652,7 @@ class ArchitectBuilderBridge:
                     pass
 
             # If preflight fails, run exactly one PATCH_FORMAT_REPAIR attempt (requirement 6 & 7)
+            repair_result: PatchRepairResult | None = None
             if not preflight.ok:
                 stderr = ""
                 if preflight.git_check_result:
@@ -1431,11 +1698,28 @@ class ArchitectBuilderBridge:
                     continue  # Do not hot-swap — skip this submission
 
             touched = _diff_touched_files(diff)
+            if not touched:
+                attempt_record["status"] = "missing_patch_diff"
+                attempt_record["failure_reason"] = self._builder_failure_report(
+                    act,
+                    grounding_dict,
+                    context_packet,
+                    status="missing_patch_diff",
+                    response=response,
+                    preflight=preflight,
+                    repair_result=repair_result,
+                )
+                patch_attempts.append(attempt_record)
+                self._record_qdkt("patch_attempt", act.task_id, "failed", {
+                    "missing_patch_diff": True,
+                })
+                continue
+
             submission = {
                 "task_id": act.task_id,
                 "owner": self.router.profile_for("worker", intensity=prepared.intensity).model_class,
                 "diff": diff,
-                "affected_files": touched or ([act.target_file] if act.target_file else []),
+                "affected_files": touched,
                 "affected_symbols": [act.target_symbol] if act.target_symbol else [],
                 "tests": [],
             }
@@ -1821,6 +2105,12 @@ async def run_live_architect_transaction(
     )
     builder = ArchitectBuilderBridge(router, workflow_memory=workflow_memory, workflow_id=workflow_id)
     patch_submissions = await builder.build_patch_submissions(prepared, objective=arena_objective)
+    patchable_submissions = _patchable_submissions(patch_submissions)
+    agentless_fallback: dict[str, Any] | None = None
+    if not _has_patchable_submission(patch_submissions):
+        agentless_fallback = run_agentless_fallback(intent, effective_root)
+        if agentless_fallback.get("localized_files"):
+            agentless_fallback["localized_files"] = list(agentless_fallback.get("localized_files", []) or [])[:5]
     stage_results = [
         stage_arena_patch(
             prepared.arena,
@@ -1831,7 +2121,7 @@ async def run_live_architect_transaction(
             affected_symbols=list(submission.get("affected_symbols", []) or []),
             tests=list(submission.get("tests", []) or []),
         )
-        for submission in patch_submissions
+        for submission in patchable_submissions
     ]
 
     # Run workspace verification BEFORE judge so the premium judge sees apply/test/topology results (requirement 8)
@@ -1875,6 +2165,7 @@ async def run_live_architect_transaction(
                 repo_root=effective_root,
                 objective=arena_objective,
                 task_id="test_gap_filler",
+                topological_grounding=plan_spec.get("topological_grounding", {}),
             )
             test_gap_result = await fill_test_gap(
                 shadow_findings_dicts,
@@ -1888,7 +2179,7 @@ async def run_live_architect_transaction(
 
     # Premium patch judge now sees temp workspace apply/test/topology results before approving hot-swap (requirement 8)
     patch_judgement = await judge_patch_bundle(
-        router, prepared, patch_submissions, stage_results, council_decision, workspace_result=workspace,
+        router, prepared, patchable_submissions, stage_results, council_decision, workspace_result=workspace,
     )
 
     # Record premium judge decision to workflow memory
@@ -1966,6 +2257,7 @@ async def run_live_architect_transaction(
                 repo_root=effective_root,
                 objective=arena_objective,
                 task_id=act.task_id,
+                topological_grounding=act.topological_grounding,
             )
         )
     _record_patch_dream_usefulness(intent, context_packets_for_dream, workspace, verification, prepared.plan.phase_hash)
@@ -1973,6 +2265,9 @@ async def run_live_architect_transaction(
     # Assemble patch quality metadata
     patch_quality = {
         **builder.patch_quality,
+        "agentless_fallback": agentless_fallback,
+        "patch_submission_count": len(patch_submissions),
+        "patchable_submission_count": len(patchable_submissions),
         "music_mitosis": selected_music_mitosis,
         "test_gap_filler": test_gap_result.to_dict() if test_gap_result else None,
         "verifier_decision": {
@@ -1999,6 +2294,7 @@ async def run_live_architect_transaction(
             "ledger_hints": plan_spec.get("ledger_hints", {}),
             "budget_route": council_decision.budget_route,
             "music_mitosis": selected_music_mitosis,
+            "topological_grounding": plan_spec.get("topological_grounding", {}),
         },
         fusion_council={
             **council_decision.to_dict(),
