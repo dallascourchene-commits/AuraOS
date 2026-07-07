@@ -204,6 +204,22 @@ class ArXivForager:
                     raise
         await conn.commit()
 
+    async def _bounded_blocking_read(
+        self,
+        read_fn,
+        *,
+        timeout: float,
+        label: str,
+    ) -> bytes:
+        """Run urllib reads in a worker thread with an outer async deadline."""
+        try:
+            return await asyncio.wait_for(
+                asyncio.to_thread(read_fn),
+                timeout=max(1.0, float(timeout)) + 3.0,
+            )
+        except (asyncio.TimeoutError, TimeoutError) as exc:
+            raise TimeoutError(f"{label} exceeded {float(timeout):.1f}s read deadline") from exc
+
     async def _fetch_arxiv_xml(
         self,
         search_query: str = "",
@@ -263,7 +279,11 @@ class ArXivForager:
                     return response.read()
 
             try:
-                payload = await asyncio.to_thread(_read_response)
+                payload = await self._bounded_blocking_read(
+                    _read_response,
+                    timeout=attempt_timeout,
+                    label="arXiv Atom API",
+                )
                 self._last_request_time = time.monotonic()
                 if not payload:
                     raise ValueError("arXiv returned an empty response")
@@ -352,7 +372,11 @@ class ArXivForager:
                     return response.read()
 
             try:
-                payload = await asyncio.to_thread(_read_response)
+                payload = await self._bounded_blocking_read(
+                    _read_response,
+                    timeout=attempt_timeout,
+                    label="arXiv OAI-PMH API",
+                )
                 self._last_request_time = time.monotonic()
                 if not payload:
                     raise ValueError("arXiv OAI-PMH returned an empty response")
@@ -676,6 +700,10 @@ class ArXivForager:
                     max_retries=max_retries,
                     timeout=timeout,
                 )
+                print(
+                    f"[*] arXiv Atom response received "
+                    f"({len(xml_data)} bytes); parsing metadata..."
+                )
                 root = ET.fromstring(xml_data)
                 entries = root.findall('{http://www.w3.org/2005/Atom}entry')
                 total_text = root.findtext(
@@ -740,6 +768,10 @@ class ArXivForager:
                             f"https://arxiv.org/pdf/{paper_id}" if paper_id else "",
                         ),
                     })
+                print(
+                    f"[*] arXiv Atom parsed {len(raw_papers)} papers "
+                    f"(reported total {total_available})."
+                )
             except Exception as api_exc:
                 print(
                     f"[⚠️ ARXIV FALLBACK] Query API unavailable ({api_exc}); "
@@ -760,6 +792,10 @@ class ArXivForager:
                 )
                 raw_papers, oai_next_token = self._parse_arxiv_oai_records(
                     oai_xml
+                )
+                print(
+                    f"[*] arXiv OAI-PMH parsed {len(raw_papers)} papers "
+                    f"(continuation token: {'yes' if oai_next_token else 'no'})."
                 )
             except Exception as oai_exc:
                 print(
@@ -794,7 +830,11 @@ class ArXivForager:
             stamp_ts = datetime.now().isoformat()
             earliest_published = None
 
-            for paper in raw_papers:
+            print(
+                f"[*] Ingesting {len(raw_papers)} arXiv metadata records "
+                f"({pdf_fetch_limit} PDF fetch budget)..."
+            )
+            for index, paper in enumerate(raw_papers, start=1):
                 title = paper.get("title", "").strip()
                 summary = " ".join(paper.get("abstract", "").split())
                 published_dt = paper.get("published") or datetime.utcnow()
@@ -844,6 +884,11 @@ class ArXivForager:
                 ingest_rows.append(
                     (doc_id, text_block, stamp_ts, blob_data)
                 )
+                if index == 1 or index == len(raw_papers) or index % 5 == 0:
+                    print(
+                        f"    processed {index}/{len(raw_papers)}: "
+                        f"{doc_id}"
+                    )
 
             if ingest_rows:
                 await conn.executemany(

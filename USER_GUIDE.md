@@ -394,7 +394,7 @@ can use the health state without recomputing the graph.
 | Command | Use when | Operation and output |
 |---------|----------|----------------------|
 | `!forage <topic>` | You need a new arXiv source on one topic. | Fetches the latest matching paper, parses the PDF when available, stores a compact scientific trace, writes a paper-memory VSA ledger record, and prints title/abstract plus three main points. |
-| `!backtrack` | The research memory needs a wider seed set. | Crawls chronological arXiv CS papers, updates the ingestion offset, stores legacy scientific vectors for search, and refreshes a bounded number of full PDF VSA records per run. |
+| `!backtrack` | The research memory needs a wider seed set. | Crawls a bounded chronological arXiv CS window, updates the ingestion offset, stores scientific vectors for search, and prints fetch/parse/ingest progress. Full PDF VSA records are opt-in through `AURA_BACKTRACK_PDF_LIMIT`. |
 | `!research <concept>` | You want source-grounded code synthesis. | Searches ingested papers, runs the SkillWeaver relevance gate, and only stages synthesis when sources pass. It benefits from `!forage` and `!backtrack` records. |
 | `!search_similar <query>` | You need nearest ingested papers without mutation. | Searches the structured scientific SQLite index and prints top paper matches with relevance scores. |
 | `!curiosity_tree <seed>` | You want autonomous discovery from one concept. | Runs bounded DFS over GitHub and arXiv and prints the discovery tree as JSON. |
@@ -410,7 +410,7 @@ can use the health state without recomputing the graph.
 Aura now keeps two coordinated memories for arXiv papers:
 
 - SQLite scientific traces in `.mempalace/`, keyed as `ARXIV_<paper_id>` when arXiv provides an ID. These keep the existing int8 scientific vectors used by `!research` and `!search_similar`.
-- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, chunk-level VSA vectors, and a compact single-seed lift profile.
+- The paper-memory ledger at `Aura_Memory/paper_memory_ledger.jsonl`. Each row stores metadata, extracted mathematical formulas, a deterministic three-point capsule, a 1.2KB holographic header, a 10,000-D complex document vector, chunk-level VSA vectors, and a compact single-seed lift profile.
 
 The PDF path is intentionally chunked. Aura does not unroll an entire raw PDF into one giant matrix slice; `aura_paper_memory.py` extracts text, chunks it, encodes each chunk as a complex phasor, chooses a deterministic seed chunk, caches the inverse seed profile once, and lifts that seed through bounded residual layers into the document vector. This keeps ingestion compatible with the existing edge-memory architecture while preserving deeper recall hooks.
 
@@ -423,7 +423,7 @@ instead of rebuilding global context.
 
 `!forage <topic>` is best when you need one targeted source right now. It attempts the PDF, writes the paper-memory ledger, updates the SQLite scientific trace, and returns the three extracted points for quick inspection.
 
-`!backtrack` is best when Aura needs a broader research substrate. It crawls by date window, keeps arXiv pacing, and stores every returned paper as a searchable scientific trace. Full PDF VSA ingestion is budgeted by `AURA_BACKTRACK_PDF_LIMIT` and defaults to `3` fetch attempts per run, so large backtracks do not overheat or flood storage.
+`!backtrack` is best when Aura needs a broader research substrate. It crawls by date window, keeps arXiv pacing, and stores every returned paper as a searchable scientific trace. The REPL path is metadata-first and bounded at 25 papers per segment. Full PDF VSA ingestion is budgeted by `AURA_BACKTRACK_PDF_LIMIT` and defaults to `0` fetch attempts per run, so large backtracks do not overheat, flood storage, or appear stuck on slow PDF reads.
 
 `!research <concept>` and `!search_similar <query>` continue to use the fast SQLite scientific index. External LLM egress automatically uses RAEC when a paper-memory ledger exists: `aura_llm_egress.py` scans the ledger, selects the top two resonant paper capsules, verifies the `root ::= ...` contract, and injects compact `[ANCHOR_ID:...][CONSTRAINTS:...]` slots before provider egress. When available, those constraints include `LIFT=SEED=...` trace metadata from the cached single-seed profile, and the LLM savings log records the lift dispatch count.
 
@@ -1400,7 +1400,7 @@ The prompt `[Dallas] >` is where you type commands.
   # Scans all .py files → Aura_Memory/live_topology_ast.json
 
 [Dallas] > !backtrack
-  # Fetches 20 recent arXiv papers
+  # Fetches one bounded arXiv CS metadata segment (25 records by default)
 
 [Dallas] > !research vector symbolic architecture
   # Queries ingested papers, synthesizes Python helper into aura_incubator.py
