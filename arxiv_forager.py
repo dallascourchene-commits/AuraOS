@@ -217,7 +217,7 @@ class ArXivForager:
                 asyncio.to_thread(read_fn),
                 timeout=max(1.0, float(timeout)) + 3.0,
             )
-        except TimeoutError as exc:
+        except (asyncio.TimeoutError, TimeoutError) as exc:
             raise TimeoutError(f"{label} exceeded {float(timeout):.1f}s read deadline") from exc
 
     async def _fetch_arxiv_xml(
