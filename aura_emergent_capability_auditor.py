@@ -233,6 +233,7 @@ def audit_emergent_capabilities(
         symbols,
         edges,
         subsystem=requested_subsystem,
+        query=query,
         limit=limit,
     )
     future_potentials = (
@@ -679,8 +680,11 @@ def _subsystem_from_intent(intent: str) -> str | None:
     lowered = str(intent or "").replace("-", "_").lower()
     if "all" in _tokens(lowered):
         return "all"
+    for subsystem in SUBSYSTEM_KEYWORDS:
+        if subsystem in lowered:
+            return subsystem
     for subsystem, keywords in SUBSYSTEM_KEYWORDS.items():
-        if subsystem in lowered or any(keyword in lowered for keyword in keywords):
+        if any(keyword in lowered for keyword in keywords):
             return subsystem
     return "all"
 

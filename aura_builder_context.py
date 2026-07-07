@@ -296,6 +296,8 @@ def build_builder_context_packet(
         elif isinstance(topological_context.get("packet"), dict):
             packet = dict(topological_context["packet"])
             packet["preplanning_route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
+            if preplanning.get("route_diagnostics") and not packet.get("route_diagnostics"):
+                packet["route_diagnostics"] = dict(preplanning.get("route_diagnostics", {}) or {})
             topological_context["packet"] = packet
 
     # Build source_refs for Graphify grounding

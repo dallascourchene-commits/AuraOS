@@ -211,9 +211,12 @@ def _external_pattern_from_intent(intent: str) -> str | None:
 
 def _asks_for_external_calls(intent: str) -> bool:
     lowered = str(intent or "").lower()
+    tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*", lowered))
+    patch_terms = {"add", "build", "create", "fix", "implement", "patch", "update", "wire", "write"}
+    if tokens & patch_terms:
+        return False
     if any(root in lowered for root in KNOWN_EXTERNAL_ROOTS):
         return True
-    tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]*", lowered))
     return bool(tokens & _EXTERNAL_QUERY_TERMS) and bool({"where", "list", "show", "find", "all"} & tokens)
 
 

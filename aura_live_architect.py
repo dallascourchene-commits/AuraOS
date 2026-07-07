@@ -918,7 +918,7 @@ def _attach_grounding_to_plan(plan: dict[str, Any], grounding: dict[str, Any]) -
     for raw_task in updated.get("act_tasks", []) or []:
         if isinstance(raw_task, dict):
             task = dict(raw_task)
-            task.setdefault("topological_grounding", packet)
+            task["topological_grounding"] = packet
             if not task.get("target_file") and updated.get("target_file"):
                 task["target_file"] = updated.get("target_file")
             if not task.get("target_symbol") and updated.get("target_symbol"):

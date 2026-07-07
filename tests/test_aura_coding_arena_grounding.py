@@ -172,6 +172,15 @@ def test_capability_patch_intent_does_not_route_to_audit(tmp_path: Path):
     assert packet["route"] != "EMERGENT_CAPABILITY_AUDIT"
 
 
+def test_api_patch_intent_does_not_route_to_external_call_context(tmp_path: Path):
+    _write_demo_repo(tmp_path, with_tests=True)
+
+    packet = ground_coding_arena_intent("fix API endpoint issue", tmp_path, target_symbol="answer")
+
+    assert packet["route"] != "EXTERNAL_CALL_CONTEXT"
+    assert packet["route"] in {"BUILDER_PATCH", "TEST_GAP_FILL", "LOCALIZE_FIRST"}
+
+
 def test_direct_capability_audit_query_preserves_report_shape(tmp_path: Path):
     (tmp_path / "aura_music_coding_arena.py").write_text(
         "def rank_music_candidates():\n    return 'music resonance ranking'\n",
@@ -407,3 +416,77 @@ def test_builder_context_renders_topological_anchor_policy_and_hashes(tmp_path: 
     assert "vsa_similarity: advisory ranking only; never patch evidence" in prompt
     assert "VSA similarity advisory only." in prompt
     assert packet.topological_context["preplanning_grounding"]["route"] == "BUILDER_PATCH"
+
+
+def test_builder_context_preserves_route_diagnostics_from_preplanning_packet(tmp_path: Path):
+    _write_demo_repo(tmp_path, with_tests=True)
+    codemap = json.loads((tmp_path / ".aura" / "CODEMAP.json").read_text(encoding="utf-8"))
+    grounding = {
+        "codemap_symbol_hits": [{"file": "demo.py", "name": "answer", "line": 1, "end_line": 2}],
+        "test_files": ["test_demo.py"],
+        "neighbor_files": ["test_demo.py"],
+    }
+    topological_grounding = ground_coding_arena_intent("patch answer", tmp_path, target_symbol="answer")
+
+    packet = build_builder_context_packet(
+        target_file="demo.py",
+        target_symbol="answer",
+        grounding_evidence=grounding,
+        codemap=codemap,
+        repo_root=tmp_path,
+        objective="patch answer",
+        task_id="A1",
+        topological_grounding=topological_grounding,
+    )
+
+    assert packet.topological_context["packet"]["route_diagnostics"]["route"] == "BUILDER_PATCH"
+    assert packet.topological_context["packet"]["preplanning_route_diagnostics"]["route"] == "BUILDER_PATCH"
+
+
+def test_patch_grounding_eligibility_reads_route_diagnostics_from_packet(tmp_path: Path):
+    _write_demo_repo(tmp_path, with_tests=True)
+    grounding = ground_coding_arena_intent("patch answer", tmp_path, target_symbol="answer")
+    prepared = _prepared_for_grounding(tmp_path, grounding)
+    bridge = ArchitectBuilderBridge(ArchitectModelRouter(repo_root=tmp_path))
+
+    eligibility = bridge._builder_patch_grounding_eligibility(
+        build_builder_context_packet(
+            target_file="demo.py",
+            target_symbol="answer",
+            grounding_evidence={"codemap_symbol_hits": [{"file": "demo.py", "name": "answer", "line": 1, "end_line": 2}]},
+            codemap=json.loads((tmp_path / ".aura" / "CODEMAP.json").read_text(encoding="utf-8")),
+            repo_root=tmp_path,
+            topological_grounding=grounding,
+        )
+    )
+
+    assert eligibility["ok"] is True
+    assert eligibility["route"] == "BUILDER_PATCH"
+
+
+def test_act_tasks_topological_grounding_overrides_stale_task_data(tmp_path: Path):
+    _write_demo_repo(tmp_path, with_tests=True)
+    from aura_live_architect import _attach_grounding_to_plan
+
+    grounding = ground_coding_arena_intent("patch answer", tmp_path, target_symbol="answer")
+    plan = {
+        "target_file": "demo.py",
+        "target_symbol": "answer",
+        "act_tasks": [
+            {
+                "task_id": "A1",
+                "objective": "patch answer",
+                "target_file": "old_demo.py",
+                "target_symbol": "old_answer",
+                "topological_grounding": {
+                    "route": "LOCALIZE_FIRST",
+                    "safety_policy": "stale_policy",
+                },
+            }
+        ],
+    }
+
+    updated = _attach_grounding_to_plan(plan, grounding)
+
+    assert updated["act_tasks"][0]["topological_grounding"]["route"] == "BUILDER_PATCH"
+    assert updated["act_tasks"][0]["topological_grounding"]["safety_policy"] == "exact_source_spans_and_hashes_only"

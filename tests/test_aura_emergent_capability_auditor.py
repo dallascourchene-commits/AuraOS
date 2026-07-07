@@ -180,3 +180,21 @@ def test_project_future_potentials_accepts_symbol_lists():
 
     assert potentials
     assert potentials[0].safe_to_patch is False
+
+
+def test_audit_query_is_passed_to_find_unwired_capability_pairs(tmp_path: Path):
+    _write_capability_repo(tmp_path)
+
+    report = audit_emergent_capabilities(tmp_path, query="st3gg topological")
+
+    assert report.query == "st3gg topological"
+    if report.findings:
+        assert report.findings[0].confidence > 0.5
+
+
+def test_subsystem_from_intent_prioritizes_exact_subsystem_names(tmp_path: Path):
+    _write_capability_repo(tmp_path)
+
+    packet = query_capability_audit("builder capability audit", tmp_path)
+
+    assert packet["report"]["subsystem"] == "capability_audit"
