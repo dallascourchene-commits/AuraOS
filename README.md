@@ -36,6 +36,21 @@ Recent commits expanded Aura from a REPL-centered substrate into a more portable
 - **Human-first 3D Coding Arena**: `aura_coding_arena_3d.py`, `aura_coding_arena_server.py`, and `aura_coding_arena/` add a dependency-free local Canvas control deck for topology selection, capsule compilation, fault detection, route simulation, LAN/phone demo mode, and Docker packaging.
 - **Emergent Properties and Future Potential**: `aura_emergent_potential_repl.py` adds `emerge` / `emergent` / `future` / `potential` as report-only REPL aliases that scan CODEMAP/topology evidence for unwired capabilities, classify candidates as `READY_TO_DOCUMENT`, `READY_TO_TEST`, `FUTURE_PATCHABLE`, `NEEDS_GROUNDING`, `TOO_RISKY`, or `DREAM_ONLY`, and route broad future-potential intents away from Architect patch mode.
 
+### ST3GG Coding Arena Egress
+
+Coding Arena action capsules now have an optional ST3GG egress layer. When the
+local benchmark gate shows enough estimated token savings, Aura emits a visible
+ASCII ST3GG machine capsule with a recall pointer and stores the full original
+capsule in local ST3GG recall sidecars. Worker models may receive this compact
+context handle, but they must not patch from ST3GG alone.
+
+Exact source spans, source hashes, tests, and verifier gates remain the only
+patch authority. JSpace, VSA, and ST3GG stay advisory. Hidden Unicode,
+zero-width payloads, private-use characters, bidi controls, tag characters, and
+other steganographic carriers are explicitly forbidden and stripped by the
+tokenizer guard before egress. Compression is disabled when it does not save
+enough estimated tokens.
+
 ## Metrics and Benchmarks
 
 These are repo-local measurements, demos, or complexity bounds documented in code, tests, and implementation notes. Re-run on target hardware with `!benchmark` and the listed tests for current numbers.
