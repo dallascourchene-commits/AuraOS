@@ -115,6 +115,22 @@ class AuraTraceNode:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AuraTraceNode:
+        return cls(
+            node_id=str(data.get("node_id", "")),
+            label=str(data.get("label", "")),
+            status=str(data.get("status", "")),
+            summary=str(data.get("summary", "")),
+            atom_ids=[str(item) for item in data.get("atom_ids", []) or []],
+            raw_refs=[str(item) for item in data.get("raw_refs", []) or []],
+            source_hashes=[str(item) for item in data.get("source_hashes", []) or []],
+            related_symbols=[str(item) for item in data.get("related_symbols", []) or []],
+            related_files=[str(item) for item in data.get("related_files", []) or []],
+            route=str(data.get("route", "")),
+            confidence=_clamp_float(data.get("confidence", 0.0)),
+        )
+
 
 @dataclass
 class AuraTraceCanvas:
@@ -127,9 +143,30 @@ class AuraTraceCanvas:
     token_estimate: int = 0
     raw_refs: list[str] = field(default_factory=list)
     updated_at: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AuraTraceCanvas:
+        nodes = [
+            AuraTraceNode.from_dict(item)
+            for item in data.get("nodes", []) or []
+            if isinstance(item, dict)
+        ]
+        return cls(
+            canvas_id=str(data.get("canvas_id", "")),
+            task_id=str(data.get("task_id", "")),
+            title=str(data.get("title", "")),
+            mermaid=str(data.get("mermaid", "")),
+            nodes=nodes,
+            warnings=[str(item) for item in data.get("warnings", []) or []],
+            token_estimate=_coerce_int(data.get("token_estimate", 0), 0),
+            raw_refs=[str(item) for item in data.get("raw_refs", []) or []],
+            updated_at=str(data.get("updated_at", "")),
+            metadata=dict(data.get("metadata") if isinstance(data.get("metadata"), dict) else {}),
+        )
 
 
 @dataclass
@@ -140,6 +177,8 @@ class AuraTraceMemoryConfig:
     canvas_max_token_ratio: float = 0.20
     max_atoms_per_canvas: int = 50
     max_raw_ref_chars: int = 200_000
+    canvas_min_new_atoms: int = 4
+    canvas_critical_statuses: tuple[str, ...] = ("blocked",)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -270,11 +309,24 @@ def build_trace_canvas(
     base = _memory_base(memory_root)
     atoms, warnings = _load_atoms(base / TRACE_ATOMS_FILE)
     wanted_task = str(task_id or "")
+    canvas_path = _canvas_cache_path(base, wanted_task)
     if wanted_task:
         selected = [atom for atom in atoms if atom.task_id == wanted_task]
     else:
         selected = list(atoms)
     selected = selected[-config.max_atoms_per_canvas :]
+    cached = _load_cached_canvas(canvas_path)
+    should_rebuild, reuse_warning = _should_rebuild_canvas(
+        cached,
+        selected,
+        wanted_task=wanted_task,
+        mode=mode,
+        config=config,
+    )
+    if cached is not None and not should_rebuild:
+        cached.warnings = _unique([*cached.warnings, *warnings, reuse_warning])
+        return cached
+
     nodes = _nodes_from_atoms(selected)
     mermaid = _render_mermaid(nodes)
     raw_refs = _unique(ref for node in nodes for ref in node.raw_refs if ref)
@@ -293,10 +345,20 @@ def build_trace_canvas(
         token_estimate=_estimate_tokens(mermaid),
         raw_refs=raw_refs,
         updated_at=_utc_now(),
+        metadata={
+            "version": TRACE_MEMORY_VERSION,
+            "mode": mode,
+            "atom_count": len(selected),
+            "atom_fingerprint": _atom_ids_fingerprint(selected),
+            "latest_atom_id": selected[-1].atom_id if selected else "",
+            "latest_task_id": selected[-1].task_id if selected else "",
+            "consolidation_policy": {
+                "canvas_min_new_atoms": config.canvas_min_new_atoms,
+                "canvas_critical_statuses": list(config.canvas_critical_statuses),
+            },
+        },
     )
-    canvases_dir = base / TRACE_CANVASES_DIR
-    canvases_dir.mkdir(parents=True, exist_ok=True)
-    canvas_path = canvases_dir / f"{_safe_filename(wanted_task or 'all')}.json"
+    canvas_path.parent.mkdir(parents=True, exist_ok=True)
     canvas_path.write_text(json.dumps(_sanitize_json(canvas.to_dict()), indent=2, sort_keys=True), encoding="utf-8")
     return canvas
 
@@ -445,6 +507,67 @@ def summarize_trace_memory(memory_root: str | Path) -> AuraTraceMemoryReport:
         latest_canvas_id=latest_canvas_id,
         raw_refs=[_aura_local_path(base, ref) for ref in refs[:50]],
     )
+
+
+def _canvas_cache_path(base: Path, task_id: str) -> Path:
+    return base / TRACE_CANVASES_DIR / f"{_safe_filename(task_id or 'all')}.json"
+
+
+def _load_cached_canvas(path: Path) -> AuraTraceCanvas | None:
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    return AuraTraceCanvas.from_dict(data)
+
+
+def _should_rebuild_canvas(
+    cached: AuraTraceCanvas | None,
+    atoms: list[AuraTraceAtom],
+    *,
+    wanted_task: str,
+    mode: str,
+    config: AuraTraceMemoryConfig,
+) -> tuple[bool, str]:
+    if cached is None:
+        return True, ""
+    metadata = dict(cached.metadata or {})
+    previous_count = _coerce_int(metadata.get("atom_count"), -1)
+    current_count = len(atoms)
+    current_fingerprint = _atom_ids_fingerprint(atoms)
+    previous_fingerprint = str(metadata.get("atom_fingerprint") or "")
+    if cached.task_id != wanted_task:
+        return True, ""
+    if str(metadata.get("mode") or "") != str(mode or ""):
+        return True, ""
+    if previous_count < 0 or current_count < previous_count:
+        return True, ""
+    if previous_fingerprint == current_fingerprint:
+        return False, "trace_canvas_reused_unchanged_atoms"
+    if current_count == previous_count:
+        return True, ""
+
+    new_atoms = atoms[previous_count:]
+    if not wanted_task:
+        latest_task_id = atoms[-1].task_id if atoms else ""
+        if latest_task_id and latest_task_id != str(metadata.get("latest_task_id") or ""):
+            return True, ""
+    critical_statuses = {str(item).lower() for item in config.canvas_critical_statuses}
+    if any(_canvas_status(atom.status, atom.event_type) in critical_statuses for atom in new_atoms):
+        return True, ""
+    threshold = max(1, int(config.canvas_min_new_atoms or 1))
+    if len(new_atoms) >= threshold:
+        return True, ""
+    return False, f"trace_canvas_reused_pending_new_atoms:{len(new_atoms)}/{threshold}"
+
+
+def _atom_ids_fingerprint(atoms: list[AuraTraceAtom]) -> str:
+    body = "|".join(f"{atom.atom_id}:{atom.source_hash}:{atom.status}" for atom in atoms)
+    return _stable_id(body, len(atoms))
 
 
 def _append_atom(atom: AuraTraceAtom, memory_root: str | Path) -> None:
@@ -748,6 +871,13 @@ def _clamp_float(value: Any) -> float:
     except (TypeError, ValueError):
         return 0.0
     return max(0.0, min(1.0, number))
+
+
+def _coerce_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
 
 
 def _as_list(value: Any) -> list[Any]:

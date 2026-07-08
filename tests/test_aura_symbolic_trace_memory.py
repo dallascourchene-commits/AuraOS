@@ -81,6 +81,82 @@ def test_canvas_renders_mermaid_with_node_id_references(tmp_path: Path):
     assert "raw_ref=" in rendered
 
 
+def test_canvas_consolidation_reuses_cached_until_new_atom_threshold(tmp_path: Path):
+    record_trace_event(
+        {
+            "event_type": "builder_prompt",
+            "task_id": "A1",
+            "node_id": "N1",
+            "summary": "first prompt",
+            "raw_text": "prompt one",
+        },
+        tmp_path,
+    )
+    first = build_trace_canvas("A1", tmp_path)
+
+    record_trace_event(
+        {
+            "event_type": "builder_model_response",
+            "task_id": "A1",
+            "node_id": "N2",
+            "summary": "second noncritical event",
+            "raw_text": "response two",
+        },
+        tmp_path,
+    )
+    reused = build_trace_canvas("A1", tmp_path)
+
+    assert reused.canvas_id == first.canvas_id
+    assert any("trace_canvas_reused_pending_new_atoms:1/4" in warning for warning in reused.warnings)
+    assert "N2" not in render_trace_canvas_for_prompt(reused)
+
+    for index in range(3, 6):
+        record_trace_event(
+            {
+                "event_type": "builder_model_response",
+                "task_id": "A1",
+                "node_id": f"N{index}",
+                "summary": f"event {index}",
+                "raw_text": f"response {index}",
+            },
+            tmp_path,
+        )
+    rebuilt = build_trace_canvas("A1", tmp_path)
+
+    assert rebuilt.canvas_id != first.canvas_id
+    assert "N5" in render_trace_canvas_for_prompt(rebuilt)
+
+
+def test_canvas_consolidation_rebuilds_immediately_for_blocked_events(tmp_path: Path):
+    record_trace_event(
+        {
+            "event_type": "builder_prompt",
+            "task_id": "A1",
+            "node_id": "N1",
+            "summary": "first prompt",
+            "raw_text": "prompt one",
+        },
+        tmp_path,
+    )
+    first = build_trace_canvas("A1", tmp_path)
+    record_trace_event(
+        {
+            "event_type": "builder_failure_report",
+            "task_id": "A1",
+            "node_id": "N2",
+            "status": "blocked",
+            "summary": "Builder blocked on missing patch diff",
+            "raw_text": "missing diff",
+        },
+        tmp_path,
+    )
+
+    rebuilt = build_trace_canvas("A1", tmp_path)
+
+    assert rebuilt.canvas_id != first.canvas_id
+    assert "N2" in render_trace_canvas_for_prompt(rebuilt)
+
+
 def test_lookup_by_node_id_recovers_raw_ref_and_summary(tmp_path: Path):
     record_trace_event(
         {
