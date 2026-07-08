@@ -90,6 +90,7 @@ def test_coding_arena_grounding_reports_requests_get_external_call(tmp_path: Pat
     assert call["line"] == 5
     assert call["caller_span"] == [4, 5]
     assert call["source_hash"]
+    assert packet["jspace_route"]["next_state"] == "READ_ONLY_CONTEXT"
 
 
 def test_empty_external_call_query_returns_all_known_external_calls(tmp_path: Path):
@@ -126,6 +127,8 @@ def test_grounded_symbol_with_tests_routes_to_builder_patch(tmp_path: Path):
     assert packet["target_symbol"] == "answer"
     assert packet["tests"] == ["test_demo.py"]
     assert packet["source_spans"][0]["source_hash"]
+    assert packet["jspace_route"]["next_state"] == "READY_PATCH"
+    assert packet["jspace_route"]["vsa_patch_authority"] is False
 
 
 def test_grounded_symbol_without_tests_routes_to_test_gap_fill(tmp_path: Path):
@@ -136,6 +139,7 @@ def test_grounded_symbol_without_tests_routes_to_test_gap_fill(tmp_path: Path):
     assert packet["route"] == "TEST_GAP_FILL"
     assert packet["exact_hits"]
     assert packet["tests"] == []
+    assert packet["jspace_route"]["next_state"] == "NEED_TEST"
 
 
 def test_fake_symbol_routes_to_localize_first_without_builder_patch(tmp_path: Path):
@@ -163,6 +167,7 @@ def test_capability_audit_query_routes_to_read_only_report(tmp_path: Path):
     assert packet["rendered"].startswith("# Emergent Properties and Future Potential")
     assert packet["report"]["safe_to_patch"] is False
     assert packet["report"]["summary"]["read_only"] is True
+    assert packet["jspace_route"]["next_state"] == "READ_ONLY_AUDIT"
 
 
 def test_capability_patch_intent_does_not_route_to_audit(tmp_path: Path):
@@ -207,6 +212,7 @@ def test_syntax_error_file_blocks_unsafe_grounding(tmp_path: Path):
 
     assert packet["route"] == "BLOCKED_WITH_REASON"
     assert any("syntax_error:broken.py" in warning for warning in packet["warnings"])
+    assert packet["jspace_route"]["next_state"] == "BLOCKED"
 
 
 def test_no_staged_patch_records_agentless_fallback_without_second_model_debate(tmp_path: Path):
@@ -417,7 +423,10 @@ def test_builder_context_renders_topological_anchor_policy_and_hashes(tmp_path: 
     assert "source_hash=" in prompt
     assert "vsa_similarity: advisory ranking only; never patch evidence" in prompt
     assert "VSA similarity advisory only." in prompt
+    assert "aura_jspace_route (advisory routing state; not patch authority)" in prompt
+    assert prompt.index("source_excerpt") < prompt.index("aura_jspace_route")
     assert packet.topological_context["preplanning_grounding"]["route"] == "BUILDER_PATCH"
+    assert packet.topological_context["jspace_route"]["next_state"] == "READY_PATCH"
 
 
 def test_builder_context_preserves_route_diagnostics_from_preplanning_packet(tmp_path: Path):

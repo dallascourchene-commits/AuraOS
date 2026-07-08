@@ -16,6 +16,7 @@ from pathlib import Path
 import re
 from typing import Any
 
+from aura_jspace_codec import active_concepts_from_packet, build_jspace_packet
 from aura_repo_localizer import EXCLUDE_DIRS, topological_context_fallback_candidates
 from aura_topological_context_anchor import (
     ANCHOR_VERSION,
@@ -154,6 +155,7 @@ def ground_coding_arena_intent(
         "safety_policy": PATCH_AUTHORITY_POLICY,
         "vsa_patch_authority": False,
     }
+    packet["jspace_route"] = _jspace_route_for_grounding(packet)
     return packet
 
 
@@ -177,7 +179,11 @@ def query_coding_arena_capability_audit(
     """Return a read-only emergent capability audit for Coding Arena query intents."""
     from aura_emergent_potential_repl import query_emergent_potential_packet
 
-    return query_emergent_potential_packet(intent, repo_root)
+    packet = query_emergent_potential_packet(intent, repo_root)
+    if isinstance(packet, dict):
+        packet = dict(packet)
+        packet["jspace_route"] = _jspace_route_for_grounding(packet)
+    return packet
 
 
 def _build_repo_anchor(root: Path) -> CodeTopoAnchor:
@@ -380,3 +386,130 @@ def _unique(values: list[Any]) -> list[Any]:
         seen.add(key)
         output.append(value)
     return output
+
+
+def _jspace_route_for_grounding(packet: dict[str, Any]) -> dict[str, Any]:
+    try:
+        frame = _jspace_frame_for_grounding(packet)
+        decision = _jspace_decision_for_grounding(packet)
+        jpacket = build_jspace_packet(frame, decision, grounding=packet)
+        state = active_concepts_from_packet(jpacket, grounding=packet)
+        return {
+            "packet": jpacket.packet,
+            "next_state": jpacket.next_state,
+            "active_concepts": list(state.active_concepts),
+            "patch_authority": PATCH_AUTHORITY_POLICY,
+            "vsa_patch_authority": False,
+            "phase_hash": state.phase_hash,
+        }
+    except Exception as exc:
+        route = str(packet.get("route") or "")
+        return {
+            "packet": "",
+            "next_state": _fallback_next_state_for_route(route),
+            "active_concepts": [],
+            "patch_authority": PATCH_AUTHORITY_POLICY,
+            "vsa_patch_authority": False,
+            "warnings": [f"jspace_route_failed:{type(exc).__name__}"],
+        }
+
+
+def _jspace_frame_for_grounding(packet: dict[str, Any]) -> dict[str, Any]:
+    route = str(packet.get("route") or "")
+    target_file = str(packet.get("target_file") or "")
+    target_symbol = str(packet.get("target_symbol") or "")
+    source_spans = [item for item in packet.get("source_spans", []) or [] if isinstance(item, dict)]
+    grounding: list[str] = []
+    if target_file or source_spans or packet.get("external_calls"):
+        grounding.append("file_exists")
+    if target_symbol or packet.get("exact_hits"):
+        grounding.append("symbol_exists")
+    if packet.get("tests"):
+        grounding.append("tests_exist")
+    if source_spans or packet.get("hashes"):
+        grounding.append("codemap_grounded")
+    if {"file_exists", "symbol_exists", "tests_exist", "codemap_grounded"} <= set(grounding):
+        grounding.append("full")
+    read_only = route in {EXTERNAL_CALL_ROUTE, CAPABILITY_AUDIT_ROUTE}
+    return {
+        "intent": "research_rank" if route == CAPABILITY_AUDIT_ROUTE else "explain" if read_only else "code_refactor",
+        "artifact": _jspace_artifact_for_file(target_file),
+        "action": "inspect" if read_only else "modify",
+        "scope": "symbol" if target_symbol else "file" if target_file else "repo",
+        "risk": "low" if read_only else "medium",
+        "grounding": tuple(grounding or ["none"]),
+        "tests": "existing" if packet.get("tests") else "none",
+        "quality": "verifier_required" if route in {"BUILDER_PATCH", "TEST_GAP_FILL", "BLOCKED_WITH_REASON"} else "balanced",
+        "cost": "no_model" if read_only or route == "BLOCKED_WITH_REASON" else "local_first",
+        "target_file": target_file or None,
+        "target_symbol": target_symbol or None,
+    }
+
+
+def _jspace_decision_for_grounding(packet: dict[str, Any]) -> dict[str, Any]:
+    route = str(packet.get("route") or "").strip() or "LOCALIZE_FIRST"
+    return {
+        "route": route,
+        "model": _jspace_model_for_route(route),
+        "context": _jspace_context_for_route(route),
+        "reason": _jspace_reason_for_grounding(packet, route),
+        "verifier_required": route in {"BUILDER_PATCH", "TEST_GAP_FILL", "VERIFY_ONLY", "BLOCKED_WITH_REASON"},
+    }
+
+
+def _jspace_artifact_for_file(path: str) -> str:
+    name = str(path or "")
+    if name.endswith(".py") and Path(name).name.startswith("test_"):
+        return "test_file"
+    if name.endswith(".py") or not name:
+        return "python_module"
+    if name.endswith((".md", ".rst", ".txt")):
+        return "documentation"
+    return "python_module"
+
+
+def _jspace_model_for_route(route: str) -> str:
+    if route in {EXTERNAL_CALL_ROUTE, CAPABILITY_AUDIT_ROUTE, "BLOCKED_WITH_REASON", "LOCALIZE_FIRST", "VERIFY_ONLY"}:
+        return "no_model"
+    if route == "PLAN_ONLY":
+        return "cheap_first"
+    return "local_first"
+
+
+def _jspace_context_for_route(route: str) -> str:
+    return {
+        "BUILDER_PATCH": "PATCH",
+        "TEST_GAP_FILL": "TEST",
+        "VERIFY_ONLY": "VERIFIER",
+        "BLOCKED_WITH_REASON": "VERIFIER",
+        EXTERNAL_CALL_ROUTE: "EXTERNAL",
+        CAPABILITY_AUDIT_ROUTE: "AUDIT",
+    }.get(route, "SUMMARY")
+
+
+def _jspace_reason_for_grounding(packet: dict[str, Any], route: str) -> str:
+    for reason in packet.get("route_reasons", []) or []:
+        text = str(reason or "")
+        if text and text != PATCH_AUTHORITY_POLICY:
+            return text
+    return {
+        "BUILDER_PATCH": "route_valid",
+        "TEST_GAP_FILL": "missing_tests_or_verifier_evidence",
+        "LOCALIZE_FIRST": "target_symbol_unresolved",
+        "BLOCKED_WITH_REASON": "missing_grounding",
+        EXTERNAL_CALL_ROUTE: "external_call_context",
+        CAPABILITY_AUDIT_ROUTE: "emergent_capability_audit",
+    }.get(route, "route_valid")
+
+
+def _fallback_next_state_for_route(route: str) -> str:
+    return {
+        "BUILDER_PATCH": "NEED_GROUND",
+        "TEST_GAP_FILL": "NEED_TEST",
+        "LOCALIZE_FIRST": "LOCALIZE_FIRST",
+        "VERIFY_ONLY": "VERIFY_ONLY",
+        "PLAN_ONLY": "PLAN_ONLY",
+        "BLOCKED_WITH_REASON": "BLOCKED",
+        EXTERNAL_CALL_ROUTE: "READ_ONLY_CONTEXT",
+        CAPABILITY_AUDIT_ROUTE: "READ_ONLY_AUDIT",
+    }.get(str(route or ""), "HUMAN_GATE")

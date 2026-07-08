@@ -293,6 +293,14 @@ class RoutingFrame:
             ]
         )
 
+    def compact_input(self) -> str:
+        try:
+            from aura_jspace_codec import compact_frame_input
+
+            return compact_frame_input(self)
+        except Exception:
+            return self.symbol_input()
+
     def to_dict(self) -> dict[str, object]:
         return {
             "intent": self.intent,
@@ -308,6 +316,7 @@ class RoutingFrame:
             "target_symbol": self.target_symbol,
             "failure_reason": self.failure_reason,
             "symbol_input": self.symbol_input(),
+            "compact_input": self.compact_input(),
         }
 
 
@@ -337,6 +346,24 @@ class RouteDecision:
             ]
         )
 
+    def compact_output(self) -> str:
+        try:
+            from aura_jspace_codec import compact_route_output
+
+            return compact_route_output(self)
+        except Exception:
+            return self.symbol_output()
+
+    def jspace_packet(self, *, next_state: str = "") -> str:
+        try:
+            from aura_jspace_codec import compact_route_output, compact_symbol_input, next_state_for_decision
+
+            state = next_state or next_state_for_decision(self)
+            return f"J0/{compact_symbol_input(self.symbol_input)}>{compact_route_output(self)}#{state}"
+        except Exception:
+            state = next_state or "HUMAN_GATE"
+            return f"J0/{self.symbol_input}>{self.symbol_output()}#{state}"
+
     def to_dict(self) -> dict[str, object]:
         payload = {
             "rule_name": self.rule_name,
@@ -348,6 +375,7 @@ class RouteDecision:
             "rule_priority": self.rule_priority,
             "symbol_input": self.symbol_input,
             "symbol_output": self.symbol_output(),
+            "compact_output": self.compact_output(),
             "weighted_alternatives": list(self.weighted_alternatives),
         }
         if self.classification:

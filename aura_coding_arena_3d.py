@@ -24,6 +24,11 @@ try:
 except Exception:
     sanitize_tokenizer_channels = None  # type: ignore[assignment]
 
+try:
+    from aura_jspace_codec import attach_jspace_to_capsule
+except Exception:
+    attach_jspace_to_capsule = None  # type: ignore[assignment]
+
 
 ARENA_TOPOLOGY_VERSION = "AURA_HUMAN_3D_CODING_ARENA_TOPOLOGY_V1"
 CAPSULE_VERSION = "AURA_CODING_ARENA_CAPSULE_V1"
@@ -297,6 +302,7 @@ def compile_action_capsule(
     }
     route = simulate_model_route(capsule_body, token_budget=token_budget)
     capsule_body["route_decision"] = route.to_dict()
+    capsule_body = _attach_jspace_capsule_state(capsule_body, topology)
     capsule_body["capsule_tokens_est"] = _estimate_tokens_json(capsule_body)
     capsule_body["phase_hash"] = _hash_payload(capsule_body)
     return capsule_body
@@ -827,6 +833,71 @@ def _operation_from_instruction(instruction: str) -> str:
     if any(term in lowered for term in ("test", "verify")):
         return "VERIFY_OR_TEST_GAP"
     return "INSPECT_OR_ROUTE"
+
+
+def _attach_jspace_capsule_state(capsule: dict[str, Any], topology: dict[str, Any]) -> dict[str, Any]:
+    if attach_jspace_to_capsule is None:
+        return capsule
+    try:
+        from aura_fst_routing import AuraCodingArenaRouter, RoutingFrame
+
+        frame = _jspace_routing_frame_from_capsule(capsule, topology, RoutingFrame)
+        decision = AuraCodingArenaRouter().route(frame)
+        return attach_jspace_to_capsule(capsule, frame=frame, decision=decision)
+    except Exception:
+        return attach_jspace_to_capsule(capsule)
+
+
+def _jspace_routing_frame_from_capsule(capsule: dict[str, Any], topology: dict[str, Any], frame_cls: Any) -> Any:
+    context = capsule.get("context", {}) if isinstance(capsule.get("context"), dict) else {}
+    target_files = list(context.get("target_files", []) or [])
+    target_symbols = list(context.get("target_symbols", []) or [])
+    tests = list(context.get("tests", []) or [])
+    op = str(capsule.get("op") or "")
+    instruction = str(capsule.get("human_instruction") or "")
+    lowered = f"{op} {instruction}".lower()
+    target_file = str(target_files[0]) if target_files else ""
+    grounding: list[str] = []
+    if target_files:
+        grounding.append("file_exists")
+    if target_symbols:
+        grounding.append("symbol_exists")
+    if tests:
+        grounding.append("tests_exist")
+    if (
+        "codemap" in str(capsule.get("truth_policy", "")).lower()
+        or str(topology.get("source", "")).lower() == "codemap"
+        or context.get("line_ranges")
+    ):
+        grounding.append("codemap_grounded")
+    if {"file_exists", "symbol_exists", "tests_exist", "codemap_grounded"} <= set(grounding):
+        grounding.append("full")
+    action = "modify" if any(term in lowered for term in ("patch", "fix", "wire", "connect")) else "verify" if any(term in lowered for term in ("test", "verify")) else "inspect"
+    intent = "code_refactor" if action == "modify" else "verify" if action == "verify" else "localize"
+    return frame_cls(
+        intent=intent,
+        artifact=_jspace_artifact_for_file(target_file),
+        action=action,
+        scope="symbol" if target_symbols else "file" if target_files else "repo",
+        risk="medium",
+        grounding=tuple(grounding or ["none"]),
+        tests="existing" if tests else "none",
+        quality="verifier_required",
+        cost="local_first",
+        target_file=target_file or None,
+        target_symbol=str(target_symbols[0]) if target_symbols else None,
+    )
+
+
+def _jspace_artifact_for_file(path: str) -> str:
+    name = str(path or "")
+    if name.endswith(".py") and Path(name).name.startswith("test_"):
+        return "test_file"
+    if name.endswith(".py") or not name:
+        return "python_module"
+    if name.endswith((".md", ".rst", ".txt")):
+        return "documentation"
+    return "python_module"
 
 
 def _path_exists_in_topology(topology: dict[str, Any], path: str) -> bool:

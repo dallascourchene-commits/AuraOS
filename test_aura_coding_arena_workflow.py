@@ -238,6 +238,37 @@ class TestQDKTObservation:
             assert payload["success"] is False
             assert payload["failures_count"] == 3
 
+    def test_qdkt_observe_includes_jspace_summary_when_context_has_packet(self):
+        """record_outcome adds compact JSpace summaries to QDKT payloads when present."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ledger = Path(tmpdir) / "test_workflows.jsonl"
+            mock_qdkt = MagicMock()
+            memory = CodingArenaWorkflowMemory(ledger_path=ledger, qdkt=mock_qdkt)
+            wf_id = memory.begin_workflow("test qdkt jspace", "aura_node.py")
+            mock_packet = MagicMock()
+            mock_packet.to_dict.return_value = {
+                "target_file": "aura_node.py",
+                "topological_context": {
+                    "jspace_route": {
+                        "packet": "J0/REF.PY.MO.SYM.M.FSC.1.B.L>BUILD.L.PAT.OK.1#READY_PATCH",
+                        "next_state": "READY_PATCH",
+                    }
+                },
+            }
+
+            outcome = WorkflowOutcome(
+                workflow_id=wf_id,
+                success=True,
+                hotswap_ready=True,
+                failures_count=0,
+                stage="verified",
+            )
+            memory.record_outcome(wf_id, outcome, context_packets=[mock_packet])
+
+            payload = mock_qdkt.observe.call_args.args[1]
+            assert payload["jspace_packets"] == ["J0/REF.PY.MO.SYM.M.FSC.1.B.L>BUILD.L.PAT.OK.1#READY_PATCH"]
+            assert payload["jspace_next_states"] == ["READY_PATCH"]
+
 
 # ---------------------------------------------------------------------------
 # Test 4: DREAM feedback rows are emitted
@@ -477,7 +508,25 @@ class TestFullWorkflowTrace:
             # Record all event types
             memory.record_plan_candidate(wf_id, {"candidate_id": "local_free", "source": "deterministic", "score": 0.54, "plan": {}})
             memory.record_shadow_critique(wf_id, {"critic_id": "scope", "approved": True, "score": 0.6, "blockers": []})
-            memory.record_builder_context(wf_id, MagicMock(to_dict=lambda: {"target_file": "aura_node.py", "source_excerpt": "code", "nearby_tests": [], "callers": [], "neighbors": []}), "A-LIVE-1")
+            memory.record_builder_context(
+                wf_id,
+                MagicMock(
+                    to_dict=lambda: {
+                        "target_file": "aura_node.py",
+                        "source_excerpt": "code",
+                        "nearby_tests": [],
+                        "callers": [],
+                        "neighbors": [],
+                        "topological_context": {
+                            "jspace_route": {
+                                "packet": "J0/REF.PY.MO.SYM.M.FSC.1.B.L>BUILD.L.PAT.OK.1#READY_PATCH",
+                                "next_state": "READY_PATCH",
+                            }
+                        },
+                    }
+                ),
+                "A-LIVE-1",
+            )
             memory.record_patch_submission(wf_id, {"task_id": "A-LIVE-1", "diff": "diff --git a/file b/file", "affected_files": ["aura_node.py"]})
             memory.record_patch_preflight(wf_id, "A-LIVE-1", MagicMock(to_dict=lambda: {"ok": True, "rejections": []}))
             memory.record_temp_workspace_apply(wf_id, MagicMock(to_dict=lambda: {"ok": True, "checks": [], "failures": []}))
@@ -508,6 +557,8 @@ class TestFullWorkflowTrace:
             assert "premium_judge_decision" in event_types
             assert "hotswap_decision" in event_types
             assert "workflow_outcome" in event_types
+            builder_event = next(e for e in trace if e["event_type"] == "builder_context_packet")
+            assert builder_event["payload"]["jspace_route"]["next_state"] == "READY_PATCH"
 
             # Verify QDKT was called
             mock_qdkt.observe.assert_called_once()

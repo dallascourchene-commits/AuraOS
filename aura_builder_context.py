@@ -282,6 +282,8 @@ def build_builder_context_packet(
         preplanning = dict(topological_grounding)
         topological_context = dict(topological_context or {})
         topological_context["preplanning_grounding"] = preplanning
+        if isinstance(preplanning.get("jspace_route"), dict):
+            topological_context["jspace_route"] = dict(preplanning["jspace_route"])
         if preplanning.get("builder_context") and not topological_context.get("rendered"):
             topological_context["rendered"] = str(preplanning.get("builder_context") or "")
         preplanning_route_diagnostics = dict(preplanning.get("route_diagnostics", {}) or {})
@@ -295,6 +297,8 @@ def build_builder_context_packet(
                 "route_diagnostics": preplanning_route_diagnostics,
                 "safety_policy": preplanning.get("safety_policy", "exact_source_spans_and_hashes_only"),
             }
+            if isinstance(preplanning.get("jspace_route"), dict):
+                topological_context["packet"]["jspace_route"] = dict(preplanning["jspace_route"])
         elif isinstance(topological_context.get("packet"), dict):
             packet = dict(topological_context["packet"])
             packet["preplanning_route_diagnostics"] = preplanning_route_diagnostics
@@ -302,6 +306,8 @@ def build_builder_context_packet(
                 packet["route_diagnostics"] = preplanning_route_diagnostics
             if preplanning_tests:
                 packet["tests"] = list(dict.fromkeys([*list(packet.get("tests", []) or []), *preplanning_tests]))
+            if isinstance(preplanning.get("jspace_route"), dict):
+                packet["jspace_route"] = dict(preplanning["jspace_route"])
             topological_context["packet"] = packet
 
     # Build source_refs for Graphify grounding
@@ -498,6 +504,19 @@ def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
         lines.append("")
 
     if packet.topological_context:
+        jspace_route = _extract_jspace_route(packet.topological_context)
+        if jspace_route:
+            lines.append("--- aura_jspace_route (advisory routing state; not patch authority) ---")
+            lines.append(f"packet: {jspace_route.get('packet', '')}")
+            lines.append(f"next_state: {jspace_route.get('next_state', '')}")
+            lines.append(f"patch_authority: {jspace_route.get('patch_authority', 'exact_source_spans_and_hashes_only')}")
+            lines.append(f"vsa_patch_authority: {str(bool(jspace_route.get('vsa_patch_authority', False))).lower()}")
+            active = _render_jspace_active(jspace_route)
+            if active:
+                lines.append(f"active: {active}")
+            lines.append("--- end aura_jspace_route ---")
+            lines.append("")
+
         rendered_topology = str(packet.topological_context.get("rendered") or "")
         if rendered_topology:
             lines.append(rendered_topology)
@@ -557,3 +576,33 @@ def render_context_packet_prompt(packet: BuilderContextPacket) -> str:
     lines.append("=== END BUILDER CONTEXT PACKET ===")
 
     return "\n".join(lines)
+
+
+def _extract_jspace_route(topological_context: dict[str, Any]) -> dict[str, Any]:
+    direct = topological_context.get("jspace_route")
+    if isinstance(direct, dict):
+        return direct
+    preplanning = topological_context.get("preplanning_grounding")
+    if isinstance(preplanning, dict) and isinstance(preplanning.get("jspace_route"), dict):
+        return dict(preplanning["jspace_route"])
+    packet = topological_context.get("packet")
+    if isinstance(packet, dict) and isinstance(packet.get("jspace_route"), dict):
+        return dict(packet["jspace_route"])
+    return {}
+
+
+def _render_jspace_active(jspace_route: dict[str, Any]) -> str:
+    active = list(jspace_route.get("active_concepts", []) or [])[:16]
+    rendered: list[str] = []
+    for concept in active:
+        if not isinstance(concept, dict):
+            continue
+        concept_id = str(concept.get("id") or "")
+        if not concept_id:
+            continue
+        try:
+            weight = float(concept.get("weight", 0.0))
+        except (TypeError, ValueError):
+            weight = 0.0
+        rendered.append(f"{concept_id}={weight:.2f}")
+    return "; ".join(rendered)

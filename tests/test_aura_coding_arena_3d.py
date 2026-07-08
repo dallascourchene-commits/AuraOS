@@ -24,6 +24,8 @@ def test_capsule_compiler_returns_valid_json_for_demo_topology(tmp_path: Path):
     assert capsule["selected"]["node_ids"] == [node_id]
     assert "NO_NEW_DEPS" in capsule["constraints"]
     assert capsule["route_decision"]["network_calls_made"] is False
+    assert capsule["jspace_packet"].startswith("J0/")
+    assert capsule["jspace_state"]["vsa_patch_authority"] is False
 
 
 def test_capsule_compiler_never_includes_nonexistent_paths(tmp_path: Path):
