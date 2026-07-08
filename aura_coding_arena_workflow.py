@@ -529,7 +529,7 @@ class CodingArenaWorkflowMemory:
                 "stage": outcome.stage,
                 "target_file": outcome.target_file,
             }
-            if jspace_summary["jspace_packets"]:
+            if jspace_summary["jspace_packets"] or jspace_summary["jspace_next_states"]:
                 qdkt_payload.update(jspace_summary)
             try:
                 qdkt.observe(

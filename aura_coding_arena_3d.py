@@ -873,7 +873,8 @@ def _jspace_routing_frame_from_capsule(capsule: dict[str, Any], topology: dict[s
     if {"file_exists", "symbol_exists", "tests_exist", "codemap_grounded"} <= set(grounding):
         grounding.append("full")
     action = "modify" if any(term in lowered for term in ("patch", "fix", "wire", "connect")) else "verify" if any(term in lowered for term in ("test", "verify")) else "inspect"
-    intent = "code_refactor" if action == "modify" else "verify" if action == "verify" else "localize"
+    # Map all actions to code_refactor intent so router rules can handle them
+    intent = "code_refactor"
     return frame_cls(
         intent=intent,
         artifact=_jspace_artifact_for_file(target_file),
