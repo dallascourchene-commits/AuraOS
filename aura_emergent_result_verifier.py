@@ -1060,6 +1060,17 @@ def verify_emergent_connections(
         ),
     )
 
+    # Populates ST3GG egress fields
+    draft_report = render_verified_emergent_report(result, config=cfg)
+    egress_meta = _st3gg_egress_for_report(draft_report, config=cfg)
+    result.st3gg_egress = egress_meta
+    if egress_meta.get("st3gg_egress_enabled"):
+        for cluster in result.clusters:
+            cluster.st3gg_egress_enabled = True
+            cluster.st3gg_savings_ratio = egress_meta.get("st3gg_savings_ratio", 0.0)
+            cluster.st3gg_pointer = egress_meta.get("st3gg_pointer", "")
+            cluster.original_report_hash = egress_meta.get("original_report_hash", "")
+
     # Step 6: trace memory (best-effort)
     atom_ids = _record_trace_events(result, config=cfg)
     result.trace_atom_ids = atom_ids
@@ -1088,6 +1099,7 @@ def render_verified_emergent_report(
     - Safety note: REPORT_ONLY
     """
     cfg = config or EmergentVerificationConfig()
+    _ = cfg  # prevent F841 unused variable warning
 
     if isinstance(report_or_result, dict):
         clusters_list = (

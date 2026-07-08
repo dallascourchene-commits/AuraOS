@@ -137,8 +137,11 @@ def decompress_report_st3gg(compressed: str) -> str:
         return ""
     text = compressed
     # Apply in reverse (longer replacements first to avoid partial matches)
+    # Use negative lookarounds to match only standalone tokens (not parts of other words)
+    # and lambda to avoid backreference interpolation issues.
     for short_form, long_form in sorted(_REVERSE_TABLE.items(), key=lambda kv: -len(kv[0])):
-        text = re.sub(re.escape(short_form), long_form, text)
+        pattern = r"(?<![a-zA-Z0-9_])" + re.escape(short_form) + r"(?![a-zA-Z0-9_])"
+        text = re.sub(pattern, lambda m, lf=long_form: lf, text)
     return text
 
 
