@@ -234,6 +234,14 @@ class EmergentPotentialReport:
     evidence_sources: list[dict[str, Any]] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     safe_to_patch: bool = False
+    verified_clusters: list[dict[str, Any]] = field(default_factory=list)
+    raw_candidate_count: int = 0
+    suppressed_duplicate_count: int = 0
+    rejected_candidate_count: int = 0
+    jspace_summary: dict[str, Any] = field(default_factory=dict)
+    st3gg_egress: dict[str, Any] = field(default_factory=dict)
+    trace_atom_ids: list[str] = field(default_factory=list)
+    verifier_summary: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -247,6 +255,14 @@ class EmergentPotentialReport:
             "evidence_sources": self.evidence_sources,
             "warnings": self.warnings,
             "safe_to_patch": self.safe_to_patch,
+            "verified_clusters": self.verified_clusters,
+            "raw_candidate_count": self.raw_candidate_count,
+            "suppressed_duplicate_count": self.suppressed_duplicate_count,
+            "rejected_candidate_count": self.rejected_candidate_count,
+            "jspace_summary": self.jspace_summary,
+            "st3gg_egress": self.st3gg_egress,
+            "trace_atom_ids": self.trace_atom_ids,
+            "verifier_summary": self.verifier_summary,
         }
 
 
@@ -368,6 +384,22 @@ def audit_emergent_potential(
             "cost_overhead - missing_evidence_penalty"
         ),
     }
+
+    # Run the verifier pipeline
+    from aura_emergent_result_verifier import (
+        verify_emergent_connections,
+        EmergentVerificationConfig,
+    )
+    trace_root = None
+    if root:
+        trace_root = str(root / "Aura_Memory")
+    cfg = EmergentVerificationConfig(
+        max_clusters=top,
+        trace_memory_root=trace_root,
+    )
+    verified = verify_emergent_connections(connections, focus=focus_text, config=cfg)
+    verified_clusters_list = [c.to_dict() for c in verified.clusters]
+
     return EmergentPotentialReport(
         version=EMERGENT_POTENTIAL_VERSION,
         route=AUDIT_ROUTE,
@@ -379,12 +411,23 @@ def audit_emergent_potential(
         evidence_sources=evidence_sources,
         warnings=warnings,
         safe_to_patch=False,
+        verified_clusters=verified_clusters_list,
+        raw_candidate_count=verified.raw_count,
+        suppressed_duplicate_count=verified.suppressed_duplicate_count,
+        rejected_candidate_count=verified.rejected_count,
+        jspace_summary=verified.jspace_summary,
+        st3gg_egress=verified.st3gg_egress,
+        trace_atom_ids=verified.trace_atom_ids,
+        verifier_summary=verified.verifier_summary,
     )
 
 
 def render_emergent_potential_report(report: EmergentPotentialReport | dict[str, Any]) -> str:
     """Render the default human-readable Markdown report."""
     payload = report.to_dict() if isinstance(report, EmergentPotentialReport) else dict(report)
+    if payload.get("verified_clusters") or payload.get("clusters"):
+        from aura_emergent_result_verifier import render_verified_emergent_report
+        return render_verified_emergent_report(payload)
     summary = dict(payload.get("summary", {}) or {})
     connections = list(payload.get("connections", []) or [])
     lines = [
