@@ -1095,13 +1095,32 @@ def render_verified_emergent_report(
     cfg = config or EmergentVerificationConfig()
 
     if isinstance(report_or_result, dict):
+        clusters_list = (
+            report_or_result.get("clusters")
+            or report_or_result.get("verified_clusters")
+            or []
+        )
         result = EmergentVerificationResult(
             version=str(report_or_result.get("version", VERIFIER_VERSION)),
-            raw_count=int(report_or_result.get("raw_count", 0)),
+            raw_count=int(
+                report_or_result.get(
+                    "raw_count",
+                    report_or_result.get("raw_candidate_count", 0),
+                )
+            ),
             accepted_count=int(report_or_result.get("accepted_count", 0)),
-            rejected_count=int(report_or_result.get("rejected_count", 0)),
-            suppressed_duplicate_count=int(report_or_result.get("suppressed_duplicate_count", 0)),
-            cluster_count=int(report_or_result.get("cluster_count", 0)),
+            rejected_count=int(
+                report_or_result.get(
+                    "rejected_count",
+                    report_or_result.get("rejected_candidate_count", 0),
+                )
+            ),
+            suppressed_duplicate_count=int(
+                report_or_result.get("suppressed_duplicate_count", 0)
+            ),
+            cluster_count=int(
+                report_or_result.get("cluster_count", len(clusters_list))
+            ),
             clusters=[],
             warnings=list(report_or_result.get("warnings", [])),
             summary=dict(report_or_result.get("summary", {})),
@@ -1112,7 +1131,7 @@ def render_verified_emergent_report(
         )
         result.clusters = [
             EmergentCandidateCluster(**_coerce_cluster(c))
-            for c in (report_or_result.get("clusters") or [])
+            for c in clusters_list
             if isinstance(c, dict)
         ]
     else:
@@ -1346,8 +1365,31 @@ def _compute_diversity_score(clusters: list[EmergentCandidateCluster]) -> float:
 
 def _coerce_cluster(d: dict[str, Any]) -> dict[str, Any]:
     """Safely coerce a plain dict back to EmergentCandidateCluster kwargs."""
+    import dataclasses
     defaults = EmergentCandidateCluster.__dataclass_fields__  # type: ignore[attr-defined]
     out: dict[str, Any] = {}
     for fname, fld in defaults.items():
-        out[fname] = d.get(fname, fld.default if fld.default is not fld.default_factory else fld.default_factory())  # type: ignore[misc]
+        if fname in d:
+            out[fname] = d[fname]
+        else:
+            if fld.default is not dataclasses.MISSING:
+                out[fname] = fld.default
+            elif fld.default_factory is not dataclasses.MISSING:
+                out[fname] = fld.default_factory()
+            else:
+                # Fallback defaults for missing fields
+                if fld.type is str:
+                    out[fname] = ""
+                elif fld.type is int:
+                    out[fname] = 0
+                elif fld.type is float:
+                    out[fname] = 0.0
+                elif fld.type is bool:
+                    out[fname] = False
+                elif getattr(fld.type, "__origin__", None) is dict:
+                    out[fname] = {}
+                elif getattr(fld.type, "__origin__", None) is list:
+                    out[fname] = []
+                else:
+                    out[fname] = None
     return out
