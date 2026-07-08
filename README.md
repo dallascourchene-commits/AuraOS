@@ -40,6 +40,55 @@ Recent commits expanded Aura from a REPL-centered substrate into a more portable
 
 These are repo-local measurements, demos, or complexity bounds documented in code, tests, and implementation notes. Re-run on target hardware with `!benchmark` and the listed tests for current numbers.
 
+### Aura Efficiency Benchmark
+
+`aura_efficiency_benchmark.py` runs the same deterministic AuraOS tasks across five modes so token savings, cost savings, latency, routing efficiency, quality lift, and safety blocking are visible side by side:
+
+| Mode | What it measures |
+|------|------------------|
+| `raw_baseline` | Naive user task plus full target file and nearby test context. No Aura route, ST3GG, JSpace, or grounding. |
+| `rag_baseline` | Simple keyword/file-name snippets, capped at three snippets. No Aura FST, ST3GG, or JSpace. |
+| `plan_act_baseline` | A plain two-step plan/act prompt over keyword snippets. No CODEMAP patch authority or Builder/Verifier packet. |
+| `aura_compress` | Aura polysynthetic packet plus ST3GG compact source context. No full Builder/Verifier loop. |
+| `aura_full` | Coding Arena grounding, `RoutingFrame`/`AuraCodingArenaRouter`, BuilderContextPacket, ST3GG metrics, JSpace packet/state, and verifier/preflight metadata when available. |
+
+The default efficiency suite lists benchmark tasks for route classification, code localization, external-call context, capability audit, test-gap detection, small safe patch proposals, summarization/compression, and unsafe advisory-only patch blocking. All runs are offline by default through a deterministic mock model caller; hosted chat-completions egress can be enabled with `--use-hosted` when `AURA_HOSTED_MODEL_API_KEY`, `AURA_HOSTED_MODEL_API_BASE`, and `AURA_HOSTED_MODEL` are present.
+
+Metrics recorded for every result:
+
+| Metric family | Fields |
+|---------------|--------|
+| Token efficiency | `input_tokens`, `output_tokens`, `total_tokens`, `tokens_saved`, `tokens_saved_pct`, `input_tokens_saved_pct`, `output_tokens_saved_pct`, `quality_per_1000_tokens`, `accuracy_per_1000_tokens` |
+| Cost savings | `cost_usd`, `baseline_cost_usd`, `cost_saved_usd`, `cost_saved_pct`, `cost_per_quality_point` |
+| Latency and speed | `latency_sec`, mode `avg_latency`, `latency_saved_sec`, `latency_saved_pct`, `processing_speedup` |
+| Routing and model choice | `model`, `route`, `expected_route`, `route_correct`, route diagnostics, JSpace packet/state |
+| Grounding and safety | target grounding correctness metadata, `verifier_pass`, `tests_pass`, `output_format_valid`, `unsafe_blocked`, `patch_authority`, `vsa_patch_authority=false` |
+| Quality | deterministic `quality_score`, per-mode `avg_quality`, `quality_gain`, and `quality_gain_pct` versus raw baseline |
+
+Run the benchmark and generate visible reports:
+
+```bash
+python3 aura_efficiency_benchmark.py --suite efficiency --modes raw_baseline,rag_baseline,plan_act_baseline,aura_compress,aura_full --out Aura_Memory/benchmarks/aura_efficiency_latest.json
+python3 aura_efficiency_report.py Aura_Memory/benchmarks/aura_efficiency_latest.json --markdown Aura_Memory/benchmarks/AURA_EFFICIENCY_REPORT.md --html Aura_Memory/benchmarks/aura_efficiency_report.html
+```
+
+Artifacts:
+
+| Artifact | Purpose |
+|----------|---------|
+| `Aura_Memory/benchmarks/aura_efficiency_latest.json` | Full run envelope with tasks, results, per-mode summary, prompt excerpts, route metadata, ST3GG metrics, and savings fields. |
+| `Aura_Memory/benchmarks/aura_efficiency_runs.jsonl` | Append-only result ledger for historical benchmark rows. |
+| `Aura_Memory/benchmarks/aura_efficiency_summary.json` | Latest compact summary for dashboards or README refreshes. |
+| `Aura_Memory/benchmarks/AURA_EFFICIENCY_REPORT.md` | Human-readable report with executive summary, token/cost/quality/latency tables, route choices, unsafe-block status, examples, excerpts, and limitations. |
+| `Aura_Memory/benchmarks/aura_efficiency_report.html` | Browser-readable zero-dependency HTML report. |
+
+Focused validation:
+
+```bash
+python3 -m pytest tests/test_aura_efficiency_benchmark.py -q
+python3 -m pytest tests/test_aura_coding_arena_grounding.py tests/test_aura_st3gg_codec.py test_aura_coding_arena_workflow.py test_aura_module_manifest.py -q
+```
+
 ### Local Diagnostics Snapshot
 
 Measured on this checkout with Aura's own `char/4` token estimator plus a 2026-07-07 live `!backtrack` smoke. Most rows are deterministic/offline unless noted; the mock matrix benchmark measures packaging, validation, and token shape, not real provider latency.
