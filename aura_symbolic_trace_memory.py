@@ -551,7 +551,15 @@ def _should_rebuild_canvas(
     if current_count == previous_count:
         return True, ""
 
-    new_atoms = atoms[previous_count:]
+    latest_atom_id = str(metadata.get("latest_atom_id") or "")
+    if latest_atom_id:
+        try:
+            last_index = next(i for i, atom in enumerate(atoms) if atom.atom_id == latest_atom_id)
+            new_atoms = atoms[last_index + 1 :]
+        except StopIteration:
+            new_atoms = list(atoms)
+    else:
+        new_atoms = list(atoms)
     if not wanted_task:
         latest_task_id = atoms[-1].task_id if atoms else ""
         if latest_task_id and latest_task_id != str(metadata.get("latest_task_id") or ""):
