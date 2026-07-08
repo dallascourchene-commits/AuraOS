@@ -29,6 +29,11 @@ try:
 except Exception:
     attach_jspace_to_capsule = None  # type: ignore[assignment]
 
+try:
+    from aura_arena_st3gg_codec import encode_arena_capsule_for_egress
+except Exception:
+    encode_arena_capsule_for_egress = None  # type: ignore[assignment]
+
 
 ARENA_TOPOLOGY_VERSION = "AURA_HUMAN_3D_CODING_ARENA_TOPOLOGY_V1"
 CAPSULE_VERSION = "AURA_CODING_ARENA_CAPSULE_V1"
@@ -305,6 +310,7 @@ def compile_action_capsule(
     capsule_body = _attach_jspace_capsule_state(capsule_body, topology)
     capsule_body["capsule_tokens_est"] = _estimate_tokens_json(capsule_body)
     capsule_body["phase_hash"] = _hash_payload(capsule_body)
+    capsule_body = _attach_st3gg_egress(capsule_body, topology)
     return capsule_body
 
 
@@ -846,6 +852,67 @@ def _attach_jspace_capsule_state(capsule: dict[str, Any], topology: dict[str, An
         return attach_jspace_to_capsule(capsule, frame=frame, decision=decision)
     except Exception:
         return attach_jspace_to_capsule(capsule)
+
+
+def _attach_st3gg_egress(capsule: dict[str, Any], topology: dict[str, Any]) -> dict[str, Any]:
+    capsule_body = dict(capsule)
+    if encode_arena_capsule_for_egress is None:
+        capsule_body["st3gg_egress"] = {
+            "enabled": False,
+            "mode": "disabled",
+            "payload": "",
+            "retrieval_marker": None,
+            "original_hash": None,
+            "decision": {
+                "enabled": False,
+                "reason": "st3gg_codec_unavailable",
+                "raw_tokens_est": 0,
+                "compact_tokens_est": 0,
+                "savings_ratio": 0.0,
+                "warnings": ["best_effort_disabled"],
+            },
+            "phase_hash": capsule_body.get("phase_hash", ""),
+            "patch_authority": "exact_source_spans_and_hashes_only",
+            "vsa_patch_authority": False,
+        }
+        return capsule_body
+    try:
+        recall_root = None
+        meta = topology.get("meta", {}) if isinstance(topology.get("meta"), dict) else {}
+        if meta.get("repo_root"):
+            recall_root = meta.get("repo_root")
+        st3gg_view = encode_arena_capsule_for_egress(capsule_body, recall_root=recall_root)
+        capsule_body["st3gg_egress"] = {
+            "enabled": st3gg_view.decision.enabled,
+            "mode": st3gg_view.mode,
+            "payload": st3gg_view.payload if st3gg_view.decision.enabled else "",
+            "retrieval_marker": st3gg_view.retrieval_marker,
+            "original_hash": st3gg_view.original_hash,
+            "decision": asdict(st3gg_view.decision),
+            "phase_hash": st3gg_view.phase_hash,
+            "patch_authority": "exact_source_spans_and_hashes_only",
+            "vsa_patch_authority": False,
+        }
+    except Exception as exc:
+        capsule_body["st3gg_egress"] = {
+            "enabled": False,
+            "mode": "disabled",
+            "payload": "",
+            "retrieval_marker": None,
+            "original_hash": None,
+            "decision": {
+                "enabled": False,
+                "reason": f"st3gg_encode_failed:{type(exc).__name__}",
+                "raw_tokens_est": 0,
+                "compact_tokens_est": 0,
+                "savings_ratio": 0.0,
+                "warnings": ["best_effort_disabled"],
+            },
+            "phase_hash": capsule_body.get("phase_hash", ""),
+            "patch_authority": "exact_source_spans_and_hashes_only",
+            "vsa_patch_authority": False,
+        }
+    return capsule_body
 
 
 def _jspace_routing_frame_from_capsule(capsule: dict[str, Any], topology: dict[str, Any], frame_cls: Any) -> Any:

@@ -83,6 +83,22 @@ The capsule compiler converts the selected graph node into compact JSON:
 The capsule is intentionally smaller than raw CODEMAP/topology JSON. Worker
 models should receive the capsule, not the full repository graph.
 
+## ST3GG Coding Arena Egress
+
+Coding Arena capsules can expose an optional ST3GG egress view when the local
+char/4 token estimate shows a useful savings. The egress payload is a visible
+ASCII machine capsule plus a local recall pointer; it does not use hidden
+Unicode, zero-width characters, private-use characters, bidi controls, or other
+steganographic carriers.
+
+The full original capsule is stored in Aura-local ST3GG recall sidecars, so a
+diagnostic can recover the exact JSON by pointer or hash. Worker models may use
+the compact ST3GG view as advisory context, but they cannot patch from ST3GG
+alone. Exact source spans, source hashes, tests, and verifier gates remain the
+only patch authority. Tokenizer guard sanitization strips forbidden carriers
+before egress, and compression is disabled when it does not clear the benchmark
+savings threshold.
+
 ## Simulated vs Real
 
 Real in this MVP:
