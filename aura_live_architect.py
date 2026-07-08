@@ -44,20 +44,19 @@ from aura_architect_loop import (
     stage_arena_patch,
     verify_refactor_arena,
 )
-from aura_liquid_planning_arena import build_world_state_delta
-from aura_substrate import REPO_ROOT
-
-from aura_builder_context import build_builder_context_packet, BuilderContextPacket
+from aura_builder_context import BuilderContextPacket, build_builder_context_packet
 from aura_coding_arena_grounding import ground_coding_arena_intent
+from aura_liquid_planning_arena import build_world_state_delta
 from aura_patch_quality_gate import (
+    PatchPreflightResult,
     generate_unified_diff_from_before_after,
     parse_before_after_response,
     preflight_patch,
-    PatchPreflightResult,
 )
-from aura_patch_repair import repair_patch_format, PatchRepairResult
+from aura_patch_repair import PatchRepairResult, repair_patch_format
 from aura_repo_localizer import run_agentless_fallback
-from aura_test_gap_filler import fill_test_gap, detect_missing_test_findings, TestGapFillerResult
+from aura_substrate import REPO_ROOT
+from aura_test_gap_filler import TestGapFillerResult, detect_missing_test_findings, fill_test_gap
 
 try:
     from aura_qdkt import get_qdkt
@@ -65,7 +64,7 @@ except Exception:
     get_qdkt = None  # type: ignore[assignment]
 
 try:
-    from aura_dream_retrieval import record_arena_retrieval_feedback, DreamCandidate
+    from aura_dream_retrieval import DreamCandidate, record_arena_retrieval_feedback
 except Exception:
     record_arena_retrieval_feedback = None  # type: ignore[assignment]
     DreamCandidate = None  # type: ignore[assignment]
@@ -727,11 +726,11 @@ class ArchitectModelRouter:
         rows = []
         with self.ledger_path.open("r", encoding="utf-8") as handle:
             for line in handle:
-                line = line.strip()
-                if not line:
+                stripped_line = line.strip()
+                if not stripped_line:
                     continue
                 try:
-                    rows.append(json.loads(line))
+                    rows.append(json.loads(stripped_line))
                 except json.JSONDecodeError:
                     continue
         recent = rows[-limit:]
@@ -985,6 +984,9 @@ def _maybe_trace_canvas_prompt(repo_root: str | Path, task_id: str, current_prom
             return ""
         rendered = render_trace_canvas_for_prompt(canvas)
         if _estimate_prompt_tokens(rendered) > max(1, int(context_window * config.canvas_max_token_ratio)):
+            return ""
+        combined_tokens = _estimate_prompt_tokens(current_prompt) + _estimate_prompt_tokens(rendered)
+        if combined_tokens > context_window:
             return ""
         return rendered
     except Exception:

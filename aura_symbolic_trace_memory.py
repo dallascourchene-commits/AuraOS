@@ -11,14 +11,15 @@ SYNOPSIS: Stdlib-only layered symbolic trace memory for Coding Arena evidence of
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import hashlib
+import itertools
 import json
 from pathlib import Path
 import re
-from typing import Any, Iterable
-
+from typing import Any
 
 TRACE_MEMORY_VERSION = "AURA_SYMBOLIC_TRACE_MEMORY_V1"
 TRACE_ATOMS_FILE = "trace_atoms.jsonl"
@@ -51,7 +52,7 @@ class AuraTraceRef:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "AuraTraceRef":
+    def from_dict(cls, data: dict[str, Any]) -> AuraTraceRef:
         return cls(
             ref_id=str(data.get("ref_id", "")),
             node_id=str(data.get("node_id", "")),
@@ -81,7 +82,7 @@ class AuraTraceAtom:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "AuraTraceAtom":
+    def from_dict(cls, data: dict[str, Any]) -> AuraTraceAtom:
         return cls(
             atom_id=str(data.get("atom_id", "")),
             node_id=str(data.get("node_id", "")),
@@ -178,10 +179,11 @@ def offload_raw_evidence(
     ref_path = refs_dir / f"{ref_id}.md"
     created_at = _utc_now()
     was_redacted = redacted != _sanitize_text(original)
+    safe_node_id = _safe_inline(node_id, 160)
     body = [
         "---",
         f"ref_id: {ref_id}",
-        f"node_id: {node_id}",
+        f"node_id: {safe_node_id}",
         f"kind: {safe_kind}",
         f"source_hash: {source_hash}",
         f"created_at: {created_at}",
@@ -231,6 +233,8 @@ def record_trace_event(event: dict, memory_root: str | Path) -> AuraTraceAtom:
     if ref is not None:
         raw_ref = ref.ref_id
         source_hash = ref.source_hash
+    elif raw_text and not source_hash:
+        source_hash = _hash_text(_redact_secrets(_sanitize_text(raw_text)))
 
     summary = _safe_inline(payload.get("summary") or _derive_summary(payload), 500)
     atom_id = str(payload.get("atom_id") or f"AT-{_stable_id(task_id, node_id, event_type, source_hash, summary)}")
@@ -521,7 +525,7 @@ def _render_mermaid(nodes: list[AuraTraceNode]) -> str:
             f"{node.node_id}<br/>{node.status}: {node.label}<br/>raw:{','.join(node.raw_refs[:1]) or 'source_hash'}"
         )
         lines.append(f'    {alias}["{label}"]')
-    for left, right in zip(nodes, nodes[1:]):
+    for left, right in itertools.pairwise(nodes):
         lines.append(f"    {aliases[left.node_id]} --> {aliases[right.node_id]}")
     lines.extend(
         [
@@ -632,13 +636,22 @@ def _aura_local_path(base: Path, path: Path) -> str:
 def _find_ref_by_key(base: Path, key: str) -> Path | None:
     if not key:
         return None
-    direct = base.parent / key
-    if direct.exists() and direct.is_file():
-        return direct
-    direct = base / key
-    if direct.exists() and direct.is_file():
-        return direct
+    key_path = Path(key)
+    if key_path.is_absolute() or ".." in key_path.parts:
+        return None
     refs_dir = base / TRACE_REFS_DIR
+    try:
+        direct = (base.parent / key).resolve()
+        if direct.is_relative_to(base.parent) and direct.exists() and direct.is_file():
+            return direct
+    except (OSError, ValueError):
+        pass
+    try:
+        direct = (base / key).resolve()
+        if direct.is_relative_to(base) and direct.exists() and direct.is_file():
+            return direct
+    except (OSError, ValueError):
+        pass
     if not refs_dir.exists():
         return None
     safe_key = _safe_filename(key)
