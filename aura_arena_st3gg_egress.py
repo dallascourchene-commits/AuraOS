@@ -117,6 +117,10 @@ def compress_report_st3gg(report_text: str) -> tuple[str, float, str]:
     compressed = _safe_ascii(compressed)
 
     savings = estimate_savings_ratio(report_text, compressed)
+    # Return original when savings < 0 (never inflate)
+    if savings < 0.0:
+        pointer = _pointer_for(report_text)
+        return report_text, 0.0, pointer
     pointer = _pointer_for(compressed)
     return compressed, savings, pointer
 

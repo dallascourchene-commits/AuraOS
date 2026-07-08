@@ -645,7 +645,7 @@ class TestReadOnlyConstraints:
         cfg = EmergentVerificationConfig(min_focus_score=0.0, min_evidence_score=0.0)
         result = verify_emergent_connections(conns, config=cfg)
         for cluster in result.clusters:
-            assert not cluster.safe_to_patch or cluster.final_score > 0.5
+            assert not cluster.safe_to_patch, f"DREAM_ONLY cluster should not be safe_to_patch (score={cluster.final_score})"
 
 
 # ===========================================================================
@@ -700,7 +700,7 @@ class TestPatchIntentGuard:
         report = render_verified_emergent_report(result)
         # Report must never contain unified diff markers
         assert "diff --git" not in report
-        assert "@@" not in report or "@@" in report  # @@ ok in other contexts but not as diff header
+        assert "\n@@" not in report and "@@" not in report[:10], "Report must not contain diff hunk headers"
         assert "--- a/" not in report
         assert "+++ b/" not in report
 
@@ -727,8 +727,10 @@ class TestJSpaceAdvisory:
         cfg = EmergentVerificationConfig(min_focus_score=0.0, min_evidence_score=0.50)
         verdict = _verdict_for_test(conn, focus="topological st3gg", config=cfg)
         # Should still fail evidence gate even if J-Space score is high
-        if verdict.jspace_focus_score > 0:
-            assert not verdict.accepted or verdict.evidence_score >= 0.50
+        assert not verdict.accepted or verdict.evidence_score >= 0.50, (
+            f"J-Space advisory must not bypass evidence gate: accepted={verdict.accepted}, "
+            f"evidence={verdict.evidence_score}, jspace={verdict.jspace_focus_score}"
+        )
 
     def test_jspace_concepts_appear_in_report(self):
         conn = _make_conn()

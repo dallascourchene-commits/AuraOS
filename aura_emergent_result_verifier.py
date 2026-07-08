@@ -617,12 +617,7 @@ def _jspace_score(connection: Any, focus: str, config: EmergentVerificationConfi
     if not jpacket_raw:
         # Build a lightweight advisory packet from connection metadata
         ability = str(_get(connection, "emergent_ability", ""))
-        src_role = _normalize_role(str(_src(connection).get("role", "")))
-        tgt_role = _normalize_role(str(_tgt(connection).get("role", "")))
-        missing = str(_get(connection, "missing_wire", ""))
-        status = str(_get(connection, "status", ""))
         safety = str(_get(connection, "safety_risk", "low"))
-        cost = str(_get(connection, "cost_risk", "low"))
         frame = {
             "intent": "verify" if "verif" in ability.lower() else "benchmark" if "benchmark" in ability.lower() else "explain",
             "artifact": "python_module",
@@ -889,7 +884,7 @@ def _st3gg_egress_for_report(
     original_hash = _hash_text(report_text)
     try:
         from aura_arena_st3gg_egress import compress_report_st3gg  # optional; may not exist
-        compressed, savings_ratio, pointer = compress_report_st3gg(report_text)
+        _compressed, savings_ratio, pointer = compress_report_st3gg(report_text)
         if savings_ratio < config.st3gg_min_savings_ratio:
             return {**disabled, "original_report_hash": original_hash}
         return {
@@ -1173,9 +1168,9 @@ def render_verified_emergent_report(
 
             lines.append(f"### {idx}. {cluster.cluster_title}")
             lines.append("")
-            lines.append(f"* **Best wire:**")
+            lines.append("* **Best wire:**")
             lines.append(f"  `{src_file}:{src_sym}`")
-            lines.append(f"  ->")
+            lines.append("  ->")
             lines.append(f"  `{tgt_file}:{tgt_sym}`")
             lines.append(f"* **Missing wire:** {missing}")
             lines.append(f"* **Why it matters:** {cluster.emergent_ability}")
@@ -1239,7 +1234,7 @@ def render_verified_emergent_report(
     if js.get("active_concepts_sample"):
         lines.append("## J-Space Advisory Summary")
         lines.append("")
-        lines.append(f"> J-Space concepts are **advisory only** — not patch authority.  ")
+        lines.append("> J-Space concepts are **advisory only** — not patch authority.  ")
         concepts_str = ", ".join(js["active_concepts_sample"][:8])
         lines.append(f"> Active concept sample: {concepts_str}")
         lines.append("")
@@ -1278,7 +1273,20 @@ def render_verified_emergent_report(
     lines.append(f"Constraints: `{'` | `'.join(READ_ONLY_CONSTRAINTS)}`")
     lines.append("")
 
-    return "\n".join(lines)
+    report_text = "\n".join(lines)
+
+    # Populate ST3GG egress metadata if not already set
+    if not result.st3gg_egress or not result.st3gg_egress.get("original_report_hash"):
+        st3gg_meta = _st3gg_egress_for_report(report_text, config=cfg)
+        result.st3gg_egress.update(st3gg_meta)
+        # Apply the same metadata to each cluster
+        for cluster in result.clusters:
+            cluster.st3gg_egress_enabled = st3gg_meta["st3gg_egress_enabled"]
+            cluster.st3gg_savings_ratio = st3gg_meta["st3gg_savings_ratio"]
+            cluster.st3gg_pointer = st3gg_meta["st3gg_pointer"]
+            cluster.original_report_hash = st3gg_meta["original_report_hash"]
+
+    return report_text
 
 
 # ---------------------------------------------------------------------------
