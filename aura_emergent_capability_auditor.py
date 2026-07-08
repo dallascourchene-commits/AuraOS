@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import hashlib
+import json
 from pathlib import Path
 import re
 from typing import Any, Iterable
@@ -418,6 +419,67 @@ def project_future_potentials(
             )
         )
     return sorted(potentials, key=lambda item: (-item.confidence, item.title))[: max(0, limit)]
+
+
+def record_capability_audit_trace_nodes(
+    report: CapabilityAuditReport | dict[str, Any],
+    memory_root: str | Path,
+    *,
+    task_id: str = "emergent_capability_audit",
+) -> list[str]:
+    """Store read-only findings/future potentials as symbolic trace nodes."""
+    try:
+        from aura_symbolic_trace_memory import record_trace_event
+    except Exception:
+        return []
+    payload = report.to_dict() if isinstance(report, CapabilityAuditReport) else dict(report or {})
+    atom_ids: list[str] = []
+    entries = [
+        ("emergent_capability_finding", item)
+        for item in list(payload.get("findings", []) or [])
+        if isinstance(item, dict)
+    ]
+    entries.extend(
+        ("future_potential_finding", item)
+        for item in list(payload.get("future_potentials", []) or [])
+        if isinstance(item, dict)
+    )
+    for event_type, item in entries:
+        finding_id = str(item.get("finding_id") or _stable_id(event_type, item.get("title", "")))
+        symbols = item.get("symbols") or item.get("present_symbols") or []
+        related_symbols = [
+            str(symbol.get("symbol"))
+            for symbol in symbols
+            if isinstance(symbol, dict) and symbol.get("symbol")
+        ]
+        related_files = [
+            str(symbol.get("file_path"))
+            for symbol in symbols
+            if isinstance(symbol, dict) and symbol.get("file_path")
+        ]
+        try:
+            atom = record_trace_event(
+                {
+                    "event_type": event_type,
+                    "task_id": task_id,
+                    "node_id": finding_id,
+                    "status": "proposed",
+                    "route": payload.get("route", AUDIT_ROUTE),
+                    "summary": str(item.get("title") or event_type),
+                    "raw_text": json.dumps(item, indent=2, sort_keys=True, default=str),
+                    "metadata": {
+                        "subsystem": item.get("subsystem", payload.get("subsystem", "")),
+                        "safe_to_patch": item.get("safe_to_patch", False),
+                        "related_symbols": _unique(related_symbols),
+                        "related_files": _unique(related_files),
+                    },
+                },
+                memory_root,
+            )
+            atom_ids.append(atom.atom_id)
+        except Exception:
+            continue
+    return atom_ids
 
 
 def render_capability_audit_report(report: CapabilityAuditReport | dict[str, Any]) -> str:

@@ -92,6 +92,21 @@ except Exception:
     fuse_music_council_plan = None  # type: ignore[assignment]
     music_builder_objective = None  # type: ignore[assignment]
 
+try:
+    from aura_symbolic_trace_memory import (
+        AuraTraceMemoryConfig,
+        build_trace_canvas,
+        record_trace_event,
+        render_trace_canvas_for_prompt,
+        should_inject_canvas,
+    )
+except Exception:
+    AuraTraceMemoryConfig = None  # type: ignore[assignment]
+    build_trace_canvas = None  # type: ignore[assignment]
+    record_trace_event = None  # type: ignore[assignment]
+    render_trace_canvas_for_prompt = None  # type: ignore[assignment]
+    should_inject_canvas = None  # type: ignore[assignment]
+
 ARCHITECT_LIVE_VERSION = "AURA_LIVE_ARCHITECT_V1"
 ARCHITECT_STAGING_PATH = Path(REPO_ROOT) / "Aura_Staging" / "architect_live_transaction.json"
 ModelCaller = Callable[[str, str, dict[str, Any]], Any]
@@ -930,6 +945,52 @@ def _attach_grounding_to_plan(plan: dict[str, Any], grounding: dict[str, Any]) -
     return updated
 
 
+def _trace_task_key(*parts: Any) -> str:
+    body = "|".join(str(part or "") for part in parts)
+    return f"trace-{hashlib.blake2b(body.encode('utf-8'), digest_size=6).hexdigest()}"
+
+
+def _estimate_prompt_tokens(text: str) -> int:
+    return max(1, len(str(text)) // 4)
+
+
+def _record_symbolic_trace(repo_root: str | Path, event: dict[str, Any]) -> None:
+    """Best-effort advisory memory write. Never affects verifier gates."""
+    if record_trace_event is None:
+        return
+    try:
+        record_trace_event(event, repo_root)
+    except Exception:
+        pass
+
+
+def _maybe_trace_canvas_prompt(repo_root: str | Path, task_id: str, current_prompt: str) -> str:
+    if (
+        AuraTraceMemoryConfig is None
+        or build_trace_canvas is None
+        or render_trace_canvas_for_prompt is None
+        or should_inject_canvas is None
+    ):
+        return ""
+    try:
+        config = AuraTraceMemoryConfig()
+        context_window = int(os.getenv("AURA_TRACE_CONTEXT_WINDOW", "16000"))
+        pressure = should_inject_canvas(_estimate_prompt_tokens(current_prompt), context_window, config)
+        if pressure == "none":
+            return ""
+        canvas = build_trace_canvas(task_id, repo_root)
+        if not canvas.nodes:
+            return ""
+        if canvas.token_estimate > max(1, int(context_window * config.canvas_max_token_ratio)):
+            return ""
+        rendered = render_trace_canvas_for_prompt(canvas)
+        if _estimate_prompt_tokens(rendered) > max(1, int(context_window * config.canvas_max_token_ratio)):
+            return ""
+        return rendered
+    except Exception:
+        return ""
+
+
 class ArchitectFusionCouncil:
     """Orchestrate multi-candidate planning, cheap critique, and premium judging."""
 
@@ -1078,6 +1139,7 @@ class ArchitectFusionCouncil:
             self.router.repo_root,
             target_symbol=target_symbol,
         )
+        trace_task_id = _trace_task_key("council", intent, target_file, target_symbol)
         inferred_file = target_file or topological_grounding.get("target_file") or self.router.infer_target_file(intent)
         budget_route = self.router.budget_route(hints, target_file=inferred_file)
         local_plan = self.router.deterministic_plan_spec(
@@ -1090,6 +1152,24 @@ class ArchitectFusionCouncil:
         local_plan = _attach_grounding_to_plan(local_plan, topological_grounding)
         candidates = [self._candidate("local_free", local_plan, cost_tier="free", source=local_plan.get("source", "deterministic_codemap_plan"))]
         grounding_summary = _planner_grounding_summary(topological_grounding)
+        _record_symbolic_trace(
+            self.router.repo_root,
+            {
+                "event_type": "council_topological_grounding_summary",
+                "task_id": trace_task_id,
+                "node_id": f"{trace_task_id}:topological_grounding",
+                "status": topological_grounding.get("route", "proposed"),
+                "route": topological_grounding.get("route", ""),
+                "summary": f"Council grounding route={topological_grounding.get('route')} target={inferred_file or 'unknown'}",
+                "raw_text": json.dumps(grounding_summary, indent=2, sort_keys=True, default=str),
+                "metadata": {
+                    "target_file": inferred_file,
+                    "target_symbol": target_symbol or topological_grounding.get("target_symbol"),
+                    "related_files": [inferred_file] if inferred_file else [],
+                    "related_symbols": [target_symbol or topological_grounding.get("target_symbol")] if (target_symbol or topological_grounding.get("target_symbol")) else [],
+                },
+            },
+        )
         prompt = (
             "Return JSON only for a bounded Aura Architect refactor plan. "
             "Fields: architecture_decision, target_file, target_symbol, act_tasks. "
@@ -1100,6 +1180,9 @@ class ArchitectFusionCouncil:
             f"Topological grounding: {json.dumps(grounding_summary, sort_keys=True)}. "
             f"Intent: {intent}. Suggested target_file: {inferred_file or 'unknown'}."
         )
+        trace_canvas = _maybe_trace_canvas_prompt(self.router.repo_root, trace_task_id, prompt)
+        if trace_canvas:
+            prompt = f"{prompt}\n{trace_canvas}"
         for index, role in enumerate(budget_route.get("premium_planner_roles", []), start=1):
             candidate_id = f"{role}_{index}"
             response = await self.router.call_model(
@@ -1199,6 +1282,86 @@ class ArchitectFusionCouncil:
             "music_mitosis": music_mitosis,
             "topological_grounding": topological_grounding,
         }
+        for candidate in candidates:
+            _record_symbolic_trace(
+                self.router.repo_root,
+                {
+                    "event_type": "council_candidate_summary",
+                    "task_id": trace_task_id,
+                    "node_id": f"{trace_task_id}:candidate:{candidate.get('candidate_id', 'unknown')}",
+                    "status": "proposed",
+                    "route": "fusion_council",
+                    "summary": (
+                        f"Candidate {candidate.get('candidate_id')} score={candidate.get('score')} "
+                        f"source={candidate.get('source')}"
+                    ),
+                    "raw_text": json.dumps(candidate, indent=2, sort_keys=True, default=str),
+                    "metadata": {
+                        "candidate_id": candidate.get("candidate_id", ""),
+                        "target_file": candidate.get("plan", {}).get("target_file", ""),
+                        "target_symbol": candidate.get("plan", {}).get("target_symbol", ""),
+                    },
+                },
+            )
+        for report in critic_reports:
+            _record_symbolic_trace(
+                self.router.repo_root,
+                {
+                    "event_type": "council_critic_report",
+                    "task_id": trace_task_id,
+                    "node_id": f"{trace_task_id}:critic:{report.get('critic_id', 'unknown')}:{report.get('candidate_id', 'unknown')}",
+                    "status": "done" if report.get("approved", False) else "blocked",
+                    "route": "fusion_council",
+                    "summary": f"Critic {report.get('critic_id')} candidate={report.get('candidate_id')} approved={report.get('approved')}",
+                    "raw_text": json.dumps(report, indent=2, sort_keys=True, default=str),
+                    "metadata": {
+                        "critic_id": report.get("critic_id", ""),
+                        "candidate_id": report.get("candidate_id", ""),
+                    },
+                },
+            )
+        _record_symbolic_trace(
+            self.router.repo_root,
+            {
+                "event_type": "council_judge_decision",
+                "task_id": trace_task_id,
+                "node_id": f"{trace_task_id}:judge_decision",
+                "status": "done" if judge_decision.get("approved", False) else "blocked",
+                "route": "fusion_council",
+                "summary": f"Judge selected {judge_decision.get('selected_candidate_id')} approved={judge_decision.get('approved')}",
+                "raw_text": json.dumps(judge_decision, indent=2, sort_keys=True, default=str),
+                "metadata": {"candidate_id": judge_decision.get("selected_candidate_id", "")},
+            },
+        )
+        _record_symbolic_trace(
+            self.router.repo_root,
+            {
+                "event_type": "council_music_grounding",
+                "task_id": trace_task_id,
+                "node_id": f"{trace_task_id}:music_grounding",
+                "status": str(music_mitosis.get("status", "disabled")),
+                "route": "music_mitosis",
+                "summary": f"MUSIC grounding status={music_mitosis.get('status', 'disabled')}",
+                "raw_text": json.dumps(music_mitosis, indent=2, sort_keys=True, default=str),
+            },
+        )
+        _record_symbolic_trace(
+            self.router.repo_root,
+            {
+                "event_type": "council_selected_plan",
+                "task_id": trace_task_id,
+                "node_id": f"{trace_task_id}:selected_plan",
+                "status": "selected",
+                "route": "fusion_council",
+                "summary": f"Selected plan target={selected_plan.get('target_file')} candidate={selected_plan.get('council_candidate_id')}",
+                "raw_text": json.dumps(selected_plan, indent=2, sort_keys=True, default=str),
+                "metadata": {
+                    "target_file": selected_plan.get("target_file", ""),
+                    "target_symbol": selected_plan.get("target_symbol", ""),
+                    "candidate_id": selected_plan.get("council_candidate_id", ""),
+                },
+            },
+        )
         return ArchitectCouncilDecision(phase_hash=_hash_payload(payload), **payload)
 
 
@@ -1214,6 +1377,49 @@ class ArchitectBuilderBridge:
         self.patch_quality: dict[str, Any] = {}
         self._workflow_memory = workflow_memory
         self._workflow_id = workflow_id
+
+    def _trace_builder_event(
+        self,
+        *,
+        act: Any,
+        event_type: str,
+        status: str,
+        summary: str,
+        raw_text: str = "",
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        _record_symbolic_trace(
+            self.router.repo_root,
+            {
+                "event_type": event_type,
+                "task_id": act.task_id,
+                "node_id": f"{act.task_id}:{event_type}",
+                "status": status,
+                "route": "builder",
+                "summary": summary,
+                "raw_text": raw_text,
+                "metadata": {
+                    "target_file": act.target_file,
+                    "target_symbol": act.target_symbol,
+                    "related_files": [act.target_file] if act.target_file else [],
+                    "related_symbols": [act.target_symbol] if act.target_symbol else [],
+                    **(metadata or {}),
+                },
+            },
+        )
+
+    def _trace_builder_failure(self, act: Any, failure: dict[str, Any]) -> None:
+        self._trace_builder_event(
+            act=act,
+            event_type="builder_failure_report",
+            status=str(failure.get("status", "blocked")),
+            summary=(
+                f"Builder failure {failure.get('status')} reasons="
+                f"{','.join(str(item) for item in list(failure.get('reason_codes', []) or [])[:5])}"
+            ),
+            raw_text=json.dumps(failure, indent=2, sort_keys=True, default=str),
+            metadata={"reason_codes": list(failure.get("reason_codes", []) or [])},
+        )
 
     def _load_codemap(self) -> dict[str, Any] | None:
         codemap_path = self.router.repo_root / ".aura" / "CODEMAP.json"
@@ -1459,6 +1665,7 @@ class ArchitectBuilderBridge:
                 )
                 failure["act_topological_grounding"] = topological_grounding
                 builder_failures.append(failure)
+                self._trace_builder_failure(act, failure)
             self.patch_quality = {
                 "attempts": [
                     {
@@ -1522,6 +1729,7 @@ class ArchitectBuilderBridge:
                 )
                 attempt_record["failure_reason"] = failure
                 patch_attempts.append(attempt_record)
+                self._trace_builder_failure(act, failure)
                 self._record_qdkt("patch_attempt", act.task_id, "failed", {
                     "grounding_route": topological_grounding.get("route"),
                     "grounding_status": non_patch_status,
@@ -1546,6 +1754,7 @@ class ArchitectBuilderBridge:
                 )
                 attempt_record["failure_reason"] = failure
                 patch_attempts.append(attempt_record)
+                self._trace_builder_failure(act, failure)
                 self._record_qdkt("patch_attempt", act.task_id, "failed", {
                     "grounding_reasons": grounding_eligibility.get("reasons", []),
                 })
@@ -1565,6 +1774,17 @@ class ArchitectBuilderBridge:
                 f"Act Capsule: {json.dumps(act.to_dict(), sort_keys=True)}\n"
                 f"{context_packet.to_prompt_section()}"
             )
+            trace_canvas = _maybe_trace_canvas_prompt(self.router.repo_root, act.task_id, prompt)
+            if trace_canvas:
+                prompt = f"{prompt}\n{trace_canvas}"
+            self._trace_builder_event(
+                act=act,
+                event_type="builder_prompt",
+                status="doing",
+                summary=f"Builder prompt for {act.task_id} with exact context packet retained",
+                raw_text=prompt,
+                metadata={"context_source_refs": list(context_packet.source_refs)},
+            )
             response = await self.router.call_model("worker", prompt, intensity=prepared.intensity, meta={"task_id": act.task_id})
             if not response:
                 attempt_record = self._reviewable_attempt(
@@ -1580,8 +1800,17 @@ class ArchitectBuilderBridge:
                     status="no_response",
                     response="",
                 )
+                self._trace_builder_failure(act, attempt_record["failure_reason"])
                 patch_attempts.append(attempt_record)
                 continue
+
+            self._trace_builder_event(
+                act=act,
+                event_type="builder_model_response",
+                status="done",
+                summary=f"Builder model response for {act.task_id}",
+                raw_text=str(response),
+            )
 
             # Check for before/after replacement object (requirement 3 & 4)
             before_after = parse_before_after_response(response)
@@ -1604,10 +1833,20 @@ class ArchitectBuilderBridge:
                         status="before_after_diff_generation_failed",
                         response=response,
                     )
+                    self._trace_builder_failure(act, attempt_record["failure_reason"])
                     patch_attempts.append(attempt_record)
                     continue
             else:
                 diff = _extract_diff(response)
+
+            self._trace_builder_event(
+                act=act,
+                event_type="builder_extracted_diff",
+                status="done" if diff.strip() else "blocked",
+                summary=f"Builder extracted diff touched={','.join(_diff_touched_files(diff)[:5]) or 'none'}",
+                raw_text=diff,
+                metadata={"affected_files": _diff_touched_files(diff)},
+            )
 
             touched = _diff_touched_files(diff)
             if not diff.strip() or not touched:
@@ -1627,6 +1866,7 @@ class ArchitectBuilderBridge:
                     status="missing_patch_diff",
                     response=response,
                 )
+                self._trace_builder_failure(act, attempt_record["failure_reason"])
                 patch_attempts.append(attempt_record)
                 self._record_qdkt("patch_attempt", act.task_id, "failed", {
                     "missing_patch_diff": True,
@@ -1644,6 +1884,14 @@ class ArchitectBuilderBridge:
                 before_after=before_after,
                 preflight=preflight,
                 builder_prompt=prompt,
+            )
+            self._trace_builder_event(
+                act=act,
+                event_type="builder_preflight_result",
+                status="preflight_passed" if preflight.ok else "preflight_failed",
+                summary=f"Preflight ok={preflight.ok} rejections={len(preflight.rejections)}",
+                raw_text=json.dumps(preflight.to_dict(), indent=2, sort_keys=True, default=str),
+                metadata={"preflight_ok": preflight.ok, "rejections": preflight.rejections},
             )
 
             # Record patch preflight result to workflow memory
@@ -1670,6 +1918,14 @@ class ArchitectBuilderBridge:
                     intensity=prepared.intensity,
                 )
                 attempt_record["repair"] = repair_result.to_dict()
+                self._trace_builder_event(
+                    act=act,
+                    event_type="builder_repair_result",
+                    status="repair_succeeded" if repair_result.ok else "repair_failed_blocked",
+                    summary=f"Repair ok={repair_result.ok}",
+                    raw_text=json.dumps(repair_result.to_dict(), indent=2, sort_keys=True, default=str),
+                    metadata={"repair_ok": repair_result.ok},
+                )
 
                 # Record repair attempt to workflow memory
                 if self._workflow_memory is not None and self._workflow_id:
@@ -1692,6 +1948,7 @@ class ArchitectBuilderBridge:
                         preflight=preflight,
                         repair_result=repair_result,
                     )
+                    self._trace_builder_failure(act, attempt_record["failure_reason"])
                     patch_attempts.append(attempt_record)
                     self._record_qdkt("patch_attempt", act.task_id, "failed", {
                         "preflight_rejections": preflight.rejections,
@@ -1711,6 +1968,7 @@ class ArchitectBuilderBridge:
                     preflight=preflight,
                     repair_result=repair_result,
                 )
+                self._trace_builder_failure(act, attempt_record["failure_reason"])
                 patch_attempts.append(attempt_record)
                 self._record_qdkt("patch_attempt", act.task_id, "failed", {
                     "missing_patch_diff": True,
@@ -2055,6 +2313,7 @@ async def run_live_architect_transaction(
             workflow_id = workflow_memory.begin_workflow(intent, target_file or "")
         except Exception:
             workflow_memory = None
+    trace_task_id = workflow_id or _trace_task_key("transaction", intent, target_file, target_symbol)
 
     council_decision = await router.plan_with_council(intent, target_file=target_file, target_symbol=target_symbol)
 
@@ -2128,6 +2387,22 @@ async def run_live_architect_transaction(
 
     # Run workspace verification BEFORE judge so the premium judge sees apply/test/topology results (requirement 8)
     workspace = verify_arena_in_temp_workspace(prepared.arena, repo_root=effective_root, test_commands=test_commands)
+    _record_symbolic_trace(
+        effective_root,
+        {
+            "event_type": "workspace_apply_test_result",
+            "task_id": trace_task_id,
+            "node_id": f"{trace_task_id}:workspace_apply_test",
+            "status": "passed" if workspace.ok else "failed",
+            "route": "verifier",
+            "summary": f"Temp workspace ok={workspace.ok} failures={len(workspace.failures)}",
+            "raw_text": json.dumps(workspace.to_dict(), indent=2, sort_keys=True, default=str),
+            "metadata": {
+                "related_files": list(prepared.arena.affected_files),
+                "workspace_path": workspace.workspace_path,
+            },
+        },
+    )
 
     # Record temp workspace apply and py_compile/test/topology_delta results to workflow memory
     if workflow_memory is not None and workflow_id:
@@ -2183,6 +2458,18 @@ async def run_live_architect_transaction(
     patch_judgement = await judge_patch_bundle(
         router, prepared, patchable_submissions, stage_results, council_decision, workspace_result=workspace,
     )
+    _record_symbolic_trace(
+        effective_root,
+        {
+            "event_type": "verifier_patch_judge_decision",
+            "task_id": trace_task_id,
+            "node_id": f"{trace_task_id}:patch_judge",
+            "status": "done" if patch_judgement.get("approved", False) else "blocked",
+            "route": "verifier",
+            "summary": f"Patch judge approved={patch_judgement.get('approved')} premium_called={patch_judgement.get('premium_called')}",
+            "raw_text": json.dumps(patch_judgement, indent=2, sort_keys=True, default=str),
+        },
+    )
 
     # Record premium judge decision to workflow memory
     if workflow_memory is not None and workflow_id:
@@ -2199,12 +2486,60 @@ async def run_live_architect_transaction(
     verification = _merge_council_plan_judgement(verification, council_decision)
     verification = _merge_council_patch_judgement(verification, patch_judgement)
     verification = _merge_workspace_result(verification, workspace)
+    _record_symbolic_trace(
+        effective_root,
+        {
+            "event_type": "verifier_decision",
+            "task_id": trace_task_id,
+            "node_id": f"{trace_task_id}:verifier_decision",
+            "status": "done" if verification.hotswap_ready else "blocked",
+            "route": "verifier",
+            "summary": f"Verifier hotswap_ready={verification.hotswap_ready} stage={verification.stage}",
+            "raw_text": json.dumps(verification.to_dict(), indent=2, sort_keys=True, default=str),
+            "metadata": {"related_files": list(prepared.arena.affected_files)},
+        },
+    )
     hotswap_capsule = build_hotswap_capsule(prepared.arena, verification, repo_root=effective_root)
     hotswap_capsule = _augment_live_hotswap_capsule(
         hotswap_capsule,
         council_decision=council_decision,
         patch_judgement=patch_judgement,
         topology_delta=workspace.topology_delta,
+    )
+    _record_symbolic_trace(
+        effective_root,
+        {
+            "event_type": "rollback_metadata",
+            "task_id": trace_task_id,
+            "node_id": f"{trace_task_id}:rollback_metadata",
+            "status": "proposed",
+            "route": "hotswap",
+            "summary": "Rollback metadata preserved for staged Architect transaction",
+            "raw_text": json.dumps(
+                {
+                    "rollback_hint": prepared.arena.rollback_hint,
+                    "rollback_conditions": prepared.plan.rollback_conditions,
+                    "promotion_entrypoint": hotswap_capsule.get("promotion_entrypoint", {}),
+                },
+                indent=2,
+                sort_keys=True,
+                default=str,
+            ),
+            "metadata": {"related_files": list(prepared.arena.affected_files)},
+        },
+    )
+    _record_symbolic_trace(
+        effective_root,
+        {
+            "event_type": "hotswap_readiness",
+            "task_id": trace_task_id,
+            "node_id": f"{trace_task_id}:hotswap_readiness",
+            "status": "ready" if hotswap_capsule.get("hotswap_ready") else "blocked",
+            "route": "hotswap",
+            "summary": f"Hotswap status={hotswap_capsule.get('status')} ready={hotswap_capsule.get('hotswap_ready')}",
+            "raw_text": json.dumps(hotswap_capsule, indent=2, sort_keys=True, default=str),
+            "metadata": {"related_files": list(prepared.arena.affected_files)},
+        },
     )
 
     # Record hotswap decision to workflow memory
