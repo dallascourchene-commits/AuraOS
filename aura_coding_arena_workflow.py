@@ -137,6 +137,7 @@ class BuilderContextRecord:
     target_file: str
     target_symbol: str
     context_packet: dict[str, Any] = field(default_factory=dict)
+    jspace_route: dict[str, Any] = field(default_factory=dict)
     source_excerpt_length: int = 0
     nearby_tests_count: int = 0
     callers_count: int = 0
@@ -194,6 +195,41 @@ def _hash_diff(diff: str) -> str:
 
 def _new_event_id(prefix: str = "CAW") -> str:
     return f"{prefix}-{hashlib.sha256(f'{time.time()}:{prefix}'.encode()).hexdigest()[:16]}"
+
+
+def _extract_jspace_route(packet_dict: dict[str, Any]) -> dict[str, Any]:
+    topology = packet_dict.get("topological_context", {})
+    if not isinstance(topology, dict):
+        return {}
+    direct = topology.get("jspace_route")
+    if isinstance(direct, dict):
+        return dict(direct)
+    preplanning = topology.get("preplanning_grounding")
+    if isinstance(preplanning, dict) and isinstance(preplanning.get("jspace_route"), dict):
+        return dict(preplanning["jspace_route"])
+    packet = topology.get("packet")
+    if isinstance(packet, dict) and isinstance(packet.get("jspace_route"), dict):
+        return dict(packet["jspace_route"])
+    return {}
+
+
+def _jspace_summary_from_context_packets(context_packets: list[Any] | None) -> dict[str, list[str]]:
+    packets: list[str] = []
+    next_states: list[str] = []
+    seen_packets: set[str] = set()
+    seen_states: set[str] = set()
+    for packet in context_packets or []:
+        packet_dict = packet.to_dict() if hasattr(packet, "to_dict") else dict(packet or {})
+        jspace_route = _extract_jspace_route(packet_dict)
+        compact = str(jspace_route.get("packet") or "")
+        next_state = str(jspace_route.get("next_state") or "")
+        if compact and compact not in seen_packets:
+            packets.append(compact)
+            seen_packets.add(compact)
+        if next_state and next_state not in seen_states:
+            next_states.append(next_state)
+            seen_states.add(next_state)
+    return {"jspace_packets": packets, "jspace_next_states": next_states}
 
 
 # ---------------------------------------------------------------------------
@@ -331,11 +367,13 @@ class CodingArenaWorkflowMemory:
         task_id: str,
     ) -> str:
         packet_dict = context_packet.to_dict() if hasattr(context_packet, "to_dict") else dict(context_packet or {})
+        jspace_route = _extract_jspace_route(packet_dict)
         record = BuilderContextRecord(
             task_id=task_id,
             target_file=str(packet_dict.get("target_file", "")),
             target_symbol=str(packet_dict.get("target_symbol") or ""),
             context_packet=packet_dict,
+            jspace_route=jspace_route,
             source_excerpt_length=len(str(packet_dict.get("source_excerpt", ""))),
             nearby_tests_count=len(list(packet_dict.get("nearby_tests", []))),
             callers_count=len(list(packet_dict.get("callers", []))),
@@ -482,17 +520,21 @@ class CodingArenaWorkflowMemory:
         # Wire to QDKT
         qdkt = self._get_qdkt()
         if qdkt is not None:
+            jspace_summary = _jspace_summary_from_context_packets(context_packets)
+            qdkt_payload = {
+                "workflow_id": workflow_id,
+                "success": outcome.success,
+                "hotswap_ready": outcome.hotswap_ready,
+                "failures_count": outcome.failures_count,
+                "stage": outcome.stage,
+                "target_file": outcome.target_file,
+            }
+            if jspace_summary["jspace_packets"] or jspace_summary["jspace_next_states"]:
+                qdkt_payload.update(jspace_summary)
             try:
                 qdkt.observe(
                     "coding_arena_workflow_outcome",
-                    {
-                        "workflow_id": workflow_id,
-                        "success": outcome.success,
-                        "hotswap_ready": outcome.hotswap_ready,
-                        "failures_count": outcome.failures_count,
-                        "stage": outcome.stage,
-                        "target_file": outcome.target_file,
-                    },
+                    qdkt_payload,
                     rationale=(
                         f"Workflow {'succeeded' if outcome.success else 'failed'}: "
                         f"{'hotswap_ready' if outcome.hotswap_ready else 'blocked'}"

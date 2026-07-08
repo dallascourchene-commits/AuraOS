@@ -1447,6 +1447,26 @@ class ArchitectBuilderBridge:
         except Exception:
             pass
 
+    def _jspace_route_for_context(
+        self,
+        context_packet: BuilderContextPacket | None,
+        grounding: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        if context_packet is not None:
+            topology = context_packet.topological_context or {}
+            direct = topology.get("jspace_route")
+            if isinstance(direct, dict):
+                return dict(direct)
+            preplanning = topology.get("preplanning_grounding")
+            if isinstance(preplanning, dict) and isinstance(preplanning.get("jspace_route"), dict):
+                return dict(preplanning["jspace_route"])
+            packet = topology.get("packet")
+            if isinstance(packet, dict) and isinstance(packet.get("jspace_route"), dict):
+                return dict(packet["jspace_route"])
+        if isinstance(grounding, dict) and isinstance(grounding.get("jspace_route"), dict):
+            return dict(grounding["jspace_route"])
+        return {}
+
     def _reviewable_attempt(
         self,
         *,
@@ -1469,6 +1489,7 @@ class ArchitectBuilderBridge:
             "status": status,
             "builder_prompt": builder_prompt,
             "builder_context": context_packet.to_dict(),
+            "jspace_route": self._jspace_route_for_context(context_packet),
             "raw_model_response": raw_response,
             "extracted_diff": extracted_diff,
             "before_after": before_after.to_dict() if before_after is not None else None,
@@ -1617,6 +1638,7 @@ class ArchitectBuilderBridge:
             "context_available": context_packet is not None,
             "context_source_refs": list(context_packet.source_refs if context_packet else []),
             "topological_context": context_packet.topological_context if context_packet else {},
+            "jspace_route": self._jspace_route_for_context(context_packet, grounding_dict),
             "reason_codes": reason_codes,
             "response_empty": response == "",
             "preflight": preflight.to_dict() if preflight is not None else None,
@@ -1666,6 +1688,8 @@ class ArchitectBuilderBridge:
                     shadow_report=prepared.shadow_report,
                 )
                 failure["act_topological_grounding"] = topological_grounding
+                if isinstance(topological_grounding.get("jspace_route"), dict):
+                    failure["jspace_route"] = dict(topological_grounding["jspace_route"])
                 builder_failures.append(failure)
                 self._trace_builder_failure(act, failure)
             self.patch_quality = {
@@ -1724,6 +1748,8 @@ class ArchitectBuilderBridge:
                         failure["reason_codes"].append(reason)
                 failure["grounding_eligibility"] = grounding_eligibility
                 failure["act_topological_grounding"] = topological_grounding
+                if isinstance(topological_grounding.get("jspace_route"), dict):
+                    failure["jspace_route"] = dict(topological_grounding["jspace_route"])
                 attempt_record = self._reviewable_attempt(
                     act=act,
                     context_packet=context_packet,
