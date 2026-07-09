@@ -673,7 +673,10 @@ def build_concept_workspace(
         if any(term in path_lower for term in search_terms):
             matched_files.append(path)
         # Also check topology neighbors of matched files
-    matched_files_set = set(matched_files) | seed_file_paths
+    # 2. Search CODEMAP files
+    # Keep track of primary matches before topology neighbor expansion
+    primary_matched_files = set(matched_files) | seed_file_paths
+    matched_files_set = set(primary_matched_files)
 
     # 3. Expand with topology neighbors (depth=1 by default)
     neighbor_files: set[str] = set()
@@ -755,7 +758,9 @@ def build_concept_workspace(
     ws.docs = all_docs
     ws.tests = all_tests
     ws.commands = matched_commands[:40]
-    ws.neighbors = sorted(neighbor_files - matched_files_set)[:40]
+    # Neighbors are topological neighbors of matched files, excluding files that matched keywords/symbols directly
+    primary_and_symbol_matches = primary_matched_files | {sym["file"] for sym in matched_symbols if sym.get("file")}
+    ws.neighbors = sorted(neighbor_files - primary_and_symbol_matches)[:40]
     ws.seed_matches = sorted(matched_files_set & seed_file_paths)
 
     # 8. Build nodes — existing topology nodes first, then synthetic for others

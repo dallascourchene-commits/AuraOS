@@ -989,6 +989,22 @@ class HumanAgentArena:
         concept_name = ws.concept
         profile_key = ws.profile_key
 
+        # Clean up old synthetic nodes/links to avoid accumulation across different concept workspaces
+        self.topology["nodes"] = [
+            n for n in self.topology.get("nodes", [])
+            if not n.get("metadata", {}).get("projected_from_codemap")
+        ]
+        self.topology["links"] = [
+            l for l in self.topology.get("links", [])
+            if not l.get("metadata", {}).get("synthetic")
+        ]
+        self._node_by_id = {
+            nid: node
+            for nid, node in self._node_by_id.items()
+            if not node.get("metadata", {}).get("projected_from_codemap")
+        }
+        self._all_node_ids = list(self._node_by_id.keys())
+
         # Collect existing projected nodes that match
         existing_highlighted: list[str] = []
         all_file_paths = set(ws.files)
@@ -1004,14 +1020,20 @@ class HumanAgentArena:
             n for n in ws.nodes
             if n.get("metadata", {}).get("projected_from_codemap")
         ]
-        # Add synthetic nodes to _node_by_id transiently (this session only, never persisted)
+        # Add synthetic nodes to _node_by_id and self.topology transiently (this session only, never persisted)
         synthetic_ids: list[str] = []
         for snode in synthetic_nodes:
             sid = str(snode["id"])
             if sid not in self._node_by_id:
                 self._node_by_id[sid] = snode
                 self._all_node_ids.append(sid)
+                self.topology["nodes"].append(snode)
             synthetic_ids.append(sid)
+
+        # Add synthetic links to self.topology
+        for slink in ws.links:
+            if slink["source"] in self._node_by_id and slink["target"] in self._node_by_id:
+                self.topology["links"].append(slink)
 
         # Build full highlighted list = existing matches + synthetic
         highlighted_set = set(existing_highlighted) | set(synthetic_ids)
@@ -1033,6 +1055,20 @@ class HumanAgentArena:
             "neighbors": ws.neighbors,
             "token_estimates": ws.token_estimates,
             "grounding": ws.grounding,
+            "files_count": len(ws.files),
+            "symbols_count": len(ws.symbols),
+            "tests_count": len(ws.tests),
+            "docs_count": len(ws.docs),
+            "neighbors_count": len(ws.neighbors),
+            "synthetic_node_count": len(synthetic_ids),
+            "action_buttons": [
+                "show all functions",
+                "show neighbors",
+                "show tests",
+                "show docs",
+                "show agent handoff",
+                "prepare refactor plan",
+            ],
         }
         self.state.add_event(
             "concept_workspace",
