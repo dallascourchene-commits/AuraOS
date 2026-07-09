@@ -185,17 +185,117 @@ Every command response separates `visual_update` from `truth_packet`:
    - The demo ends here. No patches are staged. No files are written.
    - The prepared task can be handed to the Agent Arena Bridge for actual execution.
 
+## Concept Workspace Engine (V1.1)
+
+The V1.1 upgrade replaces simple keyword filtering with a real concept-workspace engine.
+Commands like `show Agent Arena Bridge` or `show Coding Arena` now work even when those files
+are not present in the projected visual topology (e.g. because they were outside the node limit).
+
+### How it works
+
+| Step | Detail |
+|------|--------|
+| **1. CODEMAP search** | Searches the full `.aura/CODEMAP.json` — `files`, `symbol_index`, `command_index`, topology `neighbor_files` |
+| **2. Concept profiles** | 13 built-in profiles map human phrases to seed files, seed symbols, and related concepts |
+| **3. Neighbor expansion** | Topology `neighbor_files` are expanded to depth 1 by default |
+| **4. Synthetic nodes** | Files found in CODEMAP but not in the projected topology are synthesised as `ArenaNode`-compatible dicts tagged `projected_from_codemap: true`, `visual_only: true`, `patch_authority: false` |
+| **5. Visual injection** | Synthetic nodes are injected into the live session (never persisted); displayed with a dashed purple badge ring in the canvas |
+| **6. Truth packet** | The truth_packet carries exact CODEMAP file paths, symbols, line ranges (from projected nodes). Synthetic nodes appear only in the visual graph |
+
+### Concept Profiles (13 built-in)
+
+| Key | Display Name | Example Aliases |
+|-----|-------------|----------------|
+| `st3gg` | ST3GG | `st3gg`, `arena_st3gg`, `st3gg_egress` |
+| `jspace` | JSpace | `jspace`, `j_space`, `jspace_codec` |
+| `agent_arena_bridge` | Agent Arena Bridge | `agent arena`, `agent bridge`, `aura_prepare_arena` |
+| `human_agent_arena` | Human Agent Arena | `human agent arena`, `jarvis`, `route_command` |
+| `coding_arena` | Coding Arena | `coding arena`, `load_arena_topology`, `select_micro_arena` |
+| `architect` | Architect | `architect`, `aura_architect_loop`, `ArchitectFusionLoop` |
+| `dream` | DREAM | `dream`, `dream_engine`, `DreamCandidate` |
+| `qdkt` | QDKT | `qdkt`, `get_qdkt` |
+| `emergent_potential` | Emergent Potential | `emergent potential`, `audit_emergent_potential` |
+| `context_crusher` | Context Crusher | `context crusher`, `apply_context_crush_to_prompt` |
+| `llm_egress` | LLM Egress | `llm egress`, `aura_llm_egress` |
+| `verifier` | Verifier | `verifier`, `patch_quality_gate` |
+| `research_arxiv` | Research / ArXiv | `research`, `arxiv`, `ArXivForager` |
+
+### New Commands
+
+| Command | Behavior |
+|---------|----------|
+| `show Coding Arena` | Full concept workspace: files, symbols, tests, docs for Coding Arena |
+| `show Agent Arena Bridge` | Searches CODEMAP — finds bridge files even if not in projected topology |
+| `show all functions related to <concept>` | Returns function/symbol nodes in `functions` mode |
+| `show everything connected to <concept>` | Full mode: files + symbols + neighbors + docs + tests |
+| `refactor <concept>` / `I want to refactor the <concept>` | Concept workspace in prepare mode + 4 refactor next_actions |
+| `export handoff packet` | Exports concept workspace + prepared tasks as JSON; optionally writes to `Aura_Memory/human_agent_arena/handoff_<id>.json` |
+
+### Concept Workspace Summary Panel
+
+After any concept command, a **Concept Workspace Summary Panel** appears in the UI with:
+- Files count, symbols count, tests count, docs count, neighbors count
+- Synthetic CODEMAP node count (visual-only)
+- Workspace action buttons: `show all functions`, `show neighbors`, `show tests`, `show docs`, `show agent handoff`, `prepare refactor plan`
+
+### Synthetic Nodes Visual Legend
+
+| Style | Meaning |
+|-------|---------|
+| Dashed purple ring `⬤ ···` | Synthetic CODEMAP node (visual-only, not patch authority) |
+| Purple label prefix `[~CODEMAP]` | Same node in label text |
+| Normal filled dot | Existing projected topology node |
+
+### Safety Invariants (unchanged)
+
+- Synthetic nodes are **session-local only** — they are never written to CODEMAP, topology, or any file.
+- The `truth_packet` remains authoritative: exact CODEMAP facts for projected nodes; `NEEDS_GROUNDING` for synthetic matches unless line ranges are available.
+- `patch_authority: "exact_source_spans_and_hashes_only"` and `vsa_patch_authority: false` on every response.
+
+### State Fields (new in V1.1)
+
+```python
+{
+  "concept_workspace": {
+    "concept": "Agent Arena Bridge",
+    "profile_key": "agent_arena_bridge",
+    "workspace_id": "a1b2c3d4",
+    "files": ["aura_agent_arena_bridge.py", ...],
+    "symbols": ["AuraAgentArenaBridge", ...],
+    "docs": ["docs/AURA_AGENT_ARENA_BRIDGE.md"],
+    "tests": ["tests/test_aura_agent_arena_bridge.py"],
+    "commands": ["!show Agent Arena Bridge"],
+    "neighbors": [...],
+    "token_estimates": {...},
+    "grounding": "grounded"
+  },
+  "prepared_handoff_packets": [
+    {
+      "objective": "...",
+      "plan_phase_hash": "...",
+      "workspace_id": "a1b2c3d4",
+      "recommended_next_cli_commands": [...],
+      "note": "..."
+    }
+  ]
+}
+```
+
 ## Files
+
 
 | File | Purpose |
 |------|---------|
 | `aura_human_agent_arena.py` | Live state + deterministic command router |
 | `aura_human_agent_arena_server.py` | Stdlib HTTP server with polling endpoints |
+| `aura_human_agent_concepts.py` | Concept Workspace Engine — CODEMAP search, 13 concept profiles, `build_concept_workspace`, `resolve_node_ref` |
 | `aura_human_agent_arena/index.html` | Frontend HTML |
-| `aura_human_agent_arena/main.js` | Frontend JS (graph, polling, command, mic) |
+| `aura_human_agent_arena/main.js` | Frontend JS (graph, polling, command, mic, concept workspace panel) |
 | `aura_human_agent_arena/arena.css` | Frontend CSS |
-| `tests/test_aura_human_agent_arena.py` | Deterministic tests |
+| `tests/test_aura_human_agent_arena.py` | Deterministic tests (existing) |
+| `tests/test_aura_human_agent_concepts.py` | Concept Workspace Engine acceptance criteria tests (12 tests) |
 | `docs/AURA_HUMAN_AGENT_ARENA.md` | This document |
+
 
 ## Testing
 

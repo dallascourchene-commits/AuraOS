@@ -25,6 +25,10 @@ let zoom = 1.9;
 let dragging = false;
 let lastPointer = null;
 let pollTimer = null;
+// Concept workspace state (additive V1.1)
+let conceptWorkspace = null;
+let syntheticNodes = [];  // ArenaNode-compatible dicts injected from CODEMAP
+let syntheticLinks = [];  // links between synthetic nodes
 
 const typeNames = {
   file: 'Files',
@@ -97,6 +101,11 @@ function updateFromState() {
   hiddenNodeIds = liveState.hidden_node_ids || [];
   selectedNodeIds = liveState.selected_node_ids || [];
   ghostEdges = liveState.ghost_edges || [];
+  // Render concept workspace panel from live state if available
+  if (liveState.concept_workspace && liveState.concept_workspace.concept) {
+    conceptWorkspace = liveState.concept_workspace;
+    renderConceptWorkspace(conceptWorkspace);
+  }
   // Update event log
   const events = liveState.event_log || [];
   if (events.length) {
@@ -134,6 +143,23 @@ async function runCommand(command) {
     if (vu.selected_node_ids) selectedNodeIds = vu.selected_node_ids;
     if (vu.ghost_edges) ghostEdges = vu.ghost_edges;
     if (vu.labels) labels = vu.labels;
+    // Concept workspace: merge synthetic nodes into local topology for rendering
+    if (vu.synthetic_nodes && vu.synthetic_nodes.length > 0) {
+      syntheticNodes = vu.synthetic_nodes;
+      syntheticLinks = vu.links || [];
+      // Merge synthetic nodes into topology.nodes for draw() to see them
+      const existingIds = new Set(topology.nodes.map(n => n.id));
+      syntheticNodes.forEach(sn => {
+        if (!existingIds.has(sn.id)) {
+          topology.nodes.push(sn);
+        }
+      });
+      syntheticLinks.forEach(sl => topology.links.push(sl));
+    }
+    if (vu.concept_workspace) {
+      conceptWorkspace = vu.concept_workspace;
+      renderConceptWorkspace(conceptWorkspace);
+    }
     // Update next actions
     renderNextActions(result.next_actions || []);
     // Refresh state from server
@@ -158,6 +184,69 @@ function renderNextActions(actions) {
     btn.addEventListener('click', () => {
       commandInput.value = btn.dataset.action;
       runCommand(btn.dataset.action);
+    });
+  });
+}
+
+// Concept workspace summary panel renderer (additive V1.1)
+function renderConceptWorkspace(ws) {
+  if (!ws) return;
+  let panel = document.getElementById('concept-workspace-panel');
+  if (!panel) {
+    // Create panel dynamically if not in HTML
+    panel = document.createElement('div');
+    panel.id = 'concept-workspace-panel';
+    panel.style.cssText = [
+      'background: linear-gradient(135deg, rgba(99,102,241,0.18) 0%, rgba(14,165,233,0.14) 100%)',
+      'border: 1px solid rgba(139,92,246,0.45)',
+      'border-radius: 10px',
+      'padding: 12px 16px',
+      'margin-bottom: 10px',
+      'font-size: 12px',
+      'color: #e2e8f0',
+      'position: relative',
+    ].join(';');
+    // Insert before the next-actions panel or after the answer panel
+    const answEl = document.getElementById('answer-text');
+    if (answEl && answEl.parentNode) {
+      answEl.parentNode.insertBefore(panel, answEl.nextSibling);
+    }
+  }
+  const synthetic = ws.synthetic_node_count || 0;
+  const actionBtns = (ws.action_buttons || []).map(action =>
+    `<button type="button" data-action="${escapeAttr(action)}" style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(99,102,241,0.25);border:1px solid rgba(139,92,246,0.5);color:#c4b5fd;cursor:pointer;margin:2px">${escapeHtml(action)}</button>`
+  ).join('');
+  panel.innerHTML = `
+    <div style="font-weight:700;font-size:13px;color:#a78bfa;margin-bottom:6px">
+      &#128196; Concept Workspace: <span style="color:#e2e8f0">${escapeHtml(ws.concept || '')}</span>
+      <span style="float:right;font-weight:400;color:#64748b;font-size:11px">ID: ${escapeHtml((ws.workspace_id || '').substring(0,8))}</span>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:7px;font-size:11px;color:#94a3b8">
+      <span>&#128196; <b style="color:#e2e8f0">${ws.files_count || 0}</b> files</span>
+      <span>&#402; <b style="color:#e2e8f0">${ws.symbols_count || 0}</b> symbols</span>
+      <span>&#129514; <b style="color:#ef5da8">${ws.tests_count || 0}</b> tests</span>
+      <span>&#128196; <b style="color:#facc15">${ws.docs_count || 0}</b> docs</span>
+      <span>&#128279; <b style="color:#22d3ee">${ws.neighbors_count || 0}</b> neighbors</span>
+      ${synthetic > 0 ? `<span>&#10024; <b style="color:#8b5cf6">${synthetic}</b> synthetic (CODEMAP, visual-only)</span>` : ''}
+    </div>
+    <div style="margin-top:4px;font-size:11px">${actionBtns}</div>
+  `;
+  // Wire up workspace action buttons
+  panel.querySelectorAll('button[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const act = btn.dataset.action;
+      // Expand action to full command
+      const commandMap = {
+        'show all functions': `show all functions related to ${ws.concept || 'concept'}`,
+        'show neighbors': `show everything connected to ${ws.concept || 'concept'}`,
+        'show tests': 'show tests',
+        'show docs': `show ${ws.concept || 'concept'} docs`,
+        'show agent handoff': 'export handoff packet',
+        'prepare refactor plan': `refactor ${ws.concept || 'concept'}`,
+      };
+      const cmd = commandMap[act] || act;
+      commandInput.value = cmd;
+      runCommand(cmd);
     });
   });
 }
@@ -225,6 +314,7 @@ function draw() {
     const isSelected = selectedSet.has(node.id);
     const isHighlighted = visibleSet.has(node.id);
     const isHidden = hiddenSet.has(node.id);
+    const isSynthetic = node.metadata && node.metadata.projected_from_codemap;
     if (isHidden && !isSelected) {
       ctx.globalAlpha = 0.15;
     } else if (isSelected) {
@@ -236,18 +326,30 @@ function draw() {
     }
     const radius = isSelected ? 9 : (isHighlighted ? 6.5 : 4.6);
     ctx.fillStyle = isSelected ? '#ffffff' : (node.color || '#94a3b8');
-    ctx.strokeStyle = isSelected ? '#22d3ee' : '#0b1117';
-    ctx.lineWidth = isSelected ? 3 : 1;
+    ctx.strokeStyle = isSelected ? '#22d3ee' : (isSynthetic ? '#8b5cf6' : '#0b1117');
+    ctx.lineWidth = isSelected ? 3 : (isSynthetic ? 2 : 1);
     ctx.beginPath();
     ctx.arc(item.x, item.y, radius * item.scale, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+    // Badge ring for synthetic (CODEMAP-injected) nodes
+    if (isSynthetic && isHighlighted) {
+      ctx.globalAlpha = 0.55;
+      ctx.strokeStyle = '#8b5cf6';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(item.x, item.y, (radius + 4) * item.scale, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
     // Label
     if (isSelected || (isHighlighted && item.scale > 0.72)) {
       ctx.globalAlpha = 0.95;
-      ctx.fillStyle = '#dbeafe';
+      ctx.fillStyle = isSynthetic ? '#c4b5fd' : '#dbeafe';
       ctx.font = '12px Cascadia Code, monospace';
-      const label = labels[node.id] ? `[${labels[node.id]}] ${node.label || node.id}` : (node.label || node.id);
+      const badge = isSynthetic ? '[~CODEMAP] ' : (labels[node.id] ? `[${labels[node.id]}] ` : '');
+      const label = badge + (node.label || node.id);
       ctx.fillText(label, item.x + 10, item.y - 10);
     }
   });
