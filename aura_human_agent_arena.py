@@ -3,12 +3,17 @@
 ST3GG_BASE: 0xa9f3-[Q-SYS:HUMAN_AGENT_ARENA]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Human-in-the-loop topology cockpit)
-DEPENDENCIES: __future__, dataclasses, hashlib, pathlib, time, typing, aura_coding_arena_3d
-FUNCTIONS: HumanAgentArenaState, HumanAgentArena, route_command, _truth_packet_base, _visual_update_base
-SYNOPSIS: Additive third surface — a Jarvis-style human-in-the-loop topology cockpit. Deterministic
-command router (no LLM for MVP). Reuses existing Coding Arena topology functions read-only. Ghost
-edges live only in live state. Agent Arena Bridge is used only for prepared handoff. No production
-code is mutated from voice or graph commands.
+DEPENDENCIES: __future__, dataclasses, hashlib, pathlib, time, typing,
+              aura_coding_arena_3d, aura_human_agent_concepts
+FUNCTIONS: HumanAgentArenaState, HumanAgentArena, route_command, _truth_packet_base,
+           _visual_update_base, build_concept_workspace, resolve_node_ref
+SYNOPSIS: Additive third surface — a Jarvis-style human-in-the-loop topology cockpit.
+Deterministic command router (no LLM). Reuses existing Coding Arena topology functions
+read-only. Ghost edges live only in live state. Agent Arena Bridge is used only for
+prepared handoff. No production code is mutated from voice or graph commands.
+Concept Workspace upgrade (V1.1): commands like 'show Agent Arena Bridge' and
+'show Coding Arena' now search the full CODEMAP index and synthesise ArenaNode-compatible
+dicts for CODEMAP matches not present in the projected topology.
 [/AURA_MASTER_KEY]
 """
 
@@ -26,12 +31,31 @@ from aura_coding_arena_3d import (
     select_micro_arena,
 )
 
+try:
+    from aura_human_agent_concepts import (
+        build_concept_workspace as _build_concept_workspace,
+        resolve_node_ref as _resolve_node_ref_concepts,
+        get_profile as _get_concept_profile,
+        list_concept_keys as _list_concept_keys,
+        ConceptWorkspace,
+    )
+    _CONCEPTS_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _CONCEPTS_AVAILABLE = False
+    _build_concept_workspace = None  # type: ignore[assignment]
+    _resolve_node_ref_concepts = None  # type: ignore[assignment]
+    _get_concept_profile = None  # type: ignore[assignment]
+    _list_concept_keys = None  # type: ignore[assignment]
+    ConceptWorkspace = None  # type: ignore[assignment]
+
 
 HUMAN_AGENT_ARENA_VERSION = "AURA_HUMAN_AGENT_ARENA_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
 # Terms used to filter/highlight nodes for each "show <concept>" command.
+# These legacy tuples are preserved for the fallback path when the concept
+# engine is unavailable. New code goes through build_concept_workspace.
 ST3GG_TERMS = ("st3gg", "arena_st3gg", "st3gg_codec", "st3gg_egress")
 JSPACE_TERMS = ("jspace", "j_space", "jspace_codec", "jspace_packet", "jspace_state")
 AGENT_ARENA_TERMS = ("aura_agent_arena", "agent_arena_bridge", "agent_arena_cli", "agent_arena_mcp")
@@ -70,6 +94,10 @@ class HumanAgentArenaState:
     diagnostics: list[dict[str, Any]] = field(default_factory=list)
     hypotheses: list[dict[str, Any]] = field(default_factory=list)
     agent_tasks: list[dict[str, Any]] = field(default_factory=list)
+    # Concept workspace — populated by show/refactor concept commands.
+    concept_workspace: dict[str, Any] = field(default_factory=dict)
+    # Stored handoff packets from prepare agent task (prevents silent loss).
+    prepared_handoff_packets: list[dict[str, Any]] = field(default_factory=list)
     human_notes: list[str] = field(default_factory=list)
     event_log: list[dict[str, Any]] = field(default_factory=list)
     event_log_base_offset: int = 0
@@ -185,6 +213,25 @@ class HumanAgentArena:
     def _dispatch(self, command: str, mode: str):
         lowered = command.lower()
 
+        # --------------- concept workspace commands (new in V1.1) ---------------
+        # "show all functions related to <concept>" / "show functions for <concept>"
+        if "show" in lowered and ("all function" in lowered or "function" in lowered) and (
+            "related" in lowered or "for" in lowered
+        ):
+            return self._cmd_show_concept_functions
+        # "show everything connected to <concept>"
+        if "show" in lowered and "everything" in lowered and "connect" in lowered:
+            return self._cmd_show_concept_full
+        # "refactor <concept>" / "I want to refactor"
+        if ("refactor" in lowered or "i want to refactor" in lowered) and mode != "prepare":
+            return self._cmd_refactor_concept
+        # "export handoff packet"
+        if "export" in lowered and "handoff" in lowered:
+            return self._cmd_export_handoff_packet
+        # "prepare refactor plan"
+        if "prepare" in lowered and "refactor" in lowered:
+            return self._cmd_refactor_concept
+        # --------------- existing concept show commands (now concept-workspace backed) ---------------
         # show ST3GG
         if "show" in lowered and "st3gg" in lowered:
             return self._cmd_show_st3gg
@@ -194,6 +241,15 @@ class HumanAgentArena:
         # show Agent Arena Bridge
         if "show" in lowered and ("agent arena" in lowered or "agent_arena" in lowered):
             return self._cmd_show_agent_arena
+        # show Coding Arena
+        if "show" in lowered and "coding arena" in lowered:
+            return self._cmd_show_coding_arena
+        # show <any known concept>
+        if "show" in lowered and _CONCEPTS_AVAILABLE and _list_concept_keys is not None:
+            for key in _list_concept_keys():
+                if key.replace("_", " ") in lowered or key in lowered:
+                    return self._cmd_show_generic_concept
+        # --------------- existing commands ---------------
         # show tests
         if "show" in lowered and "test" in lowered:
             return self._cmd_show_tests
@@ -212,7 +268,7 @@ class HumanAgentArena:
         # what if connect / source to target
         if ("what if" in lowered and "connect" in lowered) or (
             "what if" in lowered and "source" in lowered and "target" in lowered
-        ):
+        ) or ("what if" in lowered):
             return self._cmd_what_if_connect
         # hypothesize connection
         if "hypothes" in lowered and "connect" in lowered:
@@ -231,13 +287,94 @@ class HumanAgentArena:
     # ------------------------------------------------------------------
 
     def _cmd_show_st3gg(self, command: str, mode: str) -> dict[str, Any]:
-        return self._show_concept(command, mode, ST3GG_TERMS, "ST3GG")
+        return self._show_concept_workspace(command, mode, "st3gg", fallback_terms=ST3GG_TERMS)
 
     def _cmd_show_jspace(self, command: str, mode: str) -> dict[str, Any]:
-        return self._show_concept(command, mode, JSPACE_TERMS, "JSpace")
+        return self._show_concept_workspace(command, mode, "jspace", fallback_terms=JSPACE_TERMS)
 
     def _cmd_show_agent_arena(self, command: str, mode: str) -> dict[str, Any]:
-        return self._show_concept(command, mode, AGENT_ARENA_TERMS, "Agent Arena Bridge")
+        return self._show_concept_workspace(command, mode, "agent_arena_bridge", fallback_terms=AGENT_ARENA_TERMS)
+
+    def _cmd_show_coding_arena(self, command: str, mode: str) -> dict[str, Any]:
+        return self._show_concept_workspace(command, mode, "coding_arena")
+
+    def _cmd_show_generic_concept(self, command: str, mode: str) -> dict[str, Any]:
+        """Route 'show <any concept>' to the concept workspace engine."""
+        return self._show_concept_workspace(command, mode, command)
+
+    def _cmd_show_concept_functions(self, command: str, mode: str) -> dict[str, Any]:
+        """Show all function/symbol nodes for a concept."""
+        return self._show_concept_workspace(command, mode, command, ws_mode="functions")
+
+    def _cmd_show_concept_full(self, command: str, mode: str) -> dict[str, Any]:
+        """Show everything connected to a concept (neighbors, tests, docs, commands)."""
+        return self._show_concept_workspace(command, mode, command, ws_mode="full")
+
+    def _cmd_refactor_concept(self, command: str, mode: str) -> dict[str, Any]:
+        """Build a concept workspace in prepare mode and suggest refactor next actions."""
+        ws_result = self._show_concept_workspace(command, mode, command, ws_mode="prepare")
+        # Override next_actions to include refactor suggestions.
+        ws_result["next_actions"] = [
+            "diagnose selection",
+            "show tests",
+            "show unwired connections here",
+            "prepare agent task",
+        ]
+        ws_result["answer"] = (
+            f"Concept workspace built for refactor. {ws_result.get('answer', '')} "
+            "Review the workspace, diagnose selection, then prepare agent task when ready."
+        )
+        return ws_result
+
+    def _cmd_export_handoff_packet(self, command: str, mode: str) -> dict[str, Any]:
+        """Export the current concept workspace + plan summary as JSON."""
+        packets = self.state.prepared_handoff_packets
+        workspace = self.state.concept_workspace
+        workspace_id = workspace.get("workspace_id", _short_hash(str(time.time()), size=8))
+        export_payload = {
+            "export_version": HUMAN_AGENT_ARENA_VERSION,
+            "workspace_id": workspace_id,
+            "concept_workspace": workspace,
+            "prepared_handoff_packets": packets[-3:] if packets else [],
+            "selected_node_ids": list(self.state.selected_node_ids),
+            "exported_at": time.time(),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            "note": "This packet is for human review and agent handoff only. No production mutation.",
+        }
+        # Optionally write to Aura_Memory
+        try:
+            mem_dir = self.repo_root / "Aura_Memory" / "human_agent_arena"
+            mem_dir.mkdir(parents=True, exist_ok=True)
+            out_path = mem_dir / f"handoff_{workspace_id}.json"
+            import json as _json
+            out_path.write_text(
+                _json.dumps(export_payload, indent=2, default=str),
+                encoding="utf-8",
+            )
+            export_note = f"Exported to {out_path}"
+        except Exception as exc:  # noqa: BLE001
+            out_path = None
+            export_note = f"Memory write skipped ({exc}); returning JSON only."
+        self.state.add_event("export_handoff", export_note)
+        truth = _truth_packet_base()
+        truth["workspace_id"] = workspace_id
+        truth["concept"] = workspace.get("concept", "")
+        truth["files"] = workspace.get("files", [])
+        truth["symbols"] = workspace.get("symbols", [])
+        truth["grounding"] = "grounded" if workspace else "NEEDS_GROUNDING"
+        truth["note"] = export_note
+        return {
+            "ok": True,
+            "answer": f"Handoff packet exported. {export_note}",
+            "visual_update": _visual_update_base(),
+            "truth_packet": truth,
+            "handoff_packet": export_payload,
+            "next_actions": [
+                "diagnose selection",
+                "prepare agent task",
+            ],
+        }
 
     def _cmd_show_tests(self, command: str, mode: str) -> dict[str, Any]:
         """Highlight known test files connected to the current selection."""
@@ -666,6 +803,11 @@ class HumanAgentArena:
         selected = self.state.selected_node_ids
         objective = _build_objective(command, selected, self._node_by_id)
         if not objective.strip():
+            # Try building objective from current concept workspace
+            ws = self.state.concept_workspace
+            if ws.get("concept"):
+                objective = f"Prepare agent task for concept: {ws['concept']}"
+        if not objective.strip():
             return {
                 "ok": True,
                 "answer": "Need an objective or selection to prepare an agent task.",
@@ -680,6 +822,8 @@ class HumanAgentArena:
             node = self._node_by_id.get(selected[0], {})
             target_file = str(node.get("file_path", "")) or None
             target_symbol = str(node.get("symbol", "")) or None
+
+        workspace_id = self.state.concept_workspace.get("workspace_id", "")
 
         try:
             from aura_agent_arena_bridge import AuraAgentArenaBridge
@@ -702,23 +846,46 @@ class HumanAgentArena:
                 "next_actions": ["diagnose selection", "show dependencies", "isolate selected"],
             }
 
+        plan_phase_hash = str(prepared.get("plan_phase_hash", ""))
+        # Build and store handoff packet so it is never silently lost.
+        handoff_packet: dict[str, Any] = {
+            "objective": objective,
+            "plan_phase_hash": plan_phase_hash,
+            "target_file": target_file,
+            "target_symbol": target_symbol,
+            "selected_node_ids": list(selected),
+            "workspace_id": workspace_id,
+            "recommended_next_cli_commands": [
+                f"python aura_agent_arena_cli.py prepare --objective \"{objective}\"",
+            ],
+            "prepared_at": time.time(),
+            "note": (
+                "If an external Agent Arena Bridge process needs to continue, "
+                "re-run aura_prepare_arena using the objective and target, unless "
+                "persistent bridge sessions are implemented."
+            ),
+        }
+        self.state.prepared_handoff_packets.append(handoff_packet)
+
         # Store the prepared task in live state.
         task_entry = {
             "objective": objective,
             "target_file": target_file,
             "target_symbol": target_symbol,
-            "plan_phase_hash": str(prepared.get("plan_phase_hash", "")),
+            "plan_phase_hash": plan_phase_hash,
             "blockers": list(prepared.get("blockers", [])),
             "warnings": list(prepared.get("warnings", [])),
             "prepared_at": time.time(),
         }
         self.state.agent_tasks.append(task_entry)
-        self.state.add_event("prepare", f"agent task prepared: {task_entry['plan_phase_hash']}")
+        self.state.add_event("prepare", f"agent task prepared: {plan_phase_hash}")
 
         truth = _truth_packet_base()
+        truth["concept"] = self.state.concept_workspace.get("concept", "")
+        truth["workspace_id"] = workspace_id
         truth["files"] = sorted({target_file} if target_file else set())
         truth["symbols"] = sorted({target_symbol} if target_symbol else set())
-        truth["plan_phase_hash"] = str(prepared.get("plan_phase_hash", ""))
+        truth["plan_phase_hash"] = plan_phase_hash
         truth["act_capsules"] = list(prepared.get("act_capsules", []))
         truth["grounding_evidence"] = list(prepared.get("grounding_evidence", []))
         truth["shadow_findings"] = list(prepared.get("shadow_findings", []))
@@ -730,7 +897,7 @@ class HumanAgentArena:
         return {
             "ok": True,
             "answer": (
-                f"Agent task prepared. Plan phase hash: {task_entry['plan_phase_hash']}. "
+                f"Agent task prepared. Plan phase hash: {plan_phase_hash}. "
                 f"{len(truth['blockers'])} blocker(s), {len(truth['warnings'])} warning(s). "
                 "No production files mutated. Handoff ready for Agent Arena Bridge."
             ),
@@ -743,10 +910,12 @@ class HumanAgentArena:
                 "ui_hints": ["agent_task_prepared", "handoff_ready"],
             },
             "truth_packet": truth,
+            "handoff_packet": handoff_packet,
             "next_actions": [
                 "diagnose selection",
                 "show tests",
                 "show unwired connections here",
+                "export handoff packet",
             ],
         }
 
@@ -776,6 +945,186 @@ class HumanAgentArena:
     # Helpers
     # ------------------------------------------------------------------
 
+    def _show_concept_workspace(
+        self,
+        command: str,
+        mode: str,
+        concept_or_query: str,
+        *,
+        fallback_terms: tuple[str, ...] | None = None,
+        ws_mode: str = "explore",
+    ) -> dict[str, Any]:
+        """Build a concept workspace from CODEMAP and inject synthetic nodes into the visual update.
+
+        This is the primary concept command handler in V1.1. It searches the full CODEMAP
+        index (not only the projected topology) and synthesises ArenaNode-compatible dicts
+        for CODEMAP matches not present in the projected topology.
+
+        Falls back gracefully to the legacy _show_concept keyword filter if the concept
+        engine is unavailable.
+        """
+        if not _CONCEPTS_AVAILABLE or _build_concept_workspace is None:
+            # Legacy fallback: keyword filter over projected nodes only.
+            terms = fallback_terms or (concept_or_query.lower(),)
+            concept_name = concept_or_query
+            return self._show_concept(command, mode, terms, concept_name)
+
+        # Build concept workspace from full CODEMAP
+        try:
+            ws: ConceptWorkspace = _build_concept_workspace(
+                concept_or_query,
+                repo_root=self.repo_root,
+                selected_node_ids=list(self.state.selected_node_ids),
+                existing_nodes=self._node_by_id,
+                depth=1,
+                max_files=80,
+                max_symbols=200,
+                mode=ws_mode,
+            )
+        except Exception as exc:  # noqa: BLE001
+            # Fallback to keyword filter
+            terms = fallback_terms or (concept_or_query.lower(),)
+            return self._show_concept(command, mode, terms, concept_or_query)
+
+        concept_name = ws.concept
+        profile_key = ws.profile_key
+
+        # Clean up old synthetic nodes/links to avoid accumulation across different concept workspaces
+        self.topology["nodes"] = [
+            n for n in self.topology.get("nodes", [])
+            if not n.get("metadata", {}).get("projected_from_codemap")
+        ]
+        self.topology["links"] = [
+            l for l in self.topology.get("links", [])
+            if not l.get("metadata", {}).get("synthetic")
+        ]
+        self._node_by_id = {
+            nid: node
+            for nid, node in self._node_by_id.items()
+            if not node.get("metadata", {}).get("projected_from_codemap")
+        }
+        self._all_node_ids = list(self._node_by_id.keys())
+
+        # Collect existing projected nodes that match
+        existing_highlighted: list[str] = []
+        all_file_paths = set(ws.files)
+        all_symbols = set(ws.symbols)
+        for nid, node in self._node_by_id.items():
+            fp = str(node.get("file_path", ""))
+            sym = str(node.get("symbol", ""))
+            if fp in all_file_paths or sym in all_symbols:
+                existing_highlighted.append(nid)
+
+        # Inject synthetic nodes into topology in-memory (visual advisory only)
+        synthetic_nodes = [
+            n for n in ws.nodes
+            if n.get("metadata", {}).get("projected_from_codemap")
+        ]
+        # Add synthetic nodes to _node_by_id and self.topology transiently (this session only, never persisted)
+        synthetic_ids: list[str] = []
+        for snode in synthetic_nodes:
+            sid = str(snode["id"])
+            if sid not in self._node_by_id:
+                self._node_by_id[sid] = snode
+                self._all_node_ids.append(sid)
+                self.topology["nodes"].append(snode)
+            synthetic_ids.append(sid)
+
+        # Add synthetic links to self.topology
+        for slink in ws.links:
+            if slink["source"] in self._node_by_id and slink["target"] in self._node_by_id:
+                self.topology["links"].append(slink)
+
+        # Build full highlighted list = existing matches + synthetic
+        highlighted_set = set(existing_highlighted) | set(synthetic_ids)
+        highlighted = list(highlighted_set)
+        hidden = [nid for nid in self._all_node_ids if nid not in highlighted_set]
+
+        self.state.active_filter = profile_key
+        self.state.visible_node_ids = highlighted
+        self.state.hidden_node_ids = hidden
+        self.state.concept_workspace = {
+            "concept": concept_name,
+            "profile_key": profile_key,
+            "workspace_id": ws.workspace_id,
+            "files": ws.files,
+            "symbols": ws.symbols,
+            "docs": ws.docs,
+            "tests": ws.tests,
+            "commands": ws.commands,
+            "neighbors": ws.neighbors,
+            "token_estimates": ws.token_estimates,
+            "grounding": ws.grounding,
+            "files_count": len(ws.files),
+            "symbols_count": len(ws.symbols),
+            "tests_count": len(ws.tests),
+            "docs_count": len(ws.docs),
+            "neighbors_count": len(ws.neighbors),
+            "synthetic_node_count": len(synthetic_ids),
+            "action_buttons": [
+                "show all functions",
+                "show neighbors",
+                "show tests",
+                "show docs",
+                "show agent handoff",
+                "prepare refactor plan",
+            ],
+        }
+        self.state.add_event(
+            "concept_workspace",
+            f"{concept_name}: {len(highlighted)} nodes ({len(synthetic_ids)} synthetic from CODEMAP)",
+        )
+
+        truth = ws.to_truth_packet()
+        truth["line_ranges"] = [
+            {
+                "node_id": nid,
+                "file_path": str(self._node_by_id.get(nid, {}).get("file_path", "")),
+                "symbol": str(self._node_by_id.get(nid, {}).get("symbol", "")),
+                "line_range": list(self._node_by_id.get(nid, {}).get("line_range", [])),
+            }
+            for nid in existing_highlighted
+            if self._node_by_id.get(nid, {}).get("line_range")
+        ]
+
+        visual_update = ws.to_visual_update(
+            existing_node_ids=set(self._all_node_ids),
+            selected_node_ids=self.state.selected_node_ids,
+            current_ghost_edges=self.state.ghost_edges,
+        )
+        # Merge synthetic node canvas data into topology links for rendering
+        visual_update["highlighted_node_ids"] = highlighted
+        visual_update["hidden_node_ids"] = hidden
+
+        # Determine next_actions based on mode
+        if ws_mode == "prepare":
+            next_actions = ["diagnose selection", "show tests", "show unwired connections here", "prepare agent task"]
+        elif ws_mode == "functions":
+            next_actions = ["diagnose selection", "isolate selected", "prepare agent task"]
+        elif ws_mode == "full":
+            next_actions = ["isolate selected", "diagnose selection", "prepare agent task", "export handoff packet"]
+        else:
+            next_actions = [
+                "show all functions",
+                "show neighbors",
+                "show tests",
+                "diagnose selection",
+                "prepare agent task",
+            ]
+
+        return {
+            "ok": True,
+            "answer": (
+                f"Concept workspace '{concept_name}': {len(ws.files)} file(s), "
+                f"{len(ws.symbols)} symbol(s), {len(ws.tests)} test(s), "
+                f"{len(ws.docs)} doc(s). "
+                f"{len(synthetic_ids)} node(s) synthesised from CODEMAP (visual-only)."
+            ),
+            "visual_update": visual_update,
+            "truth_packet": truth,
+            "next_actions": next_actions,
+        }
+
     def _show_concept(
         self,
         command: str,
@@ -783,7 +1132,11 @@ class HumanAgentArena:
         terms: tuple[str, ...],
         concept_name: str,
     ) -> dict[str, Any]:
-        """Filter/highlight nodes whose id/file/symbol contains any of the terms."""
+        """Legacy keyword filter — searches only already-projected topology nodes.
+
+        Preserved as a fallback for when the concept workspace engine is unavailable.
+        In V1.1 all concept show commands go through _show_concept_workspace first.
+        """
         lowered_terms = tuple(t.lower() for t in terms)
         highlighted = []
         for nid, node in self._node_by_id.items():
@@ -801,7 +1154,7 @@ class HumanAgentArena:
         self.state.active_filter = concept_name.lower().replace(" ", "_")
         self.state.visible_node_ids = highlighted
         self.state.hidden_node_ids = hidden
-        self.state.add_event("filter", f"show {concept_name}: {len(highlighted)} nodes")
+        self.state.add_event("filter", f"show {concept_name}: {len(highlighted)} nodes (legacy filter)")
 
         truth = _truth_packet_base()
         truth["files"] = sorted(
@@ -1046,12 +1399,20 @@ def _parse_hypothesize(command: str) -> tuple[str, str]:
     return "", ""
 
 
-def _resolve_node_ref(ref: str) -> str:
+def _resolve_node_ref(
+    ref: str,
+    *,
+    existing_nodes: dict[str, dict[str, Any]] | None = None,
+    workspace: Any | None = None,
+) -> str:
     """Resolve a human-friendly node reference to a node ID if possible.
 
-    For the MVP, this is a simple best-effort match. If no exact node ID matches,
-    return the ref as-is (it will be stored as a ghost edge label).
+    Uses the concept workspace engine when available. Falls back to returning
+    the ref as-is (stored as a ghost edge label) when unresolvable.
     """
+    if _CONCEPTS_AVAILABLE and _resolve_node_ref_concepts is not None:
+        result = _resolve_node_ref_concepts(ref, workspace=workspace, existing_nodes=existing_nodes)
+        return str(result.get("resolved", ref))
     return str(ref or "").strip()
 
 
