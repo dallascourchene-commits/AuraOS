@@ -12,8 +12,10 @@ Deterministic command router (no LLM). Reuses existing Coding Arena topology fun
 read-only. Ghost edges live only in live state. Agent Arena Bridge is used only for
 prepared handoff. No production code is mutated from voice or graph commands.
 Concept Workspace upgrade (V1.1): commands like 'show Agent Arena Bridge' and
-'show Coding Arena' now search the full CODEMAP index and synthesise ArenaNode-compatible
-dicts for CODEMAP matches not present in the projected topology.
+'show Coding Arena' now search the full CODEMAP index and create ArenaNode-compatible
+dicts for CODEMAP matches not present in the projected topology. These are
+CODEMAP-projected nodes — real CODEMAP-grounded entities (entity_exists: true),
+not fake or synthetic nodes.
 [/AURA_MASTER_KEY]
 """
 
@@ -279,6 +281,58 @@ class HumanAgentArena:
         # prepare agent task
         if "prepare" in lowered and ("agent" in lowered or "task" in lowered or mode == "prepare"):
             return self._cmd_prepare_agent_task
+        # --------------- Node Intelligence commands (V1.2) ---------------
+        # inspect selected / explain selected
+        if ("inspect" in lowered or "explain" in lowered) and "select" in lowered:
+            return self._cmd_inspect_selected
+        # why is this node here
+        if "why" in lowered and ("node" in lowered or "here" in lowered):
+            return self._cmd_why_is_node_here
+        # show exact source for selected
+        if "exact source" in lowered and "select" in lowered:
+            return self._cmd_show_exact_source
+        # expand selected / expand projected node
+        if "expand" in lowered and ("select" in lowered or "project" in lowered):
+            return self._cmd_expand_selected
+        # show callers
+        if "show" in lowered and "caller" in lowered:
+            return self._cmd_show_callers
+        # show callees
+        if "show" in lowered and "callee" in lowered:
+            return self._cmd_show_callees
+        # show tests for selected
+        if "show" in lowered and "test" in lowered and "select" in lowered:
+            return self._cmd_show_tests_for_selected
+        # show docs for selected
+        if "show" in lowered and "doc" in lowered and "select" in lowered:
+            return self._cmd_show_docs_for_selected
+        # show risks / what would break
+        if "show" in lowered and "risk" in lowered:
+            return self._cmd_show_risks
+        if "what" in lowered and "break" in lowered:
+            return self._cmd_what_would_break
+        # focus selected
+        if "focus" in lowered and "select" in lowered:
+            return self._cmd_focus_selected
+        # collapse unselected
+        if "collapse" in lowered and ("unselect" in lowered or "select" in lowered):
+            return self._cmd_collapse_unselected
+        # --------------- Affordance Directory commands (V1.2) ---------------
+        # what Aura tools can help here
+        if "what" in lowered and ("aura" in lowered or "tool" in lowered) and "help" in lowered:
+            return self._cmd_what_aura_tools
+        # show affordances for selected
+        if "affordance" in lowered and "select" in lowered:
+            return self._cmd_show_affordances
+        # what am I not seeing
+        if "what" in lowered and "not seeing" in lowered:
+            return self._cmd_what_am_i_not_seeing
+        # before refactor, show internal tools
+        if "before refactor" in lowered and ("internal" in lowered or "tool" in lowered):
+            return self._cmd_before_refactor_tools
+        # show native tools for this workspace
+        if "native tool" in lowered and "workspace" in lowered:
+            return self._cmd_show_native_tools
 
         return self._cmd_unknown
 
@@ -847,6 +901,24 @@ class HumanAgentArena:
             }
 
         plan_phase_hash = str(prepared.get("plan_phase_hash", ""))
+        # Compute recommended affordances for the handoff packet
+        recommended_affordances: list[dict[str, Any]] = []
+        prompt_cards: list[str] = []
+        try:
+            from aura_affordance_directory import find_affordances
+
+            aff_result = find_affordances(
+                objective=objective,
+                target_files=[target_file] if target_file else None,
+                target_symbols=[target_symbol] if target_symbol else None,
+                repo_root=self.repo_root,
+                top_k=5,
+            )
+            recommended_affordances = aff_result.get("recommended_affordances", [])
+            prompt_cards = aff_result.get("prompt_cards", [])
+        except Exception:
+            pass
+
         # Build and store handoff packet so it is never silently lost.
         handoff_packet: dict[str, Any] = {
             "objective": objective,
@@ -855,8 +927,11 @@ class HumanAgentArena:
             "target_symbol": target_symbol,
             "selected_node_ids": list(selected),
             "workspace_id": workspace_id,
+            "recommended_affordances": recommended_affordances,
+            "prompt_cards": prompt_cards,
             "recommended_next_cli_commands": [
                 f"python aura_agent_arena_cli.py prepare --objective \"{objective}\"",
+                f"python aura_agent_arena_cli.py find-affordances --objective \"{objective}\"",
             ],
             "prepared_at": time.time(),
             "note": (
@@ -919,24 +994,500 @@ class HumanAgentArena:
             ],
         }
 
+    # ------------------------------------------------------------------
+    # Node Intelligence command handlers (V1.2)
+    # ------------------------------------------------------------------
+
+    def _get_selected_node_id(self) -> str:
+        """Return the first selected node ID or empty string."""
+        if self.state.selected_node_ids:
+            return str(self.state.selected_node_ids[0])
+        return ""
+
+    def _build_workspace_context(self) -> dict[str, Any]:
+        """Build a workspace context dict for node inspector calls."""
+        ws = self.state.concept_workspace
+        return {
+            "concept": ws.get("concept", ""),
+            "files": ws.get("files", []),
+            "symbols": ws.get("symbols", []),
+            "nodes": self.topology.get("nodes", []),
+        }
+
+    def _cmd_inspect_selected(self, command: str, mode: str) -> dict[str, Any]:
+        """Inspect the selected node — produce a NodeIntelligencePacket."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result("inspect selected")
+        try:
+            from aura_node_inspector import inspect_node
+
+            pkt = inspect_node(
+                nid,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        self.state.add_event("inspect", f"inspected {nid}: {pkt.node_origin}")
+        return {
+            "ok": True,
+            "answer": pkt.why_here or f"Node {nid}: {pkt.node_origin}",
+            "visual_update": {
+                "highlighted_node_ids": [nid],
+                "hidden_node_ids": [],
+                "selected_node_ids": [nid],
+                "ghost_edges": [ge for ge in self.state.ghost_edges],
+                "labels": {nid: pkt.node_origin},
+                "ui_hints": ["node_inspected"],
+            },
+            "truth_packet": pkt.to_truth_packet(),
+            "node_intelligence": pkt.to_dict(),
+            "next_actions": pkt.next_actions,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_why_is_node_here(self, command: str, mode: str) -> dict[str, Any]:
+        """Explain the grounding path for the selected node."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result("why is this node here")
+        try:
+            from aura_node_inspector import why_is_node_here
+
+            result = why_is_node_here(
+                nid,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        self.state.add_event("why_here", f"why_here for {nid}")
+        return {
+            "ok": True,
+            "answer": result.get("answer", ""),
+            "visual_update": _visual_update_base(),
+            "truth_packet": result.get("truth_packet", _truth_packet_base()),
+            "node_intelligence": result.get("node_intelligence", {}),
+            "next_actions": result.get("next_actions", []),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_show_exact_source(self, command: str, mode: str) -> dict[str, Any]:
+        """Show file/symbol/line range/hash without dumping full source."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result("show exact source for selected")
+        try:
+            from aura_node_inspector import inspect_node
+
+            pkt = inspect_node(
+                nid,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        parts = []
+        if pkt.file_path:
+            parts.append(f"File: {pkt.file_path}")
+        if pkt.symbol:
+            parts.append(f"Symbol: {pkt.symbol}")
+        if pkt.line_range:
+            parts.append(f"Lines: {pkt.line_range[0]}-{pkt.line_range[1]}")
+        if pkt.digest8:
+            parts.append(f"Digest: {pkt.digest8}")
+        if pkt.signature_hash:
+            parts.append(f"Signature: {pkt.signature_hash}")
+        read_cmd = f"aura_read_slice --file {pkt.file_path}"
+        if pkt.symbol:
+            read_cmd += f" --symbol {pkt.symbol}"
+        parts.append(f"For exact source, use: {read_cmd}")
+        answer = " | ".join(parts) if parts else "No source grounding available. NEEDS_GROUNDING."
+        self.state.add_event("exact_source", f"source ref for {nid}")
+        return {
+            "ok": True,
+            "answer": answer,
+            "visual_update": _visual_update_base(),
+            "truth_packet": pkt.to_truth_packet(),
+            "node_intelligence": pkt.to_dict(),
+            "read_slice_command": read_cmd,
+            "next_actions": ["inspect selected", "expand selected", "show callers", "show callees"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_expand_selected(self, command: str, mode: str) -> dict[str, Any]:
+        """Expand the selected node — lazy expansion."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result("expand selected")
+        # Determine expansion mode from command
+        lowered = command.lower()
+        if "children" in lowered:
+            exp_mode = "children"
+        elif "caller" in lowered:
+            exp_mode = "callers"
+        elif "callee" in lowered:
+            exp_mode = "callees"
+        elif "test" in lowered:
+            exp_mode = "tests"
+        elif "doc" in lowered:
+            exp_mode = "docs"
+        elif "risk" in lowered:
+            exp_mode = "risks"
+        elif "full" in lowered:
+            exp_mode = "full"
+        else:
+            exp_mode = "balanced"
+        try:
+            from aura_node_inspector import expand_node
+
+            result = expand_node(
+                nid,
+                expansion_mode=exp_mode,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        # Merge additional nodes into topology for rendering
+        for an in result.get("additional_nodes", []):
+            if an["id"] not in self._node_by_id:
+                self._node_by_id[an["id"]] = an
+                self._all_node_ids.append(an["id"])
+                self.topology["nodes"].append(an)
+        for al in result.get("additional_links", []):
+            self.topology["links"].append(al)
+        self.state.add_event("expand", f"expanded {nid} ({exp_mode}): {len(result.get('additional_nodes', []))} nodes")
+        return {
+            "ok": True,
+            "answer": result.get("answer", ""),
+            "visual_update": result.get("visual_update", _visual_update_base()),
+            "truth_packet": result.get("truth_packet", _truth_packet_base()),
+            "node_intelligence": result.get("node_intelligence", {}),
+            "next_actions": result.get("next_actions", []),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_show_callers(self, command: str, mode: str) -> dict[str, Any]:
+        """Show callers of the selected node."""
+        return self._expand_with_mode(command, "callers")
+
+    def _cmd_show_callees(self, command: str, mode: str) -> dict[str, Any]:
+        """Show callees of the selected node."""
+        return self._expand_with_mode(command, "callees")
+
+    def _cmd_show_tests_for_selected(self, command: str, mode: str) -> dict[str, Any]:
+        """Show tests for the selected node."""
+        return self._expand_with_mode(command, "tests")
+
+    def _cmd_show_docs_for_selected(self, command: str, mode: str) -> dict[str, Any]:
+        """Show docs for the selected node."""
+        return self._expand_with_mode(command, "docs")
+
+    def _cmd_show_risks(self, command: str, mode: str) -> dict[str, Any]:
+        """Show risks for the selected node."""
+        return self._expand_with_mode(command, "risks")
+
+    def _cmd_what_would_break(self, command: str, mode: str) -> dict[str, Any]:
+        """Assess what would break if the selected node changed."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result("what would break if this changed")
+        try:
+            from aura_node_inspector import inspect_node
+
+            pkt = inspect_node(
+                nid,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        risk = pkt.risk
+        rel = pkt.relationships
+        parts = [f"Risk assessment for {pkt.file_path or nid}:"]
+        if risk.get("missing_tests"):
+            parts.append("⚠ No tests found — changes would be unverified.")
+        if risk.get("high_fan_in"):
+            parts.append(f"🔥 High fan-in (degree={risk.get('degree', 0)}) — many files depend on this.")
+        if risk.get("hub_file"):
+            parts.append("📦 Hub file — changes ripple widely.")
+        if risk.get("large_file"):
+            parts.append(f"📄 Large file ({risk.get('file_lines', 0)} lines) — higher chance of conflicts.")
+        called_by = rel.get("called_by", [])
+        if called_by:
+            parts.append(f"Called by {len(called_by)} file(s): {', '.join(called_by[:5])}")
+        if not any(risk.get(k) for k in ("missing_tests", "high_fan_in", "hub_file", "large_file")):
+            parts.append("✓ Low risk — no major risk factors detected.")
+        answer = " ".join(parts)
+        self.state.add_event("what_break", f"risk for {nid}: {risk.get('severity', 'low')}")
+        return {
+            "ok": True,
+            "answer": answer,
+            "visual_update": _visual_update_base(),
+            "truth_packet": pkt.to_truth_packet(),
+            "node_intelligence": pkt.to_dict(),
+            "next_actions": ["show tests for selected", "prepare agent task", "what Aura tools can help here"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _expand_with_mode(self, command: str, exp_mode: str) -> dict[str, Any]:
+        """Helper: expand selected node with a specific mode."""
+        nid = self._get_selected_node_id()
+        if not nid:
+            return self._no_selection_result(command)
+        try:
+            from aura_node_inspector import expand_node
+
+            result = expand_node(
+                nid,
+                expansion_mode=exp_mode,
+                repo_root=self.repo_root,
+                current_workspace=self._build_workspace_context(),
+                topology=self.topology,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        for an in result.get("additional_nodes", []):
+            if an["id"] not in self._node_by_id:
+                self._node_by_id[an["id"]] = an
+                self._all_node_ids.append(an["id"])
+                self.topology["nodes"].append(an)
+        for al in result.get("additional_links", []):
+            self.topology["links"].append(al)
+        self.state.add_event("expand", f"{exp_mode} for {nid}")
+        return {
+            "ok": True,
+            "answer": result.get("answer", ""),
+            "visual_update": result.get("visual_update", _visual_update_base()),
+            "truth_packet": result.get("truth_packet", _truth_packet_base()),
+            "node_intelligence": result.get("node_intelligence", {}),
+            "next_actions": result.get("next_actions", []),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_focus_selected(self, command: str, mode: str) -> dict[str, Any]:
+        """Focus on selected — hide all unselected nodes."""
+        selected = self.state.selected_node_ids
+        if not selected:
+            return self._no_selection_result("focus selected")
+        hidden = [nid for nid in self._all_node_ids if nid not in selected]
+        self.state.hidden_node_ids = hidden
+        self.state.visible_node_ids = list(selected)
+        self.state.add_event("focus", f"focused {len(selected)} node(s)")
+        return {
+            "ok": True,
+            "answer": f"Focused on {len(selected)} selected node(s). {len(hidden)} hidden.",
+            "visual_update": {
+                "highlighted_node_ids": selected,
+                "hidden_node_ids": hidden,
+                "selected_node_ids": selected,
+                "ghost_edges": [],
+                "labels": {},
+                "ui_hints": ["focused"],
+            },
+            "truth_packet": _truth_packet_base(),
+            "next_actions": ["inspect selected", "expand selected", "collapse unselected"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_collapse_unselected(self, command: str, mode: str) -> dict[str, Any]:
+        """Collapse unselected — show only selected + direct neighbors."""
+        selected = self.state.selected_node_ids
+        if not selected:
+            return self._no_selection_result("collapse unselected")
+        keep = set(selected)
+        for link in self.topology.get("links", []):
+            if link["source"] in selected:
+                keep.add(link["target"])
+            if link["target"] in selected:
+                keep.add(link["source"])
+        hidden = [nid for nid in self._all_node_ids if nid not in keep]
+        self.state.hidden_node_ids = hidden
+        self.state.visible_node_ids = list(keep)
+        self.state.add_event("collapse", f"collapsed to {len(keep)} node(s)")
+        return {
+            "ok": True,
+            "answer": f"Collapsed to {len(keep)} node(s) (selected + neighbors). {len(hidden)} hidden.",
+            "visual_update": {
+                "highlighted_node_ids": list(keep),
+                "hidden_node_ids": hidden,
+                "selected_node_ids": selected,
+                "ghost_edges": [],
+                "labels": {},
+                "ui_hints": ["collapsed"],
+            },
+            "truth_packet": _truth_packet_base(),
+            "next_actions": ["inspect selected", "expand selected", "focus selected"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    # ------------------------------------------------------------------
+    # Affordance Directory command handlers (V1.2)
+    # ------------------------------------------------------------------
+
+    def _cmd_what_aura_tools(self, command: str, mode: str) -> dict[str, Any]:
+        """What Aura tools can help here — ranked affordances."""
+        selected = self.state.selected_node_ids
+        objective = _build_objective(command, selected, self._node_by_id)
+        if not objective.strip():
+            ws = self.state.concept_workspace
+            if ws.get("concept"):
+                objective = f"tools for {ws['concept']}"
+            else:
+                objective = "general Aura tools"
+        target_files = None
+        target_symbols = None
+        if selected:
+            node = self._node_by_id.get(selected[0], {})
+            target_files = [str(node.get("file_path", ""))] if node.get("file_path") else None
+            target_symbols = [str(node.get("symbol", ""))] if node.get("symbol") else None
+        try:
+            from aura_affordance_directory import find_affordances
+
+            result = find_affordances(
+                objective=objective,
+                target_files=target_files,
+                target_symbols=target_symbols,
+                repo_root=self.repo_root,
+                top_k=7,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error_result(command, str(exc))
+        names = [a.get("name", a.get("id", "")) for a in result.get("recommended_affordances", [])]
+        answer = f"Recommended Aura tools for '{objective}': {', '.join(names) if names else 'none found'}."
+        self.state.add_event("affordances", f"found {len(names)} tools")
+        return {
+            "ok": True,
+            "answer": answer,
+            "visual_update": _visual_update_base(),
+            "truth_packet": {
+                "files": target_files or [],
+                "symbols": target_symbols or [],
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                "grounding": result.get("grounding", "NEEDS_GROUNDING"),
+            },
+            "recommended_affordances": result.get("recommended_affordances", []),
+            "prompt_cards": result.get("prompt_cards", []),
+            "do_not_reinvent": result.get("do_not_reinvent", []),
+            "next_actions": ["inspect selected", "prepare agent task", "show risks"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_show_affordances(self, command: str, mode: str) -> dict[str, Any]:
+        """Show affordances for selected node."""
+        return self._cmd_what_aura_tools(command, mode)
+
+    def _cmd_what_am_i_not_seeing(self, command: str, mode: str) -> dict[str, Any]:
+        """What am I not seeing — Affordance Directory + Node Inspector + Concept Workspace."""
+        selected = self.state.selected_node_ids
+        # Get affordances
+        affordance_result: dict[str, Any] = {}
+        try:
+            from aura_affordance_directory import find_affordances
+
+            obj = _build_objective(command, selected, self._node_by_id) or "what am I missing"
+            affordance_result = find_affordances(
+                objective=obj,
+                repo_root=self.repo_root,
+                top_k=5,
+            )
+        except Exception:
+            pass
+        # Get node intelligence if selected
+        node_intel: dict[str, Any] = {}
+        if selected:
+            try:
+                from aura_node_inspector import inspect_node
+
+                pkt = inspect_node(
+                    selected[0],
+                    repo_root=self.repo_root,
+                    current_workspace=self._build_workspace_context(),
+                    topology=self.topology,
+                )
+                node_intel = pkt.to_dict()
+            except Exception:
+                pass
+        affords = affordance_result.get("recommended_affordances", [])
+        parts = []
+        if affords:
+            parts.append(f"You may be missing these Aura tools: {', '.join(a.get('name', '') for a in affords[:3])}.")
+        if node_intel:
+            rel = node_intel.get("relationships", {})
+            missing = []
+            if not rel.get("tests"):
+                missing.append("tests for this node")
+            if not rel.get("docs"):
+                missing.append("related docs")
+            if not rel.get("called_by"):
+                missing.append("caller analysis")
+            if missing:
+                parts.append(f"Node gaps: {', '.join(missing)}.")
+        if not parts:
+            parts.append("No major gaps detected. Use 'show Coding Arena' or 'show ST3GG' to explore concepts.")
+        answer = " ".join(parts)
+        self.state.add_event("not_seeing", "analyzed gaps")
+        return {
+            "ok": True,
+            "answer": answer,
+            "visual_update": _visual_update_base(),
+            "truth_packet": {
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                "grounding": affordance_result.get("grounding", "NEEDS_GROUNDING"),
+            },
+            "recommended_affordances": affords,
+            "node_intelligence": node_intel,
+            "next_actions": ["inspect selected", "show Coding Arena", "what Aura tools can help here", "prepare agent task"],
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _cmd_before_refactor_tools(self, command: str, mode: str) -> dict[str, Any]:
+        """Before refactor, show internal tools."""
+        return self._cmd_what_aura_tools(command, mode)
+
+    def _cmd_show_native_tools(self, command: str, mode: str) -> dict[str, Any]:
+        """Show native tools for this workspace."""
+        return self._cmd_what_aura_tools(command, mode)
+
     def _cmd_unknown(self, command: str, mode: str) -> dict[str, Any]:
         """Fallback for unrecognized commands."""
         self.state.add_event("unknown", command)
         return {
             "ok": True,
             "answer": (
-                "Unknown command. Try: show ST3GG, show JSpace, show Agent Arena Bridge, "
-                "show tests, show dependencies, isolate selected, expand depth 2, "
-                "show unwired connections here, what if connect source to target, "
-                "hypothesize connection, diagnose selection, prepare agent task."
+                "Unknown command. Try: show ST3GG, show Coding Arena, show Agent Arena Bridge, "
+                "show all functions related to Coding Arena, inspect selected, "
+                "why is this node here, expand selected, show callers, show callees, "
+                "show tests for selected, show risks, what would break if this changed, "
+                "what Aura tools can help here, what am I not seeing, "
+                "prepare agent task, export handoff packet."
             ),
             "visual_update": _visual_update_base(),
             "truth_packet": _truth_packet_base_needs_grounding(),
             "next_actions": [
                 "show ST3GG",
-                "show JSpace",
-                "show Agent Arena Bridge",
-                "diagnose selection",
+                "show Coding Arena",
+                "inspect selected",
+                "what Aura tools can help here",
                 "prepare agent task",
             ],
         }
@@ -954,11 +1505,12 @@ class HumanAgentArena:
         fallback_terms: tuple[str, ...] | None = None,
         ws_mode: str = "explore",
     ) -> dict[str, Any]:
-        """Build a concept workspace from CODEMAP and inject synthetic nodes into the visual update.
+        """Build a concept workspace from CODEMAP and inject CODEMAP-projected nodes into the visual update.
 
-        This is the primary concept command handler in V1.1. It searches the full CODEMAP
-        index (not only the projected topology) and synthesises ArenaNode-compatible dicts
-        for CODEMAP matches not present in the projected topology.
+        This is the primary concept command handler in V1.1/V1.2. It searches the full CODEMAP
+        index (not only the projected topology) and creates ArenaNode-compatible dicts
+        for CODEMAP matches not present in the projected topology. These are
+        CODEMAP-projected nodes — real CODEMAP-grounded entities, not fake or synthetic nodes.
 
         Falls back gracefully to the legacy _show_concept keyword filter if the concept
         engine is unavailable.
@@ -989,7 +1541,7 @@ class HumanAgentArena:
         concept_name = ws.concept
         profile_key = ws.profile_key
 
-        # Clean up old synthetic nodes/links to avoid accumulation across different concept workspaces
+        # Clean up old CODEMAP-projected nodes/links to avoid accumulation across different concept workspaces
         self.topology["nodes"] = [
             n for n in self.topology.get("nodes", [])
             if not n.get("metadata", {}).get("projected_from_codemap")
@@ -1015,28 +1567,28 @@ class HumanAgentArena:
             if fp in all_file_paths or sym in all_symbols:
                 existing_highlighted.append(nid)
 
-        # Inject synthetic nodes into topology in-memory (visual advisory only)
-        synthetic_nodes = [
+        # Inject CODEMAP-projected nodes into topology in-memory (visual advisory only)
+        projected_nodes = [
             n for n in ws.nodes
             if n.get("metadata", {}).get("projected_from_codemap")
         ]
-        # Add synthetic nodes to _node_by_id and self.topology transiently (this session only, never persisted)
-        synthetic_ids: list[str] = []
-        for snode in synthetic_nodes:
-            sid = str(snode["id"])
-            if sid not in self._node_by_id:
-                self._node_by_id[sid] = snode
-                self._all_node_ids.append(sid)
-                self.topology["nodes"].append(snode)
-            synthetic_ids.append(sid)
+        # Add projected nodes to _node_by_id and self.topology transiently (this session only, never persisted)
+        projected_ids: list[str] = []
+        for pnode in projected_nodes:
+            pid = str(pnode["id"])
+            if pid not in self._node_by_id:
+                self._node_by_id[pid] = pnode
+                self._all_node_ids.append(pid)
+                self.topology["nodes"].append(pnode)
+            projected_ids.append(pid)
 
-        # Add synthetic links to self.topology
-        for slink in ws.links:
-            if slink["source"] in self._node_by_id and slink["target"] in self._node_by_id:
-                self.topology["links"].append(slink)
+        # Add projected links to self.topology
+        for plink in ws.links:
+            if plink["source"] in self._node_by_id and plink["target"] in self._node_by_id:
+                self.topology["links"].append(plink)
 
-        # Build full highlighted list = existing matches + synthetic
-        highlighted_set = set(existing_highlighted) | set(synthetic_ids)
+        # Build full highlighted list = existing matches + CODEMAP-projected
+        highlighted_set = set(existing_highlighted) | set(projected_ids)
         highlighted = list(highlighted_set)
         hidden = [nid for nid in self._all_node_ids if nid not in highlighted_set]
 
@@ -1060,7 +1612,8 @@ class HumanAgentArena:
             "tests_count": len(ws.tests),
             "docs_count": len(ws.docs),
             "neighbors_count": len(ws.neighbors),
-            "synthetic_node_count": len(synthetic_ids),
+            "codemap_projected_node_count": len(projected_ids),
+            "synthetic_node_count": len(projected_ids),  # backward compat
             "action_buttons": [
                 "show all functions",
                 "show neighbors",
@@ -1068,11 +1621,12 @@ class HumanAgentArena:
                 "show docs",
                 "show agent handoff",
                 "prepare refactor plan",
+                "what Aura tools can help here",
             ],
         }
         self.state.add_event(
             "concept_workspace",
-            f"{concept_name}: {len(highlighted)} nodes ({len(synthetic_ids)} synthetic from CODEMAP)",
+            f"{concept_name}: {len(highlighted)} nodes ({len(projected_ids)} CODEMAP-projected)",
         )
 
         truth = ws.to_truth_packet()
@@ -1092,7 +1646,7 @@ class HumanAgentArena:
             selected_node_ids=self.state.selected_node_ids,
             current_ghost_edges=self.state.ghost_edges,
         )
-        # Merge synthetic node canvas data into topology links for rendering
+        # Merge CODEMAP-projected node canvas data into topology links for rendering
         visual_update["highlighted_node_ids"] = highlighted
         visual_update["hidden_node_ids"] = hidden
 
@@ -1118,12 +1672,31 @@ class HumanAgentArena:
                 f"Concept workspace '{concept_name}': {len(ws.files)} file(s), "
                 f"{len(ws.symbols)} symbol(s), {len(ws.tests)} test(s), "
                 f"{len(ws.docs)} doc(s). "
-                f"{len(synthetic_ids)} node(s) synthesised from CODEMAP (visual-only)."
+                f"{len(projected_ids)} CODEMAP-projected node(s) (real CODEMAP-grounded, visual projection only)."
             ),
             "visual_update": visual_update,
             "truth_packet": truth,
+            "recommended_affordances": self._compute_affordances(concept_name, ws.files, ws.symbols),
             "next_actions": next_actions,
         }
+
+    def _compute_affordances(
+        self, concept: str, files: list[str], symbols: list[str]
+    ) -> list[dict[str, Any]]:
+        """Compute recommended affordances for a concept workspace (advisory only)."""
+        try:
+            from aura_affordance_directory import find_affordances
+
+            result = find_affordances(
+                objective=concept,
+                target_files=files[:10],
+                target_symbols=symbols[:10],
+                repo_root=self.repo_root,
+                top_k=5,
+            )
+            return result.get("recommended_affordances", [])
+        except Exception:
+            return []
 
     def _show_concept(
         self,

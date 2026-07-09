@@ -16,6 +16,7 @@ Usage:
     python -m aura_agent_arena_cli repair-packet --task-id A1
     python -m aura_agent_arena_cli status
     python -m aura_agent_arena_cli export-icm
+    python -m aura_agent_arena_cli find-affordances --objective "refactor coding arena"
 """
 
 from __future__ import annotations
@@ -258,6 +259,19 @@ def cmd_export_icm(args: argparse.Namespace) -> int:
     return 0 if result.get("ok") else 1
 
 
+def cmd_find_affordances(args: argparse.Namespace) -> int:
+    bridge = _get_bridge()
+    result = bridge.aura_find_affordances(
+        objective=args.objective,
+        target_files=args.target_files.split(",") if args.target_files else None,
+        target_symbols=args.target_symbols.split(",") if args.target_symbols else None,
+        include_affordances=not args.no_affordances,
+        top_k=args.top_k,
+    )
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
 # ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
@@ -351,6 +365,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_export = subparsers.add_parser("export-icm", help="Export arena to ICM workspace")
     p_export.add_argument("--workspace-root", default=None)
     p_export.set_defaults(func=cmd_export_icm)
+
+    # find-affordances
+    p_aff = subparsers.add_parser("find-affordances", help="Find internal Aura tools for an objective")
+    p_aff.add_argument("--objective", required=True, help="Task objective or question")
+    p_aff.add_argument("--target-files", default=None, help="Comma-separated target file paths")
+    p_aff.add_argument("--target-symbols", default=None, help="Comma-separated target symbol names")
+    p_aff.add_argument("--no-affordances", action="store_true", help="Skip affordance cards")
+    p_aff.add_argument("--top-k", type=int, default=7, help="Max affordances to return (3-7)")
+    p_aff.set_defaults(func=cmd_find_affordances)
 
     return parser
 

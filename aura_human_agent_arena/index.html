@@ -46,6 +46,36 @@
         </div>
       </section>
 
+      <section class="layout-controls">
+        <h2>Layout Controls</h2>
+        <div class="control-row">
+          <label for="spread-slider">Spacing:
+            <input type="range" id="spread-slider" min="1.0" max="6.0" step="0.1" value="2.8">
+            <span id="spread-value" class="control-value">2.8</span>
+          </label>
+        </div>
+        <div class="control-row">
+          <label for="zoom-slider">Zoom:
+            <input type="range" id="zoom-slider" min="0.4" max="8.0" step="0.1" value="1.9">
+          </label>
+        </div>
+        <div class="control-row">
+          <label for="label-mode-select">Labels:
+            <select id="label-mode-select">
+              <option value="selected">selected only</option>
+              <option value="highlighted">highlighted</option>
+              <option value="all">all visible</option>
+              <option value="off">off</option>
+            </select>
+          </label>
+        </div>
+        <div class="control-buttons">
+          <button id="reset-view-btn" type="button" class="ctrl-btn">Reset View</button>
+          <button id="focus-selected-btn" type="button" class="ctrl-btn">Focus Selected</button>
+          <button id="collapse-unselected-btn" type="button" class="ctrl-btn">Collapse Unselected</button>
+        </div>
+      </section>
+
       <section class="next-actions">
         <h2>Next Actions</h2>
         <div id="next-actions-list" class="action-buttons"></div>

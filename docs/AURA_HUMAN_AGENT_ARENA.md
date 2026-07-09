@@ -235,15 +235,15 @@ are not present in the projected visual topology (e.g. because they were outside
 
 After any concept command, a **Concept Workspace Summary Panel** appears in the UI with:
 - Files count, symbols count, tests count, docs count, neighbors count
-- Synthetic CODEMAP node count (visual-only)
-- Workspace action buttons: `show all functions`, `show neighbors`, `show tests`, `show docs`, `show agent handoff`, `prepare refactor plan`
+- CODEMAP-projected node count (real, visual projection only)
+- Workspace action buttons: `show all functions`, `show neighbors`, `show tests`, `show docs`, `show agent handoff`, `prepare refactor plan`, `what Aura tools can help here`
 
-### Synthetic Nodes Visual Legend
+### CODEMAP-Projected Nodes Visual Legend
 
 | Style | Meaning |
 |-------|---------|
-| Dashed purple ring `⬤ ···` | Synthetic CODEMAP node (visual-only, not patch authority) |
-| Purple label prefix `[~CODEMAP]` | Same node in label text |
+| Dashed purple ring `⬤ ···` | CODEMAP-projected node (real CODEMAP-grounded entity, visual projection only) |
+| Purple label prefix `[CODEMAP]` | Same node in label text |
 | Normal filled dot | Existing projected topology node |
 
 ### Safety Invariants (unchanged)
@@ -289,12 +289,18 @@ After any concept command, a **Concept Workspace Summary Panel** appears in the 
 | `aura_human_agent_arena.py` | Live state + deterministic command router |
 | `aura_human_agent_arena_server.py` | Stdlib HTTP server with polling endpoints |
 | `aura_human_agent_concepts.py` | Concept Workspace Engine — CODEMAP search, 13 concept profiles, `build_concept_workspace`, `resolve_node_ref` |
+| `aura_node_inspector.py` | Node Intelligence — `NodeIntelligencePacket`, `inspect_node`, `expand_node`, `route_node_command` |
+| `aura_affordance_directory.py` | Affordance Directory / Internal Capability Oracle |
 | `aura_human_agent_arena/index.html` | Frontend HTML |
-| `aura_human_agent_arena/main.js` | Frontend JS (graph, polling, command, mic, concept workspace panel) |
+| `aura_human_agent_arena/main.js` | Frontend JS (graph, polling, command, mic, concept workspace, node inspector, layout controls) |
 | `aura_human_agent_arena/arena.css` | Frontend CSS |
 | `tests/test_aura_human_agent_arena.py` | Deterministic tests (existing) |
-| `tests/test_aura_human_agent_concepts.py` | Concept Workspace Engine acceptance criteria tests (12 tests) |
+| `tests/test_aura_human_agent_concepts.py` | Concept Workspace Engine acceptance criteria tests |
+| `tests/test_aura_node_inspector.py` | Node Intelligence tests |
+| `tests/test_aura_affordance_directory.py` | Affordance Directory tests |
 | `docs/AURA_HUMAN_AGENT_ARENA.md` | This document |
+| `docs/AURA_NODE_INSPECTOR.md` | Node Inspector documentation |
+| `docs/AURA_AFFORDANCE_DIRECTORY.md` | Affordance Directory documentation |
 
 
 ## Testing
@@ -303,9 +309,111 @@ After any concept command, a **Concept Workspace Summary Panel** appears in the 
 # Run Human Agent Arena tests
 python -m pytest tests/test_aura_human_agent_arena.py -v
 
+# Run Node Inspector tests
+python -m pytest tests/test_aura_node_inspector.py -v
+
+# Run Affordance Directory tests
+python -m pytest tests/test_aura_affordance_directory.py -v
+
 # Run existing Coding Arena tests (must still pass)
 python -m pytest tests/test_aura_coding_arena_3d.py -v
 
 # Run all tests
 python -m pytest tests/ -v
+```
+
+---
+
+## Intelligence Layer V1.2
+
+The Human Agent Arena now includes three integrated intelligence systems that work together as one coherent layer:
+
+### 1. Grounded Node Ontology
+
+Nodes in the Concept Workspace are now classified by origin:
+
+| Origin | Description |
+|--------|-------------|
+| `exact_topology_node` | Present in loaded arena topology |
+| `codemap_projected_node` | Real file/symbol from `.aura/CODEMAP.json` projected into the visual workspace |
+| `inferred_relationship_edge` | Relationship inferred from CODEMAP neighbors, naming, tests, docs |
+| `ghost_hypothesis_edge` | Human-created hypothesis edge — never patch authority |
+| `unresolved_candidate` | Could not be grounded — shows `NEEDS_GROUNDING` |
+
+CODEMAP-projected nodes are **real CODEMAP-grounded entities** (`entity_exists: true`), not fake or synthetic nodes. The projection is UI-only, but the file/symbol itself is real.
+
+### 2. Node Intelligence (Node Inspector)
+
+Clicking a node produces a `NodeIntelligencePacket` that answers:
+- Why it is here (grounding path)
+- What source grounds it (file, symbol, line range, digest, hash)
+- What it connects to (contains, calls, called_by, neighbors, tests, docs)
+- What risks it carries (missing tests, high fan-in, hub file, large file)
+- What Aura tools can help (recommended affordances)
+- What next actions are available
+
+See [docs/AURA_NODE_INSPECTOR.md](AURA_NODE_INSPECTOR.md) for full details.
+
+### 3. Affordance Directory / Internal Capability Oracle
+
+Tells Aura and coding agents which existing internal Aura tools should be reused before inventing generic solutions. 17 seed affordances, grounded against CODEMAP, ranked by relevance.
+
+See [docs/AURA_AFFORDANCE_DIRECTORY.md](AURA_AFFORDANCE_DIRECTORY.md) for full details.
+
+### Three Surfaces Working Together
+
+| Surface | Role | Key Commands |
+|---------|------|-------------|
+| **Concept Workspace** | Broad concept search across full CODEMAP | `show Coding Arena`, `show all functions related to Coding Arena`, `show ST3GG` |
+| **Node Inspector** | Per-node intelligence and lazy expansion | `inspect selected`, `why is this node here`, `expand selected`, `show callers` |
+| **Affordance Directory** | Internal capability oracle | `what Aura tools can help here`, `what am I not seeing`, `before refactor, show internal tools` |
+
+### Example Commands
+
+```
+show Coding Arena
+show all functions related to Coding Arena
+show Agent Arena Bridge
+why is this node here
+what Aura tools can help here
+what am I not seeing
+expand selected
+inspect selected
+show callers
+show callees
+show tests for selected
+show risks
+what would break if this changed
+prepare agent task
+export handoff packet
+before refactor, show internal tools
+focus selected
+collapse unselected
+```
+
+### Frontend Improvements (V1.2)
+
+- **Layout controls**: spacing slider (1.0–6.0), zoom slider (0.4–8.0), label mode (selected/highlighted/all/off)
+- **Reset View**, **Focus Selected**, **Collapse Unselected** buttons
+- **Node Inspector panel**: origin badge, file/symbol/line range/digest/hash, why_here, relationship counts, risk badges, recommended affordances, next action buttons
+- **Click behavior**: single-click = select + inspect, double-click = inspect + expand, shift-click = focus, alt-click = collapse
+- **Label readability**: background boxes, zoom-based truncation, subsystem/file labels at low zoom, functions/classes at high zoom
+- **`layoutSpread`**: adjustable node spacing (default 2.8) applied in projection
+
+### Handoff Packets (V1.2)
+
+`prepare agent task` now includes:
+- `recommended_affordances` — top 5 Aura tools to consider
+- `prompt_cards` — compact guidance for agents
+- `recommended_next_cli_commands` — including `find-affordances`
+
+`export handoff packet` writes to `Aura_Memory/human_agent_arena/handoff_<workspace_id>.json`.
+
+### Core Invariant (Unchanged)
+
+Visual topology, JSpace, VSA, ST3GG, screenshots, summaries, fuzzy matches, CODEMAP projections, and ghost edges are **advisory/orientation layers only**. Patch authority remains exact source spans, hashes, CODEMAP facts, tests, boundary contracts, verifier gates, and human approval.
+
+```
+patch_authority: "exact_source_spans_and_hashes_only"
+vsa_patch_authority: false
 ```

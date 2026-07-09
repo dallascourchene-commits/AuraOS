@@ -249,6 +249,76 @@ pre {
   font-size: 13px;
 }
 
+/* Layout Controls (Intelligence Layer V1.2) */
+.layout-controls {
+  margin-bottom: 6px;
+}
+
+.layout-controls h2 {
+  margin-top: 14px;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.control-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.control-row input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  accent-color: var(--accent);
+}
+
+.control-row select {
+  width: auto;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+.control-value {
+  min-width: 28px;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.control-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.ctrl-btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  min-height: 28px;
+  border-radius: 5px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.ctrl-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 @media (max-width: 860px) {
   body {
     overflow: auto;

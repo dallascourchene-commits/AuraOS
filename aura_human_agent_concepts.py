@@ -8,11 +8,12 @@ FUNCTIONS: ConceptProfile, ConceptWorkspace, build_concept_workspace, resolve_no
            CONCEPT_PROFILES
 SYNOPSIS: Concept Workspace Engine for the Human Agent Arena. Searches the full
 CODEMAP index (files, symbol_index, command_index, topology neighbors) rather than
-only the already-projected visual graph. Synthesises ArenaNode-compatible dicts for
-CODEMAP matches not present in the current projected topology. Synthetic nodes are
-visual-only advisory projections; exact source facts (file path, line range, hash)
-are authoritative in the truth_packet. No production code is mutated. No network
-calls are made.
+only the already-projected visual graph. Creates ArenaNode-compatible dicts for
+CODEMAP matches not present in the current projected topology. These are
+CODEMAP-projected nodes — real CODEMAP-grounded entities projected into the visual
+workspace (visual_projection_only: true, entity_exists: true, patch_authority: false).
+Exact source facts (file path, line range, hash) are authoritative in the truth_packet.
+No production code is mutated. No network calls are made.
 [/AURA_MASTER_KEY]
 """
 
@@ -330,13 +331,56 @@ class ConceptWorkspace:
     tests: list[str] = field(default_factory=list)
     commands: list[str] = field(default_factory=list)
     neighbors: list[str] = field(default_factory=list)
-    # ArenaNode-compatible dicts (existing + synthetic)
+    # ArenaNode-compatible dicts (existing topology + CODEMAP-projected)
     nodes: list[dict[str, Any]] = field(default_factory=list)
     links: list[dict[str, Any]] = field(default_factory=list)
     token_estimates: dict[str, Any] = field(default_factory=dict)
     grounding: str = "NEEDS_GROUNDING"
 
     def to_truth_packet(self) -> dict[str, Any]:
+        # Build origin breakdown for the grounded node ontology
+        codemap_projected = [
+            n for n in self.nodes
+            if n.get("metadata", {}).get("node_origin") == "codemap_projected_node"
+        ]
+        exact_topology = [
+            n for n in self.nodes
+            if n.get("metadata", {}).get("node_origin") == "exact_topology_node"
+            or (
+                n.get("metadata", {}).get("projected_from_codemap") is not True
+                and not n.get("metadata", {}).get("node_origin")
+            )
+        ]
+        node_origins = {
+            n["id"]: n.get("metadata", {}).get("node_origin", "exact_topology_node")
+            for n in self.nodes
+            if n.get("id")
+        }
+        edge_origins = {}
+        for link in self.links:
+            meta = link.get("metadata", {})
+            eid = f'{link.get("source", "")}->{link.get("target", "")}'
+            edge_origins[eid] = meta.get("edge_origin", "inferred_relationship_edge")
+        line_ranges: list[dict[str, Any]] = []
+        source_hashes: list[str] = []
+        signature_hashes: list[str] = []
+        for n in self.nodes:
+            nid = n.get("id", "")
+            lr = n.get("line_range") or n.get("metadata", {}).get("line_range") or []
+            if lr:
+                line_ranges.append({
+                    "node_id": nid,
+                    "file_path": str(n.get("file_path", "")),
+                    "symbol": str(n.get("symbol", "")),
+                    "line_range": list(lr),
+                })
+            d8 = n.get("metadata", {}).get("digest8") or n.get("digest8", "")
+            if d8:
+                source_hashes.append(d8)
+            sh = n.get("metadata", {}).get("signature_hash") or n.get("signature_hash", "")
+            if sh:
+                signature_hashes.append(sh)
+
         return {
             "concept": self.concept,
             "workspace_id": self.workspace_id,
@@ -346,14 +390,24 @@ class ConceptWorkspace:
             "tests": list(self.tests),
             "commands": list(self.commands),
             "neighbors": list(self.neighbors),
-            "line_ranges": [],
-            "source_hashes": [],
+            "line_ranges": line_ranges,
+            "source_hashes": source_hashes,
+            "signature_hashes": signature_hashes,
+            "node_origins": node_origins,
+            "edge_origins": edge_origins,
+            "codemap_projected_nodes": [n.get("id", "") for n in codemap_projected],
+            "exact_topology_nodes": [n.get("id", "") for n in exact_topology],
+            "ghost_hypothesis_edges": [],
+            "unresolved_candidates": [],
+            "grounding_source": ".aura/CODEMAP.json",
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
             "grounding": self.grounding,
             "notes": (
-                "Synthetic CODEMAP projection nodes are visual-only. "
-                "Exact source facts in this truth_packet are authoritative."
+                "CODEMAP-projected nodes are real CODEMAP-grounded entities projected "
+                "into the visual workspace (visual_projection_only). Exact source facts "
+                "in this truth_packet are authoritative. Patch authority remains exact "
+                "source spans and hashes only."
             ),
         }
 
@@ -369,6 +423,11 @@ class ConceptWorkspace:
             nid for nid in existing_node_ids
             if nid not in set(highlighted)
         ]
+        codemap_projected_count = sum(
+            1 for n in self.nodes
+            if n.get("metadata", {}).get("node_origin") == "codemap_projected_node"
+            or n.get("metadata", {}).get("projected_from_codemap")
+        )
         return {
             "highlighted_node_ids": highlighted,
             "hidden_node_ids": hidden,
@@ -385,10 +444,8 @@ class ConceptWorkspace:
                 "token_estimate": self.token_estimates,
                 "workspace_id": self.workspace_id,
                 "profile_key": self.profile_key,
-                "synthetic_node_count": sum(
-                    1 for n in self.nodes
-                    if n.get("metadata", {}).get("projected_from_codemap")
-                ),
+                "codemap_projected_node_count": codemap_projected_count,
+                "synthetic_node_count": codemap_projected_count,  # backward compat
                 "action_buttons": [
                     "show all functions",
                     "show neighbors",
@@ -396,9 +453,15 @@ class ConceptWorkspace:
                     "show docs",
                     "show agent handoff",
                     "prepare refactor plan",
+                    "what Aura tools can help here",
                 ],
             },
-            "synthetic_nodes": [
+            "codemap_projected_nodes": [
+                n for n in self.nodes
+                if n.get("metadata", {}).get("node_origin") == "codemap_projected_node"
+                or n.get("metadata", {}).get("projected_from_codemap")
+            ],
+            "synthetic_nodes": [  # backward compat alias
                 n for n in self.nodes
                 if n.get("metadata", {}).get("projected_from_codemap")
             ],
@@ -472,7 +535,7 @@ def _node_type_for_path(path: str) -> str:
     return "file"
 
 
-def _synthetic_node(
+def _codemap_projected_node(
     file_path: str,
     symbol: str = "",
     *,
@@ -480,8 +543,17 @@ def _synthetic_node(
     line_range: list[int] | None = None,
     tokens_est: int = 0,
     note: str = "",
+    digest8: str = "",
+    semantic_id: str = "",
+    signature_hash: str = "",
 ) -> dict[str, Any]:
-    """Build an ArenaNode-compatible dict for a CODEMAP file not in the projected topology."""
+    """Build an ArenaNode-compatible dict for a real CODEMAP file/symbol not in the
+    current projected topology.
+
+    This is a CODEMAP-projected node — the file/symbol is real (entity_exists: true),
+    grounded in .aura/CODEMAP.json. The visual projection is UI-only
+    (visual_projection_only: true) and carries no patch authority.
+    """
     node_id = _stable_node_id(file_path, symbol)
     label = Path(file_path).name if not symbol else f"{symbol}"
     ntype = kind if kind in ("file", "function", "class", "method", "test", "doc", "router") else _node_type_for_path(file_path)
@@ -499,13 +571,24 @@ def _synthetic_node(
         "x": 0.0,
         "y": 0.0,
         "z": 0.0,
+        "digest8": digest8,
+        "semantic_id": semantic_id,
+        "signature_hash": signature_hash,
         "metadata": {
+            "node_origin": "codemap_projected_node",
             "projected_from_codemap": True,
-            "visual_only": True,
+            "grounding_source": ".aura/CODEMAP.json",
+            "visual_projection_only": True,
+            "entity_exists": True,
             "patch_authority": False,
-            "concept_note": note or "Injected from CODEMAP by concept workspace engine.",
+            "visual_only": True,  # backward compat
+            "concept_note": note or "Projected from CODEMAP by concept workspace engine.",
         },
     }
+
+
+# Backward-compatible alias
+_synthetic_node = _codemap_projected_node
 
 
 # ---------------------------------------------------------------------------
@@ -766,30 +849,38 @@ def build_concept_workspace(
     # 8. Build nodes — existing topology nodes first, then synthetic for others
     nodes_by_id: dict[str, dict[str, Any]] = {}
 
-    # Existing projected nodes that match
+    # Existing projected nodes that match — tag with exact_topology_node origin
     for nid, node in existing_nodes.items():
         fp = str(node.get("file_path", "") or node.get("id", ""))
         sym = str(node.get("symbol", ""))
         if fp in matched_files_set or sym in set(all_symbols):
-            nodes_by_id[nid] = node
+            # Add origin metadata if not already present
+            meta = dict(node.get("metadata", {}) or {})
+            meta.setdefault("node_origin", "exact_topology_node")
+            tagged = dict(node)
+            tagged["metadata"] = meta
+            nodes_by_id[nid] = tagged
 
-    # Synthetic nodes for files not in existing topology
+    # CODEMAP-projected nodes for files not in existing topology
     existing_file_paths = {str(n.get("file_path", "")) for n in existing_nodes.values()}
     for file_path in all_files[:max_files]:
         if file_path in existing_file_paths:
             continue
-        # Create file-level synthetic node
+        # Create file-level CODEMAP-projected node
         node_id = _stable_node_id(file_path)
         if node_id not in nodes_by_id:
             ntype = _node_type_for_path(file_path)
             entry = next((f for f in codemap_files if f.get("path") == file_path), {})
-            nodes_by_id[node_id] = _synthetic_node(
+            # Compute digest8 from file path for stable identification
+            digest8 = _short_hash(file_path, size=8)
+            nodes_by_id[node_id] = _codemap_projected_node(
                 file_path, "",
                 kind=ntype,
                 tokens_est=int(entry.get("tokens_est", 0)),
+                digest8=digest8,
             )
 
-    # Synthetic symbol nodes for matched symbols (functions-mode or full-mode)
+    # CODEMAP-projected symbol nodes for matched symbols (functions-mode or full-mode)
     if mode in ("functions", "full"):
         for sym_entry in matched_symbols[:50]:
             fp = sym_entry["file"]
@@ -803,15 +894,17 @@ def build_concept_workspace(
                 kind = "function"
             node_id = _stable_node_id(fp, sym)
             if node_id not in nodes_by_id:
-                nodes_by_id[node_id] = _synthetic_node(
+                nodes_by_id[node_id] = _codemap_projected_node(
                     fp, sym,
                     kind=kind,
                     line_range=[sym_entry["line"], sym_entry["end_line"]],
+                    semantic_id=sym_entry.get("semantic_id", ""),
+                    signature_hash=sym_entry.get("signature_hash", ""),
                 )
 
     ws.nodes = list(nodes_by_id.values())
 
-    # 9. Synthesise links between matched files
+    # 9. Synthesise links between matched files (inferred_relationship_edge)
     links: list[dict[str, Any]] = []
     node_id_set = {n["id"] for n in ws.nodes}
     for sym_entry in matched_symbols[:max_symbols]:
@@ -827,9 +920,13 @@ def build_concept_workspace(
                 "weight": 1.0,
                 "status": "known",
                 "label": "contains",
-                "metadata": {"synthetic": True},
+                "metadata": {
+                    "synthetic": True,  # backward compat
+                    "edge_origin": "inferred_relationship_edge",
+                    "inference_source": "codemap_symbol_contains",
+                },
             })
-    # Test → target links
+    # Test → target links (inferred from naming convention)
     for test_path in all_tests:
         stem = Path(test_path).stem
         target_stem = stem[5:] if stem.startswith("test_") else stem  # strip test_ prefix
@@ -845,7 +942,11 @@ def build_concept_workspace(
                         "weight": 0.9,
                         "status": "known",
                         "label": "tested_by",
-                        "metadata": {"synthetic": True},
+                        "metadata": {
+                            "synthetic": True,  # backward compat
+                            "edge_origin": "inferred_relationship_edge",
+                            "inference_source": "naming_convention_test",
+                        },
                     })
     ws.links = links
 
