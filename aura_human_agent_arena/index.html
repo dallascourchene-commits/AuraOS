@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aura Human Agent Arena</title>
+  <link rel="stylesheet" href="arena.css">
+</head>
+<body>
+  <main class="arena-shell">
+    <section class="viewport">
+      <canvas id="arena-canvas" aria-label="Aura topology graph"></canvas>
+      <div class="hud">
+        <strong>Human Agent Arena</strong>
+        <span id="graph-status">loading topology</span>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="side-panel">
+      <header class="panel-header">
+        <div>
+          <h1>Human Agent Arena</h1>
+          <p id="truth-policy">Exact topology is source of truth. Visual is advisory only.</p>
+        </div>
+        <button id="demo-toggle" type="button">Demo</button>
+      </header>
+
+      <section class="command-block">
+        <h2>Command</h2>
+        <div class="command-row">
+          <input id="command-input" type="text" value="show ST3GG" aria-label="Command" placeholder="show ST3GG, diagnose selection, prepare agent task...">
+          <button id="mic-button" type="button" title="Voice input (optional)">Mic</button>
+          <button id="run-button" type="button">Run</button>
+        </div>
+        <p id="voice-status">Voice optional: type a command and press Run.</p>
+        <div class="mode-row">
+          <label>Mode:
+            <select id="mode-select">
+              <option value="explore">explore</option>
+              <option value="diagnose">diagnose</option>
+              <option value="hypothesize">hypothesize</option>
+              <option value="prepare">prepare</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="next-actions">
+        <h2>Next Actions</h2>
+        <div id="next-actions-list" class="action-buttons"></div>
+      </section>
+
+      <section class="diagnostics">
+        <h2>Diagnostics</h2>
+        <pre id="diagnostics-panel">No diagnostics yet.</pre>
+      </section>
+
+      <section class="truth-panel">
+        <h2>Truth Packet</h2>
+        <pre id="truth-packet">{}</pre>
+      </section>
+
+      <section class="answer-panel">
+        <h2>Answer</h2>
+        <pre id="answer-text">Awaiting command.</pre>
+      </section>
+
+      <section class="event-log">
+        <h2>Event Log</h2>
+        <pre id="event-log">No events.</pre>
+      </section>
+    </aside>
+  </main>
+  <script src="main.js"></script>
+</body>
+</html>
