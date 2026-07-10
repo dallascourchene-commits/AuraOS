@@ -61,6 +61,14 @@ try:
 except Exception:  # noqa: BLE001
     _NATIVE_COCKPIT_AVAILABLE = False
 
+# Capability Orchestration — optional import (additive)
+try:
+    from aura_capability_lane_registry import lane_registry_packet, explain_lane, list_lane_ids
+    from aura_cockpit_capability_router import route_capability_lanes
+    _CAPABILITY_LANES_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _CAPABILITY_LANES_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -487,6 +495,125 @@ def cmd_prepare_native_handoff(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Capability Orchestration command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_capability_lanes() -> None:
+    if not _CAPABILITY_LANES_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Capability lanes not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_capability_lanes(args: argparse.Namespace) -> int:
+    _require_capability_lanes()
+    result = lane_registry_packet()
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_route_lanes(args: argparse.Namespace) -> int:
+    _require_capability_lanes()
+    result = route_capability_lanes(args.objective)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_music_rank(args: argparse.Namespace) -> int:
+    try:
+        from aura_music_mitosis_adapter import music_rank_cockpit_candidates
+        result = music_rank_cockpit_candidates(args.objective, [], repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_mitosis_split(args: argparse.Namespace) -> int:
+    try:
+        from aura_music_mitosis_adapter import mitosis_split_objective
+        result = mitosis_split_objective(args.objective, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_research_evidence(args: argparse.Namespace) -> int:
+    try:
+        from aura_research_cockpit_adapter import research_manifest_search, research_to_cockpit_evidence_packet
+        search = research_manifest_search(args.objective, repo_root=".", offline=True)
+        evidence = research_to_cockpit_evidence_packet(search, repo_root=".")
+        result = {"ok": True, "search": search, "evidence": evidence,
+                  "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_skillweave(args: argparse.Namespace) -> int:
+    try:
+        from aura_skill_cockpit_adapter import discover_skills_for_objective
+        result = discover_skills_for_objective(args.objective, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_goap_plan(args: argparse.Namespace) -> int:
+    try:
+        from aura_cockpit_planner import plan_objective_with_goap
+        result = plan_objective_with_goap(args.objective, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_swarm_plan(args: argparse.Namespace) -> int:
+    try:
+        from aura_cockpit_swarm import build_swarm_plan
+        agents = [a.strip() for a in args.agents.split(",") if a.strip()]
+        result = build_swarm_plan(args.objective, agents=agents, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_phase_capsules(args: argparse.Namespace) -> int:
+    try:
+        from aura_cockpit_planner import objective_to_phase_capsules
+        result = objective_to_phase_capsules(args.objective, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_live_stage_plan(args: argparse.Namespace) -> int:
+    try:
+        from aura_live_architect_cockpit_adapter import live_stage_review_packet
+        result = live_stage_review_packet(args.objective, repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_cockpit_audit(args: argparse.Namespace) -> int:
+    try:
+        from aura_cockpit_audit_trail import export_cockpit_audit_packet
+        result = export_cockpit_audit_packet(repo_root=".")
+    except Exception as exc:
+        result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -706,6 +833,64 @@ def build_parser() -> argparse.ArgumentParser:
     p_pnh.add_argument("--intent-file", required=True, help="Path to .aura.md intent document")
     p_pnh.add_argument("--agent", default="hermes", help="Agent name (hermes, codex)")
     p_pnh.set_defaults(func=cmd_prepare_native_handoff)
+
+    # ---- Capability Orchestration subcommands (additive) ----
+
+    # capability-lanes
+    p_clanes = subparsers.add_parser("capability-lanes", help="List all cockpit capability lanes")
+    p_clanes.set_defaults(func=cmd_capability_lanes)
+
+    # route-lanes
+    p_route = subparsers.add_parser("route-lanes", help="Route an objective to capability lanes")
+    p_route.add_argument("--objective", required=True, help="Coding objective")
+    p_route.set_defaults(func=cmd_route_lanes)
+
+    # music-rank
+    p_music = subparsers.add_parser("music-rank", help="Run MUSIC advisory ranking on candidates")
+    p_music.add_argument("--objective", required=True, help="Coding objective")
+    p_music.set_defaults(func=cmd_music_rank)
+
+    # mitosis-split
+    p_mitosis = subparsers.add_parser("mitosis-split", help="Split objective into child capsules")
+    p_mitosis.add_argument("--objective", required=True, help="Coding objective")
+    p_mitosis.set_defaults(func=cmd_mitosis_split)
+
+    # research-evidence
+    p_research = subparsers.add_parser("research-evidence", help="Search research manifest for evidence")
+    p_research.add_argument("--objective", required=True, help="Coding objective")
+    p_research.add_argument("--offline", action="store_true", default=True, help="Offline mode (default)")
+    p_research.set_defaults(func=cmd_research_evidence)
+
+    # skillweave
+    p_skill = subparsers.add_parser("skillweave", help="Discover skills for an objective")
+    p_skill.add_argument("--objective", required=True, help="Coding objective")
+    p_skill.set_defaults(func=cmd_skillweave)
+
+    # goap-plan
+    p_goap = subparsers.add_parser("goap-plan", help="Plan objective with GOAP planner")
+    p_goap.add_argument("--objective", required=True, help="Coding objective")
+    p_goap.set_defaults(func=cmd_goap_plan)
+
+    # swarm-plan
+    p_swarm = subparsers.add_parser("swarm-plan", help="Build multi-agent swarm plan")
+    p_swarm.add_argument("--objective", required=True, help="Coding objective")
+    p_swarm.add_argument("--agents", default="hermes", help="Comma-separated agent names")
+    p_swarm.set_defaults(func=cmd_swarm_plan)
+
+    # phase-capsules
+    p_phase = subparsers.add_parser("phase-capsules", help="Create phase capsules for an objective")
+    p_phase.add_argument("--objective", required=True, help="Coding objective")
+    p_phase.set_defaults(func=cmd_phase_capsules)
+
+    # live-stage-plan
+    p_stage = subparsers.add_parser("live-stage-plan", help="Create live architect stage plan")
+    p_stage.add_argument("--objective", required=True, help="Coding objective")
+    p_stage.set_defaults(func=cmd_live_stage_plan)
+
+    # cockpit-audit
+    p_audit = subparsers.add_parser("cockpit-audit", help="Export cockpit audit packet")
+    p_audit.add_argument("--objective", default="", help="Optional objective filter")
+    p_audit.set_defaults(func=cmd_cockpit_audit)
 
     return parser
 
