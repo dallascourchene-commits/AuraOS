@@ -130,12 +130,12 @@ intent_id: test
 ---
 
 [AURA_LEXC_ROUTE]
-DIR: +SYS
-ASP: +SYS_ROUTE
-CLASS: +POLY
-SUBJ: +SHAPE:OCTA
-VOICE: _VALIDATE
-STEM: _MERGE
+DIR: DataGate
+ASP: +NI
+CLASS: +VTI
+SUBJ: +T1_RAM
+VOICE: +SHAPE:TETRA+TEMP:HOT+LUM:MID+FRIC:MID+DIR:MIIGWECH
+STEM: _EXEC
 """
         result = route_intent_to_lexc(text, repo_root=REPO_ROOT)
         assert result["ok"] is True
@@ -179,14 +179,14 @@ scope: subsystem
         frame = result["routing_frame"]
         assert frame["scope"] == "subsystem"
         decision = result["route_decision"]
-        # Missing grounding is checked before broad scope, so it may route to LOCALIZE_FIRST
-        assert decision["route"] in ("PLAN_ONLY", "LOCALIZE_FIRST")
+        # Missing grounding is checked before broad scope, so it routes to LOCALIZE_FIRST
+        assert decision["route"] == "LOCALIZE_FIRST"
 
     def test_missing_grounding_routes_to_localize(self):
         result = route_intent_to_fst("Find the egress module", repo_root=REPO_ROOT)
         assert result["ok"] is True
         decision = result["route_decision"]
-        assert decision["route"] in ("LOCALIZE_FIRST", "PLAN_ONLY")
+        assert decision["route"] == "LOCALIZE_FIRST"
 
 
 class TestAgentHandoff:

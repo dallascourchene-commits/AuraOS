@@ -152,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "gates":
         result = cockpit.workflow_gates()
         _print_json(result)
-        return 0 if result.get("ok") else 1
+        return 0 if result.get("ok", True) else 1
 
     elif args.command == "evaluate-gate":
         try:
@@ -189,7 +189,9 @@ def main(argv: list[str] | None = None) -> int:
         _print_json(result)
         return 0 if result.get("ok") else 1
 
-    return 0
+    # Unsupported command
+    print(f"Unsupported command: {args.command}", file=sys.stderr)
+    return 1
 
 
 if __name__ == "__main__":

@@ -288,18 +288,6 @@ def _build_routing_frame(objective: str, route_hints: dict | None = None,
     if intent in ("explain", "localize"):
         cost = "no_model"
 
-    # Apply route hints override
-    if route_hints:
-        for key in ("intent", "action", "scope", "risk", "quality", "cost"):
-            if key in route_hints:
-                val = str(route_hints[key]).strip().lower()
-                if val:
-                    if key == "grounding":
-                        grounding = tuple(v.strip().lower() for v in val.split(",") if v.strip())
-                    else:
-                        # Use exec-free assignment
-                        pass  # We'll use dict directly
-
     frame = {
         "intent": intent,
         "artifact": "python_module",
@@ -319,6 +307,12 @@ def _build_routing_frame(objective: str, route_hints: dict | None = None,
                 val = str(route_hints[key]).strip().lower()
                 if val:
                     frame[key] = val
+        # Handle grounding specially (comma-separated list)
+        if "grounding" in route_hints:
+            val = str(route_hints["grounding"]).strip()
+            if val:
+                grounding_list = [v.strip().lower() for v in val.split(",") if v.strip()]
+                frame["grounding"] = grounding_list
 
     return frame
 
@@ -839,25 +833,26 @@ def route_intent_to_lexc(parsed_doc: dict | str, repo_root: str | Path = ".") ->
         lexc_path = root / "aura.lexc"
         if lexc_path.exists():
             lexc = AuraLexc.from_path(lexc_path, strict=False)
-            # Try to validate the symbols
-            # Check if we have all 6 slots
-            expected_slots = {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
-            found_slots = set(slot_values.keys())
-            if expected_slots.issubset(found_slots):
-                lexc_valid = True
-                route_packet = slot_values
-            else:
-                # Try validate_symbols with the parsed symbols
-                route = lexc.validate_symbols(symbols)
+            # Use SLOT_ORDER to derive canonical ordered slot names
+            expected_slots = list(SLOT_ORDER)
+            # Check if we have all required slots
+            if set(expected_slots).issubset(set(slot_values.keys())):
+                # Build ordered symbols list
+                ordered_symbols = [slot_values[slot] for slot in expected_slots]
+                # Always call validate_symbols
+                route = lexc.validate_symbols(ordered_symbols)
                 if route and route.is_complete:
                     lexc_valid = True
                     route_packet = route.packet()
     except Exception:
-        # Fallback: just check we have all 6 slots
-        expected_slots = {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
-        found_slots = set(slot_values.keys())
-        lexc_valid = expected_slots.issubset(found_slots)
-        route_packet = slot_values if lexc_valid else {}
+        # Fallback: cannot validate without proper FST
+        try:
+            from aura_lexc import SLOT_ORDER
+            expected_slots = list(SLOT_ORDER)
+        except Exception:
+            expected_slots = ["DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"]
+        lexc_valid = False
+        route_packet = {}
 
     return {
         "ok": True,

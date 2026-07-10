@@ -179,15 +179,18 @@ def compute_token_economy(
         savings_sources.append("polysynthetic_packet")
     if codemap_search_tokens < raw_file_tokens:
         savings_sources.append("codemap_localization")
-    savings_sources.append("ai_router_context")  # AI router always saves vs broad reads
+    if estimated_tokens_saved > 0:
+        savings_sources.append("ai_router_context")
     if read_slice_tokens < raw_file_tokens:
         savings_sources.append("read_slice")
     if context_crush_tokens > 0 and context_crush_tokens < raw_total:
         savings_sources.append("context_crusher")
     if st3gg_tokens > 0:
         savings_sources.append("st3gg_recall_pointer")
-    savings_sources.append("dream_rerank")  # Advisory savings from better retrieval
-    savings_sources.append("qdkt_fast_path")  # Advisory savings from crystallized patterns
+    if estimated_tokens_saved > 0:
+        savings_sources.append("dream_rerank")
+    if estimated_tokens_saved > 0:
+        savings_sources.append("qdkt_fast_path")
     if hermes_contract_tokens > 0 and hermes_contract_tokens < raw_total:
         savings_sources.append("hermes_contract")
 
