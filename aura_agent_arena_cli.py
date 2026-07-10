@@ -78,7 +78,6 @@ try:
         build_change_graph as _build_cg, detect_refactor_candidates as _detect_rc,
         split_work as _split_work, prepare_agent_handoff as _prep_handoff,
     )
-    from aura_code_region_ranker import rank_code_regions
     from aura_change_graph import build_change_graph
     from aura_refactor_candidate import detect_refactor_candidates
     from aura_work_splitter import split_large_objective
@@ -683,7 +682,7 @@ def cmd_localize_code(args: argparse.Namespace) -> int:
 
 def cmd_rank_code_regions_cli(args: argparse.Namespace) -> int:
     _require_workbench()
-    result = rank_code_regions(args.objective, repo_root=".", max_lines=args.max_lines)
+    result = _rank_regions(args.objective, repo_root=".", max_lines=args.max_lines)
     _print_json(result)
     return 0 if result.get("ok") else 1
 
@@ -694,10 +693,14 @@ def cmd_slice_context_cli(args: argparse.Namespace) -> int:
     loc = {}
     if args.ranking_file:
         try:
-            with open(args.ranking_file, "r") as f:
+            with open(args.ranking_file, "r", encoding="utf-8") as f:
                 loc = json.load(f)
-        except Exception:
-            pass
+        except (OSError, json.JSONDecodeError) as exc:
+            print(json.dumps({
+                "ok": False,
+                "error": f"Could not load ranking file '{args.ranking_file}': {exc}",
+            }, indent=2))
+            return 1
     result = _slice_ctx(loc, repo_root=".")
     _print_json(result)
     return 0 if result.get("ok") else 1

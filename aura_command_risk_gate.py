@@ -49,10 +49,17 @@ def classify_command_risk(command: str, repo_root: str | Path = ".") -> dict[str
             risk_category = "safe_read_only"
         elif "pytest" in cmd_lower or "python -m pytest" in cmd_lower:
             risk_category = "repo_local_test"
-        elif "git add" in cmd_lower or "git commit" in cmd_lower:
+        elif "git commit" in cmd_lower:
+            risk_category = "git_commit"
+            blocked = False
+        elif "git push" in cmd_lower and "git push --force" not in cmd_lower and "git push -f" not in cmd_lower:
+            risk_category = "git_push"
+            blocked = False
+        elif "git add" in cmd_lower:
             risk_category = "safe_read_only"
+    human_approval = blocked or risk_category in ("git_commit", "git_push")
     return {"ok": True, "command": command, "risk_category": risk_category,
-            "blocked": blocked, "human_approval_required": blocked,
+            "blocked": blocked, "human_approval_required": human_approval,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
 def classify_script_risk(path: str, repo_root: str | Path = ".") -> dict[str, Any]:
@@ -98,7 +105,9 @@ def scan_package_hooks(repo_root: str | Path = ".") -> dict[str, Any]:
 def command_risk_packet(commands_or_paths: list[str], repo_root: str | Path = ".") -> dict[str, Any]:
     results = []
     for item in commands_or_paths:
-        if item.endswith(".py") or item.endswith(".sh") or item.endswith(".md"):
+        if item.endswith(".py") or item.endswith(".sh"):
+            results.append(classify_script_risk(item, repo_root=repo_root))
+        elif item.endswith(".md"):
             results.append(scan_markdown_for_agent_instructions(item, repo_root=repo_root))
         else:
             results.append(classify_command_risk(item, repo_root=repo_root))

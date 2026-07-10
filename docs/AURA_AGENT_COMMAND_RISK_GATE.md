@@ -6,7 +6,7 @@ Classifies command-effect risk before agents run commands. Hard blocks risky com
 
 ## Risk Categories
 
-safe_read_only, repo_local_test, repo_local_build, package_install, network_access, shell_expansion, credential_access, encoded_payload, external_script, dns_lookup, destructive_file_op, git_history_rewrite, unknown
+safe_read_only, repo_local_test, git_commit, git_push, package_install, credential_access, encoded_payload, external_script, dns_lookup, destructive_file_op, git_history_rewrite
 
 ## Hard Blocks
 

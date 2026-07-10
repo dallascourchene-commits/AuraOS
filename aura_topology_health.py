@@ -97,12 +97,25 @@ def detect_topology_regression(previous: dict | None = None, current: dict | Non
     if current is None:
         current = check_codemap_health(root)
     if previous is None:
-        previous = {"topology_nodes": 2203, "topology_edges": 2197, "topology_source": "existing_topology_json"}
+        # Try loading baseline from .aura/topology_baseline.json
+        baseline_path = root / ".aura" / "topology_baseline.json"
+        try:
+            if baseline_path.exists():
+                import json
+                with open(baseline_path, "r", encoding="utf-8") as f:
+                    previous = json.load(f)
+        except Exception:
+            pass
+    if previous is None:
+        # No baseline available
+        return {"ok": True, "regression_detected": False, "baseline_available": False,
+                "current": current,
+                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     regressed = (
         current.get("topology_nodes", 0) < previous.get("topology_nodes", 0) or
         current.get("topology_edges", 0) < previous.get("topology_edges", 0)
     )
-    return {"ok": not regressed, "regression_detected": regressed,
+    return {"ok": not regressed, "regression_detected": regressed, "baseline_available": True,
             "previous": previous, "current": current,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 

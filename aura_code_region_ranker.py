@@ -66,12 +66,20 @@ def rank_code_regions(objective: str, repo_root: str | Path = ".", max_regions: 
         total_tokens += tokens
 
     for score, sym in sym_scores[:max_regions]:
+        if total_lines >= max_lines: break
         occ = si.get(sym, [])
         file_for_sym = occ[0].get("file", "") if occ and isinstance(occ[0], dict) else ""
         line_start = occ[0].get("line", 0) if occ and isinstance(occ[0], dict) else 0
         line_end = occ[0].get("end_line", 0) if occ and isinstance(occ[0], dict) else 0
+        sym_lines = max(1, line_end - line_start + 1) if line_end > 0 and line_start > 0 else 10
+        if total_lines + sym_lines > max_lines:
+            continue
+        sym_tokens = sym_lines * 10
         ranked.append({"symbol": sym, "file": file_for_sym, "score": round(score, 2),
-                       "line_range": [line_start, line_end], "reason": "symbol_match"})
+                       "line_range": [line_start, line_end], "lines": sym_lines, "tokens": sym_tokens,
+                       "reason": "symbol_match"})
+        total_lines += sym_lines
+        total_tokens += sym_tokens
 
     ranked = ranked[:max_regions]
     raw_context_tokens = sum(len(json.dumps(f)) // 4 for f in files[:50]) if isinstance(files, list) else 0

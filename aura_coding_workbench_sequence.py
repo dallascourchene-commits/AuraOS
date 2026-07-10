@@ -1,5 +1,5 @@
 """
-Aura Coding Workbench Sequence — 17-state coding-native workbench state machine.
+Aura Coding Workbench Sequence — 18-state coding-native workbench state machine.
 """
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -191,7 +191,7 @@ GATE_DEFINITIONS: dict[WorkbenchState, WorkbenchGate] = {
         command_risk="blocked",
         human_approval_required=True,
         coding_artifacts_visible=["risk_report"],
-        next_actions=[]),
+        next_actions=["WORKSPACE_OPENED"]),
 }
 
 

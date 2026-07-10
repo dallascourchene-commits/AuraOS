@@ -3,6 +3,7 @@ Aura Agent Workbench Interface — clean action interface for coding agents.
 Agents should prefer these actions over raw shell/file operations.
 """
 from __future__ import annotations
+from pathlib import Path
 from typing import Any
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
