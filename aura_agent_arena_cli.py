@@ -30,6 +30,19 @@ from typing import Any
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_agent_arena_fireworks import fireworks_patch_worker
 
+# Hermes Arena Mode — optional import (additive, does not break existing CLI)
+try:
+    from aura_hermes_arena_mode import (
+        generate_hermes_contract,
+        generate_pr_runbook,
+        generate_token_savings_report,
+        run_preflight,
+        write_hermes_aura_rules,
+    )
+    _HERMES_MODE_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _HERMES_MODE_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -273,6 +286,101 @@ def cmd_find_affordances(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Hermes Arena Mode command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_hermes_mode() -> None:
+    """Raise SystemExit if Hermes Arena Mode is not available."""
+    if not _HERMES_MODE_AVAILABLE:
+        print(json.dumps({
+            "ok": False,
+            "error": "Hermes Arena Mode is not available. Ensure aura_hermes_arena_mode.py is importable.",
+        }, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_hermes_contract(args: argparse.Namespace) -> int:
+    _require_hermes_mode()
+    result = generate_hermes_contract(
+        objective=args.objective,
+        mode=args.mode,
+        repo_root=".",
+    )
+    if args.json:
+        _print_json(result)
+    else:
+        if result.get("ok"):
+            print(result.get("contract", ""))
+        else:
+            _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_preflight(args: argparse.Namespace) -> int:
+    _require_hermes_mode()
+    target_files = None
+    if args.target_files:
+        target_files = [f.strip() for f in args.target_files.split(",") if f.strip()]
+    target_symbols = None
+    if args.target_symbols:
+        target_symbols = [s.strip() for s in args.target_symbols.split(",") if s.strip()]
+    result = run_preflight(
+        objective=args.objective,
+        repo_root=".",
+        target_files=target_files,
+        target_symbols=target_symbols,
+    )
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_token_report(args: argparse.Namespace) -> int:
+    _require_hermes_mode()
+    files = [f.strip() for f in args.files.split(",") if f.strip()]
+    result = generate_token_savings_report(
+        objective=args.objective,
+        files=files,
+        repo_root=".",
+        include_preflight=args.include_preflight,
+        output_format=args.format,
+    )
+    if args.format == "markdown" and result.get("ok"):
+        print(result.get("markdown", ""))
+    else:
+        _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_pr_runbook(args: argparse.Namespace) -> int:
+    _require_hermes_mode()
+    files = None
+    if args.files:
+        files = [f.strip() for f in args.files.split(",") if f.strip()]
+    result = generate_pr_runbook(
+        objective=args.objective,
+        branch=args.branch,
+        repo_root=".",
+        files=files,
+    )
+    if args.json:
+        _print_json(result)
+    else:
+        if result.get("ok"):
+            print(result.get("runbook", ""))
+        else:
+            _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_write_rules(args: argparse.Namespace) -> int:
+    _require_hermes_mode()
+    result = write_hermes_aura_rules(repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -374,6 +482,57 @@ def build_parser() -> argparse.ArgumentParser:
     p_aff.add_argument("--no-affordances", action="store_true", help="Skip affordance cards")
     p_aff.add_argument("--top-k", type=int, default=7, help="Max affordances to return (3-7)")
     p_aff.set_defaults(func=cmd_find_affordances)
+
+    # ---- Hermes Arena Mode subcommands (additive) ----
+
+    # hermes-contract
+    p_contract = subparsers.add_parser(
+        "hermes-contract",
+        help="Generate a ready-to-paste Hermes operating contract / system prompt",
+    )
+    p_contract.add_argument("--objective", required=True, help="Coding objective")
+    p_contract.add_argument("--mode", default="pr", choices=["pr", "direct"], help="Operating mode (default: pr)")
+    p_contract.add_argument("--json", action="store_true", help="Output full JSON instead of markdown contract text")
+    p_contract.set_defaults(func=cmd_hermes_contract)
+
+    # preflight
+    p_preflight = subparsers.add_parser(
+        "preflight",
+        help="Generate a compact JSON preflight packet for a coding objective",
+    )
+    p_preflight.add_argument("--objective", required=True, help="Coding objective")
+    p_preflight.add_argument("--target-files", default=None, help="Comma-separated target file paths")
+    p_preflight.add_argument("--target-symbols", default=None, help="Comma-separated target symbol names")
+    p_preflight.set_defaults(func=cmd_preflight)
+
+    # token-report
+    p_token = subparsers.add_parser(
+        "token-report",
+        help="Generate a token savings report comparing raw vs Aura context usage",
+    )
+    p_token.add_argument("--objective", required=True, help="Coding objective")
+    p_token.add_argument("--files", required=True, help="Comma-separated repo-relative file paths")
+    p_token.add_argument("--include-preflight", action="store_true", help="Include full preflight packet in report")
+    p_token.add_argument("--format", default="json", choices=["json", "markdown"], help="Output format (default: json)")
+    p_token.set_defaults(func=cmd_token_report)
+
+    # pr-runbook
+    p_runbook = subparsers.add_parser(
+        "pr-runbook",
+        help="Generate a PR-safe Git/Hermes workflow runbook for a task",
+    )
+    p_runbook.add_argument("--objective", required=True, help="Coding objective")
+    p_runbook.add_argument("--branch", required=True, help="Feature branch name (e.g. feature/my-task)")
+    p_runbook.add_argument("--files", default=None, help="Comma-separated files that will be modified")
+    p_runbook.add_argument("--json", action="store_true", help="Output full JSON instead of markdown runbook text")
+    p_runbook.set_defaults(func=cmd_pr_runbook)
+
+    # write-rules
+    p_rules = subparsers.add_parser(
+        "write-rules",
+        help="Write .aura/HERMES_AURA_RULES.md guard file",
+    )
+    p_rules.set_defaults(func=cmd_write_rules)
 
     return parser
 
