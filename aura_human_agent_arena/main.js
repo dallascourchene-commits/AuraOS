@@ -777,3 +777,103 @@ loadState().then(() => {
 }).catch(err => {
   statusEl.textContent = `failed: ${err.message}`;
 });
+
+// === Civic Commons Arena ===
+let civicSessionId = null;
+
+async function civicAPI(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch('/api/civic' + path, opts);
+  return r.json();
+}
+
+async function civicCreateSession() {
+  const obj = document.getElementById('civic-objective').value || 'Our neighbourhood needs an affordable hairstylist';
+  const story = document.getElementById('civic-story').value;
+  const r = await civicAPI('POST', '/sessions', { objective: obj, story });
+  if (r.ok) {
+    civicSessionId = r.session.session_id;
+    document.getElementById('civic-session-info').textContent = 'Session: ' + civicSessionId;
+    civicRefreshAll();
+  }
+}
+
+async function civicRunDemo() {
+  const story = document.getElementById('civic-story').value;
+  document.getElementById('civic-session-info').textContent = 'Running ' + story + ' demo...';
+  const r = await civicAPI('POST', '/sessions', { objective: 'demo', story });
+  if (r.ok) {
+    civicSessionId = r.session.session_id;
+    // Run all organs via sequential API calls, matching runtime run_full_demo flow
+    const organs = ['profiles', 'contributions', 'consent', 'resource-match', 'mitosis', 'scenarios', 'what-if', 'pilot', 'export'];
+    for (const action of organs) {
+      await civicAPI('POST', '/sessions/' + civicSessionId + '/' + action, {});
+    }
+    civicRefreshAll();
+  }
+}
+
+async function civicRefreshAll() {
+  if (!civicSessionId) return;
+  const s = await civicAPI('GET', '/sessions/' + civicSessionId);
+  if (!s.ok) return;
+  const sess = s.session;
+  civicSetPanel('objective-data', sess.objective || '');
+  civicSetPanel('profiles-data', JSON.stringify(sess.profile_set?.jurisdiction_profile_refs || [], null, 2));
+  civicSetPanel('needs-data', civicRenderList(sess.needs));
+  civicSetPanel('civic-offers-data', civicRenderList(sess.offers));
+  civicSetPanel('civic-assets-data', civicRenderList(sess.assets || []));
+  civicSetPanel('workstreams-data', civicRenderList(sess.workstreams));
+  civicSetPanel('scenarios-data', civicRenderList(sess.scenarios));
+  civicSetPanel('legal-data', civicRenderList(sess.legal_instruments));
+  civicSetPanel('council-data', civicRenderList(sess.council_items));
+  civicSetPanel('civic-objections-data', civicRenderList(sess.objections || []));
+  civicSetPanel('civic-gaps-data', civicRenderList(sess.gaps || []));
+  civicSetPanel('civic-evidence-data', civicRenderList(sess.evidence || []));
+  civicSetPanel('civic-map-data', JSON.stringify(sess.map_manifest || {}, null, 2));
+  civicSetPanel('consent-data', JSON.stringify(sess.consent_arc, null, 2));
+  civicSetPanel('systemic-data', JSON.stringify(sess.systemic_context, null, 2));
+  civicSetPanel('friction-data', JSON.stringify(sess.democratic_friction, null, 2));
+  civicSetPanel('whatif-data', JSON.stringify(sess.what_if, null, 2));
+  civicSetPanel('pilot-data', JSON.stringify(sess.pilot, null, 2));
+  civicSetPanel('audit-data', civicRenderList(sess.organ_receipts));
+  civicSetPanel('cost-data', 'Fixture mode: zero provider cost. Measurement: FIXTURE_ZERO.');
+  if (sess.decision_packet && sess.decision_packet.objective) {
+    const packetEl = document.getElementById('civic-decision-packet');
+    if (packetEl) {
+      packetEl.innerHTML = '<h3>Decision Packet</h3>';
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(sess.decision_packet, null, 2);
+      packetEl.appendChild(pre);
+    }
+  }
+}
+
+function civicSetPanel(id, content) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (!content) {
+    el.innerHTML = '<p class="placeholder">No data yet.</p>';
+    return;
+  }
+  // Escape content to prevent XSS
+  if (typeof content === 'string') {
+    el.textContent = content;
+  } else {
+    el.textContent = JSON.stringify(content, null, 2);
+  }
+}
+
+function civicRenderList(items) {
+  if (!items || !items.length) return '<p class="placeholder">None recorded.</p>';
+  if (typeof items === 'string') return escapeHtml(items);
+  // Create list with escaped content
+  const ul = document.createElement('ul');
+  items.forEach(i => {
+    const li = document.createElement('li');
+    li.textContent = i.description || i.title || i.organ_type || JSON.stringify(i).slice(0, 80);
+    ul.appendChild(li);
+  });
+  return ul.outerHTML;
+}
