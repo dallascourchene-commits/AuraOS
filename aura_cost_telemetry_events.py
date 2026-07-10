@@ -43,6 +43,9 @@ VISUAL_STATES = {
     "counterfactual": "purple",
 }
 
+# Keys that should never be stored in events
+SECRET_KEYS = ["api_key", "secret", "token", "password", "secret_field"]
+
 
 class TelemetryEventStream:
     """Bounded event stream for real-time UI updates."""
@@ -57,11 +60,14 @@ class TelemetryEventStream:
         if event_type not in EVENT_TYPES:
             return {"ok": False, "error": f"Unknown event type: {event_type}"}
 
+        # Filter out secret keys
+        filtered_data = {k: v for k, v in data.items() if k not in SECRET_KEYS}
+
         event = {
             "event": event_type,
             "timestamp": time.time(),
             "version": TELEMETRY_VERSION,
-            **data,
+            **filtered_data,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }

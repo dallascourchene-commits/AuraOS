@@ -863,9 +863,22 @@ def cmd_cost_attribution(args: argparse.Namespace) -> int:
         return 1
     # Build attribution from run data
     attr = AttributionLedger()
-    attr.record_stage("RAW_OBJECTIVE", output_chars=80000)
-    attr.record_stage("CODEMAP_LOCALIZED", input_chars=80000, output_chars=4000)
-    attr.record_stage("READ_SLICE", input_chars=4000, output_chars=1200)
+    context_before = run.get("context_bytes_before", 0)
+    context_after = run.get("context_bytes_after", 0)
+    source_chars = run.get("source_chars_exposed", 0)
+
+    # RAW_OBJECTIVE: initial context size
+    if context_before > 0:
+        attr.record_stage("RAW_OBJECTIVE", output_chars=context_before)
+
+    # CODEMAP_LOCALIZED: context reduction from localization
+    if context_before > 0 and source_chars > 0:
+        attr.record_stage("CODEMAP_LOCALIZED", input_chars=context_before, output_chars=source_chars)
+
+    # READ_SLICE: final context after all transformations
+    if source_chars > 0 and context_after > 0:
+        attr.record_stage("READ_SLICE", input_chars=source_chars, output_chars=context_after)
+
     report = attr.attribution_report()
     _print_json(report)
     return 0

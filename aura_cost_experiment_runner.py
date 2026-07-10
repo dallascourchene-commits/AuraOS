@@ -86,7 +86,8 @@ def compute_savings_status(
         return SAVINGS_INVALIDATED_BY_QUALITY
     if aura_cost >= raw_cost:
         return SAVINGS_INCONCLUSIVE
-    return SAVINGS_PROVISIONAL
+    # All cases covered above; this line should be unreachable
+    return SAVINGS_INCONCLUSIVE
 
 
 def compute_quality_normalized_metrics(
@@ -143,12 +144,26 @@ def compute_quality_normalized_metrics(
         metrics["latency_delta"] = (aura_run.get("latency_ms") or 0) - (raw_run.get("latency_ms") or 0)
         metrics["context_exposure_delta"] = (aura_run.get("source_lines_exposed") or 0) - (raw_run.get("source_lines_exposed") or 0)
 
-        metrics["savings_status"] = compute_savings_status(
-            aura_cost=aura_cost,
-            raw_cost=raw_cost,
-            aura_verified=aura_verified,
-            quality_not_worse=aura_run.get("quality_score", 1.0) >= (raw_run.get("quality_score", 0.0)),
-        )
+        # Determine quality_not_worse: only True if both scores are present and aura >= raw
+        aura_quality = aura_run.get("quality_score")
+        raw_quality = raw_run.get("quality_score")
+
+        # If either quality score is missing, we cannot verify quality
+        if aura_quality is None or raw_quality is None:
+            # Missing quality data: return provisional status
+            if aura_cost < raw_cost:
+                metrics["savings_status"] = SAVINGS_PROVISIONAL
+            else:
+                metrics["savings_status"] = SAVINGS_INCONCLUSIVE
+        else:
+            # Both quality scores present: use normal logic
+            quality_not_worse = aura_quality >= raw_quality
+            metrics["savings_status"] = compute_savings_status(
+                aura_cost=aura_cost,
+                raw_cost=raw_cost,
+                aura_verified=aura_verified,
+                quality_not_worse=quality_not_worse,
+            )
 
     return metrics
 

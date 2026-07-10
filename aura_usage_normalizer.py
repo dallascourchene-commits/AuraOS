@@ -40,13 +40,21 @@ def _safe_int(value: Any) -> int | None:
         return None
 
 
+def _first_present(usage: dict[str, Any], *keys: str) -> Any:
+    """Return the first present key's value (including 0), or None if all missing."""
+    for key in keys:
+        if key in usage:
+            return usage[key]
+    return None
+
+
 def normalize_openai_usage(usage: dict[str, Any], provider: str = "openai") -> dict[str, Any]:
     """Normalize OpenAI-compatible usage (also Fireworks, Groq, OpenRouter, Mistral)."""
     fields_present = []
     warnings = []
 
-    input_tokens = _safe_int(usage.get("prompt_tokens") or usage.get("input_tokens"))
-    output_tokens = _safe_int(usage.get("completion_tokens") or usage.get("output_tokens"))
+    input_tokens = _safe_int(_first_present(usage, "prompt_tokens", "input_tokens"))
+    output_tokens = _safe_int(_first_present(usage, "completion_tokens", "output_tokens"))
     total_tokens = _safe_int(usage.get("total_tokens"))
     cached_input = _safe_int(usage.get("prompt_tokens_details", {}).get("cached_tokens")) if isinstance(usage.get("prompt_tokens_details"), dict) else None
     reasoning_tokens = _safe_int(usage.get("completion_tokens_details", {}).get("reasoning_tokens")) if isinstance(usage.get("completion_tokens_details"), dict) else None
@@ -144,9 +152,9 @@ def normalize_gemini_usage(usage: dict[str, Any]) -> dict[str, Any]:
     warnings = []
 
     md = usage.get("usageMetadata", usage)
-    input_tokens = _safe_int(md.get("promptTokenCount") or md.get("prompt_token_count"))
-    output_tokens = _safe_int(md.get("candidatesTokenCount") or md.get("completion_token_count") or md.get("output_token_count"))
-    total_tokens = _safe_int(md.get("totalTokenCount") or md.get("total_token_count"))
+    input_tokens = _safe_int(_first_present(md, "promptTokenCount", "prompt_token_count"))
+    output_tokens = _safe_int(_first_present(md, "candidatesTokenCount", "completion_token_count", "output_token_count"))
+    total_tokens = _safe_int(_first_present(md, "totalTokenCount", "total_token_count"))
     cached_input = _safe_int(md.get("cachedContentTokenCount"))
 
     if input_tokens is not None:
@@ -187,8 +195,8 @@ def normalize_local_usage(usage: dict[str, Any]) -> dict[str, Any]:
     fields_present = []
     warnings = []
 
-    input_tokens = _safe_int(usage.get("prompt_tokens") or usage.get("input_tokens"))
-    output_tokens = _safe_int(usage.get("completion_tokens") or usage.get("output_tokens"))
+    input_tokens = _safe_int(_first_present(usage, "prompt_tokens", "input_tokens"))
+    output_tokens = _safe_int(_first_present(usage, "completion_tokens", "output_tokens"))
     energy_joules = usage.get("energy_joules")
     runtime_ms = usage.get("runtime_ms")
 
@@ -249,12 +257,13 @@ def normalize_usage(usage: dict[str, Any], provider: str = "openai", model: str 
         }
 
     # Auto-detect format
-    if "input_tokens" in usage or "cache_creation_input_tokens" in usage:
+    # Check provider first to avoid misdetection
+    if provider == "local" or "energy_joules" in usage:
+        result = normalize_local_usage(usage)
+    elif "input_tokens" in usage or "cache_creation_input_tokens" in usage:
         result = normalize_anthropic_usage(usage)
     elif "usageMetadata" in usage or "promptTokenCount" in usage:
         result = normalize_gemini_usage(usage)
-    elif "energy_joules" in usage or provider == "local":
-        result = normalize_local_usage(usage)
     else:
         result = normalize_openai_usage(usage, provider)
 

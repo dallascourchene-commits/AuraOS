@@ -246,6 +246,18 @@ class TestCostAttribution:
         stage0_saved = report["stages"][0]["exclusive_tokens_saved"]
         stage1_saved = report["stages"][1]["exclusive_tokens_saved"]
         total = report["total_exclusive_saved"]
+
+        # CODEMAP_LOCALIZED: 10000 input - 3000 output = 7000 saved
+        # (10000 chars / 4 = 2500 tokens input, 3000 chars / 4 = 750 tokens output, 2500-750=1750 tokens saved)
+        expected_stage0 = 10000 // 4 - 3000 // 4  # 2500 - 750 = 1750
+        # CONTEXT_CRUSHED: 3000 input - 1500 output = 1500 saved
+        # (3000 chars / 4 = 750 tokens input, 1500 chars / 4 = 375 tokens output, 750-375=375 tokens saved)
+        expected_stage1 = 3000 // 4 - 1500 // 4  # 750 - 375 = 375
+        expected_total = expected_stage0 + expected_stage1  # 1750 + 375 = 2125
+
+        assert stage0_saved == expected_stage0
+        assert stage1_saved == expected_stage1
+        assert total == expected_total
         assert total == stage0_saved + stage1_saved  # No double counting
 
     def test_waterfall_markdown(self):
@@ -283,6 +295,12 @@ class TestExperimentRunner:
     def test_savings_invalidated_by_quality(self):
         status = compute_savings_status(aura_cost=0.005, raw_cost=0.02,
                                          aura_verified=False)
+        assert status == SAVINGS_INVALIDATED_BY_QUALITY
+
+    def test_savings_invalidated_by_quality_worse(self):
+        """Test SAVINGS_INVALIDATED when quality is worse despite verification."""
+        status = compute_savings_status(aura_cost=0.005, raw_cost=0.02,
+                                         aura_verified=True, quality_not_worse=False)
         assert status == SAVINGS_INVALIDATED_BY_QUALITY
 
     def test_no_baseline(self):
@@ -365,12 +383,19 @@ class TestTelemetryEvents:
         assert stream.event_count() >= 1
 
     def test_no_secrets_in_events(self):
+        import json
         stream = TelemetryEventStream()
+        secret_api_key = "sk-test-secret-key-12345"
+        secret_value = "should_not_appear"
         stream.emit("cost_run_started", {"run_id": "r1", "comparison_id": "c1",
-                                          "api_key": "should_not_appear"})
+                                          "api_key": secret_api_key,
+                                          "secret_field": secret_value})
         events = stream.get_events()
-        # The event stores what was passed, but our code should never put secrets in events
-        # This test verifies the event structure is correct
+        # Serialize and verify secrets are not present
+        serialized = json.dumps(events)
+        assert secret_api_key not in serialized
+        assert secret_value not in serialized
+        # Verify event structure is correct
         assert "patch_authority" in events[0]
 
     def test_invariants(self):
@@ -460,20 +485,23 @@ class TestEndToEndFixture:
 
     def test_e2e_no_secrets_in_ledger(self, tmp_path):
         """Ledger must not store secrets."""
+        import json
         ledger = EmpiricalCostLedger(repo_root=tmp_path)
+        secret_key = "sk-test-secret-12345"
+        secret_value = "should_not_be_stored"
         ledger.record_run({
             "comparison_id": "secret_test",
             "mode": "test",
             "provider": "p",
             "model": "m",
-            "telemetry_warnings": ["api_key=sk-xxx should_not_be_stored"],
+            "telemetry_warnings": [f"api_key={secret_key} {secret_value}"],
         })
         run = ledger.get_run(ledger.get_history(limit=1)[0]["run_id"])
-        # The warning is stored but it's a test — verify it doesn't contain actual key patterns
-        warnings = run.get("telemetry_warnings", [])
-        if isinstance(warnings, str):
-            warnings = json.loads(warnings)
-        # Warnings are stored as JSON text, but our code should never put real secrets there
+        # Serialize and verify secrets are not present
+        serialized = json.dumps(run)
+        assert secret_key not in serialized
+        assert secret_value not in serialized
+        # Verify ledger structure is correct
         assert run["patch_authority"] == "exact_source_spans_and_hashes_only"
         ledger.close()
 
@@ -501,6 +529,51 @@ class TestArenaTelemetryIntegration:
         assert status == 200
         assert result["ok"] is True
         assert "events" in result
+
+    def test_cost_events_since_filter(self):
+        """Test the cost events endpoint with since parameter for timestamp filtering."""
+        import time
+        from aura_human_agent_arena_server import dispatch_api_request, HumanAgentArenaServerState
+        from aura_cost_telemetry_events import get_telemetry_stream
+
+        # Get stream reference and clear it first to ensure test isolation
+        stream = get_telemetry_stream()
+        stream.clear()
+
+        # Create state after clearing to avoid any initialization events
+        state = HumanAgentArenaServerState(repo_root=REPO_ROOT)
+
+        # Seed events with specific timestamps
+        timestamp_before = time.time() - 100
+        timestamp_cutoff = time.time() - 50
+        timestamp_after = time.time()
+
+        # Manually create events with controlled timestamps
+        stream.emit("cost_run_started", {"run_id": "before", "comparison_id": "c1",
+                                          "mode": "test", "provider": "test", "model": "test"})
+        stream._events[-1]["timestamp"] = timestamp_before
+
+        stream.emit("cost_run_started", {"run_id": "after1", "comparison_id": "c2",
+                                          "mode": "test", "provider": "test", "model": "test"})
+        stream._events[-1]["timestamp"] = timestamp_after
+
+        stream.emit("cost_run_completed", {"run_id": "after2", "comparison_id": "c3"})
+        stream._events[-1]["timestamp"] = timestamp_after + 1
+
+        # Request events since cutoff
+        status, result = dispatch_api_request(state, "GET", f"/api/human-agent/cost-events?since={timestamp_cutoff}")
+        assert status == 200
+        assert result["ok"] is True
+        assert "events" in result
+
+        # Should only contain events after cutoff
+        events = result["events"]
+        assert len(events) == 2  # exactly after1 and after2, not "before"
+        for event in events:
+            assert event["timestamp"] >= timestamp_cutoff
+            assert event["run_id"] in ["after1", "after2"]
+
+        stream.clear()
 
 
 # ---------------------------------------------------------------------------

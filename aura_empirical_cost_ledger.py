@@ -11,6 +11,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
+import secrets
 import sqlite3
 import time
 from pathlib import Path
@@ -19,6 +21,9 @@ from typing import Any
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 LEDGER_VERSION = "AURA_EMPIRICAL_COST_LEDGER_V1"
+
+# Keys that should never be stored in the ledger
+SECRET_KEYS = ["api_key", "secret", "token", "password"]
 
 _SCHEMA_VERSION = 1
 
@@ -124,15 +129,24 @@ class EmpiricalCostLedger:
 
     def record_run(self, run: dict[str, Any]) -> dict[str, Any]:
         """Record a cost run in the ledger."""
-        run_id = run.get("run_id") or hashlib.blake2b(
-            f"{run.get('comparison_id','')}{time.time()}".encode(), digest_size=12
-        ).hexdigest()
+        # Filter out secret keys before storing
+        filtered_run = {k: v for k, v in run.items() if k not in SECRET_KEYS}
+        run_id = filtered_run.get("run_id") or secrets.token_hex(12)
 
-        # Serialize complex fields
-        warnings = run.get("telemetry_warnings", [])
+        # Serialize complex fields and filter secrets from warning strings
+        warnings = filtered_run.get("telemetry_warnings", [])
         if isinstance(warnings, list):
-            warnings = json.dumps(warnings)
-        price_snap = run.get("price_snapshot")
+            # Filter out warnings containing secret patterns
+            filtered_warnings = []
+            for w in warnings:
+                if isinstance(w, str):
+                    # Remove warnings containing sk-* patterns and other secret-like strings
+                    if not re.search(r'sk-[a-zA-Z0-9\-]+|api[_-]?key|secret|password', w, re.IGNORECASE):
+                        filtered_warnings.append(w)
+                else:
+                    filtered_warnings.append(w)
+            warnings = json.dumps(filtered_warnings)
+        price_snap = filtered_run.get("price_snapshot")
         if isinstance(price_snap, dict):
             price_snap = json.dumps(price_snap)
 
@@ -156,29 +170,29 @@ class EmpiricalCostLedger:
                 price_snapshot, created_at
             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (
-                run_id, run.get("comparison_id", ""), run.get("parent_run_id"),
-                run.get("task_id"), run.get("arena_id"), run.get("plan_phase_hash"),
-                run.get("repository_commit_sha"), run.get("working_tree_digest"),
-                run.get("objective_hash"), run.get("mode"), run.get("provider"),
-                run.get("model"), run.get("measurement_class"),
-                run.get("started_at", time.time()), run.get("completed_at"),
-                run.get("input_tokens"), run.get("output_tokens"),
-                run.get("cached_input_tokens"), run.get("cache_creation_tokens"),
-                run.get("reasoning_tokens"),
-                run.get("estimated_input_tokens"), run.get("estimated_output_tokens"),
-                run.get("provider_cost_usd"), run.get("calculated_cost_usd"),
-                run.get("latency_ms"), run.get("time_to_first_token_ms"),
-                run.get("model_call_count", 0), run.get("tool_call_count", 0),
-                run.get("files_exposed"), run.get("symbols_exposed"),
-                run.get("source_lines_exposed"), run.get("source_chars_exposed"),
-                run.get("context_bytes_before"), run.get("context_bytes_after"),
-                run.get("patch_id"), run.get("patch_lines_added"),
-                run.get("patch_lines_removed"),
-                run.get("tests_run"), run.get("tests_passed"), run.get("tests_failed"),
-                run.get("verification_status"),
-                run.get("scope_violation_count", 0), run.get("repair_attempt_count", 0),
-                run.get("human_intervention_count", 0), run.get("human_review_status"),
-                run.get("quality_score"), run.get("confidence_class"),
+                run_id, filtered_run.get("comparison_id", ""), filtered_run.get("parent_run_id"),
+                filtered_run.get("task_id"), filtered_run.get("arena_id"), filtered_run.get("plan_phase_hash"),
+                filtered_run.get("repository_commit_sha"), filtered_run.get("working_tree_digest"),
+                filtered_run.get("objective_hash"), filtered_run.get("mode"), filtered_run.get("provider"),
+                filtered_run.get("model"), filtered_run.get("measurement_class"),
+                filtered_run.get("started_at", time.time()), filtered_run.get("completed_at"),
+                filtered_run.get("input_tokens"), filtered_run.get("output_tokens"),
+                filtered_run.get("cached_input_tokens"), filtered_run.get("cache_creation_tokens"),
+                filtered_run.get("reasoning_tokens"),
+                filtered_run.get("estimated_input_tokens"), filtered_run.get("estimated_output_tokens"),
+                filtered_run.get("provider_cost_usd"), filtered_run.get("calculated_cost_usd"),
+                filtered_run.get("latency_ms"), filtered_run.get("time_to_first_token_ms"),
+                filtered_run.get("model_call_count", 0), filtered_run.get("tool_call_count", 0),
+                filtered_run.get("files_exposed"), filtered_run.get("symbols_exposed"),
+                filtered_run.get("source_lines_exposed"), filtered_run.get("source_chars_exposed"),
+                filtered_run.get("context_bytes_before"), filtered_run.get("context_bytes_after"),
+                filtered_run.get("patch_id"), filtered_run.get("patch_lines_added"),
+                filtered_run.get("patch_lines_removed"),
+                filtered_run.get("tests_run"), filtered_run.get("tests_passed"), filtered_run.get("tests_failed"),
+                filtered_run.get("verification_status"),
+                filtered_run.get("scope_violation_count", 0), filtered_run.get("repair_attempt_count", 0),
+                filtered_run.get("human_intervention_count", 0), filtered_run.get("human_review_status"),
+                filtered_run.get("quality_score"), filtered_run.get("confidence_class"),
                 warnings, price_snap, time.time(),
             )
         )

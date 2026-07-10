@@ -117,7 +117,7 @@ def dispatch_api_request(
     if method == "GET" and route == "/api/human-agent/cost-events":
         try:
             from aura_cost_telemetry_events import get_telemetry_stream
-            since = _query_int(query.get("since", [None])[0], default=0)
+            since = _query_float(query.get("since", [None])[0], default=0.0)
             stream = get_telemetry_stream()
             events = stream.get_events(since=since, limit=100)
             return 200, {"ok": True, "events": events, "count": len(events),
@@ -248,6 +248,15 @@ def _query_int(value: str | None, *, default: int = 0) -> int:
         return default
     try:
         return max(0, int(value))
+    except (ValueError, TypeError):
+        return default
+
+
+def _query_float(value: str | None, *, default: float = 0.0) -> float:
+    if value is None:
+        return default
+    try:
+        return max(0.0, float(value))
     except (ValueError, TypeError):
         return default
 
