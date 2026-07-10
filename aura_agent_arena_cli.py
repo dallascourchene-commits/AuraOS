@@ -102,6 +102,14 @@ try:
 except Exception:  # noqa: BLE001
     _COST_OBSERVATORY_AVAILABLE = False
 
+# Capability Resolver + Stabilization — optional import (additive)
+try:
+    from aura_capability_resolver import resolve_capabilities
+    from aura_system_stabilization import stabilization_status
+    _CAPABILITY_RESOLVER_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _CAPABILITY_RESOLVER_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -895,6 +903,35 @@ def cmd_cost_history(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Capability Resolver + Stabilization command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_capability_resolver() -> None:
+    if not _CAPABILITY_RESOLVER_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Capability Resolver not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_resolve_capabilities(args: argparse.Namespace) -> int:
+    _require_capability_resolver()
+    result = resolve_capabilities(
+        args.objective, repo_root=".",
+        target_files=args.target_files.split(",") if args.target_files else None,
+        target_symbols=args.target_symbols.split(",") if args.target_symbols else None,
+    )
+    _print_json(result)
+    return 0 if result.get("version") else 1
+
+
+def cmd_stabilization_status(args: argparse.Namespace) -> int:
+    _require_capability_resolver()
+    result = stabilization_status(repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1281,6 +1318,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_ch = subparsers.add_parser("cost-history", help="Show cost run history")
     p_ch.add_argument("--limit", type=int, default=20)
     p_ch.set_defaults(func=cmd_cost_history)
+
+    # ---- Capability Resolver + Stabilization subcommands (additive) ----
+
+    # resolve-capabilities
+    p_rc = subparsers.add_parser("resolve-capabilities", help="Resolve grounded capabilities for an objective")
+    p_rc.add_argument("--objective", required=True, help="Coding objective")
+    p_rc.add_argument("--target-files", default=None, help="Comma-separated target files")
+    p_rc.add_argument("--target-symbols", default=None, help="Comma-separated target symbols")
+    p_rc.set_defaults(func=cmd_resolve_capabilities)
+
+    # stabilization-status
+    p_ss = subparsers.add_parser("stabilization-status", help="Show system stabilization report")
+    p_ss.set_defaults(func=cmd_stabilization_status)
 
     return parser
 

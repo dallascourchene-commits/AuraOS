@@ -157,7 +157,7 @@ uses only explicitly configured external provider APIs and can be dry-run with
 
 ### Key Concepts
 
-- **Polysynthetic**: Input is decomposed into 6 morphemic slots (SPATIAL, ASPECT, CLASS, SUBJECT, VOICE, STEM) before routing
+- **Polysynthetic**: Input is decomposed into 6 morphemic slots (DIR, ASP, CLASS, SUBJ, VOICE, STEM) before routing. (DIR is the canonical execution name for the direction slot; SPATIAL and DIRECTION are documented aliases.)
 - **ST3GG**: Holographic glyph/stamp system — thermal/moral/friction categorization plus visible DASH recall pointers. Aura's egress-memory path uses auditable ST3GG capsules and strips hidden tokenizer carriers before outbound calls.
 - **DIKWP**: Data → Information → Knowledge → Wisdom → Purpose — cognitive hierarchy
 - **PWFST**: Ojibwe governance principles enforced across all modules
