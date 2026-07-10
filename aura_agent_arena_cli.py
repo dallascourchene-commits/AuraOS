@@ -43,6 +43,24 @@ try:
 except Exception:  # noqa: BLE001
     _HERMES_MODE_AVAILABLE = False
 
+# Native Cockpit — optional import (additive, does not break existing CLI)
+try:
+    from aura_native_cockpit import AuraNativeCockpit
+    from aura_intent_ingestion import (
+        parse_intent_document,
+        compile_intent_packet,
+        route_intent_to_lexc,
+    )
+    from aura_capability_connectome import (
+        build_capability_connectome,
+        find_capability_path,
+    )
+    from aura_token_economy_orchestrator import compute_token_economy
+    from aura_workflow_gates import workflow_state_machine
+    _NATIVE_COCKPIT_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _NATIVE_COCKPIT_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -381,6 +399,94 @@ def cmd_write_rules(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Native Cockpit command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_native_cockpit() -> None:
+    """Raise SystemExit if Native Cockpit is not available."""
+    if not _NATIVE_COCKPIT_AVAILABLE:
+        print(json.dumps({
+            "ok": False,
+            "error": "Native Cockpit is not available. Ensure aura_native_cockpit.py and related modules are importable.",
+        }, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_ingest_intent(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    cockpit = AuraNativeCockpit(repo_root=".")
+    result = cockpit.ingest_intent(args.file)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_validate_lexc_route(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    cockpit = AuraNativeCockpit(repo_root=".")
+    result = cockpit.validate_lexc_route(args.file)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_capability_connectome(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    result = build_capability_connectome(repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_capability_path(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    result = find_capability_path(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_token_economy_cli(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    files = [f.strip() for f in args.files.split(",") if f.strip()]
+    result = compute_token_economy(args.objective, files, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_workflow_gates(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    result = workflow_state_machine()
+    _print_json(result)
+    return 0 if result.get("ok", True) else 1
+
+
+def cmd_native_cockpit_contract(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    cockpit = AuraNativeCockpit(repo_root=".")
+    result = cockpit.cockpit_contract(args.objective)
+    if args.json:
+        _print_json(result)
+    else:
+        if result.get("ok"):
+            print(result.get("contract", ""))
+        else:
+            _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_prepare_native_handoff(args: argparse.Namespace) -> int:
+    _require_native_cockpit()
+    cockpit = AuraNativeCockpit(repo_root=".")
+    # First ingest the intent
+    packet = cockpit.ingest_intent(args.intent_file)
+    if not packet.get("ok"):
+        _print_json(packet)
+        return 1
+    # Then prepare handoff
+    result = cockpit.prepare_handoff(packet, agent=args.agent)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -533,6 +639,73 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write .aura/HERMES_AURA_RULES.md guard file",
     )
     p_rules.set_defaults(func=cmd_write_rules)
+
+    # ---- Native Cockpit subcommands (additive) ----
+
+    # ingest-intent
+    p_ingest = subparsers.add_parser(
+        "ingest-intent",
+        help="Ingest an Aura-native intent document and compile an IntentPacket",
+    )
+    p_ingest.add_argument("--file", required=True, help="Path to .aura.md intent document")
+    p_ingest.set_defaults(func=cmd_ingest_intent)
+
+    # validate-lexc-route
+    p_vlexc = subparsers.add_parser(
+        "validate-lexc-route",
+        help="Validate the LEXC route from an intent document",
+    )
+    p_vlexc.add_argument("--file", required=True, help="Path to .aura.md intent document")
+    p_vlexc.set_defaults(func=cmd_validate_lexc_route)
+
+    # capability-connectome
+    p_conn = subparsers.add_parser(
+        "capability-connectome",
+        help="Build the full capability connectome graph",
+    )
+    p_conn.set_defaults(func=cmd_capability_connectome)
+
+    # capability-path
+    p_cpath = subparsers.add_parser(
+        "capability-path",
+        help="Find the capability path for an objective",
+    )
+    p_cpath.add_argument("--objective", required=True, help="Coding objective")
+    p_cpath.set_defaults(func=cmd_capability_path)
+
+    # token-economy
+    p_tecon = subparsers.add_parser(
+        "token-economy",
+        help="Compute a token economy report with savings sources",
+    )
+    p_tecon.add_argument("--objective", required=True, help="Coding objective")
+    p_tecon.add_argument("--files", required=True, help="Comma-separated file paths")
+    p_tecon.set_defaults(func=cmd_token_economy_cli)
+
+    # workflow-gates
+    p_wgates = subparsers.add_parser(
+        "workflow-gates",
+        help="Show the workflow state machine (18 checkpoint states)",
+    )
+    p_wgates.set_defaults(func=cmd_workflow_gates)
+
+    # native-cockpit-contract
+    p_ncc = subparsers.add_parser(
+        "native-cockpit-contract",
+        help="Generate a native cockpit contract for an objective",
+    )
+    p_ncc.add_argument("--objective", required=True, help="Coding objective")
+    p_ncc.add_argument("--json", action="store_true", help="Output full JSON")
+    p_ncc.set_defaults(func=cmd_native_cockpit_contract)
+
+    # prepare-native-handoff
+    p_pnh = subparsers.add_parser(
+        "prepare-native-handoff",
+        help="Prepare an agent handoff packet from an intent document",
+    )
+    p_pnh.add_argument("--intent-file", required=True, help="Path to .aura.md intent document")
+    p_pnh.add_argument("--agent", default="hermes", help="Agent name (hermes, codex)")
+    p_pnh.set_defaults(func=cmd_prepare_native_handoff)
 
     return parser
 
