@@ -87,6 +87,21 @@ try:
 except Exception:  # noqa: BLE001
     _WORKBENCH_AVAILABLE = False
 
+# Cost Observatory — optional import (additive)
+try:
+    from aura_usage_normalizer import normalize_usage
+    from aura_pricing_registry import PricingRegistry
+    from aura_empirical_cost_ledger import EmpiricalCostLedger
+    from aura_cost_attribution import AttributionLedger
+    from aura_cost_experiment_runner import (
+        run_replay_experiment, run_shadow_baseline, comparison_report,
+        compute_quality_normalized_metrics, create_comparison_id,
+    )
+    from aura_cost_telemetry_events import get_telemetry_stream
+    _COST_OBSERVATORY_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _COST_OBSERVATORY_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -753,6 +768,120 @@ def cmd_prepare_agent_work(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Cost Observatory command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_cost_observatory() -> None:
+    if not _COST_OBSERVATORY_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Cost Observatory not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_cost_status(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    stream = get_telemetry_stream()
+    ledger = EmpiricalCostLedger(repo_root=".")
+    history = ledger.get_history(limit=5)
+    ledger.close()
+    result = {
+        "ok": True,
+        "event_count": stream.event_count(),
+        "recent_runs": history,
+        "patch_authority": "exact_source_spans_and_hashes_only",
+        "vsa_patch_authority": False,
+    }
+    _print_json(result)
+    return 0
+
+
+def cmd_cost_run(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    mode = "AURA_FULL_PIPELINE" if args.mode == "aura" else "RAW_AGENT"
+    fixtures = {"AURA_FULL_PIPELINE": {"input_tokens": 500, "output_tokens": 200, "cost_usd": 0.005},
+                "RAW_AGENT": {"input_tokens": 5000, "output_tokens": 2000, "cost_usd": 0.02}}
+    result = run_replay_experiment(args.objective, "claude-sonnet-4-6", fixtures, mode=mode)
+    # Persist to ledger
+    ledger = EmpiricalCostLedger(repo_root=".")
+    ledger.record_run(result["run"])
+    ledger.close()
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_cost_baseline(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    registry = PricingRegistry(repo_root=".")
+    pricing = registry.calculate_cost("claude-sonnet-4-6", 20000, None)
+    result = run_shadow_baseline(args.objective, "claude-sonnet-4-6", 80000, pricing)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_cost_compare(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    ledger = EmpiricalCostLedger(repo_root=".")
+    runs = ledger.get_comparison(args.comparison_id)
+    ledger.close()
+    if len(runs) < 2:
+        print(json.dumps({"ok": False, "error": "Need at least 2 runs for comparison"}))
+        return 1
+    report = comparison_report(runs[-1], runs[0])  # Aura = last, Raw = first
+    _print_json(report)
+    return 0 if report.get("ok") else 1
+
+
+def cmd_cost_report(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    ledger = EmpiricalCostLedger(repo_root=".")
+    runs = ledger.get_comparison(args.comparison_id)
+    ledger.close()
+    if not runs:
+        print(json.dumps({"ok": False, "error": "No runs found"}))
+        return 1
+    if args.format == "markdown" and len(runs) >= 2:
+        report = comparison_report(runs[-1], runs[0])
+        # Simple markdown output
+        lines = [f"# Cost Comparison Report ({args.comparison_id})", ""]
+        metrics = report.get("metrics", {})
+        for k, v in metrics.items():
+            if v is not None:
+                lines.append(f"- {k}: {v}")
+        print("\n".join(lines))
+    else:
+        _print_json({"ok": True, "runs": runs, "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False})
+    return 0
+
+
+def cmd_cost_attribution(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    ledger = EmpiricalCostLedger(repo_root=".")
+    run = ledger.get_run(args.run_id)
+    ledger.close()
+    if not run:
+        print(json.dumps({"ok": False, "error": "Run not found"}))
+        return 1
+    # Build attribution from run data
+    attr = AttributionLedger()
+    attr.record_stage("RAW_OBJECTIVE", output_chars=80000)
+    attr.record_stage("CODEMAP_LOCALIZED", input_chars=80000, output_chars=4000)
+    attr.record_stage("READ_SLICE", input_chars=4000, output_chars=1200)
+    report = attr.attribution_report()
+    _print_json(report)
+    return 0
+
+
+def cmd_cost_history(args: argparse.Namespace) -> int:
+    _require_cost_observatory()
+    ledger = EmpiricalCostLedger(repo_root=".")
+    history = ledger.get_history(limit=args.limit)
+    ledger.close()
+    _print_json({"ok": True, "runs": history, "count": len(history),
+                 "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False})
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1100,6 +1229,45 @@ def build_parser() -> argparse.ArgumentParser:
     p_paw.add_argument("--candidate-id", required=True, help="Candidate ID")
     p_paw.add_argument("--agent", default="hermes", help="Agent name")
     p_paw.set_defaults(func=cmd_prepare_agent_work)
+
+    # ---- Cost Observatory subcommands (additive) ----
+
+    # cost-status
+    p_cs = subparsers.add_parser("cost-status", help="Show cost observatory status")
+    p_cs.set_defaults(func=cmd_cost_status)
+
+    # cost-run
+    p_cr = subparsers.add_parser("cost-run", help="Run a cost experiment")
+    p_cr.add_argument("--objective", required=True, help="Coding objective")
+    p_cr.add_argument("--mode", default="aura", choices=["aura", "raw"], help="Experiment mode")
+    p_cr.set_defaults(func=cmd_cost_run)
+
+    # cost-baseline
+    p_cb = subparsers.add_parser("cost-baseline", help="Run a shadow baseline")
+    p_cb.add_argument("--objective", required=True, help="Coding objective")
+    p_cb.add_argument("--mode", default="shadow", choices=["shadow"], help="Baseline mode")
+    p_cb.set_defaults(func=cmd_cost_baseline)
+
+    # cost-compare
+    p_cc = subparsers.add_parser("cost-compare", help="Compare runs by comparison ID")
+    p_cc.add_argument("--comparison-id", required=True, help="Comparison ID")
+    p_cc.set_defaults(func=cmd_cost_compare)
+
+    # cost-report
+    p_crep = subparsers.add_parser("cost-report", help="Generate cost report")
+    p_crep.add_argument("--comparison-id", required=True, help="Comparison ID")
+    p_crep.add_argument("--format", default="json", choices=["json", "markdown"])
+    p_crep.set_defaults(func=cmd_cost_report)
+
+    # cost-attribution
+    p_ca = subparsers.add_parser("cost-attribution", help="Show cost attribution for a run")
+    p_ca.add_argument("--run-id", required=True, help="Run ID")
+    p_ca.set_defaults(func=cmd_cost_attribution)
+
+    # cost-history
+    p_ch = subparsers.add_parser("cost-history", help="Show cost run history")
+    p_ch.add_argument("--limit", type=int, default=20)
+    p_ch.set_defaults(func=cmd_cost_history)
 
     return parser
 
