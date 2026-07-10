@@ -124,7 +124,7 @@ except Exception:  # noqa: BLE001
 try:
     from aura_civic_runtime import (
         create_civic_session, get_session, run_full_demo, add_contribution,
-        match_resources, run_mitosis, run_scenarios, get_consent,
+        match_resources, run_mitosis, run_scenarios, get_consent, record_consent_response,
         run_what_if, create_pilot, get_issue_pulse, export_packet,
         close_session, civic_status,
     )
@@ -1084,7 +1084,12 @@ def cmd_civic_scenarios(args: argparse.Namespace) -> int:
 
 def cmd_civic_respond(args: argparse.Namespace) -> int:
     _require_civic()
-    result = get_consent(args.session_id)
+    import json as _json
+    response = {}
+    if args.file:
+        with open(args.file) as f:
+            response = _json.load(f)
+    result = record_consent_response(args.session_id, response)
     _print_json(result)
     return 0 if result.get("ok") else 1
 
@@ -1098,7 +1103,12 @@ def cmd_civic_consent(args: argparse.Namespace) -> int:
 
 def cmd_civic_what_if(args: argparse.Namespace) -> int:
     _require_civic()
-    result = run_what_if(args.session_id)
+    import json as _json
+    changes = {}
+    if args.file:
+        with open(args.file) as f:
+            changes = _json.load(f)
+    result = run_what_if(args.session_id, changes)
     _print_json(result)
     return 0 if result.get("ok") else 1
 

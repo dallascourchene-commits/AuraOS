@@ -33,6 +33,8 @@ def assess_legal_applicability(instrument: dict[str, Any], scenario_facts: dict[
         applicability = "POSSIBLY_APPLICABLE"
     else:
         applicability = "INFORMATIONAL"
+    if not scenario_facts:
+        applicability = "INSUFFICIENT_FACTS"
     return {
         "ok": True,
         "instrument": instrument,

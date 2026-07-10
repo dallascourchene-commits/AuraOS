@@ -48,11 +48,12 @@ class CivicMemoryArchive:
         return {"ok": True, "records": exported, "count": len(exported)}
     def revoke(self, rid: str) -> dict[str, Any]:
         r = self._records.get(rid)
-        if not r: return {"ok": False, "error": "not found"}
+        if not r:
+            return {"ok": False, "error": "not found"}
         r.revocation_status = "revoked"
         return {"ok": True}
     def check_retention_expiry(self, now: float | None = None) -> dict[str, Any]:
-        t = now or time.time()
+        t = time.time() if now is None else now
         expired = [r.record_id for r in self._records.values()
                    if r.created_at + r.retention_period_days * 86400 < t and r.revocation_status == "active"]
         return {"ok": True, "expired": expired}

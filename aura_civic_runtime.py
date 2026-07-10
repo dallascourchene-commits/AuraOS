@@ -67,20 +67,20 @@ def get_session(session_id: str) -> dict[str, Any]:
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
 
-def run_civic_organ(session_id: str, organ_type: str) -> dict[str, Any]:
+def run_civic_organ(session_id: str, organ_type: str, **kwargs: Any) -> dict[str, Any]:
     """Run a trusted civic organ within a session."""
     s = get_session(session_id)
     if not s["ok"]:
         return s
     session = s["session"]
     from aura_civic_organs import execute_organ
-    result = execute_organ(organ_type, session)
+    result = execute_organ(organ_type, session, **kwargs)
     # Record receipt
     if result.get("ok"):
         session["organ_receipts"].append({
             "organ_type": organ_type,
             "executed_at": time.time(),
-            "truth_class": result.get("organ_type", ""),
+            "truth_class": result.get("truth_class", "SYSTEM_RULE_DERIVED"),
         })
     return result
 
@@ -117,12 +117,14 @@ def run_full_demo(*, story: str = "hairstylist") -> dict[str, Any]:
         r = run_civic_organ(session_id, organ_type)
         results[organ_type] = {"ok": r.get("ok", False)}
 
+    all_ok = all(result["ok"] for result in results.values())
+
     # Get final session
     final = get_session(session_id)
     session = final.get("session", {})
 
     return {
-        "ok": True,
+        "ok": all_ok,
         "session_id": session_id,
         "story": story,
         "objective": objective,
@@ -162,12 +164,40 @@ def get_consent(session_id: str) -> dict[str, Any]:
     return run_civic_organ(session_id, "ConsentArcOrgan")
 
 
+def record_consent_response(session_id: str, response: dict[str, Any]) -> dict[str, Any]:
+    """Record a bounded participant response and return updated convergence."""
+    s = get_session(session_id)
+    if not s["ok"]:
+        return s
+    from aura_civic_deliberation import ConsentArc, ParticipantResponse, assess_convergence, collect_response
+    session = s["session"]
+    arc_data = session.get("consent_arc") or {
+        "arc_id": f"ARC-{session_id}",
+        "proposal_ref": response.get("proposal_ref", ""),
+        "participant_scope": response.get("participant_scope", ""),
+    }
+    arc = ConsentArc(**{key: value for key, value in arc_data.items() if key in ConsentArc.__dataclass_fields__})
+    participant_response = ParticipantResponse(
+        response_id=response.get("response_id", f"RESP-{len(arc.responses):04d}"),
+        participant_ref=response.get("participant_ref", "anonymous"),
+        proposal_ref=response.get("proposal_ref", arc.proposal_ref),
+        response_type=response.get("response_type", "ABSTAIN"),
+        statement=response.get("statement", ""),
+        truth_class=response.get("truth_class", "COMMUNITY_ASSERTED"),
+        created_at=response.get("created_at", time.time()),
+    )
+    collect_response(arc, participant_response)
+    session["consent_arc"] = arc.to_dict()
+    return {"ok": True, "consent_arc": session["consent_arc"], "convergence": assess_convergence(arc),
+            "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+
 def run_what_if(session_id: str, changes: dict[str, Any] | None = None) -> dict[str, Any]:
-    return run_civic_organ(session_id, "WhatIfOrgan")
+    return run_civic_organ(session_id, "WhatIfOrgan", changes=changes or {})
 
 
 def create_pilot(session_id: str, scenario_id: str = "") -> dict[str, Any]:
-    return run_civic_organ(session_id, "PilotTunnelOrgan")
+    return run_civic_organ(session_id, "PilotTunnelOrgan", scenario_id=scenario_id)
 
 
 def get_issue_pulse(session_id: str) -> dict[str, Any]:

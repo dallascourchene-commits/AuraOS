@@ -8,7 +8,7 @@ Ephemeral organs are the internal assembly and lifecycle mechanism. The Civic Ar
 
 ## Architecture
 
-```
+```text
 human/community objective
 → Aura IntentPacket
 → Capability Resolution Packet

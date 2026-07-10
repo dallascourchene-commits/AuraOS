@@ -10,7 +10,7 @@ from dataclasses import dataclass, field, asdict
 from typing import Any
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
-VSA_PATCH_AUTHORY = False
+VSA_PATCH_AUTHORITY = False
 
 @dataclass
 class JurisdictionProfile:
@@ -51,7 +51,8 @@ class CivicProfileSet:
     schema_version: str = "AURA_CIVIC_PROFILE_SET_V1"
     def to_dict(self): return asdict(self)
     def compute_digest(self) -> str:
-        d = self.to_dict(); d.pop("digest", None)
+        d = self.to_dict()
+        d.pop("digest", None)
         return hashlib.blake2b(json.dumps(d, sort_keys=True, default=str).encode(), digest_size=12).hexdigest()
 
 # Winnipeg demo profiles
@@ -101,11 +102,11 @@ def get_profile(profile_id: str) -> dict[str, Any]:
     if profile_id == "winnipeg_demo_community":
         return {"ok": True, "profile": WINNIPEG_DEMO_COMMUNITY.to_dict()}
     return {"ok": False, "error": f"unknown_profile: {profile_id}",
-            "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+            "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
 def check_profile_conflicts(profile_set: CivicProfileSet) -> dict[str, Any]:
     # Check for contradictory authority rules
     conflicts = []
     # For MVP, no conflicts expected with single jurisdiction
     return {"ok": len(conflicts) == 0, "conflicts": conflicts,
-            "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+            "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}

@@ -112,16 +112,12 @@ class TestManifestFinalization:
     def test_mutation_invalidates_digest(self):
         draft = {"organ_id": "EORG-mut", "objective": "test", "manifest_state": "DRAFT"}
         result = ManifestFinalizer.finalize(draft)
-        finalized = result["finalized_manifest"]
-        digest = result["digest"]
-        # Mutate
-        finalized["objective"] = "changed"
-        mutation = ManifestFinalizer.check_mutation(
-            result["finalized_manifest"], {"organ_id": "EORG-mut", "objective": "changed", "manifest_state": "FINALIZED"}
-        )
-        # The check_mutation compares the finalized manifest with the current
-        # If we pass a mutated version, it should detect changes
+        original = result["finalized_manifest"]
+        current = dict(original)
+        current["objective"] = "changed"
+        mutation = ManifestFinalizer.check_mutation(original, current)
         assert mutation["mutated"] is True
+        assert mutation["changed_keys"] == ["objective"]
 
     def test_finalized_nested_values_do_not_alias_input(self):
         draft = {"organ_id": "EORG-nested", "manifest_state": "DRAFT", "data_policy": {"paths": ["safe"]}}
@@ -230,13 +226,10 @@ class TestVerifierAndBudget:
     def test_verifier_catches_missing_truth_class(self):
         manifest = {"state": "COMPLETED", "granted_capabilities": ["search_code"],
                     "data_policy": {"secrets_access": False, "readable_paths": [".aura/CODEMAP.json"]}}
-        results = [{"adapter": "test", "ok": None}]  # Missing truth class
+        results = [{"adapter": "test", "ok": True}]
         result = verify_run(manifest, results)
-        # Should still pass since None is not False
-        # But let's test with a result that has no ok field at all
-        results2 = [{"adapter": "test", "ok": False, "error": ""}]  # Missing error detail
-        result2 = verify_run(manifest, results2)
-        assert "checks" in result2
+        truth_check = next(check for check in result["checks"] if check["check"] == "truth_class_presence")
+        assert truth_check["passed"] is False
 
     def test_resource_budget_breach_dissolves(self, store):
         """Budget breach should transition to FAILED and dissolve."""

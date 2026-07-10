@@ -80,8 +80,9 @@ def verify_run(
     for r in execution_results:
         if r.get("adapter") == "write_temp_audit":
             continue
-        if r.get("ok") is False and not r.get("error"):
+        if not r.get("truth_class"):
             truth_ok = False
+            break
     checks.append({"check": "truth_class_presence", "passed": truth_ok})
 
     # 10. Budget compliance

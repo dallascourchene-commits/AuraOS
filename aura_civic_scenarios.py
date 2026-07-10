@@ -4,7 +4,7 @@ What-If: SIMULATION_ONLY, NOT_A_PREDICTION, ASSUMPTION_DEPENDENT.
 Pilot Tunnel: non-binding human-owned pilot packet.
 """
 from __future__ import annotations
-import hashlib, time
+import hashlib, json, time
 from dataclasses import dataclass, field, asdict
 from typing import Any
 
@@ -32,8 +32,9 @@ class WhatIfSimulation:
     def to_dict(self): return asdict(self)
 
 def run_what_if(base_scenario: dict[str, Any], changes: dict[str, Any]) -> dict[str, Any]:
+    payload = json.dumps({"base_scenario": base_scenario, "changes": changes}, sort_keys=True, separators=(",", ":"), default=str)
     sim = WhatIfSimulation(
-        sim_id=f"WHATIF-{abs(hash(str(base_scenario)+str(changes)))%100000000:08d}",
+        sim_id=f"WHATIF-{hashlib.blake2b(payload.encode(), digest_size=4).hexdigest()}",
         base_scenario_id=base_scenario.get("scenario_id",""),
         changed_assumptions=changes,
         unchanged_assumptions=[k for k in base_scenario.get("metrics",{}) if k not in changes],
@@ -70,8 +71,9 @@ class PilotPacket:
     def to_dict(self): return asdict(self)
 
 def create_pilot(scenario: dict[str, Any], *, timeline: str = "3 months") -> dict[str, Any]:
+    payload = json.dumps(scenario, sort_keys=True, separators=(",", ":"), default=str)
     pilot = PilotPacket(
-        pilot_id=f"PILOT-{abs(hash(str(scenario)))%100000000:08d}",
+        pilot_id=f"PILOT-{hashlib.blake2b(payload.encode(), digest_size=4).hexdigest()}",
         scenario_ref=scenario.get("scenario_id",""),
         minimum_viable_scope=scenario.get("description","")[:200],
         timeline=timeline,

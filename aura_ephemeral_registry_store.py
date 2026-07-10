@@ -151,7 +151,7 @@ class EphemeralRegistryStore:
             cols = [d[0] for d in cur.description]
         else:
             cols = [f"col_{i}" for i in range(len(row))]
-        d = dict(zip(cols, row))
+        d = dict(zip(cols, row, strict=True))
         for key in ("capability_lease", "dissolution_receipt", "crystallization_proposal",
                      "manifest_json", "transition_evidence", "revoked_capabilities",
                      "audit_summary", "finalized_manifest"):

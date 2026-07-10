@@ -94,7 +94,9 @@ def civic_music(scenarios: list[dict[str, Any]], *, weights: dict[str, float] | 
     w = weights or {d: 1.0 / len(MUSIC_DIMENSIONS) for d in MUSIC_DIMENSIONS}
 
     scored = []
-    for s in scenarios:
+    for index, scenario in enumerate(scenarios):
+        s = dict(scenario)
+        s.setdefault("scenario_id", f"SCEN-{index:03d}")
         scores = {}
         for dim in MUSIC_DIMENSIONS:
             scores[dim] = s.get("metrics", {}).get(dim, 0.5)

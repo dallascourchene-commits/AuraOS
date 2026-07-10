@@ -96,7 +96,8 @@ def what_if_organ(session: dict[str, Any], **kw) -> dict[str, Any]:
     from aura_civic_demo_fixtures import hairstylist_fixtures
     fx = hairstylist_fixtures()
     base = fx["scenarios"][0]
-    result = run_what_if(base, {"cost": 0.7, "accessibility": 0.9})
+    changes = kw.get("changes") or {"cost": 0.7, "accessibility": 0.9}
+    result = run_what_if(base, changes)
     return {"ok": True, "organ_type": "WhatIfOrgan", "what_if": result,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
@@ -104,7 +105,9 @@ def pilot_tunnel_organ(session: dict[str, Any], **kw) -> dict[str, Any]:
     from aura_civic_scenarios import create_pilot
     from aura_civic_demo_fixtures import hairstylist_fixtures
     fx = hairstylist_fixtures()
-    result = create_pilot(fx["scenarios"][0])
+    scenario_id = kw.get("scenario_id", "")
+    scenario = next((item for item in fx["scenarios"] if item.get("scenario_id") == scenario_id), fx["scenarios"][0])
+    result = create_pilot(scenario)
     return {"ok": True, "organ_type": "PilotTunnelOrgan", "pilot": result,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
@@ -148,6 +151,9 @@ ORGAN_ADAPTERS: dict[str, Callable[..., dict[str, Any]]] = {
     "DecisionPacketOrgan": decision_packet_organ,
 }
 
+if set(ORGAN_TYPES) != set(ORGAN_ADAPTERS):
+    raise RuntimeError("Civic organ registry mismatch between ORGAN_TYPES and ORGAN_ADAPTERS")
+
 def execute_organ(organ_type: str, session: dict[str, Any], **kw) -> dict[str, Any]:
     adapter = ORGAN_ADAPTERS.get(organ_type)
     if not adapter:
@@ -155,4 +161,5 @@ def execute_organ(organ_type: str, session: dict[str, Any], **kw) -> dict[str, A
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     result = adapter(session, **kw)
     result["organ_type"] = organ_type
+    result.setdefault("truth_class", "SYSTEM_RULE_DERIVED")
     return result

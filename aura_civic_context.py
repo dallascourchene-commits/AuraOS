@@ -38,17 +38,20 @@ LENSES = {
 }
 
 def get_lens(lens_id: str) -> dict[str, Any]:
-    l = LENSES.get(lens_id)
-    if not l: return {"ok": False, "error": f"unknown lens: {lens_id}"}
-    return {"ok": True, "lens": l.to_dict()}
+    lens = LENSES.get(lens_id)
+    if not lens:
+        return {"ok": False, "error": f"unknown lens: {lens_id}"}
+    return {"ok": True, "lens": lens.to_dict()}
 
 def list_lenses() -> dict[str, Any]:
-    return {"ok": True, "lenses": [l.to_dict() for l in LENSES.values()], "count": len(LENSES)}
+    return {"ok": True, "lenses": [lens.to_dict() for lens in LENSES.values()], "count": len(LENSES)}
 
 def check_activation(lens_id: str, active_profile_refs: list[str]) -> dict[str, Any]:
-    l = LENSES.get(lens_id)
-    if not l: return {"ok": False, "error": "unknown lens"}
-    if not l.applicable_profiles: return {"ok": True, "activated": True}
-    activated = any(p in active_profile_refs for p in l.applicable_profiles)
+    lens = LENSES.get(lens_id)
+    if not lens:
+        return {"ok": False, "error": "unknown lens"}
+    if not lens.applicable_profiles:
+        return {"ok": True, "activated": True}
+    activated = any(profile in active_profile_refs for profile in lens.applicable_profiles)
     return {"ok": True, "activated": activated,
             "note": "Cultural/governance lenses activate only through explicit profile selection" if not activated else ""}

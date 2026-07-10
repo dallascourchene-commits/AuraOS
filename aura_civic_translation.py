@@ -36,4 +36,5 @@ def validate_translation(t: TranslationRecord) -> dict[str, Any]:
 def reject_invented_translation(target_language: str, text: str) -> dict[str, Any]:
     """Reject any invented translation."""
     return {"ok": False, "error": f"invented_{target_language}_translation_rejected",
+            "rejected_text": text,
             "note": "Never invent Anishinaabemowin, Michif, French, Dene, Navajo, or any translation."}
