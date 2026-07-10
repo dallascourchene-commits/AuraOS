@@ -17,18 +17,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - **total_bytes**: 71257333
 - **text_tokens_est**: 3482074
 - **role_counts**: {'binary_artifact': 13, 'interface_surface': 1, 'knowledge_artifact': 52, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 200, 'schema_or_lexicon': 13, 'support_file': 22}
-- **topology_nodes**: 2203
-- **topology_edges**: 2197
-- **topology_source**: existing_topology_json
+- **topology_nodes**: 0
+- **topology_edges**: 0
+- **topology_source**: unknown
 - **elapsed_ms**: 31685.86
-- **last_incremental_refresh_unix**: 1783592494
+- **last_incremental_refresh_unix**: 1783652106
 
 ## Coverage
 
 - **included_file_count**: 314
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=555, `.pytest_cache`=5, `Aura_Memory`=15, `__pycache__`=157
+- **skipped_dir_file_counts**: `.git`=99, `.pytest_cache`=5, `.ruff_cache`=4, `Aura_Memory`=8, `__pycache__`=73
 
 ## Command Index
 
@@ -201,37 +201,24 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Hubs
 
-- `aura_node.py` (python_module): 80 symbols, degree 432, ~98530 tokens
-- `aura_scientific_memory.py` (python_module): 45 symbols, degree 265, ~9915 tokens
-- `test_scientific_memory.py` (python_module): 80 symbols, degree 217, ~12292 tokens
-- `test_aura_functions.py` (python_module): 80 symbols, degree 184, ~9340 tokens
-- `aura_substrate.py` (python_module): 27 symbols, degree 116, ~6261 tokens
-- `aura_codebase_navigator.py` (python_module): 34 symbols, degree 103, ~9528 tokens
-- `aura_router.py` (python_module): 29 symbols, degree 94, ~7815 tokens
-- `aura_resonant_test_oracle.py` (python_module): 21 symbols, degree 91, ~3594 tokens
-- `aura_skillweaver.py` (python_module): 27 symbols, degree 90, ~9349 tokens
-- `aura_proxy_benchmark.py` (python_module): 27 symbols, degree 85, ~7830 tokens
-- `aura_api_rotator.py` (python_module): 24 symbols, degree 85, ~3881 tokens
-- `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 84, ~4829 tokens
+- `aura_node.py` (python_module): 80 symbols, degree 0, ~98530 tokens
+- `test_scientific_memory.py` (python_module): 80 symbols, degree 0, ~12292 tokens
+- `test_aura_functions.py` (python_module): 80 symbols, degree 0, ~9340 tokens
+- `aura_architect_loop.py` (python_module): 72 symbols, degree 0, ~18223 tokens
+- `aura_live_architect.py` (python_module): 64 symbols, degree 0, ~14041 tokens
+- `aura_understand_graph_bridge.py` (python_module): 64 symbols, degree 0, ~9078 tokens
+- `test_obsidian_graph_bridge.py` (python_module): 58 symbols, degree 0, ~9429 tokens
+- `test_aura_skillweaver.py` (python_module): 53 symbols, degree 0, ~6197 tokens
+- `test_synthesis_upgrades.py` (python_module): 51 symbols, degree 0, ~4829 tokens
+- `test_aura_metaharness.py` (python_module): 47 symbols, degree 0, ~4432 tokens
+- `aura_scientific_memory.py` (python_module): 45 symbols, degree 0, ~9915 tokens
+- `aura_topology_sync.py` (python_module): 43 symbols, degree 0, ~7332 tokens
 
 ## Topology Integration
 
-- **source**: existing_topology_json
-- **nodes**: 2203
-- **edges**: 2197
-- **top_files_by_degree**:
-  - `aura_node.py` degree=432 nodes=219 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_api_rotator.py`, `aura_arch_reasoner.py`
-  - `aura_scientific_memory.py` degree=265 nodes=46 neighbors=`arxiv_forager.py`, `aura_fst_routing.py`, `aura_nesy_unit_interval.py`, `aura_node.py`
-  - `test_scientific_memory.py` degree=217 nodes=82 neighbors=`arxiv_forager.py`, `aura_scientific_memory.py`, `vsa_resonator.py`
-  - `test_aura_functions.py` degree=184 nodes=87 neighbors=`arch_reasoner_accel.py`, `async_palace.py`, `aura_arch_reasoner.py`, `aura_associative_core.py`
-  - `aura_substrate.py` degree=116 nodes=28 neighbors=`aura_codebase_navigator.py`, `aura_converse.py`, `aura_fst_routing.py`, `aura_llm_egress.py`
-  - `aura_codebase_navigator.py` degree=103 nodes=31 neighbors=`aura_api_rotator.py`, `aura_codemap_auto_refresh.py`, `aura_fst_routing.py`, `aura_savings_db.py`
-  - `aura_router.py` degree=94 nodes=29 neighbors=`aura_converse.py`, `aura_llm_egress.py`, `aura_matrix_benchmark.py`, `aura_pricing.py`
-  - `aura_resonant_test_oracle.py` degree=91 nodes=24 neighbors=`aura_api_rotator.py`, `aura_node.py`, `aura_skillweaver.py`, `test_resonant_oracle.py`
-  - `aura_skillweaver.py` degree=90 nodes=25 neighbors=`aura_api_rotator.py`, `aura_fst_routing.py`, `aura_node.py`, `aura_qdkt.py`
-  - `aura_proxy_benchmark.py` degree=85 nodes=28 neighbors=`aura_api_rotator.py`, `aura_llm_egress.py`, `aura_matrix_benchmark.py`, `aura_router.py`
-  - `aura_api_rotator.py` degree=85 nodes=22 neighbors=`aura_ai_router.py`, `aura_anthropic_router.py`, `aura_benchmark_sandbox.py`, `aura_codebase_navigator.py`
-  - `test_synthesis_upgrades.py` degree=84 nodes=52 neighbors=`aura_arch_reasoner.py`, `aura_associative_core.py`, `aura_heal.py`, `aura_node.py`
+- **source**: unknown
+- **nodes**: 0
+- **edges**: 0
 
 ## High-Value Symbols
 
