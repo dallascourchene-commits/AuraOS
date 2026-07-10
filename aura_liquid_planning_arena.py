@@ -464,7 +464,17 @@ class CodeArenaAdapter(BaseArenaAdapter):
 
 class CivicArenaAdapter(BaseArenaAdapter):
     domain = "civic"
-    domain_objects = ("neighborhoods", "services", "funding", "legal_constraints", "intervention_modules", "community_governance", "dream_evidence_scores")
+    domain_objects = (
+        "neighborhoods", "services", "funding", "legal_constraints",
+        "intervention_modules", "community_governance", "dream_evidence_scores",
+        # V3 expanded domain objects
+        "community_needs", "resource_offers", "proposals", "objections",
+        "reservations", "representation_gaps", "consent_arcs",
+        "mitosis_workstreams", "music_scenarios", "legal_instruments",
+        "council_items", "what_if_simulations", "pilot_packets",
+        "decision_packets", "organ_manifests", "organ_receipts",
+        "community_memory", "civic_sessions", "official_snapshots",
+    )
 
     def action_capsule_from_intent(
         self,
@@ -481,11 +491,85 @@ class CivicArenaAdapter(BaseArenaAdapter):
             objective=objective,
             target=dict(target or {}),
             scope={"regions": [{"region_type": "civic_scope", "id": key, "value": value} for key, value in dict(target or {}).items()]},
-            allowed_actions=["propose interventions", "request missing data", "rank evidence by downstream usefulness", "draft BoundaryContract placeholders"],
-            forbidden_actions=["claim legal approval", "allocate funding", "promise service delivery"],
-            acceptance_checks=["surface funding, legal, service, and governance constraints"],
-            expected_output="CIVIC_INTERVENTION_PLAN",
-            escalation_triggers=list(constraints or ["legal uncertainty", "community governance conflict", "funding ambiguity"]),
+            allowed_actions=[
+                "propose interventions", "request missing data", "rank evidence by downstream usefulness",
+                "draft BoundaryContract placeholders", "run MITOSIS decomposition", "run MUSIC comparison",
+                "match resources", "collect consent", "run What-If simulation", "prepare pilot packet",
+                "assemble decision packet", "map needs and assets", "inspect legal evidence",
+                "display council issues", "project systemic context",
+            ],
+            forbidden_actions=[
+                "claim legal approval", "allocate funding", "promise service delivery",
+                "submit to government", "cast binding vote", "transfer property",
+                "manufacture consensus", "erase dissent", "infer identity",
+                "auto-activate cultural profiles", "scrape social media",
+            ],
+            acceptance_checks=[
+                "surface funding, legal, service, and governance constraints",
+                "verify consent-to-match before resource matching",
+                "preserve dissent and representation gaps",
+                "label all truth classes correctly",
+                "enforce privacy classes",
+            ],
+            expected_output="CIVIC_DECISION_PACKET",
+            escalation_triggers=list(constraints or ["legal uncertainty", "community governance conflict", "funding ambiguity", "representation gap", "critical objection"]),
+        )
+
+    def create_civic_boundary_contract(
+        self,
+        *,
+        contract_id: str,
+        capsule: ActionCapsule,
+        profile_refs: list[str] | None = None,
+        privacy_classes: list[str] | None = None,
+    ) -> BoundaryContract:
+        """Create a boundary contract for civic organ execution."""
+        return BoundaryContract(
+            contract_version=1,
+            contract_id=contract_id,
+            domain=self.domain,
+            capsule_id=capsule.capsule_id,
+            boundary_type="civic_organ",
+            external_system="civic_session",
+            source_region="civic_world_model",
+            owned_scope="civic_decision_packet",
+            assumptions={},
+            required_inputs=["session_data", "profile_set", "story_fixtures"],
+            promised_outputs=["verified_organ_result"],
+            constraints={
+                "forbidden_effects": ["submit_official", "allocate_funds", "bind_participant"],
+                "secrets_access": False,
+                "privacy_classes_allowed": privacy_classes or ["PUBLIC_ATTRIBUTED", "PUBLIC_PSEUDONYMOUS", "COMMUNITY_ONLY"],
+            },
+            escalation_triggers=["legal_uncertainty", "community_governance_conflict", "funding_ambiguity"],
+            invariant="non_binding: True, dissolution_policy: mandatory",
+            status="ACTIVE",
+            metadata={"profile_refs": profile_refs or []},
+        )
+
+    def create_civic_lease(
+        self,
+        *,
+        lease_id: str,
+        capsule: ActionCapsule,
+        capabilities: list[str],
+        ttl_seconds: int = 300,
+    ) -> ArenaLease:
+        """Create a minimum-capability lease for a civic organ."""
+        import time as _time
+        return ArenaLease(
+            lease_version=1,
+            lease_id=lease_id,
+            domain=self.domain,
+            capsule_id=capsule.capsule_id,
+            holder="civic_organ",
+            regions=[{"region_type": "capability", "id": c, "value": True} for c in capabilities],
+            allowed_actions=capabilities,
+            forbidden_actions=["submit_official", "allocate_funds", "bind_participant"],
+            mode="bounded",
+            conflict_policy="deny",
+            status="ACTIVE",
+            metadata={"expires_at": _time.time() + ttl_seconds, "non_binding": True, "dissolution_policy": "mandatory"},
         )
 
 

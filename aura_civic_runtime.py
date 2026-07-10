@@ -124,29 +124,29 @@ def _update_session(session_id: str, updates: dict[str, Any]) -> dict[str, Any]:
 
 def _project_organ_result(session_id: str, organ_type: str, result: dict[str, Any]) -> dict[str, Any]:
     """Project verified organ results into session state atomically."""
-    store = _get_store()
-    if store is not None:
-        try:
-            from aura_civic_result_projector import project_civic_organ_result
-            s = get_session(session_id)
-            if s["ok"]:
-                projected = project_civic_organ_result(s["session"], organ_type, result)
-                if projected["ok"]:
-                    _update_session(session_id, projected["updates"])
-        except Exception:
-            pass  # Fallback: just record the receipt
+    # Try the result projector first
+    try:
+        from aura_civic_result_projector import project_civic_organ_result
+        s = get_session(session_id)
+        if s["ok"]:
+            projected = project_civic_organ_result(s["session"], organ_type, result)
+            if projected["ok"]:
+                _update_session(session_id, projected["updates"])
+    except Exception:
+        pass  # Fallback: just record the receipt below
 
     # Always record organ receipt
-    receipt = {
-        "organ_type": organ_type,
-        "executed_at": time.time(),
-        "ok": result.get("ok", False),
-        "manifest_digest": result.get("manifest_digest", ""),
-        "organ_id": result.get("organ_id", ""),
-    }
     s = get_session(session_id)
     if s["ok"]:
-        receipts = s["session"].get("organ_receipts", [])
+        session = s["session"]
+        receipts = session.get("organ_receipts", [])
+        receipt = {
+            "organ_type": organ_type,
+            "executed_at": time.time(),
+            "ok": result.get("ok", False),
+            "manifest_digest": result.get("manifest_digest", ""),
+            "organ_id": result.get("organ_id", ""),
+        }
         receipts.append(receipt)
         _update_session(session_id, {"organ_receipts": receipts})
 
@@ -219,7 +219,7 @@ def run_full_demo(*, story: str = "hairstylist") -> dict[str, Any]:
         r = run_civic_organ(session_id, organ_type)
         results[organ_type] = {"ok": r.get("ok", False), "organ_id": r.get("organ_id", "")}
 
-    # Get final session
+    # Get final session with projected state
     final = get_session(session_id)
     session = final.get("session", {})
 
@@ -232,6 +232,12 @@ def run_full_demo(*, story: str = "hairstylist") -> dict[str, Any]:
         "decision_packet": session.get("decision_packet", {}),
         "organ_receipts": session.get("organ_receipts", []),
         "session_state": session.get("state", "CREATED"),
+        "workstreams": session.get("workstreams", []),
+        "needs": session.get("needs", []),
+        "offers": session.get("offers", []),
+        "scenarios": session.get("scenarios", []),
+        "legal_instruments": session.get("legal_instruments", []),
+        "consent_arc": session.get("consent_arc", {}),
         "fixture_mode": True,
         "zero_raw_network_calls": True,
         "patch_authority": PATCH_AUTHORITY,
