@@ -15,9 +15,21 @@ def discover_skills_for_objective(objective: str, repo_root: str = ".") -> dict:
     """Discover skills for an objective."""
     skills = []
     try:
-        from aura_skillweaver import AuraSkillWeaver
-        weaver = AuraSkillWeaver()
-        skills = weaver.discover(objective)
+        from aura_skillweaver import AuraSkillWeaver, find_target_modules
+        weaver = AuraSkillWeaver(repo_root=repo_root)
+        # Use the skills property to get the skill registry
+        all_skills = weaver.skills
+        # Find target modules matching the objective
+        target_modules = find_target_modules(objective, all_skills)
+        # Convert skills to dict format
+        for skill in all_skills[:10]:
+            skills.append({
+                "name": skill.name,
+                "kind": skill.kind,
+                "path": skill.path,
+                "description": skill.description,
+                "status": "existing"
+            })
     except Exception:
         skills = []
     # Classify skills
@@ -61,6 +73,16 @@ def skillweaver_to_qdkt_feedback(skills: list, repo_root: str = ".") -> dict:
     try:
         from aura_qdkt import get_qdkt
         qdkt = get_qdkt()
+        # Record the skill discovery event
+        skill_names = [s.get("name", "") if isinstance(s, dict) else str(s) for s in skills[:5]]
+        qdkt.observe(
+            "skill_discovery",
+            {"skills": skill_names, "count": len(skills)},
+            rationale=f"Discovered {len(skills)} skills",
+            concept="skillweaver",
+            confidence=0.7,
+            subsystem="cockpit",
+        )
         return {"ok": True, "logged": True, "patch_authority": PATCH_AUTHORITY,
                  "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     except Exception:

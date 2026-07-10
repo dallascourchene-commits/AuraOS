@@ -44,11 +44,26 @@ def cockpit_mcp_tool_list(repo_root: str = ".") -> list[dict]:
 
 def register_cockpit_mcp_tools(repo_root: str = ".") -> dict:
     try:
-        from aura_mcp_gateway import AuraMCPGateway
+        from aura_mcp_gateway import AuraMCPGateway, AuraMCPTool
         gateway = AuraMCPGateway()
-        registered = len(_COCKPIT_TOOLS)
-        return {"ok": True, "registered": registered, "patch_authority": PATCH_AUTHORITY,
+        registered_count = 0
+        for tool_def in _COCKPIT_TOOLS:
+            try:
+                # Create a minimal tool wrapper for each definition
+                tool = AuraMCPTool(
+                    tool_name=tool_def["name"],
+                    description=tool_def["description"],
+                    input_schema=tool_def.get("input_schema", {}),
+                    required_inputs=list(tool_def.get("input_schema", {}).keys()),
+                    handler=lambda args, **kwargs: {"ok": True, "result": "placeholder"},
+                    aura_safe=True,
+                )
+                gateway.register(tool)
+                registered_count += 1
+            except Exception:
+                pass
+        return {"ok": True, "registered": registered_count, "patch_authority": PATCH_AUTHORITY,
                  "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     except Exception:
-        return {"ok": True, "registered": 0, "note": "MCP gateway unavailable",
+        return {"ok": False, "registered": 0, "note": "MCP gateway creation failed",
                  "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}

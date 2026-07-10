@@ -43,10 +43,13 @@ def paper_memory_recall(query: str, repo_root: str = ".") -> dict:
     recalled = []
     try:
         from aura_paper_memory import load_research_profiles_from_jsonl
-        # Try to load local profiles
-        recalled = load_research_profiles_from_jsonl(query)
-    except Exception:
-        pass
+        root = Path(repo_root).resolve()
+        ledger_path = root / ".aura" / "paper_memory.jsonl"
+        if ledger_path.exists():
+            recalled = load_research_profiles_from_jsonl(ledger_path)
+    except Exception as exc:
+        # Log failure but maintain response shape
+        recalled = []
     return {"ok": True, "query": query, "recalled_papers": recalled[:5],
              "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 

@@ -27,7 +27,7 @@ def build_swarm_plan(objective: str, agents: list[str] | None = None, repo_root:
     assignments = []
     token_budgets = {}
     for agent in agents:
-        role = "primary_coder" if agent == agents[0] else "secondary"
+        role = "primary" if agent == agents[0] else "secondary"
         assignments.append({"agent": agent, "role": role, "lanes": _AGENT_COMPAT.get(agent, [])})
         token_budgets[agent] = 2000  # 2000 token budget per worker
     return {"ok": True, "objective": objective,

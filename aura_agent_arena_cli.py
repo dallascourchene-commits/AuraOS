@@ -522,7 +522,10 @@ def cmd_route_lanes(args: argparse.Namespace) -> int:
 def cmd_music_rank(args: argparse.Namespace) -> int:
     try:
         from aura_music_mitosis_adapter import music_rank_cockpit_candidates
-        result = music_rank_cockpit_candidates(args.objective, [], repo_root=".")
+        candidates = []
+        if args.candidates:
+            candidates = [c.strip() for c in args.candidates.split(",") if c.strip()]
+        result = music_rank_cockpit_candidates(args.objective, candidates, repo_root=".")
     except Exception as exc:
         result = {"ok": False, "error": str(exc), "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
     _print_json(result)
@@ -542,7 +545,7 @@ def cmd_mitosis_split(args: argparse.Namespace) -> int:
 def cmd_research_evidence(args: argparse.Namespace) -> int:
     try:
         from aura_research_cockpit_adapter import research_manifest_search, research_to_cockpit_evidence_packet
-        search = research_manifest_search(args.objective, repo_root=".", offline=True)
+        search = research_manifest_search(args.objective, repo_root=".", offline=args.offline)
         evidence = research_to_cockpit_evidence_packet(search, repo_root=".")
         result = {"ok": True, "search": search, "evidence": evidence,
                   "patch_authority": "exact_source_spans_and_hashes_only", "vsa_patch_authority": False}
@@ -848,6 +851,7 @@ def build_parser() -> argparse.ArgumentParser:
     # music-rank
     p_music = subparsers.add_parser("music-rank", help="Run MUSIC advisory ranking on candidates")
     p_music.add_argument("--objective", required=True, help="Coding objective")
+    p_music.add_argument("--candidates", default=None, help="Comma-separated list of candidate files or symbols to rank")
     p_music.set_defaults(func=cmd_music_rank)
 
     # mitosis-split
@@ -858,7 +862,7 @@ def build_parser() -> argparse.ArgumentParser:
     # research-evidence
     p_research = subparsers.add_parser("research-evidence", help="Search research manifest for evidence")
     p_research.add_argument("--objective", required=True, help="Coding objective")
-    p_research.add_argument("--offline", action="store_true", default=True, help="Offline mode (default)")
+    p_research.add_argument("--offline", action="store_true", default=False, help="Offline mode")
     p_research.set_defaults(func=cmd_research_evidence)
 
     # skillweave
