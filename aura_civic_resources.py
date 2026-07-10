@@ -90,7 +90,7 @@ def match_resources(need: dict[str, Any], offers: list[dict[str, Any]]) -> dict[
         const = ResourceConstellation(
             constellation_id=f"CONST-{need.get('need_id', 'x')}-{offer.get('offer_id', 'y')}",
             need_id=need.get("need_id", ""),
-            matched_offers=[offer],
+            matched_offers=([] if {"no_consent", "privacy_conflict"} & set(blockers) else [offer]),
             score=total_score,
             score_explanation=score_components,
             hard_blockers=blockers,

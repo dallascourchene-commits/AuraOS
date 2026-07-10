@@ -153,4 +153,6 @@ def execute_organ(organ_type: str, session: dict[str, Any], **kw) -> dict[str, A
     if not adapter:
         return {"ok": False, "error": f"unknown_organ_type: {organ_type}", "status": "DENIED",
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
-    return adapter(session, **kw)
+    result = adapter(session, **kw)
+    result["organ_type"] = organ_type
+    return result

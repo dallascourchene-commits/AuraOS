@@ -149,6 +149,23 @@ class TestMUSIC:
         assert r["ok"] is True
         assert len(r["comparison"]["pareto_frontier"]) > 0
 
+    def test_all_dimensions_weighted_and_sensitivity_reported(self):
+        from aura_civic_reasoning import MUSIC_DIMENSIONS, civic_music
+        scenarios = [
+            {"scenario_id": "A", "metrics": {dim: 0.2 for dim in MUSIC_DIMENSIONS}},
+            {"scenario_id": "B", "metrics": {dim: 0.8 for dim in MUSIC_DIMENSIONS}},
+        ]
+        comparison = civic_music(scenarios)["comparison"]
+        assert comparison["dimensions"] == list(MUSIC_DIMENSIONS)
+        assert len(comparison["weights"]) == len(MUSIC_DIMENSIONS)
+        assert comparison["pareto_frontier"] == [{"scenario_id": "B", "label": "pareto_optimal"}]
+        assert comparison["sensitivity_analysis"]["baseline_ranking"] == ["B", "A"]
+
+    def test_comparison_id_is_deterministic(self):
+        from aura_civic_reasoning import civic_music
+        scenarios = [{"scenario_id": "A", "metrics": {"accessibility": 0.8}}]
+        assert civic_music(scenarios)["comparison"]["comparison_id"] == civic_music(scenarios)["comparison"]["comparison_id"]
+
     def test_weights_visible(self):
         from aura_civic_reasoning import civic_music
         r = civic_music([{"scenario_id": "A", "metrics": {}}])
@@ -331,6 +348,50 @@ class TestMemory:
         arch.revoke("R2")
         r = arch.export_governed("all")
         assert r["count"] == 0
+
+    def test_facilitator_only_requires_authorized_facilitator(self):
+        from aura_civic_memory import CivicMemoryArchive, CivicMemoryRecord
+        archive = CivicMemoryArchive()
+        archive.store(CivicMemoryRecord(
+            "R3", "contribution", "ref3", privacy_class="FACILITATOR_ONLY",
+            authorized_audiences=["FACILITATOR"],
+        ))
+        assert archive.export_governed("public_audience")["count"] == 0
+        assert archive.export_governed("FACILITATOR")["count"] == 1
+
+
+class TestReviewRegressions:
+    def test_malformed_geojson_returns_errors(self):
+        from aura_civic_map import validate_geojson
+        assert validate_geojson({"type": "FeatureCollection", "features": "bad"})["ok"] is False
+        assert validate_geojson({"type": "FeatureCollection", "features": [None]})["ok"] is False
+        assert validate_geojson({"type": "FeatureCollection", "features": [{"geometry": None}]})["ok"] is False
+
+    def test_blocked_offer_payload_is_not_returned(self):
+        from aura_civic_resources import match_resources
+        private_offer = {
+            "offer_id": "SECRET", "offer_type": "skill", "description": "private detail",
+            "consent_to_match": False, "privacy_class": "PRIVATE_NOT_SHARED",
+        }
+        result = match_resources({"need_id": "N1"}, [private_offer])
+        assert result["constellations"][0]["matched_offers"] == []
+
+    def test_aliased_organ_reports_requested_type(self):
+        from aura_civic_organs import execute_organ
+        assert execute_organ("LegalBylawOrgan", {})["organ_type"] == "LegalBylawOrgan"
+        assert execute_organ("ScenarioComparisonOrgan", {})["organ_type"] == "ScenarioComparisonOrgan"
+
+    def test_aura_proposed_is_a_valid_truth_class(self):
+        from aura_civic_truth import validate_truth_class
+        assert validate_truth_class("AURA_PROPOSED") is True
+
+    def test_systemic_context_id_is_stable_and_does_not_mutate_input(self):
+        from aura_civic_deliberation import create_systemic_context
+        findings = [{"source": "model", "truth_class": "MODEL_INFERRED", "finding": "x"}]
+        first = create_systemic_context(findings)
+        second = create_systemic_context(findings)
+        assert first["report"]["report_id"] == second["report"]["report_id"]
+        assert "classification" not in findings[0]
 
 
 class TestModelBroker:

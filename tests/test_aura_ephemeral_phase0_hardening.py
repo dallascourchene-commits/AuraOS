@@ -123,6 +123,19 @@ class TestManifestFinalization:
         # If we pass a mutated version, it should detect changes
         assert mutation["mutated"] is True
 
+    def test_finalized_nested_values_do_not_alias_input(self):
+        draft = {"organ_id": "EORG-nested", "manifest_state": "DRAFT", "data_policy": {"paths": ["safe"]}}
+        result = ManifestFinalizer.finalize(draft)
+        draft["data_policy"]["paths"].append("unsafe")
+        assert result["finalized_manifest"]["data_policy"]["paths"] == ["safe"]
+
+    def test_supersede_returns_marked_old_manifest(self):
+        old = ManifestFinalizer.finalize({"organ_id": "EORG-old", "manifest_state": "DRAFT"})["finalized_manifest"]
+        result = ManifestFinalizer.supersede(old, {"organ_id": "EORG-new", "manifest_state": "DRAFT"})
+        assert result["ok"] is True
+        assert result["superseded_manifest"]["manifest_state"] == "SUPERSEDED"
+        assert old["manifest_state"] == "FINALIZED"
+
     def test_already_finalized_rejected(self):
         manifest = {"organ_id": "EORG-done", "manifest_state": "FINALIZED"}
         result = ManifestFinalizer.finalize(manifest)
@@ -200,6 +213,17 @@ class TestPathPolicy:
             assert result["ok"] is False or "symlink" in " ".join(result.get("errors", [])).lower()
         except OSError:
             pytest.skip("symlink creation not supported on this platform")
+
+    def test_allowlist_rejects_textual_prefix_sibling(self, tmp_path):
+        safe = tmp_path / "safe"
+        sibling = tmp_path / "safe_evil"
+        safe.mkdir()
+        sibling.mkdir()
+        target = sibling / "secret.txt"
+        target.write_text("secret")
+        result = check_path_safety(str(target), allowed_paths=[str(safe)])
+        assert result["ok"] is False
+        assert "path_not_in_readable_allowlist" in result["errors"]
 
 
 class TestVerifierAndBudget:

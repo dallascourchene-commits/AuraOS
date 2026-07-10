@@ -6,6 +6,7 @@ No mutation after finalization. Any post-finalization change creates a new versi
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import time
@@ -26,7 +27,7 @@ class ManifestFinalizer:
         if manifest_dict.get("manifest_state") == "FINALIZED":
             return {"ok": False, "error": "manifest_already_finalized",
                     "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
-        finalized = dict(manifest_dict)
+        finalized = copy.deepcopy(manifest_dict)
         finalized["manifest_state"] = "FINALIZED"
         finalized["finalized_at"] = time.time()
         finalized["previous_manifest_digest"] = previous_digest
@@ -75,5 +76,7 @@ class ManifestFinalizer:
     def supersede(old_manifest: dict[str, Any], new_manifest: dict[str, Any]) -> dict[str, Any]:
         """Mark old as SUPERSEDED, finalize new with reference to old."""
         old_digest = old_manifest.get("signature_or_digest", old_manifest.get("phase_hash", ""))
+        superseded = copy.deepcopy(old_manifest)
+        superseded["manifest_state"] = "SUPERSEDED"
         result = ManifestFinalizer.finalize(new_manifest, previous_digest=old_digest)
-        return result
+        return {**result, "superseded_manifest": superseded}

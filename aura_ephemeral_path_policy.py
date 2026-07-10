@@ -31,6 +31,15 @@ def canonicalize_path(path: str, base: str = ".") -> str:
     return str((Path(base) / p).resolve())
 
 
+def _is_within(candidate: Path, allowed: Path) -> bool:
+    """Return whether candidate is the allowed path or is contained by it."""
+    try:
+        candidate.relative_to(allowed)
+        return True
+    except ValueError:
+        return False
+
+
 def check_path_safety(
     path: str,
     *,
@@ -43,13 +52,18 @@ def check_path_safety(
 
     # Canonicalize
     try:
-        resolved = Path(path).resolve()
+        raw_path = Path(path)
+        resolved = raw_path.resolve() if raw_path.is_absolute() else (Path(base) / raw_path).resolve()
     except Exception:
         return {"ok": False, "errors": ["path_resolution_failed"],
                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
-    path_str = str(resolved).lower()
+    path_str = str(resolved)
     base_resolved = Path(base).resolve()
+    allowed_resolved = [
+        Path(a).resolve() if Path(a).is_absolute() else (base_resolved / a).resolve()
+        for a in (allowed_paths or [])
+    ]
 
     # Check for .. escape
     if ".." in path:
@@ -57,13 +71,13 @@ def check_path_safety(
 
     # Check absolute path outside base
     if Path(path).is_absolute():
-        if allowed_paths and not any(path_str.startswith(str(Path(a).resolve()).lower()) for a in allowed_paths):
+        if allowed_paths and not any(_is_within(resolved, allowed) for allowed in allowed_resolved):
             errors.append("absolute_path_outside_allowlist")
 
     # Check forbidden patterns
     all_forbidden = list(FORBIDDEN_PATTERNS) + list(forbidden_paths or [])
     for pattern in all_forbidden:
-        if pattern.lower() in path_str:
+        if pattern.lower() in path_str.lower():
             errors.append(f"forbidden_path_pattern: {pattern}")
             break
 
@@ -71,17 +85,14 @@ def check_path_safety(
     try:
         if Path(path).exists() and Path(path).is_symlink():
             symlink_target = Path(path).resolve()
-            if not str(symlink_target).startswith(str(base_resolved)):
+            if not _is_within(symlink_target, base_resolved):
                 errors.append("symlink_escape_detected")
     except (PermissionError, OSError):
         errors.append("path_access_denied")
 
     # Check readable-path allowlist
     if allowed_paths:
-        in_allowlist = any(
-            path_str.startswith(str(Path(a).resolve()).lower())
-            for a in allowed_paths
-        )
+        in_allowlist = any(_is_within(resolved, allowed) for allowed in allowed_resolved)
         if not in_allowlist:
             errors.append("path_not_in_readable_allowlist")
 

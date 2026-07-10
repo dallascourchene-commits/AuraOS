@@ -8,6 +8,7 @@ Neither declares political truth, overrides rights, or selects a hidden winner.
 """
 from __future__ import annotations
 import hashlib
+import json
 from dataclasses import dataclass, field, asdict
 from typing import Any
 
@@ -90,7 +91,7 @@ class ScenarioComparison:
 
 def civic_music(scenarios: list[dict[str, Any]], *, weights: dict[str, float] | None = None) -> dict[str, Any]:
     """Multi-objective scenario comparison with Pareto frontier."""
-    w = weights or {d: 1.0 / len(MUSIC_DIMENSIONS[:5]) for d in MUSIC_DIMENSIONS[:5]}
+    w = weights or {d: 1.0 / len(MUSIC_DIMENSIONS) for d in MUSIC_DIMENSIONS}
 
     scored = []
     for s in scenarios:
@@ -100,12 +101,35 @@ def civic_music(scenarios: list[dict[str, Any]], *, weights: dict[str, float] | 
         total = sum(scores.get(d, 0) * w.get(d, 0) for d in w)
         scored.append({**s, "weighted_score": total, "dimension_scores": scores})
 
+    dimensions = list(w.keys())
     pareto = []
-    if scored:
-        pareto.append({"scenario_id": scored[0]["scenario_id"], "label": "balanced_candidate"})
-        pareto.append({"scenario_id": scored[-1]["scenario_id"], "label": "lowest_cost"})
-        co_max = max(scored, key=lambda s: s["dimension_scores"].get("local_ownership", 0))
-        pareto.append({"scenario_id": co_max["scenario_id"], "label": "maximum_community_ownership"})
+    for i, candidate in enumerate(scored):
+        dominated = any(
+            i != j
+            and all(
+                other["dimension_scores"].get(dim, 0) >= candidate["dimension_scores"].get(dim, 0)
+                for dim in dimensions
+            )
+            and any(
+                other["dimension_scores"].get(dim, 0) > candidate["dimension_scores"].get(dim, 0)
+                for dim in dimensions
+            )
+            for j, other in enumerate(scored)
+        )
+        if not dominated:
+            pareto.append({"scenario_id": candidate["scenario_id"], "label": "pareto_optimal"})
+
+    baseline_order = [s["scenario_id"] for s in sorted(scored, key=lambda item: item["weighted_score"], reverse=True)]
+    dimension_leaders = {
+        dim: max(scored, key=lambda item: item["dimension_scores"].get(dim, 0))["scenario_id"]
+        for dim in dimensions
+    } if scored else {}
+    sensitivity = {
+        "baseline_ranking": baseline_order,
+        "dimension_leaders": dimension_leaders,
+        "method": "one_dimension_leader_scan",
+        "weights_editable": True,
+    }
 
     bridges = []
     if len(scored) >= 2:
@@ -117,11 +141,12 @@ def civic_music(scenarios: list[dict[str, Any]], *, weights: dict[str, float] | 
         })
 
     comp = ScenarioComparison(
-        comparison_id=f"MUSIC-{abs(hash(str(scenarios)))%100000000:08d}",
+        comparison_id=f"MUSIC-{hashlib.blake2b(json.dumps(scenarios, sort_keys=True, separators=(',', ':'), default=str).encode(), digest_size=4).hexdigest()}",
         scenarios=scored,
-        dimensions=list(w.keys()),
+        dimensions=dimensions,
         weights=w,
         pareto_frontier=pareto,
+        sensitivity_analysis=sensitivity,
         bridge_options=bridges,
     )
     return {"ok": True, "comparison": comp.to_dict(),

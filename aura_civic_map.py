@@ -32,8 +32,14 @@ def validate_geojson(geojson: dict[str, Any]) -> dict[str, Any]:
     if geojson.get("type") != "FeatureCollection":
         return {"ok": False, "error": "invalid GeoJSON: not a FeatureCollection"}
     features = geojson.get("features", [])
+    if not isinstance(features, list):
+        return {"ok": False, "error": "invalid GeoJSON: features must be a list"}
     for f in features:
-        geom = f.get("geometry", {})
+        if not isinstance(f, dict):
+            return {"ok": False, "error": "invalid GeoJSON: feature is not an object"}
+        geom = f.get("geometry") or {}
+        if not isinstance(geom, dict):
+            return {"ok": False, "error": "invalid GeoJSON: geometry is not an object"}
         coords = geom.get("coordinates")
         if not coords:
             return {"ok": False, "error": "feature missing coordinates"}
@@ -64,8 +70,8 @@ def build_map_manifest(geojson: dict[str, Any], layers: list[str], heatmap: dict
     gj_valid = validate_geojson(geojson)
     if not gj_valid["ok"]:
         return {"ok": False, "error": gj_valid["error"]}
-    for l in layers:
-        lv = validate_layer(l)
+    for layer in layers:
+        lv = validate_layer(layer)
         if not lv["ok"]:
             return {"ok": False, "error": lv["error"]}
     result = {"ok": True, "geojson": geojson, "layers": layers,

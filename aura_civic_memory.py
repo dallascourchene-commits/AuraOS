@@ -38,8 +38,12 @@ class CivicMemoryArchive:
     def export_governed(self, audience: str) -> dict[str, Any]:
         exported = []
         for r in self._records.values():
-            if r.revocation_status != "active": continue
-            if audience not in r.authorized_audiences and "FACILITATOR_ONLY" != r.privacy_class: continue
+            if r.revocation_status != "active":
+                continue
+            if r.privacy_class == "FACILITATOR_ONLY" and audience != "FACILITATOR":
+                continue
+            if audience not in r.authorized_audiences:
+                continue
             exported.append(r.to_dict())
         return {"ok": True, "records": exported, "count": len(exported)}
     def revoke(self, rid: str) -> dict[str, Any]:

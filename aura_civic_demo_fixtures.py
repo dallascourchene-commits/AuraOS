@@ -40,8 +40,8 @@ def hairstylist_fixtures() -> dict[str, Any]:
             {"scenario_id":"SCEN-social","title":"Social Enterprise","description":"Social enterprise with sliding scale","metrics":{"local_ownership":0.5,"accessibility":0.9,"cost":0.4},"pareto_label":"balanced_candidate","truth_class":TRUTH_SYNTHETIC},
         ],
         "legal_instruments": [
-            {"instrument_id":"LI-zoning","name":"Zoning Bylaw","level":"bylaw","applicability":"POSSIBLY_APPLICABLE","truth_class":"OFFICIAL_PRIMARY_SOURCE","as_of_date":"2026-01-01"},
-            {"instrument_id":"LI-licence","name":"Business Licence Bylaw","level":"bylaw","applicability":"POSSIBLY_APPLICABLE","truth_class":"OFFICIAL_PRIMARY_SOURCE","as_of_date":"2026-01-01"},
+            {"instrument_id":"LI-zoning","name":"Zoning Bylaw","level":"bylaw","applicability":"POSSIBLY_APPLICABLE","truth_class":TRUTH_SYNTHETIC,"as_of_date":"2026-01-01"},
+            {"instrument_id":"LI-licence","name":"Business Licence Bylaw","level":"bylaw","applicability":"POSSIBLY_APPLICABLE","truth_class":TRUTH_SYNTHETIC,"as_of_date":"2026-01-01"},
         ],
         "council_items": [
             {"item_id":"CI-001","title":"Community Economic Development Committee - Update","body":"Standing Committee","meeting_date":"2026-03-15","disposition":"Received as information","truth_class":TRUTH_SYNTHETIC},
@@ -85,8 +85,8 @@ def youth_centre_fixtures() -> dict[str, Any]:
 def council_issue_fixtures() -> dict[str, Any]:
     return {
         "issues": [
-            {"item_id":"CI-001","title":"Bylaw Enforcement Update","body":"Standing Policy Committee on Protection and Community Services","meeting_date":"2026-04-02","disposition":"Motion carried","vote_record":"12-1","source_ref":"winnipeg_council_minutes","truth_class":"OFFICIAL_SNAPSHOT","extraction_confidence":0.95},
-            {"item_id":"CI-002","title":"Community Grant Program Allocation","body":"Finance Committee","meeting_date":"2026-03-20","disposition":"Received as information","vote_record":"","source_ref":"winnipeg_council_minutes","truth_class":"OFFICIAL_SNAPSHOT","extraction_confidence":0.90},
+            {"item_id":"CI-001","title":"Bylaw Enforcement Update","body":"Standing Policy Committee on Protection and Community Services","meeting_date":"2026-04-02","disposition":"Motion carried","vote_record":"12-1","source_ref":"winnipeg_council_minutes","truth_class":TRUTH_SYNTHETIC,"extraction_confidence":0.95},
+            {"item_id":"CI-002","title":"Community Grant Program Allocation","body":"Finance Committee","meeting_date":"2026-03-20","disposition":"Received as information","vote_record":"","source_ref":"winnipeg_council_minutes","truth_class":TRUTH_SYNTHETIC,"extraction_confidence":0.90},
         ],
         "note": "Do not infer councillor motives.",
     }

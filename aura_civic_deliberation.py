@@ -5,6 +5,8 @@ The Consent Arc is NON_BINDING, BOUNDED_TO_RECORDED_PARTICIPANTS, NOT_A_REFEREND
 NOT_REPRESENTATIVE_UNLESS_PROVEN.
 """
 from __future__ import annotations
+import hashlib
+import json
 import time
 from dataclasses import dataclass, field, asdict
 from typing import Any
@@ -131,16 +133,19 @@ def create_systemic_context(findings: list[dict[str, Any]]) -> dict[str, Any]:
     for f in findings:
         if not f.get("source") or not f.get("truth_class"):
             continue
-        if f.get("truth_class") == "MODEL_INFERRED":
-            f["classification"] = "MODEL_HYPOTHESIZED"
-        elif f.get("truth_class") == "OFFICIAL_PRIMARY_SOURCE":
-            f["classification"] = "HISTORICALLY_DOCUMENTED"
-        elif f.get("truth_class") == "COMMUNITY_ASSERTED":
-            f["classification"] = "COMMUNITY_ASSERTED"
+        finding = dict(f)
+        if finding.get("truth_class") == "MODEL_INFERRED":
+            finding["classification"] = "MODEL_HYPOTHESIZED"
+        elif finding.get("truth_class") == "OFFICIAL_PRIMARY_SOURCE":
+            finding["classification"] = "HISTORICALLY_DOCUMENTED"
+        elif finding.get("truth_class") == "COMMUNITY_ASSERTED":
+            finding["classification"] = "COMMUNITY_ASSERTED"
         else:
-            f["classification"] = "UNKNOWN"
-        validated.append(f)
-    report = SystemicContextReport(report_id=f"SYSCTX-{abs(hash(str(findings)))%100000000:08d}", findings=validated)
+            finding["classification"] = "UNKNOWN"
+        validated.append(finding)
+    payload = json.dumps(validated, sort_keys=True, separators=(",", ":"), default=str)
+    digest = hashlib.blake2b(payload.encode(), digest_size=4).hexdigest()
+    report = SystemicContextReport(report_id=f"SYSCTX-{digest}", findings=validated)
     return {"ok": True, "report": report.to_dict(),
             "note": "Correlation is not converted to causation.",
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
