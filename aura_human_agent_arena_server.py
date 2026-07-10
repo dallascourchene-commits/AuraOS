@@ -77,6 +77,58 @@ def dispatch_api_request(
     if method == "GET" and route == "/api/human-agent/topology":
         return 200, state.arena.topology
 
+    # GET /api/human-agent/cost-telemetry — Cost Observatory panel data
+    if method == "GET" and route == "/api/human-agent/cost-telemetry":
+        try:
+            from aura_cost_telemetry_events import get_telemetry_stream, visual_state_for_measurement_class, visual_state_for_savings
+            from aura_empirical_cost_ledger import EmpiricalCostLedger
+            stream = get_telemetry_stream()
+            ledger = EmpiricalCostLedger(repo_root=state.repo_root)
+            history = ledger.get_history(limit=10)
+            ledger.close()
+            return 200, {
+                "ok": True,
+                "event_count": stream.event_count(),
+                "recent_events": stream.get_events(limit=20),
+                "recent_runs": history,
+                "visual_states": {
+                    "measured": "green",
+                    "estimated": "yellow",
+                    "unavailable": "grey",
+                    "verified": "green",
+                    "invalidated": "red",
+                    "counterfactual": "purple",
+                },
+                "patch_authority": "exact_source_spans_and_hashes_only",
+                "vsa_patch_authority": False,
+            }
+        except Exception as exc:
+            return 200, {
+                "ok": True,
+                "event_count": 0,
+                "recent_events": [],
+                "recent_runs": [],
+                "note": f"Cost telemetry unavailable: {exc}",
+                "patch_authority": "exact_source_spans_and_hashes_only",
+                "vsa_patch_authority": False,
+            }
+
+    # GET /api/human-agent/cost-events — SSE-style event stream
+    if method == "GET" and route == "/api/human-agent/cost-events":
+        try:
+            from aura_cost_telemetry_events import get_telemetry_stream
+            since = _query_float(query.get("since", [None])[0], default=0.0)
+            stream = get_telemetry_stream()
+            events = stream.get_events(since=since, limit=100)
+            return 200, {"ok": True, "events": events, "count": len(events),
+                         "patch_authority": "exact_source_spans_and_hashes_only",
+                         "vsa_patch_authority": False}
+        except Exception as exc:
+            return 200, {"ok": True, "events": [], "count": 0,
+                         "note": f"Cost events unavailable: {exc}",
+                         "patch_authority": "exact_source_spans_and_hashes_only",
+                         "vsa_patch_authority": False}
+
     # POST /api/human-agent/command
     if method == "POST" and route == "/api/human-agent/command":
         command = str(body.get("command") or "")
@@ -196,6 +248,15 @@ def _query_int(value: str | None, *, default: int = 0) -> int:
         return default
     try:
         return max(0, int(value))
+    except (ValueError, TypeError):
+        return default
+
+
+def _query_float(value: str | None, *, default: float = 0.0) -> float:
+    if value is None:
+        return default
+    try:
+        return max(0.0, float(value))
     except (ValueError, TypeError):
         return default
 
