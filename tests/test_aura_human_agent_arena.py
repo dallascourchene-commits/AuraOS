@@ -617,3 +617,188 @@ def test_frontend_files_exist_and_contain_expected_elements():
     assert "--ghost" in css
     assert "arena-shell" in css
     assert "side-panel" in css
+
+
+# ---------------------------------------------------------------------------
+# V1.2 Intelligence Layer — command routing specificity
+# ---------------------------------------------------------------------------
+
+
+def test_show_tests_for_selected_routes_to_selected_handler(tmp_path: Path):
+    """'show tests for selected' must route to _cmd_show_tests_for_selected, not _cmd_show_tests."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show tests for selected", "explore")
+    assert handler == arena._cmd_show_tests_for_selected
+
+
+def test_show_tests_generic_routes_to_generic_handler(tmp_path: Path):
+    """'show tests' (without 'selected') must still route to _cmd_show_tests."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show tests", "explore")
+    assert handler == arena._cmd_show_tests
+
+
+def test_show_docs_for_selected_routes_to_selected_handler(tmp_path: Path):
+    """'show docs for selected' must route to _cmd_show_docs_for_selected."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show docs for selected", "explore")
+    assert handler == arena._cmd_show_docs_for_selected
+
+
+def test_show_affordances_for_selected_routes_correctly(tmp_path: Path):
+    """'show affordances for selected' must route to _cmd_show_affordances."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show affordances for selected", "explore")
+    assert handler == arena._cmd_show_affordances
+
+
+def test_inspect_selected_routes_before_concept_commands(tmp_path: Path):
+    """'inspect selected' must route to _cmd_inspect_selected."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("inspect selected", "explore")
+    assert handler == arena._cmd_inspect_selected
+
+
+def test_show_exact_source_for_selected_routes_correctly(tmp_path: Path):
+    """'show exact source for selected' must route to _cmd_show_exact_source."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show exact source for selected", "explore")
+    assert handler == arena._cmd_show_exact_source
+
+
+def test_expand_selected_routes_before_expand_depth(tmp_path: Path):
+    """'expand selected' must route to _cmd_expand_selected, not _cmd_expand_depth."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("expand selected", "explore")
+    assert handler == arena._cmd_expand_selected
+
+
+def test_show_callers_routes_correctly(tmp_path: Path):
+    """'show callers' must route to _cmd_show_callers."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show callers", "explore")
+    assert handler == arena._cmd_show_callers
+
+
+def test_show_callees_routes_correctly(tmp_path: Path):
+    """'show callees' must route to _cmd_show_callees."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show callees", "explore")
+    assert handler == arena._cmd_show_callees
+
+
+def test_show_risks_routes_correctly(tmp_path: Path):
+    """'show risks' must route to _cmd_show_risks."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("show risks", "explore")
+    assert handler == arena._cmd_show_risks
+
+
+def test_what_would_break_routes_correctly(tmp_path: Path):
+    """'what would break if this changed' must route to _cmd_what_would_break."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("what would break if this changed", "explore")
+    assert handler == arena._cmd_what_would_break
+
+
+def test_why_is_this_node_here_routes_correctly(tmp_path: Path):
+    """'why is this node here' must route to _cmd_why_is_node_here."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("why is this node here", "explore")
+    assert handler == arena._cmd_why_is_node_here
+
+
+def test_explain_selected_routes_correctly(tmp_path: Path):
+    """'explain selected' must route to _cmd_inspect_selected."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    handler = arena._dispatch("explain selected", "explore")
+    assert handler == arena._cmd_inspect_selected
+
+
+# ---------------------------------------------------------------------------
+# V1.2 — AFFORDANCE_MAP.json declares source of truth
+# ---------------------------------------------------------------------------
+
+
+def test_affordance_map_declares_source_of_truth():
+    """The .aura/AFFORDANCE_MAP.json must declare its mode and source of truth."""
+    repo_root = Path(__file__).parent.parent
+    map_path = repo_root / ".aura" / "AFFORDANCE_MAP.json"
+    assert map_path.exists(), "AFFORDANCE_MAP.json must exist"
+    data = json.loads(map_path.read_text(encoding="utf-8"))
+    assert data.get("mode") == "generated_placeholder"
+    assert data.get("source_of_truth") == "aura_affordance_directory.SEED_AFFORDANCES"
+    assert "note" in data
+    assert "affordances" in data  # key exists (may be empty array)
+
+
+# ---------------------------------------------------------------------------
+# V1.2 — Projected nodes are labeled CODEMAP-projected, not synthetic/fake
+# ---------------------------------------------------------------------------
+
+
+def test_projected_nodes_labeled_codemap_projected(tmp_path: Path):
+    """Concept workspace projected nodes must use 'codemap_projected_node' origin, not 'synthetic'/'fake'."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+    result = arena.route_command("show Agent Arena Bridge", selected_node_ids=[], mode="explore")
+    assert result["ok"] is True
+    visual = result.get("visual_update", {})
+    nodes = visual.get("additional_nodes", [])
+    for node in nodes:
+        serialized = json.dumps(node)
+        assert "synthetic node" not in serialized.lower()
+        assert "fake node" not in serialized.lower()
+        # Origin should be codemap_projected_node or exact_topology_node
+        origin = node.get("node_origin", node.get("metadata", {}).get("node_origin", ""))
+        assert origin in ("codemap_projected_node", "exact_topology_node", "")
+
+
+# ---------------------------------------------------------------------------
+# V1.2 — Projected nodes survive state refresh
+# ---------------------------------------------------------------------------
+
+
+def test_projected_nodes_survive_state_refresh(tmp_path: Path):
+    """After building a concept workspace, arena.topology must still contain the projected nodes after get_state()."""
+    arena = HumanAgentArena(tmp_path, demo=True)
+
+    # Count nodes before
+    nodes_before = len(arena.topology["nodes"])
+
+    # Run a concept workspace command that adds projected nodes
+    result = arena.route_command("show Agent Arena Bridge", selected_node_ids=[], mode="explore")
+    assert result["ok"] is True
+
+    # Count nodes after — should have grown (or stayed same if no projections)
+    nodes_after = len(arena.topology["nodes"])
+    assert nodes_after >= nodes_before, "Concept workspace should not remove topology nodes"
+
+    # Now simulate a polling refresh — call get_state() then check topology persists
+    # get_state() returns state.to_dict() (the HumanAgentArenaState dataclass).
+    # The arena.topology dict is separate and must retain projected nodes.
+    _ = arena.get_state()
+    nodes_after_refresh = len(arena.topology["nodes"])
+    assert nodes_after_refresh == nodes_after, "Projected nodes must survive state refresh in arena.topology"
+
+    # Also verify the server endpoint pattern: topology is returned alongside state
+    # (the server returns {"state": arena.get_state(), "topology": arena.topology})
+    # so projected nodes in arena.topology are always available to the frontend.
+
+
+# ---------------------------------------------------------------------------
+# V1.2 — Frontend re-merges projected nodes after polling
+# ---------------------------------------------------------------------------
+
+
+def test_frontend_remerges_projected_nodes_after_loadstate():
+    """The frontend loadState() must re-merge locally cached projected nodes after a poll."""
+    repo_root = Path(__file__).parent.parent
+    script = (repo_root / "aura_human_agent_arena/main.js").read_text(encoding="utf-8")
+    # The loadState function must check projectedNodes and re-merge them
+    assert "projectedNodes" in script
+    assert "existingIds" in script
+    # The re-merge logic must be inside loadState
+    load_state_idx = script.index("async function loadState()")
+    remerge_idx = script.index("projectedNodes", load_state_idx)
+    # The re-merge code should be after loadState starts
+    assert remerge_idx > load_state_idx

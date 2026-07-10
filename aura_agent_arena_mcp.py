@@ -204,6 +204,21 @@ TOOL_DEFINITIONS = [
             "required": ["task_id", "compressed_context", "instruction"],
         },
     },
+    {
+        "name": "aura_find_affordances",
+        "description": "Find internal Aura tools that should be considered before inventing generic solutions. Returns top 3-7 advisory affordance cards.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string"},
+                "target_files": {"type": "array", "items": {"type": "string"}},
+                "target_symbols": {"type": "array", "items": {"type": "string"}},
+                "include_affordances": {"type": "boolean", "default": True},
+                "top_k": {"type": "integer", "default": 7},
+            },
+            "required": ["objective"],
+        },
+    },
 ]
 
 
@@ -319,6 +334,17 @@ def _handle_fireworks_patch(bridge: AuraAgentArenaBridge, args: dict[str, Any]) 
         instruction=str(args.get("instruction", "")),
         model_tier=str(args.get("model_tier", "fast")),
         max_output_tokens=int(args.get("max_output_tokens", 2048)),
+    )
+
+
+@_register_tool("aura_find_affordances")
+def _handle_find_affordances(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_find_affordances(
+        objective=str(args.get("objective", "")),
+        target_files=args.get("target_files"),
+        target_symbols=args.get("target_symbols"),
+        include_affordances=bool(args.get("include_affordances", True)),
+        top_k=int(args.get("top_k", 7)),
     )
 
 

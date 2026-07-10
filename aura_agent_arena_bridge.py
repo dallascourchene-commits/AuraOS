@@ -1310,6 +1310,66 @@ class AuraAgentArenaBridge:
         }
 
     # ------------------------------------------------------------------
+    # Tool 11: aura_find_affordances (Intelligence Layer)
+    # ------------------------------------------------------------------
+
+    def aura_find_affordances(
+        self,
+        *,
+        objective: str,
+        target_files: list[str] | None = None,
+        target_symbols: list[str] | None = None,
+        include_affordances: bool = True,
+        top_k: int = 7,
+    ) -> dict[str, Any]:
+        """Expose the Aura Affordance Directory to external coding agents.
+
+        Tells agents which internal Aura tools should be considered before
+        inventing generic solutions. Returns top 3–7 affordance cards only.
+        Affordance cards are advisory — never patch authority.
+        """
+        if not objective or not objective.strip():
+            return make_error_packet(
+                "mcp_protocol_error",
+                "objective is required and must be non-empty.",
+            )
+
+        try:
+            from aura_affordance_directory import find_affordances
+
+            result = find_affordances(
+                objective=objective,
+                target_files=target_files,
+                target_symbols=target_symbols,
+                repo_root=self.repo_root,
+                top_k=min(max(top_k, 3), 7) if include_affordances else 0,
+            )
+        except Exception as exc:  # noqa: BLE001
+            return make_error_packet(
+                "missing_grounding",
+                f"Affordance directory lookup failed: {exc}",
+                repair_hint="Ensure aura_affordance_directory.py is importable.",
+            )
+
+        return {
+            "ok": True,
+            "version": BRIDGE_VERSION,
+            "objective": objective,
+            "recommended_affordances": result.get("recommended_affordances", []),
+            "prompt_cards": result.get("prompt_cards", []),
+            "do_not_reinvent": result.get("do_not_reinvent", []),
+            "route_frame": result.get("route_frame", {}),
+            "grounding": result.get("grounding", "NEEDS_GROUNDING"),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            "note": (
+                "These are advisory affordance cards. They tell you which internal "
+                "Aura tools to consider. They are NOT patch authority. "
+                "Patch authority remains exact source spans and hashes only."
+            ),
+        }
+
+    # ------------------------------------------------------------------
     # Utility: list all available tools
     # ------------------------------------------------------------------
 
@@ -1371,5 +1431,10 @@ class AuraAgentArenaBridge:
                 "name": "aura_fireworks_patch_worker",
                 "description": "Call a Fireworks model for a compressed micro-patch (candidate diff only).",
                 "required_inputs": ["task_id", "compressed_context", "instruction"],
+            },
+            {
+                "name": "aura_find_affordances",
+                "description": "Find internal Aura tools to consider before inventing generic solutions. Returns top 3-7 advisory affordance cards.",
+                "required_inputs": ["objective"],
             },
         ]
