@@ -59,12 +59,20 @@ def project_civic_organ_result(session: dict[str, Any], organ_type: str, verifie
             delta_entries.append({"field": "workstreams", "change": "set"})
 
     elif organ_type in ("CivicMUSICOrgan", "ScenarioComparisonOrgan"):
-        key = "music" if organ_type == "CivicMUSICOrgan" else "comparison"
-        if key in result:
-            music_data = result[key]
-            updates["scenarios"] = music_data.get("scenarios", [])
-            updates["music_comparison"] = music_data
-            delta_entries.append({"field": "scenarios", "change": "set"})
+        if organ_type == "CivicMUSICOrgan":
+            # Unwrap nested payload envelope for CivicMUSICOrgan
+            if "music" in result:
+                music_data = result["music"]
+                updates["scenarios"] = music_data.get("scenarios", [])
+                updates["music_comparison"] = music_data
+                delta_entries.append({"field": "scenarios", "change": "set"})
+        else:
+            # ScenarioComparisonOrgan uses flattened handling
+            if "comparison" in result:
+                music_data = result["comparison"]
+                updates["scenarios"] = music_data.get("scenarios", [])
+                updates["music_comparison"] = music_data
+                delta_entries.append({"field": "scenarios", "change": "set"})
 
     elif organ_type in ("CivicEvidenceOrgan", "LegalBylawOrgan"):
         key = "legal_instruments" if organ_type == "CivicEvidenceOrgan" else "bylaw_instruments"
@@ -96,7 +104,13 @@ def project_civic_organ_result(session: dict[str, Any], organ_type: str, verifie
 
     elif organ_type == "PilotTunnelOrgan":
         if "pilot" in result:
-            pilot_data = result["pilot"]
+            # Unwrap nested response envelope — store inner pilot packet
+            pilot_envelope = result["pilot"]
+            # If pilot_envelope has a nested "pilot" key, unwrap it; otherwise use as-is
+            if isinstance(pilot_envelope, dict) and "pilot" in pilot_envelope:
+                pilot_data = pilot_envelope["pilot"]
+            else:
+                pilot_data = pilot_envelope
             updates["pilot"] = pilot_data
             updates["state"] = "PILOT_PLANNING"
             delta_entries.append({"field": "pilot", "change": "set"})

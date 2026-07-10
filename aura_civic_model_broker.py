@@ -170,7 +170,7 @@ def broker_request(
         normalized = _normalize_usage(usage)
         cost = 0.0  # fixture mode: zero cost
         output = {
-            "normalized": str(redacted),
+            "normalized": redacted,
             "result": "fixture_mode_deterministic",
             "task": req.task,
         }
@@ -186,7 +186,7 @@ def broker_request(
             normalized = _normalize_usage(usage)
             cost = 0.0
             output = {
-                "normalized": str(redacted),
+                "normalized": redacted,
                 "result": "fixture_fallback_no_credentials",
                 "task": req.task,
                 "note": "Live credentials unavailable — using fixture fallback.",
@@ -200,7 +200,7 @@ def broker_request(
             normalized = _normalize_usage(usage)
             cost = 0.0
             output = {
-                "normalized": str(redacted),
+                "normalized": redacted,
                 "result": "live_call_not_implemented_in_offline_mode",
                 "task": req.task,
             }

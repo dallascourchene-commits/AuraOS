@@ -48,6 +48,7 @@ DEFAULT_SKIP_DIRS = frozenset({
     "dist",
     ".eggs",
     "*.egg-info",
+    "runtime",
 })
 BINARY_SUFFIXES = frozenset({".bak", ".db", ".docx", ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".ttf", ".zip"})
 TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".json", ".lexc", ".md", ".py", ".rs", ".sh", ".tex", ".toml", ".txt", ".yml", ".yaml"})
@@ -149,28 +150,43 @@ def _python_symbol_records(text: str, rel_path: str = "") -> list[SymbolRecord]:
     except SyntaxError:
         return []
     records: list[SymbolRecord] = []
-    for node in ast.walk(tree):
+
+    # Traverse with parent context to distinguish methods from module-level functions
+    def _visit_node(node: ast.AST, parent_class: str = "") -> None:
         if isinstance(node, ast.ClassDef):
             signature = _symbol_signature(node)
+            qualified_name = f"{parent_class}.{node.name}" if parent_class else node.name
             records.append(SymbolRecord(
                 node.name,
                 "class",
                 node.lineno,
                 getattr(node, "end_lineno", node.lineno) or node.lineno,
-                _semantic_id(rel_path, "class", node.name, signature),
+                _semantic_id(rel_path, "class", qualified_name, signature),
                 hashlib.blake2b(signature.encode("utf-8", errors="replace"), digest_size=8).hexdigest(),
             ))
+            # Visit class body with class context
+            for child in node.body:
+                _visit_node(child, parent_class=node.name)
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            kind = "async_function" if isinstance(node, ast.AsyncFunctionDef) else "function"
+            kind = "method" if parent_class else ("async_function" if isinstance(node, ast.AsyncFunctionDef) else "function")
             signature = _symbol_signature(node)
+            qualified_name = f"{parent_class}.{node.name}" if parent_class else node.name
             records.append(SymbolRecord(
                 node.name,
                 kind,
                 node.lineno,
                 getattr(node, "end_lineno", node.lineno) or node.lineno,
-                _semantic_id(rel_path, kind, node.name, signature),
+                _semantic_id(rel_path, kind, qualified_name, signature),
                 hashlib.blake2b(signature.encode("utf-8", errors="replace"), digest_size=8).hexdigest(),
             ))
+        else:
+            # Visit other nodes without changing parent context
+            for child in ast.iter_child_nodes(node):
+                _visit_node(child, parent_class)
+
+    for node in tree.body:
+        _visit_node(node)
+
     return sorted(records, key=lambda item: (item.line, item.name))
 
 
@@ -192,7 +208,10 @@ def _iter_repo_files(root: Path, skip_dirs: frozenset[str]) -> list[Path]:
                 rel = candidate.relative_to(root).as_posix()
             except ValueError:
                 rel = candidate.as_posix()
-            if rel in GENERATED_MAP_FILES or any(_skip_part(part) for part in candidate.relative_to(root).parts):
+            # Skip CODEMAP artifacts, runtime databases, and files in excluded dirs
+            if (rel in GENERATED_MAP_FILES or
+                candidate.suffix == ".sqlite3" or
+                any(_skip_part(part) for part in candidate.relative_to(root).parts)):
                 continue
             paths.append(candidate)
     return paths

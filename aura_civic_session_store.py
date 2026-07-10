@@ -104,17 +104,26 @@ class CivicSessionStore:
              session.get("created_at", time.time()), time.time(),
              1 if session.get("fixture_mode", True) else 0)
         )
-        # Store key session fields in session_data
+        # Store key session fields in session_data (excluding organ_receipts)
         for key in ("contributions", "match_results", "workstreams", "scenarios",
                      "legal_instruments", "council_items", "consent_arc", "consent_responses",
                      "systemic_context", "democratic_friction", "what_if", "pilot",
-                     "decision_packet", "organ_receipts", "needs", "offers",
+                     "decision_packet", "needs", "offers",
                      "what_if_changes", "selected_scenario_id", "mandatory_constraints",
                      "map_manifest", "music_comparison"):
             if key in session:
                 self._conn.execute(
                     "INSERT OR REPLACE INTO session_data (session_id, key, value) VALUES (?,?,?)",
                     (sid, key, json.dumps(session[key]))
+                )
+        # Store organ_receipts through the organ_receipts table
+        if "organ_receipts" in session:
+            for receipt in session["organ_receipts"]:
+                self._conn.execute(
+                    "INSERT INTO organ_receipts (session_id, organ_type, organ_id, manifest_digest, ok, executed_at) VALUES (?,?,?,?,?,?)",
+                    (sid, receipt.get("organ_type", ""), receipt.get("organ_id", ""),
+                     receipt.get("manifest_digest", ""), 1 if receipt.get("ok") else 0,
+                     receipt.get("executed_at", time.time()))
                 )
         self._log_audit(sid, "session_created", {"objective": session.get("objective", "")})
         return {"ok": True, "session_id": sid}
@@ -158,16 +167,19 @@ class CivicSessionStore:
         if "profile_set" in updates:
             self._conn.execute("UPDATE sessions SET profile_set = ? WHERE session_id = ?",
                               (json.dumps(updates["profile_set"]), session_id))
-        # Store other fields in session_data
+        # Store other fields in session_data (excluding organ_receipts)
         for key, value in updates.items():
-            if key in ("state", "story", "profile_set", "_last_delta"):
+            if key in ("state", "story", "profile_set", "_last_delta", "organ_receipts"):
                 continue
             self._conn.execute(
                 "INSERT OR REPLACE INTO session_data (session_id, key, value) VALUES (?,?,?)",
                 (session_id, key, json.dumps(value))
             )
-        # Record organ receipts
+        # Record organ receipts: replace/upsert to avoid duplicates
         if "organ_receipts" in updates:
+            # Clear existing receipts for this session to avoid duplicates
+            self._conn.execute("DELETE FROM organ_receipts WHERE session_id = ?", (session_id,))
+            # Insert all receipts from the update
             for receipt in updates["organ_receipts"]:
                 self._conn.execute(
                     "INSERT INTO organ_receipts (session_id, organ_type, organ_id, manifest_digest, ok, executed_at) VALUES (?,?,?,?,?,?)",

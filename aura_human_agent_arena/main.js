@@ -805,8 +805,8 @@ async function civicRunDemo() {
   const r = await civicAPI('POST', '/sessions', { objective: 'demo', story });
   if (r.ok) {
     civicSessionId = r.session.session_id;
-    // Run all organs via sequential API calls
-    const organs = ['resource-match', 'mitosis', 'scenarios', 'what-if', 'pilot', 'export'];
+    // Run all organs via sequential API calls, matching runtime run_full_demo flow
+    const organs = ['profiles', 'contributions', 'consent', 'resource-match', 'mitosis', 'scenarios', 'what-if', 'pilot', 'export'];
     for (const action of organs) {
       await civicAPI('POST', '/sessions/' + civicSessionId + '/' + action, {});
     }
@@ -822,11 +822,16 @@ async function civicRefreshAll() {
   civicSetPanel('objective-data', sess.objective || '');
   civicSetPanel('profiles-data', JSON.stringify(sess.profile_set?.jurisdiction_profile_refs || [], null, 2));
   civicSetPanel('needs-data', civicRenderList(sess.needs));
-  civicSetPanel('assets-data', civicRenderList(sess.offers));
+  civicSetPanel('civic-offers-data', civicRenderList(sess.offers));
+  civicSetPanel('civic-assets-data', civicRenderList(sess.assets || []));
   civicSetPanel('workstreams-data', civicRenderList(sess.workstreams));
   civicSetPanel('scenarios-data', civicRenderList(sess.scenarios));
   civicSetPanel('legal-data', civicRenderList(sess.legal_instruments));
   civicSetPanel('council-data', civicRenderList(sess.council_items));
+  civicSetPanel('civic-objections-data', civicRenderList(sess.objections || []));
+  civicSetPanel('civic-gaps-data', civicRenderList(sess.gaps || []));
+  civicSetPanel('civic-evidence-data', civicRenderList(sess.evidence || []));
+  civicSetPanel('civic-map-data', JSON.stringify(sess.map_manifest || {}, null, 2));
   civicSetPanel('consent-data', JSON.stringify(sess.consent_arc, null, 2));
   civicSetPanel('systemic-data', JSON.stringify(sess.systemic_context, null, 2));
   civicSetPanel('friction-data', JSON.stringify(sess.democratic_friction, null, 2));
@@ -835,17 +840,40 @@ async function civicRefreshAll() {
   civicSetPanel('audit-data', civicRenderList(sess.organ_receipts));
   civicSetPanel('cost-data', 'Fixture mode: zero provider cost. Measurement: FIXTURE_ZERO.');
   if (sess.decision_packet && sess.decision_packet.objective) {
-    document.getElementById('civic-decision-packet').innerHTML = '<h3>Decision Packet</h3><pre>' + JSON.stringify(sess.decision_packet, null, 2) + '</pre>';
+    const packetEl = document.getElementById('civic-decision-packet');
+    if (packetEl) {
+      packetEl.innerHTML = '<h3>Decision Packet</h3>';
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(sess.decision_packet, null, 2);
+      packetEl.appendChild(pre);
+    }
   }
 }
 
 function civicSetPanel(id, content) {
   const el = document.getElementById(id);
-  if (el) el.innerHTML = content || '<p class="placeholder">No data yet.</p>';
+  if (!el) return;
+  if (!content) {
+    el.innerHTML = '<p class="placeholder">No data yet.</p>';
+    return;
+  }
+  // Escape content to prevent XSS
+  if (typeof content === 'string') {
+    el.textContent = content;
+  } else {
+    el.textContent = JSON.stringify(content, null, 2);
+  }
 }
 
 function civicRenderList(items) {
   if (!items || !items.length) return '<p class="placeholder">None recorded.</p>';
-  if (typeof items === 'string') return items;
-  return '<ul>' + items.map(i => '<li>' + (i.description || i.title || i.organ_type || JSON.stringify(i).slice(0, 80)) + '</li>').join('') + '</ul>';
+  if (typeof items === 'string') return escapeHtml(items);
+  // Create list with escaped content
+  const ul = document.createElement('ul');
+  items.forEach(i => {
+    const li = document.createElement('li');
+    li.textContent = i.description || i.title || i.organ_type || JSON.stringify(i).slice(0, 80);
+    ul.appendChild(li);
+  });
+  return ul.outerHTML;
 }

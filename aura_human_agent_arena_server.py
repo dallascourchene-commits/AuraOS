@@ -137,7 +137,12 @@ def _handle_civic_api(method: str, route: str, parsed, body: dict) -> tuple[int,
     if method == "GET" and len(path_parts) == 6 and path_parts[2] == "sessions" and path_parts[4] == "legal":
         s = get_session(path_parts[3])
         if s["ok"]:
+            scenario_id = path_parts[5]
             instruments = s["session"].get("legal_instruments", [])
+            # Filter instruments by scenario_id if provided
+            if scenario_id:
+                filtered = [li for li in instruments if li.get("scenario_id") == scenario_id]
+                instruments = filtered
             return 200, {"ok": True, "legal_instruments": instruments,
                          "no_legal_approval": True, "disclaimer": "Aura is not providing legal advice.",
                          "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}

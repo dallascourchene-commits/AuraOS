@@ -75,19 +75,22 @@ def record_civic_stage(
     try:
         from aura_empirical_cost_ledger import EmpiricalCostLedger
         ledger = EmpiricalCostLedger(repo_root=".")
-        ledger.record_run(
-            run_id=f"civic_{stage}_{session_id}_{int(time.time())}",
-            provider="fixture" if fixture_mode else "unknown",
-            model="fixture" if fixture_mode else "unknown",
-            input_tokens=usage.get("input_tokens", 0),
-            output_tokens=usage.get("output_tokens", 0),
-            cached_input_tokens=0,
-            cost_usd=cost_usd,
-            latency_ms=latency_ms,
-            measurement_class=record["measurement_class"],
-            stage=f"civic_{stage}",
-            verification_status=verification_status,
-        )
+        ledger.record_run({
+            "run_id": f"civic_{stage}_{session_id}_{int(time.time())}",
+            "comparison_id": "",
+            "arena_id": "civic_commons",
+            "mode": f"civic_{stage}",
+            "provider": "fixture" if fixture_mode else "unknown",
+            "model": "fixture" if fixture_mode else "unknown",
+            "input_tokens": usage.get("input_tokens", 0),
+            "output_tokens": usage.get("output_tokens", 0),
+            "cached_input_tokens": 0,
+            "provider_cost_usd": cost_usd,
+            "calculated_cost_usd": cost_usd,
+            "latency_ms": latency_ms,
+            "measurement_class": record["measurement_class"],
+            "verification_status": verification_status,
+        })
     except Exception:
         pass  # Cost ledger is optional — record is still returned
 

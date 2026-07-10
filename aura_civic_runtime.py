@@ -94,7 +94,11 @@ def create_civic_session(objective: str, *, fixture: bool = True) -> dict[str, A
 
     store = _get_store()
     if store is not None:
-        store.create_session(session)
+        result = store.create_session(session)
+        if not result.get("ok", False):
+            return {"ok": False, "error": "session_persistence_failed",
+                    "detail": result.get("error", ""),
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     _sessions[session_id] = session  # also keep in-memory
 
     return {"ok": True, "session": session,
@@ -125,11 +129,14 @@ def _update_session(session_id: str, updates: dict[str, Any]) -> dict[str, Any]:
     store = _get_store()
     if store is not None:
         result = store.update_session(session_id, updates)
-        if result["ok"]:
-            # Also update in-memory cache
-            if session_id in _sessions:
-                _sessions[session_id].update(updates)
-            return result
+        if not result.get("ok", False):
+            return {"ok": False, "error": "session_update_failed",
+                    "detail": result.get("error", ""),
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        # Also update in-memory cache on success
+        if session_id in _sessions:
+            _sessions[session_id].update(updates)
+        return result
 
     # Fallback to in-memory
     if session_id in _sessions:
@@ -148,8 +155,16 @@ def _project_organ_result(session_id: str, organ_type: str, result: dict[str, An
             projected = project_civic_organ_result(s["session"], organ_type, result)
             if projected["ok"]:
                 _update_session(session_id, projected["updates"])
-    except Exception:
-        pass  # Fallback: just record the receipt below
+    except Exception as e:
+        # Log the exception with context, then fallback to receipt recording
+        import logging
+        import traceback
+        logger = logging.getLogger(__name__)
+        logger.error(
+            f"Projection failed for session_id={session_id}, organ_type={organ_type}: {e}",
+            exc_info=True
+        )
+        # Fallback: just record the receipt below
 
     # Always record organ receipt
     s = get_session(session_id)
@@ -295,10 +310,16 @@ def get_consent(session_id: str) -> dict[str, Any]:
 
 
 def run_what_if(session_id: str, changes: dict[str, Any] | None = None) -> dict[str, Any]:
+    # Persist what_if_changes before running the organ
+    if changes is not None:
+        _update_session(session_id, {"what_if_changes": changes})
     return run_civic_organ(session_id, "WhatIfOrgan")
 
 
 def create_pilot(session_id: str, scenario_id: str = "") -> dict[str, Any]:
+    # Persist selected_scenario_id before running the organ
+    if scenario_id:
+        _update_session(session_id, {"selected_scenario_id": scenario_id})
     return run_civic_organ(session_id, "PilotTunnelOrgan")
 
 
@@ -353,4 +374,7 @@ def add_need(session_id: str, need: dict[str, Any]) -> dict[str, Any]:
 
 def add_offer(session_id: str, offer: dict[str, Any]) -> dict[str, Any]:
     """Add a resource offer to the session."""
-    return add_contribution(session_id, {**offer, "contribution_type": "SPACE_OFFER"})
+    # Preserve caller-provided contribution_type or offer_type; default to SPACE_OFFER only if neither is present
+    if "contribution_type" not in offer and "offer_type" not in offer:
+        offer = {**offer, "contribution_type": "SPACE_OFFER"}
+    return add_contribution(session_id, offer)

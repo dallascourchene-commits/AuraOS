@@ -18,6 +18,10 @@ SNAPSHOTS_DIR = Path(".aura/civic_snapshots")
 
 def load_snapshot(snapshot_id: str) -> dict[str, Any]:
     """Load a snapshot by ID from the civic_snapshots directory."""
+    # Validate snapshot_id to prevent path traversal
+    import re
+    if not re.match(r'^[a-zA-Z0-9_-]+$', snapshot_id):
+        return {"ok": False, "error": f"invalid snapshot_id: {snapshot_id}"}
     path = SNAPSHOTS_DIR / f"{snapshot_id}.json"
     if not path.exists():
         return {"ok": False, "error": f"snapshot not found: {snapshot_id}"}
@@ -41,22 +45,30 @@ def list_snapshots() -> dict[str, Any]:
         return {"ok": True, "snapshots": []}
     snapshots = []
     for path in SNAPSHOTS_DIR.glob("*.json"):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        manifest = data.get("manifest", {})
-        snapshots.append({
-            "snapshot_id": manifest.get("source_id", path.stem),
-            "publisher": manifest.get("publisher", ""),
-            "jurisdiction": manifest.get("jurisdiction", ""),
-            "as_of": manifest.get("as_of", ""),
-            "evidence_class": manifest.get("evidence_class", ""),
-            "record_count": manifest.get("record_count", 0),
-        })
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            manifest = data.get("manifest", {})
+            snapshots.append({
+                "snapshot_id": manifest.get("source_id", path.stem),
+                "publisher": manifest.get("publisher", ""),
+                "jurisdiction": manifest.get("jurisdiction", ""),
+                "as_of": manifest.get("as_of", ""),
+                "evidence_class": manifest.get("evidence_class", ""),
+                "record_count": manifest.get("record_count", 0),
+            })
+        except json.JSONDecodeError:
+            # Skip malformed snapshot files
+            continue
     return {"ok": True, "snapshots": snapshots,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
 
 def verify_snapshot_digest(snapshot_id: str) -> dict[str, Any]:
     """Verify the content digest of a snapshot."""
+    # Validate snapshot_id to prevent path traversal
+    import re
+    if not re.match(r'^[a-zA-Z0-9_-]+$', snapshot_id):
+        return {"ok": False, "error": f"invalid snapshot_id: {snapshot_id}"}
     r = load_snapshot(snapshot_id)
     if not r["ok"]:
         return r

@@ -169,6 +169,9 @@ def execute_civic_organ_through_runtime(
         for from_state, to_state in lifecycle_chain:
             tr = store.transition_organ(organ_id, from_state, to_state)
             if not tr["ok"]:
+                # Mandatory dissolution on lifecycle failure
+                store.update_state(organ_id, "FAILED")
+                store.revoke_lease(organ_id, reason=f"lifecycle_transition_failed_{from_state}_to_{to_state}")
                 return {"ok": False, "error": f"lifecycle_transition_failed: {from_state}->{to_state}",
                         "detail": tr.get("error", ""),
                         "organ_id": organ_id, "state": from_state,
@@ -205,15 +208,35 @@ def execute_civic_organ_through_runtime(
 
     # 7. Transition to COMPLETED
     if store is not None:
-        store.transition_organ(organ_id, "RUNNING", "COMPLETED")
+        tr = store.transition_organ(organ_id, "RUNNING", "COMPLETED")
+        if not tr["ok"]:
+            # Failed to complete — dissolve without success
+            store.update_state(organ_id, "FAILED")
+            store.revoke_lease(organ_id, reason="completion_transition_failed")
+            return {"ok": False, "error": "completion_transition_failed",
+                    "detail": tr.get("error", ""),
+                    "organ_id": organ_id, "state": "FAILED",
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
     # 8. Revoke lease
     if store is not None:
-        store.revoke_lease(organ_id, reason="completed")
+        rev = store.revoke_lease(organ_id, reason="completed")
+        if not rev.get("ok", True):
+            # Failed to revoke — dissolve but report failure
+            store.update_state(organ_id, "FAILED")
+            return {"ok": False, "error": "lease_revocation_failed",
+                    "detail": rev.get("error", ""),
+                    "organ_id": organ_id, "state": "FAILED",
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
     # 9. Dissolve
     if store is not None:
-        store.update_state(organ_id, "DISSOLVED")
+        upd = store.update_state(organ_id, "DISSOLVED")
+        if not upd.get("ok", True):
+            return {"ok": False, "error": "dissolution_failed",
+                    "detail": upd.get("error", ""),
+                    "organ_id": organ_id, "state": "COMPLETED",
+                    "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
     # 10. Build dissolution receipt
     receipt = {
