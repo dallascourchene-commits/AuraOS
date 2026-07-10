@@ -1,0 +1,172 @@
+! Civic Arena Grammar for AuraOS
+! Six-slot morphotactic constraint: DIR → ASP → CLASS → SUBJ → VOICE → STEM
+! FST is an admission grammar, not a security sandbox.
+! Hard blocked: SUBMIT_OFFICIAL, ALLOCATE_FUNDS, BIND_PARTICIPANT
+
+! DIR — Civic lifecycle direction (Root lexicon)
+MultiCharacterSymbols
+OBSERVE        OBSERVE
+DISCOVER       DISCOVER
+DELIBERATE     DELIBERATE
+MATCH          MATCH
+SIMULATE       SIMULATE
+COMPARE        COMPARE
+REFINE         REFINE
+EXPORT         EXPORT
+DISSOLVE       DISSOLVE
+End
+
+! ASP — Duration/scope (Gate lexicon)
+MultiCharacterSymbols
+ONCE                ONCE
+SESSION             SESSION
+SNAPSHOT            SNAPSHOT
+CURRENT_IF_VERIFIED CURRENT_IF_VERIFIED
+ITERATIVE           ITERATIVE
+PILOT               PILOT
+End
+
+! CLASS — Effect class (Action lexicon)
+MultiCharacterSymbols
+READ_PUBLIC_DATA      READ_PUBLIC_DATA
+READ_LAW              READ_LAW
+READ_POLICY           READ_POLICY
+READ_COMMUNITY_INPUT  READ_COMMUNITY_INPUT
+AGGREGATE             AGGREGATE
+RANK                  RANK
+MATCH_RESOURCE        MATCH_RESOURCE
+GENERATE_SCENARIO     GENERATE_SCENARIO
+REQUEST_CONSENT       REQUEST_CONSENT
+WRITE_SESSION         WRITE_SESSION
+EXPORT_PACKET         EXPORT_PACKET
+End
+
+! SUBJ — Target resource (Target lexicon)
+MultiCharacterSymbols
+MAP                 MAP
+NEIGHBOURHOOD       NEIGHBOURHOOD
+SERVICE             SERVICE
+ASSET               ASSET
+LEGAL_INSTRUMENT    LEGAL_INSTRUMENT
+BYLAW               BYLAW
+PLANNING_POLICY     PLANNING_POLICY
+BUDGET              BUDGET
+GRANT               GRANT
+COUNCIL_RECORD      COUNCIL_RECORD
+PUBLIC_ENGAGEMENT   PUBLIC_ENGAGEMENT
+COMMUNITY_NEED      COMMUNITY_NEED
+RESOURCE_OFFER      RESOURCE_OFFER
+PROPOSAL            PROPOSAL
+OBJECTION           OBJECTION
+SCENARIO            SCENARIO
+CONSENT_ROUND       CONSENT_ROUND
+DECISION_PACKET     DECISION_PACKET
+End
+
+! VOICE — Authority/execution context (Physics lexicon)
+MultiCharacterSymbols
+HUMAN_REQUESTED       HUMAN_REQUESTED
+COMMUNITY_CONTRIBUTED COMMUNITY_CONTRIBUTED
+OFFICIAL_SOURCE       OFFICIAL_SOURCE
+AURA_EXTRACTED        AURA_EXTRACTED
+AURA_PROPOSED         AURA_PROPOSED
+FACILITATOR_APPROVED  FACILITATOR_APPROVED
+GOVERNANCE_APPROVED   GOVERNANCE_APPROVED
+SIMULATION_ONLY       SIMULATION_ONLY
+End
+
+! STEM — Terminal operation (Terminal lexicon)
+MultiCharacterSymbols
+QUERY             QUERY
+VERIFY            VERIFY
+MAP_OP            MAP_OP
+SUMMARIZE         SUMMARIZE
+CLUSTER           CLUSTER
+DECOMPOSE         DECOMPOSE
+MATCH_OP          MATCH_OP
+RANK_OP           RANK_OP
+COMPARE           COMPARE
+PROPOSE_BRIDGE    PROPOSE_BRIDGE
+COLLECT_RESPONSE  COLLECT_RESPONSE
+ASSESS_CONVERGENCE ASSESS_CONVERGENCE
+EXPORT            EXPORT
+DISSOLVE_OP       DISSOLVE_OP
+End
+
+LEXICON Root
+OBSERVE:               Gate ;
+DISCOVER:              Gate ;
+DELIBERATE:            Gate ;
+MATCH:                 Gate ;
+SIMULATE:              Gate ;
+COMPARE:               Gate ;
+REFINE:                Gate ;
+EXPORT:                Gate ;
+DISSOLVE:              Gate ;
+
+LEXICON Gate
+ONCE:                  Action ;
+SESSION:               Action ;
+SNAPSHOT:              Action ;
+CURRENT_IF_VERIFIED:   Action ;
+ITERATIVE:             Action ;
+PILOT:                 Action ;
+
+LEXICON Action
+READ_PUBLIC_DATA:      Target ;
+READ_LAW:              Target ;
+READ_POLICY:           Target ;
+READ_COMMUNITY_INPUT:  Target ;
+AGGREGATE:             Target ;
+RANK:                  Target ;
+MATCH_RESOURCE:        Target ;
+GENERATE_SCENARIO:     Target ;
+REQUEST_CONSENT:       Target ;
+WRITE_SESSION:         Target ;
+EXPORT_PACKET:         Target ;
+
+LEXICON Target
+MAP:                   Physics ;
+NEIGHBOURHOOD:         Physics ;
+SERVICE:               Physics ;
+ASSET:                 Physics ;
+LEGAL_INSTRUMENT:      Physics ;
+BYLAW:                 Physics ;
+PLANNING_POLICY:       Physics ;
+BUDGET:                Physics ;
+GRANT:                 Physics ;
+COUNCIL_RECORD:        Physics ;
+PUBLIC_ENGAGEMENT:     Physics ;
+COMMUNITY_NEED:        Physics ;
+RESOURCE_OFFER:        Physics ;
+PROPOSAL:              Physics ;
+OBJECTION:             Physics ;
+SCENARIO:              Physics ;
+CONSENT_ROUND:         Physics ;
+DECISION_PACKET:       Physics ;
+
+LEXICON Physics
+HUMAN_REQUESTED:       Terminal ;
+COMMUNITY_CONTRIBUTED: Terminal ;
+OFFICIAL_SOURCE:       Terminal ;
+AURA_EXTRACTED:        Terminal ;
+AURA_PROPOSED:         Terminal ;
+FACILITATOR_APPROVED:  Terminal ;
+GOVERNANCE_APPROVED:   Terminal ;
+SIMULATION_ONLY:       Terminal ;
+
+LEXICON Terminal
+QUERY:             # ;
+VERIFY:            # ;
+MAP_OP:            # ;
+SUMMARIZE:         # ;
+CLUSTER:           # ;
+DECOMPOSE:         # ;
+MATCH_OP:          # ;
+RANK_OP:           # ;
+COMPARE:           # ;
+PROPOSE_BRIDGE:    # ;
+COLLECT_RESPONSE:  # ;
+ASSESS_CONVERGENCE: # ;
+EXPORT:            # ;
+DISSOLVE_OP:       # ;
