@@ -81,6 +81,33 @@ async function loadState() {
     const data = await api('/api/human-agent/state');
     topology = data.topology || { nodes: [], links: [], meta: {} };
     liveState = data.state || {};
+    // Re-merge locally cached projected nodes after state refresh so they
+    // don't flash and disappear. The server topology may already contain
+    // them (since _show_concept_workspace merges into self.topology), but
+    // if a poll arrives between command and state update, this ensures
+    // projected nodes persist visually.
+    if (projectedNodes && projectedNodes.length > 0) {
+      const existingIds = new Set(topology.nodes.map(n => n.id));
+      projectedNodes.forEach(sn => {
+        if (!existingIds.has(sn.id)) {
+          topology.nodes.push(sn);
+        }
+      });
+      if (projectedLinks) {
+        const existingLinkKeys = new Set(topology.links.map(l => `${l.source}|${l.target}`));
+        projectedLinks.forEach(sl => {
+          const key = `${sl.source}|${sl.target}`;
+          if (!existingLinkKeys.has(key)) {
+            topology.links.push(sl);
+          }
+        });
+      }
+    }
+    // Re-merge concept workspace nodes from state if available
+    if (liveState.concept_workspace && liveState.concept_workspace.concept) {
+      conceptWorkspace = liveState.concept_workspace;
+      renderConceptWorkspace(conceptWorkspace);
+    }
     statusEl.textContent = `${topology.nodes.length} nodes, ${topology.links.length} links`;
     document.getElementById('truth-policy').textContent = (topology.meta && topology.meta.truth_policy)
       ? topology.meta.truth_policy
@@ -103,7 +130,7 @@ function renderLegend() {
   types['__ghost'] = '#c084fc';
   types['__projected'] = '#8b5cf6';
   legend.innerHTML = Object.keys(types).sort().map(key =>
-    `<span><i style="background:${types[key]}"></i>${key === '__ghost' ? 'Ghost Edges' : (key === '__projected' ? 'CODEMAP-Projected' : (typeNames[key] || key))}</span>`
+    `<span><i style="background:${types[key]}"></i>${key === '__ghost' ? 'Ghost Edges' : (key === '__projected' ? 'CODEMAP-Projected' : escapeHtml(typeNames[key] || key))}</span>`
   ).join('');
 }
 
@@ -456,7 +483,11 @@ function draw() {
     } else {
       ctx.globalAlpha = 0.35;
     }
-    const radius = isSelected ? 9 : (isHighlighted ? 6.5 : 4.6);
+    const baseRadius = isSelected ? 9 : (isHighlighted ? 6.5 : 4.6);
+    // Cap visual radius growth so high zoom doesn't produce giant nodes,
+    // while allowing positions to spread across the full zoom range.
+    const visualScale = Math.min(item.scale, 3.0);
+    const radius = baseRadius * visualScale;
     ctx.fillStyle = isSelected ? '#ffffff' : (node.color || '#94a3b8');
     ctx.strokeStyle = isSelected ? '#22d3ee' : (isProjected ? '#8b5cf6' : '#0b1117');
     ctx.lineWidth = isSelected ? 3 : (isProjected ? 2 : 1);
@@ -471,7 +502,7 @@ function draw() {
       ctx.lineWidth = 1.5;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      ctx.arc(item.x, item.y, (radius + 4) * item.scale, 0, Math.PI * 2);
+      ctx.arc(item.x, item.y, (radius + 4) * visualScale, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -510,7 +541,7 @@ function project(node, width, height) {
   const y1 = y0 * cp - z1 * sp;
   const z2 = y0 * sp + z1 * cp;
   const perspective = 620 / (620 + z2);
-  const scale = Math.max(0.35, Math.min(2.5, perspective * zoom));
+  const scale = Math.max(0.35, Math.min(8.0, perspective * zoom));
   return {
     node,
     x: width / 2 + x1 * scale * layoutSpread,
@@ -567,6 +598,7 @@ function resetView() {
   const spreadSlider = document.getElementById('spread-slider');
   const zoomSlider = document.getElementById('zoom-slider');
   if (spreadSlider) spreadSlider.value = layoutSpread;
+  if (spreadValue) spreadValue.textContent = layoutSpread.toFixed(1);
   if (zoomSlider) zoomSlider.value = zoom;
   draw();
 }

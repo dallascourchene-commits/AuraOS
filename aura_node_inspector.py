@@ -20,7 +20,6 @@ from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
-import re
 import time
 from typing import Any
 
@@ -339,7 +338,8 @@ def route_node_command(
     elif current_workspace:
         files = current_workspace.get("files", [])
         if files:
-            grounding = "codemap_grounded" if files else "none"
+            codemap_files = {f.get("path") for f in codemap.get("files", []) if isinstance(f, dict)}
+            grounding = "codemap_grounded" if any(f in codemap_files for f in files) else "none"
 
     quality = _assess_quality(cmd_text)
     cost = "no_model" if intent in ("explain", "localize") else "local_first"
@@ -555,7 +555,6 @@ def _assess_risks(node: dict[str, Any], codemap: dict[str, Any], relationships: 
     file_index = codemap.get("topology", {}).get("file_index", {})
     entry = file_index.get(file_path, {})
     degree = int(entry.get("degree", 0))
-    node_count = int(entry.get("node_count", 0))
     files = codemap.get("files", [])
     file_entry = next((f for f in files if isinstance(f, dict) and f.get("path") == file_path), {})
     file_lines = int(file_entry.get("lines", 0))
@@ -730,7 +729,10 @@ def inspect_node(
                         signature_hash = str(occ.get("signature_hash", ""))
                     break
     if not digest8 and file_path:
-        digest8 = _short_hash(file_path, size=8)
+        # Use CODEMAP file entry's digest8 if available (content-based, not path hash)
+        file_entry = next((f for f in codemap.get("files", []) if isinstance(f, dict) and f.get("path") == file_path), {})
+        cm_digest = str(file_entry.get("digest8", "") or file_entry.get("digest", "")) if file_entry else ""
+        digest8 = cm_digest or _short_hash(file_path, size=8)
 
     # Entity exists check
     files = codemap.get("files", [])
@@ -771,8 +773,8 @@ def inspect_node(
             top_k=5,
         )
         recommended_affordances = affordance_result.get("recommended_affordances", [])
-    except Exception:
-        pass
+    except Exception as exc:  # noqa: BLE001
+        recommended_affordances = []
 
     # Next actions
     next_actions = [
@@ -1005,6 +1007,8 @@ def expand_node(
     if expansion_mode == "children":
         # Contained functions/classes/methods
         for sym in rel.get("contains", [])[:20]:
+            if not sym:
+                continue
             kind = "class" if sym[0].isupper() else "function"
             _add_symbol_node(file_path, sym, kind)
 
@@ -1053,6 +1057,8 @@ def expand_node(
     elif expansion_mode == "full":
         # All available grounded rings
         for sym in rel.get("contains", [])[:15]:
+            if not sym:
+                continue
             kind = "class" if sym[0].isupper() else "function"
             _add_symbol_node(file_path, sym, kind)
         for fp in rel.get("called_by", [])[:10]:
@@ -1067,6 +1073,8 @@ def expand_node(
     else:  # balanced (default)
         # Readable mixed subset
         for sym in rel.get("contains", [])[:8]:
+            if not sym:
+                continue
             kind = "class" if sym[0].isupper() else "function"
             _add_symbol_node(file_path, sym, kind)
         for fp in rel.get("called_by", [])[:5]:
@@ -1078,7 +1086,7 @@ def expand_node(
 
     # Build visual update
     new_node_ids = [n["id"] for n in additional_nodes]
-    highlighted = [node_id] + new_node_ids
+    highlighted = [node_id, *new_node_ids]
 
     visual_update = {
         "highlighted_node_ids": highlighted,

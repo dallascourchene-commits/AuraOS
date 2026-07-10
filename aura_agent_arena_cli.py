@@ -263,8 +263,8 @@ def cmd_find_affordances(args: argparse.Namespace) -> int:
     bridge = _get_bridge()
     result = bridge.aura_find_affordances(
         objective=args.objective,
-        target_files=args.target_files.split(",") if args.target_files else None,
-        target_symbols=args.target_symbols.split(",") if args.target_symbols else None,
+        target_files=[item.strip() for item in args.target_files.split(",") if item.strip()] if args.target_files else None,
+        target_symbols=[item.strip() for item in args.target_symbols.split(",") if item.strip()] if args.target_symbols else None,
         include_affordances=not args.no_affordances,
         top_k=args.top_k,
     )

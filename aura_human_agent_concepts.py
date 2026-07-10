@@ -871,8 +871,9 @@ def build_concept_workspace(
         if node_id not in nodes_by_id:
             ntype = _node_type_for_path(file_path)
             entry = next((f for f in codemap_files if f.get("path") == file_path), {})
-            # Compute digest8 from file path for stable identification
-            digest8 = _short_hash(file_path, size=8)
+            # Use CODEMAP file entry's digest8 (content-based) if available
+            cm_digest = str(entry.get("digest8", "") or entry.get("digest", "")) if entry else ""
+            digest8 = cm_digest or _short_hash(file_path, size=8)
             nodes_by_id[node_id] = _codemap_projected_node(
                 file_path, "",
                 kind=ntype,

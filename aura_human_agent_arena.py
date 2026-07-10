@@ -215,7 +215,61 @@ class HumanAgentArena:
     def _dispatch(self, command: str, mode: str):
         lowered = command.lower()
 
-        # --------------- concept workspace commands (new in V1.1) ---------------
+        # --------------- Most-specific V1.2 selected-node commands first ---------------
+        # These MUST be checked before generic concept/show commands so they are
+        # not shadowed (e.g. "show tests for selected" before "show tests").
+        # inspect selected / explain selected
+        if ("inspect" in lowered or "explain" in lowered) and "select" in lowered:
+            return self._cmd_inspect_selected
+        # why is this node here
+        if "why" in lowered and ("node" in lowered or "here" in lowered):
+            return self._cmd_why_is_node_here
+        # show exact source for selected
+        if "exact source" in lowered and "select" in lowered:
+            return self._cmd_show_exact_source
+        # expand selected / expand projected node
+        if "expand" in lowered and ("select" in lowered or "project" in lowered):
+            return self._cmd_expand_selected
+        # show callers
+        if "show" in lowered and "caller" in lowered:
+            return self._cmd_show_callers
+        # show callees
+        if "show" in lowered and "callee" in lowered:
+            return self._cmd_show_callees
+        # show tests for selected (must precede generic "show tests")
+        if "show" in lowered and "test" in lowered and "select" in lowered:
+            return self._cmd_show_tests_for_selected
+        # show docs for selected (must precede generic "show dependencies")
+        if "show" in lowered and "doc" in lowered and "select" in lowered:
+            return self._cmd_show_docs_for_selected
+        # show risks / what would break
+        if "show" in lowered and "risk" in lowered:
+            return self._cmd_show_risks
+        if "what" in lowered and "break" in lowered:
+            return self._cmd_what_would_break
+        # focus selected
+        if "focus" in lowered and "select" in lowered:
+            return self._cmd_focus_selected
+        # collapse unselected
+        if "collapse" in lowered and ("unselect" in lowered or "select" in lowered):
+            return self._cmd_collapse_unselected
+        # show affordances for selected
+        if "affordance" in lowered and "select" in lowered:
+            return self._cmd_show_affordances
+        # before refactor, show internal tools (must precede generic "refactor")
+        if "before refactor" in lowered and ("internal" in lowered or "tool" in lowered):
+            return self._cmd_before_refactor_tools
+        # what Aura tools can help here
+        if "what" in lowered and ("aura" in lowered or "tool" in lowered) and "help" in lowered:
+            return self._cmd_what_aura_tools
+        # what am I not seeing
+        if "what" in lowered and "not seeing" in lowered:
+            return self._cmd_what_am_i_not_seeing
+        # show native tools for this workspace
+        if "native tool" in lowered and "workspace" in lowered:
+            return self._cmd_show_native_tools
+
+        # --------------- concept workspace commands (V1.1) ---------------
         # "show all functions related to <concept>" / "show functions for <concept>"
         if "show" in lowered and ("all function" in lowered or "function" in lowered) and (
             "related" in lowered or "for" in lowered
@@ -224,14 +278,14 @@ class HumanAgentArena:
         # "show everything connected to <concept>"
         if "show" in lowered and "everything" in lowered and "connect" in lowered:
             return self._cmd_show_concept_full
-        # "refactor <concept>" / "I want to refactor"
-        if ("refactor" in lowered or "i want to refactor" in lowered) and mode != "prepare":
-            return self._cmd_refactor_concept
         # "export handoff packet"
         if "export" in lowered and "handoff" in lowered:
             return self._cmd_export_handoff_packet
         # "prepare refactor plan"
         if "prepare" in lowered and "refactor" in lowered:
+            return self._cmd_refactor_concept
+        # "refactor <concept>" / "I want to refactor" (must come after before-refactor)
+        if ("refactor" in lowered or "i want to refactor" in lowered) and mode != "prepare":
             return self._cmd_refactor_concept
         # --------------- existing concept show commands (now concept-workspace backed) ---------------
         # show ST3GG
@@ -252,7 +306,7 @@ class HumanAgentArena:
                 if key.replace("_", " ") in lowered or key in lowered:
                     return self._cmd_show_generic_concept
         # --------------- existing commands ---------------
-        # show tests
+        # show tests (generic — must come after "show tests for selected")
         if "show" in lowered and "test" in lowered:
             return self._cmd_show_tests
         # show dependencies
@@ -281,58 +335,6 @@ class HumanAgentArena:
         # prepare agent task
         if "prepare" in lowered and ("agent" in lowered or "task" in lowered or mode == "prepare"):
             return self._cmd_prepare_agent_task
-        # --------------- Node Intelligence commands (V1.2) ---------------
-        # inspect selected / explain selected
-        if ("inspect" in lowered or "explain" in lowered) and "select" in lowered:
-            return self._cmd_inspect_selected
-        # why is this node here
-        if "why" in lowered and ("node" in lowered or "here" in lowered):
-            return self._cmd_why_is_node_here
-        # show exact source for selected
-        if "exact source" in lowered and "select" in lowered:
-            return self._cmd_show_exact_source
-        # expand selected / expand projected node
-        if "expand" in lowered and ("select" in lowered or "project" in lowered):
-            return self._cmd_expand_selected
-        # show callers
-        if "show" in lowered and "caller" in lowered:
-            return self._cmd_show_callers
-        # show callees
-        if "show" in lowered and "callee" in lowered:
-            return self._cmd_show_callees
-        # show tests for selected
-        if "show" in lowered and "test" in lowered and "select" in lowered:
-            return self._cmd_show_tests_for_selected
-        # show docs for selected
-        if "show" in lowered and "doc" in lowered and "select" in lowered:
-            return self._cmd_show_docs_for_selected
-        # show risks / what would break
-        if "show" in lowered and "risk" in lowered:
-            return self._cmd_show_risks
-        if "what" in lowered and "break" in lowered:
-            return self._cmd_what_would_break
-        # focus selected
-        if "focus" in lowered and "select" in lowered:
-            return self._cmd_focus_selected
-        # collapse unselected
-        if "collapse" in lowered and ("unselect" in lowered or "select" in lowered):
-            return self._cmd_collapse_unselected
-        # --------------- Affordance Directory commands (V1.2) ---------------
-        # what Aura tools can help here
-        if "what" in lowered and ("aura" in lowered or "tool" in lowered) and "help" in lowered:
-            return self._cmd_what_aura_tools
-        # show affordances for selected
-        if "affordance" in lowered and "select" in lowered:
-            return self._cmd_show_affordances
-        # what am I not seeing
-        if "what" in lowered and "not seeing" in lowered:
-            return self._cmd_what_am_i_not_seeing
-        # before refactor, show internal tools
-        if "before refactor" in lowered and ("internal" in lowered or "tool" in lowered):
-            return self._cmd_before_refactor_tools
-        # show native tools for this workspace
-        if "native tool" in lowered and "workspace" in lowered:
-            return self._cmd_show_native_tools
 
         return self._cmd_unknown
 
@@ -879,6 +881,9 @@ class HumanAgentArena:
 
         workspace_id = self.state.concept_workspace.get("workspace_id", "")
 
+        affordance_warning = ""
+        recommended_affordances: list[dict[str, Any]] = []
+        prompt_cards: list[str] = []
         try:
             from aura_agent_arena_bridge import AuraAgentArenaBridge
 
@@ -902,8 +907,6 @@ class HumanAgentArena:
 
         plan_phase_hash = str(prepared.get("plan_phase_hash", ""))
         # Compute recommended affordances for the handoff packet
-        recommended_affordances: list[dict[str, Any]] = []
-        prompt_cards: list[str] = []
         try:
             from aura_affordance_directory import find_affordances
 
@@ -916,8 +919,10 @@ class HumanAgentArena:
             )
             recommended_affordances = aff_result.get("recommended_affordances", [])
             prompt_cards = aff_result.get("prompt_cards", [])
-        except Exception:
-            pass
+        except Exception as exc:  # noqa: BLE001
+            affordance_warning = f"Affordance lookup failed: {exc}"
+            recommended_affordances = []
+            prompt_cards = []
 
         # Build and store handoff packet so it is never silently lost.
         handoff_packet: dict[str, Any] = {
@@ -929,6 +934,7 @@ class HumanAgentArena:
             "workspace_id": workspace_id,
             "recommended_affordances": recommended_affordances,
             "prompt_cards": prompt_cards,
+            "affordance_warning": affordance_warning or None,
             "recommended_next_cli_commands": [
                 f"python aura_agent_arena_cli.py prepare --objective \"{objective}\"",
                 f"python aura_agent_arena_cli.py find-affordances --objective \"{objective}\"",
@@ -1122,6 +1128,26 @@ class HumanAgentArena:
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
+    def _merge_expansion_result(self, result: dict[str, Any]) -> None:
+        """Merge additional_nodes/additional_links from expand_node into live topology.
+
+        Nodes are deduplicated by id. Links are deduplicated by (source, target)
+        so repeated expansions cannot grow self.topology['links'] unboundedly.
+        """
+        existing_link_keys = {
+            (l.get("source"), l.get("target")) for l in self.topology.get("links", [])
+        }
+        for an in result.get("additional_nodes", []):
+            if an["id"] not in self._node_by_id:
+                self._node_by_id[an["id"]] = an
+                self._all_node_ids.append(an["id"])
+                self.topology["nodes"].append(an)
+        for al in result.get("additional_links", []):
+            key = (al.get("source"), al.get("target"))
+            if key not in existing_link_keys:
+                self.topology["links"].append(al)
+                existing_link_keys.add(key)
+
     def _cmd_expand_selected(self, command: str, mode: str) -> dict[str, Any]:
         """Expand the selected node — lazy expansion."""
         nid = self._get_selected_node_id()
@@ -1157,14 +1183,8 @@ class HumanAgentArena:
             )
         except Exception as exc:  # noqa: BLE001
             return self._error_result(command, str(exc))
-        # Merge additional nodes into topology for rendering
-        for an in result.get("additional_nodes", []):
-            if an["id"] not in self._node_by_id:
-                self._node_by_id[an["id"]] = an
-                self._all_node_ids.append(an["id"])
-                self.topology["nodes"].append(an)
-        for al in result.get("additional_links", []):
-            self.topology["links"].append(al)
+        # Merge additional nodes/links into topology (deduplicated)
+        self._merge_expansion_result(result)
         self.state.add_event("expand", f"expanded {nid} ({exp_mode}): {len(result.get('additional_nodes', []))} nodes")
         return {
             "ok": True,
@@ -1259,13 +1279,7 @@ class HumanAgentArena:
             )
         except Exception as exc:  # noqa: BLE001
             return self._error_result(command, str(exc))
-        for an in result.get("additional_nodes", []):
-            if an["id"] not in self._node_by_id:
-                self._node_by_id[an["id"]] = an
-                self._all_node_ids.append(an["id"])
-                self.topology["nodes"].append(an)
-        for al in result.get("additional_links", []):
-            self.topology["links"].append(al)
+        self._merge_expansion_result(result)
         self.state.add_event("expand", f"{exp_mode} for {nid}")
         return {
             "ok": True,
@@ -1408,8 +1422,8 @@ class HumanAgentArena:
                 repo_root=self.repo_root,
                 top_k=5,
             )
-        except Exception:
-            pass
+        except Exception as exc:  # noqa: BLE001
+            affordance_result = {"affordance_warning": f"Affordance lookup failed: {exc}"}
         # Get node intelligence if selected
         node_intel: dict[str, Any] = {}
         if selected:
@@ -1695,7 +1709,7 @@ class HumanAgentArena:
                 top_k=5,
             )
             return result.get("recommended_affordances", [])
-        except Exception:
+        except Exception as exc:  # noqa: BLE001
             return []
 
     def _show_concept(

@@ -356,7 +356,7 @@ See [docs/AURA_NODE_INSPECTOR.md](AURA_NODE_INSPECTOR.md) for full details.
 
 ### 3. Affordance Directory / Internal Capability Oracle
 
-Tells Aura and coding agents which existing internal Aura tools should be reused before inventing generic solutions. 17 seed affordances, grounded against CODEMAP, ranked by relevance.
+Tells Aura and coding agents which existing internal Aura tools should be reused before inventing generic solutions. 18 seed affordances, grounded against CODEMAP, ranked by relevance.
 
 See [docs/AURA_AFFORDANCE_DIRECTORY.md](AURA_AFFORDANCE_DIRECTORY.md) for full details.
 
@@ -370,7 +370,7 @@ See [docs/AURA_AFFORDANCE_DIRECTORY.md](AURA_AFFORDANCE_DIRECTORY.md) for full d
 
 ### Example Commands
 
-```
+```text
 show Coding Arena
 show all functions related to Coding Arena
 show Agent Arena Bridge
@@ -413,7 +413,7 @@ collapse unselected
 
 Visual topology, JSpace, VSA, ST3GG, screenshots, summaries, fuzzy matches, CODEMAP projections, and ghost edges are **advisory/orientation layers only**. Patch authority remains exact source spans, hashes, CODEMAP facts, tests, boundary contracts, verifier gates, and human approval.
 
-```
+```yaml
 patch_authority: "exact_source_spans_and_hashes_only"
 vsa_patch_authority: false
 ```

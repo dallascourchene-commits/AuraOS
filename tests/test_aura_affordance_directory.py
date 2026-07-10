@@ -15,8 +15,6 @@ import json
 from pathlib import Path
 import sys
 
-import pytest
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
@@ -25,8 +23,6 @@ from aura_affordance_directory import (
     find_affordances,
     explain_affordance,
     affordance_prompt_cards,
-    route_objective_to_affordances,
-    PATCH_AUTHORITY,
 )
 
 
@@ -42,10 +38,10 @@ class TestLoadAffordanceDirectory:
         """load_affordance_directory returns a list of AuraAffordance."""
         directory = load_affordance_directory(repo_root=REPO_ROOT)
         assert isinstance(directory, list)
-        assert len(directory) >= 17  # 17 seed affordances
+        assert len(directory) >= 18  # 18 seed affordances
 
     def test_all_seeds_present(self):
-        """All 17 seed affordances are present."""
+        """All 18 seed affordances are present."""
         directory = load_affordance_directory(repo_root=REPO_ROOT)
         ids = {a.id for a in directory}
         expected_ids = {
@@ -139,7 +135,7 @@ class TestFindAffordances:
             assert "symbols" in aff
             assert "safety" in aff
             # tests may be empty list but key should exist
-            assert "tests" in aff or "tests" in aff  # field exists
+            assert "tests" in aff  # field exists
 
     def test_result_includes_patch_authority(self):
         """Result includes patch authority invariants."""

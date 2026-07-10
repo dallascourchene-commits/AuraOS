@@ -17,7 +17,6 @@ advisory only — never patch authority.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-import hashlib
 import json
 from pathlib import Path
 import re
@@ -86,7 +85,7 @@ class AuraAffordance:
 
 
 # ---------------------------------------------------------------------------
-# Seed affordances (17 required)
+# Seed affordances (18 required)
 # ---------------------------------------------------------------------------
 
 SEED_AFFORDANCES: list[dict[str, Any]] = [
@@ -710,18 +709,16 @@ def find_affordances(
     # Take top_k
     top = scored[:top_k]
 
-    # Expand with related affordances
-    top_ids = {aff.id for _, aff in top}
-    for _, aff in list(top):
-        for related_id in aff.related_affordances:
-            if related_id not in top_ids:
-                # Find the related affordance
-                related = next((a for a in directory if a.id == related_id), None)
-                if related:
-                    related_score = _score_affordance(related, objective, target_files, target_symbols, concept_overlap)
-                    if related_score > 0:
-                        scored.append((related_score, related))
-                        top_ids.add(related_id)
+    # Expand with related affordances — boost score for related items already in scored
+    related_ids = {
+        related_id
+        for _, aff in top
+        for related_id in aff.related_affordances
+    }
+    scored = [
+        (score + 0.25 if aff.id in related_ids else score, aff)
+        for score, aff in scored
+    ]
 
     # Re-sort and take final top_k
     scored.sort(key=lambda x: x[0], reverse=True)

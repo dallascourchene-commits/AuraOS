@@ -18,7 +18,7 @@ The Node Inspector is the primary tool for understanding individual nodes in the
 
 Node Intelligence is **advisory only**. Visual topology, JSpace, VSA, ST3GG, screenshots, summaries, fuzzy matches, CODEMAP projections, and ghost edges are advisory/orientation layers. **Patch authority remains exact source spans, hashes, CODEMAP facts, tests, boundary contracts, verifier gates, and human approval.**
 
-```
+```yaml
 patch_authority: "exact_source_spans_and_hashes_only"
 vsa_patch_authority: false
 ```

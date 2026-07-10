@@ -18,7 +18,7 @@ The directory returns ranked, grounded affordance cards with:
 
 Affordance cards are **advisory only**. They tell agents what to consider — they are **never patch authority**. Patch authority remains exact source spans, hashes, CODEMAP facts, tests, boundary contracts, verifier gates, and human approval.
 
-```
+```yaml
 patch_authority: "exact_source_spans_and_hashes_only"
 vsa_patch_authority: false
 ```
@@ -34,7 +34,7 @@ vsa_patch_authority: false
 | `docs/AURA_AFFORDANCE_DIRECTORY.md` | This document |
 | `tests/test_aura_affordance_directory.py` | Tests |
 
-### Seeded Affordances (17)
+### Seeded Affordances (18)
 
 | ID | Name |
 |----|------|

@@ -16,14 +16,11 @@ import json
 from pathlib import Path
 import sys
 
-import pytest
-
 # Ensure the repo root is on the path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from aura_node_inspector import (
-    NodeIntelligencePacket,
     inspect_node,
     expand_node,
     why_is_node_here,
@@ -216,10 +213,12 @@ class TestExpandNode:
             repo_root=REPO_ROOT,
         )
         assert result["ok"] is True
-        # Should find some contained symbols
+        # Should find some contained symbols (aura_fst_routing.py has functions)
         nodes = result.get("additional_nodes", [])
-        # At least the result should be well-formed
         assert isinstance(nodes, list)
+        # If CODEMAP has contains for this file, nodes should be non-empty
+        if nodes:
+            assert all(n["id"] != "aura_fst_routing.py::global_scope" for n in nodes)
 
     def test_expand_risks(self):
         """expand_node with risks mode returns risk assessment."""
