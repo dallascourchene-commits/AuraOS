@@ -281,7 +281,7 @@ All commands use `python -m aura_agent_arena_cli <subcommand>` for Windows compa
 ## Troubleshooting
 
 ### CODEMAP.json is missing
-Run CODEMAP generation first. The preflight and contract generators require `.aura/CODEMAP.json`.
+Only `run_preflight` (the `preflight` CLI command) strictly requires `.aura/CODEMAP.json` and will return an error if it is missing. The `generate_hermes_contract` command (the `hermes-contract` CLI command) will still produce a valid contract when CODEMAP is missing, but will report the CODEMAP status as "MISSING — run CODEMAP generation first" rather than failing. Run CODEMAP generation to enable full preflight functionality.
 
 ### "Hermes Arena Mode is not available"
 Ensure `aura_hermes_arena_mode.py` is in the repo root and importable. The CLI import is wrapped in a try/except so existing commands still work even if the new module has an import error.

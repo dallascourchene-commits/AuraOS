@@ -49,9 +49,9 @@ Calls existing Aura internals rather than duplicating logic.
 from __future__ import annotations
 
 import json
-import re
-from dataclasses import dataclass, field
 from pathlib import Path
+import re
+import shlex
 from typing import Any
 
 # ---------------------------------------------------------------------------
@@ -104,6 +104,35 @@ _SAFETY_RULES = [
 _CMD_PREFIX = "python -m aura_agent_arena_cli"
 
 
+def _quote_shell_arg(arg: str) -> str:
+    """Quote a shell argument safely using shlex.quote."""
+    return shlex.quote(arg)
+
+
+def _validate_git_ref(ref: str) -> bool:
+    """Validate that a git ref contains only safe characters.
+
+    Returns True if the ref is safe to use in commands.
+    """
+    # Git refs should only contain alphanumeric, slash, dash, underscore, dot
+    import string
+    allowed = set(string.ascii_letters + string.digits + "/-_.")
+    return all(c in allowed for c in ref)
+
+
+def _validate_repo_relative_path(path: str) -> bool:
+    """Validate that a path is repo-relative and contains no shell metacharacters.
+
+    Returns True if the path is safe to use in commands.
+    """
+    # Reject absolute paths
+    if path.startswith("/") or (len(path) > 1 and path[1] == ":"):
+        return False
+    # Reject shell metacharacters
+    unsafe_chars = set("$`;&|<>(){}[]!*?'\"\\")
+    return not any(c in unsafe_chars for c in path)
+
+
 # ---------------------------------------------------------------------------
 # Token estimation (local, deterministic — chars / 4)
 # ---------------------------------------------------------------------------
@@ -130,17 +159,24 @@ def _file_char_count(repo_root: Path, file_path: str) -> int:
 
 
 def _is_forbidden_path(file_path: str) -> bool:
-    """Check if a file path falls inside a forbidden directory."""
+    """Check if a file path falls inside a forbidden directory.
+
+    Uses case-insensitive component comparisons via casefold().
+    """
     normalized = file_path.replace("\\", "/")
     for part in normalized.split("/"):
-        if part in _FORBIDDEN_DIRS:
+        if part.casefold() in {d.casefold() for d in _FORBIDDEN_DIRS}:
             return True
     return False
 
 
 def _is_blocked_hub(file_path: str) -> bool:
-    """Check if a file is a blocked hub file."""
-    return Path(file_path).name in _BLOCKED_HUB_FILES
+    """Check if a file is a blocked hub file.
+
+    Uses case-insensitive name comparison via casefold().
+    """
+    name = Path(file_path).name
+    return name.casefold() in {f.casefold() for f in _BLOCKED_HUB_FILES}
 
 
 # ---------------------------------------------------------------------------
@@ -162,11 +198,12 @@ def _load_codemap(repo_root: Path) -> dict[str, Any]:
         if now - ts < _CODEMAP_TTL:
             return data
     try:
-        with open(path, "r", encoding="utf-8") as fh:
+        with open(path, encoding="utf-8") as fh:
             data = json.load(fh)
         _CODEMAP_CACHE[key] = (now, data)
         return data
-    except Exception:
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        # CODEMAP is optional — return empty dict if missing or unreadable.
         return {}
 
 
@@ -226,21 +263,35 @@ def _suggest_symbols_from_codemap(
     codemap: dict[str, Any],
     keywords: list[str],
     max_results: int = 10,
-) -> list[str]:
-    """Suggest likely symbols from CODEMAP symbol_index."""
+) -> list[tuple[str, str | None]]:
+    """Suggest likely symbols from CODEMAP symbol_index.
+
+    Returns a list of (symbol_name, file_path | None) tuples, preserving
+    CODEMAP file-to-symbol relationships. If a symbol's location cannot be
+    determined, file_path will be None.
+    """
     symbol_index = codemap.get("symbol_index", {})
     if not isinstance(symbol_index, dict):
         return []
 
-    scored: list[tuple[float, str]] = []
-    for sym_name in symbol_index:
+    scored: list[tuple[float, str, str | None]] = []
+    for sym_name, sym_data in symbol_index.items():
         sym_lower = sym_name.lower()
         score = sum(1.0 for kw in keywords if kw in sym_lower)
         if score > 0:
-            scored.append((score, sym_name))
+            # Extract file location from symbol data
+            file_path: str | None = None
+            if isinstance(sym_data, dict):
+                file_path = sym_data.get("file") or sym_data.get("path")
+            elif isinstance(sym_data, list) and len(sym_data) > 0:
+                # Some CODEMAPs store locations as a list
+                first_loc = sym_data[0]
+                if isinstance(first_loc, dict):
+                    file_path = first_loc.get("file") or first_loc.get("path")
+            scored.append((score, sym_name, file_path))
 
     scored.sort(key=lambda x: x[0], reverse=True)
-    return [sym for _, sym in scored[:max_results]]
+    return [(sym, fp) for _, sym, fp in scored[:max_results]]
 
 
 def _suggest_searches(keywords: list[str]) -> list[str]:
@@ -250,28 +301,49 @@ def _suggest_searches(keywords: list[str]) -> list[str]:
     top_kw = keywords[:3]
     searches = []
     for kw in top_kw:
-        searches.append(f"{_CMD_PREFIX} search --query \"{kw}\" --kind symbol")
+        searches.append(f"{_CMD_PREFIX} search --query {_quote_shell_arg(kw)} --kind symbol")
     # Also a combined search
     combined = " ".join(top_kw)
-    searches.append(f"{_CMD_PREFIX} search --query \"{combined}\" --kind text")
+    searches.append(f"{_CMD_PREFIX} search --query {_quote_shell_arg(combined)} --kind text")
     return searches
 
 
 def _suggest_read_slices(
     likely_files: list[str],
-    likely_symbols: list[str],
+    likely_symbols: list[tuple[str, str | None]],
 ) -> list[str]:
-    """Build suggested read-slice commands."""
+    """Build suggested read-slice commands.
+
+    Preserves CODEMAP file-to-symbol relationships instead of combining
+    independently ranked files and symbols. Uses each symbol's recorded
+    location to generate only verified (file, symbol) read-slice commands,
+    respecting the five-command limit. When a symbol lacks a verified file
+    location, omits the guessed slice. Retains existing file-only fallback
+    when no symbols are available at all.
+
+    All arguments are validated and shell-quoted for safety.
+    """
     slices: list[str] = []
-    # File + symbol pairs
-    for fp in likely_files[:3]:
-        for sym in likely_symbols[:3]:
-            slices.append(f"{_CMD_PREFIX} read-slice --file {fp} --symbol {sym}")
+
+    # Generate verified (file, symbol) pairs from CODEMAP relationships
+    for sym_name, file_path in likely_symbols:
+        if file_path and _validate_repo_relative_path(file_path):
+            # Verified location from CODEMAP
+            slices.append(
+                f"{_CMD_PREFIX} read-slice --file {_quote_shell_arg(file_path)} "
+                f"--symbol {_quote_shell_arg(sym_name)}"
+            )
+            if len(slices) >= 5:
+                break
+
     # If we have files but no symbols, suggest file-level reads
-    if not likely_symbols:
-        for fp in likely_files[:3]:
-            if not _is_blocked_hub(fp):
-                slices.append(f"{_CMD_PREFIX} read-slice --file {fp}")
+    if not likely_symbols and likely_files:
+        for fp in likely_files[:5]:
+            if not _is_blocked_hub(fp) and _validate_repo_relative_path(fp):
+                slices.append(f"{_CMD_PREFIX} read-slice --file {_quote_shell_arg(fp)}")
+                if len(slices) >= 5:
+                    break
+
     return slices[:5]
 
 
@@ -289,17 +361,30 @@ def generate_hermes_contract(
 
     Args:
         objective: The normal coding objective (e.g. "Refactor Fireworks egress").
-        mode: Operating mode — "pr" (default) or "direct".
+        mode: Operating mode — only "pr" is supported (feature-branch workflow).
         repo_root: Repo root path.
 
     Returns:
         Dict with ok, contract (markdown text), objective, mode, and invariants.
     """
+    # Validate mode: only "pr" is supported (feature-branch workflow)
+    # Direct mode is not supported to enforce the feature-branch invariant
+    if mode != "pr":
+        return {
+            "ok": False,
+            "error": f"Unsupported mode: {mode}. Only 'pr' mode is supported. "
+                     "Direct edits on main branch violate the feature-branch invariant.",
+            "objective": objective,
+            "mode": mode,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
     root = Path(repo_root).resolve()
     codemap = _load_codemap(root)
     codemap_active = bool(codemap)
 
-    mode_label = "PR-safe feature branch workflow" if mode == "pr" else "Direct edit workflow"
+    mode_label = "PR-safe feature branch workflow"
 
     contract_lines: list[str] = []
     contract_lines.append("# Hermes → Aura Operating Contract")
@@ -327,19 +412,17 @@ def generate_hermes_contract(
     contract_lines.append("- If working tree is dirty, STOP. Either commit/stash or get explicit user approval before proceeding.")
     contract_lines.append("")
 
-    if mode == "pr":
-        contract_lines.append("### Step 2: Create feature branch from main")
-        contract_lines.append("```bash")
-        contract_lines.append("git fetch origin")
-        contract_lines.append("git switch main")
-        contract_lines.append("git pull --ff-only origin main")
-        contract_lines.append("git switch -c feature/<descriptive-name>")
-        contract_lines.append("```")
-        contract_lines.append("- NEVER commit directly to main.")
-        contract_lines.append("")
-        step_offset = 3
-    else:
-        step_offset = 2
+    # Step 2: Feature branch creation (mode is always "pr")
+    contract_lines.append("### Step 2: Create feature branch from main")
+    contract_lines.append("```bash")
+    contract_lines.append("git fetch origin")
+    contract_lines.append("git switch main")
+    contract_lines.append("git pull --ff-only origin main")
+    contract_lines.append("git switch -c feature/<descriptive-name>")
+    contract_lines.append("```")
+    contract_lines.append("- NEVER commit directly to main.")
+    contract_lines.append("")
+    step_offset = 3
 
     # Step 3: Repo digest
     contract_lines.append(f"### Step {step_offset}: Run Aura repo digest")
@@ -351,14 +434,14 @@ def generate_hermes_contract(
     # Step 4: Affordance preflight
     contract_lines.append(f"### Step {step_offset}: Run affordance preflight")
     contract_lines.append("```bash")
-    contract_lines.append(f'{_CMD_PREFIX} find-affordances --objective "{objective}"')
+    contract_lines.append(f'{_CMD_PREFIX} find-affordances --objective {_quote_shell_arg(objective)}')
     contract_lines.append("```")
     step_offset += 1
 
     # Step 5: Preflight packet
     contract_lines.append(f"### Step {step_offset}: Generate preflight packet")
     contract_lines.append("```bash")
-    contract_lines.append(f'{_CMD_PREFIX} preflight --objective "{objective}"')
+    contract_lines.append(f'{_CMD_PREFIX} preflight --objective {_quote_shell_arg(objective)}')
     contract_lines.append("```")
     step_offset += 1
 
@@ -380,7 +463,7 @@ def generate_hermes_contract(
     for slice_cmd in _suggest_read_slices(likely_files, likely_symbols):
         contract_lines.append(slice_cmd)
     if not likely_files:
-        contract_lines.append(f"# (Replace with actual files found from search)")
+        contract_lines.append("# (Replace with actual files found from search)")
         contract_lines.append(f"{_CMD_PREFIX} read-slice --file <file.py> --symbol <SymbolName>")
     contract_lines.append("```")
     step_offset += 1
@@ -389,7 +472,10 @@ def generate_hermes_contract(
     contract_lines.append(f"### Step {step_offset}: Produce Token Savings Report before editing")
     contract_lines.append("```bash")
     files_arg = ",".join(likely_files[:3]) if likely_files else "<file1.py>,<file2.py>"
-    contract_lines.append(f'{_CMD_PREFIX} token-report --objective "{objective}" --files {files_arg} --include-preflight')
+    contract_lines.append(
+        f'{_CMD_PREFIX} token-report --objective {_quote_shell_arg(objective)} '
+        f'--files {_quote_shell_arg(files_arg)} --include-preflight'
+    )
     contract_lines.append("```")
     step_offset += 1
 
@@ -397,9 +483,10 @@ def generate_hermes_contract(
     contract_lines.append(f"### Step {step_offset}: Prepare arena task")
     contract_lines.append("```bash")
     target_file = likely_files[0] if likely_files else "<target_file.py>"
-    target_symbol = likely_symbols[0] if likely_symbols else "<TargetSymbol>"
+    target_symbol = likely_symbols[0][0] if likely_symbols else "<TargetSymbol>"
     contract_lines.append(
-        f'{_CMD_PREFIX} prepare --objective "{objective}" --target-file {target_file} --target-symbol {target_symbol}'
+        f'{_CMD_PREFIX} prepare --objective {_quote_shell_arg(objective)} '
+        f'--target-file {_quote_shell_arg(target_file)} --target-symbol {_quote_shell_arg(target_symbol)}'
     )
     contract_lines.append("```")
     step_offset += 1
@@ -413,8 +500,8 @@ def generate_hermes_contract(
 
     # Step 11-14: Edit, stage, verify
     contract_lines.append(f"### Step {step_offset}: Edit only localized files")
-    contract_lines.append(f"- Edit ONLY the files identified by CODEMAP search and micro-context.")
-    contract_lines.append(f"- Do NOT read or edit hub files, .venv, node_modules, or generated files.")
+    contract_lines.append("- Edit ONLY the files identified by CODEMAP search and micro-context.")
+    contract_lines.append("- Do NOT read or edit hub files, .venv, node_modules, or generated files.")
     step_offset += 1
 
     contract_lines.append(f"### Step {step_offset}: Stage patch through Aura boundary")
@@ -442,31 +529,32 @@ def generate_hermes_contract(
     contract_lines.append("- Do not auto-commit or auto-push without explicit approval.")
     step_offset += 1
 
-    if mode == "pr":
-        contract_lines.append(f"### Step {step_offset}: Commit only scoped files")
-        contract_lines.append("```bash")
-        contract_lines.append("git diff --stat")
-        contract_lines.append("git add <specific_file1.py> <specific_file2.py>  # NEVER git add .")
-        commit_msg = objective[:72].replace('"', "'")
-        contract_lines.append(f'git commit -m "{commit_msg}"')
-        contract_lines.append("```")
-        step_offset += 1
+    # Commit, push, and PR steps (mode is always "pr")
+    contract_lines.append(f"### Step {step_offset}: Commit only scoped files")
+    contract_lines.append("```bash")
+    contract_lines.append("git diff --stat")
+    contract_lines.append("git add <specific_file1.py> <specific_file2.py>  # NEVER git add .")
+    commit_msg = objective[:72].replace('"', "'")
+    contract_lines.append(f'git commit -m {_quote_shell_arg(commit_msg)}')
+    contract_lines.append("```")
+    step_offset += 1
 
-        contract_lines.append(f"### Step {step_offset}: Push feature branch")
-        contract_lines.append("```bash")
-        contract_lines.append("git push -u origin feature/<branch-name>")
-        contract_lines.append("```")
-        step_offset += 1
+    contract_lines.append(f"### Step {step_offset}: Push feature branch")
+    contract_lines.append("```bash")
+    contract_lines.append("git push -u origin feature/<branch-name>")
+    contract_lines.append("```")
+    step_offset += 1
 
-        contract_lines.append(f"### Step {step_offset}: Open a PR")
-        contract_lines.append("```bash")
-        contract_lines.append(
-            f'gh pr create --title "{commit_msg}" --body "Refactor implemented through Aura Agent Arena Bridge. '
-            f'Token savings report and preflight packet attached." --base main'
-        )
-        contract_lines.append("```")
-        contract_lines.append("- If gh CLI is not available, print the exact gh command and the compare URL.")
-        step_offset += 1
+    contract_lines.append(f"### Step {step_offset}: Open a PR")
+    contract_lines.append("```bash")
+    contract_lines.append(
+        f'gh pr create --title {_quote_shell_arg(commit_msg)} '
+        f'--body {_quote_shell_arg("Refactor implemented through Aura Agent Arena Bridge. Token savings report and preflight packet attached.")} '
+        f'--base main'
+    )
+    contract_lines.append("```")
+    contract_lines.append("- If gh CLI is not available, print the exact gh command and the compare URL.")
+    step_offset += 1
 
     # Invariants section
     contract_lines.append("")
@@ -587,31 +675,59 @@ def run_preflight(
     # --- Keyword extraction and file/symbol inference ---
     keywords = _extract_keywords(objective)
 
-    # If target_files/symbols provided, merge with CODEMAP suggestions
-    likely_files = list(target_files) if target_files else []
+    # If target_files/symbols provided, validate and merge with CODEMAP suggestions
+    # REJECT (not just warn) invalid, forbidden, or blocked paths
+    likely_files: list[str] = []
+    rejected_paths: list[str] = []
+
+    if target_files:
+        for fp in target_files:
+            # Validate the path is repo-relative and safe
+            try:
+                resolved = (root / fp).resolve()
+                resolved.relative_to(root.resolve())
+                # REJECT forbidden and blocked paths
+                if _is_forbidden_path(fp):
+                    rejected_paths.append(f"{fp} (forbidden directory)")
+                    continue
+                if _is_blocked_hub(fp):
+                    # Blocked hub files are allowed but will be warned later
+                    pass
+                likely_files.append(fp)
+            except (ValueError, OSError):
+                rejected_paths.append(f"{fp} (outside repository or invalid)")
+
     codemap_files = _suggest_files_from_codemap(codemap, keywords, max_results=10)
     for fp in codemap_files:
-        if fp not in likely_files:
+        if fp not in likely_files and not _is_forbidden_path(fp):
             likely_files.append(fp)
     likely_files = likely_files[:10]
 
-    likely_symbols = list(target_symbols) if target_symbols else []
+    # Build symbol list with CODEMAP file-to-symbol relationships
+    likely_symbols_with_files: list[tuple[str, str | None]] = []
+    if target_symbols:
+        # Convert plain target_symbols list to tuples (symbol, None)
+        likely_symbols_with_files = [(sym, None) for sym in target_symbols]
+
     codemap_symbols = _suggest_symbols_from_codemap(codemap, keywords, max_results=10)
-    for sym in codemap_symbols:
-        if sym not in likely_symbols:
-            likely_symbols.append(sym)
-    likely_symbols = likely_symbols[:10]
+    for sym_name, file_path in codemap_symbols:
+        if sym_name not in [s[0] for s in likely_symbols_with_files]:
+            likely_symbols_with_files.append((sym_name, file_path))
+    likely_symbols_with_files = likely_symbols_with_files[:10]
 
     suggested_searches = _suggest_searches(keywords)
-    suggested_read_slices = _suggest_read_slices(likely_files, likely_symbols)
+    suggested_read_slices = _suggest_read_slices(likely_files, likely_symbols_with_files)
 
     # Suggested prepare command
     prep_file = likely_files[0] if likely_files else "<target_file.py>"
-    prep_symbol = likely_symbols[0] if likely_symbols else "<TargetSymbol>"
+    prep_symbol = likely_symbols_with_files[0][0] if likely_symbols_with_files else "<TargetSymbol>"
     suggested_prepare_command = (
-        f'{_CMD_PREFIX} prepare --objective "{objective}" '
-        f'--target-file {prep_file} --target-symbol {prep_symbol}'
+        f'{_CMD_PREFIX} prepare --objective {_quote_shell_arg(objective)} '
+        f'--target-file {_quote_shell_arg(prep_file)} --target-symbol {_quote_shell_arg(prep_symbol)}'
     )
+
+    # For backward compatibility, also include a simple symbol list in the result
+    likely_symbols = [sym for sym, _ in likely_symbols_with_files]
 
     # --- Estimated token baseline ---
     # Estimate raw context: what it would cost to read the likely files raw.
@@ -630,7 +746,7 @@ def run_preflight(
                 f"WARNING: '{fp}' is inside a forbidden directory. Do not read."
             )
 
-    return {
+    result: dict[str, Any] = {
         "ok": True,
         "version": HERMES_MODE_VERSION,
         "objective": objective,
@@ -650,6 +766,12 @@ def run_preflight(
         "estimated_token_baseline": estimated_token_baseline,
         "method": "local_chars_div_4_estimate",
     }
+
+    # Include rejected paths if any were found
+    if rejected_paths:
+        result["rejected_paths"] = rejected_paths
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -678,25 +800,36 @@ def generate_token_savings_report(
         also includes a "markdown" field with a formatted report string.
     """
     root = Path(repo_root).resolve()
-    codemap = _load_codemap(root)
 
     # --- Raw baseline: what it would cost to read these files wholesale ---
+    # REJECT (not just warn) forbidden paths and paths outside repository
     raw_files_considered: list[str] = []
     raw_char_count = 0
     files_avoided: list[str] = []
     for fp in files:
-        fp = fp.strip()
-        if not fp:
+        fp_stripped = fp.strip()
+        if not fp_stripped:
             continue
-        if _is_forbidden_path(fp):
-            files_avoided.append(fp)
+
+        # Validate path is repo-relative and safe
+        try:
+            resolved = (root / fp_stripped).resolve()
+            resolved.relative_to(root.resolve())
+        except (ValueError, OSError):
+            files_avoided.append(f"{fp_stripped} (outside repository or invalid)")
             continue
-        raw_files_considered.append(fp)
-        chars = _file_char_count(root, fp)
+
+        # REJECT forbidden paths
+        if _is_forbidden_path(fp_stripped):
+            files_avoided.append(f"{fp_stripped} (forbidden directory)")
+            continue
+
+        raw_files_considered.append(fp_stripped)
+        chars = _file_char_count(root, fp_stripped)
         raw_char_count += chars
         if chars == 0:
             # File doesn't exist or unreadable — note it
-            files_avoided.append(f"{fp} (not found)")
+            files_avoided.append(f"{fp_stripped} (not found)")
 
     raw_token_estimate = max(1, raw_char_count // 4) if raw_char_count > 0 else 0
 
@@ -830,6 +963,17 @@ def generate_pr_runbook(
     codemap_active = bool(codemap)
     keywords = _extract_keywords(objective)
 
+    # Validate branch name (Git ref safety)
+    if not _validate_git_ref(branch):
+        return {
+            "ok": False,
+            "error": f"Invalid branch name: {branch}. Branch names must contain only alphanumeric, /, -, _, . characters.",
+            "objective": objective,
+            "branch": branch,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
     # Infer likely files if not provided
     if not files:
         files = _suggest_files_from_codemap(codemap, keywords, max_results=5)
@@ -849,7 +993,7 @@ def generate_pr_runbook(
     runbook_lines.append("git fetch origin")
     runbook_lines.append("git switch main")
     runbook_lines.append("git pull --ff-only origin main")
-    runbook_lines.append(f"git switch -c {branch}")
+    runbook_lines.append(f"git switch -c {_quote_shell_arg(branch)}")
     runbook_lines.append("```")
     runbook_lines.append("")
     runbook_lines.append("**Safety checks:**")
@@ -861,8 +1005,8 @@ def generate_pr_runbook(
     runbook_lines.append("## Aura Preflight")
     runbook_lines.append("```bash")
     runbook_lines.append(f"{_CMD_PREFIX} digest")
-    runbook_lines.append(f'{_CMD_PREFIX} find-affordances --objective "{objective}"')
-    runbook_lines.append(f'{_CMD_PREFIX} preflight --objective "{objective}"')
+    runbook_lines.append(f'{_CMD_PREFIX} find-affordances --objective {_quote_shell_arg(objective)}')
+    runbook_lines.append(f'{_CMD_PREFIX} preflight --objective {_quote_shell_arg(objective)}')
     runbook_lines.append("```")
     runbook_lines.append("")
 
@@ -870,14 +1014,17 @@ def generate_pr_runbook(
     runbook_lines.append("```bash")
     if files:
         for fp in files[:3]:
-            if _is_blocked_hub(fp):
-                runbook_lines.append(f"# WARNING: {fp} is a hub file — use search + read-slice --symbol")
-                runbook_lines.append(f'{_CMD_PREFIX} search --query "{keywords[0] if keywords else "target"}" --kind symbol')
-            else:
-                runbook_lines.append(f"{_CMD_PREFIX} read-slice --file {fp}")
+            if _validate_repo_relative_path(fp):
+                if _is_blocked_hub(fp):
+                    runbook_lines.append(f"# WARNING: {fp} is a hub file — use search + read-slice --symbol")
+                    kw = keywords[0] if keywords else "target"
+                    runbook_lines.append(f'{_CMD_PREFIX} search --query {_quote_shell_arg(kw)} --kind symbol')
+                else:
+                    runbook_lines.append(f"{_CMD_PREFIX} read-slice --file {_quote_shell_arg(fp)}")
     else:
-        runbook_lines.append(f'# Replace with actual files from search')
-        runbook_lines.append(f"{_CMD_PREFIX} search --query \"{keywords[0] if keywords else 'target'}\" --kind symbol")
+        runbook_lines.append('# Replace with actual files from search')
+        kw = keywords[0] if keywords else "target"
+        runbook_lines.append(f"{_CMD_PREFIX} search --query {_quote_shell_arg(kw)} --kind symbol")
         runbook_lines.append(f"{_CMD_PREFIX} read-slice --file <file.py> --symbol <Symbol>")
     runbook_lines.append("```")
     runbook_lines.append("- Refuse broad hub-file reads. Use read-slice with --symbol or --line-start/--line-end.")
@@ -886,7 +1033,10 @@ def generate_pr_runbook(
     runbook_lines.append("## Token Savings Report (before editing)")
     runbook_lines.append("```bash")
     files_arg = ",".join(files[:3]) if files else "<file1.py>,<file2.py>"
-    runbook_lines.append(f'{_CMD_PREFIX} token-report --objective "{objective}" --files {files_arg} --include-preflight')
+    runbook_lines.append(
+        f'{_CMD_PREFIX} token-report --objective {_quote_shell_arg(objective)} '
+        f'--files {_quote_shell_arg(files_arg)} --include-preflight'
+    )
     runbook_lines.append("```")
     runbook_lines.append("")
 
@@ -894,7 +1044,8 @@ def generate_pr_runbook(
     runbook_lines.append("```bash")
     target_file = files[0] if files else "<target_file.py>"
     runbook_lines.append(
-        f'{_CMD_PREFIX} prepare --objective "{objective}" --target-file {target_file}'
+        f'{_CMD_PREFIX} prepare --objective {_quote_shell_arg(objective)} '
+        f'--target-file {_quote_shell_arg(target_file)}'
     )
     runbook_lines.append(f"{_CMD_PREFIX} context --task-id A1 --format both")
     runbook_lines.append("```")
@@ -923,10 +1074,12 @@ def generate_pr_runbook(
     runbook_lines.append("```bash")
     runbook_lines.append("git diff --stat")
     if files:
-        runbook_lines.append(f"git add {' '.join(files)}")
+        # Validate and quote each file path
+        safe_files = [_quote_shell_arg(f) for f in files if _validate_repo_relative_path(f)]
+        runbook_lines.append(f"git add {' '.join(safe_files)}")
     else:
         runbook_lines.append("git add <specific_file1.py> <specific_file2.py>")
-    runbook_lines.append(f'git commit -m "{commit_msg}"')
+    runbook_lines.append(f'git commit -m {_quote_shell_arg(commit_msg)}')
     runbook_lines.append("```")
     runbook_lines.append("")
     runbook_lines.append("**CRITICAL:**")
@@ -937,16 +1090,15 @@ def generate_pr_runbook(
 
     runbook_lines.append("## Push")
     runbook_lines.append("```bash")
-    runbook_lines.append(f"git push -u origin {branch}")
+    runbook_lines.append(f"git push -u origin {_quote_shell_arg(branch)}")
     runbook_lines.append("```")
     runbook_lines.append("")
 
     runbook_lines.append("## Open PR")
     runbook_lines.append("```bash")
     runbook_lines.append(
-        f'gh pr create --title "{commit_msg}" '
-        f'--body "Refactor implemented through Aura Agent Arena Bridge. '
-        f'Token savings report and preflight packet attached." '
+        f'gh pr create --title {_quote_shell_arg(commit_msg)} '
+        f'--body {_quote_shell_arg("Refactor implemented through Aura Agent Arena Bridge. Token savings report and preflight packet attached.")} '
         f'--base main'
     )
     runbook_lines.append("```")

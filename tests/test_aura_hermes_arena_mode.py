@@ -25,7 +25,9 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from aura_hermes_arena_mode import (
+from aura_agent_arena_cli import build_parser  # noqa: E402
+from aura_agent_arena_cli import main as cli_main  # noqa: E402
+from aura_hermes_arena_mode import (  # noqa: E402
     PATCH_AUTHORITY,
     VSA_PATCH_AUTHORITY,
     generate_hermes_contract,
@@ -33,9 +35,7 @@ from aura_hermes_arena_mode import (
     generate_token_savings_report,
     run_preflight,
     write_hermes_aura_rules,
-    HERMES_MODE_VERSION,
 )
-from aura_agent_arena_cli import build_parser, main as cli_main
 
 
 def _has_codemap() -> bool:
@@ -225,6 +225,8 @@ class TestPreflight:
 
     def test_preflight_safety_rules_include_hub_file_warning(self):
         """preflight safety_rules include hub file broad-read warning."""
+        if not _has_codemap():
+            pytest.skip("CODEMAP.json not available")
         result = run_preflight(
             objective="Test",
             repo_root=REPO_ROOT,
@@ -263,6 +265,8 @@ class TestPreflight:
 
     def test_preflight_hub_file_warning_in_hub_file_warnings(self):
         """preflight includes hub_file_warnings when a likely file is a hub file."""
+        if not _has_codemap():
+            pytest.skip("CODEMAP.json not available")
         result = run_preflight(
             objective="Refactor aura_node",
             repo_root=REPO_ROOT,
@@ -448,7 +452,7 @@ class TestPRRunbook:
         # The "git add ." must appear in a warning context, not as a command
         # Check it appears after a "Do NOT" or similar
         lines = runbook.split("\n")
-        add_dot_lines = [l for l in lines if "git add ." in l]
+        add_dot_lines = [line for line in lines if "git add ." in line]
         for line in add_dot_lines:
             assert "NOT" in line or "not" in line or "Never" in line or "NEVER" in line
 
