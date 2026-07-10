@@ -69,6 +69,25 @@ try:
 except Exception:  # noqa: BLE001
     _CAPABILITY_LANES_AVAILABLE = False
 
+# Coding Workbench — optional import (additive)
+try:
+    from aura_topology_health import topology_health_packet
+    from aura_coding_workbench_actions import (
+        open_workspace, scope_task, filter_context, localize_code,
+        rank_code_regions as _rank_regions, slice_context as _slice_ctx,
+        build_change_graph as _build_cg, detect_refactor_candidates as _detect_rc,
+        split_work as _split_work, prepare_agent_handoff as _prep_handoff,
+    )
+    from aura_code_region_ranker import rank_code_regions
+    from aura_change_graph import build_change_graph
+    from aura_refactor_candidate import detect_refactor_candidates
+    from aura_work_splitter import split_large_objective
+    from aura_command_risk_gate import classify_command_risk, command_risk_packet
+    from aura_agent_workbench_interface import agent_workbench_contract
+    _WORKBENCH_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _WORKBENCH_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -617,6 +636,120 @@ def cmd_cockpit_audit(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Coding Workbench command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_workbench() -> None:
+    if not _WORKBENCH_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Coding Workbench not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_topology_health(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = topology_health_packet(repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_open_workspace(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = open_workspace(repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_scope_task(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = scope_task(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_filter_context(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = filter_context(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_localize_code(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = localize_code(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_rank_code_regions_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = rank_code_regions(args.objective, repo_root=".", max_lines=args.max_lines)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_slice_context_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    # Load ranking from file or use empty
+    loc = {}
+    if args.ranking_file:
+        try:
+            with open(args.ranking_file, "r") as f:
+                loc = json.load(f)
+        except Exception:
+            pass
+    result = _slice_ctx(loc, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_change_graph_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = _build_cg(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_refactor_candidates_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    graph = _build_cg(args.objective, repo_root=".")
+    if not graph.get("ok"):
+        _print_json(graph)
+        return 1
+    result = _detect_rc(graph, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_split_work_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = _split_work(args.objective, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_command_risk_cli(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = classify_command_risk(args.command, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_agent_workbench_contract(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = agent_workbench_contract(args.agent)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_prepare_agent_work(args: argparse.Namespace) -> int:
+    _require_workbench()
+    result = _prep_handoff(args.candidate_id, agent=args.agent, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -895,6 +1028,75 @@ def build_parser() -> argparse.ArgumentParser:
     p_audit = subparsers.add_parser("cockpit-audit", help="Export cockpit audit packet")
     p_audit.add_argument("--objective", default="", help="Optional objective filter")
     p_audit.set_defaults(func=cmd_cockpit_audit)
+
+    # ---- Coding Workbench subcommands (additive) ----
+
+    # topology-health
+    p_th = subparsers.add_parser("topology-health", help="Check CODEMAP topology health")
+    p_th.set_defaults(func=cmd_topology_health)
+
+    # open-workspace
+    p_ow = subparsers.add_parser("open-workspace", help="Open a coding workspace")
+    p_ow.add_argument("--objective", default="", help="Initial objective")
+    p_ow.set_defaults(func=cmd_open_workspace)
+
+    # scope-task
+    p_st = subparsers.add_parser("scope-task", help="Scope a coding task")
+    p_st.add_argument("--objective", required=True, help="Coding objective")
+    p_st.set_defaults(func=cmd_scope_task)
+
+    # filter-context
+    p_fc = subparsers.add_parser("filter-context", help="Filter context for an objective")
+    p_fc.add_argument("--objective", required=True, help="Coding objective")
+    p_fc.set_defaults(func=cmd_filter_context)
+
+    # localize-code
+    p_lc = subparsers.add_parser("localize-code", help="Localize code through CODEMAP")
+    p_lc.add_argument("--objective", required=True, help="Coding objective")
+    p_lc.set_defaults(func=cmd_localize_code)
+
+    # rank-code-regions
+    p_rcr = subparsers.add_parser("rank-code-regions", help="Rank code regions under token/line budget")
+    p_rcr.add_argument("--objective", required=True, help="Coding objective")
+    p_rcr.add_argument("--max-lines", type=int, default=400, help="Max lines budget")
+    p_rcr.set_defaults(func=cmd_rank_code_regions_cli)
+
+    # slice-context
+    p_sc = subparsers.add_parser("slice-context", help="Slice context from ranking")
+    p_sc.add_argument("--ranking-file", default=None, help="Path to ranking JSON file")
+    p_sc.set_defaults(func=cmd_slice_context_cli)
+
+    # change-graph
+    p_cg = subparsers.add_parser("change-graph", help="Build a change graph")
+    p_cg.add_argument("--objective", required=True, help="Coding objective")
+    p_cg.set_defaults(func=cmd_change_graph_cli)
+
+    # refactor-candidates
+    p_rfc = subparsers.add_parser("refactor-candidates", help="Detect refactor candidates")
+    p_rfc.add_argument("--objective", required=True, help="Coding objective")
+    p_rfc.set_defaults(func=cmd_refactor_candidates_cli)
+
+    # split-work (already exists from capability orchestration, override with workbench version)
+    # Use a different name to avoid conflict
+    p_sw = subparsers.add_parser("split-work", help="Split work into child tasks")
+    p_sw.add_argument("--objective", required=True, help="Coding objective")
+    p_sw.set_defaults(func=cmd_split_work_cli)
+
+    # command-risk
+    p_cr = subparsers.add_parser("command-risk", help="Classify command risk")
+    p_cr.add_argument("--command", required=True, help="Command to classify")
+    p_cr.set_defaults(func=cmd_command_risk_cli)
+
+    # agent-workbench-contract
+    p_awc = subparsers.add_parser("agent-workbench-contract", help="Generate agent workbench contract")
+    p_awc.add_argument("--agent", default="hermes", help="Agent name")
+    p_awc.set_defaults(func=cmd_agent_workbench_contract)
+
+    # prepare-agent-work
+    p_paw = subparsers.add_parser("prepare-agent-work", help="Prepare agent handoff for a candidate")
+    p_paw.add_argument("--candidate-id", required=True, help="Candidate ID")
+    p_paw.add_argument("--agent", default="hermes", help="Agent name")
+    p_paw.set_defaults(func=cmd_prepare_agent_work)
 
     return parser
 
