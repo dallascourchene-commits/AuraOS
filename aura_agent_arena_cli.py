@@ -120,6 +120,18 @@ try:
 except Exception:  # noqa: BLE001
     _EPHEMERAL_AVAILABLE = False
 
+# Civic Commons Arena — optional import (additive)
+try:
+    from aura_civic_runtime import (
+        create_civic_session, get_session, run_full_demo, add_contribution,
+        match_resources, run_mitosis, run_scenarios, get_consent, record_consent_response,
+        run_what_if, create_pilot, get_issue_pulse, export_packet,
+        close_session, civic_status,
+    )
+    _CIVIC_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _CIVIC_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -995,6 +1007,141 @@ def cmd_ephemeral_receipt(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Civic Commons Arena command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_civic() -> None:
+    if not _CIVIC_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Civic Commons Arena not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_civic_demo(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = run_full_demo(story=args.story)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_create(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = create_civic_session(args.objective, fixture=True)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_status(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = civic_status(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_profiles(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = civic_status(args.session_id)
+    if result.get("ok"):
+        profiles = result["session"].get("profile_set", {})
+        _print_json({"ok": True, "profiles": profiles})
+        return 0
+    _print_json(result)
+    return 1
+
+
+def cmd_civic_add_contribution(args: argparse.Namespace) -> int:
+    _require_civic()
+    import json as _json
+    contrib = {}
+    if args.file:
+        with open(args.file) as f:
+            contrib = _json.load(f)
+    result = add_contribution(args.session_id, contrib)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_match_resources(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = match_resources(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_mitosis(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = run_mitosis(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_scenarios(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = run_scenarios(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_respond(args: argparse.Namespace) -> int:
+    _require_civic()
+    import json as _json
+    response = {}
+    if args.file:
+        with open(args.file) as f:
+            response = _json.load(f)
+    result = record_consent_response(args.session_id, response)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_consent(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = get_consent(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_what_if(args: argparse.Namespace) -> int:
+    _require_civic()
+    import json as _json
+    changes = {}
+    if args.file:
+        with open(args.file) as f:
+            changes = _json.load(f)
+    result = run_what_if(args.session_id, changes)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_pilot(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = create_pilot(args.session_id, getattr(args, "scenario_id", ""))
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_issue_pulse(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = get_issue_pulse(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_export(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = export_packet(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_civic_close(args: argparse.Namespace) -> int:
+    _require_civic()
+    result = close_session(args.session_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1428,6 +1575,88 @@ def build_parser() -> argparse.ArgumentParser:
     p_ert = subparsers.add_parser("ephemeral-receipt", help="Get dissolution receipt for an ephemeral organ")
     p_ert.add_argument("--organ-id", required=True, help="Organ ID")
     p_ert.set_defaults(func=cmd_ephemeral_receipt)
+
+    # ---- Civic Commons Arena subcommands (additive) ----
+
+    # civic-demo
+    p_cd = subparsers.add_parser("civic-demo", help="Run full Civic Commons demo")
+    p_cd.add_argument("--fixture", action="store_true", default=True)
+    p_cd.add_argument("--story", default="hairstylist", choices=["hairstylist","youth_centre","council_pulse"])
+    p_cd.set_defaults(func=cmd_civic_demo)
+
+    # civic-create
+    p_cc = subparsers.add_parser("civic-create", help="Create a Civic Commons session")
+    p_cc.add_argument("--objective", required=True)
+    p_cc.set_defaults(func=cmd_civic_create)
+
+    # civic-status
+    p_cst = subparsers.add_parser("civic-status", help="Get Civic session status")
+    p_cst.add_argument("--session-id", required=True)
+    p_cst.set_defaults(func=cmd_civic_status)
+
+    # civic-profiles
+    p_cp = subparsers.add_parser("civic-profiles", help="Show active profiles")
+    p_cp.add_argument("--session-id", required=True)
+    p_cp.set_defaults(func=cmd_civic_profiles)
+
+    # civic-add-contribution
+    p_cac = subparsers.add_parser("civic-add-contribution", help="Add a contribution")
+    p_cac.add_argument("--session-id", required=True)
+    p_cac.add_argument("--file", default="")
+    p_cac.set_defaults(func=cmd_civic_add_contribution)
+
+    # civic-match-resources
+    p_cmr = subparsers.add_parser("civic-match-resources", help="Match resources")
+    p_cmr.add_argument("--session-id", required=True)
+    p_cmr.set_defaults(func=cmd_civic_match_resources)
+
+    # civic-mitosis
+    p_cm = subparsers.add_parser("civic-mitosis", help="Run MITOSIS decomposition")
+    p_cm.add_argument("--session-id", required=True)
+    p_cm.set_defaults(func=cmd_civic_mitosis)
+
+    # civic-scenarios
+    p_csc = subparsers.add_parser("civic-scenarios", help="Run MUSIC scenario comparison")
+    p_csc.add_argument("--session-id", required=True)
+    p_csc.set_defaults(func=cmd_civic_scenarios)
+
+    # civic-respond
+    p_cr = subparsers.add_parser("civic-respond", help="Collect responses")
+    p_cr.add_argument("--session-id", required=True)
+    p_cr.add_argument("--file", default="")
+    p_cr.set_defaults(func=cmd_civic_respond)
+
+    # civic-consent
+    p_cco = subparsers.add_parser("civic-consent", help="Get Consent Arc")
+    p_cco.add_argument("--session-id", required=True)
+    p_cco.set_defaults(func=cmd_civic_consent)
+
+    # civic-what-if
+    p_cwi = subparsers.add_parser("civic-what-if", help="Run What-If simulation")
+    p_cwi.add_argument("--session-id", required=True)
+    p_cwi.add_argument("--file", default="")
+    p_cwi.set_defaults(func=cmd_civic_what_if)
+
+    # civic-pilot
+    p_cpi = subparsers.add_parser("civic-pilot", help="Create pilot packet")
+    p_cpi.add_argument("--session-id", required=True)
+    p_cpi.add_argument("--scenario-id", default="")
+    p_cpi.set_defaults(func=cmd_civic_pilot)
+
+    # civic-issue-pulse
+    p_cip = subparsers.add_parser("civic-issue-pulse", help="Show council issue pulse")
+    p_cip.add_argument("--session-id", required=True)
+    p_cip.set_defaults(func=cmd_civic_issue_pulse)
+
+    # civic-export
+    p_ce = subparsers.add_parser("civic-export", help="Export decision packet")
+    p_ce.add_argument("--session-id", required=True)
+    p_ce.set_defaults(func=cmd_civic_export)
+
+    # civic-close
+    p_ccl = subparsers.add_parser("civic-close", help="Close Civic session")
+    p_ccl.add_argument("--session-id", required=True)
+    p_ccl.set_defaults(func=cmd_civic_close)
 
     return parser
 
