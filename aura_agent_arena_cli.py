@@ -110,6 +110,16 @@ try:
 except Exception:  # noqa: BLE001
     _CAPABILITY_RESOLVER_AVAILABLE = False
 
+# Ephemeral Organ Runtime — optional import (additive)
+try:
+    from aura_ephemeral_runtime import (
+        plan_ephemeral_organ, validate_ephemeral_organ, run_ephemeral_organ,
+        ephemeral_status, dissolve_ephemeral_organ, ephemeral_receipt,
+    )
+    _EPHEMERAL_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _EPHEMERAL_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -932,6 +942,59 @@ def cmd_stabilization_status(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Ephemeral Organ Runtime command handlers
+# ---------------------------------------------------------------------------
+
+
+def _require_ephemeral() -> None:
+    if not _EPHEMERAL_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "Ephemeral Runtime not available."}, indent=2))
+        raise SystemExit(1)
+
+
+def cmd_ephemeral_plan(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = plan_ephemeral_organ(args.objective, ttl_seconds=args.ttl, repo_root=".")
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_ephemeral_validate(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = validate_ephemeral_organ(args.organ_id, repo_root=".", human_approval=args.human_approval)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_ephemeral_run(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = run_ephemeral_organ(args.organ_id, repo_root=".", human_approval=True)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_ephemeral_status(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = ephemeral_status(args.organ_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_ephemeral_dissolve(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = dissolve_ephemeral_organ(args.organ_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_ephemeral_receipt(args: argparse.Namespace) -> int:
+    _require_ephemeral()
+    result = ephemeral_receipt(args.organ_id)
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1331,6 +1394,40 @@ def build_parser() -> argparse.ArgumentParser:
     # stabilization-status
     p_ss = subparsers.add_parser("stabilization-status", help="Show system stabilization report")
     p_ss.set_defaults(func=cmd_stabilization_status)
+
+    # ---- Ephemeral Organ Runtime subcommands (additive) ----
+
+    # ephemeral-plan
+    p_ep = subparsers.add_parser("ephemeral-plan", help="Plan an ephemeral organ for an objective")
+    p_ep.add_argument("--objective", required=True, help="Objective for the ephemeral organ")
+    p_ep.add_argument("--ttl", type=int, default=300, help="TTL in seconds")
+    p_ep.set_defaults(func=cmd_ephemeral_plan)
+
+    # ephemeral-validate
+    p_ev = subparsers.add_parser("ephemeral-validate", help="Validate an ephemeral organ through the product automaton")
+    p_ev.add_argument("--organ-id", required=True, help="Organ ID")
+    p_ev.add_argument("--human-approval", action="store_true", help="Indicate human approval is present")
+    p_ev.set_defaults(func=cmd_ephemeral_validate)
+
+    # ephemeral-run
+    p_er = subparsers.add_parser("ephemeral-run", help="Run an ephemeral organ (read-only MVP)")
+    p_er.add_argument("--organ-id", required=True, help="Organ ID")
+    p_er.set_defaults(func=cmd_ephemeral_run)
+
+    # ephemeral-status
+    p_es = subparsers.add_parser("ephemeral-status", help="Get ephemeral organ status")
+    p_es.add_argument("--organ-id", required=True, help="Organ ID")
+    p_es.set_defaults(func=cmd_ephemeral_status)
+
+    # ephemeral-dissolve
+    p_ed = subparsers.add_parser("ephemeral-dissolve", help="Dissolve an ephemeral organ")
+    p_ed.add_argument("--organ-id", required=True, help="Organ ID")
+    p_ed.set_defaults(func=cmd_ephemeral_dissolve)
+
+    # ephemeral-receipt
+    p_ert = subparsers.add_parser("ephemeral-receipt", help="Get dissolution receipt for an ephemeral organ")
+    p_ert.add_argument("--organ-id", required=True, help="Organ ID")
+    p_ert.set_defaults(func=cmd_ephemeral_receipt)
 
     return parser
 

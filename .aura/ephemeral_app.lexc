@@ -1,0 +1,166 @@
+! Ephemeral Application Grammar for AuraOS
+! Six-slot morphotactic constraint: DIR → ASP → CLASS → SUBJ → VOICE → STEM
+! Lexicon names follow aura_lexc.py's slot_for_source mapping:
+!   Root → DIR, Gate → ASP, Action → CLASS, Target → SUBJ, Physics → VOICE, Terminal → STEM
+! MVP: read-only repository investigation only.
+! The FST is an admission grammar, not a security sandbox.
+
+! ==============================================================================
+! DIR — Lifecycle direction (Root lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+CREATE        CREATE
+PREPARE       PREPARE
+RUN           RUN
+PAUSE         PAUSE
+DISSOLVE      DISSOLVE
+CRYSTALLIZE_REQUEST CRYSTALLIZE_REQUEST
+End
+
+! ==============================================================================
+! ASP — Duration/execution aspect (Gate lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+ONCE          ONCE
+SESSION       SESSION
+TTL           TTL
+End
+
+! ==============================================================================
+! CLASS — Effect class (Action lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+READ          READ
+COMPUTE       COMPUTE
+WRITE_TEMP    WRITE_TEMP
+NETWORK       NETWORK
+DEVICE        DEVICE
+INSTALL       INSTALL
+SECRET_ACCESS SECRET_ACCESS
+PRODUCTION_MUTATION PRODUCTION_MUTATION
+End
+
+! ==============================================================================
+! SUBJ — Target resource (Target lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+CODEMAP              CODEMAP
+MODULE_MANIFEST      MODULE_MANIFEST
+SOURCE_SLICE         SOURCE_SLICE
+TOPOLOGY             TOPOLOGY
+AFFORDANCE_DIRECTORY AFFORDANCE_DIRECTORY
+CAPABILITY_LANES     CAPABILITY_LANES
+PLUGIN_MANIFESTS     PLUGIN_MANIFESTS
+TEMP_WORKSPACE       TEMP_WORKSPACE
+UI_SCHEMA            UI_SCHEMA
+EXTERNAL_ENDPOINT    EXTERNAL_ENDPOINT
+PRODUCTION_SOURCE    PRODUCTION_SOURCE
+PRIVATE_MEMORY       PRIVATE_MEMORY
+End
+
+! ==============================================================================
+! VOICE — Authority/execution context (Physics lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+HUMAN_REQUESTED    HUMAN_REQUESTED
+AURA_VERIFIED      AURA_VERIFIED
+AGENT_PROPOSED     AGENT_PROPOSED
+GOVERNANCE_APPROVED GOVERNANCE_APPROVED
+SANDBOX_ONLY       SANDBOX_ONLY
+End
+
+! ==============================================================================
+! STEM — Terminal operation (Terminal lexicon)
+! ==============================================================================
+MultiCharacterSymbols
+RESOLVE_CAPABILITIES RESOLVE_CAPABILITIES
+QUERY               QUERY
+READ_SLICE          READ_SLICE
+BUILD_GRAPH         BUILD_GRAPH
+RENDER_SCHEMA       RENDER_SCHEMA
+EXECUTE_COMPONENT   EXECUTE_COMPONENT
+VERIFY              VERIFY
+DISSOLVE            DISSOLVE
+PROPOSE_CRYSTALLIZATION PROPOSE_CRYSTALLIZATION
+End
+
+! ==============================================================================
+! LEXICON: Root (DIR — lifecycle direction)
+! ==============================================================================
+LEXICON Root
+CREATE:               Gate ;
+PREPARE:              Gate ;
+RUN:                  Gate ;
+PAUSE:                Gate ;
+DISSOLVE:             Gate ;
+CRYSTALLIZE_REQUEST:  Gate ;
+END
+
+! ==============================================================================
+! LEXICON: Gate (ASP — duration/execution aspect)
+! ==============================================================================
+LEXICON Gate
+ONCE:     Action ;
+SESSION:  Action ;
+TTL:      Action ;
+END
+
+! ==============================================================================
+! LEXICON: Action (CLASS — effect class)
+! ==============================================================================
+LEXICON Action
+READ:               Target ;
+COMPUTE:            Target ;
+WRITE_TEMP:         Target ;
+! Blocked effects — machine router routes these to BLOCKED_WITH_REASON
+NETWORK:            Target ;
+DEVICE:             Target ;
+INSTALL:            Target ;
+SECRET_ACCESS:      Target ;
+PRODUCTION_MUTATION: Target ;
+END
+
+! ==============================================================================
+! LEXICON: Target (SUBJ — target resource)
+! ==============================================================================
+LEXICON Target
+CODEMAP:              Physics ;
+MODULE_MANIFEST:      Physics ;
+SOURCE_SLICE:         Physics ;
+TOPOLOGY:             Physics ;
+AFFORDANCE_DIRECTORY: Physics ;
+CAPABILITY_LANES:     Physics ;
+PLUGIN_MANIFESTS:     Physics ;
+TEMP_WORKSPACE:       Physics ;
+UI_SCHEMA:            Physics ;
+! Blocked targets — machine router routes these to BLOCKED_WITH_REASON
+EXTERNAL_ENDPOINT:    Physics ;
+PRODUCTION_SOURCE:    Physics ;
+PRIVATE_MEMORY:       Physics ;
+END
+
+! ==============================================================================
+! LEXICON: Physics (VOICE — authority/execution context)
+! ==============================================================================
+LEXICON Physics
+HUMAN_REQUESTED:     Terminal ;
+AURA_VERIFIED:       Terminal ;
+AGENT_PROPOSED:      Terminal ;
+GOVERNANCE_APPROVED: Terminal ;
+SANDBOX_ONLY:        Terminal ;
+END
+
+! ==============================================================================
+! LEXICON: Terminal (STEM — terminal operation)
+! ==============================================================================
+LEXICON Terminal
+RESOLVE_CAPABILITIES: # ;
+QUERY:                # ;
+READ_SLICE:           # ;
+BUILD_GRAPH:          # ;
+RENDER_SCHEMA:        # ;
+EXECUTE_COMPONENT:    # ;
+VERIFY:               # ;
+DISSOLVE:             # ;
+PROPOSE_CRYSTALLIZATION: # ;
+END
