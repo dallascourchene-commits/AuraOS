@@ -42,10 +42,13 @@ class TestActions:
         assert "sliced_files" in result
 
     def test_build_change_graph_blocks_on_degraded_topology(self):
-        result = build_change_graph("test", repo_root=REPO_ROOT)
-        # Topology is degraded (0 nodes) so this should block
-        assert result["ok"] is False
-        assert result.get("next_gate") == "NEED_TOPOLOGY_REPAIR"
+        from unittest.mock import patch
+        with patch("aura_topology_health.topology_health_packet") as mock_health:
+            mock_health.return_value = {"topology_nodes": 0}
+            result = build_change_graph("test", repo_root=REPO_ROOT)
+            # Topology is degraded (0 nodes) so this should block
+            assert result["ok"] is False
+            assert result.get("next_gate") == "NEED_TOPOLOGY_REPAIR"
 
     def test_detect_refactor_candidates(self):
         graph = {"objective": "test", "files": ["f1.py"], "symbols": ["sym1"], "tests": []}

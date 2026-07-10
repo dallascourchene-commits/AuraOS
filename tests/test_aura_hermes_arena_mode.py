@@ -120,14 +120,14 @@ class TestHermesContract:
         assert "git push -u origin" in contract
 
     def test_contract_direct_mode_no_pr(self):
-        """Direct mode contract does not include PR creation."""
+        """Direct mode contract is rejected to enforce feature-branch invariant."""
         result = generate_hermes_contract(
             objective="Test objective",
             mode="direct",
             repo_root=REPO_ROOT,
         )
-        contract = result["contract"]
-        assert "gh pr create" not in contract
+        assert result["ok"] is False
+        assert "Unsupported mode: direct" in result["error"]
 
     def test_cli_hermes_contract_command(self, capsys):
         """CLI hermes-contract command produces valid output."""
