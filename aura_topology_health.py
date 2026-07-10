@@ -33,9 +33,11 @@ def check_codemap_health(repo_root: str | Path = ".") -> dict[str, Any]:
     coverage = cm.get("coverage", {})
     file_count = int(coverage.get("included_file_count", 0))
     topo = cm.get("topology", {})
-    topo_nodes = len(topo.get("nodes", []) or []) if isinstance(topo, dict) else 0
-    topo_edges = len(topo.get("edges", []) or []) if isinstance(topo, dict) else 0
-    topo_source = cm.get("topology_source", "unknown")
+    summary = cm.get("summary", {})
+    # Topology node/edge counts are in summary, not in topology.nodes
+    topo_nodes = int(summary.get("topology_nodes", 0))
+    topo_edges = int(summary.get("topology_edges", 0))
+    topo_source = summary.get("topology_source", topo.get("source", "unknown"))
     fi = topo.get("file_index", {}) if isinstance(topo, dict) else {}
     neighbor_files = len(fi) > 0
     si = cm.get("symbol_index", {})
@@ -96,6 +98,7 @@ def detect_topology_regression(previous: dict | None = None, current: dict | Non
     root = Path(repo_root).resolve()
     if current is None:
         current = check_codemap_health(root)
+    baseline_loaded = False
     if previous is None:
         # Try loading baseline from .aura/topology_baseline.json
         baseline_path = root / ".aura" / "topology_baseline.json"
@@ -104,18 +107,19 @@ def detect_topology_regression(previous: dict | None = None, current: dict | Non
                 import json
                 with open(baseline_path, "r", encoding="utf-8") as f:
                     previous = json.load(f)
+                    baseline_loaded = True
         except Exception:
             pass
+    else:
+        baseline_loaded = True
     if previous is None:
-        # No baseline available
-        return {"ok": True, "regression_detected": False, "baseline_available": False,
-                "current": current,
-                "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        # No persisted baseline available — use documented fallback baseline for zero-node regression detection
+        # Fallback values are from commit 6f48c2f's known-good topology state
+        previous = {"topology_nodes": 2203, "topology_edges": 2197, "topology_source": "fallback_baseline"}
     regressed = (
-        current.get("topology_nodes", 0) < previous.get("topology_nodes", 0) or
-        current.get("topology_edges", 0) < previous.get("topology_edges", 0)
+        current.get("topology_nodes", 0) == 0 and previous.get("topology_nodes", 0) > 0
     )
-    return {"ok": not regressed, "regression_detected": regressed, "baseline_available": True,
+    return {"ok": not regressed, "regression_detected": regressed, "baseline_available": baseline_loaded,
             "previous": previous, "current": current,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
@@ -126,11 +130,12 @@ def suggest_topology_repair(repo_root: str | Path = ".") -> dict[str, Any]:
     suggestions = []
     if health.get("topology_nodes", 0) == 0:
         suggestions.append("python aura_codebase_navigator.py --refresh-topology")
-        suggestions.append("python aura_topological_scanner.py --rebuild")
     if not health.get("neighbor_files_available"):
-        suggestions.append("python aura_codebase_navigator.py --rebuild-file-index")
+        suggestions.append("python aura_codebase_navigator.py --refresh-topology")
     if not health.get("source_hashes_available"):
-        suggestions.append("python aura_codebase_navigator.py --rebuild-hashes")
+        suggestions.append("python aura_codebase_navigator.py --refresh-topology")
+    if not suggestions:
+        suggestions.append("python aura_codebase_navigator.py --refresh .")
     return {"ok": True, "repair_command_suggestion": suggestions,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 

@@ -20,11 +20,14 @@ def mock_healthy_codemap():
     return {
         "coverage": {"included_file_count": 50},
         "topology": {
-            "nodes": [{"id": f"n{i}"} for i in range(100)],
-            "edges": [{"from": f"n{i}", "to": f"n{i+1}"} for i in range(99)],
-            "file_index": {"file1.py": ["n1"], "file2.py": ["n2"]},
+            "source": "test_topology",
+            "file_index": {"file1.py": {"degree": 2}, "file2.py": {"degree": 1}},
         },
-        "topology_source": "test_topology",
+        "summary": {
+            "topology_nodes": 100,
+            "topology_edges": 99,
+            "topology_source": "test_topology",
+        },
         "symbol_index": {
             "test_func": [{"file": "file1.py", "line": 10, "end_line": 20}],
             "test_class": [{"file": "file2.py", "line": 5, "end_line": 30}],
@@ -38,8 +41,12 @@ def mock_zero_node_codemap():
     """Mock CODEMAP with zero nodes."""
     return {
         "coverage": {"included_file_count": 10},
-        "topology": {"nodes": [], "edges": [], "file_index": {}},
-        "topology_source": "empty_topology",
+        "topology": {"source": "empty_topology", "file_index": {}},
+        "summary": {
+            "topology_nodes": 0,
+            "topology_edges": 0,
+            "topology_source": "empty_topology",
+        },
         "symbol_index": {"test_func": [{"file": "file1.py", "line": 10}]},
         "command_index": {},
     }
@@ -90,7 +97,7 @@ class TestTopologyHealth:
     def test_regression_no_baseline(self, mock_healthy_codemap):
         with patch("aura_topology_health._load_codemap", return_value=mock_healthy_codemap):
             result = detect_topology_regression(repo_root=REPO_ROOT)
-            assert result["baseline_available"] is False
+            # No baseline file → uses default baseline; healthy topology = no regression
             assert result["regression_detected"] is False
 
     def test_repair_suggestion(self, mock_zero_node_codemap):

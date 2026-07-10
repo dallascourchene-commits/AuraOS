@@ -30,6 +30,23 @@ class SlotName(str, Enum):
 
 SLOT_ORDER = tuple(SlotName)
 
+# Canonical six-slot execution contract.
+# These are the canonical execution names used in code.
+# Human-readable aliases are provided for documentation and backwards compatibility.
+CANONICAL_SLOT_ORDER = ("DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM")
+SLOT_ALIASES = {
+    "SPATIAL": "DIR",
+    "DIRECTION": "DIR",
+    "ASPECT": "ASP",
+    "CLASSIFIER": "CLASS",
+    "SUBJECT": "SUBJ",
+}
+
+def canonicalize_slot_name(name: str) -> str:
+    """Return the canonical execution name for a slot, resolving aliases."""
+    upper = name.upper().strip()
+    return SLOT_ALIASES.get(upper, upper)
+
 
 @dataclass(frozen=True)
 class LexcDiagnostic:
