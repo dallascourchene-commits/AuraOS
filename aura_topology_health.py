@@ -98,6 +98,7 @@ def detect_topology_regression(previous: dict | None = None, current: dict | Non
     root = Path(repo_root).resolve()
     if current is None:
         current = check_codemap_health(root)
+    baseline_loaded = False
     if previous is None:
         # Try loading baseline from .aura/topology_baseline.json
         baseline_path = root / ".aura" / "topology_baseline.json"
@@ -106,15 +107,19 @@ def detect_topology_regression(previous: dict | None = None, current: dict | Non
                 import json
                 with open(baseline_path, "r", encoding="utf-8") as f:
                     previous = json.load(f)
+                    baseline_loaded = True
         except Exception:
             pass
+    else:
+        baseline_loaded = True
     if previous is None:
-        # No baseline available — use a default baseline to detect zero-node regression
-        previous = {"topology_nodes": 2203, "topology_edges": 2197, "topology_source": "existing_topology_json"}
+        # No persisted baseline available — use documented fallback baseline for zero-node regression detection
+        # Fallback values are from commit 6f48c2f's known-good topology state
+        previous = {"topology_nodes": 2203, "topology_edges": 2197, "topology_source": "fallback_baseline"}
     regressed = (
         current.get("topology_nodes", 0) == 0 and previous.get("topology_nodes", 0) > 0
     )
-    return {"ok": not regressed, "regression_detected": regressed, "baseline_available": True,
+    return {"ok": not regressed, "regression_detected": regressed, "baseline_available": baseline_loaded,
             "previous": previous, "current": current,
             "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 

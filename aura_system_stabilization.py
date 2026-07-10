@@ -103,13 +103,18 @@ def stabilization_status(repo_root: str | Path = ".") -> dict[str, Any]:
     try:
         from aura_agent_workbench_interface import list_agent_actions
         actions = list_agent_actions()
-        workbench_operational = len(actions)  # Declared actions
         # Check if actions actually route to real implementations
         from aura_coding_workbench_actions import open_workspace, scope_task, localize_code
         # If these don't raise, they're operational
         workbench_operational = len(actions)
     except Exception:
-        workbench_stubs = 15
+        # If we can't import workbench actions, they're all stubs
+        try:
+            from aura_agent_workbench_interface import list_agent_actions
+            actions = list_agent_actions()
+            workbench_stubs = len(actions)
+        except Exception:
+            workbench_stubs = 0
 
     # --- Cost Observatory ---
     cost_observatory_available = False

@@ -63,7 +63,11 @@ def _load_codemap(repo_root: Path) -> dict[str, Any]:
 
 
 def _normalize_path(path: str) -> str:
-    return path.replace("\\", "/").strip().lstrip("./")
+    normalized = path.replace("\\", "/").strip()
+    # Remove literal leading "./" prefix (not "../" or dotfiles like ".aura")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
 
 
 def _extract_keywords(text: str) -> list[str]:
@@ -150,6 +154,7 @@ def resolve_capabilities(
                 })
 
     # Keyword-matched symbols
+    docs_seen = set()  # Track docs to avoid duplicates
     for sym_name, occurrences in si.items():
         if len(related_functions) >= top_k:
             break
@@ -165,14 +170,19 @@ def resolve_capabilities(
                         "tests": [], "docs": [], "commands": [],
                         "risk": "low", "grounding_class": "EXACT",
                     })
-                    # Check for tests
+                    # Check for tests and docs
                     stem = Path(fp).stem if fp else ""
                     test_candidates = [f"test_{stem}.py", f"tests/test_{stem}.py"]
+                    doc_candidates = [f"{stem}.md", f"docs/{stem}.md", "README.md"]
                     files = codemap.get("files", [])
                     file_paths = {str(f.get("path", "")) for f in files if isinstance(f, dict)} if isinstance(files, list) else set()
                     for tc in test_candidates:
                         if tc in file_paths:
                             tests.append(tc)
+                    for dc in doc_candidates:
+                        if dc in file_paths and dc not in docs_seen:
+                            docs.append(dc)
+                            docs_seen.add(dc)
 
     # Command index
     ci = codemap.get("command_index", {})
@@ -235,21 +245,6 @@ def resolve_capabilities(
                 f"python -m aura_agent_arena_cli read-slice --file {rel['file']} --symbol {rel['symbol']}"
             )
 
-    # --- Reuse plan ---
-    reuse_plan: list[dict[str, Any]] = []
-    do_not_reinvent: list[str] = []
-    for aff in existing_affordances[:5]:
-        reuse_plan.append({
-            "capability_id": aff.get("id", ""),
-            "name": aff.get("name", ""),
-            "action": "reuse",
-            "implemented_by": aff.get("implemented_by", []),
-        })
-        do_not_reinvent.append(
-            f"Do not reinvent: {aff.get('name', '')} ({aff.get('id', '')}) "
-            f"already handles this. Use: {', '.join(aff.get('implemented_by', [])[:2])}."
-        )
-
     # --- Missing capabilities ---
     missing_capabilities: list[dict[str, Any]] = []
     # Check if topology is degraded
@@ -274,10 +269,12 @@ def resolve_capabilities(
     confidence = min(1.0, confidence)
 
     # --- Token budget enforcement ---
-    # Estimate packet size and trim if over budget
+    # Estimate packet size including all output collections and trim if over budget
     estimated_tokens = len(json.dumps({
         "exact_matches": exact_matches, "related_functions": related_functions,
         "existing_affordances": existing_affordances, "capability_lanes": capability_lanes,
+        "plugin_organs": plugin_organs, "agent_tools": agent_tools,
+        "commands": commands, "read_slice_commands": read_slice_commands,
     }, default=str)) // 4
     if estimated_tokens > token_budget:
         # Trim to fit budget
@@ -286,6 +283,21 @@ def resolve_capabilities(
         related_functions = related_functions[:max_items]
         existing_affordances = existing_affordances[:max_items]
         capability_lanes = capability_lanes[:max_items]
+
+    # --- Reuse plan (built AFTER trimming to use final trimmed affordances) ---
+    reuse_plan: list[dict[str, Any]] = []
+    do_not_reinvent: list[str] = []
+    for aff in existing_affordances[:5]:
+        reuse_plan.append({
+            "capability_id": aff.get("id", ""),
+            "name": aff.get("name", ""),
+            "action": "reuse",
+            "implemented_by": aff.get("implemented_by", []),
+        })
+        do_not_reinvent.append(
+            f"Do not reinvent: {aff.get('name', '')} ({aff.get('id', '')}) "
+            f"already handles this. Use: {', '.join(aff.get('implemented_by', [])[:2])}."
+        )
 
     # --- Module manifest hash ---
     module_manifest_hash = ""
