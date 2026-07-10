@@ -102,6 +102,45 @@
       </section>
     </aside>
   </main>
+
+  <!-- Civic Commons Arena Workspace -->
+  <section id="civic-workspace" class="civic-workspace" aria-label="Civic Commons Arena" role="region">
+    <h2>Civic Commons Arena</h2>
+    <div class="civic-controls">
+      <button id="civic-create-btn" onclick="civicCreateSession()" aria-label="Create Civic Session">Create Session</button>
+      <input id="civic-objective" type="text" placeholder="Enter community objective..." aria-label="Community objective" style="flex:1;min-width:300px">
+      <select id="civic-story" aria-label="Demo story">
+        <option value="hairstylist">Hairstyling Service</option>
+        <option value="youth_centre">Youth Centre</option>
+        <option value="council_pulse">Council Pulse</option>
+      </select>
+      <button id="civic-demo-btn" onclick="civicRunDemo()" aria-label="Run full demo">Run Demo</button>
+    </div>
+    <div id="civic-session-info" class="civic-session-info" aria-live="polite"></div>
+    <div class="civic-panels">
+      <div class="civic-panel" id="civic-objective-panel"><h3>Objective</h3><div id="civic-objective-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-profiles-panel"><h3>Active Profiles</h3><div id="civic-profiles-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-map-panel"><h3>Map</h3><div id="civic-map-data" class="panel-data"><p class="placeholder">No map data. Run a demo to load.</p></div></div>
+      <div class="civic-panel" id="civic-needs-panel"><h3>Community Needs</h3><div id="civic-needs-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-assets-panel"><h3>Community Assets</h3><div id="civic-assets-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-offers-panel"><h3>Resource Offers</h3><div id="civic-offers-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-workstreams-panel"><h3>MITOSIS Workstreams</h3><div id="civic-workstreams-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-scenarios-panel"><h3>MUSIC Scenario Comparison</h3><div id="civic-scenarios-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-legal-panel"><h3>Applicable Laws and Bylaws</h3><div id="civic-legal-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-council-panel"><h3>Council Issue Pulse</h3><div id="civic-council-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-consent-panel"><h3>Consent Arc</h3><div id="civic-consent-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-objections-panel"><h3>Reservations and Objections</h3><div id="civic-objections-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-gaps-panel"><h3>Representation Gaps</h3><div id="civic-gaps-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-systemic-panel"><h3>Systemic Context</h3><div id="civic-systemic-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-friction-panel"><h3>Democratic Friction</h3><div id="civic-friction-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-whatif-panel"><h3>What-If</h3><div id="civic-whatif-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-pilot-panel"><h3>Pilot Tunnel</h3><div id="civic-pilot-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-evidence-panel"><h3>Evidence Inspector</h3><div id="civic-evidence-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-cost-panel"><h3>Cost and Performance</h3><div id="civic-cost-data" class="panel-data"></div></div>
+      <div class="civic-panel" id="civic-audit-panel"><h3>Audit and Dissolution</h3><div id="civic-audit-data" class="panel-data"></div></div>
+    </div>
+    <div id="civic-decision-packet" class="civic-decision-packet" aria-live="polite"></div>
+  </section>
   <script src="main.js"></script>
 </body>
 </html>

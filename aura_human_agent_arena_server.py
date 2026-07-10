@@ -38,6 +38,134 @@ class HumanAgentArenaServerState:
         self.arena = HumanAgentArena(self.repo_root, demo=self.demo)
 
 
+def _handle_civic_api(method: str, route: str, parsed, body: dict) -> tuple[int, dict]:
+    """Handle Civic Commons Arena API requests."""
+    from urllib.parse import urlparse
+    path_parts = parsed.path.strip("/").split("/")
+    # /api/civic/status, /api/civic/sessions, /api/civic/sessions/{id}/...
+    PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
+    VSA_PATCH_AUTHORITY = False
+
+    def _err(msg, code=400): return code, {"ok": False, "error": msg,
+        "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    try:
+        from aura_civic_runtime import (
+            create_civic_session, get_session, run_full_demo,
+            add_contribution, match_resources, run_mitosis, run_scenarios,
+            get_consent, record_consent_response, run_what_if,
+            create_pilot, get_issue_pulse, export_packet, close_session,
+            civic_status, select_profiles,
+        )
+    except Exception as e:
+        return _err(f"civic_runtime_unavailable: {e}", 503)
+
+    # GET /api/civic/status
+    if method == "GET" and route == "/api/civic/status":
+        from aura_civic_snapshots import list_snapshots
+        snaps = list_snapshots()
+        return 200, {"ok": True, "civic_available": True, "snapshots": snaps.get("snapshots", []),
+                     "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+
+    # POST /api/civic/sessions
+    if method == "POST" and route == "/api/civic/sessions":
+        objective = body.get("objective", "")
+        story = body.get("story", "hairstylist")
+        r = create_civic_session(objective)
+        if r["ok"] and story:
+            from aura_civic_runtime import _update_session
+            _update_session(r["session"]["session_id"], {"story": story})
+        return 200, r
+
+    # GET /api/civic/sessions/{id}
+    if method == "GET" and len(path_parts) == 4 and path_parts[2] == "sessions":
+        sid = path_parts[3]
+        return 200, get_session(sid)
+
+    # POST /api/civic/sessions/{id}/profiles
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "profiles":
+        sid = path_parts[3]
+        return 200, select_profiles(sid, body.get("profile_refs", []))
+
+    # POST /api/civic/sessions/{id}/contributions
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "contributions":
+        sid = path_parts[3]
+        return 200, add_contribution(sid, body)
+
+    # POST /api/civic/sessions/{id}/resource-match
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "resource-match":
+        return 200, match_resources(path_parts[3])
+
+    # POST /api/civic/sessions/{id}/mitosis
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "mitosis":
+        return 200, run_mitosis(path_parts[3])
+
+    # POST /api/civic/sessions/{id}/scenarios
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "scenarios":
+        return 200, run_scenarios(path_parts[3])
+
+    # POST /api/civic/sessions/{id}/responses
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "responses":
+        return 200, record_consent_response(path_parts[3], body)
+
+    # GET /api/civic/sessions/{id}/consent
+    if method == "GET" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "consent":
+        return 200, get_consent(path_parts[3])
+
+    # GET /api/civic/sessions/{id}/map-manifest
+    if method == "GET" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "map-manifest":
+        s = get_session(path_parts[3])
+        if s["ok"]:
+            mm = s["session"].get("map_manifest", {})
+            return 200, {"ok": True, "map_manifest": mm, "accessible_table_parity": True,
+                         "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return 200, s
+
+    # GET /api/civic/sessions/{id}/evidence/{object_id}
+    if method == "GET" and len(path_parts) == 6 and path_parts[2] == "sessions" and path_parts[4] == "evidence":
+        s = get_session(path_parts[3])
+        if s["ok"]:
+            oid = path_parts[5]
+            instruments = s["session"].get("legal_instruments", [])
+            for li in instruments:
+                if li.get("id", li.get("source_id", "")) == oid:
+                    return 200, {"ok": True, "evidence": li,
+                                 "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return 404, _err("evidence not found", 404)
+
+    # GET /api/civic/sessions/{id}/legal/{scenario_id}
+    if method == "GET" and len(path_parts) == 6 and path_parts[2] == "sessions" and path_parts[4] == "legal":
+        s = get_session(path_parts[3])
+        if s["ok"]:
+            instruments = s["session"].get("legal_instruments", [])
+            return 200, {"ok": True, "legal_instruments": instruments,
+                         "no_legal_approval": True, "disclaimer": "Aura is not providing legal advice.",
+                         "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
+        return 200, s
+
+    # GET /api/civic/sessions/{id}/issue-pulse
+    if method == "GET" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "issue-pulse":
+        return 200, get_issue_pulse(path_parts[3])
+
+    # POST /api/civic/sessions/{id}/what-if
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "what-if":
+        return 200, run_what_if(path_parts[3], body)
+
+    # POST /api/civic/sessions/{id}/pilot
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "pilot":
+        return 200, create_pilot(path_parts[3], body.get("scenario_id", ""))
+
+    # POST /api/civic/sessions/{id}/export
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "export":
+        return 200, export_packet(path_parts[3])
+
+    # POST /api/civic/sessions/{id}/close
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "close":
+        return 200, close_session(path_parts[3])
+
+    return 404, _err("civic route not found", 404)
+
+
 def dispatch_api_request(
     state: HumanAgentArenaServerState,
     method: str,
@@ -56,6 +184,10 @@ def dispatch_api_request(
     query = parse_qs(parsed.query)
     route = parsed.path.rstrip("/") or "/"
     body = dict(payload or {})
+
+    # ---- Civic Commons Arena API ----
+    if route.startswith("/api/civic"):
+        return _handle_civic_api(method, route, parsed, body)
 
     # GET /api/human-agent/state
     if method == "GET" and route == "/api/human-agent/state":

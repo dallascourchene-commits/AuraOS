@@ -349,3 +349,20 @@ pre {
     grid-template-columns: minmax(0, 1fr) 56px 64px;
   }
 }
+/* Civic Commons Arena */
+.civic-workspace { padding: 1rem; border-top: 2px solid var(--accent); }
+.civic-controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.civic-controls button { padding: 0.4rem 1rem; cursor: pointer; }
+.civic-controls input, .civic-controls select { padding: 0.4rem; background: var(--bg); color: var(--fg); border: 1px solid var(--border); }
+.civic-session-info { margin-bottom: 1rem; font-size: 0.85rem; color: var(--muted); }
+.civic-panels { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; }
+.civic-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem; }
+.civic-panel h3 { font-size: 0.9rem; margin: 0 0 0.5rem 0; color: var(--accent); }
+.panel-data { font-size: 0.8rem; line-height: 1.4; max-height: 200px; overflow-y: auto; }
+.panel-data table { width: 100%; border-collapse: collapse; }
+.panel-data th, .panel-data td { padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+.panel-data .truth-class { font-size: 0.7rem; padding: 0.1rem 0.3rem; border-radius: 2px; background: var(--accent); color: var(--bg); }
+.civic-decision-packet { margin-top: 1rem; padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; max-height: 400px; overflow-y: auto; }
+.placeholder { color: var(--muted); font-style: italic; }
+@media (prefers-reduced-motion: reduce) { .civic-panel { transition: none; } }
+@media (max-width: 600px) { .civic-panels { grid-template-columns: 1fr; } }

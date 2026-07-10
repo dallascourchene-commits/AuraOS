@@ -25,22 +25,38 @@ CIVIC_SESSION_STATES = (
 
 
 _sessions: dict[str, dict[str, Any]] = {}  # in-memory fallback
+_store_instance = None  # cached singleton
 
 
 def _get_store():
-    """Get the persistent civic session store (lazy import for test isolation)."""
+    """Get the persistent civic session store (cached singleton)."""
+    global _store_instance
+    if _store_instance == "IN_MEMORY_ONLY":
+        return None  # in-memory fallback only
+    if _store_instance is not None:
+        return _store_instance
     try:
         from aura_civic_session_store import CivicSessionStore
-        return CivicSessionStore()
+        _store_instance = CivicSessionStore()
+        return _store_instance
     except Exception:
         return None
 
 
+_ephemeral_store_instance = None
+
+
 def _get_ephemeral_store():
-    """Get the persistent ephemeral registry store."""
+    """Get the persistent ephemeral registry store (cached singleton)."""
+    global _ephemeral_store_instance
+    if _ephemeral_store_instance == "IN_MEMORY_ONLY":
+        return None
+    if _ephemeral_store_instance is not None:
+        return _ephemeral_store_instance
     try:
         from aura_ephemeral_registry_store import EphemeralRegistryStore
-        return EphemeralRegistryStore()
+        _ephemeral_store_instance = EphemeralRegistryStore()
+        return _ephemeral_store_instance
     except Exception:
         return None
 
@@ -183,6 +199,12 @@ def run_civic_organ(session_id: str, organ_type: str) -> dict[str, Any]:
 
 def run_full_demo(*, story: str = "hairstylist") -> dict[str, Any]:
     """One-shot atomic demo command. Executes the full lifecycle."""
+    # Use in-memory only for demos to avoid SQLite lock contention
+    # by setting stores to a sentinel that _get_store checks
+    global _store_instance, _ephemeral_store_instance
+    _store_instance = "IN_MEMORY_ONLY"
+    _ephemeral_store_instance = "IN_MEMORY_ONLY"
+
     from aura_civic_demo_fixtures import hairstylist_fixtures, youth_centre_fixtures, council_issue_fixtures
 
     if story == "hairstylist":
