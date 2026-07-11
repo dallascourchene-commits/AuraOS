@@ -16,7 +16,7 @@ from aura_arena_experience_ledger import ArenaExperienceLedger
 from aura_arena_wfst_compiler import ARENA_WFST_COMPILER_VERSION
 from aura_arena_wfst_runtime import ARENA_WFST_RUNTIME_VERSION, ArenaWFSTRuntime
 
-HUMAN_AGENT_WFST_ADAPTER_VERSION = "AURA_HUMAN_AGENT_WFST_ADAPTER_V1"
+HUMAN_AGENT_WFST_ADAPTER_VERSION = "AURA_HUMAN_AGENT_WFST_ADAPTER_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -46,6 +46,15 @@ class HumanAgentWFSTController:
             telemetry=telemetry,
         )
 
+    def route_action(
+        self,
+        action_id: str,
+        *,
+        payload: dict[str, Any] | None = None,
+        telemetry: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return self.route_command(action_id, payload=payload, telemetry=telemetry)
+
     def route_command(
         self,
         command: str,
@@ -57,7 +66,14 @@ class HumanAgentWFSTController:
         payload = dict(payload or {})
         state_before = self._workflow_state()
         if not text:
-            return {"ok": False, "reason": "command_required", "state": state_before}
+            return {
+                "ok": False,
+                "status": "DENIED",
+                "reason": "command_required",
+                "message": "Command is required.",
+                "state": state_before,
+                "workflow": self._workflow_snapshot(),
+            }
         if not self._ready():
             return self._initialization_denial(state_before)
 
@@ -66,13 +82,9 @@ class HumanAgentWFSTController:
             if value not in (None, "", [], {}, ()):
                 evidence_view[key] = value
 
+        started = time.time()
         route_input = text
         execution_payload = payload
-        if state_before == "FRAME":
-            route_input = "HUMAN.SET_OBJECTIVE"
-            execution_payload = {**payload, "objective": text}
-
-        started = time.time()
         route = self.runtime.route(
             arena_id="human_agent",
             current_state=state_before,
@@ -82,42 +94,75 @@ class HumanAgentWFSTController:
             policy=self._policy(),
             telemetry=telemetry,
         )
+
+        if state_before == "FRAME" and not route.get("selected"):
+            route_input = "HUMAN.SET_OBJECTIVE"
+            execution_payload = {**payload, "objective": text}
+            route = self.runtime.route(
+                arena_id="human_agent",
+                current_state=state_before,
+                input_text=route_input,
+                evidence=evidence_view,
+                context=self._context(),
+                policy=self._policy(),
+                telemetry=telemetry,
+            )
+
         selected = route.get("selected") if isinstance(route, dict) else None
         if not selected:
             outcome = "BLOCKED" if route.get("blocked") else "ABSTAINED"
-            recording = self._record_experience(
-                started_at=started,
-                state_before=state_before,
-                state_after=state_before,
-                selected_transition="",
-                final_outcome=outcome,
+            result = {
+                **route,
+                "ok": False,
+                "status": outcome,
+                "message": _blocked_message(route),
+                "workflow": self._workflow_snapshot(),
+            }
+            result["experience_recording"] = self._record_experience(
+                started_at=started, state_before=state_before, state_after=state_before,
+                selected_transition="", final_outcome=outcome,
                 payload={"command": text, "route": route},
             )
-            return {**route, "experience_recording": recording}
+            return result
 
         if selected.get("meta_transition"):
             response = self._meta_response(selected, route)
-            recording = self._record_experience(
-                started_at=started,
-                state_before=state_before,
-                state_after=state_before,
+            result = {
+                **route,
+                "ok": True,
+                "status": "META_COMPLETED",
+                "action_id": str(selected.get("transition_id") or ""),
+                "message": "Meta guidance returned without changing workflow state.",
+                "meta_response": response,
+                "workflow": self._workflow_snapshot(),
+            }
+            result["experience_recording"] = self._record_experience(
+                started_at=started, state_before=state_before, state_after=state_before,
                 selected_transition=str(selected.get("transition_id") or ""),
                 final_outcome="META_COMPLETED",
                 payload={"command": text, "route": route, "meta_response": response},
             )
-            return {**route, "meta_response": response, "experience_recording": recording}
+            return result
 
         action_id = str((selected.get("provenance") or {}).get("action_id") or "")
         if not action_id:
-            recording = self._record_experience(
-                started_at=started,
-                state_before=state_before,
-                state_after=state_before,
+            result = {
+                **route,
+                "ok": False,
+                "status": "DENIED",
+                "reason": "selected_transition_has_no_action_binding",
+                "message": "The selected transition has no grounded action binding.",
+                "fail_closed": True,
+                "workflow": self._workflow_snapshot(),
+            }
+            result["experience_recording"] = self._record_experience(
+                started_at=started, state_before=state_before, state_after=state_before,
                 selected_transition=str(selected.get("transition_id") or ""),
                 final_outcome="DENIED",
                 payload={"command": text, "route": route, "failure": "selected_transition_has_no_action_binding"},
             )
-            return {**route, "ok": False, "reason": "selected_transition_has_no_action_binding", "fail_closed": True, "experience_recording": recording}
+            return result
+
         result = self.workflow.execute(action_id, execution_payload)
         state_after = self._workflow_state()
         final_outcome = "COMPLETED" if result.get("ok") else "DENIED"
@@ -136,10 +181,7 @@ class HumanAgentWFSTController:
             },
         )
         return {
-            "ok": bool(result.get("ok")),
-            "status": result.get("status"),
-            "action_id": action_id,
-            "action_result": result,
+            **result,
             "route_decision": route,
             "experience_recording": recording,
             "patch_authority": PATCH_AUTHORITY,
@@ -155,8 +197,17 @@ class HumanAgentWFSTController:
         return bool(self.initialization.get("human", {}).get("ok") and self.initialization.get("meta", {}).get("ok"))
 
     def _workflow_state(self) -> str:
+        current_phase = getattr(self.workflow, "current_phase", None)
+        if callable(current_phase):
+            return str(current_phase() or "FRAME")
         state = self.workflow.get_state()
         return str(state.get("current_phase") or "FRAME")
+
+    def _workflow_snapshot(self) -> dict[str, Any]:
+        snapshot = getattr(self.workflow, "get_state_without_routing", None)
+        if callable(snapshot):
+            return dict(snapshot())
+        return dict(self.workflow.get_state())
 
     def _context(self) -> dict[str, Any]:
         return {
@@ -184,7 +235,7 @@ class HumanAgentWFSTController:
             return None
         try:
             self._ledger = ArenaExperienceLedger(self.repo_root)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             self._ledger_error = f"experience_ledger_unavailable:{type(exc).__name__}"
             return None
         return self._ledger
@@ -225,7 +276,7 @@ class HumanAgentWFSTController:
                 source_hashes=_source_hashes_from_evidence(evidence),
             )
             result = ledger.record(experience)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             return {"ok": False, "reason": f"experience_record_failed:{type(exc).__name__}", "persistent": False}
         return {**result, "persistent": bool(result.get("ok"))}
 
@@ -248,13 +299,23 @@ class HumanAgentWFSTController:
     def _initialization_denial(self, state: str) -> dict[str, Any]:
         return {
             "ok": False,
+            "status": "DENIED",
             "reason": "human_agent_wfst_initialization_failed",
+            "message": "The Human Agent grammar did not initialize; routing failed closed.",
             "state": state,
             "initialization": self.initialization,
             "fail_closed": True,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
+
+
+def _blocked_message(route: dict[str, Any]) -> str:
+    blocked = list(route.get("blocked") or [])
+    if not blocked:
+        return "No safe state-local transition matched. Clarification is required."
+    missing = sorted({item for row in blocked for item in row.get("missing_evidence", [])})
+    return "Transition blocked by hard guards." + (f" Missing: {', '.join(missing)}." if missing else "")
 
 
 def _bounded_result(result: dict[str, Any]) -> dict[str, Any]:
