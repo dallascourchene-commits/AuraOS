@@ -61,6 +61,29 @@ POST /api/coding-workbench/action
 POST /api/coding-workbench/command
 ```
 
+## Live terminal client
+
+Start the local server:
+
+```bash
+python -m aura_human_agent_arena_server
+```
+
+Then inspect or drive the same persistent guarded sessions from another terminal:
+
+```bash
+python -m aura_arena_live_cli human-routes
+python -m aura_arena_live_cli human-command "Refactor the Human Agent Arena"
+python -m aura_arena_live_cli human-action ground_context
+
+python -m aura_arena_live_cli coding-state
+python -m aura_arena_live_cli coding-command "Refactor the routing layer"
+python -m aura_arena_live_cli coding-action localize_code
+```
+
+The live client calls the local server through stdlib HTTP. It does not create a
+second workflow state or bypass the server's guards.
+
 ## Authority remains unchanged
 
 ```yaml
@@ -76,3 +99,12 @@ automatic_merge: false
 
 The WFST admits and ranks transitions. Existing leases, tools, sandboxes, tests,
 verifiers, and human review remain the authority for consequential work.
+
+## Required before merge
+
+- Run the full repository test suite from a real checkout.
+- Refresh `.aura/CODEMAP.md`, `.aura/CODEMAP.json`, module manifests, affordances,
+  and generated topology metadata using Aura's generators.
+- Review whether the small live client should remain standalone or be registered as
+  additive subcommands in the large primary `aura_agent_arena_cli.py`.
+- Review frontend accessibility and keyboard behavior for generated route buttons.
