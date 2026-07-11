@@ -106,3 +106,37 @@ def test_session_scopes_free_form_objective_and_only_generates_pr_command(tmp_pa
     assert packet["pr_opened"] is False
     assert packet["produced_evidence"]["pr_packet"]["executed"] is False
     assert packet["produced_evidence"]["pr_packet"]["draft"] is True
+
+
+def test_workspace_meta_and_alias_are_routed_before_objective_fallback(tmp_path: Path):
+    routes = tmp_path / ".aura" / "arena_routes"
+    routes.mkdir(parents=True)
+    shutil.copy(MANIFEST, routes / "coding.v1.json")
+    shutil.copy(REPO_ROOT / ".aura" / "arena_routes" / "meta.v1.json", routes / "meta.v1.json")
+    session = CodingWorkbenchWFSTSession(tmp_path, restore=False)
+    help_result = session.route_command("help")
+    assert help_result["status"] == "META_COMPLETED"
+    assert session.state is WorkbenchState.WORKSPACE_OPENED
+    assert session.objective == ""
+    topology = session.route_command("topology health")
+    session.close()
+    assert topology["action_id"] == "check_topology"
+    assert session.objective == ""
+
+
+def test_prepare_handoff_accepts_existing_task_id(monkeypatch, tmp_path: Path):
+    routes = tmp_path / ".aura" / "arena_routes"
+    routes.mkdir(parents=True)
+    shutil.copy(MANIFEST, routes / "coding.v1.json")
+    shutil.copy(REPO_ROOT / ".aura" / "arena_routes" / "meta.v1.json", routes / "meta.v1.json")
+    import aura_coding_workbench_actions as actions
+    monkeypatch.setattr(actions, "prepare_agent_handoff", lambda capsule_id, agent, repo_root: {
+        "ok": True, "handoff_packet": {"capsule_id": capsule_id, "agent": agent}
+    })
+    session = CodingWorkbenchWFSTSession(tmp_path, restore=False)
+    session.state = WorkbenchState.ACT_CAPSULES_CREATED
+    session.evidence["act_capsules"] = [{"task_id": "A1", "objective": "test"}]
+    result = session.route_action("prepare_agent_handoff")
+    session.close()
+    assert result["ok"] is True
+    assert result["produced_evidence"]["agent_handoff_packet"]["capsule_id"] == "A1"
