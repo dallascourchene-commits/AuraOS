@@ -130,11 +130,28 @@ class CodingWorkbenchWFSTSession:
         payload = dict(payload or {})
         if not text:
             return self._denial("command_required")
-        route_input = text
-        if self.state is WorkbenchState.WORKSPACE_OPENED and not _looks_like_declared_action(text):
-            route_input = "scope_task"
-            payload = {**payload, "objective": text}
-        return self.route_action(route_input, payload=payload, telemetry=telemetry, original_command=text)
+        if self.state is WorkbenchState.WORKSPACE_OPENED:
+            evidence_view = dict(self.evidence)
+            for key, value in payload.items():
+                if value not in (None, "", [], {}, ()):
+                    evidence_view[key] = value
+            preview = self.runtime.route(
+                arena_id="coding_workbench",
+                current_state=self.state.value,
+                input_text=text,
+                evidence=evidence_view,
+                context=self._context(payload),
+                policy=self._policy(),
+                telemetry=telemetry,
+            )
+            if not preview.get("selected"):
+                return self.route_action(
+                    "scope_task",
+                    payload={**payload, "objective": text},
+                    telemetry=telemetry,
+                    original_command=text,
+                )
+        return self.route_action(text, payload=payload, telemetry=telemetry, original_command=text)
 
     def route_action(
         self,
@@ -424,7 +441,14 @@ class CodingWorkbenchWFSTSession:
         from aura_coding_workbench_actions import prepare_agent_handoff
         capsules = self.evidence.get("act_capsules")
         items = capsules if isinstance(capsules, list) else (capsules.get("act_capsules", []) if isinstance(capsules, dict) else [])
-        capsule_id = str(payload.get("capsule_id") or (items[0].get("capsule_id") if items and isinstance(items[0], dict) else ""))
+        first = items[0] if items and isinstance(items[0], dict) else {}
+        capsule_id = str(
+            payload.get("capsule_id")
+            or first.get("capsule_id")
+            or first.get("task_id")
+            or first.get("child_id")
+            or ""
+        )
         if not capsule_id:
             return self._denial("capsule_id_required", action_id="prepare_agent_handoff")
         output = prepare_agent_handoff(capsule_id, agent=str(payload.get("agent") or "hermes"), repo_root=self.repo_root)
@@ -795,11 +819,6 @@ def _meta_response(selected: dict[str, Any], route: dict[str, Any]) -> dict[str,
     if transition_id == "META.WHAT_NEXT":
         return {"kind": "what_next", "recommended": [item for item in route.get("recommended", []) if not item.get("meta_transition")]}
     return {"kind": transition_id.casefold().replace(".", "_"), "state": route.get("state"), "recommended": route.get("recommended", []), "blocked": route.get("blocked", [])}
-
-
-def _looks_like_declared_action(value: str) -> bool:
-    normalized = str(value or "").strip().casefold().replace("-", "_").replace(" ", "_")
-    return any(normalized in {action.casefold(), f"coding.{state.value}.{action}".casefold()} for state, gate in GATE_DEFINITIONS.items() for action in gate.allowed_actions)
 
 
 def _git_value(repo_root: Path, args: list[str]) -> str:
