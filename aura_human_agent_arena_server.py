@@ -4,11 +4,12 @@ ST3GG_BASE: 0xa9f4-[Q-SYS:HUMAN_AGENT_ARENA_SERVER]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Local Human Agent Arena HTTP Surface)
 DEPENDENCIES: __future__, argparse, http.server, json, mimetypes, pathlib, urllib.parse, typing,
-              aura_human_agent_arena, aura_human_agent_workflow
+              aura_human_agent_arena, aura_human_agent_workflow,
+              aura_coding_workbench_wfst_adapter
 FUNCTIONS: HumanAgentArenaServerState, dispatch_api_request, make_handler, serve, main
-SYNOPSIS: Local Human Agent Arena HTTP surface with additive grounded workflow,
-bounded ephemeral tools, and jurisdiction-aware Civic map projection. No direct
-production mutation. No provider APIs required.
+SYNOPSIS: Local Human Agent Arena HTTP surface with guarded-WFST Human and Coding
+workflow projections, bounded ephemeral tools, and jurisdiction-aware Civic map
+projection. No direct production mutation. No provider APIs required.
 [/AURA_MASTER_KEY]
 """
 
@@ -22,6 +23,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+from aura_coding_workbench_wfst_adapter import CodingWorkbenchWFSTSession
 from aura_human_agent_arena import HumanAgentArena
 from aura_human_agent_workflow import HumanAgentWorkflow
 
@@ -30,16 +32,22 @@ DEFAULT_PORT = 8090
 FRONTEND_DIR = Path(__file__).resolve().parent / "aura_human_agent_arena"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
+SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_3"
 
 
 class HumanAgentArenaServerState:
-    """Holds the legacy Arena plus the additive workflow/tool runtime."""
+    """Holds the spatial Arena plus guarded Human and Coding workflows."""
 
     def __init__(self, repo_root: str | Path = ".", *, demo: bool = False):
         self.repo_root = Path(repo_root).resolve()
         self.demo = bool(demo)
         self.arena = HumanAgentArena(self.repo_root, demo=self.demo)
         self.workflow = HumanAgentWorkflow(self.repo_root)
+        self.coding_workbench = CodingWorkbenchWFSTSession(self.repo_root)
+
+    def close(self) -> None:
+        self.workflow.close()
+        self.coding_workbench.close()
 
 
 def _error(message: str, code: int = 400) -> tuple[int, dict[str, Any]]:
@@ -213,12 +221,15 @@ def dispatch_api_request(
         return _handle_civic_api(method, route, parsed, body)
 
     if method == "GET" and route == "/api/human-agent/state":
+        workflow = state.workflow.get_state()
         return 200, {
             "ok": True,
-            "version": "AURA_HUMAN_AGENT_ARENA_V1",
+            "version": SERVER_VERSION,
             "state": state.arena.get_state(),
             "topology": state.arena.topology,
-            "workflow": state.workflow.get_state(),
+            "workflow": workflow,
+            "routing": workflow.get("routing", {}),
+            "coding_workbench": state.coding_workbench.get_state(),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -233,18 +244,53 @@ def dispatch_api_request(
     if method == "GET" and route == "/api/human-agent/workflow":
         return 200, state.workflow.get_state()
 
+    if method == "GET" and route == "/api/human-agent/routes":
+        workflow = state.workflow.get_state()
+        return 200, {
+            "ok": bool(workflow.get("routing", {}).get("ok")),
+            "workflow_id": workflow.get("workflow_id"),
+            "current_phase": workflow.get("current_phase"),
+            "routing": workflow.get("routing", {}),
+            "recommended": workflow.get("recommended", []),
+            "available": workflow.get("available", []),
+            "blocked": workflow.get("blocked", []),
+            "meta": workflow.get("meta", []),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
     if method == "POST" and route == "/api/human-agent/workflow/action":
         action_id = str(body.get("action_id") or "")
         if not action_id:
             return _error("action_id is required")
-        result = state.workflow.execute(action_id, dict(body.get("payload") or {}))
+        result = state.workflow.execute_guarded(action_id, dict(body.get("payload") or {}))
         return (200 if result.get("ok") else 409), result
 
     if method == "POST" and route == "/api/human-agent/workflow/command":
         command = str(body.get("command") or "")
         if not command.strip():
             return _error("command is required")
-        result = state.workflow.ingest_command(command)
+        result = state.workflow.ingest_command(command, dict(body.get("payload") or {}))
+        return (200 if result.get("ok") else 409), result
+
+    if method == "GET" and route == "/api/coding-workbench/state":
+        return 200, state.coding_workbench.get_state()
+
+    if method == "GET" and route == "/api/coding-workbench/routes":
+        return 200, state.coding_workbench.project_state()
+
+    if method == "POST" and route == "/api/coding-workbench/action":
+        action_id = str(body.get("action_id") or "")
+        if not action_id:
+            return _error("action_id is required")
+        result = state.coding_workbench.route_action(action_id, payload=dict(body.get("payload") or {}))
+        return (200 if result.get("ok") else 409), result
+
+    if method == "POST" and route == "/api/coding-workbench/command":
+        command = str(body.get("command") or "")
+        if not command.strip():
+            return _error("command is required")
+        result = state.coding_workbench.route_command(command, payload=dict(body.get("payload") or {}))
         return (200 if result.get("ok") else 409), result
 
     if method == "GET" and route == "/api/human-agent/tools":
@@ -323,6 +369,7 @@ def dispatch_api_request(
                 "vsa_patch_authority": VSA_PATCH_AUTHORITY,
             }
 
+    # Preserve the existing spatial topology lens as an optional secondary surface.
     if method == "POST" and route == "/api/human-agent/command":
         command = str(body.get("command") or "")
         if not command.strip():
@@ -342,7 +389,7 @@ def dispatch_api_request(
 
 def make_handler(state: HumanAgentArenaServerState):
     class HumanAgentArenaHandler(BaseHTTPRequestHandler):
-        server_version = "AuraHumanAgentArena/0.2"
+        server_version = "AuraHumanAgentArena/0.3"
 
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
@@ -388,6 +435,13 @@ def make_handler(state: HumanAgentArenaServerState):
                 self.send_error(404)
                 return
             body = candidate.read_bytes()
+            if rel == "index.html":
+                text = body.decode("utf-8", errors="replace")
+                if "wfst.css" not in text:
+                    text = text.replace("</head>", '  <link rel="stylesheet" href="wfst.css">\n</head>')
+                if "wfst.js" not in text:
+                    text = text.replace("</body>", '  <script src="wfst.js"></script>\n</body>')
+                body = text.encode("utf-8")
             mime = mimetypes.guess_type(str(candidate))[0] or "application/octet-stream"
             self.send_response(200)
             self.send_header("content-type", mime)
@@ -409,9 +463,13 @@ def serve(
     state = HumanAgentArenaServerState(repo_root, demo=demo)
     server = HTTPServer((host, int(port)), make_handler(state))
     print(f"Aura Human Agent Arena listening on http://{host}:{port}")
-    print("Grounded workflow and bounded ephemeral tools are active.")
+    print("Guarded Human and Coding WFST workflows are active.")
     print("No model/provider APIs are called by this server.")
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    finally:
+        state.close()
+        server.server_close()
     return server
 
 
