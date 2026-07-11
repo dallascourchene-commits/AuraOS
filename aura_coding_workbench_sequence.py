@@ -8,6 +8,7 @@ from typing import Any
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
+SEQUENCE_VERSION = "AURA_CODING_WORKBENCH_SEQUENCE_V2"
 
 
 class WorkbenchState(str, Enum):
@@ -73,7 +74,7 @@ GATE_DEFINITIONS: dict[WorkbenchState, WorkbenchGate] = {
         blocked_actions=["stage_patch"],
         required_evidence=["objective"],
         coding_artifacts_visible=["objective", "scope"],
-        next_actions=["CONTEXT_FILTERED"]),
+        next_actions=["CONTEXT_FILTERED", "CODE_LOCALIZED"]),
     WorkbenchState.CONTEXT_FILTERED: WorkbenchGate(
         WorkbenchState.CONTEXT_FILTERED,
         allowed_actions=["localize_code"],
@@ -87,14 +88,14 @@ GATE_DEFINITIONS: dict[WorkbenchState, WorkbenchGate] = {
         blocked_actions=["stage_patch"],
         required_evidence=["localized_files", "localized_symbols"],
         coding_artifacts_visible=["localized_files", "localized_symbols", "line_ranges"],
-        next_actions=["CODE_REGIONS_RANKED"]),
+        next_actions=["CODE_REGIONS_RANKED", "CONTEXT_SLICED"]),
     WorkbenchState.CODE_REGIONS_RANKED: WorkbenchGate(
         WorkbenchState.CODE_REGIONS_RANKED,
         allowed_actions=["slice_context", "build_change_graph"],
         blocked_actions=["stage_patch"],
         required_evidence=["ranked_regions"],
         coding_artifacts_visible=["ranked_regions", "confidence", "token_budget"],
-        next_actions=["CONTEXT_SLICED"]),
+        next_actions=["CONTEXT_SLICED", "CHANGE_GRAPH_BUILT"]),
     WorkbenchState.CONTEXT_SLICED: WorkbenchGate(
         WorkbenchState.CONTEXT_SLICED,
         allowed_actions=["build_change_graph"],
@@ -115,7 +116,7 @@ GATE_DEFINITIONS: dict[WorkbenchState, WorkbenchGate] = {
         blocked_actions=["stage_patch"],
         required_evidence=["refactor_candidates"],
         coding_artifacts_visible=["candidates", "risk_levels", "suggested_agents"],
-        next_actions=["WORK_SPLIT"]),
+        next_actions=["WORK_SPLIT", "ACT_CAPSULES_CREATED"]),
     WorkbenchState.WORK_SPLIT: WorkbenchGate(
         WorkbenchState.WORK_SPLIT,
         allowed_actions=["create_act_capsules"],
@@ -208,7 +209,7 @@ def can_transition(current: WorkbenchState, target: WorkbenchState) -> bool:
 
 def workbench_state_machine() -> dict[str, Any]:
     return {
-        "ok": True, "state_count": len(GATE_DEFINITIONS),
+        "ok": True, "version": SEQUENCE_VERSION, "state_count": len(GATE_DEFINITIONS),
         "states": [s.value for s in WorkbenchState],
         "gates": [g.to_dict() for g in GATE_DEFINITIONS.values()],
         "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY,
