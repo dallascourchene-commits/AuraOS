@@ -53,6 +53,48 @@ class HumanAgentWFSTController:
         payload: dict[str, Any] | None = None,
         telemetry: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        action_text = str(action_id or "").strip()
+        if not action_text:
+            return {
+                "ok": False,
+                "status": "DENIED",
+                "reason": "action_id_required",
+                "message": "Action ID is required.",
+                "state": self._workflow_state(),
+                "workflow": self._workflow_snapshot(),
+                "fail_closed": True,
+            }
+        if not self._ready():
+            return self._initialization_denial(self._workflow_state())
+
+        evidence_view = dict(getattr(self.workflow, "evidence", {}) or {})
+        for key, value in (payload or {}).items():
+            if value not in (None, "", [], {}, ()):
+                evidence_view[key] = value
+
+        route = self.runtime.route(
+            arena_id="human_agent",
+            current_state=self._workflow_state(),
+            input_text=action_text,
+            evidence=evidence_view,
+            context=self._context(),
+            policy=self._policy(),
+            telemetry=telemetry,
+        )
+
+        selected = route.get("selected") if isinstance(route, dict) else None
+        if not selected:
+            return {
+                **route,
+                "ok": False,
+                "status": "DENIED",
+                "reason": "unknown_action_id",
+                "message": f"Unknown action ID: {action_text}",
+                "state": self._workflow_state(),
+                "workflow": self._workflow_snapshot(),
+                "fail_closed": True,
+            }
+
         return self.route_command(action_id, payload=payload, telemetry=telemetry)
 
     def route_command(

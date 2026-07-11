@@ -57,6 +57,9 @@
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action_id: actionId, payload: {} }),
+    }).catch(error => {
+      console.error('Failed to activate transition:', actionId, error);
+      alert(`Failed to activate transition "${actionId}": ${error.message}`);
     }).finally(() => setTimeout(refresh, 50));
   }
 

@@ -85,3 +85,15 @@ def test_server_exposes_contextual_human_and_coding_routes(tmp_path: Path):
     assert "recommended" in human and "blocked" in human and "meta" in human
     assert coding_status == 200
     assert coding_result is coding_projection
+
+
+def test_execute_guarded_fails_closed_for_unknown_action_id(tmp_path: Path):
+    _copy_routes(tmp_path)
+    workflow = HumanAgentWorkflow(tmp_path)
+    result = workflow.execute_guarded("unknown_nonexistent_action_12345", {})
+    workflow.close()
+    assert result["ok"] is False
+    assert result["status"] == "DENIED"
+    assert result["fail_closed"] is True
+    assert result["reason"] == "unknown_action_id"
+    assert "unknown_nonexistent_action_12345" in result["message"]
