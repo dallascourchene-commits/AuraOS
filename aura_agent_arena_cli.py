@@ -132,6 +132,15 @@ try:
 except Exception:  # noqa: BLE001
     _CIVIC_AVAILABLE = False
 
+# Tensor Evidence Engine — optional import (additive)
+try:
+    from aura_coding_tensor_adapter import analyze_coding_region
+    from aura_civic_tensor_adapter import analyze_civic_session
+    from aura_tensor_evidence import TensorBeliefEngine, compress_factor
+    _TENSOR_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _TENSOR_AVAILABLE = False
+
 # Module-level bridge instance — persists across CLI calls within one process.
 _bridge: AuraAgentArenaBridge | None = None
 # Module-level plan_phase_hash — set by prepare, used by subsequent commands.
@@ -1142,6 +1151,87 @@ def cmd_civic_close(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Tensor Evidence commands
+# ---------------------------------------------------------------------------
+
+def _require_tensor():
+    if not _TENSOR_AVAILABLE:
+        print(json.dumps({"ok": False, "error": "tensor evidence engine not available"}))
+        raise SystemExit(1)
+
+
+def cmd_tensor_analyze_coding(args: argparse.Namespace) -> int:
+    _require_tensor()
+    result = analyze_coding_region(
+        node_ids=args.node_ids.split(",") if args.node_ids else [],
+        source_grounded=args.grounded,
+        tests_present=args.tests,
+        dependency_depth=args.deps or 0,
+        public_api_touched=args.public_api,
+        external_effects=args.external.split(",") if args.external else [],
+    )
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_tensor_analyze_civic(args: argparse.Namespace) -> int:
+    _require_tensor()
+    from aura_civic_runtime import get_session
+    s = get_session(args.session_id)
+    if not s["ok"]:
+        _print_json(s)
+        return 1
+    result = analyze_civic_session(s["session"])
+    _print_json(result)
+    return 0 if result.get("ok") else 1
+
+
+def cmd_tensor_compress(args: argparse.Namespace) -> int:
+    _require_tensor()
+    import numpy as np
+    # Demo: compress a random low-rank matrix
+    u = np.random.rand(8, 2); v = np.random.rand(2, 8)
+    tensor = u @ v
+    r = compress_factor(tensor, max_rank=args.max_rank, reconstruction_tolerance=args.tolerance)
+    _print_json(r)
+    return 0 if r.get("ok") else 1
+
+
+def cmd_tensor_show_contradictions(args: argparse.Namespace) -> int:
+    _require_tensor()
+    if not args.session_id:
+        _print_json({"ok": False, "error": "no session selected — provide --session-id"})
+        return 1
+    from aura_civic_runtime import get_session
+    s = get_session(args.session_id)
+    if not s["ok"]:
+        _print_json({"ok": False, "error": f"session not found: {args.session_id}"})
+        return 1
+    r = analyze_civic_session(s["session"])
+    contradicted = r["tensor_evidence_analysis"]["contradicted_variables"]
+    _print_json({"ok": True, "contradictions": contradicted,
+                 "advisory": "Contradictions are advisory only.",
+                 "patch_authority": "exact_source_spans_and_hashes_only"})
+    return 0
+
+
+def cmd_tensor_show_confinement(args: argparse.Namespace) -> int:
+    _require_tensor()
+    if not args.session_id:
+        _print_json({"ok": False, "error": "no session selected — provide --session-id"})
+        return 1
+    from aura_civic_runtime import get_session
+    s = get_session(args.session_id)
+    if not s["ok"]:
+        _print_json({"ok": False, "error": f"session not found: {args.session_id}"})
+        return 1
+    r = analyze_civic_session(s["session"])
+    conf = r["tensor_evidence_analysis"]["confinement"]
+    _print_json({"ok": True, "confinement": conf, "advisory": True})
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -1657,6 +1747,33 @@ def build_parser() -> argparse.ArgumentParser:
     p_ccl = subparsers.add_parser("civic-close", help="Close Civic session")
     p_ccl.add_argument("--session-id", required=True)
     p_ccl.set_defaults(func=cmd_civic_close)
+
+    # ---- Tensor Evidence commands ----
+    p_tac = subparsers.add_parser("tensor-analyze-coding", help="Analyze coding region with tensor BP")
+    p_tac.add_argument("--node-ids", default="")
+    p_tac.add_argument("--grounded", action="store_true")
+    p_tac.add_argument("--tests", action="store_true")
+    p_tac.add_argument("--deps", type=int, default=0)
+    p_tac.add_argument("--public-api", action="store_true")
+    p_tac.add_argument("--external", default="")
+    p_tac.set_defaults(func=cmd_tensor_analyze_coding)
+
+    p_tav = subparsers.add_parser("tensor-analyze-civic", help="Analyze civic session with tensor BP")
+    p_tav.add_argument("--session-id", required=True)
+    p_tav.set_defaults(func=cmd_tensor_analyze_civic)
+
+    p_tcp = subparsers.add_parser("tensor-compress", help="Demo tensor compression")
+    p_tcp.add_argument("--max-rank", type=int, default=None)
+    p_tcp.add_argument("--tolerance", type=float, default=1e-3)
+    p_tcp.set_defaults(func=cmd_tensor_compress)
+
+    p_tct = subparsers.add_parser("tensor-contradictions", help="Show contradictions")
+    p_tct.add_argument("--session-id", default="")
+    p_tct.set_defaults(func=cmd_tensor_show_contradictions)
+
+    p_tcf = subparsers.add_parser("tensor-confinement", help="Show confinement analysis")
+    p_tcf.add_argument("--session-id", default="")
+    p_tcf.set_defaults(func=cmd_tensor_show_confinement)
 
     return parser
 
