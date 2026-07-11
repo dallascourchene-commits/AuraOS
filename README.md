@@ -961,16 +961,6 @@ A healthy result should report non-zero topology nodes and edges.
 python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology
 ```
 
-### Important maintenance warning
-
-A normal incremental refresh defaults to `refresh_topology=False`. The fallback topology file lives under `Aura_Memory/`, which is normally runtime state and may be absent in a clean checkout. If an incremental refresh runs without a reusable topology artifact, it can preserve the file index while replacing topology counts with zero.
-
-Before committing generated maps:
-1. run a full deep rebuild or `--refresh-topology`;
-2. confirm `topology_nodes > 0`;
-3. confirm `topology_edges > 0`;
-4. run `stabilization-status`;
-5. reject the generated map if graph health regressed.
 
 ---
 
