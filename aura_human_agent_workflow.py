@@ -1,8 +1,9 @@
 """Grounded workflow spine for Aura's Human Agent Arena.
 
 The surface may be conversational, but every consequential step is governed by
-explicit evidence. Blocked actions return missing evidence and the next safe
-remediation. Nothing here merges or mutates production directly.
+explicit evidence. Phase A2 makes the guarded-WFST controller the default command
+and server-action path while preserving the existing action implementations.
+Nothing here merges or mutates production directly.
 """
 from __future__ import annotations
 
@@ -15,7 +16,7 @@ from aura_arena_tool_runtime import ArenaToolRuntime, list_tools
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-WORKFLOW_VERSION = "AURA_HUMAN_AGENT_WORKFLOW_V1"
+WORKFLOW_VERSION = "AURA_HUMAN_AGENT_WORKFLOW_V2"
 
 ACTIONS = (
     {"action_id":"set_objective","title":"Frame objective","phase":"FRAME","purpose":"Turn any request into the active bounded objective.","requires":(),"produces":("objective",)},
@@ -82,8 +83,6 @@ class ToolRuntimeFacade:
     @staticmethod
     def _normalize_outputs(tool_id: str, raw: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         if tool_id == "topology_inspector":
-            # ArenaToolRuntime returns direct localization fields. Retain support
-            # for the earlier nested grounding packet so callers see one shape.
             direct_files = list(result.get("localized_files") or [])
             direct_symbols = list(result.get("localized_symbols") or [])
             direct_ranges = list(result.get("line_ranges") or [])
@@ -148,8 +147,10 @@ class HumanAgentWorkflow:
         self.last_result: dict[str, Any] = {}
         self.event_log: list[dict[str, Any]] = []
         self.tools = ToolRuntimeFacade(self.repo_root)
-        self.state = self  # compatibility for existing server/tests expecting workflow.state
+        self.state = self
         self._bridge: Any = None
+        self._wfst_controller: Any = None
+        self._wfst_error = ""
         self._event("init","Grounded Human-Agent workflow opened")
 
     def _bridge_instance(self) -> Any:
@@ -157,6 +158,23 @@ class HumanAgentWorkflow:
             from aura_agent_arena_bridge import AuraAgentArenaBridge
             self._bridge = AuraAgentArenaBridge(repo_root=self.repo_root)
         return self._bridge
+
+    def _wfst_instance(self) -> Any:
+        if self._wfst_controller is not None:
+            return self._wfst_controller
+        if self._wfst_error:
+            return None
+        try:
+            from aura_human_agent_wfst_adapter import HumanAgentWFSTController
+            self._wfst_controller = HumanAgentWFSTController(self, repo_root=self.repo_root)
+        except Exception as exc:  # noqa: BLE001
+            self._wfst_error = f"human_agent_wfst_unavailable:{type(exc).__name__}"
+            return None
+        return self._wfst_controller
+
+    def close(self) -> None:
+        if self._wfst_controller is not None:
+            self._wfst_controller.close()
 
     def _event(self, kind: str, detail: str) -> None:
         self.event_log.append({"ts":time.time(),"kind":kind,"detail":detail})
@@ -177,104 +195,189 @@ class HumanAgentWorkflow:
         }
         return [{"label":mapping.get(item,(f"Provide {item}",""))[0],"action":mapping.get(item,("", ""))[1],"evidence":item} for item in missing]
 
-    def get_state(self) -> dict[str, Any]:
+    def _action_states(self) -> list[dict[str, Any]]:
         actions = []
         for action in ACTIONS:
             missing = [key for key in action.get("requires",()) if not self._has(key)]
             complete = bool(action.get("produces")) and all(self._has(key) for key in action.get("produces",()))
-            actions.append({**action,"requires":list(action.get("requires",())),"produces":list(action.get("produces",())),
-                            "status":"COMPLETE" if complete else ("BLOCKED" if missing else "READY"),
-                            "missing_evidence":missing,"enabled":not missing,"remediation":self._remediation(missing)})
-        current = next((phase for phase in PHASES if any(a["phase"]==phase and a["status"] in {"READY","BLOCKED"} for a in actions)),"DECIDE")
-        return {"ok":True,"version":WORKFLOW_VERSION,"workflow_id":self.workflow_id,"objective":self.objective,
-                "current_phase":current,"evidence_keys":sorted(self.evidence),"evidence":self.evidence,
-                "actions":actions,"last_result":self.last_result,"event_log":self.event_log[-40:],
-                "patch_authority":PATCH_AUTHORITY,"vsa_patch_authority":VSA_PATCH_AUTHORITY}
+            actions.append({
+                **action,
+                "requires":list(action.get("requires",())),
+                "produces":list(action.get("produces",())),
+                "status":"COMPLETE" if complete else ("BLOCKED" if missing else "READY"),
+                "missing_evidence":missing,
+                "enabled":not missing,
+                "remediation":self._remediation(missing),
+            })
+        return actions
+
+    def current_phase(self) -> str:
+        actions = self._action_states()
+        return next((phase for phase in PHASES if any(a["phase"]==phase and a["status"] in {"READY","BLOCKED"} for a in actions)),"DECIDE")
+
+    def get_state_without_routing(self) -> dict[str, Any]:
+        actions = self._action_states()
+        return {
+            "ok":True,
+            "version":WORKFLOW_VERSION,
+            "workflow_id":self.workflow_id,
+            "objective":self.objective,
+            "current_phase":self.current_phase(),
+            "evidence_keys":sorted(self.evidence),
+            "evidence":self.evidence,
+            "actions":actions,
+            "last_result":self.last_result,
+            "event_log":self.event_log[-40:],
+            "patch_authority":PATCH_AUTHORITY,
+            "vsa_patch_authority":VSA_PATCH_AUTHORITY,
+        }
+
+    def get_state(self) -> dict[str, Any]:
+        packet = self.get_state_without_routing()
+        controller = self._wfst_instance()
+        if controller is None:
+            routing = {
+                "ok":False,
+                "reason":self._wfst_error or "human_agent_wfst_unavailable",
+                "fail_closed":True,
+                "recommended":[],"available":[],"blocked":[],"meta":[],
+            }
+        else:
+            routing = controller.project_state()
+        packet.update({
+            "routing":routing,
+            "recommended":routing.get("recommended",[]),
+            "available":routing.get("available",[]),
+            "blocked":routing.get("blocked",[]),
+            "meta":routing.get("meta",[]),
+            "grammar_version":routing.get("grammar_version",""),
+            "state_packet":routing.get("state_packet",{}),
+        })
+        return packet
 
     def execute(self, action_id: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Execute a previously admitted action implementation.
+
+        Direct callers retain this compatibility API. User/server surfaces should use
+        ``execute_guarded`` or ``ingest_command`` so the WFST admits the action first.
+        """
         payload = dict(payload or {})
         action = ACTION_BY_ID.get(str(action_id))
-        if not action: return self._result(False,str(action_id),"Unknown workflow action.",[str(action_id)])
+        if not action:
+            return self._result(False,str(action_id),"Unknown workflow action.",[str(action_id)])
         missing = [key for key in action.get("requires",()) if not self._has(key)]
         for key in list(missing):
-            if payload.get(key): self.evidence[key], missing = payload[key], [item for item in missing if item != key]
-        if missing: return self._result(False,action_id,f"{action['title']} denied because required evidence is missing.",missing)
-        try: result = getattr(self,f"_do_{action_id}")(payload)
-        except Exception as exc: result = self._result(False,action_id,f"Action failed: {exc}")
+            if payload.get(key):
+                self.evidence[key] = payload[key]
+                missing = [item for item in missing if item != key]
+        if missing:
+            return self._result(False,action_id,f"{action['title']} denied because required evidence is missing.",missing)
+        try:
+            result = getattr(self,f"_do_{action_id}")(payload)
+        except Exception as exc:  # noqa: BLE001
+            result = self._result(False,action_id,f"Action failed: {exc}")
         self.last_result = result
         self._event("action",f"{action_id}:{result.get('status')}")
         return result
 
-    def ingest_command(self, command: str) -> dict[str, Any]:
-        text, lowered = str(command or "").strip(), str(command or "").lower()
-        if not text: return self._result(False,"command","Command is required.")
-        if any(term in lowered for term in ("run test","test this","execute test")): return self.execute("run_tests")
-        if "verify" in lowered: return self.execute("verify_patch")
-        if "hotswap" in lowered or "hot swap" in lowered: return self.execute("check_hotswap")
-        if "stage" in lowered and "patch" in lowered: return self.execute("stage_patch")
-        self.execute("set_objective",{"objective":text})
-        if any(term in lowered for term in ("prepare","refactor","build","change","fix")):
-            grounded = self.execute("ground_context")
-            return self.execute("prepare_capsule") if grounded.get("ok") else grounded
-        if any(term in lowered for term in ("show","inspect","where","find","what","why","how")): return self.execute("ground_context")
-        return self.last_result
+    def execute_guarded(self, action_id: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+        controller = self._wfst_instance()
+        if controller is None:
+            return self._result(False, str(action_id), "Guarded WFST routing is unavailable; action failed closed.", ["guarded_wfst"])
+        return controller.route_action(str(action_id), payload=dict(payload or {}))
+
+    def ingest_command(self, command: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+        controller = self._wfst_instance()
+        if controller is None:
+            return self._result(False,"command","Guarded WFST routing is unavailable; command failed closed.",["guarded_wfst"])
+        return controller.route_command(str(command or ""), payload=dict(payload or {}))
 
     def _do_set_objective(self, payload: dict[str, Any]) -> dict[str, Any]:
         objective = str(payload.get("objective") or "").strip()
-        if not objective: return self._result(False,"set_objective","Objective is required.",["objective"])
-        if objective != self.objective: self.evidence.clear()
+        if not objective:
+            return self._result(False,"set_objective","Objective is required.",["objective"])
+        if objective != self.objective:
+            self.evidence.clear()
         self.objective, self.evidence["objective"] = objective, objective
         return self._result(True,"set_objective",f"Objective framed: {objective}",produced={"objective":objective})
 
     def _do_ground_context(self, payload: dict[str, Any]) -> dict[str, Any]:
         run = self.tools.execute("topology_inspector",objective=self.objective)
         output = dict(run.get("outputs") or {})
-        if not output.get("ok"): return self._result(False,"ground_context","Grounding tool failed.",["grounding"],details=run)
-        grounding = {"localized_files":output.get("localized_files",[]),"localized_symbols":output.get("localized_symbols",[]),
-                     "line_ranges":output.get("line_ranges",[]),"ranking":output.get("ranking",{}),
-                     "tool_run_id":run.get("run_id","") ,"dissolution_receipt":run.get("dissolution_receipt",{})}
+        if not output.get("ok"):
+            return self._result(False,"ground_context","Grounding tool failed.",["grounding"],details=run)
+        grounding = {
+            "localized_files":output.get("localized_files",[]),
+            "localized_symbols":output.get("localized_symbols",[]),
+            "line_ranges":output.get("line_ranges",[]),
+            "ranking":output.get("ranking",{}),
+            "tool_run_id":run.get("run_id",""),
+            "dissolution_receipt":run.get("dissolution_receipt",{}),
+        }
         tests = list(output.get("tests") or (output.get("ranking") or {}).get("tests") or [])
         self.evidence.update({"grounding":grounding,"affected_files":grounding["localized_files"][:8]})
-        if tests: self.evidence["test_targets"] = tests[:8]
+        if tests:
+            self.evidence["test_targets"] = tests[:8]
         return self._result(True,"ground_context","Objective grounded in exact repository evidence.",produced={"grounding":grounding,"test_targets":tests},details=run)
 
     def _do_prepare_capsule(self, payload: dict[str, Any]) -> dict[str, Any]:
         grounding = self.evidence.get("grounding",{})
         files, symbols = grounding.get("localized_files",[]), grounding.get("localized_symbols",[])
-        prepared = self._bridge_instance().aura_prepare_arena(objective=self.objective,target_file=files[0] if files else None,
-            target_symbol=symbols[0] if symbols else None,acceptance_criteria=list(payload.get("acceptance_criteria",[]) or []),
-            constraints=["stage_before_mutation","human_review_required"])
-        if not prepared.get("ok"): return self._result(False,"prepare_capsule","Arena preparation was denied.",["grounded_preparation"],details=prepared)
+        prepared = self._bridge_instance().aura_prepare_arena(
+            objective=self.objective,
+            target_file=files[0] if files else None,
+            target_symbol=symbols[0] if symbols else None,
+            acceptance_criteria=list(payload.get("acceptance_criteria",[]) or []),
+            constraints=["stage_before_mutation","human_review_required"],
+        )
+        if not prepared.get("ok"):
+            return self._result(False,"prepare_capsule","Arena preparation was denied.",["grounded_preparation"],details=prepared)
         self.evidence.update({"plan_phase_hash":prepared.get("plan_phase_hash",""),"act_capsules":prepared.get("act_capsules",[])})
         tests = [test for item in prepared.get("grounding_evidence",[]) if isinstance(item,dict) for test in item.get("test_files",[]) if test]
-        if tests: self.evidence["test_targets"] = list(dict.fromkeys(tests))
+        if tests:
+            self.evidence["test_targets"] = list(dict.fromkeys(tests))
         if prepared.get("act_capsules") and prepared["act_capsules"][0].get("target_file"):
             self.evidence["affected_files"] = [prepared["act_capsules"][0]["target_file"]]
         return self._result(True,"prepare_capsule","Arena capsule, lease, boundaries, and handoff prepared.",produced={"plan_phase_hash":self.evidence["plan_phase_hash"],"act_capsules":self.evidence["act_capsules"]},details=prepared)
 
     def _do_stage_patch(self, payload: dict[str, Any]) -> dict[str, Any]:
         diff = str(payload.get("candidate_diff") or self.evidence.get("candidate_diff") or "")
-        capsules, files = self.evidence.get("act_capsules",[]), list(payload.get("affected_files") or self.evidence.get("affected_files") or [])
+        capsules = self.evidence.get("act_capsules",[])
+        files = list(payload.get("affected_files") or self.evidence.get("affected_files") or [])
         task_id = str(payload.get("task_id") or (capsules[0].get("task_id") if capsules else ""))
-        if not diff.strip(): return self._result(False,"stage_patch","Patch staging denied: no candidate diff exists.",["candidate_diff"])
-        staged = self._bridge_instance().aura_stage_patch(plan_phase_hash=str(self.evidence.get("plan_phase_hash","")),task_id=task_id,
-            owner="human_agent_arena",diff=diff,affected_files=files,affected_symbols=list(payload.get("affected_symbols",[]) or []),tests=list(self.evidence.get("test_targets",[]) or []))
-        if not staged.get("ok"): return self._result(False,"stage_patch","Candidate patch was rejected by the staging gate.",["acceptable_staged_patch"],details=staged)
+        if not diff.strip():
+            return self._result(False,"stage_patch","Patch staging denied: no candidate diff exists.",["candidate_diff"])
+        staged = self._bridge_instance().aura_stage_patch(
+            plan_phase_hash=str(self.evidence.get("plan_phase_hash","")),
+            task_id=task_id,
+            owner="human_agent_arena",
+            diff=diff,
+            affected_files=files,
+            affected_symbols=list(payload.get("affected_symbols",[]) or []),
+            tests=list(self.evidence.get("test_targets",[]) or []),
+        )
+        if not staged.get("ok"):
+            return self._result(False,"stage_patch","Candidate patch was rejected by the staging gate.",["acceptable_staged_patch"],details=staged)
         self.evidence.update({"candidate_diff":diff,"staged_patch":staged.get("patch",staged)})
         return self._result(True,"stage_patch","Candidate patch staged. Production remains unchanged.",produced={"staged_patch":self.evidence["staged_patch"]},details=staged)
 
     def _do_run_tests(self, payload: dict[str, Any]) -> dict[str, Any]:
         run = self.tools.execute("test_lab",objective=self.objective,inputs={"test_targets":payload.get("test_targets") or self.evidence.get("test_targets",[])})
         output = dict(run.get("outputs") or {})
-        if not output.get("ok"): return self._result(False,"run_tests","The test lab did not produce passing evidence.",output.get("missing_evidence",["passing_test_evidence"]),details=run)
+        if not output.get("ok"):
+            return self._result(False,"run_tests","The test lab did not produce passing evidence.",output.get("missing_evidence",["passing_test_evidence"]),details=run)
         evidence = {**output,"tool_run_id":run.get("run_id",""),"dissolution_receipt":run.get("dissolution_receipt",{})}
         self.evidence["test_evidence"] = evidence
         return self._result(True,"run_tests","Focused tests completed and measured evidence was preserved.",produced={"test_evidence":evidence},details=run)
 
     def _do_verify_patch(self, payload: dict[str, Any]) -> dict[str, Any]:
         plan_hash = str(self.evidence.get("plan_phase_hash",""))
-        verification = self._bridge_instance().aura_verify_arena(plan_phase_hash=plan_hash,test_scope="focused") if plan_hash and self.evidence.get("staged_patch") else {"ok":bool((self.evidence.get("test_evidence") or {}).get("passed",(self.evidence.get("test_evidence") or {}).get("ok"))),"stage":"evidence_only_verifier"}
-        if not verification.get("ok"): return self._result(False,"verify_patch","Verification failed; repair evidence is required.",["passing_verification"],details=verification)
+        verification = self._bridge_instance().aura_verify_arena(plan_phase_hash=plan_hash,test_scope="focused") if plan_hash and self.evidence.get("staged_patch") else {
+            "ok":bool((self.evidence.get("test_evidence") or {}).get("passed",(self.evidence.get("test_evidence") or {}).get("ok"))),
+            "stage":"evidence_only_verifier",
+        }
+        if not verification.get("ok"):
+            return self._result(False,"verify_patch","Verification failed; repair evidence is required.",["passing_verification"],details=verification)
         self.evidence["verification_packet"] = verification
         return self._result(True,"verify_patch","Verifier gates passed for the available evidence.",produced={"verification_packet":verification},details=verification)
 
@@ -282,21 +385,47 @@ class HumanAgentWorkflow:
         status = self._bridge_instance().aura_hotswap_status(plan_phase_hash=str(self.evidence.get("plan_phase_hash","")))
         ready = status.get("status") in {"ready","READY","approved"} or status.get("hotswap_ready") is True
         self.evidence["hotswap_status"] = status
-        return self._result(ready,"check_hotswap","Hotswap gate is ready for human review." if ready else "Hotswap remains blocked; missing proof is shown below.",[] if ready else status.get("missing_evidence",["hotswap_ready_evidence"]),produced={"hotswap_status":status},details=status)
+        return self._result(
+            ready,
+            "check_hotswap",
+            "Hotswap gate is ready for human review." if ready else "Hotswap remains blocked; missing proof is shown below.",
+            [] if ready else status.get("missing_evidence",["hotswap_ready_evidence"]),
+            produced={"hotswap_status":status},
+            details=status,
+        )
 
     def _do_human_review(self, payload: dict[str, Any]) -> dict[str, Any]:
-        review = {"reviewed":True,"approved_for_next_gate":bool(payload.get("approved",False)),"reviewer":str(payload.get("reviewer") or "human_operator"),"note":str(payload.get("note") or ""),"merge_performed":False,"production_mutation":False,"reviewed_at":time.time()}
+        review = {
+            "reviewed":True,
+            "approved_for_next_gate":bool(payload.get("approved",False)),
+            "reviewer":str(payload.get("reviewer") or "human_operator"),
+            "note":str(payload.get("note") or ""),
+            "merge_performed":False,
+            "production_mutation":False,
+            "reviewed_at":time.time(),
+        }
         self.evidence["human_review"] = review
         return self._result(True,"human_review","Human review recorded. No merge or production promotion was performed.",produced={"human_review":review})
 
     def _do_export_handoff(self, payload: dict[str, Any]) -> dict[str, Any]:
         exported = self._bridge_instance().aura_export_icm(plan_phase_hash=str(self.evidence.get("plan_phase_hash","")),workspace_root="Aura_Memory/icm_workspaces")
-        if not exported.get("ok"): return self._result(False,"export_handoff","Review packet export failed.",details=exported)
+        if not exported.get("ok"):
+            return self._result(False,"export_handoff","Review packet export failed.",details=exported)
         self.evidence["review_packet"] = exported
         return self._result(True,"export_handoff","Grounded review packet exported for review.",produced={"review_packet":exported},details=exported)
 
     def _result(self, ok: bool, action_id: str, message: str, missing: list[str] | None = None, *, produced: dict[str, Any] | None = None, details: dict[str, Any] | None = None) -> dict[str, Any]:
         missing = list(missing or [])
-        return {"ok":bool(ok),"status":"ALLOWED" if ok else "DENIED","action_id":action_id,"message":message,
-                "produced_evidence":dict(produced or {}),"missing_evidence":missing,"remediation":self._remediation(missing),
-                "details":dict(details or {}),"workflow":self.get_state(),"patch_authority":PATCH_AUTHORITY,"vsa_patch_authority":VSA_PATCH_AUTHORITY}
+        return {
+            "ok":bool(ok),
+            "status":"ALLOWED" if ok else "DENIED",
+            "action_id":action_id,
+            "message":message,
+            "produced_evidence":dict(produced or {}),
+            "missing_evidence":missing,
+            "remediation":self._remediation(missing),
+            "details":dict(details or {}),
+            "workflow":self.get_state(),
+            "patch_authority":PATCH_AUTHORITY,
+            "vsa_patch_authority":VSA_PATCH_AUTHORITY,
+        }
