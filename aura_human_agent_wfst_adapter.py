@@ -95,6 +95,9 @@ class HumanAgentWFSTController:
             telemetry=telemetry,
         )
 
+        # A free-form request at FRAME is an objective only when it did not resolve
+        # to a declared state-local or Meta transition. This preserves "help" and
+        # "status" as Meta self-loops instead of accidentally making them objectives.
         if state_before == "FRAME" and not route.get("selected"):
             route_input = "HUMAN.SET_OBJECTIVE"
             execution_payload = {**payload, "objective": text}
@@ -119,8 +122,11 @@ class HumanAgentWFSTController:
                 "workflow": self._workflow_snapshot(),
             }
             result["experience_recording"] = self._record_experience(
-                started_at=started, state_before=state_before, state_after=state_before,
-                selected_transition="", final_outcome=outcome,
+                started_at=started,
+                state_before=state_before,
+                state_after=state_before,
+                selected_transition="",
+                final_outcome=outcome,
                 payload={"command": text, "route": route},
             )
             return result
@@ -137,7 +143,9 @@ class HumanAgentWFSTController:
                 "workflow": self._workflow_snapshot(),
             }
             result["experience_recording"] = self._record_experience(
-                started_at=started, state_before=state_before, state_after=state_before,
+                started_at=started,
+                state_before=state_before,
+                state_after=state_before,
                 selected_transition=str(selected.get("transition_id") or ""),
                 final_outcome="META_COMPLETED",
                 payload={"command": text, "route": route, "meta_response": response},
@@ -156,7 +164,9 @@ class HumanAgentWFSTController:
                 "workflow": self._workflow_snapshot(),
             }
             result["experience_recording"] = self._record_experience(
-                started_at=started, state_before=state_before, state_after=state_before,
+                started_at=started,
+                state_before=state_before,
+                state_after=state_before,
                 selected_transition=str(selected.get("transition_id") or ""),
                 final_outcome="DENIED",
                 payload={"command": text, "route": route, "failure": "selected_transition_has_no_action_binding"},
