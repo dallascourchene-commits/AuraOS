@@ -11,7 +11,7 @@ from pathlib import Path
 import time
 from typing import Any
 
-from aura_arena_tool_runtime import launch_tool, list_tools
+from aura_arena_tool_runtime import ArenaToolRuntime, list_tools
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
@@ -33,40 +33,48 @@ PHASES = ("FRAME","GROUND","PLAN","ACT","PROVE","DECIDE")
 
 
 class ToolRuntimeFacade:
-    """Stateful wrapper over Aura's functional ephemeral tool runtime."""
+    """Preserve the Arena-facing packet shape over ArenaToolRuntime."""
+
     def __init__(self, repo_root: str | Path) -> None:
         self.repo_root = Path(repo_root).resolve()
+        self._runtime = ArenaToolRuntime(self.repo_root)
         self.runs: dict[str, dict[str, Any]] = {}
 
     def get_tools(self) -> dict[str, Any]:
-        return list_tools()
+        return self._runtime.get_tools()
 
     def get_run(self, run_id: str) -> dict[str, Any]:
         run = self.runs.get(str(run_id))
         return {"ok": bool(run), "run": run} if run else {"ok":False,"error":"tool_run_not_found","run_id":run_id}
 
     def execute(self, tool_id: str, *, objective: str = "", inputs: dict[str, Any] | None = None) -> dict[str, Any]:
-        params = dict(inputs or {})
-        params.setdefault("objective", objective)
-        if tool_id == "topology_inspector":
-            params.setdefault("query", objective)
-        raw = launch_tool(tool_id, params, repo_root=self.repo_root, human_approval=True)
-        result = dict(raw.get("result") or {})
-        run_id = str(raw.get("organ_id") or f"TOOL-{int(time.time()*1000)}")
+        raw = self._runtime.execute(
+            tool_id,
+            objective=str(objective),
+            inputs=dict(inputs or {}),
+        )
+        result = dict(raw.get("outputs") or {})
+        run_id = str(raw.get("run_id") or f"TOOL-{int(time.time()*1000)}")
         outputs = self._normalize_outputs(tool_id, raw, result)
-        denial = {}
-        if raw.get("status") == "DENIED" or result.get("status") == "DENIED":
+        denial = dict(raw.get("denial") or {})
+        if raw.get("status") == "DENIED" and not denial:
             denial = {
-                "reason": result.get("reason") or raw.get("reason") or raw.get("error") or "tool_denied",
+                "reason": result.get("reason") or raw.get("error") or "tool_denied",
                 "missing": result.get("missing_evidence", []),
                 "remediation": result.get("remediation", []),
                 "fail_closed": True,
             }
         packet = {
-            "run_id":run_id,"tool_id":tool_id,"status":raw.get("status",result.get("status","FAILED")),
-            "outputs":outputs,"denial":denial,"sandbox_receipt":raw.get("sandbox",{}),
-            "dissolution_receipt":raw.get("receipt",{}),"raw":raw,
-            "patch_authority":PATCH_AUTHORITY,"vsa_patch_authority":VSA_PATCH_AUTHORITY,
+            "run_id":run_id,
+            "tool_id":str(raw.get("tool_id") or tool_id),
+            "status":str(raw.get("status") or "FAILED"),
+            "outputs":outputs,
+            "denial":denial,
+            "sandbox_receipt":dict(raw.get("sandbox_receipt") or {}),
+            "dissolution_receipt":dict(raw.get("dissolution_receipt") or {}),
+            "raw":raw,
+            "patch_authority":PATCH_AUTHORITY,
+            "vsa_patch_authority":VSA_PATCH_AUTHORITY,
         }
         self.runs[run_id] = packet
         return packet
@@ -74,6 +82,24 @@ class ToolRuntimeFacade:
     @staticmethod
     def _normalize_outputs(tool_id: str, raw: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         if tool_id == "topology_inspector":
+            # ArenaToolRuntime returns direct localization fields. Retain support
+            # for the earlier nested grounding packet so callers see one shape.
+            direct_files = list(result.get("localized_files") or [])
+            direct_symbols = list(result.get("localized_symbols") or [])
+            direct_ranges = list(result.get("line_ranges") or [])
+            ranking = dict(result.get("ranking") or {})
+            if direct_files or direct_symbols or direct_ranges or ranking:
+                tests = list(result.get("tests") or ranking.get("tests") or [])
+                return {
+                    "ok": bool(result.get("ok")),
+                    "localized_files": direct_files,
+                    "localized_symbols": direct_symbols,
+                    "line_ranges": direct_ranges,
+                    "ranking": ranking,
+                    "tests": tests,
+                    "truth_class": result.get("truth_class", "EXACT_REPOSITORY_FACTS"),
+                }
+
             hits = list((result.get("grounding_packet") or {}).get("results") or [])
             files: list[str] = []
             symbols: list[str] = []
@@ -82,21 +108,35 @@ class ToolRuntimeFacade:
             for hit in hits:
                 if not isinstance(hit, dict):
                     continue
-                file_path, symbol = str(hit.get("file") or ""), str(hit.get("symbol") or "")
-                if file_path and file_path not in files: files.append(file_path)
-                if symbol and symbol not in symbols: symbols.append(symbol)
-                if file_path: ranges.append({"file":file_path,"symbol":symbol,"line_range":hit.get("line_range",[])})
+                file_path = str(hit.get("file") or "")
+                symbol = str(hit.get("symbol") or "")
+                if file_path and file_path not in files:
+                    files.append(file_path)
+                if symbol and symbol not in symbols:
+                    symbols.append(symbol)
+                if file_path:
+                    ranges.append({"file":file_path,"symbol":symbol,"line_range":hit.get("line_range",[])})
                 for candidate in [file_path, *list(hit.get("neighbors") or [])]:
                     if isinstance(candidate,str) and Path(candidate).name.startswith("test_") and candidate not in tests:
                         tests.append(candidate)
-            return {"ok":bool(raw.get("ok")),"localized_files":files,"localized_symbols":symbols,
-                    "line_ranges":ranges,"ranking":{"results":hits,"tests":tests},"tests":tests}
+            return {
+                "ok": bool(result.get("ok", raw.get("status") == "COMPLETED")),
+                "localized_files": files,
+                "localized_symbols": symbols,
+                "line_ranges": ranges,
+                "ranking": {"results": hits, "tests": tests},
+                "tests": tests,
+            }
+
         if tool_id == "test_lab":
-            evidence = dict(result.get("test_evidence") or {})
-            evidence.update({"ok":bool(result.get("ok")),"status":result.get("status",raw.get("status",""))})
-            if not evidence["ok"]: evidence["missing_evidence"] = result.get("missing_evidence",["passing_test_evidence"])
+            evidence = dict(result.get("test_evidence") or result)
+            evidence["ok"] = bool(evidence.get("ok"))
+            evidence["status"] = str(raw.get("status") or evidence.get("status") or "")
+            if not evidence["ok"]:
+                evidence["missing_evidence"] = evidence.get("missing_evidence", ["passing_test_evidence"])
             return evidence
-        return {**result,"ok":bool(result.get("ok",raw.get("ok")))}
+
+        return {**result,"ok":bool(result.get("ok",raw.get("status") == "COMPLETED"))}
 
 
 class HumanAgentWorkflow:
