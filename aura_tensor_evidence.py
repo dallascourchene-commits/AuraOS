@@ -187,6 +187,14 @@ class TensorBeliefEngine:
         if not variables:
             return self._fallback("no variables", INVALID_GRAPH, 0.0, [])
 
+        # Validate factor tensor shapes
+        for f in factors:
+            expected_shape = (N_STATES,) * len(f.var_ids)
+            if f.tensor.shape != expected_shape:
+                return self._fallback(
+                    f"factor {f.factor_id} shape {f.tensor.shape} != expected {expected_shape}",
+                    INVALID_GRAPH, 0.0, variables)
+
         # Build variable index
         var_ids = [v.var_id for v in variables]
         var_idx = {vid: i for i, vid in enumerate(var_ids)}
@@ -288,9 +296,7 @@ class TensorBeliefEngine:
                     # Convert to log space
                     raw = np.clip(raw, 1e-30, None)
                     log_msg = np.log(raw)
-                    # Add evidence if this is the target var
-                    if target_vid in log_evidence:
-                        log_msg = log_msg + log_evidence[target_vid]
+                    # Add evidence only in the final belief computation, not here (C4 fix)
                     # Normalize
                     log_msg = log_msg - np.max(log_msg)
                     msg = np.exp(log_msg)
@@ -336,6 +342,7 @@ class TensorBeliefEngine:
                         for m in other_incoming:
                             if m is not None:
                                 outgoing = outgoing * m
+                        # Evidence is applied in factor-to-var path only (C4 fix)
                         if vid in log_evidence:
                             outgoing = outgoing * np.exp(log_evidence[vid])
                         outgoing = outgoing / (outgoing.sum() + 1e-30)
@@ -364,8 +371,12 @@ class TensorBeliefEngine:
             belief = belief / (belief.sum() + 1e-30)
 
             state_idx = int(np.argmax(belief))
-            state = INDEX_STATE[state_idx]
+            # Treat ties (near-uniform) as UNRESOLVED
             confidence = float(belief[state_idx])
+            if confidence < 0.4:
+                state = UNRESOLVED
+            else:
+                state = INDEX_STATE[state_idx]
 
             # Collect supporting/contradicting evidence
             supporting = []
@@ -406,7 +417,7 @@ class TensorBeliefEngine:
         graph_hash = graph.graph_hash()
 
         # --- Confinement analysis ---
-        confinement = self._confinement_analysis(graph, results, converged)
+        confinement = self._confinement_analysis(graph, results, converged, var_factors)
 
         exec_time = (time.time() - start) * 1000
 
@@ -443,21 +454,36 @@ class TensorBeliefEngine:
                 "fallback_reason": reason, **AUTHORITY_FLAGS}
 
     def _confinement_analysis(self, graph: TensorEvidenceGraph, results: list[BeliefResult],
-                              converged: bool) -> ConfinementResult:
+                              converged: bool, var_factors: dict | None = None) -> ConfinementResult:
         """Bounded confinement analysis."""
         var_ids = {v.var_id for v in graph.variables}
+        var_ids_list = [v.var_id for v in graph.variables]
         internal_edges = 0
         boundary_edges = 0
+        boundary_vars = set()
+
+        # Analyze edges: internal = both endpoints in graph, boundary = one endpoint outside
         for fid, vid in graph.edges:
-            internal_edges += 1
+            if vid in var_ids:
+                internal_edges += 1
+                # Check if this factor connects to vars outside our set
+                f = next((f for f in graph.factors if f.factor_id == fid), None)
+                if f:
+                    for other_vid in f.var_ids:
+                        if other_vid not in var_ids:
+                            boundary_edges += 1
+                            boundary_vars.add(vid)
 
         # Count unresolved variables as potential external effects
         unresolved = sum(1 for r in results if r.state == UNRESOLVED)
         contradicted = sum(1 for r in results if r.state == CONTRADICTED)
+        external_effects = unresolved + contradicted + len(boundary_vars)
 
         # Estimate influence radius from message propagation
-        if converged:
-            influence_radius = 1.0 / (1.0 + internal_edges) * len(var_ids)
+        if converged and internal_edges > 0:
+            influence_radius = len(var_ids) / (1.0 + internal_edges)
+        elif converged:
+            influence_radius = float(len(var_ids))
         else:
             influence_radius = float('inf')
 
@@ -465,7 +491,7 @@ class TensorBeliefEngine:
         if not var_ids:
             score = 0.0
         else:
-            score = 1.0 - (boundary_edges + unresolved + contradicted) / (len(var_ids) + 1)
+            score = 1.0 - (boundary_edges + external_effects) / (len(var_ids) + 1)
             score = max(0.0, min(1.0, score))
 
         if score > 0.7 and converged:

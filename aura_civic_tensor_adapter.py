@@ -16,6 +16,7 @@ import numpy as np
 from aura_tensor_evidence import (
     TensorVariable, TensorFactor, EvidenceReference, TensorBeliefEngine,
     SUPPORTED, CONTRADICTED, UNRESOLVED,
+    STATE_INDEX,
     PATCH_AUTHORITY, CIVIC_DECISION_AUTHORITY,
 )
 
@@ -50,9 +51,14 @@ def analyze_civic_session(session: dict[str, Any]) -> dict[str, Any]:
     has_matches = any(m.get("ok") for m in match_results) if match_results else False
     has_evidence = len(legal_instruments) > 0
     has_scenarios = len(scenarios) > 0
-    has_consent = bool(consent_arc.get("responses"))
-    has_dissent = any(r.get("response_type") in ("OBJECT", "CRITICAL_OBJECTION")
-                      for r in consent_arc.get("responses", [])) if isinstance(consent_arc, dict) else False
+    # Guard consent_arc access (R1 fix: crashes if non-dict)
+    if isinstance(consent_arc, dict):
+        has_consent = bool(consent_arc.get("responses"))
+        has_dissent = any(r.get("response_type") in ("OBJECT", "CRITICAL_OBJECTION")
+                          for r in consent_arc.get("responses", []))
+    else:
+        has_consent = False
+        has_dissent = False
     has_representation_gaps = len(representation_gaps) > 0
     has_pilot = bool(pilot)
 
@@ -103,9 +109,18 @@ def analyze_civic_session(session: dict[str, Any]) -> dict[str, Any]:
         # Pairwise: match + evidence -> scenario
         TensorFactor("f_match_evidence", ["MATCH_FEASIBLE", "EVIDENCE_SUFFICIENT"],
                      np.array([[0.8,0.1,0.1],[0.1,0.8,0.1],[0.2,0.3,0.5]])),
-        # Pairwise: scenario + representation -> pilot
+        # Pairwise: scenario + representation -> pilot (R5 fix: connect pilot to evidence chain)
         TensorFactor("f_scenario_repr", ["SCENARIO_VIABLE", "REPRESENTATION_SUFFICIENT"],
                      np.array([[0.7,0.2,0.1],[0.1,0.8,0.1],[0.3,0.3,0.4]])),
+        # Pairwise: representation + consent -> pilot (connects pilot to consent island)
+        TensorFactor("f_repr_consent_pilot", ["REPRESENTATION_SUFFICIENT", "CONSENT_UNRESOLVED"],
+                     np.array([[0.6,0.3,0.1],[0.1,0.7,0.2],[0.3,0.3,0.4]])),
+        # Pairwise: pilot connects to scenario+representation island
+        TensorFactor("f_scenario_pilot", ["SCENARIO_VIABLE", "PILOT_READY_FOR_DELIBERATION"],
+                     np.array([[0.7,0.2,0.1],[0.1,0.8,0.1],[0.3,0.3,0.4]])),
+        # Pairwise: dissent + consent -> pilot (connects dissent island to pilot)
+        TensorFactor("f_dissent_pilot", ["DISSENT_PRESENT", "PILOT_READY_FOR_DELIBERATION"],
+                     np.array([[0.6,0.3,0.1],[0.1,0.7,0.2],[0.3,0.3,0.4]])),
         # Pilot readiness
         TensorFactor("f_pilot", ["PILOT_READY_FOR_DELIBERATION"],
                      unary([0.6, 0.1, 0.3]) if has_pilot else unary([0.2, 0.1, 0.7])),
@@ -147,7 +162,7 @@ def analyze_civic_session(session: dict[str, Any]) -> dict[str, Any]:
             "execution_time_ms": result["execution_time_ms"],
         },
         "scenario_support": {
-            vid: beliefs.get(vid, {}).get("confidence", 0.0)
+            vid: beliefs.get(vid, {}).get("beliefs", [0, 0, 0])[STATE_INDEX[SUPPORTED]]
             for vid in ["SCENARIO_VIABLE", "PILOT_READY_FOR_DELIBERATION", "MATCH_FEASIBLE"]
         },
         "patch_authority": "exact_source_spans_and_hashes_only",

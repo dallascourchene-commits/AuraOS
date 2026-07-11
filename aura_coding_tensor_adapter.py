@@ -83,9 +83,22 @@ def analyze_coding_region(
     # Deps + API -> Ready
     factors.append(TensorFactor("f_deps_api", ["DEPENDENCY_IMPACT_BOUNDED", "PUBLIC_API_RISK"],
         np.array([[0.8,0.1,0.1],[0.1,0.8,0.1],[0.2,0.3,0.5]])))
-    # Ready depends on grounded, tests, confined
-    factors.append(TensorFactor("f_ready", ["READY_FOR_AGENT_HANDOFF"],
-        unary([0.6, 0.1, 0.3])))
+    # External -> Confined (R4 fix: connect CHANGE_REGION_CONFINED to evidence chain)
+    factors.append(TensorFactor("f_ext_confined", ["EXTERNAL_EFFECT_RISK", "CHANGE_REGION_CONFINED"],
+        np.array([[0.8,0.1,0.1],[0.1,0.8,0.1],[0.2,0.3,0.5]])))
+    # Deps -> Confined
+    factors.append(TensorFactor("f_deps_confined", ["DEPENDENCY_IMPACT_BOUNDED", "CHANGE_REGION_CONFINED"],
+        np.array([[0.7,0.2,0.1],[0.1,0.8,0.1],[0.3,0.3,0.4]])))
+    # Confined + Grounded -> Ready (C1 fix: derive readiness from prerequisites)
+    factors.append(TensorFactor("f_confined_grounded_ready", ["CHANGE_REGION_CONFINED", "TARGET_GROUNDED", "READY_FOR_AGENT_HANDOFF"],
+        np.array([
+            [[0.8,0.1,0.1],[0.6,0.2,0.2],[0.2,0.3,0.5]],  # confined=supported
+            [[0.2,0.3,0.5],[0.1,0.8,0.1],[0.1,0.3,0.6]],  # confined=contradicted
+            [[0.2,0.2,0.6],[0.2,0.2,0.6],[0.1,0.2,0.7]],  # confined=unresolved
+        ])))
+    # Tests -> Ready (C1 fix: readiness depends on tests too)
+    factors.append(TensorFactor("f_tests_ready", ["TEST_COVERAGE_PRESENT", "READY_FOR_AGENT_HANDOFF"],
+        np.array([[0.7,0.2,0.1],[0.1,0.8,0.1],[0.3,0.3,0.4]])))
 
     engine = TensorBeliefEngine()
     result = engine.analyze(variables, factors)

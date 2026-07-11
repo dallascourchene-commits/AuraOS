@@ -1199,32 +1199,36 @@ def cmd_tensor_compress(args: argparse.Namespace) -> int:
 
 def cmd_tensor_show_contradictions(args: argparse.Namespace) -> int:
     _require_tensor()
-    if args.session_id:
-        from aura_civic_runtime import get_session
-        s = get_session(args.session_id)
-        if s["ok"]:
-            r = analyze_civic_session(s["session"])
-            contradicted = r["tensor_evidence_analysis"]["contradicted_variables"]
-            _print_json({"ok": True, "contradictions": contradicted,
-                         "advisory": "Contradictions are advisory only.",
-                         "patch_authority": "exact_source_spans_and_hashes_only"})
-            return 0
-    _print_json({"ok": False, "error": "no session selected"})
-    return 1
+    if not args.session_id:
+        _print_json({"ok": False, "error": "no session selected — provide --session-id"})
+        return 1
+    from aura_civic_runtime import get_session
+    s = get_session(args.session_id)
+    if not s["ok"]:
+        _print_json({"ok": False, "error": f"session not found: {args.session_id}"})
+        return 1
+    r = analyze_civic_session(s["session"])
+    contradicted = r["tensor_evidence_analysis"]["contradicted_variables"]
+    _print_json({"ok": True, "contradictions": contradicted,
+                 "advisory": "Contradictions are advisory only.",
+                 "patch_authority": "exact_source_spans_and_hashes_only"})
+    return 0
 
 
 def cmd_tensor_show_confinement(args: argparse.Namespace) -> int:
     _require_tensor()
-    if args.session_id:
-        from aura_civic_runtime import get_session
-        s = get_session(args.session_id)
-        if s["ok"]:
-            r = analyze_civic_session(s["session"])
-            conf = r["tensor_evidence_analysis"]["confinement"]
-            _print_json({"ok": True, "confinement": conf, "advisory": True})
-            return 0
-    _print_json({"ok": False, "error": "no session selected"})
-    return 1
+    if not args.session_id:
+        _print_json({"ok": False, "error": "no session selected — provide --session-id"})
+        return 1
+    from aura_civic_runtime import get_session
+    s = get_session(args.session_id)
+    if not s["ok"]:
+        _print_json({"ok": False, "error": f"session not found: {args.session_id}"})
+        return 1
+    r = analyze_civic_session(s["session"])
+    conf = r["tensor_evidence_analysis"]["confinement"]
+    _print_json({"ok": True, "confinement": conf, "advisory": True})
+    return 0
 
 
 # ---------------------------------------------------------------------------

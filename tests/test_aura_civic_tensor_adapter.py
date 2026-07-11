@@ -103,14 +103,12 @@ class TestCivicTensorAdapter:
 
     def test_integration_with_civic_demo(self):
         """Tensor analysis works after running a civic demo."""
-        from aura_civic_runtime import run_full_demo
+        from aura_civic_runtime import run_full_demo, get_session
         from aura_civic_tensor_adapter import analyze_civic_session
         demo = run_full_demo(story="youth_centre")
         assert demo["ok"] is True
-        # Get the session
-        from aura_civic_runtime import get_session
         sess = get_session(demo["session_id"])
-        if sess["ok"]:
-            r = analyze_civic_session(sess["session"])
-            assert r["ok"] is True
-            assert r["tensor_evidence_analysis"]["non_binding"] is True
+        assert sess["ok"] is True, f"Session not found after demo: {demo['session_id']}"
+        r = analyze_civic_session(sess["session"])
+        assert r["ok"] is True
+        assert r["tensor_evidence_analysis"]["non_binding"] is True

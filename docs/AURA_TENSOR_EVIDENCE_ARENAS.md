@@ -38,8 +38,9 @@ Aura Tensor Evidence Engine (aura_tensor_evidence.py)
 ### Belief Propagation
 - Damped, log-space, deterministic
 - Defaults: damping=0.5, max_iterations=20, residual_tolerance=1e-4
-- NaN/Inf rejection, oscillation detection, maximum iteration cutoff
-- Statuses: CONVERGED, NOT_CONVERGED, CONTRADICTORY_HARD_FACTORS, INVALID_GRAPH, FALLBACK_REQUIRED
+- NaN/Inf rejection, maximum iteration cutoff, non-convergence fallback
+- Statuses: CONVERGED, NOT_CONVERGED, CONTRADICTORY_HARD_FACTORS, INVALID_GRAPH
+- Non-converged results remain visible and are not presented as resolved conclusions
 
 ### Tensor Compression
 - NumPy SVD-based low-rank compression
