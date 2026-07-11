@@ -74,6 +74,7 @@ GATE_DEFINITIONS: dict[WorkbenchState, WorkbenchGate] = {
         blocked_actions=["stage_patch"],
         required_evidence=["objective"],
         coding_artifacts_visible=["objective", "scope"],
+        # Both advertised actions have distinct valid destinations.
         next_actions=["CONTEXT_FILTERED", "CODE_LOCALIZED"]),
     WorkbenchState.CONTEXT_FILTERED: WorkbenchGate(
         WorkbenchState.CONTEXT_FILTERED,
