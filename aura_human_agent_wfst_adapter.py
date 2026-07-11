@@ -109,7 +109,15 @@ class HumanAgentWFSTController:
 
         action_id = str((selected.get("provenance") or {}).get("action_id") or "")
         if not action_id:
-            return {**route, "ok": False, "reason": "selected_transition_has_no_action_binding", "fail_closed": True}
+            recording = self._record_experience(
+                started_at=started,
+                state_before=state_before,
+                state_after=state_before,
+                selected_transition=str(selected.get("transition_id") or ""),
+                final_outcome="DENIED",
+                payload={"command": text, "route": route, "failure": "selected_transition_has_no_action_binding"},
+            )
+            return {**route, "ok": False, "reason": "selected_transition_has_no_action_binding", "fail_closed": True, "experience_recording": recording}
         result = self.workflow.execute(action_id, execution_payload)
         state_after = self._workflow_state()
         final_outcome = "COMPLETED" if result.get("ok") else "DENIED"

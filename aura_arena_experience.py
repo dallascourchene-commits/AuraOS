@@ -164,7 +164,8 @@ def sanitize_experience_payload(value: Any) -> tuple[Any, list[str]]:
                 output[key] = walk(raw_value, child_path)
             return output
         if isinstance(item, (list, tuple, set)):
-            return [walk(value, f"{path}[{index}]") for index, value in enumerate(item)]
+            items = sorted(item, key=lambda x: (type(x).__name__, str(x))) if isinstance(item, set) else item
+            return [walk(value, f"{path}[{index}]") for index, value in enumerate(items)]
         if isinstance(item, bytes):
             item = item.decode("utf-8", errors="replace")
         if isinstance(item, str):
