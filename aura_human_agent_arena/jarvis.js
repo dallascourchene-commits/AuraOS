@@ -128,6 +128,10 @@
     renderWorkflow(workflowState);
     const objectiveInput = $('workflow-objective');
     if (objectiveInput && workflowState.objective) objectiveInput.value = workflowState.objective;
+    // Preserve Aura's existing contextual buttons and topology commands as an optional lens.
+    if (typeof window.runCommand === 'function') {
+      try { await window.runCommand(command); } catch (_) { /* workflow remains authoritative */ }
+    }
   }
 
   $('run-button')?.addEventListener('click', event => {
@@ -142,6 +146,26 @@
     }
   });
   $('workflow-objective-btn')?.addEventListener('click', () => executeWorkflowAction('set_objective'));
+  $('mic-button')?.addEventListener('click', event => {
+    event.stopImmediatePropagation();
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      if ($('voice-status')) $('voice-status').textContent = 'Voice unsupported here. Type a command and press Send.';
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.onstart = () => { if ($('voice-status')) $('voice-status').textContent = 'Listening…'; };
+    recognition.onerror = () => { if ($('voice-status')) $('voice-status').textContent = 'Voice failed. Type the command instead.'; };
+    recognition.onresult = resultEvent => {
+      const text = resultEvent.results[0][0].transcript || '';
+      if ($('command-input')) $('command-input').value = text;
+      if ($('voice-status')) $('voice-status').textContent = `Heard: ${text}`;
+      submitWorkflowCommand(text);
+    };
+    recognition.start();
+  });
   $('jarvis-mic-button')?.addEventListener('click', () => $('mic-button')?.click());
 
   async function loadTools() {
