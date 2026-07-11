@@ -1,0 +1,89 @@
+{
+  "schema_version": "AURA_ARENA_GRAMMAR_MANIFEST_V1",
+  "arena_id": "meta",
+  "arena_version": "AURA_ARENA_META_V1",
+  "grammar_version": "meta-wfst-v1",
+  "meta_grammar": true,
+  "start_state": "*",
+  "states": ["*"],
+  "terminal_states": [],
+  "transitions": [
+    {
+      "transition_id": "META.HELP",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_HELP", "META.HELP"],
+      "aliases": ["help", "what can i do", "show help"],
+      "output_symbol": "META:help",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 0.7, "user_fit": 0.8, "empirical_uncertainty": 0.2},
+      "ui_label": "Help",
+      "ui_description": "Explain the current Arena without changing workflow state."
+    },
+    {
+      "transition_id": "META.STATUS",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_STATUS", "META.STATUS"],
+      "aliases": ["status", "where are we", "current state"],
+      "output_symbol": "META:status",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 0.8, "user_fit": 0.8, "empirical_uncertainty": 0.2},
+      "ui_label": "Status",
+      "ui_description": "Show the active state, evidence, and governing grammar."
+    },
+    {
+      "transition_id": "META.WHAT_NEXT",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_WHAT_NEXT", "META.WHAT_NEXT"],
+      "aliases": ["what next", "what should i do", "next step"],
+      "output_symbol": "META:what_next",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 1.0, "user_fit": 1.0, "empirical_uncertainty": 0.2},
+      "ui_label": "What next?",
+      "ui_description": "Show the highest-ranked admissible next actions."
+    },
+    {
+      "transition_id": "META.WHY_BLOCKED",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_WHY_BLOCKED", "META.WHY_BLOCKED"],
+      "aliases": ["why blocked", "why can't i", "what is missing"],
+      "output_symbol": "META:why_blocked",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 0.9, "user_fit": 0.9, "empirical_uncertainty": 0.2},
+      "ui_label": "Why blocked?",
+      "ui_description": "Show failed guards, missing evidence, and the smallest safe remediation."
+    },
+    {
+      "transition_id": "META.SHOW_EVIDENCE",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_SHOW_EVIDENCE", "META.SHOW_EVIDENCE"],
+      "aliases": ["show evidence", "what evidence do we have"],
+      "output_symbol": "META:show_evidence",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 0.6, "user_fit": 0.8, "empirical_uncertainty": 0.2},
+      "ui_label": "Show evidence",
+      "ui_description": "Project the exact evidence references currently available."
+    },
+    {
+      "transition_id": "META.CANCEL",
+      "from_state": "*",
+      "accepted_input_symbols": ["META_CANCEL", "META.CANCEL"],
+      "aliases": ["cancel", "stop this action"],
+      "output_symbol": "META:cancel",
+      "next_state": "*",
+      "risk": "low",
+      "soft_weight_profile": {"base_priority": 0.5, "user_fit": 0.7, "empirical_uncertainty": 0.2},
+      "ui_label": "Cancel",
+      "ui_description": "Cancel the pending interaction without granting new authority."
+    }
+  ],
+  "authority": {
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": false,
+    "automatic_grammar_promotion": false
+  }
+}
