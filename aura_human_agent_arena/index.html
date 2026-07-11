@@ -5,37 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aura Human Agent Arena</title>
   <link rel="stylesheet" href="arena.css">
+  <link rel="stylesheet" href="jarvis.css">
 </head>
 <body>
-  <main class="arena-shell">
-    <section class="viewport">
-      <canvas id="arena-canvas" aria-label="Aura topology graph"></canvas>
-      <div class="hud">
-        <strong>Human Agent Arena</strong>
-        <span id="graph-status">loading topology</span>
+  <header class="aura-topbar">
+    <div class="aura-brand">
+      <span class="aura-mark" aria-hidden="true"></span>
+      <div>
+        <strong>AURA</strong>
+        <span>Human–Agent Arena</span>
       </div>
-      <div class="legend" id="legend"></div>
-    </section>
+    </div>
+    <nav class="surface-tabs" aria-label="Arena surfaces">
+      <button class="surface-tab is-active" data-surface="coding-surface" type="button">Coding Arena</button>
+      <button class="surface-tab" data-surface="civic-workspace" type="button">Civic Arena</button>
+    </nav>
+    <div class="authority-chip">
+      <span class="authority-light"></span>
+      Human authority active
+    </div>
+  </header>
 
-    <aside class="side-panel">
-      <header class="panel-header">
-        <div>
-          <h1>Human Agent Arena</h1>
-          <p id="truth-policy">Exact topology is source of truth. Visual is advisory only.</p>
-        </div>
-        <button id="demo-toggle" type="button">Demo</button>
-      </header>
+  <main id="coding-surface" class="surface is-active">
+    <section class="jarvis-stage" aria-label="Aura conversational workflow">
+      <div class="ambient-ring ring-one"></div>
+      <div class="ambient-ring ring-two"></div>
 
-      <section class="command-block">
-        <h2>Command</h2>
-        <div class="command-row">
-          <input id="command-input" type="text" value="show ST3GG" aria-label="Command" placeholder="show ST3GG, diagnose selection, prepare agent task...">
-          <button id="mic-button" type="button" title="Voice input (optional)">Mic</button>
-          <button id="run-button" type="button">Run</button>
+      <section class="conversation-deck">
+        <div class="conversation-heading">
+          <div>
+            <p class="eyebrow">Universal intent surface</p>
+            <h1>Tell Aura what you need.</h1>
+            <p>Ask a question, inspect the architecture, prepare a refactor, launch a test lab, or check why a hotswap is blocked.</p>
+          </div>
+          <button id="jarvis-mic-button" class="voice-orb" type="button" aria-label="Speak to Aura">
+            <span class="voice-core"></span>
+            <span class="voice-label">Speak</span>
+          </button>
         </div>
-        <p id="voice-status">Voice optional: type a command and press Run.</p>
-        <div class="mode-row">
-          <label>Mode:
+
+        <div class="command-console">
+          <input id="command-input" type="text" value="Refactor the Human Agent Arena"
+                 aria-label="Command" placeholder="Ask Aura anything…">
+          <button id="mic-button" class="legacy-mic" type="button" title="Voice input">Mic</button>
+          <button id="run-button" class="primary-command" type="button">Send</button>
+        </div>
+        <div class="command-meta">
+          <p id="voice-status" aria-live="polite">Voice and typed commands use the same grounded workflow.</p>
+          <label class="mode-control">Lens
             <select id="mode-select">
               <option value="explore">explore</option>
               <option value="diagnose">diagnose</option>
@@ -44,104 +61,157 @@
             </select>
           </label>
         </div>
-      </section>
 
-      <section class="layout-controls">
-        <h2>Layout Controls</h2>
-        <div class="control-row">
-          <label for="spread-slider">Spacing:
-            <input type="range" id="spread-slider" min="1.0" max="6.0" step="0.1" value="2.8">
-            <span id="spread-value" class="control-value">2.8</span>
-          </label>
+        <div id="command-transcript" class="command-transcript" aria-live="polite">
+          <span class="transcript-speaker">Aura</span>
+          <p>State an objective. I will show the safest useful next action and explain every blocked gate.</p>
         </div>
-        <div class="control-row">
-          <label for="zoom-slider">Zoom:
-            <input type="range" id="zoom-slider" min="0.4" max="8.0" step="0.1" value="1.9">
-          </label>
-        </div>
-        <div class="control-row">
-          <label for="label-mode-select">Labels:
-            <select id="label-mode-select">
-              <option value="selected">selected only</option>
-              <option value="highlighted">highlighted</option>
-              <option value="all">all visible</option>
-              <option value="off">off</option>
-            </select>
-          </label>
-        </div>
-        <div class="control-buttons">
-          <button id="reset-view-btn" type="button" class="ctrl-btn">Reset View</button>
-          <button id="focus-selected-btn" type="button" class="ctrl-btn">Focus Selected</button>
-          <button id="collapse-unselected-btn" type="button" class="ctrl-btn">Collapse Unselected</button>
+
+        <div class="objective-strip">
+          <label for="workflow-objective">Active objective</label>
+          <input id="workflow-objective" type="text" placeholder="No objective set">
+          <button id="workflow-objective-btn" type="button">Set objective</button>
         </div>
       </section>
 
-      <section class="next-actions">
-        <h2>Next Actions</h2>
+      <section class="workflow-deck" aria-labelledby="workflow-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Grounded workflow spine</p>
+            <h2 id="workflow-title">From intent to proof</h2>
+          </div>
+          <span id="workflow-status" class="status-pill">Connecting…</span>
+        </div>
+        <div id="workflow-actions" class="workflow-actions"></div>
+      </section>
+
+      <section class="evidence-deck">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Live evidence</p>
+            <h2>Why Aura allowed or denied the action</h2>
+          </div>
+        </div>
+        <div id="workflow-evidence" class="workflow-evidence">
+          <p class="placeholder">Run an action to see exact evidence, blockers, remediation, and lifecycle receipts.</p>
+        </div>
+        <details class="legacy-answer" open>
+          <summary>Aura response</summary>
+          <pre id="answer-text">Awaiting command.</pre>
+        </details>
+      </section>
+    </section>
+
+    <section class="tool-and-lens-grid">
+      <section class="tool-dock-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Ephemeral organs</p><h2>Summon a bounded tool</h2></div>
+        </div>
+        <div id="tool-dock" class="tool-dock"></div>
+      </section>
+      <section class="context-actions-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Contextual guidance</p><h2>Helpful next actions</h2></div>
+        </div>
         <div id="next-actions-list" class="action-buttons"></div>
       </section>
+    </section>
 
-      <section class="diagnostics">
-        <h2>Diagnostics</h2>
-        <pre id="diagnostics-panel">No diagnostics yet.</pre>
-      </section>
-
-      <section class="truth-panel">
-        <h2>Truth Packet</h2>
-        <pre id="truth-packet">{}</pre>
-      </section>
-
-      <section class="answer-panel">
-        <h2>Answer</h2>
-        <pre id="answer-text">Awaiting command.</pre>
-      </section>
-
-      <section class="event-log">
-        <h2>Event Log</h2>
-        <pre id="event-log">No events.</pre>
-      </section>
-    </aside>
+    <details class="spatial-lens">
+      <summary>
+        <span><strong>Spatial topology lens</strong><small>Optional orientation view. Exact source remains authoritative.</small></span>
+        <span id="graph-status">loading topology</span>
+      </summary>
+      <div class="arena-shell">
+        <section class="viewport">
+          <canvas id="arena-canvas" aria-label="Aura topology graph"></canvas>
+          <div class="hud"><strong>Topology Lens</strong><span id="truth-policy">Exact topology is source of truth. Visual is advisory only.</span></div>
+          <div class="legend" id="legend"></div>
+        </section>
+        <aside class="side-panel">
+          <header class="panel-header">
+            <div><h2>Lens controls</h2><p>Inspect a node only when spatial orientation helps.</p></div>
+            <button id="demo-toggle" type="button">Demo</button>
+          </header>
+          <section class="layout-controls">
+            <div class="control-row"><label for="spread-slider">Spacing
+              <input type="range" id="spread-slider" min="1.0" max="6.0" step="0.1" value="2.8"><span id="spread-value" class="control-value">2.8</span>
+            </label></div>
+            <div class="control-row"><label for="zoom-slider">Zoom
+              <input type="range" id="zoom-slider" min="0.4" max="8.0" step="0.1" value="1.9">
+            </label></div>
+            <div class="control-row"><label for="label-mode-select">Labels
+              <select id="label-mode-select"><option value="selected">selected only</option><option value="highlighted">highlighted</option><option value="all">all visible</option><option value="off">off</option></select>
+            </label></div>
+            <div class="control-buttons">
+              <button id="reset-view-btn" type="button" class="ctrl-btn">Reset View</button>
+              <button id="focus-selected-btn" type="button" class="ctrl-btn">Focus Selected</button>
+              <button id="collapse-unselected-btn" type="button" class="ctrl-btn">Collapse Unselected</button>
+            </div>
+          </section>
+          <section class="diagnostics"><h2>Diagnostics</h2><pre id="diagnostics-panel">No diagnostics yet.</pre></section>
+          <section class="truth-panel"><h2>Truth packet</h2><pre id="truth-packet">{}</pre></section>
+          <section class="event-log"><h2>Event log</h2><pre id="event-log">No events.</pre></section>
+        </aside>
+      </div>
+    </details>
   </main>
 
-  <!-- Civic Commons Arena Workspace -->
-  <section id="civic-workspace" class="civic-workspace" aria-label="Civic Commons Arena" role="region">
-    <h2>Civic Commons Arena</h2>
-    <div class="civic-controls">
-      <button id="civic-create-btn" onclick="civicCreateSession()" aria-label="Create Civic Session">Create Session</button>
-      <input id="civic-objective" type="text" placeholder="Enter community objective..." aria-label="Community objective" style="flex:1;min-width:300px">
-      <select id="civic-story" aria-label="Demo story">
-        <option value="hairstylist">Hairstyling Service</option>
-        <option value="youth_centre">Youth Centre</option>
-        <option value="council_pulse">Council Pulse</option>
-      </select>
-      <button id="civic-demo-btn" onclick="civicRunDemo()" aria-label="Run full demo">Run Demo</button>
+  <section id="civic-workspace" class="surface civic-map-surface" aria-label="Civic Commons Arena">
+    <div class="civic-map-shell">
+      <section class="civic-map-stage">
+        <canvas id="civic-map-canvas" aria-label="Jurisdiction-aware Civic Arena map"></canvas>
+        <div class="civic-map-top">
+          <div><p class="eyebrow">Civic Commons Arena</p><h1>The map is the interface.</h1><p id="civic-map-scope">Zoom to reveal only the data appropriate to this jurisdiction and scale.</p></div>
+          <div class="map-authority-badge">Non-binding · Community authority</div>
+        </div>
+        <div class="civic-map-controls">
+          <button id="civic-zoom-out" type="button" aria-label="Zoom out">−</button>
+          <input id="civic-map-zoom" type="range" min="3" max="18" step="1" value="11" aria-label="Map zoom">
+          <button id="civic-zoom-in" type="button" aria-label="Zoom in">+</button>
+          <label>Jurisdiction<select id="civic-jurisdiction"><option value="">Active session jurisdiction</option></select></label>
+          <button id="civic-fit-map" type="button">Fit data</button>
+        </div>
+        <div id="civic-layer-chips" class="civic-layer-chips"></div>
+        <div id="civic-map-tooltip" class="civic-map-tooltip" hidden></div>
+      </section>
+
+      <aside class="civic-command-drawer">
+        <div class="section-heading"><div><p class="eyebrow">Community objective</p><h2>Open a governed session</h2></div></div>
+        <input id="civic-objective" type="text" placeholder="What does the community want to plan?">
+        <select id="civic-story" aria-label="Demo story"><option value="hairstylist">Hairstyling Service</option><option value="youth_centre">Youth Centre</option><option value="council_pulse">Council Pulse</option></select>
+        <div class="civic-controls"><button id="civic-create-btn" onclick="civicCreateSession()" type="button">Create Session</button><button id="civic-demo-btn" onclick="civicRunDemo()" type="button">Run Demo</button></div>
+        <div id="civic-session-info" class="civic-session-info" aria-live="polite">No civic session active.</div>
+        <div id="civic-feature-inspector" class="civic-feature-inspector"><p class="placeholder">Select a map feature to inspect its truth class, source, jurisdiction, privacy, and location precision.</p></div>
+        <div id="civic-map-data" class="sr-only"></div>
+        <section class="civic-summary-grid">
+          <article><h3>Objective</h3><div id="objective-data" class="panel-data"></div></article>
+          <article><h3>Active Profiles</h3><div id="profiles-data" class="panel-data"></div></article>
+          <article><h3>Needs</h3><div id="needs-data" class="panel-data"></div></article>
+          <article><h3>Assets</h3><div id="civic-assets-data" class="panel-data"></div></article>
+          <article><h3>Offers</h3><div id="civic-offers-data" class="panel-data"></div></article>
+          <article><h3>Workstreams</h3><div id="workstreams-data" class="panel-data"></div></article>
+          <article><h3>Scenarios</h3><div id="scenarios-data" class="panel-data"></div></article>
+          <article><h3>Laws and Bylaws</h3><div id="legal-data" class="panel-data"></div></article>
+          <article><h3>Council Pulse</h3><div id="council-data" class="panel-data"></div></article>
+          <article><h3>Consent Arc</h3><div id="consent-data" class="panel-data"></div></article>
+          <article><h3>Objections</h3><div id="civic-objections-data" class="panel-data"></div></article>
+          <article><h3>Representation Gaps</h3><div id="civic-gaps-data" class="panel-data"></div></article>
+          <article><h3>Systemic Context</h3><div id="systemic-data" class="panel-data"></div></article>
+          <article><h3>Democratic Friction</h3><div id="friction-data" class="panel-data"></div></article>
+          <article><h3>What-If</h3><div id="whatif-data" class="panel-data"></div></article>
+          <article><h3>Pilot</h3><div id="pilot-data" class="panel-data"></div></article>
+          <article><h3>Evidence</h3><div id="civic-evidence-data" class="panel-data"></div></article>
+          <article><h3>Cost</h3><div id="cost-data" class="panel-data"></div></article>
+          <article><h3>Audit</h3><div id="audit-data" class="panel-data"></div></article>
+          <article><h3>Tensor Analysis</h3><div id="civic-tensor-data" class="panel-data"></div></article>
+        </section>
+        <div id="civic-decision-packet" class="civic-decision-packet" aria-live="polite"></div>
+      </aside>
     </div>
-    <div id="civic-session-info" class="civic-session-info" aria-live="polite"></div>
-    <div class="civic-panels">
-      <div class="civic-panel" id="civic-objective-panel"><h3>Objective</h3><div id="civic-objective-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-profiles-panel"><h3>Active Profiles</h3><div id="civic-profiles-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-map-panel"><h3>Map</h3><div id="civic-map-data" class="panel-data"><p class="placeholder">No map data. Run a demo to load.</p></div></div>
-      <div class="civic-panel" id="civic-needs-panel"><h3>Community Needs</h3><div id="civic-needs-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-assets-panel"><h3>Community Assets</h3><div id="civic-assets-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-offers-panel"><h3>Resource Offers</h3><div id="civic-offers-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-workstreams-panel"><h3>MITOSIS Workstreams</h3><div id="civic-workstreams-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-scenarios-panel"><h3>MUSIC Scenario Comparison</h3><div id="civic-scenarios-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-legal-panel"><h3>Applicable Laws and Bylaws</h3><div id="civic-legal-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-council-panel"><h3>Council Issue Pulse</h3><div id="civic-council-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-consent-panel"><h3>Consent Arc</h3><div id="civic-consent-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-objections-panel"><h3>Reservations and Objections</h3><div id="civic-objections-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-gaps-panel"><h3>Representation Gaps</h3><div id="civic-gaps-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-systemic-panel"><h3>Systemic Context</h3><div id="civic-systemic-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-friction-panel"><h3>Democratic Friction</h3><div id="civic-friction-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-whatif-panel"><h3>What-If</h3><div id="civic-whatif-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-pilot-panel"><h3>Pilot Tunnel</h3><div id="civic-pilot-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-evidence-panel"><h3>Evidence Inspector</h3><div id="civic-evidence-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-cost-panel"><h3>Cost and Performance</h3><div id="civic-cost-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-audit-panel"><h3>Audit and Dissolution</h3><div id="civic-audit-data" class="panel-data"></div></div>
-      <div class="civic-panel" id="civic-tensor-panel"><h3>Tensor Evidence Analysis</h3><div id="civic-tensor-data" class="panel-data"><p class="placeholder">No tensor analysis. Run a civic demo then analyze.</p></div></div>
-    </div>
-    <div id="civic-decision-packet" class="civic-decision-packet" aria-live="polite"></div>
   </section>
+
+  <script src="jarvis.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
