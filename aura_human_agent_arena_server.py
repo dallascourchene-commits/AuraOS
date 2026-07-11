@@ -168,6 +168,15 @@ def _handle_civic_api(method: str, route: str, parsed, body: dict) -> tuple[int,
     if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "close":
         return 200, close_session(path_parts[3])
 
+    # POST /api/civic/sessions/{id}/tensor-analyze
+    if method == "POST" and len(path_parts) == 5 and path_parts[2] == "sessions" and path_parts[4] == "tensor-analyze":
+        s = get_session(path_parts[3])
+        if s["ok"]:
+            from aura_civic_tensor_adapter import analyze_civic_session
+            r = analyze_civic_session(s["session"])
+            return 200, r
+        return 200, s
+
     return 404, _err("civic route not found", 404)
 
 
