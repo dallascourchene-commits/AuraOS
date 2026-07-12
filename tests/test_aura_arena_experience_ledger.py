@@ -36,7 +36,8 @@ def test_ledger_uses_wal_redacts_secrets_and_is_idempotent(tmp_path: Path):
     with ArenaExperienceLedger(tmp_path) as ledger:
         status = ledger.status()
         assert status["journal_mode"] == "wal"
-        assert status["schema_version"] == 2
+        assert status["schema_version"] == 3
+        assert status["v2_complete_record_count"] == 0
         exp = _experience()
         first = ledger.record(exp)
         second = ledger.record(exp)

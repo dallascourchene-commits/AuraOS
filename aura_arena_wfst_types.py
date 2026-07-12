@@ -1,15 +1,15 @@
 """Typed contracts for Aura's shared guarded Arena WFST fabric.
 
-The contracts are deliberately stdlib-only and contain no execution hooks. Grammar
-manifests may name registered guards and grounded capabilities, but they cannot embed
-Python callables or arbitrary code.
+Grammar manifests remain declarative and may reference registered guards, grounded
+capabilities, and C2 repository-local route capsules. They cannot embed executable
+code, prompts, secrets, or authority-bearing hooks.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-ARENA_WFST_TYPES_VERSION = "AURA_ARENA_WFST_TYPES_V1"
+ARENA_WFST_TYPES_VERSION = "AURA_ARENA_WFST_TYPES_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -84,6 +84,9 @@ class ArenaTransition:
     approval_requirement: str = "none"
     risk: str = "low"
     soft_weight_profile: SoftWeightProfile = field(default_factory=SoftWeightProfile)
+    morphology_profile_ref: str = ""
+    route_capsule_ref: str = ""
+    capsule_feature_flag: str = ""
     ui_label: str = ""
     ui_description: str = ""
     explanation_ref: str = ""
@@ -125,6 +128,9 @@ class ArenaTransition:
             approval_requirement=str(data.get("approval_requirement") or "none").strip().lower(),
             risk=str(data.get("risk") or "low").strip().lower(),
             soft_weight_profile=SoftWeightProfile.from_dict(data.get("soft_weight_profile")),
+            morphology_profile_ref=str(data.get("morphology_profile_ref") or "").strip(),
+            route_capsule_ref=str(data.get("route_capsule_ref") or "").strip(),
+            capsule_feature_flag=str(data.get("capsule_feature_flag") or "").strip(),
             ui_label=str(data.get("ui_label") or transition_id).strip(),
             ui_description=str(data.get("ui_description") or "").strip(),
             explanation_ref=str(data.get("explanation_ref") or "").strip(),
@@ -154,6 +160,9 @@ class ArenaTransition:
             "approval_requirement": self.approval_requirement,
             "risk": self.risk,
             "soft_weight_profile": self.soft_weight_profile.to_dict(),
+            "morphology_profile_ref": self.morphology_profile_ref,
+            "route_capsule_ref": self.route_capsule_ref,
+            "capsule_feature_flag": self.capsule_feature_flag,
             "ui_label": self.ui_label,
             "ui_description": self.ui_description,
             "explanation_ref": self.explanation_ref,
@@ -235,6 +244,7 @@ class RankVector:
     negative_user_fit: float
     stable_transition_id: str
     measurement_classes: dict[str, str] = field(default_factory=dict)
+    negative_capsule_resonance: float = 0.0
 
     def sort_key(self) -> tuple[Any, ...]:
         return (
@@ -242,6 +252,7 @@ class RankVector:
             self.declared_evidence_gap,
             self.empirical_uncertainty,
             self.semantic_ambiguity,
+            self.negative_capsule_resonance,
             self.context_switch_cost,
             self.latency_cost,
             self.token_cost,
@@ -257,6 +268,7 @@ class RankVector:
             "declared_evidence_gap": self.declared_evidence_gap,
             "empirical_uncertainty": self.empirical_uncertainty,
             "semantic_ambiguity": self.semantic_ambiguity,
+            "negative_capsule_resonance": self.negative_capsule_resonance,
             "context_switch_cost": self.context_switch_cost,
             "latency_cost": self.latency_cost,
             "token_cost": self.token_cost,
