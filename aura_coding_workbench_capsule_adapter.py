@@ -57,28 +57,29 @@ class CapsuleCodingWorkbenchWFSTSession(CodingWorkbenchWFSTSession):
         self._capsule_context_items: list[dict[str, Any]] = []
         self._capsule_memory_refs: list[str] = []
         self._capsule_budget_consumed: dict[str, float] = {}
-        super().__init__(repo_root=repo_root, session_path=session_path, restore=restore)
+        super().__init__(repo_root=repo_root, session_path=session_path, restore=False)
 
-        runtime = CapsuleAwareArenaWFSTRuntime(
+        self.runtime = CapsuleAwareArenaWFSTRuntime(
             repo_root=self.repo_root,
             route_capsules_enabled=self.route_capsules_enabled,
         )
         route_root = self.repo_root / ".aura" / "arena_routes"
-        coding = runtime.register_manifest(route_root / "coding.v1.json")
-        meta = runtime.register_manifest(route_root / "meta.v1.json")
-        capsule_localize = runtime.attach_capsule(
+        coding = self.runtime.register_manifest(route_root / "coding.v1.json")
+        meta = self.runtime.register_manifest(route_root / "meta.v1.json")
+        capsule_localize = self.runtime.attach_capsule(
             arena_id="coding_workbench",
             transition_id="CODING.TASK_SCOPED.LOCALIZE_CODE",
             route_capsule_ref=".aura/route_capsules/coding_localize.v1.json",
             morphology_profile_ref=".aura/morphology_profiles/six_slot.v1.json",
             feature_flag="c2_coding_localization_enabled",
         )
-        self.runtime = runtime
         self.initialization = {
             "coding": coding,
             "meta": meta,
             "capsule_localize": capsule_localize,
         }
+        if restore:
+            self._restore()
         self._event(
             "c2_runtime",
             f"enabled={self.route_capsules_enabled};leases={len(self.capsule_lease_capabilities)}",
@@ -119,11 +120,8 @@ class CapsuleCodingWorkbenchWFSTSession(CodingWorkbenchWFSTSession):
 
     def _context(self, payload: dict[str, Any]) -> dict[str, Any]:
         context = super()._context(payload)
-        leases = payload.get("lease_capabilities")
-        if leases is None:
-            leases = self.capsule_lease_capabilities
         context.update({
-            "lease_capabilities": tuple(str(item) for item in leases or ()),
+            "lease_capabilities": self.capsule_lease_capabilities,
             "requested_model": str(payload.get("requested_model") or self.requested_model),
             "capsule_context_items": list(
                 payload.get("capsule_context_items") or self._capsule_context_items
@@ -131,9 +129,7 @@ class CapsuleCodingWorkbenchWFSTSession(CodingWorkbenchWFSTSession):
             "capsule_memory_refs": list(
                 payload.get("capsule_memory_refs") or self._capsule_memory_refs
             ),
-            "capsule_budget_consumed": dict(
-                payload.get("capsule_budget_consumed") or self._capsule_budget_consumed
-            ),
+            "capsule_budget_consumed": dict(self._capsule_budget_consumed),
             "exact_target": str(payload.get("exact_target") or ""),
             "target_file": str(payload.get("target_file") or ""),
             "target_symbol": str(payload.get("target_symbol") or ""),
@@ -196,7 +192,6 @@ class CapsuleCodingWorkbenchWFSTSession(CodingWorkbenchWFSTSession):
         from aura_coding_workbench_actions import localize_code
 
         started = time.perf_counter()
-        output = dict(localize_code(self.objective, repo_root=self.repo_root) or {})
         selected = dict((getattr(self.runtime, "last_route", {}) or {}).get("selected") or {})
         aperture = dict(selected.get("materialized_aperture") or {})
         if self.route_capsules_enabled and not aperture:
@@ -213,6 +208,8 @@ class CapsuleCodingWorkbenchWFSTSession(CodingWorkbenchWFSTSession):
             value is not None for value in (maximum_files, maximum_symbols, maximum_lines)
         ):
             return self._denial("invalid_materialized_data_aperture", action_id="localize_code")
+
+        output = dict(localize_code(self.objective, repo_root=self.repo_root) or {})
 
         files = list(output.get("localized_files") or [])
         symbols = list(output.get("localized_symbols") or [])

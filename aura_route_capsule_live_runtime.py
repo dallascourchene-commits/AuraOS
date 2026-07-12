@@ -211,7 +211,11 @@ class CapsuleAwareArenaWFSTRuntime(ArenaWFSTRuntime):
         blocked.sort(key=lambda item: str(item.get("transition_id") or ""))
         route["available"] = allowed
         route["blocked"] = blocked
-        route["recommended"] = allowed[:max(0, int(kwargs.get("recommendation_limit", 4)))]
+        try:
+            recommendation_limit = max(0, int(kwargs.get("recommendation_limit", 4)))
+        except (TypeError, ValueError, OverflowError):
+            recommendation_limit = 4
+        route["recommended"] = allowed[:recommendation_limit]
         route["meta"] = [item for item in allowed if item.get("meta_transition")]
         route["intent_packet"] = intent_view
         exact = set(route.get("exact_match_transition_ids") or [])

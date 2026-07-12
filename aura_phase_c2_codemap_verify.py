@@ -18,6 +18,7 @@ C2_REQUIRED_PATHS = frozenset({
     "aura_arena_experience.py",
     "aura_arena_experience_ledger.py",
     "aura_phase_c2_codemap_verify.py",
+    "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_phase_c2_live_route_capsules.py",
     "tests/test_aura_phase_c2_capsule_enforcement.py",
 })

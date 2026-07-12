@@ -241,6 +241,20 @@ def test_v2_database_migrates_without_inventing_capsule_provenance(tmp_path):
          trace_atom_ids_json TEXT NOT NULL, raw_evidence_refs_json TEXT NOT NULL, redactions_json TEXT NOT NULL,
          payload_json TEXT NOT NULL, experience_digest TEXT NOT NULL, schema_version TEXT NOT NULL, created_at REAL NOT NULL);
         CREATE TABLE arena_experience_migrations(version INTEGER PRIMARY KEY, applied_at REAL NOT NULL);
+        INSERT INTO arena_experiences (
+         experience_id, correlation_id, task_id, workflow_id, arena_id, arena_version, grammar_version,
+         grammar_manifest_digest, runtime_version, compiler_version, started_at, completed_at,
+         state_before, state_after, selected_transition, final_outcome, outcome_vector_json,
+         admissible_alternatives_json, predictions_json, route_observation_digest,
+         trace_atom_ids_json, raw_evidence_refs_json, redactions_json, payload_json,
+         experience_digest, schema_version, created_at
+        ) VALUES (
+         'legacy-v2-experience-001', 'corr-001', 'task-001', 'workflow-001', 'coding_workbench',
+         'v1', 'g1', 'manifest-digest', 'runtime-v1', 'compiler-v1', 1000.0, 1001.0,
+         'TASK_SCOPED', 'CODE_LOCALIZED', 'CODING.TASK_SCOPED.LOCALIZE_CODE', 'COMPLETED',
+         '{}', '[]', '[]', 'route-digest', '[]', '[]', '[]', '{"test": "legacy"}',
+         'exp-digest', 'AURA_ARENA_EXPERIENCE_V2', 1000.0
+        );
         """
     )
     connection.commit()
@@ -253,3 +267,11 @@ def test_v2_database_migrates_without_inventing_capsule_provenance(tmp_path):
         assert "route_capsule_digest" in columns
         assert "budget_consumed_json" in columns
         assert ledger.status()["capsule_record_count"] == 0
+
+        legacy_row = ledger._conn.execute(
+            "SELECT route_capsule_digest, aperture_digest FROM arena_experiences WHERE experience_id = ?",
+            ("legacy-v2-experience-001",)
+        ).fetchone()
+        assert legacy_row is not None
+        assert legacy_row[0] in ("", None)
+        assert legacy_row[1] in ("", None)
