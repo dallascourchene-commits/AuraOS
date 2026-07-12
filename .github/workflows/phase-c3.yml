@@ -37,8 +37,19 @@ jobs:
         python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - name: Remove persisted checkout credentials
+        shell: bash
+        run: |
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git config --local --unset-all credential.helper || true
+          if [ -n "$(git config --local --get-all http.https://github.com/.extraheader || true)" ]; then
+            echo "checkout token remained in local git configuration" >&2
+            exit 1
+          fi
+          if [ -n "$(git config --local --get-all credential.helper || true)" ]; then
+            echo "credential helper remained in local git configuration" >&2
+            exit 1
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
