@@ -96,10 +96,10 @@ def test_human_agent_state_projects_exact_wfst_recommendations_and_blocks():
         plan_state = workflow.get_state()
         assert plan_state["current_phase"] == "PLAN"
         assert plan_state["grammar_version"] == "human-agent-wfst-v1"
-        recommended = [item for item in plan_state["recommended"] if not item.get("meta_transition")]
-        assert recommended[0]["transition_id"] == "HUMAN.PREPARE_CAPSULE"
-        assert recommended[0]["provenance"]["action_id"] == "prepare_capsule"
-        assert set(recommended[0]["rank"]) >= {
+        ranked_actions = [item for item in plan_state["available"] if not item.get("meta_transition")]
+        assert ranked_actions[0]["transition_id"] == "HUMAN.PREPARE_CAPSULE"
+        assert ranked_actions[0]["provenance"]["action_id"] == "prepare_capsule"
+        assert set(ranked_actions[0]["rank"]) >= {
             "unresolved_risk",
             "declared_evidence_gap",
             "empirical_uncertainty",
@@ -121,6 +121,22 @@ def test_human_agent_state_projects_exact_wfst_recommendations_and_blocks():
         workflow.close()
 
 
+def test_showcase_status_discloses_optional_basemap_network_access():
+    from aura_showcase_server import dispatch_showcase_request
+
+    class FakeState:
+        default_session_id = ""
+        demo_project = "winnipeg_pathways"
+
+    status, _, raw = dispatch_showcase_request(FakeState(), "GET", "/api/showcase/status")
+    payload = json.loads(raw)
+    assert status == 200
+    assert payload["zero_raw_civic_data_network_calls"] is True
+    assert payload["optional_public_basemap_network_calls"] is True
+    assert payload["basemap_provider"].startswith("OpenStreetMap")
+    assert "zero_raw_network_calls" not in payload
+
+
 def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     index = (REPO_ROOT / "aura_showcase" / "index.html").read_text(encoding="utf-8")
     civic = (REPO_ROOT / "aura_showcase" / "civic.js").read_text(encoding="utf-8")
@@ -134,4 +150,5 @@ def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     assert "navigator.onLine" in civic
     assert "rankVector" in human
     assert "failed_guards" in human
+    assert "workflow.available" in human
     assert "MAP_VULNERABLE_PEOPLE" not in civic
