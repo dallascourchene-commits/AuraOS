@@ -121,6 +121,82 @@ def test_human_agent_state_projects_exact_wfst_recommendations_and_blocks():
         workflow.close()
 
 
+def test_six_slot_guidance_teaches_from_current_guarded_state_only():
+    from aura_human_agent_guidance import answer_guidance_question, build_guidance_packet
+    from aura_human_agent_workflow import HumanAgentWorkflow
+
+    workflow = HumanAgentWorkflow(REPO_ROOT)
+    try:
+        objective = "Investigate a grounded Winnipeg map presentation issue."
+        workflow.objective = objective
+        workflow.evidence.update({
+            "objective": objective,
+            "grounding": {"truth_class": "EXACT_REPOSITORY_FACTS"},
+        })
+        packet = build_guidance_packet(workflow.get_state())
+        assert packet["current_phase"] == "PLAN"
+        assert set(packet["gate"]["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+        assert packet["recommended_actions"][0]["action_id"] == "prepare_capsule"
+        assert set(packet["recommended_actions"][0]["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+        assert packet["ai_direction"]["may_not"] == ["grant capabilities", "bypass guards", "mutate production", "commit", "push", "merge"]
+        assert "Never invent" in packet["ai_direction"]["instruction"]
+
+        available = answer_guidance_question(packet, "What can I do?")
+        assert available["ok"] is True
+        assert "Prepare Arena capsule" in available["answer"]
+
+        explained = answer_guidance_question(packet, "Explain this gate using the six slots.")
+        assert explained["kind"] == "gate_explanation"
+        assert "DIR=" in explained["answer"]
+        assert "STEM=" in explained["answer"]
+    finally:
+        workflow.close()
+
+
+def test_showcase_guide_routes_return_grounded_answers():
+    from aura_human_agent_workflow import HumanAgentWorkflow
+    from aura_showcase_server import dispatch_showcase_request
+
+    workflow = HumanAgentWorkflow(REPO_ROOT)
+    try:
+        objective = "Investigate a grounded Winnipeg map presentation issue."
+        workflow.objective = objective
+        workflow.evidence.update({
+            "objective": objective,
+            "grounding": {"truth_class": "EXACT_REPOSITORY_FACTS"},
+        })
+
+        class HumanState:
+            pass
+
+        human = HumanState()
+        human.workflow = workflow
+
+        class FakeState:
+            default_session_id = ""
+            demo_project = "winnipeg_pathways"
+            human_agent = human
+
+        status, _, raw = dispatch_showcase_request(FakeState(), "GET", "/api/human-agent/guide")
+        guide = json.loads(raw)
+        assert status == 200
+        assert guide["current_phase"] == "PLAN"
+        assert guide["recommended_actions"][0]["action_id"] == "prepare_capsule"
+
+        status, _, raw = dispatch_showcase_request(
+            FakeState(),
+            "POST",
+            "/api/human-agent/guide/ask",
+            {"question": "What should I do next?"},
+        )
+        answer = json.loads(raw)
+        assert status == 200
+        assert answer["kind"] == "recommended_next"
+        assert "Prepare Arena capsule" in answer["answer"]
+    finally:
+        workflow.close()
+
+
 def test_showcase_status_discloses_optional_basemap_network_access():
     from aura_showcase_server import dispatch_showcase_request
 
@@ -145,10 +221,14 @@ def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     assert 'id="basemap-tiles"' in index
     assert 'id="human-recommended-actions"' in index
     assert 'id="human-blocked-actions"' in index
+    assert 'id="human-six-slots"' in index
+    assert 'id="human-guide-ask"' in index
+    assert 'href="guide.css"' in index
     assert "OpenStreetMap contributors" in index
     assert "tile.openstreetmap.org/{z}/{x}/{y}.png" in civic
     assert "navigator.onLine" in civic
     assert "rankVector" in human
     assert "failed_guards" in human
-    assert "workflow.available" in human
+    assert "workflow.available" in human or "routing.available" in human
+    assert "/api/human-agent/guide/ask" in human
     assert "MAP_VULNERABLE_PEOPLE" not in civic
