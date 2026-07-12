@@ -29,7 +29,7 @@ from aura_showcase_handoff import import_handoff_into_workflow
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V1"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V2"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
@@ -101,7 +101,10 @@ def dispatch_showcase_request(
             "guide": guide,
             "human_agent_available": True,
             "fixture_mode": True,
-            "zero_raw_network_calls": True,
+            "zero_raw_civic_data_network_calls": True,
+            "optional_public_basemap_network_calls": True,
+            "basemap_provider": "OpenStreetMap standard raster tiles",
+            "basemap_offline_fallback": "Aura governed synthetic grid",
             "automatic_commit": False,
             "automatic_push": False,
             "automatic_merge": False,
