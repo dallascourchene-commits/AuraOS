@@ -4,6 +4,8 @@ window.Showcase = {
   INITIAL_MAP_ZOOM: 11,
   DEFAULT_MAP_CENTER: {lon: -97.152, lat: 49.895},
   TEST_COMMUNITY_CENTER: {lon: -97.165, lat: 49.8865},
+  DEFAULT_TILE_URL_TEMPLATE: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  tileUrlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   guide: null,
   sessionId: '',
   mapZoom: 11,
@@ -90,6 +92,7 @@ S.initialize = async () => {
   S.$('advance-step').addEventListener('click', S.advance);
   S.$('back-step').addEventListener('click', S.back);
   const status = await S.api('/api/showcase/status');
+  S.tileUrlTemplate = status.basemap_tile_url_template || S.DEFAULT_TILE_URL_TEMPLATE;
   if (status.guide?.ok) S.applyGuide(status.guide);
   else await S.restartProject();
 };
