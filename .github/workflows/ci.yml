@@ -246,5 +246,16 @@ jobs:
         run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
       - name: Regenerate deep CODEMAP
         run: python aura_codebase_navigator.py
+      - name: Upload regenerated CODEMAP artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-codemap-${{ github.run_id }}
+          path: |
+            .aura/CODEMAP.md
+            .aura/CODEMAP.json
+            .aura/topology_map.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Verify topology and stable committed structure
         run: python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
