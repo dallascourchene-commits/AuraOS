@@ -1,8 +1,7 @@
-# Aura Arena Experience Schema — Phase A
+# Aura Arena Experience Schema
 
-`ArenaExperienceV1` is the authoritative structured trace format that future
-Crucible workers will mine. Phase A records experience; it does not learn from or
-promote it automatically.
+`ArenaExperienceV1` is the authoritative structured trace format recorded by Arena
+workflows and mined by the proposal-only Phase B Crucible.
 
 ## Storage
 
@@ -63,8 +62,22 @@ Repeating the same `experience_id` with the same canonical digest is accepted as
 idempotent replay. Reusing the ID for different content fails closed with
 `experience_id_digest_conflict`.
 
-## Future Crucible boundary
+## Phase B Crucible boundary
 
-Future background workers may read complete schema-valid records and emit proposals.
-They may not mutate the active grammar. Candidate output must terminate at
-`CRYSTALLIZATION_PROPOSED` and require verifier and human review.
+The Phase B Arena Crucible may read complete schema-valid records and emit proposals.
+It may not mutate an active grammar or runtime weight. Candidate output must terminate
+at:
+
+```text
+CRYSTALLIZATION_PROPOSED
+```
+
+Every stored proposal requires verifier and human review. In Phase B, the only
+supported candidate path is:
+
+```text
+soft_weight_profile.empirical_uncertainty
+```
+
+Hard guards, aliases, states, capabilities, risk declarations, verifier requirements,
+and approval requirements are outside the Phase B learning surface.
