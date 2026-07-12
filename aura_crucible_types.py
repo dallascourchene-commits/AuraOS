@@ -97,6 +97,13 @@ class CrucibleCandidate:
         for value in (self.current_value, self.proposed_value, self.train_success_rate, self.train_wilson_lower):
             if not 0.0 <= float(value) <= 1.0:
                 raise ValueError("candidate probability/weight values must be between 0 and 1")
+        if self.patch_authority != PATCH_AUTHORITY or any((
+            self.vsa_patch_authority,
+            self.learned_weight_patch_authority,
+            self.crystallization_patch_authority,
+            self.automatic_grammar_promotion,
+        )):
+            raise ValueError("Crucible candidates cannot carry mutation or promotion authority")
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -142,8 +149,20 @@ class CrystallizationProposal:
             raise ValueError("Crucible output must terminate at CRYSTALLIZATION_PROPOSED")
         if self.change_path not in _ALLOWED_CHANGE_PATHS:
             raise ValueError(f"unsupported proposal change path: {self.change_path}")
-        if not bool(self.validation.get("passed")):
+        if self.validation.get("passed") is not True:
             raise ValueError("a crystallization proposal requires passing validation")
+        if self.required_next_gate != "VERIFIER_AND_HUMAN_REVIEW":
+            raise ValueError("Crucible proposals must require verifier and human review")
+        if self.patch_authority != PATCH_AUTHORITY or any((
+            self.vsa_patch_authority,
+            self.learned_weight_patch_authority,
+            self.crystallization_patch_authority,
+            self.automatic_grammar_promotion,
+            self.automatic_commit,
+            self.automatic_push,
+            self.automatic_merge,
+        )):
+            raise ValueError("Crucible proposals cannot carry mutation or promotion authority")
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
