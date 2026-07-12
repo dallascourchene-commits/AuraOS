@@ -15,6 +15,7 @@ window.Showcase = {
   basemapFailed: false,
   handoff: null,
   workflow: null,
+  humanGuide: null,
 };
 
 const S = window.Showcase;
@@ -58,9 +59,11 @@ S.restartProject = async () => {
   S.basemapFailed = false;
   S.handoff = null;
   S.workflow = null;
+  S.humanGuide = null;
   S.applyGuide(result);
   if (S.renderHandoff) S.renderHandoff();
   if (S.renderWorkflow) S.renderWorkflow();
+  if (S.renderHumanGuide) S.renderHumanGuide();
 };
 
 S.advance = async () => {
