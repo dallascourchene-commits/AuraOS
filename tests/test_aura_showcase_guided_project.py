@@ -1,6 +1,7 @@
 """Focused contracts for the Winnipeg Civic + Human Agent showcase."""
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 from pathlib import Path
 
@@ -41,6 +42,26 @@ def test_project_registry_includes_winnipeg_pathways():
     assert project.jurisdiction_id == "winnipeg_mb_ca"
     assert "no_person_level_vulnerability_mapping" in project.mandatory_constraints
     assert project.demo_issue["human_review_required"] is True
+
+
+def test_legacy_projects_use_the_defined_explore_map_step():
+    from aura_civic_projects import list_projects
+
+    projects = {item["project_id"]: item for item in list_projects()["projects"]}
+    for project_id in ("hairstylist", "youth_centre", "council_pulse"):
+        assert "EXPLORE_MAP" in projects[project_id]["guided_steps"]
+        assert "EXPLORE" not in projects[project_id]["guided_steps"]
+
+
+def test_unknown_project_returns_structured_failure():
+    from aura_civic_guided_project import start_project
+    from aura_civic_projects import get_project
+
+    lookup = get_project("missing-project")
+    assert lookup["ok"] is False
+    assert lookup["error"] == "unknown_civic_project"
+    result = start_project("missing-project")
+    assert result == lookup
 
 
 def test_winnipeg_fixture_is_synthetic_and_uses_safe_aggregate_heatmap():
@@ -124,6 +145,31 @@ def test_response_preserves_reservation_without_binding_vote():
     assert "vote_cast" not in json.dumps(session).lower()
 
 
+def test_concurrent_responses_are_serialized_without_lost_updates():
+    from aura_civic_guided_project import record_response, start_project
+    import aura_civic_runtime as runtime
+
+    guide = start_project("winnipeg_pathways")
+    session_id = guide["session"]["session_id"]
+    statements = [f"community-response-{index}" for index in range(16)]
+
+    def submit(statement: str):
+        return record_response(session_id, {
+            "response_type": "CONSENT_WITH_RESERVATION",
+            "statement": statement,
+        })
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(submit, statements))
+
+    assert all(result["ok"] is True for result in results)
+    session = runtime.get_session(session_id)["session"]
+    recorded = {item["statement"] for item in session["guide_responses"]}
+    consent_recorded = {item["statement"] for item in session["consent_responses"]}
+    assert recorded == set(statements)
+    assert consent_recorded == set(statements)
+
+
 def test_handoff_packet_uses_exact_files_and_never_mutates_production():
     from aura_civic_guided_project import start_project
     from aura_showcase_handoff import build_handoff_packet
@@ -187,3 +233,14 @@ def test_showcase_dispatch_lists_and_starts_projects():
     assert status == 200
     assert started["ok"] is True
     assert state.default_session_id == started["session"]["session_id"]
+
+    status, _, raw = dispatch_showcase_request(
+        state,
+        "POST",
+        "/api/showcase/projects/missing-project/start",
+        {},
+    )
+    rejected = json.loads(raw)
+    assert status == 400
+    assert rejected["ok"] is False
+    assert rejected["error"] == "unknown_civic_project"
