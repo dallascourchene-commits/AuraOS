@@ -38,7 +38,7 @@ MAX_BODY_BYTES = 1_000_000
 class ShowcaseState:
     def __init__(self, repo_root: str | Path, *, demo_project: str, auto_start: bool) -> None:
         self.repo_root = Path(repo_root).resolve()
-        self.human_agent = HumanAgentArenaServerState(self.repo_root, demo=True)
+        self._human_agent: HumanAgentArenaServerState | None = None
         self.demo_project = demo_project
         self.default_session_id = ""
         if auto_start:
@@ -46,8 +46,16 @@ class ShowcaseState:
             if started.get("ok"):
                 self.default_session_id = str(started["session"]["session_id"])
 
+    @property
+    def human_agent(self) -> HumanAgentArenaServerState:
+        """Load the topology-heavy Human Agent surface only when it is used."""
+        if self._human_agent is None:
+            self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=True)
+        return self._human_agent
+
     def close(self) -> None:
-        self.human_agent.close()
+        if self._human_agent is not None:
+            self._human_agent.close()
 
 
 def _json(status: int, payload: dict[str, Any]) -> tuple[int, str, bytes]:
