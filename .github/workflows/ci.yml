@@ -138,10 +138,20 @@ jobs:
           echo "The pytest-native suite failed. Inspect the uploaded JUnit artifact."
           exit 1
 
-  legacy-validators:
-    name: Legacy executable validation suites
+  legacy-validator:
+    name: Legacy validator (${{ matrix.script }})
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        script:
+          - test_aura_functions.py
+          - test_synthesis_upgrades.py
+          - test_syntax_fixes.py
+          - test_codemap_hooks_simple.py
+          - test_pvm_logic.py
+          - test_aura_substrate.py
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -161,47 +171,33 @@ jobs:
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0"
-      - name: Run executable validators through their intended entry points
-        id: legacy_validators
+      - name: Run validator through its intended entry point
+        id: validator
         continue-on-error: true
         env:
           PYTHONHASHSEED: "0"
         run: |
-          mkdir -p legacy-validator-reports
-          failed=0
-          for script in \
-            test_aura_functions.py \
-            test_synthesis_upgrades.py \
-            test_syntax_fixes.py \
-            test_codemap_hooks_simple.py \
-            test_pvm_logic.py \
-            test_aura_substrate.py
-          do
-            name="${script%.py}"
-            echo "Running ${script}"
-            set +e
-            timeout 900 python "${script}" > "legacy-validator-reports/${name}.log" 2>&1
-            code=$?
-            set -e
-            printf '%s\n' "${code}" > "legacy-validator-reports/${name}.exit_code"
-            if [ "${code}" -ne 0 ]; then
-              failed=1
-              echo "${script} failed with exit code ${code}"
-            fi
-          done
-          exit "${failed}"
-      - name: Upload legacy validator diagnostics
+          mkdir -p legacy-validator-report
+          set +e
+          timeout 1200 python "${{ matrix.script }}" \
+            > legacy-validator-report/output.log 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "${code}" > legacy-validator-report/exit_code
+          printf '%s\n' "${{ matrix.script }}" > legacy-validator-report/script
+          exit "${code}"
+      - name: Upload validator diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: legacy-validator-reports-${{ github.run_id }}
-          path: legacy-validator-reports/
+          name: legacy-${{ matrix.script }}-${{ github.run_id }}
+          path: legacy-validator-report/
           if-no-files-found: error
           retention-days: 14
-      - name: Enforce legacy validator result
-        if: steps.legacy_validators.outcome != 'success'
+      - name: Enforce validator result
+        if: steps.validator.outcome != 'success'
         run: |
-          echo "One or more executable validators failed. Inspect the uploaded reports."
+          echo "${{ matrix.script }} failed. Inspect its uploaded report."
           exit 1
 
   topology:
