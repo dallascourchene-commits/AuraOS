@@ -219,7 +219,7 @@ def dispatch_showcase_request(
 
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
-    if relative not in {"index.html", "app.js", "civic.js", "human.js", "topology.js", "styles.css", "guide.css"}:
+    if relative not in {"index.html", "app.js", "civic.js", "human.js", "topology.js", "topology.css", "styles.css", "guide.css"}:
         return _error("static asset not found", 404)
     path = (STATIC_DIR / relative).resolve()
     try:
