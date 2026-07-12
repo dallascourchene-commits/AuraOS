@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V2"
+CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V3"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 REQUIRED_PATHS = frozenset({
@@ -34,16 +34,16 @@ REQUIRED_SYMBOLS = frozenset({
     "verify_codemap",
 })
 _VOLATILE_SUMMARY_FIELDS = frozenset({"elapsed_ms", "last_incremental_refresh_unix"})
-_STABLE_TOP_LEVEL_FIELDS = (
-    "status",
-    "generated_by",
-    "intent_packet",
-    "navigation_protocol",
-    "rings",
-    "hubs",
-    "command_index",
-    "symbol_index",
-    "files",
+_SOURCE_CARD_FIELDS = (
+    "path",
+    "role",
+    "bytes",
+    "lines",
+    "tokens_est",
+    "symbol_count",
+    "commands",
+    "command_lines",
+    "digest8",
 )
 
 
@@ -184,13 +184,12 @@ def verify_codemap(
 
 
 def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
-    """Return the environment-independent structural portion of a CODEMAP payload.
+    """Return Aura's canonical repository structure for regeneration comparison.
 
-    Runtime-specific metadata such as absolute checkout paths, timestamps, elapsed
-    time, cache directory counts, topology compiler diagnostics, and topology timing
-    metadata are intentionally excluded. Repository files, symbols, commands, rings,
-    hubs, topology counts, per-file topology, and all navigation cards remain part of
-    the comparison contract.
+    Exact source cards, commands, symbols, rings, aggregate topology counts, and
+    per-file graph structure remain authoritative. Runtime metadata and redundant
+    presentation rankings are excluded because they may vary across clean checkouts
+    without changing repository or graph meaning.
     """
 
     summary = {
@@ -205,27 +204,44 @@ def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
             "included_file_count",
             "included_policy",
             "excluded_generated_map_files",
+            "all_included_paths_sorted",
         )
         if key in coverage
     }
+    source_cards = []
+    for raw in payload.get("files", []) or []:
+        if not isinstance(raw, dict):
+            continue
+        source_cards.append({key: raw.get(key) for key in _SOURCE_CARD_FIELDS if key in raw})
+    source_cards.sort(key=lambda item: str(item.get("path") or ""))
+
     topology = dict(payload.get("topology") or {})
-    projection = {
-        key: payload.get(key)
-        for key in _STABLE_TOP_LEVEL_FIELDS
-        if key in payload
+    file_index = topology.get("file_index") if isinstance(topology.get("file_index"), dict) else {}
+    stable_file_index = {
+        str(file_name): _stable_topology_bucket(bucket)
+        for file_name, bucket in sorted(file_index.items())
+        if isinstance(bucket, dict)
     }
-    projection["summary"] = summary
-    projection["coverage"] = stable_coverage
-    projection["topology"] = {
-        key: topology.get(key)
-        for key in ("source", "file_index", "top_files_by_degree")
-        if key in topology
+    return {
+        "status": payload.get("status"),
+        "generated_by": payload.get("generated_by"),
+        "intent_packet": payload.get("intent_packet"),
+        "navigation_protocol": payload.get("navigation_protocol"),
+        "summary": summary,
+        "coverage": stable_coverage,
+        "rings": payload.get("rings"),
+        "command_index": payload.get("command_index"),
+        "symbol_index": payload.get("symbol_index"),
+        "source_cards": source_cards,
+        "topology": {
+            "source": topology.get("source"),
+            "file_index": stable_file_index,
+        },
     }
-    return projection
 
 
 def compare_codemap_payloads(reference: dict[str, Any], regenerated: dict[str, Any]) -> dict[str, Any]:
-    """Compare stable CODEMAP structure while ignoring runtime-only metadata."""
+    """Compare canonical CODEMAP structure while ignoring runtime-only metadata."""
 
     left = stable_codemap_projection(reference)
     right = stable_codemap_projection(regenerated)
@@ -237,15 +253,33 @@ def compare_codemap_payloads(reference: dict[str, Any], regenerated: dict[str, A
         "reference_digest": _canonical_digest(left),
         "regenerated_digest": _canonical_digest(right),
         "differing_fields": differing_fields,
-        "volatile_fields_ignored": [
+        "volatile_or_derived_fields_ignored": [
             "root",
             "generated_at_unix",
             "summary.elapsed_ms",
             "summary.last_incremental_refresh_unix",
             "coverage.skipped_dir_file_counts",
+            "files[*].vector",
+            "files[*].topology.hub_rank",
+            "hubs",
             "topology.diagnostics",
             "topology.meta",
+            "topology.top_files_by_degree",
         ],
+    }
+
+
+def _stable_topology_bucket(bucket: dict[str, Any]) -> dict[str, Any]:
+    """Canonicalize one per-file topology bucket without presentation rank."""
+
+    edge_kinds = bucket.get("edge_kinds") if isinstance(bucket.get("edge_kinds"), dict) else {}
+    return {
+        "node_count": _integer(bucket.get("node_count")),
+        "edge_count": _integer(bucket.get("edge_count")),
+        "degree": _integer(bucket.get("degree")),
+        "symbols": sorted(str(item) for item in bucket.get("symbols", []) or []),
+        "neighbor_files": sorted(str(item) for item in bucket.get("neighbor_files", []) or []),
+        "edge_kinds": {str(key): _integer(value) for key, value in sorted(edge_kinds.items())},
     }
 
 
