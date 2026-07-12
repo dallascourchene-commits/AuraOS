@@ -1,12 +1,12 @@
 """Proposal-only background Crucible for Aura Arena experience records.
 
-The service reads complete structured experiences, mines deterministic soft-weight
-candidates, validates them on temporal holdout and historical shadow projections,
-and stores only ``CRYSTALLIZATION_PROPOSED`` packets. It contains no apply, install,
-commit, push, merge, or active-grammar mutation path.
+The service reads complete V2 experiences, mines OutcomeVector candidates, validates
+on an independent validation dataset, replays a separate shadow dataset, and stores
+only ``CRYSTALLIZATION_PROPOSED`` packets. It has no apply or promotion path.
 """
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import secrets
 import time
@@ -16,14 +16,20 @@ from aura_arena_experience_ledger import ArenaExperienceLedger
 from aura_arena_wfst_compiler import load_and_compile_arena_grammar
 from aura_crucible_miner import mine_crucible_candidates
 from aura_crucible_store import CrucibleStore
-from aura_crucible_types import CrystallizationProposal, CruciblePolicy, PATCH_AUTHORITY, VSA_PATCH_AUTHORITY, canonical_digest
+from aura_crucible_types import (
+    CrystallizationProposal,
+    CruciblePolicy,
+    PATCH_AUTHORITY,
+    VSA_PATCH_AUTHORITY,
+    canonical_digest,
+)
 from aura_crucible_validation import validate_crucible_candidate
 
-ARENA_CRUCIBLE_VERSION = "AURA_ARENA_CRUCIBLE_V1"
+ARENA_CRUCIBLE_VERSION = "AURA_ARENA_CRUCIBLE_V2"
 
 
 class ArenaCrucibleService:
-    """Cooperative pause/resume service with one bounded mining cycle at a time."""
+    """Cooperative pause/resume service with one bounded proposal cycle at a time."""
 
     def __init__(
         self,
@@ -50,6 +56,10 @@ class ArenaCrucibleService:
             **self.store.status(),
             "service_version": ARENA_CRUCIBLE_VERSION,
             "experience_db_path": str(self.experience_db_path or self.repo_root / "Aura_Memory" / "arena_experience.db"),
+            "experience_schema_required": "AURA_ARENA_EXPERIENCE_V2",
+            "outcome_model": "OutcomeVector",
+            "dataset_split": ["TRAIN", "VALIDATION", "SHADOW"],
+            "threshold_scope": "PROPOSAL_ONLY",
             "active_grammar_mutation": False,
             "learned_weight_patch_authority": False,
             "crystallization_patch_authority": False,
@@ -61,7 +71,7 @@ class ArenaCrucibleService:
         *,
         arena_id: str = "",
         policy: CruciblePolicy | dict[str, Any] | None = None,
-        experience_limit: int = 1000,
+        experience_limit: int = 10000,
     ) -> dict[str, Any]:
         control = self.store.control_status()
         if control.get("paused"):
@@ -71,17 +81,22 @@ class ArenaCrucibleService:
         run_id = f"CRUN-{secrets.token_hex(10)}"
         grammar_index, grammar_diagnostics = self._load_grammar_index()
         with ArenaExperienceLedger(self.repo_root, db_path=self.experience_db_path) as ledger:
-            experiences = ledger.history(arena_id=arena_id, limit=max(1, min(int(experience_limit), 1000)))
+            experiences = ledger.history(arena_id=arena_id, limit=max(1, min(int(experience_limit), 10000)))
+            ledger_status = ledger.status()
         candidates = mine_crucible_candidates(experiences, grammar_index, policy=resolved_policy, arena_id=arena_id)
 
         proposals: list[dict[str, Any]] = []
         validations: list[dict[str, Any]] = []
         for candidate in candidates:
-            validation = validate_crucible_candidate(candidate, experiences, policy=resolved_policy)
+            validation = validate_crucible_candidate(
+                candidate,
+                experiences,
+                repo_root=self.repo_root,
+                policy=resolved_policy,
+            )
             validations.append(validation)
             if not validation.get("passed"):
                 continue
-            source_ids = tuple((*candidate.train_experience_ids, *candidate.holdout_experience_ids))[: resolved_policy.max_source_ids]
             existing = self.store.get_proposal_by_candidate(candidate.candidate_id)
             if existing is not None:
                 proposals.append({
@@ -115,7 +130,15 @@ class ArenaCrucibleService:
                 current_value=candidate.current_value,
                 proposed_value=candidate.proposed_value,
                 validation=validation,
-                source_experience_ids=source_ids,
+                proposal_thresholds=candidate.proposal_thresholds,
+                threshold_assessment={
+                    **candidate.threshold_assessment,
+                    "validation_thresholds": validation.get("proposal_threshold_checks", {}),
+                    "all_proposal_thresholds_met": validation.get("all_proposal_thresholds_met", False),
+                },
+                train_experience_ids=candidate.train_experience_ids,
+                validation_experience_ids=candidate.validation_experience_ids,
+                shadow_experience_ids=candidate.shadow_experience_ids,
                 source_experience_digest=candidate.source_experience_digest,
                 created_at=time.time(),
             )
@@ -132,15 +155,24 @@ class ArenaCrucibleService:
             "started_at": started,
             "completed_at": completed,
             "source_record_count": len(experiences),
+            "v2_complete_record_count": int(ledger_status.get("v2_complete_record_count") or 0),
+            "legacy_record_count": int(ledger_status.get("legacy_record_count") or 0),
             "compiled_grammar_count": len(grammar_index),
             "grammar_diagnostics": grammar_diagnostics,
             "candidate_count": len(candidates),
             "validation_count": len(validations),
             "proposal_count": len(proposals),
             "policy": resolved_policy.to_dict(),
+            "threshold_scope": "PROPOSAL_ONLY",
+            "thresholds_have_runtime_authority": False,
+            "outcome_model": "OutcomeVector",
+            "binary_outcome_used": False,
+            "dataset_split": ["TRAIN", "VALIDATION", "SHADOW"],
             "candidate_ids": [item.candidate_id for item in candidates],
             "validations": validations,
             "proposals": proposals,
+            "all_admissible_alternatives_preserved": True,
+            "all_predictions_preserved": True,
             "active_grammar_mutated": False,
             "terminal_status": "CRYSTALLIZATION_PROPOSED",
             "required_next_gate": "VERIFIER_AND_HUMAN_REVIEW",
@@ -165,18 +197,17 @@ class ArenaCrucibleService:
         policy: CruciblePolicy | dict[str, Any] | None = None,
         on_cycle: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
-        """Run cooperative cycles in the foreground until interrupted or bounded."""
-
         interval = max(1.0, float(interval_seconds))
         cycles = 0
         reports: list[dict[str, Any]] = []
         try:
             while max_cycles is None or cycles < max(0, int(max_cycles)):
                 control = self.store.control_status()
-                if control.get("paused"):
-                    report = _denial("crucible_paused", pause_reason=str(control.get("pause_reason") or ""))
-                else:
-                    report = self.run_once(arena_id=arena_id, policy=policy)
+                report = (
+                    _denial("crucible_paused", pause_reason=str(control.get("pause_reason") or ""))
+                    if control.get("paused")
+                    else self.run_once(arena_id=arena_id, policy=policy)
+                )
                 reports.append(report)
                 cycles += 1
                 if on_cycle is not None:
@@ -194,11 +225,18 @@ class ArenaCrucibleService:
         route_root = self.repo_root / ".aura" / "arena_routes"
         for path in sorted(route_root.glob("*.json")):
             result = load_and_compile_arena_grammar(path)
-            diagnostics.append({"path": str(path), "ok": result.ok, "diagnostics": [item.to_dict() for item in result.diagnostics]})
+            relative_path = path.resolve().relative_to(self.repo_root).as_posix()
+            diagnostics.append({
+                "path": relative_path,
+                "ok": result.ok,
+                "manifest_digest": result.manifest_digest,
+                "diagnostics": [item.to_dict() for item in result.diagnostics],
+            })
             grammar = result.grammar
             if not result.ok or grammar is None or grammar.meta_grammar:
                 continue
-            index[(grammar.arena_id, grammar.grammar_version)] = grammar
+            pinned = replace(grammar, source_path=relative_path)
+            index[(pinned.arena_id, pinned.grammar_version)] = pinned
         return index, diagnostics
 
 
@@ -210,6 +248,7 @@ def _denial(reason: str, *, pause_reason: str = "") -> dict[str, Any]:
         "pause_reason": pause_reason,
         "fail_closed": True,
         "active_grammar_mutated": False,
+        "threshold_scope": "PROPOSAL_ONLY",
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         "learned_weight_patch_authority": False,
