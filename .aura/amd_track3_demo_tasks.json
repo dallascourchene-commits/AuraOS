@@ -1,0 +1,26 @@
+{
+  "schema_version": "AURA_AMD_TRACK3_TASKS_V1",
+  "tasks": [
+    {
+      "task_id": "TRACK3.DEMO.ONE",
+      "objective": "Append a deterministic verification marker to the first demo module.",
+      "allowed_files": ["tests/fixtures/amd_track3/demo_one.py"],
+      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_one.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
+      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
+    },
+    {
+      "task_id": "TRACK3.DEMO.TWO",
+      "objective": "Append a deterministic verification marker to the second demo module.",
+      "allowed_files": ["tests/fixtures/amd_track3/demo_two.py"],
+      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_two.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
+      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
+    },
+    {
+      "task_id": "TRACK3.DEMO.THREE",
+      "objective": "Append a deterministic verification marker to the third demo module.",
+      "allowed_files": ["tests/fixtures/amd_track3/demo_three.py"],
+      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_three.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
+      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
+    }
+  ]
+}
