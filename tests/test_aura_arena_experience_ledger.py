@@ -13,6 +13,7 @@ def _experience(**overrides):
         "arena_id": "human_agent",
         "arena_version": "v1",
         "grammar_version": "g1",
+        "grammar_manifest_digest": "digest-g1",
         "runtime_version": "r1",
         "compiler_version": "c1",
         "state_before": "FRAME",
@@ -35,6 +36,7 @@ def test_ledger_uses_wal_redacts_secrets_and_is_idempotent(tmp_path: Path):
     with ArenaExperienceLedger(tmp_path) as ledger:
         status = ledger.status()
         assert status["journal_mode"] == "wal"
+        assert status["schema_version"] == 2
         exp = _experience()
         first = ledger.record(exp)
         second = ledger.record(exp)
@@ -45,6 +47,9 @@ def test_ledger_uses_wal_redacts_secrets_and_is_idempotent(tmp_path: Path):
         assert stored["payload"]["api_key"] == "[REDACTED]"
         assert "chain_of_thought" not in stored["payload"]
         assert stored["payload"]["nested"]["authorization"] == "[REDACTED]"
+        assert stored["grammar_manifest_digest"] == "digest-g1"
+        assert stored["outcome_vector"]["proposal_only"] is True
+        assert stored["legacy_record"] is False
         assert stored["learned_weight_patch_authority"] is False
         assert stored["crystallization_patch_authority"] is False
 
@@ -95,7 +100,7 @@ class StubWorkflow:
         }
 
 
-def test_free_form_frame_command_routes_only_to_set_objective(tmp_path: Path):
+def test_free_form_frame_command_records_manifest_and_complete_choice_set(tmp_path: Path):
     source = Path(__file__).resolve().parents[1] / ".aura" / "arena_routes"
     target = tmp_path / ".aura" / "arena_routes"
     target.mkdir(parents=True)
@@ -111,5 +116,17 @@ def test_free_form_frame_command_routes_only_to_set_objective(tmp_path: Path):
     assert result["action_id"] == "set_objective"
     assert workflow.objective == "Refactor the routing system"
     assert workflow.phase == "GROUND"
-    assert result["route_decision"]["selected"]["transition_id"] == "HUMAN.SET_OBJECTIVE"
+    route = result["route_decision"]
+    assert route["selected"]["transition_id"] == "HUMAN.SET_OBJECTIVE"
+    assert route["all_state_local_alternatives_evaluated"] is True
+    assert len(route["available"]) > 1
+
+    with ArenaExperienceLedger(tmp_path) as ledger:
+        stored = ledger.history(arena_id="human_agent", limit=1)[0]
+    available_ids = [row["transition_id"] for row in route["available"]]
+    assert stored["grammar_manifest_digest"] == route["grammar_digest"]
+    assert [row["transition_id"] for row in stored["admissible_alternatives"]] == available_ids
+    assert [row["transition_id"] for row in stored["predictions"]] == available_ids
+    assert sum(bool(row["predicted_selected"]) for row in stored["predictions"]) == 1
+    assert stored["outcome_vector"]["terminal_class"] == "COMPLETED"
     assert result["experience_recording"]["persistent"] is True
