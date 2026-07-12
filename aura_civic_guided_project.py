@@ -2,16 +2,31 @@
 from __future__ import annotations
 
 import hashlib
+import threading
 import time
 from typing import Any
 
 from aura_civic_guided_steps import STEP_DETAILS, timeline
 from aura_civic_project_runtime import project_for_session, run_project_organ, runtime_module
-from aura_civic_projects import get_project, list_projects
+from aura_civic_projects import CivicProjectDefinition, get_project, list_projects
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 GUIDE_VERSION = "AURA_CIVIC_GUIDED_PROJECT_V1"
+
+_SESSION_LOCKS: dict[str, threading.RLock] = {}
+_SESSION_LOCKS_GUARD = threading.Lock()
+
+
+def _session_lock(session_id: str) -> threading.RLock:
+    """Return the stable in-process lock that serializes one guided session."""
+    key = str(session_id)
+    with _SESSION_LOCKS_GUARD:
+        lock = _SESSION_LOCKS.get(key)
+        if lock is None:
+            lock = threading.RLock()
+            _SESSION_LOCKS[key] = lock
+        return lock
 
 
 def _summary(session: dict[str, Any], fixture: dict[str, Any]) -> dict[str, Any]:
@@ -95,6 +110,8 @@ def get_guide(session_id: str) -> dict[str, Any]:
 
 def start_project(project_id: str = "winnipeg_pathways") -> dict[str, Any]:
     project = get_project(project_id)
+    if not isinstance(project, CivicProjectDefinition):
+        return dict(project)
     runtime = runtime_module()
     seed = f"{project.objective}\n[guided_showcase_run:{time.time_ns()}]"
     created = runtime.create_civic_session(seed, fixture=True)
@@ -117,50 +134,47 @@ def start_project(project_id: str = "winnipeg_pathways") -> dict[str, Any]:
 
 
 def advance_project(session_id: str) -> dict[str, Any]:
-    runtime = runtime_module()
-    current = runtime.get_session(session_id)
-    if not current.get("ok"):
-        return current
-    session = current["session"]
-    project = project_for_session(session)
-    old_index = max(0, min(int(session.get("guide_step_index") or 0), len(project.guided_steps) - 1))
-    if old_index >= len(project.guided_steps) - 1:
+    with _session_lock(session_id):
+        runtime = runtime_module()
+        current = runtime.get_session(session_id)
+        if not current.get("ok"):
+            return current
+        session = current["session"]
+        project = project_for_session(session)
+        old_index = max(0, min(int(session.get("guide_step_index") or 0), len(project.guided_steps) - 1))
+        if old_index >= len(project.guided_steps) - 1:
+            return get_guide(session_id)
+        new_index = old_index + 1
+        step_id = project.guided_steps[new_index]
+        log = list(session.get("guide_execution_log") or [])
+        for organ_type in tuple((STEP_DETAILS.get(step_id) or {}).get("actions") or ()):
+            result = run_project_organ(session_id, organ_type)
+            entry = {
+                "step_id": step_id, "organ_type": organ_type, "ok": bool(result.get("ok")),
+                "organ_id": result.get("organ_id", ""), "manifest_digest": result.get("manifest_digest", ""),
+                "receipt": result.get("receipt", {}), "executed_at": time.time(),
+            }
+            log.append(entry)
+            if not result.get("ok"):
+                return {"ok": False, "error": "guided_step_execution_failed", "failure": entry, "guide": get_guide(session_id), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+        runtime._update_session(session_id, {"guide_step_index": new_index, "guide_execution_log": log[-80:]})
         return get_guide(session_id)
-    new_index = old_index + 1
-    step_id = project.guided_steps[new_index]
-    log = list(session.get("guide_execution_log") or [])
-    for organ_type in tuple((STEP_DETAILS.get(step_id) or {}).get("actions") or ()):
-        result = run_project_organ(session_id, organ_type)
-        entry = {
-            "step_id": step_id, "organ_type": organ_type, "ok": bool(result.get("ok")),
-            "organ_id": result.get("organ_id", ""), "manifest_digest": result.get("manifest_digest", ""),
-            "receipt": result.get("receipt", {}), "executed_at": time.time(),
-        }
-        log.append(entry)
-        if not result.get("ok"):
-            return {"ok": False, "error": "guided_step_execution_failed", "failure": entry, "guide": get_guide(session_id), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
-    runtime._update_session(session_id, {"guide_step_index": new_index, "guide_execution_log": log[-80:]})
-    return get_guide(session_id)
 
 
 def back_project(session_id: str) -> dict[str, Any]:
-    runtime = runtime_module()
-    current = runtime.get_session(session_id)
-    if not current.get("ok"):
-        return current
-    session = current["session"]
-    project = project_for_session(session)
-    index = max(0, min(int(session.get("guide_step_index") or 0), len(project.guided_steps) - 1))
-    runtime._update_session(session_id, {"guide_step_index": max(0, index - 1)})
-    return get_guide(session_id)
+    with _session_lock(session_id):
+        runtime = runtime_module()
+        current = runtime.get_session(session_id)
+        if not current.get("ok"):
+            return current
+        session = current["session"]
+        project = project_for_session(session)
+        index = max(0, min(int(session.get("guide_step_index") or 0), len(project.guided_steps) - 1))
+        runtime._update_session(session_id, {"guide_step_index": max(0, index - 1)})
+        return get_guide(session_id)
 
 
 def record_response(session_id: str, response: dict[str, Any]) -> dict[str, Any]:
-    runtime = runtime_module()
-    current = runtime.get_session(session_id)
-    if not current.get("ok"):
-        return current
-    session = current["session"]
     item = {
         "response_type": str(response.get("response_type") or "NOTE"),
         "statement": str(response.get("statement") or "").strip(),
@@ -169,12 +183,18 @@ def record_response(session_id: str, response: dict[str, Any]) -> dict[str, Any]
     }
     if not item["statement"]:
         return {"ok": False, "error": "statement is required", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
-    responses = list(session.get("guide_responses") or []) + [item]
-    updates: dict[str, Any] = {"guide_responses": responses}
-    if item["response_type"] in {"CONSENT", "CONSENT_WITH_RESERVATION", "OBJECT", "CRITICAL_OBJECTION"}:
-        updates["consent_responses"] = list(session.get("consent_responses") or []) + [item]
-    runtime._update_session(session_id, updates)
-    return get_guide(session_id)
+    with _session_lock(session_id):
+        runtime = runtime_module()
+        current = runtime.get_session(session_id)
+        if not current.get("ok"):
+            return current
+        session = current["session"]
+        responses = list(session.get("guide_responses") or []) + [item]
+        updates: dict[str, Any] = {"guide_responses": responses}
+        if item["response_type"] in {"CONSENT", "CONSENT_WITH_RESERVATION", "OBJECT", "CRITICAL_OBJECTION"}:
+            updates["consent_responses"] = list(session.get("consent_responses") or []) + [item]
+        runtime._update_session(session_id, updates)
+        return get_guide(session_id)
 
 
 def project_map(session_id: str, *, zoom: float = 11, viewer_scope: str = "community") -> dict[str, Any]:
