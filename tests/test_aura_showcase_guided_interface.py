@@ -82,12 +82,56 @@ def test_fixture_contains_synthetic_west_broadway_overlay():
     assert fixture["basemap"]["offline_fallback"]
 
 
-def test_browser_assets_disclose_basemap_and_render_weighted_menu():
+def test_human_agent_state_projects_exact_wfst_recommendations_and_blocks():
+    from aura_human_agent_workflow import HumanAgentWorkflow
+
+    workflow = HumanAgentWorkflow(REPO_ROOT)
+    try:
+        objective = "Investigate a grounded Winnipeg map presentation issue."
+        workflow.objective = objective
+        workflow.evidence.update({
+            "objective": objective,
+            "grounding": {"truth_class": "EXACT_REPOSITORY_FACTS"},
+        })
+        plan_state = workflow.get_state()
+        assert plan_state["current_phase"] == "PLAN"
+        assert plan_state["grammar_version"] == "human-agent-wfst-v1"
+        recommended = [item for item in plan_state["recommended"] if not item.get("meta_transition")]
+        assert recommended[0]["transition_id"] == "HUMAN.PREPARE_CAPSULE"
+        assert recommended[0]["provenance"]["action_id"] == "prepare_capsule"
+        assert set(recommended[0]["rank"]) >= {
+            "unresolved_risk",
+            "declared_evidence_gap",
+            "empirical_uncertainty",
+            "semantic_ambiguity",
+            "negative_user_fit",
+        }
+
+        workflow.evidence.update({
+            "plan_phase_hash": "plan-hash",
+            "act_capsules": [{"capsule_id": "CAP-1"}],
+        })
+        act_state = workflow.get_state()
+        assert act_state["current_phase"] == "ACT"
+        blocked = {item["transition_id"]: item for item in act_state["blocked"]}
+        assert "HUMAN.STAGE_PATCH" in blocked
+        assert {"candidate_diff", "affected_files"} <= set(blocked["HUMAN.STAGE_PATCH"]["missing_evidence"])
+        assert blocked["HUMAN.STAGE_PATCH"]["fail_closed"] is True
+    finally:
+        workflow.close()
+
+
+def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     index = (REPO_ROOT / "aura_showcase" / "index.html").read_text(encoding="utf-8")
     civic = (REPO_ROOT / "aura_showcase" / "civic.js").read_text(encoding="utf-8")
+    human = (REPO_ROOT / "aura_showcase" / "human.js").read_text(encoding="utf-8")
     assert 'id="route-actions"' in index
     assert 'id="basemap-tiles"' in index
+    assert 'id="human-recommended-actions"' in index
+    assert 'id="human-blocked-actions"' in index
     assert "OpenStreetMap contributors" in index
     assert "tile.openstreetmap.org/{z}/{x}/{y}.png" in civic
     assert "navigator.onLine" in civic
+    assert "rankVector" in human
+    assert "failed_guards" in human
     assert "MAP_VULNERABLE_PEOPLE" not in civic
