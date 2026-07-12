@@ -1,8 +1,8 @@
 """Unified Winnipeg Civic and Human Agent Arena showcase server.
 
-The server is additive. Existing Human Agent and Civic endpoints are delegated to
-Aura's established dispatcher; guided-project endpoints compose those systems
-without granting production mutation or civic authority.
+The server is intentionally additive. Existing Human Agent and Civic endpoints
+are delegated to Aura's established server dispatcher; guided-project endpoints
+compose those systems without granting production mutation or civic authority.
 """
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ def dispatch_showcase_request(
 
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
-    if relative not in {"index.html", "app.js", "styles.css"}:
+    if relative not in {"index.html", "app.js", "civic.js", "human.js", "styles.css"}:
         return _error("static asset not found", 404)
     path = (STATIC_DIR / relative).resolve()
     try:
@@ -218,7 +218,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    serve(host=args.host, port=args.port, repo_root=args.repo_root, demo_project=args.demo_project, auto_start=not args.no_auto_start)
+    serve(
+        host=args.host,
+        port=args.port,
+        repo_root=args.repo_root,
+        demo_project=args.demo_project,
+        auto_start=not args.no_auto_start,
+    )
     return 0
 
 
