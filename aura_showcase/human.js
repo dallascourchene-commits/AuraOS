@@ -54,9 +54,10 @@
   S.renderHumanRoutes = () => {
     const workflow = S.workflow || {};
     const routing = workflow.routing || {};
-    const recommended = (workflow.recommended || routing.recommended || []).filter(item => !item.meta_transition && actionId(item)).slice(0, 4);
-    const recommendedIds = new Set(recommended.map(item => item.transition_id));
-    const available = (workflow.available || routing.available || []).filter(item => !item.meta_transition && actionId(item) && !recommendedIds.has(item.transition_id)).slice(0, 6);
+    const rankedWorkflowActions = (workflow.available || routing.available || [])
+      .filter(item => !item.meta_transition && actionId(item));
+    const recommended = rankedWorkflowActions.slice(0, 4);
+    const available = rankedWorkflowActions.slice(4, 10);
     const blocked = (workflow.blocked || routing.blocked || []).filter(item => !item.meta_transition).slice(0, 8);
     const statePacket = workflow.state_packet || routing.state_packet || {};
 
