@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
 from typing import Any
 
-CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V1"
+CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 REQUIRED_PATHS = frozenset({
@@ -32,9 +33,27 @@ REQUIRED_SYMBOLS = frozenset({
     "validate_manifest_pin",
     "verify_codemap",
 })
+_VOLATILE_SUMMARY_FIELDS = frozenset({"elapsed_ms", "last_incremental_refresh_unix"})
+_STABLE_TOP_LEVEL_FIELDS = (
+    "status",
+    "generated_by",
+    "intent_packet",
+    "navigation_protocol",
+    "rings",
+    "hubs",
+    "command_index",
+    "symbol_index",
+    "files",
+)
 
 
-def verify_codemap(repo_root: str | Path = ".") -> dict[str, Any]:
+def verify_codemap(
+    repo_root: str | Path = ".",
+    *,
+    compare_json_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Verify topology integrity and optionally compare stable regenerated content."""
+
     root = Path(repo_root).resolve()
     json_path = root / ".aura" / "CODEMAP.json"
     markdown_path = root / ".aura" / "CODEMAP.md"
@@ -115,6 +134,31 @@ def verify_codemap(repo_root: str | Path = ".") -> dict[str, Any]:
     except OSError:
         errors.append("codemap_markdown_unreadable")
 
+    stable_comparison: dict[str, Any] | None = None
+    if compare_json_path is not None:
+        comparison_path = Path(compare_json_path)
+        if not comparison_path.is_absolute():
+            comparison_path = root / comparison_path
+        try:
+            reference_payload = json.loads(comparison_path.read_text(encoding="utf-8"))
+            if not isinstance(reference_payload, dict):
+                raise TypeError("comparison payload is not an object")
+        except FileNotFoundError:
+            errors.append("codemap_comparison_json_missing")
+            stable_comparison = {"ok": False, "comparison_path": str(comparison_path)}
+        except (OSError, json.JSONDecodeError, TypeError) as exc:
+            errors.append("codemap_comparison_json_invalid")
+            stable_comparison = {
+                "ok": False,
+                "comparison_path": str(comparison_path),
+                "error": type(exc).__name__,
+            }
+        else:
+            stable_comparison = compare_codemap_payloads(reference_payload, payload)
+            stable_comparison["comparison_path"] = str(comparison_path)
+            if not stable_comparison["ok"]:
+                errors.append("codemap_stable_structure_changed")
+
     return {
         "ok": not errors,
         "version": CODEMAP_VERIFY_VERSION,
@@ -131,6 +175,7 @@ def verify_codemap(repo_root: str | Path = ".") -> dict[str, Any]:
         },
         "markdown_summary": markdown_summary,
         "baseline": baseline,
+        "stable_comparison": stable_comparison,
         "missing_paths": missing_paths,
         "missing_symbols": missing_symbols,
         "patch_authority": PATCH_AUTHORITY,
@@ -138,17 +183,93 @@ def verify_codemap(repo_root: str | Path = ".") -> dict[str, Any]:
     }
 
 
+def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
+    """Return the environment-independent structural portion of a CODEMAP payload.
+
+    Runtime-specific metadata such as absolute checkout paths, timestamps, elapsed
+    time, cache directory counts, topology compiler diagnostics, and topology timing
+    metadata are intentionally excluded. Repository files, symbols, commands, rings,
+    hubs, topology counts, per-file topology, and all navigation cards remain part of
+    the comparison contract.
+    """
+
+    summary = {
+        key: value
+        for key, value in dict(payload.get("summary") or {}).items()
+        if key not in _VOLATILE_SUMMARY_FIELDS
+    }
+    coverage = dict(payload.get("coverage") or {})
+    stable_coverage = {
+        key: coverage.get(key)
+        for key in (
+            "included_file_count",
+            "included_policy",
+            "excluded_generated_map_files",
+        )
+        if key in coverage
+    }
+    topology = dict(payload.get("topology") or {})
+    projection = {
+        key: payload.get(key)
+        for key in _STABLE_TOP_LEVEL_FIELDS
+        if key in payload
+    }
+    projection["summary"] = summary
+    projection["coverage"] = stable_coverage
+    projection["topology"] = {
+        key: topology.get(key)
+        for key in ("source", "file_index", "top_files_by_degree")
+        if key in topology
+    }
+    return projection
+
+
+def compare_codemap_payloads(reference: dict[str, Any], regenerated: dict[str, Any]) -> dict[str, Any]:
+    """Compare stable CODEMAP structure while ignoring runtime-only metadata."""
+
+    left = stable_codemap_projection(reference)
+    right = stable_codemap_projection(regenerated)
+    differing_fields = sorted(
+        key for key in set(left) | set(right) if left.get(key) != right.get(key)
+    )
+    return {
+        "ok": not differing_fields,
+        "reference_digest": _canonical_digest(left),
+        "regenerated_digest": _canonical_digest(right),
+        "differing_fields": differing_fields,
+        "volatile_fields_ignored": [
+            "root",
+            "generated_at_unix",
+            "summary.elapsed_ms",
+            "summary.last_incremental_refresh_unix",
+            "coverage.skipped_dir_file_counts",
+            "topology.diagnostics",
+            "topology.meta",
+        ],
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Verify Aura CODEMAP deep topology")
     parser.add_argument("--repo-root", default=".")
+    parser.add_argument(
+        "--compare-json",
+        default=None,
+        help="Optional pre-regeneration CODEMAP JSON to compare structurally",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    result = verify_codemap(args.repo_root)
+    result = verify_codemap(args.repo_root, compare_json_path=args.compare_json)
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result.get("ok") else 1
+
+
+def _canonical_digest(value: Any) -> str:
+    body = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+    return hashlib.blake2b(body.encode("utf-8"), digest_size=20).hexdigest()
 
 
 def _markdown_integer(text: str, name: str) -> int:
