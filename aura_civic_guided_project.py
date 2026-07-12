@@ -97,6 +97,7 @@ def get_guide(session_id: str) -> dict[str, Any]:
         can_advance=can_advance,
         can_go_back=can_go_back,
         demo_issue_available=demo_issue_available,
+        project_id=project.project_id,
     )
     return {
         "ok": True,

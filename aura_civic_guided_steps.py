@@ -65,6 +65,7 @@ def ranked_actions(
     can_advance: bool,
     can_go_back: bool,
     demo_issue_available: bool,
+    project_id: str = "winnipeg_pathways",
 ) -> list[dict[str, Any]]:
     """Return the deterministic, inspectable action menu for one guide step.
 
@@ -93,7 +94,7 @@ def ranked_actions(
         slots=_slots(direction="current_stage", aspect="read_only", capability_class="evidence", subject="showcase_participant", voice="inspect", stem="open"),
     ))
 
-    if step_id in {"SELECT_CONTEXT", "EXPLORE_MAP", "ADD_COMMUNITY_INPUT"}:
+    if project_id == "winnipeg_pathways" and step_id in {"SELECT_CONTEXT", "EXPLORE_MAP", "ADD_COMMUNITY_INPUT"}:
         actions.append(_action(
             "FOCUS_TEST_COMMUNITY",
             "Focus the West Broadway synthetic test community",
@@ -104,7 +105,7 @@ def ranked_actions(
             args={"zoom": 14, "center": [-97.165, 49.8865]},
         ))
 
-    if step_id == "EXPLORE_MAP":
+    if project_id == "winnipeg_pathways" and step_id == "EXPLORE_MAP":
         actions.extend([
             _action(
                 "REVEAL_CANDIDATE",

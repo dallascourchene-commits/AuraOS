@@ -31,7 +31,8 @@
     const capability = (item.requested_capabilities || []).join(', ') || 'no external tool capability';
     const requires = (item.required_evidence || []).join(', ') || 'no additional evidence';
     const produces = (item.produced_evidence || []).join(', ') || 'guidance only';
-    const slots = item.intent_slots ? `<span class="human-route-slots">${esc(slotText(item.intent_slots))}</span>` : '';
+    const resolvedSlots = item.intent_slots || (S.humanGuide?.available_actions || []).find(a => actionId(a) === actionId(item))?.intent_slots;
+    const slots = resolvedSlots ? `<span class="human-route-slots">${esc(slotText(resolvedSlots))}</span>` : '';
     return `<button class="human-route-action${compact ? ' is-compact' : ''}" data-human-transition="${esc(item.transition_id)}" data-human-action="${esc(actionId(item))}">
       <span class="human-route-rank">${index + 1}</span>
       <span class="human-route-copy">
@@ -48,7 +49,8 @@
   function blockedCard(item) {
     const guards = (item.failed_guards || []).map(guard => typeof guard === 'string' ? guard : (guard.guard_id || guard.id)).filter(Boolean).join(' · ') || 'hard guard failed';
     const missing = (item.missing_evidence || []).join(' · ') || 'policy or capability requirement';
-    const slots = item.intent_slots ? `<small>${esc(slotText(item.intent_slots))}</small>` : '';
+    const resolvedSlots = item.intent_slots || (S.humanGuide?.blocked_actions || []).find(b => actionId(b) === actionId(item))?.intent_slots;
+    const slots = resolvedSlots ? `<small>${esc(slotText(resolvedSlots))}</small>` : '';
     return `<article class="human-blocked-route"><strong>${esc(item.label || item.transition_id)}</strong><span>${esc(guards)}</span><small>Missing: ${esc(missing)}</small>${slots}</article>`;
   }
 
