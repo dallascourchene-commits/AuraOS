@@ -1,20 +1,21 @@
-name: Phase B Fix Stale ICM Test
+name: Phase B Repair Stale Validators
 
 on:
-  push:
-    branches:
-      - feature/arena-crucible-phase-b
+  pull_request:
+    types: [reopened]
 
 permissions:
   contents: write
 
 concurrency:
-  group: phase-b-fix-stale-icm-test
+  group: phase-b-repair-stale-validators
   cancel-in-progress: true
 
 jobs:
   repair:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.ref == 'feature/arena-crucible-phase-b'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -31,14 +32,15 @@ jobs:
           python -m pip install \
             "numpy>=1.26.4,<3.0" \
             pytest pytest-asyncio
-      - name: Remove workflow and repair stale constructor fixture
+      - name: Remove workflow and repair stale fixtures
         run: |
           rm .github/workflows/phase-b-fix-stale-icm-test.yml
           python - <<'PY'
           from pathlib import Path
+          import json
 
-          path = Path('test_aura_icm_workspace.py')
-          text = path.read_text(encoding='utf-8')
+          icm_path = Path('test_aura_icm_workspace.py')
+          icm = icm_path.read_text(encoding='utf-8')
           old_head = '''    arena = LiquidPlanningArena(
               arena_id="ARENA-ICM-1",
               domain="code",
@@ -61,22 +63,72 @@ jobs:
               shared_action_queue=[],
               phase_hash="ph1",
           '''
-          if old_head not in text:
-              raise SystemExit('expected LiquidPlanningArena constructor head not found')
-          if old_tail not in text:
-              raise SystemExit('expected LiquidPlanningArena constructor tail not found')
-          text = text.replace(old_head, new_head, 1).replace(old_tail, new_tail, 1)
-          path.write_text(text, encoding='utf-8')
+          if old_head not in icm or old_tail not in icm:
+              raise SystemExit('expected stale LiquidPlanningArena fixture was not found')
+          icm = icm.replace(old_head, new_head, 1).replace(old_tail, new_tail, 1)
+          icm_path.write_text(icm, encoding='utf-8')
+
+          substrate_path = Path('test_aura_substrate.py')
+          substrate = substrate_path.read_text(encoding='utf-8')
+          old_plan = '''    original = ContextSelector().read("aura_mesh.py")
+              good = ('{"edits": [{"file": "aura_mesh.py", "start_line": 174, "end_line": 174, '
+                      '"replacement": "            secure_packet = '
+                      'self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"}]}')
+          '''
+          new_plan = '''    original = ContextSelector().read("aura_mesh.py")
+              original_lines = original.splitlines()
+              target_line = next(
+                  index
+                  for index, line in enumerate(original_lines, start=1)
+                  if "secure_packet = self.pack_secure_polysynthetic_packet" in line
+              )
+              target_source = original_lines[target_line - 1]
+              indentation = target_source[: len(target_source) - len(target_source.lstrip())]
+              replacement = (
+                  f"{indentation}secure_packet = "
+                  "self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"
+              )
+              good = json.dumps({
+                  "edits": [{
+                      "file": "aura_mesh.py",
+                      "start_line": target_line,
+                      "end_line": target_line,
+                      "replacement": replacement,
+                  }]
+              })
+          '''
+          if old_plan not in substrate:
+              raise SystemExit('expected stale substrate edit-plan fixture was not found')
+          substrate_path.write_text(substrate.replace(old_plan, new_plan, 1), encoding='utf-8')
           PY
-      - name: Verify repaired test
+      - name: Record exact PVM architecture violations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from pvm_arch_checker import PVMArchChecker
+
+          violations = PVMArchChecker(root=Path('.')).run()
+          hard_rules = {"SYNTAX_ERROR", "WILDCARD_IMPORT", "CIRCULAR_IMPORT", "NAMESPACE_INJECTION"}
+          hard = [v._asdict() for v in violations if v.rule in hard_rules]
+          Path('PHASE_B_PVM_ARCH_DIAGNOSTIC.json').write_text(
+              json.dumps({"hard_violations": hard, "hard_count": len(hard)}, indent=2, sort_keys=True),
+              encoding='utf-8',
+          )
+          PY
+      - name: Verify repaired tests
         run: |
           python -m pytest -q \
             test_aura_icm_workspace.py::test_arena_export_to_icm_creates_workspace
-      - name: Commit repair and remove workflow
+          python test_aura_substrate.py
+      - name: Commit repairs, diagnostic, and workflow removal
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add test_aura_icm_workspace.py
+          git add \
+            test_aura_icm_workspace.py \
+            test_aura_substrate.py \
+            PHASE_B_PVM_ARCH_DIAGNOSTIC.json
           git add -u .github/workflows/phase-b-fix-stale-icm-test.yml
-          git commit -m "test(icm): align LiquidPlanningArena fixture with current schema"
+          git commit -m "test(ci): repair stale validators and record PVM violations"
           git push origin HEAD:feature/arena-crucible-phase-b
