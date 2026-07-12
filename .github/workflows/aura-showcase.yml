@@ -3,6 +3,7 @@ name: Aura Winnipeg Showcase
 on:
   pull_request:
     paths:
+      - "aura_civic_authority.py"
       - "aura_civic_winnipeg_fixture.py"
       - "aura_civic_projects.py"
       - "aura_civic_guided_steps.py"
@@ -57,6 +58,7 @@ jobs:
       - name: Compile showcase modules
         run: >-
           python -m py_compile
+          aura_civic_authority.py
           aura_civic_winnipeg_fixture.py
           aura_civic_projects.py
           aura_civic_guided_steps.py
@@ -68,6 +70,7 @@ jobs:
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
+          aura_civic_authority.py
           aura_civic_winnipeg_fixture.py
           aura_civic_projects.py
           aura_civic_guided_steps.py
