@@ -43,7 +43,7 @@ def _existing_project(project_id: str) -> CivicProjectDefinition:
     return CivicProjectDefinition(
         project_id, title, str(fixture.get("objective") or title), "winnipeg_mb_ca", "Winnipeg, Manitoba", (),
         ("human_authority", "privacy", "non_binding"),
-        ("WELCOME", "FRAME_OBJECTIVE", "EXPLORE", "REVIEW_PACKET", "COMPLETE"), organs, factory,
+        ("WELCOME", "FRAME_OBJECTIVE", "EXPLORE_MAP", "REVIEW_PACKET", "COMPLETE"), organs, factory,
     )
 
 
@@ -96,13 +96,27 @@ def list_projects() -> dict[str, Any]:
     return {"ok": True, "projects": [item.to_dict() for item in projects], "default_project_id": "winnipeg_pathways", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
 
 
-def get_project(project_id: str) -> CivicProjectDefinition:
+def get_project(project_id: str) -> CivicProjectDefinition | dict[str, Any]:
     key = str(project_id or "").strip()
     if key == "winnipeg_pathways":
         return WINNIPEG_PATHWAYS
     if key in {"hairstylist", "youth_centre", "council_pulse"}:
         return _existing_project(key)
-    raise KeyError(f"unknown civic project: {key}")
+    return {
+        "ok": False,
+        "error": "unknown_civic_project",
+        "project_id": key,
+        "available_project_ids": ["winnipeg_pathways", "hairstylist", "youth_centre", "council_pulse"],
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
 
 
-__all__ = ["CivicProjectDefinition", "TRUTH_SYNTHETIC", "WINNIPEG_PATHWAYS", "get_project", "list_projects", "winnipeg_pathways_fixtures"]
+def require_project(project_id: str) -> CivicProjectDefinition:
+    project = get_project(project_id)
+    if isinstance(project, CivicProjectDefinition):
+        return project
+    raise LookupError(str(project.get("error") or "unknown_civic_project"))
+
+
+__all__ = ["CivicProjectDefinition", "TRUTH_SYNTHETIC", "WINNIPEG_PATHWAYS", "get_project", "list_projects", "require_project", "winnipeg_pathways_fixtures"]
