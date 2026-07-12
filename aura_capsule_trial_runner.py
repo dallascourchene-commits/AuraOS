@@ -84,103 +84,145 @@ def run_capsule_trial(
         "output_bytes": max(1, int(float(budget.get("output_tokens") or 0) * 4)),
         "tool_calls": max(0, int(budget.get("tool_calls") or 0)),
     }
-    prepared = prepare_sandbox(
-        {
-            "organ_id": trial_id,
-            "resource_budget": resource_budget,
-        },
-        repo_root=str(Path(repo_root).resolve()),
-    )
+    try:
+        prepared = prepare_sandbox(
+            {
+                "organ_id": trial_id,
+                "resource_budget": resource_budget,
+            },
+            repo_root=str(Path(repo_root).resolve()),
+        )
+    except Exception as exc:  # noqa: BLE001
+        return _denial(
+            f"trial_sandbox_preparation_failed:{type(exc).__name__}",
+            run_id=run_id,
+            trial_id=trial_id,
+        )
     if not prepared.get("ok"):
         return _denial("trial_sandbox_preparation_failed", run_id=run_id, trial_id=trial_id)
 
-    temp_dir = Path(str(prepared.get("temp_dir") or ""))
+    temp_dir_value = str(
+        prepared.get("temp_dir")
+        or (prepared.get("receipt") or {}).get("temp_dir")
+        or ""
+    )
+    if not temp_dir_value:
+        return _denial("trial_sandbox_receipt_missing_temp_dir", run_id=run_id, trial_id=trial_id)
+    temp_dir = Path(temp_dir_value)
     started = time.perf_counter()
-    output: dict[str, Any]
+    stable_output: dict[str, Any] = {}
+    output_json = ""
+    usage: dict[str, Any] = {}
+    exceeded: list[str] = []
     executor_error = ""
+    processing_error = ""
     try:
-        output = dict(executor(case, variant, context, temp_dir) or {})
+        try:
+            output = dict(executor(case, variant, context, temp_dir) or {})
+        except Exception as exc:  # noqa: BLE001
+            output = {"ok": False, "reason": f"executor_failed:{type(exc).__name__}"}
+            executor_error = type(exc).__name__
+        elapsed = max(0.0, time.perf_counter() - started)
+
+        stable_output = _stable_output(output)
+        output_json = json.dumps(
+            stable_output,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            default=str,
+        )
+        usage = {
+            "input_tokens": _token_estimate(case.objective) + _token_estimate(context),
+            "output_tokens": _token_estimate(stable_output),
+            "tool_calls": 1,
+            "model_calls": 0,
+            "wall_seconds": round(elapsed, 9),
+            "output_bytes": len(output_json.encode("utf-8")),
+        }
+        resource_check = enforce_resource_budget(
+            prepared.get("receipt") or {},
+            elapsed_ms=elapsed * 1000.0,
+            output_bytes=usage["output_bytes"],
+            tool_calls=usage["tool_calls"],
+        )
+        exceeded = sorted(
+            set(resource_check.get("exceeded") or [])
+            | set(_budget_exceeded(budget, usage))
+        )
     except Exception as exc:  # noqa: BLE001
-        output = {"ok": False, "reason": f"executor_failed:{type(exc).__name__}"}
-        executor_error = type(exc).__name__
-    elapsed = max(0.0, time.perf_counter() - started)
+        processing_error = type(exc).__name__
+    finally:
+        cleanup = _dissolve_trial_sandbox(trial_id, temp_dir)
 
-    stable_output = _stable_output(output)
-    output_json = json.dumps(stable_output, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
-    usage = {
-        "input_tokens": _token_estimate(case.objective) + _token_estimate(context),
-        "output_tokens": _token_estimate(stable_output),
-        "tool_calls": 1,
-        "model_calls": 0,
-        "wall_seconds": round(elapsed, 9),
-        "output_bytes": len(output_json.encode("utf-8")),
-    }
-    resource_check = enforce_resource_budget(
-        prepared.get("receipt") or {},
-        elapsed_ms=elapsed * 1000.0,
-        output_bytes=usage["output_bytes"],
-        tool_calls=usage["tool_calls"],
-    )
-    exceeded = sorted(set(resource_check.get("exceeded") or []) | set(_budget_exceeded(budget, usage)))
+    sandbox = _sandbox_report(prepared, temp_dir_value, cleanup)
+    if processing_error:
+        return _denial(
+            f"trial_postprocessing_failed:{processing_error}",
+            run_id=run_id,
+            trial_id=trial_id,
+            sandbox=sandbox,
+        )
 
-    revoked = revoke_capabilities(trial_id)
-    destroyed = destroy_sandbox(str(temp_dir))
-    dissolution = verify_dissolution(str(temp_dir), bool(revoked.get("ok")))
-    outcome = _outcome_vector(
-        case=case,
-        output=stable_output,
-        usage=usage,
-        budget=budget,
-        budget_ok=not exceeded,
-        dissolution_ok=bool(dissolution.get("ok")),
-    )
-    completed = bool(
-        stable_output.get("ok")
-        and not exceeded
-        and dissolution.get("ok")
-        and not executor_error
-    )
-    return {
-        "ok": completed,
-        "version": CAPSULE_TRIAL_RUNNER_VERSION,
-        "trial_id": trial_id,
-        "run_id": run_id,
-        "variant_id": variant.variant_id,
-        "case_id": case.case_id,
-        "case_digest": case.digest(),
-        "dataset": case.dataset,
-        "repetition": int(repetition),
-        "executor_id": executor_id,
-        "executor_allowlisted": True,
-        "arbitrary_code_executed": False,
-        "native_fallback_used": False,
-        "sandbox": {
-            "mode": (prepared.get("receipt") or {}).get("sandbox_mode", ""),
-            "wasmtime_available": bool(prepared.get("wasmtime_available")),
-            "temporary_directory_created": bool(temp_dir),
-            "temporary_directory_removed": bool(destroyed.get("temp_dir_removed")),
-            "capabilities_revoked": bool(revoked.get("ok")),
-            "dissolution_verified": bool(dissolution.get("ok")),
-        },
-        "output": stable_output,
-        "output_digest": hashlib.blake2b(output_json.encode("utf-8"), digest_size=20).hexdigest(),
-        "actual_context_digest": canonical_digest(context),
-        "actual_context_items": context,
-        "usage": usage,
-        "budget_requested": budget,
-        "budget_exceeded": exceeded,
-        "outcome_vector": outcome.to_dict(),
-        "outcome_projection": outcome.proposal_projection(),
-        "terminal_class": "COMPLETED" if completed else "FAILED",
-        "required_lease_capabilities": sorted(required),
-        "patch_authority": PATCH_AUTHORITY,
-        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
-        "automatic_capsule_activation": False,
-        "automatic_code_installation": False,
-        "automatic_commit": False,
-        "automatic_push": False,
-        "automatic_merge": False,
-    }
+    try:
+        dissolution = cleanup["dissolution"]
+        outcome = _outcome_vector(
+            case=case,
+            output=stable_output,
+            usage=usage,
+            budget=budget,
+            budget_ok=not exceeded,
+            dissolution_ok=bool(dissolution.get("ok")),
+        )
+        completed = bool(
+            stable_output.get("ok")
+            and not exceeded
+            and dissolution.get("ok")
+            and not executor_error
+        )
+        return {
+            "ok": completed,
+            "version": CAPSULE_TRIAL_RUNNER_VERSION,
+            "trial_id": trial_id,
+            "run_id": run_id,
+            "variant_id": variant.variant_id,
+            "case_id": case.case_id,
+            "case_digest": case.digest(),
+            "dataset": case.dataset,
+            "repetition": int(repetition),
+            "executor_id": executor_id,
+            "executor_allowlisted": True,
+            "arbitrary_code_executed": False,
+            "native_fallback_used": False,
+            "sandbox": sandbox,
+            "output": stable_output,
+            "output_digest": hashlib.blake2b(
+                output_json.encode("utf-8"), digest_size=20
+            ).hexdigest(),
+            "actual_context_digest": canonical_digest(context),
+            "actual_context_items": context,
+            "usage": usage,
+            "budget_requested": budget,
+            "budget_exceeded": exceeded,
+            "outcome_vector": outcome.to_dict(),
+            "outcome_projection": outcome.proposal_projection(),
+            "terminal_class": "COMPLETED" if completed else "FAILED",
+            "required_lease_capabilities": sorted(required),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            "automatic_capsule_activation": False,
+            "automatic_code_installation": False,
+            "automatic_commit": False,
+            "automatic_push": False,
+            "automatic_merge": False,
+        }
+    except Exception as exc:  # noqa: BLE001
+        return _denial(
+            f"trial_result_assembly_failed:{type(exc).__name__}",
+            run_id=run_id,
+            trial_id=trial_id,
+            sandbox=sandbox,
+        )
 
 
 def aggregate_trial_observations(observations: Iterable[dict[str, Any]]) -> dict[str, Any]:
@@ -192,11 +234,21 @@ def aggregate_trial_observations(observations: Iterable[dict[str, Any]]) -> dict
     ]
     groups: dict[str, set[str]] = {}
     for row in rows:
-        groups.setdefault(str(row.get("case_id") or ""), set()).add(str(row.get("output_digest") or ""))
-    reproducible = bool(groups) and all(len({item for item in digests if item}) == 1 for digests in groups.values())
+        groups.setdefault(str(row.get("case_id") or ""), set()).add(
+            str(row.get("output_digest") or "")
+        )
+    reproducible = bool(groups) and all(
+        len({item for item in digests if item}) == 1 for digests in groups.values()
+    )
     completed = sum(1 for row in rows if row.get("ok") is True)
-    total_tokens = sum(float((row.get("usage") or {}).get("input_tokens") or 0.0) + float((row.get("usage") or {}).get("output_tokens") or 0.0) for row in rows)
-    wall_seconds = sum(float((row.get("usage") or {}).get("wall_seconds") or 0.0) for row in rows)
+    total_tokens = sum(
+        float((row.get("usage") or {}).get("input_tokens") or 0.0)
+        + float((row.get("usage") or {}).get("output_tokens") or 0.0)
+        for row in rows
+    )
+    wall_seconds = sum(
+        float((row.get("usage") or {}).get("wall_seconds") or 0.0) for row in rows
+    )
     return {
         "observation_count": len(rows),
         "completed_count": completed,
@@ -204,13 +256,23 @@ def aggregate_trial_observations(observations: Iterable[dict[str, Any]]) -> dict
         "score_mean": round(sum(scores) / len(scores), 6) if scores else None,
         "score_min": round(min(scores), 6) if scores else None,
         "reproducible": reproducible,
-        "case_output_digest_sets": {key: sorted(values) for key, values in sorted(groups.items())},
+        "case_output_digest_sets": {
+            key: sorted(values) for key, values in sorted(groups.items())
+        },
         "total_tokens": round(total_tokens, 6),
         "wall_seconds": round(wall_seconds, 9),
-        "tool_calls": sum(int((row.get("usage") or {}).get("tool_calls") or 0) for row in rows),
-        "model_calls": sum(int((row.get("usage") or {}).get("model_calls") or 0) for row in rows),
+        "tool_calls": sum(
+            int((row.get("usage") or {}).get("tool_calls") or 0) for row in rows
+        ),
+        "model_calls": sum(
+            int((row.get("usage") or {}).get("model_calls") or 0) for row in rows
+        ),
         "budget_failure_count": sum(1 for row in rows if row.get("budget_exceeded")),
-        "dissolution_failure_count": sum(1 for row in rows if not (row.get("sandbox") or {}).get("dissolution_verified")),
+        "dissolution_failure_count": sum(
+            1
+            for row in rows
+            if not (row.get("sandbox") or {}).get("dissolution_verified")
+        ),
         "proposal_only": True,
     }
 
@@ -238,21 +300,29 @@ def _materialize_case_context(
         resolved.relative_to(root)
         content = path.read_bytes()
         symbols = [str(item) for item in raw.get("symbols") or () if str(item)]
-        tests = [repository_relative_path(str(item)) for item in raw.get("tests") or () if str(item)]
+        tests = [
+            repository_relative_path(str(item))
+            for item in raw.get("tests") or ()
+            if str(item)
+        ]
         keywords = [str(item) for item in raw.get("keywords") or () if str(item)]
         haystack = " ".join((relative, *symbols, *tests, *keywords)).lower()
         overlap = len(objective_tokens & _tokens(haystack))
         line_count = max(1, content.count(b"\n") + 1)
-        materialized.append({
-            "path": relative,
-            "symbols": symbols,
-            "tests": tests,
-            "keywords": keywords,
-            "source_hash": hashlib.blake2b(content, digest_size=20).hexdigest(),
-            "line_count": line_count,
-            "semantic_overlap": overlap,
-        })
-    materialized.sort(key=lambda item: (-int(item["semantic_overlap"]), str(item["path"])))
+        materialized.append(
+            {
+                "path": relative,
+                "symbols": symbols,
+                "tests": tests,
+                "keywords": keywords,
+                "source_hash": hashlib.blake2b(content, digest_size=20).hexdigest(),
+                "line_count": line_count,
+                "semantic_overlap": overlap,
+            }
+        )
+    materialized.sort(
+        key=lambda item: (-int(item["semantic_overlap"]), str(item["path"]))
+    )
     selected: list[dict[str, Any]] = []
     symbols_used = 0
     lines_used = 0
@@ -264,7 +334,9 @@ def _materialize_case_context(
             break
         bounded = dict(item)
         bounded["symbols"] = list(item["symbols"][:remaining_symbols])
-        bounded["line_count"] = min(int(item["line_count"]), maximum_lines - lines_used)
+        bounded["line_count"] = min(
+            int(item["line_count"]), maximum_lines - lines_used
+        )
         bounded["line_start"] = 1
         bounded["line_end"] = bounded["line_count"]
         selected.append(bounded)
@@ -282,8 +354,12 @@ def _execute_coding_localization_fixture(
     temp_dir: Path,
 ) -> dict[str, Any]:
     files = [str(item["path"]) for item in context]
-    symbols = [str(symbol) for item in context for symbol in item.get("symbols") or ()]
-    tests = list(dict.fromkeys(str(test) for item in context for test in item.get("tests") or ()))
+    symbols = [
+        str(symbol) for item in context for symbol in item.get("symbols") or ()
+    ]
+    tests = list(
+        dict.fromkeys(str(test) for item in context for test in item.get("tests") or ())
+    )
     source_hashes = [
         {"path": str(item["path"]), "source_hash": str(item["source_hash"])}
         for item in context
@@ -338,11 +414,22 @@ def _outcome_vector(
         if isinstance(item, dict) and item.get("source_hash")
     }
     evidence = len(files & hashes) / len(files) if files else 0.0
-    requested_tokens = max(1.0, float(budget.get("input_tokens") or 0) + float(budget.get("output_tokens") or 0))
-    consumed_tokens = float(usage.get("input_tokens") or 0) + float(usage.get("output_tokens") or 0)
-    cost_efficiency = max(0.0, min(1.0, 1.0 - consumed_tokens / requested_tokens))
+    requested_tokens = max(
+        1.0,
+        float(budget.get("input_tokens") or 0)
+        + float(budget.get("output_tokens") or 0),
+    )
+    consumed_tokens = float(usage.get("input_tokens") or 0) + float(
+        usage.get("output_tokens") or 0
+    )
+    cost_efficiency = max(
+        0.0, min(1.0, 1.0 - consumed_tokens / requested_tokens)
+    )
     wall_limit = max(0.001, float(budget.get("wall_seconds") or 0.001))
-    latency_efficiency = max(0.0, min(1.0, 1.0 - float(usage.get("wall_seconds") or 0.0) / wall_limit))
+    latency_efficiency = max(
+        0.0,
+        min(1.0, 1.0 - float(usage.get("wall_seconds") or 0.0) / wall_limit),
+    )
     completed = bool(output.get("ok") and budget_ok and dissolution_ok)
     return OutcomeVector(
         terminal_class="COMPLETED" if completed else "FAILED",
@@ -382,10 +469,66 @@ def _stable_output(output: dict[str, Any]) -> dict[str, Any]:
 
 def _budget_exceeded(budget: dict[str, Any], usage: dict[str, Any]) -> list[str]:
     exceeded: list[str] = []
-    for key in ("input_tokens", "output_tokens", "tool_calls", "model_calls", "wall_seconds"):
-        if key in budget and float(usage.get(key) or 0.0) > float(budget.get(key) or 0.0):
+    for key in (
+        "input_tokens",
+        "output_tokens",
+        "tool_calls",
+        "model_calls",
+        "wall_seconds",
+    ):
+        if key in budget and float(usage.get(key) or 0.0) > float(
+            budget.get(key) or 0.0
+        ):
             exceeded.append(key)
     return exceeded
+
+
+def _dissolve_trial_sandbox(trial_id: str, temp_dir: Path) -> dict[str, Any]:
+    """Attempt revocation, destruction, and verification in order without short-circuiting."""
+    errors: list[str] = []
+    revoked: dict[str, Any] = {"ok": False}
+    destroyed: dict[str, Any] = {"ok": False, "temp_dir_removed": False}
+    dissolution: dict[str, Any] = {"ok": False}
+    try:
+        revoked = dict(revoke_capabilities(trial_id) or {})
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"revoke_capabilities:{type(exc).__name__}")
+    try:
+        destroyed = dict(destroy_sandbox(str(temp_dir)) or {})
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"destroy_sandbox:{type(exc).__name__}")
+    try:
+        dissolution = dict(
+            verify_dissolution(str(temp_dir), bool(revoked.get("ok"))) or {}
+        )
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"verify_dissolution:{type(exc).__name__}")
+    return {
+        "revoked": revoked,
+        "destroyed": destroyed,
+        "dissolution": dissolution,
+        "errors": errors,
+    }
+
+
+def _sandbox_report(
+    prepared: dict[str, Any],
+    temp_dir: str,
+    cleanup: dict[str, Any],
+) -> dict[str, Any]:
+    """Return stable cleanup evidence for completed, failed, and denied trials."""
+    revoked = cleanup.get("revoked") or {}
+    destroyed = cleanup.get("destroyed") or {}
+    dissolution = cleanup.get("dissolution") or {}
+    return {
+        "mode": (prepared.get("receipt") or {}).get("sandbox_mode", ""),
+        "wasmtime_available": bool(prepared.get("wasmtime_available")),
+        "temporary_directory_created": bool(temp_dir),
+        "temporary_directory_removed": bool(destroyed.get("temp_dir_removed")),
+        "capabilities_revoked": bool(revoked.get("ok")),
+        "dissolution_verified": bool(dissolution.get("ok")),
+        "cleanup_errors": list(cleanup.get("errors") or []),
+    }
 
 
 def _f1(actual: set[str], expected: set[str]) -> float:
@@ -400,12 +543,22 @@ def _f1(actual: set[str], expected: set[str]) -> float:
 
 
 def _tokens(value: Any) -> set[str]:
-    return {item for item in re.findall(r"[a-z0-9_]+", str(value).lower()) if len(item) > 1}
+    return {
+        item
+        for item in re.findall(r"[a-z0-9_]+", str(value).lower())
+        if len(item) > 1
+    }
 
 
 def _token_estimate(value: Any) -> float:
     if not isinstance(value, str):
-        value = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+        value = json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            default=str,
+        )
     return round(max(0.0, len(value) / 4.0), 6)
 
 
@@ -415,8 +568,9 @@ def _denial(
     run_id: str = "",
     trial_id: str = "",
     missing: list[str] | None = None,
+    sandbox: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    result = {
         "ok": False,
         "status": "DENIED",
         "reason": reason,
@@ -434,6 +588,9 @@ def _denial(
         "automatic_push": False,
         "automatic_merge": False,
     }
+    if sandbox is not None:
+        result["sandbox"] = dict(sandbox)
+    return result
 
 
 register_builtin_trial_executor(
