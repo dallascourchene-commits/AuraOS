@@ -128,6 +128,7 @@ jobs:
 
           session_id = status["default_session_id"]
           assert session_id
+          assert status["basemap_tile_url_template"]
           request = urllib.request.Request(
               base + f"/api/showcase/sessions/{session_id}/advance",
               data=b"{}",
@@ -138,7 +139,16 @@ jobs:
               guide = json.load(response)
           assert guide["ok"] is True
           assert guide["patch_authority"] == "exact_source_spans_and_hashes_only"
-          assert guide["available_actions"]
+          actions = guide.get("available_actions")
+          assert isinstance(actions, list) and actions
+          required = {
+              "action_id", "label", "effect", "route_weight", "why_available",
+              "intent_slots", "activates", "args", "binding",
+          }
+          for action in actions:
+              assert isinstance(action, dict)
+              assert required <= set(action)
+              assert set(action["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
           PY
 
   showcase-container:
@@ -177,6 +187,7 @@ jobs:
                   if payload.get("ok"):
                       assert payload["default_session_id"]
                       assert payload["automatic_merge"] is False
+                      assert payload["basemap_tile_url_template"]
                       break
               except Exception:
                   time.sleep(0.5)
