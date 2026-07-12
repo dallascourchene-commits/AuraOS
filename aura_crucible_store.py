@@ -132,7 +132,15 @@ class CrucibleStore:
         return {"ok": True, "run_id": run_id, "run_digest": digest, "idempotent_replay": False}
 
     def record_proposal(self, proposal: CrystallizationProposal | dict[str, Any]) -> dict[str, Any]:
-        raw = proposal.to_dict() if isinstance(proposal, CrystallizationProposal) else dict(proposal or {})
+        if isinstance(proposal, CrystallizationProposal):
+            raw = proposal.to_dict()
+        else:
+            candidate = dict(proposal or {})
+            candidate.pop("proposal_digest", None)
+            try:
+                raw = CrystallizationProposal(**candidate).to_dict()
+            except (TypeError, ValueError) as exc:
+                return _denial(f"invalid_proposal_contract:{type(exc).__name__}")
         if str(raw.get("status") or "") != CRYSTALLIZATION_PROPOSED:
             return _denial("invalid_proposal_status")
         proposal_id = str(raw.get("proposal_id") or "")
