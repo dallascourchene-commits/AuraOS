@@ -47,6 +47,7 @@ S.activateTab = name => {
   S.$('learning-view')?.classList.toggle('is-active', name === 'learning');
   if (name === 'civic' && S.resizeMap) setTimeout(S.resizeMap, 20);
   if (name === 'human' && S.resizeTopology) setTimeout(S.resizeTopology, 20);
+  if (name === 'learning' && S.resizeLearningTopology) setTimeout(S.resizeLearningTopology, 20);
 };
 
 S.applyGuide = guide => {
