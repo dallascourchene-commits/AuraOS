@@ -8,6 +8,7 @@ on:
       - "tests/test_aura_amd_track3_demo.py"
       - "tests/fixtures/amd_track3/**"
       - "Dockerfile.amd-track3"
+      - "docker-compose.track3.yml"
       - "requirements-amd-track3.txt"
       - "docs/AMD_TRACK3_CRUCIBLE_DEMO.md"
       - ".github/workflows/amd-track3.yml"
@@ -64,8 +65,53 @@ jobs:
           tests/test_aura_amd_track3_demo.py
       - name: Run Track 3 contracts
         run: python -m pytest -q tests/test_aura_amd_track3_demo.py tests/test_aura_phase_c3_trial_crucible.py
-      - name: Exercise judge-facing fixture cycle
+      - name: Exercise judge-facing crystal reuse sequence
         run: >-
           python aura_amd_track3_cli.py
           --crystals /tmp/verified_crystals.jsonl
-          run-once --provider fixture
+          demo-sequence --provider fixture --reset-demo
+      - name: Build inspection container
+        run: docker build -f Dockerfile.amd-track3 -t aura-track3:test .
+      - name: Exercise container default command
+        shell: bash
+        run: |
+          set -euo pipefail
+          container_id="$(docker run -d -p 18080:8080 aura-track3:test)"
+          cleanup() {
+            docker logs "$container_id" || true
+            docker rm -f "$container_id" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          ready=0
+          for attempt in $(seq 1 30); do
+            if python - <<'PY'
+          import urllib.request
+
+          try:
+              with urllib.request.urlopen("http://127.0.0.1:18080/status", timeout=1) as response:
+                  raise SystemExit(0 if response.status == 200 else 1)
+          except Exception:
+              raise SystemExit(1)
+          PY
+            then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" -eq 1
+
+          python - <<'PY'
+          import json
+          import urllib.request
+
+          with urllib.request.urlopen("http://127.0.0.1:18080/status", timeout=5) as response:
+              payload = json.load(response)
+          assert payload["ok"] is True
+          assert payload["verified_count"] == 2
+          assert len(payload["reuse_links"]) >= 1
+          assert payload["automatic_commit"] is False
+          assert payload["automatic_push"] is False
+          assert payload["automatic_merge"] is False
+          PY

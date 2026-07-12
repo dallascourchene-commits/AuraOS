@@ -1,126 +1,144 @@
-# Aura Crucible — AMD Hackathon Act II Track 3 Demo
+# Aura Sovereign Learning Arena — AMD Hackathon Act II Track 3
 
-## What this adds
+## One-command inspection demo
 
-Aura now has a runnable Track 3 demo layer that turns small, bounded coding tasks into verified reusable training records called **crystals**.
+```bash
+docker compose -f docker-compose.track3.yml up --build
+```
 
-The main path is intentionally easy to find:
+Open `http://127.0.0.1:8080`.
+
+The default container uses a deterministic fixture worker, so judges need no model download, API key, or AMD notebook access. It executes two related coding tasks, verifies both in detached copies, creates two crystals, and shows the second task reusing the first verified procedure.
+
+## What the demo proves
 
 ```text
-aura_amd_track3_cli.py
-  -> aura_amd_track3_worker.py
-  -> detached repository copy
-  -> argv-only verifier command
-  -> .aura/runtime/amd_track3/verified_crystals.jsonl
-  -> aura_amd_track3_train.py
-  -> Gemma LoRA adapter checkpoint
+human objective
+  -> DIR -> ASP -> CLASS -> SUBJ -> VOICE -> STEM
+  -> guarded WFST admission
+  -> bounded Coding Arena
+  -> replaceable worker
+  -> detached verifier
+  -> verified crystal
+  -> reusable procedure
 ```
 
-This layer surrounds Phase C3. It does not weaken C3's proposal-only authority and never commits, pushes, or merges generated code.
+The browser dashboard shows:
 
-## Why AMD is meaningful
+- polysynthetic intent compilation;
+- hard-guarded WFST admission and blocked actions;
+- exact Arena file and verifier boundaries;
+- fixture, local Ollama, or AMD/Gemma worker identity;
+- passing verification and sandbox dissolution;
+- verified crystal creation and reuse;
+- the Anishinaabemowin tutor's sovereign-knowledge response contract;
+- the preserved AMD ROCm and Gemma/LoRA path.
 
-On the hackathon notebook, the AMD GPU is used for two bounded workloads:
+## Live local Ollama mode
 
-1. **Gemma coding inference** through a local OpenAI-compatible endpoint such as vLLM/ROCm, or through an approved Fireworks endpoint.
-2. **Background LoRA crystallization** with the ROCm-compatible PyTorch build already provided by the AMD notebook image.
+Dallas's Windows laptop already has the 3B coding model installed. Ollama runs natively on Windows and serves its API at `http://localhost:11434`.
 
-The worker and trainer are separated so inference and adapter training can be scheduled independently without changing the verified crystal format.
+### Native PowerShell run
 
-## Fast public demo
+```powershell
+ollama list
 
-The public container uses a deterministic fixture provider. It downloads no model, requires no secret, creates three verified crystals, and exposes status on port 8080.
+python aura_amd_track3_cli.py `
+  --crystals .aura/runtime/amd_track3/verified_crystals.jsonl `
+  demo-sequence `
+  --provider ollama `
+  --endpoint http://127.0.0.1:11434 `
+  --model qwen2.5-coder:3b `
+  --reset-demo
 
-```bash
-docker build -f Dockerfile.amd-track3 -t aura-track3:demo .
-docker run --rm -p 8080:8080 aura-track3:demo
-curl http://127.0.0.1:8080/
+python aura_amd_track3_cli.py serve --host 127.0.0.1 --port 8080
 ```
 
-The returned JSON identifies the Track 3 path, AMD backend label, crystal count, latest crystal, and preserved C3 authority.
+### Container connected to Windows Ollama
 
-## AMD notebook launch
+```powershell
+$env:AURA_PROVIDER="ollama"
+$env:AURA_ENDPOINT="http://host.docker.internal:11434"
+$env:AURA_MODEL="qwen2.5-coder:3b"
+docker compose -f docker-compose.track3.yml up --build
+```
+
+If Ollama is unavailable, return to guaranteed inspection mode:
+
+```powershell
+$env:AURA_PROVIDER="fixture"
+docker compose -f docker-compose.track3.yml up --build
+```
+
+## Optional DeepSeek fallback
+
+The existing OpenAI-compatible provider can call DeepSeek without adding another authority path:
+
+```powershell
+$env:DEEPSEEK_API_KEY="<local secret>"
+python aura_amd_track3_cli.py demo-sequence `
+  --provider openai-compatible `
+  --endpoint https://api.deepseek.com/v1 `
+  --model deepseek-chat `
+  --reset-demo
+```
+
+Secrets are read from environment variables only and are never written to crystals or dashboard output.
+
+## AMD judge path
+
+The AMD implementation remains intact even when the inspection machine is not attached to the hackathon notebook:
+
+```text
+AMD ROCm notebook
+  -> Gemma inference through a local OpenAI-compatible endpoint
+  -> bounded Aura task worker
+  -> detached verification
+  -> verified crystals
+  -> optional PEFT/LoRA Gemma adapter training
+```
+
+Notebook launch:
 
 ```bash
-git clone https://github.com/dallascourchene-commits/AuraOS.git
-cd AuraOS
 python -m pip install -r requirements-amd-track3.txt
-```
-
-Use the ROCm-compatible `torch` package already installed in the notebook. Do not replace it with a CUDA wheel.
-
-### Option A — local Gemma endpoint
-
-Start the notebook's existing Gemma server, then run:
-
-```bash
 export AURA_AMD_BACKEND="AMD ROCm notebook"
 export AURA_TRACK3_ENDPOINT="http://127.0.0.1:8000/v1"
 export AURA_TRACK3_MODEL="google/gemma-3-4b-it"
 python aura_amd_track3_cli.py run-loop \
   --provider openai-compatible \
-  --interval-seconds 60
+  --endpoint "$AURA_TRACK3_ENDPOINT" \
+  --model "$AURA_TRACK3_MODEL" \
+  --cycles 1
 ```
 
-For a stable demo, use the Gemma checkpoint already downloaded on the notebook. Gemma 3 4B is the conservative fallback; Gemma 3 12B is appropriate when it is already present and confirmed to fit.
-
-### Option B — approved Fireworks endpoint
-
-```bash
-export AURA_TRACK3_ENDPOINT="https://api.fireworks.ai/inference/v1"
-export AURA_TRACK3_MODEL="<approved-model-id>"
-export AURA_TRACK3_API_KEY="<secret>"
-python aura_amd_track3_cli.py run-loop --provider openai-compatible
-```
-
-No API key is required by the public container. External services are optional and explicitly configured through environment variables.
-
-## Background adapter training
-
-After at least three verified crystals exist:
+After verified crystals exist:
 
 ```bash
 python aura_amd_track3_train.py \
   --model "$AURA_TRACK3_MODEL" \
-  --crystals .aura/runtime/amd_track3/verified_crystals.jsonl \
-  --output-dir .aura/runtime/amd_track3/adapters
+  --crystals .aura/runtime/amd_track3/verified_crystals.jsonl
 ```
 
-The trainer:
+## Three-minute judge script
 
-- accepts only `training_eligible=true` records with return code zero;
-- trains a PEFT LoRA adapter rather than rewriting the base model;
-- uses BF16 on the visible AMD GPU;
-- supports checkpoint continuation;
-- saves an `aura_training_manifest.json` beside each adapter.
+1. Open the dashboard and state: **Aura is not an LLM wrapper; models are replaceable workers inside governed Arenas.**
+2. Show the six-slot packet: `DIR -> ASP -> CLASS -> SUBJ -> VOICE -> STEM`.
+3. Show guarded actions: inspect, bounded proposal, declared verifier.
+4. Show blocked actions: secrets, unrelated files, commit, push, merge.
+5. Show task one creating the `guard-clause-validation` crystal.
+6. Show task two reusing that crystal and passing its independent verifier.
+7. Show `source_checkout_mutated=false` and `dissolution_verified=true`.
+8. Show the sovereign-knowledge card: confidence, sources, dialect, governance, and review are mandatory for Anishinaabemowin outputs.
+9. Show the AMD path: ROCm Gemma inference and optional LoRA training from verified crystals.
 
-## Safety and reliability boundaries
+## Authority boundaries
 
+- Work occurs only in detached temporary repository copies.
 - Tasks declare exact `allowed_files`.
-- Proposals containing any other path fail closed.
-- Work occurs in a detached temporary repository copy.
-- Verifiers are argv arrays, not shell command strings.
-- Only passing attempts become crystals.
+- Verifiers are argv arrays, not shell strings.
+- Only passing results become training-eligible crystals.
+- Prior crystals are advice, never authority.
 - The source checkout remains unchanged.
-- No generated commit, push, pull request, review request, or merge occurs.
-- Phase C3 remains the proposal and human-review authority boundary.
-
-## Track 3 self-check
-
-- **Clear AMD usage:** documented ROCm inference and BF16 LoRA training.
-- **Clear README:** this file gives architecture, setup, run commands, and external-service variables.
-- **Runnable project:** deterministic container mode requires no model or secret.
-- **Original work:** verified experiences are transformed into Aura Agent-IR-compatible reusable crystals.
-- **Easy implementation path:** four root modules, one task manifest, one JSONL ledger.
-- **Complete outputs:** every declared task returns a success or failure record; no silent skipping.
-- **Runtime discipline:** public container performs no runtime model download.
-
-## Demo narrative
-
-1. Show `status` with zero or existing crystals.
-2. Start `run-loop` against Gemma on the AMD notebook.
-3. Show a small task, the bounded file allowlist, and the verifier command.
-4. Show the detached attempt and passing test evidence.
-5. Show the new JSONL crystal and unchanged source checkout.
-6. Start or show the LoRA trainer reading only verified crystals.
-7. Show the adapter manifest and explain that future Aura coding tasks can load the latest accepted adapter.
+- No automatic commit, push, pull request, review request, or merge occurs.
+- Phase C3 remains proposal-only and human-review governed.

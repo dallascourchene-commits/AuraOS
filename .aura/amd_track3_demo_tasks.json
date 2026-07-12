@@ -1,26 +1,79 @@
 {
-  "schema_version": "AURA_AMD_TRACK3_TASKS_V1",
+  "schema_version": "AURA_AMD_TRACK3_TASKS_V2",
   "tasks": [
     {
-      "task_id": "TRACK3.DEMO.ONE",
-      "objective": "Append a deterministic verification marker to the first demo module.",
-      "allowed_files": ["tests/fixtures/amd_track3/demo_one.py"],
-      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_one.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
-      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
+      "task_id": "TRACK3.DEMO.VALIDATE_NAME",
+      "objective": "Add a minimal guard clause so normalize_name rejects blank input while preserving normal behavior.",
+      "allowed_files": [
+        "tests/fixtures/amd_track3/demo_one.py"
+      ],
+      "test_command": [
+        "python",
+        "-c",
+        "from tests.fixtures.amd_track3.demo_one import normalize_name; assert normalize_name(' dallas ') == 'Dallas';\ntry:\n normalize_name('   ')\nexcept ValueError:\n pass\nelse:\n raise AssertionError('blank input must raise ValueError')"
+      ],
+      "metadata": {
+        "intent_packet": {
+          "DIR": "LOCAL",
+          "ASP": "BOUNDED",
+          "CLASS": "VALIDATION",
+          "SUBJ": "FUNCTION",
+          "VOICE": "PROPOSAL_ONLY",
+          "STEM": "MODIFY"
+        },
+        "machine_route": {
+          "intent": "code_repair",
+          "artifact": "python_module",
+          "action": "modify",
+          "scope": "symbol",
+          "risk": "low",
+          "grounding": "symbol_exists",
+          "tests": "required",
+          "quality": "verifier_required",
+          "cost": "local_first"
+        },
+        "reusable_procedure": "guard-clause-validation",
+        "replacement_files": {
+          "tests/fixtures/amd_track3/demo_one.py": "def normalize_name(value: str) -> str:\n    \"\"\"Return a title-cased name and reject blank input.\"\"\"\n    cleaned = value.strip()\n    if not cleaned:\n        raise ValueError(\"name must not be blank\")\n    return cleaned.title()\n"
+        }
+      }
     },
     {
-      "task_id": "TRACK3.DEMO.TWO",
-      "objective": "Append a deterministic verification marker to the second demo module.",
-      "allowed_files": ["tests/fixtures/amd_track3/demo_two.py"],
-      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_two.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
-      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
-    },
-    {
-      "task_id": "TRACK3.DEMO.THREE",
-      "objective": "Append a deterministic verification marker to the third demo module.",
-      "allowed_files": ["tests/fixtures/amd_track3/demo_three.py"],
-      "test_command": ["python", "-c", "from pathlib import Path; p=Path('tests/fixtures/amd_track3/demo_three.py'); assert 'verified by Aura AMD Track 3 demo' in p.read_text()"],
-      "metadata": {"append_marker": "# verified by Aura AMD Track 3 demo"}
+      "task_id": "TRACK3.DEMO.REUSE_VALIDATION",
+      "objective": "Apply the verified guard-clause validation procedure to normalize_project without changing unrelated behavior.",
+      "allowed_files": [
+        "tests/fixtures/amd_track3/demo_two.py"
+      ],
+      "test_command": [
+        "python",
+        "-c",
+        "from tests.fixtures.amd_track3.demo_two import normalize_project; assert normalize_project(' Aura OS ') == 'aura-os';\ntry:\n normalize_project('   ')\nexcept ValueError:\n pass\nelse:\n raise AssertionError('blank input must raise ValueError')"
+      ],
+      "metadata": {
+        "intent_packet": {
+          "DIR": "LOCAL",
+          "ASP": "BOUNDED",
+          "CLASS": "VALIDATION",
+          "SUBJ": "FUNCTION",
+          "VOICE": "PROPOSAL_ONLY",
+          "STEM": "MODIFY"
+        },
+        "machine_route": {
+          "intent": "code_repair",
+          "artifact": "python_module",
+          "action": "modify",
+          "scope": "symbol",
+          "risk": "low",
+          "grounding": "symbol_exists",
+          "tests": "required",
+          "quality": "verifier_required",
+          "cost": "local_first"
+        },
+        "reusable_procedure": "guard-clause-validation",
+        "replacement_files": {
+          "tests/fixtures/amd_track3/demo_two.py": "def normalize_project(value: str) -> str:\n    \"\"\"Return a slug and reject blank input.\"\"\"\n    cleaned = value.strip()\n    if not cleaned:\n        raise ValueError(\"project must not be blank\")\n    return cleaned.lower().replace(\" \", \"-\")\n"
+        }
+      }
     }
   ]
 }
