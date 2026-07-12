@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: phase-c3-${{ github.workflow }}-${{ github.ref }}
@@ -83,50 +83,3 @@ jobs:
           tests/test_aura_phase_c2_capsule_enforcement.py
           tests/test_aura_phase_c1_route_capsules.py
           tests/test_aura_crucible_phase_b.py
-
-  # BEGIN ONE-SHOT CODEMAP FINALIZER
-  finalize-codemap:
-    if: github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: feature/phase-c3-trial-crucible
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install declared dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "websockets>=12.0,<17.0" \
-            "aiosqlite>=0.20.0,<1.0" \
-            "ddgs>=6.0,<10.0" \
-            "wasmtime>=20.0,<46.0" \
-            "aiohttp>=3.9.0,<4.0" \
-            "beautifulsoup4>=4.12.0,<5.0" \
-            "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0"
-      - name: Remove temporary finalizers before topology compilation
-        run: |
-          rm -f .github/workflows/phase-c3-codemap-refresh.yml
-          python - <<'PY'
-          from pathlib import Path
-          path = Path('.github/workflows/phase-c3.yml')
-          text = path.read_text(encoding='utf-8')
-          start = text.index('\n  # BEGIN ONE-SHOT CODEMAP FINALIZER')
-          path.write_text(text[:start].rstrip() + '\n', encoding='utf-8')
-          PY
-      - name: Regenerate authoritative topology artifacts
-        run: python aura_codebase_navigator.py
-      - name: Commit exact final-tree maps and cleanup
-        run: |
-          git config user.name "aura-codemap[bot]"
-          git config user.email "aura-codemap[bot]@users.noreply.github.com"
-          git add -A .github/workflows/phase-c3.yml .github/workflows/phase-c3-codemap-refresh.yml .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
-          git commit -m "chore(c3): refresh final CODEMAP and remove helpers"
-          git push origin HEAD:feature/phase-c3-trial-crucible
-  # END ONE-SHOT CODEMAP FINALIZER
