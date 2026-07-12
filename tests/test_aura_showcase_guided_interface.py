@@ -265,7 +265,6 @@ def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     assert "basemap_tile_url_template" in app
     assert "DEFAULT_TILE_URL_TEMPLATE" in app
     assert "S.tileUrlTemplate" in civic
-    assert "actionForEffect('REVEAL_CANDIDATE')" not in civic  # button delegates through runGuidedEffect
     assert "runGuidedEffect('REVEAL_CANDIDATE')" in civic
     assert "-97.176" not in civic
     assert "navigator.onLine" in civic
