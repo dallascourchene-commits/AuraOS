@@ -13,7 +13,9 @@ on:
       - "aura_showcase_server.py"
       - "aura_showcase/**"
       - "tests/test_aura_showcase_guided_project.py"
+      - "tests/test_aura_showcase_guided_interface.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
+      - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
       - "Dockerfile.aura-showcase"
       - "docker-compose.showcase.yml"
       - ".github/workflows/aura-showcase.yml"
@@ -67,6 +69,7 @@ jobs:
           aura_showcase_handoff.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
+          tests/test_aura_showcase_guided_interface.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -79,10 +82,17 @@ jobs:
           aura_showcase_handoff.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
+          tests/test_aura_showcase_guided_interface.py
+      - name: Check browser JavaScript syntax
+        run: |
+          node --check aura_showcase/app.js
+          node --check aura_showcase/civic.js
+          node --check aura_showcase/human.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
           tests/test_aura_showcase_guided_project.py
+          tests/test_aura_showcase_guided_interface.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
       - name: Exercise unified server
@@ -125,6 +135,7 @@ jobs:
               guide = json.load(response)
           assert guide["ok"] is True
           assert guide["patch_authority"] == "exact_source_spans_and_hashes_only"
+          assert guide["available_actions"]
           PY
 
   showcase-container:
