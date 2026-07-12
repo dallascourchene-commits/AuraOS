@@ -18,6 +18,8 @@ window.Showcase = {
   handoff: null,
   workflow: null,
   humanGuide: null,
+  intentTrace: null,
+  intentStage: 0,
 };
 
 const S = window.Showcase;
@@ -40,9 +42,11 @@ S.api = async (path, body) => {
 
 S.activateTab = name => {
   document.querySelectorAll('.tab').forEach(node => node.classList.toggle('is-active', node.dataset.tab === name));
-  S.$('civic-view').classList.toggle('is-active', name === 'civic');
-  S.$('human-view').classList.toggle('is-active', name === 'human');
+  S.$('civic-view')?.classList.toggle('is-active', name === 'civic');
+  S.$('human-view')?.classList.toggle('is-active', name === 'human');
+  S.$('learning-view')?.classList.toggle('is-active', name === 'learning');
   if (name === 'civic' && S.resizeMap) setTimeout(S.resizeMap, 20);
+  if (name === 'human' && S.resizeTopology) setTimeout(S.resizeTopology, 20);
 };
 
 S.applyGuide = guide => {
@@ -87,12 +91,14 @@ S.showCivicError = message => {
 
 S.initialize = async () => {
   document.querySelectorAll('.tab').forEach(button => button.addEventListener('click', () => S.activateTab(button.dataset.tab)));
-  S.$('return-civic').addEventListener('click', () => S.activateTab('civic'));
-  S.$('restart-project').addEventListener('click', S.restartProject);
-  S.$('advance-step').addEventListener('click', S.advance);
-  S.$('back-step').addEventListener('click', S.back);
+  S.$('return-civic')?.addEventListener('click', () => S.activateTab('civic'));
+  S.$('restart-project')?.addEventListener('click', S.restartProject);
+  S.$('advance-step')?.addEventListener('click', S.advance);
+  S.$('back-step')?.addEventListener('click', S.back);
   const status = await S.api('/api/showcase/status');
   S.tileUrlTemplate = status.basemap_tile_url_template || S.DEFAULT_TILE_URL_TEMPLATE;
+  const intentInput = S.$('bulk-intent-input');
+  if (intentInput && !intentInput.value.trim()) intentInput.value = status.default_bulk_intent || '';
   if (status.guide?.ok) S.applyGuide(status.guide);
   else await S.restartProject();
 };
