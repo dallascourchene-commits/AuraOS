@@ -121,6 +121,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          # CODEMAP is a committed artifact of the source branch. The full-suite job
+          # still tests GitHub's synthetic merge ref, while this job verifies the
+          # exact tree that produced the committed navigation artifacts.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
