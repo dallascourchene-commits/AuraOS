@@ -1,0 +1,154 @@
+name: Aura Winnipeg Showcase
+
+on:
+  pull_request:
+    paths:
+      - "aura_civic_winnipeg_fixture.py"
+      - "aura_civic_projects.py"
+      - "aura_civic_guided_steps.py"
+      - "aura_civic_project_runtime.py"
+      - "aura_civic_guided_project.py"
+      - "aura_showcase_handoff.py"
+      - "aura_showcase_server.py"
+      - "aura_showcase/**"
+      - "tests/test_aura_showcase_guided_project.py"
+      - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
+      - "Dockerfile.aura-showcase"
+      - "docker-compose.showcase.yml"
+      - ".github/workflows/aura-showcase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guided-showcase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused runtime and test dependencies
+        run: |
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest ruff
+      - name: Compile showcase modules
+        run: >-
+          python -m py_compile
+          aura_civic_winnipeg_fixture.py
+          aura_civic_projects.py
+          aura_civic_guided_steps.py
+          aura_civic_project_runtime.py
+          aura_civic_guided_project.py
+          aura_showcase_handoff.py
+          aura_showcase_server.py
+          tests/test_aura_showcase_guided_project.py
+      - name: Fatal lint checks
+        run: >-
+          ruff check --select E9,F63,F7,F82
+          aura_civic_winnipeg_fixture.py
+          aura_civic_projects.py
+          aura_civic_guided_steps.py
+          aura_civic_project_runtime.py
+          aura_civic_guided_project.py
+          aura_showcase_handoff.py
+          aura_showcase_server.py
+          tests/test_aura_showcase_guided_project.py
+      - name: Run guided showcase contracts
+        run: >-
+          python -m pytest -q
+          tests/test_aura_showcase_guided_project.py
+          tests/test_aura_civic_commons_arena.py
+          tests/test_aura_human_agent_workflow.py
+      - name: Exercise unified server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python aura_showcase_server.py --host 127.0.0.1 --port 18091 --demo-project winnipeg_pathways > /tmp/aura-showcase.log 2>&1 &
+          server_pid=$!
+          cleanup() {
+            cat /tmp/aura-showcase.log || true
+            kill "$server_pid" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          python - <<'PY'
+          import json
+          import time
+          import urllib.request
+
+          base = "http://127.0.0.1:18091"
+          for _ in range(40):
+              try:
+                  with urllib.request.urlopen(base + "/api/showcase/status", timeout=1) as response:
+                      status = json.load(response)
+                  if status.get("ok"):
+                      break
+              except Exception:
+                  time.sleep(0.25)
+          else:
+              raise SystemExit("showcase server did not become ready")
+
+          session_id = status["default_session_id"]
+          assert session_id
+          request = urllib.request.Request(
+              base + f"/api/showcase/sessions/{session_id}/advance",
+              data=b"{}",
+              headers={"content-type": "application/json"},
+              method="POST",
+          )
+          with urllib.request.urlopen(request, timeout=5) as response:
+              guide = json.load(response)
+          assert guide["ok"] is True
+          assert guide["patch_authority"] == "exact_source_spans_and_hashes_only"
+          PY
+
+  showcase-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build showcase container
+        run: docker build -f Dockerfile.aura-showcase -t aura-showcase:test .
+      - name: Exercise container default command
+        shell: bash
+        run: |
+          set -euo pipefail
+          container_id="$(docker run -d -p 18092:8091 aura-showcase:test)"
+          cleanup() {
+            docker logs "$container_id" || true
+            docker rm -f "$container_id" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          python - <<'PY'
+          import json
+          import time
+          import urllib.request
+
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:18092/api/showcase/status", timeout=1) as response:
+                      payload = json.load(response)
+                  if payload.get("ok"):
+                      assert payload["default_session_id"]
+                      assert payload["automatic_merge"] is False
+                      break
+              except Exception:
+                  time.sleep(0.5)
+          else:
+              raise SystemExit("container showcase did not become ready")
+          PY
