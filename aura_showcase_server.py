@@ -10,6 +10,7 @@ import argparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
+import os
 from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
@@ -23,17 +24,25 @@ from aura_civic_guided_project import (
     record_response,
     start_project,
 )
+from aura_human_agent_guidance import answer_guidance_question, build_guidance_packet
 if TYPE_CHECKING:
     from aura_human_agent_arena_server import HumanAgentArenaServerState
 from aura_showcase_handoff import import_handoff_into_workflow
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V1"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V3"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
+DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 MAX_BODY_BYTES = 1_000_000
+
+
+def basemap_tile_url_template() -> str:
+    """Return the operator-configurable interactive basemap tile endpoint."""
+    configured = str(os.environ.get("AURA_BASEMAP_TILE_URL_TEMPLATE") or "").strip()
+    return configured or DEFAULT_BASEMAP_TILE_URL_TEMPLATE
 
 
 class ShowcaseState:
@@ -101,7 +110,11 @@ def dispatch_showcase_request(
             "guide": guide,
             "human_agent_available": True,
             "fixture_mode": True,
-            "zero_raw_network_calls": True,
+            "zero_raw_civic_data_network_calls": True,
+            "optional_public_basemap_network_calls": True,
+            "basemap_provider": "OpenStreetMap-compatible raster tiles",
+            "basemap_tile_url_template": basemap_tile_url_template(),
+            "basemap_offline_fallback": "Aura governed synthetic grid",
             "automatic_commit": False,
             "automatic_push": False,
             "automatic_merge": False,
@@ -143,6 +156,18 @@ def dispatch_showcase_request(
             result = import_handoff_into_workflow(state.human_agent.workflow, state.repo_root, session_id)
             return _json(200 if result.get("ok") else 409, result)
 
+    if method == "GET" and route == "/api/human-agent/guide":
+        workflow = state.human_agent.workflow.get_state()
+        return _json(200, build_guidance_packet(workflow))
+
+    if method == "POST" and route == "/api/human-agent/guide/ask":
+        question = str(body.get("question") or "").strip()
+        if not question:
+            return _error("question is required", 400)
+        workflow = state.human_agent.workflow.get_state()
+        guide = build_guidance_packet(workflow)
+        return _json(200, answer_guidance_question(guide, question))
+
     if route.startswith("/api/human-agent") or route.startswith("/api/coding-workbench") or route.startswith("/api/civic"):
         from aura_human_agent_arena_server import dispatch_api_request
         status, result = dispatch_api_request(state.human_agent, method, raw_path, body)
@@ -153,7 +178,7 @@ def dispatch_showcase_request(
 
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
-    if relative not in {"index.html", "app.js", "civic.js", "human.js", "styles.css"}:
+    if relative not in {"index.html", "app.js", "civic.js", "human.js", "styles.css", "guide.css"}:
         return _error("static asset not found", 404)
     path = (STATIC_DIR / relative).resolve()
     try:

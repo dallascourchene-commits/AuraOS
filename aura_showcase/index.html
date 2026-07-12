@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aura Winnipeg Community Pathways Lab</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="guide.css">
 </head>
 <body>
   <header class="topbar">
@@ -22,12 +23,12 @@
         <div>
           <p class="eyebrow">Winnipeg Community Pathways Lab · synthetic demonstration</p>
           <h1>Plan with people, evidence, and visible limits.</h1>
-          <p class="lede">Aura helps a community explore service access, resources, trade-offs, consent, and a reversible pilot. It does not map vulnerable people, declare a winner, allocate money, or make a binding decision.</p>
+          <p class="lede">Aura presents only the actions admitted at the current gate. Route weights explain which interaction is most appropriate; they never grant civic authority.</p>
         </div>
         <div class="hero-actions">
-          <button id="restart-project" class="secondary">Restart</button>
+          <button id="restart-project" class="secondary">Restart demo</button>
           <button id="back-step" class="secondary">Back</button>
-          <button id="advance-step" class="primary">Continue</button>
+          <button id="advance-step" class="primary">Run next governed stage</button>
         </div>
       </section>
 
@@ -39,15 +40,26 @@
       <section class="workspace-grid">
         <section class="map-card">
           <div class="section-head">
-            <div><p class="eyebrow">Governed map projection</p><h2>The map is an interface, not an authority.</h2></div>
+            <div><p class="eyebrow">Governed Winnipeg map</p><h2>Real streets beneath a synthetic, policy-filtered overlay.</h2></div>
             <div class="map-controls">
               <button id="zoom-out" aria-label="Zoom out">−</button>
               <span id="zoom-label">Zoom 11</span>
               <button id="zoom-in" aria-label="Zoom in">+</button>
-              <button id="reveal-candidate" class="secondary">Reveal candidate at governed zoom</button>
+              <button id="focus-community" class="secondary">West Broadway test community</button>
+              <button id="reveal-candidate" class="secondary">Reveal candidate</button>
             </div>
           </div>
-          <canvas id="map-canvas" aria-label="Synthetic Winnipeg Civic map"></canvas>
+          <div id="map-shell" class="map-shell">
+            <div id="basemap-tiles" class="basemap-tiles" aria-hidden="true"></div>
+            <canvas id="map-canvas" aria-label="Winnipeg street map with synthetic governed Civic overlay"></canvas>
+            <div class="map-legend" aria-label="Map legend">
+              <span><i class="legend-community"></i>Synthetic test community</span>
+              <span><i class="legend-service"></i>Service</span>
+              <span><i class="legend-transit"></i>Transit</span>
+              <span><i class="legend-candidate"></i>Candidate</span>
+            </div>
+            <div class="map-attribution">Basemap © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a></div>
+          </div>
           <div id="map-status" class="map-status">Waiting for map evidence.</div>
           <div id="feature-inspector" class="inspector"><span>Select a visible map feature to inspect truth, privacy, jurisdiction, and source.</span></div>
         </section>
@@ -56,6 +68,17 @@
           <p id="step-purpose" class="step-purpose"></p>
           <div class="question"><span>Human question</span><strong id="human-question">—</strong></div>
           <div id="truth-notice" class="notice"></div>
+
+          <section class="route-console" aria-labelledby="route-console-title">
+            <div class="route-console-head">
+              <div><p class="eyebrow">Weighted FST-guided menu</p><h3 id="route-console-title">Available actions at this gate</h3></div>
+              <span class="pill">inspectable</span>
+            </div>
+            <p id="route-notice" class="muted route-notice"></p>
+            <div id="route-actions" class="route-actions"></div>
+            <details class="blocked-routes"><summary>Actions blocked at every Civic gate</summary><div id="blocked-actions"></div></details>
+          </section>
+
           <div class="summary-grid">
             <article><strong id="needs-count">0</strong><span>needs</span></article>
             <article><strong id="offers-count">0</strong><span>assets</span></article>
@@ -75,7 +98,7 @@
               <button id="record-response" class="secondary">Record</button>
             </div>
           </div>
-          <details class="advanced"><summary>Inspect current evidence</summary><pre id="guide-evidence">{}</pre></details>
+          <details id="evidence-details" class="advanced"><summary>Inspect current evidence</summary><pre id="guide-evidence">{}</pre></details>
         </aside>
       </section>
 
@@ -104,14 +127,51 @@
         <div>
           <p class="eyebrow">Human Agent Coding Arena</p>
           <h1>Investigate the system without surrendering authority.</h1>
-          <p class="lede">Exact repository facts enter a guarded workflow. Candidate changes may be staged, tested, and reviewed, but this showcase never commits, pushes, or merges.</p>
+          <p class="lede">The guarded WFST shows the safest admitted next actions at every phase. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
         </div>
         <button id="return-civic" class="secondary">Return to Civic project</button>
       </section>
 
+      <section class="human-route-console" aria-labelledby="human-route-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Guarded WFST semi-guided mode</p><h2 id="human-route-title">Recommended next actions</h2></div>
+          <div class="human-route-state"><span id="human-grammar" class="pill">grammar unavailable</span><span id="human-phase-hash" class="pill">state —</span></div>
+        </div>
+        <p class="muted">Hard guards remove unsafe or unsupported transitions first. The remaining actions are ordered by Aura's exact lexicographic rank vector—not an opaque confidence score.</p>
+        <div id="human-recommended-actions" class="human-recommended-actions"><p class="muted">Import the Civic handoff to begin.</p></div>
+        <details class="human-route-details">
+          <summary>Inspect available alternatives and blocked transitions</summary>
+          <div class="human-route-columns">
+            <section><h3>Other admitted actions</h3><div id="human-available-actions"></div></section>
+            <section><h3>Blocked by evidence or policy</h3><div id="human-blocked-actions"></div></section>
+          </div>
+        </details>
+      </section>
+
+      <section class="human-guide-assistant" aria-labelledby="human-guide-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Manual-free learning layer</p><h2 id="human-guide-title">Ask Aura what this gate means</h2></div>
+          <span class="pill">six-slot grounded</span>
+        </div>
+        <p id="human-guide-summary" class="muted">Import the Civic handoff to load the current gate rules.</p>
+        <div id="human-six-slots" class="six-slot-grid" aria-label="Current six-slot gate packet"></div>
+        <div id="human-gate-rules" class="gate-rules"></div>
+        <div class="guide-prompt-buttons">
+          <button type="button" data-guide-question="What can I do?">What can I do?</button>
+          <button type="button" data-guide-question="What should I do next?">What should I do next?</button>
+          <button type="button" data-guide-question="Why is an action blocked?">Why is it blocked?</button>
+          <button type="button" data-guide-question="Explain this gate using the six slots.">Explain this gate</button>
+        </div>
+        <div class="guide-question-row">
+          <input id="human-guide-input" type="text" placeholder="Ask about the current gate, evidence, available actions, or six-slot meaning…">
+          <button id="human-guide-ask" class="primary">Ask Aura</button>
+        </div>
+        <div id="human-guide-answer" class="guide-answer"><p class="muted">The guide answers only from the current guarded state. It cannot invent actions or bypass a gate.</p></div>
+      </section>
+
       <section class="human-grid">
         <section class="workflow-card">
-          <div class="section-head"><div><p class="eyebrow">FRAME → GROUND → PLAN → ACT → PROVE → DECIDE</p><h2>Guarded workflow</h2></div><span id="workflow-phase" class="pill">Not started</span></div>
+          <div class="section-head"><div><p class="eyebrow">FRAME → GROUND → PLAN → ACT → PROVE → DECIDE</p><h2>Workflow evidence gates</h2></div><span id="workflow-phase" class="pill">Not started</span></div>
           <div id="workflow-actions" class="workflow-actions"><p class="muted">Open the Civic issue to import an exact handoff packet.</p></div>
         </section>
         <aside class="handoff-card">
@@ -128,7 +188,7 @@
     </section>
   </main>
 
-  <footer>Fixture mode · zero raw network calls · no automatic commit · no push · no merge</footer>
+  <footer>Fixture civic data · optional public OpenStreetMap basemap · offline governed-grid fallback · no automatic commit, push, or merge</footer>
   <script src="app.js"></script>
   <script src="civic.js"></script>
   <script src="human.js"></script>

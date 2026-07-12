@@ -19,7 +19,7 @@ def _record(identifier: str, description: str, **extra: Any) -> dict[str, Any]:
 
 
 def _feature(feature_id: str, name: str, kind: str, coordinates: Any, *, privacy: str = "PUBLIC_ATTRIBUTED") -> dict[str, Any]:
-    geometry_type = "Polygon" if kind == "boundary" else "Point"
+    geometry_type = "Polygon" if kind in {"boundary", "neighbourhood"} else "Point"
     return {
         "type": "Feature",
         "properties": {
@@ -29,7 +29,7 @@ def _feature(feature_id: str, name: str, kind: str, coordinates: Any, *, privacy
             "jurisdiction_id": "winnipeg_mb_ca",
             "truth_class": TRUTH_SYNTHETIC,
             "privacy_class": privacy,
-            "location_class": "NEIGHBOURHOOD_ONLY" if kind == "boundary" else "APPROXIMATE_LOCATION",
+            "location_class": "NEIGHBOURHOOD_ONLY" if geometry_type == "Polygon" else "APPROXIMATE_LOCATION",
             "source_ref": TRUTH_SYNTHETIC,
         },
         "geometry": {"type": geometry_type, "coordinates": coordinates},
@@ -115,14 +115,25 @@ def winnipeg_pathways_fixtures() -> dict[str, Any]:
             {"instrument_id": "WP-LI-PRIVACY", "name": "Privacy and community data-governance questions", "level": "policy", "applicability": "REQUIRES_HUMAN_REVIEW", "source_ref": "SYNTHETIC_DEMO_REFERENCE", "as_of_date": "2026-07-12", "truth_class": TRUTH_SYNTHETIC},
         ],
         "council_items": [],
+        "basemap": {
+            "provider": "OpenStreetMap",
+            "tile_url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "attribution": "© OpenStreetMap contributors",
+            "network_optional": True,
+            "offline_fallback": "Aura synthetic governed grid",
+            "test_community_label": "West Broadway synthetic test community",
+            "default_center": [-97.152, 49.895],
+            "test_community_center": [-97.165, 49.8865],
+        },
         "geojson": {
             "type": "FeatureCollection",
             "features": [
-                _feature("WP-BOUNDARY", "Winnipeg Pathways Demonstration Area", "boundary", [[[-97.19, 49.87], [-97.08, 49.87], [-97.08, 49.94], [-97.19, 49.94], [-97.19, 49.87]]]),
-                _feature("WP-FACILITY-1", "Community Partner Site", "facility", [-97.145, 49.895]),
-                _feature("WP-TRANSIT-1", "Transit Connection", "transit", [-97.151, 49.899]),
-                _feature("WP-SERVICE-1", "Housing Navigation Access Point", "service", [-97.132, 49.91]),
-                _feature("WP-CANDIDATE-1", "Proposed Mobile Pilot Staging Site", "candidate", [-97.158, 49.906], privacy="COMMUNITY_ONLY"),
+                _feature("WP-BOUNDARY", "Central Winnipeg Demonstration Area", "boundary", [[[-97.19, 49.87], [-97.08, 49.87], [-97.08, 49.94], [-97.19, 49.94], [-97.19, 49.87]]]),
+                _feature("WP-TEST-COMMUNITY", "West Broadway Synthetic Test Community", "neighbourhood", [[[-97.181, 49.878], [-97.146, 49.878], [-97.146, 49.895], [-97.181, 49.895], [-97.181, 49.878]]]),
+                _feature("WP-FACILITY-1", "Community Partner Site", "facility", [-97.162, 49.884]),
+                _feature("WP-TRANSIT-1", "Transit Connection", "transit", [-97.167, 49.886]),
+                _feature("WP-SERVICE-1", "Housing Navigation Access Point", "service", [-97.153, 49.89]),
+                _feature("WP-CANDIDATE-1", "Proposed Mobile Pilot Staging Site", "candidate", [-97.176, 49.889], privacy="COMMUNITY_ONLY"),
             ],
         },
         "heatmap": {
