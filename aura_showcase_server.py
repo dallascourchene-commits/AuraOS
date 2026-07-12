@@ -10,6 +10,7 @@ import argparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
+import os
 from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
@@ -33,8 +34,15 @@ VSA_PATCH_AUTHORITY = False
 SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V3"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
+DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 MAX_BODY_BYTES = 1_000_000
+
+
+def basemap_tile_url_template() -> str:
+    """Return the operator-configurable interactive basemap tile endpoint."""
+    configured = str(os.environ.get("AURA_BASEMAP_TILE_URL_TEMPLATE") or "").strip()
+    return configured or DEFAULT_BASEMAP_TILE_URL_TEMPLATE
 
 
 class ShowcaseState:
@@ -104,7 +112,8 @@ def dispatch_showcase_request(
             "fixture_mode": True,
             "zero_raw_civic_data_network_calls": True,
             "optional_public_basemap_network_calls": True,
-            "basemap_provider": "OpenStreetMap standard raster tiles",
+            "basemap_provider": "OpenStreetMap-compatible raster tiles",
+            "basemap_tile_url_template": basemap_tile_url_template(),
             "basemap_offline_fallback": "Aura governed synthetic grid",
             "automatic_commit": False,
             "automatic_push": False,
