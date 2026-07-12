@@ -3,10 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from aura_civic_authority import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
 from aura_civic_projects import CivicProjectDefinition, require_project
-
-PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
-VSA_PATCH_AUTHORITY = False
 
 
 def runtime_module():
@@ -29,7 +27,7 @@ def _map_adapter(project: CivicProjectDefinition):
             jurisdiction_id=project.jurisdiction_id,
             jurisdiction_label=project.jurisdiction_label,
         )
-        return {"ok": bool(manifest.get("ok")), "organ_type": "CivicMapOrgan", "map_manifest": manifest, "accessible_table_parity": True, "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+        return {"ok": bool(manifest.get("ok")), "organ_type": "CivicMapOrgan", "map_manifest": manifest, "accessible_table_parity": True, "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     return adapter
 
 
@@ -37,7 +35,7 @@ def _music_adapter(project: CivicProjectDefinition):
     def adapter(session: dict[str, Any]) -> dict[str, Any]:
         from aura_civic_reasoning import civic_music
         result = civic_music(project.fixtures_factory().get("scenarios", []))
-        return {"ok": bool(result.get("ok")), "organ_type": "CivicMUSICOrgan", "music": result.get("comparison", {}), "note": result.get("note", ""), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+        return {"ok": bool(result.get("ok")), "organ_type": "CivicMUSICOrgan", "music": result.get("comparison", {}), "note": result.get("note", ""), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     return adapter
 
 
