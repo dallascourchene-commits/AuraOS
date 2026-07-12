@@ -210,9 +210,11 @@ def test_showcase_dispatch_compiles_bulk_intent_and_attaches_bounded_topology():
     assert result["automatic_merge"] is False
 
 
-def test_browser_assets_present_guided_learning_rail_and_authority_boundary():
+def test_browser_assets_present_usable_learning_workspace_with_optional_tour():
     index = (REPO_ROOT / "aura_showcase" / "index.html").read_text(encoding="utf-8")
+    app_js = (REPO_ROOT / "aura_showcase" / "app.js").read_text(encoding="utf-8")
     intent_js = (REPO_ROOT / "aura_showcase" / "intent.js").read_text(encoding="utf-8")
+    intent_css = (REPO_ROOT / "aura_showcase" / "intent.css").read_text(encoding="utf-8")
     server = (REPO_ROOT / "aura_showcase_server.py").read_text(encoding="utf-8")
 
     assert 'data-tab="learning"' in index
@@ -225,9 +227,28 @@ def test_browser_assets_present_guided_learning_rail_and_authority_boundary():
     assert 'id="learning-topology-canvas"' in index
     assert 'href="intent.css"' in index
     assert 'src="intent.js"' in index
+
     assert "/api/showcase/intent/compile" in intent_js
     assert "model calls: 0" in intent_js
     assert "include_topology: true" in intent_js
+
+    assert "Use Aura freely—or follow the suggested tour." in app_js
+    assert "S.startLearningTour" in app_js
+    assert "S.exitLearningTour" in app_js
+    assert "S.toggleLearningOverview" in app_js
+    assert "Compiled workspace ready · every view is now available" in app_js
+    assert "Copy worker handoff" in app_js
+    assert "Copy trace JSON" in app_js
+    assert "Export JSON" in app_js
+    assert "LEARNING_EXAMPLES" in app_js
+    assert "document.querySelectorAll('[data-learning-stage]')" in app_js
+    assert "button.disabled = false" in app_js
+
+    assert "#learning-view.is-overview .learning-panel" in intent_css
+    assert ".learning-workspace-toolbar" in intent_css
+    assert ".learning-tour-note" in intent_css
+    assert ".learning-examples" in intent_css
+
     assert '"intent.js"' in server
     assert '"intent.css"' in server
     assert "model_calls_before_handoff" in server
