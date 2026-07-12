@@ -1,0 +1,59 @@
+name: Phase B Release Candidate CODEMAP Refresh
+
+on:
+  push:
+    branches:
+      - feature/arena-crucible-phase-b
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase-b-release-candidate-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/arena-crucible-phase-b
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0"
+      - name: Remove temporary workflow before indexing
+        run: rm .github/workflows/phase-b-release-refresh.yml
+      - name: Regenerate and verify deep CODEMAP
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify
+      - name: Commit regenerated artifacts and remove this workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .aura/CODEMAP.json .aura/CODEMAP.md
+          git add -u .github/workflows/phase-b-release-refresh.yml
+          if git diff --cached --quiet; then
+            echo "No CODEMAP changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(codemap): refresh Phase B release candidate"
+          git push origin HEAD:feature/arena-crucible-phase-b
