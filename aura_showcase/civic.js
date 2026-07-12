@@ -3,7 +3,6 @@
 (() => {
   const S = window.Showcase, $ = S.$, esc = S.esc;
   const TILE_SIZE = 256;
-  const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
   const list = (items, formatter) => !items?.length
     ? '<p class="muted">Evidence has not been produced at this step.</p>'
     : `<ul class="result-list">${items.slice(0, 10).map(item => `<li>${formatter(item)}</li>`).join('')}</ul>`;
@@ -12,6 +11,10 @@
     const slots = action.intent_slots || {};
     return ['DIR', 'ASP', 'CLASS', 'SUBJ', 'VOICE', 'STEM']
       .map(key => `${key}:${slots[key] || '—'}`).join(' · ');
+  }
+
+  function actionForEffect(effect) {
+    return (S.guide?.available_actions || []).find(action => action.effect === effect);
   }
 
   function renderRouteMenu() {
@@ -48,13 +51,14 @@
         return;
       }
       case 'FOCUS_TEST_COMMUNITY':
-        S.mapCenter = {lon: Number(args.center?.[0] ?? S.TEST_COMMUNITY_CENTER.lon), lat: Number(args.center?.[1] ?? S.TEST_COMMUNITY_CENTER.lat)};
-        S.mapZoom = Number(args.zoom || 14);
+      case 'REVEAL_CANDIDATE': {
+        if (!Array.isArray(args.center) || args.center.length < 2) {
+          return S.showCivicError(`Map focus is unavailable for ${action.label || action.effect}.`);
+        }
+        S.mapCenter = {lon: Number(args.center[0]), lat: Number(args.center[1])};
+        S.mapZoom = Number(args.zoom || S.mapZoom);
         return S.refreshMap();
-      case 'REVEAL_CANDIDATE':
-        S.mapCenter = {lon: Number(args.center?.[0] ?? -97.176), lat: Number(args.center?.[1] ?? 49.889)};
-        S.mapZoom = Number(args.zoom || 12);
-        return S.refreshMap();
+      }
       case 'PREFILL_RESPONSE':
         $('response-type').value = args.response_type || 'CONSENT_WITH_RESERVATION';
         $('response-statement').value = args.statement || '';
@@ -66,6 +70,12 @@
       default:
         return S.showCivicError(`Unknown guided action: ${action.effect}`);
     }
+  }
+
+  function runGuidedEffect(effect) {
+    const action = actionForEffect(effect);
+    if (!action) return S.showCivicError(`${effect} is not admitted at this gate.`);
+    return executeRouteAction(action);
   }
 
   S.renderCivicGuide = () => {
@@ -95,6 +105,8 @@
     $('issue-card').hidden = !g.demo_issue_available;
     $('issue-title').textContent = issue.title || 'Map presentation issue';
     $('issue-observed').textContent = issue.observed || '';
+    $('focus-community').disabled = !actionForEffect('FOCUS_TEST_COMMUNITY');
+    $('reveal-candidate').disabled = !actionForEffect('REVEAL_CANDIDATE');
     renderRouteMenu();
   };
 
@@ -110,7 +122,7 @@
     }
     const result = S.mapProjection || {};
     const suppressed = Object.values(result.suppressed_counts || {}).reduce((sum, value) => sum + Number(value || 0), 0);
-    const basemap = S.basemapLoaded ? 'OpenStreetMap streets loaded' : (S.basemapFailed ? 'offline governed-grid fallback' : 'street basemap loading');
+    const basemap = S.basemapLoaded ? 'street basemap loaded' : (S.basemapFailed ? 'offline governed-grid fallback' : 'street basemap loading');
     $('map-status').textContent = `${result.visible_feature_count || 0} visible synthetic features · ${suppressed} policy-filtered · ${basemap}`;
   }
 
@@ -158,7 +170,8 @@
     const shell = $('map-shell');
     const rect = shell.getBoundingClientRect();
     host.innerHTML = '';
-    if (!rect.width || !rect.height || navigator.onLine === false) {
+    const tileTemplate = S.tileUrlTemplate || S.DEFAULT_TILE_URL_TEMPLATE;
+    if (!rect.width || !rect.height || navigator.onLine === false || !tileTemplate) {
       S.basemapFailed = true;
       S.basemapLoaded = false;
       updateMapStatus();
@@ -184,7 +197,7 @@
         image.setAttribute('aria-hidden', 'true');
         image.decoding = 'async';
         image.loading = 'eager';
-        image.src = OSM_TILE_URL.replace('{z}', zoom).replace('{x}', wrappedX).replace('{y}', tileY);
+        image.src = tileTemplate.replace('{z}', zoom).replace('{x}', wrappedX).replace('{y}', tileY);
         image.style.left = `${tileX * TILE_SIZE - left}px`;
         image.style.top = `${tileY * TILE_SIZE - top}px`;
         image.addEventListener('load', () => {
@@ -284,8 +297,8 @@
   });
   $('zoom-in').addEventListener('click', () => { S.mapZoom = Math.min(18, S.mapZoom + 1); S.refreshMap(); });
   $('zoom-out').addEventListener('click', () => { S.mapZoom = Math.max(3, S.mapZoom - 1); S.refreshMap(); });
-  $('focus-community').addEventListener('click', () => { S.mapCenter = {...S.TEST_COMMUNITY_CENTER}; S.mapZoom = 14; S.refreshMap(); });
-  $('reveal-candidate').addEventListener('click', () => { S.mapCenter = {lon: -97.176, lat: 49.889}; S.mapZoom = 12; S.refreshMap(); });
+  $('focus-community').addEventListener('click', () => runGuidedEffect('FOCUS_TEST_COMMUNITY'));
+  $('reveal-candidate').addEventListener('click', () => runGuidedEffect('REVEAL_CANDIDATE'));
   $('record-response').addEventListener('click', async () => {
     const statement = $('response-statement').value.trim(); if (!statement || !S.sessionId) return;
     const result = await S.api(`/api/showcase/sessions/${encodeURIComponent(S.sessionId)}/respond`, {response_type: $('response-type').value, statement});
