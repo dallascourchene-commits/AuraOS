@@ -56,9 +56,11 @@ class VSAEncodingProfile:
         if not isinstance(value, dict):
             raise TypeError("VSA profile must be an object")
         payload = dict(value)
-        payload.pop("schema_version", None)
-        payload.pop("kind", None)
-        payload.pop("component_id", None)
+        for metadata_key in (
+            "schema_version", "kind", "component_id",
+            "patch_authority", "vsa_patch_authority",
+        ):
+            payload.pop(metadata_key, None)
         profile = cls(**payload)
         profile.validate()
         return profile
