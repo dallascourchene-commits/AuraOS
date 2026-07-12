@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from aura_civic_projects import CivicProjectDefinition, get_project
+from aura_civic_projects import CivicProjectDefinition, require_project
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
@@ -15,7 +15,7 @@ def runtime_module():
 
 
 def project_for_session(session: dict[str, Any]) -> CivicProjectDefinition:
-    return get_project(str(session.get("project_id") or session.get("story") or "winnipeg_pathways"))
+    return require_project(str(session.get("project_id") or session.get("story") or "winnipeg_pathways"))
 
 
 def _map_adapter(project: CivicProjectDefinition):
