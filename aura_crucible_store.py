@@ -2,15 +2,21 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import sqlite3
 import time
 from typing import Any
 
-from aura_crucible_types import CRYSTALLIZATION_PROPOSED, CrystallizationProposal, PATCH_AUTHORITY, VSA_PATCH_AUTHORITY, canonical_digest
+from aura_crucible_types import (
+    CRYSTALLIZATION_PROPOSED,
+    CrystallizationProposal,
+    PATCH_AUTHORITY,
+    VSA_PATCH_AUTHORITY,
+    canonical_digest,
+)
 
-CRUCIBLE_STORE_VERSION = "AURA_CRUCIBLE_STORE_V1"
-_SCHEMA_VERSION = 1
+CRUCIBLE_STORE_VERSION = "AURA_CRUCIBLE_STORE_V2"
+_SCHEMA_VERSION = 2
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS crucible_control (
     control_id INTEGER PRIMARY KEY CHECK(control_id = 1),
@@ -42,6 +48,8 @@ CREATE TABLE IF NOT EXISTS crystallization_proposals (
     manifest_path TEXT NOT NULL,
     manifest_digest TEXT NOT NULL,
     transition_id TEXT NOT NULL,
+    recommendation TEXT NOT NULL DEFAULT '',
+    thresholds_met INTEGER NOT NULL DEFAULT 0,
     proposal_json TEXT NOT NULL,
     proposal_digest TEXT NOT NULL,
     created_at REAL NOT NULL
@@ -60,6 +68,7 @@ class CrucibleStore:
 
     def __init__(self, repo_root: str | Path = ".", *, db_path: str | Path | None = None) -> None:
         root = Path(repo_root).resolve()
+        self.repo_root = root
         self.db_path = Path(db_path).resolve() if db_path is not None else root / "Aura_Memory" / "arena_crucible.db"
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(str(self.db_path), timeout=10.0)
@@ -68,23 +77,45 @@ class CrucibleStore:
         self._conn.execute("PRAGMA synchronous=NORMAL;")
         self._conn.execute("PRAGMA foreign_keys=ON;")
         self._conn.executescript(_SCHEMA)
-        self._conn.execute("INSERT OR IGNORE INTO crucible_migrations(version, applied_at) VALUES (?, ?)", (_SCHEMA_VERSION, time.time()))
+        self._migrate()
         self._conn.commit()
+
+    def _migrate(self) -> None:
+        columns = {str(row[1]) for row in self._conn.execute("PRAGMA table_info(crystallization_proposals)").fetchall()}
+        if "recommendation" not in columns:
+            self._conn.execute("ALTER TABLE crystallization_proposals ADD COLUMN recommendation TEXT NOT NULL DEFAULT ''")
+        if "thresholds_met" not in columns:
+            self._conn.execute("ALTER TABLE crystallization_proposals ADD COLUMN thresholds_met INTEGER NOT NULL DEFAULT 0")
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_crucible_proposal_readiness ON crystallization_proposals(thresholds_met, recommendation)"
+        )
+        self._conn.execute(
+            "INSERT OR IGNORE INTO crucible_migrations(version, applied_at) VALUES (?, ?)",
+            (_SCHEMA_VERSION, time.time()),
+        )
 
     def pause(self, reason: str = "operator_pause") -> dict[str, Any]:
         now = time.time()
-        self._conn.execute("UPDATE crucible_control SET paused = 1, pause_reason = ?, updated_at = ? WHERE control_id = 1", (str(reason or "operator_pause"), now))
+        self._conn.execute(
+            "UPDATE crucible_control SET paused = 1, pause_reason = ?, updated_at = ? WHERE control_id = 1",
+            (str(reason or "operator_pause"), now),
+        )
         self._conn.commit()
         return self.control_status()
 
     def resume(self) -> dict[str, Any]:
         now = time.time()
-        self._conn.execute("UPDATE crucible_control SET paused = 0, pause_reason = '', updated_at = ? WHERE control_id = 1", (now,))
+        self._conn.execute(
+            "UPDATE crucible_control SET paused = 0, pause_reason = '', updated_at = ? WHERE control_id = 1",
+            (now,),
+        )
         self._conn.commit()
         return self.control_status()
 
     def control_status(self) -> dict[str, Any]:
-        row = self._conn.execute("SELECT paused, pause_reason, updated_at FROM crucible_control WHERE control_id = 1").fetchone()
+        row = self._conn.execute(
+            "SELECT paused, pause_reason, updated_at FROM crucible_control WHERE control_id = 1"
+        ).fetchone()
         return {
             "ok": True,
             "paused": bool(row["paused"]),
@@ -143,23 +174,36 @@ class CrucibleStore:
                 return _denial(f"invalid_proposal_contract:{type(exc).__name__}")
         if str(raw.get("status") or "") != CRYSTALLIZATION_PROPOSED:
             return _denial("invalid_proposal_status")
+        if raw.get("threshold_scope") != "PROPOSAL_ONLY":
+            return _denial("threshold_scope_must_be_proposal_only")
+        if not _repository_relative_manifest_path(str(raw.get("manifest_path") or "")):
+            return _denial("manifest_path_not_repository_relative")
         proposal_id = str(raw.get("proposal_id") or "")
-        required = ("run_id", "candidate_id", "arena_id", "grammar_version", "manifest_path", "manifest_digest", "transition_id")
-        missing = [key for key in required if not str(raw.get(key) or "")]
+        required = (
+            "run_id", "candidate_id", "arena_id", "grammar_version", "manifest_path",
+            "manifest_digest", "transition_id", "proposal_thresholds", "threshold_assessment",
+        )
+        missing = [key for key in required if not raw.get(key)]
         if not proposal_id or missing:
             return _denial("missing_proposal_fields", missing=missing + ([] if proposal_id else ["proposal_id"]))
         body = {key: value for key, value in raw.items() if key != "proposal_digest"}
         digest = canonical_digest(body)
-        existing = self._conn.execute("SELECT proposal_digest FROM crystallization_proposals WHERE proposal_id = ?", (proposal_id,)).fetchone()
+        existing = self._conn.execute(
+            "SELECT proposal_digest FROM crystallization_proposals WHERE proposal_id = ?", (proposal_id,)
+        ).fetchone()
         if existing:
             if existing["proposal_digest"] == digest:
                 return {"ok": True, "proposal_id": proposal_id, "proposal_digest": digest, "idempotent_replay": True}
             return _denial("proposal_id_digest_conflict", proposal_id=proposal_id)
+        validation = dict(raw.get("validation") or {})
+        recommendation = str(validation.get("proposal_recommendation") or "")
+        thresholds_met = bool(validation.get("all_proposal_thresholds_met"))
         try:
             self._conn.execute(
                 """INSERT INTO crystallization_proposals(proposal_id, run_id, candidate_id, status,
                    arena_id, grammar_version, manifest_path, manifest_digest, transition_id,
-                   proposal_json, proposal_digest, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                   recommendation, thresholds_met, proposal_json, proposal_digest, created_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (
                     proposal_id,
                     str(raw["run_id"]),
@@ -170,6 +214,8 @@ class CrucibleStore:
                     str(raw["manifest_path"]),
                     str(raw["manifest_digest"]),
                     str(raw["transition_id"]),
+                    recommendation,
+                    int(thresholds_met),
                     _json(body),
                     digest,
                     float(raw.get("created_at") or time.time()),
@@ -182,25 +228,18 @@ class CrucibleStore:
         return {"ok": True, "proposal_id": proposal_id, "proposal_digest": digest, "idempotent_replay": False}
 
     def get_proposal_by_candidate(self, candidate_id: str) -> dict[str, Any] | None:
-        """Return the existing proposal for an identical deterministic candidate."""
-
         row = self._conn.execute(
             "SELECT proposal_json, proposal_digest FROM crystallization_proposals WHERE candidate_id = ? ORDER BY created_at ASC LIMIT 1",
             (str(candidate_id),),
         ).fetchone()
-        if not row:
-            return None
-        data = json.loads(row["proposal_json"])
-        data["proposal_digest"] = row["proposal_digest"]
-        return data
+        return _decode_proposal(row) if row else None
 
     def get_proposal(self, proposal_id: str) -> dict[str, Any] | None:
-        row = self._conn.execute("SELECT proposal_json, proposal_digest FROM crystallization_proposals WHERE proposal_id = ?", (str(proposal_id),)).fetchone()
-        if not row:
-            return None
-        data = json.loads(row["proposal_json"])
-        data["proposal_digest"] = row["proposal_digest"]
-        return data
+        row = self._conn.execute(
+            "SELECT proposal_json, proposal_digest FROM crystallization_proposals WHERE proposal_id = ?",
+            (str(proposal_id),),
+        ).fetchone()
+        return _decode_proposal(row) if row else None
 
     def list_proposals(self, *, arena_id: str = "", limit: int = 50) -> list[dict[str, Any]]:
         params: list[Any] = []
@@ -213,17 +252,13 @@ class CrucibleStore:
             f"SELECT proposal_json, proposal_digest FROM crystallization_proposals {where} ORDER BY created_at DESC LIMIT ?",
             params,
         ).fetchall()
-        output = []
-        for row in rows:
-            data = json.loads(row["proposal_json"])
-            data["proposal_digest"] = row["proposal_digest"]
-            output.append(data)
-        return output
+        return [_decode_proposal(row) for row in rows]
 
     def status(self) -> dict[str, Any]:
         control = self.control_status()
         run_count = int(self._conn.execute("SELECT COUNT(*) FROM crucible_runs").fetchone()[0])
         proposal_count = int(self._conn.execute("SELECT COUNT(*) FROM crystallization_proposals").fetchone()[0])
+        ready_count = int(self._conn.execute("SELECT COUNT(*) FROM crystallization_proposals WHERE thresholds_met = 1").fetchone()[0])
         journal_mode = str(self._conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
         return {
             **control,
@@ -233,7 +268,9 @@ class CrucibleStore:
             "journal_mode": journal_mode,
             "run_count": run_count,
             "proposal_count": proposal_count,
+            "proposal_thresholds_met_count": ready_count,
             "terminal_proposal_status": CRYSTALLIZATION_PROPOSED,
+            "threshold_scope": "PROPOSAL_ONLY",
         }
 
     def close(self) -> None:
@@ -244,6 +281,20 @@ class CrucibleStore:
 
     def __exit__(self, exc_type, exc, tb) -> None:
         self.close()
+
+
+def _repository_relative_manifest_path(value: str) -> bool:
+    raw = str(value or "").replace("\\", "/")
+    if not raw:
+        return False
+    path = PurePosixPath(raw)
+    return not path.is_absolute() and all(part not in {"", ".", ".."} for part in path.parts)
+
+
+def _decode_proposal(row: sqlite3.Row) -> dict[str, Any]:
+    data = json.loads(row["proposal_json"])
+    data["proposal_digest"] = row["proposal_digest"]
+    return data
 
 
 def _json(value: Any) -> str:
