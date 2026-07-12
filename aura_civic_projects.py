@@ -77,7 +77,7 @@ WINNIPEG_PATHWAYS = CivicProjectDefinition(
         "observed": "The showcase opens at zoom 11 while candidate features require zoom 12.",
         "question": "Is this intended policy, fixture data, or a presentation default mismatch?",
         "recommended_option": "Preserve map policy and focus the guided candidate step at zoom 12.",
-        "files": ["aura_showcase/app.js", "aura_civic_map.py", "aura_civic_projects.py", "tests/test_aura_showcase_guided_project.py"],
+        "files": ["aura_showcase/app.js", "aura_civic_map.py", "aura_civic_winnipeg_fixture.py", "tests/test_aura_showcase_guided_project.py"],
         "tests": ["tests/test_aura_showcase_guided_project.py"],
         "candidate_options": [
             "Open every Civic project at zoom 12.",
