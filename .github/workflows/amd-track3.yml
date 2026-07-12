@@ -8,6 +8,7 @@ on:
       - "tests/test_aura_amd_track3_demo.py"
       - "tests/fixtures/amd_track3/**"
       - "Dockerfile.amd-track3"
+      - "docker-compose.track3.yml"
       - "requirements-amd-track3.txt"
       - "docs/AMD_TRACK3_CRUCIBLE_DEMO.md"
       - ".github/workflows/amd-track3.yml"
@@ -64,8 +65,16 @@ jobs:
           tests/test_aura_amd_track3_demo.py
       - name: Run Track 3 contracts
         run: python -m pytest -q tests/test_aura_amd_track3_demo.py tests/test_aura_phase_c3_trial_crucible.py
-      - name: Exercise judge-facing fixture cycle
+      - name: Exercise judge-facing crystal reuse sequence
         run: >-
           python aura_amd_track3_cli.py
           --crystals /tmp/verified_crystals.jsonl
-          run-once --provider fixture
+          demo-sequence --provider fixture --reset-demo
+      - name: Build inspection container
+        run: docker build -f Dockerfile.amd-track3 -t aura-track3:test .
+      - name: Exercise container demo
+        run: >-
+          docker run --rm aura-track3:test
+          python aura_amd_track3_cli.py
+          --crystals /tmp/container-crystals.jsonl
+          demo-sequence --provider fixture --reset-demo
