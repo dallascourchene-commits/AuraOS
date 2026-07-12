@@ -1,0 +1,33 @@
+name: Apply federated Arena README update
+
+on:
+  push:
+    branches:
+      - docs/federated-arena-market-vision
+    paths:
+      - .github/workflows/apply-federated-arena-readme.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-readme-update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/federated-arena-market-vision
+      - name: Apply README update
+        run: python tools/apply_federated_arena_readme_update.py
+      - name: Remove one-time updater and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm tools/apply_federated_arena_readme_update.py
+          rm .github/workflows/apply-federated-arena-readme.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: add federated Arena vision to README"
+          git push origin HEAD:docs/federated-arena-market-vision
