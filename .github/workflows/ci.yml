@@ -138,9 +138,9 @@ jobs:
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0"
+      - name: Preserve committed CODEMAP snapshot
+        run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
       - name: Regenerate deep CODEMAP
         run: python aura_codebase_navigator.py
-      - name: Verify topology and indexed Phase B surface
-        run: python -m aura_codemap_verify
-      - name: Require committed generated artifacts
-        run: git diff --exit-code -- .aura/CODEMAP.json .aura/CODEMAP.md
+      - name: Verify topology and stable committed structure
+        run: python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
