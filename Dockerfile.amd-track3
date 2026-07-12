@@ -8,7 +8,10 @@ COPY tests/fixtures/amd_track3 ./tests/fixtures/amd_track3
 RUN useradd -m -u 1000 aura && chown -R aura:aura /app
 USER aura
 
-ENV AURA_AMD_BACKEND="AMD approved compute demo mode"
+ENV AURA_AMD_BACKEND="AMD approved compute / local inspection mode" \
+    AURA_PROVIDER="fixture" \
+    AURA_ENDPOINT="http://host.docker.internal:11434" \
+    AURA_MODEL="qwen2.5-coder:3b"
 EXPOSE 8080
 
-CMD ["sh", "-c", "python aura_amd_track3_cli.py run-once --provider fixture && python aura_amd_track3_cli.py serve --host 0.0.0.0 --port 8080"]
+CMD ["sh", "-c", "python aura_amd_track3_cli.py demo-sequence --provider \"${AURA_PROVIDER}\" --endpoint \"${AURA_ENDPOINT}\" --model \"${AURA_MODEL}\" --reset-demo && python aura_amd_track3_cli.py serve --host 0.0.0.0 --port 8080"]
