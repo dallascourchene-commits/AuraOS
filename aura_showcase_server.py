@@ -1,4 +1,4 @@
-"""Unified Winnipeg Civic and Human Agent Arena showcase server.
+"""Unified Winnipeg Civic, Human Agent, and Learning Arena showcase server.
 
 The server is intentionally additive. Existing Human Agent and Civic endpoints
 are delegated to Aura's established server dispatcher; guided-project endpoints
@@ -28,6 +28,8 @@ from aura_human_agent_guidance import answer_guidance_question, build_guidance_p
 if TYPE_CHECKING:
     from aura_human_agent_arena_server import HumanAgentArenaServerState
 from aura_showcase_handoff import import_handoff_into_workflow
+from aura_showcase_intent import DEFAULT_BULK_INTENT, compile_bulk_intent_trace
+from aura_showcase_intent_topology import build_intent_workspace
 from aura_showcase_spatial import (
     build_selected_workspace,
     build_task_workspace,
@@ -36,7 +38,7 @@ from aura_showcase_spatial import (
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V4"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V5"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -63,7 +65,7 @@ class ShowcaseState:
 
     @property
     def human_agent(self) -> "HumanAgentArenaServerState":
-        """Load the real CODEMAP topology lazily when the coding surface is used."""
+        """Load the real CODEMAP topology lazily when a coding surface is used."""
         if self._human_agent is None:
             from aura_human_agent_arena_server import HumanAgentArenaServerState
             self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=False)
@@ -121,6 +123,11 @@ def dispatch_showcase_request(
             "default_session_id": state.default_session_id,
             "guide": guide,
             "human_agent_available": True,
+            "learning_arena_available": True,
+            "deterministic_bulk_intent_compiler": True,
+            "model_calls_before_handoff": 0,
+            "english_lexicon_expected_primitives": 4096,
+            "default_bulk_intent": DEFAULT_BULK_INTENT,
             "spatial_tasks_available": True,
             "bounded_topology_projection": True,
             "full_topology_sent_to_browser": False,
@@ -140,6 +147,22 @@ def dispatch_showcase_request(
 
     if method == "GET" and route == "/api/showcase/coding-tasks":
         return _json(200, list_spatial_tasks())
+
+    if method == "POST" and route == "/api/showcase/intent/compile":
+        text = str(body.get("text") or "")
+        include_grounding = body.get("include_grounding", True) is not False
+        trace = compile_bulk_intent_trace(
+            text,
+            repo_root=state.repo_root,
+            include_grounding=include_grounding,
+        )
+        if trace.get("ok") and body.get("include_topology", True) is not False:
+            trace["topology_packet"] = build_intent_workspace(
+                state.human_agent.arena.topology,
+                trace,
+                depth=_depth(body.get("depth", 1)),
+            )
+        return _json(200 if trace.get("ok") else 400, trace)
 
     if (
         method == "GET"
@@ -219,7 +242,11 @@ def dispatch_showcase_request(
 
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
-    if relative not in {"index.html", "app.js", "civic.js", "human.js", "topology.js", "topology.css", "styles.css", "guide.css"}:
+    allowed = {
+        "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js",
+        "topology.css", "intent.css", "styles.css", "guide.css",
+    }
+    if relative not in allowed:
         return _error("static asset not found", 404)
     path = (STATIC_DIR / relative).resolve()
     try:
@@ -284,7 +311,7 @@ def serve(*, host: str, port: int, repo_root: str | Path, demo_project: str, aut
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Aura Winnipeg Civic + Human Agent showcase")
+    parser = argparse.ArgumentParser(description="Aura Winnipeg Civic + Human Agent + Learning Arena showcase")
     parser.add_argument("--host", default=DEFAULT_HOST)
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--repo-root", default=".")
