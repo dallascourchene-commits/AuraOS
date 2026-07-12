@@ -1,15 +1,15 @@
-"""Deterministic experience mining for Aura's proposal-only Arena Crucible."""
+"""Deterministic OutcomeVector mining for Aura's proposal-only Arena Crucible."""
 from __future__ import annotations
 
 from collections import defaultdict
 import math
+import statistics
 from typing import Any, Iterable
 
+from aura_arena_experience import OutcomeVector
 from aura_crucible_types import CrucibleCandidate, CruciblePolicy, bounded_probability, canonical_digest
 
-CRUCIBLE_MINER_VERSION = "AURA_CRUCIBLE_MINER_V1"
-_SUCCESS_OUTCOMES = frozenset({"ALLOWED", "COMPLETED", "PASS", "PASSED", "SUCCEEDED", "SUCCESS", "VERIFIED", "META_COMPLETED"})
-_FAILURE_OUTCOMES = frozenset({"BLOCKED", "DENIED", "FAILED", "FAIL", "ERROR", "ABSTAINED", "INVALIDATED"})
+CRUCIBLE_MINER_VERSION = "AURA_CRUCIBLE_MINER_V2"
 
 
 def mine_crucible_candidates(
@@ -19,14 +19,15 @@ def mine_crucible_candidates(
     policy: CruciblePolicy | None = None,
     arena_id: str = "",
 ) -> list[CrucibleCandidate]:
-    """Mine supported transition-weight candidates using temporal train/holdout splits.
+    """Mine existing-transition proposals from complete V2 observations.
 
-    ``grammar_index`` maps ``(arena_id, grammar_version)`` to a compiled grammar. A
-    record targeting a missing or stale transition is ignored rather than guessed.
+    Terminal strings remain audit labels only. Candidate values come from continuous
+    OutcomeVector projections. Thresholds are attached to proposals and never become
+    guards, runtime policy, or promotion authority.
     """
 
     policy = policy or CruciblePolicy()
-    groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    groups: dict[tuple[str, str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for raw in experiences:
         row = dict(raw or {})
         if not _eligible(row, arena_id=arena_id):
@@ -34,118 +35,190 @@ def mine_crucible_candidates(
         key = (
             str(row.get("arena_id") or ""),
             str(row.get("grammar_version") or ""),
+            str(row.get("grammar_manifest_digest") or ""),
             str(row.get("state_before") or ""),
             str(row.get("selected_transition") or ""),
         )
         grammar = grammar_index.get((key[0], key[1]))
-        transition = grammar.transition_by_id(key[3]) if grammar is not None else None
-        if transition is None or str(getattr(transition, "from_state", "")) not in {key[2], "*"}:
+        transition = grammar.transition_by_id(key[4]) if grammar is not None else None
+        if grammar is None or str(getattr(grammar, "manifest_digest", "")) != key[2]:
+            continue
+        if transition is None or str(getattr(transition, "from_state", "")) not in {key[3], "*"}:
             continue
         groups[key].append(row)
 
     candidates: list[CrucibleCandidate] = []
     for key in sorted(groups):
         rows = sorted(groups[key], key=lambda item: (float(item.get("completed_at") or 0.0), str(item.get("experience_id") or "")))
-        split = _temporal_split(rows, policy)
+        split = three_way_temporal_split(rows, policy)
         if split is None:
             continue
-        train, holdout = split
-        train_successes = sum(_is_success(row) for row in train)
-        train_rate = train_successes / len(train)
-        if train_rate < policy.min_train_success_rate:
-            continue
-        objective_count = len({str(row.get("objective_hash") or "") for row in train if str(row.get("objective_hash") or "")})
-        if objective_count < policy.min_distinct_objectives:
+        train, validation, shadow = split
+        train_summary = summarize_outcome_vectors(train)
+        floor = train_summary.get("conservative_floor")
+        if train_summary.get("score_mean") is None or floor is None:
             continue
 
         grammar = grammar_index[(key[0], key[1])]
-        transition = grammar.transition_by_id(key[3])
-        profile = getattr(transition, "soft_weight_profile", None)
-        current = bounded_probability(getattr(profile, "empirical_uncertainty", 1.0))
-        lower = wilson_lower_bound(train_successes, len(train))
-        proposed = round(max(0.05, min(1.0, 1.0 - lower)), 6)
-        if abs(current - proposed) < policy.minimum_uncertainty_delta:
+        transition = grammar.transition_by_id(key[4])
+        current = bounded_probability(getattr(getattr(transition, "soft_weight_profile", None), "empirical_uncertainty", 1.0))
+        proposed = round(max(0.0, min(1.0, 1.0 - float(floor))), 6)
+        if proposed == current:
             continue
 
-        train_ids = tuple(str(row["experience_id"]) for row in train[: policy.max_source_ids])
-        holdout_ids = tuple(str(row["experience_id"]) for row in holdout[: policy.max_source_ids])
-        source_digest = canonical_digest(sorted((*train_ids, *holdout_ids)))
-        identity = {
-            "arena_id": key[0],
-            "grammar_version": key[1],
-            "manifest_digest": str(getattr(grammar, "manifest_digest", "")),
-            "state_before": key[2],
-            "transition_id": key[3],
-            "change_path": "soft_weight_profile.empirical_uncertainty",
-            "current": current,
-            "proposed": proposed,
-            "source_digest": source_digest,
-        }
-        candidate_id = f"CAND-{canonical_digest(identity)[:24]}"
-        candidates.append(CrucibleCandidate(
-            candidate_id=candidate_id,
-            arena_id=key[0],
-            grammar_version=key[1],
-            manifest_path=str(getattr(grammar, "source_path", "")),
-            manifest_digest=str(getattr(grammar, "manifest_digest", "")),
-            state_before=key[2],
-            transition_id=key[3],
-            change_path="soft_weight_profile.empirical_uncertainty",
+        objective_count = len({str(row.get("objective_hash") or "") for row in train if str(row.get("objective_hash") or "")})
+        assessment = assess_proposal_thresholds(
+            policy=policy,
+            train_count=len(train),
+            validation_count=len(validation),
+            shadow_count=len(shadow),
+            distinct_objectives=objective_count,
+            train_summary=train_summary,
             current_value=current,
             proposed_value=proposed,
-            train_record_count=len(train),
-            holdout_record_count=len(holdout),
-            train_success_count=train_successes,
-            train_success_rate=round(train_rate, 6),
-            train_wilson_lower=round(lower, 6),
+        )
+        train_ids = tuple(str(row["experience_id"]) for row in train)
+        validation_ids = tuple(str(row["experience_id"]) for row in validation)
+        shadow_ids = tuple(str(row["experience_id"]) for row in shadow)
+        train_digest = canonical_digest(train_ids)
+        validation_digest = canonical_digest(validation_ids)
+        shadow_digest = canonical_digest(shadow_ids)
+        source_digest = canonical_digest({
+            "train": train_digest,
+            "validation": validation_digest,
+            "shadow": shadow_digest,
+            "manifest_digest": key[2],
+        })
+        identity = {
+            "arena_id": key[0], "grammar_version": key[1], "manifest_digest": key[2],
+            "state_before": key[3], "transition_id": key[4],
+            "change_path": "soft_weight_profile.empirical_uncertainty",
+            "current": current, "proposed": proposed, "source_digest": source_digest,
+        }
+        candidates.append(CrucibleCandidate(
+            candidate_id=f"CAND-{canonical_digest(identity)[:24]}",
+            arena_id=key[0], grammar_version=key[1],
+            manifest_path=str(getattr(grammar, "source_path", "")),
+            manifest_digest=key[2], state_before=key[3], transition_id=key[4],
+            change_path="soft_weight_profile.empirical_uncertainty",
+            current_value=current, proposed_value=proposed,
+            train_record_count=len(train), validation_record_count=len(validation), shadow_record_count=len(shadow),
+            train_outcome_summary=train_summary,
+            proposal_thresholds=policy.proposal_thresholds(),
+            threshold_assessment=assessment,
             distinct_objectives=objective_count,
             train_experience_ids=train_ids,
-            holdout_experience_ids=holdout_ids,
+            validation_experience_ids=validation_ids,
+            shadow_experience_ids=shadow_ids,
+            train_experience_digest=train_digest,
+            validation_experience_digest=validation_digest,
+            shadow_experience_digest=shadow_digest,
             source_experience_digest=source_digest,
         ))
-    candidates.sort(key=lambda item: (-item.train_wilson_lower, -item.train_record_count, item.candidate_id))
-    return candidates[: policy.max_proposals_per_run]
+    candidates.sort(key=lambda item: (
+        not bool(item.threshold_assessment.get("all_proposal_thresholds_met")),
+        -float(item.train_outcome_summary.get("conservative_floor") or 0.0),
+        -item.train_record_count,
+        item.candidate_id,
+    ))
+    return candidates[: policy.operational_max_proposals_per_run]
 
 
-def wilson_lower_bound(successes: int, total: int, z: float = 1.96) -> float:
-    """Return the lower Wilson confidence bound for a binomial success rate."""
+def three_way_temporal_split(
+    rows: list[dict[str, Any]], policy: CruciblePolicy
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]] | None:
+    """Return disjoint oldest-train, middle-validation, newest-shadow data."""
 
-    if total <= 0:
-        return 0.0
-    successes = max(0, min(int(successes), int(total)))
-    n = float(total)
-    p = successes / n
-    denominator = 1.0 + (z * z / n)
-    centre = p + (z * z / (2.0 * n))
-    margin = z * math.sqrt((p * (1.0 - p) / n) + (z * z / (4.0 * n * n)))
-    return max(0.0, min(1.0, (centre - margin) / denominator))
+    total = len(rows)
+    if total < 3:
+        return None
+    validation_count = max(1, int(math.floor(total * policy.validation_fraction)))
+    shadow_count = max(1, int(math.floor(total * policy.shadow_fraction)))
+    while validation_count + shadow_count >= total:
+        if validation_count >= shadow_count and validation_count > 1:
+            validation_count -= 1
+        elif shadow_count > 1:
+            shadow_count -= 1
+        else:
+            return None
+    train_end = total - validation_count - shadow_count
+    validation_end = total - shadow_count
+    train = rows[:train_end]
+    validation = rows[train_end:validation_end]
+    shadow = rows[validation_end:]
+    return (train, validation, shadow) if train and validation and shadow else None
+
+
+def summarize_outcome_vectors(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize continuous OutcomeVector projections without binary coercion."""
+
+    scores: list[float] = []
+    coverages: list[float] = []
+    dimensions: dict[str, list[float]] = defaultdict(list)
+    terminal_classes: dict[str, int] = defaultdict(int)
+    for row in rows:
+        try:
+            vector = OutcomeVector.from_dict(dict(row.get("outcome_vector") or {}))
+        except (TypeError, ValueError):
+            continue
+        projection = vector.proposal_projection()
+        if projection.get("score") is not None:
+            scores.append(float(projection["score"]))
+            coverages.append(float(projection.get("coverage") or 0.0))
+        for name, value in projection.get("observed_dimensions", {}).items():
+            dimensions[str(name)].append(float(value))
+        terminal_classes[vector.terminal_class] += 1
+    if not scores:
+        return {"record_count": 0, "score_mean": None, "conservative_floor": None,
+                "coverage_mean": 0.0, "dimension_means": {},
+                "terminal_classes": dict(terminal_classes), "binary_outcome_used": False,
+                "proposal_only": True}
+    mean = statistics.fmean(scores)
+    std = statistics.stdev(scores) if len(scores) > 1 else 0.0
+    margin = 1.96 * std / math.sqrt(len(scores)) if len(scores) > 1 else 0.0
+    return {
+        "record_count": len(scores),
+        "score_mean": round(mean, 6),
+        "score_stddev": round(std, 6),
+        "conservative_floor": round(max(0.0, min(1.0, mean - margin)), 6),
+        "coverage_mean": round(statistics.fmean(coverages), 6),
+        "dimension_means": {name: round(statistics.fmean(values), 6) for name, values in sorted(dimensions.items()) if values},
+        "dimension_observation_counts": {name: len(values) for name, values in sorted(dimensions.items())},
+        "terminal_classes": dict(sorted(terminal_classes.items())),
+        "binary_outcome_used": False,
+        "proposal_only": True,
+    }
+
+
+def assess_proposal_thresholds(*, policy: CruciblePolicy, train_count: int,
+                               validation_count: int, shadow_count: int,
+                               distinct_objectives: int, train_summary: dict[str, Any],
+                               current_value: float, proposed_value: float) -> dict[str, Any]:
+    checks = {
+        "train_record_count": train_count >= policy.proposal_min_train_records,
+        "validation_record_count": validation_count >= policy.proposal_min_validation_records,
+        "shadow_record_count": shadow_count >= policy.proposal_min_shadow_records,
+        "distinct_objectives": distinct_objectives >= policy.proposal_min_distinct_objectives,
+        "train_outcome_coverage": float(train_summary.get("coverage_mean") or 0.0) >= policy.proposal_min_outcome_coverage,
+        "train_outcome_score": float(train_summary.get("score_mean") or 0.0) >= policy.proposal_min_train_score,
+        "uncertainty_delta": abs(float(current_value) - float(proposed_value)) >= policy.proposal_min_uncertainty_delta,
+    }
+    return {"checks": checks, "all_proposal_thresholds_met": all(checks.values()),
+            "threshold_scope": "PROPOSAL_ONLY", "runtime_authority": False,
+            "candidate_generation_blocked": False}
 
 
 def _eligible(row: dict[str, Any], *, arena_id: str) -> bool:
-    required = ("experience_id", "arena_id", "grammar_version", "state_before", "selected_transition", "final_outcome")
-    if any(not str(row.get(key) or "").strip() for key in required):
+    required = ("experience_id", "arena_id", "grammar_version", "grammar_manifest_digest",
+                "state_before", "selected_transition", "outcome_vector")
+    if any(not row.get(key) for key in required) or row.get("legacy_record") is True:
         return False
     if arena_id and str(row.get("arena_id")) != arena_id:
         return False
-    transition_id = str(row.get("selected_transition") or "")
-    if transition_id.startswith("META."):
+    if str(row.get("selected_transition") or "").startswith("META."):
         return False
-    return str(row.get("final_outcome") or "").upper() in (_SUCCESS_OUTCOMES | _FAILURE_OUTCOMES)
-
-
-def _is_success(row: dict[str, Any]) -> int:
-    return int(str(row.get("final_outcome") or "").upper() in _SUCCESS_OUTCOMES)
-
-
-def _temporal_split(rows: list[dict[str, Any]], policy: CruciblePolicy) -> tuple[list[dict[str, Any]], list[dict[str, Any]]] | None:
-    total = len(rows)
-    minimum = policy.min_train_records + policy.min_holdout_records
-    if total < minimum:
-        return None
-    holdout_count = max(policy.min_holdout_records, int(math.ceil(total * policy.holdout_fraction)))
-    holdout_count = min(holdout_count, total - policy.min_train_records)
-    train = rows[: total - holdout_count]
-    holdout = rows[total - holdout_count :]
-    if len(train) < policy.min_train_records or len(holdout) < policy.min_holdout_records:
-        return None
-    return train, holdout
+    try:
+        OutcomeVector.from_dict(dict(row.get("outcome_vector") or {}))
+    except (TypeError, ValueError):
+        return False
+    return True
