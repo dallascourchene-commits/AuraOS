@@ -167,6 +167,40 @@ Conclude:
 
 > The same architecture that prevents Aura from inventing civic authority also prevents an AI coding worker from granting itself software authority.
 
+## From one Civic Arena to a federated response system
+
+The Winnipeg demonstration is also the smallest visible unit of a larger Arena-of-Arenas architecture.
+
+A future synthetic emergency scenario could compose:
+
+```text
+Winnipeg Civic Arena
++ Community or First Nation Emergency Arena
++ Shelter Arena
++ Health Capacity Arena
++ Transportation and Logistics Arena
++ Infrastructure Arena
++ Humanitarian Organization Arena
+→ Temporary Federated Response Arena
+```
+
+Each participant would retain its own data custody, legal or community authority, identity rules, exact source sidecars, and revocation rights. The federated response would receive only the minimum authorized resource, need, location, freshness, and provenance capsules required for the incident.
+
+The same governed map principles demonstrated here would apply during disaster relief:
+
+- public views show aggregate shelter capacity, routes, infrastructure, service coverage, and verified notices;
+- frontline views are role- and purpose-scoped;
+- personal displacement, medical, child, identity, or vulnerability records remain restricted;
+- local operation continues through deterministic workflows when cloud access or an LLM is unavailable;
+- compact signed updates synchronize when connectivity returns;
+- unresolved conflicts, duplicate requests, stale reports, and uncertainty remain visible.
+
+This is a market direction and demonstration roadmap, not a claim that the current Winnipeg fixture is a certified emergency-management deployment.
+
+Detailed architecture: `docs/AURA_FEDERATED_ARENAS_MARKET_VISION.md`.
+
+AMD recording guide: `docs/AMD_DEMO_RECORDING_SCRIPT.md`.
+
 ## Authority invariants
 
 - `patch_authority: exact_source_spans_and_hashes_only`
