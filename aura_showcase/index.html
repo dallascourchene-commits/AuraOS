@@ -22,12 +22,12 @@
         <div>
           <p class="eyebrow">Winnipeg Community Pathways Lab · synthetic demonstration</p>
           <h1>Plan with people, evidence, and visible limits.</h1>
-          <p class="lede">Aura helps a community explore service access, resources, trade-offs, consent, and a reversible pilot. It does not map vulnerable people, declare a winner, allocate money, or make a binding decision.</p>
+          <p class="lede">Aura presents only the actions admitted at the current gate. Route weights explain which interaction is most appropriate; they never grant civic authority.</p>
         </div>
         <div class="hero-actions">
-          <button id="restart-project" class="secondary">Restart</button>
+          <button id="restart-project" class="secondary">Restart demo</button>
           <button id="back-step" class="secondary">Back</button>
-          <button id="advance-step" class="primary">Continue</button>
+          <button id="advance-step" class="primary">Run next governed stage</button>
         </div>
       </section>
 
@@ -39,15 +39,26 @@
       <section class="workspace-grid">
         <section class="map-card">
           <div class="section-head">
-            <div><p class="eyebrow">Governed map projection</p><h2>The map is an interface, not an authority.</h2></div>
+            <div><p class="eyebrow">Governed Winnipeg map</p><h2>Real streets beneath a synthetic, policy-filtered overlay.</h2></div>
             <div class="map-controls">
               <button id="zoom-out" aria-label="Zoom out">−</button>
               <span id="zoom-label">Zoom 11</span>
               <button id="zoom-in" aria-label="Zoom in">+</button>
-              <button id="reveal-candidate" class="secondary">Reveal candidate at governed zoom</button>
+              <button id="focus-community" class="secondary">West Broadway test community</button>
+              <button id="reveal-candidate" class="secondary">Reveal candidate</button>
             </div>
           </div>
-          <canvas id="map-canvas" aria-label="Synthetic Winnipeg Civic map"></canvas>
+          <div id="map-shell" class="map-shell">
+            <div id="basemap-tiles" class="basemap-tiles" aria-hidden="true"></div>
+            <canvas id="map-canvas" aria-label="Winnipeg street map with synthetic governed Civic overlay"></canvas>
+            <div class="map-legend" aria-label="Map legend">
+              <span><i class="legend-community"></i>Synthetic test community</span>
+              <span><i class="legend-service"></i>Service</span>
+              <span><i class="legend-transit"></i>Transit</span>
+              <span><i class="legend-candidate"></i>Candidate</span>
+            </div>
+            <div class="map-attribution">Basemap © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a></div>
+          </div>
           <div id="map-status" class="map-status">Waiting for map evidence.</div>
           <div id="feature-inspector" class="inspector"><span>Select a visible map feature to inspect truth, privacy, jurisdiction, and source.</span></div>
         </section>
@@ -56,6 +67,17 @@
           <p id="step-purpose" class="step-purpose"></p>
           <div class="question"><span>Human question</span><strong id="human-question">—</strong></div>
           <div id="truth-notice" class="notice"></div>
+
+          <section class="route-console" aria-labelledby="route-console-title">
+            <div class="route-console-head">
+              <div><p class="eyebrow">Weighted FST-guided menu</p><h3 id="route-console-title">Available actions at this gate</h3></div>
+              <span class="pill">inspectable</span>
+            </div>
+            <p id="route-notice" class="muted route-notice"></p>
+            <div id="route-actions" class="route-actions"></div>
+            <details class="blocked-routes"><summary>Actions blocked at every Civic gate</summary><div id="blocked-actions"></div></details>
+          </section>
+
           <div class="summary-grid">
             <article><strong id="needs-count">0</strong><span>needs</span></article>
             <article><strong id="offers-count">0</strong><span>assets</span></article>
@@ -75,7 +97,7 @@
               <button id="record-response" class="secondary">Record</button>
             </div>
           </div>
-          <details class="advanced"><summary>Inspect current evidence</summary><pre id="guide-evidence">{}</pre></details>
+          <details id="evidence-details" class="advanced"><summary>Inspect current evidence</summary><pre id="guide-evidence">{}</pre></details>
         </aside>
       </section>
 
@@ -128,7 +150,7 @@
     </section>
   </main>
 
-  <footer>Fixture mode · zero raw network calls · no automatic commit · no push · no merge</footer>
+  <footer>Fixture civic data · optional public OpenStreetMap basemap · offline governed-grid fallback · no automatic commit, push, or merge</footer>
   <script src="app.js"></script>
   <script src="civic.js"></script>
   <script src="human.js"></script>
