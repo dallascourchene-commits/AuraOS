@@ -7,11 +7,11 @@ import time
 from typing import Any
 
 from aura_civic_authority import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
-from aura_civic_guided_steps import STEP_DETAILS, timeline
+from aura_civic_guided_steps import BLOCKED_ACTIONS, STEP_DETAILS, ranked_actions, timeline
 from aura_civic_project_runtime import project_for_session, run_project_organ, runtime_module
 from aura_civic_projects import CivicProjectDefinition, get_project, list_projects
 
-GUIDE_VERSION = "AURA_CIVIC_GUIDED_PROJECT_V1"
+GUIDE_VERSION = "AURA_CIVIC_GUIDED_PROJECT_V2"
 
 _SESSION_LOCKS: dict[str, threading.RLock] = {}
 _SESSION_LOCKS_GUARD = threading.Lock()
@@ -57,6 +57,7 @@ def get_guide(session_id: str) -> dict[str, Any]:
     fixture = project.fixtures_factory()
     index = max(0, min(int(session.get("guide_step_index") or 0), len(project.guided_steps) - 1))
     step_id = project.guided_steps[index]
+    next_step_id = project.guided_steps[index + 1] if index < len(project.guided_steps) - 1 else None
     detail = STEP_DETAILS.get(step_id, {"title": step_id, "purpose": "", "human_question": "", "actions": ()})
     session_view = {
         "session_id": session_id,
@@ -81,11 +82,21 @@ def get_guide(session_id: str) -> dict[str, Any]:
         "concerns": fixture.get("concerns", []),
         "objections": fixture.get("objections", []),
         "pilot_template": fixture.get("pilot_template", {}),
+        "guide_responses": session.get("guide_responses", []),
     }
     demo_issue_available = bool(
         project.demo_issue
         and "EXPLORE_MAP" in project.guided_steps
         and index >= project.guided_steps.index("EXPLORE_MAP")
+    )
+    can_go_back = index > 0
+    can_advance = index < len(project.guided_steps) - 1
+    available_actions = ranked_actions(
+        step_id,
+        next_step_id=next_step_id,
+        can_advance=can_advance,
+        can_go_back=can_go_back,
+        demo_issue_available=demo_issue_available,
     )
     return {
         "ok": True,
@@ -101,9 +112,13 @@ def get_guide(session_id: str) -> dict[str, Any]:
             "human_question": detail.get("human_question", ""),
             "organ_actions": list(detail.get("actions") or ()),
         },
+        "next_step_id": next_step_id,
         "timeline": timeline(project.guided_steps, index),
-        "can_go_back": index > 0,
-        "can_advance": index < len(project.guided_steps) - 1,
+        "can_go_back": can_go_back,
+        "can_advance": can_advance,
+        "available_actions": available_actions,
+        "blocked_actions": [dict(item) for item in BLOCKED_ACTIONS],
+        "route_notice": "Route weights rank deterministic demo actions. They do not represent model confidence or grant civic authority.",
         "demo_issue_available": demo_issue_available,
         "demo_issue": dict(project.demo_issue or {}),
         "truth_notice": "All project records are synthetic demonstration data. Aura does not make binding civic decisions.",
