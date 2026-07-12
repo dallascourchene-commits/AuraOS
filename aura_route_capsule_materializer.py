@@ -15,9 +15,16 @@ from typing import Any, Mapping
 from aura_route_capsule_registry import load_registry_component
 from aura_route_capsule_types import CompiledRouteCapsule, REFERENCE_FIELDS
 
-ROUTE_CAPSULE_MATERIALIZER_VERSION = "AURA_ROUTE_CAPSULE_MATERIALIZER_V1"
+ROUTE_CAPSULE_MATERIALIZER_VERSION = "AURA_ROUTE_CAPSULE_MATERIALIZER_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
+_BUDGET_KEYS = (
+    "input_tokens",
+    "output_tokens",
+    "tool_calls",
+    "model_calls",
+    "wall_seconds",
+)
 
 
 @dataclass(frozen=True)
@@ -78,11 +85,10 @@ def materialize_route_capsule(
     context: Mapping[str, Any] | None = None,
     policy: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Revalidate component pins and materialize a bounded, non-executing aperture."""
+    """Revalidate every component pin and emit a bounded, non-executing aperture."""
     root = Path(repo_root).resolve()
     context = dict(context or {})
     policy = dict(policy or {})
-
     if policy.get("route_capsules_enabled") is not True:
         return _denial("route_capsule_feature_disabled")
 
@@ -160,16 +166,20 @@ def materialize_route_capsule(
 
     if bool(data_aperture.get("allow_unbounded_repository_context")):
         return _denial("unbounded_repository_context_forbidden")
+    limits = _validate_limits(data_aperture, memory_aperture, execution_budget)
+    if not limits["ok"]:
+        return _denial(str(limits["reason"]), missing=list(limits.get("missing") or []))
 
     actual_context = _bounded_context_items(
         context.get("capsule_context_items") or (),
-        max_files=_positive_int(data_aperture.get("maximum_files"), 0),
-        max_symbols=_positive_int(data_aperture.get("maximum_symbols"), 0),
-        max_lines=_positive_int(data_aperture.get("maximum_lines"), 0),
+        max_files=limits["maximum_files"],
+        max_symbols=limits["maximum_symbols"],
+        max_lines=limits["maximum_lines"],
+        require_source_hashes=bool(data_aperture.get("require_source_hashes")),
     )
     actual_memory_refs = _bounded_memory_refs(
         context.get("capsule_memory_refs") or (),
-        maximum=_positive_int(memory_aperture.get("maximum_experiences"), 0),
+        maximum=limits["maximum_experiences"],
     )
 
     requested_model = str(context.get("requested_model") or "").strip()
@@ -178,7 +188,7 @@ def materialize_route_capsule(
         return _denial("requested_model_not_allowed")
 
     consumed = _numeric_budget(context.get("capsule_budget_consumed") or {})
-    exceeded = _budget_exceeded(execution_budget, consumed)
+    exceeded = _budget_exceeded(limits["execution_budget"], consumed)
     if exceeded:
         return _denial("capsule_budget_exceeded", missing=exceeded)
 
@@ -190,7 +200,7 @@ def materialize_route_capsule(
         "memory_aperture": memory_aperture,
         "tool_bundle": tool_bundle,
         "model_policy": model_policy,
-        "execution_budget": execution_budget,
+        "execution_budget": limits["execution_budget"],
         "verifier_contract": verifier_contract,
         "output_schema": output_schema,
         "component_digests": dict(sorted(compiled.component_digests.items())),
@@ -213,7 +223,7 @@ def materialize_route_capsule(
             "capability_bindings": [dict(item) for item in compiled.capability_bindings],
         },
         model_policy=model_policy,
-        execution_budget=execution_budget,
+        execution_budget=limits["execution_budget"],
         verifier_contract=verifier_contract,
         output_schema=output_schema,
         component_digests=dict(compiled.component_digests),
@@ -233,6 +243,49 @@ def materialize_route_capsule(
     }
 
 
+def _validate_limits(
+    data_aperture: Mapping[str, Any],
+    memory_aperture: Mapping[str, Any],
+    execution_budget: Mapping[str, Any],
+) -> dict[str, Any]:
+    missing = [
+        name
+        for name in ("maximum_files", "maximum_symbols", "maximum_lines")
+        if name not in data_aperture
+    ]
+    if "maximum_experiences" not in memory_aperture:
+        missing.append("maximum_experiences")
+    missing.extend(name for name in _BUDGET_KEYS if name not in execution_budget)
+    if missing:
+        return {"ok": False, "reason": "capsule_limits_missing", "missing": sorted(set(missing))}
+    try:
+        maximum_files = int(data_aperture["maximum_files"])
+        maximum_symbols = int(data_aperture["maximum_symbols"])
+        maximum_lines = int(data_aperture["maximum_lines"])
+        maximum_experiences = int(memory_aperture["maximum_experiences"])
+        normalized_budget = {
+            key: float(execution_budget[key])
+            for key in _BUDGET_KEYS
+        }
+    except (TypeError, ValueError, OverflowError):
+        return {"ok": False, "reason": "capsule_limits_invalid", "missing": []}
+    if min(maximum_files, maximum_symbols, maximum_lines) <= 0:
+        return {"ok": False, "reason": "capsule_context_limits_must_be_positive", "missing": []}
+    if maximum_experiences < 0 or any(value < 0 for value in normalized_budget.values()):
+        return {"ok": False, "reason": "capsule_limits_must_be_nonnegative", "missing": []}
+    return {
+        "ok": True,
+        "maximum_files": maximum_files,
+        "maximum_symbols": maximum_symbols,
+        "maximum_lines": maximum_lines,
+        "maximum_experiences": maximum_experiences,
+        "execution_budget": {
+            **execution_budget,
+            **normalized_budget,
+        },
+    }
+
+
 def _bounded_component(payload: Mapping[str, Any], *, allowed: tuple[str, ...]) -> dict[str, Any]:
     return {key: payload.get(key) for key in allowed if key in payload}
 
@@ -243,6 +296,7 @@ def _bounded_context_items(
     max_files: int,
     max_symbols: int,
     max_lines: int,
+    require_source_hashes: bool,
 ) -> list[dict[str, Any]]:
     if not isinstance(raw_items, (list, tuple)):
         return []
@@ -257,12 +311,15 @@ def _bounded_context_items(
         if not path:
             continue
         symbol = str(raw.get("symbol") or "").strip()
-        lines = _positive_int(raw.get("line_count"), 0)
-        if path not in seen_files and max_files and len(seen_files) >= max_files:
+        lines = _nonnegative_int(raw.get("line_count"), 0)
+        source_hash = str(raw.get("source_hash") or "").strip()[:160]
+        if require_source_hashes and not source_hash:
             continue
-        if symbol and symbol not in seen_symbols and max_symbols and len(seen_symbols) >= max_symbols:
+        if path not in seen_files and len(seen_files) >= max_files:
             continue
-        if max_lines and line_total + lines > max_lines:
+        if symbol and symbol not in seen_symbols and len(seen_symbols) >= max_symbols:
+            continue
+        if line_total + lines > max_lines:
             continue
         seen_files.add(path)
         if symbol:
@@ -271,16 +328,16 @@ def _bounded_context_items(
         output.append({
             "path": path,
             "symbol": symbol,
-            "line_start": _positive_int(raw.get("line_start"), 0),
-            "line_end": _positive_int(raw.get("line_end"), 0),
+            "line_start": _nonnegative_int(raw.get("line_start"), 0),
+            "line_end": _nonnegative_int(raw.get("line_end"), 0),
             "line_count": lines,
-            "source_hash": str(raw.get("source_hash") or "")[:160],
+            "source_hash": source_hash,
         })
     return output
 
 
 def _bounded_memory_refs(raw: Any, *, maximum: int) -> list[str]:
-    if not isinstance(raw, (list, tuple)):
+    if not isinstance(raw, (list, tuple)) or maximum == 0:
         return []
     refs: list[str] = []
     for value in raw:
@@ -290,7 +347,7 @@ def _bounded_memory_refs(raw: Any, *, maximum: int) -> list[str]:
         if any(term in text.casefold() for term in ("secret", "hidden_reasoning", "scratchpad")):
             continue
         refs.append(text[:240])
-        if maximum and len(refs) >= maximum:
+        if len(refs) >= maximum:
             break
     return refs
 
@@ -323,33 +380,30 @@ def _select_model(requested: str, policy: Mapping[str, Any]) -> str | None:
 
 def _numeric_budget(value: Any) -> dict[str, float]:
     if not isinstance(value, Mapping):
-        return {}
+        return {key: 0.0 for key in _BUDGET_KEYS}
     result: dict[str, float] = {}
-    for key in ("input_tokens", "output_tokens", "tool_calls", "model_calls", "wall_seconds"):
+    for key in _BUDGET_KEYS:
         try:
-            number = max(0.0, float(value.get(key, 0.0)))
-        except (TypeError, ValueError):
-            number = 0.0
-        result[key] = number
+            result[key] = max(0.0, float(value.get(key, 0.0)))
+        except (TypeError, ValueError, OverflowError):
+            result[key] = 0.0
     return result
 
 
 def _budget_exceeded(budget: Mapping[str, Any], consumed: Mapping[str, float]) -> list[str]:
     exceeded: list[str] = []
-    for key, used in consumed.items():
-        try:
-            limit = max(0.0, float(budget.get(key, 0.0)))
-        except (TypeError, ValueError):
-            limit = 0.0
-        if limit and used > limit:
+    for key in _BUDGET_KEYS:
+        used = float(consumed.get(key, 0.0))
+        limit = float(budget[key])
+        if used > limit:
             exceeded.append(key)
     return exceeded
 
 
-def _positive_int(value: Any, default: int) -> int:
+def _nonnegative_int(value: Any, default: int) -> int:
     try:
         return max(0, int(value))
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return default
 
 
