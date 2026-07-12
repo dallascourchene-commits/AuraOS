@@ -7,6 +7,18 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+ACTION_KEYS = {
+    "action_id",
+    "label",
+    "effect",
+    "route_weight",
+    "why_available",
+    "intent_slots",
+    "activates",
+    "args",
+    "binding",
+}
+SLOT_KEYS = {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
 
 
 @pytest.fixture(autouse=True)
@@ -36,12 +48,13 @@ def test_every_guided_gate_exposes_ranked_inspectable_actions():
     guide = start_project("winnipeg_pathways")
     while True:
         actions = guide["available_actions"]
-        assert actions
+        assert isinstance(actions, list) and actions
         weights = [action["route_weight"] for action in actions]
         assert weights == sorted(weights, reverse=True)
         assert all(0 <= weight <= 1 for weight in weights)
         for action in actions:
-            assert set(action["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+            assert ACTION_KEYS <= set(action)
+            assert set(action["intent_slots"]) == SLOT_KEYS
             assert action["binding"] is False
             assert action["why_available"]
         assert guide["route_notice"].startswith("Route weights rank deterministic")
@@ -65,6 +78,25 @@ def test_map_gate_offers_test_community_candidate_and_handoff_actions():
     assert by_effect["REVEAL_CANDIDATE"]["args"]["zoom"] == 12
     assert "PREFILL_RESPONSE" in by_effect
     assert "OPEN_HANDOFF" in by_effect
+
+
+@pytest.mark.parametrize("project_id", ["hairstylist", "youth_centre", "council_pulse"])
+def test_winnipeg_map_shortcuts_do_not_leak_to_other_projects(project_id):
+    from aura_civic_guided_steps import ranked_actions
+
+    actions = ranked_actions(
+        "EXPLORE_MAP",
+        next_step_id="ADD_COMMUNITY_INPUT",
+        can_advance=True,
+        can_go_back=True,
+        demo_issue_available=False,
+        project_id=project_id,
+    )
+    effects = {action["effect"] for action in actions}
+    labels = " ".join(action["label"] for action in actions)
+    assert "FOCUS_TEST_COMMUNITY" not in effects
+    assert "REVEAL_CANDIDATE" not in effects
+    assert "West Broadway" not in labels
 
 
 def test_fixture_contains_synthetic_west_broadway_overlay():
@@ -135,9 +167,9 @@ def test_six_slot_guidance_teaches_from_current_guarded_state_only():
         })
         packet = build_guidance_packet(workflow.get_state())
         assert packet["current_phase"] == "PLAN"
-        assert set(packet["gate"]["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+        assert set(packet["gate"]["intent_slots"]) == SLOT_KEYS
         assert packet["recommended_actions"][0]["action_id"] == "prepare_capsule"
-        assert set(packet["recommended_actions"][0]["intent_slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+        assert set(packet["recommended_actions"][0]["intent_slots"]) == SLOT_KEYS
         assert packet["ai_direction"]["may_not"] == ["grant capabilities", "bypass guards", "mutate production", "commit", "push", "merge"]
         assert "Never invent" in packet["ai_direction"]["instruction"]
 
@@ -197,8 +229,11 @@ def test_showcase_guide_routes_return_grounded_answers():
         workflow.close()
 
 
-def test_showcase_status_discloses_optional_basemap_network_access():
+def test_showcase_status_discloses_configurable_basemap(monkeypatch):
     from aura_showcase_server import dispatch_showcase_request
+
+    configured = "https://maps.example.test/tiles/{z}/{x}/{y}.png"
+    monkeypatch.setenv("AURA_BASEMAP_TILE_URL_TEMPLATE", configured)
 
     class FakeState:
         default_session_id = ""
@@ -210,11 +245,13 @@ def test_showcase_status_discloses_optional_basemap_network_access():
     assert payload["zero_raw_civic_data_network_calls"] is True
     assert payload["optional_public_basemap_network_calls"] is True
     assert payload["basemap_provider"].startswith("OpenStreetMap")
+    assert payload["basemap_tile_url_template"] == configured
     assert "zero_raw_network_calls" not in payload
 
 
 def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     index = (REPO_ROOT / "aura_showcase" / "index.html").read_text(encoding="utf-8")
+    app = (REPO_ROOT / "aura_showcase" / "app.js").read_text(encoding="utf-8")
     civic = (REPO_ROOT / "aura_showcase" / "civic.js").read_text(encoding="utf-8")
     human = (REPO_ROOT / "aura_showcase" / "human.js").read_text(encoding="utf-8")
     assert 'id="route-actions"' in index
@@ -225,10 +262,16 @@ def test_browser_assets_disclose_basemap_and_render_both_guided_menus():
     assert 'id="human-guide-ask"' in index
     assert 'href="guide.css"' in index
     assert "OpenStreetMap contributors" in index
-    assert "tile.openstreetmap.org/{z}/{x}/{y}.png" in civic
+    assert "basemap_tile_url_template" in app
+    assert "DEFAULT_TILE_URL_TEMPLATE" in app
+    assert "S.tileUrlTemplate" in civic
+    assert "actionForEffect('REVEAL_CANDIDATE')" not in civic  # button delegates through runGuidedEffect
+    assert "runGuidedEffect('REVEAL_CANDIDATE')" in civic
+    assert "-97.176" not in civic
     assert "navigator.onLine" in civic
     assert "rankVector" in human
     assert "failed_guards" in human
-    assert "workflow.available" in human or "routing.available" in human
+    assert "S.humanGuide?.available_actions" in human
+    assert "S.humanGuide?.blocked_actions" in human
     assert "/api/human-agent/guide/ask" in human
     assert "MAP_VULNERABLE_PEOPLE" not in civic
