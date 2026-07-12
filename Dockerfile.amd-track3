@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY aura_amd_track3_types.py aura_amd_track3_worker.py aura_amd_track3_train.py aura_amd_track3_cli.py ./
+COPY .aura/amd_track3_demo_tasks.json ./.aura/amd_track3_demo_tasks.json
+COPY tests/fixtures/amd_track3 ./tests/fixtures/amd_track3
+
+RUN useradd -m -u 1000 aura && chown -R aura:aura /app
+USER aura
+
+ENV AURA_AMD_BACKEND="AMD approved compute demo mode"
+EXPOSE 8080
+
+CMD ["sh", "-c", "python aura_amd_track3_cli.py run-once --provider fixture && python aura_amd_track3_cli.py serve --host 0.0.0.0 --port 8080"]

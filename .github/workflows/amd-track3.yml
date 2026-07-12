@@ -1,0 +1,71 @@
+name: AMD Track 3 Crucible Demo
+
+on:
+  pull_request:
+    paths:
+      - "aura_amd_track3_*.py"
+      - ".aura/amd_track3_demo_tasks.json"
+      - "tests/test_aura_amd_track3_demo.py"
+      - "tests/fixtures/amd_track3/**"
+      - "Dockerfile.amd-track3"
+      - "requirements-amd-track3.txt"
+      - "docs/AMD_TRACK3_CRUCIBLE_DEMO.md"
+      - ".github/workflows/amd-track3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-track3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove persisted checkout credentials
+        shell: bash
+        run: |
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git config --local --unset-all credential.helper || true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install focused test tools and C3 dependencies
+        run: |
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest pytest-asyncio ruff
+      - name: Compile demo modules
+        run: >-
+          python -m py_compile
+          aura_amd_track3_types.py
+          aura_amd_track3_worker.py
+          aura_amd_track3_train.py
+          aura_amd_track3_cli.py
+      - name: Fatal lint checks
+        run: >-
+          ruff check --select E9,F63,F7,F82
+          aura_amd_track3_types.py
+          aura_amd_track3_worker.py
+          aura_amd_track3_train.py
+          aura_amd_track3_cli.py
+          tests/test_aura_amd_track3_demo.py
+      - name: Run Track 3 contracts
+        run: python -m pytest -q tests/test_aura_amd_track3_demo.py tests/test_aura_phase_c3_trial_crucible.py
+      - name: Exercise judge-facing fixture cycle
+        run: >-
+          python aura_amd_track3_cli.py
+          --crystals /tmp/verified_crystals.jsonl
+          run-once --provider fixture
