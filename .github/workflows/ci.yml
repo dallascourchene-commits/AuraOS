@@ -111,9 +111,26 @@ jobs:
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio
       - name: Run all tests
+        id: full-tests
+        continue-on-error: true
         env:
           PYTHONHASHSEED: "0"
-        run: python -m pytest -q --disable-warnings --maxfail=1
+        run: |
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --junitxml=full-suite-junit.xml
+      - name: Upload full-suite diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-suite-junit-${{ github.run_id }}
+          path: full-suite-junit.xml
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce full-suite result
+        if: steps.full-tests.outcome != 'success'
+        run: |
+          echo "Full repository test suite failed. Inspect the uploaded JUnit artifact."
+          exit 1
 
   topology:
     name: Regenerate and verify CODEMAP topology
