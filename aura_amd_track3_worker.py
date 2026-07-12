@@ -78,13 +78,16 @@ class OpenAICompatibleProvider:
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
         req = request.Request(f"{self.endpoint}/chat/completions", data=body, headers=headers, method="POST")
-        with request.urlopen(req, timeout=self.timeout) as response:
-            raw = response.read().decode("utf-8")
-        payload = json.loads(raw)
-        content = payload["choices"][0]["message"]["content"]
-        parsed = json.loads(_strip_code_fence(content))
-        parsed["raw_response_digest"] = canonical_digest(payload)
-        return PatchProposal.from_dict(parsed, task=task, provider=self.name, model=self.model)
+        try:
+            with request.urlopen(req, timeout=self.timeout) as response:
+                raw = response.read().decode("utf-8")
+            payload = json.loads(raw)
+            content = payload["choices"][0]["message"]["content"]
+            parsed = json.loads(_strip_code_fence(content))
+            parsed["raw_response_digest"] = canonical_digest(payload)
+            return PatchProposal.from_dict(parsed, task=task, provider=self.name, model=self.model)
+        except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"Provider request failed: {type(exc).__name__}: {exc}") from exc
 
 
 def load_tasks(path: str | Path) -> list[CodingTask]:
@@ -110,7 +113,15 @@ def run_task(
     source_commit = _git_output(root, ["rev-parse", "HEAD"]) or "unversioned"
     attempts: list[dict[str, Any]] = []
     for attempt in range(1, task.max_attempts + 1):
-        proposal = provider.propose(task, root)
+        try:
+            proposal = provider.propose(task, root)
+        except Exception as exc:
+            attempts.append({
+                "attempt": attempt,
+                "provider_error": str(exc),
+                "provider_error_type": type(exc).__name__,
+            })
+            continue
         with tempfile.TemporaryDirectory(prefix=f"aura_track3_{task.task_id}_") as temp:
             worktree = Path(temp) / "repo"
             shutil.copytree(root, worktree, ignore=shutil.ignore_patterns(".git", ".aura/runtime", "__pycache__", ".pytest_cache"))

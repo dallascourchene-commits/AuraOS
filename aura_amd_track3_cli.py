@@ -126,7 +126,16 @@ def main(argv=None) -> int:
         completed = 0
         result = {"ok": True, "status": "STOPPED"}
         while args.cycles == 0 or completed < args.cycles:
-            result = run_cycle(args)
+            try:
+                result = run_cycle(args)
+            except Exception as exc:
+                result = {
+                    "ok": False,
+                    "status": "CYCLE_FAILED",
+                    "error": str(exc),
+                    "error_type": type(exc).__name__,
+                    "cycle": completed + 1,
+                }
             print(json.dumps(result, ensure_ascii=False, default=str), flush=True)
             completed += 1
             if args.cycles == 0 or completed < args.cycles:

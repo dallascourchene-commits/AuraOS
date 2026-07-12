@@ -16,8 +16,20 @@ def load_crystals(path: str | Path) -> list[dict[str, Any]]:
     rows = []
     for line in source.read_text(encoding="utf-8").splitlines():
         if line.strip():
-            row = json.loads(line)
-            if row.get("training_eligible") is True and int(row.get("test_returncode") or 0) == 0:
+            try:
+                row = json.loads(line)
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if row.get("training_eligible") is not True:
+                continue
+            returncode_value = row.get("test_returncode")
+            if returncode_value is None:
+                continue
+            try:
+                returncode = int(returncode_value)
+            except (ValueError, TypeError):
+                continue
+            if returncode == 0:
                 rows.append(row)
     return rows
 
@@ -50,7 +62,7 @@ def train_once(args: argparse.Namespace) -> dict[str, Any]:
         from datasets import Dataset
         from peft import LoraConfig
         from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
-        from trl import SFTTrainer
+        from trl import SFTConfig, SFTTrainer
     except ImportError as exc:
         return {"ok": False, "status": "TRAINING_DEPENDENCIES_MISSING", "reason": type(exc).__name__}
 
@@ -77,7 +89,7 @@ def train_once(args: argparse.Namespace) -> dict[str, Any]:
         target_modules="all-linear",
     )
     output = Path(args.output_dir) / time.strftime("adapter-%Y%m%d-%H%M%S")
-    training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=str(output),
         per_device_train_batch_size=1,
         gradient_accumulation_steps=max(1, args.gradient_accumulation_steps),
@@ -87,16 +99,16 @@ def train_once(args: argparse.Namespace) -> dict[str, Any]:
         save_strategy="epoch",
         bf16=True,
         report_to=[],
+        dataset_text_field="text",
+        max_seq_length=args.max_seq_length,
+        packing=True,
     )
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         train_dataset=dataset,
-        dataset_text_field="text",
-        max_seq_length=args.max_seq_length,
         peft_config=config,
         args=training_args,
-        packing=True,
     )
     trainer.train(resume_from_checkpoint=args.resume_from_checkpoint or None)
     trainer.save_model(str(output))
