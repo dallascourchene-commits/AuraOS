@@ -1,13 +1,15 @@
 """Holdout and historical shadow validation for Aura Crucible candidates."""
 from __future__ import annotations
 
+import hashlib
+from pathlib import Path
 from typing import Any, Iterable
 
 from aura_crucible_miner import wilson_lower_bound
 from aura_crucible_types import CrucibleCandidate, CruciblePolicy
 
 CRUCIBLE_VALIDATION_VERSION = "AURA_CRUCIBLE_VALIDATION_V1"
-_SUCCESS_OUTCOMES = frozenset({"ALLOWED", "COMPLETED", "PASS", "PASSED", "SUCCEEDED", "SUCCESS", "VERIFIED"})
+_SUCCESS_OUTCOMES = frozenset({"ALLOWED", "COMPLETED", "PASS", "PASSED", "SUCCEEDED", "SUCCESS", "VERIFIED", "META_COMPLETED"})
 _RANK_FIELDS = (
     "unresolved_risk",
     "declared_evidence_gap",
@@ -21,6 +23,39 @@ _RANK_FIELDS = (
     "negative_user_fit",
     "stable_transition_id",
 )
+
+
+def _validate_manifest_pin(manifest_path: str, manifest_digest: str) -> bool:
+    """Validate that manifest path is repository-local and digest matches file contents.
+
+    Returns True only if:
+    1. Both path and digest are non-empty
+    2. Path is relative (not absolute) and contains no path traversal
+    3. The file exists and its BLAKE2b digest matches the declared digest
+    """
+    if not manifest_path or not manifest_digest:
+        return False
+
+    # Reject absolute paths
+    if Path(manifest_path).is_absolute():
+        return False
+
+    # Reject path traversal attempts
+    normalized = Path(manifest_path).as_posix()
+    if ".." in normalized.split("/") or normalized.startswith("/"):
+        return False
+
+    # Verify digest matches file contents
+    try:
+        path = Path(manifest_path)
+        if not path.exists() or not path.is_file():
+            return False
+
+        content = path.read_bytes()
+        computed_digest = hashlib.blake2b(content, digest_size=20).hexdigest()
+        return computed_digest == manifest_digest
+    except (OSError, ValueError):
+        return False
 
 
 def validate_crucible_candidate(
@@ -51,7 +86,7 @@ def validate_crucible_candidate(
         "shadow_no_unsafe_changes": int(shadow["unsafe_selection_changes"]) == 0,
         "shadow_change_rate": float(shadow["selection_change_rate"]) <= policy.max_shadow_selection_change_rate,
         "allowed_change_path": candidate.change_path == "soft_weight_profile.empirical_uncertainty",
-        "manifest_pinned": bool(candidate.manifest_digest and candidate.manifest_path),
+        "manifest_pinned": _validate_manifest_pin(candidate.manifest_path, candidate.manifest_digest),
     }
     passed = all(checks.values())
     return {

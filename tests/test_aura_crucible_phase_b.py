@@ -34,7 +34,7 @@ class Grammar:
     def __init__(self, transition_id="HUMAN.GROUND_CONTEXT"):
         self.arena_id = "human_agent"
         self.grammar_version = "human-agent-wfst-v1"
-        self.manifest_digest = "manifest-123"
+        self.manifest_digest = "5071cfeedb320e69a4d6d80aaa073fb095240a0d"
         self.source_path = ".aura/arena_routes/human_agent.v1.json"
         self.meta_grammar = False
         self._transition = Transition(transition_id, "GROUND")
@@ -172,7 +172,7 @@ def proposal(run_id="RUN-1"):
         arena_id="human_agent",
         grammar_version="human-agent-wfst-v1",
         manifest_path=".aura/arena_routes/human_agent.v1.json",
-        manifest_digest="manifest-123",
+        manifest_digest="5071cfeedb320e69a4d6d80aaa073fb095240a0d",
         state_before="GROUND",
         transition_id="HUMAN.GROUND_CONTEXT",
         change_path="soft_weight_profile.empirical_uncertainty",
@@ -202,13 +202,23 @@ def test_store_pause_resume_wal_and_idempotent_proposal(tmp_path: Path):
     store = CrucibleStore(tmp_path)
     assert store.status()["journal_mode"] == "wal"
     assert store.pause("review")["paused"] is True
-    assert store.resume()["paused"] is False
-    first = store.record_proposal(proposal())
-    second = store.record_proposal(proposal())
+    store.close()
+
+    # Verify paused state persists across store instances
+    store2 = CrucibleStore(tmp_path)
+    assert store2.status()["paused"] is True
+    assert store2.resume()["paused"] is False
+    store2.close()
+
+    # Verify resumed state persists across store instances
+    store3 = CrucibleStore(tmp_path)
+    assert store3.status()["paused"] is False
+    first = store3.record_proposal(proposal())
+    second = store3.record_proposal(proposal())
     assert first["ok"] is True and first["idempotent_replay"] is False
     assert second["ok"] is True and second["idempotent_replay"] is True
-    assert store.get_proposal("CPROP-1")["status"] == CRYSTALLIZATION_PROPOSED
-    store.close()
+    assert store3.get_proposal("CPROP-1")["status"] == CRYSTALLIZATION_PROPOSED
+    store3.close()
 
 
 def test_store_rejects_non_proposal_status_and_digest_conflict(tmp_path: Path):

@@ -101,7 +101,8 @@ A candidate must pass every check:
    risk or a larger declared evidence gap.
 7. The total historical selection-change rate remains within policy.
 8. The candidate targets the single allowed Phase B change path.
-9. The proposal is pinned to a manifest path and digest.
+9. The proposal is pinned to a repository-local manifest path (relative, no path
+   traversal) whose BLAKE2b digest matches the declared digest.
 
 Historical shadow replay operates only over transitions that were already admitted in
 the recorded route projection. It does not replay, reinterpret, or bypass hard guards.
