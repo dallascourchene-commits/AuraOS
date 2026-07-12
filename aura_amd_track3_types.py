@@ -33,7 +33,12 @@ class CodingTask:
         max_attempts = max(1, min(5, int(raw.get("max_attempts") or 2)))
         if not task_id or not objective or not allowed_files or not test_command:
             raise ValueError("task_id, objective, allowed_files, and test_command are required")
-        if any(path.startswith("/") or ".." in path.replace("\\", "/").split("/") for path in allowed_files):
+        if any(
+            path.startswith("/")
+            or ".." in path.replace("\\", "/").split("/")
+            or (len(path) >= 3 and path[1] == ":" and path[0].isalpha() and path[2] in ("/", "\\"))
+            for path in allowed_files
+        ):
             raise ValueError("allowed_files must be repository-relative and traversal-free")
         metadata = dict(raw.get("metadata") or {})
         intent_packet = dict(metadata.get("intent_packet") or {})

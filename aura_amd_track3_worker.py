@@ -252,13 +252,21 @@ def run_task(
                     ignore=shutil.ignore_patterns(".git", ".aura/runtime", "__pycache__", ".pytest_cache"),
                 )
                 _apply_proposal(worktree, proposal, task)
+                minimal_env = {
+                    "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),
+                    "HOME": os.environ.get("HOME", "/tmp"),
+                    "PYTHONPATH": str(worktree),
+                }
+                for var in ("LANG", "LC_ALL", "TMPDIR", "TEMP", "TMP"):
+                    if var in os.environ:
+                        minimal_env[var] = os.environ[var]
                 completed = subprocess.run(
                     list(task.test_command),
                     cwd=worktree,
                     text=True,
                     capture_output=True,
                     timeout=max(10, int(task.metadata.get("timeout_seconds") or 120)),
-                    env={**os.environ, "PYTHONPATH": str(worktree)},
+                    env=minimal_env,
                     check=False,
                 )
         except subprocess.TimeoutExpired as exc:

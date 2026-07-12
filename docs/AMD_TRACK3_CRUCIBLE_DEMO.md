@@ -108,7 +108,8 @@ export AURA_TRACK3_MODEL="google/gemma-3-4b-it"
 python aura_amd_track3_cli.py run-loop \
   --provider openai-compatible \
   --endpoint "$AURA_TRACK3_ENDPOINT" \
-  --model "$AURA_TRACK3_MODEL"
+  --model "$AURA_TRACK3_MODEL" \
+  --cycles 1
 ```
 
 After verified crystals exist:

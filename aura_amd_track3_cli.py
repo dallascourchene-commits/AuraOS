@@ -41,7 +41,7 @@ def _provider(args):
             output_tokens=args.output_tokens,
         )
         health = candidate.health()
-        if health.get("ok") and (health.get("model_available") or not health.get("models")):
+        if health.get("ok") and health.get("model_available"):
             return candidate
         return FixtureProvider()
     return OpenAICompatibleProvider(
