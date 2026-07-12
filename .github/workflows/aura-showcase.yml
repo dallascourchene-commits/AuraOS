@@ -11,10 +11,12 @@ on:
       - "aura_civic_guided_project.py"
       - "aura_human_agent_guidance.py"
       - "aura_showcase_handoff.py"
+      - "aura_showcase_spatial.py"
       - "aura_showcase_server.py"
       - "aura_showcase/**"
       - "tests/test_aura_showcase_guided_project.py"
       - "tests/test_aura_showcase_guided_interface.py"
+      - "tests/test_aura_showcase_spatial_integration.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
       - "Dockerfile.aura-showcase"
@@ -69,9 +71,11 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_showcase_handoff.py
+          aura_showcase_spatial.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -83,19 +87,23 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_showcase_handoff.py
+          aura_showcase_spatial.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
       - name: Check browser JavaScript syntax
         run: |
           node --check aura_showcase/app.js
           node --check aura_showcase/civic.js
           node --check aura_showcase/human.js
+          node --check aura_showcase/topology.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
       - name: Exercise unified server
@@ -129,6 +137,22 @@ jobs:
           session_id = status["default_session_id"]
           assert session_id
           assert status["basemap_tile_url_template"]
+          assert status["bounded_topology_projection"] is True
+          assert status["full_topology_sent_to_browser"] is False
+
+          with urllib.request.urlopen(base + "/api/showcase/coding-tasks", timeout=5) as response:
+              tasks = json.load(response)
+          assert tasks["task_count"] == 4
+
+          with urllib.request.urlopen(
+              base + "/api/showcase/topology/tasks/civic_map_overlay?depth=1",
+              timeout=15,
+          ) as response:
+              spatial = json.load(response)
+          assert spatial["ok"] is True
+          assert spatial["workspace"]["nodes"]
+          assert spatial["workspace"]["returned_node_count"] <= spatial["bounds"]["node_limit"]
+
           request = urllib.request.Request(
               base + f"/api/showcase/sessions/{session_id}/advance",
               data=b"{}",
@@ -188,6 +212,7 @@ jobs:
                       assert payload["default_session_id"]
                       assert payload["automatic_merge"] is False
                       assert payload["basemap_tile_url_template"]
+                      assert payload["bounded_topology_projection"] is True
                       break
               except Exception:
                   time.sleep(0.5)
