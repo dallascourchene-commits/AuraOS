@@ -7,7 +7,7 @@ compose those systems without granting production mutation or civic authority.
 from __future__ import annotations
 
 import argparse
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
 from pathlib import Path
@@ -208,7 +208,7 @@ def make_handler(state: ShowcaseState):
 
 def serve(*, host: str, port: int, repo_root: str | Path, demo_project: str, auto_start: bool) -> None:
     state = ShowcaseState(repo_root, demo_project=demo_project, auto_start=auto_start)
-    server = ThreadingHTTPServer((host, port), make_handler(state))
+    server = HTTPServer((host, port), make_handler(state))
     try:
         print(f"Aura Winnipeg showcase: http://{host}:{port}")
         server.serve_forever()
