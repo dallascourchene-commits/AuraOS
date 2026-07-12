@@ -17,7 +17,9 @@ C2_REQUIRED_PATHS = frozenset({
     "aura_coding_workbench_capsule_adapter.py",
     "aura_arena_experience.py",
     "aura_arena_experience_ledger.py",
+    "aura_phase_c2_codemap_verify.py",
     "tests/test_aura_phase_c2_live_route_capsules.py",
+    "tests/test_aura_phase_c2_capsule_enforcement.py",
 })
 C2_REQUIRED_SYMBOLS = frozenset({
     "MaterializedRouteCapsule",
@@ -25,6 +27,7 @@ C2_REQUIRED_SYMBOLS = frozenset({
     "infer_runtime_intent_packet",
     "CapsuleAwareArenaWFSTRuntime",
     "CapsuleCodingWorkbenchWFSTSession",
+    "verify_phase_c2_codemap",
 })
 
 
