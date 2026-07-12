@@ -223,6 +223,16 @@ def test_store_rejects_non_proposal_status_and_digest_conflict(tmp_path: Path):
     store.close()
 
 
+def test_store_rejects_forged_authority_flags(tmp_path: Path):
+    store = CrucibleStore(tmp_path)
+    forged = proposal().to_dict()
+    forged["automatic_grammar_promotion"] = True
+    result = store.record_proposal(forged)
+    store.close()
+    assert result["ok"] is False
+    assert result["reason"].startswith("invalid_proposal_contract")
+
+
 def test_service_pauses_fail_closed(tmp_path: Path):
     service = ArenaCrucibleService(tmp_path)
     service.pause("operator")
