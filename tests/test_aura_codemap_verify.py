@@ -150,6 +150,26 @@ def test_stable_comparison_ignores_runtime_and_derived_display_fields():
     assert result["reference_digest"] == result["regenerated_digest"]
 
 
+def test_stable_comparison_normalizes_self_referential_topology_digest():
+    reference = _payload()
+    regenerated = json.loads(json.dumps(reference))
+    topology_card = {
+        "path": "topology_map.json",
+        "role": "schema_or_lexicon",
+        "bytes": 100,
+        "lines": 10,
+        "tokens_est": 25,
+        "symbol_count": 0,
+        "commands": [],
+        "command_lines": {},
+        "digest8": "first-generated-digest",
+    }
+    reference["files"].append(topology_card)
+    regenerated["files"].append({**topology_card, "digest8": "second-generated-digest"})
+    result = compare_codemap_payloads(reference, regenerated)
+    assert result["ok"]
+
+
 def test_stable_comparison_detects_source_and_graph_change():
     reference = _payload()
     regenerated = json.loads(json.dumps(reference))
