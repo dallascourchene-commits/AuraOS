@@ -4,6 +4,7 @@
   const S = window.Showcase, $ = S.$, esc = S.esc;
   const canvas = $('topology-canvas');
   if (!canvas) return;
+  canvas.tabIndex = 0;
   const context = canvas.getContext('2d');
 
   let packet = null;
@@ -255,6 +256,12 @@
     return best;
   }
 
+  function clearDragState() {
+    dragging = false;
+    lastPointer = null;
+    dragOrigin = null;
+  }
+
   canvas.addEventListener('pointerdown', event => {
     dragging = true;
     dragOrigin = {x: event.clientX, y: event.clientY};
@@ -271,17 +278,41 @@
   });
   canvas.addEventListener('pointerup', event => {
     const moved = dragOrigin ? Math.hypot(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y) : 0;
-    dragging = false;
-    lastPointer = null;
+    clearDragState();
     const rect = canvas.getBoundingClientRect();
     const node = moved < 4 ? hitTest(event.clientX - rect.left, event.clientY - rect.top) : null;
     if (node) selectNode(node.id, 1);
+  });
+  canvas.addEventListener('pointercancel', () => {
+    clearDragState();
   });
   canvas.addEventListener('wheel', event => {
     event.preventDefault();
     zoom = Math.max(0.55, Math.min(5.5, zoom + (event.deltaY < 0 ? 0.14 : -0.14)));
     draw();
   }, {passive: false});
+  canvas.addEventListener('keydown', event => {
+    const nodes = graph.nodes || [];
+    if (!nodes.length) return;
+    let currentIndex = nodes.findIndex(node => node.id === selectedNodeId);
+    if (currentIndex < 0) currentIndex = 0;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      const nextIndex = (currentIndex + 1) % nodes.length;
+      selectedNodeId = nodes[nextIndex].id;
+      selectNode(selectedNodeId, 1);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      const prevIndex = (currentIndex - 1 + nodes.length) % nodes.length;
+      selectedNodeId = nodes[prevIndex].id;
+      selectNode(selectedNodeId, 1);
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (selectedNodeId) {
+        selectNode(selectedNodeId, 1);
+      }
+    }
+  });
 
   $('topology-depth-1').addEventListener('click', () => selectNode(selectedNodeId, 1));
   $('topology-depth-2').addEventListener('click', () => selectNode(selectedNodeId, 2));

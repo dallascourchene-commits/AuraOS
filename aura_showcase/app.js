@@ -251,18 +251,16 @@ S.downloadLearningTrace = () => {
   S.setLearningWorkspaceStatus('Compiled trace exported as JSON');
 };
 
-S.watchForCompiledIntent = previousTrace => {
-  let attempts = 0;
-  const timer = window.setInterval(() => {
-    attempts += 1;
-    if (S.intentTrace && S.intentTrace !== previousTrace) {
-      window.clearInterval(timer);
-      S.unlockLearningWorkspace(S.intentTrace);
-    } else if (attempts >= 300) {
-      window.clearInterval(timer);
-      S.setLearningWorkspaceStatus('Compilation did not complete. Review the visible error and try again.');
-    }
-  }, 50);
+S.setStage = rawStage => {
+  const stage = Math.max(0, Math.min(5, Number(rawStage) || 0));
+  if (stage > 0 && !S.intentTrace) return;
+  S.showLearningStage(stage);
+};
+
+S.handleLearningCompile = async () => {
+  if (S.compileIntent) {
+    await S.compileIntent();
+  }
 };
 
 S.setupLearningWorkspace = () => {
@@ -333,10 +331,10 @@ S.setupLearningWorkspace = () => {
     const button = oldButton.cloneNode(true);
     oldButton.replaceWith(button);
     button.disabled = Number(button.dataset.learningStage) > 0 && !S.intentTrace;
-    button.addEventListener('click', () => S.showLearningStage(Number(button.dataset.learningStage)));
+    button.addEventListener('click', () => S.setStage(Number(button.dataset.learningStage)));
   });
-  replaceListenerNode('learning-back', () => S.showLearningStage(S.intentStage - 1));
-  replaceListenerNode('learning-next', () => S.showLearningStage(S.intentStage + 1));
+  replaceListenerNode('learning-back', () => S.setStage(S.intentStage - 1));
+  replaceListenerNode('learning-next', () => S.setStage(S.intentStage + 1));
 
   S.$('learning-tour-start')?.addEventListener('click', S.startLearningTour);
   S.$('learning-tour-exit')?.addEventListener('click', S.exitLearningTour);
@@ -345,11 +343,7 @@ S.setupLearningWorkspace = () => {
   S.$('learning-download-trace')?.addEventListener('click', S.downloadLearningTrace);
   S.$('learning-copy-handoff')?.addEventListener('click', () => S.copyText(S.intentTrace?.agent_handoff?.compressed_context, 'Bounded worker handoff copied'));
 
-  S.$('learning-compile')?.addEventListener('click', () => {
-    const previous = S.intentTrace;
-    S.setLearningWorkspaceStatus('Compiling locally · no model called');
-    S.watchForCompiledIntent(previous);
-  });
+  S.$('learning-compile')?.addEventListener('click', S.handleLearningCompile);
   reset?.addEventListener('click', () => window.setTimeout(() => {
     S.learningWorkspace.tourActive = false;
     S.learningWorkspace.overviewActive = false;

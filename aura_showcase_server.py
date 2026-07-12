@@ -44,6 +44,7 @@ DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 MAX_BODY_BYTES = 1_000_000
+MAX_SELECTED_NODES = 4
 
 
 def basemap_tile_url_template() -> str:
@@ -178,7 +179,10 @@ def dispatch_showcase_request(
 
     if method == "POST" and route == "/api/showcase/topology/select":
         raw_ids = body.get("node_ids", body.get("node_id", []))
-        node_ids = [raw_ids] if isinstance(raw_ids, str) else list(raw_ids or [])
+        if isinstance(raw_ids, str):
+            node_ids = [raw_ids]
+        else:
+            node_ids = list(raw_ids or [])[:MAX_SELECTED_NODES]
         result = build_selected_workspace(
             state.human_agent.arena.topology,
             node_ids,

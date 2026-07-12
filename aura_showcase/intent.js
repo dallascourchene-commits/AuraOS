@@ -37,24 +37,28 @@
     return `<article><strong>${esc(value)}</strong><span>${esc(label)}</span></article>`;
   }
 
-  function setStage(rawStage) {
+  function applyStage(rawStage) {
     const stage = Math.max(0, Math.min(5, Number(rawStage) || 0));
     if (stage > maxStage) return;
-    S.intentStage = stage;
-    document.querySelectorAll('[data-learning-panel]').forEach(panel => {
-      panel.classList.toggle('is-active', Number(panel.dataset.learningPanel) === stage);
-    });
-    document.querySelectorAll('[data-learning-stage]').forEach(button => {
-      const index = Number(button.dataset.learningStage);
-      button.disabled = index > maxStage;
-      button.classList.toggle('is-active', index === stage);
-      button.classList.toggle('is-complete', index < stage && index <= maxStage);
-    });
-    $('learning-stage-title').textContent = STAGE_TITLES[stage];
-    $('learning-back').disabled = stage === 0;
-    $('learning-next').disabled = !S.intentTrace || stage === 5;
-    $('learning-next').textContent = NEXT_LABELS[stage];
-    if (stage === 5) setTimeout(resizeTopology, 20);
+    if (S.applyStage) {
+      S.applyStage(stage);
+    } else {
+      S.intentStage = stage;
+      document.querySelectorAll('[data-learning-panel]').forEach(panel => {
+        panel.classList.toggle('is-active', Number(panel.dataset.learningPanel) === stage);
+      });
+      document.querySelectorAll('[data-learning-stage]').forEach(button => {
+        const index = Number(button.dataset.learningStage);
+        button.disabled = index > maxStage;
+        button.classList.toggle('is-active', index === stage);
+        button.classList.toggle('is-complete', index < stage && index <= maxStage);
+      });
+      $('learning-stage-title').textContent = STAGE_TITLES[stage];
+      $('learning-back').disabled = stage === 0;
+      $('learning-next').disabled = !S.intentTrace || stage === 5;
+      $('learning-next').textContent = NEXT_LABELS[stage];
+      if (stage === 5) setTimeout(resizeTopology, 20);
+    }
   }
 
   async function compileIntent() {
@@ -78,12 +82,16 @@
       S.intentTrace = result;
       maxStage = 1;
       renderTrace(result);
-      setStage(1);
+      if (S.unlockLearningWorkspace) {
+        S.unlockLearningWorkspace(result);
+      } else {
+        applyStage(1);
+      }
     } catch (error) {
       S.intentTrace = null;
       maxStage = 0;
       $('learning-truth-notice').textContent = error.message;
-      setStage(0);
+      applyStage(0);
     } finally {
       button.disabled = false;
       button.textContent = 'Compile intention without an LLM';
@@ -96,7 +104,7 @@
     graph = {nodes: [], links: []};
     selectedNodeId = '';
     clearOutputs();
-    setStage(0);
+    applyStage(0);
     drawTopology();
     $('bulk-intent-input').focus();
   }
@@ -363,15 +371,18 @@
     drawTopology();
   }, {passive: false});
 
-  $('learning-compile').addEventListener('click', compileIntent);
-  $('learning-reset').addEventListener('click', resetDemo);
-  $('learning-back').addEventListener('click', () => setStage(S.intentStage - 1));
-  $('learning-next').addEventListener('click', () => {
-    if (!S.intentTrace || S.intentStage >= 5) return;
-    maxStage = Math.max(maxStage, S.intentStage + 1);
-    setStage(S.intentStage + 1);
-  });
-  document.querySelectorAll('[data-learning-stage]').forEach(button => button.addEventListener('click', () => setStage(Number(button.dataset.learningStage))));
+  if (!S.setupLearningWorkspace) {
+    $('learning-compile').addEventListener('click', compileIntent);
+    $('learning-reset').addEventListener('click', resetDemo);
+    $('learning-back').addEventListener('click', () => applyStage(S.intentStage - 1));
+    $('learning-next').addEventListener('click', () => {
+      if (!S.intentTrace || S.intentStage >= 5) return;
+      maxStage = Math.max(maxStage, S.intentStage + 1);
+      applyStage(S.intentStage + 1);
+    });
+    document.querySelectorAll('[data-learning-stage]').forEach(button => button.addEventListener('click', () => applyStage(Number(button.dataset.learningStage))));
+  }
+  S.compileIntent = compileIntent;
   $('bulk-intent-input').addEventListener('keydown', event => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); compileIntent(); }
   });
@@ -382,9 +393,9 @@
     if (!$('learning-view').classList.contains('is-active') || !S.intentTrace || S.intentStage >= 5) return;
     event.preventDefault();
     maxStage = Math.max(maxStage, S.intentStage + 1);
-    setStage(S.intentStage + 1);
+    applyStage(S.intentStage + 1);
   });
   window.addEventListener('resize', resizeTopology);
-  setStage(0);
+  applyStage(0);
   drawTopology();
 })();

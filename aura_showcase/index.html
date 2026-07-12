@@ -256,8 +256,8 @@
         <section class="learning-main-card">
           <div data-learning-panel="0" class="learning-panel is-active">
             <p class="eyebrow">Ordinary language input</p>
-            <h2>No prompt syntax or manual slots required</h2>
-            <textarea id="bulk-intent-input" class="bulk-intent-input" maxlength="12000" placeholder="Describe the complete intention in your own words…"></textarea>
+            <h2 id="bulk-intent-input-label">No prompt syntax or manual slots required</h2>
+            <textarea id="bulk-intent-input" class="bulk-intent-input" maxlength="12000" placeholder="Describe the complete intention in your own words…" aria-labelledby="bulk-intent-input-label"></textarea>
             <p class="muted">The local parser is deterministic. Secrets are redacted before the trace is displayed. This stage does not contact a model.</p>
           </div>
 
