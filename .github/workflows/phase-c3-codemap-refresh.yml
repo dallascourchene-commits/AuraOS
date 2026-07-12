@@ -38,16 +38,18 @@ jobs:
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0"
+      - name: Remove one-shot helper before topology compilation
+        run: rm .github/workflows/phase-c3-codemap-refresh.yml
       - name: Regenerate authoritative topology artifacts
         run: python aura_codebase_navigator.py
-      - name: Commit exact generated maps
+      - name: Commit exact final-tree maps and helper removal
         run: |
           git config user.name "aura-codemap[bot]"
           git config user.email "aura-codemap[bot]@users.noreply.github.com"
-          git add .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
+          git add -A .github/workflows/phase-c3-codemap-refresh.yml .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
           if git diff --cached --quiet; then
-            echo "CODEMAP already current"
+            echo "CODEMAP already current and helper removed"
             exit 0
           fi
-          git commit -m "chore(c3): refresh CODEMAP for trial crucible"
+          git commit -m "chore(c3): refresh final CODEMAP and remove helper"
           git push origin HEAD:feature/phase-c3-trial-crucible
