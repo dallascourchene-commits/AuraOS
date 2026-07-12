@@ -72,9 +72,46 @@ jobs:
           demo-sequence --provider fixture --reset-demo
       - name: Build inspection container
         run: docker build -f Dockerfile.amd-track3 -t aura-track3:test .
-      - name: Exercise container demo
-        run: >-
-          docker run --rm aura-track3:test
-          python aura_amd_track3_cli.py
-          --crystals /tmp/container-crystals.jsonl
-          demo-sequence --provider fixture --reset-demo
+      - name: Exercise container default command
+        shell: bash
+        run: |
+          set -euo pipefail
+          container_id="$(docker run -d -p 18080:8080 aura-track3:test)"
+          cleanup() {
+            docker logs "$container_id" || true
+            docker rm -f "$container_id" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          ready=0
+          for attempt in $(seq 1 30); do
+            if python - <<'PY'
+          import urllib.request
+
+          try:
+              with urllib.request.urlopen("http://127.0.0.1:18080/status", timeout=1) as response:
+                  raise SystemExit(0 if response.status == 200 else 1)
+          except Exception:
+              raise SystemExit(1)
+          PY
+            then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" -eq 1
+
+          python - <<'PY'
+          import json
+          import urllib.request
+
+          with urllib.request.urlopen("http://127.0.0.1:18080/status", timeout=5) as response:
+              payload = json.load(response)
+          assert payload["ok"] is True
+          assert payload["verified_count"] == 2
+          assert len(payload["reuse_links"]) >= 1
+          assert payload["automatic_commit"] is False
+          assert payload["automatic_push"] is False
+          assert payload["automatic_merge"] is False
+          PY
