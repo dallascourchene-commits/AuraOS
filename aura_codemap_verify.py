@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V3"
+CODEMAP_VERIFY_VERSION = "AURA_CODEMAP_VERIFY_V4"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 REQUIRED_PATHS = frozenset({
@@ -34,6 +34,7 @@ REQUIRED_SYMBOLS = frozenset({
     "verify_codemap",
 })
 _VOLATILE_SUMMARY_FIELDS = frozenset({"elapsed_ms", "last_incremental_refresh_unix"})
+_SELF_REFERENTIAL_GENERATED_DIGEST_PATHS = frozenset({"topology_map.json"})
 _SOURCE_CARD_FIELDS = (
     "path",
     "role",
@@ -189,7 +190,9 @@ def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
     Exact source cards, commands, symbols, rings, aggregate topology counts, and
     per-file graph structure remain authoritative. Runtime metadata and redundant
     presentation rankings are excluded because they may vary across clean checkouts
-    without changing repository or graph meaning.
+    without changing repository or graph meaning. The generated ``topology_map.json``
+    digest is self-referential and is normalized while its size, shape, role, and
+    independently compiled graph metrics remain verified.
     """
 
     summary = {
@@ -212,7 +215,10 @@ def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
     for raw in payload.get("files", []) or []:
         if not isinstance(raw, dict):
             continue
-        source_cards.append({key: raw.get(key) for key in _SOURCE_CARD_FIELDS if key in raw})
+        card = {key: raw.get(key) for key in _SOURCE_CARD_FIELDS if key in raw}
+        if str(card.get("path") or "") in _SELF_REFERENTIAL_GENERATED_DIGEST_PATHS:
+            card["digest8"] = "SELF_REFERENTIAL_GENERATED_ARTIFACT"
+        source_cards.append(card)
     source_cards.sort(key=lambda item: str(item.get("path") or ""))
 
     topology = dict(payload.get("topology") or {})
@@ -261,6 +267,7 @@ def compare_codemap_payloads(reference: dict[str, Any], regenerated: dict[str, A
             "coverage.skipped_dir_file_counts",
             "files[*].vector",
             "files[*].topology.hub_rank",
+            "topology_map.json.digest8 (self-referential generated artifact)",
             "hubs",
             "topology.diagnostics",
             "topology.meta",
