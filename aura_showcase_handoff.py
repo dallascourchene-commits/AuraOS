@@ -1,7 +1,7 @@
 """Exact Civic-to-Human-Agent handoff for the Winnipeg showcase.
 
 The handoff imports repository facts, hashes, candidate options, and a review-only
-patch proposal into the existing Human Agent workflow.  It does not apply the
+patch proposal into the existing Human Agent workflow. It does not apply the
 patch, run a merge, or treat the visual map as source authority.
 """
 from __future__ import annotations
@@ -37,7 +37,7 @@ def build_handoff_packet(repo_root: str | Path, session_id: str) -> dict[str, An
     markers = {
         "aura_showcase/app.js": "INITIAL_MAP_ZOOM",
         "aura_civic_map.py": '"candidate": 12',
-        "aura_civic_projects.py": "WP-CANDIDATE-1",
+        "aura_civic_winnipeg_fixture.py": "WP-CANDIDATE-1",
         "tests/test_aura_showcase_guided_project.py": "test_candidate_is_hidden_at_11_and_visible_at_12",
     }
     exact_files: list[dict[str, Any]] = []
@@ -66,14 +66,17 @@ def build_handoff_packet(repo_root: str | Path, session_id: str) -> dict[str, An
 --- a/aura_showcase/app.js
 +++ b/aura_showcase/app.js
 @@
- const INITIAL_MAP_ZOOM = 11;
-+const CANDIDATE_FOCUS_ZOOM = 12;
+ window.Showcase = {
+   INITIAL_MAP_ZOOM: 11,
++  CANDIDATE_FOCUS_ZOOM: 12,
 @@
--  await refreshMap();
+ S.applyGuide = guide => {
+   S.guide = guide;
+   S.sessionId = guide.session?.session_id || '';
 +  if (guide.current_step?.step_id === 'EXPLORE_MAP') {
-+    mapZoom = CANDIDATE_FOCUS_ZOOM;
++    S.mapZoom = S.CANDIDATE_FOCUS_ZOOM;
 +  }
-+  await refreshMap();
+   if (S.renderCivicGuide) S.renderCivicGuide();
 """
     objective = (
         "Investigate why the Winnipeg Pathways candidate pilot location is hidden when the Civic Arena opens. "
