@@ -11,12 +11,19 @@ on:
       - "aura_civic_guided_project.py"
       - "aura_human_agent_guidance.py"
       - "aura_showcase_handoff.py"
+      - "aura_showcase_spatial.py"
+      - "aura_showcase_intent.py"
+      - "aura_showcase_intent_topology.py"
       - "aura_showcase_server.py"
       - "aura_showcase/**"
       - "tests/test_aura_showcase_guided_project.py"
       - "tests/test_aura_showcase_guided_interface.py"
+      - "tests/test_aura_showcase_spatial_integration.py"
+      - "tests/test_aura_showcase_intent_routing.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
+      - "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md"
+      - "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md"
       - "Dockerfile.aura-showcase"
       - "docker-compose.showcase.yml"
       - ".github/workflows/aura-showcase.yml"
@@ -69,9 +76,14 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_showcase_handoff.py
+          aura_showcase_spatial.py
+          aura_showcase_intent.py
+          aura_showcase_intent_topology.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
+          tests/test_aura_showcase_intent_routing.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -83,19 +95,28 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_showcase_handoff.py
+          aura_showcase_spatial.py
+          aura_showcase_intent.py
+          aura_showcase_intent_topology.py
           aura_showcase_server.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
+          tests/test_aura_showcase_intent_routing.py
       - name: Check browser JavaScript syntax
         run: |
           node --check aura_showcase/app.js
           node --check aura_showcase/civic.js
           node --check aura_showcase/human.js
+          node --check aura_showcase/topology.js
+          node --check aura_showcase/intent.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
+          tests/test_aura_showcase_spatial_integration.py
+          tests/test_aura_showcase_intent_routing.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
       - name: Exercise unified server
@@ -129,6 +150,46 @@ jobs:
           session_id = status["default_session_id"]
           assert session_id
           assert status["basemap_tile_url_template"]
+          assert status["bounded_topology_projection"] is True
+          assert status["full_topology_sent_to_browser"] is False
+          assert status["learning_arena_available"] is True
+          assert status["deterministic_bulk_intent_compiler"] is True
+          assert status["model_calls_before_handoff"] == 0
+          assert status["english_lexicon_expected_primitives"] == 4096
+
+          with urllib.request.urlopen(base + "/api/showcase/coding-tasks", timeout=5) as response:
+              tasks = json.load(response)
+          assert tasks["task_count"] == 4
+
+          with urllib.request.urlopen(
+              base + "/api/showcase/topology/tasks/civic_map_overlay?depth=1",
+              timeout=15,
+          ) as response:
+              spatial = json.load(response)
+          assert spatial["ok"] is True
+          assert spatial["workspace"]["nodes"]
+          assert spatial["workspace"]["returned_node_count"] <= spatial["bounds"]["node_limit"]
+
+          intent_request = urllib.request.Request(
+              base + "/api/showcase/intent/compile",
+              data=json.dumps({
+                  "text": "Improve compile_intent_packet routing and preserve its tests.",
+                  "include_grounding": False,
+                  "include_topology": False,
+              }).encode("utf-8"),
+              headers={"content-type": "application/json"},
+              method="POST",
+          )
+          with urllib.request.urlopen(intent_request, timeout=20) as response:
+              intent = json.load(response)
+          assert intent["ok"] is True
+          assert intent["model_calls_made"] == 0
+          assert intent["lexical_codebook"]["primitive_count"] == 4096
+          assert set(intent["six_slot_packet"]["slots"]) == {"DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM"}
+          assert intent["machine_route"]["rule_name"]
+          assert intent["agent_handoff"]["compressed_context"]
+          assert intent["automatic_merge"] is False
+
           request = urllib.request.Request(
               base + f"/api/showcase/sessions/{session_id}/advance",
               data=b"{}",
@@ -188,6 +249,9 @@ jobs:
                       assert payload["default_session_id"]
                       assert payload["automatic_merge"] is False
                       assert payload["basemap_tile_url_template"]
+                      assert payload["bounded_topology_projection"] is True
+                      assert payload["learning_arena_available"] is True
+                      assert payload["model_calls_before_handoff"] == 0
                       break
               except Exception:
                   time.sleep(0.5)

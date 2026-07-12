@@ -6,6 +6,8 @@
   <title>Aura Winnipeg Community Pathways Lab</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="topology.css">
+  <link rel="stylesheet" href="intent.css">
 </head>
 <body>
   <header class="topbar">
@@ -13,6 +15,7 @@
     <nav aria-label="Showcase surfaces">
       <button class="tab is-active" data-tab="civic">Civic Arena</button>
       <button class="tab" data-tab="human">Human Agent Coding Arena</button>
+      <button class="tab" data-tab="learning">Sovereign Learning Arena</button>
     </nav>
     <div class="authority"><i></i> Human authority active</div>
   </header>
@@ -127,9 +130,43 @@
         <div>
           <p class="eyebrow">Human Agent Coding Arena</p>
           <h1>Investigate the system without surrendering authority.</h1>
-          <p class="lede">The guarded WFST shows the safest admitted next actions at every phase. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
+          <p class="lede">Begin with a small task, see its exact repository neighborhood in the spatial lens, then move through the guarded WFST. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
         </div>
         <button id="return-civic" class="secondary">Return to Civic project</button>
+      </section>
+
+      <section class="spatial-task-panel" aria-labelledby="spatial-task-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Presenter-safe starting points</p><h2 id="spatial-task-title">Choose a bounded investigation task</h2></div>
+          <span class="pill">real CODEMAP · no full-graph transfer</span>
+        </div>
+        <p class="muted">Each task declares a six-slot intent, exact seed files, acceptance criteria, and prohibited actions before Aura projects a small topology workspace.</p>
+        <div id="spatial-task-list" class="spatial-task-list"><p class="muted">Loading task registry…</p></div>
+        <div id="spatial-task-detail" class="spatial-task-detail"><p class="muted">Choose a task to project its exact repository neighborhood.</p></div>
+      </section>
+
+      <section class="topology-card" aria-labelledby="topology-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Graphify / Obsidian-style spatial lens</p><h2 id="topology-title">Bounded 3D Aura topology</h2></div>
+          <span class="pill">orientation only · exact source remains authority</span>
+        </div>
+        <div class="topology-layout">
+          <div class="topology-viewport">
+            <canvas id="topology-canvas" aria-label="Rotatable three-dimensional graph of the selected Aura repository workspace"></canvas>
+            <div class="topology-hud">
+              <div id="topology-status" class="topology-status">Choose a starter task to load a bounded workspace.</div>
+              <div class="topology-controls">
+                <button id="topology-depth-1" type="button">Depth 1</button>
+                <button id="topology-depth-2" type="button">Depth 2</button>
+                <button id="topology-fit" type="button">Fit</button>
+              </div>
+            </div>
+            <div id="topology-legend" class="topology-legend"></div>
+          </div>
+          <aside id="topology-inspector" class="topology-inspector">
+            <p class="muted">Select a node to inspect exact repository information.</p>
+          </aside>
+        </div>
       </section>
 
       <section class="human-route-console" aria-labelledby="human-route-title">
@@ -186,11 +223,117 @@
         <div id="workflow-result" class="workflow-result"><p class="muted">Awaiting a guarded action.</p></div>
       </section>
     </section>
+
+    <section id="learning-view" class="view">
+      <section class="hero learning-hero">
+        <div>
+          <p class="eyebrow">Sovereign Learning Arena · deterministic pre-LLM routing</p>
+          <h1>Speak normally. Watch Aura compile the intention.</h1>
+          <p class="lede">Paste a broad human objective. Aura addresses known words, extracts routing tags, binds the six-slot packet, applies FST hard gates, localizes the CODEMAP, and prepares a bounded worker handoff—before any LLM is called.</p>
+        </div>
+        <div class="hero-actions">
+          <button id="learning-reset" class="secondary">Reset guided demo</button>
+          <button id="learning-compile" class="primary">Compile intention without an LLM</button>
+        </div>
+      </section>
+
+      <section class="learning-rail-card">
+        <div class="section-head">
+          <div><p class="eyebrow">On-rails presenter path</p><h2 id="learning-stage-title">1. Give Aura bulk intention</h2></div>
+          <span id="learning-model-count" class="pill">model calls: 0</span>
+        </div>
+        <div id="learning-rail" class="learning-rail" aria-label="Learning Arena guided stages">
+          <button data-learning-stage="0" class="is-active">Bulk intention</button>
+          <button data-learning-stage="1" disabled>Lexical addresses</button>
+          <button data-learning-stage="2" disabled>Routing tags</button>
+          <button data-learning-stage="3" disabled>Six-slot packet</button>
+          <button data-learning-stage="4" disabled>FST hard gate</button>
+          <button data-learning-stage="5" disabled>Bounded handoff</button>
+        </div>
+      </section>
+
+      <section class="learning-grid">
+        <section class="learning-main-card">
+          <div data-learning-panel="0" class="learning-panel is-active">
+            <p class="eyebrow">Ordinary language input</p>
+            <h2 id="bulk-intent-input-label">No prompt syntax or manual slots required</h2>
+            <textarea id="bulk-intent-input" class="bulk-intent-input" maxlength="12000" placeholder="Describe the complete intention in your own words…" aria-labelledby="bulk-intent-input-label"></textarea>
+            <p class="muted">The local parser is deterministic. Secrets are redacted before the trace is displayed. This stage does not contact a model.</p>
+          </div>
+
+          <div data-learning-panel="1" class="learning-panel">
+            <p class="eyebrow">4,096 primitive codebook</p>
+            <h2>Stable 12-bit lexical addressing</h2>
+            <div id="lexicon-metrics" class="learning-metrics"></div>
+            <div id="lexicon-token-trace" class="token-trace"></div>
+            <p class="muted">Known words receive their stored 12-bit address. Unknown words receive the existing deterministic checksum fallback. Addressing supports routing but does not grant semantic or execution authority by itself.</p>
+          </div>
+
+          <div data-learning-panel="2" class="learning-panel">
+            <p class="eyebrow">Local tag extraction and LEXC vocabulary</p>
+            <h2>Aura identifies operation, domain, target, and expected output</h2>
+            <div id="intent-tag-groups" class="intent-tag-groups"></div>
+            <div id="compressed-intent" class="compiled-strip"></div>
+            <details><summary>Inspect actual aura.lexc layers and candidate route</summary><div id="lexc-trace"></div></details>
+          </div>
+
+          <div data-learning-panel="3" class="learning-panel">
+            <p class="eyebrow">Canonical execution contract</p>
+            <h2>DIR → ASP → CLASS → SUBJ → VOICE → STEM</h2>
+            <div id="compiled-six-slots" class="compiled-six-slots"></div>
+            <div id="vsa-binding" class="vsa-binding"></div>
+            <p class="muted">This is a software routing contract inspired by Athabaskan morphotactic ordering; it is not presented as a universal linguistic model.</p>
+          </div>
+
+          <div data-learning-panel="4" class="learning-panel">
+            <p class="eyebrow">Machine-oriented FST admission grammar</p>
+            <h2>Hard gates decide the route before model selection</h2>
+            <div id="machine-route-summary" class="machine-route-summary"></div>
+            <div class="symbol-columns">
+              <section><h3>Input routing symbols</h3><div id="machine-input-symbols" class="symbol-trace"></div></section>
+              <section><h3>Output routing symbols</h3><div id="machine-output-symbols" class="symbol-trace"></div></section>
+            </div>
+            <details><summary>Compact JSpace packet</summary><pre id="machine-jspace"></pre></details>
+          </div>
+
+          <div data-learning-panel="5" class="learning-panel">
+            <p class="eyebrow">Bounded context prepared for a replaceable worker</p>
+            <h2>The LLM receives direction—not unrestricted authority</h2>
+            <div id="handoff-metrics" class="learning-metrics"></div>
+            <div class="handoff-preview-grid">
+              <section><h3>Localized files and symbols</h3><div id="intent-localization"></div></section>
+              <section><h3>Compressed worker context</h3><pre id="intent-handoff-preview"></pre></section>
+            </div>
+            <section class="learning-topology-card">
+              <div class="section-head"><div><p class="eyebrow">Same bounded topology substrate as the Coding Arena</p><h3>Repository neighborhood localized from this intention</h3></div><span id="learning-topology-status" class="pill">not compiled</span></div>
+              <canvas id="learning-topology-canvas" aria-label="Bounded repository topology localized from the compiled bulk intention"></canvas>
+              <div id="learning-topology-inspector" class="learning-topology-inspector"><span class="muted">Compile the intention to project exact CODEMAP nodes.</span></div>
+            </section>
+          </div>
+
+          <div class="learning-stage-actions">
+            <button id="learning-back" class="secondary" disabled>Previous proof</button>
+            <button id="learning-next" class="primary" disabled>Show lexical addressing</button>
+          </div>
+        </section>
+
+        <aside class="learning-guardrail-card">
+          <p class="eyebrow">Always-visible authority rail</p>
+          <h2>What Aura may and may not do</h2>
+          <div id="learning-admitted" class="guardrail-list allowed-list"><p class="muted">Compile the intention to load admitted operations.</p></div>
+          <div id="learning-blocked" class="guardrail-list blocked-list"><p class="muted">Commit, push, and merge remain blocked.</p></div>
+          <div id="learning-truth-notice" class="notice">The English codebook, six-slot software contract, Anishinaabemowin governance alignments, and machine FST are distinct layers with distinct roles.</div>
+          <details><summary>Exact compiled trace</summary><pre id="learning-exact-trace">{}</pre></details>
+        </aside>
+      </section>
+    </section>
   </main>
 
-  <footer>Fixture civic data · optional public OpenStreetMap basemap · offline governed-grid fallback · no automatic commit, push, or merge</footer>
+  <footer>Fixture civic data · optional public OpenStreetMap basemap · deterministic no-LLM intent compilation · bounded real CODEMAP topology · no automatic commit, push, or merge</footer>
   <script src="app.js"></script>
   <script src="civic.js"></script>
   <script src="human.js"></script>
+  <script src="topology.js"></script>
+  <script src="intent.js"></script>
 </body>
 </html>
