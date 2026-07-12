@@ -11,7 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
 
 from aura_civic_guided_project import (
@@ -23,7 +23,8 @@ from aura_civic_guided_project import (
     record_response,
     start_project,
 )
-from aura_human_agent_arena_server import HumanAgentArenaServerState, dispatch_api_request
+if TYPE_CHECKING:
+    from aura_human_agent_arena_server import HumanAgentArenaServerState
 from aura_showcase_handoff import import_handoff_into_workflow
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
@@ -38,7 +39,7 @@ MAX_BODY_BYTES = 1_000_000
 class ShowcaseState:
     def __init__(self, repo_root: str | Path, *, demo_project: str, auto_start: bool) -> None:
         self.repo_root = Path(repo_root).resolve()
-        self._human_agent: HumanAgentArenaServerState | None = None
+        self._human_agent: Any = None
         self.demo_project = demo_project
         self.default_session_id = ""
         if auto_start:
@@ -47,9 +48,10 @@ class ShowcaseState:
                 self.default_session_id = str(started["session"]["session_id"])
 
     @property
-    def human_agent(self) -> HumanAgentArenaServerState:
-        """Load the topology-heavy Human Agent surface only when it is used."""
+    def human_agent(self) -> "HumanAgentArenaServerState":
+        """Load Human Agent modules and topology only when the handoff is used."""
         if self._human_agent is None:
+            from aura_human_agent_arena_server import HumanAgentArenaServerState
             self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=True)
         return self._human_agent
 
@@ -142,6 +144,7 @@ def dispatch_showcase_request(
             return _json(200 if result.get("ok") else 409, result)
 
     if route.startswith("/api/human-agent") or route.startswith("/api/coding-workbench") or route.startswith("/api/civic"):
+        from aura_human_agent_arena_server import dispatch_api_request
         status, result = dispatch_api_request(state.human_agent, method, raw_path, body)
         return _json(status, result)
 
