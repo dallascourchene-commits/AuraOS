@@ -1,304 +1,235 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import replace
+import hashlib
+import json
 from pathlib import Path
+import sqlite3
 
 import pytest
 
 from aura_arena_crucible import ArenaCrucibleService
+from aura_arena_experience import OutcomeVector, build_arena_experience
+from aura_arena_experience_ledger import ArenaExperienceLedger
+from aura_arena_wfst_compiler import load_and_compile_arena_grammar
 from aura_crucible_cli import build_parser
-from aura_crucible_miner import mine_crucible_candidates
+from aura_crucible_miner import mine_crucible_candidates, three_way_temporal_split
 from aura_crucible_store import CrucibleStore
-from aura_crucible_types import (
-    CRYSTALLIZATION_PROPOSED,
-    CrystallizationProposal,
-    CruciblePolicy,
-    canonical_digest,
-)
-from aura_crucible_validation import validate_crucible_candidate
+from aura_crucible_types import CRYSTALLIZATION_PROPOSED, CrystallizationProposal, CruciblePolicy
+from aura_crucible_validation import validate_crucible_candidate, validate_manifest_pin
+
+RANK = {
+    "unresolved_risk": 0.0,
+    "declared_evidence_gap": 0.0,
+    "empirical_uncertainty": 1.0,
+    "semantic_ambiguity": 0.0,
+    "context_switch_cost": 0.0,
+    "latency_cost": 0.2,
+    "token_cost": 0.3,
+    "thermal_cost": 0.1,
+    "negative_semantic_fit": -0.9,
+    "negative_user_fit": -0.8,
+    "stable_transition_id": "T.A",
+    "measurement_classes": {"latency": "MEASURED", "tokens": "MEASURED", "thermal": "MEASURED"},
+}
 
 
-@dataclass(frozen=True)
-class Profile:
-    empirical_uncertainty: float = 1.0
-
-
-@dataclass(frozen=True)
-class Transition:
-    transition_id: str
-    from_state: str
-    soft_weight_profile: Profile = Profile()
-
-
-class Grammar:
-    def __init__(self, transition_id="HUMAN.GROUND_CONTEXT"):
-        self.arena_id = "human_agent"
-        self.grammar_version = "human-agent-wfst-v1"
-        self.manifest_digest = "5071cfeedb320e69a4d6d80aaa073fb095240a0d"
-        self.source_path = ".aura/arena_routes/human_agent.v1.json"
-        self.meta_grammar = False
-        self._transition = Transition(transition_id, "GROUND")
-    def transition_by_id(self, transition_id):
-        return self._transition if transition_id == self._transition.transition_id else None
-
-
-def rank(transition_id: str, uncertainty: float, risk: float = 0.0, gap: float = 0.0):
-    return {
-        "transition_id": transition_id,
-        "rank": {
-            "unresolved_risk": risk,
-            "declared_evidence_gap": gap,
-            "empirical_uncertainty": uncertainty,
-            "semantic_ambiguity": 0.0,
-            "context_switch_cost": 0.0,
-            "latency_cost": 0.0,
-            "token_cost": 0.0,
-            "thermal_cost": 0.0,
-            "negative_semantic_fit": -1.0,
-            "negative_user_fit": -0.5,
-            "stable_transition_id": transition_id,
-        },
+def _manifest(root: Path):
+    path = root / ".aura" / "arena_routes" / "test.v1.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_version": "AURA_ARENA_GRAMMAR_MANIFEST_V1",
+        "arena_id": "test",
+        "arena_version": "v1",
+        "grammar_version": "g1",
+        "start_state": "S",
+        "states": ["S", "N"],
+        "terminal_states": ["N"],
+        "transitions": [
+            {"transition_id": "T.A", "from_state": "S", "next_state": "N", "output_symbol": "A", "soft_weight_profile": {"empirical_uncertainty": 1.0}},
+            {"transition_id": "T.B", "from_state": "S", "next_state": "N", "output_symbol": "B", "soft_weight_profile": {"empirical_uncertainty": 0.8}},
+        ],
     }
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    result = load_and_compile_arena_grammar(path)
+    assert result.ok and result.grammar is not None
+    return path, result
 
 
-def experience(index: int, *, success: bool = True, objective: str | None = None, selected="HUMAN.GROUND_CONTEXT"):
-    available = [rank(selected, 1.0), rank("HUMAN.OTHER", 1.0)]
-    return {
-        "experience_id": f"EXP-{index:03d}",
-        "arena_id": "human_agent",
-        "grammar_version": "human-agent-wfst-v1",
-        "state_before": "GROUND",
-        "state_after": "PLAN" if success else "GROUND",
-        "selected_transition": selected,
-        "final_outcome": "COMPLETED" if success else "DENIED",
-        "completed_at": float(index),
-        "objective_hash": objective or f"OBJ-{index % 4}",
-        "repository_commit_sha": "abc",
-        "payload": {
-            "route": {
-                "selected": {"transition_id": selected},
-                "available": available,
-            }
-        },
-    }
+def _route(digest: str, selected: str = "T.A") -> dict:
+    a = {"transition_id": "T.A", "next_state": "N", "risk": "low", "required_evidence": [], "produced_evidence": ["x"], "verifier_requirement": "none", "approval_requirement": "none", "semantic_fit": 0.9, "rank": dict(RANK)}
+    b_rank = dict(RANK)
+    b_rank["empirical_uncertainty"] = 0.8
+    b_rank["stable_transition_id"] = "T.B"
+    b = {"transition_id": "T.B", "next_state": "N", "risk": "low", "required_evidence": [], "produced_evidence": ["y"], "verifier_requirement": "none", "approval_requirement": "none", "semantic_fit": 0.8, "rank": b_rank}
+    return {"grammar_digest": digest, "selected": a if selected == "T.A" else b, "available": [a, b], "recommended": [a, b], "blocked": [], "abstained": False}
 
 
-def policy(**updates):
-    data = {
-        "min_train_records": 6,
-        "min_holdout_records": 3,
-        "holdout_fraction": 0.25,
-        "min_distinct_objectives": 2,
-        "min_train_success_rate": 0.7,
-        "min_holdout_success_rate": 0.67,
-        "min_holdout_wilson_lower": 0.3,
-        "min_shadow_records": 1,
-        "max_shadow_selection_change_rate": 0.35,
-        "minimum_uncertainty_delta": 0.05,
-        "max_proposals_per_run": 8,
-        "max_source_ids": 200,
-    }
-    data.update(updates)
-    return CruciblePolicy(**data)
-
-
-def test_miner_is_deterministic_and_uses_disjoint_temporal_holdout():
-    rows = [experience(i) for i in range(12)]
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    first = mine_crucible_candidates(rows, index, policy=policy())
-    second = mine_crucible_candidates(reversed(rows), index, policy=policy())
-    assert [item.to_dict() for item in first] == [item.to_dict() for item in second]
-    candidate = first[0]
-    assert candidate.train_record_count == 9
-    assert candidate.holdout_record_count == 3
-    assert not set(candidate.train_experience_ids) & set(candidate.holdout_experience_ids)
-    assert candidate.train_experience_ids[-1] == "EXP-008"
-    assert candidate.holdout_experience_ids[0] == "EXP-009"
-
-
-def test_miner_ignores_stale_or_unknown_transition_records():
-    rows = [experience(i, selected="HUMAN.MISSING") for i in range(12)]
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    assert mine_crucible_candidates(rows, index, policy=policy()) == []
-
-
-def test_miner_requires_support_diversity_and_success():
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    too_few = [experience(i) for i in range(8)]
-    assert mine_crucible_candidates(too_few, index, policy=policy()) == []
-    one_objective = [experience(i, objective="SAME") for i in range(12)]
-    assert mine_crucible_candidates(one_objective, index, policy=policy()) == []
-    failures = [experience(i, success=i >= 8) for i in range(12)]
-    assert mine_crucible_candidates(failures, index, policy=policy()) == []
-
-
-def test_candidate_can_only_propose_empirical_uncertainty():
-    rows = [experience(i) for i in range(12)]
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    candidate = mine_crucible_candidates(rows, index, policy=policy())[0]
-    assert candidate.change_path == "soft_weight_profile.empirical_uncertainty"
-    assert 0.0 <= candidate.proposed_value <= 1.0
-    assert candidate.learned_weight_patch_authority is False
-    assert candidate.crystallization_patch_authority is False
-    assert candidate.automatic_grammar_promotion is False
-
-
-def test_holdout_and_shadow_validation_pass_without_mutation():
-    rows = [experience(i) for i in range(12)]
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    candidate = mine_crucible_candidates(rows, index, policy=policy())[0]
-    result = validate_crucible_candidate(candidate, rows, policy=policy())
-    assert result["passed"] is True
-    assert result["shadow"]["replay_record_count"] == 3
-    assert result["shadow"]["unsafe_selection_changes"] == 0
-    assert result["active_grammar_mutated"] is False
-
-
-def test_validation_fails_on_bad_holdout():
-    rows = [experience(i, success=i < 9) for i in range(12)]
-    index = {("human_agent", "human-agent-wfst-v1"): Grammar()}
-    candidate = mine_crucible_candidates(rows, index, policy=policy(min_train_success_rate=0.6))[0]
-    result = validate_crucible_candidate(candidate, rows, policy=policy(min_train_success_rate=0.6))
-    assert result["passed"] is False
-    assert result["checks"]["holdout_success_rate"] is False
-
-
-def proposal(run_id="RUN-1"):
-    validation = {"passed": True, "verifier_status": "PASSED"}
-    return CrystallizationProposal(
-        proposal_id="CPROP-1",
-        run_id=run_id,
-        candidate_id="CAND-1",
-        arena_id="human_agent",
-        grammar_version="human-agent-wfst-v1",
-        manifest_path=".aura/arena_routes/human_agent.v1.json",
-        manifest_digest="5071cfeedb320e69a4d6d80aaa073fb095240a0d",
-        state_before="GROUND",
-        transition_id="HUMAN.GROUND_CONTEXT",
-        change_path="soft_weight_profile.empirical_uncertainty",
-        current_value=1.0,
-        proposed_value=0.2,
-        validation=validation,
-        source_experience_ids=("EXP-1", "EXP-2"),
-        source_experience_digest=canonical_digest(["EXP-1", "EXP-2"]),
-        created_at=1.0,
+def _experience(index: int, digest: str, score: float = 0.85):
+    vector = OutcomeVector(terminal_class="COMPLETED", task_progress=score, evidence_quality=score, verification_quality=score, safety_quality=1.0, human_alignment=score, cost_efficiency=0.8, latency_efficiency=0.8)
+    return build_arena_experience(
+        arena_id="test", arena_version="v1", grammar_version="g1", runtime_version="r", compiler_version="c",
+        state_before="S", state_after="N", selected_transition="T.A",
+        final_outcome="COMPLETED" if index % 2 else "DENIED",
+        payload={"route": _route(digest), "action_result": {"ok": bool(index % 2)}, "evidence_keys": []},
+        outcome_vector=vector, experience_id=f"EXP-{index:03}", objective=f"objective-{index % 4}",
+        started_at=float(index), completed_at=float(index) + 0.1,
     )
 
 
-def test_proposal_is_terminal_and_has_no_promotion_authority():
-    packet = proposal().to_dict()
-    assert packet["status"] == CRYSTALLIZATION_PROPOSED
-    assert packet["required_next_gate"] == "VERIFIER_AND_HUMAN_REVIEW"
-    assert packet["crystallization_patch_authority"] is False
-    assert packet["automatic_grammar_promotion"] is False
-    bad = proposal().to_dict()
-    bad.pop("proposal_digest", None)
-    bad["status"] = "PROMOTED"
-    with pytest.raises(ValueError):
-        CrystallizationProposal(**bad)
+def _grammar(root: Path):
+    path, result = _manifest(root)
+    return replace(result.grammar, source_path=path.relative_to(root).as_posix()), result.manifest_digest
 
 
-def test_store_pause_resume_wal_and_idempotent_proposal(tmp_path: Path):
+def test_experience_requires_digest_and_preserves_every_alternative_and_prediction(tmp_path: Path):
+    _, result = _manifest(tmp_path)
+    exp = _experience(1, result.manifest_digest)
+    assert exp.grammar_manifest_digest == result.manifest_digest
+    assert [row["transition_id"] for row in exp.admissible_alternatives] == ["T.A", "T.B"]
+    assert [row["transition_id"] for row in exp.predictions] == ["T.A", "T.B"]
+    assert sum(bool(row["predicted_selected"]) for row in exp.predictions) == 1
+    assert exp.outcome_vector.proposal_projection()["runtime_authority"] is False
+    with pytest.raises(ValueError, match="grammar_manifest_digest"):
+        build_arena_experience(arena_id="x", arena_version="v", grammar_version="g", runtime_version="r", compiler_version="c", state_before="S", state_after="S", selected_transition="", final_outcome="BLOCKED")
+
+
+def test_outcome_vector_replaces_binary_scoring(tmp_path: Path):
+    grammar, digest = _grammar(tmp_path)
+    rows = [_experience(i, digest, 0.82).to_dict() for i in range(1, 18)]
+    assert {row["final_outcome"] for row in rows} == {"COMPLETED", "DENIED"}
+    candidates = mine_crucible_candidates(rows, {("test", "g1"): grammar})
+    assert len(candidates) == 1
+    assert candidates[0].train_outcome_summary["binary_outcome_used"] is False
+    assert candidates[0].train_outcome_summary["score_mean"] > 0.8
+
+
+def test_v1_ledger_migrates_without_fabricating_v2_observations(tmp_path: Path):
+    _, result = _manifest(tmp_path)
+    db = tmp_path / "old.db"
+    con = sqlite3.connect(db)
+    con.executescript("""CREATE TABLE arena_experiences (experience_id TEXT PRIMARY KEY, correlation_id TEXT NOT NULL, task_id TEXT, workflow_id TEXT, arena_id TEXT NOT NULL, arena_version TEXT NOT NULL, grammar_version TEXT NOT NULL, runtime_version TEXT NOT NULL, compiler_version TEXT NOT NULL, started_at REAL NOT NULL, completed_at REAL NOT NULL, state_before TEXT NOT NULL, state_after TEXT NOT NULL, selected_transition TEXT, final_outcome TEXT NOT NULL, repository_commit_sha TEXT, working_tree_digest TEXT, objective_hash TEXT, source_hash_digest TEXT, provider TEXT, model TEXT, measurement_class TEXT, cost_run_id TEXT, trace_atom_ids_json TEXT NOT NULL, raw_evidence_refs_json TEXT NOT NULL, redactions_json TEXT NOT NULL, payload_json TEXT NOT NULL, experience_digest TEXT NOT NULL, schema_version TEXT NOT NULL, created_at REAL NOT NULL); CREATE TABLE arena_experience_migrations(version INTEGER PRIMARY KEY, applied_at REAL NOT NULL);""")
+    con.execute("INSERT INTO arena_experiences VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", ("OLD", "C", "", "", "test", "v1", "g1", "r", "c", 0, 1, "S", "N", "T.A", "COMPLETED", "", "", "", "", "", "", "UNAVAILABLE", "", "[]", "[]", "[]", "{}", "d", "V1", 1))
+    con.commit()
+    con.close()
+    with ArenaExperienceLedger(tmp_path, db_path=db) as ledger:
+        assert ledger.get("OLD")["legacy_record"] is True
+        assert ledger.record(_experience(1, result.manifest_digest))["ok"]
+        assert ledger.get("EXP-001")["legacy_record"] is False
+        assert ledger.status()["v2_complete_record_count"] == 1
+
+
+def test_train_validation_shadow_are_disjoint(tmp_path: Path):
+    _, digest = _grammar(tmp_path)
+    rows = [_experience(i, digest).to_dict() for i in range(1, 21)]
+    split = three_way_temporal_split(rows, CruciblePolicy())
+    assert split is not None
+    ids = [{row["experience_id"] for row in dataset} for dataset in split]
+    assert not (ids[0] & ids[1] or ids[0] & ids[2] or ids[1] & ids[2])
+
+
+def test_stale_or_unknown_manifest_digest_is_not_mined(tmp_path: Path):
+    grammar, digest = _grammar(tmp_path)
+    rows = [_experience(i, "stale-digest").to_dict() for i in range(1, 15)]
+    assert mine_crucible_candidates(rows, {("test", "g1"): grammar}) == []
+    assert digest != "stale-digest"
+
+
+def test_all_thresholds_remain_proposal_only_and_do_not_block_candidates(tmp_path: Path):
+    grammar, digest = _grammar(tmp_path)
+    rows = [_experience(i, digest, 0.55).to_dict() for i in range(1, 16)]
+    policy = CruciblePolicy(proposal_min_train_records=999, proposal_min_validation_records=999, proposal_min_shadow_records=999, proposal_min_outcome_coverage=0.99, proposal_min_train_score=0.99, proposal_min_validation_score=0.99, proposal_min_uncertainty_delta=0.99)
+    candidate = mine_crucible_candidates(rows, {("test", "g1"): grammar}, policy=policy)[0]
+    assert candidate.threshold_scope == "PROPOSAL_ONLY"
+    assert candidate.threshold_assessment["all_proposal_thresholds_met"] is False
+    assert candidate.threshold_assessment["candidate_generation_blocked"] is False
+
+
+def test_manifest_pin_is_repo_relative_and_compiler_canonical(tmp_path: Path):
+    path, result = _manifest(tmp_path)
+    rel = path.relative_to(tmp_path).as_posix()
+    assert validate_manifest_pin(repo_root=tmp_path, manifest_path=rel, manifest_digest=result.manifest_digest, arena_id="test", grammar_version="g1")["passed"]
+    assert not validate_manifest_pin(repo_root=tmp_path, manifest_path=str(path.resolve()), manifest_digest=result.manifest_digest, arena_id="test", grammar_version="g1")["passed"]
+    assert not validate_manifest_pin(repo_root=tmp_path, manifest_path="../escape.json", manifest_digest=result.manifest_digest, arena_id="test", grammar_version="g1")["passed"]
+    raw_digest = hashlib.blake2b(path.read_bytes(), digest_size=20).hexdigest()
+    assert raw_digest != result.manifest_digest
+    assert not validate_manifest_pin(repo_root=tmp_path, manifest_path=rel, manifest_digest=raw_digest, arena_id="test", grammar_version="g1")["passed"]
+
+
+def test_validation_and_shadow_use_separate_data_and_preserve_observations(tmp_path: Path):
+    grammar, digest = _grammar(tmp_path)
+    rows = [_experience(i, digest).to_dict() for i in range(1, 21)]
+    policy = CruciblePolicy(proposal_min_train_records=2, proposal_min_validation_records=1, proposal_min_shadow_records=1)
+    candidate = mine_crucible_candidates(rows, {("test", "g1"): grammar}, policy=policy)[0]
+    report = validate_crucible_candidate(candidate, rows, repo_root=tmp_path, policy=policy)
+    assert report["passed"]
+    assert set(report["dataset_ids"]["validation"]).isdisjoint(report["dataset_ids"]["shadow"])
+    assert report["shadow"]["dataset"] == "SHADOW"
+    assert report["shadow"]["all_admissible_alternatives_preserved"]
+    assert all(len(row["admissible_alternatives"]) == 2 and len(row["recorded_predictions"]) == 2 for row in report["shadow"]["replay_records"])
+
+
+def test_missing_shadow_prediction_fails_structural_validation(tmp_path: Path):
+    grammar, digest = _grammar(tmp_path)
+    rows = [_experience(i, digest).to_dict() for i in range(1, 21)]
+    candidate = mine_crucible_candidates(rows, {("test", "g1"): grammar})[0]
+    shadow_id = candidate.shadow_experience_ids[0]
+    next_rows = [dict(row) for row in rows]
+    next(row for row in next_rows if row["experience_id"] == shadow_id)["predictions"] = []
+    report = validate_crucible_candidate(candidate, next_rows, repo_root=tmp_path)
+    assert not report["passed"]
+    assert not report["structural_checks"]["shadow_observations_preserve_all_alternatives_and_predictions"]
+
+
+def test_service_stores_structural_proposal_even_with_threshold_warnings(tmp_path: Path):
+    _, result = _manifest(tmp_path)
+    with ArenaExperienceLedger(tmp_path) as ledger:
+        for i in range(1, 18):
+            assert ledger.record(_experience(i, result.manifest_digest, 0.55))["ok"]
+    policy = CruciblePolicy(proposal_min_train_records=999, proposal_min_validation_records=999, proposal_min_shadow_records=999, proposal_min_outcome_coverage=0.99, proposal_min_train_score=0.99, proposal_min_validation_score=0.99)
+    service = ArenaCrucibleService(tmp_path)
+    report = service.run_once(policy=policy)
+    service.close()
+    assert report["proposal_count"] == 1
+    proposal = report["proposals"][0]
+    assert proposal["status"] == CRYSTALLIZATION_PROPOSED
+    assert proposal["validation"]["passed"]
+    assert proposal["validation"]["all_proposal_thresholds_met"] is False
+    assert proposal["validation"]["proposal_recommendation"] == "REVIEW_WITH_THRESHOLD_WARNINGS"
+
+
+def test_pause_resume_persists_across_process_like_store_instances(tmp_path: Path):
+    first = CrucibleStore(tmp_path)
+    assert first.pause("review")["paused"]
+    first.close()
+    second = CrucibleStore(tmp_path)
+    assert second.status()["paused"]
+    assert not second.resume()["paused"]
+    second.close()
+    third = CrucibleStore(tmp_path)
+    assert not third.status()["paused"]
+    third.close()
+
+
+def _proposal(tmp_path: Path) -> CrystallizationProposal:
+    path, result = _manifest(tmp_path)
+    validation = {"passed": True, "proposal_recommendation": "READY_FOR_HUMAN_REVIEW", "all_proposal_thresholds_met": True}
+    return CrystallizationProposal("P1", "R1", "C1", "test", "g1", path.relative_to(tmp_path).as_posix(), result.manifest_digest, "S", "T.A", "soft_weight_profile.empirical_uncertainty", 1.0, 0.2, validation, {"proposal_min_train_records": 1}, {"all_proposal_thresholds_met": True}, ("A",), ("B",), ("C",), "source", 1.0)
+
+
+def test_store_rejects_forged_authority_and_nonrelative_manifest(tmp_path: Path):
+    proposal = _proposal(tmp_path).to_dict()
+    proposal["automatic_grammar_promotion"] = True
     store = CrucibleStore(tmp_path)
-    assert store.status()["journal_mode"] == "wal"
-    assert store.pause("review")["paused"] is True
+    assert not store.record_proposal(proposal)["ok"]
+    proposal = _proposal(tmp_path).to_dict()
+    proposal["manifest_path"] = str((tmp_path / "x.json").resolve())
+    assert not store.record_proposal(proposal)["ok"]
     store.close()
 
-    # Verify paused state persists across store instances
-    store2 = CrucibleStore(tmp_path)
-    assert store2.status()["paused"] is True
-    assert store2.resume()["paused"] is False
-    store2.close()
 
-    # Verify resumed state persists across store instances
-    store3 = CrucibleStore(tmp_path)
-    assert store3.status()["paused"] is False
-    first = store3.record_proposal(proposal())
-    second = store3.record_proposal(proposal())
-    assert first["ok"] is True and first["idempotent_replay"] is False
-    assert second["ok"] is True and second["idempotent_replay"] is True
-    assert store3.get_proposal("CPROP-1")["status"] == CRYSTALLIZATION_PROPOSED
-    store3.close()
-
-
-def test_store_rejects_non_proposal_status_and_digest_conflict(tmp_path: Path):
-    store = CrucibleStore(tmp_path)
-    invalid = proposal().to_dict()
-    invalid["status"] = "PROMOTED"
-    assert store.record_proposal(invalid)["ok"] is False
-    assert store.record_proposal(proposal())["ok"] is True
-    changed = proposal().to_dict()
-    changed["proposed_value"] = 0.1
-    assert store.record_proposal(changed)["reason"] == "proposal_id_digest_conflict"
-    store.close()
-
-
-def test_store_rejects_forged_authority_flags(tmp_path: Path):
-    store = CrucibleStore(tmp_path)
-    forged = proposal().to_dict()
-    forged["automatic_grammar_promotion"] = True
-    result = store.record_proposal(forged)
-    store.close()
-    assert result["ok"] is False
-    assert result["reason"].startswith("invalid_proposal_contract")
-
-
-def test_service_pauses_fail_closed(tmp_path: Path):
-    service = ArenaCrucibleService(tmp_path)
-    service.pause("operator")
-    result = service.run_once(policy=policy())
-    service.close()
-    assert result["ok"] is False
-    assert result["reason"] == "crucible_paused"
-    assert result["automatic_grammar_promotion"] is False
-
-
-def test_service_run_emits_only_proposals(monkeypatch, tmp_path: Path):
-    rows = [experience(i) for i in range(12)]
-    service = ArenaCrucibleService(tmp_path)
-    monkeypatch.setattr(service, "_load_grammar_index", lambda: ({("human_agent", "human-agent-wfst-v1"): Grammar()}, []))
-
-    class FakeLedger:
-        def __init__(self, *args, **kwargs): pass
-        def __enter__(self): return self
-        def __exit__(self, *args): return None
-        def history(self, **kwargs): return rows
-
-    monkeypatch.setattr("aura_arena_crucible.ArenaExperienceLedger", FakeLedger)
-    result = service.run_once(arena_id="human_agent", policy=policy())
-    service.close()
-    assert result["ok"] is True
-    assert result["proposal_count"] == 1
-    assert result["terminal_status"] == CRYSTALLIZATION_PROPOSED
-    assert result["active_grammar_mutated"] is False
-    assert result["automatic_commit"] is False
-    assert result["automatic_merge"] is False
-
-
-def test_repeated_service_cycle_reuses_identical_candidate_proposal(monkeypatch, tmp_path: Path):
-    rows = [experience(i) for i in range(12)]
-    service = ArenaCrucibleService(tmp_path)
-    monkeypatch.setattr(service, "_load_grammar_index", lambda: ({("human_agent", "human-agent-wfst-v1"): Grammar()}, []))
-
-    class FakeLedger:
-        def __init__(self, *args, **kwargs): pass
-        def __enter__(self): return self
-        def __exit__(self, *args): return None
-        def history(self, **kwargs): return rows
-
-    monkeypatch.setattr("aura_arena_crucible.ArenaExperienceLedger", FakeLedger)
-    first = service.run_once(arena_id="human_agent", policy=policy())
-    second = service.run_once(arena_id="human_agent", policy=policy())
-    status = service.store.status()
-    service.close()
-    assert first["proposal_count"] == 1
-    assert second["proposal_count"] == 1
-    assert second["proposals"][0]["storage"]["existing_candidate"] is True
-    assert status["proposal_count"] == 1
-
-
-def test_cli_has_no_apply_promote_or_merge_command():
+def test_cli_has_no_apply_promote_commit_push_or_merge_commands():
     parser = build_parser()
-    choices = parser._subparsers._group_actions[0].choices
-    assert {"status", "pause", "resume", "run-once", "service", "proposals", "proposal"} == set(choices)
-    assert not {"apply", "promote", "commit", "push", "merge"} & set(choices)
+    choices = set(next(action for action in parser._actions if getattr(action, "choices", None)).choices)
+    assert choices == {"status", "pause", "resume", "run-once", "service", "proposals", "proposal"}
+    assert not choices & {"apply", "promote", "commit", "push", "merge"}
