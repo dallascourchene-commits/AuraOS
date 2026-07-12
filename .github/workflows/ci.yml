@@ -111,7 +111,7 @@ jobs:
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio
       - name: Run all tests
-        id: full-tests
+        id: full_tests
         continue-on-error: true
         env:
           PYTHONHASHSEED: "0"
@@ -127,7 +127,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Enforce full-suite result
-        if: steps.full-tests.outcome != 'success'
+        if: steps.full_tests.outcome != 'success'
         run: |
           echo "Full repository test suite failed. Inspect the uploaded JUnit artifact."
           exit 1
