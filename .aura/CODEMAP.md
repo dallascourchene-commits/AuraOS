@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 633
-- **total_bytes**: 59994887
-- **text_tokens_est**: 5641562
+- **total_bytes**: 60007639
+- **text_tokens_est**: 5644751
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 7, 'knowledge_artifact': 85, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 467, 'schema_or_lexicon': 31, 'support_file': 28}
-- **topology_nodes**: 6274
-- **topology_edges**: 12862
+- **topology_nodes**: 6277
+- **topology_edges**: 12867
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 17530.43
+- **elapsed_ms**: 17159.71
 
 ## Coverage
 
@@ -113,7 +113,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!synthesize` -> `USER_GUIDE.md:912`, `aura_associative_core.py:141`, `aura_node.py:6896`, `test_aura_functions.py:913`
 - `!system_audit` -> `USER_GUIDE.md:881`, `aura_node.py:6184`
 - `!target_bytes` -> `cognitive_search.rs:72`
-- `!test` -> `AuraOS.tex:533`
+- `!test` -> `AuraOS.tex:533`, `tests/test_aura_codemap_verify.py:41`
 - `!test_airlock` -> `USER_GUIDE.md:883`, `aura_node.py:5614`
 - `!tgtPos` -> `index.html:122`
 - `!timeline` -> `USER_GUIDE.md:908`, `aura_node.py:6657`
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 6274
-- **edges**: 12862
+- **nodes**: 6277
+- **edges**: 12867
 - **top_files_by_degree**:
   - `aura_node.py` degree=869 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
