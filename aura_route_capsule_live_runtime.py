@@ -31,6 +31,31 @@ class CapsuleAwareArenaWFSTRuntime(ArenaWFSTRuntime):
         self._attachments: dict[tuple[str, str], dict[str, str]] = {}
         self.last_route: dict[str, Any] = {}
 
+    def register_manifest(self, path: str | Path) -> dict[str, Any]:
+        report = super().register_manifest(path)
+        if not report.get("ok"):
+            return report
+        grammar_data = report.get("grammar") if isinstance(report.get("grammar"), dict) else {}
+        arena_id = str(grammar_data.get("arena_id") or "")
+        grammar = self.grammar(arena_id)
+        attachments: list[dict[str, Any]] = []
+        if grammar is not None:
+            for transition in grammar.transitions:
+                if not transition.route_capsule_ref:
+                    continue
+                attachments.append(self.attach_capsule(
+                    arena_id=arena_id,
+                    transition_id=transition.transition_id,
+                    route_capsule_ref=transition.route_capsule_ref,
+                    morphology_profile_ref=transition.morphology_profile_ref,
+                    feature_flag=transition.capsule_feature_flag,
+                ))
+        report["capsule_attachments"] = attachments
+        if any(not item.get("ok") for item in attachments):
+            report["ok"] = False
+            report["capsule_attachment_failed"] = True
+        return report
+
     def attach_capsule(
         self, *, arena_id: str, transition_id: str, route_capsule_ref: str,
         morphology_profile_ref: str = "", feature_flag: str = "",
@@ -120,7 +145,12 @@ class CapsuleAwareArenaWFSTRuntime(ArenaWFSTRuntime):
             transition_id = str(row.get("transition_id") or "")
             key = (arena_id, transition_id)
             attachment = self._attachments.get(key)
+            grammar = self.grammar(arena_id)
+            transition = grammar.transition_by_id(transition_id) if grammar else None
             if not attachment:
+                if transition is not None and transition.route_capsule_ref:
+                    blocked.append(_blocked(row, "declared_route_capsule_not_compiled"))
+                    continue
                 allowed.append(row)
                 continue
             flag = attachment.get("feature_flag") or ""
