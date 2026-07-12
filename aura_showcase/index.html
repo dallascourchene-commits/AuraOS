@@ -6,6 +6,7 @@
   <title>Aura Winnipeg Community Pathways Lab</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="guide.css">
+  <link rel="stylesheet" href="topology.css">
 </head>
 <body>
   <header class="topbar">
@@ -127,9 +128,43 @@
         <div>
           <p class="eyebrow">Human Agent Coding Arena</p>
           <h1>Investigate the system without surrendering authority.</h1>
-          <p class="lede">The guarded WFST shows the safest admitted next actions at every phase. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
+          <p class="lede">Begin with a small task, see its exact repository neighborhood in the spatial lens, then move through the guarded WFST. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
         </div>
         <button id="return-civic" class="secondary">Return to Civic project</button>
+      </section>
+
+      <section class="spatial-task-panel" aria-labelledby="spatial-task-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Presenter-safe starting points</p><h2 id="spatial-task-title">Choose a bounded investigation task</h2></div>
+          <span class="pill">real CODEMAP · no full-graph transfer</span>
+        </div>
+        <p class="muted">Each task declares a six-slot intent, exact seed files, acceptance criteria, and prohibited actions before Aura projects a small topology workspace.</p>
+        <div id="spatial-task-list" class="spatial-task-list"><p class="muted">Loading task registry…</p></div>
+        <div id="spatial-task-detail" class="spatial-task-detail"><p class="muted">Choose a task to project its exact repository neighborhood.</p></div>
+      </section>
+
+      <section class="topology-card" aria-labelledby="topology-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Graphify / Obsidian-style spatial lens</p><h2 id="topology-title">Bounded 3D Aura topology</h2></div>
+          <span class="pill">orientation only · exact source remains authority</span>
+        </div>
+        <div class="topology-layout">
+          <div class="topology-viewport">
+            <canvas id="topology-canvas" aria-label="Rotatable three-dimensional graph of the selected Aura repository workspace"></canvas>
+            <div class="topology-hud">
+              <div id="topology-status" class="topology-status">Choose a starter task to load a bounded workspace.</div>
+              <div class="topology-controls">
+                <button id="topology-depth-1" type="button">Depth 1</button>
+                <button id="topology-depth-2" type="button">Depth 2</button>
+                <button id="topology-fit" type="button">Fit</button>
+              </div>
+            </div>
+            <div id="topology-legend" class="topology-legend"></div>
+          </div>
+          <aside id="topology-inspector" class="topology-inspector">
+            <p class="muted">Select a node to inspect exact repository information.</p>
+          </aside>
+        </div>
       </section>
 
       <section class="human-route-console" aria-labelledby="human-route-title">
@@ -188,9 +223,10 @@
     </section>
   </main>
 
-  <footer>Fixture civic data · optional public OpenStreetMap basemap · offline governed-grid fallback · no automatic commit, push, or merge</footer>
+  <footer>Fixture civic data · optional public OpenStreetMap basemap · bounded real CODEMAP topology · no automatic commit, push, or merge</footer>
   <script src="app.js"></script>
   <script src="civic.js"></script>
   <script src="human.js"></script>
+  <script src="topology.js"></script>
 </body>
 </html>
