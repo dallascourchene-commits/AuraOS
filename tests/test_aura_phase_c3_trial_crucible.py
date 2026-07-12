@@ -5,6 +5,7 @@ from dataclasses import replace
 import json
 from pathlib import Path
 
+import aura_capsule_trial_runner as trial_runner
 from aura_agent_ir_induction import induce_agent_ir_procedure
 from aura_capsule_trial_cli import build_parser
 from aura_capsule_trial_runner import (
@@ -24,6 +25,13 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 POLICY_REF = ".aura/capsule_trial_policies/coding_localize.v1.json"
 CASES_REF = ".aura/capsule_trial_cases/coding_localize.v1.json"
 LEASE = [TRIAL_EXECUTION_LEASE, "tool:topology_inspector"]
+
+
+def _baseline_trial_inputs():
+    policy = load_capsule_trial_policy(POLICY_REF, repo_root=REPO_ROOT)
+    generated = generate_capsule_variants(policy, repo_root=REPO_ROOT)
+    cases, _ = load_capsule_trial_cases(CASES_REF, repo_root=REPO_ROOT)
+    return policy, generated["variant_objects"][0], cases[0]
 
 
 def test_variant_generator_emits_baseline_and_tightening_only():
@@ -74,14 +82,11 @@ def test_duplicate_case_id_fails_split_validation():
 
 
 def test_trial_requires_feature_flag_and_independent_lease():
-    policy = load_capsule_trial_policy(POLICY_REF, repo_root=REPO_ROOT)
-    generated = generate_capsule_variants(policy, repo_root=REPO_ROOT)
-    cases, _ = load_capsule_trial_cases(CASES_REF, repo_root=REPO_ROOT)
-    variant = generated["variant_objects"][0]
+    policy, variant, case = _baseline_trial_inputs()
     disabled = run_capsule_trial(
         run_id="R1",
         variant=variant,
-        case=cases[0],
+        case=case,
         executor_id=policy.executor_id,
         repetition=0,
         repo_root=REPO_ROOT,
@@ -92,7 +97,7 @@ def test_trial_requires_feature_flag_and_independent_lease():
     unleased = run_capsule_trial(
         run_id="R2",
         variant=variant,
-        case=cases[0],
+        case=case,
         executor_id=policy.executor_id,
         repetition=0,
         repo_root=REPO_ROOT,
@@ -103,15 +108,12 @@ def test_trial_requires_feature_flag_and_independent_lease():
 
 
 def test_builtin_trial_is_reproducible_and_dissolves_sandbox():
-    policy = load_capsule_trial_policy(POLICY_REF, repo_root=REPO_ROOT)
-    generated = generate_capsule_variants(policy, repo_root=REPO_ROOT)
-    cases, _ = load_capsule_trial_cases(CASES_REF, repo_root=REPO_ROOT)
-    variant = generated["variant_objects"][0]
+    policy, variant, case = _baseline_trial_inputs()
     observations = [
         run_capsule_trial(
             run_id="REPRO",
             variant=variant,
-            case=cases[0],
+            case=case,
             executor_id=policy.executor_id,
             repetition=index,
             repo_root=REPO_ROOT,
@@ -127,6 +129,94 @@ def test_builtin_trial_is_reproducible_and_dissolves_sandbox():
     summary = aggregate_trial_observations(observations)
     assert summary["reproducible"] is True
     assert summary["model_calls"] == 0
+
+
+def test_postprocessing_failure_denies_and_always_dissolves(monkeypatch):
+    policy, variant, case = _baseline_trial_inputs()
+    calls = []
+    original_revoke = trial_runner.revoke_capabilities
+    original_destroy = trial_runner.destroy_sandbox
+    original_verify = trial_runner.verify_dissolution
+
+    def raise_during_stabilization(_output):
+        raise RuntimeError("synthetic postprocessing failure")
+
+    def revoke(organ_id):
+        calls.append("revoke")
+        return original_revoke(organ_id)
+
+    def destroy(temp_dir):
+        calls.append("destroy")
+        return original_destroy(temp_dir)
+
+    def verify(temp_dir, capabilities_revoked):
+        calls.append("verify")
+        return original_verify(temp_dir, capabilities_revoked)
+
+    monkeypatch.setattr(trial_runner, "_stable_output", raise_during_stabilization)
+    monkeypatch.setattr(trial_runner, "revoke_capabilities", revoke)
+    monkeypatch.setattr(trial_runner, "destroy_sandbox", destroy)
+    monkeypatch.setattr(trial_runner, "verify_dissolution", verify)
+
+    result = trial_runner.run_capsule_trial(
+        run_id="POSTPROCESS-FAIL",
+        variant=variant,
+        case=case,
+        executor_id=policy.executor_id,
+        repetition=0,
+        repo_root=REPO_ROOT,
+        trials_enabled=True,
+        lease_capabilities=LEASE,
+    )
+
+    assert result["status"] == "DENIED"
+    assert result["reason"] == "trial_postprocessing_failed:RuntimeError"
+    assert calls == ["revoke", "destroy", "verify"]
+    assert result["sandbox"]["temporary_directory_removed"] is True
+    assert result["sandbox"]["capabilities_revoked"] is True
+    assert result["sandbox"]["dissolution_verified"] is True
+    assert result["sandbox"]["cleanup_errors"] == []
+
+
+def test_cleanup_does_not_short_circuit_when_revocation_raises(monkeypatch):
+    policy, variant, case = _baseline_trial_inputs()
+    calls = []
+    original_destroy = trial_runner.destroy_sandbox
+    original_verify = trial_runner.verify_dissolution
+
+    def revoke(_organ_id):
+        calls.append("revoke")
+        raise RuntimeError("synthetic revocation failure")
+
+    def destroy(temp_dir):
+        calls.append("destroy")
+        return original_destroy(temp_dir)
+
+    def verify(temp_dir, capabilities_revoked):
+        calls.append("verify")
+        return original_verify(temp_dir, capabilities_revoked)
+
+    monkeypatch.setattr(trial_runner, "revoke_capabilities", revoke)
+    monkeypatch.setattr(trial_runner, "destroy_sandbox", destroy)
+    monkeypatch.setattr(trial_runner, "verify_dissolution", verify)
+
+    result = trial_runner.run_capsule_trial(
+        run_id="CLEANUP-FAIL",
+        variant=variant,
+        case=case,
+        executor_id=policy.executor_id,
+        repetition=0,
+        repo_root=REPO_ROOT,
+        trials_enabled=True,
+        lease_capabilities=LEASE,
+    )
+
+    assert calls == ["revoke", "destroy", "verify"]
+    assert result["ok"] is False
+    assert result["sandbox"]["temporary_directory_removed"] is True
+    assert result["sandbox"]["capabilities_revoked"] is False
+    assert result["sandbox"]["dissolution_verified"] is False
+    assert result["sandbox"]["cleanup_errors"] == ["revoke_capabilities:RuntimeError"]
 
 
 def test_agent_ir_pure_requires_independent_gates():
