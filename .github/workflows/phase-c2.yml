@@ -61,7 +61,8 @@ jobs:
             aura_route_capsule_live_runtime.py \
             aura_coding_workbench_capsule_adapter.py \
             aura_arena_experience.py \
-            aura_arena_experience_ledger.py
+            aura_arena_experience_ledger.py \
+            aura_phase_c2_codemap_verify.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -72,6 +73,7 @@ jobs:
             aura_coding_workbench_capsule_adapter.py \
             aura_arena_experience.py \
             aura_arena_experience_ledger.py \
+            aura_phase_c2_codemap_verify.py \
             tests/test_aura_phase_c2_live_route_capsules.py
       - name: Run focused C2 and regression contracts
         run: |
