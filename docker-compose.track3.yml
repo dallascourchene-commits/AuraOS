@@ -1,0 +1,14 @@
+services:
+  aura-track3:
+    build:
+      context: .
+      dockerfile: Dockerfile.amd-track3
+    ports:
+      - "8080:8080"
+    environment:
+      AURA_PROVIDER: ${AURA_PROVIDER:-fixture}
+      AURA_ENDPOINT: ${AURA_ENDPOINT:-http://host.docker.internal:11434}
+      AURA_MODEL: ${AURA_MODEL:-qwen2.5-coder:3b}
+      AURA_AMD_BACKEND: ${AURA_AMD_BACKEND:-AMD approved compute / local inspection mode}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
