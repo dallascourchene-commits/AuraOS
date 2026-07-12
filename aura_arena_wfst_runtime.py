@@ -1,8 +1,8 @@
 """Shared guarded-WFST runtime for Aura Arenas.
 
-Hard guards remove inadmissible transitions before any ranking occurs. Ranking is
-lexicographic, deterministic, and advisory; execution remains with Aura's capability,
-lease, sandbox, verifier, and human-approval systems.
+Hard guards remove inadmissible transitions before ranking. Selection remains exact
+and fail-closed, while every state-local admissible alternative is projected so the
+experience ledger can preserve the complete choice set and predictions.
 """
 from __future__ import annotations
 
@@ -16,10 +16,17 @@ from typing import Any
 from aura_arena_state_packet import build_arena_state_packet
 from aura_arena_wfst_compiler import normalize_input_phrase
 from aura_arena_wfst_registry import ArenaGrammarRegistry
-from aura_arena_wfst_types import ArenaTransition, CompiledArenaGrammar, GuardResult, PATCH_AUTHORITY, RankVector, VSA_PATCH_AUTHORITY
+from aura_arena_wfst_types import (
+    ArenaTransition,
+    CompiledArenaGrammar,
+    GuardResult,
+    PATCH_AUTHORITY,
+    RankVector,
+    VSA_PATCH_AUTHORITY,
+)
 from aura_capability_binding import resolve_capability_bindings
 
-ARENA_WFST_RUNTIME_VERSION = "AURA_ARENA_WFST_RUNTIME_V1"
+ARENA_WFST_RUNTIME_VERSION = "AURA_ARENA_WFST_RUNTIME_V2"
 RISK_ORDER = {"low": 0.0, "medium": 1.0, "high": 2.0, "live": 3.0, "unknown": 4.0}
 UNKNOWN_MEASUREMENT_COST = 1.0
 GuardFunction = Callable[[ArenaTransition, dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]], GuardResult]
@@ -71,20 +78,21 @@ class ArenaWFSTRuntime:
         normalized_input = normalize_input_phrase(input_text)
         all_transitions = list(grammar.outgoing(current_state)) + self._meta_outgoing()
         exact_matches = _exact_matches(all_transitions, normalized_input)
+        exact_ids = {item.transition_id for item in exact_matches}
         phrase_scores = {item.transition_id: _semantic_fit(normalized_input, item) for item in all_transitions}
-        considered = exact_matches if exact_matches else all_transitions
 
         allowed_rows: list[dict[str, Any]] = []
         blocked_rows: list[dict[str, Any]] = []
-        for transition in considered:
+        for transition in all_transitions:
             guard_results = self._evaluate_guards(transition, evidence, context, policy)
             failed = [item for item in guard_results if not item.passed]
-            semantic_fit = 1.0 if transition in exact_matches else phrase_scores[transition.transition_id]
+            semantic_fit = 1.0 if transition.transition_id in exact_ids else phrase_scores[transition.transition_id]
             if failed:
                 blocked_rows.append(_blocked_row(transition, failed, semantic_fit, current_state))
                 continue
-
-            binding_packet = resolve_capability_bindings(transition.requested_capabilities, repo_root=self.repo_root)
+            binding_packet = resolve_capability_bindings(
+                transition.requested_capabilities, repo_root=self.repo_root
+            )
             if not binding_packet.get("ok"):
                 binding_failures = [
                     GuardResult(
@@ -98,13 +106,15 @@ class ArenaWFSTRuntime:
                 ]
                 blocked_rows.append(_blocked_row(transition, binding_failures, semantic_fit, current_state))
                 continue
-
-            rank = _rank_transition(transition, semantic_fit=semantic_fit, evidence=evidence, telemetry=telemetry)
+            rank = _rank_transition(
+                transition, semantic_fit=semantic_fit, evidence=evidence, telemetry=telemetry
+            )
             allowed_rows.append({
                 **_transition_projection(transition, current_state=current_state),
                 "guard_results": [item.to_dict() for item in guard_results],
                 "capability_bindings": binding_packet.get("bindings", []),
                 "semantic_fit": round(semantic_fit, 6),
+                "exact_input_match": transition.transition_id in exact_ids,
                 "rank": rank.to_dict(),
                 "_sort_key": rank.sort_key(),
             })
@@ -117,8 +127,9 @@ class ArenaWFSTRuntime:
         selected: dict[str, Any] | None = None
         abstention_reason = ""
         if normalized_input:
-            if exact_matches:
-                selected = allowed_rows[0] if allowed_rows else None
+            if exact_ids:
+                exact_allowed = [item for item in allowed_rows if item["transition_id"] in exact_ids]
+                selected = exact_allowed[0] if exact_allowed else None
                 if selected is None:
                     abstention_reason = "exact_transition_blocked"
             elif allowed_rows and allowed_rows[0].get("semantic_fit", 0.0) >= 0.50:
@@ -148,6 +159,8 @@ class ArenaWFSTRuntime:
             "available": allowed_rows,
             "blocked": blocked_rows,
             "meta": [item for item in allowed_rows if item.get("meta_transition")],
+            "all_state_local_alternatives_evaluated": True,
+            "exact_match_transition_ids": sorted(exact_ids),
             "abstained": bool(normalized_input and selected is None),
             "abstention_reason": abstention_reason,
             "state_packet": packet.to_dict(),
@@ -158,7 +171,9 @@ class ArenaWFSTRuntime:
             "automatic_grammar_promotion": False,
         }
 
-    def project_state(self, *, arena_id: str, current_state: str, evidence=None, context=None, policy=None, telemetry=None, recommendation_limit: int = 4) -> dict[str, Any]:
+    def project_state(self, *, arena_id: str, current_state: str, evidence=None,
+                      context=None, policy=None, telemetry=None,
+                      recommendation_limit: int = 4) -> dict[str, Any]:
         return self.route(
             arena_id=arena_id,
             current_state=current_state,
@@ -302,7 +317,8 @@ DEFAULT_GUARDS: dict[str, GuardFunction] = {
 }
 
 
-def _rank_transition(transition: ArenaTransition, *, semantic_fit: float, evidence: dict[str, Any], telemetry: dict[str, Any]) -> RankVector:
+def _rank_transition(transition: ArenaTransition, *, semantic_fit: float,
+                     evidence: dict[str, Any], telemetry: dict[str, Any]) -> RankVector:
     profile = transition.soft_weight_profile
     latency, latency_class = _measurement(telemetry, transition.transition_id, "latency_cost", profile.latency_cost)
     tokens, token_class = _measurement(telemetry, transition.transition_id, "token_cost", profile.token_cost)
@@ -324,7 +340,8 @@ def _rank_transition(transition: ArenaTransition, *, semantic_fit: float, eviden
     )
 
 
-def _measurement(telemetry: dict[str, Any], transition_id: str, field: str, fallback: float | None) -> tuple[float, str]:
+def _measurement(telemetry: dict[str, Any], transition_id: str, field: str,
+                 fallback: float | None) -> tuple[float, str]:
     item = telemetry.get(transition_id, {}) if isinstance(telemetry.get(transition_id), dict) else {}
     value = item.get(field)
     measurement_class = str(item.get(f"{field}_measurement_class") or "")
@@ -385,7 +402,8 @@ def _transition_projection(transition: ArenaTransition, *, current_state: str) -
     }
 
 
-def _blocked_row(transition: ArenaTransition, failed: list[GuardResult], semantic_fit: float, current_state: str) -> dict[str, Any]:
+def _blocked_row(transition: ArenaTransition, failed: list[GuardResult],
+                 semantic_fit: float, current_state: str) -> dict[str, Any]:
     missing = sorted({item for result in failed for item in result.missing_evidence if item})
     return {
         **_transition_projection(transition, current_state=current_state),
