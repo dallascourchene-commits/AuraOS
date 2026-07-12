@@ -1,4 +1,4 @@
-name: Refresh Phase B CODEMAP
+name: Finalize Phase B CODEMAP
 
 on:
   push:
@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  refresh:
+  finalize:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -43,18 +43,16 @@ jobs:
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0"
+      - name: Remove one-shot refresh workflow before indexing
+        run: rm .github/workflows/codemap-refresh-phase-b.yml
       - name: Regenerate deep topology and CODEMAP
         run: python aura_codebase_navigator.py
       - name: Verify generated topology
         run: python -m aura_codemap_verify
-      - name: Commit generated artifacts when changed
+      - name: Commit final generated artifacts and workflow removal
         run: |
-          if git diff --quiet -- .aura/CODEMAP.json .aura/CODEMAP.md; then
-            echo "CODEMAP already current."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .aura/CODEMAP.json .aura/CODEMAP.md
-          git commit -m "chore(codemap): restore verified deep topology"
+          git add -A .github/workflows/codemap-refresh-phase-b.yml .aura/CODEMAP.json .aura/CODEMAP.md
+          git commit -m "chore(codemap): finalize verified deep topology"
           git push origin HEAD:feature/arena-crucible-phase-b
