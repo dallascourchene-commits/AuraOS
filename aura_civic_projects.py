@@ -4,10 +4,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Any, Callable
 
+from aura_civic_authority import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
 from aura_civic_winnipeg_fixture import TRUTH_SYNTHETIC, winnipeg_pathways_fixtures
-
-PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
-VSA_PATCH_AUTHORITY = False
 
 
 @dataclass(frozen=True)
@@ -27,7 +25,7 @@ class CivicProjectDefinition:
     def to_dict(self) -> dict[str, Any]:
         packet = asdict(self)
         packet.pop("fixtures_factory", None)
-        packet.update({"patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False, "non_binding": True})
+        packet.update({"patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY, "non_binding": True})
         return packet
 
 
@@ -93,7 +91,7 @@ WINNIPEG_PATHWAYS = CivicProjectDefinition(
 def list_projects() -> dict[str, Any]:
     projects = [_existing_project(name) for name in ("hairstylist", "youth_centre", "council_pulse")]
     projects.append(WINNIPEG_PATHWAYS)
-    return {"ok": True, "projects": [item.to_dict() for item in projects], "default_project_id": "winnipeg_pathways", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+    return {"ok": True, "projects": [item.to_dict() for item in projects], "default_project_id": "winnipeg_pathways", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
 
 
 def get_project(project_id: str) -> CivicProjectDefinition | dict[str, Any]:
@@ -108,7 +106,7 @@ def get_project(project_id: str) -> CivicProjectDefinition | dict[str, Any]:
         "project_id": key,
         "available_project_ids": ["winnipeg_pathways", "hairstylist", "youth_centre", "council_pulse"],
         "patch_authority": PATCH_AUTHORITY,
-        "vsa_patch_authority": False,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
 
 
