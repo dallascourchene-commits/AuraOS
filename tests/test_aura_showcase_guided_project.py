@@ -142,6 +142,27 @@ def test_handoff_packet_uses_exact_files_and_never_mutates_production():
     assert "CANDIDATE_FOCUS_ZOOM" in packet["candidate_diff"]
 
 
+def test_handoff_imports_exact_evidence_into_guarded_workflow():
+    from aura_civic_guided_project import start_project
+    from aura_human_agent_workflow import HumanAgentWorkflow
+    from aura_showcase_handoff import import_handoff_into_workflow
+
+    guide = start_project("winnipeg_pathways")
+    session_id = guide["session"]["session_id"]
+    workflow = HumanAgentWorkflow(REPO_ROOT)
+    try:
+        result = import_handoff_into_workflow(workflow, REPO_ROOT, session_id)
+        assert result["ok"] is True, result
+        assert workflow.objective.startswith("Investigate why the Winnipeg Pathways")
+        assert workflow.evidence["grounding"]["truth_class"] == "EXACT_REPOSITORY_FACTS"
+        assert "aura_showcase/app.js" in workflow.evidence["affected_files"]
+        assert workflow.evidence["test_targets"] == ["tests/test_aura_showcase_guided_project.py"]
+        assert "CANDIDATE_FOCUS_ZOOM" in workflow.evidence["candidate_diff"]
+        assert result["handoff"]["automatic_merge"] is False
+    finally:
+        workflow.close()
+
+
 def test_showcase_dispatch_lists_and_starts_projects():
     from aura_showcase_server import dispatch_showcase_request
 
