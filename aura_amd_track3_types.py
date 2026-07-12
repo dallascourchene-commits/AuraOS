@@ -1,4 +1,4 @@
-"""Typed contracts for the AMD Track 3 Crucible demo layer."""
+"""Typed contracts for the AMD Track 3 Sovereign Learning Arena demo."""
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
@@ -6,7 +6,8 @@ import hashlib
 import json
 from typing import Any
 
-TRACK3_SCHEMA_VERSION = "AURA_AMD_TRACK3_V1"
+TRACK3_SCHEMA_VERSION = "AURA_AMD_TRACK3_V2"
+INTENT_SLOT_ORDER = ("DIR", "ASP", "CLASS", "SUBJ", "VOICE", "STEM")
 
 
 def canonical_digest(value: Any) -> str:
@@ -32,15 +33,34 @@ class CodingTask:
         max_attempts = max(1, min(5, int(raw.get("max_attempts") or 2)))
         if not task_id or not objective or not allowed_files or not test_command:
             raise ValueError("task_id, objective, allowed_files, and test_command are required")
-        if any(path.startswith("/") or ".." in path.split("/") for path in allowed_files):
+        if any(path.startswith("/") or ".." in path.replace("\\", "/").split("/") for path in allowed_files):
             raise ValueError("allowed_files must be repository-relative and traversal-free")
-        return cls(task_id, objective, allowed_files, test_command, max_attempts, dict(raw.get("metadata") or {}))
+        metadata = dict(raw.get("metadata") or {})
+        intent_packet = dict(metadata.get("intent_packet") or {})
+        if intent_packet:
+            missing = [slot for slot in INTENT_SLOT_ORDER if not str(intent_packet.get(slot) or "").strip()]
+            if missing:
+                raise ValueError(f"intent_packet missing canonical slots: {missing}")
+        return cls(task_id, objective, allowed_files, test_command, max_attempts, metadata)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     def digest(self) -> str:
         return canonical_digest(self.to_dict())
+
+    @property
+    def intent_packet(self) -> dict[str, str]:
+        raw = dict(self.metadata.get("intent_packet") or {})
+        return {slot: str(raw.get(slot) or "") for slot in INTENT_SLOT_ORDER}
+
+    @property
+    def machine_route(self) -> dict[str, Any]:
+        return dict(self.metadata.get("machine_route") or {})
+
+    @property
+    def reusable_procedure(self) -> str:
+        return str(self.metadata.get("reusable_procedure") or "").strip()
 
 
 @dataclass(frozen=True)
@@ -87,6 +107,13 @@ class VerifiedCrystal:
     created_at: float
     amd_backend: str
     training_eligible: bool = True
+    intent_packet: dict[str, str] = field(default_factory=dict)
+    machine_route: dict[str, Any] = field(default_factory=dict)
+    reusable_procedure: str = ""
+    reused_crystal_ids: tuple[str, ...] = ()
+    arena_contract: dict[str, Any] = field(default_factory=dict)
+    source_checkout_mutated: bool = False
+    dissolution_verified: bool = True
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
