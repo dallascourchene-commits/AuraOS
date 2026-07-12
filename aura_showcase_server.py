@@ -28,10 +28,15 @@ from aura_human_agent_guidance import answer_guidance_question, build_guidance_p
 if TYPE_CHECKING:
     from aura_human_agent_arena_server import HumanAgentArenaServerState
 from aura_showcase_handoff import import_handoff_into_workflow
+from aura_showcase_spatial import (
+    build_selected_workspace,
+    build_task_workspace,
+    list_spatial_tasks,
+)
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V3"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V4"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -58,10 +63,10 @@ class ShowcaseState:
 
     @property
     def human_agent(self) -> "HumanAgentArenaServerState":
-        """Load Human Agent modules and topology only when the handoff is used."""
+        """Load the real CODEMAP topology lazily when the coding surface is used."""
         if self._human_agent is None:
             from aura_human_agent_arena_server import HumanAgentArenaServerState
-            self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=True)
+            self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=False)
         return self._human_agent
 
     def close(self) -> None:
@@ -87,6 +92,13 @@ def _parts(path: str) -> list[str]:
     return [part for part in path.strip("/").split("/") if part]
 
 
+def _depth(value: Any, *, default: int = 1) -> int:
+    try:
+        return max(0, min(2, int(value)))
+    except (TypeError, ValueError):
+        return default
+
+
 def dispatch_showcase_request(
     state: ShowcaseState,
     method: str,
@@ -109,6 +121,9 @@ def dispatch_showcase_request(
             "default_session_id": state.default_session_id,
             "guide": guide,
             "human_agent_available": True,
+            "spatial_tasks_available": True,
+            "bounded_topology_projection": True,
+            "full_topology_sent_to_browser": False,
             "fixture_mode": True,
             "zero_raw_civic_data_network_calls": True,
             "optional_public_basemap_network_calls": True,
@@ -122,6 +137,32 @@ def dispatch_showcase_request(
 
     if method == "GET" and route == "/api/showcase/projects":
         return _json(200, list_projects())
+
+    if method == "GET" and route == "/api/showcase/coding-tasks":
+        return _json(200, list_spatial_tasks())
+
+    if (
+        method == "GET"
+        and len(parts) == 5
+        and parts[:4] == ["api", "showcase", "topology", "tasks"]
+    ):
+        result = build_task_workspace(
+            state.human_agent.arena.topology,
+            parts[4],
+            depth=_depth(query.get("depth", [1])[0]),
+        )
+        return _json(200 if result.get("ok") else 404, result)
+
+    if method == "POST" and route == "/api/showcase/topology/select":
+        raw_ids = body.get("node_ids", body.get("node_id", []))
+        node_ids = [raw_ids] if isinstance(raw_ids, str) else list(raw_ids or [])
+        result = build_selected_workspace(
+            state.human_agent.arena.topology,
+            node_ids,
+            depth=_depth(body.get("depth", 1)),
+            task_id=str(body.get("task_id") or ""),
+        )
+        return _json(200 if result.get("ok") else 400, result)
 
     if method == "POST" and len(parts) == 5 and parts[:3] == ["api", "showcase", "projects"] and parts[4] == "start":
         project_id = parts[3]
@@ -178,7 +219,7 @@ def dispatch_showcase_request(
 
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
-    if relative not in {"index.html", "app.js", "civic.js", "human.js", "styles.css", "guide.css"}:
+    if relative not in {"index.html", "app.js", "civic.js", "human.js", "topology.js", "styles.css", "guide.css"}:
         return _error("static asset not found", 404)
     path = (STATIC_DIR / relative).resolve()
     try:
