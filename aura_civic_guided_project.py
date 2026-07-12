@@ -6,12 +6,11 @@ import threading
 import time
 from typing import Any
 
+from aura_civic_authority import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
 from aura_civic_guided_steps import STEP_DETAILS, timeline
 from aura_civic_project_runtime import project_for_session, run_project_organ, runtime_module
 from aura_civic_projects import CivicProjectDefinition, get_project, list_projects
 
-PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
-VSA_PATCH_AUTHORITY = False
 GUIDE_VERSION = "AURA_CIVIC_GUIDED_PROJECT_V1"
 
 _SESSION_LOCKS: dict[str, threading.RLock] = {}
@@ -83,6 +82,11 @@ def get_guide(session_id: str) -> dict[str, Any]:
         "objections": fixture.get("objections", []),
         "pilot_template": fixture.get("pilot_template", {}),
     }
+    demo_issue_available = bool(
+        project.demo_issue
+        and "EXPLORE_MAP" in project.guided_steps
+        and index >= project.guided_steps.index("EXPLORE_MAP")
+    )
     return {
         "ok": True,
         "version": GUIDE_VERSION,
@@ -100,11 +104,11 @@ def get_guide(session_id: str) -> dict[str, Any]:
         "timeline": timeline(project.guided_steps, index),
         "can_go_back": index > 0,
         "can_advance": index < len(project.guided_steps) - 1,
-        "demo_issue_available": bool(project.demo_issue and index >= project.guided_steps.index("EXPLORE_MAP")),
+        "demo_issue_available": demo_issue_available,
         "demo_issue": dict(project.demo_issue or {}),
         "truth_notice": "All project records are synthetic demonstration data. Aura does not make binding civic decisions.",
         "patch_authority": PATCH_AUTHORITY,
-        "vsa_patch_authority": False,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
 
 
@@ -156,7 +160,7 @@ def advance_project(session_id: str) -> dict[str, Any]:
             }
             log.append(entry)
             if not result.get("ok"):
-                return {"ok": False, "error": "guided_step_execution_failed", "failure": entry, "guide": get_guide(session_id), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+                return {"ok": False, "error": "guided_step_execution_failed", "failure": entry, "guide": get_guide(session_id), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
         runtime._update_session(session_id, {"guide_step_index": new_index, "guide_execution_log": log[-80:]})
         return get_guide(session_id)
 
@@ -182,7 +186,7 @@ def record_response(session_id: str, response: dict[str, Any]) -> dict[str, Any]
         "recorded_at": time.time(), "binding": False,
     }
     if not item["statement"]:
-        return {"ok": False, "error": "statement is required", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": False}
+        return {"ok": False, "error": "statement is required", "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY}
     with _session_lock(session_id):
         runtime = runtime_module()
         current = runtime.get_session(session_id)
