@@ -1,0 +1,37 @@
+{
+  "schema_version": "AURA_EXECUTABLE_ROUTE_CAPSULE_V1",
+  "capsule_id": "CODING.LOCALIZE.V1",
+  "capsule_version": "v1",
+  "transition_id": "CODING.TASK_SCOPED.LOCALIZE_CODE",
+  "morphology_profile_ref": ".aura/morphology_profiles/six_slot.v1.json",
+  "vsa_profile_ref": ".aura/vsa_profiles/complex_phasor.v1.json",
+  "data_aperture_ref": ".aura/data_apertures/coding_localize.v1.json",
+  "memory_aperture_ref": ".aura/memory_apertures/coding_localize.v1.json",
+  "tool_bundle_ref": ".aura/tool_bundles/coding_localize.v1.json",
+  "model_policy_ref": ".aura/model_policies/local_first.v1.json",
+  "execution_budget_ref": ".aura/execution_budgets/coding_localize.v1.json",
+  "verifier_contract_ref": ".aura/verifier_contracts/coding_localize.v1.json",
+  "output_schema_ref": ".aura/output_schemas/localization_packet.v1.json",
+  "morphology_signature": {
+    "DIR": "OUT",
+    "ASP": "GROUND",
+    "CLASS": "LOCALIZE",
+    "SUBJ": "REPOSITORY",
+    "VOICE": "HUMAN_AGENT",
+    "STEM": "INSPECT"
+  },
+  "routing_adjuncts": {
+    "risk": "low",
+    "grounding": "exact_source_hashes",
+    "context_class": "bounded_codemap_slice",
+    "model_class": "local_first",
+    "resource_budget": "coding_localize.v1"
+  },
+  "requested_capabilities": ["tool:topology_inspector"],
+  "metadata": {
+    "phase": "C1",
+    "live_routing": false,
+    "review_required": true,
+    "purpose": "foundation fixture for repository localization and test selection"
+  }
+}
