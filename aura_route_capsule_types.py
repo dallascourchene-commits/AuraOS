@@ -144,6 +144,7 @@ class CompiledRouteCapsule:
             "routing_authority": "advisory_after_hard_guards",
             "automatic_activation": False,
             "automatic_grammar_promotion": False,
+            "automatic_code_installation": False,
             "automatic_commit": False,
             "automatic_push": False,
             "automatic_merge": False,

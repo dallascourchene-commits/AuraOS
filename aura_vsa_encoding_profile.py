@@ -135,7 +135,7 @@ def cosine(left: np.ndarray, right: np.ndarray) -> float:
     denom = float(np.linalg.norm(a) * np.linalg.norm(b))
     if denom == 0.0:
         return 0.0
-    return float(np.real(np.vdot(a, b)) / denom)
+    return float(np.abs(np.vdot(a, b)) / denom)
 
 
 def encode_text(text: str, profile: VSAEncodingProfile = DEFAULT_COMPLEX_PHASOR_V1) -> np.ndarray:

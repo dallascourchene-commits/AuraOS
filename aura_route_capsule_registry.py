@@ -60,6 +60,8 @@ def resolve_repository_reference(repo_root: str | Path, reference: str, *, field
     if not raw:
         raise ValueError(f"{field_name} is required")
     pure = PurePosixPath(raw)
+    if not pure.parts:
+        raise ValueError(f"{field_name} contains unsafe path traversal")
     if pure.is_absolute() or ":" in pure.parts[0]:
         raise ValueError(f"{field_name} must be repository-relative")
     if any(part in {"", ".", ".."} for part in pure.parts):

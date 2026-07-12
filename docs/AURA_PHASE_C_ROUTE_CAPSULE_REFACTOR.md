@@ -92,26 +92,32 @@ resource budget, thermal class, jurisdiction
 
 A capsule contains repository-relative references only:
 
-```yaml
-capsule_id:
-transition_id:
-morphology_profile_ref:
-vsa_profile_ref:
-data_aperture_ref:
-memory_aperture_ref:
-tool_bundle_ref:
-model_policy_ref:
-execution_budget_ref:
-verifier_contract_ref:
-output_schema_ref:
-morphology_signature:
-routing_adjuncts:
-requested_capabilities:
+```json
+{
+  "schema_version": "AURA_EXECUTABLE_ROUTE_CAPSULE_V1",
+  "capsule_id": "...",
+  "capsule_version": "...",
+  "transition_id": "...",
+  "morphology_profile_ref": "...",
+  "vsa_profile_ref": "...",
+  "data_aperture_ref": "...",
+  "memory_aperture_ref": "...",
+  "tool_bundle_ref": "...",
+  "model_policy_ref": "...",
+  "execution_budget_ref": "...",
+  "verifier_contract_ref": "...",
+  "output_schema_ref": "...",
+  "morphology_signature": {},
+  "routing_adjuncts": {},
+  "requested_capabilities": []
+}
 ```
 
-Capsule manifests cannot embed Python, shell commands, arbitrary prompts, secrets or
-automatic promotion authority. The compiler pins every component by canonical digest
-and resolves every requested capability through Aura's existing capability-binding
+Capsule manifests cannot declare forbidden field names such as `python`, `code`,
+`shell`, `command`, `prompt`, `secret`, `token`, or automatic promotion authority keys.
+Reserved field name filtering prevents structural embedding but does not inspect field
+values such as `metadata.description`. The compiler pins every component by canonical
+digest and resolves every requested capability through Aura's existing capability-binding
 registries.
 
 ## Phase sequence
