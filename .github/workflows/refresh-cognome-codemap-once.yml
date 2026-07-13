@@ -51,23 +51,30 @@ jobs:
         working-directory: repo
         run: python aura_codebase_navigator.py
 
+      - name: Stage topology artifacts
+        id: stage_maps
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          git add -f .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
+          git status --short
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "${GITHUB_OUTPUT}"
+            echo "CODEMAP artifacts are already current."
+          else
+            echo "changed=true" >> "${GITHUB_OUTPUT}"
+          fi
+
       - name: Commit topology artifacts
-        id: commit_maps
+        if: steps.stage_maps.outputs.changed == 'true'
         working-directory: repo
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "${GITHUB_OUTPUT}"
-            echo "CODEMAP artifacts are already current."
-            exit 0
-          fi
-          git commit -m "chore(codemap): refresh Model Cognome topology"
-          echo "changed=true" >> "${GITHUB_OUTPUT}"
+          git commit --no-verify -m "chore(codemap): refresh Model Cognome topology"
 
       - name: Push topology artifacts
-        if: steps.commit_maps.outputs.changed == 'true'
+        if: steps.stage_maps.outputs.changed == 'true'
         working-directory: repo
         run: git push origin HEAD:refactor/model-cognome-adaptive-router
