@@ -11,6 +11,7 @@ on:
       - "aura_civic_guided_project.py"
       - "aura_human_agent_guidance.py"
       - "aura_arena_gate_dialogue.py"
+      - "aura_arena_attempt_archive.py"
       - "aura_showcase_handoff.py"
       - "aura_showcase_spatial.py"
       - "aura_showcase_intent.py"
@@ -29,6 +30,7 @@ on:
       - "tests/test_aura_showcase_observatory_crucible.py"
       - "tests/test_aura_showcase_human_guided_tour.py"
       - "tests/test_aura_showcase_gate_dialogue.py"
+      - "tests/test_aura_showcase_attempt_archive.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
       - "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md"
@@ -36,6 +38,7 @@ on:
       - "docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md"
       - "docs/AURA_HUMAN_AGENT_GUIDED_SHOWCASE.md"
       - "docs/AURA_ARENA_GATE_DIALOGUE.md"
+      - "docs/AURA_ARENA_ATTEMPT_ARCHIVE.md"
       - "Dockerfile.aura-showcase"
       - "docker-compose.showcase.yml"
       - ".github/workflows/aura-showcase.yml"
@@ -88,6 +91,7 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_arena_gate_dialogue.py
+          aura_arena_attempt_archive.py
           aura_showcase_handoff.py
           aura_showcase_spatial.py
           aura_showcase_intent.py
@@ -105,6 +109,7 @@ jobs:
           tests/test_aura_showcase_observatory_crucible.py
           tests/test_aura_showcase_human_guided_tour.py
           tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -116,6 +121,7 @@ jobs:
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
           aura_arena_gate_dialogue.py
+          aura_arena_attempt_archive.py
           aura_showcase_handoff.py
           aura_showcase_spatial.py
           aura_showcase_intent.py
@@ -133,6 +139,7 @@ jobs:
           tests/test_aura_showcase_observatory_crucible.py
           tests/test_aura_showcase_human_guided_tour.py
           tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
       - name: Check browser JavaScript syntax
         run: |
           node --check aura_showcase/app.js
@@ -142,6 +149,7 @@ jobs:
           node --check aura_showcase/intent.js
           node --check aura_showcase/crucible.js
           node --check aura_showcase/gate-dialogue.js
+          node --check aura_showcase/attempt-archive.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
@@ -152,6 +160,7 @@ jobs:
           tests/test_aura_showcase_observatory_crucible.py
           tests/test_aura_showcase_human_guided_tour.py
           tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
           test_aura_context_crusher.py
@@ -210,6 +219,10 @@ jobs:
           assert status["human_gate_dialogue_available"] is True
           assert status["topology_anchored_intent"] is True
           assert status["gate_approval_required"] is True
+          assert status["attempt_archive_available"] is True
+          assert status["failed_attempts_preserved"] is True
+          assert status["archived_output_copyable"] is True
+          assert status["archived_output_authority"] is False
           assert status["observatory_available"] is True
           assert status["learning_arena_available"] is True
           assert status["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
@@ -220,8 +233,11 @@ jobs:
 
           index = get_text("/")
           assert '<script src="gate-dialogue.js"></script>' in index
+          assert '<script src="attempt-archive.js"></script>' in index
           gate_js = get_text("/gate-dialogue.js")
           assert "PENDING_HUMAN_APPROVAL" in gate_js
+          attempt_js = get_text("/attempt-archive.js")
+          assert "Copy full artifact" in attempt_js
 
           tasks = get("/api/showcase/coding-tasks")
           assert tasks["task_count"] == 4
@@ -267,6 +283,30 @@ jobs:
           assert approval["ok"] is True
           assert approval["status"] == "APPROVED_FOR_NEXT_GUARDED_GATE"
           assert approval["automatic_merge"] is False
+
+          framed = post("/api/human-agent/workflow/action", {
+              "action_id": "set_objective",
+              "payload": {"objective": "Investigate the selected Civic renderer."},
+              "_arena_archive_context": {
+                  "stage_hint": "FRAME",
+                  "node_context": node_context,
+                  "gate_dialogue": {
+                      "proposal_id": proposal["proposal_id"],
+                      "human_comment": proposal["human_comment"],
+                      "aura_response": proposal["aura_response"],
+                  },
+              },
+          })
+          assert framed["ok"] is True
+          assert framed["attempt_artifact"]["ok"] is True
+          assert framed["attempt_artifact"]["copyable"] is True
+          artifact_id = framed["attempt_artifact"]["artifact_id"]
+          attempts = get("/api/showcase/human/attempts?limit=5")
+          assert any(item["artifact_id"] == artifact_id for item in attempts["attempts"])
+          detail = get(f"/api/showcase/human/attempts/{artifact_id}")
+          assert detail["artifact"]["copy_text"]
+          assert detail["artifact"]["selected_node"]["id"] == selected.get("id")
+          assert detail["artifact"]["archived_output_authority"] is False
 
           intent = post("/api/showcase/intent/compile", {
               "text": "Improve compile_intent_packet routing and preserve its tests.",
@@ -349,6 +389,9 @@ jobs:
                       assert payload["bounded_topology_projection"] is True
                       assert payload["human_gate_dialogue_available"] is True
                       assert payload["gate_approval_required"] is True
+                      assert payload["attempt_archive_available"] is True
+                      assert payload["failed_attempts_preserved"] is True
+                      assert payload["archived_output_authority"] is False
                       assert payload["observatory_available"] is True
                       assert payload["learning_arena_available"] is True
                       assert payload["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
