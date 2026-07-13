@@ -198,7 +198,7 @@ def test_browser_gate_dialogue_is_injected_and_uses_real_guarded_actions():
     assert "run_tests" in javascript
     assert "verify_patch" in javascript
     assert "approved: false" in javascript
-    assert "automatic merge" in javascript.lower()
+    assert "No production approval or merge was granted." in javascript
 
     status, content_type, body = _static_response("/")
     assert status == 200
