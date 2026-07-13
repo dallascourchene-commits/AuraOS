@@ -33,7 +33,7 @@ REQUIRED_SYMBOLS = frozenset({
     "validate_manifest_pin",
     "verify_codemap",
 })
-_VOLATILE_SUMMARY_FIELDS = frozenset({"elapsed_ms", "last_incremental_refresh_unix"})
+_VOLATILE_SUMMARY_FIELDS = frozenset({"elapsed_ms", "last_incremental_refresh_unix", "total_bytes", "text_tokens_est"})
 _SELF_REFERENTIAL_GENERATED_DIGEST_PATHS = frozenset({"topology_map.json"})
 _SOURCE_CARD_FIELDS = (
     "path",
@@ -217,6 +217,9 @@ def stable_codemap_projection(payload: dict[str, Any]) -> dict[str, Any]:
             continue
         card = {key: raw.get(key) for key in _SOURCE_CARD_FIELDS if key in raw}
         if str(card.get("path") or "") in _SELF_REFERENTIAL_GENERATED_DIGEST_PATHS:
+            card["bytes"] = 0
+            card["lines"] = 0
+            card["tokens_est"] = 0
             card["digest8"] = "SELF_REFERENTIAL_GENERATED_ARTIFACT"
         source_cards.append(card)
     source_cards.sort(key=lambda item: str(item.get("path") or ""))
@@ -264,10 +267,11 @@ def compare_codemap_payloads(reference: dict[str, Any], regenerated: dict[str, A
             "generated_at_unix",
             "summary.elapsed_ms",
             "summary.last_incremental_refresh_unix",
+            "summary.total_bytes/text_tokens_est (includes generated topology artifact)",
             "coverage.skipped_dir_file_counts",
             "files[*].vector",
             "files[*].topology.hub_rank",
-            "topology_map.json.digest8 (self-referential generated artifact)",
+            "topology_map.json bytes/lines/tokens_est/digest8 (generated artifact)",
             "hubs",
             "topology.diagnostics",
             "topology.meta",
