@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/model_cognome_v1.schema.json",
+  "title": "Aura Model Cognome V1",
+  "type": "object",
+  "required": ["schema_version", "record_type", "record"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_type": {
+      "enum": [
+        "model_endpoint",
+        "task_context",
+        "route_decision",
+        "model_observation",
+        "model_capability_edge",
+        "capability_posterior",
+        "dikwp_envelope"
+      ]
+    },
+    "record": {"type": "object"},
+    "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+    "vsa_patch_authority": {"const": false}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "access_class": {"enum": ["OPEN_WEIGHT", "GRAY_BOX", "BLACK_BOX"]},
+    "endpoint_status": {"enum": ["ACTIVE", "STALE", "QUARANTINED", "RETIRED"]},
+    "measurement_class": {
+      "enum": ["MEASURED", "TOKENIZER_EXACT", "DERIVED", "ESTIMATED", "UNAVAILABLE", "INFERRED"]
+    },
+    "route_policy": {"enum": ["ZERO_MODEL", "DIRECT", "CASCADE", "PANEL"]},
+    "dikwp_stage": {"enum": ["DATA", "INFORMATION", "KNOWLEDGE", "WISDOM", "PURPOSE"]}
+  }
+}
