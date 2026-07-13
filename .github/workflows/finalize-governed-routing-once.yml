@@ -1,12 +1,11 @@
 name: Finalize Governed Routing Once
 
 on:
-  push:
-    branches:
-      - refactor/model-cognome-governed-routing
+  pull_request:
     paths:
       - ".github/workflows/finalize-governed-routing-once.yml"
       - "tools/one_time_finalize_governed_routing.py"
+      - "aura_shadow_model_router.py"
   workflow_dispatch:
 
 permissions:
@@ -52,5 +51,3 @@ jobs:
           path: finalizer-report/
           if-no-files-found: warn
           retention-days: 3
-
-# Existing-file trigger: finalizer-v2
