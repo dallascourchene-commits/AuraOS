@@ -88,6 +88,19 @@ jobs:
           review_text = review_text.replace(old_attempt, new_attempt, 1)
           review_text = review_text.replace(old_saved, new_saved, 1)
           review_test.write_text(review_text, encoding="utf-8")
+
+          federation = Path("aura_federation.py")
+          federation_text = federation.read_text(encoding="utf-8")
+          old_capsule = '''            verifier_result=dict(verifier_result or {}),
+            phase_hash=phase_hash,
+        )'''
+          new_capsule = '''            verifier_result=dict(verifier_result or {}),
+            phase_hash=phase_hash,
+            ts=payload["ts"],
+        )'''
+          if old_capsule not in federation_text:
+              raise SystemExit("federation timestamp insertion marker missing")
+          federation.write_text(federation_text.replace(old_capsule, new_capsule, 1), encoding="utf-8")
           PY
           rm -rf /tmp/cognome-replay-probes-report
           set +e
