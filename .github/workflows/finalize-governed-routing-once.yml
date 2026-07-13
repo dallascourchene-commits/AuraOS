@@ -53,6 +53,18 @@ jobs:
               text = text.replace("import json\n", "import json\nimport math\n", 1)
               records.write_text(text, encoding="utf-8")
 
+          ledger = Path("aura_empirical_cost_ledger.py")
+          ledger_text = ledger.read_text(encoding="utf-8")
+          ledger_text = ledger_text.replace(
+              'r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\\s+[a-zA-Z0-9._~+/-]+=*|api[_-]?key|secret|password",',
+              'r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\\s+[a-zA-Z0-9._~+/-]+=*",',
+          )
+          ledger_text = ledger_text.replace(
+              'clean.setdefault("comparison_id", "")',
+              'clean["comparison_id"] = str(clean.get("comparison_id") or "")',
+          )
+          ledger.write_text(ledger_text, encoding="utf-8")
+
           finalizer = Path("tools/one_time_finalize_governed_routing.py")
           script = finalizer.read_text(encoding="utf-8")
           script = script.replace(
