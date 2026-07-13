@@ -1,8 +1,7 @@
-"""Unified Winnipeg Civic, Human Agent, and Learning Arena showcase server.
+"""Unified Civic, Human Agent, Aura Observatory, and Learning Arena server.
 
-The server is intentionally additive. Existing Human Agent and Civic endpoints
-are delegated to Aura's established server dispatcher; guided-project endpoints
-compose those systems without granting production mutation or civic authority.
+The server composes Aura's established systems without granting production mutation,
+civic authority, patch authority, or automatic grammar promotion.
 """
 from __future__ import annotations
 
@@ -27,9 +26,14 @@ from aura_civic_guided_project import (
 from aura_human_agent_guidance import answer_guidance_question, build_guidance_packet
 if TYPE_CHECKING:
     from aura_human_agent_arena_server import HumanAgentArenaServerState
+from aura_showcase_crucible import LearningArenaShowcase
 from aura_showcase_handoff import import_handoff_into_workflow
 from aura_showcase_intent import DEFAULT_BULK_INTENT, compile_bulk_intent_trace
 from aura_showcase_intent_topology import build_intent_workspace
+from aura_showcase_observatory_handoff import (
+    build_learning_intake,
+    import_observatory_trace_into_workflow,
+)
 from aura_showcase_spatial import (
     build_selected_workspace,
     build_task_workspace,
@@ -38,7 +42,7 @@ from aura_showcase_spatial import (
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V5"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V6"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -57,8 +61,11 @@ class ShowcaseState:
     def __init__(self, repo_root: str | Path, *, demo_project: str, auto_start: bool) -> None:
         self.repo_root = Path(repo_root).resolve()
         self._human_agent: Any = None
+        self._crucible: LearningArenaShowcase | None = None
         self.demo_project = demo_project
         self.default_session_id = ""
+        self.last_observatory_trace: dict[str, Any] = {}
+        self.learning_intake: dict[str, Any] = {}
         if auto_start:
             started = start_project(demo_project)
             if started.get("ok"):
@@ -72,9 +79,18 @@ class ShowcaseState:
             self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=False)
         return self._human_agent
 
+    @property
+    def crucible(self) -> LearningArenaShowcase:
+        """Load the runtime-local proposal-only Crucible lazily."""
+        if self._crucible is None:
+            self._crucible = LearningArenaShowcase(self.repo_root)
+        return self._crucible
+
     def close(self) -> None:
         if self._human_agent is not None:
             self._human_agent.close()
+        if self._crucible is not None:
+            self._crucible.close()
 
 
 def _json(status: int, payload: dict[str, Any]) -> tuple[int, str, bytes]:
@@ -102,6 +118,11 @@ def _depth(value: Any, *, default: int = 1) -> int:
         return default
 
 
+def _trace_for_handoff(state: ShowcaseState, body: dict[str, Any]) -> dict[str, Any]:
+    supplied = body.get("trace")
+    return dict(supplied) if isinstance(supplied, dict) else dict(state.last_observatory_trace)
+
+
 def dispatch_showcase_request(
     state: ShowcaseState,
     method: str,
@@ -124,7 +145,9 @@ def dispatch_showcase_request(
             "default_session_id": state.default_session_id,
             "guide": guide,
             "human_agent_available": True,
+            "observatory_available": True,
             "learning_arena_available": True,
+            "learning_arena_identity": "LEARNING_ARENA_CRUCIBLE",
             "deterministic_bulk_intent_compiler": True,
             "model_calls_before_handoff": 0,
             "english_lexicon_expected_primitives": 4096,
@@ -138,6 +161,8 @@ def dispatch_showcase_request(
             "basemap_provider": "OpenStreetMap-compatible raster tiles",
             "basemap_tile_url_template": basemap_tile_url_template(),
             "basemap_offline_fallback": "Aura governed synthetic grid",
+            "active_grammar_mutation": False,
+            "automatic_grammar_promotion": False,
             "automatic_commit": False,
             "automatic_push": False,
             "automatic_merge": False,
@@ -163,7 +188,47 @@ def dispatch_showcase_request(
                 trace,
                 depth=_depth(body.get("depth", 1)),
             )
+        if trace.get("ok"):
+            state.last_observatory_trace = dict(trace)
         return _json(200 if trace.get("ok") else 400, trace)
+
+    if method == "POST" and route == "/api/showcase/observatory/handoff/human":
+        trace = _trace_for_handoff(state, body)
+        result = import_observatory_trace_into_workflow(state.human_agent.workflow, trace)
+        if result.get("ok"):
+            result["guide"] = build_guidance_packet(result.get("workflow") or {})
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "POST" and route == "/api/showcase/observatory/handoff/learning":
+        trace = _trace_for_handoff(state, body)
+        result = build_learning_intake(trace)
+        if result.get("ok"):
+            state.learning_intake = dict(result)
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "GET" and route == "/api/showcase/learning/status":
+        arena_id = str(query.get("arena_id", [""])[0])
+        return _json(200, state.crucible.status(intake=state.learning_intake, arena_id=arena_id))
+
+    if method == "POST" and route == "/api/showcase/learning/run":
+        result = state.crucible.run_once(
+            arena_id=str(body.get("arena_id") or ""),
+            policy=body.get("policy") if isinstance(body.get("policy"), dict) else None,
+            experience_limit=max(1, min(int(body.get("experience_limit") or 1000), 1000)),
+        )
+        dashboard = state.crucible.status(
+            intake=state.learning_intake,
+            arena_id=str(body.get("arena_id") or ""),
+        )
+        return _json(200 if result.get("ok") else 409, {"ok": bool(result.get("ok")), "run": result, "dashboard": dashboard})
+
+    if method == "POST" and route == "/api/showcase/learning/pause":
+        result = state.crucible.pause(str(body.get("reason") or "showcase_operator_pause"))
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "POST" and route == "/api/showcase/learning/resume":
+        result = state.crucible.resume()
+        return _json(200 if result.get("ok") else 409, result)
 
     if (
         method == "GET"
@@ -247,8 +312,8 @@ def dispatch_showcase_request(
 def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
     allowed = {
-        "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js",
-        "topology.css", "intent.css", "styles.css", "guide.css",
+        "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js", "crucible.js",
+        "topology.css", "intent.css", "crucible.css", "styles.css", "guide.css",
     }
     if relative not in allowed:
         return _error("static asset not found", 404)
@@ -315,7 +380,7 @@ def serve(*, host: str, port: int, repo_root: str | Path, demo_project: str, aut
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Aura Winnipeg Civic + Human Agent + Learning Arena showcase")
+    parser = argparse.ArgumentParser(description="Aura Civic + Human Agent + Observatory + Learning Arena showcase")
     parser.add_argument("--host", default=DEFAULT_HOST)
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--repo-root", default=".")
