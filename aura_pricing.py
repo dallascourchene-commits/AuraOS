@@ -16,13 +16,9 @@ Aura PriceBook — per-provider token pricing with weekly auto-refresh.
 
 Single source of truth for $/1k token prices, persisted at .aura/pricing.json
 with a last-updated timestamp. Prices go stale after 7 days; `maybe_refresh()`
-re-fetches if a fetcher is registered (none ships by default — provider price
-pages are not standardized, so we never fabricate live numbers). When prices
-change, callers can recalibrate.
-
-Prices are USD per 1,000 tokens. Defaults seed the file on first use.
+re-fetches if a fetcher is registered. Without a fetcher Aura never fabricates
+live prices.
 """
-
 from __future__ import annotations
 
 import json
@@ -33,8 +29,12 @@ _DIR = os.path.dirname(os.path.abspath(__file__))
 PRICING_PATH = os.path.join(_DIR, ".aura", "pricing.json")
 STALE_AFTER_DAYS = 7
 
-# Seed prices (USD / 1k tokens). Kept in sync with aura_llm_egress.PROVIDERS.
+# Seed prices in USD per 1,000 tokens. Fireworks reflects its primary GLM 5.2
+# route; the budget DeepSeek-V4-Flash role has a lower model-specific price and
+# should be refreshed by a future model-aware pricing fetcher when selected.
 DEFAULT_PRICES: dict[str, dict] = {
+    "fireworks":  {"in_per_1k": 0.0014,  "out_per_1k": 0.0044},
+    "deepseek":   {"in_per_1k": 0.00014, "out_per_1k": 0.00028},
     "mistral":    {"in_per_1k": 0.0002,  "out_per_1k": 0.0006},
     "sambanova":  {"in_per_1k": 0.0006,  "out_per_1k": 0.0012},
     "groq":       {"in_per_1k": 0.00059, "out_per_1k": 0.00079},
@@ -56,60 +56,58 @@ class PriceBook:
     def _load(self) -> dict:
         if os.path.exists(self.path):
             try:
-                with open(self.path, encoding="utf-8") as f:
-                    return json.load(f)
+                with open(self.path, encoding="utf-8") as handle:
+                    return json.load(handle)
             except Exception:
                 pass
-        data = {"updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                "prices": dict(DEFAULT_PRICES)}
+        data = {
+            "updated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "prices": dict(DEFAULT_PRICES),
+        }
         self._save(data)
         return data
 
     def _save(self, data: dict | None = None) -> None:
         data = data if data is not None else self.data
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
+        with open(self.path, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=2)
 
     def price(self, provider: str) -> tuple[float, float]:
-        p = self.data.get("prices", {}).get(provider) or DEFAULT_PRICES.get(provider) \
+        packet = (
+            self.data.get("prices", {}).get(provider)
+            or DEFAULT_PRICES.get(provider)
             or {"in_per_1k": 0.0, "out_per_1k": 0.0}
-        return float(p["in_per_1k"]), float(p["out_per_1k"])
+        )
+        return float(packet["in_per_1k"]), float(packet["out_per_1k"])
 
     def cost(self, provider: str, in_tokens: int, out_tokens: int) -> float:
-        pin, pout = self.price(provider)
-        return round(in_tokens / 1000 * pin + out_tokens / 1000 * pout, 6)
+        price_in, price_out = self.price(provider)
+        return round(in_tokens / 1000 * price_in + out_tokens / 1000 * price_out, 6)
 
     def updated_at(self) -> str:
         return self.data.get("updated", "")
 
     def is_stale(self, days: int = STALE_AFTER_DAYS) -> bool:
-        ts = self.data.get("updated")
-        if not ts:
+        timestamp = self.data.get("updated")
+        if not timestamp:
             return True
         try:
-            t = time.mktime(time.strptime(ts, "%Y-%m-%dT%H:%M:%SZ"))
+            parsed = time.mktime(time.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ"))
         except ValueError:
             return True
-        return (time.time() - t) > days * 86400
+        return (time.time() - parsed) > days * 86400
 
     def update(self, provider: str, in_per_1k: float, out_per_1k: float) -> None:
         self.data.setdefault("prices", {})[provider] = {
-            "in_per_1k": float(in_per_1k), "out_per_1k": float(out_per_1k)}
+            "in_per_1k": float(in_per_1k),
+            "out_per_1k": float(out_per_1k),
+        }
         self.data["updated"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         self._save()
 
     def maybe_refresh(self, fetcher=None, days: int = STALE_AFTER_DAYS) -> bool:
-        """Refresh prices weekly if stale and a fetcher is registered.
-
-        `fetcher()` must return {provider: {"in_per_1k": x, "out_per_1k": y}}.
-        With no fetcher we do NOT fabricate prices — we just report staleness so
-        the operator (or a future live-price plugin) can update them. Returns
-        True if prices were changed.
-        """
-        if not self.is_stale(days):
-            return False
-        if fetcher is None:
+        if not self.is_stale(days) or fetcher is None:
             return False
         try:
             fresh = fetcher() or {}
