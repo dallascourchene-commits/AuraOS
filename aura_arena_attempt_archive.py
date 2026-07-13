@@ -260,9 +260,9 @@ class ArenaAttemptArchive:
         )[:240]
         status = str(raw_result.get("status") or ("COMPLETED" if raw_result.get("ok") else "FAILED")).upper()[:120]
         ok = bool(raw_result.get("ok"))
-        phase = str(raw_state.get("current_phase") or raw_context.get("stage_hint") or "")[:120]
-        workflow_id = str(raw_state.get("workflow_id") or "")[:240]
-        objective = _text(raw_state.get("objective") or raw_context.get("objective"), 120_000)
+        phase = str(safe_state.get("current_phase") or safe_context.get("stage_hint") or "")[:120]
+        workflow_id = str(safe_state.get("workflow_id") or "")[:240]
+        objective = _text(safe_state.get("objective") or safe_context.get("objective"), 120_000)
         selected_node = dict((safe_context or {}).get("node_context", {}).get("selected_node") or {})
         if not selected_node:
             selected_node = dict((safe_context or {}).get("selected_node") or {})
