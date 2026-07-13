@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
 
+from aura_arena_gate_dialogue import ArenaGateDialogueService
 from aura_civic_guided_project import (
     advance_project,
     back_project,
@@ -42,7 +43,7 @@ from aura_showcase_spatial import (
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V6"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V7"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -62,6 +63,7 @@ class ShowcaseState:
         self.repo_root = Path(repo_root).resolve()
         self._human_agent: Any = None
         self._crucible: LearningArenaShowcase | None = None
+        self._gate_dialogue: ArenaGateDialogueService | None = None
         self.demo_project = demo_project
         self.default_session_id = ""
         self.last_observatory_trace: dict[str, Any] = {}
@@ -78,6 +80,13 @@ class ShowcaseState:
             from aura_human_agent_arena_server import HumanAgentArenaServerState
             self._human_agent = HumanAgentArenaServerState(self.repo_root, demo=False)
         return self._human_agent
+
+    @property
+    def gate_dialogue(self) -> ArenaGateDialogueService:
+        """Bind the approval ledger to the same real Human Agent workflow."""
+        if self._gate_dialogue is None:
+            self._gate_dialogue = ArenaGateDialogueService(self.repo_root, self.human_agent.workflow)
+        return self._gate_dialogue
 
     @property
     def crucible(self) -> LearningArenaShowcase:
@@ -145,6 +154,9 @@ def dispatch_showcase_request(
             "default_session_id": state.default_session_id,
             "guide": guide,
             "human_agent_available": True,
+            "human_gate_dialogue_available": True,
+            "topology_anchored_intent": True,
+            "gate_approval_required": True,
             "observatory_available": True,
             "learning_arena_available": True,
             "learning_arena_identity": "LEARNING_ARENA_CRUCIBLE",
@@ -204,6 +216,33 @@ def dispatch_showcase_request(
         result = build_learning_intake(trace)
         if result.get("ok"):
             state.learning_intake = dict(result)
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "GET" and route == "/api/showcase/human/gate/status":
+        return _json(200, state.gate_dialogue.status())
+
+    if method == "POST" and route == "/api/showcase/human/gate/address":
+        result = state.gate_dialogue.address(
+            comment=str(body.get("comment") or ""),
+            node_context=body.get("node_context") if isinstance(body.get("node_context"), dict) else {},
+            stage_hint=str(body.get("stage_hint") or ""),
+            prefer_model=body.get("prefer_model", True) is not False,
+        )
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "POST" and route == "/api/showcase/human/gate/approve":
+        result = state.gate_dialogue.approve(
+            proposal_id=str(body.get("proposal_id") or ""),
+            approved=bool(body.get("approved")),
+            current_node_context=(
+                body.get("current_node_context")
+                if isinstance(body.get("current_node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            reviewer=str(body.get("reviewer") or "human_operator"),
+            note=str(body.get("note") or ""),
+        )
         return _json(200 if result.get("ok") else 409, result)
 
     if method == "GET" and route == "/api/showcase/learning/status":
@@ -322,7 +361,7 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
     allowed = {
         "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js", "crucible.js",
-        "topology.css", "intent.css", "crucible.css", "styles.css", "guide.css",
+        "gate-dialogue.js", "topology.css", "intent.css", "crucible.css", "styles.css", "guide.css",
     }
     if relative not in allowed:
         return _error("static asset not found", 404)
@@ -333,10 +372,16 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
         return _error("invalid static path", 400)
     if not path.is_file():
         return _error("static asset not found", 404)
+    body = path.read_bytes()
+    if relative == "index.html" and b'gate-dialogue.js' not in body:
+        body = body.replace(
+            b"</body>",
+            b'  <script src="gate-dialogue.js"></script>\n</body>',
+        )
     mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
     if mime.startswith("text/") or mime in {"application/javascript", "application/json"}:
         mime += "; charset=utf-8"
-    return 200, mime, path.read_bytes()
+    return 200, mime, body
 
 
 def make_handler(state: ShowcaseState):
