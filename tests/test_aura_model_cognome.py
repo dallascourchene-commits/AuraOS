@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 
 from aura_model_cognome import (
@@ -134,3 +137,12 @@ def test_beta_posterior_update_keeps_split_separate() -> None:
     assert updated.sample_count == 1
     assert updated.verified_success_alpha == 10
     assert updated.validation_split == "SHADOW"
+
+
+def test_portable_schema_pins_authority_and_typed_records() -> None:
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "schemas" / "model_cognome_v1.schema.json").read_text(encoding="utf-8"))
+    assert schema["properties"]["patch_authority"]["const"] == "exact_source_spans_and_hashes_only"
+    assert schema["properties"]["vsa_patch_authority"]["const"] is False
+    assert schema["$defs"]["route_decision"]["properties"]["proposal_only"]["const"] is True
+    assert schema["$defs"]["capability_posterior"]["properties"]["validation_split"]["$ref"].endswith("validation_split")
