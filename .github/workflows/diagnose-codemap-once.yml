@@ -9,7 +9,6 @@ on:
 permissions:
   contents: read
 
-# Disposable diagnostic; removed by resetting to the clean map commit.
 jobs:
   diagnose:
     runs-on: ubuntu-latest
@@ -39,47 +38,27 @@ jobs:
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0"
-      - name: Compare stable projections
+      - name: Run full verifier diagnostic
         run: |
           set -euo pipefail
           cp .aura/CODEMAP.json "${RUNNER_TEMP}/committed.json"
           rm .github/workflows/diagnose-codemap-once.yml
           python aura_codebase_navigator.py
           python - <<'PY'
-          import hashlib
           import json
           import os
           from pathlib import Path
-          from aura_codemap_verify import stable_codemap_projection
+          from aura_codemap_verify import verify_codemap
 
-          left = stable_codemap_projection(json.loads(Path(os.environ["RUNNER_TEMP"] + "/committed.json").read_text()))
-          right = stable_codemap_projection(json.loads(Path(".aura/CODEMAP.json").read_text()))
-          def digest(value):
-              body = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
-              return hashlib.blake2b(body.encode(), digest_size=20).hexdigest()
-          fields = sorted(key for key in set(left) | set(right) if left.get(key) != right.get(key))
-          detail = {}
-          for key in fields:
-              lval, rval = left.get(key), right.get(key)
-              entry = {"left_digest": digest(lval), "right_digest": digest(rval)}
-              if isinstance(lval, dict) and isinstance(rval, dict):
-                  entry["differing_subkeys"] = sorted(k for k in set(lval) | set(rval) if lval.get(k) != rval.get(k))[:200]
-              elif isinstance(lval, list) and isinstance(rval, list):
-                  entry["left_len"] = len(lval)
-                  entry["right_len"] = len(rval)
-                  first = next((i for i, (a, b) in enumerate(zip(lval, rval)) if a != b), None)
-                  entry["first_differing_index"] = first
-                  if first is not None:
-                      entry["left_item"] = lval[first]
-                      entry["right_item"] = rval[first]
-              detail[key] = entry
-          out = {"differing_fields": fields, "detail": detail}
-          Path("codemap-diagnostic.json").write_text(json.dumps(out, indent=2, sort_keys=True), encoding="utf-8")
-          print(json.dumps(out, indent=2, sort_keys=True))
+          result = verify_codemap(".", compare_json_path=Path(os.environ["RUNNER_TEMP"]) / "committed.json")
+          Path("codemap-verifier-result.json").write_text(
+              json.dumps(result, indent=2, sort_keys=True), encoding="utf-8"
+          )
+          print(json.dumps(result, indent=2, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: codemap-diagnostic-${{ github.run_id }}
-          path: codemap-diagnostic.json
+          name: codemap-verifier-result-${{ github.run_id }}
+          path: codemap-verifier-result.json
           if-no-files-found: error
           retention-days: 2
