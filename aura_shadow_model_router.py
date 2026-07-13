@@ -14,7 +14,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from aura_model_cognome import RouteDecision, TaskContext, stable_digest
 
-SHADOW_ROUTER_VERSION = "AURA_SHADOW_MODEL_ROUTER_V1"
+SHADOW_ROUTER_VERSION = "AURA_SHADOW_MODEL_ROUTER_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -114,6 +114,8 @@ class CandidateEvidence:
     endpoint_status: str
     access_class: str
     capability_ids: tuple[str, ...]
+    capability_graph_digest: str
+    evidence_split: str
     verified_success_probability: float | None
     mean_cost_usd: float | None
     mean_time_to_verified_ms: float | None
@@ -139,10 +141,12 @@ class CandidateEvidence:
             _first(candidate, ("verified_success_probability", "verified_success_mean", "posterior_mean"))
         )
         scope = _probability(_first(candidate, ("scope_violation_rate",)), default=0.0)
-        drift = _probability(_first(candidate, ("endpoint_drift_score", "drift_score")), default=0.0)
+        drift = _probability(_first(candidate, ("endpoint_drift_score", "drift_score")))
         uncertainty = _probability(_first(candidate, ("uncertainty", "uncertainty_score", "calibration_error")))
         context_window_raw = _first(candidate, ("context_window", "max_context_tokens"))
         context_window = int(context_window_raw) if context_window_raw is not None else None
+        if context_window is not None and context_window < 0:
+            raise ValueError("candidate context_window must be non-negative")
         evidence_count = int(candidate.get("evidence_count") or candidate.get("sample_count") or 0)
         if evidence_count < 0:
             raise ValueError("candidate evidence_count must be non-negative")
@@ -155,6 +159,8 @@ class CandidateEvidence:
             capability_ids=_tuple_strings(
                 _first(candidate, ("capability_ids", "required_capability_ids", "supported_capability_ids"), ())
             ),
+            capability_graph_digest=str(candidate.get("capability_graph_digest") or ""),
+            evidence_split=str(candidate.get("evidence_split") or ""),
             verified_success_probability=success,
             mean_cost_usd=_finite_nonnegative(
                 _first(candidate, ("mean_cost_usd", "expected_cost_usd", "cost_usd")),
@@ -299,6 +305,7 @@ def _assess_candidate(
     candidate: CandidateEvidence,
     *,
     context: TaskContext,
+    graph_digest: str,
     model_capability_ids: tuple[str, ...],
     consequential: bool,
     policy: ShadowRoutingPolicy,
@@ -309,14 +316,20 @@ def _assess_candidate(
     if not bool(_context_value(context, "data_egress_allowed", True)) and not candidate.is_local:
         reasons.append("data egress is not allowed")
     missing_capabilities = sorted(set(model_capability_ids) - set(candidate.capability_ids))
-    if candidate.capability_ids and missing_capabilities:
+    if missing_capabilities:
         reasons.append("missing validated capability support: " + ", ".join(missing_capabilities))
+    if candidate.capability_graph_digest != graph_digest:
+        reasons.append("candidate capability evidence is stale or graph-unbound")
+    if candidate.evidence_split not in {"SHADOW", "VALIDATION", "VALIDATED_EDGE"}:
+        reasons.append("candidate evidence is not validation/shadow isolated")
     if candidate.evidence_count <= 0 or not candidate.evidence_digest:
         reasons.append("no verifier-backed capability evidence")
     if candidate.verified_success_probability is None:
         reasons.append("verified-success probability is unknown")
     context_tokens = int(_context_value(context, "context_tokens", 0) or 0)
-    if candidate.context_window is not None and candidate.context_window < context_tokens:
+    if context_tokens > 0 and candidate.context_window is None:
+        reasons.append("context window is unknown")
+    elif candidate.context_window is not None and candidate.context_window < context_tokens:
         reasons.append("context window is insufficient")
     required_tools = set(_tuple_strings(_context_value(context, "required_tools", ())))
     if required_tools and not required_tools.issubset(set(candidate.supported_tools)):
@@ -474,7 +487,7 @@ def _panel_option(
         expected_drift=drift,
         expected_energy_joules=round(energy, 8) if energy is not None else None,
         utility=utility,
-        explanation=("independent model evidence is combined only as a shadow proposal",),
+        explanation=("optimistic independence surrogate; shadow proposal only",),
     )
 
 
@@ -528,12 +541,26 @@ def evaluate_shadow_route(
         denial.extend(str(item) for item in path_resolution.get("errors", []) or [])
     if not graph_digest or graph_digest != str(_context_value(context, "capability_graph_digest", "")):
         denial.append("capability graph digest is missing or stale")
+    if not path_digest:
+        denial.append("capability path digest is missing")
     unresolved = _tuple_strings(path_resolution.get("unresolved_execution_capability_ids"))
     if unresolved:
         denial.append("execution class unresolved: " + ", ".join(unresolved))
     required_path = _tuple_strings(path_resolution.get("required_capability_ids"))
-    if required_path and required_path != _tuple_strings(_context_value(context, "required_capability_ids", ())):
+    context_required = _tuple_strings(_context_value(context, "required_capability_ids", ()))
+    if not required_path or required_path != context_required:
         denial.append("resolved capability path does not match TaskContext")
+    if _tuple_strings(_context_value(context, "capability_path", ())) != required_path:
+        denial.append("TaskContext capability path is missing or mismatched")
+    model_capability_ids = _tuple_strings(path_resolution.get("model_dependent_capability_ids"))
+    if not set(model_capability_ids).issubset(set(required_path)):
+        denial.append("model-dependent capability IDs are outside the admitted path")
+    zero_model = path_resolution.get("zero_model", {}) or {}
+    zero_eligible = bool(zero_model.get("eligible"))
+    if zero_eligible and model_capability_ids:
+        denial.append("ZERO_MODEL cannot include model-dependent capabilities")
+    if not zero_eligible and not model_capability_ids:
+        denial.append("non-zero route has no model-dependent capability IDs")
     if denial:
         return ShadowRouteResult(
             status=DENIED,
@@ -548,8 +575,7 @@ def evaluate_shadow_route(
             created_at=created,
         )
 
-    zero_model = path_resolution.get("zero_model", {}) or {}
-    if bool(zero_model.get("eligible")):
+    if zero_eligible:
         option = PolicyOption(
             policy_mode=ZERO_MODEL,
             profile_ids=(),
@@ -563,15 +589,24 @@ def evaluate_shadow_route(
             utility=policy.quality_weight,
             explanation=("all admitted capabilities are deterministic and locally grounded",),
         )
+        evidence_digest = stable_digest(
+            {"context_id": context.task_context_id, "graph_digest": graph_digest, "path_digest": path_digest, "selected": option.to_dict()}
+        )
         decision = RouteDecision.create(
             task_context_id=context.task_context_id,
             purpose_digest=context.purpose_digest,
             policy_mode=ZERO_MODEL,
             policy_version=policy.policy_version,
             selected_profile_ids=(),
+            admitted_profile_ids=(),
+            predicted_verified_success=1.0,
+            expected_cost_usd=0.0,
+            expected_time_to_verified_ms=0.0,
+            capability_graph_digest=graph_digest,
+            knowledge_snapshot_digest=evidence_digest,
             created_at=created,
         ).to_dict()
-        decision.update({"shadow_only": True, "proposal_only": True, "graph_digest": graph_digest, "path_digest": path_digest})
+        decision.update({"shadow_only": True, "proposal_only": True, "path_digest": path_digest, "policy_evidence_digest": evidence_digest})
         return ShadowRouteResult(
             status="PROPOSED",
             route_decision=decision,
@@ -585,7 +620,6 @@ def evaluate_shadow_route(
             created_at=created,
         )
 
-    model_capability_ids = _tuple_strings(path_resolution.get("model_dependent_capability_ids"))
     consequential = _risk_class(context) in _HIGH_RISK or bool(_context_value(context, "exactness_required", ""))
     assessments: list[CandidateAssessment] = []
     for raw in path_resolution.get("model_candidates", []) or []:
@@ -595,6 +629,7 @@ def evaluate_shadow_route(
                 _assess_candidate(
                     evidence,
                     context=context,
+                    graph_digest=graph_digest,
                     model_capability_ids=model_capability_ids,
                     consequential=consequential,
                     policy=policy,
@@ -609,6 +644,8 @@ def evaluate_shadow_route(
                 endpoint_status="INVALID",
                 access_class="BLACK_BOX",
                 capability_ids=(),
+                capability_graph_digest="",
+                evidence_split="",
                 verified_success_probability=None,
                 mean_cost_usd=None,
                 mean_time_to_verified_ms=None,
@@ -625,8 +662,9 @@ def evaluate_shadow_route(
             )
             assessments.append(CandidateAssessment(invalid, False, (f"invalid candidate evidence: {exc}",), None))
 
+    admitted_in_input_order = [item for item in assessments if item.admitted]
     admitted = sorted(
-        (item for item in assessments if item.admitted),
+        admitted_in_input_order,
         key=lambda item: (-float(item.utility or -float("inf")), item.candidate.profile_id),
     )
     if not admitted:
@@ -636,7 +674,7 @@ def evaluate_shadow_route(
             selected_option=None,
             options=(),
             candidate_assessments=tuple(assessments),
-            baseline_comparisons=_baselines(admitted),
+            baseline_comparisons={},
             denial_reasons=("no candidate passed all hard admission gates",),
             graph_digest=graph_digest,
             path_digest=path_digest,
@@ -660,24 +698,45 @@ def evaluate_shadow_route(
             cascade = _cascade_option(primary, fallback, policy)
             if cascade is not None and _fits_budgets(cascade, context):
                 options.append(cascade)
+
+    high_risk = _risk_class(context) in _HIGH_RISK
+    panel_pool = admitted
+    if high_risk:
+        panel_pool = []
+        seen_providers: set[str] = set()
+        for item in admitted:
+            provider = item.candidate.provider.lower()
+            if provider in seen_providers:
+                continue
+            seen_providers.add(provider)
+            panel_pool.append(item)
     panel = None
-    if policy.allow_panel and len(admitted) >= 2:
-        panel = _panel_option(admitted, policy)
+    if policy.allow_panel and len(panel_pool) >= 2:
+        panel = _panel_option(panel_pool, policy)
         if panel is not None and _fits_budgets(panel, context):
             options.append(panel)
 
     selected = direct
-    high_risk = _risk_class(context) in _HIGH_RISK
     best_uncertainty = admitted[0].candidate.uncertainty
-    if (
-        panel is not None
-        and panel in options
-        and high_risk
-        and (
-            direct.expected_success < policy.high_risk_direct_min_success
-            or (best_uncertainty is not None and best_uncertainty >= policy.panel_uncertainty_threshold)
-        )
-    ):
+    needs_panel = high_risk and (
+        direct.expected_success < policy.high_risk_direct_min_success
+        or best_uncertainty is None
+        or best_uncertainty >= policy.panel_uncertainty_threshold
+    )
+    if needs_panel:
+        if panel is None or panel not in options:
+            return ShadowRouteResult(
+                status=DENIED,
+                route_decision=None,
+                selected_option=None,
+                options=tuple(options),
+                candidate_assessments=tuple(assessments),
+                baseline_comparisons=_baselines(admitted_in_input_order),
+                denial_reasons=("high-risk route requires a diverse admitted panel",),
+                graph_digest=graph_digest,
+                path_digest=path_digest,
+                created_at=created,
+            )
         selected = panel
     else:
         cascade_options = [option for option in options if option.policy_mode == CASCADE]
@@ -686,33 +745,42 @@ def evaluate_shadow_route(
             if best_cascade.utility >= direct.utility + policy.cascade_min_gain:
                 selected = best_cascade
 
+    selected_uncertainties = [
+        item.candidate.uncertainty
+        for item in admitted
+        if item.candidate.profile_id in selected.profile_ids and item.candidate.uncertainty is not None
+    ]
+    evidence_digest = stable_digest(
+        {
+            "context_id": context.task_context_id,
+            "graph_digest": graph_digest,
+            "path_digest": path_digest,
+            "selected": selected.to_dict(),
+            "candidates": [item.to_dict() for item in assessments],
+            "policy": asdict(policy),
+        }
+    )
     decision = RouteDecision.create(
         task_context_id=context.task_context_id,
         purpose_digest=context.purpose_digest,
         policy_mode=selected.policy_mode,
         policy_version=policy.policy_version,
         selected_profile_ids=selected.profile_ids,
+        admitted_profile_ids=tuple(item.candidate.profile_id for item in admitted),
+        predicted_verified_success=selected.expected_success,
+        expected_cost_usd=selected.expected_cost_usd,
+        expected_time_to_verified_ms=selected.expected_time_to_verified_ms,
+        uncertainty_score=max(selected_uncertainties) if selected_uncertainties else None,
+        capability_graph_digest=graph_digest,
+        knowledge_snapshot_digest=evidence_digest,
         created_at=created,
     ).to_dict()
     decision.update(
         {
             "shadow_only": True,
             "proposal_only": True,
-            "graph_digest": graph_digest,
             "path_digest": path_digest,
-            "expected_verified_success": selected.expected_success,
-            "expected_cost_usd": selected.expected_cost_usd,
-            "expected_time_to_verified_ms": selected.expected_time_to_verified_ms,
-            "policy_evidence_digest": stable_digest(
-                {
-                    "context_id": context.task_context_id,
-                    "graph_digest": graph_digest,
-                    "path_digest": path_digest,
-                    "selected": selected.to_dict(),
-                    "candidates": [item.to_dict() for item in assessments],
-                    "policy": asdict(policy),
-                }
-            ),
+            "policy_evidence_digest": evidence_digest,
         }
     )
     return ShadowRouteResult(
@@ -721,7 +789,7 @@ def evaluate_shadow_route(
         selected_option=selected,
         options=tuple(options),
         candidate_assessments=tuple(assessments),
-        baseline_comparisons=_baselines(admitted),
+        baseline_comparisons=_baselines(admitted_in_input_order),
         denial_reasons=(),
         graph_digest=graph_digest,
         path_digest=path_digest,

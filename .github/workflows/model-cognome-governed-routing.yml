@@ -1,0 +1,46 @@
+name: Model Cognome Governed Routing
+
+on:
+  pull_request:
+    paths:
+      - "aura_model_cognome*.py"
+      - "aura_shadow_model_router.py"
+      - "aura_empirical_cost_ledger.py"
+      - "aura_usage_normalizer.py"
+      - "aura_pricing_registry.py"
+      - "tests/test_aura_model_cognome*.py"
+      - "tests/test_aura_empirical_cost_ledger_v2.py"
+      - "tests/test_aura_shadow_model_router.py"
+      - ".github/workflows/model-cognome-governed-routing.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governed-routing:
+    name: Governed routing contracts (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install tooling
+        run: python -m pip install pytest ruff
+      - name: Compile governed modules
+        run: |
+          python -m py_compile             aura_model_cognome.py             aura_model_cognome_store.py             aura_model_cognome_store_records.py             aura_model_cognome_telemetry.py             aura_model_cognome_call_logger.py             aura_empirical_cost_ledger.py             aura_shadow_model_router.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82             aura_model_cognome.py             aura_model_cognome_store.py             aura_model_cognome_store_records.py             aura_model_cognome_telemetry.py             aura_model_cognome_call_logger.py             aura_empirical_cost_ledger.py             aura_shadow_model_router.py             tests/test_aura_model_cognome_telemetry.py             tests/test_aura_model_cognome_telemetry_integration.py             tests/test_aura_model_cognome_call_logger.py             tests/test_aura_empirical_cost_ledger_v2.py             tests/test_aura_shadow_model_router.py
+      - name: Run governed routing contracts
+        run: |
+          python -m pytest -q             tests/test_aura_model_cognome.py             tests/test_aura_model_cognome_store.py             tests/test_aura_model_cognome_telemetry.py             tests/test_aura_model_cognome_telemetry_integration.py             tests/test_aura_model_cognome_call_logger.py             tests/test_aura_empirical_cost_ledger_v2.py             tests/test_aura_shadow_model_router.py

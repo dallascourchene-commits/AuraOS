@@ -26,7 +26,7 @@ _SECRET_KEY = re.compile(
     re.IGNORECASE,
 )
 _SECRET_VALUE = re.compile(
-    r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\s+[a-zA-Z0-9._~+/-]+=*|api[_-]?key|secret|password",
+    r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\s+[a-zA-Z0-9._~+/-]+=*",
     re.IGNORECASE,
 )
 
@@ -310,7 +310,7 @@ class EmpiricalCostLedger:
         clean = _sanitize(dict(run))
         run_id = str(clean.get("run_id") or secrets.token_hex(12))
         clean["run_id"] = run_id
-        clean.setdefault("comparison_id", "")
+        clean["comparison_id"] = str(clean.get("comparison_id") or "")
         clean.setdefault("model_call_count", 0)
         clean.setdefault("tool_call_count", 0)
         clean.setdefault("scope_violation_count", 0)
