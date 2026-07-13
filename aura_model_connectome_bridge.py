@@ -5,6 +5,7 @@ model-capability evidence. It never grants patch, action, merge, or policy autho
 """
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Mapping, Protocol
 
@@ -13,6 +14,7 @@ from aura_capability_connectome_v2 import (
     UNRESOLVED_EXECUTION,
     capability_node,
     enrich_connectome,
+    enrich_path,
     zero_model_eligibility,
 )
 from aura_model_cognome import ModelCapabilityEdge, TaskContext
@@ -115,12 +117,27 @@ def task_context_from_path(
     if not graph_digest:
         raise ValueError("Capability path must include graph_digest")
     required_ids = tuple(str(item) for item in path_packet.get("required_capability_ids", []) or [])
+    path_ids = tuple(str(item) for item in path_packet.get("path", []) or [])
     if not required_ids:
         raise ValueError("Capability path must include required_capability_ids")
+    if path_ids != required_ids:
+        raise ValueError("Capability path and required_capability_ids must match exactly")
+    reserved = {
+        "required_capabilities",
+        "required_capability_ids",
+        "capability_path",
+        "capability_truth_boundaries",
+        "capability_risks",
+        "capability_tests",
+        "capability_token_savings_roles",
+    }
+    overrides = sorted(reserved.intersection(fields))
+    if overrides:
+        raise ValueError("Path-bound TaskContext fields cannot be overridden: " + ", ".join(overrides))
     defaults = {
         "required_capabilities": required_ids,
         "required_capability_ids": required_ids,
-        "capability_path": tuple(str(item) for item in path_packet.get("path", []) or []),
+        "capability_path": path_ids,
         "capability_truth_boundaries": tuple(
             str(item) for item in path_packet.get("truth_boundaries", []) or []
         ),
@@ -129,8 +146,8 @@ def task_context_from_path(
         "capability_token_savings_roles": tuple(
             str(item) for item in path_packet.get("token_savings_roles", []) or []
         ),
+        **fields,
     }
-    defaults.update(fields)
     return TaskContext.create(
         objective=objective,
         purpose_digest=purpose_digest,
@@ -150,33 +167,53 @@ def resolve_candidates_for_path(
     errors: list[str] = []
     current_digest = str(graph.get("graph_digest", ""))
     packet_digest = str(path_packet.get("graph_digest", ""))
+    path_ids = tuple(str(item) for item in path_packet.get("required_capability_ids", []) or [])
+    authoritative_path = enrich_path(
+        {"ok": True, "version": BRIDGE_VERSION, "path": list(path_ids)},
+        graph,
+    )
+
+    if not path_packet.get("ok"):
+        errors.append("Capability path packet is invalid")
     if not current_digest:
         errors.append("Current Capability Connectome has no graph digest")
     if context.capability_graph_digest != current_digest:
         errors.append("TaskContext capability graph is stale")
     if packet_digest != current_digest:
         errors.append("Capability path packet is stale")
-    path_ids = tuple(str(item) for item in path_packet.get("required_capability_ids", []) or [])
+    if path_packet.get("path_digest") != authoritative_path.get("path_digest"):
+        errors.append("Capability path digest does not match current node evidence")
     if tuple(context.required_capability_ids) != path_ids:
         errors.append("TaskContext required capability IDs do not match the admitted path")
+    if tuple(context.capability_path) != path_ids:
+        errors.append("TaskContext capability path does not match the admitted path")
     missing = [capability_id for capability_id in path_ids if capability_node(graph, capability_id) is None]
     if missing:
         errors.append("Capability IDs missing from current graph: " + ", ".join(missing))
-    unresolved = tuple(str(item) for item in path_packet.get("unresolved_execution_capability_ids", []) or [])
+    unresolved = tuple(
+        str(item) for item in authoritative_path.get("unresolved_execution_capability_ids", []) or []
+    )
     if unresolved:
         errors.append("Execution class unresolved: " + ", ".join(unresolved))
 
+    model_ids = tuple(
+        str(item) for item in authoritative_path.get("model_dependent_capability_ids", []) or []
+    )
     candidates: list[dict[str, Any]] = []
-    if not errors:
-        candidates = store.query_candidates(context)
-    zero_model = zero_model_eligibility(path_packet)
+    if not errors and model_ids:
+        # query_candidates only reads routing fields; this non-persisted view keeps
+        # the full TaskContext authoritative while scoring the model-dependent subset.
+        candidate_context = replace(context, required_capability_ids=model_ids)
+        candidates = store.query_candidates(candidate_context)
+    zero_model = zero_model_eligibility(authoritative_path)
     return {
         "ok": not errors,
         "errors": errors,
         "task_context_id": context.task_context_id,
         "graph_digest": current_digest,
-        "path_digest": path_packet.get("path_digest", ""),
+        "path_digest": authoritative_path.get("path_digest", ""),
         "required_capability_ids": list(path_ids),
+        "model_dependent_capability_ids": list(model_ids),
         "zero_model": zero_model,
         "model_candidates": candidates,
         "candidate_count": len(candidates),
