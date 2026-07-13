@@ -1,0 +1,90 @@
+name: Refresh Final CODEMAP Once
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/refresh-final-codemap-once.yml"
+  push:
+    branches:
+      - refactor/model-connectome-bridge
+    paths:
+      - ".github/workflows/refresh-final-codemap-once.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Clone exact branch into workspace root
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          git clone --depth 1 --branch refactor/model-connectome-bridge \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0"
+      - name: Remove helper and regenerate stable topology
+        run: |
+          set -euo pipefail
+          rm .github/workflows/refresh-final-codemap-once.yml
+          python aura_codebase_navigator.py
+          cp .aura/CODEMAP.json "${RUNNER_TEMP}/first.json"
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/first.json"
+      - name: Create detached final map commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/map-commit"
+          python - <<'PY'
+          import base64, json, os, subprocess, urllib.request
+          from pathlib import Path
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parent = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          api = f"https://api.github.com/repos/{repo}/git"
+          headers = {"Accept":"application/vnd.github+json","Authorization":f"Bearer {token}","X-GitHub-Api-Version":"2022-11-28","User-Agent":"aura-final-codemap"}
+          def req(method, url, payload=None):
+              body = None if payload is None else json.dumps(payload).encode()
+              request = urllib.request.Request(url, data=body, headers=headers, method=method)
+              with urllib.request.urlopen(request, timeout=180) as response:
+                  return json.load(response)
+          parent_commit = req("GET", f"{api}/commits/{parent}")
+          entries=[]
+          for path in (".aura/CODEMAP.md",".aura/CODEMAP.json","topology_map.json"):
+              blob=req("POST",f"{api}/blobs",{"content":base64.b64encode(Path(path).read_bytes()).decode(),"encoding":"base64"})
+              entries.append({"path":path,"mode":"100644","type":"blob","sha":blob["sha"]})
+          entries.append({"path":".github/workflows/refresh-final-codemap-once.yml","mode":"100644","type":"blob","sha":None})
+          tree=req("POST",f"{api}/trees",{"base_tree":parent_commit["tree"]["sha"],"tree":entries})
+          commit=req("POST",f"{api}/commits",{"message":"chore(codemap): refresh final clean Model Connectome topology","tree":tree["sha"],"parents":[parent]})
+          out=Path(os.environ["RUNNER_TEMP"])/"map-commit"
+          (out/"commit_sha.txt").write_text(commit["sha"]+"\n")
+          (out/"parent_sha.txt").write_text(parent+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-clean-codemap-${{ github.run_id }}
+          path: ${{ runner.temp }}/map-commit/
+          if-no-files-found: error
+          retention-days: 2
