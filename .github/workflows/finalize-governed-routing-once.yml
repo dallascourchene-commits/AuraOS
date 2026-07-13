@@ -43,7 +43,6 @@ jobs:
             pytest pytest-asyncio ruff
       - name: Patch, validate, regenerate, and push clean branch
         run: |
-          mkdir -p finalizer-report
           python - <<'PY'
           from pathlib import Path
 
@@ -73,13 +72,16 @@ jobs:
           )
           finalizer.write_text(script, encoding="utf-8")
           PY
+          rm -rf finalizer-report
           set +e
           python tools/one_time_finalize_governed_routing.py \
-            > finalizer-report/output.log 2>&1
+            > /tmp/governed-routing-finalizer.log 2>&1
           code=$?
           set -e
+          mkdir -p finalizer-report
+          cp /tmp/governed-routing-finalizer.log finalizer-report/output.log
           printf '%s\n' "$code" > finalizer-report/exit_code
-          tail -n 250 finalizer-report/output.log || true
+          tail -n 250 /tmp/governed-routing-finalizer.log || true
           exit "$code"
       - name: Upload finalizer report
         if: always()
