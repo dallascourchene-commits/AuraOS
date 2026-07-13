@@ -1,6 +1,9 @@
 name: Refresh Cognome CODEMAP Once
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/refresh-cognome-codemap-once.yml"
   push:
     branches:
       - refactor/model-cognome-adaptive-router
