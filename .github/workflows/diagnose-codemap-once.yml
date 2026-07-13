@@ -4,11 +4,17 @@ on:
   pull_request:
     paths:
       - ".github/workflows/diagnose-codemap-once.yml"
+  push:
+    branches:
+      - refactor/model-connectome-bridge
+    paths:
+      - ".github/workflows/diagnose-codemap-once.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
+# One-time patch; the detached commit removes this workflow.
 jobs:
   patch:
     runs-on: ubuntu-latest
