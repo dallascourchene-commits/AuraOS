@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/model_cognome_v1.schema.json",
+  "title": "Aura Model Cognome V1 portable record envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "record",
+    "patch_authority",
+    "vsa_patch_authority"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_type": {
+      "enum": [
+        "model_endpoint",
+        "task_context",
+        "route_decision",
+        "model_observation",
+        "model_capability_edge",
+        "capability_posterior",
+        "dikwp_envelope"
+      ]
+    },
+    "record": {"type": "object"},
+    "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+    "vsa_patch_authority": {"const": false}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"record_type": {"const": "model_endpoint"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/model_endpoint"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "task_context"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/task_context"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "route_decision"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/route_decision"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "model_observation"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/model_observation"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "model_capability_edge"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/model_capability_edge"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "capability_posterior"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/capability_posterior"}}}
+    },
+    {
+      "if": {"properties": {"record_type": {"const": "dikwp_envelope"}}},
+      "then": {"properties": {"record": {"$ref": "#/$defs/dikwp_envelope"}}}
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "nonempty_string": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "minLength": 1},
+    "probability": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "nonnegative_number": {"type": ["number", "null"], "minimum": 0},
+    "access_class": {"enum": ["OPEN_WEIGHT", "GRAY_BOX", "BLACK_BOX"]},
+    "endpoint_status": {"enum": ["ACTIVE", "STALE", "QUARANTINED", "RETIRED"]},
+    "measurement_class": {
+      "enum": ["MEASURED", "TOKENIZER_EXACT", "DERIVED", "ESTIMATED", "UNAVAILABLE", "INFERRED"]
+    },
+    "evidence_class": {"enum": ["BEHAVIORAL_SURROGATE", "MECHANISTIC_OPEN_WEIGHT", "INFERRED"]},
+    "route_policy": {"enum": ["ZERO_MODEL", "DIRECT", "CASCADE", "PANEL"]},
+    "validation_split": {"enum": ["TRAIN", "VALIDATION", "SHADOW"]},
+    "dikwp_stage": {"enum": ["DATA", "INFORMATION", "KNOWLEDGE", "WISDOM", "PURPOSE"]},
+    "model_endpoint": {
+      "type": "object",
+      "required": [
+        "profile_id", "provider", "requested_model", "returned_model",
+        "access_class", "endpoint_fingerprint", "fingerprint_version", "status"
+      ],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/nonempty_string"},
+        "provider": {"$ref": "#/$defs/nonempty_string"},
+        "requested_model": {"$ref": "#/$defs/nonempty_string"},
+        "returned_model": {"$ref": "#/$defs/nonempty_string"},
+        "access_class": {"$ref": "#/$defs/access_class"},
+        "endpoint_fingerprint": {"$ref": "#/$defs/digest"},
+        "fingerprint_version": {"$ref": "#/$defs/nonempty_string"},
+        "status": {"$ref": "#/$defs/endpoint_status"}
+      },
+      "additionalProperties": true
+    },
+    "task_context": {
+      "type": "object",
+      "required": ["task_context_id", "objective_hash", "purpose_digest", "data_egress_allowed"],
+      "properties": {
+        "task_context_id": {"$ref": "#/$defs/nonempty_string"},
+        "objective_hash": {"$ref": "#/$defs/digest"},
+        "purpose_digest": {"$ref": "#/$defs/digest"},
+        "required_capability_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "capability_graph_digest": {"type": "string"},
+        "data_egress_allowed": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "route_decision": {
+      "type": "object",
+      "required": ["route_decision_id", "task_context_id", "purpose_digest", "policy_mode", "policy_version", "proposal_only"],
+      "properties": {
+        "route_decision_id": {"$ref": "#/$defs/nonempty_string"},
+        "task_context_id": {"$ref": "#/$defs/nonempty_string"},
+        "purpose_digest": {"$ref": "#/$defs/digest"},
+        "policy_mode": {"$ref": "#/$defs/route_policy"},
+        "policy_version": {"$ref": "#/$defs/nonempty_string"},
+        "selected_profile_ids": {"type": "array", "items": {"type": "string"}},
+        "proposal_only": {"const": true}
+      },
+      "additionalProperties": true
+    },
+    "model_observation": {
+      "type": "object",
+      "required": ["observation_id", "profile_id", "measurement_class", "evidence_class", "created_at"],
+      "properties": {
+        "observation_id": {"$ref": "#/$defs/nonempty_string"},
+        "profile_id": {"$ref": "#/$defs/nonempty_string"},
+        "measurement_class": {"$ref": "#/$defs/measurement_class"},
+        "evidence_class": {"$ref": "#/$defs/evidence_class"},
+        "cost_usd": {"$ref": "#/$defs/nonnegative_number"},
+        "time_to_verified_outcome_ms": {"$ref": "#/$defs/nonnegative_number"},
+        "created_at": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "model_capability_edge": {
+      "type": "object",
+      "required": ["edge_id", "profile_id", "aura_capability_id", "task_bucket", "support_level", "status"],
+      "properties": {
+        "edge_id": {"$ref": "#/$defs/nonempty_string"},
+        "profile_id": {"$ref": "#/$defs/nonempty_string"},
+        "aura_capability_id": {"$ref": "#/$defs/nonempty_string"},
+        "task_bucket": {"$ref": "#/$defs/nonempty_string"},
+        "verified_success_probability": {"$ref": "#/$defs/probability"},
+        "capability_graph_digest": {"type": "string"},
+        "status": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "capability_posterior": {
+      "type": "object",
+      "required": [
+        "profile_id", "task_bucket", "context_bucket", "verifier_id",
+        "validation_split", "verified_success_alpha", "verified_success_beta"
+      ],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/nonempty_string"},
+        "task_bucket": {"$ref": "#/$defs/nonempty_string"},
+        "context_bucket": {"$ref": "#/$defs/nonempty_string"},
+        "verifier_id": {"$ref": "#/$defs/nonempty_string"},
+        "validation_split": {"$ref": "#/$defs/validation_split"},
+        "verified_success_alpha": {"type": "number", "exclusiveMinimum": 0},
+        "verified_success_beta": {"type": "number", "exclusiveMinimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "dikwp_envelope": {
+      "type": "object",
+      "required": ["envelope_id", "correlation_id", "stage", "payload_digest", "source_record_ids", "proposal_only"],
+      "properties": {
+        "envelope_id": {"$ref": "#/$defs/nonempty_string"},
+        "correlation_id": {"$ref": "#/$defs/nonempty_string"},
+        "stage": {"$ref": "#/$defs/dikwp_stage"},
+        "payload_digest": {"$ref": "#/$defs/digest"},
+        "source_record_ids": {"type": "array", "items": {"type": "string"}},
+        "purpose_digest": {"type": "string"},
+        "proposal_only": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  }
+}

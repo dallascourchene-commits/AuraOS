@@ -47,7 +47,7 @@ jobs:
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio ruff
-      - name: Compile Phase A, Phase B, and Phase C1 modules
+      - name: Compile governed contract modules
         run: |
           python -m py_compile \
             aura_arena_experience.py \
@@ -65,7 +65,13 @@ jobs:
             aura_route_capsule_registry.py \
             aura_route_capsule_compiler.py \
             aura_route_capsule_binding.py \
-            aura_codemap_verify.py
+            aura_codemap_verify.py \
+            aura_model_cognome.py \
+            aura_dikwp_router_pipeline.py \
+            aura_model_cognome_store.py \
+            aura_model_cognome_store_schema.py \
+            aura_model_cognome_store_records.py \
+            aura_model_cognome_store_io.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -85,11 +91,20 @@ jobs:
             aura_route_capsule_compiler.py \
             aura_route_capsule_binding.py \
             aura_codemap_verify.py \
+            aura_model_cognome.py \
+            aura_dikwp_router_pipeline.py \
+            aura_model_cognome_store.py \
+            aura_model_cognome_store_schema.py \
+            aura_model_cognome_store_records.py \
+            aura_model_cognome_store_io.py \
             tests/test_aura_arena_experience_ledger.py \
             tests/test_aura_crucible_phase_b.py \
             tests/test_aura_phase_c1_route_capsules.py \
-            tests/test_aura_codemap_verify.py
-      - name: Run focused Arena, Crucible, and Route Capsule tests
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_model_cognome.py \
+            tests/test_aura_dikwp_router_pipeline.py \
+            tests/test_aura_model_cognome_store.py
+      - name: Run focused governed contract tests
         run: |
           python -m pytest -q \
             tests/test_aura_arena_experience_ledger.py \
@@ -98,7 +113,10 @@ jobs:
             tests/test_aura_codemap_verify.py \
             tests/test_aura_arena_live_cli.py \
             tests/test_aura_coding_workbench_wfst_equivalence.py \
-            tests/test_aura_human_agent_wfst_live_integration.py
+            tests/test_aura_human_agent_wfst_live_integration.py \
+            tests/test_aura_model_cognome.py \
+            tests/test_aura_dikwp_router_pipeline.py \
+            tests/test_aura_model_cognome_store.py
 
   full-pytest-suite:
     name: Full pytest-native suite
