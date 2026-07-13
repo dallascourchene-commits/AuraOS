@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import sqlite3
 import time
 from typing import Any
@@ -164,15 +165,156 @@ class CognomeRecordMixin:
         row = self._conn.execute("SELECT record_json FROM model_observations WHERE observation_id=?", (observation_id,)).fetchone(); return json.loads(row[0]) if row else None
 
     def query_candidates(self, context: TaskContext) -> list[dict[str, Any]]:
-        required = tuple(dict.fromkeys(context.required_capability_ids))
-        if not required:
-            return [json.loads(row[0]) for row in self._conn.execute("SELECT record_json FROM model_endpoints WHERE status='ACTIVE' ORDER BY provider,returned_model")]
-        marks = ",".join("?" for _ in required); task = context.task_family or context.domain
-        rows = self._conn.execute(f"""SELECT e.record_json,COUNT(DISTINCT m.aura_capability_id) supported
-         FROM model_endpoints e JOIN model_capability_edges m ON m.profile_id=e.profile_id
-         WHERE e.status='ACTIVE' AND m.status='VALIDATED' AND m.evidence_count>0 AND m.evidence_digest<>''
-         AND m.last_validated_at>0 AND m.aura_capability_id IN ({marks})
-         AND m.task_bucket IN (?, '*', 'ANY') AND m.capability_graph_digest=?
-         GROUP BY e.profile_id,e.record_json HAVING supported=? ORDER BY e.provider,e.returned_model""",
-         (*required,task,context.capability_graph_digest,len(required))).fetchall()
-        return [json.loads(row[0]) for row in rows]
+        """Return verifier-backed, graph-pinned routing evidence for complete paths.
+
+        Endpoint identity alone is never a routing candidate. Every returned row
+        supports every required capability on the current graph and carries the
+        weakest-link edge evidence plus an optional VALIDATION/SHADOW posterior.
+        """
+        required = tuple(dict.fromkeys(str(item) for item in context.required_capability_ids))
+        if not required or not context.capability_graph_digest:
+            return []
+        task = str(context.task_family or context.domain or "ANY")
+        bucket = context_bucket(int(context.context_tokens))
+        marks = ",".join("?" for _ in required)
+        profile_rows = self._conn.execute(
+            f"""SELECT e.profile_id,e.record_json,COUNT(DISTINCT m.aura_capability_id) supported
+            FROM model_endpoints e JOIN model_capability_edges m ON m.profile_id=e.profile_id
+            WHERE e.status='ACTIVE' AND m.status='VALIDATED' AND m.evidence_count>0
+              AND m.evidence_digest<>'' AND m.last_validated_at>0
+              AND m.aura_capability_id IN ({marks})
+              AND m.task_bucket IN (?, '*', 'ANY')
+              AND m.capability_graph_digest=?
+            GROUP BY e.profile_id,e.record_json HAVING supported=?
+            ORDER BY e.provider,e.returned_model""",
+            (*required, task, context.capability_graph_digest, len(required)),
+        ).fetchall()
+        candidates: list[dict[str, Any]] = []
+        for profile_row in profile_rows:
+            profile_id = str(profile_row[0])
+            endpoint = json.loads(profile_row[1])
+            edge_rows = self._conn.execute(
+                f"""SELECT record_json FROM model_capability_edges
+                WHERE profile_id=? AND status='VALIDATED' AND evidence_count>0
+                  AND evidence_digest<>'' AND last_validated_at>0
+                  AND aura_capability_id IN ({marks})
+                  AND task_bucket IN (?, '*', 'ANY')
+                  AND capability_graph_digest=?
+                ORDER BY aura_capability_id,task_bucket""",
+                (profile_id, *required, task, context.capability_graph_digest),
+            ).fetchall()
+            edges = [json.loads(row[0]) for row in edge_rows]
+            supported = {str(edge.get("aura_capability_id", "")) for edge in edges}
+            if not set(required).issubset(supported):
+                continue
+
+            posterior: dict[str, Any] | None = None
+            if context.verifier_id:
+                posterior_row = self._conn.execute(
+                    """SELECT record_json FROM capability_posteriors
+                    WHERE profile_id=? AND task_bucket IN (?, '*', 'ANY')
+                      AND context_bucket=? AND verifier_id=?
+                      AND validation_split IN ('SHADOW','VALIDATION')
+                      AND status='VALIDATED' AND sample_count>0 AND evidence_digest<>''
+                    ORDER BY CASE validation_split WHEN 'SHADOW' THEN 0 ELSE 1 END,
+                             CASE task_bucket WHEN ? THEN 0 ELSE 1 END,
+                             last_validated_at DESC LIMIT 1""",
+                    (profile_id, task, bucket, context.verifier_id, task),
+                ).fetchone()
+                if posterior_row is not None:
+                    posterior = json.loads(posterior_row[0])
+
+            def complete_values(name: str) -> list[float]:
+                values = [edge.get(name) for edge in edges]
+                if not values or any(value is None for value in values):
+                    return []
+                return [float(value) for value in values]
+
+            edge_success = complete_values("verified_success_probability")
+            edge_costs = complete_values("mean_cost_usd")
+            edge_times = complete_values("p50_time_to_verified_ms")
+            success = min(edge_success) if edge_success else None
+            cost = max(edge_costs) if edge_costs else None
+            verified_time = max(edge_times) if edge_times else None
+            repair = None
+            scope_rate = None
+            uncertainty = None
+            evidence_split = "VALIDATED_EDGE"
+            if posterior is not None:
+                success = posterior.get("verified_success_mean", success)
+                cost = posterior.get("mean_cost_usd") if posterior.get("mean_cost_usd") is not None else cost
+                verified_time = (
+                    posterior.get("mean_time_to_verified_ms")
+                    if posterior.get("mean_time_to_verified_ms") is not None
+                    else verified_time
+                )
+                repair = posterior.get("mean_repair_attempts")
+                scope_rate = posterior.get("scope_violation_rate")
+                evidence_split = str(posterior.get("validation_split") or "")
+                uncertainty_values: list[float] = []
+                if posterior.get("calibration_error") is not None:
+                    uncertainty_values.append(float(posterior["calibration_error"]))
+                alpha = float(posterior.get("verified_success_alpha") or 0.0)
+                beta = float(posterior.get("verified_success_beta") or 0.0)
+                denominator = alpha + beta
+                if alpha > 0 and beta > 0 and denominator > 0:
+                    variance = alpha * beta / (denominator * denominator * (denominator + 1.0))
+                    uncertainty_values.append(math.sqrt(variance))
+                uncertainty = max(uncertainty_values) if uncertainty_values else None
+
+            edge_counts = [int(edge.get("evidence_count") or 0) for edge in edges]
+            evidence_count = min(edge_counts) if edge_counts else 0
+            if posterior is not None:
+                evidence_count = min(evidence_count, int(posterior.get("sample_count") or 0))
+            evidence_digest = stable_digest(
+                {
+                    "profile_id": profile_id,
+                    "graph_digest": context.capability_graph_digest,
+                    "required": required,
+                    "edges": [
+                        {
+                            "edge_id": edge.get("edge_id"),
+                            "capability_id": edge.get("aura_capability_id"),
+                            "evidence_digest": edge.get("evidence_digest"),
+                            "last_validated_at": edge.get("last_validated_at"),
+                        }
+                        for edge in edges
+                    ],
+                    "posterior": (
+                        {
+                            "split": posterior.get("validation_split"),
+                            "evidence_digest": posterior.get("evidence_digest"),
+                            "last_validated_at": posterior.get("last_validated_at"),
+                        }
+                        if posterior
+                        else None
+                    ),
+                }
+            )
+            drift_row = self._conn.execute(
+                "SELECT drift_score FROM endpoint_fingerprints WHERE profile_id=? "
+                "ORDER BY observed_at DESC LIMIT 1",
+                (profile_id,),
+            ).fetchone()
+            endpoint.update(
+                {
+                    "capability_ids": list(required),
+                    "verified_success_probability": success,
+                    "mean_cost_usd": cost,
+                    "mean_time_to_verified_ms": verified_time,
+                    "mean_repair_attempts": repair,
+                    "scope_violation_rate": scope_rate,
+                    "endpoint_drift_score": drift_row[0] if drift_row is not None else None,
+                    "uncertainty": uncertainty,
+                    "evidence_count": evidence_count,
+                    "evidence_digest": evidence_digest,
+                    "evidence_split": evidence_split,
+                    "capability_graph_digest": context.capability_graph_digest,
+                    "context_bucket": bucket,
+                    "task_bucket": task,
+                    "supported_tools": list(endpoint.get("supported_tools", [])),
+                    "context_window": endpoint.get("context_window"),
+                }
+            )
+            candidates.append(endpoint)
+        return sorted(candidates, key=lambda item: (str(item.get("provider")), str(item.get("returned_model"))))
