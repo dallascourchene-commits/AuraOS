@@ -25,4 +25,4 @@ RUN useradd -m -u 1000 aura \
 USER aura
 EXPOSE 10000
 
-CMD ["sh", "-c", "python aura_showcase_server.py --host 0.0.0.0 --port ${PORT:-10000} --demo-project winnipeg_pathways"]
+CMD ["sh", "-c", "exec python aura_showcase_server.py --host 0.0.0.0 --port ${PORT:-10000} --demo-project winnipeg_pathways"]
