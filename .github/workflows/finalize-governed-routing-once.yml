@@ -44,6 +44,23 @@ jobs:
       - name: Patch, validate, regenerate, and push clean branch
         run: |
           mkdir -p finalizer-report
+          python - <<'PY'
+          from pathlib import Path
+
+          records = Path("aura_model_cognome_store_records.py")
+          text = records.read_text(encoding="utf-8")
+          if "import math\n" not in text:
+              text = text.replace("import json\n", "import json\nimport math\n", 1)
+              records.write_text(text, encoding="utf-8")
+
+          finalizer = Path("tools/one_time_finalize_governed_routing.py")
+          script = finalizer.read_text(encoding="utf-8")
+          script = script.replace(
+              'copy = ROOT / ".aura/CODEMAP.finalizer-first.json"',
+              'copy = Path("/tmp/CODEMAP.finalizer-first.json")',
+          )
+          finalizer.write_text(script, encoding="utf-8")
+          PY
           set +e
           python tools/one_time_finalize_governed_routing.py \
             > finalizer-report/output.log 2>&1
