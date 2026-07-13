@@ -12,6 +12,7 @@ from aura_capability_connectome_v2 import (
     MODEL_DEPENDENT,
     UNRESOLVED_EXECUTION,
     capability_node,
+    enrich_connectome,
     zero_model_eligibility,
 )
 from aura_model_cognome import ModelCapabilityEdge, TaskContext
@@ -30,7 +31,7 @@ class CognomeBridgeStore(Protocol):
 def current_connectome(repo_root: str | Path = ".") -> dict[str, Any]:
     from aura_capability_connectome import build_capability_connectome
 
-    return build_capability_connectome(repo_root)
+    return enrich_connectome(build_capability_connectome(repo_root))
 
 
 def validate_model_capability_edge(
