@@ -65,6 +65,14 @@ jobs:
           if old not in text:
               raise SystemExit("pytest-native replacement marker missing")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          arena_test = Path("test_aura_liquid_planning_arena.py")
+          arena_text = arena_test.read_text(encoding="utf-8")
+          old_output = 'assert civic_action.expected_output == "CIVIC_INTERVENTION_PLAN"'
+          new_output = 'assert civic_action.expected_output == "CIVIC_DECISION_PACKET"'
+          if old_output not in arena_text:
+              raise SystemExit("stale civic expectation marker missing")
+          arena_test.write_text(arena_text.replace(old_output, new_output, 1), encoding="utf-8")
           PY
           rm -rf /tmp/cognome-replay-probes-report
           set +e
