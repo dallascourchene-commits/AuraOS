@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1783981355,
+  "generated_at_unix": 1783982059,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 775,
+    "included_file_count": 776,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,8 +13,10 @@
     ],
     "skipped_dir_file_counts": {
       ".git": 27,
+      ".pytest_cache": 4,
+      ".ruff_cache": 4,
       "Aura_Memory": 1,
-      "__pycache__": 8
+      "__pycache__": 9
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -778,6 +780,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_render_four_tab_deployment.py",
+      "tools/one_time_codemap_stability_fix.py",
       "topology_map.json",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -795,23 +798,23 @@
     ]
   },
   "summary": {
-    "file_count": 775,
-    "total_bytes": 62204858,
-    "text_tokens_est": 6154979,
+    "file_count": 776,
+    "total_bytes": 62212514,
+    "text_tokens_est": 6156895,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 110,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 539,
+      "python_module": 540,
       "schema_or_lexicon": 57,
       "support_file": 41
     },
     "topology_nodes": 6783,
     "topology_edges": 14003,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 14328.57
+    "elapsed_ms": 18582.68
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1594,6 +1597,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_render_four_tab_deployment.py",
+      "tools/one_time_codemap_stability_fix.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -15793,8 +15797,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 311,
-        "end_line": 313,
+        "line": 315,
+        "end_line": 317,
         "semantic_id": "aura_codemap_verify.py#function:_canonical_digest:f8aec97fbdb5f28e",
         "signature_hash": "0513d5eea6b714f2"
       }
@@ -17925,8 +17929,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 340,
-        "end_line": 349,
+        "line": 344,
+        "end_line": 353,
         "semantic_id": "aura_codemap_verify.py#function:_denial:202294da69bc0878",
         "signature_hash": "e8caebee64f65b1b"
       },
@@ -22091,8 +22095,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 326,
-        "end_line": 330,
+        "line": 330,
+        "end_line": 334,
         "semantic_id": "aura_codemap_verify.py#function:_integer:4ce4f6b22e5d1302",
         "signature_hash": "ecb6632d8f432715"
       }
@@ -23635,8 +23639,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 316,
-        "end_line": 318,
+        "line": 320,
+        "end_line": 322,
         "semantic_id": "aura_codemap_verify.py#function:_markdown_integer:20dcb0c09fef7f08",
         "signature_hash": "7348ac9d9f3af818"
       }
@@ -23655,8 +23659,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 321,
-        "end_line": 323,
+        "line": 325,
+        "end_line": 327,
         "semantic_id": "aura_codemap_verify.py#function:_markdown_text:d1398f37a34fbe85",
         "signature_hash": "4d2681f9060557d8"
       }
@@ -26181,8 +26185,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 333,
-        "end_line": 337,
+        "line": 337,
+        "end_line": 341,
         "semantic_id": "aura_codemap_verify.py#function:_ratio:e7dfc1886d9ecd5d",
         "signature_hash": "552bc332ddcbf89c"
       },
@@ -29453,8 +29457,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 279,
-        "end_line": 290,
+        "line": 283,
+        "end_line": 294,
         "semantic_id": "aura_codemap_verify.py#function:_stable_topology_bucket:488cc10e2d71aeda",
         "signature_hash": "0fc47c54182e7761"
       }
@@ -34617,8 +34621,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 293,
-        "end_line": 301,
+        "line": 297,
+        "end_line": 305,
         "semantic_id": "aura_codemap_verify.py#function:build_parser:e271201cdbe8aeb5",
         "signature_hash": "0b42d711d564d255"
       },
@@ -37151,8 +37155,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 276,
+        "line": 252,
+        "end_line": 280,
         "semantic_id": "aura_codemap_verify.py#function:compare_codemap_payloads:460f49e83a91c06a",
         "signature_hash": "865daf9cc7a75e14"
       }
@@ -38169,6 +38173,16 @@
         "end_line": 105,
         "semantic_id": "aura_civic_runtime.py#function:create_civic_session:1de7990c3686b74e",
         "signature_hash": "bd9c567926f830ac"
+      }
+    ],
+    "create_commit": [
+      {
+        "file": "tools/one_time_codemap_stability_fix.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 161,
+        "semantic_id": "tools/one_time_codemap_stability_fix.py#function:create_commit:1a68ab00385f41f1",
+        "signature_hash": "a37a37ded6b04f43"
       }
     ],
     "create_comparison_id": [
@@ -45373,8 +45387,8 @@
       {
         "file": "aura_codemap_verify.py",
         "kind": "function",
-        "line": 304,
-        "end_line": 308,
+        "line": 308,
+        "end_line": 312,
         "semantic_id": "aura_codemap_verify.py#function:main:aa2e60595597f5aa",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -46901,6 +46915,16 @@
         "end_line": 87,
         "semantic_id": "aura_resonant_test_oracle.py#method:ResonantAssertion.passed:e68116c311a47aaa",
         "signature_hash": "3f0260e8dc67f313"
+      }
+    ],
+    "patch_files": [
+      {
+        "file": "tools/one_time_codemap_stability_fix.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 99,
+        "semantic_id": "tools/one_time_codemap_stability_fix.py#function:patch_files:c91041757aab3446",
+        "signature_hash": "3ed7a374df27958b"
       }
     ],
     "pause": [
@@ -49389,6 +49413,16 @@
         "signature_hash": "39bdc48f846667fb"
       }
     ],
+    "request": [
+      {
+        "file": "tools/one_time_codemap_stability_fix.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 123,
+        "semantic_id": "tools/one_time_codemap_stability_fix.py#function:request:25f3c0378605b413",
+        "signature_hash": "80a32bb125a3221c"
+      }
+    ],
     "require": [
       {
         "file": "aura_language_source_registry.py",
@@ -50239,6 +50273,14 @@
         "end_line": 157,
         "semantic_id": "pvm_arch_checker.py#method:PVMArchChecker.run:f15d1ebd8e12a791",
         "signature_hash": "059588ce65dc390d"
+      },
+      {
+        "file": "tools/one_time_codemap_stability_fix.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tools/one_time_codemap_stability_fix.py#function:run:d797ab7f6caa5b5d",
+        "signature_hash": "fc7d5752dcbf3f88"
       }
     ],
     "run_agentless_fallback": [
@@ -52030,7 +52072,7 @@
         "file": "aura_codemap_verify.py",
         "kind": "function",
         "line": 187,
-        "end_line": 246,
+        "end_line": 249,
         "semantic_id": "aura_codemap_verify.py#function:stable_codemap_projection:799037496844cbf5",
         "signature_hash": "1a2ed6ef262f24d6"
       }
@@ -59039,6 +59081,16 @@
         "signature_hash": "f550dcc1abf09cd8"
       }
     ],
+    "test_generated_topology_size_drift_is_normalized": [
+      {
+        "file": "tests/test_aura_codemap_verify.py",
+        "kind": "function",
+        "line": 200,
+        "end_line": 230,
+        "semantic_id": "tests/test_aura_codemap_verify.py#function:test_generated_topology_size_drift_is_normalized:bc8787c87e7135f0",
+        "signature_hash": "da611004b0b18b60"
+      }
+    ],
     "test_generic_query_uses_raw_tokens": [
       {
         "file": "test_aura_skillweaver.py",
@@ -64575,6 +64627,16 @@
         "end_line": 73,
         "semantic_id": "tests/test_aura_coding_tensor_adapter.py#method:TestCodingTensorAdapter.test_ready_for_handoff_when_grounded_tested:01ae330bae3f7df7",
         "signature_hash": "82f26fb556bba3b5"
+      }
+    ],
+    "test_real_source_card_size_change_is_still_detected": [
+      {
+        "file": "tests/test_aura_codemap_verify.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_codemap_verify.py#function:test_real_source_card_size_change_is_still_detected:f6506ce5cae6b25a",
+        "signature_hash": "fca227191b1a21d9"
       }
     ],
     "test_reasoning_token_handling": [
@@ -72647,6 +72709,16 @@
         "end_line": 52,
         "semantic_id": "aura_vsa_encoding_profile.py#method:VSAEncodingProfile.validate:11b9185a0c660933",
         "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "validate_and_generate": [
+      {
+        "file": "tools/one_time_codemap_stability_fix.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 110,
+        "semantic_id": "tools/one_time_codemap_stability_fix.py#function:validate_and_generate:2018f33929d6a744",
+        "signature_hash": "8fe0ac1631e194b1"
       }
     ],
     "validate_block": [
@@ -83940,9 +84012,9 @@
     {
       "path": "aura_codemap_verify.py",
       "role": "python_module",
-      "bytes": 13580,
-      "lines": 354,
-      "tokens_est": 3395,
+      "bytes": 13805,
+      "lines": 358,
+      "tokens_est": 3452,
       "symbol_count": 12,
       "commands": [],
       "command_lines": {},
@@ -83975,40 +84047,40 @@
           "import_module": 1
         }
       },
-      "digest8": "66153f83ab490f34",
+      "digest8": "25c81ee8697dd897",
       "vector": [
-        0.090982,
-        0.258768,
-        -0.187872,
-        0.053171,
-        -0.147698,
-        -0.145335,
-        -0.076803,
-        -0.180783,
-        0.254041,
-        -0.100435,
-        -0.114614,
-        -0.027177,
-        -0.263494,
-        0.261131,
-        0.076803,
-        0.244589,
-        0.150062,
-        0.17842,
-        -0.010634,
-        -0.199688,
-        0.02954,
-        -0.147698,
-        -0.168967,
-        0.112251,
-        0.124067,
-        -0.26822,
-        -0.072077,
-        -0.249315,
-        -0.291852,
-        -0.27531,
-        -0.183146,
-        0.076803
+        0.266912,
+        -0.169233,
+        0.137431,
+        -0.269183,
+        0.114715,
+        0.287356,
+        0.157875,
+        0.105629,
+        0.198764,
+        -0.269183,
+        0.116987,
+        -0.212394,
+        0.062469,
+        -0.26464,
+        0.20785,
+        0.201036,
+        0.210122,
+        0.169233,
+        0.014765,
+        -0.096543,
+        0.17832,
+        -0.037481,
+        -0.203307,
+        0.128345,
+        -0.255554,
+        -0.032938,
+        -0.023852,
+        -0.210122,
+        0.073827,
+        -0.06474,
+        0.214665,
+        0.091999
       ]
     },
     {
@@ -110974,47 +111046,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 13648136,
+      "bytes": 13647398,
       "lines": 436171,
-      "tokens_est": 3412034,
+      "tokens_est": 3411850,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "964b19e2a5147e4e",
+      "digest8": "860afa1ad480016e",
       "vector": [
-        -0.198784,
-        -0.045683,
-        -0.186437,
-        -0.211131,
-        0.006173,
-        0.085193,
-        -0.282743,
-        0.21607,
-        0.038275,
-        -0.008643,
-        0.048153,
-        0.277804,
-        -0.025928,
-        -0.154336,
-        -0.262988,
-        -0.17656,
-        -0.095071,
-        -0.282743,
-        -0.287682,
-        -0.250641,
-        0.260518,
-        -0.01852,
-        -0.045683,
-        0.016051,
-        -0.141989,
-        0.208662,
-        0.151866,
-        -0.003704,
-        -0.238294,
-        -0.260518,
-        -0.141989,
-        0.050622
+        -0.092594,
+        0.301938,
+        0.159691,
+        -0.178479,
+        0.269731,
+        0.073807,
+        -0.025497,
+        -0.309989,
+        0.293886,
+        0.146272,
+        0.00671,
+        0.159691,
+        -0.044284,
+        -0.253628,
+        0.15164,
+        0.165059,
+        0.05502,
+        0.288518,
+        -0.258995,
+        0.0416,
+        0.208001,
+        -0.014761,
+        0.159691,
+        -0.095278,
+        0.13822,
+        0.261679,
+        -0.170427,
+        0.033549,
+        -0.00671,
+        -0.157008,
+        -0.178479,
+        0.10333
       ]
     },
     {
@@ -120067,10 +120139,10 @@
     {
       "path": "tests/test_aura_codemap_verify.py",
       "role": "python_module",
-      "bytes": 7805,
-      "lines": 197,
-      "tokens_est": 1952,
-      "symbol_count": 9,
+      "bytes": 9353,
+      "lines": 241,
+      "tokens_est": 2339,
+      "symbol_count": 11,
       "commands": [
         "!test"
       ],
@@ -120080,40 +120152,40 @@
         ]
       },
       "topology": {},
-      "digest8": "b1479db328c0ea8c",
+      "digest8": "15cd806dae65025d",
       "vector": [
-        -0.157378,
-        -0.210953,
-        0.27569,
-        -0.114964,
-        0.003348,
-        -0.023439,
-        -0.103802,
-        0.268993,
-        -0.231044,
-        -0.083712,
-        -0.168539,
-        0.103802,
-        -0.016742,
-        0.052459,
-        -0.273458,
-        0.047995,
-        0.242206,
-        -0.271226,
-        -0.132822,
-        0.184166,
-        0.253367,
-        0.231044,
-        0.177469,
-        0.280155,
-        -0.284619,
-        -0.137287,
-        -0.088176,
-        -0.10157,
-        0.117196,
-        -0.007813,
-        0.168539,
-        0.081479
+        -0.278233,
+        0.20622,
+        -0.247682,
+        0.075287,
+        0.223678,
+        0.134207,
+        0.173487,
+        -0.208402,
+        -0.036007,
+        0.243318,
+        -0.173487,
+        0.123295,
+        0.105838,
+        0.182215,
+        -0.223678,
+        0.066558,
+        -0.223678,
+        0.149482,
+        -0.101473,
+        0.212766,
+        -0.084015,
+        0.099291,
+        0.269504,
+        -0.066558,
+        0.064376,
+        -0.22586,
+        -0.079651,
+        -0.276051,
+        0.223678,
+        0.090562,
+        0.182215,
+        0.125478
       ]
     },
     {
@@ -123204,6 +123276,52 @@
         0.123319,
         0.18674,
         0.109225
+      ]
+    },
+    {
+      "path": "tools/one_time_codemap_stability_fix.py",
+      "role": "python_module",
+      "bytes": 6621,
+      "lines": 168,
+      "tokens_est": 1656,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f55e4a0e313b8c6c",
+      "vector": [
+        -0.219045,
+        0.057289,
+        0.277457,
+        0.252745,
+        -0.178606,
+        -0.061782,
+        -0.187593,
+        -0.230278,
+        0.124687,
+        0.111208,
+        -0.196579,
+        0.140414,
+        -0.198826,
+        0.243758,
+        -0.221292,
+        -0.088741,
+        0.061782,
+        -0.120194,
+        0.243758,
+        0.219045,
+        0.196579,
+        0.281951,
+        0.037069,
+        -0.230278,
+        0.00337,
+        -0.124687,
+        -0.050549,
+        -0.070768,
+        0.203319,
+        0.228032,
+        -0.046056,
+        -0.158387
       ]
     },
     {

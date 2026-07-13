@@ -194,3 +194,47 @@ def test_verify_codemap_can_compare_pre_regeneration_snapshot(tmp_path: Path):
     result = verify_codemap(tmp_path, compare_json_path=comparison_path)
     assert result["ok"]
     assert result["stable_comparison"]["ok"]
+
+
+
+def test_generated_topology_size_drift_is_normalized():
+    reference = _payload()
+    regenerated = json.loads(json.dumps(reference))
+    reference_card = {
+        "path": "topology_map.json",
+        "role": "schema_or_lexicon",
+        "bytes": 100,
+        "lines": 10,
+        "tokens_est": 25,
+        "symbol_count": 0,
+        "commands": [],
+        "command_lines": {},
+        "digest8": "first-generated-digest",
+    }
+    regenerated_card = {
+        **reference_card,
+        "bytes": 141,
+        "lines": 12,
+        "tokens_est": 35,
+        "digest8": "second-generated-digest",
+    }
+    reference["files"].append(reference_card)
+    regenerated["files"].append(regenerated_card)
+    reference["summary"]["file_count"] += 1
+    regenerated["summary"]["file_count"] += 1
+    reference["summary"]["total_bytes"] += reference_card["bytes"]
+    regenerated["summary"]["total_bytes"] += regenerated_card["bytes"]
+    reference["summary"]["text_tokens_est"] += reference_card["tokens_est"]
+    regenerated["summary"]["text_tokens_est"] += regenerated_card["tokens_est"]
+    result = compare_codemap_payloads(reference, regenerated)
+    assert result["ok"]
+
+
+def test_real_source_card_size_change_is_still_detected():
+    reference = _payload()
+    regenerated = json.loads(json.dumps(reference))
+    regenerated["files"][0]["bytes"] += 1
+    regenerated["summary"]["total_bytes"] += 1
+    result = compare_codemap_payloads(reference, regenerated)
+    assert not result["ok"]
+    assert "source_cards" in result["differing_fields"]
