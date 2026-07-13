@@ -73,6 +73,21 @@ jobs:
           if old_output not in arena_text:
               raise SystemExit("stale civic expectation marker missing")
           arena_test.write_text(arena_text.replace(old_output, new_output, 1), encoding="utf-8")
+
+          review_test = Path("test_aura_live_architect_review_artifacts.py")
+          review_text = review_test.read_text(encoding="utf-8")
+          old_attempt = '    assert attempt["repair"]["candidate_diff"] == worker_diff.strip()\n'
+          new_attempt = (
+              '    assert attempt["preflight"]["ok"] is True\n'
+              '    assert attempt["repair"] is None\n'
+          )
+          old_saved = '    assert saved_attempt["repair"]["candidate_diff"] == worker_diff.strip()\n'
+          new_saved = '    assert saved_attempt["repair"] is None\n'
+          if old_attempt not in review_text or old_saved not in review_text:
+              raise SystemExit("stale architect repair expectation marker missing")
+          review_text = review_text.replace(old_attempt, new_attempt, 1)
+          review_text = review_text.replace(old_saved, new_saved, 1)
+          review_test.write_text(review_text, encoding="utf-8")
           PY
           rm -rf /tmp/cognome-replay-probes-report
           set +e
