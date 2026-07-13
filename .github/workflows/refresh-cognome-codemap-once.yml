@@ -19,12 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Checkout exact branch
-        uses: actions/checkout@v4
-        with:
-          ref: refactor/model-cognome-adaptive-router
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Clone exact branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf repo
+          git clone --depth 1 --branch refactor/model-cognome-adaptive-router \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -46,6 +48,7 @@ jobs:
             "cryptography>=41.0.0,<45.0"
 
       - name: Regenerate and commit topology artifacts
+        working-directory: repo
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -57,5 +60,4 @@ jobs:
           git add .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json \
             .github/workflows/refresh-cognome-codemap-once.yml
           git commit -m "chore(codemap): refresh Model Cognome topology"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
-            HEAD:refactor/model-cognome-adaptive-router
+          git push origin HEAD:refactor/model-cognome-adaptive-router
