@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from urllib.parse import parse_qs, urlparse
 
+from aura_arena_attempt_archive import ArenaAttemptArchive
+from aura_arena_gate_dialogue import ArenaGateDialogueService
 from aura_civic_guided_project import (
     advance_project,
     back_project,
@@ -42,13 +44,20 @@ from aura_showcase_spatial import (
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V6"
+SHOWCASE_VERSION = "AURA_WINNIPEG_SHOWCASE_V8"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8091
 DEFAULT_BASEMAP_TILE_URL_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 STATIC_DIR = Path(__file__).resolve().parent / "aura_showcase"
 MAX_BODY_BYTES = 1_000_000
 MAX_SELECTED_NODES = 4
+_ARCHIVED_ATTEMPT_ROUTES = {
+    "/api/human-agent/workflow/action",
+    "/api/human-agent/workflow/command",
+    "/api/human-agent/tools/run",
+    "/api/coding-workbench/action",
+    "/api/coding-workbench/command",
+}
 
 
 def basemap_tile_url_template() -> str:
@@ -62,6 +71,8 @@ class ShowcaseState:
         self.repo_root = Path(repo_root).resolve()
         self._human_agent: Any = None
         self._crucible: LearningArenaShowcase | None = None
+        self._gate_dialogue: ArenaGateDialogueService | None = None
+        self._attempt_archive: ArenaAttemptArchive | None = None
         self.demo_project = demo_project
         self.default_session_id = ""
         self.last_observatory_trace: dict[str, Any] = {}
@@ -80,6 +91,20 @@ class ShowcaseState:
         return self._human_agent
 
     @property
+    def gate_dialogue(self) -> ArenaGateDialogueService:
+        """Bind the approval ledger to the same real Human Agent workflow."""
+        if self._gate_dialogue is None:
+            self._gate_dialogue = ArenaGateDialogueService(self.repo_root, self.human_agent.workflow)
+        return self._gate_dialogue
+
+    @property
+    def attempt_archive(self) -> ArenaAttemptArchive:
+        """Preserve inspectable outputs from every Human and Coding Arena attempt."""
+        if self._attempt_archive is None:
+            self._attempt_archive = ArenaAttemptArchive(self.repo_root)
+        return self._attempt_archive
+
+    @property
     def crucible(self) -> LearningArenaShowcase:
         """Load the runtime-local proposal-only Crucible lazily."""
         if self._crucible is None:
@@ -91,6 +116,8 @@ class ShowcaseState:
             self._human_agent.close()
         if self._crucible is not None:
             self._crucible.close()
+        if self._attempt_archive is not None:
+            self._attempt_archive.close()
 
 
 def _json(status: int, payload: dict[str, Any]) -> tuple[int, str, bytes]:
@@ -118,9 +145,34 @@ def _depth(value: Any, *, default: int = 1) -> int:
         return default
 
 
+def _limit(value: Any, *, default: int = 50, maximum: int = 500) -> int:
+    try:
+        return max(1, min(maximum, int(value)))
+    except (TypeError, ValueError):
+        return default
+
+
+def _query_bool(value: Any) -> bool:
+    return str(value or "").strip().casefold() in {"1", "true", "yes", "on", "failed", "failure"}
+
+
 def _trace_for_handoff(state: ShowcaseState, body: dict[str, Any]) -> dict[str, Any]:
     supplied = body.get("trace")
     return dict(supplied) if isinstance(supplied, dict) else dict(state.last_observatory_trace)
+
+
+def _workflow_snapshot_for_archive(state: ShowcaseState, route: str) -> dict[str, Any]:
+    if route.startswith("/api/coding-workbench"):
+        try:
+            return dict(state.human_agent.coding_workbench.get_state())
+        except Exception:  # noqa: BLE001
+            return {}
+    workflow = state.human_agent.workflow
+    snapshot = getattr(workflow, "get_state_without_routing", None)
+    try:
+        return dict(snapshot() if callable(snapshot) else workflow.get_state())
+    except Exception:  # noqa: BLE001
+        return {}
 
 
 def dispatch_showcase_request(
@@ -145,6 +197,13 @@ def dispatch_showcase_request(
             "default_session_id": state.default_session_id,
             "guide": guide,
             "human_agent_available": True,
+            "human_gate_dialogue_available": True,
+            "topology_anchored_intent": True,
+            "gate_approval_required": True,
+            "attempt_archive_available": True,
+            "failed_attempts_preserved": True,
+            "archived_output_copyable": True,
+            "archived_output_authority": False,
             "observatory_available": True,
             "learning_arena_available": True,
             "learning_arena_identity": "LEARNING_ARENA_CRUCIBLE",
@@ -205,6 +264,58 @@ def dispatch_showcase_request(
         if result.get("ok"):
             state.learning_intake = dict(result)
         return _json(200 if result.get("ok") else 409, result)
+
+    if method == "GET" and route == "/api/showcase/human/gate/status":
+        return _json(200, state.gate_dialogue.status())
+
+    if method == "POST" and route == "/api/showcase/human/gate/address":
+        result = state.gate_dialogue.address(
+            comment=str(body.get("comment") or ""),
+            node_context=body.get("node_context") if isinstance(body.get("node_context"), dict) else {},
+            stage_hint=str(body.get("stage_hint") or ""),
+            prefer_model=body.get("prefer_model", True) is not False,
+        )
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "POST" and route == "/api/showcase/human/gate/approve":
+        result = state.gate_dialogue.approve(
+            proposal_id=str(body.get("proposal_id") or ""),
+            approved=bool(body.get("approved")),
+            current_node_context=(
+                body.get("current_node_context")
+                if isinstance(body.get("current_node_context"), dict)
+                else {}
+            ),
+            stage_hint=str(body.get("stage_hint") or ""),
+            reviewer=str(body.get("reviewer") or "human_operator"),
+            note=str(body.get("note") or ""),
+        )
+        return _json(200 if result.get("ok") else 409, result)
+
+    if method == "GET" and route == "/api/showcase/human/attempts/status":
+        return _json(200, state.attempt_archive.status())
+
+    if method == "GET" and route == "/api/showcase/human/attempts":
+        arena_id = str(query.get("arena_id", [""])[0])
+        workflow_id = str(query.get("workflow_id", [""])[0])
+        failures_only = _query_bool(query.get("failures_only", [""])[0])
+        attempts = state.attempt_archive.list(
+            arena_id=arena_id,
+            workflow_id=workflow_id,
+            failures_only=failures_only,
+            limit=_limit(query.get("limit", [50])[0]),
+        )
+        return _json(200, {
+            "ok": True,
+            "attempts": attempts,
+            "attempt_count": len(attempts),
+            "failures_only": failures_only,
+            "archived_output_authority": False,
+        })
+
+    if method == "GET" and len(parts) == 5 and parts[:4] == ["api", "showcase", "human", "attempts"]:
+        artifact = state.attempt_archive.get(parts[4])
+        return _json(200, {"ok": True, "artifact": artifact}) if artifact else _error("attempt artifact not found", 404)
 
     if method == "GET" and route == "/api/showcase/learning/status":
         arena_id = str(query.get("arena_id", [""])[0])
@@ -312,7 +423,21 @@ def dispatch_showcase_request(
 
     if route.startswith("/api/human-agent") or route.startswith("/api/coding-workbench") or route.startswith("/api/civic"):
         from aura_human_agent_arena_server import dispatch_api_request
-        status, result = dispatch_api_request(state.human_agent, method, raw_path, body)
+        delegated_body = dict(body)
+        archive_context = delegated_body.pop("_arena_archive_context", {})
+        if not isinstance(archive_context, dict):
+            archive_context = {}
+        status, result = dispatch_api_request(state.human_agent, method, raw_path, delegated_body)
+        if method == "POST" and route in _ARCHIVED_ATTEMPT_ROUTES:
+            artifact = state.attempt_archive.record(
+                arena_id="coding_workbench" if route.startswith("/api/coding-workbench") else "human_agent",
+                route=route,
+                request=delegated_body,
+                result=result,
+                workflow_state=_workflow_snapshot_for_archive(state, route),
+                archive_context=archive_context,
+            )
+            result = {**result, "attempt_artifact": artifact}
         return _json(status, result)
 
     return _error("showcase route not found", 404)
@@ -322,7 +447,8 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
     allowed = {
         "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js", "crucible.js",
-        "topology.css", "intent.css", "crucible.css", "styles.css", "guide.css",
+        "gate-dialogue.js", "attempt-archive.js", "topology.css", "intent.css", "crucible.css",
+        "styles.css", "guide.css",
     }
     if relative not in allowed:
         return _error("static asset not found", 404)
@@ -333,10 +459,19 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
         return _error("invalid static path", 400)
     if not path.is_file():
         return _error("static asset not found", 404)
+    body = path.read_bytes()
+    if relative == "index.html":
+        scripts: list[bytes] = []
+        if b'gate-dialogue.js' not in body:
+            scripts.append(b'  <script src="gate-dialogue.js"></script>')
+        if b'attempt-archive.js' not in body:
+            scripts.append(b'  <script src="attempt-archive.js"></script>')
+        if scripts:
+            body = body.replace(b"</body>", b"\n".join(scripts) + b"\n</body>")
     mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
     if mime.startswith("text/") or mime in {"application/javascript", "application/json"}:
         mime += "; charset=utf-8"
-    return 200, mime, path.read_bytes()
+    return 200, mime, body
 
 
 def make_handler(state: ShowcaseState):

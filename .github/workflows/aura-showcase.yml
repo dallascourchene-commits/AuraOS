@@ -10,6 +10,8 @@ on:
       - "aura_civic_project_runtime.py"
       - "aura_civic_guided_project.py"
       - "aura_human_agent_guidance.py"
+      - "aura_arena_gate_dialogue.py"
+      - "aura_arena_attempt_archive.py"
       - "aura_showcase_handoff.py"
       - "aura_showcase_spatial.py"
       - "aura_showcase_intent.py"
@@ -26,11 +28,17 @@ on:
       - "tests/test_aura_showcase_spatial_integration.py"
       - "tests/test_aura_showcase_intent_routing.py"
       - "tests/test_aura_showcase_observatory_crucible.py"
+      - "tests/test_aura_showcase_human_guided_tour.py"
+      - "tests/test_aura_showcase_gate_dialogue.py"
+      - "tests/test_aura_showcase_attempt_archive.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
       - "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md"
       - "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md"
       - "docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md"
+      - "docs/AURA_HUMAN_AGENT_GUIDED_SHOWCASE.md"
+      - "docs/AURA_ARENA_GATE_DIALOGUE.md"
+      - "docs/AURA_ARENA_ATTEMPT_ARCHIVE.md"
       - "Dockerfile.aura-showcase"
       - "docker-compose.showcase.yml"
       - ".github/workflows/aura-showcase.yml"
@@ -82,6 +90,8 @@ jobs:
           aura_civic_project_runtime.py
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
+          aura_arena_gate_dialogue.py
+          aura_arena_attempt_archive.py
           aura_showcase_handoff.py
           aura_showcase_spatial.py
           aura_showcase_intent.py
@@ -97,6 +107,9 @@ jobs:
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
           tests/test_aura_showcase_observatory_crucible.py
+          tests/test_aura_showcase_human_guided_tour.py
+          tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -107,6 +120,8 @@ jobs:
           aura_civic_project_runtime.py
           aura_civic_guided_project.py
           aura_human_agent_guidance.py
+          aura_arena_gate_dialogue.py
+          aura_arena_attempt_archive.py
           aura_showcase_handoff.py
           aura_showcase_spatial.py
           aura_showcase_intent.py
@@ -122,6 +137,9 @@ jobs:
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
           tests/test_aura_showcase_observatory_crucible.py
+          tests/test_aura_showcase_human_guided_tour.py
+          tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
       - name: Check browser JavaScript syntax
         run: |
           node --check aura_showcase/app.js
@@ -130,6 +148,8 @@ jobs:
           node --check aura_showcase/topology.js
           node --check aura_showcase/intent.js
           node --check aura_showcase/crucible.js
+          node --check aura_showcase/gate-dialogue.js
+          node --check aura_showcase/attempt-archive.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
@@ -138,6 +158,9 @@ jobs:
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
           tests/test_aura_showcase_observatory_crucible.py
+          tests/test_aura_showcase_human_guided_tour.py
+          tests/test_aura_showcase_gate_dialogue.py
+          tests/test_aura_showcase_attempt_archive.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
           test_aura_context_crusher.py
@@ -164,6 +187,10 @@ jobs:
               with urllib.request.urlopen(base + path, timeout=timeout) as response:
                   return json.load(response)
 
+          def get_text(path, timeout=15):
+              with urllib.request.urlopen(base + path, timeout=timeout) as response:
+                  return response.read().decode("utf-8")
+
           def post(path, payload, timeout=20):
               request = urllib.request.Request(
                   base + path,
@@ -189,6 +216,13 @@ jobs:
           assert status["basemap_tile_url_template"]
           assert status["bounded_topology_projection"] is True
           assert status["full_topology_sent_to_browser"] is False
+          assert status["human_gate_dialogue_available"] is True
+          assert status["topology_anchored_intent"] is True
+          assert status["gate_approval_required"] is True
+          assert status["attempt_archive_available"] is True
+          assert status["failed_attempts_preserved"] is True
+          assert status["archived_output_copyable"] is True
+          assert status["archived_output_authority"] is False
           assert status["observatory_available"] is True
           assert status["learning_arena_available"] is True
           assert status["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
@@ -197,6 +231,14 @@ jobs:
           assert status["english_lexicon_expected_primitives"] == 4096
           assert status["automatic_grammar_promotion"] is False
 
+          index = get_text("/")
+          assert '<script src="gate-dialogue.js"></script>' in index
+          assert '<script src="attempt-archive.js"></script>' in index
+          gate_js = get_text("/gate-dialogue.js")
+          assert "PENDING_HUMAN_APPROVAL" in gate_js
+          attempt_js = get_text("/attempt-archive.js")
+          assert "Copy full artifact" in attempt_js
+
           tasks = get("/api/showcase/coding-tasks")
           assert tasks["task_count"] == 4
 
@@ -204,6 +246,67 @@ jobs:
           assert spatial["ok"] is True
           assert spatial["workspace"]["nodes"]
           assert spatial["workspace"]["returned_node_count"] <= spatial["bounds"]["node_limit"]
+          selected = spatial["workspace"]["nodes"][0]
+          node_context = {
+              "task_id": "civic_map_overlay",
+              "selected_node": {
+                  "id": selected.get("id"),
+                  "label": selected.get("label"),
+                  "file_path": selected.get("file_path"),
+                  "symbol": selected.get("symbol"),
+                  "node_type": selected.get("node_type"),
+                  "line_range": selected.get("line_range", []),
+                  "projection_truth": selected.get("projection_truth"),
+              },
+              "dependencies": [],
+              "callers": [],
+              "tests": [],
+              "relations": [],
+          }
+          proposal = post("/api/showcase/human/gate/address", {
+              "comment": "Explain this selected node and the safest bounded next step.",
+              "node_context": node_context,
+              "stage_hint": "FRAME",
+              "prefer_model": False,
+          })
+          assert proposal["ok"] is True
+          assert proposal["status"] == "PENDING_HUMAN_APPROVAL"
+          assert proposal["intent_trace"]["model_calls_made"] == 0
+          assert proposal["node_context"]["selected_node"]["id"] == selected.get("id")
+          approval = post("/api/showcase/human/gate/approve", {
+              "proposal_id": proposal["proposal_id"],
+              "approved": True,
+              "current_node_context": node_context,
+              "stage_hint": "FRAME",
+              "reviewer": "showcase_ci",
+          })
+          assert approval["ok"] is True
+          assert approval["status"] == "APPROVED_FOR_NEXT_GUARDED_GATE"
+          assert approval["automatic_merge"] is False
+
+          framed = post("/api/human-agent/workflow/action", {
+              "action_id": "set_objective",
+              "payload": {"objective": "Investigate the selected Civic renderer."},
+              "_arena_archive_context": {
+                  "stage_hint": "FRAME",
+                  "node_context": node_context,
+                  "gate_dialogue": {
+                      "proposal_id": proposal["proposal_id"],
+                      "human_comment": proposal["human_comment"],
+                      "aura_response": proposal["aura_response"],
+                  },
+              },
+          })
+          assert framed["ok"] is True
+          assert framed["attempt_artifact"]["ok"] is True
+          assert framed["attempt_artifact"]["copyable"] is True
+          artifact_id = framed["attempt_artifact"]["artifact_id"]
+          attempts = get("/api/showcase/human/attempts?limit=5")
+          assert any(item["artifact_id"] == artifact_id for item in attempts["attempts"])
+          detail = get(f"/api/showcase/human/attempts/{artifact_id}")
+          assert detail["artifact"]["copy_text"]
+          assert detail["artifact"]["selected_node"]["id"] == selected.get("id")
+          assert detail["artifact"]["archived_output_authority"] is False
 
           intent = post("/api/showcase/intent/compile", {
               "text": "Improve compile_intent_packet routing and preserve its tests.",
@@ -284,6 +387,11 @@ jobs:
                       assert payload["automatic_grammar_promotion"] is False
                       assert payload["basemap_tile_url_template"]
                       assert payload["bounded_topology_projection"] is True
+                      assert payload["human_gate_dialogue_available"] is True
+                      assert payload["gate_approval_required"] is True
+                      assert payload["attempt_archive_available"] is True
+                      assert payload["failed_attempts_preserved"] is True
+                      assert payload["archived_output_authority"] is False
                       assert payload["observatory_available"] is True
                       assert payload["learning_arena_available"] is True
                       assert payload["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
