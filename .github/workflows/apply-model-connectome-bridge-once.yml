@@ -1,0 +1,343 @@
+name: Apply Model Connectome Bridge Once
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/apply-model-connectome-bridge-once.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Clone exact branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf repo
+          git clone --depth 1 --branch refactor/model-connectome-bridge \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test tooling and declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest pytest-asyncio ruff
+
+      - name: Apply compatibility wrappers and CI coverage
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          rm .github/workflows/apply-model-connectome-bridge-once.yml
+          python - <<'PY'
+          from pathlib import Path
+
+          connectome = Path("aura_capability_connectome.py")
+          text = connectome.read_text(encoding="utf-8")
+          marker = "# AURA_CAPABILITY_CONNECTOME_V2_COMPAT"
+          if marker not in text:
+              text += r'''
+
+# AURA_CAPABILITY_CONNECTOME_V2_COMPAT
+# Additive compatibility layer: V1 builders remain the source substrate while
+# V2 binds stable graph/node digests and execution traits to their results.
+from aura_capability_connectome_v2 import (
+    capability_node as _capability_node_v2,
+    enrich_connectome as _enrich_connectome_v2,
+    enrich_path as _enrich_path_v2,
+)
+
+_build_capability_connectome_v1 = build_capability_connectome
+_find_capability_path_v1 = find_capability_path
+
+
+def build_capability_connectome(repo_root: str | Path = ".") -> dict[str, Any]:
+    """Build the V1 graph and bind stable V2 node/graph evidence."""
+    return _enrich_connectome_v2(_build_capability_connectome_v1(repo_root))
+
+
+def find_capability_path(
+    objective: str,
+    repo_root: str | Path = ".",
+) -> dict[str, Any]:
+    """Return a graph-digest-pinned path with exact node evidence."""
+    graph = build_capability_connectome(repo_root)
+    base = _find_capability_path_v1(objective, repo_root)
+    return _enrich_path_v2(base, graph)
+
+
+def get_capability_node(
+    capability_id: str,
+    repo_root: str | Path = ".",
+) -> dict[str, Any]:
+    """Look up one stable capability node by exact ID."""
+    graph = build_capability_connectome(repo_root)
+    node = _capability_node_v2(graph, capability_id)
+    if node is None:
+        return {
+            "ok": False,
+            "error": f"Capability not found: {capability_id}",
+            "graph_digest": graph.get("graph_digest", ""),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+    return {
+        "ok": True,
+        "version": graph.get("version", CONNECTOME_VERSION),
+        "graph_digest": graph.get("graph_digest", ""),
+        "capability": node,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+
+
+def capability_graph_packet(repo_root: str | Path = ".") -> dict[str, Any]:
+    """Return a compact graph packet with stable node and graph digests."""
+    graph = build_capability_connectome(repo_root)
+    return {
+        "ok": graph.get("ok", False),
+        "version": graph.get("version", CONNECTOME_VERSION),
+        "source_version": graph.get("source_version", ""),
+        "graph_digest": graph.get("graph_digest", ""),
+        "nodes_count": graph.get("node_count", 0),
+        "edges_count": graph.get("edge_count", 0),
+        "capabilities": [
+            {
+                "id": node.get("id", ""),
+                "name": node.get("name", ""),
+                "node_digest": node.get("node_digest", ""),
+                "execution_class": node.get("execution_class", "UNRESOLVED_EXECUTION"),
+                "token_savings_role": node.get("token_savings_role", ""),
+                "truth_boundary": node.get("truth_boundary", ""),
+                "grounding": node.get("grounding", ""),
+            }
+            for node in graph.get("nodes", [])
+        ],
+        "deterministic_capability_ids": graph.get("deterministic_capability_ids", []),
+        "model_dependent_capability_ids": graph.get("model_dependent_capability_ids", []),
+        "unresolved_execution_capability_ids": graph.get("unresolved_execution_capability_ids", []),
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+'''
+              connectome.write_text(text, encoding="utf-8")
+
+          resolver = Path("aura_capability_resolver.py")
+          text = resolver.read_text(encoding="utf-8")
+          marker = "# AURA_CAPABILITY_RESOLUTION_V2_CONNECTOME"
+          if marker not in text:
+              text += r'''
+
+# AURA_CAPABILITY_RESOLUTION_V2_CONNECTOME
+# Preserve V1 resolution behavior and add the admitted Connectome path as a
+# first-class, graph-digest-pinned result.
+_resolve_capabilities_v1 = resolve_capabilities
+
+
+def resolve_capabilities(
+    objective: str,
+    *,
+    target_files: list[str] | None = None,
+    target_symbols: list[str] | None = None,
+    selected_node_ids: list[str] | None = None,
+    repo_root: str | Path = ".",
+    top_k: int = 12,
+    token_budget: int = 2400,
+) -> dict[str, Any]:
+    result = _resolve_capabilities_v1(
+        objective,
+        target_files=target_files,
+        target_symbols=target_symbols,
+        selected_node_ids=selected_node_ids,
+        repo_root=repo_root,
+        top_k=top_k,
+        token_budget=token_budget,
+    )
+    from aura_capability_connectome import find_capability_path
+
+    path_packet = find_capability_path(objective, repo_root=repo_root)
+    result.update(
+        {
+            "version": "AURA_CAPABILITY_RESOLUTION_V2",
+            "source_version": result.get("version", RESOLVER_VERSION),
+            "capability_connectome_path": path_packet,
+            "capability_graph_digest": path_packet.get("graph_digest", ""),
+            "capability_path_digest": path_packet.get("path_digest", ""),
+            "required_capability_ids": path_packet.get("required_capability_ids", []),
+            "capability_path": path_packet.get("path", []),
+            "capability_path_details": path_packet.get("path_details", []),
+            "capability_truth_boundaries": path_packet.get("truth_boundaries", []),
+            "capability_risks": path_packet.get("risks", []),
+            "capability_tests": path_packet.get("tests", []),
+            "capability_token_savings_roles": path_packet.get("token_savings_roles", []),
+            "deterministic_capability_ids": path_packet.get("deterministic_capability_ids", []),
+            "model_dependent_capability_ids": path_packet.get("model_dependent_capability_ids", []),
+            "unresolved_execution_capability_ids": path_packet.get("unresolved_execution_capability_ids", []),
+            "model_execution_requirements": path_packet.get("model_execution_requirements", []),
+        }
+    )
+    do_not_reinvent = list(result.get("do_not_reinvent", []))
+    do_not_reinvent.extend(
+        [
+            "Do not invent a second capability graph; use aura_capability_connectome.py.",
+            "Do not attach model support to undeclared capability IDs; use aura_model_connectome_bridge.py.",
+        ]
+    )
+    result["do_not_reinvent"] = list(dict.fromkeys(do_not_reinvent))
+    if not path_packet.get("ok"):
+        missing = list(result.get("missing_capabilities", []))
+        missing.append(
+            {
+                "capability": "capability_connectome_path",
+                "status": "unresolved",
+                "reason": path_packet.get("missing_capability_ids", []),
+                "impact": "Consequential model routing must fail closed.",
+            }
+        )
+        result["missing_capabilities"] = missing
+    return result
+'''
+              resolver.write_text(text, encoding="utf-8")
+
+          ci = Path(".github/workflows/ci.yml")
+          text = ci.read_text(encoding="utf-8")
+          module_needle = "            aura_model_cognome_store_io.py"
+          module_addition = (
+              module_needle
+              + "\n            aura_capability_connectome_v2.py"
+              + "\n            aura_model_connectome_bridge.py"
+          )
+          if "            aura_model_connectome_bridge.py" not in text:
+              text = text.replace(module_needle, module_addition)
+          test_needle = "            tests/test_aura_model_cognome_store.py"
+          test_addition = (
+              test_needle
+              + "\n            tests/test_aura_capability_connectome_v2.py"
+              + "\n            tests/test_aura_model_connectome_bridge.py"
+              + "\n            tests/test_aura_capability_resolver_connectome.py"
+          )
+          if "            tests/test_aura_model_connectome_bridge.py" not in text:
+              text = text.replace(test_needle, test_addition)
+          ci.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Validate compatibility patch
+        working-directory: repo
+        run: |
+          python -m py_compile \
+            aura_capability_connectome.py \
+            aura_capability_connectome_v2.py \
+            aura_capability_resolver.py \
+            aura_model_connectome_bridge.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_capability_connectome.py \
+            aura_capability_connectome_v2.py \
+            aura_capability_resolver.py \
+            aura_model_connectome_bridge.py \
+            tests/test_aura_capability_connectome_v2.py \
+            tests/test_aura_model_connectome_bridge.py \
+            tests/test_aura_capability_resolver_connectome.py
+          python -m pytest -q \
+            tests/test_aura_capability_connectome.py \
+            tests/test_aura_capability_connectome_v2.py \
+            tests/test_aura_model_connectome_bridge.py \
+            tests/test_aura_capability_resolver_connectome.py
+
+      - name: Create detached compatibility commit
+        working-directory: repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../patch-commit
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import urllib.request
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parent = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          api = f"https://api.github.com/repos/{repository}/git"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "aura-connectome-bridge-patch",
+          }
+
+          def request(method: str, url: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(url, data=body, headers=headers, method=method)
+              with urllib.request.urlopen(req, timeout=180) as response:
+                  return json.load(response)
+
+          parent_commit = request("GET", f"{api}/commits/{parent}")
+          entries = []
+          for relative in (
+              "aura_capability_connectome.py",
+              "aura_capability_resolver.py",
+              ".github/workflows/ci.yml",
+          ):
+              raw = Path(relative).read_bytes()
+              blob = request(
+                  "POST",
+                  f"{api}/blobs",
+                  {"content": base64.b64encode(raw).decode("ascii"), "encoding": "base64"},
+              )
+              entries.append({"path": relative, "mode": "100644", "type": "blob", "sha": blob["sha"]})
+          entries.append({
+              "path": ".github/workflows/apply-model-connectome-bridge-once.yml",
+              "mode": "100644",
+              "type": "blob",
+              "sha": None,
+          })
+          tree = request(
+              "POST",
+              f"{api}/trees",
+              {"base_tree": parent_commit["tree"]["sha"], "tree": entries},
+          )
+          commit = request(
+              "POST",
+              f"{api}/commits",
+              {
+                  "message": "feat(connectome): bind capability paths to Cognome evidence",
+                  "tree": tree["sha"],
+                  "parents": [parent],
+              },
+          )
+          Path("../patch-commit/commit_sha.txt").write_text(commit["sha"] + "\n", encoding="utf-8")
+          Path("../patch-commit/parent_sha.txt").write_text(parent + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload detached commit reference
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-connectome-bridge-commit-${{ github.run_id }}
+          path: patch-commit/
+          if-no-files-found: error
+          retention-days: 2
