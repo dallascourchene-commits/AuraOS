@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from aura_capability_resolver import resolve_capabilities
+from aura_capability_resolver_v2 import resolve_capabilities
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
