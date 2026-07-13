@@ -1,0 +1,98 @@
+name: Aura Public Demo Platform
+
+on:
+  pull_request:
+    paths:
+      - "deploy/huggingface-space/**"
+      - "scripts/deploy_huggingface_space.py"
+      - "docs/AURA_PUBLIC_DEMO_PLATFORM.md"
+      - "tests/test_huggingface_space_deployment.py"
+      - ".github/workflows/huggingface-space-demo.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deployment-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact workflow ref without credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install focused validation tools
+        run: python -m pip install pytest ruff
+      - name: Compile deployment publisher and contract
+        run: >-
+          python -m py_compile
+          scripts/deploy_huggingface_space.py
+          tests/test_huggingface_space_deployment.py
+      - name: Fatal lint checks
+        run: >-
+          ruff check --select E9,F63,F7,F82
+          scripts/deploy_huggingface_space.py
+          tests/test_huggingface_space_deployment.py
+      - name: Verify Space deployment contract
+        run: python -m pytest -q tests/test_huggingface_space_deployment.py
+
+  docker-space:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact workflow ref without credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+      - name: Build public Space image
+        run: docker build -f deploy/huggingface-space/Dockerfile -t auraos-hf-space .
+      - name: Launch and verify the public demo runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm -d --name auraos-hf-space -p 7860:7860 auraos-hf-space
+          cleanup() {
+            docker logs auraos-hf-space || true
+            docker stop auraos-hf-space >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          python - <<'PY'
+          import json
+          import time
+          import urllib.request
+
+          url = "http://127.0.0.1:7860/api/showcase/status"
+          for _ in range(80):
+              try:
+                  with urllib.request.urlopen(url, timeout=2) as response:
+                      status = json.load(response)
+                  if status.get("ok"):
+                      break
+              except Exception:
+                  time.sleep(0.5)
+          else:
+              raise SystemExit("public demo container did not become ready")
+
+          assert status["observatory_available"] is True
+          assert status["learning_arena_available"] is True
+          assert status["human_gate_dialogue_available"] is True
+          assert status["attempt_archive_available"] is True
+          assert status["automatic_grammar_promotion"] is False
+          print(json.dumps({
+              "ok": True,
+              "version": status.get("version"),
+              "platform": "Hugging Face Spaces (Docker)",
+          }, sort_keys=True))
+          PY
