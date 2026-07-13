@@ -211,10 +211,19 @@ def dispatch_showcase_request(
         return _json(200, state.crucible.status(intake=state.learning_intake, arena_id=arena_id))
 
     if method == "POST" and route == "/api/showcase/learning/run":
+        raw_experience_limit = body.get("experience_limit")
+        if raw_experience_limit is None:
+            experience_limit = 1000
+        else:
+            try:
+                experience_limit = int(raw_experience_limit)
+            except (TypeError, ValueError):
+                return _error("invalid experience_limit", 400)
+        experience_limit = max(1, min(experience_limit, 1000))
         result = state.crucible.run_once(
             arena_id=str(body.get("arena_id") or ""),
             policy=body.get("policy") if isinstance(body.get("policy"), dict) else None,
-            experience_limit=max(1, min(int(body.get("experience_limit") or 1000), 1000)),
+            experience_limit=experience_limit,
         )
         dashboard = state.crucible.status(
             intake=state.learning_intake,

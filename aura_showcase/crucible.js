@@ -284,13 +284,16 @@
     $('crucible-resume')?.addEventListener('click', () => setPaused(false));
 
     const humanHero = $('human-view')?.querySelector('.human-hero .hero-actions') || $('human-view')?.querySelector('.human-hero');
-    if (humanHero && !$('human-open-learning')) {
-      const button = document.createElement('button');
-      button.id = 'human-open-learning';
-      button.className = 'secondary';
-      button.textContent = 'Open Learning Arena';
+    if (humanHero) {
+      let button = $('human-open-learning');
+      if (!button) {
+        button = document.createElement('button');
+        button.id = 'human-open-learning';
+        button.className = 'secondary';
+        button.textContent = 'Open Learning Arena';
+        humanHero.appendChild(button);
+      }
       button.addEventListener('click', () => S.activateTab('crucible'));
-      humanHero.appendChild(button);
     }
   }
 
