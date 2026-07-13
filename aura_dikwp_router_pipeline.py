@@ -51,35 +51,45 @@ class DIKWPEnvelope:
         created_at: float | None = None,
         proposal_only: bool = True,
     ) -> "DIKWPEnvelope":
+        correlation = str(correlation_id).strip()
+        if not correlation:
+            raise ValueError("correlation_id must not be empty")
         stage_value = stage.value if isinstance(stage, DIKWPStage) else str(stage)
         if stage_value not in {item.value for item in DIKWPStage}:
             raise ValueError(f"Unknown DIKWP stage: {stage_value}")
-        if stage_value in {DIKWPStage.INFORMATION.value, DIKWPStage.KNOWLEDGE.value, DIKWPStage.WISDOM.value} and not source_record_ids:
+        sources = tuple(str(item) for item in source_record_ids)
+        if stage_value in {
+            DIKWPStage.INFORMATION.value,
+            DIKWPStage.KNOWLEDGE.value,
+            DIKWPStage.WISDOM.value,
+        } and not sources:
             raise ValueError(f"{stage_value} requires provenance source_record_ids")
         if stage_value == DIKWPStage.WISDOM.value and not purpose_digest:
             raise ValueError("WISDOM requires a pinned purpose_digest")
-        payload_digest = stable_digest(payload)
+        if confidence is not None and not 0.0 <= float(confidence) <= 1.0:
+            raise ValueError("confidence must be between 0 and 1")
+        payload_hash = stable_digest(payload)
         timestamp = time.time() if created_at is None else float(created_at)
         basis = {
-            "correlation_id": correlation_id,
+            "correlation_id": correlation,
             "stage": stage_value,
-            "payload_digest": payload_digest,
-            "source_record_ids": source_record_ids,
-            "purpose_digest": purpose_digest,
+            "payload_digest": payload_hash,
+            "source_record_ids": sources,
+            "purpose_digest": str(purpose_digest),
             "created_at": timestamp,
         }
         return cls(
             envelope_id=stable_id("dikwp", basis),
-            correlation_id=correlation_id,
+            correlation_id=correlation,
             stage=stage_value,
-            payload_digest=payload_digest,
-            source_record_ids=source_record_ids,
+            payload_digest=payload_hash,
+            source_record_ids=sources,
             measurement_classes=dict(measurement_classes or {}),
             confidence=confidence,
-            policy_scope=policy_scope,
-            purpose_digest=purpose_digest,
+            policy_scope=str(policy_scope),
+            purpose_digest=str(purpose_digest),
             created_at=timestamp,
-            proposal_only=proposal_only,
+            proposal_only=bool(proposal_only),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -105,42 +115,99 @@ def purpose_digest(payload: Any) -> str:
     return stable_digest(payload)
 
 
-def validate_dikwp_chain(envelopes: Iterable[DIKWPEnvelope], *, consequential: bool = True) -> dict[str, Any]:
-    items = list(envelopes)
-    by_id = {item.envelope_id: item for item in items}
-    by_stage: dict[str, list[DIKWPEnvelope]] = {stage.value: [] for stage in DIKWPStage}
-    errors: list[str] = []
-    for item in items:
-        by_stage.setdefault(item.stage, []).append(item)
+def _has_cycle(items: list[DIKWPEnvelope], by_id: dict[str, DIKWPEnvelope]) -> bool:
+    visiting: set[str] = set()
+    visited: set[str] = set()
 
-    required = {stage.value for stage in DIKWPStage} if consequential else {
-        DIKWPStage.DATA.value,
-        DIKWPStage.INFORMATION.value,
-    }
+    def visit(node_id: str) -> bool:
+        if node_id in visiting:
+            return True
+        if node_id in visited:
+            return False
+        visiting.add(node_id)
+        node = by_id[node_id]
+        for parent_id in node.source_record_ids:
+            if parent_id in by_id and visit(parent_id):
+                return True
+        visiting.remove(node_id)
+        visited.add(node_id)
+        return False
+
+    return any(visit(item.envelope_id) for item in items if item.envelope_id not in visited)
+
+
+def validate_dikwp_chain(
+    envelopes: Iterable[DIKWPEnvelope],
+    *,
+    consequential: bool = True,
+) -> dict[str, Any]:
+    items = list(envelopes)
+    errors: list[str] = []
+    by_id: dict[str, DIKWPEnvelope] = {}
+    for item in items:
+        previous = by_id.get(item.envelope_id)
+        if previous is not None and previous != item:
+            errors.append(f"conflicting duplicate envelope_id: {item.envelope_id}")
+        by_id[item.envelope_id] = item
+
+    correlations = {item.correlation_id for item in items}
+    if len(correlations) > 1:
+        errors.append("all envelopes in a DIKWP chain must share one correlation_id")
+
+    by_stage: dict[str, list[DIKWPEnvelope]] = {stage.value: [] for stage in DIKWPStage}
+    for item in items:
+        if item.stage not in by_stage:
+            errors.append(f"unknown stage on envelope {item.envelope_id}: {item.stage}")
+            continue
+        by_stage[item.stage].append(item)
+
+    required = (
+        {stage.value for stage in DIKWPStage}
+        if consequential
+        else {DIKWPStage.DATA.value, DIKWPStage.INFORMATION.value}
+    )
     missing = sorted(stage for stage in required if not by_stage.get(stage))
     if missing:
         errors.append("missing stages: " + ", ".join(missing))
 
-    allowed_parent_stages = {
+    required_parent_stages = {
         DIKWPStage.INFORMATION.value: {DIKWPStage.DATA.value},
         DIKWPStage.KNOWLEDGE.value: {DIKWPStage.INFORMATION.value},
         DIKWPStage.WISDOM.value: {DIKWPStage.KNOWLEDGE.value, DIKWPStage.PURPOSE.value},
     }
     for item in items:
-        allowed = allowed_parent_stages.get(item.stage)
-        if not allowed:
-            continue
-        parent_stages = {by_id[parent].stage for parent in item.source_record_ids if parent in by_id}
-        if not parent_stages.intersection(allowed):
-            errors.append(f"{item.envelope_id} lacks a valid {item.stage} parent")
         unknown = sorted(parent for parent in item.source_record_ids if parent not in by_id)
         if unknown:
             errors.append(f"{item.envelope_id} references unknown sources: {', '.join(unknown)}")
+        parents = [by_id[parent] for parent in item.source_record_ids if parent in by_id]
+        for parent in parents:
+            if parent.correlation_id != item.correlation_id:
+                errors.append(f"{item.envelope_id} references a source from another correlation")
+            if parent.created_at > item.created_at:
+                errors.append(f"{item.envelope_id} references a source created later")
+        required_parents = required_parent_stages.get(item.stage)
+        if required_parents:
+            actual_parent_stages = {parent.stage for parent in parents}
+            missing_parent_stages = sorted(required_parents - actual_parent_stages)
+            if missing_parent_stages:
+                errors.append(
+                    f"{item.envelope_id} lacks required {item.stage} parents: "
+                    + ", ".join(missing_parent_stages)
+                )
 
-    purpose_payloads = {item.payload_digest for item in by_stage.get(DIKWPStage.PURPOSE.value, [])}
+    if _has_cycle(items, by_id):
+        errors.append("DIKWP provenance graph contains a cycle")
+
     for wisdom in by_stage.get(DIKWPStage.WISDOM.value, []):
-        if wisdom.purpose_digest not in purpose_payloads:
-            errors.append(f"{wisdom.envelope_id} purpose_digest does not match a PURPOSE envelope")
+        cited_purposes = [
+            by_id[parent]
+            for parent in wisdom.source_record_ids
+            if parent in by_id and by_id[parent].stage == DIKWPStage.PURPOSE.value
+        ]
+        if not cited_purposes:
+            errors.append(f"{wisdom.envelope_id} must cite a PURPOSE envelope")
+        elif wisdom.purpose_digest not in {item.payload_digest for item in cited_purposes}:
+            errors.append(f"{wisdom.envelope_id} purpose_digest does not match its cited PURPOSE envelope")
         if not wisdom.proposal_only:
             errors.append(f"{wisdom.envelope_id} must remain proposal_only")
 
@@ -148,6 +215,7 @@ def validate_dikwp_chain(envelopes: Iterable[DIKWPEnvelope], *, consequential: b
         "ok": not errors,
         "errors": errors,
         "stages_present": sorted(stage for stage, values in by_stage.items() if values),
+        "correlation_id": next(iter(correlations)) if len(correlations) == 1 else None,
         "consequential": consequential,
         "version": DIKWP_VERSION,
         "patch_authority": PATCH_AUTHORITY,
