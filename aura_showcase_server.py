@@ -447,7 +447,8 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
     relative = "index.html" if route in {"/", "/index.html"} else route.lstrip("/")
     allowed = {
         "index.html", "app.js", "civic.js", "human.js", "topology.js", "intent.js", "crucible.js",
-        "gate-dialogue.js", "topology.css", "intent.css", "crucible.css", "styles.css", "guide.css",
+        "gate-dialogue.js", "attempt-archive.js", "topology.css", "intent.css", "crucible.css",
+        "styles.css", "guide.css",
     }
     if relative not in allowed:
         return _error("static asset not found", 404)
@@ -459,11 +460,14 @@ def _static_response(route: str) -> tuple[int, str, bytes]:
     if not path.is_file():
         return _error("static asset not found", 404)
     body = path.read_bytes()
-    if relative == "index.html" and b'gate-dialogue.js' not in body:
-        body = body.replace(
-            b"</body>",
-            b'  <script src="gate-dialogue.js"></script>\n</body>',
-        )
+    if relative == "index.html":
+        scripts: list[bytes] = []
+        if b'gate-dialogue.js' not in body:
+            scripts.append(b'  <script src="gate-dialogue.js"></script>')
+        if b'attempt-archive.js' not in body:
+            scripts.append(b'  <script src="attempt-archive.js"></script>')
+        if scripts:
+            body = body.replace(b"</body>", b"\n".join(scripts) + b"\n</body>")
     mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
     if mime.startswith("text/") or mime in {"application/javascript", "application/json"}:
         mime += "; charset=utf-8"
