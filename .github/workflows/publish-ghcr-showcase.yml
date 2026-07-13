@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - main
-      - fix/render-four-tab-showcase
     paths:
       - "Dockerfile"
       - "aura_showcase_server.py"
       - "aura_showcase/**"
       - "aura_*.py"
-      - "requirements.txt"
       - ".github/workflows/publish-ghcr-showcase.yml"
   workflow_dispatch:
 
@@ -29,6 +27,8 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
