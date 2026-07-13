@@ -51,30 +51,96 @@ jobs:
         working-directory: repo
         run: python aura_codebase_navigator.py
 
-      - name: Stage topology artifacts
-        id: stage_maps
+      - name: Create detached topology commit
         working-directory: repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git add -f .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
-          git status --short
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "${GITHUB_OUTPUT}"
-            echo "CODEMAP artifacts are already current."
-          else
-            echo "changed=true" >> "${GITHUB_OUTPUT}"
-          fi
+          mkdir -p ../codemap-commit
+          python - <<'PY'
+          from __future__ import annotations
 
-      - name: Commit topology artifacts
-        if: steps.stage_maps.outputs.changed == 'true'
-        working-directory: repo
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit --no-verify -m "chore(codemap): refresh Model Cognome topology"
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import urllib.request
 
-      - name: Push topology artifacts
-        if: steps.stage_maps.outputs.changed == 'true'
-        working-directory: repo
-        run: git push origin HEAD:refactor/model-cognome-adaptive-router
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parent = subprocess.check_output(
+              ["git", "rev-parse", "HEAD"], text=True
+          ).strip()
+          api = f"https://api.github.com/repos/{repository}/git"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "aura-codemap-refresh",
+          }
+
+          def request(method: str, url: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(
+                  url, data=body, headers=headers, method=method
+              )
+              with urllib.request.urlopen(req, timeout=180) as response:
+                  return json.load(response)
+
+          parent_commit = request("GET", f"{api}/commits/{parent}")
+          entries = []
+          for relative in (
+              ".aura/CODEMAP.md",
+              ".aura/CODEMAP.json",
+              "topology_map.json",
+          ):
+              raw = Path(relative).read_bytes()
+              blob = request(
+                  "POST",
+                  f"{api}/blobs",
+                  {
+                      "content": base64.b64encode(raw).decode("ascii"),
+                      "encoding": "base64",
+                  },
+              )
+              entries.append(
+                  {
+                      "path": relative,
+                      "mode": "100644",
+                      "type": "blob",
+                      "sha": blob["sha"],
+                  }
+              )
+
+          tree = request(
+              "POST",
+              f"{api}/trees",
+              {"base_tree": parent_commit["tree"]["sha"], "tree": entries},
+          )
+          commit = request(
+              "POST",
+              f"{api}/commits",
+              {
+                  "message": "chore(codemap): refresh Model Cognome topology",
+                  "tree": tree["sha"],
+                  "parents": [parent],
+              },
+          )
+          Path("../codemap-commit/codemap_commit_sha.txt").write_text(
+              commit["sha"] + "\n", encoding="utf-8"
+          )
+          Path("../codemap-commit/parent_sha.txt").write_text(
+              parent + "\n", encoding="utf-8"
+          )
+          print(json.dumps({"parent": parent, "commit": commit["sha"]}))
+          PY
+
+      - name: Upload detached commit reference
+        uses: actions/upload-artifact@v4
+        with:
+          name: cognome-codemap-commit-${{ github.run_id }}
+          path: codemap-commit/
+          if-no-files-found: error
+          retention-days: 2
