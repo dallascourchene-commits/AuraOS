@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="guide.css">
   <link rel="stylesheet" href="topology.css">
   <link rel="stylesheet" href="intent.css">
+  <link rel="stylesheet" href="crucible.css">
 </head>
 <body>
   <header class="topbar">
@@ -15,7 +16,8 @@
     <nav aria-label="Showcase surfaces">
       <button class="tab is-active" data-tab="civic">Civic Arena</button>
       <button class="tab" data-tab="human">Human Agent Coding Arena</button>
-      <button class="tab" data-tab="learning">Sovereign Learning Arena</button>
+      <button class="tab" data-tab="learning">Aura Observatory</button>
+      <button class="tab" data-tab="crucible">Learning Arena / Crucible</button>
     </nav>
     <div class="authority"><i></i> Human authority active</div>
   </header>
@@ -71,7 +73,6 @@
           <p id="step-purpose" class="step-purpose"></p>
           <div class="question"><span>Human question</span><strong id="human-question">—</strong></div>
           <div id="truth-notice" class="notice"></div>
-
           <section class="route-console" aria-labelledby="route-console-title">
             <div class="route-console-head">
               <div><p class="eyebrow">Weighted FST-guided menu</p><h3 id="route-console-title">Available actions at this gate</h3></div>
@@ -81,7 +82,6 @@
             <div id="route-actions" class="route-actions"></div>
             <details class="blocked-routes"><summary>Actions blocked at every Civic gate</summary><div id="blocked-actions"></div></details>
           </section>
-
           <div class="summary-grid">
             <article><strong id="needs-count">0</strong><span>needs</span></article>
             <article><strong id="offers-count">0</strong><span>assets</span></article>
@@ -130,9 +130,12 @@
         <div>
           <p class="eyebrow">Human Agent Coding Arena</p>
           <h1>Investigate the system without surrendering authority.</h1>
-          <p class="lede">Begin with a small task, see its exact repository neighborhood in the spatial lens, then move through the guarded WFST. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
+          <p class="lede">Begin with a small task or an Observatory handoff, inspect its exact repository neighborhood, then move through the guarded WFST. Hard evidence gates run before weighted ranking, and every change remains review-only.</p>
         </div>
-        <button id="return-civic" class="secondary">Return to Civic project</button>
+        <div class="hero-actions">
+          <button id="return-civic" class="secondary">Return to Civic project</button>
+          <button id="human-open-learning" class="secondary">Open Learning Arena</button>
+        </div>
       </section>
 
       <section class="spatial-task-panel" aria-labelledby="spatial-task-title">
@@ -163,9 +166,7 @@
             </div>
             <div id="topology-legend" class="topology-legend"></div>
           </div>
-          <aside id="topology-inspector" class="topology-inspector">
-            <p class="muted">Select a node to inspect exact repository information.</p>
-          </aside>
+          <aside id="topology-inspector" class="topology-inspector"><p class="muted">Select a node to inspect exact repository information.</p></aside>
         </div>
       </section>
 
@@ -175,7 +176,7 @@
           <div class="human-route-state"><span id="human-grammar" class="pill">grammar unavailable</span><span id="human-phase-hash" class="pill">state —</span></div>
         </div>
         <p class="muted">Hard guards remove unsafe or unsupported transitions first. The remaining actions are ordered by Aura's exact lexicographic rank vector—not an opaque confidence score.</p>
-        <div id="human-recommended-actions" class="human-recommended-actions"><p class="muted">Import the Civic handoff to begin.</p></div>
+        <div id="human-recommended-actions" class="human-recommended-actions"><p class="muted">Import a Civic or Observatory handoff to begin.</p></div>
         <details class="human-route-details">
           <summary>Inspect available alternatives and blocked transitions</summary>
           <div class="human-route-columns">
@@ -187,10 +188,10 @@
 
       <section class="human-guide-assistant" aria-labelledby="human-guide-title">
         <div class="section-head">
-          <div><p class="eyebrow">Manual-free learning layer</p><h2 id="human-guide-title">Ask Aura what this gate means</h2></div>
+          <div><p class="eyebrow">Manual-free guidance layer</p><h2 id="human-guide-title">Ask Aura what this gate means</h2></div>
           <span class="pill">six-slot grounded</span>
         </div>
-        <p id="human-guide-summary" class="muted">Import the Civic handoff to load the current gate rules.</p>
+        <p id="human-guide-summary" class="muted">Import a handoff to load the current gate rules.</p>
         <div id="human-six-slots" class="six-slot-grid" aria-label="Current six-slot gate packet"></div>
         <div id="human-gate-rules" class="gate-rules"></div>
         <div class="guide-prompt-buttons">
@@ -209,7 +210,7 @@
       <section class="human-grid">
         <section class="workflow-card">
           <div class="section-head"><div><p class="eyebrow">FRAME → GROUND → PLAN → ACT → PROVE → DECIDE</p><h2>Workflow evidence gates</h2></div><span id="workflow-phase" class="pill">Not started</span></div>
-          <div id="workflow-actions" class="workflow-actions"><p class="muted">Open the Civic issue to import an exact handoff packet.</p></div>
+          <div id="workflow-actions" class="workflow-actions"><p class="muted">Open a bounded handoff to begin.</p></div>
         </section>
         <aside class="handoff-card">
           <h2>Exact handoff packet</h2>
@@ -224,25 +225,25 @@
       </section>
     </section>
 
-    <section id="learning-view" class="view">
+    <section id="learning-view" class="view" data-surface-identity="AURA_OBSERVATORY">
       <section class="hero learning-hero">
         <div>
-          <p class="eyebrow">Sovereign Learning Arena · deterministic pre-LLM routing</p>
-          <h1>Speak normally. Watch Aura compile the intention.</h1>
-          <p class="lede">Paste a broad human objective. Aura addresses known words, extracts routing tags, binds the six-slot packet, applies FST hard gates, localizes the CODEMAP, and prepares a bounded worker handoff—before any LLM is called.</p>
+          <p class="eyebrow">Aura Observatory · deterministic glass-box routing</p>
+          <h1>See how Aura understood and bounded your intention.</h1>
+          <p class="lede">Enter ordinary bulk intention, inspect every local routing transformation, and hand the bounded result to the Human Agent Arena or the verified Learning Arena path—before any LLM is called.</p>
         </div>
         <div class="hero-actions">
-          <button id="learning-reset" class="secondary">Reset guided demo</button>
+          <button id="learning-reset" class="secondary">Clear Observatory</button>
           <button id="learning-compile" class="primary">Compile intention without an LLM</button>
         </div>
       </section>
 
       <section class="learning-rail-card">
         <div class="section-head">
-          <div><p class="eyebrow">On-rails presenter path</p><h2 id="learning-stage-title">1. Give Aura bulk intention</h2></div>
+          <div><p class="eyebrow">Aura Observatory · optional architecture tour</p><h2 id="learning-stage-title">1. Give Aura bulk intention</h2></div>
           <span id="learning-model-count" class="pill">model calls: 0</span>
         </div>
-        <div id="learning-rail" class="learning-rail" aria-label="Learning Arena guided stages">
+        <div id="learning-rail" class="learning-rail" aria-label="Aura Observatory views">
           <button data-learning-stage="0" class="is-active">Bulk intention</button>
           <button data-learning-stage="1" disabled>Lexical addresses</button>
           <button data-learning-stage="2" disabled>Routing tags</button>
@@ -312,8 +313,8 @@
           </div>
 
           <div class="learning-stage-actions">
-            <button id="learning-back" class="secondary" disabled>Previous proof</button>
-            <button id="learning-next" class="primary" disabled>Show lexical addressing</button>
+            <button id="learning-back" class="secondary" disabled>Previous view</button>
+            <button id="learning-next" class="primary" disabled>Next view</button>
           </div>
         </section>
 
@@ -329,11 +330,12 @@
     </section>
   </main>
 
-  <footer>Fixture civic data · optional public OpenStreetMap basemap · deterministic no-LLM intent compilation · bounded real CODEMAP topology · no automatic commit, push, or merge</footer>
+  <footer>Civic action · Human Agent execution · Aura Observatory transparency · verified Learning Arena / Crucible · no automatic commit, push, merge, or grammar promotion</footer>
   <script src="app.js"></script>
   <script src="civic.js"></script>
   <script src="human.js"></script>
   <script src="topology.js"></script>
   <script src="intent.js"></script>
+  <script src="crucible.js"></script>
 </body>
 </html>
