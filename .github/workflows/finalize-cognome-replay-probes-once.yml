@@ -101,6 +101,7 @@ jobs:
           if old_capsule not in federation_text:
               raise SystemExit("federation timestamp insertion marker missing")
           federation.write_text(federation_text.replace(old_capsule, new_capsule, 1), encoding="utf-8")
+          Path("sitecustomize.py").unlink(missing_ok=True)
           PY
           rm -rf /tmp/cognome-replay-probes-report
           set +e
