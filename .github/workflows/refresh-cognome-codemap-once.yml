@@ -49,15 +49,15 @@ jobs:
 
       - name: Regenerate and commit topology artifacts
         working-directory: repo
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           python aura_codebase_navigator.py
-          rm .github/workflows/refresh-cognome-codemap-once.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json \
-            .github/workflows/refresh-cognome-codemap-once.yml
+          git add .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json
+          if git diff --cached --quiet; then
+            echo "CODEMAP artifacts are already current."
+            exit 0
+          fi
           git commit -m "chore(codemap): refresh Model Cognome topology"
           git push origin HEAD:refactor/model-cognome-adaptive-router
