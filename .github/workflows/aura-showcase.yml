@@ -14,16 +14,23 @@ on:
       - "aura_showcase_spatial.py"
       - "aura_showcase_intent.py"
       - "aura_showcase_intent_topology.py"
+      - "aura_showcase_observatory_handoff.py"
+      - "aura_showcase_crucible.py"
       - "aura_showcase_server.py"
+      - "aura_llm_egress.py"
+      - "aura_provider_registry.py"
+      - "aura_pricing.py"
       - "aura_showcase/**"
       - "tests/test_aura_showcase_guided_project.py"
       - "tests/test_aura_showcase_guided_interface.py"
       - "tests/test_aura_showcase_spatial_integration.py"
       - "tests/test_aura_showcase_intent_routing.py"
+      - "tests/test_aura_showcase_observatory_crucible.py"
       - "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       - "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md"
       - "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md"
       - "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md"
+      - "docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md"
       - "Dockerfile.aura-showcase"
       - "docker-compose.showcase.yml"
       - ".github/workflows/aura-showcase.yml"
@@ -65,7 +72,7 @@ jobs:
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0" \
             pytest ruff
-      - name: Compile showcase modules
+      - name: Compile showcase and egress modules
         run: >-
           python -m py_compile
           aura_civic_authority.py
@@ -79,11 +86,17 @@ jobs:
           aura_showcase_spatial.py
           aura_showcase_intent.py
           aura_showcase_intent_topology.py
+          aura_showcase_observatory_handoff.py
+          aura_showcase_crucible.py
           aura_showcase_server.py
+          aura_llm_egress.py
+          aura_provider_registry.py
+          aura_pricing.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
+          tests/test_aura_showcase_observatory_crucible.py
       - name: Fatal lint checks
         run: >-
           ruff check --select E9,F63,F7,F82
@@ -98,11 +111,17 @@ jobs:
           aura_showcase_spatial.py
           aura_showcase_intent.py
           aura_showcase_intent_topology.py
+          aura_showcase_observatory_handoff.py
+          aura_showcase_crucible.py
           aura_showcase_server.py
+          aura_llm_egress.py
+          aura_provider_registry.py
+          aura_pricing.py
           tests/test_aura_showcase_guided_project.py
           tests/test_aura_showcase_guided_interface.py
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
+          tests/test_aura_showcase_observatory_crucible.py
       - name: Check browser JavaScript syntax
         run: |
           node --check aura_showcase/app.js
@@ -110,6 +129,7 @@ jobs:
           node --check aura_showcase/human.js
           node --check aura_showcase/topology.js
           node --check aura_showcase/intent.js
+          node --check aura_showcase/crucible.js
       - name: Run guided showcase contracts
         run: >-
           python -m pytest -q
@@ -117,8 +137,11 @@ jobs:
           tests/test_aura_showcase_guided_interface.py
           tests/test_aura_showcase_spatial_integration.py
           tests/test_aura_showcase_intent_routing.py
+          tests/test_aura_showcase_observatory_crucible.py
           tests/test_aura_civic_commons_arena.py
           tests/test_aura_human_agent_workflow.py
+          test_aura_context_crusher.py
+          test_universal_llm_logging.py
       - name: Exercise unified server
         shell: bash
         run: |
@@ -136,10 +159,24 @@ jobs:
           import urllib.request
 
           base = "http://127.0.0.1:18091"
+
+          def get(path, timeout=15):
+              with urllib.request.urlopen(base + path, timeout=timeout) as response:
+                  return json.load(response)
+
+          def post(path, payload, timeout=20):
+              request = urllib.request.Request(
+                  base + path,
+                  data=json.dumps(payload).encode("utf-8"),
+                  headers={"content-type": "application/json"},
+                  method="POST",
+              )
+              with urllib.request.urlopen(request, timeout=timeout) as response:
+                  return json.load(response)
+
           for _ in range(40):
               try:
-                  with urllib.request.urlopen(base + "/api/showcase/status", timeout=1) as response:
-                      status = json.load(response)
+                  status = get("/api/showcase/status", timeout=1)
                   if status.get("ok"):
                       break
               except Exception:
@@ -152,36 +189,27 @@ jobs:
           assert status["basemap_tile_url_template"]
           assert status["bounded_topology_projection"] is True
           assert status["full_topology_sent_to_browser"] is False
+          assert status["observatory_available"] is True
           assert status["learning_arena_available"] is True
+          assert status["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
           assert status["deterministic_bulk_intent_compiler"] is True
           assert status["model_calls_before_handoff"] == 0
           assert status["english_lexicon_expected_primitives"] == 4096
+          assert status["automatic_grammar_promotion"] is False
 
-          with urllib.request.urlopen(base + "/api/showcase/coding-tasks", timeout=5) as response:
-              tasks = json.load(response)
+          tasks = get("/api/showcase/coding-tasks")
           assert tasks["task_count"] == 4
 
-          with urllib.request.urlopen(
-              base + "/api/showcase/topology/tasks/civic_map_overlay?depth=1",
-              timeout=15,
-          ) as response:
-              spatial = json.load(response)
+          spatial = get("/api/showcase/topology/tasks/civic_map_overlay?depth=1")
           assert spatial["ok"] is True
           assert spatial["workspace"]["nodes"]
           assert spatial["workspace"]["returned_node_count"] <= spatial["bounds"]["node_limit"]
 
-          intent_request = urllib.request.Request(
-              base + "/api/showcase/intent/compile",
-              data=json.dumps({
-                  "text": "Improve compile_intent_packet routing and preserve its tests.",
-                  "include_grounding": False,
-                  "include_topology": False,
-              }).encode("utf-8"),
-              headers={"content-type": "application/json"},
-              method="POST",
-          )
-          with urllib.request.urlopen(intent_request, timeout=20) as response:
-              intent = json.load(response)
+          intent = post("/api/showcase/intent/compile", {
+              "text": "Improve compile_intent_packet routing and preserve its tests.",
+              "include_grounding": False,
+              "include_topology": False,
+          })
           assert intent["ok"] is True
           assert intent["model_calls_made"] == 0
           assert intent["lexical_codebook"]["primitive_count"] == 4096
@@ -190,14 +218,19 @@ jobs:
           assert intent["agent_handoff"]["compressed_context"]
           assert intent["automatic_merge"] is False
 
-          request = urllib.request.Request(
-              base + f"/api/showcase/sessions/{session_id}/advance",
-              data=b"{}",
-              headers={"content-type": "application/json"},
-              method="POST",
-          )
-          with urllib.request.urlopen(request, timeout=5) as response:
-              guide = json.load(response)
+          intake = post("/api/showcase/observatory/handoff/learning", {"trace": intent})
+          assert intake["ok"] is True
+          assert intake["eligible_for_crucible"] is False
+          assert intake["status"] == "AWAITING_VERIFIED_EXPERIENCE"
+
+          learning = get("/api/showcase/learning/status")
+          assert learning["identity"] == "LEARNING_ARENA_CRUCIBLE"
+          assert learning["intake"]["observatory_trace_digest"] == intake["observatory_trace_digest"]
+          assert learning["dataset_split"] == ["TRAIN", "VALIDATION", "SHADOW"]
+          assert learning["terminal_status"] == "CRYSTALLIZATION_PROPOSED"
+          assert learning["automatic_grammar_promotion"] is False
+
+          guide = post(f"/api/showcase/sessions/{session_id}/advance", {})
           assert guide["ok"] is True
           assert guide["patch_authority"] == "exact_source_spans_and_hashes_only"
           actions = guide.get("available_actions")
@@ -248,9 +281,12 @@ jobs:
                   if payload.get("ok"):
                       assert payload["default_session_id"]
                       assert payload["automatic_merge"] is False
+                      assert payload["automatic_grammar_promotion"] is False
                       assert payload["basemap_tile_url_template"]
                       assert payload["bounded_topology_projection"] is True
+                      assert payload["observatory_available"] is True
                       assert payload["learning_arena_available"] is True
+                      assert payload["learning_arena_identity"] == "LEARNING_ARENA_CRUCIBLE"
                       assert payload["model_calls_before_handoff"] == 0
                       break
               except Exception:
