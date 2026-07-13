@@ -1,13 +1,28 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+ENV PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=10000
 
+WORKDIR /app
 COPY . .
 
-RUN useradd -m -u 1000 arenauser && chown -R arenauser:arenauser /app
+RUN python -m pip install --no-cache-dir \
+    "numpy>=1.26.4,<3.0" \
+    "websockets>=12.0,<17.0" \
+    "aiosqlite>=0.20.0,<1.0" \
+    "ddgs>=6.0,<10.0" \
+    "wasmtime>=20.0,<46.0" \
+    "aiohttp>=3.9.0,<4.0" \
+    "beautifulsoup4>=4.12.0,<5.0" \
+    "httpx>=0.27.0,<1.0" \
+    "cryptography>=41.0.0,<45.0"
 
-USER arenauser
+RUN useradd -m -u 1000 aura \
+    && mkdir -p Aura_Memory Aura_Staging \
+    && chown -R aura:aura /app
 
-EXPOSE 8080
+USER aura
+EXPOSE 10000
 
-CMD ["python", "aura_coding_arena_server.py", "--host", "0.0.0.0", "--port", "8080", "--demo"]
+CMD ["sh", "-c", "python aura_showcase_server.py --host 0.0.0.0 --port ${PORT:-10000} --demo-project winnipeg_pathways"]
