@@ -42,12 +42,21 @@ jobs:
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio ruff
       - name: Patch, validate, regenerate, and push clean branch
-        run: python tools/one_time_finalize_governed_routing.py
+        run: |
+          mkdir -p finalizer-report
+          set +e
+          python tools/one_time_finalize_governed_routing.py \
+            > finalizer-report/output.log 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "$code" > finalizer-report/exit_code
+          tail -n 250 finalizer-report/output.log || true
+          exit "$code"
       - name: Upload finalizer report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: governed-routing-finalizer-${{ github.run_id }}
           path: finalizer-report/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 3
