@@ -75,6 +75,22 @@ if _old_hardware in _workbench_text:
 elif _new_hardware not in _workbench_text:
     raise RuntimeError("hardware truthfulness test marker missing")
 
+_quantizer_test = _root / "test_timestep_svd_quantizer.py"
+_quantizer_text = _quantizer_test.read_text(encoding="utf-8")
+_old_async = '''        results = asyncio.get_event_loop().run_until_complete(
+            engine.quantize_expert_activations(activations, timestep=0)
+        )'''
+_new_async = '''        results = asyncio.run(
+            engine.quantize_expert_activations(activations, timestep=0)
+        )'''
+if _old_async in _quantizer_text:
+    _quantizer_test.write_text(
+        _quantizer_text.replace(_old_async, _new_async, 1),
+        encoding="utf-8",
+    )
+elif _new_async not in _quantizer_text:
+    raise RuntimeError("async quantizer test marker missing")
+
 (_root / "sitecustomize.py").unlink(missing_ok=True)
 _self = Path(__file__).resolve()
 _body = _self.with_name("aura_open_weight_jacobian_adapter_body_once.py")
