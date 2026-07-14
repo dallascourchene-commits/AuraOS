@@ -73,24 +73,7 @@ jobs:
             pytest pytest-asyncio ruff
 
       - name: Apply canonical P1.1 changes
-        id: apply_changes
-        continue-on-error: true
-        run: python scripts/p1_1_finalize.py > p1-1-finalizer.log 2>&1
-
-      - name: Upload finalizer diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1-1-finalizer-${{ github.run_id }}
-          path: p1-1-finalizer.log
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Enforce finalizer result
-        if: steps.apply_changes.outcome != 'success'
-        run: |
-          cat p1-1-finalizer.log
-          exit 1
+        run: python scripts/p1_1_finalize.py
 
       - name: Validate focused contracts
         run: |
@@ -115,23 +98,38 @@ jobs:
             tests/test_aura_workflow_authority_bridge.py \
             tests/test_aura_workflow_gates.py
 
-      - name: Remove one-shot staging artifacts
-        run: |
-          rm -rf .p1_payload
-          rm -f scripts/p1_1_finalize.py
-          rm -f p1-1-finalizer.log
-          rm -f .github/workflows/p1-1-bootstrap.yml
-
       - name: Regenerate navigation artifacts
         run: python aura_codebase_navigator.py
 
       - name: Commit finalized P1.1 implementation
+        id: commit_changes
+        continue-on-error: true
         run: |
+          rm -f p1-1-finalizer.log
           git config user.name "AuraOS Refactor Bot"
           git config user.email "actions@users.noreply.github.com"
           git add -A
-          git diff --cached --check
+          git status --short
           git commit -m "feat(governance): add action-bound relational authority"
           git push origin HEAD:refactor/relational-authority-p1-1
+          
+      - name: Capture commit diagnostics
+        if: always()
+        run: |
+          git status --short > p1-1-commit.log
+          git log -1 --oneline >> p1-1-commit.log
 
-# payload revision: exact privacy fixture restored
+      - name: Upload commit diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-1-commit-${{ github.run_id }}
+          path: p1-1-commit.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce commit result
+        if: steps.commit_changes.outcome != 'success'
+        run: exit 1
+
+# staging files are removed after the tested implementation commit lands
