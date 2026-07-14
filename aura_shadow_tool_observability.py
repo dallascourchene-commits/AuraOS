@@ -18,6 +18,7 @@ from aura_event_contracts import (
     MeasurementClass,
     ToolDecisionRecord,
     ToolResultRecord,
+    stable_digest,
 )
 
 SHADOW_OBSERVABILITY_VERSION = "AURA_SHADOW_TOOL_OBSERVABILITY_V1"
@@ -50,7 +51,7 @@ def invoke_tool_shadow(
     value: Any = None
     status = "SUCCEEDED"
     error_class = ""
-    caught: BaseException | None = None
+    caught: Exception | None = None
     try:
         value = tool(**kwargs)
         if isinstance(value, Mapping) and (
@@ -58,7 +59,7 @@ def invoke_tool_shadow(
         ):
             status = str(value.get("status") or "FAILED").upper()
             error_class = str(value.get("error_class") or value.get("error") or "")
-    except BaseException as exc:  # preserve exact caller-visible exception behavior
+    except Exception as exc:  # preserve caller-visible exception type and message
         caught = exc
         status = "FAILED"
         error_class = type(exc).__name__
@@ -76,12 +77,16 @@ def invoke_tool_shadow(
     )
 
     decision_payload_ref = f"inline:{decision.decision_id}"
+    decision_payload_digest = stable_digest(decision.to_dict())
     result_payload_ref = f"inline:{result.result_id}"
+    result_payload_digest = stable_digest(result.to_dict())
     if store is not None:
         decision_ref = store.store_payload(decision.to_dict(), kind="tool-decision", created_at=started)
         result_ref = store.store_payload(result.to_dict(), kind="tool-result", created_at=finished)
         decision_payload_ref = decision_ref.ref_id
+        decision_payload_digest = decision_ref.payload_digest
         result_payload_ref = result_ref.ref_id
+        result_payload_digest = result_ref.payload_digest
 
     decision_event = AuraEventEnvelope.create(
         trace_id=decision.trace_id,
@@ -94,9 +99,9 @@ def invoke_tool_shadow(
         purpose_digest=purpose_digest,
         dikwp_stage=DIKWPStage.INFORMATION,
         payload_ref=decision_payload_ref,
-        payload_digest=decision.decision_id,
+        payload_digest=decision_payload_digest,
         proposal_only=True,
-        measurement_classes={"confidence": MeasurementClass.MODEL_ESTIMATED},
+        measurement_classes={"confidence": decision.confidence_measurement_class},
         confidence=decision.confidence_estimate,
         created_at=started,
     )
@@ -112,7 +117,7 @@ def invoke_tool_shadow(
         purpose_digest=purpose_digest,
         dikwp_stage=DIKWPStage.DATA,
         payload_ref=result_payload_ref,
-        payload_digest=result.result_id,
+        payload_digest=result_payload_digest,
         proposal_only=True,
         created_at=finished,
     )
