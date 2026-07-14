@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 822
-- **total_bytes**: 63708097
-- **text_tokens_est**: 6530962
+- **total_bytes**: 63715027
+- **text_tokens_est**: 6532695
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 577, 'schema_or_lexicon': 65, 'support_file': 41}
-- **topology_nodes**: 7195
-- **topology_edges**: 15028
+- **topology_nodes**: 7196
+- **topology_edges**: 15037
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 19896.27
+- **elapsed_ms**: 19082.32
 
 ## Coverage
 
@@ -52,7 +52,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `USER_GUIDE.md:924`, `aura_node.py:5655`
 - `!commands` -> `USER_GUIDE.md:207`
-- `!contains` -> `.github/workflows/p2-2-planning-regression.yml:56`
 - `!contingency_spawn` -> `aura_node.py:7006`
 - `!converse` -> `AURA_FINAL_REPORT.md:161`, `USER_GUIDE.md:980`, `aura_node.py:7649`
 - `!coordinated_reason` -> `USER_GUIDE.md:932`, `aura_node.py:7449`
@@ -226,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7195
-- **edges**: 15028
+- **nodes**: 7196
+- **edges**: 15037
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
