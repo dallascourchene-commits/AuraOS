@@ -41,24 +41,20 @@ jobs:
           import base64
           import zlib
 
-          compressed_paths = (
-              "aura_relational_authority.py",
-              "tests/test_aura_relational_authority.py",
-              "tests/test_aura_workflow_authority_bridge.py",
-              "scripts/p1_1_finalize.py",
-          )
-          for item in compressed_paths:
-              path = Path(item)
-              path.write_bytes(zlib.decompress(path.read_bytes()))
-              print(f"decoded {item}")
-
-          privacy_payload = Path(".p1_payload/privacy_tests.b64").read_text(
-              encoding="utf-8"
-          ).strip()
-          Path("tests/test_aura_event_privacy_hardening.py").write_bytes(
-              zlib.decompress(base64.b64decode(privacy_payload))
-          )
-          print("decoded tests/test_aura_event_privacy_hardening.py")
+          payloads = {
+              "aura_relational_authority.py": ".p1_payload/authority.b64",
+              "tests/test_aura_event_privacy_hardening.py": ".p1_payload/privacy_tests.b64",
+              "tests/test_aura_relational_authority.py": ".p1_payload/authority_tests.b64",
+              "tests/test_aura_workflow_authority_bridge.py": ".p1_payload/bridge_tests.b64",
+              "scripts/p1_1_finalize.py": ".p1_payload/finalizer.b64",
+          }
+          for target, payload_path in payloads.items():
+              encoded = Path(payload_path).read_text(encoding="utf-8").strip()
+              decoded = zlib.decompress(base64.b64decode(encoded))
+              path = Path(target)
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_bytes(decoded)
+              print(f"decoded {target}")
           PY
 
       - name: Install validation dependencies
