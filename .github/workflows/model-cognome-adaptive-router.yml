@@ -75,7 +75,7 @@ jobs:
         continue-on-error: true
         run: |
           set +e
-          python -m pytest -q \
+          python -m pytest -q tests \
             --junitxml=/tmp/pr92-full-pytest.xml \
             > /tmp/pr92-full-pytest.log 2>&1
           code=$?
