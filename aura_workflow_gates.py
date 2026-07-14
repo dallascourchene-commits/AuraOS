@@ -514,7 +514,7 @@ GATE_DEFINITIONS: Dict[WorkflowState, WorkflowGate] = {
             "patch_spans_exact",  # exact source spans required
             "patch_hashes_match",  # hashes must match
             "route_not_in_blocked_set",  # route must allow patching
-            "prior_state_verified_or_repair",  # VERIFIED or REPAIR_REQUIRED
+            "prior_state_agent_running_or_repair",  # VERIFIED or REPAIR_REQUIRED
         ],
         truth_packet=_truth_packet(),
         token_economy_snapshot=_token_economy_snapshot(),
@@ -692,7 +692,7 @@ def can_transition(current_state: WorkflowState, target_state: WorkflowState) ->
 
     * ``AGENT_HANDOFF_READY`` requires the workflow to have already passed
       ``CODEMAP_LOCALIZED`` and ``PLAN_READY``.
-    * ``PATCH_PROPOSED`` requires the prior state to be ``VERIFIED`` or
+    * ``PATCH_PROPOSED`` requires the prior state to be ``AGENT_RUNNING`` or
       ``REPAIR_REQUIRED``.
     * ``HUMAN_APPROVED_FOR_COMMIT`` requires ``VERIFIED`` to have been reached.
     * ``PR_READY`` requires ``HUMAN_APPROVED_FOR_COMMIT``.
@@ -780,7 +780,7 @@ def get_transition_requirements(
                 "route must not be in blocked_routes unless a repair / "
                 "localization gate has been satisfied"
             ),
-            "requires_prior_state": ["VERIFIED", "REPAIR_REQUIRED"],
+            "requires_prior_state": ["AGENT_RUNNING", "REPAIR_REQUIRED"],
         }
 
     if target_state is WorkflowState.AGENT_HANDOFF_READY:
@@ -816,15 +816,18 @@ def get_transition_requirements(
 
 def _authority_requirement(state: WorkflowState, evidence: Mapping[str, Any]) -> Dict[str, str]:
     defaults = _AUTHORITY_SCOPE_BY_STATE.get(state.name, {})
+    policy_scope = defaults.get("policy_scope")
+    capability_scope = defaults.get("capability_scope")
     return {
         "policy_scope": str(
-            evidence.get("required_policy_scope", defaults.get("policy_scope", ""))
+            policy_scope
+            if policy_scope is not None
+            else evidence.get("required_policy_scope", "")
         ),
         "capability_scope": str(
-            evidence.get(
-                "required_capability_scope",
-                defaults.get("capability_scope", ""),
-            )
+            capability_scope
+            if capability_scope is not None
+            else evidence.get("required_capability_scope", "")
         ),
     }
 
@@ -885,9 +888,17 @@ def _evaluate_authority(
                 capability_scope=scopes["capability_scope"],
                 now=float(evidence.get("authority_now", time.time())),
             )
+            raw_verified_ids = evidence.get(
+                "verified_governance_decision_ids", ()
+            )
+            if isinstance(raw_verified_ids, (str, bytes)):
+                raise ValueError(
+                    "verified_governance_decision_ids must be a collection"
+                )
             verified_ids = {
-                str(item)
-                for item in evidence.get("verified_governance_decision_ids", ())
+                str(item).strip()
+                for item in raw_verified_ids
+                if str(item).strip()
             }
             if decision.decision_id not in verified_ids:
                 raise ValueError("governance_decision_not_externally_verified")
@@ -905,7 +916,7 @@ def _evaluate_authority(
             result["authority_missing_reasons"].append(str(exc))
         return result
 
-    if bool(evidence.get("human_approval")):
+    if evidence.get("human_approval") is True:
         result.update(
             {
                 "satisfied": True,

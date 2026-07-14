@@ -56,7 +56,7 @@ _SECRET_PATTERNS = (
 
 def _normalize_field_name(value: Any) -> str:
     text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(value).strip())
-    return text.lower().replace("-", "_").replace(" ", "_")
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
 
 
 _PRIVATE_REASONING_KEYS = frozenset(
@@ -78,6 +78,9 @@ _NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(
 _COMPACT_PRIVATE_REASONING_KEYS = frozenset(
     item.replace("_", "") for item in _NORMALIZED_PRIVATE_REASONING_KEYS
 )
+_COMPACT_PRIVATE_REASONING_SUFFIXES = frozenset(
+    item for item in _COMPACT_PRIVATE_REASONING_KEYS if len(item) >= 8
+)
 _PRIVATE_REASONING_SUFFIXES = tuple(
     f"_{item}" for item in sorted(_NORMALIZED_PRIVATE_REASONING_KEYS)
 )
@@ -89,7 +92,10 @@ def _is_private_reasoning_field(normalized: str) -> bool:
         normalized in _NORMALIZED_PRIVATE_REASONING_KEYS
         or normalized.endswith(_PRIVATE_REASONING_SUFFIXES)
         or compact in _COMPACT_PRIVATE_REASONING_KEYS
-        or any(compact.endswith(item) for item in _COMPACT_PRIVATE_REASONING_KEYS)
+        or any(
+            compact.endswith(item)
+            for item in _COMPACT_PRIVATE_REASONING_SUFFIXES
+        )
     )
 _SECRET_FIELDS = frozenset(
     {

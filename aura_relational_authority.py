@@ -291,6 +291,7 @@ class AuthorityGrant:
                 now=current_time,
                 verified_authority_refs=trusted,
             )
+            parent_grant._validate_identity()
             resolved_parent_ref = parent_grant.grant_id
             if supplied_parent_ref and supplied_parent_ref != resolved_parent_ref:
                 raise ValueError("parent_grant_ref does not match parent grant")
@@ -489,6 +490,9 @@ class ApprovalAttestation:
             now=current_time,
             verified_authority_refs=verified_authority_refs,
         )
+        grant._validate_identity()
+        if created < grant.valid_from:
+            raise ValueError("attestation cannot predate its authority grant")
 
         principal = _required(principal_id, "principal_id")
         if principal != grant.principal_id:
@@ -642,6 +646,10 @@ class ApprovalAttestation:
             raise ValueError("attestation uses an unauthorized policy scope")
         if self.capability_scope not in grant.capability_scopes:
             raise ValueError("attestation uses an unauthorized capability scope")
+        if self.created_at < grant.valid_from:
+            raise ValueError("attestation predates its authority grant")
+        if self.expires_at > grant.expires_at:
+            raise ValueError("attestation outlives its authority grant")
         if current_time < self.created_at:
             raise ValueError("attestation is not active yet")
         if current_time >= self.expires_at:
@@ -838,6 +846,14 @@ class QuorumPolicy:
         else:
             if self.emergency_ttl_seconds != 0:
                 raise ValueError("non-emergency policy has an emergency TTL")
+            if self.emergency_allowed_policy_scopes:
+                raise ValueError("non-emergency policy has emergency policy scopes")
+            if self.emergency_allowed_capability_scopes:
+                raise ValueError("non-emergency policy has emergency capability scopes")
+            if self.mandatory_post_event_review:
+                raise ValueError("non-emergency policy requires emergency review")
+            if self.baseline_policy_id or self.baseline_policy_digest:
+                raise ValueError("non-emergency policy references an emergency baseline")
 
     def validate_emergency_against(self, normal_policy: "QuorumPolicy") -> None:
         self.validate()
@@ -1004,6 +1020,8 @@ class GovernanceDecision:
     ) -> None:
         self.validate_integrity()
         current_time = _now(now)
+        if current_time < self.created_at:
+            raise ValueError("governance decision is not active yet")
         if not self.authorized:
             raise ValueError("governance decision is not authorized")
         if self.action_id != _required(action_id, "action_id"):
@@ -1129,7 +1147,12 @@ def evaluate_governance(
         }
     )
 
+    seen_attestation_ids: set[str] = set()
     for attestation in supplied:
+        if attestation.attestation_id in seen_attestation_ids:
+            reasons.append(f"duplicate_attestation:{attestation.attestation_id}")
+            continue
+        seen_attestation_ids.add(attestation.attestation_id)
         try:
             grant = grant_map.get(attestation.grant_ref)
             if grant is None:
@@ -1167,17 +1190,30 @@ def evaluate_governance(
         item for item in valid if item.decision == AttestationDecision.ABSTAIN.value
     ]
 
-    role_to_principals: dict[str, set[str]] = {}
+    counted_approvals: list[ApprovalAttestation] = []
+    seen_principal_roles: set[tuple[str, str]] = set()
     for approval in approvals:
+        principal_role = (approval.principal_id, approval.functional_role)
+        if principal_role in seen_principal_roles:
+            reasons.append(
+                "duplicate_principal_role_approval:"
+                f"{approval.principal_id}:{approval.functional_role}"
+            )
+            continue
+        seen_principal_roles.add(principal_role)
+        counted_approvals.append(approval)
+
+    role_to_principals: dict[str, set[str]] = {}
+    for approval in counted_approvals:
         role_to_principals.setdefault(approval.functional_role, set()).add(
             approval.principal_id
         )
-    approval_principals = {item.principal_id for item in approvals}
+    approval_principals = {item.principal_id for item in counted_approvals}
     missing_roles = sorted(
         set(quorum_policy.required_functional_roles) - set(role_to_principals)
     )
     missing_quorum = max(
-        0, quorum_policy.minimum_approval_count - len(approvals)
+        0, quorum_policy.minimum_approval_count - len(counted_approvals)
     )
     missing_distinct = max(
         0,
@@ -1216,8 +1252,8 @@ def evaluate_governance(
     if invalid_ids:
         reasons.append("invalid_attestations_present")
 
-    valid_expiries = [item.expires_at for item in approvals]
-    for approval in approvals:
+    valid_expiries = [item.expires_at for item in counted_approvals]
+    for approval in counted_approvals:
         grant = grant_map.get(approval.grant_ref)
         if grant is not None:
             valid_expiries.append(grant.expires_at)
@@ -1501,6 +1537,22 @@ class TrustedCheckpoint:
             **payload,
         )
 
+    def validate_integrity(
+        self, *, verified_checkpoint_refs: Iterable[str]
+    ) -> None:
+        trusted = _trusted_set(
+            verified_checkpoint_refs, "verified_checkpoint_refs"
+        )
+        if self.externally_signed_checkpoint_ref not in trusted:
+            raise ValueError("checkpoint signature reference is not externally trusted")
+        if self.schema_version != SCHEMA_VERSION:
+            raise ValueError("unsupported checkpoint schema version")
+        if self.sequence_number < 0:
+            raise ValueError("checkpoint sequence_number must be non-negative")
+        payload = _canonical_payload(self, exclude=("checkpoint_id",))
+        if self.checkpoint_id != stable_id("authority-checkpoint", payload):
+            raise ValueError("checkpoint ID does not match its content")
+
 
 @dataclass(frozen=True)
 class ChainedAuthorityReceipt:
@@ -1607,7 +1659,7 @@ def verify_receipt_chain(
     items = tuple(receipts)
     errors: list[str] = []
     ledger_ids = {item.ledger_id for item in items}
-    ledger_id = next(iter(ledger_ids), "")
+    ledger_id = sorted(ledger_ids)[0] if ledger_ids else ""
     if len(ledger_ids) > 1:
         errors.append("multiple_ledger_ids")
 
@@ -1618,13 +1670,16 @@ def verify_receipt_chain(
         if str(item).strip()
     )
     if trusted_checkpoint is not None:
-        if (
-            trusted_checkpoint.externally_signed_checkpoint_ref
-            not in checkpoint_trusted
-        ):
-            errors.append("checkpoint_reference_not_externally_verified")
+        try:
+            trusted_checkpoint.validate_integrity(
+                verified_checkpoint_refs=checkpoint_trusted
+            )
+        except (TypeError, ValueError) as exc:
+            errors.append(f"invalid_trusted_checkpoint:{exc}")
         else:
             checkpoint_verified = True
+            if not ledger_id:
+                ledger_id = trusted_checkpoint.ledger_id
         if ledger_id and trusted_checkpoint.ledger_id != ledger_id:
             errors.append("checkpoint_ledger_mismatch")
         if items and items[-1].sequence_number < trusted_checkpoint.sequence_number:
@@ -1706,8 +1761,24 @@ def verify_receipt_chain(
         ):
             errors.append("trusted_checkpoint_sequence_missing")
 
-    final_sequence = items[-1].sequence_number if items else 0
-    final_digest = items[-1].chain_digest if items else GENESIS_CHAIN_DIGEST
+    final_sequence = (
+        items[-1].sequence_number
+        if items
+        else (
+            trusted_checkpoint.sequence_number
+            if trusted_checkpoint is not None and checkpoint_verified
+            else 0
+        )
+    )
+    final_digest = (
+        items[-1].chain_digest
+        if items
+        else (
+            trusted_checkpoint.chain_digest
+            if trusted_checkpoint is not None and checkpoint_verified
+            else GENESIS_CHAIN_DIGEST
+        )
+    )
     return ChainVerificationResult(
         valid=not errors,
         ledger_id=ledger_id,
