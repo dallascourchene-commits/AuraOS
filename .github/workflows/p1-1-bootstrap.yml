@@ -1,0 +1,110 @@
+name: Bootstrap and finalize P1.1 relational authority
+
+on:
+  push:
+    branches:
+      - refactor/relational-authority-p1-1
+    paths:
+      - .github/workflows/p1-1-bootstrap.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: p1-1-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/relational-authority-p1-1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Materialize reviewed P1.1 sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          fetch_compressed_blob() {
+            local sha="$1"
+            local target="$2"
+            mkdir -p "$(dirname "${target}")"
+            gh api "repos/dallascourchene-commits/AuraOS/git/blobs/${sha}" --jq .content \
+              | tr -d '\n' \
+              | base64 --decode \
+              | python -c 'import sys,zlib; sys.stdout.buffer.write(zlib.decompress(sys.stdin.buffer.read()))' \
+              > "${target}"
+          }
+          fetch_compressed_blob 773509e45a81fa00c8c4ce3a0b6f10a148c0f2c7 aura_relational_authority.py
+          fetch_compressed_blob fa78f090bdf068e0b1e13f0e910dda3dfa97655e tests/test_aura_event_privacy_hardening.py
+          fetch_compressed_blob 61b23ab114bab14168ca1e1096046ee62f29dd8b tests/test_aura_relational_authority.py
+          fetch_compressed_blob 06d9cb33709861247bc6c57721a70b87b08e0945 tests/test_aura_workflow_authority_bridge.py
+          fetch_compressed_blob 55bb721ce0b7856a00a86a5b982e444fa8e5be70 scripts/p1_1_finalize.py
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest pytest-asyncio ruff
+
+      - name: Apply canonical P1.1 changes
+        run: python scripts/p1_1_finalize.py
+
+      - name: Validate focused contracts
+        run: |
+          python -m py_compile \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_workflow_gates.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_workflow_gates.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py
+          python -m pytest -q \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py \
+            tests/test_aura_workflow_gates.py
+
+      - name: Remove one-shot automation
+        run: |
+          rm -f scripts/p1_1_finalize.py
+          rm -f .github/workflows/p1-1-bootstrap.yml
+
+      - name: Regenerate navigation artifacts
+        run: python aura_codebase_navigator.py
+
+      - name: Commit finalized P1.1 implementation
+        run: |
+          git config user.name "AuraOS Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat(governance): add action-bound relational authority"
+          git push origin HEAD:refactor/relational-authority-p1-1
