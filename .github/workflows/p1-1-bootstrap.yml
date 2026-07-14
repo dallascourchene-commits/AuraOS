@@ -23,8 +23,6 @@ jobs:
   finalize:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    env:
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,43 +33,6 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-
-      - name: Materialize reviewed P1.1 sources
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import base64
-          import json
-          import os
-          import urllib.request
-          import zlib
-
-          blobs = {
-              "aura_relational_authority.py": "773509e45a81fa00c8c4ce3a0b6f10a148c0f2c7",
-              "tests/test_aura_event_privacy_hardening.py": "fa78f090bdf068e0b1e13f0e910dda3dfa97655e",
-              "tests/test_aura_relational_authority.py": "61b23ab114bab14168ca1e1096046ee62f29dd8b",
-              "tests/test_aura_workflow_authority_bridge.py": "06d9cb33709861247bc6c57721a70b87b08e0945",
-              "scripts/p1_1_finalize.py": "55bb721ce0b7856a00a86a5b982e444fa8e5be70",
-          }
-          token = os.environ["GH_TOKEN"]
-          for relative_path, sha in blobs.items():
-              request = urllib.request.Request(
-                  f"https://api.github.com/repos/dallascourchene-commits/AuraOS/git/blobs/{sha}",
-                  headers={
-                      "Authorization": f"Bearer {token}",
-                      "Accept": "application/vnd.github+json",
-                      "X-GitHub-Api-Version": "2022-11-28",
-                  },
-              )
-              with urllib.request.urlopen(request) as response:
-                  payload = json.load(response)
-              compressed = base64.b64decode(payload["content"])
-              path = Path(relative_path)
-              path.parent.mkdir(parents=True, exist_ok=True)
-              path.write_bytes(zlib.decompress(compressed))
-              print(f"materialized {relative_path}")
-          PY
 
       - name: Install validation dependencies
         run: |
@@ -114,8 +75,9 @@ jobs:
             tests/test_aura_workflow_authority_bridge.py \
             tests/test_aura_workflow_gates.py
 
-      - name: Remove one-shot automation
+      - name: Remove one-shot staging artifacts
         run: |
+          rm -rf .p1_payload
           rm -f scripts/p1_1_finalize.py
           rm -f .github/workflows/p1-1-bootstrap.yml
 
