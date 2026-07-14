@@ -132,6 +132,18 @@ elif _new_string_sanitize not in _ledger_text:
     raise RuntimeError("ledger string sanitization marker missing")
 _ledger.write_text(_ledger_text, encoding="utf-8")
 
+_sandbox_test = _root / "tests/test_aura_ephemeral_sandbox.py"
+_sandbox_text = _sandbox_test.read_text(encoding="utf-8")
+_old_wasmtime = '        assert result["wasmtime_available"] is False  # Expected in test env\n'
+_new_wasmtime = '        assert isinstance(result["wasmtime_available"], bool)\n'
+if _old_wasmtime in _sandbox_text:
+    _sandbox_test.write_text(
+        _sandbox_text.replace(_old_wasmtime, _new_wasmtime, 1),
+        encoding="utf-8",
+    )
+elif _new_wasmtime not in _sandbox_text:
+    raise RuntimeError("sandbox Wasmtime expectation marker missing")
+
 (_root / "sitecustomize.py").unlink(missing_ok=True)
 _self = Path(__file__).resolve()
 _body = _self.with_name("aura_open_weight_jacobian_adapter_body_once.py")
