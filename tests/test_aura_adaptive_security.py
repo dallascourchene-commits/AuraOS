@@ -57,6 +57,26 @@ def test_execution_authorization_requires_explicit_model_profiles() -> None:
         raise AssertionError("model execution was authorized without explicit profiles")
 
 
+def test_execution_authorization_rejects_empty_profile_values() -> None:
+    try:
+        ExecutionAuthorization.create(
+            approved_by="Dallas",
+            verifier_id="verifier",
+            purpose_digest="purpose",
+            capability_graph_digest="graph",
+            allowed_policy_modes=[DIRECT],
+            allowed_profile_ids=[""],
+            nonce="nonce",
+            issued_at=1.0,
+            expires_at=2.0,
+            max_calls=1,
+        )
+    except ValueError as exc:
+        assert "empty" in str(exc)
+    else:
+        raise AssertionError("empty endpoint profile was authorized")
+
+
 def test_execution_authorization_rejects_content_tampering() -> None:
     authorization = ExecutionAuthorization.create(
         approved_by="Dallas",
