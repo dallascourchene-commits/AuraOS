@@ -290,17 +290,26 @@ def regress_board_goal(
                 break
             continue
 
-        target = open_predicates[0]
         protected_requirements = _dedupe_predicates(
             (*open_predicates, *protected_predicates)
         )
-        producers = tuple(
-            action
+        producer_options = tuple(
+            (target, action)
+            for target in open_predicates
             for action in actions
             if _effect_satisfies(action, target)
             and not _action_conflicts(action, protected_requirements)
         )
-        if not producers:
+        producible_keys = {
+            _predicate_key(target) for target, _action in producer_options
+        }
+        missing_targets = tuple(
+            target
+            for target in open_predicates
+            if _predicate_key(target) not in producible_keys
+        )
+        if missing_targets:
+            target = missing_targets[0]
             candidates.append(
                 RegressionCandidate(
                     tuple(reversed(selected_reversed)),
@@ -321,6 +330,7 @@ def regress_board_goal(
             continue
 
         if len(selected_reversed) >= max_depth:
+            target = open_predicates[0]
             candidates.append(
                 RegressionCandidate(
                     tuple(reversed(selected_reversed)),
@@ -341,7 +351,7 @@ def regress_board_goal(
             continue
 
         expanded = False
-        for action in producers:
+        for target, action in producer_options:
             if action.action_id in selected_reversed:
                 findings.append(
                     RegressionFinding(
