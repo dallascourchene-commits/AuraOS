@@ -1,8 +1,7 @@
-"""Canonical Aura event and tool-decision contracts.
+"""Canonical, domain-neutral Aura event and tool-decision contracts.
 
-This module is domain-neutral and stdlib-only. It records bounded, auditable
-explanations beside tool/model invocations without changing the invoked tool's
-schema and without storing private chain-of-thought.
+Records bounded explanations beside calls without changing tool schemas or
+storing private chain-of-thought. Runtime dependencies are stdlib only.
 """
 from __future__ import annotations
 
@@ -36,17 +35,15 @@ _SECRET_PATTERNS = (
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
 _PRIVATE_REASONING_KEYS = frozenset(
-    {
-        "chain_of_thought",
-        "chain-of-thought",
-        "cot",
-        "hidden_reasoning",
-        "private_reasoning",
-        "inner_thought",
-        "innerthought",
-        "scratchpad",
-    }
+    {"chain_of_thought", "chain-of-thought", "cot", "hidden_reasoning", "private_reasoning",
+     "inner_thought", "innerthought", "scratchpad"}
 )
+_NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(item.replace("-", "_") for item in _PRIVATE_REASONING_KEYS)
+_SECRET_FIELDS = frozenset(
+    {"api_key", "apikey", "access_token", "auth_token", "authorization", "password",
+     "private_key", "secret", "token"}
+)
+_SECRET_SUFFIXES = ("_api_key", "_access_token", "_auth_token", "_password", "_private_key", "_secret")
 
 
 class ActorType(str, Enum):
@@ -93,8 +90,8 @@ def _canonicalize(value: Any) -> Any:
     if isinstance(value, (tuple, list)):
         return [_canonicalize(item) for item in value]
     if isinstance(value, (set, frozenset)):
-        normalized = [_canonicalize(item) for item in value]
-        return sorted(normalized, key=lambda item: json.dumps(item, sort_keys=True, default=str))
+        items = [_canonicalize(item) for item in value]
+        return sorted(items, key=lambda item: json.dumps(item, sort_keys=True, default=str))
     if isinstance(value, bytes):
         return {"__bytes_hex__": value.hex()}
     if isinstance(value, float) and not math.isfinite(value):
@@ -104,18 +101,17 @@ def _canonicalize(value: Any) -> Any:
 
 def canonical_json(value: Any) -> str:
     return json.dumps(
-        _canonicalize(value),
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-        allow_nan=False,
+        _canonicalize(value), sort_keys=True, separators=(",", ":"),
+        ensure_ascii=False, allow_nan=False,
     )
 
 
 def stable_digest(value: Any, *, digest_size: int = 16) -> str:
     if not 1 <= int(digest_size) <= 64:
         raise ValueError("digest_size must be between 1 and 64 bytes")
-    return hashlib.blake2b(canonical_json(value).encode("utf-8"), digest_size=int(digest_size)).hexdigest()
+    return hashlib.blake2b(
+        canonical_json(value).encode("utf-8"), digest_size=int(digest_size)
+    ).hexdigest()
 
 
 def stable_id(prefix: str, value: Any, *, digest_size: int = 12) -> str:
@@ -125,22 +121,21 @@ def stable_id(prefix: str, value: Any, *, digest_size: int = 12) -> str:
     return f"{clean}_{stable_digest(value, digest_size=digest_size)}"
 
 
-def _require_nonempty(value: str, field_name: str) -> str:
+def _required(value: Any, field_name: str) -> str:
     normalized = str(value or "").strip()
     if not normalized:
         raise ValueError(f"{field_name} must not be empty")
     return normalized
 
 
-def _enum_value(value: str | Enum, enum_type: type[Enum], field_name: str) -> str:
+def _enum(value: str | Enum, enum_type: type[Enum], field_name: str) -> str:
     raw = value.value if isinstance(value, Enum) else str(value)
-    allowed = {item.value for item in enum_type}
-    if raw not in allowed:
+    if raw not in {item.value for item in enum_type}:
         raise ValueError(f"unknown {field_name}: {raw}")
     return raw
 
 
-def _bounded_text(value: str, field_name: str, limit: int, *, required: bool = True) -> str:
+def _bounded(value: Any, field_name: str, limit: int, *, required: bool = True) -> str:
     normalized = " ".join(str(value or "").split())
     if required and not normalized:
         raise ValueError(f"{field_name} must not be empty")
@@ -175,14 +170,19 @@ def redact_secrets(value: str) -> str:
 
 
 def sanitize_payload(value: Any) -> Any:
-    """Return a JSON-safe payload with secrets redacted and private-reasoning keys rejected."""
+    """Redact secrets and reject fields intended for private reasoning."""
     if isinstance(value, Mapping):
         result: dict[str, Any] = {}
         for key, item in value.items():
             key_text = str(key)
-            if key_text.strip().lower() in _PRIVATE_REASONING_KEYS:
+            normalized = key_text.strip().lower().replace("-", "_").replace(" ", "_")
+            if normalized in _NORMALIZED_PRIVATE_REASONING_KEYS:
                 raise ValueError(f"private reasoning field is prohibited: {key_text}")
-            result[key_text] = sanitize_payload(item)
+            result[key_text] = (
+                "[REDACTED]"
+                if normalized in _SECRET_FIELDS or normalized.endswith(_SECRET_SUFFIXES)
+                else sanitize_payload(item)
+            )
         return result
     if isinstance(value, (list, tuple)):
         return [sanitize_payload(item) for item in value]
@@ -243,60 +243,39 @@ class AuraEventEnvelope:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(
-        cls,
-        *,
-        trace_id: str,
-        event_type: str,
-        actor_id: str,
-        actor_type: str | ActorType,
-        purpose_digest: str,
-        dikwp_stage: str | DIKWPStage,
-        payload_ref: str,
-        payload_digest: str,
-        parent_event_ids: Iterable[str] = (),
-        arena_id: str = "",
-        board_id: str = "",
-        node_id: str = "",
-        objective_id: str = "",
-        evidence_refs: Iterable[str] = (),
-        policy_scope: str = "",
-        proposal_only: bool = True,
-        measurement_classes: Mapping[str, str | MeasurementClass] | None = None,
-        confidence: float | None = None,
-        uncertainty: float | None = None,
-        created_at: float | None = None,
-    ) -> "AuraEventEnvelope":
-        created = time.time() if created_at is None else float(created_at)
-        classes = {
-            str(key): _enum_value(value, MeasurementClass, f"measurement class for {key}")
-            for key, value in dict(measurement_classes or {}).items()
-        }
+    def create(cls, *, trace_id: str, event_type: str, actor_id: str,
+               actor_type: str | ActorType, purpose_digest: str,
+               dikwp_stage: str | DIKWPStage, payload_ref: str, payload_digest: str,
+               parent_event_ids: Iterable[str] = (), arena_id: str = "", board_id: str = "",
+               node_id: str = "", objective_id: str = "", evidence_refs: Iterable[str] = (),
+               policy_scope: str = "", proposal_only: bool = True,
+               measurement_classes: Mapping[str, str | MeasurementClass] | None = None,
+               confidence: float | None = None, uncertainty: float | None = None,
+               created_at: float | None = None) -> "AuraEventEnvelope":
         payload = {
-            "trace_id": _require_nonempty(trace_id, "trace_id"),
+            "trace_id": _required(trace_id, "trace_id"),
             "parent_event_ids": tuple(str(item) for item in parent_event_ids),
-            "event_type": _require_nonempty(event_type, "event_type"),
+            "event_type": _required(event_type, "event_type"),
             "schema_version": SCHEMA_VERSION,
-            "actor_id": _require_nonempty(actor_id, "actor_id"),
-            "actor_type": _enum_value(actor_type, ActorType, "actor_type"),
-            "arena_id": str(arena_id),
-            "board_id": str(board_id),
-            "node_id": str(node_id),
+            "actor_id": _required(actor_id, "actor_id"),
+            "actor_type": _enum(actor_type, ActorType, "actor_type"),
+            "arena_id": str(arena_id), "board_id": str(board_id), "node_id": str(node_id),
             "objective_id": str(objective_id),
-            "purpose_digest": _require_nonempty(purpose_digest, "purpose_digest"),
-            "dikwp_stage": _enum_value(dikwp_stage, DIKWPStage, "dikwp_stage"),
-            "payload_ref": _require_nonempty(payload_ref, "payload_ref"),
-            "payload_digest": _require_nonempty(payload_digest, "payload_digest"),
+            "purpose_digest": _required(purpose_digest, "purpose_digest"),
+            "dikwp_stage": _enum(dikwp_stage, DIKWPStage, "dikwp_stage"),
+            "payload_ref": _required(payload_ref, "payload_ref"),
+            "payload_digest": _required(payload_digest, "payload_digest"),
             "evidence_refs": tuple(str(item) for item in evidence_refs),
-            "policy_scope": str(policy_scope),
-            "proposal_only": bool(proposal_only),
-            "measurement_classes": classes,
+            "policy_scope": str(policy_scope), "proposal_only": bool(proposal_only),
+            "measurement_classes": {
+                str(key): _enum(value, MeasurementClass, f"measurement class for {key}")
+                for key, value in dict(measurement_classes or {}).items()
+            },
             "confidence": _probability(confidence, "confidence"),
             "uncertainty": _probability(uncertainty, "uncertainty"),
-            "created_at": created,
+            "created_at": time.time() if created_at is None else float(created_at),
         }
-        event_id = stable_id("event", payload)
-        return cls(event_id=event_id, **payload)
+        return cls(event_id=stable_id("event", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
         return _canonicalize(self)
@@ -316,6 +295,7 @@ class ToolDecisionRecord:
     advantage_over_alternatives: str
     alternatives_considered: tuple[str, ...]
     confidence_estimate: float | None
+    confidence_measurement_class: str
     uncertainty_reasons: tuple[str, ...]
     required_evidence_classes: tuple[str, ...]
     expected_cost: dict[str, Any]
@@ -329,75 +309,61 @@ class ToolDecisionRecord:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(
-        cls,
-        *,
-        trace_id: str,
-        tool_id: str,
-        decision_kind: str | DecisionKind,
-        decision_rationale: str,
-        expected_information: str,
-        tool_input: Any,
-        capability_ids: Iterable[str] = (),
-        board_id: str = "",
-        node_id: str = "",
-        advantage_over_alternatives: str = "",
-        alternatives_considered: Iterable[str] = (),
-        confidence_estimate: float | None = None,
-        uncertainty_reasons: Iterable[str] = (),
-        required_evidence_classes: Iterable[str] = (),
-        expected_cost: Mapping[str, Any] | None = None,
-        expected_latency_ms: float | None = None,
-        expected_risk: str = "LOW",
-        authorization_ref: str = "",
-        proposal_only: bool = True,
-        created_at: float | None = None,
-        rationale_limit: int = DEFAULT_RATIONALE_LIMIT,
-    ) -> "ToolDecisionRecord":
-        alternatives = tuple(
-            _bounded_text(item, "alternative", DEFAULT_RATIONALE_LIMIT)
-            for item in alternatives_considered
-        )
+    def create(cls, *, trace_id: str, tool_id: str, decision_kind: str | DecisionKind,
+               decision_rationale: str, expected_information: str, tool_input: Any,
+               capability_ids: Iterable[str] = (), board_id: str = "", node_id: str = "",
+               advantage_over_alternatives: str = "", alternatives_considered: Iterable[str] = (),
+               confidence_estimate: float | None = None,
+               confidence_measurement_class: str | MeasurementClass = MeasurementClass.UNAVAILABLE,
+               uncertainty_reasons: Iterable[str] = (), required_evidence_classes: Iterable[str] = (),
+               expected_cost: Mapping[str, Any] | None = None,
+               expected_latency_ms: float | None = None, expected_risk: str = "LOW",
+               authorization_ref: str = "", proposal_only: bool = True,
+               created_at: float | None = None,
+               rationale_limit: int = DEFAULT_RATIONALE_LIMIT) -> "ToolDecisionRecord":
+        alternatives = tuple(_bounded(item, "alternative", DEFAULT_RATIONALE_LIMIT)
+                             for item in alternatives_considered)
         if len(alternatives) > DEFAULT_ALTERNATIVE_LIMIT:
             raise ValueError(f"alternatives_considered is capped at {DEFAULT_ALTERNATIVE_LIMIT}")
-        sanitized_input = sanitize_payload(tool_input)
-        created = time.time() if created_at is None else float(created_at)
+        confidence = _probability(confidence_estimate, "confidence_estimate")
+        confidence_class = _enum(
+            confidence_measurement_class, MeasurementClass, "confidence_measurement_class"
+        )
+        if confidence is not None and confidence_class == MeasurementClass.UNAVAILABLE.value:
+            raise ValueError(
+                "confidence_measurement_class must be explicit when confidence_estimate is present"
+            )
         payload = {
-            "trace_id": _require_nonempty(trace_id, "trace_id"),
-            "board_id": str(board_id),
-            "node_id": str(node_id),
-            "tool_id": _require_nonempty(tool_id, "tool_id"),
+            "trace_id": _required(trace_id, "trace_id"), "board_id": str(board_id),
+            "node_id": str(node_id), "tool_id": _required(tool_id, "tool_id"),
             "capability_ids": tuple(str(item) for item in capability_ids),
-            "decision_kind": _enum_value(decision_kind, DecisionKind, "decision_kind"),
-            "decision_rationale": _bounded_text(
+            "decision_kind": _enum(decision_kind, DecisionKind, "decision_kind"),
+            "decision_rationale": _bounded(
                 decision_rationale, "decision_rationale", rationale_limit
             ),
-            "expected_information": _bounded_text(
+            "expected_information": _bounded(
                 expected_information, "expected_information", DEFAULT_EXPECTATION_LIMIT
             ),
-            "advantage_over_alternatives": _bounded_text(
-                advantage_over_alternatives,
-                "advantage_over_alternatives",
-                DEFAULT_EXPECTATION_LIMIT,
-                required=False,
+            "advantage_over_alternatives": _bounded(
+                advantage_over_alternatives, "advantage_over_alternatives",
+                DEFAULT_EXPECTATION_LIMIT, required=False,
             ),
             "alternatives_considered": alternatives,
-            "confidence_estimate": _probability(confidence_estimate, "confidence_estimate"),
+            "confidence_estimate": confidence,
+            "confidence_measurement_class": confidence_class,
             "uncertainty_reasons": tuple(
-                _bounded_text(item, "uncertainty reason", DEFAULT_RATIONALE_LIMIT)
+                _bounded(item, "uncertainty reason", DEFAULT_RATIONALE_LIMIT)
                 for item in uncertainty_reasons
             ),
             "required_evidence_classes": tuple(str(item) for item in required_evidence_classes),
             "expected_cost": sanitize_payload(dict(expected_cost or {})),
             "expected_latency_ms": _nonnegative(expected_latency_ms, "expected_latency_ms"),
-            "expected_risk": _require_nonempty(expected_risk, "expected_risk").upper(),
-            "tool_input_digest": stable_digest(sanitized_input),
-            "authorization_ref": str(authorization_ref),
-            "proposal_only": bool(proposal_only),
-            "created_at": created,
+            "expected_risk": _required(expected_risk, "expected_risk").upper(),
+            "tool_input_digest": stable_digest(sanitize_payload(tool_input)),
+            "authorization_ref": str(authorization_ref), "proposal_only": bool(proposal_only),
+            "created_at": time.time() if created_at is None else float(created_at),
         }
-        decision_id = stable_id("tool-decision", payload)
-        return cls(decision_id=decision_id, **payload)
+        return cls(decision_id=stable_id("tool-decision", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
         return _canonicalize(self)
@@ -420,50 +386,28 @@ class ToolResultRecord:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(
-        cls,
-        *,
-        decision_id: str,
-        tool_id: str,
-        status: str,
-        output: Any,
-        output_ref: str = "",
-        usage_ref: str = "",
-        evidence_refs: Iterable[str] = (),
-        error_class: str = "",
-        started_at: float,
-        finished_at: float,
-    ) -> "ToolResultRecord":
-        started = float(started_at)
-        finished = float(finished_at)
+    def create(cls, *, decision_id: str, tool_id: str, status: str, output: Any,
+               output_ref: str = "", usage_ref: str = "", evidence_refs: Iterable[str] = (),
+               error_class: str = "", started_at: float, finished_at: float) -> "ToolResultRecord":
+        started, finished = float(started_at), float(finished_at)
         if finished < started:
             raise ValueError("finished_at must be greater than or equal to started_at")
-        sanitized_output = sanitize_payload(output)
         payload = {
-            "decision_id": _require_nonempty(decision_id, "decision_id"),
-            "tool_id": _require_nonempty(tool_id, "tool_id"),
-            "status": _require_nonempty(status, "status").upper(),
-            "output_ref": str(output_ref),
-            "output_digest": stable_digest(sanitized_output),
-            "usage_ref": str(usage_ref),
+            "decision_id": _required(decision_id, "decision_id"),
+            "tool_id": _required(tool_id, "tool_id"),
+            "status": _required(status, "status").upper(), "output_ref": str(output_ref),
+            "output_digest": stable_digest(sanitize_payload(output)), "usage_ref": str(usage_ref),
             "evidence_refs": tuple(str(item) for item in evidence_refs),
-            "error_class": str(error_class),
-            "started_at": started,
-            "finished_at": finished,
+            "error_class": str(error_class), "started_at": started, "finished_at": finished,
         }
-        result_id = stable_id("tool-result", payload)
-        return cls(result_id=result_id, **payload)
+        return cls(result_id=stable_id("tool-result", payload), **payload)
 
     def to_dict(self) -> dict[str, Any]:
         return _canonicalize(self)
 
 
 class AppendOnlyEventStore:
-    """Small local JSONL store with immutable exact sidecars.
-
-    It exposes append/read operations only. Re-appending an identical event is
-    idempotent; reusing an event ID with different content fails closed.
-    """
+    """Local JSONL event store with immutable, redacted exact sidecars."""
 
     def __init__(self, root: str | Path) -> None:
         self.root = Path(root).resolve()
@@ -472,34 +416,29 @@ class AppendOnlyEventStore:
         self.sidecars_dir.mkdir(parents=True, exist_ok=True)
         self._event_digests = self._load_event_digests()
 
-    def store_payload(self, payload: Any, *, kind: str, created_at: float | None = None) -> ExactPayloadRef:
+    def store_payload(self, payload: Any, *, kind: str,
+                      created_at: float | None = None) -> ExactPayloadRef:
         safe_payload = sanitize_payload(payload)
         encoded = canonical_json(safe_payload)
         digest = stable_digest(safe_payload)
-        safe_kind = re.sub(r"[^A-Za-z0-9._-]+", "-", _require_nonempty(kind, "kind")).strip("-")
+        safe_kind = re.sub(r"[^A-Za-z0-9._-]+", "-", _required(kind, "kind")).strip("-")
         ref_id = stable_id("payload", {"kind": safe_kind, "digest": digest})
         path = self.sidecars_dir / f"{ref_id}.json"
         encoded_bytes = encoded.encode("utf-8")
-        if path.exists():
-            existing = path.read_bytes()
-            if existing != encoded_bytes:
-                raise ValueError(f"sidecar collision for {ref_id}")
-        else:
+        if path.exists() and path.read_bytes() != encoded_bytes:
+            raise ValueError(f"sidecar collision for {ref_id}")
+        if not path.exists():
             path.write_bytes(encoded_bytes)
-        original_json = canonical_json(_canonicalize(payload))
         return ExactPayloadRef(
-            ref_id=ref_id,
-            kind=safe_kind,
+            ref_id=ref_id, kind=safe_kind,
             path=str(path.relative_to(self.root)).replace("\\", "/"),
-            payload_digest=digest,
-            byte_count=len(encoded_bytes),
-            redacted=original_json != encoded,
+            payload_digest=digest, byte_count=len(encoded_bytes),
+            redacted=canonical_json(_canonicalize(payload)) != encoded,
             created_at=time.time() if created_at is None else float(created_at),
         )
 
     def append(self, event: AuraEventEnvelope) -> bool:
-        encoded = canonical_json(event.to_dict())
-        digest = stable_digest(event.to_dict())
+        encoded, digest = canonical_json(event.to_dict()), stable_digest(event.to_dict())
         existing = self._event_digests.get(event.event_id)
         if existing is not None:
             if existing != digest:
@@ -520,7 +459,6 @@ class AppendOnlyEventStore:
                 for line in handle:
                     if line.strip():
                         yield json.loads(line)
-
         return _iterator()
 
     def _load_event_digests(self) -> dict[str, str]:
@@ -532,10 +470,8 @@ class AppendOnlyEventStore:
                 if not line.strip():
                     continue
                 payload = json.loads(line)
-                event_id = _require_nonempty(payload.get("event_id"), "event_id")
-                digest = stable_digest(payload)
-                prior = result.get(event_id)
-                if prior is not None and prior != digest:
+                event_id, digest = _required(payload.get("event_id"), "event_id"), stable_digest(payload)
+                if event_id in result and result[event_id] != digest:
                     raise ValueError(f"conflicting duplicate event in store: {event_id}")
                 result[event_id] = digest
         return result
