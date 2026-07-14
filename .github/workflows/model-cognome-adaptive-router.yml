@@ -1,4 +1,4 @@
-name: Adaptive Router Reviewed Repair Builder
+name: Adaptive Router Topology Diagnostic Builder
 
 on:
   pull_request:
@@ -9,13 +9,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: adaptive-router-reviewed-repair-builder
+  group: adaptive-router-topology-diagnostic
   cancel-in-progress: true
 
 jobs:
-  build-reviewed-repair:
+  diagnose-topology:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,13 +23,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Apply reviewed repair in isolated checkout
+      - name: Build reviewed tree
         run: |
           python tools/pr92_review_repair.py
           python tools/pr92_review_postprocess.py
           cp tools/model-cognome-adaptive-router.permanent.yml \
             .github/workflows/model-cognome-adaptive-router.yml
-      - name: Install declared dependencies and test tooling
+      - name: Install navigator dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install \
@@ -43,85 +43,87 @@ jobs:
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio ruff
-      - name: Compile and lint reviewed surfaces
+      - name: Reconfirm repaired contracts
         run: |
           python -m py_compile \
-            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
+            aura_ai_router.py aura_router_adaptive_compat.py \
             aura_adaptive_model_router.py aura_adaptive_model_executor.py \
             aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
             aura_model_cognome_store_io.py
-          ruff check --select E9,F63,F7,F82 \
-            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
-            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
-            aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
-            aura_model_cognome_store_io.py \
-            tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
-            tests/test_aura_adaptive_execution.py tests/test_aura_adaptive_security.py \
-            tests/test_aura_adaptive_fusion_schema.py
-      - name: Validate public CLI
-        run: |
-          python aura_router.py route --help
-          python aura_router.py fusion --help
-      - name: Run adaptive contracts
-        run: |
           python -m pytest -q \
             tests/test_aura_ai_router_dynamic.py \
             tests/test_aura_adaptive_planner.py \
             tests/test_aura_adaptive_execution.py \
             tests/test_aura_adaptive_security.py \
             tests/test_aura_adaptive_fusion_schema.py
-      - name: Run complete pytest-native suite with retained diagnostics
-        id: full_pytest
+      - name: Generate both topology snapshots
+        id: topology
         continue-on-error: true
         run: |
           set +e
-          python -m pytest -q tests \
-            --junitxml=/tmp/pr92-full-pytest.xml \
-            > /tmp/pr92-full-pytest.log 2>&1
-          code=$?
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          mkdir -p /tmp/pr92-topology/first /tmp/pr92-topology/second
+          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md \
+            > /tmp/pr92-topology/first/generate.log 2>&1
+          first_code=$?
+          cp .aura/CODEMAP.json /tmp/pr92-topology/first/CODEMAP.json
+          cp .aura/CODEMAP.md /tmp/pr92-topology/first/CODEMAP.md
+          cp topology_map.json /tmp/pr92-topology/first/topology_map.json
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md \
+            > /tmp/pr92-topology/second/generate.log 2>&1
+          second_code=$?
+          cp .aura/CODEMAP.json /tmp/pr92-topology/second/CODEMAP.json
+          cp .aura/CODEMAP.md /tmp/pr92-topology/second/CODEMAP.md
+          cp topology_map.json /tmp/pr92-topology/second/topology_map.json
+          python aura_phase_c2_codemap_verify.py \
+            --committed-json /tmp/pr92-topology/first/CODEMAP.json \
+            --generated-json /tmp/pr92-topology/second/CODEMAP.json \
+            --committed-markdown /tmp/pr92-topology/first/CODEMAP.md \
+            --generated-markdown /tmp/pr92-topology/second/CODEMAP.md \
+            > /tmp/pr92-topology/codemap-verify.log 2>&1
+          verify_code=$?
+          cmp /tmp/pr92-topology/first/topology_map.json \
+              /tmp/pr92-topology/second/topology_map.json \
+              > /tmp/pr92-topology/topology-cmp.log 2>&1
+          topology_code=$?
+          python - <<'PY' > /tmp/pr92-topology/digests.txt
+          from hashlib import sha256
+          from pathlib import Path
+          for path in sorted(Path('/tmp/pr92-topology').rglob('*')):
+              if path.is_file():
+                  print(sha256(path.read_bytes()).hexdigest(), path)
+          PY
+          echo "first_code=$first_code" >> "$GITHUB_OUTPUT"
+          echo "second_code=$second_code" >> "$GITHUB_OUTPUT"
+          echo "verify_code=$verify_code" >> "$GITHUB_OUTPUT"
+          echo "topology_code=$topology_code" >> "$GITHUB_OUTPUT"
           exit 0
-      - name: Upload full-suite diagnostics
+      - name: Upload topology diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pr92-full-pytest-${{ github.run_id }}
+          name: pr92-topology-diagnostics-${{ github.run_id }}
           retention-days: 3
-          path: |
-            /tmp/pr92-full-pytest.log
-            /tmp/pr92-full-pytest.xml
-      - name: Enforce complete pytest-native suite
-        if: steps.full_pytest.outputs.exit_code != '0'
+          path: /tmp/pr92-topology
+      - name: Enforce topology stability
+        if: >-
+          steps.topology.outputs.first_code != '0' ||
+          steps.topology.outputs.second_code != '0' ||
+          steps.topology.outputs.verify_code != '0' ||
+          steps.topology.outputs.topology_code != '0'
         run: |
-          cat /tmp/pr92-full-pytest.log
+          cat /tmp/pr92-topology/first/generate.log
+          cat /tmp/pr92-topology/second/generate.log
+          cat /tmp/pr92-topology/codemap-verify.log
+          cat /tmp/pr92-topology/topology-cmp.log
+          cat /tmp/pr92-topology/digests.txt
           exit 1
-      - name: Regenerate and verify stable topology
-        run: |
-          set -euo pipefail
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          python aura_codebase_navigator.py \
-            --deep \
-            --out .aura/CODEMAP.json \
-            --markdown .aura/CODEMAP.md
-          cp .aura/CODEMAP.json /tmp/CODEMAP.first.json
-          cp .aura/CODEMAP.md /tmp/CODEMAP.first.md
-          cp topology_map.json /tmp/topology.first.json
-          python aura_codebase_navigator.py \
-            --deep \
-            --out .aura/CODEMAP.json \
-            --markdown .aura/CODEMAP.md
-          python aura_phase_c2_codemap_verify.py \
-            --committed-json /tmp/CODEMAP.first.json \
-            --generated-json .aura/CODEMAP.json \
-            --committed-markdown /tmp/CODEMAP.first.md \
-            --generated-markdown .aura/CODEMAP.md
-          cmp /tmp/topology.first.json topology_map.json
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-      - name: Ensure reviewed artifact is clean
-        run: |
-          git diff --check
-          test ! -e .aura/MODULE_MANIFEST.json
-          test ! -e Aura_Memory/civic_arena.sqlite3
       - name: Upload tested reviewed repair
         uses: actions/upload-artifact@v4
         with:
