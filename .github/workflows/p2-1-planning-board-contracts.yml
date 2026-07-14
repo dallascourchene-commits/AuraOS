@@ -72,10 +72,9 @@ jobs:
           git reset --hard origin/refactor/planning-board-p2-1
       - name: Apply analyzed review fixes
         run: |
-          test -f scripts/p2_1_review_fixes.patch
+          test -f scripts/p2_1_apply_review_fixes.py
           test -f scripts/p2_1_clean_workflow.yml
-          git apply --check scripts/p2_1_review_fixes.patch
-          git apply scripts/p2_1_review_fixes.patch
+          python scripts/p2_1_apply_review_fixes.py
       - name: Validate review fixes
         run: |
           python -m pip install pytest ruff
@@ -86,6 +85,7 @@ jobs:
         run: |
           cp scripts/p2_1_clean_workflow.yml .github/workflows/p2-1-planning-board-contracts.yml
           rm scripts/p2_1_clean_workflow.yml
+          rm scripts/p2_1_apply_review_fixes.py
           rm scripts/p2_1_review_fixes.patch
           rm .github/workflows/p2-1-apply-review-fixes.yml
       - name: Commit reviewed fixes
