@@ -114,7 +114,18 @@ def _router(
             store=router.store,
             mock=mock,
         )
-        return AdaptiveModelExecutor(
+
+        class ManagedExecutor(AdaptiveModelExecutor):
+            def execute(self, objective: str, **kwargs: Any) -> dict[str, Any]:
+                try:
+                    return super().execute(objective, **kwargs)
+                finally:
+                    try:
+                        super().close()
+                    finally:
+                        panel_executor.close()
+
+        return ManagedExecutor(
             router=router,
             verifier=verifier,
             panel_executor=panel_executor,
