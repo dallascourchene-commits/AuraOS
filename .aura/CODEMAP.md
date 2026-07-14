@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 821
-- **total_bytes**: 63653853
-- **text_tokens_est**: 6516220
+- **total_bytes**: 63656010
+- **text_tokens_est**: 6516759
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 575, 'schema_or_lexicon': 65, 'support_file': 42}
 - **topology_nodes**: 7177
-- **topology_edges**: 14987
+- **topology_edges**: 14988
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 20303.13
+- **elapsed_ms**: 19900.7
 
 ## Coverage
 
@@ -220,13 +220,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_scientific_memory.py` (python_module): 44 symbols, degree 341, ~9915 tokens
 - `aura_human_agent_arena.py` (python_module): 72 symbols, degree 326, ~22286 tokens
 - `aura_music_coding_arena.py` (python_module): 46 symbols, degree 303, ~11812 tokens
-- `aura_planning_board.py` (python_module): 51 symbols, degree 281, ~7452 tokens
+- `aura_planning_board.py` (python_module): 51 symbols, degree 283, ~7678 tokens
 
 ## Topology Integration
 
 - **source**: compiled_deep_topology
 - **nodes**: 7177
-- **edges**: 14987
+- **edges**: 14988
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
@@ -239,7 +239,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   - `aura_scientific_memory.py` degree=341 nodes=46 neighbors=`arxiv_forager.py`, `aura_fst_routing.py`, `aura_node.py`, `aura_ojibwe_lexicon_sidecar.py`
   - `aura_human_agent_arena.py` degree=326 nodes=73 neighbors=`aura_affordance_directory.py`, `aura_agent_arena_bridge.py`, `aura_api_rotator.py`, `aura_coding_arena_3d.py`
   - `aura_music_coding_arena.py` degree=303 nodes=49 neighbors=`aura_fst_routing.py`, `aura_live_architect.py`, `aura_music_inversion.py`, `aura_proxy_benchmark.py`
-  - `aura_planning_board.py` degree=281 nodes=52 neighbors=`aura_event_contracts.py`
+  - `aura_planning_board.py` degree=283 nodes=52 neighbors=`aura_event_contracts.py`
 
 ## High-Value Symbols
 
