@@ -2,8 +2,8 @@
 
 > **Operator guide for the Arena-based AuraOS architecture**
 
-**Repository snapshot:** `b7180b11a518b4601043bd369b231bd977516d64`  
-**Validated CODEMAP:** 602 files · 5,881 nodes · 12,168 edges · `compiled_deep_topology`
+**Operator documentation audit:** June 14–July 14, 2026 (through draft PR #92)
+**Validated CODEMAP:** 804 indexed files · 7,019 topology nodes · 14,526 topology edges · `compiled_deep_topology`
 
 AuraOS is local-first and can run many deterministic functions without a hosted model. External models are optional workers operating through controlled egress and Arena boundaries.
 
@@ -24,6 +24,7 @@ AuraOS is local-first and can run many deterministic functions without a hosted 
 11. [Ephemeral Organ Runtime](#11-ephemeral-organ-runtime)
 12. [Civic Commons Arena](#12-civic-commons-arena)
 13. [Anishinaabemowin Tutor](#13-anishinaabemowin-tutor)
+13A. [Model Cognome and Adaptive Routing](#13a-model-cognome-and-adaptive-routing)
 14. [Legacy REPL](#14-legacy-repl)
 15. [Cost and Efficiency](#15-cost-and-efficiency)
 16. [Common Workflows](#16-common-workflows)
@@ -202,6 +203,7 @@ Counts naturally change as files and symbols change. The important condition is 
 | Coding Arena | Local visual topology selection and capsule simulation | `python3 aura_coding_arena_server.py` |
 | Human Agent Arena | Human/Aura/agent concept workspaces, Node Inspector, hypotheses, Civic UI | `python3 aura_human_agent_arena_server.py --repo-root .` |
 | Agent Arena MCP | MCP-compatible tool surface for external agents | `python3 -m aura_agent_arena_mcp` |
+| Model Cognome router | Governed legacy, no-call shadow planning, or explicitly authorized paired-live comparison | `python aura_router.py route --help` |
 | Legacy REPL | Existing `!commands`, research, mesh, reasoning, and compatibility workflows | `python3 aura_node.py` |
 | Python APIs | Tutor and domain-specific integration | import the relevant module |
 
@@ -841,6 +843,63 @@ Do not assume commercial use is permitted. Obtain separate permission, isolate t
 
 ---
 
+<!-- PR92:USER_ADAPTIVE_ROUTER:START -->
+## 13A. Model Cognome and Adaptive Routing
+
+Use the adaptive compatibility router only after topology health, capability resolution, and purpose are explicit.
+
+### Public modes
+
+| Mode | Provider calls | Required authority | Use |
+|---|---:|---|---|
+| `LEGACY` | Existing behavior | Existing router controls | Default and rollback path |
+| `SHADOW` | No | Purpose digest and current graph-bound context | Compare plans and collect evidence without egress |
+| `PAIRED_LIVE` | Yes | Reviewed authorization JSON, named verifier, current graph digest, approved purpose, and explicit data-egress approval | One bounded live comparison |
+
+Execution plans may select `ZERO_MODEL`, `DIRECT`, `CASCADE`, or `PANEL`. A forced model must still be admitted and cannot replace a required high-risk panel.
+
+### Legacy commands
+
+```powershell
+python aura_router.py route --task mesh_offload --mock
+python aura_router.py fusion --task "Analyze this architecture" --mock
+```
+
+### Shadow planning
+
+```powershell
+python aura_router.py route `
+  --task mesh_offload `
+  --routing-mode shadow `
+  --purpose-digest PURPOSE_DIGEST
+```
+
+`SHADOW` records the governed plan and evidence but must never call a provider.
+
+### Authorized paired-live comparison
+
+```powershell
+python aura_router.py route `
+  --task mesh_offload `
+  --routing-mode paired_live `
+  --purpose-digest PURPOSE_DIGEST `
+  --authorization-file .\approved-experiment.json `
+  --allow-data-egress
+```
+
+Before using `PAIRED_LIVE`, verify that the authorization names the human approver and verifier, matches the current purpose and Capability Connectome graph digest, permits the selected route/profile, has an unused nonce, has not expired, and has sufficient remaining calls.
+
+### Non-goals and rollback
+
+- `AURA_ADAPTIVE_ROUTER_MODE` defaults to `LEGACY`.
+- `SHADOW` and `PAIRED_LIVE` do not promote policy.
+- No adaptive route may automatically mutate source, commit, push, merge, or activate a learned procedure.
+- Exact source spans and hashes remain patch authority.
+- Return to `LEGACY` when evidence, authorization, topology freshness, endpoint lifecycle, verifier identity, or egress approval is uncertain.
+
+See `docs/AURA_MODEL_COGNOME_ADAPTIVE_ROUTER.md` for the complete contract.
+<!-- PR92:USER_ADAPTIVE_ROUTER:END -->
+
 ## 14. Legacy REPL
 
 Launch:
@@ -1264,6 +1323,14 @@ Confirm:
 - no expectation that the MVP provides public authentication.
 
 ---
+
+<!-- PR92:RECENT_OPERATOR_SURFACES:START -->
+### Recent operator surfaces (June 14–July 14, 2026)
+
+The current checkout also includes guarded WFST/Experience/Crucible workflows, C1/C2/C3 evidence gates, the Model Cognome and policy-observation stores, unified cost telemetry, the Human Agent/Coding Workbench improvements, and the unified Showcase/deployment surfaces. Treat these as coordinated views over the same authority model—not independent bypasses.
+
+For any unfamiliar surface, follow the standard sequence: topology health → digest → capability resolution → exact slices → subsystem guide → staged execution → verifier → human review.
+<!-- PR92:RECENT_OPERATOR_SURFACES:END -->
 
 ## 20. Documentation Maintenance
 

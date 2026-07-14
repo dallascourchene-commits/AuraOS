@@ -40,6 +40,13 @@ def _default_verifier(text: str | None, error: str | None, **_kwargs: Any) -> di
     }
 
 
+def paired_live_comparison_id(authorization_id: str) -> str:
+    authorization = str(authorization_id or "").strip()
+    if not authorization:
+        raise ValueError("authorization_id must not be empty")
+    return stable_id("paired-live", {"authorization_id": authorization})
+
+
 class AdaptiveModelExecutor:
     def __init__(
         self,
@@ -85,12 +92,18 @@ class AdaptiveModelExecutor:
             pricing_registry = PricingRegistry(self.repo_root)
         self.pricing_registry = pricing_registry
         self.now = now
+        self._closed = False
         if not hasattr(router, "_used_authorization_ids"):
             router._used_authorization_ids = set()  # type: ignore[attr-defined]
 
     def close(self) -> None:
+        if self._closed:
+            return
+        self._closed = True
         if self._owns_ledger and self.empirical_ledger is not None and hasattr(self.empirical_ledger, "close"):
             self.empirical_ledger.close()
+        if self.panel_executor is not None and hasattr(self.panel_executor, "close"):
+            self.panel_executor.close()
 
     def _verify(
         self,
@@ -111,13 +124,23 @@ class AdaptiveModelExecutor:
                 "failure_class": "EXPLICIT_HIGH_RISK_VERIFIER_REQUIRED",
             }
         else:
-            raw = (self.verifier or _default_verifier)(
-                text,
-                error,
-                context=context,
-                candidate=candidate,
-                objective=objective,
-            )
+            try:
+                raw = (self.verifier or _default_verifier)(
+                    text,
+                    error,
+                    context=context,
+                    candidate=candidate,
+                    objective=objective,
+                )
+            except Exception as exc:
+                result = {
+                    "passed": False,
+                    "format_valid": False,
+                    "tests_passed": None,
+                    "tests_failed": None,
+                    "failure_class": f"VERIFIER_EXCEPTION:{type(exc).__name__}",
+                }
+                return result, max(0.0, (self.now() - started) * 1000.0)
             if isinstance(raw, bool):
                 result = {
                     "passed": raw,
@@ -153,18 +176,27 @@ class AdaptiveModelExecutor:
             or candidate.get("requested_model")
             or ""
         )
-        egress = self.egress_factory(
-            provider=provider,
-            model=model,
-            task=call_type,
-            aspect="adaptive_router",
-        )
         started = self.now()
-        raw = egress.generate(
-            objective,
-            router_context=router_context or None,
-            call_type=call_type,
-        )
+        try:
+            egress = self.egress_factory(
+                provider=provider,
+                model=model,
+                task=call_type,
+                aspect="adaptive_router",
+            )
+            raw = egress.generate(
+                objective,
+                router_context=router_context or None,
+                call_type=call_type,
+            )
+        except Exception as exc:
+            return {
+                "text": None,
+                "error": f"EGRESS_EXCEPTION:{type(exc).__name__}",
+                "latency_sec": max(0.0, self.now() - started),
+                "usage": {},
+                "returned_model": model,
+            }
         elapsed = max(0.0, self.now() - started)
         if isinstance(raw, Mapping):
             return {
@@ -308,7 +340,7 @@ class AdaptiveModelExecutor:
         option_data = dict(plan["selected_option"])
         policy_mode = str(option_data["policy_mode"])
         profile_ids = tuple(str(item) for item in option_data.get("profile_ids", []) or [])
-        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids) + (1 if policy_mode == PANEL else 0)
+        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids)
         errors = auth.validate_for(
             purpose_digest=context.purpose_digest,
             graph_digest=str(plan["path_resolution"].get("graph_digest") or ""),
@@ -320,6 +352,8 @@ class AdaptiveModelExecutor:
             now=self.now(),
         )
         errors.extend(self.router.revalidate(plan))
+        if str(context.risk or "LOW").upper() in _HIGH_RISK and policy_mode != PANEL and self.verifier is None:
+            errors.append("high-risk DIRECT/CASCADE execution requires an explicit verifier")
         if policy_mode == ZERO_MODEL and self.deterministic_executor is None:
             errors.append("ZERO_MODEL live execution requires an injected deterministic executor")
         if policy_mode == PANEL and self.panel_executor is None:
@@ -327,10 +361,7 @@ class AdaptiveModelExecutor:
         if errors:
             return self._deny(plan, errors, auth.authorization_id)
 
-        comparison_id = stable_id("paired-live", {
-            "authorization_id": auth.authorization_id,
-            "proposal_route_decision_id": plan["route_decision"]["route_decision_id"],
-        })
+        comparison_id = paired_live_comparison_id(auth.authorization_id)
         stored_comparison = self.store.record_experiment_comparison({
             "comparison_id": comparison_id,
             "measurement_mode": PAIRED_LIVE,
@@ -342,7 +373,7 @@ class AdaptiveModelExecutor:
             "created_at": self.now(),
         })
         if stored_comparison != comparison_id:
-            return self._deny(plan, ["experiment comparison ID mismatch"], auth.authorization_id)
+            return self._deny(plan, ["authorization has already been consumed or its comparison claim failed"], auth.authorization_id)
         used.add(auth.authorization_id)
 
         fresh = evaluate_shadow_route(
@@ -352,6 +383,21 @@ class AdaptiveModelExecutor:
             created_at=self.now(),
         )
         assessments = tuple(fresh.candidate_assessments)
+        assessment_by_profile = {item.candidate.profile_id: item for item in assessments}
+        if any(
+            profile_id not in assessment_by_profile
+            or not assessment_by_profile[profile_id].admitted
+            for profile_id in profile_ids
+        ):
+            return self._deny(plan, ["selected profile failed fresh admission"], auth.authorization_id)
+        if not plan.get("forced_human_override"):
+            fresh_option = fresh.selected_option
+            if (
+                fresh_option is None
+                or fresh_option.policy_mode != policy_mode
+                or tuple(fresh_option.profile_ids) != profile_ids
+            ):
+                return self._deny(plan, ["policy selection changed after route planning"], auth.authorization_id)
         option = PolicyOption(
             policy_mode=policy_mode,
             profile_ids=profile_ids,
@@ -398,21 +444,38 @@ class AdaptiveModelExecutor:
             "executor_version": EXECUTOR_VERSION,
         }
         if policy_mode == ZERO_MODEL:
-            output = self.deterministic_executor(objective, context=context, routing=plan["routing"])
+            try:
+                output = self.deterministic_executor(objective, context=context, routing=plan["routing"])
+            except Exception as exc:
+                return {
+                    **common,
+                    "status": "FAILED",
+                    "executed": True,
+                    "error": f"DETERMINISTIC_EXECUTOR_EXCEPTION:{type(exc).__name__}",
+                    "calls": [],
+                }
             return {**common, "status": "EXECUTED", "executed": True, "output": output, "calls": []}
         if policy_mode == PANEL:
-            panel = self.panel_executor(
-                objective=objective,
-                plan=plan,
-                context=context,
-                live_decision=live_decision,
-                authorization=auth,
-                comparison_id=comparison_id,
-                correlation_id=correlation_id,
-            )
+            try:
+                panel = self.panel_executor(
+                    objective=objective,
+                    plan=plan,
+                    context=context,
+                    live_decision=live_decision,
+                    authorization=auth,
+                    comparison_id=comparison_id,
+                    correlation_id=correlation_id,
+                )
+            except Exception as exc:
+                return {
+                    **common,
+                    "status": "FAILED",
+                    "executed": True,
+                    "error": f"PANEL_EXECUTOR_EXCEPTION:{type(exc).__name__}",
+                }
             return {
                 **common,
-                "status": "EXECUTED" if bool(panel.get("ok")) else "FAILED",
+                "status": "EXECUTED" if panel.get("ok") is True else "FAILED",
                 "executed": True,
                 "panel_result": panel,
             }
@@ -444,18 +507,24 @@ class AdaptiveModelExecutor:
                 candidate=candidate,
                 objective=objective,
             )
-            lineage = self._persist_call(
-                context=context,
-                decision=live_decision,
-                candidate=candidate,
-                result=call_result,
-                verification=verification,
-                verifier_ms=verifier_ms,
-                correlation_id=correlation_id,
-                attempt_index=index,
-                fallback_index=index if policy_mode == CASCADE else 0,
-                comparison_id=comparison_id,
-            )
+            try:
+                lineage = self._persist_call(
+                    context=context,
+                    decision=live_decision,
+                    candidate=candidate,
+                    result=call_result,
+                    verification=verification,
+                    verifier_ms=verifier_ms,
+                    correlation_id=correlation_id,
+                    attempt_index=index,
+                    fallback_index=index if policy_mode == CASCADE else 0,
+                    comparison_id=comparison_id,
+                )
+            except Exception as exc:
+                final_text = call_result.get("text")
+                final_error = f"TELEMETRY_PERSISTENCE_EXCEPTION:{type(exc).__name__}"
+                verified = False
+                break
             calls.append({
                 "profile_id": profile_id,
                 "provider": candidate.get("provider"),

@@ -295,8 +295,7 @@ class TopologyBuilder:
         dead_ends = [n["id"] for n in self.nodes if out_degree.get(n["id"], 0) == 0]
         hubs = sorted(
             [(nid, in_degree[nid] + out_degree[nid]) for nid in connected],
-            key=lambda x: x[1],
-            reverse=True,
+            key=lambda item: (-item[1], item[0]),
         )[:15]
 
         dangling = [

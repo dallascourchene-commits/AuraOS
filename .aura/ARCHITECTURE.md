@@ -4,8 +4,8 @@
 >
 > This document explains how AuraOS is organized, which layers are authoritative, how the Arenas fit together, and how to navigate the repository without loading the entire codebase.
 
-**Repository snapshot:** `b7180b11a518b4601043bd369b231bd977516d64`  
-**CODEMAP state:** 602 indexed files · 5,881 topology nodes · 12,168 topology edges  
+**Architecture audit:** June 14–July 14, 2026 (through draft PR #92)
+**CODEMAP state:** 804 indexed files · 7,019 topology nodes · 14,526 topology edges
 **Topology source:** `compiled_deep_topology`
 
 ---
@@ -44,6 +44,25 @@ The central invariant is:
 > **Meaning may guide retrieval. Only grounded evidence and authorized governance may grant authority.**
 
 ---
+
+<!-- PR92:ARCH_EVOLUTION:START -->
+## 1A. Implemented Evolution During the Architecture Audit
+
+The June 14–July 14, 2026 commit/PR audit shows that Aura evolved from a substrate-and-router core into a governed, self-describing application fabric. The authoritative implementation is organized by layer rather than by pull-request number:
+
+| Layer | Implemented current surface | Authority boundary |
+|---|---|---|
+| Intent and route | Canonical six-slot LEXC, machine FST, guarded WFST challenges, C1 context capsules, and C2 live-route capsules | Grammar and route acceptance constrain work; they do not create permission |
+| Grounding and self-model | CODEMAP, compiled topology, Topological Context Anchor, Capability Connectome, Capability Genome Resolver, Model Cognome | Current exact spans, hashes, graph digests, tests, and manifests outrank semantic inference |
+| Arenas and temporary applications | Coding, Agent, Human Agent, Liquid Planning, Civic Commons, Experience/Crucible, ephemeral organs | Minimum leases, lifecycle enforcement, verifier gates, human/community authority, mandatory dissolution |
+| Learning and procedure evidence | Experience V2, Crucible candidate review, C3 isolated trials, replay/shadow/drift evaluation | Candidates and trials are proposal-only; no automatic procedure or policy activation |
+| Model execution | Legacy calibration router plus governed adaptive `SHADOW` and authorized `PAIRED_LIVE` routes | External models are workers; live calls require admission, authorization, current evidence, and approved egress |
+| Compression and continuity | Reversible context crushing, visible ST3GG, JSpace, DREAM-lite, QDKT, MUSIC, MITOSIS | Compression and ranking remain advisory and recoverable |
+| Observability and federation | Usage normalization, pricing snapshots, cost attribution, policy observations, signed/redacted federation bundles | Unknown cost stays unknown; remote evidence cannot silently become local policy |
+| Human inspection and deployment | Native Cockpit, Coding Workbench, Human Agent Arena, unified Showcase, Winnipeg demo, Docker/Render/Hugging Face surfaces | Presentation is not authority; guided gates remain explicit |
+
+This audit supersedes older summaries that described only the pre-Arena or pre-Cognome architecture. Historical reports remain useful as provenance, not as current system maps.
+<!-- PR92:ARCH_EVOLUTION:END -->
 
 ## 2. Truth and Authority Model
 
@@ -263,9 +282,7 @@ Primary generator:
 Current healthy map:
 
 ```text
-files: 602
-nodes: 5,881
-edges: 12,168
+804 indexed files · 7,019 topology nodes · 14,526 topology edges
 source: compiled_deep_topology
 ```
 
@@ -678,6 +695,69 @@ Primary modules:
 - `aura_api_rotator.py`
 - `aura_tokenizer_guard.py`
 
+<!-- PR92:MODEL_COGNOME:START -->
+### 10.1 Model Cognome and governed adaptive routing
+
+The Model Cognome is the evidence and profile layer used to reason about model capabilities without treating model identity, benchmark reputation, or semantic fit as permission. Current routing composes:
+
+```text
+objective + explicit targets
+  → Capability Genome Resolver
+  → Capability Connectome path packet
+  → Topological Context Anchor
+  → exact source spans, hashes, callers, callees, tests, dependencies
+  → graph-bound TaskContext
+  → Model Cognome candidate profiles
+  → hard admission and policy checks
+  → LEGACY, SHADOW, or explicitly authorized PAIRED_LIVE execution
+  → unified observations, verifier result, replay/shadow evidence
+```
+
+Public compatibility modes:
+
+- `LEGACY`: existing calibration-ledger behavior; default and rollback path.
+- `SHADOW`: plans and records a governed route; provider calls are forbidden.
+- `PAIRED_LIVE`: performs one explicitly authorized comparison route.
+
+Execution semantics:
+
+- `ZERO_MODEL`: injected deterministic executor only.
+- `DIRECT`: one admitted model followed by the named verifier.
+- `CASCADE`: fallback only after call failure or verifier rejection.
+- `PANEL`: at least two panel profiles plus one judge profile through AuraFusion.
+
+`PAIRED_LIVE` authorization is content-addressed and bound to the named approver, verifier, purpose digest, current Capability Connectome graph digest, allowed routes/profiles, nonce, issue/expiry times, and maximum calls. The router revalidates current capability-path evidence and endpoint lifecycle before execution and fallback calls. Forced-model selection is an override request, never an admission bypass.
+
+Primary modules:
+
+- `aura_model_cognome.py`
+- `aura_model_cognome_bridge.py`
+- `aura_model_cognome_store_io.py`
+- `aura_model_cognome_execution_auth.py`
+- `aura_shadow_model_router.py`
+- `aura_adaptive_model_router.py`
+- `aura_adaptive_model_executor.py`
+- `aura_adaptive_fusion.py`
+- `aura_router_adaptive_compat.py`
+- `aura_ai_router.py`
+- `docs/AURA_MODEL_COGNOME_ADAPTIVE_ROUTER.md`
+
+Explicit non-authorities:
+
+```yaml
+legacy_default: true
+shadow_provider_calls: false
+paired_live_requires_authorization: true
+automatic_policy_activation: false
+automatic_policy_promotion: false
+automatic_source_mutation: false
+automatic_commit: false
+automatic_push: false
+automatic_merge: false
+patch_authority: exact_source_spans_and_hashes_only
+```
+<!-- PR92:MODEL_COGNOME:END -->
+
 Secrets must come from environment variables or ignored local secret files. They must never be written to CODEMAP, prompts, ledgers, or responses.
 
 ---
@@ -787,6 +867,36 @@ Primary modules:
 
 ---
 
+<!-- PR92:LEARNING_GATES:START -->
+### 11.5 Experience, Crucible, and C1/C2/C3 evidence gates
+
+Aura's recent learning path is deliberately split so experience cannot silently become procedure or policy:
+
+```text
+observed execution
+  → Experience V2 record
+  → Crucible candidate/proposal
+  → C1 graph-bound context capsule
+  → C2 explicitly authorized live route capsule
+  → C3 isolated trial and procedure evidence
+  → replay and SHADOW comparison
+  → drift/quality/cost/verifier evidence
+  → human-reviewed promotion proposal
+```
+
+Key boundaries:
+
+- experience storage is descriptive, not executable authority;
+- Crucible outputs are candidates requiring review;
+- C1 packets bind context to exact topology and evidence digests;
+- C2 live routes require explicit authorization, approved egress, and verifier identity;
+- C3 trials are isolated and may propose procedures but never auto-activate them;
+- replay, shadow, drift, and federation evidence may support a promotion proposal only;
+- policy activation remains separate from model execution and requires human review.
+
+Primary surfaces include `aura_experience_v2.py`, Crucible modules, route-capsule schemas, governed trial/procedure modules, policy observation stores, and the Model Cognome evidence bridge.
+<!-- PR92:LEARNING_GATES:END -->
+
 ## 12. Plane 8 — Domain Deployments
 
 ### 12.1 Anishinaabemowin tutor
@@ -891,6 +1001,22 @@ Primary modules:
 - `aura_human_agent_arena/`
 
 ---
+
+<!-- PR92:SHOWCASE_DEPLOYMENT:START -->
+### 12.5 Unified Showcase and deployment surfaces
+
+The unified Showcase is the human inspection layer for architecture, guided gates, observability, Winnipeg pathways, and demonstration projects. Recent deployment work adds Docker, Render, and Hugging Face-compatible launch surfaces around the same governed runtime rather than creating a second authority path.
+
+Rules:
+
+- demo fixtures and seeded Winnipeg data must be labelled as fixtures or snapshots;
+- observability panels report evidence and measurement class, not guaranteed savings;
+- a UI approval control must call the same underlying gate as CLI/API workflows;
+- deployment configuration may expose a surface but may not weaken leases, egress policy, verifier requirements, or human/community authority;
+- showcase rendering and narrative summaries remain non-authoritative projections.
+
+Primary surfaces include `aura_showcase_server.py`, showcase UI assets, guided-gate APIs, deployment manifests, and the Winnipeg demo project.
+<!-- PR92:SHOWCASE_DEPLOYMENT:END -->
 
 ## 13. Canonical Files and Generated Artifacts
 
@@ -1071,7 +1197,9 @@ AuraOS =
   + advisory VSA/JSpace/ST3GG/DREAM/QDKT
   + bounded Arenas
   + ephemeral capability leases
+  + Model Cognome and governed adaptive routes
   + optional external workers
+  + Experience/Crucible/C1-C3 proposal gates
   + exact tests/verifiers
   + human/community authority
   + governed memory and measured cost

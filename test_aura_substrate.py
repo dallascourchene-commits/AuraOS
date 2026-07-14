@@ -154,9 +154,27 @@ def test_json_edit_plan_scoring() -> None:
         with_output_mode,
     )
     original = ContextSelector().read("aura_mesh.py")
-    good = ('{"edits": [{"file": "aura_mesh.py", "start_line": 174, "end_line": 174, '
-            '"replacement": "            secure_packet = '
-            'self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"}]}')
+    function_source, function_start, _function_end = extract_function_source(
+        original, "offload_compute"
+    )
+    assert function_source is not None
+    target_offset = next(
+        offset for offset, line in enumerate(function_source.splitlines())
+        if "secure_packet:" in line
+        and "pack_length_prefixed_payload(payload_obj)" in line
+    )
+    target_line = function_start + target_offset
+    original_line = original.splitlines()[target_line - 1]
+    indentation = original_line[: len(original_line) - len(original_line.lstrip())]
+    good = json.dumps(
+        {"edits": [{"file": "aura_mesh.py", "start_line": target_line,
+                    "end_line": target_line,
+                    "replacement": (
+                        f"{indentation}secure_packet = "
+                        "self.pack_secure_polysynthetic_packet("
+                        "[0, 0, 0, 0, 0, 0], 1.0)"
+                    )}]}
+    )
     plan, note = parse_edit_plan(good)
     assert plan is not None and note == "ok"
     patched, _n = apply_edit_plan(original, plan)

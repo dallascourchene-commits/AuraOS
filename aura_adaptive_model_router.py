@@ -71,6 +71,12 @@ def _candidate_matches(assessment: CandidateAssessment, token: str) -> bool:
     return query in aliases
 
 
+def _candidate_set_digest(candidates: Sequence[Mapping[str, Any]]) -> str:
+    normalized = [dict(item) for item in candidates]
+    normalized.sort(key=lambda item: str(item.get("profile_id") or ""))
+    return stable_digest(normalized)
+
+
 def _forced_direct(assessment: CandidateAssessment) -> PolicyOption:
     candidate = assessment.candidate
     if not assessment.admitted or assessment.utility is None:
@@ -176,6 +182,7 @@ class AdaptiveModelRouter:
         self.capability_resolver = capability_resolver
         self.now = now
         self.executor_factory = executor_factory
+        self._used_authorization_ids: set[str] = set()
 
     def close(self) -> None:
         if self._owns_store and hasattr(self.store, "close"):
@@ -272,6 +279,25 @@ class AdaptiveModelRouter:
         fields.setdefault("source_lines_exposed", _source_line_count(routing))
         fields.setdefault("topology_digest", str(routing.get("topology_digest") or ""))
         fields.setdefault("source_hash_digest", stable_digest(routing.get("source_hashes", {})))
+        exact_required = (
+            str(fields.get("action") or "").lower() == "patch"
+            or str(fields.get("exactness_required") or "").upper().startswith("EXACT")
+        )
+        if exact_required and (
+            routing.get("routing_source") != "dynamic_topology"
+            or not routing.get("source_hashes")
+        ):
+            return {
+                "status": DENIED,
+                "executed": False,
+                "execution_mode": SHADOW,
+                "denial_reasons": ["exact topology and source hashes are required for this task"],
+                "routing": routing,
+                "capability_resolution": resolution,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                "version": ADAPTIVE_ROUTER_VERSION,
+            }
         context = task_context_from_path(
             objective=objective_text,
             purpose_digest=purpose,
@@ -299,6 +325,8 @@ class AdaptiveModelRouter:
             matches = [item for item in assessments if _candidate_matches(item, forced_model)]
             if not matches:
                 override_errors.append("forced model is not present in the graph-pinned candidate set")
+            elif len(matches) > 1:
+                override_errors.append("forced model selector is ambiguous; use an exact profile ID or provider:model")
             elif not matches[0].admitted:
                 override_errors.extend(matches[0].rejection_reasons or ("forced model failed admission",))
             elif str(context.risk or "LOW").upper() in _HIGH_RISK and selected and selected.policy_mode == PANEL:
@@ -325,11 +353,15 @@ class AdaptiveModelRouter:
                 "version": ADAPTIVE_ROUTER_VERSION,
             }
 
+        candidate_evidence_digest = _candidate_set_digest(
+            path_resolution.get("model_candidates", []) or []
+        )
         evidence_digest = stable_digest({
             "shadow": shadow.to_dict(),
             "forced_model": forced_model or "",
             "topology_digest": routing.get("topology_digest", ""),
             "path_digest": path_resolution.get("path_digest", ""),
+            "candidate_evidence_digest": candidate_evidence_digest,
         })
         decision = make_route_decision(
             context=context,
@@ -363,6 +395,7 @@ class AdaptiveModelRouter:
             "route_decision": decision.to_dict(),
             "selected_option": selected.to_dict(),
             "candidate_records": candidate_records,
+            "candidate_evidence_digest": candidate_evidence_digest,
             "routing": routing,
             "capability_resolution": resolution,
             "path_resolution": path_resolution,
@@ -381,6 +414,7 @@ class AdaptiveModelRouter:
                 "rejected_candidates": [item.to_dict() for item in assessments if not item.admitted],
                 "capability_graph_digest": path_resolution.get("graph_digest", ""),
                 "capability_path_digest": path_resolution.get("path_digest", ""),
+                "candidate_evidence_digest": candidate_evidence_digest,
                 "topology_digest": routing.get("topology_digest", ""),
                 "purpose_digest": purpose,
                 "forced_human_override": override,
@@ -414,6 +448,13 @@ class AdaptiveModelRouter:
             errors.append("capability path changed after route planning")
         if current.get("graph_digest") != plan.get("path_resolution", {}).get("graph_digest"):
             errors.append("capability graph changed after route planning")
+        expected_evidence = str(
+            plan.get("candidate_evidence_digest")
+            or _candidate_set_digest(plan.get("path_resolution", {}).get("model_candidates", []) or [])
+        )
+        current_evidence = _candidate_set_digest(current.get("model_candidates", []) or [])
+        if current_evidence != expected_evidence:
+            errors.append("candidate evidence changed after route planning")
         for profile_id in plan.get("selected_option", {}).get("profile_ids", []) or []:
             endpoint = self.store.get_endpoint(str(profile_id))
             if endpoint is None:
@@ -430,4 +471,8 @@ class AdaptiveModelRouter:
 
             factory = AdaptiveModelExecutor
         executor = factory(router=self)
-        return executor.execute(objective, **kwargs)
+        try:
+            return executor.execute(objective, **kwargs)
+        finally:
+            if hasattr(executor, "close"):
+                executor.close()

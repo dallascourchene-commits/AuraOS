@@ -107,3 +107,21 @@ def test_generated_markdown_is_cold_fallback_only(tmp_path: Path) -> None:
     assert result["primary_file"] == "aura_router.py"
     assert result["advisory_only"] is True
     assert result["dynamic_attempt"]["routing_source"] in {"none", "dynamic_error"}
+
+def test_query_router_prefers_explicit_file_for_duplicate_symbol(tmp_path: Path) -> None:
+    (tmp_path / "alpha.py").write_text("def target():\n    return 'alpha'\n", encoding="utf-8")
+    (tmp_path / "beta.py").write_text("def target():\n    return 'beta'\n", encoding="utf-8")
+
+    result = query_router(
+        "change target in beta.py",
+        repo_root=tmp_path,
+        target_files=["beta.py"],
+        target_symbols=["target"],
+        static_fallback=False,
+        resolver=_resolution,
+    )
+
+    assert result["primary_file"] == "beta.py"
+    assert result["exact_symbols"][0]["file"] == "beta.py"
+    assert "return 'beta'" in result["router_context"]
+    assert "return 'alpha'" not in result["router_context"]

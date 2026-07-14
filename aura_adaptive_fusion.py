@@ -8,6 +8,7 @@ observation IDs are attached to every panel and judge record.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 import threading
 from typing import Any, Callable, Mapping
@@ -33,6 +34,44 @@ ADAPTIVE_FUSION_VERSION = "AURA_ADAPTIVE_FUSION_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 _PANEL_ROLES = ("THINKER", "WORKER", "VERIFIER", "RESEARCHER")
+
+
+def _schema_value_valid(value: Any, schema: Mapping[str, Any]) -> bool:
+    expected = schema.get("type")
+    if expected == "object":
+        if not isinstance(value, dict):
+            return False
+        properties = schema.get("properties", {})
+        required = schema.get("required", ())
+        if any(field not in value for field in required):
+            return False
+        if schema.get("additionalProperties") is False and any(key not in properties for key in value):
+            return False
+        return all(
+            _schema_value_valid(item, properties[key])
+            for key, item in value.items()
+            if key in properties
+        )
+    if expected == "array":
+        return isinstance(value, list) and all(
+            _schema_value_valid(item, schema.get("items", {})) for item in value
+        )
+    if expected == "string":
+        return isinstance(value, str)
+    if expected == "boolean":
+        return type(value) is bool
+    if expected == "number":
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return False
+        number = float(value)
+        if not math.isfinite(number):
+            return False
+        minimum = schema.get("minimum")
+        maximum = schema.get("maximum")
+        return (minimum is None or number >= float(minimum)) and (
+            maximum is None or number <= float(maximum)
+        )
+    return True
 
 
 class AdaptiveFusionPanelExecutor:
@@ -115,6 +154,8 @@ class AdaptiveFusionPanelExecutor:
     ) -> tuple[list[AuraFusionAgent], AuraFusionAgent, dict[str, str]]:
         if len(profile_ids) < 3:
             raise ValueError("PANEL execution requires at least two panel profiles and one judge profile")
+        if len(profile_ids) != len(set(profile_ids)):
+            raise ValueError("PANEL execution cannot reuse the same profile")
         panel_ids = profile_ids[:-1]
         judge_id = profile_ids[-1]
         if len(panel_ids) > len(_PANEL_ROLES):
@@ -152,7 +193,7 @@ class AdaptiveFusionPanelExecutor:
         except Exception:
             return False
         schema = JUDGE_SCHEMA if role == "JUDGE" else PANEL_SCHEMA
-        return all(field in parsed for field in schema["required"])
+        return _schema_value_valid(parsed, schema)
 
     def __call__(
         self,
@@ -192,42 +233,20 @@ class AdaptiveFusionPanelExecutor:
                 fallback_index=0,
                 event_nonce=f"fusion:{agent_name}:{role}",
             )
-            packet = build_telemetry_packet(
-                linkage=linkage,
-                provider=str(kwargs.get("provider") or ""),
-                model=str(kwargs.get("model") or ""),
-                raw_usage={},
-                timings=StageTimings(generation_ms=max(0.0, float(latency) * 1000.0)),
-                pricing_registry=self.pricing_registry,
-                policy_mode=PANEL,
-                verifier_pass=passed,
-                format_valid=passed,
-                failure_class="" if passed else str(error or "FUSION_SCHEMA_REJECTED"),
-                shadow_only=False,
-                extra_evidence={
-                    "fusion_agent": agent_name,
-                    "fusion_role": role,
-                    "used_response_schema": bool(used_schema),
-                    "authorization_id": authorization.authorization_id,
-                },
-            )
-            persistence = None
-            if self.persist_telemetry:
-                persistence = persist_telemetry_packet(
-                    packet,
-                    cognome_store=self.store,
-                    empirical_ledger=self.empirical_ledger,
-                    logger_sink=self.logger_sink,
-                )
             with lock:
                 links[agent_name] = {
                     "profile_id": profile_id,
                     "task_context_id": context.task_context_id,
                     "route_decision_id": live_decision.route_decision_id,
                     "call_id": linkage.call_id,
-                    "observation_id": packet.observation.observation_id,
                     "cost_run_id": linkage.cost_run_id,
-                    "persistence": persistence,
+                    "linkage": linkage,
+                    "provider": str(kwargs.get("provider") or ""),
+                    "model": str(kwargs.get("model") or ""),
+                    "latency": max(0.0, float(latency)),
+                    "verifier_pass": passed,
+                    "failure_class": "" if passed else str(error or "FUSION_SCHEMA_REJECTED"),
+                    "used_response_schema": bool(used_schema),
                 }
             return text, error, latency, used_schema
 
@@ -253,11 +272,52 @@ class AdaptiveFusionPanelExecutor:
                 "capability_path_digest": plan.get("path_resolution", {}).get("path_digest", ""),
             },
         ).to_dict()
+        persistence_failed = False
+        for link in links.values():
+            packet = build_telemetry_packet(
+                linkage=link.pop("linkage"),
+                provider=link.pop("provider"),
+                model=link.pop("model"),
+                raw_usage={},
+                timings=StageTimings(generation_ms=link.pop("latency") * 1000.0),
+                pricing_registry=self.pricing_registry,
+                policy_mode=PANEL,
+                verifier_pass=link["verifier_pass"],
+                format_valid=link["verifier_pass"],
+                failure_class=link.pop("failure_class"),
+                shadow_only=False,
+                extra_evidence={
+                    "fusion_agent": next(
+                        (name for name, candidate in links.items() if candidate is link), ""
+                    ),
+                    "used_response_schema": link.pop("used_response_schema"),
+                    "authorization_id": authorization.authorization_id,
+                },
+            )
+            link["observation_id"] = packet.observation.observation_id
+            link["persistence"] = None
+            if self.persist_telemetry:
+                try:
+                    link["persistence"] = persist_telemetry_packet(
+                        packet,
+                        cognome_store=self.store,
+                        empirical_ledger=self.empirical_ledger,
+                        logger_sink=self.logger_sink,
+                    )
+                except Exception as exc:
+                    persistence_failed = True
+                    link["persistence_error"] = f"TELEMETRY_PERSISTENCE_EXCEPTION:{type(exc).__name__}"
         for output in result.get("panel_outputs", []):
             output.update(links.get(str(output.get("agent") or ""), {}))
         judge_output = result.get("judge_output", {})
         judge_output.update(links.get(str(judge_output.get("agent") or ""), {}))
         result["judge_output"] = judge_output
+        result["ok"] = (
+            bool(result.get("ok"))
+            and not persistence_failed
+            and len(links) == len(profile_ids)
+            and all(bool(item.get("verifier_pass")) for item in links.values())
+        )
         result["calls"] = [links[name] | {"agent": name} for name in sorted(links)]
         result["task_context_id"] = context.task_context_id
         result["route_decision_id"] = live_decision.route_decision_id

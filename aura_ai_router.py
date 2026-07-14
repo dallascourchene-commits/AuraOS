@@ -26,6 +26,7 @@ DEFAULT_TOKEN_BUDGET = 2400
 
 _INDEX_CACHE: dict[str, Any] | None = None
 _INDEX_CACHE_MTIME: float | None = None
+_INDEX_CACHE_PATH: str | None = None
 
 _TASK_ROW = re.compile(
     r"^\|\s*`(?P<task>[^`]+)`\s*\|\s*`(?P<primary>[^`]+)`\s*\|"
@@ -73,17 +74,18 @@ def load_router_index(path: str = ROUTER_INDEX_PATH) -> dict[str, Any]:
     The Markdown is a read-only view, not authoritative topology.  Cache
     invalidation follows file mtime so regeneration remains backward compatible.
     """
-    global _INDEX_CACHE, _INDEX_CACHE_MTIME
+    global _INDEX_CACHE, _INDEX_CACHE_MTIME, _INDEX_CACHE_PATH
+    cache_path = str(Path(path).resolve())
     try:
-        mtime = os.path.getmtime(path)
+        mtime = os.path.getmtime(cache_path)
     except OSError:
         return {"tasks": {}, "source": path, "authoritative": False}
-    if _INDEX_CACHE is not None and _INDEX_CACHE_MTIME == mtime:
+    if _INDEX_CACHE is not None and _INDEX_CACHE_MTIME == mtime and _INDEX_CACHE_PATH == cache_path:
         return _INDEX_CACHE
 
     tasks: dict[str, dict[str, Any]] = {}
     try:
-        lines = Path(path).read_text(encoding="utf-8", errors="ignore").splitlines()
+        lines = Path(cache_path).read_text(encoding="utf-8", errors="ignore").splitlines()
     except OSError:
         lines = []
     for line in lines:
@@ -103,11 +105,12 @@ def load_router_index(path: str = ROUTER_INDEX_PATH) -> dict[str, Any]:
         }
     _INDEX_CACHE = {
         "tasks": tasks,
-        "source": path,
+        "source": cache_path,
         "authoritative": False,
         "view_only": True,
     }
     _INDEX_CACHE_MTIME = mtime
+    _INDEX_CACHE_PATH = cache_path
     return _INDEX_CACHE
 
 
@@ -286,6 +289,73 @@ def _trim_context_packet(packet: dict[str, Any], token_budget: int) -> dict[str,
     return packet
 
 
+def _exact_context_packet(anchor: Any, node: Any, radius: int = 1) -> Any:
+    from aura_topological_context_anchor import CodeTopoContextPacket
+
+    radius = max(0, min(3, int(radius)))
+    visited = {node.node_id}
+    neighbor_edge: dict[str, Any] = {}
+    queue = [(node.node_id, 0)]
+    while queue and len(visited) < 24:
+        node_id, distance = queue.pop(0)
+        if distance >= radius:
+            continue
+        for edge in [*anchor.outgoing.get(node_id, []), *anchor.incoming.get(node_id, [])]:
+            other = edge.dst_id if edge.src_id == node_id else edge.src_id
+            if other not in anchor.nodes or other in visited:
+                continue
+            visited.add(other)
+            neighbor_edge[other] = edge
+            queue.append((other, distance + 1))
+
+    source_spans = []
+    hashes: dict[str, str] = {}
+    token_estimate = 0
+    ordered_ids = [node.node_id, *sorted(visited - {node.node_id})]
+    for node_id in ordered_ids:
+        current = anchor.nodes[node_id]
+        span = anchor._source_span_for_node(
+            current, role="target" if node_id == node.node_id else "neighbor"
+        )
+        if span:
+            source_spans.append(span)
+            token_estimate += _estimate_tokens(str(span.get("source", "")))
+        hashes[current.node_id] = current.source_hash
+        hashes.setdefault(current.file_path, anchor.file_hashes.get(current.file_path, ""))
+
+    neighbor_summaries = []
+    for node_id in sorted(visited - {node.node_id}):
+        current = anchor.nodes[node_id]
+        edge = neighbor_edge.get(node_id)
+        neighbor_summaries.append({
+            "node_id": current.node_id,
+            "file_path": current.file_path,
+            "symbol": current.symbol,
+            "kind": current.kind,
+            "span": [current.start_line, current.end_line],
+            "source_hash": current.source_hash,
+            "edge_type": edge.edge_type if edge else "neighbor",
+            "edge_evidence": edge.evidence if edge else "",
+            "confidence": edge.confidence if edge else 1.0,
+        })
+    tests = anchor._tests_for_nodes([node.node_id])
+    return CodeTopoContextPacket(
+        target_nodes=[node],
+        source_spans=source_spans,
+        neighbor_summaries=neighbor_summaries[:16],
+        tests=tests,
+        hashes={key: value for key, value in hashes.items() if value},
+        warnings=list(dict.fromkeys(anchor.warnings)),
+        token_estimate=token_estimate,
+        route_diagnostics={
+            "route": "BUILDER_PATCH" if tests else "TEST_GAP_FILL",
+            "reason": "exact_node_grounded" if tests else "exact_node_grounded_missing_tests",
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        },
+    )
+
+
 def _dynamic_route(
     task_description: str,
     *,
@@ -316,10 +386,25 @@ def _dynamic_route(
     anchor = CodeTopoAnchor.build_from_files(sources)
 
     candidate_symbols = list(dict.fromkeys([*requested_symbols, *resolved_symbols]))
+    preferred_files = list(dict.fromkeys([*requested_files, *resolved_files]))
+    preferred_rank = {_normalize_path(path): index for index, path in enumerate(preferred_files)}
+    primary_requested = _normalize_path(requested_files[0]) if requested_files else ""
+    selection_warnings: list[str] = []
     exact_nodes: list[Any] = []
     for symbol in candidate_symbols:
         lookup = anchor.lookup_symbol(symbol)
-        exact_nodes.extend(lookup.exact_hits)
+        hits = list(lookup.exact_hits)
+        primary_hits = [node for node in hits if _normalize_path(node.file_path) == primary_requested]
+        preferred_hits = [node for node in hits if _normalize_path(node.file_path) in preferred_rank]
+        if primary_hits:
+            hits = primary_hits
+        elif len(preferred_hits) == 1:
+            hits = preferred_hits
+        elif len(preferred_hits) > 1 or len(hits) > 1:
+            selection_warnings.append("ambiguous_exact_symbol_without_unique_file_target")
+            continue
+        hits.sort(key=lambda node: (preferred_rank.get(_normalize_path(node.file_path), 10**6), node.file_path, node.start_line))
+        exact_nodes.extend(hits)
         if len(exact_nodes) >= 6:
             break
     deduped_nodes: list[Any] = []
@@ -342,24 +427,27 @@ def _dynamic_route(
     tests: list[str] = list(resolved_tests)
     hashes: dict[str, str] = {}
     dependencies: list[str] = []
-    warnings: list[str] = []
+    warnings: list[str] = list(selection_warnings)
+    primary_packet = None
     for node in exact_nodes[:4]:
-        packet = anchor.nearest_context(node.symbol, radius=1)
+        packet = _exact_context_packet(anchor, node, radius=1)
+        if primary_packet is None:
+            primary_packet = packet
         source_spans.extend(packet.source_spans)
         neighbors.extend(packet.neighbor_summaries)
         tests.extend(packet.tests)
         hashes.update(packet.hashes)
         warnings.extend(packet.warnings)
         dependencies.extend(node.imports)
-        caller_result = anchor.callers_of(node.symbol)
         callers.extend(
-            _node_summary(item, confidence=score, relationship="caller")
-            for item, score in caller_result.ranked_neighbors
+            _node_summary(anchor.nodes[edge.src_id], confidence=edge.confidence, relationship="caller")
+            for edge in anchor.incoming.get(node.node_id, [])
+            if edge.edge_type == "call" and edge.src_id in anchor.nodes
         )
-        callee_result = anchor.callees_of(node.symbol)
         callees.extend(
-            _node_summary(item, confidence=score, relationship="callee")
-            for item, score in callee_result.ranked_neighbors
+            _node_summary(anchor.nodes[edge.dst_id], confidence=edge.confidence, relationship="callee")
+            for edge in anchor.outgoing.get(node.node_id, [])
+            if edge.edge_type == "call" and edge.dst_id in anchor.nodes
         )
 
     if advisory_nodes:
@@ -390,9 +478,8 @@ def _dynamic_route(
     # Render through the existing anchor contract when there is one exact packet;
     # otherwise emit a compact JSON advisory packet.
     router_context = ""
-    if exact_nodes:
-        nearest = anchor.nearest_context(exact_nodes[0].symbol, radius=1)
-        router_context = _bounded_text(render_builder_context(nearest), token_budget)
+    if exact_nodes and primary_packet is not None:
+        router_context = _bounded_text(render_builder_context(primary_packet), token_budget)
     elif advisory_nodes:
         router_context = _bounded_text(
             json.dumps({"advisory_neighbors": context_packet["neighbor_summaries"]}, sort_keys=True),
@@ -400,7 +487,7 @@ def _dynamic_route(
         )
 
     primary_file = exact_nodes[0].file_path if exact_nodes else (
-        resolved_files[0] if resolved_files else (requested_files[0] if requested_files else "")
+        requested_files[0] if requested_files else (resolved_files[0] if resolved_files else "")
     )
     secondary_files = list(dict.fromkeys(
         [
@@ -568,9 +655,10 @@ def regenerate_router(quiet: bool = False) -> bool:
 
         markdown = generate_ai_router.build_router_md()
         Path(generate_ai_router.OUTPUT_MD).write_text(markdown, encoding="utf-8")
-        global _INDEX_CACHE, _INDEX_CACHE_MTIME
+        global _INDEX_CACHE, _INDEX_CACHE_MTIME, _INDEX_CACHE_PATH
         _INDEX_CACHE = None
         _INDEX_CACHE_MTIME = None
+        _INDEX_CACHE_PATH = None
         if not quiet:
             print(f"[+] AURA_AI_ROUTER.md regenerated ({len(markdown.splitlines())} lines)")
         return True

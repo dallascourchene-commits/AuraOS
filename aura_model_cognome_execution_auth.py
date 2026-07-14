@@ -171,6 +171,13 @@ class ExecutionAuthorization:
         now: float,
     ) -> list[str]:
         errors: list[str] = []
+        if not math.isfinite(float(now)):
+            errors.append("authorization evaluation time must be finite")
+            return errors
+        if type(call_count) is not int or call_count < 0:
+            errors.append("call_count must be a non-negative integer")
+        if len(tuple(profile_ids)) != len(set(str(item) for item in profile_ids)):
+            errors.append("selected profile IDs cannot contain duplicates")
         if now < self.issued_at:
             errors.append("authorization is not active yet")
         if now >= self.expires_at:

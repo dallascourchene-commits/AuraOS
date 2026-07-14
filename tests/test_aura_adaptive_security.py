@@ -99,3 +99,28 @@ def test_execution_authorization_rejects_content_tampering() -> None:
         assert "authorization_id" in str(exc)
     else:
         raise AssertionError("tampered authorization was accepted")
+
+def test_paired_live_comparison_id_is_authorization_bound() -> None:
+    from aura_adaptive_model_executor import paired_live_comparison_id
+
+    first = paired_live_comparison_id("authorization-a")
+    second = paired_live_comparison_id("authorization-a")
+    different = paired_live_comparison_id("authorization-b")
+    assert first == second
+    assert first != different
+
+
+def test_topology_hub_ties_are_sorted_by_node_id(tmp_path) -> None:
+    from aura_topology_manager import TopologyBuilder
+
+    builder = TopologyBuilder(tmp_path)
+    builder.nodes = [{"id": node_id} for node_id in ("c", "a", "b")]
+    builder._node_ids = {"a", "b", "c"}
+    builder.edges = [
+        {"source": "a", "target": "b", "kind": "call"},
+        {"source": "b", "target": "c", "kind": "call"},
+        {"source": "c", "target": "a", "kind": "call"},
+    ]
+
+    hubs = builder._compute_diagnostics()["top_hubs"]
+    assert [item["id"] for item in hubs] == ["a", "b", "c"]

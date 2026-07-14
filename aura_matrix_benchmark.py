@@ -44,6 +44,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 import time
 
 from aura_llm_egress import (
@@ -70,6 +71,29 @@ _W_DELTA = 0.15
 _W_LATENCY = 0.15
 _W_COST = 0.15
 
+
+# PR92:MESH_FIXTURE_HELPER:START
+def _mesh_offload_fixture() -> tuple[int, str, str]:
+    """Resolve the mock edit target inside offload_compute by symbol."""
+    lines = (Path(REPO_ROOT) / "aura_mesh.py").read_text(encoding="utf-8").splitlines()
+    start = next(i for i, line in enumerate(lines) if line.lstrip().startswith("async def offload_compute("))
+    function_indent = len(lines[start]) - len(lines[start].lstrip())
+    end = len(lines)
+    for i in range(start + 1, len(lines)):
+        stripped = lines[i].lstrip()
+        indent = len(lines[i]) - len(stripped)
+        if stripped.startswith(("def ", "async def ")) and indent == function_indent:
+            end = i
+            break
+    target = next(
+        i for i in range(start, end)
+        if "secure_packet:" in lines[i]
+        and "pack_length_prefixed_payload(payload_obj)" in lines[i]
+    )
+    original = lines[target]
+    indentation = original[: len(original) - len(original.lstrip())]
+    return target + 1, original, indentation
+# PR92:MESH_FIXTURE_HELPER:END
 
 # --------------------------------------------------------------------------- #
 # Offline mock egress (deterministic; for pipeline testing only)
@@ -98,21 +122,24 @@ class MockEgress:
                     "ANSWER: Mock reply in the compact polysynthetic envelope.\n"
                     "REFS: none\nNEXT: none\n[/REPLY]")
             return text, None, 0.001
+        if is_aura:
+            target_line, original_line, indentation = _mesh_offload_fixture()
+            replacement = (
+                f"{indentation}secure_packet = "
+                "self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"
+            )
         if is_aura and wants_edit_plan:
-            text = (
-                '{"edits": [{"file": "aura_mesh.py", "start_line": 174, '
-                '"end_line": 174, "replacement": "            secure_packet = '
-                'self.pack_secure_polysynthetic_packet([0, 0, 0, 0, 0, 0], 1.0)"}]}'
+            text = json.dumps(
+                {"edits": [{"file": "aura_mesh.py", "start_line": target_line,
+                            "end_line": target_line, "replacement": replacement}]}
             )
         elif is_aura:
             text = (
                 "--- a/aura_mesh.py\n+++ b/aura_mesh.py\n"
-                "@@ -172,3 +172,4 @@\n"
-                "         try:\n"
-                "             print(f\"[*] Offloading {module} to {target_ip}:4445...\")\n"
-                "+            # validate target before packing (no new deps)\n"
-                "             secure_packet = self.pack_secure_polysynthetic_packet("
-                "[0, 0, 0, 0, 0, 0], 1.0)\n"
+                f"@@ -{target_line},1 +{target_line},2 @@\n"
+                f"-{original_line}\n"
+                f"+{indentation}# validate target before packing (no new deps)\n"
+                f"+{replacement}\n"
             )
         else:
             text = (

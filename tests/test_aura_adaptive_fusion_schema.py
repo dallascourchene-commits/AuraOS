@@ -21,3 +21,17 @@ def test_fusion_telemetry_rejects_required_fields_with_invalid_types() -> None:
     assert AdaptiveFusionPanelExecutor._schema_passed(
         "JUDGE", json.dumps(invalid_judge), None
     ) is False
+
+def test_fusion_schema_rejects_additional_properties_and_nonfinite_numbers() -> None:
+    import json
+
+    extra = {
+        "role": "THINKER", "answer": "x", "claims": [], "risks": [],
+        "missing_info": [], "recommended_action": "review", "confidence": 0.5,
+        "unexpected": True,
+    }
+    nonfinite = dict(extra)
+    nonfinite.pop("unexpected")
+    nonfinite["confidence"] = float("nan")
+    assert AdaptiveFusionPanelExecutor._schema_passed("THINKER", json.dumps(extra), None) is False
+    assert AdaptiveFusionPanelExecutor._schema_passed("THINKER", json.dumps(nonfinite), None) is False

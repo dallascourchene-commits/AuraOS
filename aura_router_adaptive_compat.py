@@ -29,10 +29,10 @@ def resolve_mode(value: str | None = None) -> str:
 
 
 def load_authorization(value: Any) -> Any:
-    if value is None or hasattr(value, "validate_for"):
-        return value
     from aura_model_cognome_execution_auth import ExecutionAuthorization
 
+    if value is None or isinstance(value, ExecutionAuthorization):
+        return value
     if isinstance(value, Mapping):
         return ExecutionAuthorization.from_mapping(value)
     path = Path(str(value)).expanduser().resolve()
@@ -100,11 +100,8 @@ def _router(
     fusion_required: bool = False,
     mock: bool = False,
 ):
-    from aura_adaptive_fusion import AdaptiveFusionPanelExecutor
     from aura_adaptive_model_executor import AdaptiveModelExecutor
     from aura_adaptive_model_router import AdaptiveModelRouter
-    from aura_model_cognome import TaskContext
-    from aura_model_connectome_bridge import resolve_candidates_for_path
     from aura_shadow_model_router import ShadowRoutingPolicy
 
     policy = None
@@ -116,51 +113,23 @@ def _router(
             allow_panel=True,
         )
 
-    class CompatibilityAdaptiveModelRouter(AdaptiveModelRouter):
-        def revalidate(self, plan: Mapping[str, Any]) -> list[str]:
-            errors = super().revalidate(plan)
-            context = TaskContext(**dict(plan["task_context"]))
-            path_packet = dict(
-                plan.get("capability_resolution", {}).get("capability_connectome_path", {}) or {}
-            )
-            current = resolve_candidates_for_path(
-                self.store,
-                context,
-                path_packet,
-                repo_root=self.repo_root,
-            )
-            expected = _candidate_evidence_digest(
-                plan.get("path_resolution", {}).get("model_candidates", []) or []
-            )
-            observed = _candidate_evidence_digest(current.get("model_candidates", []) or [])
-            if observed != expected:
-                errors.append("candidate evidence changed after route planning")
-            return list(dict.fromkeys(errors))
-
     def executor_factory(router: AdaptiveModelRouter):
-        panel_executor = AdaptiveFusionPanelExecutor(
-            repo_root=auto_router.root,
-            store=router.store,
-            mock=mock,
-        )
+        panel_executor = None
+        if fusion_required:
+            from aura_adaptive_fusion import AdaptiveFusionPanelExecutor
 
-        class ManagedExecutor(AdaptiveModelExecutor):
-            def execute(self, objective: str, **kwargs: Any) -> dict[str, Any]:
-                try:
-                    return super().execute(objective, **kwargs)
-                finally:
-                    try:
-                        super().close()
-                    finally:
-                        panel_executor.close()
-
-        return ManagedExecutor(
+            panel_executor = AdaptiveFusionPanelExecutor(
+                repo_root=auto_router.root,
+                store=router.store,
+                mock=mock,
+            )
+        return AdaptiveModelExecutor(
             router=router,
             verifier=verifier,
             panel_executor=panel_executor,
         )
 
-    return CompatibilityAdaptiveModelRouter(
+    return AdaptiveModelRouter(
         repo_root=auto_router.root,
         policy=policy,
         executor_factory=executor_factory,
@@ -179,6 +148,8 @@ def route_test_case(
     mock: bool = False,
 ) -> dict[str, Any]:
     mode = resolve_mode(routing_mode)
+    if type(data_egress_allowed) is not bool or type(mock) is not bool:
+        raise ValueError("data_egress_allowed and mock must be booleans")
     if mode == LEGACY:
         raise ValueError("route_test_case is only for SHADOW or PAIRED_LIVE")
     if not str(purpose_digest or "").strip():
@@ -235,6 +206,8 @@ def route_fusion_text(
     mock: bool = False,
 ) -> dict[str, Any]:
     mode = resolve_mode(routing_mode)
+    if type(data_egress_allowed) is not bool or type(mock) is not bool:
+        raise ValueError("data_egress_allowed and mock must be booleans")
     if mode == LEGACY:
         raise ValueError("route_fusion_text is only for SHADOW or PAIRED_LIVE")
     if not str(purpose_digest or "").strip():
