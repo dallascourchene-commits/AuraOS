@@ -1,4 +1,4 @@
-name: Adaptive Router Guarded Repair Once
+name: Adaptive Router Reviewed Repair Builder
 
 on:
   pull_request:
@@ -6,438 +6,26 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: adaptive-router-guarded-repair
-  cancel-in-progress: false
+  group: adaptive-router-reviewed-repair-builder
+  cancel-in-progress: true
 
 jobs:
-  repair:
-    if: github.actor != 'github-actions[bot]'
+  build-reviewed-repair:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
           ref: refactor/model-cognome-live-compat
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Apply reviewed fixes
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          def replace_once(path, old, new):
-              target = Path(path)
-              text = target.read_text(encoding='utf-8')
-              if new in text:
-                  return
-              if old not in text:
-                  raise RuntimeError(f'marker missing in {path}: {old[:120]!r}')
-              target.write_text(text.replace(old, new, 1), encoding='utf-8')
-
-          def insert_before(path, marker, block):
-              target = Path(path)
-              text = target.read_text(encoding='utf-8')
-              if block in text:
-                  return
-              if marker not in text:
-                  raise RuntimeError(f'marker missing in {path}: {marker!r}')
-              target.write_text(text.replace(marker, block + marker, 1), encoding='utf-8')
-
-          def replace_between(path, start, end, replacement):
-              target = Path(path)
-              text = target.read_text(encoding='utf-8')
-              left = text.find(start)
-              right = text.find(end, left + len(start))
-              if left < 0 or right < 0:
-                  raise RuntimeError(f'block markers missing in {path}')
-              target.write_text(text[:left] + replacement + text[right:], encoding='utf-8')
-
-          def append_once(path, marker, block):
-              target = Path(path)
-              text = target.read_text(encoding='utf-8')
-              if marker in text:
-                  return
-              target.write_text(text.rstrip() + '\n\n' + block.strip() + '\n', encoding='utf-8')
-
-          # --- aura_adaptive_fusion.py ---
-          replace_once('aura_adaptive_fusion.py', 'import json\n', 'import json\nimport math\n')
-          insert_before(
-              'aura_adaptive_fusion.py',
-              '\n\nclass AdaptiveFusionPanelExecutor:',
-              '''\n\ndef _schema_value_valid(value: Any, schema: Mapping[str, Any]) -> bool:
-    expected = schema.get("type")
-    if expected == "object":
-        if not isinstance(value, dict):
-            return False
-        properties = schema.get("properties", {})
-        required = schema.get("required", ())
-        if any(field not in value for field in required):
-            return False
-        if schema.get("additionalProperties") is False and any(key not in properties for key in value):
-            return False
-        return all(
-            _schema_value_valid(item, properties[key])
-            for key, item in value.items()
-            if key in properties
-        )
-    if expected == "array":
-        if not isinstance(value, list):
-            return False
-        item_schema = schema.get("items", {})
-        return all(_schema_value_valid(item, item_schema) for item in value)
-    if expected == "string":
-        return isinstance(value, str)
-    if expected == "boolean":
-        return type(value) is bool
-    if expected == "number":
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            return False
-        number = float(value)
-        if not math.isfinite(number):
-            return False
-        minimum = schema.get("minimum")
-        maximum = schema.get("maximum")
-        return (minimum is None or number >= float(minimum)) and (maximum is None or number <= float(maximum))
-    return True
-'''
-          )
-          replace_once(
-              'aura_adaptive_fusion.py',
-              '        schema = JUDGE_SCHEMA if role == "JUDGE" else PANEL_SCHEMA\n        return all(field in parsed for field in schema["required"])\n',
-              '        schema = JUDGE_SCHEMA if role == "JUDGE" else PANEL_SCHEMA\n        return _schema_value_valid(parsed, schema)\n',
-          )
-          replace_once(
-              'aura_adaptive_fusion.py',
-              '                    "cost_run_id": linkage.cost_run_id,\n                    "persistence": persistence,\n',
-              '                    "cost_run_id": linkage.cost_run_id,\n                    "verifier_pass": passed,\n                    "persistence": persistence,\n',
-          )
-          replace_once(
-              'aura_adaptive_fusion.py',
-              '        result["judge_output"] = judge_output\n        result["calls"] = [links[name] | {"agent": name} for name in sorted(links)]\n',
-              '        result["judge_output"] = judge_output\n        result["ok"] = (\n            bool(result.get("ok"))\n            and len(links) == len(profile_ids)\n            and all(bool(item.get("verifier_pass")) for item in links.values())\n        )\n        result["calls"] = [links[name] | {"agent": name} for name in sorted(links)]\n',
-          )
-
-          # --- aura_adaptive_model_router.py ---
-          insert_before(
-              'aura_adaptive_model_router.py',
-              '\n\ndef _forced_direct(',
-              '''\n\ndef _candidate_set_digest(candidates: Sequence[Mapping[str, Any]]) -> str:
-    normalized = [dict(item) for item in candidates]
-    normalized.sort(key=lambda item: str(item.get("profile_id") or ""))
-    return stable_digest(normalized)
-'''
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '        self.executor_factory = executor_factory\n',
-              '        self.executor_factory = executor_factory\n        self._used_authorization_ids: set[str] = set()\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '            if not matches:\n                override_errors.append("forced model is not present in the graph-pinned candidate set")\n            elif not matches[0].admitted:\n',
-              '            if not matches:\n                override_errors.append("forced model is not present in the graph-pinned candidate set")\n            elif len(matches) > 1:\n                override_errors.append("forced model selector is ambiguous; use an exact profile ID or provider:model")\n            elif not matches[0].admitted:\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '        evidence_digest = stable_digest({\n            "shadow": shadow.to_dict(),\n            "forced_model": forced_model or "",\n            "topology_digest": routing.get("topology_digest", ""),\n            "path_digest": path_resolution.get("path_digest", ""),\n        })\n',
-              '        candidate_evidence_digest = _candidate_set_digest(\n            path_resolution.get("model_candidates", []) or []\n        )\n        evidence_digest = stable_digest({\n            "shadow": shadow.to_dict(),\n            "forced_model": forced_model or "",\n            "topology_digest": routing.get("topology_digest", ""),\n            "path_digest": path_resolution.get("path_digest", ""),\n            "candidate_evidence_digest": candidate_evidence_digest,\n        })\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '            "candidate_records": candidate_records,\n            "routing": routing,\n',
-              '            "candidate_records": candidate_records,\n            "candidate_evidence_digest": candidate_evidence_digest,\n            "routing": routing,\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '                "capability_path_digest": path_resolution.get("path_digest", ""),\n                "topology_digest": routing.get("topology_digest", ""),\n',
-              '                "capability_path_digest": path_resolution.get("path_digest", ""),\n                "candidate_evidence_digest": candidate_evidence_digest,\n                "topology_digest": routing.get("topology_digest", ""),\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '        if current.get("graph_digest") != plan.get("path_resolution", {}).get("graph_digest"):\n            errors.append("capability graph changed after route planning")\n        for profile_id in plan.get("selected_option", {}).get("profile_ids", []) or []:\n',
-              '        if current.get("graph_digest") != plan.get("path_resolution", {}).get("graph_digest"):\n            errors.append("capability graph changed after route planning")\n        expected_evidence = str(\n            plan.get("candidate_evidence_digest")\n            or _candidate_set_digest(plan.get("path_resolution", {}).get("model_candidates", []) or [])\n        )\n        current_evidence = _candidate_set_digest(current.get("model_candidates", []) or [])\n        if current_evidence != expected_evidence:\n            errors.append("candidate evidence changed after route planning")\n        for profile_id in plan.get("selected_option", {}).get("profile_ids", []) or []:\n',
-          )
-          replace_once(
-              'aura_adaptive_model_router.py',
-              '        executor = factory(router=self)\n        return executor.execute(objective, **kwargs)\n',
-              '        executor = factory(router=self)\n        try:\n            return executor.execute(objective, **kwargs)\n        finally:\n            if hasattr(executor, "close"):\n                executor.close()\n',
-          )
-
-          # --- aura_adaptive_model_executor.py ---
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '    def close(self) -> None:\n        if self._owns_ledger and self.empirical_ledger is not None and hasattr(self.empirical_ledger, "close"):\n            self.empirical_ledger.close()\n',
-              '    def close(self) -> None:\n        if self._owns_ledger and self.empirical_ledger is not None and hasattr(self.empirical_ledger, "close"):\n            self.empirical_ledger.close()\n        if self.panel_executor is not None and hasattr(self.panel_executor, "close"):\n            self.panel_executor.close()\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '            raw = (self.verifier or _default_verifier)(\n                text,\n                error,\n                context=context,\n                candidate=candidate,\n                objective=objective,\n            )\n            if isinstance(raw, bool):\n',
-              '            try:\n                raw = (self.verifier or _default_verifier)(\n                    text,\n                    error,\n                    context=context,\n                    candidate=candidate,\n                    objective=objective,\n                )\n            except Exception as exc:\n                result = {\n                    "passed": False,\n                    "format_valid": False,\n                    "tests_passed": None,\n                    "tests_failed": None,\n                    "failure_class": f"VERIFIER_EXCEPTION:{type(exc).__name__}",\n                }\n                return result, max(0.0, (self.now() - started) * 1000.0)\n            if isinstance(raw, bool):\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        egress = self.egress_factory(\n            provider=provider,\n            model=model,\n            task=call_type,\n            aspect="adaptive_router",\n        )\n        started = self.now()\n        raw = egress.generate(\n            objective,\n            router_context=router_context or None,\n            call_type=call_type,\n        )\n        elapsed = max(0.0, self.now() - started)\n',
-              '        started = self.now()\n        try:\n            egress = self.egress_factory(\n                provider=provider,\n                model=model,\n                task=call_type,\n                aspect="adaptive_router",\n            )\n            raw = egress.generate(\n                objective,\n                router_context=router_context or None,\n                call_type=call_type,\n            )\n        except Exception as exc:\n            return {\n                "text": None,\n                "error": f"EGRESS_EXCEPTION:{type(exc).__name__}",\n                "latency_sec": max(0.0, self.now() - started),\n                "usage": {},\n                "returned_model": model,\n            }\n        elapsed = max(0.0, self.now() - started)\n',
-          )
-          insert_before(
-              'aura_adaptive_model_executor.py',
-              '\n\nclass AdaptiveModelExecutor:',
-              '''\n\ndef paired_live_comparison_id(authorization_id: str) -> str:
-    return stable_id("paired-live", {"authorization_id": str(authorization_id or "").strip()})
-'''
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids) + (1 if policy_mode == PANEL else 0)\n',
-              '        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids)\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        if policy_mode == ZERO_MODEL and self.deterministic_executor is None:\n            errors.append("ZERO_MODEL live execution requires an injected deterministic executor")\n',
-              '        if str(context.risk or "LOW").upper() in _HIGH_RISK and policy_mode != PANEL and self.verifier is None:\n            errors.append("high-risk DIRECT/CASCADE execution requires an explicit verifier")\n        if policy_mode == ZERO_MODEL and self.deterministic_executor is None:\n            errors.append("ZERO_MODEL live execution requires an injected deterministic executor")\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        comparison_id = stable_id("paired-live", {\n            "authorization_id": auth.authorization_id,\n            "proposal_route_decision_id": plan["route_decision"]["route_decision_id"],\n        })\n',
-              '        comparison_id = paired_live_comparison_id(auth.authorization_id)\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        if stored_comparison != comparison_id:\n            return self._deny(plan, ["experiment comparison ID mismatch"], auth.authorization_id)\n',
-              '        if stored_comparison != comparison_id:\n            return self._deny(plan, ["authorization has already been consumed or its comparison claim failed"], auth.authorization_id)\n',
-          )
-          replace_once(
-              'aura_adaptive_model_executor.py',
-              '        if policy_mode == ZERO_MODEL:\n            output = self.deterministic_executor(objective, context=context, routing=plan["routing"])\n            return {**common, "status": "EXECUTED", "executed": True, "output": output, "calls": []}\n        if policy_mode == PANEL:\n            panel = self.panel_executor(\n                objective=objective,\n                plan=plan,\n                context=context,\n                live_decision=live_decision,\n                authorization=auth,\n                comparison_id=comparison_id,\n                correlation_id=correlation_id,\n            )\n            return {\n                **common,\n                "status": "EXECUTED" if bool(panel.get("ok")) else "FAILED",\n                "executed": True,\n                "panel_result": panel,\n            }\n',
-              '        if policy_mode == ZERO_MODEL:\n            try:\n                output = self.deterministic_executor(objective, context=context, routing=plan["routing"])\n            except Exception as exc:\n                return {**common, "status": "FAILED", "executed": True, "error": f"DETERMINISTIC_EXECUTOR_EXCEPTION:{type(exc).__name__}", "calls": []}\n            return {**common, "status": "EXECUTED", "executed": True, "output": output, "calls": []}\n        if policy_mode == PANEL:\n            try:\n                panel = self.panel_executor(\n                    objective=objective,\n                    plan=plan,\n                    context=context,\n                    live_decision=live_decision,\n                    authorization=auth,\n                    comparison_id=comparison_id,\n                    correlation_id=correlation_id,\n                )\n            except Exception as exc:\n                return {**common, "status": "FAILED", "executed": True, "error": f"PANEL_EXECUTOR_EXCEPTION:{type(exc).__name__}"}\n            return {\n                **common,\n                "status": "EXECUTED" if bool(panel.get("ok")) else "FAILED",\n                "executed": True,\n                "panel_result": panel,\n            }\n',
-          )
-
-          # --- aura_router_adaptive_compat.py ---
-          replace_once(
-              'aura_router_adaptive_compat.py',
-              'def load_authorization(value: Any) -> Any:\n    if value is None or hasattr(value, "validate_for"):\n        return value\n    from aura_model_cognome_execution_auth import ExecutionAuthorization\n\n    if isinstance(value, Mapping):\n',
-              'def load_authorization(value: Any) -> Any:\n    from aura_model_cognome_execution_auth import ExecutionAuthorization\n\n    if value is None or isinstance(value, ExecutionAuthorization):\n        return value\n    if isinstance(value, Mapping):\n',
-          )
-          replace_between(
-              'aura_router_adaptive_compat.py',
-              'def _router(\n',
-              'def route_test_case(\n',
-              '''def _router(
-    auto_router: Any,
-    *,
-    verifier: Any,
-    fusion_required: bool = False,
-    mock: bool = False,
-):
-    from aura_adaptive_model_executor import AdaptiveModelExecutor
-    from aura_adaptive_model_router import AdaptiveModelRouter
-    from aura_shadow_model_router import ShadowRoutingPolicy
-
-    policy = None
-    if fusion_required:
-        policy = ShadowRoutingPolicy(
-            high_risk_direct_min_success=1.0,
-            panel_uncertainty_threshold=0.0,
-            panel_size=3,
-            allow_panel=True,
-        )
-
-    def executor_factory(router: AdaptiveModelRouter):
-        panel_executor = None
-        if fusion_required:
-            from aura_adaptive_fusion import AdaptiveFusionPanelExecutor
-
-            panel_executor = AdaptiveFusionPanelExecutor(
-                repo_root=auto_router.root,
-                store=router.store,
-                mock=mock,
-            )
-        return AdaptiveModelExecutor(
-            router=router,
-            verifier=verifier,
-            panel_executor=panel_executor,
-        )
-
-    return AdaptiveModelRouter(
-        repo_root=auto_router.root,
-        policy=policy,
-        executor_factory=executor_factory,
-    )
-
-
-'''
-          )
-
-          # --- aura_ai_router.py ---
-          replace_once(
-              'aura_ai_router.py',
-              '_INDEX_CACHE: dict[str, Any] | None = None\n_INDEX_CACHE_MTIME: float | None = None\n',
-              '_INDEX_CACHE: dict[str, Any] | None = None\n_INDEX_CACHE_MTIME: float | None = None\n_INDEX_CACHE_PATH: str | None = None\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    global _INDEX_CACHE, _INDEX_CACHE_MTIME\n    try:\n        mtime = os.path.getmtime(path)\n',
-              '    global _INDEX_CACHE, _INDEX_CACHE_MTIME, _INDEX_CACHE_PATH\n    cache_path = str(Path(path).resolve())\n    try:\n        mtime = os.path.getmtime(cache_path)\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    if _INDEX_CACHE is not None and _INDEX_CACHE_MTIME == mtime:\n        return _INDEX_CACHE\n',
-              '    if _INDEX_CACHE is not None and _INDEX_CACHE_MTIME == mtime and _INDEX_CACHE_PATH == cache_path:\n        return _INDEX_CACHE\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '        lines = Path(path).read_text(encoding="utf-8", errors="ignore").splitlines()\n',
-              '        lines = Path(cache_path).read_text(encoding="utf-8", errors="ignore").splitlines()\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '        "source": path,\n',
-              '        "source": cache_path,\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    _INDEX_CACHE_MTIME = mtime\n    return _INDEX_CACHE\n',
-              '    _INDEX_CACHE_MTIME = mtime\n    _INDEX_CACHE_PATH = cache_path\n    return _INDEX_CACHE\n',
-          )
-          insert_before(
-              'aura_ai_router.py',
-              '\n\ndef _dynamic_route(',
-              '''\n\ndef _exact_context_packet(anchor: Any, node: Any, radius: int = 1) -> Any:
-    from aura_topological_context_anchor import CodeTopoContextPacket
-
-    radius = max(0, min(3, int(radius)))
-    visited = {node.node_id}
-    neighbor_edge: dict[str, Any] = {}
-    queue = [(node.node_id, 0)]
-    while queue and len(visited) < 24:
-        node_id, distance = queue.pop(0)
-        if distance >= radius:
-            continue
-        for edge in [*anchor.outgoing.get(node_id, []), *anchor.incoming.get(node_id, [])]:
-            other = edge.dst_id if edge.src_id == node_id else edge.src_id
-            if other not in anchor.nodes or other in visited:
-                continue
-            visited.add(other)
-            neighbor_edge[other] = edge
-            queue.append((other, distance + 1))
-
-    source_spans = []
-    hashes: dict[str, str] = {}
-    token_estimate = 0
-    ordered_ids = [node.node_id, *sorted(visited - {node.node_id})]
-    for node_id in ordered_ids:
-        current = anchor.nodes[node_id]
-        span = anchor._source_span_for_node(current, role="target" if node_id == node.node_id else "neighbor")
-        if span:
-            source_spans.append(span)
-            token_estimate += _estimate_tokens(str(span.get("source", "")))
-        hashes[current.node_id] = current.source_hash
-        hashes.setdefault(current.file_path, anchor.file_hashes.get(current.file_path, ""))
-
-    neighbor_summaries = []
-    for node_id in sorted(visited - {node.node_id}):
-        current = anchor.nodes[node_id]
-        edge = neighbor_edge.get(node_id)
-        neighbor_summaries.append({
-            "node_id": current.node_id,
-            "file_path": current.file_path,
-            "symbol": current.symbol,
-            "kind": current.kind,
-            "span": [current.start_line, current.end_line],
-            "source_hash": current.source_hash,
-            "edge_type": edge.edge_type if edge else "neighbor",
-            "edge_evidence": edge.evidence if edge else "",
-            "confidence": edge.confidence if edge else 1.0,
-        })
-    tests = anchor._tests_for_nodes([node.node_id])
-    return CodeTopoContextPacket(
-        target_nodes=[node],
-        source_spans=source_spans,
-        neighbor_summaries=neighbor_summaries[:16],
-        tests=tests,
-        hashes={key: value for key, value in hashes.items() if value},
-        warnings=list(dict.fromkeys(anchor.warnings)),
-        token_estimate=token_estimate,
-        route_diagnostics={
-            "route": "BUILDER_PATCH" if tests else "TEST_GAP_FILL",
-            "reason": "exact_node_grounded" if tests else "exact_node_grounded_missing_tests",
-            "patch_authority": PATCH_AUTHORITY,
-            "vsa_patch_authority": False,
-        },
-    )
-'''
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    candidate_symbols = list(dict.fromkeys([*requested_symbols, *resolved_symbols]))\n    exact_nodes: list[Any] = []\n    for symbol in candidate_symbols:\n        lookup = anchor.lookup_symbol(symbol)\n        exact_nodes.extend(lookup.exact_hits)\n        if len(exact_nodes) >= 6:\n            break\n',
-              '    candidate_symbols = list(dict.fromkeys([*requested_symbols, *resolved_symbols]))\n    preferred_files = list(dict.fromkeys([*requested_files, *resolved_files]))\n    preferred_rank = {_normalize_path(path): index for index, path in enumerate(preferred_files)}\n    selection_warnings: list[str] = []\n    exact_nodes: list[Any] = []\n    for symbol in candidate_symbols:\n        lookup = anchor.lookup_symbol(symbol)\n        hits = list(lookup.exact_hits)\n        preferred_hits = [node for node in hits if _normalize_path(node.file_path) in preferred_rank]\n        if preferred_hits:\n            if len(hits) > len(preferred_hits):\n                selection_warnings.append("ambiguous_symbol_hits_filtered_by_target_file")\n            hits = preferred_hits\n        elif len(hits) > 1:\n            selection_warnings.append("ambiguous_exact_symbol_without_file_target")\n        hits.sort(key=lambda node: (preferred_rank.get(_normalize_path(node.file_path), 10**6), node.file_path, node.start_line))\n        exact_nodes.extend(hits)\n        if len(exact_nodes) >= 6:\n            break\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    warnings: list[str] = []\n    for node in exact_nodes[:4]:\n        packet = anchor.nearest_context(node.symbol, radius=1)\n',
-              '    warnings: list[str] = list(selection_warnings)\n    primary_packet = None\n    for node in exact_nodes[:4]:\n        packet = _exact_context_packet(anchor, node, radius=1)\n        if primary_packet is None:\n            primary_packet = packet\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '        caller_result = anchor.callers_of(node.symbol)\n        callers.extend(\n            _node_summary(item, confidence=score, relationship="caller")\n            for item, score in caller_result.ranked_neighbors\n        )\n        callee_result = anchor.callees_of(node.symbol)\n        callees.extend(\n            _node_summary(item, confidence=score, relationship="callee")\n            for item, score in callee_result.ranked_neighbors\n        )\n',
-              '        callers.extend(\n            _node_summary(anchor.nodes[edge.src_id], confidence=edge.confidence, relationship="caller")\n            for edge in anchor.incoming.get(node.node_id, [])\n            if edge.edge_type == "call" and edge.src_id in anchor.nodes\n        )\n        callees.extend(\n            _node_summary(anchor.nodes[edge.dst_id], confidence=edge.confidence, relationship="callee")\n            for edge in anchor.outgoing.get(node.node_id, [])\n            if edge.edge_type == "call" and edge.dst_id in anchor.nodes\n        )\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '    if exact_nodes:\n        nearest = anchor.nearest_context(exact_nodes[0].symbol, radius=1)\n        router_context = _bounded_text(render_builder_context(nearest), token_budget)\n',
-              '    if exact_nodes and primary_packet is not None:\n        router_context = _bounded_text(render_builder_context(primary_packet), token_budget)\n',
-          )
-          replace_once(
-              'aura_ai_router.py',
-              '        global _INDEX_CACHE, _INDEX_CACHE_MTIME\n        _INDEX_CACHE = None\n        _INDEX_CACHE_MTIME = None\n',
-              '        global _INDEX_CACHE, _INDEX_CACHE_MTIME, _INDEX_CACHE_PATH\n        _INDEX_CACHE = None\n        _INDEX_CACHE_MTIME = None\n        _INDEX_CACHE_PATH = None\n',
-          )
-
-          # --- tests ---
-          append_once(
-              'tests/test_aura_ai_router_dynamic.py',
-              'test_query_router_prefers_explicit_file_for_duplicate_symbol',
-              '''
-def test_query_router_prefers_explicit_file_for_duplicate_symbol(tmp_path: Path) -> None:
-    (tmp_path / "alpha.py").write_text("def target():\n    return 'alpha'\n", encoding="utf-8")
-    (tmp_path / "beta.py").write_text("def target():\n    return 'beta'\n", encoding="utf-8")
-
-    result = query_router(
-        "change target in beta.py",
-        repo_root=tmp_path,
-        target_files=["beta.py"],
-        target_symbols=["target"],
-        static_fallback=False,
-        resolver=_resolution,
-    )
-
-    assert result["primary_file"] == "beta.py"
-    assert result["exact_symbols"][0]["file"] == "beta.py"
-    assert "return 'beta'" in result["router_context"]
-    assert "return 'alpha'" not in result["router_context"]
-'''
-          )
-          append_once(
-              'tests/test_aura_adaptive_security.py',
-              'test_paired_live_comparison_id_ignores_proposal_route_identity',
-              '''
-def test_paired_live_comparison_id_ignores_proposal_route_identity() -> None:
-    from aura_adaptive_model_executor import paired_live_comparison_id
-
-    first = paired_live_comparison_id("authorization-a")
-    second = paired_live_comparison_id("authorization-a")
-    different = paired_live_comparison_id("authorization-b")
-    assert first == second
-    assert first != different
-'''
-          )
-          PY
-      - name: Restore permanent CI workflow
+          python-version: "3.12"
+      - name: Apply reviewed repair in isolated checkout
+        run: python tools/pr92_review_repair.py
+      - name: Restore permanent read-only adaptive CI definition
         run: |
           cat > .github/workflows/model-cognome-adaptive-router.yml <<'YAML'
           name: Model Cognome Adaptive Router
@@ -551,7 +139,11 @@ def test_paired_live_comparison_id_ignores_proposal_route_identity() -> None:
             tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
             tests/test_aura_adaptive_execution.py tests/test_aura_adaptive_security.py \
             tests/test_aura_adaptive_fusion_schema.py
-      - name: Run adaptive and complete pytest-native suites
+      - name: Validate public CLI
+        run: |
+          python aura_router.py route --help
+          python aura_router.py fusion --help
+      - name: Run adaptive contracts
         run: |
           python -m pytest -q \
             tests/test_aura_ai_router_dynamic.py \
@@ -559,16 +151,23 @@ def test_paired_live_comparison_id_ignores_proposal_route_identity() -> None:
             tests/test_aura_adaptive_execution.py \
             tests/test_aura_adaptive_security.py \
             tests/test_aura_adaptive_fusion_schema.py
-          python -m pytest -q
+      - name: Run complete pytest-native suite
+        run: python -m pytest -q
       - name: Regenerate and verify stable topology
         run: |
           set -euo pipefail
           rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          python aura_codebase_navigator.py --deep --out .aura/CODEMAP.json --markdown .aura/CODEMAP.md
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md
           cp .aura/CODEMAP.json /tmp/CODEMAP.first.json
           cp .aura/CODEMAP.md /tmp/CODEMAP.first.md
           cp topology_map.json /tmp/topology.first.json
-          python aura_codebase_navigator.py --deep --out .aura/CODEMAP.json --markdown .aura/CODEMAP.md
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md
           python aura_phase_c2_codemap_verify.py \
             --committed-json /tmp/CODEMAP.first.json \
             --generated-json .aura/CODEMAP.json \
@@ -576,18 +175,28 @@ def test_paired_live_comparison_id_ignores_proposal_route_identity() -> None:
             --generated-markdown .aura/CODEMAP.md
           cmp /tmp/topology.first.json topology_map.json
           rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-      - name: Commit reviewed fixes
+      - name: Ensure reviewed artifact is clean
         run: |
-          set -euo pipefail
-          git config user.name "Aura Refactor Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add \
-            .github/workflows/model-cognome-adaptive-router.yml \
-            aura_ai_router.py aura_router_adaptive_compat.py \
-            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
-            aura_adaptive_fusion.py \
-            tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_security.py \
-            .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
-          git diff --cached --check
-          git commit -m "Harden adaptive router after final review"
-          git push origin HEAD:refactor/model-cognome-live-compat
+          git diff --check
+          test ! -e .aura/MODULE_MANIFEST.json
+          test ! -e Aura_Memory/civic_arena.sqlite3
+      - name: Upload tested reviewed repair
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr92-reviewed-repair-${{ github.run_id }}
+          retention-days: 3
+          path: |
+            .github/workflows/model-cognome-adaptive-router.yml
+            aura_ai_router.py
+            aura_router_adaptive_compat.py
+            aura_adaptive_model_router.py
+            aura_adaptive_model_executor.py
+            aura_adaptive_fusion.py
+            aura_model_cognome_execution_auth.py
+            aura_model_cognome_store_io.py
+            tests/test_aura_ai_router_dynamic.py
+            tests/test_aura_adaptive_security.py
+            tests/test_aura_adaptive_fusion_schema.py
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
