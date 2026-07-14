@@ -1,0 +1,268 @@
+name: Apply P1.1 privacy hardening
+
+on:
+  push:
+    branches:
+      - refactor/relational-authority-p1-1
+    paths:
+      - .github/workflows/p1-1-privacy-hardening.yml
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/relational-authority-p1-1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply privacy hardening and focused regressions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('aura_event_contracts.py')
+          text = path.read_text(encoding='utf-8')
+
+          old_patterns = '''_SECRET_PATTERNS = (
+              re.compile(r"(?i)\\b(authorization)\\s*[:=]\\s*bearer\\s+[A-Za-z0-9._\\-]+"),
+              re.compile(r"(?i)\\bbearer\\s+[A-Za-z0-9._\\-]+"),
+              re.compile(
+                  r"(?i)\\b(api[_-]?key|access[_-]?token|auth[_-]?token|secret|password|private[_-]?key)"
+                  r"\\s*[:=]\\s*['\\\"]?[^'\\\"\\s,}]+"
+              ),
+              re.compile(r"\\bsk-[A-Za-z0-9]{20,}\\b"),
+              re.compile(r"\\bAKIA[0-9A-Z]{16}\\b"),
+          )
+          '''
+          new_patterns = '''_BEARER_PATTERN = re.compile(r"(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]+")
+          _QUOTED_SECRET_ASSIGNMENT_PATTERN = re.compile(
+              r"(?is)(?P<prefix>[\\\"']?(?:api[_-]?key|access[_-]?token|auth[_-]?token|"
+              r"refresh[_-]?token|secret|password|private[_-]?key|authorization)[\\\"']?"
+              r"\\s*[:=]\\s*)(?P<quote>[\\\"'])(?P<value>.*?)(?P=quote)"
+          )
+          _UNQUOTED_SECRET_ASSIGNMENT_PATTERN = re.compile(
+              r"(?ix)(?P<prefix>\\b(?:api[_-]?key|access[_-]?token|auth[_-]?token|"
+              r"refresh[_-]?token|secret|password|private[_-]?key|authorization)\\b"
+              r"\\s*[:=]\\s*)(?P<value>[^\\s,}\\]&]+)"
+          )
+          _RAW_SECRET_PATTERNS = (
+              re.compile(r"\\bsk-[A-Za-z0-9]{20,}\\b"),
+              re.compile(r"\\bAKIA[0-9A-Z]{16}\\b"),
+          )
+          '''
+          if old_patterns not in text:
+              raise SystemExit('expected secret-pattern block not found')
+          text = text.replace(old_patterns, new_patterns, 1)
+
+          old_private = '''_PRIVATE_REASONING_KEYS = frozenset(
+              {
+                  "chain_of_thought",
+                  "chain-of-thought",
+                  "cot",
+                  "hidden_reasoning",
+                  "private_reasoning",
+                  "inner_thought",
+                  "innerthought",
+                  "scratchpad",
+              }
+          )
+          _NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(
+              _normalize_field_name(item) for item in _PRIVATE_REASONING_KEYS
+          )
+          '''
+          new_private = '''_PRIVATE_REASONING_KEYS = frozenset(
+              {
+                  "chain_of_thought",
+                  "chain-of-thought",
+                  "cot",
+                  "hidden_reasoning",
+                  "private_reasoning",
+                  "inner_thought",
+                  "innerthought",
+                  "scratchpad",
+                  "scratch_pad",
+              }
+          )
+          _NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(
+              _normalize_field_name(item) for item in _PRIVATE_REASONING_KEYS
+          )
+          _COMPACT_PRIVATE_REASONING_KEYS = frozenset(
+              re.sub(r"[^a-z0-9]+", "", item) for item in _NORMALIZED_PRIVATE_REASONING_KEYS
+          )
+          _COMPACT_PRIVATE_REASONING_SUFFIXES = frozenset(
+              {
+                  "chainofthought",
+                  "hiddenreasoning",
+                  "privatereasoning",
+                  "innerthought",
+                  "scratchpad",
+              }
+          )
+
+
+          def _is_private_reasoning_field(value: Any) -> bool:
+              normalized = _normalize_field_name(value)
+              compact = re.sub(r"[^a-z0-9]+", "", normalized)
+              return (
+                  normalized in _NORMALIZED_PRIVATE_REASONING_KEYS
+                  or compact in _COMPACT_PRIVATE_REASONING_KEYS
+                  or any(compact.endswith(suffix) for suffix in _COMPACT_PRIVATE_REASONING_SUFFIXES)
+              )
+          '''
+          if old_private not in text:
+              raise SystemExit('expected private-reasoning block not found')
+          text = text.replace(old_private, new_private, 1)
+
+          old_redact = '''def redact_secrets(value: str) -> str:
+              redacted = str(value)
+              for pattern in _SECRET_PATTERNS:
+                  redacted = pattern.sub("[REDACTED]", redacted)
+              return redacted
+          '''
+          new_redact = '''def redact_secrets(value: str) -> str:
+              redacted = _BEARER_PATTERN.sub("Bearer [REDACTED]", str(value))
+              redacted = _QUOTED_SECRET_ASSIGNMENT_PATTERN.sub(
+                  lambda match: (
+                      f"{match.group('prefix')}{match.group('quote')}"
+                      f"[REDACTED]{match.group('quote')}"
+                  ),
+                  redacted,
+              )
+              redacted = _UNQUOTED_SECRET_ASSIGNMENT_PATTERN.sub(
+                  lambda match: f"{match.group('prefix')}[REDACTED]",
+                  redacted,
+              )
+              for pattern in _RAW_SECRET_PATTERNS:
+                  redacted = pattern.sub("[REDACTED]", redacted)
+              return redacted
+          '''
+          if old_redact not in text:
+              raise SystemExit('expected redact_secrets function not found')
+          text = text.replace(old_redact, new_redact, 1)
+
+          old_check = '''            normalized = _normalize_field_name(key_text)
+                      if normalized in _NORMALIZED_PRIVATE_REASONING_KEYS:
+                          raise ValueError(f"private reasoning field is prohibited: {key_text}")
+          '''
+          new_check = '''            normalized = _normalize_field_name(key_text)
+                      if _is_private_reasoning_field(key_text):
+                          raise ValueError(f"private reasoning field is prohibited: {key_text}")
+          '''
+          if old_check not in text:
+              raise SystemExit('expected private-reasoning check not found')
+          text = text.replace(old_check, new_check, 1)
+
+          path.write_text(text, encoding='utf-8')
+
+          Path('tests/test_aura_event_privacy_hardening.py').write_text(r'''from __future__ import annotations
+
+import json
+
+import pytest
+
+from aura_event_contracts import (
+    AppendOnlyEventStore,
+    ToolResultRecord,
+    redact_secrets,
+    sanitize_payload,
+    stable_digest,
+)
+
+
+@pytest.mark.parametrize(
+    "field_name",
+    (
+        "scratchpad",
+        "scratch_pad",
+        "scratchPad",
+        "internalScratchpad",
+        "modelChainOfThought",
+    ),
+)
+def test_private_reasoning_aliases_fail_closed(field_name: str) -> None:
+    with pytest.raises(ValueError, match="private reasoning"):
+        sanitize_payload({field_name: "must-not-persist"})
+
+
+@pytest.mark.parametrize(
+    ("raw", "secret"),
+    (
+        ('{"access_token": "abc"}', "abc"),
+        ("access_token: abc", "abc"),
+        ("Authorization: Bearer abC/12+xy~z==", "abC/12+xy~z=="),
+        ("https://example.test/cb?access_token=abc&state=ok", "abc"),
+        ("password='correct horse battery staple'", "correct horse battery staple"),
+    ),
+)
+def test_string_level_credentials_are_fully_redacted(raw: str, secret: str) -> None:
+    redacted = redact_secrets(raw)
+    assert secret not in redacted
+    assert "[REDACTED]" in redacted
+
+
+def test_nested_string_outputs_are_redacted_before_digesting() -> None:
+    payload = {
+        "items": [
+            '{"access_token":"abc"}',
+            {"header": "Authorization: Bearer a/b+c~d=="},
+        ]
+    }
+    sanitized = sanitize_payload(payload)
+    encoded = json.dumps(sanitized, sort_keys=True)
+    assert "abc" not in encoded
+    assert "a/b+c~d==" not in encoded
+
+    result = ToolResultRecord.create(
+        decision_id="decision-1",
+        tool_id="tool-1",
+        status="SUCCEEDED",
+        output=payload,
+        started_at=1.0,
+        finished_at=2.0,
+    )
+    assert result.output_digest == stable_digest(sanitized)
+    assert result.output_digest != stable_digest(payload)
+
+
+def test_sidecar_contains_only_redacted_string_payload(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    raw = {
+        "tool_output": '{"access_token":"abc"}',
+        "authorization_header": "Bearer a/b+c~d==",
+    }
+    ref = store.store_payload(raw, kind="tool-result", created_at=1.0)
+    stored_text = (store.root / ref.path).read_text(encoding="utf-8")
+    stored = json.loads(stored_text)
+
+    assert "abc" not in stored_text
+    assert "a/b+c~d==" not in stored_text
+    assert ref.payload_digest == stable_digest(stored)
+    assert ref.payload_digest != stable_digest(raw)
+    assert ref.redacted is True
+''', encoding='utf-8')
+
+          workflow = Path('.github/workflows/p1-1-privacy-hardening.yml')
+          workflow.unlink()
+          PY
+
+      - name: Validate privacy hardening
+        run: |
+          python -m py_compile aura_event_contracts.py tests/test_aura_event_privacy_hardening.py
+          python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_event_privacy_hardening.py
+
+      - name: Commit hardened privacy gates
+        run: |
+          git config user.name "AuraOS Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_event_contracts.py tests/test_aura_event_privacy_hardening.py .github/workflows/p1-1-privacy-hardening.yml
+          git commit -m "fix(events): harden private reasoning and string redaction"
+          git push origin HEAD:refactor/relational-authority-p1-1
