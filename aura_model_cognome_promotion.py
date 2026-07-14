@@ -5,7 +5,7 @@ Outputs require verifier and human review and cannot mutate active routing.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 import math
 import time
 from typing import Any, Mapping

@@ -342,33 +342,62 @@ def evaluate_replay(cases: Iterable[ReplayCase], policy: ReplayPolicy) -> Replay
 def compare_replay_evaluations(candidate: ReplayEvaluation, baseline: ReplayEvaluation) -> dict[str, Any]:
     if candidate.measurement_mode != "REPLAY" or baseline.measurement_mode != "REPLAY":
         raise ValueError("only REPLAY evaluations can be compared")
-    candidate_cases = {item.case_id for item in candidate.case_results if item.status == "EVALUATED"}
-    baseline_cases = {item.case_id for item in baseline.case_results if item.status == "EVALUATED"}
-    common = candidate_cases & baseline_cases
+    candidate_map = {
+        item.case_id: item for item in candidate.case_results if item.status == "EVALUATED"
+    }
+    baseline_map = {
+        item.case_id: item for item in baseline.case_results if item.status == "EVALUATED"
+    }
+    common = sorted(set(candidate_map) & set(baseline_map))
     if not common:
         raise ValueError("replay evaluations have no common evaluated cases")
 
-    def delta(left: float | None, right: float | None) -> float | None:
-        return None if left is None or right is None else left - right
+    def summarize(values: dict[str, ReplayCaseResult]) -> dict[str, float | None]:
+        selected = [values[case_id] for case_id in common]
+        successes = [item.verified_success for item in selected if item.verified_success is not None]
+        return {
+            "verified_success_rate": (
+                sum(1 for value in successes if value) / len(successes) if successes else None
+            ),
+            "mean_cost_usd": _mean_known(item.cost_usd for item in selected),
+            "mean_time_to_verified_ms": _mean_known(item.time_to_verified_ms for item in selected),
+            "mean_repair_attempts": _mean_known(item.repair_attempts for item in selected),
+            "mean_scope_violation_count": _mean_known(
+                item.scope_violation_count for item in selected
+            ),
+        }
 
+    candidate_summary = summarize(candidate_map)
+    baseline_summary = summarize(baseline_map)
+
+    def delta(name: str) -> float | None:
+        left = candidate_summary[name]
+        right = baseline_summary[name]
+        return None if left is None or right is None else float(left) - float(right)
+
+    union_count = len(set(candidate_map) | set(baseline_map))
     result = {
         "comparison_id": stable_id(
             "replay-comparison",
             {
                 "candidate": candidate.evaluation_id,
                 "baseline": baseline.evaluation_id,
-                "common_cases": sorted(common),
+                "common_cases": common,
             },
         ),
         "measurement_mode": "REPLAY",
         "candidate_evaluation_id": candidate.evaluation_id,
         "baseline_evaluation_id": baseline.evaluation_id,
         "common_case_count": len(common),
-        "success_rate_delta": delta(candidate.verified_success_rate, baseline.verified_success_rate),
-        "mean_cost_delta_usd": delta(candidate.mean_cost_usd, baseline.mean_cost_usd),
-        "mean_time_delta_ms": delta(candidate.mean_time_to_verified_ms, baseline.mean_time_to_verified_ms),
-        "mean_repair_delta": delta(candidate.mean_repair_attempts, baseline.mean_repair_attempts),
-        "mean_scope_violation_delta": delta(candidate.mean_scope_violation_count, baseline.mean_scope_violation_count),
+        "evaluated_count": len(common),
+        "coverage": len(common) / union_count if union_count else 0.0,
+        "success_rate_delta": delta("verified_success_rate"),
+        "mean_cost_delta_usd": delta("mean_cost_usd"),
+        "mean_time_delta_ms": delta("mean_time_to_verified_ms"),
+        "mean_repair_delta": delta("mean_repair_attempts"),
+        "mean_scope_violation_delta": delta("mean_scope_violation_count"),
+        "candidate_common_summary": candidate_summary,
+        "baseline_common_summary": baseline_summary,
         "candidate_evidence_digest": candidate.evidence_digest,
         "baseline_evidence_digest": baseline.evidence_digest,
         "proposal_only": True,

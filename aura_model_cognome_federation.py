@@ -63,6 +63,7 @@ class FederationEnvelope:
             "recipient_scope": self.recipient_scope,
             "nonce": self.nonce,
             "payload_digest": self.payload_digest,
+            "signature_scheme": self.signature_scheme,
             "created_at": self.created_at,
             "expires_at": self.expires_at,
             "patch_authority": self.patch_authority,
@@ -122,6 +123,9 @@ def create_federation_envelope(
         raise ValueError("federated payload VSA authority is invalid")
     now = time.time() if created_at is None else float(created_at)
     digest = stable_digest(clean)
+    scheme = "UNSIGNED_LOCAL" if signer is None else str(signature_scheme)
+    if signer is not None and scheme == "UNSIGNED_LOCAL":
+        raise ValueError("signed envelopes cannot use UNSIGNED_LOCAL")
     basis = {
         "sender_id": sender_id,
         "recipient_scope": recipient_scope,
@@ -130,7 +134,7 @@ def create_federation_envelope(
         "created_at": now,
         "expires_at": now + ttl,
     }
-    envelope = FederationEnvelope(
+    provisional = FederationEnvelope(
         envelope_id=stable_id("federation-envelope", basis),
         sender_id=sender_id,
         recipient_scope=recipient_scope,
@@ -139,17 +143,17 @@ def create_federation_envelope(
         payload=clean,
         created_at=now,
         expires_at=now + ttl,
-        signature="",
-        signature_scheme="UNSIGNED_LOCAL" if signer is None else signature_scheme,
+        signature="" if signer is None else "PENDING_SIGNATURE",
+        signature_scheme=scheme,
     )
     if signer is None:
         if not allow_unsigned_local:
             raise ValueError("a signer is required unless allow_unsigned_local is explicit")
-        return envelope
-    signature = str(signer(envelope.signing_payload()))
+        return provisional
+    signature = str(signer(provisional.signing_payload()))
     if not signature:
         raise ValueError("signer returned an empty signature")
-    return FederationEnvelope(**{**asdict(envelope), "signature": signature, "signature_scheme": signature_scheme})
+    return FederationEnvelope(**{**asdict(provisional), "signature": signature})
 
 
 def validate_federation_envelope(
@@ -162,7 +166,26 @@ def validate_federation_envelope(
     allow_unsigned_local: bool = False,
     now: float | None = None,
 ) -> dict[str, Any]:
-    packet = envelope if isinstance(envelope, FederationEnvelope) else FederationEnvelope.from_mapping(envelope)
+    try:
+        packet = (
+            envelope
+            if isinstance(envelope, FederationEnvelope)
+            else FederationEnvelope.from_mapping(envelope)
+        )
+    except (TypeError, ValueError) as exc:
+        message = str(exc)
+        code = "payload_digest_mismatch" if "payload digest" in message else "envelope_invalid"
+        result = {
+            "ok": False,
+            "errors": [code],
+            "error_detail": message,
+            "proposal_only": True,
+            "automatic_import": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        result["validation_digest"] = stable_digest(result)
+        return result
     errors: list[str] = []
     allowed = {str(item) for item in allowed_senders}
     if packet.sender_id not in allowed:

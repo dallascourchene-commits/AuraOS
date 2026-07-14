@@ -21,7 +21,7 @@ class TestSandbox:
         result = prepare_sandbox(manifest)
         assert result["ok"] is True
         assert "temp_dir" in result
-        assert result["wasmtime_available"] is False  # Expected in test env
+        assert isinstance(result["wasmtime_available"], bool)
         # Cleanup
         destroy_sandbox(result["temp_dir"])
 

@@ -221,20 +221,25 @@ def test_amd_demo_fake_symbol_blocks_mutation() -> None:
     assert "stage_action_capsule" in forbidden
 
 
-def test_hardware_profile_router_never_claims_execution_without_backend() -> None:
-    """Ensures recommendation status is recommended when a backend is missing."""
-    # Force system environment to simulate no ROCm/NPU
-    os_environ_backup = os.environ.copy()
-    if "PATH" in os.environ:
-        os.environ["PATH"] = ""  # Clear path to prevent local heuristics from matching ROCm
-        
-    profile = AuraHardwareProfileRouter.assign_profile_to_node("symbol", complex_matrix_operations=True)
-    if profile.preferred_device in ("GPU", "NPU"):
-        # Since path is empty and no files exist, backend is unavailable -> status should be recommended
-        assert profile.execution_status == "recommended"
-        
-    os.environ.clear()
-    os.environ.update(os_environ_backup)
+def test_hardware_profile_router_never_claims_execution_without_backend(monkeypatch) -> None:
+    """CPU-only capability evidence must produce an honest CPU fallback."""
+    monkeypatch.setattr(
+        AuraHardwareProfileRouter,
+        "probe_capabilities",
+        staticmethod(lambda: {
+            "available_devices": ["CPU"],
+            "rocm_available": False,
+            "npu_backend_available": False,
+            "gpu_memory_mb": 0,
+            "cpu_threads": 1,
+        }),
+    )
+    profile = AuraHardwareProfileRouter.assign_profile_to_node(
+        "symbol", complex_matrix_operations=True
+    )
+    assert profile.preferred_device == "CPU"
+    assert profile.execution_status == "executed"
+    assert "No local accelerator backend detected" in profile.reason
 
 
 def test_provider_registry_health_check_redacts_keys() -> None:

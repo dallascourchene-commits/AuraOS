@@ -83,10 +83,11 @@ def test_failed_live_architect_preserves_reviewable_worker_output(tmp_path: Path
     attempt = transaction.patch_quality["attempts"][0]
     assert attempt["raw_model_response"] == worker_diff
     assert attempt["extracted_diff"] == worker_diff
-    assert attempt["repair"]["candidate_diff"] == worker_diff.strip()
+    assert attempt["preflight"]["ok"] is True
+    assert attempt["repair"] is None
     assert attempt["builder_context"]["target_file"] == "demo.py"
 
     saved = json.loads(staging_path.read_text(encoding="utf-8"))
     saved_attempt = saved["patch_quality"]["review_artifacts"][0]
     assert saved_attempt["raw_model_response"] == worker_diff
-    assert saved_attempt["repair"]["candidate_diff"] == worker_diff.strip()
+    assert saved_attempt["repair"] is None

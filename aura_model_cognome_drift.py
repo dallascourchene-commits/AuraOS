@@ -255,6 +255,8 @@ def assess_drift(
         raise ValueError("all probe results must belong to one profile")
     reference_ids = {item.probe_id for item in reference}
     current_ids = {item.probe_id for item in current}
+    if len(reference_ids) != len(reference) or len(current_ids) != len(current):
+        raise ValueError("probe batches cannot contain duplicate probe IDs")
     if reference_ids != current_ids:
         raise ValueError("reference and current probe suites must contain the same probe IDs")
     reference_fingerprints = {item.endpoint_fingerprint for item in reference}

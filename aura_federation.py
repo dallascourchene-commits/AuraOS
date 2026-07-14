@@ -161,6 +161,7 @@ class AuraFederation:
             signature=signature,
             verifier_result=dict(verifier_result or {}),
             phase_hash=phase_hash,
+            ts=payload["ts"],
         )
         self._exported.append(fed)
         self._record("federation_export", fed.capsule_id, origin=self.origin_node, success=True)

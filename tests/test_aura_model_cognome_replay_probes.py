@@ -315,6 +315,7 @@ def test_promotion_requires_independent_replay_and_shadow_evidence() -> None:
         baseline_policy_id="baseline",
         replay_evidence=promotion_evidence("REPLAY", "replay-digest"),
         shadow_evidence=promotion_evidence("SHADOW", "shadow-digest"),
+        policy=RoutePromotionPolicy(),
         created_at=1.0,
     )
     assert decision.status == PROMOTION_PROPOSED
