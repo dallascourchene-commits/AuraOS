@@ -35,8 +35,8 @@ Calibration and routing themselves are deterministic.
 Run:
     python3 aura_router.py calibrate                 # calibrate working providers
     python3 aura_router.py calibrate --mock          # offline
-    python3 aura_router.py route --task mesh_offload  # auto-optimal routing
-    python3 aura_router.py route --task mesh_offload --model sambanova   # force model
+    python3 aura_router.py route --task mesh_offload  # legacy default
+    python3 aura_router.py route --task mesh_offload --routing-mode shadow --purpose-digest PURPOSE
     python3 aura_router.py fusion --task "Analyze this architecture" --mock
     python3 aura_router.py status                    # best per task from the ledger
     python3 aura_router.py savings                   # savings metrics
@@ -206,7 +206,6 @@ def calibrate(task_key: str, providers: list[str], styles: list[str],
     ledger = ledger or CalibrationLedger(LEDGER_PATH)
     results = run_matrix(task_key, providers, styles, mock,
                          trials=trials, output_modes=output_modes, delay=delay)
-    # tag rows with task_type so the ledger is per-task
     task_type = TASKS[task_key].task_type
     for r in results["rows"]:
         r.setdefault("task_type", task_type)
@@ -233,9 +232,8 @@ class AutoRouter:
     def _available(self, mock: bool, forced: str | None) -> list[str]:
         if mock:
             return ["mock"]
-        pool = usable_providers(prefer_working=False)  # working + configured (have keys)
+        pool = usable_providers(prefer_working=False)
         if forced and forced.lower() not in pool:
-            # forced model has no usable key — still surface it so we can warn
             pool = [forced.lower(), *pool]
         return pool
 
@@ -252,14 +250,29 @@ class AutoRouter:
         est_cost = round(sum(costs) / len(costs), 6) if costs else None
         return raw_in, est_out, est_cost
 
-    # Safety-critical checks that must pass to accept a patch (vs. nice-to-have).
     _SAFETY_CHECKS = ("parses_ok", "no_fake_files", "no_forbidden_deps")
 
     def route(self, task_key: str, forced_model: str | None = None,
               mock: bool = False, max_fallbacks: int = 4, aspect: str = "refactor",
-              max_retries: int = 1) -> dict:
+              max_retries: int = 1, routing_mode: str | None = None,
+              purpose_digest: str = "", authorization=None,
+              data_egress_allowed: bool = False) -> dict:
         if task_key not in TASKS:
             raise SystemExit(f"Unknown task '{task_key}'. Known: {list(TASKS)}")
+        from aura_router_adaptive_compat import LEGACY, resolve_mode, route_test_case
+
+        mode = resolve_mode(routing_mode)
+        if mode != LEGACY:
+            return route_test_case(
+                self,
+                TASKS[task_key],
+                routing_mode=mode,
+                purpose_digest=purpose_digest,
+                authorization=authorization,
+                forced_model=forced_model,
+                data_egress_allowed=data_egress_allowed,
+                mock=mock,
+            )
         return self.route_task(TASKS[task_key], forced_model=forced_model, mock=mock,
                                max_fallbacks=max_fallbacks, aspect=aspect,
                                max_retries=max_retries)
@@ -267,13 +280,7 @@ class AutoRouter:
     def route_task(self, task, forced_model: str | None = None, mock: bool = False,
                    max_fallbacks: int = 4, aspect: str = "refactor",
                    max_retries: int = 1) -> dict:
-        """Route any TestCase to the best-available model with a sanitize+retry loop.
-
-        On a verification failure the patch is ASCII-sanitized (deterministic);
-        if a safety check still fails, the verifier error is fed back to the model
-        and the call is retried (up to max_retries) before falling back to the
-        next-best provider.
-        """
+        """Route any TestCase to the best-available model with a sanitize+retry loop."""
         available = self._available(mock, forced_model)
         candidates = self.ledger.best_candidates(task.task_type, available,
                                                  prefer_model=forced_model)
@@ -302,7 +309,6 @@ class AutoRouter:
                     pkg.prompt + "\n[CORRECTION]\n" + correction +
                     "\nEmit ASCII only (no smart quotes or em-dashes).\n")
                 ain = estimate_tokens(prompt)
-                # Wire savings context into the egress so every call is logged
                 egress._task = task.key
                 egress._aspect = aspect
                 egress._baseline_prompt = raw_in
@@ -314,7 +320,7 @@ class AutoRouter:
                                   "output_mode": cand["output_mode"], "error": err or "empty"})
                     print(f"[fallback] {cand['provider']}/{cand['style']}/{cand['output_mode']}: "
                           f"{err or 'empty'}")
-                    break  # provider error -> next candidate
+                    break
 
                 clean, _repl = sanitize_code(text)
                 q = scorer.score(clean, task_v)
@@ -350,9 +356,26 @@ class AutoRouter:
                 "reason": "all candidates failed (no key / rate-limited / error)"}
 
     def route_fusion_task(self, task_text: str, *, target_file: str | None = None,
-                          target_symbol: str | None = None, output_mode: str = "TEXT",
-                          mock: bool = False) -> dict:
-        """Run AuraFusion as an explicit router mode without replacing route_task."""
+                           target_symbol: str | None = None, output_mode: str = "TEXT",
+                           mock: bool = False, routing_mode: str | None = None,
+                           purpose_digest: str = "", authorization=None,
+                           data_egress_allowed: bool = False) -> dict:
+        """Run legacy AuraFusion or an explicit Cognome-governed panel route."""
+        from aura_router_adaptive_compat import LEGACY, resolve_mode, route_fusion_text
+
+        mode = resolve_mode(routing_mode)
+        if mode != LEGACY:
+            return route_fusion_text(
+                self,
+                task_text,
+                routing_mode=mode,
+                purpose_digest=purpose_digest,
+                authorization=authorization,
+                target_file=target_file,
+                target_symbol=target_symbol,
+                data_egress_allowed=data_egress_allowed,
+                mock=mock,
+            )
         from aura_fusion import AuraFusionCoordinator
 
         coordinator = AuraFusionCoordinator(repo_root=self.root, mock=mock)
@@ -489,7 +512,6 @@ def savings_report(ledger: CalibrationLedger | None = None,
         if row.get("baseline_cost_usd") is not None or row.get("cost_saved_usd") is not None:
             db_counted += 1
 
-    # Projected per-task savings if every task_type were routed to its best cell.
     projection: dict[str, dict] = {}
     by_type: dict[str, list[dict]] = {}
     for r in ledger.latest():
@@ -543,6 +565,14 @@ def _egress_factory(mock: bool):
     return lambda p: ExternalLLM(provider=p)
 
 
+def _adaptive_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--routing-mode", default=None,
+                        help="LEGACY (default), SHADOW, or authorization-bound PAIRED_LIVE")
+    parser.add_argument("--purpose-digest", default="")
+    parser.add_argument("--authorization-file", default=None)
+    parser.add_argument("--allow-data-egress", action="store_true")
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Aura auto-router (calibrate + optimal routing)")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -559,8 +589,9 @@ def main(argv: list[str] | None = None) -> int:
 
     pr = sub.add_parser("route", help="route a task to the most optimal (or forced) model")
     pr.add_argument("--task", default="mesh_offload")
-    pr.add_argument("--model", default=None, help="force a specific model (reorders priority)")
+    pr.add_argument("--model", default=None, help="force a model only after adaptive hard admission")
     pr.add_argument("--mock", action="store_true")
+    _adaptive_arguments(pr)
 
     pf = sub.add_parser("fusion", help="run native AuraFusion panel + judge deliberation")
     pf.add_argument("--task", required=True, help="freeform task text")
@@ -568,6 +599,7 @@ def main(argv: list[str] | None = None) -> int:
     pf.add_argument("--target-symbol", default=None)
     pf.add_argument("--output-mode", default="TEXT")
     pf.add_argument("--mock", action="store_true")
+    _adaptive_arguments(pf)
 
     sub.add_parser("status", help="show best calibrated protocol per task type")
     sub.add_parser("savings", help="show cumulative + projected savings")
@@ -607,7 +639,30 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "route":
         router = AutoRouter(egress_factory=_egress_factory(args.mock))
-        res = router.route(args.task, forced_model=args.model, mock=args.mock)
+        res = router.route(
+            args.task,
+            forced_model=args.model,
+            mock=args.mock,
+            routing_mode=args.routing_mode,
+            purpose_digest=args.purpose_digest,
+            authorization=args.authorization_file,
+            data_egress_allowed=args.allow_data_egress,
+        )
+        if res.get("router_mode"):
+            if not res.get("ok"):
+                print("[-] adaptive routing denied: " + "; ".join(res.get("denial_reasons", [])))
+                return 1
+            option = res.get("selected_option", {})
+            print(f"[+] adaptive {res['router_mode']} policy={option.get('policy_mode')} "
+                  f"profiles={option.get('profile_ids', [])}")
+            if res.get("executed"):
+                print(f"    verified={res.get('verified')} calls={len(res.get('calls', []))}")
+                if res.get("artifact"):
+                    print("\n--- expanded artifact ---")
+                    print(res["artifact"][:1500])
+            else:
+                print(json.dumps(res.get("explanation", {}), indent=2, sort_keys=True))
+            return 0
         if not res["ok"]:
             print(f"[-] routing failed: {res['reason']}")
             for t in res["tried"]:
@@ -634,7 +689,24 @@ def main(argv: list[str] | None = None) -> int:
             target_symbol=args.target_symbol,
             output_mode=args.output_mode,
             mock=args.mock,
+            routing_mode=args.routing_mode,
+            purpose_digest=args.purpose_digest,
+            authorization=args.authorization_file,
+            data_egress_allowed=args.allow_data_egress,
         )
+        if res.get("router_mode"):
+            if not res.get("ok"):
+                print("[-] adaptive Fusion denied: " + "; ".join(res.get("denial_reasons", [])))
+                return 1
+            panel_result = res.get("panel_result", {})
+            option = res.get("selected_option", {})
+            print(f"[+] adaptive {res['router_mode']} policy={option.get('policy_mode')} "
+                  f"profiles={option.get('profile_ids', [])}")
+            if panel_result:
+                print(panel_result.get("final_answer", ""))
+            else:
+                print(json.dumps(res.get("explanation", {}), indent=2, sort_keys=True))
+            return 0
         status_label = "[+]" if res.get("ok") else "[-]"
         print(f"{status_label} AuraFusion phase={res.get('phase_hash')} "
               f"panel={res.get('metrics', {}).get('panel_count', 0)}")
