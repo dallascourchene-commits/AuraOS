@@ -50,7 +50,24 @@ jobs:
             pytest pytest-asyncio ruff
 
       - name: Apply canonical P1.1 changes
-        run: python scripts/p1_1_finalize.py
+        id: apply_changes
+        continue-on-error: true
+        run: python scripts/p1_1_finalize.py > p1-1-finalizer.log 2>&1
+
+      - name: Upload finalizer diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-1-finalizer-${{ github.run_id }}
+          path: p1-1-finalizer.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce finalizer result
+        if: steps.apply_changes.outcome != 'success'
+        run: |
+          cat p1-1-finalizer.log
+          exit 1
 
       - name: Validate focused contracts
         run: |
@@ -79,6 +96,7 @@ jobs:
         run: |
           rm -rf .p1_payload
           rm -f scripts/p1_1_finalize.py
+          rm -f p1-1-finalizer.log
           rm -f .github/workflows/p1-1-bootstrap.yml
 
       - name: Regenerate navigation artifacts
