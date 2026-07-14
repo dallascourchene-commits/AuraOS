@@ -27,6 +27,7 @@ def test_tool_decision_is_bounded_hashed_and_redacts_secrets() -> None:
         tool_input={"path": "aura.py", "api_key": "sk-abcdefghijklmnopqrstuvwxyz"},
         alternatives_considered=("semantic-only lookup",),
         confidence_estimate=0.9,
+        confidence_measurement_class=MeasurementClass.DERIVED,
         expected_latency_ms=10,
         created_at=10.0,
     )
@@ -34,6 +35,7 @@ def test_tool_decision_is_bounded_hashed_and_redacts_secrets() -> None:
     assert decision.decision_id.startswith("tool-decision_")
     assert "sk-abcdefghijklmnopqrstuvwxyz" not in encoded
     assert decision.tool_input_digest
+    assert decision.confidence_measurement_class == "DERIVED"
 
 
 def test_private_chain_of_thought_fields_are_rejected() -> None:
@@ -58,6 +60,17 @@ def test_confidence_and_alternative_limits_fail_closed() -> None:
             expected_information="data",
             tool_input={},
             confidence_estimate=1.1,
+            confidence_measurement_class=MeasurementClass.DERIVED,
+        )
+    with pytest.raises(ValueError, match="measurement_class"):
+        ToolDecisionRecord.create(
+            trace_id="trace-1",
+            tool_id="tool",
+            decision_kind="SELECT",
+            decision_rationale="reason",
+            expected_information="data",
+            tool_input={},
+            confidence_estimate=0.5,
         )
     with pytest.raises(ValueError, match="capped"):
         ToolDecisionRecord.create(
@@ -113,6 +126,14 @@ def test_tool_result_hashes_sanitized_output_and_validates_time() -> None:
     )
     assert result.status == "SUCCEEDED"
     assert result.output_digest
+    assert result.output_digest == ToolResultRecord.create(
+        decision_id="decision",
+        tool_id="tool",
+        status="succeeded",
+        output={"password": "different-secret", "value": 3},
+        started_at=10,
+        finished_at=11,
+    ).output_digest
     with pytest.raises(ValueError, match="finished_at"):
         ToolResultRecord.create(
             decision_id="decision",
