@@ -54,20 +54,16 @@ jobs:
             tests/test_aura_workflow_gates.py \
             tests/test_p1_1_adversarial_review.py
 
-      - name: Restore permanent workflows and commit repairs
+      - name: Commit reviewed source and regression tests
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git show 4c417883c87797af04dcce64d1e0145423d89ecd:.github/workflows/p1-1-authority-contracts.yml \
-            > .github/workflows/p1-1-authority-contracts.yml
-          git rm \
-            .github/workflows/p1-1-adversarial-review-fixes.yml \
-            .github/workflows/p1-1-review-repair-v2.yml \
-            .github/scripts/p1_1_review_repair.py
-
-          git add -A
+          git add \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_workflow_gates.py \
+            tests/test_p1_1_adversarial_review.py
           git commit -m "fix(governance): close adversarial authority bypasses"
           git fetch origin refactor/relational-authority-p1-1
           git rebase origin/refactor/relational-authority-p1-1
