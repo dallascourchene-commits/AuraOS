@@ -1,0 +1,124 @@
+--- a/aura_planning_board.py
++++ b/aura_planning_board.py
+@@ -542,7 +542,11 @@ def action_spec_from_goal_action(action: Any) -> ActionSpec:
+         name=name,
+         domain=domain,
+         preconditions=tuple(
+-            PredicateSpec(str(key), value)
++            PredicateSpec(
++                str(key),
++                value,
++                PredicateOperator.IN if isinstance(value, (set, tuple, list)) else PredicateOperator.EQ,
++            )
+             for key, value in sorted(preconditions.items(), key=lambda item: str(item[0]))
+         ),
+         effects=tuple(
+@@ -673,6 +677,22 @@ def verify_board_continuity(
+                 "no exact reference proves current constraints are satisfiable",
+                 action.action_id,
+             )
++        constrained = set(() if item is None else item.constrained_evidence_refs)
++        required_constraint_refs = {
++            reference
++            for constraint in (*board.goal.constraints, *action.constraints)
++            if constraint.blocking
++            for reference in constraint.evidence_refs
++        }
++        unresolved_constraints = required_constraint_refs - constrained
++        if unresolved_constraints:
++            _finding(
++                findings,
++                BoardContinuityLevel.BC2_CONSTRAINED,
++                "UNRESOLVED_CONSTRAINT_REFERENCE",
++                f"declared constraint refs were not resolved: {sorted(unresolved_constraints)}",
++                action.action_id,
++            )
+         if action.reversibility is ReversibilityClass.UNSPECIFIED:
+             _finding(
+                 findings,
+--- a/tests/test_aura_planning_board.py
++++ b/tests/test_aura_planning_board.py
+@@ -9,12 +9,15 @@ from aura_planning_board import (
+     ActionSpec,
+     AuthorityRequirement,
+     BoardContinuityLevel,
++    ConstraintKind,
++    ConstraintSpec,
+     EffectSpec,
+     PlanningBoard,
+     PortCardinality,
+     PortDirection,
+     PortSpec,
++    PredicateOperator,
+     PredicateSpec,
+     ResourceDemand,
+     RetryPolicy,
+@@ -221,6 +224,15 @@ def test_goap_adapter_preserves_proposal_semantics_without_inventing_authority()
+     assert action.proposal_only is True
+ 
+ 
++def test_goap_adapter_preserves_membership_precondition_semantics() -> None:
++    legacy = LegacyGoalAction()
++    legacy.preconditions = {"mode": ("safe", "dry_run")}
++    action = action_spec_from_goal_action(legacy)
++    assert action.preconditions[0].fact == "mode"
++    assert action.preconditions[0].expected == ("safe", "dry_run")
++    assert action.preconditions[0].operator is PredicateOperator.IN
++
++
+ def test_goal_plan_shadow_projection_is_stable_and_non_authoritative() -> None:
+     plan = LegacyGoalPlan(
+         goal="create verified patch",
+@@ -316,3 +328,45 @@ def test_declared_grounding_refs_must_be_resolved_by_evidence_projection() -> None:
+     assert "UNRESOLVED_GROUNDING_REFERENCE" in {
+         item.code for item in report.findings
+     }
++
++
++def test_declared_blocking_constraint_refs_must_be_resolved() -> None:
++    base = _complete_action()
++    action = ActionSpec(
++        **{
++            **base.__dict__,
++            "constraints": (
++                ConstraintSpec(
++                    constraint_id="budget-check",
++                    kind=ConstraintKind.BUDGET,
++                    description="Budget must be available",
++                    evidence_refs=("budget:available",),
++                ),
++            ),
++        }
++    )
++    board = _board(action)
++    report = verify_board_continuity(
++        board,
++        evidence=(
++            ActionContinuityEvidence(
++                action_id="action-1",
++                constrained_evidence_refs=("unrelated-check",),
++                grounded_evidence_refs=("sidecar:source:abc",),
++                authority_decision_ids=("decision:1",),
++                verifier_receipts=(VerifierReceiptEvidence("pytest", "receipt:1"),),
++            ),
++        ),
++    )
++    assert BoardContinuityLevel.BC2_CONSTRAINED not in report.passed_levels
++    assert "UNRESOLVED_CONSTRAINT_REFERENCE" in {
++        finding.code for finding in report.findings
++    }
++
++
++def test_nonblocking_constraint_refs_do_not_block_bc2() -> None:
++    base = _complete_action()
++    action = ActionSpec(
++        **{
++            **base.__dict__,
++            "constraints": (
++                ConstraintSpec("advisory", ConstraintKind.DOMAIN, "Advisory", ("advisory:1",), False),
++            ),
++        }
++    )
++    board = _board(action)
++    report = verify_board_continuity(board, evidence=(ActionContinuityEvidence("action-1", ("check:1",)),))
++    assert "UNRESOLVED_CONSTRAINT_REFERENCE" not in {finding.code for finding in report.findings}
