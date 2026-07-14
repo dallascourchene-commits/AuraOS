@@ -177,6 +177,19 @@ def _effect_satisfies(action: ActionSpec, predicate: PredicateSpec) -> bool:
     return False
 
 
+def _action_conflicts(
+    action: ActionSpec,
+    predicates: Sequence[PredicateSpec],
+) -> bool:
+    """Return True when an action overwrites a still-protected requirement."""
+
+    for effect in action.effects:
+        for predicate in predicates:
+            if effect.fact == predicate.fact and not _effect_satisfies(action, predicate):
+                return True
+    return False
+
+
 def _predicate_key(predicate: PredicateSpec) -> str:
     return canonical_json(predicate)
 
@@ -236,17 +249,21 @@ def regress_board_goal(
             explored_nodes=1,
         )
 
-    queue: list[tuple[tuple[PredicateSpec, ...], tuple[str, ...]]] = [(initial_open, ())]
-    visited: set[tuple[tuple[str, ...], tuple[str, ...]]] = set()
+    initial_protected = _dedupe_predicates(board.goal.desired_state)
+    queue: list[
+        tuple[tuple[PredicateSpec, ...], tuple[PredicateSpec, ...], tuple[str, ...]]
+    ] = [(initial_open, initial_protected, ())]
+    visited: set[tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]] = set()
     candidates: list[RegressionCandidate] = []
     findings: list[RegressionFinding] = []
     explored_nodes = 0
     candidate_limit_reported = False
 
     while queue and explored_nodes < max_explored_nodes:
-        open_predicates, selected_reversed = queue.pop(0)
+        open_predicates, protected_predicates, selected_reversed = queue.pop(0)
         state_key = (
             tuple(_predicate_key(item) for item in open_predicates),
+            tuple(_predicate_key(item) for item in protected_predicates),
             selected_reversed,
         )
         if state_key in visited:
@@ -262,7 +279,15 @@ def regress_board_goal(
             continue
 
         target = open_predicates[0]
-        producers = tuple(action for action in actions if _effect_satisfies(action, target))
+        protected_requirements = _dedupe_predicates(
+            (*open_predicates, *protected_predicates)
+        )
+        producers = tuple(
+            action
+            for action in actions
+            if _effect_satisfies(action, target)
+            and not _action_conflicts(action, protected_requirements)
+        )
         if not producers:
             candidates.append(
                 RegressionCandidate(
@@ -315,9 +340,22 @@ def regress_board_goal(
                     )
                 )
                 continue
-            remaining = open_predicates[1:]
+            remaining = tuple(
+                predicate
+                for predicate in open_predicates
+                if not _effect_satisfies(action, predicate)
+            )
+            protected_after = _dedupe_predicates(
+                tuple(
+                    predicate
+                    for predicate in protected_predicates
+                    if not _effect_satisfies(action, predicate)
+                )
+            )
             regressed = _open_predicates((*remaining, *action.preconditions), initial_state)
-            queue.append((regressed, (*selected_reversed, action.action_id)))
+            queue.append(
+                (regressed, protected_after, (*selected_reversed, action.action_id))
+            )
             expanded = True
         if not expanded:
             candidates.append(
@@ -337,7 +375,7 @@ def regress_board_goal(
                 RegressionFindingCode.DEPTH_LIMIT,
                 target.fact,
                 "maximum explored-node budget reached",
-                tuple(reversed(queue[0][1])),
+                tuple(reversed(queue[0][2])),
             )
         )
     if candidate_limit_reported:
