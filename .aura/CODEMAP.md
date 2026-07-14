@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 804
-- **total_bytes**: 63046294
-- **text_tokens_est**: 6365503
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 563, 'schema_or_lexicon': 61, 'support_file': 41}
-- **topology_nodes**: 7019
-- **topology_edges**: 14526
+- **file_count**: 808
+- **total_bytes**: 63160170
+- **text_tokens_est**: 6393972
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 567, 'schema_or_lexicon': 61, 'support_file': 41}
+- **topology_nodes**: 7062
+- **topology_edges**: 14592
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 21603.51
+- **elapsed_ms**: 19050.68
 
 ## Coverage
 
-- **included_file_count**: 804
+- **included_file_count**: 808
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=48, `.ruff_cache`=4, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=48, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -205,7 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 664 more; query CODEMAP.json for exact file cards
+- ... 668 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7019
-- **edges**: 14526
+- **nodes**: 7062
+- **edges**: 14592
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
@@ -249,6 +249,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AccountState` -> `aura_blockchain/node.py:27`
 - `ActCapsule` -> `aura_architect_loop.py:84`
 - `ActionCapsule` -> `aura_liquid_planning_arena.py:112`
+- `ActorType` -> `aura_event_contracts.py:93`
 - `AdapterMetadata` -> `aura_ephemeral_adapter_registry.py:19`
 - `AdaptiveFusionPanelExecutor` -> `aura_adaptive_fusion.py:77`
 - `AdaptiveLiquidTimeConstant` -> `liquid_kernel.py:60`, `liquid_math_reference.py:39`
@@ -258,6 +259,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AgentIRNode` -> `aura_agent_ir.py:37`
 - `AnimacyClass` -> `aura_ojibwe_morph_bridge.py:84`
 - `AnthropicRouter` -> `aura_anthropic_router.py:268`
+- `AppendOnlyEventStore` -> `aura_event_contracts.py:585`
 - `ArXivForager` -> `arxiv_forager.py:84`
 - `ArchitectBuilderBridge` -> `aura_live_architect.py:1370`
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:140`
@@ -312,6 +314,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraDependencyScanner` -> `aura_node.py:1105`
 - `AuraDreamEngine` -> `aura_dream_engine.py:55`
 - `AuraEpistemicIngestGateway` -> `aura_epistemic_ingest.py:27`
+- `AuraEventEnvelope` -> `aura_event_contracts.py:333`
 - `AuraFederation` -> `aura_federation.py:100`
 - `AuraFusionAgent` -> `aura_fusion.py:89`
 - `AuraFusionCoordinator` -> `aura_fusion.py:481`
@@ -320,6 +323,3 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraGraftOrchestrator` -> `liquid_attractor_control_plane.py:725`
 - `AuraGraphRetrievalPolicy` -> `aura_graph_retrieval_policy.py:17`
 - `AuraHardwareProfileRouter` -> `aura_hardware_profile_router.py:17`
-- `AuraHolographicManifest` -> `aura_holographic_manifest.py:25`
-- `AuraHyperdimensionalCore` -> `aura_core.py:217`, `aura_node.py:928`
-- `AuraHyperdimensionalProbeBridge` -> `aura_hyperdimensional_probe_bridge.py:17`
