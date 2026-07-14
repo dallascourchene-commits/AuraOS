@@ -27,91 +27,8 @@ jobs:
         run: |
           python tools/pr92_review_repair.py
           python tools/pr92_review_postprocess.py
-      - name: Restore permanent read-only adaptive CI definition
-        run: |
-          cat > .github/workflows/model-cognome-adaptive-router.yml <<'YAML'
-          name: Model Cognome Adaptive Router
-
-          on:
-            pull_request:
-              paths:
-                - "aura_ai_router.py"
-                - "aura_router.py"
-                - "aura_router_adaptive_compat.py"
-                - "aura_adaptive_model_router.py"
-                - "aura_adaptive_model_executor.py"
-                - "aura_adaptive_fusion.py"
-                - "aura_model_cognome_execution_auth.py"
-                - "aura_model_cognome_store_io.py"
-                - "tests/test_aura_ai_router_dynamic.py"
-                - "tests/test_aura_adaptive_planner.py"
-                - "tests/test_aura_adaptive_execution.py"
-                - "tests/test_aura_adaptive_security.py"
-                - "tests/test_aura_adaptive_fusion_schema.py"
-                - ".github/workflows/model-cognome-adaptive-router.yml"
-            workflow_dispatch:
-
-          permissions:
-            contents: read
-
-          jobs:
-            adaptive-router:
-              name: Adaptive router contracts (Python ${{ matrix.python-version }})
-              runs-on: ubuntu-latest
-              timeout-minutes: 40
-              strategy:
-                fail-fast: false
-                matrix:
-                  python-version: ["3.10", "3.12"]
-              steps:
-                - uses: actions/checkout@v4
-                  with:
-                    ref: ${{ github.event.pull_request.head.ref || github.ref }}
-                - uses: actions/setup-python@v5
-                  with:
-                    python-version: ${{ matrix.python-version }}
-                - name: Install tooling and declared runtime dependency
-                  run: python -m pip install pytest ruff "numpy>=1.26.4,<3.0"
-                - name: Compile adaptive compatibility surfaces
-                  run: |
-                    python -m py_compile \
-                      aura_ai_router.py \
-                      aura_router.py \
-                      aura_router_adaptive_compat.py \
-                      aura_adaptive_model_router.py \
-                      aura_adaptive_model_executor.py \
-                      aura_adaptive_fusion.py \
-                      aura_model_cognome_execution_auth.py \
-                      aura_model_cognome_store_io.py
-                - name: Fatal lint checks
-                  run: |
-                    ruff check --select E9,F63,F7,F82 \
-                      aura_ai_router.py \
-                      aura_router.py \
-                      aura_router_adaptive_compat.py \
-                      aura_adaptive_model_router.py \
-                      aura_adaptive_model_executor.py \
-                      aura_adaptive_fusion.py \
-                      aura_model_cognome_execution_auth.py \
-                      aura_model_cognome_store_io.py \
-                      tests/test_aura_ai_router_dynamic.py \
-                      tests/test_aura_adaptive_planner.py \
-                      tests/test_aura_adaptive_execution.py \
-                      tests/test_aura_adaptive_security.py \
-                      tests/test_aura_adaptive_fusion_schema.py
-                - name: Validate public CLI compatibility
-                  run: |
-                    python aura_router.py route --help
-                    python aura_router.py fusion --help
-                - name: Run adaptive routing contracts
-                  run: |
-                    python -m pytest -q \
-                      tests/test_aura_ai_router_dynamic.py \
-                      tests/test_aura_adaptive_planner.py \
-                      tests/test_aura_adaptive_execution.py \
-                      tests/test_aura_adaptive_security.py \
-                      tests/test_aura_adaptive_fusion_schema.py
-          YAML
+          cp tools/model-cognome-adaptive-router.permanent.yml \
+            .github/workflows/model-cognome-adaptive-router.yml
       - name: Install declared dependencies and test tooling
         run: |
           python -m pip install --upgrade pip
@@ -153,8 +70,31 @@ jobs:
             tests/test_aura_adaptive_execution.py \
             tests/test_aura_adaptive_security.py \
             tests/test_aura_adaptive_fusion_schema.py
-      - name: Run complete pytest-native suite
-        run: python -m pytest -q
+      - name: Run complete pytest-native suite with retained diagnostics
+        id: full_pytest
+        continue-on-error: true
+        run: |
+          set +e
+          python -m pytest -q \
+            --junitxml=/tmp/pr92-full-pytest.xml \
+            > /tmp/pr92-full-pytest.log 2>&1
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload full-suite diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr92-full-pytest-${{ github.run_id }}
+          retention-days: 3
+          path: |
+            /tmp/pr92-full-pytest.log
+            /tmp/pr92-full-pytest.xml
+      - name: Enforce complete pytest-native suite
+        if: steps.full_pytest.outputs.exit_code != '0'
+        run: |
+          cat /tmp/pr92-full-pytest.log
+          exit 1
       - name: Regenerate and verify stable topology
         run: |
           set -euo pipefail
