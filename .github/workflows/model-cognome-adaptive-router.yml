@@ -21,12 +21,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Apply reviewed source, legacy, and documentation repairs
+      - name: Apply reviewed adaptive-router source repairs
+        run: python tools/pr92_review_repair.py
+      - name: Apply reviewed adaptive-router postprocessing
+        run: python tools/pr92_review_postprocess.py
+      - name: Fix legacy dynamic-import policy violation
+        run: python -c "import tools.pr92_closeout as c; c.fix_dynamic_import()"
+      - name: Make mesh benchmark fixtures symbol-relative
+        run: python -c "import tools.pr92_closeout as c; c.fix_symbol_relative_mesh_fixture()"
+      - name: Refresh README architecture summary
+        run: python -c "import tools.pr92_closeout as c; c.update_readme()"
+      - name: Refresh canonical architecture anchor
+        run: python -c "import tools.pr92_closeout as c; c.update_architecture()"
+      - name: Refresh operator user guide
+        run: python -c "import tools.pr92_closeout as c; c.update_user_guide()"
+      - name: Install permanent workflow and remove closeout helpers
         run: |
           set -euo pipefail
-          python tools/pr92_review_repair.py
-          python tools/pr92_review_postprocess.py
-          python tools/pr92_closeout.py
           cp tools/model-cognome-adaptive-router.permanent.yml \
             .github/workflows/model-cognome-adaptive-router.yml
           rm -f \
