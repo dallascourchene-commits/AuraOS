@@ -1,0 +1,507 @@
+from __future__ import annotations
+
+from dataclasses import replace
+
+import pytest
+
+from aura_relational_authority import (
+    ApprovalAttestation,
+    AttestationDecision,
+    AuthorityGrant,
+    ChainedAuthorityReceipt,
+    GENESIS_CHAIN_DIGEST,
+    GovernanceDecision,
+    GovernanceFunction,
+    QuorumPolicy,
+    RiskClass,
+    SovereignGovernanceProfile,
+    TrustedCheckpoint,
+    evaluate_governance,
+    stable_digest,
+    verify_receipt_chain,
+)
+
+
+NOW = 1_800_000_000.0
+AUTH_REFS = {"authority:alice", "authority:bob", "authority:carol"}
+ATTEST_REFS = {"attestation:alice", "attestation:bob", "attestation:carol"}
+POLICY_SCOPE = "workflow.commit"
+CAPABILITY_SCOPE = "commit"
+ACTION_ID = "action-123"
+ACTION_DIGEST = stable_digest({"patch": "exact"})
+
+
+def make_grant(
+    principal: str,
+    *,
+    roles: tuple[str, ...],
+    auth_ref: str,
+    policy_scopes: tuple[str, ...] = (POLICY_SCOPE,),
+    capability_scopes: tuple[str, ...] = (CAPABILITY_SCOPE,),
+    maximum_depth: int = 0,
+    current_depth: int = 0,
+    parent: AuthorityGrant | None = None,
+) -> AuthorityGrant:
+    return AuthorityGrant.create(
+        principal_id=principal,
+        authorized_functional_roles=roles,
+        policy_scopes=policy_scopes,
+        capability_scopes=capability_scopes,
+        valid_from=NOW - 100,
+        expires_at=NOW + 1_000,
+        maximum_delegation_depth=maximum_depth,
+        current_delegation_depth=current_depth,
+        parent_grant=parent,
+        externally_verified_authority_ref=auth_ref,
+        verified_authority_refs=AUTH_REFS,
+        now=NOW,
+    )
+
+
+def make_attestation(
+    grant: AuthorityGrant,
+    *,
+    role: str,
+    decision: AttestationDecision = AttestationDecision.APPROVE,
+    attestation_ref: str,
+    action_id: str = ACTION_ID,
+    action_digest: str = ACTION_DIGEST,
+    policy_scope: str = POLICY_SCOPE,
+    capability_scope: str = CAPABILITY_SCOPE,
+) -> ApprovalAttestation:
+    return ApprovalAttestation.create(
+        action_id=action_id,
+        action_payload_digest=action_digest,
+        principal_id=grant.principal_id,
+        grant=grant,
+        decision=decision,
+        functional_role=role,
+        policy_scope=policy_scope,
+        capability_scope=capability_scope,
+        public_rationale="Exact evidence supports this bounded decision.",
+        evidence_refs=(f"evidence:{grant.principal_id}",),
+        externally_verified_attestation_ref=attestation_ref,
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        created_at=NOW - 10,
+        expires_at=NOW + 500,
+        now=NOW,
+    )
+
+
+def high_policy() -> QuorumPolicy:
+    return QuorumPolicy.create(
+        risk_class=RiskClass.HIGH,
+        minimum_approval_count=2,
+        required_functional_roles=("APPROVE", "VERIFY"),
+        minimum_distinct_principals=2,
+        separation_of_duties=(("APPROVE", "VERIFY"),),
+        rejection_blocks_authorization=True,
+        preserve_abstentions=True,
+        proposer_approval_allowed=False,
+    )
+
+
+def test_grant_requires_externally_trusted_authority_reference() -> None:
+    with pytest.raises(ValueError, match="externally trusted"):
+        AuthorityGrant.create(
+            principal_id="alice",
+            authorized_functional_roles=("APPROVE",),
+            policy_scopes=(POLICY_SCOPE,),
+            capability_scopes=(CAPABILITY_SCOPE,),
+            valid_from=NOW - 1,
+            expires_at=NOW + 100,
+            externally_verified_authority_ref="fabricated",
+            verified_authority_refs=AUTH_REFS,
+            now=NOW,
+        )
+
+
+def test_delegation_cannot_exceed_parent_roles_scopes_or_depth() -> None:
+    parent = make_grant(
+        "council",
+        roles=("APPROVE",),
+        auth_ref="authority:alice",
+        maximum_depth=1,
+    )
+    with pytest.raises(ValueError, match="roles exceed"):
+        make_grant(
+            "delegate",
+            roles=("APPROVE", "VERIFY"),
+            auth_ref="authority:bob",
+            maximum_depth=1,
+            current_depth=1,
+            parent=parent,
+        )
+    with pytest.raises(ValueError, match="depth"):
+        make_grant(
+            "delegate",
+            roles=("APPROVE",),
+            auth_ref="authority:bob",
+            maximum_depth=1,
+            current_depth=2,
+            parent=parent,
+        )
+
+
+def test_replayed_attestation_against_another_digest_is_invalid_and_denied() -> None:
+    alice = make_grant(
+        "alice", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    bob = make_grant("bob", roles=("VERIFY",), auth_ref="authority:bob")
+    approval = make_attestation(
+        alice, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verifier = make_attestation(
+        bob, role="VERIFY", attestation_ref="attestation:bob"
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=stable_digest({"different": True}),
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(alice, bob),
+        attestations=(approval, verifier),
+        quorum_policy=high_policy(),
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        proposer_principal_id="proposer",
+        now=NOW,
+    )
+
+    assert decision.authorized is False
+    assert approval.attestation_id in decision.invalid_attestation_ids
+    assert any("another action digest" in item for item in decision.authority_missing_reasons)
+
+
+def test_high_risk_proposer_cannot_self_approve() -> None:
+    proposer = make_grant(
+        "proposer", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    verifier_grant = make_grant(
+        "verifier", roles=("VERIFY",), auth_ref="authority:bob"
+    )
+    approval = make_attestation(
+        proposer, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verifier = make_attestation(
+        verifier_grant, role="VERIFY", attestation_ref="attestation:bob"
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(proposer, verifier_grant),
+        attestations=(approval, verifier),
+        quorum_policy=high_policy(),
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        proposer_principal_id="proposer",
+        now=NOW,
+    )
+
+    assert decision.authorized is False
+    assert any(
+        item.startswith("proposer_self_approval")
+        for item in decision.separation_of_duties_failures
+    )
+
+
+def test_same_principal_cannot_fill_separated_roles() -> None:
+    grant = make_grant(
+        "alice",
+        roles=("APPROVE", "VERIFY"),
+        auth_ref="authority:alice",
+    )
+    approve = make_attestation(
+        grant, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verify = make_attestation(
+        grant, role="VERIFY", attestation_ref="attestation:alice"
+    )
+    policy = QuorumPolicy.create(
+        risk_class=RiskClass.HIGH,
+        minimum_approval_count=2,
+        required_functional_roles=("APPROVE", "VERIFY"),
+        minimum_distinct_principals=1,
+        separation_of_duties=(("APPROVE", "VERIFY"),),
+        proposer_approval_allowed=True,
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(grant,),
+        attestations=(approve, verify),
+        quorum_policy=policy,
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        now=NOW,
+    )
+
+    assert decision.authorized is False
+    assert decision.separation_of_duties_failures
+
+
+def test_valid_high_risk_quorum_authorizes_but_remains_proposal_only() -> None:
+    alice = make_grant(
+        "alice", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    bob = make_grant("bob", roles=("VERIFY",), auth_ref="authority:bob")
+    approval = make_attestation(
+        alice, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verifier = make_attestation(
+        bob, role="VERIFY", attestation_ref="attestation:bob"
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(alice, bob),
+        attestations=(approval, verifier),
+        quorum_policy=high_policy(),
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        proposer_principal_id="proposer",
+        now=NOW,
+    )
+
+    assert decision.authorized is True
+    assert decision.proposal_only is True
+    assert decision.patch_authority == "exact_source_spans_and_hashes_only"
+    assert decision.vsa_patch_authority is False
+    round_trip = GovernanceDecision.from_dict(decision.to_dict())
+    round_trip.validate_for_action(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        now=NOW,
+    )
+
+
+def test_rejection_and_abstention_are_preserved_and_rejection_blocks() -> None:
+    alice = make_grant(
+        "alice", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    bob = make_grant(
+        "bob", roles=("VERIFY",), auth_ref="authority:bob"
+    )
+    carol = make_grant(
+        "carol", roles=("GUARD",), auth_ref="authority:carol"
+    )
+    approval = make_attestation(
+        alice, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verify = make_attestation(
+        bob, role="VERIFY", attestation_ref="attestation:bob"
+    )
+    rejection = make_attestation(
+        carol,
+        role="GUARD",
+        decision=AttestationDecision.REJECT,
+        attestation_ref="attestation:carol",
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(alice, bob, carol),
+        attestations=(approval, verify, rejection),
+        quorum_policy=high_policy(),
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        proposer_principal_id="proposer",
+        now=NOW,
+    )
+
+    assert decision.authorized is False
+    assert rejection.attestation_id in decision.rejection_attestation_ids
+    assert rejection.attestation_id in decision.preserved_dissent_refs
+
+
+def test_expired_or_out_of_scope_grants_fail_closed() -> None:
+    grant = make_grant(
+        "alice", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    with pytest.raises(ValueError, match="expired"):
+        grant.validate(
+            now=NOW + 2_000,
+            verified_authority_refs=AUTH_REFS,
+        )
+    with pytest.raises(ValueError, match="outside the authority grant"):
+        make_attestation(
+            grant,
+            role="APPROVE",
+            attestation_ref="attestation:alice",
+            capability_scope="merge",
+        )
+
+
+def test_emergency_policy_cannot_lower_normal_safety_threshold() -> None:
+    normal = high_policy()
+    with pytest.raises(ValueError, match="cannot be lower"):
+        QuorumPolicy.create(
+            risk_class=RiskClass.EMERGENCY,
+            minimum_approval_count=1,
+            required_functional_roles=("APPROVE", "VERIFY"),
+            minimum_distinct_principals=1,
+            separation_of_duties=(("APPROVE", "VERIFY"),),
+            proposer_approval_allowed=False,
+            emergency_ttl_seconds=60,
+            mandatory_post_event_review=True,
+            emergency_allowed_policy_scopes=(POLICY_SCOPE,),
+            emergency_allowed_capability_scopes=(CAPABILITY_SCOPE,),
+            normal_policy=normal,
+        )
+
+
+def test_emergency_authority_is_narrow_temporary_reasoned_and_review_producing() -> None:
+    normal = high_policy()
+    emergency = QuorumPolicy.create(
+        risk_class=RiskClass.EMERGENCY,
+        minimum_approval_count=2,
+        required_functional_roles=("APPROVE", "VERIFY"),
+        minimum_distinct_principals=2,
+        separation_of_duties=(("APPROVE", "VERIFY"),),
+        rejection_blocks_authorization=True,
+        proposer_approval_allowed=False,
+        emergency_ttl_seconds=60,
+        mandatory_post_event_review=True,
+        emergency_allowed_policy_scopes=(POLICY_SCOPE,),
+        emergency_allowed_capability_scopes=(CAPABILITY_SCOPE,),
+        normal_policy=normal,
+    )
+    alice = make_grant(
+        "alice", roles=("APPROVE",), auth_ref="authority:alice"
+    )
+    bob = make_grant("bob", roles=("VERIFY",), auth_ref="authority:bob")
+    approval = make_attestation(
+        alice, role="APPROVE", attestation_ref="attestation:alice"
+    )
+    verifier = make_attestation(
+        bob, role="VERIFY", attestation_ref="attestation:bob"
+    )
+
+    decision = evaluate_governance(
+        action_id=ACTION_ID,
+        action_payload_digest=ACTION_DIGEST,
+        policy_scope=POLICY_SCOPE,
+        capability_scope=CAPABILITY_SCOPE,
+        grants=(alice, bob),
+        attestations=(approval, verifier),
+        quorum_policy=emergency,
+        normal_policy=normal,
+        verified_authority_refs=AUTH_REFS,
+        verified_attestation_refs=ATTEST_REFS,
+        proposer_principal_id="proposer",
+        emergency_reason="Immediate containment of a verified active incident.",
+        now=NOW,
+    )
+
+    assert decision.authorized is True
+    assert decision.expires_at <= NOW + 60
+    assert decision.emergency_review_required is True
+    assert decision.post_event_review_due_at == decision.expires_at
+    assert decision.emergency_reason
+
+
+def test_profile_cannot_auto_activate_without_explicit_verified_consent() -> None:
+    profile = SovereignGovernanceProfile.create(
+        profile_name="Community-controlled governance profile",
+        sovereign_owner_id="community:example",
+        function_mappings={
+            "local-approver-term": (GovernanceFunction.APPROVE,),
+            "local-review-term": (GovernanceFunction.REVIEW,),
+        },
+        jurisdiction_refs=("jurisdiction:community",),
+        provenance_refs=("provenance:community-session",),
+        externally_verified_profile_ref="profile:verified",
+        verified_profile_refs={"profile:verified"},
+        created_at=NOW,
+    )
+    assert profile.active is False
+    with pytest.raises(ValueError, match="not externally verified"):
+        profile.activate(
+            consent_refs=("consent:community",),
+            verified_consent_refs={"consent:other"},
+            activated_by_principal_id="community:example",
+            activated_at=NOW + 1,
+        )
+    active = profile.activate(
+        consent_refs=("consent:community",),
+        verified_consent_refs={"consent:community"},
+        activated_by_principal_id="community:example",
+        activated_at=NOW + 1,
+    )
+    assert active.active is True
+    assert active.activation_mode == "EXPLICIT_GOVERNED_CONSENT"
+
+
+def test_receipt_chain_detects_modification_reorder_deletion_and_truncation() -> None:
+    record_one = stable_digest({"one": 1})
+    record_two = stable_digest({"two": 2})
+    first = ChainedAuthorityReceipt.create(
+        ledger_id="authority-ledger",
+        sequence_number=1,
+        previous_chain_digest=GENESIS_CHAIN_DIGEST,
+        record_id="record-1",
+        record_digest=record_one,
+        created_at=NOW,
+    )
+    second = ChainedAuthorityReceipt.create(
+        ledger_id="authority-ledger",
+        sequence_number=2,
+        previous_chain_digest=first.chain_digest,
+        record_id="record-2",
+        record_digest=record_two,
+        created_at=NOW + 1,
+    )
+    checkpoint = TrustedCheckpoint.create(
+        ledger_id="authority-ledger",
+        sequence_number=2,
+        chain_digest=second.chain_digest,
+        externally_signed_checkpoint_ref="checkpoint:signed",
+        verified_checkpoint_refs={"checkpoint:signed"},
+        created_at=NOW + 2,
+    )
+
+    valid = verify_receipt_chain(
+        (first, second),
+        record_digests={"record-1": record_one, "record-2": record_two},
+        trusted_checkpoint=checkpoint,
+        verified_checkpoint_refs={"checkpoint:signed"},
+    )
+    assert valid.valid is True
+    assert valid.checkpoint_verified is True
+
+    modified = replace(second, record_digest="tampered")
+    modified_result = verify_receipt_chain((first, modified))
+    assert modified_result.valid is False
+    assert any("modified_receipt" in item for item in modified_result.errors)
+
+    reordered = verify_receipt_chain((second, first))
+    assert reordered.valid is False
+    assert any("reordered" in item or "previous_digest" in item for item in reordered.errors)
+
+    deleted = verify_receipt_chain((second,))
+    assert deleted.valid is False
+    assert any("deleted_or_missing_sequence" in item for item in deleted.errors)
+
+    truncated = verify_receipt_chain(
+        (first,),
+        trusted_checkpoint=checkpoint,
+        verified_checkpoint_refs={"checkpoint:signed"},
+    )
+    assert truncated.valid is False
+    assert "truncated_before_trusted_checkpoint" in truncated.errors

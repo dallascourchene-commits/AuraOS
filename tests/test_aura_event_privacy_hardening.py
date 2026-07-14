@@ -1,0 +1,128 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+import json
+
+import pytest
+
+import aura_event_contracts
+from aura_event_contracts import AppendOnlyEventStore, sanitize_payload, stable_digest
+
+
+@pytest.mark.parametrize(
+    "field_name",
+    [
+        "scratchpad",
+        "scratch_pad",
+        "scratchPad",
+        "internalScratchpad",
+        "modelChainOfThought",
+        "chain_of_thought",
+        "chainOfThought",
+    ],
+)
+def test_private_reasoning_aliases_fail_closed(field_name: str) -> None:
+    with pytest.raises(ValueError, match="private reasoning"):
+        sanitize_payload({field_name: "must never persist"})
+
+
+def test_nested_dataclass_private_reasoning_alias_fails_closed() -> None:
+    @dataclass
+    class UnsafePacket:
+        chainOfThought: str
+
+    with pytest.raises(ValueError, match="private reasoning"):
+        sanitize_payload({"nested": UnsafePacket("must never persist")})
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        '{"access_token": "abc/DEF+ghi~=123"}',
+        '{"apiKey":"secret-value"}',
+        "access_token: abc/DEF+ghi~=123",
+        'password="secret value"',
+        "Authorization: Bearer abc/DEF+ghi~=123",
+        "authorization=Bearer abc+/~==",
+        "https://example.test/?access_token=abc/DEF+ghi~=123",
+        "log refresh_token='abc/DEF+ghi~=123'",
+        "github_token: ghp_example",
+    ],
+)
+def test_string_level_credentials_are_fully_redacted(payload: str) -> None:
+    sanitized = sanitize_payload(payload)
+    for secret in (
+        "abc/DEF+ghi~=123",
+        "secret-value",
+        "secret value",
+        "abc+/~==",
+        "ghp_example",
+    ):
+        assert secret not in sanitized
+    assert "[REDACTED]" in sanitized
+
+
+def test_complex_bearer_token_is_redacted_as_one_complete_credential() -> None:
+    payload = (
+        "Authorization: Bearer "
+        "eyJhbGciOiJIUzI1NiJ9.payload/signature+padding=="
+    )
+    sanitized = sanitize_payload(payload)
+    assert "eyJhbGciOiJIUzI1NiJ9" not in sanitized
+    assert "signature+padding==" not in sanitized
+    assert sanitized.count("[REDACTED]") == 1
+
+
+def test_nested_serialized_tool_output_is_redacted_before_digest_and_persistence(
+    tmp_path,
+) -> None:
+    payload = {
+        "items": [
+            {"message": '{"access_token":"abc/DEF+ghi~=123"}'},
+            "Authorization: Bearer abc/DEF+ghi~=123",
+            ["refresh_token=abc/DEF+ghi~=123"],
+        ]
+    }
+    sanitized = sanitize_payload(payload)
+    encoded = json.dumps(sanitized, sort_keys=True)
+    assert "abc/DEF+ghi~=123" not in encoded
+
+    expected_digest = stable_digest(sanitized)
+    store = AppendOnlyEventStore(tmp_path / "events")
+    ref = store.store_payload(payload, kind="privacy-regression")
+    persisted = (store.root / ref.path).read_text(encoding="utf-8")
+
+    assert ref.payload_digest == expected_digest
+    assert ref.redacted is True
+    assert "abc/DEF+ghi~=123" not in persisted
+    assert "[REDACTED]" in persisted
+
+
+def test_arbitrary_object_string_representation_is_redacted() -> None:
+    class ToolOutput:
+        def __str__(self) -> str:
+            return "authorization=Bearer abc/def+ghi~jkl=="
+
+    sanitized = sanitize_payload({"output": ToolOutput()})
+    assert "abc/def+ghi~jkl==" not in sanitized["output"]
+    assert "[REDACTED]" in sanitized["output"]
+
+
+def test_private_reasoning_never_reaches_sidecar(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    with pytest.raises(ValueError, match="private reasoning"):
+        store.store_payload(
+            {"nested": [{"internalScratchpad": "must never persist"}]},
+            kind="private-reasoning-regression",
+        )
+    assert not list(store.sidecars_dir.glob("*.json"))
+
+
+def test_benign_token_metrics_are_not_redacted() -> None:
+    payload = {"token_count": 42, "input_tokens": 100}
+    assert sanitize_payload(payload) == payload
+
+
+def test_canonical_contract_types_remain_owned_by_canonical_module() -> None:
+    assert aura_event_contracts.AuraEventEnvelope.__module__ == "aura_event_contracts"
+    assert aura_event_contracts.ToolDecisionRecord.__module__ == "aura_event_contracts"
