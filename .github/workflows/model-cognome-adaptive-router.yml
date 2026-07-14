@@ -1,4 +1,4 @@
-name: Adaptive Router Final Reviewed Tree
+name: Finalize PR92 Reviewed Tree
 
 on:
   pull_request:
@@ -6,30 +6,35 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build-final-reviewed-tree:
+  finalize-reviewed-tree:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
           ref: refactor/model-cognome-live-compat
+          fetch-depth: 0
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build final tree without review helpers
+      - name: Apply reviewed source, legacy, and documentation repairs
         run: |
+          set -euo pipefail
           python tools/pr92_review_repair.py
           python tools/pr92_review_postprocess.py
+          python tools/pr92_closeout.py
           cp tools/model-cognome-adaptive-router.permanent.yml \
             .github/workflows/model-cognome-adaptive-router.yml
           rm -f \
             tools/pr92_review_repair.py \
             tools/pr92_review_postprocess.py \
+            tools/pr92_closeout.py \
             tools/model-cognome-adaptive-router.permanent.yml
-      - name: Install declared dependencies
+      - name: Install declared dependencies and validation tooling
         run: |
           python -m pip install \
             "numpy>=1.26.4,<3.0" \
@@ -42,25 +47,69 @@ jobs:
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio ruff
-      - name: Validate all reviewed code
+      - name: Compile and lint changed compatibility surfaces
         run: |
           python -m py_compile \
             aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
             aura_adaptive_model_router.py aura_adaptive_model_executor.py \
             aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
-            aura_model_cognome_store_io.py aura_topology_manager.py
+            aura_model_cognome_store_io.py aura_topology_manager.py \
+            aura_matrix_benchmark.py test_aura_substrate.py \
+            test_aura_coding_arena_workflow.py
           ruff check --select E9,F63,F7,F82 \
             aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
             aura_adaptive_model_router.py aura_adaptive_model_executor.py \
             aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
             aura_model_cognome_store_io.py aura_topology_manager.py \
+            aura_matrix_benchmark.py test_aura_substrate.py \
+            test_aura_coding_arena_workflow.py \
             tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
             tests/test_aura_adaptive_execution.py tests/test_aura_adaptive_security.py \
             tests/test_aura_adaptive_fusion_schema.py
           python aura_router.py route --help
           python aura_router.py fusion --help
-          python -m pytest -q tests
-      - name: Regenerate and semantically verify topology twice
+      - name: Run complete pytest-native suite
+        run: python -m pytest -q tests
+      - name: Run legacy and architectural validators
+        run: |
+          python test_pvm_logic.py
+          python test_aura_substrate.py
+          python test_aura_functions.py
+          python test_syntax_fixes.py
+          python test_synthesis_upgrades.py
+          python test_codemap_hooks_simple.py
+      - name: Clean runtime artifacts before topology generation
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          rm -rf .pytest_cache
+          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
+      - name: Generate topology and stamp exact documentation metrics
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py \
+            --index .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md \
+            --topology-json topology_map.json
+          python aura_phase_c2_codemap_verify.py --repo-root .
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          token = "__AURA_CODEMAP_METRICS__"
+          summary = json.loads(Path(".aura/CODEMAP.json").read_text(encoding="utf-8"))["summary"]
+          metric = (
+              f"{summary['file_count']:,} indexed files · "
+              f"{summary['topology_nodes']:,} topology nodes · "
+              f"{summary['topology_edges']:,} topology edges"
+          )
+          for name in ("README.md", ".aura/ARCHITECTURE.md", "USER_GUIDE.md"):
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              if token not in text:
+                  raise SystemExit(f"missing documentation metric token in {name}")
+              path.write_text(text.replace(token, metric), encoding="utf-8")
+          PY
+      - name: Regenerate and semantically verify final topology twice
         run: |
           set -euo pipefail
           mkdir -p /tmp/pr92-first
@@ -107,28 +156,28 @@ jobs:
           if normalized_markdown("/tmp/pr92-first/CODEMAP.md") != normalized_markdown(".aura/CODEMAP.md"):
               raise SystemExit("semantic CODEMAP Markdown changed between clean generations")
           PY
+      - name: Verify exact final tree
+        run: |
+          set -euo pipefail
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           rm -rf .pytest_cache
           rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-      - name: Upload tested final reviewed tree
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr92-final-reviewed-tree-${{ github.run_id }}
-          retention-days: 3
-          include-hidden-files: true
-          path: |
-            .github/workflows/model-cognome-adaptive-router.yml
-            aura_ai_router.py
-            aura_router_adaptive_compat.py
-            aura_adaptive_model_router.py
-            aura_adaptive_model_executor.py
-            aura_adaptive_fusion.py
-            aura_model_cognome_execution_auth.py
-            aura_model_cognome_store_io.py
-            aura_topology_manager.py
-            tests/test_aura_ai_router_dynamic.py
-            tests/test_aura_adaptive_security.py
-            tests/test_aura_adaptive_fusion_schema.py
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            topology_map.json
+          git diff --check
+          ! grep -R "__AURA_CODEMAP_METRICS__" README.md USER_GUIDE.md .aura/ARCHITECTURE.md
+          test ! -e tools/pr92_review_repair.py
+          test ! -e tools/pr92_review_postprocess.py
+          test ! -e tools/pr92_closeout.py
+          test ! -e tools/model-cognome-adaptive-router.permanent.yml
+          git status --short
+      - name: Commit final reviewed tree to PR branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No closeout changes to commit."
+            exit 0
+          fi
+          git commit -m "Finalize PR92 adaptive router and architecture audit"
+          git push origin HEAD:refactor/model-cognome-live-compat
