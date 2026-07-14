@@ -53,7 +53,18 @@ class AdaptiveFusionPanelExecutor:
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
         self.store = store
+        self.persist_telemetry = bool(persist_telemetry)
+        self._owns_ledger = False
+        if self.persist_telemetry and empirical_ledger is None:
+            from aura_empirical_cost_ledger import EmpiricalCostLedger
+
+            empirical_ledger = EmpiricalCostLedger(self.repo_root)
+            self._owns_ledger = True
         self.empirical_ledger = empirical_ledger
+        if self.persist_telemetry and logger_sink is None:
+            from aura_model_cognome_call_logger import NormalizedCallLogger
+
+            logger_sink = NormalizedCallLogger(operation="adaptive_fusion", mode="PAIRED_LIVE")
         self.logger_sink = logger_sink
         if pricing_registry is None:
             from aura_pricing_registry import PricingRegistry
@@ -65,7 +76,10 @@ class AdaptiveFusionPanelExecutor:
         self.coordinator_factory = coordinator_factory
         self.secrets = secrets
         self.mock = bool(mock)
-        self.persist_telemetry = bool(persist_telemetry)
+
+    def close(self) -> None:
+        if self._owns_ledger and self.empirical_ledger is not None and hasattr(self.empirical_ledger, "close"):
+            self.empirical_ledger.close()
 
     def _agent(
         self,
@@ -84,10 +98,7 @@ class AdaptiveFusionPanelExecutor:
         config = self.provider_registry.get_provider_config(provider)
         if config is None and not self.mock:
             raise ValueError(f"Fusion provider is not registered: {provider}")
-        config = config or {
-            "base_url": "mock",
-            "api_key_env": "MOCK_API_KEY",
-        }
+        config = config or {"base_url": "mock", "api_key_env": "MOCK_API_KEY"}
         return AuraFusionAgent(
             name=f"cognome_{role.lower()}_{profile_id[-8:]}",
             role=role,
@@ -114,11 +125,7 @@ class AdaptiveFusionPanelExecutor:
             candidate = candidates.get(profile_id)
             if not isinstance(candidate, Mapping):
                 raise ValueError(f"missing selected Fusion candidate: {profile_id}")
-            agent = self._agent(
-                candidate=candidate,
-                role=_PANEL_ROLES[index],
-                profile_id=profile_id,
-            )
+            agent = self._agent(candidate=candidate, role=_PANEL_ROLES[index], profile_id=profile_id)
             panel.append(agent)
             name_to_profile[agent.name] = profile_id
         judge_candidate = candidates.get(judge_id)
