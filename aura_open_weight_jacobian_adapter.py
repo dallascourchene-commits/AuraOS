@@ -102,6 +102,36 @@ if "import numpy as np\n" not in _scanner_text:
         encoding="utf-8",
     )
 
+_ledger = _root / "aura_empirical_cost_ledger.py"
+_ledger_text = _ledger.read_text(encoding="utf-8")
+_assignment_definition = '''_SECRET_ASSIGNMENT = re.compile(
+    r"(?:api[_-]?key|secret|password|authorization|credential|access[_-]?token|refresh[_-]?token|private[_-]?key)\\s*[:=]",
+    re.IGNORECASE,
+)
+'''
+if "_SECRET_ASSIGNMENT = re.compile(" not in _ledger_text:
+    marker = '''_SECRET_VALUE = re.compile(
+    r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\\s+[a-zA-Z0-9._~+/-]+=*",
+    re.IGNORECASE,
+)
+'''
+    if marker not in _ledger_text:
+        raise RuntimeError("ledger secret pattern marker missing")
+    _ledger_text = _ledger_text.replace(marker, marker + _assignment_definition, 1)
+_old_string_sanitize = '''    if isinstance(value, str):
+        return _SECRET_VALUE.sub("[REDACTED]", value)
+'''
+_new_string_sanitize = '''    if isinstance(value, str):
+        if _SECRET_ASSIGNMENT.search(value):
+            return "[REDACTED]"
+        return _SECRET_VALUE.sub("[REDACTED]", value)
+'''
+if _old_string_sanitize in _ledger_text:
+    _ledger_text = _ledger_text.replace(_old_string_sanitize, _new_string_sanitize, 1)
+elif _new_string_sanitize not in _ledger_text:
+    raise RuntimeError("ledger string sanitization marker missing")
+_ledger.write_text(_ledger_text, encoding="utf-8")
+
 (_root / "sitecustomize.py").unlink(missing_ok=True)
 _self = Path(__file__).resolve()
 _body = _self.with_name("aura_open_weight_jacobian_adapter_body_once.py")
