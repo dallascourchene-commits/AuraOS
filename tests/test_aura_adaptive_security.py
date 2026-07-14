@@ -22,6 +22,22 @@ def test_paired_live_claim_survives_process_restart(tmp_path) -> None:
         assert store.record_experiment_comparison(comparison) == ""
 
 
+def test_paired_live_approval_rejects_string_truthiness(tmp_path) -> None:
+    comparison = {
+        "comparison_id": "invalid_claim",
+        "measurement_mode": "PAIRED_LIVE",
+        "approved_live": "false",
+        "created_at": 1.0,
+    }
+    with ModelCognomeStore(tmp_path) as store:
+        try:
+            store.record_experiment_comparison(comparison)
+        except ValueError as exc:
+            assert "boolean" in str(exc)
+        else:
+            raise AssertionError("string approval was treated as truthy")
+
+
 def test_execution_authorization_requires_explicit_model_profiles() -> None:
     try:
         ExecutionAuthorization.create(
