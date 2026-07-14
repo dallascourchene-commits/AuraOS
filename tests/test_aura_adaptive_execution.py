@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
+from types import SimpleNamespace
 from typing import Any
 
 import aura_adaptive_model_router as module
+from aura_adaptive_fusion import AdaptiveFusionPanelExecutor
 from aura_adaptive_model_executor import AdaptiveModelExecutor
 from aura_adaptive_model_router import AdaptiveModelRouter, PAIRED_LIVE
 from aura_model_cognome_execution_auth import ExecutionAuthorization
@@ -217,3 +220,101 @@ def test_revalidation_blocks_quarantined_endpoint(monkeypatch) -> None:
     assert result["status"] == "DENIED"
     assert any("no longer ACTIVE" in reason for reason in result["denial_reasons"])
     assert egress.calls == []
+
+
+def test_public_router_remains_legacy_by_default_and_adaptive_is_explicit(monkeypatch) -> None:
+    from aura_router import AutoRouter
+    import aura_router_adaptive_compat as compat
+
+    router = AutoRouter()
+    monkeypatch.setattr(router, "route_task", lambda task, **kwargs: {"ok": True, "legacy": task.key})
+    assert router.route("mesh_offload") == {"ok": True, "legacy": "mesh_offload"}
+
+    captured = {}
+    def fake_adaptive(_router, task, **kwargs):
+        captured.update(kwargs)
+        return {"ok": True, "router_mode": kwargs["routing_mode"], "task": task.key}
+    monkeypatch.setattr(compat, "route_test_case", fake_adaptive)
+    result = router.route("mesh_offload", routing_mode="SHADOW", purpose_digest="purpose")
+    assert result["router_mode"] == "SHADOW"
+    assert captured["purpose_digest"] == "purpose"
+
+
+def test_adaptive_fusion_links_every_panel_and_judge_call() -> None:
+    class Registry:
+        def get_provider_config(self, provider):
+            return {"base_url": f"https://{provider}.invalid", "api_key_env": f"{provider.upper()}_KEY"}
+
+    class Result:
+        def __init__(self, payload): self.payload = payload
+        def to_dict(self): return dict(self.payload)
+
+    class Coordinator:
+        def __init__(self, *, panel, judge, caller, **_kwargs):
+            self.panel, self.judge, self.caller = panel, judge, caller
+        def run(self, task, **_kwargs):
+            panel_outputs = []
+            for agent in self.panel:
+                payload = {"agent": {"name": agent.name, "role": agent.role}}
+                text, error, latency, schema = self.caller(
+                    provider=agent.provider, model=agent.model,
+                    messages=[{"role": "user", "content": json.dumps(payload)}],
+                )
+                panel_outputs.append({"agent": agent.name, "ok": not error, "content": text})
+            agent = self.judge
+            payload = {"agent": {"name": agent.name, "role": agent.role}}
+            text, error, latency, schema = self.caller(
+                provider=agent.provider, model=agent.model,
+                messages=[{"role": "user", "content": json.dumps(payload)}],
+            )
+            return Result({
+                "ok": not error, "task": task, "mode": "adaptive_panel", "phase_hash": "phase",
+                "panel_outputs": panel_outputs,
+                "judge_output": {"agent": agent.name, "ok": not error, "content": text},
+                "final_answer": "judged", "metrics": {"panel_count": len(panel_outputs)},
+            })
+
+    def caller(**kwargs):
+        agent = json.loads(kwargs["messages"][-1]["content"])["agent"]
+        if agent["role"] == "JUDGE":
+            content = {
+                "consensus": [], "contradictions": [], "coverage_gaps": [],
+                "unique_insights": [], "blind_spots": [], "winning_approach": "x",
+                "final_answer": "judged", "confidence": 1.0,
+                "should_escalate_to_human": False,
+            }
+        else:
+            content = {
+                "role": agent["role"], "answer": "x", "claims": [], "risks": [],
+                "missing_info": [], "recommended_action": "review", "confidence": 1.0,
+            }
+        return json.dumps(content), None, 0.01, True
+
+    records = {
+        "p1": {"profile_id": "p1", "provider": "fireworks", "model": "m1"},
+        "p2": {"profile_id": "p2", "provider": "deepseek", "model": "m2"},
+        "p3": {"profile_id": "p3", "provider": "groq", "model": "m3"},
+    }
+    executor = AdaptiveFusionPanelExecutor(
+        store=object(), provider_registry=Registry(), caller=caller,
+        coordinator_factory=Coordinator, persist_telemetry=False,
+    )
+    result = executor(
+        objective="analyze",
+        plan={
+            "selected_option": {"profile_ids": ["p1", "p2", "p3"]},
+            "candidate_records": records,
+            "routing": {"primary_file": "", "key_functions": []},
+            "path_resolution": {"path_digest": "path"},
+        },
+        context=SimpleNamespace(task_context_id="task", capability_graph_digest="graph"),
+        live_decision=SimpleNamespace(route_decision_id="route"),
+        authorization=SimpleNamespace(authorization_id="auth"),
+        comparison_id="comparison",
+        correlation_id="correlation",
+    )
+    assert result["ok"] is True
+    assert len(result["calls"]) == 3
+    assert all(call["call_id"].startswith("call_") for call in result["calls"])
+    assert all(output["profile_id"] for output in result["panel_outputs"])
+    assert result["judge_output"]["profile_id"] == "p3"
