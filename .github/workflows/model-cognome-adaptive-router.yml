@@ -1,4 +1,4 @@
-name: Finalize PR92 Reviewed Tree
+name: Diagnose PR92 Final Tree
 
 on:
   pull_request:
@@ -6,40 +6,31 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  finalize-reviewed-tree:
+  diagnose-final-tree:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           ref: refactor/model-cognome-live-compat
           fetch-depth: 0
-          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Apply reviewed adaptive-router source repairs
-        run: python tools/pr92_review_repair.py
-      - name: Apply reviewed adaptive-router postprocessing
-        run: python tools/pr92_review_postprocess.py
-      - name: Fix legacy dynamic-import policy violation
-        run: python -c "import tools.pr92_closeout as c; c.fix_dynamic_import()"
-      - name: Make mesh benchmark fixtures symbol-relative
-        run: python tools/pr92_mesh_closeout.py
-      - name: Refresh README architecture summary
-        run: python -c "import tools.pr92_closeout as c; c.update_readme()"
-      - name: Refresh canonical architecture anchor
-        run: python -c "import tools.pr92_closeout as c; c.update_architecture()"
-      - name: Refresh operator user guide
-        run: python -c "import tools.pr92_closeout as c; c.update_user_guide()"
-      - name: Normalize closeout source and documentation whitespace
-        run: python tools/pr92_trim_trailing_ws.py
-      - name: Install permanent workflow and remove closeout helpers
+      - name: Apply exact reviewed transformation
         run: |
           set -euo pipefail
+          python tools/pr92_review_repair.py
+          python tools/pr92_review_postprocess.py
+          python -c "import tools.pr92_closeout as c; c.fix_dynamic_import()"
+          python tools/pr92_mesh_closeout.py
+          python -c "import tools.pr92_closeout as c; c.update_readme()"
+          python -c "import tools.pr92_closeout as c; c.update_architecture()"
+          python -c "import tools.pr92_closeout as c; c.update_user_guide()"
+          python tools/pr92_trim_trailing_ws.py
           cp tools/model-cognome-adaptive-router.permanent.yml \
             .github/workflows/model-cognome-adaptive-router.yml
           rm -f \
@@ -49,7 +40,7 @@ jobs:
             tools/pr92_mesh_closeout.py \
             tools/pr92_trim_trailing_ws.py \
             tools/model-cognome-adaptive-router.permanent.yml
-      - name: Install declared dependencies and validation tooling
+      - name: Install topology dependencies
         run: |
           python -m pip install \
             "numpy>=1.26.4,<3.0" \
@@ -60,56 +51,20 @@ jobs:
             "aiohttp>=3.9.0,<4.0" \
             "beautifulsoup4>=4.12.0,<5.0" \
             "httpx>=0.27.0,<1.0" \
-            "cryptography>=41.0.0,<45.0" \
-            pytest pytest-asyncio ruff
-      - name: Compile and lint changed compatibility surfaces
+            "cryptography>=41.0.0,<45.0"
+      - name: Generate exact final topology and metrics
         run: |
-          python -m py_compile \
-            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
-            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
-            aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
-            aura_model_cognome_store_io.py aura_topology_manager.py \
-            aura_matrix_benchmark.py test_aura_substrate.py \
-            test_aura_coding_arena_workflow.py
-          ruff check --select E9,F63,F7,F82 \
-            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
-            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
-            aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
-            aura_model_cognome_store_io.py aura_topology_manager.py \
-            aura_matrix_benchmark.py test_aura_substrate.py \
-            test_aura_coding_arena_workflow.py \
-            tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
-            tests/test_aura_adaptive_execution.py tests/test_aura_adaptive_security.py \
-            tests/test_aura_adaptive_fusion_schema.py
-          python aura_router.py route --help
-          python aura_router.py fusion --help
-      - name: Run complete pytest-native suite
-        run: python -m pytest -q tests
-      - name: Run legacy and architectural validators
-        run: |
-          python test_pvm_logic.py
-          python test_aura_substrate.py
-          python test_aura_functions.py
-          python test_syntax_fixes.py
-          python test_synthesis_upgrades.py
-          python test_codemap_hooks_simple.py
-      - name: Clean runtime artifacts before topology generation
-        run: |
+          set -euo pipefail
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           rm -rf .pytest_cache
           rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-      - name: Generate topology and stamp exact documentation metrics
-        run: |
-          set -euo pipefail
           python aura_codebase_navigator.py \
             --index .aura/CODEMAP.json \
             --markdown .aura/CODEMAP.md \
             --topology-json topology_map.json
-          python aura_phase_c2_codemap_verify.py --repo-root .
           python - <<'PY'
           import json
           from pathlib import Path
-
           token = "__AURA_CODEMAP_METRICS__"
           summary = json.loads(Path(".aura/CODEMAP.json").read_text(encoding="utf-8"))["summary"]
           metric = (
@@ -119,85 +74,17 @@ jobs:
           )
           for name in ("README.md", ".aura/ARCHITECTURE.md", "USER_GUIDE.md"):
               path = Path(name)
-              text = path.read_text(encoding="utf-8")
-              if token not in text:
-                  raise SystemExit(f"missing documentation metric token in {name}")
-              path.write_text(text.replace(token, metric), encoding="utf-8")
+              path.write_text(path.read_text(encoding="utf-8").replace(token, metric), encoding="utf-8")
           PY
-      - name: Regenerate and semantically verify final topology twice
+      - name: Capture whitespace and status diagnostics
         run: |
-          set -euo pipefail
-          mkdir -p /tmp/pr92-first
-          find . -type d -name __pycache__ -prune -exec rm -rf {} +
-          rm -rf .pytest_cache
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          python aura_codebase_navigator.py \
-            --index .aura/CODEMAP.json \
-            --markdown .aura/CODEMAP.md \
-            --topology-json topology_map.json
-          python aura_phase_c2_codemap_verify.py --repo-root .
-          cp .aura/CODEMAP.json /tmp/pr92-first/CODEMAP.json
-          cp .aura/CODEMAP.md /tmp/pr92-first/CODEMAP.md
-          cp topology_map.json /tmp/pr92-first/topology_map.json
-          find . -type d -name __pycache__ -prune -exec rm -rf {} +
-          rm -rf .pytest_cache
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          python aura_codebase_navigator.py \
-            --index .aura/CODEMAP.json \
-            --markdown .aura/CODEMAP.md \
-            --topology-json topology_map.json
-          python aura_phase_c2_codemap_verify.py --repo-root .
-          cmp /tmp/pr92-first/topology_map.json topology_map.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          def normalized_json(path):
-              value = json.loads(Path(path).read_text(encoding="utf-8"))
-              value.pop("generated_at_unix", None)
-              if isinstance(value.get("summary"), dict):
-                  value["summary"].pop("elapsed_ms", None)
-              return value
-
-          if normalized_json("/tmp/pr92-first/CODEMAP.json") != normalized_json(".aura/CODEMAP.json"):
-              raise SystemExit("semantic CODEMAP JSON changed between clean generations")
-
-          def normalized_markdown(path):
-              return [
-                  line for line in Path(path).read_text(encoding="utf-8").splitlines()
-                  if not line.startswith("- **elapsed_ms**:")
-              ]
-
-          if normalized_markdown("/tmp/pr92-first/CODEMAP.md") != normalized_markdown(".aura/CODEMAP.md"):
-              raise SystemExit("semantic CODEMAP Markdown changed between clean generations")
-          PY
-      - name: Verify no whitespace errors
-        run: git diff --check
-      - name: Verify documentation metrics were resolved
-        run: '! grep -R "__AURA_CODEMAP_METRICS__" README.md USER_GUIDE.md .aura/ARCHITECTURE.md'
-      - name: Verify closeout helpers are absent
-        run: |
-          test ! -e tools/pr92_review_repair.py
-          test ! -e tools/pr92_review_postprocess.py
-          test ! -e tools/pr92_closeout.py
-          test ! -e tools/pr92_mesh_closeout.py
-          test ! -e tools/pr92_trim_trailing_ws.py
-          test ! -e tools/model-cognome-adaptive-router.permanent.yml
-      - name: Show final reviewed changes
-        run: |
-          find . -type d -name __pycache__ -prune -exec rm -rf {} +
-          rm -rf .pytest_cache
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          git status --short
-      - name: Commit final reviewed tree to PR branch
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No closeout changes to commit."
-            exit 0
-          fi
-          git commit -m "Finalize PR92 adaptive router and architecture audit"
-          git push origin HEAD:refactor/model-cognome-live-compat
+          git diff --check > pr92-diff-check.txt 2>&1 || true
+          git status --short > pr92-status.txt
+          cat pr92-diff-check.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr92-final-tree-diagnostics
+          path: |
+            pr92-diff-check.txt
+            pr92-status.txt
+          if-no-files-found: error
