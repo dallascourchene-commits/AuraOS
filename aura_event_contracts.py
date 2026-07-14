@@ -40,7 +40,7 @@ _SECRET_PATTERNS = (
            authorization|secret|password|private[_-]?key|token|
            [a-z0-9_.-]+[_-]token)
         ["']?\s*[:=]\s*
-        (?:bearer\s+)?
+        (?:(?:bearer|basic)\s+)?
         (?:
             "(?:\\.|[^"\\])*"
           | '(?:\\.|[^'\\])*'
@@ -49,6 +49,11 @@ _SECRET_PATTERNS = (
         """
     ),
     re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=%\-]+"),
+    re.compile(r"(?i)\bbasic\s+[A-Za-z0-9+/=]+"),
+    re.compile(
+        r"(?is)-----BEGIN [^-\r\n]*PRIVATE KEY-----.*?"
+        r"-----END [^-\r\n]*PRIVATE KEY-----"
+    ),
     re.compile(r"\bsk-[A-Za-z0-9._~+/=%\-]{20,}\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
@@ -218,6 +223,12 @@ def _enum(value: str | Enum, enum_type: type[Enum], field_name: str) -> str:
     return raw
 
 
+def _strict_bool(value: Any, field_name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{field_name} must be a boolean")
+    return value
+
+
 def _bounded(value: Any, field_name: str, limit: int, *, required: bool = True) -> str:
     normalized = " ".join(str(value or "").split())
     if required and not normalized:
@@ -287,8 +298,13 @@ def _sanitize_payload(value: Any) -> tuple[Any, bool]:
     if isinstance(value, str):
         redacted = redact_secrets(value)
         return redacted, redacted != value
-    if isinstance(value, bytes):
-        return {"__bytes_hex__": value.hex()}, True
+    if isinstance(value, (bytes, bytearray, memoryview)):
+        raw_bytes = bytes(value)
+        decoded = raw_bytes.decode("utf-8", errors="replace")
+        redacted = redact_secrets(decoded)
+        if redacted != decoded:
+            return {"__bytes_text__": redacted}, True
+        return {"__bytes_hex__": raw_bytes.hex()}, True
     if isinstance(value, float) and not math.isfinite(value):
         raise ValueError("non-finite floats are not permitted in event payloads")
     if value is None or isinstance(value, (bool, int, float)):
@@ -431,7 +447,7 @@ class AuraEventEnvelope:
             "payload_digest": _required(payload_digest, "payload_digest"),
             "evidence_refs": tuple(str(item) for item in evidence_refs),
             "policy_scope": str(policy_scope),
-            "proposal_only": bool(proposal_only),
+            "proposal_only": _strict_bool(proposal_only, "proposal_only"),
             "measurement_classes": {
                 str(key): _enum(value, MeasurementClass, f"measurement class for {key}")
                 for key, value in dict(measurement_classes or {}).items()
@@ -554,7 +570,7 @@ class ToolDecisionRecord:
             "expected_risk": _required(expected_risk, "expected_risk").upper(),
             "tool_input_digest": stable_digest(sanitize_payload(tool_input)),
             "authorization_ref": str(authorization_ref),
-            "proposal_only": bool(proposal_only),
+            "proposal_only": _strict_bool(proposal_only, "proposal_only"),
             "created_at": time.time() if created_at is None else float(created_at),
         }
         return cls(decision_id=stable_id("tool-decision", payload), **payload)

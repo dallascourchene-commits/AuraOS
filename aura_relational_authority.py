@@ -64,7 +64,7 @@ _SECRET_PATTERNS = (
            authorization|secret|password|private[_-]?key|token|
            [a-z0-9_.-]+[_-]token)
         ["']?\s*[:=]\s*
-        (?:bearer\s+)?
+        (?:(?:bearer|basic)\s+)?
         (?:
             "(?:\\.|[^"\\])*"
           | '(?:\\.|[^'\\])*'
@@ -73,6 +73,11 @@ _SECRET_PATTERNS = (
         """
     ),
     re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=%\-]+"),
+    re.compile(r"(?i)\bbasic\s+[A-Za-z0-9+/=]+"),
+    re.compile(
+        r"(?is)-----BEGIN [^-\r\n]*PRIVATE KEY-----.*?"
+        r"-----END [^-\r\n]*PRIVATE KEY-----"
+    ),
     re.compile(r"\bsk-[A-Za-z0-9._~+/=%\-]{20,}\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
@@ -174,6 +179,12 @@ def _enum_value(value: str | Enum, enum_type: type[Enum], field_name: str) -> st
     if raw not in permitted:
         raise ValueError(f"unknown {field_name}: {raw}")
     return raw
+
+
+def _strict_bool(value: Any, field_name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{field_name} must be a boolean")
+    return value
 
 
 def _normalized_strings(
@@ -359,9 +370,11 @@ class AuthorityGrant:
                 "externally_verified_authority_ref",
             ),
             schema_version=str(data.get("schema_version", SCHEMA_VERSION)),
-            proposal_only=bool(data.get("proposal_only", True)),
+            proposal_only=_strict_bool(data.get("proposal_only", True), "proposal_only"),
             patch_authority=str(data.get("patch_authority", PATCH_AUTHORITY)),
-            vsa_patch_authority=bool(data.get("vsa_patch_authority", False)),
+            vsa_patch_authority=_strict_bool(
+                data.get("vsa_patch_authority", False), "vsa_patch_authority"
+            ),
         )
         grant.validate(now=now, verified_authority_refs=verified_authority_refs)
         grant._validate_identity()
@@ -585,9 +598,11 @@ class ApprovalAttestation:
             created_at=float(data.get("created_at")),
             expires_at=float(data.get("expires_at")),
             schema_version=str(data.get("schema_version", SCHEMA_VERSION)),
-            proposal_only=bool(data.get("proposal_only", True)),
+            proposal_only=_strict_bool(data.get("proposal_only", True), "proposal_only"),
             patch_authority=str(data.get("patch_authority", PATCH_AUTHORITY)),
-            vsa_patch_authority=bool(data.get("vsa_patch_authority", False)),
+            vsa_patch_authority=_strict_bool(
+                data.get("vsa_patch_authority", False), "vsa_patch_authority"
+            ),
         )
         trusted = _trusted_set(
             verified_attestation_refs, "verified_attestation_refs"
@@ -791,11 +806,19 @@ class QuorumPolicy:
             "required_functional_roles": roles,
             "minimum_distinct_principals": distinct,
             "separation_of_duties": separations,
-            "rejection_blocks_authorization": bool(rejection_blocks_authorization),
-            "preserve_abstentions": bool(preserve_abstentions),
-            "proposer_approval_allowed": bool(proposer_approval_allowed),
+            "rejection_blocks_authorization": _strict_bool(
+                rejection_blocks_authorization, "rejection_blocks_authorization"
+            ),
+            "preserve_abstentions": _strict_bool(
+                preserve_abstentions, "preserve_abstentions"
+            ),
+            "proposer_approval_allowed": _strict_bool(
+                proposer_approval_allowed, "proposer_approval_allowed"
+            ),
             "emergency_ttl_seconds": ttl,
-            "mandatory_post_event_review": bool(mandatory_post_event_review),
+            "mandatory_post_event_review": _strict_bool(
+                mandatory_post_event_review, "mandatory_post_event_review"
+            ),
             "emergency_allowed_policy_scopes": emergency_policies,
             "emergency_allowed_capability_scopes": emergency_capabilities,
             "baseline_policy_id": baseline_id,
@@ -942,7 +965,7 @@ class GovernanceDecision:
             quorum_policy_id=_required(
                 data.get("quorum_policy_id"), "quorum_policy_id"
             ),
-            authorized=bool(data.get("authorized", False)),
+            authorized=_strict_bool(data.get("authorized", False), "authorized"),
             valid_attestation_ids=tuple(data.get("valid_attestation_ids", ())),
             invalid_attestation_ids=tuple(data.get("invalid_attestation_ids", ())),
             approval_attestation_ids=tuple(
@@ -970,8 +993,9 @@ class GovernanceDecision:
             ),
             expires_at=float(data.get("expires_at")),
             emergency_reason=str(data.get("emergency_reason", "")),
-            emergency_review_required=bool(
-                data.get("emergency_review_required", False)
+            emergency_review_required=_strict_bool(
+                data.get("emergency_review_required", False),
+                "emergency_review_required",
             ),
             post_event_review_due_at=(
                 None
@@ -980,9 +1004,11 @@ class GovernanceDecision:
             ),
             created_at=float(data.get("created_at")),
             schema_version=str(data.get("schema_version", SCHEMA_VERSION)),
-            proposal_only=bool(data.get("proposal_only", True)),
+            proposal_only=_strict_bool(data.get("proposal_only", True), "proposal_only"),
             patch_authority=str(data.get("patch_authority", PATCH_AUTHORITY)),
-            vsa_patch_authority=bool(data.get("vsa_patch_authority", False)),
+            vsa_patch_authority=_strict_bool(
+                data.get("vsa_patch_authority", False), "vsa_patch_authority"
+            ),
         )
         decision.validate_integrity()
         return decision

@@ -514,7 +514,7 @@ GATE_DEFINITIONS: Dict[WorkflowState, WorkflowGate] = {
             "patch_spans_exact",  # exact source spans required
             "patch_hashes_match",  # hashes must match
             "route_not_in_blocked_set",  # route must allow patching
-            "prior_state_agent_running_or_repair",  # VERIFIED or REPAIR_REQUIRED
+            "prior_state_agent_running_or_repair",  # AGENT_RUNNING or REPAIR_REQUIRED
         ],
         truth_packet=_truth_packet(),
         token_economy_snapshot=_token_economy_snapshot(),
@@ -936,8 +936,8 @@ def _evaluate_authority(
 def evaluate_gate(state: WorkflowState, evidence: Dict[str, Any]) -> Dict[str, Any]:
     """Evaluate exact evidence and action-bound authority for a workflow gate.
 
-    A verified :class:`GovernanceDecision` is preferred. The historical truthy
-    ``human_approval`` input remains available as an explicitly labeled
+    A verified :class:`GovernanceDecision` is preferred. The historical literal
+    boolean ``human_approval=True`` input remains as an explicitly labeled
     compatibility mode and is never represented as verified authority.
     """
     state = _coerce_state(state)
@@ -958,7 +958,7 @@ def evaluate_gate(state: WorkflowState, evidence: Dict[str, Any]) -> Dict[str, A
         satisfied = (
             authority["satisfied"]
             if key == "human_approval"
-            else bool(evidence.get(key))
+            else evidence.get(key) is True
         )
         if satisfied:
             met.append(key)

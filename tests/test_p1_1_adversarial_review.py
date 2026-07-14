@@ -331,3 +331,53 @@ def test_empty_suffix_is_anchored_to_trusted_checkpoint() -> None:
     assert result.ledger_id == "ledger-1"
     assert result.final_sequence_number == 4
     assert result.final_chain_digest == "chain-4"
+
+
+def test_basic_authorization_header_is_fully_redacted() -> None:
+    payload = "Authorization: Basic dXNlcjpwYXNzd29yZA=="
+    sanitized = sanitize_payload(payload)
+    assert "dXNlcjpwYXNzd29yZA==" not in sanitized
+    assert "[REDACTED]" in sanitized
+
+
+def test_binary_credentials_are_redacted_before_hex_encoding() -> None:
+    secret = b"Authorization: Bearer abc/DEF+ghi~=123"
+    sanitized = sanitize_payload({"blob": secret})
+    encoded = str(sanitized)
+    assert "abc/DEF+ghi~=123" not in encoded
+    assert secret.hex() not in encoded
+    assert "[REDACTED]" in encoded
+
+
+def test_string_false_does_not_satisfy_non_authority_evidence() -> None:
+    result = evaluate_gate(
+        "HUMAN_APPROVED_FOR_COMMIT",
+        {
+            "human_approval": True,
+            "verified": "false",
+            "tests_pass": "false",
+        },
+    )
+    assert result["can_proceed"] is False
+    assert "verified" in result["missing_requirements"]
+    assert "tests_pass" in result["missing_requirements"]
+
+
+def test_serialized_governance_boolean_fields_are_strict() -> None:
+    decision = make_decision().to_dict()
+    decision["authorized"] = "false"
+    with pytest.raises(ValueError, match="authorized must be a boolean"):
+        from aura_relational_authority import GovernanceDecision
+
+        GovernanceDecision.from_dict(decision)
+
+
+def test_quorum_policy_boolean_parameters_are_strict() -> None:
+    with pytest.raises(ValueError, match="proposer_approval_allowed must be a boolean"):
+        QuorumPolicy.create(
+            risk_class=RiskClass.LOW,
+            minimum_approval_count=1,
+            required_functional_roles=("APPROVE",),
+            minimum_distinct_principals=1,
+            proposer_approval_allowed="false",  # type: ignore[arg-type]
+        )
