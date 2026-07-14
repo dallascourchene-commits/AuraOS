@@ -34,6 +34,25 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: Decode staged P1.1 sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zlib
+
+          paths = (
+              "aura_relational_authority.py",
+              "tests/test_aura_event_privacy_hardening.py",
+              "tests/test_aura_relational_authority.py",
+              "tests/test_aura_workflow_authority_bridge.py",
+              "scripts/p1_1_finalize.py",
+          )
+          for item in paths:
+              path = Path(item)
+              path.write_bytes(zlib.decompress(path.read_bytes()))
+              print(f"decoded {item}")
+          PY
+
       - name: Install validation dependencies
         run: |
           python -m pip install --upgrade pip
