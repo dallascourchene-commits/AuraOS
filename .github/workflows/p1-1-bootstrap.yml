@@ -1,6 +1,11 @@
 name: Bootstrap and finalize P1.1 relational authority
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/p1-1-bootstrap.yml
   push:
     branches:
       - refactor/relational-authority-p1-1
