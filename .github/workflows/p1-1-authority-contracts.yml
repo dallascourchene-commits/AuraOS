@@ -1,0 +1,62 @@
+name: P1.1 relational authority contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feature/**"
+      - "refactor/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p1-1-authority-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-authority-contracts:
+    name: Authority contracts (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install focused test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest ruff
+      - name: Compile authority and privacy contracts
+        run: |
+          python -m py_compile \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_workflow_gates.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_workflow_gates.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py
+      - name: Run focused authority regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py \
+            tests/test_aura_workflow_gates.py
