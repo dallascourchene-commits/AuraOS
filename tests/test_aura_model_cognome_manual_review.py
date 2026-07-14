@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 
-from aura_codebase_navigator import DEFAULT_SKIP_DIRS
 from aura_model_cognome import ModelAccessClass, ModelEndpointIdentity
 from aura_model_cognome_drift import ProbeResult, STABLE, DriftAssessment, persist_drift_assessment
 from aura_model_cognome_federation import (
@@ -20,7 +19,8 @@ from aura_open_weight_jacobian_adapter import JacobianLensSummary, build_open_we
 
 
 def test_codemap_excludes_generated_sandbox_vault() -> None:
-    assert "Aura_Sandbox" in DEFAULT_SKIP_DIRS
+    navigator = Path("aura_codebase_navigator.py").read_text(encoding="utf-8")
+    assert '"Aura_Sandbox"' in navigator
 
 
 def test_replay_and_probe_boolean_fields_are_strict() -> None:
