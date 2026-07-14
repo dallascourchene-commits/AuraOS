@@ -46,9 +46,10 @@ isolation for governance checks.
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass, field, asdict
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Mapping, Optional, Set
 
 
 # ---------------------------------------------------------------------------
@@ -69,6 +70,26 @@ BLOCKED_PATCH_ROUTES: Set[str] = {
     "BLOCKED_WITH_REASON",
 }
 """FST routes that forbid direct patching without prior repair / localization."""
+
+
+_AUTHORITY_SCOPE_BY_STATE: Dict[str, Dict[str, str]] = {
+    "HUMAN_APPROVED_FOR_AGENT": {
+        "policy_scope": "workflow.agent_handoff",
+        "capability_scope": "agent_handoff",
+    },
+    "AGENT_HANDOFF_READY": {
+        "policy_scope": "workflow.agent_handoff",
+        "capability_scope": "agent_handoff",
+    },
+    "HUMAN_APPROVED_FOR_COMMIT": {
+        "policy_scope": "workflow.commit",
+        "capability_scope": "commit",
+    },
+    "PR_READY": {
+        "policy_scope": "workflow.commit",
+        "capability_scope": "commit",
+    },
+}
 
 
 # ---------------------------------------------------------------------------
@@ -793,58 +814,167 @@ def get_transition_requirements(
     }
 
 
+def _authority_requirement(state: WorkflowState, evidence: Mapping[str, Any]) -> Dict[str, str]:
+    defaults = _AUTHORITY_SCOPE_BY_STATE.get(state.name, {})
+    return {
+        "policy_scope": str(
+            evidence.get("required_policy_scope", defaults.get("policy_scope", ""))
+        ),
+        "capability_scope": str(
+            evidence.get(
+                "required_capability_scope",
+                defaults.get("capability_scope", ""),
+            )
+        ),
+    }
+
+
+def _evaluate_authority(
+    state: WorkflowState,
+    evidence: Mapping[str, Any],
+    *,
+    required: bool,
+) -> Dict[str, Any]:
+    scopes = _authority_requirement(state, evidence)
+    result: Dict[str, Any] = {
+        "satisfied": not required,
+        "authority_mode": "NOT_REQUIRED" if not required else "MISSING",
+        "authority_verified": False,
+        "governance_decision_id": "",
+        "governance_action_digest": "",
+        "legacy_human_approval_used": False,
+        "authority_missing_reasons": [],
+        "authority_warnings": [],
+        "required_policy_scope": scopes["policy_scope"],
+        "required_capability_scope": scopes["capability_scope"],
+    }
+    if not required:
+        return result
+
+    supplied = evidence.get("governance_decision")
+    if supplied is not None:
+        result["authority_mode"] = "GOVERNANCE_DECISION_INVALID"
+        try:
+            # Imported only when governed evidence is supplied so this module
+            # remains independently loadable for legacy workflow checks.
+            from aura_relational_authority import GovernanceDecision
+
+            if isinstance(supplied, GovernanceDecision):
+                decision = supplied
+                decision.validate_integrity()
+            elif isinstance(supplied, Mapping):
+                decision = GovernanceDecision.from_dict(supplied)
+            else:
+                raise ValueError("governance decision has an unsupported type")
+
+            action_id = str(evidence.get("requested_action_id", "")).strip()
+            action_digest = str(evidence.get("requested_action_digest", "")).strip()
+            if not action_id:
+                raise ValueError("requested action ID is missing")
+            if not action_digest:
+                raise ValueError("requested action digest is missing")
+            if not scopes["policy_scope"]:
+                raise ValueError("required policy scope is missing")
+            if not scopes["capability_scope"]:
+                raise ValueError("required capability scope is missing")
+
+            decision.validate_for_action(
+                action_id=action_id,
+                action_payload_digest=action_digest,
+                policy_scope=scopes["policy_scope"],
+                capability_scope=scopes["capability_scope"],
+                now=float(evidence.get("authority_now", time.time())),
+            )
+            verified_ids = {
+                str(item)
+                for item in evidence.get("verified_governance_decision_ids", ())
+            }
+            if decision.decision_id not in verified_ids:
+                raise ValueError("governance_decision_not_externally_verified")
+
+            result.update(
+                {
+                    "satisfied": True,
+                    "authority_mode": "GOVERNANCE_DECISION",
+                    "authority_verified": True,
+                    "governance_decision_id": decision.decision_id,
+                    "governance_action_digest": decision.action_payload_digest,
+                }
+            )
+        except (TypeError, ValueError) as exc:
+            result["authority_missing_reasons"].append(str(exc))
+        return result
+
+    if bool(evidence.get("human_approval")):
+        result.update(
+            {
+                "satisfied": True,
+                "authority_mode": "LEGACY_BOOLEAN_COMPAT",
+                "legacy_human_approval_used": True,
+                "authority_warnings": [
+                    "legacy human_approval is not action-bound or authority-verified"
+                ],
+            }
+        )
+        return result
+
+    result["authority_missing_reasons"].append("authority_evidence_missing")
+    return result
+
+
 def evaluate_gate(state: WorkflowState, evidence: Dict[str, Any]) -> Dict[str, Any]:
-    """Evaluate whether *state*'s gate requirements are met by *evidence*.
+    """Evaluate exact evidence and action-bound authority for a workflow gate.
 
-    Parameters
-    ----------
-    state:
-        The :class:`WorkflowState` (or its string name) to evaluate.
-    evidence:
-        A mapping of evidence keys to their values.  Boolean-truthiness is used
-        to determine whether a required key is satisfied.
-
-    Returns
-    -------
-    dict
-        A result packet with the following keys:
-
-        * ``ok`` — ``True`` if every required evidence key is satisfied.
-        * ``state`` — the evaluated state name.
-        * ``met_requirements`` — required keys that were satisfied.
-        * ``missing_requirements`` — required keys that were not satisfied.
-        * ``human_approval_required`` — whether the gate needs human approval.
-        * ``can_proceed`` — ``True`` if ``ok`` is ``True`` **and** (when human
-          approval is required) ``evidence['human_approval']`` is truthy.
-        * ``patch_authority`` — the governing patch-authority constant.
-        * ``vsa_patch_authority`` — the VSA patch-authority flag.
+    A verified :class:`GovernanceDecision` is preferred. The historical truthy
+    ``human_approval`` input remains available as an explicitly labeled
+    compatibility mode and is never represented as verified authority.
     """
     state = _coerce_state(state)
     gate = get_gate(state)
     evidence = evidence or {}
+    authority_required = bool(
+        gate.human_approval_required or "human_approval" in gate.required_evidence
+    )
+    authority = _evaluate_authority(
+        state,
+        evidence,
+        required=authority_required,
+    )
 
     met: List[str] = []
     missing: List[str] = []
     for key in gate.required_evidence:
-        if bool(evidence.get(key)):
+        satisfied = (
+            authority["satisfied"]
+            if key == "human_approval"
+            else bool(evidence.get(key))
+        )
+        if satisfied:
             met.append(key)
         else:
             missing.append(key)
 
     ok = len(missing) == 0
-    human_required = gate.human_approval_required
-    human_satisfied = bool(evidence.get("human_approval"))
-    can_proceed = ok and (not human_required or human_satisfied)
+    can_proceed = ok and authority["satisfied"]
 
     return {
         "ok": ok,
         "state": state.name,
         "met_requirements": met,
         "missing_requirements": missing,
-        "human_approval_required": human_required,
+        "human_approval_required": gate.human_approval_required,
         "can_proceed": can_proceed,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        "authority_mode": authority["authority_mode"],
+        "authority_verified": authority["authority_verified"],
+        "governance_decision_id": authority["governance_decision_id"],
+        "governance_action_digest": authority["governance_action_digest"],
+        "legacy_human_approval_used": authority["legacy_human_approval_used"],
+        "authority_missing_reasons": list(authority["authority_missing_reasons"]),
+        "authority_warnings": list(authority["authority_warnings"]),
+        "required_policy_scope": authority["required_policy_scope"],
+        "required_capability_scope": authority["required_capability_scope"],
     }
 
 
