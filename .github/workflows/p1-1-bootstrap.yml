@@ -38,19 +38,27 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import base64
           import zlib
 
-          paths = (
+          compressed_paths = (
               "aura_relational_authority.py",
-              "tests/test_aura_event_privacy_hardening.py",
               "tests/test_aura_relational_authority.py",
               "tests/test_aura_workflow_authority_bridge.py",
               "scripts/p1_1_finalize.py",
           )
-          for item in paths:
+          for item in compressed_paths:
               path = Path(item)
               path.write_bytes(zlib.decompress(path.read_bytes()))
               print(f"decoded {item}")
+
+          privacy_payload = Path(".p1_payload/privacy_tests.b64").read_text(
+              encoding="utf-8"
+          ).strip()
+          Path("tests/test_aura_event_privacy_hardening.py").write_bytes(
+              zlib.decompress(base64.b64decode(privacy_payload))
+          )
+          print("decoded tests/test_aura_event_privacy_hardening.py")
           PY
 
       - name: Install validation dependencies
