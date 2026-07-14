@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784062299,
+  "generated_at_unix": 1784062790,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -69,7 +69,6 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
-      ".github/workflows/p1-1-adversarial-review-fixes.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
@@ -817,6 +816,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "topology_map.json",
       "travel_extractors/__init__.py",
@@ -836,22 +836,22 @@
   },
   "summary": {
     "file_count": 814,
-    "total_bytes": 63504178,
-    "text_tokens_est": 6479982,
+    "total_bytes": 63464644,
+    "text_tokens_est": 6470098,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 571,
-      "schema_or_lexicon": 63,
+      "python_module": 572,
+      "schema_or_lexicon": 62,
       "support_file": 41
     },
-    "topology_nodes": 7122,
-    "topology_edges": 14825,
+    "topology_nodes": 7123,
+    "topology_edges": 14832,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19506.0
+    "elapsed_ms": 19718.16
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1045,7 +1045,6 @@
       ".github/workflows/model-cognome-replay-probes.yml",
       ".github/workflows/model-cognome-telemetry.yml",
       ".github/workflows/model-connectome-bridge.yml",
-      ".github/workflows/p1-1-adversarial-review-fixes.yml",
       ".github/workflows/p1-1-authority-contracts.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
@@ -1672,6 +1671,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1708,7 +1708,7 @@
       "role": "python_module",
       "symbols": 74,
       "tokens_est": 30294,
-      "topology_degree": 537
+      "topology_degree": 539
     },
     {
       "path": "test_scientific_memory.py",
@@ -1725,18 +1725,18 @@
       "topology_degree": 457
     },
     {
+      "path": "aura_relational_authority.py",
+      "role": "python_module",
+      "symbols": 57,
+      "tokens_est": 18767,
+      "topology_degree": 457
+    },
+    {
       "path": "aura_fst_routing.py",
       "role": "python_module",
       "symbols": 35,
       "tokens_est": 8991,
       "topology_degree": 453
-    },
-    {
-      "path": "aura_relational_authority.py",
-      "role": "python_module",
-      "symbols": 56,
-      "tokens_est": 17940,
-      "topology_degree": 445
     },
     {
       "path": "test_aura_functions.py",
@@ -1819,7 +1819,7 @@
       "path": "aura_event_contracts.py",
       "role": "python_module",
       "symbols": 39,
-      "tokens_est": 6166,
+      "tokens_est": 6207,
       "topology_degree": 228
     },
     {
@@ -2361,8 +2361,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 120,
-        "end_line": 126,
+        "line": 126,
+        "end_line": 132,
         "semantic_id": "aura_event_contracts.py#class:ActorType:effa1a689a3d5079",
         "signature_hash": "a255ce020e2120bb"
       }
@@ -2469,8 +2469,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 612,
-        "end_line": 712,
+        "line": 618,
+        "end_line": 718,
         "semantic_id": "aura_event_contracts.py#class:AppendOnlyEventStore:e1aedf3897476133",
         "signature_hash": "99a72d32d353f2ac"
       }
@@ -2479,8 +2479,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 437,
-        "end_line": 662,
+        "line": 438,
+        "end_line": 670,
         "semantic_id": "aura_relational_authority.py#class:ApprovalAttestation:a4fe35ace2836577",
         "signature_hash": "b36313a2cdffb3b3"
       }
@@ -3047,8 +3047,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 360,
-        "end_line": 440,
+        "line": 366,
+        "end_line": 446,
         "semantic_id": "aura_event_contracts.py#class:AuraEventEnvelope:156b9ee5eae83ae8",
         "signature_hash": "6fe1cf0d5c6c6c80"
       }
@@ -3714,7 +3714,7 @@
         "file": "aura_relational_authority.py",
         "kind": "class",
         "line": 216,
-        "end_line": 433,
+        "end_line": 434,
         "semantic_id": "aura_relational_authority.py#class:AuthorityGrant:75cb0040f0bbcdd5",
         "signature_hash": "b3e80468eff2c286"
       }
@@ -4103,8 +4103,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 1582,
-        "end_line": 1592,
+        "line": 1634,
+        "end_line": 1644,
         "semantic_id": "aura_relational_authority.py#class:ChainVerificationResult:a8a6b4430e003616",
         "signature_hash": "d870c2137208feca"
       }
@@ -4113,8 +4113,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 1506,
-        "end_line": 1578,
+        "line": 1558,
+        "end_line": 1630,
         "semantic_id": "aura_relational_authority.py#class:ChainedAuthorityReceipt:1ebe3069a494bf10",
         "signature_hash": "20bf6ab7921318fc"
       }
@@ -4831,8 +4831,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 129,
-        "end_line": 134,
+        "line": 135,
+        "end_line": 140,
         "semantic_id": "aura_event_contracts.py#class:DIKWPStage:cb54658762038e94",
         "signature_hash": "e6020b6e6f6d9903"
       }
@@ -4871,8 +4871,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 137,
-        "end_line": 142,
+        "line": 143,
+        "end_line": 148,
         "semantic_id": "aura_event_contracts.py#class:DecisionKind:25ab61aac0622797",
         "signature_hash": "80978259de0f329b"
       }
@@ -5451,8 +5451,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 346,
-        "end_line": 356,
+        "line": 352,
+        "end_line": 362,
         "semantic_id": "aura_event_contracts.py#class:ExactPayloadRef:5040c39c49946ffd",
         "signature_hash": "c6baec235a09adac"
       }
@@ -5737,8 +5737,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 880,
-        "end_line": 1025,
+        "line": 896,
+        "end_line": 1043,
         "semantic_id": "aura_relational_authority.py#class:GovernanceDecision:1c43edc07be80e90",
         "signature_hash": "0ccf24f63a397aa3"
       }
@@ -6507,8 +6507,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 145,
-        "end_line": 151,
+        "line": 151,
+        "end_line": 157,
         "semantic_id": "aura_event_contracts.py#class:MeasurementClass:3bb5c2cb58cf693e",
         "signature_hash": "735a57c7e81b25b0"
       }
@@ -7435,8 +7435,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 666,
-        "end_line": 876,
+        "line": 674,
+        "end_line": 892,
         "semantic_id": "aura_relational_authority.py#class:QuorumPolicy:17f53d721ddeb933",
         "signature_hash": "bbc771f2304452eb"
       }
@@ -8269,8 +8269,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 1291,
-        "end_line": 1455,
+        "line": 1327,
+        "end_line": 1491,
         "semantic_id": "aura_relational_authority.py#class:SovereignGovernanceProfile:7fa990387c2fcea1",
         "signature_hash": "a3f6bab52da329b8"
       }
@@ -11129,8 +11129,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 444,
-        "end_line": 557,
+        "line": 450,
+        "end_line": 563,
         "semantic_id": "aura_event_contracts.py#class:ToolDecisionRecord:5c5fd1cae234dd3d",
         "signature_hash": "d67a839603cd4267"
       }
@@ -11149,8 +11149,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "class",
-        "line": 561,
-        "end_line": 609,
+        "line": 567,
+        "end_line": 615,
         "semantic_id": "aura_event_contracts.py#class:ToolResultRecord:0d17ffc902c72f60",
         "signature_hash": "baec4a58b98a9372"
       }
@@ -11429,8 +11429,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "class",
-        "line": 1459,
-        "end_line": 1502,
+        "line": 1495,
+        "end_line": 1554,
         "semantic_id": "aura_relational_authority.py#class:TrustedCheckpoint:9d083f9941fbbd4a",
         "signature_hash": "c398a6aceac80b87"
       }
@@ -12657,8 +12657,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 615,
-        "end_line": 622,
+        "line": 621,
+        "end_line": 628,
         "semantic_id": "aura_event_contracts.py#method:AppendOnlyEventStore.__init__:51235a3e3ee33d6f",
         "signature_hash": "d65503f663f5ee26"
       },
@@ -14555,8 +14555,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 1052,
-        "end_line": 1057,
+        "line": 1063,
+        "end_line": 1068,
         "semantic_id": "aura_workflow_gates.py#function:__repr__:c496033c8e47d9b4",
         "signature_hash": "b024c6eb1f0f4353"
       },
@@ -14647,8 +14647,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 312,
-        "end_line": 321,
+        "line": 318,
+        "end_line": 327,
         "semantic_id": "aura_event_contracts.py#function:_acquire_process_lock:bb7b9bc935e5d9b2",
         "signature_hash": "f082e82b45e7bf16"
       }
@@ -15796,7 +15796,7 @@
         "file": "aura_workflow_gates.py",
         "kind": "function",
         "line": 817,
-        "end_line": 829,
+        "end_line": 832,
         "semantic_id": "aura_workflow_gates.py#function:_authority_requirement:b1f28ec2c2f4f3bf",
         "signature_hash": "ba7115f68ce5bc4f"
       }
@@ -16145,8 +16145,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 215,
-        "end_line": 221,
+        "line": 221,
+        "end_line": 227,
         "semantic_id": "aura_event_contracts.py#function:_bounded:fce4351702a126bc",
         "signature_hash": "8b9e966ed0b0f1e3"
       },
@@ -16919,8 +16919,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 154,
-        "end_line": 170,
+        "line": 160,
+        "end_line": 176,
         "semantic_id": "aura_event_contracts.py#function:_canonicalize:72eac2aa17d3ea31",
         "signature_hash": "fff47da21f5f4f20"
       },
@@ -17845,8 +17845,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 1030,
-        "end_line": 1045,
+        "line": 1041,
+        "end_line": 1056,
         "semantic_id": "aura_workflow_gates.py#function:_coerce_state:04cb93da75b4bf8b",
         "signature_hash": "367ef5bb81a94720"
       }
@@ -20029,8 +20029,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 208,
-        "end_line": 212,
+        "line": 214,
+        "end_line": 218,
         "semantic_id": "aura_event_contracts.py#function:_enum:f0a28463151f1958",
         "signature_hash": "e6620c087eb484ee"
       }
@@ -20239,8 +20239,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 832,
-        "end_line": 922,
+        "line": 835,
+        "end_line": 933,
         "semantic_id": "aura_workflow_gates.py#function:_evaluate_authority:5e096614f0c03012",
         "signature_hash": "de981ffcec98b09b"
       }
@@ -20403,8 +20403,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 333,
-        "end_line": 342,
+        "line": 339,
+        "end_line": 348,
         "semantic_id": "aura_event_contracts.py#function:_exclusive_store_lock:412430a49ef3af45",
         "signature_hash": "69c9f6c8190dbba7"
       }
@@ -23547,8 +23547,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 93,
+        "line": 89,
+        "end_line": 99,
         "semantic_id": "aura_event_contracts.py#function:_is_private_reasoning_field:3e79040146690674",
         "signature_hash": "5f4c93168173cd5d"
       }
@@ -24453,8 +24453,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 698,
-        "end_line": 712,
+        "line": 704,
+        "end_line": 718,
         "semantic_id": "aura_event_contracts.py#method:AppendOnlyEventStore._load_event_digests:f60384048d59876c",
         "signature_hash": "5358c9593c5e72f9"
       }
@@ -25949,8 +25949,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 233,
-        "end_line": 239,
+        "line": 239,
+        "end_line": 245,
         "semantic_id": "aura_event_contracts.py#function:_nonnegative:0aaa4de1d0ef41f0",
         "signature_hash": "f0bf5217c5923bb2"
       },
@@ -27229,8 +27229,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 224,
-        "end_line": 230,
+        "line": 230,
+        "end_line": 236,
         "semantic_id": "aura_event_contracts.py#function:_probability:dad36771b700d119",
         "signature_hash": "c948b5ccb0c875ba"
       },
@@ -28365,8 +28365,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 324,
-        "end_line": 329,
+        "line": 330,
+        "end_line": 335,
         "semantic_id": "aura_event_contracts.py#function:_release_process_lock:c992df88990341be",
         "signature_hash": "5b74f02f314c959f"
       }
@@ -28645,8 +28645,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 201,
-        "end_line": 205,
+        "line": 207,
+        "end_line": 211,
         "semantic_id": "aura_event_contracts.py#function:_required:9f9d426662d11f9d",
         "signature_hash": "fc3507f3e613f3eb"
       },
@@ -29881,8 +29881,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 297,
+        "line": 255,
+        "end_line": 303,
         "semantic_id": "aura_event_contracts.py#function:_sanitize_payload:2d0d80d986d5ea24",
         "signature_hash": "2ff56be5c1c2c489"
       }
@@ -32675,8 +32675,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 306,
-        "end_line": 309,
+        "line": 312,
+        "end_line": 315,
         "semantic_id": "aura_event_contracts.py#function:_thread_lock_for:19f46f64dc5d63fa",
         "signature_hash": "0e9ed9080be689b4"
       }
@@ -33521,8 +33521,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "function",
-        "line": 1028,
-        "end_line": 1055,
+        "line": 1046,
+        "end_line": 1073,
         "semantic_id": "aura_relational_authority.py#function:_validate_grant_chain:9b2a2c60ed596c85",
         "signature_hash": "7abe4ebe6ae6c57a"
       }
@@ -33541,16 +33541,16 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 369,
-        "end_line": 374,
+        "line": 370,
+        "end_line": 375,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant._validate_identity:45d4bd3eaa79c1fa",
         "signature_hash": "0f45cd53692ebe7d"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 596,
-        "end_line": 603,
+        "line": 600,
+        "end_line": 607,
         "semantic_id": "aura_relational_authority.py#method:ApprovalAttestation._validate_identity:e82f9c3ca635be07",
         "signature_hash": "0f45cd53692ebe7d"
       }
@@ -34161,8 +34161,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1388,
-        "end_line": 1424,
+        "line": 1424,
+        "end_line": 1460,
         "semantic_id": "aura_relational_authority.py#method:SovereignGovernanceProfile.activate:31be6003eb3eae6e",
         "signature_hash": "856ed94c3c42c854"
       },
@@ -34755,8 +34755,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 666,
-        "end_line": 685,
+        "line": 672,
+        "end_line": 691,
         "semantic_id": "aura_event_contracts.py#method:AppendOnlyEventStore.append:299fdc62de683b4c",
         "signature_hash": "7eec43a3fd40af1a"
       },
@@ -37251,8 +37251,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 173,
-        "end_line": 180,
+        "line": 179,
+        "end_line": 186,
         "semantic_id": "aura_event_contracts.py#function:canonical_json:092e4363dfdd6176",
         "signature_hash": "2af8a10abc3d606e"
       },
@@ -40159,24 +40159,24 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 387,
-        "end_line": 437,
+        "line": 393,
+        "end_line": 443,
         "semantic_id": "aura_event_contracts.py#method:AuraEventEnvelope.create:2f128859beb04264",
         "signature_hash": "ad643fdfb4e52b7e"
       },
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 471,
-        "end_line": 554,
+        "line": 477,
+        "end_line": 560,
         "semantic_id": "aura_event_contracts.py#method:ToolDecisionRecord.create:3577a91b131bdf6f",
         "signature_hash": "6827ff35a42ec762"
       },
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 577,
-        "end_line": 606,
+        "line": 583,
+        "end_line": 612,
         "semantic_id": "aura_event_contracts.py#method:ToolResultRecord.create:88d8f4913cd5234e",
         "signature_hash": "7bbc97b3e87bb8be"
       },
@@ -40288,47 +40288,47 @@
         "file": "aura_relational_authority.py",
         "kind": "method",
         "line": 235,
-        "end_line": 333,
+        "end_line": 334,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant.create:92ddddd5f1fd0174",
         "signature_hash": "167961e863cc0313"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 459,
-        "end_line": 542,
+        "line": 460,
+        "end_line": 546,
         "semantic_id": "aura_relational_authority.py#method:ApprovalAttestation.create:e502dcdf336a556f",
         "signature_hash": "7f04d99c24af9fdc"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 689,
-        "end_line": 804,
+        "line": 697,
+        "end_line": 812,
         "semantic_id": "aura_relational_authority.py#method:QuorumPolicy.create:cbdf961967001825",
         "signature_hash": "81cac7ef0fcb4e10"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1312,
-        "end_line": 1386,
+        "line": 1348,
+        "end_line": 1422,
         "semantic_id": "aura_relational_authority.py#method:SovereignGovernanceProfile.create:fb6bde18ba2fd1af",
         "signature_hash": "c268df5ca8542d04"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1469,
-        "end_line": 1502,
+        "line": 1505,
+        "end_line": 1538,
         "semantic_id": "aura_relational_authority.py#method:TrustedCheckpoint.create:71d7913eab749461",
         "signature_hash": "6a89c72bd50f475f"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1522,
-        "end_line": 1558,
+        "line": 1574,
+        "end_line": 1610,
         "semantic_id": "aura_relational_authority.py#method:ChainedAuthorityReceipt.create:9a87a87fd6bdf577",
         "signature_hash": "dc47955c8f815ecb"
       }
@@ -42051,8 +42051,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 925,
-        "end_line": 978,
+        "line": 936,
+        "end_line": 989,
         "semantic_id": "aura_workflow_gates.py#function:evaluate_gate:8a20acdebbf62162",
         "signature_hash": "63e3ec936567e88f"
       }
@@ -42061,8 +42061,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "function",
-        "line": 1058,
-        "end_line": 1287,
+        "line": 1076,
+        "end_line": 1323,
         "semantic_id": "aura_relational_authority.py#function:evaluate_governance:77b1c6f64432e69a",
         "signature_hash": "297206dfc765a7b8"
       }
@@ -43559,24 +43559,24 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 336,
-        "end_line": 367,
+        "line": 337,
+        "end_line": 368,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant.from_dict:6c433f5523bac07d",
         "signature_hash": "9b074d7a8dcd4219"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 545,
-        "end_line": 594,
+        "line": 549,
+        "end_line": 598,
         "semantic_id": "aura_relational_authority.py#method:ApprovalAttestation.from_dict:9e5e946d6e502163",
         "signature_hash": "f3228eb3e4cbd34c"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 912,
-        "end_line": 972,
+        "line": 928,
+        "end_line": 988,
         "semantic_id": "aura_relational_authority.py#method:GovernanceDecision.from_dict:93cd5ac4d4d443d0",
         "signature_hash": "e8824d1702c73cba"
       },
@@ -46641,8 +46641,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 687,
-        "end_line": 696,
+        "line": 693,
+        "end_line": 702,
         "semantic_id": "aura_event_contracts.py#method:AppendOnlyEventStore.iter_events:8962fb753977caa9",
         "signature_hash": "c4c7352c4f9421ee"
       }
@@ -48243,6 +48243,24 @@
         "end_line": 89,
         "semantic_id": "tests/test_aura_relational_authority.py#function:make_attestation:6599ad8b8cc8e9cd",
         "signature_hash": "683668ff1a19d0ec"
+      },
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 69,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
+        "signature_hash": "d32488e6727c3aaf"
+      }
+    ],
+    "make_decision": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 94,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_decision:b9b692c965b4354a",
+        "signature_hash": "602e1d8f768279b6"
       }
     ],
     "make_error_packet": [
@@ -48263,6 +48281,14 @@
         "end_line": 58,
         "semantic_id": "tests/test_aura_relational_authority.py#function:make_grant:6da4d4f699ea85df",
         "signature_hash": "994a3cd071939fc7"
+      },
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 41,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_grant:c610aebc2dd74c01",
+        "signature_hash": "235dfedc5e6f581e"
       }
     ],
     "make_handler": [
@@ -51671,8 +51697,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 242,
-        "end_line": 246,
+        "line": 248,
+        "end_line": 252,
         "semantic_id": "aura_event_contracts.py#function:redact_secrets:3e42a5cba6e48496",
         "signature_hash": "2d235fdbe1c23429"
       },
@@ -52015,6 +52041,16 @@
         "end_line": 49,
         "semantic_id": "aura_benchmark_gate.py#method:BenchmarkGate.register_record:0e3b58b846a3e623",
         "signature_hash": "8e5aedbb859a3568"
+      }
+    ],
+    "reidentify_policy": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 105,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:reidentify_policy:680833ceeccadf62",
+        "signature_hash": "d4107600b0eaf7ca"
       }
     ],
     "reject_exact_price_payload": [
@@ -53757,8 +53793,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 300,
-        "end_line": 303,
+        "line": 306,
+        "end_line": 309,
         "semantic_id": "aura_event_contracts.py#function:sanitize_payload:4b7be22dada1d847",
         "signature_hash": "d603059f597ebf4f"
       }
@@ -54977,8 +55013,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 183,
-        "end_line": 188,
+        "line": 189,
+        "end_line": 194,
         "semantic_id": "aura_event_contracts.py#function:stable_digest:c8e1ca4bd6d9d650",
         "signature_hash": "d8644d120e8246c9"
       },
@@ -55003,8 +55039,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "function",
-        "line": 191,
-        "end_line": 198,
+        "line": 197,
+        "end_line": 204,
         "semantic_id": "aura_event_contracts.py#function:stable_id:c26a747cc015099a",
         "signature_hash": "6446fe4247ba7520"
       },
@@ -55493,8 +55529,8 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 624,
-        "end_line": 664,
+        "line": 630,
+        "end_line": 670,
         "semantic_id": "aura_event_contracts.py#method:AppendOnlyEventStore.store_payload:a5835dfea5ef0500",
         "signature_hash": "71c5e874588381ad"
       }
@@ -56779,6 +56815,16 @@
         "end_line": 113,
         "semantic_id": "tests/test_aura_jspace_codec.py#function:test_attach_jspace_to_capsule_preserves_existing_keys_and_adds_state:c03f8d662a1b5f56",
         "signature_hash": "2d7ce86033ed364c"
+      }
+    ],
+    "test_attestation_cannot_be_backdated_before_grant": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 252,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_attestation_cannot_be_backdated_before_grant:c6ea33990577304b",
+        "signature_hash": "ff07f12624ad0bb1"
       }
     ],
     "test_attribution_report": [
@@ -58655,6 +58701,16 @@
         "end_line": 44,
         "semantic_id": "tests/test_aura_command_risk_gate.py#method:TestRiskGate.test_command_risk_packet:69fb668d983d4971",
         "signature_hash": "2d8b1d5cf7d9355f"
+      }
+    ],
+    "test_commit_gate_scope_cannot_be_downgraded_by_evidence": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 145,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_commit_gate_scope_cannot_be_downgraded_by_evidence:63e80b1085d53fed",
+        "signature_hash": "b061ea4c19260138"
       }
     ],
     "test_community_only_allowed_with_context": [
@@ -60595,6 +60651,16 @@
         "signature_hash": "a4a72e590106aac9"
       }
     ],
+    "test_duplicate_attestation_cannot_inflate_quorum": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 213,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_duplicate_attestation_cannot_inflate_quorum:634b5ea7d91dd5c2",
+        "signature_hash": "54bd25ccfd75d21c"
+      }
+    ],
     "test_duplicate_case_id_fails_split_validation": [
       {
         "file": "tests/test_aura_phase_c3_trial_crucible.py",
@@ -60823,6 +60889,16 @@
         "end_line": 80,
         "semantic_id": "tests/test_aura_civic_tensor_adapter.py#method:TestCivicTensorAdapter.test_empty_session_safe:4c2f000de1a5e535",
         "signature_hash": "12d68a8a833ef779"
+      }
+    ],
+    "test_empty_suffix_is_anchored_to_trusted_checkpoint": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 333,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_empty_suffix_is_anchored_to_trusted_checkpoint:f11787efe12c470a",
+        "signature_hash": "3957244a94035935"
       }
     ],
     "test_empty_variables_fallback": [
@@ -62307,6 +62383,16 @@
         "end_line": 23,
         "semantic_id": "tests/test_aura_adaptive_fusion_schema.py#function:test_fusion_telemetry_rejects_required_fields_with_invalid_types:f782f46405865667",
         "signature_hash": "67a0de08ffa7c410"
+      }
+    ],
+    "test_future_governance_decision_is_not_active": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 261,
+        "end_line": 278,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_future_governance_decision_is_not_active:07b44e15f02d4958",
+        "signature_hash": "9d32938b7a0f95e5"
       }
     ],
     "test_future_parent_and_non_proposal_wisdom_are_rejected": [
@@ -66341,6 +66427,16 @@
         "signature_hash": "4d97ee23d163b738"
       }
     ],
+    "test_non_emergency_policy_rejects_emergency_only_fields": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 281,
+        "end_line": 292,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_non_emergency_policy_rejects_emergency_only_fields:a312e28b35fbc240",
+        "signature_hash": "a99cc08d4ef72bf5"
+      }
+    ],
     "test_normalization_preserves_original_form": [
       {
         "file": "test_aura_ojibwe_tutor.py",
@@ -67177,6 +67273,16 @@
         "signature_hash": "c1b222d5d6aeffdb"
       }
     ],
+    "test_patch_transition_order_matches_the_state_machine": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 178,
+        "end_line": 184,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_patch_transition_order_matches_the_state_machine:21826e6f4e9bb136",
+        "signature_hash": "6f1d408e562578fd"
+      }
+    ],
     "test_path_traversal_blocked": [
       {
         "file": "tests/test_aura_ephemeral_sandbox.py",
@@ -67687,6 +67793,16 @@
         "signature_hash": "e7b371aa56fb9c26"
       }
     ],
+    "test_private_reasoning_acronym_does_not_block_unrelated_words": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 118,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_private_reasoning_acronym_does_not_block_unrelated_words:ebec6d6e5197ecdf",
+        "signature_hash": "9b80fe936a371c1f"
+      }
+    ],
     "test_private_reasoning_aliases_fail_closed": [
       {
         "file": "tests/test_aura_event_privacy_hardening.py",
@@ -67705,6 +67821,16 @@
         "end_line": 118,
         "semantic_id": "tests/test_aura_event_privacy_hardening.py#function:test_private_reasoning_never_reaches_sidecar:3e768514e6c397a2",
         "signature_hash": "5f977a5ae9c04866"
+      }
+    ],
+    "test_private_reasoning_punctuation_aliases_are_rejected": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 114,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_private_reasoning_punctuation_aliases_are_rejected:4b2840c0e02a3720",
+        "signature_hash": "8baf1fcae7c9d4e2"
       }
     ],
     "test_probe_ledger_appends_and_returns_latest": [
@@ -68085,6 +68211,16 @@
         "end_line": 44,
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_publisher_requires_named_space_and_uploads_only_bundle:e0c8e2c25d68546c",
         "signature_hash": "894edf0d6d652d76"
+      }
+    ],
+    "test_punctuation_separated_secret_field_is_redacted": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 124,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_punctuation_separated_secret_field_is_redacted:2ab639443742fdd5",
+        "signature_hash": "e7775d15237a13d0"
       }
     ],
     "test_qdkt_observe_called_on_failure": [
@@ -70103,6 +70239,16 @@
         "signature_hash": "07f14ea7113bf9a9"
       }
     ],
+    "test_same_principal_role_cannot_submit_multiple_counted_approvals": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 216,
+        "end_line": 247,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_same_principal_role_cannot_submit_multiple_counted_approvals:682779ade9e99c1d",
+        "signature_hash": "0a003b2435e2b256"
+      }
+    ],
     "test_sampled_similarity_does_not_overflow_int8": [
       {
         "file": "test_scientific_memory.py",
@@ -71747,6 +71893,16 @@
         "signature_hash": "abcdb5055361dde6"
       }
     ],
+    "test_string_human_approval_does_not_pass_legacy_gate": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 154,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_string_human_approval_does_not_pass_legacy_gate:899c49521dd40815",
+        "signature_hash": "75b948c23e212783"
+      }
+    ],
     "test_string_level_credentials_are_fully_redacted": [
       {
         "file": "tests/test_aura_event_privacy_hardening.py",
@@ -72017,6 +72173,16 @@
         "signature_hash": "94f44743c3090e49"
       }
     ],
+    "test_tampered_grant_is_rejected_before_attestation_creation": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 255,
+        "end_line": 258,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_tampered_grant_is_rejected_before_attestation_creation:372d2f25de6bcc45",
+        "signature_hash": "c38103232bae80fd"
+      }
+    ],
     "test_tampered_path_digest_is_denied": [
       {
         "file": "tests/test_aura_model_connectome_bridge.py",
@@ -72035,6 +72201,16 @@
         "end_line": 148,
         "semantic_id": "tests/test_aura_workflow_authority_bridge.py#function:test_tampered_serialized_decision_fails_integrity_check:4f4ffe60dab40f36",
         "signature_hash": "edf9582559b2dbdf"
+      }
+    ],
+    "test_tampered_trusted_checkpoint_is_rejected": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 295,
+        "end_line": 312,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_tampered_trusted_checkpoint_is_rejected:d6e154feec9a0a45",
+        "signature_hash": "78451c126bef9f7b"
       }
     ],
     "test_task_context_hashes_objective_and_all_route_relevant_fields": [
@@ -73553,6 +73729,16 @@
         "end_line": 414,
         "semantic_id": "test_scientific_memory.py#function:test_vector_similarity_zero_vector_returns_zero:92cede04618a82d9",
         "signature_hash": "4fd1e6e7faf2bf9e"
+      }
+    ],
+    "test_verified_decision_ids_must_be_a_collection": [
+      {
+        "file": "tests/test_p1_1_adversarial_review.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 175,
+        "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_verified_decision_ids_must_be_a_collection:e5859c33edd6f203",
+        "signature_hash": "1f3ddfd9d44b83fc"
       }
     ],
     "test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule": [
@@ -75275,32 +75461,32 @@
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 355,
-        "end_line": 356,
+        "line": 361,
+        "end_line": 362,
         "semantic_id": "aura_event_contracts.py#method:ExactPayloadRef.to_dict:2f38ef564d546c97",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 439,
-        "end_line": 440,
+        "line": 445,
+        "end_line": 446,
         "semantic_id": "aura_event_contracts.py#method:AuraEventEnvelope.to_dict:a346eb69e0320d75",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 556,
-        "end_line": 557,
+        "line": 562,
+        "end_line": 563,
         "semantic_id": "aura_event_contracts.py#method:ToolDecisionRecord.to_dict:02f8ae45a4eb44e4",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_event_contracts.py",
         "kind": "method",
-        "line": 608,
-        "end_line": 609,
+        "line": 614,
+        "end_line": 615,
         "semantic_id": "aura_event_contracts.py#method:ToolResultRecord.to_dict:eb075510834cf8b4",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -75867,56 +76053,56 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 432,
-        "end_line": 433,
+        "line": 433,
+        "end_line": 434,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant.to_dict:cbed4be5846d4cf1",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 661,
-        "end_line": 662,
+        "line": 669,
+        "end_line": 670,
         "semantic_id": "aura_relational_authority.py#method:ApprovalAttestation.to_dict:23850e6b4bd276d2",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 875,
-        "end_line": 876,
+        "line": 891,
+        "end_line": 892,
         "semantic_id": "aura_relational_authority.py#method:QuorumPolicy.to_dict:6ec83dae99dc1aed",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1024,
-        "end_line": 1025,
+        "line": 1042,
+        "end_line": 1043,
         "semantic_id": "aura_relational_authority.py#method:GovernanceDecision.to_dict:4a93160a6281bb29",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1454,
-        "end_line": 1455,
+        "line": 1490,
+        "end_line": 1491,
         "semantic_id": "aura_relational_authority.py#method:SovereignGovernanceProfile.to_dict:2a7740521631d343",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1577,
-        "end_line": 1578,
+        "line": 1629,
+        "end_line": 1630,
         "semantic_id": "aura_relational_authority.py#method:ChainedAuthorityReceipt.to_dict:7a0f2295a1e56467",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1591,
-        "end_line": 1592,
+        "line": 1643,
+        "end_line": 1644,
         "semantic_id": "aura_relational_authority.py#method:ChainVerificationResult.to_dict:77db4305b55d212f",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -77091,16 +77277,16 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 376,
-        "end_line": 410,
+        "line": 377,
+        "end_line": 411,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant.validate:fe24d333e347057e",
         "signature_hash": "7744baf2e8ee8eb0"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 806,
-        "end_line": 840,
+        "line": 814,
+        "end_line": 856,
         "semantic_id": "aura_relational_authority.py#method:QuorumPolicy.validate:94914574b08f5385",
         "signature_hash": "99559e6add5bcf3e"
       },
@@ -77117,8 +77303,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 605,
-        "end_line": 659,
+        "line": 609,
+        "end_line": 667,
         "semantic_id": "aura_relational_authority.py#method:ApprovalAttestation.validate_against:7aa523960e686ea3",
         "signature_hash": "f6126b3b4f337089"
       }
@@ -77167,8 +77353,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 412,
-        "end_line": 430,
+        "line": 413,
+        "end_line": 431,
         "semantic_id": "aura_relational_authority.py#method:AuthorityGrant.validate_delegation_from:cca09b447839c4ed",
         "signature_hash": "950c58d8c689dc93"
       }
@@ -77187,8 +77373,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 842,
-        "end_line": 873,
+        "line": 858,
+        "end_line": 889,
         "semantic_id": "aura_relational_authority.py#method:QuorumPolicy.validate_emergency_against:18b1157063aba944",
         "signature_hash": "1253934fca661e66"
       }
@@ -77247,8 +77433,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 996,
-        "end_line": 1022,
+        "line": 1012,
+        "end_line": 1040,
         "semantic_id": "aura_relational_authority.py#method:GovernanceDecision.validate_for_action:e173cc191e548242",
         "signature_hash": "5d23c680a24b73a0"
       }
@@ -77277,24 +77463,32 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 974,
-        "end_line": 994,
+        "line": 990,
+        "end_line": 1010,
         "semantic_id": "aura_relational_authority.py#method:GovernanceDecision.validate_integrity:5589389a1074e247",
         "signature_hash": "b513004eb88773d1"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1426,
-        "end_line": 1452,
+        "line": 1462,
+        "end_line": 1488,
         "semantic_id": "aura_relational_authority.py#method:SovereignGovernanceProfile.validate_integrity:30282b171c458f29",
         "signature_hash": "b513004eb88773d1"
       },
       {
         "file": "aura_relational_authority.py",
         "kind": "method",
-        "line": 1560,
-        "end_line": 1575,
+        "line": 1540,
+        "end_line": 1554,
+        "semantic_id": "aura_relational_authority.py#method:TrustedCheckpoint.validate_integrity:92f6369cff9f8300",
+        "signature_hash": "e298b874525be023"
+      },
+      {
+        "file": "aura_relational_authority.py",
+        "kind": "method",
+        "line": 1612,
+        "end_line": 1627,
         "semantic_id": "aura_relational_authority.py#method:ChainedAuthorityReceipt.validate_integrity:8316622896ffd028",
         "signature_hash": "b513004eb88773d1"
       }
@@ -77779,8 +77973,8 @@
       {
         "file": "aura_relational_authority.py",
         "kind": "function",
-        "line": 1595,
-        "end_line": 1719,
+        "line": 1647,
+        "end_line": 1790,
         "semantic_id": "aura_relational_authority.py#function:verify_receipt_chain:85ae88aeb47a0905",
         "signature_hash": "b2bf0b14b0bb830b"
       }
@@ -78361,8 +78555,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 999,
-        "end_line": 1023,
+        "line": 1010,
+        "end_line": 1034,
         "semantic_id": "aura_workflow_gates.py#function:workflow_gate_markdown:8adb61786cf321ce",
         "signature_hash": "74bb72e64ab22b5a"
       }
@@ -78381,8 +78575,8 @@
       {
         "file": "aura_workflow_gates.py",
         "kind": "function",
-        "line": 981,
-        "end_line": 996,
+        "line": 992,
+        "end_line": 1007,
         "semantic_id": "aura_workflow_gates.py#function:workflow_state_machine:efca1bae327a9b67",
         "signature_hash": "9e52890376eeb762"
       }
@@ -93117,9 +93311,9 @@
     {
       "path": "aura_event_contracts.py",
       "role": "python_module",
-      "bytes": 24663,
-      "lines": 713,
-      "tokens_est": 6166,
+      "bytes": 24826,
+      "lines": 719,
+      "tokens_est": 6207,
       "symbol_count": 39,
       "commands": [],
       "command_lines": {},
@@ -93159,40 +93353,40 @@
           "import_module": 1
         }
       },
-      "digest8": "ce17c42e90e3b153",
+      "digest8": "698da1b0099a352d",
       "vector": [
-        -0.177807,
-        0.030656,
-        -0.042919,
-        -0.28817,
-        -0.256288,
-        -0.011036,
-        0.072349,
-        0.207237,
-        -0.163092,
-        -0.158187,
-        -0.214595,
-        0.17045,
-        0.19007,
-        0.082159,
-        -0.006131,
-        0.251383,
-        0.052729,
-        -0.109137,
-        -0.271003,
-        0.008584,
-        -0.224405,
-        0.006131,
-        0.197427,
-        -0.226857,
-        -0.20969,
-        0.17045,
-        0.118947,
-        0.283265,
-        0.111589,
-        -0.305338,
-        0.067444,
-        0.17045
+        0.001521,
+        0.007605,
+        0.056274,
+        0.241828,
+        -0.269205,
+        0.053233,
+        0.077567,
+        -0.007605,
+        0.126237,
+        -0.019772,
+        -0.339168,
+        0.317874,
+        -0.150572,
+        0.041065,
+        0.135363,
+        0.180991,
+        0.059316,
+        -0.29354,
+        0.193158,
+        0.056274,
+        0.29354,
+        0.086693,
+        0.107986,
+        0.013688,
+        -0.071484,
+        -0.378712,
+        0.080609,
+        0.263121,
+        0.09886,
+        0.16274,
+        -0.074526,
+        -0.217493
       ]
     },
     {
@@ -93659,7 +93853,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 6,
+        "hub_rank": 7,
         "node_count": 36,
         "edge_count": 453,
         "degree": 453,
@@ -96812,8 +97006,8 @@
       "topology": {
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 537,
-        "degree": 537,
+        "edge_count": 539,
+        "degree": 539,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -96859,7 +97053,7 @@
           "aura_proxy_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 358,
+          "call": 360,
           "defines": 168,
           "import_module": 11
         }
@@ -102682,17 +102876,17 @@
     {
       "path": "aura_relational_authority.py",
       "role": "python_module",
-      "bytes": 71759,
-      "lines": 1746,
-      "tokens_est": 17940,
-      "symbol_count": 56,
+      "bytes": 75068,
+      "lines": 1817,
+      "tokens_est": 18767,
+      "symbol_count": 57,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 7,
-        "node_count": 57,
-        "edge_count": 445,
-        "degree": 445,
+        "hub_rank": 6,
+        "node_count": 58,
+        "edge_count": 457,
+        "degree": 457,
         "symbols": [
           "ApprovalAttestation",
           "AttestationDecision",
@@ -102722,44 +102916,44 @@
           "liquid_attractor_control_plane.py"
         ],
         "edge_kinds": {
-          "call": 333,
-          "defines": 112
+          "call": 343,
+          "defines": 114
         }
       },
-      "digest8": "29857937ac509627",
+      "digest8": "87e852a6aed729c9",
       "vector": [
-        -0.184161,
-        0.029325,
-        -0.001173,
-        0.090321,
-        -0.252195,
-        0.217005,
-        0.221697,
-        -0.141933,
-        0.043401,
-        -0.200583,
-        0.092667,
-        -0.019941,
-        -0.163047,
-        0.219351,
-        0.024633,
-        0.038709,
-        -0.292077,
-        -0.174777,
-        -0.050439,
-        -0.123165,
-        -0.010557,
-        -0.144279,
-        0.256887,
-        -0.148971,
-        0.278001,
-        -0.165393,
-        -0.224043,
-        -0.200583,
-        0.191199,
-        -0.268617,
-        0.263925,
-        0.181815
+        0.161028,
+        0.098346,
+        0.005404,
+        -0.275586,
+        -0.143737,
+        0.186966,
+        0.035664,
+        0.247487,
+        -0.212903,
+        -0.202096,
+        0.13293,
+        0.078893,
+        -0.091862,
+        0.228034,
+        -0.063763,
+        0.221549,
+        -0.020534,
+        -0.247487,
+        0.256133,
+        0.243164,
+        0.14806,
+        0.212903,
+        0.055117,
+        -0.124284,
+        0.269101,
+        -0.256133,
+        -0.07457,
+        0.271263,
+        0.039987,
+        0.024857,
+        -0.232357,
+        -0.033503
       ]
     },
     {
@@ -108766,9 +108960,9 @@
     {
       "path": "aura_workflow_gates.py",
       "role": "python_module",
-      "bytes": 40493,
-      "lines": 1132,
-      "tokens_est": 10117,
+      "bytes": 40961,
+      "lines": 1143,
+      "tokens_est": 10234,
       "symbol_count": 15,
       "commands": [
         "!r"
@@ -108776,10 +108970,10 @@
       "command_lines": {
         "!r": [
           676,
-          1042,
-          1056,
-          1069,
-          1070
+          1053,
+          1067,
+          1080,
+          1081
         ]
       },
       "topology": {
@@ -108812,40 +109006,40 @@
           "call": 13
         }
       },
-      "digest8": "3dade4dada6c1fe7",
+      "digest8": "2e3dce2f17758527",
       "vector": [
-        -0.042071,
-        0.024223,
-        0.189958,
-        0.011474,
-        -0.036972,
-        0.144062,
-        -0.192508,
-        0.164461,
-        0.108365,
-        -0.141513,
-        0.108365,
-        0.322547,
-        -0.095617,
-        0.322547,
-        -0.225655,
-        -0.309798,
-        -0.189958,
-        0.299599,
-        -0.072669,
-        -0.05482,
-        0.110915,
-        0.138963,
-        0.126214,
-        -0.090517,
-        0.184859,
-        0.177209,
-        0.128764,
-        -0.136413,
-        0.210357,
-        0.28685,
-        -0.042071,
-        -0.220556
+        0.253501,
+        -0.115025,
+        0.280303,
+        0.04802,
+        -0.177562,
+        -0.173095,
+        0.001117,
+        0.222232,
+        -0.106091,
+        -0.04802,
+        0.190963,
+        0.088223,
+        0.130659,
+        0.213298,
+        -0.168628,
+        -0.222232,
+        -0.28477,
+        0.007817,
+        0.226699,
+        -0.061421,
+        0.030152,
+        -0.139593,
+        0.159695,
+        0.228933,
+        0.226699,
+        0.13736,
+        -0.255735,
+        -0.237867,
+        0.072588,
+        -0.14406,
+        -0.161928,
+        0.231166
       ]
     },
     {
@@ -116802,47 +116996,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 14386661,
-      "lines": 459601,
-      "tokens_est": 3596666,
+      "bytes": 14389385,
+      "lines": 459734,
+      "tokens_est": 3597347,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "8865c52bd6dca9cd",
+      "digest8": "9123f5ee6f122b10",
       "vector": [
-        0.143099,
-        -0.0159,
-        -0.182237,
-        0.006115,
-        -0.265406,
-        -0.192022,
-        0.294759,
-        -0.003669,
-        -0.023238,
-        0.228714,
-        0.089284,
-        0.035469,
-        -0.086838,
-        -0.260513,
-        0.108853,
-        0.267852,
-        -0.272744,
-        0.103961,
-        -0.243391,
-        -0.23116,
-        -0.209145,
-        0.236052,
-        -0.267852,
-        -0.209145,
-        -0.045254,
-        0.209145,
-        0.052592,
-        0.165114,
-        0.001223,
-        0.011008,
-        0.0159,
-        0.204252
+        -0.041072,
+        -0.072153,
+        0.00555,
+        0.258641,
+        0.041072,
+        0.283062,
+        0.187598,
+        0.027751,
+        0.069933,
+        -0.118775,
+        0.127656,
+        -0.138756,
+        0.143196,
+        -0.00555,
+        -0.267522,
+        0.092134,
+        -0.23644,
+        0.232,
+        0.243101,
+        0.069933,
+        0.172057,
+        0.180938,
+        0.129876,
+        0.185378,
+        -0.147636,
+        0.276402,
+        0.23866,
+        0.22978,
+        0.189818,
+        0.014431,
+        -0.218679,
+        0.271962
       ]
     },
     {
@@ -119929,95 +120123,49 @@
       ]
     },
     {
-      "path": ".github/workflows/p1-1-adversarial-review-fixes.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 27058,
-      "lines": 188,
-      "tokens_est": 6765,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "a2938c11a758b393",
-      "vector": [
-        -0.117506,
-        -0.027117,
-        0.189817,
-        0.326691,
-        -0.151079,
-        -0.032282,
-        0.078767,
-        0.037447,
-        0.326691,
-        0.120088,
-        -0.187234,
-        0.241467,
-        -0.194982,
-        -0.140748,
-        -0.040029,
-        -0.065855,
-        0.122671,
-        -0.099428,
-        -0.311196,
-        0.287953,
-        0.003874,
-        -0.107175,
-        -0.058107,
-        0.194982,
-        0.246633,
-        0.231137,
-        -0.161409,
-        -0.034864,
-        0.10201,
-        -0.169156,
-        0.290536,
-        -0.10201
-      ]
-    },
-    {
       "path": ".github/workflows/p1-1-authority-contracts.yml",
       "role": "schema_or_lexicon",
-      "bytes": 32449,
-      "lines": 290,
-      "tokens_est": 8113,
+      "bytes": 2131,
+      "lines": 66,
+      "tokens_est": 533,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "466c8260457d0cb0",
+      "digest8": "54fce204e97fa6b8",
       "vector": [
-        -0.076443,
-        -0.085851,
-        0.229329,
-        -0.161118,
-        -0.191695,
-        0.008232,
-        -0.078795,
-        -0.285779,
-        0.189343,
-        -0.229329,
-        -0.234033,
-        0.285779,
-        -0.10702,
-        0.250497,
-        0.132893,
-        0.236385,
-        -0.059978,
-        0.285779,
-        0.161118,
-        -0.125837,
-        0.10702,
-        -0.008232,
-        -0.250497,
-        -0.055274,
-        0.147006,
-        -0.012936,
-        -0.069387,
-        -0.161118,
-        0.15171,
-        -0.017641,
-        -0.241089,
-        -0.269314
+        0.169572,
+        -0.161351,
+        0.173683,
+        0.138741,
+        0.202459,
+        0.081189,
+        -0.204514,
+        -0.140796,
+        -0.136686,
+        -0.132575,
+        0.11202,
+        -0.0853,
+        0.093522,
+        0.245623,
+        0.245623,
+        0.257955,
+        -0.237401,
+        0.235346,
+        0.188071,
+        0.124353,
+        0.171628,
+        -0.245623,
+        0.027748,
+        0.218902,
+        0.192182,
+        -0.081189,
+        0.149018,
+        -0.099688,
+        0.124353,
+        -0.245623,
+        0.20657,
+        0.198348
       ]
     },
     {
@@ -129909,6 +130057,52 @@
       ]
     },
     {
+      "path": "tests/test_p1_1_adversarial_review.py",
+      "role": "python_module",
+      "bytes": 11178,
+      "lines": 334,
+      "tokens_est": 2795,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9db66ed9b172047b",
+      "vector": [
+        -0.119656,
+        -0.1764,
+        0.164064,
+        0.210939,
+        0.050576,
+        0.247946,
+        0.233144,
+        0.080182,
+        -0.104853,
+        0.215874,
+        0.203538,
+        0.040708,
+        -0.119656,
+        -0.050576,
+        -0.085116,
+        -0.171465,
+        0.255348,
+        -0.292355,
+        0.067846,
+        -0.119656,
+        -0.151728,
+        0.161597,
+        -0.070313,
+        -0.171465,
+        -0.035773,
+        -0.284953,
+        -0.168998,
+        -0.245479,
+        -0.151728,
+        0.270151,
+        -0.282486,
+        0.062912
+      ]
+    },
+    {
       "path": "tests/test_render_four_tab_deployment.py",
       "role": "python_module",
       "bytes": 1440,
@@ -130229,15 +130423,15 @@
           "degree": 65
         },
         {
+          "id": "aura_live_architect.py::add",
+          "degree": 61
+        },
+        {
           "id": "test_synthesis_upgrades.py::global_scope",
           "degree": 60
         },
         {
           "id": "aura_emergent_potential_repl.py::global_scope",
-          "degree": 59
-        },
-        {
-          "id": "aura_live_architect.py::add",
           "degree": 59
         },
         {
@@ -130289,11 +130483,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 452,
-      "node_count": 7122,
-      "edge_count": 14825,
+      "node_count": 7123,
+      "edge_count": 14832,
       "spectral_layout": true,
-      "spectral_sparsity": 0.056874,
-      "global_health": 0.971693
+      "spectral_sparsity": 0.056866,
+      "global_health": 0.971697
     },
     "file_index": {
       "aura_node.py": {
@@ -130391,8 +130585,8 @@
       "aura_live_architect.py": {
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 537,
-        "degree": 537,
+        "edge_count": 539,
+        "degree": 539,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -130438,7 +130632,7 @@
           "aura_proxy_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 358,
+          "call": 360,
           "defines": 168,
           "import_module": 11
         }
@@ -130530,8 +130724,46 @@
           "import_module": 10
         }
       },
-      "aura_fst_routing.py": {
+      "aura_relational_authority.py": {
         "hub_rank": 6,
+        "node_count": 58,
+        "edge_count": 457,
+        "degree": 457,
+        "symbols": [
+          "ApprovalAttestation",
+          "AttestationDecision",
+          "AuthorityGrant",
+          "ChainVerificationResult",
+          "ChainedAuthorityReceipt",
+          "GovernanceDecision",
+          "GovernanceFunction",
+          "QuorumPolicy",
+          "RiskClass",
+          "SovereignGovernanceProfile",
+          "TrustedCheckpoint",
+          "_bounded",
+          "_canonical_payload",
+          "_canonicalize",
+          "_enum_value",
+          "_normalize_role_pair",
+          "_normalized_strings",
+          "_now",
+          "_required",
+          "_timestamp"
+        ],
+        "neighbor_files": [
+          "aura_graphify_schema.py",
+          "aura_live_architect.py",
+          "aura_workflow_gates.py",
+          "liquid_attractor_control_plane.py"
+        ],
+        "edge_kinds": {
+          "call": 343,
+          "defines": 114
+        }
+      },
+      "aura_fst_routing.py": {
+        "hub_rank": 7,
         "node_count": 36,
         "edge_count": 453,
         "degree": 453,
@@ -130583,44 +130815,6 @@
           "call": 379,
           "defines": 70,
           "import_module": 4
-        }
-      },
-      "aura_relational_authority.py": {
-        "hub_rank": 7,
-        "node_count": 57,
-        "edge_count": 445,
-        "degree": 445,
-        "symbols": [
-          "ApprovalAttestation",
-          "AttestationDecision",
-          "AuthorityGrant",
-          "ChainVerificationResult",
-          "ChainedAuthorityReceipt",
-          "GovernanceDecision",
-          "GovernanceFunction",
-          "QuorumPolicy",
-          "RiskClass",
-          "SovereignGovernanceProfile",
-          "TrustedCheckpoint",
-          "_bounded",
-          "_canonical_payload",
-          "_canonicalize",
-          "_enum_value",
-          "_normalize_role_pair",
-          "_normalized_strings",
-          "_now",
-          "_required",
-          "_timestamp"
-        ],
-        "neighbor_files": [
-          "aura_graphify_schema.py",
-          "aura_live_architect.py",
-          "aura_workflow_gates.py",
-          "liquid_attractor_control_plane.py"
-        ],
-        "edge_kinds": {
-          "call": 333,
-          "defines": 112
         }
       },
       "test_aura_functions.py": {
@@ -143503,8 +143697,8 @@
         "file": "aura_live_architect.py",
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 537,
-        "degree": 537,
+        "edge_count": 539,
+        "degree": 539,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -143550,7 +143744,7 @@
           "aura_proxy_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 358,
+          "call": 360,
           "defines": 168,
           "import_module": 11
         }
@@ -143645,8 +143839,47 @@
         }
       },
       {
-        "file": "aura_fst_routing.py",
+        "file": "aura_relational_authority.py",
         "hub_rank": 6,
+        "node_count": 58,
+        "edge_count": 457,
+        "degree": 457,
+        "symbols": [
+          "ApprovalAttestation",
+          "AttestationDecision",
+          "AuthorityGrant",
+          "ChainVerificationResult",
+          "ChainedAuthorityReceipt",
+          "GovernanceDecision",
+          "GovernanceFunction",
+          "QuorumPolicy",
+          "RiskClass",
+          "SovereignGovernanceProfile",
+          "TrustedCheckpoint",
+          "_bounded",
+          "_canonical_payload",
+          "_canonicalize",
+          "_enum_value",
+          "_normalize_role_pair",
+          "_normalized_strings",
+          "_now",
+          "_required",
+          "_timestamp"
+        ],
+        "neighbor_files": [
+          "aura_graphify_schema.py",
+          "aura_live_architect.py",
+          "aura_workflow_gates.py",
+          "liquid_attractor_control_plane.py"
+        ],
+        "edge_kinds": {
+          "call": 343,
+          "defines": 114
+        }
+      },
+      {
+        "file": "aura_fst_routing.py",
+        "hub_rank": 7,
         "node_count": 36,
         "edge_count": 453,
         "degree": 453,
@@ -143698,45 +143931,6 @@
           "call": 379,
           "defines": 70,
           "import_module": 4
-        }
-      },
-      {
-        "file": "aura_relational_authority.py",
-        "hub_rank": 7,
-        "node_count": 57,
-        "edge_count": 445,
-        "degree": 445,
-        "symbols": [
-          "ApprovalAttestation",
-          "AttestationDecision",
-          "AuthorityGrant",
-          "ChainVerificationResult",
-          "ChainedAuthorityReceipt",
-          "GovernanceDecision",
-          "GovernanceFunction",
-          "QuorumPolicy",
-          "RiskClass",
-          "SovereignGovernanceProfile",
-          "TrustedCheckpoint",
-          "_bounded",
-          "_canonical_payload",
-          "_canonicalize",
-          "_enum_value",
-          "_normalize_role_pair",
-          "_normalized_strings",
-          "_now",
-          "_required",
-          "_timestamp"
-        ],
-        "neighbor_files": [
-          "aura_graphify_schema.py",
-          "aura_live_architect.py",
-          "aura_workflow_gates.py",
-          "liquid_attractor_control_plane.py"
-        ],
-        "edge_kinds": {
-          "call": 333,
-          "defines": 112
         }
       },
       {
