@@ -31,6 +31,14 @@ def _nonnegative(value: Any, name: str) -> float | None:
     return number
 
 
+def _strict_optional_bool(value: Any, name: str) -> bool | None:
+    if value is None:
+        return None
+    if type(value) is not bool:
+        raise ValueError(f"{name} must be a boolean or None")
+    return value
+
+
 @dataclass(frozen=True)
 class ReplayOutcome:
     """One historically observed, verifier-linked outcome."""
@@ -51,6 +59,7 @@ class ReplayOutcome:
             raise ValueError("observation_id must not be empty")
         if not self.profile_id:
             raise ValueError("profile_id must not be empty")
+        _strict_optional_bool(self.verifier_pass, "verifier_pass")
         _nonnegative(self.cost_usd, "cost_usd")
         _nonnegative(self.time_to_verified_ms, "time_to_verified_ms")
         _nonnegative(self.repair_attempts, "repair_attempts")
@@ -66,7 +75,7 @@ class ReplayOutcome:
         return cls(
             observation_id=str(value.get("observation_id") or ""),
             profile_id=str(value.get("profile_id") or ""),
-            verifier_pass=value.get("verifier_pass"),
+            verifier_pass=_strict_optional_bool(value.get("verifier_pass"), "verifier_pass"),
             cost_usd=value.get("cost_usd"),
             time_to_verified_ms=value.get("time_to_verified_outcome_ms", value.get("time_to_verified_ms")),
             repair_attempts=float(value.get("repair_attempt_count") or value.get("repair_attempts") or 0.0),
@@ -101,6 +110,7 @@ class ReplayCase:
             raise ValueError("replay evidence must come from VALIDATION or SHADOW")
         if not self.capability_graph_digest or not self.path_digest:
             raise ValueError("replay cases must be graph and path bound")
+        _nonnegative(self.created_at, "created_at")
         profile_ids = [item.profile_id for item in self.outcomes]
         if len(profile_ids) != len(set(profile_ids)):
             raise ValueError("a replay case cannot contain duplicate profile outcomes")
@@ -174,6 +184,10 @@ class ReplayPolicy:
             raise ValueError("DIRECT replay policies require exactly one profile")
         if self.policy_mode in {CASCADE, PANEL} and len(self.profile_ids) < 2:
             raise ValueError(f"{self.policy_mode} replay policies require at least two profiles")
+        if any(not str(profile_id).strip() for profile_id in self.profile_ids):
+            raise ValueError("replay policy profile IDs must not be empty")
+        if len(self.profile_ids) != len(set(self.profile_ids)):
+            raise ValueError("replay policies cannot contain duplicate profile IDs")
 
     @classmethod
     def create(

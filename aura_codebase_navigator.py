@@ -39,6 +39,7 @@ DEFAULT_SKIP_DIRS = frozenset({
     ".ruff_cache",
     "node_modules",
     "Aura_Memory",
+    "Aura_Sandbox",
     ".venv",
     "venv",
     "env",
@@ -707,8 +708,6 @@ def search_index(payload: dict[str, Any], query: str, *, limit: int = 8) -> list
                 result["matched_command_lines"] = {cmd: card["command_lines"][cmd] for cmd in sorted(matched_commands)}
             ranked.append(result)
     return sorted(ranked, key=lambda item: item["score"], reverse=True)[:limit]
-
-
 
 
 def _atomic_write_text(path: Path, text: str) -> None:

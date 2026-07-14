@@ -9,6 +9,7 @@ on:
       - "aura_model_cognome_federation.py"
       - "aura_open_weight_jacobian_adapter.py"
       - "tests/test_aura_model_cognome_replay_probes.py"
+      - "tests/test_aura_model_cognome_manual_review.py"
       - "test_aura_icm_workspace.py"
       - ".github/workflows/model-cognome-replay-probes.yml"
   workflow_dispatch:
@@ -29,6 +30,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -39,7 +41,7 @@ jobs:
           python -m py_compile             aura_model_cognome_replay.py             aura_model_cognome_drift.py             aura_model_cognome_promotion.py             aura_model_cognome_federation.py             aura_open_weight_jacobian_adapter.py
       - name: Fatal lint checks
         run: |
-          ruff check --select E9,F63,F7,F82             aura_model_cognome_replay.py             aura_model_cognome_drift.py             aura_model_cognome_promotion.py             aura_model_cognome_federation.py             aura_open_weight_jacobian_adapter.py             tests/test_aura_model_cognome_replay_probes.py             test_aura_icm_workspace.py
+          ruff check --select E9,F63,F7,F82             aura_model_cognome_replay.py             aura_model_cognome_drift.py             aura_model_cognome_promotion.py             aura_model_cognome_federation.py             aura_open_weight_jacobian_adapter.py             tests/test_aura_model_cognome_replay_probes.py             tests/test_aura_model_cognome_manual_review.py             test_aura_icm_workspace.py
       - name: Run replay, probe, and ICM contracts
         run: |
-          python -m pytest -q             tests/test_aura_model_cognome_replay_probes.py             test_aura_icm_workspace.py
+          python -m pytest -q             tests/test_aura_model_cognome_replay_probes.py             tests/test_aura_model_cognome_manual_review.py             test_aura_icm_workspace.py

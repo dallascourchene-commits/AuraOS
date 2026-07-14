@@ -58,11 +58,15 @@ class RoutePromotionPolicy:
             "maximum_uncertainty",
         ):
             _probability(getattr(self, name), name)
-        _finite(self.minimum_success_rate_delta, "minimum_success_rate_delta")
-        _finite(self.maximum_success_regression, "maximum_success_regression")
-        _finite(self.maximum_cost_increase_usd, "maximum_cost_increase_usd")
-        _finite(self.maximum_time_increase_ms, "maximum_time_increase_ms")
-        _finite(self.maximum_scope_violation_delta, "maximum_scope_violation_delta")
+        for name in (
+            "minimum_success_rate_delta",
+            "maximum_success_regression",
+            "maximum_cost_increase_usd",
+            "maximum_time_increase_ms",
+            "maximum_scope_violation_delta",
+        ):
+            if _finite(getattr(self, name), name) < 0:
+                raise ValueError(f"{name} must be non-negative")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -160,6 +164,8 @@ class RoutePolicyProposal:
     def __post_init__(self) -> None:
         if self.status != PROMOTION_PROPOSED:
             raise ValueError("route policy proposals must terminate at PROMOTION_PROPOSED")
+        if not math.isfinite(float(self.created_at)) or self.created_at < 0:
+            raise ValueError("created_at must be finite and non-negative")
         if self.candidate_policy_mode not in _ALLOWED_MODES:
             raise ValueError(f"unknown candidate policy mode: {self.candidate_policy_mode}")
         if self.replay_evidence.measurement_mode != "REPLAY":
@@ -268,6 +274,8 @@ def evaluate_route_policy_promotion(
 ) -> PromotionDecision:
     if not candidate_policy_id or not baseline_policy_id:
         raise ValueError("candidate and baseline policy IDs must not be empty")
+    if candidate_policy_id == baseline_policy_id:
+        raise ValueError("candidate and baseline policy IDs must differ")
     if candidate_policy_mode not in _ALLOWED_MODES:
         raise ValueError(f"unknown candidate policy mode: {candidate_policy_mode}")
     thresholds = policy or RoutePromotionPolicy()

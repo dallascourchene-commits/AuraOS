@@ -44,6 +44,26 @@ def _finite(value: Any, name: str) -> float:
     return number
 
 
+def _strict_bool(value: Any, name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{name} must be a boolean")
+    return value
+
+
+def _summary_basis(*, model_artifact_digest: str, method_version: str, layer_start: int, layer_end: int, sample_count: int, metrics: Mapping[str, float], task_bucket: str, dataset_digest: str, code_digest: str) -> dict[str, Any]:
+    return {
+        "model_artifact_digest": model_artifact_digest,
+        "method_version": method_version,
+        "layer_start": int(layer_start),
+        "layer_end": int(layer_end),
+        "sample_count": int(sample_count),
+        "metrics": {str(key): float(value) for key, value in metrics.items()},
+        "task_bucket": task_bucket,
+        "dataset_digest": dataset_digest,
+        "code_digest": code_digest,
+    }
+
+
 @dataclass(frozen=True)
 class JacobianLensSummary:
     summary_id: str
@@ -84,21 +104,29 @@ class JacobianLensSummary:
                 raise ValueError("workspace_rank must be non-negative")
         if self.raw_activations_stored or self.raw_prompts_stored or self.private_reasoning_stored:
             raise ValueError("Jacobian adapter accepts aggregate summaries only")
-        expected = stable_digest(
-            {
-                "model_artifact_digest": self.model_artifact_digest,
-                "method_version": self.method_version,
-                "layer_start": self.layer_start,
-                "layer_end": self.layer_end,
-                "sample_count": self.sample_count,
-                "metrics": self.metrics,
-                "task_bucket": self.task_bucket,
-                "dataset_digest": self.dataset_digest,
-                "code_digest": self.code_digest,
-            }
+        if self.version != JACOBIAN_ADAPTER_VERSION:
+            raise ValueError("unsupported Jacobian summary version")
+        if not math.isfinite(float(self.created_at)) or self.created_at < 0:
+            raise ValueError("created_at must be finite and non-negative")
+        _strict_bool(self.raw_activations_stored, "raw_activations_stored")
+        _strict_bool(self.raw_prompts_stored, "raw_prompts_stored")
+        _strict_bool(self.private_reasoning_stored, "private_reasoning_stored")
+        basis = _summary_basis(
+            model_artifact_digest=self.model_artifact_digest,
+            method_version=self.method_version,
+            layer_start=self.layer_start,
+            layer_end=self.layer_end,
+            sample_count=self.sample_count,
+            metrics=self.metrics,
+            task_bucket=self.task_bucket,
+            dataset_digest=self.dataset_digest,
+            code_digest=self.code_digest,
         )
+        expected = stable_digest(basis)
         if expected != self.analysis_artifact_digest:
             raise ValueError("analysis_artifact_digest does not match the canonical summary")
+        if self.summary_id != stable_id("jacobian-summary", basis):
+            raise ValueError("summary_id does not match the canonical summary")
 
     @classmethod
     def create(
@@ -116,17 +144,17 @@ class JacobianLensSummary:
         created_at: float | None = None,
     ) -> "JacobianLensSummary":
         clean_metrics = {str(key): float(value) for key, value in metrics.items()}
-        basis = {
-            "model_artifact_digest": model_artifact_digest,
-            "method_version": method_version,
-            "layer_start": int(layer_start),
-            "layer_end": int(layer_end),
-            "sample_count": int(sample_count),
-            "metrics": clean_metrics,
-            "task_bucket": task_bucket,
-            "dataset_digest": dataset_digest,
-            "code_digest": code_digest,
-        }
+        basis = _summary_basis(
+            model_artifact_digest=model_artifact_digest,
+            method_version=method_version,
+            layer_start=layer_start,
+            layer_end=layer_end,
+            sample_count=sample_count,
+            metrics=clean_metrics,
+            task_bucket=task_bucket,
+            dataset_digest=dataset_digest,
+            code_digest=code_digest,
+        )
         analysis_digest = stable_digest(basis)
         return cls(
             summary_id=stable_id("jacobian-summary", basis),
@@ -158,9 +186,9 @@ class JacobianLensSummary:
             dataset_digest=str(value.get("dataset_digest") or ""),
             code_digest=str(value.get("code_digest") or ""),
             created_at=float(value.get("created_at") or time.time()),
-            raw_activations_stored=bool(value.get("raw_activations_stored", False)),
-            raw_prompts_stored=bool(value.get("raw_prompts_stored", False)),
-            private_reasoning_stored=bool(value.get("private_reasoning_stored", False)),
+            raw_activations_stored=_strict_bool(value.get("raw_activations_stored", False), "raw_activations_stored"),
+            raw_prompts_stored=_strict_bool(value.get("raw_prompts_stored", False), "raw_prompts_stored"),
+            private_reasoning_stored=_strict_bool(value.get("private_reasoning_stored", False), "private_reasoning_stored"),
             version=str(value.get("version") or JACOBIAN_ADAPTER_VERSION),
         )
 
@@ -181,7 +209,9 @@ def build_open_weight_observation(
         raise ValueError("Jacobian mechanistic evidence requires an OPEN_WEIGHT endpoint")
     validate_evidence_claim(endpoint.access_class, MECHANISTIC_OPEN_WEIGHT)
     packet = summary if isinstance(summary, JacobianLensSummary) else JacobianLensSummary.from_mapping(summary)
-    if endpoint.endpoint_fingerprint and packet.model_artifact_digest != endpoint.endpoint_fingerprint:
+    if not endpoint.endpoint_fingerprint:
+        raise ValueError("Jacobian mechanistic evidence requires an endpoint artifact fingerprint")
+    if packet.model_artifact_digest != endpoint.endpoint_fingerprint:
         raise ValueError("Jacobian model artifact digest does not match endpoint fingerprint")
     evidence = {
         "adapter_version": JACOBIAN_ADAPTER_VERSION,

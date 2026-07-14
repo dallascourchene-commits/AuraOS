@@ -34,6 +34,12 @@ def _nonnegative(value: Any, name: str) -> float:
     return number
 
 
+def _strict_bool(value: Any, name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{name} must be a boolean")
+    return value
+
+
 @dataclass(frozen=True)
 class ProbeDefinition:
     probe_id: str
@@ -110,7 +116,10 @@ class ProbeResult:
         for name in ("probe_id", "profile_id", "endpoint_fingerprint"):
             if not str(getattr(self, name)).strip():
                 raise ValueError(f"{name} must not be empty")
+        _strict_bool(self.verifier_pass, "verifier_pass")
+        _strict_bool(self.format_valid, "format_valid")
         _nonnegative(self.latency_ms, "latency_ms")
+        _nonnegative(self.observed_at, "observed_at")
         if not self.evidence_digest:
             object.__setattr__(
                 self,
@@ -136,13 +145,13 @@ class ProbeResult:
             probe_id=str(value.get("probe_id") or ""),
             profile_id=str(value.get("profile_id") or ""),
             endpoint_fingerprint=str(value.get("endpoint_fingerprint") or value.get("fingerprint") or ""),
-            verifier_pass=bool(value.get("verifier_pass")),
-            format_valid=bool(value.get("format_valid")),
+            verifier_pass=_strict_bool(value.get("verifier_pass"), "verifier_pass"),
+            format_valid=_strict_bool(value.get("format_valid"), "format_valid"),
             latency_ms=float(value.get("latency_ms") or 0.0),
             error_class=str(value.get("error_class") or ""),
             output_digest=str(value.get("output_digest") or ""),
             evidence_digest=str(value.get("evidence_digest") or ""),
-            observed_at=float(value.get("observed_at") or time.time()),
+            observed_at=float(time.time() if value.get("observed_at") is None else value.get("observed_at")),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -334,22 +343,26 @@ def persist_drift_assessment(
 ) -> str:
     """Record assessment; lifecycle mutation requires explicit named approval."""
     status = WARNING
+    lifecycle_change_approved = False
     if assessment.status == STABLE:
         status = "STABLE"
-    elif approve_lifecycle_change:
+    if approve_lifecycle_change:
+        if assessment.status not in {STALE_PROPOSED, QUARANTINE_PROPOSED}:
+            raise ValueError("only stale or quarantine proposals can approve a lifecycle change")
         if not str(approved_by).strip():
             raise ValueError("approved_by is required for lifecycle changes")
+        lifecycle_change_approved = True
         if assessment.status == STALE_PROPOSED:
             status = EndpointStatus.STALE.value
-        elif assessment.status == QUARANTINE_PROPOSED:
+        else:
             status = EndpointStatus.QUARANTINED.value
     payload = assessment.to_dict()
     payload.update(
         {
             "status": status,
             "recommended_status": assessment.status,
-            "lifecycle_change_approved": bool(approve_lifecycle_change),
-            "approved_by": str(approved_by),
+            "lifecycle_change_approved": lifecycle_change_approved,
+            "approved_by": str(approved_by) if lifecycle_change_approved else "",
             "reference_fingerprint": assessment.reference_fingerprint,
             "current_fingerprint": assessment.current_fingerprint,
             "created_at": assessment.created_at,
