@@ -1,0 +1,295 @@
+--- a/aura_planning_board.py
++++ b/aura_planning_board.py
+@@ -109,7 +109,9 @@
+     return result
+ 
+ 
+-def _records(values: Sequence[Any], record_type: type, field_name: str) -> tuple:
++def _records(values: Sequence[Any] | None, record_type: type, field_name: str) -> tuple:
++    if values is None:
++        return ()
+     if isinstance(values, (str, bytes, bytearray)):
+         raise ValueError(f"{field_name} must be a sequence")
+     result = tuple(values)
+@@ -126,15 +128,27 @@
+     return value
+ 
+ 
+-def _nonnegative_number(value: float | None, field_name: str) -> float | None:
++def _nonnegative_number(value: float | int | None, field_name: str) -> float | None:
+     if value is None:
+         return None
++    if type(value) not in (int, float):
++        raise ValueError(f"{field_name} must be a number")
+     number = float(value)
+     if not math.isfinite(number) or number < 0:
+         raise ValueError(f"{field_name} must be finite and non-negative")
+     return number
+ 
+ 
++def _fact_items(values: Mapping[Any, Any], field_name: str) -> tuple[tuple[str, Any], ...]:
++    """Normalize fact keys without allowing stringification collisions."""
++
++    normalized = tuple((str(key), value) for key, value in values.items())
++    names = [name for name, _ in normalized]
++    if len(names) != len(set(names)):
++        raise ValueError(f"{field_name} contains colliding fact names")
++    return tuple(sorted(normalized, key=lambda item: item[0]))
++
++
+ class CanonicalRecord:
+     def to_dict(self) -> dict[str, Any]:
+         return json.loads(canonical_json(self))
+@@ -379,6 +393,10 @@
+         if _strict_bool(self.proposal_only, "action.proposal_only") is not True:
+             raise ValueError("Planning Board actions must remain proposal_only")
+ 
++    @property
++    def digest(self) -> str:
++        return stable_digest(self.to_dict())
++
+ 
+ @dataclass(frozen=True)
+ class PlanningBoard(CanonicalRecord):
+@@ -434,6 +452,7 @@
+     """References emitted by authoritative external subsystems."""
+ 
+     action_id: str
++    action_digest: str
+     constrained_evidence_refs: tuple[str, ...] = ()
+     grounded_evidence_refs: tuple[str, ...] = ()
+     authority_decision_ids: tuple[str, ...] = ()
+@@ -441,6 +460,9 @@
+ 
+     def __post_init__(self) -> None:
+         object.__setattr__(self, "action_id", _required(self.action_id, "evidence.action_id"))
++        object.__setattr__(
++            self, "action_digest", _required(self.action_digest, "evidence.action_digest")
++        )
+         for name in (
+             "constrained_evidence_refs",
+             "grounded_evidence_refs",
+@@ -542,12 +564,12 @@
+         name=name,
+         domain=domain,
+         preconditions=tuple(
+-            PredicateSpec(str(key), value)
+-            for key, value in sorted(preconditions.items(), key=lambda item: str(item[0]))
++            PredicateSpec(key, value)
++            for key, value in _fact_items(preconditions, "goal_action.preconditions")
+         ),
+         effects=tuple(
+-            EffectSpec(str(key), value)
+-            for key, value in sorted(effects.items(), key=lambda item: str(item[0]))
++            EffectSpec(key, value)
++            for key, value in _fact_items(effects, "goal_action.effects")
+         ),
+         required_capabilities=(f"organ:{organ}",) if organ else (),
+         verifier_ids=tuple(f"gate:{gate}" for gate in gates),
+@@ -580,8 +602,8 @@
+         goal_id=f"goal_{stable_digest({'goal': goal_name, 'state': final_state}, digest_size=12)}",
+         objective=goal_name,
+         desired_state=tuple(
+-            PredicateSpec(str(key), value)
+-            for key, value in sorted(final_state.items(), key=lambda item: str(item[0]))
++            PredicateSpec(key, value)
++            for key, value in _fact_items(final_state, "goal_plan.final_state")
+         ),
+     )
+     payload = {
+@@ -631,6 +653,11 @@
+     unknown = set(by_action) - action_ids
+     if unknown:
+         raise ValueError(f"evidence references unknown action IDs: {sorted(unknown)}")
++    for action in board.actions:
++        item = by_action.get(action.action_id)
++        if item is not None and item.action_digest != action.digest:
++            raise ValueError(f"evidence digest mismatch for action: {action.action_id}")
++
+     findings: list[ContinuityFinding] = []
+     for action in board.actions:
+         for fallback_id in action.retry_policy.fallback_action_ids:
+@@ -677,6 +704,21 @@
+                 "no exact reference proves current constraints are satisfiable",
+                 action.action_id,
+             )
++        constrained = set(() if item is None else item.constrained_evidence_refs)
++        required_constraint_refs = {
++            ref
++            for constraint in (*board.goal.constraints, *action.constraints)
++            for ref in constraint.evidence_refs
++        }
++        unresolved_constraints = required_constraint_refs - constrained
++        if unresolved_constraints:
++            _finding(
++                findings,
++                BoardContinuityLevel.BC2_CONSTRAINED,
++                "UNRESOLVED_CONSTRAINT_REFERENCE",
++                f"declared constraint refs were not resolved: {sorted(unresolved_constraints)}",
++                action.action_id,
++            )
+         if action.reversibility is ReversibilityClass.UNSPECIFIED:
+             _finding(
+                 findings,
+--- a/tests/test_aura_planning_board.py
++++ b/tests/test_aura_planning_board.py
+@@ -7,6 +7,8 @@
+     ActionSpec,
+     AuthorityRequirement,
+     BoardContinuityLevel,
++    ConstraintKind,
++    ConstraintSpec,
+     EffectSpec,
+     PlanningBoard,
+     PortCardinality,
+@@ -98,7 +100,7 @@
+ 
+ def test_resource_demand_rejects_invalid_measurements() -> None:
+     with pytest.raises(ValueError, match="non-negative integer"):
+-        ResourceDemand(context_tokens=True)
++        ResourceDemand(context_tokens=True)  # bool must not pass as int
+     with pytest.raises(ValueError, match="finite and non-negative"):
+         ResourceDemand(estimated_cost=float("nan"))
+     with pytest.raises(ValueError, match="finite and non-negative"):
+@@ -108,6 +110,11 @@
+         ResourceDemand(estimated_cost=1.0, measurement_class="HEURISTIC")
+     with pytest.raises(ValueError, match="measurement_class"):
+         ResourceDemand(context_tokens=1)
++    with pytest.raises(ValueError, match="must be a number"):
++        ResourceDemand(human_attention_minutes=True, measurement_class="HEURISTIC")
++    with pytest.raises(ValueError, match="must be a number"):
++        ResourceDemand(estimated_cost="1", cost_unit="USD", measurement_class="HEURISTIC")
++
+ 
+ def test_port_direction_and_cardinality_are_enforced() -> None:
+     with pytest.raises(ValueError, match="optional ports"):
+@@ -137,6 +144,7 @@
+         evidence=(
+             ActionContinuityEvidence(
+                 action_id="action-1",
++                action_digest=board.actions[0].digest,
+                 constrained_evidence_refs=("constraint-check:1",),
+                 grounded_evidence_refs=("sidecar:source:abc", "exact-source:1"),
+                 authority_decision_ids=("decision:1",),
+@@ -156,6 +164,7 @@
+         evidence=(
+             ActionContinuityEvidence(
+                 action_id="action-1",
++                action_digest=board.actions[0].digest,
+                 constrained_evidence_refs=("constraint-check:1",),
+                 grounded_evidence_refs=("sidecar:source:abc", "exact-source:1"),
+                 verifier_receipts=(VerifierReceiptEvidence("pytest", "receipt:1"),),
+@@ -238,12 +247,14 @@
+ 
+ def test_evidence_rejects_duplicates_unknown_actions_and_string_sequences() -> None:
+     board = _board()
+-    duplicate = ActionContinuityEvidence(action_id="action-1")
++    duplicate = ActionContinuityEvidence(
++        action_id="action-1", action_digest=board.actions[0].digest
++    )
+     with pytest.raises(ValueError, match="at most one"):
+         verify_board_continuity(board, evidence=(duplicate, duplicate))
+     with pytest.raises(ValueError, match="unknown action"):
+         verify_board_continuity(
+-            board, evidence=(ActionContinuityEvidence(action_id="other"),)
++            board, evidence=(ActionContinuityEvidence(action_id="other", action_digest="digest:other"),)
+         )
+     with pytest.raises(ValueError, match="sequence"):
+         verify_board_continuity(board, evidence="not-a-sequence")  # type: ignore[arg-type]
+@@ -257,11 +268,13 @@
+             "authority_requirement": AuthorityRequirement.NONE,
+         }
+     )
++    board = _board(action)
+     report = verify_board_continuity(
+-        _board(action),
++        board,
+         evidence=(
+             ActionContinuityEvidence(
+                 action_id="action-1",
++                action_digest=board.actions[0].digest,
+                 constrained_evidence_refs=("constraint-check:1",),
+                 grounded_evidence_refs=("sidecar:source:abc",),
+                 verifier_receipts=(VerifierReceiptEvidence("pytest", "receipt:1"),),
+@@ -280,11 +293,13 @@
+             "verifier_ids": ("pytest", "policy-check"),
+         }
+     )
++    board = _board(action)
+     report = verify_board_continuity(
+-        _board(action),
++        board,
+         evidence=(
+             ActionContinuityEvidence(
+                 action_id="action-1",
++                action_digest=board.actions[0].digest,
+                 constrained_evidence_refs=("constraint-check:1",),
+                 grounded_evidence_refs=("sidecar:source:abc",),
+                 authority_decision_ids=("decision:1",),
+@@ -303,6 +318,7 @@
+         evidence=(
+             ActionContinuityEvidence(
+                 action_id="action-1",
++                action_digest=board.actions[0].digest,
+                 constrained_evidence_refs=("constraint-check:1",),
+                 grounded_evidence_refs=("different-sidecar",),
+                 authority_decision_ids=("decision:1",),
+@@ -315,3 +331,58 @@
+         item.code for item in report.findings
+     }
+ 
++
++def test_evidence_is_bound_to_exact_action_digest() -> None:
++    board = _board()
++    with pytest.raises(ValueError, match="digest mismatch"):
++        verify_board_continuity(
++            board,
++            evidence=(
++                ActionContinuityEvidence(
++                    action_id="action-1",
++                    action_digest="wrong-digest",
++                ),
++            ),
++        )
++
++
++def test_declared_constraint_refs_must_be_resolved() -> None:
++    base = _complete_action()
++    action = ActionSpec(
++        **{
++            **base.__dict__,
++            "constraints": (
++                ConstraintSpec(
++                    "budget-check",
++                    ConstraintKind.BUDGET,
++                    "Budget must be available",
++                    evidence_refs=("budget:available",),
++                ),
++            ),
++        }
++    )
++    board = _board(action)
++    report = verify_board_continuity(
++        board,
++        evidence=(
++            ActionContinuityEvidence(
++                action_id="action-1",
++                action_digest=action.digest,
++                constrained_evidence_refs=("other-check",),
++                grounded_evidence_refs=("sidecar:source:abc",),
++                authority_decision_ids=("decision:1",),
++                verifier_receipts=(VerifierReceiptEvidence("pytest", "receipt:1"),),
++            ),
++        ),
++    )
++    assert BoardContinuityLevel.BC2_CONSTRAINED not in report.passed_levels
++    assert "UNRESOLVED_CONSTRAINT_REFERENCE" in {
++        finding.code for finding in report.findings
++    }
++
++
++def test_goal_adapter_rejects_stringified_fact_key_collisions() -> None:
++    action = LegacyGoalAction()
++    action.preconditions = {1: True, "1": False}
++    with pytest.raises(ValueError, match="colliding fact names"):
++        action_spec_from_goal_action(action)
