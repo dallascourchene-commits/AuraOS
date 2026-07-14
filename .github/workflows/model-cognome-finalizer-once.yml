@@ -1,4 +1,4 @@
-name: Adaptive Router Compatibility Patch Once
+name: Adaptive Router Compatibility Build Once
 
 on:
   pull_request:
@@ -8,20 +8,22 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  patch:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
     steps:
-      - name: Clone branch
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-          git clone --branch refactor/model-cognome-live-compat \
-            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/model-cognome-live-compat
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Apply bounded compatibility patch
         run: |
           python - <<'PY'
@@ -134,15 +136,32 @@ jobs:
 ''',
           )
           PY
-      - name: Commit compatibility changes
+      - name: Install tooling
+        run: python -m pip install pytest ruff
+      - name: Compile and lint compatibility surfaces
         run: |
-          set -euo pipefail
-          git config user.name "Aura Refactor Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add aura_router.py aura_adaptive_model_router.py aura_adaptive_model_executor.py
-          if git diff --cached --quiet; then
-            echo "No compatibility changes required"
-            exit 0
-          fi
-          git commit -m "Integrate adaptive modes behind legacy router facade"
-          git push origin HEAD:refactor/model-cognome-live-compat
+          python -m py_compile \
+            aura_router.py aura_router_adaptive_compat.py aura_adaptive_fusion.py \
+            aura_ai_router.py aura_adaptive_model_router.py aura_adaptive_model_executor.py \
+            aura_model_cognome_execution_auth.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_router.py aura_router_adaptive_compat.py aura_adaptive_fusion.py \
+            aura_ai_router.py aura_adaptive_model_router.py aura_adaptive_model_executor.py \
+            aura_model_cognome_execution_auth.py \
+            tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py
+      - name: Run focused contracts
+        run: |
+          python -m pytest -q \
+            tests/test_aura_ai_router_dynamic.py \
+            tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py
+      - name: Upload reviewed files
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: adaptive-compat-reviewed-${{ github.run_id }}
+          path: |
+            aura_router.py
+            aura_adaptive_model_router.py
+            aura_adaptive_model_executor.py
