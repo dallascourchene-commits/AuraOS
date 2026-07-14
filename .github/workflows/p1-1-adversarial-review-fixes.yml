@@ -1,0 +1,104 @@
+name: P1.1 adversarial review fixes
+
+on:
+  push:
+    branches:
+      - refactor/relational-authority-p1-1
+
+permissions:
+  contents: write
+
+jobs:
+  apply-review-fixes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/relational-authority-p1-1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply adversarial review fixes and regression tests
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"expected exactly one match in {path}, found {count}")
+              target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          replace_once(
+              "aura_event_contracts.py",
+              '''def _normalize_field_name(value: Any) -> str:\n    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(value).strip())\n    return text.lower().replace("-", "_").replace(" ", "_")\n''',
+              '''def _normalize_field_name(value: Any) -> str:\n    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(value).strip())\n    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")\n''',
+          )
+
+          replace_once(
+              "aura_workflow_gates.py",
+              '''def _authority_requirement(state: WorkflowState, evidence: Mapping[str, Any]) -> Dict[str, str]:\n    defaults = _AUTHORITY_SCOPE_BY_STATE.get(state.name, {})\n    return {\n        "policy_scope": str(\n            evidence.get("required_policy_scope", defaults.get("policy_scope", ""))\n        ),\n        "capability_scope": str(\n            evidence.get(\n                "required_capability_scope",\n                defaults.get("capability_scope", ""),\n            )\n        ),\n    }\n''',
+              '''def _authority_requirement(state: WorkflowState, evidence: Mapping[str, Any]) -> Dict[str, str]:\n    defaults = _AUTHORITY_SCOPE_BY_STATE.get(state.name, {})\n    policy_scope = defaults.get("policy_scope")\n    capability_scope = defaults.get("capability_scope")\n    return {\n        "policy_scope": str(\n            policy_scope\n            if policy_scope is not None\n            else evidence.get("required_policy_scope", "")\n        ),\n        "capability_scope": str(\n            capability_scope\n            if capability_scope is not None\n            else evidence.get("required_capability_scope", "")\n        ),\n    }\n''',
+          )
+          replace_once(
+              "aura_workflow_gates.py",
+              '    if bool(evidence.get("human_approval")):\n',
+              '    if evidence.get("human_approval") is True:\n',
+          )
+
+          replace_once(
+              "aura_relational_authority.py",
+              '''        grant.validate(\n            now=current_time,\n            verified_authority_refs=verified_authority_refs,\n        )\n\n        principal = _required(principal_id, "principal_id")\n''',
+              '''        grant.validate(\n            now=current_time,\n            verified_authority_refs=verified_authority_refs,\n        )\n        if created < grant.valid_from:\n            raise ValueError("attestation cannot predate its authority grant")\n\n        principal = _required(principal_id, "principal_id")\n''',
+          )
+          replace_once(
+              "aura_relational_authority.py",
+              '''        if self.capability_scope not in grant.capability_scopes:\n            raise ValueError("attestation uses an unauthorized capability scope")\n        if current_time < self.created_at:\n''',
+              '''        if self.capability_scope not in grant.capability_scopes:\n            raise ValueError("attestation uses an unauthorized capability scope")\n        if self.created_at < grant.valid_from:\n            raise ValueError("attestation predates its authority grant")\n        if self.expires_at > grant.expires_at:\n            raise ValueError("attestation outlives its authority grant")\n        if current_time < self.created_at:\n''',
+          )
+          replace_once(
+              "aura_relational_authority.py",
+              '''        current_time = _now(now)\n        if not self.authorized:\n''',
+              '''        current_time = _now(now)\n        if current_time < self.created_at:\n            raise ValueError("governance decision is not active yet")\n        if not self.authorized:\n''',
+          )
+          replace_once(
+              "aura_relational_authority.py",
+              '''    for attestation in supplied:\n        try:\n''',
+              '''    seen_attestation_ids: set[str] = set()\n    for attestation in supplied:\n        if attestation.attestation_id in seen_attestation_ids:\n            invalid_ids.append(attestation.attestation_id)\n            reasons.append(f"duplicate_attestation:{attestation.attestation_id}")\n            continue\n        seen_attestation_ids.add(attestation.attestation_id)\n        try:\n''',
+          )
+          replace_once(
+              "aura_relational_authority.py",
+              '''    abstentions = [\n        item for item in valid if item.decision == AttestationDecision.ABSTAIN.value\n    ]\n\n    role_to_principals: dict[str, set[str]] = {}\n''',
+              '''    abstentions = [\n        item for item in valid if item.decision == AttestationDecision.ABSTAIN.value\n    ]\n\n    seen_principal_roles: set[tuple[str, str]] = set()\n    for approval in approvals:\n        principal_role = (approval.principal_id, approval.functional_role)\n        if principal_role in seen_principal_roles:\n            reasons.append(\n                "duplicate_principal_role_approval:"\n                f"{approval.principal_id}:{approval.functional_role}"\n            )\n        seen_principal_roles.add(principal_role)\n\n    role_to_principals: dict[str, set[str]] = {}\n''',
+          )
+
+          Path("tests/test_p1_1_adversarial_review.py").write_text(
+              '''from __future__ import annotations\n\nfrom dataclasses import replace\n\nimport pytest\n\nfrom aura_event_contracts import sanitize_payload\nfrom aura_relational_authority import (\n    ApprovalAttestation,\n    AttestationDecision,\n    AuthorityGrant,\n    QuorumPolicy,\n    RiskClass,\n    evaluate_governance,\n    stable_digest,\n    stable_id,\n)\nfrom aura_workflow_gates import evaluate_gate\n\n\nNOW = 1_800_000_000.0\nACTION_ID = "review-action"\nACTION_DIGEST = stable_digest({"patch": "exact"})\nAUTH_REF = "authority:reviewer"\nATTEST_REFS = {"attestation:one", "attestation:two"}\n\n\ndef make_grant(*, policy_scope: str = "workflow.commit", capability_scope: str = "commit") -> AuthorityGrant:\n    return AuthorityGrant.create(\n        principal_id="reviewer",\n        authorized_functional_roles=("APPROVE",),\n        policy_scopes=(policy_scope,),\n        capability_scopes=(capability_scope,),\n        valid_from=NOW - 100,\n        expires_at=NOW + 1_000,\n        externally_verified_authority_ref=AUTH_REF,\n        verified_authority_refs={AUTH_REF},\n        now=NOW,\n    )\n\n\ndef make_attestation(\n    grant: AuthorityGrant,\n    *,\n    attestation_ref: str = "attestation:one",\n    created_at: float = NOW - 10,\n    policy_scope: str = "workflow.commit",\n    capability_scope: str = "commit",\n) -> ApprovalAttestation:\n    return ApprovalAttestation.create(\n        action_id=ACTION_ID,\n        action_payload_digest=ACTION_DIGEST,\n        principal_id=grant.principal_id,\n        grant=grant,\n        decision=AttestationDecision.APPROVE,\n        functional_role="APPROVE",\n        policy_scope=policy_scope,\n        capability_scope=capability_scope,\n        public_rationale="Exact evidence supports this bounded action.",\n        evidence_refs=("evidence:exact",),\n        externally_verified_attestation_ref=attestation_ref,\n        verified_authority_refs={AUTH_REF},\n        verified_attestation_refs=ATTEST_REFS,\n        created_at=created_at,\n        expires_at=NOW + 500,\n        now=NOW,\n    )\n\n\ndef make_decision(*, policy_scope: str = "workflow.commit", capability_scope: str = "commit"):\n    grant = make_grant(policy_scope=policy_scope, capability_scope=capability_scope)\n    approval = make_attestation(\n        grant,\n        policy_scope=policy_scope,\n        capability_scope=capability_scope,\n    )\n    policy = QuorumPolicy.create(\n        risk_class=RiskClass.LOW,\n        minimum_approval_count=1,\n        required_functional_roles=("APPROVE",),\n        minimum_distinct_principals=1,\n    )\n    return evaluate_governance(\n        action_id=ACTION_ID,\n        action_payload_digest=ACTION_DIGEST,\n        policy_scope=policy_scope,\n        capability_scope=capability_scope,\n        grants=(grant,),\n        attestations=(approval,),\n        quorum_policy=policy,\n        verified_authority_refs={AUTH_REF},\n        verified_attestation_refs=ATTEST_REFS,\n        now=NOW,\n    )\n\n\n@pytest.mark.parametrize(\n    "field_name",\n    ("chain.of.thought", "model/chain-of-thought", "internal:scratchpad"),\n)\ndef test_private_reasoning_punctuation_aliases_are_rejected(field_name: str) -> None:\n    with pytest.raises(ValueError, match="private reasoning field"):\n        sanitize_payload({field_name: "must not persist"})\n\n\ndef test_punctuation_separated_secret_field_is_redacted() -> None:\n    assert sanitize_payload({"api.key": "secret-value"}) == {"api.key": "[REDACTED]"}\n\n\ndef test_commit_gate_scope_cannot_be_downgraded_by_evidence() -> None:\n    decision = make_decision(policy_scope="workflow.read", capability_scope="read")\n    result = evaluate_gate(\n        "HUMAN_APPROVED_FOR_COMMIT",\n        {\n            "verified": True,\n            "tests_pass": True,\n            "governance_decision": decision,\n            "verified_governance_decision_ids": (decision.decision_id,),\n            "requested_action_id": ACTION_ID,\n            "requested_action_digest": ACTION_DIGEST,\n            "required_policy_scope": "workflow.read",\n            "required_capability_scope": "read",\n            "authority_now": NOW,\n        },\n    )\n    assert result["can_proceed"] is False\n    assert result["required_policy_scope"] == "workflow.commit"\n    assert result["required_capability_scope"] == "commit"\n\n\ndef test_string_human_approval_does_not_pass_legacy_gate() -> None:\n    result = evaluate_gate(\n        "HUMAN_APPROVED_FOR_COMMIT",\n        {"human_approval": "false", "verified": True, "tests_pass": True},\n    )\n    assert result["can_proceed"] is False\n    assert result["legacy_human_approval_used"] is False\n\n\ndef test_duplicate_attestation_cannot_inflate_quorum() -> None:\n    grant = make_grant()\n    approval = make_attestation(grant)\n    policy = QuorumPolicy.create(\n        risk_class=RiskClass.LOW,\n        minimum_approval_count=2,\n        required_functional_roles=("APPROVE",),\n        minimum_distinct_principals=1,\n    )\n    decision = evaluate_governance(\n        action_id=ACTION_ID,\n        action_payload_digest=ACTION_DIGEST,\n        policy_scope="workflow.commit",\n        capability_scope="commit",\n        grants=(grant,),\n        attestations=(approval, approval),\n        quorum_policy=policy,\n        verified_authority_refs={AUTH_REF},\n        verified_attestation_refs=ATTEST_REFS,\n        now=NOW,\n    )\n    assert decision.authorized is False\n    assert any(item.startswith("duplicate_attestation:") for item in decision.authority_missing_reasons)\n\n\ndef test_same_principal_role_cannot_submit_multiple_counted_approvals() -> None:\n    grant = make_grant()\n    first = make_attestation(grant, attestation_ref="attestation:one", created_at=NOW - 10)\n    second = make_attestation(grant, attestation_ref="attestation:two", created_at=NOW - 9)\n    policy = QuorumPolicy.create(\n        risk_class=RiskClass.LOW,\n        minimum_approval_count=2,\n        required_functional_roles=("APPROVE",),\n        minimum_distinct_principals=1,\n    )\n    decision = evaluate_governance(\n        action_id=ACTION_ID,\n        action_payload_digest=ACTION_DIGEST,\n        policy_scope="workflow.commit",\n        capability_scope="commit",\n        grants=(grant,),\n        attestations=(first, second),\n        quorum_policy=policy,\n        verified_authority_refs={AUTH_REF},\n        verified_attestation_refs=ATTEST_REFS,\n        now=NOW,\n    )\n    assert decision.authorized is False\n    assert "duplicate_principal_role_approval:reviewer:APPROVE" in decision.authority_missing_reasons\n\n\ndef test_attestation_cannot_be_backdated_before_grant() -> None:\n    grant = make_grant()\n    with pytest.raises(ValueError, match="predate"):\n        make_attestation(grant, created_at=NOW - 200)\n\n\ndef test_future_governance_decision_is_not_active() -> None:\n    decision = make_decision()\n    future = replace(decision, created_at=NOW + 100)\n    payload = future.to_dict()\n    payload.pop("decision_id")\n    payload.pop("decision_digest")\n    future = replace(\n        future,\n        decision_id=stable_id("governance-decision", payload),\n        decision_digest=stable_digest(payload),\n    )\n    with pytest.raises(ValueError, match="not active yet"):\n        future.validate_for_action(\n            action_id=ACTION_ID,\n            action_payload_digest=ACTION_DIGEST,\n            policy_scope="workflow.commit",\n            capability_scope="commit",\n            now=NOW,\n        )\n''',
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Run focused review regression tests
+        run: |
+          python -m py_compile aura_event_contracts.py aura_relational_authority.py aura_workflow_gates.py
+          python -m pytest -q \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py \
+            tests/test_p1_1_adversarial_review.py
+
+      - name: Commit review fixes and remove one-time workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/p1-1-adversarial-review-fixes.yml
+          git add aura_event_contracts.py aura_relational_authority.py aura_workflow_gates.py tests/test_p1_1_adversarial_review.py
+          git commit -m "fix(governance): close adversarial authority bypasses"
+          git push origin HEAD:refactor/relational-authority-p1-1
