@@ -1,0 +1,57 @@
+name: P2.1 one-shot continuity hardening
+
+on:
+  push:
+    branches:
+      - refactor/planning-board-p2-1
+    paths:
+      - .github/workflows/p2-1-finalize-hardening.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: p2-1-finalize-hardening
+  cancel-in-progress: false
+
+jobs:
+  apply-reviewed-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/planning-board-p2-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Wait for concurrent CODEMAP synchronization
+        run: sleep 90
+      - name: Refresh exact branch head
+        run: |
+          git fetch origin refactor/planning-board-p2-1
+          git reset --hard origin/refactor/planning-board-p2-1
+      - name: Apply bounded continuity hardening
+        run: |
+          test -f scripts/p2_1_hardening.patch
+          git apply --check scripts/p2_1_hardening.patch
+          git apply scripts/p2_1_hardening.patch
+      - name: Validate hardened contracts
+        run: |
+          python -m pip install pytest ruff
+          python -m py_compile aura_planning_board.py tests/test_aura_planning_board.py
+          ruff check --select E9,F63,F7,F82 aura_planning_board.py tests/test_aura_planning_board.py
+          python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_planning_board.py
+      - name: Remove one-shot migration artifacts
+        run: |
+          rm scripts/p2_1_hardening.patch
+          rm .github/workflows/p2-1-finalize-hardening.yml
+      - name: Commit hardened contracts
+        run: |
+          git config user.name "AuraOS Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(planning): bind continuity evidence to exact actions"
+          git pull --rebase origin refactor/planning-board-p2-1
+          git push origin HEAD:refactor/planning-board-p2-1
