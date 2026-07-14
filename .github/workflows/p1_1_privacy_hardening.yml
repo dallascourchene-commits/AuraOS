@@ -1,0 +1,151 @@
+name: P1.1 Privacy Hardening
+
+on:
+  push:
+    branches:
+      - refactor/relational-authority-p1-1
+    paths:
+      - .github/workflows/p1_1_privacy_hardening.yml
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/relational-authority-p1-1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply privacy fixes and regression tests
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('aura_event_contracts.py')
+          text = path.read_text(encoding='utf-8')
+
+          text = text.replace(
+              're.compile(r"(?i)\\b(authorization)\\s*[:=]\\s*bearer\\s+[A-Za-z0-9._\\-]+"),',
+              're.compile(r"(?i)\\b(authorization)\\s*[:=]\\s*bearer\\s+[A-Za-z0-9._~+/=\\-]+"),',
+          )
+          text = text.replace(
+              're.compile(r"(?i)\\bbearer\\s+[A-Za-z0-9._\\-]+"),',
+              're.compile(r"(?i)\\bbearer\\s+[A-Za-z0-9._~+/=\\-]+"),',
+          )
+
+          marker = '''    re.compile(\n        r"(?i)\\b(api[_-]?key|access[_-]?token|auth[_-]?token|secret|password|private[_-]?key)"\n        r"\\s*[:=]\\s*['\\\"]?[^'\\\"\\s,}]+"\n    ),\n'''
+          replacement = '''    re.compile(\n        r"(?i)['\\\"](?:api[_-]?key|access[_-]?token|auth[_-]?token|secret|password|private[_-]?key)['\\\"]"\n        r"\\s*[:=]\\s*['\\\"]?[^'\\\"\\s,}]+"\n    ),\n''' + marker
+          if replacement not in text:
+              if marker not in text:
+                  raise SystemExit('credential-pattern insertion marker not found')
+              text = text.replace(marker, replacement, 1)
+
+          text = text.replace(
+              '        "scratchpad",\n',
+              '        "scratchpad",\n        "scratch_pad",\n',
+              1,
+          )
+
+          normalized_marker = '''_NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(\n    _normalize_field_name(item) for item in _PRIVATE_REASONING_KEYS\n)\n'''
+          normalized_replacement = normalized_marker + '''_PRIVATE_REASONING_SUFFIXES = tuple(\n    f"_{item}" for item in sorted(_NORMALIZED_PRIVATE_REASONING_KEYS)\n)\n'''
+          if '_PRIVATE_REASONING_SUFFIXES' not in text:
+              if normalized_marker not in text:
+                  raise SystemExit('private-reasoning suffix insertion marker not found')
+              text = text.replace(normalized_marker, normalized_replacement, 1)
+
+          old_condition = '            if normalized in _NORMALIZED_PRIVATE_REASONING_KEYS:\n'
+          new_condition = '''            if (\n                normalized in _NORMALIZED_PRIVATE_REASONING_KEYS\n                or normalized.endswith(_PRIVATE_REASONING_SUFFIXES)\n            ):\n'''
+          if new_condition not in text:
+              if old_condition not in text:
+                  raise SystemExit('private-reasoning condition marker not found')
+              text = text.replace(old_condition, new_condition, 1)
+
+          path.write_text(text, encoding='utf-8')
+
+          tests = Path('tests/test_aura_event_privacy_hardening.py')
+          tests.write_text(r'''from __future__ import annotations
+
+import json
+
+import pytest
+
+from aura_event_contracts import AppendOnlyEventStore, sanitize_payload, stable_digest
+
+
+@pytest.mark.parametrize(
+    "field_name",
+    [
+        "scratchpad",
+        "scratch_pad",
+        "scratchPad",
+        "internalScratchpad",
+        "modelChainOfThought",
+    ],
+)
+def test_private_reasoning_aliases_fail_closed(field_name: str) -> None:
+    with pytest.raises(ValueError, match="private reasoning"):
+        sanitize_payload({field_name: "must never persist"})
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        '{"access_token": "abc/DEF+ghi~=123"}',
+        "access_token: abc/DEF+ghi~=123",
+        "Authorization: Bearer abc/DEF+ghi~=123",
+        "https://example.test/?access_token=abc/DEF+ghi~=123",
+        "authorization=Bearer abc/DEF+ghi~=123",
+    ],
+)
+def test_string_level_credentials_are_fully_redacted(payload: str) -> None:
+    sanitized = sanitize_payload(payload)
+    assert "abc/DEF+ghi~=123" not in sanitized
+    assert "[REDACTED]" in sanitized
+
+
+def test_nested_serialized_tool_output_is_redacted_before_digest_and_persistence(tmp_path) -> None:
+    payload = {
+        "items": [
+            {"message": '{"access_token":"abc/DEF+ghi~=123"}'},
+            "Authorization: Bearer abc/DEF+ghi~=123",
+        ]
+    }
+    sanitized = sanitize_payload(payload)
+    encoded = json.dumps(sanitized, sort_keys=True)
+    assert "abc/DEF+ghi~=123" not in encoded
+
+    expected_digest = stable_digest(sanitized)
+    store = AppendOnlyEventStore(tmp_path / "events")
+    ref = store.store_payload(payload, kind="privacy-regression")
+    persisted = (store.root / ref.path).read_text(encoding="utf-8")
+
+    assert ref.payload_digest == expected_digest
+    assert ref.redacted is True
+    assert "abc/DEF+ghi~=123" not in persisted
+    assert "[REDACTED]" in persisted
+''', encoding='utf-8')
+
+          workflow = Path('.github/workflows/p1_1_privacy_hardening.yml')
+          workflow.unlink()
+          PY
+
+      - name: Validate focused privacy contracts
+        run: |
+          python -m py_compile aura_event_contracts.py tests/test_aura_event_privacy_hardening.py
+          python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_event_privacy_hardening.py
+
+      - name: Commit hardened privacy contracts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_event_contracts.py tests/test_aura_event_privacy_hardening.py .github/workflows/p1_1_privacy_hardening.yml
+          git commit -m "fix(events): harden private reasoning and credential redaction"
+          git push origin HEAD:refactor/relational-authority-p1-1
