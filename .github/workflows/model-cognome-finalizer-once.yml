@@ -41,7 +41,8 @@ jobs:
             aura_adaptive_model_router.py \
             aura_adaptive_model_executor.py \
             tests/test_aura_ai_router_dynamic.py \
-            tests/test_aura_adaptive_planner.py
+            tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py
       - name: Run focused tests
         id: pytest
         continue-on-error: true
@@ -49,6 +50,7 @@ jobs:
           python -m pytest -q \
             tests/test_aura_ai_router_dynamic.py \
             tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py \
             --junitxml=focused-${{ matrix.python-version }}.xml \
             > focused-${{ matrix.python-version }}.log 2>&1
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
