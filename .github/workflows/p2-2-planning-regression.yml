@@ -56,7 +56,7 @@ jobs:
 
   apply-open-predicate-fix:
     name: Apply open-predicate branching fix
-    if: github.event_name == 'push' && github.ref_name == 'refactor/planning-regression-p2-2'
+    if: github.event_name == 'pull_request' && github.head_ref == 'refactor/planning-regression-p2-2'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
