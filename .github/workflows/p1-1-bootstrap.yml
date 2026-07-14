@@ -105,18 +105,19 @@ jobs:
         id: commit_changes
         continue-on-error: true
         run: |
-          rm -f p1-1-finalizer.log
+          git checkout -- .github/workflows/ci.yml
           git config user.name "AuraOS Refactor Bot"
           git config user.email "actions@users.noreply.github.com"
           git add -A
           git status --short
           git commit -m "feat(governance): add action-bound relational authority"
           git push origin HEAD:refactor/relational-authority-p1-1
-          
+
       - name: Capture commit diagnostics
         if: always()
         run: |
           git status --short > p1-1-commit.log
+          git rev-parse HEAD >> p1-1-commit.log
           git log -1 --oneline >> p1-1-commit.log
 
       - name: Upload commit diagnostics
@@ -132,4 +133,4 @@ jobs:
         if: steps.commit_changes.outcome != 'success'
         run: exit 1
 
-# staging files are removed after the tested implementation commit lands
+# CI workflow changes are applied separately through the reviewed connector path
