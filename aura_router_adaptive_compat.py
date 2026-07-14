@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from aura_model_cognome import stable_digest
 
@@ -37,6 +37,12 @@ def load_authorization(value: Any) -> Any:
         return ExecutionAuthorization.from_mapping(value)
     path = Path(str(value)).expanduser().resolve()
     return ExecutionAuthorization.from_mapping(json.loads(path.read_text(encoding="utf-8")))
+
+
+def _candidate_evidence_digest(candidates: Sequence[Mapping[str, Any]]) -> str:
+    normalized = [dict(item) for item in candidates]
+    normalized.sort(key=lambda item: str(item.get("profile_id") or ""))
+    return stable_digest(normalized)
 
 
 def _task_objective(task: Any) -> str:
@@ -97,6 +103,8 @@ def _router(
     from aura_adaptive_fusion import AdaptiveFusionPanelExecutor
     from aura_adaptive_model_executor import AdaptiveModelExecutor
     from aura_adaptive_model_router import AdaptiveModelRouter
+    from aura_model_cognome import TaskContext
+    from aura_model_connectome_bridge import resolve_candidates_for_path
     from aura_shadow_model_router import ShadowRoutingPolicy
 
     policy = None
@@ -107,6 +115,27 @@ def _router(
             panel_size=3,
             allow_panel=True,
         )
+
+    class CompatibilityAdaptiveModelRouter(AdaptiveModelRouter):
+        def revalidate(self, plan: Mapping[str, Any]) -> list[str]:
+            errors = super().revalidate(plan)
+            context = TaskContext(**dict(plan["task_context"]))
+            path_packet = dict(
+                plan.get("capability_resolution", {}).get("capability_connectome_path", {}) or {}
+            )
+            current = resolve_candidates_for_path(
+                self.store,
+                context,
+                path_packet,
+                repo_root=self.repo_root,
+            )
+            expected = _candidate_evidence_digest(
+                plan.get("path_resolution", {}).get("model_candidates", []) or []
+            )
+            observed = _candidate_evidence_digest(current.get("model_candidates", []) or [])
+            if observed != expected:
+                errors.append("candidate evidence changed after route planning")
+            return list(dict.fromkeys(errors))
 
     def executor_factory(router: AdaptiveModelRouter):
         panel_executor = AdaptiveFusionPanelExecutor(
@@ -131,7 +160,7 @@ def _router(
             panel_executor=panel_executor,
         )
 
-    return AdaptiveModelRouter(
+    return CompatibilityAdaptiveModelRouter(
         repo_root=auto_router.root,
         policy=policy,
         executor_factory=executor_factory,
