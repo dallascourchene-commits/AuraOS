@@ -35,6 +35,8 @@ jobs:
         run: python -c "import tools.pr92_closeout as c; c.update_architecture()"
       - name: Refresh operator user guide
         run: python -c "import tools.pr92_closeout as c; c.update_user_guide()"
+      - name: Normalize closeout source and documentation whitespace
+        run: python tools/pr92_trim_trailing_ws.py
       - name: Install permanent workflow and remove closeout helpers
         run: |
           set -euo pipefail
@@ -45,6 +47,7 @@ jobs:
             tools/pr92_review_postprocess.py \
             tools/pr92_closeout.py \
             tools/pr92_mesh_closeout.py \
+            tools/pr92_trim_trailing_ws.py \
             tools/model-cognome-adaptive-router.permanent.yml
       - name: Install declared dependencies and validation tooling
         run: |
@@ -168,19 +171,23 @@ jobs:
           if normalized_markdown("/tmp/pr92-first/CODEMAP.md") != normalized_markdown(".aura/CODEMAP.md"):
               raise SystemExit("semantic CODEMAP Markdown changed between clean generations")
           PY
-      - name: Verify exact final tree
+      - name: Verify no whitespace errors
+        run: git diff --check
+      - name: Verify documentation metrics were resolved
+        run: '! grep -R "__AURA_CODEMAP_METRICS__" README.md USER_GUIDE.md .aura/ARCHITECTURE.md'
+      - name: Verify closeout helpers are absent
         run: |
-          set -euo pipefail
-          find . -type d -name __pycache__ -prune -exec rm -rf {} +
-          rm -rf .pytest_cache
-          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-          git diff --check
-          ! grep -R "__AURA_CODEMAP_METRICS__" README.md USER_GUIDE.md .aura/ARCHITECTURE.md
           test ! -e tools/pr92_review_repair.py
           test ! -e tools/pr92_review_postprocess.py
           test ! -e tools/pr92_closeout.py
           test ! -e tools/pr92_mesh_closeout.py
+          test ! -e tools/pr92_trim_trailing_ws.py
           test ! -e tools/model-cognome-adaptive-router.permanent.yml
+      - name: Show final reviewed changes
+        run: |
+          find . -type d -name __pycache__ -prune -exec rm -rf {} +
+          rm -rf .pytest_cache
+          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
           git status --short
       - name: Commit final reviewed tree to PR branch
         run: |
