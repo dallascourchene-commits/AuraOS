@@ -24,7 +24,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Apply reviewed repair in isolated checkout
-        run: python tools/pr92_review_repair.py
+        run: |
+          python tools/pr92_review_repair.py
+          python tools/pr92_review_postprocess.py
       - name: Restore permanent read-only adaptive CI definition
         run: |
           cat > .github/workflows/model-cognome-adaptive-router.yml <<'YAML'
