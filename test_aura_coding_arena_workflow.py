@@ -19,6 +19,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import aura_coding_arena_workflow as acaw
 from aura_coding_arena_workflow import (
     ALLOW_ARENA_STAGING,
     ALLOW_MUTATION,
@@ -472,8 +473,6 @@ class TestSingletonAccessor:
     def test_singleton_returns_same_instance(self):
         """get_coding_arena_memory returns the same instance on repeated calls."""
         # Reset module-level singleton and force initialization with a temp-backed ledger
-        import importlib
-        acaw = importlib.import_module("aura_coding_arena_workflow")
         acaw._CODING_ARENA_MEMORY = None
         orig_cls = acaw.CodingArenaWorkflowMemory
         with tempfile.TemporaryDirectory() as tmpdir:

@@ -7,7 +7,7 @@ A sovereign, local-first, Arena-based cognitive operating substrate that compile
 - [Target: Edge First](#quick-start)
 - [Governance: Human Authority](#truth-authority-and-safety)
 
-**AuraOS is not an LLM and it is not a single application.**  
+**AuraOS is not an LLM and it is not a single application.**
 Aura is a deterministic orchestration substrate that helps humans and external AI workers understand a large system, select the smallest relevant context, assemble bounded tools, verify results, and preserve human or community authority.
 
 AuraOS began as a locally controlled AI tutor intended to help its founder learn and preserve Anishinaabemowin without surrendering language data to large external platforms. That origin shaped the wider architecture: local control, purpose limitation, inspectable memory, provenance, data minimization, revocable capability leases, external-provider boundaries, and governance above model convenience.
@@ -70,6 +70,27 @@ External models such as Hermes, Codex, Fireworks-backed workers, or other agents
 - **Measured claims:** label usage and savings as measured, tokenizer-exact, derived, estimated, or unavailable.
 
 ---
+
+<!-- PR92:CURRENT_ARCHITECTURE:START -->
+## Current Implemented Architecture
+
+**Implementation audit:** June 14–July 14, 2026 · **Generated topology:** 804 indexed files · 7,019 topology nodes · 14,526 topology edges
+
+The current repository combines the earlier substrate with the major capabilities added during the audit window:
+
+- canonical six-slot and machine-FST routing, guarded WFST challenge paths, and C1/C2 route capsules;
+- CODEMAP/deep-topology grounding, the Topological Context Anchor, Capability Connectome, Capability Genome Resolver, and Model Cognome;
+- Coding, Agent, Human Agent, Liquid Planning, Civic Commons, Experience/Crucible, and ephemeral-organ execution surfaces;
+- reversible context crushing, visible ST3GG egress, JSpace route state, empirical cost telemetry, and governed provider egress;
+- C3 proposal-only procedure induction, replay/shadow/drift evidence, federation bundles, and human-reviewed policy promotion gates;
+- the unified Showcase and deployment surfaces used to inspect architecture, Winnipeg pathways, observability, and guided approvals.
+
+### Model Cognome and adaptive routing
+
+Aura's public compatibility router keeps `LEGACY` as the default and rollback path. `SHADOW` creates and records a graph-bound plan without provider calls. `PAIRED_LIVE` permits one explicitly authorized comparison only after purpose, current graph digest, endpoint, verifier, expiry, call budget, and egress checks pass. Execution modes are `ZERO_MODEL`, `DIRECT`, `CASCADE`, and `PANEL`.
+
+The adaptive layer may select and execute admitted workers; it may not automatically activate or promote policy, mutate source, commit, push, merge, or replace exact source/hash patch authority. See `docs/AURA_MODEL_COGNOME_ADAPTIVE_ROUTER.md`.
+<!-- PR92:CURRENT_ARCHITECTURE:END -->
 
 ## The Core Loop
 
@@ -153,6 +174,7 @@ Aura's capabilities are easiest to understand as coordinated Arenas rather than 
 | **Anishinaabemowin Tutor** | Learners, speakers, teachers, and language programs | Vetted-source lookup, morphology, pronunciation guidance, curriculum, dialect notes, confidence labels, and review queues | Language authority remains with speakers, teachers, and community governance |
 | **Liquid Planning Arena** | Domain adapters | General Action Capsules, Boundary Contracts, scoped leases, work queues, and verifier-led handoffs for code and non-code domains | Adapter-specific and bounded by contracts |
 | **Ephemeral Organ Runtime** | All Arenas | Compiles temporary, capability-bounded applications from intent and dissolves them after use | Minimum explicit lease; no ambient authority |
+| **Model Cognome + Adaptive Router** | Operators and governed experiments | Resolves current graph-bound context, admits endpoint profiles, plans routes, and records comparable evidence | `LEGACY` default; `SHADOW` no-call; `PAIRED_LIVE` requires explicit authorization and egress approval |
 
 ### 1. Coding Arena
 
@@ -510,11 +532,11 @@ Aura's intent compiler turns a long request into a compact structured packet. Th
 
 Aura keeps three sources and roles separate:
 
-1. **Anishinaabemowin-derived semantic and governance alignment**  
+1. **Anishinaabemowin-derived semantic and governance alignment**
    Concepts such as mutual benefit, relational responsibility, and integrity influence module policy and headers. These alignments are design constraints and have not been formally validated as linguistic software models.
-2. **Athabaskan-inspired six-slot morphotactic constraint**  
+2. **Athabaskan-inspired six-slot morphotactic constraint**
    `DIR → ASP → CLASS → SUBJ → VOICE → STEM` provides canonical software ordering.
-3. **Aura's machine-oriented FST routing language**  
+3. **Aura's machine-oriented FST routing language**
    `aura_fst_routing.py` provides deterministic symbols, hard gates, weighted alternatives, grounding blockers, test requirements, risk classes, and route decisions.
 
 These must not be flattened into a generic claim about "Indigenous grammar."

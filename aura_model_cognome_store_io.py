@@ -30,12 +30,19 @@ class CognomeIOMixin:
         return digest
 
     def record_experiment_comparison(self, comparison: Mapping[str, Any]) -> str:
-        clean = sanitize_for_storage(dict(comparison)); mode = str(clean.get("measurement_mode","")); approved = bool(clean.get("approved_live",False))
+        clean = sanitize_for_storage(dict(comparison)); mode = str(clean.get("measurement_mode","")); approved_raw = clean.get("approved_live",False)
+        if type(approved_raw) is not bool: raise ValueError("approved_live must be a boolean")
+        approved = approved_raw
         if mode not in {"REPLAY","SHADOW","PAIRED_LIVE"}: raise ValueError(f"Unknown measurement mode: {mode}")
         if mode == "PAIRED_LIVE" and not approved: raise ValueError("PAIRED_LIVE requires explicit approval")
         comparison_id = str(clean.get("comparison_id") or stable_id("comparison", clean)); payload = clean | {"comparison_id": comparison_id,"approved_live": approved}; encoded = json.dumps(payload,sort_keys=True,separators=(",",":"))
         with self._conn:
-            self._conn.execute("INSERT OR IGNORE INTO experiment_comparisons VALUES(?,?,?,?,?)", (comparison_id,mode,int(approved),encoded,float(clean.get("created_at",time.time()))))
+            cursor = self._conn.execute("INSERT OR IGNORE INTO experiment_comparisons VALUES(?,?,?,?,?)", (comparison_id,mode,int(approved),encoded,float(clean.get("created_at",time.time()))))
+        # REPLAY and SHADOW records remain idempotent.  A PAIRED_LIVE record is a
+        # durable authorization-consumption claim: a duplicate ID means that the
+        # same approved experiment has already been used, even after restart.
+        if mode == "PAIRED_LIVE" and cursor.rowcount != 1:
+            return ""
         return comparison_id
 
     def record_drift_event(self, event: Mapping[str, Any]) -> str:
