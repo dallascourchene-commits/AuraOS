@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784071066,
+  "generated_at_unix": 1784071223,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 822,
+    "included_file_count": 823,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -799,6 +799,7 @@
       "tests/test_aura_phase_c3_trial_crucible.py",
       "tests/test_aura_planning_board.py",
       "tests/test_aura_planning_regression.py",
+      "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
@@ -843,23 +844,23 @@
     ]
   },
   "summary": {
-    "file_count": 822,
-    "total_bytes": 63714286,
-    "text_tokens_est": 6532510,
+    "file_count": 823,
+    "total_bytes": 63714594,
+    "text_tokens_est": 6532588,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 577,
+      "python_module": 578,
       "schema_or_lexicon": 65,
       "support_file": 41
     },
     "topology_nodes": 7196,
     "topology_edges": 15037,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 18994.4
+    "elapsed_ms": 16576.54
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1667,6 +1668,7 @@
       "tests/test_aura_phase_c3_trial_crucible.py",
       "tests/test_aura_planning_board.py",
       "tests/test_aura_planning_regression.py",
+      "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
@@ -15109,6 +15111,14 @@
         "end_line": 35,
         "semantic_id": "tests/test_aura_planning_regression.py#function:_action:f9e4cec26a263ecb",
         "signature_hash": "a698e53c63eae5e6"
+      },
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:_action:89098b7f53eb5e53",
+        "signature_hash": "a698e53c63eae5e6"
       }
     ],
     "_action_conflicts": [
@@ -16538,6 +16548,14 @@
         "line": 38,
         "end_line": 45,
         "semantic_id": "tests/test_aura_planning_regression.py#function:_board:44d3762cb368ba7c",
+        "signature_hash": "a0cbf41c814a97ef"
+      },
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:_board:c53cc86bd598246e",
         "signature_hash": "a0cbf41c814a97ef"
       }
     ],
@@ -56765,6 +56783,26 @@
         "signature_hash": "60f4c24b0364cc16"
       }
     ],
+    "test_action_cannot_overwrite_an_initially_satisfied_goal": [
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:test_action_cannot_overwrite_an_initially_satisfied_goal:0a98acb71c8b5ac9",
+        "signature_hash": "ff2dc6fa7a78651b"
+      }
+    ],
+    "test_action_cannot_overwrite_another_open_goal": [
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:test_action_cannot_overwrite_another_open_goal:3d21c410a6034cab",
+        "signature_hash": "892790e5d4941ecf"
+      }
+    ],
     "test_action_router_non_mutating_boundary_contract": [
       {
         "file": "test_aura_workbench.py",
@@ -57215,6 +57253,16 @@
         "end_line": 90,
         "semantic_id": "tests/test_aura_planning_regression.py#function:test_already_satisfied_goal_returns_empty_candidate:e8f787fb56f7e157",
         "signature_hash": "c88101572f60e28d"
+      }
+    ],
+    "test_ambiguous_duplicate_effect_fact_fails_closed": [
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:test_ambiguous_duplicate_effect_fact_fails_closed:35a65dafa8281892",
+        "signature_hash": "9399d525346f112c"
       }
     ],
     "test_amd_demo_fake_symbol_blocks_mutation": [
@@ -61481,6 +61529,16 @@
         "signature_hash": "d7618bc3568e889f"
       }
     ],
+    "test_duplicate_identical_effect_values_are_not_ambiguous": [
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 112,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:test_duplicate_identical_effect_values_are_not_ambiguous:d4a7999a8365d7b7",
+        "signature_hash": "99d173233c161441"
+      }
+    ],
     "test_e2e_failed_cheap_run": [
       {
         "file": "tests/test_aura_empirical_cost_observatory.py",
@@ -61509,6 +61567,16 @@
         "end_line": 308,
         "semantic_id": "tests/test_aura_planning_board.py#function:test_each_declared_verifier_requires_its_own_bound_receipt:d63b0f86745bda5b",
         "signature_hash": "a1352cee0c351069"
+      }
+    ],
+    "test_earlier_action_may_change_fact_restored_by_later_action": [
+      {
+        "file": "tests/test_aura_planning_regression_adversarial.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_planning_regression_adversarial.py#function:test_earlier_action_may_change_fact_restored_by_later_action:ea594e2455962fe2",
+        "signature_hash": "823bfb66a3199505"
       }
     ],
     "test_edge_id_deterministic": [
@@ -121466,47 +121534,47 @@
     {
       "path": ".github/workflows/p2-2-planning-regression.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3485,
-      "lines": 99,
-      "tokens_est": 872,
+      "bytes": 3789,
+      "lines": 106,
+      "tokens_est": 948,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b6aef93f60b8fbb5",
+      "digest8": "0e87b82e8eabe4bd",
       "vector": [
-        -0.01552,
-        -0.005969,
-        -0.2519,
-        -0.232798,
-        0.142067,
-        0.273389,
-        -0.170719,
-        -0.013132,
-        0.168331,
-        0.239961,
-        0.175494,
-        -0.079987,
-        0.165943,
-        0.008357,
-        -0.001194,
-        -0.199371,
-        -0.271001,
-        0.232798,
-        0.137291,
-        -0.228023,
-        -0.146842,
-        -0.223248,
-        0.027458,
-        0.072824,
-        0.139679,
-        -0.242349,
-        -0.280552,
-        0.256675,
-        -0.008357,
-        0.259063,
-        0.037009,
-        -0.005969
+        0.006857,
+        0.012342,
+        0.133018,
+        0.256437,
+        -0.086393,
+        0.237238,
+        0.168672,
+        0.053481,
+        -0.061709,
+        0.004114,
+        -0.21804,
+        0.171415,
+        -0.042511,
+        -0.286606,
+        -0.105592,
+        0.091878,
+        0.303062,
+        0.1769,
+        -0.149474,
+        0.028798,
+        -0.053481,
+        0.083651,
+        0.338716,
+        0.03154,
+        -0.335973,
+        0.039768,
+        0.207069,
+        0.168672,
+        0.028798,
+        -0.300319,
+        -0.171415,
+        0.242724
       ]
     },
     {
@@ -126556,47 +126624,47 @@
     {
       "path": "scripts/p2_2_harden_regression.py",
       "role": "python_module",
-      "bytes": 6382,
-      "lines": 175,
-      "tokens_est": 1596,
+      "bytes": 3021,
+      "lines": 87,
+      "tokens_est": 756,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2325642e47b7aa2c",
+      "digest8": "150e81c01cda0d42",
       "vector": [
-        0.26192,
-        -0.204273,
-        0.083965,
-        -0.241869,
-        0.093991,
-        0.29701,
-        0.139106,
-        0.241869,
-        -0.046369,
-        -0.249388,
-        -0.26192,
-        -0.036343,
-        -0.146625,
-        0.083965,
-        -0.016292,
-        0.299517,
-        0.109029,
-        -0.319568,
-        -0.058901,
-        -0.086471,
-        0.194247,
-        -0.046369,
-        -0.26192,
-        -0.088978,
-        0.181715,
-        0.181715,
-        0.1366,
-        0.071433,
-        -0.131587,
-        0.013785,
-        0.201766,
-        0.083965
+        0.211751,
+        0.209462,
+        -0.216329,
+        -0.017169,
+        -0.21404,
+        -0.278138,
+        -0.200305,
+        0.257535,
+        0.264402,
+        0.044639,
+        0.172835,
+        0.204883,
+        -0.067531,
+        0.163678,
+        -0.255246,
+        0.268981,
+        -0.21404,
+        0.046929,
+        0.035483,
+        -0.198016,
+        0.044639,
+        0.104159,
+        -0.062953,
+        0.268981,
+        -0.090423,
+        -0.113315,
+        -0.138497,
+        0.149943,
+        -0.053796,
+        -0.257535,
+        -0.106448,
+        -0.033193
       ]
     },
     {
@@ -130383,6 +130451,52 @@
         0.040248,
         0.207769,
         -0.199066
+      ]
+    },
+    {
+      "path": "tests/test_aura_planning_regression_adversarial.py",
+      "role": "python_module",
+      "bytes": 3365,
+      "lines": 113,
+      "tokens_est": 842,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "de07a6c3369bae89",
+      "vector": [
+        -0.225288,
+        -0.28018,
+        0.10178,
+        0.287042,
+        0.163534,
+        0.186406,
+        -0.074334,
+        -0.10178,
+        -0.136088,
+        -0.106354,
+        0.170395,
+        0.287042,
+        0.277893,
+        0.1338,
+        -0.152098,
+        -0.213852,
+        -0.003431,
+        0.056036,
+        -0.24816,
+        0.28018,
+        -0.145236,
+        0.20699,
+        0.147523,
+        0.184118,
+        -0.220713,
+        0.072046,
+        0.090344,
+        -0.06061,
+        0.072046,
+        0.218426,
+        -0.11779,
+        0.003431
       ]
     },
     {
