@@ -24,8 +24,23 @@ jobs:
           from pathlib import Path
           path = Path('.github/workflows/ci.yml')
           text = path.read_text(encoding='utf-8')
-          old = '  group: aura-ci-${{ github.workflow }}-${{ github.ref }}\n'
-          new = '  group: aura-ci-${{ github.workflow }}-${{ github.ref }}-${{ github.event.pull_request.head.sha || github.sha }}\n'
+          open_expr = '$' + '{' + '{'
+          close_expr = '}' + '}'
+          old = (
+              '  group: aura-ci-'
+              + open_expr + ' github.workflow ' + close_expr
+              + '-'
+              + open_expr + ' github.ref ' + close_expr
+              + '\n'
+          )
+          new = (
+              old.rstrip('\n')
+              + '-'
+              + open_expr
+              + ' github.event.pull_request.head.sha || github.sha '
+              + close_expr
+              + '\n'
+          )
           if new not in text:
               if text.count(old) != 1:
                   raise SystemExit('AuraOS CI concurrency group did not match the expected source span')
