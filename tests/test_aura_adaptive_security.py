@@ -22,6 +22,25 @@ def test_paired_live_claim_survives_process_restart(tmp_path) -> None:
         assert store.record_experiment_comparison(comparison) == ""
 
 
+def test_execution_authorization_requires_explicit_model_profiles() -> None:
+    try:
+        ExecutionAuthorization.create(
+            approved_by="Dallas",
+            verifier_id="verifier",
+            purpose_digest="purpose",
+            capability_graph_digest="graph",
+            allowed_policy_modes=[DIRECT],
+            nonce="nonce",
+            issued_at=1.0,
+            expires_at=2.0,
+            max_calls=1,
+        )
+    except ValueError as exc:
+        assert "profile allowlist" in str(exc)
+    else:
+        raise AssertionError("model execution was authorized without explicit profiles")
+
+
 def test_execution_authorization_rejects_content_tampering() -> None:
     authorization = ExecutionAuthorization.create(
         approved_by="Dallas",
