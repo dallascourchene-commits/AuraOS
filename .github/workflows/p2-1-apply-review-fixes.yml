@@ -1,0 +1,41 @@
+name: P2.1 review regression gate
+
+on:
+  pull_request:
+    paths:
+      - aura_planning_board.py
+      - tests/test_aura_planning_board.py
+      - .github/workflows/p2-1-apply-review-fixes.yml
+  push:
+    branches:
+      - main
+      - "refactor/**"
+    paths:
+      - aura_planning_board.py
+      - tests/test_aura_planning_board.py
+      - .github/workflows/p2-1-apply-review-fixes.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p2-1-review-regressions-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reviewed-regressions:
+    name: Reviewed Planning Board regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install test tooling
+        run: python -m pip install pytest
+      - name: Preserve reviewed semantics
+        run: |
+          python -m pytest -q tests/test_aura_planning_board.py \
+            -k "membership_precondition_semantics or declared_blocking_constraint_refs or nonblocking_constraint_refs"
