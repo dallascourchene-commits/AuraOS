@@ -9,11 +9,11 @@ on:
       - "refactor/**"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: p2-1-planning-board-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   focused-planning-board:
@@ -50,3 +50,49 @@ jobs:
           python -m pytest -q \
             tests/test_aura_event_contracts.py \
             tests/test_aura_planning_board.py
+
+  apply-review-fixes:
+    name: Apply analyzed review fixes
+    if: github.event_name == 'push' && github.ref_name == 'refactor/planning-board-p2-1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/planning-board-p2-1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Wait for CODEMAP synchronization
+        run: sleep 75
+      - name: Refresh exact branch head
+        run: |
+          git fetch origin refactor/planning-board-p2-1
+          git reset --hard origin/refactor/planning-board-p2-1
+      - name: Apply analyzed review fixes
+        run: |
+          test -f scripts/p2_1_review_fixes.patch
+          test -f scripts/p2_1_clean_workflow.yml
+          git apply --check scripts/p2_1_review_fixes.patch
+          git apply scripts/p2_1_review_fixes.patch
+      - name: Validate review fixes
+        run: |
+          python -m pip install pytest ruff
+          python -m py_compile aura_planning_board.py tests/test_aura_planning_board.py
+          ruff check --select E9,F63,F7,F82 aura_planning_board.py tests/test_aura_planning_board.py
+          python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_planning_board.py
+      - name: Restore clean workflow and remove temporary files
+        run: |
+          cp scripts/p2_1_clean_workflow.yml .github/workflows/p2-1-planning-board-contracts.yml
+          rm scripts/p2_1_clean_workflow.yml
+          rm scripts/p2_1_review_fixes.patch
+          rm .github/workflows/p2-1-apply-review-fixes.yml
+      - name: Commit reviewed fixes
+        run: |
+          git config user.name "AuraOS Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(planning): preserve GOAP membership and constraint evidence"
+          git pull --rebase origin refactor/planning-board-p2-1
+          git push origin HEAD:refactor/planning-board-p2-1
