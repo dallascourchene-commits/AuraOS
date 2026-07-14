@@ -16,6 +16,8 @@ from pathlib import Path
 import re
 import sys
 
+import numpy as np
+
 from spatial_mapper import scan_and_vectorize
 
 

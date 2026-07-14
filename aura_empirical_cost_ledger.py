@@ -29,6 +29,10 @@ _SECRET_VALUE = re.compile(
     r"sk-[a-zA-Z0-9_-]+|gh[opusr]_[a-zA-Z0-9]+|Bearer\s+[a-zA-Z0-9._~+/-]+=*",
     re.IGNORECASE,
 )
+_SECRET_ASSIGNMENT = re.compile(
+    r"(?:api[_-]?key|secret|password|authorization|credential|access[_-]?token|refresh[_-]?token|private[_-]?key)\s*[:=]",
+    re.IGNORECASE,
+)
 
 _COLUMNS = (
     "run_id",
@@ -226,6 +230,8 @@ def _sanitize(value: Any, *, key: str = "") -> Any:
     if isinstance(value, (list, tuple)):
         return [_sanitize(item) for item in value]
     if isinstance(value, str):
+        if _SECRET_ASSIGNMENT.search(value):
+            return "[REDACTED]"
         return _SECRET_VALUE.sub("[REDACTED]", value)
     return value
 

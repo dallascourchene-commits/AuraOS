@@ -379,14 +379,18 @@ def test_build_icm_context_md_contains_stage_table():
 
 def test_arena_export_to_icm_creates_workspace(tmp_path):
     from aura_liquid_planning_arena import (
+        LIQUID_ARENA_VERSION,
         LiquidPlanningArena,
         export_arena_to_icm,
     )
 
     arena = LiquidPlanningArena(
+        arena_version=LIQUID_ARENA_VERSION,
         arena_id="ARENA-ICM-1",
         domain="code",
         intent="patch demo.py",
+        plan_ref="plan-1",
+        domain_objects=["files", "diffs", "tests"],
         adapter={"domain": "code"},
         action_capsules=[
             {
@@ -409,6 +413,7 @@ def test_arena_export_to_icm_creates_workspace(tmp_path):
             {"capsule_id": "CAP-1", "verifier_id": "lint_pass"}
         ],
         agent_leases=[{"lease_id": "L-1"}],
+        shared_action_queue=[],
         phase_hash="ph1",
     )
 

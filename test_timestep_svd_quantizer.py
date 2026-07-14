@@ -196,7 +196,7 @@ class TestAsyncEngine:
             for i in range(3)
         }
 
-        results = asyncio.get_event_loop().run_until_complete(
+        results = asyncio.run(
             engine.quantize_expert_activations(activations, timestep=0)
         )
 

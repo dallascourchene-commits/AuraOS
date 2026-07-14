@@ -24,6 +24,7 @@ import math
 import os
 from pathlib import Path
 import re
+import tempfile
 import time
 from typing import Any
 
@@ -38,6 +39,7 @@ DEFAULT_SKIP_DIRS = frozenset({
     ".ruff_cache",
     "node_modules",
     "Aura_Memory",
+    "Aura_Sandbox",
     ".venv",
     "venv",
     "env",
@@ -708,6 +710,23 @@ def search_index(payload: dict[str, Any], query: str, *, limit: int = 8) -> list
     return sorted(ranked, key=lambda item: item["score"], reverse=True)[:limit]
 
 
+def _atomic_write_text(path: Path, text: str) -> None:
+    """Publish a text artifact atomically so concurrent readers never see truncation."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent)
+    )
+    temporary_path = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_path, path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+
 def write_navigation_artifacts(
     payload: dict[str, Any],
     json_path: Path = DEFAULT_INDEX_PATH,
@@ -719,7 +738,7 @@ def write_navigation_artifacts(
     json_path.parent.mkdir(parents=True, exist_ok=True)
     md_path.parent.mkdir(parents=True, exist_ok=True)
     if write_json:
-        json_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        _atomic_write_text(json_path, json.dumps(payload, indent=2))
     lines = [
         "# Aura Compact Code Map",
         "",
@@ -771,7 +790,7 @@ def write_navigation_artifacts(
         hits = payload["symbol_index"][symbol]
         where = ", ".join(f"`{hit['file']}:{hit['line']}`" for hit in hits[:3])
         lines.append(f"- `{symbol}` -> {where}")
-    md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _atomic_write_text(md_path, "\n".join(lines) + "\n")
     return json_path, md_path
 
 

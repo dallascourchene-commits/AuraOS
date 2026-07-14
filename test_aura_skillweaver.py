@@ -151,13 +151,13 @@ class TestStrongSourceAllow:
         assert any(c.accepted for c in result.candidates)
 
     def test_allow_with_target_modules(self, weaver, strong_vsa_candidate):
-        """When sources pass AND target modules found, allow mutation."""
+        """When sources and targets pass, allow governed Arena staging."""
         result = weaver.evaluate_research_gate(
             "vector symbolic architecture edge memory",
             [strong_vsa_candidate],
         )
         # With matching modules, should allow or at least not refuse outright
-        assert result.decision in ("ALLOW_MUTATION", "NEED_MORE_SOURCES")
+        assert result.decision in ("ALLOW_ARENA_STAGING", "NEED_MORE_SOURCES")
 
     def test_opposed_relevant_sources_pause_mutation(self, weaver):
         """Relevant but contradictory papers require evidence resolution."""
