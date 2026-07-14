@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 
-from aura_event_contracts import AppendOnlyEventStore, MeasurementClass, ToolDecisionRecord, stable_digest
+from aura_event_contracts import (
+    AppendOnlyEventStore,
+    MeasurementClass,
+    ToolDecisionRecord,
+    stable_digest,
+)
 from aura_shadow_tool_observability import invoke_tool_shadow
 
 
@@ -50,11 +57,43 @@ def test_wrapper_forwards_only_original_tool_arguments(tmp_path) -> None:
     assert len(observed.persisted_event_ids) == 2
 
 
-def test_wrapper_preserves_exception_behavior_and_records_no_fake_success() -> None:
+def test_wrapper_rejects_decision_input_mismatch_before_invocation() -> None:
+    called = False
+
+    def tool(*, value):
+        nonlocal called
+        called = True
+        return value
+
+    with pytest.raises(ValueError, match="does not match"):
+        invoke_tool_shadow(
+            tool,
+            tool_kwargs={"value": 2},
+            decision=_decision({"value": 1}),
+            purpose_digest="purpose",
+        )
+    assert called is False
+
+
+def test_wrapper_normalizes_lowercase_failure_status() -> None:
+    times = iter((2.0, 3.0))
+    observed = invoke_tool_shadow(
+        lambda **_kwargs: {"status": "failed", "error": "bad result"},
+        tool_kwargs={"value": 1},
+        decision=_decision({"value": 1}),
+        purpose_digest="purpose",
+        now=lambda: next(times),
+    )
+    assert observed.result.status == "FAILED"
+    assert observed.result.error_class == "bad result"
+
+
+def test_wrapper_preserves_exception_and_persists_failed_result(tmp_path) -> None:
     def tool(*, value):
         raise RuntimeError(f"bad:{value}")
 
     kwargs = {"value": 7}
+    store = AppendOnlyEventStore(tmp_path / "events")
     times = iter((2.0, 3.0))
     with pytest.raises(RuntimeError, match="bad:7"):
         invoke_tool_shadow(
@@ -62,5 +101,34 @@ def test_wrapper_preserves_exception_behavior_and_records_no_fake_success() -> N
             tool_kwargs=kwargs,
             decision=_decision(kwargs),
             purpose_digest="purpose",
+            store=store,
+            now=lambda: next(times),
+        )
+
+    events = list(store.iter_events())
+    result_event = next(item for item in events if item["event_type"] == "TOOL_RESULT_RECORDED")
+    result_payload_path = store.sidecars_dir / f"{result_event['payload_ref']}.json"
+    result_payload = json.loads(result_payload_path.read_text(encoding="utf-8"))
+    assert result_payload["status"] == "FAILED"
+    assert result_payload["error_class"] == "RuntimeError"
+
+
+def test_observability_failure_does_not_replace_original_tool_exception() -> None:
+    class BrokenStore:
+        def store_payload(self, *_args, **_kwargs):
+            raise OSError("observer unavailable")
+
+    def tool(*, value):
+        raise RuntimeError(f"original:{value}")
+
+    kwargs = {"value": 9}
+    times = iter((2.0, 3.0))
+    with pytest.raises(RuntimeError, match="original:9"):
+        invoke_tool_shadow(
+            tool,
+            tool_kwargs=kwargs,
+            decision=_decision(kwargs),
+            purpose_digest="purpose",
+            store=BrokenStore(),
             now=lambda: next(times),
         )
