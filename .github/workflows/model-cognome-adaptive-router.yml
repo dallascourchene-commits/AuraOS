@@ -176,4 +176,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Finalize PR92 adaptive router and architecture audit"
+          git fetch origin refactor/model-cognome-live-compat
+          git rebase origin/refactor/model-cognome-live-compat
           git push origin HEAD:refactor/model-cognome-live-compat
