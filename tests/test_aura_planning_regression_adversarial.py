@@ -110,3 +110,25 @@ def test_duplicate_identical_effect_values_are_not_ambiguous() -> None:
         {},
     )
     assert report.complete_candidates[0].action_ids == ("duplicate",)
+
+
+def test_target_selection_branches_across_all_open_predicates() -> None:
+    establish_x = _action(
+        "a0-establish-x",
+        effects=(EffectSpec("x", False),),
+    )
+    establish_z = _action(
+        "a2-establish-z",
+        preconditions=(PredicateSpec("x", False),),
+        effects=(EffectSpec("z", True),),
+    )
+    report = regress_board_goal(
+        _board(
+            (establish_x, establish_z),
+            (PredicateSpec("x", False), PredicateSpec("z", True)),
+        ),
+        {},
+    )
+    assert ("a0-establish-x", "a2-establish-z") in {
+        candidate.action_ids for candidate in report.complete_candidates
+    }
