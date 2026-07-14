@@ -75,7 +75,7 @@ def _mesh_offload_fixture() -> tuple[int, str, str]:
         r"                \"Sure! Here is an improved version)",
         re.DOTALL,
     )
-    text, count = pattern.subn(branch, text, count=1)
+    text, count = pattern.subn(lambda _match: branch, text, count=1)
     if count != 1:
         raise RuntimeError(f"benchmark mock branch bounded matches: {count}")
     _write(path, text)
@@ -110,7 +110,7 @@ def _mesh_offload_fixture() -> tuple[int, str, str]:
         r"(?=    plan, note = parse_edit_plan\(good\))",
         re.DOTALL,
     )
-    text, count = pattern.subn(fixture, text, count=1)
+    text, count = pattern.subn(lambda _match: fixture, text, count=1)
     if count != 1:
         raise RuntimeError(f"substrate fixture bounded matches: {count}")
     _write(path, text)
