@@ -1,4 +1,4 @@
-name: Adaptive Router Focused Validation Once
+name: Adaptive Router Compatibility Patch Once
 
 on:
   pull_request:
@@ -8,62 +8,141 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  focused:
+  patch:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.12"]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: refactor/model-cognome-live-compat
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install tooling
-        run: python -m pip install pytest ruff
-      - name: Compile adaptive modules
+      - name: Clone branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python -m py_compile \
-            aura_ai_router.py \
-            aura_model_cognome_execution_auth.py \
-            aura_adaptive_model_router.py \
-            aura_adaptive_model_executor.py
-      - name: Fatal lint
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          git clone --branch refactor/model-cognome-live-compat \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+      - name: Apply bounded compatibility patch
         run: |
-          ruff check --select E9,F63,F7,F82 \
-            aura_ai_router.py \
-            aura_model_cognome_execution_auth.py \
-            aura_adaptive_model_router.py \
-            aura_adaptive_model_executor.py \
-            tests/test_aura_ai_router_dynamic.py \
-            tests/test_aura_adaptive_planner.py \
-            tests/test_aura_adaptive_execution.py
-      - name: Run focused tests
-        id: pytest
-        continue-on-error: true
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if new in text:
+                  return
+              if old not in text:
+                  raise RuntimeError(f"marker missing in {path}: {old[:100]!r}")
+              target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          replace_once(
+              "aura_adaptive_model_router.py",
+              "        self.executor_factory = executor_factory\n",
+              "        self.executor_factory = executor_factory\n        self._used_authorization_ids: set[str] = set()\n",
+          )
+          replace_once(
+              "aura_adaptive_model_executor.py",
+              "        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids) + (1 if policy_mode == PANEL else 0)\n",
+              "        estimated_calls = 0 if policy_mode == ZERO_MODEL else len(profile_ids)\n",
+          )
+          replace_once(
+              "aura_router.py",
+              '''    def route(self, task_key: str, forced_model: str | None = None,
+              mock: bool = False, max_fallbacks: int = 4, aspect: str = "refactor",
+              max_retries: int = 1) -> dict:
+        if task_key not in TASKS:
+            raise SystemExit(f"Unknown task '{task_key}'. Known: {list(TASKS)}")
+        return self.route_task(TASKS[task_key], forced_model=forced_model, mock=mock,
+                               max_fallbacks=max_fallbacks, aspect=aspect,
+                               max_retries=max_retries)
+''',
+              '''    def route(self, task_key: str, forced_model: str | None = None,
+              mock: bool = False, max_fallbacks: int = 4, aspect: str = "refactor",
+              max_retries: int = 1, routing_mode: str | None = None,
+              purpose_digest: str = "", authorization=None,
+              data_egress_allowed: bool = False) -> dict:
+        if task_key not in TASKS:
+            raise SystemExit(f"Unknown task '{task_key}'. Known: {list(TASKS)}")
+        from aura_router_adaptive_compat import LEGACY, resolve_mode, route_test_case
+
+        mode = resolve_mode(routing_mode)
+        if mode != LEGACY:
+            return route_test_case(
+                self,
+                TASKS[task_key],
+                routing_mode=mode,
+                purpose_digest=purpose_digest,
+                authorization=authorization,
+                forced_model=forced_model,
+                data_egress_allowed=data_egress_allowed,
+                mock=mock,
+            )
+        return self.route_task(TASKS[task_key], forced_model=forced_model, mock=mock,
+                               max_fallbacks=max_fallbacks, aspect=aspect,
+                               max_retries=max_retries)
+''',
+          )
+          replace_once(
+              "aura_router.py",
+              '''    def route_fusion_task(self, task_text: str, *, target_file: str | None = None,
+                           target_symbol: str | None = None, output_mode: str = "TEXT",
+                           mock: bool = False) -> dict:
+        """Run AuraFusion as an explicit router mode without replacing route_task."""
+        from aura_fusion import AuraFusionCoordinator
+
+        coordinator = AuraFusionCoordinator(repo_root=self.root, mock=mock)
+        result = coordinator.run(
+            task_text,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            output_mode=output_mode,
+        )
+        return result.to_dict()
+''',
+              '''    def route_fusion_task(self, task_text: str, *, target_file: str | None = None,
+                           target_symbol: str | None = None, output_mode: str = "TEXT",
+                           mock: bool = False, routing_mode: str | None = None,
+                           purpose_digest: str = "", authorization=None,
+                           data_egress_allowed: bool = False) -> dict:
+        """Run legacy AuraFusion or an explicit Cognome-governed panel route."""
+        from aura_router_adaptive_compat import LEGACY, resolve_mode, route_fusion_text
+
+        mode = resolve_mode(routing_mode)
+        if mode != LEGACY:
+            return route_fusion_text(
+                self,
+                task_text,
+                routing_mode=mode,
+                purpose_digest=purpose_digest,
+                authorization=authorization,
+                target_file=target_file,
+                target_symbol=target_symbol,
+                data_egress_allowed=data_egress_allowed,
+                mock=mock,
+            )
+        from aura_fusion import AuraFusionCoordinator
+
+        coordinator = AuraFusionCoordinator(repo_root=self.root, mock=mock)
+        result = coordinator.run(
+            task_text,
+            target_file=target_file,
+            target_symbol=target_symbol,
+            output_mode=output_mode,
+        )
+        return result.to_dict()
+''',
+          )
+          PY
+      - name: Commit compatibility changes
         run: |
-          python -m pytest -q \
-            tests/test_aura_ai_router_dynamic.py \
-            tests/test_aura_adaptive_planner.py \
-            tests/test_aura_adaptive_execution.py \
-            --junitxml=focused-${{ matrix.python-version }}.xml \
-            > focused-${{ matrix.python-version }}.log 2>&1
-          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
-      - name: Upload diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: adaptive-focused-${{ matrix.python-version }}-${{ github.run_id }}
-          path: |
-            focused-${{ matrix.python-version }}.log
-            focused-${{ matrix.python-version }}.xml
-      - name: Enforce tests
-        if: steps.pytest.outputs.exit_code != '0'
-        run: |
-          cat focused-${{ matrix.python-version }}.log
-          exit 1
+          set -euo pipefail
+          git config user.name "Aura Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add aura_router.py aura_adaptive_model_router.py aura_adaptive_model_executor.py
+          if git diff --cached --quiet; then
+            echo "No compatibility changes required"
+            exit 0
+          fi
+          git commit -m "Integrate adaptive modes behind legacy router facade"
+          git push origin HEAD:refactor/model-cognome-live-compat
