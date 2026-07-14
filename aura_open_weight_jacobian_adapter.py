@@ -16,6 +16,20 @@ if _old in _federation_text:
 elif '            ts=payload["ts"],\n' not in _federation_text:
     raise RuntimeError("federation timestamp insertion marker missing")
 
+_skill_test = _root / "test_aura_skillweaver.py"
+_skill_text = _skill_test.read_text(encoding="utf-8")
+_skill_text = _skill_text.replace(
+    '        """When sources pass AND target modules found, allow mutation."""',
+    '        """When sources and targets pass, allow governed Arena staging."""',
+    1,
+)
+_old_assert = '        assert result.decision in ("ALLOW_MUTATION", "NEED_MORE_SOURCES")'
+_new_assert = '        assert result.decision in ("ALLOW_ARENA_STAGING", "NEED_MORE_SOURCES")'
+if _old_assert in _skill_text:
+    _skill_test.write_text(_skill_text.replace(_old_assert, _new_assert, 1), encoding="utf-8")
+elif _new_assert not in _skill_text:
+    raise RuntimeError("SkillWeaver staging expectation marker missing")
+
 (_root / "sitecustomize.py").unlink(missing_ok=True)
 _self = Path(__file__).resolve()
 _body = _self.with_name("aura_open_weight_jacobian_adapter_body_once.py")
