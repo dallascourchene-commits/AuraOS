@@ -30,7 +30,9 @@ class CognomeIOMixin:
         return digest
 
     def record_experiment_comparison(self, comparison: Mapping[str, Any]) -> str:
-        clean = sanitize_for_storage(dict(comparison)); mode = str(clean.get("measurement_mode","")); approved = bool(clean.get("approved_live",False))
+        clean = sanitize_for_storage(dict(comparison)); mode = str(clean.get("measurement_mode","")); approved_raw = clean.get("approved_live",False)
+        if type(approved_raw) is not bool: raise ValueError("approved_live must be a boolean")
+        approved = approved_raw
         if mode not in {"REPLAY","SHADOW","PAIRED_LIVE"}: raise ValueError(f"Unknown measurement mode: {mode}")
         if mode == "PAIRED_LIVE" and not approved: raise ValueError("PAIRED_LIVE requires explicit approval")
         comparison_id = str(clean.get("comparison_id") or stable_id("comparison", clean)); payload = clean | {"comparison_id": comparison_id,"approved_live": approved}; encoded = json.dumps(payload,sort_keys=True,separators=(",",":"))
