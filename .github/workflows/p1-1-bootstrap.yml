@@ -39,22 +39,39 @@ jobs:
       - name: Materialize reviewed P1.1 sources
         shell: bash
         run: |
-          set -euo pipefail
-          fetch_compressed_blob() {
-            local sha="$1"
-            local target="$2"
-            mkdir -p "$(dirname "${target}")"
-            gh api "repos/dallascourchene-commits/AuraOS/git/blobs/${sha}" --jq .content \
-              | tr -d '\n' \
-              | base64 --decode \
-              | python -c 'import sys,zlib; sys.stdout.buffer.write(zlib.decompress(sys.stdin.buffer.read()))' \
-              > "${target}"
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import json
+          import os
+          import urllib.request
+          import zlib
+
+          blobs = {
+              "aura_relational_authority.py": "773509e45a81fa00c8c4ce3a0b6f10a148c0f2c7",
+              "tests/test_aura_event_privacy_hardening.py": "fa78f090bdf068e0b1e13f0e910dda3dfa97655e",
+              "tests/test_aura_relational_authority.py": "61b23ab114bab14168ca1e1096046ee62f29dd8b",
+              "tests/test_aura_workflow_authority_bridge.py": "06d9cb33709861247bc6c57721a70b87b08e0945",
+              "scripts/p1_1_finalize.py": "55bb721ce0b7856a00a86a5b982e444fa8e5be70",
           }
-          fetch_compressed_blob 773509e45a81fa00c8c4ce3a0b6f10a148c0f2c7 aura_relational_authority.py
-          fetch_compressed_blob fa78f090bdf068e0b1e13f0e910dda3dfa97655e tests/test_aura_event_privacy_hardening.py
-          fetch_compressed_blob 61b23ab114bab14168ca1e1096046ee62f29dd8b tests/test_aura_relational_authority.py
-          fetch_compressed_blob 06d9cb33709861247bc6c57721a70b87b08e0945 tests/test_aura_workflow_authority_bridge.py
-          fetch_compressed_blob 55bb721ce0b7856a00a86a5b982e444fa8e5be70 scripts/p1_1_finalize.py
+          token = os.environ["GH_TOKEN"]
+          for relative_path, sha in blobs.items():
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/dallascourchene-commits/AuraOS/git/blobs/{sha}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(request) as response:
+                  payload = json.load(response)
+              compressed = base64.b64decode(payload["content"])
+              path = Path(relative_path)
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_bytes(zlib.decompress(compressed))
+              print(f"materialized {relative_path}")
+          PY
 
       - name: Install validation dependencies
         run: |
