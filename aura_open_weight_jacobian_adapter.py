@@ -91,6 +91,17 @@ if _old_async in _quantizer_text:
 elif _new_async not in _quantizer_text:
     raise RuntimeError("async quantizer test marker missing")
 
+_scanner = _root / "aura_topological_scanner.py"
+_scanner_text = _scanner.read_text(encoding="utf-8")
+if "import numpy as np\n" not in _scanner_text:
+    marker = "import sys\n"
+    if marker not in _scanner_text:
+        raise RuntimeError("topological scanner import marker missing")
+    _scanner.write_text(
+        _scanner_text.replace(marker, marker + "\nimport numpy as np\n", 1),
+        encoding="utf-8",
+    )
+
 (_root / "sitecustomize.py").unlink(missing_ok=True)
 _self = Path(__file__).resolve()
 _body = _self.with_name("aura_open_weight_jacobian_adapter_body_once.py")
