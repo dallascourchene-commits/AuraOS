@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 import json
 
 import pytest
@@ -14,6 +16,7 @@ from aura_event_contracts import (
     ToolDecisionRecord,
     ToolResultRecord,
     canonical_json,
+    sanitize_payload,
 )
 
 
@@ -38,16 +41,32 @@ def test_tool_decision_is_bounded_hashed_and_redacts_secrets() -> None:
     assert decision.confidence_measurement_class == "DERIVED"
 
 
-def test_private_chain_of_thought_fields_are_rejected() -> None:
-    with pytest.raises(ValueError, match="private reasoning"):
-        ToolDecisionRecord.create(
-            trace_id="trace-1",
-            tool_id="tool",
-            decision_kind="SELECT",
-            decision_rationale="Use the exact tool.",
-            expected_information="Exact data.",
-            tool_input={"chain_of_thought": "hidden"},
-        )
+def test_private_chain_of_thought_fields_are_rejected_in_snake_and_camel_case() -> None:
+    for field_name in ("chain_of_thought", "chainOfThought", "hiddenReasoning"):
+        with pytest.raises(ValueError, match="private reasoning"):
+            ToolDecisionRecord.create(
+                trace_id="trace-1",
+                tool_id="tool",
+                decision_kind="SELECT",
+                decision_rationale="Use the exact tool.",
+                expected_information="Exact data.",
+                tool_input={field_name: "hidden"},
+            )
+
+
+def test_generic_token_fields_are_redacted_in_snake_and_camel_case() -> None:
+    sanitized = sanitize_payload(
+        {
+            "refresh_token": "refresh-secret",
+            "githubToken": "github-secret",
+            "nested": {"session_token": "session-secret"},
+        }
+    )
+    assert sanitized == {
+        "refresh_token": "[REDACTED]",
+        "githubToken": "[REDACTED]",
+        "nested": {"session_token": "[REDACTED]"},
+    }
 
 
 def test_confidence_and_alternative_limits_fail_closed() -> None:
@@ -145,6 +164,31 @@ def test_tool_result_hashes_sanitized_output_and_validates_time() -> None:
         )
 
 
+def test_sidecar_redaction_tracking_accepts_custom_objects(tmp_path) -> None:
+    class CustomPayload:
+        def __str__(self) -> str:
+            return "custom-payload"
+
+    store = AppendOnlyEventStore(tmp_path / "events")
+    ref = store.store_payload(CustomPayload(), kind="custom", created_at=1.0)
+    assert ref.redacted is True
+    assert json.loads((store.root / ref.path).read_text(encoding="utf-8")) == "custom-payload"
+
+
+def _event(payload_digest: str = "digest") -> AuraEventEnvelope:
+    return AuraEventEnvelope.create(
+        trace_id="trace",
+        event_type="EVENT",
+        actor_id="aura",
+        actor_type="AURA",
+        purpose_digest="purpose",
+        dikwp_stage="DATA",
+        payload_ref="payload",
+        payload_digest=payload_digest,
+        created_at=2.0,
+    )
+
+
 def test_append_only_store_is_idempotent_and_uses_exact_redacted_sidecars(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     ref = store.store_payload(
@@ -157,17 +201,32 @@ def test_append_only_store_is_idempotent_and_uses_exact_redacted_sidecars(tmp_pa
     assert "abc.def.ghi" not in json.dumps(stored)
     assert ref.redacted is True
 
-    event = AuraEventEnvelope.create(
-        trace_id="trace",
-        event_type="EVENT",
-        actor_id="aura",
-        actor_type="AURA",
-        purpose_digest="purpose",
-        dikwp_stage="DATA",
-        payload_ref=ref.ref_id,
-        payload_digest=ref.payload_digest,
-        created_at=2.0,
-    )
+    event = _event(ref.payload_digest)
     assert store.append(event) is True
     assert store.append(event) is False
     assert [item["event_id"] for item in store.iter_events()] == [event.event_id]
+
+
+def test_independent_stores_serialize_duplicate_detection(tmp_path) -> None:
+    root = tmp_path / "events"
+    first = AppendOnlyEventStore(root)
+    second = AppendOnlyEventStore(root)
+    event = _event()
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(lambda store: store.append(event), (first, second)))
+
+    assert sorted(results) == [False, True]
+    assert len(list(first.iter_events())) == 1
+
+
+def test_conflicting_duplicate_fails_closed_after_reloading_persisted_state(tmp_path) -> None:
+    root = tmp_path / "events"
+    first = AppendOnlyEventStore(root)
+    event = _event()
+    assert first.append(event) is True
+
+    conflicting = replace(event, payload_digest="different")
+    second = AppendOnlyEventStore(root)
+    with pytest.raises(ValueError, match="event ID collision"):
+        second.append(conflicting)
