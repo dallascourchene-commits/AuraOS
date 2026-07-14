@@ -1,31 +1,31 @@
-name: Phase C2 Review Repair
+name: Adaptive Router CODEMAP Finalizer Once
 
 on:
   push:
     branches:
-      - feature/phase-c2-live-route-capsules
+      - refactor/model-cognome-live-compat
 
 permissions:
   contents: write
 
 concurrency:
-  group: phase-c2-review-repair
+  group: adaptive-router-codemap-finalizer
   cancel-in-progress: false
 
 jobs:
-  repair:
+  finalize:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/phase-c2-live-route-capsules
+          ref: refactor/model-cognome-live-compat
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install focused dependencies
+      - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install \
@@ -39,181 +39,61 @@ jobs:
             "httpx>=0.27.0,<1.0" \
             "cryptography>=41.0.0,<45.0" \
             pytest pytest-asyncio ruff
-      - name: Apply verified review fixes
+      - name: Restore permanent workflow and validate adaptive contracts
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          def replace_once(path: str, old: str, new: str) -> None:
-              target = Path(path)
-              text = target.read_text(encoding="utf-8")
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f"{path}: expected one match, found {count}")
-              target.write_text(text.replace(old, new, 1), encoding="utf-8")
-
-          replace_once(
-              "aura_codebase_navigator.py",
-              '        "root": str(root),\n',
-              '        "root": ".",\n',
-          )
-
-          replace_once(
-              ".github/workflows/phase-c2.yml",
-              "      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n",
-              "      - uses: actions/checkout@v4\n        with:\n          persist-credentials: false\n      - uses: actions/setup-python@v5\n",
-          )
-
-          replace_once(
-              "aura_phase_c2_codemap_verify.py",
-              '    "tests/test_aura_phase_c2_capsule_enforcement.py",\n',
-              '    "tests/test_aura_phase_c2_capsule_enforcement.py",\n    "tests/test_aura_arena_experience_ledger.py",\n',
-          )
-
-          replace_once(
-              "aura_coding_workbench_wfst_adapter.py",
-              '''        self.runtime = ArenaWFSTRuntime(repo_root=self.repo_root)\n        route_root = self.repo_root / ".aura" / "arena_routes"\n        coding = self.runtime.register_manifest(route_root / "coding.v1.json")\n        meta = self.runtime.register_manifest(route_root / "meta.v1.json")\n        self.initialization = {"coding": coding, "meta": meta}\n''',
-              '''        self.runtime, self.initialization = self._initialize_runtime()\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_wfst_adapter.py",
-              '''    def close(self) -> None:\n''',
-              '''    def _initialize_runtime(self) -> tuple[ArenaWFSTRuntime, dict[str, Any]]:\n        """Create and register the session runtime exactly once."""\n        runtime = ArenaWFSTRuntime(repo_root=self.repo_root)\n        route_root = self.repo_root / ".aura" / "arena_routes"\n        coding = runtime.register_manifest(route_root / "coding.v1.json")\n        meta = runtime.register_manifest(route_root / "meta.v1.json")\n        return runtime, {"coding": coding, "meta": meta}\n\n    def close(self) -> None:\n''',
-          )
-
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        runtime = CapsuleAwareArenaWFSTRuntime(\n            repo_root=self.repo_root,\n            route_capsules_enabled=self.route_capsules_enabled,\n        )\n        route_root = self.repo_root / ".aura" / "arena_routes"\n        coding = runtime.register_manifest(route_root / "coding.v1.json")\n        meta = runtime.register_manifest(route_root / "meta.v1.json")\n        capsule_localize = runtime.attach_capsule(\n            arena_id="coding_workbench",\n            transition_id="CODING.TASK_SCOPED.LOCALIZE_CODE",\n            route_capsule_ref=".aura/route_capsules/coding_localize.v1.json",\n            morphology_profile_ref=".aura/morphology_profiles/six_slot.v1.json",\n            feature_flag="c2_coding_localization_enabled",\n        )\n        self.runtime = runtime\n        self.initialization = {\n            "coding": coding,\n            "meta": meta,\n            "capsule_localize": capsule_localize,\n        }\n''',
-              '''''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''    def _ready(self) -> bool:\n''',
-              '''    def _initialize_runtime(\n        self,\n    ) -> tuple[CapsuleAwareArenaWFSTRuntime, dict[str, Any]]:\n        """Create the capsule-aware runtime and attach C2 localization once."""\n        runtime = CapsuleAwareArenaWFSTRuntime(\n            repo_root=self.repo_root,\n            route_capsules_enabled=self.route_capsules_enabled,\n        )\n        route_root = self.repo_root / ".aura" / "arena_routes"\n        coding = runtime.register_manifest(route_root / "coding.v1.json")\n        meta = runtime.register_manifest(route_root / "meta.v1.json")\n        capsule_localize = runtime.attach_capsule(\n            arena_id="coding_workbench",\n            transition_id="CODING.TASK_SCOPED.LOCALIZE_CODE",\n            route_capsule_ref=".aura/route_capsules/coding_localize.v1.json",\n            morphology_profile_ref=".aura/morphology_profiles/six_slot.v1.json",\n            feature_flag="c2_coding_localization_enabled",\n        )\n        return runtime, {\n            "coding": coding,\n            "meta": meta,\n            "capsule_localize": capsule_localize,\n        }\n\n    def _ready(self) -> bool:\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        leases = payload.get("lease_capabilities")\n        if leases is None:\n            leases = self.capsule_lease_capabilities\n        context.update({\n            "lease_capabilities": tuple(str(item) for item in leases or ()),\n''',
-              '''        context.update({\n            "lease_capabilities": self.capsule_lease_capabilities,\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''            "capsule_budget_consumed": dict(\n                payload.get("capsule_budget_consumed") or self._capsule_budget_consumed\n            ),\n''',
-              '''            "capsule_budget_consumed": dict(self._capsule_budget_consumed),\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        started = time.perf_counter()\n        output = dict(localize_code(self.objective, repo_root=self.repo_root) or {})\n        selected = dict((getattr(self.runtime, "last_route", {}) or {}).get("selected") or {})\n''',
-              '''        selected = dict((getattr(self.runtime, "last_route", {}) or {}).get("selected") or {})\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        if self.route_capsules_enabled and not all(\n            value is not None for value in (maximum_files, maximum_symbols, maximum_lines)\n        ):\n            return self._denial("invalid_materialized_data_aperture", action_id="localize_code")\n\n        files = list(output.get("localized_files") or [])\n''',
-              '''        if self.route_capsules_enabled and not all(\n            value is not None for value in (maximum_files, maximum_symbols, maximum_lines)\n        ):\n            return self._denial("invalid_materialized_data_aperture", action_id="localize_code")\n\n        started = time.perf_counter()\n        output = dict(localize_code(self.objective, repo_root=self.repo_root) or {})\n        files = list(output.get("localized_files") or [])\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        capsule_usage = {\n''',
-              '''        cumulative_consumed = _merge_budget(\n            self._capsule_budget_consumed, consumed\n        )\n        capsule_usage = {\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''            "budget_consumed": consumed,\n            "runtime_execution_performed": True,\n''',
-              '''            "budget_consumed": consumed,\n            "budget_consumed_total": cumulative_consumed,\n            "runtime_execution_performed": True,\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''        exceeded = _exceeded_budget(aperture.get("execution_budget") or {}, consumed)\n''',
-              '''        exceeded = _exceeded_budget(\n            aperture.get("execution_budget") or {}, cumulative_consumed\n        )\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''            self._capsule_budget_consumed = consumed\n''',
-              '''            self._capsule_budget_consumed = cumulative_consumed\n''',
-          )
-          replace_once(
-              "aura_coding_workbench_capsule_adapter.py",
-              '''def _nonnegative_int(value: Any, default: int) -> int:\n''',
-              '''def _merge_budget(\n    prior: dict[str, float], current: dict[str, float]\n) -> dict[str, float]:\n    return {\n        name: float(prior.get(name, 0.0)) + float(current.get(name, 0.0))\n        for name in _BUDGET_KEYS\n    }\n\n\ndef _nonnegative_int(value: Any, default: int) -> int:\n''',
-          )
-
-          replace_once(
-              "aura_route_capsule_live_runtime.py",
-              '''        route["recommended"] = allowed[:max(0, int(kwargs.get("recommendation_limit", 4)))]\n''',
-              '''        route["recommended"] = allowed[\n            :_recommendation_limit(kwargs.get("recommendation_limit", 4))\n        ]\n''',
-          )
-          replace_once(
-              "aura_route_capsule_live_runtime.py",
-              '''def _number(value: Any, default: float) -> float:\n''',
-              '''def _recommendation_limit(value: Any, default: int = 4) -> int:\n    try:\n        return max(0, int(value))\n    except (TypeError, ValueError, OverflowError):\n        return max(0, int(default))\n\n\ndef _number(value: Any, default: float) -> float:\n''',
-          )
-
-          replace_once(
-              "tests/test_aura_phase_c2_capsule_enforcement.py",
-              '''from aura_route_capsule_materializer import materialize_route_capsule\n''',
-              '''from aura_route_capsule_materializer import materialize_route_capsule\nfrom aura_route_capsule_live_runtime import _recommendation_limit\n''',
-          )
-          append = '''\n\ndef test_request_payload_cannot_spoof_session_lease_or_budget():\n    session = CapsuleCodingWorkbenchWFSTSession.__new__(\n        CapsuleCodingWorkbenchWFSTSession\n    )\n    session.repo_root = REPO_ROOT\n    session.objective = "Inspect route capsule security"\n    session.evidence = {}\n    session.capsule_lease_capabilities = (LEASE,)\n    session.requested_model = "no_model"\n    session._capsule_context_items = []\n    session._capsule_memory_refs = []\n    session._capsule_budget_consumed = {"tool_calls": 2.0}\n\n    context = session._context({\n        "lease_capabilities": ["tool:forged"],\n        "capsule_budget_consumed": {"tool_calls": 0.0},\n    })\n\n    assert context["lease_capabilities"] == (LEASE,)\n    assert context["capsule_budget_consumed"] == {"tool_calls": 2.0}\n\n\ndef test_localization_does_not_execute_without_materialized_aperture(monkeypatch):\n    import aura_coding_workbench_actions\n\n    executed = {"value": False}\n\n    def localize_code(objective, repo_root):\n        executed["value"] = True\n        return {"ok": True}\n\n    monkeypatch.setattr(aura_coding_workbench_actions, "localize_code", localize_code)\n\n    class Runtime:\n        last_route = {"selected": {}}\n\n    session = CapsuleCodingWorkbenchWFSTSession.__new__(\n        CapsuleCodingWorkbenchWFSTSession\n    )\n    session.repo_root = REPO_ROOT\n    session.objective = "Must fail before localization"\n    session.evidence = {}\n    session.route_capsules_enabled = True\n    session.runtime = Runtime()\n    session._capsule_budget_consumed = {}\n\n    result = session._do_localize_code({})\n\n    assert result["ok"] is False\n    assert result["reason"] == "enabled_route_capsule_was_not_materialized"\n    assert executed["value"] is False\n\n\ndef test_invalid_recommendation_limit_uses_safe_default():\n    assert _recommendation_limit("not-a-number") == 4\n    assert _recommendation_limit(-5) == 0\n    assert _recommendation_limit(2) == 2\n'''
-          path = Path("tests/test_aura_phase_c2_capsule_enforcement.py")
-          path.write_text(path.read_text(encoding="utf-8").rstrip() + append + "\n", encoding="utf-8")
-
-          replace_once(
-              "tests/test_aura_phase_c2_live_route_capsules.py",
-              '''         CREATE TABLE arena_experience_migrations(version INTEGER PRIMARY KEY, applied_at REAL NOT NULL);\n''',
-              '''         CREATE TABLE arena_experience_migrations(version INTEGER PRIMARY KEY, applied_at REAL NOT NULL);\n         INSERT INTO arena_experiences (\n          experience_id, correlation_id, arena_id, arena_version, grammar_version,\n          grammar_manifest_digest, runtime_version, compiler_version, started_at, completed_at,\n          state_before, state_after, final_outcome, outcome_vector_json, trace_atom_ids_json,\n          raw_evidence_refs_json, redactions_json, payload_json, experience_digest,\n          schema_version, created_at\n         ) VALUES (\n          'exp-v2-001', 'corr-v2-001', 'coding_workbench', 'arena-v1', 'grammar-v1',\n          'grammar-digest-v2', 'runtime-v2', 'compiler-v2', 1.0, 2.0,\n          'TASK_SCOPED', 'CODE_LOCALIZED', 'COMPLETED',\n          '{"terminal_class":"COMPLETED"}', '[]', '[]', '[]', '{}',\n          'experience-digest-v2', 'AURA_ARENA_EXPERIENCE_V2', 2.0\n         );\n''',
-          )
-          replace_once(
-              "tests/test_aura_phase_c2_live_route_capsules.py",
-              '''        assert "budget_consumed_json" in columns\n        assert ledger.status()["capsule_record_count"] == 0\n''',
-              '''        assert "budget_consumed_json" in columns\n        status = ledger.status()\n        assert status["capsule_record_count"] == 0\n        row = ledger.get("exp-v2-001")\n        assert row is not None\n        assert not row.get("route_capsule_digest")\n        assert not row.get("aperture_digest")\n        assert row.get("actual_tool_calls") == []\n        assert row.get("budget_consumed") == {}\n''',
-          )
-          PY
-      - name: Remove one-time helper before validation and topology generation
-        run: rm .github/workflows/phase-c2-review-repair.yml
-      - name: Compile and lint repaired files
-        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/phase-c2-review-repair.yml
           python -m py_compile \
-            aura_codebase_navigator.py \
-            aura_coding_workbench_wfst_adapter.py \
-            aura_coding_workbench_capsule_adapter.py \
-            aura_route_capsule_live_runtime.py \
-            aura_phase_c2_codemap_verify.py \
-            tests/test_aura_phase_c2_live_route_capsules.py \
-            tests/test_aura_phase_c2_capsule_enforcement.py
+            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
+            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
+            aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
+            aura_model_cognome_store_io.py
           ruff check --select E9,F63,F7,F82 \
-            aura_codebase_navigator.py \
-            aura_coding_workbench_wfst_adapter.py \
-            aura_coding_workbench_capsule_adapter.py \
-            aura_route_capsule_live_runtime.py \
-            aura_phase_c2_codemap_verify.py \
-            tests/test_aura_phase_c2_live_route_capsules.py \
-            tests/test_aura_phase_c2_capsule_enforcement.py
-      - name: Run focused C2 and regression tests
+            aura_ai_router.py aura_router.py aura_router_adaptive_compat.py \
+            aura_adaptive_model_router.py aura_adaptive_model_executor.py \
+            aura_adaptive_fusion.py aura_model_cognome_execution_auth.py \
+            aura_model_cognome_store_io.py \
+            tests/test_aura_ai_router_dynamic.py tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py tests/test_aura_adaptive_security.py
+          python -m pytest -q \
+            tests/test_aura_ai_router_dynamic.py \
+            tests/test_aura_adaptive_planner.py \
+            tests/test_aura_adaptive_execution.py \
+            tests/test_aura_adaptive_security.py
+      - name: Regenerate and verify clean CODEMAP
         run: |
-          python -m pytest -q --tb=short --maxfail=1 \
-            tests/test_aura_phase_c2_live_route_capsules.py \
-            tests/test_aura_phase_c2_capsule_enforcement.py \
-            tests/test_aura_phase_c1_route_capsules.py \
-            tests/test_aura_arena_experience_ledger.py \
-            tests/test_aura_crucible_phase_b.py \
-            tests/test_aura_coding_workbench_wfst_equivalence.py \
-            tests/test_aura_human_agent_wfst_live_integration.py
-      - name: Regenerate and verify portable CODEMAP
+          set -euo pipefail
+          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md
+          cp .aura/CODEMAP.json /tmp/CODEMAP.first.json
+          cp .aura/CODEMAP.md /tmp/CODEMAP.first.md
+          python aura_codebase_navigator.py \
+            --deep \
+            --out .aura/CODEMAP.json \
+            --markdown .aura/CODEMAP.md
+          python aura_phase_c2_codemap_verify.py \
+            --committed-json /tmp/CODEMAP.first.json \
+            --generated-json .aura/CODEMAP.json \
+            --committed-markdown /tmp/CODEMAP.first.md \
+            --generated-markdown .aura/CODEMAP.md
+          rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
+      - name: Commit final clean tree
         run: |
-          python aura_codebase_navigator.py
-          python -m aura_phase_c2_codemap_verify
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload = json.loads(Path('.aura/CODEMAP.json').read_text(encoding='utf-8'))
-          assert payload.get('root') == '.', payload.get('root')
-          assert payload.get('topology', {}).get('meta', {}).get('root') == '.'
-          PY
-      - name: Commit reviewed repairs
-        run: |
-          git diff --check
-          git config user.name "aura-review-fix[bot]"
-          git config user.email "aura-review-fix[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "fix(c2): close review security and fail-closed gaps"
-          git push origin HEAD:feature/phase-c2-live-route-capsules
+          set -euo pipefail
+          git config user.name "Aura Refactor Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            .github/workflows/phase-c2-review-repair.yml \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "No CODEMAP update required"
+            exit 0
+          fi
+          git commit -m "Refresh CODEMAP for adaptive router compatibility"
+          git push origin HEAD:refactor/model-cognome-live-compat
