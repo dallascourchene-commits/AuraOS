@@ -6,15 +6,23 @@ storing private chain-of-thought. Runtime dependencies are stdlib only.
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, is_dataclass
 from enum import Enum
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
+import threading
 import time
-from typing import Any
+from typing import Any, BinaryIO
+
+if os.name == "nt":
+    import msvcrt as _file_lock_backend
+else:
+    import fcntl as _file_lock_backend
 
 EVENT_CONTRACTS_VERSION = "AURA_EVENT_CONTRACTS_V1"
 SCHEMA_VERSION = "1.0"
@@ -34,16 +42,52 @@ _SECRET_PATTERNS = (
     re.compile(r"\bsk-[A-Za-z0-9]{20,}\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
+
+
+def _normalize_field_name(value: Any) -> str:
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(value).strip())
+    return text.lower().replace("-", "_").replace(" ", "_")
+
+
 _PRIVATE_REASONING_KEYS = frozenset(
-    {"chain_of_thought", "chain-of-thought", "cot", "hidden_reasoning", "private_reasoning",
-     "inner_thought", "innerthought", "scratchpad"}
+    {
+        "chain_of_thought",
+        "chain-of-thought",
+        "cot",
+        "hidden_reasoning",
+        "private_reasoning",
+        "inner_thought",
+        "innerthought",
+        "scratchpad",
+    }
 )
-_NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(item.replace("-", "_") for item in _PRIVATE_REASONING_KEYS)
+_NORMALIZED_PRIVATE_REASONING_KEYS = frozenset(
+    _normalize_field_name(item) for item in _PRIVATE_REASONING_KEYS
+)
 _SECRET_FIELDS = frozenset(
-    {"api_key", "apikey", "access_token", "auth_token", "authorization", "password",
-     "private_key", "secret", "token"}
+    {
+        "api_key",
+        "apikey",
+        "access_token",
+        "auth_token",
+        "authorization",
+        "password",
+        "private_key",
+        "secret",
+        "token",
+    }
 )
-_SECRET_SUFFIXES = ("_api_key", "_access_token", "_auth_token", "_password", "_private_key", "_secret")
+_SECRET_SUFFIXES = (
+    "_api_key",
+    "_access_token",
+    "_auth_token",
+    "_token",
+    "_password",
+    "_private_key",
+    "_secret",
+)
+_THREAD_LOCKS: dict[str, threading.Lock] = {}
+_THREAD_LOCKS_GUARD = threading.Lock()
 
 
 class ActorType(str, Enum):
@@ -101,8 +145,11 @@ def _canonicalize(value: Any) -> Any:
 
 def canonical_json(value: Any) -> str:
     return json.dumps(
-        _canonicalize(value), sort_keys=True, separators=(",", ":"),
-        ensure_ascii=False, allow_nan=False,
+        _canonicalize(value),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
     )
 
 
@@ -115,7 +162,10 @@ def stable_digest(value: Any, *, digest_size: int = 16) -> str:
 
 
 def stable_id(prefix: str, value: Any, *, digest_size: int = 12) -> str:
-    clean = "".join(ch if ch.isalnum() or ch in "-_" else "-" for ch in str(prefix).strip().lower())
+    clean = "".join(
+        ch if ch.isalnum() or ch in "-_" else "-"
+        for ch in str(prefix).strip().lower()
+    )
     if not clean:
         raise ValueError("stable_id prefix must not be empty")
     return f"{clean}_{stable_digest(value, digest_size=digest_size)}"
@@ -169,36 +219,100 @@ def redact_secrets(value: str) -> str:
     return redacted
 
 
-def sanitize_payload(value: Any) -> Any:
-    """Redact secrets and reject fields intended for private reasoning."""
+def _sanitize_payload(value: Any) -> tuple[Any, bool]:
     if isinstance(value, Mapping):
         result: dict[str, Any] = {}
+        changed = not isinstance(value, dict)
         for key, item in value.items():
             key_text = str(key)
-            normalized = key_text.strip().lower().replace("-", "_").replace(" ", "_")
+            changed = changed or not isinstance(key, str)
+            normalized = _normalize_field_name(key_text)
             if normalized in _NORMALIZED_PRIVATE_REASONING_KEYS:
                 raise ValueError(f"private reasoning field is prohibited: {key_text}")
-            result[key_text] = (
-                "[REDACTED]"
-                if normalized in _SECRET_FIELDS or normalized.endswith(_SECRET_SUFFIXES)
-                else sanitize_payload(item)
-            )
-        return result
-    if isinstance(value, (list, tuple)):
-        return [sanitize_payload(item) for item in value]
+            if normalized in _SECRET_FIELDS or normalized.endswith(_SECRET_SUFFIXES):
+                result[key_text] = "[REDACTED]"
+                changed = True
+            else:
+                sanitized, item_changed = _sanitize_payload(item)
+                result[key_text] = sanitized
+                changed = changed or item_changed
+        return result, changed
+    if isinstance(value, list):
+        result = []
+        changed = False
+        for item in value:
+            sanitized, item_changed = _sanitize_payload(item)
+            result.append(sanitized)
+            changed = changed or item_changed
+        return result, changed
+    if isinstance(value, tuple):
+        result, _changed = _sanitize_payload(list(value))
+        return result, True
     if isinstance(value, (set, frozenset)):
-        return [sanitize_payload(item) for item in sorted(value, key=str)]
+        result, _changed = _sanitize_payload(sorted(value, key=str))
+        return result, True
     if isinstance(value, str):
-        return redact_secrets(value)
+        redacted = redact_secrets(value)
+        return redacted, redacted != value
     if isinstance(value, bytes):
-        return {"__bytes_hex__": value.hex()}
+        return {"__bytes_hex__": value.hex()}, True
     if isinstance(value, float) and not math.isfinite(value):
         raise ValueError("non-finite floats are not permitted in event payloads")
     if value is None or isinstance(value, (bool, int, float)):
-        return value
+        return value, False
+    if isinstance(value, Enum):
+        sanitized, _changed = _sanitize_payload(value.value)
+        return sanitized, True
     if is_dataclass(value):
-        return sanitize_payload(asdict(value))
-    return redact_secrets(str(value))
+        sanitized, _changed = _sanitize_payload(asdict(value))
+        return sanitized, True
+    text = redact_secrets(str(value))
+    return text, True
+
+
+def sanitize_payload(value: Any) -> Any:
+    """Redact secrets and reject fields intended for private reasoning."""
+    sanitized, _changed = _sanitize_payload(value)
+    return sanitized
+
+
+def _thread_lock_for(path: Path) -> threading.Lock:
+    key = str(path.resolve())
+    with _THREAD_LOCKS_GUARD:
+        return _THREAD_LOCKS.setdefault(key, threading.Lock())
+
+
+def _acquire_process_lock(handle: BinaryIO) -> None:
+    handle.seek(0)
+    if os.name == "nt":
+        if not handle.read(1):
+            handle.write(b"\0")
+            handle.flush()
+        handle.seek(0)
+        _file_lock_backend.locking(handle.fileno(), _file_lock_backend.LK_LOCK, 1)
+    else:
+        _file_lock_backend.flock(handle.fileno(), _file_lock_backend.LOCK_EX)
+
+
+def _release_process_lock(handle: BinaryIO) -> None:
+    handle.seek(0)
+    if os.name == "nt":
+        _file_lock_backend.locking(handle.fileno(), _file_lock_backend.LK_UNLCK, 1)
+    else:
+        _file_lock_backend.flock(handle.fileno(), _file_lock_backend.LOCK_UN)
+
+
+@contextmanager
+def _exclusive_store_lock(path: Path) -> Iterator[None]:
+    thread_lock = _thread_lock_for(path)
+    with thread_lock:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a+b") as handle:
+            _acquire_process_lock(handle)
+            try:
+                yield
+            finally:
+                _release_process_lock(handle)
 
 
 @dataclass(frozen=True)
@@ -243,15 +357,30 @@ class AuraEventEnvelope:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(cls, *, trace_id: str, event_type: str, actor_id: str,
-               actor_type: str | ActorType, purpose_digest: str,
-               dikwp_stage: str | DIKWPStage, payload_ref: str, payload_digest: str,
-               parent_event_ids: Iterable[str] = (), arena_id: str = "", board_id: str = "",
-               node_id: str = "", objective_id: str = "", evidence_refs: Iterable[str] = (),
-               policy_scope: str = "", proposal_only: bool = True,
-               measurement_classes: Mapping[str, str | MeasurementClass] | None = None,
-               confidence: float | None = None, uncertainty: float | None = None,
-               created_at: float | None = None) -> "AuraEventEnvelope":
+    def create(
+        cls,
+        *,
+        trace_id: str,
+        event_type: str,
+        actor_id: str,
+        actor_type: str | ActorType,
+        purpose_digest: str,
+        dikwp_stage: str | DIKWPStage,
+        payload_ref: str,
+        payload_digest: str,
+        parent_event_ids: Iterable[str] = (),
+        arena_id: str = "",
+        board_id: str = "",
+        node_id: str = "",
+        objective_id: str = "",
+        evidence_refs: Iterable[str] = (),
+        policy_scope: str = "",
+        proposal_only: bool = True,
+        measurement_classes: Mapping[str, str | MeasurementClass] | None = None,
+        confidence: float | None = None,
+        uncertainty: float | None = None,
+        created_at: float | None = None,
+    ) -> "AuraEventEnvelope":
         payload = {
             "trace_id": _required(trace_id, "trace_id"),
             "parent_event_ids": tuple(str(item) for item in parent_event_ids),
@@ -259,14 +388,17 @@ class AuraEventEnvelope:
             "schema_version": SCHEMA_VERSION,
             "actor_id": _required(actor_id, "actor_id"),
             "actor_type": _enum(actor_type, ActorType, "actor_type"),
-            "arena_id": str(arena_id), "board_id": str(board_id), "node_id": str(node_id),
+            "arena_id": str(arena_id),
+            "board_id": str(board_id),
+            "node_id": str(node_id),
             "objective_id": str(objective_id),
             "purpose_digest": _required(purpose_digest, "purpose_digest"),
             "dikwp_stage": _enum(dikwp_stage, DIKWPStage, "dikwp_stage"),
             "payload_ref": _required(payload_ref, "payload_ref"),
             "payload_digest": _required(payload_digest, "payload_digest"),
             "evidence_refs": tuple(str(item) for item in evidence_refs),
-            "policy_scope": str(policy_scope), "proposal_only": bool(proposal_only),
+            "policy_scope": str(policy_scope),
+            "proposal_only": bool(proposal_only),
             "measurement_classes": {
                 str(key): _enum(value, MeasurementClass, f"measurement class for {key}")
                 for key, value in dict(measurement_classes or {}).items()
@@ -309,33 +441,55 @@ class ToolDecisionRecord:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(cls, *, trace_id: str, tool_id: str, decision_kind: str | DecisionKind,
-               decision_rationale: str, expected_information: str, tool_input: Any,
-               capability_ids: Iterable[str] = (), board_id: str = "", node_id: str = "",
-               advantage_over_alternatives: str = "", alternatives_considered: Iterable[str] = (),
-               confidence_estimate: float | None = None,
-               confidence_measurement_class: str | MeasurementClass = MeasurementClass.UNAVAILABLE,
-               uncertainty_reasons: Iterable[str] = (), required_evidence_classes: Iterable[str] = (),
-               expected_cost: Mapping[str, Any] | None = None,
-               expected_latency_ms: float | None = None, expected_risk: str = "LOW",
-               authorization_ref: str = "", proposal_only: bool = True,
-               created_at: float | None = None,
-               rationale_limit: int = DEFAULT_RATIONALE_LIMIT) -> "ToolDecisionRecord":
-        alternatives = tuple(_bounded(item, "alternative", DEFAULT_RATIONALE_LIMIT)
-                             for item in alternatives_considered)
+    def create(
+        cls,
+        *,
+        trace_id: str,
+        tool_id: str,
+        decision_kind: str | DecisionKind,
+        decision_rationale: str,
+        expected_information: str,
+        tool_input: Any,
+        capability_ids: Iterable[str] = (),
+        board_id: str = "",
+        node_id: str = "",
+        advantage_over_alternatives: str = "",
+        alternatives_considered: Iterable[str] = (),
+        confidence_estimate: float | None = None,
+        confidence_measurement_class: str | MeasurementClass = MeasurementClass.UNAVAILABLE,
+        uncertainty_reasons: Iterable[str] = (),
+        required_evidence_classes: Iterable[str] = (),
+        expected_cost: Mapping[str, Any] | None = None,
+        expected_latency_ms: float | None = None,
+        expected_risk: str = "LOW",
+        authorization_ref: str = "",
+        proposal_only: bool = True,
+        created_at: float | None = None,
+        rationale_limit: int = DEFAULT_RATIONALE_LIMIT,
+    ) -> "ToolDecisionRecord":
+        alternatives = tuple(
+            _bounded(item, "alternative", DEFAULT_RATIONALE_LIMIT)
+            for item in alternatives_considered
+        )
         if len(alternatives) > DEFAULT_ALTERNATIVE_LIMIT:
-            raise ValueError(f"alternatives_considered is capped at {DEFAULT_ALTERNATIVE_LIMIT}")
+            raise ValueError(
+                f"alternatives_considered is capped at {DEFAULT_ALTERNATIVE_LIMIT}"
+            )
         confidence = _probability(confidence_estimate, "confidence_estimate")
         confidence_class = _enum(
-            confidence_measurement_class, MeasurementClass, "confidence_measurement_class"
+            confidence_measurement_class,
+            MeasurementClass,
+            "confidence_measurement_class",
         )
         if confidence is not None and confidence_class == MeasurementClass.UNAVAILABLE.value:
             raise ValueError(
                 "confidence_measurement_class must be explicit when confidence_estimate is present"
             )
         payload = {
-            "trace_id": _required(trace_id, "trace_id"), "board_id": str(board_id),
-            "node_id": str(node_id), "tool_id": _required(tool_id, "tool_id"),
+            "trace_id": _required(trace_id, "trace_id"),
+            "board_id": str(board_id),
+            "node_id": str(node_id),
+            "tool_id": _required(tool_id, "tool_id"),
             "capability_ids": tuple(str(item) for item in capability_ids),
             "decision_kind": _enum(decision_kind, DecisionKind, "decision_kind"),
             "decision_rationale": _bounded(
@@ -345,8 +499,10 @@ class ToolDecisionRecord:
                 expected_information, "expected_information", DEFAULT_EXPECTATION_LIMIT
             ),
             "advantage_over_alternatives": _bounded(
-                advantage_over_alternatives, "advantage_over_alternatives",
-                DEFAULT_EXPECTATION_LIMIT, required=False,
+                advantage_over_alternatives,
+                "advantage_over_alternatives",
+                DEFAULT_EXPECTATION_LIMIT,
+                required=False,
             ),
             "alternatives_considered": alternatives,
             "confidence_estimate": confidence,
@@ -355,12 +511,17 @@ class ToolDecisionRecord:
                 _bounded(item, "uncertainty reason", DEFAULT_RATIONALE_LIMIT)
                 for item in uncertainty_reasons
             ),
-            "required_evidence_classes": tuple(str(item) for item in required_evidence_classes),
+            "required_evidence_classes": tuple(
+                str(item) for item in required_evidence_classes
+            ),
             "expected_cost": sanitize_payload(dict(expected_cost or {})),
-            "expected_latency_ms": _nonnegative(expected_latency_ms, "expected_latency_ms"),
+            "expected_latency_ms": _nonnegative(
+                expected_latency_ms, "expected_latency_ms"
+            ),
             "expected_risk": _required(expected_risk, "expected_risk").upper(),
             "tool_input_digest": stable_digest(sanitize_payload(tool_input)),
-            "authorization_ref": str(authorization_ref), "proposal_only": bool(proposal_only),
+            "authorization_ref": str(authorization_ref),
+            "proposal_only": bool(proposal_only),
             "created_at": time.time() if created_at is None else float(created_at),
         }
         return cls(decision_id=stable_id("tool-decision", payload), **payload)
@@ -386,19 +547,34 @@ class ToolResultRecord:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     @classmethod
-    def create(cls, *, decision_id: str, tool_id: str, status: str, output: Any,
-               output_ref: str = "", usage_ref: str = "", evidence_refs: Iterable[str] = (),
-               error_class: str = "", started_at: float, finished_at: float) -> "ToolResultRecord":
+    def create(
+        cls,
+        *,
+        decision_id: str,
+        tool_id: str,
+        status: str,
+        output: Any,
+        output_ref: str = "",
+        usage_ref: str = "",
+        evidence_refs: Iterable[str] = (),
+        error_class: str = "",
+        started_at: float,
+        finished_at: float,
+    ) -> "ToolResultRecord":
         started, finished = float(started_at), float(finished_at)
         if finished < started:
             raise ValueError("finished_at must be greater than or equal to started_at")
         payload = {
             "decision_id": _required(decision_id, "decision_id"),
             "tool_id": _required(tool_id, "tool_id"),
-            "status": _required(status, "status").upper(), "output_ref": str(output_ref),
-            "output_digest": stable_digest(sanitize_payload(output)), "usage_ref": str(usage_ref),
+            "status": _required(status, "status").upper(),
+            "output_ref": str(output_ref),
+            "output_digest": stable_digest(sanitize_payload(output)),
+            "usage_ref": str(usage_ref),
             "evidence_refs": tuple(str(item) for item in evidence_refs),
-            "error_class": str(error_class), "started_at": started, "finished_at": finished,
+            "error_class": str(error_class),
+            "started_at": started,
+            "finished_at": finished,
         }
         return cls(result_id=stable_id("tool-result", payload), **payload)
 
@@ -413,53 +589,84 @@ class AppendOnlyEventStore:
         self.root = Path(root).resolve()
         self.events_path = self.root / "events.jsonl"
         self.sidecars_dir = self.root / "sidecars"
+        self.lock_path = self.root / ".event-store.lock"
         self.sidecars_dir.mkdir(parents=True, exist_ok=True)
-        self._event_digests = self._load_event_digests()
+        with _exclusive_store_lock(self.lock_path):
+            self._event_digests = self._load_event_digests()
 
-    def store_payload(self, payload: Any, *, kind: str,
-                      created_at: float | None = None) -> ExactPayloadRef:
-        safe_payload = sanitize_payload(payload)
+    def store_payload(
+        self,
+        payload: Any,
+        *,
+        kind: str,
+        created_at: float | None = None,
+    ) -> ExactPayloadRef:
+        safe_payload, changed = _sanitize_payload(payload)
         encoded = canonical_json(safe_payload)
         digest = stable_digest(safe_payload)
-        safe_kind = re.sub(r"[^A-Za-z0-9._-]+", "-", _required(kind, "kind")).strip("-")
+        safe_kind = re.sub(
+            r"[^A-Za-z0-9._-]+", "-", _required(kind, "kind")
+        ).strip("-")
         ref_id = stable_id("payload", {"kind": safe_kind, "digest": digest})
         path = self.sidecars_dir / f"{ref_id}.json"
         encoded_bytes = encoded.encode("utf-8")
-        if path.exists() and path.read_bytes() != encoded_bytes:
-            raise ValueError(f"sidecar collision for {ref_id}")
-        if not path.exists():
-            path.write_bytes(encoded_bytes)
+        with _exclusive_store_lock(self.lock_path):
+            if path.exists() and path.read_bytes() != encoded_bytes:
+                raise ValueError(f"sidecar collision for {ref_id}")
+            if not path.exists():
+                temporary = path.with_name(
+                    f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp"
+                )
+                try:
+                    with temporary.open("wb") as handle:
+                        handle.write(encoded_bytes)
+                        handle.flush()
+                        os.fsync(handle.fileno())
+                    os.replace(temporary, path)
+                finally:
+                    if temporary.exists():
+                        temporary.unlink()
         return ExactPayloadRef(
-            ref_id=ref_id, kind=safe_kind,
+            ref_id=ref_id,
+            kind=safe_kind,
             path=str(path.relative_to(self.root)).replace("\\", "/"),
-            payload_digest=digest, byte_count=len(encoded_bytes),
-            redacted=canonical_json(_canonicalize(payload)) != encoded,
+            payload_digest=digest,
+            byte_count=len(encoded_bytes),
+            redacted=changed,
             created_at=time.time() if created_at is None else float(created_at),
         )
 
     def append(self, event: AuraEventEnvelope) -> bool:
-        encoded, digest = canonical_json(event.to_dict()), stable_digest(event.to_dict())
-        existing = self._event_digests.get(event.event_id)
-        if existing is not None:
-            if existing != digest:
-                raise ValueError(f"event ID collision for {event.event_id}")
-            return False
-        self.root.mkdir(parents=True, exist_ok=True)
-        with self.events_path.open("a", encoding="utf-8") as handle:
-            handle.write(encoded + "\n")
-        self._event_digests[event.event_id] = digest
-        return True
+        event_payload = event.to_dict()
+        encoded = canonical_json(event_payload)
+        digest = stable_digest(event_payload)
+        with _exclusive_store_lock(self.lock_path):
+            current = self._load_event_digests()
+            existing = current.get(event.event_id)
+            if existing is not None:
+                self._event_digests = current
+                if existing != digest:
+                    raise ValueError(f"event ID collision for {event.event_id}")
+                return False
+            self.root.mkdir(parents=True, exist_ok=True)
+            with self.events_path.open("a", encoding="utf-8") as handle:
+                handle.write(encoded + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            current[event.event_id] = digest
+            self._event_digests = current
+            return True
 
     def iter_events(self) -> Iterator[dict[str, Any]]:
-        if not self.events_path.exists():
-            return iter(())
-
-        def _iterator() -> Iterator[dict[str, Any]]:
+        with _exclusive_store_lock(self.lock_path):
+            if not self.events_path.exists():
+                return iter(())
+            events: list[dict[str, Any]] = []
             with self.events_path.open("r", encoding="utf-8") as handle:
                 for line in handle:
                     if line.strip():
-                        yield json.loads(line)
-        return _iterator()
+                        events.append(json.loads(line))
+        return iter(events)
 
     def _load_event_digests(self) -> dict[str, str]:
         result: dict[str, str] = {}
@@ -470,7 +677,8 @@ class AppendOnlyEventStore:
                 if not line.strip():
                     continue
                 payload = json.loads(line)
-                event_id, digest = _required(payload.get("event_id"), "event_id"), stable_digest(payload)
+                event_id = _required(payload.get("event_id"), "event_id")
+                digest = stable_digest(payload)
                 if event_id in result and result[event_id] != digest:
                     raise ValueError(f"conflicting duplicate event in store: {event_id}")
                 result[event_id] = digest
