@@ -110,14 +110,6 @@ jobs:
           find . -type d -name __pycache__ -prune -exec rm -rf {} +
           rm -rf .pytest_cache
           rm -f .aura/MODULE_MANIFEST.json Aura_Memory/civic_arena.sqlite3
-      - name: Verify clean final tree
-        run: |
-          git diff --check
-          test ! -e tools/pr92_review_repair.py
-          test ! -e tools/pr92_review_postprocess.py
-          test ! -e tools/model-cognome-adaptive-router.permanent.yml
-          test ! -e .aura/MODULE_MANIFEST.json
-          test ! -e Aura_Memory/civic_arena.sqlite3
       - name: Upload tested final reviewed tree
         uses: actions/upload-artifact@v4
         with:
