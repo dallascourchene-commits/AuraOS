@@ -35,8 +35,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install tooling
-        run: python -m pip install pytest ruff
+      - name: Install tooling and declared runtime dependency
+        run: python -m pip install pytest ruff "numpy>=1.26.4,<3.0"
       - name: Compile adaptive compatibility surfaces
         run: |
           python -m py_compile \
