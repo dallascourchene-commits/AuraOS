@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 794
-- **total_bytes**: 62777792
-- **text_tokens_est**: 6291053
-- **role_counts**: {'binary_artifact': 3, 'interface_surface': 13, 'knowledge_artifact': 110, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 553, 'schema_or_lexicon': 61, 'support_file': 41}
+- **file_count**: 792
+- **total_bytes**: 62759486
+- **text_tokens_est**: 6293644
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 110, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 553, 'schema_or_lexicon': 60, 'support_file': 41}
 - **topology_nodes**: 6941
 - **topology_edges**: 14385
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 20070.83
+- **elapsed_ms**: 17344.86
 
 ## Coverage
 
-- **included_file_count**: 794
+- **included_file_count**: 792
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=28, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=23, `Aura_Sandbox`=16260, `__pycache__`=381
+- **skipped_dir_file_counts**: `.git`=28, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -160,7 +160,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_blockchain/block.py`
 - `aura_blockchain/consensus.py`
 - `aura_blockchain/demo.py`
-- ... 33 more; query CODEMAP.json for exact file cards
+- ... 32 more; query CODEMAP.json for exact file cards
 
 ### topology_and_navigation
 - `.aura/topology_baseline.json`
@@ -205,7 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 659 more; query CODEMAP.json for exact file cards
+- ... 658 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
