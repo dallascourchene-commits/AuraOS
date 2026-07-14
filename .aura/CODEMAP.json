@@ -1,18 +1,18 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784070652,
+  "generated_at_unix": 1784070853,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 821,
+    "included_file_count": 822,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
       ".aura/CODEMAP.md"
     ],
     "skipped_dir_file_counts": {
-      ".git": 49,
+      ".git": 47,
       "Aura_Memory": 1,
       "Aura_Sandbox": 1,
       "__pycache__": 8
@@ -645,6 +645,7 @@
       "schemas/model_cognome_v1.schema.json",
       "scripts/aura-agent-arena",
       "scripts/deploy_huggingface_space.py",
+      "scripts/p2_2_harden_regression.py",
       "setup.sh",
       "setup_aura.sh",
       "spatial_mapper.py",
@@ -842,23 +843,23 @@
     ]
   },
   "summary": {
-    "file_count": 821,
-    "total_bytes": 63701843,
-    "text_tokens_est": 6529398,
+    "file_count": 822,
+    "total_bytes": 63708097,
+    "text_tokens_est": 6530962,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 576,
+      "python_module": 577,
       "schema_or_lexicon": 65,
       "support_file": 41
     },
     "topology_nodes": 7195,
     "topology_edges": 15028,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19638.71
+    "elapsed_ms": 19896.27
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1534,6 +1535,7 @@
       "schemas/model_cognome_v1.schema.json",
       "scripts/aura-agent-arena",
       "scripts/deploy_huggingface_space.py",
+      "scripts/p2_2_harden_regression.py",
       "setup.sh",
       "setup_aura.sh",
       "start_codemap_watcher.bat",
@@ -1935,6 +1937,9 @@
     ],
     "!commands": [
       "USER_GUIDE.md:207"
+    ],
+    "!contains": [
+      ".github/workflows/p2-2-planning-regression.yml:56"
     ],
     "!contingency_spawn": [
       "aura_node.py:7006"
@@ -121453,47 +121458,53 @@
     {
       "path": ".github/workflows/p2-2-planning-regression.yml",
       "role": "schema_or_lexicon",
-      "bytes": 1454,
-      "lines": 53,
-      "tokens_est": 364,
+      "bytes": 3201,
+      "lines": 90,
+      "tokens_est": 801,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "!contains"
+      ],
+      "command_lines": {
+        "!contains": [
+          56
+        ]
+      },
       "topology": {},
-      "digest8": "4a8ce0153d3e193f",
+      "digest8": "69a14004719d4c73",
       "vector": [
-        0.037797,
-        0.142655,
-        0.115831,
-        -0.152409,
-        -0.028043,
-        -0.257267,
-        0.281652,
-        -0.123147,
-        0.249951,
-        0.181672,
-        -0.106077,
-        -0.1012,
-        0.210934,
-        0.045113,
-        0.291406,
-        0.257267,
-        0.215811,
-        -0.003658,
-        0.284091,
-        -0.071937,
-        0.140216,
-        -0.279213,
-        0.215811,
-        -0.035359,
-        0.003658,
-        -0.18411,
-        0.093884,
-        -0.008535,
-        -0.037797,
-        0.276775,
-        0.042675,
-        -0.254828
+        0.003612,
+        -0.229949,
+        0.227541,
+        0.030098,
+        -0.193831,
+        0.307,
+        0.051769,
+        -0.119188,
+        0.261251,
+        -0.013243,
+        -0.294961,
+        0.018059,
+        0.046953,
+        -0.210686,
+        0.287737,
+        -0.162529,
+        0.114373,
+        0.162529,
+        0.12882,
+        0.126412,
+        -0.090294,
+        0.109557,
+        -0.114373,
+        -0.071031,
+        0.140859,
+        -0.302184,
+        -0.205871,
+        0.010835,
+        0.203463,
+        -0.241988,
+        -0.258843,
+        -0.056584
       ]
     },
     {
@@ -126538,6 +126549,52 @@
         -0.234943,
         0.196428,
         -0.026961
+      ]
+    },
+    {
+      "path": "scripts/p2_2_harden_regression.py",
+      "role": "python_module",
+      "bytes": 4507,
+      "lines": 125,
+      "tokens_est": 1127,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d5e2dc5a67e0ff97",
+      "vector": [
+        0.046095,
+        -0.216293,
+        -0.263571,
+        -0.065006,
+        0.133558,
+        0.251751,
+        -0.218657,
+        -0.013001,
+        0.062642,
+        -0.173744,
+        0.079189,
+        0.121739,
+        -0.105192,
+        -0.135922,
+        -0.270662,
+        -0.254115,
+        -0.23284,
+        -0.112283,
+        -0.126467,
+        0.100464,
+        -0.299028,
+        -0.010637,
+        0.24466,
+        0.299028,
+        -0.055551,
+        0.126467,
+        0.145377,
+        -0.237568,
+        -0.00591,
+        0.206838,
+        0.138286,
+        0.187927
       ]
     },
     {

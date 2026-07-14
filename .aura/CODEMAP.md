@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 821
-- **total_bytes**: 63701843
-- **text_tokens_est**: 6529398
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 576, 'schema_or_lexicon': 65, 'support_file': 41}
+- **file_count**: 822
+- **total_bytes**: 63708097
+- **text_tokens_est**: 6530962
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 577, 'schema_or_lexicon': 65, 'support_file': 41}
 - **topology_nodes**: 7195
 - **topology_edges**: 15028
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 19638.71
+- **elapsed_ms**: 19896.27
 
 ## Coverage
 
-- **included_file_count**: 821
+- **included_file_count**: 822
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=49, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=47, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -52,6 +52,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `USER_GUIDE.md:924`, `aura_node.py:5655`
 - `!commands` -> `USER_GUIDE.md:207`
+- `!contains` -> `.github/workflows/p2-2-planning-regression.yml:56`
 - `!contingency_spawn` -> `aura_node.py:7006`
 - `!converse` -> `AURA_FINAL_REPORT.md:161`, `USER_GUIDE.md:980`, `aura_node.py:7649`
 - `!coordinated_reason` -> `USER_GUIDE.md:932`, `aura_node.py:7449`
@@ -205,7 +206,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 681 more; query CODEMAP.json for exact file cards
+- ... 682 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
