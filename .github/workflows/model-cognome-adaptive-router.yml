@@ -28,7 +28,7 @@ jobs:
       - name: Fix legacy dynamic-import policy violation
         run: python -c "import tools.pr92_closeout as c; c.fix_dynamic_import()"
       - name: Make mesh benchmark fixtures symbol-relative
-        run: python -c "import tools.pr92_closeout as c; c.fix_symbol_relative_mesh_fixture()"
+        run: python tools/pr92_mesh_closeout.py
       - name: Refresh README architecture summary
         run: python -c "import tools.pr92_closeout as c; c.update_readme()"
       - name: Refresh canonical architecture anchor
@@ -44,6 +44,7 @@ jobs:
             tools/pr92_review_repair.py \
             tools/pr92_review_postprocess.py \
             tools/pr92_closeout.py \
+            tools/pr92_mesh_closeout.py \
             tools/model-cognome-adaptive-router.permanent.yml
       - name: Install declared dependencies and validation tooling
         run: |
@@ -178,6 +179,7 @@ jobs:
           test ! -e tools/pr92_review_repair.py
           test ! -e tools/pr92_review_postprocess.py
           test ! -e tools/pr92_closeout.py
+          test ! -e tools/pr92_mesh_closeout.py
           test ! -e tools/model-cognome-adaptive-router.permanent.yml
           git status --short
       - name: Commit final reviewed tree to PR branch
