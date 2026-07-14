@@ -11,6 +11,7 @@ on:
       - "aura_adaptive_fusion.py"
       - "aura_model_cognome_execution_auth.py"
       - "aura_model_cognome_store_io.py"
+      - "aura_topology_manager.py"
       - "tests/test_aura_ai_router_dynamic.py"
       - "tests/test_aura_adaptive_planner.py"
       - "tests/test_aura_adaptive_execution.py"
@@ -50,7 +51,8 @@ jobs:
             aura_adaptive_model_executor.py \
             aura_adaptive_fusion.py \
             aura_model_cognome_execution_auth.py \
-            aura_model_cognome_store_io.py
+            aura_model_cognome_store_io.py \
+            aura_topology_manager.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -62,6 +64,7 @@ jobs:
             aura_adaptive_fusion.py \
             aura_model_cognome_execution_auth.py \
             aura_model_cognome_store_io.py \
+            aura_topology_manager.py \
             tests/test_aura_ai_router_dynamic.py \
             tests/test_aura_adaptive_planner.py \
             tests/test_aura_adaptive_execution.py \
