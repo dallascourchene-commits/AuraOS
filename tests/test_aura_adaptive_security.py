@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from aura_model_cognome_execution_auth import DIRECT, ExecutionAuthorization
+from aura_model_cognome_execution_auth import ExecutionAuthorization
 from aura_model_cognome_store import ModelCognomeStore
+from aura_shadow_model_router import DIRECT
 
 
 def test_paired_live_claim_survives_process_restart(tmp_path) -> None:
