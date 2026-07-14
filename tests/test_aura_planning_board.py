@@ -7,11 +7,14 @@ from aura_planning_board import (
     ActionSpec,
     AuthorityRequirement,
     BoardContinuityLevel,
+    ConstraintKind,
+    ConstraintSpec,
     EffectSpec,
     PlanningBoard,
     PortCardinality,
     PortDirection,
     PortSpec,
+    PredicateOperator,
     PredicateSpec,
     ResourceDemand,
     RetryPolicy,
@@ -219,6 +222,15 @@ def test_goap_adapter_preserves_proposal_semantics_without_inventing_authority()
     assert action.proposal_only is True
 
 
+def test_goap_adapter_preserves_membership_precondition_semantics() -> None:
+    legacy = LegacyGoalAction()
+    legacy.preconditions = {"mode": ("safe", "dry_run")}
+    action = action_spec_from_goal_action(legacy)
+    assert action.preconditions[0].fact == "mode"
+    assert action.preconditions[0].expected == ("safe", "dry_run")
+    assert action.preconditions[0].operator is PredicateOperator.IN
+
+
 def test_goal_plan_shadow_projection_is_stable_and_non_authoritative() -> None:
     plan = LegacyGoalPlan(
         goal="create verified patch",
@@ -314,3 +326,69 @@ def test_declared_grounding_refs_must_be_resolved_by_evidence_projection() -> No
     assert "UNRESOLVED_GROUNDING_REFERENCE" in {
         item.code for item in report.findings
     }
+
+
+def test_declared_blocking_constraint_refs_must_be_resolved() -> None:
+    base = _complete_action()
+    action = ActionSpec(
+        **{
+            **base.__dict__,
+            "constraints": (
+                ConstraintSpec(
+                    constraint_id="budget-check",
+                    kind=ConstraintKind.BUDGET,
+                    description="Budget must be available",
+                    evidence_refs=("budget:available",),
+                ),
+            ),
+        }
+    )
+    board = _board(action)
+    report = verify_board_continuity(
+        board,
+        evidence=(
+            ActionContinuityEvidence(
+                action_id="action-1",
+                constrained_evidence_refs=("unrelated-check",),
+                grounded_evidence_refs=("sidecar:source:abc",),
+                authority_decision_ids=("decision:1",),
+                verifier_receipts=(VerifierReceiptEvidence("pytest", "receipt:1"),),
+            ),
+        ),
+    )
+    assert BoardContinuityLevel.BC2_CONSTRAINED not in report.passed_levels
+    assert "UNRESOLVED_CONSTRAINT_REFERENCE" in {
+        finding.code for finding in report.findings
+    }
+
+
+def test_nonblocking_constraint_refs_do_not_block_bc2() -> None:
+    base = _complete_action()
+    action = ActionSpec(
+        **{
+            **base.__dict__,
+            "constraints": (
+                ConstraintSpec(
+                    constraint_id="advisory",
+                    kind=ConstraintKind.DOMAIN,
+                    description="Advisory only",
+                    evidence_refs=("advisory:1",),
+                    blocking=False,
+                ),
+            ),
+        }
+    )
+    board = _board(action)
+    report = verify_board_continuity(
+        board,
+        evidence=(
+            ActionContinuityEvidence(
+                action_id="action-1",
+                constrained_evidence_refs=("constraint-check:1",),
+            ),
+        ),
+    )
+    assert "UNRESOLVED_CONSTRAINT_REFERENCE" not in {
+        finding.code for finding in report.findings
+    }
+

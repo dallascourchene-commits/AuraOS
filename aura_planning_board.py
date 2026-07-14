@@ -542,7 +542,13 @@ def action_spec_from_goal_action(action: Any) -> ActionSpec:
         name=name,
         domain=domain,
         preconditions=tuple(
-            PredicateSpec(str(key), value)
+            PredicateSpec(
+                str(key),
+                value,
+                PredicateOperator.IN
+                if isinstance(value, (set, tuple, list))
+                else PredicateOperator.EQ,
+            )
             for key, value in sorted(preconditions.items(), key=lambda item: str(item[0]))
         ),
         effects=tuple(
@@ -676,6 +682,22 @@ def verify_board_continuity(
                 BoardContinuityLevel.BC2_CONSTRAINED,
                 "MISSING_CONSTRAINT_EVIDENCE",
                 "no exact reference proves current constraints are satisfiable",
+                action.action_id,
+            )
+        constrained = set(() if item is None else item.constrained_evidence_refs)
+        required_constraint_refs = {
+            reference
+            for constraint in (*board.goal.constraints, *action.constraints)
+            if constraint.blocking
+            for reference in constraint.evidence_refs
+        }
+        unresolved_constraints = required_constraint_refs - constrained
+        if unresolved_constraints:
+            _finding(
+                findings,
+                BoardContinuityLevel.BC2_CONSTRAINED,
+                "UNRESOLVED_CONSTRAINT_REFERENCE",
+                f"declared constraint refs were not resolved: {sorted(unresolved_constraints)}",
                 action.action_id,
             )
         if action.reversibility is ReversibilityClass.UNSPECIFIED:
