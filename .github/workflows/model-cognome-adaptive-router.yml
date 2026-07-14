@@ -61,9 +61,28 @@ jobs:
             tests/test_aura_adaptive_planner.py \
             tests/test_aura_adaptive_execution.py
       - name: Validate public CLI compatibility
+        id: cli
+        continue-on-error: true
         run: |
-          python aura_router.py route --help
-          python aura_router.py fusion --help
+          set +e
+          python aura_router.py route --help > cli-${{ matrix.python-version }}.log 2>&1
+          route_code=$?
+          python aura_router.py fusion --help >> cli-${{ matrix.python-version }}.log 2>&1
+          fusion_code=$?
+          echo "route_code=$route_code" >> "$GITHUB_OUTPUT"
+          echo "fusion_code=$fusion_code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload CLI diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adaptive-cli-${{ matrix.python-version }}-${{ github.run_id }}
+          path: cli-${{ matrix.python-version }}.log
+      - name: Enforce CLI compatibility
+        if: steps.cli.outputs.route_code != '0' || steps.cli.outputs.fusion_code != '0'
+        run: |
+          cat cli-${{ matrix.python-version }}.log
+          exit 1
       - name: Run adaptive routing contracts
         run: |
           python -m pytest -q \
