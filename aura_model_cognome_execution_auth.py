@@ -18,6 +18,7 @@ AUTHORIZATION_VERSION = "AURA_ADAPTIVE_EXECUTION_AUTHORIZATION_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 _ALLOWED_POLICIES = frozenset({"ZERO_MODEL", "DIRECT", "CASCADE", "PANEL"})
+_MODEL_POLICIES = frozenset({"DIRECT", "CASCADE", "PANEL"})
 
 
 @dataclass(frozen=True)
@@ -54,13 +55,23 @@ class ExecutionAuthorization:
             raise ValueError("authorization expiry must be greater than issue time")
         if self.max_calls < 0:
             raise ValueError("max_calls must be non-negative")
+        if not isinstance(self.allowed_policy_modes, tuple):
+            raise ValueError("allowed_policy_modes must be a tuple")
+        if not isinstance(self.allowed_profile_ids, tuple):
+            raise ValueError("allowed_profile_ids must be a tuple")
         if not self.allowed_policy_modes:
             raise ValueError("allowed_policy_modes must not be empty")
+        if len(self.allowed_policy_modes) != len(set(self.allowed_policy_modes)):
+            raise ValueError("allowed_policy_modes cannot contain duplicates")
         unknown = sorted(set(self.allowed_policy_modes) - _ALLOWED_POLICIES)
         if unknown:
             raise ValueError("unknown authorized policy modes: " + ", ".join(unknown))
+        if any(not str(item).strip() for item in self.allowed_profile_ids):
+            raise ValueError("allowed_profile_ids cannot contain empty values")
         if len(self.allowed_profile_ids) != len(set(self.allowed_profile_ids)):
             raise ValueError("allowed_profile_ids cannot contain duplicates")
+        if set(self.allowed_policy_modes) & _MODEL_POLICIES and not self.allowed_profile_ids:
+            raise ValueError("model-executing policy modes require an explicit profile allowlist")
         if type(self.allow_forced_override) is not bool:
             raise ValueError("allow_forced_override must be a boolean")
         expected = stable_id("execution-authorization", self.identity_basis())
@@ -122,6 +133,12 @@ class ExecutionAuthorization:
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> "ExecutionAuthorization":
+        policy_modes = value.get("allowed_policy_modes", ())
+        profile_ids = value.get("allowed_profile_ids", ())
+        if not isinstance(policy_modes, (list, tuple)):
+            raise ValueError("allowed_policy_modes must be a list or tuple")
+        if not isinstance(profile_ids, (list, tuple)):
+            raise ValueError("allowed_profile_ids must be a list or tuple")
         if type(value.get("allow_forced_override", False)) is not bool:
             raise ValueError("allow_forced_override must be a boolean")
         return cls(
@@ -130,8 +147,8 @@ class ExecutionAuthorization:
             verifier_id=str(value.get("verifier_id") or ""),
             purpose_digest=str(value.get("purpose_digest") or ""),
             capability_graph_digest=str(value.get("capability_graph_digest") or ""),
-            allowed_policy_modes=tuple(str(item) for item in value.get("allowed_policy_modes", ()) or ()),
-            allowed_profile_ids=tuple(str(item) for item in value.get("allowed_profile_ids", ()) or ()),
+            allowed_policy_modes=tuple(str(item) for item in policy_modes),
+            allowed_profile_ids=tuple(str(item) for item in profile_ids),
             nonce=str(value.get("nonce") or ""),
             issued_at=float(value.get("issued_at")),
             expires_at=float(value.get("expires_at")),
@@ -167,7 +184,7 @@ class ExecutionAuthorization:
         if policy_mode not in self.allowed_policy_modes:
             errors.append("policy mode is not authorized")
         selected = tuple(str(item) for item in profile_ids)
-        if self.allowed_profile_ids and not set(selected).issubset(set(self.allowed_profile_ids)):
+        if not set(selected).issubset(set(self.allowed_profile_ids)):
             errors.append("selected profile is outside the authorization allowlist")
         if call_count > self.max_calls:
             errors.append("route exceeds authorization call limit")
