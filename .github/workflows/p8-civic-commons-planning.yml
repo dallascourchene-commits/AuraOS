@@ -54,7 +54,9 @@ jobs:
             aura_civic_planning_inventory.py \
             aura_civic_planning.py \
             aura_civic_planning_benchmark.py \
-            tests/test_aura_civic_planning.py \
+            tests/test_aura_civic_planning_projection.py \
+            tests/test_aura_civic_planning_behavior.py \
+            tests/test_aura_civic_planning_contracts.py \
             tests/test_aura_civic_planning_stress.py \
             tests/test_aura_civic_planning_inventory.py
       - name: Fatal and static correctness lint
@@ -64,7 +66,9 @@ jobs:
             aura_civic_planning_inventory.py \
             aura_civic_planning.py \
             aura_civic_planning_benchmark.py \
-            tests/test_aura_civic_planning.py \
+            tests/test_aura_civic_planning_projection.py \
+            tests/test_aura_civic_planning_behavior.py \
+            tests/test_aura_civic_planning_contracts.py \
             tests/test_aura_civic_planning_stress.py \
             tests/test_aura_civic_planning_inventory.py
       - name: Run deterministic structural parity benchmark
@@ -110,7 +114,9 @@ jobs:
         run: |
           set +e
           python -m pytest -q \
-            tests/test_aura_civic_planning.py \
+            tests/test_aura_civic_planning_projection.py \
+            tests/test_aura_civic_planning_behavior.py \
+            tests/test_aura_civic_planning_contracts.py \
             tests/test_aura_civic_planning_stress.py \
             tests/test_aura_civic_planning_inventory.py \
             tests/test_aura_civic_commons_arena.py \
