@@ -46,27 +46,26 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import textwrap
 
           module_path = Path("aura_st3gg_contracts.py")
           module = module_path.read_text(encoding="utf-8")
-          old = textwrap.dedent("""\
-                  if self.pointer is not None:
-                      parse_canonical_pointer(self.pointer)
-                  if self.exact_ref is not None and not _EXACT_REF_RE.fullmatch(self.exact_ref):
-                      raise ValueError("exact_ref_not_canonical")
-          """)
-          new = textwrap.dedent("""\
-                  if self.pointer is not None:
-                      parse_canonical_pointer(self.pointer)
-                      if self.pointer != canonical_pointer(self.namespace, self.original_digest):
-                          raise ValueError("pointer_digest_mismatch")
-                  if self.exact_ref is not None:
-                      if not _EXACT_REF_RE.fullmatch(self.exact_ref):
-                          raise ValueError("exact_ref_not_canonical")
-                      if self.exact_ref != exact_ref_for(self.namespace, self.original_digest):
-                          raise ValueError("exact_ref_digest_mismatch")
-          """)
+          old = (
+              "        if self.pointer is not None:\n"
+              "            parse_canonical_pointer(self.pointer)\n"
+              "        if self.exact_ref is not None and not _EXACT_REF_RE.fullmatch(self.exact_ref):\n"
+              "            raise ValueError(\"exact_ref_not_canonical\")\n"
+          )
+          new = (
+              "        if self.pointer is not None:\n"
+              "            parse_canonical_pointer(self.pointer)\n"
+              "            if self.pointer != canonical_pointer(self.namespace, self.original_digest):\n"
+              "                raise ValueError(\"pointer_digest_mismatch\")\n"
+              "        if self.exact_ref is not None:\n"
+              "            if not _EXACT_REF_RE.fullmatch(self.exact_ref):\n"
+              "                raise ValueError(\"exact_ref_not_canonical\")\n"
+              "            if self.exact_ref != exact_ref_for(self.namespace, self.original_digest):\n"
+              "                raise ValueError(\"exact_ref_digest_mismatch\")\n"
+          )
           if old not in module:
               raise SystemExit("canonical identity patch target not found")
           module_path.write_text(module.replace(old, new), encoding="utf-8")
@@ -74,54 +73,56 @@ jobs:
           test_path = Path("tests/test_aura_st3gg_contracts.py")
           tests = test_path.read_text(encoding="utf-8")
           marker = "\n\n@dataclass(frozen=True)\nclass LegacyArenaDecision:"
-          additions = textwrap.dedent("""\
-
-
-          def test_decision_rejects_pointer_not_bound_to_original_digest() -> None:
-              original_digest = digest_text("original")
-              wrong_pointer = canonical_pointer("ARENA", digest_text("other"))
-
-              with pytest.raises(ValueError, match="pointer_digest_mismatch"):
-                  ST3GGDecision(
-                      enabled=True,
-                      reason="invalid",
-                      namespace="ARENA",
-                      measurement_class=ST3GGMeasurementClass.BYTE_EXACT,
-                      raw_units=100,
-                      candidate_units=10,
-                      final_units=20,
-                      overhead_units=10,
-                      savings_ratio=0.8,
-                      minimum_savings_ratio=0.08,
-                      restoration_mode=ST3GGRestorationMode.LOSSY_ADVISORY,
-                      original_digest=original_digest,
-                      compact_digest=digest_text("compact"),
-                      pointer=wrong_pointer,
-                  )
-
-
-          def test_decision_rejects_exact_ref_not_bound_to_original_digest() -> None:
-              original_digest = digest_text("original")
-
-              with pytest.raises(ValueError, match="exact_ref_digest_mismatch"):
-                  ST3GGDecision(
-                      enabled=True,
-                      reason="invalid",
-                      namespace="ARENA",
-                      measurement_class=ST3GGMeasurementClass.BYTE_EXACT,
-                      raw_units=100,
-                      candidate_units=10,
-                      final_units=20,
-                      overhead_units=10,
-                      savings_ratio=0.8,
-                      minimum_savings_ratio=0.08,
-                      restoration_mode=ST3GGRestorationMode.EXACT_RECALL,
-                      original_digest=original_digest,
-                      compact_digest=digest_text("compact"),
-                      pointer=canonical_pointer("ARENA", original_digest),
-                      exact_ref=exact_ref_for("ARENA", digest_text("other")),
-                  )
-          """)
+          additions = "\n".join(
+              [
+                  "",
+                  "",
+                  "def test_decision_rejects_pointer_not_bound_to_original_digest() -> None:",
+                  "    original_digest = digest_text(\"original\")",
+                  "    wrong_pointer = canonical_pointer(\"ARENA\", digest_text(\"other\"))",
+                  "",
+                  "    with pytest.raises(ValueError, match=\"pointer_digest_mismatch\"):",
+                  "        ST3GGDecision(",
+                  "            enabled=True,",
+                  "            reason=\"invalid\",",
+                  "            namespace=\"ARENA\",",
+                  "            measurement_class=ST3GGMeasurementClass.BYTE_EXACT,",
+                  "            raw_units=100,",
+                  "            candidate_units=10,",
+                  "            final_units=20,",
+                  "            overhead_units=10,",
+                  "            savings_ratio=0.8,",
+                  "            minimum_savings_ratio=0.08,",
+                  "            restoration_mode=ST3GGRestorationMode.LOSSY_ADVISORY,",
+                  "            original_digest=original_digest,",
+                  "            compact_digest=digest_text(\"compact\"),",
+                  "            pointer=wrong_pointer,",
+                  "        )",
+                  "",
+                  "",
+                  "def test_decision_rejects_exact_ref_not_bound_to_original_digest() -> None:",
+                  "    original_digest = digest_text(\"original\")",
+                  "",
+                  "    with pytest.raises(ValueError, match=\"exact_ref_digest_mismatch\"):",
+                  "        ST3GGDecision(",
+                  "            enabled=True,",
+                  "            reason=\"invalid\",",
+                  "            namespace=\"ARENA\",",
+                  "            measurement_class=ST3GGMeasurementClass.BYTE_EXACT,",
+                  "            raw_units=100,",
+                  "            candidate_units=10,",
+                  "            final_units=20,",
+                  "            overhead_units=10,",
+                  "            savings_ratio=0.8,",
+                  "            minimum_savings_ratio=0.08,",
+                  "            restoration_mode=ST3GGRestorationMode.EXACT_RECALL,",
+                  "            original_digest=original_digest,",
+                  "            compact_digest=digest_text(\"compact\"),",
+                  "            pointer=canonical_pointer(\"ARENA\", original_digest),",
+                  "            exact_ref=exact_ref_for(\"ARENA\", digest_text(\"other\")),",
+                  "        )",
+              ]
+          )
           if marker not in tests:
               raise SystemExit("adversarial regression insertion point not found")
           test_path.write_text(tests.replace(marker, additions + marker), encoding="utf-8")
