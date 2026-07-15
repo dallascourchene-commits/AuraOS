@@ -173,8 +173,11 @@ def _strings(
     required: bool = False,
     limit: int | None = None,
 ) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes, bytearray)):
-        raise ValueError(f"{field_name} must be a sequence")
+    if isinstance(values, (str, bytes, bytearray)) or not isinstance(
+        values,
+        Sequence,
+    ):
+        raise ValueError(f"{field_name} must be an ordered sequence")
     result = tuple(_required(item, field_name) for item in values)
     if required and not result:
         raise ValueError(f"{field_name} must not be empty")
