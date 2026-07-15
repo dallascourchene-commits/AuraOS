@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784124170,
+  "generated_at_unix": 1784124289,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -886,8 +886,8 @@
   },
   "summary": {
     "file_count": 864,
-    "total_bytes": 64762167,
-    "text_tokens_est": 6794488,
+    "total_bytes": 64748946,
+    "text_tokens_est": 6791183,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
@@ -899,9 +899,9 @@
       "support_file": 41
     },
     "topology_nodes": 7459,
-    "topology_edges": 15811,
+    "topology_edges": 15810,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 12264.5
+    "elapsed_ms": 20503.6
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -32103,6 +32103,16 @@
         "signature_hash": "db83f01b665c97c2"
       }
     ],
+    "_safe_snapshot": [
+      {
+        "file": "aura_qdkt_observations.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 81,
+        "semantic_id": "aura_qdkt_observations.py#function:_safe_snapshot:cf8a75e6860cc11c",
+        "signature_hash": "f8a0c50d40cea02f"
+      }
+    ],
     "_safe_test_targets": [
       {
         "file": "aura_arena_tool_runtime.py",
@@ -33195,16 +33205,6 @@
         "end_line": 180,
         "semantic_id": "tests/test_aura_planning_projector.py#function:_snapshot_files:b4e9fafef2bae9ce",
         "signature_hash": "3a41ea4462b53d93"
-      }
-    ],
-    "_snapshot_identity": [
-      {
-        "file": "aura_qdkt_observations.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 81,
-        "semantic_id": "aura_qdkt_observations.py#function:_snapshot_identity:b217e8f25ce39887",
-        "signature_hash": "1e3ee28b7b15a995"
       }
     ],
     "_snapshot_json": [
@@ -40230,7 +40230,7 @@
         "file": "aura_qdkt_observations.py",
         "kind": "async_function",
         "line": 431,
-        "end_line": 515,
+        "end_line": 498,
         "semantic_id": "aura_qdkt_observations.py#async_function:capture_legacy_qdkt_observation:43f9b35a1f717e08",
         "signature_hash": "5bbc57b10a07f409"
       }
@@ -61819,18 +61819,28 @@
       {
         "file": "tests/test_aura_qdkt_event_recording.py",
         "kind": "function",
-        "line": 71,
-        "end_line": 93,
+        "line": 88,
+        "end_line": 110,
         "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_capture_calls_legacy_generator_once_and_preserves_result:deef0b8435672081",
         "signature_hash": "3f398fc26288ec3b"
+      }
+    ],
+    "test_capture_preflight_rejects_before_generator_invocation": [
+      {
+        "file": "tests/test_aura_qdkt_event_recording.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_capture_preflight_rejects_before_generator_invocation:8f19a79a947779e9",
+        "signature_hash": "8af6399eeb10b9b2"
       }
     ],
     "test_capture_rejects_invalid_generator_surface": [
       {
         "file": "tests/test_aura_qdkt_event_recording.py",
         "kind": "function",
-        "line": 96,
-        "end_line": 108,
+        "line": 147,
+        "end_line": 159,
         "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_capture_rejects_invalid_generator_surface:3af87a8a90c1d361",
         "signature_hash": "1551588e79474f8a"
       }
@@ -63973,6 +63983,16 @@
         "end_line": 272,
         "semantic_id": "test_aura_metaharness.py#method:TestAuraBackgroundWorkers.test_default_supervisor_has_workers:cf0a7f4b6bb9f7ec",
         "signature_hash": "1f35d4f637b483f9"
+      }
+    ],
+    "test_default_timestamp_is_resolved_once_for_sidecar_and_event": [
+      {
+        "file": "tests/test_aura_qdkt_event_recording.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_default_timestamp_is_resolved_once_for_sidecar_and_event:bd78cd674cd3d297",
+        "signature_hash": "51757a42e45fb6be"
       }
     ],
     "test_delegation_cannot_exceed_parent_roles_scopes_or_depth": [
@@ -68393,14 +68413,14 @@
         "signature_hash": "927772548c11e2f2"
       }
     ],
-    "test_invalid_envelope_fails_before_sidecar_write": [
+    "test_invalid_envelope_and_policy_fail_before_sidecar_write": [
       {
         "file": "tests/test_aura_qdkt_event_recording.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 68,
-        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_invalid_envelope_fails_before_sidecar_write:86189738da6eb520",
-        "signature_hash": "07c6063007f9b35d"
+        "line": 68,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_invalid_envelope_and_policy_fail_before_sidecar_write:07dd9607b688f260",
+        "signature_hash": "94648ff7b5e4da70"
       }
     ],
     "test_invalid_envelope_fields_fail_before_sidecar_write": [
@@ -68457,8 +68477,8 @@
       {
         "file": "tests/test_aura_qdkt_event_recording.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 123,
+        "line": 162,
+        "end_line": 174,
         "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_invalid_timestamps_are_rejected_before_write:aed8cabab122bd78",
         "signature_hash": "f1666be5ee3af5ce"
       }
@@ -73773,14 +73793,14 @@
         "signature_hash": "5f43fb086958694a"
       }
     ],
-    "test_recording_is_append_only_and_idempotent": [
+    "test_recording_is_append_only_idempotent_and_time_bound": [
       {
         "file": "tests/test_aura_qdkt_event_recording.py",
         "kind": "function",
         "line": 28,
-        "end_line": 53,
-        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_recording_is_append_only_and_idempotent:02909eccaecebc73",
-        "signature_hash": "54134aeae8e02d54"
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_qdkt_event_recording.py#function:test_recording_is_append_only_idempotent_and_time_bound:9974540811669723",
+        "signature_hash": "0641e3cbf38f36dc"
       }
     ],
     "test_records_candidate_tree_jsonl": [
@@ -101971,7 +101991,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 71,
+        "hub_rank": 70,
         "node_count": 41,
         "edge_count": 117,
         "degree": 117,
@@ -104263,7 +104283,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 72,
+        "hub_rank": 71,
         "node_count": 26,
         "edge_count": 117,
         "degree": 117,
@@ -109061,17 +109081,17 @@
     {
       "path": "aura_qdkt_observations.py",
       "role": "python_module",
-      "bytes": 19695,
-      "lines": 530,
-      "tokens_est": 4924,
+      "bytes": 19035,
+      "lines": 513,
+      "tokens_est": 4759,
       "symbol_count": 22,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 70,
+        "hub_rank": 73,
         "node_count": 23,
-        "edge_count": 118,
-        "degree": 118,
+        "edge_count": 116,
+        "degree": 116,
         "symbols": [
           "QDKTEventReceipt",
           "QDKTObservation",
@@ -109083,7 +109103,7 @@
           "_optional",
           "_preflight_fields",
           "_required",
-          "_snapshot_identity",
+          "_safe_snapshot",
           "_strings",
           "_timestamp",
           "capture_legacy_qdkt_observation",
@@ -109100,45 +109120,45 @@
           "aura_qdkt_projection_io.py"
         ],
         "edge_kinds": {
-          "call": 71,
+          "call": 69,
           "defines": 44,
           "import_module": 3
         }
       },
-      "digest8": "231539015b85d4c2",
+      "digest8": "de7918b184d0478d",
       "vector": [
-        -0.121294,
-        -0.288236,
-        0.225633,
-        0.139553,
-        -0.272585,
-        0.071733,
-        -0.322146,
-        -0.006521,
-        -0.087384,
-        0.11086,
-        -0.303887,
-        -0.207373,
-        0.069124,
-        -0.251717,
-        -0.301278,
-        -0.311712,
-        -0.00913,
-        0.029997,
-        -0.089992,
-        -0.050865,
-        0.084775,
-        -0.082167,
-        0.142162,
-        0.256934,
-        -0.11086,
-        0.016955,
-        -0.071733,
-        -0.074341,
-        -0.045648,
-        -0.272585,
-        0.001304,
-        0.160421
+        0.09995,
+        -0.011106,
+        -0.255427,
+        0.149308,
+        -0.104886,
+        -0.18139,
+        0.248023,
+        0.035784,
+        0.156711,
+        -0.018509,
+        -0.018509,
+        0.161647,
+        0.1345,
+        0.252959,
+        0.109821,
+        -0.265299,
+        0.045656,
+        -0.24062,
+        -0.013573,
+        -0.00617,
+        0.136968,
+        0.250491,
+        -0.043188,
+        -0.28751,
+        -0.075271,
+        -0.307253,
+        0.151776,
+        0.28751,
+        0.14684,
+        -0.304785,
+        -0.104886,
+        0.149308
       ]
     },
     {
@@ -122202,7 +122222,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 73,
+        "hub_rank": 72,
         "node_count": 23,
         "edge_count": 117,
         "degree": 117,
@@ -123864,47 +123884,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 15203100,
-      "lines": 485237,
-      "tokens_est": 3800775,
+      "bytes": 15188642,
+      "lines": 485223,
+      "tokens_est": 3797161,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "e4333e91d1c66ce2",
+      "digest8": "c352f1fab8876f72",
       "vector": [
-        0.236685,
-        0.028152,
-        -0.134504,
-        -0.26588,
-        -0.20332,
-        0.019811,
-        -0.224173,
-        -0.199149,
-        0.263795,
-        0.197064,
-        0.261709,
-        -0.194979,
-        0.057347,
-        -0.038579,
-        -0.121992,
-        -0.144931,
-        -0.134504,
-        -0.209576,
-        0.105309,
-        0.226259,
-        0.007299,
-        0.161613,
-        0.197064,
-        0.019811,
-        -0.107395,
-        0.136589,
-        -0.232515,
-        0.263795,
-        0.138675,
-        0.224173,
-        0.230429,
-        -0.032323
+        0.144286,
+        -0.139178,
+        0.200468,
+        -0.093211,
+        -0.269419,
+        0.151947,
+        -0.325601,
+        0.271972,
+        -0.02426,
+        -0.10598,
+        -0.182592,
+        0.047244,
+        0.192807,
+        0.169823,
+        -0.162162,
+        -0.077889,
+        0.19536,
+        0.10598,
+        0.25665,
+        -0.185145,
+        -0.226005,
+        0.157054,
+        0.287295,
+        -0.174931,
+        -0.062566,
+        0.282187,
+        -0.049798,
+        0.049798,
+        0.167269,
+        -0.151947,
+        0.10598,
+        -0.016599
       ]
     },
     {
@@ -137065,47 +137085,47 @@
     {
       "path": "tests/test_aura_qdkt_event_recording.py",
       "role": "python_module",
-      "bytes": 3843,
-      "lines": 124,
-      "tokens_est": 961,
-      "symbol_count": 6,
+      "bytes": 5740,
+      "lines": 175,
+      "tokens_est": 1435,
+      "symbol_count": 8,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "01959d57c84383b0",
+      "digest8": "1838f5d5b419c3d5",
       "vector": [
-        0.215661,
-        -0.253653,
-        0.278236,
-        -0.240244,
-        0.086041,
-        -0.077102,
-        0.063693,
-        0.045814,
-        -0.023466,
-        0.170964,
-        -0.132972,
-        0.284941,
-        0.244714,
-        -0.16873,
-        0.077102,
-        -0.112859,
-        -0.197782,
-        0.144146,
-        0.193313,
-        -0.025701,
-        -0.048049,
-        0.269297,
-        0.112859,
-        0.267062,
-        -0.132972,
-        -0.271532,
-        -0.284941,
-        0.16873,
-        -0.10392,
-        -0.018996,
-        0.070397,
-        0.157555
+        -0.06064,
+        0.191072,
+        0.255144,
+        -0.136153,
+        -0.163613,
+        0.175054,
+        0.197937,
+        -0.248279,
+        0.040045,
+        -0.266586,
+        -0.284892,
+        0.122423,
+        0.229973,
+        -0.195649,
+        0.03318,
+        -0.223108,
+        0.11327,
+        0.044622,
+        -0.177342,
+        -0.065216,
+        0.129288,
+        -0.120135,
+        -0.202513,
+        -0.280315,
+        -0.257432,
+        0.195649,
+        -0.021739,
+        0.099541,
+        0.072081,
+        0.282604,
+        -0.030892,
+        -0.069793
       ]
     },
     {
@@ -138962,7 +138982,7 @@
       "root": ".",
       "module_count": 467,
       "node_count": 7459,
-      "edge_count": 15811,
+      "edge_count": 15810,
       "spectral_layout": true,
       "spectral_sparsity": 0.056449,
       "global_health": 0.971897
@@ -141914,46 +141934,8 @@
           "import_module": 2
         }
       },
-      "aura_qdkt_observations.py": {
-        "hub_rank": 70,
-        "node_count": 23,
-        "edge_count": 118,
-        "degree": 118,
-        "symbols": [
-          "QDKTEventReceipt",
-          "QDKTObservation",
-          "QDKTTruthClass",
-          "__post_init__",
-          "_actor",
-          "_belief",
-          "_envelope",
-          "_optional",
-          "_preflight_fields",
-          "_required",
-          "_snapshot_identity",
-          "_strings",
-          "_timestamp",
-          "capture_legacy_qdkt_observation",
-          "digest",
-          "from_dict",
-          "from_legacy_result",
-          "identity_payload",
-          "legacy_result",
-          "record_qdkt_observation"
-        ],
-        "neighbor_files": [
-          "aura_event_contracts.py",
-          "aura_qdkt_projection.py",
-          "aura_qdkt_projection_io.py"
-        ],
-        "edge_kinds": {
-          "call": 71,
-          "defines": 44,
-          "import_module": 3
-        }
-      },
       "aura_jspace_codec.py": {
-        "hub_rank": 71,
+        "hub_rank": 70,
         "node_count": 41,
         "edge_count": 117,
         "degree": 117,
@@ -141990,7 +141972,7 @@
         }
       },
       "aura_model_cognome_replay.py": {
-        "hub_rank": 72,
+        "hub_rank": 71,
         "node_count": 26,
         "edge_count": 117,
         "degree": 117,
@@ -142025,7 +142007,7 @@
         }
       },
       "test_aura_workbench.py": {
-        "hub_rank": 73,
+        "hub_rank": 72,
         "node_count": 23,
         "edge_count": 117,
         "degree": 117,
@@ -142075,6 +142057,44 @@
           "call": 62,
           "defines": 44,
           "import_module": 11
+        }
+      },
+      "aura_qdkt_observations.py": {
+        "hub_rank": 73,
+        "node_count": 23,
+        "edge_count": 116,
+        "degree": 116,
+        "symbols": [
+          "QDKTEventReceipt",
+          "QDKTObservation",
+          "QDKTTruthClass",
+          "__post_init__",
+          "_actor",
+          "_belief",
+          "_envelope",
+          "_optional",
+          "_preflight_fields",
+          "_required",
+          "_safe_snapshot",
+          "_strings",
+          "_timestamp",
+          "capture_legacy_qdkt_observation",
+          "digest",
+          "from_dict",
+          "from_legacy_result",
+          "identity_payload",
+          "legacy_result",
+          "record_qdkt_observation"
+        ],
+        "neighbor_files": [
+          "aura_event_contracts.py",
+          "aura_qdkt_projection.py",
+          "aura_qdkt_projection_io.py"
+        ],
+        "edge_kinds": {
+          "call": 69,
+          "defines": 44,
+          "import_module": 3
         }
       },
       "aura_language_source_registry.py": {
