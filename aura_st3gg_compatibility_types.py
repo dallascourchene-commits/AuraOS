@@ -9,6 +9,7 @@ import math
 import re
 from typing import Any
 
+from aura_arena_st3gg_egress import decompress_report_st3gg
 from aura_st3gg_codec import ST3GGFrame
 from aura_st3gg_contracts import (
     PATCH_AUTHORITY,
@@ -97,6 +98,10 @@ class ST3GGCanonicalBinding:
             type(self.legacy_holographic_header) is str
             and _HEADER_RE.fullmatch(self.legacy_holographic_header) is not None,
             "binding_header_invalid",
+        )
+        require(
+            (self.legacy_surface_pointer is None) == (self.legacy_compact_digest is None),
+            "binding_surface_identity_incomplete",
         )
         if self.legacy_surface_pointer is not None:
             require(
@@ -249,6 +254,7 @@ class ST3GGASTCompatibilityResult:
         )
         require(isinstance(self.legacy_frame, ST3GGFrame), "ast_legacy_frame_invalid")
         require(isinstance(self.v2_decision, ST3GGDecision), "ast_v2_decision_invalid")
+        require(type(self.exact_span_count) is int and self.exact_span_count >= 0, "ast_span_count_invalid")
         require(self.exact_span_count == len(self.legacy_frame.spans), "ast_span_count_disagreement")
         require(
             type(self.legacy_frame_digest) is str
@@ -334,6 +340,10 @@ class ST3GGReportCompatibilityResult:
             "report_legacy_fields_invalid",
         )
         require(
+            self.legacy_restored_preview == decompress_report_st3gg(self.legacy_compressed),
+            "report_restored_preview_disagreement",
+        )
+        require(
             type(self.legacy_savings_ratio) is float
             and math.isfinite(self.legacy_savings_ratio)
             and 0.0 <= self.legacy_savings_ratio <= 1.0,
@@ -345,6 +355,20 @@ class ST3GGReportCompatibilityResult:
             all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
             "report_mismatch_reason_invalid",
         )
+        require(
+            (
+                self.v2_decision.enabled
+                and self.v2_decision.restoration_mode
+                in {ST3GGRestorationMode.LOSSY_ADVISORY, ST3GGRestorationMode.EXACT_RECALL}
+            )
+            or (
+                not self.v2_decision.enabled
+                and self.v2_decision.restoration_mode is ST3GGRestorationMode.NONE
+            ),
+            "report_enabled_restoration_mode_disagreement",
+        )
+        if self.mismatch_reasons:
+            require(not self.v2_decision.enabled, "failed_report_result_enabled")
         if self.v2_decision.enabled:
             require(_EGRESS_POINTER_RE.fullmatch(self.legacy_pointer) is not None, "enabled_report_pointer_invalid")
             require(self.v2_decision.legacy_pointer == self.legacy_pointer, "enabled_report_legacy_pointer_disagreement")
