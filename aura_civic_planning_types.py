@@ -9,13 +9,34 @@ import string
 from typing import Any
 
 from aura_event_contracts import stable_digest
-from aura_planning_board import ActionContinuityEvidence, AuthorityRequirement, PlanningBoard
+from aura_planning_board import (
+    ActionContinuityEvidence,
+    AuthorityRequirement,
+    ConstraintKind,
+    PlanningBoard,
+    PortCardinality,
+    PortDirection,
+    ResourceDemand,
+    ReversibilityClass,
+)
 
 CIVIC_P8_VERSION = "AURA_CIVIC_PLANNING_P8"
 CIVIC_INVENTORY_VERSION = "AURA_CIVIC_SURFACE_INVENTORY_P8"
 CIVIC_OWNERSHIP_DISPOSITION = "RETAIN_CIVIC_COMMONS_OWNER"
 _HEX = frozenset(string.hexdigits)
 _DRIVE = re.compile(r"^[A-Za-z]:")
+_PROJECTED_BLOCKERS = frozenset({
+    ("human_governance_authorization_contract_absent",),
+    ("human_governance_authorization_contract_absent", "decision_packet_absent"),
+})
+_MUTATION_FINDING_CODES = frozenset({
+    "PROJECT_CHANGED_DURING_INSPECTION",
+    "SESSION_CHANGED_DURING_INSPECTION",
+})
+_AUTHORITY_FINDING_CODES = frozenset({
+    "PATCH_AUTHORITY_MISMATCH",
+    "ADVISORY_AUTHORITY_ESCALATION",
+})
 
 
 class CivicCompatibilityStatus(str, Enum):
@@ -223,8 +244,10 @@ class CivicCompatibilityReport:
         if projected:
             if self.workstream_count <= 0 or self.mapped_action_count != self.workstream_count or not self.mapping_verified:
                 raise ValueError("projected report requires complete structural mapping")
-            if self.source_mutated or self.authority_changed or self.findings or not self.governance_blockers:
+            if self.source_mutated or self.authority_changed or self.findings:
                 raise ValueError("projected report crossed a boundary")
+            if self.governance_blockers not in _PROJECTED_BLOCKERS:
+                raise ValueError("projected report has an unsupported blocker set")
             required = (self.project_id, self.session_id, self.project_digest, self.session_digest, self.inventory_digest, self.bindings_digest, self.board_digest)
             if any(value is None for value in required):
                 raise ValueError("projected report is missing exact bindings")
@@ -233,6 +256,9 @@ class CivicCompatibilityReport:
                 raise ValueError("failed report cannot carry projected state")
             if not self.findings:
                 raise ValueError("failed report requires a finding")
+            codes = frozenset(item.code for item in self.findings)
+            object.__setattr__(self, "source_mutated", bool(codes & _MUTATION_FINDING_CODES))
+            object.__setattr__(self, "authority_changed", bool(codes & _AUTHORITY_FINDING_CODES))
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -294,8 +320,44 @@ class CivicPlanningInspection:
             raise ValueError("board source references do not self-bind")
         if self.board.arena_id != f"civic_commons:{self.report.project_id}":
             raise ValueError("board arena identity does not self-bind")
+        expected_board_id = f"civic_board_{stable_digest({'project': self.report.project_digest, 'session': self.report.session_digest}, digest_size=12)}"
+        if self.board.board_id != expected_board_id:
+            raise ValueError("board identifier does not self-bind")
+        expected_goal_id = f"civic_goal_{stable_digest({'project': self.report.project_id, 'session': self.report.session_id}, digest_size=12)}"
+        if self.board.goal.goal_id != expected_goal_id:
+            raise ValueError("goal identifier does not self-bind")
+        expected_purpose = stable_digest({
+            "project_id": self.report.project_id,
+            "session_id": self.report.session_id,
+            "objective": self.board.goal.objective,
+            "bindings": self.bindings.digest,
+        })
+        if self.board.purpose_digest != expected_purpose:
+            raise ValueError("board purpose does not self-bind")
         if len(self.board.actions) != len(self.mappings) or len(self.mappings) != len(self.action_evidence):
             raise ValueError("projected evidence counts disagree")
+        expected_goal_facts = tuple(
+            f"civic.workstream.{mapping.workstream_id}.shadow_projected"
+            for mapping in self.mappings
+        )
+        if tuple(item.fact for item in self.board.goal.desired_state) != expected_goal_facts:
+            raise ValueError("goal desired state does not self-bind")
+        if any(item.expected is not True or item.operator.value != "EQ" for item in self.board.goal.desired_state):
+            raise ValueError("goal desired state changed its exact truth requirement")
+        if len(self.board.goal.constraints) < 2:
+            raise ValueError("board must retain project and external-authority constraints")
+        for constraint in self.board.goal.constraints[:-1]:
+            if constraint.kind is not ConstraintKind.DOMAIN or constraint.evidence_refs != (state_refs[0],) or constraint.blocking is not True:
+                raise ValueError("project constraints do not self-bind")
+        authority_constraint = self.board.goal.constraints[-1]
+        if (
+            authority_constraint.kind is not ConstraintKind.POLICY
+            or authority_constraint.description != "External human governance authorization is required before execution."
+            or authority_constraint.evidence_refs != (state_refs[2],)
+            or authority_constraint.blocking is not True
+        ):
+            raise ValueError("external-authority constraint does not self-bind")
+        default_resource = ResourceDemand().to_dict()
         for index, (action, mapping, evidence) in enumerate(zip(self.board.actions, self.mappings, self.action_evidence, strict=True)):
             expected_id = f"civic_p8_{index:03d}_{stable_digest({'workstream': mapping.workstream_id, 'digest': mapping.workstream_digest}, digest_size=10)}"
             expected_refs = (
@@ -306,8 +368,32 @@ class CivicPlanningInspection:
                 raise ValueError("projected action identities disagree")
             if mapping.evidence_refs != expected_refs or tuple(action.evidence_refs) != expected_refs:
                 raise ValueError("action evidence references do not self-bind")
+            if not action.name.startswith("Shadow project Civic workstream: ") or action.domain != "civic_commons":
+                raise ValueError("action label or domain does not self-bind")
+            if action.required_capabilities != ("civic_commons.shadow_project",):
+                raise ValueError("action capabilities do not self-bind")
             if action.authority_requirement is not AuthorityRequirement.HUMAN or action.proposal_only is not True or action.verifier_ids:
                 raise ValueError("action crossed its HUMAN proposal-only boundary")
+            if action.constraints != self.board.goal.constraints:
+                raise ValueError("action constraints do not self-bind")
+            if (
+                len(action.input_ports) != 1
+                or action.input_ports[0].name != "civic_source_record"
+                or action.input_ports[0].data_type != "CivicWorkstreamRecord"
+                or action.input_ports[0].direction is not PortDirection.INPUT
+                or action.input_ports[0].cardinality is not PortCardinality.ONE
+                or action.input_ports[0].required is not True
+            ):
+                raise ValueError("action input port does not self-bind")
+            if (
+                len(action.output_ports) != 1
+                or action.output_ports[0].name != "planning_shadow_action"
+                or action.output_ports[0].data_type != "PlanningBoardAction"
+                or action.output_ports[0].direction is not PortDirection.OUTPUT
+                or action.output_ports[0].cardinality is not PortCardinality.ONE
+                or action.output_ports[0].required is not True
+            ):
+                raise ValueError("action output port does not self-bind")
             expected_preconditions = tuple(f"civic.workstream.{item}.proposal_exists" for item in mapping.dependency_ids) + ("civic.governance.external_human_authorization_required",)
             if tuple(item.fact for item in action.preconditions) != expected_preconditions:
                 raise ValueError("dependency preconditions do not self-bind")
@@ -317,6 +403,16 @@ class CivicPlanningInspection:
                 raise ValueError("action effect does not self-bind")
             if action.idempotency_key != f"civic-p8:{mapping.workstream_digest}":
                 raise ValueError("action idempotency does not self-bind")
+            if action.resource_demand.to_dict() != default_resource:
+                raise ValueError("action resource demand does not self-bind")
+            if action.reversibility is not ReversibilityClass.REVERSIBLE:
+                raise ValueError("action reversibility does not self-bind")
+            if (
+                action.retry_policy.max_attempts != 1
+                or action.retry_policy.backoff_seconds != 0.0
+                or action.retry_policy.fallback_action_ids
+            ):
+                raise ValueError("action retry policy does not self-bind")
             if evidence.authority_decision_ids or evidence.verifier_receipts:
                 raise ValueError("P8 cannot fabricate authority or verifier evidence")
             if evidence.constrained_evidence_refs != (expected_refs[1], expected_refs[3]):
