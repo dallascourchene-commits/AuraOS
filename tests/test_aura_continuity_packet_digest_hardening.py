@@ -9,6 +9,7 @@ from aura_arena_state_packet import build_arena_state_packet
 from aura_continuity_packet import (
     J2RouteView,
     arena_view_from_j1,
+    build_j2_continuity_packet,
     parse_j2_continuity_packet,
     route_view_from_j0,
 )
@@ -57,6 +58,17 @@ def _j0_packet():
             "hashes": {"demo.py": "filehash"},
         },
     )
+
+
+def _arena_view():
+    _state, raw = build_arena_state_packet(
+        arena_id="human_agent",
+        arena_version="v1",
+        grammar_version="g1",
+        phase="PROVE",
+        state_code="PROVE",
+    )
+    return arena_view_from_j1(raw)
 
 
 def _encode_payload(payload: dict) -> str:
@@ -132,17 +144,37 @@ def test_digest_contracts_reject_labels_masquerading_as_digests() -> None:
         )
 
 
+def test_route_view_rejects_unordered_active_concept_digests() -> None:
+    with pytest.raises(ValueError, match="ordered sequence"):
+        J2RouteView(
+            route="PLAN_ONLY",
+            next_state="PLAN_ONLY",
+            verifier_required=False,
+            phase_digest="0" * 32,
+            source_packet_digest="1" * 32,
+            active_concept_digests={"2" * 32},
+            active_concept_count=1,
+        )
+
+
+def test_builder_rejects_unordered_event_refs() -> None:
+    with pytest.raises(ValueError, match="ordered sequence"):
+        build_j2_continuity_packet(
+            trace_id="trace-j2",
+            board_id="board-j2",
+            board_digest=stable_digest({"board": "j2"}),
+            history_chain_id="planning-chain-j2",
+            history_projection_digest=stable_digest({"projection": "j2"}),
+            continuity_report_digest=stable_digest({"continuity": "j2"}),
+            event_refs={"event_a", "event_b"},
+            route_view=route_view_from_j0(_j0_packet()),
+            arena_view=_arena_view(),
+        )
+
+
 def test_parser_rejects_recomputed_packet_with_invalid_nested_digest() -> None:
-    source = _j0_packet()
-    route = route_view_from_j0(source)
-    _state, raw_j1 = build_arena_state_packet(
-        arena_id="human_agent",
-        arena_version="v1",
-        grammar_version="g1",
-        phase="PROVE",
-        state_code="PROVE",
-    )
-    arena = arena_view_from_j1(raw_j1)
+    route = route_view_from_j0(_j0_packet())
+    arena = _arena_view()
     payload = {
         "arena_view": arena.to_dict(),
         "board_digest": stable_digest({"board": "j2"}),
