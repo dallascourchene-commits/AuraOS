@@ -27,6 +27,9 @@ SOURCE_SNAPSHOT = (
     {"path": "alpha.py", "digest": "a" * 64},
     {"path": "beta.py", "digest": "b" * 64},
 )
+EVENT_ID = "event_" + "a" * 24
+OBSERVATION_ID = "qdkt-observation_" + "b" * 24
+PAYLOAD_REF = "payload_" + "c" * 24
 
 
 def record(
@@ -175,6 +178,40 @@ def test_parent_removed_between_projection_and_reread_fails_closed(
     assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
 
 
+def test_parent_duplicated_between_projection_and_reread_fails_closed(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    parent = generic_parent()
+    store.append(parent)
+    record(store, parent_event_ids=(parent.event_id,))
+    original = compatibility.project_qdkt_events
+    changed = False
+
+    def project_then_duplicate_parent(target):
+        nonlocal changed
+        report = original(target)
+        if not changed:
+            lines = target.events_path.read_text(encoding="utf-8").splitlines()
+            target.events_path.write_text(
+                "\n".join((lines[0], lines[0], lines[1])) + "\n",
+                encoding="utf-8",
+            )
+            changed = True
+        return report
+
+    monkeypatch.setattr(compatibility, "project_qdkt_events", project_then_duplicate_parent)
+    result = compatibility.compare_qdkt_dual_read(
+        store,
+        LEGACY_RESULT,
+        source_snapshot=SOURCE_SNAPSHOT,
+    )
+    assert result.status is QDKTDualReadStatus.MISMATCHED
+    assert result.legacy_result == LEGACY_RESULT
+    assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
+
+
 def test_multiple_exact_events_are_mismatched_without_rewriting_legacy(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     record(store, trace="trace-1", created_at=100.0)
@@ -285,31 +322,31 @@ def test_evidence_normalizes_one_shot_finding_iterables() -> None:
     warning = QDKTCompatibilityFinding(
         QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED,
         "snapshot omitted",
-        ("event-1",),
+        (EVENT_ID,),
         blocking=False,
     )
     evidence = QDKTDualReadEvidence(
         legacy_root=LEGACY_RESULT["root"],
         legacy_belief=LEGACY_RESULT["belief"],
         status=QDKTDualReadStatus.ADVISORY_ONLY,
-        findings=(item for item in (warning,)),
-        matching_event_ids=(item for item in ("event-1",)),
-        observation_id="observation-1",
-        payload_ref="payload_" + "a" * 24,
-        payload_digest="b" * 32,
-        canonical_source_snapshot_digest="c" * 32,
+        findings=(item for item in (warning, warning)),
+        matching_event_ids=(item for item in (EVENT_ID,)),
+        observation_id=OBSERVATION_ID,
+        payload_ref=PAYLOAD_REF,
+        payload_digest="d" * 32,
+        canonical_source_snapshot_digest="e" * 32,
         canonical_source_count=2,
         canonical_created_at=100.0,
     )
     assert evidence.findings == (warning,)
-    assert evidence.matching_event_ids == ("event-1",)
+    assert evidence.matching_event_ids == (EVENT_ID,)
 
 
 def test_evidence_rejects_incoherent_status_and_metadata() -> None:
     warning = QDKTCompatibilityFinding(
         QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED,
         "snapshot omitted",
-        ("event-1",),
+        (EVENT_ID,),
         blocking=False,
     )
     with pytest.raises(ValueError, match="mismatched evidence"):
@@ -332,6 +369,37 @@ def test_evidence_rejects_incoherent_status_and_metadata() -> None:
             ),
             requested_source_snapshot_digest="d" * 32,
         )
+
+
+def test_evidence_rejects_noncanonical_selected_ids_and_negative_time() -> None:
+    blocking = QDKTCompatibilityFinding(
+        QDKTCompatibilityFindingCode.STALE_CANONICAL_EVIDENCE,
+        "stale",
+        (EVENT_ID,),
+    )
+    common = {
+        "legacy_root": LEGACY_RESULT["root"],
+        "legacy_belief": LEGACY_RESULT["belief"],
+        "status": QDKTDualReadStatus.MISMATCHED,
+        "findings": (blocking,),
+        "matching_event_ids": (EVENT_ID,),
+        "observation_id": OBSERVATION_ID,
+        "payload_ref": PAYLOAD_REF,
+        "payload_digest": "d" * 32,
+        "canonical_source_snapshot_digest": "e" * 32,
+        "canonical_source_count": 2,
+        "canonical_created_at": 100.0,
+    }
+    for field, value in (
+        ("matching_event_ids", ("event-bad",)),
+        ("observation_id", "observation-bad"),
+        ("payload_ref", "payload-bad"),
+        ("canonical_created_at", -1.0),
+    ):
+        payload = dict(common)
+        payload[field] = value
+        with pytest.raises(ValueError):
+            QDKTDualReadEvidence(**payload)
 
 
 def test_ownership_contract_rejects_owner_substitution() -> None:
