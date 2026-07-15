@@ -169,6 +169,44 @@ class PlanningEventReceipt:
         object.__setattr__(self, "kind", kind)
 
 
+def _create_envelope(
+    *,
+    kind: PlanningEventKind,
+    board: PlanningBoard,
+    trace_id: str,
+    actor_id: str,
+    actor_type: ActorType | str,
+    parent_event_ids: tuple[str, ...],
+    evidence_refs: tuple[str, ...],
+    policy_scope: str,
+    payload_ref: str,
+    payload_digest: str,
+    created_at: float | None,
+) -> AuraEventEnvelope:
+    """Create one validated envelope without performing any store mutation."""
+
+    return AuraEventEnvelope.create(
+        trace_id=trace_id,
+        parent_event_ids=parent_event_ids,
+        event_type=kind.value,
+        actor_id=actor_id,
+        actor_type=actor_type,
+        arena_id=board.arena_id,
+        board_id=board.board_id,
+        node_id=kind.value,
+        objective_id=board.goal.goal_id,
+        purpose_digest=board.purpose_digest,
+        dikwp_stage=_STAGE[kind],
+        payload_ref=payload_ref,
+        payload_digest=payload_digest,
+        evidence_refs=evidence_refs,
+        policy_scope=policy_scope,
+        proposal_only=True,
+        measurement_classes=_MEASUREMENTS[kind],
+        created_at=created_at,
+    )
+
+
 def _record(
     store: AppendOnlyEventStore,
     *,
@@ -188,29 +226,44 @@ def _record(
     parents = _refs(parent_event_ids, "parent_event_ids")
     evidence = _refs(evidence_refs, "evidence_refs")
     timestamp = _timestamp(created_at)
+    trace = _required(trace_id, "trace_id")
+    actor = _required(actor_id, "actor_id")
+    scope = _required(policy_scope, "policy_scope")
+
+    # Validate every dynamic and fixed envelope field before writing the
+    # immutable sidecar. The placeholder values are non-authoritative and are
+    # never appended; they only prove that final event creation cannot fail for
+    # caller-controlled envelope data after persistence has begun.
+    _create_envelope(
+        kind=kind,
+        board=board,
+        trace_id=trace,
+        actor_id=actor,
+        actor_type=actor_type,
+        parent_event_ids=parents,
+        evidence_refs=evidence,
+        policy_scope=scope,
+        payload_ref="preflight:planning-payload",
+        payload_digest="preflight-planning-payload-digest",
+        created_at=timestamp,
+    )
+
     payload_ref = store.store_payload(
         artifact_payload,
         kind=_SIDECAR_KIND[kind],
         created_at=timestamp,
     )
-    event = AuraEventEnvelope.create(
-        trace_id=_required(trace_id, "trace_id"),
-        parent_event_ids=parents,
-        event_type=kind.value,
-        actor_id=_required(actor_id, "actor_id"),
+    event = _create_envelope(
+        kind=kind,
+        board=board,
+        trace_id=trace,
+        actor_id=actor,
         actor_type=actor_type,
-        arena_id=board.arena_id,
-        board_id=board.board_id,
-        node_id=kind.value,
-        objective_id=board.goal.goal_id,
-        purpose_digest=board.purpose_digest,
-        dikwp_stage=_STAGE[kind],
+        parent_event_ids=parents,
+        evidence_refs=evidence,
+        policy_scope=scope,
         payload_ref=payload_ref.ref_id,
         payload_digest=payload_ref.payload_digest,
-        evidence_refs=evidence,
-        policy_scope=_required(policy_scope, "policy_scope"),
-        proposal_only=True,
-        measurement_classes=_MEASUREMENTS[kind],
         created_at=timestamp,
     )
     return PlanningEventReceipt(
