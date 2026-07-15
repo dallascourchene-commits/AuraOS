@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784105896,
+  "generated_at_unix": 1784106087,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 850,
+    "included_file_count": 853,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -79,6 +79,7 @@
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
       ".github/workflows/p5-2-st3gg-arena-shadow.yml",
+      ".github/workflows/p5-3-st3gg-compatibility.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -612,6 +613,7 @@
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
       "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
       "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
+      "docs/AURA_ST3GG_COMPATIBILITY_P5_3.md",
       "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
       "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
       "docs/AURA_TOKEN_ECONOMY_STACK.md",
@@ -841,6 +843,7 @@
       "tests/test_aura_showcase_spatial_integration.py",
       "tests/test_aura_skill_cockpit_adapter.py",
       "tests/test_aura_st3gg_codec.py",
+      "tests/test_aura_st3gg_compatibility.py",
       "tests/test_aura_st3gg_contracts.py",
       "tests/test_aura_symbolic_trace_memory.py",
       "tests/test_aura_system_stabilization.py",
@@ -871,23 +874,23 @@
     ]
   },
   "summary": {
-    "file_count": 850,
-    "total_bytes": 64518675,
-    "text_tokens_est": 6733611,
+    "file_count": 853,
+    "total_bytes": 64540860,
+    "text_tokens_est": 6739158,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
-      "knowledge_artifact": 113,
+      "knowledge_artifact": 114,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 597,
-      "schema_or_lexicon": 71,
+      "python_module": 598,
+      "schema_or_lexicon": 72,
       "support_file": 41
     },
     "topology_nodes": 7410,
     "topology_edges": 15647,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 20836.24
+    "elapsed_ms": 22300.04
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1091,6 +1094,7 @@
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
       ".github/workflows/p5-2-st3gg-arena-shadow.yml",
+      ".github/workflows/p5-3-st3gg-compatibility.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -1538,6 +1542,7 @@
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
       "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
       "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
+      "docs/AURA_ST3GG_COMPATIBILITY_P5_3.md",
       "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
       "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
       "docs/AURA_TOKEN_ECONOMY_STACK.md",
@@ -1735,6 +1740,7 @@
       "tests/test_aura_showcase_spatial_integration.py",
       "tests/test_aura_skill_cockpit_adapter.py",
       "tests/test_aura_st3gg_codec.py",
+      "tests/test_aura_st3gg_compatibility.py",
       "tests/test_aura_st3gg_contracts.py",
       "tests/test_aura_system_stabilization.py",
       "tests/test_aura_tensor_evidence.py",
@@ -21769,6 +21775,16 @@
         "end_line": 361,
         "semantic_id": "aura_arena_wfst_runtime.py#function:_exact_matches:5fb738e535ccd943",
         "signature_hash": "b705bb20b575c9c3"
+      }
+    ],
+    "_exact_report": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:_exact_report:76c1c5000cd1884a",
+        "signature_hash": "eac16814636d829e"
       }
     ],
     "_exact_source_spans": [
@@ -59825,6 +59841,56 @@
         "signature_hash": "1753632db0e556af"
       }
     ],
+    "test_ast_exact_spans_remain_sidecar_and_never_claim_exact_recall": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_ast_exact_spans_remain_sidecar_and_never_claim_exact_recall:2c6c482aff5fc23f",
+        "signature_hash": "7e20723f32bbad49"
+      }
+    ],
+    "test_ast_facade_preserves_golden_v1_frame_and_classifies_lossy": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_ast_facade_preserves_golden_v1_frame_and_classifies_lossy:42aca1f6832ce56a",
+        "signature_hash": "3533ca4a1c166165"
+      }
+    ],
+    "test_ast_forged_measurement_fails_closed_to_none": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_ast_forged_measurement_fails_closed_to_none:7ef72e1860cc6bc3",
+        "signature_hash": "e3d7fcec458e378b"
+      }
+    ],
+    "test_ast_noncanonical_fidelity_metadata_fails_closed": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 132,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_ast_noncanonical_fidelity_metadata_fails_closed:8942bc5a02ca33ba",
+        "signature_hash": "e3c0a2f9ece7ec26"
+      }
+    ],
+    "test_ast_projection_crash_cannot_suppress_v1_frame": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_ast_projection_crash_cannot_suppress_v1_frame:47385e90303e9c25",
+        "signature_hash": "a9117d642d0f3200"
+      }
+    ],
     "test_ast_symbol_match_works_without_codemap": [
       {
         "file": "test_aura_repo_localizer.py",
@@ -64029,6 +64095,66 @@
         "signature_hash": "a4a72e590106aac9"
       }
     ],
+    "test_dual_read_evidence_digest_is_deterministic": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 345,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_evidence_digest_is_deterministic:44dbaf9f75b2e13c",
+        "signature_hash": "6137d6776a1afa37"
+      }
+    ],
+    "test_dual_read_rejects_digest_bound_length_disagreement": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 322,
+        "end_line": 335,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_rejects_digest_bound_length_disagreement:962f1992dd1a6306",
+        "signature_hash": "4e7130ce98e2c4ff"
+      }
+    ],
+    "test_dual_read_rejects_duplicate_conflicting_record": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 291,
+        "end_line": 305,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_rejects_duplicate_conflicting_record:6b090fc8c9690e1f",
+        "signature_hash": "6c7e587a16a6d9d7"
+      }
+    ],
+    "test_dual_read_rejects_json_alias_disagreement": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 288,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_rejects_json_alias_disagreement:2f8aefb2ca742e37",
+        "signature_hash": "99248cb113c6015c"
+      }
+    ],
+    "test_dual_read_rejects_noncanonical_record_metadata": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 308,
+        "end_line": 319,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_rejects_noncanonical_record_metadata:309341b63416bf48",
+        "signature_hash": "625b54ea96e436f3"
+      }
+    ],
+    "test_dual_read_rejects_pointer_substitution": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 257,
+        "end_line": 274,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_dual_read_rejects_pointer_substitution:7b13cd26663d60a3",
+        "signature_hash": "1d9c6b02d6968a2d"
+      }
+    ],
     "test_duplicate_and_conflicting_event_ids_fail_closed": [
       {
         "file": "tests/test_aura_planning_projector.py",
@@ -64327,6 +64453,16 @@
         "end_line": 224,
         "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_empty_legacy_compact_candidate_is_rejected_before_exact_claim:a1f372842bd77447",
         "signature_hash": "59919e8db48a222e"
+      }
+    ],
+    "test_empty_report_is_explicit_none": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 249,
+        "end_line": 254,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_empty_report_is_explicit_none:e57dc6efac70824f",
+        "signature_hash": "28acc4e5820bff98"
       }
     ],
     "test_empty_session_safe": [
@@ -68961,6 +69097,16 @@
         "signature_hash": "af070f0aa2f70549"
       }
     ],
+    "test_malformed_report_pointer_fails_closed_to_none": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 234,
+        "end_line": 246,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_malformed_report_pointer_fails_closed_to_none:845fe8533500b828",
+        "signature_hash": "333ec50f2b9a8e9b"
+      }
+    ],
     "test_mandatory_constraints_preserved": [
       {
         "file": "tests/test_aura_civic_commons_arena.py",
@@ -70859,6 +71005,16 @@
         "end_line": 104,
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:test_outcome_vector_replaces_binary_scoring:782977174ac8ce0f",
         "signature_hash": "1854926bace93150"
+      }
+    ],
+    "test_p5_3_explicitly_retains_v1": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 348,
+        "end_line": 355,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_p5_3_explicitly_retains_v1:941a185c52a8f4bb",
+        "signature_hash": "16c60927ab5d5521"
       }
     ],
     "test_pack_vector_already_packed_bytes_passes_through": [
@@ -73451,6 +73607,16 @@
         "signature_hash": "683e701f4d5a974b"
       }
     ],
+    "test_report_canonical_overhead_can_block_exact_without_changing_v1": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_report_canonical_overhead_can_block_exact_without_changing_v1:220afe5a685f7846",
+        "signature_hash": "1836dab6038c28ee"
+      }
+    ],
     "test_report_contains_key_sections": [
       {
         "file": "test_aura_skillweaver.py",
@@ -73459,6 +73625,26 @@
         "end_line": 472,
         "semantic_id": "test_aura_skillweaver.py#method:TestReportFormat.test_report_contains_key_sections:09e39d56573026ac",
         "signature_hash": "932608426b4906a1"
+      }
+    ],
+    "test_report_exact_recall_binds_v2_to_verified_v1_dual_reads": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 191,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_report_exact_recall_binds_v2_to_verified_v1_dual_reads:c122d83e18696417",
+        "signature_hash": "58d5317246f99502"
+      }
+    ],
+    "test_report_facade_preserves_exact_legacy_tuple_without_persistence": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 161,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_report_facade_preserves_exact_legacy_tuple_without_persistence:ad40ec31c4667899",
+        "signature_hash": "855c7a5c5f6d8bcf"
       }
     ],
     "test_report_format": [
@@ -73481,6 +73667,16 @@
         "signature_hash": "a2bffbf661eea407"
       }
     ],
+    "test_report_invalid_unicode_still_preserves_legacy_result": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 164,
+        "end_line": 172,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_report_invalid_unicode_still_preserves_legacy_result:e797ab38412393ae",
+        "signature_hash": "5934ffbef38f0347"
+      }
+    ],
     "test_report_is_deterministic_and_bound_to_board_and_state": [
       {
         "file": "tests/test_aura_planning_regression.py",
@@ -73489,6 +73685,16 @@
         "end_line": 180,
         "semantic_id": "tests/test_aura_planning_regression.py#function:test_report_is_deterministic_and_bound_to_board_and_state:67c445fc8475ee9c",
         "signature_hash": "1a0a604c689e02fc"
+      }
+    ],
+    "test_report_persistence_failure_preserves_v1_and_downgrades_to_lossy": [
+      {
+        "file": "tests/test_aura_st3gg_compatibility.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 231,
+        "semantic_id": "tests/test_aura_st3gg_compatibility.py#function:test_report_persistence_failure_preserves_v1_and_downgrades_to_lossy:0f996ba547ef53be",
+        "signature_hash": "fcb723ea825654f7"
       }
     ],
     "test_repository_example_capsule_compiles_with_real_binding": [
@@ -125999,6 +126205,52 @@
       ]
     },
     {
+      "path": ".github/workflows/p5-3-st3gg-compatibility.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 3056,
+      "lines": 89,
+      "tokens_est": 764,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f70df3142b7cfad6",
+      "vector": [
+        -0.124647,
+        0.05182,
+        0.278706,
+        0.217083,
+        0.18347,
+        0.124647,
+        0.2619,
+        -0.177868,
+        0.197475,
+        -0.267502,
+        -0.149857,
+        -0.149857,
+        0.046218,
+        0.077029,
+        0.088234,
+        -0.326324,
+        -0.320722,
+        0.004202,
+        -0.035013,
+        -0.015406,
+        -0.085432,
+        -0.057422,
+        -0.121846,
+        -0.009804,
+        0.116244,
+        0.015406,
+        -0.31512,
+        -0.077029,
+        0.169464,
+        -0.309518,
+        0.040615,
+        -0.233889
+      ]
+    },
+    {
       "path": ".github/workflows/phase-c2-review-repair.yml",
       "role": "schema_or_lexicon",
       "bytes": 17524,
@@ -130764,6 +131016,52 @@
         -0.059268,
         -0.054224,
         -0.311474
+      ]
+    },
+    {
+      "path": "docs/AURA_ST3GG_COMPATIBILITY_P5_3.md",
+      "role": "knowledge_artifact",
+      "bytes": 5443,
+      "lines": 114,
+      "tokens_est": 1361,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5feb04d77068ab76",
+      "vector": [
+        -0.142271,
+        0.163091,
+        -0.290326,
+        0.012723,
+        -0.137644,
+        -0.133018,
+        0.070557,
+        -0.158465,
+        0.181598,
+        0.294952,
+        -0.158465,
+        0.123764,
+        0.116824,
+        -0.139958,
+        0.288012,
+        0.126078,
+        0.153838,
+        -0.209358,
+        0.167718,
+        0.033544,
+        -0.03817,
+        -0.260252,
+        -0.244059,
+        0.068244,
+        -0.223239,
+        0.190852,
+        -0.072871,
+        0.269506,
+        -0.061304,
+        -0.276446,
+        -0.033544,
+        0.183912
       ]
     },
     {
@@ -136114,6 +136412,52 @@
         0.124469,
         0.230078,
         0.194875
+      ]
+    },
+    {
+      "path": "tests/test_aura_st3gg_compatibility.py",
+      "role": "python_module",
+      "bytes": 13686,
+      "lines": 356,
+      "tokens_est": 3422,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7c92e0096809b7d6",
+      "vector": [
+        -0.187659,
+        0.139891,
+        0.048905,
+        -0.012511,
+        0.196758,
+        -0.153539,
+        -0.05118,
+        -0.123969,
+        0.064828,
+        -0.083025,
+        0.169462,
+        -0.064828,
+        0.244525,
+        0.271821,
+        -0.17856,
+        -0.180835,
+        -0.153539,
+        0.158089,
+        -0.253624,
+        -0.244525,
+        0.249075,
+        0.221779,
+        -0.239976,
+        -0.276371,
+        -0.171736,
+        0.11487,
+        0.092124,
+        -0.083025,
+        -0.278645,
+        0.180835,
+        0.01706,
+        0.18311
       ]
     },
     {
