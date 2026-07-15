@@ -245,15 +245,25 @@ def compare_qdkt_dual_read(
             )
         )
 
-    nonmatching = tuple(item for item in valid if item not in matches)
-    if matches and nonmatching:
-        findings.append(
-            _finding(
-                QDKTCompatibilityFindingCode.CONFLICTING_CANONICAL_EVIDENCE,
-                "additional canonical QDKT observations conflict with the selected result",
-                tuple(item[0].event_id for item in nonmatching),
+    if source_snapshot is not None and matches:
+        conflicts = tuple(
+            item
+            for item in valid
+            if item[1].source_snapshot_digest == expected_digest
+            and item[1].source_count == expected_count
+            and (
+                item[1].legacy_root != root
+                or item[1].legacy_belief != belief
             )
         )
+        if conflicts:
+            findings.append(
+                _finding(
+                    QDKTCompatibilityFindingCode.CONFLICTING_CANONICAL_EVIDENCE,
+                    "the same source snapshot is bound to a conflicting root or belief",
+                    tuple(item[0].event_id for item in conflicts),
+                )
+            )
 
     if len(matches) == 1 and maximum_age is not None and current_time is not None:
         age = current_time - float(matches[0][0].created_at)
