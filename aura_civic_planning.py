@@ -24,6 +24,7 @@ from aura_civic_planning_types import (
     CivicSurfaceInventory,
 )
 from aura_event_contracts import canonical_json, stable_digest
+from aura_exact_record_identity import ExactRecordIdentityError, require_exact_copied_fields
 from aura_planning_board import (
     ActionContinuityEvidence,
     ActionSpec,
@@ -196,6 +197,28 @@ def _bind_records(session: dict[str, Any]) -> CivicRecordBindings:
         _fail("INVALID_DECISION_PACKET", "decision_packet must be an object")
     if isinstance(decision, dict) and decision:
         _authority(decision, "decision_packet")
+        _text(decision.get("packet_id"), "decision_packet.packet_id")
+        profile_set = session.get("profile_set")
+        assert isinstance(profile_set, dict)
+        identity_source = {
+            "objective": session.get("objective"),
+            "active_profiles": profile_set.get("jurisdiction_profile_refs"),
+            "workstreams": session.get("workstreams"),
+            "scenarios": session.get("scenarios"),
+            "consent_arc": session.get("consent_arc"),
+        }
+        try:
+            require_exact_copied_fields(
+                identity_source,
+                decision,
+                tuple((field, field) for field in identity_source),
+            )
+        except ExactRecordIdentityError as exc:
+            _fail(
+                "DECISION_PACKET_IDENTITY_MISMATCH",
+                str(exc),
+                subject_id=exc.field,
+            )
         decision_digest = stable_digest(decision)
     else:
         decision_digest = None
