@@ -213,6 +213,8 @@ def project_report_egress_to_v2(
     try:
         require(type(original) is str and type(legacy_compressed) is str, "legacy_report_text_invalid")
         require(type(legacy_pointer) is str, "legacy_report_pointer_invalid")
+        if original:
+            require(_EGRESS_POINTER_RE.fullmatch(legacy_pointer) is not None, "legacy_report_pointer_malformed")
         replay_compressed, replay_savings, replay_pointer = compress_report_st3gg(original)
         require(legacy_compressed == replay_compressed, "legacy_report_compact_replay_disagreement")
         require(legacy_pointer == replay_pointer, "legacy_report_pointer_replay_disagreement")
