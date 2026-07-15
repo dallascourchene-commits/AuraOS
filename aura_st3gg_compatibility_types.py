@@ -367,8 +367,18 @@ class ST3GGReportCompatibilityResult:
             ),
             "report_enabled_restoration_mode_disagreement",
         )
-        if self.mismatch_reasons:
-            require(not self.v2_decision.enabled, "failed_report_result_enabled")
+        if self.mismatch_reasons and self.v2_decision.enabled:
+            advisory_downgrade = (
+                self.v2_decision.restoration_mode is ST3GGRestorationMode.LOSSY_ADVISORY
+                and self.v2_decision.reason
+                == "legacy_report_lossy_advisory_exact_recall_not_admitted"
+                and all(
+                    reason.startswith("exact_recall_not_admitted:")
+                    and reason in self.v2_decision.warnings
+                    for reason in self.mismatch_reasons
+                )
+            )
+            require(advisory_downgrade, "failed_report_result_enabled")
         if self.v2_decision.enabled:
             require(_EGRESS_POINTER_RE.fullmatch(self.legacy_pointer) is not None, "enabled_report_pointer_invalid")
             require(self.v2_decision.legacy_pointer == self.legacy_pointer, "enabled_report_legacy_pointer_disagreement")
