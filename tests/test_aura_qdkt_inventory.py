@@ -265,7 +265,12 @@ def test_inventory_entry_rejects_unsafe_paths_and_normalizes_windows_separators(
         "readiness": QDKTInventoryReadiness.DUAL_READ_CANDIDATE,
         "detail": "reference",
     }
-    for path in ("../escape.py", "/absolute.py", "folder/./file.py"):
+    for path in (
+        "../escape.py",
+        "/absolute.py",
+        "C:\\absolute.py",
+        "folder/./file.py",
+    ):
         with pytest.raises(ValueError, match="repository-relative path"):
             QDKTInventoryEntry.create(file_path=path, **common)
     normalized = QDKTInventoryEntry.create(file_path="folder\\mixed.py", **common)
