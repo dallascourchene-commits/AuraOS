@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ast
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -16,6 +17,8 @@ from aura_substrate_manifest import (
     build_substrate_manifest,
 )
 from aura_substrate_release import build_release_index
+
+MANIFEST_ARCHIVE_PATH = Path("docs/aura_substrate_manifest.v1.json.gz")
 
 
 def _safe_file(root: Path, relative: str) -> Path:
@@ -98,6 +101,70 @@ def _read_canonical_json(
     return parsed
 
 
+def _manifest_artifacts(manifest: Any) -> tuple[bytes, bytes, dict[str, Any]]:
+    full = (canonical_json(manifest.to_dict()) + "\n").encode("utf-8")
+    archive = gzip.compress(full, mtime=0)
+    receipt = {
+        "version": manifest.version,
+        "manifest_digest": manifest.digest,
+        "archive_path": MANIFEST_ARCHIVE_PATH.as_posix(),
+        "archive_sha256": hashlib.sha256(archive).hexdigest(),
+        "uncompressed_bytes": len(full),
+        "compressed_bytes": len(archive),
+        "file_count": len(manifest.files),
+        "phase_count": len(manifest.phases),
+        "retained_external_surfaces": list(manifest.retained_external_surfaces),
+    }
+    return full, archive, receipt
+
+
+def _verify_manifest_artifacts(
+    root: Path,
+    manifest: Any,
+    receipt_path: str,
+    archive_path: str,
+    findings: list[VerificationFinding],
+) -> None:
+    expected_full, expected_archive, expected_receipt = _manifest_artifacts(manifest)
+    parsed_receipt = _read_canonical_json(root, receipt_path, findings)
+    if parsed_receipt is not None and parsed_receipt != expected_receipt:
+        _finding(
+            findings,
+            "MANIFEST_RECEIPT_CONTENT_MISMATCH",
+            "manifest receipt does not equal the deterministic ledger metadata",
+            receipt_path,
+        )
+    try:
+        archive = _safe_file(root, archive_path).read_bytes()
+    except (ValueError, OSError) as exc:
+        _finding(findings, "MANIFEST_ARCHIVE_UNAVAILABLE", str(exc), archive_path)
+        return
+    if archive != expected_archive:
+        _finding(
+            findings,
+            "MANIFEST_ARCHIVE_CONTENT_MISMATCH",
+            "manifest archive bytes are not the deterministic gzip encoding",
+            archive_path,
+        )
+    try:
+        expanded = gzip.decompress(archive)
+    except (OSError, EOFError) as exc:
+        _finding(
+            findings,
+            "MANIFEST_ARCHIVE_INVALID",
+            f"{type(exc).__name__}: {exc}",
+            archive_path,
+        )
+        return
+    if expanded != expected_full:
+        _finding(
+            findings,
+            "MANIFEST_ARCHIVE_LEDGER_MISMATCH",
+            "decompressed manifest does not equal the deterministic phase ledger",
+            archive_path,
+        )
+
+
 def _verify_git_history(root: Path, commits: tuple[str, ...], findings: list[VerificationFinding]) -> None:
     if not (root / ".git").exists():
         _finding(findings, "GIT_HISTORY_UNAVAILABLE", "repository metadata is unavailable")
@@ -127,20 +194,19 @@ def _verify_git_history(root: Path, commits: tuple[str, ...], findings: list[Ver
 def verify_substrate_release(
     root: str | Path = ".",
     manifest_path: str | Path = MANIFEST_PATH,
+    manifest_archive_path: str | Path = MANIFEST_ARCHIVE_PATH,
     release_index_path: str | Path = RELEASE_INDEX_PATH,
 ) -> VerificationReport:
     base = Path(root)
     findings: list[VerificationFinding] = []
     manifest = build_substrate_manifest()
-    expected_manifest = manifest.to_dict()
-    parsed_manifest = _read_canonical_json(base, str(manifest_path), findings)
-    if parsed_manifest is not None and parsed_manifest != expected_manifest:
-        _finding(
-            findings,
-            "MANIFEST_CONTENT_MISMATCH",
-            "committed manifest does not equal the deterministic phase ledger",
-            str(manifest_path),
-        )
+    _verify_manifest_artifacts(
+        base,
+        manifest,
+        str(manifest_path),
+        str(manifest_archive_path),
+        findings,
+    )
 
     release_modules = {
         Path(record.path).stem
@@ -153,6 +219,11 @@ def verify_substrate_release(
         for path in phase.retained_dependency_paths
         if path.endswith(".py")
     }
+    retained_modules.update(
+        Path(path).stem
+        for path in manifest.retained_external_surfaces
+        if path.endswith(".py")
+    )
     checked_files = 0
     checked_symbols = 0
     checked_versions = 0
@@ -281,4 +352,4 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["verify_substrate_release"]
+__all__ = ["MANIFEST_ARCHIVE_PATH", "verify_substrate_release"]
