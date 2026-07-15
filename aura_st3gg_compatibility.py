@@ -218,8 +218,12 @@ def project_report_egress_to_v2(
         candidate = count_utf8_bytes(legacy_compressed)
         supplied = _ratio_value(legacy_savings_ratio, "legacy_savings_ratio")
         measured = _legacy_savings(raw, candidate)
-        warnings = () if math.isclose(supplied, measured, rel_tol=0.0, abs_tol=1e-12) else ("legacy_savings_recomputed",)
-        mismatches = () if not warnings else ("legacy_report_savings_disagreement",)
+        require(
+            math.isclose(supplied, measured, rel_tol=0.0, abs_tol=1e-12),
+            "legacy_report_savings_disagreement",
+        )
+        warnings: tuple[str, ...] = ()
+        mismatches: tuple[str, ...] = ()
         if not original:
             require((legacy_compressed, legacy_pointer) == ("", ""), "legacy_empty_report_shape_invalid")
             decision = _view_decision(
