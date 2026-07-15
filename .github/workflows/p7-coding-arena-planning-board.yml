@@ -1,0 +1,134 @@
+name: P7 Coding Arena Planning Board
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "refactor/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p7-coding-arena-planning-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  focused-coding-arena-planning:
+    name: Coding Arena Planning Board (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install focused tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "pytest>=8.0,<9.0" \
+            "ruff>=0.9,<1.0"
+      - name: Compile legacy, Planning Board, and P7 surfaces
+        run: |
+          python -m py_compile \
+            aura_event_contracts.py \
+            aura_planning_board.py \
+            aura_liquid_planning_arena.py \
+            aura_architect_loop.py \
+            aura_coding_arena_planning_types.py \
+            aura_coding_arena_planning.py \
+            aura_coding_arena_planning_benchmark.py \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_benchmark.py
+      - name: Fatal and static correctness lint
+        run: |
+          ruff check --select E4,E7,E9,F --ignore E721 \
+            aura_coding_arena_planning_types.py \
+            aura_coding_arena_planning.py \
+            aura_coding_arena_planning_benchmark.py \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_benchmark.py
+      - name: Run deterministic parity benchmark
+        run: |
+          python aura_coding_arena_planning_benchmark.py \
+            --output "p7-coding-arena-benchmark-${{ matrix.python-version }}.json" \
+            --repeats 3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from aura_event_contracts import canonical_json
+
+          files = tuple(Path('.').glob('p7-coding-arena-benchmark-*.json'))
+          assert len(files) == 1
+          text = files[0].read_text(encoding='utf-8')
+          payload = json.loads(text)
+          assert text == canonical_json(payload) + '\n'
+          assert payload['version'] == 'AURA_CODING_ARENA_BENCHMARK_P7'
+          assert payload['measurement_class'] == 'EMPIRICAL_FIXTURE_WITH_HEURISTIC_TOKEN_PROXY'
+          assert payload['total_cases'] == 5
+          assert payload['passed_cases'] == 5
+          assert payload['total_tasks'] == 6
+          assert payload['mapped_actions'] == 6
+          assert payload['action_coverage'] == 1.0
+          assert payload['deterministic_case_rate'] == 1.0
+          assert payload['order_preservation_rate'] == 1.0
+          assert payload['verifier_declaration_rate'] == 1.0
+          assert payload['mutation_drift_count'] == 0
+          assert payload['authority_drift_count'] == 0
+          assert payload['identifier_collision_count'] == 0
+          assert payload['gate_passed'] is True
+          assert payload['baseline_bytes'] > 0
+          assert payload['candidate_bytes'] > 0
+          assert payload['limitations']
+          PY
+      - name: Upload benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: p7-coding-arena-benchmark-${{ matrix.python-version }}
+          path: p7-coding-arena-benchmark-${{ matrix.python-version }}.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Run focused and prior-contract regression matrix
+        id: focused-tests
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_benchmark.py \
+            tests/test_aura_planning_board.py \
+            tests/test_aura_planning_regression.py \
+            tests/test_aura_planning_frontier.py \
+            tests/test_aura_planning_events.py \
+            test_aura_architect_loop.py \
+            test_aura_liquid_planning_arena.py \
+            > "p7-pytest-${{ matrix.python-version }}.txt" 2>&1
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          cat "p7-pytest-${{ matrix.python-version }}.txt"
+          exit 0
+      - name: Upload diagnostics on failure
+        if: steps.focused-tests.outputs.status != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: p7-pytest-${{ matrix.python-version }}
+          path: p7-pytest-${{ matrix.python-version }}.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce focused test result
+        if: steps.focused-tests.outputs.status != '0'
+        run: exit 1
