@@ -245,12 +245,23 @@ def compare_qdkt_dual_read(
             )
         )
 
-    if source_snapshot is not None and matches:
+    conflict_identities: set[tuple[str, int]] = set()
+    if source_snapshot is not None and expected_count is not None:
+        conflict_identities.add((expected_digest, expected_count))
+    else:
+        conflict_identities.update(
+            (item[1].source_snapshot_digest, item[1].source_count)
+            for item in matches
+        )
+    if matches and conflict_identities:
         conflicts = tuple(
             item
             for item in valid
-            if item[1].source_snapshot_digest == expected_digest
-            and item[1].source_count == expected_count
+            if (
+                item[1].source_snapshot_digest,
+                item[1].source_count,
+            )
+            in conflict_identities
             and (
                 item[1].legacy_root != root
                 or item[1].legacy_belief != belief
