@@ -24,15 +24,18 @@ P6.2 therefore accepts an **already-produced** legacy result and compares it wit
 
 - imports of `quantum_dag` or `QuantumMerkleDAG`;
 - constructor calls;
-- `generate_epistemic_system_root()` calls;
+- direct calls and duck-typed compatibility resolution/invocation of `generate_epistemic_system_root()`;
 - root and belief consumers;
-- persistence and display uses;
+- direct and derived-container persistence uses;
+- display uses;
 - test surfaces;
 - archived `.save`/backup surfaces;
 - documentation references;
 - the legacy generator definition.
 
 Every entry contains a stable ID, repository-relative file path, enclosing symbol, line, use class, impact, readiness, and detail. Entries are sorted deterministically and the complete report has a stable digest.
+
+Generated CODEMAP, topology, understand-graph, and prior P6.2 inventory artifacts are excluded so repeated inventory generation remains stable and does not classify generated descriptions as new callers.
 
 Generate the current inventory with:
 
@@ -54,7 +57,16 @@ The P6.2 workflow runs this command on Python 3.10 and 3.12 and uploads the exac
 
 ### Current repository disposition
 
-The direct executable result surface remains `quantum_dag.py`. Current direct construction/call coverage is present in `test_aura_functions.py`; historical construction/call surfaces remain in `aura_node.py.save` and `aura_node.py.save.1`. P6.1 supplies the opt-in observation/event facade and focused tests. Documentation, verification metadata, and configuration references are classified separately rather than treated as live consumers.
+The direct result owner remains `quantum_dag.py`. The generated inventory identifies two active production call sites in `aura_node.py`:
+
+1. `AuraEcosystemAuditor.execute_unified_audit` constructs the legacy DAG, awaits the result, consumes `root`, and uses it while stamping audited files.
+2. `main` constructs the legacy DAG during hot-swap approval, embeds the full result in the approval record, and persists that derived container to `Aura_Staging/approved_hotswap_capsule.json`.
+
+Both are high-impact `DUAL_READ_CANDIDATE` surfaces. P6.2 inventories them but does not wrap, redirect, or otherwise change either path.
+
+`test_aura_functions.py` provides direct construction/call coverage. Historical construction/call surfaces remain in `aura_node.py.save` and `aura_node.py.save.1`. P6.1 supplies the opt-in observation/event facade and focused tests; P6.2 recognizes its duck-typed method resolution and invocation separately from direct legacy imports.
+
+Documentation, workflow metadata, lexicon references, and reports are classified separately rather than treated as live consumers.
 
 The inventory is intentionally generated from the checked-out commit rather than maintained as a hand-edited list, preventing drift as files move or new callers appear.
 
@@ -115,4 +127,4 @@ generator_replayed = false
 
 ## Next evidence gate
 
-A later P6 slice may propose an opt-in wrapper at a specific live caller only after the generated inventory identifies that caller, dual-read evidence is clean, and regression evidence demonstrates unchanged behavior. P6.2 itself makes no such redirection.
+A later P6 slice may propose an opt-in wrapper at one named live caller only after its source snapshot is explicitly defined, dual-read evidence is clean, the caller-specific persistence/side-effect boundary is understood, and regression evidence demonstrates unchanged behavior. P6.2 itself makes no such redirection.
