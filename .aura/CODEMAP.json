@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784123165,
+  "generated_at_unix": 1784123564,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 861,
+    "included_file_count": 864,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -80,6 +80,7 @@
       ".github/workflows/p5-1-st3gg-contracts.yml",
       ".github/workflows/p5-2-st3gg-arena-shadow.yml",
       ".github/workflows/p5-3-st3gg-compatibility.yml",
+      ".github/workflows/p6-1-qdkt-events.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -609,6 +610,7 @@
       "docs/AURA_PHASE_C3_TRIAL_CRUCIBLE.md",
       "docs/AURA_PHASE_C_ROUTE_CAPSULE_REFACTOR.md",
       "docs/AURA_PUBLIC_DEMO_PLATFORM.md",
+      "docs/AURA_QDKT_EVENTS_P6_1.md",
       "docs/AURA_REFACTOR_CANDIDATES.md",
       "docs/AURA_RESEARCH_COCKPIT_LANE.md",
       "docs/AURA_RESEARCH_EVIDENCE_LANE.md",
@@ -834,7 +836,8 @@
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_qdkt_event_recording.py",
       "tests/test_aura_qdkt_observations.py",
-      "tests/test_aura_qdkt_projection.py",
+      "tests/test_aura_qdkt_projection_core.py",
+      "tests/test_aura_qdkt_projection_hardening.py",
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
@@ -882,23 +885,23 @@
     ]
   },
   "summary": {
-    "file_count": 861,
-    "total_bytes": 64729376,
-    "text_tokens_est": 6786290,
+    "file_count": 864,
+    "total_bytes": 64736816,
+    "text_tokens_est": 6788151,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
-      "knowledge_artifact": 114,
+      "knowledge_artifact": 115,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 606,
-      "schema_or_lexicon": 72,
+      "python_module": 607,
+      "schema_or_lexicon": 73,
       "support_file": 41
     },
     "topology_nodes": 7455,
     "topology_edges": 15796,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19720.1
+    "elapsed_ms": 21376.57
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1103,6 +1106,7 @@
       ".github/workflows/p5-1-st3gg-contracts.yml",
       ".github/workflows/p5-2-st3gg-arena-shadow.yml",
       ".github/workflows/p5-3-st3gg-compatibility.yml",
+      ".github/workflows/p6-1-qdkt-events.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -1547,6 +1551,7 @@
       "docs/AURA_PHASE_C3_TRIAL_CRUCIBLE.md",
       "docs/AURA_PHASE_C_ROUTE_CAPSULE_REFACTOR.md",
       "docs/AURA_PUBLIC_DEMO_PLATFORM.md",
+      "docs/AURA_QDKT_EVENTS_P6_1.md",
       "docs/AURA_REFACTOR_CANDIDATES.md",
       "docs/AURA_RESEARCH_COCKPIT_LANE.md",
       "docs/AURA_RESEARCH_EVIDENCE_LANE.md",
@@ -1741,7 +1746,8 @@
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_qdkt_event_recording.py",
       "tests/test_aura_qdkt_observations.py",
-      "tests/test_aura_qdkt_projection.py",
+      "tests/test_aura_qdkt_projection_core.py",
+      "tests/test_aura_qdkt_projection_hardening.py",
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
@@ -41807,11 +41813,19 @@
     ],
     "codes": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 48,
-        "end_line": 49,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:codes:8dafd835ce3dbfcf",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:codes:ab79894d238145fb",
+        "signature_hash": "98960cb877c99634"
+      },
+      {
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:codes:450bfe5a8240b61e",
         "signature_hash": "98960cb877c99634"
       }
     ],
@@ -47319,16 +47333,6 @@
         "signature_hash": "fe4abed96cd4b791"
       }
     ],
-    "generic_event": [
-      {
-        "file": "tests/test_aura_qdkt_projection.py",
-        "kind": "function",
-        "line": 52,
-        "end_line": 69,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:generic_event:05880a3d5dc3a543",
-        "signature_hash": "9bd94c054999b4bf"
-      }
-    ],
     "get": [
       {
         "file": "aura_arena_attempt_archive.py",
@@ -52157,12 +52161,20 @@
         "signature_hash": "300c0045d64cf75a"
       },
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 28,
-        "end_line": 33,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:observation:1b13669ef04c79ef",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:observation:b765c349c8639cd6",
         "signature_hash": "300c0045d64cf75a"
+      },
+      {
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
+        "signature_hash": "b6d2f925be861055"
       }
     ],
     "observe": [
@@ -52539,6 +52551,16 @@
         "end_line": 1275,
         "semantic_id": "arxiv_forager.py#method:ForagerStats.papers_per_second:dd981ae5ed7a4219",
         "signature_hash": "96988cf557f9f60e"
+      }
+    ],
+    "parent_event": [
+      {
+        "file": "tests/test_aura_qdkt_projection_core.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 58,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:parent_event:8179dfd657cd48bd",
+        "signature_hash": "f44e0c3175f5ed02"
       }
     ],
     "parse": [
@@ -54387,12 +54409,20 @@
         "signature_hash": "9ea27b3f4c3e6113"
       },
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 36,
-        "end_line": 45,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:record:a7c3cdec73856ca5",
+        "line": 30,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:record:e03f3860e1a3adab",
         "signature_hash": "f6dcd60c22960901"
+      },
+      {
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:record:0b231c7d7dcac91f",
+        "signature_hash": "ea245189ec910910"
       }
     ],
     "record_agent_handoff": [
@@ -61007,6 +61037,16 @@
         "signature_hash": "af04d9856d697d1d"
       }
     ],
+    "test_boolean_timestamp_row_is_rejected": [
+      {
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 178,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_boolean_timestamp_row_is_rejected:a964b9553b547f28",
+        "signature_hash": "a23d931b7acc5ec3"
+      }
+    ],
     "test_bound_intent_is_stable_and_does_not_claim_authority": [
       {
         "file": "tests/test_aura_phase_c1_route_capsules.py",
@@ -62977,11 +63017,11 @@
     ],
     "test_conflicting_duplicate_event_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 113,
-        "end_line": 123,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_conflicting_duplicate_event_is_reported:890ebd0eedc62d31",
+        "line": 47,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_conflicting_duplicate_event_is_reported:55d13c58045ff886",
         "signature_hash": "2d53a8d10593c5c5"
       }
     ],
@@ -65325,11 +65365,11 @@
     ],
     "test_exact_duplicate_event_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 100,
-        "end_line": 110,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_exact_duplicate_event_is_reported:10e530be65b5cc76",
+        "line": 90,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_exact_duplicate_event_is_reported:83f7f156e5229b56",
         "signature_hash": "c3626951ecda6c7e"
       }
     ],
@@ -68345,6 +68385,16 @@
         "signature_hash": "c5edb016e52492db"
       }
     ],
+    "test_invalid_payload_reference_is_reported": [
+      {
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_invalid_payload_reference_is_reported:94c3702bdccd1498",
+        "signature_hash": "d9a24a1c2e91fc5a"
+      }
+    ],
     "test_invalid_route_missing_slots": [
       {
         "file": "tests/test_aura_intent_ingestion.py",
@@ -70107,11 +70157,11 @@
     ],
     "test_missing_parent_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 231,
-        "end_line": 237,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_missing_parent_is_reported:610c28daf92a7028",
+        "line": 114,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_missing_parent_is_reported:6969a0194c2c7a76",
         "signature_hash": "9692b4864f4162f2"
       }
     ],
@@ -70157,11 +70207,11 @@
     ],
     "test_missing_sidecar_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 163,
-        "end_line": 170,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_missing_sidecar_is_reported:193fb202d5e1b4b4",
+        "line": 86,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_missing_sidecar_is_reported:f9dd940e0c811e1e",
         "signature_hash": "21bcc86822be73cc"
       }
     ],
@@ -71141,11 +71191,11 @@
     ],
     "test_non_qdkt_event_is_ignored": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 88,
-        "end_line": 97,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_non_qdkt_event_is_ignored:0872031303d4f79d",
+        "line": 78,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_non_qdkt_event_is_ignored:4de2083bd96f8804",
         "signature_hash": "d74193425c553c5a"
       }
     ],
@@ -71177,16 +71227,6 @@
         "end_line": 367,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:test_noncanonical_base64url_spelling_fails_closed:2b953381f9214970",
         "signature_hash": "140ffa67be72e3aa"
-      }
-    ],
-    "test_noncanonical_event_row_is_reported": [
-      {
-        "file": "tests/test_aura_qdkt_projection.py",
-        "kind": "function",
-        "line": 126,
-        "end_line": 134,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_noncanonical_event_row_is_reported:66ce1225cc08171b",
-        "signature_hash": "90a52e3f0bfb9491"
       }
     ],
     "test_noncanonical_j2_json_bytes_fail_closed": [
@@ -71229,14 +71269,14 @@
         "signature_hash": "ec1c5108afee9ebc"
       }
     ],
-    "test_nonfinite_and_duplicate_key_event_rows_fail_closed": [
+    "test_nonfinite_and_duplicate_key_rows_fail_closed": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 251,
-        "end_line": 263,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_nonfinite_and_duplicate_key_event_rows_fail_closed:83ae8ec3b700674e",
-        "signature_hash": "387bd0b421f72d20"
+        "line": 154,
+        "end_line": 166,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_nonfinite_and_duplicate_key_rows_fail_closed:e67a8fcd3d583e1f",
+        "signature_hash": "c60fa9933461d1b7"
       }
     ],
     "test_nonfinite_duplicate_record_fails_closed_before_digesting": [
@@ -71251,11 +71291,11 @@
     ],
     "test_nonfinite_sidecar_is_reported_without_throwing": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 150,
-        "end_line": 160,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_nonfinite_sidecar_is_reported_without_throwing:ac3b479d8191deb4",
+        "line": 73,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_nonfinite_sidecar_is_reported_without_throwing:a4664f0e004e2992",
         "signature_hash": "51807bba14ee189a"
       }
     ],
@@ -71269,14 +71309,14 @@
         "signature_hash": "1457d958d6031115"
       }
     ],
-    "test_nonproposal_authority_escalation_is_reported": [
+    "test_nonproposal_event_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 198,
-        "end_line": 228,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_nonproposal_authority_escalation_is_reported:cc648d53960b97d4",
-        "signature_hash": "99c5a309f4087b11"
+        "line": 121,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_nonproposal_event_is_reported:7eb57d515eb82114",
+        "signature_hash": "6f377eec0a5a1249"
       }
     ],
     "test_normalization_preserves_original_form": [
@@ -71887,11 +71927,11 @@
     ],
     "test_parent_appended_after_child_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 240,
-        "end_line": 248,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_parent_appended_after_child_is_reported:6fdca15c2a28f385",
+        "line": 123,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_parent_appended_after_child_is_reported:acc8d18462a1155b",
         "signature_hash": "9349f7f4b4f1fd89"
       }
     ],
@@ -72407,11 +72447,11 @@
     ],
     "test_planning_reference_is_not_conflated_with_board_id": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 266,
-        "end_line": 273,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_planning_reference_is_not_conflated_with_board_id:5e9ef3988223b86d",
+        "line": 134,
+        "end_line": 139,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_planning_reference_is_not_conflated_with_board_id:570cd482beec4681",
         "signature_hash": "c4b6bd6ffb8471d6"
       }
     ],
@@ -76249,6 +76289,16 @@
         "signature_hash": "284dc6f532aff78f"
       }
     ],
+    "test_single_line_noncanonical_json_is_reported": [
+      {
+        "file": "tests/test_aura_qdkt_projection_core.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_single_line_noncanonical_json_is_reported:5732d818d5ad1424",
+        "signature_hash": "12e65b259d9df705"
+      }
+    ],
     "test_singleton_returns_same_instance": [
       {
         "file": "test_aura_coding_arena_workflow.py",
@@ -77437,11 +77487,11 @@
     ],
     "test_tampered_sidecar_digest_is_reported": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_hardening.py",
         "kind": "function",
-        "line": 137,
-        "end_line": 147,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_tampered_sidecar_digest_is_reported:1c1eb81bf5585b34",
+        "line": 60,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:test_tampered_sidecar_digest_is_reported:0126c0c1524b7703",
         "signature_hash": "02f5afd92d51f7d3"
       }
     ],
@@ -78673,16 +78723,6 @@
         "signature_hash": "ccf666273af6e0a8"
       }
     ],
-    "test_unsafe_payload_reference_is_reported": [
-      {
-        "file": "tests/test_aura_qdkt_projection.py",
-        "kind": "function",
-        "line": 173,
-        "end_line": 195,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_unsafe_payload_reference_is_reported:c4f050639e8191e4",
-        "signature_hash": "16641caf7b6e6b2a"
-      }
-    ],
     "test_unstructured_markdown_fallback": [
       {
         "file": "tests/test_aura_intent_ingestion.py",
@@ -78895,11 +78935,11 @@
     ],
     "test_valid_projection_is_complete_and_read_only": [
       {
-        "file": "tests/test_aura_qdkt_projection.py",
+        "file": "tests/test_aura_qdkt_projection_core.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 85,
-        "semantic_id": "tests/test_aura_qdkt_projection.py#function:test_valid_projection_is_complete_and_read_only:4f9259440ff852b3",
+        "line": 61,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_qdkt_projection_core.py#function:test_valid_projection_is_complete_and_read_only:0065702137c88e6d",
         "signature_hash": "08ffa4d726fb403b"
       }
     ],
@@ -127416,6 +127456,52 @@
       ]
     },
     {
+      "path": ".github/workflows/p6-1-qdkt-events.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 3270,
+      "lines": 93,
+      "tokens_est": 818,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ebaaeaf917e510ff",
+      "vector": [
+        0.215614,
+        -0.251029,
+        0.217697,
+        0.10312,
+        -0.242696,
+        0.023957,
+        0.171866,
+        -0.082287,
+        -0.169783,
+        0.186449,
+        0.238529,
+        0.259361,
+        -0.138534,
+        -0.001042,
+        -0.251029,
+        0.194782,
+        0.240612,
+        0.051039,
+        -0.007291,
+        0.042706,
+        -0.201031,
+        0.146867,
+        -0.071871,
+        -0.159367,
+        -0.046873,
+        0.115619,
+        -0.263528,
+        -0.236446,
+        0.23228,
+        0.044789,
+        0.080204,
+        -0.265611
+      ]
+    },
+    {
       "path": ".github/workflows/phase-c2-review-repair.yml",
       "role": "schema_or_lexicon",
       "bytes": 17524,
@@ -131813,6 +131899,52 @@
         0.108784,
         -0.19581,
         -0.044793
+      ]
+    },
+    {
+      "path": "docs/AURA_QDKT_EVENTS_P6_1.md",
+      "role": "knowledge_artifact",
+      "bytes": 3025,
+      "lines": 63,
+      "tokens_est": 756,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33d018a818210bd5",
+      "vector": [
+        0.039461,
+        -0.269051,
+        -0.273834,
+        -0.05381,
+        -0.125557,
+        0.194913,
+        0.123166,
+        -0.13034,
+        0.044244,
+        0.09925,
+        0.228394,
+        0.269051,
+        -0.044244,
+        0.187738,
+        -0.037069,
+        0.29775,
+        0.226003,
+        -0.237961,
+        -0.058593,
+        -0.020328,
+        -0.170997,
+        -0.190129,
+        0.06816,
+        -0.29775,
+        0.132732,
+        -0.166214,
+        0.211653,
+        -0.300141,
+        -0.082509,
+        0.049027,
+        -0.170997,
+        0.09925
       ]
     },
     {
@@ -136982,49 +137114,95 @@
       ]
     },
     {
-      "path": "tests/test_aura_qdkt_projection.py",
+      "path": "tests/test_aura_qdkt_projection_core.py",
       "role": "python_module",
-      "bytes": 9004,
-      "lines": 274,
-      "tokens_est": 2251,
-      "symbol_count": 18,
+      "bytes": 4437,
+      "lines": 140,
+      "tokens_est": 1110,
+      "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2e8b8f98ae9cd264",
+      "digest8": "8a196b3246d93a44",
       "vector": [
-        0.077831,
-        -0.270665,
-        0.221876,
-        -0.214906,
-        -0.029041,
-        -0.098741,
-        0.282282,
-        0.049951,
-        -0.226523,
-        -0.042981,
-        -0.205613,
-        0.277635,
-        0.210259,
-        0.103387,
-        0.073184,
-        -0.149853,
-        -0.219553,
-        -0.098741,
-        0.082477,
-        0.001162,
-        0.080154,
-        0.233492,
-        0.066214,
-        -0.252079,
-        0.008132,
-        -0.233492,
-        -0.266019,
-        -0.238139,
-        0.003485,
-        0.11268,
-        -0.293898,
-        0.049951
+        0.173218,
+        0.255916,
+        -0.137457,
+        -0.262621,
+        0.045819,
+        0.056994,
+        0.041349,
+        0.224625,
+        -0.124047,
+        0.007823,
+        0.103931,
+        0.099461,
+        0.09052,
+        0.186629,
+        0.166513,
+        -0.162043,
+        0.08158,
+        0.271561,
+        -0.168748,
+        -0.108401,
+        0.032409,
+        -0.191099,
+        -0.193334,
+        0.215685,
+        0.186629,
+        -0.112871,
+        0.244741,
+        0.242505,
+        0.195569,
+        -0.246976,
+        -0.211214,
+        0.271561
+      ]
+    },
+    {
+      "path": "tests/test_aura_qdkt_projection_hardening.py",
+      "role": "python_module",
+      "bytes": 5712,
+      "lines": 179,
+      "tokens_est": 1428,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7ac7b9a7ed61c266",
+      "vector": [
+        -0.023213,
+        0.284668,
+        -0.06964,
+        0.30666,
+        -0.106292,
+        0.250459,
+        0.211363,
+        -0.206476,
+        0.142945,
+        0.052535,
+        0.260233,
+        -0.074527,
+        -0.113623,
+        0.294442,
+        0.21625,
+        0.164937,
+        0.094075,
+        -0.182041,
+        0.081857,
+        -0.018326,
+        0.252903,
+        0.277338,
+        0.189372,
+        0.032987,
+        -0.113623,
+        0.296886,
+        0.147832,
+        -0.16005,
+        -0.094075,
+        -0.006109,
+        0.062309,
+        -0.003665
       ]
     },
     {
