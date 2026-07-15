@@ -216,7 +216,7 @@ def project_report_egress_to_v2(
         ratio = _ratio_value(minimum_savings_ratio, "minimum_savings_ratio")
         raw = count_utf8_bytes(original)
         candidate = count_utf8_bytes(legacy_compressed)
-        supplied = _number(legacy_savings_ratio, "legacy_savings_ratio")
+        supplied = _ratio_value(legacy_savings_ratio, "legacy_savings_ratio")
         measured = _legacy_savings(raw, candidate)
         warnings = () if math.isclose(supplied, measured, rel_tol=0.0, abs_tol=1e-12) else ("legacy_savings_recomputed",)
         mismatches = () if not warnings else ("legacy_report_savings_disagreement",)
@@ -455,6 +455,7 @@ def _report_failure(
         if type(savings) in {int, float}
         and not isinstance(savings, bool)
         and math.isfinite(float(savings))
+        and 0.0 <= float(savings) <= 1.0
         else 0.0
     )
     return _report_result(safe_compact, safe_savings, str(pointer), decision, (reason,))
