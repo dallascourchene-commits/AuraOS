@@ -110,6 +110,18 @@ def test_j2_parser_rejects_non_string_input_without_coercion() -> None:
     }
 
 
+def test_j2_parser_fails_closed_on_excessive_nesting() -> None:
+    deeply_nested_json = "[" * 1200 + "0" + "]" * 1200
+    encoded = base64.urlsafe_b64encode(deeply_nested_json.encode("utf-8")).decode(
+        "ascii"
+    ).rstrip("=")
+    packet = f"J2/{encoded}#{'0' * 32}"
+
+    expected = {"ok": False, "error": "j2_payload_too_deep"}
+    assert parse_j2_continuity_packet(packet) == expected
+    assert parse_continuity_packet(packet) == expected
+
+
 def test_unified_parser_preserves_legacy_outer_whitespace_behavior() -> None:
     encoded = _j1_packet()
     assert parse_continuity_packet(f"  {encoded}\n") == parse_arena_state_packet(encoded)
