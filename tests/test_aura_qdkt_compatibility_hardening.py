@@ -117,6 +117,21 @@ def test_same_snapshot_with_conflicting_result_is_mismatched(tmp_path) -> None:
     assert QDKTCompatibilityFindingCode.CONFLICTING_CANONICAL_EVIDENCE in codes(result)
 
 
+def test_same_snapshot_conflict_without_caller_snapshot_fails_closed(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    record(store, trace="trace-good", result=LEGACY_RESULT)
+    record(
+        store,
+        trace="trace-conflict",
+        result={"root": "B1B2C3D4E5F60718", "belief": 6900},
+    )
+    result = compare_qdkt_dual_read(store, LEGACY_RESULT)
+    assert result.status is QDKTDualReadStatus.MISMATCHED
+    assert result.legacy_result == LEGACY_RESULT
+    assert QDKTCompatibilityFindingCode.CONFLICTING_CANONICAL_EVIDENCE in codes(result)
+    assert QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED not in codes(result)
+
+
 def test_stale_or_future_dated_evidence_is_mismatched(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     record(store, created_at=100.0)
