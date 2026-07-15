@@ -40,9 +40,11 @@ def test_manifest_contract_rejects_out_of_order_phase_dependencies() -> None:
         SubstrateManifest(files=manifest.files, phases=phases)
 
 
-def test_generated_topology_and_package_publication_cannot_be_authoritative() -> None:
+def test_generated_topology_package_and_retained_overlap_are_rejected() -> None:
     manifest = build_substrate_manifest()
     with pytest.raises(ValueError):
         replace(manifest, generated_topology_authoritative=True)
     with pytest.raises(ValueError):
         replace(manifest, package_published=True)
+    with pytest.raises(ValueError):
+        replace(manifest, retained_external_surfaces=("aura_event_contracts.py",))
