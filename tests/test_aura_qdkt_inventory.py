@@ -256,7 +256,7 @@ def test_inventory_report_normalizes_one_shot_iterables_and_rejects_bad_counts(t
         QDKTInventoryReport((first, second), scanned_files=1, ignored_files=0)
 
 
-def test_inventory_entry_rejects_unsafe_or_noncanonical_paths() -> None:
+def test_inventory_entry_rejects_unsafe_paths_and_normalizes_windows_separators() -> None:
     common = {
         "symbol": "<module>",
         "line": 1,
@@ -265,6 +265,8 @@ def test_inventory_entry_rejects_unsafe_or_noncanonical_paths() -> None:
         "readiness": QDKTInventoryReadiness.DUAL_READ_CANDIDATE,
         "detail": "reference",
     }
-    for path in ("../escape.py", "/absolute.py", "folder\\mixed.py", "folder/./file.py"):
+    for path in ("../escape.py", "/absolute.py", "folder/./file.py"):
         with pytest.raises(ValueError, match="repository-relative path"):
             QDKTInventoryEntry.create(file_path=path, **common)
+    normalized = QDKTInventoryEntry.create(file_path="folder\\mixed.py", **common)
+    assert normalized.file_path == "folder/mixed.py"
