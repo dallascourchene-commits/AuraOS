@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784098120,
+  "generated_at_unix": 1784098229,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 843,
+    "included_file_count": 846,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -78,6 +78,7 @@
       ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
+      ".github/workflows/p5-2-st3gg-arena-shadow.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -606,6 +607,7 @@
       "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md",
       "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md",
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
+      "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
       "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
       "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
       "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
@@ -741,6 +743,7 @@
       "tests/test_aura_amd_track3_demo.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
+      "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
@@ -864,23 +867,23 @@
     ]
   },
   "summary": {
-    "file_count": 843,
-    "total_bytes": 64282647,
-    "text_tokens_est": 6674603,
+    "file_count": 846,
+    "total_bytes": 64297054,
+    "text_tokens_est": 6678205,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
-      "knowledge_artifact": 112,
+      "knowledge_artifact": 113,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 592,
-      "schema_or_lexicon": 70,
+      "python_module": 593,
+      "schema_or_lexicon": 71,
       "support_file": 41
     },
     "topology_nodes": 7350,
     "topology_edges": 15440,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 17164.7
+    "elapsed_ms": 19834.54
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1083,6 +1086,7 @@
       ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
+      ".github/workflows/p5-2-st3gg-arena-shadow.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -1525,6 +1529,7 @@
       "docs/AURA_RESEARCH_EVIDENCE_LANE.md",
       "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md",
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
+      "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
       "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
       "docs/AURA_SWARM_AND_MCP_COCKPIT.md",
       "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
@@ -1635,6 +1640,7 @@
       "tests/test_aura_agent_workbench_interface.py",
       "tests/test_aura_amd_track3_demo.py",
       "tests/test_aura_arena_live_cli.py",
+      "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
@@ -23281,6 +23287,16 @@
         "signature_hash": "f993307cccd51516"
       }
     ],
+    "_golden_capsule": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:_golden_capsule:f2ebaa67b9883c02",
+        "signature_hash": "215375c38de52da2"
+      }
+    ],
     "_grammar": [
       {
         "file": "tests/test_aura_crucible_phase_b.py",
@@ -25400,6 +25416,14 @@
         "line": 24,
         "end_line": 54,
         "semantic_id": "test_aura_arena_st3gg_codec.py#function:_large_capsule:4338e094e61907fb",
+        "signature_hash": "3eccfe42c20b263b"
+      },
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:_large_capsule:9a97b938b8426e42",
         "signature_hash": "3eccfe42c20b263b"
       }
     ],
@@ -29681,6 +29705,16 @@
         "end_line": 333,
         "semantic_id": "aura_human_agent_wfst_adapter.py#method:HumanAgentWFSTController._record_experience:eaabeed7b2a64671",
         "signature_hash": "7809af604246758f"
+      }
+    ],
+    "_record_for": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:_record_for:4a11ec4af5719c51",
+        "signature_hash": "32df9f70b1d83892"
       }
     ],
     "_record_for_paper": [
@@ -60481,6 +60515,16 @@
         "signature_hash": "f5b173dde191b4c3"
       }
     ],
+    "test_canonical_overhead_can_disable_v2_while_v1_remains_live": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_canonical_overhead_can_disable_v2_while_v1_remains_live:b5c497c204730d5f",
+        "signature_hash": "cc58eaa1ff5f2b70"
+      }
+    ],
     "test_canonical_pointer_is_versioned_visible_ascii_and_deterministic": [
       {
         "file": "tests/test_aura_st3gg_contracts.py",
@@ -63695,6 +63739,16 @@
         "end_line": 353,
         "semantic_id": "tests/test_aura_emergent_result_verifier.py#method:TestFocusScoring.test_empty_focus_returns_full_score:9db09180fc5de2cd",
         "signature_hash": "c74cd06cb8d754fc"
+      }
+    ],
+    "test_empty_legacy_compact_candidate_is_rejected_before_exact_claim": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 208,
+        "end_line": 222,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_empty_legacy_compact_candidate_is_rejected_before_exact_claim:a1f372842bd77447",
+        "signature_hash": "59919e8db48a222e"
       }
     ],
     "test_empty_session_safe": [
@@ -67609,6 +67663,16 @@
         "signature_hash": "2691237bc3229d1b"
       }
     ],
+    "test_large_v1_record_projects_to_enabled_canonical_v2_exact_recall": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_large_v1_record_projects_to_enabled_canonical_v2_exact_recall:e1575dcf8955c973",
+        "signature_hash": "4460dc4a5b067e22"
+      }
+    ],
     "test_learner_data_never_goes_to_llm": [
       {
         "file": "test_aura_ojibwe_tutor.py",
@@ -68779,6 +68843,16 @@
         "signature_hash": "c50585ca5cb9deb1"
       }
     ],
+    "test_missing_v1_record_fails_closed_without_changing_v1_output": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_missing_v1_record_fails_closed_without_changing_v1_output:a2cc692ea5f3aad7",
+        "signature_hash": "8da31ce62ec7a907"
+      }
+    ],
     "test_mitosis_music_inversion_returns_dominant_frequency_angle": [
       {
         "file": "test_aura_music_inversion.py",
@@ -69731,6 +69805,16 @@
         "end_line": 57,
         "semantic_id": "tests/test_aura_planning_projector_jsonl.py#function:test_noncanonical_planning_event_bytes_fail_closed:14250cbc5fb0fd92",
         "signature_hash": "282a85c0d01a5310"
+      }
+    ],
+    "test_noncanonical_v1_record_metadata_is_rejected": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 191,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_noncanonical_v1_record_metadata_is_rejected:f5ee2c9a91870ed9",
+        "signature_hash": "ec1c5108afee9ebc"
       }
     ],
     "test_nonfinite_duplicate_record_fails_closed_before_digesting": [
@@ -74143,6 +74227,16 @@
         "signature_hash": "f30f9148a8d97a3b"
       }
     ],
+    "test_shadow_comparison_is_deterministic_and_read_only": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 243,
+        "end_line": 252,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_shadow_comparison_is_deterministic_and_read_only:de639b194cb1e771",
+        "signature_hash": "244ebf60e53cc01e"
+      }
+    ],
     "test_shadow_plan_records_proposal_without_execution": [
       {
         "file": "tests/test_aura_adaptive_planner.py",
@@ -74181,6 +74275,16 @@
         "end_line": 142,
         "semantic_id": "test_aura_architect_loop.py#function:test_shadow_report_blocks_out_of_repo_existing_file:7ad4b0678daeb8bc",
         "signature_hash": "0ddd866080fb924d"
+      }
+    ],
+    "test_shadow_wrapper_preserves_exact_v1_golden_bytes": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 99,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_shadow_wrapper_preserves_exact_v1_golden_bytes:da09e770c0d2f298",
+        "signature_hash": "a40cdc83bdff5565"
       }
     ],
     "test_short_opposed_claims_share_topic_after_polarity_unbinding": [
@@ -75261,6 +75365,16 @@
         "end_line": 125,
         "semantic_id": "test_travel_sidecar_stack.py#function:test_stale_price_is_blocked_before_package_display:5c4a5ab32e11007e",
         "signature_hash": "8c5373d21adcebaa"
+      }
+    ],
+    "test_stale_v1_record_is_rejected": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_stale_v1_record_is_rejected:bfa6fe19a83e4121",
+        "signature_hash": "22e19bc5815b9ad9"
       }
     ],
     "test_state_info": [
@@ -77067,6 +77181,16 @@
         "signature_hash": "3aae7c8bc50a79d1"
       }
     ],
+    "test_v1_digest_disagreement_is_rejected": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 188,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_v1_digest_disagreement_is_rejected:b2234ec3d4e1c7c4",
+        "signature_hash": "e26883353ca8b1f6"
+      }
+    ],
     "test_v1_ledger_migrates_without_fabricating_v2_observations": [
       {
         "file": "tests/test_aura_crucible_phase_b.py",
@@ -77075,6 +77199,16 @@
         "end_line": 119,
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:test_v1_ledger_migrates_without_fabricating_v2_observations:e88bf7f193e9bd5d",
         "signature_hash": "d6b7a07bc4c572e2"
+      }
+    ],
+    "test_v1_pointer_substitution_is_rejected": [
+      {
+        "file": "tests/test_aura_arena_st3gg_shadow.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 171,
+        "semantic_id": "tests/test_aura_arena_st3gg_shadow.py#function:test_v1_pointer_substitution_is_rejected:e98bd7daaf57f07f",
+        "signature_hash": "78b14b3d53a8c122"
       }
     ],
     "test_v2_database_migrates_without_inventing_capsule_provenance": [
@@ -121378,47 +121512,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 14900506,
+      "bytes": 14899792,
       "lines": 476193,
-      "tokens_est": 3725127,
+      "tokens_est": 3724948,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3c6fe181234ca6b3",
+      "digest8": "e514d2ebb4cea36e",
       "vector": [
-        0.235732,
-        0.181732,
-        0.104885,
-        0.175501,
-        0.123578,
-        -0.246117,
-        -0.185886,
-        0.0135,
-        0.22327,
-        0.075808,
-        0.084116,
-        0.140193,
-        0.136039,
-        -0.246117,
-        -0.034269,
-        -0.048808,
-        0.069577,
-        0.152655,
-        0.204578,
-        0.260655,
-        -0.260655,
-        -0.212886,
-        0.241963,
-        0.252347,
-        -0.167193,
-        0.096577,
-        -0.163039,
-        0.194193,
-        -0.262732,
-        -0.098654,
-        0.111116,
-        0.167193
+        -0.185177,
+        -0.062577,
+        0.054915,
+        0.080456,
+        -0.029373,
+        -0.003831,
+        -0.11366,
+        0.05236,
+        0.054915,
+        -0.203056,
+        0.238814,
+        0.108552,
+        -0.118769,
+        -0.111106,
+        0.177514,
+        0.072794,
+        0.167298,
+        0.312885,
+        0.162189,
+        -0.11366,
+        -0.177514,
+        0.287343,
+        -0.044698,
+        -0.320548,
+        0.08301,
+        -0.264356,
+        -0.088119,
+        0.151973,
+        -0.300114,
+        0.254139,
+        0.29756,
+        -0.157081
       ]
     },
     {
@@ -124916,6 +125050,52 @@
         -0.204041,
         0.188641,
         0.255372
+      ]
+    },
+    {
+      "path": ".github/workflows/p5-2-st3gg-arena-shadow.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 2465,
+      "lines": 78,
+      "tokens_est": 617,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5ca6ff9c14575ad6",
+      "vector": [
+        0.208426,
+        0.22655,
+        0.033227,
+        0.15204,
+        0.230578,
+        0.206413,
+        0.093641,
+        0.04531,
+        -0.21044,
+        0.0292,
+        -0.238633,
+        0.007048,
+        -0.089613,
+        0.009062,
+        0.150027,
+        -0.168151,
+        -0.228564,
+        -0.085586,
+        -0.246688,
+        -0.184261,
+        0.196344,
+        -0.139958,
+        -0.242661,
+        0.176206,
+        -0.19433,
+        -0.246688,
+        0.250716,
+        -0.256757,
+        -0.109751,
+        0.228564,
+        0.137944,
+        -0.015103
       ]
     },
     {
@@ -129595,6 +129775,52 @@
       ]
     },
     {
+      "path": "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
+      "role": "knowledge_artifact",
+      "bytes": 3208,
+      "lines": 71,
+      "tokens_est": 802,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9ef09cc2821476c6",
+      "vector": [
+        0.010872,
+        -0.182405,
+        -0.177574,
+        0.235557,
+        0.308036,
+        -0.223477,
+        -0.28146,
+        -0.088183,
+        -0.228309,
+        -0.237973,
+        -0.141334,
+        0.150998,
+        -0.201733,
+        0.266964,
+        -0.044695,
+        -0.090599,
+        -0.221061,
+        0.0302,
+        0.00604,
+        0.175158,
+        -0.245221,
+        -0.008456,
+        -0.047111,
+        -0.150998,
+        0.042279,
+        -0.015704,
+        -0.093015,
+        0.26938,
+        -0.30562,
+        -0.177574,
+        0.010872,
+        0.00604
+      ]
+    },
+    {
       "path": "docs/AURA_ST3GG_CANONICAL_CONTRACTS.md",
       "role": "knowledge_artifact",
       "bytes": 3705,
@@ -130604,6 +130830,52 @@
         0.219981,
         -0.106985,
         -0.292106
+      ]
+    },
+    {
+      "path": "tests/test_aura_arena_st3gg_shadow.py",
+      "role": "python_module",
+      "bytes": 9448,
+      "lines": 253,
+      "tokens_est": 2362,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1e9ecd3f36e692ce",
+      "vector": [
+        0.063544,
+        0.020382,
+        0.020382,
+        0.025178,
+        -0.29614,
+        -0.181041,
+        -0.305732,
+        -0.051555,
+        0.200224,
+        -0.29614,
+        0.154664,
+        0.272161,
+        -0.109104,
+        0.154664,
+        0.272161,
+        0.1139,
+        -0.264967,
+        0.231397,
+        0.001199,
+        0.260172,
+        0.1139,
+        0.20502,
+        0.097115,
+        0.056351,
+        0.169052,
+        -0.166654,
+        -0.188235,
+        0.185837,
+        -0.128287,
+        -0.053953,
+        -0.145073,
+        -0.058748
       ]
     },
     {

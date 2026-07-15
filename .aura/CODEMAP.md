@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 843
-- **total_bytes**: 64282647
-- **text_tokens_est**: 6674603
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 112, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 592, 'schema_or_lexicon': 70, 'support_file': 41}
+- **file_count**: 846
+- **total_bytes**: 64297054
+- **text_tokens_est**: 6678205
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 113, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 593, 'schema_or_lexicon': 71, 'support_file': 41}
 - **topology_nodes**: 7350
 - **topology_edges**: 15440
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 17164.7
+- **elapsed_ms**: 19834.54
 
 ## Coverage
 
-- **included_file_count**: 843
+- **included_file_count**: 846
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
 - **skipped_dir_file_counts**: `.git`=49, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
@@ -205,7 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 703 more; query CODEMAP.json for exact file cards
+- ... 706 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
