@@ -33,6 +33,7 @@ _EXCLUDED_DIRS = {
 _EXCLUDED_FILES = {
     ".aura/CODEMAP.json",
     ".aura/CODEMAP.md",
+    ".aura/understand_graph.json",
     "topology_map.json",
 }
 _QDKT_TERMS = ("QuantumMerkleDAG", "generate_epistemic_system_root", "quantum_dag")
@@ -241,7 +242,7 @@ class _PythonInventory(ast.NodeVisitor):
                 QDKTUseClass.METHOD_CALL,
                 "resolves generate_epistemic_system_root through a compatibility facade",
             )
-        if self._is_generator_call(value):
+        if self._is_generator_call(value) or _contains_result_reference(value, self.result_names):
             self.result_names.update(names)
 
     def visit_Assign(self, node: ast.Assign) -> Any:
