@@ -335,7 +335,11 @@ _PHASES = (
 
 
 def build_substrate_manifest() -> SubstrateManifest:
-    return SubstrateManifest(files=_FILES, phases=_PHASES)
+    return SubstrateManifest(
+        files=_FILES,
+        phases=_PHASES,
+        retained_external_surfaces=("aura_substrate.py",),
+    )
 
 
 def write_manifest(path: str | Path = MANIFEST_PATH) -> dict[str, Any]:
