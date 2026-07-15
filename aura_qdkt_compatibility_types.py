@@ -33,6 +33,7 @@ class QDKTUseClass(str, Enum):
     DISPLAY = "DISPLAY"
     TEST = "TEST"
     DOCUMENTATION = "DOCUMENTATION"
+    UNPARSED_REFERENCE = "UNPARSED_REFERENCE"
 
 
 class QDKTInventoryImpact(str, Enum):
@@ -57,8 +58,6 @@ class QDKTDualReadStatus(str, Enum):
 
 
 class QDKTCompatibilityFindingCode(str, Enum):
-    INVALID_LEGACY_RESULT = "INVALID_LEGACY_RESULT"
-    INVALID_SOURCE_SNAPSHOT = "INVALID_SOURCE_SNAPSHOT"
     CANONICAL_EVIDENCE_UNAVAILABLE = "CANONICAL_EVIDENCE_UNAVAILABLE"
     CANONICAL_INTEGRITY_FAILED = "CANONICAL_INTEGRITY_FAILED"
     LEGACY_ROOT_MISMATCH = "LEGACY_ROOT_MISMATCH"
@@ -91,6 +90,32 @@ def _enum(value: Any, enum_type: type[Enum], name: str) -> Enum:
         return enum_type(str(value))
     except ValueError as exc:
         raise ValueError(f"unsupported {name}") from exc
+
+
+def _tuple(value: Any, name: str) -> tuple[Any, ...]:
+    if isinstance(value, (str, bytes, bytearray)):
+        raise ValueError(f"{name} must be a sequence")
+    try:
+        return tuple(value)
+    except TypeError as exc:
+        raise ValueError(f"{name} must be a sequence") from exc
+
+
+def _digest(value: Any, name: str, *, required: bool = False) -> str:
+    text = _optional(value, name)
+    if required and not text:
+        raise ValueError(f"{name} must be a canonical digest")
+    if text and not _DIGEST_RE.fullmatch(text):
+        raise ValueError(f"{name} must be a canonical digest")
+    return text
+
+
+def _count(value: Any, name: str) -> int | None:
+    if value is None:
+        return None
+    if type(value) is not int or value < 0:
+        raise ValueError(f"{name} must be a non-negative integer or None")
+    return value
 
 
 def _strict_legacy_result(value: Mapping[str, Any]) -> tuple[str, int]:
@@ -185,11 +210,12 @@ class QDKTInventoryReport:
     version: str = QDKT_INVENTORY_VERSION
 
     def __post_init__(self) -> None:
-        if not all(isinstance(item, QDKTInventoryEntry) for item in self.entries):
+        entries = _tuple(self.entries, "entries")
+        if not all(isinstance(item, QDKTInventoryEntry) for item in entries):
             raise ValueError("entries contains an invalid inventory entry")
         canonical = tuple(
             sorted(
-                self.entries,
+                entries,
                 key=lambda item: (
                     item.file_path,
                     item.line,
@@ -206,6 +232,8 @@ class QDKTInventoryReport:
             value = getattr(self, name)
             if type(value) is not int or value < 0:
                 raise ValueError(f"{name} must be a non-negative integer")
+        if self.ignored_files > self.scanned_files:
+            raise ValueError("ignored_files must not exceed scanned_files")
         if self.version != QDKT_INVENTORY_VERSION:
             raise ValueError("unsupported QDKT inventory report version")
 
@@ -232,9 +260,8 @@ class QDKTCompatibilityFinding:
     def __post_init__(self) -> None:
         code = _enum(self.code, QDKTCompatibilityFindingCode, "finding code")
         detail = _required(self.detail, "detail")
-        if isinstance(self.event_ids, (str, bytes, bytearray)):
-            raise ValueError("event_ids must be a sequence")
-        event_ids = tuple(_required(item, "event_id") for item in self.event_ids)
+        raw_ids = _tuple(self.event_ids, "event_ids")
+        event_ids = tuple(_required(item, "event_id") for item in raw_ids)
         if len(event_ids) != len(set(event_ids)):
             raise ValueError("event_ids must not contain duplicates")
         if type(self.blocking) is not bool:
@@ -268,8 +295,10 @@ class QDKTOwnershipRecommendation:
     version: str = QDKT_OWNERSHIP_VERSION
 
     def __post_init__(self) -> None:
-        _required(self.current_result_owner, "current_result_owner")
-        _required(self.canonical_evidence_owner, "canonical_evidence_owner")
+        if self.current_result_owner != QDKT_CURRENT_RESULT_OWNER:
+            raise ValueError("current QDKT result ownership changed")
+        if self.canonical_evidence_owner != QDKT_CANONICAL_EVIDENCE_OWNER:
+            raise ValueError("canonical QDKT evidence ownership changed")
         if self.recommendation != QDKT_RECOMMENDATION:
             raise ValueError("unsupported QDKT ownership recommendation")
         if any(
@@ -297,6 +326,9 @@ class QDKTOwnershipRecommendation:
         return asdict(self)
 
 
+QDKT_OWNERSHIP_DIGEST = QDKTOwnershipRecommendation().digest
+
+
 @dataclass(frozen=True)
 class QDKTDualReadEvidence:
     legacy_root: str
@@ -307,11 +339,13 @@ class QDKTDualReadEvidence:
     observation_id: str = ""
     payload_ref: str = ""
     payload_digest: str = ""
-    source_snapshot_digest: str = ""
-    source_count: int | None = None
+    canonical_source_snapshot_digest: str = ""
+    canonical_source_count: int | None = None
+    requested_source_snapshot_digest: str = ""
+    requested_source_count: int | None = None
     canonical_created_at: float | None = None
     inventory_digest: str = ""
-    ownership_digest: str = ""
+    ownership_digest: str = QDKT_OWNERSHIP_DIGEST
     truth_class: str = QDKTTruthClass.LEGACY_NONDETERMINISTIC_ADVISORY.value
     generator_replayed: bool = False
     proposal_only: bool = True
@@ -325,40 +359,75 @@ class QDKTDualReadEvidence:
             {"root": self.legacy_root, "belief": self.legacy_belief}
         )
         status = _enum(self.status, QDKTDualReadStatus, "dual-read status")
-        if not all(isinstance(item, QDKTCompatibilityFinding) for item in self.findings):
+
+        raw_findings = _tuple(self.findings, "findings")
+        if not all(isinstance(item, QDKTCompatibilityFinding) for item in raw_findings):
             raise ValueError("findings contains an invalid compatibility finding")
         findings = tuple(
             sorted(
-                self.findings,
+                raw_findings,
                 key=lambda item: (item.code.value, item.event_ids, item.detail),
             )
         )
-        if isinstance(self.matching_event_ids, (str, bytes, bytearray)):
-            raise ValueError("matching_event_ids must be a sequence")
-        matching = tuple(_required(item, "matching_event_id") for item in self.matching_event_ids)
+
+        raw_matching = _tuple(self.matching_event_ids, "matching_event_ids")
+        matching = tuple(_required(item, "matching_event_id") for item in raw_matching)
         if len(matching) != len(set(matching)):
             raise ValueError("matching_event_ids must not contain duplicates")
-        for name in (
-            "observation_id",
-            "payload_ref",
-            "payload_digest",
-            "source_snapshot_digest",
-            "inventory_digest",
-            "ownership_digest",
-        ):
+
+        for name in ("observation_id", "payload_ref"):
             object.__setattr__(self, name, _optional(getattr(self, name), name))
-        if self.source_snapshot_digest and not _DIGEST_RE.fullmatch(self.source_snapshot_digest):
-            raise ValueError("source_snapshot_digest must be a canonical digest")
-        if self.source_count is not None and (
-            type(self.source_count) is not int or self.source_count < 0
-        ):
-            raise ValueError("source_count must be a non-negative integer or None")
+        object.__setattr__(
+            self,
+            "payload_digest",
+            _digest(self.payload_digest, "payload_digest"),
+        )
+        object.__setattr__(
+            self,
+            "canonical_source_snapshot_digest",
+            _digest(
+                self.canonical_source_snapshot_digest,
+                "canonical_source_snapshot_digest",
+            ),
+        )
+        object.__setattr__(
+            self,
+            "requested_source_snapshot_digest",
+            _digest(
+                self.requested_source_snapshot_digest,
+                "requested_source_snapshot_digest",
+            ),
+        )
+        object.__setattr__(
+            self,
+            "inventory_digest",
+            _digest(self.inventory_digest, "inventory_digest"),
+        )
+        ownership_digest = _digest(
+            self.ownership_digest,
+            "ownership_digest",
+            required=True,
+        )
+        if ownership_digest != QDKT_OWNERSHIP_DIGEST:
+            raise ValueError("ownership_digest does not match the P6.2 ownership boundary")
+        object.__setattr__(self, "ownership_digest", ownership_digest)
+
+        canonical_count = _count(self.canonical_source_count, "canonical_source_count")
+        requested_count = _count(self.requested_source_count, "requested_source_count")
+        object.__setattr__(self, "canonical_source_count", canonical_count)
+        object.__setattr__(self, "requested_source_count", requested_count)
+        if bool(self.canonical_source_snapshot_digest) != (canonical_count is not None):
+            raise ValueError("canonical source snapshot digest and count must appear together")
+        if bool(self.requested_source_snapshot_digest) != (requested_count is not None):
+            raise ValueError("requested source snapshot digest and count must appear together")
+
         if self.canonical_created_at is not None and (
             isinstance(self.canonical_created_at, bool)
             or not isinstance(self.canonical_created_at, (int, float))
             or not math.isfinite(float(self.canonical_created_at))
         ):
             raise ValueError("canonical_created_at must be finite or None")
+
         if self.truth_class != QDKTTruthClass.LEGACY_NONDETERMINISTIC_ADVISORY.value:
             raise ValueError("QDKT truth class changed")
         if (
@@ -369,16 +438,52 @@ class QDKTDualReadEvidence:
             or self.qdkt_patch_authority is not False
         ):
             raise ValueError("QDKT compatibility authority boundary changed")
+
+        metadata_flags = (
+            bool(self.observation_id),
+            bool(self.payload_ref),
+            bool(self.payload_digest),
+            bool(self.canonical_source_snapshot_digest),
+            canonical_count is not None,
+            self.canonical_created_at is not None,
+        )
+        if any(metadata_flags) and not all(metadata_flags):
+            raise ValueError("canonical event metadata must be complete or absent")
+        has_selected_metadata = all(metadata_flags)
+        if len(matching) == 1 and not has_selected_metadata:
+            raise ValueError("a single matching event requires complete canonical metadata")
+        if len(matching) != 1 and has_selected_metadata:
+            raise ValueError("canonical metadata requires exactly one selected event")
+
+        blocking = tuple(item for item in findings if item.blocking)
         if status is QDKTDualReadStatus.VERIFIED:
-            if findings or len(matching) != 1:
-                raise ValueError("verified evidence requires exactly one clean match")
-            for name in ("observation_id", "payload_ref", "payload_digest"):
-                if not getattr(self, name):
-                    raise ValueError(f"verified evidence requires {name}")
-            if not self.source_snapshot_digest or self.source_count is None:
-                raise ValueError("verified evidence requires source snapshot agreement")
-        if status is QDKTDualReadStatus.ADVISORY_ONLY and not matching:
-            raise ValueError("advisory evidence requires a canonical root/belief match")
+            if findings or len(matching) != 1 or not has_selected_metadata:
+                raise ValueError("verified evidence requires exactly one clean canonical match")
+            if not self.requested_source_snapshot_digest:
+                raise ValueError("verified evidence requires a requested source snapshot")
+            if (
+                self.requested_source_snapshot_digest
+                != self.canonical_source_snapshot_digest
+                or requested_count != canonical_count
+            ):
+                raise ValueError("verified evidence requires requested and canonical snapshot agreement")
+        elif status is QDKTDualReadStatus.ADVISORY_ONLY:
+            if len(matching) != 1 or not has_selected_metadata or blocking:
+                raise ValueError("advisory evidence requires one non-blocking canonical match")
+            if self.requested_source_snapshot_digest:
+                raise ValueError("advisory evidence must not claim a requested source snapshot")
+            if len(findings) != 1 or findings[0].code is not QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED:
+                raise ValueError("advisory evidence requires the source-snapshot warning")
+        elif status is QDKTDualReadStatus.UNAVAILABLE:
+            if matching or has_selected_metadata:
+                raise ValueError("unavailable evidence must not select a canonical event")
+            if len(findings) != 1 or findings[0].code is not QDKTCompatibilityFindingCode.CANONICAL_EVIDENCE_UNAVAILABLE:
+                raise ValueError("unavailable evidence requires the unavailable finding")
+            if not findings[0].blocking:
+                raise ValueError("unavailable evidence must be blocking")
+        elif status is QDKTDualReadStatus.MISMATCHED and not blocking:
+            raise ValueError("mismatched evidence requires at least one blocking finding")
+
         if self.version != QDKT_COMPATIBILITY_VERSION:
             raise ValueError("unsupported QDKT compatibility version")
         object.__setattr__(self, "legacy_root", root)
@@ -406,8 +511,10 @@ class QDKTDualReadEvidence:
             "observation_id": self.observation_id,
             "payload_ref": self.payload_ref,
             "payload_digest": self.payload_digest,
-            "source_snapshot_digest": self.source_snapshot_digest,
-            "source_count": self.source_count,
+            "canonical_source_snapshot_digest": self.canonical_source_snapshot_digest,
+            "canonical_source_count": self.canonical_source_count,
+            "requested_source_snapshot_digest": self.requested_source_snapshot_digest,
+            "requested_source_count": self.requested_source_count,
             "canonical_created_at": self.canonical_created_at,
             "inventory_digest": self.inventory_digest,
             "ownership_digest": self.ownership_digest,
@@ -434,6 +541,7 @@ __all__ = [
     "QDKTInventoryReadiness",
     "QDKTInventoryReport",
     "QDKTOwnershipRecommendation",
+    "QDKT_OWNERSHIP_DIGEST",
     "QDKTDualReadEvidence",
     "QDKTDualReadStatus",
     "QDKTUseClass",
