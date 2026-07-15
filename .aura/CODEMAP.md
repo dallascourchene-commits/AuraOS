@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 846
-- **total_bytes**: 64297003
-- **text_tokens_est**: 6678192
+- **total_bytes**: 64319456
+- **text_tokens_est**: 6683805
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 113, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 593, 'schema_or_lexicon': 71, 'support_file': 41}
-- **topology_nodes**: 7350
-- **topology_edges**: 15440
+- **topology_nodes**: 7355
+- **topology_edges**: 15457
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 20224.9
+- **elapsed_ms**: 19877.8
 
 ## Coverage
 
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7350
-- **edges**: 15440
+- **nodes**: 7355
+- **edges**: 15457
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
@@ -288,9 +288,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArenaResearchIdea` -> `aura_music_coding_arena.py:81`
 - `ArenaST3GGCapsule` -> `aura_arena_st3gg_codec.py:55`
 - `ArenaST3GGDecision` -> `aura_arena_st3gg_codec.py:43`
-- `ArenaST3GGShadowError` -> `aura_arena_st3gg_shadow.py:60`
-- `ArenaST3GGShadowResult` -> `aura_arena_st3gg_shadow.py:141`
-- `ArenaST3GGV2ShadowComparison` -> `aura_arena_st3gg_shadow.py:65`
+- `ArenaST3GGShadowError` -> `aura_arena_st3gg_shadow.py:63`
+- `ArenaST3GGShadowResult` -> `aura_arena_st3gg_shadow.py:152`
+- `ArenaST3GGV2ShadowComparison` -> `aura_arena_st3gg_shadow.py:68`
 - `ArenaStatePacket` -> `aura_arena_state_packet.py:21`
 - `ArenaToolRuntime` -> `aura_arena_tool_runtime.py:169`
 - `ArenaTransition` -> `aura_arena_wfst_types.py:70`
