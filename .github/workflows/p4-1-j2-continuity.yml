@@ -73,7 +73,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: p4-1-pytest-${{ matrix.python-version }}
-          path: p4-1-pytest-${{ matrix.python-version }}.txt
+          path: |
+            p4-1-pytest-${{ matrix.python-version }}.txt
+            aura_continuity_packet.py
+            tests/test_aura_continuity_packet.py
           if-no-files-found: error
           retention-days: 7
       - name: Enforce focused test result
