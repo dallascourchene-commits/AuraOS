@@ -79,6 +79,17 @@ def test_invalid_legacy_savings_fails_closed_without_second_exception() -> None:
     assert result.mismatch_reasons == ("legacy_savings_ratio_invalid",)
 
 
+def test_forged_in_range_legacy_savings_fails_closed() -> None:
+    compressed, savings, pointer = compress_report_st3gg(REPORT_TEXT)
+    forged = 0.0 if savings != 0.0 else 0.5
+
+    result = project_report_egress_to_v2(REPORT_TEXT, compressed, forged, pointer)
+
+    assert result.legacy_result == (compressed, forged, pointer)
+    assert result.v2_decision.restoration_mode is ST3GGRestorationMode.NONE
+    assert result.mismatch_reasons == ("legacy_report_savings_disagreement",)
+
+
 def test_dual_read_rejects_created_timestamp_substitution(tmp_path: Path) -> None:
     ledger_path, result = _exact_report(tmp_path)
     original_record = lookup_st3gg_recall(
