@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784151583,
+  "generated_at_unix": 1784151909,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 899,
+    "included_file_count": 900,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -331,6 +331,7 @@
       "aura_event_contracts.py",
       "aura_evolution_bridge.py",
       "aura_evolve.py",
+      "aura_exact_record_identity.py",
       "aura_exports/aura_export_default_1780273977.txt",
       "aura_federated_hdc.py",
       "aura_federation.py",
@@ -920,23 +921,23 @@
     ]
   },
   "summary": {
-    "file_count": 899,
-    "total_bytes": 65751189,
-    "text_tokens_est": 7041165,
+    "file_count": 900,
+    "total_bytes": 65758316,
+    "text_tokens_est": 7042948,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 117,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 635,
+      "python_module": 636,
       "schema_or_lexicon": 77,
       "support_file": 42
     },
-    "topology_nodes": 7695,
-    "topology_edges": 16612,
+    "topology_nodes": 7699,
+    "topology_edges": 16620,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 13357.69
+    "elapsed_ms": 21003.68
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1355,6 +1356,7 @@
       "aura_event_contracts.py",
       "aura_evolution_bridge.py",
       "aura_evolve.py",
+      "aura_exact_record_identity.py",
       "aura_exports/aura_export_default_1780273977.txt",
       "aura_federated_hdc.py",
       "aura_federation.py",
@@ -4587,8 +4589,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "class",
-        "line": 50,
-        "end_line": 56,
+        "line": 51,
+        "end_line": 57,
         "semantic_id": "aura_civic_planning.py#class:CivicProjectionError:1587f1501c81940d",
         "signature_hash": "e8795931af839240"
       }
@@ -5989,6 +5991,16 @@
         "end_line": 378,
         "semantic_id": "aura_event_contracts.py#class:ExactPayloadRef:5040c39c49946ffd",
         "signature_hash": "c6baec235a09adac"
+      }
+    ],
+    "ExactRecordIdentityError": [
+      {
+        "file": "aura_exact_record_identity.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "aura_exact_record_identity.py#class:ExactRecordIdentityError:6df764d37a57cd0a",
+        "signature_hash": "8d70edc07e49ccd6"
       }
     ],
     "ExecutableRouteCapsule": [
@@ -13609,8 +13621,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "method",
-        "line": 51,
-        "end_line": 56,
+        "line": 52,
+        "end_line": 57,
         "semantic_id": "aura_civic_planning.py#method:CivicProjectionError.__init__:e4fd3fcfe27da21a",
         "signature_hash": "f8f4a8cbaf0c76c6"
       },
@@ -13917,6 +13929,14 @@
         "end_line": 150,
         "semantic_id": "aura_evolve.py#method:LiquidFlashEvolve.__init__:4c8a039cd0321afb",
         "signature_hash": "50f761d6ca8df165"
+      },
+      {
+        "file": "aura_exact_record_identity.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 11,
+        "semantic_id": "aura_exact_record_identity.py#method:ExactRecordIdentityError.__init__:f3e48edfe926297e",
+        "signature_hash": "674c24a70c397fb7"
       },
       {
         "file": "aura_federated_hdc.py",
@@ -17657,8 +17677,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 110,
-        "end_line": 114,
+        "line": 111,
+        "end_line": 115,
         "semantic_id": "aura_civic_planning.py#function:_authority:3533a4e1874b3279",
         "signature_hash": "579da78377b5c86c"
       }
@@ -17835,8 +17855,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 186,
-        "end_line": 209,
+        "line": 187,
+        "end_line": 232,
         "semantic_id": "aura_civic_planning.py#function:_bind_records:6d1ce67b230a3867",
         "signature_hash": "0e14f3f5f1e177bb"
       }
@@ -18039,8 +18059,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 69,
-        "end_line": 72,
+        "line": 70,
+        "end_line": 73,
         "semantic_id": "aura_civic_planning.py#function:_bool:d9b9feed7e4ada6e",
         "signature_hash": "8695679e648502b4"
       }
@@ -18325,8 +18345,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 219,
-        "end_line": 272,
+        "line": 242,
+        "end_line": 295,
         "semantic_id": "aura_civic_planning.py#function:_build_board:5c2c8cea363d6706",
         "signature_hash": "823b20bd9e1b82d3"
       }
@@ -20503,8 +20523,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 212,
-        "end_line": 216,
+        "line": 235,
+        "end_line": 239,
         "semantic_id": "aura_civic_planning.py#function:_constraint:7439a4f9715ee0f9",
         "signature_hash": "2d44ffb9123359d6"
       },
@@ -23357,8 +23377,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 60,
+        "end_line": 61,
         "semantic_id": "aura_civic_planning.py#function:_fail:d9b51faa1663fc3c",
         "signature_hash": "26564be46fd73a5c"
       },
@@ -23419,8 +23439,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 130,
+        "line": 122,
+        "end_line": 131,
         "semantic_id": "aura_civic_planning.py#function:_failure:451af58121922155",
         "signature_hash": "110847e5a55c5659"
       }
@@ -29511,8 +29531,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 117,
-        "end_line": 118,
+        "line": 118,
+        "end_line": 119,
         "semantic_id": "aura_civic_planning.py#function:_objective_hash:42cb112a7434e0ca",
         "signature_hash": "dca3e836d79f4028"
       }
@@ -34663,8 +34683,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 107,
+        "line": 87,
+        "end_line": 108,
         "semantic_id": "aura_civic_planning.py#function:_snapshot:9add783eaef79622",
         "signature_hash": "aff363bfdf9353d0"
       }
@@ -35391,8 +35411,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 75,
-        "end_line": 83,
+        "line": 76,
+        "end_line": 84,
         "semantic_id": "aura_civic_planning.py#function:_strings:40435090fc0d3fce",
         "signature_hash": "55a3755ff09650f7"
       },
@@ -36709,8 +36729,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 66,
+        "line": 64,
+        "end_line": 67,
         "semantic_id": "aura_civic_planning.py#function:_text:9bb0c03c80195b2c",
         "signature_hash": "c410f907de926258"
       },
@@ -36875,8 +36895,8 @@
       {
         "file": "aura_civic_planning_benchmark.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 57,
+        "line": 62,
+        "end_line": 63,
         "semantic_id": "aura_civic_planning_benchmark.py#function:_token_proxy:777dcdbc24e41ef1",
         "signature_hash": "3a0c0a751c30f0f3"
       },
@@ -37853,8 +37873,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 133,
-        "end_line": 157,
+        "line": 134,
+        "end_line": 158,
         "semantic_id": "aura_civic_planning.py#function:_validate_identity:2299bc3ac7536f27",
         "signature_hash": "706a0b7d2d91f739"
       },
@@ -37979,8 +37999,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 160,
-        "end_line": 183,
+        "line": 161,
+        "end_line": 184,
         "semantic_id": "aura_civic_planning.py#function:_validate_workstreams:d928620ecc91f668",
         "signature_hash": "a2651f07d7b7a5a3"
       }
@@ -40722,7 +40742,7 @@
         "file": "aura_civic_planning_benchmark.py",
         "kind": "function",
         "line": 29,
-        "end_line": 53,
+        "end_line": 59,
         "semantic_id": "aura_civic_planning_benchmark.py#function:build_case_records:ea55e818bd9e8c35",
         "signature_hash": "d4c0c4a36de3c486"
       }
@@ -51299,8 +51319,8 @@
       {
         "file": "aura_civic_planning.py",
         "kind": "function",
-        "line": 275,
-        "end_line": 312,
+        "line": 298,
+        "end_line": 335,
         "semantic_id": "aura_civic_planning.py#function:inspect_civic_commons_planning_compatibility:379bd1d0593338cf",
         "signature_hash": "680fa0e4696cefad"
       }
@@ -53051,8 +53071,8 @@
       {
         "file": "aura_civic_planning_benchmark.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 152,
+        "line": 147,
+        "end_line": 158,
         "semantic_id": "aura_civic_planning_benchmark.py#function:main:b8421f57849cc494",
         "signature_hash": "1107cedc597d81be"
       },
@@ -57795,6 +57815,16 @@
         "signature_hash": "674443a392dbc0df"
       }
     ],
+    "require_exact_copied_fields": [
+      {
+        "file": "aura_exact_record_identity.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 21,
+        "semantic_id": "aura_exact_record_identity.py#function:require_exact_copied_fields:c0c99883370a428a",
+        "signature_hash": "82e4e505d7fa1b1d"
+      }
+    ],
     "require_human_approval_for_risky_commands": [
       {
         "file": "aura_command_risk_gate.py",
@@ -58803,8 +58833,8 @@
       {
         "file": "aura_civic_planning_benchmark.py",
         "kind": "function",
-        "line": 60,
-        "end_line": 138,
+        "line": 66,
+        "end_line": 144,
         "semantic_id": "aura_civic_planning_benchmark.py#function:run_benchmark:34373e294ae16886",
         "signature_hash": "2830f05d005c47e9"
       },
@@ -90340,7 +90370,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 445,
+        "hub_rank": 446,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -91672,7 +91702,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 448,
+        "hub_rank": 449,
         "node_count": 2,
         "edge_count": 8,
         "degree": 8,
@@ -91736,7 +91766,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 423,
+        "hub_rank": 424,
         "node_count": 4,
         "edge_count": 11,
         "degree": 11,
@@ -94959,7 +94989,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 440,
+        "hub_rank": 441,
         "node_count": 2,
         "edge_count": 9,
         "degree": 9,
@@ -95023,7 +95053,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 447,
+        "hub_rank": 448,
         "node_count": 3,
         "edge_count": 8,
         "degree": 8,
@@ -95469,7 +95499,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 467,
+        "hub_rank": 468,
         "node_count": 1,
         "edge_count": 3,
         "degree": 3,
@@ -95529,7 +95559,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 426,
+        "hub_rank": 427,
         "node_count": 6,
         "edge_count": 10,
         "degree": 10,
@@ -95655,7 +95685,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 458,
+        "hub_rank": 459,
         "node_count": 3,
         "edge_count": 5,
         "degree": 5,
@@ -95917,7 +95947,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 455,
+        "hub_rank": 456,
         "node_count": 3,
         "edge_count": 6,
         "degree": 6,
@@ -96400,17 +96430,17 @@
     {
       "path": "aura_civic_planning.py",
       "role": "python_module",
-      "bytes": 17168,
-      "lines": 316,
-      "tokens_est": 4292,
+      "bytes": 18145,
+      "lines": 339,
+      "tokens_est": 4537,
       "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 51,
+        "hub_rank": 50,
         "node_count": 17,
-        "edge_count": 161,
-        "degree": 161,
+        "edge_count": 166,
+        "degree": 166,
         "symbols": [
           "CivicProjectionError",
           "__init__",
@@ -96434,57 +96464,58 @@
           "aura_civic_planning_inventory.py",
           "aura_civic_planning_types.py",
           "aura_event_contracts.py",
+          "aura_exact_record_identity.py",
           "aura_planning_board.py",
           "aura_relational_authority.py"
         ],
         "edge_kinds": {
-          "call": 124,
+          "call": 128,
           "defines": 32,
-          "import_module": 5
+          "import_module": 6
         }
       },
-      "digest8": "13b7e839cab27e86",
+      "digest8": "259ba3df3e91ac03",
       "vector": [
-        0.27557,
-        0.003548,
-        -0.292128,
-        -0.223531,
-        -0.065049,
-        -0.1573,
-        0.221166,
-        0.008279,
-        -0.04376,
-        0.10053,
-        0.289763,
-        -0.261378,
-        -0.098164,
-        0.072145,
-        0.079241,
-        -0.034298,
-        0.299224,
-        -0.117088,
-        -0.190415,
-        -0.230627,
-        -0.088703,
-        0.24482,
-        0.147838,
-        -0.199877,
-        0.01301,
-        -0.261378,
-        -0.232993,
-        0.209339,
-        0.16203,
-        -0.020106,
-        -0.086337,
-        0.034298
+        -0.253138,
+        0.273909,
+        0.110342,
+        -0.03505,
+        0.198616,
+        -0.149287,
+        -0.193424,
+        -0.011683,
+        -0.024665,
+        0.183038,
+        -0.071398,
+        -0.209001,
+        -0.250542,
+        0.28689,
+        0.14669,
+        -0.092168,
+        0.253138,
+        0.003894,
+        0.245349,
+        -0.040243,
+        0.255735,
+        0.006491,
+        0.019472,
+        -0.006491,
+        -0.029857,
+        -0.328431,
+        -0.016876,
+        0.073994,
+        -0.128516,
+        0.203809,
+        -0.237561,
+        -0.263523
       ]
     },
     {
       "path": "aura_civic_planning_benchmark.py",
       "role": "python_module",
-      "bytes": 8570,
-      "lines": 157,
-      "tokens_est": 2143,
+      "bytes": 8744,
+      "lines": 163,
+      "tokens_est": 2186,
       "symbol_count": 5,
       "commands": [],
       "command_lines": {},
@@ -96512,40 +96543,40 @@
           "import_module": 4
         }
       },
-      "digest8": "4758d3d1a771b434",
+      "digest8": "f662555cf1aa81ee",
       "vector": [
-        0.259159,
-        0.112619,
-        0.278155,
-        0.044776,
-        -0.139756,
-        0.128901,
-        0.248304,
-        -0.063772,
-        -0.126187,
-        0.291723,
-        0.050204,
-        -0.115333,
-        -0.318861,
-        -0.226595,
-        0.204885,
-        -0.02578,
-        0.039349,
-        -0.118046,
-        0.24559,
-        0.185889,
-        0.169607,
-        -0.109905,
-        0.088195,
-        -0.066486,
-        0.090909,
-        -0.153324,
-        -0.0692,
-        -0.313433,
-        0.343284,
-        -0.055631,
-        -0.020353,
-        -0.082768
+        -0.196634,
+        0.280407,
+        -0.182672,
+        -0.264118,
+        0.157074,
+        -0.094245,
+        0.266445,
+        0.087264,
+        0.054685,
+        -0.131477,
+        0.040723,
+        -0.287388,
+        -0.075628,
+        -0.091918,
+        -0.164056,
+        -0.171037,
+        0.063993,
+        -0.236193,
+        -0.022107,
+        0.229212,
+        0.005818,
+        -0.068647,
+        0.052358,
+        0.073301,
+        0.250156,
+        0.12915,
+        -0.208269,
+        0.294369,
+        -0.285061,
+        0.136131,
+        0.063993,
+        -0.231539
       ]
     },
     {
@@ -97050,7 +97081,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 466,
+        "hub_rank": 467,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -97325,7 +97356,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 438,
+        "hub_rank": 439,
         "node_count": 4,
         "edge_count": 9,
         "degree": 9,
@@ -97388,7 +97419,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 444,
+        "hub_rank": 445,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -97514,7 +97545,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 443,
+        "hub_rank": 444,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -97965,7 +97996,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 436,
+        "hub_rank": 437,
         "node_count": 5,
         "edge_count": 9,
         "degree": 9,
@@ -98029,7 +98060,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 446,
+        "hub_rank": 447,
         "node_count": 4,
         "edge_count": 8,
         "degree": 8,
@@ -98093,7 +98124,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 442,
+        "hub_rank": 443,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -99216,7 +99247,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 427,
+        "hub_rank": 428,
         "node_count": 5,
         "edge_count": 10,
         "degree": 10,
@@ -101047,7 +101078,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 435,
+        "hub_rank": 436,
         "node_count": 2,
         "edge_count": 10,
         "degree": 10,
@@ -101255,7 +101286,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 50,
+        "hub_rank": 51,
         "node_count": 30,
         "edge_count": 163,
         "degree": 163,
@@ -102135,7 +102166,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 470,
+        "hub_rank": 471,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -103037,7 +103068,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 461,
+        "hub_rank": 462,
         "node_count": 3,
         "edge_count": 4,
         "degree": 4,
@@ -103401,6 +103432,70 @@
         0.200849,
         0.234539,
         -0.177524
+      ]
+    },
+    {
+      "path": "aura_exact_record_identity.py",
+      "role": "python_module",
+      "bytes": 774,
+      "lines": 25,
+      "tokens_est": 194,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {
+        "hub_rank": 423,
+        "node_count": 4,
+        "edge_count": 11,
+        "degree": 11,
+        "symbols": [
+          "ExactRecordIdentityError",
+          "__init__",
+          "require_exact_copied_fields"
+        ],
+        "neighbor_files": [
+          "aura_civic_planning.py"
+        ],
+        "edge_kinds": {
+          "defines": 6,
+          "call": 4,
+          "import_module": 1
+        }
+      },
+      "digest8": "383526185b036c84",
+      "vector": [
+        0.211697,
+        0.178095,
+        0.283383,
+        0.274422,
+        0.068326,
+        0.258741,
+        -0.115369,
+        -0.148972,
+        0.014561,
+        -0.090727,
+        -0.175854,
+        -0.213937,
+        -0.043684,
+        0.086247,
+        0.148972,
+        0.039203,
+        0.092968,
+        -0.010081,
+        -0.202737,
+        0.225138,
+        0.269942,
+        0.278903,
+        0.189295,
+        0.164653,
+        -0.180335,
+        -0.075046,
+        0.054884,
+        -0.24306,
+        -0.00336,
+        0.043684,
+        0.222898,
+        -0.276663
       ]
     },
     {
@@ -104147,7 +104242,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 450,
+        "hub_rank": 451,
         "node_count": 3,
         "edge_count": 7,
         "degree": 7,
@@ -105728,7 +105823,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 469,
+        "hub_rank": 470,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -105859,7 +105954,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 468,
+        "hub_rank": 469,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -106975,7 +107070,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 441,
+        "hub_rank": 442,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -110635,7 +110730,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 437,
+        "hub_rank": 438,
         "node_count": 4,
         "edge_count": 9,
         "degree": 9,
@@ -111711,7 +111806,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 434,
+        "hub_rank": 435,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -113436,7 +113531,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 453,
+        "hub_rank": 454,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -113650,7 +113745,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 460,
+        "hub_rank": 461,
         "node_count": 3,
         "edge_count": 4,
         "degree": 4,
@@ -114024,7 +114119,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 459,
+        "hub_rank": 460,
         "node_count": 2,
         "edge_count": 5,
         "degree": 5,
@@ -115962,7 +116057,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 449,
+        "hub_rank": 450,
         "node_count": 3,
         "edge_count": 7,
         "degree": 7,
@@ -117905,7 +118000,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 433,
+        "hub_rank": 434,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -118587,7 +118682,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 457,
+        "hub_rank": 458,
         "node_count": 3,
         "edge_count": 5,
         "degree": 5,
@@ -118715,7 +118810,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 454,
+        "hub_rank": 455,
         "node_count": 3,
         "edge_count": 6,
         "degree": 6,
@@ -119686,7 +119781,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 439,
+        "hub_rank": 440,
         "node_count": 3,
         "edge_count": 9,
         "degree": 9,
@@ -120489,7 +120584,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 465,
+        "hub_rank": 466,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -120602,7 +120697,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 478,
+        "hub_rank": 479,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -120748,7 +120843,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 477,
+        "hub_rank": 478,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -120802,7 +120897,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 476,
+        "hub_rank": 477,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -120902,7 +120997,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 475,
+        "hub_rank": 476,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -121021,7 +121116,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 474,
+        "hub_rank": 475,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -121885,7 +121980,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 430,
+        "hub_rank": 431,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -121956,7 +122051,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 425,
+        "hub_rank": 426,
         "node_count": 2,
         "edge_count": 11,
         "degree": 11,
@@ -123682,7 +123777,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 424,
+        "hub_rank": 425,
         "node_count": 3,
         "edge_count": 11,
         "degree": 11,
@@ -124618,7 +124713,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 463,
+        "hub_rank": 464,
         "node_count": 2,
         "edge_count": 4,
         "degree": 4,
@@ -124828,7 +124923,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 429,
+        "hub_rank": 430,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -125043,7 +125138,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 432,
+        "hub_rank": 433,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -125246,7 +125341,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 464,
+        "hub_rank": 465,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -125554,7 +125649,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 431,
+        "hub_rank": 432,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -125816,7 +125911,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 456,
+        "hub_rank": 457,
         "node_count": 2,
         "edge_count": 6,
         "degree": 6,
@@ -126287,7 +126382,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 428,
+        "hub_rank": 429,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -126718,7 +126813,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 462,
+        "hub_rank": 463,
         "node_count": 2,
         "edge_count": 4,
         "degree": 4,
@@ -126780,7 +126875,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 452,
+        "hub_rank": 453,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -126980,7 +127075,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 471,
+        "hub_rank": 472,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -127586,7 +127681,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 451,
+        "hub_rank": 452,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -127649,7 +127744,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 473,
+        "hub_rank": 474,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -128154,47 +128249,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 15845464,
-      "lines": 504757,
-      "tokens_est": 3961366,
+      "bytes": 15850666,
+      "lines": 505015,
+      "tokens_est": 3962667,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3f54057e9e32d397",
+      "digest8": "a79a83f2b60de6d1",
       "vector": [
-        -0.244933,
-        0.290783,
-        -0.215976,
-        0.300436,
-        0.049469,
-        0.271478,
-        0.295609,
-        -0.215976,
-        0.068774,
-        -0.208736,
-        0.020512,
-        -0.124277,
-        0.153234,
-        0.182192,
-        0.155647,
-        0.191844,
-        0.167713,
-        0.215976,
-        0.076014,
-        0.131516,
-        0.001207,
-        -0.187018,
-        0.273891,
-        0.184605,
-        0.141169,
-        -0.092906,
-        0.00362,
-        0.020512,
-        0.061535,
-        0.162887,
-        -0.04223,
-        -0.153234
+        0.275172,
+        0.016187,
+        -0.275172,
+        0.0723,
+        -0.078775,
+        -0.018345,
+        0.03561,
+        -0.203951,
+        -0.257906,
+        0.275172,
+        0.15647,
+        -0.171578,
+        -0.251432,
+        0.113306,
+        0.139205,
+        0.147838,
+        -0.152154,
+        -0.15647,
+        -0.270856,
+        0.219059,
+        0.067984,
+        0.175894,
+        -0.203951,
+        0.03561,
+        -0.093882,
+        0.266539,
+        0.104673,
+        -0.134888,
+        -0.2169,
+        -0.061509,
+        0.19316,
+        -0.188844
       ]
     },
     {
@@ -128853,7 +128948,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 472,
+        "hub_rank": 473,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -144360,12 +144455,12 @@
     "meta": {
       "generated_by": "aura_topology_manager",
       "root": ".",
-      "module_count": 478,
-      "node_count": 7695,
-      "edge_count": 16612,
+      "module_count": 479,
+      "node_count": 7699,
+      "edge_count": 16620,
       "spectral_layout": true,
-      "spectral_sparsity": 0.056148,
-      "global_health": 0.972036
+      "spectral_sparsity": 0.056248,
+      "global_health": 0.971966
     },
     "file_index": {
       "aura_node.py": {
@@ -146509,8 +146604,46 @@
           "import_module": 4
         }
       },
-      "aura_dream_retrieval.py": {
+      "aura_civic_planning.py": {
         "hub_rank": 50,
+        "node_count": 17,
+        "edge_count": 166,
+        "degree": 166,
+        "symbols": [
+          "CivicProjectionError",
+          "__init__",
+          "_authority",
+          "_bind_records",
+          "_bool",
+          "_build_board",
+          "_constraint",
+          "_fail",
+          "_failure",
+          "_objective_hash",
+          "_snapshot",
+          "_strings",
+          "_text",
+          "_validate_identity",
+          "_validate_workstreams",
+          "inspect_civic_commons_planning_compatibility"
+        ],
+        "neighbor_files": [
+          "aura_civic_planning_benchmark.py",
+          "aura_civic_planning_inventory.py",
+          "aura_civic_planning_types.py",
+          "aura_event_contracts.py",
+          "aura_exact_record_identity.py",
+          "aura_planning_board.py",
+          "aura_relational_authority.py"
+        ],
+        "edge_kinds": {
+          "call": 128,
+          "defines": 32,
+          "import_module": 6
+        }
+      },
+      "aura_dream_retrieval.py": {
+        "hub_rank": 51,
         "node_count": 30,
         "edge_count": 163,
         "degree": 163,
@@ -146551,43 +146684,6 @@
           "call": 99,
           "defines": 58,
           "import_module": 6
-        }
-      },
-      "aura_civic_planning.py": {
-        "hub_rank": 51,
-        "node_count": 17,
-        "edge_count": 161,
-        "degree": 161,
-        "symbols": [
-          "CivicProjectionError",
-          "__init__",
-          "_authority",
-          "_bind_records",
-          "_bool",
-          "_build_board",
-          "_constraint",
-          "_fail",
-          "_failure",
-          "_objective_hash",
-          "_snapshot",
-          "_strings",
-          "_text",
-          "_validate_identity",
-          "_validate_workstreams",
-          "inspect_civic_commons_planning_compatibility"
-        ],
-        "neighbor_files": [
-          "aura_civic_planning_benchmark.py",
-          "aura_civic_planning_inventory.py",
-          "aura_civic_planning_types.py",
-          "aura_event_contracts.py",
-          "aura_planning_board.py",
-          "aura_relational_authority.py"
-        ],
-        "edge_kinds": {
-          "call": 124,
-          "defines": 32,
-          "import_module": 5
         }
       },
       "aura_skillweaver.py": {
@@ -157501,8 +157597,27 @@
           "call": 2
         }
       },
-      "aura_agent_workbench_interface.py": {
+      "aura_exact_record_identity.py": {
         "hub_rank": 423,
+        "node_count": 4,
+        "edge_count": 11,
+        "degree": 11,
+        "symbols": [
+          "ExactRecordIdentityError",
+          "__init__",
+          "require_exact_copied_fields"
+        ],
+        "neighbor_files": [
+          "aura_civic_planning.py"
+        ],
+        "edge_kinds": {
+          "defines": 6,
+          "call": 4,
+          "import_module": 1
+        }
+      },
+      "aura_agent_workbench_interface.py": {
+        "hub_rank": 424,
         "node_count": 4,
         "edge_count": 11,
         "degree": 11,
@@ -157521,7 +157636,7 @@
         }
       },
       "test_aura_agent_ir.py": {
-        "hub_rank": 424,
+        "hub_rank": 425,
         "node_count": 3,
         "edge_count": 11,
         "degree": 11,
@@ -157540,7 +157655,7 @@
         }
       },
       "mistral_gate.py": {
-        "hub_rank": 425,
+        "hub_rank": 426,
         "node_count": 2,
         "edge_count": 11,
         "degree": 11,
@@ -157560,7 +157675,7 @@
         }
       },
       "aura_civic_context.py": {
-        "hub_rank": 426,
+        "hub_rank": 427,
         "node_count": 6,
         "edge_count": 10,
         "degree": 10,
@@ -157577,7 +157692,7 @@
         }
       },
       "aura_coding_music_lane.py": {
-        "hub_rank": 427,
+        "hub_rank": 428,
         "node_count": 5,
         "edge_count": 10,
         "degree": 10,
@@ -157594,7 +157709,7 @@
         }
       },
       "test_aura_thermal.py": {
-        "hub_rank": 428,
+        "hub_rank": 429,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -157613,7 +157728,7 @@
         }
       },
       "test_aura_live_architect_review_artifacts.py": {
-        "hub_rank": 429,
+        "hub_rank": 430,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -157632,7 +157747,7 @@
         }
       },
       "mint_genesis.py": {
-        "hub_rank": 430,
+        "hub_rank": 431,
         "node_count": 4,
         "edge_count": 10,
         "degree": 10,
@@ -157648,7 +157763,7 @@
         }
       },
       "test_aura_phase_capsule.py": {
-        "hub_rank": 431,
+        "hub_rank": 432,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -157666,7 +157781,7 @@
         }
       },
       "test_aura_module_manifest.py": {
-        "hub_rank": 432,
+        "hub_rank": 433,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -157684,7 +157799,7 @@
         }
       },
       "aura_test_selector.py": {
-        "hub_rank": 433,
+        "hub_rank": 434,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -157701,7 +157816,7 @@
         }
       },
       "aura_phase_c2_codemap_verify.py": {
-        "hub_rank": 434,
+        "hub_rank": 435,
         "node_count": 3,
         "edge_count": 10,
         "degree": 10,
@@ -157721,7 +157836,7 @@
         }
       },
       "aura_crystallization.py": {
-        "hub_rank": 435,
+        "hub_rank": 436,
         "node_count": 2,
         "edge_count": 10,
         "degree": 10,
@@ -157741,7 +157856,7 @@
         }
       },
       "aura_cockpit_planner.py": {
-        "hub_rank": 436,
+        "hub_rank": 437,
         "node_count": 5,
         "edge_count": 9,
         "degree": 9,
@@ -157760,7 +157875,7 @@
         }
       },
       "aura_ojibwe_dialect_profile.py": {
-        "hub_rank": 437,
+        "hub_rank": 438,
         "node_count": 4,
         "edge_count": 9,
         "degree": 9,
@@ -157780,7 +157895,7 @@
         }
       },
       "aura_civic_snapshots.py": {
-        "hub_rank": 438,
+        "hub_rank": 439,
         "node_count": 4,
         "edge_count": 9,
         "degree": 9,
@@ -157798,7 +157913,7 @@
         }
       },
       "aura_visual_grounding_bridge.py": {
-        "hub_rank": 439,
+        "hub_rank": 440,
         "node_count": 3,
         "edge_count": 9,
         "degree": 9,
@@ -157819,7 +157934,7 @@
         }
       },
       "aura_capability_resolver_v2.py": {
-        "hub_rank": 440,
+        "hub_rank": 441,
         "node_count": 2,
         "edge_count": 9,
         "degree": 9,
@@ -157838,7 +157953,7 @@
         }
       },
       "aura_live_architect_cockpit_adapter.py": {
-        "hub_rank": 441,
+        "hub_rank": 442,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -157854,7 +157969,7 @@
         }
       },
       "aura_cockpit_swarm.py": {
-        "hub_rank": 442,
+        "hub_rank": 443,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -157870,7 +157985,7 @@
         }
       },
       "aura_civic_translation.py": {
-        "hub_rank": 443,
+        "hub_rank": 444,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -157886,7 +158001,7 @@
         }
       },
       "aura_civic_sources.py": {
-        "hub_rank": 444,
+        "hub_rank": 445,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -157902,7 +158017,7 @@
         }
       },
       "apply_graft.py": {
-        "hub_rank": 445,
+        "hub_rank": 446,
         "node_count": 5,
         "edge_count": 8,
         "degree": 8,
@@ -157918,7 +158033,7 @@
         }
       },
       "aura_cockpit_plugin_registration.py": {
-        "hub_rank": 446,
+        "hub_rank": 447,
         "node_count": 4,
         "edge_count": 8,
         "degree": 8,
@@ -157937,7 +158052,7 @@
         }
       },
       "aura_capsule_trial_cli.py": {
-        "hub_rank": 447,
+        "hub_rank": 448,
         "node_count": 3,
         "edge_count": 8,
         "degree": 8,
@@ -157956,7 +158071,7 @@
         }
       },
       "aura_agent_ir_induction.py": {
-        "hub_rank": 448,
+        "hub_rank": 449,
         "node_count": 2,
         "edge_count": 8,
         "degree": 8,
@@ -157975,7 +158090,7 @@
         }
       },
       "aura_showcase_intent_topology.py": {
-        "hub_rank": 449,
+        "hub_rank": 450,
         "node_count": 3,
         "edge_count": 7,
         "degree": 7,
@@ -157994,7 +158109,7 @@
         }
       },
       "aura_graph_retrieval_policy.py": {
-        "hub_rank": 450,
+        "hub_rank": 451,
         "node_count": 3,
         "edge_count": 7,
         "degree": 7,
@@ -158013,7 +158128,7 @@
         }
       },
       "test_self_repair.py": {
-        "hub_rank": 451,
+        "hub_rank": 452,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -158031,7 +158146,7 @@
         }
       },
       "test_forge.py": {
-        "hub_rank": 452,
+        "hub_rank": 453,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -158048,7 +158163,7 @@
         }
       },
       "aura_qdkt_projection.py": {
-        "hub_rank": 453,
+        "hub_rank": 454,
         "node_count": 2,
         "edge_count": 7,
         "degree": 7,
@@ -158068,7 +158183,7 @@
         }
       },
       "aura_topology_density_controller.py": {
-        "hub_rank": 454,
+        "hub_rank": 455,
         "node_count": 3,
         "edge_count": 6,
         "degree": 6,
@@ -158087,7 +158202,7 @@
         }
       },
       "aura_civic_evidence.py": {
-        "hub_rank": 455,
+        "hub_rank": 456,
         "node_count": 3,
         "edge_count": 6,
         "degree": 6,
@@ -158104,7 +158219,7 @@
         }
       },
       "test_aura_single_seed_lift.py": {
-        "hub_rank": 456,
+        "hub_rank": 457,
         "node_count": 2,
         "edge_count": 6,
         "degree": 6,
@@ -158121,7 +158236,7 @@
         }
       },
       "aura_topology_analyzer.py": {
-        "hub_rank": 457,
+        "hub_rank": 458,
         "node_count": 3,
         "edge_count": 5,
         "degree": 5,
@@ -158138,7 +158253,7 @@
         }
       },
       "aura_civic_cost_integration.py": {
-        "hub_rank": 458,
+        "hub_rank": 459,
         "node_count": 3,
         "edge_count": 5,
         "degree": 5,
@@ -158155,7 +158270,7 @@
         }
       },
       "aura_research_ingest_bridge.py": {
-        "hub_rank": 459,
+        "hub_rank": 460,
         "node_count": 2,
         "edge_count": 5,
         "degree": 5,
@@ -158174,7 +158289,7 @@
         }
       },
       "aura_refactor_candidate.py": {
-        "hub_rank": 460,
+        "hub_rank": 461,
         "node_count": 3,
         "edge_count": 4,
         "degree": 4,
@@ -158188,7 +158303,7 @@
         }
       },
       "aura_ephemeral_verifier.py": {
-        "hub_rank": 461,
+        "hub_rank": 462,
         "node_count": 3,
         "edge_count": 4,
         "degree": 4,
@@ -158202,7 +158317,7 @@
         }
       },
       "test_codemap_slimming.py": {
-        "hub_rank": 462,
+        "hub_rank": 463,
         "node_count": 2,
         "edge_count": 4,
         "degree": 4,
@@ -158219,7 +158334,7 @@
         }
       },
       "test_aura_integration.py": {
-        "hub_rank": 463,
+        "hub_rank": 464,
         "node_count": 2,
         "edge_count": 4,
         "degree": 4,
@@ -158236,7 +158351,7 @@
         }
       },
       "test_aura_node_live_architect_dispatch.py": {
-        "hub_rank": 464,
+        "hub_rank": 465,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -158252,7 +158367,7 @@
         }
       },
       "dag_executor.py": {
-        "hub_rank": 465,
+        "hub_rank": 466,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -158268,7 +158383,7 @@
         }
       },
       "aura_civic_result_projector.py": {
-        "hub_rank": 466,
+        "hub_rank": 467,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -158284,7 +158399,7 @@
         }
       },
       "aura_civic_authority.py": {
-        "hub_rank": 467,
+        "hub_rank": 468,
         "node_count": 1,
         "edge_count": 3,
         "degree": 3,
@@ -158299,7 +158414,7 @@
         }
       },
       "aura_ingest.py": {
-        "hub_rank": 468,
+        "hub_rank": 469,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -158312,7 +158427,7 @@
         }
       },
       "aura_incubator.py": {
-        "hub_rank": 469,
+        "hub_rank": 470,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -158325,7 +158440,7 @@
         }
       },
       "aura_english_compiler.py": {
-        "hub_rank": 470,
+        "hub_rank": 471,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -158338,7 +158453,7 @@
         }
       },
       "test_fst_quick.py": {
-        "hub_rank": 471,
+        "hub_rank": 472,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -158351,15 +158466,6 @@
         }
       },
       "verify_os.py": {
-        "hub_rank": 472,
-        "node_count": 1,
-        "edge_count": 0,
-        "degree": 0,
-        "symbols": [],
-        "neighbor_files": [],
-        "edge_kinds": {}
-      },
-      "test_syntax_fixes.py": {
         "hub_rank": 473,
         "node_count": 1,
         "edge_count": 0,
@@ -158368,7 +158474,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "fix_db.py": {
+      "test_syntax_fixes.py": {
         "hub_rank": 474,
         "node_count": 1,
         "edge_count": 0,
@@ -158377,7 +158483,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "extract_new_papers.py": {
+      "fix_db.py": {
         "hub_rank": 475,
         "node_count": 1,
         "edge_count": 0,
@@ -158386,7 +158492,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_zenodo_papers.py": {
+      "extract_new_papers.py": {
         "hub_rank": 476,
         "node_count": 1,
         "edge_count": 0,
@@ -158395,7 +158501,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_papers.py": {
+      "download_zenodo_papers.py": {
         "hub_rank": 477,
         "node_count": 1,
         "edge_count": 0,
@@ -158404,8 +158510,17 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "debug_att.py": {
+      "download_papers.py": {
         "hub_rank": 478,
+        "node_count": 1,
+        "edge_count": 0,
+        "degree": 0,
+        "symbols": [],
+        "neighbor_files": [],
+        "edge_kinds": {}
+      },
+      "debug_att.py": {
+        "hub_rank": 479,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
