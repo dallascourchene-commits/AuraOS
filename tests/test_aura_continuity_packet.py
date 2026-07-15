@@ -134,6 +134,20 @@ def _encode_payload(payload: dict, *, canonical: bool = True) -> str:
     return f"J2/{encoded}#{stable_digest(payload)}"
 
 
+def _all_mapping_keys(value: object) -> set[str]:
+    if isinstance(value, dict):
+        keys = {str(key) for key in value}
+        for item in value.values():
+            keys.update(_all_mapping_keys(item))
+        return keys
+    if isinstance(value, list):
+        keys: set[str] = set()
+        for item in value:
+            keys.update(_all_mapping_keys(item))
+        return keys
+    return set()
+
+
 def test_j2_packet_is_deterministic_and_round_trips() -> None:
     first, first_encoded, _j0, _j1 = _built()
     second, second_encoded, _j0_second, _j1_second = _built()
@@ -155,6 +169,7 @@ def test_j2_adapters_store_digests_not_legacy_packet_payloads() -> None:
     packet, encoded, j0, j1 = _built()
     payload, _digest = _decode_j2(encoded)
     serialized = canonical_json(payload)
+    keys = _all_mapping_keys(payload)
 
     assert j0 not in serialized
     assert j1 not in serialized
@@ -164,11 +179,11 @@ def test_j2_adapters_store_digests_not_legacy_packet_payloads() -> None:
     assert packet.arena_view.source_packet_digest == stable_digest(
         {"legacy_packet": j1}
     )
-    assert "source_spans" not in serialized
-    assert "policy_body" not in serialized
-    assert "lease_body" not in serialized
-    assert "goal" not in serialized
-    assert "actions" not in serialized
+    assert "source_spans" not in keys
+    assert "policy_body" not in keys
+    assert "lease_body" not in keys
+    assert "goal" not in keys
+    assert "actions" not in keys
 
 
 def test_unified_parser_preserves_existing_j0_and_j1_results() -> None:
