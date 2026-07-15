@@ -6,6 +6,10 @@ This document summarizes the public contract assembled through P1–P8 of issue 
 
 Planning proposes. Governance authorizes. Verification proves. Exact source spans and hashes remain patch authority. Planning candidates, continuity packets, compact representations, compatibility evidence, and domain shadows remain advisory.
 
+## Scope distinction
+
+The repository already contains `aura_substrate.py`, the LLM-free orchestration core. P9 does not replace, rename, migrate, or bundle that existing module. The machine manifest records it as a retained external surface while the P1–P8 contract remains a separate verified release index.
+
 ## Layers
 
 1. **P1–P1.1:** deterministic event, tool-decision, exact-sidecar, privacy, and action-bound authority contracts.
