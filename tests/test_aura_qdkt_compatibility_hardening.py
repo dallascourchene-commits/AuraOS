@@ -4,11 +4,15 @@ import json
 
 import pytest
 
+import aura_qdkt_compatibility as compatibility
 from aura_event_contracts import AppendOnlyEventStore, canonical_json
 from aura_qdkt_compatibility import compare_qdkt_dual_read
 from aura_qdkt_compatibility_types import (
+    QDKTCompatibilityFinding,
     QDKTCompatibilityFindingCode,
+    QDKTDualReadEvidence,
     QDKTDualReadStatus,
+    QDKTOwnershipRecommendation,
 )
 from aura_qdkt_observations import QDKTObservation, record_qdkt_observation
 
@@ -83,6 +87,35 @@ def test_duplicate_event_rows_are_mismatched(tmp_path) -> None:
         source_snapshot=SOURCE_SNAPSHOT,
     )
     assert result.status is QDKTDualReadStatus.MISMATCHED
+    assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
+
+
+def test_store_change_between_projection_and_reread_fails_closed(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    record(store)
+    original = compatibility.project_qdkt_events
+    changed = False
+
+    def project_then_duplicate(target):
+        nonlocal changed
+        report = original(target)
+        if not changed:
+            row = target.events_path.read_text(encoding="utf-8")
+            target.events_path.write_text(row + row, encoding="utf-8")
+            changed = True
+        return report
+
+    monkeypatch.setattr(compatibility, "project_qdkt_events", project_then_duplicate)
+    result = compatibility.compare_qdkt_dual_read(
+        store,
+        LEGACY_RESULT,
+        source_snapshot=SOURCE_SNAPSHOT,
+    )
+    assert result.status is QDKTDualReadStatus.MISMATCHED
+    assert result.legacy_result == LEGACY_RESULT
     assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
 
 
@@ -190,3 +223,63 @@ def test_noncanonical_event_bytes_fail_closed(tmp_path) -> None:
     )
     assert result.status is QDKTDualReadStatus.MISMATCHED
     assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
+
+
+def test_evidence_normalizes_one_shot_finding_iterables() -> None:
+    warning = QDKTCompatibilityFinding(
+        QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED,
+        "snapshot omitted",
+        ("event-1",),
+        blocking=False,
+    )
+    evidence = QDKTDualReadEvidence(
+        legacy_root=LEGACY_RESULT["root"],
+        legacy_belief=LEGACY_RESULT["belief"],
+        status=QDKTDualReadStatus.ADVISORY_ONLY,
+        findings=(item for item in (warning,)),
+        matching_event_ids=(item for item in ("event-1",)),
+        observation_id="observation-1",
+        payload_ref="payload_" + "a" * 24,
+        payload_digest="b" * 32,
+        canonical_source_snapshot_digest="c" * 32,
+        canonical_source_count=2,
+        canonical_created_at=100.0,
+    )
+    assert evidence.findings == (warning,)
+    assert evidence.matching_event_ids == ("event-1",)
+
+
+def test_evidence_rejects_incoherent_status_and_metadata() -> None:
+    warning = QDKTCompatibilityFinding(
+        QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED,
+        "snapshot omitted",
+        ("event-1",),
+        blocking=False,
+    )
+    with pytest.raises(ValueError, match="mismatched evidence"):
+        QDKTDualReadEvidence(
+            legacy_root=LEGACY_RESULT["root"],
+            legacy_belief=LEGACY_RESULT["belief"],
+            status=QDKTDualReadStatus.MISMATCHED,
+            findings=(warning,),
+        )
+    with pytest.raises(ValueError, match="digest and count"):
+        QDKTDualReadEvidence(
+            legacy_root=LEGACY_RESULT["root"],
+            legacy_belief=LEGACY_RESULT["belief"],
+            status=QDKTDualReadStatus.MISMATCHED,
+            findings=(
+                QDKTCompatibilityFinding(
+                    QDKTCompatibilityFindingCode.LEGACY_ROOT_MISMATCH,
+                    "root mismatch",
+                ),
+            ),
+            requested_source_snapshot_digest="d" * 32,
+        )
+
+
+def test_ownership_contract_rejects_owner_substitution() -> None:
+    with pytest.raises(ValueError, match="ownership changed"):
+        QDKTOwnershipRecommendation(current_result_owner="replacement.generator")
+    with pytest.raises(ValueError, match="evidence ownership changed"):
+        QDKTOwnershipRecommendation(canonical_evidence_owner="replacement.store")
