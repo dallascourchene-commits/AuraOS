@@ -214,3 +214,16 @@ def test_boolean_timestamp_row_is_rejected(tmp_path) -> None:
     report = project_qdkt_events(store)
 
     assert QDKTProjectionFindingCode.ENVELOPE_MISMATCH in codes(report)
+
+
+def test_integer_timestamp_bytes_do_not_impersonate_float_envelope(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    receipt = record(store)
+    raw = receipt.event.to_dict()
+    raw["created_at"] = 100
+    store.events_path.write_text(canonical_json(raw) + "\n", encoding="utf-8")
+
+    report = project_qdkt_events(store)
+
+    assert QDKTProjectionFindingCode.ENVELOPE_MISMATCH in codes(report)
+    assert report.integrity_complete is False
