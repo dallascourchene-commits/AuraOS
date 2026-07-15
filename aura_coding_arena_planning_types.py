@@ -1,7 +1,7 @@
 """P7 immutable contracts for Coding Arena Planning Board shadow evidence."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Any
 
@@ -15,6 +15,7 @@ from aura_planning_board import (
 CODING_ARENA_PLANNING_VERSION = "AURA_CODING_ARENA_PLANNING_P7"
 CODING_ARENA_COMPATIBILITY_VERSION = "AURA_CODING_ARENA_COMPATIBILITY_P7"
 CODING_ARENA_BENCHMARK_VERSION = "AURA_CODING_ARENA_BENCHMARK_P7"
+_PATCH_OUTPUT_MODES = frozenset({"PATCH", "UNIFIED_DIFF", "JSON_EDIT_PLAN", "PYTHON"})
 
 
 class CodingArenaCompatibilityStatus(str, Enum):
@@ -131,6 +132,32 @@ class CodingArenaPlanningInspection:
     continuity: BoardContinuityReport | None = None
     action_evidence: tuple[ActionContinuityEvidence, ...] = ()
     mappings: tuple[CodingArenaActionMapping, ...] = ()
+
+    def __post_init__(self) -> None:
+        """Preserve the exact legacy stageability disposition.
+
+        ``stage_arena_patch`` only accepts ``BUILDER_PATCH``. A patch-producing
+        action on any other route therefore remains blocked even when the
+        route name itself does not start with ``BLOCK``. The original route is
+        retained unchanged in both the mapping and compatibility report.
+        """
+        non_builder_patch = any(
+            mapping.expected_output.upper() in _PATCH_OUTPUT_MODES
+            and mapping.route != "BUILDER_PATCH"
+            for mapping in self.mappings
+        )
+        if (
+            non_builder_patch
+            and self.report.status is CodingArenaCompatibilityStatus.VERIFIED_SHADOW
+        ):
+            object.__setattr__(
+                self,
+                "report",
+                replace(
+                    self.report,
+                    status=CodingArenaCompatibilityStatus.BLOCKED_LEGACY,
+                ),
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {
