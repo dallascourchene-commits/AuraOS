@@ -53,6 +53,7 @@ jobs:
             aura_coding_arena_planning_benchmark.py \
             tests/test_aura_coding_arena_planning.py \
             tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_integrity.py \
             tests/test_aura_coding_arena_planning_benchmark.py
       - name: Fatal and static correctness lint
         run: |
@@ -63,6 +64,7 @@ jobs:
             aura_coding_arena_planning_benchmark.py \
             tests/test_aura_coding_arena_planning.py \
             tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_integrity.py \
             tests/test_aura_coding_arena_planning_benchmark.py
       - name: Run deterministic parity benchmark
         run: |
@@ -112,6 +114,7 @@ jobs:
           python -m pytest -q \
             tests/test_aura_coding_arena_planning.py \
             tests/test_aura_coding_arena_planning_hardening.py \
+            tests/test_aura_coding_arena_planning_integrity.py \
             tests/test_aura_coding_arena_planning_benchmark.py \
             tests/test_aura_planning_board.py \
             tests/test_aura_planning_regression.py \
