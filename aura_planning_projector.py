@@ -28,6 +28,7 @@ PLANNING_PROJECTOR_VERSION = "AURA_PLANNING_PROJECTOR_V1"
 class ProjectionFindingCode(str, Enum):
     EVENT_LOG_READ_FAILED = "EVENT_LOG_READ_FAILED"
     INVALID_EVENT_RECORD = "INVALID_EVENT_RECORD"
+    NONCANONICAL_EVENT_RECORD = "NONCANONICAL_EVENT_RECORD"
     EVENT_ID_MISMATCH = "EVENT_ID_MISMATCH"
     ENVELOPE_MISMATCH = "ENVELOPE_MISMATCH"
     DUPLICATE_EVENT_ID = "DUPLICATE_EVENT_ID"
@@ -292,6 +293,11 @@ class _Collector:
             return
         self._keys.add(key)
         self.findings.append(ProjectionFinding(code, message, normalized_ids))
+
+
+def _merge_findings(target: _Collector, source: _Collector) -> None:
+    for finding in source.findings:
+        target.add(finding.code, finding.message, finding.event_ids)
 
 
 def _ordered_findings(collector: _Collector) -> tuple[ProjectionFinding, ...]:
@@ -583,18 +589,142 @@ def _context_mismatches(events: Sequence[_ValidatedEvent]) -> tuple[str, ...]:
     )
 
 
+def _snapshot_json(value: Any) -> str:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=True,
+    )
+
+
+def _parse_serialized_event_log(
+    raw_bytes: bytes,
+    collector: _Collector,
+) -> tuple[Mapping[str, Any], ...] | None:
+    if not raw_bytes:
+        return ()
+
+    rows: list[Mapping[str, Any]] = []
+    for row_number, raw_line in enumerate(raw_bytes.splitlines(keepends=True), 1):
+        if not raw_line.strip():
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {row_number} is blank",
+            )
+            return None
+
+        terminated = raw_line.endswith(b"\n")
+        row_bytes = raw_line[:-1] if terminated else raw_line
+        try:
+            row_text = row_bytes.decode("utf-8")
+        except UnicodeError as exc:
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {row_number} is not valid UTF-8: {exc}",
+            )
+            return None
+        try:
+            raw = json.loads(row_text)
+        except json.JSONDecodeError as exc:
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {row_number} is malformed JSON: {exc}",
+            )
+            return None
+        if not isinstance(raw, Mapping):
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {row_number} is not a JSON object",
+            )
+            return None
+
+        kind = _planning_kind(raw)
+        if kind is not None:
+            event_id = str(raw.get("event_id") or "")
+            try:
+                canonical = canonical_json(raw)
+            except (TypeError, ValueError) as exc:
+                collector.add(
+                    ProjectionFindingCode.INVALID_EVENT_RECORD,
+                    f"planning event row {row_number} is not canonicalizable: {exc}",
+                    (event_id,),
+                )
+                return None
+            if not terminated or row_text != canonical:
+                collector.add(
+                    ProjectionFindingCode.NONCANONICAL_EVENT_RECORD,
+                    f"planning event row {row_number} bytes are not canonical JSONL",
+                    (event_id,),
+                )
+                return None
+        rows.append(raw)
+    return tuple(rows)
+
+
 def _read_raw_events(
     store: AppendOnlyEventStore,
     collector: _Collector,
 ) -> tuple[Mapping[str, Any], ...] | None:
-    try:
-        return tuple(store.iter_events())
-    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+    for attempt in range(2):
+        local = _Collector()
+        try:
+            locked_rows = tuple(store.iter_events())
+        except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            if attempt == 0:
+                continue
+            try:
+                raw_bytes = (
+                    store.events_path.read_bytes()
+                    if store.events_path.exists()
+                    else b""
+                )
+            except OSError as read_exc:
+                local.add(
+                    ProjectionFindingCode.EVENT_LOG_READ_FAILED,
+                    f"append-only event log cannot be read: {read_exc}",
+                )
+            else:
+                _parse_serialized_event_log(raw_bytes, local)
+                local.add(
+                    ProjectionFindingCode.EVENT_LOG_READ_FAILED,
+                    f"append-only event log cannot be decoded: {exc}",
+                )
+            _merge_findings(collector, local)
+            return None
+
+        try:
+            raw_bytes = (
+                store.events_path.read_bytes()
+                if store.events_path.exists()
+                else b""
+            )
+        except OSError as exc:
+            if attempt == 0:
+                continue
+            collector.add(
+                ProjectionFindingCode.EVENT_LOG_READ_FAILED,
+                f"append-only event log cannot be read: {exc}",
+            )
+            return None
+
+        serialized_rows = _parse_serialized_event_log(raw_bytes, local)
+        if serialized_rows is None:
+            if attempt == 0:
+                continue
+            _merge_findings(collector, local)
+            return None
+        if _snapshot_json(serialized_rows) == _snapshot_json(locked_rows):
+            return serialized_rows
+        if attempt == 0:
+            continue
         collector.add(
             ProjectionFindingCode.EVENT_LOG_READ_FAILED,
-            f"append-only event log cannot be decoded: {exc}",
+            "append-only event log changed while its read-only snapshot was verified",
         )
         return None
+    return None
 
 
 def _exclude_duplicate_event_ids(
