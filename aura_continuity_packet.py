@@ -27,6 +27,8 @@ from aura_event_contracts import (
 J2_CONTINUITY_VERSION = "AURA_CONTINUITY_PACKET_J2"
 J2_PACKET_PREFIX = "J2/"
 J2_MAX_ACTIVE_CONCEPTS = 25
+J2_MAX_EVENT_REFS = 64
+J2_MAX_ENCODED_CHARS = 32768
 
 _TOP_LEVEL_KEYS = frozenset(
     {
@@ -120,7 +122,9 @@ class CanonicalRecord:
 
 
 def _required(value: Any, field_name: str, *, limit: int = 256) -> str:
-    text = str(value or "").strip()
+    if not isinstance(value, str):
+        raise ValueError(f"{field_name} must be a string")
+    text = value.strip()
     if not text:
         raise ValueError(f"{field_name} must not be empty")
     if len(text) > limit:
@@ -129,7 +133,9 @@ def _required(value: Any, field_name: str, *, limit: int = 256) -> str:
 
 
 def _optional(value: Any, field_name: str, *, limit: int = 256) -> str:
-    text = str(value or "").strip()
+    if not isinstance(value, str):
+        raise ValueError(f"{field_name} must be a string")
+    text = value.strip()
     if len(text) > limit:
         raise ValueError(f"{field_name} exceeds {limit} characters")
     return text
@@ -365,7 +371,12 @@ class J2ContinuityPacket(CanonicalRecord):
         object.__setattr__(
             self,
             "event_refs",
-            _strings(self.event_refs, "j2.event_refs", required=True),
+            _strings(
+                self.event_refs,
+                "j2.event_refs",
+                required=True,
+                limit=J2_MAX_EVENT_REFS,
+            ),
         )
         if not isinstance(self.route_view, J2RouteView):
             raise ValueError("j2.route_view must be a J2RouteView")
@@ -528,8 +539,12 @@ def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
     encoded, separator, supplied_digest = body.rpartition("#")
     if separator != "#" or not encoded or not supplied_digest:
         return {"ok": False, "error": "malformed_j2_packet"}
+    if len(encoded) > J2_MAX_ENCODED_CHARS:
+        return {"ok": False, "error": "j2_packet_too_large"}
     if not re.fullmatch(r"[A-Za-z0-9_-]+", encoded):
         return {"ok": False, "error": "invalid_j2_base64"}
+    if not re.fullmatch(r"[0-9a-f]{32}", supplied_digest):
+        return {"ok": False, "error": "invalid_j2_digest"}
 
     padding = "=" * ((4 - len(encoded) % 4) % 4)
     try:
@@ -540,6 +555,9 @@ def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
         )
     except (binascii.Error, ValueError):
         return {"ok": False, "error": "invalid_j2_base64"}
+    canonical_encoded = base64.urlsafe_b64encode(raw_bytes).decode("ascii").rstrip("=")
+    if encoded != canonical_encoded:
+        return {"ok": False, "error": "j2_noncanonical_base64"}
     try:
         text = raw_bytes.decode("utf-8")
     except UnicodeDecodeError:
@@ -629,6 +647,11 @@ def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
         )
     except (KeyError, TypeError, ValueError):
         return {"ok": False, "error": "j2_contract_invalid"}
+
+    if canonical_json(packet.to_dict()) != canonical:
+        return {"ok": False, "error": "j2_contract_normalization_mismatch"}
+    if packet.digest != supplied_digest:
+        return {"ok": False, "error": "j2_contract_digest_mismatch"}
 
     return {
         "ok": True,
