@@ -580,7 +580,7 @@ def build_j2_continuity_packet(
         history_chain_id=history_chain_id,
         history_projection_digest=history_projection_digest,
         continuity_report_digest=continuity_report_digest,
-        event_refs=tuple(event_refs),
+        event_refs=event_refs,
         route_view=route_view,
         arena_view=arena_view,
     )
