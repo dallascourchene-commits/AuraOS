@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 import hashlib
 import math
+import re
 from typing import Any
 
 from aura_st3gg_codec import ST3GGFrame
@@ -26,6 +27,13 @@ V1_STORAGE_OWNER = ST3GG_RECALL_VERSION
 REPORT_SOURCE_HINT = "arena_st3gg_egress_p5_3"
 PROPOSAL_ONLY = True
 ST3GG_PATCH_AUTHORITY = False
+
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_V1_POINTER_RE = re.compile(r"^ST3GG-L2::[A-Z0-9_-]+:[0-9A-F]{4}:[0-9a-f]{16}$")
+_DASH_RE = re.compile(r"^[0-9a-f]{16}$")
+_GLYPH_RE = re.compile(r"^[0-9A-F]{4}$")
+_HEADER_RE = re.compile(r"^[A-Za-z0-9_-]{64}$")
+_EGRESS_POINTER_RE = re.compile(r"^ST3GG_PTR:[0-9a-f]{12}$")
 
 
 class ST3GGCompatibilityError(ValueError):
@@ -58,6 +66,7 @@ class ST3GGCanonicalBinding:
 
     def __post_init__(self) -> None:
         constitutional(self.version, EXECUTION_MODE, self.storage_owner, True, PATCH_AUTHORITY, False)
+        require(_SHA256_RE.fullmatch(self.original_digest) is not None, "binding_digest_invalid")
         require(type(self.original_bytes) is int and self.original_bytes >= 0, "binding_length_invalid")
         require(self.pointer == canonical_pointer(self.namespace, self.original_digest), "binding_pointer_mismatch")
         require(self.exact_ref == exact_ref_for(self.namespace, self.original_digest), "binding_ref_mismatch")
@@ -65,6 +74,12 @@ class ST3GGCanonicalBinding:
         require(type(self.content_type) is str and bool(self.content_type.strip()), "binding_content_type_required")
         require(type(self.source_hint) is str, "binding_source_hint_invalid")
         require(type(self.legacy_surface) is str and bool(self.legacy_surface), "binding_surface_required")
+        require(_V1_POINTER_RE.fullmatch(self.legacy_recall_pointer) is not None, "binding_v1_pointer_invalid")
+        require(_DASH_RE.fullmatch(self.legacy_dash_key) is not None, "binding_dash_invalid")
+        require(_GLYPH_RE.fullmatch(self.legacy_glyph) is not None, "binding_glyph_invalid")
+        require(_HEADER_RE.fullmatch(self.legacy_holographic_header) is not None, "binding_header_invalid")
+        if self.legacy_surface_pointer is not None:
+            require(_EGRESS_POINTER_RE.fullmatch(self.legacy_surface_pointer) is not None, "binding_surface_pointer_invalid")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -107,8 +122,22 @@ class ST3GGRecallDualReadEvidence:
             require(self.resolved_original_digest == self.binding.original_digest, "evidence_digest_mismatch")
             require(self.resolved_content_type == self.binding.content_type, "evidence_content_type_mismatch")
             require(self.resolved_original_bytes == self.binding.original_bytes, "evidence_length_mismatch")
+            names = tuple(name for name, _digest in self.alias_record_digests)
+            digests = {record_digest for _name, record_digest in self.alias_record_digests}
+            require(names == ("pointer", "digest", "dash_key"), "verified_alias_evidence_incomplete")
+            require(len(digests) == 1, "verified_alias_evidence_disagreement")
+            require(self.json_index_record_digest in digests, "verified_json_evidence_disagreement")
         else:
             require(self.restoration_mode is ST3GGRestorationMode.NONE, "failed_evidence_mode_not_none")
+            require(bool(self.mismatch_reasons), "failed_evidence_reason_required")
+        for alias, record_digest in self.alias_record_digests:
+            require(bool(alias) and _SHA256_RE.fullmatch(record_digest) is not None, "alias_evidence_invalid")
+        if self.json_index_record_digest is not None:
+            require(_SHA256_RE.fullmatch(self.json_index_record_digest) is not None, "json_evidence_digest_invalid")
+        require(
+            all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
+            "evidence_mismatch_reason_invalid",
+        )
 
     def to_dict(self) -> dict[str, Any]:
         value = asdict(self)
@@ -145,11 +174,17 @@ class ST3GGASTCompatibilityResult:
             self.st3gg_patch_authority,
         )
         require(isinstance(self.legacy_frame, ST3GGFrame), "ast_legacy_frame_invalid")
+        require(isinstance(self.v2_decision, ST3GGDecision), "ast_v2_decision_invalid")
         require(self.exact_span_count == len(self.legacy_frame.spans), "ast_span_count_disagreement")
+        require(_SHA256_RE.fullmatch(self.legacy_frame_digest) is not None, "ast_frame_digest_invalid")
         require(
             self.v2_decision.restoration_mode
             in {ST3GGRestorationMode.LOSSY_ADVISORY, ST3GGRestorationMode.NONE},
             "ast_false_exact_claim",
+        )
+        require(
+            all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
+            "ast_mismatch_reason_invalid",
         )
 
 
@@ -181,7 +216,17 @@ class ST3GGReportCompatibilityResult:
             self.st3gg_patch_authority,
         )
         require(type(self.legacy_compressed) is str and type(self.legacy_pointer) is str, "report_legacy_fields_invalid")
-        require(type(self.legacy_savings_ratio) is float and math.isfinite(self.legacy_savings_ratio), "report_savings_invalid")
+        require(
+            type(self.legacy_savings_ratio) is float
+            and math.isfinite(self.legacy_savings_ratio)
+            and 0.0 <= self.legacy_savings_ratio <= 1.0,
+            "report_savings_invalid",
+        )
+        require(isinstance(self.v2_decision, ST3GGDecision), "report_v2_decision_invalid")
+        require(
+            all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
+            "report_mismatch_reason_invalid",
+        )
         exact = self.v2_decision.restoration_mode is ST3GGRestorationMode.EXACT_RECALL
         if exact:
             require(self.binding is not None and self.recall_evidence is not None, "exact_report_binding_missing")
@@ -221,7 +266,16 @@ class ST3GGLegacyDispositionRecord:
             self.st3gg_patch_authority,
         )
         require(isinstance(self.disposition, ST3GGLegacyDisposition), "disposition_invalid")
-        require(bool(self.reason) and bool(self.blockers) and bool(self.satisfied_evidence), "disposition_incomplete")
+        require(type(self.reason) is str and bool(self.reason), "disposition_reason_invalid")
+        require(
+            bool(self.blockers) and all(type(item) is str and bool(item) for item in self.blockers),
+            "disposition_blockers_invalid",
+        )
+        require(
+            bool(self.satisfied_evidence)
+            and all(type(item) is str and bool(item) for item in self.satisfied_evidence),
+            "disposition_evidence_invalid",
+        )
 
     def to_dict(self) -> dict[str, Any]:
         value = asdict(self)
