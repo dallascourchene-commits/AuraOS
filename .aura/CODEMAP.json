@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784079789,
+  "generated_at_unix": 1784081557,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 831,
+    "included_file_count": 832,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -806,6 +806,7 @@
       "tests/test_aura_planning_events.py",
       "tests/test_aura_planning_frontier.py",
       "tests/test_aura_planning_projector.py",
+      "tests/test_aura_planning_projector_hardening.py",
       "tests/test_aura_planning_regression.py",
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
@@ -852,23 +853,23 @@
     ]
   },
   "summary": {
-    "file_count": 831,
-    "total_bytes": 63942477,
-    "text_tokens_est": 6589562,
+    "file_count": 832,
+    "total_bytes": 63965434,
+    "text_tokens_est": 6595301,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 583,
+      "python_module": 584,
       "schema_or_lexicon": 68,
       "support_file": 41
     },
-    "topology_nodes": 7259,
-    "topology_edges": 15197,
+    "topology_nodes": 7263,
+    "topology_edges": 15213,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 20035.5
+    "elapsed_ms": 20440.67
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1683,6 +1684,7 @@
       "tests/test_aura_planning_events.py",
       "tests/test_aura_planning_frontier.py",
       "tests/test_aura_planning_projector.py",
+      "tests/test_aura_planning_projector_hardening.py",
       "tests/test_aura_planning_regression.py",
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
@@ -1742,7 +1744,7 @@
       "role": "python_module",
       "symbols": 74,
       "tokens_est": 30294,
-      "topology_degree": 562
+      "topology_degree": 569
     },
     {
       "path": "test_scientific_memory.py",
@@ -4063,8 +4065,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 81,
-        "end_line": 83,
+        "line": 82,
+        "end_line": 84,
         "semantic_id": "aura_planning_projector.py#class:CanonicalRecord:29aedea8ab94a988",
         "signature_hash": "2b4fa7f3591ef81c"
       },
@@ -7443,8 +7445,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 145,
-        "end_line": 175,
+        "line": 176,
+        "end_line": 210,
         "semantic_id": "aura_planning_projector.py#class:PlanningHistoryChain:4f89e63425bfc588",
         "signature_hash": "d81d29acaba0d598"
       }
@@ -7453,8 +7455,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 179,
-        "end_line": 220,
+        "line": 214,
+        "end_line": 260,
         "semantic_id": "aura_planning_projector.py#class:PlanningHistoryProjectionReport:9c1a4da9b4b64b08",
         "signature_hash": "d42474d19f27c7ba"
       }
@@ -7633,8 +7635,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 122,
-        "end_line": 141,
+        "line": 135,
+        "end_line": 172,
         "semantic_id": "aura_planning_projector.py#class:ProjectedPlanningEvent:9d7207418167130a",
         "signature_hash": "d004d5ce76d31b58"
       }
@@ -7643,8 +7645,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 103,
-        "end_line": 118,
+        "line": 104,
+        "end_line": 131,
         "semantic_id": "aura_planning_projector.py#class:ProjectionFinding:b099bf9ca9ee1eaf",
         "signature_hash": "239d597d3e80c2e1"
       }
@@ -7653,8 +7655,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 29,
-        "end_line": 57,
+        "line": 28,
+        "end_line": 58,
         "semantic_id": "aura_planning_projector.py#class:ProjectionFindingCode:8c96c5cc32b9b238",
         "signature_hash": "cbb42b093f95b2ae"
       }
@@ -12217,8 +12219,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 230,
-        "end_line": 246,
+        "line": 270,
+        "end_line": 294,
         "semantic_id": "aura_planning_projector.py#class:_Collector:570f47c320c054d9",
         "signature_hash": "4f8732686467bca8"
       }
@@ -12325,8 +12327,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "class",
-        "line": 224,
-        "end_line": 227,
+        "line": 264,
+        "end_line": 267,
         "semantic_id": "aura_planning_projector.py#class:_ValidatedEvent:f4020427d7ad225f",
         "signature_hash": "c17e76ef4104f571"
       }
@@ -13723,8 +13725,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 231,
-        "end_line": 233,
+        "line": 271,
+        "end_line": 273,
         "semantic_id": "aura_planning_projector.py#method:_Collector.__init__:31524b6d190d6f7a",
         "signature_hash": "3d77650513b79756"
       },
@@ -15123,32 +15125,32 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 109,
-        "end_line": 118,
+        "line": 110,
+        "end_line": 131,
         "semantic_id": "aura_planning_projector.py#method:ProjectionFinding.__post_init__:ce3a35c49839650a",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 129,
-        "end_line": 141,
+        "line": 142,
+        "end_line": 172,
         "semantic_id": "aura_planning_projector.py#method:ProjectedPlanningEvent.__post_init__:e7f416a54d4f3c7c",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 157,
-        "end_line": 175,
+        "line": 188,
+        "end_line": 210,
         "semantic_id": "aura_planning_projector.py#method:PlanningHistoryChain.__post_init__:92a459e2af573f47",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 186,
-        "end_line": 207,
+        "line": 221,
+        "end_line": 247,
         "semantic_id": "aura_planning_projector.py#method:PlanningHistoryProjectionReport.__post_init__:1456eb611e251872",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -16809,6 +16811,14 @@
         "signature_hash": "72982361d90ea567"
       },
       {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_board:e6486de575dec00d",
+        "signature_hash": "72982361d90ea567"
+      },
+      {
         "file": "tests/test_aura_planning_regression.py",
         "kind": "function",
         "line": 38,
@@ -17759,6 +17769,14 @@
         "end_line": 103,
         "semantic_id": "tests/test_aura_planning_projector.py#function:_chain:99a4f62983fcd44c",
         "signature_hash": "f238e68f4cf5877e"
+      },
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_chain:dcff4cebbcf2f78b",
+        "signature_hash": "be86fcfcda6137d4"
       }
     ],
     "_chars": [
@@ -18571,6 +18589,14 @@
         "end_line": 172,
         "semantic_id": "tests/test_aura_planning_projector.py#function:_codes:f575d399a59babb5",
         "signature_hash": "b789256c9791ce81"
+      },
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_codes:cc0ef5e87ccafdae",
+        "signature_hash": "b789256c9791ce81"
       }
     ],
     "_coerce_anchor": [
@@ -19201,8 +19227,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 402,
-        "end_line": 415,
+        "line": 570,
+        "end_line": 583,
         "semantic_id": "aura_planning_projector.py#function:_context_mismatches:5f2174ea6ef0b291",
         "signature_hash": "6b4978480c5a589a"
       }
@@ -21175,6 +21201,14 @@
         "end_line": 111,
         "semantic_id": "tests/test_aura_planning_projector.py#function:_event_rows:ce725142ad730065",
         "signature_hash": "4655bbea38596da7"
+      },
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_event_rows:93f7c94bbe865ce4",
+        "signature_hash": "4655bbea38596da7"
       }
     ],
     "_evict_oldest": [
@@ -21255,6 +21289,16 @@
         "end_line": 456,
         "semantic_id": "aura_coding_workbench_capsule_adapter.py#function:_exceeded_budget:9021786a1e4e0f91",
         "signature_hash": "812c49e6a2a4827c"
+      }
+    ],
+    "_exclude_duplicate_event_ids": [
+      {
+        "file": "aura_planning_projector.py",
+        "kind": "function",
+        "line": 600,
+        "end_line": 642,
+        "semantic_id": "aura_planning_projector.py#function:_exclude_duplicate_event_ids:44da0e10cf4a7046",
+        "signature_hash": "cf3f7876868b1234"
       }
     ],
     "_exclusive_store_lock": [
@@ -25491,8 +25535,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 321,
-        "end_line": 364,
+        "line": 442,
+        "end_line": 529,
         "semantic_id": "aura_planning_projector.py#function:_load_sidecar:b0a35f9e484c7781",
         "signature_hash": "3e98c309b8e99eb4"
       }
@@ -27379,6 +27423,16 @@
         "signature_hash": "d561773b615bd852"
       }
     ],
+    "_ordered_findings": [
+      {
+        "file": "aura_planning_projector.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 303,
+        "semantic_id": "aura_planning_projector.py#function:_ordered_findings:4213dd8c66291f46",
+        "signature_hash": "41cefe0f257570c1"
+      }
+    ],
     "_ordered_view": [
       {
         "file": "async_palace.py",
@@ -27939,8 +27993,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 253,
+        "line": 321,
+        "end_line": 325,
         "semantic_id": "aura_planning_projector.py#function:_planning_kind:031e746c1fcb5ada",
         "signature_hash": "faf8f468a3406dc8"
       }
@@ -28337,8 +28391,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 391,
-        "end_line": 399,
+        "line": 559,
+        "end_line": 567,
         "semantic_id": "aura_planning_projector.py#function:_projected:aa019bf69aa35ae7",
         "signature_hash": "1256592b05e40b20"
       }
@@ -28749,6 +28803,16 @@
         "signature_hash": "cd4e6b796233b0a6"
       }
     ],
+    "_read_raw_events": [
+      {
+        "file": "aura_planning_projector.py",
+        "kind": "function",
+        "line": 586,
+        "end_line": 597,
+        "semantic_id": "aura_planning_projector.py#function:_read_raw_events:bacfc8fe9ab424e4",
+        "signature_hash": "20980ec799e31a41"
+      }
+    ],
     "_read_store_record": [
       {
         "file": "aura_st3gg_recall.py",
@@ -28862,6 +28926,14 @@
         "line": 121,
         "end_line": 145,
         "semantic_id": "tests/test_aura_planning_projector.py#function:_rebuild_event:b949db445d91e4a3",
+        "signature_hash": "381ec73094f73b44"
+      },
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_rebuild_event:216cd4284d3a5a5d",
         "signature_hash": "381ec73094f73b44"
       }
     ],
@@ -29517,6 +29589,14 @@
     ],
     "_report": [
       {
+        "file": "aura_planning_projector.py",
+        "kind": "function",
+        "line": 306,
+        "end_line": 318,
+        "semantic_id": "aura_planning_projector.py#function:_report:e9958acccd0dc770",
+        "signature_hash": "53deb8b187c3ee4d"
+      },
+      {
         "file": "tests/test_aura_planning_frontier.py",
         "kind": "function",
         "line": 53,
@@ -29691,8 +29771,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 86,
-        "end_line": 90,
+        "line": 87,
+        "end_line": 91,
         "semantic_id": "aura_planning_projector.py#function:_required:b4acf76d0e962508",
         "signature_hash": "fc3507f3e613f3eb"
       },
@@ -32475,8 +32555,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 99,
+        "line": 94,
+        "end_line": 100,
         "semantic_id": "aura_planning_projector.py#function:_strings:577eb2c5a7c409c6",
         "signature_hash": "a867226c392dd32e"
       }
@@ -34635,8 +34715,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 256,
-        "end_line": 318,
+        "line": 328,
+        "end_line": 439,
         "semantic_id": "aura_planning_projector.py#function:_validate_envelope:e03c894c3624d6d2",
         "signature_hash": "5091c3f2c3b89df3"
       }
@@ -34753,8 +34833,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 367,
-        "end_line": 388,
+        "line": 532,
+        "end_line": 556,
         "semantic_id": "aura_planning_projector.py#function:_validate_payload_metadata:a4f86560a643cbe0",
         "signature_hash": "09d48e243a3ffebc"
       }
@@ -35265,6 +35345,16 @@
         "signature_hash": "321b66554f1e5ee8"
       }
     ],
+    "_write_rows": [
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:_write_rows:14655033be9d5f9f",
+        "signature_hash": "3d112f85671eb9a3"
+      }
+    ],
     "_write_workspace_event": [
       {
         "file": "aura_qdkt.py",
@@ -35423,8 +35513,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 235,
-        "end_line": 246,
+        "line": 275,
+        "end_line": 294,
         "semantic_id": "aura_planning_projector.py#method:_Collector.add:0690bd3b5390cfd2",
         "signature_hash": "090e38c577806312"
       },
@@ -42491,8 +42581,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 214,
-        "end_line": 215,
+        "line": 254,
+        "end_line": 255,
         "semantic_id": "aura_planning_projector.py#method:PlanningHistoryProjectionReport.digest:81b31e8dc781ce04",
         "signature_hash": "78cc05eff2137397"
       },
@@ -47611,8 +47701,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 210,
-        "end_line": 211,
+        "line": 250,
+        "end_line": 251,
         "semantic_id": "aura_planning_projector.py#method:PlanningHistoryProjectionReport.integrity_complete:84e3894bc8992fdb",
         "signature_hash": "1184aa68b0655620"
       }
@@ -51609,8 +51699,8 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "function",
-        "line": 418,
-        "end_line": 571,
+        "line": 645,
+        "end_line": 898,
         "semantic_id": "aura_planning_projector.py#function:project_planning_history:50b94391727b5154",
         "signature_hash": "e050bb5bd5394241"
       }
@@ -63971,6 +64061,16 @@
         "signature_hash": "c85968b09b5128e3"
       }
     ],
+    "test_frontier_board_binding_has_distinct_diagnostic": [
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:test_frontier_board_binding_has_distinct_diagnostic:10db43af8d8bbd54",
+        "signature_hash": "1b8d7cc628508bb4"
+      }
+    ],
     "test_frontier_must_match_exact_regression_report": [
       {
         "file": "tests/test_aura_planning_events.py",
@@ -66889,6 +66989,16 @@
         "signature_hash": "8562ddfececd1438"
       }
     ],
+    "test_malformed_event_log_returns_blocking_finding": [
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:test_malformed_event_log_returns_blocking_finding:8f51d8ea886bd146",
+        "signature_hash": "4bf9e5ae85a0d3ec"
+      }
+    ],
     "test_malformed_geojson_returns_errors": [
       {
         "file": "tests/test_aura_civic_commons_arena.py",
@@ -68273,6 +68383,16 @@
         "signature_hash": "cf6d797c06e3c0a0"
       }
     ],
+    "test_non_string_event_type_is_rejected_without_crashing": [
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 177,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:test_non_string_event_type_is_rejected_without_crashing:537433dd71a8637a",
+        "signature_hash": "97d80ee7205ba814"
+      }
+    ],
     "test_nonblocking_constraint_refs_do_not_block_bc2": [
       {
         "file": "tests/test_aura_planning_board.py",
@@ -68281,6 +68401,16 @@
         "end_line": 393,
         "semantic_id": "tests/test_aura_planning_board.py#function:test_nonblocking_constraint_refs_do_not_block_bc2:07dcd23e872b7671",
         "signature_hash": "1cd15fc1d249c836"
+      }
+    ],
+    "test_nonfinite_duplicate_record_fails_closed_before_digesting": [
+      {
+        "file": "tests/test_aura_planning_projector_hardening.py",
+        "kind": "function",
+        "line": 180,
+        "end_line": 191,
+        "semantic_id": "tests/test_aura_planning_projector_hardening.py#function:test_nonfinite_duplicate_record_fails_closed_before_digesting:87e12ac973261371",
+        "signature_hash": "e5062a48b1de38bc"
       }
     ],
     "test_normalization_preserves_original_form": [
@@ -78135,16 +78265,16 @@
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 82,
-        "end_line": 83,
+        "line": 83,
+        "end_line": 84,
         "semantic_id": "aura_planning_projector.py#method:CanonicalRecord.to_dict:86e1d39b73c16f2d",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_planning_projector.py",
         "kind": "method",
-        "line": 217,
-        "end_line": 220,
+        "line": 257,
+        "end_line": 260,
         "semantic_id": "aura_planning_projector.py#method:PlanningHistoryProjectionReport.to_dict:a6c6125e4e0a2a26",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -84245,7 +84375,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 47,
+        "hub_rank": 48,
         "node_count": 31,
         "edge_count": 159,
         "degree": 159,
@@ -92228,7 +92358,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 51,
+        "hub_rank": 52,
         "node_count": 37,
         "edge_count": 144,
         "degree": 144,
@@ -93546,7 +93676,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 45,
+        "hub_rank": 46,
         "node_count": 30,
         "edge_count": 163,
         "degree": 163,
@@ -94342,7 +94472,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 44,
+        "hub_rank": 45,
         "node_count": 29,
         "edge_count": 166,
         "degree": 166,
@@ -99150,8 +99280,8 @@
       "topology": {
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 562,
-        "degree": 562,
+        "edge_count": 569,
+        "degree": 569,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -99197,7 +99327,7 @@
           "aura_planning_projector.py"
         ],
         "edge_kinds": {
-          "call": 383,
+          "call": 390,
           "defines": 168,
           "import_module": 11
         }
@@ -104433,17 +104563,17 @@
     {
       "path": "aura_planning_projector.py",
       "role": "python_module",
-      "bytes": 25365,
-      "lines": 572,
-      "tokens_est": 6342,
-      "symbol_count": 27,
+      "bytes": 31103,
+      "lines": 899,
+      "tokens_est": 7776,
+      "symbol_count": 31,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 53,
-        "node_count": 28,
-        "edge_count": 142,
-        "degree": 142,
+        "hub_rank": 43,
+        "node_count": 32,
+        "edge_count": 167,
+        "degree": 167,
         "symbols": [
           "CanonicalRecord",
           "PlanningHistoryChain",
@@ -104456,15 +104586,15 @@
           "__init__",
           "__post_init__",
           "_context_mismatches",
+          "_exclude_duplicate_event_ids",
           "_load_sidecar",
+          "_ordered_findings",
           "_planning_kind",
           "_projected",
+          "_read_raw_events",
+          "_report",
           "_required",
-          "_strings",
-          "_validate_envelope",
-          "_validate_payload_metadata",
-          "add",
-          "digest"
+          "_strings"
         ],
         "neighbor_files": [
           "aura_event_contracts.py",
@@ -104473,45 +104603,45 @@
           "aura_planning_events.py"
         ],
         "edge_kinds": {
-          "call": 86,
-          "defines": 54,
+          "call": 103,
+          "defines": 62,
           "import_module": 2
         }
       },
-      "digest8": "bdf70de225b52e24",
+      "digest8": "a2e6a0dbedd33542",
       "vector": [
-        0.07286,
-        0.075416,
-        -0.323395,
-        -0.026843,
-        -0.302943,
-        0.285048,
-        -0.060077,
-        0.006391,
-        0.141885,
-        -0.274822,
-        -0.003835,
-        0.164893,
-        -0.06519,
-        0.249257,
-        -0.26204,
-        0.170006,
-        -0.077973,
-        -0.049851,
-        0.014061,
-        -0.121433,
-        0.052408,
-        0.277378,
-        -0.060077,
-        -0.162337,
-        -0.016617,
-        0.228805,
-        -0.118876,
-        -0.320839,
-        0.218579,
-        -0.136772,
-        -0.213466,
-        -0.07286
+        0.065195,
+        -0.274311,
+        0.067655,
+        0.222647,
+        0.195585,
+        0.099638,
+        -0.119319,
+        -0.247249,
+        0.193125,
+        -0.166063,
+        -0.13162,
+        0.079956,
+        0.293993,
+        -0.072576,
+        0.234948,
+        -0.178364,
+        0.13162,
+        -0.276771,
+        -0.239869,
+        -0.141461,
+        0.00369,
+        -0.276771,
+        0.276771,
+        -0.028292,
+        0.173443,
+        -0.00369,
+        -0.050434,
+        -0.1267,
+        -0.166063,
+        0.266931,
+        0.047974,
+        0.013531
       ]
     },
     {
@@ -105883,7 +106013,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 50,
+        "hub_rank": 51,
         "node_count": 24,
         "edge_count": 145,
         "degree": 145,
@@ -106488,7 +106618,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 43,
+        "hub_rank": 44,
         "node_count": 31,
         "edge_count": 166,
         "degree": 166,
@@ -108135,7 +108265,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 46,
+        "hub_rank": 47,
         "node_count": 28,
         "edge_count": 160,
         "degree": 160,
@@ -108681,7 +108811,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 49,
+        "hub_rank": 50,
         "node_count": 28,
         "edge_count": 148,
         "degree": 148,
@@ -117268,7 +117398,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 48,
+        "hub_rank": 49,
         "node_count": 54,
         "edge_count": 152,
         "degree": 152,
@@ -118727,7 +118857,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 52,
+        "hub_rank": 53,
         "node_count": 13,
         "edge_count": 143,
         "degree": 143,
@@ -119544,47 +119674,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 14696287,
-      "lines": 469598,
-      "tokens_est": 3674072,
+      "bytes": 14706447,
+      "lines": 469962,
+      "tokens_est": 3676612,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f7e9340a509180e7",
+      "digest8": "77a082aa394959f3",
       "vector": [
-        0.090878,
-        0.009495,
-        0.299763,
-        0.193964,
-        0.234656,
-        -0.147847,
-        0.139709,
-        0.183113,
-        0.153273,
-        -0.226518,
-        0.161411,
-        -0.08274,
-        -0.118006,
-        -0.310614,
-        -0.039335,
-        0.172262,
-        -0.134283,
-        0.109868,
-        -0.10173,
-        -0.145134,
-        -0.112581,
-        0.123432,
-        -0.302476,
-        0.153273,
-        0.1804,
-        -0.153273,
-        -0.310614,
-        0.009495,
-        -0.231943,
-        0.023059,
-        -0.177688,
-        0.204815
+        0.190234,
+        0.128594,
+        0.081832,
+        0.043573,
+        -0.037197,
+        0.232744,
+        -0.253999,
+        0.107339,
+        -0.256125,
+        -0.245497,
+        -0.113715,
+        0.01169,
+        0.022318,
+        0.266752,
+        -0.115841,
+        0.266752,
+        -0.166853,
+        0.100962,
+        -0.192359,
+        0.001063,
+        -0.260376,
+        0.096711,
+        0.173229,
+        -0.175355,
+        0.17748,
+        -0.141347,
+        0.156225,
+        0.149849,
+        -0.232744,
+        0.098836,
+        -0.260376,
+        -0.262501
       ]
     },
     {
@@ -122949,47 +123079,47 @@
     {
       "path": ".github/workflows/p3-2-planning-projector.yml",
       "role": "schema_or_lexicon",
-      "bytes": 1857,
-      "lines": 61,
-      "tokens_est": 465,
+      "bytes": 2021,
+      "lines": 64,
+      "tokens_est": 506,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2f5bd97bf29d9f25",
+      "digest8": "b9c86793d55f251e",
       "vector": [
-        0.196793,
-        0.255933,
-        0.039766,
-        0.137653,
-        -0.227383,
-        0.249815,
-        0.170282,
-        -0.257972,
-        -0.153968,
-        0.198832,
-        -0.031609,
-        0.133574,
-        -0.241658,
-        -0.107064,
-        -0.237579,
-        -0.14785,
-        -0.253893,
-        -0.084631,
-        0.047924,
-        0.102985,
-        -0.200872,
-        0.023452,
-        0.209029,
-        -0.14581,
-        0.027531,
-        0.249815,
-        0.227383,
-        0.225343,
-        0.170282,
-        0.178439,
-        0.135614,
-        -0.009177
+        -0.050044,
+        -0.29128,
+        -0.15783,
+        0.283581,
+        0.234821,
+        -0.00385,
+        0.078274,
+        -0.211724,
+        0.193759,
+        0.234821,
+        0.068008,
+        0.160397,
+        -0.037212,
+        -0.111636,
+        0.162963,
+        -0.019248,
+        -0.139866,
+        0.31951,
+        -0.180928,
+        -0.152698,
+        0.147565,
+        0.05261,
+        0.29128,
+        0.173228,
+        0.327209,
+        0.265617,
+        -0.085973,
+        -0.132167,
+        0.127034,
+        0.00385,
+        -0.034646,
+        -0.021814
       ]
     },
     {
@@ -131915,6 +132045,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_planning_projector_hardening.py",
+      "role": "python_module",
+      "bytes": 6895,
+      "lines": 224,
+      "tokens_est": 1724,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "09f180ce87aeee18",
+      "vector": [
+        -0.111423,
+        -0.193523,
+        0.071545,
+        0.212289,
+        -0.219327,
+        0.26155,
+        -0.172412,
+        -0.085619,
+        -0.125497,
+        -0.242784,
+        -0.019939,
+        0.240438,
+        0.066854,
+        0.052779,
+        -0.249821,
+        0.057471,
+        0.163029,
+        -0.214635,
+        -0.226364,
+        -0.001173,
+        0.205252,
+        -0.055125,
+        0.188832,
+        0.207598,
+        -0.228709,
+        -0.24513,
+        0.27797,
+        -0.163029,
+        -0.019939,
+        0.186486,
+        -0.010556,
+        0.202906
+      ]
+    },
+    {
       "path": "tests/test_aura_planning_regression.py",
       "role": "python_module",
       "bytes": 6895,
@@ -133483,7 +133659,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 3333,
+      "dead_end_count": 3334,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -133516,7 +133692,7 @@
         },
         {
           "id": "aura_live_architect.py::add",
-          "degree": 84
+          "degree": 91
         },
         {
           "id": "aura_showcase_server.py::dispatch_showcase_request",
@@ -133583,11 +133759,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 457,
-      "node_count": 7259,
-      "edge_count": 15197,
+      "node_count": 7263,
+      "edge_count": 15213,
       "spectral_layout": true,
-      "spectral_sparsity": 0.056627,
-      "global_health": 0.971827
+      "spectral_sparsity": 0.056596,
+      "global_health": 0.971842
     },
     "file_index": {
       "aura_node.py": {
@@ -133685,8 +133861,8 @@
       "aura_live_architect.py": {
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 562,
-        "degree": 562,
+        "edge_count": 569,
+        "degree": 569,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -133732,7 +133908,7 @@
           "aura_planning_projector.py"
         ],
         "edge_kinds": {
-          "call": 383,
+          "call": 390,
           "defines": 168,
           "import_module": 11
         }
@@ -135431,8 +135607,47 @@
           "import_module": 6
         }
       },
-      "aura_router.py": {
+      "aura_planning_projector.py": {
         "hub_rank": 43,
+        "node_count": 32,
+        "edge_count": 167,
+        "degree": 167,
+        "symbols": [
+          "CanonicalRecord",
+          "PlanningHistoryChain",
+          "PlanningHistoryProjectionReport",
+          "ProjectedPlanningEvent",
+          "ProjectionFinding",
+          "ProjectionFindingCode",
+          "_Collector",
+          "_ValidatedEvent",
+          "__init__",
+          "__post_init__",
+          "_context_mismatches",
+          "_exclude_duplicate_event_ids",
+          "_load_sidecar",
+          "_ordered_findings",
+          "_planning_kind",
+          "_projected",
+          "_read_raw_events",
+          "_report",
+          "_required",
+          "_strings"
+        ],
+        "neighbor_files": [
+          "aura_event_contracts.py",
+          "aura_live_architect.py",
+          "aura_ojibwe_dialect_conflict_resolver.py",
+          "aura_planning_events.py"
+        ],
+        "edge_kinds": {
+          "call": 103,
+          "defines": 62,
+          "import_module": 2
+        }
+      },
+      "aura_router.py": {
+        "hub_rank": 44,
         "node_count": 31,
         "edge_count": 166,
         "degree": 166,
@@ -135476,7 +135691,7 @@
         }
       },
       "aura_empirical_software_lab.py": {
-        "hub_rank": 44,
+        "hub_rank": 45,
         "node_count": 29,
         "edge_count": 166,
         "degree": 166,
@@ -135515,7 +135730,7 @@
         }
       },
       "aura_dream_retrieval.py": {
-        "hub_rank": 45,
+        "hub_rank": 46,
         "node_count": 30,
         "edge_count": 163,
         "degree": 163,
@@ -135559,7 +135774,7 @@
         }
       },
       "aura_skillweaver.py": {
-        "hub_rank": 46,
+        "hub_rank": 47,
         "node_count": 28,
         "edge_count": 160,
         "degree": 160,
@@ -135602,7 +135817,7 @@
         }
       },
       "aura_agent_arena_bridge.py": {
-        "hub_rank": 47,
+        "hub_rank": 48,
         "node_count": 31,
         "edge_count": 159,
         "degree": 159,
@@ -135643,7 +135858,7 @@
         }
       },
       "test_aura_skillweaver.py": {
-        "hub_rank": 48,
+        "hub_rank": 49,
         "node_count": 54,
         "edge_count": 152,
         "degree": 152,
@@ -135679,7 +135894,7 @@
         }
       },
       "aura_substrate.py": {
-        "hub_rank": 49,
+        "hub_rank": 50,
         "node_count": 28,
         "edge_count": 148,
         "degree": 148,
@@ -135731,7 +135946,7 @@
         }
       },
       "aura_resonant_test_oracle.py": {
-        "hub_rank": 50,
+        "hub_rank": 51,
         "node_count": 24,
         "edge_count": 145,
         "degree": 145,
@@ -135771,7 +135986,7 @@
         }
       },
       "aura_context_crusher.py": {
-        "hub_rank": 51,
+        "hub_rank": 52,
         "node_count": 37,
         "edge_count": 144,
         "degree": 144,
@@ -135814,7 +136029,7 @@
         }
       },
       "test_pvm_logic.py": {
-        "hub_rank": 52,
+        "hub_rank": 53,
         "node_count": 13,
         "edge_count": 143,
         "degree": 143,
@@ -135842,45 +136057,6 @@
           "call": 116,
           "defines": 24,
           "import_module": 3
-        }
-      },
-      "aura_planning_projector.py": {
-        "hub_rank": 53,
-        "node_count": 28,
-        "edge_count": 142,
-        "degree": 142,
-        "symbols": [
-          "CanonicalRecord",
-          "PlanningHistoryChain",
-          "PlanningHistoryProjectionReport",
-          "ProjectedPlanningEvent",
-          "ProjectionFinding",
-          "ProjectionFindingCode",
-          "_Collector",
-          "_ValidatedEvent",
-          "__init__",
-          "__post_init__",
-          "_context_mismatches",
-          "_load_sidecar",
-          "_planning_kind",
-          "_projected",
-          "_required",
-          "_strings",
-          "_validate_envelope",
-          "_validate_payload_metadata",
-          "add",
-          "digest"
-        ],
-        "neighbor_files": [
-          "aura_event_contracts.py",
-          "aura_live_architect.py",
-          "aura_ojibwe_dialect_conflict_resolver.py",
-          "aura_planning_events.py"
-        ],
-        "edge_kinds": {
-          "call": 86,
-          "defines": 54,
-          "import_module": 2
         }
       },
       "aura_civic_runtime.py": {
@@ -146980,8 +147156,8 @@
         "file": "aura_live_architect.py",
         "hub_rank": 3,
         "node_count": 85,
-        "edge_count": 562,
-        "degree": 562,
+        "edge_count": 569,
+        "degree": 569,
         "symbols": [
           "ArchitectBuilderBridge",
           "ArchitectCouncilDecision",
@@ -147027,7 +147203,7 @@
           "aura_planning_projector.py"
         ],
         "edge_kinds": {
-          "call": 383,
+          "call": 390,
           "defines": 168,
           "import_module": 11
         }
