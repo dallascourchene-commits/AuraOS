@@ -3,7 +3,7 @@
 ST3GG_BASE: 0xab52-[Q-SYS:ARENA_ST3GG_V2_SHADOW]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Verified Shadow Compatibility)
-DEPENDENCIES: __future__, dataclasses, hashlib, json, pathlib, typing,
+DEPENDENCIES: __future__, dataclasses, hashlib, json, math, pathlib, typing,
               aura_arena_st3gg_codec, aura_st3gg_contracts, aura_st3gg_recall
 FUNCTIONS: encode_arena_capsule_with_v2_shadow, project_arena_st3gg_v2_shadow
 SYNOPSIS: Read-only shadow projection of the live Arena ST3GG V1 writer into
@@ -16,6 +16,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -26,7 +27,9 @@ from aura_arena_st3gg_codec import (
     MIN_SAVINGS_RATIO,
     MAX_ROWS,
     PATCH_AUTHORITY,
+    SAFE_MODE,
     ArenaST3GGCapsule,
+    ArenaST3GGDecision,
     encode_arena_capsule_for_egress,
     estimate_tokens,
 )
@@ -68,6 +71,7 @@ class ArenaST3GGV2ShadowComparison:
     eligible: bool
     exact_recall_verified: bool
     legacy_phase_hash: str
+    legacy_decision: ArenaST3GGDecision
     legacy_pointer: str | None
     legacy_original_hash: str | None
     legacy_payload_digest: str
@@ -100,6 +104,10 @@ class ArenaST3GGV2ShadowComparison:
             raise ValueError("arena_st3gg_shadow_must_remain_proposal_only")
         if self.patch_authority != PATCH_AUTHORITY or self.st3gg_patch_authority is not False:
             raise ValueError("arena_st3gg_shadow_cannot_gain_patch_authority")
+        if not _is_hex_digest(self.legacy_phase_hash, size=32):
+            raise ValueError("legacy_phase_hash_invalid")
+        if not isinstance(self.legacy_decision, ArenaST3GGDecision):
+            raise TypeError("legacy_decision_must_be_arena_st3gg_decision")
         for name, value in (
             ("legacy_raw_units", self.legacy_raw_units),
             ("legacy_final_units", self.legacy_final_units),
@@ -108,7 +116,7 @@ class ArenaST3GGV2ShadowComparison:
                 raise ValueError(f"{name}_invalid")
         if type(self.legacy_savings_ratio) is not float or not 0.0 <= self.legacy_savings_ratio <= 1.0:
             raise ValueError("legacy_savings_ratio_invalid")
-        if self.legacy_payload_digest and not _is_sha256(self.legacy_payload_digest):
+        if not _is_sha256(self.legacy_payload_digest):
             raise ValueError("legacy_payload_digest_invalid")
         for name, value in (
             ("legacy_original_hash", self.legacy_original_hash),
@@ -125,9 +133,12 @@ class ArenaST3GGV2ShadowComparison:
             raise ValueError("enabled_v2_requires_verified_v1_exact_recall")
         if self.v2_decision.enabled and self.v2_decision.restoration_mode is not ST3GGRestorationMode.EXACT_RECALL:
             raise ValueError("enabled_v2_requires_exact_recall_mode")
+        if any(type(reason) is not str or not reason for reason in self.mismatch_reasons):
+            raise ValueError("mismatch_reasons_invalid")
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
+        payload["legacy_decision"]["warnings"] = list(self.legacy_decision.warnings)
         payload["v2_decision"] = self.v2_decision.to_dict()
         payload["mismatch_reasons"] = list(self.mismatch_reasons)
         return payload
@@ -162,7 +173,12 @@ def encode_arena_capsule_with_v2_shadow(
     lookup_record: LookupRecall = lookup_st3gg_recall,
     count_units: CountUnits = estimate_tokens,
 ) -> ArenaST3GGShadowResult:
-    """Run the unchanged V1 writer and add a fail-closed, read-only V2 shadow."""
+    """Run the unchanged V1 writer and add a fail-closed, read-only V2 shadow.
+
+    Once the V1 writer succeeds, no shadow-only defect is allowed to suppress or
+    alter that live result. Unexpected shadow exceptions are converted into a
+    deterministic disabled V2 comparison using Aura's built-in token estimate.
+    """
 
     legacy = encode_arena_capsule_for_egress(
         capsule,
@@ -172,15 +188,24 @@ def encode_arena_capsule_with_v2_shadow(
         max_rows=max_rows,
         recall_root=recall_root,
     )
-    comparison = project_arena_st3gg_v2_shadow(
-        capsule,
-        legacy,
-        namespace=namespace,
-        minimum_savings_ratio=min_savings_ratio,
-        recall_root=recall_root,
-        lookup_record=lookup_record,
-        count_units=count_units,
-    )
+    try:
+        comparison = project_arena_st3gg_v2_shadow(
+            capsule,
+            legacy,
+            namespace=namespace,
+            minimum_savings_ratio=min_savings_ratio,
+            recall_root=recall_root,
+            lookup_record=lookup_record,
+            count_units=count_units,
+        )
+    except Exception as exc:  # final compatibility guard after V1 has succeeded
+        comparison = _failure_comparison(
+            capsule,
+            legacy,
+            namespace=namespace,
+            minimum_savings_ratio=min_savings_ratio,
+            reason=f"shadow_projection_failed:{type(exc).__name__}",
+        )
     return ArenaST3GGShadowResult(legacy_capsule=legacy, comparison=comparison)
 
 
@@ -197,26 +222,25 @@ def project_arena_st3gg_v2_shadow(
     """Project one already-emitted V1 Arena result into canonical V2 evidence.
 
     The function never mutates V1 recall. A canonical persistence receipt is
-    synthesized only after the exact V1 record is independently recovered and
-    verified against the caller capsule and emitted V1 bytes.
+    synthesized only after the exact V1 record is recovered through both live
+    V1 aliases and verified against the caller capsule and emitted V1 bytes.
     """
 
     if not isinstance(legacy_capsule, ArenaST3GGCapsule):
         raise TypeError("legacy_capsule_must_be_arena_st3gg_capsule")
-    if not callable(lookup_record):
-        raise TypeError("lookup_record_must_be_callable")
-    if not callable(count_units):
-        raise TypeError("count_units_must_be_callable")
+    if not isinstance(legacy_capsule.decision, ArenaST3GGDecision):
+        raise TypeError("legacy_decision_must_be_arena_st3gg_decision")
 
     original_json = _legacy_original_json(capsule)
     original_digest = digest_text(original_json)
     legacy_payload = legacy_capsule.payload
-    legacy_raw_units = _safe_count(count_units, original_json)
-    legacy_final_units = _safe_count(count_units, legacy_payload) if legacy_payload else legacy_raw_units
-    legacy_savings = _ratio(legacy_raw_units, legacy_final_units)
+    if type(legacy_payload) is not str:
+        raise TypeError("legacy_payload_must_be_string")
+    legacy_raw_units = estimate_tokens(original_json)
+    legacy_final_units = estimate_tokens(legacy_payload) if legacy_payload else legacy_raw_units
+    legacy_savings = _legacy_ratio(legacy_raw_units, legacy_final_units)
     legacy_payload_digest = digest_text(legacy_payload)
     legacy_pointer = legacy_capsule.decision.st3gg_pointer
-    legacy_hash = legacy_capsule.original_hash or legacy_capsule.decision.original_hash
 
     if legacy_capsule.decision.enabled is not True:
         projected = adapt_legacy_arena_decision(legacy_capsule.decision, namespace=namespace)
@@ -234,14 +258,16 @@ def project_arena_st3gg_v2_shadow(
 
     record: ST3GGRecallRecord | None = None
     try:
-        _require(bool(legacy_payload), "legacy_enabled_empty_payload")
-        _require(bool(legacy_pointer), "legacy_enabled_missing_pointer")
-        _require(bool(legacy_hash), "legacy_enabled_missing_original_hash")
-        _require(legacy_hash == original_digest, "legacy_original_digest_disagreement")
-        _require(legacy_capsule.decision.original_hash == original_digest, "legacy_decision_digest_disagreement")
-        _require(
-            legacy_capsule.retrieval_marker == _retrieval_marker(original_digest),
-            "legacy_retrieval_marker_disagreement",
+        if not callable(lookup_record):
+            raise TypeError("lookup_record_must_be_callable")
+        if not callable(count_units):
+            raise TypeError("count_units_must_be_callable")
+        policy_ratio = _validated_policy_ratio(minimum_savings_ratio)
+        _verify_live_v1_capsule(
+            legacy_capsule,
+            original_json=original_json,
+            original_digest=original_digest,
+            minimum_savings_ratio=policy_ratio,
         )
         candidate = _extract_compact_candidate(
             legacy_payload,
@@ -259,6 +285,18 @@ def project_arena_st3gg_v2_shadow(
             expected_pointer=str(legacy_pointer),
             expected_payload=legacy_payload,
         )
+        digest_record = lookup_record(original_digest, ledger_path=ledger_path)
+        _require(digest_record is not None, "legacy_digest_alias_missing")
+        _require(isinstance(digest_record, ST3GGRecallRecord), "legacy_digest_alias_record_type_invalid")
+        _verify_v1_record(
+            digest_record,
+            expected_namespace=_legacy_namespace(namespace),
+            expected_original=original_json,
+            expected_digest=original_digest,
+            expected_pointer=str(legacy_pointer),
+            expected_payload=legacy_payload,
+        )
+        _require(digest_record == record, "legacy_digest_alias_record_substitution")
 
         def confirm_v1_exact(v2_record: ST3GGExactRecallRecord) -> Mapping[str, str]:
             verify_exact_recall_record(v2_record)
@@ -279,7 +317,7 @@ def project_arena_st3gg_v2_shadow(
             content_type="application/json",
             source_hint="coding_arena_st3gg_v1_shadow_binding",
             policy=ST3GGSavingsPolicy(
-                minimum_savings_ratio=float(minimum_savings_ratio),
+                minimum_savings_ratio=policy_ratio,
                 minimum_raw_units=1,
                 measurement_class=ST3GGMeasurementClass.TOKEN_ESTIMATE,
             ),
@@ -317,6 +355,7 @@ def project_arena_st3gg_v2_shadow(
         namespace=namespace,
         original_digest=original_digest,
         raw_units=legacy_raw_units,
+        minimum_savings_ratio=_safe_policy_ratio(minimum_savings_ratio),
         reason=reason,
         legacy_pointer=str(legacy_pointer or "") or None,
     )
@@ -328,9 +367,42 @@ def project_arena_st3gg_v2_shadow(
         legacy_raw_units=legacy_raw_units,
         legacy_final_units=legacy_final_units,
         legacy_savings_ratio=legacy_savings,
+        legacy_record=record if isinstance(record, ST3GGRecallRecord) else None,
         v2_decision=disabled,
         mismatch_reasons=(reason,),
     )
+
+
+def _verify_live_v1_capsule(
+    legacy_capsule: ArenaST3GGCapsule,
+    *,
+    original_json: str,
+    original_digest: str,
+    minimum_savings_ratio: float,
+) -> None:
+    decision = legacy_capsule.decision
+    _require(legacy_capsule.capsule_version == ARENA_ST3GG_CODEC_VERSION, "legacy_capsule_version_noncanonical")
+    _require(legacy_capsule.mode == SAFE_MODE, "legacy_capsule_mode_noncanonical")
+    _require(type(legacy_capsule.payload) is str and bool(legacy_capsule.payload), "legacy_enabled_empty_payload")
+    _require(type(legacy_capsule.phase_hash) is str, "legacy_phase_hash_type_invalid")
+    _require(decision.enabled is True, "legacy_decision_not_enabled")
+    _require(decision.reason == "savings_threshold_met", "legacy_enabled_reason_noncanonical")
+    _require(bool(decision.st3gg_pointer), "legacy_enabled_missing_pointer")
+    _require(legacy_capsule.original_hash == original_digest, "legacy_capsule_digest_disagreement")
+    _require(decision.original_hash == original_digest, "legacy_decision_digest_disagreement")
+    _require(
+        legacy_capsule.retrieval_marker == _retrieval_marker(original_digest),
+        "legacy_retrieval_marker_disagreement",
+    )
+    raw_units = estimate_tokens(original_json)
+    final_units = estimate_tokens(legacy_capsule.payload)
+    measured_savings = _legacy_ratio(raw_units, final_units)
+    _require(decision.raw_tokens_est == raw_units, "legacy_raw_measurement_disagreement")
+    _require(decision.compact_tokens_est == final_units, "legacy_final_measurement_disagreement")
+    _require(decision.savings_ratio == measured_savings, "legacy_savings_measurement_disagreement")
+    _require(measured_savings >= minimum_savings_ratio, "legacy_enabled_below_requested_threshold")
+    expected_phase_hash = _legacy_enabled_phase_hash(legacy_capsule)
+    _require(legacy_capsule.phase_hash == expected_phase_hash, "legacy_phase_hash_disagreement")
 
 
 def _verify_v1_record(
@@ -365,9 +437,25 @@ def _extract_compact_candidate(payload: str, *, pointer: str, original_digest: s
     _require(payload.endswith(suffix), "legacy_payload_metadata_noncanonical")
     candidate = payload[: -len(suffix)]
     _require(bool(candidate), "legacy_compact_candidate_empty")
-    candidate.encode("ascii")
+    _require(candidate.isascii(), "legacy_compact_candidate_not_ascii")
     _require(all(32 <= ord(char) <= 126 for char in candidate), "legacy_compact_candidate_not_visible_ascii")
     return candidate
+
+
+def _legacy_enabled_phase_hash(legacy_capsule: ArenaST3GGCapsule) -> str:
+    body = json.dumps(
+        {
+            "version": ARENA_ST3GG_CODEC_VERSION,
+            "mode": SAFE_MODE,
+            "payload": legacy_capsule.payload,
+            "original_hash": legacy_capsule.original_hash,
+            "decision": legacy_capsule.decision,
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.blake2b(body.encode("utf-8", errors="replace"), digest_size=16).hexdigest()
 
 
 def _comparison(
@@ -388,6 +476,7 @@ def _comparison(
         eligible=eligible,
         exact_recall_verified=exact_recall_verified,
         legacy_phase_hash=legacy_capsule.phase_hash,
+        legacy_decision=legacy_capsule.decision,
         legacy_pointer=legacy_capsule.decision.st3gg_pointer,
         legacy_original_hash=_trusted_sha256(
             legacy_capsule.original_hash or legacy_capsule.decision.original_hash
@@ -407,11 +496,46 @@ def _comparison(
     )
 
 
+def _failure_comparison(
+    capsule: dict[str, Any],
+    legacy_capsule: ArenaST3GGCapsule,
+    *,
+    namespace: str,
+    minimum_savings_ratio: Any,
+    reason: str,
+) -> ArenaST3GGV2ShadowComparison:
+    original_json = _legacy_original_json(capsule)
+    original_digest = digest_text(original_json)
+    payload = legacy_capsule.payload if type(legacy_capsule.payload) is str else str(legacy_capsule.payload)
+    raw_units = estimate_tokens(original_json)
+    final_units = estimate_tokens(payload) if payload else raw_units
+    disabled = _disabled_v2_decision(
+        namespace=namespace,
+        original_digest=original_digest,
+        raw_units=raw_units,
+        minimum_savings_ratio=_safe_policy_ratio(minimum_savings_ratio),
+        reason=reason,
+        legacy_pointer=legacy_capsule.decision.st3gg_pointer,
+    )
+    return _comparison(
+        eligible=False,
+        exact_recall_verified=False,
+        legacy_capsule=legacy_capsule,
+        legacy_payload_digest=digest_text(payload),
+        legacy_raw_units=raw_units,
+        legacy_final_units=final_units,
+        legacy_savings_ratio=_legacy_ratio(raw_units, final_units),
+        v2_decision=disabled,
+        mismatch_reasons=(reason,),
+    )
+
+
 def _disabled_v2_decision(
     *,
     namespace: str,
     original_digest: str,
     raw_units: int,
+    minimum_savings_ratio: float,
     reason: str,
     legacy_pointer: str | None,
 ) -> ST3GGDecision:
@@ -426,7 +550,7 @@ def _disabled_v2_decision(
         final_units=trusted_raw,
         overhead_units=0,
         savings_ratio=0.0,
-        minimum_savings_ratio=MIN_SAVINGS_RATIO,
+        minimum_savings_ratio=minimum_savings_ratio,
         restoration_mode=ST3GGRestorationMode.NONE,
         original_digest=original_digest,
         warnings=(reason,),
@@ -470,17 +594,29 @@ def _retrieval_marker(original_digest: str) -> str:
     return f"<<aura_arena_st3gg:{original_digest}>>"
 
 
-def _safe_count(count_units: CountUnits, text: str) -> int:
-    value = count_units(text)
-    if type(value) is not int or value < 0:
-        raise ArenaST3GGShadowError("measurement_callback_returned_invalid_units")
-    return value
+def _validated_policy_ratio(value: Any) -> float:
+    if type(value) is bool:
+        raise ArenaST3GGShadowError("minimum_savings_ratio_invalid")
+    try:
+        ratio = float(value)
+    except (TypeError, ValueError) as exc:
+        raise ArenaST3GGShadowError("minimum_savings_ratio_invalid") from exc
+    if not math.isfinite(ratio) or not 0.0 <= ratio <= 1.0:
+        raise ArenaST3GGShadowError("minimum_savings_ratio_invalid")
+    return ratio
 
 
-def _ratio(raw_units: int, final_units: int) -> float:
+def _safe_policy_ratio(value: Any) -> float:
+    try:
+        return _validated_policy_ratio(value)
+    except ArenaST3GGShadowError:
+        return MIN_SAVINGS_RATIO
+
+
+def _legacy_ratio(raw_units: int, final_units: int) -> float:
     if raw_units <= 0 or final_units >= raw_units:
         return 0.0
-    return round((raw_units - final_units) / raw_units, 6)
+    return round((raw_units - final_units) / raw_units, 4)
 
 
 def _require(condition: bool, reason: str) -> None:
@@ -488,8 +624,12 @@ def _require(condition: bool, reason: str) -> None:
         raise ArenaST3GGShadowError(reason)
 
 
-def _is_sha256(value: str) -> bool:
-    return len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+def _is_hex_digest(value: Any, *, size: int) -> bool:
+    return type(value) is str and len(value) == size and all(char in "0123456789abcdef" for char in value)
+
+
+def _is_sha256(value: Any) -> bool:
+    return _is_hex_digest(value, size=64)
 
 
 def _trusted_sha256(value: Any) -> str | None:
