@@ -62,6 +62,13 @@ def test_exact_binding_rejects_compact_pointer_disagreement(tmp_path: Path) -> N
         replace(result.binding, legacy_compact_digest="0" * 64)
 
 
+def test_exact_result_rejects_forged_v2_payload(tmp_path: Path) -> None:
+    _ledger_path, result = _exact_report(tmp_path)
+
+    with pytest.raises(ValueError, match="exact_report_payload_digest_disagreement"):
+        replace(result, v2_payload=result.v2_payload + "X")
+
+
 def test_ast_result_rejects_forged_frame_digest() -> None:
     result = encode_source_with_v2_facade(AST_SOURCE)
 
