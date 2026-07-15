@@ -62,6 +62,13 @@ def test_exact_binding_rejects_compact_pointer_disagreement(tmp_path: Path) -> N
         replace(result.binding, legacy_compact_digest="0" * 64)
 
 
+def test_exact_binding_rejects_partial_surface_identity(tmp_path: Path) -> None:
+    _ledger_path, result = _exact_report(tmp_path)
+
+    with pytest.raises(ValueError, match="binding_surface_identity_incomplete"):
+        replace(result.binding, legacy_compact_digest=None)
+
+
 def test_exact_result_rejects_forged_v2_payload(tmp_path: Path) -> None:
     _ledger_path, result = _exact_report(tmp_path)
 
@@ -69,11 +76,43 @@ def test_exact_result_rejects_forged_v2_payload(tmp_path: Path) -> None:
         replace(result, v2_payload=result.v2_payload + "X")
 
 
+def test_report_result_rejects_forged_restored_preview(tmp_path: Path) -> None:
+    _ledger_path, result = _exact_report(tmp_path)
+
+    with pytest.raises(ValueError, match="report_restored_preview_disagreement"):
+        replace(result, legacy_restored_preview=result.legacy_restored_preview + "X")
+
+
+def test_report_result_rejects_enabled_none_mode(tmp_path: Path) -> None:
+    _ledger_path, result = _exact_report(tmp_path)
+    forged_decision = replace(
+        result.v2_decision,
+        restoration_mode=ST3GGRestorationMode.NONE,
+    )
+
+    with pytest.raises(ValueError, match="report_enabled_restoration_mode_disagreement"):
+        replace(result, v2_decision=forged_decision)
+
+
+def test_report_result_rejects_enabled_mismatch_state(tmp_path: Path) -> None:
+    _ledger_path, result = _exact_report(tmp_path)
+
+    with pytest.raises(ValueError, match="failed_report_result_enabled"):
+        replace(result, mismatch_reasons=("forged_mismatch",))
+
+
 def test_ast_result_rejects_forged_frame_digest() -> None:
     result = encode_source_with_v2_facade(AST_SOURCE)
 
     with pytest.raises(ValueError, match="ast_frame_digest_disagreement"):
         replace(result, legacy_frame_digest="0" * 64)
+
+
+def test_ast_result_rejects_boolean_span_count() -> None:
+    result = encode_source_with_v2_facade(AST_SOURCE)
+
+    with pytest.raises(ValueError, match="ast_span_count_invalid"):
+        replace(result, exact_span_count=True)
 
 
 def test_invalid_legacy_savings_fails_closed_without_second_exception() -> None:
