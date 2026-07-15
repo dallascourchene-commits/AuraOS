@@ -151,6 +151,44 @@ def test_nonproposal_event_is_reported(tmp_path) -> None:
     assert QDKTProjectionFindingCode.NON_PROPOSAL_EVENT in codes(report)
 
 
+def test_empty_parent_or_evidence_ref_is_reported_without_throwing(tmp_path) -> None:
+    for suffix, parent_refs, evidence_refs in (
+        ("parent", ("",), ()),
+        ("evidence", (), ("",)),
+    ):
+        store = AppendOnlyEventStore(tmp_path / suffix)
+        receipt = record(store)
+        raw = receipt.event.to_dict()
+        changed = AuraEventEnvelope.create(
+            trace_id=raw["trace_id"],
+            parent_event_ids=parent_refs,
+            event_type=raw["event_type"],
+            actor_id=raw["actor_id"],
+            actor_type=raw["actor_type"],
+            arena_id=raw["arena_id"],
+            board_id=raw["board_id"],
+            node_id=raw["node_id"],
+            objective_id=raw["objective_id"],
+            purpose_digest=raw["purpose_digest"],
+            dikwp_stage=raw["dikwp_stage"],
+            payload_ref=raw["payload_ref"],
+            payload_digest=raw["payload_digest"],
+            evidence_refs=evidence_refs,
+            policy_scope=raw["policy_scope"],
+            proposal_only=True,
+            measurement_classes=raw["measurement_classes"],
+            created_at=raw["created_at"],
+        )
+        store.events_path.write_text(
+            canonical_json(changed.to_dict()) + "\n", encoding="utf-8"
+        )
+
+        report = project_qdkt_events(store)
+
+        assert QDKTProjectionFindingCode.INVALID_EVENT_RECORD in codes(report)
+        assert report.integrity_complete is False
+
+
 def test_nonfinite_and_duplicate_key_rows_fail_closed(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     store.events_path.parent.mkdir(parents=True, exist_ok=True)
