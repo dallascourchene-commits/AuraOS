@@ -21,6 +21,7 @@ from aura_qdkt_projection_io import (
     FindingCollector,
     load_observation,
     read_event_rows,
+    rebuild_envelope,
     validate_qdkt_envelope,
 )
 from aura_qdkt_projection_types import QDKTProjectionFindingCode
@@ -73,8 +74,12 @@ def _valid_observations(
     collector = FindingCollector()
     rows = read_event_rows(store, collector)
     valid: list[tuple[Any, QDKTObservation]] = []
+    all_events: dict[str, tuple[int, float]] = {}
     row_digests: dict[str, str] = {}
-    for _index, raw in rows:
+    for index, raw in rows:
+        generic = rebuild_envelope(raw)
+        if generic is not None:
+            all_events.setdefault(generic.event_id, (index, generic.created_at))
         if raw.get("event_type") != QDKT_EVENT_TYPE:
             continue
         event_id = str(raw.get("event_id") or "")
@@ -108,7 +113,27 @@ def _valid_observations(
         if observation is None:
             continue
         valid.append((envelope, observation))
+
     ordered = tuple(sorted(valid, key=lambda item: (item[0].created_at, item[0].event_id)))
+    for envelope, _observation in ordered:
+        child = all_events.get(envelope.event_id)
+        for parent_id in envelope.parent_event_ids:
+            parent = all_events.get(parent_id)
+            if parent is None:
+                collector.add(
+                    QDKTProjectionFindingCode.MISSING_PARENT,
+                    "QDKT parent event is missing or invalid during compatibility read",
+                    (envelope.event_id, parent_id),
+                )
+            elif child is not None and (
+                parent[0] >= child[0] or parent[1] > envelope.created_at
+            ):
+                collector.add(
+                    QDKTProjectionFindingCode.OUT_OF_ORDER,
+                    "QDKT parent occurs after its child during compatibility read",
+                    (envelope.event_id, parent_id),
+                )
+
     findings = tuple(
         sorted(
             _projection_findings(collector.findings),
