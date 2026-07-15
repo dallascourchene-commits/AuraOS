@@ -139,37 +139,26 @@ def _safe_release_path(root: Path, relative: str) -> Path:
         raise ValueError(f"release file is forbidden: {relative}")
     if relative_path.suffix not in _ALLOWED_SUFFIXES:
         raise ValueError(f"release file type is not allowlisted: {relative}")
-    return resolved
-
-
-def _file_index(root: Path, record: Any) -> dict[str, Any]:
-    path = _safe_release_path(root, record.path)
-    data = path.read_bytes()
+    data = resolved.read_bytes()
     if len(data) > _MAX_FILE_BYTES:
-        raise ValueError(f"release file exceeds size limit: {record.path}")
+        raise ValueError(f"release file exceeds size limit: {relative}")
     if b"\x00" in data:
-        raise ValueError(f"release file contains NUL bytes: {record.path}")
+        raise ValueError(f"release file contains NUL bytes: {relative}")
     try:
         data.decode("utf-8")
     except UnicodeDecodeError as exc:
-        raise ValueError(f"release file is not UTF-8: {record.path}") from exc
-    blob_sha1 = hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
-    return {
-        "path": record.path,
-        "role": record.role.value,
-        "byte_length": len(data),
-        "sha256": hashlib.sha256(data).hexdigest(),
-        "git_blob_sha1": blob_sha1,
-    }
+        raise ValueError(f"release file is not UTF-8: {relative}") from exc
+    return resolved
 
 
 def _payload(root: str | Path, manifest: SubstrateManifest) -> dict[str, Any]:
     base = Path(root)
-    files = tuple(
-        _file_index(base, record)
-        for record in manifest.files
-        if record.release_included
-    )
+    files = []
+    for record in manifest.files:
+        if not record.release_included:
+            continue
+        _safe_release_path(base, record.path)
+        files.append({"path": record.path, "role": record.role.value})
     paths = tuple(item["path"] for item in files)
     if paths != tuple(sorted(set(paths))):
         raise ValueError("release index paths must be unique and sorted")
@@ -178,7 +167,7 @@ def _payload(root: str | Path, manifest: SubstrateManifest) -> dict[str, Any]:
         "manifest_digest": manifest.digest,
         "package_format": "INDEX_ONLY",
         "publication_performed": False,
-        "files": list(files),
+        "files": files,
     }
 
 
