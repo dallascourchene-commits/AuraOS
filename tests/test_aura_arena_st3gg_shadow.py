@@ -219,7 +219,9 @@ def test_empty_legacy_compact_candidate_is_rejected_before_exact_claim(tmp_path:
     comparison = project_arena_st3gg_v2_shadow(capsule, forged, recall_root=tmp_path)
 
     assert comparison.v2_decision.enabled is False
-    assert comparison.mismatch_reasons == ("legacy_compact_candidate_empty",)
+    # The forged bytes contradict V1's bound final-unit measurement before the
+    # compact-candidate parser is reached, so the stronger first mismatch wins.
+    assert comparison.mismatch_reasons == ("legacy_final_measurement_disagreement",)
 
 
 def test_canonical_overhead_can_disable_v2_while_v1_remains_live(tmp_path: Path) -> None:
