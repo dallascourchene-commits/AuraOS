@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784087814,
+  "generated_at_unix": 1784087930,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 836,
+    "included_file_count": 837,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -764,6 +764,7 @@
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_continuity_packet.py",
+      "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -857,23 +858,23 @@
     ]
   },
   "summary": {
-    "file_count": 836,
-    "total_bytes": 64086716,
-    "text_tokens_est": 6625624,
+    "file_count": 837,
+    "total_bytes": 64092493,
+    "text_tokens_est": 6627068,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 587,
+      "python_module": 588,
       "schema_or_lexicon": 69,
       "support_file": 41
     },
     "topology_nodes": 7292,
     "topology_edges": 15301,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19151.52
+    "elapsed_ms": 19385.57
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1649,6 +1650,7 @@
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_continuity_packet.py",
+      "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_potential_repl.py",
@@ -20925,6 +20927,14 @@
         "end_line": 134,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:_encode_payload:dc228a0dd4728b87",
         "signature_hash": "75195820d21ba7a1"
+      },
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:_encode_payload:3183cc556d67fc22",
+        "signature_hash": "d897e4e3cdfb3048"
       }
     ],
     "_encode_statement": [
@@ -24778,6 +24788,14 @@
         "line": 54,
         "end_line": 74,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:_j0_packet:24b5cedf3e48c529",
+        "signature_hash": "91d4e5181d203a8e"
+      },
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:_j0_packet:b9d38077f9129647",
         "signature_hash": "91d4e5181d203a8e"
       }
     ],
@@ -62365,6 +62383,16 @@
         "signature_hash": "6512dd08ba0837d1"
       }
     ],
+    "test_digest_contracts_reject_labels_masquerading_as_digests": [
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:test_digest_contracts_reject_labels_masquerading_as_digests:44742e31f810670b",
+        "signature_hash": "bc7976d7697e89e5"
+      }
+    ],
     "test_digest_finalized_after_enrichment": [
       {
         "file": "tests/test_aura_ephemeral_phase0_hardening.py",
@@ -66565,6 +66593,26 @@
         "signature_hash": "83699148ede99e3a"
       }
     ],
+    "test_j0_adapter_ignores_unbound_aurajpacket_metadata": [
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:test_j0_adapter_ignores_unbound_aurajpacket_metadata:c3f1c26206a05d0b",
+        "signature_hash": "590572004fd26fd6"
+      }
+    ],
+    "test_j1_adapter_hashes_legacy_digest_fields_instead_of_copying_values": [
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:test_j1_adapter_hashes_legacy_digest_fields_instead_of_copying_values:2fcb85545d4a2dee",
+        "signature_hash": "599211c18b2ff30e"
+      }
+    ],
     "test_j1_state_packet_round_trip_and_tamper_detection": [
       {
         "file": "tests/test_aura_arena_wfst_phase_a.py",
@@ -69693,6 +69741,16 @@
         "end_line": 692,
         "semantic_id": "tests/test_aura_hermes_arena_mode.py#method:TestCLIParserRegistration.test_parser_has_write_rules:372ac619de79d244",
         "signature_hash": "add1f6eb9f68a8f1"
+      }
+    ],
+    "test_parser_rejects_recomputed_packet_with_invalid_nested_digest": [
+      {
+        "file": "tests/test_aura_continuity_packet_digest_hardening.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 167,
+        "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:test_parser_rejects_recomputed_packet_with_invalid_nested_digest:b5e99cca8b648f8c",
+        "signature_hash": "4285c08023ed053f"
       }
     ],
     "test_parser_returns_stable_prefix_and_malformed_errors": [
@@ -123733,47 +123791,47 @@
     {
       "path": ".github/workflows/p4-1-j2-continuity.yml",
       "role": "schema_or_lexicon",
-      "bytes": 2746,
-      "lines": 85,
-      "tokens_est": 687,
+      "bytes": 3016,
+      "lines": 89,
+      "tokens_est": 754,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a9a9a3f83bccc7f4",
+      "digest8": "39366b7219289945",
       "vector": [
-        -0.176064,
-        0.266935,
-        0.121541,
-        0.191966,
-        0.239674,
-        0.164705,
-        0.189694,
-        0.266935,
-        -0.021582,
-        -0.035213,
-        -0.137443,
-        -0.207869,
-        -0.010223,
-        0.032941,
-        0.137443,
-        -0.176064,
-        -0.221499,
-        0.191966,
-        0.153346,
-        -0.241945,
-        -0.219228,
-        0.144259,
-        0.166976,
-        -0.062474,
-        0.173792,
-        0.180607,
-        -0.098823,
-        0.169248,
-        0.285109,
-        0.094279,
-        0.026126,
-        -0.280566
+        0.057359,
+        -0.110716,
+        -0.121387,
+        0.29213,
+        0.228101,
+        0.150734,
+        -0.305469,
+        -0.193419,
+        -0.089373,
+        0.158737,
+        -0.086705,
+        0.116052,
+        0.265451,
+        0.116052,
+        0.084037,
+        -0.204091,
+        -0.062695,
+        0.046687,
+        -0.284126,
+        0.076034,
+        0.00667,
+        0.289462,
+        -0.225434,
+        -0.308137,
+        0.020009,
+        -0.014673,
+        -0.310805,
+        0.012005,
+        -0.076034,
+        0.060027,
+        -0.14273,
+        0.206759
       ]
     },
     {
@@ -130664,6 +130722,52 @@
         -0.090717,
         -0.216931,
         0.240596
+      ]
+    },
+    {
+      "path": "tests/test_aura_continuity_packet_digest_hardening.py",
+      "role": "python_module",
+      "bytes": 5507,
+      "lines": 168,
+      "tokens_est": 1377,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1ebe8a13c17dd07f",
+      "vector": [
+        0.238342,
+        -0.251054,
+        0.219275,
+        0.153598,
+        0.215038,
+        -0.251054,
+        -0.176903,
+        -0.003178,
+        -0.077329,
+        -0.155717,
+        -0.223512,
+        0.206563,
+        0.068854,
+        0.100633,
+        0.066736,
+        0.217156,
+        -0.083685,
+        0.104871,
+        -0.215038,
+        -0.242579,
+        -0.111226,
+        0.244698,
+        0.227749,
+        -0.007415,
+        0.079447,
+        -0.083685,
+        0.028601,
+        0.174784,
+        0.268002,
+        -0.238342,
+        0.013771,
+        0.240461
       ]
     },
     {
