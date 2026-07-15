@@ -14,6 +14,10 @@ concurrency:
   group: p6-2-qdkt-compatibility-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
 jobs:
   focused-qdkt-compatibility:
     name: QDKT compatibility (Python ${{ matrix.python-version }})
@@ -32,7 +36,10 @@ jobs:
       - name: Install focused tooling
         run: |
           python -m pip install --upgrade pip
-          python -m pip install numpy pytest ruff
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "pytest>=8.0,<9.0" \
+            "ruff>=0.9,<1.0"
       - name: Compile legacy, P6.1, and P6.2 surfaces
         run: |
           python -m py_compile \
@@ -76,8 +83,27 @@ jobs:
           text = files[0].read_text(encoding='utf-8')
           payload = json.loads(text)
           assert text == canonical_json(payload) + '\n'
+          assert payload['version'] == 'AURA_QDKT_INVENTORY_P6_2'
           assert payload['entries']
           assert payload['scanned_files'] > 0
+          assert 0 <= payload['ignored_files'] <= payload['scanned_files']
+          ids = [item['entry_id'] for item in payload['entries']]
+          assert len(ids) == len(set(ids))
+          sort_keys = [
+              (
+                  item['file_path'],
+                  item['line'],
+                  item['use_class'],
+                  item['symbol'],
+                  item['entry_id'],
+              )
+              for item in payload['entries']
+          ]
+          assert sort_keys == sorted(sort_keys)
+          assert all(
+              not Path(item['file_path']).name.startswith('qdkt-p6-2-inventory')
+              for item in payload['entries']
+          )
           PY
       - name: Upload deterministic inventory
         uses: actions/upload-artifact@v4
