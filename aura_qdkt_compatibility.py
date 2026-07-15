@@ -77,18 +77,13 @@ def _valid_observations(
     all_events: dict[str, tuple[int, float]] = {}
     row_digests: dict[str, str] = {}
     for index, raw in rows:
-        generic = rebuild_envelope(raw)
-        if generic is not None:
-            all_events.setdefault(generic.event_id, (index, generic.created_at))
-        if raw.get("event_type") != QDKT_EVENT_TYPE:
-            continue
         event_id = str(raw.get("event_id") or "")
         try:
             row_digest = stable_digest(raw)
         except (TypeError, ValueError):
             collector.add(
                 QDKTProjectionFindingCode.INVALID_EVENT_RECORD,
-                "QDKT event cannot be canonically digested during compatibility read",
+                "event cannot be canonically digested during compatibility read",
                 (event_id,),
             )
             continue
@@ -101,11 +96,17 @@ def _valid_observations(
             )
             collector.add(
                 code,
-                "duplicate QDKT event ID during compatibility read",
+                "duplicate event ID during compatibility read",
                 (event_id,),
             )
             continue
         row_digests[event_id] = row_digest
+
+        generic = rebuild_envelope(raw)
+        if generic is not None:
+            all_events[generic.event_id] = (index, generic.created_at)
+        if raw.get("event_type") != QDKT_EVENT_TYPE:
+            continue
         envelope = validate_qdkt_envelope(raw, collector)
         if envelope is None:
             continue
