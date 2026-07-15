@@ -5,6 +5,8 @@ import json
 import pytest
 
 from aura_qdkt_compatibility_types import (
+    QDKTInventoryEntry,
+    QDKTInventoryImpact,
     QDKTInventoryReadiness,
     QDKTInventoryReport,
     QDKTUseClass,
@@ -231,3 +233,38 @@ def test_inventory_report_normalizes_one_shot_iterables_and_rejects_bad_counts(t
     assert report.entries == source.entries
     with pytest.raises(ValueError, match="must not exceed"):
         QDKTInventoryReport((), scanned_files=0, ignored_files=1)
+
+    first = QDKTInventoryEntry.create(
+        file_path="first.py",
+        symbol="<module>",
+        line=1,
+        use_class=QDKTUseClass.IMPORT,
+        impact=QDKTInventoryImpact.MEDIUM,
+        readiness=QDKTInventoryReadiness.DUAL_READ_CANDIDATE,
+        detail="first",
+    )
+    second = QDKTInventoryEntry.create(
+        file_path="second.py",
+        symbol="<module>",
+        line=1,
+        use_class=QDKTUseClass.IMPORT,
+        impact=QDKTInventoryImpact.MEDIUM,
+        readiness=QDKTInventoryReadiness.DUAL_READ_CANDIDATE,
+        detail="second",
+    )
+    with pytest.raises(ValueError, match="more files than were scanned"):
+        QDKTInventoryReport((first, second), scanned_files=1, ignored_files=0)
+
+
+def test_inventory_entry_rejects_unsafe_or_noncanonical_paths() -> None:
+    common = {
+        "symbol": "<module>",
+        "line": 1,
+        "use_class": QDKTUseClass.IMPORT,
+        "impact": QDKTInventoryImpact.MEDIUM,
+        "readiness": QDKTInventoryReadiness.DUAL_READ_CANDIDATE,
+        "detail": "reference",
+    }
+    for path in ("../escape.py", "/absolute.py", "folder\\mixed.py", "folder/./file.py"):
+        with pytest.raises(ValueError, match="repository-relative path"):
+            QDKTInventoryEntry.create(file_path=path, **common)
