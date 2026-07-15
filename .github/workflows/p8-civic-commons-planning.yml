@@ -57,8 +57,11 @@ jobs:
             tests/test_aura_civic_planning_projection.py \
             tests/test_aura_civic_planning_behavior.py \
             tests/test_aura_civic_planning_contracts.py \
+            tests/test_aura_civic_planning_diagnostics.py \
+            tests/test_aura_civic_planning_shape.py \
             tests/test_aura_civic_planning_stress.py \
-            tests/test_aura_civic_planning_inventory.py
+            tests/test_aura_civic_planning_inventory.py \
+            tests/test_aura_civic_planning_integration.py
       - name: Fatal and static correctness lint
         run: |
           ruff check --select E4,E7,E9,F --ignore E721 \
@@ -69,8 +72,11 @@ jobs:
             tests/test_aura_civic_planning_projection.py \
             tests/test_aura_civic_planning_behavior.py \
             tests/test_aura_civic_planning_contracts.py \
+            tests/test_aura_civic_planning_diagnostics.py \
+            tests/test_aura_civic_planning_shape.py \
             tests/test_aura_civic_planning_stress.py \
-            tests/test_aura_civic_planning_inventory.py
+            tests/test_aura_civic_planning_inventory.py \
+            tests/test_aura_civic_planning_integration.py
       - name: Run deterministic structural parity benchmark
         run: |
           python aura_civic_planning_benchmark.py \
@@ -117,8 +123,11 @@ jobs:
             tests/test_aura_civic_planning_projection.py \
             tests/test_aura_civic_planning_behavior.py \
             tests/test_aura_civic_planning_contracts.py \
+            tests/test_aura_civic_planning_diagnostics.py \
+            tests/test_aura_civic_planning_shape.py \
             tests/test_aura_civic_planning_stress.py \
             tests/test_aura_civic_planning_inventory.py \
+            tests/test_aura_civic_planning_integration.py \
             tests/test_aura_civic_commons_arena.py \
             tests/test_aura_civic_completion.py \
             tests/test_aura_civic_snapshots_and_store.py \
