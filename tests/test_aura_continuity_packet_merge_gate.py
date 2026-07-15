@@ -111,7 +111,7 @@ def test_j2_parser_rejects_non_string_input_without_coercion() -> None:
 
 
 def test_j2_parser_fails_closed_on_excessive_nesting() -> None:
-    deeply_nested_json = "[" * 1200 + "0" + "]" * 1200
+    deeply_nested_json = '{"level":' * 1200 + "0" + "}" * 1200
     encoded = base64.urlsafe_b64encode(deeply_nested_json.encode("utf-8")).decode(
         "ascii"
     ).rstrip("=")
