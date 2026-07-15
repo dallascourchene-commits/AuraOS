@@ -108,15 +108,16 @@ def test_capture_rejects_invalid_generator_surface(tmp_path) -> None:
         )
 
 
-def test_nonfinite_timestamp_is_rejected_before_write(tmp_path) -> None:
-    store = AppendOnlyEventStore(tmp_path / "events")
-    with pytest.raises(ValueError, match="created_at must be finite"):
-        record_qdkt_observation(
-            store,
-            observation(),
-            trace_id="trace-1",
-            actor_id="aura",
-            purpose_digest="purpose-1",
-            created_at=float("nan"),
-        )
-    assert list(store.sidecars_dir.iterdir()) == []
+def test_invalid_timestamps_are_rejected_before_write(tmp_path) -> None:
+    for invalid in (True, float("nan"), float("inf"), "100"):
+        store = AppendOnlyEventStore(tmp_path / f"events-{type(invalid).__name__}")
+        with pytest.raises(ValueError, match="created_at must be a finite number"):
+            record_qdkt_observation(
+                store,
+                observation(),
+                trace_id="trace-1",
+                actor_id="aura",
+                purpose_digest="purpose-1",
+                created_at=invalid,
+            )
+        assert list(store.sidecars_dir.iterdir()) == []
