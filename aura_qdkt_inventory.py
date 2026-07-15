@@ -67,7 +67,7 @@ def _is_test(path: str) -> bool:
 
 
 def _is_generated_inventory(path: Path) -> bool:
-    return path.suffix == ".json" and path.name.startswith("qdkt-p6-2-inventory")
+    return path.name.startswith("qdkt-p6-2-inventory")
 
 
 def _classify(path: str, use_class: QDKTUseClass) -> tuple[QDKTInventoryImpact, QDKTInventoryReadiness]:
@@ -83,6 +83,7 @@ def _classify(path: str, use_class: QDKTUseClass) -> tuple[QDKTInventoryImpact, 
         QDKTUseClass.ROOT_CONSUMER,
         QDKTUseClass.BELIEF_CONSUMER,
         QDKTUseClass.PERSISTENCE,
+        QDKTUseClass.UNPARSED_REFERENCE,
     ):
         return QDKTInventoryImpact.HIGH, QDKTInventoryReadiness.DUAL_READ_CANDIDATE
     return QDKTInventoryImpact.MEDIUM, QDKTInventoryReadiness.DUAL_READ_CANDIDATE
@@ -142,6 +143,28 @@ def _is_getattr_generator_method(node: ast.AST) -> bool:
     return isinstance(name, ast.Constant) and name.value == "generate_epistemic_system_root"
 
 
+def _reference_entries(
+    text: str,
+    relative: str,
+    use_class: QDKTUseClass,
+    detail_prefix: str,
+) -> list[QDKTInventoryEntry]:
+    entries: list[QDKTInventoryEntry] = []
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        terms = tuple(term for term in _QDKT_TERMS if term in line)
+        if terms:
+            entries.append(
+                _entry(
+                    relative,
+                    "<unparsed>" if use_class is QDKTUseClass.UNPARSED_REFERENCE else "<document>",
+                    line_number,
+                    use_class,
+                    f"{detail_prefix}" + ", ".join(terms),
+                )
+            )
+    return entries
+
+
 class _PythonInventory(ast.NodeVisitor):
     def __init__(self, path: str) -> None:
         self.path = path
@@ -163,9 +186,15 @@ class _PythonInventory(ast.NodeVisitor):
     def visit_ClassDef(self, node: ast.ClassDef) -> Any:
         if node.name == "QuantumMerkleDAG":
             self.add(node, QDKTUseClass.GENERATOR_DEFINITION, "legacy generator class definition")
+        previous_constructors = set(self.constructor_aliases)
+        previous_methods = set(self.generator_method_aliases)
+        previous_results = set(self.result_names)
         self.scope.append(node.name)
         self.generic_visit(node)
         self.scope.pop()
+        self.constructor_aliases = previous_constructors
+        self.generator_method_aliases = previous_methods
+        self.result_names = previous_results
 
     def _function_args(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> Iterable[str]:
         arguments = (
@@ -183,6 +212,8 @@ class _PythonInventory(ast.NodeVisitor):
     def _visit_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
         if node.name == "generate_epistemic_system_root":
             self.add(node, QDKTUseClass.GENERATOR_DEFINITION, "legacy result method definition")
+        previous_constructors = set(self.constructor_aliases)
+        previous_methods = set(self.generator_method_aliases)
         previous_results = set(self.result_names)
         self.result_names.update(
             name for name in self._function_args(node) if "legacy_result" in name.lower()
@@ -190,6 +221,8 @@ class _PythonInventory(ast.NodeVisitor):
         self.scope.append(node.name)
         self.generic_visit(node)
         self.scope.pop()
+        self.constructor_aliases = previous_constructors
+        self.generator_method_aliases = previous_methods
         self.result_names = previous_results
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
@@ -233,8 +266,14 @@ class _PythonInventory(ast.NodeVisitor):
             return value.func.attr == "generate_epistemic_system_root"
         return isinstance(value.func, ast.Name) and value.func.id in self.generator_method_aliases
 
+    def _is_constructor_reference(self, value: ast.AST) -> bool:
+        return _name_is_qdkt_constructor(value, self.constructor_aliases)
+
     def _track_assignment(self, target: ast.AST, value: ast.AST) -> None:
         names = tuple(self._assignment_names(target))
+        if not names:
+            return
+
         if _is_getattr_generator_method(value):
             self.generator_method_aliases.update(names)
             self.add(
@@ -242,8 +281,18 @@ class _PythonInventory(ast.NodeVisitor):
                 QDKTUseClass.METHOD_CALL,
                 "resolves generate_epistemic_system_root through a compatibility facade",
             )
+        else:
+            self.generator_method_aliases.difference_update(names)
+
+        if self._is_constructor_reference(value):
+            self.constructor_aliases.update(names)
+        else:
+            self.constructor_aliases.difference_update(names)
+
         if self._is_generator_call(value) or _contains_result_reference(value, self.result_names):
             self.result_names.update(names)
+        else:
+            self.result_names.difference_update(names)
 
     def visit_Assign(self, node: ast.Assign) -> Any:
         for target in node.targets:
@@ -295,9 +344,28 @@ def _scan_python(path: Path, root: Path) -> list[QDKTInventoryEntry]:
     relative = _relative(path, root)
     try:
         source = path.read_text(encoding="utf-8", errors="strict")
-        tree = ast.parse(source, filename=relative)
-    except (OSError, UnicodeError, SyntaxError):
+    except UnicodeError:
+        try:
+            source = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return []
+        return _reference_entries(
+            source,
+            relative,
+            QDKTUseClass.UNPARSED_REFERENCE,
+            "non-UTF-8 Python reference to ",
+        )
+    except OSError:
         return []
+    try:
+        tree = ast.parse(source, filename=relative)
+    except SyntaxError:
+        return _reference_entries(
+            source,
+            relative,
+            QDKTUseClass.UNPARSED_REFERENCE,
+            "syntactically unparsed Python reference to ",
+        )
     visitor = _PythonInventory(relative)
     visitor.visit(tree)
     entries = visitor.entries
@@ -318,31 +386,29 @@ def _scan_python(path: Path, root: Path) -> list[QDKTInventoryEntry]:
 def _scan_text(path: Path, root: Path) -> list[QDKTInventoryEntry]:
     relative = _relative(path, root)
     try:
-        lines = path.read_text(encoding="utf-8", errors="strict").splitlines()
-    except (OSError, UnicodeError):
+        text = path.read_text(encoding="utf-8", errors="strict")
+    except UnicodeError:
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return []
+    except OSError:
         return []
-    entries = []
-    for line_number, line in enumerate(lines, start=1):
-        terms = tuple(term for term in _QDKT_TERMS if term in line)
-        if terms:
-            entries.append(
-                _entry(
-                    relative,
-                    "<document>",
-                    line_number,
-                    QDKTUseClass.DOCUMENTATION,
-                    "references " + ", ".join(terms),
-                )
-            )
-    return entries
+    return _reference_entries(
+        text,
+        relative,
+        QDKTUseClass.DOCUMENTATION,
+        "references ",
+    )
 
 
 def _candidate_files(root: Path) -> Iterable[Path]:
     for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
-        if not path.is_file() or _is_generated_inventory(path):
+        if path.is_symlink() or not path.is_file() or _is_generated_inventory(path):
             continue
         relative = _relative(path, root)
-        if relative in _EXCLUDED_FILES or any(part in _EXCLUDED_DIRS for part in path.parts):
+        relative_parts = Path(relative).parts
+        if relative in _EXCLUDED_FILES or any(part in _EXCLUDED_DIRS for part in relative_parts):
             continue
         if path.suffix == ".py" or path.suffix in _TEXT_SUFFIXES or _is_archival(relative):
             yield path
