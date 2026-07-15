@@ -3,8 +3,16 @@ from dataclasses import replace
 import pytest
 
 from aura_coding_arena_planning import inspect_coding_arena_planning_compatibility
-from aura_coding_arena_planning_benchmark import _case, _grounding, _task, default_benchmark_cases
-from aura_coding_arena_planning_types import CodingArenaCompatibilityStatus
+from aura_coding_arena_planning_benchmark import (
+    _case,
+    _grounding,
+    _task,
+    default_benchmark_cases,
+)
+from aura_coding_arena_planning_types import (
+    CodingArenaCompatibilityFinding,
+    CodingArenaCompatibilityStatus,
+)
 
 
 def _valid_inspection():
@@ -91,18 +99,7 @@ def test_failed_inspection_cannot_carry_a_verified_board():
         exact_legacy_preserved=False,
         highest_contiguous_level=None,
         continuity_complete=False,
-        findings=(
-            replace(
-                inspection.report.findings[0],
-                code="FORGED",
-                message="forged",
-            )
-            if inspection.report.findings
-            else __import__(
-                "aura_coding_arena_planning_types",
-                fromlist=["CodingArenaCompatibilityFinding"],
-            ).CodingArenaCompatibilityFinding("FORGED", "forged")
-        ,),
+        findings=(CodingArenaCompatibilityFinding("FORGED", "forged"),),
     )
 
     with pytest.raises(ValueError):
