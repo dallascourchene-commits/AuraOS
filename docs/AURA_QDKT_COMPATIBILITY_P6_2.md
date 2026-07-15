@@ -34,7 +34,7 @@ P6.2 therefore accepts an **already-produced** legacy result and compares it wit
 - the legacy generator definition;
 - explicit `UNPARSED_REFERENCE` entries when a Python file contains QDKT terms but cannot be parsed as strict UTF-8 Python syntax.
 
-Every entry contains a stable ID, repository-relative file path, enclosing symbol, line, use class, impact, readiness, and detail. Entries are sorted deterministically and the complete report has a stable digest.
+Every entry contains a stable ID, normalized repository-relative file path, enclosing symbol, line, use class, impact, readiness, and detail. Windows separators are canonicalized to `/`; absolute, drive-qualified, traversal, and non-normalized paths are rejected. Entries are sorted deterministically, the report cannot claim entries from more files than it scanned, and the complete report has a stable digest.
 
 Generated CODEMAP, topology, understand-graph, and prior P6.2 inventory artifacts are excluded so repeated inventory generation remains stable and does not classify generated descriptions as new callers. Exclusions are evaluated from repository-relative paths rather than parent directory names. Symbolic links are not followed, preventing the inventory from reading targets outside the checked-out repository.
 
@@ -95,7 +95,7 @@ The evidence contract does not conflate caller input with stored evidence:
 - canonical event metadata is absent when no unique event is selected;
 - `VERIFIED` requires the requested and canonical pairs to be present and equal.
 
-Status constructors enforce coherent combinations. `VERIFIED` cannot carry findings, `ADVISORY_ONLY` requires exactly one non-blocking source-snapshot warning, `UNAVAILABLE` cannot select an event, and `MISMATCHED` requires at least one blocking finding. One-shot iterables are materialized once before validation so they cannot bypass contract checks.
+Status constructors enforce coherent combinations. `VERIFIED` cannot carry findings, `ADVISORY_ONLY` requires exactly one non-blocking source-snapshot warning, `UNAVAILABLE` cannot select an event, and `MISMATCHED` requires at least one blocking finding. One-shot iterables are materialized once before validation so they cannot bypass contract checks. Identical findings are deduplicated, selected event/observation/payload identifiers must use their canonical stable-ID forms, digests must be canonical lowercase hex, and canonical timestamps must be finite and non-negative.
 
 ## Conflict and history semantics
 
@@ -119,7 +119,7 @@ The comparator relies on the read-only P6.1 projector and sidecar readers for:
 
 Any blocking projector finding yields `MISMATCHED`. P6.2 never repairs the store.
 
-Because the comparator needs observation fields not exposed by the P6.1 projection summary, it performs a second strict read. The second read repeats duplicate, envelope, sidecar, and observation validation and must produce the exact same ordered projected-event signature. If the event evidence changes between the two views, comparison fails closed with `CANONICAL_INTEGRITY_FAILED` rather than accepting a stale or internally inconsistent view.
+Because the comparator needs observation fields not exposed by the P6.1 projection summary, it performs a second strict read. The second read repeats canonical digesting and duplicate detection across **all** event rows—including generic parent events—then repeats envelope, sidecar, observation, parent-existence, and ordering validation. It must produce the exact same ordered QDKT projection signature. If the event evidence changes between the two views, including a duplicated, removed, or reordered parent, comparison fails closed with `CANONICAL_INTEGRITY_FAILED` rather than accepting a stale or internally inconsistent view.
 
 ## Freshness
 
