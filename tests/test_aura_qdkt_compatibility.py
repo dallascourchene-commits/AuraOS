@@ -8,6 +8,7 @@ from aura_qdkt_compatibility import (
 from aura_qdkt_compatibility_types import (
     QDKTCompatibilityFindingCode,
     QDKTDualReadStatus,
+    QDKT_OWNERSHIP_DIGEST,
 )
 from aura_qdkt_observations import QDKTObservation, record_qdkt_observation
 
@@ -45,6 +46,10 @@ def record(
 def test_exact_existing_result_and_snapshot_are_verified(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     receipt = record(store)
+    expected = QDKTObservation.from_legacy_result(
+        LEGACY_RESULT,
+        source_snapshot=SOURCE_SNAPSHOT,
+    )
     result = compare_qdkt_dual_read(
         store,
         LEGACY_RESULT,
@@ -56,6 +61,11 @@ def test_exact_existing_result_and_snapshot_are_verified(tmp_path) -> None:
     assert result.observation_id == receipt.observation.observation_id
     assert result.payload_ref == receipt.payload_ref.ref_id
     assert result.payload_digest == receipt.payload_ref.payload_digest
+    assert result.canonical_source_snapshot_digest == expected.source_snapshot_digest
+    assert result.canonical_source_count == expected.source_count
+    assert result.requested_source_snapshot_digest == expected.source_snapshot_digest
+    assert result.requested_source_count == expected.source_count
+    assert result.ownership_digest == QDKT_OWNERSHIP_DIGEST
     assert result.findings == ()
     assert result.generator_replayed is False
     assert result.proposal_only is True
@@ -64,10 +74,14 @@ def test_exact_existing_result_and_snapshot_are_verified(tmp_path) -> None:
 
 def test_root_and_belief_match_without_snapshot_is_advisory(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
-    record(store)
+    receipt = record(store)
     result = compare_qdkt_dual_read(store, LEGACY_RESULT)
     assert result.status is QDKTDualReadStatus.ADVISORY_ONLY
     assert result.legacy_result == LEGACY_RESULT
+    assert result.canonical_source_snapshot_digest == receipt.observation.source_snapshot_digest
+    assert result.canonical_source_count == receipt.observation.source_count
+    assert result.requested_source_snapshot_digest == ""
+    assert result.requested_source_count is None
     assert [item.code for item in result.findings] == [
         QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_NOT_SUPPLIED
     ]
@@ -75,6 +89,10 @@ def test_root_and_belief_match_without_snapshot_is_advisory(tmp_path) -> None:
 
 
 def test_missing_canonical_evidence_is_unavailable(tmp_path) -> None:
+    expected = QDKTObservation.from_legacy_result(
+        LEGACY_RESULT,
+        source_snapshot=SOURCE_SNAPSHOT,
+    )
     result = compare_qdkt_dual_read(
         AppendOnlyEventStore(tmp_path / "events"),
         LEGACY_RESULT,
@@ -82,6 +100,10 @@ def test_missing_canonical_evidence_is_unavailable(tmp_path) -> None:
     )
     assert result.status is QDKTDualReadStatus.UNAVAILABLE
     assert result.legacy_result == LEGACY_RESULT
+    assert result.canonical_source_snapshot_digest == ""
+    assert result.canonical_source_count is None
+    assert result.requested_source_snapshot_digest == expected.source_snapshot_digest
+    assert result.requested_source_count == expected.source_count
     assert result.findings[0].code is QDKTCompatibilityFindingCode.CANONICAL_EVIDENCE_UNAVAILABLE
 
 
@@ -115,6 +137,10 @@ def test_root_belief_and_snapshot_mismatches_fail_closed(tmp_path) -> None:
     )
     assert snapshot.status is QDKTDualReadStatus.MISMATCHED
     assert snapshot.legacy_result == LEGACY_RESULT
+    assert snapshot.canonical_source_snapshot_digest == ""
+    assert snapshot.canonical_source_count is None
+    assert snapshot.requested_source_snapshot_digest
+    assert snapshot.requested_source_count == 1
     assert snapshot.findings[0].code is QDKTCompatibilityFindingCode.SOURCE_SNAPSHOT_MISMATCH
 
 
@@ -159,3 +185,4 @@ def test_ownership_recommendation_retains_legacy_and_denies_authority() -> None:
     assert recommendation.historical_backfill_ready is False
     assert recommendation.proposal_only is True
     assert recommendation.qdkt_patch_authority is False
+    assert recommendation.digest == QDKT_OWNERSHIP_DIGEST
