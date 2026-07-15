@@ -40,11 +40,13 @@ def test_input_mutation_is_detected() -> None:
     assert finding_code(result) == "SESSION_CHANGED_DURING_INSPECTION"
 
 
-def test_record_binding_digest_changes_without_changing_status() -> None:
+def test_synchronized_record_binding_digest_changes_without_changing_status() -> None:
     project, session = build_case_records("digest-a", responses=["recorded"])
     first = inspect_civic_commons_planning_compatibility(project, session, inventory=inventory())
     changed = deepcopy(session)
-    changed["consent_arc"]["responses"].append({"response_type": "another-record", "binding": False})
+    new_response = {"response_type": "another-record", "binding": False}
+    changed["consent_arc"]["responses"].append(dict(new_response))
+    changed["decision_packet"]["consent_arc"]["responses"].append(dict(new_response))
     second = inspect_civic_commons_planning_compatibility(project, changed, inventory=inventory())
     assert first.bindings is not None and second.bindings is not None
     assert first.bindings.digest != second.bindings.digest
