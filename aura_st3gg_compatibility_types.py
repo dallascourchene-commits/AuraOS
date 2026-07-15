@@ -16,6 +16,7 @@ from aura_st3gg_contracts import (
     ST3GGRestorationMode,
     canonical_json_bytes,
     canonical_pointer,
+    digest_text,
     exact_ref_for,
     parse_canonical_pointer,
 )
@@ -61,12 +62,16 @@ class ST3GGCanonicalBinding:
     legacy_holographic_header: str
     legacy_surface: str
     legacy_surface_pointer: str | None = None
+    legacy_compact_digest: str | None = None
     version: str = ST3GG_COMPATIBILITY_VERSION
     storage_owner: str = V1_STORAGE_OWNER
 
     def __post_init__(self) -> None:
         constitutional(self.version, EXECUTION_MODE, self.storage_owner, True, PATCH_AUTHORITY, False)
-        require(_SHA256_RE.fullmatch(self.original_digest) is not None, "binding_digest_invalid")
+        require(
+            type(self.original_digest) is str and _SHA256_RE.fullmatch(self.original_digest) is not None,
+            "binding_digest_invalid",
+        )
         require(type(self.original_bytes) is int and self.original_bytes >= 0, "binding_length_invalid")
         require(self.pointer == canonical_pointer(self.namespace, self.original_digest), "binding_pointer_mismatch")
         require(self.exact_ref == exact_ref_for(self.namespace, self.original_digest), "binding_ref_mismatch")
@@ -74,12 +79,41 @@ class ST3GGCanonicalBinding:
         require(type(self.content_type) is str and bool(self.content_type.strip()), "binding_content_type_required")
         require(type(self.source_hint) is str, "binding_source_hint_invalid")
         require(type(self.legacy_surface) is str and bool(self.legacy_surface), "binding_surface_required")
-        require(_V1_POINTER_RE.fullmatch(self.legacy_recall_pointer) is not None, "binding_v1_pointer_invalid")
-        require(_DASH_RE.fullmatch(self.legacy_dash_key) is not None, "binding_dash_invalid")
-        require(_GLYPH_RE.fullmatch(self.legacy_glyph) is not None, "binding_glyph_invalid")
-        require(_HEADER_RE.fullmatch(self.legacy_holographic_header) is not None, "binding_header_invalid")
+        require(
+            type(self.legacy_recall_pointer) is str
+            and _V1_POINTER_RE.fullmatch(self.legacy_recall_pointer) is not None,
+            "binding_v1_pointer_invalid",
+        )
+        require(
+            type(self.legacy_dash_key) is str and _DASH_RE.fullmatch(self.legacy_dash_key) is not None,
+            "binding_dash_invalid",
+        )
+        require(
+            type(self.legacy_glyph) is str and _GLYPH_RE.fullmatch(self.legacy_glyph) is not None,
+            "binding_glyph_invalid",
+        )
+        require(
+            type(self.legacy_holographic_header) is str
+            and _HEADER_RE.fullmatch(self.legacy_holographic_header) is not None,
+            "binding_header_invalid",
+        )
         if self.legacy_surface_pointer is not None:
-            require(_EGRESS_POINTER_RE.fullmatch(self.legacy_surface_pointer) is not None, "binding_surface_pointer_invalid")
+            require(
+                type(self.legacy_surface_pointer) is str
+                and _EGRESS_POINTER_RE.fullmatch(self.legacy_surface_pointer) is not None,
+                "binding_surface_pointer_invalid",
+            )
+        if self.legacy_compact_digest is not None:
+            require(
+                type(self.legacy_compact_digest) is str
+                and _SHA256_RE.fullmatch(self.legacy_compact_digest) is not None,
+                "binding_compact_digest_invalid",
+            )
+        if self.legacy_surface_pointer is not None and self.legacy_compact_digest is not None:
+            require(
+                self.legacy_surface_pointer == f"ST3GG_PTR:{self.legacy_compact_digest[:12]}",
+                "binding_surface_pointer_digest_mismatch",
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -114,7 +148,21 @@ class ST3GGRecallDualReadEvidence:
             self.patch_authority,
             self.st3gg_patch_authority,
         )
+        require(type(self.verified) is bool, "evidence_verified_flag_invalid")
+        require(isinstance(self.restoration_mode, ST3GGRestorationMode), "evidence_restoration_mode_invalid")
         require(isinstance(self.binding, ST3GGCanonicalBinding), "evidence_binding_invalid")
+        require(type(self.alias_record_digests) is tuple, "alias_evidence_container_invalid")
+        require(
+            all(
+                type(item) is tuple
+                and len(item) == 2
+                and type(item[0]) is str
+                and type(item[1]) is str
+                for item in self.alias_record_digests
+            ),
+            "alias_evidence_shape_invalid",
+        )
+        require(type(self.mismatch_reasons) is tuple, "evidence_mismatch_container_invalid")
         if self.verified:
             require(self.restoration_mode is ST3GGRestorationMode.EXACT_RECALL, "verified_mode_not_exact")
             require(not self.mismatch_reasons, "verified_evidence_has_mismatch")
@@ -122,6 +170,11 @@ class ST3GGRecallDualReadEvidence:
             require(self.resolved_original_digest == self.binding.original_digest, "evidence_digest_mismatch")
             require(self.resolved_content_type == self.binding.content_type, "evidence_content_type_mismatch")
             require(self.resolved_original_bytes == self.binding.original_bytes, "evidence_length_mismatch")
+            if self.binding.legacy_compact_digest is not None:
+                require(
+                    self.resolved_compact_digest == self.binding.legacy_compact_digest,
+                    "evidence_compact_digest_mismatch",
+                )
             names = tuple(name for name, _digest in self.alias_record_digests)
             digests = {record_digest for _name, record_digest in self.alias_record_digests}
             require(names == ("pointer", "digest", "dash_key"), "verified_alias_evidence_incomplete")
@@ -130,10 +183,30 @@ class ST3GGRecallDualReadEvidence:
         else:
             require(self.restoration_mode is ST3GGRestorationMode.NONE, "failed_evidence_mode_not_none")
             require(bool(self.mismatch_reasons), "failed_evidence_reason_required")
+            require(
+                self.resolved_pointer is None
+                and self.resolved_original_digest is None
+                and self.resolved_content_type is None
+                and self.resolved_original_bytes is None
+                and self.resolved_compact_digest is None
+                and not self.alias_record_digests
+                and self.json_index_record_digest is None,
+                "failed_evidence_carries_verified_state",
+            )
         for alias, record_digest in self.alias_record_digests:
             require(bool(alias) and _SHA256_RE.fullmatch(record_digest) is not None, "alias_evidence_invalid")
+        if self.resolved_compact_digest is not None:
+            require(
+                type(self.resolved_compact_digest) is str
+                and _SHA256_RE.fullmatch(self.resolved_compact_digest) is not None,
+                "evidence_compact_digest_invalid",
+            )
         if self.json_index_record_digest is not None:
-            require(_SHA256_RE.fullmatch(self.json_index_record_digest) is not None, "json_evidence_digest_invalid")
+            require(
+                type(self.json_index_record_digest) is str
+                and _SHA256_RE.fullmatch(self.json_index_record_digest) is not None,
+                "json_evidence_digest_invalid",
+            )
         require(
             all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
             "evidence_mismatch_reason_invalid",
@@ -176,15 +249,29 @@ class ST3GGASTCompatibilityResult:
         require(isinstance(self.legacy_frame, ST3GGFrame), "ast_legacy_frame_invalid")
         require(isinstance(self.v2_decision, ST3GGDecision), "ast_v2_decision_invalid")
         require(self.exact_span_count == len(self.legacy_frame.spans), "ast_span_count_disagreement")
-        require(_SHA256_RE.fullmatch(self.legacy_frame_digest) is not None, "ast_frame_digest_invalid")
+        require(
+            type(self.legacy_frame_digest) is str
+            and _SHA256_RE.fullmatch(self.legacy_frame_digest) is not None,
+            "ast_frame_digest_invalid",
+        )
+        require(
+            self.legacy_frame_digest == hashlib.sha256(canonical_json_bytes(self.legacy_frame.to_dict())).hexdigest(),
+            "ast_frame_digest_disagreement",
+        )
         require(
             self.v2_decision.restoration_mode
             in {ST3GGRestorationMode.LOSSY_ADVISORY, ST3GGRestorationMode.NONE},
             "ast_false_exact_claim",
         )
+        require(type(self.mismatch_reasons) is tuple, "ast_mismatch_container_invalid")
         require(
             all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
             "ast_mismatch_reason_invalid",
+        )
+        require(
+            (self.v2_decision.enabled and self.v2_decision.restoration_mode is ST3GGRestorationMode.LOSSY_ADVISORY)
+            or (not self.v2_decision.enabled and self.v2_decision.restoration_mode is ST3GGRestorationMode.NONE),
+            "ast_enabled_restoration_mode_disagreement",
         )
 
 
@@ -215,7 +302,13 @@ class ST3GGReportCompatibilityResult:
             self.patch_authority,
             self.st3gg_patch_authority,
         )
-        require(type(self.legacy_compressed) is str and type(self.legacy_pointer) is str, "report_legacy_fields_invalid")
+        require(
+            type(self.legacy_compressed) is str
+            and type(self.legacy_pointer) is str
+            and type(self.legacy_restored_preview) is str
+            and type(self.v2_payload) is str,
+            "report_legacy_fields_invalid",
+        )
         require(
             type(self.legacy_savings_ratio) is float
             and math.isfinite(self.legacy_savings_ratio)
@@ -223,16 +316,28 @@ class ST3GGReportCompatibilityResult:
             "report_savings_invalid",
         )
         require(isinstance(self.v2_decision, ST3GGDecision), "report_v2_decision_invalid")
+        require(type(self.mismatch_reasons) is tuple, "report_mismatch_container_invalid")
         require(
             all(type(reason) is str and bool(reason) for reason in self.mismatch_reasons),
             "report_mismatch_reason_invalid",
         )
+        if self.v2_decision.enabled:
+            require(_EGRESS_POINTER_RE.fullmatch(self.legacy_pointer) is not None, "enabled_report_pointer_invalid")
+            require(self.v2_decision.legacy_pointer == self.legacy_pointer, "enabled_report_legacy_pointer_disagreement")
         exact = self.v2_decision.restoration_mode is ST3GGRestorationMode.EXACT_RECALL
         if exact:
+            require(self.v2_decision.enabled, "exact_report_decision_not_enabled")
             require(self.binding is not None and self.recall_evidence is not None, "exact_report_binding_missing")
             require(self.recall_evidence.verified and bool(self.v2_payload), "exact_report_not_verified")
             require(self.v2_decision.pointer == self.binding.pointer, "exact_report_pointer_disagreement")
             require(self.v2_decision.exact_ref == self.binding.exact_ref, "exact_report_ref_disagreement")
+            require(self.v2_decision.legacy_pointer == self.legacy_pointer, "exact_report_legacy_pointer_disagreement")
+            require(self.v2_decision.legacy_surface == self.binding.legacy_surface, "exact_report_surface_disagreement")
+            require(self.binding.legacy_surface_pointer == self.legacy_pointer, "exact_report_binding_pointer_disagreement")
+            require(
+                self.binding.legacy_compact_digest == digest_text(self.legacy_compressed),
+                "exact_report_compact_digest_disagreement",
+            )
             require(self.recall_evidence.binding == self.binding, "exact_report_evidence_binding_disagreement")
         else:
             require(
@@ -268,11 +373,14 @@ class ST3GGLegacyDispositionRecord:
         require(isinstance(self.disposition, ST3GGLegacyDisposition), "disposition_invalid")
         require(type(self.reason) is str and bool(self.reason), "disposition_reason_invalid")
         require(
-            bool(self.blockers) and all(type(item) is str and bool(item) for item in self.blockers),
+            type(self.blockers) is tuple
+            and bool(self.blockers)
+            and all(type(item) is str and bool(item) for item in self.blockers),
             "disposition_blockers_invalid",
         )
         require(
-            bool(self.satisfied_evidence)
+            type(self.satisfied_evidence) is tuple
+            and bool(self.satisfied_evidence)
             and all(type(item) is str and bool(item) for item in self.satisfied_evidence),
             "disposition_evidence_invalid",
         )
