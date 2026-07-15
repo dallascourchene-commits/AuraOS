@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 838
-- **total_bytes**: 64100246
-- **text_tokens_est**: 6629007
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 111, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 589, 'schema_or_lexicon': 69, 'support_file': 41}
-- **topology_nodes**: 7292
-- **topology_edges**: 15301
+- **file_count**: 842
+- **total_bytes**: 64213219
+- **text_tokens_est**: 6657246
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 112, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 591, 'schema_or_lexicon': 70, 'support_file': 41}
+- **topology_nodes**: 7324
+- **topology_edges**: 15391
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 19752.57
+- **elapsed_ms**: 19932.85
 
 ## Coverage
 
-- **included_file_count**: 838
+- **included_file_count**: 842
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
 - **skipped_dir_file_counts**: `.git`=47, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
@@ -205,7 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 698 more; query CODEMAP.json for exact file cards
+- ... 702 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7292
-- **edges**: 15301
+- **nodes**: 7324
+- **edges**: 15391
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
