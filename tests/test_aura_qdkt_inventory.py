@@ -23,10 +23,13 @@ def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -
         encoding="utf-8",
     )
     (tmp_path / "facade.py").write_text(
-        "async def capture(generator, legacy_result):\n"
+        "import json\n"
+        "async def capture(generator, legacy_result, handle):\n"
         "    method = getattr(generator, 'generate_epistemic_system_root', None)\n"
         "    result = method()\n"
         "    root = legacy_result.get('root')\n"
+        "    approval = {'state_snapshot': result, 'root': root}\n"
+        "    json.dump(approval, handle)\n"
         "    return result, root\n",
         encoding="utf-8",
     )
@@ -69,6 +72,12 @@ def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -
         if item.file_path == "facade.py" and item.use_class is QDKTUseClass.METHOD_CALL
     ]
     assert len(facade_calls) == 2
+    facade_persistence = [
+        item
+        for item in report.entries
+        if item.file_path == "facade.py" and item.use_class is QDKTUseClass.PERSISTENCE
+    ]
+    assert len(facade_persistence) == 1
     archive = [item for item in report.entries if item.file_path.endswith(".save")]
     assert archive
     assert all(item.readiness is QDKTInventoryReadiness.ARCHIVAL_ONLY for item in archive)
