@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784150049,
+  "generated_at_unix": 1784150309,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 888,
+    "included_file_count": 893,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -781,6 +781,11 @@
       "tests/test_aura_change_graph.py",
       "tests/test_aura_civic_commons_arena.py",
       "tests/test_aura_civic_completion.py",
+      "tests/test_aura_civic_planning_behavior.py",
+      "tests/test_aura_civic_planning_contracts.py",
+      "tests/test_aura_civic_planning_inventory.py",
+      "tests/test_aura_civic_planning_projection.py",
+      "tests/test_aura_civic_planning_stress.py",
       "tests/test_aura_civic_snapshots_and_store.py",
       "tests/test_aura_civic_tensor_adapter.py",
       "tests/test_aura_cockpit_audit_trail.py",
@@ -909,23 +914,23 @@
     ]
   },
   "summary": {
-    "file_count": 888,
-    "total_bytes": 65722445,
-    "text_tokens_est": 7034567,
+    "file_count": 893,
+    "total_bytes": 65729997,
+    "text_tokens_est": 7036457,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 117,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 626,
+      "python_module": 631,
       "schema_or_lexicon": 76,
       "support_file": 41
     },
     "topology_nodes": 7695,
     "topology_edges": 16612,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 17150.0
+    "elapsed_ms": 21361.65
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1720,6 +1725,11 @@
       "tests/test_aura_change_graph.py",
       "tests/test_aura_civic_commons_arena.py",
       "tests/test_aura_civic_completion.py",
+      "tests/test_aura_civic_planning_behavior.py",
+      "tests/test_aura_civic_planning_contracts.py",
+      "tests/test_aura_civic_planning_inventory.py",
+      "tests/test_aura_civic_planning_projection.py",
+      "tests/test_aura_civic_planning_stress.py",
       "tests/test_aura_civic_snapshots_and_store.py",
       "tests/test_aura_civic_tensor_adapter.py",
       "tests/test_aura_cockpit_planner.py",
@@ -26149,6 +26159,16 @@
         "signature_hash": "1a5a7e99847594c9"
       }
     ],
+    "_inventory": [
+      {
+        "file": "tests/test_aura_civic_planning_stress.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tests/test_aura_civic_planning_stress.py#function:_inventory:56d0fc88605bddcd",
+        "signature_hash": "f8111995b5de1fdb"
+      }
+    ],
     "_invoke_patch_engine": [
       {
         "file": "aura_evolve.py",
@@ -38271,6 +38291,14 @@
     ],
     "_write": [
       {
+        "file": "tests/test_aura_civic_planning_inventory.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 14,
+        "semantic_id": "tests/test_aura_civic_planning_inventory.py#function:_write:b62660a946ac3b74",
+        "signature_hash": "e56a1af0edf042b2"
+      },
+      {
         "file": "tests/test_aura_phase_c1_route_capsules.py",
         "kind": "function",
         "line": 26,
@@ -48037,6 +48065,24 @@
         "signature_hash": "f4e1d6af8cdbc745"
       }
     ],
+    "finding_code": [
+      {
+        "file": "tests/test_aura_civic_planning_behavior.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_civic_planning_behavior.py#function:finding_code:8fbe28d3c4b4cf99",
+        "signature_hash": "3461574cf4d6cd04"
+      },
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:finding_code:93fd1327970bb99e",
+        "signature_hash": "3461574cf4d6cd04"
+      }
+    ],
     "fireworks_patch_worker": [
       {
         "file": "aura_agent_arena_fireworks.py",
@@ -51403,6 +51449,32 @@
         "end_line": 647,
         "semantic_id": "aura_skillweaver.py#method:AuraSkillWeaver.invalidate_skill_cache:bc4263f6b963ebe7",
         "signature_hash": "af5dde7ffb74da81"
+      }
+    ],
+    "inventory": [
+      {
+        "file": "tests/test_aura_civic_planning_behavior.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_aura_civic_planning_behavior.py#function:inventory:81a8019a87fc6166",
+        "signature_hash": "971751c8a10ab118"
+      },
+      {
+        "file": "tests/test_aura_civic_planning_contracts.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_aura_civic_planning_contracts.py#function:inventory:5bbd27f9bc8e126a",
+        "signature_hash": "971751c8a10ab118"
+      },
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 16,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:inventory:88cc27049b200f8b",
+        "signature_hash": "971751c8a10ab118"
       }
     ],
     "investigate_external_calls": [
@@ -62595,6 +62667,16 @@
         "signature_hash": "f2748c943d3a860b"
       }
     ],
+    "test_authority_and_lineage_fail_closed": [
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:test_authority_and_lineage_fail_closed:7df38ab721b1afb6",
+        "signature_hash": "aa868d047e89ff0d"
+      }
+    ],
     "test_authority_flags": [
       {
         "file": "tests/test_aura_tensor_evidence.py",
@@ -62793,6 +62875,16 @@
         "end_line": 226,
         "semantic_id": "tests/test_aura_st3gg_codec.py#function:test_benchmark_fixture_reports_two_real_aura_snippets:a361d2cc069ead89",
         "signature_hash": "732c7ff2588f1568"
+      }
+    ],
+    "test_benchmark_is_deterministic_and_fully_blocked": [
+      {
+        "file": "tests/test_aura_civic_planning_behavior.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_civic_planning_behavior.py#function:test_benchmark_is_deterministic_and_fully_blocked:140b6bf0d4812af8",
+        "signature_hash": "89f56d478a0a7ec6"
       }
     ],
     "test_benchmark_output_is_canonical_and_deterministic": [
@@ -65389,6 +65481,16 @@
         "end_line": 120,
         "semantic_id": "tests/test_aura_hermes_arena_mode.py#method:TestHermesContract.test_contract_pr_mode_includes_gh_pr_create:fa3c30c56601acd3",
         "signature_hash": "28776dffb705b1c7"
+      }
+    ],
+    "test_contract_rejects_inconsistent_external_evidence": [
+      {
+        "file": "tests/test_aura_civic_planning_contracts.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_civic_planning_contracts.py#function:test_contract_rejects_inconsistent_external_evidence:4869da4ff866fe46",
+        "signature_hash": "fe22d767942ef96d"
       }
     ],
     "test_contract_uses_python_m_cli": [
@@ -70431,6 +70533,16 @@
         "signature_hash": "babe58e7e973100f"
       }
     ],
+    "test_input_mutation_is_detected": [
+      {
+        "file": "tests/test_aura_civic_planning_behavior.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_civic_planning_behavior.py#function:test_input_mutation_is_detected:051d44da6e7817ae",
+        "signature_hash": "c87a61df171a29ab"
+      }
+    ],
     "test_inspect_codemap_projected_node": [
       {
         "file": "tests/test_aura_node_inspector.py",
@@ -71031,6 +71143,16 @@
         "signature_hash": "59e724eefd3c1d61"
       }
     ],
+    "test_inventory_fails_on_missing_symbol_and_non_utf8": [
+      {
+        "file": "tests/test_aura_civic_planning_inventory.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_civic_planning_inventory.py#function:test_inventory_fails_on_missing_symbol_and_non_utf8:5c78d69e2c7a5b1c",
+        "signature_hash": "d402b3ad016cc7c8"
+      }
+    ],
     "test_inventory_falls_back_to_explicit_unparsed_references": [
       {
         "file": "tests/test_aura_qdkt_inventory.py",
@@ -71039,6 +71161,16 @@
         "end_line": 189,
         "semantic_id": "tests/test_aura_qdkt_inventory.py#function:test_inventory_falls_back_to_explicit_unparsed_references:8bfb750a24d3f482",
         "signature_hash": "0be61e0c1e044c15"
+      }
+    ],
+    "test_inventory_is_deterministic_and_source_only": [
+      {
+        "file": "tests/test_aura_civic_planning_inventory.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_civic_planning_inventory.py#function:test_inventory_is_deterministic_and_source_only:f95395ab452cbdaa",
+        "signature_hash": "30a17b28660fa8b2"
       }
     ],
     "test_inventory_is_deterministic_canonical_and_ignores_its_output": [
@@ -71059,6 +71191,16 @@
         "end_line": 129,
         "semantic_id": "tests/test_aura_qdkt_inventory.py#function:test_inventory_never_imports_or_executes_scanned_code:1e1697d02b854200",
         "signature_hash": "da763ee6aa0529fd"
+      }
+    ],
+    "test_inventory_rejects_symlink_escape": [
+      {
+        "file": "tests/test_aura_civic_planning_inventory.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_civic_planning_inventory.py#function:test_inventory_rejects_symlink_escape:f977a2a4b94ed4ce",
+        "signature_hash": "ac7c3551164f0970"
       }
     ],
     "test_inventory_report_normalizes_one_shot_iterables_and_rejects_bad_counts": [
@@ -72621,6 +72763,16 @@
         "signature_hash": "6b6b7daa5d39007f"
       }
     ],
+    "test_missing_decision_packet_adds_blocker_without_dropping_mapping": [
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:test_missing_decision_packet_adds_blocker_without_dropping_mapping:f513e66d40546aa7",
+        "signature_hash": "0a6b00e39e34012c"
+      }
+    ],
     "test_missing_grounding_routes_to_localize": [
       {
         "file": "tests/test_aura_intent_ingestion.py",
@@ -74121,6 +74273,16 @@
         "signature_hash": "61a7acfc893aa5b7"
       }
     ],
+    "test_opaque_record_combinations_are_bound_without_interpretation": [
+      {
+        "file": "tests/test_aura_civic_planning_stress.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_civic_planning_stress.py#function:test_opaque_record_combinations_are_bound_without_interpretation:069e78c9aa6d9dda",
+        "signature_hash": "b3682a940f80d86c"
+      }
+    ],
     "test_opd_entries_are_cross_reference_not_verified": [
       {
         "file": "test_aura_ojibwe_tutor.py",
@@ -75541,6 +75703,16 @@
         "signature_hash": "0bebfa8a4dbf8805"
       }
     ],
+    "test_profile_digest_and_required_record_substitution_fail_closed": [
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:test_profile_digest_and_required_record_substitution_fail_closed:0536dcf418778a6e",
+        "signature_hash": "d0db9715e3f17e4c"
+      }
+    ],
     "test_profile_digest_is_stable": [
       {
         "file": "tests/test_aura_phase_c1_route_capsules.py",
@@ -76289,6 +76461,26 @@
         "end_line": 186,
         "semantic_id": "tests/test_aura_empirical_cost_observatory.py#method:TestEmpiricalCostLedger.test_record_and_retrieve:657bdfd90ab68cd7",
         "signature_hash": "528a97a81302d3ab"
+      }
+    ],
+    "test_record_binding_constructor_requires_exact_presence": [
+      {
+        "file": "tests/test_aura_civic_planning_contracts.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_civic_planning_contracts.py#function:test_record_binding_constructor_requires_exact_presence:42b67874d0ae7e88",
+        "signature_hash": "1a1cf92e13d90411"
+      }
+    ],
+    "test_record_binding_digest_changes_without_changing_status": [
+      {
+        "file": "tests/test_aura_civic_planning_behavior.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 51,
+        "semantic_id": "tests/test_aura_civic_planning_behavior.py#function:test_record_binding_digest_changes_without_changing_status:837c326ae10e9b54",
+        "signature_hash": "5917ec03a351bf3f"
       }
     ],
     "test_record_dream_scores_appends": [
@@ -79959,6 +80151,16 @@
         "end_line": 111,
         "semantic_id": "test_scientific_memory.py#function:test_structural_analogy_retrieves_two_surface_forms:f409b8fa2e70ed59",
         "signature_hash": "5c0e5aa49d972d5c"
+      }
+    ],
+    "test_structural_projection_is_complete_and_blocked": [
+      {
+        "file": "tests/test_aura_civic_planning_projection.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_civic_planning_projection.py#function:test_structural_projection_is_complete_and_blocked:f1c0a816f6cbd437",
+        "signature_hash": "9eb96c5b4c6f583e"
       }
     ],
     "test_structural_shadow_diagnosis": [
@@ -127838,47 +128040,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 15845461,
+      "bytes": 15841415,
       "lines": 504757,
-      "tokens_est": 3961366,
+      "tokens_est": 3960354,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "19143c774ac94362",
+      "digest8": "fa286593088e70ec",
       "vector": [
-        -0.178747,
-        -0.255524,
-        0.281916,
-        -0.140358,
-        -0.070779,
-        -0.289114,
-        0.113966,
-        -0.094772,
-        0.058783,
-        0.106768,
-        -0.305909,
-        -0.049185,
-        0.157153,
-        -0.185945,
-        -0.116366,
-        0.209938,
-        0.113966,
-        0.274719,
-        -0.207539,
-        0.248326,
-        -0.265121,
-        0.106768,
-        -0.140358,
-        0.082775,
-        -0.23633,
-        0.082775,
-        -0.190743,
-        -0.097171,
-        0.130761,
-        0.178747,
-        -0.077977,
-        -0.013196
+        0.152766,
+        -0.021463,
+        -0.140141,
+        -0.205792,
+        -0.243668,
+        -0.013888,
+        0.256294,
+        -0.271444,
+        -0.097215,
+        -0.147716,
+        0.294169,
+        -0.09974,
+        0.183067,
+        -0.273969,
+        -0.243668,
+        -0.097215,
+        0.170442,
+        0.107315,
+        -0.031563,
+        0.102265,
+        0.003788,
+        0.188117,
+        -0.11489,
+        -0.001263,
+        0.11994,
+        0.231043,
+        -0.266394,
+        -0.066914,
+        -0.170442,
+        -0.294169,
+        -0.213368,
+        0.071964
       ]
     },
     {
@@ -131611,47 +131813,47 @@
     {
       "path": ".github/workflows/p8-civic-commons-planning.yml",
       "role": "schema_or_lexicon",
-      "bytes": 5216,
-      "lines": 137,
-      "tokens_est": 1304,
+      "bytes": 5594,
+      "lines": 143,
+      "tokens_est": 1399,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "60f891c511ccfbc3",
+      "digest8": "ac753474b7606ead",
       "vector": [
-        -0.151819,
-        0.257215,
-        0.043915,
-        -0.041405,
-        -0.006274,
-        0.196989,
-        -0.119197,
-        0.262234,
-        -0.289837,
-        -0.156838,
-        0.287328,
-        0.154329,
-        0.003764,
-        -0.212045,
-        -0.252196,
-        -0.124216,
-        -0.144291,
-        0.006274,
-        0.013802,
-        -0.126725,
-        0.229611,
-        0.202008,
-        -0.011292,
-        0.144291,
-        0.169385,
-        -0.006274,
-        -0.274781,
-        0.089084,
-        0.023839,
-        -0.099122,
-        0.267252,
-        -0.317441
+        -0.052609,
+        0.207213,
+        -0.06764,
+        -0.192182,
+        0.06764,
+        -0.273779,
+        -0.125616,
+        -0.168562,
+        0.256601,
+        -0.250159,
+        0.136353,
+        -0.248012,
+        -0.207213,
+        -0.093407,
+        0.18574,
+        0.003221,
+        -0.155678,
+        0.123469,
+        -0.202919,
+        0.095554,
+        0.239423,
+        -0.239423,
+        -0.226539,
+        0.046167,
+        0.19433,
+        -0.151384,
+        -0.052609,
+        -0.063345,
+        -0.228686,
+        -0.198624,
+        0.05905,
+        -0.271632
       ]
     },
     {
@@ -138076,6 +138278,236 @@
         -0.207869,
         -0.026414,
         0.157337
+      ]
+    },
+    {
+      "path": "tests/test_aura_civic_planning_behavior.py",
+      "role": "python_module",
+      "bytes": 2649,
+      "lines": 65,
+      "tokens_est": 663,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f09ca3d34547f7b3",
+      "vector": [
+        0.272584,
+        -0.288419,
+        0.039587,
+        0.204721,
+        0.184362,
+        0.026014,
+        0.109712,
+        -0.13912,
+        -0.111974,
+        0.274846,
+        0.003393,
+        -0.247701,
+        0.274846,
+        0.229604,
+        0.118761,
+        0.073518,
+        0.200197,
+        -0.265798,
+        -0.050897,
+        -0.231866,
+        0.157216,
+        -0.102926,
+        0.039587,
+        -0.066732,
+        0.010179,
+        0.091615,
+        0.23639,
+        -0.234128,
+        0.243177,
+        -0.003393,
+        0.220555,
+        0.019228
+      ]
+    },
+    {
+      "path": "tests/test_aura_civic_planning_contracts.py",
+      "role": "python_module",
+      "bytes": 1601,
+      "lines": 38,
+      "tokens_est": 401,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "62154095733c64cd",
+      "vector": [
+        -0.335362,
+        -0.057914,
+        0.103706,
+        -0.012122,
+        0.014815,
+        0.028284,
+        0.014815,
+        0.114481,
+        -0.05522,
+        -0.29765,
+        0.224921,
+        -0.165661,
+        0.138724,
+        -0.130643,
+        -0.197985,
+        0.068689,
+        -0.254552,
+        0.103706,
+        -0.241083,
+        -0.152192,
+        -0.028284,
+        -0.230309,
+        0.243777,
+        -0.26802,
+        0.006734,
+        0.152192,
+        -0.057914,
+        -0.235696,
+        0.294957,
+        -0.214147,
+        -0.122562,
+        0.192597
+      ]
+    },
+    {
+      "path": "tests/test_aura_civic_planning_inventory.py",
+      "role": "python_module",
+      "bytes": 1999,
+      "lines": 48,
+      "tokens_est": 500,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9a8951f4226de7d6",
+      "vector": [
+        -0.220479,
+        -0.138228,
+        -0.261605,
+        0.252466,
+        -0.161076,
+        0.001142,
+        0.138228,
+        0.241042,
+        -0.033129,
+        -0.106241,
+        -0.252466,
+        -0.284453,
+        -0.083394,
+        0.147367,
+        0.083394,
+        0.206771,
+        -0.046838,
+        0.113096,
+        0.01942,
+        0.190778,
+        -0.241042,
+        0.074255,
+        0.21591,
+        0.014851,
+        0.16793,
+        0.243327,
+        0.268459,
+        -0.074255,
+        -0.229618,
+        0.229618,
+        -0.158791,
+        0.060546
+      ]
+    },
+    {
+      "path": "tests/test_aura_civic_planning_projection.py",
+      "role": "python_module",
+      "bytes": 3759,
+      "lines": 71,
+      "tokens_est": 940,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ccbb6643402bc92b",
+      "vector": [
+        -0.068994,
+        -0.242105,
+        0.016308,
+        0.247123,
+        0.191928,
+        -0.184401,
+        -0.277229,
+        -0.023834,
+        0.272211,
+        -0.292282,
+        0.086556,
+        0.001254,
+        -0.071502,
+        -0.314862,
+        -0.144259,
+        -0.084047,
+        -0.12168,
+        0.086556,
+        0.091573,
+        -0.264685,
+        0.307335,
+        0.211999,
+        0.16433,
+        0.046414,
+        0.204472,
+        -0.171857,
+        0.129206,
+        -0.079029,
+        0.134224,
+        0.086556,
+        -0.119171,
+        -0.156804
+      ]
+    },
+    {
+      "path": "tests/test_aura_civic_planning_stress.py",
+      "role": "python_module",
+      "bytes": 1212,
+      "lines": 25,
+      "tokens_est": 303,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ea17e2e25286ae49",
+      "vector": [
+        0.043664,
+        -0.135983,
+        -0.086081,
+        -0.063625,
+        -0.303156,
+        -0.063625,
+        -0.258244,
+        -0.068615,
+        -0.298165,
+        -0.123508,
+        0.218322,
+        -0.123508,
+        0.223312,
+        -0.073606,
+        0.208342,
+        -0.138479,
+        -0.260739,
+        -0.031189,
+        -0.058635,
+        0.088576,
+        0.153449,
+        -0.111032,
+        0.220817,
+        0.071111,
+        0.300661,
+        -0.225807,
+        -0.190876,
+        -0.235788,
+        -0.258244,
+        -0.081091,
+        0.086081,
+        -0.1784
       ]
     },
     {
