@@ -47,8 +47,14 @@ def build_case_records(case_id: str, *, responses: list[str], include_decision_p
     }
     if include_decision_packet:
         session["decision_packet"] = {
-            "packet_id": f"PACKET-{case_id}", "workstreams": deepcopy(workstreams), "scenarios": [deepcopy(scenario)],
-            "consent_arc": deepcopy(arc), "patch_authority": PATCH_AUTHORITY, "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            "packet_id": f"PACKET-{case_id}",
+            "objective": objective,
+            "active_profiles": list(session["profile_set"]["jurisdiction_profile_refs"]),
+            "workstreams": deepcopy(workstreams),
+            "scenarios": [deepcopy(scenario)],
+            "consent_arc": deepcopy(arc),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
     return project, session
 
