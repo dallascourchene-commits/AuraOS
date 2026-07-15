@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 901
-- **total_bytes**: 65761882
-- **text_tokens_est**: 7044427
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 120, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 636, 'schema_or_lexicon': 76, 'support_file': 41}
+- **file_count**: 902
+- **total_bytes**: 65761789
+- **text_tokens_est**: 7044403
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 121, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 636, 'schema_or_lexicon': 76, 'support_file': 41}
 - **topology_nodes**: 7699
 - **topology_edges**: 16625
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 13693.78
+- **elapsed_ms**: 20260.0
 
 ## Coverage
 
-- **included_file_count**: 901
+- **included_file_count**: 902
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
 - **skipped_dir_file_counts**: `.git`=55, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
@@ -131,6 +131,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_substrate.py`
 - `docs/AURA_COGNITIVE_SUBSTRATE_P9.md`
 - `docs/AURA_SUBSTRATE_INTEGRATION_P9.md`
+- `docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md`
 - `docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md`
 - `gateway.py`
 - `test_aura_substrate.py`
