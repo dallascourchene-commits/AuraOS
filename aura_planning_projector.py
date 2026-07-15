@@ -11,7 +11,6 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
 import json
-from pathlib import Path
 from typing import Any
 
 from aura_event_contracts import (
@@ -27,6 +26,7 @@ PLANNING_PROJECTOR_VERSION = "AURA_PLANNING_PROJECTOR_V1"
 
 
 class ProjectionFindingCode(str, Enum):
+    EVENT_LOG_READ_FAILED = "EVENT_LOG_READ_FAILED"
     INVALID_EVENT_RECORD = "INVALID_EVENT_RECORD"
     EVENT_ID_MISMATCH = "EVENT_ID_MISMATCH"
     ENVELOPE_MISMATCH = "ENVELOPE_MISMATCH"
@@ -53,6 +53,7 @@ class ProjectionFindingCode(str, Enum):
     CHAIN_CONTEXT_MISMATCH = "CHAIN_CONTEXT_MISMATCH"
     OUT_OF_ORDER = "OUT_OF_ORDER"
     REGRESSION_BOARD_DIGEST_MISMATCH = "REGRESSION_BOARD_DIGEST_MISMATCH"
+    FRONTIER_BOARD_DIGEST_MISMATCH = "FRONTIER_BOARD_DIGEST_MISMATCH"
     FRONTIER_REGRESSION_DIGEST_MISMATCH = "FRONTIER_REGRESSION_DIGEST_MISMATCH"
     STATE_DIGEST_MISMATCH = "STATE_DIGEST_MISMATCH"
 
@@ -108,12 +109,24 @@ class ProjectionFinding(CanonicalRecord):
 
     def __post_init__(self) -> None:
         try:
-            code = self.code if isinstance(self.code, ProjectionFindingCode) else ProjectionFindingCode(str(self.code))
+            code = (
+                self.code
+                if isinstance(self.code, ProjectionFindingCode)
+                else ProjectionFindingCode(str(self.code))
+            )
         except ValueError as exc:
             raise ValueError(f"unknown projection finding code: {self.code}") from exc
         object.__setattr__(self, "code", code)
-        object.__setattr__(self, "message", _required(self.message, "finding.message"))
-        object.__setattr__(self, "event_ids", _strings(self.event_ids, "finding.event_ids"))
+        object.__setattr__(
+            self,
+            "message",
+            _required(self.message, "finding.message"),
+        )
+        object.__setattr__(
+            self,
+            "event_ids",
+            _strings(self.event_ids, "finding.event_ids"),
+        )
         if type(self.blocking) is not bool:
             raise ValueError("finding.blocking must be a boolean")
 
@@ -127,14 +140,32 @@ class ProjectedPlanningEvent(CanonicalRecord):
     created_at: float
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "event_id", _required(self.event_id, "projected_event.event_id"))
+        object.__setattr__(
+            self,
+            "event_id",
+            _required(self.event_id, "projected_event.event_id"),
+        )
         try:
-            kind = self.kind if isinstance(self.kind, PlanningEventKind) else PlanningEventKind(str(self.kind))
+            kind = (
+                self.kind
+                if isinstance(self.kind, PlanningEventKind)
+                else PlanningEventKind(str(self.kind))
+            )
         except ValueError as exc:
-            raise ValueError(f"unknown projected planning event kind: {self.kind}") from exc
+            raise ValueError(
+                f"unknown projected planning event kind: {self.kind}"
+            ) from exc
         object.__setattr__(self, "kind", kind)
-        object.__setattr__(self, "payload_ref", _required(self.payload_ref, "projected_event.payload_ref"))
-        object.__setattr__(self, "payload_digest", _required(self.payload_digest, "projected_event.payload_digest"))
+        object.__setattr__(
+            self,
+            "payload_ref",
+            _required(self.payload_ref, "projected_event.payload_ref"),
+        )
+        object.__setattr__(
+            self,
+            "payload_digest",
+            _required(self.payload_digest, "projected_event.payload_digest"),
+        )
         timestamp = float(self.created_at)
         if timestamp != timestamp or timestamp in (float("inf"), float("-inf")):
             raise ValueError("projected_event.created_at must be finite")
@@ -164,14 +195,18 @@ class PlanningHistoryChain(CanonicalRecord):
             "purpose_digest",
             "policy_scope",
         ):
-            object.__setattr__(self, field_name, _required(getattr(self, field_name), f"chain.{field_name}"))
+            object.__setattr__(
+                self,
+                field_name,
+                _required(getattr(self, field_name), f"chain.{field_name}"),
+            )
         expected = (
             (self.board_event, PlanningEventKind.BOARD_CREATED),
             (self.regression_event, PlanningEventKind.REGRESSION_COMPLETED),
             (self.frontier_event, PlanningEventKind.FRONTIER_COMPLETED),
         )
         for event, kind in expected:
-            if not isinstance(event, ProjectedPlanningEvent) or event.kind is not kind:
+            if not isinstance(event, ProjectedPlanningEvent) or event.kind != kind:
                 raise ValueError(f"chain event does not match {kind.value}")
 
 
@@ -192,17 +227,22 @@ class PlanningHistoryProjectionReport(CanonicalRecord):
         chain_ids = [item.chain_id for item in chains]
         if len(chain_ids) != len(set(chain_ids)):
             raise ValueError("projection chains must have unique chain IDs")
+
         if isinstance(self.findings, (str, bytes, bytearray)):
             raise ValueError("projection findings must be a sequence")
         findings = tuple(self.findings)
         if not all(isinstance(item, ProjectionFinding) for item in findings):
             raise ValueError("projection findings contains an invalid value")
+
         for name in ("planning_event_count", "ignored_nonplanning_events"):
             value = getattr(self, name)
             if type(value) is not int or value < 0:
                 raise ValueError(f"{name} must be a non-negative integer")
         if self.version != PLANNING_PROJECTOR_VERSION:
-            raise ValueError(f"unsupported planning projector version: {self.version}")
+            raise ValueError(
+                f"unsupported planning projector version: {self.version}"
+            )
+
         object.__setattr__(self, "chains", chains)
         object.__setattr__(self, "findings", findings)
 
@@ -238,7 +278,15 @@ class _Collector:
         message: str,
         event_ids: Sequence[str] = (),
     ) -> None:
-        normalized_ids = tuple(sorted(str(item) for item in event_ids if str(item)))
+        normalized_ids = tuple(
+            sorted(
+                {
+                    str(item).strip()
+                    for item in event_ids
+                    if str(item).strip()
+                }
+            )
+        )
         key = (code.value, normalized_ids, message)
         if key in self._keys:
             return
@@ -246,11 +294,35 @@ class _Collector:
         self.findings.append(ProjectionFinding(code, message, normalized_ids))
 
 
+def _ordered_findings(collector: _Collector) -> tuple[ProjectionFinding, ...]:
+    return tuple(
+        sorted(
+            collector.findings,
+            key=lambda item: (item.code.value, item.event_ids, item.message),
+        )
+    )
+
+
+def _report(
+    collector: _Collector,
+    *,
+    chains: Sequence[PlanningHistoryChain] = (),
+    planning_event_count: int = 0,
+    ignored_nonplanning_events: int = 0,
+) -> PlanningHistoryProjectionReport:
+    return PlanningHistoryProjectionReport(
+        chains=tuple(sorted(chains, key=lambda item: item.chain_id)),
+        findings=_ordered_findings(collector),
+        planning_event_count=planning_event_count,
+        ignored_nonplanning_events=ignored_nonplanning_events,
+    )
+
+
 def _planning_kind(raw: Mapping[str, Any]) -> PlanningEventKind | None:
     event_type = raw.get("event_type")
-    if event_type not in _PLANNING_TYPES:
+    if not isinstance(event_type, str) or event_type not in _PLANNING_TYPES:
         return None
-    return PlanningEventKind(str(event_type))
+    return PlanningEventKind(event_type)
 
 
 def _validate_envelope(
@@ -262,17 +334,34 @@ def _validate_envelope(
     parents = raw.get("parent_event_ids")
     evidence = raw.get("evidence_refs")
     if not isinstance(parents, list):
-        collector.add(ProjectionFindingCode.INVALID_EVENT_RECORD, "parent_event_ids must be a JSON array", (event_id,))
+        collector.add(
+            ProjectionFindingCode.INVALID_EVENT_RECORD,
+            "parent_event_ids must be a JSON array",
+            (event_id,),
+        )
         return None
     if not isinstance(evidence, list):
-        collector.add(ProjectionFindingCode.INVALID_EVENT_RECORD, "evidence_refs must be a JSON array", (event_id,))
+        collector.add(
+            ProjectionFindingCode.INVALID_EVENT_RECORD,
+            "evidence_refs must be a JSON array",
+            (event_id,),
+        )
         return None
     if len(parents) != len(set(map(str, parents))):
-        collector.add(ProjectionFindingCode.DUPLICATE_PARENT_REF, "planning event contains duplicate parent references", (event_id,))
+        collector.add(
+            ProjectionFindingCode.DUPLICATE_PARENT_REF,
+            "planning event contains duplicate parent references",
+            (event_id,),
+        )
         return None
     if len(evidence) != len(set(map(str, evidence))):
-        collector.add(ProjectionFindingCode.DUPLICATE_EVIDENCE_REF, "planning event contains duplicate evidence references", (event_id,))
+        collector.add(
+            ProjectionFindingCode.DUPLICATE_EVIDENCE_REF,
+            "planning event contains duplicate evidence references",
+            (event_id,),
+        )
         return None
+
     try:
         expected = AuraEventEnvelope.create(
             trace_id=raw.get("trace_id"),
@@ -297,23 +386,55 @@ def _validate_envelope(
             created_at=raw.get("created_at"),
         )
     except (TypeError, ValueError) as exc:
-        collector.add(ProjectionFindingCode.INVALID_EVENT_RECORD, f"planning event contract validation failed: {exc}", (event_id,))
+        collector.add(
+            ProjectionFindingCode.INVALID_EVENT_RECORD,
+            f"planning event contract validation failed: {exc}",
+            (event_id,),
+        )
         return None
+
     if event_id != expected.event_id:
-        collector.add(ProjectionFindingCode.EVENT_ID_MISMATCH, "serialized event_id does not match the canonical envelope", (event_id, expected.event_id))
+        collector.add(
+            ProjectionFindingCode.EVENT_ID_MISMATCH,
+            "serialized event_id does not match the canonical envelope",
+            (event_id, expected.event_id),
+        )
         return None
-    if canonical_json(raw) != canonical_json(expected.to_dict()):
-        collector.add(ProjectionFindingCode.ENVELOPE_MISMATCH, "serialized event contains non-canonical or unexpected envelope fields", (event_id,))
+
+    try:
+        serialized = canonical_json(raw)
+    except (TypeError, ValueError) as exc:
+        collector.add(
+            ProjectionFindingCode.INVALID_EVENT_RECORD,
+            f"serialized planning event is not canonicalizable: {exc}",
+            (event_id,),
+        )
         return None
+    if serialized != canonical_json(expected.to_dict()):
+        collector.add(
+            ProjectionFindingCode.ENVELOPE_MISMATCH,
+            "serialized event contains non-canonical or unexpected envelope fields",
+            (event_id,),
+        )
+        return None
+
     if expected.proposal_only is not True:
-        collector.add(ProjectionFindingCode.NON_PROPOSAL_EVENT, "planning history events must remain proposal_only", (event_id,))
+        collector.add(
+            ProjectionFindingCode.NON_PROPOSAL_EVENT,
+            "planning history events must remain proposal_only",
+            (event_id,),
+        )
         return None
     if (
         expected.node_id != kind.value
         or expected.dikwp_stage != _EXPECTED_STAGE[kind]
         or expected.measurement_classes != _EXPECTED_MEASUREMENTS[kind]
     ):
-        collector.add(ProjectionFindingCode.WRONG_EVENT_CONTRACT, "planning event stage, node, or measurement contract is invalid", (event_id,))
+        collector.add(
+            ProjectionFindingCode.WRONG_EVENT_CONTRACT,
+            "planning event stage, node, or measurement contract is invalid",
+            (event_id,),
+        )
         return None
     return expected
 
@@ -325,41 +446,85 @@ def _load_sidecar(
     collector: _Collector,
 ) -> Mapping[str, Any] | None:
     ref_id = envelope.payload_ref
-    sidecars_root = store.sidecars_dir.resolve()
-    candidate = (sidecars_root / f"{ref_id}.json").resolve()
+    try:
+        sidecars_root = store.sidecars_dir.resolve()
+        candidate = (sidecars_root / f"{ref_id}.json").resolve()
+    except (OSError, RuntimeError, ValueError) as exc:
+        collector.add(
+            ProjectionFindingCode.UNSAFE_PAYLOAD_REF,
+            f"payload_ref cannot be resolved safely: {exc}",
+            (envelope.event_id,),
+        )
+        return None
+
     if candidate.parent != sidecars_root or candidate.name != f"{ref_id}.json":
-        collector.add(ProjectionFindingCode.UNSAFE_PAYLOAD_REF, "payload_ref escapes or does not resolve directly under the sidecar directory", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.UNSAFE_PAYLOAD_REF,
+            "payload_ref escapes or does not resolve directly under the sidecar directory",
+            (envelope.event_id,),
+        )
         return None
     if not candidate.is_file():
-        collector.add(ProjectionFindingCode.MISSING_SIDECAR, "planning event sidecar is missing", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.MISSING_SIDECAR,
+            "planning event sidecar is missing",
+            (envelope.event_id,),
+        )
         return None
+
     try:
         text = candidate.read_text(encoding="utf-8")
         payload = json.loads(text)
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        collector.add(ProjectionFindingCode.MALFORMED_SIDECAR, f"planning sidecar cannot be decoded: {exc}", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.MALFORMED_SIDECAR,
+            f"planning sidecar cannot be decoded: {exc}",
+            (envelope.event_id,),
+        )
         return None
     if not isinstance(payload, Mapping):
-        collector.add(ProjectionFindingCode.MALFORMED_SIDECAR, "planning sidecar root must be a JSON object", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.MALFORMED_SIDECAR,
+            "planning sidecar root must be a JSON object",
+            (envelope.event_id,),
+        )
         return None
+
     try:
         canonical = canonical_json(payload)
     except (TypeError, ValueError) as exc:
-        collector.add(ProjectionFindingCode.MALFORMED_SIDECAR, f"planning sidecar is not canonicalizable: {exc}", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.MALFORMED_SIDECAR,
+            f"planning sidecar is not canonicalizable: {exc}",
+            (envelope.event_id,),
+        )
         return None
     if text != canonical:
-        collector.add(ProjectionFindingCode.NONCANONICAL_SIDECAR, "planning sidecar bytes do not match canonical JSON", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.NONCANONICAL_SIDECAR,
+            "planning sidecar bytes do not match canonical JSON",
+            (envelope.event_id,),
+        )
         return None
+
     digest = stable_digest(payload)
     if digest != envelope.payload_digest:
-        collector.add(ProjectionFindingCode.PAYLOAD_DIGEST_MISMATCH, "planning sidecar digest does not match the event", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.PAYLOAD_DIGEST_MISMATCH,
+            "planning sidecar digest does not match the event",
+            (envelope.event_id,),
+        )
         return None
     expected_ref = stable_id(
         "payload",
         {"kind": _EXPECTED_SIDECAR_KIND[kind], "digest": digest},
     )
     if ref_id != expected_ref:
-        collector.add(ProjectionFindingCode.PAYLOAD_REF_MISMATCH, "planning payload_ref is not the canonical sidecar ID for its event type", (envelope.event_id,))
+        collector.add(
+            ProjectionFindingCode.PAYLOAD_REF_MISMATCH,
+            "planning payload_ref is not the canonical sidecar ID for its event type",
+            (envelope.event_id,),
+        )
         return None
     return payload
 
@@ -370,8 +535,7 @@ def _validate_payload_metadata(
     payload: Mapping[str, Any],
     collector: _Collector,
 ) -> bool:
-    event_id = envelope.event_id
-    if kind is PlanningEventKind.BOARD_CREATED:
+    if kind == PlanningEventKind.BOARD_CREATED:
         goal = payload.get("goal")
         matches = (
             payload.get("board_id") == envelope.board_id
@@ -382,10 +546,14 @@ def _validate_payload_metadata(
         )
     else:
         matches = payload.get("board_id") == envelope.board_id
-    if not matches:
-        collector.add(ProjectionFindingCode.PAYLOAD_METADATA_MISMATCH, "planning sidecar metadata does not match its event envelope", (event_id,))
-        return False
-    return True
+    if matches:
+        return True
+    collector.add(
+        ProjectionFindingCode.PAYLOAD_METADATA_MISMATCH,
+        "planning sidecar metadata does not match its event envelope",
+        (envelope.event_id,),
+    )
+    return False
 
 
 def _projected(event: _ValidatedEvent) -> ProjectedPlanningEvent:
@@ -415,6 +583,65 @@ def _context_mismatches(events: Sequence[_ValidatedEvent]) -> tuple[str, ...]:
     )
 
 
+def _read_raw_events(
+    store: AppendOnlyEventStore,
+    collector: _Collector,
+) -> tuple[Mapping[str, Any], ...] | None:
+    try:
+        return tuple(store.iter_events())
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        collector.add(
+            ProjectionFindingCode.EVENT_LOG_READ_FAILED,
+            f"append-only event log cannot be decoded: {exc}",
+        )
+        return None
+
+
+def _exclude_duplicate_event_ids(
+    planning_rows: Sequence[tuple[int, Mapping[str, Any], PlanningEventKind]],
+    collector: _Collector,
+) -> set[str]:
+    occurrences: dict[
+        str,
+        list[tuple[int, Mapping[str, Any], PlanningEventKind]],
+    ] = {}
+    for row in planning_rows:
+        event_id = str(row[1].get("event_id") or "")
+        occurrences.setdefault(event_id, []).append(row)
+
+    excluded: set[str] = set()
+    for event_id, rows in occurrences.items():
+        if len(rows) < 2:
+            continue
+        digests: set[str] = set()
+        digest_failed = False
+        for _index, raw, _kind in rows:
+            try:
+                digests.add(stable_digest(raw))
+            except (TypeError, ValueError) as exc:
+                collector.add(
+                    ProjectionFindingCode.INVALID_EVENT_RECORD,
+                    f"duplicate planning event is not canonicalizable: {exc}",
+                    (event_id,),
+                )
+                digest_failed = True
+        if digest_failed:
+            excluded.add(event_id)
+            continue
+        code = (
+            ProjectionFindingCode.CONFLICTING_DUPLICATE_EVENT
+            if len(digests) > 1
+            else ProjectionFindingCode.DUPLICATE_EVENT_ID
+        )
+        collector.add(
+            code,
+            "planning event ID occurs more than once in the append-only log",
+            (event_id,),
+        )
+        excluded.add(event_id)
+    return excluded
+
+
 def project_planning_history(
     store: AppendOnlyEventStore,
 ) -> PlanningHistoryProjectionReport:
@@ -422,13 +649,28 @@ def project_planning_history(
 
     if not isinstance(store, AppendOnlyEventStore):
         raise ValueError("store must be an AppendOnlyEventStore")
+
     collector = _Collector()
-    raw_events = tuple(store.iter_events())
+    raw_events = _read_raw_events(store, collector)
+    if raw_events is None:
+        return _report(collector)
+
     planning_rows: list[tuple[int, Mapping[str, Any], PlanningEventKind]] = []
     ignored = 0
     for index, raw in enumerate(raw_events):
         if not isinstance(raw, Mapping):
-            collector.add(ProjectionFindingCode.INVALID_EVENT_RECORD, f"event row {index} is not a JSON object")
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {index} is not a JSON object",
+            )
+            continue
+        event_type = raw.get("event_type")
+        if event_type is not None and not isinstance(event_type, str):
+            collector.add(
+                ProjectionFindingCode.INVALID_EVENT_RECORD,
+                f"event row {index} has a non-string event_type",
+                (str(raw.get("event_id") or ""),),
+            )
             continue
         kind = _planning_kind(raw)
         if kind is None:
@@ -436,22 +678,10 @@ def project_planning_history(
             continue
         planning_rows.append((index, raw, kind))
 
-    occurrences: dict[str, list[tuple[int, Mapping[str, Any], PlanningEventKind]]] = {}
-    for row in planning_rows:
-        event_id = str(row[1].get("event_id") or "")
-        occurrences.setdefault(event_id, []).append(row)
-    excluded_duplicate_ids: set[str] = set()
-    for event_id, rows in occurrences.items():
-        if len(rows) < 2:
-            continue
-        digests = {stable_digest(row[1]) for row in rows}
-        code = (
-            ProjectionFindingCode.CONFLICTING_DUPLICATE_EVENT
-            if len(digests) > 1
-            else ProjectionFindingCode.DUPLICATE_EVENT_ID
-        )
-        collector.add(code, "planning event ID occurs more than once in the append-only log", (event_id,))
-        excluded_duplicate_ids.add(event_id)
+    excluded_duplicate_ids = _exclude_duplicate_event_ids(
+        planning_rows,
+        collector,
+    )
 
     valid: dict[str, _ValidatedEvent] = {}
     for _index, raw, kind in planning_rows:
@@ -462,88 +692,192 @@ def project_planning_history(
         if envelope is None:
             continue
         payload = _load_sidecar(store, envelope, kind, collector)
-        if payload is None or not _validate_payload_metadata(envelope, kind, payload, collector):
+        if payload is None:
+            continue
+        if not _validate_payload_metadata(envelope, kind, payload, collector):
             continue
         valid[envelope.event_id] = _ValidatedEvent(envelope, kind, payload)
 
-    boards = tuple(sorted((item for item in valid.values() if item.kind is PlanningEventKind.BOARD_CREATED), key=lambda item: item.envelope.event_id))
-    regressions = tuple(item for item in valid.values() if item.kind is PlanningEventKind.REGRESSION_COMPLETED)
-    frontiers = tuple(item for item in valid.values() if item.kind is PlanningEventKind.FRONTIER_COMPLETED)
+    boards = tuple(
+        sorted(
+            (
+                item
+                for item in valid.values()
+                if item.kind == PlanningEventKind.BOARD_CREATED
+            ),
+            key=lambda item: item.envelope.event_id,
+        )
+    )
+    regressions = tuple(
+        item
+        for item in valid.values()
+        if item.kind == PlanningEventKind.REGRESSION_COMPLETED
+    )
+    frontiers = tuple(
+        item
+        for item in valid.values()
+        if item.kind == PlanningEventKind.FRONTIER_COMPLETED
+    )
 
     regression_children: dict[str, list[_ValidatedEvent]] = {}
     frontier_children: dict[str, list[_ValidatedEvent]] = {}
 
     for board in boards:
         if board.envelope.parent_event_ids:
-            collector.add(ProjectionFindingCode.BOARD_NOT_ROOT, "planning board event must be a root event", (board.envelope.event_id,))
+            collector.add(
+                ProjectionFindingCode.BOARD_NOT_ROOT,
+                "planning board event must be a root event",
+                (board.envelope.event_id,),
+            )
 
-    for event, expected_parent_kind, target in (
+    parent_contracts = (
         *((item, PlanningEventKind.BOARD_CREATED, regression_children) for item in regressions),
         *((item, PlanningEventKind.REGRESSION_COMPLETED, frontier_children) for item in frontiers),
-    ):
+    )
+    for event, expected_parent_kind, target in parent_contracts:
         parents = event.envelope.parent_event_ids
         if len(parents) != 1:
-            collector.add(ProjectionFindingCode.WRONG_PARENT_COUNT, f"{event.kind.value} requires exactly one parent", (event.envelope.event_id, *parents))
+            collector.add(
+                ProjectionFindingCode.WRONG_PARENT_COUNT,
+                f"{event.kind.value} requires exactly one parent",
+                (event.envelope.event_id, *parents),
+            )
             continue
         parent_id = parents[0]
         parent = valid.get(parent_id)
         if parent is None:
-            collector.add(ProjectionFindingCode.MISSING_PARENT, "planning event parent is missing or invalid", (event.envelope.event_id, parent_id))
+            collector.add(
+                ProjectionFindingCode.MISSING_PARENT,
+                "planning event parent is missing or invalid",
+                (event.envelope.event_id, parent_id),
+            )
             continue
-        if parent.kind is not expected_parent_kind:
-            collector.add(ProjectionFindingCode.WRONG_PARENT_TYPE, f"{event.kind.value} parent must be {expected_parent_kind.value}", (event.envelope.event_id, parent_id))
+        if parent.kind != expected_parent_kind:
+            collector.add(
+                ProjectionFindingCode.WRONG_PARENT_TYPE,
+                f"{event.kind.value} parent must be {expected_parent_kind.value}",
+                (event.envelope.event_id, parent_id),
+            )
             continue
         target.setdefault(parent_id, []).append(event)
 
     chains: list[PlanningHistoryChain] = []
     for board in boards:
-        board_id = board.envelope.event_id
+        board_event_id = board.envelope.event_id
         if board.envelope.parent_event_ids:
             continue
-        board_regressions = sorted(regression_children.get(board_id, []), key=lambda item: item.envelope.event_id)
+
+        board_regressions = sorted(
+            regression_children.get(board_event_id, []),
+            key=lambda item: item.envelope.event_id,
+        )
         if not board_regressions:
-            collector.add(ProjectionFindingCode.MISSING_REGRESSION_CHILD, "planning board event has no regression child", (board_id,))
+            collector.add(
+                ProjectionFindingCode.MISSING_REGRESSION_CHILD,
+                "planning board event has no regression child",
+                (board_event_id,),
+            )
             continue
         if len(board_regressions) > 1:
-            collector.add(ProjectionFindingCode.BRANCHING_CHAIN, "planning board event has multiple regression children", (board_id, *(item.envelope.event_id for item in board_regressions)))
+            collector.add(
+                ProjectionFindingCode.BRANCHING_CHAIN,
+                "planning board event has multiple regression children",
+                (
+                    board_event_id,
+                    *(item.envelope.event_id for item in board_regressions),
+                ),
+            )
             continue
+
         regression = board_regressions[0]
-        regression_id = regression.envelope.event_id
-        regression_frontiers = sorted(frontier_children.get(regression_id, []), key=lambda item: item.envelope.event_id)
+        regression_event_id = regression.envelope.event_id
+        regression_frontiers = sorted(
+            frontier_children.get(regression_event_id, []),
+            key=lambda item: item.envelope.event_id,
+        )
         if not regression_frontiers:
-            collector.add(ProjectionFindingCode.MISSING_FRONTIER_CHILD, "planning regression event has no frontier child", (regression_id,))
+            collector.add(
+                ProjectionFindingCode.MISSING_FRONTIER_CHILD,
+                "planning regression event has no frontier child",
+                (regression_event_id,),
+            )
             continue
         if len(regression_frontiers) > 1:
-            collector.add(ProjectionFindingCode.BRANCHING_CHAIN, "planning regression event has multiple frontier children", (regression_id, *(item.envelope.event_id for item in regression_frontiers)))
+            collector.add(
+                ProjectionFindingCode.BRANCHING_CHAIN,
+                "planning regression event has multiple frontier children",
+                (
+                    regression_event_id,
+                    *(item.envelope.event_id for item in regression_frontiers),
+                ),
+            )
             continue
+
         frontier = regression_frontiers[0]
         chain_events = (board, regression, frontier)
+        chain_event_ids = tuple(
+            item.envelope.event_id for item in chain_events
+        )
+
         mismatches = _context_mismatches(chain_events)
         if mismatches:
-            collector.add(ProjectionFindingCode.CHAIN_CONTEXT_MISMATCH, f"planning chain context differs across fields: {list(mismatches)}", tuple(item.envelope.event_id for item in chain_events))
+            collector.add(
+                ProjectionFindingCode.CHAIN_CONTEXT_MISMATCH,
+                f"planning chain context differs across fields: {list(mismatches)}",
+                chain_event_ids,
+            )
             continue
-        timestamps = tuple(item.envelope.created_at for item in chain_events)
+
+        timestamps = tuple(
+            item.envelope.created_at for item in chain_events
+        )
         if timestamps != tuple(sorted(timestamps)):
-            collector.add(ProjectionFindingCode.OUT_OF_ORDER, "planning chain timestamps are not board <= regression <= frontier", tuple(item.envelope.event_id for item in chain_events))
+            collector.add(
+                ProjectionFindingCode.OUT_OF_ORDER,
+                "planning chain timestamps are not board <= regression <= frontier",
+                chain_event_ids,
+            )
             continue
+
         board_digest = board.envelope.payload_digest
         if regression.payload.get("board_digest") != board_digest:
-            collector.add(ProjectionFindingCode.REGRESSION_BOARD_DIGEST_MISMATCH, "regression sidecar is not bound to the board sidecar digest", (board_id, regression_id))
+            collector.add(
+                ProjectionFindingCode.REGRESSION_BOARD_DIGEST_MISMATCH,
+                "regression sidecar is not bound to the board sidecar digest",
+                (board_event_id, regression_event_id),
+            )
             continue
         if frontier.payload.get("board_digest") != board_digest:
-            collector.add(ProjectionFindingCode.REGRESSION_BOARD_DIGEST_MISMATCH, "frontier sidecar is not bound to the board sidecar digest", (board_id, frontier.envelope.event_id))
+            collector.add(
+                ProjectionFindingCode.FRONTIER_BOARD_DIGEST_MISMATCH,
+                "frontier sidecar is not bound to the board sidecar digest",
+                (board_event_id, frontier.envelope.event_id),
+            )
             continue
-        if frontier.payload.get("regression_report_digest") != regression.envelope.payload_digest:
-            collector.add(ProjectionFindingCode.FRONTIER_REGRESSION_DIGEST_MISMATCH, "frontier sidecar is not bound to the regression sidecar digest", (regression_id, frontier.envelope.event_id))
+        if (
+            frontier.payload.get("regression_report_digest")
+            != regression.envelope.payload_digest
+        ):
+            collector.add(
+                ProjectionFindingCode.FRONTIER_REGRESSION_DIGEST_MISMATCH,
+                "frontier sidecar is not bound to the regression sidecar digest",
+                (regression_event_id, frontier.envelope.event_id),
+            )
             continue
-        if frontier.payload.get("state_digest") != regression.payload.get("state_digest"):
-            collector.add(ProjectionFindingCode.STATE_DIGEST_MISMATCH, "regression and frontier sidecars disagree on initial state digest", (regression_id, frontier.envelope.event_id))
+        if frontier.payload.get("state_digest") != regression.payload.get(
+            "state_digest"
+        ):
+            collector.add(
+                ProjectionFindingCode.STATE_DIGEST_MISMATCH,
+                "regression and frontier sidecars disagree on initial state digest",
+                (regression_event_id, frontier.envelope.event_id),
+            )
             continue
+
         envelope = board.envelope
-        event_ids = tuple(item.envelope.event_id for item in chain_events)
         chains.append(
             PlanningHistoryChain(
-                chain_id=stable_id("planning-chain", event_ids),
+                chain_id=stable_id("planning-chain", chain_event_ids),
                 trace_id=envelope.trace_id,
                 board_id=envelope.board_id,
                 arena_id=envelope.arena_id,
@@ -556,16 +890,9 @@ def project_planning_history(
             )
         )
 
-    ordered_chains = tuple(sorted(chains, key=lambda item: item.chain_id))
-    ordered_findings = tuple(
-        sorted(
-            collector.findings,
-            key=lambda item: (item.code.value, item.event_ids, item.message),
-        )
-    )
-    return PlanningHistoryProjectionReport(
-        chains=ordered_chains,
-        findings=ordered_findings,
+    return _report(
+        collector,
+        chains=chains,
         planning_event_count=len(planning_rows),
         ignored_nonplanning_events=ignored,
     )
