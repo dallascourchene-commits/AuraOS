@@ -111,6 +111,31 @@ def test_single_line_noncanonical_json_is_reported(tmp_path) -> None:
     assert QDKTProjectionFindingCode.NONCANONICAL_EVENT_RECORD in codes(report)
 
 
+def test_missing_terminal_newline_is_reported_but_row_is_read(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    record(store)
+    text = store.events_path.read_text(encoding="utf-8")
+    store.events_path.write_text(text.removesuffix("\n"), encoding="utf-8")
+
+    report = project_qdkt_events(store)
+
+    assert QDKTProjectionFindingCode.NONCANONICAL_EVENT_RECORD in codes(report)
+    assert report.qdkt_event_count == 1
+    assert report.integrity_complete is False
+
+
+def test_injected_blank_row_is_reported(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    record(store)
+    with store.events_path.open("a", encoding="utf-8") as handle:
+        handle.write("\n")
+
+    report = project_qdkt_events(store)
+
+    assert QDKTProjectionFindingCode.NONCANONICAL_EVENT_RECORD in codes(report)
+    assert report.integrity_complete is False
+
+
 def test_missing_parent_is_reported(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     record(store, parent_event_ids=("missing-parent",))
