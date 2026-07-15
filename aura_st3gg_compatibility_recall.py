@@ -145,19 +145,20 @@ def persist_report_exact_to_v1(
         require(record.compressed == compact, "existing_digest_record_compact_conflict")
     require(isinstance(record, ST3GGRecallRecord), "v1_persistence_record_type_invalid")
     binding = ST3GGCanonicalBinding(
-        exact.namespace,
-        canonical_pointer(exact.namespace, exact.original_digest),
-        exact.exact_ref,
-        exact.original_digest,
-        exact.original_bytes,
-        exact.content_type,
-        exact.source_hint,
-        record.pointer,
-        record.dash_key,
-        record.glyph,
-        record.holographic_header,
-        EGRESS_VERSION,
-        surface_pointer,
+        namespace=exact.namespace,
+        pointer=canonical_pointer(exact.namespace, exact.original_digest),
+        exact_ref=exact.exact_ref,
+        original_digest=exact.original_digest,
+        original_bytes=exact.original_bytes,
+        content_type=exact.content_type,
+        source_hint=exact.source_hint,
+        legacy_recall_pointer=record.pointer,
+        legacy_dash_key=record.dash_key,
+        legacy_glyph=record.glyph,
+        legacy_holographic_header=record.holographic_header,
+        legacy_surface=EGRESS_VERSION,
+        legacy_surface_pointer=surface_pointer,
+        legacy_compact_digest=digest_text(compact),
     )
     evidence = dual_read_st3gg_recall(
         binding,
@@ -281,6 +282,7 @@ def _record_dict(record: ST3GGRecallRecord) -> dict[str, Any]:
         "source_hint": record.source_hint,
         "original": record.original,
         "compressed": record.compressed,
+        "created_unix": record.created_unix,
     }
 
 
