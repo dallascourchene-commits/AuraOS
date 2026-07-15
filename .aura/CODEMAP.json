@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784077859,
+  "generated_at_unix": 1784079789,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 829,
+    "included_file_count": 831,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -75,6 +75,7 @@
       ".github/workflows/p2-2-planning-regression.yml",
       ".github/workflows/p2-3-planning-frontier.yml",
       ".github/workflows/p3-1-planning-events.yml",
+      ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -804,6 +805,7 @@
       "tests/test_aura_planning_board.py",
       "tests/test_aura_planning_events.py",
       "tests/test_aura_planning_frontier.py",
+      "tests/test_aura_planning_projector.py",
       "tests/test_aura_planning_regression.py",
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
@@ -850,23 +852,23 @@
     ]
   },
   "summary": {
-    "file_count": 829,
-    "total_bytes": 63925591,
-    "text_tokens_est": 6585339,
+    "file_count": 831,
+    "total_bytes": 63942477,
+    "text_tokens_est": 6589562,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 582,
-      "schema_or_lexicon": 67,
+      "python_module": 583,
+      "schema_or_lexicon": 68,
       "support_file": 41
     },
     "topology_nodes": 7259,
     "topology_edges": 15197,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19266.77
+    "elapsed_ms": 20035.5
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1066,6 +1068,7 @@
       ".github/workflows/p2-2-planning-regression.yml",
       ".github/workflows/p2-3-planning-frontier.yml",
       ".github/workflows/p3-1-planning-events.yml",
+      ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -1679,6 +1682,7 @@
       "tests/test_aura_planning_board.py",
       "tests/test_aura_planning_events.py",
       "tests/test_aura_planning_frontier.py",
+      "tests/test_aura_planning_projector.py",
       "tests/test_aura_planning_regression.py",
       "tests/test_aura_planning_regression_adversarial.py",
       "tests/test_aura_refactor_candidate.py",
@@ -16797,6 +16801,14 @@
         "signature_hash": "4cc9156e3ed71c4d"
       },
       {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_board:055ddedfbe436eee",
+        "signature_hash": "72982361d90ea567"
+      },
+      {
         "file": "tests/test_aura_planning_regression.py",
         "kind": "function",
         "line": 38,
@@ -17739,6 +17751,16 @@
         "signature_hash": "34dcdc83b65fa0a9"
       }
     ],
+    "_chain": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_chain:99a4f62983fcd44c",
+        "signature_hash": "f238e68f4cf5877e"
+      }
+    ],
     "_chars": [
       {
         "file": "aura_efficiency_benchmark.py",
@@ -18539,6 +18561,16 @@
         "end_line": 587,
         "semantic_id": "aura_human_agent_concepts.py#function:_codemap_projected_node:98447e327500ea3b",
         "signature_hash": "5a5b6642ff0684e1"
+      }
+    ],
+    "_codes": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 171,
+        "end_line": 172,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_codes:f575d399a59babb5",
+        "signature_hash": "b789256c9791ce81"
       }
     ],
     "_coerce_anchor": [
@@ -21133,6 +21165,16 @@
         "end_line": 702,
         "semantic_id": "aura_symbolic_trace_memory.py#function:_event_raw_text:b6315285f5ace66b",
         "signature_hash": "e616a41f61286e19"
+      }
+    ],
+    "_event_rows": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_event_rows:ce725142ad730065",
+        "signature_hash": "4655bbea38596da7"
       }
     ],
     "_evict_oldest": [
@@ -28813,6 +28855,16 @@
         "signature_hash": "696efa736c161060"
       }
     ],
+    "_rebuild_event": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 145,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_rebuild_event:b949db445d91e4a3",
+        "signature_hash": "381ec73094f73b44"
+      }
+    ],
     "_rebuild_hash_sidecar": [
       {
         "file": "aura_st3gg_recall.py",
@@ -29369,6 +29421,16 @@
         "end_line": 1153,
         "semantic_id": "aura_obsidian_graph_bridge.py#method:ObsidianGraphBridge._render_note:371f1daa4758075d",
         "signature_hash": "79da9157b9d3f18b"
+      }
+    ],
+    "_replace_payload": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_replace_payload:f5ec655c23708c93",
+        "signature_hash": "c6c14ecbb20e411c"
       }
     ],
     "_replay_candidate": [
@@ -31793,6 +31855,16 @@
         "end_line": 21,
         "semantic_id": "test_aura_arena_st3gg_codec.py#function:_small_capsule:c23682ba717c6854",
         "signature_hash": "30ead0ee8ee01310"
+      }
+    ],
+    "_snapshot_files": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 180,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_snapshot_files:b4e9fafef2bae9ce",
+        "signature_hash": "3a41ea4462b53d93"
       }
     ],
     "_snapshot_node": [
@@ -35091,6 +35163,16 @@
         "end_line": 52,
         "semantic_id": "test_aura_empirical_software_lab.py#function:_write_empirical_repo:c310c5cb8541e025",
         "signature_hash": "c263db764e282df0"
+      }
+    ],
+    "_write_event_rows": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:_write_event_rows:7bcddaec07ad27ff",
+        "signature_hash": "b95363fd945e20f6"
       }
     ],
     "_write_fixture": [
@@ -58779,6 +58861,16 @@
         "signature_hash": "31534e2a0e25097d"
       }
     ],
+    "test_board_regression_frontier_digest_bindings_fail_closed": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 373,
+        "end_line": 427,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_board_regression_frontier_digest_bindings_fail_closed:91a55b0528adf6a9",
+        "signature_hash": "2f7d5481db39b363"
+      }
+    ],
     "test_board_regression_frontier_parent_chain_is_exact": [
       {
         "file": "tests/test_aura_planning_events.py",
@@ -61211,6 +61303,16 @@
         "signature_hash": "e93e043d8ad750eb"
       }
     ],
+    "test_cross_context_and_timestamp_order_mismatches_are_detected": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 361,
+        "end_line": 370,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_cross_context_and_timestamp_order_mismatches_are_detected:387cd1cb517e59ae",
+        "signature_hash": "5cb6be57ec30abb6"
+      }
+    ],
     "test_cross_correlation_sources_are_rejected": [
       {
         "file": "tests/test_aura_dikwp_router_pipeline.py",
@@ -62165,6 +62267,16 @@
         "signature_hash": "a4a72e590106aac9"
       }
     ],
+    "test_duplicate_and_conflicting_event_ids_fail_closed": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 234,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_duplicate_and_conflicting_event_ids_fail_closed:5d0b93a5fa6aebdd",
+        "signature_hash": "7c88c6f94dbf1072"
+      }
+    ],
     "test_duplicate_attestation_cannot_inflate_quorum": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -62633,6 +62745,16 @@
         "end_line": 134,
         "semantic_id": "tests/test_aura_event_contracts.py#function:test_event_envelope_validates_measurement_classes_and_authority:5c3d9ff4f7536567",
         "signature_hash": "15cf73af5d9969f0"
+      }
+    ],
+    "test_event_id_and_envelope_are_independently_reverified": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 246,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_event_id_and_envelope_are_independently_reverified:714b02ec907bfd37",
+        "signature_hash": "89de2b448a10f089"
       }
     ],
     "test_every_guided_gate_exposes_ranked_inspectable_actions": [
@@ -65607,6 +65729,16 @@
         "signature_hash": "c5d194e100d40418"
       }
     ],
+    "test_invalid_contract_and_nonproposal_event_fail_closed": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 249,
+        "end_line": 263,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_invalid_contract_and_nonproposal_event_fail_closed:cdb36162cdec8374",
+        "signature_hash": "1ea8e32a044e9ca0"
+      }
+    ],
     "test_invalid_coordinates_rejected": [
       {
         "file": "tests/test_aura_civic_commons_arena.py",
@@ -68545,6 +68677,16 @@
         "end_line": 61,
         "semantic_id": "tests/test_aura_civic_commons_arena.py#method:TestContributions.test_original_statement_retained:556b309b847d1717",
         "signature_hash": "aca63ed7f378c116"
+      }
+    ],
+    "test_orphans_wrong_parent_types_and_branching_are_detected": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 334,
+        "end_line": 358,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_orphans_wrong_parent_types_and_branching_are_detected:345721e87eb020f7",
+        "signature_hash": "e5bef6c972267034"
       }
     ],
     "test_outbox_is_idempotent_and_can_be_marked_synced": [
@@ -72811,6 +72953,26 @@
         "signature_hash": "bfd87cdbb7859efb"
       }
     ],
+    "test_sidecar_digest_and_canonical_ref_are_reverified": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 304,
+        "end_line": 317,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_sidecar_digest_and_canonical_ref_are_reverified:212e8c40eedc313d",
+        "signature_hash": "11da41762a20281a"
+      }
+    ],
+    "test_sidecar_metadata_must_match_event_envelope": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 320,
+        "end_line": 331,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_sidecar_metadata_must_match_event_envelope:83401da20851ccbc",
+        "signature_hash": "27f5844bd79d98cd"
+      }
+    ],
     "test_sidecar_note_references_source_not_copies": [
       {
         "file": "test_obsidian_graph_bridge.py",
@@ -75225,6 +75387,26 @@
         "signature_hash": "1a03fb25892a2feb"
       }
     ],
+    "test_unrelated_events_are_counted_and_ignored": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 216,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_unrelated_events_are_counted_and_ignored:304d7c4950e78a7c",
+        "signature_hash": "dba83a4b7587fb9e"
+      }
+    ],
+    "test_unsafe_missing_malformed_and_noncanonical_sidecars_fail_closed": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 282,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_unsafe_missing_malformed_and_noncanonical_sidecars_fail_closed:cb5b2b90e594f3b2",
+        "signature_hash": "ccf666273af6e0a8"
+      }
+    ],
     "test_unstructured_markdown_fallback": [
       {
         "file": "tests/test_aura_intent_ingestion.py",
@@ -75363,6 +75545,16 @@
         "end_line": 323,
         "semantic_id": "test_aura_music_coding_arena.py#function:test_vague_fused_capsule_receives_policy_penalties:cf782fa09b0d5a4b",
         "signature_hash": "9cc08b475f18f52c"
+      }
+    ],
+    "test_valid_chain_projects_deterministically_without_store_mutation": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 203,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_valid_chain_projects_deterministically_without_store_mutation:e0f070b0e1e7c0ce",
+        "signature_hash": "0a0ecadbbba2b722"
       }
     ],
     "test_valid_codemap_passes_deep_topology_contract": [
@@ -76193,6 +76385,16 @@
         "end_line": 735,
         "semantic_id": "tests/test_aura_hermes_arena_mode.py#method:TestWriteRules.test_write_rules_patch_authority_invariants:636e5931bebec6aa",
         "signature_hash": "980e900f759d992c"
+      }
+    ],
+    "test_wrong_stage_or_measurement_contract_is_rejected": [
+      {
+        "file": "tests/test_aura_planning_projector.py",
+        "kind": "function",
+        "line": 266,
+        "end_line": 279,
+        "semantic_id": "tests/test_aura_planning_projector.py#function:test_wrong_stage_or_measurement_contract_is_rejected:1360f3fdf294130f",
+        "signature_hash": "32182d25fff6019a"
       }
     ],
     "test_wrong_type": [
@@ -122745,6 +122947,52 @@
       ]
     },
     {
+      "path": ".github/workflows/p3-2-planning-projector.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 1857,
+      "lines": 61,
+      "tokens_est": 465,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2f5bd97bf29d9f25",
+      "vector": [
+        0.196793,
+        0.255933,
+        0.039766,
+        0.137653,
+        -0.227383,
+        0.249815,
+        0.170282,
+        -0.257972,
+        -0.153968,
+        0.198832,
+        -0.031609,
+        0.133574,
+        -0.241658,
+        -0.107064,
+        -0.237579,
+        -0.14785,
+        -0.253893,
+        -0.084631,
+        0.047924,
+        0.102985,
+        -0.200872,
+        0.023452,
+        0.209029,
+        -0.14581,
+        0.027531,
+        0.249815,
+        0.227383,
+        0.225343,
+        0.170282,
+        0.178439,
+        0.135614,
+        -0.009177
+      ]
+    },
+    {
       "path": ".github/workflows/phase-c2-review-repair.yml",
       "role": "schema_or_lexicon",
       "bytes": 17524,
@@ -131618,6 +131866,52 @@
         0.190892,
         -0.066032,
         -0.284537
+      ]
+    },
+    {
+      "path": "tests/test_aura_planning_projector.py",
+      "role": "python_module",
+      "bytes": 15029,
+      "lines": 428,
+      "tokens_est": 3758,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6dc207c1d20a5250",
+      "vector": [
+        -0.253052,
+        0.020782,
+        0.233493,
+        0.086796,
+        0.301951,
+        -0.204153,
+        -0.204153,
+        -0.020782,
+        0.023227,
+        0.262832,
+        -0.196819,
+        0.255497,
+        0.111245,
+        0.211488,
+        -0.243273,
+        0.10391,
+        0.245718,
+        0.011002,
+        -0.262832,
+        -0.067236,
+        -0.001222,
+        -0.206598,
+        -0.003667,
+        0.140585,
+        0.067236,
+        -0.221268,
+        0.167479,
+        0.196819,
+        0.121025,
+        -0.150365,
+        -0.165034,
+        0.12836
       ]
     },
     {
