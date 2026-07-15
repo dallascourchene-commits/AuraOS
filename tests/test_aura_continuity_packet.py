@@ -319,3 +319,101 @@ def test_parser_returns_stable_prefix_and_malformed_errors() -> None:
         "ok": False,
         "error": "invalid_j2_base64",
     }
+
+
+def _noncanonical_base64_alias(encoded_packet: str) -> str:
+    body = encoded_packet.removeprefix("J2/")
+    encoded, digest = body.rsplit("#", 1)
+    padding = "=" * ((4 - len(encoded) % 4) % 4)
+    raw = base64.urlsafe_b64decode((encoded + padding).encode("ascii"))
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+    for character in alphabet:
+        candidate = encoded[:-1] + character
+        if candidate == encoded:
+            continue
+        candidate_padding = "=" * ((4 - len(candidate) % 4) % 4)
+        try:
+            decoded = base64.urlsafe_b64decode(
+                (candidate + candidate_padding).encode("ascii")
+            )
+        except ValueError:
+            continue
+        if decoded == raw:
+            return f"J2/{candidate}#{digest}"
+    raise AssertionError("fixture did not expose an alternate base64url spelling")
+
+
+def test_noncanonical_base64url_spelling_fails_closed() -> None:
+    _packet, encoded, _j0, _j1 = _built()
+    payload, _digest = _decode_j2(encoded)
+    for suffix in ("x", "xx", "xxx"):
+        payload["trace_id"] = f"trace-j2-{suffix}"
+        canonical_packet = _encode_payload(payload)
+        canonical_body = canonical_packet.removeprefix("J2/").split("#", 1)[0]
+        padding = "=" * ((4 - len(canonical_body) % 4) % 4)
+        raw = base64.urlsafe_b64decode(
+            (canonical_body + padding).encode("ascii")
+        )
+        if len(raw) % 3:
+            break
+    else:
+        raise AssertionError("could not construct a padded base64url fixture")
+
+    alias = _noncanonical_base64_alias(canonical_packet)
+
+    assert parse_j2_continuity_packet(alias) == {
+        "ok": False,
+        "error": "j2_noncanonical_base64",
+    }
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    [
+        (("trace_id",), {"unexpected": "object"}),
+        (("arena_view", "arena_version"), 7),
+        (("route_view", "route"), ["BUILDER_PATCH"]),
+        (("event_refs",), ["event_board", 7]),
+    ],
+)
+def test_j2_string_fields_reject_primitive_type_coercion(
+    path: tuple[str, ...],
+    value: object,
+) -> None:
+    _packet, encoded, _j0, _j1 = _built()
+    payload, _digest = _decode_j2(encoded)
+    target = payload
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+
+    assert parse_j2_continuity_packet(_encode_payload(payload)) == {
+        "ok": False,
+        "error": "j2_contract_invalid",
+    }
+
+
+def test_builder_bounds_event_references() -> None:
+    route_view, arena_view, _j0, _j1 = _views()
+    with pytest.raises(ValueError, match="exceeds 64 entries"):
+        build_j2_continuity_packet(
+            trace_id="trace-j2",
+            board_id="board-j2",
+            board_digest=stable_digest({"board": "j2"}),
+            history_chain_id="planning-chain_j2",
+            history_projection_digest=stable_digest({"projection": "j2"}),
+            continuity_report_digest=stable_digest({"continuity": "j2"}),
+            event_refs=tuple(f"event_{index}" for index in range(65)),
+            route_view=route_view,
+            arena_view=arena_view,
+        )
+
+
+def test_parser_bounds_packet_size_and_digest_shape() -> None:
+    assert parse_j2_continuity_packet(
+        f"J2/{'A' * 32769}#{'0' * 32}"
+    ) == {"ok": False, "error": "j2_packet_too_large"}
+    assert parse_j2_continuity_packet("J2/e30#abc") == {
+        "ok": False,
+        "error": "invalid_j2_digest",
+    }
