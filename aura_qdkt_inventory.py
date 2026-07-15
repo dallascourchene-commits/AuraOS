@@ -65,6 +65,10 @@ def _is_test(path: str) -> bool:
     return path.startswith("tests/") or name.startswith("test_") or name.endswith("_test.py")
 
 
+def _is_generated_inventory(path: Path) -> bool:
+    return path.suffix == ".json" and path.name.startswith("qdkt-p6-2-inventory")
+
+
 def _classify(path: str, use_class: QDKTUseClass) -> tuple[QDKTInventoryImpact, QDKTInventoryReadiness]:
     if _is_archival(path):
         return QDKTInventoryImpact.LOW, QDKTInventoryReadiness.ARCHIVAL_ONLY
@@ -128,12 +132,22 @@ def _subscript_key(node: ast.Subscript) -> str:
     return ""
 
 
+def _is_getattr_generator_method(node: ast.AST) -> bool:
+    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+        return False
+    if node.func.id != "getattr" or len(node.args) < 2:
+        return False
+    name = node.args[1]
+    return isinstance(name, ast.Constant) and name.value == "generate_epistemic_system_root"
+
+
 class _PythonInventory(ast.NodeVisitor):
     def __init__(self, path: str) -> None:
         self.path = path
         self.entries: list[QDKTInventoryEntry] = []
         self.constructor_aliases = {"QuantumMerkleDAG"}
-        self.result_names: set[str] = set()
+        self.generator_method_aliases: set[str] = set()
+        self.result_names: set[str] = {"legacy_result"}
         self.scope: list[str] = ["<module>"]
 
     @property
@@ -152,15 +166,36 @@ class _PythonInventory(ast.NodeVisitor):
         self.generic_visit(node)
         self.scope.pop()
 
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
+    def _function_args(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> Iterable[str]:
+        arguments = (
+            *node.args.posonlyargs,
+            *node.args.args,
+            *node.args.kwonlyargs,
+        )
+        for argument in arguments:
+            yield argument.arg
+        if node.args.vararg is not None:
+            yield node.args.vararg.arg
+        if node.args.kwarg is not None:
+            yield node.args.kwarg.arg
+
+    def _visit_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
         if node.name == "generate_epistemic_system_root":
             self.add(node, QDKTUseClass.GENERATOR_DEFINITION, "legacy result method definition")
+        previous_results = set(self.result_names)
+        self.result_names.update(
+            name for name in self._function_args(node) if "legacy_result" in name.lower()
+        )
         self.scope.append(node.name)
         self.generic_visit(node)
         self.scope.pop()
+        self.result_names = previous_results
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
+        self._visit_function(node)
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> Any:
-        self.visit_FunctionDef(node)
+        self._visit_function(node)
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
         if node.module == "quantum_dag":
@@ -191,21 +226,32 @@ class _PythonInventory(ast.NodeVisitor):
     def _is_generator_call(self, value: ast.AST) -> bool:
         if isinstance(value, ast.Await):
             value = value.value
-        return (
-            isinstance(value, ast.Call)
-            and isinstance(value.func, ast.Attribute)
-            and value.func.attr == "generate_epistemic_system_root"
-        )
+        if not isinstance(value, ast.Call):
+            return False
+        if isinstance(value.func, ast.Attribute):
+            return value.func.attr == "generate_epistemic_system_root"
+        return isinstance(value.func, ast.Name) and value.func.id in self.generator_method_aliases
+
+    def _track_assignment(self, target: ast.AST, value: ast.AST) -> None:
+        names = tuple(self._assignment_names(target))
+        if _is_getattr_generator_method(value):
+            self.generator_method_aliases.update(names)
+            self.add(
+                value,
+                QDKTUseClass.METHOD_CALL,
+                "resolves generate_epistemic_system_root through a compatibility facade",
+            )
+        if self._is_generator_call(value):
+            self.result_names.update(names)
 
     def visit_Assign(self, node: ast.Assign) -> Any:
-        if self._is_generator_call(node.value):
-            for target in node.targets:
-                self.result_names.update(self._assignment_names(target))
+        for target in node.targets:
+            self._track_assignment(target, node.value)
         self.generic_visit(node)
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> Any:
-        if node.value is not None and self._is_generator_call(node.value):
-            self.result_names.update(self._assignment_names(node.target))
+        if node.value is not None:
+            self._track_assignment(node.target, node.value)
         self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call) -> Any:
@@ -213,6 +259,8 @@ class _PythonInventory(ast.NodeVisitor):
             self.add(node, QDKTUseClass.CONSTRUCTOR, "constructs the legacy QuantumMerkleDAG")
         if isinstance(node.func, ast.Attribute) and node.func.attr == "generate_epistemic_system_root":
             self.add(node, QDKTUseClass.METHOD_CALL, "invokes the asynchronous legacy result method")
+        elif isinstance(node.func, ast.Name) and node.func.id in self.generator_method_aliases:
+            self.add(node, QDKTUseClass.METHOD_CALL, "invokes the resolved legacy result method")
         method = _call_name(node)
         if method in _PERSISTENCE_METHODS and any(
             _contains_result_reference(arg, self.result_names) for arg in node.args
@@ -290,7 +338,7 @@ def _scan_text(path: Path, root: Path) -> list[QDKTInventoryEntry]:
 
 def _candidate_files(root: Path) -> Iterable[Path]:
     for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
-        if not path.is_file():
+        if not path.is_file() or _is_generated_inventory(path):
             continue
         relative = _relative(path, root)
         if relative in _EXCLUDED_FILES or any(part in _EXCLUDED_DIRS for part in path.parts):
