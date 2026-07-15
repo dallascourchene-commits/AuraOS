@@ -102,7 +102,7 @@ def test_lease_read_scope_escape_is_rejected():
 
     inspection = inspect_coding_arena_planning_compatibility(plan, grounding, shadow, arena)
 
-    assert _finding_code(inspection) == "LEASE_READ_SCOPE_ESCAPE"
+    assert _finding_code(inspection) == "LEASE_READ_SCOPE_MISMATCH"
 
 
 def test_boundary_scope_substitution_is_rejected():
@@ -232,7 +232,7 @@ class _FlippingPlan:
         return result
 
 
-def test_input_mutation_between_projection_reads_is_detected():
+def test_changing_record_fails_closed_before_a_board_is_returned():
     case = _case("grounded_single_file_patch")
     plan = _FlippingPlan(case.plan)
 
@@ -244,7 +244,8 @@ def test_input_mutation_between_projection_reads_is_detected():
     )
 
     assert inspection.report.status is CodingArenaCompatibilityStatus.MISMATCHED
-    assert _finding_code(inspection) == "LEGACY_MUTATION_DETECTED"
+    assert _finding_code(inspection) == "LIQUID_INTENT_MISMATCH"
+    assert inspection.board is None
 
 
 def test_strict_projection_raises_stable_error_for_mismatch():
