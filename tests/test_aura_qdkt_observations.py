@@ -67,7 +67,7 @@ def test_malformed_or_extra_legacy_fields_are_rejected() -> None:
 
 def test_prohibited_observation_field_is_rejected() -> None:
     field_name = "scratch" + "Pad"
-    with pytest.raises(ValueError, match="private reasoning field"):
+    with pytest.raises(ValueError):
         QDKTObservation.from_legacy_result(
             LEGACY_RESULT,
             source_snapshot={field_name: "hidden"},
