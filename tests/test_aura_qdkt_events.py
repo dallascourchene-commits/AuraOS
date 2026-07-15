@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from dataclasses import replace
 
 import pytest
@@ -79,6 +80,14 @@ def test_observation_rejects_prohibited_snapshot_field() -> None:
         )
 
 
+def test_observation_from_dict_requires_json_array_inputs() -> None:
+    payload = _observation().to_dict()
+    payload["nondeterministic_inputs"] = "thermal_reading"
+
+    with pytest.raises(ValueError, match="JSON array"):
+        QDKTObservation.from_dict(payload)
+
+
 def test_observation_rejects_forged_identity_and_authority() -> None:
     observation = _observation()
     with pytest.raises(ValueError, match="observation_id"):
@@ -131,8 +140,7 @@ def test_invalid_envelope_fails_before_sidecar_write(tmp_path) -> None:
     assert not store.events_path.exists()
 
 
-@pytest.mark.asyncio
-async def test_capture_invokes_legacy_generator_once_and_preserves_result(tmp_path) -> None:
+def test_capture_invokes_legacy_generator_once_and_preserves_result(tmp_path) -> None:
     class LegacyGenerator:
         def __init__(self) -> None:
             self.calls = 0
@@ -142,28 +150,31 @@ async def test_capture_invokes_legacy_generator_once_and_preserves_result(tmp_pa
             return dict(LEGACY_RESULT)
 
     generator = LegacyGenerator()
-    receipt = await capture_legacy_qdkt_observation(
-        AppendOnlyEventStore(tmp_path / "events"),
-        generator,
-        source_snapshot=SOURCE_SNAPSHOT,
-        trace_id="trace-1",
-        actor_id="aura",
-        purpose_digest="purpose-1",
-        created_at=100.0,
-    )
-    assert generator.calls == 1
-    assert receipt.observation.legacy_result == LEGACY_RESULT
-
-
-@pytest.mark.asyncio
-async def test_capture_rejects_invalid_generator_surface(tmp_path) -> None:
-    with pytest.raises(ValueError, match="generate_epistemic_system_root"):
-        await capture_legacy_qdkt_observation(
+    receipt = asyncio.run(
+        capture_legacy_qdkt_observation(
             AppendOnlyEventStore(tmp_path / "events"),
-            object(),
+            generator,
             source_snapshot=SOURCE_SNAPSHOT,
             trace_id="trace-1",
             actor_id="aura",
             purpose_digest="purpose-1",
             created_at=100.0,
+        )
+    )
+    assert generator.calls == 1
+    assert receipt.observation.legacy_result == LEGACY_RESULT
+
+
+def test_capture_rejects_invalid_generator_surface(tmp_path) -> None:
+    with pytest.raises(ValueError, match="generate_epistemic_system_root"):
+        asyncio.run(
+            capture_legacy_qdkt_observation(
+                AppendOnlyEventStore(tmp_path / "events"),
+                object(),
+                source_snapshot=SOURCE_SNAPSHOT,
+                trace_id="trace-1",
+                actor_id="aura",
+                purpose_digest="purpose-1",
+                created_at=100.0,
+            )
         )
