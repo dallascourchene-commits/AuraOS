@@ -81,6 +81,7 @@ _ARENA_VIEW_KEYS = frozenset(
 )
 
 _NORMALIZE_KEY_RE = re.compile(r"[^a-z0-9]+")
+_DIGEST_RE = re.compile(r"[0-9a-f]{32}")
 _PRIVATE_KEY_TOKENS = frozenset(
     {
         "chain_of_thought",
@@ -139,6 +140,24 @@ def _optional(value: Any, field_name: str, *, limit: int = 256) -> str:
     if len(text) > limit:
         raise ValueError(f"{field_name} exceeds {limit} characters")
     return text
+
+
+def _digest(value: Any, field_name: str, *, optional: bool = False) -> str:
+    text = _optional(value, field_name) if optional else _required(value, field_name)
+    if optional and not text:
+        return ""
+    if not _DIGEST_RE.fullmatch(text):
+        raise ValueError(
+            f"{field_name} must be a 32-character lowercase hexadecimal digest"
+        )
+    return text
+
+
+def _legacy_field_digest(field_name: str, value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    return stable_digest({"legacy_field": field_name, "value": text})
 
 
 def _strict_bool(value: Any, field_name: str) -> bool:
@@ -251,20 +270,24 @@ class J2RouteView(CanonicalRecord):
         object.__setattr__(
             self,
             "phase_digest",
-            _required(self.phase_digest, "route_view.phase_digest"),
+            _digest(self.phase_digest, "route_view.phase_digest"),
         )
         object.__setattr__(
             self,
             "source_packet_digest",
-            _required(
+            _digest(
                 self.source_packet_digest,
                 "route_view.source_packet_digest",
             ),
         )
-        digests = _strings(
+        raw_digests = _strings(
             self.active_concept_digests,
             "route_view.active_concept_digests",
             limit=J2_MAX_ACTIVE_CONCEPTS,
+        )
+        digests = tuple(
+            _digest(item, "route_view.active_concept_digests")
+            for item in raw_digests
         )
         object.__setattr__(self, "active_concept_digests", digests)
         if type(self.active_concept_count) is not int or self.active_concept_count < 0:
@@ -305,8 +328,6 @@ class J2ArenaView(CanonicalRecord):
             "phase",
             "state_code",
             "verifier_requirement",
-            "phase_digest",
-            "source_packet_digest",
         ):
             object.__setattr__(
                 self,
@@ -321,17 +342,37 @@ class J2ArenaView(CanonicalRecord):
             "substate",
             "selected_transition",
             "next_state",
-            "focus_digest",
-            "evidence_digest",
-            "policy_digest",
-            "lease_digest",
             "repository_commit_ref",
-            "working_tree_digest",
         ):
             object.__setattr__(
                 self,
                 field_name,
                 _optional(
+                    getattr(self, field_name),
+                    f"arena_view.{field_name}",
+                ),
+            )
+        for field_name in (
+            "focus_digest",
+            "evidence_digest",
+            "policy_digest",
+            "lease_digest",
+            "working_tree_digest",
+        ):
+            object.__setattr__(
+                self,
+                field_name,
+                _digest(
+                    getattr(self, field_name),
+                    f"arena_view.{field_name}",
+                    optional=True,
+                ),
+            )
+        for field_name in ("phase_digest", "source_packet_digest"):
+            object.__setattr__(
+                self,
+                field_name,
+                _digest(
                     getattr(self, field_name),
                     f"arena_view.{field_name}",
                 ),
@@ -355,18 +396,21 @@ class J2ContinuityPacket(CanonicalRecord):
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     def __post_init__(self) -> None:
+        for field_name in ("trace_id", "board_id", "history_chain_id"):
+            object.__setattr__(
+                self,
+                field_name,
+                _required(getattr(self, field_name), f"j2.{field_name}"),
+            )
         for field_name in (
-            "trace_id",
-            "board_id",
             "board_digest",
-            "history_chain_id",
             "history_projection_digest",
             "continuity_report_digest",
         ):
             object.__setattr__(
                 self,
                 field_name,
-                _required(getattr(self, field_name), f"j2.{field_name}"),
+                _digest(getattr(self, field_name), f"j2.{field_name}"),
             )
         object.__setattr__(
             self,
@@ -437,7 +481,10 @@ def route_view_from_j0(
         if isinstance(packet, AuraJPacket)
         else str(packet or "").strip()
     )
-    state = active_concepts_from_packet(packet, active_limit=active_limit)
+    state = active_concepts_from_packet(
+        raw_packet,
+        active_limit=active_limit,
+    )
     concept_digests = tuple(
         stable_digest({"concept": concept}) for concept in state.active_concepts
     )
@@ -445,7 +492,9 @@ def route_view_from_j0(
         route=state.route or "UNRESOLVED",
         next_state=state.next_state or "HUMAN_GATE",
         verifier_required=state.verifier_required,
-        phase_digest=state.phase_hash,
+        phase_digest=stable_digest(
+            {"legacy_version": "J0", "phase_packet": raw_packet}
+        ),
         source_packet_digest=stable_digest({"legacy_packet": raw_packet}),
         active_concept_digests=concept_digests,
         active_concept_count=len(concept_digests),
@@ -464,23 +513,45 @@ def arena_view_from_j1(raw_packet: str) -> J2ArenaView:
     state = parsed.get("state")
     if not isinstance(state, Mapping):
         raise ValueError("J1 state must be a mapping")
+    state_code = state.get("state_code") or state.get("phase")
     return J2ArenaView(
         arena_id=state.get("arena_id"),
         arena_version=state.get("arena_version"),
         grammar_version=state.get("grammar_version"),
         phase=state.get("phase"),
         substate=state.get("substate", ""),
-        state_code=state.get("state_code") or state.get("phase"),
+        state_code=state_code,
         selected_transition=state.get("selected_transition", ""),
         next_state=state.get("next_state", ""),
         verifier_requirement=state.get("verifier_requirement") or "none",
-        focus_digest=state.get("focus_digest", ""),
-        evidence_digest=state.get("evidence_digest", ""),
-        policy_digest=state.get("policy_digest", ""),
-        lease_digest=state.get("lease_digest", ""),
+        focus_digest=_legacy_field_digest(
+            "focus_digest",
+            state.get("focus_digest"),
+        ),
+        evidence_digest=_legacy_field_digest(
+            "evidence_digest",
+            state.get("evidence_digest"),
+        ),
+        policy_digest=_legacy_field_digest(
+            "policy_digest",
+            state.get("policy_digest"),
+        ),
+        lease_digest=_legacy_field_digest(
+            "lease_digest",
+            state.get("lease_digest"),
+        ),
         repository_commit_ref=state.get("repository_commit", ""),
-        working_tree_digest=state.get("working_tree_digest", ""),
-        phase_digest=state.get("phase_hash"),
+        working_tree_digest=_legacy_field_digest(
+            "working_tree_digest",
+            state.get("working_tree_digest"),
+        ),
+        phase_digest=stable_digest(
+            {
+                "legacy_version": "J1",
+                "phase_hash": str(state.get("phase_hash") or ""),
+                "state_code": str(state_code or ""),
+            }
+        ),
         source_packet_digest=stable_digest({"legacy_packet": raw}),
     )
 
@@ -543,7 +614,7 @@ def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
         return {"ok": False, "error": "j2_packet_too_large"}
     if not re.fullmatch(r"[A-Za-z0-9_-]+", encoded):
         return {"ok": False, "error": "invalid_j2_base64"}
-    if not re.fullmatch(r"[0-9a-f]{32}", supplied_digest):
+    if not _DIGEST_RE.fullmatch(supplied_digest):
         return {"ok": False, "error": "invalid_j2_digest"}
 
     padding = "=" * ((4 - len(encoded) % 4) % 4)
