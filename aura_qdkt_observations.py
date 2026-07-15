@@ -73,13 +73,17 @@ def _snapshot_identity(snapshot: Any) -> tuple[str, int]:
     safe = sanitize_payload(snapshot)
     if isinstance(safe, Mapping):
         count = len(safe)
-    elif isinstance(safe, Sequence) and not isinstance(
-        safe, (str, bytes, bytearray)
-    ):
+    elif isinstance(safe, Sequence) and not isinstance(safe, (str, bytes, bytearray)):
         count = len(safe)
     else:
         raise ValueError("source_snapshot must be a mapping or ordered sequence")
     return stable_digest(safe), count
+
+
+def _belief(value: Any, name: str) -> int:
+    if type(value) is not int or value < 0:
+        raise ValueError(f"{name} must be a non-negative integer")
+    return value
 
 
 @dataclass(frozen=True)
@@ -103,14 +107,9 @@ class QDKTObservation:
     version: str = QDKT_EVENT_VERSION
 
     def __post_init__(self) -> None:
-        if type(self.legacy_root) is not str or not _ROOT_RE.fullmatch(
-            self.legacy_root
-        ):
-            raise ValueError(
-                "legacy_root must be 16 uppercase hexadecimal characters"
-            )
-        if type(self.legacy_belief) is not int:
-            raise ValueError("legacy_belief must be an integer")
+        if type(self.legacy_root) is not str or not _ROOT_RE.fullmatch(self.legacy_root):
+            raise ValueError("legacy_root must be 16 uppercase hexadecimal characters")
+        _belief(self.legacy_belief, "legacy_belief")
         if type(self.source_snapshot_digest) is not str or not _DIGEST_RE.fullmatch(
             self.source_snapshot_digest
         ):
@@ -129,21 +128,13 @@ class QDKTObservation:
             raise ValueError("unsupported QDKT truth class") from exc
         inputs = _strings(self.nondeterministic_inputs, "nondeterministic_inputs")
         if inputs != _NONDETERMINISTIC_INPUTS:
-            raise ValueError(
-                "nondeterministic_inputs must declare the complete legacy set"
-            )
+            raise ValueError("nondeterministic_inputs must declare the complete legacy set")
         object.__setattr__(self, "truth_class", truth)
         object.__setattr__(self, "nondeterministic_inputs", inputs)
-        for name in (
-            "planning_board_ref",
-            "planning_history_ref",
-            "continuity_ref",
-        ):
+        for name in ("planning_board_ref", "planning_history_ref", "continuity_ref"):
             object.__setattr__(self, name, _optional(getattr(self, name), name))
         if self.proposal_only is not True or self.reproducible is not False:
-            raise ValueError(
-                "QDKT observations must remain proposal-only and non-reproducible"
-            )
+            raise ValueError("QDKT observations must remain proposal-only and non-reproducible")
         if (
             self.patch_authority != PATCH_AUTHORITY
             or self.vsa_patch_authority is not False
@@ -153,9 +144,7 @@ class QDKTObservation:
         if self.version != QDKT_EVENT_VERSION:
             raise ValueError("unsupported QDKT observation version")
         if self.observation_id != stable_id("qdkt-observation", self.identity_payload()):
-            raise ValueError(
-                "observation_id does not match canonical observation identity"
-            )
+            raise ValueError("observation_id does not match canonical observation identity")
 
     @classmethod
     def from_legacy_result(
@@ -175,8 +164,7 @@ class QDKTObservation:
         belief = legacy_result.get("belief")
         if type(root) is not str or not _ROOT_RE.fullmatch(root):
             raise ValueError("legacy_result.root is malformed")
-        if type(belief) is not int:
-            raise ValueError("legacy_result.belief must be an integer")
+        belief = _belief(belief, "legacy_result.belief")
         source_digest, source_count = _snapshot_identity(source_snapshot)
         identity = {
             "legacy_root": root,
@@ -186,12 +174,8 @@ class QDKTObservation:
             "generator_version": QDKT_GENERATOR_VERSION,
             "truth_class": QDKTTruthClass.LEGACY_NONDETERMINISTIC_ADVISORY.value,
             "nondeterministic_inputs": _NONDETERMINISTIC_INPUTS,
-            "planning_board_ref": _optional(
-                planning_board_ref, "planning_board_ref"
-            ),
-            "planning_history_ref": _optional(
-                planning_history_ref, "planning_history_ref"
-            ),
+            "planning_board_ref": _optional(planning_board_ref, "planning_board_ref"),
+            "planning_history_ref": _optional(planning_history_ref, "planning_history_ref"),
             "continuity_ref": _optional(continuity_ref, "continuity_ref"),
         }
         return cls(
@@ -269,9 +253,7 @@ class QDKTEventReceipt:
             raise ValueError("sidecar kind does not match the QDKT contract")
         if self.payload_ref.redacted is not False:
             raise ValueError("canonical QDKT observation was unexpectedly redacted")
-        expected_bytes = len(
-            canonical_json(self.observation.to_dict()).encode("utf-8")
-        )
+        expected_bytes = len(canonical_json(self.observation.to_dict()).encode("utf-8"))
         if self.payload_ref.byte_count != expected_bytes:
             raise ValueError("sidecar byte count does not match the observation")
         if (
@@ -316,8 +298,12 @@ def _envelope(
     policy_scope: str,
     created_at: float | None,
 ) -> AuraEventEnvelope:
-    if created_at is not None and not math.isfinite(float(created_at)):
-        raise ValueError("created_at must be finite")
+    if created_at is not None and (
+        isinstance(created_at, bool)
+        or not isinstance(created_at, (int, float))
+        or not math.isfinite(float(created_at))
+    ):
+        raise ValueError("created_at must be a finite number")
     return AuraEventEnvelope.create(
         trace_id=_required(trace_id, "trace_id"),
         parent_event_ids=_strings(parent_event_ids, "parent_event_ids"),
@@ -388,9 +374,7 @@ def record_qdkt_observation(
         payload_digest=payload_ref.payload_digest,
         **common,
     )
-    return QDKTEventReceipt(
-        observation, payload_ref, event, store.append(event)
-    )
+    return QDKTEventReceipt(observation, payload_ref, event, store.append(event))
 
 
 async def capture_legacy_qdkt_observation(
@@ -412,13 +396,9 @@ async def capture_legacy_qdkt_observation(
     continuity_ref: str = "",
     created_at: float | None = None,
 ) -> QDKTEventReceipt:
-    method = getattr(
-        legacy_generator, "generate_epistemic_system_root", None
-    )
+    method = getattr(legacy_generator, "generate_epistemic_system_root", None)
     if method is None or not callable(method):
-        raise ValueError(
-            "legacy_generator must expose generate_epistemic_system_root"
-        )
+        raise ValueError("legacy_generator must expose generate_epistemic_system_root")
     result = method()
     if inspect.isawaitable(result):
         result = await result
