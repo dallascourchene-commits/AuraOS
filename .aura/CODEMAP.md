@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 903
-- **total_bytes**: 65762700
-- **text_tokens_est**: 7044631
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 122, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 636, 'schema_or_lexicon': 76, 'support_file': 41}
-- **topology_nodes**: 7699
-- **topology_edges**: 16625
+- **file_count**: 905
+- **total_bytes**: 65868171
+- **text_tokens_est**: 7071000
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 122, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 638, 'schema_or_lexicon': 76, 'support_file': 41}
+- **topology_nodes**: 7732
+- **topology_edges**: 16688
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 21685.96
+- **elapsed_ms**: 20993.24
 
 ## Coverage
 
-- **included_file_count**: 903
+- **included_file_count**: 905
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
 - **skipped_dir_file_counts**: `.git`=55, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
@@ -129,13 +129,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_core.py`
 - `aura_node.py`
 - `aura_substrate.py`
+- `aura_substrate_contracts.py`
+- `aura_substrate_manifest.py`
 - `docs/AURA_COGNITIVE_SUBSTRATE_P9.md`
 - `docs/AURA_SUBSTRATE_INTEGRATION_P9.md`
 - `docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md`
 - `docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md`
 - `docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md`
 - `gateway.py`
-- `test_aura_substrate.py`
+- ... 1 more; query CODEMAP.json for exact file cards
 
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
@@ -219,8 +221,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 480, ~19006 tokens
+- `aura_fst_routing.py` (python_module): 35 symbols, degree 458, ~8991 tokens
 - `aura_architect_loop.py` (python_module): 70 symbols, degree 457, ~18332 tokens
-- `aura_fst_routing.py` (python_module): 35 symbols, degree 457, ~8991 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 358, ~9340 tokens
 - `aura_coding_arena_planning.py` (python_module): 20 symbols, degree 350, ~10712 tokens
 - `aura_scientific_memory.py` (python_module): 44 symbols, degree 341, ~9915 tokens
@@ -230,16 +232,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7699
-- **edges**: 16625
+- **nodes**: 7732
+- **edges**: 16688
 - **top_files_by_degree**:
   - `aura_node.py` degree=873 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
   - `test_scientific_memory.py` degree=517 nodes=120 neighbors=`arxiv_forager.py`, `aura_paper_memory.py`, `aura_scientific_memory.py`, `travel_price_sidecar.py`
   - `aura_relational_authority.py` degree=480 nodes=59 neighbors=`aura_civic_planning.py`, `aura_graphify_schema.py`, `aura_workflow_gates.py`, `liquid_attractor_control_plane.py`
+  - `aura_fst_routing.py` degree=458 nodes=36 neighbors=`aura_architect_loop.py`, `aura_fusion.py`, `aura_graphify_schema.py`, `aura_harness_evolver.py`
   - `aura_architect_loop.py` degree=457 nodes=73 neighbors=`aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_dream_retrieval.py`, `aura_fst_routing.py`
-  - `aura_fst_routing.py` degree=457 nodes=36 neighbors=`aura_architect_loop.py`, `aura_fusion.py`, `aura_graphify_schema.py`, `aura_harness_evolver.py`
   - `test_aura_functions.py` degree=358 nodes=87 neighbors=`arch_reasoner_accel.py`, `async_palace.py`, `aura_arch_reasoner.py`, `aura_associative_core.py`
   - `aura_coding_arena_planning.py` degree=350 nodes=21 neighbors=`aura_coding_arena_planning_benchmark.py`, `aura_coding_arena_planning_integrity.py`, `aura_coding_arena_planning_types.py`, `aura_event_contracts.py`
   - `aura_scientific_memory.py` degree=341 nodes=46 neighbors=`arxiv_forager.py`, `aura_fst_routing.py`, `aura_node.py`, `aura_ojibwe_lexicon_sidecar.py`
