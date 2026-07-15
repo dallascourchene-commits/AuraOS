@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784140316,
+  "generated_at_unix": 1784140584,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 881,
+    "included_file_count": 882,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -789,6 +789,7 @@
       "tests/test_aura_coding_arena_planning.py",
       "tests/test_aura_coding_arena_planning_benchmark.py",
       "tests/test_aura_coding_arena_planning_hardening.py",
+      "tests/test_aura_coding_arena_planning_integrity.py",
       "tests/test_aura_coding_music_lane.py",
       "tests/test_aura_coding_research_lane.py",
       "tests/test_aura_coding_tensor_adapter.py",
@@ -902,23 +903,23 @@
     ]
   },
   "summary": {
-    "file_count": 881,
-    "total_bytes": 65467419,
-    "text_tokens_est": 6970808,
+    "file_count": 882,
+    "total_bytes": 65489182,
+    "text_tokens_est": 6976249,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 117,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 620,
+      "python_module": 621,
       "schema_or_lexicon": 75,
       "support_file": 41
     },
     "topology_nodes": 7628,
-    "topology_edges": 16410,
+    "topology_edges": 16419,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 20654.63
+    "elapsed_ms": 20505.16
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1719,6 +1720,7 @@
       "tests/test_aura_coding_arena_planning.py",
       "tests/test_aura_coding_arena_planning_benchmark.py",
       "tests/test_aura_coding_arena_planning_hardening.py",
+      "tests/test_aura_coding_arena_planning_integrity.py",
       "tests/test_aura_coding_music_lane.py",
       "tests/test_aura_coding_research_lane.py",
       "tests/test_aura_coding_tensor_adapter.py",
@@ -1880,18 +1882,18 @@
       "topology_degree": 358
     },
     {
+      "path": "aura_coding_arena_planning.py",
+      "role": "python_module",
+      "symbols": 20,
+      "tokens_est": 10712,
+      "topology_degree": 350
+    },
+    {
       "path": "aura_scientific_memory.py",
       "role": "python_module",
       "symbols": 44,
       "tokens_est": 9915,
       "topology_degree": 341
-    },
-    {
-      "path": "aura_coding_arena_planning.py",
-      "role": "python_module",
-      "symbols": 20,
-      "tokens_est": 7851,
-      "topology_degree": 333
     },
     {
       "path": "aura_human_agent_arena.py",
@@ -1912,7 +1914,7 @@
       "role": "python_module",
       "symbols": 20,
       "tokens_est": 6400,
-      "topology_degree": 299
+      "topology_degree": 300
     },
     {
       "path": "aura_planning_board.py",
@@ -4710,8 +4712,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "class",
-        "line": 21,
-        "end_line": 29,
+        "line": 54,
+        "end_line": 69,
         "semantic_id": "aura_coding_arena_planning.py#class:CodingArenaProjectionError:ea57ede046a36222",
         "signature_hash": "a6b44cf41f9ad4c4"
       }
@@ -12812,6 +12814,16 @@
         "signature_hash": "fc9645240a16cbae"
       }
     ],
+    "_BrokenRecord": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "class",
+        "line": 161,
+        "end_line": 163,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#class:_BrokenRecord:e83183cdddb1840d",
+        "signature_hash": "e8a0b7b674f5299f"
+      }
+    ],
     "_Collector": [
       {
         "file": "aura_planning_projector.py",
@@ -13486,8 +13498,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "method",
-        "line": 24,
-        "end_line": 29,
+        "line": 57,
+        "end_line": 69,
         "semantic_id": "aura_coding_arena_planning.py#method:CodingArenaProjectionError.__init__:58b0c6471f4f4dfe",
         "signature_hash": "1500b7a32f17b134"
       },
@@ -18770,6 +18782,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#function:_case:cafd4c443969c0fa",
         "signature_hash": "8abd1a7c7fd4d1cb"
+      },
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 9,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:_case:3bdc3cd66d98ac18",
+        "signature_hash": "2c867cd4bae70151"
       }
     ],
     "_chain": [
@@ -20212,8 +20232,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 181,
-        "end_line": 183,
+        "line": 378,
+        "end_line": 397,
         "semantic_id": "aura_coding_arena_planning.py#function:_constraint:310a760e0bfbec5c",
         "signature_hash": "44cf09bb0a899812"
       }
@@ -20654,8 +20674,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 147,
-        "end_line": 157,
+        "line": 296,
+        "end_line": 318,
         "semantic_id": "aura_coding_arena_planning.py#function:_declared_files:c9472b122a0a00eb",
         "signature_hash": "dcd7c2fefe70a7ac"
       },
@@ -21360,8 +21380,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 144,
-        "end_line": 145,
+        "line": 292,
+        "end_line": 293,
         "semantic_id": "aura_coding_arena_planning.py#function:_digest_ref:0d092d7c6c546e3b",
         "signature_hash": "afc673e366cd4747"
       }
@@ -23050,8 +23070,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 31,
-        "end_line": 32,
+        "line": 72,
+        "end_line": 84,
         "semantic_id": "aura_coding_arena_planning.py#function:_fail:bfff691a3d3cd63c",
         "signature_hash": "bd9a2d6525a40877"
       },
@@ -23336,6 +23356,16 @@
         "signature_hash": "f9b34d617e50109b"
       }
     ],
+    "_file_regions": [
+      {
+        "file": "aura_coding_arena_planning.py",
+        "kind": "function",
+        "line": 321,
+        "end_line": 375,
+        "semantic_id": "aura_coding_arena_planning.py#function:_file_regions:2439f9158eb3d8f3",
+        "signature_hash": "501f3b66578e24b3"
+      }
+    ],
     "_file_section": [
       {
         "file": "aura_efficiency_benchmark.py",
@@ -23481,6 +23511,14 @@
         "line": 28,
         "end_line": 30,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#function:_finding_code:68a46d1670d520df",
+        "signature_hash": "badaa7097ce84237"
+      },
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:_finding_code:111e74bddd415dd2",
         "signature_hash": "badaa7097ce84237"
       }
     ],
@@ -29274,8 +29312,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 116,
+        "line": 228,
+        "end_line": 238,
         "semantic_id": "aura_coding_arena_planning.py#function:_optional_repo_path:68a4751e76cc30c2",
         "signature_hash": "aa847425e6e6c64f"
       }
@@ -29284,8 +29322,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 124,
+        "line": 241,
+        "end_line": 256,
         "semantic_id": "aura_coding_arena_planning.py#function:_optional_string:ca2614385032e852",
         "signature_hash": "a87f807f4b75fee5"
       }
@@ -29314,8 +29352,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 126,
-        "end_line": 142,
+        "line": 259,
+        "end_line": 289,
         "semantic_id": "aura_coding_arena_planning.py#function:_ordered_index:173b7f0be93e3517",
         "signature_hash": "15b8fa6e75220fa9"
       }
@@ -29753,6 +29791,14 @@
         "line": 18,
         "end_line": 25,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#function:_payloads:4a51c3c260203786",
+        "signature_hash": "abc9a0ddc126a310"
+      },
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:_payloads:6125f679e0dbd2ab",
         "signature_hash": "abc9a0ddc126a310"
       }
     ],
@@ -30364,8 +30410,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 185,
-        "end_line": 186,
+        "line": 400,
+        "end_line": 411,
         "semantic_id": "aura_coding_arena_planning.py#function:_projection_inputs:376768865c3f60ec",
         "signature_hash": "3709bf18ca476c2d"
       }
@@ -31148,8 +31194,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 76,
-        "end_line": 85,
+        "line": 153,
+        "end_line": 166,
         "semantic_id": "aura_coding_arena_planning.py#function:_record_list:31efdbe5bd505408",
         "signature_hash": "7b17613e82f97d43"
       }
@@ -31428,16 +31474,6 @@
         "end_line": 148,
         "semantic_id": "aura_patcher.py#method:AuraSovereignPatcher._regenerate_holographic_manifest:aed7da35346b1d90",
         "signature_hash": "7fc926f6a48398f8"
-      }
-    ],
-    "_region_files": [
-      {
-        "file": "aura_coding_arena_planning.py",
-        "kind": "function",
-        "line": 159,
-        "end_line": 179,
-        "semantic_id": "aura_coding_arena_planning.py#function:_region_files:6d55df219201ea80",
-        "signature_hash": "20a652cb9934a550"
       }
     ],
     "_regions": [
@@ -31892,8 +31928,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 34,
-        "end_line": 40,
+        "line": 87,
+        "end_line": 97,
         "semantic_id": "aura_coding_arena_planning.py#function:_required:98da6933ee548e8d",
         "signature_hash": "66e54b44851d51c1"
       },
@@ -33098,8 +33134,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 97,
-        "end_line": 109,
+        "line": 192,
+        "end_line": 225,
         "semantic_id": "aura_coding_arena_planning.py#function:_safe_repo_path:39fa922907c6bfee",
         "signature_hash": "eab0a756f9dac4ca"
       },
@@ -34280,8 +34316,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 47,
-        "end_line": 67,
+        "line": 106,
+        "end_line": 139,
         "semantic_id": "aura_coding_arena_planning.py#function:_snapshot_record:d894db1d760a3018",
         "signature_hash": "1f8350559f856ccd"
       }
@@ -34290,8 +34326,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 69,
-        "end_line": 74,
+        "line": 142,
+        "end_line": 150,
         "semantic_id": "aura_coding_arena_planning.py#function:_snapshot_records:15b80d1e011d07cb",
         "signature_hash": "aa6f141d637093e0"
       }
@@ -34808,8 +34844,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 42,
-        "end_line": 45,
+        "line": 100,
+        "end_line": 103,
         "semantic_id": "aura_coding_arena_planning.py#function:_strict_bool:d5ab986600b144db",
         "signature_hash": "81b73ee053f4afd7"
       },
@@ -34922,10 +34958,10 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 87,
-        "end_line": 95,
-        "semantic_id": "aura_coding_arena_planning.py#function:_string_list:000f3120ddee3576",
-        "signature_hash": "1bbed9aae08f98ad"
+        "line": 169,
+        "end_line": 189,
+        "semantic_id": "aura_coding_arena_planning.py#function:_string_list:839e632ace067b8e",
+        "signature_hash": "b368b9cf0bf67de2"
       }
     ],
     "_string_to_phasor": [
@@ -50692,8 +50728,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 366,
-        "end_line": 400,
+        "line": 1158,
+        "end_line": 1271,
         "semantic_id": "aura_coding_arena_planning.py#function:inspect_coding_arena_planning_compatibility:e0df1da79e1caf14",
         "signature_hash": "65a261d0c493ab30"
       }
@@ -54904,8 +54940,8 @@
       {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
-        "line": 188,
-        "end_line": 364,
+        "line": 414,
+        "end_line": 1155,
         "semantic_id": "aura_coding_arena_planning.py#function:project_coding_arena_planning_board:1572546df62f108c",
         "signature_hash": "1c090213c179f9d5"
       }
@@ -62554,6 +62590,16 @@
         "end_line": 149,
         "semantic_id": "tests/test_aura_phase_c1_route_capsules.py#function:test_bound_intent_is_stable_and_does_not_claim_authority:eb8c30093c848851",
         "signature_hash": "a96837fc93bab419"
+      }
+    ],
+    "test_boundary_metadata_task_id_is_not_string_coerced": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_boundary_metadata_task_id_is_not_string_coerced:d685705a021600c0",
+        "signature_hash": "6f80db18acd87660"
       }
     ],
     "test_boundary_nodes_reported": [
@@ -71194,6 +71240,26 @@
         "signature_hash": "e27c2f17ca2877b9"
       }
     ],
+    "test_liquid_action_hash_or_payload_substitution_is_rejected": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_liquid_action_hash_or_payload_substitution_is_rejected:9662000131a266a8",
+        "signature_hash": "22f797eb9d13cead"
+      }
+    ],
+    "test_liquid_adapter_authority_invariant_substitution_is_rejected": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_liquid_adapter_authority_invariant_substitution_is_rejected:274b0a4c6fafdb3f",
+        "signature_hash": "b1e4c773b6202f7e"
+      }
+    ],
     "test_liquid_arena_action_reordering_is_rejected": [
       {
         "file": "tests/test_aura_coding_arena_planning_hardening.py",
@@ -71202,6 +71268,26 @@
         "end_line": 161,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#function:test_liquid_arena_action_reordering_is_rejected:e8b6717bf4fd3c17",
         "signature_hash": "f971f20bac5e699d"
+      }
+    ],
+    "test_liquid_arena_phase_hash_substitution_is_rejected": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 102,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_liquid_arena_phase_hash_substitution_is_rejected:4217b025cd09722e",
+        "signature_hash": "f68af13d6351f279"
+      }
+    ],
+    "test_liquid_boundary_substitution_is_rejected_even_if_top_copy_is_unchanged": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_liquid_boundary_substitution_is_rejected_even_if_top_copy_is_unchanged:80ddef25340c093e",
+        "signature_hash": "0d2b0769439ba818"
       }
     ],
     "test_list_actions": [
@@ -75544,6 +75630,16 @@
         "signature_hash": "82f26fb556bba3b5"
       }
     ],
+    "test_ready_for_incubator_must_match_shadow_grounding_and_routes": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_ready_for_incubator_must_match_shadow_grounding_and_routes:504dfb5dbc3e869c",
+        "signature_hash": "edd5cead4b8a653a"
+      }
+    ],
     "test_real_source_card_size_change_is_still_detected": [
       {
         "file": "tests/test_aura_codemap_verify.py",
@@ -77220,6 +77316,16 @@
         "signature_hash": "098c374a6f7b217d"
       }
     ],
+    "test_route_reason_is_required_as_a_string": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 158,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_route_reason_is_required_as_a_string:44bd95d7ffea5979",
+        "signature_hash": "b5806b1b2e801ad7"
+      }
+    ],
     "test_route_view_rejects_unordered_active_concept_digests": [
       {
         "file": "tests/test_aura_continuity_packet_digest_hardening.py",
@@ -78506,6 +78612,16 @@
         "end_line": 396,
         "semantic_id": "test_aura_metaharness.py#method:TestMetaHarnessOrchestrator.test_snapshot_contains_all_components:abfcea63d598fe46",
         "signature_hash": "dc246ef082303f15"
+      }
+    ],
+    "test_snapshot_exceptions_become_unavailable_findings": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 177,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_snapshot_exceptions_become_unavailable_findings:0e926a6326601a52",
+        "signature_hash": "37598183d5efb32a"
       }
     ],
     "test_source_spans_and_tests_can_be_future_patchable": [
@@ -80162,6 +80278,16 @@
         "signature_hash": "335331ccae1f3f6c"
       }
     ],
+    "test_top_level_symbol_lease_substitution_is_rejected": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_top_level_symbol_lease_substitution_is_rejected:8ac020459d7bcff2",
+        "signature_hash": "c182ad55bbb35ab4"
+      }
+    ],
     "test_topological_anchor_requires_no_new_dependencies": [
       {
         "file": "tests/test_aura_topological_context_anchor.py",
@@ -80670,6 +80796,16 @@
         "end_line": 287,
         "semantic_id": "tests/test_aura_civic_commons_arena.py#method:TestMap.test_unknown_layer_rejected:59256a712b0e4c48",
         "signature_hash": "d4ae7eeb0705aa01"
+      }
+    ],
+    "test_unknown_lease_region_type_is_rejected_before_projection": [
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_unknown_lease_region_type_is_rejected_before_projection:dae9fdf3495ff64c",
+        "signature_hash": "332439c105189adf"
       }
     ],
     "test_unknown_method": [
@@ -84281,6 +84417,14 @@
         "line": 228,
         "end_line": 232,
         "semantic_id": "tests/test_aura_coding_arena_planning_hardening.py#method:_FlippingPlan.to_dict:dee61b2307e96870",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "tests/test_aura_coding_arena_planning_integrity.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 163,
+        "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#method:_BrokenRecord.to_dict:f777727943ee615b",
         "signature_hash": "5c1a69a9659e2089"
       }
     ],
@@ -97318,17 +97462,17 @@
     {
       "path": "aura_coding_arena_planning.py",
       "role": "python_module",
-      "bytes": 31402,
-      "lines": 401,
-      "tokens_est": 7851,
+      "bytes": 42845,
+      "lines": 1272,
+      "tokens_est": 10712,
       "symbol_count": 20,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 10,
+        "hub_rank": 9,
         "node_count": 21,
-        "edge_count": 333,
-        "degree": 333,
+        "edge_count": 350,
+        "degree": 350,
         "symbols": [
           "CodingArenaProjectionError",
           "__init__",
@@ -97336,12 +97480,12 @@
           "_declared_files",
           "_digest_ref",
           "_fail",
+          "_file_regions",
           "_optional_repo_path",
           "_optional_string",
           "_ordered_index",
           "_projection_inputs",
           "_record_list",
-          "_region_files",
           "_required",
           "_safe_repo_path",
           "_snapshot_record",
@@ -97353,50 +97497,51 @@
         ],
         "neighbor_files": [
           "aura_coding_arena_planning_benchmark.py",
+          "aura_coding_arena_planning_integrity.py",
           "aura_coding_arena_planning_types.py",
           "aura_event_contracts.py",
           "aura_planning_board.py"
         ],
         "edge_kinds": {
-          "call": 289,
+          "call": 305,
           "defines": 40,
-          "import_module": 4
+          "import_module": 5
         }
       },
-      "digest8": "2b4a487037a5061c",
+      "digest8": "f4574c4b172960cd",
       "vector": [
-        0.262566,
-        0.127125,
-        -0.172272,
-        0.174648,
-        0.184153,
-        -0.193657,
-        0.153262,
-        -0.098611,
-        -0.288704,
-        0.174648,
-        0.21029,
-        -0.196033,
-        0.100987,
-        0.231676,
-        0.238804,
-        0.184153,
-        -0.105739,
-        0.26019,
-        -0.283951,
-        0.222171,
-        -0.162767,
-        -0.062968,
-        -0.008317,
-        0.110492,
-        0.141382,
-        0.139005,
-        -0.165143,
-        -0.1794,
-        0.074849,
-        0.181776,
-        0.098611,
-        -0.00594
+        0.120629,
+        0.226348,
+        0.153158,
+        0.01762,
+        0.180265,
+        0.201951,
+        0.26972,
+        -0.26972,
+        0.096232,
+        0.115207,
+        0.107075,
+        -0.012198,
+        0.085389,
+        0.112496,
+        -0.275142,
+        -0.174844,
+        -0.01762,
+        0.30496,
+        -0.031174,
+        0.185687,
+        0.239902,
+        -0.036595,
+        0.093521,
+        0.250745,
+        -0.033884,
+        0.215505,
+        -0.031174,
+        -0.169422,
+        0.299538,
+        0.006777,
+        0.307671,
+        0.101653
       ]
     },
     {
@@ -97495,8 +97640,8 @@
       "topology": {
         "hub_rank": 13,
         "node_count": 21,
-        "edge_count": 299,
-        "degree": 299,
+        "edge_count": 300,
+        "degree": 300,
         "symbols": [
           "LegacyCodingArenaIntegrityError",
           "__init__",
@@ -97520,12 +97665,13 @@
           "validate_legacy_coding_arena_integrity"
         ],
         "neighbor_files": [
+          "aura_coding_arena_planning.py",
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
           "call": 258,
           "defines": 40,
-          "import_module": 1
+          "import_module": 2
         }
       },
       "digest8": "3bd0ee5bb4d25338",
@@ -113903,7 +114049,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 9,
+        "hub_rank": 10,
         "node_count": 46,
         "edge_count": 341,
         "degree": 341,
@@ -126749,47 +126895,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 15676370,
-      "lines": 499566,
-      "tokens_est": 3919093,
+      "bytes": 15681391,
+      "lines": 499692,
+      "tokens_est": 3920348,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f11562eed1a8d283",
+      "digest8": "d04a7b76c16d201a",
       "vector": [
-        0.121412,
-        -0.001252,
-        0.229057,
-        0.196513,
-        -0.058829,
-        -0.063835,
-        0.196513,
-        0.249083,
-        0.036299,
-        -0.251587,
-        0.234063,
-        0.086366,
-        0.126419,
-        0.153956,
-        0.036299,
-        0.27662,
-        0.236567,
-        -0.189003,
-        0.226553,
-        -0.038802,
-        0.17148,
-        0.156459,
-        -0.151453,
-        -0.274117,
-        0.249083,
-        0.196513,
-        0.061332,
-        -0.28413,
-        0.161466,
-        -0.151453,
-        -0.068842,
-        0.078856
+        -0.09957,
+        0.208987,
+        -0.270261,
+        -0.279014,
+        -0.132395,
+        -0.009848,
+        -0.130207,
+        0.180539,
+        -0.075498,
+        0.005471,
+        0.206799,
+        0.171785,
+        0.075498,
+        0.06018,
+        0.193669,
+        -0.250566,
+        -0.274637,
+        0.257131,
+        0.171785,
+        -0.07331,
+        -0.128018,
+        -0.025166,
+        -0.084251,
+        -0.121453,
+        0.261507,
+        -0.259319,
+        -0.176162,
+        0.136772,
+        -0.211175,
+        -0.219929,
+        -0.117077,
+        -0.182727
       ]
     },
     {
@@ -130476,47 +130622,47 @@
     {
       "path": ".github/workflows/p7-coding-arena-planning-board.yml",
       "role": "schema_or_lexicon",
-      "bytes": 5228,
-      "lines": 136,
-      "tokens_est": 1307,
+      "bytes": 5531,
+      "lines": 141,
+      "tokens_est": 1383,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "f69304b7be5efdeb",
+      "digest8": "d87b416ae8452db4",
       "vector": [
-        0.118128,
-        -0.259268,
-        0.148811,
-        -0.142674,
-        -0.231654,
-        -0.035285,
-        0.286883,
-        -0.065968,
-        0.280746,
-        0.296088,
-        0.059831,
-        -0.243927,
-        0.04449,
-        0.23779,
-        -0.320634,
-        0.059831,
-        0.139606,
-        0.04449,
-        -0.084377,
-        0.007671,
-        -0.059831,
-        -0.173357,
-        0.035285,
-        -0.041422,
-        -0.072104,
-        0.20404,
-        -0.108923,
-        -0.151879,
-        0.225517,
-        0.207108,
-        -0.296088,
-        -0.108923
+        0.102833,
+        0.298086,
+        0.076799,
+        -0.167918,
+        0.154901,
+        -0.32412,
+        -0.024732,
+        -0.048162,
+        0.248622,
+        0.022129,
+        0.30069,
+        0.251225,
+        0.071593,
+        -0.082006,
+        0.212175,
+        -0.154901,
+        0.217382,
+        -0.10804,
+        0.277259,
+        -0.313706,
+        0.147091,
+        0.13147,
+        -0.029939,
+        0.011715,
+        0.019525,
+        0.095023,
+        -0.126264,
+        0.134074,
+        -0.295483,
+        0.061179,
+        -0.136677,
+        0.102833
       ]
     },
     {
@@ -137548,6 +137694,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_coding_arena_planning_integrity.py",
+      "role": "python_module",
+      "bytes": 4996,
+      "lines": 178,
+      "tokens_est": 1249,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "26924b67f21f3c4c",
+      "vector": [
+        -0.001389,
+        0.065298,
+        -0.134764,
+        -0.309818,
+        -0.201451,
+        0.056962,
+        0.062519,
+        -0.145878,
+        -0.04029,
+        -0.287589,
+        0.165329,
+        -0.170886,
+        0.140321,
+        -0.087527,
+        -0.031954,
+        0.182001,
+        -0.195894,
+        -0.04029,
+        -0.048626,
+        -0.215344,
+        -0.276474,
+        0.012504,
+        0.315375,
+        -0.320932,
+        0.226459,
+        -0.004168,
+        0.351497,
+        -0.043069,
+        -0.148657,
+        0.095863,
+        -0.065298,
+        -0.173665
+      ]
+    },
+    {
       "path": "tests/test_aura_coding_music_lane.py",
       "role": "python_module",
       "bytes": 915,
@@ -142236,16 +142428,16 @@
           "degree": 116
         },
         {
+          "id": "aura_coding_arena_planning.py::project_coding_arena_planning_board",
+          "degree": 103
+        },
+        {
           "id": "aura_agent_arena_cli.py::global_scope",
           "degree": 102
         },
         {
           "id": "aura_live_architect.py::add",
           "degree": 101
-        },
-        {
-          "id": "aura_coding_arena_planning.py::project_coding_arena_planning_board",
-          "degree": 98
         },
         {
           "id": "aura_agent_arena_cli.py::_print_json",
@@ -142313,7 +142505,7 @@
       "root": ".",
       "module_count": 474,
       "node_count": 7628,
-      "edge_count": 16410,
+      "edge_count": 16419,
       "spectral_layout": true,
       "spectral_sparsity": 0.056116,
       "global_health": 0.972053
@@ -142700,8 +142892,48 @@
           "import_module": 35
         }
       },
-      "aura_scientific_memory.py": {
+      "aura_coding_arena_planning.py": {
         "hub_rank": 9,
+        "node_count": 21,
+        "edge_count": 350,
+        "degree": 350,
+        "symbols": [
+          "CodingArenaProjectionError",
+          "__init__",
+          "_constraint",
+          "_declared_files",
+          "_digest_ref",
+          "_fail",
+          "_file_regions",
+          "_optional_repo_path",
+          "_optional_string",
+          "_ordered_index",
+          "_projection_inputs",
+          "_record_list",
+          "_required",
+          "_safe_repo_path",
+          "_snapshot_record",
+          "_snapshot_records",
+          "_strict_bool",
+          "_string_list",
+          "inspect_coding_arena_planning_compatibility",
+          "project_coding_arena_planning_board"
+        ],
+        "neighbor_files": [
+          "aura_coding_arena_planning_benchmark.py",
+          "aura_coding_arena_planning_integrity.py",
+          "aura_coding_arena_planning_types.py",
+          "aura_event_contracts.py",
+          "aura_planning_board.py"
+        ],
+        "edge_kinds": {
+          "call": 305,
+          "defines": 40,
+          "import_module": 5
+        }
+      },
+      "aura_scientific_memory.py": {
+        "hub_rank": 10,
         "node_count": 46,
         "edge_count": 341,
         "degree": 341,
@@ -142738,45 +142970,6 @@
         "edge_kinds": {
           "call": 247,
           "defines": 90,
-          "import_module": 4
-        }
-      },
-      "aura_coding_arena_planning.py": {
-        "hub_rank": 10,
-        "node_count": 21,
-        "edge_count": 333,
-        "degree": 333,
-        "symbols": [
-          "CodingArenaProjectionError",
-          "__init__",
-          "_constraint",
-          "_declared_files",
-          "_digest_ref",
-          "_fail",
-          "_optional_repo_path",
-          "_optional_string",
-          "_ordered_index",
-          "_projection_inputs",
-          "_record_list",
-          "_region_files",
-          "_required",
-          "_safe_repo_path",
-          "_snapshot_record",
-          "_snapshot_records",
-          "_strict_bool",
-          "_string_list",
-          "inspect_coding_arena_planning_compatibility",
-          "project_coding_arena_planning_board"
-        ],
-        "neighbor_files": [
-          "aura_coding_arena_planning_benchmark.py",
-          "aura_coding_arena_planning_types.py",
-          "aura_event_contracts.py",
-          "aura_planning_board.py"
-        ],
-        "edge_kinds": {
-          "call": 289,
-          "defines": 40,
           "import_module": 4
         }
       },
@@ -142865,8 +143058,8 @@
       "aura_coding_arena_planning_integrity.py": {
         "hub_rank": 13,
         "node_count": 21,
-        "edge_count": 299,
-        "degree": 299,
+        "edge_count": 300,
+        "degree": 300,
         "symbols": [
           "LegacyCodingArenaIntegrityError",
           "__init__",
@@ -142890,12 +143083,13 @@
           "validate_legacy_coding_arena_integrity"
         ],
         "neighbor_files": [
+          "aura_coding_arena_planning.py",
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
           "call": 258,
           "defines": 40,
-          "import_module": 1
+          "import_module": 2
         }
       },
       "aura_planning_board.py": {
@@ -156624,8 +156818,49 @@
         }
       },
       {
-        "file": "aura_scientific_memory.py",
+        "file": "aura_coding_arena_planning.py",
         "hub_rank": 9,
+        "node_count": 21,
+        "edge_count": 350,
+        "degree": 350,
+        "symbols": [
+          "CodingArenaProjectionError",
+          "__init__",
+          "_constraint",
+          "_declared_files",
+          "_digest_ref",
+          "_fail",
+          "_file_regions",
+          "_optional_repo_path",
+          "_optional_string",
+          "_ordered_index",
+          "_projection_inputs",
+          "_record_list",
+          "_required",
+          "_safe_repo_path",
+          "_snapshot_record",
+          "_snapshot_records",
+          "_strict_bool",
+          "_string_list",
+          "inspect_coding_arena_planning_compatibility",
+          "project_coding_arena_planning_board"
+        ],
+        "neighbor_files": [
+          "aura_coding_arena_planning_benchmark.py",
+          "aura_coding_arena_planning_integrity.py",
+          "aura_coding_arena_planning_types.py",
+          "aura_event_contracts.py",
+          "aura_planning_board.py"
+        ],
+        "edge_kinds": {
+          "call": 305,
+          "defines": 40,
+          "import_module": 5
+        }
+      },
+      {
+        "file": "aura_scientific_memory.py",
+        "hub_rank": 10,
         "node_count": 46,
         "edge_count": 341,
         "degree": 341,
@@ -156662,46 +156897,6 @@
         "edge_kinds": {
           "call": 247,
           "defines": 90,
-          "import_module": 4
-        }
-      },
-      {
-        "file": "aura_coding_arena_planning.py",
-        "hub_rank": 10,
-        "node_count": 21,
-        "edge_count": 333,
-        "degree": 333,
-        "symbols": [
-          "CodingArenaProjectionError",
-          "__init__",
-          "_constraint",
-          "_declared_files",
-          "_digest_ref",
-          "_fail",
-          "_optional_repo_path",
-          "_optional_string",
-          "_ordered_index",
-          "_projection_inputs",
-          "_record_list",
-          "_region_files",
-          "_required",
-          "_safe_repo_path",
-          "_snapshot_record",
-          "_snapshot_records",
-          "_strict_bool",
-          "_string_list",
-          "inspect_coding_arena_planning_compatibility",
-          "project_coding_arena_planning_board"
-        ],
-        "neighbor_files": [
-          "aura_coding_arena_planning_benchmark.py",
-          "aura_coding_arena_planning_types.py",
-          "aura_event_contracts.py",
-          "aura_planning_board.py"
-        ],
-        "edge_kinds": {
-          "call": 289,
-          "defines": 40,
           "import_module": 4
         }
       },
@@ -156793,8 +156988,8 @@
         "file": "aura_coding_arena_planning_integrity.py",
         "hub_rank": 13,
         "node_count": 21,
-        "edge_count": 299,
-        "degree": 299,
+        "edge_count": 300,
+        "degree": 300,
         "symbols": [
           "LegacyCodingArenaIntegrityError",
           "__init__",
@@ -156818,12 +157013,13 @@
           "validate_legacy_coding_arena_integrity"
         ],
         "neighbor_files": [
+          "aura_coding_arena_planning.py",
           "aura_event_contracts.py"
         ],
         "edge_kinds": {
           "call": 258,
           "defines": 40,
-          "import_module": 1
+          "import_module": 2
         }
       },
       {
