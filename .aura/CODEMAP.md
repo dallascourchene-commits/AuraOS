@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 881
-- **total_bytes**: 65436697
-- **text_tokens_est**: 6963127
+- **total_bytes**: 65467419
+- **text_tokens_est**: 6970808
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 117, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 620, 'schema_or_lexicon': 75, 'support_file': 41}
-- **topology_nodes**: 7620
-- **topology_edges**: 16386
+- **topology_nodes**: 7628
+- **topology_edges**: 16410
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 22272.36
+- **elapsed_ms**: 20654.63
 
 ## Coverage
 
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7620
-- **edges**: 16386
+- **nodes**: 7628
+- **edges**: 16410
 - **top_files_by_degree**:
   - `aura_node.py` degree=873 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
