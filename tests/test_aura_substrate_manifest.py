@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import gzip
+import hashlib
 import json
 from pathlib import Path
 
 from aura_event_contracts import canonical_json
 from aura_substrate_manifest import build_substrate_manifest
+from aura_substrate_verifier import MANIFEST_ARCHIVE_PATH, _manifest_artifacts
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -36,9 +39,16 @@ def test_release_file_ledger_is_sorted_and_bounded() -> None:
     assert not any(path.endswith((".db", ".jsonl", ".sqlite")) for path in paths)
 
 
-def test_committed_manifest_matches_builder() -> None:
-    path = ROOT / "docs/aura_substrate_manifest.v1.json"
-    text = path.read_text(encoding="utf-8")
-    payload = json.loads(text)
-    assert text == canonical_json(payload) + "\n"
-    assert payload == build_substrate_manifest().to_dict()
+def test_committed_manifest_receipt_and_archive_match_builder() -> None:
+    manifest = build_substrate_manifest()
+    expected_full, expected_archive, expected_receipt = _manifest_artifacts(manifest)
+    receipt_path = ROOT / "docs/aura_substrate_manifest.v1.json"
+    receipt_text = receipt_path.read_text(encoding="utf-8")
+    receipt = json.loads(receipt_text)
+    assert receipt_text == canonical_json(receipt) + "\n"
+    assert receipt == expected_receipt
+
+    archive = (ROOT / MANIFEST_ARCHIVE_PATH).read_bytes()
+    assert archive == expected_archive
+    assert hashlib.sha256(archive).hexdigest() == receipt["archive_sha256"]
+    assert gzip.decompress(archive) == expected_full
