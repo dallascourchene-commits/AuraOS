@@ -11,7 +11,7 @@ from aura_qdkt_inventory import scan_qdkt_uses, write_qdkt_inventory
 
 def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -> None:
     (tmp_path / "consumer.py").write_text(
-        """from quantum_dag import QuantumMerkleDAG\n"
+        "from quantum_dag import QuantumMerkleDAG\n"
         "import json\n"
         "async def run(node, handle):\n"
         "    dag = QuantumMerkleDAG(node)\n"
@@ -19,8 +19,15 @@ def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -
         "    print(result['root'])\n"
         "    belief = result.get('belief')\n"
         "    json.dump(result, handle)\n"
-        "    return belief\n"
-        """,
+        "    return belief\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "facade.py").write_text(
+        "async def capture(generator, legacy_result):\n"
+        "    method = getattr(generator, 'generate_epistemic_system_root', None)\n"
+        "    result = method()\n"
+        "    root = legacy_result.get('root')\n"
+        "    return result, root\n",
         encoding="utf-8",
     )
     tests = tmp_path / "tests"
@@ -56,6 +63,12 @@ def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -
         QDKTUseClass.TEST,
         QDKTUseClass.DOCUMENTATION,
     } <= classes
+    facade_calls = [
+        item
+        for item in report.entries
+        if item.file_path == "facade.py" and item.use_class is QDKTUseClass.METHOD_CALL
+    ]
+    assert len(facade_calls) == 2
     archive = [item for item in report.entries if item.file_path.endswith(".save")]
     assert archive
     assert all(item.readiness is QDKTInventoryReadiness.ARCHIVAL_ONLY for item in archive)
@@ -64,7 +77,7 @@ def test_inventory_classifies_live_consumers_tests_archives_and_docs(tmp_path) -
     assert all(item.readiness is QDKTInventoryReadiness.TEST_ONLY for item in test_entries)
 
 
-def test_inventory_is_deterministic_and_canonical(tmp_path) -> None:
+def test_inventory_is_deterministic_canonical_and_ignores_its_output(tmp_path) -> None:
     (tmp_path / "quantum_dag.py").write_text(
         "class QuantumMerkleDAG:\n"
         "    async def generate_epistemic_system_root(self):\n"
@@ -80,11 +93,14 @@ def test_inventory_is_deterministic_and_canonical(tmp_path) -> None:
         for item in first.entries
     )
 
-    output = write_qdkt_inventory(first, tmp_path / "inventory.json")
+    output = write_qdkt_inventory(first, tmp_path / "qdkt-p6-2-inventory.json")
     text = output.read_text(encoding="utf-8")
     assert text.endswith("\n")
     payload = json.loads(text)
     assert payload == first.to_dict()
+    third = scan_qdkt_uses(tmp_path)
+    assert third == first
+    assert third.digest == first.digest
 
 
 def test_inventory_never_imports_or_executes_scanned_code(tmp_path) -> None:
