@@ -22,12 +22,15 @@ def test_phase_ledger_order_and_dispositions() -> None:
     assert dispositions["P8"] == "RETAIN_CIVIC_COMMONS_OWNER"
     assert all(not item.live_owner_changed for item in manifest.phases)
     assert all(not item.execution_authority_granted for item in manifest.phases)
+    assert manifest.retained_external_surfaces == ("aura_substrate.py",)
 
 
 def test_release_file_ledger_is_sorted_and_bounded() -> None:
-    paths = tuple(item.path for item in build_substrate_manifest().files)
+    manifest = build_substrate_manifest()
+    paths = tuple(item.path for item in manifest.files)
     assert paths == tuple(sorted(set(paths)))
     assert len(paths) == 38
+    assert "aura_substrate.py" not in paths
     assert not any(path.startswith(("tests/", ".github/", ".aura/")) for path in paths)
     assert "topology_map.json" not in paths
     assert not any(path.endswith((".db", ".jsonl", ".sqlite")) for path in paths)
