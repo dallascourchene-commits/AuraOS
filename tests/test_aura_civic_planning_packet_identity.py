@@ -41,6 +41,23 @@ def test_stale_decision_packet_is_rejected_before_mapping() -> None:
     assert result.board is None
 
 
+def test_type_substitution_is_not_an_exact_packet_copy() -> None:
+    project, session = build_case_records("typed-packet", responses=["recorded"])
+    session["scenarios"][0]["reviewed"] = True
+    session["decision_packet"]["scenarios"][0]["reviewed"] = 1
+
+    result = inspect_civic_commons_planning_compatibility(
+        project,
+        session,
+        inventory=inventory(),
+    )
+
+    assert result.report.status is CivicCompatibilityStatus.MISMATCHED
+    assert finding_code(result) == "DECISION_PACKET_IDENTITY_MISMATCH"
+    assert result.report.mapped_action_count == 0
+    assert result.board is None
+
+
 def test_synchronized_packet_copy_remains_structurally_valid() -> None:
     project, session = build_case_records("packet-sync", responses=["recorded"])
     changed = deepcopy(session)
