@@ -20,7 +20,7 @@ from aura_st3gg_compatibility import (
 | Legacy surface | Unchanged V1 owner | Canonical V2 classification |
 |---|---|---|
 | `aura_st3gg_codec.py` | `AURA_ST3GG_CODEC_V1` | `LOSSY_ADVISORY` when the verified encoded view is smaller; otherwise `NONE` |
-| `aura_st3gg_recall.py` | `AURA_ST3GG_RECALL_V1` | `EXACT_RECALL` only after pointer, digest, dash-key, JSON-index, exact-original, content-type, and length agreement |
+| `aura_st3gg_recall.py` | `AURA_ST3GG_RECALL_V1` | `EXACT_RECALL` only after pointer, digest, dash-key, JSON-index, exact-original, content-type, complete-record identity, and length agreement |
 | `aura_arena_st3gg_egress.py` | `AURA_ARENA_ST3GG_EGRESS_V1` | `LOSSY_ADVISORY` by default; optional `EXACT_RECALL` only after canonical overhead passes and the exact original is persisted and dual-read through V1 recall |
 
 Exact source spans carried by AST PATCH/TEST/VERIFIER frames remain authoritative sidecars. They do not make the compact AST representation reversible and do not grant ST3GG patch authority.
@@ -34,19 +34,22 @@ Every public facade runs the unchanged V1 operation first. Projection defects ca
 1. Emit the unchanged `ST3GGFrame`.
 2. Recompute source digest, raw units, candidate units, ratio, counts, warnings, and exact spans.
 3. Replay the deterministic V1 encoder and require complete frame equality.
-4. Classify the encoded view as `LOSSY_ADVISORY` or `NONE`.
-5. On any projection error, return the exact V1 frame with a disabled V2 decision.
+4. Bind the result to a recomputed digest of the complete immutable V1 frame.
+5. Classify the encoded view as `LOSSY_ADVISORY` or `NONE`.
+6. On any projection error, return the exact V1 frame with a disabled V2 decision.
 
 ### Report egress facade
 
 1. Emit the unchanged `(compressed, savings, ST3GG_PTR)` tuple.
-2. Recompute byte measurements and verify pointer and visible-ASCII identity.
-3. Preserve `LOSSY_ADVISORY` unless exact persistence is explicitly requested.
-4. Count the complete canonical V2 metadata suffix before writing recall.
-5. Persist through the existing V1 recall owner only when the final V2 artifact still passes policy.
-6. Verify the stored exact original independently through the JSON compatibility index and public pointer, digest, and dash-key reads.
-7. Emit a canonical V2 exact handle only after all reads agree.
-8. On any error, preserve the V1 tuple and downgrade to `LOSSY_ADVISORY` or `NONE`.
+2. Recompute byte measurements and require exact agreement with the V1 savings field.
+3. Verify the V1 pointer and visible-ASCII compact identity.
+4. Preserve `LOSSY_ADVISORY` unless exact persistence is explicitly requested.
+5. Count the complete canonical V2 metadata suffix before writing recall.
+6. Persist through the existing V1 recall owner only when the final V2 artifact still passes policy.
+7. Verify the stored exact original independently through the JSON compatibility index and public pointer, digest, and dash-key reads.
+8. Bind the full compact digest to the legacy 12-character `ST3GG_PTR` and the canonical V2 exact result.
+9. Emit a canonical V2 exact handle only after all reads and bindings agree.
+10. On any error, preserve the V1 tuple and downgrade to `LOSSY_ADVISORY` or `NONE`; malformed savings are normalized only inside the disabled diagnostic result so failure handling cannot throw a second exception.
 
 ## Dual-read invariants
 
@@ -59,14 +62,18 @@ Every public facade runs the unchanged V1 operation first. Projection defects ca
 - non-canonical record version, pointer, dash key, glyph, holographic header, timestamp, content type, or source hint;
 - pointer/header values not derived from the exact original and namespace;
 - exact-original digest or byte-length disagreement;
-- compact payload disagreement;
+- compact payload or full compact-digest disagreement;
+- record substitutions that differ only in `created_unix`;
+- partial constructor evidence that omits pointer, digest, or dash-key proof;
+- failed evidence objects that still carry resolved exact state;
 - canonical V2 pointer, exact-reference, namespace, or storage-owner disagreement.
 
 A verified record binds:
 
 ```text
 V1 pointer + V1 digest alias + V1 dash alias + direct JSON record
-    == one exact V1 record
+    == one complete V1 record, including created_unix
+    == V1 full compact digest -> V1 ST3GG_PTR prefix
     == canonical V2 original digest + exact reference + pointer
 ```
 
@@ -102,11 +109,13 @@ The focused Python 3.10/3.12 gate includes:
 
 - syntax compilation and fatal/static Ruff checks;
 - golden direct-versus-facade V1 equality for AST and report output;
-- recomputed AST token measurements and report byte measurements;
-- deterministic AST replay and metadata-forgery rejection;
+- recomputed AST token measurements and strict report byte/savings agreement;
+- deterministic AST replay, full-frame digest binding, and metadata-forgery rejection;
 - exact-span sidecar validation without false exact-recall claims;
 - optional report exact persistence and pointer/digest/dash/JSON dual reads;
-- pointer substitution, alias disagreement, duplicate/conflicting record, malformed metadata, digest/length disagreement, invalid Unicode, empty candidate, persistence failure, and overhead-erased-savings tests;
+- full compact-digest binding behind the legacy pointer prefix;
+- pointer substitution, alias disagreement, duplicate/conflicting record, timestamp substitution, malformed metadata, digest/length disagreement, forged savings, invalid Unicode, empty candidate, persistence failure, and overhead-erased-savings tests;
+- constructor-level rejection of partial verified evidence and failed evidence carrying exact state;
 - deterministic evidence and disposition digests;
 - the existing P5.1 contracts, P5.2 Arena shadow, V1 AST codec, and V1 Arena codec tests.
 
