@@ -158,9 +158,11 @@ def rebuild_envelope(raw: Mapping[str, Any]) -> AuraEventEnvelope | None:
             uncertainty=raw.get("uncertainty"),
             created_at=created,
         )
+        raw_bytes = canonical_json(dict(raw))
+        expected_bytes = canonical_json(expected.to_dict())
     except Exception:
         return None
-    if raw.get("event_id") != expected.event_id or raw != expected.to_dict():
+    if raw.get("event_id") != expected.event_id or raw_bytes != expected_bytes:
         return None
     return expected
 
