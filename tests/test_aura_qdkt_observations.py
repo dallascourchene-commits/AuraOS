@@ -43,12 +43,13 @@ def test_same_snapshot_has_same_identity_and_digest() -> None:
     assert left.digest == right.digest
 
 
-def test_boolean_belief_is_rejected() -> None:
-    with pytest.raises(ValueError, match="belief must be an integer"):
-        QDKTObservation.from_legacy_result(
-            {"root": LEGACY_RESULT["root"], "belief": True},
-            source_snapshot=SOURCE_SNAPSHOT,
-        )
+def test_boolean_and_negative_beliefs_are_rejected() -> None:
+    for invalid in (True, -1):
+        with pytest.raises(ValueError, match="non-negative integer"):
+            QDKTObservation.from_legacy_result(
+                {"root": LEGACY_RESULT["root"], "belief": invalid},
+                source_snapshot=SOURCE_SNAPSHOT,
+            )
 
 
 def test_malformed_or_extra_legacy_fields_are_rejected() -> None:
