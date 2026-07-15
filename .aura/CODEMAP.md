@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 842
-- **total_bytes**: 64218562
-- **text_tokens_est**: 6658581
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 112, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 591, 'schema_or_lexicon': 70, 'support_file': 41}
-- **topology_nodes**: 7324
-- **topology_edges**: 15395
+- **file_count**: 847
+- **total_bytes**: 64326716
+- **text_tokens_est**: 6685620
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 113, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 594, 'schema_or_lexicon': 71, 'support_file': 41}
+- **topology_nodes**: 7355
+- **topology_edges**: 15457
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 20247.04
+- **elapsed_ms**: 21721.04
 
 ## Coverage
 
-- **included_file_count**: 842
+- **included_file_count**: 847
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=47, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=49, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -205,7 +205,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 702 more; query CODEMAP.json for exact file cards
+- ... 707 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -225,8 +225,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7324
-- **edges**: 15395
+- **nodes**: 7355
+- **edges**: 15457
 - **top_files_by_degree**:
   - `aura_node.py` degree=870 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
@@ -288,6 +288,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `ArenaResearchIdea` -> `aura_music_coding_arena.py:81`
 - `ArenaST3GGCapsule` -> `aura_arena_st3gg_codec.py:55`
 - `ArenaST3GGDecision` -> `aura_arena_st3gg_codec.py:43`
+- `ArenaST3GGShadowError` -> `aura_arena_st3gg_shadow.py:63`
+- `ArenaST3GGShadowResult` -> `aura_arena_st3gg_shadow.py:152`
+- `ArenaST3GGV2ShadowComparison` -> `aura_arena_st3gg_shadow.py:68`
 - `ArenaStatePacket` -> `aura_arena_state_packet.py:21`
 - `ArenaToolRuntime` -> `aura_arena_tool_runtime.py:169`
 - `ArenaTransition` -> `aura_arena_wfst_types.py:70`
@@ -320,6 +323,3 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraEpistemicIngestGateway` -> `aura_epistemic_ingest.py:27`
 - `AuraEventEnvelope` -> `aura_event_contracts.py:382`
 - `AuraFederation` -> `aura_federation.py:100`
-- `AuraFusionAgent` -> `aura_fusion.py:89`
-- `AuraFusionCoordinator` -> `aura_fusion.py:481`
-- `AuraFusionResult` -> `aura_fusion.py:126`
