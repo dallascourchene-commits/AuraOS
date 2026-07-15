@@ -213,10 +213,17 @@ def project_report_egress_to_v2(
     try:
         require(type(original) is str and type(legacy_compressed) is str, "legacy_report_text_invalid")
         require(type(legacy_pointer) is str, "legacy_report_pointer_invalid")
+        replay_compressed, replay_savings, replay_pointer = compress_report_st3gg(original)
+        require(legacy_compressed == replay_compressed, "legacy_report_compact_replay_disagreement")
+        require(legacy_pointer == replay_pointer, "legacy_report_pointer_replay_disagreement")
         ratio = _ratio_value(minimum_savings_ratio, "minimum_savings_ratio")
         raw = count_utf8_bytes(original)
         candidate = count_utf8_bytes(legacy_compressed)
         supplied = _ratio_value(legacy_savings_ratio, "legacy_savings_ratio")
+        require(
+            math.isclose(supplied, replay_savings, rel_tol=0.0, abs_tol=1e-12),
+            "legacy_report_savings_replay_disagreement",
+        )
         measured = _legacy_savings(raw, candidate)
         require(
             math.isclose(supplied, measured, rel_tol=0.0, abs_tol=1e-12),
