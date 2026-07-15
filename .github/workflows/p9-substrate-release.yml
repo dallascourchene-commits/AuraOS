@@ -32,22 +32,23 @@ jobs:
           python-version: "3.12"
       - name: Generate canonical artifacts
         run: |
-          python aura_substrate_manifest.py --output /tmp/aura_substrate_manifest.v1.json
-          python aura_substrate_release.py --root . --output /tmp/aura_substrate_release_index.v1.json
+          rm -rf /tmp/p9-generated
+          python aura_substrate_release.py \
+            --root . \
+            --manifest-output-root /tmp/p9-generated \
+            --output /tmp/p9-generated/docs/aura_substrate_release_index.v1.json
       - name: Upload generated evidence
         uses: actions/upload-artifact@v4
         with:
           name: p9-generated-release-evidence
-          path: |
-            /tmp/aura_substrate_manifest.v1.json
-            /tmp/aura_substrate_release_index.v1.json
+          path: /tmp/p9-generated/docs/*.json
           if-no-files-found: error
           retention-days: 14
 
   validate-substrate:
     name: Substrate contract (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
@@ -64,23 +65,93 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install "pytest>=8.0,<9.0" "ruff>=0.9,<1.0"
-      - name: Compile P9 surfaces
+      - name: Compile P9 surfaces and tests
         run: |
           python -m py_compile \
             aura_substrate_contracts.py \
             aura_substrate_manifest.py \
             aura_substrate_release.py \
-            aura_substrate_verifier.py
+            aura_substrate_verifier.py \
+            tests/test_aura_substrate_contracts.py \
+            tests/test_aura_substrate_manifest.py \
+            tests/test_aura_substrate_release.py \
+            tests/test_aura_substrate_verifier.py
       - name: Fatal and static correctness lint
         run: |
           ruff check --select E4,E7,E9,F --ignore E721 \
             aura_substrate_contracts.py \
             aura_substrate_manifest.py \
             aura_substrate_release.py \
-            aura_substrate_verifier.py
-      - name: Regenerate and compare manifest
+            aura_substrate_verifier.py \
+            tests/test_aura_substrate_contracts.py \
+            tests/test_aura_substrate_manifest.py \
+            tests/test_aura_substrate_release.py \
+            tests/test_aura_substrate_verifier.py
+      - name: Regenerate and compare canonical artifacts
         run: |
-          python aura_substrate_manifest.py --output /tmp/aura_substrate_manifest.v1.json
-          cmp docs/aura_substrate_manifest.v1.json /tmp/aura_substrate_manifest.v1.json
-      - name: Require committed release index
-        run: test -f docs/aura_substrate_release_index.v1.json
+          rm -rf /tmp/p9-generated
+          python aura_substrate_release.py \
+            --root . \
+            --manifest-output-root /tmp/p9-generated \
+            --output /tmp/p9-generated/docs/aura_substrate_release_index.v1.json
+          for path in \
+            docs/aura_substrate_manifest.v1.json \
+            docs/aura_substrate_manifest.files.01.json \
+            docs/aura_substrate_manifest.files.02.json \
+            docs/aura_substrate_manifest.files.03.json \
+            docs/aura_substrate_manifest.files.04.json \
+            docs/aura_substrate_manifest.files.05.json \
+            docs/aura_substrate_manifest.phases.01.json \
+            docs/aura_substrate_manifest.phases.02.json \
+            docs/aura_substrate_manifest.phases.03.json \
+            docs/aura_substrate_manifest.phases.04.json \
+            docs/aura_substrate_manifest.phases.05.json \
+            docs/aura_substrate_release_index.v1.json
+          do
+            cmp "$path" "/tmp/p9-generated/$path"
+          done
+      - name: Run independent release verifier
+        run: |
+          python aura_substrate_verifier.py > "p9-verifier-${{ matrix.python-version }}.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = tuple(Path('.').glob('p9-verifier-*.json'))
+          assert len(files) == 1
+          payload = json.loads(files[0].read_text(encoding='utf-8'))
+          assert payload['version'] == 'AURA_SUBSTRATE_VERIFIER_P9_V1'
+          assert payload['passed'] is True
+          assert payload['findings'] == []
+          assert payload['checked_files'] > 38
+          assert payload['checked_symbols'] > 0
+          assert payload['checked_versions'] > 0
+          PY
+      - name: Upload verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: p9-verifier-${{ matrix.python-version }}
+          path: p9-verifier-${{ matrix.python-version }}.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Run focused and inherited contract regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_substrate_contracts.py \
+            tests/test_aura_substrate_manifest.py \
+            tests/test_aura_substrate_release.py \
+            tests/test_aura_substrate_verifier.py \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_planning_board.py \
+            tests/test_aura_planning_regression.py \
+            tests/test_aura_planning_frontier.py \
+            tests/test_aura_planning_events.py \
+            tests/test_aura_planning_projector.py \
+            tests/test_aura_continuity_packet.py \
+            tests/test_aura_st3gg_contracts.py \
+            tests/test_aura_st3gg_compatibility.py \
+            tests/test_aura_qdkt_observations.py \
+            tests/test_aura_qdkt_compatibility.py \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_civic_planning_projection.py
