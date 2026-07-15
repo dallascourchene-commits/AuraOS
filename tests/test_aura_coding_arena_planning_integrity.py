@@ -30,6 +30,7 @@ def _finding_code(inspection):
 
 def test_top_level_symbol_lease_substitution_is_rejected():
     plan, grounding, shadow, arena = _payloads()
+    arena["agent_leases"] = deepcopy(arena["agent_leases"])
     symbol_region = arena["agent_leases"][0]["regions"][-1]
     assert symbol_region["region_type"] == "symbol"
     symbol_region["id"] = "other_symbol"
