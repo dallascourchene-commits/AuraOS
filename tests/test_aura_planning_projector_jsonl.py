@@ -31,7 +31,7 @@ def test_noncanonical_planning_event_bytes_fail_closed(tmp_path) -> None:
     )
     row = json.loads(store.events_path.read_text(encoding="utf-8"))
     store.events_path.write_text(
-        json.dumps(row, indent=2) + "\n",
+        json.dumps(row) + "\n",
         encoding="utf-8",
     )
 
