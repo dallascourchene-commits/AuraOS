@@ -57,6 +57,14 @@ def _sidecar_payload(store: AppendOnlyEventStore, path: str):
     return json.loads((store.root / path).read_text(encoding="utf-8"))
 
 
+def _stored_files(store: AppendOnlyEventStore) -> set[str]:
+    return {
+        str(path.relative_to(store.root))
+        for path in store.root.rglob("*")
+        if path.is_file()
+    }
+
+
 def test_board_projection_persists_exact_sidecar_and_compact_event(tmp_path) -> None:
     store = AppendOnlyEventStore(tmp_path / "events")
     board = _board()
@@ -249,6 +257,30 @@ def test_duplicate_parent_and_evidence_refs_fail_before_append(tmp_path) -> None
             evidence_refs=("evidence", "evidence"),
         )
     assert list(store.iter_events()) == []
+
+
+def test_invalid_envelope_fields_fail_before_sidecar_write(tmp_path) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    board = _board()
+    baseline = _stored_files(store)
+
+    invalid_calls = (
+        ({"trace_id": "", "actor_id": "aura"}, "trace_id"),
+        ({"trace_id": "trace", "actor_id": ""}, "actor_id"),
+        (
+            {"trace_id": "trace", "actor_id": "aura", "policy_scope": ""},
+            "policy_scope",
+        ),
+        (
+            {"trace_id": "trace", "actor_id": "aura", "actor_type": "BAD"},
+            "actor_type",
+        ),
+    )
+    for kwargs, match in invalid_calls:
+        with pytest.raises(ValueError, match=match):
+            record_planning_board_event(store, board, **kwargs)
+        assert _stored_files(store) == baseline
+        assert list(store.iter_events()) == []
 
 
 def test_existing_store_redacts_secrets_and_rejects_private_reasoning(tmp_path) -> None:
