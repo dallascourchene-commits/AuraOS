@@ -1,0 +1,58 @@
+name: P3.1 Planning event projection
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "refactor/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p3-1-planning-events-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-planning-events:
+    name: Planning events (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install focused tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest ruff
+      - name: Compile planning event contracts
+        run: |
+          python -m py_compile \
+            aura_event_contracts.py \
+            aura_planning_board.py \
+            aura_planning_regression.py \
+            aura_planning_frontier.py \
+            aura_planning_events.py \
+            tests/test_aura_planning_events.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_planning_events.py \
+            tests/test_aura_planning_events.py
+      - name: Run focused planning event tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_planning_board.py \
+            tests/test_aura_planning_regression.py \
+            tests/test_aura_planning_regression_adversarial.py \
+            tests/test_aura_planning_frontier.py \
+            tests/test_aura_planning_events.py
