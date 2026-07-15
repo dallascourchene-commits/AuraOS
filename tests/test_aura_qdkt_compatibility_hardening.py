@@ -5,7 +5,13 @@ import json
 import pytest
 
 import aura_qdkt_compatibility as compatibility
-from aura_event_contracts import AppendOnlyEventStore, canonical_json
+from aura_event_contracts import (
+    ActorType,
+    AppendOnlyEventStore,
+    AuraEventEnvelope,
+    DIKWPStage,
+    canonical_json,
+)
 from aura_qdkt_compatibility import compare_qdkt_dual_read
 from aura_qdkt_compatibility_types import (
     QDKTCompatibilityFinding,
@@ -30,6 +36,7 @@ def record(
     created_at=100.0,
     result=LEGACY_RESULT,
     snapshot=SOURCE_SNAPSHOT,
+    parent_event_ids=(),
 ):
     return record_qdkt_observation(
         store,
@@ -37,6 +44,24 @@ def record(
         trace_id=trace,
         actor_id="aura",
         purpose_digest="purpose-1",
+        parent_event_ids=parent_event_ids,
+        created_at=created_at,
+    )
+
+
+def generic_parent(created_at=50.0) -> AuraEventEnvelope:
+    return AuraEventEnvelope.create(
+        trace_id="trace-parent",
+        event_type="test.parent.recorded",
+        actor_id="aura",
+        actor_type=ActorType.AURA,
+        node_id="parent-node",
+        purpose_digest="purpose-parent",
+        dikwp_stage=DIKWPStage.DATA,
+        payload_ref="parent-payload",
+        payload_digest="parent-digest",
+        policy_scope="test.parent",
+        proposal_only=True,
         created_at=created_at,
     )
 
@@ -109,6 +134,37 @@ def test_store_change_between_projection_and_reread_fails_closed(
         return report
 
     monkeypatch.setattr(compatibility, "project_qdkt_events", project_then_duplicate)
+    result = compatibility.compare_qdkt_dual_read(
+        store,
+        LEGACY_RESULT,
+        source_snapshot=SOURCE_SNAPSHOT,
+    )
+    assert result.status is QDKTDualReadStatus.MISMATCHED
+    assert result.legacy_result == LEGACY_RESULT
+    assert QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED in codes(result)
+
+
+def test_parent_removed_between_projection_and_reread_fails_closed(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    store = AppendOnlyEventStore(tmp_path / "events")
+    parent = generic_parent()
+    store.append(parent)
+    record(store, parent_event_ids=(parent.event_id,))
+    original = compatibility.project_qdkt_events
+    changed = False
+
+    def project_then_remove_parent(target):
+        nonlocal changed
+        report = original(target)
+        if not changed:
+            lines = target.events_path.read_text(encoding="utf-8").splitlines()
+            target.events_path.write_text(lines[-1] + "\n", encoding="utf-8")
+            changed = True
+        return report
+
+    monkeypatch.setattr(compatibility, "project_qdkt_events", project_then_remove_parent)
     result = compatibility.compare_qdkt_dual_read(
         store,
         LEGACY_RESULT,
