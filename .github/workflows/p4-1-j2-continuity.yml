@@ -45,14 +45,16 @@ jobs:
             tests/test_aura_jspace_codec.py \
             tests/test_aura_arena_wfst_phase_a.py \
             tests/test_aura_continuity_packet.py \
-            tests/test_aura_continuity_packet_digest_hardening.py
+            tests/test_aura_continuity_packet_digest_hardening.py \
+            tests/test_aura_continuity_packet_merge_gate.py
       - name: Static correctness lint
         run: |
           # E721 is intentional where exact primitive types reject bool coercion.
           ruff check --select E4,E7,E9,F --ignore E721 \
             aura_continuity_packet.py \
             tests/test_aura_continuity_packet.py \
-            tests/test_aura_continuity_packet_digest_hardening.py
+            tests/test_aura_continuity_packet_digest_hardening.py \
+            tests/test_aura_continuity_packet_merge_gate.py
       - name: Run focused continuity tests
         id: focused-tests
         shell: bash
@@ -66,21 +68,18 @@ jobs:
             tests/test_aura_planning_projector.py \
             tests/test_aura_continuity_packet.py \
             tests/test_aura_continuity_packet_digest_hardening.py \
+            tests/test_aura_continuity_packet_merge_gate.py \
             > "p4-1-pytest-${{ matrix.python-version }}.txt" 2>&1
           status=$?
           echo "status=$status" >> "$GITHUB_OUTPUT"
           cat "p4-1-pytest-${{ matrix.python-version }}.txt"
           exit 0
-      - name: Upload focused diagnostics
-        if: always()
+      - name: Upload focused diagnostics on failure
+        if: steps.focused-tests.outputs.status != '0'
         uses: actions/upload-artifact@v4
         with:
           name: p4-1-pytest-${{ matrix.python-version }}
-          path: |
-            p4-1-pytest-${{ matrix.python-version }}.txt
-            aura_continuity_packet.py
-            tests/test_aura_continuity_packet.py
-            tests/test_aura_continuity_packet_digest_hardening.py
+          path: p4-1-pytest-${{ matrix.python-version }}.txt
           if-no-files-found: error
           retention-days: 7
       - name: Enforce focused test result
