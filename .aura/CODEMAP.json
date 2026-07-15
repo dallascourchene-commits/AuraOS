@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784095560,
+  "generated_at_unix": 1784095772,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 843,
+    "included_file_count": 842,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,9 +13,10 @@
     ],
     "skipped_dir_file_counts": {
       ".git": 47,
+      ".pytest_cache": 4,
       "Aura_Memory": 1,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 10
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -78,7 +79,6 @@
       ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
-      ".github/workflows/p5-1-sync-codemap-once.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -864,9 +864,9 @@
     ]
   },
   "summary": {
-    "file_count": 843,
-    "total_bytes": 64219989,
-    "text_tokens_est": 6658939,
+    "file_count": 842,
+    "total_bytes": 64218562,
+    "text_tokens_est": 6658581,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
@@ -874,13 +874,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 591,
-      "schema_or_lexicon": 71,
+      "schema_or_lexicon": 70,
       "support_file": 41
     },
     "topology_nodes": 7324,
-    "topology_edges": 15391,
+    "topology_edges": 15395,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 21586.02
+    "elapsed_ms": 20087.39
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1083,7 +1083,6 @@
       ".github/workflows/p3-2-planning-projector.yml",
       ".github/workflows/p4-1-j2-continuity.yml",
       ".github/workflows/p5-1-st3gg-contracts.yml",
-      ".github/workflows/p5-1-sync-codemap-once.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -6457,8 +6456,8 @@
       {
         "file": "tests/test_aura_st3gg_contracts.py",
         "kind": "class",
-        "line": 215,
-        "end_line": 223,
+        "line": 243,
+        "end_line": 251,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#class:LegacyArenaDecision:e55aa75f9b2fac1b",
         "signature_hash": "6b737b7c1ce0ab5a"
       }
@@ -8392,7 +8391,7 @@
         "file": "aura_st3gg_contracts.py",
         "kind": "class",
         "line": 112,
-        "end_line": 196,
+        "end_line": 207,
         "semantic_id": "aura_st3gg_contracts.py#class:ST3GGDecision:21d3f54d41407473",
         "signature_hash": "8f6504ef8cb1b357"
       }
@@ -8431,8 +8430,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "class",
-        "line": 200,
-        "end_line": 203,
+        "line": 211,
+        "end_line": 214,
         "semantic_id": "aura_st3gg_contracts.py#class:ST3GGPreparedArtifact:78419992d4c810d7",
         "signature_hash": "bf529b1b291b476a"
       }
@@ -15378,7 +15377,7 @@
         "file": "aura_st3gg_contracts.py",
         "kind": "method",
         "line": 136,
-        "end_line": 185,
+        "end_line": 196,
         "semantic_id": "aura_st3gg_contracts.py#method:ST3GGDecision.__post_init__:cfa0430df90d31f3",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -25387,8 +25386,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 468,
-        "end_line": 476,
+        "line": 479,
+        "end_line": 487,
         "semantic_id": "aura_st3gg_contracts.py#function:_legacy_float:59ff657168a47730",
         "signature_hash": "6ddec107f89656a7"
       }
@@ -25397,8 +25396,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 451,
-        "end_line": 454,
+        "line": 462,
+        "end_line": 465,
         "semantic_id": "aura_st3gg_contracts.py#function:_legacy_get:b69356731f022ab0",
         "signature_hash": "8bb842d58d6d48d6"
       }
@@ -25407,8 +25406,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 457,
-        "end_line": 465,
+        "line": 468,
+        "end_line": 476,
         "semantic_id": "aura_st3gg_contracts.py#function:_legacy_int:c906770a967345bc",
         "signature_hash": "d7ebe75ba2e4e6e7"
       }
@@ -26637,8 +26636,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 319,
-        "end_line": 331,
+        "line": 330,
+        "end_line": 342,
         "semantic_id": "aura_st3gg_contracts.py#function:_metadata_suffix:c155bd2c6ed103b1",
         "signature_hash": "9469bf9d11c11b4e"
       }
@@ -27469,8 +27468,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 226,
-        "end_line": 231,
+        "line": 237,
+        "end_line": 242,
         "semantic_id": "aura_st3gg_contracts.py#function:_normalize_namespace:a90adbd4943c9910",
         "signature_hash": "9a498dfe53929975"
       }
@@ -29191,8 +29190,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 313,
-        "end_line": 316,
+        "line": 324,
+        "end_line": 327,
         "semantic_id": "aura_st3gg_contracts.py#function:_ratio:260062431e85bf37",
         "signature_hash": "87bbd30c6a8d8629"
       }
@@ -34933,8 +34932,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 588,
-        "end_line": 597,
+        "line": 602,
+        "end_line": 611,
         "semantic_id": "aura_st3gg_contracts.py#function:_unique:bbca9ada2512eb55",
         "signature_hash": "57943261a01abca2"
       },
@@ -36029,8 +36028,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 479,
-        "end_line": 512,
+        "line": 490,
+        "end_line": 526,
         "semantic_id": "aura_st3gg_contracts.py#function:adapt_legacy_arena_decision:c2a611db1eddfd1b",
         "signature_hash": "5d47dacfc679b778"
       }
@@ -36039,8 +36038,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 515,
-        "end_line": 543,
+        "line": 529,
+        "end_line": 557,
         "semantic_id": "aura_st3gg_contracts.py#function:adapt_legacy_ast_frame:c60505764302463b",
         "signature_hash": "c0e33d70b3abb517"
       }
@@ -36049,8 +36048,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 546,
-        "end_line": 585,
+        "line": 560,
+        "end_line": 599,
         "semantic_id": "aura_st3gg_contracts.py#function:adapt_legacy_report_result:b58f3f623f971cbe",
         "signature_hash": "8bc84d18773865ae"
       }
@@ -39163,8 +39162,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 210,
-        "end_line": 217,
+        "line": 221,
+        "end_line": 228,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_json_bytes:45e2aa70586d7f49",
         "signature_hash": "b2bc0a31834a37f8"
       }
@@ -39193,8 +39192,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 234,
-        "end_line": 246,
+        "line": 245,
+        "end_line": 257,
         "semantic_id": "aura_st3gg_contracts.py#function:canonical_pointer:39a8df20a2990872",
         "signature_hash": "752ce5535dfd3968"
       }
@@ -42107,8 +42106,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 297,
-        "end_line": 300,
+        "line": 308,
+        "end_line": 311,
         "semantic_id": "aura_st3gg_contracts.py#function:count_utf8_bytes:f932bf2064ba3b1f",
         "signature_hash": "d00b926b83b5a578"
       }
@@ -42639,8 +42638,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "method",
-        "line": 195,
-        "end_line": 196,
+        "line": 206,
+        "end_line": 207,
         "semantic_id": "aura_st3gg_contracts.py#method:ST3GGDecision.decision_digest:b595e1fc24be1c07",
         "signature_hash": "af940db68c44de13"
       }
@@ -43255,8 +43254,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 220,
-        "end_line": 223,
+        "line": 231,
+        "end_line": 234,
         "semantic_id": "aura_st3gg_contracts.py#function:digest_text:29d5eab9d25f7888",
         "signature_hash": "422e73e05e570602"
       }
@@ -44209,8 +44208,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 258,
-        "end_line": 262,
+        "line": 269,
+        "end_line": 273,
         "semantic_id": "aura_st3gg_contracts.py#function:exact_ref_for:cf2a769a91cc1d03",
         "signature_hash": "1bf7375fe5eee6dd"
       }
@@ -51467,8 +51466,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 255,
+        "line": 260,
+        "end_line": 266,
         "semantic_id": "aura_st3gg_contracts.py#function:parse_canonical_pointer:70c547f89e14178d",
         "signature_hash": "4cc7d904019251f3"
       }
@@ -52193,8 +52192,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 334,
-        "end_line": 448,
+        "line": 345,
+        "end_line": 459,
         "semantic_id": "aura_st3gg_contracts.py#function:prepare_st3gg_artifact:d6b3aeb4ef3a4ef2",
         "signature_hash": "8221a03559b8bc8a"
       }
@@ -56001,8 +56000,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 265,
-        "end_line": 294,
+        "line": 276,
+        "end_line": 305,
         "semantic_id": "aura_st3gg_contracts.py#function:sanitize_visible_ascii:6bbb83fa24047a32",
         "signature_hash": "76b68e77119b75fe"
       }
@@ -62333,6 +62332,16 @@
         "signature_hash": "3101def3994a4fd7"
       }
     ],
+    "test_decision_rejects_caller_supplied_savings_ratio": [
+      {
+        "file": "tests/test_aura_st3gg_contracts.py",
+        "kind": "function",
+        "line": 232,
+        "end_line": 234,
+        "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_decision_rejects_caller_supplied_savings_ratio:732adcb3dffd88ea",
+        "signature_hash": "50ca259f87f5a85f"
+      }
+    ],
     "test_decision_rejects_exact_claim_without_exact_ref": [
       {
         "file": "tests/test_aura_st3gg_contracts.py",
@@ -62341,6 +62350,36 @@
         "end_line": 211,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_decision_rejects_exact_claim_without_exact_ref:fae3071bc77d39c9",
         "signature_hash": "72ccee3b19878c74"
+      }
+    ],
+    "test_decision_rejects_exact_ref_not_bound_to_original_digest": [
+      {
+        "file": "tests/test_aura_st3gg_contracts.py",
+        "kind": "function",
+        "line": 221,
+        "end_line": 224,
+        "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_decision_rejects_exact_ref_not_bound_to_original_digest:cf77792a4966aac7",
+        "signature_hash": "59d22b94b0a89556"
+      }
+    ],
+    "test_decision_rejects_inconsistent_measurement_arithmetic": [
+      {
+        "file": "tests/test_aura_st3gg_contracts.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 229,
+        "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_decision_rejects_inconsistent_measurement_arithmetic:fad4ed5f819396b7",
+        "signature_hash": "f9d026964940c623"
+      }
+    ],
+    "test_decision_rejects_pointer_not_bound_to_original_digest": [
+      {
+        "file": "tests/test_aura_st3gg_contracts.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 218,
+        "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_decision_rejects_pointer_not_bound_to_original_digest:12e950da8e4371a7",
+        "signature_hash": "964058a91552a04f"
       }
     ],
     "test_decision_reports_positive_savings_only_when_compact_payload_is_smaller": [
@@ -65307,8 +65346,8 @@
       {
         "file": "tests/test_aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 272,
-        "end_line": 279,
+        "line": 300,
+        "end_line": 307,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_golden_vectors_are_stable:46da3d7416b4326c",
         "signature_hash": "7e434d13a2bdf5fd"
       }
@@ -67435,8 +67474,8 @@
       {
         "file": "tests/test_aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 226,
-        "end_line": 232,
+        "line": 254,
+        "end_line": 260,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_legacy_arena_projection_preserves_pointer_but_does_not_claim_exact_v2_recall:e6848bcea2b03168",
         "signature_hash": "bd12650dc569100d"
       }
@@ -67445,8 +67484,8 @@
       {
         "file": "tests/test_aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 235,
-        "end_line": 252,
+        "line": 263,
+        "end_line": 280,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_legacy_ast_projection_is_explicitly_lossy_advisory:0fb6324ab6cb3e8f",
         "signature_hash": "cc827ce3d106d1d7"
       }
@@ -67479,6 +67518,16 @@
         "end_line": 624,
         "semantic_id": "tests/test_aura_emergent_result_verifier.py#method:TestLegacyCompat.test_legacy_connection_dict_fields_preserved:406eac01d21de734",
         "signature_hash": "8bf7d5045668d016"
+      }
+    ],
+    "test_legacy_empty_compact_payload_is_not_enabled": [
+      {
+        "file": "tests/test_aura_st3gg_contracts.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_legacy_empty_compact_payload_is_not_enabled:b30dd68fc5090035",
+        "signature_hash": "d131ed39eaea84b5"
       }
     ],
     "test_legacy_paper_memory_rows_still_load_without_lift_profile": [
@@ -67515,8 +67564,8 @@
       {
         "file": "tests/test_aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 255,
-        "end_line": 269,
+        "line": 283,
+        "end_line": 297,
         "semantic_id": "tests/test_aura_st3gg_contracts.py#function:test_legacy_report_projection_recomputes_byte_savings_and_stays_lossy:6695f0f01f1ac348",
         "signature_hash": "accdf5015a1bd95a"
       }
@@ -79641,8 +79690,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "method",
-        "line": 187,
-        "end_line": 192,
+        "line": 198,
+        "end_line": 203,
         "semantic_id": "aura_st3gg_contracts.py#method:ST3GGDecision.to_dict:579280c2e1ffb84c",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -81271,8 +81320,8 @@
       {
         "file": "aura_st3gg_contracts.py",
         "kind": "function",
-        "line": 303,
-        "end_line": 310,
+        "line": 314,
+        "end_line": 321,
         "semantic_id": "aura_st3gg_contracts.py#function:verify_exact_recall_record:9b34ad04be5ed4dd",
         "signature_hash": "4cd9902376a8eefb"
       }
@@ -84975,7 +85024,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 40,
         "edge_count": 180,
         "degree": 180,
@@ -86742,7 +86791,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 35,
+        "hub_rank": 36,
         "node_count": 25,
         "edge_count": 185,
         "degree": 185,
@@ -92553,7 +92602,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 34,
+        "hub_rank": 35,
         "node_count": 48,
         "edge_count": 185,
         "degree": 185,
@@ -98197,7 +98246,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 32,
+        "hub_rank": 33,
         "node_count": 19,
         "edge_count": 187,
         "degree": 187,
@@ -109844,7 +109893,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 36,
+        "hub_rank": 37,
         "node_count": 59,
         "edge_count": 184,
         "degree": 184,
@@ -109967,17 +110016,17 @@
     {
       "path": "aura_st3gg_contracts.py",
       "role": "python_module",
-      "bytes": 23169,
-      "lines": 598,
-      "tokens_est": 5793,
+      "bytes": 24060,
+      "lines": 612,
+      "tokens_est": 6015,
       "symbol_count": 31,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 40,
+        "hub_rank": 32,
         "node_count": 32,
-        "edge_count": 179,
-        "degree": 179,
+        "edge_count": 187,
+        "degree": 187,
         "symbols": [
           "ST3GGDecision",
           "ST3GGExactRecallRecord",
@@ -110004,44 +110053,44 @@
           "aura_lexc.py"
         ],
         "edge_kinds": {
-          "call": 117,
+          "call": 125,
           "defines": 62
         }
       },
-      "digest8": "9e4aee33870df9cb",
+      "digest8": "5514c2f6b657c3ec",
       "vector": [
-        -0.047207,
-        0.176163,
-        0.031088,
-        0.261365,
-        0.042601,
-        -0.104776,
-        0.113988,
-        0.15774,
-        0.153135,
-        -0.095565,
-        0.180768,
-        0.201493,
-        -0.051813,
-        -0.093263,
-        -0.148529,
-        0.259063,
-        0.254457,
-        0.047207,
-        0.104776,
-        -0.245246,
-        -0.21531,
-        0.143924,
-        -0.04951,
-        0.229126,
-        0.04951,
-        0.268274,
-        0.224521,
-        0.247549,
-        -0.238338,
-        -0.194585,
-        0.291301,
-        0.120896
+        0.027488,
+        0.065102,
+        0.128758,
+        0.108504,
+        0.302364,
+        0.17216,
+        -0.224241,
+        0.201094,
+        0.131651,
+        -0.186627,
+        -0.203987,
+        -0.186627,
+        0.059315,
+        0.224241,
+        0.227135,
+        0.059315,
+        0.082463,
+        0.258963,
+        0.166373,
+        0.299471,
+        -0.056422,
+        0.143225,
+        0.059315,
+        0.18952,
+        0.299471,
+        0.091143,
+        0.044848,
+        0.256069,
+        0.134545,
+        0.015914,
+        0.033275,
+        0.279217
       ]
     },
     {
@@ -110388,7 +110437,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 39,
+        "hub_rank": 40,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -111993,7 +112042,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 37,
+        "hub_rank": 38,
         "node_count": 44,
         "edge_count": 183,
         "degree": 183,
@@ -120116,7 +120165,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 33,
+        "hub_rank": 34,
         "node_count": 59,
         "edge_count": 185,
         "degree": 185,
@@ -121017,47 +121066,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 14854626,
-      "lines": 474593,
-      "tokens_est": 3713657,
+      "bytes": 14856552,
+      "lines": 474649,
+      "tokens_est": 3714138,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "dc975c4d6a8af218",
+      "digest8": "572607a944aff6e5",
       "vector": [
-        0.218141,
-        0.031163,
-        -0.084255,
-        -0.262,
-        0.04963,
-        0.218141,
-        -0.121189,
-        0.287392,
-        -0.248149,
-        0.005771,
-        -0.227374,
-        -0.047322,
-        0.158123,
-        0.167357,
-        -0.169665,
-        0.195057,
-        -0.27585,
-        0.137348,
-        0.222757,
-        -0.125806,
-        -0.045013,
-        0.056555,
-        -0.051938,
-        -0.231991,
-        0.019621,
-        0.102722,
-        0.195057,
-        0.215832,
-        0.065788,
-        -0.2897,
-        -0.268925,
-        0.121189
+        0.058902,
+        0.160537,
+        0.195185,
+        0.257552,
+        -0.234453,
+        -0.109719,
+        0.068142,
+        0.206734,
+        0.257552,
+        0.09586,
+        -0.015014,
+        0.167466,
+        -0.239073,
+        -0.09817,
+        -0.1051,
+        0.192875,
+        0.051972,
+        0.155917,
+        0.192875,
+        0.033493,
+        0.042733,
+        0.158227,
+        -0.271411,
+        -0.09817,
+        0.139748,
+        -0.29451,
+        0.028874,
+        -0.072761,
+        -0.250622,
+        -0.28989,
+        -0.225213,
+        0.218284
       ]
     },
     {
@@ -124555,52 +124604,6 @@
         -0.204041,
         0.188641,
         0.255372
-      ]
-    },
-    {
-      "path": ".github/workflows/p5-1-sync-codemap-once.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 6770,
-      "lines": 146,
-      "tokens_est": 1693,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "dbcea4532b20e62a",
-      "vector": [
-        -0.073029,
-        -0.030335,
-        0.084265,
-        -0.201112,
-        0.055053,
-        0.111229,
-        0.2865,
-        -0.153924,
-        -0.221335,
-        0.169653,
-        -0.216841,
-        -0.201112,
-        0.066288,
-        -0.279759,
-        0.140441,
-        -0.273018,
-        0.070782,
-        -0.183135,
-        0.232571,
-        -0.104488,
-        0.14943,
-        0.178641,
-        -0.277512,
-        0.037076,
-        0.246053,
-        0.111229,
-        0.117971,
-        0.196618,
-        0.257288,
-        -0.18763,
-        0.140441,
-        0.007865
       ]
     },
     {
@@ -134586,47 +134589,47 @@
     {
       "path": "tests/test_aura_st3gg_contracts.py",
       "role": "python_module",
-      "bytes": 9141,
-      "lines": 280,
-      "tokens_est": 2285,
-      "symbol_count": 17,
+      "bytes": 11667,
+      "lines": 308,
+      "tokens_est": 2917,
+      "symbol_count": 22,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6e1c8874fc0df346",
+      "digest8": "7b6503d56b9ced9f",
       "vector": [
-        -0.323076,
-        -0.245427,
-        -0.214922,
-        0.181643,
-        -0.12618,
-        0.217695,
-        0.153912,
-        0.067943,
-        -0.23988,
-        0.012479,
-        0.103994,
-        0.153912,
-        0.287024,
-        -0.054077,
-        -0.020799,
-        0.256519,
-        -0.001387,
-        0.084582,
-        0.06517,
-        0.270385,
-        0.201056,
-        -0.070716,
-        0.001387,
-        -0.081809,
-        0.084582,
-        0.192736,
-        -0.173324,
-        0.192736,
-        -0.176097,
-        -0.292571,
-        0.034665,
-        -0.234334
+        -0.026908,
+        -0.230473,
+        0.036267,
+        0.279609,
+        -0.010529,
+        -0.167297,
+        0.207074,
+        0.148579,
+        -0.288968,
+        0.277269,
+        0.176657,
+        -0.043287,
+        0.239832,
+        0.279609,
+        -0.200055,
+        0.017549,
+        -0.186016,
+        0.174317,
+        -0.092423,
+        -0.193035,
+        0.148579,
+        0.27025,
+        -0.080724,
+        -0.183676,
+        -0.047966,
+        0.085404,
+        0.232812,
+        -0.155598,
+        -0.251531,
+        0.057326,
+        -0.057326,
+        -0.010529
       ]
     },
     {
@@ -135517,7 +135520,7 @@
       "root": ".",
       "module_count": 459,
       "node_count": 7324,
-      "edge_count": 15391,
+      "edge_count": 15395,
       "spectral_layout": true,
       "spectral_sparsity": 0.056398,
       "global_health": 0.971926
@@ -136896,8 +136899,43 @@
           "import_module": 7
         }
       },
-      "aura_hermes_arena_mode.py": {
+      "aura_st3gg_contracts.py": {
         "hub_rank": 32,
+        "node_count": 32,
+        "edge_count": 187,
+        "degree": 187,
+        "symbols": [
+          "ST3GGDecision",
+          "ST3GGExactRecallRecord",
+          "ST3GGMeasurementClass",
+          "ST3GGPreparedArtifact",
+          "ST3GGRestorationMode",
+          "ST3GGSavingsPolicy",
+          "__post_init__",
+          "_legacy_float",
+          "_legacy_get",
+          "_legacy_int",
+          "_metadata_suffix",
+          "_normalize_namespace",
+          "_ratio",
+          "_unique",
+          "adapt_legacy_arena_decision",
+          "adapt_legacy_ast_frame",
+          "adapt_legacy_report_result",
+          "canonical_json_bytes",
+          "canonical_pointer",
+          "count_utf8_bytes"
+        ],
+        "neighbor_files": [
+          "aura_lexc.py"
+        ],
+        "edge_kinds": {
+          "call": 125,
+          "defines": 62
+        }
+      },
+      "aura_hermes_arena_mode.py": {
+        "hub_rank": 33,
         "node_count": 19,
         "edge_count": 187,
         "degree": 187,
@@ -136933,7 +136971,7 @@
         }
       },
       "test_obsidian_graph_bridge.py": {
-        "hub_rank": 33,
+        "hub_rank": 34,
         "node_count": 59,
         "edge_count": 185,
         "degree": 185,
@@ -136972,7 +137010,7 @@
         }
       },
       "aura_coding_arena_3d.py": {
-        "hub_rank": 34,
+        "hub_rank": 35,
         "node_count": 48,
         "edge_count": 185,
         "degree": 185,
@@ -137015,7 +137053,7 @@
         }
       },
       "aura_api_rotator.py": {
-        "hub_rank": 35,
+        "hub_rank": 36,
         "node_count": 25,
         "edge_count": 185,
         "degree": 185,
@@ -137070,7 +137108,7 @@
         }
       },
       "aura_st3gg_codec.py": {
-        "hub_rank": 36,
+        "hub_rank": 37,
         "node_count": 59,
         "edge_count": 184,
         "degree": 184,
@@ -137109,7 +137147,7 @@
         }
       },
       "aura_topology_sync.py": {
-        "hub_rank": 37,
+        "hub_rank": 38,
         "node_count": 44,
         "edge_count": 183,
         "degree": 183,
@@ -137150,7 +137188,7 @@
         }
       },
       "arxiv_forager.py": {
-        "hub_rank": 38,
+        "hub_rank": 39,
         "node_count": 40,
         "edge_count": 180,
         "degree": 180,
@@ -137194,7 +137232,7 @@
         }
       },
       "aura_symbolic_trace_memory.py": {
-        "hub_rank": 39,
+        "hub_rank": 40,
         "node_count": 58,
         "edge_count": 179,
         "degree": 179,
@@ -137230,41 +137268,6 @@
         "edge_kinds": {
           "defines": 114,
           "call": 65
-        }
-      },
-      "aura_st3gg_contracts.py": {
-        "hub_rank": 40,
-        "node_count": 32,
-        "edge_count": 179,
-        "degree": 179,
-        "symbols": [
-          "ST3GGDecision",
-          "ST3GGExactRecallRecord",
-          "ST3GGMeasurementClass",
-          "ST3GGPreparedArtifact",
-          "ST3GGRestorationMode",
-          "ST3GGSavingsPolicy",
-          "__post_init__",
-          "_legacy_float",
-          "_legacy_get",
-          "_legacy_int",
-          "_metadata_suffix",
-          "_normalize_namespace",
-          "_ratio",
-          "_unique",
-          "adapt_legacy_arena_decision",
-          "adapt_legacy_ast_frame",
-          "adapt_legacy_report_result",
-          "canonical_json_bytes",
-          "canonical_pointer",
-          "count_utf8_bytes"
-        ],
-        "neighbor_files": [
-          "aura_lexc.py"
-        ],
-        "edge_kinds": {
-          "call": 117,
-          "defines": 62
         }
       },
       "aura_emergent_potential_repl.py": {

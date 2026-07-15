@@ -211,6 +211,34 @@ def test_decision_rejects_exact_claim_without_exact_ref() -> None:
         )
 
 
+def test_decision_rejects_pointer_not_bound_to_original_digest() -> None:
+    original_digest = digest_text("original")
+    wrong_pointer = canonical_pointer("ARENA", digest_text("other"))
+    with pytest.raises(ValueError, match="pointer_digest_mismatch"):
+        ST3GGDecision(enabled=True, reason="invalid", namespace="ARENA", measurement_class=ST3GGMeasurementClass.BYTE_EXACT, raw_units=100, candidate_units=10, final_units=20, overhead_units=10, savings_ratio=0.8, minimum_savings_ratio=0.08, restoration_mode=ST3GGRestorationMode.LOSSY_ADVISORY, original_digest=original_digest, compact_digest=digest_text("compact"), pointer=wrong_pointer)
+
+
+def test_decision_rejects_exact_ref_not_bound_to_original_digest() -> None:
+    original_digest = digest_text("original")
+    with pytest.raises(ValueError, match="exact_ref_digest_mismatch"):
+        ST3GGDecision(enabled=True, reason="invalid", namespace="ARENA", measurement_class=ST3GGMeasurementClass.BYTE_EXACT, raw_units=100, candidate_units=10, final_units=20, overhead_units=10, savings_ratio=0.8, minimum_savings_ratio=0.08, restoration_mode=ST3GGRestorationMode.EXACT_RECALL, original_digest=original_digest, compact_digest=digest_text("compact"), pointer=canonical_pointer("ARENA", original_digest), exact_ref=exact_ref_for("ARENA", digest_text("other")))
+
+
+def test_decision_rejects_inconsistent_measurement_arithmetic() -> None:
+    with pytest.raises(ValueError, match="final_units_do_not_match_candidate_plus_overhead"):
+        ST3GGDecision(enabled=False, reason="invalid", namespace="ARENA", measurement_class=ST3GGMeasurementClass.BYTE_EXACT, raw_units=100, candidate_units=20, final_units=30, overhead_units=5, savings_ratio=0.7, minimum_savings_ratio=0.08, restoration_mode=ST3GGRestorationMode.NONE, original_digest=digest_text("original"))
+
+
+def test_decision_rejects_caller_supplied_savings_ratio() -> None:
+    with pytest.raises(ValueError, match="savings_ratio_not_derived_from_final_units"):
+        ST3GGDecision(enabled=False, reason="invalid", namespace="ARENA", measurement_class=ST3GGMeasurementClass.BYTE_EXACT, raw_units=100, candidate_units=20, final_units=20, overhead_units=0, savings_ratio=0.9, minimum_savings_ratio=0.08, restoration_mode=ST3GGRestorationMode.NONE, original_digest=digest_text("original"))
+
+
+def test_legacy_empty_compact_payload_is_not_enabled() -> None:
+    decision = adapt_legacy_report_result("original" * 20, "", 1.0, "ST3GG_PTR:empty")
+    assert decision.enabled is False
+    assert decision.pointer is None
+
 @dataclass(frozen=True)
 class LegacyArenaDecision:
     enabled: bool = True

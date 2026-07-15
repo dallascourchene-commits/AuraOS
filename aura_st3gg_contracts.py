@@ -162,15 +162,26 @@ class ST3GGDecision:
         ):
             if type(value) is not float or not math.isfinite(value) or not 0.0 <= value <= 1.0:
                 raise ValueError(f"{name}_invalid")
+        if self.final_units != self.candidate_units + self.overhead_units:
+            raise ValueError("final_units_do_not_match_candidate_plus_overhead")
+        if self.savings_ratio != _ratio(self.raw_units, self.final_units):
+            raise ValueError("savings_ratio_not_derived_from_final_units")
         if not _DIGEST_RE.fullmatch(self.original_digest):
             raise ValueError("original_digest_invalid")
         if self.compact_digest is not None and not _DIGEST_RE.fullmatch(self.compact_digest):
             raise ValueError("compact_digest_invalid")
         if self.pointer is not None:
             parse_canonical_pointer(self.pointer)
-        if self.exact_ref is not None and not _EXACT_REF_RE.fullmatch(self.exact_ref):
-            raise ValueError("exact_ref_not_canonical")
+            if self.pointer != canonical_pointer(self.namespace, self.original_digest):
+                raise ValueError("pointer_digest_mismatch")
+        if self.exact_ref is not None:
+            if not _EXACT_REF_RE.fullmatch(self.exact_ref):
+                raise ValueError("exact_ref_not_canonical")
+            if self.exact_ref != exact_ref_for(self.namespace, self.original_digest):
+                raise ValueError("exact_ref_digest_mismatch")
         if self.enabled:
+            if self.candidate_units == 0:
+                raise ValueError("enabled_artifact_empty_candidate")
             if self.final_units >= self.raw_units:
                 raise ValueError("enabled_artifact_must_be_smaller")
             if self.savings_ratio < self.minimum_savings_ratio:
@@ -487,10 +498,13 @@ def adapt_legacy_arena_decision(
     enabled = _legacy_get(legacy, "enabled", False) is True
     raw_units = _legacy_int(legacy, "raw_tokens_est")
     candidate_units = _legacy_int(legacy, "compact_tokens_est")
-    savings = _legacy_float(legacy, "savings_ratio")
+    supplied_savings = _legacy_float(legacy, "savings_ratio")
+    measured_savings = _ratio(raw_units, candidate_units)
     pointer = str(_legacy_get(legacy, "st3gg_pointer", "") or "")
     reason = str(_legacy_get(legacy, "reason", "legacy_arena_projection") or "legacy_arena_projection")
     warnings = _unique(tuple(_legacy_get(legacy, "warnings", ()) or ()))
+    if supplied_savings != measured_savings:
+        warnings = _unique((*warnings, "legacy_savings_recomputed"))
     if enabled:
         warnings = _unique((*warnings, "legacy_arena_exact_ref_not_canonicalized"))
     return ST3GGDecision(
@@ -502,7 +516,7 @@ def adapt_legacy_arena_decision(
         candidate_units=candidate_units,
         final_units=candidate_units,
         overhead_units=0,
-        savings_ratio=savings if candidate_units < raw_units else 0.0,
+        savings_ratio=measured_savings,
         minimum_savings_ratio=0.08,
         restoration_mode=ST3GGRestorationMode.NONE,
         original_digest=original_digest,
@@ -524,7 +538,7 @@ def adapt_legacy_ast_frame(frame: Any) -> ST3GGDecision:
         profile = str(_legacy_get(frame, "profile").value)
     savings = _ratio(raw_units, candidate_units)
     return ST3GGDecision(
-        enabled=candidate_units < raw_units,
+        enabled=0 < candidate_units < raw_units,
         reason="legacy_ast_lossy_advisory_projection",
         namespace="AST",
         measurement_class=ST3GGMeasurementClass.TOKEN_ESTIMATE,
@@ -537,7 +551,7 @@ def adapt_legacy_ast_frame(frame: Any) -> ST3GGDecision:
         restoration_mode=ST3GGRestorationMode.LOSSY_ADVISORY,
         original_digest=original_digest,
         compact_digest=digest_text(str(_legacy_get(frame, "encoded", ""))),
-        pointer=canonical_pointer("AST", original_digest) if candidate_units < raw_units else None,
+        pointer=canonical_pointer("AST", original_digest) if 0 < candidate_units < raw_units else None,
         warnings=_unique((*tuple(_legacy_get(frame, "warnings", ()) or ()), f"legacy_profile:{profile}")),
         legacy_surface="AURA_ST3GG_CODEC_V1",
     )
@@ -563,7 +577,7 @@ def adapt_legacy_report_result(
     warnings: tuple[str, ...] = ()
     if not math.isfinite(supplied) or round(max(0.0, supplied), 6) != measured_savings:
         warnings = ("legacy_savings_recomputed",)
-    enabled = candidate_units < raw_units
+    enabled = 0 < candidate_units < raw_units
     return ST3GGDecision(
         enabled=enabled,
         reason="legacy_report_lossy_advisory_projection",
