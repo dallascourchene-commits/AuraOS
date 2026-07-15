@@ -24,6 +24,7 @@ _DIGEST_RE = re.compile(r"^[0-9a-f]{32}$")
 _EVENT_ID_RE = re.compile(r"^event_[0-9a-f]{24}$")
 _OBSERVATION_ID_RE = re.compile(r"^qdkt-observation_[0-9a-f]{24}$")
 _PAYLOAD_REF_RE = re.compile(r"^payload_[0-9a-f]{24}$")
+_DRIVE_PATH_RE = re.compile(r"^[A-Za-z]:/")
 
 
 class QDKTUseClass(str, Enum):
@@ -125,7 +126,12 @@ def _count(value: Any, name: str) -> int | None:
 def _relative_path(value: Any, name: str = "file_path") -> str:
     text = _required(value, name).replace("\\", "/")
     path = PurePosixPath(text)
-    if path.is_absolute() or text != path.as_posix() or any(part in {"", ".", ".."} for part in path.parts):
+    if (
+        path.is_absolute()
+        or _DRIVE_PATH_RE.match(text)
+        or text != path.as_posix()
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
         raise ValueError(f"{name} must be a normalized repository-relative path")
     return text
 
