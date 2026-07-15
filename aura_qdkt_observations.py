@@ -7,6 +7,7 @@ from enum import Enum
 import inspect
 import math
 import re
+import time
 from typing import Any
 
 from aura_event_contracts import (
@@ -84,6 +85,58 @@ def _belief(value: Any, name: str) -> int:
     if type(value) is not int or value < 0:
         raise ValueError(f"{name} must be a non-negative integer")
     return value
+
+
+def _timestamp(value: Any) -> float:
+    if value is None:
+        return time.time()
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(float(value))
+    ):
+        raise ValueError("created_at must be a finite number")
+    return float(value)
+
+
+def _actor(value: ActorType | str) -> ActorType:
+    if isinstance(value, ActorType):
+        return value
+    try:
+        return ActorType(str(value))
+    except ValueError as exc:
+        raise ValueError("unsupported actor_type") from exc
+
+
+def _preflight_fields(
+    *,
+    trace_id: str,
+    actor_id: str,
+    actor_type: ActorType | str,
+    purpose_digest: str,
+    parent_event_ids: Sequence[str],
+    evidence_refs: Sequence[str],
+    arena_id: str,
+    board_id: str,
+    objective_id: str,
+    policy_scope: str,
+    created_at: Any,
+) -> dict[str, Any]:
+    if policy_scope != QDKT_POLICY_SCOPE:
+        raise ValueError("policy_scope must remain the canonical QDKT advisory scope")
+    return {
+        "trace_id": _required(trace_id, "trace_id"),
+        "actor_id": _required(actor_id, "actor_id"),
+        "actor_type": _actor(actor_type),
+        "purpose_digest": _required(purpose_digest, "purpose_digest"),
+        "parent_event_ids": _strings(parent_event_ids, "parent_event_ids"),
+        "evidence_refs": _strings(evidence_refs, "evidence_refs"),
+        "arena_id": _optional(arena_id, "arena_id"),
+        "board_id": _optional(board_id, "board_id"),
+        "objective_id": _optional(objective_id, "objective_id"),
+        "policy_scope": policy_scope,
+        "created_at": _timestamp(created_at),
+    }
 
 
 @dataclass(frozen=True)
@@ -256,6 +309,8 @@ class QDKTEventReceipt:
         expected_bytes = len(canonical_json(self.observation.to_dict()).encode("utf-8"))
         if self.payload_ref.byte_count != expected_bytes:
             raise ValueError("sidecar byte count does not match the observation")
+        if self.payload_ref.created_at != self.event.created_at:
+            raise ValueError("sidecar and event timestamps disagree")
         if (
             self.event.event_type != QDKT_EVENT_TYPE
             or self.event.node_id != self.observation.observation_id
@@ -286,40 +341,34 @@ def _envelope(
     *,
     trace_id: str,
     actor_id: str,
-    actor_type: ActorType | str,
+    actor_type: ActorType,
     purpose_digest: str,
     payload_ref: str,
     payload_digest: str,
-    parent_event_ids: Sequence[str],
-    evidence_refs: Sequence[str],
+    parent_event_ids: tuple[str, ...],
+    evidence_refs: tuple[str, ...],
     arena_id: str,
     board_id: str,
     objective_id: str,
     policy_scope: str,
-    created_at: float | None,
+    created_at: float,
 ) -> AuraEventEnvelope:
-    if created_at is not None and (
-        isinstance(created_at, bool)
-        or not isinstance(created_at, (int, float))
-        or not math.isfinite(float(created_at))
-    ):
-        raise ValueError("created_at must be a finite number")
     return AuraEventEnvelope.create(
-        trace_id=_required(trace_id, "trace_id"),
-        parent_event_ids=_strings(parent_event_ids, "parent_event_ids"),
+        trace_id=trace_id,
+        parent_event_ids=parent_event_ids,
         event_type=QDKT_EVENT_TYPE,
-        actor_id=_required(actor_id, "actor_id"),
+        actor_id=actor_id,
         actor_type=actor_type,
-        arena_id=_optional(arena_id, "arena_id"),
-        board_id=_optional(board_id, "board_id"),
+        arena_id=arena_id,
+        board_id=board_id,
         node_id=observation.observation_id,
-        objective_id=_optional(objective_id, "objective_id"),
-        purpose_digest=_required(purpose_digest, "purpose_digest"),
+        objective_id=objective_id,
+        purpose_digest=purpose_digest,
         dikwp_stage=DIKWPStage.KNOWLEDGE,
         payload_ref=_required(payload_ref, "payload_ref"),
         payload_digest=_required(payload_digest, "payload_digest"),
-        evidence_refs=_strings(evidence_refs, "evidence_refs"),
-        policy_scope=_required(policy_scope, "policy_scope"),
+        evidence_refs=evidence_refs,
+        policy_scope=policy_scope,
         proposal_only=True,
         measurement_classes={"legacy_belief": MeasurementClass.DERIVED},
         created_at=created_at,
@@ -346,7 +395,7 @@ def record_qdkt_observation(
         raise ValueError("store must be an AppendOnlyEventStore")
     if not isinstance(observation, QDKTObservation):
         raise ValueError("observation must be a QDKTObservation")
-    common = dict(
+    common = _preflight_fields(
         trace_id=trace_id,
         actor_id=actor_id,
         actor_type=actor_type,
@@ -366,7 +415,9 @@ def record_qdkt_observation(
         **common,
     )
     payload_ref = store.store_payload(
-        observation.to_dict(), kind=QDKT_SIDECAR_KIND, created_at=created_at
+        observation.to_dict(),
+        kind=QDKT_SIDECAR_KIND,
+        created_at=common["created_at"],
     )
     event = _envelope(
         observation,
@@ -396,6 +447,25 @@ async def capture_legacy_qdkt_observation(
     continuity_ref: str = "",
     created_at: float | None = None,
 ) -> QDKTEventReceipt:
+    if not isinstance(store, AppendOnlyEventStore):
+        raise ValueError("store must be an AppendOnlyEventStore")
+    preflight = _preflight_fields(
+        trace_id=trace_id,
+        actor_id=actor_id,
+        actor_type=actor_type,
+        purpose_digest=purpose_digest,
+        parent_event_ids=parent_event_ids,
+        evidence_refs=evidence_refs,
+        arena_id=arena_id,
+        board_id=board_id,
+        objective_id=objective_id,
+        policy_scope=QDKT_POLICY_SCOPE,
+        created_at=created_at,
+    )
+    source_digest, source_count = _snapshot_identity(source_snapshot)
+    planning_board_ref = _optional(planning_board_ref, "planning_board_ref")
+    planning_history_ref = _optional(planning_history_ref, "planning_history_ref")
+    continuity_ref = _optional(continuity_ref, "continuity_ref")
     method = getattr(legacy_generator, "generate_epistemic_system_root", None)
     if method is None or not callable(method):
         raise ValueError("legacy_generator must expose generate_epistemic_system_root")
@@ -404,26 +474,44 @@ async def capture_legacy_qdkt_observation(
         result = await result
     observation = QDKTObservation.from_legacy_result(
         result,
-        source_snapshot=source_snapshot,
+        source_snapshot=(source_digest, source_count),
         planning_board_ref=planning_board_ref,
         planning_history_ref=planning_history_ref,
         continuity_ref=continuity_ref,
+    )
+    # Rebind the source identity to the exact preflight snapshot, not the helper tuple.
+    observation = QDKTObservation(
+        **{
+            **observation.to_dict(),
+            "source_snapshot_digest": source_digest,
+            "source_count": source_count,
+            "nondeterministic_inputs": observation.nondeterministic_inputs,
+            "observation_id": stable_id(
+                "qdkt-observation",
+                {
+                    **observation.identity_payload(),
+                    "source_snapshot_digest": source_digest,
+                    "source_count": source_count,
+                },
+            ),
+        }
     )
     if observation.legacy_result != dict(result):
         raise ValueError("canonical observation changed the exact legacy result")
     return record_qdkt_observation(
         store,
         observation,
-        trace_id=trace_id,
-        actor_id=actor_id,
-        purpose_digest=purpose_digest,
-        actor_type=actor_type,
-        parent_event_ids=parent_event_ids,
-        evidence_refs=evidence_refs,
-        arena_id=arena_id,
-        board_id=board_id,
-        objective_id=objective_id,
-        created_at=created_at,
+        trace_id=preflight["trace_id"],
+        actor_id=preflight["actor_id"],
+        purpose_digest=preflight["purpose_digest"],
+        actor_type=preflight["actor_type"],
+        parent_event_ids=preflight["parent_event_ids"],
+        evidence_refs=preflight["evidence_refs"],
+        arena_id=preflight["arena_id"],
+        board_id=preflight["board_id"],
+        objective_id=preflight["objective_id"],
+        policy_scope=preflight["policy_scope"],
+        created_at=preflight["created_at"],
     )
 
 
