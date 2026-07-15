@@ -209,6 +209,13 @@ def verify_substrate_release(
                             record.path,
                         )
 
+    for relative in manifest.retained_external_surfaces:
+        try:
+            _safe_file(base, relative)
+            checked_files += 1
+        except ValueError as exc:
+            _finding(findings, "RETAINED_SURFACE_UNAVAILABLE", str(exc), relative)
+
     evidence_paths = sorted(
         {
             path
