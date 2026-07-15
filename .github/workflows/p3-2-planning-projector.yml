@@ -46,7 +46,8 @@ jobs:
             tests/test_aura_planning_projector_hardening.py
       - name: Static lint checks
         run: |
-          ruff check \
+          # Exact type comparisons intentionally reject bool-as-int coercion.
+          ruff check --ignore E721 \
             aura_planning_projector.py \
             tests/test_aura_planning_projector.py \
             tests/test_aura_planning_projector_hardening.py
