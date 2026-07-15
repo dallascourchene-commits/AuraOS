@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from enum import Enum
 import math
+from pathlib import PurePosixPath
 import re
 from typing import Any, Mapping
 
@@ -20,6 +21,9 @@ QDKT_RECOMMENDATION = "RETAIN_LEGACY_DUAL_READ"
 
 _ROOT_RE = re.compile(r"^[0-9A-F]{16}$")
 _DIGEST_RE = re.compile(r"^[0-9a-f]{32}$")
+_EVENT_ID_RE = re.compile(r"^event_[0-9a-f]{24}$")
+_OBSERVATION_ID_RE = re.compile(r"^qdkt-observation_[0-9a-f]{24}$")
+_PAYLOAD_REF_RE = re.compile(r"^payload_[0-9a-f]{24}$")
 
 
 class QDKTUseClass(str, Enum):
@@ -118,6 +122,23 @@ def _count(value: Any, name: str) -> int | None:
     return value
 
 
+def _relative_path(value: Any, name: str = "file_path") -> str:
+    text = _required(value, name).replace("\\", "/")
+    path = PurePosixPath(text)
+    if path.is_absolute() or text != path.as_posix() or any(part in {"", ".", ".."} for part in path.parts):
+        raise ValueError(f"{name} must be a normalized repository-relative path")
+    return text
+
+
+def _identifier(value: Any, name: str, pattern: re.Pattern[str], *, required: bool = False) -> str:
+    text = _optional(value, name)
+    if required and not text:
+        raise ValueError(f"{name} must be a canonical identifier")
+    if text and not pattern.fullmatch(text):
+        raise ValueError(f"{name} must be a canonical identifier")
+    return text
+
+
 def _strict_legacy_result(value: Mapping[str, Any]) -> tuple[str, int]:
     if not isinstance(value, Mapping) or set(value) != {"root", "belief"}:
         raise ValueError("legacy_result must contain exactly root and belief")
@@ -143,7 +164,7 @@ class QDKTInventoryEntry:
     version: str = QDKT_INVENTORY_VERSION
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "file_path", _required(self.file_path, "file_path"))
+        object.__setattr__(self, "file_path", _relative_path(self.file_path))
         object.__setattr__(self, "symbol", _required(self.symbol, "symbol"))
         if type(self.line) is not int or self.line < 1:
             raise ValueError("line must be a positive integer")
@@ -173,7 +194,7 @@ class QDKTInventoryEntry:
         detail: str,
     ) -> "QDKTInventoryEntry":
         identity = {
-            "file_path": _required(file_path, "file_path"),
+            "file_path": _relative_path(file_path),
             "symbol": _required(symbol, "symbol"),
             "line": line,
             "use_class": _enum(use_class, QDKTUseClass, "use_class").value,
@@ -234,6 +255,8 @@ class QDKTInventoryReport:
                 raise ValueError(f"{name} must be a non-negative integer")
         if self.ignored_files > self.scanned_files:
             raise ValueError("ignored_files must not exceed scanned_files")
+        if len({item.file_path for item in canonical}) > self.scanned_files:
+            raise ValueError("inventory entries reference more files than were scanned")
         if self.version != QDKT_INVENTORY_VERSION:
             raise ValueError("unsupported QDKT inventory report version")
 
@@ -363,20 +386,33 @@ class QDKTDualReadEvidence:
         raw_findings = _tuple(self.findings, "findings")
         if not all(isinstance(item, QDKTCompatibilityFinding) for item in raw_findings):
             raise ValueError("findings contains an invalid compatibility finding")
+        unique_findings = {
+            (item.code.value, item.detail, item.event_ids, item.blocking): item
+            for item in raw_findings
+        }
         findings = tuple(
             sorted(
-                raw_findings,
-                key=lambda item: (item.code.value, item.event_ids, item.detail),
+                unique_findings.values(),
+                key=lambda item: (item.code.value, item.event_ids, item.detail, item.blocking),
             )
         )
 
         raw_matching = _tuple(self.matching_event_ids, "matching_event_ids")
-        matching = tuple(_required(item, "matching_event_id") for item in raw_matching)
+        matching = tuple(
+            _identifier(item, "matching_event_id", _EVENT_ID_RE, required=True)
+            for item in raw_matching
+        )
         if len(matching) != len(set(matching)):
             raise ValueError("matching_event_ids must not contain duplicates")
 
-        for name in ("observation_id", "payload_ref"):
-            object.__setattr__(self, name, _optional(getattr(self, name), name))
+        observation_id = _identifier(
+            self.observation_id,
+            "observation_id",
+            _OBSERVATION_ID_RE,
+        )
+        payload_ref = _identifier(self.payload_ref, "payload_ref", _PAYLOAD_REF_RE)
+        object.__setattr__(self, "observation_id", observation_id)
+        object.__setattr__(self, "payload_ref", payload_ref)
         object.__setattr__(
             self,
             "payload_digest",
@@ -425,8 +461,9 @@ class QDKTDualReadEvidence:
             isinstance(self.canonical_created_at, bool)
             or not isinstance(self.canonical_created_at, (int, float))
             or not math.isfinite(float(self.canonical_created_at))
+            or float(self.canonical_created_at) < 0.0
         ):
-            raise ValueError("canonical_created_at must be finite or None")
+            raise ValueError("canonical_created_at must be finite, non-negative, or None")
 
         if self.truth_class != QDKTTruthClass.LEGACY_NONDETERMINISTIC_ADVISORY.value:
             raise ValueError("QDKT truth class changed")
