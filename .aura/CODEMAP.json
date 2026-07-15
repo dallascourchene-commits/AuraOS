@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784088519,
+  "generated_at_unix": 1784091132,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 837,
+    "included_file_count": 838,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -765,6 +765,7 @@
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
+      "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -858,23 +859,23 @@
     ]
   },
   "summary": {
-    "file_count": 837,
-    "total_bytes": 64093657,
-    "text_tokens_est": 6627359,
+    "file_count": 838,
+    "total_bytes": 64099456,
+    "text_tokens_est": 6628809,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 111,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 588,
+      "python_module": 589,
       "schema_or_lexicon": 69,
       "support_file": 41
     },
     "topology_nodes": 7292,
     "topology_edges": 15301,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19391.06
+    "elapsed_ms": 22748.72
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1651,6 +1652,7 @@
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
+      "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_potential_repl.py",
@@ -24817,6 +24819,24 @@
         "end_line": 94,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:_j1_packet:c6e5d0ccc854d207",
         "signature_hash": "64deb3c0eff6b8f6"
+      },
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:_j1_packet:27af70a8e0f2766b",
+        "signature_hash": "64deb3c0eff6b8f6"
+      }
+    ],
+    "_j2_packet": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:_j2_packet:246b772dd06c6a87",
+        "signature_hash": "1aa270f86a77f486"
       }
     ],
     "_join_limited": [
@@ -33163,6 +33183,16 @@
         "signature_hash": "38585b592519e9e0"
       }
     ],
+    "_tamper_j1_excluded_field": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:_tamper_j1_excluded_field:e3a0d3a6a54b7ce1",
+        "signature_hash": "bb71cdb2ff5ea819"
+      }
+    ],
     "_target_capacity": [
       {
         "file": "aura_st3gg_recall.py",
@@ -36688,7 +36718,7 @@
         "file": "aura_continuity_packet.py",
         "kind": "function",
         "line": 507,
-        "end_line": 559,
+        "end_line": 570,
         "semantic_id": "aura_continuity_packet.py#function:arena_view_from_j1:35f526b5fba43adc",
         "signature_hash": "1ddb76bebd996404"
       }
@@ -38075,8 +38105,8 @@
       {
         "file": "aura_continuity_packet.py",
         "kind": "function",
-        "line": 562,
-        "end_line": 591,
+        "line": 573,
+        "end_line": 602,
         "semantic_id": "aura_continuity_packet.py#function:build_j2_continuity_packet:ac401a3b505291be",
         "signature_hash": "bc2187a8aa0eb8a2"
       }
@@ -51159,8 +51189,8 @@
       {
         "file": "aura_continuity_packet.py",
         "kind": "function",
-        "line": 594,
-        "end_line": 604,
+        "line": 605,
+        "end_line": 615,
         "semantic_id": "aura_continuity_packet.py#function:parse_continuity_packet:74391ea0fc457660",
         "signature_hash": "ffd18c67e7b60c76"
       }
@@ -51209,8 +51239,8 @@
       {
         "file": "aura_continuity_packet.py",
         "kind": "function",
-        "line": 607,
-        "end_line": 739,
+        "line": 618,
+        "end_line": 754,
         "semantic_id": "aura_continuity_packet.py#function:parse_j2_continuity_packet:9de17ac478dd6380",
         "signature_hash": "d685796c380e5dc9"
       }
@@ -66623,6 +66653,16 @@
         "signature_hash": "590572004fd26fd6"
       }
     ],
+    "test_j1_adapter_accepts_canonical_authority_constants": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j1_adapter_accepts_canonical_authority_constants:df59a4595e57124e",
+        "signature_hash": "0b3757b9a4f8f0fd"
+      }
+    ],
     "test_j1_adapter_hashes_legacy_digest_fields_instead_of_copying_values": [
       {
         "file": "tests/test_aura_continuity_packet_digest_hardening.py",
@@ -66631,6 +66671,16 @@
         "end_line": 131,
         "semantic_id": "tests/test_aura_continuity_packet_digest_hardening.py#function:test_j1_adapter_hashes_legacy_digest_fields_instead_of_copying_values:2fcb85545d4a2dee",
         "signature_hash": "599211c18b2ff30e"
+      }
+    ],
+    "test_j1_adapter_rejects_excluded_authority_field_tampering": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 138,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j1_adapter_rejects_excluded_authority_field_tampering:09e4297075f3cb93",
+        "signature_hash": "0d108760561d4566"
       }
     ],
     "test_j1_state_packet_round_trip_and_tamper_detection": [
@@ -66683,6 +66733,16 @@
         "signature_hash": "bf9a73c6002bed92"
       }
     ],
+    "test_j2_parser_rejects_non_string_input_without_coercion": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 110,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j2_parser_rejects_non_string_input_without_coercion:d2d611f4236a7a7c",
+        "signature_hash": "abbd4a600c4c07b5"
+      }
+    ],
     "test_j2_payload_tampering_with_original_digest_fails_closed": [
       {
         "file": "tests/test_aura_continuity_packet.py",
@@ -66691,6 +66751,16 @@
         "end_line": 218,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:test_j2_payload_tampering_with_original_digest_fails_closed:27b5a74421e39c2e",
         "signature_hash": "fc413a6c52aafa47"
+      }
+    ],
+    "test_j2_rejects_outer_whitespace_aliases": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j2_rejects_outer_whitespace_aliases:0fcca677fab5843b",
+        "signature_hash": "28a5b7cd9cf0fcbc"
       }
     ],
     "test_j2_sensitive_fields_are_rejected_before_schema_parsing": [
@@ -75899,6 +75969,16 @@
         "end_line": 194,
         "semantic_id": "tests/test_aura_continuity_packet.py#function:test_unified_parser_preserves_existing_j0_and_j1_results:7b99a52858c3a4c1",
         "signature_hash": "993c481764071b92"
+      }
+    ],
+    "test_unified_parser_preserves_legacy_outer_whitespace_behavior": [
+      {
+        "file": "tests/test_aura_continuity_packet_merge_gate.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_unified_parser_preserves_legacy_outer_whitespace_behavior:9c470ca9db368e1f",
+        "signature_hash": "7634b2b22e1f4f55"
       }
     ],
     "test_unified_showcase_contains_all_four_tabs": [
@@ -93052,9 +93132,9 @@
     {
       "path": "aura_continuity_packet.py",
       "role": "python_module",
-      "bytes": 24755,
-      "lines": 740,
-      "tokens_est": 6189,
+      "bytes": 25583,
+      "lines": 755,
+      "tokens_est": 6396,
       "symbol_count": 25,
       "commands": [],
       "command_lines": {},
@@ -93095,40 +93175,40 @@
           "import_module": 1
         }
       },
-      "digest8": "dcf802229d335ee8",
+      "digest8": "d18dfd7e66ab5316",
       "vector": [
-        -0.020046,
-        0.078846,
-        0.324739,
-        0.017373,
-        0.156356,
-        0.148337,
-        0.212483,
-        0.140319,
-        0.279302,
-        0.18041,
-        0.116264,
-        0.12161,
-        0.102901,
-        0.017373,
-        -0.102901,
-        -0.28732,
-        -0.060137,
-        -0.292666,
-        0.081519,
-        0.308702,
-        -0.332757,
-        -0.110919,
-        0.113592,
-        0.046773,
-        -0.009355,
-        -0.172392,
-        -0.223174,
-        -0.177738,
-        -0.281975,
-        -0.06281,
-        0.09221,
-        -0.030737
+        0.237626,
+        0.031231,
+        -0.099124,
+        0.275646,
+        -0.259352,
+        0.305519,
+        -0.093693,
+        -0.150723,
+        -0.218616,
+        -0.175164,
+        0.224048,
+        0.074683,
+        -0.050241,
+        0.104556,
+        0.055672,
+        0.028515,
+        0.291941,
+        -0.164302,
+        0.014937,
+        0.071967,
+        0.052957,
+        -0.17788,
+        -0.033947,
+        0.300088,
+        0.020368,
+        0.123566,
+        0.047525,
+        0.183312,
+        -0.275646,
+        0.080114,
+        0.221332,
+        -0.294656
       ]
     },
     {
@@ -120377,40 +120457,40 @@
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4d35852da7e91e46",
+      "digest8": "1574fb17177addbb",
       "vector": [
-        0.149971,
-        0.114683,
-        0.026465,
-        -0.253312,
-        0.281037,
-        0.167614,
-        0.008822,
-        0.026465,
-        0.253312,
-        0.19534,
-        -0.228107,
-        -0.081917,
-        -0.094519,
-        0.028986,
-        -0.031506,
-        -0.233148,
-        -0.202901,
-        -0.288599,
-        0.288599,
-        -0.142409,
-        -0.034027,
-        0.152491,
-        0.054191,
-        0.177696,
-        -0.091999,
-        0.192819,
-        0.124766,
-        0.230627,
-        0.275996,
-        0.286079,
-        0.064273,
-        0.044109
+        -0.196941,
+        0.082357,
+        -0.094293,
+        -0.175456,
+        -0.020291,
+        0.218425,
+        0.287653,
+        0.235135,
+        0.196941,
+        0.25662,
+        0.051324,
+        0.151585,
+        0.225586,
+        0.208876,
+        -0.189779,
+        0.07997,
+        0.249458,
+        0.170682,
+        -0.182618,
+        0.149197,
+        -0.287653,
+        -0.196941,
+        0.044162,
+        -0.013129,
+        0.187392,
+        -0.232748,
+        0.039388,
+        0.027452,
+        0.244684,
+        -0.189779,
+        -0.037001,
+        0.044162
       ]
     },
     {
@@ -123821,47 +123901,47 @@
     {
       "path": ".github/workflows/p4-1-j2-continuity.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3016,
-      "lines": 89,
-      "tokens_est": 754,
+      "bytes": 3079,
+      "lines": 88,
+      "tokens_est": 770,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "39366b7219289945",
+      "digest8": "b23054fe3e6e7dc8",
       "vector": [
-        0.057359,
-        -0.110716,
-        -0.121387,
-        0.29213,
-        0.228101,
-        0.150734,
-        -0.305469,
-        -0.193419,
-        -0.089373,
-        0.158737,
-        -0.086705,
-        0.116052,
-        0.265451,
-        0.116052,
-        0.084037,
-        -0.204091,
-        -0.062695,
-        0.046687,
-        -0.284126,
-        0.076034,
-        0.00667,
-        0.289462,
-        -0.225434,
-        -0.308137,
-        0.020009,
-        -0.014673,
-        -0.310805,
-        0.012005,
-        -0.076034,
-        0.060027,
-        -0.14273,
-        0.206759
+        -0.148549,
+        0.040513,
+        -0.180468,
+        -0.187834,
+        0.006138,
+        0.209932,
+        0.128906,
+        -0.025781,
+        -0.212388,
+        0.038058,
+        0.062611,
+        0.008594,
+        -0.185379,
+        0.259039,
+        0.246763,
+        0.143638,
+        -0.175558,
+        0.246763,
+        0.288504,
+        -0.26395,
+        -0.281138,
+        -0.001228,
+        -0.268861,
+        0.045424,
+        0.197656,
+        -0.067522,
+        -0.313057,
+        -0.182924,
+        0.101897,
+        -0.057701,
+        -0.082254,
+        -0.141183
       ]
     },
     {
@@ -130798,6 +130878,52 @@
         0.158928,
         -0.00343,
         -0.147494
+      ]
+    },
+    {
+      "path": "tests/test_aura_continuity_packet_merge_gate.py",
+      "role": "python_module",
+      "bytes": 4908,
+      "lines": 151,
+      "tokens_est": 1227,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fdd3549a75f8b7fb",
+      "vector": [
+        -0.205004,
+        -0.123929,
+        0.033588,
+        -0.156359,
+        0.21427,
+        -0.040538,
+        -0.049803,
+        0.269864,
+        -0.028955,
+        -0.290712,
+        -0.167941,
+        0.283763,
+        0.093815,
+        0.276813,
+        -0.154043,
+        -0.198055,
+        -0.135511,
+        -0.105398,
+        -0.140144,
+        0.209637,
+        0.249016,
+        -0.27913,
+        0.144777,
+        -0.033588,
+        -0.100765,
+        0.001158,
+        -0.27913,
+        0.068335,
+        0.242067,
+        -0.137828,
+        -0.14246,
+        -0.0776
       ]
     },
     {
