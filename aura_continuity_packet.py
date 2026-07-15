@@ -507,7 +507,10 @@ def route_view_from_j0(
 def arena_view_from_j1(raw_packet: str) -> J2ArenaView:
     """Project a valid legacy J1 packet into a digest/reference-only arena view."""
 
-    from aura_arena_state_packet import parse_arena_state_packet
+    from aura_arena_state_packet import (
+        ARENA_STATE_PACKET_VERSION,
+        parse_arena_state_packet,
+    )
 
     raw = str(raw_packet or "").strip()
     parsed = parse_arena_state_packet(raw)
@@ -516,6 +519,14 @@ def arena_view_from_j1(raw_packet: str) -> J2ArenaView:
     state = parsed.get("state")
     if not isinstance(state, Mapping):
         raise ValueError("J1 state must be a mapping")
+    if state.get("packet_version") != ARENA_STATE_PACKET_VERSION:
+        raise ValueError("J1 packet_version must remain canonical")
+    if state.get("patch_authority") != PATCH_AUTHORITY:
+        raise ValueError("J1 patch_authority must remain exact-source-only")
+    if type(state.get("vsa_patch_authority")) is not bool:
+        raise ValueError("J1 vsa_patch_authority must be a boolean")
+    if state.get("vsa_patch_authority") is not False:
+        raise ValueError("J1 VSA/JSpace state cannot be patch authority")
     state_code = state.get("state_code") or state.get("phase")
     return J2ArenaView(
         arena_id=state.get("arena_id"),
@@ -594,9 +605,9 @@ def build_j2_continuity_packet(
 def parse_continuity_packet(raw_packet: str) -> dict[str, Any]:
     """Parse J2 canonically or delegate unchanged J0/J1 compatibility parsing."""
 
+    if isinstance(raw_packet, str) and raw_packet.strip().startswith(J2_PACKET_PREFIX):
+        return parse_j2_continuity_packet(raw_packet)
     raw = str(raw_packet or "").strip()
-    if raw.startswith(J2_PACKET_PREFIX):
-        return parse_j2_continuity_packet(raw)
     if raw.startswith(("J0/", "J1/")):
         from aura_arena_state_packet import parse_arena_state_packet
 
@@ -605,7 +616,11 @@ def parse_continuity_packet(raw_packet: str) -> dict[str, Any]:
 
 
 def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
-    raw = str(raw_packet or "").strip()
+    if not isinstance(raw_packet, str):
+        return {"ok": False, "error": "j2_packet_not_string"}
+    if raw_packet != raw_packet.strip():
+        return {"ok": False, "error": "j2_noncanonical_outer_whitespace"}
+    raw = raw_packet
     if not raw.startswith(J2_PACKET_PREFIX):
         return {"ok": False, "error": "unsupported_j2_packet_prefix"}
 
