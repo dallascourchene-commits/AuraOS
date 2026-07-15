@@ -653,15 +653,23 @@ def parse_j2_continuity_packet(raw_packet: str) -> dict[str, Any]:
         return {"ok": False, "error": "invalid_j2_utf8"}
     try:
         payload = json.loads(text)
+    except RecursionError:
+        return {"ok": False, "error": "j2_payload_too_deep"}
     except json.JSONDecodeError:
         return {"ok": False, "error": "invalid_j2_json"}
     if not isinstance(payload, Mapping):
         return {"ok": False, "error": "j2_payload_not_object"}
-    if _contains_sensitive_key(payload):
+    try:
+        contains_sensitive_key = _contains_sensitive_key(payload)
+    except RecursionError:
+        return {"ok": False, "error": "j2_payload_too_deep"}
+    if contains_sensitive_key:
         return {"ok": False, "error": "j2_sensitive_field_forbidden"}
 
     try:
         canonical = canonical_json(payload)
+    except RecursionError:
+        return {"ok": False, "error": "j2_payload_too_deep"}
     except (TypeError, ValueError):
         return {"ok": False, "error": "j2_payload_not_canonicalizable"}
     if text != canonical:
