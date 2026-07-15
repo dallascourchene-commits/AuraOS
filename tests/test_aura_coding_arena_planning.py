@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from aura_coding_arena_planning import (
     inspect_coding_arena_planning_compatibility,
     project_coding_arena_planning_board,
@@ -59,6 +61,31 @@ def test_blocked_legacy_work_still_projects_without_elevating_authority():
     assert inspection.action_evidence[0].grounded_evidence_refs == ()
     assert inspection.report.authority_changed is False
     assert inspection.report.proposal_only is True
+
+
+def test_non_builder_patch_route_remains_blocked_with_exact_route_preserved():
+    case = _case("grounded_single_file_patch")
+    plan = deepcopy(case.plan)
+    grounding = deepcopy(list(case.grounding))
+    shadow_report = deepcopy(case.shadow_report)
+    arena = deepcopy(case.arena)
+    arena["routing_decisions"][0]["route"] = "TEST_GAP_FILL"
+    arena["routing_decisions"][0]["symbol_output"] = "TEST_GAP_FILL"
+    arena["ready_for_incubator"] = False
+
+    inspection = inspect_coding_arena_planning_compatibility(
+        plan,
+        grounding,
+        shadow_report,
+        arena,
+    )
+
+    assert inspection.report.status is CodingArenaCompatibilityStatus.BLOCKED_LEGACY
+    assert inspection.report.legacy_routes == ("TEST_GAP_FILL",)
+    assert inspection.mappings[0].route == "TEST_GAP_FILL"
+    assert inspection.mappings[0].expected_output == "UNIFIED_DIFF"
+    assert inspection.board is not None
+    assert inspection.report.authority_changed is False
 
 
 def test_inspect_only_route_is_verified_but_preserves_not_ready_legacy_state():
