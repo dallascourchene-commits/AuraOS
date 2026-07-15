@@ -14,7 +14,6 @@ concurrency:
 
 jobs:
   apply:
-    if: ${{ hashFiles('.github/p8_packet_identity.patch') != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +22,7 @@ jobs:
           fetch-depth: 0
       - name: Apply reviewed identity patch
         run: |
+          test -f .github/p8_packet_identity.patch
           git apply --check .github/p8_packet_identity.patch
           git apply .github/p8_packet_identity.patch
           python - <<'PY'
