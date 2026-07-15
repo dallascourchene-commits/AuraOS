@@ -1,0 +1,59 @@
+name: P8 Apply Packet Identity Fix
+
+on:
+  push:
+    branches:
+      - refactor/p8-civic-commons-planning
+
+permissions:
+  contents: write
+
+concurrency:
+  group: p8-apply-packet-identity
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: ${{ hashFiles('.github/p8_packet_identity.patch') != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/p8-civic-commons-planning
+          fetch-depth: 0
+      - name: Apply reviewed identity patch
+        run: |
+          git apply --check .github/p8_packet_identity.patch
+          git apply .github/p8_packet_identity.patch
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/p8-civic-commons-planning.yml')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              '            tests/test_aura_civic_planning_integration.py\n',
+              '            tests/test_aura_civic_planning_integration.py \\\n'
+              '            tests/test_aura_civic_planning_packet_identity.py\n',
+              2,
+          )
+          text = text.replace(
+              '            tests/test_aura_civic_planning_integration.py \\\n'
+              '            tests/test_aura_civic_commons_arena.py \\\n',
+              '            tests/test_aura_civic_planning_integration.py \\\n'
+              '            tests/test_aura_civic_planning_packet_identity.py \\\n'
+              '            tests/test_aura_civic_commons_arena.py \\\n',
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm .github/p8_packet_identity.patch
+          rm .github/workflows/p8-apply-packet-identity.yml
+      - name: Commit exact reviewed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_civic_planning.py aura_civic_planning_benchmark.py \
+            .github/workflows/p8-civic-commons-planning.yml \
+            .github/p8_packet_identity.patch \
+            .github/workflows/p8-apply-packet-identity.yml
+          git commit -m "P8: bind decision packets to current Civic session"
+          git push origin HEAD:refactor/p8-civic-commons-planning
