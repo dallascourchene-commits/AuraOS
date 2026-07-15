@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 907
-- **total_bytes**: 65913870
-- **text_tokens_est**: 7082425
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 122, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 640, 'schema_or_lexicon': 76, 'support_file': 41}
+- **file_count**: 913
+- **total_bytes**: 65967502
+- **text_tokens_est**: 7095836
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 122, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 644, 'schema_or_lexicon': 78, 'support_file': 41}
 - **topology_nodes**: 7748
 - **topology_edges**: 16753
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 23522.0
+- **elapsed_ms**: 18689.86
 
 ## Coverage
 
-- **included_file_count**: 907
+- **included_file_count**: 913
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
 - **skipped_dir_file_counts**: `.git`=55, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
@@ -125,6 +125,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Navigation Rings
 
 ### substrate_core
+- `.github/workflows/p9-substrate-release.yml`
 - `AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf`
 - `aura_core.py`
 - `aura_node.py`
@@ -136,8 +137,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `docs/AURA_COGNITIVE_SUBSTRATE_P9.md`
 - `docs/AURA_SUBSTRATE_INTEGRATION_P9.md`
 - `docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md`
-- `docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md`
-- ... 3 more; query CODEMAP.json for exact file cards
+- ... 9 more; query CODEMAP.json for exact file cards
 
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`

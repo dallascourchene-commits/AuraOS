@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784155579,
+  "generated_at_unix": 1784156153,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 907,
+    "included_file_count": 913,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -84,6 +84,7 @@
       ".github/workflows/p6-2-qdkt-compatibility.yml",
       ".github/workflows/p7-coding-arena-planning-board.yml",
       ".github/workflows/p8-civic-commons-planning.yml",
+      ".github/workflows/p9-substrate-release.yml",
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
@@ -650,6 +651,7 @@
       "docs/AURA_TENSOR_EVIDENCE_ARENAS.md",
       "docs/AURA_TOKEN_ECONOMY_STACK.md",
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
+      "docs/aura_substrate_manifest.v1.json",
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
@@ -899,6 +901,10 @@
       "tests/test_aura_st3gg_compatibility.py",
       "tests/test_aura_st3gg_compatibility_hardening.py",
       "tests/test_aura_st3gg_contracts.py",
+      "tests/test_aura_substrate_contracts.py",
+      "tests/test_aura_substrate_manifest.py",
+      "tests/test_aura_substrate_release.py",
+      "tests/test_aura_substrate_verifier.py",
       "tests/test_aura_symbolic_trace_memory.py",
       "tests/test_aura_system_stabilization.py",
       "tests/test_aura_tensor_evidence.py",
@@ -928,23 +934,23 @@
     ]
   },
   "summary": {
-    "file_count": 907,
-    "total_bytes": 65913870,
-    "text_tokens_est": 7082425,
+    "file_count": 913,
+    "total_bytes": 65967502,
+    "text_tokens_est": 7095836,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 122,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 640,
-      "schema_or_lexicon": 76,
+      "python_module": 644,
+      "schema_or_lexicon": 78,
       "support_file": 41
     },
     "topology_nodes": 7748,
     "topology_edges": 16753,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 23522.0
+    "elapsed_ms": 18689.86
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -955,6 +961,7 @@
   ],
   "rings": {
     "substrate_core": [
+      ".github/workflows/p9-substrate-release.yml",
       "AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf",
       "aura_core.py",
       "aura_node.py",
@@ -968,8 +975,13 @@
       "docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md",
       "docs/AURA_SUBSTRATE_RELEASE_CHECKLIST_P9.md",
       "docs/AURA_SUBSTRATE_SECURITY_PRIVACY_P9.md",
+      "docs/aura_substrate_manifest.v1.json",
       "gateway.py",
-      "test_aura_substrate.py"
+      "test_aura_substrate.py",
+      "tests/test_aura_substrate_contracts.py",
+      "tests/test_aura_substrate_manifest.py",
+      "tests/test_aura_substrate_release.py",
+      "tests/test_aura_substrate_verifier.py"
     ],
     "cognition_and_memory": [
       ".aura/memory_apertures/coding_localize.v1.json",
@@ -18076,6 +18088,16 @@
         "signature_hash": "b9e3fbed432d8edb"
       }
     ],
+    "_blob": [
+      {
+        "file": "tests/test_aura_substrate_verifier.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_substrate_verifier.py#function:_blob:5eaa8ab03b23bde8",
+        "signature_hash": "d78e47a46143b971"
+      }
+    ],
     "_blocked": [
       {
         "file": "aura_route_capsule_live_runtime.py",
@@ -28156,6 +28178,22 @@
         "end_line": 56,
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_manifest:6e39d370084bec2b",
         "signature_hash": "3f782e49116f8aca"
+      },
+      {
+        "file": "tests/test_aura_substrate_release.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_substrate_release.py#function:_manifest:a72fbc8d46a115da",
+        "signature_hash": "8e58cbad989a24ea"
+      },
+      {
+        "file": "tests/test_aura_substrate_verifier.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 48,
+        "semantic_id": "tests/test_aura_substrate_verifier.py#function:_manifest:866f8a9ae050c306",
+        "signature_hash": "236a0e7d81c2f527"
       }
     ],
     "_manifest_digest": [
@@ -30690,6 +30728,16 @@
         "end_line": 146,
         "semantic_id": "aura_qdkt_observations.py#function:_preflight_fields:63e45a4453a019ea",
         "signature_hash": "278b814608d8194f"
+      }
+    ],
+    "_prepare": [
+      {
+        "file": "tests/test_aura_substrate_verifier.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tests/test_aura_substrate_verifier.py#function:_prepare:b60181828261c4b9",
+        "signature_hash": "3b38105bfdcd5c00"
       }
     ],
     "_prepare_capsule": [
@@ -65122,6 +65170,16 @@
         "signature_hash": "b061ea4c19260138"
       }
     ],
+    "test_committed_manifest_matches_builder": [
+      {
+        "file": "tests/test_aura_substrate_manifest.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_substrate_manifest.py#function:test_committed_manifest_matches_builder:fddd3d1bfcb94687",
+        "signature_hash": "306e1b990707db30"
+      }
+    ],
     "test_community_only_allowed_with_context": [
       {
         "file": "test_aura_ojibwe_tutor.py",
@@ -69564,6 +69622,16 @@
         "signature_hash": "57fe59a17018030c"
       }
     ],
+    "test_generated_topology_and_package_publication_cannot_be_authoritative": [
+      {
+        "file": "tests/test_aura_substrate_contracts.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 48,
+        "semantic_id": "tests/test_aura_substrate_contracts.py#function:test_generated_topology_and_package_publication_cannot_be_authoritative:bd0b4e941471564b",
+        "signature_hash": "817e4297cf0d5870"
+      }
+    ],
     "test_generated_topology_size_drift_is_normalized": [
       {
         "file": "tests/test_aura_codemap_verify.py",
@@ -72872,6 +72940,36 @@
         "signature_hash": "b9abaa2217bb1edf"
       }
     ],
+    "test_manifest_contract_rejects_migration_and_authority_claims": [
+      {
+        "file": "tests/test_aura_substrate_contracts.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_substrate_contracts.py#function:test_manifest_contract_rejects_migration_and_authority_claims:0f49b62f8a0bcfce",
+        "signature_hash": "cfec56dbc00193e9"
+      }
+    ],
+    "test_manifest_contract_rejects_out_of_order_phase_dependencies": [
+      {
+        "file": "tests/test_aura_substrate_contracts.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_substrate_contracts.py#function:test_manifest_contract_rejects_out_of_order_phase_dependencies:c51cb3329123431e",
+        "signature_hash": "86f8322ed5d0b756"
+      }
+    ],
+    "test_manifest_contract_rejects_unsafe_and_duplicate_files": [
+      {
+        "file": "tests/test_aura_substrate_contracts.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_substrate_contracts.py#function:test_manifest_contract_rejects_unsafe_and_duplicate_files:a4713cfab25a671c",
+        "signature_hash": "fd29a2e466ae1180"
+      }
+    ],
     "test_manifest_dataclasses": [
       {
         "file": "test_aura_research_manifest.py",
@@ -75622,6 +75720,16 @@
         "signature_hash": "f3e3511de4336921"
       }
     ],
+    "test_phase_ledger_order_and_dispositions": [
+      {
+        "file": "tests/test_aura_substrate_manifest.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_substrate_manifest.py#function:test_phase_ledger_order_and_dispositions:f6f6a21ea9b8766e",
+        "signature_hash": "f355568f61fdbb74"
+      }
+    ],
     "test_plan_emits_act_tasks_with_gate_constraints": [
       {
         "file": "test_aura_metaharness.py",
@@ -77350,6 +77458,36 @@
         "end_line": 38,
         "semantic_id": "tests/test_aura_capability_resolver.py#method:TestCapabilityResolver.test_related_functions_found:69cce27b20cadce6",
         "signature_hash": "e1a3b408e9a182b2"
+      }
+    ],
+    "test_release_file_ledger_is_sorted_and_bounded": [
+      {
+        "file": "tests/test_aura_substrate_manifest.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_substrate_manifest.py#function:test_release_file_ledger_is_sorted_and_bounded:70624a07371bcad9",
+        "signature_hash": "80fdd46a0d1e72d1"
+      }
+    ],
+    "test_release_index_is_deterministic_and_binds_exact_bytes": [
+      {
+        "file": "tests/test_aura_substrate_release.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_substrate_release.py#function:test_release_index_is_deterministic_and_binds_exact_bytes:33b53b1c1ffbc939",
+        "signature_hash": "43b92b947290cab9"
+      }
+    ],
+    "test_release_index_rejects_symlinks_forbidden_paths_and_non_utf8": [
+      {
+        "file": "tests/test_aura_substrate_release.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_substrate_release.py#function:test_release_index_rejects_symlinks_forbidden_paths_and_non_utf8:867aabdaedfbf91d",
+        "signature_hash": "d96fc51e9e0867b5"
       }
     ],
     "test_render_blueprint_targets_default_unified_container": [
@@ -82700,6 +82838,16 @@
         "signature_hash": "0a8e5b59ceaad928"
       }
     ],
+    "test_verifier_accepts_exact_manifest_symbols_versions_and_index": [
+      {
+        "file": "tests/test_aura_substrate_verifier.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_substrate_verifier.py#function:test_verifier_accepts_exact_manifest_symbols_versions_and_index:c7012ac793cd4b74",
+        "signature_hash": "2cc9071f69068b6e"
+      }
+    ],
     "test_verifier_blocks_until_tests_run_then_builds_hotswap_capsule": [
       {
         "file": "test_aura_architect_loop.py",
@@ -82718,6 +82866,16 @@
         "end_line": 232,
         "semantic_id": "tests/test_aura_ephemeral_phase0_hardening.py#method:TestVerifierAndBudget.test_verifier_catches_missing_truth_class:8b5969f1f681af93",
         "signature_hash": "5c5a85c9e9d52196"
+      }
+    ],
+    "test_verifier_detects_digest_symbol_version_dependency_and_index_drift": [
+      {
+        "file": "tests/test_aura_substrate_verifier.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_substrate_verifier.py#function:test_verifier_detects_digest_symbol_version_dependency_and_index_drift:24d2a851106d40d4",
+        "signature_hash": "b3816b623c0e6027"
       }
     ],
     "test_verifies_edge_from_verifier": [
@@ -128988,47 +129146,47 @@
     {
       "path": "topology_map.json",
       "role": "schema_or_lexicon",
-      "bytes": 15948507,
+      "bytes": 15963741,
       "lines": 508611,
-      "tokens_est": 3987127,
+      "tokens_est": 3990936,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "0ec00c3b68ecc8ef",
+      "digest8": "c186681df639f0c4",
       "vector": [
-        -0.157913,
-        0.223805,
-        0.2079,
-        -0.248798,
-        -0.203356,
-        0.080661,
-        -0.198811,
-        0.185178,
-        0.067028,
-        -0.114743,
-        0.273792,
-        0.128375,
-        0.00568,
-        0.053395,
-        0.153369,
-        -0.073844,
-        0.14428,
-        0.126103,
-        -0.266975,
-        -0.221533,
-        0.135192,
-        0.10111,
-        0.257887,
-        -0.126103,
-        0.062484,
-        -0.260159,
-        -0.035218,
-        -0.171546,
-        -0.078388,
-        0.230621,
-        -0.237437,
-        0.266975
+        -0.093434,
+        0.151679,
+        -0.141972,
+        -0.285157,
+        -0.134691,
+        0.185656,
+        0.076446,
+        -0.268169,
+        0.00364,
+        0.037616,
+        -0.183229,
+        -0.248754,
+        0.263315,
+        -0.032763,
+        -0.265742,
+        -0.071593,
+        0.071593,
+        -0.044897,
+        -0.277877,
+        0.095861,
+        -0.246327,
+        -0.151679,
+        0.006067,
+        -0.103142,
+        -0.112849,
+        0.241474,
+        -0.192936,
+        0.141972,
+        0.27545,
+        0.137118,
+        -0.032763,
+        0.285157
       ]
     },
     {
@@ -132802,6 +132960,52 @@
         0.277497,
         0.192615,
         0.131675
+      ]
+    },
+    {
+      "path": ".github/workflows/p9-substrate-release.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 2678,
+      "lines": 87,
+      "tokens_est": 670,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d8d39fb8ec8a54b5",
+      "vector": [
+        -0.177417,
+        0.194314,
+        0.278799,
+        -0.276385,
+        -0.167762,
+        -0.28604,
+        -0.199142,
+        -0.290868,
+        0.044656,
+        -0.199142,
+        0.085691,
+        -0.14121,
+        0.042242,
+        0.080864,
+        -0.051898,
+        0.027759,
+        0.006035,
+        0.04707,
+        -0.228108,
+        -0.037415,
+        -0.189486,
+        -0.189486,
+        -0.288454,
+        0.167762,
+        -0.107416,
+        0.167762,
+        0.020518,
+        -0.203969,
+        -0.266729,
+        0.025345,
+        0.261902,
+        -0.027759
       ]
     },
     {
@@ -138168,6 +138372,52 @@
         -0.014931,
         -0.263786,
         -0.160926
+      ]
+    },
+    {
+      "path": "docs/aura_substrate_manifest.v1.json",
+      "role": "schema_or_lexicon",
+      "bytes": 26422,
+      "lines": 2,
+      "tokens_est": 6606,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5bfe366924241733",
+      "vector": [
+        0.139472,
+        -0.142031,
+        0.080612,
+        0.20089,
+        0.180417,
+        0.272545,
+        0.213686,
+        -0.021752,
+        -0.277663,
+        0.047344,
+        0.298136,
+        -0.223922,
+        -0.264868,
+        0.047344,
+        -0.267427,
+        -0.026871,
+        -0.313491,
+        -0.211127,
+        0.047344,
+        0.154826,
+        0.008957,
+        -0.052462,
+        0.016634,
+        0.016634,
+        -0.026871,
+        0.139472,
+        0.078053,
+        0.067816,
+        -0.22904,
+        0.22904,
+        0.070376,
+        0.290459
       ]
     },
     {
@@ -144444,6 +144694,190 @@
         0.057326,
         -0.057326,
         -0.010529
+      ]
+    },
+    {
+      "path": "tests/test_aura_substrate_contracts.py",
+      "role": "python_module",
+      "bytes": 1709,
+      "lines": 49,
+      "tokens_est": 428,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "745c6f45b586fa0f",
+      "vector": [
+        -0.290495,
+        -0.016784,
+        0.311152,
+        -0.169133,
+        0.065846,
+        0.060681,
+        0.305988,
+        0.269838,
+        0.076174,
+        -0.045188,
+        0.009038,
+        -0.014202,
+        -0.109743,
+        -0.244016,
+        0.135564,
+        -0.003873,
+        -0.197537,
+        0.176879,
+        -0.006455,
+        0.073592,
+        0.132982,
+        0.07101,
+        -0.218194,
+        -0.311152,
+        0.187208,
+        0.251762,
+        0.114907,
+        0.197537,
+        0.143311,
+        -0.192372,
+        0.101996,
+        -0.236269
+      ]
+    },
+    {
+      "path": "tests/test_aura_substrate_manifest.py",
+      "role": "python_module",
+      "bytes": 1727,
+      "lines": 42,
+      "tokens_est": 432,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "093af286abe951bd",
+      "vector": [
+        0.053101,
+        0.248217,
+        0.045692,
+        -0.137075,
+        0.06792,
+        -0.277855,
+        0.169183,
+        0.282795,
+        0.21117,
+        0.06792,
+        -0.082739,
+        0.043222,
+        0.171653,
+        0.171653,
+        0.164243,
+        -0.21364,
+        -0.302553,
+        -0.124726,
+        -0.233398,
+        -0.045692,
+        -0.250687,
+        0.06298,
+        -0.225989,
+        -0.161773,
+        0.171653,
+        0.146954,
+        0.112377,
+        -0.20376,
+        0.109907,
+        0.184002,
+        0.275385,
+        0.011114
+      ]
+    },
+    {
+      "path": "tests/test_aura_substrate_release.py",
+      "role": "python_module",
+      "bytes": 2492,
+      "lines": 71,
+      "tokens_est": 623,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13795c217c71fb41",
+      "vector": [
+        0.110466,
+        0.015781,
+        0.270701,
+        -0.137171,
+        0.251279,
+        0.142027,
+        -0.222145,
+        0.146883,
+        -0.253707,
+        0.076476,
+        -0.202722,
+        -0.287696,
+        -0.044915,
+        -0.23914,
+        -0.091043,
+        -0.074048,
+        -0.110466,
+        -0.290124,
+        0.088615,
+        0.246423,
+        -0.122605,
+        0.202722,
+        0.037631,
+        -0.163877,
+        0.054626,
+        0.088615,
+        0.076476,
+        0.066765,
+        0.309546,
+        -0.180872,
+        -0.219717,
+        0.163877
+      ]
+    },
+    {
+      "path": "tests/test_aura_substrate_verifier.py",
+      "role": "python_module",
+      "bytes": 3370,
+      "lines": 87,
+      "tokens_est": 843,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "50a4e7cd2e064179",
+      "vector": [
+        -0.28397,
+        -0.019101,
+        0.263595,
+        0.00382,
+        -0.314532,
+        0.016554,
+        0.151535,
+        0.008914,
+        0.090412,
+        0.085318,
+        0.113333,
+        0.301797,
+        -0.133708,
+        0.271236,
+        -0.016554,
+        0.021648,
+        -0.105693,
+        -0.008914,
+        -0.092959,
+        -0.019101,
+        -0.103146,
+        -0.095506,
+        -0.28397,
+        -0.189738,
+        0.314532,
+        0.044569,
+        -0.136255,
+        -0.222846,
+        -0.281423,
+        0.024195,
+        0.314532,
+        -0.105693
       ]
     },
     {
