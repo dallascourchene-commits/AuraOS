@@ -70,7 +70,7 @@ def _strings(values: Sequence[Any], name: str) -> tuple[str, ...]:
     return result
 
 
-def _snapshot_identity(snapshot: Any) -> tuple[str, int]:
+def _safe_snapshot(snapshot: Any) -> tuple[Any, str, int]:
     safe = sanitize_payload(snapshot)
     if isinstance(safe, Mapping):
         count = len(safe)
@@ -78,7 +78,7 @@ def _snapshot_identity(snapshot: Any) -> tuple[str, int]:
         count = len(safe)
     else:
         raise ValueError("source_snapshot must be a mapping or ordered sequence")
-    return stable_digest(safe), count
+    return safe, stable_digest(safe), count
 
 
 def _belief(value: Any, name: str) -> int:
@@ -218,7 +218,7 @@ class QDKTObservation:
         if type(root) is not str or not _ROOT_RE.fullmatch(root):
             raise ValueError("legacy_result.root is malformed")
         belief = _belief(belief, "legacy_result.belief")
-        source_digest, source_count = _snapshot_identity(source_snapshot)
+        _safe, source_digest, source_count = _safe_snapshot(source_snapshot)
         identity = {
             "legacy_root": root,
             "legacy_belief": belief,
@@ -462,7 +462,7 @@ async def capture_legacy_qdkt_observation(
         policy_scope=QDKT_POLICY_SCOPE,
         created_at=created_at,
     )
-    source_digest, source_count = _snapshot_identity(source_snapshot)
+    safe_snapshot, _digest, _count = _safe_snapshot(source_snapshot)
     planning_board_ref = _optional(planning_board_ref, "planning_board_ref")
     planning_history_ref = _optional(planning_history_ref, "planning_history_ref")
     continuity_ref = _optional(continuity_ref, "continuity_ref")
@@ -474,27 +474,10 @@ async def capture_legacy_qdkt_observation(
         result = await result
     observation = QDKTObservation.from_legacy_result(
         result,
-        source_snapshot=(source_digest, source_count),
+        source_snapshot=safe_snapshot,
         planning_board_ref=planning_board_ref,
         planning_history_ref=planning_history_ref,
         continuity_ref=continuity_ref,
-    )
-    # Rebind the source identity to the exact preflight snapshot, not the helper tuple.
-    observation = QDKTObservation(
-        **{
-            **observation.to_dict(),
-            "source_snapshot_digest": source_digest,
-            "source_count": source_count,
-            "nondeterministic_inputs": observation.nondeterministic_inputs,
-            "observation_id": stable_id(
-                "qdkt-observation",
-                {
-                    **observation.identity_payload(),
-                    "source_snapshot_digest": source_digest,
-                    "source_count": source_count,
-                },
-            ),
-        }
     )
     if observation.legacy_result != dict(result):
         raise ValueError("canonical observation changed the exact legacy result")
