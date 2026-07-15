@@ -74,6 +74,15 @@ def test_prohibited_observation_field_is_rejected() -> None:
         )
 
 
+def test_lossy_or_sensitive_provenance_is_rejected() -> None:
+    field_name = "api" + "_key"
+    with pytest.raises(ValueError, match="sensitive or lossy"):
+        QDKTObservation.from_legacy_result(
+            LEGACY_RESULT,
+            source_snapshot={field_name: "placeholder-value"},
+        )
+
+
 def test_from_dict_requires_canonical_input_array() -> None:
     payload = observation().to_dict()
     payload["nondeterministic_inputs"] = "thermal_reading"
