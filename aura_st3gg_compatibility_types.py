@@ -16,6 +16,7 @@ from aura_st3gg_contracts import (
     ST3GGRestorationMode,
     canonical_json_bytes,
     canonical_pointer,
+    count_utf8_bytes,
     digest_text,
     exact_ref_for,
     parse_canonical_pointer,
@@ -273,6 +274,29 @@ class ST3GGASTCompatibilityResult:
             or (not self.v2_decision.enabled and self.v2_decision.restoration_mode is ST3GGRestorationMode.NONE),
             "ast_enabled_restoration_mode_disagreement",
         )
+        if self.mismatch_reasons:
+            require(not self.v2_decision.enabled, "failed_ast_result_enabled")
+        else:
+            require(self.v2_decision.original_digest == self.legacy_frame.source_hash, "ast_decision_source_digest_disagreement")
+            require(
+                self.v2_decision.raw_units == self.legacy_frame.metrics.raw_token_estimate,
+                "ast_decision_raw_units_disagreement",
+            )
+            require(
+                self.v2_decision.candidate_units == self.legacy_frame.metrics.encoded_token_estimate,
+                "ast_decision_candidate_units_disagreement",
+            )
+            require(
+                self.v2_decision.final_units == self.v2_decision.candidate_units
+                and self.v2_decision.overhead_units == 0,
+                "ast_decision_final_units_disagreement",
+            )
+            require(self.v2_decision.legacy_surface == self.legacy_frame.version, "ast_decision_surface_disagreement")
+            if self.v2_decision.enabled:
+                require(
+                    self.v2_decision.compact_digest == digest_text(self.legacy_frame.encoded),
+                    "ast_decision_compact_digest_disagreement",
+                )
 
 
 @dataclass(frozen=True)
@@ -324,11 +348,28 @@ class ST3GGReportCompatibilityResult:
         if self.v2_decision.enabled:
             require(_EGRESS_POINTER_RE.fullmatch(self.legacy_pointer) is not None, "enabled_report_pointer_invalid")
             require(self.v2_decision.legacy_pointer == self.legacy_pointer, "enabled_report_legacy_pointer_disagreement")
+            legacy_compact_digest = digest_text(self.legacy_compressed)
+            require(
+                self.legacy_pointer == f"ST3GG_PTR:{legacy_compact_digest[:12]}",
+                "enabled_report_pointer_digest_disagreement",
+            )
+            require(
+                self.v2_decision.candidate_units == count_utf8_bytes(self.legacy_compressed),
+                "enabled_report_candidate_units_disagreement",
+            )
         exact = self.v2_decision.restoration_mode is ST3GGRestorationMode.EXACT_RECALL
         if exact:
             require(self.v2_decision.enabled, "exact_report_decision_not_enabled")
             require(self.binding is not None and self.recall_evidence is not None, "exact_report_binding_missing")
             require(self.recall_evidence.verified and bool(self.v2_payload), "exact_report_not_verified")
+            require(
+                self.v2_decision.compact_digest == digest_text(self.v2_payload),
+                "exact_report_payload_digest_disagreement",
+            )
+            require(
+                self.v2_decision.final_units == count_utf8_bytes(self.v2_payload),
+                "exact_report_payload_units_disagreement",
+            )
             require(self.v2_decision.pointer == self.binding.pointer, "exact_report_pointer_disagreement")
             require(self.v2_decision.exact_ref == self.binding.exact_ref, "exact_report_ref_disagreement")
             require(self.v2_decision.legacy_pointer == self.legacy_pointer, "exact_report_legacy_pointer_disagreement")
@@ -344,6 +385,16 @@ class ST3GGReportCompatibilityResult:
                 not self.v2_payload and self.binding is None and self.recall_evidence is None,
                 "non_exact_report_has_exact_state",
             )
+            if self.v2_decision.enabled:
+                require(
+                    self.v2_decision.compact_digest == digest_text(self.legacy_compressed),
+                    "lossy_report_compact_digest_disagreement",
+                )
+                require(
+                    self.v2_decision.final_units == self.v2_decision.candidate_units
+                    and self.v2_decision.overhead_units == 0,
+                    "lossy_report_final_units_disagreement",
+                )
 
     @property
     def legacy_result(self) -> tuple[str, float, str]:
