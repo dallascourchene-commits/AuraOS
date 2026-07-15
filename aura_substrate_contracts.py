@@ -258,6 +258,7 @@ class PhaseDisposition:
 class SubstrateManifest:
     files: tuple[SubstrateFileRecord, ...]
     phases: tuple[PhaseDisposition, ...]
+    retained_external_surfaces: tuple[str, ...] = ()
     version: str = SUBSTRATE_MANIFEST_VERSION
     release_index_version: str = SUBSTRATE_RELEASE_INDEX_VERSION
     verifier_version: str = SUBSTRATE_VERIFIER_VERSION
@@ -281,6 +282,18 @@ class SubstrateManifest:
         phase_ids = tuple(item.phase_id for item in self.phases)
         if len(phase_ids) != len(set(phase_ids)):
             raise ValueError("phase IDs must be unique")
+        external = tuple(
+            _path(item, "retained_external_surfaces[]")
+            for item in _tuple_text(
+                self.retained_external_surfaces,
+                "retained_external_surfaces",
+            )
+        )
+        if external != tuple(sorted(external)):
+            raise ValueError("retained external surfaces must be sorted")
+        if set(external) & set(paths):
+            raise ValueError("retained external surfaces cannot also be release files")
+        object.__setattr__(self, "retained_external_surfaces", external)
         phase_set = set(phase_ids)
         seen: set[str] = set()
         path_set = set(paths)
@@ -305,6 +318,7 @@ class SubstrateManifest:
             "verifier_version": self.verifier_version,
             "generated_topology_authoritative": False,
             "package_published": False,
+            "retained_external_surfaces": list(self.retained_external_surfaces),
             "files": [item.to_dict() for item in self.files],
             "phases": [item.to_dict() for item in self.phases],
         }
