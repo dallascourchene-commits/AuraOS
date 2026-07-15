@@ -5,7 +5,7 @@ from collections.abc import Mapping
 import math
 from typing import Any
 
-from aura_event_contracts import AppendOnlyEventStore
+from aura_event_contracts import AppendOnlyEventStore, stable_digest
 from aura_qdkt_compatibility_types import (
     QDKTCompatibilityFinding,
     QDKTCompatibilityFindingCode,
@@ -23,6 +23,7 @@ from aura_qdkt_projection_io import (
     read_event_rows,
     validate_qdkt_envelope,
 )
+from aura_qdkt_projection_types import QDKTProjectionFindingCode
 
 
 def qdkt_ownership_recommendation() -> QDKTOwnershipRecommendation:
@@ -51,37 +52,102 @@ def _finding(
     return QDKTCompatibilityFinding(code, detail, event_ids, blocking)
 
 
-def _projector_findings(report: Any) -> tuple[QDKTCompatibilityFinding, ...]:
+def _projection_findings(findings: Any) -> tuple[QDKTCompatibilityFinding, ...]:
     return tuple(
         _finding(
             QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED,
             f"{item.code.value}:{item.message}",
             tuple(item.event_ids),
         )
-        for item in report.findings
+        for item in findings
         if item.blocking
     )
 
 
 def _valid_observations(
     store: AppendOnlyEventStore,
-) -> tuple[tuple[Any, QDKTObservation], ...]:
+) -> tuple[
+    tuple[tuple[Any, QDKTObservation], ...],
+    tuple[QDKTCompatibilityFinding, ...],
+]:
     collector = FindingCollector()
     rows = read_event_rows(store, collector)
     valid: list[tuple[Any, QDKTObservation]] = []
-    seen: set[str] = set()
+    row_digests: dict[str, str] = {}
     for _index, raw in rows:
         if raw.get("event_type") != QDKT_EVENT_TYPE:
             continue
+        event_id = str(raw.get("event_id") or "")
+        try:
+            row_digest = stable_digest(raw)
+        except (TypeError, ValueError):
+            collector.add(
+                QDKTProjectionFindingCode.INVALID_EVENT_RECORD,
+                "QDKT event cannot be canonically digested during compatibility read",
+                (event_id,),
+            )
+            continue
+        previous = row_digests.get(event_id)
+        if previous is not None:
+            code = (
+                QDKTProjectionFindingCode.DUPLICATE_EVENT_ID
+                if previous == row_digest
+                else QDKTProjectionFindingCode.CONFLICTING_DUPLICATE_EVENT
+            )
+            collector.add(
+                code,
+                "duplicate QDKT event ID during compatibility read",
+                (event_id,),
+            )
+            continue
+        row_digests[event_id] = row_digest
         envelope = validate_qdkt_envelope(raw, collector)
-        if envelope is None or envelope.event_id in seen:
+        if envelope is None:
             continue
         observation = load_observation(store, envelope, collector)
         if observation is None:
             continue
-        seen.add(envelope.event_id)
         valid.append((envelope, observation))
-    return tuple(sorted(valid, key=lambda item: (item[0].created_at, item[0].event_id)))
+    ordered = tuple(sorted(valid, key=lambda item: (item[0].created_at, item[0].event_id)))
+    findings = tuple(
+        sorted(
+            _projection_findings(collector.findings),
+            key=lambda item: (item.code.value, item.event_ids, item.detail),
+        )
+    )
+    return ordered, findings
+
+
+def _projected_signature(report: Any) -> tuple[tuple[Any, ...], ...]:
+    return tuple(
+        (
+            item.event_id,
+            item.observation_id,
+            item.payload_ref,
+            item.payload_digest,
+            item.trace_id,
+            tuple(item.parent_event_ids),
+            float(item.created_at),
+        )
+        for item in report.events
+    )
+
+
+def _observation_signature(
+    observations: tuple[tuple[Any, QDKTObservation], ...],
+) -> tuple[tuple[Any, ...], ...]:
+    return tuple(
+        (
+            envelope.event_id,
+            observation.observation_id,
+            envelope.payload_ref,
+            envelope.payload_digest,
+            envelope.trace_id,
+            tuple(envelope.parent_event_ids),
+            float(envelope.created_at),
+        )
+        for envelope, observation in observations
+    )
 
 
 def _result(
@@ -92,8 +158,8 @@ def _result(
     findings: tuple[QDKTCompatibilityFinding, ...],
     matches: tuple[tuple[Any, QDKTObservation], ...] = (),
     inventory: QDKTInventoryReport | None = None,
-    expected_snapshot_digest: str = "",
-    expected_source_count: int | None = None,
+    requested_snapshot_digest: str = "",
+    requested_source_count: int | None = None,
 ) -> QDKTDualReadEvidence:
     ownership = qdkt_ownership_recommendation()
     selected = matches[0] if len(matches) == 1 else None
@@ -108,12 +174,12 @@ def _result(
         observation_id=observation.observation_id if observation else "",
         payload_ref=envelope.payload_ref if envelope else "",
         payload_digest=envelope.payload_digest if envelope else "",
-        source_snapshot_digest=(
-            observation.source_snapshot_digest
-            if observation
-            else expected_snapshot_digest
+        canonical_source_snapshot_digest=(
+            observation.source_snapshot_digest if observation else ""
         ),
-        source_count=(observation.source_count if observation else expected_source_count),
+        canonical_source_count=(observation.source_count if observation else None),
+        requested_source_snapshot_digest=requested_snapshot_digest,
+        requested_source_count=requested_source_count,
         canonical_created_at=(envelope.created_at if envelope else None),
         inventory_digest=inventory.digest if inventory is not None else "",
         ownership_digest=ownership.digest,
@@ -148,8 +214,8 @@ def compare_qdkt_dual_read(
             raise ValueError("now is required when max_age_seconds is supplied")
         current_time = _finite_nonnegative(now, "now")
 
-    expected_digest = ""
-    expected_count: int | None = None
+    requested_digest = ""
+    requested_count: int | None = None
     if source_snapshot is not None:
         try:
             expected = QDKTObservation.from_legacy_result(
@@ -158,12 +224,29 @@ def compare_qdkt_dual_read(
             )
         except ValueError as exc:
             raise ValueError("source_snapshot is invalid for canonical comparison") from exc
-        expected_digest = expected.source_snapshot_digest
-        expected_count = expected.source_count
+        requested_digest = expected.source_snapshot_digest
+        requested_count = expected.source_count
 
     report = project_qdkt_events(store)
-    integrity_findings = _projector_findings(report)
-    valid = _valid_observations(store)
+    integrity_findings = _projection_findings(report.findings)
+    valid, reread_findings = _valid_observations(store)
+    integrity_findings = tuple((*integrity_findings, *reread_findings))
+    if not integrity_findings and _projected_signature(report) != _observation_signature(valid):
+        event_ids = tuple(
+            sorted(
+                {
+                    *(item.event_id for item in report.events),
+                    *(item[0].event_id for item in valid),
+                }
+            )
+        )
+        integrity_findings = (
+            _finding(
+                QDKTCompatibilityFindingCode.CANONICAL_INTEGRITY_FAILED,
+                "QDKT event evidence changed between projection and compatibility read",
+                event_ids,
+            ),
+        )
 
     if integrity_findings:
         return _result(
@@ -172,8 +255,8 @@ def compare_qdkt_dual_read(
             status=QDKTDualReadStatus.MISMATCHED,
             findings=integrity_findings,
             inventory=inventory,
-            expected_snapshot_digest=expected_digest,
-            expected_source_count=expected_count,
+            requested_snapshot_digest=requested_digest,
+            requested_source_count=requested_count,
         )
 
     if report.qdkt_event_count == 0:
@@ -188,8 +271,8 @@ def compare_qdkt_dual_read(
                 ),
             ),
             inventory=inventory,
-            expected_snapshot_digest=expected_digest,
-            expected_source_count=expected_count,
+            requested_snapshot_digest=requested_digest,
+            requested_source_count=requested_count,
         )
 
     root_matches = tuple(item for item in valid if item[1].legacy_root == root)
@@ -223,8 +306,8 @@ def compare_qdkt_dual_read(
         source_matches = tuple(
             item
             for item in value_matches
-            if item[1].source_snapshot_digest == expected_digest
-            and item[1].source_count == expected_count
+            if item[1].source_snapshot_digest == requested_digest
+            and item[1].source_count == requested_count
         )
         if value_matches and not source_matches:
             findings.append(
@@ -246,8 +329,8 @@ def compare_qdkt_dual_read(
         )
 
     conflict_identities: set[tuple[str, int]] = set()
-    if source_snapshot is not None and expected_count is not None:
-        conflict_identities.add((expected_digest, expected_count))
+    if source_snapshot is not None and requested_count is not None:
+        conflict_identities.add((requested_digest, requested_count))
     else:
         conflict_identities.update(
             (item[1].source_snapshot_digest, item[1].source_count)
@@ -303,8 +386,8 @@ def compare_qdkt_dual_read(
             findings=tuple(findings),
             matches=matches,
             inventory=inventory,
-            expected_snapshot_digest=expected_digest,
-            expected_source_count=expected_count,
+            requested_snapshot_digest=requested_digest,
+            requested_source_count=requested_count,
         )
 
     if source_snapshot is None:
@@ -331,8 +414,8 @@ def compare_qdkt_dual_read(
         findings=(),
         matches=matches,
         inventory=inventory,
-        expected_snapshot_digest=expected_digest,
-        expected_source_count=expected_count,
+        requested_snapshot_digest=requested_digest,
+        requested_source_count=requested_count,
     )
 
 
