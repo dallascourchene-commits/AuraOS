@@ -14,7 +14,7 @@ from aura_substrate_contracts import (
     SubstrateFileRecord,
     SubstrateManifest,
 )
-from aura_substrate_release import build_release_index
+from aura_substrate_release import build_manifest_artifacts, build_release_index
 
 
 def _blob(data: bytes) -> str:
@@ -51,9 +51,12 @@ def _manifest(data: bytes, *, symbols=("PublicThing",), versions=(("VERSION", "V
 def _prepare(tmp_path: Path, monkeypatch, source: bytes, manifest: SubstrateManifest) -> None:
     (tmp_path / "contract.py").write_bytes(source)
     (tmp_path / "evidence.md").write_text("evidence\n", encoding="utf-8")
-    _full, archive, receipt = verifier._manifest_artifacts(manifest)
+    receipt, parts = build_manifest_artifacts(manifest)
     (tmp_path / "manifest.json").write_text(canonical_json(receipt) + "\n", encoding="utf-8")
-    (tmp_path / "manifest.json.gz").write_bytes(archive)
+    for relative, payload in parts:
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(canonical_json(payload) + "\n", encoding="utf-8")
     index = build_release_index(tmp_path, manifest)
     (tmp_path / "index.json").write_text(canonical_json(index) + "\n", encoding="utf-8")
     monkeypatch.setattr(verifier, "build_substrate_manifest", lambda: manifest)
@@ -64,12 +67,7 @@ def test_verifier_accepts_exact_manifest_symbols_versions_and_index(tmp_path: Pa
     source = b'VERSION = "V1"\nclass PublicThing:\n    pass\n'
     manifest = _manifest(source)
     _prepare(tmp_path, monkeypatch, source, manifest)
-    report = verifier.verify_substrate_release(
-        tmp_path,
-        "manifest.json",
-        "manifest.json.gz",
-        "index.json",
-    )
+    report = verifier.verify_substrate_release(tmp_path, "manifest.json", "index.json")
     assert report.passed is True
     assert report.checked_symbols == 1
     assert report.checked_versions == 1
@@ -81,12 +79,7 @@ def test_verifier_detects_digest_symbol_version_dependency_and_index_drift(tmp_p
     changed = b'import aura_untracked\nVERSION = "V2"\nclass Replacement:\n    pass\n'
     _prepare(tmp_path, monkeypatch, changed, manifest)
     (tmp_path / "index.json").write_text("{}\n", encoding="utf-8")
-    report = verifier.verify_substrate_release(
-        tmp_path,
-        "manifest.json",
-        "manifest.json.gz",
-        "index.json",
-    )
+    report = verifier.verify_substrate_release(tmp_path, "manifest.json", "index.json")
     codes = {item.code for item in report.findings}
     assert {
         "PINNED_FILE_DIGEST_MISMATCH",
@@ -98,20 +91,19 @@ def test_verifier_detects_digest_symbol_version_dependency_and_index_drift(tmp_p
     assert report.passed is False
 
 
-def test_verifier_rejects_manifest_receipt_and_archive_substitution(tmp_path: Path, monkeypatch) -> None:
+def test_verifier_rejects_changed_manifest_receipt_and_part(tmp_path: Path, monkeypatch) -> None:
     source = b'VERSION = "V1"\nclass PublicThing:\n    pass\n'
     manifest = _manifest(source)
     _prepare(tmp_path, monkeypatch, source, manifest)
+    receipt, parts = build_manifest_artifacts(manifest)
     (tmp_path / "manifest.json").write_text("{}\n", encoding="utf-8")
-    (tmp_path / "manifest.json.gz").write_bytes(b"not-gzip")
-    report = verifier.verify_substrate_release(
-        tmp_path,
-        "manifest.json",
-        "manifest.json.gz",
-        "index.json",
-    )
+    part_path, _payload = parts[0]
+    (tmp_path / part_path).write_text("{}\n", encoding="utf-8")
+    report = verifier.verify_substrate_release(tmp_path, "manifest.json", "index.json")
     codes = {item.code for item in report.findings}
     assert "MANIFEST_RECEIPT_CONTENT_MISMATCH" in codes
-    assert "MANIFEST_ARCHIVE_CONTENT_MISMATCH" in codes
-    assert "MANIFEST_ARCHIVE_INVALID" in codes
+    assert "MANIFEST_PART_CONTENT_MISMATCH" in codes
+    assert "MANIFEST_PART_LENGTH_MISMATCH" in codes
+    assert "MANIFEST_PART_DIGEST_MISMATCH" in codes
     assert report.passed is False
+    assert receipt["parts"]
