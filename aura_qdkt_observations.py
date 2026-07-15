@@ -71,7 +71,14 @@ def _strings(values: Sequence[Any], name: str) -> tuple[str, ...]:
 
 
 def _safe_snapshot(snapshot: Any) -> tuple[Any, str, int]:
-    safe = sanitize_payload(snapshot)
+    try:
+        original = canonical_json(snapshot)
+        safe = sanitize_payload(snapshot)
+        sanitized = canonical_json(safe)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("source_snapshot must be canonical and safe") from exc
+    if sanitized != original:
+        raise ValueError("source_snapshot must not contain sensitive or lossy values")
     if isinstance(safe, Mapping):
         count = len(safe)
     elif isinstance(safe, Sequence) and not isinstance(safe, (str, bytes, bytearray)):
