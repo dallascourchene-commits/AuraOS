@@ -1,7 +1,13 @@
 import json
 
 from aura_event_contracts import AppendOnlyEventStore
-from aura_planning_board import GoalSpec, PlanningBoard, PredicateSpec
+from aura_planning_board import (
+    ActionSpec,
+    EffectSpec,
+    GoalSpec,
+    PlanningBoard,
+    PredicateSpec,
+)
 from aura_planning_events import record_planning_board_event
 from aura_planning_projector import (
     ProjectionFindingCode,
@@ -20,7 +26,15 @@ def test_noncanonical_planning_event_bytes_fail_closed(tmp_path) -> None:
             "Validate canonical event bytes",
             (PredicateSpec("finished", True),),
         ),
-        actions=(),
+        actions=(
+            ActionSpec(
+                action_id="finish-jsonl",
+                name="finish-jsonl",
+                domain="planning-projector-jsonl-test",
+                preconditions=(),
+                effects=(EffectSpec("finished", True),),
+            ),
+        ),
     )
     record_planning_board_event(
         store,
