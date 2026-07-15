@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from aura_arena_st3gg_egress import compress_report_st3gg
+from aura_arena_st3gg_egress import compress_report_st3gg, st3gg_pointer_for
 from aura_st3gg_compatibility import (
     compress_report_with_v2_facade,
     dual_read_st3gg_recall,
@@ -94,7 +94,20 @@ def test_forged_in_range_legacy_savings_fails_closed() -> None:
 
     assert result.legacy_result == (compressed, forged, pointer)
     assert result.v2_decision.restoration_mode is ST3GGRestorationMode.NONE
-    assert result.mismatch_reasons == ("legacy_report_savings_disagreement",)
+    assert result.mismatch_reasons == ("legacy_report_savings_replay_disagreement",)
+
+
+def test_direct_report_projection_rejects_non_v1_compact_tuple() -> None:
+    compact = "EP|alternate"
+    pointer = st3gg_pointer_for(compact)
+    raw_bytes = len(REPORT_TEXT.encode("utf-8"))
+    savings = (raw_bytes - len(compact.encode("utf-8"))) / raw_bytes
+
+    result = project_report_egress_to_v2(REPORT_TEXT, compact, savings, pointer)
+
+    assert result.legacy_result == (compact, savings, pointer)
+    assert result.v2_decision.restoration_mode is ST3GGRestorationMode.NONE
+    assert result.mismatch_reasons == ("legacy_report_compact_replay_disagreement",)
 
 
 def test_dual_read_rejects_created_timestamp_substitution(tmp_path: Path) -> None:
