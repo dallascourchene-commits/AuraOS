@@ -87,9 +87,22 @@ def read_event_rows(
             f"event log read failed: {type(exc).__name__}",
         )
         return []
+    if not text:
+        return []
+    terminated = text.endswith("\n")
+    if not terminated:
+        collector.add(
+            QDKTProjectionFindingCode.NONCANONICAL_EVENT_RECORD,
+            "event log is missing the required terminal newline",
+        )
+    body = text[:-1] if terminated else text
     rows: list[tuple[int, dict[str, Any]]] = []
-    for index, line in enumerate(text.splitlines(), start=1):
+    for index, line in enumerate(body.split("\n"), start=1):
         if not line.strip():
+            collector.add(
+                QDKTProjectionFindingCode.NONCANONICAL_EVENT_RECORD,
+                f"event row {index} is blank",
+            )
             continue
         try:
             value = parse_finite_object(line)
@@ -152,6 +165,10 @@ def rebuild_envelope(raw: Mapping[str, Any]) -> AuraEventEnvelope | None:
     return expected
 
 
+def _invalid_refs(values: list[Any]) -> bool:
+    return any(type(item) is not str or not item.strip() for item in values)
+
+
 def validate_qdkt_envelope(
     raw: Mapping[str, Any],
     collector: FindingCollector,
@@ -166,14 +183,21 @@ def validate_qdkt_envelope(
             (event_id,),
         )
         return None
-    if len(parents) != len(set(map(str, parents))):
+    if _invalid_refs(parents) or _invalid_refs(evidence):
+        collector.add(
+            QDKTProjectionFindingCode.INVALID_EVENT_RECORD,
+            "parent and evidence references must be non-empty strings",
+            (event_id,),
+        )
+        return None
+    if len(parents) != len(set(parents)):
         collector.add(
             QDKTProjectionFindingCode.DUPLICATE_PARENT_REF,
             "duplicate parent reference",
             (event_id,),
         )
         return None
-    if len(evidence) != len(set(map(str, evidence))):
+    if len(evidence) != len(set(evidence)):
         collector.add(
             QDKTProjectionFindingCode.DUPLICATE_EVIDENCE_REF,
             "duplicate evidence reference",
