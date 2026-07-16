@@ -56,7 +56,18 @@ jobs:
         run: node --check aura_human_agent_arena/emergent.js
 
       - name: Validate emergent workspace integrity
-        run: python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_emergent_refactor_workspace.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_emergent_refactor_workspace.py 2>&1 | tee /tmp/emergent-integrity.log
+
+      - name: Upload emergent integrity diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-integrity-diagnostic-${{ github.run_id }}
+          path: /tmp/emergent-integrity.log
+          if-no-files-found: warn
 
       - name: Validate JavaScript CODEMAP metadata
         run: python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_codemap_verify.py
