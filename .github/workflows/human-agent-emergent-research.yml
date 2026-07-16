@@ -1,0 +1,157 @@
+name: Human Agent Emergent Research
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "aura_emergent_refactor_workspace.py"
+      - "aura_arena_research_bridge.py"
+      - "aura_human_agent_arena_server.py"
+      - "aura_human_agent_arena/index.html"
+      - "aura_human_agent_arena/emergent.js"
+      - "aura_human_agent_arena/emergent.css"
+      - "tests/test_aura_emergent_refactor_workspace.py"
+      - "Aura_Memory/emergent_results/seed_runs/**"
+      - ".github/workflows/human-agent-emergent-research.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: human-agent-emergent-research-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  seed-full-results:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Download exact 22-probe artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: aura-emergent-capacity-probes
+          path: /tmp/aura-emergent-capacity-probes
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 29528471066
+
+      - name: Install lossless seed reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          seed_dir="Aura_Memory/emergent_results/seed_runs/2026-07-16"
+          mkdir -p "$seed_dir"
+          cp /tmp/aura-emergent-capacity-probes/emergent_capacity_probes/emergent_capacity_probes.json \
+             "$seed_dir/emergent_capacity_probes.json"
+          cp /tmp/aura-emergent-capacity-probes/emergent_capacity_probes/emergent_capacity_report.md \
+             "$seed_dir/emergent_capacity_report.md"
+          cp /tmp/aura-emergent-capacity-probes/grounded_capacity_projection_probes/grounded_capacity_projections.json \
+             "$seed_dir/grounded_capacity_projections.json"
+          cp /tmp/aura-emergent-capacity-probes/grounded_capacity_projection_probes/grounded_capacity_projection_report.md \
+             "$seed_dir/grounded_capacity_projection_report.md"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          root = Path("Aura_Memory/emergent_results/seed_runs/2026-07-16")
+          files = {}
+          for path in sorted(root.iterdir()):
+              raw = path.read_bytes()
+              files[path.name] = {
+                  "bytes": len(raw),
+                  "sha256": hashlib.sha256(raw).hexdigest(),
+              }
+          provenance = {
+              "source": "GitHub Actions artifact aura-emergent-capacity-probes",
+              "source_run_id": 29528471066,
+              "source_artifact_id": 8387658835,
+              "source_artifact_digest": "sha256:aefff3dbbed14d061b38218763fef36dc7e376820dc81301f0a9aeae6a049c1a",
+              "repository_head_analyzed": "624a8afefe1824ef070f4684bcc7dc4195542162",
+              "probe_count": 22,
+              "failure_count": 0,
+              "python_file_count": 708,
+              "topology_node_count": 10815,
+              "topology_edge_count": 20764,
+              "lossless": True,
+              "files": files,
+          }
+          (root / "provenance.json").write_text(
+              json.dumps(provenance, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Commit seed reports when absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add Aura_Memory/emergent_results/seed_runs/2026-07-16
+          if git diff --cached --quiet; then
+            echo "Exact seed reports already committed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data: seed full emergent capacity reports"
+          git push origin "HEAD:${{ github.head_ref }}"
+
+  verify:
+    needs: seed-full-results
+    if: always() && (needs.seed-full-results.result == 'success' || needs.seed-full-results.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out latest feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile changed Python modules
+        run: |
+          python -m py_compile \
+            aura_emergent_refactor_workspace.py \
+            aura_arena_research_bridge.py \
+            aura_human_agent_arena_server.py
+
+      - name: Check Emergent Lab JavaScript syntax
+        run: node --check aura_human_agent_arena/emergent.js
+
+      - name: Run focused emergent-workspace tests
+        run: python -m pytest -q tests/test_aura_emergent_refactor_workspace.py
+
+      - name: Run Human Agent Arena regression tests
+        run: python -m pytest -q tests/test_aura_human_agent_arena.py
+
+      - name: Verify exact seed import and search
+        shell: bash
+        run: |
+          python - <<'PY'
+          from aura_emergent_refactor_workspace import EmergentResultsStore
+
+          store = EmergentResultsStore(".")
+          imported = store.import_seed_reports()
+          assert imported["ok"], imported
+          runs = store.list_runs(limit=20)
+          assert runs["total"] >= 2, runs
+          versions = {item.get("suite_version") for item in runs["runs"]}
+          assert "AURA_EMERGENT_CAPACITY_PROBES_V1" in versions, versions
+          assert "AURA_GROUNDED_CAPACITY_PROJECTIONS_V1" in versions, versions
+          search = store.search_findings("Human Agent Arena refactor research", limit=10)
+          assert search["count"] > 0, search
+          assert all(item["patch_authority"] == "exact_source_spans_and_hashes_only" for item in search["findings"])
+          print({"runs": runs["total"], "findings": search["count"], "versions": sorted(versions)})
+          PY
