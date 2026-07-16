@@ -1,0 +1,101 @@
+name: Architect Consolidation Benchmark
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "analysis/**"
+      - "refactor/**"
+      - main
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  prepare-benchmark:
+    name: Prepare grounded benchmark prompts
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Aura runtime and focused tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8.0,<9.0"
+      - name: Compile benchmark and external LLM surfaces
+        run: |
+          python -m py_compile \
+            aura_architect_consolidation_benchmark.py \
+            aura_external_llm_session.py \
+            aura_agent_arena_mcp_external_llm.py
+      - name: Regenerate CODEMAP and topology from tested commit
+        run: |
+          python aura_codebase_navigator.py
+          test -s .aura/CODEMAP.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('.aura/CODEMAP.json')
+          payload = json.loads(path.read_text(encoding='utf-8'))
+          assert isinstance(payload, dict)
+          file_count = len(payload.get('files', []) or payload.get('file_cards', []) or [])
+          symbol_count = len(payload.get('symbol_index', {}) or {})
+          assert file_count > 0, file_count
+          assert symbol_count > 0, symbol_count
+          print({'codemap_bytes': path.stat().st_size, 'files': file_count, 'symbols': symbol_count})
+          PY
+      - name: Prepare RAW and Aura-slice prompts
+        run: |
+          rm -rf benchmark-output
+          python aura_architect_consolidation_benchmark.py prepare \
+            --repo-root . \
+            --output-dir benchmark-output \
+            > benchmark-output.log
+          cat benchmark-output.log
+      - name: Validate benchmark preparation evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('benchmark-output')
+          required = {
+              'raw_prompt.txt',
+              'aura_slice_prompt.txt',
+              'prepare_manifest.json',
+              'responses.template.json',
+          }
+          assert required <= {path.name for path in root.iterdir()}
+          manifest = json.loads((root / 'prepare_manifest.json').read_text(encoding='utf-8'))
+          assert manifest['codemap']['bytes'] > 0
+          assert manifest['repository_inventory']['file_count'] > 0
+          assert manifest['prompts']['raw']['token_proxy'] > 0
+          assert manifest['prompts']['aura_slice']['token_proxy'] > 0
+          assert manifest['aura_slice_packet']['source_slice_count'] > 0
+          assert manifest['prompts']['aura_slice']['token_proxy'] < manifest['prompts']['raw']['token_proxy']
+          print(json.dumps({
+              'repo_token_proxy': manifest['repository_inventory']['token_proxy'],
+              'raw_prompt_tokens': manifest['prompts']['raw']['token_proxy'],
+              'slice_prompt_tokens': manifest['prompts']['aura_slice']['token_proxy'],
+              'source_slices': manifest['aura_slice_packet']['source_slice_count'],
+              'test_slices': manifest['aura_slice_packet']['test_slice_count'],
+          }, indent=2))
+          PY
+      - name: Upload reproducible prompt evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: architect-consolidation-benchmark-prompts
+          path: |
+            benchmark-output/
+            benchmark-output.log
+          if-no-files-found: error
+          retention-days: 30
