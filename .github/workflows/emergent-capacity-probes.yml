@@ -1,0 +1,39 @@
+name: Emergent Capacity Probe Suite
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/run_emergent_capacity_probes.py"
+      - ".github/workflows/emergent-capacity-probes.yml"
+      - "aura_emergent_potential_repl.py"
+      - "aura_emergent_result_verifier.py"
+      - "aura_topological_context_anchor.py"
+      - "aura_emergent_capability_auditor.py"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out AuraOS
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run 15 emergent-capacity probes
+        run: python tools/run_emergent_capacity_probes.py
+
+      - name: Upload raw and rendered reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-emergent-capacity-probes
+          path: artifacts/emergent_capacity_probes/
+          if-no-files-found: error
