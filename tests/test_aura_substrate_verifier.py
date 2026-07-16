@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import hashlib
 from pathlib import Path
 
@@ -88,6 +89,24 @@ def test_verifier_detects_digest_symbol_version_dependency_and_index_drift(tmp_p
         "UNDECLARED_AURA_DEPENDENCY",
         "RELEASE_INDEX_CONTENT_MISMATCH",
     } <= codes
+    assert report.passed is False
+
+
+def test_verifier_detects_unpinned_release_file_byte_drift(tmp_path: Path, monkeypatch) -> None:
+    original = b'VERSION = "V1"\nclass PublicThing:\n    pass\n'
+    pinned = _manifest(original)
+    manifest = replace(
+        pinned,
+        files=(replace(pinned.files[0], expected_git_blob_sha1=None),),
+    )
+    _prepare(tmp_path, monkeypatch, original, manifest)
+    (tmp_path / "contract.py").write_bytes(
+        b'VERSION = "V1"\nclass PublicThing:\n    changed = True\n'
+    )
+    report = verifier.verify_substrate_release(tmp_path, "manifest.json", "index.json")
+    codes = {item.code for item in report.findings}
+    assert "PINNED_FILE_DIGEST_MISMATCH" not in codes
+    assert "RELEASE_INDEX_CONTENT_MISMATCH" in codes
     assert report.passed is False
 
 
