@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+# Branch-scoped documentation updater; README-only bot commits do not retrigger it.
 START = "<!-- AURA_ARCHITECT_BENCHMARK:START -->"
 END = "<!-- AURA_ARCHITECT_BENCHMARK:END -->"
 
