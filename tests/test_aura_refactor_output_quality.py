@@ -4,6 +4,7 @@ import difflib
 from pathlib import Path
 
 from aura_refactor_output_record import (
+    NOT_MEASURED,
     PASS,
     RefactorOutputRecord,
     finalize_record,
