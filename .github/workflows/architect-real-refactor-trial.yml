@@ -1,4 +1,4 @@
-name: Aura Real Refactor Trial V1
+name: Aura Real Refactor Trial V2
 
 on:
   pull_request:
@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - name: Install Aura runtime and adversarial test tools
+      - name: Install Aura runtime and benchmark tools
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pytest>=8,<9" hypothesis bandit ruff
@@ -44,21 +44,32 @@ jobs:
             aura_arena_architect_connector.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
-            aura_real_refactor_trial.py \
-            tests/test_aura_benchmark_four.py \
-            tests/test_aura_benchmark_four_hardening.py \
-            tests/test_aura_arena_connector_hardening.py \
-            tests/test_aura_state_identity_cycles.py
-      - name: Run adversarial and property-based tests
+            aura_real_refactor_trial.py
+      - name: Run visible and property tests
+        run: |
+          set -o pipefail
+          python -m pytest -q tests/test_aura_benchmark_four.py \
+            --junitxml=benchmark-four-visible.xml \
+            2>&1 | tee benchmark-four-visible.log
+      - name: Run review-derived adversarial tests
         run: |
           set -o pipefail
           python -m pytest -q \
-            tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
             tests/test_aura_state_identity_cycles.py \
-            --junitxml=benchmark-four-junit.xml \
-            2>&1 | tee benchmark-four-tests.log
+            --junitxml=benchmark-four-hidden.xml \
+            2>&1 | tee benchmark-four-hidden.log
+      - name: Run focused regression suites
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_refactor_chronicle_and_length.py \
+            tests/test_aura_external_llm_session.py \
+            tests/test_aura_architect_council_v3.py \
+            tests/test_aura_refactor_output_quality.py \
+            --junitxml=benchmark-four-regression.xml \
+            2>&1 | tee benchmark-four-regression.log
       - name: Run focused static and security gates
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -98,7 +109,7 @@ jobs:
           from pathlib import Path
           gates = {
               "compile": "PASS",
-              "focused_tests": "PASS",
+              "api_compatibility": "PASS",
               "property_tests": "PASS",
               "static_analysis": "PASS",
               "security": "PASS",
@@ -115,22 +126,29 @@ jobs:
             --repo-root . \
             --plans benchmarks/real_refactor_trial/plans.json \
             --output-dir benchmark-output/real-refactor-trial \
-            --junit benchmark-four-junit.xml \
+            --visible-junit benchmark-four-visible.xml \
+            --hidden-junit benchmark-four-hidden.xml \
+            --regression-junit benchmark-four-regression.xml \
             --gate-evidence benchmark-four-gates.json \
-            --base-sha "${{ github.event.pull_request.base.sha || github.event.before }}" \
             --head-sha "${{ github.sha }}"
           cat benchmark-output/real-refactor-trial/real_refactor_trial.md
-      - name: Validate selected Council plan and evidence
+      - name: Validate standard record and selected Council plan
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           report = json.loads(Path("benchmark-output/real-refactor-trial/real_refactor_trial.json").read_text())
+          record = report["code_quality_record"]
           assert report["selected_plan_match"] is True
           assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-C-INTEGRATED-ARENA-ARCHITECTURE"
-          assert report["execution_evidence"]["junit"]["status"] == "PASS"
-          assert report["execution_evidence"]["junit"]["tests"] >= 40
-          assert report["disposition"] == "READY_FOR_CODERABBIT_OR_MANUAL_REVIEW"
+          for group in ("visible_junit", "hidden_junit", "regression_junit"):
+              assert report["execution_evidence"][group]["status"] == "PASS"
+              assert report["execution_evidence"][group]["tests"] > 0
+          assert record["standard"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
+          assert record["disposition"] == "ACCEPTED"
+          assert record["mandatory_gate_passed"] is True
+          assert record["gates"]["scope"]["status"] == "PASS"
+          assert not record["patch_stats"]["out_of_scope_files"]
           prior = report["prior_evidence"]["benchmark_three"]
           assert prior["v3_token_reduction_pct"] == 32.83
           assert prior["fixture_code_quality_score"] == 97.5
@@ -154,12 +172,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-real-refactor-trial-v1
+          name: aura-real-refactor-trial-v2
           path: |
             benchmark-output/real-refactor-trial/
-            benchmark-four-junit.xml
+            benchmark-four-visible.xml
+            benchmark-four-hidden.xml
+            benchmark-four-regression.xml
             benchmark-four-gates.json
-            benchmark-four-tests.log
+            benchmark-four-visible.log
+            benchmark-four-hidden.log
+            benchmark-four-regression.log
             architect-mcp-tools.json
             container-compose.resolved.yml
             benchmarks/real_refactor_trial/plans.json
