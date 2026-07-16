@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 from pathlib import Path
+import threading
 import time
 from typing import Any, Callable, Mapping, Sequence
 
@@ -56,7 +57,16 @@ def _tokens(value: Any) -> int:
     return (len(_canonical(value)) + 3) // 4
 
 
+def _normalize_plan_path(value: Any) -> str:
+    normalized = str(value or "").replace("\\", "/").strip()
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
+
+
 def _candidate(candidate: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
+    if not isinstance(candidate, Mapping):
+        raise ValueError("every candidate must be an object")
     candidate_id = str(candidate.get("candidate_id") or candidate.get("plan_id") or "candidate")
     plan = dict(candidate.get("plan") or candidate)
     if len(json.dumps(plan, default=str).encode("utf-8")) > MAX_PLAN_BYTES:
@@ -89,14 +99,15 @@ def _task_projection(task: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "task_id": str(task.get("task_id") or task.get("id") or ""),
         "objective": str(task.get("objective") or "").strip(),
-        "target_file": str(task.get("target_file") or "").replace("\\", "/").lstrip("./"),
+        "target_file": _normalize_plan_path(task.get("target_file")),
         "target_symbol": str(task.get("target_symbol") or ""),
         "related_files": [
-            str(item).replace("\\", "/").lstrip("./")
-            for item in list(task.get("related_files") or [])
+            _normalize_plan_path(item) for item in list(task.get("related_files") or [])
         ],
         "allowed_scope": str(task.get("allowed_scope") or "single bounded edit"),
-        "acceptance": str(task.get("acceptance") or "Return a bounded patch or a refusal reason."),
+        "acceptance": str(
+            task.get("acceptance") or "Return a bounded patch or a refusal reason."
+        ),
         "expected_output": str(task.get("expected_output") or "UNIFIED_DIFF").upper(),
         "size": str(task.get("size") or "S").upper(),
     }
@@ -127,6 +138,8 @@ class PlanAssessment:
         value = asdict(self)
         value["selected_critic_lanes"] = list(self.selected_critic_lanes)
         value["reasons"] = list(self.reasons)
+        value["actual_model_calls"] = 0
+        value["planned_critic_lane_count"] = self.planned_critic_calls
         return value
 
 
@@ -151,9 +164,15 @@ class AuraArenaArchitectConnector:
             raw_record = Path(record_path)
             self.record_path = raw_record if raw_record.is_absolute() else self.repo_root / raw_record
         else:
-            self.record_path = self.repo_root / "Aura_Memory" / "benchmarks" / "architect_plan_selections.jsonl"
+            self.record_path = (
+                self.repo_root
+                / "Aura_Memory"
+                / "benchmarks"
+                / "architect_plan_selections.jsonl"
+            )
         self.output_vault = output_vault or RefactorOutputVault(self.repo_root)
         self._surgeon_sessions: dict[str, ControlledRefactorSessionManager] = {}
+        self._lock = threading.RLock()
 
     @property
     def bridge(self) -> Any:
@@ -274,11 +293,18 @@ class AuraArenaArchitectConnector:
         objective = str(objective or "").strip()
         if not objective:
             raise ValueError("objective is required")
-        if not candidates:
+        if isinstance(candidates, (str, bytes)) or not candidates:
             raise ValueError("at least one candidate plan is required")
         if len(candidates) > MAX_CANDIDATES:
             raise ValueError(f"at most {MAX_CANDIDATES} candidate plans are allowed")
-        ids = [str(item.get("candidate_id") or item.get("plan_id") or "candidate") for item in candidates]
+        if any(not isinstance(item, Mapping) for item in candidates):
+            raise ValueError("every candidate must be an object")
+        if isinstance(required_capabilities, (str, bytes)):
+            raise ValueError("required_capabilities must be an array")
+        ids = [
+            str(item.get("candidate_id") or item.get("plan_id") or "candidate")
+            for item in candidates
+        ]
         if len(ids) != len(set(ids)):
             raise ValueError("candidate ids must be unique")
         profile = normalize_control_profile(control, surface=surface, benchmark=benchmark)
@@ -316,7 +342,8 @@ class AuraArenaArchitectConnector:
                 "provenance": dict(item.get("provenance") or {}),
                 "token_usage": dict(item.get("token_usage") or {}),
                 "prompt_digest": item.get("prompt_digest") or "",
-                "response_digest": item.get("response_digest") or _digest(item.get("plan") or item),
+                "response_digest": item.get("response_digest")
+                or _digest(item.get("plan") or item),
             }
             for item in candidates
         }
@@ -343,43 +370,47 @@ class AuraArenaArchitectConnector:
                 }
             ),
             "selection_method": "CONTROLLED_DETERMINISTIC_COUNCIL_PROFILE_RUBRIC",
+            "actual_model_calls": 0,
             "proposal_only": True,
             "production_mutation": False,
             "human_review_required": True,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
-        if record:
-            self._record("architect_plan_selected", result)
-        if profile.record_outputs:
-            vault_run = str(run_id or f"ARCH-{time.time_ns()}-{result['selection_digest'][:8]}")
-            run = self.output_vault.start_run(
-                run_id=vault_run,
-                objective=objective,
-                surface=profile.surface,
-                control_profile=profile.to_dict(),
-                metadata={
-                    "connector_version": ARENA_ARCHITECT_CONNECTOR_VERSION,
-                    "benchmark": benchmark,
-                },
-            )
-            vault_record = self.output_vault.record_plan_candidates(
-                run_id=vault_run,
-                objective=objective,
-                candidates=candidates,
-                comparison=result,
-            )
-            result["output_vault"] = {
-                "enabled": True,
-                "run_id": vault_run,
-                "root": profile.output_root,
-                "run_path": run.get("relative_path"),
-                "selection_artifact": vault_record.get("selection_artifact"),
-                "comparison_digest": vault_record.get("comparison_digest"),
-                "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
-            }
-        else:
-            result["output_vault"] = {"enabled": False}
+        with self._lock:
+            if record:
+                self._record("architect_plan_selected", result)
+            if profile.record_outputs:
+                vault_run = str(
+                    run_id or f"ARCH-{time.time_ns()}-{result['selection_digest'][:8]}"
+                )
+                run = self.output_vault.start_run(
+                    run_id=vault_run,
+                    objective=objective,
+                    surface=profile.surface,
+                    control_profile=profile.to_dict(),
+                    metadata={
+                        "connector_version": ARENA_ARCHITECT_CONNECTOR_VERSION,
+                        "benchmark": benchmark,
+                    },
+                )
+                vault_record = self.output_vault.record_plan_candidates(
+                    run_id=vault_run,
+                    objective=objective,
+                    candidates=candidates,
+                    comparison=result,
+                )
+                result["output_vault"] = {
+                    "enabled": True,
+                    "run_id": vault_run,
+                    "root": profile.output_root,
+                    "run_path": run.get("relative_path"),
+                    "selection_artifact": vault_record.get("selection_artifact"),
+                    "comparison_digest": vault_record.get("comparison_digest"),
+                    "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
+                }
+            else:
+                result["output_vault"] = {"enabled": False}
         return result
 
     def _prepare_selected_plan(
@@ -427,28 +458,39 @@ class AuraArenaArchitectConnector:
             for task in tasks
         }
         for capsule in prepared.arena.agent_capsules:
-            capsule["depends_on"] = dependency_map.get(str(capsule.get("task_id") or ""), [])
-
-        sessions = getattr(self.bridge, "_sessions", None)
-        if not isinstance(sessions, dict):
-            raise ValueError("Arena bridge cannot register a prepared selected-plan session")
-        phase_hash = prepared.plan.phase_hash
-        sessions[phase_hash] = {
-            "prepared": prepared,
-            "arena": prepared.arena,
-            "grounding": [item.to_dict() for item in prepared.grounding],
-            "verification": None,
-            "stage_results": [],
-            "hotswap_capsule": None,
-            "selected_plan_digest": _digest(selected_plan),
-            "dependency_map": dependency_map,
-        }
+            capsule["depends_on"] = dependency_map.get(
+                str(capsule.get("task_id") or ""),
+                [],
+            )
 
         findings = [item.to_dict() for item in prepared.shadow_report.findings]
         routes = [dict(item) for item in prepared.arena.routing_decisions]
+        blockers = [item for item in findings if item.get("severity") == "blocker"]
+        warnings = [item for item in findings if item.get("severity") != "blocker"]
+        builder_authorized = bool(routes) and all(
+            item.get("route") == "BUILDER_PATCH" for item in routes
+        )
+        executable = not blockers and builder_authorized
+
+        sessions = getattr(self.bridge, "_sessions", None)
+        if executable:
+            if not isinstance(sessions, dict):
+                raise ValueError("Arena bridge cannot register a prepared selected-plan session")
+            phase_hash = prepared.plan.phase_hash
+            sessions[phase_hash] = {
+                "prepared": prepared,
+                "arena": prepared.arena,
+                "grounding": [item.to_dict() for item in prepared.grounding],
+                "verification": None,
+                "stage_results": [],
+                "hotswap_capsule": None,
+                "selected_plan_digest": _digest(selected_plan),
+                "dependency_map": dependency_map,
+            }
+        phase_hash = prepared.plan.phase_hash
         act_capsules = [dict(item) for item in prepared.arena.agent_capsules]
         return {
-            "ok": True,
+            "ok": executable,
             "plan_phase_hash": phase_hash,
             "selected_plan_digest": _digest(selected_plan),
             "requested_act_projection_digest": _digest(requested_projection),
@@ -460,14 +502,14 @@ class AuraArenaArchitectConnector:
             "shadow_gate": prepared.shadow_report.gate,
             "routing_decisions": routes,
             "liquid_arena_lease_count": len(prepared.arena.agent_leases),
-            "builder_patch_authorized": bool(routes)
-            and all(item.get("route") == "BUILDER_PATCH" for item in routes),
+            "builder_patch_authorized": builder_authorized,
             "ready_for_incubator": prepared.arena.ready_for_incubator,
-            "blockers": [item for item in findings if item.get("severity") == "blocker"],
-            "warnings": [item for item in findings if item.get("severity") != "blocker"],
+            "blockers": blockers,
+            "warnings": warnings,
             "intensity": prepared.intensity,
             "proposal_only": True,
             "human_review_required": True,
+            "production_mutation": False,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -567,12 +609,14 @@ class AuraArenaArchitectConnector:
         )
         session_id = str(dict(opened.get("session") or {}).get("session_id") or "")
         if session_id:
-            self._surgeon_sessions[session_id] = manager
+            with self._lock:
+                self._surgeon_sessions[session_id] = manager
         opened["architect_preparation"] = prepared
         return opened
 
     def surgeon_next(self, session_id: str) -> dict[str, Any]:
-        return self._session_manager(session_id).next_turn(session_id)
+        with self._lock:
+            return self._session_manager(session_id).next_turn(session_id)
 
     def surgeon_submit(
         self,
@@ -582,22 +626,26 @@ class AuraArenaArchitectConnector:
         response: str,
         provider_usage: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
-        return self._session_manager(session_id).submit_response(
-            session_id=session_id,
-            turn_id=turn_id,
-            response=response,
-            provider_usage=dict(provider_usage or {}),
-        )
+        with self._lock:
+            return self._session_manager(session_id).submit_response(
+                session_id=session_id,
+                turn_id=turn_id,
+                response=response,
+                provider_usage=dict(provider_usage or {}),
+            )
 
     def surgeon_status(self, session_id: str) -> dict[str, Any]:
-        return self._session_manager(session_id).get_session(session_id)
+        with self._lock:
+            return self._session_manager(session_id).get_session(session_id)
 
     def surgeon_replan(self, **kwargs: Any) -> dict[str, Any]:
         session_id = str(kwargs.get("session_id") or "")
-        return self._session_manager(session_id).apply_council_replan(**kwargs)
+        with self._lock:
+            return self._session_manager(session_id).apply_council_replan(**kwargs)
 
     def list_refactor_outputs(self, *, limit: int = 50) -> dict[str, Any]:
-        return self.output_vault.list_runs(limit=limit)
+        with self._lock:
+            return self.output_vault.list_runs(limit=limit)
 
     def load_refactor_output(
         self,
@@ -605,7 +653,8 @@ class AuraArenaArchitectConnector:
         *,
         max_bytes: int = 2_000_000,
     ) -> dict[str, Any]:
-        return self.output_vault.load_artifact(relative_path, max_bytes=max_bytes)
+        with self._lock:
+            return self.output_vault.load_artifact(relative_path, max_bytes=max_bytes)
 
     def route_native_model(self, **kwargs: Any) -> dict[str, Any]:
         return self.model_gateway.plan_best(**kwargs)
