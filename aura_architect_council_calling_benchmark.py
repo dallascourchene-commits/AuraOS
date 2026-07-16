@@ -23,6 +23,14 @@ def _digest(value: Any) -> str:
     return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
 
 
+def _comparable_plan(plan: dict[str, Any]) -> dict[str, Any]:
+    """Remove policy-version metadata while preserving substantive plan contracts."""
+    comparable = json.loads(json.dumps(plan, sort_keys=True, default=str))
+    comparable.pop("council_version", None)
+    comparable.pop("ledger_hints", None)
+    return comparable
+
+
 def _role_totals(calls: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
     totals: dict[str, dict[str, int]] = {}
     for call in calls:
@@ -51,6 +59,7 @@ async def _run_arm(
     )
     decision = await router.plan_with_council(base.OBJECTIVE)
     plan = dict(decision.selected_plan)
+    comparable = _comparable_plan(plan)
     quality = base.score_plan(root, plan, label=arm_id)
     usage = caller.summary()
     calls = list(usage.get("calls", []) or [])
@@ -62,6 +71,7 @@ async def _run_arm(
         "arm_id": arm_id,
         "selected_plan": plan,
         "selected_plan_digest": _digest(plan),
+        "comparable_plan_digest": _digest(comparable),
         "quality": quality,
         "call_count": int(usage.get("call_count") or 0),
         "input_tokens": int(usage.get("input_token_estimate") or 0),
@@ -121,20 +131,23 @@ async def run(root: Path, fixture: dict[str, Any], output_dir: Path) -> dict[str
             "input_token_reduction_pct": _pct_reduction(v2["input_tokens"], v3["input_tokens"]),
             "total_token_reduction_pct": _pct_reduction(v2["total_tokens"], v3["total_tokens"]),
             "quality_delta": round(v3["quality"]["quality_score"] - v2["quality"]["quality_score"], 4),
-            "selected_plan_same": v2["selected_plan_digest"] == v3["selected_plan_digest"],
+            "selected_plan_same": v2["comparable_plan_digest"] == v3["comparable_plan_digest"],
+            "raw_plan_digest_same": v2["selected_plan_digest"] == v3["selected_plan_digest"],
             "v2_critic_reports": v2["critic_report_count"],
             "v3_critic_reports": v3["critic_report_count"],
         },
         "interpretation": (
             "This ablation isolates Council critic-calling policy on one frozen response fixture. "
-            "It measures whether selective routing preserves the selected plan and deterministic "
-            "planning score while reducing calls and token proxy. It does not independently measure "
-            "generated-code quality; that is evaluated by the separate executable patch benchmark."
+            "It measures whether selective routing preserves the substantive selected plan and "
+            "deterministic planning score while reducing calls and token proxy. It does not "
+            "independently measure generated-code quality; that is evaluated by the separate "
+            "executable patch benchmark."
         ),
         "limitations": [
             "The response fixture is fixed and single-session assisted, not a blinded provider trial.",
-            "Equal selected plans show no loss on this fixture, not general equivalence.",
+            "Equal substantive plans show no loss on this fixture, not general equivalence.",
             "Token values are deterministic estimates unless provider usage is supplied.",
+            "Version-only and ledger-hint metadata are excluded from plan-equivalence comparison.",
         ],
     }
     return report
@@ -155,7 +168,8 @@ def _write_markdown(report: dict[str, Any], path: Path) -> None:
 - Input-token reduction: **{comparison['input_token_reduction_pct']}%**
 - Total-token reduction: **{comparison['total_token_reduction_pct']}%**
 - Planning-quality delta: **{comparison['quality_delta']:+.4f}**
-- Selected plan unchanged: **{comparison['selected_plan_same']}**
+- Substantive selected plan unchanged: **{comparison['selected_plan_same']}**
+- Raw plan digest unchanged: **{comparison['raw_plan_digest_same']}**
 
 {report['interpretation']}
 """
