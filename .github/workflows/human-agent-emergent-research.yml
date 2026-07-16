@@ -15,126 +15,15 @@ on:
       - ".github/workflows/human-agent-emergent-research.yml"
 
 permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: human-agent-emergent-research-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  seed-full-results:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Check out feature branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Download exact 22-probe artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: aura-emergent-capacity-probes
-          path: /tmp/aura-emergent-capacity-probes
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: 29528471066
-
-      - name: Install lossless seed reports
-        shell: bash
-        run: |
-          set -euo pipefail
-          seed_dir="Aura_Memory/emergent_results/seed_runs/2026-07-16"
-          mkdir -p "$seed_dir"
-          cp /tmp/aura-emergent-capacity-probes/emergent_capacity_probes/emergent_capacity_probes.json \
-             "$seed_dir/emergent_capacity_probes.json"
-          cp /tmp/aura-emergent-capacity-probes/emergent_capacity_probes/emergent_capacity_report.md \
-             "$seed_dir/emergent_capacity_report.md"
-          cp /tmp/aura-emergent-capacity-probes/grounded_capacity_projection_probes/grounded_capacity_projections.json \
-             "$seed_dir/grounded_capacity_projections.json"
-          cp /tmp/aura-emergent-capacity-probes/grounded_capacity_projection_probes/grounded_capacity_projection_report.md \
-             "$seed_dir/grounded_capacity_projection_report.md"
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, json
-
-          root = Path("Aura_Memory/emergent_results/seed_runs/2026-07-16")
-          files = {}
-          for path in sorted(root.iterdir()):
-              if path.name == "provenance.jsonl":
-                  continue
-              raw = path.read_bytes()
-              files[path.name] = {
-                  "bytes": len(raw),
-                  "sha256": hashlib.sha256(raw).hexdigest(),
-              }
-          provenance = {
-              "source": "GitHub Actions artifact aura-emergent-capacity-probes",
-              "source_run_id": 29528471066,
-              "source_artifact_id": 8387658835,
-              "source_artifact_digest": "sha256:aefff3dbbed14d061b38218763fef36dc7e376820dc81301f0a9aeae6a049c1a",
-              "repository_head_analyzed": "624a8afefe1824ef070f4684bcc7dc4195542162",
-              "probe_count": 22,
-              "failure_count": 0,
-              "python_file_count": 708,
-              "topology_node_count": 10815,
-              "topology_edge_count": 20764,
-              "lossless": True,
-              "files": files,
-          }
-          (root / "provenance.jsonl").write_text(
-              json.dumps(provenance, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          PY
-
-      - name: Commit and publish seed reports
-        id: publish-seeds
-        shell: bash
-        run: |
-          set -uo pipefail
-          : > /tmp/seed-push.log
-          {
-            set -x
-            # Runtime Aura_Memory stays ignored. Only this dated, immutable fixture set is versioned.
-            git add -f Aura_Memory/emergent_results/seed_runs/2026-07-16
-            if git diff --cached --quiet; then
-              echo "Exact seed reports already committed."
-              exit 0
-            fi
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "data: seed full emergent capacity reports"
-            git fetch origin "${{ github.head_ref }}"
-            git rebase "origin/${{ github.head_ref }}"
-            git push origin "HEAD:${{ github.head_ref }}"
-          } > /tmp/seed-push.log 2>&1
-          status=$?
-          cat /tmp/seed-push.log
-          exit "$status"
-
-      - name: Upload seed publication diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: human-agent-emergent-seed-push-${{ github.run_id }}
-          path: /tmp/seed-push.log
-          if-no-files-found: error
-
   verify:
-    needs: seed-full-results
-    if: always() && (needs.seed-full-results.result == 'success' || needs.seed-full-results.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check out latest feature branch
+      - name: Check out exact pull-request head
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
