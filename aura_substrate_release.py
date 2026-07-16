@@ -48,6 +48,11 @@ def _canonical_bytes(payload: dict[str, Any]) -> bytes:
     return (canonical_json(payload) + "\n").encode("utf-8")
 
 
+def _git_blob_sha1(data: bytes) -> str:
+    header = f"blob {len(data)}\0".encode("ascii")
+    return hashlib.sha1(header + data).hexdigest()
+
+
 def _chunks(values: tuple[Any, ...], size: int) -> tuple[tuple[Any, ...], ...]:
     return tuple(values[index:index + size] for index in range(0, len(values), size))
 
@@ -121,7 +126,7 @@ def write_manifest_artifacts(
     return receipt
 
 
-def _safe_release_path(root: Path, relative: str) -> Path:
+def _safe_release_file(root: Path, relative: str) -> tuple[Path, bytes]:
     candidate = root / relative
     resolved_root = root.resolve()
     try:
@@ -148,7 +153,7 @@ def _safe_release_path(root: Path, relative: str) -> Path:
         data.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise ValueError(f"release file is not UTF-8: {relative}") from exc
-    return resolved
+    return resolved, data
 
 
 def _payload(root: str | Path, manifest: SubstrateManifest) -> dict[str, Any]:
@@ -157,8 +162,14 @@ def _payload(root: str | Path, manifest: SubstrateManifest) -> dict[str, Any]:
     for record in manifest.files:
         if not record.release_included:
             continue
-        _safe_release_path(base, record.path)
-        files.append({"path": record.path, "role": record.role.value})
+        _path, data = _safe_release_file(base, record.path)
+        files.append(
+            {
+                "path": record.path,
+                "role": record.role.value,
+                "git_blob_sha1": _git_blob_sha1(data),
+            }
+        )
     paths = tuple(item["path"] for item in files)
     if paths != tuple(sorted(set(paths))):
         raise ValueError("release index paths must be unique and sorted")
