@@ -5,11 +5,13 @@ DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Local Human Agent Arena HTTP Surface)
 DEPENDENCIES: __future__, argparse, http.server, json, mimetypes, pathlib, urllib.parse, typing,
               aura_human_agent_arena, aura_human_agent_workflow,
-              aura_coding_workbench_wfst_adapter
+              aura_coding_workbench_wfst_adapter, aura_emergent_refactor_workspace,
+              aura_arena_research_bridge
 FUNCTIONS: HumanAgentArenaServerState, dispatch_api_request, make_handler, serve, main
 SYNOPSIS: Local Human Agent Arena HTTP surface with guarded-WFST Human and Coding
-workflow projections, bounded ephemeral tools, and jurisdiction-aware Civic map
-projection. No direct production mutation. No provider APIs required.
+workflow projections, bounded ephemeral tools, persistent emergent-property evidence,
+bounded arXiv/GitHub research, and jurisdiction-aware Civic map projection. No direct
+production mutation. External evidence never grants patch authority.
 [/AURA_MASTER_KEY]
 """
 
@@ -20,10 +22,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import mimetypes
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 from urllib.parse import parse_qs, urlparse
 
+from aura_arena_research_bridge import ArenaResearchBridge
 from aura_coding_workbench_wfst_adapter import CodingWorkbenchWFSTSession
+from aura_emergent_refactor_workspace import EmergentResultsStore
 from aura_human_agent_arena import HumanAgentArena
 from aura_human_agent_workflow import HumanAgentWorkflow
 
@@ -32,11 +36,11 @@ DEFAULT_PORT = 8090
 FRONTEND_DIR = Path(__file__).resolve().parent / "aura_human_agent_arena"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_3"
+SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_4"
 
 
 class HumanAgentArenaServerState:
-    """Holds the spatial Arena plus guarded Human and Coding workflows."""
+    """Holds spatial, guarded-workflow, emergent-evidence, and research surfaces."""
 
     def __init__(self, repo_root: str | Path = ".", *, demo: bool = False):
         self.repo_root = Path(repo_root).resolve()
@@ -44,6 +48,9 @@ class HumanAgentArenaServerState:
         self.arena = HumanAgentArena(self.repo_root, demo=self.demo)
         self.workflow = HumanAgentWorkflow(self.repo_root)
         self.coding_workbench = CodingWorkbenchWFSTSession(self.repo_root)
+        self.emergent_store = EmergentResultsStore(self.repo_root)
+        self.seed_import = self.emergent_store.import_seed_reports()
+        self.research_bridge = ArenaResearchBridge(str(self.repo_root))
 
     def close(self) -> None:
         self.workflow.close()
@@ -205,6 +212,159 @@ def _handle_civic_api(method: str, route: str, parsed: Any, body: dict[str, Any]
     return _error("civic route not found", 404)
 
 
+def _attach_emergent_refactor_context(
+    state: HumanAgentArenaServerState,
+    objective: str,
+    *,
+    finding_ids: Iterable[str] = (),
+    research_evidence_ids: Iterable[str] = (),
+) -> dict[str, Any]:
+    objective_text = str(objective or "").strip()
+    if not objective_text:
+        return {"ok": False, "error": "objective_required_for_emergent_context"}
+    packet_result = state.emergent_store.build_refactor_packet(
+        objective_text,
+        finding_ids=list(finding_ids),
+        research_evidence_ids=list(research_evidence_ids),
+        max_findings=8,
+        persist=True,
+    )
+    packet = dict(packet_result.get("packet") or {})
+    if not packet:
+        return packet_result
+    workflow_evidence = state.workflow.evidence
+    workflow_evidence["emergent_refactor_packet"] = packet
+    workflow_evidence["emergent_findings"] = list(packet.get("selected_findings") or [])
+    workflow_evidence["research_gaps"] = list(packet.get("research_gaps") or [])
+    workflow_evidence["external_research_evidence"] = list(packet.get("research_evidence") or [])
+    existing_tests = list(workflow_evidence.get("test_targets") or [])
+    workflow_evidence["test_targets"] = _unique([*existing_tests, *list(packet.get("required_tests") or [])])[:16]
+    return packet_result
+
+
+def _prepare_payload_with_emergent_context(
+    state: HumanAgentArenaServerState,
+    payload: dict[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    objective = str(state.workflow.state.objective or payload.get("objective") or "").strip()
+    result = _attach_emergent_refactor_context(
+        state,
+        objective,
+        finding_ids=list(payload.get("finding_ids") or []),
+        research_evidence_ids=list(payload.get("research_evidence_ids") or []),
+    ) if objective else {"ok": False, "error": "objective_not_set"}
+    packet = dict(result.get("packet") or {})
+    merged = dict(payload)
+    merged["acceptance_criteria"] = _unique(
+        [
+            *list(payload.get("acceptance_criteria") or []),
+            *list(packet.get("acceptance_criteria") or []),
+            *[f"Close or explicitly defer research gap: {item.get('gap')}" for item in packet.get("research_gaps", []) if item.get("gap")],
+        ]
+    )
+    merged["emergent_refactor_packet_id"] = packet.get("packet_id", "")
+    return merged, result
+
+
+def _handle_emergent_and_research_api(
+    state: HumanAgentArenaServerState,
+    method: str,
+    route: str,
+    query: dict[str, list[str]],
+    body: dict[str, Any],
+) -> tuple[int, dict[str, Any]] | None:
+    if method == "GET" and route == "/api/human-agent/emergent/runs":
+        return 200, state.emergent_store.list_runs(limit=_query_int(query.get("limit", [None])[0], default=50))
+
+    if method == "GET" and route == "/api/human-agent/emergent/search":
+        text = str(query.get("q", [""])[0] or "")
+        statuses = [item for item in str(query.get("status", [""])[0] or "").split(",") if item]
+        return 200, state.emergent_store.search_findings(
+            text,
+            limit=_query_int(query.get("limit", [None])[0], default=20),
+            statuses=statuses,
+        )
+
+    if method == "GET" and route.startswith("/api/human-agent/emergent/findings/"):
+        finding_id = route.rsplit("/", 1)[-1]
+        result = state.emergent_store.get_finding(finding_id)
+        return (200 if result.get("ok") else 404), result
+
+    if method == "GET" and route.startswith("/api/human-agent/emergent/runs/"):
+        run_id = route.rsplit("/", 1)[-1]
+        result = state.emergent_store.get_run(run_id)
+        return (200 if result.get("ok") else 404), result
+
+    if method == "POST" and route == "/api/human-agent/emergent/import":
+        report = body.get("report")
+        if not isinstance(report, dict) or not report:
+            return _error("report is required")
+        try:
+            result = state.emergent_store.store_report(
+                report,
+                source=str(body.get("source") or "human_agent_arena_import"),
+                label=str(body.get("label") or ""),
+                metadata=dict(body.get("metadata") or {}),
+            )
+        except Exception as exc:  # noqa: BLE001
+            return _error(f"emergent_import_failed:{exc}")
+        return 200, result
+
+    if method == "POST" and route == "/api/human-agent/emergent/refactor-packet":
+        objective = str(body.get("objective") or state.workflow.state.objective or "").strip()
+        try:
+            result = _attach_emergent_refactor_context(
+                state,
+                objective,
+                finding_ids=list(body.get("finding_ids") or []),
+                research_evidence_ids=list(body.get("research_evidence_ids") or []),
+            )
+        except Exception as exc:  # noqa: BLE001
+            return _error(f"refactor_packet_failed:{exc}")
+        return (200 if result.get("ok") else 409), result
+
+    if method == "POST" and route == "/api/human-agent/research/search":
+        provider = str(body.get("provider") or "").lower()
+        search_query = str(body.get("query") or "")
+        try:
+            result = state.research_bridge.search(
+                provider,
+                search_query,
+                limit=int(body.get("limit") or 8),
+                include_sidecars=bool(body.get("include_sidecars", False)),
+                sidecar_limit=int(body.get("sidecar_limit") or 2),
+            )
+        except Exception as exc:  # noqa: BLE001
+            return _error(f"research_search_failed:{exc}")
+        if not result.get("ok"):
+            return 502, result
+        stored = state.emergent_store.store_research_evidence(
+            provider=provider,
+            query=search_query,
+            results=list(result.get("results") or []),
+            linked_finding_ids=list(body.get("finding_ids") or []),
+            metadata={
+                "metadata_truth": result.get("metadata_truth"),
+                "sidecar_truth": result.get("sidecar_truth"),
+                "count": result.get("count", 0),
+            },
+        )
+        result["stored_evidence"] = stored
+        return 200, result
+
+    if method == "GET" and route == "/api/human-agent/research/evidence":
+        return 200, state.emergent_store.list_research_evidence(
+            limit=_query_int(query.get("limit", [None])[0], default=50)
+        )
+
+    if method == "GET" and route.startswith("/api/human-agent/research/evidence/"):
+        evidence_id = route.rsplit("/", 1)[-1]
+        result = state.emergent_store.get_research_evidence(evidence_id)
+        return (200 if result.get("ok") else 404), result
+
+    return None
+
+
 def dispatch_api_request(
     state: HumanAgentArenaServerState,
     method: str,
@@ -220,6 +380,10 @@ def dispatch_api_request(
     if route.startswith("/api/civic"):
         return _handle_civic_api(method, route, parsed, body)
 
+    enhanced = _handle_emergent_and_research_api(state, method, route, query, body)
+    if enhanced is not None:
+        return enhanced
+
     if method == "GET" and route == "/api/human-agent/state":
         workflow = state.workflow.get_state()
         return 200, {
@@ -230,6 +394,9 @@ def dispatch_api_request(
             "workflow": workflow,
             "routing": workflow.get("routing", {}),
             "coding_workbench": state.coding_workbench.get_state(),
+            "emergent_workspace": state.emergent_store.list_runs(limit=20),
+            "seed_import": state.seed_import,
+            "research_evidence": state.emergent_store.list_research_evidence(limit=20),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -263,14 +430,36 @@ def dispatch_api_request(
         action_id = str(body.get("action_id") or "")
         if not action_id:
             return _error("action_id is required")
-        result = state.workflow.execute_guarded(action_id, dict(body.get("payload") or {}))
+        action_payload = dict(body.get("payload") or {})
+        emergent_context: dict[str, Any] = {}
+        if action_id == "prepare_capsule":
+            action_payload, emergent_context = _prepare_payload_with_emergent_context(state, action_payload)
+        elif action_id == "ground_context" and state.workflow.state.objective:
+            emergent_context = _attach_emergent_refactor_context(state, state.workflow.state.objective)
+        result = state.workflow.execute_guarded(action_id, action_payload)
+        if result.get("ok") and action_id in {"set_objective", "ground_context"}:
+            objective = str(state.workflow.state.objective or action_payload.get("objective") or "")
+            if objective:
+                emergent_context = _attach_emergent_refactor_context(state, objective)
+        if emergent_context:
+            result["emergent_context"] = emergent_context
+            result["workflow"] = state.workflow.get_state()
         return (200 if result.get("ok") else 409), result
 
     if method == "POST" and route == "/api/human-agent/workflow/command":
         command = str(body.get("command") or "")
         if not command.strip():
             return _error("command is required")
-        result = state.workflow.ingest_command(command, dict(body.get("payload") or {}))
+        command_payload = dict(body.get("payload") or {})
+        emergent_context: dict[str, Any] = {}
+        if state.workflow.state.objective:
+            command_payload, emergent_context = _prepare_payload_with_emergent_context(state, command_payload)
+        result = state.workflow.ingest_command(command, command_payload)
+        objective = str(state.workflow.state.objective or "")
+        if result.get("ok") and objective:
+            emergent_context = _attach_emergent_refactor_context(state, objective)
+            result["emergent_context"] = emergent_context
+            result["workflow"] = state.workflow.get_state()
         return (200 if result.get("ok") else 409), result
 
     if method == "GET" and route == "/api/coding-workbench/state":
@@ -294,16 +483,75 @@ def dispatch_api_request(
         return (200 if result.get("ok") else 409), result
 
     if method == "GET" and route == "/api/human-agent/tools":
-        return 200, state.workflow.tools.get_tools()
+        tools = state.workflow.tools.get_tools()
+        tools.setdefault("tools", [])
+        tools["tools"].extend(
+            [
+                {
+                    "tool_id": "emergent_refactor_workspace",
+                    "title": "Emergent Refactor Workspace",
+                    "purpose": "Search stored emergent properties and compile them into refactor evidence.",
+                    "capability": "search_emergent_evidence",
+                    "stage": "GROUND",
+                    "risk": "low",
+                    "runtime": "trusted_server_adapter",
+                    "requires": ["objective"],
+                    "produces": ["emergent_refactor_packet", "research_gaps"],
+                },
+                {
+                    "tool_id": "research_forager",
+                    "title": "arXiv / GitHub Research Forager",
+                    "purpose": "Search official public APIs and preserve bounded external evidence for missing pieces.",
+                    "capability": "external_research",
+                    "stage": "GROUND",
+                    "risk": "medium",
+                    "runtime": "bounded_network_adapter",
+                    "requires": ["provider", "query"],
+                    "produces": ["research_evidence"],
+                },
+            ]
+        )
+        return 200, tools
 
     if method == "POST" and route == "/api/human-agent/tools/run":
         tool_id = str(body.get("tool_id") or "")
         if not tool_id:
             return _error("tool_id is required")
+        inputs = dict(body.get("inputs") or {})
+        objective = str(body.get("objective") or state.workflow.state.objective)
+        if tool_id == "emergent_refactor_workspace":
+            result = _attach_emergent_refactor_context(
+                state,
+                objective,
+                finding_ids=list(inputs.get("finding_ids") or []),
+                research_evidence_ids=list(inputs.get("research_evidence_ids") or []),
+            )
+            return (200 if result.get("ok") else 409), {
+                "run_id": str((result.get("packet") or {}).get("packet_id") or ""),
+                "tool_id": tool_id,
+                "status": "COMPLETED" if result.get("ok") else "FAILED",
+                "outputs": result,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+        if tool_id == "research_forager":
+            return dispatch_api_request(
+                state,
+                "POST",
+                "/api/human-agent/research/search",
+                {
+                    "provider": inputs.get("provider"),
+                    "query": inputs.get("query") or objective,
+                    "limit": inputs.get("limit", 8),
+                    "include_sidecars": inputs.get("include_sidecars", False),
+                    "sidecar_limit": inputs.get("sidecar_limit", 2),
+                    "finding_ids": inputs.get("finding_ids", []),
+                },
+            )
         result = state.workflow.tools.execute(
             tool_id,
-            objective=str(body.get("objective") or state.workflow.state.objective),
-            inputs=dict(body.get("inputs") or {}),
+            objective=objective,
+            inputs=inputs,
         )
         return (200 if result.get("status") != "DENIED" else 409), result
 
@@ -369,7 +617,6 @@ def dispatch_api_request(
                 "vsa_patch_authority": VSA_PATCH_AUTHORITY,
             }
 
-    # Preserve the existing spatial topology lens as an optional secondary surface.
     if method == "POST" and route == "/api/human-agent/command":
         command = str(body.get("command") or "")
         if not command.strip():
@@ -389,7 +636,7 @@ def dispatch_api_request(
 
 def make_handler(state: HumanAgentArenaServerState):
     class HumanAgentArenaHandler(BaseHTTPRequestHandler):
-        server_version = "AuraHumanAgentArena/0.3"
+        server_version = "AuraHumanAgentArena/0.4"
 
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
@@ -464,7 +711,8 @@ def serve(
     server = HTTPServer((host, int(port)), make_handler(state))
     print(f"Aura Human Agent Arena listening on http://{host}:{port}")
     print("Guarded Human and Coding WFST workflows are active.")
-    print("No model/provider APIs are called by this server.")
+    print("Stored emergent evidence and bounded arXiv/GitHub research are active.")
+    print("External evidence is advisory; exact source spans, tests, and human review remain authoritative.")
     try:
         server.serve_forever()
     finally:
@@ -509,6 +757,18 @@ def _query_float(value: str | None, *, default: float = 0.0) -> float:
         return max(0.0, float(value))
     except (ValueError, TypeError):
         return default
+
+
+def _unique(values: Iterable[Any]) -> list[Any]:
+    result: list[Any] = []
+    seen: set[str] = set()
+    for value in values:
+        key = json.dumps(value, sort_keys=True, default=str) if isinstance(value, (dict, list)) else str(value)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        result.append(value)
+    return result
 
 
 if __name__ == "__main__":
