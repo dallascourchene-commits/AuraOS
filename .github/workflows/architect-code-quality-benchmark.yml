@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: architect-code-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PYTHONHASHSEED: "0"
@@ -200,8 +204,13 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add README.md USER_GUIDE.md .aura/ARCHITECTURE.md .aura/CODEMAP.json .aura/CODEMAP.md Aura_Memory/live_topology_ast.json .github/workflows/architect-code-quality-benchmark.yml
+          git add -u
+          if git diff --cached --quiet; then
+            echo 'Canonical documentation already synchronized'
+            exit 0
+          fi
           git commit -m 'Update canonical refactor quality documentation'
+          git pull --rebase origin analysis/architect-benchmark
           git push origin HEAD:analysis/architect-benchmark
       # AURA_DOC_SYNC_END
       - name: Upload executable quality evidence
