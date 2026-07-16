@@ -1,16 +1,17 @@
-"""Safe filesystem boundary for external-LLM session exports.
+"""Safe filesystem boundary for recorded external-LLM session exports.
 
-The base session manager owns orchestration. This adapter narrows the MCP-visible
-export effect to ``Aura_Staging/external_llm_sessions`` beneath the repository.
-Absolute paths, parent traversal, and symlink escapes are rejected.
+The recorded session manager owns orchestration and append-only refactor evidence.
+This adapter narrows the MCP-visible export effect to
+``Aura_Staging/external_llm_sessions`` beneath the repository. Absolute paths,
+parent traversal, and symlink escapes are rejected.
 """
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-from aura_external_llm_session import (
-    AuraExternalLLMSessionManager as _BaseSessionManager,
+from aura_external_llm_session_recorded import (
+    RecordedAuraExternalLLMSessionManager as _BaseSessionManager,
     PATCH_AUTHORITY,
     VSA_PATCH_AUTHORITY,
 )
@@ -19,7 +20,7 @@ EXPORT_ROOT = Path("Aura_Staging") / "external_llm_sessions"
 
 
 class AuraExternalLLMSessionManager(_BaseSessionManager):
-    """Session manager whose export effect is confined to Aura's review workspace."""
+    """Recorded session manager confined to Aura's review workspace."""
 
     def export_session(self, session_id: str, output_path: str | Path) -> dict[str, Any]:
         raw = Path(str(output_path or "").strip())
@@ -58,6 +59,12 @@ class AuraExternalLLMSessionManager(_BaseSessionManager):
         if result.get("ok"):
             result["review_workspace"] = EXPORT_ROOT.as_posix()
             result["relative_path"] = resolved_target.relative_to(self.repo_root).as_posix()
+            session = self._sessions.get(str(session_id))
+            if session is not None:
+                result["chronicle"] = self.chronicle.summary(
+                    correlation_id=f"REF-{session.session_id}",
+                    session_id=session.session_id,
+                )
         return result
 
     @staticmethod
