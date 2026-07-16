@@ -34,6 +34,7 @@ jobs:
           python -m py_compile \
             aura_refactor_output_record.py \
             aura_refactor_patch_evaluator.py \
+            aura_refactor_patch_evaluator_v2.py \
             aura_code_quality_registry.py \
             aura_current_code_quality_assessment.py \
             aura_executable_refactor_benchmark.py \
@@ -132,20 +133,39 @@ jobs:
               assert record['token_usage'].get('input_tokens_estimated') is not None
               assert record['token_usage'].get('output_tokens_estimated') is not None
               assert record['patch_stats']['file_count'] > 0
+              for group in ('visible_tests', 'hidden_tests', 'regression_tests'):
+                  assert record['gates'][group]['total'] > 0
+                  assert 0 <= record['gates'][group]['passed'] <= record['gates'][group]['total']
 
-          assert records['broad_context']['disposition'] == 'PARTIAL'
-          assert records['broad_context']['gates']['visible_tests']['status'] == 'PASS'
-          assert records['broad_context']['gates']['hidden_tests']['status'] == 'FAIL'
-          assert records['slice_surgeon']['disposition'] == 'PARTIAL'
-          assert records['slice_surgeon']['gates']['visible_tests']['status'] == 'PASS'
-          assert records['slice_surgeon']['gates']['hidden_tests']['status'] == 'FAIL'
+          broad = records['broad_context']
+          assert broad['disposition'] == 'PARTIAL'
+          assert broad['gates']['visible_tests']['status'] == 'PASS'
+          assert broad['gates']['visible_tests']['passed'] == 3
+          assert broad['gates']['visible_tests']['total'] == 3
+          assert broad['gates']['hidden_tests']['status'] == 'FAIL'
+          assert broad['gates']['hidden_tests']['passed'] == 1
+          assert broad['gates']['hidden_tests']['total'] == 3
+          assert broad['gates']['regression_tests']['passed'] == 2
+
+          sliced = records['slice_surgeon']
+          assert sliced['disposition'] == 'PARTIAL'
+          assert sliced['gates']['visible_tests']['status'] == 'PASS'
+          assert sliced['gates']['visible_tests']['passed'] == 3
+          assert sliced['gates']['hidden_tests']['status'] == 'FAIL'
+          assert sliced['gates']['hidden_tests']['passed'] == 2
+          assert sliced['gates']['hidden_tests']['total'] == 3
+          assert sliced['gates']['regression_tests']['passed'] == 2
+
           for arm_id in ('council_v2', 'council_v3'):
               record = records[arm_id]
               assert record['working_status'] == 'WORKING'
               assert record['disposition'] == 'ACCEPTED'
               assert record['mandatory_gate_passed'] is True
+              assert record['gates']['visible_tests']['passed'] == 3
               assert record['gates']['hidden_tests']['status'] == 'PASS'
-              assert record['gates']['regression_tests']['status'] == 'PASS'
+              assert record['gates']['hidden_tests']['passed'] == 3
+              assert record['gates']['hidden_tests']['total'] == 3
+              assert record['gates']['regression_tests']['passed'] == 2
               assert record['gates']['api_compatibility']['status'] == 'PASS'
               assert record['gates']['security']['status'] == 'PASS'
 
@@ -169,6 +189,13 @@ jobs:
           print(json.dumps({
               'calling_comparison': calling,
               'executable_comparison': comparison,
+              'hidden_test_results': {
+                  key: {
+                      'passed': value['gates']['hidden_tests']['passed'],
+                      'total': value['gates']['hidden_tests']['total'],
+                  }
+                  for key, value in records.items()
+              },
               'dispositions': {key: value['disposition'] for key, value in records.items()},
           }, indent=2, sort_keys=True))
           PY
@@ -189,6 +216,7 @@ jobs:
             executable-quality.log
             aura_refactor_output_record.py
             aura_refactor_patch_evaluator.py
+            aura_refactor_patch_evaluator_v2.py
             aura_code_quality_registry.py
             aura_current_code_quality_assessment.py
             aura_executable_refactor_benchmark.py
