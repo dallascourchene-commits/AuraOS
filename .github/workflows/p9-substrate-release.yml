@@ -154,4 +154,13 @@ jobs:
             tests/test_aura_qdkt_observations.py \
             tests/test_aura_qdkt_compatibility.py \
             tests/test_aura_coding_arena_planning.py \
-            tests/test_aura_civic_planning_projection.py
+            tests/test_aura_civic_planning_projection.py \
+            --junitxml="p9-regressions-${{ matrix.python-version }}.xml"
+      - name: Upload regression diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p9-regressions-${{ matrix.python-version }}
+          path: p9-regressions-${{ matrix.python-version }}.xml
+          if-no-files-found: error
+          retention-days: 14
