@@ -1,7 +1,7 @@
 """Route refactor cognition between Aura's Council and sliced implementers.
 
 The Council is strategic: cross-domain architecture, dependency sequencing,
-trade-offs, invariants, and graph repair.  The Surgeon is tactical: exact-file
+trade-offs, invariants, and graph repair. The Surgeon is tactical: exact-file
 implementation, compile-ready patches, focused tests, and bounded local repair.
 
 Routing is descriptive and advisory. It never grants patch or promotion authority.
@@ -75,7 +75,27 @@ class CognitiveLaborDecision:
 
 
 def _text(value: Any) -> str:
-    return str(value or "").strip().lower()
+    """Collect human evidence values without treating schema keys as evidence."""
+    parts: list[str] = []
+
+    def visit(item: Any) -> None:
+        if isinstance(item, str):
+            text = item.strip().lower()
+            if text:
+                parts.append(text)
+            return
+        if isinstance(item, dict):
+            for child in item.values():
+                visit(child)
+            return
+        if isinstance(item, (list, tuple, set)):
+            for child in item:
+                visit(child)
+            return
+        # Booleans and numeric scope fields are evaluated explicitly by route_failure.
+
+    visit(value)
+    return " ".join(parts)
 
 
 def _contains(text: str, terms: set[str]) -> bool:
