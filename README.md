@@ -91,6 +91,7 @@ The benchmark preserves these failures as evidence. The generated skeleton remai
 - Quality scores and normalized costs: **DERIVED**.
 - Provider-reported tokens and billed costs: **UNAVAILABLE** in this fixture run.
 - The pilot was not blinded; all role fixtures were authored in one GPT-5.6 Thinking session.
+- The values above come from the first scored workflow snapshot. The PR may receive later safety and documentation commits while retaining the same reproducible fixture and benchmark commands.
 
 ### Reproduce
 
