@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784217914,
+  "generated_at_unix": 1784218287,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1008,
+    "included_file_count": 1009,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -918,6 +918,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_controlled_replan.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -1030,23 +1031,23 @@
     ]
   },
   "summary": {
-    "file_count": 1008,
-    "total_bytes": 50810602,
-    "text_tokens_est": 3306371,
+    "file_count": 1009,
+    "total_bytes": 50816538,
+    "text_tokens_est": 3307854,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 133,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 705,
+      "python_module": 706,
       "schema_or_lexicon": 100,
       "support_file": 42
     },
-    "topology_nodes": 8276,
-    "topology_edges": 18080,
+    "topology_nodes": 8277,
+    "topology_edges": 18081,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 21498.75
+    "elapsed_ms": 22556.18
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1978,6 +1979,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_controlled_replan.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_potential_repl.py",
@@ -5608,7 +5610,7 @@
         "file": "aura_controlled_refactor_session.py",
         "kind": "class",
         "line": 36,
-        "end_line": 212,
+        "end_line": 280,
         "semantic_id": "aura_controlled_refactor_session.py#class:ControlledRefactorSessionManager:65480b7c246037b7",
         "signature_hash": "7aaed37e839c3e35"
       }
@@ -13993,6 +13995,16 @@
         "signature_hash": "2df34609d13da164"
       }
     ],
+    "_NoTurnBridge": [
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_controlled_replan.py#class:_NoTurnBridge:de047fa2c0103b2e",
+        "signature_hash": "c774d5152186d65e"
+      }
+    ],
     "_PreparedBridgeProxy": [
       {
         "file": "aura_controlled_refactor_session.py",
@@ -19445,6 +19457,16 @@
         "end_line": 22,
         "semantic_id": "tests/test_aura_substrate_verifier.py#function:_blob:5eaa8ab03b23bde8",
         "signature_hash": "d78e47a46143b971"
+      }
+    ],
+    "_block_replan": [
+      {
+        "file": "aura_controlled_refactor_session.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 207,
+        "semantic_id": "aura_controlled_refactor_session.py#method:ControlledRefactorSessionManager._block_replan:d9b011c3d7053671",
+        "signature_hash": "072be60c354adf04"
       }
     ],
     "_blocked": [
@@ -28441,6 +28463,16 @@
         "signature_hash": "fed2cab18467b81f"
       }
     ],
+    "_install_session": [
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_controlled_replan.py#function:_install_session:ee4c7a35d92adeed",
+        "signature_hash": "b9aa19ff4b0f2477"
+      }
+    ],
     "_integer": [
       {
         "file": "aura_codemap_verify.py",
@@ -30391,6 +30423,16 @@
         "end_line": 186,
         "semantic_id": "tests/test_aura_emergent_result_verifier.py#function:_make_st3gg_focused_connections:f502e340917e55d1",
         "signature_hash": "d24d30b730bf3f94"
+      }
+    ],
+    "_manager": [
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_controlled_replan.py#function:_manager:a1fbd2076003347a",
+        "signature_hash": "a909d67ac7d4b509"
       }
     ],
     "_manager_for": [
@@ -43177,8 +43219,8 @@
       {
         "file": "aura_controlled_refactor_session.py",
         "kind": "method",
-        "line": 187,
-        "end_line": 212,
+        "line": 209,
+        "end_line": 280,
         "semantic_id": "aura_controlled_refactor_session.py#method:ControlledRefactorSessionManager.apply_council_replan:93092e86087ea8a2",
         "signature_hash": "f53be6d8917f93fd"
       },
@@ -43813,6 +43855,14 @@
         "end_line": 389,
         "semantic_id": "tests/test_aura_architect_controls_vault_and_surfaces.py#method:_TwoTaskBridge.aura_get_micro_context:ccb4ddc4d2c9253d",
         "signature_hash": "09a716de3bbaab90"
+      },
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_controlled_replan.py#method:_NoTurnBridge.aura_get_micro_context:8e387b711efee566",
+        "signature_hash": "82bfdc65dac75d6b"
       },
       {
         "file": "tests/test_aura_external_llm_session.py",
@@ -71383,6 +71433,26 @@
         "signature_hash": "7e1d83b4aeaac4f6"
       }
     ],
+    "test_council_replan_cannot_issue_turn_after_session_budget": [
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_controlled_replan.py#function:test_council_replan_cannot_issue_turn_after_session_budget:cdde0d5941e8d6c1",
+        "signature_hash": "202ef46785943edb"
+      }
+    ],
+    "test_council_replan_never_leaves_waiting_state_without_turn": [
+      {
+        "file": "tests/test_aura_controlled_replan.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 96,
+        "semantic_id": "tests/test_aura_controlled_replan.py#function:test_council_replan_never_leaves_waiting_state_without_turn:a57d7c8c7cd9c5c6",
+        "signature_hash": "92237d6ca00456a9"
+      }
+    ],
     "test_council_trace_style_music_fusion_is_blocked_before_act_capsule": [
       {
         "file": "test_aura_music_coding_arena.py",
@@ -97800,7 +97870,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 317,
+        "hub_rank": 318,
         "node_count": 11,
         "edge_count": 30,
         "degree": 30,
@@ -98543,7 +98613,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 311,
+        "hub_rank": 312,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -99340,7 +99410,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 318,
+        "hub_rank": 319,
         "node_count": 10,
         "edge_count": 30,
         "degree": 30,
@@ -99524,7 +99594,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 310,
+        "hub_rank": 311,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -101083,7 +101153,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 321,
+        "hub_rank": 322,
         "node_count": 7,
         "edge_count": 30,
         "degree": 30,
@@ -102240,7 +102310,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 309,
+        "hub_rank": 310,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -102870,7 +102940,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 320,
+        "hub_rank": 321,
         "node_count": 7,
         "edge_count": 30,
         "degree": 30,
@@ -106370,7 +106440,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 308,
+        "hub_rank": 309,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -108207,22 +108277,23 @@
     {
       "path": "aura_controlled_refactor_session.py",
       "role": "python_module",
-      "bytes": 8673,
-      "lines": 216,
-      "tokens_est": 2169,
-      "symbol_count": 9,
+      "bytes": 11284,
+      "lines": 284,
+      "tokens_est": 2821,
+      "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 323,
-        "node_count": 10,
-        "edge_count": 29,
-        "degree": 29,
+        "hub_rank": 307,
+        "node_count": 11,
+        "edge_count": 31,
+        "degree": 31,
         "symbols": [
           "ControlledRefactorSessionManager",
           "_PreparedBridgeProxy",
           "__getattr__",
           "__init__",
+          "_block_replan",
           "apply_council_replan",
           "aura_prepare_arena",
           "open_prepared_session",
@@ -108235,45 +108306,45 @@
           "aura_refactor_output_vault.py"
         ],
         "edge_kinds": {
-          "defines": 18,
+          "defines": 20,
           "call": 7,
           "import_module": 4
         }
       },
-      "digest8": "52d8dbd4c3815422",
+      "digest8": "1057e20e8665ee35",
       "vector": [
-        0.178276,
-        -0.066153,
-        -0.24555,
-        0.180519,
-        0.196216,
-        -0.241065,
-        -0.11773,
-        0.176034,
-        0.106517,
-        -0.075123,
-        -0.191731,
-        -0.095305,
-        -0.202943,
-        -0.200701,
-        0.216398,
-        -0.250035,
-        -0.169306,
-        -0.261248,
-        -0.08185,
-        0.003364,
-        -0.234338,
-        -0.155852,
-        0.279187,
-        0.198458,
-        -0.153609,
-        0.285915,
-        0.093062,
-        0.086335,
-        -0.162579,
-        0.095305,
-        0.088577,
-        -0.104275
+        -0.115108,
+        0.187808,
+        0.039985,
+        -0.124802,
+        0.260508,
+        -0.003635,
+        0.056948,
+        -0.168422,
+        -0.224158,
+        -0.190232,
+        0.052102,
+        -0.192655,
+        -0.248392,
+        0.209618,
+        0.163575,
+        0.069065,
+        -0.066642,
+        0.233852,
+        -0.204772,
+        0.301705,
+        -0.098145,
+        -0.146612,
+        0.081182,
+        0.069065,
+        -0.175692,
+        0.250815,
+        0.018175,
+        0.076335,
+        0.192655,
+        0.248392,
+        0.216888,
+        -0.301705
       ]
     },
     {
@@ -109914,7 +109985,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 315,
+        "hub_rank": 316,
         "node_count": 12,
         "edge_count": 30,
         "degree": 30,
@@ -110525,7 +110596,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 314,
+        "hub_rank": 315,
         "node_count": 12,
         "edge_count": 30,
         "degree": 30,
@@ -110659,7 +110730,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 316,
+        "hub_rank": 317,
         "node_count": 11,
         "edge_count": 30,
         "degree": 30,
@@ -116794,7 +116865,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 319,
+        "hub_rank": 320,
         "node_count": 8,
         "edge_count": 30,
         "degree": 30,
@@ -120432,7 +120503,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 307,
+        "hub_rank": 308,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -122744,7 +122815,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 313,
+        "hub_rank": 314,
         "node_count": 13,
         "edge_count": 30,
         "degree": 30,
@@ -123029,7 +123100,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 322,
+        "hub_rank": 323,
         "node_count": 6,
         "edge_count": 30,
         "degree": 30,
@@ -138195,7 +138266,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 312,
+        "hub_rank": 313,
         "node_count": 8,
         "edge_count": 31,
         "degree": 31,
@@ -141329,93 +141400,93 @@
     {
       "path": ".github/workflows/architect-real-refactor-hardening.yml",
       "role": "schema_or_lexicon",
-      "bytes": 2590,
-      "lines": 69,
-      "tokens_est": 648,
+      "bytes": 2692,
+      "lines": 71,
+      "tokens_est": 673,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "9f970b8200fb4ab5",
+      "digest8": "a66c2d096348e48f",
       "vector": [
-        0.164017,
-        0.114923,
-        -0.230962,
-        0.204184,
-        -0.181869,
-        0.105997,
-        -0.217573,
-        -0.090377,
-        0.186332,
-        -0.097071,
-        -0.268898,
-        -0.09484,
-        -0.222036,
-        -0.132775,
-        0.146165,
-        0.00781,
-        -0.19749,
-        -0.255509,
-        0.282287,
-        -0.275593,
-        -0.235425,
-        -0.181869,
-        -0.041283,
-        -0.284519,
-        -0.032357,
-        0.045746,
-        0.010042,
-        -0.233194,
-        0.188563,
-        -0.112692,
-        0.005579,
-        -0.119386
+        -0.259797,
+        -0.127135,
+        -0.140401,
+        0.131557,
+        0.22442,
+        -0.281907,
+        0.051959,
+        -0.124924,
+        0.164722,
+        0.182411,
+        0.219998,
+        0.147034,
+        -0.20231,
+        -0.226631,
+        -0.158089,
+        0.262008,
+        0.098391,
+        0.122713,
+        0.151456,
+        0.182411,
+        0.09618,
+        0.120502,
+        0.085125,
+        -0.200099,
+        0.235475,
+        -0.186833,
+        0.164722,
+        0.259797,
+        -0.085125,
+        -0.233264,
+        -0.127135,
+        0.003317
       ]
     },
     {
       "path": ".github/workflows/architect-real-refactor-trial.yml",
       "role": "schema_or_lexicon",
-      "bytes": 10491,
-      "lines": 242,
-      "tokens_est": 2623,
+      "bytes": 10644,
+      "lines": 245,
+      "tokens_est": 2661,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7ebdaffe1ec79672",
+      "digest8": "e322711dec72c7f5",
       "vector": [
-        -0.271807,
-        0.114864,
-        -0.080746,
-        -0.276356,
-        0.035255,
-        -0.094393,
-        -0.274082,
-        -0.055726,
-        0.164904,
-        0.210395,
-        0.210395,
-        -0.098942,
-        0.174002,
-        0.244513,
-        0.014784,
-        -0.078472,
-        -0.089844,
-        0.210395,
-        0.073922,
-        -0.28318,
-        0.119413,
-        -0.210395,
-        -0.235415,
-        0.128511,
-        -0.089844,
-        0.117139,
-        0.164904,
-        -0.269533,
-        0.194473,
-        -0.101217,
-        0.007961,
-        -0.285454
+        -0.231081,
+        0.137639,
+        -0.107333,
+        0.27654,
+        0.104807,
+        -0.243709,
+        -0.117435,
+        0.006314,
+        -0.087129,
+        -0.087129,
+        0.044196,
+        0.018941,
+        -0.145215,
+        0.19825,
+        0.069451,
+        -0.117435,
+        -0.321998,
+        0.228556,
+        0.079553,
+        0.152791,
+        0.018941,
+        0.135113,
+        0.268963,
+        0.243709,
+        -0.180572,
+        -0.132588,
+        -0.137639,
+        0.314422,
+        -0.193199,
+        -0.087129,
+        -0.11996,
+        0.309371
       ]
     },
     {
@@ -152633,6 +152704,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_controlled_replan.py",
+      "role": "python_module",
+      "bytes": 3070,
+      "lines": 97,
+      "tokens_est": 768,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "777b40f12e962309",
+      "vector": [
+        0.101259,
+        0.142218,
+        -0.10581,
+        -0.258268,
+        -0.19683,
+        0.001138,
+        0.114912,
+        0.089882,
+        0.119463,
+        -0.039821,
+        0.271921,
+        0.012515,
+        -0.051199,
+        0.290125,
+        -0.199105,
+        -0.067127,
+        -0.023893,
+        -0.260544,
+        -0.253717,
+        0.230962,
+        0.023893,
+        0.032995,
+        0.133116,
+        -0.249166,
+        0.203656,
+        -0.210483,
+        0.028444,
+        0.233238,
+        -0.26737,
+        0.240064,
+        0.217309,
+        -0.160422
+      ]
+    },
+    {
       "path": "tests/test_aura_crucible_phase_b.py",
       "role": "python_module",
       "bytes": 13902,
@@ -157297,7 +157414,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 3737,
+      "dead_end_count": 3738,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -157397,11 +157514,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 526,
-      "node_count": 8276,
-      "edge_count": 18080,
+      "node_count": 8277,
+      "edge_count": 18081,
       "spectral_layout": true,
-      "spectral_sparsity": 0.058006,
-      "global_health": 0.970277
+      "spectral_sparsity": 0.057999,
+      "global_health": 0.97028
     },
     "file_index": {
       "aura_node.py": {
@@ -168214,8 +168331,36 @@
           "import_module": 3
         }
       },
-      "aura_opd_license_adapter.py": {
+      "aura_controlled_refactor_session.py": {
         "hub_rank": 307,
+        "node_count": 11,
+        "edge_count": 31,
+        "degree": 31,
+        "symbols": [
+          "ControlledRefactorSessionManager",
+          "_PreparedBridgeProxy",
+          "__getattr__",
+          "__init__",
+          "_block_replan",
+          "apply_council_replan",
+          "aura_prepare_arena",
+          "open_prepared_session",
+          "submit_response"
+        ],
+        "neighbor_files": [
+          "aura_architect_control.py",
+          "aura_arena_architect_connector.py",
+          "aura_external_llm_session_safe.py",
+          "aura_refactor_output_vault.py"
+        ],
+        "edge_kinds": {
+          "defines": 20,
+          "call": 7,
+          "import_module": 4
+        }
+      },
+      "aura_opd_license_adapter.py": {
+        "hub_rank": 308,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -168238,7 +168383,7 @@
         }
       },
       "aura_codemap_auto_refresh.py": {
-        "hub_rank": 308,
+        "hub_rank": 309,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -168264,7 +168409,7 @@
         }
       },
       "aura_benchmark_registry.py": {
-        "hub_rank": 309,
+        "hub_rank": 310,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -168291,7 +168436,7 @@
         }
       },
       "aura_arch_reasoner.py": {
-        "hub_rank": 310,
+        "hub_rank": 311,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -168319,7 +168464,7 @@
         }
       },
       "aura_agent_arena_mcp_external_llm.py": {
-        "hub_rank": 311,
+        "hub_rank": 312,
         "node_count": 9,
         "edge_count": 31,
         "degree": 31,
@@ -168345,7 +168490,7 @@
         }
       },
       "test_travel_sidecar_stack.py": {
-        "hub_rank": 312,
+        "hub_rank": 313,
         "node_count": 8,
         "edge_count": 31,
         "degree": 31,
@@ -168374,7 +168519,7 @@
         }
       },
       "aura_qdkt_projection_types.py": {
-        "hub_rank": 313,
+        "hub_rank": 314,
         "node_count": 13,
         "edge_count": 30,
         "degree": 30,
@@ -168401,7 +168546,7 @@
         }
       },
       "aura_ephemeral_adapter_registry.py": {
-        "hub_rank": 314,
+        "hub_rank": 315,
         "node_count": 12,
         "edge_count": 30,
         "degree": 30,
@@ -168425,7 +168570,7 @@
         }
       },
       "aura_efficiency_report.py": {
-        "hub_rank": 315,
+        "hub_rank": 316,
         "node_count": 12,
         "edge_count": 30,
         "degree": 30,
@@ -168449,7 +168594,7 @@
         }
       },
       "aura_ephemeral_fst.py": {
-        "hub_rank": 316,
+        "hub_rank": 317,
         "node_count": 11,
         "edge_count": 30,
         "degree": 30,
@@ -168473,7 +168618,7 @@
         }
       },
       "aura_adaptive_model_executor.py": {
-        "hub_rank": 317,
+        "hub_rank": 318,
         "node_count": 11,
         "edge_count": 30,
         "degree": 30,
@@ -168504,7 +168649,7 @@
         }
       },
       "aura_anthropic_router.py": {
-        "hub_rank": 318,
+        "hub_rank": 319,
         "node_count": 10,
         "edge_count": 30,
         "degree": 30,
@@ -168533,7 +168678,7 @@
         }
       },
       "aura_mitosis.py": {
-        "hub_rank": 319,
+        "hub_rank": 320,
         "node_count": 8,
         "edge_count": 30,
         "degree": 30,
@@ -168560,7 +168705,7 @@
         }
       },
       "aura_capability_resolver.py": {
-        "hub_rank": 320,
+        "hub_rank": 321,
         "node_count": 7,
         "edge_count": 30,
         "degree": 30,
@@ -168585,7 +168730,7 @@
         }
       },
       "aura_arena_st3gg_egress.py": {
-        "hub_rank": 321,
+        "hub_rank": 322,
         "node_count": 7,
         "edge_count": 30,
         "degree": 30,
@@ -168610,7 +168755,7 @@
         }
       },
       "aura_refactor_chronicle_recorded.py": {
-        "hub_rank": 322,
+        "hub_rank": 323,
         "node_count": 6,
         "edge_count": 30,
         "degree": 30,
@@ -168632,33 +168777,6 @@
           "call": 17,
           "defines": 10,
           "import_module": 3
-        }
-      },
-      "aura_controlled_refactor_session.py": {
-        "hub_rank": 323,
-        "node_count": 10,
-        "edge_count": 29,
-        "degree": 29,
-        "symbols": [
-          "ControlledRefactorSessionManager",
-          "_PreparedBridgeProxy",
-          "__getattr__",
-          "__init__",
-          "apply_council_replan",
-          "aura_prepare_arena",
-          "open_prepared_session",
-          "submit_response"
-        ],
-        "neighbor_files": [
-          "aura_architect_control.py",
-          "aura_arena_architect_connector.py",
-          "aura_external_llm_session_safe.py",
-          "aura_refactor_output_vault.py"
-        ],
-        "edge_kinds": {
-          "defines": 18,
-          "call": 7,
-          "import_module": 4
         }
       },
       "aura_phase_capsule.py": {
