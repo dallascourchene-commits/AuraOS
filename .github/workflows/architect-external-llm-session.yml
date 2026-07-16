@@ -33,6 +33,7 @@ jobs:
         run: |
           python -m py_compile \
             aura_external_llm_session.py \
+            aura_external_llm_session_safe.py \
             aura_agent_arena_mcp_external_llm.py \
             tests/test_aura_external_llm_session.py
       - name: Run focused slice-session tests
@@ -62,6 +63,8 @@ jobs:
           }
           missing = sorted(required - names)
           assert not missing, missing
+          export_tool = next(tool for tool in tools if tool["name"] == "aura_llm_session_export")
+          assert "Aura_Staging/external_llm_sessions" in export_tool["description"]
           PY
       - name: Upload tool manifest
         uses: actions/upload-artifact@v4
