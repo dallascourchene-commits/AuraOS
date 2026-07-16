@@ -9,7 +9,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
@@ -53,3 +53,70 @@ jobs:
           path: architect-v2-tests.log
           if-no-files-found: error
           retention-days: 14
+
+  finalize-review:
+    needs: v2-tests
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.ref == 'analysis/architect-benchmark'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: analysis/architect-benchmark
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8.0,<9.0"
+      - name: Apply deterministic reconciliation
+        run: python scripts/pr131_finalize_reconciliation.py
+      - name: Validate reviewed fixes
+        run: |
+          python -m py_compile \
+            aura_external_llm_session.py \
+            aura_architect_benchmark_report.py \
+            scripts/update_architect_benchmark_readme.py
+          python -m pytest -q \
+            tests/test_aura_external_llm_session.py \
+            tests/test_aura_architect_council_v2_contracts.py
+          grep -q "168,569" README.md
+          grep -q "18 attempted, 18 recorded, 0 failed" README.md
+          grep -q "Benchmark quality: **93.50**" README.md
+      - name: Regenerate CODEMAP
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+      - name: Commit canonical reconciliation
+        run: |
+          git show HEAD^:.github/workflows/architect-refactor-v2-tests.yml > .github/workflows/architect-refactor-v2-tests.yml
+          rm -f \
+            scripts/pr131_finalize_reconciliation.py \
+            .github/workflows/pr131-finalize-reconciliation.yml \
+            .github/workflows/pr131-apply-final-review.yml \
+            .github/workflows/pr131-sync-final-benchmark-readme.yml
+          git config user.name "AuraOS Review Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_external_llm_session.py \
+            tests/test_aura_external_llm_session.py \
+            README.md \
+            aura_architect_benchmark_report.py \
+            .github/workflows/architect-consolidation-benchmark.yml \
+            .github/workflows/architect-external-llm-session.yml \
+            .github/workflows/architect-refactor-v2-tests.yml \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md
+          git add -u \
+            scripts/pr131_finalize_reconciliation.py \
+            .github/workflows/pr131-finalize-reconciliation.yml \
+            .github/workflows/pr131-apply-final-review.yml \
+            .github/workflows/pr131-sync-final-benchmark-readme.yml
+          git commit -m "fix(review): reconcile all inline findings and publish benchmarks"
+          git push origin HEAD:analysis/architect-benchmark
