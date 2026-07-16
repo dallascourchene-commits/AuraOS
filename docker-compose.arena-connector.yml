@@ -1,11 +1,9 @@
 services:
   aura-arena-connector:
-    build:
-      context: .
-      dockerfile: Dockerfile.arena-connector
     image: ghcr.io/dallascourchene-commits/auraos-arena-connector:latest
+    pull_policy: always
     ports:
-      - "8091:8091"
+      - "127.0.0.1:8091:8091"
     environment:
       AURA_REPO_ROOT: /opt/aura
       AURA_CONNECTOR_HOST: 0.0.0.0
