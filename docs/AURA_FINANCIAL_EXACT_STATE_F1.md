@@ -51,6 +51,7 @@ Accounts, balances, transactions, cash flows, debts, asset values, and fees acce
 
 - unsupported versions or altered ownership boundaries;
 - execution, advice, or non-proposal authority;
+- account authority owners that differ from the snapshot authority owner;
 - empty, duplicated, or unsorted account identities;
 - duplicated record identities;
 - unknown account references;
@@ -61,6 +62,8 @@ Accounts, balances, transactions, cash flows, debts, asset values, and fees acce
 - debt terms attached to a non-liability account;
 - asset values attached to a non-asset/non-investment account;
 - malformed dates, currencies, rates, sources, or decimals.
+
+Every balance, transaction, flow, debt, valuation, fee, and assumption is identified by its own record ID rather than its parent account ID. For transactions, both `effective_on` and `posted_on` are checked independently against the snapshot date and account lifecycle.
 
 Serialization is deterministic and the complete snapshot receives a stable 256-bit BLAKE2 digest through Aura's canonical event-contract serializer.
 
