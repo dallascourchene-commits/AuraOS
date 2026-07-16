@@ -113,7 +113,8 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
             return result
         session = dict(result.get("session") or {})
         session_id = str(session.get("session_id") or "")
-        vault_run = str(run_id or session_id)
+        parent_run = str(run_id or "").strip()
+        vault_run = f"{parent_run}-surgeon" if parent_run else session_id
         self._vault_runs[session_id] = vault_run
         if self.control.record_outputs:
             self.output_vault.start_run(
@@ -122,6 +123,7 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 surface=self.control.surface,
                 control_profile=self.control.to_dict(),
                 metadata={
+                    "parent_architect_run_id": parent_run,
                     "session_id": session_id,
                     "provider": str(provider or "external"),
                     "model": str(model or ""),
@@ -134,6 +136,7 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
         result["output_vault"] = {
             "enabled": self.control.record_outputs,
             "run_id": vault_run,
+            "parent_run_id": parent_run,
             "root": self.control.output_root,
             "visibility": "LOCAL_PRIVATE_FULL_OUTPUT",
         }
