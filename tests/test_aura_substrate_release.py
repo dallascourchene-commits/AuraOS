@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,10 @@ from aura_substrate_contracts import (
     SubstrateManifest,
 )
 from aura_substrate_release import build_release_index
+
+
+def _blob(data: bytes) -> str:
+    return hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
 
 
 def _manifest(path: str) -> SubstrateManifest:
@@ -36,20 +41,32 @@ def _manifest(path: str) -> SubstrateManifest:
     return SubstrateManifest(files=(record,), phases=(phase,))
 
 
-def test_release_index_is_deterministic_and_reference_only(tmp_path: Path) -> None:
+def test_release_index_is_deterministic_and_binds_exact_bytes(tmp_path: Path) -> None:
     path = tmp_path / "contract.py"
-    path.write_text("value = 1\n", encoding="utf-8")
+    first_bytes = b"value = 1\n"
+    path.write_bytes(first_bytes)
     manifest = _manifest("contract.py")
+
     first = build_release_index(tmp_path, manifest)
-    path.write_text("value = 2\n", encoding="utf-8")
-    second = build_release_index(tmp_path, manifest)
-    assert first == second
+    repeated = build_release_index(tmp_path, manifest)
+    assert first == repeated
     assert first["files"] == [
-        {"path": "contract.py", "role": "CANONICAL_CONTRACT"}
+        {
+            "path": "contract.py",
+            "role": "CANONICAL_CONTRACT",
+            "git_blob_sha1": _blob(first_bytes),
+        }
     ]
     assert first["package_format"] == "INDEX_ONLY"
     assert first["publication_performed"] is False
     assert first["index_digest"]
+
+    second_bytes = b"value = 2\n"
+    path.write_bytes(second_bytes)
+    changed = build_release_index(tmp_path, manifest)
+    assert changed != first
+    assert changed["files"][0]["git_blob_sha1"] == _blob(second_bytes)
+    assert changed["index_digest"] != first["index_digest"]
 
 
 def test_release_index_rejects_symlinks_forbidden_paths_and_non_utf8(tmp_path: Path) -> None:
