@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1051
-- **total_bytes**: 73839955
-- **text_tokens_est**: 8936306
-- **role_counts**: {'binary_artifact': 7, 'interface_surface': 13, 'knowledge_artifact': 136, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 689, 'schema_or_lexicon': 129, 'support_file': 64}
+- **file_count**: 978
+- **total_bytes**: 67265262
+- **text_tokens_est**: 7420232
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 132, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 681, 'schema_or_lexicon': 96, 'support_file': 41}
 - **topology_nodes**: 8077
 - **topology_edges**: 17607
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 17193.24
+- **elapsed_ms**: 22345.52
 
 ## Coverage
 
-- **included_file_count**: 1051
+- **included_file_count**: 978
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=47, `.pytest_cache`=4, `Aura_Memory`=37, `Aura_Sandbox`=1, `__pycache__`=71
+- **skipped_dir_file_counts**: `.git`=47, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
@@ -81,9 +81,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `USER_GUIDE.md:1042`, `aura_arch_reasoner.py:93`, `aura_node.py:7377`
 - `!optimize` -> `AURA_FINAL_REPORT.md:172`, `USER_GUIDE.md:1057`, `aura_node.py:5931`
 - `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `USER_GUIDE.md:1089`, `aura_capability_lane_registry.py:158`, `aura_node.py:5644`
-- `!plan` -> `aura_affordance_directory.py:440`, `aura_node.py:5602`, `benchmark-output/prompt_manifest.json:7`, `benchmark-output/raw_prompt.txt:5047`
+- `!plan` -> `aura_affordance_directory.py:440`, `aura_node.py:5602`
 - `!push` -> `USER_GUIDE.md:1098`, `aura_node.py:5166`, `test_aura_functions.py:207`
-- `!qdkt` -> `aura_affordance_directory.py:356`, `benchmark-output/prompt_manifest.json:7`, `benchmark-output/raw_prompt.txt:4963`
+- `!qdkt` -> `aura_affordance_directory.py:356`
 - `!r` -> `aura_arena_wfst_compiler.py:181`, `aura_capsule_trial_types.py:50`, `aura_civic_planning_inventory.py:63`, `aura_ephemeral_adapter_registry.py:134`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `USER_GUIDE.md:1037`, `aura_node.py:7492`
 - `!repair_db` -> `USER_GUIDE.md:1099`, `aura_node.py:6979`
@@ -100,14 +100,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!self_optimize` -> `USER_GUIDE.md:1057`, `aura_dynamic_attention.py:209`, `aura_node.py:5931`, `refactored-auraos-upgrades.md:826`
 - `!self_reflect` -> `USER_GUIDE.md:1056`, `aura_arch_reasoner.py:223`, `aura_hv_cache.py:36`, `aura_node.py:5749`
 - `!settings` -> `USER_GUIDE.md:1023`, `aura_node.py:7668`
-- `!show` -> `benchmark-output/prompt_manifest.json:7`, `benchmark-output/raw_prompt.txt:9469`, `docs/AURA_HUMAN_AGENT_ARENA.md:267`, `tests/test_aura_human_agent_concepts.py:86`
+- `!show` -> `docs/AURA_HUMAN_AGENT_ARENA.md:267`, `tests/test_aura_human_agent_concepts.py:86`
 - `!simulate` -> `USER_GUIDE.md:1028`, `aura_node.py:7142`, `cognitive_router.py:224`
 - `!something` -> `aura_node.py:4969`
 - `!srcPos` -> `index.html:122`
 - `!stage` -> `AURA_FINAL_REPORT.md:149`, `USER_GUIDE.md:1058`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2159`
 - `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `USER_GUIDE.md:1059`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2160`
-- `!stage_purge` -> `USER_GUIDE.md:1060`, `aura_capability_lane_registry.py:229`, `aura_node.py:6774`, `benchmark-output/prompt_manifest.json:7`
-- `!stage_review` -> `USER_GUIDE.md:1058`, `aura_capability_lane_registry.py:229`, `aura_node.py:6709`, `benchmark-output/prompt_manifest.json:7`
+- `!stage_purge` -> `USER_GUIDE.md:1060`, `aura_capability_lane_registry.py:229`, `aura_node.py:6774`
+- `!stage_review` -> `USER_GUIDE.md:1058`, `aura_capability_lane_registry.py:229`, `aura_node.py:6709`
 - `!status` -> `AURA_FINAL_REPORT.md:136`, `SYNTAX_FIXES_APPLIED.md:107`, `aura_node.py:5166`
 - `!strategy_buffer_stats` -> `USER_GUIDE.md:1039`, `aura_coordinated_solver.py:69`, `aura_node.py:7476`
 - `!synthesize` -> `USER_GUIDE.md:1077`, `aura_associative_core.py:141`, `aura_node.py:6896`, `test_aura_functions.py:913`
@@ -118,7 +118,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!tgtPos` -> `index.html:122`
 - `!timeline` -> `USER_GUIDE.md:1073`, `aura_node.py:6657`
 - `!topology` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `USER_GUIDE.md:1026`, `aura_affordance_directory.py:146`
-- `!topology_deep` -> `USER_GUIDE.md:1027`, `aura_affordance_directory.py:146`, `aura_node.py:7231`, `benchmark-output/prompt_manifest.json:7`
+- `!topology_deep` -> `USER_GUIDE.md:1027`, `aura_affordance_directory.py:146`, `aura_node.py:7231`
 - `!total` -> `aura_savings_dashboard.py:223`
 - `!voice` -> `USER_GUIDE.md:1101`, `aura_node.py:7731`
 
@@ -167,7 +167,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_arena_experience_ledger.py`
 - `aura_blockchain/__init__.py`
 - `aura_blockchain/block.py`
-- ... 39 more; query CODEMAP.json for exact file cards
+- ... 38 more; query CODEMAP.json for exact file cards
 
 ### topology_and_navigation
 - `.aura/topology_baseline.json`
@@ -212,7 +212,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 882 more; query CODEMAP.json for exact file cards
+- ... 810 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
