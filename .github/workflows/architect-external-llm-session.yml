@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -35,8 +37,12 @@ jobs:
             aura_external_llm_session.py \
             aura_refactor_chronicle.py \
             aura_refactor_chronicle_recorded.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
             aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
             aura_external_llm_session_recorded.py \
             aura_external_llm_session_persistent.py \
             aura_external_llm_session_safe.py \
