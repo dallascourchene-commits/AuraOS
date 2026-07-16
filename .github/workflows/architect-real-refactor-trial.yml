@@ -1,0 +1,149 @@
+name: Aura Real Refactor Trial V1
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "analysis/**"
+      - "refactor/**"
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-real-refactor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  real-refactor-trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Aura runtime and adversarial test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" hypothesis bandit ruff
+      - name: Compile Benchmark Four surfaces
+        run: |
+          python -m py_compile \
+            aura_cognitive_labor_router.py \
+            aura_refactor_state_ledger.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            tests/test_aura_benchmark_four.py
+      - name: Run adversarial and property-based tests
+        run: |
+          set -o pipefail
+          python -m pytest -q tests/test_aura_benchmark_four.py \
+            --junitxml=benchmark-four-junit.xml \
+            2>&1 | tee benchmark-four-tests.log
+      - name: Run focused static and security gates
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_cognitive_labor_router.py \
+            aura_refactor_state_ledger.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            tests/test_aura_benchmark_four.py
+          bandit -q -ll \
+            aura_cognitive_labor_router.py \
+            aura_refactor_state_ledger.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py
+      - name: Validate container contract
+        run: |
+          docker compose -f docker-compose.arena-connector.yml config > container-compose.resolved.yml
+          docker build -f Dockerfile.arena-connector -t auraos-arena-connector:test .
+      - name: Record passed engineering gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          gates = {
+              "compile": "PASS",
+              "focused_tests": "PASS",
+              "property_tests": "PASS",
+              "static_analysis": "PASS",
+              "security": "PASS",
+              "container_build": "PASS",
+              "proposal_only_authority": "PASS",
+          }
+          Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
+          PY
+      - name: Run the real refactor as Benchmark Four
+        run: |
+          python aura_real_refactor_trial.py \
+            --repo-root . \
+            --plans benchmarks/real_refactor_trial/plans.json \
+            --output-dir benchmark-output/real-refactor-trial \
+            --junit benchmark-four-junit.xml \
+            --gate-evidence benchmark-four-gates.json \
+            --base-sha "${{ github.event.pull_request.base.sha || github.event.before }}" \
+            --head-sha "${{ github.sha }}"
+          cat benchmark-output/real-refactor-trial/real_refactor_trial.md
+      - name: Validate selected Council plan and evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("benchmark-output/real-refactor-trial/real_refactor_trial.json").read_text())
+          assert report["selected_plan_match"] is True
+          assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-C-INTEGRATED-ARENA-ARCHITECTURE"
+          assert report["execution_evidence"]["junit"]["status"] == "PASS"
+          assert report["execution_evidence"]["junit"]["tests"] >= 10
+          assert report["disposition"] == "READY_FOR_CODERABBIT_OR_MANUAL_REVIEW"
+          prior = report["prior_evidence"]["benchmark_three"]
+          assert prior["v3_token_reduction_pct"] == 32.83
+          assert prior["fixture_code_quality_score"] == 97.5
+          PY
+      - name: Verify unified MCP tool discovery
+        run: |
+          python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json
+          python - <<'PY'
+          import json
+          names = {item["name"] for item in json.load(open("architect-mcp-tools.json"))}
+          required = {
+              "aura_llm_session_open",
+              "aura_architect_compare_plans",
+              "aura_architect_prepare",
+              "aura_native_model_route",
+              "aura_native_model_execute",
+          }
+          assert required <= names
+          PY
+      - name: Upload Benchmark Four evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-real-refactor-trial-v1
+          path: |
+            benchmark-output/real-refactor-trial/
+            benchmark-four-junit.xml
+            benchmark-four-gates.json
+            benchmark-four-tests.log
+            architect-mcp-tools.json
+            container-compose.resolved.yml
+            benchmarks/real_refactor_trial/plans.json
+          if-no-files-found: error
+          retention-days: 30
