@@ -222,7 +222,16 @@ def _attach_emergent_refactor_context(
     objective_text = str(objective or "").strip()
     if not objective_text:
         return {"ok": False, "error": "objective_required_for_emergent_context"}
-    packet_result = state.emergent_store.build_refactor_packet(
+    emergent_store = getattr(state, "emergent_store", None)
+    if emergent_store is None:
+        return {
+            "ok": False,
+            "status": "UNAVAILABLE",
+            "error": "emergent_workspace_unavailable",
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+    packet_result = emergent_store.build_refactor_packet(
         objective_text,
         finding_ids=list(finding_ids),
         research_evidence_ids=list(research_evidence_ids),
