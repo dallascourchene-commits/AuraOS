@@ -1,7 +1,7 @@
 """Controlled Surgeon session using a preselected Aura Architect plan.
 
 This adapter lets native Aura and third-party Arena clients execute the same
-prepared plan through the existing persistent slice-session machinery.  The
+prepared plan through the existing persistent slice-session machinery. The
 human-selected control profile bounds Council replans, Surgeon turns, repair
 attempts, context, output, and local evidence recording.
 """
@@ -138,7 +138,7 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
             "run_id": vault_run,
             "parent_run_id": parent_run,
             "root": self.control.output_root,
-            "visibility": "LOCAL_PRIVATE_FULL_OUTPUT",
+            "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
         }
         return result
 
@@ -179,9 +179,31 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 "response_digest": vault_record.get("response_digest"),
                 "evidence_digest": vault_record.get("evidence_digest"),
                 "artifacts": vault_record.get("artifacts", {}),
-                "visibility": "LOCAL_PRIVATE_FULL_OUTPUT",
+                "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
             }
         result["control_profile"] = self.control.to_dict()
+        return result
+
+    def _block_replan(
+        self,
+        session: Any,
+        *,
+        status: str,
+        error: str,
+    ) -> dict[str, Any]:
+        session.status = status
+        session.pending_turn = None
+        result = {
+            "ok": False,
+            "status": status,
+            "error": error,
+            "session": session.public_state(),
+            "turn": None,
+            "production_mutation": False,
+            "control_profile": self.control.to_dict(),
+        }
+        if hasattr(self, "_finalize"):
+            result["experience"] = self._finalize(session)
         return result
 
     def apply_council_replan(self, **kwargs: Any) -> dict[str, Any]:
@@ -193,6 +215,14 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 "production_mutation": False,
             }
         session_id = str(kwargs.get("session_id") or "")
+        session = self._sessions.get(session_id)
+        if session is None:
+            return {
+                "ok": False,
+                "error": "session_not_found",
+                "control_profile": self.control.to_dict(),
+                "production_mutation": False,
+            }
         used = int(self._council_replans.get(session_id, 0))
         if used >= self.control.council_call_budget:
             return {
@@ -203,12 +233,50 @@ class ControlledRefactorSessionManager(AuraExternalLLMSessionManager):
                 "control_profile": self.control.to_dict(),
                 "production_mutation": False,
             }
+        if len(session.turns) >= session.max_turns:
+            return self._block_replan(
+                session,
+                status="BLOCKED_MAX_TURNS",
+                error="max_turns_exceeded_before_council_replan",
+            )
+
+        task_id = str((session.active_task or {}).get("task_id") or "")
+        prompt = str(kwargs.get("prompt") or "")
+        response = str(kwargs.get("response") or "")
+        provider_usage = dict(kwargs.get("provider_usage") or {})
         result = super().apply_council_replan(**kwargs)
+        if result.get("status") == "WAITING_FOR_MODEL" and not result.get("turn"):
+            result = self._block_replan(
+                session,
+                status="BLOCKED_REPLAN_TURN_UNAVAILABLE",
+                error="unable_to_build_replanned_turn",
+            )
+
         result["control_profile"] = self.control.to_dict()
         result["council_budget"] = {
             "used_replans": int(self._council_replans.get(session_id, 0)),
             "maximum_replans": self.control.council_call_budget,
         }
+        if self.control.record_outputs:
+            run_id = self._vault_runs.get(session_id, session_id)
+            replan_number = int(self._council_replans.get(session_id, used))
+            vault_record = self.output_vault.record_generated_output(
+                run_id=run_id,
+                turn_id=f"COUNCIL-REPLAN-{max(1, replan_number)}",
+                task_id=task_id,
+                role="council_replan",
+                prompt=prompt,
+                response=response,
+                result=result,
+                provider_usage=provider_usage,
+            )
+            result["local_output_record"] = {
+                "run_id": run_id,
+                "response_digest": vault_record.get("response_digest"),
+                "evidence_digest": vault_record.get("evidence_digest"),
+                "artifacts": vault_record.get("artifacts", {}),
+                "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
+            }
         return result
 
 
