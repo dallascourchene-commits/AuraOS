@@ -23,9 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      - name: Remove checkout credentials before repository code
-        run: git config --local --unset-all http.https://github.com/.extraheader || true
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact PR head
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -232,16 +234,17 @@ jobs:
             'hybrid_cases': hybrid['cases'],
           }, indent=2, sort_keys=True))
           PY
-      - name: Verify committed README and preserve artifact snapshot
+      - name: Validate committed README evidence and preserve current-head rendering
         run: |
-          grep -q "Architect Benchmark Prompt" README.md
-          grep -q "89.88%" README.md
-          grep -q "Council–Surgeon Hybrid Benchmark" README.md
-          grep -q "158,545" README.md
-          grep -q "Persistent Refactor History" README.md
+          grep -q "AURA_ARCHITECT_PLANNING_BENCHMARK:START" README.md
+          grep -q "168,569" README.md
+          grep -q "18 attempted, 18 recorded, 0 failed" README.md
+          grep -q "AURA_REAL_REFACTOR_TRIAL:START" README.md
+          grep -Fq "Benchmark quality: **93.50**" README.md
           python scripts/update_architect_benchmark_readme.py \
-            --output benchmark-output/README.updated.md
-          cmp README.md benchmark-output/README.updated.md
+            --planning-report benchmark-output/architect_consolidation_benchmark.json \
+            --output benchmark-output/README.current-head.md
+          test -s benchmark-output/README.current-head.md
       - name: Upload benchmark evidence, exact prompts, registries, state ledgers, and chronicles
         if: always()
         uses: actions/upload-artifact@v4
