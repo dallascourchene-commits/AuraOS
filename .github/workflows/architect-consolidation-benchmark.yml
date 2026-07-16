@@ -149,13 +149,14 @@ jobs:
           assert (root / 'README_ARCHITECT_BENCHMARK.md').is_file()
           print(json.dumps(report['comparison'], indent=2, sort_keys=True))
           PY
-      - name: Generate exact updated README artifact
+      - name: Verify committed README and preserve artifact snapshot
         run: |
-          python scripts/update_architect_benchmark_readme.py
           grep -q "First Architect Consolidation Benchmark" README.md
           grep -q "89.88%" README.md
-          grep -q "Council normalization lost plan-level contracts" README.md
-          cp README.md benchmark-output/README.updated.md
+          grep -q "Plan contract loss" README.md
+          python scripts/update_architect_benchmark_readme.py \
+            --output benchmark-output/README.updated.md
+          cmp README.md benchmark-output/README.updated.md
       - name: Upload benchmark evidence and refactor skeleton
         if: always()
         uses: actions/upload-artifact@v4
