@@ -1,0 +1,36 @@
+name: PR131 Export Review Files
+
+on:
+  push:
+    branches:
+      - analysis/architect-benchmark
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Export exact-head review files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr131-exact-head-review-files
+          path: |
+            aura_real_refactor_trial.py
+            aura_architect_council_v2.py
+            aura_architect_benchmark_report.py
+            scripts/update_architect_benchmark_readme.py
+            .github/workflows/architect-consolidation-benchmark.yml
+            .github/workflows/architect-real-refactor-trial.yml
+            README.md
+            requirements.txt
+            tests/test_aura_benchmark_four_hardening.py
+          if-no-files-found: error
+          retention-days: 1
