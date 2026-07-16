@@ -18,7 +18,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
+          fetch-depth: 0
+      - name: Remove checkout credentials
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
       - name: Export exact-head review files
         uses: actions/upload-artifact@v4
         with:
