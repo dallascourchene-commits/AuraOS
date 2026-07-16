@@ -28,7 +28,7 @@ jobs:
   integrity-repair:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Check out feature branch
         uses: actions/checkout@v4
@@ -49,13 +49,20 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest pytest-asyncio numpy aiosqlite websockets ddgs wasmtime aiohttp beautifulsoup4 httpx cryptography
 
-      - name: Validate repaired feature
-        run: |
-          python -m py_compile aura_emergent_refactor_workspace.py aura_arena_research_bridge.py aura_human_agent_arena_server.py aura_codebase_navigator.py
-          node --check aura_human_agent_arena/emergent.js
-          python -m pytest -q tests/test_aura_emergent_refactor_workspace.py
-          python -m pytest -q tests/test_aura_codemap_verify.py
-          python -m pytest -q tests/test_aura_human_agent_arena.py tests/test_aura_human_agent_wfst_live_integration.py
+      - name: Compile repaired Python modules
+        run: python -m py_compile aura_emergent_refactor_workspace.py aura_arena_research_bridge.py aura_human_agent_arena_server.py aura_codebase_navigator.py
+
+      - name: Check repaired JavaScript syntax
+        run: node --check aura_human_agent_arena/emergent.js
+
+      - name: Validate emergent workspace integrity
+        run: python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_emergent_refactor_workspace.py
+
+      - name: Validate JavaScript CODEMAP metadata
+        run: python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_codemap_verify.py
+
+      - name: Validate Human Agent Arena compatibility
+        run: python -m pytest -vv --tb=short --maxfail=1 tests/test_aura_human_agent_arena.py tests/test_aura_human_agent_wfst_live_integration.py
 
       - name: Run Phase C2 regression contracts
         run: |
