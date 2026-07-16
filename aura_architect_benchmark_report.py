@@ -14,7 +14,9 @@ from typing import Any
 
 
 def _role_totals(calls: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
-    totals: dict[str, dict[str, int]] = defaultdict(lambda: {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+    totals: dict[str, dict[str, int]] = defaultdict(
+        lambda: {"calls": 0, "input_tokens": 0, "output_tokens": 0}
+    )
     for call in calls:
         role = str(call.get("role") or "unknown")
         totals[role]["calls"] += 1
@@ -30,23 +32,27 @@ def _route_findings(quality: dict[str, Any]) -> list[dict[str, Any]]:
     for route in list(arena.get("routing_decisions", []) or []):
         if route.get("route") == "BUILDER_PATCH":
             continue
-        findings.append({
-            "kind": "NON_BUILDER_ROUTE",
-            "task_id": route.get("task_id"),
-            "route": route.get("route"),
-            "reason": route.get("reason"),
-            "scope": dict(route.get("frame") or {}).get("scope"),
-            "risk": dict(route.get("frame") or {}).get("risk"),
-        })
+        findings.append(
+            {
+                "kind": "NON_BUILDER_ROUTE",
+                "task_id": route.get("task_id"),
+                "route": route.get("route"),
+                "reason": route.get("reason"),
+                "scope": dict(route.get("frame") or {}).get("scope"),
+                "risk": dict(route.get("frame") or {}).get("risk"),
+            }
+        )
     shadow = dict(prepared.get("shadow_report") or {})
     for item in list(shadow.get("findings", []) or []):
-        findings.append({
-            "kind": "SHADOW_FINDING",
-            "task_id": item.get("task_id"),
-            "severity": item.get("severity"),
-            "shadow_type": item.get("shadow_type"),
-            "message": item.get("message"),
-        })
+        findings.append(
+            {
+                "kind": "SHADOW_FINDING",
+                "task_id": item.get("task_id"),
+                "severity": item.get("severity"),
+                "shadow_type": item.get("shadow_type"),
+                "message": item.get("message"),
+            }
+        )
     return findings
 
 
@@ -56,7 +62,9 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
     skeleton = json.loads(skeleton_path.read_text(encoding="utf-8"))
     comparison = report["comparison"]
     arms = report["arms"]
-    selected = dict(arms["aura_architect_council"].get("selected_plan") or {})
+    council_arm = arms["aura_architect_council"]
+    council_calls = int(council_arm.get("model_calls") or 0)
+    selected = dict(council_arm.get("selected_plan") or {})
     submitted = dict((responses.get("council") or {}).get("planner") or {})
     contract_fields = (
         "acceptance_criteria",
@@ -64,9 +72,17 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
         "risk_map",
         "constraints",
     )
-    lost_fields = [field for field in contract_fields if submitted.get(field) and not selected.get(field)]
-    role_totals = _role_totals(list(arms["aura_architect_council"]["model_usage"].get("calls", []) or []))
-    route_findings = _route_findings(arms["aura_architect_council"]["quality"])
+    lost_fields = [
+        field for field in contract_fields if submitted.get(field) and not selected.get(field)
+    ]
+    role_totals = _role_totals(list(council_arm["model_usage"].get("calls", []) or []))
+    route_findings = _route_findings(council_arm["quality"])
+    council_quality_supported = comparison["council_quality_delta"] > 0
+    council_quality_statement = (
+        "outperformed the broad-context arm"
+        if council_quality_supported
+        else "did not outperform the broad-context arm"
+    )
 
     findings = [
         {
@@ -90,17 +106,24 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
             "id": "F3_COUNCIL_EFFICIENCY",
             "status": "MIXED_FIRST_PILOT",
             "statement": (
-                f"The 12-call Council remained {comparison['council_total_reduction_pct']}% below "
-                "the broad-context total-token proxy, but used substantially more tokens than the "
-                "single sliced planner."
+                f"The measured {council_calls}-call Council remained "
+                f"{comparison['council_total_reduction_pct']}% below the broad-context "
+                "total-token proxy, but used substantially more tokens than the single "
+                "sliced planner."
             ),
+            "measured_model_calls": council_calls,
         },
         {
             "id": "F4_COUNCIL_QUALITY",
-            "status": "NOT_SUPPORTED_FIRST_PILOT" if comparison["council_quality_delta"] <= 0 else "SUPPORTED_FIRST_PILOT",
+            "status": (
+                "SUPPORTED_FIRST_PILOT"
+                if council_quality_supported
+                else "NOT_SUPPORTED_FIRST_PILOT"
+            ),
             "statement": (
-                f"The Council changed deterministic quality by {comparison['council_quality_delta']:+.4f} "
-                "versus broad context and did not outperform the single sliced planner in this run."
+                f"The Council changed deterministic quality by "
+                f"{comparison['council_quality_delta']:+.4f} versus broad context and "
+                f"{council_quality_statement} in this run."
             ),
         },
         {
@@ -117,45 +140,53 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
             "id": "F6_LOCALIZATION_FALLBACK",
             "status": "DEFECT_OBSERVED_AND_BENCHMARK_ADAPTER_CORRECTED",
             "statement": (
-                "The initial generic LOCALIZE_FIRST route ranked unrelated fallback modules above the "
-                "Architect/Human-Agent spine. The refined benchmark ranks exact spans, selected lanes, "
-                "grounded affordances, and objective-core files before fallback candidates."
+                "The initial generic LOCALIZE_FIRST route ranked unrelated fallback modules "
+                "above the Architect/Human-Agent spine. The refined benchmark ranks exact "
+                "spans, selected lanes, grounded affordances, and objective-core files before "
+                "fallback candidates."
             ),
         },
         {
             "id": "F7_REFACTOR_READINESS",
             "status": "HUMAN_REPAIR_REQUIRED",
             "statement": (
-                "The selected skeleton is grounded and blocker-free but is not Arena-ready because at "
-                "least one task routed outside BUILDER_PATCH and one target lacked a nearby test mapping."
+                "The selected skeleton is grounded and blocker-free but is not Arena-ready "
+                "because at least one task routed outside BUILDER_PATCH and one target lacked "
+                "a nearby test mapping."
             ),
             "gate_findings": route_findings,
         },
     ]
 
-    if comparison["slice_quality_delta"] >= 0:
-        slice_text = "The sliced arm preserved or improved the deterministic grounded-plan score."
-    else:
-        slice_text = "The sliced arm saved context but reduced the deterministic grounded-plan score."
-    if comparison["council_quality_delta"] > 0:
-        council_text = "The Council improved quality versus broad context."
-    else:
-        council_text = "The Council did not improve quality versus broad context in this pilot."
+    slice_text = (
+        "The sliced arm preserved or improved the deterministic grounded-plan score."
+        if comparison["slice_quality_delta"] >= 0
+        else "The sliced arm saved context but reduced the deterministic grounded-plan score."
+    )
+    council_text = (
+        "The Council improved quality versus broad context."
+        if council_quality_supported
+        else "The Council did not improve quality versus broad context in this pilot."
+    )
     report["interpretation"] = (
-        "The single sliced planner isolates Aura's context-selection effect and achieved the strongest "
-        "quality-adjusted efficiency in this first pilot. "
+        "The single sliced planner isolates Aura's context-selection effect and achieved the "
+        "strongest quality-adjusted efficiency in this first pilot. "
         + slice_text
-        + " The Council arm measures aggregate multi-agent cost across planners, critics, and Judge rather "
-        "than comparing only one compact prompt. "
+        + " The Council arm measures aggregate multi-agent cost across planners, critics, and "
+        "Judge rather than comparing only one compact prompt. "
         + council_text
-        + " The run also exposed contract-preservation and routing defects that must be repaired before "
-        "claiming general architectural superiority. This is reproducible pilot evidence, not proof that "
-        "Aura is revolutionary, generally superior, conscious, or production-ready."
+        + " The run also exposed contract-preservation and routing defects that must be repaired "
+        "before claiming general architectural superiority. This is reproducible pilot evidence, "
+        "not proof that Aura is revolutionary, generally superior, conscious, or production-ready."
     )
     report["findings"] = findings
     report["council_role_totals"] = role_totals
     report["claims"] = {
-        "supported": ["slice context reduction", "slice normalized cost reduction", "grounded plan generation"],
+        "supported": [
+            "slice context reduction",
+            "slice normalized cost reduction",
+            "grounded plan generation",
+        ],
         "not_yet_supported": [
             "general quality superiority",
             "Council superiority",
@@ -164,20 +195,30 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
             "revolutionary architecture claim",
         ],
     }
-    report_path.write_text(json.dumps(report, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    report_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
 
     skeleton["benchmark_findings"] = findings
     skeleton["repair_requirements"] = {
         "preserve_plan_contract_fields": lost_fields,
-        "resolve_non_builder_routes": [item for item in route_findings if item.get("kind") == "NON_BUILDER_ROUTE"],
-        "resolve_shadow_findings": [item for item in route_findings if item.get("kind") == "SHADOW_FINDING"],
+        "resolve_non_builder_routes": [
+            item for item in route_findings if item.get("kind") == "NON_BUILDER_ROUTE"
+        ],
+        "resolve_shadow_findings": [
+            item for item in route_findings if item.get("kind") == "SHADOW_FINDING"
+        ],
     }
-    skeleton_path.write_text(json.dumps(skeleton, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    skeleton_path.write_text(
+        json.dumps(skeleton, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
 
     snippet_path = report_path.parent / "README_ARCHITECT_BENCHMARK.md"
     raw = arms["raw_broad_context"]
     sliced = arms["aura_slice_single"]
-    council = arms["aura_architect_council"]
+    council = council_arm
     snippet = f"""## First Architect Consolidation Benchmark
 
 **Status:** reproducible single-session pilot; plan-only; no production mutation.
@@ -196,7 +237,7 @@ The benchmark uses the same repository commit, objective, output contract, and d
 
 - **{comparison['slice_input_reduction_pct']}%** less input-token proxy and **{comparison['slice_total_reduction_pct']}%** less total-token proxy for Aura slices versus broad context.
 - The sliced plan scored **{comparison['slice_quality_delta']:+.4f}** versus broad context while reducing normalized cost by **{comparison['slice_cost_reduction_pct']}%**.
-- The Council remained **{comparison['council_total_reduction_pct']}%** below the broad-context total-token proxy, but its quality changed **{comparison['council_quality_delta']:+.4f}** and did not beat the single sliced planner.
+- The measured {council_calls}-call Council remained **{comparison['council_total_reduction_pct']}%** below the broad-context total-token proxy; its quality changed **{comparison['council_quality_delta']:+.4f}**.
 
 ### Defects discovered by the benchmark
 
@@ -228,7 +269,13 @@ def main() -> int:
     parser.add_argument("--skeleton", type=Path, required=True)
     args = parser.parse_args()
     report = finalize(args.report, args.responses, args.skeleton)
-    print(json.dumps({"comparison": report["comparison"], "findings": report["findings"]}, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {"comparison": report["comparison"], "findings": report["findings"]},
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 0
 
 
