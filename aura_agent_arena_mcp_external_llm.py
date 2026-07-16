@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import aura_agent_arena_mcp as base_mcp
-from aura_external_llm_session import AuraExternalLLMSessionManager
+from aura_external_llm_session_safe import AuraExternalLLMSessionManager
 
 MCP_EXTENSION_VERSION = "AURA_AGENT_ARENA_EXTERNAL_LLM_MCP_V1"
 
@@ -78,7 +78,10 @@ SESSION_TOOL_DEFINITIONS = [
     },
     {
         "name": "aura_llm_session_export",
-        "description": "Export session evidence to a reviewable JSON file.",
+        "description": (
+            "Export session evidence beneath Aura_Staging/external_llm_sessions. "
+            "Absolute paths and parent traversal are rejected."
+        ),
         "inputSchema": {
             "type": "object",
             "properties": {
