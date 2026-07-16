@@ -17,9 +17,9 @@ env:
 
 jobs:
   architect-benchmark:
-    name: Ground, deliberate, and score Architect benchmark
+    name: Ground, deliberate, execute, and record Architect benchmarks
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,17 +30,27 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pytest>=8.0,<9.0"
-      - name: Compile benchmark and external LLM surfaces
+      - name: Compile benchmark, Council V2, chronicle, and external LLM surfaces
         run: |
           python -m py_compile \
             aura_architect_consolidation_benchmark.py \
             aura_architect_consolidation_benchmark_refined.py \
+            aura_architect_consolidation_benchmark_v2.py \
             aura_architect_benchmark_report.py \
+            aura_architect_council_v2.py \
+            aura_benchmark_registry.py \
+            aura_refactor_chronicle.py \
+            aura_multistep_refactor_benchmark.py \
             aura_external_llm_session.py \
+            aura_external_llm_session_recorded.py \
             aura_external_llm_session_safe.py \
             aura_agent_arena_mcp_external_llm.py \
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
-            scripts/update_architect_benchmark_readme.py
+            scripts/update_architect_benchmark_readme.py \
+            tests/test_aura_refactor_chronicle_and_length.py
+      - name: Run focused V2 chronicle and length tests
+        run: |
+          python -m pytest -q tests/test_aura_refactor_chronicle_and_length.py
       - name: Regenerate CODEMAP and topology from tested commit
         run: |
           python aura_codebase_navigator.py
@@ -61,24 +71,19 @@ jobs:
       - name: Prepare RAW and Aura-slice prompts
         run: |
           rm -rf benchmark-output
-          python aura_architect_consolidation_benchmark_refined.py prepare \
+          python aura_architect_consolidation_benchmark_v2.py prepare \
             --repo-root . \
             --output-dir benchmark-output \
             > benchmark-prepare.log
           cat benchmark-prepare.log
-      - name: Validate benchmark preparation evidence
+      - name: Validate prompt preparation evidence
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
           root = Path('benchmark-output')
-          required = {
-              'raw_prompt.txt',
-              'aura_slice_prompt.txt',
-              'prepare_manifest.json',
-              'responses.template.json',
-          }
+          required = {'raw_prompt.txt','aura_slice_prompt.txt','prepare_manifest.json','responses.template.json'}
           assert required <= {path.name for path in root.iterdir()}
           manifest = json.loads((root / 'prepare_manifest.json').read_text(encoding='utf-8'))
           assert manifest['codemap']['bytes'] > 0
@@ -96,14 +101,14 @@ jobs:
               'test_slices': manifest['aura_slice_packet']['test_slice_count'],
           }, indent=2))
           PY
-      - name: Materialize reproducible GPT-5.6 pilot responses
+      - name: Materialize reproducible GPT-5.6 role responses
         run: |
           python benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
             --output benchmark-output/responses.gpt-5.6-thinking.json
           python -m json.tool benchmark-output/responses.gpt-5.6-thinking.json > /dev/null
-      - name: Run real Architect Council and score all arms
+      - name: Run length-aware Architect Council and score all planning arms
         run: |
-          python aura_architect_consolidation_benchmark_refined.py score \
+          python aura_architect_consolidation_benchmark_v2.py score \
             --repo-root . \
             --output-dir benchmark-output \
             --responses benchmark-output/responses.gpt-5.6-thinking.json \
@@ -111,7 +116,7 @@ jobs:
             --output-rate 3.0 \
             > benchmark-score.log
           cat benchmark-score.log
-      - name: Finalize truth-preserving findings and README section
+      - name: Finalize truth-preserving planning findings
         run: |
           python aura_architect_benchmark_report.py \
             --report benchmark-output/architect_consolidation_benchmark.json \
@@ -119,7 +124,15 @@ jobs:
             --skeleton benchmark-output/architect_consolidation_skeleton.json \
             > benchmark-findings.log
           cat benchmark-findings.log
-      - name: Validate scored benchmark and skeleton
+      - name: Run recorded multi-step execution benchmark
+        run: |
+          python aura_multistep_refactor_benchmark.py \
+            --repo-root . \
+            --output-dir benchmark-output/multistep \
+            --lengths 1,4,8 \
+            > multistep-benchmark.log
+          cat multistep-benchmark.log
+      - name: Validate planning prompt manifest, token accounting, and multi-step history
         run: |
           python - <<'PY'
           import json
@@ -128,48 +141,80 @@ jobs:
           root = Path('benchmark-output')
           report = json.loads((root / 'architect_consolidation_benchmark.json').read_text(encoding='utf-8'))
           skeleton = json.loads((root / 'architect_consolidation_skeleton.json').read_text(encoding='utf-8'))
+          prompts = json.loads((root / 'prompt_manifest.json').read_text(encoding='utf-8'))
+          multistep = json.loads((root / 'multistep' / 'multistep_refactor_benchmark.json').read_text(encoding='utf-8'))
+
+          assert report['benchmark_version'] == 'AURA_ARCHITECT_CONSOLIDATION_BENCHMARK_V2'
           assert report['production_mutation'] is False
-          assert report['measurement_class']['tokens'] == 'ESTIMATED_CHAR4_PROXY'
           assert report['arms']['raw_broad_context']['model_calls'] == 1
           assert report['arms']['aura_slice_single']['model_calls'] == 1
-          assert report['arms']['aura_architect_council']['model_calls'] >= 10
+          assert report['arms']['aura_architect_council']['model_calls'] >= 12
           assert report['comparison']['slice_input_reduction_pct'] > 50
-          assert report['findings']
-          assert report['claims']['not_yet_supported']
+          assert report['prompt_manifest']['entry_count'] == prompts['entry_count']
+          assert prompts['objective_exact']
+          assert prompts['plan_instruction_exact']
+          assert any(item['role'] == 'judge' for item in prompts['entries'])
+          assert any(item['role'] == 'shadow' for item in prompts['entries'])
+          assert report['role_token_totals']
           for arm in report['arms'].values():
+              assert 'input_tokens_reported' in arm
+              assert 'output_tokens_reported' in arm
               quality = arm['quality']
               assert 0.0 <= quality['quality_score'] <= 1.0
               assert quality['task_count'] > 0
               assert quality['exact_file_rate'] == 1.0
               assert quality['output_contract_rate'] == 1.0
+          selected = report['arms']['aura_architect_council']['selected_plan']
+          for field in ('acceptance_criteria','rollback_conditions','risk_map','constraints'):
+              assert selected.get(field), field
+          assert selected['length_profile']['length_class'] in {'LONG','PROGRAM'}
           assert skeleton['production_mutation'] is False
           assert skeleton['next_gate'] == 'HUMAN_REVIEW_BEFORE_REFACTOR'
-          assert skeleton['repair_requirements']
-          assert len(skeleton['selected_plan']['act_tasks']) >= 6
-          assert (root / 'README_ARCHITECT_BENCHMARK.md').is_file()
-          print(json.dumps(report['comparison'], indent=2, sort_keys=True))
+          assert (root / 'benchmark_registry.jsonl').is_file()
+
+          cases = {item['task_count']: item for item in multistep['cases']}
+          assert set(cases) == {1,4,8}
+          assert all(item['terminal_status'] == 'READY_FOR_HUMAN_REVIEW' for item in cases.values())
+          assert cases[8]['turn_count'] == 9
+          assert cases[8]['repair_event_count'] >= 1
+          assert cases[8]['input_tokens_estimated'] > cases[4]['input_tokens_estimated'] > cases[1]['input_tokens_estimated']
+          assert cases[8]['output_tokens_estimated'] > cases[4]['output_tokens_estimated'] > cases[1]['output_tokens_estimated']
+          assert cases[8]['input_tokens_reported'] is not None
+          assert cases[8]['output_tokens_reported'] is not None
+          assert (root / 'multistep' / 'benchmark_registry.jsonl').is_file()
+          assert (root / 'multistep' / 'tasks-8' / 'refactor_chronicle.jsonl').is_file()
+          assert (root / 'multistep' / 'tasks-8' / 'arena_experience.db').is_file()
+          print(json.dumps({
+              'planning_comparison': report['comparison'],
+              'council_length_profile': selected['length_profile'],
+              'multistep_cases': multistep['cases'],
+          }, indent=2, sort_keys=True))
           PY
       - name: Verify committed README and preserve artifact snapshot
         run: |
           grep -q "First Architect Consolidation Benchmark" README.md
           grep -q "89.88%" README.md
-          grep -q "Plan contract loss" README.md
           python scripts/update_architect_benchmark_readme.py \
             --output benchmark-output/README.updated.md
           cmp README.md benchmark-output/README.updated.md
-      - name: Upload benchmark evidence and refactor skeleton
+      - name: Upload benchmark evidence, prompts, registries, and chronicles
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: architect-consolidation-benchmark
+          name: architect-consolidation-benchmark-v2
           path: |
             benchmark-output/
             benchmark-prepare.log
             benchmark-score.log
             benchmark-findings.log
+            multistep-benchmark.log
             aura_architect_consolidation_benchmark.py
             aura_architect_consolidation_benchmark_refined.py
-            aura_architect_benchmark_report.py
+            aura_architect_consolidation_benchmark_v2.py
+            aura_architect_council_v2.py
+            aura_refactor_chronicle.py
+            aura_multistep_refactor_benchmark.py
+            aura_benchmark_registry.py
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
           if-no-files-found: error
           retention-days: 30
