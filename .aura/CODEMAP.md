@@ -13,29 +13,49 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 929
-- **total_bytes**: 66169413
-- **text_tokens_est**: 7146320
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 123, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 647, 'schema_or_lexicon': 90, 'support_file': 41}
-- **topology_nodes**: 7805
-- **topology_edges**: 16913
+- **file_count**: 957
+- **total_bytes**: 66971636
+- **text_tokens_est**: 7346850
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 127, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 668, 'schema_or_lexicon': 93, 'support_file': 41}
+- **topology_nodes**: 8008
+- **topology_edges**: 17425
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 20842.27
+- **elapsed_ms**: 22278.62
 
 ## Coverage
 
-- **included_file_count**: 929
+- **included_file_count**: 957
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`
-- **skipped_dir_file_counts**: `.git`=59, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=47, `Aura_Memory`=1, `Aura_Sandbox`=1, `__pycache__`=8
 
 ## Command Index
 
+- `!A` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!Aura_Sandbox` -> `.gitignore:46`
+- `!BOEw` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!CORE_AXIOM_VALID` -> `aura_nesy_sat_reasoner.py:280`
+- `!D-qwva` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!DOCTYPE` -> `aura_savings_dashboard.py:49`, `index.html:1`
+- `!FEovOtO1i` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Fevy4_U` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Jp8` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Ju` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Mc` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Me0vt` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!O` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Pwqn46` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Q` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!RT2Mql-LJ1QS355` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!S8o_2id9KTu3TDm` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Sze6` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Tx` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!U6Yir` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!Z` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!ZK9` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!ai_route` -> `USER_GUIDE.md:918`, `aura_ai_router.py:628`, `aura_node.py:7202`
 - `!ai_router_regen` -> `USER_GUIDE.md:919`, `aura_node.py:7217`
+- `!akkagfWVNNin_OvvrA1` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!approve` -> `AURA_FINAL_REPORT.md:151`, `USER_GUIDE.md:956`, `aura_node.py:5638`
 - `!ar_server_start` -> `USER_GUIDE.md:989`, `aura_node.py:6588`
 - `!ar_server_stop` -> `USER_GUIDE.md:990`, `aura_node.py:6604`
@@ -43,12 +63,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!ar_stop` -> `AURA_FINAL_REPORT.md:169`, `USER_GUIDE.md:990`, `aura_node.py:6604`, `refactored-auraos-upgrades.md:2572`
 - `!attention` -> `USER_GUIDE.md:925`, `aura_node.py:5686`
 - `!audit` -> `USER_GUIDE.md:940`, `aura_node.py:6184`
+- `!b` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!b3MWj-Z` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!backtrack` -> `AURA_FINAL_REPORT.md:143`, `USER_GUIDE.md:964`, `arxiv_forager.py:657`, `aura_node.py:6204`
 - `!benchmark` -> `USER_GUIDE.md:939`, `aura_node.py:2991`
 - `!c` -> `arch_reasoner_accel.rs:14`
+- `!cLTRot4IwOCYoZN` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!calibrate` -> `AURA_FINAL_REPORT.md:163`, `USER_GUIDE.md:979`, `aura_node.py:7532`
 - `!canvas` -> `aura_savings_dashboard.py:174`
 - `!catalyze` -> `AURA_FINAL_REPORT.md:156`, `USER_GUIDE.md:957`, `aura_node.py:7239`, `generate_ai_router.py:356`
+- `!cbuo` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `USER_GUIDE.md:924`, `aura_node.py:5655`
 - `!commands` -> `USER_GUIDE.md:207`
@@ -58,6 +82,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!crystallize` -> `AURA_FINAL_REPORT.md:141`, `USER_GUIDE.md:970`, `aura_node.py:7306`
 - `!curiosity_tree` -> `AURA_FINAL_REPORT.md:174`, `USER_GUIDE.md:968`, `aura_node.py:6645`
 - `!db_repair` -> `USER_GUIDE.md:993`, `aura_node.py:2991`
+- `!dlH73O` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!doctype` -> `aura_amd_track3_cli.py:187`, `aura_coding_arena/index.html:1`, `aura_efficiency_report.py:124`, `aura_human_agent_arena/index.html:1`
 - `!empirical_lab` -> `USER_GUIDE.md:949`, `aura_node.py:6230`
 - `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `USER_GUIDE.md:934`, `aura_node.py:7301`
@@ -69,22 +94,37 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!forager_off` -> `aura_node.py:6582`
 - `!forager_on` -> `aura_node.py:6576`
 - `!fusion` -> `AURA_FINAL_REPORT.md:31`, `USER_GUIDE.md:978`, `aura_fusion.py:384`, `aura_node.py:7518`
+- `!g` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!hPgi2Jk25Rihp` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!heal` -> `aura_node.py:5209`
 - `!help` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `USER_GUIDE.md:917`, `aura_node.py:7668`
+- `!hlY` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!important` -> `aura_human_agent_arena/jarvis.css:107`, `index.html:9`
 - `!indus_decrypt` -> `AURA_FINAL_REPORT.md:175`, `aura_node.py:7313`
 - `!invalid_base64` -> `test_scientific_memory.py:972`
+- `!j` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!ju` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!l` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!mVT` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!manifest` -> `AURA_FINAL_REPORT.md:138`, `USER_GUIDE.md:917`, `aura_node.py:7668`
 - `!markov` -> `AURA_FINAL_REPORT.md:144`, `USER_GUIDE.md:994`, `aura_node.py:7504`
 - `!mesh_status` -> `AURA_FINAL_REPORT.md:167`, `USER_GUIDE.md:982`, `aura_capability_lane_registry.py:158`, `aura_node.py:5649`
 - `!meta_analyze` -> `USER_GUIDE.md:935`, `aura_node.py:7352`
 - `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `USER_GUIDE.md:936`, `aura_arch_reasoner.py:93`, `aura_node.py:7377`
+- `!mi` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!nIPcE` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!oMh` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!oS-` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!olx` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!optimize` -> `AURA_FINAL_REPORT.md:172`, `USER_GUIDE.md:951`, `aura_node.py:5931`
 - `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `USER_GUIDE.md:983`, `aura_capability_lane_registry.py:158`, `aura_node.py:5644`
 - `!plan` -> `aura_affordance_directory.py:440`, `aura_node.py:5602`
+- `!poP` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!push` -> `USER_GUIDE.md:992`, `aura_node.py:5166`, `test_aura_functions.py:207`
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!r` -> `aura_arena_wfst_compiler.py:181`, `aura_capsule_trial_types.py:50`, `aura_civic_planning_inventory.py:63`, `aura_ephemeral_adapter_registry.py:134`
+- `!rGQ3s` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!rZHQl5Yg4a` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `USER_GUIDE.md:931`, `aura_node.py:7492`
 - `!repair_db` -> `USER_GUIDE.md:993`, `aura_node.py:6979`
 - `!research` -> `AURA_FINAL_REPORT.md:142`, `USER_GUIDE.md:965`, `aura_affordance_directory.py:461`, `aura_capability_lane_registry.py:120`
@@ -112,6 +152,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!strategy_buffer_stats` -> `USER_GUIDE.md:933`, `aura_coordinated_solver.py:69`, `aura_node.py:7476`
 - `!synthesize` -> `USER_GUIDE.md:971`, `aura_associative_core.py:141`, `aura_node.py:6896`, `test_aura_functions.py:913`
 - `!system_audit` -> `USER_GUIDE.md:940`, `aura_node.py:6184`
+- `!tHuo` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!target_bytes` -> `cognitive_search.rs:72`
 - `!test` -> `AuraOS.tex:533`, `tests/test_aura_codemap_verify.py:57`
 - `!test_airlock` -> `USER_GUIDE.md:942`, `aura_node.py:5614`
@@ -120,7 +161,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!topology` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `USER_GUIDE.md:920`, `aura_affordance_directory.py:146`
 - `!topology_deep` -> `USER_GUIDE.md:921`, `aura_affordance_directory.py:146`, `aura_node.py:7231`
 - `!total` -> `aura_savings_dashboard.py:223`
+- `!v` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!voice` -> `USER_GUIDE.md:995`, `aura_node.py:7731`
+- `!xNNN2` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!xZNgv` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
+- `!zqsDBwn3aI` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 
 ## Navigation Rings
 
@@ -149,10 +194,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_attention_palace.py`
 - `aura_blockchain/memory_staking.py`
 - `aura_civic_memory.py`
+- `aura_cognitive_labor_router.py`
 - `aura_cognitive_synthesizer.py`
 - `aura_dream_engine.py`
-- `aura_dream_retrieval.py`
-- ... 17 more; query CODEMAP.json for exact file cards
+- ... 18 more; query CODEMAP.json for exact file cards
 
 ### mesh_and_routing
 - `.aura/civic_completion_ledger.json`
@@ -167,7 +212,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_arena_experience_ledger.py`
 - `aura_blockchain/__init__.py`
 - `aura_blockchain/block.py`
-- ... 37 more; query CODEMAP.json for exact file cards
+- ... 38 more; query CODEMAP.json for exact file cards
 
 ### topology_and_navigation
 - `.aura/topology_baseline.json`
@@ -212,41 +257,41 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
 - `.aura/arena_routes/meta.v1.json`
-- ... 763 more; query CODEMAP.json for exact file cards
+- ... 789 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
-- `aura_node.py` (python_module): 194 symbols, degree 873, ~104110 tokens
-- `aura_live_architect.py` (python_module): 74 symbols, degree 579, ~30294 tokens
+- `aura_node.py` (python_module): 194 symbols, degree 866, ~104110 tokens
 - `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
 - `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
+- `aura_live_architect.py` (python_module): 74 symbols, degree 506, ~30294 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 480, ~19006 tokens
-- `aura_fst_routing.py` (python_module): 35 symbols, degree 466, ~8991 tokens
+- `aura_fst_routing.py` (python_module): 35 symbols, degree 475, ~8991 tokens
 - `aura_architect_loop.py` (python_module): 70 symbols, degree 457, ~18332 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 358, ~9340 tokens
 - `aura_coding_arena_planning.py` (python_module): 20 symbols, degree 350, ~10712 tokens
 - `aura_scientific_memory.py` (python_module): 44 symbols, degree 341, ~9915 tokens
-- `aura_human_agent_arena.py` (python_module): 72 symbols, degree 326, ~22286 tokens
-- `aura_music_coding_arena.py` (python_module): 46 symbols, degree 303, ~11812 tokens
+- `aura_human_agent_arena.py` (python_module): 72 symbols, degree 329, ~22286 tokens
+- `aura_coding_arena_planning_integrity.py` (python_module): 20 symbols, degree 300, ~6400 tokens
 
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 7805
-- **edges**: 16913
+- **nodes**: 8008
+- **edges**: 17425
 - **top_files_by_degree**:
-  - `aura_node.py` degree=873 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
-  - `aura_live_architect.py` degree=579 nodes=85 neighbors=`aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`, `aura_coding_arena_workflow.py`
+  - `aura_node.py` degree=866 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
   - `test_scientific_memory.py` degree=517 nodes=120 neighbors=`arxiv_forager.py`, `aura_paper_memory.py`, `aura_scientific_memory.py`, `travel_price_sidecar.py`
+  - `aura_live_architect.py` degree=506 nodes=85 neighbors=`aura_architect_council_v2.py`, `aura_architect_loop.py`, `aura_builder_context.py`, `aura_coding_arena_grounding.py`
   - `aura_relational_authority.py` degree=480 nodes=59 neighbors=`aura_civic_planning.py`, `aura_graphify_schema.py`, `aura_workflow_gates.py`, `liquid_attractor_control_plane.py`
-  - `aura_fst_routing.py` degree=466 nodes=36 neighbors=`aura_architect_loop.py`, `aura_fusion.py`, `aura_graphify_schema.py`, `aura_harness_evolver.py`
+  - `aura_fst_routing.py` degree=475 nodes=36 neighbors=`aura_architect_loop.py`, `aura_external_llm_session.py`, `aura_fusion.py`, `aura_graphify_schema.py`
   - `aura_architect_loop.py` degree=457 nodes=73 neighbors=`aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_dream_retrieval.py`, `aura_fst_routing.py`
   - `test_aura_functions.py` degree=358 nodes=87 neighbors=`arch_reasoner_accel.py`, `async_palace.py`, `aura_arch_reasoner.py`, `aura_associative_core.py`
   - `aura_coding_arena_planning.py` degree=350 nodes=21 neighbors=`aura_coding_arena_planning_benchmark.py`, `aura_coding_arena_planning_integrity.py`, `aura_coding_arena_planning_types.py`, `aura_event_contracts.py`
   - `aura_scientific_memory.py` degree=341 nodes=46 neighbors=`arxiv_forager.py`, `aura_fst_routing.py`, `aura_node.py`, `aura_ojibwe_lexicon_sidecar.py`
-  - `aura_human_agent_arena.py` degree=326 nodes=73 neighbors=`aura_affordance_directory.py`, `aura_agent_arena_bridge.py`, `aura_api_rotator.py`, `aura_coding_arena_3d.py`
-  - `aura_music_coding_arena.py` degree=303 nodes=49 neighbors=`aura_fst_routing.py`, `aura_live_architect.py`, `aura_music_inversion.py`, `aura_proxy_benchmark.py`
+  - `aura_human_agent_arena.py` degree=329 nodes=73 neighbors=`aura_affordance_directory.py`, `aura_agent_arena_bridge.py`, `aura_api_rotator.py`, `aura_coding_arena_3d.py`
+  - `aura_coding_arena_planning_integrity.py` degree=300 nodes=21 neighbors=`aura_coding_arena_planning.py`, `aura_event_contracts.py`
 
 ## High-Value Symbols
 
