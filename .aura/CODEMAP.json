@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784211295,
+  "generated_at_unix": 1784211513,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 997,
+    "included_file_count": 998,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -987,6 +987,7 @@
       "tests/test_aura_st3gg_compatibility.py",
       "tests/test_aura_st3gg_compatibility_hardening.py",
       "tests/test_aura_st3gg_contracts.py",
+      "tests/test_aura_state_identity_cycles.py",
       "tests/test_aura_substrate_contracts.py",
       "tests/test_aura_substrate_manifest.py",
       "tests/test_aura_substrate_release.py",
@@ -1019,23 +1020,23 @@
     ]
   },
   "summary": {
-    "file_count": 997,
-    "total_bytes": 50642198,
-    "text_tokens_est": 3264264,
+    "file_count": 998,
+    "total_bytes": 50646551,
+    "text_tokens_est": 3265353,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 133,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 694,
+      "python_module": 695,
       "schema_or_lexicon": 100,
       "support_file": 42
     },
-    "topology_nodes": 8146,
-    "topology_edges": 17771,
+    "topology_nodes": 8148,
+    "topology_edges": 17781,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 13630.55
+    "elapsed_ms": 21338.39
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2031,6 +2032,7 @@
       "tests/test_aura_st3gg_compatibility.py",
       "tests/test_aura_st3gg_compatibility_hardening.py",
       "tests/test_aura_st3gg_contracts.py",
+      "tests/test_aura_state_identity_cycles.py",
       "tests/test_aura_system_stabilization.py",
       "tests/test_aura_tensor_evidence.py",
       "tests/test_aura_token_economy_orchestrator.py",
@@ -28704,6 +28706,16 @@
         "signature_hash": "6d88f993b99b0459"
       }
     ],
+    "_key": [
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "aura_refactor_state_identity.py#function:_key:a20071f3b969acc4",
+        "signature_hash": "bf3a233f00be2a47"
+      }
+    ],
     "_key_token": [
       {
         "file": "aura_st3gg_recall.py",
@@ -36896,6 +36908,14 @@
         "end_line": 36,
         "semantic_id": "tests/test_aura_benchmark_four_hardening.py#function:_session:a359c27d2b9750c8",
         "signature_hash": "a4d1e8c024179ed0"
+      },
+      {
+        "file": "tests/test_aura_state_identity_cycles.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_state_identity_cycles.py#function:_session:f53653432c5067f7",
+        "signature_hash": "be3e736a30e442d5"
       }
     ],
     "_session_lock": [
@@ -40170,6 +40190,16 @@
         "end_line": 84,
         "semantic_id": "aura_substrate_contracts.py#function:_tuple_text:3e096c1c6f46fa98",
         "signature_hash": "85a223c600653a0d"
+      }
+    ],
+    "_type": [
+      {
+        "file": "aura_refactor_state_identity.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "aura_refactor_state_identity.py#function:_type:2a2da041657b93ca",
+        "signature_hash": "0f2284e2400d8a5f"
       }
     ],
     "_typed_tuple": [
@@ -44286,8 +44316,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 97,
-        "end_line": 101,
+        "line": 169,
+        "end_line": 187,
         "semantic_id": "aura_refactor_state_identity.py#function:build_projection:df6496f6cdfd6442",
         "signature_hash": "34d306e70112922f"
       }
@@ -44376,8 +44406,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 104,
-        "end_line": 108,
+        "line": 190,
+        "end_line": 200,
         "semantic_id": "aura_refactor_state_identity.py#function:build_sidecar:77e02fe8954fdca9",
         "signature_hash": "e3b339fb35e6b065"
       }
@@ -44886,8 +44916,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 51,
-        "end_line": 52,
+        "line": 85,
+        "end_line": 92,
         "semantic_id": "aura_refactor_state_identity.py#function:canonical:b4d847dbdebaab25",
         "signature_hash": "8405a7944186ce60"
       }
@@ -49320,8 +49350,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 55,
-        "end_line": 56,
+        "line": 95,
+        "end_line": 96,
         "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
         "signature_hash": "cb7986ce5e23d90c"
       },
@@ -54138,8 +54168,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 71,
+        "line": 103,
+        "end_line": 124,
         "semantic_id": "aura_refactor_state_identity.py#function:history_events:b7d0847c42934c44",
         "signature_hash": "0a02942cc8476948"
       }
@@ -54148,8 +54178,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 74,
-        "end_line": 80,
+        "line": 127,
+        "end_line": 145,
         "semantic_id": "aura_refactor_state_identity.py#function:history_identity:482be237fe4ebe0c",
         "signature_hash": "98d3755384d3f914"
       }
@@ -57704,10 +57734,10 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 18,
-        "end_line": 48,
-        "semantic_id": "aura_refactor_state_identity.py#function:normalize:2432c21348733c80",
-        "signature_hash": "01f3ebaf8df316e8"
+        "line": 33,
+        "end_line": 82,
+        "semantic_id": "aura_refactor_state_identity.py#function:normalize:80035a727048292a",
+        "signature_hash": "46f85bd234a1802f"
       },
       {
         "file": "aura_vsa_encoding_profile.py",
@@ -63944,8 +63974,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 83,
-        "end_line": 94,
+        "line": 148,
+        "end_line": 166,
         "semantic_id": "aura_refactor_state_identity.py#function:semantic_sets:3b0ada7f8fee0768",
         "signature_hash": "8b3fcd736602a4da"
       }
@@ -70104,6 +70134,16 @@
         "end_line": 155,
         "semantic_id": "tests/test_aura_planning_regression.py#function:test_cycle_is_blocked_without_repeating_actions:d459f9b58df8a2e7",
         "signature_hash": "aa0b9b3132e1643c"
+      }
+    ],
+    "test_cyclic_event_container_is_bounded_and_deterministic": [
+      {
+        "file": "tests/test_aura_state_identity_cycles.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_state_identity_cycles.py#function:test_cyclic_event_container_is_bounded_and_deterministic:ac5fe46c903dd056",
+        "signature_hash": "4a2e23564e9c7da7"
       }
     ],
     "test_dag_has_stages": [
@@ -78782,6 +78822,16 @@
         "end_line": 251,
         "semantic_id": "test_aura_ojibwe_tutor.py#method:TestOjibweLexiconSidecar.test_only_verified_vetted_entries_added:1d215c5e54e2bced",
         "signature_hash": "61a7acfc893aa5b7"
+      }
+    ],
+    "test_opaque_objects_use_stable_type_identity_not_memory_address": [
+      {
+        "file": "tests/test_aura_state_identity_cycles.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_state_identity_cycles.py#function:test_opaque_objects_use_stable_type_identity_not_memory_address:e246fa0715d4e676",
+        "signature_hash": "0b20af2773153f00"
       }
     ],
     "test_opaque_record_combinations_are_bound_without_interpretation": [
@@ -90632,8 +90682,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 99,
+        "end_line": 100,
         "semantic_id": "aura_refactor_state_identity.py#function:tokens:49602440db545cec",
         "signature_hash": "cc4ec4376c52d132"
       }
@@ -91950,8 +92000,8 @@
       {
         "file": "aura_refactor_state_identity.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 119,
+        "line": 203,
+        "end_line": 214,
         "semantic_id": "aura_refactor_state_identity.py#function:verify_sidecar:76b1f9c0ed501fbe",
         "signature_hash": "07c66b497a72ff16"
       }
@@ -96049,7 +96099,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 134,
+        "hub_rank": 135,
         "node_count": 22,
         "edge_count": 83,
         "degree": 83,
@@ -96558,7 +96608,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 116,
+        "hub_rank": 117,
         "node_count": 20,
         "edge_count": 96,
         "degree": 96,
@@ -99482,7 +99532,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 117,
+        "hub_rank": 118,
         "node_count": 15,
         "edge_count": 95,
         "degree": 95,
@@ -99733,7 +99783,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 119,
+        "hub_rank": 120,
         "node_count": 26,
         "edge_count": 93,
         "degree": 93,
@@ -105030,7 +105080,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 115,
+        "hub_rank": 116,
         "node_count": 28,
         "edge_count": 96,
         "degree": 96,
@@ -106162,7 +106212,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 137,
+        "hub_rank": 138,
         "node_count": 22,
         "edge_count": 80,
         "degree": 80,
@@ -106330,7 +106380,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 113,
+        "hub_rank": 114,
         "node_count": 21,
         "edge_count": 97,
         "degree": 97,
@@ -110376,7 +110426,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 139,
+        "hub_rank": 140,
         "node_count": 19,
         "edge_count": 80,
         "degree": 80,
@@ -111185,7 +111235,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 127,
+        "hub_rank": 128,
         "node_count": 11,
         "edge_count": 87,
         "degree": 87,
@@ -111489,7 +111539,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 114,
+        "hub_rank": 115,
         "node_count": 17,
         "edge_count": 97,
         "degree": 97,
@@ -111748,7 +111798,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 122,
+        "hub_rank": 123,
         "node_count": 17,
         "edge_count": 90,
         "degree": 90,
@@ -111985,7 +112035,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 133,
+        "hub_rank": 134,
         "node_count": 32,
         "edge_count": 84,
         "degree": 84,
@@ -112086,7 +112136,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 118,
+        "hub_rank": 119,
         "node_count": 27,
         "edge_count": 94,
         "degree": 94,
@@ -114085,7 +114135,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 120,
+        "hub_rank": 121,
         "node_count": 22,
         "edge_count": 93,
         "degree": 93,
@@ -114260,7 +114310,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 128,
+        "hub_rank": 129,
         "node_count": 33,
         "edge_count": 86,
         "degree": 86,
@@ -114495,7 +114545,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 126,
+        "hub_rank": 127,
         "node_count": 22,
         "edge_count": 87,
         "degree": 87,
@@ -115957,7 +116007,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 138,
+        "hub_rank": 139,
         "node_count": 20,
         "edge_count": 80,
         "degree": 80,
@@ -118450,7 +118500,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 135,
+        "hub_rank": 136,
         "node_count": 15,
         "edge_count": 83,
         "degree": 83,
@@ -119294,7 +119344,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 132,
+        "hub_rank": 133,
         "node_count": 20,
         "edge_count": 85,
         "degree": 85,
@@ -121106,18 +121156,20 @@
     {
       "path": "aura_refactor_state_identity.py",
       "role": "python_module",
-      "bytes": 6516,
-      "lines": 123,
-      "tokens_est": 1629,
-      "symbol_count": 10,
+      "bytes": 8601,
+      "lines": 230,
+      "tokens_est": 2151,
+      "symbol_count": 12,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 140,
-        "node_count": 11,
-        "edge_count": 80,
-        "degree": 80,
+        "hub_rank": 112,
+        "node_count": 13,
+        "edge_count": 100,
+        "degree": 100,
         "symbols": [
+          "_key",
+          "_type",
           "build_projection",
           "build_sidecar",
           "canonical",
@@ -121134,45 +121186,45 @@
           "aura_refactor_state_ledger_metrics.py"
         ],
         "edge_kinds": {
-          "call": 58,
-          "defines": 20,
+          "call": 74,
+          "defines": 24,
           "import_module": 2
         }
       },
-      "digest8": "96556344509c74ec",
+      "digest8": "290bd2717985f228",
       "vector": [
-        -0.154253,
-        -0.238806,
-        0.254803,
-        -0.042277,
-        0.007998,
-        0.147397,
-        -0.188531,
-        0.151968,
-        -0.181675,
-        -0.012569,
-        -0.172535,
-        -0.259373,
-        0.117689,
-        -0.266229,
-        0.014854,
-        0.039991,
-        -0.27537,
-        -0.270799,
-        -0.186246,
-        0.07884,
-        0.135971,
-        0.058273,
-        -0.092552,
-        -0.211383,
-        0.202243,
-        -0.186246,
-        0.044562,
-        -0.039991,
-        -0.133686,
-        0.236521,
-        -0.252518,
-        -0.270799
+        -0.104235,
+        0.239127,
+        0.244032,
+        0.3078,
+        -0.011037,
+        -0.18517,
+        -0.226864,
+        0.09933,
+        0.089519,
+        -0.10914,
+        -0.141024,
+        0.052731,
+        0.305347,
+        0.261201,
+        -0.116498,
+        -0.067446,
+        -0.121403,
+        0.273463,
+        -0.202338,
+        0.25139,
+        -0.25139,
+        -0.089519,
+        -0.138571,
+        -0.0233,
+        -0.067446,
+        -0.209696,
+        -0.275916,
+        -0.035563,
+        -0.101782,
+        -0.018394,
+        -0.18517,
+        -0.064994
       ]
     },
     {
@@ -121467,7 +121519,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 129,
+        "hub_rank": 130,
         "node_count": 19,
         "edge_count": 86,
         "degree": 86,
@@ -123930,7 +123982,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 123,
+        "hub_rank": 124,
         "node_count": 20,
         "edge_count": 88,
         "degree": 88,
@@ -125294,7 +125346,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 112,
+        "hub_rank": 113,
         "node_count": 10,
         "edge_count": 99,
         "degree": 99,
@@ -129683,7 +129735,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 130,
+        "hub_rank": 131,
         "node_count": 31,
         "edge_count": 85,
         "degree": 85,
@@ -130680,7 +130732,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 131,
+        "hub_rank": 132,
         "node_count": 26,
         "edge_count": 85,
         "degree": 85,
@@ -132561,7 +132613,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 136,
+        "hub_rank": 137,
         "node_count": 16,
         "edge_count": 81,
         "degree": 81,
@@ -132773,7 +132825,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 121,
+        "hub_rank": 122,
         "node_count": 17,
         "edge_count": 93,
         "degree": 93,
@@ -134122,7 +134174,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 125,
+        "hub_rank": 126,
         "node_count": 22,
         "edge_count": 87,
         "degree": 87,
@@ -135815,7 +135867,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 124,
+        "hub_rank": 125,
         "node_count": 26,
         "edge_count": 87,
         "degree": 87,
@@ -139030,93 +139082,93 @@
     {
       "path": ".github/workflows/architect-real-refactor-hardening.yml",
       "role": "schema_or_lexicon",
-      "bytes": 1624,
-      "lines": 48,
-      "tokens_est": 406,
+      "bytes": 1679,
+      "lines": 49,
+      "tokens_est": 420,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ef87d6cbd57cc66f",
+      "digest8": "f3ed0faed79eaa23",
       "vector": [
-        -0.271391,
-        -0.107777,
-        0.229838,
-        -0.141539,
-        0.076613,
-        0.294764,
-        -0.271391,
-        -0.248018,
-        0.2636,
-        -0.229838,
-        -0.250615,
-        0.211659,
-        0.115568,
-        0.089598,
-        0.136345,
-        0.120763,
-        0.040254,
-        0.055836,
-        0.032463,
-        -0.167509,
-        -0.266197,
-        -0.222047,
-        -0.058433,
-        0.167509,
-        0.120763,
-        0.224644,
-        -0.063628,
-        0.081807,
-        0.087001,
-        0.21945,
-        0.110374,
-        0.016881
+        -0.269458,
+        0.24728,
+        -0.269458,
+        -0.016633,
+        -0.003327,
+        0.107561,
+        0.021069,
+        -0.211796,
+        -0.253933,
+        0.083166,
+        0.253933,
+        0.058771,
+        0.256151,
+        -0.043246,
+        -0.245062,
+        0.160787,
+        0.196272,
+        -0.218449,
+        0.258369,
+        0.060988,
+        -0.15857,
+        -0.209578,
+        0.021069,
+        0.15857,
+        -0.045464,
+        -0.160787,
+        0.00998,
+        -0.072077,
+        -0.22732,
+        -0.198489,
+        -0.258369,
+        0.036593
       ]
     },
     {
       "path": ".github/workflows/architect-real-refactor-trial.yml",
       "role": "schema_or_lexicon",
-      "bytes": 5733,
-      "lines": 150,
-      "tokens_est": 1434,
+      "bytes": 6778,
+      "lines": 168,
+      "tokens_est": 1695,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6ca6a65768b7ecc8",
+      "digest8": "907a46f144ce40cb",
       "vector": [
-        -0.242673,
-        -0.068818,
-        0.051915,
-        0.305454,
-        -0.042256,
-        -0.15816,
-        -0.080891,
-        0.196794,
-        0.08572,
-        -0.175063,
-        -0.286137,
-        -0.0495,
-        -0.010866,
-        -0.013281,
-        -0.032598,
-        -0.22577,
-        0.100208,
-        -0.247502,
-        0.206453,
-        0.032598,
-        0.288551,
-        -0.303039,
-        0.247502,
-        -0.003622,
-        0.162989,
-        -0.266819,
-        0.114696,
-        -0.155745,
-        -0.066403,
-        0.138843,
-        -0.131599,
-        0.257161
+        -0.001214,
+        0.086164,
+        -0.146843,
+        -0.212376,
+        -0.195386,
+        -0.091018,
+        0.117717,
+        -0.212376,
+        0.086164,
+        -0.13228,
+        -0.110436,
+        0.268201,
+        0.042475,
+        0.285191,
+        -0.21723,
+        0.185677,
+        0.120144,
+        -0.16626,
+        -0.076455,
+        -0.292472,
+        -0.287618,
+        0.265774,
+        0.158979,
+        0.202668,
+        0.001214,
+        -0.013349,
+        -0.069174,
+        -0.192959,
+        -0.018204,
+        0.285191,
+        -0.263346,
+        0.015777
       ]
     },
     {
@@ -153936,6 +153988,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_state_identity_cycles.py",
+      "role": "python_module",
+      "bytes": 1168,
+      "lines": 40,
+      "tokens_est": 292,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9841ac2f2e5fc31b",
+      "vector": [
+        0.175871,
+        -0.136788,
+        0.316567,
+        0.074257,
+        0.144605,
+        -0.01433,
+        0.006514,
+        -0.194109,
+        -0.061229,
+        0.058624,
+        0.035174,
+        0.300934,
+        -0.214953,
+        0.097706,
+        -0.160238,
+        0.042991,
+        0.123761,
+        -0.326989,
+        0.110733,
+        -0.28009,
+        0.053413,
+        0.084678,
+        0.113339,
+        0.30354,
+        0.178476,
+        -0.22277,
+        0.024752,
+        0.22277,
+        0.042991,
+        -0.22277,
+        0.256641,
+        -0.162843
+      ]
+    },
+    {
       "path": "tests/test_aura_substrate_contracts.py",
       "role": "python_module",
       "bytes": 1822,
@@ -154906,7 +155004,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 3696,
+      "dead_end_count": 3697,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -155006,11 +155104,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 517,
-      "node_count": 8146,
-      "edge_count": 17771,
+      "node_count": 8148,
+      "edge_count": 17781,
       "spectral_layout": true,
-      "spectral_sparsity": 0.057827,
-      "global_health": 0.970864
+      "spectral_sparsity": 0.057813,
+      "global_health": 0.970871
     },
     "file_index": {
       "aura_node.py": {
@@ -159634,8 +159732,37 @@
           "import_module": 4
         }
       },
-      "aura_substrate_verifier.py": {
+      "aura_refactor_state_identity.py": {
         "hub_rank": 112,
+        "node_count": 13,
+        "edge_count": 100,
+        "degree": 100,
+        "symbols": [
+          "_key",
+          "_type",
+          "build_projection",
+          "build_sidecar",
+          "canonical",
+          "digest",
+          "history_events",
+          "history_identity",
+          "normalize",
+          "semantic_sets",
+          "tokens",
+          "verify_sidecar"
+        ],
+        "neighbor_files": [
+          "aura_refactor_state_ledger_core.py",
+          "aura_refactor_state_ledger_metrics.py"
+        ],
+        "edge_kinds": {
+          "call": 74,
+          "defines": 24,
+          "import_module": 2
+        }
+      },
+      "aura_substrate_verifier.py": {
+        "hub_rank": 113,
         "node_count": 10,
         "edge_count": 99,
         "degree": 99,
@@ -159664,7 +159791,7 @@
         }
       },
       "aura_core.py": {
-        "hub_rank": 113,
+        "hub_rank": 114,
         "node_count": 21,
         "edge_count": 97,
         "degree": 97,
@@ -159706,7 +159833,7 @@
         }
       },
       "aura_hotswap_refactor.py": {
-        "hub_rank": 114,
+        "hub_rank": 115,
         "node_count": 17,
         "edge_count": 97,
         "degree": 97,
@@ -159740,7 +159867,7 @@
         }
       },
       "aura_coding_arena_planning_types.py": {
-        "hub_rank": 115,
+        "hub_rank": 116,
         "node_count": 28,
         "edge_count": 96,
         "degree": 96,
@@ -159775,7 +159902,7 @@
         }
       },
       "aura_agent_arena_mcp.py": {
-        "hub_rank": 116,
+        "hub_rank": 117,
         "node_count": 20,
         "edge_count": 96,
         "degree": 96,
@@ -159813,7 +159940,7 @@
         }
       },
       "aura_arena_wfst_compiler.py": {
-        "hub_rank": 117,
+        "hub_rank": 118,
         "node_count": 15,
         "edge_count": 95,
         "degree": 95,
@@ -159851,7 +159978,7 @@
         }
       },
       "aura_hv_cache.py": {
-        "hub_rank": 118,
+        "hub_rank": 119,
         "node_count": 27,
         "edge_count": 94,
         "degree": 94,
@@ -159891,7 +160018,7 @@
         }
       },
       "aura_arena_wfst_types.py": {
-        "hub_rank": 119,
+        "hub_rank": 120,
         "node_count": 26,
         "edge_count": 93,
         "degree": 93,
@@ -159929,7 +160056,7 @@
         }
       },
       "aura_matrix_benchmark.py": {
-        "hub_rank": 120,
+        "hub_rank": 121,
         "node_count": 22,
         "edge_count": 93,
         "degree": 93,
@@ -159972,7 +160099,7 @@
         }
       },
       "test_aura_live_architect.py": {
-        "hub_rank": 121,
+        "hub_rank": 122,
         "node_count": 17,
         "edge_count": 93,
         "degree": 93,
@@ -160005,7 +160132,7 @@
         }
       },
       "aura_human_agent_concepts.py": {
-        "hub_rank": 122,
+        "hub_rank": 123,
         "node_count": 17,
         "edge_count": 90,
         "degree": 90,
@@ -160041,7 +160168,7 @@
         }
       },
       "aura_single_seed_lift.py": {
-        "hub_rank": 123,
+        "hub_rank": 124,
         "node_count": 20,
         "edge_count": 88,
         "degree": 88,
@@ -160076,7 +160203,7 @@
         }
       },
       "test_timestep_svd_quantizer.py": {
-        "hub_rank": 124,
+        "hub_rank": 125,
         "node_count": 26,
         "edge_count": 87,
         "degree": 87,
@@ -160112,7 +160239,7 @@
         }
       },
       "test_aura_st3gg_recall.py": {
-        "hub_rank": 125,
+        "hub_rank": 126,
         "node_count": 22,
         "edge_count": 87,
         "degree": 87,
@@ -160148,7 +160275,7 @@
         }
       },
       "aura_metaharness_audit.py": {
-        "hub_rank": 126,
+        "hub_rank": 127,
         "node_count": 22,
         "edge_count": 87,
         "degree": 87,
@@ -160187,7 +160314,7 @@
         }
       },
       "aura_heal.py": {
-        "hub_rank": 127,
+        "hub_rank": 128,
         "node_count": 11,
         "edge_count": 87,
         "degree": 87,
@@ -160217,7 +160344,7 @@
         }
       },
       "aura_mesh.py": {
-        "hub_rank": 128,
+        "hub_rank": 129,
         "node_count": 33,
         "edge_count": 86,
         "degree": 86,
@@ -160259,7 +160386,7 @@
         }
       },
       "aura_repair_kg.py": {
-        "hub_rank": 129,
+        "hub_rank": 130,
         "node_count": 19,
         "edge_count": 86,
         "degree": 86,
@@ -160296,7 +160423,7 @@
         }
       },
       "liquid_math_reference.py": {
-        "hub_rank": 130,
+        "hub_rank": 131,
         "node_count": 31,
         "edge_count": 85,
         "degree": 85,
@@ -160333,7 +160460,7 @@
         }
       },
       "pvm_arch_checker.py": {
-        "hub_rank": 131,
+        "hub_rank": 132,
         "node_count": 26,
         "edge_count": 85,
         "degree": 85,
@@ -160371,7 +160498,7 @@
         }
       },
       "aura_plugin_registry.py": {
-        "hub_rank": 132,
+        "hub_rank": 133,
         "node_count": 20,
         "edge_count": 85,
         "degree": 85,
@@ -160407,7 +160534,7 @@
         }
       },
       "aura_human_agent_workflow.py": {
-        "hub_rank": 133,
+        "hub_rank": 134,
         "node_count": 32,
         "edge_count": 84,
         "degree": 84,
@@ -160450,7 +160577,7 @@
         }
       },
       "aura_adaptive_model_router.py": {
-        "hub_rank": 134,
+        "hub_rank": 135,
         "node_count": 22,
         "edge_count": 83,
         "degree": 83,
@@ -160493,7 +160620,7 @@
         }
       },
       "aura_patch_quality_gate.py": {
-        "hub_rank": 135,
+        "hub_rank": 136,
         "node_count": 15,
         "edge_count": 83,
         "degree": 83,
@@ -160527,7 +160654,7 @@
         }
       },
       "test_aura_icm_workspace.py": {
-        "hub_rank": 136,
+        "hub_rank": 137,
         "node_count": 16,
         "edge_count": 81,
         "degree": 81,
@@ -160562,7 +160689,7 @@
         }
       },
       "aura_converse.py": {
-        "hub_rank": 137,
+        "hub_rank": 138,
         "node_count": 22,
         "edge_count": 80,
         "degree": 80,
@@ -160601,7 +160728,7 @@
         }
       },
       "aura_music_inversion.py": {
-        "hub_rank": 138,
+        "hub_rank": 139,
         "node_count": 20,
         "edge_count": 80,
         "degree": 80,
@@ -160636,7 +160763,7 @@
         }
       },
       "aura_fractal_ledger.py": {
-        "hub_rank": 139,
+        "hub_rank": 140,
         "node_count": 19,
         "edge_count": 80,
         "degree": 80,
@@ -160668,33 +160795,6 @@
           "call": 43,
           "defines": 36,
           "import_module": 1
-        }
-      },
-      "aura_refactor_state_identity.py": {
-        "hub_rank": 140,
-        "node_count": 11,
-        "edge_count": 80,
-        "degree": 80,
-        "symbols": [
-          "build_projection",
-          "build_sidecar",
-          "canonical",
-          "digest",
-          "history_events",
-          "history_identity",
-          "normalize",
-          "semantic_sets",
-          "tokens",
-          "verify_sidecar"
-        ],
-        "neighbor_files": [
-          "aura_refactor_state_ledger_core.py",
-          "aura_refactor_state_ledger_metrics.py"
-        ],
-        "edge_kinds": {
-          "call": 58,
-          "defines": 20,
-          "import_module": 2
         }
       },
       "symbolic_shield.py": {
