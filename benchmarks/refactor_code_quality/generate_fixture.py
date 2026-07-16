@@ -319,7 +319,7 @@ def generate(output_dir: Path, planning: dict[str, Any], ablation: dict[str, Any
             "protected_api_files": [
                 "arena_refactor/router.py",
                 "arena_refactor/state.py",
-                "arena_refactor/service.py"
+                "arena_refactor/service.py",
             ],
             "required_gates": [
                 "patch_apply",
@@ -329,11 +329,11 @@ def generate(output_dir: Path, planning: dict[str, Any], ablation: dict[str, Any
                 "regression_tests",
                 "api_compatibility",
                 "scope",
-                "security"
+                "security",
             ],
-            "run_ruff": true,
-            "run_mypy": false,
-            "run_bandit": true,
+            "run_ruff": True,
+            "run_mypy": False,
+            "run_bandit": True,
             "model": str(planning.get("model") or "GPT-5.6 Thinking fixture"),
             "provider": "single-session-assisted-fixture",
             "repository_commit_sha": str(planning.get("repository_commit_sha") or ""),
@@ -348,24 +348,26 @@ def generate(output_dir: Path, planning: dict[str, Any], ablation: dict[str, Any
                 "visible_test_count": 3,
                 "hidden_test_count": 3,
                 "regression_test_count": 2,
-                "hidden_tests_prompt_exposed": false,
-                "patch_fixture_independence": "single_session_assisted_not_blinded"
+                "hidden_tests_prompt_exposed": False,
+                "patch_fixture_independence": "single_session_assisted_not_blinded",
             },
             "supplemental_metrics": {},
-            "timeout_seconds": 60
+            "timeout_seconds": 60,
         }
         (spec_dir / f"{arm}.json").write_text(
             json.dumps(spec, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-        records.append({
-            "arm_id": arm,
-            "method": methods[arm],
-            "patch": str(patch_path),
-            "patch_digest": _digest(patch),
-            "spec": str(spec_dir / f"{arm}.json"),
-            "token_usage": token_map[arm],
-        })
+        records.append(
+            {
+                "arm_id": arm,
+                "method": methods[arm],
+                "patch": str(patch_path),
+                "patch_digest": _digest(patch),
+                "spec": str(spec_dir / f"{arm}.json"),
+                "token_usage": token_map[arm],
+            }
+        )
 
     manifest = {
         "fixture_version": FIXTURE_VERSION,
@@ -374,7 +376,7 @@ def generate(output_dir: Path, planning: dict[str, Any], ablation: dict[str, Any
         "limitations": [
             "Patch fixtures were authored in one assisted session and are not independent provider samples.",
             "The fixture is cross-module and executable but smaller than AuraOS production refactors.",
-            "The Council V2 and V3 arms intentionally use the same patch to isolate critic-calling efficiency from implementation variance."
+            "The Council V2 and V3 arms intentionally use the same patch to isolate critic-calling efficiency from implementation variance.",
         ],
     }
     (output_dir / "manifest.json").write_text(
