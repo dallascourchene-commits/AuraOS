@@ -3,7 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aura_external_llm_session import InstrumentedExternalModelCaller
+from aura_external_llm_session import (
+    AuraExternalLLMSessionManager as BaseAuraExternalLLMSessionManager,
+    InstrumentedExternalModelCaller,
+    _token_estimate,
+)
 from aura_external_llm_session_safe import AuraExternalLLMSessionManager
 
 
@@ -240,3 +244,125 @@ def test_instrumented_caller_records_role_tokens_cost_and_digests() -> None:
     assert summary["calls"][0]["role"] == "judge"
     assert summary["calls"][0]["request_digest"]
     assert summary["calls"][0]["response_digest"]
+
+
+class TwoTaskBridge(FakeBridge):
+    def __init__(self, *, fail_second_micro: bool = False) -> None:
+        super().__init__(verify_ready=True)
+        self.fail_second_micro = fail_second_micro
+
+    def aura_prepare_arena(self, **kwargs):
+        result = super().aura_prepare_arena(**kwargs)
+        result["act_capsules"] = [
+            dict(result["act_capsules"][0]),
+            {
+                "task_id": "A2",
+                "target_file": "aura_skills.py",
+                "target_symbol": "consolidate_skills",
+                "related_files": [],
+                "objective": kwargs["objective"],
+                "size": "M",
+                "role": "cheap_builder",
+            },
+        ]
+        result["routing_decisions"].append({"task_id": "A2", "route": "BUILDER_PATCH"})
+        return result
+
+    def aura_get_micro_context(self, **kwargs):
+        if kwargs.get("task_id") == "A2" and self.fail_second_micro:
+            self.calls.append(("micro", kwargs))
+            return {"ok": False, "error": "micro_context_unavailable"}
+        result = super().aura_get_micro_context(**kwargs)
+        if kwargs.get("task_id") == "A2":
+            result.update(
+                {
+                    "task_id": "A2",
+                    "target_file": "aura_skills.py",
+                    "target_symbol": "consolidate_skills",
+                    "line_ranges": [
+                        {
+                            "file": "aura_skills.py",
+                            "symbol": "consolidate_skills",
+                            "line_range": [10, 30],
+                        }
+                    ],
+                    "tests": [],
+                }
+            )
+        return result
+
+
+class OversizedFallbackBridge(FakeBridge):
+    def aura_read_slice(self, **kwargs):
+        self.calls.append(("read", kwargs))
+        return {
+            "ok": True,
+            "file": "nested/" + "x" * 160 + ".py",
+            "symbol": "oversized_symbol",
+            "line_start": 1,
+            "line_end": 1,
+            "total_lines": 1,
+            "content": "x = 1",
+            "warnings": ["w" * 160],
+        }
+
+
+def _review_diff(path: str = "aura_memory.py") -> str:
+    return (
+        f"diff --git a/{path} b/{path}\n"
+        f"--- a/{path}\n"
+        f"+++ b/{path}\n"
+        "@@ -1 +1 @@\n"
+        "-x = 1\n"
+        "+x = 2\n"
+    )
+
+
+def test_base_manager_blocks_successive_turn_at_max_turns(tmp_path: Path) -> None:
+    bridge = TwoTaskBridge()
+    manager = BaseAuraExternalLLMSessionManager(tmp_path, bridge=bridge)
+    opened = manager.open_session(objective="Complete two capsules", max_turns=1)
+    before = len([1 for name, _ in bridge.calls if name == "micro"])
+    result = manager.submit_response(
+        session_id=opened["session"]["session_id"],
+        turn_id=opened["turn"]["turn_id"],
+        response=_review_diff(),
+    )
+    after = len([1 for name, _ in bridge.calls if name == "micro"])
+    assert result["ok"] is False
+    assert result["status"] == "BLOCKED_MAX_TURNS"
+    assert result["next_turn"] is None
+    assert result["session"]["pending_turn"] is None
+    assert after == before
+
+
+def test_base_manager_never_waits_without_pending_turn(tmp_path: Path) -> None:
+    bridge = TwoTaskBridge(fail_second_micro=True)
+    manager = BaseAuraExternalLLMSessionManager(tmp_path, bridge=bridge)
+    opened = manager.open_session(objective="Complete two capsules", max_turns=4)
+    result = manager.submit_response(
+        session_id=opened["session"]["session_id"],
+        turn_id=opened["turn"]["turn_id"],
+        response=_review_diff(),
+    )
+    assert result["ok"] is False
+    assert result["status"] == "BLOCKED_NEXT_TURN_UNAVAILABLE"
+    assert result["next_turn"] is None
+    assert result["session"]["pending_turn"] is None
+
+
+def test_base_manager_fallback_charges_full_serialized_slice(tmp_path: Path) -> None:
+    bridge = OversizedFallbackBridge()
+    manager = BaseAuraExternalLLMSessionManager(tmp_path, bridge=bridge)
+    micro = {
+        "ok": True,
+        "target_file": "aura_memory.py",
+        "target_symbol": "consolidate_memory",
+        "line_ranges": [],
+        "tests": [],
+    }
+    source, test_slices = manager._lease_slices(micro, token_budget=70)
+    assert source == []
+    assert test_slices == []
+    compact = manager._compact_slice(bridge.aura_read_slice(file="aura_memory.py"))
+    assert _token_estimate(json.dumps(compact, sort_keys=True, default=str)) > 70

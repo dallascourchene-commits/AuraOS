@@ -56,55 +56,45 @@ The shared planning instruction was also recorded exactly:
 
 `AURA_ARCHITECT_CONSOLIDATION_BENCHMARK_V2` emitted a prompt manifest containing **20 exact prompt entries**: the broad-context prompt, the single sliced prompt, two planner prompts, fifteen Shadow prompts, and one Judge prompt. Each entry includes byte size, digest, estimated input/output tokens, and provider-reported token fields when available.
 
+<!-- AURA_ARCHITECT_PLANNING_BENCHMARK:START -->
 ## Planning Benchmarks
 
 **Status:** reproducible fixture-based planning benchmark; no production mutation.  
-**Model fixture:** GPT-5.6 Thinking, single-session assisted pilot.  
-**Tokens:** deterministic char/4 proxies unless provider-reported usage is available.
-
-### V2 results
+**Measured code head:** `002ece8a22c0982b883efb54e381ef9f2329e034`.  
+**Tokens:** deterministic char/4 proxies; normalized cost is comparative, not a provider invoice.
 
 | Arm | Calls | Input token proxy | Output token proxy | Total token proxy | Grounded-plan quality | Normalized cost* |
 |---|---:|---:|---:|---:|---:|---:|
-| Broad-context single planner | 1 | 130,485 | 1,169 | 131,654 | 0.9550 | $0.133992 |
-| **Aura-slice single planner** | **1** | **13,201** | **1,667** | **14,868** | **0.9607** | **$0.018202** |
-| Length-aware Architect Council V2 | 18 | 154,226 | 4,319 | 158,545 | **0.9625** | $0.167183 |
+| Broad-context single planner | 1 | 130,486 | 1,169 | 131,655 | 0.9550 | $0.133993 |
+| **Aura-slice single planner** | **1** | **12,764** | **1,667** | **14,431** | **0.9607** | **$0.017765** |
+| Length-aware Architect Council V2 | 18 | 163,936 | 4,633 | 168,569 | **0.9625** | $0.177835 |
 
-\*Normalized cost uses a declared $1/M input-token proxy and $3/M output-token proxy rate card. It is derived for comparison and is **not** a provider invoice or current provider price.
+\*Normalized cost uses a declared $1/M input and $3/M output proxy rate card.
 
-### What changed from V1
+### Current measured findings
 
-V1 used 12 Council calls, 94,141 total token proxy, and scored 0.9458. It exposed plan-contract loss and showed that an uncorrected Council did not beat the sliced planner.
+- Aura slices reduced input-token proxy by **90.22%** and total-token proxy by **89.04%** versus broad context.
+- The sliced plan changed grounded-plan quality by **+0.0057**.
+- Council total-token proxy was **28.04% higher** than broad context.
+- The Council changed grounded-plan quality by **+0.0075**.
+- Selected plan profile: **LONG**, 8 tasks, 17 distinct files.
+- Governance contract: **all submitted plan-level governance fields preserved**.
+- Call accounting: **18 attempted, 18 recorded, 0 failed**.
+- Prompt manifest: **20 exact entries**.
 
-Council V2:
+### Council role accounting
 
-- preserves `acceptance_criteria`, `rollback_conditions`, `risk_map`, `constraints`, and escalation rules;
-- classifies plans as short, medium, long, or program-scale;
-- adds sequence, continuity, and rollback Shadow review for long plans;
-- raised Council quality from **0.9458 to 0.9625**;
-- raised Council calls from **12 to 18**;
-- raised Council total token proxy from **94,141 to 158,545**.
-
-V2 therefore produced the best planning score, **+0.0075 over broad context** and **+0.0018 over the single sliced planner**, but used **20.43% more total token proxy than broad context** and about **10.66×** the total tokens of the sliced planner.
-
-### Where the Council token tax comes from
-
-| Council role | Calls | Estimated input | Estimated output |
+| Role | Calls | Estimated input | Estimated output |
 |---|---:|---:|---:|
-| Planner | 1 | 395 | 2,011 |
-| Alternate planner | 1 | 396 | 1,546 |
-| Shadow critics | 15 | 127,473 | 687 |
-| Judge | 1 | 25,962 | 75 |
+| Planner | 1 | 399 | 2,011 |
+| Planner Alt | 1 | 400 | 1,546 |
+| Shadow | 15 | 135,582 | 1,001 |
+| Judge | 1 | 27,555 | 75 |
 
-Shadow review consumed approximately **82.6% of Council input tokens**. This identifies the next optimization target: route only the critic lanes justified by plan length, changed interfaces, risk, and prior failure evidence instead of applying every critic lane uniformly.
+### Fixture and claim boundary
 
-### Stable findings
-
-- Aura slices reduced input-token proxy by **89.88%** and total-token proxy by **88.71%** versus broad context.
-- The sliced planner preserved quality while remaining the strongest **single-call quality-per-token** arm.
-- Council V2 improved strategic plan quality after preserving the full governance contract.
-- Council V2 is not economical for localized implementation; its value must be amortized across long, cross-system work.
-- These fixture results do not establish general model superiority, real patch quality, provider-billed savings, consciousness, or production readiness.
+The long-plan critic lanes use explicit deterministic fixture aliases (continuity→tests, rollback→cost, sequence→scope). These are reproducible fixture invocations, not independent live-provider responses. The benchmark supports context-selection and controlled planning comparisons for this measured head; it does not establish general model superiority, provider-billed savings, consciousness, or production readiness.
+<!-- AURA_ARCHITECT_PLANNING_BENCHMARK:END -->
 
 <!-- AURA_REFACTOR_CODE_QUALITY:START -->
 ## Executable Refactor Code Quality
@@ -141,6 +131,27 @@ Aura uses ISO/IEC 25010:2023, ISO/IEC 5055:2021, NIST SSDF 1.1, OWASP SAMM, and 
 
 Detailed evidence: [`docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md`](docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md).  
 Standard protocol: [`docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md`](docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md).
+<!-- AURA_REAL_REFACTOR_TRIAL:START -->
+### Latest real AuraOS refactor trial
+
+**Measured code head:** `002ece8a22c0982b883efb54e381ef9f2329e034`.  
+**Selected plan:** `PLAN-D-SELECTIVE-COUNCIL-V3-SURGEON`; expected selection match: **True**.  
+**Working status:** `WORKING`; disposition: `ACCEPTED`.
+
+| Gate family | Passed | Total | Failures | Errors |
+|---|---:|---:|---:|---:|
+| Visible/property | 32 | 32 | 0 | 0 |
+| Review-derived adversarial | 35 | 35 | 0 | 0 |
+| Focused regression | 21 | 21 | 0 | 0 |
+
+- Observed quality: **100.00**.
+- Benchmark quality: **93.50**.
+- Measurement completeness: **93.5%**.
+- Patch digest: `0c0b1ad98678e0c33b2e66775a625832`.
+- Required gates: compile=PASS, api_compatibility=PASS, security=PASS, static_analysis=PASS, container_build=PASS, selected_plan_bound_to_arena=PASS, local_output_vault=PASS, record_redaction=PASS.
+
+This trial is a real branch refactor with held-out and review-derived tests, but the planning arms are frozen assisted artifacts rather than blinded independent-provider generations. Performance and calibrated maintainability remain unmeasured.
+<!-- AURA_REAL_REFACTOR_TRIAL:END -->
 <!-- AURA_REFACTOR_CODE_QUALITY:END -->
 
 ## Council–Surgeon Hybrid Benchmark

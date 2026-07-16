@@ -130,9 +130,13 @@ def finalize(report_path: Path, responses_path: Path, skeleton_path: Path) -> di
             "id": "F5_PLAN_CONTRACT_LOSS",
             "status": "DEFECT_OBSERVED" if lost_fields else "NOT_OBSERVED",
             "statement": (
-                "Architect Council normalization did not preserve submitted plan-level fields: "
-                + (", ".join(lost_fields) if lost_fields else "none")
-                + "."
+                (
+                    "Architect Council normalization did not preserve submitted plan-level fields: "
+                    + ", ".join(lost_fields)
+                    + "."
+                )
+                if lost_fields
+                else "Architect Council normalization preserved every submitted plan-level governance field."
             ),
             "lost_fields": lost_fields,
         },

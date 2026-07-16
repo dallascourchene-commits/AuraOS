@@ -375,7 +375,33 @@ class AuraExternalLLMSessionManager:
                     ),
                     "next_turn": None,
                 }
+            if len(session.turns) >= session.max_turns:
+                session.pending_turn = None
+                session.status = "BLOCKED_MAX_TURNS"
+                session.updated_at = time.time()
+                return {
+                    "ok": False,
+                    "status": session.status,
+                    "session": session.public_state(),
+                    "stage_result": stage,
+                    "verification": verification,
+                    "next_turn": None,
+                    "error": "max_turns_exceeded",
+                }
             next_turn = self._build_turn(session, role="worker", failure_packet={})
+            if next_turn is None:
+                session.pending_turn = None
+                session.status = "BLOCKED_NEXT_TURN_UNAVAILABLE"
+                session.updated_at = time.time()
+                return {
+                    "ok": False,
+                    "status": session.status,
+                    "session": session.public_state(),
+                    "stage_result": stage,
+                    "verification": verification,
+                    "next_turn": None,
+                    "error": "unable_to_build_leased_turn",
+                }
             session.pending_turn = next_turn
             session.status = "WAITING_FOR_MODEL"
             session.updated_at = time.time()
@@ -385,7 +411,7 @@ class AuraExternalLLMSessionManager:
                 "session": session.public_state(),
                 "stage_result": stage,
                 "verification": verification,
-                "next_turn": next_turn.to_dict() if next_turn else None,
+                "next_turn": next_turn.to_dict(),
             }
 
         repair = self.bridge.aura_repair_packet(
@@ -465,6 +491,8 @@ class AuraExternalLLMSessionManager:
         role: str,
         failure_packet: dict[str, Any],
     ) -> ExternalLLMTurn | None:
+        if len(session.turns) >= session.max_turns:
+            return None
         task = session.active_task
         if task is None:
             return None
@@ -589,7 +617,7 @@ class AuraExternalLLMSessionManager:
                 )
                 if result.get("ok"):
                     safe = self._compact_slice(result)
-                    cost = _token_estimate(safe.get("content", ""))
+                    cost = _token_estimate(json.dumps(safe, sort_keys=True, default=str))
                     if cost <= remaining:
                         source_slices.append(safe)
                         remaining -= cost
@@ -601,8 +629,10 @@ class AuraExternalLLMSessionManager:
             )
             if result.get("ok"):
                 safe = self._compact_slice(result)
-                source_slices.append(safe)
-                remaining -= _token_estimate(safe.get("content", ""))
+                cost = _token_estimate(json.dumps(safe, sort_keys=True, default=str))
+                if cost <= remaining:
+                    source_slices.append(safe)
+                    remaining -= cost
 
         for test_file in list(micro.get("tests", []) or [])[:2]:
             if remaining <= 96:
@@ -613,7 +643,7 @@ class AuraExternalLLMSessionManager:
             )
             if result.get("ok"):
                 safe = self._compact_slice(result)
-                cost = _token_estimate(safe.get("content", ""))
+                cost = _token_estimate(json.dumps(safe, sort_keys=True, default=str))
                 if cost <= remaining:
                     test_slices.append(safe)
                     remaining -= cost

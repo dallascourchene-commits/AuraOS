@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784222945,
+  "generated_at_unix": 1784226922,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1010,
+    "included_file_count": 1008,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,11 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 47,
+      ".git": 30,
+      ".pytest_cache": 4,
       "Aura_Memory": 1,
       "Aura_Sandbox": 1,
-      "__pycache__": 8
+      "__pycache__": 68
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -67,7 +68,6 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
-      ".github/workflows/architect-refactor-v2-tests.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
@@ -96,7 +96,6 @@
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
-      ".github/workflows/pr131-sync-final-benchmark-readme.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -1032,9 +1031,9 @@
     ]
   },
   "summary": {
-    "file_count": 1010,
-    "total_bytes": 50842417,
-    "text_tokens_est": 3314325,
+    "file_count": 1008,
+    "total_bytes": 50840676,
+    "text_tokens_est": 3313888,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
@@ -1042,13 +1041,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 706,
-      "schema_or_lexicon": 101,
+      "schema_or_lexicon": 99,
       "support_file": 42
     },
     "topology_nodes": 8288,
-    "topology_edges": 18108,
+    "topology_edges": 18110,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 22255.22
+    "elapsed_ms": 22298.52
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1272,7 +1271,6 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
-      ".github/workflows/architect-refactor-v2-tests.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
@@ -1298,7 +1296,6 @@
       ".github/workflows/phase-c2-review-repair.yml",
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
-      ".github/workflows/pr131-sync-final-benchmark-readme.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -3557,7 +3554,7 @@
         "file": "aura_external_llm_session.py",
         "kind": "class",
         "line": 173,
-        "end_line": 650,
+        "end_line": 680,
         "semantic_id": "aura_external_llm_session.py#class:AuraExternalLLMSessionManager:62a9e9f13a1e7f01",
         "signature_hash": "ef1d80df12a1339c"
       },
@@ -6540,8 +6537,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "class",
-        "line": 10,
-        "end_line": 119,
+        "line": 14,
+        "end_line": 123,
         "semantic_id": "tests/test_aura_external_llm_session.py#class:FakeBridge:40165af0c5492060",
         "signature_hash": "c2b682b337060da2"
       },
@@ -7262,8 +7259,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "class",
-        "line": 653,
-        "end_line": 731,
+        "line": 683,
+        "end_line": 761,
         "semantic_id": "aura_external_llm_session.py#class:InstrumentedExternalModelCaller:3925b7e9363d4def",
         "signature_hash": "30fbcfb22d28da67"
       }
@@ -8356,6 +8353,16 @@
         "end_line": 139,
         "semantic_id": "aura_arena_experience.py#class:OutcomeVector:8031a94445fa6b26",
         "signature_hash": "4fbd0750cff5df9f"
+      }
+    ],
+    "OversizedFallbackBridge": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "class",
+        "line": 295,
+        "end_line": 307,
+        "semantic_id": "tests/test_aura_external_llm_session.py#class:OversizedFallbackBridge:dac2a538956a172d",
+        "signature_hash": "056e974a9846737d"
       }
     ],
     "PVMArchChecker": [
@@ -13460,6 +13467,16 @@
         "signature_hash": "544aefc54f87045e"
       }
     ],
+    "TwoTaskBridge": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "class",
+        "line": 249,
+        "end_line": 292,
+        "semantic_id": "tests/test_aura_external_llm_session.py#class:TwoTaskBridge:b7bfe17c2d3040c8",
+        "signature_hash": "42a9efd9f36e9b4a"
+      }
+    ],
     "UnifiedPWFST": [
       {
         "file": "pwfst.py",
@@ -14146,8 +14163,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 672,
-        "end_line": 717,
+        "line": 702,
+        "end_line": 747,
         "semantic_id": "aura_external_llm_session.py#method:InstrumentedExternalModelCaller.__call__:209d2188f5e5c74f",
         "signature_hash": "3abb1f7e9ddee0f3"
       },
@@ -15066,8 +15083,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 662,
-        "end_line": 670,
+        "line": 692,
+        "end_line": 700,
         "semantic_id": "aura_external_llm_session.py#method:InstrumentedExternalModelCaller.__init__:c24a52bb13257802",
         "signature_hash": "a816f48ab83fc9cc"
       },
@@ -16730,10 +16747,18 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 11,
-        "end_line": 13,
+        "line": 15,
+        "end_line": 17,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.__init__:43f001ff517f603e",
         "signature_hash": "5556c11618abc2e4"
+      },
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 252,
+        "semantic_id": "tests/test_aura_external_llm_session.py#method:TwoTaskBridge.__init__:37675420287b1bd7",
+        "signature_hash": "6cb39ab399820004"
       },
       {
         "file": "tests/test_aura_showcase_observatory_crucible.py",
@@ -20216,8 +20241,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 461,
-        "end_line": 562,
+        "line": 487,
+        "end_line": 590,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager._build_turn:8d321d024d2e79ec",
         "signature_hash": "e26448084d218369"
       }
@@ -21920,8 +21945,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 623,
-        "end_line": 633,
+        "line": 653,
+        "end_line": 663,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager._compact_slice:8e02dc75656158fc",
         "signature_hash": "3dfcc7e206bd0bf2"
       }
@@ -24628,8 +24653,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 636,
-        "end_line": 650,
+        "line": 666,
+        "end_line": 680,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager._error:a633edb669dd7def",
         "signature_hash": "24469f074c9797b7"
       },
@@ -29424,8 +29449,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 564,
-        "end_line": 620,
+        "line": 592,
+        "end_line": 650,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager._lease_slices:b49cfce0206d8be5",
         "signature_hash": "6dbf05318aad3a32"
       },
@@ -34024,8 +34049,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 436,
-        "end_line": 459,
+        "line": 462,
+        "end_line": 485,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager._queue_repair:0183d63e26fa4d20",
         "signature_hash": "9f82a1050ba286c8"
       },
@@ -35906,6 +35931,16 @@
         "end_line": 594,
         "semantic_id": "aura_jspace_codec.py#function:_reverse:8f3dcee86206d309",
         "signature_hash": "e8b3362af5d19f8e"
+      }
+    ],
+    "_review_diff": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "function",
+        "line": 310,
+        "end_line": 318,
+        "semantic_id": "tests/test_aura_external_llm_session.py#function:_review_diff:e151f8ff54cc70bf",
+        "signature_hash": "6b2c36d20313f213"
       }
     ],
     "_reviewable_attempt": [
@@ -44000,9 +44035,17 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 37,
-        "end_line": 53,
+        "line": 41,
+        "end_line": 57,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_get_micro_context:63cebbe8cc196b54",
+        "signature_hash": "d670d0fa778bc1bf"
+      },
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 292,
+        "semantic_id": "tests/test_aura_external_llm_session.py#method:TwoTaskBridge.aura_get_micro_context:920c4fbda6d69237",
         "signature_hash": "d670d0fa778bc1bf"
       }
     ],
@@ -44034,8 +44077,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 112,
-        "end_line": 119,
+        "line": 116,
+        "end_line": 123,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_hotswap_status:589161ab12917e75",
         "signature_hash": "a727c46959491257"
       },
@@ -44084,9 +44127,17 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 15,
-        "end_line": 35,
+        "line": 19,
+        "end_line": 39,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_prepare_arena:3f61dfae294cc420",
+        "signature_hash": "c2417c2f96738913"
+      },
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_external_llm_session.py#method:TwoTaskBridge.aura_prepare_arena:bd6377c70465fc54",
         "signature_hash": "c2417c2f96738913"
       },
       {
@@ -44126,9 +44177,17 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 55,
-        "end_line": 73,
+        "line": 59,
+        "end_line": 77,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_read_slice:9856cf88ebadcc92",
+        "signature_hash": "56db2bc46ffc15bf"
+      },
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 307,
+        "semantic_id": "tests/test_aura_external_llm_session.py#method:OversizedFallbackBridge.aura_read_slice:ce311ab32ed614d9",
         "signature_hash": "56db2bc46ffc15bf"
       }
     ],
@@ -44160,8 +44219,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 100,
-        "end_line": 110,
+        "line": 104,
+        "end_line": 114,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_repair_packet:03ca00cd99730771",
         "signature_hash": "62c2d3792c0d3e61"
       }
@@ -44214,8 +44273,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 75,
-        "end_line": 85,
+        "line": 79,
+        "end_line": 89,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_stage_patch:eaf232e5cc2687f0",
         "signature_hash": "dfcfeb950c5c6054"
       },
@@ -44274,8 +44333,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "method",
-        "line": 87,
-        "end_line": 98,
+        "line": 91,
+        "end_line": 102,
         "semantic_id": "tests/test_aura_external_llm_session.py#method:FakeBridge.aura_verify_arena:86c3fb87621c4b7e",
         "signature_hash": "7787b69dddf3b1e1"
       },
@@ -52194,8 +52253,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 408,
-        "end_line": 434,
+        "line": 434,
+        "end_line": 460,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager.export_session:40743180328f6413",
         "signature_hash": "c912a1878ba1fec3"
       },
@@ -52461,7 +52520,7 @@
         "file": "aura_architect_benchmark_report.py",
         "kind": "function",
         "line": 59,
-        "end_line": 262,
+        "end_line": 266,
         "semantic_id": "aura_architect_benchmark_report.py#function:finalize:9d1c701cc1a087c9",
         "signature_hash": "da8d9eb093f0d4eb"
       },
@@ -57774,8 +57833,8 @@
       {
         "file": "aura_architect_benchmark_report.py",
         "kind": "function",
-        "line": 265,
-        "end_line": 279,
+        "line": 269,
+        "end_line": 283,
         "semantic_id": "aura_architect_benchmark_report.py#function:main:0e60c2a18a788551",
         "signature_hash": "1107cedc597d81be"
       },
@@ -64424,8 +64483,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "async_function",
-        "line": 734,
-        "end_line": 776,
+        "line": 764,
+        "end_line": 806,
         "semantic_id": "aura_external_llm_session.py#async_function:run_live_architect_with_external_callback:58bf2d0cdbbc10e0",
         "signature_hash": "57bb699a015a2fbd"
       }
@@ -66781,7 +66840,7 @@
         "file": "aura_external_llm_session.py",
         "kind": "method",
         "line": 291,
-        "end_line": 406,
+        "end_line": 432,
         "semantic_id": "aura_external_llm_session.py#method:AuraExternalLLMSessionManager.submit_response:c20426ec74244479",
         "signature_hash": "59caa1103b7dc2ea"
       },
@@ -66942,8 +67001,8 @@
       {
         "file": "aura_external_llm_session.py",
         "kind": "method",
-        "line": 719,
-        "end_line": 731,
+        "line": 749,
+        "end_line": 761,
         "semantic_id": "aura_external_llm_session.py#method:InstrumentedExternalModelCaller.summary:a475a92926cfd991",
         "signature_hash": "da89317e302e244e"
       },
@@ -68554,6 +68613,36 @@
         "end_line": 157,
         "semantic_id": "tests/test_aura_phase_c2_live_route_capsules.py#function:test_base_hard_guard_blocks_before_capsule_materialization:c487bbac49297f6a",
         "signature_hash": "669f9495eb51c4b5"
+      }
+    ],
+    "test_base_manager_blocks_successive_turn_at_max_turns": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "function",
+        "line": 321,
+        "end_line": 336,
+        "semantic_id": "tests/test_aura_external_llm_session.py#function:test_base_manager_blocks_successive_turn_at_max_turns:0a068a402e9c3f52",
+        "signature_hash": "ee937b3387f0e5d1"
+      }
+    ],
+    "test_base_manager_fallback_charges_full_serialized_slice": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "function",
+        "line": 354,
+        "end_line": 368,
+        "semantic_id": "tests/test_aura_external_llm_session.py#function:test_base_manager_fallback_charges_full_serialized_slice:40ca7a554cb7264c",
+        "signature_hash": "6ad272ce7a1924bf"
+      }
+    ],
+    "test_base_manager_never_waits_without_pending_turn": [
+      {
+        "file": "tests/test_aura_external_llm_session.py",
+        "kind": "function",
+        "line": 339,
+        "end_line": 351,
+        "semantic_id": "tests/test_aura_external_llm_session.py#function:test_base_manager_never_waits_without_pending_turn:3bbb7628c23b4b39",
+        "signature_hash": "74122277b508b434"
       }
     ],
     "test_baseline_comparison_and_no_execution_surface": [
@@ -74420,8 +74509,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 169,
-        "end_line": 194,
+        "line": 173,
+        "end_line": 198,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_failed_verification_returns_bounded_repair_turn:d2512d6cfb60bd35",
         "signature_hash": "61ee7576897b2ed8"
       }
@@ -76756,8 +76845,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 221,
-        "end_line": 242,
+        "line": 225,
+        "end_line": 246,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_instrumented_caller_records_role_tokens_cost_and_digests:952560fd605a9f71",
         "signature_hash": "7b4e8a404f7b1f72"
       }
@@ -80586,8 +80675,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 122,
-        "end_line": 138,
+        "line": 126,
+        "end_line": 142,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_open_session_returns_only_bounded_slices:5dfc93431f92efde",
         "signature_hash": "4d3689f95b3b70eb"
       }
@@ -85170,8 +85259,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 197,
-        "end_line": 205,
+        "line": 201,
+        "end_line": 209,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_session_export_is_confined_to_review_workspace:2e57b9e2d0277058",
         "signature_hash": "e0cb803cdf0a1a00"
       }
@@ -85180,8 +85269,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 208,
-        "end_line": 218,
+        "line": 212,
+        "end_line": 222,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_session_export_rejects_absolute_and_parent_paths:4a10285f4d3f51b6",
         "signature_hash": "6589271597b7d6e0"
       }
@@ -86746,8 +86835,8 @@
       {
         "file": "tests/test_aura_external_llm_session.py",
         "kind": "function",
-        "line": 141,
-        "end_line": 166,
+        "line": 145,
+        "end_line": 170,
         "semantic_id": "tests/test_aura_external_llm_session.py#function:test_submit_response_stages_verifies_and_stops_for_human_review:4ef995d591cdd686",
         "signature_hash": "c01fdffcb714ab99"
       }
@@ -96516,47 +96605,47 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 23817,
-      "lines": 401,
-      "tokens_est": 5932,
+      "bytes": 24212,
+      "lines": 412,
+      "tokens_est": 6029,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b02ca3f32d5888ce",
+      "digest8": "016ab677db2263d0",
       "vector": [
-        0.142986,
-        0.26713,
-        -0.211708,
-        0.076481,
-        0.162938,
-        -0.1053,
-        -0.107517,
-        -0.125252,
-        -0.260479,
-        -0.14077,
-        0.247178,
-        0.100866,
-        0.007759,
-        -0.043228,
-        0.205058,
-        -0.209492,
-        0.174022,
-        0.23166,
-        0.258262,
-        -0.260479,
-        0.14742,
-        0.114167,
-        0.134119,
-        0.049879,
-        -0.222793,
-        0.003325,
-        0.216142,
-        -0.145203,
-        0.18289,
-        0.236094,
-        0.032144,
-        0.253828
+        -0.021731,
+        -0.231369,
+        -0.267161,
+        -0.129107,
+        -0.131663,
+        0.182795,
+        -0.154672,
+        -0.103541,
+        0.014061,
+        -0.031957,
+        0.323406,
+        -0.016618,
+        -0.185351,
+        -0.121437,
+        0.024287,
+        0.318293,
+        -0.149559,
+        0.141889,
+        -0.039627,
+        0.213473,
+        0.011505,
+        -0.300397,
+        -0.239039,
+        0.244152,
+        0.083088,
+        0.282501,
+        0.218586,
+        0.147003,
+        0.054966,
+        0.067749,
+        0.233926,
+        -0.016618
       ]
     },
     {
@@ -99863,9 +99952,9 @@
     {
       "path": "aura_architect_benchmark_report.py",
       "role": "python_module",
-      "bytes": 13082,
-      "lines": 284,
-      "tokens_est": 3270,
+      "bytes": 13242,
+      "lines": 288,
+      "tokens_est": 3310,
       "symbol_count": 4,
       "commands": [],
       "command_lines": {},
@@ -99888,40 +99977,40 @@
           "call": 7
         }
       },
-      "digest8": "4bdac3019a40e360",
+      "digest8": "a76514effcac7343",
       "vector": [
-        -0.199659,
-        0.17822,
-        -0.07638,
-        -0.320259,
-        -0.333659,
-        -0.13534,
-        -0.05762,
-        -0.03618,
-        0.03618,
-        0.07906,
-        -0.0737,
-        -0.191619,
-        0.0603,
-        0.188939,
-        -0.13266,
-        -0.03618,
-        -0.293459,
-        -0.0335,
-        -0.247899,
-        0.01206,
-        0.274699,
-        -0.10854,
-        -0.253259,
-        0.0603,
-        -0.194299,
-        0.0201,
-        -0.272019,
-        -0.199659,
-        0.280059,
-        -0.12998,
-        -0.15946,
-        -0.0335
+        -0.292428,
+        0.212568,
+        -0.019965,
+        -0.085732,
+        -0.158545,
+        -0.027011,
+        -0.116266,
+        -0.259544,
+        0.104522,
+        -0.151499,
+        -0.280684,
+        -0.027011,
+        0.18908,
+        -0.057546,
+        -0.294776,
+        -0.066941,
+        -0.278335,
+        -0.290079,
+        0.02936,
+        -0.132708,
+        0.285381,
+        -0.142103,
+        0.116266,
+        0.217265,
+        -0.163243,
+        0.12801,
+        -0.073988,
+        0.064592,
+        -0.170289,
+        -0.2478,
+        0.116266,
+        -0.10922
       ]
     },
     {
@@ -112159,17 +112248,17 @@
     {
       "path": "aura_external_llm_session.py",
       "role": "python_module",
-      "bytes": 29526,
-      "lines": 777,
-      "tokens_est": 7382,
+      "bytes": 30842,
+      "lines": 807,
+      "tokens_est": 7711,
       "symbol_count": 26,
       "commands": [],
       "command_lines": {},
       "topology": {
         "hub_rank": 29,
         "node_count": 28,
-        "edge_count": 207,
-        "degree": 207,
+        "edge_count": 211,
+        "degree": 211,
         "symbols": [
           "AuraExternalLLMSessionManager",
           "ExternalLLMSession",
@@ -112215,45 +112304,45 @@
           "aura_live_architect.py"
         ],
         "edge_kinds": {
-          "call": 149,
+          "call": 153,
           "defines": 54,
           "import_module": 4
         }
       },
-      "digest8": "723d49f343452242",
+      "digest8": "bcfee14ddebc7d4e",
       "vector": [
-        0.293607,
-        -0.013182,
-        0.209719,
-        0.15699,
-        0.260052,
-        0.272036,
-        -0.087483,
-        0.041944,
-        0.300798,
-        0.027563,
-        0.02996,
-        0.221703,
-        -0.171371,
-        -0.200132,
-        0.046737,
-        0.176164,
-        -0.190545,
-        -0.113848,
-        0.027563,
-        -0.111451,
-        -0.171371,
-        0.171371,
-        0.207323,
-        0.262449,
-        -0.219307,
-        0.056325,
-        -0.001198,
-        -0.085086,
-        -0.044341,
-        -0.226497,
-        0.152196,
-        0.286417
+        0.166311,
+        -0.084852,
+        0.08259,
+        -0.175362,
+        -0.247769,
+        0.118793,
+        -0.080327,
+        -0.220616,
+        0.200252,
+        -0.139158,
+        -0.019233,
+        -0.218354,
+        -0.080327,
+        -0.123319,
+        -0.252295,
+        0.188938,
+        0.105217,
+        0.225142,
+        -0.240981,
+        -0.263608,
+        -0.161785,
+        -0.059962,
+        0.270397,
+        -0.080327,
+        0.059962,
+        0.188938,
+        0.184413,
+        0.050911,
+        -0.159523,
+        0.274922,
+        -0.170836,
+        -0.252295
       ]
     },
     {
@@ -141528,93 +141617,93 @@
     {
       "path": ".github/workflows/architect-consolidation-benchmark.yml",
       "role": "schema_or_lexicon",
-      "bytes": 13685,
-      "lines": 272,
-      "tokens_est": 3421,
+      "bytes": 13879,
+      "lines": 273,
+      "tokens_est": 3470,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4c47fe46551bb811",
+      "digest8": "4f48a4fa494742ba",
       "vector": [
-        -0.146335,
-        0.079505,
-        -0.040329,
-        -0.097941,
-        0.254646,
-        -0.074896,
-        0.05646,
-        0.051851,
-        -0.270778,
-        0.162467,
-        -0.054156,
-        0.026502,
-        -0.266169,
-        -0.270778,
-        0.014979,
-        -0.139422,
-        0.259255,
-        -0.270778,
-        0.084114,
-        -0.072591,
-        -0.120986,
-        -0.233906,
-        0.206252,
-        -0.114072,
-        -0.072591,
-        0.279996,
-        0.183207,
-        -0.107159,
-        0.178598,
-        -0.201643,
-        0.247733,
-        0.277691
+        0.25344,
+        -0.011379,
+        0.224476,
+        0.25344,
+        0.218269,
+        -0.152064,
+        0.139651,
+        -0.168615,
+        0.257578,
+        -0.025861,
+        0.127237,
+        -0.125168,
+        0.133444,
+        -0.251371,
+        -0.131375,
+        0.209993,
+        -0.104479,
+        -0.222407,
+        -0.164478,
+        -0.243096,
+        0.139651,
+        0.021723,
+        -0.176891,
+        -0.263785,
+        0.06517,
+        -0.143789,
+        0.222407,
+        0.145857,
+        0.073446,
+        0.243096,
+        0.172753,
+        -0.061033
       ]
     },
     {
       "path": ".github/workflows/architect-external-llm-session.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3181,
-      "lines": 93,
-      "tokens_est": 796,
+      "bytes": 3273,
+      "lines": 96,
+      "tokens_est": 819,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "449b271da73922c8",
+      "digest8": "f3227b0ebeb86b1c",
       "vector": [
-        -0.215567,
-        0.233011,
-        0.315251,
-        -0.071025,
-        -0.113391,
-        0.138312,
-        -0.108406,
-        0.125851,
-        0.080993,
-        0.163233,
-        -0.103422,
-        0.277869,
-        0.031151,
-        0.095946,
-        0.240488,
-        -0.277869,
-        -0.04112,
-        -0.270393,
-        -0.076009,
-        0.317743,
-        0.133327,
-        -0.16074,
-        -0.120867,
-        0.090962,
-        -0.110898,
-        -0.095946,
-        -0.048596,
-        -0.173201,
-        0.223043,
-        0.265409,
-        0.080993,
-        0.200614
+        -0.067887,
+        -0.101235,
+        0.287032,
+        0.048831,
+        -0.156021,
+        -0.220336,
+        0.244156,
+        -0.139347,
+        -0.084561,
+        0.117909,
+        0.279886,
+        0.075033,
+        -0.24892,
+        -0.251302,
+        -0.287032,
+        -0.082179,
+        -0.227482,
+        -0.146493,
+        -0.029775,
+        0.258448,
+        0.113145,
+        0.025011,
+        -0.277504,
+        0.098853,
+        0.175077,
+        -0.167931,
+        -0.055977,
+        -0.256066,
+        0.086943,
+        0.103617,
+        -0.203662,
+        -0.027393
       ]
     },
     {
@@ -141707,52 +141796,6 @@
         -0.163603,
         -0.272672,
         -0.017291
-      ]
-    },
-    {
-      "path": ".github/workflows/architect-refactor-v2-tests.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 1614,
-      "lines": 56,
-      "tokens_est": 404,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "5747a397e1004fa1",
-      "vector": [
-        0.123075,
-        0.132277,
-        -0.291008,
-        0.254201,
-        -0.291008,
-        -0.003451,
-        0.141478,
-        0.146079,
-        0.026455,
-        -0.024155,
-        -0.228896,
-        -0.003451,
-        -0.127676,
-        -0.19899,
-        -0.205891,
-        -0.054061,
-        0.037958,
-        -0.274905,
-        -0.129976,
-        -0.284107,
-        -0.258802,
-        -0.152981,
-        -0.152981,
-        -0.060962,
-        -0.164483,
-        0.04946,
-        0.286408,
-        -0.15068,
-        -0.251901,
-        -0.143779,
-        -0.077065,
-        -0.143779
       ]
     },
     {
@@ -143044,52 +143087,6 @@
       ]
     },
     {
-      "path": ".github/workflows/pr131-sync-final-benchmark-readme.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 5366,
-      "lines": 119,
-      "tokens_est": 1342,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "91be9c70ded699e6",
-      "vector": [
-        0.104318,
-        0.03116,
-        -0.050127,
-        0.299406,
-        0.166638,
-        0.334631,
-        -0.128704,
-        0.09077,
-        -0.237086,
-        -0.079932,
-        -0.128704,
-        0.315664,
-        0.112447,
-        -0.266892,
-        0.188314,
-        0.34005,
-        0.033869,
-        0.318373,
-        0.033869,
-        -0.023031,
-        0.082642,
-        -0.09348,
-        -0.120575,
-        0.098899,
-        -0.033869,
-        -0.041998,
-        -0.123285,
-        -0.098899,
-        -0.058256,
-        0.223539,
-        0.27773,
-        0.123285
-      ]
-    },
-    {
       "path": ".github/workflows/publish-arena-connector.yml",
       "role": "schema_or_lexicon",
       "bytes": 996,
@@ -143230,47 +143227,47 @@
     {
       "path": ".github/workflows/sync-analysis-codemap.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3343,
-      "lines": 90,
-      "tokens_est": 836,
+      "bytes": 1849,
+      "lines": 58,
+      "tokens_est": 463,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "948653f4e84a0a7c",
+      "digest8": "80c4dd11a8168caf",
       "vector": [
-        0.053131,
-        0.222285,
-        0.224453,
-        -0.129034,
-        -0.005422,
-        0.0553,
-        0.146383,
-        0.237465,
-        0.120359,
-        -0.274332,
-        0.094335,
-        0.094335,
-        0.174575,
-        0.053131,
-        -0.211442,
-        0.235296,
-        -0.116022,
-        -0.220116,
-        -0.254814,
-        0.265657,
-        -0.24614,
-        -0.016265,
-        0.263489,
-        -0.189755,
-        0.159394,
-        -0.239634,
-        -0.018433,
-        0.076986,
-        -0.113853,
-        -0.046626,
-        0.168069,
-        -0.250477
+        -0.00944,
+        -0.227913,
+        -0.333103,
+        0.001349,
+        0.168574,
+        0.090356,
+        -0.265673,
+        -0.325012,
+        -0.111933,
+        -0.063384,
+        0.184758,
+        0.165877,
+        0.1443,
+        -0.084962,
+        0.244096,
+        -0.028321,
+        0.07687,
+        -0.3358,
+        -0.060687,
+        -0.173969,
+        -0.117328,
+        -0.225216,
+        -0.004046,
+        0.252187,
+        -0.00944,
+        -0.192849,
+        -0.07687,
+        -0.29804,
+        -0.039109,
+        -0.184758,
+        -0.060687,
+        0.074173
       ]
     },
     {
@@ -153754,47 +153751,47 @@
     {
       "path": "tests/test_aura_external_llm_session.py",
       "role": "python_module",
-      "bytes": 9303,
-      "lines": 243,
-      "tokens_est": 2326,
-      "symbol_count": 15,
+      "bytes": 13879,
+      "lines": 369,
+      "tokens_est": 3470,
+      "symbol_count": 25,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c00fb72c5bb1bbd9",
+      "digest8": "9e4334abc2fa4d15",
       "vector": [
-        -0.036423,
-        -0.158804,
-        -0.219994,
-        -0.278271,
-        -0.228736,
-        0.257874,
-        -0.141321,
-        0.030595,
-        0.161718,
-        0.208339,
-        -0.013112,
-        -0.228736,
-        -0.205425,
-        -0.024768,
-        -0.287012,
-        -0.109269,
-        0.249132,
-        0.289926,
-        -0.141321,
-        -0.021854,
-        -0.042251,
-        -0.065561,
-        0.077216,
-        -0.103441,
-        0.234563,
-        -0.112182,
-        -0.161718,
-        0.35403,
-        0.065561,
-        0.048078,
-        -0.123838,
-        -0.135493
+        0.105675,
+        0.177674,
+        -0.291478,
+        0.061547,
+        -0.019742,
+        -0.198576,
+        0.277542,
+        0.170706,
+        0.077805,
+        -0.138191,
+        0.142836,
+        -0.170706,
+        0.186964,
+        -0.175351,
+        -0.154448,
+        0.240382,
+        -0.098708,
+        -0.212512,
+        -0.200899,
+        0.029032,
+        -0.121933,
+        0.142836,
+        -0.040644,
+        0.28451,
+        0.066192,
+        -0.098708,
+        0.193931,
+        0.238059,
+        -0.277542,
+        0.035999,
+        -0.159093,
+        0.272897
       ]
     },
     {
@@ -157781,7 +157778,7 @@
       "root": ".",
       "module_count": 526,
       "node_count": 8288,
-      "edge_count": 18108,
+      "edge_count": 18110,
       "spectral_layout": true,
       "spectral_sparsity": 0.057922,
       "global_health": 0.970271
@@ -159027,8 +159024,8 @@
       "aura_external_llm_session.py": {
         "hub_rank": 29,
         "node_count": 28,
-        "edge_count": 207,
-        "degree": 207,
+        "edge_count": 211,
+        "degree": 211,
         "symbols": [
           "AuraExternalLLMSessionManager",
           "ExternalLLMSession",
@@ -159074,7 +159071,7 @@
           "aura_live_architect.py"
         ],
         "edge_kinds": {
-          "call": 149,
+          "call": 153,
           "defines": 54,
           "import_module": 4
         }
@@ -174516,8 +174513,8 @@
         "file": "aura_external_llm_session.py",
         "hub_rank": 29,
         "node_count": 28,
-        "edge_count": 207,
-        "degree": 207,
+        "edge_count": 211,
+        "degree": 211,
         "symbols": [
           "AuraExternalLLMSessionManager",
           "ExternalLLMSession",
@@ -174563,7 +174560,7 @@
           "aura_live_architect.py"
         ],
         "edge_kinds": {
-          "call": 149,
+          "call": 153,
           "defines": 54,
           "import_module": 4
         }
