@@ -167,7 +167,7 @@ jobs:
           }
           Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
           PY
-      - name: Extend frozen support scope for final review reconciliation
+      - name: Extend frozen support scope for reviewed permanent features
         run: |
           python - <<'PY'
           import json
@@ -183,8 +183,25 @@ jobs:
               "scripts/update_architect_benchmark_readme.py",
               "tests/test_aura_external_llm_session.py",
           }
+          human_agent_emergent_files = {
+              ".github/workflows/human-agent-emergent-research.yml",
+              "Aura_Memory/emergent_results/seed_runs/2026-07-16/emergent_capacity_probes.json",
+              "Aura_Memory/emergent_results/seed_runs/2026-07-16/emergent_capacity_report.md",
+              "Aura_Memory/emergent_results/seed_runs/2026-07-16/grounded_capacity_projection_report.md",
+              "Aura_Memory/emergent_results/seed_runs/2026-07-16/grounded_capacity_projections.json",
+              "Aura_Memory/emergent_results/seed_runs/2026-07-16/provenance.jsonl",
+              "aura_arena_research_bridge.py",
+              "aura_emergent_refactor_workspace.py",
+              "aura_human_agent_arena/emergent.css",
+              "aura_human_agent_arena/emergent.js",
+              "aura_human_agent_arena/index.html",
+              "aura_human_agent_arena_server.py",
+              "tests/test_aura_emergent_refactor_workspace.py",
+          }
           allowed = set(payload.get("allowed_support_files") or [])
-          payload["allowed_support_files"] = sorted(allowed | permanent_review_files)
+          payload["allowed_support_files"] = sorted(
+              allowed | permanent_review_files | human_agent_emergent_files
+          )
           target = Path("benchmark-four-plans.current.json")
           target.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
           assert payload["candidates"] == json.loads(source.read_text(encoding="utf-8"))["candidates"]
