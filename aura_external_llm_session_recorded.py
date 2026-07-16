@@ -1,7 +1,7 @@
 """Chronicle-enabled external-LLM refactor sessions.
 
-The orchestration and authority model remain in ``aura_external_llm_session``.
-This adapter only adds append-only events and an ArenaExperience projection.
+The base manager retains orchestration and authority. This adapter adds immutable
+turn/outcome evidence and projects terminal runs into ArenaExperience V3.
 """
 from __future__ import annotations
 
@@ -39,22 +39,22 @@ def _digest(value: Any) -> str:
 
 
 def _usage(value: dict[str, Any]) -> tuple[int | None, int | None, float | None]:
-    def as_int(raw: Any) -> int | None:
+    def integer(raw: Any) -> int | None:
         try:
             return None if raw is None else max(0, int(raw))
         except (TypeError, ValueError):
             return None
 
-    def as_float(raw: Any) -> float | None:
+    def number(raw: Any) -> float | None:
         try:
             return None if raw is None else max(0.0, float(raw))
         except (TypeError, ValueError):
             return None
 
     return (
-        as_int(value.get("input_tokens", value.get("prompt_tokens"))),
-        as_int(value.get("output_tokens", value.get("completion_tokens"))),
-        as_float(value.get("cost_usd", value.get("reported_cost_usd"))),
+        integer(value.get("input_tokens", value.get("prompt_tokens"))),
+        integer(value.get("output_tokens", value.get("completion_tokens"))),
+        number(value.get("cost_usd", value.get("reported_cost_usd"))),
     )
 
 
@@ -80,7 +80,7 @@ def _prompt(turn: ExternalLLMTurn) -> str:
 
 
 class RecordedAuraExternalLLMSessionManager(_BaseManager):
-    """Record every issued turn, response, repair, and terminal outcome."""
+    """Record each issued turn, response, repair, and terminal outcome."""
 
     def __init__(
         self,
@@ -102,8 +102,7 @@ class RecordedAuraExternalLLMSessionManager(_BaseManager):
         result = super().open_session(**kwargs)
         if not result.get("session_created"):
             return result
-        state = dict(result.get("session") or {})
-        session_id = str(state.get("session_id") or "")
+        session_id = str(dict(result.get("session") or {}).get("session_id") or "")
         session = self._sessions[session_id]
         self.chronicle.record(
             "refactor_session_opened",
@@ -209,12 +208,13 @@ class RecordedAuraExternalLLMSessionManager(_BaseManager):
             status=session.status,
             provider=session.provider,
             model=session.model,
-            input_tokens_estimated=_tokens(prompt),
+            input_tokens_estimated=0,
             prompt=prompt,
             payload={
                 "turn_id": turn.turn_id,
                 "role": turn.role,
                 "turn_index": turn.turn_index,
+                "prompt_tokens_estimated": _tokens(prompt),
                 "declared_context_tokens": turn.context_token_estimate,
                 "max_output_tokens": turn.max_output_tokens,
                 "source_slice_count": len(turn.source_slices),
@@ -226,11 +226,12 @@ class RecordedAuraExternalLLMSessionManager(_BaseManager):
         if session.session_id in self._finalized:
             return {"ok": True, "idempotent_replay": True, "chronicle": self._summary(session)}
         status = session.status
+        summary = self._summary(session)
         notes = [
             f"terminal_status={status}",
             f"task_count={len(session.act_capsules)}",
             f"turn_count={len(session.turns)}",
-            f"repair_event_count={self._summary(session).get('repair_event_count', 0)}",
+            f"repair_event_count={summary.get('repair_event_count', 0)}",
         ]
         self.chronicle.record(
             "refactor_session_terminal",
@@ -272,8 +273,4 @@ class RecordedAuraExternalLLMSessionManager(_BaseManager):
         return f"REF-{session_id}"
 
 
-__all__ = [
-    "RecordedAuraExternalLLMSessionManager",
-    "PATCH_AUTHORITY",
-    "VSA_PATCH_AUTHORITY",
-]
+__all__ = ["RecordedAuraExternalLLMSessionManager", "PATCH_AUTHORITY", "VSA_PATCH_AUTHORITY"]
