@@ -15,85 +15,15 @@ on:
       - ".github/workflows/human-agent-emergent-research.yml"
 
 permissions:
-  contents: write
-
-concurrency:
-  group: human-agent-emergent-research-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  compat-repair:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Check out feature branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Make emergent context optional for minimal legacy state
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("aura_human_agent_arena_server.py")
-          text = path.read_text(encoding="utf-8")
-          old = '''    objective_text = str(objective or "").strip()
-              if not objective_text:
-                  return {"ok": False, "error": "objective_required_for_emergent_context"}
-              packet_result = state.emergent_store.build_refactor_packet(
-          '''.replace("              ", "    ")
-          new = '''    objective_text = str(objective or "").strip()
-              if not objective_text:
-                  return {"ok": False, "error": "objective_required_for_emergent_context"}
-              emergent_store = getattr(state, "emergent_store", None)
-              if emergent_store is None:
-                  return {
-                      "ok": False,
-                      "status": "UNAVAILABLE",
-                      "error": "emergent_workspace_unavailable",
-                      "patch_authority": PATCH_AUTHORITY,
-                      "vsa_patch_authority": VSA_PATCH_AUTHORITY,
-                  }
-              packet_result = emergent_store.build_refactor_packet(
-          '''.replace("              ", "    ")
-          if new in text:
-              raise SystemExit(0)
-          if old not in text:
-              raise SystemExit("compatibility target not found")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          PY
-
-      - name: Publish compatibility repair when needed
-        shell: bash
-        run: |
-          set -euo pipefail
-          git add aura_human_agent_arena_server.py
-          if git diff --cached --quiet; then
-            echo "Compatibility guard already present."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "fix: preserve minimal Human Agent server states"
-          git fetch origin "${{ github.head_ref }}"
-          git rebase "origin/${{ github.head_ref }}"
-          git push origin "HEAD:${{ github.head_ref }}"
-
   verify:
-    needs: compat-repair
-    if: always() && (needs.compat-repair.result == 'success' || needs.compat-repair.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - name: Check out latest feature branch
+      - name: Check out exact pull-request head
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
