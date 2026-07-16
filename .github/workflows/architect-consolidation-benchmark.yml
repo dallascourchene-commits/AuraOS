@@ -41,11 +41,13 @@ jobs:
             aura_cognitive_labor_router.py \
             aura_benchmark_registry.py \
             aura_refactor_chronicle.py \
+            aura_refactor_chronicle_recorded.py \
             aura_refactor_state_ledger.py \
             aura_multistep_refactor_benchmark.py \
             aura_hybrid_refactor_benchmark.py \
             aura_external_llm_session.py \
             aura_external_llm_session_recorded.py \
+            aura_external_llm_session_persistent.py \
             aura_external_llm_session_safe.py \
             aura_agent_arena_mcp_external_llm.py \
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
@@ -224,8 +226,11 @@ jobs:
           PY
       - name: Verify committed README and preserve artifact snapshot
         run: |
-          grep -q "First Architect Consolidation Benchmark" README.md
+          grep -q "Architect Benchmark Prompt" README.md
           grep -q "89.88%" README.md
+          grep -q "Council–Surgeon Hybrid Benchmark" README.md
+          grep -q "158,545" README.md
+          grep -q "Persistent Refactor History" README.md
           python scripts/update_architect_benchmark_readme.py \
             --output benchmark-output/README.updated.md
           cmp README.md benchmark-output/README.updated.md
@@ -247,6 +252,7 @@ jobs:
             aura_architect_council_v2.py
             aura_cognitive_labor_router.py
             aura_refactor_chronicle.py
+            aura_refactor_chronicle_recorded.py
             aura_refactor_state_ledger.py
             aura_multistep_refactor_benchmark.py
             aura_hybrid_refactor_benchmark.py
