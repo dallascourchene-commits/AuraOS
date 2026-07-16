@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1005
-- **total_bytes**: 50795792
-- **text_tokens_est**: 3302668
+- **total_bytes**: 50801429
+- **text_tokens_est**: 3304077
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 133, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 702, 'schema_or_lexicon': 100, 'support_file': 42}
-- **topology_nodes**: 8255
-- **topology_edges**: 18041
+- **topology_nodes**: 8256
+- **topology_edges**: 18044
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 16334.52
+- **elapsed_ms**: 21253.55
 
 ## Coverage
 
@@ -232,8 +232,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 8255
-- **edges**: 18041
+- **nodes**: 8256
+- **edges**: 18044
 - **top_files_by_degree**:
   - `aura_node.py` degree=861 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
@@ -323,7 +323,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraAffordance` -> `aura_affordance_directory.py:37`
 - `AuraAgentArenaBridge` -> `aura_agent_arena_bridge.py:182`
 - `AuraArchReasoner` -> `aura_arch_reasoner.py:31`
-- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:133`
+- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:146`
 - `AuraAssociativeCore` -> `aura_associative_core.py:30`
 - `AuraCodingArenaRouter` -> `aura_fst_routing.py:399`
 - `AuraCognitiveSynthesizer` -> `aura_cognitive_synthesizer.py:24`
