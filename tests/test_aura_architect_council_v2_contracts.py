@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import aura_architect_consolidation_benchmark as benchmark
 import aura_architect_consolidation_benchmark_refined as refined
+import aura_architect_consolidation_benchmark_v2 as benchmark_v2
 from aura_architect_council_v2 import (
     LengthAwareArchitectFusionCouncil,
     _phase_hash,
@@ -112,3 +113,22 @@ def test_refined_facade_propagates_council_runner_to_legacy_scorer() -> None:
         if original_legacy is not None:
             legacy._run_council = original_legacy
         refined._sync_runtime_overrides()
+
+
+def test_v2_fixture_completion_makes_long_critic_calls_explicit() -> None:
+    fixture = {
+        "council": {
+            "critics": {
+                "scope": {"approved": True, "score": 0.9, "blockers": []},
+                "tests": {"approved": True, "score": 0.8, "blockers": []},
+                "cost": {"approved": True, "score": 0.7, "blockers": []},
+            }
+        }
+    }
+    completed = benchmark_v2._complete_v2_fixture_payload(fixture)
+    critics = completed["council"]["critics"]
+    assert critics["sequence"]["fixture_alias_of"] == "scope"
+    assert critics["continuity"]["fixture_alias_of"] == "tests"
+    assert critics["rollback"]["fixture_alias_of"] == "cost"
+    assert completed["fixture_completion"]["independent_provider_responses"] is False
+    assert "sequence" not in fixture["council"]["critics"]
