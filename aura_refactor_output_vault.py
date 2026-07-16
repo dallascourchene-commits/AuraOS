@@ -20,7 +20,16 @@ DEFAULT_VAULT_ROOT = Path("Aura_Staging") / "refactor_output_vault"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 _SAFE_ID = re.compile(r"[^A-Za-z0-9_.-]+")
-_SECRET_KEYS = ("api_key", "apikey", "secret", "password", "token", "private_key", "authorization")
+_SECRET_KEYS = (
+    "api_key",
+    "apikey",
+    "secret",
+    "password",
+    "access_token",
+    "refresh_token",
+    "private_key",
+    "authorization",
+)
 _SECRET_PATTERNS = (
     re.compile(r"\b(?:sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,})\b"),
     re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]{12,}"),
