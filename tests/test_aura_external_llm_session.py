@@ -3,10 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aura_external_llm_session import (
-    AuraExternalLLMSessionManager,
-    InstrumentedExternalModelCaller,
-)
+from aura_external_llm_session import InstrumentedExternalModelCaller
+from aura_external_llm_session_safe import AuraExternalLLMSessionManager
 
 
 class FakeBridge:
@@ -194,6 +192,30 @@ def test_failed_verification_returns_bounded_repair_turn(tmp_path: Path) -> None
     assert repair["allowed_files"] == ["aura_memory.py"]
     assert repair["do_not_touch"] == ["aura_node.py"]
     assert repair["context_token_estimate"] <= 2200
+
+
+def test_session_export_is_confined_to_review_workspace(tmp_path: Path) -> None:
+    manager = AuraExternalLLMSessionManager(tmp_path, bridge=FakeBridge())
+    opened = manager.open_session(objective="Consolidate Aura capabilities")
+    result = manager.export_session(opened["session"]["session_id"], "review/session.json")
+    assert result["ok"] is True
+    assert result["relative_path"] == "Aura_Staging/external_llm_sessions/review/session.json"
+    target = tmp_path / result["relative_path"]
+    assert target.is_file()
+    assert json.loads(target.read_text(encoding="utf-8"))["session"]["production_mutation"] is False
+
+
+def test_session_export_rejects_absolute_and_parent_paths(tmp_path: Path) -> None:
+    manager = AuraExternalLLMSessionManager(tmp_path, bridge=FakeBridge())
+    opened = manager.open_session(objective="Consolidate Aura capabilities")
+    session_id = opened["session"]["session_id"]
+    absolute = manager.export_session(session_id, tmp_path.parent / "escape.json")
+    traversal = manager.export_session(session_id, "../escape.json")
+    assert absolute["ok"] is False
+    assert absolute["error"] == "absolute_export_path_forbidden"
+    assert traversal["ok"] is False
+    assert traversal["error"] == "export_path_traversal_forbidden"
+    assert not (tmp_path.parent / "escape.json").exists()
 
 
 def test_instrumented_caller_records_role_tokens_cost_and_digests() -> None:
