@@ -144,7 +144,7 @@ jobs:
           for group in ("visible_junit", "hidden_junit", "regression_junit"):
               assert report["execution_evidence"][group]["status"] == "PASS"
               assert report["execution_evidence"][group]["tests"] > 0
-          assert record["standard"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
+          assert record["record_version"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
           assert record["disposition"] == "ACCEPTED"
           assert record["mandatory_gate_passed"] is True
           assert record["gates"]["scope"]["status"] == "PASS"
