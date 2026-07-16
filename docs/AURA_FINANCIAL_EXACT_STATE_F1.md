@@ -100,3 +100,5 @@ F1 does not include:
 - live Planning Board projection.
 
 Those remain separately reviewable future stages after the exact-state foundation is verified.
+
+<!-- transient verification marker -->
