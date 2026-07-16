@@ -35,6 +35,7 @@ jobs:
           python -m py_compile \
             aura_architect_consolidation_benchmark.py \
             aura_architect_consolidation_benchmark_refined.py \
+            aura_architect_benchmark_report.py \
             aura_external_llm_session.py \
             aura_agent_arena_mcp_external_llm.py \
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
@@ -108,6 +109,14 @@ jobs:
             --output-rate 3.0 \
             > benchmark-score.log
           cat benchmark-score.log
+      - name: Finalize truth-preserving findings and README section
+        run: |
+          python aura_architect_benchmark_report.py \
+            --report benchmark-output/architect_consolidation_benchmark.json \
+            --responses benchmark-output/responses.gpt-5.6-thinking.json \
+            --skeleton benchmark-output/architect_consolidation_skeleton.json \
+            > benchmark-findings.log
+          cat benchmark-findings.log
       - name: Validate scored benchmark and skeleton
         run: |
           python - <<'PY'
@@ -123,6 +132,8 @@ jobs:
           assert report['arms']['aura_slice_single']['model_calls'] == 1
           assert report['arms']['aura_architect_council']['model_calls'] >= 10
           assert report['comparison']['slice_input_reduction_pct'] > 50
+          assert report['findings']
+          assert report['claims']['not_yet_supported']
           for arm in report['arms'].values():
               quality = arm['quality']
               assert 0.0 <= quality['quality_score'] <= 1.0
@@ -131,7 +142,9 @@ jobs:
               assert quality['output_contract_rate'] == 1.0
           assert skeleton['production_mutation'] is False
           assert skeleton['next_gate'] == 'HUMAN_REVIEW_BEFORE_REFACTOR'
+          assert skeleton['repair_requirements']
           assert len(skeleton['selected_plan']['act_tasks']) >= 6
+          assert (root / 'README_ARCHITECT_BENCHMARK.md').is_file()
           print(json.dumps(report['comparison'], indent=2, sort_keys=True))
           PY
       - name: Upload benchmark evidence and refactor skeleton
@@ -143,8 +156,10 @@ jobs:
             benchmark-output/
             benchmark-prepare.log
             benchmark-score.log
+            benchmark-findings.log
             aura_architect_consolidation_benchmark.py
             aura_architect_consolidation_benchmark_refined.py
+            aura_architect_benchmark_report.py
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
           if-no-files-found: error
           retention-days: 30
