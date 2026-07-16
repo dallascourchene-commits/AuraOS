@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "tools/run_emergent_capacity_probes.py"
+      - "tools/run_grounded_capacity_projection_probes.py"
       - ".github/workflows/emergent-capacity-probes.yml"
       - "aura_emergent_potential_repl.py"
       - "aura_emergent_result_verifier.py"
@@ -27,13 +28,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run 15 emergent-capacity probes
+      - name: Run 15 emergent-capacity discovery probes
         run: python tools/run_emergent_capacity_probes.py
+
+      - name: Run 7 grounded new-capacity projections
+        run: python tools/run_grounded_capacity_projection_probes.py
 
       - name: Upload raw and rendered reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aura-emergent-capacity-probes
-          path: artifacts/emergent_capacity_probes/
+          path: |
+            artifacts/emergent_capacity_probes/
+            artifacts/grounded_capacity_projection_probes/
           if-no-files-found: error
