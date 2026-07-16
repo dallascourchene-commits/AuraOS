@@ -1,0 +1,50 @@
+name: Synchronize Architect Benchmark CODEMAP
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-architect-benchmark-codemap-final
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.head_ref == 'analysis/architect-benchmark' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: analysis/architect-benchmark
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Remove one-shot workflow and regenerate final navigation artifacts
+        run: |
+          rm .github/workflows/sync-architect-benchmark-codemap.yml
+          python aura_codebase_navigator.py
+          test -s .aura/CODEMAP.json
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          if grep -q 'generate_gpt56_pilot_fixture.py:18' .aura/CODEMAP.md; then
+            echo 'Encoded fixture still polluted the command index.'
+            exit 1
+          fi
+      - name: Commit final synchronized tree
+        run: |
+          git config user.name 'AuraOS CODEMAP Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A .github/workflows/sync-architect-benchmark-codemap.yml \
+            .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          git commit -m 'chore: synchronize final Architect benchmark CODEMAP'
+          git push origin HEAD:analysis/architect-benchmark
