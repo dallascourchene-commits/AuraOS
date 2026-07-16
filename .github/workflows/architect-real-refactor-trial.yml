@@ -23,6 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@v5
@@ -156,7 +157,7 @@ jobs:
             --hidden-junit benchmark-four-hidden.xml \
             --regression-junit benchmark-four-regression.xml \
             --gate-evidence benchmark-four-gates.json \
-            --head-sha "${{ github.sha }}"
+            --head-sha "${{ github.event.pull_request.head.sha || github.sha }}"
           cat benchmark-output/real-refactor-trial/real_refactor_trial.md
       - name: Validate standard record and selected Council plan
         run: |
