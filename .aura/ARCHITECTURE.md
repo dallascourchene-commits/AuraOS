@@ -190,7 +190,7 @@ Every executable arm should emit `AURA_REFACTOR_OUTPUT_RECORD_V1`, preserving ex
 
 | Tier | Evidence | Current examples | Permitted claim |
 |---:|---|---|---|
-| 1 | Executable gates with retained failures and quality | V3 fixture `3/3 + 3/3 + 2/2`; real refactor `32/32 + 35/35 + 21/21` | Working status and disposition for the measured artifact |
+| 1 | Executable gates with retained failures and quality | V3 fixture `3/3 + 3/3 + 2/2`; exact-head real refactor `32/32 + 35/35 + 24/24` | Working status and disposition for the measured artifact |
 | 2 | Deterministic comparative proxies | Aura slices **89.04%** lower total proxy; V3 **32.83%** lower than Council V2; State Ledger **96.19%** less context at step 7 | Comparative fixture efficiency, not billing |
 | 3 | Estimated structural projections | Shared grounding evidence **53.1936%** projected reduction on PR #138 head `15bea1a` | Provisional structural estimate only |
 | 4 | Discovery and capacity scans | `708` Python files, `10,815` nodes, `20,764` edges, 15 probes; seven projections remained `NEEDS_GROUNDING` | Candidate discovery only |
@@ -201,7 +201,7 @@ Tier 3 and Tier 4 evidence cannot be promoted into Tier 1 claims without governe
 
 - Selective Council V3 used 12 calls instead of 18, reduced total-token proxy by **32.83%**, and retained the same selected plan, executable patch digest, `ACCEPTED` disposition, and code-quality scores as Council V2 on the controlled fixture.
 - The controlled V3 patch passed visible `3/3`, hidden `3/3`, and regression `2/2`, with observed quality `100.00` and benchmark quality `97.50`.
-- The real AuraOS branch trial passed visible/property `32/32`, review-derived adversarial `35/35`, and focused regression `21/21`, with observed quality `100.00` and benchmark quality `93.50`.
+- The exact-head AuraOS branch trial at `52c9423` passed visible/property `32/32`, review-derived adversarial `35/35`, and focused regression `24/24`, with observed quality `100.00`, benchmark quality `93.50`, scope `PASS`, and no failed required gates.
 
 ### Current efficiency evidence
 
