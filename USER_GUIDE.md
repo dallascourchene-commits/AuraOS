@@ -294,7 +294,7 @@ Do not combine unlike evidence into one headline score. Use this hierarchy:
 | Context localization | `131,655 → 14,431` total proxy; **89.04% lower**; quality `+0.0057` | Deterministic comparative fixture |
 | Selective Council V3 | `18 → 12` calls; `158,545 → 106,494` total proxy; **32.83% lower**, same accepted patch and quality | Controlled executable fixture |
 | Executable cross-module patch | visible `3/3`, hidden `3/3`, regression `2/2`; observed `100.00`, benchmark `97.50` | Executable gate evidence |
-| Real AuraOS refactor | `32/32`, `35/35`, `21/21`; observed `100.00`, benchmark `93.50` | Real branch gate evidence |
+| Real AuraOS refactor at `52c9423` | `32/32`, `35/35`, `24/24`; observed `100.00`, benchmark `93.50`; scope and all required gates passed | Exact-head branch gate evidence |
 | State Ledger | step 7 `234` vs `6,140`; **96.19% less context**, preservation `1.0000`, drift `0.0000` | Synthetic continuity fixture |
 | Emergent capacity scan | `708` Python files, `10,815` nodes, `20,764` edges, 15 probes, 0 failures | Discovery evidence |
 | Grounded capacity projections | 7 probes, 0 failures; all candidates still `NEEDS_GROUNDING` | Projection, not implementation proof |
