@@ -119,12 +119,27 @@ def _build_aura_slice_packet(
     return packet
 
 
-benchmark._build_aura_slice_packet = _build_aura_slice_packet
-_legacy.benchmark._build_aura_slice_packet = _build_aura_slice_packet
+def _sync_runtime_overrides() -> None:
+    """Propagate public-facade overrides into preserved legacy globals.
+
+    Functions defined in the preserved legacy module resolve globals from that
+    module, not from this public facade. Without this synchronization, V2 can
+    assign a Council runner on the facade while the legacy scorer silently calls
+    its original runner.
+    """
+    benchmark._build_aura_slice_packet = _build_aura_slice_packet
+    _legacy.benchmark._build_aura_slice_packet = _build_aura_slice_packet
+    council_runner = getattr(benchmark, "_run_council", None)
+    legacy_benchmark = getattr(benchmark, "_legacy", None)
+    if council_runner is not None and legacy_benchmark is not None:
+        legacy_benchmark._run_council = council_runner
+
+
+_sync_runtime_overrides()
 
 
 def main(argv: list[str] | None = None) -> int:
-    benchmark._build_aura_slice_packet = _build_aura_slice_packet
+    _sync_runtime_overrides()
     return benchmark.main(argv)
 
 
