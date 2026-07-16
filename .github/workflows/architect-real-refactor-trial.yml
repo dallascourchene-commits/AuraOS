@@ -24,6 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -36,12 +37,19 @@ jobs:
         run: |
           python -m py_compile \
             aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
             aura_refactor_state_identity.py \
             aura_refactor_state_ledger_core.py \
             aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py
@@ -55,6 +63,7 @@ jobs:
         run: |
           set -o pipefail
           python -m pytest -q \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
             tests/test_aura_state_identity_cycles.py \
@@ -74,27 +83,42 @@ jobs:
         run: |
           ruff check --select E9,F63,F7,F82 \
             aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
             aura_refactor_state_identity.py \
             aura_refactor_state_ledger_core.py \
             aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
             tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
             tests/test_aura_state_identity_cycles.py
           bandit -q -ll \
             aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
             aura_refactor_state_identity.py \
             aura_refactor_state_ledger_core.py \
             aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py
@@ -117,6 +141,8 @@ jobs:
               "proposal_only_authority": "PASS",
               "history_reconstructability": "PASS",
               "record_redaction": "PASS",
+              "selected_plan_bound_to_arena": "PASS",
+              "local_output_vault": "PASS",
           }
           Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
           PY
@@ -139,19 +165,25 @@ jobs:
           from pathlib import Path
           report = json.loads(Path("benchmark-output/real-refactor-trial/real_refactor_trial.json").read_text())
           record = report["code_quality_record"]
+          assert len(report["planning_arms"]) == 4
           assert report["selected_plan_match"] is True
-          assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-C-INTEGRATED-ARENA-ARCHITECTURE"
+          assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-D-SELECTIVE-COUNCIL-V3-SURGEON"
+          assert report["plan_comparison"]["selected_provenance"]["arm_family"] == "SELECTIVE_COUNCIL_V3_PLUS_BOUNDED_SURGEON"
           for group in ("visible_junit", "hidden_junit", "regression_junit"):
               assert report["execution_evidence"][group]["status"] == "PASS"
               assert report["execution_evidence"][group]["tests"] > 0
+          assert report["execution_evidence"]["patch_digest"]
           assert record["record_version"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
           assert record["disposition"] == "ACCEPTED"
           assert record["mandatory_gate_passed"] is True
           assert record["gates"]["scope"]["status"] == "PASS"
           assert not record["patch_stats"]["out_of_scope_files"]
+          assert record["engineering_metrics"]["selected_plan_bound_to_arena"] == "PASS"
+          assert record["engineering_metrics"]["local_output_vault"] == "PASS"
           prior = report["prior_evidence"]["benchmark_three"]
           assert prior["v3_token_reduction_pct"] == 32.83
           assert prior["fixture_code_quality_score"] == 97.5
+          assert "independent live provider generation superiority" in report["claims"]["not_yet_proven"]
           PY
       - name: Verify unified MCP tool discovery
         run: |
@@ -161,8 +193,16 @@ jobs:
           names = {item["name"] for item in json.load(open("architect-mcp-tools.json"))}
           required = {
               "aura_llm_session_open",
+              "aura_architect_control_validate",
               "aura_architect_compare_plans",
               "aura_architect_prepare",
+              "aura_architect_surgeon_open",
+              "aura_architect_surgeon_next",
+              "aura_architect_surgeon_submit",
+              "aura_architect_surgeon_status",
+              "aura_architect_council_replan",
+              "aura_refactor_outputs_list",
+              "aura_refactor_output_load",
               "aura_native_model_route",
               "aura_native_model_execute",
           }
@@ -175,6 +215,7 @@ jobs:
           name: aura-real-refactor-trial-v2
           path: |
             benchmark-output/real-refactor-trial/
+            Aura_Staging/refactor_output_vault/
             benchmark-four-visible.xml
             benchmark-four-hidden.xml
             benchmark-four-regression.xml
