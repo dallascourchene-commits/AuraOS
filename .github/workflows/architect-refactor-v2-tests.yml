@@ -98,7 +98,8 @@ jobs:
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
       - name: Commit canonical reconciliation
         run: |
-          git show HEAD^:.github/workflows/architect-refactor-v2-tests.yml > .github/workflows/architect-refactor-v2-tests.yml
+          git fetch --depth=1 origin main
+          git show FETCH_HEAD:.github/workflows/architect-refactor-v2-tests.yml > .github/workflows/architect-refactor-v2-tests.yml
           rm -f \
             scripts/pr131_finalize_reconciliation.py \
             .github/workflows/pr131-finalize-reconciliation.yml \
@@ -116,10 +117,16 @@ jobs:
             .github/workflows/architect-refactor-v2-tests.yml \
             .aura/CODEMAP.json \
             .aura/CODEMAP.md
-          git add -u \
+          for path in \
             scripts/pr131_finalize_reconciliation.py \
             .github/workflows/pr131-finalize-reconciliation.yml \
             .github/workflows/pr131-apply-final-review.yml \
-            .github/workflows/pr131-sync-final-benchmark-readme.yml
+            .github/workflows/pr131-sync-final-benchmark-readme.yml; do
+            if git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+              git add -A -- "$path"
+            fi
+          done
           git commit -m "fix(review): reconcile all inline findings and publish benchmarks"
+          git fetch origin analysis/architect-benchmark
+          git rebase origin/analysis/architect-benchmark
           git push origin HEAD:analysis/architect-benchmark
