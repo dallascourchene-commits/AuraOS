@@ -11,10 +11,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: pr131-review-finalizer
-  cancel-in-progress: true
-
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PYTHONHASHSEED: "0"
@@ -62,10 +58,9 @@ jobs:
     needs: v2-tests
     if: >-
       github.actor != 'github-actions[bot]' &&
-      ((github.event_name == 'pull_request' &&
-        github.event.pull_request.head.ref == 'analysis/architect-benchmark') ||
-       (github.event_name == 'push' &&
-        github.ref_name == 'analysis/architect-benchmark'))
+      github.event_name == 'pull_request' &&
+      github.event.action == 'reopened' &&
+      github.event.pull_request.head.ref == 'analysis/architect-benchmark'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
