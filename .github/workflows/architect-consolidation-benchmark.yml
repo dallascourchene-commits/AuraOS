@@ -9,7 +9,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
@@ -22,6 +22,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref_name || github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -38,7 +41,8 @@ jobs:
             aura_architect_benchmark_report.py \
             aura_external_llm_session.py \
             aura_agent_arena_mcp_external_llm.py \
-            benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
+            benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
+            scripts/update_architect_benchmark_readme.py
       - name: Regenerate CODEMAP and topology from tested commit
         run: |
           python aura_codebase_navigator.py
@@ -147,6 +151,26 @@ jobs:
           assert (root / 'README_ARCHITECT_BENCHMARK.md').is_file()
           print(json.dumps(report['comparison'], indent=2, sort_keys=True))
           PY
+      - name: Update branch README from verified evidence
+        if: github.event_name == 'push' && github.ref_name == 'analysis/architect-benchmark'
+        run: |
+          python scripts/update_architect_benchmark_readme.py
+          git diff --check
+          grep -q "First Architect Consolidation Benchmark" README.md
+          grep -q "89.88%" README.md
+          grep -q "Council normalization lost plan-level contracts" README.md
+      - name: Commit README evidence
+        if: github.event_name == 'push' && github.ref_name == 'analysis/architect-benchmark'
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "README already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Document first Architect benchmark in README"
+          git push origin HEAD:analysis/architect-benchmark
       - name: Upload benchmark evidence and refactor skeleton
         if: always()
         uses: actions/upload-artifact@v4
