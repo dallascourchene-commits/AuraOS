@@ -16,8 +16,8 @@ env:
   PYTHONHASHSEED: "0"
 
 jobs:
-  prepare-benchmark:
-    name: Prepare grounded benchmark prompts
+  architect-benchmark:
+    name: Ground, deliberate, and score Architect benchmark
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -36,7 +36,8 @@ jobs:
             aura_architect_consolidation_benchmark.py \
             aura_architect_consolidation_benchmark_refined.py \
             aura_external_llm_session.py \
-            aura_agent_arena_mcp_external_llm.py
+            aura_agent_arena_mcp_external_llm.py \
+            benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
       - name: Regenerate CODEMAP and topology from tested commit
         run: |
           python aura_codebase_navigator.py
@@ -60,8 +61,8 @@ jobs:
           python aura_architect_consolidation_benchmark_refined.py prepare \
             --repo-root . \
             --output-dir benchmark-output \
-            > benchmark-output.log
-          cat benchmark-output.log
+            > benchmark-prepare.log
+          cat benchmark-prepare.log
       - name: Validate benchmark preparation evidence
         run: |
           python - <<'PY'
@@ -81,7 +82,8 @@ jobs:
           assert manifest['repository_inventory']['file_count'] > 0
           assert manifest['prompts']['raw']['token_proxy'] > 0
           assert manifest['prompts']['aura_slice']['token_proxy'] > 0
-          assert manifest['aura_slice_packet']['source_slice_count'] > 0
+          assert manifest['aura_slice_packet']['source_slice_count'] >= 8
+          assert manifest['aura_slice_packet']['test_slice_count'] >= 2
           assert manifest['prompts']['aura_slice']['token_proxy'] < manifest['prompts']['raw']['token_proxy']
           print(json.dumps({
               'repo_token_proxy': manifest['repository_inventory']['token_proxy'],
@@ -91,14 +93,53 @@ jobs:
               'test_slices': manifest['aura_slice_packet']['test_slice_count'],
           }, indent=2))
           PY
-      - name: Upload reproducible prompt evidence
+      - name: Materialize reproducible GPT-5.6 pilot responses
+        run: |
+          python benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
+            --output benchmark-output/responses.gpt-5.6-thinking.json
+          python -m json.tool benchmark-output/responses.gpt-5.6-thinking.json > /dev/null
+      - name: Run real Architect Council and score all arms
+        run: |
+          python aura_architect_consolidation_benchmark_refined.py score \
+            --repo-root . \
+            --output-dir benchmark-output \
+            --responses benchmark-output/responses.gpt-5.6-thinking.json \
+            --input-rate 1.0 \
+            --output-rate 3.0 \
+            > benchmark-score.log
+          cat benchmark-score.log
+      - name: Validate scored benchmark and skeleton
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('benchmark-output')
+          report = json.loads((root / 'architect_consolidation_benchmark.json').read_text(encoding='utf-8'))
+          skeleton = json.loads((root / 'architect_consolidation_skeleton.json').read_text(encoding='utf-8'))
+          assert report['production_mutation'] is False
+          assert report['measurement_class']['tokens'] == 'ESTIMATED_CHAR4_PROXY'
+          assert report['arms']['raw_broad_context']['model_calls'] == 1
+          assert report['arms']['aura_slice_single']['model_calls'] == 1
+          assert report['arms']['aura_architect_council']['model_calls'] >= 10
+          assert report['comparison']['slice_input_reduction_pct'] > 50
+          assert report['arms']['aura_slice_single']['quality']['quality_score'] >= report['arms']['raw_broad_context']['quality']['quality_score']
+          assert report['arms']['aura_architect_council']['quality']['quality_score'] >= report['arms']['aura_slice_single']['quality']['quality_score']
+          assert skeleton['production_mutation'] is False
+          assert skeleton['next_gate'] == 'HUMAN_REVIEW_BEFORE_REFACTOR'
+          assert len(skeleton['selected_plan']['act_tasks']) >= 6
+          print(json.dumps(report['comparison'], indent=2, sort_keys=True))
+          PY
+      - name: Upload benchmark evidence and refactor skeleton
         uses: actions/upload-artifact@v4
         with:
-          name: architect-consolidation-benchmark-prompts
+          name: architect-consolidation-benchmark
           path: |
             benchmark-output/
-            benchmark-output.log
+            benchmark-prepare.log
+            benchmark-score.log
             aura_architect_consolidation_benchmark.py
             aura_architect_consolidation_benchmark_refined.py
+            benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py
           if-no-files-found: error
           retention-days: 30
