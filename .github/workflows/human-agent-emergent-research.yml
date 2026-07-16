@@ -91,19 +91,37 @@ jobs:
           )
           PY
 
-      - name: Commit seed reports when absent
+      - name: Commit and publish seed reports
+        id: publish-seeds
         shell: bash
         run: |
-          set -euo pipefail
-          git add Aura_Memory/emergent_results/seed_runs/2026-07-16
-          if git diff --cached --quiet; then
-            echo "Exact seed reports already committed."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "data: seed full emergent capacity reports"
-          git push origin "HEAD:${{ github.head_ref }}"
+          set -uo pipefail
+          : > /tmp/seed-push.log
+          {
+            set -x
+            git add Aura_Memory/emergent_results/seed_runs/2026-07-16
+            if git diff --cached --quiet; then
+              echo "Exact seed reports already committed."
+              exit 0
+            fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "data: seed full emergent capacity reports"
+            git fetch origin "${{ github.head_ref }}"
+            git rebase "origin/${{ github.head_ref }}"
+            git push origin "HEAD:${{ github.head_ref }}"
+          } > /tmp/seed-push.log 2>&1
+          status=$?
+          cat /tmp/seed-push.log
+          exit "$status"
+
+      - name: Upload seed publication diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: human-agent-emergent-seed-push-${{ github.run_id }}
+          path: /tmp/seed-push.log
+          if-no-files-found: error
 
   verify:
     needs: seed-full-results
