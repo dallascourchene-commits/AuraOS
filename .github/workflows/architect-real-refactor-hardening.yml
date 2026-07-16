@@ -1,0 +1,45 @@
+name: Benchmark Four Hardening
+on:
+  pull_request:
+  push:
+    branches: ["analysis/**", "refactor/**", main]
+permissions:
+  contents: read
+concurrency:
+  group: benchmark-four-hardening-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  hardening:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test tools
+        run: python -m pip install -r requirements.txt "pytest>=8,<9" hypothesis
+      - name: Compile hardened contracts
+        run: |
+          python -m py_compile \
+            aura_cognitive_labor_router.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
+            aura_refactor_state_ledger.py \
+            aura_arena_connector_server.py
+      - name: Run review-derived adversarial tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            --junitxml=benchmark-four-hardening.xml \
+            2>&1 | tee benchmark-four-hardening.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-four-hardening
+          path: |
+            benchmark-four-hardening.xml
+            benchmark-four-hardening.log
+          if-no-files-found: error
+          retention-days: 30
