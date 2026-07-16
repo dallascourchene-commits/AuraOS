@@ -22,6 +22,10 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Remove checkout credentials before repository code
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -39,6 +43,7 @@ jobs:
             aura_architect_benchmark_report.py \
             aura_architect_council_v2.py \
             aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
             aura_benchmark_registry.py \
             aura_refactor_chronicle.py \
             aura_refactor_chronicle_recorded.py \
@@ -99,11 +104,11 @@ jobs:
           assert manifest['aura_slice_packet']['test_slice_count'] >= 2
           assert manifest['prompts']['aura_slice']['token_proxy'] < manifest['prompts']['raw']['token_proxy']
           print(json.dumps({
-              'repo_token_proxy': manifest['repository_inventory']['token_proxy'],
-              'raw_prompt_tokens': manifest['prompts']['raw']['token_proxy'],
-              'slice_prompt_tokens': manifest['prompts']['aura_slice']['token_proxy'],
-              'source_slices': manifest['aura_slice_packet']['source_slice_count'],
-              'test_slices': manifest['aura_slice_packet']['test_slice_count'],
+            'repo_token_proxy': manifest['repository_inventory']['token_proxy'],
+            'raw_prompt_tokens': manifest['prompts']['raw']['token_proxy'],
+            'slice_prompt_tokens': manifest['prompts']['aura_slice']['token_proxy'],
+            'source_slices': manifest['aura_slice_packet']['source_slice_count'],
+            'test_slices': manifest['aura_slice_packet']['test_slice_count'],
           }, indent=2))
           PY
       - name: Materialize reproducible GPT-5.6 role responses
@@ -219,9 +224,9 @@ jobs:
           assert (root / 'hybrid' / 'tasks-10-local' / 'refactor_chronicle.jsonl').is_file()
           assert (root / 'hybrid' / 'tasks-10-graph' / 'arena_experience.db').is_file()
           print(json.dumps({
-              'planning_comparison': report['comparison'],
-              'council_length_profile': selected['length_profile'],
-              'hybrid_cases': hybrid['cases'],
+            'planning_comparison': report['comparison'],
+            'council_length_profile': selected['length_profile'],
+            'hybrid_cases': hybrid['cases'],
           }, indent=2, sort_keys=True))
           PY
       - name: Verify committed README and preserve artifact snapshot
@@ -251,6 +256,7 @@ jobs:
             aura_architect_consolidation_benchmark_v2.py
             aura_architect_council_v2.py
             aura_cognitive_labor_router.py
+            aura_cognitive_labor_router_core.py
             aura_refactor_chronicle.py
             aura_refactor_chronicle_recorded.py
             aura_refactor_state_ledger.py
