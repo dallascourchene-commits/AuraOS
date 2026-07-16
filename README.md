@@ -94,7 +94,7 @@ Evidence is organized by strength. **Executable gate evidence outranks token pro
 | Benchmark | Calls / tests | Result | Claim boundary |
 |---|---:|---|---|
 | **Selective Council V3 + Surgeon cross-module fixture** | 12 calls; visible `3/3`; hidden `3/3`; regression `2/2` | `WORKING`, `ACCEPTED`; observed `100.00`; benchmark `97.50`; API, scope, security, compilation, and static-analysis gates passed | Controlled executable fixture |
-| **Real AuraOS refactor trial** | visible/property `32/32`; review-derived adversarial `35/35`; focused regression `21/21` | `WORKING`, `ACCEPTED`; observed `100.00`; benchmark `93.50`; required gates passed | Real branch trial; planning arms were frozen assisted artifacts, not blinded independent-provider generations |
+| **Real AuraOS refactor trial** | visible/property `32/32`; review-derived adversarial `35/35`; focused regression `24/24` | `WORKING`, `ACCEPTED`; observed `100.00`; benchmark `93.50`; required gates passed | Exact-head branch trial at `52c9423`; planning arms were frozen assisted artifacts, not blinded independent-provider generations |
 
 ### Tier 2 — Deterministic comparative proxies
 
