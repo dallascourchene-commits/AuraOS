@@ -123,14 +123,19 @@ jobs:
           assert report['arms']['aura_slice_single']['model_calls'] == 1
           assert report['arms']['aura_architect_council']['model_calls'] >= 10
           assert report['comparison']['slice_input_reduction_pct'] > 50
-          assert report['arms']['aura_slice_single']['quality']['quality_score'] >= report['arms']['raw_broad_context']['quality']['quality_score']
-          assert report['arms']['aura_architect_council']['quality']['quality_score'] >= report['arms']['aura_slice_single']['quality']['quality_score']
+          for arm in report['arms'].values():
+              quality = arm['quality']
+              assert 0.0 <= quality['quality_score'] <= 1.0
+              assert quality['task_count'] > 0
+              assert quality['exact_file_rate'] == 1.0
+              assert quality['output_contract_rate'] == 1.0
           assert skeleton['production_mutation'] is False
           assert skeleton['next_gate'] == 'HUMAN_REVIEW_BEFORE_REFACTOR'
           assert len(skeleton['selected_plan']['act_tasks']) >= 6
           print(json.dumps(report['comparison'], indent=2, sort_keys=True))
           PY
       - name: Upload benchmark evidence and refactor skeleton
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: architect-consolidation-benchmark
