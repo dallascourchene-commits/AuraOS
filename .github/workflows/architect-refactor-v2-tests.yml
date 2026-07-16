@@ -89,9 +89,9 @@ jobs:
         run: python -m pytest -q tests/test_aura_architect_council_v2_contracts.py
       - name: Verify README evidence
         run: |
-          grep -q "168,569" README.md
-          grep -q "18 attempted, 18 recorded, 0 failed" README.md
-          grep -q "Benchmark quality: **93.50**" README.md
+          grep -Fq "168,569" README.md
+          grep -Fq "18 attempted, 18 recorded, 0 failed" README.md
+          grep -Fq "Benchmark quality: **93.50**" README.md
       - name: Regenerate CODEMAP
         run: |
           python aura_codebase_navigator.py
