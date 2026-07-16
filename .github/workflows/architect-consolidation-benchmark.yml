@@ -57,10 +57,13 @@ jobs:
             aura_agent_arena_mcp_external_llm.py \
             benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
             scripts/update_architect_benchmark_readme.py \
-            tests/test_aura_refactor_chronicle_and_length.py
-      - name: Run focused V2 chronicle, state, routing, and length tests
+            tests/test_aura_refactor_chronicle_and_length.py \
+            tests/test_aura_architect_council_v2_contracts.py
+      - name: Run focused V2 chronicle, state, routing, length, and contract tests
         run: |
-          python -m pytest -q tests/test_aura_refactor_chronicle_and_length.py
+          python -m pytest -q \
+            tests/test_aura_refactor_chronicle_and_length.py \
+            tests/test_aura_architect_council_v2_contracts.py
       - name: Regenerate CODEMAP and topology from tested commit
         run: |
           python aura_codebase_navigator.py
