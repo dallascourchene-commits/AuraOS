@@ -81,8 +81,9 @@ jobs:
             tests/test_aura_refactor_output_quality.py \
             --junitxml=benchmark-four-regression.xml \
             2>&1 | tee benchmark-four-regression.log
-      - name: Run focused static and security gates
+      - name: Run focused static gate
         run: |
+          set -o pipefail
           ruff check --select E9,F63,F7,F82 \
             aura_cognitive_labor_router.py \
             aura_cognitive_labor_router_core.py \
@@ -105,7 +106,12 @@ jobs:
             tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
-            tests/test_aura_state_identity_cycles.py
+            tests/test_aura_state_identity_cycles.py \
+            2>&1 | tee benchmark-four-static.log
+      - name: Run focused security gate
+        if: always()
+        run: |
+          set -o pipefail
           bandit -q -ll \
             aura_cognitive_labor_router.py \
             aura_cognitive_labor_router_core.py \
@@ -123,7 +129,8 @@ jobs:
             aura_human_agent_arena_architect.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
-            aura_real_refactor_trial.py
+            aura_real_refactor_trial.py \
+            2>&1 | tee benchmark-four-security.log
       - name: Validate container contract
         run: |
           docker compose -f docker-compose.arena-connector.yml config > container-compose.resolved.yml
@@ -225,8 +232,10 @@ jobs:
             benchmark-four-visible.log
             benchmark-four-hidden.log
             benchmark-four-regression.log
+            benchmark-four-static.log
+            benchmark-four-security.log
             architect-mcp-tools.json
             container-compose.resolved.yml
             benchmarks/real_refactor_trial/plans.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
