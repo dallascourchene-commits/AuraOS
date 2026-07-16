@@ -34,6 +34,7 @@ jobs:
         run: |
           python -m py_compile \
             aura_architect_consolidation_benchmark.py \
+            aura_architect_consolidation_benchmark_refined.py \
             aura_external_llm_session.py \
             aura_agent_arena_mcp_external_llm.py
       - name: Regenerate CODEMAP and topology from tested commit
@@ -56,7 +57,7 @@ jobs:
       - name: Prepare RAW and Aura-slice prompts
         run: |
           rm -rf benchmark-output
-          python aura_architect_consolidation_benchmark.py prepare \
+          python aura_architect_consolidation_benchmark_refined.py prepare \
             --repo-root . \
             --output-dir benchmark-output \
             > benchmark-output.log
@@ -98,5 +99,6 @@ jobs:
             benchmark-output/
             benchmark-output.log
             aura_architect_consolidation_benchmark.py
+            aura_architect_consolidation_benchmark_refined.py
           if-no-files-found: error
           retention-days: 30
