@@ -24,11 +24,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -46,6 +55,7 @@ jobs:
       - name: Commit synchronized maps
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           git config user.name "AuraOS CODEMAP Bot"
           git config user.email "actions@users.noreply.github.com"
@@ -54,4 +64,4 @@ jobs:
             exit 0
           fi
           git commit -m "docs: synchronize CODEMAP"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:"${TARGET_BRANCH}"
