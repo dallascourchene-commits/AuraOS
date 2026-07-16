@@ -127,6 +127,7 @@ jobs:
             fi
           done
           git commit -m "fix(review): reconcile all inline findings and publish benchmarks"
+          git reset --hard HEAD
           git fetch origin analysis/architect-benchmark
           git rebase origin/analysis/architect-benchmark
           git push origin HEAD:analysis/architect-benchmark
