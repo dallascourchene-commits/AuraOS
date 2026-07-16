@@ -64,6 +64,8 @@ jobs:
           root = Path("Aura_Memory/emergent_results/seed_runs/2026-07-16")
           files = {}
           for path in sorted(root.iterdir()):
+              if path.name == "provenance.jsonl":
+                  continue
               raw = path.read_bytes()
               files[path.name] = {
                   "bytes": len(raw),
@@ -83,8 +85,8 @@ jobs:
               "lossless": True,
               "files": files,
           }
-          (root / "provenance.json").write_text(
-              json.dumps(provenance, indent=2, sort_keys=True) + "\n",
+          (root / "provenance.jsonl").write_text(
+              json.dumps(provenance, sort_keys=True) + "\n",
               encoding="utf-8",
           )
           PY
@@ -119,6 +121,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Install focused test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest numpy aiosqlite websockets
 
       - name: Compile changed Python modules
         run: |
