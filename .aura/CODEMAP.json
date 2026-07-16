@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784209476,
+  "generated_at_unix": 1784209940,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 990,
+    "included_file_count": 992,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -614,6 +614,7 @@
       "aura_work_splitter.py",
       "aura_workflow_gates.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
       "bus_init.cpp",
@@ -837,6 +838,7 @@
       "test_universal_llm_logging.py",
       "test_vsa_ast_topology.py",
       "test_vsa_rendering.py",
+      "tests/conftest.py",
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
@@ -1012,23 +1014,23 @@
     ]
   },
   "summary": {
-    "file_count": 990,
-    "total_bytes": 50623211,
-    "text_tokens_est": 3259516,
+    "file_count": 992,
+    "total_bytes": 50627614,
+    "text_tokens_est": 3260617,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 133,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 688,
-      "schema_or_lexicon": 98,
+      "python_module": 689,
+      "schema_or_lexicon": 99,
       "support_file": 43
     },
     "topology_nodes": 8131,
     "topology_edges": 17735,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 22354.03
+    "elapsed_ms": 13524.88
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1711,6 +1713,7 @@
       "aura_work_splitter.py",
       "aura_workflow_gates.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
+      "benchmarks/real_refactor_trial/plans.json",
       "benchmarks/refactor_code_quality/generate_fixture.py",
       "build_aura.sh",
       "bus_init.cpp",
@@ -1885,6 +1888,7 @@
       "test_travel_sidecar_stack.py",
       "test_universal_llm_logging.py",
       "test_vsa_rendering.py",
+      "tests/conftest.py",
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
@@ -13828,6 +13832,16 @@
         "signature_hash": "dbc96fd78b1daad9"
       }
     ],
+    "_Strategies": [
+      {
+        "file": "tests/conftest.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tests/conftest.py#class:_Strategies:a6382d4072a8f7db",
+        "signature_hash": "a8499037de5cf6fe"
+      }
+    ],
     "_SymbolIndexer": [
       {
         "file": "aura_topological_context_anchor.py",
@@ -14058,6 +14072,16 @@
         "end_line": 221,
         "semantic_id": "pvm_memory_guard.py#method:MemoryBudget.__exit__:a57450a29a342f9a",
         "signature_hash": "0644df2e0c6f4a60"
+      }
+    ],
+    "__getattr__": [
+      {
+        "file": "tests/conftest.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/conftest.py#method:_Strategies.__getattr__:dcdbaf357c7e79f4",
+        "signature_hash": "2250228d8549c7cb"
       }
     ],
     "__init__": [
@@ -53636,6 +53660,16 @@
         "end_line": 320,
         "semantic_id": "aura_converse.py#method:Conversationalist.give_feedback:0504eed3649edbc7",
         "signature_hash": "49bd25202453a763"
+      }
+    ],
+    "given": [
+      {
+        "file": "tests/conftest.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 19,
+        "semantic_id": "tests/conftest.py#function:given:636e6ecc6539ff3f",
+        "signature_hash": "190b1ca91ec08e0a"
       }
     ],
     "global_state_phasor": [
@@ -142103,6 +142137,52 @@
       ]
     },
     {
+      "path": "benchmarks/real_refactor_trial/plans.json",
+      "role": "schema_or_lexicon",
+      "bytes": 3655,
+      "lines": 1,
+      "tokens_est": 914,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7592734334c2a7ec",
+      "vector": [
+        -0.052079,
+        -0.146548,
+        -0.115058,
+        0.122325,
+        0.279773,
+        -0.182882,
+        -0.030279,
+        0.274929,
+        0.09568,
+        -0.020589,
+        -0.270084,
+        0.274929,
+        -0.018167,
+        -0.069035,
+        -0.197416,
+        -0.044812,
+        0.090836,
+        0.190149,
+        -0.267662,
+        0.243439,
+        0.165926,
+        0.231328,
+        -0.216794,
+        -0.037545,
+        -0.224061,
+        -0.071457,
+        -0.124747,
+        0.192571,
+        -0.069035,
+        0.119903,
+        0.253128,
+        -0.243439
+      ]
+    },
+    {
       "path": "benchmarks/refactor_code_quality/generate_fixture.py",
       "role": "python_module",
       "bytes": 17156,
@@ -146798,6 +146878,52 @@
         -0.001247,
         0.153417,
         -0.153417
+      ]
+    },
+    {
+      "path": "tests/conftest.py",
+      "role": "python_module",
+      "bytes": 748,
+      "lines": 28,
+      "tokens_est": 187,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b51e3d5325626bab",
+      "vector": [
+        -0.280535,
+        -0.235469,
+        -0.248989,
+        -0.276028,
+        0.199416,
+        -0.089005,
+        0.228709,
+        -0.070979,
+        0.052952,
+        -0.228709,
+        -0.271522,
+        -0.120551,
+        0.219696,
+        -0.221949,
+        0.212936,
+        0.066472,
+        0.255749,
+        -0.098018,
+        0.192657,
+        0.17463,
+        -0.005633,
+        -0.172377,
+        -0.158857,
+        0.145337,
+        -0.037179,
+        -0.165617,
+        0.210683,
+        -0.064219,
+        -0.140831,
+        -0.032673,
+        0.107031,
+        0.059712
       ]
     },
     {
