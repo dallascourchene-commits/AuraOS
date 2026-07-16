@@ -6,6 +6,7 @@
   <title>Aura Human Agent Arena</title>
   <link rel="stylesheet" href="arena.css">
   <link rel="stylesheet" href="jarvis.css">
+  <link rel="stylesheet" href="emergent.css">
 </head>
 <body>
   <header class="aura-topbar">
@@ -18,6 +19,7 @@
     </div>
     <nav class="surface-tabs" aria-label="Arena surfaces">
       <button class="surface-tab is-active" data-surface="coding-surface" type="button">Coding Arena</button>
+      <button class="surface-tab" data-surface="emergent-workspace" type="button">Emergent Lab</button>
       <button class="surface-tab" data-surface="civic-workspace" type="button">Civic Arena</button>
     </nav>
     <div class="authority-chip">
@@ -157,6 +159,64 @@
     </details>
   </main>
 
+  <section id="emergent-workspace" class="surface emergent-surface" aria-label="Emergent properties and research workspace">
+    <div class="emergent-shell">
+      <section class="emergent-hero">
+        <div>
+          <p class="eyebrow">Persistent architecture evidence</p>
+          <h1>Turn unwired potential into a grounded refactor.</h1>
+          <p>Search every stored emergent-properties run, select the findings that matter, compile them into the active refactor workflow, and use bounded arXiv or GitHub research to fill evidence gaps.</p>
+        </div>
+        <span id="emergent-status" class="status-pill">Loading stored runs…</span>
+      </section>
+
+      <section class="emergent-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Stored runs</p><h2>Complete emergent evidence archive</h2></div>
+        </div>
+        <div id="emergent-run-list" class="emergent-run-list"></div>
+        <div class="emergent-search-row">
+          <input id="emergent-query" type="text" placeholder="Search an objective, missing wire, module, or capability…">
+          <button id="emergent-search-btn" type="button">Search findings</button>
+          <button id="emergent-packet-btn" type="button">Attach to refactor</button>
+        </div>
+        <div class="emergent-actions"><span id="emergent-selection-count">0 selected</span><span>Unselected search results remain advisory.</span></div>
+      </section>
+
+      <div class="emergent-grid">
+        <section class="emergent-panel">
+          <div class="section-heading"><div><p class="eyebrow">Unwired capacities</p><h2>Relevant findings</h2></div></div>
+          <div id="emergent-findings" class="finding-list"><p class="placeholder">Search to project stored findings into this objective.</p></div>
+          <div id="emergent-finding-detail" class="emergent-detail"><p class="placeholder">Select a finding to inspect its complete stored object.</p></div>
+        </section>
+
+        <section class="emergent-panel">
+          <div class="section-heading"><div><p class="eyebrow">Refactor fit</p><h2>Compiled evidence packet</h2></div></div>
+          <div id="emergent-packet" class="emergent-packet"><p class="placeholder">Attach selected findings to generate targets, tests, acceptance criteria, and research gaps.</p></div>
+          <div class="research-safety">arXiv and GitHub can help discover missing engineering pieces. Their metadata and sidecars are external evidence only; they cannot replace Aura's exact source spans, tests, verifier gates, or human approval.</div>
+        </section>
+      </div>
+
+      <div class="emergent-grid">
+        <section class="emergent-panel">
+          <div class="section-heading"><div><p class="eyebrow">Bounded discovery</p><h2>Search arXiv or GitHub</h2></div></div>
+          <div class="research-search-row">
+            <select id="research-provider" aria-label="Research provider"><option value="arxiv">arXiv</option><option value="github">GitHub repos</option></select>
+            <input id="research-query" type="text" placeholder="Research the selected missing wire…">
+            <label class="mode-control"><input id="research-sidecars" type="checkbox"> sidecars</label>
+            <button id="research-search-btn" type="button">Search and store</button>
+          </div>
+          <div id="research-results" class="research-result-list"><p class="placeholder">Results will preserve canonical API metadata and clearly label untrusted sidecar text.</p></div>
+        </section>
+
+        <section class="emergent-panel">
+          <div class="section-heading"><div><p class="eyebrow">Evidence history</p><h2>Stored research packets</h2></div></div>
+          <div id="research-evidence-list" class="research-evidence-list"><p class="placeholder">No external evidence loaded yet.</p></div>
+        </section>
+      </div>
+    </div>
+  </section>
+
   <section id="civic-workspace" class="surface civic-map-surface" aria-label="Civic Commons Arena">
     <div class="civic-map-shell">
       <section class="civic-map-stage">
@@ -212,6 +272,7 @@
   </section>
 
   <script src="jarvis.js"></script>
+  <script src="emergent.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

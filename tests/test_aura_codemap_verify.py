@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from aura_codebase_navigator import _scan_file
 from aura_codemap_verify import (
     REQUIRED_PATHS,
     REQUIRED_SYMBOLS,
@@ -238,3 +239,13 @@ def test_real_source_card_size_change_is_still_detected():
     result = compare_codemap_payloads(reference, regenerated)
     assert not result["ok"]
     assert "source_cards" in result["differing_fields"]
+
+
+def test_javascript_interface_surface_has_real_text_metadata(tmp_path: Path):
+    source = tmp_path / "ui.js"
+    source.write_text("const answer = 42;\nfunction render() { return answer; }\n", encoding="utf-8")
+    card = _scan_file(tmp_path, source)
+    assert card["role"] == "interface_surface"
+    assert card["lines"] >= 2
+    assert card["tokens_est"] > 0
+    assert card["binary"] is False
