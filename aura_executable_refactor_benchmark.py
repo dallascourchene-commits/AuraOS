@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from aura_code_quality_registry import CodeQualityRegistry
-from aura_refactor_patch_evaluator import EvaluationSpec, evaluate
+from aura_refactor_patch_evaluator_v2 import EvaluationSpec, evaluate
 from aura_refactor_output_record import DEFAULT_REQUIRED_GATES, write_record
 
 BENCHMARK_VERSION = "AURA_EXECUTABLE_REFACTOR_CODE_QUALITY_V1"
@@ -117,6 +117,15 @@ def _delta(after: Any, before: Any) -> float | None:
     return round(float(after) - float(before), 2)
 
 
+def _test_fraction(gate_value: dict[str, Any]) -> str:
+    passed = gate_value.get("passed")
+    total = gate_value.get("total")
+    status = gate_value.get("status")
+    if passed is None or total is None:
+        return str(status)
+    return f"{passed}/{total} {status}"
+
+
 def _write_markdown(summary: dict[str, Any], path: Path) -> None:
     lines = [
         "# Executable Refactor Code-Quality Benchmark",
@@ -133,9 +142,9 @@ def _write_markdown(summary: dict[str, Any], path: Path) -> None:
                 arm=arm_id,
                 working=record["working_status"],
                 disposition=record["disposition"],
-                visible=gates["visible_tests"]["status"],
-                hidden=gates["hidden_tests"]["status"],
-                regression=gates["regression_tests"]["status"],
+                visible=_test_fraction(gates["visible_tests"]),
+                hidden=_test_fraction(gates["hidden_tests"]),
+                regression=_test_fraction(gates["regression_tests"]),
                 api=gates["api_compatibility"]["status"],
                 scope=gates["scope"]["status"],
                 security=gates["security"]["status"],
