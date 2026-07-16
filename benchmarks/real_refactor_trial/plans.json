@@ -1,7 +1,7 @@
 {
   "benchmark_id": "AURA_REAL_REFACTOR_TRIAL_V2",
   "trial_base_sha": "00263be1804eeb2cb738bdccd45a13d480c6bc4e",
-  "objective": "Use Aura's Council/Surgeon architecture to complete and harden PR #131: restore fail-closed routing, preserve reconstructable State Ledger identity, bind frozen plans to exact Arena Act Capsules, expose shared controlled Architect/Surgeon access to Coding Arena, Human Agent Arena, MCP, HTTP/container, and native Aura, persist locally reviewable redacted output evidence beneath Aura_Staging, route native model work through the Model Cognome, and emit an honest Benchmark Four record without automatic merge or production mutation.",
+  "objective": "Use Aura's Council/Surgeon architecture to complete and harden PR #131: restore fail-closed routing, preserve reconstructable State Ledger identity, bind frozen plans to exact Arena Act Capsules, expose controlled Architect and Surgeon access to native Aura, Coding Arena, Human Agent Arena, MCP, HTTP and container clients, persist locally reviewable redacted output evidence beneath Aura_Staging, route native model work through the Model Cognome, preserve selective Council efficiency, and emit an honest Benchmark Four record without automatic merge or production mutation.",
   "required_capabilities": [
     "routing",
     "ledger",
@@ -14,7 +14,8 @@
     "container",
     "model",
     "testing",
-    "benchmark_evidence"
+    "benchmark_evidence",
+    "selective_council_efficiency"
   ],
   "expected_selected_candidate_id": "PLAN-D-SELECTIVE-COUNCIL-V3-SURGEON",
   "prior_evidence": {
@@ -42,13 +43,14 @@
     ".github/workflows/architect-real-refactor-trial.yml",
     ".github/workflows/publish-arena-connector.yml",
     "Dockerfile.arena-connector",
-    "README.md",
-    "USER_GUIDE.md",
-    ".aura/ARCHITECTURE.md",
+    "_aura_architect_consolidation_benchmark_legacy.py",
+    "_aura_architect_consolidation_benchmark_refined_legacy.py",
+    "_aura_architect_consolidation_benchmark_v2_legacy.py",
     "aura_agent_arena_mcp_architect.py",
     "aura_architect_benchmark_report.py",
     "aura_architect_consolidation_benchmark.py",
     "aura_architect_consolidation_benchmark_refined.py",
+    "aura_architect_consolidation_benchmark_v2.py",
     "aura_architect_control.py",
     "aura_arena_architect_connector.py",
     "aura_arena_architect_runtime.py",
@@ -56,7 +58,6 @@
     "aura_cognitive_labor_router.py",
     "aura_cognitive_labor_router_core.py",
     "aura_controlled_refactor_session.py",
-    "aura_external_llm_session.py",
     "aura_external_llm_session_safe.py",
     "aura_human_agent_arena_architect.py",
     "aura_native_model_gateway.py",
@@ -74,7 +75,6 @@
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_external_llm_session.py",
     "tests/test_aura_state_identity_cycles.py"
   ],
   "candidates": [
@@ -95,7 +95,7 @@
         "reported_provider_usage": null
       },
       "plan": {
-        "architecture_decision": "Perform one broad, monolithic refactor pass across routing, memory, Arenas, distribution, and benchmarks, then run the full verifier at the end.",
+        "architecture_decision": "Apply one broad repository patch and run verification only after all surfaces are changed.",
         "target_file": "aura_arena_architect_connector.py",
         "target_symbol": "AuraArenaArchitectConnector",
         "coverage_tags": [
@@ -116,7 +116,7 @@
         "act_tasks": [
           {
             "task_id": "A1",
-            "objective": "Rewrite the complete Architect integration in one pass, including routing, State Ledger, all Arena surfaces, model routing, local logs, container distribution, and Benchmark Four.",
+            "objective": "Rewrite routing, memory, Arena surfaces, distribution, and benchmark evidence in one repository-wide pass.",
             "target_file": "aura_arena_architect_connector.py",
             "target_symbol": "AuraArenaArchitectConnector",
             "related_files": [
@@ -124,30 +124,18 @@
               "aura_refactor_state_ledger.py",
               "aura_agent_arena_mcp_architect.py",
               "aura_arena_connector_server.py",
-              "aura_human_agent_arena.py",
               "aura_real_refactor_trial.py"
             ],
             "allowed_scope": "repository-wide coordinated rewrite",
-            "acceptance": "The complete repository test suite and container build pass after the one broad patch.",
+            "acceptance": "All focused and full repository gates pass after the monolithic patch.",
             "expected_output": "UNIFIED_DIFF",
             "size": "XL"
           }
         ],
-        "acceptance_criteria": [
-          "All required capabilities are present.",
-          "Full CI passes."
-        ],
-        "rollback_conditions": [
-          "Revert the monolithic patch if any required gate fails."
-        ],
-        "risk_map": [
-          "Large blast radius.",
-          "Late discovery of interface and authority defects."
-        ],
-        "constraints": [
-          "Proposal only.",
-          "Human approval required."
-        ]
+        "acceptance_criteria": ["All required gates pass."],
+        "rollback_conditions": ["Revert the monolithic patch on any required-gate failure."],
+        "risk_map": ["Large blast radius and late defect discovery."],
+        "constraints": ["Proposal only.", "Human approval required."]
       }
     },
     {
@@ -167,8 +155,8 @@
         "reported_provider_usage": null
       },
       "plan": {
-        "architecture_decision": "Use one sliced Surgeon to complete four bounded implementation capsules without a multi-agent strategic Council.",
-        "target_file": "aura_cognitive_labor_router.py",
+        "architecture_decision": "Use one sliced Surgeon for bounded routing, ledger, connector, evidence, and benchmark capsules without a strategic Council.",
+        "target_file": "aura_cognitive_labor_router_core.py",
         "target_symbol": "route_failure",
         "coverage_tags": [
           "routing",
@@ -180,88 +168,60 @@
           "benchmark_evidence"
         ],
         "architecture_reuse": true,
-        "existing_modules": [
-          "ArchitectFusionLoop",
-          "Agent Arena Bridge",
-          "Persistent External LLM Session",
-          "State Ledger"
-        ],
+        "existing_modules": ["ArchitectFusionLoop", "Agent Arena Bridge", "State Ledger"],
         "act_tasks": [
           {
             "task_id": "B1",
-            "objective": "Restore fail-closed failure routing and preserve None compatibility.",
-            "target_file": "aura_cognitive_labor_router.py",
+            "objective": "Restore fail-closed failure routing.",
+            "target_file": "aura_cognitive_labor_router_core.py",
             "target_symbol": "route_failure",
-            "related_files": ["aura_cognitive_labor_router_core.py"],
-            "allowed_scope": "router facade and core only",
-            "acceptance": "Malformed counters and flags never raise and fail closed; local failures remain local.",
+            "related_files": ["aura_cognitive_labor_router.py"],
+            "allowed_scope": "routing only",
+            "acceptance": "Malformed evidence never raises and local assertions remain local.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M"
           },
           {
             "task_id": "B2",
-            "objective": "Complete reconstructable State Ledger identity and sidecar checks.",
+            "objective": "Complete reconstructable State Ledger identity.",
             "target_file": "aura_refactor_state_ledger.py",
             "target_symbol": "build_state_ledger",
-            "related_files": [
-              "aura_refactor_state_identity.py",
-              "aura_refactor_state_ledger_core.py",
-              "aura_refactor_state_ledger_metrics.py"
-            ],
-            "allowed_scope": "State Ledger implementation and focused tests",
-            "acceptance": "History mutation, reorder, insertion, deletion, cycles, and sidecar tampering are detected.",
+            "related_files": ["aura_refactor_state_identity.py", "aura_refactor_state_ledger_core.py"],
+            "allowed_scope": "ledger identity only",
+            "acceptance": "History and sidecar adversarial tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
             "depends_on": ["B1"]
           },
           {
             "task_id": "B3",
-            "objective": "Expose one bounded external Architect connector and local output archive.",
+            "objective": "Expose an external connector and local output archive.",
             "target_file": "aura_arena_architect_connector.py",
             "target_symbol": "AuraArenaArchitectConnector",
-            "related_files": [
-              "aura_agent_arena_mcp_architect.py",
-              "aura_refactor_output_vault.py",
-              "aura_external_llm_session_safe.py"
-            ],
-            "allowed_scope": "MCP connector, safe session, and local evidence only",
-            "acceptance": "Third-party clients receive slices, generated outputs are recorded locally, and no promotion authority is granted.",
+            "related_files": ["aura_agent_arena_mcp_architect.py", "aura_refactor_output_vault.py"],
+            "allowed_scope": "external connector and evidence",
+            "acceptance": "MCP tools and local evidence tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
             "depends_on": ["B1", "B2"]
           },
           {
             "task_id": "B4",
-            "objective": "Record the real branch trial with visible, adversarial, and regression evidence.",
+            "objective": "Record the real branch benchmark.",
             "target_file": "aura_real_refactor_trial.py",
             "target_symbol": "run_trial",
-            "related_files": [
-              "benchmarks/real_refactor_trial/plans.json",
-              ".github/workflows/architect-real-refactor-trial.yml"
-            ],
-            "allowed_scope": "Benchmark Four controller, fixture, and workflow",
-            "acceptance": "A standard output record is emitted with honest measured and unmeasured dimensions.",
+            "related_files": ["benchmarks/real_refactor_trial/plans.json"],
+            "allowed_scope": "Benchmark Four only",
+            "acceptance": "A standard output record is emitted.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
-            "depends_on": ["B1", "B2", "B3"]
+            "depends_on": ["B3"]
           }
         ],
-        "acceptance_criteria": [
-          "Focused implementation tests pass.",
-          "Every generated output is retained locally.",
-          "Human review remains mandatory."
-        ],
-        "rollback_conditions": [
-          "Discard the active Act Capsule when its verifier fails beyond the local repair budget."
-        ],
-        "risk_map": [
-          "No independent strategic review of cross-surface interfaces.",
-          "Coding and Human Agent Arena native controls remain incomplete."
-        ],
-        "constraints": [
-          "Exact source spans and hashes are authoritative.",
-          "No automatic merge or promotion."
-        ]
+        "acceptance_criteria": ["Focused tests pass.", "Outputs are retained locally."],
+        "rollback_conditions": ["Discard a failed capsule after its repair budget."],
+        "risk_map": ["Cross-surface strategy is not independently reviewed."],
+        "constraints": ["Exact source evidence is authoritative.", "No automatic merge."]
       }
     },
     {
@@ -269,7 +229,7 @@
       "arm_family": "COUNCIL_V2_UNIFORM_CRITICS_PLUS_SURGEON",
       "provenance": {
         "generation_mode": "ASSISTED_FROZEN_PLAN_NOT_LIVE_PROVIDER",
-        "context_strategy": "Council architecture plus exact Surgeon slices",
+        "context_strategy": "uniform strategic critics plus exact Surgeon slices",
         "strategic_agents": 1,
         "critic_policy": "all_lanes_for_all_candidates",
         "implementers": 1,
@@ -283,7 +243,7 @@
         "reported_provider_usage": null
       },
       "plan": {
-        "architecture_decision": "Use the full Council V2 for architecture and every critic lane, then execute nine narrowly separated Surgeon capsules.",
+        "architecture_decision": "Use the full Council V2 with every critic lane, then execute a complete sequence of bounded Surgeon capsules.",
         "target_file": "aura_cognitive_labor_router_core.py",
         "target_symbol": "route_failure",
         "coverage_tags": [
@@ -301,153 +261,96 @@
           "benchmark_evidence"
         ],
         "architecture_reuse": true,
-        "existing_modules": [
-          "Council V2",
-          "ArchitectFusionLoop",
-          "Agent Arena Bridge",
-          "Human Agent Arena",
-          "AdaptiveModelRouter",
-          "State Ledger"
-        ],
+        "existing_modules": ["Council V2", "ArchitectFusionLoop", "Human Agent Arena", "AdaptiveModelRouter"],
         "act_tasks": [
           {
             "task_id": "C1",
-            "objective": "Restore and harden Router V3 core.",
+            "objective": "Restore fail-closed routing.",
             "target_file": "aura_cognitive_labor_router_core.py",
             "target_symbol": "route_failure",
             "related_files": ["aura_cognitive_labor_router.py"],
-            "allowed_scope": "cognitive labor routing",
-            "acceptance": "All typed failure evidence probes pass.",
+            "allowed_scope": "routing",
+            "acceptance": "Routing adversarial tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M"
           },
           {
             "task_id": "C2",
-            "objective": "Complete event-history and state-projection identity.",
-            "target_file": "aura_refactor_state_identity.py",
-            "target_symbol": "canonicalize_state_value",
-            "related_files": [
-              "aura_refactor_state_ledger_core.py",
-              "aura_refactor_state_ledger_metrics.py",
-              "aura_refactor_state_ledger.py"
-            ],
-            "allowed_scope": "State Ledger identity",
-            "acceptance": "History and projected state identities are deterministic and reconstructable.",
+            "objective": "Complete reconstructable State Ledger identity.",
+            "target_file": "aura_refactor_state_ledger.py",
+            "target_symbol": "build_state_ledger",
+            "related_files": ["aura_refactor_state_identity.py", "aura_refactor_state_ledger_core.py"],
+            "allowed_scope": "ledger",
+            "acceptance": "History, projection, and tamper tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
             "depends_on": ["C1"]
           },
           {
             "task_id": "C3",
-            "objective": "Define explicit native and external Council/Surgeon controls.",
+            "objective": "Create strict controls and local evidence.",
             "target_file": "aura_architect_control.py",
             "target_symbol": "ArchitectControlProfile",
-            "related_files": ["aura_arena_architect_runtime.py"],
-            "allowed_scope": "control contracts",
-            "acceptance": "Unsafe authority requests fail closed and native budgets remain explicit.",
+            "related_files": ["aura_refactor_output_vault.py", "aura_controlled_refactor_session.py"],
+            "allowed_scope": "controls and evidence",
+            "acceptance": "Unsafe controls and secrets fail closed.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
-            "depends_on": ["C1"]
+            "depends_on": ["C1", "C2"]
           },
           {
             "task_id": "C4",
-            "objective": "Create append-only local generated-output evidence.",
-            "target_file": "aura_refactor_output_vault.py",
-            "target_symbol": "RefactorOutputVault",
-            "related_files": ["aura_controlled_refactor_session.py"],
-            "allowed_scope": "Aura_Staging local evidence",
-            "acceptance": "Plans, generated patches, verifier results, and quality records are digest-bound and secrets are redacted.",
+            "objective": "Bind selected plans and expose MCP.",
+            "target_file": "aura_arena_architect_connector.py",
+            "target_symbol": "AuraArenaArchitectConnector",
+            "related_files": ["aura_agent_arena_mcp_architect.py"],
+            "allowed_scope": "connector and MCP",
+            "acceptance": "Plan projection and MCP discovery tests pass.",
             "expected_output": "UNIFIED_DIFF",
-            "size": "M",
+            "size": "L",
             "depends_on": ["C3"]
           },
           {
             "task_id": "C5",
-            "objective": "Bind selected plans to exact Arena Act Capsules.",
-            "target_file": "aura_arena_architect_connector.py",
-            "target_symbol": "AuraArenaArchitectConnector",
-            "related_files": ["aura_agent_arena_bridge.py"],
-            "allowed_scope": "canonical Architect connector",
-            "acceptance": "Recorded selected-plan projection equals the prepared Arena projection.",
+            "objective": "Expose native Arena and HTTP/container surfaces.",
+            "target_file": "aura_human_agent_arena_architect.py",
+            "target_symbol": "HumanAgentArchitectCockpit",
+            "related_files": ["aura_arena_connector_server.py", "Dockerfile.arena-connector"],
+            "allowed_scope": "native and deployment surfaces",
+            "acceptance": "Alias, control, load, and container tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
-            "depends_on": ["C2", "C3", "C4"]
+            "depends_on": ["C4"]
           },
           {
             "task_id": "C6",
-            "objective": "Expose controlled Architect and Surgeon tools through MCP.",
-            "target_file": "aura_agent_arena_mcp_architect.py",
-            "target_symbol": "install_architect_tools",
-            "related_files": ["aura_external_llm_session_safe.py"],
-            "allowed_scope": "third-party MCP surface",
-            "acceptance": "Tool discovery and bounded external lifecycle tests pass.",
+            "objective": "Route native models through the Model Cognome.",
+            "target_file": "aura_native_model_gateway.py",
+            "target_symbol": "AuraNativeModelGateway",
+            "related_files": [],
+            "allowed_scope": "model gateway",
+            "acceptance": "Adaptive routing and authorization tests pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
-            "depends_on": ["C5"]
+            "depends_on": ["C4"]
           },
           {
             "task_id": "C7",
-            "objective": "Expose controlled Architect and Surgeon routes through HTTP/container.",
-            "target_file": "aura_arena_connector_server.py",
-            "target_symbol": "dispatch_connector_request",
-            "related_files": [
-              "Dockerfile.arena-connector",
-              "docker-compose.arena-connector.yml",
-              ".github/workflows/publish-arena-connector.yml"
-            ],
-            "allowed_scope": "HTTP and container surfaces",
-            "acceptance": "Loopback, authentication, request bounds, pull-only compose, and image build gates pass.",
-            "expected_output": "UNIFIED_DIFF",
-            "size": "L",
-            "depends_on": ["C5", "C6"]
-          },
-          {
-            "task_id": "C8",
-            "objective": "Integrate controls and local output loading into native Coding and Human Agent Arenas.",
-            "target_file": "aura_human_agent_arena_architect.py",
-            "target_symbol": "HumanAgentArchitectCockpit",
-            "related_files": ["aura_arena_architect_runtime.py"],
-            "allowed_scope": "native Arena adapters",
-            "acceptance": "The Human Agent Arena can list and load local outputs and native callers can set Council/Surgeon budgets.",
-            "expected_output": "UNIFIED_DIFF",
-            "size": "M",
-            "depends_on": ["C5"]
-          },
-          {
-            "task_id": "C9",
-            "objective": "Run and record Benchmark Four on the exact real branch.",
+            "objective": "Run and record Benchmark Four.",
             "target_file": "aura_real_refactor_trial.py",
             "target_symbol": "run_trial",
-            "related_files": [
-              "benchmarks/real_refactor_trial/plans.json",
-              ".github/workflows/architect-real-refactor-trial.yml",
-              "tests/test_aura_benchmark_four.py"
-            ],
-            "allowed_scope": "Benchmark Four evidence and gates",
-            "acceptance": "Four plans and the implemented branch produce a standard accepted record or an honest failed record with all evidence retained.",
+            "related_files": ["benchmarks/real_refactor_trial/plans.json"],
+            "allowed_scope": "benchmark evidence",
+            "acceptance": "All evidence is retained with honest limitations.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
-            "depends_on": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8"]
+            "depends_on": ["C1", "C2", "C3", "C4", "C5", "C6"]
           }
         ],
-        "acceptance_criteria": [
-          "All required gates pass.",
-          "Every critic lane reviews every plan candidate.",
-          "The exact branch patch and every generated output remain inspectable."
-        ],
-        "rollback_conditions": [
-          "Discard any failed Act Capsule.",
-          "Council replans affected downstream capsules after graph invalidation."
-        ],
-        "risk_map": [
-          "Uniform critics incur a large token tax.",
-          "More coordination calls increase latency and failure opportunities."
-        ],
-        "constraints": [
-          "Proposal only.",
-          "Exact source and verifier evidence remain authoritative.",
-          "Human approval is required before promotion or merge."
-        ]
+        "acceptance_criteria": ["All required gates pass.", "Every critic lane reviews every candidate."],
+        "rollback_conditions": ["Council replans affected downstream capsules on graph invalidation."],
+        "risk_map": ["Uniform critics impose unnecessary cost and latency."],
+        "constraints": ["Proposal only.", "Human approval required."]
       }
     },
     {
@@ -457,7 +360,7 @@
         "generation_mode": "ASSISTED_FROZEN_PLAN_NOT_LIVE_PROVIDER",
         "context_strategy": "selective strategic critics plus exact Surgeon slices",
         "strategic_agents": 1,
-        "critic_policy": "scope_and_tests_always; sequence_continuity_rollback_cost_when_plan_evidence_requires",
+        "critic_policy": "scope_and_tests_always; sequence_continuity_rollback_cost_only_when_evidence_requires",
         "implementers": 1,
         "hidden_tests_seen": false,
         "independent_generation": false
@@ -470,7 +373,7 @@
         "reported_provider_usage": null
       },
       "plan": {
-        "architecture_decision": "Use Selective Council V3 once to freeze the cross-surface architecture and selectively for graph repair; execute seven bounded Surgeon capsules with a reconstructable State Ledger, exact verifier gates, explicit native controls, and append-only local output evidence.",
+        "architecture_decision": "Use Selective Council V3 once for cross-surface architecture and selectively for graph repair; execute bounded Surgeon capsules with a reconstructable State Ledger, exact verifier gates, native controls, and append-only local evidence.",
         "target_file": "aura_cognitive_labor_router_core.py",
         "target_symbol": "route_failure",
         "coverage_tags": [
@@ -485,141 +388,92 @@
           "container",
           "model",
           "testing",
-          "benchmark_evidence"
+          "benchmark_evidence",
+          "selective_council_efficiency"
         ],
         "architecture_reuse": true,
-        "existing_modules": [
-          "Selective Council V3",
-          "ArchitectFusionLoop",
-          "Agent Arena Bridge",
-          "Persistent External LLM Session",
-          "Human Agent Arena",
-          "AdaptiveModelRouter",
-          "State Ledger V3",
-          "Refactor Output Record"
-        ],
-        "domains": [
-          "planning",
-          "execution",
-          "memory",
-          "arena_surfaces",
-          "security",
-          "benchmarking"
-        ],
+        "existing_modules": ["Selective Council V3", "ArchitectFusionLoop", "Human Agent Arena", "AdaptiveModelRouter", "State Ledger V3"],
+        "domains": ["planning", "execution", "memory", "arena_surfaces", "security", "benchmarking"],
         "act_tasks": [
           {
             "task_id": "D1",
-            "objective": "Restore the reviewed Router V3 core and preserve fail-closed compatibility at the public facade.",
+            "objective": "Restore fail-closed routing and compatibility.",
             "target_file": "aura_cognitive_labor_router_core.py",
             "target_symbol": "route_failure",
-            "related_files": [
-              "aura_cognitive_labor_router.py",
-              "tests/test_aura_benchmark_four.py",
-              "tests/test_aura_benchmark_four_hardening.py"
-            ],
-            "allowed_scope": "failure-evidence parsing and Council/Surgeon routing only",
-            "acceptance": "Arbitrary packets never raise; malformed, negative, non-finite, and unknown evidence fails closed; explicit false overrides packet true; local assertions route to the Surgeon.",
+            "related_files": ["aura_cognitive_labor_router.py"],
+            "allowed_scope": "failure-evidence routing",
+            "acceptance": "Malformed evidence never raises; local failures remain local; graph failures escalate.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M"
           },
           {
             "task_id": "D2",
-            "objective": "Preserve complete history identity and reconstructable semantic execution state in the compact State Ledger.",
+            "objective": "Preserve complete history and semantic state identity.",
             "target_file": "aura_refactor_state_ledger.py",
             "target_symbol": "build_state_ledger",
-            "related_files": [
-              "aura_refactor_state_identity.py",
-              "aura_refactor_state_ledger_core.py",
-              "aura_refactor_state_ledger_metrics.py",
-              "tests/test_aura_state_identity_cycles.py"
-            ],
-            "allowed_scope": "State Ledger identity, sidecar, metrics, and focused tests",
-            "acceptance": "Mutation, insertion, deletion, reorder, cycle, opaque-object, semantic-decision, reconstructability, and tamper probes pass without replaying raw history to the model.",
+            "related_files": ["aura_refactor_state_identity.py", "aura_refactor_state_ledger_core.py", "aura_refactor_state_ledger_metrics.py"],
+            "allowed_scope": "State Ledger identity and sidecars",
+            "acceptance": "Mutation, reorder, cycle, reconstruction, and tamper probes pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
             "depends_on": ["D1"]
           },
           {
             "task_id": "D3",
-            "objective": "Define strict human-governed Council/Surgeon controls and an append-only local output vault beneath Aura_Staging.",
+            "objective": "Define strict controls and append-only local output evidence.",
             "target_file": "aura_architect_control.py",
             "target_symbol": "ArchitectControlProfile",
-            "related_files": [
-              "aura_refactor_output_vault.py",
-              "aura_controlled_refactor_session.py",
-              "aura_external_llm_session_safe.py"
-            ],
-            "allowed_scope": "control contracts, safe session postconditions, and local evidence",
-            "acceptance": "Unsafe booleans and paths fail closed; output runs are idempotent and digest-chained; secrets are redacted; exact original output digests and verifier results are retained locally.",
+            "related_files": ["aura_refactor_output_vault.py", "aura_controlled_refactor_session.py", "aura_external_llm_session_safe.py"],
+            "allowed_scope": "controls, safe sessions, and local evidence",
+            "acceptance": "Unsafe paths and authority fail closed; secrets are redacted; outputs and verifier evidence remain digest-bound.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
             "depends_on": ["D1", "D2"]
           },
           {
             "task_id": "D4",
-            "objective": "Bind the selected plan to exact prepared Arena Act Capsules and expose the canonical lifecycle to MCP and third-party coding agents.",
+            "objective": "Bind selected plans to exact Act Capsules and expose third-party MCP.",
             "target_file": "aura_arena_architect_connector.py",
             "target_symbol": "AuraArenaArchitectConnector",
-            "related_files": [
-              "aura_agent_arena_mcp_architect.py",
-              "aura_agent_arena_bridge.py"
-            ],
-            "allowed_scope": "shared Architect connector and MCP extension",
-            "acceptance": "Frozen-plan and prepared-capsule projections match; duplicate IDs and oversized plans fail; MCP discovers control, comparison, preparation, Surgeon, replan, output-list/load, and model tools.",
+            "related_files": ["aura_agent_arena_mcp_architect.py"],
+            "allowed_scope": "canonical connector and MCP",
+            "acceptance": "Frozen and prepared projections match; bounded Architect, Surgeon, replan, and output tools are discoverable.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
             "depends_on": ["D2", "D3"]
           },
           {
             "task_id": "D5",
-            "objective": "Expose the same controlled service to native Aura, Coding Arena, Human Agent Arena, and the loopback HTTP/container surface.",
+            "objective": "Expose the same controls to native Aura, Coding Arena, Human Agent Arena, and HTTP/container clients.",
             "target_file": "aura_human_agent_arena_architect.py",
             "target_symbol": "HumanAgentArchitectCockpit",
-            "related_files": [
-              "aura_arena_architect_runtime.py",
-              "aura_arena_connector_server.py",
-              "Dockerfile.arena-connector",
-              "docker-compose.arena-connector.yml",
-              ".github/workflows/publish-arena-connector.yml"
-            ],
-            "allowed_scope": "native Arena adapters and deployment boundary",
-            "acceptance": "Native users can set Council and Surgeon budgets; the Human Agent Arena can list/load output artifacts; aliases share semantics; loopback, authentication, read-only container, and pull-only compose gates pass.",
+            "related_files": ["aura_arena_architect_runtime.py", "aura_arena_connector_server.py", "Dockerfile.arena-connector", "docker-compose.arena-connector.yml"],
+            "allowed_scope": "native Arena and deployment surfaces",
+            "acceptance": "Native budgets are explicit; local outputs load into Human Agent Arena; aliases, auth, loopback, and container gates pass.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
             "depends_on": ["D4"]
           },
           {
             "task_id": "D6",
-            "objective": "Route native model work through the Model Cognome without hard-coded provider preference.",
+            "objective": "Route native model work through the Model Cognome.",
             "target_file": "aura_native_model_gateway.py",
             "target_symbol": "AuraNativeModelGateway",
-            "related_files": [
-              "aura_adaptive_model_router.py",
-              "aura_adaptive_model_executor.py"
-            ],
-            "allowed_scope": "native model gateway and bounded selection telemetry",
-            "acceptance": "ZERO_MODEL, DIRECT, CASCADE, and PANEL remain available; SHADOW is default; live execution is authorization-gated; selection traces are evidence-based.",
+            "related_files": [],
+            "allowed_scope": "native model gateway",
+            "acceptance": "ZERO_MODEL, DIRECT, CASCADE, and PANEL remain evidence-routed; SHADOW is default and live execution is authorized.",
             "expected_output": "UNIFIED_DIFF",
             "size": "M",
             "depends_on": ["D3", "D4"]
           },
           {
             "task_id": "D7",
-            "objective": "Execute this real branch refactor as Benchmark Four, preserve all four plans and the implemented patch, and publish only measured claims after exact-head gates pass.",
+            "objective": "Execute this real refactor as Benchmark Four and retain all plans, patches, tests, gates, and limitations.",
             "target_file": "aura_real_refactor_trial.py",
             "target_symbol": "run_trial",
-            "related_files": [
-              "benchmarks/real_refactor_trial/plans.json",
-              ".github/workflows/architect-real-refactor-trial.yml",
-              ".github/workflows/architect-real-refactor-hardening.yml",
-              "tests/test_aura_architect_controls_vault_and_surfaces.py",
-              "tests/test_aura_arena_connector_hardening.py",
-              "tests/test_aura_benchmark_four.py",
-              "tests/test_aura_benchmark_four_hardening.py",
-              "docs/AURA_REAL_REFACTOR_TRIAL_V1.md"
-            ],
-            "allowed_scope": "Benchmark Four controller, plans, tests, workflows, and measured documentation",
-            "acceptance": "The exact branch patch, candidate provenance, token classes, visible/property, independently review-derived adversarial, regression, compile, API, scope, security, static, and container evidence are retained in AURA_REFACTOR_OUTPUT_RECORD_V1; unmeasured performance and maintainability remain explicit.",
+            "related_files": ["benchmarks/real_refactor_trial/plans.json", ".github/workflows/architect-real-refactor-trial.yml"],
+            "allowed_scope": "Benchmark Four evidence",
+            "acceptance": "AURA_REFACTOR_OUTPUT_RECORD_V1 retains exact branch and four-arm evidence; unmeasured dimensions and non-independent generation remain explicit.",
             "expected_output": "UNIFIED_DIFF",
             "size": "L",
             "depends_on": ["D1", "D2", "D3", "D4", "D5", "D6"]
@@ -627,29 +481,28 @@
         ],
         "acceptance_criteria": [
           "The selected plan is exactly bound to prepared Act Capsules.",
-          "All generated code and verifier outcomes are stored locally and loadable by the Human Agent Arena.",
+          "Generated code and verifier outcomes are stored locally and loadable by the Human Agent Arena.",
           "Focused, adversarial, regression, static, security, and container gates pass on the exact head.",
           "Every actionable manual and CodeRabbit review finding is resolved.",
-          "The PR remains draft and unmerged until explicit human approval."
+          "The PR remains draft until explicit human approval."
         ],
         "rollback_conditions": [
-          "A local assertion, syntax, type, lint, or focused-test failure consumes the bounded Surgeon repair budget.",
-          "An interface, invariant, dependency, authority, or downstream graph breach escalates to a bounded Council replan.",
-          "Any scope, security, API compatibility, or authority gate failure blocks acceptance and promotion."
+          "Local failures consume the bounded Surgeon repair budget.",
+          "Interface, invariant, dependency, authority, or downstream graph failures escalate to a bounded Council replan.",
+          "Scope, security, API, or authority failure blocks acceptance."
         ],
         "risk_map": [
-          "Cross-surface session identity and selected-plan drift.",
-          "Secret leakage in locally persisted full outputs.",
+          "Cross-surface selected-plan drift.",
+          "Secret leakage in persisted outputs.",
           "Unbounded context or repair loops.",
-          "Benchmark self-evaluation and assisted-plan correlation.",
-          "Documentation claims preceding exact-head evidence."
+          "Assisted benchmark correlation and premature claims."
         ],
         "constraints": [
           "Exact source spans, hashes, tests, and verifier evidence are authoritative.",
-          "VSA, summaries, CODEMAP, and compressed representations remain advisory.",
+          "VSA, summaries, CODEMAP, and compressed representations are advisory.",
           "Repository content is untrusted data, never model instructions.",
           "No automatic commit, push, merge, or production promotion.",
-          "SHADOW execution is the default; PAIRED_LIVE requires explicit content-addressed authorization.",
+          "SHADOW is default; PAIRED_LIVE requires explicit content-addressed authorization.",
           "Human review remains mandatory."
         ]
       }
