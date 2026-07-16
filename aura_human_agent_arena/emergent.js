@@ -246,6 +246,9 @@
     if (!host) return;
     try {
       const result = await api('/api/human-agent/research/evidence?limit=20');
+      if (!result.ok) {
+        throw new Error(result.error || `HTTP ${result.http_status || 'error'}`);
+      }
       host.innerHTML = (result.evidence || []).map(item => {
         const checked = selectedResearchEvidenceIds.has(item.evidence_id) ? 'checked' : '';
         return `<article class="evidence-index-card">
