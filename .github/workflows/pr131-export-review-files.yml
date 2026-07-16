@@ -1,6 +1,7 @@
 name: PR131 Export Review Files
 
 on:
+  pull_request:
   push:
     branches:
       - analysis/architect-benchmark
@@ -16,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - name: Export exact-head review files
         uses: actions/upload-artifact@v4
