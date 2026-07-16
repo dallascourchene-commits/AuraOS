@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 957
-- **total_bytes**: 66971636
-- **text_tokens_est**: 7346850
+- **total_bytes**: 66972029
+- **text_tokens_est**: 7346948
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 127, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 668, 'schema_or_lexicon': 93, 'support_file': 41}
 - **topology_nodes**: 8008
 - **topology_edges**: 17425
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 22278.62
+- **elapsed_ms**: 21798.35
 
 ## Coverage
 
@@ -31,31 +31,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Command Index
 
-- `!A` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!Aura_Sandbox` -> `.gitignore:46`
-- `!BOEw` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!CORE_AXIOM_VALID` -> `aura_nesy_sat_reasoner.py:280`
-- `!D-qwva` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!DOCTYPE` -> `aura_savings_dashboard.py:49`, `index.html:1`
-- `!FEovOtO1i` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Fevy4_U` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Jp8` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Ju` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Mc` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Me0vt` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!O` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Pwqn46` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Q` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!RT2Mql-LJ1QS355` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!S8o_2id9KTu3TDm` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Sze6` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Tx` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!U6Yir` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!Z` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!ZK9` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!ai_route` -> `USER_GUIDE.md:918`, `aura_ai_router.py:628`, `aura_node.py:7202`
 - `!ai_router_regen` -> `USER_GUIDE.md:919`, `aura_node.py:7217`
-- `!akkagfWVNNin_OvvrA1` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!approve` -> `AURA_FINAL_REPORT.md:151`, `USER_GUIDE.md:956`, `aura_node.py:5638`
 - `!ar_server_start` -> `USER_GUIDE.md:989`, `aura_node.py:6588`
 - `!ar_server_stop` -> `USER_GUIDE.md:990`, `aura_node.py:6604`
@@ -63,16 +43,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!ar_stop` -> `AURA_FINAL_REPORT.md:169`, `USER_GUIDE.md:990`, `aura_node.py:6604`, `refactored-auraos-upgrades.md:2572`
 - `!attention` -> `USER_GUIDE.md:925`, `aura_node.py:5686`
 - `!audit` -> `USER_GUIDE.md:940`, `aura_node.py:6184`
-- `!b` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!b3MWj-Z` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!backtrack` -> `AURA_FINAL_REPORT.md:143`, `USER_GUIDE.md:964`, `arxiv_forager.py:657`, `aura_node.py:6204`
 - `!benchmark` -> `USER_GUIDE.md:939`, `aura_node.py:2991`
 - `!c` -> `arch_reasoner_accel.rs:14`
-- `!cLTRot4IwOCYoZN` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!calibrate` -> `AURA_FINAL_REPORT.md:163`, `USER_GUIDE.md:979`, `aura_node.py:7532`
 - `!canvas` -> `aura_savings_dashboard.py:174`
 - `!catalyze` -> `AURA_FINAL_REPORT.md:156`, `USER_GUIDE.md:957`, `aura_node.py:7239`, `generate_ai_router.py:356`
-- `!cbuo` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `USER_GUIDE.md:924`, `aura_node.py:5655`
 - `!commands` -> `USER_GUIDE.md:207`
@@ -82,7 +58,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!crystallize` -> `AURA_FINAL_REPORT.md:141`, `USER_GUIDE.md:970`, `aura_node.py:7306`
 - `!curiosity_tree` -> `AURA_FINAL_REPORT.md:174`, `USER_GUIDE.md:968`, `aura_node.py:6645`
 - `!db_repair` -> `USER_GUIDE.md:993`, `aura_node.py:2991`
-- `!dlH73O` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!doctype` -> `aura_amd_track3_cli.py:187`, `aura_coding_arena/index.html:1`, `aura_efficiency_report.py:124`, `aura_human_agent_arena/index.html:1`
 - `!empirical_lab` -> `USER_GUIDE.md:949`, `aura_node.py:6230`
 - `!evolve_reasoning` -> `AURA_FINAL_REPORT.md:157`, `USER_GUIDE.md:934`, `aura_node.py:7301`
@@ -94,37 +69,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!forager_off` -> `aura_node.py:6582`
 - `!forager_on` -> `aura_node.py:6576`
 - `!fusion` -> `AURA_FINAL_REPORT.md:31`, `USER_GUIDE.md:978`, `aura_fusion.py:384`, `aura_node.py:7518`
-- `!g` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!hPgi2Jk25Rihp` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!heal` -> `aura_node.py:5209`
 - `!help` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `USER_GUIDE.md:917`, `aura_node.py:7668`
-- `!hlY` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!important` -> `aura_human_agent_arena/jarvis.css:107`, `index.html:9`
 - `!indus_decrypt` -> `AURA_FINAL_REPORT.md:175`, `aura_node.py:7313`
 - `!invalid_base64` -> `test_scientific_memory.py:972`
-- `!j` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!ju` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!l` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!mVT` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!manifest` -> `AURA_FINAL_REPORT.md:138`, `USER_GUIDE.md:917`, `aura_node.py:7668`
 - `!markov` -> `AURA_FINAL_REPORT.md:144`, `USER_GUIDE.md:994`, `aura_node.py:7504`
 - `!mesh_status` -> `AURA_FINAL_REPORT.md:167`, `USER_GUIDE.md:982`, `aura_capability_lane_registry.py:158`, `aura_node.py:5649`
 - `!meta_analyze` -> `USER_GUIDE.md:935`, `aura_node.py:7352`
 - `!meta_reason` -> `AURA_FINAL_REPORT.md:155`, `USER_GUIDE.md:936`, `aura_arch_reasoner.py:93`, `aura_node.py:7377`
-- `!mi` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!nIPcE` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!oMh` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!oS-` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!olx` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!optimize` -> `AURA_FINAL_REPORT.md:172`, `USER_GUIDE.md:951`, `aura_node.py:5931`
 - `!ping_mesh` -> `AURA_FINAL_REPORT.md:166`, `USER_GUIDE.md:983`, `aura_capability_lane_registry.py:158`, `aura_node.py:5644`
 - `!plan` -> `aura_affordance_directory.py:440`, `aura_node.py:5602`
-- `!poP` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!push` -> `USER_GUIDE.md:992`, `aura_node.py:5166`, `test_aura_functions.py:207`
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!r` -> `aura_arena_wfst_compiler.py:181`, `aura_capsule_trial_types.py:50`, `aura_civic_planning_inventory.py:63`, `aura_ephemeral_adapter_registry.py:134`
-- `!rGQ3s` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!rZHQl5Yg4a` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `USER_GUIDE.md:931`, `aura_node.py:7492`
 - `!repair_db` -> `USER_GUIDE.md:993`, `aura_node.py:6979`
 - `!research` -> `AURA_FINAL_REPORT.md:142`, `USER_GUIDE.md:965`, `aura_affordance_directory.py:461`, `aura_capability_lane_registry.py:120`
@@ -152,7 +112,6 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!strategy_buffer_stats` -> `USER_GUIDE.md:933`, `aura_coordinated_solver.py:69`, `aura_node.py:7476`
 - `!synthesize` -> `USER_GUIDE.md:971`, `aura_associative_core.py:141`, `aura_node.py:6896`, `test_aura_functions.py:913`
 - `!system_audit` -> `USER_GUIDE.md:940`, `aura_node.py:6184`
-- `!tHuo` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!target_bytes` -> `cognitive_search.rs:72`
 - `!test` -> `AuraOS.tex:533`, `tests/test_aura_codemap_verify.py:57`
 - `!test_airlock` -> `USER_GUIDE.md:942`, `aura_node.py:5614`
@@ -161,11 +120,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!topology` -> `AURA_FINAL_REPORT.md:48`, `SYNTAX_FIXES_APPLIED.md:107`, `USER_GUIDE.md:920`, `aura_affordance_directory.py:146`
 - `!topology_deep` -> `USER_GUIDE.md:921`, `aura_affordance_directory.py:146`, `aura_node.py:7231`
 - `!total` -> `aura_savings_dashboard.py:223`
-- `!v` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 - `!voice` -> `USER_GUIDE.md:995`, `aura_node.py:7731`
-- `!xNNN2` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!xZNgv` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
-- `!zqsDBwn3aI` -> `benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py:16`
 
 ## Navigation Rings
 
