@@ -1,0 +1,72 @@
+name: Architect External LLM Slice Sessions
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "analysis/**"
+      - "refactor/**"
+      - main
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  slice-session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install focused tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "pytest>=8.0,<9.0"
+      - name: Compile slice-session surfaces
+        run: |
+          python -m py_compile \
+            aura_external_llm_session.py \
+            aura_agent_arena_mcp_external_llm.py \
+            tests/test_aura_external_llm_session.py
+      - name: Run focused slice-session tests
+        run: |
+          python -m pytest -q tests/test_aura_external_llm_session.py
+      - name: Verify additive MCP discovery
+        run: |
+          python aura_agent_arena_mcp_external_llm.py --list-tools > external-llm-tools.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          tools = json.loads(Path("external-llm-tools.json").read_text(encoding="utf-8"))
+          names = {tool["name"] for tool in tools}
+          required = {
+              "aura_repo_digest",
+              "aura_prepare_arena",
+              "aura_read_slice",
+              "aura_stage_patch",
+              "aura_verify_arena",
+              "aura_repair_packet",
+              "aura_llm_session_open",
+              "aura_llm_session_next",
+              "aura_llm_session_submit",
+              "aura_llm_session_status",
+              "aura_llm_session_export",
+          }
+          missing = sorted(required - names)
+          assert not missing, missing
+          PY
+      - name: Upload tool manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: architect-external-llm-tools
+          path: external-llm-tools.json
+          if-no-files-found: error
+          retention-days: 14
