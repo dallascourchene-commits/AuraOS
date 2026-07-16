@@ -176,6 +176,7 @@ jobs:
           source = Path("benchmarks/real_refactor_trial/plans.json")
           payload = json.loads(source.read_text(encoding="utf-8"))
           permanent_review_files = {
+              ".github/workflows/architect-refactor-v2-tests.yml",
               ".github/workflows/sync-analysis-codemap.yml",
               "README.md",
               "aura_external_llm_session.py",
