@@ -57,7 +57,7 @@ TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".json", ".lexc", 
 DEFAULT_INDEX_PATH = Path(".aura/CODEMAP.json")
 DEFAULT_MARKDOWN_PATH = Path(".aura/CODEMAP.md")
 DEFAULT_TOPOLOGY_PATH = Path("Aura_Memory/live_topology_ast.json")
-GENERATED_MAP_FILES = {DEFAULT_INDEX_PATH.as_posix(), DEFAULT_MARKDOWN_PATH.as_posix()}
+GENERATED_MAP_FILES = {DEFAULT_INDEX_PATH.as_posix(), DEFAULT_MARKDOWN_PATH.as_posix(), "topology_map.json"}
 VECTOR_DIMS = 32
 MAX_SYMBOLS_PER_FILE = 80
 
