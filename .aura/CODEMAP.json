@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784185360,
+  "generated_at_unix": 1784185483,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 977,
+    "included_file_count": 978,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -870,6 +870,7 @@
       "tests/test_aura_cockpit_planner.py",
       "tests/test_aura_cockpit_swarm.py",
       "tests/test_aura_code_region_ranker.py",
+      "tests/test_aura_codebase_navigator_generated_outputs.py",
       "tests/test_aura_codemap_verify.py",
       "tests/test_aura_coding_arena_3d.py",
       "tests/test_aura_coding_arena_grounding.py",
@@ -999,23 +1000,23 @@
     ]
   },
   "summary": {
-    "file_count": 977,
-    "total_bytes": 50555119,
-    "text_tokens_est": 3242696,
+    "file_count": 978,
+    "total_bytes": 50556028,
+    "text_tokens_est": 3242924,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 13,
       "knowledge_artifact": 132,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 681,
+      "python_module": 682,
       "schema_or_lexicon": 95,
       "support_file": 41
     },
     "topology_nodes": 8077,
     "topology_edges": 17607,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 20906.09
+    "elapsed_ms": 20783.84
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1162,6 +1163,7 @@
       "aura_topology_ws_bridge.py",
       "spatial_mapper.py",
       "test_vsa_ast_topology.py",
+      "tests/test_aura_codebase_navigator_generated_outputs.py",
       "tests/test_aura_topological_context_anchor.py",
       "tests/test_aura_topology_health.py"
     ],
@@ -72670,6 +72672,16 @@
         "end_line": 109,
         "semantic_id": "tests/test_aura_ai_router_dynamic.py#function:test_generated_markdown_is_cold_fallback_only:6402070008537022",
         "signature_hash": "57fe59a17018030c"
+      }
+    ],
+    "test_generated_topology_map_is_excluded_from_full_repository_scan": [
+      {
+        "file": "tests/test_aura_codebase_navigator_generated_outputs.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_codebase_navigator_generated_outputs.py#function:test_generated_topology_map_is_excluded_from_full_repository_scan:69d08f44ee5c1ad7",
+        "signature_hash": "fd4fe72858b633ed"
       }
     ],
     "test_generated_topology_package_and_retained_overlap_are_rejected": [
@@ -147365,6 +147377,52 @@
         -0.074323,
         0.177232,
         -0.291575
+      ]
+    },
+    {
+      "path": "tests/test_aura_codebase_navigator_generated_outputs.py",
+      "role": "python_module",
+      "bytes": 909,
+      "lines": 25,
+      "tokens_est": 228,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d156ad17eadce769",
+      "vector": [
+        -0.129653,
+        -0.056645,
+        0.099443,
+        0.174969,
+        0.21525,
+        0.031469,
+        -0.268118,
+        0.174969,
+        0.167417,
+        -0.169934,
+        -0.283224,
+        -0.253013,
+        0.159864,
+        0.159864,
+        -0.041539,
+        -0.185039,
+        -0.06168,
+        -0.290776,
+        -0.114548,
+        -0.147276,
+        -0.021399,
+        0.308399,
+        -0.109513,
+        -0.308399,
+        0.122101,
+        0.023917,
+        -0.104478,
+        0.114548,
+        0.001259,
+        -0.099443,
+        -0.162381,
+        -0.315952
       ]
     },
     {
