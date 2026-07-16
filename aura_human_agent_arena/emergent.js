@@ -9,6 +9,7 @@
 
   let findings = [];
   let selectedFindingIds = new Set();
+  let selectedResearchEvidenceIds = new Set();
 
   async function api(path, body) {
     const options = body === undefined ? {} : {
@@ -145,6 +146,7 @@
     const result = await api('/api/human-agent/emergent/refactor-packet', {
       objective,
       finding_ids: [...selectedFindingIds],
+      research_evidence_ids: [...selectedResearchEvidenceIds],
     });
     const host = $('emergent-packet');
     if (host) {
@@ -178,6 +180,8 @@
       sidecar_limit: 2,
       finding_ids: [...selectedFindingIds],
     });
+    const storedEvidenceId = result.stored_evidence?.evidence_id;
+    if (storedEvidenceId) selectedResearchEvidenceIds.add(storedEvidenceId);
     renderResearchResults(result);
     setStatus(result.ok
       ? `${result.count || 0} ${provider} results stored as external evidence.`
@@ -216,11 +220,21 @@
     if (!host) return;
     try {
       const result = await api('/api/human-agent/research/evidence?limit=20');
-      host.innerHTML = (result.evidence || []).map(item => `
-        <article class="evidence-index-card">
+      host.innerHTML = (result.evidence || []).map(item => {
+        const checked = selectedResearchEvidenceIds.has(item.evidence_id) ? 'checked' : '';
+        return `<article class="evidence-index-card">
+          <label class="finding-select"><input type="checkbox" ${checked} data-select-evidence="${escape(item.evidence_id)}"> attach</label>
           <strong>${escape(item.provider)} · ${escape(item.query)}</strong>
           <small>${Number(item.result_count || 0)} results · ${escape(item.evidence_id)}</small>
-        </article>`).join('') || '<p class="placeholder">No research evidence stored yet.</p>';
+        </article>`;
+      }).join('') || '<p class="placeholder">No research evidence stored yet.</p>';
+      host.querySelectorAll('[data-select-evidence]').forEach(input => {
+        input.addEventListener('change', event => {
+          const evidenceId = event.currentTarget.dataset.selectEvidence;
+          if (event.currentTarget.checked) selectedResearchEvidenceIds.add(evidenceId);
+          else selectedResearchEvidenceIds.delete(evidenceId);
+        });
+      });
     } catch (error) {
       host.textContent = `Evidence index unavailable: ${error.message}`;
     }

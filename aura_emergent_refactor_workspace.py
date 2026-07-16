@@ -200,7 +200,10 @@ class EmergentResultsStore:
         }
 
     def get_run(self, run_id: str) -> dict[str, Any]:
-        safe_id = _safe_identifier(run_id, prefix="EMR-")
+        try:
+            safe_id = _safe_identifier(run_id, prefix="EMR-")
+        except ValueError:
+            return {"ok": False, "error": "invalid_emergent_run_id", "run_id": str(run_id or "")}
         path = self.runs_dir / f"{safe_id}.json"
         if not path.exists():
             return {"ok": False, "error": "emergent_run_not_found", "run_id": safe_id}
@@ -233,7 +236,6 @@ class EmergentResultsStore:
                         finding.emergent_ability,
                         finding.missing_wire,
                         finding.status,
-                        finding.focus,
                         finding.source.get("file", ""),
                         finding.source.get("symbol", ""),
                         finding.target.get("file", ""),
@@ -243,13 +245,17 @@ class EmergentResultsStore:
                 )
                 candidate_tokens = set(_tokens(text))
                 overlap = len(query_tokens & candidate_tokens)
-                coverage = overlap / max(1, len(query_tokens)) if query_tokens else 1.0
-                exact_bonus = 0.35 if query_text and query_text.lower() in text.lower() else 0.0
-                status_bonus = 0.25 if finding.status.upper() == "FUTURE_PATCHABLE" else 0.0
-                evidence_bonus = min(0.25, finding.evidence_count * 0.025)
-                rank = coverage + exact_bonus + status_bonus + evidence_bonus + min(0.35, finding.score / 12.0)
-                if query_tokens and overlap == 0:
+                query_size = len(query_tokens)
+                coverage = overlap / max(1, query_size) if query_tokens else 1.0
+                min_overlap = 1 if query_size <= 2 else 2
+                min_coverage = 0.20 if query_size <= 2 else 0.34
+                if query_tokens and (overlap < min_overlap or coverage < min_coverage):
                     continue
+                exact_bonus = 0.50 if query_text and query_text.lower() in text.lower() else 0.0
+                status_bonus = 0.10 if finding.status.upper() == "FUTURE_PATCHABLE" else 0.0
+                evidence_bonus = min(0.10, finding.evidence_count * 0.01)
+                emergence_bonus = min(0.10, max(0.0, finding.score) / 40.0)
+                rank = coverage * 4.0 + exact_bonus + status_bonus + evidence_bonus + emergence_bonus
                 ranked.append((rank, finding))
         ranked.sort(key=lambda item: (-item[0], -item[1].score, item[1].finding_id))
         bounded = ranked[: max(1, min(int(limit), 100))]
@@ -277,6 +283,27 @@ class EmergentResultsStore:
                         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
                     }
         return {"ok": False, "error": "emergent_finding_not_found", "finding_id": needle}
+
+    def _research_evidence_ids_for_findings(
+        self,
+        finding_ids: Sequence[str],
+        *,
+        limit: int = 100,
+    ) -> list[str]:
+        needles = {str(item) for item in finding_ids if str(item).strip()}
+        if not needles:
+            return []
+        rows = [
+            row
+            for row in _read_jsonl(self.research_index)
+            if needles & {str(item) for item in row.get("linked_finding_ids", []) if item}
+        ]
+        rows.sort(key=lambda item: float(item.get("stored_at", 0.0)), reverse=True)
+        return _unique(
+            str(row.get("evidence_id") or "")
+            for row in rows[: max(1, min(int(limit), 500))]
+            if row.get("evidence_id")
+        )
 
     def build_refactor_packet(
         self,
@@ -349,24 +376,52 @@ class EmergentResultsStore:
                     }
                 )
 
-        linked_research = [
-            item
-            for evidence_id in research_evidence_ids
-            if (item := self.get_research_evidence(str(evidence_id))).get("ok")
+        selected_finding_ids = [
+            str(item.get("finding_id") or "") for item in selected if item.get("finding_id")
         ]
+        auto_research_ids = self._research_evidence_ids_for_findings(selected_finding_ids)
+        linked_research_ids = _unique(
+            [
+                *[str(item) for item in research_evidence_ids if str(item).strip()],
+                *auto_research_ids,
+            ]
+        )
+        linked_research: list[dict[str, Any]] = []
+        for evidence_id in linked_research_ids:
+            item = self.get_research_evidence(str(evidence_id))
+            if item.get("ok"):
+                linked_research.append(item)
+        research_evidence = [
+            dict(item.get("evidence") or {}) for item in linked_research if item.get("evidence")
+        ]
+        evidence_ids_by_finding: dict[str, list[str]] = {}
+        for evidence in research_evidence:
+            evidence_id = str(evidence.get("evidence_id") or "")
+            for finding_id in evidence.get("linked_finding_ids", []) or []:
+                if evidence_id:
+                    evidence_ids_by_finding.setdefault(str(finding_id), []).append(evidence_id)
+        for gap in research_gaps:
+            finding_id = str(gap.get("finding_id") or "")
+            linked_ids = _unique(evidence_ids_by_finding.get(finding_id, []))
+            gap["linked_research_evidence_ids"] = linked_ids
+            gap["status"] = (
+                "EVIDENCE_FOUND_REQUIRES_LOCAL_VERIFICATION" if linked_ids else "OPEN"
+            )
+
         payload = {
             "workspace_version": WORKSPACE_VERSION,
             "objective": objective_text,
             "created_at": time.time(),
             "selected_findings": selected,
-            "selected_finding_ids": [item.get("finding_id") for item in selected],
+            "selected_finding_ids": selected_finding_ids,
             "target_files": target_files,
             "target_symbols": target_symbols,
             "missing_wires": missing_wires,
             "required_tests": required_tests,
             "acceptance_criteria": _unique(acceptance_criteria),
             "research_gaps": research_gaps,
-            "research_evidence": [item.get("evidence") for item in linked_research],
+            "research_evidence_ids": linked_research_ids,
+            "research_evidence": research_evidence,
             "external_evidence_is_patch_authority": False,
             "local_verification_required": True,
             "human_approval_required": True,
@@ -451,7 +506,14 @@ class EmergentResultsStore:
         }
 
     def get_research_evidence(self, evidence_id: str) -> dict[str, Any]:
-        safe_id = _safe_identifier(evidence_id, prefix="ERE-")
+        try:
+            safe_id = _safe_identifier(evidence_id, prefix="ERE-")
+        except ValueError:
+            return {
+                "ok": False,
+                "error": "invalid_research_evidence_id",
+                "evidence_id": str(evidence_id or ""),
+            }
         path = self.research_dir / f"{safe_id}.json"
         if not path.exists():
             return {"ok": False, "error": "research_evidence_not_found", "evidence_id": safe_id}

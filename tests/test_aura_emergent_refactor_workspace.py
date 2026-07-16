@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,7 @@ from aura_arena_research_bridge import (
 )
 from aura_emergent_refactor_workspace import EmergentResultsStore
 from aura_human_agent_arena_server import (
+    AuraThreadingHTTPServer,
     HumanAgentArenaServerState,
     _attach_emergent_refactor_context,
     _prepare_payload_with_emergent_context,
@@ -336,3 +338,46 @@ def test_state_endpoint_exposes_emergent_workspace(tmp_path: Path):
     assert result["emergent_workspace"]["total"] >= 1
     assert result["patch_authority"] == "exact_source_spans_and_hashes_only"
     assert result["vsa_patch_authority"] is False
+
+
+
+def test_review_fixes_rank_link_and_thread(tmp_path: Path):
+    store = EmergentResultsStore(tmp_path)
+    seed_root = Path(__file__).resolve().parents[1] / "Aura_Memory" / "emergent_results" / "seed_runs" / "2026-07-16"
+    store.store_report(json.loads((seed_root / "emergent_capacity_probes.json").read_text(encoding="utf-8")))
+    store.store_report(json.loads((seed_root / "grounded_capacity_projections.json").read_text(encoding="utf-8")))
+
+    ranked = store.search_findings("Refactor the Human Agent Arena", limit=8)
+    assert ranked["count"] > 0
+    top_files = [
+        " ".join(
+            [
+                str((item.get("source") or {}).get("file") or ""),
+                str((item.get("target") or {}).get("file") or ""),
+            ]
+        ).lower()
+        for item in ranked["findings"][:3]
+    ]
+    assert any("human_agent" in files for files in top_files), ranked["findings"][:3]
+    assert not all("coding_arena" in files and "human_agent" not in files for files in top_files)
+
+    sample_store = EmergentResultsStore(tmp_path / "linked")
+    sample_store.store_report(sample_report(), source="test")
+    finding = sample_store.search_findings("Human Agent Arena research", limit=1)["findings"][0]
+    stored = sample_store.store_research_evidence(
+        provider="arxiv",
+        query="human agent arena verification",
+        results=[{"arxiv_id": "2601.00001", "title": "Arena verification"}],
+        linked_finding_ids=[finding["finding_id"]],
+    )
+    packet = sample_store.build_refactor_packet(
+        "Refactor the Human Agent Arena",
+        finding_ids=[finding["finding_id"]],
+    )["packet"]
+    assert stored["evidence_id"] in packet["research_evidence_ids"]
+    assert packet["research_evidence"][0]["evidence_id"] == stored["evidence_id"]
+
+    assert issubclass(AuraThreadingHTTPServer, ThreadingHTTPServer)
+    assert AuraThreadingHTTPServer.daemon_threads is True
+    assert sample_store.get_run("invalid")["error"] == "invalid_emergent_run_id"
+    assert sample_store.get_research_evidence("invalid")["error"] == "invalid_research_evidence_id"

@@ -18,7 +18,7 @@ production mutation. External evidence never grants patch authority.
 from __future__ import annotations
 
 import argparse
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
 from pathlib import Path
@@ -37,6 +37,13 @@ FRONTEND_DIR = Path(__file__).resolve().parent / "aura_human_agent_arena"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_4"
+
+
+class AuraThreadingHTTPServer(ThreadingHTTPServer):
+    """Serve slow research requests without freezing the Arena control surface."""
+
+    daemon_threads = True
+    allow_reuse_address = True
 
 
 class HumanAgentArenaServerState:
@@ -715,9 +722,9 @@ def serve(
     host: str = DEFAULT_HOST,
     port: int = DEFAULT_PORT,
     demo: bool = False,
-) -> HTTPServer:
+) -> AuraThreadingHTTPServer:
     state = HumanAgentArenaServerState(repo_root, demo=demo)
-    server = HTTPServer((host, int(port)), make_handler(state))
+    server = AuraThreadingHTTPServer((host, int(port)), make_handler(state))
     print(f"Aura Human Agent Arena listening on http://{host}:{port}")
     print("Guarded Human and Coding WFST workflows are active.")
     print("Stored emergent evidence and bounded arXiv/GitHub research are active.")
