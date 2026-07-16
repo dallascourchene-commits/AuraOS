@@ -58,7 +58,13 @@ _EXACT_TRUTH_CLASSES = frozenset(
 )
 
 
-def _text(value: Any, name: str, *, optional: bool = False, maximum: int = 240) -> str | None:
+def _text(
+    value: Any,
+    name: str,
+    *,
+    optional: bool = False,
+    maximum: int = 240,
+) -> str | None:
     if value is None and optional:
         return None
     if type(value) is not str or not value.strip():
@@ -111,11 +117,18 @@ def _currency(value: Any, name: str = "currency") -> str:
     return result
 
 
-def _decimal(value: Any, name: str, *, non_negative: bool = False, positive: bool = False) -> str:
+def _decimal(
+    value: Any,
+    name: str,
+    *,
+    non_negative: bool = False,
+    positive: bool = False,
+) -> str:
     if type(value) is bool or isinstance(value, float):
         raise ValueError(f"{name} must not use binary floating-point")
     if not isinstance(value, (str, int, Decimal)):
         raise ValueError(f"{name} must be supplied as str, int, or Decimal")
+    candidate: str | int | Decimal
     if isinstance(value, str):
         candidate = value.strip()
         if not candidate:
@@ -155,7 +168,9 @@ def _exact_truth(value: Any, name: str) -> FinancialTruthClass:
     result = _enum(value, FinancialTruthClass, name)
     assert isinstance(result, FinancialTruthClass)
     if result not in _EXACT_TRUTH_CLASSES:
-        raise ValueError(f"{name} must identify user-recorded or exactly imported evidence")
+        raise ValueError(
+            f"{name} must identify user-recorded or exactly imported evidence"
+        )
     return result
 
 
@@ -166,7 +181,11 @@ class ExactMoney:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "amount", _decimal(self.amount, "money.amount"))
-        object.__setattr__(self, "currency", _currency(self.currency, "money.currency"))
+        object.__setattr__(
+            self,
+            "currency",
+            _currency(self.currency, "money.currency"),
+        )
 
     @property
     def decimal(self) -> Decimal:
@@ -182,8 +201,16 @@ class ExactRate:
     basis: FinancialRateBasis = FinancialRateBasis.FRACTION_PER_YEAR
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "value", _decimal(self.value, "rate.value", non_negative=True))
-        object.__setattr__(self, "basis", _enum(self.basis, FinancialRateBasis, "rate.basis"))
+        object.__setattr__(
+            self,
+            "value",
+            _decimal(self.value, "rate.value", non_negative=True),
+        )
+        object.__setattr__(
+            self,
+            "basis",
+            _enum(self.basis, FinancialRateBasis, "rate.basis"),
+        )
 
     @property
     def decimal(self) -> Decimal:
@@ -205,15 +232,51 @@ class FinancialAccount:
     truth_class: FinancialTruthClass
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "account_id", _text(self.account_id, "account.account_id"))
-        object.__setattr__(self, "kind", _enum(self.kind, FinancialAccountKind, "account.kind"))
-        object.__setattr__(self, "currency", _currency(self.currency, "account.currency"))
-        object.__setattr__(self, "authority_owner", _text(self.authority_owner, "account.authority_owner"))
-        object.__setattr__(self, "opened_on", _iso_date(self.opened_on, "account.opened_on", optional=True))
-        object.__setattr__(self, "closed_on", _iso_date(self.closed_on, "account.closed_on", optional=True))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "account.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "account.truth_class"))
-        if self.opened_on and self.closed_on and _date_value(self.closed_on) < _date_value(self.opened_on):
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "account.account_id"),
+        )
+        object.__setattr__(
+            self,
+            "kind",
+            _enum(self.kind, FinancialAccountKind, "account.kind"),
+        )
+        object.__setattr__(
+            self,
+            "currency",
+            _currency(self.currency, "account.currency"),
+        )
+        object.__setattr__(
+            self,
+            "authority_owner",
+            _text(self.authority_owner, "account.authority_owner"),
+        )
+        object.__setattr__(
+            self,
+            "opened_on",
+            _iso_date(self.opened_on, "account.opened_on", optional=True),
+        )
+        object.__setattr__(
+            self,
+            "closed_on",
+            _iso_date(self.closed_on, "account.closed_on", optional=True),
+        )
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "account.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "account.truth_class"),
+        )
+        if (
+            self.opened_on
+            and self.closed_on
+            and _date_value(self.closed_on) < _date_value(self.opened_on)
+        ):
             raise ValueError("account.closed_on cannot precede account.opened_on")
 
     def to_dict(self) -> dict[str, Any]:
@@ -239,13 +302,29 @@ class BalanceRecord:
     truth_class: FinancialTruthClass
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "balance_id", _text(self.balance_id, "balance.balance_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "balance.account_id"))
+        object.__setattr__(
+            self,
+            "balance_id",
+            _text(self.balance_id, "balance.balance_id"),
+        )
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "balance.account_id"),
+        )
         if not isinstance(self.money, ExactMoney):
             raise ValueError("balance.money must be ExactMoney")
         object.__setattr__(self, "as_of", _iso_date(self.as_of, "balance.as_of"))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "balance.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "balance.truth_class"))
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "balance.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "balance.truth_class"),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -270,17 +349,49 @@ class TransactionRecord:
     truth_class: FinancialTruthClass
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "transaction_id", _text(self.transaction_id, "transaction.transaction_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "transaction.account_id"))
+        object.__setattr__(
+            self,
+            "transaction_id",
+            _text(self.transaction_id, "transaction.transaction_id"),
+        )
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "transaction.account_id"),
+        )
         if not isinstance(self.money, ExactMoney) or self.money.decimal <= 0:
             raise ValueError("transaction.money must be positive ExactMoney")
-        object.__setattr__(self, "direction", _enum(self.direction, FinancialDirection, "transaction.direction"))
-        object.__setattr__(self, "effective_on", _iso_date(self.effective_on, "transaction.effective_on"))
-        object.__setattr__(self, "posted_on", _iso_date(self.posted_on, "transaction.posted_on", optional=True))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "transaction.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "transaction.truth_class"))
-        if self.posted_on and _date_value(self.posted_on) < _date_value(self.effective_on):
-            raise ValueError("transaction.posted_on cannot precede transaction.effective_on")
+        object.__setattr__(
+            self,
+            "direction",
+            _enum(self.direction, FinancialDirection, "transaction.direction"),
+        )
+        object.__setattr__(
+            self,
+            "effective_on",
+            _iso_date(self.effective_on, "transaction.effective_on"),
+        )
+        object.__setattr__(
+            self,
+            "posted_on",
+            _iso_date(self.posted_on, "transaction.posted_on", optional=True),
+        )
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "transaction.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "transaction.truth_class"),
+        )
+        if self.posted_on and _date_value(self.posted_on) < _date_value(
+            self.effective_on
+        ):
+            raise ValueError(
+                "transaction.posted_on cannot precede transaction.effective_on"
+            )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -307,13 +418,33 @@ class CashFlowRecord:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "flow_id", _text(self.flow_id, "cash_flow.flow_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "cash_flow.account_id"))
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "cash_flow.account_id"),
+        )
         if not isinstance(self.money, ExactMoney) or self.money.decimal <= 0:
             raise ValueError("cash_flow.money must be positive ExactMoney")
-        object.__setattr__(self, "direction", _enum(self.direction, FinancialDirection, "cash_flow.direction"))
-        object.__setattr__(self, "effective_on", _iso_date(self.effective_on, "cash_flow.effective_on"))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "cash_flow.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "cash_flow.truth_class"))
+        object.__setattr__(
+            self,
+            "direction",
+            _enum(self.direction, FinancialDirection, "cash_flow.direction"),
+        )
+        object.__setattr__(
+            self,
+            "effective_on",
+            _iso_date(self.effective_on, "cash_flow.effective_on"),
+        )
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "cash_flow.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "cash_flow.truth_class"),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -341,18 +472,44 @@ class DebtTerms:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "debt_id", _text(self.debt_id, "debt.debt_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "debt.account_id"))
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "debt.account_id"),
+        )
         if not isinstance(self.principal, ExactMoney) or self.principal.decimal < 0:
             raise ValueError("debt.principal must be non-negative ExactMoney")
         if not isinstance(self.annual_rate, ExactRate):
             raise ValueError("debt.annual_rate must be ExactRate")
-        object.__setattr__(self, "effective_on", _iso_date(self.effective_on, "debt.effective_on"))
-        object.__setattr__(self, "maturity_on", _iso_date(self.maturity_on, "debt.maturity_on", optional=True))
-        if self.payment is not None and (not isinstance(self.payment, ExactMoney) or self.payment.decimal < 0):
-            raise ValueError("debt.payment must be non-negative ExactMoney when present")
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "debt.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "debt.truth_class"))
-        if self.maturity_on and _date_value(self.maturity_on) < _date_value(self.effective_on):
+        object.__setattr__(
+            self,
+            "effective_on",
+            _iso_date(self.effective_on, "debt.effective_on"),
+        )
+        object.__setattr__(
+            self,
+            "maturity_on",
+            _iso_date(self.maturity_on, "debt.maturity_on", optional=True),
+        )
+        if self.payment is not None and (
+            not isinstance(self.payment, ExactMoney) or self.payment.decimal < 0
+        ):
+            raise ValueError(
+                "debt.payment must be non-negative ExactMoney when present"
+            )
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "debt.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "debt.truth_class"),
+        )
+        if self.maturity_on and _date_value(self.maturity_on) < _date_value(
+            self.effective_on
+        ):
             raise ValueError("debt.maturity_on cannot precede debt.effective_on")
         if self.payment is not None and self.payment.currency != self.principal.currency:
             raise ValueError("debt payment and principal currencies must match")
@@ -381,13 +538,29 @@ class AssetValue:
     truth_class: FinancialTruthClass
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "valuation_id", _text(self.valuation_id, "asset.valuation_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "asset.account_id"))
+        object.__setattr__(
+            self,
+            "valuation_id",
+            _text(self.valuation_id, "asset.valuation_id"),
+        )
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "asset.account_id"),
+        )
         if not isinstance(self.money, ExactMoney):
             raise ValueError("asset.money must be ExactMoney")
         object.__setattr__(self, "as_of", _iso_date(self.as_of, "asset.as_of"))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "asset.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "asset.truth_class"))
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "asset.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "asset.truth_class"),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -411,12 +584,28 @@ class FeeRecord:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "fee_id", _text(self.fee_id, "fee.fee_id"))
-        object.__setattr__(self, "account_id", _text(self.account_id, "fee.account_id"))
+        object.__setattr__(
+            self,
+            "account_id",
+            _text(self.account_id, "fee.account_id"),
+        )
         if not isinstance(self.money, ExactMoney) or self.money.decimal < 0:
             raise ValueError("fee.money must be non-negative ExactMoney")
-        object.__setattr__(self, "effective_on", _iso_date(self.effective_on, "fee.effective_on"))
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "fee.source_refs"))
-        object.__setattr__(self, "truth_class", _exact_truth(self.truth_class, "fee.truth_class"))
+        object.__setattr__(
+            self,
+            "effective_on",
+            _iso_date(self.effective_on, "fee.effective_on"),
+        )
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "fee.source_refs"),
+        )
+        object.__setattr__(
+            self,
+            "truth_class",
+            _exact_truth(self.truth_class, "fee.truth_class"),
+        )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -440,16 +629,32 @@ class TaxAssumption:
     truth_class: FinancialTruthClass = FinancialTruthClass.ASSUMPTION
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "assumption_id", _text(self.assumption_id, "tax.assumption_id"))
-        object.__setattr__(self, "jurisdiction_ref", _text(self.jurisdiction_ref, "tax.jurisdiction_ref"))
-        object.__setattr__(self, "effective_on", _iso_date(self.effective_on, "tax.effective_on"))
+        object.__setattr__(
+            self,
+            "assumption_id",
+            _text(self.assumption_id, "tax.assumption_id"),
+        )
+        object.__setattr__(
+            self,
+            "jurisdiction_ref",
+            _text(self.jurisdiction_ref, "tax.jurisdiction_ref"),
+        )
+        object.__setattr__(
+            self,
+            "effective_on",
+            _iso_date(self.effective_on, "tax.effective_on"),
+        )
         if (self.rate is None) == (self.amount is None):
             raise ValueError("tax assumption must provide exactly one of rate or amount")
         if self.rate is not None and not isinstance(self.rate, ExactRate):
             raise ValueError("tax.rate must be ExactRate")
         if self.amount is not None and not isinstance(self.amount, ExactMoney):
             raise ValueError("tax.amount must be ExactMoney")
-        object.__setattr__(self, "source_refs", _strings(self.source_refs, "tax.source_refs"))
+        object.__setattr__(
+            self,
+            "source_refs",
+            _strings(self.source_refs, "tax.source_refs"),
+        )
         result = _enum(self.truth_class, FinancialTruthClass, "tax.truth_class")
         if result is not FinancialTruthClass.ASSUMPTION:
             raise ValueError("tax assumption truth_class must be ASSUMPTION")
@@ -468,14 +673,15 @@ class TaxAssumption:
 
 
 def _typed_tuple(value: Any, item_type: type[Any], name: str) -> tuple[Any, ...]:
-    if type(value) is not tuple or not all(isinstance(item, item_type) for item in value):
+    if type(value) is not tuple or not all(
+        isinstance(item, item_type) for item in value
+    ):
         raise ValueError(f"{name} must be a tuple of {item_type.__name__}")
     return value
 
 
 def _record_id(record: Any) -> str:
     for field in (
-        "account_id",
         "balance_id",
         "transaction_id",
         "flow_id",
@@ -489,12 +695,16 @@ def _record_id(record: Any) -> str:
     raise ValueError("financial record has no stable identity")
 
 
-def _record_date(record: Any) -> str | None:
-    for field in ("as_of", "posted_on", "effective_on"):
-        value = getattr(record, field, None)
-        if value is not None:
-            return str(value)
-    return None
+def _observed_dates(record: Any) -> tuple[str, ...]:
+    if isinstance(record, TransactionRecord):
+        values = (record.effective_on, record.posted_on)
+    elif isinstance(record, (BalanceRecord, AssetValue)):
+        values = (record.as_of,)
+    elif isinstance(record, (CashFlowRecord, DebtTerms, FeeRecord, TaxAssumption)):
+        values = (record.effective_on,)
+    else:
+        raise ValueError("unsupported financial record type")
+    return tuple(value for value in values if value is not None)
 
 
 @dataclass(frozen=True)
@@ -524,24 +734,90 @@ class FinancialLedgerSnapshot:
             raise ValueError("financial ledger ownership boundary changed")
         if self.patch_authority != FINANCIAL_PATCH_AUTHORITY:
             raise ValueError("financial patch authority changed")
-        if self.proposal_only is not True or self.execution_authority is not False or self.advice_authority is not False:
-            raise ValueError("financial exact-state contract cannot grant execution or advice authority")
-        object.__setattr__(self, "snapshot_id", _text(self.snapshot_id, "snapshot.snapshot_id"))
-        object.__setattr__(self, "as_of", _iso_date(self.as_of, "snapshot.as_of"))
-        object.__setattr__(self, "authority_owner", _text(self.authority_owner, "snapshot.authority_owner"))
-        object.__setattr__(self, "accounts", _typed_tuple(self.accounts, FinancialAccount, "snapshot.accounts"))
-        object.__setattr__(self, "balances", _typed_tuple(self.balances, BalanceRecord, "snapshot.balances"))
-        object.__setattr__(self, "transactions", _typed_tuple(self.transactions, TransactionRecord, "snapshot.transactions"))
-        object.__setattr__(self, "cash_flows", _typed_tuple(self.cash_flows, CashFlowRecord, "snapshot.cash_flows"))
-        object.__setattr__(self, "debts", _typed_tuple(self.debts, DebtTerms, "snapshot.debts"))
-        object.__setattr__(self, "asset_values", _typed_tuple(self.asset_values, AssetValue, "snapshot.asset_values"))
-        object.__setattr__(self, "fees", _typed_tuple(self.fees, FeeRecord, "snapshot.fees"))
-        object.__setattr__(self, "tax_assumptions", _typed_tuple(self.tax_assumptions, TaxAssumption, "snapshot.tax_assumptions"))
+        if (
+            self.proposal_only is not True
+            or self.execution_authority is not False
+            or self.advice_authority is not False
+        ):
+            raise ValueError(
+                "financial exact-state contract cannot grant execution or advice authority"
+            )
+        object.__setattr__(
+            self,
+            "snapshot_id",
+            _text(self.snapshot_id, "snapshot.snapshot_id"),
+        )
+        object.__setattr__(
+            self,
+            "as_of",
+            _iso_date(self.as_of, "snapshot.as_of"),
+        )
+        object.__setattr__(
+            self,
+            "authority_owner",
+            _text(self.authority_owner, "snapshot.authority_owner"),
+        )
+        object.__setattr__(
+            self,
+            "accounts",
+            _typed_tuple(self.accounts, FinancialAccount, "snapshot.accounts"),
+        )
+        object.__setattr__(
+            self,
+            "balances",
+            _typed_tuple(self.balances, BalanceRecord, "snapshot.balances"),
+        )
+        object.__setattr__(
+            self,
+            "transactions",
+            _typed_tuple(
+                self.transactions,
+                TransactionRecord,
+                "snapshot.transactions",
+            ),
+        )
+        object.__setattr__(
+            self,
+            "cash_flows",
+            _typed_tuple(self.cash_flows, CashFlowRecord, "snapshot.cash_flows"),
+        )
+        object.__setattr__(
+            self,
+            "debts",
+            _typed_tuple(self.debts, DebtTerms, "snapshot.debts"),
+        )
+        object.__setattr__(
+            self,
+            "asset_values",
+            _typed_tuple(self.asset_values, AssetValue, "snapshot.asset_values"),
+        )
+        object.__setattr__(
+            self,
+            "fees",
+            _typed_tuple(self.fees, FeeRecord, "snapshot.fees"),
+        )
+        object.__setattr__(
+            self,
+            "tax_assumptions",
+            _typed_tuple(
+                self.tax_assumptions,
+                TaxAssumption,
+                "snapshot.tax_assumptions",
+            ),
+        )
         if not self.accounts:
             raise ValueError("snapshot.accounts must not be empty")
         account_ids = tuple(item.account_id for item in self.accounts)
         if account_ids != tuple(sorted(set(account_ids))):
             raise ValueError("snapshot accounts must be unique and sorted by account_id")
+
+        snapshot_date = _date_value(self.as_of)
+        for account in self.accounts:
+            if account.authority_owner != self.authority_owner:
+                raise ValueError("account authority owner differs from snapshot authority owner")
+            if account.opened_on and _date_value(account.opened_on) > snapshot_date:
+                raise ValueError("account opening occurs after snapshot.as_of")
+
         records = (
             *self.balances,
             *self.transactions,
@@ -554,46 +830,68 @@ class FinancialLedgerSnapshot:
         record_ids = tuple(_record_id(item) for item in records)
         if len(record_ids) != len(set(record_ids)):
             raise ValueError("financial record identities must be globally unique")
+
         account_map = {item.account_id: item for item in self.accounts}
-        snapshot_date = _date_value(self.as_of)
         balance_keys: dict[tuple[str, str], str] = {}
         for record in records:
-            record_date = _record_date(record)
-            if record_date and _date_value(record_date) > snapshot_date:
-                raise ValueError(f"record {_record_id(record)} occurs after snapshot.as_of")
+            record_id = _record_id(record)
+            observed_dates = _observed_dates(record)
+            if any(_date_value(item) > snapshot_date for item in observed_dates):
+                raise ValueError(f"record {record_id} occurs after snapshot.as_of")
+
             account_id = getattr(record, "account_id", None)
             if account_id is None:
                 continue
             account = account_map.get(account_id)
             if account is None:
-                raise ValueError(f"record {_record_id(record)} references an unknown account")
+                raise ValueError(f"record {record_id} references an unknown account")
+
             money = getattr(record, "money", None)
             if money is None:
                 money = getattr(record, "principal", None)
             if isinstance(money, ExactMoney) and money.currency != account.currency:
-                raise ValueError(f"record {_record_id(record)} currency does not match its account")
-            if account.opened_on and record_date and _date_value(record_date) < _date_value(account.opened_on):
-                raise ValueError(f"record {_record_id(record)} precedes account opening")
-            if account.closed_on and record_date and _date_value(record_date) > _date_value(account.closed_on):
-                raise ValueError(f"record {_record_id(record)} follows account closure")
+                raise ValueError(
+                    f"record {record_id} currency does not match its account"
+                )
+
+            for observed_on in observed_dates:
+                observed_date = _date_value(observed_on)
+                if account.opened_on and observed_date < _date_value(account.opened_on):
+                    raise ValueError(f"record {record_id} precedes account opening")
+                if account.closed_on and observed_date > _date_value(account.closed_on):
+                    raise ValueError(f"record {record_id} follows account closure")
+
         for balance in self.balances:
             key = (balance.account_id, balance.as_of)
             prior = balance_keys.get(key)
             if prior is not None:
                 if prior != balance.money.amount:
-                    raise ValueError("contradictory balances exist for the same account and date")
-                raise ValueError("duplicate balances exist for the same account and date")
+                    raise ValueError(
+                        "contradictory balances exist for the same account and date"
+                    )
+                raise ValueError(
+                    "duplicate balances exist for the same account and date"
+                )
             balance_keys[key] = balance.money.amount
+
         for debt in self.debts:
             account = account_map[debt.account_id]
             if account.kind is not FinancialAccountKind.LIABILITY:
                 raise ValueError("debt terms must reference a LIABILITY account")
             if debt.principal.currency != account.currency:
-                raise ValueError("debt principal currency does not match its account")
+                raise ValueError(
+                    "debt principal currency does not match its account"
+                )
+
         for asset in self.asset_values:
             account = account_map[asset.account_id]
-            if account.kind not in {FinancialAccountKind.ASSET, FinancialAccountKind.INVESTMENT}:
-                raise ValueError("asset valuation must reference an ASSET or INVESTMENT account")
+            if account.kind not in {
+                FinancialAccountKind.ASSET,
+                FinancialAccountKind.INVESTMENT,
+            }:
+                raise ValueError(
+                    "asset valuation must reference an ASSET or INVESTMENT account"
+                )
 
     def to_dict(self) -> dict[str, Any]:
         return {
