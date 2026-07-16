@@ -2,16 +2,19 @@
 
 A sovereign, local-first, Arena-based cognitive operating substrate that compiles human intent into grounded, governed, temporary capability systems.
 
-**AuraOS is not an LLM.** Aura helps humans and external AI workers understand a large system, select the smallest relevant context, assemble bounded tools, verify results, retain plans and evidence, and preserve human or community authority.
+**AuraOS is not an LLM.** Aura helps humans and external AI workers understand large systems, select the smallest useful context, assemble bounded tools, verify results, preserve plans and evidence, and keep consequential authority with people or communities.
 
-Aura began as a locally controlled tutor for learning and preserving Anishinaabemowin without surrendering language data to large external platforms. That origin shaped the architecture: local control, data minimization, inspectable memory, provenance, purpose-limited egress, revocable capability leases, and governance above model convenience.
+Aura began as a locally controlled tutor for learning and preserving Anishinaabemowin without surrendering language data to large external platforms. That origin shaped the wider architecture: local control, data minimization, inspectable memory, provenance, purpose-limited egress, revocable capability leases, and governance above model convenience.
 
 The complete pre-benchmark architecture README is preserved at [`docs/README_PRE_ARCHITECT_BENCHMARK.md`](docs/README_PRE_ARCHITECT_BENCHMARK.md).
 
 ## Contents
 
 - [What Aura Does](#what-aura-does)
-- [First Architect Consolidation Benchmark](#first-architect-consolidation-benchmark)
+- [Architect Benchmark Prompt](#architect-benchmark-prompt)
+- [Planning Benchmarks](#planning-benchmarks)
+- [Council–Surgeon Hybrid Benchmark](#councilsurgeon-hybrid-benchmark)
+- [Persistent Refactor History](#persistent-refactor-history)
 - [External LLM Slice Sessions](#external-llm-slice-sessions)
 - [Architecture](#architecture)
 - [Benchmark Refactor Skeleton](#benchmark-refactor-skeleton)
@@ -34,80 +37,181 @@ Instead of giving an AI agent a giant prompt and an entire repository, Aura:
 8. stages proposed changes;
 9. runs tests, Shadow checks, and verifiers;
 10. returns bounded repair evidence when a gate fails;
-11. requires human approval for consequential promotion;
-12. records provenance, cost, state, and lifecycle receipts.
+11. escalates graph-level failures without escalating every local test failure;
+12. requires human approval for consequential promotion;
+13. records prompts, outputs, tokens, state, verification, repairs, costs, and lifecycle receipts.
 
 External models such as Hermes, Codex, OpenAI, Anthropic, Gemini, Fireworks-backed workers, or local models are **workers inside Aura's governed environment**. They are not Aura's architecture, memory, verifier, or authority.
 
-## First Architect Consolidation Benchmark
+## Architect Benchmark Prompt
 
-**Benchmark:** `AURA_ARCHITECT_CONSOLIDATION_BENCHMARK_V1`  
-**Status:** reproducible single-session pilot; plan-only; no production mutation  
-**Model fixture:** GPT-5.6 Thinking, single-session assisted pilot
-
-### Objective
+The benchmark objective was recorded exactly:
 
 > Scan the AuraOS repository and produce a grounded, staged refactor skeleton that consolidates memory, skill, capability, and agentic functions to improve the Human Agent Arena. Reuse existing Aura architecture, preserve compatibility through explicit adapters, retain plans and verifier evidence, and require human approval before mutation or promotion.
 
-The same repository snapshot, objective, JSON plan contract, and deterministic grounding rubric were used across three arms.
+The shared planning instruction was also recorded exactly:
+
+> Return JSON only. Produce a bounded Aura Architect refactor plan with fields: architecture_decision, target_file, target_symbol, act_tasks, acceptance_criteria, rollback_conditions, risk_map, constraints. Each act task must include task_id, objective, target_file, target_symbol, related_files, allowed_scope, acceptance, expected_output=UNIFIED_DIFF, and size. Use only repository facts present in the context. Prefer existing modules and explicit adapters over a new giant abstraction. The plan must persist in the Human Agent Arena, preserve verifier evidence, stage all changes, and require human approval before mutation or promotion.
+
+`AURA_ARCHITECT_CONSOLIDATION_BENCHMARK_V2` emitted a prompt manifest containing **20 exact prompt entries**: the broad-context prompt, the single sliced prompt, two planner prompts, fifteen Shadow prompts, and one Judge prompt. Each entry includes byte size, digest, estimated input/output tokens, and provider-reported token fields when available.
+
+## Planning Benchmarks
+
+**Status:** reproducible fixture-based planning benchmark; no production mutation.  
+**Model fixture:** GPT-5.6 Thinking, single-session assisted pilot.  
+**Tokens:** deterministic char/4 proxies unless provider-reported usage is available.
+
+### V2 results
 
 | Arm | Calls | Input token proxy | Output token proxy | Total token proxy | Grounded-plan quality | Normalized cost* |
 |---|---:|---:|---:|---:|---:|---:|
 | Broad-context single planner | 1 | 130,485 | 1,169 | 131,654 | 0.9550 | $0.133992 |
-| Aura-slice single planner | 1 | 13,201 | 1,667 | 14,868 | 0.9607 | $0.018202 |
-| Aura Architect Council | 12 | 90,020 | 4,121 | 94,141 | 0.9458 | $0.102383 |
+| **Aura-slice single planner** | **1** | **13,201** | **1,667** | **14,868** | **0.9607** | **$0.018202** |
+| Length-aware Architect Council V2 | 18 | 154,226 | 4,319 | 158,545 | **0.9625** | $0.167183 |
 
 \*Normalized cost uses a declared $1/M input-token proxy and $3/M output-token proxy rate card. It is derived for comparison and is **not** a provider invoice or current provider price.
 
-### Results
+### What changed from V1
 
-- Aura slices reduced input-token proxy by **89.88%** versus broad context.
-- Aura slices reduced total-token proxy by **88.71%** and normalized comparison cost by **86.42%**.
-- The sliced plan's deterministic quality changed by **+0.0057**.
-- The 12-call Council remained **28.49%** below broad context in total-token proxy and **23.59%** below it in normalized cost.
-- Council quality changed by **-0.0092** and did **not** outperform the single sliced planner.
-- The tested inventory contained **860** source/config/document files, **52,671,947** bytes, and **1,538,107** lines, with a **13,167,987** char/4 token proxy.
-- The Aura-slice input was **99.90%** below that full-repository proxy. The broad baseline was **99.01%** below it because it used a relevance-ranked 520,000-character cap rather than every repository byte.
+V1 used 12 Council calls, 94,141 total token proxy, and scored 0.9458. It exposed plan-contract loss and showed that an uncorrected Council did not beat the sliced planner.
 
-### What this supports
+Council V2:
 
-This first run supports narrow claims that Aura can replace a broad repository handoff with a much smaller exact-slice packet, preserve grounded-plan quality on this task, and measure the aggregate cost of a real multi-role Architect Council.
+- preserves `acceptance_criteria`, `rollback_conditions`, `risk_map`, `constraints`, and escalation rules;
+- classifies plans as short, medium, long, or program-scale;
+- adds sequence, continuity, and rollback Shadow review for long plans;
+- raised Council quality from **0.9458 to 0.9625**;
+- raised Council calls from **12 to 18**;
+- raised Council total token proxy from **94,141 to 158,545**.
 
-It does **not** yet establish general quality superiority, Council superiority, production refactor success, provider-billed cost savings, production readiness, consciousness, or a conclusively revolutionary architecture.
+V2 therefore produced the best planning score, **+0.0075 over broad context** and **+0.0018 over the single sliced planner**, but used **20.43% more total token proxy than broad context** and about **10.66×** the total tokens of the sliced planner.
 
-### Defects discovered
+### Where the Council token tax comes from
 
-1. **Localization drift:** generic `LOCALIZE_FIRST` candidates initially ranked civic, AMD, and server modules before the Architect/Human-Agent spine. The refined adapter now ranks exact spans, selected capability lanes, grounded affordances, objective-core files, then fallbacks.
-2. **Plan contract loss:** `ArchitectFusionCouncil._normalize_plan_spec()` did not preserve planner-level `acceptance_criteria`, `rollback_conditions`, `risk_map`, or `constraints`.
-3. **Scope false positive:** wording about “repository and source digests” was interpreted as repo-wide write authority and routed one exact task `PLAN_ONLY`.
-4. **Test-neighbor gap:** `aura_arena_experience.py::build_arena_experience` had no nearby test mapping under the current heuristic.
+| Council role | Calls | Estimated input | Estimated output |
+|---|---:|---:|---:|
+| Planner | 1 | 395 | 2,011 |
+| Alternate planner | 1 | 396 | 1,546 |
+| Shadow critics | 15 | 127,473 | 687 |
+| Judge | 1 | 25,962 | 75 |
 
-The benchmark preserves these failures as evidence. The generated skeleton remains a human-review proposal rather than refactor-ready code.
+Shadow review consumed approximately **82.6% of Council input tokens**. This identifies the next optimization target: route only the critic lanes justified by plan length, changed interfaces, risk, and prior failure evidence instead of applying every critic lane uniformly.
 
-### Measurement labels
+### Stable findings
 
-- Repository bytes, lines, file count, CODEMAP size, and call count: **MEASURED**.
-- Token values: **ESTIMATED** char/4 proxies.
-- Quality scores and normalized costs: **DERIVED**.
-- Provider-reported tokens and billed costs: **UNAVAILABLE** in this fixture run.
-- The pilot was not blinded; all role fixtures were authored in one GPT-5.6 Thinking session.
-- The values above come from the first scored workflow snapshot. The PR may receive later safety and documentation commits while retaining the same reproducible fixture and benchmark commands.
+- Aura slices reduced input-token proxy by **89.88%** and total-token proxy by **88.71%** versus broad context.
+- The sliced planner preserved quality while remaining the strongest **single-call quality-per-token** arm.
+- Council V2 improved strategic plan quality after preserving the full governance contract.
+- Council V2 is not economical for localized implementation; its value must be amortized across long, cross-system work.
+- These fixture results do not establish general model superiority, real patch quality, provider-billed savings, consciousness, or production readiness.
 
-### Reproduce
+## Council–Surgeon Hybrid Benchmark
 
-```bash
-python aura_codebase_navigator.py
-python aura_architect_consolidation_benchmark_refined.py prepare --repo-root . --output-dir benchmark-output
-python benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py --output benchmark-output/responses.gpt-5.6-thinking.json
-python aura_architect_consolidation_benchmark_refined.py score --repo-root . --output-dir benchmark-output --responses benchmark-output/responses.gpt-5.6-thinking.json --input-rate 1.0 --output-rate 3.0
-python aura_architect_benchmark_report.py --report benchmark-output/architect_consolidation_benchmark.json --responses benchmark-output/responses.gpt-5.6-thinking.json --skeleton benchmark-output/architect_consolidation_skeleton.json
+The second benchmark tests the proposed division of cognitive labor:
+
+| Vector | Single sliced planner — “The Surgeon” | Multi-agent Council — “The Board” |
+|---|---|---|
+| Optimal scope | Local implementation, single-module refactoring, pure code synthesis | Architecture, cross-domain dependencies, trade-offs, graph repair |
+| Context | Hyper-narrow slices plus compact State Ledger | System indexes, dependency trees, invariants, plan history |
+| Output | Compile-ready bounded patch capsule | Execution sequence, interfaces, invariants, rollback conditions |
+| Failure mode | Tunnel vision and missed global effects | Consensus drift, boilerplate, token tax, latency |
+
+The operating policy is:
+
+```text
+Council once → long execution graph
+Surgeon → each bounded Act Capsule
+local test failure → Surgeon local repair
+interface/dependency/invariant failure → Council replan → Surgeon resumes
 ```
 
-See [`docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md`](docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md) for full evidence and limitations.
+### Multi-step execution scaling
+
+| Steps | Turns | Estimated input | Estimated output | Provider-reported input* | Provider-reported output* | Estimated tokens per completed step |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 1 | 602 | 51 | 452 | 51 | 653.0 |
+| 4 | 5 | 3,287 | 255 | 2,513 | 255 | 885.5 |
+| 8 | 9 | 5,984 | 459 | 4,611 | 459 | 805.4 |
+| 10 | 11 | 7,405 | 562 | 5,730 | 562 | 796.7 |
+
+\*These are deterministic fixture-reported values, not provider billing records.
+
+The 4-, 8-, and 10-step cases include one forced local repair. All cases reached `READY_FOR_HUMAN_REVIEW` without production mutation.
+
+### State preservation and context drift
+
+Aura passes a lightweight State Ledger rather than replaying the full historical conversation. The ledger contains plan identity, completed/current tasks, dependency map, invariants, latest stage/verification digests, repair attempts, replan count, and execution status.
+
+For the 10-step local-repair run:
+
+| Point | State Ledger proxy | Full-history proxy | History avoided | Ledger/history ratio | State preservation | Context drift |
+|---|---:|---:|---:|---:|---:|---:|
+| Step 3 | 227 | 1,670 | 1,443 | 13.59% | 1.0000 | 0.0000 |
+| Step 7 | 234 | 6,140 | 5,906 | 3.81% | 1.0000 | 0.0000 |
+
+By step 7, the compact ledger used approximately **96.19% fewer context tokens than replaying recorded history**, while deterministic fact matching found no state loss in this synthetic test.
+
+The graph-replan case also retained a **1.0000 minimum state-preservation score** and **0.0000 maximum drift**; its step-7 ledger was 237 tokens versus 6,032 tokens of history.
+
+### Token amortization
+
+Council V2's one-time planning cost was 158,545 total token proxy.
+
+| 10-step scenario | Initial Council | Surgeon execution | Council replan | Hybrid total | Council planning amortized per step | Avoided Council-every-step tax* |
+|---|---:|---:|---:|---:|---:|---:|
+| Local failure repaired by Surgeon | 158,545 | 8,147 | 0 | 166,692 | 15,854.5 | 1,426,905 — 90.00% |
+| Graph failure escalated to Council | 158,545 | 8,115 | 2,039 | 168,699 | 15,854.5 | 1,424,866 — 89.87% |
+
+\*“Council every step” is a clearly labeled extrapolation: 158,545 planning tokens × 10 steps. It is not a measured provider run.
+
+This confirms the **accounting mechanics** of the hybrid hypothesis: one strategic Council can be amortized across many bounded implementation steps, and a graph replan can remain much smaller than rerunning the entire initial Council. It does **not yet prove** that the Council improves real multi-step patch quality; that requires provider-backed, blinded, repository-mutating-in-temporary-worktree trials.
+
+### Rollback recovery
+
+Two step-4 failures were injected:
+
+- **Local assertion failure:** routed `SURGEON_LOCAL_REPAIR`; one repair turn; no Council call; completed all 10 steps.
+- **Interface/dependency/invariant failure:** routed `ESCALATE_TO_COUNCIL_REPLAN`; no local repair; one bounded replan of 2,039 token proxy; Surgeon resumed and completed all 10 steps.
+
+The router also escalates after the local-repair budget is exhausted, even when the initial failure appeared local.
+
+## Persistent Refactor History
+
+Every recorded refactor can now preserve:
+
+- objective and plan phase hash;
+- exact redacted prompt and response evidence in content-addressed files;
+- prompt and response digests;
+- estimated input and output tokens;
+- provider-reported input/output tokens and cost when supplied;
+- Act Capsule, stage, verifier, repair, and Council-replan events;
+- State Ledger snapshots and drift measurements;
+- final outcome and human-review boundary;
+- learning notes and ArenaExperience V3 projection.
+
+The compact append-only stream is stored at:
+
+```text
+Aura_Memory/refactor_chronicle.jsonl
+```
+
+Redacted content evidence is stored separately under:
+
+```text
+Aura_Memory/refactor_evidence/
+```
+
+Benchmark runs are indexed in:
+
+```text
+Aura_Memory/benchmarks/benchmark_registry.jsonl
+```
+
+Benchmark workflows use artifact-local registries so each evidence package is independently replayable. Full histories are retained for human recall and learning, while future model turns receive the compact State Ledger rather than the entire conversation.
 
 ## External LLM Slice Sessions
 
-Aura now exposes a provider-neutral mechanism through which an external LLM can work inside the Agent Arena without downloading the repository.
+Aura exposes a provider-neutral mechanism through which an external LLM can work inside the Agent Arena without downloading the repository.
 
 ```bash
 python aura_agent_arena_mcp_external_llm.py
@@ -119,24 +223,24 @@ The additive MCP entrypoint exposes the original Agent Arena tools plus:
 |---|---|
 | `aura_llm_session_open` | Prepare an Arena and return the first leased turn |
 | `aura_llm_session_next` | Return the pending turn |
-| `aura_llm_session_submit` | Stage and verify a response, then return completion or repair |
-| `aura_llm_session_status` | Return safe public state and history |
+| `aura_llm_session_submit` | Stage and verify a response, then return completion, local repair, or replan requirement |
+| `aura_llm_session_status` | Return safe public state, token totals, and history summary |
 | `aura_llm_session_export` | Export review evidence inside Aura's staging boundary |
 
 ```text
 objective
-→ Aura prepares Arena state
-→ one Act Capsule is selected
-→ exact source and test slices are leased
+→ Aura prepares Arena state and cognitive-labor route
+→ one Act Capsule plus State Ledger is leased
 → external model returns one bounded diff
 → Aura stages and verifies
 → pass: next capsule or READY_FOR_HUMAN_REVIEW
-→ fail: bounded repair packet and repair turn
+→ local failure: bounded Surgeon repair
+→ graph/invariant failure: Council replan requirement
 ```
 
-A turn includes only the objective, role, gate, Act Capsule, exact slices, allowed files, do-not-touch files, failure evidence, output contract, and token budgets. No repository archive is included.
+A turn contains only the objective, role, gate, Act Capsule, exact source/test slices, compact State Ledger, allowed files, do-not-touch files, failure evidence, output contract, and token budgets. No repository archive is included.
 
-`run_live_architect_with_external_callback()` also lets Aura use external providers for its real planner, alternate-planner, Shadow, Judge, and worker roles without importing provider SDKs. Aura retains grounding, verification, rollback, ledger, and human-review authority.
+`run_live_architect_with_external_callback()` lets Aura use external providers for planner, alternate-planner, Shadow, Judge, and worker roles without importing provider-specific SDKs. Aura retains grounding, verification, rollback, ledger, and human-review authority.
 
 Session exports are confined to:
 
@@ -144,15 +248,20 @@ Session exports are confined to:
 Aura_Staging/external_llm_sessions/
 ```
 
-Absolute paths, parent traversal, and resolved-path escapes are rejected.
+Absolute paths, parent traversal, symlink escapes, and resolved-path escapes are rejected.
 
 Key files:
 
 - `aura_external_llm_session.py`
+- `aura_external_llm_session_recorded.py`
+- `aura_external_llm_session_persistent.py`
 - `aura_external_llm_session_safe.py`
+- `aura_refactor_state_ledger.py`
+- `aura_refactor_chronicle.py`
+- `aura_refactor_chronicle_recorded.py`
+- `aura_cognitive_labor_router.py`
+- `aura_benchmark_registry.py`
 - `aura_agent_arena_mcp_external_llm.py`
-- `tests/test_aura_external_llm_session.py`
-- `docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md`
 
 ## Architecture
 
@@ -160,12 +269,12 @@ Key files:
 HUMAN / COMMUNITY OBJECTIVE
 → intent packet and machine-FST route
 → CODEMAP, topology, manifests, affordances, capability lanes
-→ advisory VSA/DREAM/QDKT/JSpace/ST3GG cognition
-→ bounded Coding, Agent, Human Agent, Civic, or domain Arena
-→ temporary leases, Action Capsules, and boundary contracts
-→ stage, test, verify, compare, repair, or rollback
+→ Council for systemic planning when justified
+→ sliced Surgeon for bounded execution
+→ State Ledger for continuity without conversation replay
+→ stage, test, verify, repair, replan, or rollback
 → exact evidence and human/community approval
-→ experience, audit, cost, and lifecycle records
+→ refactor chronicle, benchmark registry, experience, cost, and lifecycle records
 ```
 
 Implemented surfaces include semantic LEXC routing, CODEMAP and deep topology, Capability Connectome and Genome Resolver, Coding Arena, Agent Arena Bridge, Human Agent Arena, Architect Fusion Loop, Planning Board projections, external-LLM slice sessions, Refactor Arena staging, Arena Experience and ledgers, Crucible proposal paths, Ephemeral Organ Runtime, empirical observability, Civic Commons prototypes, and Anishinaabemowin tutoring and governance.
@@ -192,7 +301,7 @@ patch_authority: exact_source_spans_and_hashes_only
 vsa_patch_authority: false
 ```
 
-Before implementation, the skeleton requires repair of Council contract preservation, scope classification, and the missing experience test mapping.
+Council V2 preserves the governance fields lost by V1. Before product integration, its normalization and length-aware critic routing must be folded into the canonical Live Architect path, the scope classifier must distinguish repository evidence from repository-wide authority, and focused tests must be mapped for the Arena Experience target.
 
 ## Truth and Safety
 
@@ -201,6 +310,18 @@ Advisory-only evidence includes model suggestions, VSA/HDC similarity, DREAM sco
 Consequential promotion requires exact source spans and hashes, valid leases, staged diff boundaries, tests, verifier evidence, topology-delta evidence, rollback information, and digest-bound human approval.
 
 The external-LLM adapter prohibits repository download through a turn, direct production mutation, automatic commit/push/merge/promotion, gate bypass, unrestricted export paths, and model or VSA output becoming patch authority.
+
+## Reproduce
+
+```bash
+python aura_codebase_navigator.py
+python aura_architect_consolidation_benchmark_v2.py prepare --repo-root . --output-dir benchmark-output
+python benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py --output benchmark-output/responses.gpt-5.6-thinking.json
+python aura_architect_consolidation_benchmark_v2.py score --repo-root . --output-dir benchmark-output --responses benchmark-output/responses.gpt-5.6-thinking.json --input-rate 1.0 --output-rate 3.0
+python aura_architect_benchmark_report.py --report benchmark-output/architect_consolidation_benchmark.json --responses benchmark-output/responses.gpt-5.6-thinking.json --skeleton benchmark-output/architect_consolidation_skeleton.json
+python aura_multistep_refactor_benchmark.py --repo-root . --output-dir benchmark-output/multistep --lengths 1,4,8,10
+python aura_hybrid_refactor_benchmark.py --repo-root . --output-dir benchmark-output/hybrid --planning-report benchmark-output/architect_consolidation_benchmark.json
+```
 
 ## Quick Start
 
@@ -213,7 +334,7 @@ python -m venv .venv
 pip install -r requirements.txt
 python aura_codebase_navigator.py
 python aura_agent_arena_mcp_external_llm.py --list-tools
-python -m pytest -q tests/test_aura_external_llm_session.py
+python -m pytest -q tests/test_aura_external_llm_session.py tests/test_aura_refactor_chronicle_and_length.py
 ```
 
 ## Documentation
@@ -222,7 +343,7 @@ python -m pytest -q tests/test_aura_external_llm_session.py
 - [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) — canonical architecture and invariants
 - [`.aura/CODEMAP.md`](.aura/CODEMAP.md) and [`.aura/CODEMAP.json`](.aura/CODEMAP.json) — human and machine code maps
 - [`USER_GUIDE.md`](USER_GUIDE.md) — operator and REPL reference
-- [`docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md`](docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md) — full benchmark
+- [`docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md`](docs/AURA_ARCHITECT_CONSOLIDATION_BENCHMARK.md) — planning benchmark evidence
 - [`docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md`](docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md) — external-model protocol
 - [`docs/AURA_AGENT_ARENA_BRIDGE.md`](docs/AURA_AGENT_ARENA_BRIDGE.md) — Agent Arena
 - [`docs/AURA_HUMAN_AGENT_ARENA.md`](docs/AURA_HUMAN_AGENT_ARENA.md) — Human Agent Arena
@@ -231,9 +352,9 @@ python -m pytest -q tests/test_aura_external_llm_session.py
 
 ## Status and Licensing
 
-AuraOS is active research and development software. The first Architect benchmark provides strong pilot evidence for slice-based context efficiency on one repository-planning task, while also showing that more multi-agent deliberation did not automatically improve quality.
+AuraOS is active research and development software. Current evidence supports slice-based context efficiency, full-contract Council planning, compact state preservation, token amortization, and selective local-repair versus graph-replan routing in reproducible fixture and synthetic tests.
 
-Remaining work includes Council contract preservation, improved scope and test mapping, persistent Human Agent plan revisions, governed Architect Experience/Crucible integration, tokenizer-exact and provider-billed blinded benchmarks, independent security review, production authentication, community data governance, and repository cleanup.
+Remaining work includes provider-backed blinded multi-step refactors in temporary worktrees, tokenizer-exact and billed-token runs, selective critic-lane optimization, canonical integration of Council V2, persistent Human Agent plan revisions, governed Experience/Crucible learning, independent security review, production authentication, community data governance, and repository cleanup.
 
 AuraOS is released under the **GNU Affero General Public License v3.0**. Integrated OjibweMorph finite-state resources use **CC BY-NC-SA 4.0** and must not be assumed commercially licensed. The software licence does not grant rights to community-owned language data, recordings, cultural knowledge, learner data, private or ceremonial material, identities, or consent records.
 
