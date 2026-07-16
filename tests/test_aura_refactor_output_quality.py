@@ -11,7 +11,7 @@ from aura_refactor_output_record import (
     gate,
     record_non_executable_output,
 )
-from aura_refactor_patch_evaluator import EvaluationSpec, evaluate
+from aura_refactor_patch_evaluator_v2 import EvaluationSpec, evaluate
 
 
 def _fixture(root: Path) -> Path:
@@ -126,7 +126,10 @@ def test_accepted_patch_records_executable_engineering_quality(tmp_path: Path) -
     assert record.disposition == "ACCEPTED"
     assert record.mandatory_gate_passed is True
     assert record.gates["visible_tests"]["status"] == PASS
+    assert record.gates["visible_tests"]["passed"] == 1
+    assert record.gates["visible_tests"]["total"] == 1
     assert record.gates["hidden_tests"]["status"] == PASS
+    assert record.gates["hidden_tests"]["passed"] == 1
     assert record.gates["regression_tests"]["status"] == PASS
     assert record.gates["api_compatibility"]["status"] == PASS
     assert record.observed_quality_score is not None
@@ -194,7 +197,10 @@ def test_partial_patch_records_passing_hidden_behavior_and_failed_visible_behavi
     assert record.working_status == "PARTIALLY_WORKING"
     assert record.disposition == "PARTIAL"
     assert record.gates["visible_tests"]["status"] == "FAIL"
+    assert record.gates["visible_tests"]["passed"] == 0
+    assert record.gates["visible_tests"]["total"] == 1
     assert record.gates["hidden_tests"]["status"] == PASS
+    assert record.gates["hidden_tests"]["passed"] == 1
     assert record.gates["regression_tests"]["status"] == PASS
     assert "visible_tests" in record.failed_required_gates
 
