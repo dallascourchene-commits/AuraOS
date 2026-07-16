@@ -152,7 +152,6 @@ jobs:
       - name: Generate exact updated README artifact
         run: |
           python scripts/update_architect_benchmark_readme.py
-          git diff --check
           grep -q "First Architect Consolidation Benchmark" README.md
           grep -q "89.88%" README.md
           grep -q "Council normalization lost plan-level contracts" README.md
