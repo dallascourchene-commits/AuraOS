@@ -26,12 +26,14 @@ jobs:
             aura_refactor_state_ledger_core.py \
             aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
+            aura_arena_architect_connector.py \
             aura_arena_connector_server.py
       - name: Run review-derived adversarial tests
         run: |
           python -m pytest -q \
             tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
             --junitxml=benchmark-four-hardening.xml \
             2>&1 | tee benchmark-four-hardening.log
       - uses: actions/upload-artifact@v4
