@@ -34,6 +34,7 @@ jobs:
             tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py \
             --junitxml=benchmark-four-hardening.xml \
             2>&1 | tee benchmark-four-hardening.log
       - uses: actions/upload-artifact@v4
