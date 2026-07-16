@@ -29,6 +29,10 @@
     node.dataset.tone = tone;
   }
 
+  function activateEmergentWorkspace() {
+    document.querySelector('[data-surface="emergent-workspace"]')?.click();
+  }
+
   async function loadRuns() {
     try {
       const result = await api('/api/human-agent/emergent/runs?limit=50');
@@ -221,6 +225,26 @@
       host.textContent = `Evidence index unavailable: ${error.message}`;
     }
   }
+
+  // The generic tool dock cannot supply provider-specific research inputs. Route these
+  // two cards into the dedicated surface before Jarvis's target-phase click handler runs.
+  document.addEventListener('click', event => {
+    const button = event.target.closest?.('[data-tool-id]');
+    const toolId = button?.dataset?.toolId;
+    if (!['emergent_refactor_workspace', 'research_forager'].includes(toolId)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    activateEmergentWorkspace();
+    const objective = $('workflow-objective')?.value?.trim() || $('command-input')?.value?.trim() || '';
+    if (toolId === 'emergent_refactor_workspace') {
+      if ($('emergent-query') && objective) $('emergent-query').value = objective;
+      searchFindings();
+      return;
+    }
+    if ($('research-provider')) $('research-provider').value = 'arxiv';
+    if ($('research-query') && objective) $('research-query').value = objective;
+    setStatus('Choose arXiv or GitHub, refine the query, then search and store the evidence.', 'ok');
+  }, true);
 
   $('emergent-search-btn')?.addEventListener('click', searchFindings);
   $('emergent-query')?.addEventListener('keydown', event => {
