@@ -11,75 +11,19 @@ on:
       - "aura_human_agent_arena/emergent.js"
       - "aura_human_agent_arena/emergent.css"
       - "tests/test_aura_emergent_refactor_workspace.py"
-      - "tools/apply_human_agent_emergent_review_fixes.py"
       - "Aura_Memory/emergent_results/seed_runs/**"
       - ".github/workflows/human-agent-emergent-research.yml"
 
 permissions:
-  contents: write
-
-concurrency:
-  group: human-agent-emergent-research-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  review-repair:
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Check out feature branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Apply deterministic review repairs
-        run: python tools/apply_human_agent_emergent_review_fixes.py
-
-      - name: Install focused test dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pytest pytest-asyncio numpy aiosqlite websockets ddgs wasmtime aiohttp beautifulsoup4 httpx cryptography
-
-      - name: Validate repaired files
-        run: |
-          python -m py_compile aura_emergent_refactor_workspace.py aura_human_agent_arena_server.py
-          node --check aura_human_agent_arena/emergent.js
-          python -m pytest -q tests/test_aura_emergent_refactor_workspace.py
-          python -m pytest -q tests/test_aura_human_agent_arena.py tests/test_aura_human_agent_wfst_live_integration.py
-
-      - name: Publish repaired files
-        shell: bash
-        run: |
-          set -euo pipefail
-          git add aura_emergent_refactor_workspace.py aura_human_agent_arena_server.py aura_human_agent_arena/emergent.js tests/test_aura_emergent_refactor_workspace.py
-          if git diff --cached --quiet; then
-            echo "Review repairs already present."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "fix: close emergent Arena review gaps"
-          git fetch origin "${{ github.head_ref }}"
-          git rebase "origin/${{ github.head_ref }}"
-          git push origin "HEAD:${{ github.head_ref }}"
-
   verify:
-    needs: review-repair
-    if: always() && (needs.review-repair.result == 'success' || needs.review-repair.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
-      - name: Check out latest feature branch
+      - name: Check out exact pull-request head
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -111,3 +55,30 @@ jobs:
             tests/test_aura_crucible_phase_b.py \
             tests/test_aura_coding_workbench_wfst_equivalence.py \
             tests/test_aura_human_agent_wfst_live_integration.py
+
+      - name: Verify review-specific contracts
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from aura_emergent_refactor_workspace import EmergentResultsStore
+          from aura_human_agent_arena_server import AuraThreadingHTTPServer
+
+          store = EmergentResultsStore(".")
+          imported = store.import_seed_reports()
+          assert imported["ok"], imported
+          ranked = store.search_findings("Refactor the Human Agent Arena", limit=8)
+          top = ranked["findings"][:3]
+          assert top, ranked
+          files = [
+              " ".join([
+                  str((item.get("source") or {}).get("file") or ""),
+                  str((item.get("target") or {}).get("file") or ""),
+              ]).lower()
+              for item in top
+          ]
+          assert any("human_agent" in item for item in files), top
+          assert AuraThreadingHTTPServer.daemon_threads is True
+          print({"top_files": files, "threaded": True})
+          PY
