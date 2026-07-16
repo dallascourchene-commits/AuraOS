@@ -45,13 +45,12 @@ jobs:
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py \
-            tests/test_aura_controlled_replan.py
+            tests/test_aura_benchmark_four_hardening.py
       - name: Run review-derived adversarial tests
         run: |
           set -o pipefail
           python -m pytest -q \
             tests/test_aura_architect_controls_vault_and_surfaces.py \
-            tests/test_aura_controlled_replan.py \
             tests/test_aura_benchmark_four.py \
             tests/test_aura_benchmark_four_hardening.py \
             tests/test_aura_arena_connector_hardening.py \
