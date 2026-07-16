@@ -53,7 +53,7 @@ DEFAULT_SKIP_DIRS = frozenset({
     "runtime",
 })
 BINARY_SUFFIXES = frozenset({".bak", ".db", ".docx", ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".ttf", ".zip"})
-TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".json", ".lexc", ".md", ".py", ".rs", ".sh", ".tex", ".toml", ".txt", ".yml", ".yaml"})
+TEXT_SUFFIXES = frozenset({"", ".c", ".cpp", ".css", ".html", ".js", ".json", ".lexc", ".md", ".py", ".rs", ".sh", ".tex", ".toml", ".txt", ".yml", ".yaml"})
 DEFAULT_INDEX_PATH = Path(".aura/CODEMAP.json")
 DEFAULT_MARKDOWN_PATH = Path(".aura/CODEMAP.md")
 DEFAULT_TOPOLOGY_PATH = Path("Aura_Memory/live_topology_ast.json")
@@ -139,7 +139,7 @@ def classify_file(path: Path) -> str:
         return "schema_or_lexicon"
     if suffix == ".sh" or name.startswith("setup") or name.startswith("build"):
         return "operator_script"
-    if suffix in {".html", ".css"}:
+    if suffix in {".html", ".css", ".js"}:
         return "interface_surface"
     if suffix in BINARY_SUFFIXES:
         return "binary_artifact"

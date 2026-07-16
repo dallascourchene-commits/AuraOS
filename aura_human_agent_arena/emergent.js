@@ -7,6 +7,15 @@
     .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 
+  function safeHttpUrl(value) {
+    try {
+      const parsed = new URL(String(value || ''), window.location.href);
+      return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+    } catch (_error) {
+      return '';
+    }
+  }
+
   let findings = [];
   let selectedFindingIds = new Set();
   let selectedResearchEvidenceIds = new Set();
@@ -116,24 +125,30 @@
   async function inspectFinding(findingId) {
     const host = $('emergent-finding-detail');
     if (host) host.innerHTML = '<p class="placeholder">Loading complete stored finding…</p>';
-    const result = await api(`/api/human-agent/emergent/findings/${encodeURIComponent(findingId)}`);
-    if (!host) return;
-    if (!result.ok) {
-      host.textContent = result.error || 'Finding unavailable.';
-      return;
+    try {
+      const result = await api(`/api/human-agent/emergent/findings/${encodeURIComponent(findingId)}`);
+      if (!host) return;
+      if (!result.ok) {
+        host.textContent = result.error || 'Finding unavailable.';
+        setStatus(`Finding unavailable: ${result.error || 'unknown error'}`, 'error');
+        return;
+      }
+      const finding = result.finding || {};
+      const raw = result.raw || {};
+      const queryInput = $('research-query');
+      if (queryInput && !queryInput.value) {
+        queryInput.value = `${finding.emergent_ability || ''} ${finding.missing_wire || ''}`.trim();
+      }
+      host.innerHTML = `
+        <div class="detail-head"><strong>${escape(finding.emergent_ability)}</strong><span>${escape(finding.status)}</span></div>
+        <p><b>Missing wire:</b> ${escape(finding.missing_wire)}</p>
+        <p><b>Required tests:</b> ${(finding.required_tests || []).map(escape).join(' · ') || 'not yet defined'}</p>
+        <p><b>Patch authority:</b> exact local source spans and hashes only</p>
+        <details><summary>Complete stored object</summary><pre>${escape(JSON.stringify(raw, null, 2))}</pre></details>`;
+    } catch (error) {
+      if (host) host.innerHTML = `<p class="placeholder">${escape(error.message || 'Finding request failed.')}</p>`;
+      setStatus(`Finding request failed: ${error.message || 'unknown error'}`, 'error');
     }
-    const finding = result.finding || {};
-    const raw = result.raw || {};
-    const queryInput = $('research-query');
-    if (queryInput && !queryInput.value) {
-      queryInput.value = `${finding.emergent_ability || ''} ${finding.missing_wire || ''}`.trim();
-    }
-    host.innerHTML = `
-      <div class="detail-head"><strong>${escape(finding.emergent_ability)}</strong><span>${escape(finding.status)}</span></div>
-      <p><b>Missing wire:</b> ${escape(finding.missing_wire)}</p>
-      <p><b>Required tests:</b> ${(finding.required_tests || []).map(escape).join(' · ') || 'not yet defined'}</p>
-      <p><b>Patch authority:</b> exact local source spans and hashes only</p>
-      <details><summary>Complete stored object</summary><pre>${escape(JSON.stringify(raw, null, 2))}</pre></details>`;
   }
 
   async function compileRefactorPacket() {
@@ -142,25 +157,30 @@
       setStatus('Set the active refactor objective first.', 'warn');
       return;
     }
-    setStatus('Compiling emergent findings into refactor evidence…');
-    const result = await api('/api/human-agent/emergent/refactor-packet', {
-      objective,
-      finding_ids: [...selectedFindingIds],
-      research_evidence_ids: [...selectedResearchEvidenceIds],
-    });
     const host = $('emergent-packet');
-    if (host) {
-      const packet = result.packet || {};
-      host.innerHTML = result.ok ? `
-        <div class="detail-head"><strong>Refactor packet ${escape(packet.packet_id)}</strong><span>${(packet.selected_findings || []).length} findings</span></div>
-        <p><b>Targets:</b> ${(packet.target_files || []).map(escape).join(' · ') || 'none'}</p>
-        <p><b>Tests:</b> ${(packet.required_tests || []).map(escape).join(' · ') || 'must be defined'}</p>
-        <p><b>Research gaps:</b> ${(packet.research_gaps || []).length}</p>
-        <details open><summary>Acceptance criteria</summary><ul>${(packet.acceptance_criteria || []).map(item => `<li>${escape(item)}</li>`).join('')}</ul></details>
-        <details><summary>Complete packet</summary><pre>${escape(JSON.stringify(packet, null, 2))}</pre></details>`
-        : `<p class="placeholder">${escape(result.error || 'Packet creation failed.')}</p>`;
+    setStatus('Compiling emergent findings into refactor evidence…');
+    try {
+      const result = await api('/api/human-agent/emergent/refactor-packet', {
+        objective,
+        finding_ids: [...selectedFindingIds],
+        research_evidence_ids: [...selectedResearchEvidenceIds],
+      });
+      if (host) {
+        const packet = result.packet || {};
+        host.innerHTML = result.ok ? `
+          <div class="detail-head"><strong>Refactor packet ${escape(packet.packet_id)}</strong><span>${(packet.selected_findings || []).length} findings</span></div>
+          <p><b>Targets:</b> ${(packet.target_files || []).map(escape).join(' · ') || 'none'}</p>
+          <p><b>Tests:</b> ${(packet.required_tests || []).map(escape).join(' · ') || 'must be defined'}</p>
+          <p><b>Research gaps:</b> ${(packet.research_gaps || []).length}</p>
+          <details open><summary>Acceptance criteria</summary><ul>${(packet.acceptance_criteria || []).map(item => `<li>${escape(item)}</li>`).join('')}</ul></details>
+          <details><summary>Complete packet</summary><pre>${escape(JSON.stringify(packet, null, 2))}</pre></details>`
+          : `<p class="placeholder">${escape(result.error || 'Packet creation failed.')}</p>`;
+      }
+      setStatus(result.ok ? 'Refactor evidence attached to the active Human Agent workflow.' : 'Packet creation failed.', result.ok ? 'ok' : 'error');
+    } catch (error) {
+      if (host) host.innerHTML = `<p class="placeholder">${escape(error.message || 'Packet request failed.')}</p>`;
+      setStatus(`Packet request failed: ${error.message || 'unknown error'}`, 'error');
     }
-    setStatus(result.ok ? 'Refactor evidence attached to the active Human Agent workflow.' : 'Packet creation failed.', result.ok ? 'ok' : 'error');
   }
 
   async function runResearchSearch() {
@@ -172,22 +192,27 @@
     }
     const includeSidecars = Boolean($('research-sidecars')?.checked);
     setStatus(`Searching ${provider} through the bounded research bridge…`);
-    const result = await api('/api/human-agent/research/search', {
-      provider,
-      query,
-      limit: 8,
-      include_sidecars: includeSidecars,
-      sidecar_limit: 2,
-      finding_ids: [...selectedFindingIds],
-    });
-    const storedEvidenceId = result.stored_evidence?.evidence_id;
-    if (storedEvidenceId) selectedResearchEvidenceIds.add(storedEvidenceId);
-    renderResearchResults(result);
-    setStatus(result.ok
-      ? `${result.count || 0} ${provider} results stored as external evidence.`
-      : `Research failed: ${result.error || 'unknown error'}`,
-      result.ok ? 'ok' : 'error');
-    await loadResearchEvidence();
+    try {
+      const result = await api('/api/human-agent/research/search', {
+        provider,
+        query,
+        limit: 8,
+        include_sidecars: includeSidecars,
+        sidecar_limit: 2,
+        finding_ids: [...selectedFindingIds],
+      });
+      const storedEvidenceId = result.stored_evidence?.evidence_id;
+      if (storedEvidenceId) selectedResearchEvidenceIds.add(storedEvidenceId);
+      renderResearchResults(result);
+      setStatus(result.ok
+        ? `${result.count || 0} ${provider} results stored as external evidence.`
+        : `Research failed: ${result.error || 'unknown error'}`,
+        result.ok ? 'ok' : 'error');
+      await loadResearchEvidence();
+    } catch (error) {
+      renderResearchResults({ ok: false, error: error.message || 'Research request failed.' });
+      setStatus(`Research request failed: ${error.message || 'unknown error'}`, 'error');
+    }
   }
 
   function renderResearchResults(result) {
@@ -200,7 +225,8 @@
     host.innerHTML = (result.results || []).map(item => {
       const isArxiv = item.provider === 'arxiv';
       const title = isArxiv ? item.title : item.full_name;
-      const url = isArxiv ? item.entry_url : item.html_url;
+      const rawUrl = isArxiv ? item.entry_url : item.html_url;
+      const url = safeHttpUrl(rawUrl);
       const description = isArxiv ? item.abstract : item.description;
       const metadata = isArxiv
         ? `${item.versioned_id || item.arxiv_id} · ${(item.categories || []).slice(0, 4).join(', ')}`

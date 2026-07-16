@@ -131,8 +131,7 @@ class EmergentResultsStore:
         created = not path.exists()
         if created:
             _atomic_write_json(path, envelope)
-            summary = self._run_summary(envelope)
-            _append_jsonl(self.runs_index, summary)
+            self._reconciled_run_rows(repair=True)
         else:
             existing = _read_json(path)
             stored_at = float(existing.get("stored_at", stored_at)) if isinstance(existing, dict) else stored_at
@@ -180,14 +179,73 @@ class EmergentResultsStore:
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
+    def _research_summary(self, payload: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "evidence_id": payload.get("evidence_id"),
+            "provider": payload.get("provider"),
+            "query": payload.get("query"),
+            "stored_at": payload.get("stored_at", 0.0),
+            "result_count": len(payload.get("results", []) or []),
+            "linked_finding_ids": list(payload.get("linked_finding_ids", []) or []),
+            "digest": payload.get("digest", ""),
+            "truth_class": TRUTH_EXTERNAL_EVIDENCE,
+        }
+
+    def _reconciled_run_rows(self, *, repair: bool = True) -> list[dict[str, Any]]:
+        indexed = {
+            str(row.get("run_id")): dict(row)
+            for row in _read_jsonl(self.runs_index)
+            if row.get("run_id")
+        }
+        authoritative: dict[str, dict[str, Any]] = {}
+        for file_path in sorted(self.runs_dir.glob("EMR-*.json")):
+            try:
+                payload = _read_json(file_path)
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(payload, dict):
+                continue
+            run_id = str(payload.get("run_id") or file_path.stem)
+            authoritative[run_id] = {**indexed.get(run_id, {}), **self._run_summary(payload)}
+        rows = sorted(
+            authoritative.values(),
+            key=lambda item: (float(item.get("stored_at", 0.0)), str(item.get("run_id", ""))),
+            reverse=True,
+        )
+        if repair:
+            _atomic_write_jsonl(self.runs_index, rows)
+        return rows
+
+    def _reconciled_research_rows(self, *, repair: bool = True) -> list[dict[str, Any]]:
+        indexed = {
+            str(row.get("evidence_id")): dict(row)
+            for row in _read_jsonl(self.research_index)
+            if row.get("evidence_id")
+        }
+        authoritative: dict[str, dict[str, Any]] = {}
+        for file_path in sorted(self.research_dir.glob("ERE-*.json")):
+            try:
+                payload = _read_json(file_path)
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(payload, dict):
+                continue
+            evidence_id = str(payload.get("evidence_id") or file_path.stem)
+            authoritative[evidence_id] = {
+                **indexed.get(evidence_id, {}),
+                **self._research_summary(payload),
+            }
+        rows = sorted(
+            authoritative.values(),
+            key=lambda item: (float(item.get("stored_at", 0.0)), str(item.get("evidence_id", ""))),
+            reverse=True,
+        )
+        if repair:
+            _atomic_write_jsonl(self.research_index, rows)
+        return rows
+
     def list_runs(self, *, limit: int = 50) -> dict[str, Any]:
-        rows = _read_jsonl(self.runs_index)
-        if not rows:
-            for path in sorted(self.runs_dir.glob("EMR-*.json")):
-                payload = _read_json(path)
-                if isinstance(payload, dict):
-                    rows.append(self._run_summary(payload))
-        rows.sort(key=lambda item: float(item.get("stored_at", 0.0)), reverse=True)
+        rows = self._reconciled_run_rows(repair=True)
         bounded = rows[: max(1, min(int(limit), 500))]
         return {
             "ok": True,
@@ -295,10 +353,9 @@ class EmergentResultsStore:
             return []
         rows = [
             row
-            for row in _read_jsonl(self.research_index)
+            for row in self._reconciled_research_rows(repair=True)
             if needles & {str(item) for item in row.get("linked_finding_ids", []) if item}
         ]
-        rows.sort(key=lambda item: float(item.get("stored_at", 0.0)), reverse=True)
         return _unique(
             str(row.get("evidence_id") or "")
             for row in rows[: max(1, min(int(limit), 500))]
@@ -317,14 +374,39 @@ class EmergentResultsStore:
         objective_text = str(objective or "").strip()
         if not objective_text:
             raise ValueError("objective is required")
+
+        requested_finding_ids = _unique(str(item) for item in finding_ids if str(item).strip())
         selected: list[dict[str, Any]] = []
-        if finding_ids:
-            for finding_id in finding_ids:
-                packet = self.get_finding(str(finding_id))
-                if packet.get("ok"):
-                    selected.append(dict(packet["finding"]))
+        unresolved_finding_ids: list[str] = []
+        if requested_finding_ids:
+            for finding_id in requested_finding_ids:
+                finding_result = self.get_finding(finding_id)
+                if finding_result.get("ok"):
+                    selected.append(dict(finding_result["finding"]))
+                else:
+                    unresolved_finding_ids.append(finding_id)
+            if unresolved_finding_ids:
+                return {
+                    "ok": False,
+                    "error": "unresolved_finding_ids",
+                    "requested_finding_ids": requested_finding_ids,
+                    "missing_finding_ids": unresolved_finding_ids,
+                    "persisted": False,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+                }
         else:
             selected = list(self.search_findings(objective_text, limit=max_findings).get("findings", []))
+
+        if not selected:
+            return {
+                "ok": False,
+                "error": "no_relevant_emergent_findings",
+                "objective": objective_text,
+                "persisted": False,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
 
         target_files = _unique(
             value
@@ -379,18 +461,30 @@ class EmergentResultsStore:
         selected_finding_ids = [
             str(item.get("finding_id") or "") for item in selected if item.get("finding_id")
         ]
-        auto_research_ids = self._research_evidence_ids_for_findings(selected_finding_ids)
-        linked_research_ids = _unique(
-            [
-                *[str(item) for item in research_evidence_ids if str(item).strip()],
-                *auto_research_ids,
-            ]
+        requested_research_ids = _unique(
+            str(item) for item in research_evidence_ids if str(item).strip()
         )
+        auto_research_ids = self._research_evidence_ids_for_findings(selected_finding_ids)
+        linked_research_ids = _unique([*requested_research_ids, *auto_research_ids])
         linked_research: list[dict[str, Any]] = []
+        unresolved_research_ids: list[str] = []
         for evidence_id in linked_research_ids:
-            item = self.get_research_evidence(str(evidence_id))
+            item = self.get_research_evidence(evidence_id)
             if item.get("ok"):
                 linked_research.append(item)
+            else:
+                unresolved_research_ids.append(evidence_id)
+        if unresolved_research_ids:
+            return {
+                "ok": False,
+                "error": "unresolved_research_evidence_ids",
+                "requested_research_evidence_ids": requested_research_ids,
+                "missing_research_evidence_ids": unresolved_research_ids,
+                "persisted": False,
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+
         research_evidence = [
             dict(item.get("evidence") or {}) for item in linked_research if item.get("evidence")
         ]
@@ -408,10 +502,9 @@ class EmergentResultsStore:
                 "EVIDENCE_FOUND_REQUIRES_LOCAL_VERIFICATION" if linked_ids else "OPEN"
             )
 
-        payload = {
+        stable_payload = {
             "workspace_version": WORKSPACE_VERSION,
             "objective": objective_text,
-            "created_at": time.time(),
             "selected_findings": selected,
             "selected_finding_ids": selected_finding_ids,
             "target_files": target_files,
@@ -429,16 +522,25 @@ class EmergentResultsStore:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
-        digest = hashlib.sha256(_canonical_json(payload)).hexdigest()
+        digest = hashlib.sha256(_canonical_json(stable_payload)).hexdigest()
         packet_id = f"ERP-{digest[:20]}"
-        payload["packet_id"] = packet_id
-        if persist:
-            _atomic_write_json(self.packets_dir / f"{packet_id}.json", payload)
-        return {"ok": True, "packet": payload}
-
-    # ------------------------------------------------------------------
-    # External research evidence storage
-    # ------------------------------------------------------------------
+        path = self.packets_dir / f"{packet_id}.json"
+        created = False
+        if persist and path.exists():
+            existing = _read_json(path)
+            if isinstance(existing, dict):
+                payload = existing
+            else:
+                payload = {**stable_payload, "packet_id": packet_id, "digest": digest, "created_at": time.time()}
+                _atomic_write_json(path, payload)
+                created = True
+        else:
+            payload = {**stable_payload, "packet_id": packet_id, "digest": digest}
+            if persist:
+                payload["created_at"] = time.time()
+                _atomic_write_json(path, payload)
+                created = True
+        return {"ok": True, "packet": payload, "created": created, "persisted": bool(persist)}
 
     def store_research_evidence(
         self,
@@ -449,12 +551,12 @@ class EmergentResultsStore:
         linked_finding_ids: Sequence[str] = (),
         metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        payload = {
+        requested_links = _unique(str(item) for item in linked_finding_ids if str(item).strip())
+        stable_payload = {
             "workspace_version": WORKSPACE_VERSION,
             "provider": str(provider or "unknown").lower(),
             "query": str(query or ""),
-            "stored_at": time.time(),
-            "linked_finding_ids": [str(item) for item in linked_finding_ids if item],
+            "linked_finding_ids": requested_links,
             "metadata": dict(metadata or {}),
             "results": [dict(item) for item in results if isinstance(item, dict)],
             "truth_class": TRUTH_EXTERNAL_EVIDENCE,
@@ -462,38 +564,36 @@ class EmergentResultsStore:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
-        digest = hashlib.sha256(_canonical_json(payload)).hexdigest()
+        digest = hashlib.sha256(_canonical_json(stable_payload)).hexdigest()
         evidence_id = f"ERE-{digest[:20]}"
-        payload["evidence_id"] = evidence_id
         path = self.research_dir / f"{evidence_id}.json"
-        created = not path.exists()
-        if created:
+        created = False
+        if path.exists():
+            existing = _read_json(path)
+            payload = existing if isinstance(existing, dict) else {}
+        else:
+            payload = {
+                **stable_payload,
+                "evidence_id": evidence_id,
+                "digest": digest,
+                "stored_at": time.time(),
+            }
             _atomic_write_json(path, payload)
-            _append_jsonl(
-                self.research_index,
-                {
-                    "evidence_id": evidence_id,
-                    "provider": payload["provider"],
-                    "query": payload["query"],
-                    "stored_at": payload["stored_at"],
-                    "result_count": len(payload["results"]),
-                    "linked_finding_ids": payload["linked_finding_ids"],
-                    "digest": digest,
-                },
-            )
+            created = True
+        self._reconciled_research_rows(repair=True)
         return {
             "ok": True,
             "evidence_id": evidence_id,
             "created": created,
-            "result_count": len(payload["results"]),
+            "stored_at": payload.get("stored_at", 0.0),
+            "result_count": len(payload.get("results", []) or []),
             "truth_class": TRUTH_EXTERNAL_EVIDENCE,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
     def list_research_evidence(self, *, limit: int = 50) -> dict[str, Any]:
-        rows = _read_jsonl(self.research_index)
-        rows.sort(key=lambda item: float(item.get("stored_at", 0.0)), reverse=True)
+        rows = self._reconciled_research_rows(repair=True)
         bounded = rows[: max(1, min(int(limit), 500))]
         return {
             "ok": True,
@@ -633,6 +733,17 @@ def _append_jsonl(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str) + "\n")
+
+
+def _atomic_write_jsonl(path: Path, rows: Sequence[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_suffix(path.suffix + f".{os.getpid()}.tmp")
+    content = "".join(
+        json.dumps(row, sort_keys=True, ensure_ascii=False, default=str) + "\n"
+        for row in rows
+    )
+    temp.write_text(content, encoding="utf-8")
+    os.replace(temp, path)
 
 
 def _read_json(path: Path) -> Any:

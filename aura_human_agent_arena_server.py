@@ -18,10 +18,12 @@ production mutation. External evidence never grants patch authority.
 from __future__ import annotations
 
 import argparse
+import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
 from pathlib import Path
+import time
 from typing import Any, Iterable
 from urllib.parse import parse_qs, urlparse
 
@@ -219,12 +221,26 @@ def _handle_civic_api(method: str, route: str, parsed: Any, body: dict[str, Any]
     return _error("civic route not found", 404)
 
 
+def _commit_emergent_packet(state: HumanAgentArenaServerState, packet: dict[str, Any]) -> None:
+    workflow_evidence = state.workflow.evidence
+    workflow_evidence["emergent_refactor_packet"] = packet
+    workflow_evidence["emergent_findings"] = list(packet.get("selected_findings") or [])
+    workflow_evidence["research_gaps"] = list(packet.get("research_gaps") or [])
+    workflow_evidence["external_research_evidence"] = list(packet.get("research_evidence") or [])
+    existing_tests = list(workflow_evidence.get("test_targets") or [])
+    workflow_evidence["test_targets"] = _unique(
+        [*existing_tests, *list(packet.get("required_tests") or [])]
+    )[:16]
+
+
 def _attach_emergent_refactor_context(
     state: HumanAgentArenaServerState,
     objective: str,
     *,
     finding_ids: Iterable[str] = (),
     research_evidence_ids: Iterable[str] = (),
+    persist: bool = True,
+    commit: bool = True,
 ) -> dict[str, Any]:
     objective_text = str(objective or "").strip()
     if not objective_text:
@@ -243,18 +259,11 @@ def _attach_emergent_refactor_context(
         finding_ids=list(finding_ids),
         research_evidence_ids=list(research_evidence_ids),
         max_findings=8,
-        persist=True,
+        persist=persist,
     )
     packet = dict(packet_result.get("packet") or {})
-    if not packet:
-        return packet_result
-    workflow_evidence = state.workflow.evidence
-    workflow_evidence["emergent_refactor_packet"] = packet
-    workflow_evidence["emergent_findings"] = list(packet.get("selected_findings") or [])
-    workflow_evidence["research_gaps"] = list(packet.get("research_gaps") or [])
-    workflow_evidence["external_research_evidence"] = list(packet.get("research_evidence") or [])
-    existing_tests = list(workflow_evidence.get("test_targets") or [])
-    workflow_evidence["test_targets"] = _unique([*existing_tests, *list(packet.get("required_tests") or [])])[:16]
+    if packet_result.get("ok") and packet and commit:
+        _commit_emergent_packet(state, packet)
     return packet_result
 
 
@@ -268,6 +277,8 @@ def _prepare_payload_with_emergent_context(
         objective,
         finding_ids=list(payload.get("finding_ids") or []),
         research_evidence_ids=list(payload.get("research_evidence_ids") or []),
+        persist=False,
+        commit=False,
     ) if objective else {"ok": False, "error": "objective_not_set"}
     packet = dict(result.get("packet") or {})
     merged = dict(payload)
@@ -275,11 +286,50 @@ def _prepare_payload_with_emergent_context(
         [
             *list(payload.get("acceptance_criteria") or []),
             *list(packet.get("acceptance_criteria") or []),
-            *[f"Close or explicitly defer research gap: {item.get('gap')}" for item in packet.get("research_gaps", []) if item.get("gap")],
+            *[
+                f"Close or explicitly defer research gap: {item.get('gap')}"
+                for item in packet.get("research_gaps", [])
+                if item.get("gap")
+            ],
         ]
     )
     merged["emergent_refactor_packet_id"] = packet.get("packet_id", "")
     return merged, result
+
+
+def _record_special_tool_run(
+    state: HumanAgentArenaServerState,
+    *,
+    tool_id: str,
+    objective: str,
+    inputs: dict[str, Any],
+    outputs: dict[str, Any],
+    ok: bool,
+) -> dict[str, Any]:
+    started_at = time.time()
+    seed = json.dumps(
+        {"tool_id": tool_id, "objective": objective, "inputs": inputs, "started_at": started_at},
+        sort_keys=True,
+        default=str,
+    )
+    run_id = f"TOOL-{hashlib.blake2b(seed.encode(), digest_size=8).hexdigest()}"
+    record = {
+        "run_id": run_id,
+        "tool_id": tool_id,
+        "objective": objective,
+        "status": "COMPLETED" if ok else "FAILED",
+        "started_at": started_at,
+        "completed_at": time.time(),
+        "inputs": dict(inputs),
+        "outputs": dict(outputs),
+        "denial": {},
+        "sandbox_receipt": {},
+        "dissolution_receipt": {},
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+    state.workflow.tools.runs[run_id] = record
+    return record
 
 
 def _handle_emergent_and_research_api(
@@ -366,6 +416,10 @@ def _handle_emergent_and_research_api(
             },
         )
         result["stored_evidence"] = stored
+        if not stored.get("ok"):
+            result["ok"] = False
+            result["error"] = stored.get("error", "research_evidence_store_failed")
+            return 409, result
         return 200, result
 
     if method == "GET" and route == "/api/human-agent/research/evidence":
@@ -447,16 +501,24 @@ def dispatch_api_request(
         if not action_id:
             return _error("action_id is required")
         action_payload = dict(body.get("payload") or {})
-        emergent_context: dict[str, Any] = {}
+        preview_context: dict[str, Any] = {}
         if action_id == "prepare_capsule":
-            action_payload, emergent_context = _prepare_payload_with_emergent_context(state, action_payload)
-        elif action_id == "ground_context" and state.workflow.state.objective:
-            emergent_context = _attach_emergent_refactor_context(state, state.workflow.state.objective)
+            action_payload, preview_context = _prepare_payload_with_emergent_context(state, action_payload)
         result = state.workflow.execute_guarded(action_id, action_payload)
-        if result.get("ok") and action_id in {"set_objective", "ground_context"}:
+        emergent_context: dict[str, Any] = {}
+        if result.get("ok"):
             objective = str(state.workflow.state.objective or action_payload.get("objective") or "")
-            if objective:
-                emergent_context = _attach_emergent_refactor_context(state, objective)
+            if objective and action_id in {"set_objective", "ground_context", "prepare_capsule"}:
+                emergent_context = _attach_emergent_refactor_context(
+                    state,
+                    objective,
+                    finding_ids=list(action_payload.get("finding_ids") or []),
+                    research_evidence_ids=list(action_payload.get("research_evidence_ids") or []),
+                    persist=True,
+                    commit=True,
+                )
+        elif preview_context:
+            result["emergent_context_preview"] = preview_context
         if emergent_context:
             result["emergent_context"] = emergent_context
             result["workflow"] = state.workflow.get_state()
@@ -467,15 +529,24 @@ def dispatch_api_request(
         if not command.strip():
             return _error("command is required")
         command_payload = dict(body.get("payload") or {})
-        emergent_context: dict[str, Any] = {}
+        preview_context: dict[str, Any] = {}
         if state.workflow.state.objective:
-            command_payload, emergent_context = _prepare_payload_with_emergent_context(state, command_payload)
+            command_payload, preview_context = _prepare_payload_with_emergent_context(state, command_payload)
         result = state.workflow.ingest_command(command, command_payload)
         objective = str(state.workflow.state.objective or "")
         if result.get("ok") and objective:
-            emergent_context = _attach_emergent_refactor_context(state, objective)
+            emergent_context = _attach_emergent_refactor_context(
+                state,
+                objective,
+                finding_ids=list(command_payload.get("finding_ids") or []),
+                research_evidence_ids=list(command_payload.get("research_evidence_ids") or []),
+                persist=True,
+                commit=True,
+            )
             result["emergent_context"] = emergent_context
             result["workflow"] = state.workflow.get_state()
+        elif preview_context:
+            result["emergent_context_preview"] = preview_context
         return (200 if result.get("ok") else 409), result
 
     if method == "GET" and route == "/api/coding-workbench/state":
@@ -536,22 +607,25 @@ def dispatch_api_request(
         inputs = dict(body.get("inputs") or {})
         objective = str(body.get("objective") or state.workflow.state.objective)
         if tool_id == "emergent_refactor_workspace":
-            result = _attach_emergent_refactor_context(
+            outputs = _attach_emergent_refactor_context(
                 state,
                 objective,
                 finding_ids=list(inputs.get("finding_ids") or []),
                 research_evidence_ids=list(inputs.get("research_evidence_ids") or []),
+                persist=True,
+                commit=True,
             )
-            return (200 if result.get("ok") else 409), {
-                "run_id": str((result.get("packet") or {}).get("packet_id") or ""),
-                "tool_id": tool_id,
-                "status": "COMPLETED" if result.get("ok") else "FAILED",
-                "outputs": result,
-                "patch_authority": PATCH_AUTHORITY,
-                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
-            }
+            record = _record_special_tool_run(
+                state,
+                tool_id=tool_id,
+                objective=objective,
+                inputs=inputs,
+                outputs=outputs,
+                ok=bool(outputs.get("ok")),
+            )
+            return (200 if outputs.get("ok") else 409), record
         if tool_id == "research_forager":
-            return dispatch_api_request(
+            status, outputs = dispatch_api_request(
                 state,
                 "POST",
                 "/api/human-agent/research/search",
@@ -564,6 +638,15 @@ def dispatch_api_request(
                     "finding_ids": inputs.get("finding_ids", []),
                 },
             )
+            record = _record_special_tool_run(
+                state,
+                tool_id=tool_id,
+                objective=objective,
+                inputs=inputs,
+                outputs=outputs,
+                ok=200 <= status < 300 and bool(outputs.get("ok")),
+            )
+            return status, record
         result = state.workflow.tools.execute(
             tool_id,
             objective=objective,

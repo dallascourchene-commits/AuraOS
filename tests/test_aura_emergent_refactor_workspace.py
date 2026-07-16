@@ -327,7 +327,7 @@ def test_prepare_payload_merges_emergent_acceptance_criteria(tmp_path: Path):
     assert context["ok"] is True
     assert "Keep existing server routes compatible" in merged["acceptance_criteria"]
     assert any("Human Agent Arena research-grounded refactoring" in item for item in merged["acceptance_criteria"])
-    assert state.workflow.evidence["emergent_refactor_packet"]["human_approval_required"] is True
+    assert "emergent_refactor_packet" not in state.workflow.evidence
 
 
 def test_state_endpoint_exposes_emergent_workspace(tmp_path: Path):
@@ -381,3 +381,148 @@ def test_review_fixes_rank_link_and_thread(tmp_path: Path):
     assert AuraThreadingHTTPServer.daemon_threads is True
     assert sample_store.get_run("invalid")["error"] == "invalid_emergent_run_id"
     assert sample_store.get_research_evidence("invalid")["error"] == "invalid_research_evidence_id"
+
+
+
+def test_second_pass_integrity_contracts(tmp_path: Path):
+    store = EmergentResultsStore(tmp_path)
+    first = store.store_report(sample_report(), source="first")
+    changed = sample_report()
+    changed["suite_version"] = "TEST_EMERGENT_SUITE_V2"
+    second = store.store_report(changed, source="second")
+
+    # Authoritative files survive stale/malformed indexes and repair them without duplicates.
+    first_row = store.list_runs(limit=10)["runs"][0]
+    store.runs_index.write_text(json.dumps(first_row) + "\n{malformed\n", encoding="utf-8")
+    runs = store.list_runs(limit=10)
+    assert runs["total"] == 2
+    assert {item["run_id"] for item in runs["runs"]} == {first["run_id"], second["run_id"]}
+    assert len(store.runs_index.read_text(encoding="utf-8").splitlines()) == 2
+
+    finding = store.search_findings("Human Agent Arena research", limit=1)["findings"][0]
+    evidence_a = store.store_research_evidence(
+        provider="arxiv",
+        query="arena verification",
+        results=[{"arxiv_id": "2601.00001", "title": "Arena verification"}],
+        linked_finding_ids=[finding["finding_id"]],
+    )
+    evidence_b = store.store_research_evidence(
+        provider="github",
+        query="arena verification",
+        results=[{"full_name": "example/arena"}],
+        linked_finding_ids=[finding["finding_id"]],
+    )
+    first_evidence_row = store.list_research_evidence(limit=10)["evidence"][0]
+    store.research_index.write_text(json.dumps(first_evidence_row) + "\nnot-json\n", encoding="utf-8")
+    evidence_rows = store.list_research_evidence(limit=10)
+    assert evidence_rows["total"] == 2
+    assert {item["evidence_id"] for item in evidence_rows["evidence"]} == {
+        evidence_a["evidence_id"], evidence_b["evidence_id"]
+    }
+
+    # Content IDs are stable and explicit unresolved selections fail closed.
+    packet_a = store.build_refactor_packet(
+        "Refactor the Human Agent Arena", finding_ids=[finding["finding_id"]]
+    )
+    packet_b = store.build_refactor_packet(
+        "Refactor the Human Agent Arena", finding_ids=[finding["finding_id"]]
+    )
+    assert packet_a["packet"]["packet_id"] == packet_b["packet"]["packet_id"]
+    assert packet_b["created"] is False
+    evidence_repeat = store.store_research_evidence(
+        provider="arxiv",
+        query="arena verification",
+        results=[{"arxiv_id": "2601.00001", "title": "Arena verification"}],
+        linked_finding_ids=[finding["finding_id"]],
+    )
+    assert evidence_repeat["evidence_id"] == evidence_a["evidence_id"]
+    assert evidence_repeat["created"] is False
+    missing_findings = store.build_refactor_packet(
+        "Refactor", finding_ids=["EMF-" + "0" * 20]
+    )
+    assert missing_findings["ok"] is False
+    assert missing_findings["error"] == "unresolved_finding_ids"
+    missing_evidence = store.build_refactor_packet(
+        "Refactor", finding_ids=[finding["finding_id"]], research_evidence_ids=["ERE-" + "0" * 20]
+    )
+    assert missing_evidence["ok"] is False
+    assert missing_evidence["error"] == "unresolved_research_evidence_ids"
+
+
+def test_denied_wfst_action_does_not_commit_emergent_evidence(tmp_path: Path):
+    state = HumanAgentArenaServerState(tmp_path, demo=True)
+    state.emergent_store.store_report(sample_report(), source="test")
+    before = json.loads(json.dumps(state.workflow.evidence, default=str))
+    status, result = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/workflow/action",
+        {
+            "action_id": "prepare_capsule",
+            "payload": {"objective": "Refactor the Human Agent Arena"},
+        },
+    )
+    assert status == 409
+    assert result["ok"] is False
+    assert state.workflow.evidence == before
+
+
+def test_special_tool_runs_are_registered_and_retrievable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    state = HumanAgentArenaServerState(tmp_path, demo=True)
+    state.emergent_store.store_report(sample_report(), source="test")
+    finding = state.emergent_store.search_findings("Human Agent Arena research", limit=1)["findings"][0]
+
+    status, run = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/tools/run",
+        {
+            "tool_id": "emergent_refactor_workspace",
+            "objective": "Refactor the Human Agent Arena",
+            "inputs": {"finding_ids": [finding["finding_id"]]},
+        },
+    )
+    assert status == 200
+    assert run["run_id"].startswith("TOOL-")
+    status, loaded = dispatch_api_request(
+        state, "GET", f"/api/human-agent/tool-runs/{run['run_id']}"
+    )
+    assert status == 200
+    assert loaded["run"]["tool_id"] == "emergent_refactor_workspace"
+
+    monkeypatch.setattr(
+        state.research_bridge,
+        "search",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "provider": "github",
+            "query": "arena",
+            "count": 1,
+            "results": [{"full_name": "example/arena"}],
+            "metadata_truth": GITHUB_METADATA_TRUTH,
+            "sidecar_truth": SIDECAR_TRUTH,
+        },
+    )
+    status, research_run = dispatch_api_request(
+        state,
+        "POST",
+        "/api/human-agent/tools/run",
+        {
+            "tool_id": "research_forager",
+            "objective": "Refactor the Human Agent Arena",
+            "inputs": {"provider": "github", "query": "arena", "finding_ids": [finding["finding_id"]]},
+        },
+    )
+    assert status == 200
+    status, loaded_research = dispatch_api_request(
+        state, "GET", f"/api/human-agent/tool-runs/{research_run['run_id']}"
+    )
+    assert status == 200
+    assert loaded_research["run"]["outputs"]["stored_evidence"]["ok"] is True
+
+
+def test_emergent_ui_has_error_boundaries_and_safe_urls():
+    script = (Path(__file__).resolve().parents[1] / "aura_human_agent_arena" / "emergent.js").read_text(encoding="utf-8")
+    assert "function safeHttpUrl" in script
+    assert script.count("catch (error)") >= 4
+    assert "const url = safeHttpUrl(rawUrl);" in script
