@@ -1,0 +1,72 @@
+name: Benchmark Four Hardening
+on:
+  pull_request:
+  push:
+    branches: ["analysis/**", "refactor/**", main]
+permissions:
+  contents: read
+concurrency:
+  group: benchmark-four-hardening-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  hardening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Remove checkout credentials before repository code
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" hypothesis
+      - name: Compile hardened contracts
+        run: |
+          python -m py_compile \
+            aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
+            aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_architect_council_v2.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
+            aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            tests/test_aura_architect_council_v2_contracts.py \
+            tests/test_aura_benchmark_four_hardening.py
+      - name: Run review-derived adversarial tests
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
+            tests/test_aura_architect_council_v2_contracts.py \
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py \
+            tests/test_aura_external_llm_session.py \
+            --junitxml=benchmark-four-hardening.xml \
+            2>&1 | tee benchmark-four-hardening.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-four-hardening
+          path: |
+            benchmark-four-hardening.xml
+            benchmark-four-hardening.log
+          if-no-files-found: error
+          retention-days: 30

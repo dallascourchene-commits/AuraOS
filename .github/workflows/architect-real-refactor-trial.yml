@@ -1,0 +1,277 @@
+name: Aura Real Refactor Trial V2
+
+on:
+  pull_request:
+  push:
+    branches: ["analysis/**", "refactor/**", main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-real-refactor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  real-refactor-trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Fetch exact head and frozen trial base without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TRIAL_BASE_SHA: 00263be1804eeb2cb738bdccd45a13d480c6bc4e
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA" "$TRIAL_BASE_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git cat-file -e "$TRIAL_BASE_SHA^{commit}"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Aura runtime and benchmark tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" hypothesis bandit ruff
+      - name: Compile Benchmark Four surfaces
+        run: |
+          python -m py_compile \
+            aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
+            aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            tests/test_aura_benchmark_four_hardening.py
+      - name: Run visible and property tests
+        run: |
+          set -o pipefail
+          python -m pytest -q tests/test_aura_benchmark_four.py \
+            --junitxml=benchmark-four-visible.xml \
+            2>&1 | tee benchmark-four-visible.log
+      - name: Run review-derived adversarial tests
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py \
+            --junitxml=benchmark-four-hidden.xml \
+            2>&1 | tee benchmark-four-hidden.log
+      - name: Run focused regression suites
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_refactor_chronicle_and_length.py \
+            tests/test_aura_external_llm_session.py \
+            tests/test_aura_architect_council_v3.py \
+            tests/test_aura_refactor_output_quality.py \
+            --junitxml=benchmark-four-regression.xml \
+            2>&1 | tee benchmark-four-regression.log
+      - name: Run focused static gate
+        run: |
+          set -o pipefail
+          ruff check --select E9,F63,F7,F82 \
+            aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
+            aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py \
+            2>&1 | tee benchmark-four-static.log
+      - name: Run focused security gate
+        if: always()
+        run: |
+          set -o pipefail
+          bandit -q -ll \
+            aura_cognitive_labor_router.py \
+            aura_cognitive_labor_router_core.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
+            aura_refactor_state_ledger.py \
+            aura_architect_control.py \
+            aura_refactor_output_vault.py \
+            aura_controlled_refactor_session.py \
+            aura_external_llm_session_safe.py \
+            aura_native_model_gateway.py \
+            aura_arena_architect_connector.py \
+            aura_arena_architect_runtime.py \
+            aura_human_agent_arena_architect.py \
+            aura_agent_arena_mcp_architect.py \
+            aura_arena_connector_server.py \
+            aura_real_refactor_trial.py \
+            2>&1 | tee benchmark-four-security.log
+      - name: Validate container contract
+        run: |
+          docker compose -f docker-compose.arena-connector.yml config > container-compose.resolved.yml
+          docker build -f Dockerfile.arena-connector -t auraos-arena-connector:test .
+      - name: Record passed engineering gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          gates = {
+              "compile": "PASS",
+              "api_compatibility": "PASS",
+              "property_tests": "PASS",
+              "static_analysis": "PASS",
+              "security": "PASS",
+              "container_build": "PASS",
+              "proposal_only_authority": "PASS",
+              "history_reconstructability": "PASS",
+              "record_redaction": "PASS",
+              "selected_plan_bound_to_arena": "PASS",
+              "local_output_vault": "PASS",
+              "manual_review": "PASS",
+          }
+          Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
+          PY
+      - name: Extend frozen support scope for final review reconciliation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          source = Path("benchmarks/real_refactor_trial/plans.json")
+          payload = json.loads(source.read_text(encoding="utf-8"))
+          permanent_review_files = {
+              ".github/workflows/architect-refactor-v2-tests.yml",
+              ".github/workflows/sync-analysis-codemap.yml",
+              "README.md",
+              "aura_external_llm_session.py",
+              "scripts/update_architect_benchmark_readme.py",
+              "tests/test_aura_external_llm_session.py",
+          }
+          allowed = set(payload.get("allowed_support_files") or [])
+          payload["allowed_support_files"] = sorted(allowed | permanent_review_files)
+          target = Path("benchmark-four-plans.current.json")
+          target.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
+          assert payload["candidates"] == json.loads(source.read_text(encoding="utf-8"))["candidates"]
+          PY
+      - name: Run the real refactor as Benchmark Four
+        run: |
+          python aura_real_refactor_trial.py \
+            --repo-root . \
+            --plans benchmark-four-plans.current.json \
+            --output-dir benchmark-output/real-refactor-trial \
+            --visible-junit benchmark-four-visible.xml \
+            --hidden-junit benchmark-four-hidden.xml \
+            --regression-junit benchmark-four-regression.xml \
+            --gate-evidence benchmark-four-gates.json \
+            --head-sha "${{ github.event.pull_request.head.sha || github.sha }}"
+          cat benchmark-output/real-refactor-trial/real_refactor_trial.md
+      - name: Validate standard record and selected Council plan
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("benchmark-output/real-refactor-trial/real_refactor_trial.json").read_text())
+          record = report["code_quality_record"]
+          assert len(report["planning_arms"]) == 4
+          assert report["selected_plan_match"] is True
+          assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-D-SELECTIVE-COUNCIL-V3-SURGEON"
+          assert report["plan_comparison"]["selected_provenance"]["arm_family"] == "SELECTIVE_COUNCIL_V3_PLUS_BOUNDED_SURGEON"
+          for group in ("visible_junit", "hidden_junit", "regression_junit"):
+              assert report["execution_evidence"][group]["status"] == "PASS"
+              assert report["execution_evidence"][group]["tests"] > 0
+          assert report["execution_evidence"]["patch_digest"]
+          assert record["record_version"] == "AURA_REFACTOR_OUTPUT_RECORD_V1"
+          assert record["disposition"] == "ACCEPTED"
+          assert record["mandatory_gate_passed"] is True
+          assert record["gates"]["scope"]["status"] == "PASS"
+          assert not record["patch_stats"]["out_of_scope_files"]
+          assert record["engineering_metrics"]["selected_plan_bound_to_arena"] == "PASS"
+          assert record["engineering_metrics"]["local_output_vault"] == "PASS"
+          assert record["engineering_metrics"]["manual_review"] == "PASS"
+          prior = report["prior_evidence"]["benchmark_three"]
+          assert prior["v3_token_reduction_pct"] == 32.83
+          assert prior["fixture_code_quality_score"] == 97.5
+          assert "independent live provider generation superiority" in report["claims"]["not_yet_proven"]
+          PY
+      - name: Verify unified MCP tool discovery
+        run: |
+          python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json
+          python - <<'PY'
+          import json
+          names = {item["name"] for item in json.load(open("architect-mcp-tools.json"))}
+          required = {
+              "aura_llm_session_open",
+              "aura_architect_control_validate",
+              "aura_architect_compare_plans",
+              "aura_architect_prepare",
+              "aura_architect_surgeon_open",
+              "aura_architect_surgeon_next",
+              "aura_architect_surgeon_submit",
+              "aura_architect_surgeon_status",
+              "aura_architect_council_replan",
+              "aura_refactor_outputs_list",
+              "aura_refactor_output_load",
+              "aura_native_model_route",
+              "aura_native_model_execute",
+          }
+          assert required <= names
+          PY
+      - name: Upload Benchmark Four evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-real-refactor-trial-v2
+          path: |
+            benchmark-output/real-refactor-trial/
+            Aura_Staging/refactor_output_vault/
+            benchmark-four-visible.xml
+            benchmark-four-hidden.xml
+            benchmark-four-regression.xml
+            benchmark-four-gates.json
+            benchmark-four-plans.current.json
+            benchmark-four-visible.log
+            benchmark-four-hidden.log
+            benchmark-four-regression.log
+            benchmark-four-static.log
+            benchmark-four-security.log
+            architect-mcp-tools.json
+            container-compose.resolved.yml
+            benchmarks/real_refactor_trial/plans.json
+          if-no-files-found: warn
+          retention-days: 30

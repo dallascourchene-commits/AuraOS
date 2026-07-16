@@ -1,0 +1,217 @@
+name: Architect Code Quality and Council V3 Benchmark
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "analysis/**"
+      - "refactor/**"
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: architect-code-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  code-quality-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: analysis/architect-benchmark
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Aura runtime and benchmark tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8.0,<9.0" bandit ruff jsonschema
+      - name: Compile code-quality and selective Council surfaces
+        run: |
+          python -m py_compile \
+            aura_refactor_output_record.py \
+            aura_refactor_patch_evaluator.py \
+            aura_refactor_patch_evaluator_v2.py \
+            aura_code_quality_registry.py \
+            aura_current_code_quality_assessment.py \
+            aura_executable_refactor_benchmark.py \
+            aura_architect_council_v3.py \
+            aura_architect_council_calling_benchmark.py \
+            benchmarks/refactor_code_quality/generate_fixture.py \
+            scripts/install_refactor_quality_docs.py \
+            scripts/finalize_refactor_quality_doc_sync.py \
+            tests/test_aura_refactor_output_quality.py \
+            tests/test_aura_architect_council_v3.py
+      - name: Run standardized record and selective-routing tests
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_refactor_output_quality.py \
+            tests/test_aura_architect_council_v3.py \
+            2>&1 | tee code-quality-tests.log
+      - name: Regenerate CODEMAP for planning benchmark
+        run: |
+          python aura_codebase_navigator.py
+          test -s .aura/CODEMAP.json
+      - name: Prepare frozen planning prompts
+        run: |
+          rm -rf benchmark-output
+          python aura_architect_consolidation_benchmark_v2.py prepare \
+            --repo-root . \
+            --output-dir benchmark-output \
+            > benchmark-prepare.log
+      - name: Materialize frozen GPT-5.6 role responses
+        run: |
+          python benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py \
+            --output benchmark-output/responses.gpt-5.6-thinking.json
+          python -m json.tool benchmark-output/responses.gpt-5.6-thinking.json > /dev/null
+      - name: Score planning benchmark V2
+        run: |
+          python aura_architect_consolidation_benchmark_v2.py score \
+            --repo-root . \
+            --output-dir benchmark-output \
+            --responses benchmark-output/responses.gpt-5.6-thinking.json \
+            --input-rate 1.0 \
+            --output-rate 3.0 \
+            > benchmark-score.log
+      - name: Compare uniform and selective Council calling
+        run: |
+          python aura_architect_council_calling_benchmark.py \
+            --repo-root . \
+            --responses benchmark-output/responses.gpt-5.6-thinking.json \
+            --output-dir benchmark-output/council-calling \
+            > council-calling.log
+          cat council-calling.log
+      - name: Run hybrid control-flow benchmark for current assessment
+        run: |
+          python aura_hybrid_refactor_benchmark.py \
+            --repo-root . \
+            --output-dir benchmark-output/hybrid \
+            --planning-report benchmark-output/architect_consolidation_benchmark.json \
+            > hybrid-benchmark.log
+      - name: Record current planning and synthetic code-quality status
+        run: |
+          python aura_current_code_quality_assessment.py \
+            --planning-report benchmark-output/architect_consolidation_benchmark.json \
+            --hybrid-report benchmark-output/hybrid/hybrid_refactor_benchmark.json \
+            --output-dir benchmark-output/current-code-quality \
+            > current-code-quality.log
+          cat current-code-quality.log
+      - name: Generate executable cross-module patch fixture
+        run: |
+          python benchmarks/refactor_code_quality/generate_fixture.py \
+            --output-dir benchmark-output/executable-fixture \
+            --planning-report benchmark-output/architect_consolidation_benchmark.json \
+            --calling-ablation benchmark-output/council-calling/council_calling_ablation.json \
+            > fixture-generation.log
+      - name: Evaluate every patch arm against engineering gates
+        run: |
+          python aura_executable_refactor_benchmark.py \
+            --fixture-dir benchmark-output/executable-fixture \
+            --output-dir benchmark-output/executable-quality \
+            > executable-quality.log
+          cat executable-quality.log
+      - name: Validate records, schema, partial evidence, and V3 efficiency
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          root = Path('benchmark-output')
+          schema = json.loads(Path('schemas/aura_refactor_output_record.schema.json').read_text(encoding='utf-8'))
+          validator = Draft202012Validator(schema)
+          summary = json.loads((root / 'executable-quality' / 'executable_refactor_benchmark.json').read_text(encoding='utf-8'))
+          ablation = json.loads((root / 'council-calling' / 'council_calling_ablation.json').read_text(encoding='utf-8'))
+          current = json.loads((root / 'current-code-quality' / 'current_code_output_assessment.json').read_text(encoding='utf-8'))
+
+          records = summary['records']
+          for arm_id, record in records.items():
+              errors = sorted(validator.iter_errors(record), key=lambda item: list(item.path))
+              assert not errors, (arm_id, [error.message for error in errors])
+              assert record['token_usage'].get('input_tokens_estimated') is not None
+              assert record['token_usage'].get('output_tokens_estimated') is not None
+              assert record['patch_stats']['file_count'] > 0
+              for group in ('visible_tests', 'hidden_tests', 'regression_tests'):
+                  assert record['gates'][group]['total'] > 0
+                  assert 0 <= record['gates'][group]['passed'] <= record['gates'][group]['total']
+
+          broad = records['broad_context']
+          assert broad['disposition'] == 'PARTIAL'
+          assert broad['gates']['visible_tests']['passed'] == 3
+          assert broad['gates']['hidden_tests']['passed'] == 1
+          assert broad['gates']['hidden_tests']['total'] == 3
+          assert broad['gates']['regression_tests']['passed'] == 2
+
+          sliced = records['slice_surgeon']
+          assert sliced['disposition'] == 'PARTIAL'
+          assert sliced['gates']['visible_tests']['passed'] == 3
+          assert sliced['gates']['hidden_tests']['passed'] == 2
+          assert sliced['gates']['hidden_tests']['total'] == 3
+          assert sliced['gates']['regression_tests']['passed'] == 2
+
+          for arm_id in ('council_v2', 'council_v3'):
+              record = records[arm_id]
+              assert record['working_status'] == 'WORKING'
+              assert record['disposition'] == 'ACCEPTED'
+              assert record['mandatory_gate_passed'] is True
+              assert record['gates']['visible_tests']['passed'] == 3
+              assert record['gates']['hidden_tests']['passed'] == 3
+              assert record['gates']['hidden_tests']['total'] == 3
+              assert record['gates']['regression_tests']['passed'] == 2
+              assert record['gates']['api_compatibility']['status'] == 'PASS'
+              assert record['gates']['security']['status'] == 'PASS'
+
+          comparison = summary['comparison']
+          assert comparison['v3_vs_v2_same_patch_digest'] is True
+          assert comparison['v3_vs_v2_same_disposition'] is True
+          assert comparison['v3_vs_v2_total_token_reduction_pct'] > 0
+          assert comparison['v3_better_quality_adjusted_efficiency'] is True
+
+          calling = ablation['comparison']
+          assert calling['call_reduction_pct'] > 0
+          assert calling['total_token_reduction_pct'] > 0
+          assert calling['quality_delta'] >= 0
+          assert calling['selected_plan_same'] is True
+
+          assert current['assessment']['planning_code_quality'] == 'UNAVAILABLE'
+          assert current['assessment']['hybrid_code_quality'] == 'UNAVAILABLE'
+          assert all(row['disposition'] == 'CODE_QUALITY_UNAVAILABLE' for row in current['records'])
+          PY
+      - name: Upload executable quality evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: architect-code-quality-benchmark
+          path: |
+            benchmark-output/
+            code-quality-tests.log
+            benchmark-prepare.log
+            benchmark-score.log
+            council-calling.log
+            hybrid-benchmark.log
+            current-code-quality.log
+            fixture-generation.log
+            executable-quality.log
+            aura_refactor_output_record.py
+            aura_refactor_patch_evaluator.py
+            aura_refactor_patch_evaluator_v2.py
+            aura_code_quality_registry.py
+            aura_current_code_quality_assessment.py
+            aura_executable_refactor_benchmark.py
+            aura_architect_council_v3.py
+            aura_architect_council_calling_benchmark.py
+            benchmarks/refactor_code_quality/generate_fixture.py
+            schemas/aura_refactor_output_record.schema.json
+          if-no-files-found: error
+          retention-days: 30
