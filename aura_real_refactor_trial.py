@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 from typing import Any
-import xml.etree.ElementTree as ET
+from defusedxml import ElementTree as ET
 
 from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_refactor_output_record import (
