@@ -99,7 +99,8 @@ jobs:
           : > /tmp/seed-push.log
           {
             set -x
-            git add Aura_Memory/emergent_results/seed_runs/2026-07-16
+            # Runtime Aura_Memory stays ignored. Only this dated, immutable fixture set is versioned.
+            git add -f Aura_Memory/emergent_results/seed_runs/2026-07-16
             if git diff --cached --quiet; then
               echo "Exact seed reports already committed."
               exit 0
