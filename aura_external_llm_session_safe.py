@@ -1,17 +1,16 @@
-"""Safe filesystem boundary for recorded external-LLM session exports.
+"""Safe filesystem boundary for persistent external-LLM session exports.
 
-The recorded session manager owns orchestration and append-only refactor evidence.
-This adapter narrows the MCP-visible export effect to
-``Aura_Staging/external_llm_sessions`` beneath the repository. Absolute paths,
-parent traversal, and symlink escapes are rejected.
+The persistent manager records compact events, token usage, state ledgers, and
+redacted content-addressed prompt/response evidence. This adapter confines the
+MCP-visible export effect to ``Aura_Staging/external_llm_sessions``.
 """
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-from aura_external_llm_session_recorded import (
-    RecordedAuraExternalLLMSessionManager as _BaseSessionManager,
+from aura_external_llm_session_persistent import (
+    PersistentAuraExternalLLMSessionManager as _BaseSessionManager,
     PATCH_AUTHORITY,
     VSA_PATCH_AUTHORITY,
 )
@@ -20,7 +19,7 @@ EXPORT_ROOT = Path("Aura_Staging") / "external_llm_sessions"
 
 
 class AuraExternalLLMSessionManager(_BaseSessionManager):
-    """Recorded session manager confined to Aura's review workspace."""
+    """Persistent recorded session manager confined to Aura's review workspace."""
 
     def export_session(self, session_id: str, output_path: str | Path) -> dict[str, Any]:
         raw = Path(str(output_path or "").strip())
@@ -65,6 +64,7 @@ class AuraExternalLLMSessionManager(_BaseSessionManager):
                     correlation_id=f"REF-{session.session_id}",
                     session_id=session.session_id,
                 )
+                result["content_evidence_dir"] = str(self.chronicle.evidence_dir)
         return result
 
     @staticmethod
