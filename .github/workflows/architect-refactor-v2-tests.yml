@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: pr131-review-finalizer
+  cancel-in-progress: true
+
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PYTHONHASHSEED: "0"
@@ -58,8 +62,10 @@ jobs:
     needs: v2-tests
     if: >-
       github.actor != 'github-actions[bot]' &&
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.head.ref == 'analysis/architect-benchmark'
+      ((github.event_name == 'pull_request' &&
+        github.event.pull_request.head.ref == 'analysis/architect-benchmark') ||
+       (github.event_name == 'push' &&
+        github.ref_name == 'analysis/architect-benchmark'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -76,7 +82,18 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pytest>=8.0,<9.0"
       - name: Apply deterministic reconciliation
-        run: PYTHONPATH=. python scripts/pr131_finalize_reconciliation.py
+        run: |
+          PYTHONPATH=. python scripts/pr131_finalize_reconciliation.py
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/architect-consolidation-benchmark.yml')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              'grep -q "Benchmark quality: **93.50**"',
+              'grep -Fq "Benchmark quality: **93.50**"',
+          )
+          path.write_text(text, encoding='utf-8')
+          PY
       - name: Compile reviewed fixes
         run: |
           python -m py_compile \
@@ -92,11 +109,7 @@ jobs:
           grep -Fq "168,569" README.md
           grep -Fq "18 attempted, 18 recorded, 0 failed" README.md
           grep -Fq "Benchmark quality: **93.50**" README.md
-      - name: Regenerate CODEMAP
-        run: |
-          python aura_codebase_navigator.py
-          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-      - name: Prepare canonical commit
+      - name: Prepare final workspace shape
         run: |
           git fetch --depth=1 origin main
           git show FETCH_HEAD:.github/workflows/architect-refactor-v2-tests.yml > .github/workflows/architect-refactor-v2-tests.yml
@@ -105,36 +118,107 @@ jobs:
             .github/workflows/pr131-finalize-reconciliation.yml \
             .github/workflows/pr131-apply-final-review.yml \
             .github/workflows/pr131-sync-final-benchmark-readme.yml
-          git config user.name "AuraOS Review Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add \
-            aura_external_llm_session.py \
-            tests/test_aura_external_llm_session.py \
-            README.md \
-            aura_architect_benchmark_report.py \
-            .github/workflows/architect-consolidation-benchmark.yml \
-            .github/workflows/architect-external-llm-session.yml \
-            .github/workflows/architect-refactor-v2-tests.yml \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md
-          for path in \
-            scripts/pr131_finalize_reconciliation.py \
-            .github/workflows/pr131-finalize-reconciliation.yml \
-            .github/workflows/pr131-apply-final-review.yml \
-            .github/workflows/pr131-sync-final-benchmark-readme.yml; do
-            if git ls-files --error-unmatch "$path" >/dev/null 2>&1; then
-              git add -A -- "$path"
-            fi
-          done
-          git status --short
-          test -n "$(git diff --cached --name-only)"
-      - name: Create canonical commit
-        run: git commit -m "fix(review): reconcile all inline findings and publish benchmarks"
-      - name: Clean generated worktree
-        run: git reset --hard HEAD
-      - name: Rebase onto current branch
+      - name: Regenerate CODEMAP against final workspace
         run: |
-          git fetch origin analysis/architect-benchmark
-          git rebase origin/analysis/architect-benchmark
-      - name: Push canonical reconciliation
-        run: git push origin HEAD:analysis/architect-benchmark
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+      - name: Publish reconciled code atomically
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: analysis/architect-benchmark
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import urllib.error
+          import urllib.request
+
+          token = os.environ['GH_TOKEN']
+          repository = os.environ['REPOSITORY']
+          branch = os.environ['BRANCH']
+          api_root = f'https://api.github.com/repos/{repository}'
+
+          def request(method: str, path: str, payload: dict | None = None) -> dict:
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(
+                  api_root + path,
+                  data=data,
+                  method=method,
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'AuraOS-PR131-Finalizer',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(req) as response:
+                      body = response.read()
+              except urllib.error.HTTPError as exc:
+                  detail = exc.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'{method} {path} failed: {exc.code} {detail}') from exc
+              return json.loads(body or b'{}')
+
+          ref_path = '/git/ref/heads/' + branch
+          ref = request('GET', ref_path)
+          current_head = ref['object']['sha']
+          checked_out = subprocess.check_output(
+              ['git', 'rev-parse', 'HEAD'], text=True
+          ).strip()
+          if current_head != checked_out:
+              raise RuntimeError(
+                  f'branch moved during validation: checked_out={checked_out} current={current_head}'
+              )
+
+          base_commit = request('GET', f'/git/commits/{current_head}')
+          paths = [
+              'aura_external_llm_session.py',
+              'tests/test_aura_external_llm_session.py',
+              'README.md',
+              'aura_architect_benchmark_report.py',
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+          ]
+          entries: list[dict] = []
+          for rel in paths:
+              content = Path(rel).read_bytes()
+              blob = request(
+                  'POST',
+                  '/git/blobs',
+                  {
+                      'content': base64.b64encode(content).decode('ascii'),
+                      'encoding': 'base64',
+                  },
+              )
+              entries.append(
+                  {'path': rel, 'mode': '100644', 'type': 'blob', 'sha': blob['sha']}
+              )
+
+          tree = request(
+              'POST',
+              '/git/trees',
+              {'base_tree': base_commit['tree']['sha'], 'tree': entries},
+          )
+          commit = request(
+              'POST',
+              '/git/commits',
+              {
+                  'message': 'fix(review): reconcile remaining inline findings',
+                  'tree': tree['sha'],
+                  'parents': [current_head],
+              },
+          )
+          request(
+              'PATCH',
+              '/git/refs/heads/' + branch,
+              {'sha': commit['sha'], 'force': False},
+          )
+          print(commit['sha'])
+          PY
