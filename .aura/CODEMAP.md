@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 997
-- **total_bytes**: 50639716
-- **text_tokens_est**: 3263644
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 133, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 693, 'schema_or_lexicon': 100, 'support_file': 43}
-- **topology_nodes**: 8147
+- **total_bytes**: 50642198
+- **text_tokens_est**: 3264264
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 133, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 694, 'schema_or_lexicon': 100, 'support_file': 42}
+- **topology_nodes**: 8146
 - **topology_edges**: 17771
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 22045.02
+- **elapsed_ms**: 16866.17
 
 ## Coverage
 
@@ -232,7 +232,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 8147
+- **nodes**: 8146
 - **edges**: 17771
 - **top_files_by_degree**:
   - `aura_node.py` degree=861 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
@@ -321,7 +321,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraAffordance` -> `aura_affordance_directory.py:37`
 - `AuraAgentArenaBridge` -> `aura_agent_arena_bridge.py:182`
 - `AuraArchReasoner` -> `aura_arch_reasoner.py:31`
-- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:71`
+- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:66`
 - `AuraAssociativeCore` -> `aura_associative_core.py:30`
 - `AuraCodingArenaRouter` -> `aura_fst_routing.py:399`
 - `AuraCognitiveSynthesizer` -> `aura_cognitive_synthesizer.py:24`
