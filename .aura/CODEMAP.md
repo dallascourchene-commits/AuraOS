@@ -20,7 +20,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - **topology_nodes**: 8147
 - **topology_edges**: 17771
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 22055.74
+- **elapsed_ms**: 22045.02
 
 ## Coverage
 
