@@ -1,10 +1,10 @@
-"""Shared proposal-only Architect connector for Aura's Arena surfaces.
+"""Shared governed Architect/Surgeon connector for every Aura Arena surface.
 
 Native Aura, Coding Arena, Human Agent Arena, MCP clients, HTTP/container clients,
-and third-party coding agents enter through this same bounded service.  Candidate
-plans are frozen and recorded before selection; generated code is executed through
-controlled slice-leased Surgeon sessions; all consequential promotion remains under
-human authority.
+and third-party coding agents enter through this same bounded service. Candidate
+plans are frozen and recorded before selection. The selected plan is then passed
+verbatim into ``ArchitectFusionLoop.prepare`` and checked against the resulting
+Act Capsules before any Surgeon turn is leased.
 """
 from __future__ import annotations
 
@@ -44,14 +44,16 @@ _REQUIRED = (
 _ALL_CRITIC_LANES = ("scope", "tests", "sequence", "continuity", "rollback", "cost")
 
 
+def _canonical(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+
+
 def _digest(value: Any, *, size: int = 16) -> str:
-    text = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
-    return hashlib.blake2b(text.encode("utf-8"), digest_size=size).hexdigest()
+    return hashlib.blake2b(_canonical(value).encode("utf-8"), digest_size=size).hexdigest()
 
 
 def _tokens(value: Any) -> int:
-    text = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
-    return (len(text) + 3) // 4
+    return (len(_canonical(value)) + 3) // 4
 
 
 def _candidate(candidate: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
@@ -59,8 +61,11 @@ def _candidate(candidate: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
     plan = dict(candidate.get("plan") or candidate)
     if len(json.dumps(plan, default=str).encode("utf-8")) > MAX_PLAN_BYTES:
         raise ValueError("candidate plan exceeds the bounded plan size")
-    if len(list(plan.get("act_tasks") or [])) > MAX_TASKS:
+    tasks = list(plan.get("act_tasks") or [])
+    if len(tasks) > MAX_TASKS:
         raise ValueError(f"candidate plan exceeds {MAX_TASKS} Act Capsules")
+    if any(not isinstance(item, Mapping) for item in tasks):
+        raise ValueError("every Act Capsule must be an object")
     return candidate_id, plan
 
 
@@ -78,6 +83,27 @@ def _effective_lanes(
     else:
         lanes = select_critic_lanes({"candidate_id": candidate_id, "plan": dict(plan)})
     return tuple(lanes[: control.council_call_budget])
+
+
+def _task_projection(task: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "task_id": str(task.get("task_id") or task.get("id") or ""),
+        "objective": str(task.get("objective") or "").strip(),
+        "target_file": str(task.get("target_file") or "").replace("\\", "/").lstrip("./"),
+        "target_symbol": str(task.get("target_symbol") or ""),
+        "related_files": [
+            str(item).replace("\\", "/").lstrip("./")
+            for item in list(task.get("related_files") or [])
+        ],
+        "allowed_scope": str(task.get("allowed_scope") or "single bounded edit"),
+        "acceptance": str(task.get("acceptance") or "Return a bounded patch or a refusal reason."),
+        "expected_output": str(task.get("expected_output") or "UNIFIED_DIFF").upper(),
+        "size": str(task.get("size") or "S").upper(),
+    }
+
+
+def _prepared_projection(prepared: Any) -> list[dict[str, Any]]:
+    return [_task_projection(item.to_dict()) for item in prepared.plan.act_capsules]
 
 
 @dataclass(frozen=True)
@@ -105,7 +131,7 @@ class PlanAssessment:
 
 
 class AuraArenaArchitectConnector:
-    """One governed Architect/Surgeon service for every Aura access surface."""
+    """One bounded Architect/Surgeon service for all Aura access surfaces."""
 
     def __init__(
         self,
@@ -121,11 +147,11 @@ class AuraArenaArchitectConnector:
         self._bridge = bridge
         self._bridge_factory = bridge_factory
         self.model_gateway = model_gateway or AuraNativeModelGateway(self.repo_root)
-        self.record_path = (
-            Path(record_path)
-            if record_path
-            else self.repo_root / "Aura_Memory" / "benchmarks" / "architect_plan_selections.jsonl"
-        )
+        if record_path:
+            raw_record = Path(record_path)
+            self.record_path = raw_record if raw_record.is_absolute() else self.repo_root / raw_record
+        else:
+            self.record_path = self.repo_root / "Aura_Memory" / "benchmarks" / "architect_plan_selections.jsonl"
         self.output_vault = output_vault or RefactorOutputVault(self.repo_root)
         self._surgeon_sessions: dict[str, ControlledRefactorSessionManager] = {}
 
@@ -164,7 +190,7 @@ class AuraArenaArchitectConnector:
     ) -> PlanAssessment:
         profile = normalize_control_profile(control, surface=surface)
         candidate_id, plan = _candidate(candidate)
-        tasks = [dict(item) for item in list(plan.get("act_tasks") or []) if isinstance(item, Mapping)]
+        tasks = [dict(item) for item in list(plan.get("act_tasks") or [])]
         length = profile_refactor_length(plan)
         lanes = _effective_lanes(candidate_id, plan, profile)
         required = {str(item) for item in required_capabilities if str(item)}
@@ -217,20 +243,20 @@ class AuraArenaArchitectConnector:
             score = 0.0
             reasons.append("no_act_capsules")
         return PlanAssessment(
-            candidate_id,
-            round(min(1.0, score), 4),
-            lanes,
-            length.to_dict(),
-            round(coverage, 4),
-            round(exact, 4),
-            round(governance, 4),
-            round(testability, 4),
-            reuse,
-            tuple(reasons),
-            _digest(plan),
-            _tokens(plan),
-            profile.council_mode,
-            len(lanes),
+            candidate_id=candidate_id,
+            score=round(min(1.0, score), 4),
+            selected_critic_lanes=lanes,
+            length_profile=length.to_dict(),
+            coverage_fraction=round(coverage, 4),
+            exact_task_fraction=round(exact, 4),
+            governance_fraction=round(governance, 4),
+            testability_fraction=round(testability, 4),
+            architecture_reuse=reuse,
+            reasons=tuple(reasons),
+            plan_digest=_digest(plan),
+            token_proxy=_tokens(plan),
+            council_mode=profile.council_mode,
+            planned_critic_calls=len(lanes),
         )
 
     def compare_plans(
@@ -284,7 +310,7 @@ class AuraArenaArchitectConnector:
             cross_domain_count=len(set(selected_plan.get("domains") or [])),
             large_task_count=int(length.get("large_task_count") or 0),
         )
-        candidate_provenance = {
+        provenance = {
             str(item.get("candidate_id") or item.get("plan_id") or "candidate"): {
                 "arm_family": item.get("arm_family") or item.get("method") or "UNKNOWN",
                 "provenance": dict(item.get("provenance") or {}),
@@ -301,10 +327,10 @@ class AuraArenaArchitectConnector:
             "required_capabilities": list(required_capabilities),
             "selected_candidate_id": selected.candidate_id,
             "selected_plan": selected_plan,
-            "selected_provenance": candidate_provenance[selected.candidate_id],
+            "selected_provenance": provenance[selected.candidate_id],
             "selected_assessment": selected.to_dict(),
             "assessments": [item.to_dict() for item in assessments],
-            "candidate_provenance": candidate_provenance,
+            "candidate_provenance": provenance,
             "cognitive_labor_route": route.to_dict(),
             "control_profile": profile.to_dict(),
             "selection_digest": _digest(
@@ -312,7 +338,7 @@ class AuraArenaArchitectConnector:
                     "objective": objective,
                     "selected": selected.to_dict(),
                     "candidates": [item.to_dict() for item in assessments],
-                    "provenance": candidate_provenance,
+                    "provenance": provenance,
                     "control": profile.to_dict(),
                 }
             ),
@@ -350,11 +376,101 @@ class AuraArenaArchitectConnector:
                 "run_path": run.get("relative_path"),
                 "selection_artifact": vault_record.get("selection_artifact"),
                 "comparison_digest": vault_record.get("comparison_digest"),
-                "visibility": "LOCAL_PRIVATE_FULL_OUTPUT",
+                "visibility": "LOCAL_PRIVATE_REDACTED_OUTPUT",
             }
         else:
             result["output_vault"] = {"enabled": False}
         return result
+
+    def _prepare_selected_plan(
+        self,
+        *,
+        objective: str,
+        selected_plan: Mapping[str, Any],
+        profile: ArchitectControlProfile,
+        target_file: str | None = None,
+        target_symbol: str | None = None,
+    ) -> dict[str, Any]:
+        from aura_architect_loop import ArchitectFusionLoop
+
+        tasks = [dict(item) for item in list(selected_plan.get("act_tasks") or [])]
+        if not tasks:
+            raise ValueError("selected plan has no Act Capsules")
+        requested_projection = [_task_projection(task) for task in tasks]
+        prepared = ArchitectFusionLoop(repo_root=self.repo_root).prepare(
+            objective,
+            architecture_decision=str(
+                selected_plan.get("architecture_decision") or "Bounded Architect plan."
+            ),
+            act_tasks=tasks,
+            target_file=target_file or selected_plan.get("target_file"),
+            target_symbol=target_symbol or selected_plan.get("target_symbol"),
+            acceptance_criteria=list(selected_plan.get("acceptance_criteria") or []),
+            rollback_conditions=list(selected_plan.get("rollback_conditions") or []),
+            risk_map=list(selected_plan.get("risk_map") or []),
+            constraints=[
+                *list(selected_plan.get("constraints") or []),
+                f"council_mode={profile.council_mode}",
+                f"council_call_budget={profile.council_call_budget}",
+                f"surgeon_mode={profile.surgeon_mode}",
+                "full_generated_outputs_recorded_locally",
+            ],
+        )
+        actual_projection = _prepared_projection(prepared)
+        if requested_projection != actual_projection:
+            raise ValueError("prepared Act Capsules do not match the frozen selected plan")
+
+        dependency_map = {
+            str(task.get("task_id") or task.get("id") or ""): [
+                str(item) for item in list(task.get("depends_on") or [])
+            ]
+            for task in tasks
+        }
+        for capsule in prepared.arena.agent_capsules:
+            capsule["depends_on"] = dependency_map.get(str(capsule.get("task_id") or ""), [])
+
+        sessions = getattr(self.bridge, "_sessions", None)
+        if not isinstance(sessions, dict):
+            raise ValueError("Arena bridge cannot register a prepared selected-plan session")
+        phase_hash = prepared.plan.phase_hash
+        sessions[phase_hash] = {
+            "prepared": prepared,
+            "arena": prepared.arena,
+            "grounding": [item.to_dict() for item in prepared.grounding],
+            "verification": None,
+            "stage_results": [],
+            "hotswap_capsule": None,
+            "selected_plan_digest": _digest(selected_plan),
+            "dependency_map": dependency_map,
+        }
+
+        findings = [item.to_dict() for item in prepared.shadow_report.findings]
+        routes = [dict(item) for item in prepared.arena.routing_decisions]
+        act_capsules = [dict(item) for item in prepared.arena.agent_capsules]
+        return {
+            "ok": True,
+            "plan_phase_hash": phase_hash,
+            "selected_plan_digest": _digest(selected_plan),
+            "requested_act_projection_digest": _digest(requested_projection),
+            "prepared_act_projection_digest": _digest(actual_projection),
+            "act_capsules": act_capsules,
+            "dependency_map": dependency_map,
+            "grounding_evidence": [item.to_dict() for item in prepared.grounding],
+            "shadow_findings": findings,
+            "shadow_gate": prepared.shadow_report.gate,
+            "routing_decisions": routes,
+            "liquid_arena_lease_count": len(prepared.arena.agent_leases),
+            "builder_patch_authorized": bool(routes)
+            and all(item.get("route") == "BUILDER_PATCH" for item in routes),
+            "ready_for_incubator": prepared.arena.ready_for_incubator,
+            "blockers": [item for item in findings if item.get("severity") == "blocker"],
+            "warnings": [item for item in findings if item.get("severity") != "blocker"],
+            "intensity": prepared.intensity,
+            "proposal_only": True,
+            "human_review_required": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
 
     def prepare_refactor(
         self,
@@ -378,26 +494,20 @@ class AuraArenaArchitectConnector:
             run_id=run_id,
             benchmark=benchmark,
         )
-        selected = dict(comparison["selected_plan"])
         profile = normalize_control_profile(
-            comparison.get("control_profile"), surface=surface, benchmark=benchmark
+            comparison.get("control_profile"),
+            surface=surface,
+            benchmark=benchmark,
         )
-        prepared = self.bridge.aura_prepare_arena(
+        prepared = self._prepare_selected_plan(
             objective=objective,
-            target_file=target_file or selected.get("target_file"),
-            target_symbol=target_symbol or selected.get("target_symbol"),
-            acceptance_criteria=list(selected.get("acceptance_criteria") or []),
-            risk_map=list(selected.get("risk_map") or []),
-            constraints=[
-                *list(selected.get("constraints") or []),
-                f"council_mode={profile.council_mode}",
-                f"council_call_budget={profile.council_call_budget}",
-                f"surgeon_mode={profile.surgeon_mode}",
-                "full_generated_outputs_recorded_locally",
-            ],
+            selected_plan=dict(comparison["selected_plan"]),
+            profile=profile,
+            target_file=target_file,
+            target_symbol=target_symbol,
         )
         result = {
-            "ok": bool(prepared.get("ok", True)),
+            "ok": bool(prepared.get("ok")),
             "comparison": comparison,
             "arena_preparation": prepared,
             "control_profile": profile.to_dict(),
@@ -439,7 +549,7 @@ class AuraArenaArchitectConnector:
             surface=profile.surface,
             output_vault=self.output_vault,
         )
-        vault_run = str(
+        architect_run = str(
             run_id
             or dict(prepared.get("comparison", {})).get("output_vault", {}).get("run_id")
             or ""
@@ -449,7 +559,7 @@ class AuraArenaArchitectConnector:
             objective=objective,
             provider=provider,
             model=model,
-            run_id=vault_run,
+            run_id=architect_run,
             metadata={
                 "selected_candidate_id": prepared["comparison"]["selected_candidate_id"],
                 "selection_digest": prepared["comparison"]["selection_digest"],
@@ -489,7 +599,12 @@ class AuraArenaArchitectConnector:
     def list_refactor_outputs(self, *, limit: int = 50) -> dict[str, Any]:
         return self.output_vault.list_runs(limit=limit)
 
-    def load_refactor_output(self, relative_path: str, *, max_bytes: int = 2_000_000) -> dict[str, Any]:
+    def load_refactor_output(
+        self,
+        relative_path: str,
+        *,
+        max_bytes: int = 2_000_000,
+    ) -> dict[str, Any]:
         return self.output_vault.load_artifact(relative_path, max_bytes=max_bytes)
 
     def route_native_model(self, **kwargs: Any) -> dict[str, Any]:
@@ -527,7 +642,7 @@ class AuraArenaArchitectConnector:
             "recorded_at": time.time(),
             "payload_digest": _digest(public),
             "payload": public,
-            "redaction": "FULL_PLANS_AUTHORIZATIONS_GENERATED_CODE_AND_PRIVATE_EVIDENCE_OMITTED",
+            "redaction": "FULL_PLANS_AUTHORIZATIONS_AND_PRIVATE_EVIDENCE_OMITTED",
         }
         try:
             self.record_path.parent.mkdir(parents=True, exist_ok=True)
