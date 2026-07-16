@@ -106,9 +106,8 @@ jobs:
           grep -Fq "Benchmark quality: **93.50**" README.md
       - name: Prepare final workspace shape
         run: |
-          git fetch --depth=1 origin main
-          git show FETCH_HEAD:.github/workflows/architect-refactor-v2-tests.yml > .github/workflows/architect-refactor-v2-tests.yml
           rm -f \
+            .github/workflows/architect-refactor-v2-tests.yml \
             scripts/pr131_finalize_reconciliation.py \
             .github/workflows/pr131-finalize-reconciliation.yml \
             .github/workflows/pr131-apply-final-review.yml \
