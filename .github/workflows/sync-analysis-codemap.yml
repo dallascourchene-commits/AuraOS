@@ -1,6 +1,7 @@
 name: Synchronize CODEMAP on analysis branches
 
 on:
+  pull_request:
   push:
     branches:
       - "analysis/**"
@@ -13,17 +14,20 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-analysis-codemap-${{ github.ref }}
+  group: sync-analysis-codemap-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   sync-codemap:
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      (github.event_name == 'push' || startsWith(github.event.pull_request.head.ref, 'analysis/'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -58,4 +62,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: synchronize CODEMAP for analysis branch"
-          git push origin HEAD:${{ github.ref_name }}
+          git push origin HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}
