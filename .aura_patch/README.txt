@@ -1,1 +1,0 @@
-Temporary reviewable source fragments for the Benchmark Four hardening commit. The synchronization workflow removes this directory before committing the final tree.
