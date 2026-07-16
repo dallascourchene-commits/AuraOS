@@ -10,7 +10,7 @@ on:
       - ".aura/CODEMAP.md"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: sync-analysis-codemap-${{ github.event.pull_request.number || github.ref }}
@@ -52,90 +52,12 @@ jobs:
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
-      - name: Publish synchronized maps atomically
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          if git diff --quiet -- .aura/CODEMAP.json .aura/CODEMAP.md; then
-            exit 0
-          fi
-          python - <<'PY'
-          import base64
-          import json
-          import os
-          from pathlib import Path
-          import urllib.error
-          import urllib.request
-
-          token = os.environ["GH_TOKEN"]
-          branch = os.environ["TARGET_BRANCH"]
-          target_sha = os.environ["TARGET_SHA"]
-          repository = os.environ["REPOSITORY"]
-          root = f"https://api.github.com/repos/{repository}"
-
-          def request(method, path, payload=None):
-              data = None if payload is None else json.dumps(payload).encode("utf-8")
-              req = urllib.request.Request(
-                  root + path,
-                  data=data,
-                  method=method,
-                  headers={
-                      "Authorization": f"Bearer {token}",
-                      "Accept": "application/vnd.github+json",
-                      "X-GitHub-Api-Version": "2022-11-28",
-                      "Content-Type": "application/json",
-                      "User-Agent": "AuraOS-CODEMAP-Sync",
-                  },
-              )
-              try:
-                  with urllib.request.urlopen(req) as response:
-                      body = response.read()
-              except urllib.error.HTTPError as exc:
-                  detail = exc.read().decode("utf-8", errors="replace")
-                  raise RuntimeError(f"{method} {path} failed: {exc.code} {detail}") from exc
-              return json.loads(body or b"{}")
-
-          ref_path = "/git/ref/heads/" + branch
-          ref = request("GET", ref_path)
-          current_sha = ref["object"]["sha"]
-          if current_sha != target_sha:
-              raise RuntimeError(
-                  f"branch moved during CODEMAP validation: expected={target_sha} current={current_sha}"
-              )
-          base_commit = request("GET", f"/git/commits/{current_sha}")
-          entries = []
-          for rel in (".aura/CODEMAP.json", ".aura/CODEMAP.md"):
-              content = Path(rel).read_bytes()
-              blob = request(
-                  "POST",
-                  "/git/blobs",
-                  {
-                      "content": base64.b64encode(content).decode("ascii"),
-                      "encoding": "base64",
-                  },
-              )
-              entries.append({"path": rel, "mode": "100644", "type": "blob", "sha": blob["sha"]})
-          tree = request(
-              "POST",
-              "/git/trees",
-              {"base_tree": base_commit["tree"]["sha"], "tree": entries},
-          )
-          commit = request(
-              "POST",
-              "/git/commits",
-              {
-                  "message": "docs: synchronize CODEMAP",
-                  "tree": tree["sha"],
-                  "parents": [current_sha],
-              },
-          )
-          request(
-              "PATCH",
-              "/git/refs/heads/" + branch,
-              {"sha": commit["sha"], "force": False},
-          )
-          print(commit["sha"])
-          PY
+      - name: Upload synchronized maps
+        uses: actions/upload-artifact@v4
+        with:
+          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+          if-no-files-found: error
+          retention-days: 14
