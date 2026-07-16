@@ -93,14 +93,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git checkout -- .github/workflows/architect-real-refactor-trial.yml
           git add \
             aura_emergent_refactor_workspace.py \
             aura_human_agent_arena_server.py \
             aura_human_agent_arena/emergent.js \
             aura_codebase_navigator.py \
             tests/test_aura_codemap_verify.py \
-            tests/test_aura_emergent_refactor_workspace.py \
-            .github/workflows/architect-real-refactor-trial.yml
+            tests/test_aura_emergent_refactor_workspace.py
           if git diff --cached --quiet; then
             echo "Integrity repairs already present."
             exit 0
