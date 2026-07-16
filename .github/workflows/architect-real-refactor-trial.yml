@@ -3,10 +3,7 @@ name: Aura Real Refactor Trial V1
 on:
   pull_request:
   push:
-    branches:
-      - "analysis/**"
-      - "refactor/**"
-      - main
+    branches: ["analysis/**", "refactor/**", main]
 
 permissions:
   contents: read
@@ -39,32 +36,51 @@ jobs:
         run: |
           python -m py_compile \
             aura_cognitive_labor_router.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py \
-            tests/test_aura_benchmark_four.py
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py
       - name: Run adversarial and property-based tests
         run: |
           set -o pipefail
-          python -m pytest -q tests/test_aura_benchmark_four.py \
+          python -m pytest -q \
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py \
             --junitxml=benchmark-four-junit.xml \
             2>&1 | tee benchmark-four-tests.log
       - name: Run focused static and security gates
         run: |
           ruff check --select E9,F63,F7,F82 \
             aura_cognitive_labor_router.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
             aura_agent_arena_mcp_architect.py \
             aura_arena_connector_server.py \
             aura_real_refactor_trial.py \
-            tests/test_aura_benchmark_four.py
+            tests/test_aura_benchmark_four.py \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_arena_connector_hardening.py \
+            tests/test_aura_state_identity_cycles.py
           bandit -q -ll \
             aura_cognitive_labor_router.py \
+            aura_refactor_state_identity.py \
+            aura_refactor_state_ledger_core.py \
+            aura_refactor_state_ledger_metrics.py \
             aura_refactor_state_ledger.py \
             aura_native_model_gateway.py \
             aura_arena_architect_connector.py \
@@ -88,6 +104,8 @@ jobs:
               "security": "PASS",
               "container_build": "PASS",
               "proposal_only_authority": "PASS",
+              "history_reconstructability": "PASS",
+              "record_redaction": "PASS",
           }
           Path("benchmark-four-gates.json").write_text(json.dumps(gates, indent=2) + "\n")
           PY
@@ -111,7 +129,7 @@ jobs:
           assert report["selected_plan_match"] is True
           assert report["plan_comparison"]["selected_candidate_id"] == "PLAN-C-INTEGRATED-ARENA-ARCHITECTURE"
           assert report["execution_evidence"]["junit"]["status"] == "PASS"
-          assert report["execution_evidence"]["junit"]["tests"] >= 10
+          assert report["execution_evidence"]["junit"]["tests"] >= 40
           assert report["disposition"] == "READY_FOR_CODERABBIT_OR_MANUAL_REVIEW"
           prior = report["prior_evidence"]["benchmark_three"]
           assert prior["v3_token_reduction_pct"] == 32.83
