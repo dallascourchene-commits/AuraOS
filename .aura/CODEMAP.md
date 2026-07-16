@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1003
-- **total_bytes**: 50710056
-- **text_tokens_est**: 3281233
+- **total_bytes**: 50715344
+- **text_tokens_est**: 3282555
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 13, 'knowledge_artifact': 133, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 700, 'schema_or_lexicon': 100, 'support_file': 42}
-- **topology_nodes**: 8222
-- **topology_edges**: 17954
+- **topology_nodes**: 8226
+- **topology_edges**: 17971
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 22555.75
+- **elapsed_ms**: 15838.75
 
 ## Coverage
 
@@ -222,7 +222,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_live_architect.py` (python_module): 74 symbols, degree 506, ~30294 tokens
 - `aura_fst_routing.py` (python_module): 35 symbols, degree 488, ~8991 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 480, ~19006 tokens
-- `aura_architect_loop.py` (python_module): 70 symbols, degree 457, ~18332 tokens
+- `aura_architect_loop.py` (python_module): 70 symbols, degree 459, ~18332 tokens
 - `test_aura_functions.py` (python_module): 80 symbols, degree 358, ~9340 tokens
 - `aura_coding_arena_planning.py` (python_module): 20 symbols, degree 350, ~10712 tokens
 - `aura_scientific_memory.py` (python_module): 44 symbols, degree 341, ~9915 tokens
@@ -232,8 +232,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 8222
-- **edges**: 17954
+- **nodes**: 8226
+- **edges**: 17971
 - **top_files_by_degree**:
   - `aura_node.py` degree=861 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
@@ -241,7 +241,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
   - `aura_live_architect.py` degree=506 nodes=85 neighbors=`aura_architect_council_calling_benchmark.py`, `aura_architect_council_v2.py`, `aura_architect_council_v3.py`, `aura_architect_loop.py`
   - `aura_fst_routing.py` degree=488 nodes=36 neighbors=`aura_architect_loop.py`, `aura_external_llm_session.py`, `aura_fusion.py`, `aura_graphify_schema.py`
   - `aura_relational_authority.py` degree=480 nodes=59 neighbors=`aura_civic_planning.py`, `aura_graphify_schema.py`, `aura_workflow_gates.py`, `liquid_attractor_control_plane.py`
-  - `aura_architect_loop.py` degree=457 nodes=73 neighbors=`aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_dream_retrieval.py`, `aura_fst_routing.py`
+  - `aura_architect_loop.py` degree=459 nodes=73 neighbors=`aura_arena_architect_connector.py`, `aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_dream_retrieval.py`
   - `test_aura_functions.py` degree=358 nodes=87 neighbors=`arch_reasoner_accel.py`, `async_palace.py`, `aura_arch_reasoner.py`, `aura_associative_core.py`
   - `aura_coding_arena_planning.py` degree=350 nodes=21 neighbors=`aura_coding_arena_planning_benchmark.py`, `aura_coding_arena_planning_integrity.py`, `aura_coding_arena_planning_types.py`, `aura_event_contracts.py`
   - `aura_scientific_memory.py` degree=341 nodes=46 neighbors=`arxiv_forager.py`, `aura_fst_routing.py`, `aura_node.py`, `aura_ojibwe_lexicon_sidecar.py`
@@ -323,7 +323,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraAffordance` -> `aura_affordance_directory.py:37`
 - `AuraAgentArenaBridge` -> `aura_agent_arena_bridge.py:182`
 - `AuraArchReasoner` -> `aura_arch_reasoner.py:31`
-- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:107`
+- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:133`
 - `AuraAssociativeCore` -> `aura_associative_core.py:30`
 - `AuraCodingArenaRouter` -> `aura_fst_routing.py:399`
 - `AuraCognitiveSynthesizer` -> `aura_cognitive_synthesizer.py:24`
