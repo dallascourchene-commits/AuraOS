@@ -97,7 +97,26 @@ Environment variables:
 | `aura_repair_packet` | Return minimum context needed to repair a failed patch |
 | `aura_hotswap_status` | Return whether staged transaction is ready for promotion |
 | `aura_export_icm` | Export arena transaction into ICM audit workspace |
+| `aura_checkpoint_session` | Persist the prepared bridge session as a verifier-bound checkpoint |
+| `aura_list_checkpoints` | List checkpoint metadata without payloads |
+| `aura_restore_checkpoint` | Assess restore against current HEAD and invariants; never auto-apply |
+| `aura_fork_checkpoint` | Create a named what-if child checkpoint |
+| `aura_handoff_checkpoint` | Create a payload-free digital baton for another Arena |
 | `aura_fireworks_patch_worker` | Call Fireworks model for a compressed micro-patch |
+
+## Temporal Persistence Tools
+
+The MCP server uses `PersistentAuraAgentArenaBridge`, which extends the existing bridge without changing patch authority.
+
+```text
+prepare / stage / verify
+  → aura_checkpoint_session
+  → optional aura_fork_checkpoint
+  → aura_restore_checkpoint
+  → existing verifier and human review
+```
+
+A restore result is an assessment packet only. It cannot apply a patch, promote a hotswap, commit, push, open a PR, merge, or authorize a physical action. Cross-Arena handoff excludes the checkpoint payload by default.
 
 ## Example Codex CLI Workflow
 
