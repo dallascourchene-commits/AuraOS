@@ -1,0 +1,86 @@
+{
+  "version": "AURA_SCO_PHASE4_E9_E12_TEMPORAL_PERSISTENCE_V1",
+  "date": "2026-07-17",
+  "repository": "dallascourchene-commits/AuraOS",
+  "pull_request": 150,
+  "baseline_main": "c77e6d6558b2ee4f4c7f7c9160eff16e8ec0e4c5",
+  "verified_implementation_head": "d37fbffcebb84527fd4343c4babc70b938395421",
+  "audit": {
+    "run_id": 29602039592,
+    "artifact_id": 8415408411,
+    "python_compile": "PASS",
+    "fatal_ruff": "PASS",
+    "topology_generation": "PASS",
+    "registry_cli_mcp_boundary_gate": "PASS"
+  },
+  "tests": {
+    "focused_passed": 25,
+    "focused_elapsed_seconds": 1.27,
+    "canonical_owner_regressions_passed": 95,
+    "canonical_owner_regressions_elapsed_seconds": 1.80
+  },
+  "coverage_percent": {
+    "aggregate_persistence_owners": 84,
+    "temporal_persistence": 85,
+    "temporal_wfst_adapter": 91,
+    "arena_persistence_adapters": 83,
+    "agent_bridge_persistence": 71,
+    "restoration_commander": 67
+  },
+  "arenas": {
+    "coding_workbench": "INTEGRATED",
+    "human_agent_arena": "INTEGRATED",
+    "agent_bridge_arena": "INTEGRATED",
+    "construction_arena": "INTEGRATED_AS_PROJECTION"
+  },
+  "restoration_decisions": [
+    "DIRECT_RESUME_REVIEW_REQUIRED",
+    "MITOSIS_REQUIRED",
+    "RESTORATION_COUNCIL_REQUIRED"
+  ],
+  "manual_adversarial_repairs": [
+    "verify every registry-referenced checkpoint file",
+    "cross-check duplicated registry metadata against checkpoint content",
+    "preserve explicit empty fork payloads",
+    "reject non-finite checkpoint timestamps",
+    "bind creation time into the record digest while keeping checkpoint identity idempotent",
+    "fail closed when no supported file-lock backend is available",
+    "support POSIX fcntl and Windows msvcrt registry locks",
+    "remove two verified-unused Coding Workbench imports",
+    "include committed emergent seed fixtures in owner regression checkout",
+    "make the integration push reject all concurrent source changes"
+  ],
+  "coderabbit": {
+    "explicit_invocations": 1,
+    "command_comment_id": 5006045090,
+    "invocation_id": "18886d52-813b-4e14-a514-b75398f22a3f",
+    "commit_check": "SUCCESS",
+    "submitted_reviews": 0,
+    "inline_threads": 0,
+    "actionable_findings": 0,
+    "invoke_again": false
+  },
+  "claim_boundaries": {
+    "automatic_restore": false,
+    "automatic_mitosis": false,
+    "automatic_restoration_council_model_call": false,
+    "automatic_hotswap": false,
+    "automatic_commit": false,
+    "automatic_push": false,
+    "automatic_pull_request": false,
+    "automatic_merge": false,
+    "physical_work_authorized": false,
+    "payment_released": false,
+    "access_control_authorized": false,
+    "professional_certification_authorized": false,
+    "active_grammar_mutated": false,
+    "legal_immutability_claimed": false,
+    "court_admissibility_claimed": false,
+    "production_readiness_claimed": false,
+    "provider_tokens_measured": false,
+    "provider_cost_measured": false,
+    "human_review_required": true,
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "vsa_patch_authority": false
+  }
+}
