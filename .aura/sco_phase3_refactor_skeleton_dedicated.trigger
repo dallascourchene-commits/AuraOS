@@ -1,1 +1,1 @@
-trigger: isolated exact RefactorSkeleton Surgeon repair dependency pass 3
+trigger: structural RefactorSkeleton Surgeon repair pass 4
