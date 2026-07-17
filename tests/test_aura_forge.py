@@ -140,7 +140,11 @@ def request() -> dict[str, Any]:
         "risk_map": ["interface drift", "scope expansion"],
         "provider": "test-provider",
         "model": "test-model",
-        "metadata": {"ticket": "ENG-42", "api_key": "must-not-leak"},
+        "metadata": {
+            "ticket": "ENG-42",
+            "api_key": "must-not-leak",
+            "forge_contract_id": "spoofed-lineage",
+        },
     }
 
 
@@ -157,7 +161,10 @@ def test_prepare_compiles_exact_evidence_contract(tmp_path: Path) -> None:
     assert contract["task_evidence"][0]["line_ranges"][0]["line_range"] == [20, 60]
     assert contract["authority"]["production_mutation"] is False
     assert contract["authority"]["automatic_merge"] is False
-    assert contract["metadata"] == {"ticket": "ENG-42"}
+    assert contract["metadata"] == {
+        "ticket": "ENG-42",
+        "forge_contract_id": "spoofed-lineage",
+    }
     assert validate_forge_contract(contract) == []
     assert bridge.context_calls[0]["max_tokens_est"] == 800
     assert "external_workers_receive_slices_only" in bridge.prepare_calls[0]["constraints"]
@@ -186,6 +193,23 @@ def test_start_freezes_prepared_plan_and_opens_controlled_session(tmp_path: Path
     assert manager.opened is not None
     assert manager.opened["prepared_arena"]["plan_phase_hash"] == "phase-123"
     assert manager.opened["metadata"]["forge_contract_id"] == result["contract"]["contract_id"]
+    assert manager.opened["metadata"]["forge_contract_id"] != "spoofed-lineage"
+    assert manager.opened["metadata"]["forge_version"] == "AURA_FORGE_V1"
+
+
+def test_status_does_not_claim_decision_eligibility_without_proof(tmp_path: Path) -> None:
+    runtime, _bridge, manager = build_runtime(tmp_path)
+    started = runtime.start(request())
+    manager.status = "READY_FOR_HUMAN_REVIEW"
+
+    status = runtime.status(started["run_id"])
+
+    assert status["status"] == "READY_FOR_HUMAN_REVIEW"
+    assert status["decision_eligible"] is False
+    assert status["human_review_packet"]["required_gate_results"] == {
+        "canonical_arena_verifier": False,
+        "hotswap_readiness": True,
+    }
 
 
 def test_submit_stops_at_human_review_without_promotion(tmp_path: Path) -> None:
@@ -252,6 +276,13 @@ def test_request_rejects_unsafe_paths_and_invalid_budgets() -> None:
 def test_dot_prefixed_repository_paths_are_preserved() -> None:
     parsed = ForgeRunRequest.from_value({"objective": "x", "target_file": ".aura/ARCHITECTURE.md"})
     assert parsed.target_file == ".aura/ARCHITECTURE.md"
+
+
+def test_contract_validator_rejects_unsupported_gates(tmp_path: Path) -> None:
+    runtime, _bridge, _manager = build_runtime(tmp_path)
+    contract = runtime.prepare(request())["contract"]
+    contract["required_gates"] = ["hidden_tests"]
+    assert validate_forge_contract(contract) == ["unsupported_required_gates:hidden_tests"]
 
 
 def test_export_delegates_to_safe_session_owner(tmp_path: Path) -> None:

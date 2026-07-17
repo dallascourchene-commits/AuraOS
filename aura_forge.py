@@ -48,6 +48,10 @@ _SECRET_KEYS = frozenset({
     "auth_token",
     "bearer_token",
     "refresh_token",
+    "authorization",
+    "client_secret",
+    "passphrase",
+    "signing_key",
 })
 _SECRET_SUFFIXES = ("_api_key", "_password", "_private_key", "_secret", "_credential")
 
@@ -80,7 +84,7 @@ def _safe_repo_path(value: Any, *, field_name: str) -> str | None:
     normalized = path.as_posix()
     while normalized.startswith("./"):
         normalized = normalized[2:]
-    if not normalized:
+    if not normalized or normalized == ".":
         raise ValueError(f"{field_name} must not be empty")
     return normalized
 
@@ -419,9 +423,9 @@ class AuraForgeRuntime:
             model=request.model,
             run_id=run_id,
             metadata={
+                **dict(request.metadata),
                 "forge_version": FORGE_VERSION,
                 "forge_contract_id": state["contract"].contract_id,
-                **dict(request.metadata),
             },
         )
         if not opened.get("session_created"):
@@ -502,6 +506,11 @@ class AuraForgeRuntime:
             if current.get("ok"):
                 session = dict(current.get("session") or {})
                 state["status"] = str(session.get("status") or state["status"])
+        review_packet = (
+            self.human_review_packet(run_id)
+            if state["status"] == REVIEW_READY_STATUS
+            else None
+        )
         return {
             "ok": True,
             "version": FORGE_VERSION,
@@ -509,7 +518,10 @@ class AuraForgeRuntime:
             "status": state["status"],
             "contract": state["contract"].to_dict(),
             "session": _sanitize(session),
-            "decision_eligible": state["status"] == REVIEW_READY_STATUS,
+            "decision_eligible": bool(
+                review_packet and review_packet.get("decision_eligible") is True
+            ),
+            "human_review_packet": review_packet,
             "production_mutation": False,
             "human_review_required": True,
         }
@@ -720,8 +732,13 @@ def validate_forge_contract(value: Mapping[str, Any]) -> list[str]:
             errors.append("vsa_patch_authority_must_be_false")
     else:
         errors.append("authority_must_be_object")
-    if not list(value.get("required_gates") or []):
+    required_gates = list(value.get("required_gates") or [])
+    if not required_gates:
         errors.append("required_gates_must_not_be_empty")
+    else:
+        unsupported = sorted(set(required_gates) - SUPPORTED_REQUIRED_GATES)
+        if unsupported:
+            errors.append(f"unsupported_required_gates:{','.join(unsupported)}")
     if not list(value.get("act_capsules") or []):
         errors.append("act_capsules_must_not_be_empty")
     return errors

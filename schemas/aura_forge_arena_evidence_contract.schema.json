@@ -21,18 +21,66 @@
     "lifecycle"
   ],
   "properties": {
-    "version": {"const": "AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1"},
-    "contract_id": {"type": "string", "minLength": 16},
-    "request_digest": {"type": "string", "minLength": 16},
-    "objective": {"type": "string", "minLength": 1},
-    "objective_digest": {"type": "string", "minLength": 16},
-    "repository": {"type": "object"},
-    "plan_phase_hash": {"type": "string", "minLength": 1},
-    "act_capsules": {"type": "array", "minItems": 1, "items": {"type": "object"}},
-    "task_evidence": {"type": "array", "minItems": 1, "items": {"type": "object"}},
-    "required_gates": {"type": "array", "minItems": 1, "items": {"type": "string"}},
-    "allowed_files": {"type": "array", "items": {"type": "string"}},
-    "worker_contract": {"type": "object"},
+    "version": {
+      "const": "AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1"
+    },
+    "contract_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "request_digest": {
+      "type": "string",
+      "minLength": 16
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objective_digest": {
+      "type": "string",
+      "minLength": 16
+    },
+    "repository": {
+      "type": "object"
+    },
+    "plan_phase_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "act_capsules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "task_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "required_gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "canonical_arena_verifier",
+          "hotswap_readiness"
+        ]
+      }
+    },
+    "allowed_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "worker_contract": {
+      "type": "object"
+    },
     "authority": {
       "type": "object",
       "required": [
@@ -45,18 +93,40 @@
         "automatic_merge"
       ],
       "properties": {
-        "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
-        "vsa_patch_authority": {"const": false},
-        "production_mutation": {"const": false},
-        "automatic_commit": {"const": false},
-        "automatic_push": {"const": false},
-        "automatic_pull_request": {"const": false},
-        "automatic_merge": {"const": false}
+        "patch_authority": {
+          "const": "exact_source_spans_and_hashes_only"
+        },
+        "vsa_patch_authority": {
+          "const": false
+        },
+        "production_mutation": {
+          "const": false
+        },
+        "automatic_commit": {
+          "const": false
+        },
+        "automatic_push": {
+          "const": false
+        },
+        "automatic_pull_request": {
+          "const": false
+        },
+        "automatic_merge": {
+          "const": false
+        }
       }
     },
     "lifecycle": {
       "type": "array",
-      "const": ["FRAME", "GROUND", "PLAN", "ACT", "PROVE", "DECIDE", "DISSOLVE"]
+      "const": [
+        "FRAME",
+        "GROUND",
+        "PLAN",
+        "ACT",
+        "PROVE",
+        "DECIDE",
+        "DISSOLVE"
+      ]
     }
   }
 }
