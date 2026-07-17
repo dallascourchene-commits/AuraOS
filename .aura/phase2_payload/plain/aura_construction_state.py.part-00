@@ -1,0 +1,239 @@
+"""Deterministic append-only state, supersession, conflict, and query projection.
+
+Readiness in this module means evidence-ready for governed authority review. It
+never means physical-work authorization or professional certification.
+"""
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+import math
+from typing import Any, Iterable
+
+from aura_event_contracts import stable_digest
+from aura_construction_contracts import (
+    ConstructionClaim,
+    ConstructionEvent,
+    ConstructionEvidence,
+    ConstructionEvidenceClass,
+    ConstructionPrivacyClass,
+    ConstructionRecordKind,
+    GENESIS_CHAIN_DIGEST,
+    PATCH_AUTHORITY,
+    PROPOSAL_ONLY,
+    VSA_PATCH_AUTHORITY,
+)
+
+CONSTRUCTION_STATE_VERSION = "AURA_CONSTRUCTION_STATE_V1"
+_NON_DISPOSITIVE = frozenset(
+    {ConstructionEvidenceClass.SENSOR.value, ConstructionEvidenceClass.LOCATION.value}
+)
+_PRIVACY_RANK = {
+    ConstructionPrivacyClass.PUBLIC.value: 0,
+    ConstructionPrivacyClass.PROJECT.value: 1,
+    ConstructionPrivacyClass.RESTRICTED.value: 2,
+    ConstructionPrivacyClass.SENSITIVE.value: 3,
+}
+
+
+def _digest(value: Any, name: str) -> str:
+    if type(value) is not str or len(value) not in {32, 64}:
+        raise ValueError(f"{name} must be a 32- or 64-character digest")
+    normalized = value.lower()
+    if any(ch not in "0123456789abcdef" for ch in normalized):
+        raise ValueError(f"{name} must be hexadecimal")
+    if value != normalized:
+        raise ValueError(f"{name} must use canonical lowercase hexadecimal")
+    return normalized
+
+
+def _timestamp(value: Any, name: str) -> float:
+    if type(value) not in {int, float}:
+        raise ValueError(f"{name} must be numeric")
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(f"{name} must be finite")
+    return number
+
+
+def _require_canonical_float(value: Any, name: str) -> None:
+    if type(value) is not float or not math.isfinite(value):
+        raise ValueError(f"{name} must be a canonical finite float")
+
+
+def _tuple_strings(value: Any, name: str) -> tuple[str, ...]:
+    if type(value) is not tuple:
+        raise ValueError(f"{name} must be a tuple")
+    if any(type(item) is not str or not item for item in value):
+        raise ValueError(f"{name} contains an invalid value")
+    if len(value) != len(set(value)):
+        raise ValueError(f"{name} must not contain duplicates")
+    if value != tuple(sorted(value)):
+        raise ValueError(f"{name} must use canonical sorted order")
+    return value
+
+
+@dataclass(frozen=True)
+class ConstructionConflict:
+    record_kind: str
+    state_key: str
+    active_event_ids: tuple[str, ...]
+    record_digests: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        if self.record_kind not in {item.value for item in ConstructionRecordKind}:
+            raise ValueError("conflict record_kind is invalid")
+        if type(self.state_key) is not str or not self.state_key:
+            raise ValueError("conflict state_key is required")
+        _tuple_strings(self.active_event_ids, "conflict.active_event_ids")
+        _tuple_strings(self.record_digests, "conflict.record_digests")
+        if len(self.active_event_ids) < 2 or len(self.record_digests) < 2:
+            raise ValueError("conflict requires at least two active events and digests")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionConflict":
+        data = dict(value)
+        return cls(
+            record_kind=data.get("record_kind"),
+            state_key=data.get("state_key"),
+            active_event_ids=tuple(data.get("active_event_ids", ())),
+            record_digests=tuple(data.get("record_digests", ())),
+        )
+
+
+def _reduce_events(
+    events: tuple[ConstructionEvent, ...],
+) -> tuple[str, str, tuple[str, ...], tuple[str, ...], tuple[ConstructionConflict, ...]]:
+    if not events:
+        raise ValueError("at least one construction event is required")
+    if not all(type(item) is ConstructionEvent for item in events):
+        raise ValueError("all construction events must be exact ConstructionEvent values")
+
+    project_id = events[0].project_id
+    ledger_id = events[0].ledger_id
+    seen: dict[str, ConstructionEvent] = {}
+    active: set[str] = set()
+    active_record_ids: dict[str, str] = {}
+    superseded: set[str] = set()
+    previous_chain = GENESIS_CHAIN_DIGEST
+    previous_created_at = float("-inf")
+
+    for expected_sequence, event in enumerate(events, start=1):
+        event.__post_init__()
+        if event.project_id != project_id:
+            raise ValueError("construction ledger contains multiple projects")
+        if event.ledger_id != ledger_id:
+            raise ValueError("construction ledger contains multiple ledger IDs")
+        if event.sequence_number != expected_sequence:
+            raise ValueError(
+                f"construction event sequence gap or reorder at {expected_sequence}"
+            )
+        if event.previous_chain_digest != previous_chain:
+            raise ValueError(
+                f"construction event previous digest mismatch at {expected_sequence}"
+            )
+        if event.created_at < previous_created_at:
+            raise ValueError(
+                f"construction event timestamp moved backward at {expected_sequence}"
+            )
+        if event.event_id in seen:
+            raise ValueError(f"duplicate construction event ID: {event.event_id}")
+
+        missing_parents = set(event.parent_event_ids) - set(seen)
+        if missing_parents:
+            raise ValueError(
+                f"event references missing parent events: {sorted(missing_parents)}"
+            )
+
+        for target_id in event.supersedes_event_ids:
+            target = seen.get(target_id)
+            if target is None:
+                raise ValueError(f"event supersedes missing event: {target_id}")
+            if target_id not in active:
+                raise ValueError(f"event supersedes an already inactive event: {target_id}")
+            if target.record_kind != event.record_kind or target.state_key != event.state_key:
+                raise ValueError("supersession must preserve record kind and state key")
+            active.remove(target_id)
+            superseded.add(target_id)
+            active_record_ids.pop(target.record_id, None)
+
+        prior_event_id = active_record_ids.get(event.record_id)
+        if prior_event_id is not None:
+            raise ValueError(
+                f"duplicate active construction record without supersession: {event.record_id}"
+            )
+
+        seen[event.event_id] = event
+        active.add(event.event_id)
+        active_record_ids[event.record_id] = event.event_id
+        previous_chain = event.chain_digest
+        previous_created_at = event.created_at
+
+    active_records = [event for event in events if event.event_id in active]
+    groups: dict[tuple[str, str], list[ConstructionEvent]] = {}
+    for event in active_records:
+        groups.setdefault((event.record_kind, event.state_key), []).append(event)
+
+    conflicts: list[ConstructionConflict] = []
+    for (record_kind, state_key), group in sorted(groups.items()):
+        digests = tuple(
+            sorted(
+                {
+                    event.record.value_digest
+                    if type(event.record) is ConstructionClaim
+                    else event.record.payload_digest
+                    for event in group
+                }
+            )
+        )
+        if len(digests) > 1:
+            conflicts.append(
+                ConstructionConflict(
+                    record_kind=record_kind,
+                    state_key=state_key,
+                    active_event_ids=tuple(sorted(event.event_id for event in group)),
+                    record_digests=digests,
+                )
+            )
+
+    return (
+        project_id,
+        ledger_id,
+        tuple(sorted(active)),
+        tuple(sorted(superseded)),
+        tuple(conflicts),
+    )
+
+
+def _state_payload(
+    *,
+    project_id: str,
+    ledger_id: str,
+    events: tuple[ConstructionEvent, ...],
+    active_event_ids: tuple[str, ...],
+    superseded_event_ids: tuple[str, ...],
+    conflicts: tuple[ConstructionConflict, ...],
+    final_chain_digest: str,
+) -> dict[str, Any]:
+    return {
+        "project_id": project_id,
+        "ledger_id": ledger_id,
+        "events": [event.to_dict() for event in events],
+        "active_event_ids": list(active_event_ids),
+        "superseded_event_ids": list(superseded_event_ids),
+        "conflicts": [item.to_dict() for item in conflicts],
+        "final_chain_digest": final_chain_digest,
+        "version": CONSTRUCTION_STATE_VERSION,
+        "proposal_only": PROPOSAL_ONLY,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+
+
+@dataclass(frozen=True)
+class ConstructionProjectState:
+    project_id: str
+    ledger_id: str
+    events: tuple[ConstructionEvent, ...]
