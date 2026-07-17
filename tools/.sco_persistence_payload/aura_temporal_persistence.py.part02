@@ -1,0 +1,150 @@
+ str,
+        payload: Mapping[str, Any],
+        invariant_values: Mapping[str, Any] | None = None,
+        prehashed_invariant_digests: Mapping[str, str] | None = None,
+        parent_checkpoint_id: str = "",
+        branch_name: str = "",
+        sequence_number: int | None = None,
+        source_kind: str = "ARENA_STATE",
+        created_at: float | None = None,
+    ) -> dict[str, Any]:
+        arena = _component(arena_id, "arena_id")
+        session = _component(session_id, "session_id")
+        parent = _component(parent_checkpoint_id, "parent_checkpoint_id", allow_empty=True)
+        branch = _component(branch_name, "branch_name", allow_empty=True)
+        source = _component(source_kind, "source_kind")
+        head = _repo_head(repo_head)
+        normalized_payload = _mapping(payload, "payload")
+        payload_digest = digest(normalized_payload, size=20)
+        if invariant_values is not None and prehashed_invariant_digests is not None:
+            raise ValueError("provide invariant values or prehashed digests, not both")
+        if prehashed_invariant_digests is None:
+            invariants = _invariant_digests(invariant_values)
+        else:
+            invariants = {}
+            for key, item in sorted(dict(prehashed_invariant_digests).items()):
+                name = _component(str(key), "invariant name")
+                if type(item) is not str or len(item) != 32 or any(
+                    ch not in "0123456789abcdef" for ch in item
+                ):
+                    raise ValueError("prehashed invariant digests must be 32 lowercase hex characters")
+                invariants[name] = item
+        generated_at = float(time.time() if created_at is None else created_at)
+        if not generated_at >= 0:
+            raise ValueError("created_at must be non-negative")
+
+        with self._lock():
+            index = self._entry_index_unlocked()
+            parent_record: TemporalCheckpoint | None = None
+            if parent:
+                parent_entry = index.get(parent)
+                if parent_entry is None:
+                    raise ValueError("parent checkpoint does not exist")
+                parent_record = self._load_from_entry_unlocked(parent_entry)
+                if parent_record.arena_id != arena or parent_record.session_id != session:
+                    raise ValueError("parent checkpoint belongs to another arena session")
+            expected_sequence = parent_record.sequence_number + 1 if parent_record else 0
+            seq = expected_sequence if sequence_number is None else _sequence(sequence_number)
+            if seq != expected_sequence:
+                raise ValueError("sequence_number must continue the parent chain")
+
+            identity = _checkpoint_identity(
+                arena_id=arena,
+                session_id=session,
+                parent_checkpoint_id=parent,
+                branch_name=branch,
+                sequence_number=seq,
+                repo_head=head,
+                payload_digest=payload_digest,
+                invariant_digests=invariants,
+                source_kind=source,
+            )
+            checkpoint_id = f"CHK-{digest(identity, size=20)}"
+            record_digest = digest(
+                {"identity": identity, "payload": normalized_payload},
+                size=20,
+            )
+            checkpoint = TemporalCheckpoint(
+                checkpoint_id=checkpoint_id,
+                arena_id=arena,
+                session_id=session,
+                parent_checkpoint_id=parent,
+                branch_name=branch,
+                sequence_number=seq,
+                repo_head=head,
+                payload=normalized_payload,
+                payload_digest=payload_digest,
+                invariant_digests=invariants,
+                source_kind=source,
+                created_at=generated_at,
+                record_digest=record_digest,
+            )
+            existing = index.get(checkpoint_id)
+            if existing is not None:
+                loaded = self._load_from_entry_unlocked(existing)
+                return {
+                    "ok": True,
+                    "created": False,
+                    "checkpoint": loaded.to_dict(),
+                    "registry_entry": existing,
+                }
+
+            path = self._checkpoint_path(checkpoint)
+            self._atomic_json(path, checkpoint.to_dict())
+            entries = self._registry_entries_unlocked()
+            previous = entries[-1]["entry_digest"] if entries else ""
+            relative_path = path.relative_to(self.repo_root).as_posix()
+            body = {
+                "registry_version": TEMPORAL_REGISTRY_VERSION,
+                "checkpoint_id": checkpoint_id,
+                "arena_id": arena,
+                "session_id": session,
+                "parent_checkpoint_id": parent,
+                "branch_name": branch,
+                "sequence_number": seq,
+                "repo_head": head,
+                "created_at": generated_at,
+                "checkpoint_path": relative_path,
+                "record_digest": record_digest,
+                "previous_entry_digest": previous,
+            }
+            entry = {**body, "entry_digest": digest(body, size=20)}
+            self.registry_path.parent.mkdir(parents=True, exist_ok=True)
+            encoded = json.dumps(
+                entry,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+                allow_nan=False,
+            ) + "\n"
+            with self.registry_path.open("a", encoding="utf-8") as handle:
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            return {
+                "ok": True,
+                "created": True,
+                "checkpoint": checkpoint.to_dict(),
+                "registry_entry": entry,
+            }
+
+    def _load_from_entry_unlocked(self, entry: Mapping[str, Any]) -> TemporalCheckpoint:
+        raw_path = str(entry.get("checkpoint_path") or "")
+        path = (self.repo_root / raw_path).resolve()
+        try:
+            path.relative_to(self.root)
+        except ValueError as exc:
+            raise ValueError("registry checkpoint path escaped persistence root") from exc
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"checkpoint file is missing or invalid: {raw_path}") from exc
+        checkpoint = TemporalCheckpoint.from_dict(value)
+        if checkpoint.checkpoint_id != entry.get("checkpoint_id"):
+            raise ValueError("registry checkpoint ID does not match checkpoint file")
+        if checkpoint.record_digest != entry.get("record_digest"):
+            raise ValueError("registry record digest does not match checkpoint file")
+        return checkpoint
+
+    def load_checkpoint(self, checkpoint_id: str) -> TemporalCheckpoint:
+        identifier = _component(checkpoint_id,
