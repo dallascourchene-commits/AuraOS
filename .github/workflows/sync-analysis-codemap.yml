@@ -19,6 +19,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  sco-phase2-finalize:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.ref == 'refactor/sco-construction-e4-e6'
+    uses: ./.github/workflows/sco-phase2-finalize.yml
+    secrets: inherit
+
   sync-codemap:
     if: >-
       github.actor != 'github-actions[bot]' &&
