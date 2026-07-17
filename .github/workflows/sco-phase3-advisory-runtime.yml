@@ -22,17 +22,31 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 128
-          persist-credentials: false
-          show-progress: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/Aura_Memory/
-            !/Aura_Sandbox/
+      - name: Checkout exact Phase 3 source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
+          git config http.https://github.com/.extraheader "${AUTH_HEADER}"
+          git config core.sparseCheckout true
+          git config core.sparseCheckoutCone false
+          cat > .git/info/sparse-checkout <<'EOF'
+          /*
+          !/Aura_Memory/
+          !/Aura_Sandbox/
+          EOF
+          git -c protocol.version=2 fetch \
+            --no-tags \
+            --filter=blob:none \
+            --depth=128 \
+            origin "${TARGET_SHA}"
+          git checkout --quiet --detach "${TARGET_SHA}"
+          git config --unset-all http.https://github.com/.extraheader
+          test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
