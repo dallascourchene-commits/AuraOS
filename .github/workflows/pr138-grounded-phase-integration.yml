@@ -1,9 +1,7 @@
 name: PR138 Grounded Phase Capsule Integrator
 
 on:
-  push:
-    branches:
-      - refactor/grounded-phase-capsule-compiler
+  pull_request:
     paths:
       - tools/pr138_materialize_part1.py
       - tools/pr138_materialize_part2.py
@@ -18,6 +16,7 @@ concurrency:
 
 jobs:
   integrate:
+    if: github.event.pull_request.head.ref == 'refactor/grounded-phase-capsule-compiler'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
