@@ -1,0 +1,69 @@
+    with pytest.raises(ValueError):
+        evaluate_construction_authority(
+            request=request, state=other_state, grants=(), attestations=(),
+            quorum_policy=quorum_policy(), verified_authority_refs=('authority-ref',),
+            verified_attestation_refs=('attestation-ref',), now=10,
+        )
+
+
+def test_verified_receipt_binding_keys_must_be_normalized():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    with pytest.raises(ValueError):
+        receipt_for(
+            state, request, result, decision,
+            verified_receipt_bindings={' receipt-ref ': result.result_digest},
+        )
+
+
+def test_verified_receipt_binding_digest_must_be_hex():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    with pytest.raises(ValueError):
+        receipt_for(
+            state, request, result, decision,
+            verified_receipt_bindings={'receipt-ref': 'not-a-digest'},
+        )
+
+
+def test_receipt_cannot_predate_authority_evaluation():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    with pytest.raises(ValueError):
+        receipt_for(state, request, result, decision, created_at=result.evaluated_at - 1)
+
+
+def test_action_policy_scope_cannot_target_a_sibling_zone():
+    _, request, _ = fixtures()
+    with pytest.raises(ValueError):
+        ConstructionActionRequest.create(
+            scope=request.scope, action_kind="x", policy_scope="construction/P1/Z2",
+            capability_scope="construction.release", risk_class=RiskClass.HIGH,
+            required_claim_ids=request.required_claim_ids, created_at=5, expires_at=40,
+        )
+
+
+def test_action_policy_scope_cannot_target_a_sibling_work_package():
+    _, request, _ = fixtures()
+    with pytest.raises(ValueError):
+        ConstructionActionRequest.create(
+            scope=request.scope, action_kind="x", policy_scope="construction/P1/Z1/WP2",
+            capability_scope="construction.release", risk_class=RiskClass.HIGH,
+            required_claim_ids=request.required_claim_ids, created_at=5, expires_at=40,
+        )
+
+
+def test_action_policy_scope_may_be_an_exact_ancestor_scope():
+    _, request, _ = fixtures()
+    project = ConstructionActionRequest.create(
+        scope=request.scope, action_kind="x", policy_scope="construction/P1",
+        capability_scope="construction.release", risk_class=RiskClass.HIGH,
+        required_claim_ids=request.required_claim_ids, created_at=5, expires_at=40,
+    )
+    zone = ConstructionActionRequest.create(
+        scope=request.scope, action_kind="x", policy_scope="construction/P1/Z1",
+        capability_scope="construction.release", risk_class=RiskClass.HIGH,
+        required_claim_ids=request.required_claim_ids, created_at=5, expires_at=40,
+    )
+    exact = ConstructionActionRequest.create(
+        scope=request.scope, action_kind="x", policy_scope="construction/P1/Z1/WP1",
