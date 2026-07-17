@@ -47,6 +47,14 @@ jobs:
           PY
           python tools/pr138_materialize_part1.py
           python tools/pr138_materialize_part2.py
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("aura_cost_experiment_runner.py")
+          text = path.read_text(encoding="utf-8")
+          if text.count("import math\n") != 1:
+              raise SystemExit("unexpected cost-runner math import count")
+          path.write_text(text.replace("import math\n", ""), encoding="utf-8")
+          PY
       - name: Compile and run fatal static checks
         run: |
           python -m py_compile \
