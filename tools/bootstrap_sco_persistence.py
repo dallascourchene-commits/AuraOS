@@ -23,6 +23,11 @@ def main() -> None:
         destination = root / target
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(content, encoding="utf-8")
+    cleanup = root / "tools" / "apply_sco_persistence_static_cleanup.py"
+    if cleanup.exists():
+        namespace = {"__file__": str(cleanup), "__name__": "__main__"}
+        exec(compile(cleanup.read_text(encoding="utf-8"), str(cleanup), "exec"), namespace)
+        cleanup.unlink()
     for part in payload.iterdir():
         part.unlink()
     payload.rmdir()
