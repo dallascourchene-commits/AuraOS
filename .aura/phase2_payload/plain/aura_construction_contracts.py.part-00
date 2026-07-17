@@ -1,0 +1,265 @@
+"""Minimal immutable SCO Construction domain contracts for AuraOS.
+
+These contracts represent digital claims and evidence only. They never authorize
+physical work, certify safety or engineering, release payment, control access,
+or replace owner, professional, contractual, legal, regulatory, or community
+authority.
+"""
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from enum import Enum
+import math
+import re
+from typing import Any, Iterable
+
+from aura_event_contracts import (
+    ActorType,
+    AuraEventEnvelope,
+    DIKWPStage,
+    MeasurementClass,
+    stable_digest,
+    stable_id,
+)
+
+CONSTRUCTION_CONTRACTS_VERSION = "AURA_CONSTRUCTION_CONTRACTS_V1"
+PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
+VSA_PATCH_AUTHORITY = False
+PROPOSAL_ONLY = True
+GENESIS_CHAIN_DIGEST = "GENESIS"
+_HEX = re.compile(r"^[0-9a-f]+$")
+
+
+class ConstructionRecordKind(str, Enum):
+    CLAIM = "CLAIM"
+    EVIDENCE = "EVIDENCE"
+
+
+class ConstructionEvidenceClass(str, Enum):
+    OWNER_RECORD = "OWNER_RECORD"
+    CONTRACTOR_RECORD = "CONTRACTOR_RECORD"
+    PROFESSIONAL_RECORD = "PROFESSIONAL_RECORD"
+    INSPECTION = "INSPECTION"
+    TEST_RESULT = "TEST_RESULT"
+    DOCUMENT = "DOCUMENT"
+    PHOTO = "PHOTO"
+    SENSOR = "SENSOR"
+    LOCATION = "LOCATION"
+    OTHER = "OTHER"
+
+
+class ConstructionAuthorityClass(str, Enum):
+    NONE = "NONE"
+    INFORMATIVE = "INFORMATIVE"
+    OWNER = "OWNER"
+    CONTRACTOR = "CONTRACTOR"
+    PROFESSIONAL = "PROFESSIONAL"
+    REGULATORY = "REGULATORY"
+    LEGAL = "LEGAL"
+    COMMUNITY = "COMMUNITY"
+
+
+class ConstructionPrivacyClass(str, Enum):
+    PUBLIC = "PUBLIC"
+    PROJECT = "PROJECT"
+    RESTRICTED = "RESTRICTED"
+    SENSITIVE = "SENSITIVE"
+
+
+def _text(value: Any, name: str) -> str:
+    if type(value) is not str or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    normalized = " ".join(value.split())
+    if normalized != value:
+        raise ValueError(f"{name} must be normalized")
+    return value
+
+
+def _normalized_text_input(value: Any, name: str) -> str:
+    if type(value) is not str:
+        raise ValueError(f"{name} must be a string")
+    normalized = " ".join(value.split())
+    if not normalized:
+        raise ValueError(f"{name} must not be empty")
+    return normalized
+
+
+def _scope_component(value: Any, name: str) -> str:
+    normalized = _text(value, name)
+    if any(token in normalized for token in ("/", "\\", "*", "|")):
+        raise ValueError(f"{name} contains a reserved scope delimiter")
+    return normalized
+
+
+def _chain_reference(value: Any, name: str, *, genesis_allowed: bool) -> str:
+    if genesis_allowed and value == GENESIS_CHAIN_DIGEST:
+        return GENESIS_CHAIN_DIGEST
+    return _digest(value, name)
+
+
+def _tuple_strings(value: Any, name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
+    if type(value) is not tuple:
+        raise ValueError(f"{name} must be a tuple")
+    normalized = tuple(_text(item, f"{name}[]") for item in value)
+    if len(normalized) != len(set(normalized)):
+        raise ValueError(f"{name} must not contain duplicates")
+    if normalized != tuple(sorted(normalized)):
+        raise ValueError(f"{name} must use canonical sorted order")
+    if not allow_empty and not normalized:
+        raise ValueError(f"{name} must not be empty")
+    return normalized
+
+
+def _normalized_unique(values: Iterable[Any], name: str) -> tuple[str, ...]:
+    result: list[str] = []
+    seen: set[str] = set()
+    for raw in values:
+        if type(raw) is not str:
+            raise ValueError(f"{name} contains a non-string value")
+        normalized = " ".join(raw.split())
+        if not normalized:
+            raise ValueError(f"{name} contains an empty value")
+        if normalized in seen:
+            raise ValueError(f"{name} contains duplicate or normalization-colliding values")
+        seen.add(normalized)
+        result.append(normalized)
+    return tuple(sorted(result))
+
+
+def _enum_value(value: Any, enum_type: type[Enum], name: str) -> str:
+    if isinstance(value, enum_type):
+        raw = value.value
+    elif type(value) is str:
+        raw = value
+    else:
+        raise ValueError(f"{name} must be a string or {enum_type.__name__}")
+    permitted = {item.value for item in enum_type}
+    if raw not in permitted:
+        raise ValueError(f"unknown {name}: {raw}")
+    return raw
+
+
+def _digest(value: Any, name: str) -> str:
+    if type(value) is not str:
+        raise ValueError(f"{name} must be a hexadecimal digest")
+    normalized = value.lower()
+    if len(normalized) not in {32, 64} or _HEX.fullmatch(normalized) is None:
+        raise ValueError(f"{name} must be a 32- or 64-character hexadecimal digest")
+    if value != normalized:
+        raise ValueError(f"{name} must use canonical lowercase hexadecimal")
+    return normalized
+
+
+def _probability(value: Any, name: str) -> float | None:
+    if value is None:
+        return None
+    if type(value) not in {int, float}:
+        raise ValueError(f"{name} must be numeric")
+    number = float(value)
+    if not math.isfinite(number) or not 0.0 <= number <= 1.0:
+        raise ValueError(f"{name} must be between zero and one")
+    return number
+
+
+def _timestamp(value: Any, name: str) -> float:
+    if type(value) not in {int, float}:
+        raise ValueError(f"{name} must be numeric")
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(f"{name} must be finite")
+    return number
+
+
+def _require_canonical_float(value: Any, name: str, *, allow_none: bool = False) -> None:
+    if value is None and allow_none:
+        return
+    if type(value) is not float or not math.isfinite(value):
+        raise ValueError(f"{name} must be a canonical finite float")
+
+
+def _require_canonical_enum(value: Any, enum_type: type[Enum], name: str) -> str:
+    normalized = _enum_value(value, enum_type, name)
+    if type(value) is not str or value != normalized:
+        raise ValueError(f"{name} must be stored as its canonical string value")
+    return normalized
+
+
+def _validate_boundaries(*, proposal_only: bool, patch_authority: str, vsa_patch_authority: bool) -> None:
+    if proposal_only is not True:
+        raise ValueError("construction records must remain proposal-only")
+    if patch_authority != PATCH_AUTHORITY or vsa_patch_authority is not False:
+        raise ValueError("construction patch-authority boundary was modified")
+
+
+@dataclass(frozen=True)
+class ConstructionScope:
+    project_id: str
+    zone_id: str = ""
+    work_package_id: str = ""
+
+    def __post_init__(self) -> None:
+        _scope_component(self.project_id, "scope.project_id")
+        if self.zone_id:
+            _scope_component(self.zone_id, "scope.zone_id")
+        if self.work_package_id:
+            _scope_component(self.work_package_id, "scope.work_package_id")
+            if not self.zone_id:
+                raise ValueError("scope.work_package_id requires scope.zone_id")
+
+    @property
+    def scope_key(self) -> str:
+        return "/".join((self.project_id, self.zone_id or "*", self.work_package_id or "*"))
+
+    def to_dict(self) -> dict[str, str]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionScope":
+        data = dict(value)
+        return cls(
+            project_id=data.get("project_id"),
+            zone_id=data.get("zone_id", ""),
+            work_package_id=data.get("work_package_id", ""),
+        )
+
+
+@dataclass(frozen=True)
+class ConstructionEvidence:
+    evidence_id: str
+    evidence_digest: str
+    scope: ConstructionScope
+    subject_id: str
+    evidence_class: str
+    source_ref: str
+    payload_digest: str
+    measurement_class: str
+    confidence: float | None
+    authority_class: str
+    privacy_class: str
+    consent_refs: tuple[str, ...]
+    observed_at: float
+    expires_at: float | None
+    version: str = CONSTRUCTION_CONTRACTS_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_CONTRACTS_VERSION:
+            raise ValueError("unsupported construction evidence version")
+        if type(self.scope) is not ConstructionScope:
+            raise ValueError("evidence scope must be a ConstructionScope")
+        _text(self.subject_id, "evidence.subject_id")
+        evidence_class = _require_canonical_enum(
+            self.evidence_class, ConstructionEvidenceClass, "evidence_class"
+        )
+        _text(self.source_ref, "evidence.source_ref")
+        _digest(self.payload_digest, "evidence.payload_digest")
+        _require_canonical_enum(
+            self.measurement_class, MeasurementClass, "measurement_class"
+        )
+        _require_canonical_float(
+            self.confidence, "evidence.confidence", allow_none=True
+        )
+        _probability(self.confidence, "evidence.confidence")
+        authority = _require_canonical_enum(
