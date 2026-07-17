@@ -69,6 +69,11 @@ jobs:
             rm tools/apply_sco_persistence_integration.py
             FINALIZE=1
           fi
+          if [ -f tools/apply_sco_persistence_manual_hardening.py ]; then
+            python tools/apply_sco_persistence_manual_hardening.py
+            rm tools/apply_sco_persistence_manual_hardening.py
+            FINALIZE=1
+          fi
           echo "PERSISTENCE_FINALIZE=${FINALIZE}" >> "${GITHUB_ENV}"
 
       - name: Compile and run fatal static checks
@@ -197,7 +202,7 @@ jobs:
             test "${#CHANGED[@]}" -gt 0
             for path in "${CHANGED[@]}"; do
               case "${path}" in
-                .aura/CODEMAP.json|.aura/CODEMAP.md|topology_map.json) ;;
+                .aura/CODEMAP.json|.aura/CODEMAP.md|topology_map.json|Aura_Memory/live_topology_ast.json) ;;
                 *) echo "unsafe concurrent source change: ${path}" >&2; exit 1 ;;
               esac
             done
