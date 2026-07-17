@@ -24,7 +24,7 @@ vsa_patch_authority: false
 
 ```yaml
 py_compile: PASS
-focused_adversarial_tests: 30_passed
+focused_adversarial_tests: 33_passed
 construction_runtime_created: false
 physical_authority_created: false
 payment_authority_created: false
@@ -58,6 +58,8 @@ crucible_auto_activation_created: false
 12. Broken prior-revision digest chains are rejected.
 13. Temporary persistence files are unique and atomically replaced.
 14. Stored envelope truth-class and envelope-digest corruption are rejected.
+15. Direct constructors cannot inject mutable list-backed sequence fields into digest-bound nodes or skeletons.
+16. Mapping and source-hash keys that collide after canonical normalization fail closed instead of silently overwriting evidence.
 
 ## Claim boundary
 
