@@ -1,0 +1,75 @@
+        return {**values, "scope": values["scope"].to_dict(), "required_claim_ids": list(values["required_claim_ids"])}
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("action_id")
+        data.pop("action_digest")
+        return data
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ConstructionAuthorityResult:
+    result_id: str
+    result_digest: str
+    project_id: str
+    scope_key: str
+    request_id: str
+    request_digest: str
+    required_claim_ids: tuple[str, ...]
+    state_digest: str
+    governance_decision_id: str
+    governance_decision_digest: str
+    governance_authorized: bool
+    evidence_ready: bool
+    digitally_ready: bool
+    readiness_reports: tuple[ConstructionReadinessReport, ...]
+    missing_reasons: tuple[str, ...]
+    evaluated_at: float
+    expires_at: float
+    version: str = CONSTRUCTION_AUTHORITY_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    human_release_required: bool = True
+    physical_work_authorized: bool = False
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_AUTHORITY_VERSION:
+            raise ValueError("unsupported construction authority result version")
+        _text(self.project_id, "result.project_id")
+        _text(self.scope_key, "result.scope_key")
+        if not self.scope_key.startswith(f"{self.project_id}/"):
+            raise ValueError("authority result scope does not belong to its project")
+        _text(self.request_id, "result.request_id")
+        _digest(self.request_digest, "result.request_digest")
+        _tuple_strings(
+            self.required_claim_ids,
+            "result.required_claim_ids",
+            allow_empty=False,
+        )
+        _digest(self.state_digest, "result.state_digest")
+        _text(self.governance_decision_id, "result.governance_decision_id")
+        _digest(self.governance_decision_digest, "result.governance_decision_digest")
+        flags = (
+            self.governance_authorized,
+            self.evidence_ready,
+            self.digitally_ready,
+        )
+        if any(type(value) is not bool for value in flags):
+            raise ValueError("authority result flags must be booleans")
+        reports_are_exact = (
+            type(self.readiness_reports) is tuple
+            and bool(self.readiness_reports)
+            and all(
+                type(item) is ConstructionReadinessReport
+                for item in self.readiness_reports
+            )
+        )
+        if not reports_are_exact:
+            raise ValueError("authority result requires exact readiness reports")
+        report_claims = tuple(item.claim_id for item in self.readiness_reports)
+        if report_claims != tuple(sorted(report_claims)):
+            raise ValueError("authority result readiness reports must use canonical claim order")
