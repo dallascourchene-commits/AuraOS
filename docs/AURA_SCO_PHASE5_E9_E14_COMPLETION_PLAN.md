@@ -1,11 +1,13 @@
 # SCO Construction Arena — Phase 5 E9–E14 Completion Verification
 
 ```yaml
-document_status: VERIFIED_PENDING_PINNED_MERGE
-document_version: 2.0.0
+document_status: MERGED_AND_POST_MERGE_VERIFIED
+document_version: 2.1.0
 date: 2026-07-17
 baseline_main: 62b967be2fc1150c3d52e1624d4d2b6af234d05a
 verified_implementation_head: 974c3a51e1f0a838160c1ad3ef3237409a922d2c
+final_branch_head: 6fcc443a189da2bac7258e62ecc931ab88a45753
+merge_commit: 2f00b9694271b2e553527329f1d4c0f5a44d1773
 branch: refactor/sco-construction-e9-e14-completion
 pull_request: 151
 scope:
@@ -26,7 +28,7 @@ vsa_patch_authority: false
 
 The PR and Issues pages were checked before the final implementation:
 
-- PR #130 is an old read-only analysis scaffold based on pre-Construction `main`; its own description says it is not intended for merge.
+- PR #130 was an old read-only analysis scaffold based on pre-Construction `main`; its own description said it was not intended for merge. It was closed without merge after PR #151 landed.
 - Issue #126 is the separate Financial Arena parent epic, with F1.1 already merged.
 - Issue #129 is the active Financial Planning Board projection slice.
 - No open issue tracked the remaining SCO Construction work.
@@ -58,7 +60,7 @@ ConstructionProjectState
 
 ## E0–E14 status
 
-The machine completion audit verified every implementation node from E0 through E13 as `INTEGRATED`, with no unresolved entries. E14 is now `READY_FOR_PINNED_MERGE`.
+The machine completion audit verified every implementation node from E0 through E13 as `INTEGRATED`, with no unresolved entries. E14 completed through an exact pinned squash merge.
 
 | Phase | Verified owner/result |
 |---|---|
@@ -69,7 +71,7 @@ The machine completion audit verified every implementation node from E0 through 
 | E10–E11 | verified Experience/Crucible projection and deterministic benchmark |
 | E12 | cross-Arena temporal persistence, restoration assessment, forks, and handoff |
 | E13 | machine-enforced owner, API, UI, documentation, and handoff reconciliation |
-| E14 | one independent CodeRabbit review and pinned merge gate |
+| E14 | one independent CodeRabbit review, exact-head audit, and pinned merge |
 
 ## Verified gates
 
@@ -88,7 +90,9 @@ Exact audit run `29608965787`, artifact `8417990053`:
 - completion audit digest: `92ab375bf3a086247ee623933571d358`;
 - `runtime_complete: true`;
 - `unresolved: []`;
-- `e14_release_status: READY_FOR_PINNED_MERGE`.
+- pre-merge release status: `READY_FOR_PINNED_MERGE`;
+- final branch head: `6fcc443a189da2bac7258e62ecc931ab88a45753`;
+- squash merge commit: `2f00b9694271b2e553527329f1d4c0f5a44d1773`.
 
 Machine-readable evidence: `docs/evidence/AURA_SCO_PHASE5_E9_E14_COMPLETION.json`.
 
@@ -110,7 +114,7 @@ Each behavioral repair has a focused adversarial regression.
 
 ## CodeRabbit result
 
-CodeRabbit was invoked exactly once using comment `5006965863`. Invocation `c15decf9-43b2-4939-87ff-b0dc685a94c2` completed with a successful check on reviewed head `974c3a51e1f0a838160c1ad3ef3237409a922d2c`. It submitted no review and created no inline threads, so there were no CodeRabbit-suggested changes to apply. It will not be invoked again for this phase.
+CodeRabbit was invoked exactly once using comment `5006965863`. Invocation `c15decf9-43b2-4939-87ff-b0dc685a94c2` completed with a successful check on reviewed head `974c3a51e1f0a838160c1ad3ef3237409a922d2c`. It submitted no review and created no inline threads, so there were no CodeRabbit-suggested changes to apply. It was not invoked again for this phase.
 
 ## Explicit policy deferrals
 
@@ -123,7 +127,7 @@ The following remain intentional future programs rather than unfinished E0–E14
 - automatic restoration, hotswap, commit, push, PR, or merge;
 - commercial field-performance claims.
 
-## Final sequence
+## Completed sequence
 
 ```text
 verified implementation and manual hardening
@@ -131,8 +135,8 @@ verified implementation and manual hardening
   → evidence and canonical documentation finalization
   → regenerated CODEMAP/topology
   → final exact-head audit
-  → mark PR ready
+  → marked PR ready
   → pinned-head squash merge
   → post-merge main verification
-  → close stale analysis PR #130 without merging
+  → stale analysis PR #130 closed without merge
 ```
