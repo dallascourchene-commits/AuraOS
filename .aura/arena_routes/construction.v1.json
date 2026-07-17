@@ -2,7 +2,7 @@
   "schema_version": "AURA_ARENA_GRAMMAR_MANIFEST_V1",
   "arena_id": "sco_construction",
   "arena_version": "AURA_SCO_CONSTRUCTION_ARENA_V1",
-  "grammar_version": "sco-construction-wfst-v2",
+  "grammar_version": "sco-construction-wfst-v1",
   "start_state": "DECIDE",
   "states": [
     "DECIDE"
@@ -30,6 +30,12 @@
               "benchmark_report",
               "verification_packet"
             ]
+          }
+        },
+        {
+          "id": "GUARD.VERIFIER_PASS",
+          "args": {
+            "key": "verification_packet"
           }
         }
       ],
@@ -79,6 +85,12 @@
               "verification_packet"
             ]
           }
+        },
+        {
+          "id": "GUARD.VERIFIER_PASS",
+          "args": {
+            "key": "verification_packet"
+          }
         }
       ],
       "required_evidence": [
@@ -126,6 +138,12 @@
               "benchmark_report",
               "verification_packet"
             ]
+          }
+        },
+        {
+          "id": "GUARD.VERIFIER_PASS",
+          "args": {
+            "key": "verification_packet"
           }
         }
       ],
