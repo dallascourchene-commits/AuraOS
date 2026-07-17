@@ -1,7 +1,8 @@
 name: SCO Phase 2 E4-E6 Finalize
-# Lease-guarded finalization permits generated-map drift only.
+# Reusable exact-head finalization with lease-guarded publication.
 
 on:
+  workflow_call:
   push:
     branches:
       - refactor/sco-construction-e4-e6
@@ -23,10 +24,10 @@ jobs:
       PYTHONHASHSEED: '0'
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
-      - name: Checkout exact triggering commit
+      - name: Checkout exact triggering head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -121,7 +122,7 @@ jobs:
 
       - name: Record exact-branch review evidence
         env:
-          REVIEWED_SHA: ${{ github.sha }}
+          REVIEWED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -131,9 +132,10 @@ jobs:
           paths = (
               Path('docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md'),
               Path('docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md'),
+              Path('docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md'),
               Path('docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md'),
           )
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: PASS\n- focused Construction coverage gate: PASS at or above 90%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads: scheduled for removal before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: PASS\n- focused Construction coverage gate: PASS at or above 90%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
           for path in paths:
               text = path.read_text(encoding='utf-8')
@@ -206,9 +208,9 @@ jobs:
 
       - name: Commit and safely publish exact verified final tree
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: refactor/sco-construction-e4-e6
-          TRIGGER_SHA: ${{ github.sha }}
+          TRIGGER_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           git config user.name 'AuraOS Phase Bot'
           git config user.email 'actions@users.noreply.github.com'
