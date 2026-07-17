@@ -1,0 +1,70 @@
+        quorum_policy=policy, verified_authority_refs=('different-ref',),
+        verified_attestation_refs=('attestation-ref',), now=10,
+    )
+    assert not decision.authorized
+    assert not result.digitally_ready
+    assert any('invalid_attestation' in reason for reason in result.missing_reasons)
+
+
+def test_revoked_attestation_reference_fails_governance_closed():
+    state, request, _ = fixtures()
+    grants, attestations, policy = authority_material(request)
+    result, decision = evaluate_construction_authority(
+        request=request, state=state, grants=grants, attestations=attestations,
+        quorum_policy=policy, verified_authority_refs=('authority-ref',),
+        verified_attestation_refs=('different-ref',), now=10,
+    )
+    assert not decision.authorized
+    assert not result.digitally_ready
+
+
+def test_reloaded_receipt_binding_can_be_revalidated_against_full_lineage():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    receipt, binding = receipt_for(state, request, result, decision)
+    loaded = ConstructionReceiptBinding.from_dict(binding.to_dict())
+    loaded.validate_against(
+        authority_result=result, request=request, state=state,
+        governance_decision=decision, governance_replay=governance_replay(request),
+        chain_receipt=receipt,
+        verified_receipt_bindings={'receipt-ref': result.result_digest},
+    )
+
+
+def test_reloaded_receipt_binding_rejects_wrong_external_digest_binding():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    receipt, binding = receipt_for(state, request, result, decision)
+    with pytest.raises(ValueError):
+        binding.validate_against(
+            authority_result=result, request=request, state=state,
+            governance_decision=decision, governance_replay=governance_replay(request),
+            chain_receipt=receipt,
+            verified_receipt_bindings={'receipt-ref': 'f' * 32},
+        )
+
+
+def test_persisted_authority_request_rejects_numeric_string_timestamp():
+    _, request, _ = fixtures()
+    payload = request.to_dict()
+    payload['created_at'] = '5.0'
+    with pytest.raises(ValueError, match='canonical finite float'):
+        ConstructionActionRequest.from_dict(payload)
+
+
+def test_persisted_authority_result_rejects_numeric_string_timestamp():
+    state, request, _ = fixtures()
+    result, _ = evaluate_ready(state, request)
+    payload = result.to_dict()
+    payload['evaluated_at'] = '10.0'
+    with pytest.raises(ValueError, match='canonical finite float'):
+        ConstructionAuthorityResult.from_dict(payload)
+
+
+def test_persisted_receipt_binding_rejects_numeric_string_timestamp():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    _, binding = receipt_for(state, request, result, decision)
+    payload = binding.to_dict()
+    payload['created_at'] = '11.0'
+    with pytest.raises(ValueError, match='canonical finite float'):
