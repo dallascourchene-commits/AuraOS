@@ -83,7 +83,7 @@ jobs:
             tests/test_aura_construction_authority.py
           python -m coverage report \
             --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' \
-            --fail-under=88
+            --fail-under=90
 
       - name: Run canonical owner regressions
         run: |
@@ -103,7 +103,7 @@ jobs:
           from pathlib import Path
           import os
 
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{os.environ["REVIEWED_SHA"]}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: 89% measured; 88% enforced minimum PASS\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{os.environ["REVIEWED_SHA"]}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: PASS at or above 90%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
           for name in (
               'docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md',
@@ -152,7 +152,9 @@ jobs:
                 - run: |
                     python -m py_compile aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
                     ruff check --select E9,F63,F7,F82,F401,F811,B006 aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
-                    python -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
+                    python -m coverage erase
+                    python -m coverage run -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
+                    python -m coverage report --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' --fail-under=90
                     python aura_codemap_verify.py --repo-root .
           YAML
 
@@ -166,7 +168,7 @@ jobs:
           python aura_codemap_verify.py --repo-root .
           git diff --check
 
-      - name: Publish clean reviewed tree over live branch tip
+      - name: Publish clean reviewed tree across live CODEMAP updates
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: refactor/sco-construction-e4-e6
@@ -174,16 +176,21 @@ jobs:
           git config user.name 'AuraOS Phase Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
-          git reset HEAD -- \
-            .github/workflows/sco-phase2-finalize.yml \
-            .github/workflows/sync-analysis-codemap.yml
           git diff --cached --check
           git commit -m 'SCO Construction Arena E4-E6 reviewed vertical slice [skip ci]'
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           REMOTE_REF="refs/remotes/origin/${TARGET_BRANCH}"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:${REMOTE_REF}"
-          REMOTE_HEAD="$(git rev-parse "$REMOTE_REF")"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${REMOTE_HEAD}" \
-            origin "HEAD:refs/heads/${TARGET_BRANCH}"
+          for attempt in $(seq 1 20); do
+            git update-ref -d "$REMOTE_REF" || true
+            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:${REMOTE_REF}"
+            REMOTE_HEAD="$(git rev-parse "$REMOTE_REF")"
+            if git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+              push --force-with-lease="refs/heads/${TARGET_BRANCH}:${REMOTE_HEAD}" \
+              origin "HEAD:refs/heads/${TARGET_BRANCH}"; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'Unable to publish verified SCO tree after 20 live-tip retries' >&2
+          exit 1
