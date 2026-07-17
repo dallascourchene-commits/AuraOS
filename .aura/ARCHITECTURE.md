@@ -300,7 +300,42 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 - the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
 - Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
 
-## 7. Benchmark evidence hierarchy
+## 7. Temporal persistence plane
+
+Aura's continuity architecture is layered:
+
+1. `RefactorStateLedger V3` preserves compact intra-session execution state.
+2. `TemporalCheckpointRegistry` persists content-addressed checkpoints and an append-only parent/fork index.
+3. `ArenaPersistenceCoordinator` projects existing Coding, Human Agent, Agent Bridge, and Construction state into the canonical registry.
+4. `aura_wfst_temporal_adapter.py` classifies current, stale, future, and branch-offset state before existing Arena guards.
+5. Restoration returns a review packet. It never mutates a live Arena automatically.
+
+```text
+arena state
+  → canonical projection
+  → payload digest + invariant digests + exact repo HEAD
+  → checkpoint DAG
+  → restore assessment
+       unchanged → human review then existing Surgeon/Arena gate
+       oversized → MITOSIS
+       changed → Restoration Council verify and re-baseline
+```
+
+Architectural invariants:
+
+- checkpoint identity excludes wall-clock metadata so replay is idempotent;
+- registry entries form a digest chain and checkpoint files are repository-confined;
+- parent checkpoints must belong to the same Arena session;
+- cross-Arena handoff exports only a payload-free checkpoint reference and assessment;
+- Observatory projections omit checkpoint payloads;
+- stale or branch-offset state fails closed and forces refresh/re-verification;
+- checkpoints do not become a second Construction truth store;
+- no checkpoint grants code, physical-work, payment, access, safety, engineering, legal, grammar, commit, push, PR, or merge authority;
+- no legal immutability or court-admissibility claim is made.
+
+Primary implementations: `aura_temporal_persistence.py`, `aura_arena_persistence_adapters.py`, `aura_wfst_temporal_adapter.py`, `aura_agent_arena_persistence_bridge.py`, and `aura_persistence_cli.py`.
+
+## 8. Benchmark evidence hierarchy
 
 Aura keeps unlike evidence separate so projections cannot be mistaken for executable proof.
 

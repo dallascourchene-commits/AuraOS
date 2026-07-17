@@ -150,6 +150,35 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 
 This is synthetic/shadow software evidence, not a real-project or production-readiness claim. Provider tokens, provider cost, and real-project savings remain `NOT_MEASURED`. The runtime cannot authorize physical work, release payment, control access, certify safety or engineering, mutate authoritative records, or automatically promote grammar. See [`docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json`](docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json).
 
+## Temporal persistence across arenas
+
+Aura now separates three continuity layers:
+
+```text
+intra-session State Ledger V3
+  → content-addressed TemporalCheckpoint
+  → append-only parent/fork registry
+  → restore assessment against current HEAD and invariants
+  → DIRECT_RESUME_REVIEW_REQUIRED
+     | MITOSIS_REQUIRED
+     | RESTORATION_COUNCIL_REQUIRED
+  → existing Arena guards, verifiers, and human review
+```
+
+The engine is shared by the Coding Workbench, Human Agent Arena, Agent Bridge Arena, and Construction Arena. Construction is the first domain profile, not a second persistence store.
+
+Primary files:
+
+- `aura_temporal_persistence.py`
+- `aura_wfst_temporal_adapter.py`
+- `aura_arena_persistence_adapters.py`
+- `aura_agent_arena_persistence_bridge.py`
+- `aura_persistence_cli.py`
+
+Checkpoints live under `Aura_Memory/checkpoints/` and are excluded from production authority. A checkpoint can be inspected, forked, handed to another Arena as a payload-free digital baton, or assessed for restoration. Restore assessment never applies state automatically. Repository-head or invariant drift routes to the Restoration Council; large remaining context routes to MITOSIS.
+
+Temporal labels such as `TEMP:CURRENT`, `TEMP:STALE`, and `TEMP:BRANCH_OFFSET` are guard evidence only. They do not mutate active grammar. The engine does not claim legal immutability, court admissibility, production readiness, automatic physical action, automatic hotswap, or automatic merge.
+
 ## Truth and authority
 
 Source-of-truth order:

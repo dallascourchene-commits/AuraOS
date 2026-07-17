@@ -28,6 +28,7 @@ from typing import Any, Iterable
 from urllib.parse import parse_qs, urlparse
 
 from aura_arena_research_bridge import ArenaResearchBridge
+from aura_arena_persistence_adapters import ArenaPersistenceCoordinator
 from aura_coding_workbench_wfst_adapter import CodingWorkbenchWFSTSession
 from aura_emergent_refactor_workspace import EmergentResultsStore
 from aura_human_agent_arena import HumanAgentArena
@@ -38,7 +39,7 @@ DEFAULT_PORT = 8090
 FRONTEND_DIR = Path(__file__).resolve().parent / "aura_human_agent_arena"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_4"
+SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_5"
 
 
 class AuraThreadingHTTPServer(ThreadingHTTPServer):
@@ -60,6 +61,7 @@ class HumanAgentArenaServerState:
         self.emergent_store = EmergentResultsStore(self.repo_root)
         self.seed_import = self.emergent_store.import_seed_reports()
         self.research_bridge = ArenaResearchBridge(str(self.repo_root))
+        self.persistence = ArenaPersistenceCoordinator(str(self.repo_root))
 
     def close(self) -> None:
         self.workflow.close()
@@ -432,6 +434,75 @@ def _handle_emergent_and_research_api(
         result = state.emergent_store.get_research_evidence(evidence_id)
         return (200 if result.get("ok") else 404), result
 
+    if method == "GET" and route == "/api/human-agent/persistence/checkpoints":
+        try:
+            return 200, state.persistence.list_checkpoints(
+                arena_id=str(query.get("arena_id", ["human_agent_arena"])[0] or "human_agent_arena"),
+                session_id=str(query.get("session_id", [""])[0] or "") or None,
+                limit=_query_int(query.get("limit", [None])[0], default=100),
+            )
+        except (KeyError, ValueError) as exc:
+            return _error(f"persistence_list_failed:{exc}")
+
+    if method == "GET" and route.startswith("/api/human-agent/persistence/checkpoints/"):
+        checkpoint_id = route.rsplit("/", 1)[-1]
+        try:
+            return 200, state.persistence.observatory_projection(checkpoint_id)
+        except KeyError as exc:
+            return _error(f"checkpoint_not_found:{exc}", 404)
+        except ValueError as exc:
+            return _error(f"checkpoint_invalid:{exc}")
+
+    if method == "POST" and route == "/api/human-agent/persistence/checkpoint":
+        try:
+            result = state.persistence.checkpoint_human_agent(
+                state.workflow,
+                repo_head=str(body.get("repo_head") or ""),
+                parent_checkpoint_id=str(body.get("parent_checkpoint_id") or ""),
+                branch_name=str(body.get("branch_name") or ""),
+            )
+        except (KeyError, ValueError) as exc:
+            return _error(f"checkpoint_write_failed:{exc}")
+        return 200, result
+
+    if method == "POST" and route == "/api/human-agent/persistence/assess":
+        try:
+            result = state.persistence.assess(
+                str(body.get("checkpoint_id") or ""),
+                current_repo_head=str(body.get("current_repo_head") or ""),
+                current_invariant_values=dict(body.get("current_invariant_values") or {}),
+                remaining_context_tokens=int(body.get("remaining_context_tokens") or 0),
+                surgeon_context_limit=int(body.get("surgeon_context_limit") or 0),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            return _error(f"checkpoint_assessment_failed:{exc}")
+        return 200, result
+
+    if method == "POST" and route == "/api/human-agent/persistence/restoration-packet":
+        try:
+            result = state.persistence.restoration_packet(
+                str(body.get("checkpoint_id") or ""),
+                current_repo_head=str(body.get("current_repo_head") or ""),
+                current_invariant_values=dict(body.get("current_invariant_values") or {}),
+                remaining_context_tokens=int(body.get("remaining_context_tokens") or 0),
+                surgeon_context_limit=int(body.get("surgeon_context_limit") or 0),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            return _error(f"restoration_packet_failed:{exc}")
+        return 200, result
+
+    if method == "POST" and route == "/api/human-agent/persistence/handoff":
+        try:
+            result = state.persistence.handoff_packet(
+                str(body.get("checkpoint_id") or ""),
+                target_arena_id=str(body.get("target_arena_id") or ""),
+                current_repo_head=str(body.get("current_repo_head") or ""),
+                current_invariant_values=dict(body.get("current_invariant_values") or {}),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            return _error(f"checkpoint_handoff_failed:{exc}")
+        return 200, result
+
     return None
 
 
@@ -467,6 +538,9 @@ def dispatch_api_request(
             "emergent_workspace": state.emergent_store.list_runs(limit=20),
             "seed_import": state.seed_import,
             "research_evidence": state.emergent_store.list_research_evidence(limit=20),
+            "temporal_persistence": state.persistence.list_checkpoints(
+                arena_id="human_agent_arena", limit=20
+            ),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }

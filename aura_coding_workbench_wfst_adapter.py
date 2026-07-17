@@ -13,13 +13,14 @@ from pathlib import Path
 import secrets
 import shlex
 import time
-from typing import Any, Callable
+from typing import Any
 
 from aura_arena_experience import build_arena_experience, sanitize_experience_payload
+from aura_arena_persistence_adapters import ArenaPersistenceCoordinator
 from aura_arena_experience_ledger import ArenaExperienceLedger
 from aura_arena_wfst_compiler import ARENA_WFST_COMPILER_VERSION
 from aura_arena_wfst_runtime import ARENA_WFST_RUNTIME_VERSION, ArenaWFSTRuntime
-from aura_coding_workbench_sequence import GATE_DEFINITIONS, WorkbenchState, get_gate
+from aura_coding_workbench_sequence import WorkbenchState, get_gate
 
 CODING_WORKBENCH_WFST_ADAPTER_VERSION = "AURA_CODING_WORKBENCH_WFST_ADAPTER_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
@@ -55,6 +56,7 @@ class CodingWorkbenchWFSTSession:
         self.initialization = {"coding": coding, "meta": meta}
         self._ledger: ArenaExperienceLedger | None = None
         self._ledger_error = ""
+        self.persistence = ArenaPersistenceCoordinator(str(self.repo_root))
         if restore and self.session_path.exists():
             self._restore()
         if "topology_health" not in self.evidence:
@@ -117,6 +119,7 @@ class CodingWorkbenchWFSTSession:
             "automatic_commit": False,
             "automatic_push": False,
             "automatic_merge": False,
+            "temporal_persistence_enabled": True,
         }
 
     def route_command(
@@ -286,6 +289,67 @@ class CodingWorkbenchWFSTSession:
         self._event("action", f"{action_id}:{final_outcome}:{state_before}->{state_after}")
         self._persist()
         return result
+
+    def checkpoint_state(
+        self,
+        *,
+        repo_head: str,
+        parent_checkpoint_id: str = "",
+        branch_name: str = "",
+    ) -> dict[str, Any]:
+        # Persist the current Coding Workbench projection without applying restore.
+        result = self.persistence.checkpoint_coding_workbench(
+            self,
+            repo_head=repo_head,
+            parent_checkpoint_id=parent_checkpoint_id,
+            branch_name=branch_name,
+        )
+        checkpoint_id = str((result.get("checkpoint") or {}).get("checkpoint_id") or "")
+        if checkpoint_id:
+            self._event("checkpoint", checkpoint_id)
+        return result
+
+    def assess_checkpoint(
+        self,
+        checkpoint_id: str,
+        *,
+        current_repo_head: str,
+        current_invariant_values: dict[str, Any] | None = None,
+        remaining_context_tokens: int = 0,
+        surgeon_context_limit: int = 0,
+    ) -> dict[str, Any]:
+        # Return a fail-closed restoration assessment; never mutate live state.
+        return self.persistence.assess(
+            checkpoint_id,
+            current_repo_head=current_repo_head,
+            current_invariant_values=current_invariant_values,
+            remaining_context_tokens=remaining_context_tokens,
+            surgeon_context_limit=surgeon_context_limit,
+        )
+
+    def restoration_packet(
+        self,
+        checkpoint_id: str,
+        *,
+        current_repo_head: str,
+        current_invariant_values: dict[str, Any] | None = None,
+        remaining_context_tokens: int = 0,
+        surgeon_context_limit: int = 0,
+    ) -> dict[str, Any]:
+        return self.persistence.restoration_packet(
+            checkpoint_id,
+            current_repo_head=current_repo_head,
+            current_invariant_values=current_invariant_values,
+            remaining_context_tokens=remaining_context_tokens,
+            surgeon_context_limit=surgeon_context_limit,
+        )
+
+    def list_checkpoints(self, *, limit: int = 100) -> dict[str, Any]:
+        return self.persistence.list_checkpoints(
+            arena_id="coding_workbench",
+            session_id=self.session_id,
+            limit=limit,
+        )
 
     def get_state_without_routing(self) -> dict[str, Any]:
         return {

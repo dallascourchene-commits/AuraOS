@@ -235,7 +235,58 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 
 Interpret these as fictional deterministic and synthetic pipeline gates only. A `CRYSTALLIZATION_PROPOSED` result requires verifier and human review and does not change active grammar. All real physical-work, payment, access, safety, engineering, legal, and regulatory decisions remain with authorized humans and institutions.
 
-## 10. Cost and benchmark interpretation
+## 10. Temporal persistence and cross-Arena handoff
+
+Verify the registry:
+
+```bash
+python3 -m aura_persistence_cli --repo-root . verify-registry
+```
+
+List checkpoint metadata without loading payloads:
+
+```bash
+python3 -m aura_persistence_cli --repo-root . list --arena-id human_agent_arena
+```
+
+Assess a checkpoint against the current repository:
+
+```bash
+python3 -m aura_persistence_cli --repo-root . assess   --checkpoint-id CHK-...   --repo-head "$(git rev-parse HEAD)"   --invariants-json /tmp/current-invariants.json   --remaining-context-tokens 7000   --surgeon-context-limit 10000
+```
+
+Possible decisions:
+
+- `DIRECT_RESUME_REVIEW_REQUIRED` — exact HEAD and invariants match; a human still reviews before the existing Arena/Surgeon gate;
+- `MITOSIS_REQUIRED` — remaining work exceeds 75% of the declared Surgeon context limit;
+- `RESTORATION_COUNCIL_REQUIRED` — repository HEAD or a persisted invariant changed.
+
+Human Agent endpoints:
+
+```text
+GET  /api/human-agent/persistence/checkpoints
+GET  /api/human-agent/persistence/checkpoints/{checkpoint_id}
+POST /api/human-agent/persistence/checkpoint
+POST /api/human-agent/persistence/assess
+POST /api/human-agent/persistence/restoration-packet
+POST /api/human-agent/persistence/handoff
+```
+
+Agent Bridge MCP tools:
+
+```text
+aura_checkpoint_session
+aura_list_checkpoints
+aura_restore_checkpoint
+aura_fork_checkpoint
+aura_handoff_checkpoint
+```
+
+The Coding Workbench exposes `checkpoint_state()`, `assess_checkpoint()`, `restoration_packet()`, and `list_checkpoints()` on its guarded session object.
+
+A handoff packet is a payload-free digital baton. It identifies the source checkpoint, target Arena, payload digest, and required restoration gate; it does not mutate the target Arena. `TEMP:STALE` and `TEMP:BRANCH_OFFSET` force refresh/re-verification. Checkpoints are operational continuity records, not automatic authority or legal certification.
+
+## 11. Cost and benchmark interpretation
 
 Keep evidence classes separate and read them in this order:
 
@@ -257,7 +308,7 @@ Keep evidence classes separate and read them in this order:
 
 Token proxies are comparative unless provider usage is explicitly recorded. Never present them as invoices. Tier 3 and Tier 4 evidence must not be promoted into Tier 1 claims without governed execution, comparable quality evidence, and verifier review.
 
-## 11. Testing
+## 12. Testing
 
 Focused PR #133 tests:
 
@@ -277,7 +328,7 @@ python3 aura_codebase_navigator.py
 
 Then verify that CODEMAP indexes and compiled topology remain healthy.
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 **The UI shows no research evidence after a server error**  
 Inspect the API response. Successful evidence loading requires `ok: true`; non-network HTTP errors are surfaced through the UI error boundary.
@@ -294,7 +345,7 @@ Treat this as a governance regression. Context must be built without mutation an
 **CODEMAP reports zero metadata for a changed interface file**  
 Regenerate CODEMAP from the current tree and verify the exact file entry.
 
-## 13. Safety rules
+## 14. Safety rules
 
 - External workers are tools, not authorities.
 - Semantic similarity and VSA are not patch authority.

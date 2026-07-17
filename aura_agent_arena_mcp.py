@@ -18,7 +18,10 @@ import logging
 import sys
 from typing import Any
 
-from aura_agent_arena_bridge import AuraAgentArenaBridge, BRIDGE_VERSION
+from aura_agent_arena_bridge import BRIDGE_VERSION
+from aura_agent_arena_persistence_bridge import (
+    PersistentAuraAgentArenaBridge as AuraAgentArenaBridge,
+)
 from aura_agent_arena_errors import is_error_packet
 from aura_agent_arena_fireworks import fireworks_patch_worker
 
@@ -219,6 +222,73 @@ TOOL_DEFINITIONS = [
             "required": ["objective"],
         },
     },
+    {
+        "name": "aura_checkpoint_session",
+        "description": "Persist a prepared Agent Bridge session as a verifier-bound checkpoint.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "plan_phase_hash": {"type": "string"},
+                "repo_head": {"type": "string"},
+                "parent_checkpoint_id": {"type": "string"},
+                "branch_name": {"type": "string"},
+            },
+            "required": ["plan_phase_hash", "repo_head"],
+        },
+    },
+    {
+        "name": "aura_list_checkpoints",
+        "description": "List Agent Bridge checkpoints without returning checkpoint payloads.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "session_id": {"type": "string"},
+                "limit": {"type": "integer", "default": 100},
+            },
+        },
+    },
+    {
+        "name": "aura_restore_checkpoint",
+        "description": "Return a reviewable restore assessment; never apply state automatically.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "checkpoint_id": {"type": "string"},
+                "current_repo_head": {"type": "string"},
+                "current_invariant_values": {"type": "object"},
+                "remaining_context_tokens": {"type": "integer", "default": 0},
+                "surgeon_context_limit": {"type": "integer", "default": 0},
+            },
+            "required": ["checkpoint_id", "current_repo_head"],
+        },
+    },
+    {
+        "name": "aura_fork_checkpoint",
+        "description": "Create a named child checkpoint for a what-if branch.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "checkpoint_id": {"type": "string"},
+                "branch_name": {"type": "string"},
+                "repo_head": {"type": "string"},
+            },
+            "required": ["checkpoint_id", "branch_name"],
+        },
+    },
+    {
+        "name": "aura_handoff_checkpoint",
+        "description": "Create a payload-free digital baton for another Aura arena.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "checkpoint_id": {"type": "string"},
+                "target_arena_id": {"type": "string"},
+                "current_repo_head": {"type": "string"},
+                "current_invariant_values": {"type": "object"},
+            },
+            "required": ["checkpoint_id", "target_arena_id", "current_repo_head"],
+        },
+    },
 ]
 
 
@@ -345,6 +415,54 @@ def _handle_find_affordances(bridge: AuraAgentArenaBridge, args: dict[str, Any])
         target_symbols=args.get("target_symbols"),
         include_affordances=bool(args.get("include_affordances", True)),
         top_k=int(args.get("top_k", 7)),
+    )
+
+
+@_register_tool("aura_checkpoint_session")
+def _handle_checkpoint_session(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_checkpoint_session(
+        plan_phase_hash=str(args.get("plan_phase_hash", "")),
+        repo_head=str(args.get("repo_head", "")),
+        parent_checkpoint_id=str(args.get("parent_checkpoint_id", "")),
+        branch_name=str(args.get("branch_name", "")),
+    )
+
+
+@_register_tool("aura_list_checkpoints")
+def _handle_list_checkpoints(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_list_checkpoints(
+        session_id=str(args.get("session_id", "")) or None,
+        limit=int(args.get("limit", 100)),
+    )
+
+
+@_register_tool("aura_restore_checkpoint")
+def _handle_restore_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_restore_checkpoint(
+        checkpoint_id=str(args.get("checkpoint_id", "")),
+        current_repo_head=str(args.get("current_repo_head", "")),
+        current_invariant_values=dict(args.get("current_invariant_values") or {}),
+        remaining_context_tokens=int(args.get("remaining_context_tokens", 0)),
+        surgeon_context_limit=int(args.get("surgeon_context_limit", 0)),
+    )
+
+
+@_register_tool("aura_fork_checkpoint")
+def _handle_fork_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_fork_checkpoint(
+        checkpoint_id=str(args.get("checkpoint_id", "")),
+        branch_name=str(args.get("branch_name", "")),
+        repo_head=str(args.get("repo_head", "")) or None,
+    )
+
+
+@_register_tool("aura_handoff_checkpoint")
+def _handle_handoff_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_handoff_checkpoint(
+        checkpoint_id=str(args.get("checkpoint_id", "")),
+        target_arena_id=str(args.get("target_arena_id", "")),
+        current_repo_head=str(args.get("current_repo_head", "")),
+        current_invariant_values=dict(args.get("current_invariant_values") or {}),
     )
 
 

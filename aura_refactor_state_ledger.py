@@ -10,6 +10,11 @@ from aura_refactor_state_ledger_metrics import (
     bounded_state_ledger_text,
     measure_state_preservation,
 )
+from aura_temporal_persistence import (
+    TemporalCheckpointRegistry,
+    checkpoint_refactor_state,
+    verify_refactor_checkpoint,
+)
 
 __all__ = [
     "RefactorStateLedger",
@@ -19,4 +24,7 @@ __all__ = [
     "build_state_sidecar",
     "measure_state_preservation",
     "reconstruct_state_from_ledger",
+    "TemporalCheckpointRegistry",
+    "checkpoint_refactor_state",
+    "verify_refactor_checkpoint",
 ]

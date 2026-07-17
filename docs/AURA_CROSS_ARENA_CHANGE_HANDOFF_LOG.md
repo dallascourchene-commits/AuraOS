@@ -118,3 +118,23 @@ context_efficiency:
 - deterministic randomized histories: 250 PASS
 - staging payloads and one-run tooling: removed before final topology
 - authority boundary: proposal-only; human physical release remains mandatory
+
+## Phase 4 temporal-persistence handoff
+
+```yaml
+baseline_main: c77e6d6558b2ee4f4c7f7c9160eff16e8ec0e4c5
+active_branch: refactor/sco-construction-persistence-e9-e12
+current_phase: E9_E12_TEMPORAL_PERSISTENCE
+current_status: IMPLEMENTING
+coderabbit_policy: TRIGGER_ONCE_AFTER_FINAL_MANUAL_AND_EXECUTABLE_GATES
+```
+
+| Capability | Canonical owner | Disposition |
+|---|---|---|
+| Content-addressed checkpoint and registry | `aura_temporal_persistence.py` | `NEW_GENERIC_OWNER` |
+| Temporal stale/branch guard | `aura_wfst_temporal_adapter.py` | `NEW_NARROW_ADAPTER`; no active grammar mutation |
+| Coding/Human/Bridge/Construction projections | `aura_arena_persistence_adapters.py` | `INTEGRATED` |
+| Agent Bridge persistence MCP | `aura_agent_arena_persistence_bridge.py`, `aura_agent_arena_mcp.py` | `INTEGRATED` |
+| Human Agent persistence API | `aura_human_agent_arena_server.py` | `INTEGRATED` |
+| Automatic restore or hotswap | none | `FORBIDDEN` |
+| Legal immutability/court admissibility | none | `NOT_CLAIMED` |
