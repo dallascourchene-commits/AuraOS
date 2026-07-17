@@ -1,0 +1,219 @@
+    active_event_ids: tuple[str, ...]
+    superseded_event_ids: tuple[str, ...]
+    conflicts: tuple[ConstructionConflict, ...]
+    final_chain_digest: str
+    state_digest: str
+    version: str = CONSTRUCTION_STATE_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_STATE_VERSION:
+            raise ValueError("unsupported construction state version")
+        if self.proposal_only is not True:
+            raise ValueError("construction state must remain proposal-only")
+        if self.patch_authority != PATCH_AUTHORITY or self.vsa_patch_authority is not False:
+            raise ValueError("construction state authority boundary was modified")
+        if type(self.events) is not tuple:
+            raise ValueError("state events must be a tuple")
+        projected = _reduce_events(self.events)
+        expected_project, expected_ledger, expected_active, expected_superseded, expected_conflicts = projected
+        if self.project_id != expected_project or self.ledger_id != expected_ledger:
+            raise ValueError("state project or ledger does not match its event chain")
+        if self.active_event_ids != expected_active:
+            raise ValueError("state active-event projection does not match its event chain")
+        if self.superseded_event_ids != expected_superseded:
+            raise ValueError("state supersession projection does not match its event chain")
+        if self.conflicts != expected_conflicts:
+            raise ValueError("state conflict projection does not match its event chain")
+        if self.final_chain_digest != self.events[-1].chain_digest:
+            raise ValueError("state final chain digest does not match the final event")
+        if self.state_digest != stable_digest(self._identity_payload()):
+            raise ValueError("state digest does not match its content")
+
+    def _identity_payload(self) -> dict[str, Any]:
+        return _state_payload(
+            project_id=self.project_id,
+            ledger_id=self.ledger_id,
+            events=self.events,
+            active_event_ids=self.active_event_ids,
+            superseded_event_ids=self.superseded_event_ids,
+            conflicts=self.conflicts,
+            final_chain_digest=self.final_chain_digest,
+        )
+
+    @property
+    def events_by_id(self) -> dict[str, ConstructionEvent]:
+        return {item.event_id: item for item in self.events}
+
+    @property
+    def active_events(self) -> tuple[ConstructionEvent, ...]:
+        active = set(self.active_event_ids)
+        return tuple(item for item in self.events if item.event_id in active)
+
+    @property
+    def active_claim_events(self) -> tuple[ConstructionEvent, ...]:
+        return tuple(
+            item
+            for item in self.active_events
+            if item.record_kind == ConstructionRecordKind.CLAIM.value
+        )
+
+    @property
+    def active_evidence_events(self) -> tuple[ConstructionEvent, ...]:
+        return tuple(
+            item
+            for item in self.active_events
+            if item.record_kind == ConstructionRecordKind.EVIDENCE.value
+        )
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionProjectState":
+        data = dict(value)
+        return cls(
+            project_id=data.get("project_id"),
+            ledger_id=data.get("ledger_id"),
+            events=tuple(
+                ConstructionEvent.from_dict(dict(item))
+                for item in data.get("events", ())
+            ),
+            active_event_ids=tuple(data.get("active_event_ids", ())),
+            superseded_event_ids=tuple(data.get("superseded_event_ids", ())),
+            conflicts=tuple(
+                ConstructionConflict.from_dict(dict(item))
+                for item in data.get("conflicts", ())
+            ),
+            final_chain_digest=data.get("final_chain_digest"),
+            state_digest=data.get("state_digest"),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {**self._identity_payload(), "state_digest": self.state_digest}
+
+
+def replay_construction_events(
+    events: Iterable[ConstructionEvent],
+) -> ConstructionProjectState:
+    items = tuple(events)
+    project_id, ledger_id, active, superseded, conflicts = _reduce_events(items)
+    payload = _state_payload(
+        project_id=project_id,
+        ledger_id=ledger_id,
+        events=items,
+        active_event_ids=active,
+        superseded_event_ids=superseded,
+        conflicts=conflicts,
+        final_chain_digest=items[-1].chain_digest,
+    )
+    return ConstructionProjectState(
+        project_id=project_id,
+        ledger_id=ledger_id,
+        events=items,
+        active_event_ids=active,
+        superseded_event_ids=superseded,
+        conflicts=conflicts,
+        final_chain_digest=items[-1].chain_digest,
+        state_digest=stable_digest(payload),
+    )
+
+
+@dataclass(frozen=True)
+class ConstructionReadinessReport:
+    claim_id: str
+    ready: bool
+    blockers: tuple[str, ...]
+    active_evidence_ids: tuple[str, ...]
+    conflict_event_ids: tuple[str, ...]
+    state_digest: str
+    evaluated_at: float
+    readiness_class: str = "EVIDENCE_READY_FOR_AUTHORITY_REVIEW"
+    proposal_only: bool = PROPOSAL_ONLY
+    human_release_required: bool = True
+    physical_work_authorized: bool = False
+
+    def __post_init__(self) -> None:
+        if type(self.claim_id) is not str or not self.claim_id:
+            raise ValueError("readiness claim_id is required")
+        if type(self.ready) is not bool:
+            raise ValueError("readiness ready flag must be boolean")
+        _tuple_strings(self.blockers, "readiness.blockers")
+        _tuple_strings(self.active_evidence_ids, "readiness.active_evidence_ids")
+        _tuple_strings(self.conflict_event_ids, "readiness.conflict_event_ids")
+        _digest(self.state_digest, "readiness.state_digest")
+        _require_canonical_float(self.evaluated_at, "readiness.evaluated_at")
+        _timestamp(self.evaluated_at, "readiness.evaluated_at")
+        if self.readiness_class != "EVIDENCE_READY_FOR_AUTHORITY_REVIEW":
+            raise ValueError("unsupported construction readiness class")
+        if self.ready == bool(self.blockers):
+            raise ValueError("readiness flag and blocker set disagree")
+        if (
+            self.proposal_only is not True
+            or self.human_release_required is not True
+            or self.physical_work_authorized is not False
+        ):
+            raise ValueError("readiness report crossed its authority boundary")
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionReadinessReport":
+        data = dict(value)
+        return cls(
+            claim_id=data.get("claim_id"),
+            ready=data.get("ready"),
+            blockers=tuple(data.get("blockers", ())),
+            active_evidence_ids=tuple(data.get("active_evidence_ids", ())),
+            conflict_event_ids=tuple(data.get("conflict_event_ids", ())),
+            state_digest=data.get("state_digest"),
+            evaluated_at=data.get("evaluated_at"),
+            readiness_class=data.get("readiness_class"),
+            proposal_only=data.get("proposal_only"),
+            human_release_required=data.get("human_release_required"),
+            physical_work_authorized=data.get("physical_work_authorized"),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def query_claim_readiness(
+    state: ConstructionProjectState,
+    *,
+    claim_id: str,
+    now: float,
+) -> ConstructionReadinessReport:
+    state.__post_init__()
+    evaluated = _timestamp(now, "now")
+    active_claim_events = [
+        event
+        for event in state.active_claim_events
+        if type(event.record) is ConstructionClaim and event.record.claim_id == claim_id
+    ]
+    if len(active_claim_events) != 1:
+        return ConstructionReadinessReport(
+            claim_id=claim_id,
+            ready=False,
+            blockers=("claim_not_uniquely_active",),
+            active_evidence_ids=(),
+            conflict_event_ids=(),
+            state_digest=state.state_digest,
+            evaluated_at=evaluated,
+        )
+
+    claim_event = active_claim_events[0]
+    claim = claim_event.record
+    assert type(claim) is ConstructionClaim
+    blockers: list[str] = []
+    conflict_ids: list[str] = []
+
+    for conflict in state.conflicts:
+        if (
+            conflict.record_kind == ConstructionRecordKind.CLAIM.value
+            and conflict.state_key == claim.state_key
+        ):
+            blockers.append("conflicting_active_claims")
+            conflict_ids.extend(conflict.active_event_ids)
+
