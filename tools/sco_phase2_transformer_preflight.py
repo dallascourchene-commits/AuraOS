@@ -17,6 +17,30 @@ def main() -> None:
 
     text = replace_once(
         text,
+        '''def replace_between(path: str, start: str, end: str, replacement: str) -> None:
+    target = ROOT / path
+    text = target.read_text(encoding="utf-8")
+    if text.count(start) != 1 or text.count(end) != 1:
+        raise SystemExit(f"{path}: replacement anchors are not unique")
+    before, remainder = text.split(start, 1)
+    _, after = remainder.split(end, 1)
+    target.write_text(before + replacement + end + after, encoding="utf-8")
+''',
+        '''def replace_between(path: str, start: str, end: str, replacement: str) -> None:
+    target = ROOT / path
+    text = target.read_text(encoding="utf-8")
+    if text.count(start) != 1:
+        raise SystemExit(f"{path}: replacement start anchor is not unique")
+    before, remainder = text.split(start, 1)
+    if end not in remainder:
+        raise SystemExit(f"{path}: replacement end anchor is missing after start")
+    _, after = remainder.split(end, 1)
+    target.write_text(before + replacement + end + after, encoding="utf-8")
+''',
+    )
+
+    text = replace_once(
+        text,
         '''    for old, new in (
         ('consent_refs=tuple(data.get("consent_refs", ())),',
          'consent_refs=_sequence_input(data.get("consent_refs", ()), "evidence.consent_refs"),'),
