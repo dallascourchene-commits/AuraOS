@@ -34,6 +34,17 @@ jobs:
           python -m pip install pytest==8.4.1 ruff==0.5.0
       - name: Materialize manually reviewed integration
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          for relative in ("tools/pr138_materialize_part1.py", "tools/pr138_materialize_part2.py"):
+              path = Path(relative)
+              text = path.read_text(encoding="utf-8")
+              old = 'PAYLOAD.encode("ascii")'
+              new = 'PAYLOAD.replace("\\n", "").encode("ascii")'
+              if text.count(old) != 1:
+                  raise SystemExit(f"unexpected payload decoder shape: {relative}")
+              path.write_text(text.replace(old, new), encoding="utf-8")
+          PY
           python tools/pr138_materialize_part1.py
           python tools/pr138_materialize_part2.py
       - name: Compile and run fatal static checks
