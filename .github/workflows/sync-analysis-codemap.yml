@@ -1,49 +1,17 @@
-name: SCO Phase 2 Missing Branch Diagnostic
+name: SCO Phase 2 CodeRabbit Finalization
 
 on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: sco-phase2-missing-branches-${{ github.head_ref || github.ref_name }}
+  group: sco-phase2-publish-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
-  diagnose:
+  finalize:
     if: github.event.pull_request.head.ref == 'refactor/sco-construction-e4-e6'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Fetch exact head
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          git init -q .
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch -q --no-tags --depth=1 origin "$TARGET_SHA"
-          unset AUTH_HEADER
-          git checkout -q --detach FETCH_HEAD
-      - name: Materialize reviewed tree
-        run: |
-          python3 tools/sco_phase2_materialize.py >/dev/null
-          python3 tools/sco_phase2_transformer_preflight.py >/dev/null
-          python3 tools/sco_phase2_apply_review_fixes.py >/dev/null
-      - name: Print uncovered branch source
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          targets = {
-              'aura_construction_state.py': [43, 45, 54, 65, 71, 74, 76, 78, 80, 93, 99, 123, 125, 141, 155, 166, 168, 265, 267, 269, 271, 279, 281, 283, 300, 397, 399, 407, 409, 494, 495, 500, 512, 566, 567],
-              'aura_construction_authority.py': [132, 274, 276, 288, 294, 306, 322, 328],
-          }
-          for path, numbers in targets.items():
-              lines = Path(path).read_text(encoding='utf-8').splitlines()
-              print(f'## {path}')
-              for number in numbers:
-                  print(f'{number}: {lines[number - 1]}')
-          PY
+    uses: ./.github/workflows/sco-phase2-finalize.yml
+    secrets: inherit
