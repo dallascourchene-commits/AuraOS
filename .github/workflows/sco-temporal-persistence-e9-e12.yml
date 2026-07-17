@@ -1,0 +1,189 @@
+name: SCO Temporal Persistence E9-E12 Audit
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sco-temporal-persistence-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.ref == 'refactor/sco-construction-persistence-e9-e12'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact persistence head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
+          git config http.https://github.com/.extraheader "${AUTH_HEADER}"
+          git config core.sparseCheckout true
+          git config core.sparseCheckoutCone false
+          cat > .git/info/sparse-checkout <<'EOF'
+          /*
+          !/Aura_Memory/
+          !/Aura_Sandbox/
+          EOF
+          git -c protocol.version=2 fetch \
+            --no-tags \
+            --filter=blob:none \
+            --depth=160 \
+            origin "${TARGET_SHA}"
+          git checkout --quiet --detach "${TARGET_SHA}"
+          git config --unset-all http.https://github.com/.extraheader
+          test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install exact audit environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest==8.4.1 coverage==7.9.2 ruff==0.5.0
+
+      - name: Apply bounded arena integrations once
+        run: |
+          set -euo pipefail
+          FINALIZE=0
+          if [ -f tools/bootstrap_sco_persistence.py ]; then
+            python tools/bootstrap_sco_persistence.py
+            rm tools/bootstrap_sco_persistence.py
+            FINALIZE=1
+          fi
+          if [ -f tools/apply_sco_persistence_integration.py ]; then
+            python tools/apply_sco_persistence_integration.py
+            rm tools/apply_sco_persistence_integration.py
+            FINALIZE=1
+          fi
+          echo "PERSISTENCE_FINALIZE=${FINALIZE}" >> "${GITHUB_ENV}"
+
+      - name: Compile and run fatal static checks
+        run: |
+          python -m py_compile \
+            aura_temporal_persistence.py \
+            aura_persistence_registry.py \
+            aura_restoration_commander.py \
+            aura_wfst_temporal_adapter.py \
+            aura_arena_persistence_adapters.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_persistence_cli.py \
+            aura_refactor_state_ledger.py \
+            aura_coding_workbench_wfst_adapter.py \
+            aura_human_agent_arena_server.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_temporal_persistence.py \
+            tests/test_aura_wfst_temporal_adapter.py \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_persistence_integrations.py
+          ruff check --select E9,F63,F7,F82,F401,F811,B006 \
+            aura_temporal_persistence.py \
+            aura_persistence_registry.py \
+            aura_restoration_commander.py \
+            aura_wfst_temporal_adapter.py \
+            aura_arena_persistence_adapters.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_persistence_cli.py \
+            aura_refactor_state_ledger.py \
+            aura_coding_workbench_wfst_adapter.py \
+            aura_human_agent_arena_server.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_temporal_persistence.py \
+            tests/test_aura_wfst_temporal_adapter.py \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_persistence_integrations.py
+          git diff --check
+
+      - name: Run focused persistence coverage gate
+        run: |
+          set -o pipefail
+          python -m coverage erase
+          python -m coverage run -m pytest -q \
+            tests/test_aura_temporal_persistence.py \
+            tests/test_aura_wfst_temporal_adapter.py \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_persistence_integrations.py \
+            2>&1 | tee /tmp/sco-persistence-focused.txt
+          python -m coverage report -m \
+            --include='aura_temporal_persistence.py,aura_restoration_commander.py,aura_wfst_temporal_adapter.py,aura_arena_persistence_adapters.py,aura_agent_arena_persistence_bridge.py' \
+            --fail-under=75 \
+            2>&1 | tee /tmp/sco-persistence-coverage.txt
+
+      - name: Run canonical owner regressions
+        run: |
+          set -o pipefail
+          python -m pytest -q \
+            tests/test_aura_benchmark_four_hardening.py \
+            tests/test_aura_emergent_refactor_workspace.py \
+            tests/test_aura_phase_c2_capsule_enforcement.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_adapter.py \
+            2>&1 | tee /tmp/sco-persistence-regressions.txt
+
+      - name: Verify registry and CLI boundaries
+        run: |
+          python -m aura_persistence_cli --repo-root . verify-registry
+          python - <<'PY'
+          from aura_agent_arena_mcp import TOOL_DEFINITIONS
+          names = {item["name"] for item in TOOL_DEFINITIONS}
+          required = {
+              "aura_checkpoint_session",
+              "aura_list_checkpoints",
+              "aura_restore_checkpoint",
+              "aura_fork_checkpoint",
+              "aura_handoff_checkpoint",
+          }
+          missing = required - names
+          assert not missing, missing
+          PY
+
+      - name: Regenerate and validate topology
+        run: |
+          rm -f .coverage
+          rm -rf .pytest_cache .ruff_cache __pycache__
+          python aura_codebase_navigator.py
+          python aura_codemap_verify.py --repo-root .
+          git diff --check
+
+      - name: Upload persistence evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sco-temporal-persistence-${{ github.sha }}
+          path: |
+            /tmp/sco-persistence-focused.txt
+            /tmp/sco-persistence-coverage.txt
+            /tmp/sco-persistence-regressions.txt
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit integrated arena surfaces and topology
+        if: env.PERSISTENCE_FINALIZE == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          rm -f .coverage
+          rm -rf .pytest_cache .ruff_cache __pycache__
+          git config user.name "AuraOS Persistence Surgeon"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Implement cross-arena temporal persistence"
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="${AUTH_HEADER}" \
+            push origin HEAD:"${HEAD_REF}"
