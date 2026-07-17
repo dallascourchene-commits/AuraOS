@@ -1,162 +1,149 @@
 # AuraOS SCO Construction Arena — Emergent Refactor Addendum
 
 ```yaml
-document_status: PHASE_ONE_VERIFIED_READY_TO_MERGE
-document_version: 1.1.1
-prepared_date: 2026-07-16
+document_status: PHASE_TWO_E4_E6_COMPLETE_AWAITING_USER_DIRECTION
+document_version: 1.2.0
+prepared_date: 2026-07-17
 repository: dallascourchene-commits/AuraOS
-baseline_main: 52f07f3b8bc5f932b6a1c950f0c3081500f189db
-branch: refactor/sco-construction-arena
-phase: E0_E3
+baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
+branch: refactor/sco-construction-e4-e6
+completed_phases: E0_E6
 patch_authority: exact_source_spans_and_hashes_only
 vsa_patch_authority: false
-construction_authority: authorized_human_professional_contractual_legal_and_regulatory_roles_only
+coderabbit_triggered: false
+pull_request_opened: false
+merged: false
 cross_arena_handoff: docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md
 ```
 
-## Decision
+## Architecture decision
 
-The SCO Construction Arena should be built as a narrow domain layer over Aura's existing governed spine. The original proposed module list remains a responsibility inventory, not permission to create a parallel planner, evidence store, bridge, experience system, quality system, or autonomous construction controller.
+The SCO Construction Arena remains a narrow domain layer over Aura's governed spine. It is not a parallel planner, evidence store, authority system, bridge, learning system, or autonomous construction controller.
 
 ```text
 human objective
   -> Human Agent emergent evidence
-  -> Capability Connectome / Resolver
-  -> CODEMAP and exact topology
-  -> existing owner | narrow adapter | true capability gap
+  -> Capability Resolver and CODEMAP grounding
+  -> exact canonical owners and missing domain gaps
   -> revisioned refactor skeleton
-  -> exact-span-and-hash Action Capsules
-  -> staged patch and verifier
+  -> bounded implementation
+  -> deterministic replay and queries
+  -> canonical relational governance
   -> digest-bound human decision
 ```
 
-## Construction authority boundary
+## Authority boundary
 
-Aura may represent claims, evidence, conflicts, dependencies, missing approvals, and coordination options. It may not:
+Aura may represent claims, evidence, conflict, dependencies, missing approvals, and digital coordination readiness. It may not:
 
 - authorize physical work;
 - certify safety, engineering, inspection, or professional conclusions;
 - release payment or transfer funds;
-- control physical access;
-- operate equipment;
+- control access or equipment;
 - discipline workers;
-- treat sensor or location data as dispositive proof;
-- replace contractual, legal, regulatory, owner, consultant, or community authority.
+- treat sensors or location as dispositive proof;
+- replace owner, consultant, community, contractual, legal, or regulatory authority.
 
-## Original ten emergent properties adapted
+The invariant is:
 
-| # | Emergent property | Phase 1 adaptation |
+```text
+EVIDENCE_READY != GOVERNANCE_AUTHORIZED != PHYSICAL_RELEASED
+```
+
+Physical release remains false and human-controlled.
+
+## Phase 1 — E0–E3 foundation
+
+Phase 1 introduced the general revisioned `RefactorSkeleton`, exact source-hash/span capsule authority, capability reuse grounding, Construction plan adapter, persistent handoff, and generated topology. It merged as:
+
+```text
+77e83f5686250530b00d40ef0d99e60f098681e5
+```
+
+## Phase 2 — E4 minimal contracts
+
+`aura_construction_contracts.py` adds the minimum domain gap while reusing `aura_event_contracts.py`:
+
+- immutable Construction scopes;
+- claims and evidence as separate records;
+- evidence, measurement, confidence, authority, privacy, consent, freshness, and expiry separation;
+- project-bound append-only Construction events;
+- exact sequence, parent, supersession, event, and chain identity;
+- canonical Aura event-envelope projection.
+
+## Phase 2 — E5 deterministic state and queries
+
+`aura_construction_state.py` adds a zero-model reducer and query layer:
+
+- deterministic replay;
+- explicit supersession;
+- conflict preservation;
+- deletion, reordering, duplicate, foreign-parent, cross-key, and backward-time rejection;
+- claim-readiness and project-conflict queries;
+- sensor/location-only evidence blocked as non-dispositive;
+- privacy and consent propagation enforcement.
+
+## Phase 2 — E6 authority and receipts
+
+`aura_construction_authority.py` is a narrow adapter over `aura_relational_authority.py`:
+
+- no custom cryptography;
+- no injectable evaluator;
+- exact risk/quorum binding;
+- exact project policy and Construction capability scope;
+- canonical grant, attestation, quorum, and governance evaluation;
+- separate governance-authorized and evidence-ready values;
+- digitally-ready only when both pass;
+- chained receipt and external-reference binding to the exact request, state, decision, and result;
+- physical work remains unauthorized.
+
+## Original ten emergent properties in E4–E6
+
+| # | Emergent property | E4–E6 application |
 |---:|---|---|
-| 1 | Grounded intent -> Action Capsules | Only `READY_FOR_ACT` nodes with verified repository bytes, SHA-256 hashes, and exact line spans compile |
-| 2 | Topology -> route | Future work may select zero-model, Surgeon, Council, or human specialist from grounded task structure |
-| 3 | Localization before broad prompts | Capability Resolver and exact requested owner symbols precede invention |
-| 4 | Verified memory -> compact context | Revisioned skeletons replace conversation replay as the continuity object |
-| 5 | Plans -> persistent live skeletons | Content-addressed, immutable, revisioned skeleton and node records |
-| 6 | Gate failure -> bounded repair | Repairs append to responsible-node history; revision forks and gaps fail closed |
-| 7 | Attempts -> governed procedures | Deferred until complete verified ArenaExperience records exist |
-| 8 | Finding -> ghost plan | Human Agent emergent evidence remains proposal-only and strict at packet admission |
-| 9 | Reuse before invention | Every proposed capability receives an exact owner/reuse decision |
-| 10 | Verified component -> hotswap proposal | Deferred to exact-head staging, verification, approval, rollback, and post-merge checks |
-
-## Phase 1 implementation
-
-### General canonical owner
-
-`aura_refactor_skeleton.py` provides:
-
-- `SourceSpan`;
-- `IntegrationDisposition`;
-- `RefactorSkeletonNode`;
-- `RefactorSkeleton`;
-- `RefactorSkeletonStore`;
-- exact repository file verification and SHA-256 helpers.
-
-The implementation preserves:
-
-- stable semantic identity;
-- recursive immutability of digest-covered mappings, nested values, and sequence fields;
-- normalized-key collision rejection;
-- canonical node and skeleton digests;
-- exact source hashes and line spans;
-- revision and prior-digest chains;
-- repair history;
-- cross-Arena integration dispositions;
-- proposal-only authority;
-- content-addressed, atomically written persistence.
-
-A node cannot become `READY_FOR_ACT` without exactly one valid SHA-256 hash per target file, at least one exact span per target, required tests, normalized repository-relative paths, and verified current file bytes.
-
-### Construction planning adapter
-
-`aura_construction_refactor_plan.py` provides:
-
-- construction capability requirements;
-- Capability Resolver-backed reuse inventory;
-- exact requested-symbol owner proof;
-- rejection of file placeholders, unrelated symbols, and generic capability paths;
-- the E0-E14 Construction skeleton;
-- fail-closed exact-grounded Action Capsule compilation;
-- construction authority validation.
-
-### Phase sequence
-
-```text
-E0 — evidence and baseline lock
-E1 — capability reuse matrix
-E2 — persistent refactor skeleton
-E3 — exact-grounded capsule compiler boundary
-E4-E14 — deferred runtime, evidence, benchmark, documentation, review, and merge work
-```
-
-## Human Agent Emergent integration
-
-Reuse `aura_emergent_refactor_workspace.py`; do not create another evidence store.
-
-```text
-EMR-* complete report
-EMF-* finding
-ERP-* strict refactor packet
-ERE-* external research evidence
-```
-
-Complete files remain authoritative; indexes are repairable. Semantic IDs exclude timestamps. Evidence capture may be permissive, but packet admission is strict and unresolved selected IDs fail closed. External research remains non-authoritative.
-
-## Cross-Arena discoverability
-
-Every new capability must classify every relevant structure as one of:
-
-```text
-INTEGRATED
-INTENTIONALLY_LOCAL
-ADAPTER_REQUIRED
-DEFERRED
-BLOCKED
-NOT_APPLICABLE
-DEPRECATED
-SUPERSEDED
-```
-
-Anything not integrated must be recorded in `docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md` with its canonical owner, missing wire, exact next grounding task, and retirement criterion.
+| 1 | Grounded intent -> capsules | Exact canonical owners and narrow domain gaps defined the slice |
+| 2 | Topology -> route | Runtime queries use `ZERO_MODEL`; authority escalates to canonical human governance |
+| 3 | Localization before broad prompts | Four principal owner files selected from 1,022 repository files |
+| 4 | Verified memory -> compact context | Append-only state digest replaces broad history replay |
+| 5 | Plans -> persistent skeletons | Phase state and unresolved wires remain in the handoff log |
+| 6 | Failures -> bounded repair | Twenty-four review findings were repaired locally with regressions |
+| 7 | Attempts -> governed procedures | Still deferred until verified Experience episodes exist |
+| 8 | Findings -> ghost plan | Deferred integrations remain explicit wiring debts |
+| 9 | Reuse before invention | Event and authority owners were reused; only proven Construction gaps were added |
+| 10 | Verified component -> promotion proposal | Phase stops before PR, CodeRabbit, merge, or activation |
 
 ## Manual equivalent review
 
-CodeRabbit was unavailable within the phase window, so an equivalent manual review was completed. The exact evidence is recorded in `docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md`.
+CodeRabbit was not triggered by user instruction. The equivalent review produced:
 
 ```yaml
 py_compile: PASS
 compileall: PASS
-focused_adversarial_tests: 33_passed
-automated_review_findings_repaired: 5
-additional_manual_findings_repaired: 16
-review_threads_resolved: 5_of_5
-github_actions: ACTION_REQUIRED_NO_JOBS_EXECUTED
+focused_adversarial_tests: 89_passed
+focused_statement_coverage: 90_percent
+manual_fatal_lint: PASS
+randomized_replay_probe: 250_histories_passed
+manual_findings_repaired: 24
 ```
 
-GitHub Actions required approval and created no jobs; this was not an executed test failure. The user-authorized fallback was the equivalent manual review above.
+Full evidence is recorded in `docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md`.
+
+## Context-efficiency evidence
+
+```yaml
+repository_file_count: 1022
+selected_principal_owner_files: 4
+structural_file_selection_reduction: 99.61_percent
+measurement_class: STRUCTURAL_CONTEXT_PROXY
+provider_tokens_and_cost: NOT_MEASURED
+runtime_model_route: ZERO_MODEL
+```
+
+This is a structural context-selection result, not a provider billing claim.
 
 ## Generated topology policy
 
-The topology artifacts are regenerated, never hand-merged:
+The following artifacts must be regenerated from the final branch tree and never hand-merged:
 
 ```text
 .aura/CODEMAP.json
@@ -164,18 +151,15 @@ The topology artifacts are regenerated, never hand-merged:
 topology_map.json
 ```
 
-They must reflect the exact final source, tests, and documentation tree.
+## Deferred work
 
-## Next phase
+- Construction `BaseArenaAdapter`;
+- Human Agent Construction profile and UI;
+- Observatory projection;
+- verified Experience and Crucible projection;
+- payment-readiness lane;
+- hazard/location advisory lane;
+- live connectors;
+- physical control or autonomous procedure activation.
 
-After Phase 1 is merged and current `main` is regrounded, execute E4-E6 only:
-
-```text
-E4 — minimal Construction domain contracts
-E5 — deterministic state, supersession, conflict, and queries
-E6 — authority, attestation, and receipt adapter
-```
-
-Money, hazard, live connectors, physical control, Human Agent runtime integration, Experience projection, and Crucible proposal mining remain deferred until E4-E6 are independently verified.
-
-> Build the Construction Arena by extending Aura's governed spine, not by creating another monolith. Preserve unknowns, conflicts, and missing authority; return consequential decisions to authorized people.
+> Build the Construction Arena by extending Aura's governed spine. Preserve unknowns, conflict, dissent, privacy, missing authority, and human release.
