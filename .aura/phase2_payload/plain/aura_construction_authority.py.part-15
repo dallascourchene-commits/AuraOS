@@ -1,0 +1,28 @@
+        if result is None:
+            raise ValueError(f"receipt references an unknown authority result: {receipt.record_id}")
+        expected_ledger = f"construction-authority/{result.project_id}"
+        if receipt.ledger_id != expected_ledger:
+            raise ValueError(f"construction receipt must use ledger {expected_ledger}")
+        if receipt.created_at < result.evaluated_at:
+            raise ValueError("construction receipt predates its authority evaluation")
+        if receipt.created_at >= result.expires_at:
+            raise ValueError("construction receipt was created after authority expiry")
+
+    return verify_receipt_chain(
+        items,
+        record_digests=record_digests,
+        trusted_checkpoint=trusted_checkpoint,
+        verified_checkpoint_refs=verified_checkpoint_refs,
+    )
+
+
+__all__ = [
+    "CONSTRUCTION_AUTHORITY_VERSION",
+    "ConstructionGovernanceReplay",
+    "ConstructionActionRequest",
+    "ConstructionAuthorityResult",
+    "ConstructionReceiptBinding",
+    "evaluate_construction_authority",
+    "create_construction_receipt",
+    "verify_construction_receipts",
+]
