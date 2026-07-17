@@ -13,18 +13,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1042
-- **total_bytes**: 51376952
-- **text_tokens_est**: 3504447
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 27, 'knowledge_artifact': 140, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 727, 'schema_or_lexicon': 103, 'support_file': 30}
-- **topology_nodes**: 8631
-- **topology_edges**: 19028
+- **file_count**: 1046
+- **total_bytes**: 51403525
+- **text_tokens_est**: 3511071
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 27, 'knowledge_artifact': 140, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 728, 'schema_or_lexicon': 105, 'support_file': 31}
+- **topology_nodes**: 8634
+- **topology_edges**: 19048
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 14295.14
+- **elapsed_ms**: 22303.63
 
 ## Coverage
 
-- **included_file_count**: 1042
+- **included_file_count**: 1046
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
 - **skipped_dir_file_counts**: `.git`=64, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
@@ -297,9 +297,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/ROLES.md`
 - `.aura/amd_track3_demo_tasks.json`
 - `.aura/arena_routes/coding.v1.json`
+- `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- `.aura/arena_routes/meta.v1.json`
-- ... 871 more; query CODEMAP.json for exact file cards
+- ... 875 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -319,8 +319,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 8631
-- **edges**: 19028
+- **nodes**: 8634
+- **edges**: 19048
 - **top_files_by_degree**:
   - `aura_node.py` degree=879 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
