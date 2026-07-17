@@ -363,6 +363,8 @@ class AuraForgeRuntime:
                 stage="GROUND",
                 details={"exception_type": type(exc).__name__},
             )
+        if not isinstance(repo_digest, Mapping):
+            return self._error("repository_digest_invalid", stage="GROUND")
         if not repo_digest.get("ok"):
             return self._error("repository_digest_unavailable", stage="GROUND", details=repo_digest)
 
@@ -382,6 +384,8 @@ class AuraForgeRuntime:
                 stage="PLAN",
                 details={"exception_type": type(exc).__name__},
             )
+        if not isinstance(prepared, Mapping):
+            return self._error("arena_prepare_invalid", stage="PLAN")
         if not prepared.get("ok"):
             return self._error("arena_prepare_failed", stage="PLAN", details=prepared)
         if list(prepared.get("blockers") or []):
@@ -409,6 +413,12 @@ class AuraForgeRuntime:
                     "task_micro_context_error",
                     stage="GROUND",
                     details={"task_id": task_id, "exception_type": type(exc).__name__},
+                )
+            if not isinstance(micro, Mapping):
+                return self._error(
+                    "task_micro_context_invalid",
+                    stage="GROUND",
+                    details={"task_id": task_id},
                 )
             if not micro.get("ok"):
                 return self._error(
@@ -485,6 +495,9 @@ class AuraForgeRuntime:
                 stage="ACT",
                 details={"exception_type": type(exc).__name__},
             )
+        if not isinstance(opened, Mapping):
+            state["status"] = "BLOCKED_SESSION_INVALID"
+            return self._error("controlled_session_open_invalid", stage="ACT")
         if not opened.get("session_created"):
             state["last_result"] = dict(opened)
             state["status"] = "BLOCKED_SESSION_OPEN"
@@ -546,6 +559,9 @@ class AuraForgeRuntime:
                 stage="ACT",
                 details={"exception_type": type(exc).__name__},
             )
+        if not isinstance(result, Mapping):
+            state["status"] = "BLOCKED_SUBMIT_INVALID"
+            return self._error("controlled_session_submit_invalid", stage="ACT")
         state["last_result"] = dict(result)
         session = dict(result.get("session") or {})
         state["status"] = str(result.get("status") or session.get("status") or state["status"])
@@ -575,6 +591,8 @@ class AuraForgeRuntime:
                     stage="STATUS",
                     details={"exception_type": type(exc).__name__},
                 )
+            if not isinstance(current, Mapping):
+                return self._error("controlled_session_status_invalid", stage="STATUS")
             if current.get("ok"):
                 session = dict(current.get("session") or {})
                 state["status"] = str(session.get("status") or state["status"])
@@ -614,6 +632,8 @@ class AuraForgeRuntime:
                     stage="DECIDE",
                     details={"exception_type": type(exc).__name__},
                 )
+            if not isinstance(current, Mapping):
+                return self._error("controlled_session_review_invalid", stage="DECIDE")
             if current.get("ok"):
                 session = dict(current.get("session") or {})
                 state["status"] = str(session.get("status") or state["status"])
@@ -687,6 +707,8 @@ class AuraForgeRuntime:
                 stage="EXPORT",
                 details={"exception_type": type(exc).__name__},
             )
+        if not isinstance(result, Mapping):
+            return self._error("controlled_session_export_invalid", stage="EXPORT")
         return {
             **_sanitize(result),
             "version": FORGE_VERSION,
@@ -787,6 +809,8 @@ class AuraForgeRuntime:
 
 def validate_forge_contract(value: Mapping[str, Any]) -> list[str]:
     """Return structural contract errors without granting execution authority."""
+    if not isinstance(value, Mapping):
+        return ["contract_must_be_object"]
     required = {
         "version", "contract_id", "request_digest", "objective", "objective_digest",
         "repository", "plan_phase_hash", "act_capsules", "task_evidence",
@@ -823,20 +847,31 @@ def validate_forge_contract(value: Mapping[str, Any]) -> list[str]:
     else:
         errors.append("authority_must_be_object")
 
-    required_gates = list(value.get("required_gates") or [])
-    if not required_gates:
+    gates_value = value.get("required_gates")
+    if not isinstance(gates_value, (list, tuple)):
+        errors.append("required_gates_must_be_array")
+    elif not gates_value:
         errors.append("required_gates_must_not_be_empty")
     else:
-        unsupported = sorted(set(required_gates) - SUPPORTED_REQUIRED_GATES)
+        unsupported = sorted(set(gates_value) - SUPPORTED_REQUIRED_GATES)
         if unsupported:
             errors.append(f"unsupported_required_gates:{','.join(unsupported)}")
-    if not list(value.get("act_capsules") or []):
+
+    capsules_value = value.get("act_capsules")
+    if not isinstance(capsules_value, (list, tuple)):
+        errors.append("act_capsules_must_be_array")
+    elif not capsules_value:
         errors.append("act_capsules_must_not_be_empty")
-    if not list(value.get("task_evidence") or []):
+
+    evidence_value = value.get("task_evidence")
+    if not isinstance(evidence_value, (list, tuple)):
+        errors.append("task_evidence_must_be_array")
+    elif not evidence_value:
         errors.append("task_evidence_must_not_be_empty")
 
     expected_lifecycle = ["FRAME", "GROUND", "PLAN", "ACT", "PROVE", "DECIDE", "DISSOLVE"]
-    if list(value.get("lifecycle") or []) != expected_lifecycle:
+    lifecycle_value = value.get("lifecycle")
+    if not isinstance(lifecycle_value, (list, tuple)) or list(lifecycle_value) != expected_lifecycle:
         errors.append("invalid_lifecycle")
 
     allowed_files = value.get("allowed_files")

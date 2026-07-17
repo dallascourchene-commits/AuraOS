@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784330345,
+  "generated_at_unix": 1784330509,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1103,8 +1103,8 @@
   },
   "summary": {
     "file_count": 1078,
-    "total_bytes": 51764788,
-    "text_tokens_est": 3601283,
+    "total_bytes": 51767577,
+    "text_tokens_est": 3601980,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 29,
@@ -1118,7 +1118,7 @@
     "topology_nodes": 8793,
     "topology_edges": 19411,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 19158.91
+    "elapsed_ms": 14857.17
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -4011,7 +4011,7 @@
         "file": "aura_forge.py",
         "kind": "class",
         "line": 287,
-        "end_line": 785,
+        "end_line": 807,
         "semantic_id": "aura_forge.py#class:AuraForgeRuntime:b340e1030be01f02",
         "signature_hash": "7d8fe86d2805c957"
       }
@@ -23694,8 +23694,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 699,
-        "end_line": 785,
+        "line": 721,
+        "end_line": 807,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime._compile_contract:b2af26cd6de4c3f1",
         "signature_hash": "10705094ce60865f"
       }
@@ -56080,8 +56080,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 675,
-        "end_line": 697,
+        "line": 695,
+        "end_line": 719,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.export:65109c70689fa39d",
         "signature_hash": "0194a279e621f55d"
       },
@@ -59838,8 +59838,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 601,
-        "end_line": 673,
+        "line": 619,
+        "end_line": 693,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.human_review_packet:7312c52595538b95",
         "signature_hash": "698828b689d920f4"
       }
@@ -65185,7 +65185,7 @@
         "file": "aura_forge.py",
         "kind": "method",
         "line": 351,
-        "end_line": 456,
+        "end_line": 466,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.prepare:4032b33073e193bd",
         "signature_hash": "9c75d7185bc23074"
       },
@@ -71290,8 +71290,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 458,
-        "end_line": 518,
+        "line": 468,
+        "end_line": 531,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.start:b9865e85ea8f5062",
         "signature_hash": "5b8ba712694cd36e"
       },
@@ -71554,8 +71554,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 563,
-        "end_line": 599,
+        "line": 579,
+        "end_line": 617,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.status:36edc1b6b94d02e3",
         "signature_hash": "0e699607739954c5"
       },
@@ -71884,8 +71884,8 @@
       {
         "file": "aura_forge.py",
         "kind": "method",
-        "line": 520,
-        "end_line": 561,
+        "line": 533,
+        "end_line": 577,
         "semantic_id": "aura_forge.py#method:AuraForgeRuntime.submit:3f04bf699fc013a1",
         "signature_hash": "9ac1ef1397f35917"
       },
@@ -77110,6 +77110,16 @@
         "signature_hash": "e5d8f102c3678597"
       }
     ],
+    "test_contract_validator_never_raises_on_malformed_arrays": [
+      {
+        "file": "tests/test_aura_forge.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 352,
+        "semantic_id": "tests/test_aura_forge.py#function:test_contract_validator_never_raises_on_malformed_arrays:097ad4b7a1cbea86",
+        "signature_hash": "97af1729c85212c3"
+      }
+    ],
     "test_contract_validator_rejects_authority_and_lifecycle_tampering": [
       {
         "file": "tests/test_aura_forge.py",
@@ -80438,8 +80448,8 @@
       {
         "file": "tests/test_aura_forge.py",
         "kind": "function",
-        "line": 338,
-        "end_line": 346,
+        "line": 365,
+        "end_line": 373,
         "semantic_id": "tests/test_aura_forge.py#function:test_export_delegates_to_safe_session_owner:155dc268de4292fb",
         "signature_hash": "b6fec7335716ecbf"
       }
@@ -83398,6 +83408,16 @@
         "end_line": 140,
         "semantic_id": "tests/test_aura_phase_c1_route_capsules.py#function:test_intent_rejects_missing_unknown_and_duplicate_aliases:7c64be1c316b4033",
         "signature_hash": "c5d194e100d40418"
+      }
+    ],
+    "test_invalid_bridge_packet_fails_closed": [
+      {
+        "file": "tests/test_aura_forge.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 362,
+        "semantic_id": "tests/test_aura_forge.py#function:test_invalid_bridge_packet_fails_closed:3af17babd03e44dc",
+        "signature_hash": "3fbcc34cad71740f"
       }
     ],
     "test_invalid_contract_and_nonproposal_event_fail_closed": [
@@ -101912,8 +101932,8 @@
       {
         "file": "aura_forge.py",
         "kind": "function",
-        "line": 788,
-        "end_line": 851,
+        "line": 810,
+        "end_line": 886,
         "semantic_id": "aura_forge.py#function:validate_forge_contract:54e75f50582171a7",
         "signature_hash": "a6c6203f931c3ec8"
       }
@@ -122568,9 +122588,9 @@
     {
       "path": "aura_forge.py",
       "role": "python_module",
-      "bytes": 34053,
-      "lines": 867,
-      "tokens_est": 8513,
+      "bytes": 35809,
+      "lines": 902,
+      "tokens_est": 8952,
       "symbol_count": 22,
       "commands": [],
       "command_lines": {},
@@ -122611,40 +122631,40 @@
           "defines": 46
         }
       },
-      "digest8": "8432b3de07a12012",
+      "digest8": "2a56238a2857b978",
       "vector": [
-        0.233057,
-        -0.039053,
-        -0.278409,
-        0.22046,
-        0.034014,
-        0.296046,
-        -0.27085,
-        -0.081885,
-        -0.041572,
-        0.021416,
-        -0.018897,
-        -0.21794,
-        0.091963,
-        0.031494,
-        -0.031494,
-        0.112119,
-        0.018897,
-        -0.00126,
-        0.142354,
-        0.27085,
-        -0.240616,
-        0.046611,
-        -0.102041,
-        -0.27337,
-        0.142354,
-        0.288487,
-        -0.066768,
-        -0.149913,
-        -0.291007,
-        0.149913,
-        0.152432,
-        -0.27589
+        0.203694,
+        -0.226201,
+        0.284721,
+        0.271216,
+        -0.219449,
+        0.277969,
+        0.142923,
+        0.19244,
+        0.016881,
+        -0.169932,
+        0.140672,
+        -0.079902,
+        -0.235204,
+        -0.214947,
+        -0.021382,
+        -0.010128,
+        0.219449,
+        -0.052893,
+        0.232953,
+        -0.210446,
+        0.068648,
+        -0.187938,
+        -0.190189,
+        -0.057394,
+        0.028134,
+        -0.127168,
+        0.241956,
+        -0.032636,
+        0.212697,
+        0.091156,
+        -0.196941,
+        -0.120416
       ]
     },
     {
@@ -166839,47 +166859,47 @@
     {
       "path": "tests/test_aura_forge.py",
       "role": "python_module",
-      "bytes": 13082,
-      "lines": 347,
-      "tokens_est": 3271,
-      "symbol_count": 27,
+      "bytes": 14115,
+      "lines": 374,
+      "tokens_est": 3529,
+      "symbol_count": 29,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "859e7dfcd215dfa3",
+      "digest8": "99abeffac875d0ea",
       "vector": [
-        0.181951,
-        -0.04288,
-        -0.147183,
-        -0.082284,
-        -0.281618,
-        0.249169,
-        -0.02202,
-        0.242215,
-        -0.251486,
-        0.168044,
-        0.151819,
-        0.214401,
-        -0.084601,
-        0.114733,
-        -0.026655,
-        0.17268,
-        0.086919,
-        0.170362,
-        0.260758,
-        0.001159,
-        0.228308,
-        0.246851,
-        0.137912,
-        -0.174997,
-        0.279301,
-        0.228308,
-        0.047516,
-        -0.082284,
-        -0.135594,
-        0.147183,
-        0.112416,
-        -0.256122
+        -0.046547,
+        -0.162397,
+        -0.247216,
+        0.247216,
+        -0.166534,
+        0.230666,
+        -0.152053,
+        0.187222,
+        -0.152053,
+        0.201703,
+        0.149984,
+        -0.065166,
+        0.108609,
+        0.230666,
+        -0.147916,
+        0.042409,
+        -0.145847,
+        0.247216,
+        -0.114816,
+        0.160328,
+        0.083784,
+        0.129297,
+        -0.191359,
+        0.234803,
+        0.027928,
+        -0.201703,
+        -0.050684,
+        0.259628,
+        0.255491,
+        -0.234803,
+        0.218253,
+        -0.121022
       ]
     },
     {

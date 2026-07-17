@@ -335,6 +335,33 @@ def test_bridge_exceptions_fail_closed(tmp_path: Path) -> None:
     assert result["details"] == {"exception_type": "RuntimeError"}
 
 
+def test_contract_validator_never_raises_on_malformed_arrays(tmp_path: Path) -> None:
+    runtime, _bridge, _manager = build_runtime(tmp_path)
+    contract = runtime.prepare(request())["contract"]
+    contract["required_gates"] = 7
+    contract["act_capsules"] = {"bad": "shape"}
+    contract["task_evidence"] = None
+    contract["lifecycle"] = 42
+
+    errors = validate_forge_contract(contract)
+
+    assert "required_gates_must_be_array" in errors
+    assert "act_capsules_must_be_array" in errors
+    assert "task_evidence_must_be_array" in errors
+    assert "invalid_lifecycle" in errors
+    assert validate_forge_contract([]) == ["contract_must_be_object"]  # type: ignore[arg-type]
+
+
+def test_invalid_bridge_packet_fails_closed(tmp_path: Path) -> None:
+    runtime, bridge, _manager = build_runtime(tmp_path)
+    bridge.aura_repo_digest = lambda **_kwargs: None  # type: ignore[method-assign]
+
+    result = runtime.prepare(request())
+
+    assert result["ok"] is False
+    assert result["error"] == "repository_digest_invalid"
+
+
 def test_export_delegates_to_safe_session_owner(tmp_path: Path) -> None:
     runtime, _bridge, manager = build_runtime(tmp_path)
     started = runtime.start(request())
