@@ -83,6 +83,8 @@ Aura's self-model is built from the current repository:
 
 The resolver searches existing owners before new code is proposed. Generated topology is navigation evidence, not proof by itself. Exact current source, symbols, spans, hashes, tests, schemas, and verifier output remain authoritative.
 
+Primary resolver owners include `aura_capability_resolver.py` and the graph-pinned `aura_capability_resolver_v2.py` facade over Capability Connectome evidence.
+
 The current synchronized map indexes more than one thousand repository files and a deep graph of thousands of nodes and edges. Regenerate it after architecture or source changes rather than relying on historical line numbers.
 
 ### 3. Planning, events, continuity, and governance
