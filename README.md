@@ -37,6 +37,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Aura Observatory** | Shows lexical addressing, six-slot intent, FST route, CODEMAP localization, compression, topology, and worker handoff | Glass-box review surface; no execution or permission |
 | **Human Agent Arena** | Runs `FRAME → GROUND → PLAN → ACT → PROVE → DECIDE` with exact evidence and human gates | Guarded execution and review; no automatic merge |
 | **Coding Workbench / Coding Arena** | Localizes code, ranks bounded regions, builds change graphs, prepares capsules, and verifies candidate work | Exact source spans and hashes remain patch authority |
+| **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human review; no automatic commit, PR, merge, or production mutation |
 | **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows and external-agent handoffs | External agents remain workers, not authorities |
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
 | **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
@@ -46,6 +47,33 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Ephemeral Organ Runtime** | Compiles temporary capability systems with manifests, leases, sandbox policy, verification, dissolution, and receipts | No ambient authority; arbitrary components fail closed without a real sandbox |
 | **Model Cognome** | Records endpoint capability evidence, usage, cost, latency, drift, replay, shadow, and governed route proposals | Active routing changes require explicit authorization and verification |
 | **Empirical Cost Observatory** | Separates measured, calculated, estimated, and unavailable usage/cost evidence | Measurement cannot mutate production or upgrade a claim class |
+
+<!-- AURA_FORGE_V1:START -->
+## Aura Forge — Verified Engineering OS
+
+Aura Forge is the first commercial product surface over Aura's existing Coding Arena and
+controlled refactor owners. It does not introduce a second planner, patch store, verifier,
+or learning path.
+
+```text
+engineering objective
+  → CODEMAP/topology grounding
+  → frozen Architect/Coding Arena plan
+  → AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1
+  → bounded source/test slice lease
+  → external worker unified diff
+  → canonical staging, verification, and repair
+  → READY_FOR_HUMAN_REVIEW
+  → separate authorized promotion decision
+```
+
+`aura_forge.py` binds the objective, exact repository identity, plan phase, Act Capsules,
+source/test references, allowed files, required gates, worker budgets, authority, and
+lifecycle into one deterministic contract. External workers remain replaceable and receive
+no ambient repository or release authority.
+
+See [`docs/AURA_FORGE.md`](docs/AURA_FORGE.md).
+<!-- AURA_FORGE_V1:END -->
 
 ## Canonical architecture
 
