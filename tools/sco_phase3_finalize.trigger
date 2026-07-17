@@ -1,1 +1,1 @@
-trigger: stage generated docs and topology, then enforce zero diff
+trigger: stage generated docs and topology with race-resilient branch write
