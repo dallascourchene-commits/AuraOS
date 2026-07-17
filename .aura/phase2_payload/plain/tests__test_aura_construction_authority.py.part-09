@@ -1,0 +1,60 @@
+    with pytest.raises(ValueError, match="deterministic readiness replay"):
+        create_construction_receipt(
+            authority_result=forged, request=request, state=state,
+            governance_decision=decision, governance_replay=governance_replay(request),
+            ledger_id="construction-authority/P1",
+            sequence_number=1, externally_verified_receipt_ref="receipt-ref",
+            verified_receipt_bindings={"receipt-ref": forged.result_digest},
+            created_at=11,
+        )
+
+
+def test_public_receipt_binding_factory_rejects_foreign_ledger_receipt():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    from aura_relational_authority import ChainedAuthorityReceipt
+    receipt = ChainedAuthorityReceipt.create(
+        ledger_id="foreign-ledger", sequence_number=1,
+        previous_chain_digest=GENESIS_CHAIN_DIGEST, record_id=result.result_id,
+        record_digest=result.result_digest, created_at=11,
+    )
+    with pytest.raises(ValueError, match="construction receipt must use ledger"):
+        ConstructionReceiptBinding.create(
+            authority_result=result, request=request, state=state,
+            governance_decision=decision, governance_replay=governance_replay(request),
+            chain_receipt=receipt,
+            externally_verified_receipt_ref="receipt-ref",
+            verified_receipt_bindings={"receipt-ref": result.result_digest},
+            created_at=11,
+        )
+
+
+def test_public_receipt_binding_factory_rejects_backdated_chain_receipt():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    from aura_relational_authority import ChainedAuthorityReceipt
+    receipt = ChainedAuthorityReceipt.create(
+        ledger_id="construction-authority/P1", sequence_number=1,
+        previous_chain_digest=GENESIS_CHAIN_DIGEST, record_id=result.result_id,
+        record_digest=result.result_digest, created_at=result.evaluated_at - 1,
+    )
+    with pytest.raises(ValueError, match="cannot predate"):
+        ConstructionReceiptBinding.create(
+            authority_result=result, request=request, state=state,
+            governance_decision=decision, governance_replay=governance_replay(request),
+            chain_receipt=receipt,
+            externally_verified_receipt_ref="receipt-ref",
+            verified_receipt_bindings={"receipt-ref": result.result_digest},
+            created_at=11,
+        )
+
+
+def test_receipt_verifier_rejects_foreign_project_ledger():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    from aura_relational_authority import ChainedAuthorityReceipt
+    receipt = ChainedAuthorityReceipt.create(
+        ledger_id="construction-authority/P2", sequence_number=1,
+        previous_chain_digest=GENESIS_CHAIN_DIGEST, record_id=result.result_id,
+        record_digest=result.result_digest, created_at=11,
+    )
