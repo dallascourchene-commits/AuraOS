@@ -1,0 +1,90 @@
+        risk_class=RiskClass.HIGH,
+        minimum_approval_count=1,
+        required_functional_roles=("OWNER",),
+        minimum_distinct_principals=1,
+    )
+
+
+def authority_material(request, *, decision=AttestationDecision.APPROVE, action_id=None):
+    grant = AuthorityGrant.create(
+        principal_id="owner-1",
+        authorized_functional_roles=("OWNER",),
+        policy_scopes=(request.policy_scope,),
+        capability_scopes=(request.capability_scope,),
+        valid_from=1,
+        expires_at=35,
+        externally_verified_authority_ref="authority-ref",
+        verified_authority_refs=("authority-ref",),
+        now=10,
+    )
+    attestation = ApprovalAttestation.create(
+        action_id=request.action_id if action_id is None else action_id,
+        action_payload_digest=request.action_digest,
+        principal_id="owner-1",
+        grant=grant,
+        decision=decision,
+        functional_role="OWNER",
+        policy_scope=request.policy_scope,
+        capability_scope=request.capability_scope,
+        public_rationale="Reviewed against bounded construction evidence.",
+        evidence_refs=request.required_claim_ids,
+        externally_verified_attestation_ref="attestation-ref",
+        verified_authority_refs=("authority-ref",),
+        verified_attestation_refs=("attestation-ref",),
+        created_at=9,
+        expires_at=30,
+        now=10,
+    )
+    return (grant,), (attestation,), quorum_policy()
+
+
+def governance_replay(request):
+    grants, attestations, policy = authority_material(request)
+    return ConstructionGovernanceReplay.create(
+        grants=grants,
+        attestations=attestations,
+        quorum_policy=policy,
+        verified_authority_refs=("authority-ref",),
+        verified_attestation_refs=("attestation-ref",),
+    )
+
+
+def evaluate_ready(state, request):
+    grants, attestations, policy = authority_material(request)
+    return evaluate_construction_authority(
+        request=request,
+        state=state,
+        grants=grants,
+        attestations=attestations,
+        quorum_policy=policy,
+        verified_authority_refs=("authority-ref",),
+        verified_attestation_refs=("attestation-ref",),
+        now=10,
+    )
+
+
+def receipt_for(state, request, result, decision, **overrides):
+    kwargs = {
+        "authority_result": result,
+        "request": request,
+        "state": state,
+        "governance_decision": decision,
+        "governance_replay": governance_replay(request),
+        "ledger_id": "construction-authority/P1",
+        "sequence_number": 1,
+        "externally_verified_receipt_ref": "receipt-ref",
+        "verified_receipt_bindings": {"receipt-ref": result.result_digest},
+        "created_at": 11,
+    }
+    kwargs.update(overrides)
+    return create_construction_receipt(**kwargs)
+
+
+def test_request_identity_is_stable():
+    _, first, _ = fixtures()
+    _, second, _ = fixtures()
+    assert first == second
+
+
+def test_request_requires_claims():
+    _, request, _ = fixtures()
