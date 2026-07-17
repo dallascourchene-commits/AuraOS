@@ -446,6 +446,25 @@ class ConstructionHumanAgentProfileService:
         self.profile = profile
         return profile
 
+    def bind_checkpoint(self, checkpoint_id: str) -> ConstructionHumanAgentProfile:
+        """Rebuild the immutable profile with one reviewed checkpoint reference."""
+        if (
+            self.fixture is None
+            or self.state is None
+            or self.evaluation is None
+            or self.profile is None
+        ):
+            raise KeyError("Construction Human Agent profile is unavailable")
+        profile = build_construction_human_agent_profile(
+            self.state,
+            self.evaluation,
+            candidates=self.fixture.candidates,
+            checkpoint_id=checkpoint_id,
+            synthetic=self.profile.synthetic,
+        )
+        self.profile = profile
+        return profile
+
     def status(self) -> dict[str, Any]:
         return {
             "ok": True,

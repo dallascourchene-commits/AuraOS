@@ -30,6 +30,7 @@ from urllib.parse import parse_qs, urlparse
 from aura_arena_research_bridge import ArenaResearchBridge
 from aura_arena_persistence_adapters import ArenaPersistenceCoordinator
 from aura_coding_workbench_wfst_adapter import CodingWorkbenchWFSTSession
+from aura_construction_human_agent import ConstructionHumanAgentProfileService
 from aura_emergent_refactor_workspace import EmergentResultsStore
 from aura_human_agent_arena import HumanAgentArena
 from aura_human_agent_workflow import HumanAgentWorkflow
@@ -39,7 +40,7 @@ DEFAULT_PORT = 8090
 FRONTEND_DIR = Path(__file__).resolve().parent / "aura_human_agent_arena"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_5"
+SERVER_VERSION = "AURA_HUMAN_AGENT_ARENA_SERVER_V0_6"
 
 
 class AuraThreadingHTTPServer(ThreadingHTTPServer):
@@ -58,6 +59,9 @@ class HumanAgentArenaServerState:
         self.arena = HumanAgentArena(self.repo_root, demo=self.demo)
         self.workflow = HumanAgentWorkflow(self.repo_root)
         self.coding_workbench = CodingWorkbenchWFSTSession(self.repo_root)
+        self.construction_profile = ConstructionHumanAgentProfileService(
+            demo=self.demo
+        )
         self.emergent_store = EmergentResultsStore(self.repo_root)
         self.seed_import = self.emergent_store.import_seed_reports()
         self.research_bridge = ArenaResearchBridge(str(self.repo_root))
@@ -525,6 +529,66 @@ def dispatch_api_request(
     if enhanced is not None:
         return enhanced
 
+    if method == "GET" and route == "/api/human-agent/construction/status":
+        return 200, state.construction_profile.status()
+
+    if method == "GET" and route == "/api/human-agent/construction/profile":
+        try:
+            return 200, state.construction_profile.get_profile()
+        except KeyError as exc:
+            return _error(f"construction_profile_unavailable:{exc}", 404)
+
+    if method == "GET" and route == "/api/human-agent/construction/observatory":
+        try:
+            return 200, state.construction_profile.get_observatory_projection()
+        except KeyError as exc:
+            return _error(f"construction_observatory_unavailable:{exc}", 404)
+
+    if method == "GET" and route.startswith("/api/human-agent/construction/candidates/"):
+        candidate_id = route.rsplit("/", 1)[-1]
+        try:
+            return 200, state.construction_profile.get_candidate(candidate_id)
+        except KeyError as exc:
+            return _error(f"construction_candidate_unavailable:{exc}", 404)
+        except ValueError as exc:
+            return _error(f"construction_candidate_invalid:{exc}")
+
+    if method == "POST" and route == "/api/human-agent/construction/handoff":
+        try:
+            result = state.construction_profile.prepare_handoff(
+                str(body.get("target_arena_id") or "")
+            )
+        except KeyError as exc:
+            return _error(f"construction_profile_unavailable:{exc}", 404)
+        except ValueError as exc:
+            return _error(f"construction_handoff_invalid:{exc}")
+        return 200, result
+
+    if method == "POST" and route == "/api/human-agent/construction/checkpoint":
+        construction_state = state.construction_profile.state
+        if construction_state is None:
+            return _error("construction_profile_unavailable", 404)
+        repo_head = str(body.get("repo_head") or "").strip()
+        if not repo_head:
+            return _error("repo_head is required")
+        try:
+            result = state.persistence.checkpoint_construction(
+                construction_state,
+                repo_head=repo_head,
+                parent_checkpoint_id=str(body.get("parent_checkpoint_id") or ""),
+                branch_name=str(body.get("branch_name") or ""),
+            )
+            checkpoint_id = str(
+                (result.get("checkpoint") or {}).get("checkpoint_id") or ""
+            )
+            if checkpoint_id:
+                profile = state.construction_profile.bind_checkpoint(checkpoint_id)
+                result["profile_id"] = profile.profile_id
+                result["profile_digest"] = profile.profile_digest
+        except (KeyError, ValueError) as exc:
+            return _error(f"construction_checkpoint_failed:{exc}")
+        return 200, result
+
     if method == "GET" and route == "/api/human-agent/state":
         workflow = state.workflow.get_state()
         return 200, {
@@ -535,6 +599,7 @@ def dispatch_api_request(
             "workflow": workflow,
             "routing": workflow.get("routing", {}),
             "coding_workbench": state.coding_workbench.get_state(),
+            "construction_profile": state.construction_profile.status(),
             "emergent_workspace": state.emergent_store.list_runs(limit=20),
             "seed_import": state.seed_import,
             "research_evidence": state.emergent_store.list_research_evidence(limit=20),

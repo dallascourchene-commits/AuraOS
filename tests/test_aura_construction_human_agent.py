@@ -1,15 +1,15 @@
 """Adversarial tests for the Construction Human Agent and Observatory profile."""
 from __future__ import annotations
 
-from dataclasses import replace
-
 import pytest
 
 from aura_construction_adapter import (
     ConstructionArenaMode,
+    ConstructionCoordinationEvaluation,
     evaluate_construction_candidates,
 )
 from aura_construction_fixtures import build_sco_construction_demo_fixture
+from aura_event_contracts import stable_digest, stable_id
 from aura_construction_human_agent import (
     ConstructionHumanAgentProfileService,
     build_construction_human_agent_profile,
@@ -54,7 +54,35 @@ def test_profile_is_read_only_proposal_only_and_bound_to_exact_state():
 
 def test_profile_rejects_evaluation_from_another_state():
     fixture, evaluation = _profile_inputs()
-    mismatched = replace(evaluation, state_digest="wrong-state-digest")
+    values = {
+        "mode": evaluation.mode,
+        "lane": evaluation.lane,
+        "route_class": evaluation.route_class,
+        "state_digest": "wrong-state-digest",
+        "evaluated_at": evaluation.evaluated_at,
+        "assessments": evaluation.assessments,
+        "recommended_candidate_id": evaluation.recommended_candidate_id,
+        "option_candidate_ids": evaluation.option_candidate_ids,
+        "next_authority_route": evaluation.next_authority_route,
+        "version": evaluation.version,
+        "proposal_only": evaluation.proposal_only,
+        "human_release_required": evaluation.human_release_required,
+        "physical_work_authorized": evaluation.physical_work_authorized,
+        "payment_released": evaluation.payment_released,
+        "access_controlled": evaluation.access_controlled,
+        "patch_authority": evaluation.patch_authority,
+        "vsa_patch_authority": evaluation.vsa_patch_authority,
+    }
+    payload = {
+        **values,
+        "assessments": [item.to_dict() for item in values["assessments"]],
+        "option_candidate_ids": list(values["option_candidate_ids"]),
+    }
+    mismatched = ConstructionCoordinationEvaluation(
+        evaluation_id=stable_id("construction-evaluation", payload),
+        evaluation_digest=stable_digest(payload),
+        **values,
+    )
 
     with pytest.raises(ValueError, match="evaluation does not bind"):
         build_construction_human_agent_profile(

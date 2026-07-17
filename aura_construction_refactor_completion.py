@@ -197,7 +197,9 @@ def validate_construction_refactor_completion(
     root = _canonical_root(repo_root)
     nodes = tuple(
         _audit_node(root, node_id, owners)
-        for node_id, owners in sorted(_REQUIRED_SYMBOLS.items())
+        for node_id, owners in sorted(
+            _REQUIRED_SYMBOLS.items(), key=lambda item: int(item[0][1:])
+        )
     )
     marker_failures = _marker_failures(root)
     node_failures = [

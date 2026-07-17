@@ -14,7 +14,6 @@ from aura_refactor_skeleton import (
     PATCH_AUTHORITY,
     RefactorSkeleton,
     RefactorSkeletonNode,
-    SourceSpan,
 )
 
 CONSTRUCTION_REFACTOR_PLAN_VERSION = "AURA_SCO_CONSTRUCTION_REFACTOR_PLAN_V1"
@@ -294,7 +293,11 @@ def create_construction_refactor_skeleton(
     emergent_packet_id: str = "",
     emergent_packet_digest: str = "",
 ) -> RefactorSkeleton:
-    """Create the E0-E14 skeleton; all implementation remains closed."""
+    """Create the original E0-E14 planning skeleton.
+
+    Current completion is validated by aura_construction_refactor_completion.py;
+    this historical skeleton remains stable for provenance and replay.
+    """
     unresolved = tuple(
         str(item)
         for item in reuse_matrix.get("unresolved_capability_ids", ())
