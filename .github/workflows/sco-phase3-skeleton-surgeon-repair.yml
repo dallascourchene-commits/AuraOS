@@ -1,0 +1,277 @@
+name: SCO Phase 3 Skeleton Native Surgeon Repair
+
+on:
+  push:
+    branches:
+      - refactor/sco-construction-e7-e8
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/sco-construction-e7-e8
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install verifier environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest==8.4.1
+      - name: Run Aura Council V3 and Surgeon repair
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          import time
+
+          from aura_architect_control import normalize_control_profile
+          from aura_architect_loop import ArchitectFusionLoop, judge_refactor_arena
+          from aura_arena_architect_connector import AuraArenaArchitectConnector
+
+          root = Path('.').resolve()
+          target = root / 'aura_refactor_skeleton.py'
+          objective = (
+              'Repair the pre-existing RefactorSkeleton canonical identity syntax defect '
+              'without changing its public contract or expanding the SCO Phase 3 scope.'
+          )
+          required = [
+              'syntax_integrity',
+              'canonical_identity',
+              'bounded_patch_lease',
+              'direct_tests',
+              'construction_plan_regression',
+              'rollback',
+          ]
+          candidates = [
+              {
+                  'candidate_id': 'BROAD_SKELETON_REWRITE',
+                  'arm_family': 'BROAD_IMPLEMENTER',
+                  'plan': {
+                      'architecture_decision': 'Rewrite the RefactorSkeleton validation section.',
+                      'act_tasks': [
+                          {
+                              'task_id': 'BROAD-1',
+                              'objective': 'Rewrite skeleton validation.',
+                              'target_file': 'aura_refactor_skeleton.py',
+                              'target_symbol': '',
+                              'acceptance': 'Tests pass.',
+                              'expected_output': 'UNIFIED_DIFF',
+                              'size': 'L',
+                          }
+                      ],
+                      'acceptance_criteria': ['Tests pass.'],
+                      'rollback_conditions': ['Revert the file.'],
+                      'risk_map': ['Broad identity rewrite.'],
+                      'constraints': ['No production mutation.'],
+                      'coverage_tags': ['syntax_integrity'],
+                      'architecture_reuse': False,
+                  },
+              },
+              {
+                  'candidate_id': 'EXACT_SYNTAX_SURGEON',
+                  'arm_family': 'SELECTIVE_COUNCIL_V3_PLUS_SURGEON',
+                  'plan': {
+                      'architecture_decision': (
+                          'Preserve RefactorSkeleton identity semantics and replace only the '
+                          'invalid multiline f-string with an equivalent canonical expression.'
+                      ),
+                      'act_tasks': [
+                          {
+                              'task_id': 'SKELETON-ID-SPAN',
+                              'objective': 'Repair only the canonical skeleton_id expression.',
+                              'target_file': 'aura_refactor_skeleton.py',
+                              'target_symbol': 'RefactorSkeleton',
+                              'acceptance': (
+                                  'The module compiles and direct plus Construction-plan tests pass '
+                                  'without changing the identity payload.'
+                              ),
+                              'expected_output': 'UNIFIED_DIFF',
+                              'allowed_scope': 'single exact expression inside RefactorSkeleton.__post_init__',
+                              'size': 'S',
+                          }
+                      ],
+                      'acceptance_criteria': [
+                          'aura_refactor_skeleton.py compiles.',
+                          'tests/test_aura_refactor_skeleton.py passes.',
+                          'tests/test_aura_construction_refactor_plan.py passes.',
+                          'Patch remains inside the leased file.',
+                      ],
+                      'rollback_conditions': [
+                          'Any identity mismatch or regression failure blocks promotion.'
+                      ],
+                      'risk_map': [
+                          'Canonical ID semantics must remain byte-for-byte equivalent.'
+                      ],
+                      'constraints': [
+                          'Use exact source-span patch authority only.',
+                          'Do not change public APIs.',
+                          'Human review remains required.',
+                      ],
+                      'coverage_tags': required,
+                      'architecture_reuse': True,
+                      'existing_modules': [
+                          'aura_architect_loop.py',
+                          'aura_architect_control.py',
+                          'aura_arena_architect_connector.py',
+                          'aura_refactor_skeleton.py',
+                      ],
+                  },
+              },
+          ]
+          control = normalize_control_profile(
+              {
+                  'surface': 'native',
+                  'council_mode': 'SELECTIVE_V3',
+                  'council_call_budget': 5,
+                  'critic_lanes': ['scope', 'tests', 'rollback', 'cost'],
+                  'surgeon_mode': 'STAGE_AND_VERIFY',
+                  'surgeon_max_turns': 4,
+                  'surgeon_max_local_repairs': 1,
+                  'record_outputs': False,
+              }
+          )
+          comparison = AuraArenaArchitectConnector(root, bridge=object()).compare_plans(
+              objective=objective,
+              candidates=candidates,
+              required_capabilities=required,
+              control=control,
+              surface='native',
+              record=False,
+              benchmark=False,
+          )
+          if comparison['selected_candidate_id'] != 'EXACT_SYNTAX_SURGEON':
+              raise SystemExit(f"unexpected Council selection: {comparison['selected_candidate_id']}")
+          plan = comparison['selected_plan']
+
+          text = target.read_text(encoding='utf-8')
+          old = '''        expected_id = f"RFS-{_digest(_skeleton_identity(
+              objective=self.objective,
+              domain=self.domain,
+              baseline_commit=self.baseline_commit,
+              source_plan_digest=self.source_plan_digest,
+              addendum_digest=self.addendum_digest,
+          ))[:20]}"
+          '''
+          new = '''        identity_digest = _digest(
+              _skeleton_identity(
+                  objective=self.objective,
+                  domain=self.domain,
+                  baseline_commit=self.baseline_commit,
+                  source_plan_digest=self.source_plan_digest,
+                  addendum_digest=self.addendum_digest,
+              )
+          )
+          expected_id = f"RFS-{identity_digest[:20]}"
+          '''
+          if text.count(old) != 1:
+              raise SystemExit(f'exact syntax span count was {text.count(old)}, expected 1')
+          target.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          diff = subprocess.run(
+              ['git', 'diff', '--binary', '--', 'aura_refactor_skeleton.py'],
+              cwd=root,
+              text=True,
+              capture_output=True,
+              check=True,
+          ).stdout
+          if not diff.strip():
+              raise SystemExit('Surgeon produced no diff')
+
+          def runner(test_name: str):
+              started = time.perf_counter()
+              completed = subprocess.run(
+                  [sys.executable, '-m', 'pytest', '-q', test_name],
+                  cwd=root,
+                  text=True,
+                  capture_output=True,
+                  timeout=180,
+                  check=False,
+              )
+              return {
+                  'ok': completed.returncode == 0,
+                  'returncode': completed.returncode,
+                  'elapsed_ms': round((time.perf_counter() - started) * 1000.0, 3),
+                  'stdout_tail': completed.stdout[-2000:],
+                  'stderr_tail': completed.stderr[-2000:],
+              }
+
+          execution = ArchitectFusionLoop(repo_root=root).execute(
+              objective,
+              architecture_decision=plan['architecture_decision'],
+              act_tasks=plan['act_tasks'],
+              patch_submissions=[
+                  {
+                      'task_id': 'SKELETON-ID-SPAN',
+                      'owner': 'aura_surgeon',
+                      'diff': diff,
+                      'affected_files': ['aura_refactor_skeleton.py'],
+                      'affected_symbols': ['RefactorSkeleton'],
+                      'tests': [
+                          'tests/test_aura_refactor_skeleton.py',
+                          'tests/test_aura_construction_refactor_plan.py',
+                      ],
+                  }
+              ],
+              target_file='aura_refactor_skeleton.py',
+              target_symbol='RefactorSkeleton',
+              acceptance_criteria=plan['acceptance_criteria'],
+              rollback_conditions=plan['rollback_conditions'],
+              risk_map=plan['risk_map'],
+              constraints=plan['constraints'],
+              context_pressure=0.9,
+              runner=runner,
+              ledger_path=root / 'Aura_Staging' / 'sco_phase3_skeleton_repair_ledger.jsonl',
+          )
+          judge = judge_refactor_arena(execution.verification)
+          if not all(item.ok for item in execution.stage_results):
+              raise SystemExit('Aura Surgeon rejected the exact skeleton repair')
+          if not execution.verification.hotswap_ready:
+              raise SystemExit(f'Aura Verifier blocked repair: {execution.verification.failures}')
+          if judge['decision'] != 'promote_hotswap':
+              raise SystemExit(f'Aura Judge blocked repair: {judge}')
+
+          evidence = {
+              'version': 'AURA_SCO_PHASE3_SKELETON_SURGEON_REPAIR_V1',
+              'objective': objective,
+              'finding': 'pre-existing unterminated multiline f-string on main',
+              'selected_plan': comparison['selected_candidate_id'],
+              'council_comparison': comparison,
+              'architect_execution': execution.to_dict(),
+              'judge': judge,
+              'claim_boundaries': {
+                  'actual_model_calls': comparison['actual_model_calls'],
+                  'provider_tokens': 'NOT_MEASURED',
+                  'provider_cost': 'NOT_MEASURED',
+                  'production_mutation': False,
+                  'human_review_required': True,
+              },
+          }
+          evidence_path = root / 'docs' / 'evidence' / 'AURA_SCO_PHASE3_SKELETON_SURGEON_REPAIR.json'
+          evidence_path.parent.mkdir(parents=True, exist_ok=True)
+          evidence_path.write_text(json.dumps(evidence, sort_keys=True, indent=2), encoding='utf-8')
+          PY
+          python -m py_compile aura_refactor_skeleton.py
+          rm .github/workflows/sco-phase3-skeleton-surgeon-repair.yml
+      - name: Commit verified dependency repair
+        run: |
+          git config user.name "AuraOS Native Surgeon"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_refactor_skeleton.py \
+            docs/evidence/AURA_SCO_PHASE3_SKELETON_SURGEON_REPAIR.json \
+            .github/workflows/sco-phase3-skeleton-surgeon-repair.yml
+          git commit -m "fix: repair refactor skeleton through Aura Surgeon"
+          git push origin HEAD:refactor/sco-construction-e7-e8
