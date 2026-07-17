@@ -5,11 +5,18 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: pr138-grounded-phase-audit-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   audit:
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.ref == 'refactor/grounded-phase-capsule-compiler'
+    if: >-
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.ref == 'refactor/grounded-phase-capsule-compiler') &&
+      github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -57,14 +64,24 @@ jobs:
           python aura_codebase_navigator.py
           python aura_codemap_verify.py --repo-root .
           git diff --check
-      - name: Export exact topology
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr138-final-topology-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            Aura_Memory/live_topology_ast.json
+      - name: Synchronize generated topology
+        run: |
+          git config user.name 'AuraOS Topology Audit Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            Aura_Memory/live_topology_ast.json \
             topology_map.json
-          if-no-files-found: error
-          retention-days: 7
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m 'docs: synchronize PR138 grounded capsule topology [skip ci]'
+          REMOTE_REF='refs/remotes/origin/refactor/grounded-phase-capsule-compiler'
+          git fetch --no-tags origin \
+            refs/heads/refactor/grounded-phase-capsule-compiler:${REMOTE_REF}
+          REMOTE_HEAD="$(git rev-parse "${REMOTE_REF}")"
+          git push \
+            --force-with-lease="refs/heads/refactor/grounded-phase-capsule-compiler:${REMOTE_HEAD}" \
+            origin HEAD:refs/heads/refactor/grounded-phase-capsule-compiler
