@@ -198,6 +198,9 @@ def main() -> None:
     )
 
     TARGET.write_text(text, encoding="utf-8")
+    from sco_phase2_transformer_postflight import main as apply_postflight
+
+    apply_postflight()
     print("SCO_PHASE2_TRANSFORMER_PREFLIGHT_PASS")
 
 
