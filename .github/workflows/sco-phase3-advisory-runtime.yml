@@ -24,7 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -43,6 +45,7 @@ jobs:
             aura_construction_learning.py \
             aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_adapter_hardening.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
@@ -54,6 +57,7 @@ jobs:
             aura_construction_learning.py \
             aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_adapter_hardening.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
@@ -64,16 +68,18 @@ jobs:
           set -o pipefail
           python -m pytest --collect-only -q \
             tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_adapter_hardening.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
             tests/test_aura_construction_architect_refactor.py \
             2>&1 | tee /tmp/sco-phase3-collect.txt
           COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase3-collect.txt | tail -1 | awk '{print $1}')"
-          test "${COLLECTED:-0}" -ge 54
+          test "${COLLECTED:-0}" -ge 60
           python -m coverage erase
           python -m coverage run -m pytest -q \
             tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_adapter_hardening.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
@@ -85,27 +91,14 @@ jobs:
             2>&1 | tee /tmp/sco-phase3-coverage.txt
           python -m coverage report -m \
             --include='aura_construction_learning.py' \
+            --fail-under=80 \
             2>&1 | tee /tmp/sco-phase3-learning-coverage.txt
-      - name: Record pre-existing main skeleton syntax defect
-        run: |
-          set +e
-          python -m py_compile aura_refactor_skeleton.py \
-            > /tmp/sco-phase3-known-baseline.txt 2>&1
-          STATUS="$?"
-          set -e
-          if [ "${STATUS}" -eq 0 ]; then
-            echo "RESOLVED_UPSTREAM: aura_refactor_skeleton.py now compiles" \
-              >> /tmp/sco-phase3-known-baseline.txt
-          else
-            echo "KNOWN_MAIN_DEFECT_NOT_INTRODUCED_BY_PR: aura_refactor_skeleton.py" \
-              >> /tmp/sco-phase3-known-baseline.txt
-            grep -q "SyntaxError" /tmp/sco-phase3-known-baseline.txt
-          fi
-          cat /tmp/sco-phase3-known-baseline.txt
-      - name: Run prior canonical-owner regressions unaffected by known baseline defect
+      - name: Run prior Construction and canonical-owner regressions
         run: |
           set -o pipefail
           python -m pytest -q \
+            tests/test_aura_construction_refactor_plan.py \
+            tests/test_aura_refactor_skeleton.py \
             tests/test_aura_construction_contracts.py \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py \
@@ -151,7 +144,6 @@ jobs:
             /tmp/sco-phase3-tests.txt
             /tmp/sco-phase3-coverage.txt
             /tmp/sco-phase3-learning-coverage.txt
-            /tmp/sco-phase3-known-baseline.txt
             /tmp/sco-phase3-regressions.txt
             Aura_Staging/sco_construction_phase3_architect
             Aura_Staging/sco_construction_phase3_learning
