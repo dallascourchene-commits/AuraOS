@@ -159,12 +159,15 @@ def test_four_option_pattern_is_bounded_and_admissible():
 
 
 def test_multiple_admissible_candidates_use_multi_lane_route():
+    demo = fixture()
     evaluation = evaluate()
+    recommended = next(
+        item
+        for item in demo.candidates
+        if item.candidate_id == evaluation.recommended_candidate_id
+    )
     assert evaluation.route_class == ConstructionRouteClass.MULTI_LANE_COMPARISON.value
-    assert evaluation.next_authority_route in {
-        ConstructionAuthorityRoute.OWNER_REVIEW_REQUIRED.value,
-        ConstructionAuthorityRoute.PROFESSIONAL_REVIEW_REQUIRED.value,
-    }
+    assert evaluation.next_authority_route == recommended.authority_route
 
 
 def test_empty_candidate_set_fails_closed_without_recommendation():

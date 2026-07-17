@@ -671,13 +671,6 @@ class ConstructionCoordinationEvaluation:
         }
 
 
-_AUTHORITY_PRIORITY = {
-    ConstructionAuthorityRoute.OWNER_REVIEW_REQUIRED.value: 0,
-    ConstructionAuthorityRoute.PROFESSIONAL_REVIEW_REQUIRED.value: 1,
-    ConstructionAuthorityRoute.REGULATORY_OR_LEGAL_REVIEW_REQUIRED.value: 2,
-}
-
-
 def _route_class(admissible_count: int, candidate_count: int) -> str:
     if admissible_count == 0:
         return ConstructionRouteClass.OWNER_REVIEW_REQUIRED.value
@@ -830,13 +823,15 @@ def evaluate_construction_candidates(
         for item in selectors:
             if item.candidate_id not in options:
                 options.append(item.candidate_id)
+        for item in ranked:
+            if item.candidate_id not in options:
+                options.append(item.candidate_id)
+            if len(options) >= 4:
+                break
 
     next_authority = ""
-    if ranked:
-        next_authority = max(
-            (item.authority_route for item in ranked),
-            key=lambda value: _AUTHORITY_PRIORITY[value],
-        )
+    if recommended_id:
+        next_authority = candidate_by_id[recommended_id].authority_route
 
     values = {
         "mode": mode_value,
