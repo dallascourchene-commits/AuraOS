@@ -519,13 +519,16 @@ class RefactorSkeleton:
         if not isinstance(self.metadata, MappingProxyType):
             raise ValueError("metadata must be immutable")
         _require_tuple("nodes", self.nodes, RefactorSkeletonNode)
-        expected_id = f"RFS-{_digest(_skeleton_identity(
-            objective=self.objective,
-            domain=self.domain,
-            baseline_commit=self.baseline_commit,
-            source_plan_digest=self.source_plan_digest,
-            addendum_digest=self.addendum_digest,
-        ))[:20]}"
+        identity_digest = _digest(
+            _skeleton_identity(
+                objective=self.objective,
+                domain=self.domain,
+                baseline_commit=self.baseline_commit,
+                source_plan_digest=self.source_plan_digest,
+                addendum_digest=self.addendum_digest,
+            )
+        )
+        expected_id = f"RFS-{identity_digest[:20]}"
         if self.skeleton_id != expected_id or not _SKELETON_ID.fullmatch(self.skeleton_id):
             raise ValueError("skeleton_id does not match canonical identity")
         node_ids = [node.node_id for node in self.nodes]
