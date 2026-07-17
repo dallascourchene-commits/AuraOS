@@ -8,13 +8,14 @@ Dependencies: stdlib only (sqlite3, json, re, secrets, time, pathlib).
 """
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 import json
 import re
 import secrets
 import sqlite3
 import time
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
@@ -85,7 +86,6 @@ _COLUMNS = (
     "telemetry_warnings",
     "price_snapshot",
     "created_at",
-    # V2 linkage and timing fields.
     "correlation_id",
     "route_decision_id",
     "task_context_id",
@@ -107,11 +107,13 @@ _COLUMNS = (
     "field_measurement_classes",
 )
 
-_JSON_COLUMNS = frozenset({
-    "telemetry_warnings",
-    "price_snapshot",
-    "field_measurement_classes",
-})
+_JSON_COLUMNS = frozenset(
+    {
+        "telemetry_warnings",
+        "price_snapshot",
+        "field_measurement_classes",
+    }
+)
 
 _CREATE_TABLES = """
 CREATE TABLE IF NOT EXISTS cost_runs (
@@ -244,7 +246,10 @@ def _serialize(column: str, value: Any) -> Any:
     return json.dumps(_sanitize(value), sort_keys=True, separators=(",", ":"))
 
 
-def _deserialize_row(row: sqlite3.Row | tuple[Any, ...], columns: list[str]) -> dict[str, Any]:
+def _deserialize_row(
+    row: sqlite3.Row | tuple[Any, ...],
+    columns: list[str],
+) -> dict[str, Any]:
     result = dict(zip(columns, row))
     for column in _JSON_COLUMNS:
         value = result.get(column)
@@ -257,6 +262,23 @@ def _deserialize_row(row: sqlite3.Row | tuple[Any, ...], columns: list[str]) -> 
     result["vsa_patch_authority"] = VSA_PATCH_AUTHORITY
     result["ledger_version"] = LEDGER_VERSION
     return result
+
+
+def _prepare_run(run: Mapping[str, Any]) -> tuple[dict[str, Any], list[Any]]:
+    if not isinstance(run, Mapping):
+        raise ValueError("run_must_be_a_mapping")
+    clean = _sanitize(dict(run))
+    run_id = str(clean.get("run_id") or secrets.token_hex(12))
+    clean["run_id"] = run_id
+    clean["comparison_id"] = str(clean.get("comparison_id") or "")
+    clean.setdefault("model_call_count", 0)
+    clean.setdefault("tool_call_count", 0)
+    clean.setdefault("scope_violation_count", 0)
+    clean.setdefault("repair_attempt_count", 0)
+    clean.setdefault("human_intervention_count", 0)
+    clean.setdefault("created_at", time.time())
+    values = [_serialize(column, clean.get(column)) for column in _COLUMNS]
+    return clean, values
 
 
 class EmpiricalCostLedger:
@@ -278,33 +300,59 @@ class EmpiricalCostLedger:
 
     def _columns(self) -> set[str]:
         assert self._conn is not None
-        return {str(row[1]) for row in self._conn.execute("PRAGMA table_info(cost_runs)")}
+        return {
+            str(row[1])
+            for row in self._conn.execute("PRAGMA table_info(cost_runs)")
+        }
 
     def _migrate(self) -> None:
         assert self._conn is not None
         columns = self._columns()
         for name, declaration in _V2_COLUMNS.items():
             if name not in columns:
-                self._conn.execute(f"ALTER TABLE cost_runs ADD COLUMN {name} {declaration}")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_comparison ON cost_runs(comparison_id)")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_provider ON cost_runs(provider)")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_model ON cost_runs(model)")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_call_id ON cost_runs(call_id)")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_observation_id ON cost_runs(observation_id)")
-        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_route_decision_id ON cost_runs(route_decision_id)")
+                self._conn.execute(
+                    f"ALTER TABLE cost_runs ADD COLUMN {name} {declaration}"
+                )
         self._conn.execute(
-            "INSERT OR REPLACE INTO schema_migrations(version, applied_at) VALUES(?, ?)",
+            "CREATE INDEX IF NOT EXISTS idx_comparison ON cost_runs(comparison_id)"
+        )
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_provider ON cost_runs(provider)"
+        )
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_model ON cost_runs(model)"
+        )
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_call_id ON cost_runs(call_id)"
+        )
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_observation_id ON cost_runs(observation_id)"
+        )
+        self._conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_route_decision_id "
+            "ON cost_runs(route_decision_id)"
+        )
+        self._conn.execute(
+            "INSERT OR REPLACE INTO schema_migrations(version, applied_at) "
+            "VALUES(?, ?)",
             (_SCHEMA_VERSION, time.time()),
         )
 
     def schema_status(self) -> dict[str, Any]:
         assert self._conn is not None
-        version = self._conn.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0] or 0
+        version = (
+            self._conn.execute(
+                "SELECT MAX(version) FROM schema_migrations"
+            ).fetchone()[0]
+            or 0
+        )
         return {
             "ok": True,
             "ledger_version": LEDGER_VERSION,
             "schema_version": int(version),
-            "journal_mode": str(self._conn.execute("PRAGMA journal_mode").fetchone()[0]).lower(),
+            "journal_mode": str(
+                self._conn.execute("PRAGMA journal_mode").fetchone()[0]
+            ).lower(),
             "columns": sorted(self._columns()),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
@@ -313,49 +361,85 @@ class EmpiricalCostLedger:
     def record_run(self, run: dict[str, Any]) -> dict[str, Any]:
         """Record or idempotently replace one linked empirical run."""
         assert self._conn is not None
-        clean = _sanitize(dict(run))
-        run_id = str(clean.get("run_id") or secrets.token_hex(12))
-        clean["run_id"] = run_id
-        clean["comparison_id"] = str(clean.get("comparison_id") or "")
-        clean.setdefault("model_call_count", 0)
-        clean.setdefault("tool_call_count", 0)
-        clean.setdefault("scope_violation_count", 0)
-        clean.setdefault("repair_attempt_count", 0)
-        clean.setdefault("human_intervention_count", 0)
-        clean.setdefault("created_at", time.time())
-        values = [_serialize(column, clean.get(column)) for column in _COLUMNS]
+        clean, values = _prepare_run(run)
         placeholders = ",".join("?" for _ in _COLUMNS)
         columns_sql = ",".join(_COLUMNS)
         with self._conn:
             self._conn.execute(
-                f"INSERT OR REPLACE INTO cost_runs({columns_sql}) VALUES({placeholders})",
+                f"INSERT OR REPLACE INTO cost_runs({columns_sql}) "
+                f"VALUES({placeholders})",
                 values,
             )
         return {
             "ok": True,
-            "run_id": run_id,
+            "run_id": clean["run_id"],
             "call_id": clean.get("call_id"),
             "observation_id": clean.get("observation_id"),
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
 
+    def record_runs(
+        self,
+        runs: Sequence[Mapping[str, Any]],
+    ) -> dict[str, Any]:
+        """Atomically record or replace a non-empty batch of linked runs."""
+        assert self._conn is not None
+        if isinstance(runs, (str, bytes, bytearray)) or not isinstance(
+            runs, Sequence
+        ):
+            raise ValueError("runs_must_be_a_sequence")
+        if not runs:
+            raise ValueError("runs_must_not_be_empty")
+
+        prepared = [_prepare_run(run) for run in runs]
+        run_ids = [clean["run_id"] for clean, _ in prepared]
+        if len(set(run_ids)) != len(run_ids):
+            raise ValueError("run_ids_must_be_unique")
+
+        placeholders = ",".join("?" for _ in _COLUMNS)
+        columns_sql = ",".join(_COLUMNS)
+        with self._conn:
+            for _, values in prepared:
+                self._conn.execute(
+                    f"INSERT OR REPLACE INTO cost_runs({columns_sql}) "
+                    f"VALUES({placeholders})",
+                    values,
+                )
+        return {
+            "ok": True,
+            "run_ids": run_ids,
+            "record_count": len(run_ids),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
     def get_run(self, run_id: str) -> dict[str, Any] | None:
         assert self._conn is not None
-        cursor = self._conn.execute("SELECT * FROM cost_runs WHERE run_id=?", (run_id,))
+        cursor = self._conn.execute(
+            "SELECT * FROM cost_runs WHERE run_id=?",
+            (run_id,),
+        )
         row = cursor.fetchone()
         if row is None:
             return None
-        return _deserialize_row(row, [item[0] for item in cursor.description])
+        return _deserialize_row(
+            row,
+            [item[0] for item in cursor.description],
+        )
 
     def get_comparison(self, comparison_id: str) -> list[dict[str, Any]]:
         assert self._conn is not None
         cursor = self._conn.execute(
-            "SELECT * FROM cost_runs WHERE comparison_id=? ORDER BY started_at, created_at",
+            "SELECT * FROM cost_runs WHERE comparison_id=? "
+            "ORDER BY started_at, created_at",
             (comparison_id,),
         )
         columns = [item[0] for item in cursor.description]
-        return [_deserialize_row(row, columns) for row in cursor.fetchall()]
+        return [
+            _deserialize_row(row, columns)
+            for row in cursor.fetchall()
+        ]
 
     def get_by_call_id(self, call_id: str) -> list[dict[str, Any]]:
         assert self._conn is not None
@@ -364,15 +448,20 @@ class EmpiricalCostLedger:
             (call_id,),
         )
         columns = [item[0] for item in cursor.description]
-        return [_deserialize_row(row, columns) for row in cursor.fetchall()]
+        return [
+            _deserialize_row(row, columns)
+            for row in cursor.fetchall()
+        ]
 
     def get_history(self, limit: int = 20) -> list[dict[str, Any]]:
         assert self._conn is not None
         cursor = self._conn.execute(
-            "SELECT run_id, comparison_id, correlation_id, call_id, observation_id, "
-            "route_decision_id, profile_id, provider, model, measurement_class, "
-            "input_tokens, output_tokens, provider_cost_usd, calculated_cost_usd, "
-            "cost_status, latency_ms, time_to_verified_outcome_ms, verification_status, created_at "
+            "SELECT run_id, comparison_id, correlation_id, call_id, "
+            "observation_id, route_decision_id, profile_id, provider, "
+            "model, measurement_class, input_tokens, output_tokens, "
+            "provider_cost_usd, calculated_cost_usd, cost_status, "
+            "latency_ms, time_to_verified_outcome_ms, "
+            "verification_status, created_at "
             "FROM cost_runs ORDER BY created_at DESC LIMIT ?",
             (int(limit),),
         )
@@ -387,5 +476,10 @@ class EmpiricalCostLedger:
     def __enter__(self) -> "EmpiricalCostLedger":
         return self
 
-    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+    def __exit__(
+        self,
+        exc_type: Any,
+        exc: Any,
+        traceback: Any,
+    ) -> None:
         self.close()

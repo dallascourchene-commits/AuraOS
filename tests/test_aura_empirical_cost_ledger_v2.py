@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import sqlite3
 
+import pytest
+
 from aura_empirical_cost_ledger import EmpiricalCostLedger
 
 
@@ -115,7 +117,9 @@ def test_v1_database_migrates_without_losing_existing_run(tmp_path: Path) -> Non
         assert legacy["time_to_verified_outcome_ms"] is None
 
 
-def test_linked_run_round_trip_preserves_nulls_and_json_provenance(tmp_path: Path) -> None:
+def test_linked_run_round_trip_preserves_nulls_and_json_provenance(
+    tmp_path: Path,
+) -> None:
     with EmpiricalCostLedger(tmp_path) as ledger:
         recorded = ledger.record_run(
             {
@@ -206,3 +210,57 @@ def test_replay_with_same_run_id_replaces_deterministically(tmp_path: Path) -> N
         rows = ledger.get_by_call_id("call-1")
         assert len(rows) == 1
         assert rows[0]["latency_ms"] == 20
+
+
+def test_record_runs_persists_pair_atomically(tmp_path: Path) -> None:
+    with EmpiricalCostLedger(tmp_path) as ledger:
+        result = ledger.record_runs(
+            (
+                {"run_id": "pair-a", "comparison_id": "pair"},
+                {"run_id": "pair-b", "comparison_id": "pair"},
+            )
+        )
+        assert result["ok"] is True
+        assert result["record_count"] == 2
+        assert result["run_ids"] == ["pair-a", "pair-b"]
+        assert [row["run_id"] for row in ledger.get_comparison("pair")] == [
+            "pair-a",
+            "pair-b",
+        ]
+
+
+def test_record_runs_rolls_back_when_any_row_cannot_bind(tmp_path: Path) -> None:
+    with EmpiricalCostLedger(tmp_path) as ledger:
+        with pytest.raises(sqlite3.ProgrammingError):
+            ledger.record_runs(
+                (
+                    {"run_id": "pair-good", "comparison_id": "pair"},
+                    {
+                        "run_id": "pair-bad",
+                        "comparison_id": "pair",
+                        "started_at": object(),
+                    },
+                )
+            )
+        assert ledger.get_run("pair-good") is None
+        assert ledger.get_run("pair-bad") is None
+
+
+@pytest.mark.parametrize(
+    "runs",
+    [
+        [],
+        "not-a-sequence",
+        (
+            {"run_id": "duplicate", "comparison_id": "pair"},
+            {"run_id": "duplicate", "comparison_id": "pair"},
+        ),
+    ],
+)
+def test_record_runs_rejects_noncanonical_batches(
+    tmp_path: Path,
+    runs,
+) -> None:
+    with EmpiricalCostLedger(tmp_path) as ledger:
+        with pytest.raises(ValueError):
+            ledger.record_runs(runs)
