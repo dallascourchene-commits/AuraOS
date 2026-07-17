@@ -179,10 +179,12 @@ def test_contract_identity_is_stable_for_same_grounded_evidence(tmp_path: Path) 
 
     first = runtime_a.prepare(request())
     second = runtime_b.prepare(request())
+    third = runtime_a.prepare(request())
 
     assert first["contract"]["contract_id"] == second["contract"]["contract_id"]
-    assert first["run_id"].endswith("-0001")
-    assert second["run_id"].endswith("-0001")
+    assert first["contract"]["contract_id"] == third["contract"]["contract_id"]
+    assert first["run_id"] != second["run_id"]
+    assert first["run_id"] != third["run_id"]
 
 
 def test_start_freezes_prepared_plan_and_opens_controlled_session(tmp_path: Path) -> None:
@@ -281,6 +283,7 @@ def test_malformed_request_collections_fail_closed(tmp_path: Path) -> None:
 
     criteria = runtime.prepare({"objective": "x", "acceptance_criteria": 7})
     metadata = runtime.prepare({"objective": "x", "metadata": ["not", "an", "object"]})
+    empty_gates = runtime.prepare({"objective": "x", "required_gates": []})
 
     assert criteria["ok"] is False
     assert criteria["stage"] == "REQUEST"
@@ -288,6 +291,8 @@ def test_malformed_request_collections_fail_closed(tmp_path: Path) -> None:
     assert metadata["ok"] is False
     assert metadata["stage"] == "REQUEST"
     assert metadata["error"] == "metadata must be an object"
+    assert empty_gates["ok"] is False
+    assert empty_gates["error"] == "required_gates must not be empty"
 
 
 def test_dot_prefixed_repository_paths_are_preserved() -> None:
@@ -300,6 +305,34 @@ def test_contract_validator_rejects_unsupported_gates(tmp_path: Path) -> None:
     contract = runtime.prepare(request())["contract"]
     contract["required_gates"] = ["hidden_tests"]
     assert validate_forge_contract(contract) == ["unsupported_required_gates:hidden_tests"]
+
+
+def test_contract_validator_rejects_authority_and_lifecycle_tampering(tmp_path: Path) -> None:
+    runtime, _bridge, _manager = build_runtime(tmp_path)
+    contract = runtime.prepare(request())["contract"]
+    contract["authority"]["automatic_push"] = True
+    contract["lifecycle"] = ["FRAME", "ACT"]
+    contract["allowed_files"] = ["../escape.py"]
+
+    errors = validate_forge_contract(contract)
+
+    assert "invalid_authority:automatic_push" in errors
+    assert "invalid_lifecycle" in errors
+    assert "invalid_allowed_file:../escape.py" in errors
+
+
+def test_bridge_exceptions_fail_closed(tmp_path: Path) -> None:
+    runtime, bridge, _manager = build_runtime(tmp_path)
+
+    def explode(**_kwargs: Any) -> dict[str, Any]:
+        raise RuntimeError("secret backend detail")
+
+    bridge.aura_repo_digest = explode  # type: ignore[method-assign]
+    result = runtime.prepare(request())
+
+    assert result["ok"] is False
+    assert result["error"] == "repository_digest_error"
+    assert result["details"] == {"exception_type": "RuntimeError"}
 
 
 def test_export_delegates_to_safe_session_owner(tmp_path: Path) -> None:

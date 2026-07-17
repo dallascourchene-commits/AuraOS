@@ -14,20 +14,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1078
-- **total_bytes**: 51759626
-- **text_tokens_est**: 3599992
+- **total_bytes**: 51764788
+- **text_tokens_est**: 3601283
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 144, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 749, 'schema_or_lexicon': 111, 'support_file': 30}
 - **topology_nodes**: 8793
-- **topology_edges**: 19410
+- **topology_edges**: 19411
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 19820.1
+- **elapsed_ms**: 19158.91
 
 ## Coverage
 
 - **included_file_count**: 1078
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=70, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=88
+- **skipped_dir_file_counts**: `.git`=68, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=88
 
 ## Command Index
 
@@ -321,7 +321,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 - **source**: compiled_deep_topology
 - **nodes**: 8793
-- **edges**: 19410
+- **edges**: 19411
 - **top_files_by_degree**:
   - `aura_node.py` degree=879 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`

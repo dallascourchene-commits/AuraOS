@@ -84,13 +84,16 @@
     "authority": {
       "type": "object",
       "required": [
-        "patch_authority",
-        "vsa_patch_authority",
-        "production_mutation",
         "automatic_commit",
-        "automatic_push",
+        "automatic_merge",
         "automatic_pull_request",
-        "automatic_merge"
+        "automatic_push",
+        "human_authorizes",
+        "patch_authority",
+        "planning_proposes",
+        "production_mutation",
+        "verification_proves",
+        "vsa_patch_authority"
       ],
       "properties": {
         "patch_authority": {
@@ -113,6 +116,15 @@
         },
         "automatic_merge": {
           "const": false
+        },
+        "planning_proposes": {
+          "const": true
+        },
+        "verification_proves": {
+          "const": true
+        },
+        "human_authorizes": {
+          "const": true
         }
       }
     },

@@ -13,6 +13,7 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import subprocess
+import uuid
 from typing import Any, Callable, Mapping, Sequence
 
 FORGE_VERSION = "AURA_FORGE_V1"
@@ -191,7 +192,10 @@ class ForgeRunRequest:
                 raise ValueError(f"{name} must be between {minimum} and {maximum}")
             return parsed
 
-        gates = _clean_strings(raw.get("required_gates") or DEFAULT_REQUIRED_GATES)
+        if "required_gates" in raw:
+            gates = _clean_strings(raw.get("required_gates"))
+        else:
+            gates = DEFAULT_REQUIRED_GATES
         if not gates:
             raise ValueError("required_gates must not be empty")
         unsupported = sorted(set(gates) - SUPPORTED_REQUIRED_GATES)
@@ -351,19 +355,33 @@ class AuraForgeRuntime:
         except ValueError as exc:
             return self._error(str(exc), stage="REQUEST")
 
-        repo_digest = self.bridge.aura_repo_digest(include_hubs=False, max_lines=80)
+        try:
+            repo_digest = self.bridge.aura_repo_digest(include_hubs=False, max_lines=80)
+        except Exception as exc:  # noqa: BLE001
+            return self._error(
+                "repository_digest_error",
+                stage="GROUND",
+                details={"exception_type": type(exc).__name__},
+            )
         if not repo_digest.get("ok"):
             return self._error("repository_digest_unavailable", stage="GROUND", details=repo_digest)
 
         all_constraints = [*_CANONICAL_CONSTRAINTS, *request.constraints]
-        prepared = self.bridge.aura_prepare_arena(
-            objective=request.objective,
-            target_file=request.target_file,
-            target_symbol=request.target_symbol,
-            acceptance_criteria=list(request.acceptance_criteria),
-            risk_map=list(request.risk_map),
-            constraints=list(dict.fromkeys(all_constraints)),
-        )
+        try:
+            prepared = self.bridge.aura_prepare_arena(
+                objective=request.objective,
+                target_file=request.target_file,
+                target_symbol=request.target_symbol,
+                acceptance_criteria=list(request.acceptance_criteria),
+                risk_map=list(request.risk_map),
+                constraints=list(dict.fromkeys(all_constraints)),
+            )
+        except Exception as exc:  # noqa: BLE001
+            return self._error(
+                "arena_prepare_error",
+                stage="PLAN",
+                details={"exception_type": type(exc).__name__},
+            )
         if not prepared.get("ok"):
             return self._error("arena_prepare_failed", stage="PLAN", details=prepared)
         if list(prepared.get("blockers") or []):
@@ -378,13 +396,20 @@ class AuraForgeRuntime:
         task_evidence: list[dict[str, Any]] = []
         for capsule in act_capsules:
             task_id = str(capsule.get("task_id") or "")
-            micro = self.bridge.aura_get_micro_context(
-                plan_phase_hash=str(prepared.get("plan_phase_hash") or ""),
-                task_id=task_id,
-                depth=1,
-                format="both",
-                max_tokens_est=min(800, request.max_context_tokens),
-            )
+            try:
+                micro = self.bridge.aura_get_micro_context(
+                    plan_phase_hash=str(prepared.get("plan_phase_hash") or ""),
+                    task_id=task_id,
+                    depth=1,
+                    format="both",
+                    max_tokens_est=min(800, request.max_context_tokens),
+                )
+            except Exception as exc:  # noqa: BLE001
+                return self._error(
+                    "task_micro_context_error",
+                    stage="GROUND",
+                    details={"task_id": task_id, "exception_type": type(exc).__name__},
+                )
             if not micro.get("ok"):
                 return self._error(
                     "task_micro_context_unavailable",
@@ -409,8 +434,7 @@ class AuraForgeRuntime:
             )
 
         contract = self._compile_contract(request, repo_digest, prepared, act_capsules, task_evidence)
-        self._run_counter += 1
-        run_id = f"FORGE-{contract.contract_id[:16]}-{self._run_counter:04d}"
+        run_id = f"FORGE-{contract.contract_id[:16]}-{uuid.uuid4().hex[:12]}"
         self._runs[run_id] = {
             "request": request,
             "contract": contract,
@@ -440,19 +464,27 @@ class AuraForgeRuntime:
         run_id = str(prepared_result["run_id"])
         state = self._runs[run_id]
         request: ForgeRunRequest = state["request"]
-        manager = self._session_manager_factory(request, self.bridge, self.repo_root)
-        opened = manager.open_prepared_session(
-            prepared_arena=state["prepared"],
-            objective=request.objective,
-            provider=request.provider,
-            model=request.model,
-            run_id=run_id,
-            metadata={
-                **dict(request.metadata),
-                "forge_version": FORGE_VERSION,
-                "forge_contract_id": state["contract"].contract_id,
-            },
-        )
+        try:
+            manager = self._session_manager_factory(request, self.bridge, self.repo_root)
+            opened = manager.open_prepared_session(
+                prepared_arena=state["prepared"],
+                objective=request.objective,
+                provider=request.provider,
+                model=request.model,
+                run_id=run_id,
+                metadata={
+                    **dict(request.metadata),
+                    "forge_version": FORGE_VERSION,
+                    "forge_contract_id": state["contract"].contract_id,
+                },
+            )
+        except Exception as exc:  # noqa: BLE001
+            state["status"] = "BLOCKED_SESSION_EXCEPTION"
+            return self._error(
+                "controlled_session_open_error",
+                stage="ACT",
+                details={"exception_type": type(exc).__name__},
+            )
         if not opened.get("session_created"):
             state["last_result"] = dict(opened)
             state["status"] = "BLOCKED_SESSION_OPEN"
@@ -500,12 +532,20 @@ class AuraForgeRuntime:
         if manager is None:
             return self._error("forge_run_not_started", stage="ACT")
 
-        result = manager.submit_response(
-            session_id=state["session_id"],
-            turn_id=str(turn_id),
-            response=str(response or ""),
-            provider_usage=_sanitize(dict(provider_usage or {})),
-        )
+        try:
+            result = manager.submit_response(
+                session_id=state["session_id"],
+                turn_id=str(turn_id),
+                response=str(response or ""),
+                provider_usage=_sanitize(dict(provider_usage or {})),
+            )
+        except Exception as exc:  # noqa: BLE001
+            state["status"] = "BLOCKED_SUBMIT_EXCEPTION"
+            return self._error(
+                "controlled_session_submit_error",
+                stage="ACT",
+                details={"exception_type": type(exc).__name__},
+            )
         state["last_result"] = dict(result)
         session = dict(result.get("session") or {})
         state["status"] = str(result.get("status") or session.get("status") or state["status"])
@@ -527,7 +567,14 @@ class AuraForgeRuntime:
         manager = state.get("manager")
         session: dict[str, Any] = {}
         if manager is not None:
-            current = manager.get_session(state["session_id"])
+            try:
+                current = manager.get_session(state["session_id"])
+            except Exception as exc:  # noqa: BLE001
+                return self._error(
+                    "controlled_session_status_error",
+                    stage="STATUS",
+                    details={"exception_type": type(exc).__name__},
+                )
             if current.get("ok"):
                 session = dict(current.get("session") or {})
                 state["status"] = str(session.get("status") or state["status"])
@@ -559,7 +606,14 @@ class AuraForgeRuntime:
         manager = state.get("manager")
         session: dict[str, Any] = {}
         if manager is not None:
-            current = manager.get_session(state["session_id"])
+            try:
+                current = manager.get_session(state["session_id"])
+            except Exception as exc:  # noqa: BLE001
+                return self._error(
+                    "controlled_session_review_error",
+                    stage="DECIDE",
+                    details={"exception_type": type(exc).__name__},
+                )
             if current.get("ok"):
                 session = dict(current.get("session") or {})
                 state["status"] = str(session.get("status") or state["status"])
@@ -625,7 +679,14 @@ class AuraForgeRuntime:
         manager = state.get("manager")
         if manager is None:
             return self._error("forge_run_not_started", stage="EXPORT")
-        result = manager.export_session(state["session_id"], output_path)
+        try:
+            result = manager.export_session(state["session_id"], output_path)
+        except Exception as exc:  # noqa: BLE001
+            return self._error(
+                "controlled_session_export_error",
+                stage="EXPORT",
+                details={"exception_type": type(exc).__name__},
+            )
         return {
             **_sanitize(result),
             "version": FORGE_VERSION,
@@ -727,36 +788,41 @@ class AuraForgeRuntime:
 def validate_forge_contract(value: Mapping[str, Any]) -> list[str]:
     """Return structural contract errors without granting execution authority."""
     required = {
-        "version",
-        "contract_id",
-        "request_digest",
-        "objective",
-        "objective_digest",
-        "repository",
-        "plan_phase_hash",
-        "act_capsules",
-        "task_evidence",
-        "required_gates",
-        "allowed_files",
-        "worker_contract",
-        "authority",
-        "lifecycle",
+        "version", "contract_id", "request_digest", "objective", "objective_digest",
+        "repository", "plan_phase_hash", "act_capsules", "task_evidence",
+        "required_gates", "allowed_files", "worker_contract", "authority", "lifecycle",
     }
     errors = [f"missing:{name}" for name in sorted(required - set(value))]
-    if value.get("version") not in {None, FORGE_CONTRACT_VERSION}:
+    if value.get("version") != FORGE_CONTRACT_VERSION:
         errors.append("unsupported_version")
+    for name in ("contract_id", "request_digest", "objective", "objective_digest", "plan_phase_hash"):
+        if not str(value.get(name) or "").strip():
+            errors.append(f"{name}_must_not_be_empty")
+    if not isinstance(value.get("repository"), Mapping):
+        errors.append("repository_must_be_object")
+    if not isinstance(value.get("worker_contract"), Mapping):
+        errors.append("worker_contract_must_be_object")
+
     authority = value.get("authority")
+    expected_authority = {
+        "planning_proposes": True,
+        "verification_proves": True,
+        "human_authorizes": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+        "production_mutation": False,
+        "automatic_commit": False,
+        "automatic_push": False,
+        "automatic_pull_request": False,
+        "automatic_merge": False,
+    }
     if isinstance(authority, Mapping):
-        if authority.get("production_mutation") is not False:
-            errors.append("production_mutation_must_be_false")
-        if authority.get("automatic_merge") is not False:
-            errors.append("automatic_merge_must_be_false")
-        if authority.get("patch_authority") != PATCH_AUTHORITY:
-            errors.append("invalid_patch_authority")
-        if authority.get("vsa_patch_authority") is not False:
-            errors.append("vsa_patch_authority_must_be_false")
+        for name, expected in expected_authority.items():
+            if authority.get(name) != expected:
+                errors.append(f"invalid_authority:{name}")
     else:
         errors.append("authority_must_be_object")
+
     required_gates = list(value.get("required_gates") or [])
     if not required_gates:
         errors.append("required_gates_must_not_be_empty")
@@ -766,6 +832,22 @@ def validate_forge_contract(value: Mapping[str, Any]) -> list[str]:
             errors.append(f"unsupported_required_gates:{','.join(unsupported)}")
     if not list(value.get("act_capsules") or []):
         errors.append("act_capsules_must_not_be_empty")
+    if not list(value.get("task_evidence") or []):
+        errors.append("task_evidence_must_not_be_empty")
+
+    expected_lifecycle = ["FRAME", "GROUND", "PLAN", "ACT", "PROVE", "DECIDE", "DISSOLVE"]
+    if list(value.get("lifecycle") or []) != expected_lifecycle:
+        errors.append("invalid_lifecycle")
+
+    allowed_files = value.get("allowed_files")
+    if not isinstance(allowed_files, list):
+        errors.append("allowed_files_must_be_array")
+    else:
+        for item in allowed_files:
+            try:
+                _safe_repo_path(item, field_name="allowed_file")
+            except ValueError:
+                errors.append(f"invalid_allowed_file:{item}")
     return errors
 
 
