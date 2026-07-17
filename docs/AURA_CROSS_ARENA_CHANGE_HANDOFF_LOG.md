@@ -3,63 +3,61 @@
 > Editable continuity record. Git source, tests, schemas, and CODEMAP remain authoritative.
 
 ```yaml
-document_version: 1.2.0
+document_version: 1.3.0
 updated_date: 2026-07-17
 repository: dallascourchene-commits/AuraOS
 baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
 active_branch: refactor/sco-construction-e4-e6
 current_phase: E4_E6
-current_status: PHASE_COMPLETE_AWAITING_USER_DIRECTION
+current_status: IMPLEMENTED_AND_MANUALLY_VERIFIED_AWAITING_USER_DIRECTION
 coderabbit_triggered: false
 pull_request_opened: false
 merged: false
 ```
 
-## Current capability registry
+## Capability registry
 
-| Capability | Canonical owner | Cross-Arena status |
+| Capability | Canonical owner | Disposition |
 |---|---|---|
-| Revisioned refactor skeleton | `aura_refactor_skeleton.py` | `INTEGRATED` with Human Agent planning and Coding capsule preparation |
-| Construction refactor adapter | `aura_construction_refactor_plan.py` | `INTEGRATED` for E0–E3 |
-| Construction domain contracts | `aura_construction_contracts.py` | `INTENTIONALLY_LOCAL`; projects into canonical Aura event envelopes |
-| Construction deterministic state and queries | `aura_construction_state.py` | `INTENTIONALLY_LOCAL`; `ZERO_MODEL` runtime |
-| Construction authority and receipt binding | `aura_construction_authority.py` | `INTEGRATED` with relational authority; physical release remains external |
+| Revisioned refactor skeleton | `aura_refactor_skeleton.py` | `INTEGRATED` |
+| Construction refactor adapter | `aura_construction_refactor_plan.py` | `INTEGRATED` |
+| Construction contracts | `aura_construction_contracts.py` | `INTENTIONALLY_LOCAL`; projects to canonical Aura events |
+| Construction replay and queries | `aura_construction_state.py` | `INTENTIONALLY_LOCAL`; deterministic `ZERO_MODEL` |
+| Construction authority binding | `aura_construction_authority.py` | `INTEGRATED` with relational authority; no physical release |
 | Construction `BaseArenaAdapter` | not implemented | `ADAPTER_REQUIRED` |
 | Human Agent Construction profile | not implemented | `ADAPTER_REQUIRED` |
-| Observatory Construction projection | not implemented | `DEFERRED` |
-| Construction Experience projection | not implemented | `DEFERRED` |
-| Crucible Construction proposal mining | not implemented | `DEFERRED` |
+| Observatory projection | not implemented | `DEFERRED` |
+| Experience/Crucible projection | not implemented | `DEFERRED` |
+| Payment and hazard lanes | not implemented | `DEFERRED` |
 
-## E4–E6 implemented boundaries
+## Implemented path
 
 ```text
 Construction records
-  -> deterministic replay
-  -> conflicts and missing evidence
-  -> evidence-ready report
-  -> canonical Aura relational governance
-  -> digitally-ready proposal and receipt
-  -> HUMAN RELEASE STILL REQUIRED
+  -> deterministic append-only replay
+  -> explicit supersession and preserved conflicts
+  -> evidence-readiness query
+  -> exact relational-governance replay
+  -> digitally-ready proposal and chained receipt
+  -> HUMAN PHYSICAL RELEASE STILL REQUIRED
 ```
-
-Aura does not authorize physical work, safety, engineering, inspection, payment, access, equipment, discipline, contractual change, legal conclusions, or regulatory conclusions.
 
 ## Open wiring debts
 
-| Debt | Missing wire | Status | Next exact grounding step | Retirement criterion |
-|---|---|---|---|---|
-| `WIRE-SCO-001` | Construction `BaseArenaAdapter` | `ADAPTER_REQUIRED` | Ground Liquid/Civic adapter lifecycle after user approves next phase | Synthetic adapter parity tests pass |
-| `WIRE-SCO-002` | Construction packets in Human Agent Emergent | `ADAPTER_REQUIRED` | Ground preview, guarded commit, API, and denial seams | Denied operations remain non-mutating |
-| `WIRE-SCO-003` | Construction Experience projection | `DEFERRED` | Produce a complete verified synthetic episode first | Eligibility and redaction gates pass |
-| `WIRE-SCO-004` | Observatory projection | `DEFERRED` | Define read-only query, route, gate, and cost records | No execution methods exposed |
-| `WIRE-SCO-005` | Handoff-log validation gate | `DEFERRED` | Add lightweight schema validation in a later governance phase | Missing dispositions fail review |
-| `WIRE-SCO-006` | E4 minimal contracts | `INTEGRATED` | Maintain tests and topology | Canonical domain contracts remain stable |
-| `WIRE-SCO-007` | E5 deterministic state/query engine | `INTEGRATED` | Maintain replay and conflict regressions | Zero-model replay/query gates remain green |
-| `WIRE-SCO-008` | E6 authority/attestation/receipt adapter | `INTEGRATED` | Maintain exact request/state/decision/result bindings | No authority bypass or unbound receipt is accepted |
-| `WIRE-SCO-009` | Payment readiness | `DEFERRED` | Ground only after digital coordination runtime is accepted | No fund-transfer capability introduced |
-| `WIRE-SCO-010` | Hazard/location advisory | `DEFERRED` | Ground non-dispositive advisory requirements | Sensors/location never become dispositive authority |
+| Debt | Missing wire | Status | Retirement criterion |
+|---|---|---|---|
+| `WIRE-SCO-001` | Construction `BaseArenaAdapter` | `ADAPTER_REQUIRED` | Synthetic adapter parity passes |
+| `WIRE-SCO-002` | Human Agent Emergent Construction packets | `ADAPTER_REQUIRED` | Denied operations remain non-mutating |
+| `WIRE-SCO-003` | Construction Experience projection | `DEFERRED` | Verified synthetic episode passes eligibility/redaction |
+| `WIRE-SCO-004` | Observatory projection | `DEFERRED` | Read-only records expose no execution methods |
+| `WIRE-SCO-005` | Handoff-log validation gate | `DEFERRED` | Missing dispositions fail validation |
+| `WIRE-SCO-006` | E4 contracts | `INTEGRATED` | Contract regressions remain green |
+| `WIRE-SCO-007` | E5 state/query engine | `INTEGRATED` | Replay/query regressions remain green |
+| `WIRE-SCO-008` | E6 authority/receipt adapter | `INTEGRATED` | No unbound result or receipt is accepted |
+| `WIRE-SCO-009` | Payment readiness | `DEFERRED` | No fund-transfer capability |
+| `WIRE-SCO-010` | Hazard/location advisory | `DEFERRED` | Sensor/location evidence remains non-dispositive |
 
-## Phase 2 evidence
+## Phase evidence
 
 ```yaml
 source_files:
@@ -70,56 +68,53 @@ test_files:
   - tests/test_aura_construction_contracts.py
   - tests/test_aura_construction_state.py
   - tests/test_aura_construction_authority.py
-review_document:
-  - docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md
 validation:
+  focused_adversarial_tests: 128_passed
+  focused_statement_coverage: 90_percent
   py_compile: PASS
   compileall: PASS
-  focused_adversarial_tests: 89_passed
-  focused_statement_coverage: 90_percent
   manual_fatal_lint: PASS
   randomized_replay_histories: 250
-  coderabbit: NOT_TRIGGERED_BY_USER_INSTRUCTION
+  manual_findings_repaired: 40
+  coderabbit: NOT_TRIGGERED
   pr: NOT_OPENED
   merge: NOT_PERFORMED
 context_efficiency:
-  measurement_class: STRUCTURAL_CONTEXT_PROXY
   broad_repository_files: 1022
   selected_principal_owner_files: 4
-  file_selection_reduction: 99.61_percent
+  structural_file_selection_reduction: 99.61_percent
+  measurement_class: STRUCTURAL_CONTEXT_PROXY
   provider_tokens_and_cost: NOT_MEASURED
 ```
 
 ## Future-AI continuation rule
 
-1. Read this log, the reuse matrix, Phase 1 evidence, and Phase 2 evidence.
-2. Verify current Git, exact source, tests, schemas, and regenerated CODEMAP before acting.
-3. Do not reopen E4–E6 design questions without a failing test, changed dependency, or exact new evidence.
-4. Run Capability Connectome/Resolver before adding any Construction module.
-5. Keep `EVIDENCE_READY`, `GOVERNANCE_AUTHORIZED`, and `PHYSICAL_RELEASED` separate.
-6. Do not trigger CodeRabbit unless the user explicitly requests it.
-7. Do not open a PR or merge this phase without user direction.
+1. Verify current Git, source, tests, schemas, and generated topology.
+2. Do not redesign E4–E6 without a failing gate, changed dependency, or exact new evidence.
+3. Run Capability Connectome/Resolver before adding a module.
+4. Keep `EVIDENCE_READY`, `GOVERNANCE_AUTHORIZED`, and `PHYSICAL_RELEASED` separate.
+5. Treat `verify_construction_receipts()` as continuity/content verification, not actor authenticity.
+6. Use `ConstructionReceiptBinding.validate_against()` for full governance-lineage validation.
+7. Do not trigger CodeRabbit unless the user explicitly requests it.
+8. Do not open a PR or merge without user direction.
 
-## Required future entry fields
+## CodeRabbit and manual adversarial review continuation
 
-```yaml
-change_id:
-date:
-objective:
-canonical_owner:
-branch:
-pr:
-commit:
-status:
-files:
-symbols:
-tests:
-docs:
-truth_boundary:
-authority_boundary:
-privacy_boundary:
-integration_dispositions:
-known_missing_wires:
-next_grounding_step:
-rollback_or_supersession:
-```
+- CodeRabbit review: 15 actionable threads examined individually.
+- Confirmed repairs: canonical materialization, strict collection containers,
+  canonical policy scopes, evidence-freshness expiry, exact canonical authority
+  types, deterministic result revalidation, verified receipt predecessors,
+  non-ready receipt rejection, state-query indexing, and fail-closed event order.
+- Staging payloads and one-time tools are removed only after exact-branch tests.
+- Construction remains proposal-only and never authorizes physical work.
+
+## Exact-branch CodeRabbit/manual repair validation
+
+- reviewed_trigger_sha: `91fde5f4626fd87cc0f1b6a8f1e7cf756027aa7e`
+- CodeRabbit actionable threads examined: 15
+- focused Construction tests: at least 138 PASS
+- focused Construction statement coverage: 89% measured; 88% enforced minimum PASS
+- canonical owner regressions: PASS
+- deterministic randomized histories: 250 PASS
+- staging payloads and one-run tooling: removed before final topology
+- authority boundary: proposal-only; human physical release remains mandatory
