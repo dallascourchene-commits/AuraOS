@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1050
-- **total_bytes**: 51454407
-- **text_tokens_est**: 3523799
+- **total_bytes**: 51446894
+- **text_tokens_est**: 3521920
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 27, 'knowledge_artifact': 140, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 731, 'schema_or_lexicon': 106, 'support_file': 31}
 - **topology_nodes**: 8647
 - **topology_edges**: 19084
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 23478.4
+- **elapsed_ms**: 20889.73
 
 ## Coverage
 
