@@ -1,0 +1,69 @@
+            governance_decision_id=data.get("governance_decision_id"),
+            governance_decision_digest=data.get("governance_decision_digest"),
+            authority_result_id=data.get("authority_result_id"),
+            authority_result_digest=data.get("authority_result_digest"),
+            chain_receipt_id=data.get("chain_receipt_id"),
+            chain_digest=data.get("chain_digest"),
+            externally_verified_receipt_ref=data.get("externally_verified_receipt_ref"),
+            created_at=data.get("created_at"),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            human_release_required=data.get("human_release_required"),
+            physical_work_authorized=data.get("physical_work_authorized"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("binding_id")
+        data.pop("binding_digest")
+        return data
+
+    def validate_against(
+        self,
+        *,
+        authority_result: ConstructionAuthorityResult,
+        request: ConstructionActionRequest,
+        state: ConstructionProjectState,
+        governance_decision: GovernanceDecision,
+        governance_replay: ConstructionGovernanceReplay,
+        chain_receipt: ChainedAuthorityReceipt,
+        verified_receipt_bindings: Mapping[str, str],
+    ) -> None:
+        recreated = type(self).create(
+            authority_result=authority_result,
+            request=request,
+            state=state,
+            governance_decision=governance_decision,
+            governance_replay=governance_replay,
+            chain_receipt=chain_receipt,
+            externally_verified_receipt_ref=self.externally_verified_receipt_ref,
+            verified_receipt_bindings=verified_receipt_bindings,
+            created_at=self.created_at,
+        )
+        if self != recreated:
+            raise ValueError("receipt binding does not match exact persisted lineage")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def create_construction_receipt(
+    *,
+    authority_result: ConstructionAuthorityResult,
+    request: ConstructionActionRequest,
+    state: ConstructionProjectState,
+    governance_decision: GovernanceDecision,
+    governance_replay: ConstructionGovernanceReplay,
+    ledger_id: str,
+    sequence_number: int,
+    previous_chain_digest: str = GENESIS_CHAIN_DIGEST,
+    externally_verified_receipt_ref: str,
+    verified_receipt_bindings: Mapping[str, str],
+    created_at: float,
+) -> tuple[ChainedAuthorityReceipt, ConstructionReceiptBinding]:
+    created = _timestamp(created_at, "created_at")
+    if type(sequence_number) is not int or sequence_number < 1:
+        raise ValueError("construction receipt sequence_number must be a positive integer")
+    if type(previous_chain_digest) is not str:
