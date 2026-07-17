@@ -1,0 +1,61 @@
+            raise ValueError("chain receipt cannot predate the authority evaluation")
+        if chain_receipt.created_at >= authority_result.expires_at:
+            raise ValueError("chain receipt cannot be created after authority expiry")
+        if chain_receipt.created_at > created:
+            raise ValueError("receipt binding cannot predate its chain receipt")
+        if not authority_result.digitally_ready:
+            raise ValueError("cannot issue a receipt for a non-ready authority result")
+        external_ref = _text(
+            externally_verified_receipt_ref,
+            "externally_verified_receipt_ref",
+        )
+        bindings = _verified_digest_bindings(
+            verified_receipt_bindings,
+            "verified_receipt_bindings",
+        )
+        bound_digest = bindings.get(external_ref)
+        if bound_digest != authority_result.result_digest:
+            raise ValueError("external receipt reference is not bound to this authority result")
+        receipt_is_bound = (
+            chain_receipt.record_id == authority_result.result_id
+            and chain_receipt.record_digest == authority_result.result_digest
+        )
+        if not receipt_is_bound:
+            raise ValueError("chain receipt is not bound to the authority result")
+        values = {
+            "project_id": authority_result.project_id,
+            "request_id": request.action_id,
+            "request_digest": request.action_digest,
+            "state_digest": state.state_digest,
+            "governance_decision_id": governance_decision.decision_id,
+            "governance_decision_digest": governance_decision.decision_digest,
+            "authority_result_id": authority_result.result_id,
+            "authority_result_digest": authority_result.result_digest,
+            "chain_receipt_id": chain_receipt.receipt_id,
+            "chain_digest": chain_receipt.chain_digest,
+            "externally_verified_receipt_ref": external_ref,
+            "created_at": created,
+            "version": CONSTRUCTION_AUTHORITY_VERSION,
+            "proposal_only": PROPOSAL_ONLY,
+            "human_release_required": True,
+            "physical_work_authorized": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = dict(values)
+        return cls(
+            binding_id=stable_id("construction-receipt-binding", payload),
+            binding_digest=stable_digest(payload),
+            **values,
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionReceiptBinding":
+        data = dict(value)
+        return cls(
+            binding_id=data.get("binding_id"),
+            binding_digest=data.get("binding_digest"),
+            project_id=data.get("project_id"),
+            request_id=data.get("request_id"),
+            request_digest=data.get("request_digest"),
+            state_digest=data.get("state_digest"),
