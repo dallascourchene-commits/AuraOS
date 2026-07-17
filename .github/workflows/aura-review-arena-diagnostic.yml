@@ -17,7 +17,7 @@ jobs:
   diagnose:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,7 +27,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install test tools
-        run: python -m pip install "pytest>=8,<9"
+        run: python -m pip install -r requirements.txt "pytest>=8,<9"
       - name: Apply integration patch
         run: python scripts/apply_aura_review_arena_v1.py
       - name: Unique IDs and graph slice
@@ -54,6 +54,21 @@ jobs:
       - name: Malformed findings collection
         continue-on-error: true
         run: python -m pytest -q tests/test_aura_review_arena.py::test_invalid_findings_collection_returns_error -vv
-      - name: MCP integration
+      - name: Review MCP integration
         continue-on-error: true
         run: python -m pytest -q tests/test_aura_review_arena_mcp.py -vv
+      - name: Canonical MCP owner
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_agent_arena_mcp.py -vv
+      - name: Canonical Agent Bridge owner
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_agent_arena_bridge.py -vv
+      - name: Forge owner
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_forge.py -vv
+      - name: External session owner
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_external_llm_session.py -vv
+      - name: Architect controls owner
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_architect_controls_vault_and_surfaces.py -vv
