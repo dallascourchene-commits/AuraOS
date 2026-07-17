@@ -40,6 +40,7 @@ jobs:
             aura_construction_adapter.py \
             aura_construction_fixtures.py \
             aura_construction_benchmark.py \
+            aura_construction_learning.py \
             aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
@@ -49,6 +50,7 @@ jobs:
             aura_construction_adapter.py \
             aura_construction_fixtures.py \
             aura_construction_benchmark.py \
+            aura_construction_learning.py \
             aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
@@ -104,7 +106,17 @@ jobs:
             --base-sha "${BASE_SHA}" \
             --output-dir Aura_Staging/sco_construction_phase3_architect
           test -s Aura_Staging/sco_construction_phase3_architect/architect_refactor_report.json
-      - name: Upload focused and Architect diagnostics
+      - name: Run deterministic benchmark and governed learning projection
+        run: |
+          python aura_construction_benchmark.py --iterations 250 --seed 1337 --json
+          python aura_construction_learning.py \
+            --repo-root . \
+            --output-dir Aura_Staging/sco_construction_phase3_learning \
+            --experience-count 15
+          test -s Aura_Staging/sco_construction_phase3_learning/sco_phase3_learning_evidence.json
+          test -s Aura_Staging/sco_construction_phase3_learning/arena_experience.db
+          test -s Aura_Staging/sco_construction_phase3_learning/crucible.db
+      - name: Upload focused, Architect, benchmark, and Crucible evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -115,10 +127,9 @@ jobs:
             /tmp/sco-phase3-coverage.txt
             /tmp/sco-phase3-regressions.txt
             Aura_Staging/sco_construction_phase3_architect
+            Aura_Staging/sco_construction_phase3_learning
           if-no-files-found: warn
           retention-days: 14
-      - name: Run deterministic 250-permutation benchmark
-        run: python aura_construction_benchmark.py --iterations 250 --seed 1337 --json
       - name: Regenerate and verify exact topology in audit workspace
         run: |
           python aura_codebase_navigator.py
