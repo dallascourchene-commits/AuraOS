@@ -196,25 +196,25 @@ Scope and tests are universal Council lanes. Other critic lanes are admitted onl
 
 ## 10. Cost and benchmark interpretation
 
-Keep evidence classes separate:
+Keep evidence classes separate and read them in this order:
 
 1. executable gate results;
 2. deterministic comparative token proxies;
 3. estimated structural projections;
 4. discovery and capacity scans.
 
-| Benchmark | Key result | Evidence class |
-|---|---|---|
-| Context localization | `131,655 → 14,431`; **89.04% lower** total proxy; quality `+0.0057` | Deterministic fixture |
-| Selective Council V3 | `18 → 12` calls; `158,545 → 106,494`; **32.83% lower**, same accepted patch and quality | Controlled executable fixture |
-| Executable patch | visible `3/3`, hidden `3/3`, regression `2/2`; observed `100.00`, benchmark `97.50` | Executable gate evidence |
-| Real AuraOS refactor | `32/32`, `35/35`, `21/21`; observed `100.00`, benchmark `93.50` | Real branch gate evidence |
-| State Ledger | `234` vs `6,140`; **96.19% less context**, preservation `1.0000`, drift `0.0000` | Synthetic continuity fixture |
-| Emergent scan | `708` Python files, `10,815` nodes, `20,764` edges, `15` probes, `0` failures | Discovery evidence |
-| Grounded projections | `7` probes, all `NEEDS_GROUNDING` | Projection only |
-| Shared evidence | `2,004 → 938`; **53.1936% projected savings** | `ESTIMATED`, proposed PR #138 evidence |
+| Tier | Benchmark | Key result | Claim boundary |
+|---:|---|---|---|
+| 1 | Executable patch fixture | visible `3/3`, hidden `3/3`, regression `2/2`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `97.50` | Exact executable gate evidence |
+| 1 | Real AuraOS refactor | visible/property `32/32`, adversarial `35/35`, regression `24/24`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50` | Exact-head branch evidence; frozen assisted planning artifacts |
+| 2 | Context localization | `131,655 → 14,431`; **89.04% lower** total proxy; quality `+0.0057` | Deterministic fixture, not billing |
+| 2 | Selective Council V3 | `18 → 12` calls; `158,545 → 106,494`; **32.83% lower**, same accepted patch and quality | Controlled comparative fixture |
+| 2 | State Ledger | `234` vs `6,140`; **96.19% less context**, preservation `1.0000`, drift `0.0000` | Synthetic continuity fixture |
+| 3 | Shared grounding evidence | `2,004 → 938`; `1,066` avoided; **53.1936% projected savings** | `ESTIMATED`; proposed PR #138 evidence, not provider billing |
+| 4 | Emergent scan | `708` Python files, `10,815` nodes, `20,764` edges, `15` probes, `0` failures | Discovery evidence only |
+| 4 | Grounded projections | `7` probes, `0` failures; all `NEEDS_GROUNDING` | Projection, not implementation proof |
 
-Token proxies are comparative unless provider usage is explicitly recorded. Never present them as invoices.
+Token proxies are comparative unless provider usage is explicitly recorded. Never present them as invoices. Tier 3 and Tier 4 evidence must not be promoted into Tier 1 claims without governed execution, comparable quality evidence, and verifier review.
 
 ## 11. Testing
 
@@ -258,14 +258,6 @@ Regenerate CODEMAP from the current tree and verify the exact file entry.
 - External workers are tools, not authorities.
 - Semantic similarity and VSA are not patch authority.
 - Observatory output is review evidence, not permission.
-- Emergent findings are hypotheses until grounded and verified.
-- Crucible proposals never self-promote.
+- Crucible output is a proposal, not active policy.
+- Generated topology is advisory unless grounded in current exact source and tests.
 - Unknown cost remains unknown.
-- Consequential actions require explicit human or community authority.
-- Restricted cultural and personal data must remain inside their consent and governance boundaries.
-
-## 14. Documentation maintenance
-
-Update `README.md`, `USER_GUIDE.md`, and `.aura/ARCHITECTURE.md` together when changing cross-cutting architecture. Regenerate `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, and `topology_map.json` after source or architecture changes.
-
-Historical documents remain useful as provenance, but current exact source, tests, schemas, and verifier evidence outrank old summaries.
