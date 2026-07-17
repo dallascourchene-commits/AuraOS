@@ -1,19 +1,21 @@
 """Run SCO Construction changes through Aura's native refactor architecture.
 
-The current branch diff is treated as four bounded Act Capsules: coordination,
-synthetic fixtures, deterministic benchmarking, and governed learning. Selective
-Council V3 compares frozen plans; Work Splitter, CODEMAP grounding, Shadow,
-Liquid Planning leases, Surgeon staging, Verifier, Judge, rollback, hot-swap,
-and the append-only Architect ledger remain the canonical execution owners.
+The branch diff is treated as four bounded Act Capsules: coordination, synthetic
+fixtures, deterministic benchmarking, and governed learning. Selective Council
+V3 compares frozen plans; Work Splitter, CODEMAP grounding, Shadow, Liquid
+Planning leases, Surgeon staging, Verifier, Judge, rollback, hot-swap, and the
+append-only Architect ledger remain the canonical execution owners.
+
 Nothing in this module grants production, VSA, merge, deployment, physical-work,
-payment, access, professional, legal, or regulatory authority.
+payment, access, professional, legal, regulatory, or Crucible promotion authority.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import re
 import subprocess
 import sys
 import time
@@ -25,10 +27,11 @@ from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_work_splitter import split_by_file, work_split_to_act_capsules
 
 CONSTRUCTION_ARCHITECT_REFACTOR_VERSION = (
-    "AURA_SCO_CONSTRUCTION_ARCHITECT_REFACTOR_V2"
+    "AURA_SCO_CONSTRUCTION_ARCHITECT_REFACTOR_V3"
 )
 NOT_MEASURED = "NOT_MEASURED"
 SELECTED_PLAN_ID = "SELECTIVE_COUNCIL_V3_SURGEON"
+_COMMIT_SHA = re.compile(r"^[0-9a-f]{7,64}$")
 
 SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
     {
@@ -40,10 +43,13 @@ SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
         "target_file": "aura_construction_adapter.py",
         "target_symbol": "evaluate_construction_candidates",
         "acceptance": (
-            "Hard blockers precede ranking, authority remains human-governed, and "
-            "tests/test_aura_construction_adapter.py passes."
+            "Hard blockers precede ranking, serialized inputs fail closed, option roles "
+            "remain stable, and both adapter test suites pass."
         ),
-        "tests": ("tests/test_aura_construction_adapter.py",),
+        "tests": (
+            "tests/test_aura_construction_adapter.py",
+            "tests/test_aura_construction_adapter_hardening.py",
+        ),
         "allowed_scope": "single Construction adapter module",
         "expected_output": "UNIFIED_DIFF",
         "size": "M",
@@ -85,14 +91,14 @@ SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
     {
         "task_id": "SCO-E10-LEARNING",
         "objective": (
-            "Project only distinct verified synthetic executions into the existing "
+            "Project only truthful synthetic permutation executions into the existing "
             "Experience Ledger and proposal-only Crucible owners."
         ),
         "target_file": "aura_construction_learning.py",
         "target_symbol": "run_construction_phase3_learning",
         "acceptance": (
-            "No cloned episode counts as independent evidence, Crucible remains "
-            "proposal-only, and tests/test_aura_construction_learning.py passes."
+            "Single-scenario evidence cannot satisfy generalization thresholds, Crucible "
+            "remains proposal-only, and tests/test_aura_construction_learning.py passes."
         ),
         "tests": ("tests/test_aura_construction_learning.py",),
         "allowed_scope": "single governed learning projection module",
@@ -168,7 +174,7 @@ def _base_plan(
 
 
 def build_refactor_plan_candidates() -> list[dict[str, Any]]:
-    """Build frozen, locally measured alternatives for Selective Council V3."""
+    """Build frozen, zero-model alternatives for Selective Council V3."""
     source_tasks = [_task_without_tests(item) for item in SOURCE_SHARDS]
     selective_tasks = [
         {
@@ -232,7 +238,7 @@ def build_refactor_plan_candidates() -> list[dict[str, Any]]:
                 coverage_tags=list(REQUIRED_CAPABILITIES[:-1]),
                 architecture_reuse=True,
                 acceptance=[
-                    "All four focused suites pass.",
+                    "All focused suites pass.",
                     "No source shard crosses its file boundary.",
                 ],
                 rollback=["Discard any failed shard by phase hash."],
@@ -295,7 +301,62 @@ def build_refactor_plan_candidates() -> list[dict[str, Any]]:
     return candidates
 
 
+def _normalize_base_sha(value: Any) -> str:
+    if type(value) is not str or not _COMMIT_SHA.fullmatch(value.strip().lower()):
+        raise ValueError("base_sha must be a hexadecimal commit SHA")
+    return value.strip().lower()
+
+
+def _resolve_output(root: Path, output_dir: str | Path) -> tuple[Path, PurePosixPath]:
+    output = Path(output_dir)
+    if output.is_absolute():
+        raise ValueError("output_dir must be repository-relative")
+    raw = PurePosixPath(str(output).replace("\\", "/"))
+    if not raw.parts or any(part in {"", ".", ".."} for part in raw.parts):
+        raise ValueError("output_dir must be a safe repository-relative path")
+    resolved = (root / Path(*raw.parts)).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as exc:
+        raise ValueError("output_dir escapes the repository root") from exc
+    return resolved, raw
+
+
+def _verify_git_boundary(repo_root: Path, base_sha: str) -> str:
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    ).stdout.strip()
+    exists = subprocess.run(
+        ["git", "cat-file", "-e", f"{base_sha}^{{commit}}"],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    if exists.returncode != 0:
+        raise ValueError("base_sha is not an available commit")
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", base_sha, head],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
+    )
+    if ancestry.returncode != 0:
+        raise ValueError("base_sha is not an ancestor of HEAD")
+    return head
+
+
 def _git_diff_for_file(repo_root: Path, base_sha: str, path: str) -> str:
+    if path not in {str(item["target_file"]) for item in SOURCE_SHARDS}:
+        raise ValueError(f"unleased Architect shard path: {path}")
     completed = subprocess.run(
         ["git", "diff", "--binary", base_sha, "HEAD", "--", path],
         cwd=repo_root,
@@ -312,6 +373,20 @@ def _git_diff_for_file(repo_root: Path, base_sha: str, path: str) -> str:
 
 
 def _pytest_runner(repo_root: Path, test_name: str) -> dict[str, Any]:
+    allowed = {
+        test
+        for shard in SOURCE_SHARDS
+        for test in tuple(shard.get("tests") or ())
+    }
+    if test_name not in allowed:
+        return {
+            "ok": False,
+            "returncode": 2,
+            "test": test_name,
+            "elapsed_ms": 0.0,
+            "stdout_tail": "",
+            "stderr_tail": "test target is outside the Construction Act Capsule allowlist",
+        }
     started = time.perf_counter()
     completed = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", test_name],
@@ -339,6 +414,8 @@ def _codemap_metrics(repo_root: Path) -> dict[str, Any]:
             "repository_text_tokens_est": NOT_MEASURED,
         }
     payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise RuntimeError("CODEMAP root must be an object")
     summary = dict(payload.get("summary") or {})
     coverage = dict(payload.get("coverage") or {})
     return {
@@ -349,6 +426,15 @@ def _codemap_metrics(repo_root: Path) -> dict[str, Any]:
     }
 
 
+def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
+        json.dumps(value, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(path)
+
+
 def run_construction_architect_refactor(
     *,
     repo_root: str | Path,
@@ -357,12 +443,9 @@ def run_construction_architect_refactor(
 ) -> dict[str, Any]:
     """Verify the exact branch diff through Aura's governed refactor loop."""
     root = Path(repo_root).resolve()
-    if type(base_sha) is not str or not base_sha.strip():
-        raise ValueError("base_sha is required")
-    output = Path(output_dir)
-    if output.is_absolute():
-        raise ValueError("output_dir must be repository-relative")
-    output_path = root / output
+    normalized_base = _normalize_base_sha(base_sha)
+    output_path, output_relative = _resolve_output(root, output_dir)
+    head_sha = _verify_git_boundary(root, normalized_base)
     output_path.mkdir(parents=True, exist_ok=True)
 
     control = normalize_control_profile(
@@ -375,7 +458,7 @@ def run_construction_architect_refactor(
             "surgeon_max_turns": 16,
             "surgeon_max_local_repairs": 2,
             "record_outputs": True,
-            "output_root": output.as_posix(),
+            "output_root": output_relative.as_posix(),
         },
         benchmark=True,
     )
@@ -385,7 +468,12 @@ def run_construction_architect_refactor(
         "architecture, preserving authority and evidence boundaries, and recording "
         "executable refactor and learning benchmarks."
     )
-    run_id = f"SCO-P3-{hashlib.blake2b(base_sha.encode(), digest_size=8).hexdigest()}"
+    run_id = (
+        "SCO-P3-"
+        + hashlib.blake2b(
+            f"{normalized_base}:{head_sha}".encode("utf-8"), digest_size=8
+        ).hexdigest()
+    )
     started = time.perf_counter()
     comparison = AuraArenaArchitectConnector(root, bridge=object()).compare_plans(
         objective=objective,
@@ -416,11 +504,13 @@ def run_construction_architect_refactor(
     for task in selected_plan["act_tasks"]:
         task_id = str(task["task_id"])
         target_file = str(task["target_file"])
+        if task_id not in tests_by_task:
+            raise RuntimeError(f"selected plan contains unknown task: {task_id}")
         patch_submissions.append(
             {
                 "task_id": task_id,
                 "owner": "aura_surgeon",
-                "diff": _git_diff_for_file(root, base_sha, target_file),
+                "diff": _git_diff_for_file(root, normalized_base, target_file),
                 "affected_files": [target_file],
                 "affected_symbols": [str(task["target_symbol"])],
                 "tests": tests_by_task[task_id],
@@ -473,14 +563,8 @@ def run_construction_architect_refactor(
         "ok": True,
         "version": CONSTRUCTION_ARCHITECT_REFACTOR_VERSION,
         "run_id": run_id,
-        "base_sha": base_sha,
-        "head_sha": subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=root,
-            text=True,
-            capture_output=True,
-            check=True,
-        ).stdout.strip(),
+        "base_sha": normalized_base,
+        "head_sha": head_sha,
         "objective": objective,
         "control_profile": control.to_dict(),
         "work_splitter": {
@@ -549,10 +633,7 @@ def run_construction_architect_refactor(
         },
     }
     report["report_digest"] = _canonical_digest(report)
-    (output_path / "architect_refactor_report.json").write_text(
-        json.dumps(report, sort_keys=True, indent=2),
-        encoding="utf-8",
-    )
+    _atomic_json(output_path / "architect_refactor_report.json", report)
     return report
 
 
