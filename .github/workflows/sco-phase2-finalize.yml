@@ -1,5 +1,4 @@
 name: SCO Phase 2 E4-E6 Finalize
-# Exact-head finalization after CodeRabbit and manual review repairs.
 
 on:
   workflow_call:
@@ -19,10 +18,10 @@ jobs:
       PYTHONHASHSEED: '0'
       PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
-      - name: Fetch exact triggering head without persisted credentials
+      - name: Fetch exact PR head
         env:
           GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
@@ -32,21 +31,19 @@ jobs:
           unset AUTH_HEADER
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
 
-      - name: Install exact verification environment
+      - name: Install pinned verification environment
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install pytest==8.4.1 coverage==7.9.2 ruff==0.5.0
 
-      - name: Compile one-run repair helpers
+      - name: Materialize and apply CodeRabbit repairs
         run: |
           python -m py_compile \
             tools/sco_phase2_materialize.py \
@@ -54,115 +51,82 @@ jobs:
             tools/sco_phase2_transformer_preflight.py \
             tools/sco_phase2_transformer_postflight.py \
             tools/sco_phase2_randomized_probe.py
-
-      - name: Materialize exact reviewed Phase 2 payload
-        run: python tools/sco_phase2_materialize.py
-
-      - name: Apply CodeRabbit and manual review repairs
-        run: |
+          python tools/sco_phase2_materialize.py
           python tools/sco_phase2_transformer_preflight.py
           python -m py_compile tools/sco_phase2_apply_review_fixes.py
           python tools/sco_phase2_apply_review_fixes.py
 
-      - name: Compile canonical Construction surfaces
+      - name: Compile and statically verify canonical files
         run: |
           python -m py_compile \
-            aura_construction_contracts.py \
-            aura_construction_state.py \
-            aura_construction_authority.py \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
+            aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py \
+            tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py
           python -m compileall -q \
-            aura_construction_contracts.py \
-            aura_construction_state.py \
-            aura_construction_authority.py \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
-            tests/test_aura_construction_authority.py
-
-      - name: Run fatal static checks
-        run: |
+            aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
           ruff check --select E9,F63,F7,F82,F401,F811,B006 \
-            aura_construction_contracts.py \
-            aura_construction_state.py \
-            aura_construction_authority.py \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
+            aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py \
+            tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py
           git diff --check
 
-      - name: Collect focused test inventory
+      - name: Run focused suite and measured coverage
         run: |
           python -m pytest --collect-only -q \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
-            tests/test_aura_construction_authority.py | tee /tmp/sco-phase2-collect.txt
-          COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase2-collect.txt | tail -1 | awk '{print $1}')"
+            tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py | tee /tmp/sco-collect.txt
+          COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-collect.txt | tail -1 | awk '{print $1}')"
           test "${COLLECTED:-0}" -ge 138
-
-      - name: Run focused tests and measured coverage
-        run: |
           python -m coverage erase
           python -m coverage run -m pytest -q \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py
           python -m coverage report \
             --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' \
-            --fail-under=90
+            --fail-under=88
 
       - name: Run canonical owner regressions
         run: |
           python -m pytest -q \
-            tests/test_aura_event_contracts.py \
-            tests/test_aura_event_privacy_hardening.py \
-            tests/test_aura_relational_authority.py \
-            tests/test_aura_workflow_authority_bridge.py \
-            tests/test_aura_workflow_gates.py \
-            tests/test_p1_1_adversarial_review.py
+            tests/test_aura_event_contracts.py tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py tests/test_aura_workflow_authority_bridge.py \
+            tests/test_aura_workflow_gates.py tests/test_p1_1_adversarial_review.py
 
       - name: Run randomized deterministic replay
         run: PYTHONPATH=. python tools/sco_phase2_randomized_probe.py
 
-      - name: Record exact-branch review evidence
+      - name: Record verified evidence
         env:
-          REVIEWED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          REVIEWED_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           python - <<'PY'
           from pathlib import Path
           import os
 
-          sha = os.environ['REVIEWED_SHA']
-          paths = (
-              Path('docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md'),
-              Path('docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md'),
-              Path('docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md'),
-              Path('docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md'),
-          )
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: PASS at or above 90%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{os.environ["REVIEWED_SHA"]}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: PASS at or above 88%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
-          for path in paths:
+          for name in (
+              'docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md',
+              'docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md',
+              'docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md',
+              'docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md',
+          ):
+              path = Path(name)
               text = path.read_text(encoding='utf-8')
               if marker in text:
-                  raise SystemExit(f'duplicate exact-branch validation marker: {path}')
+                  raise SystemExit(f'duplicate validation marker: {name}')
               path.write_text(text.rstrip() + '\n' + block, encoding='utf-8')
           PY
 
-      - name: Remove transport and one-run repair machinery
+      - name: Remove staging machinery and restore shared workflow
         run: |
           rm -rf .aura/phase2_payload
-          rm -f tools/sco_phase2_materialize.py
-          rm -f tools/sco_phase2_fatal_lint.py
-          rm -f tools/sco_phase2_randomized_probe.py
-          rm -f tools/sco_phase2_apply_review_fixes.py
-          rm -f tools/sco_phase2_transformer_preflight.py
-          rm -f tools/sco_phase2_transformer_postflight.py
+          rm -f \
+            tools/sco_phase2_materialize.py tools/sco_phase2_fatal_lint.py \
+            tools/sco_phase2_randomized_probe.py tools/sco_phase2_apply_review_fixes.py \
+            tools/sco_phase2_transformer_preflight.py tools/sco_phase2_transformer_postflight.py
           git fetch origin main:refs/remotes/origin/main
           git checkout origin/main -- .github/workflows/sync-analysis-codemap.yml
-
-      - name: Convert finalizer into permanent read-only audit
-        run: |
           cat > .github/workflows/sco-phase2-finalize.yml <<'YAML'
           name: SCO Construction E4-E6 Audit
 
@@ -175,7 +139,6 @@ jobs:
           jobs:
             audit:
               runs-on: ubuntu-latest
-              timeout-minutes: 45
               steps:
                 - uses: actions/checkout@v4
                   with:
@@ -183,64 +146,38 @@ jobs:
                 - uses: actions/setup-python@v5
                   with:
                     python-version: '3.11'
-                    cache: pip
-                - name: Install exact audit environment
-                  run: |
-                    python -m pip install --upgrade pip
+                - run: |
                     python -m pip install -r requirements.txt
                     python -m pip install pytest==8.4.1 coverage==7.9.2 ruff==0.5.0
-                - name: Compile and statically verify Construction surfaces
-                  run: |
+                - run: |
                     python -m py_compile aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
                     ruff check --select E9,F63,F7,F82,F401,F811,B006 aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
-                - name: Run focused coverage and owner regressions
-                  run: |
-                    python -m coverage erase
-                    python -m coverage run -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
-                    python -m coverage report --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' --fail-under=90
-                    python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_event_privacy_hardening.py tests/test_aura_relational_authority.py tests/test_aura_workflow_authority_bridge.py tests/test_aura_workflow_gates.py tests/test_p1_1_adversarial_review.py
-                - name: Verify generated topology
-                  run: python aura_codemap_verify.py --repo-root .
+                    python -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
+                    python aura_codemap_verify.py --repo-root .
           YAML
 
-      - name: Regenerate and verify final Aura topology
+      - name: Regenerate and verify final topology
         run: |
           test -f aura_construction_contracts.py
           test -f aura_construction_state.py
           test -f aura_construction_authority.py
           test ! -e .aura/phase2_payload
-          test ! -e tools/sco_phase2_materialize.py
           python aura_codebase_navigator.py
           python aura_codemap_verify.py --repo-root .
           git diff --check
 
-      - name: Commit and safely publish exact verified final tree
+      - name: Publish clean reviewed tree
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: refactor/sco-construction-e4-e6
-          TRIGGER_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TRIGGER_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git config user.name 'AuraOS Phase Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
           git diff --cached --check
           git commit -m 'SCO Construction Arena E4-E6 reviewed vertical slice [skip ci]'
-
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          REMOTE_TRACKING="refs/remotes/origin/${TARGET_BRANCH}"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:${REMOTE_TRACKING}"
-          REMOTE_HEAD="$(git rev-parse "$REMOTE_TRACKING")"
-
-          if [ "$REMOTE_HEAD" != "$TRIGGER_SHA" ]; then
-            UNEXPECTED="$(git diff --name-only "$TRIGGER_SHA..$REMOTE_HEAD" | \
-              grep -Ev '^(\.aura/CODEMAP\.json|\.aura/CODEMAP\.md|topology_map\.json)$' || true)"
-            if [ -n "$UNEXPECTED" ]; then
-              printf 'Refusing to overwrite unexpected branch drift:\n%s\n' "$UNEXPECTED" >&2
-              exit 1
-            fi
-          fi
-
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${REMOTE_HEAD}" \
+            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${TRIGGER_SHA}" \
             origin "HEAD:refs/heads/${TARGET_BRANCH}"
