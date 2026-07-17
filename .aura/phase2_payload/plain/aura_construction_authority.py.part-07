@@ -1,0 +1,60 @@
+        evidence_ready = all(item.ready for item in readiness_reports)
+        reasons: set[str] = set()
+        for report in readiness_reports:
+            reasons.update(f"claim:{report.claim_id}:{item}" for item in report.blockers)
+        reasons.update(str(item) for item in governance_decision.authority_missing_reasons)
+        if not governance_decision.authorized:
+            reasons.add("governance_not_authorized")
+        ready = governance_decision.authorized and evidence_ready and not reasons
+        values = {
+            "project_id": request.scope.project_id,
+            "scope_key": request.scope.scope_key,
+            "request_id": request.action_id,
+            "request_digest": request.action_digest,
+            "required_claim_ids": request.required_claim_ids,
+            "state_digest": state.state_digest,
+            "governance_decision_id": governance_decision.decision_id,
+            "governance_decision_digest": governance_decision.decision_digest,
+            "governance_authorized": bool(governance_decision.authorized),
+            "evidence_ready": evidence_ready,
+            "digitally_ready": ready,
+            "readiness_reports": readiness_reports,
+            "missing_reasons": tuple(sorted(reasons)),
+            "evaluated_at": current,
+            "expires_at": _timestamp(
+                min(request.expires_at, governance_decision.expires_at)
+                if governance_decision.authorized
+                else request.expires_at,
+                "expires_at",
+            ),
+            "version": CONSTRUCTION_AUTHORITY_VERSION,
+            "proposal_only": PROPOSAL_ONLY,
+            "human_release_required": True,
+            "physical_work_authorized": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = cls._payload_from_values(values)
+        return cls(
+            result_id=stable_id("construction-authority-result", payload),
+            result_digest=stable_digest(payload),
+            **values,
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionAuthorityResult":
+        data = dict(value)
+        return cls(
+            result_id=data.get("result_id"),
+            result_digest=data.get("result_digest"),
+            project_id=data.get("project_id"),
+            scope_key=data.get("scope_key"),
+            request_id=data.get("request_id"),
+            request_digest=data.get("request_digest"),
+            required_claim_ids=tuple(data.get("required_claim_ids", ())),
+            state_digest=data.get("state_digest"),
+            governance_decision_id=data.get("governance_decision_id"),
+            governance_decision_digest=data.get("governance_decision_digest"),
+            governance_authorized=data.get("governance_authorized"),
+            evidence_ready=data.get("evidence_ready"),
+            digitally_ready=data.get("digitally_ready"),
