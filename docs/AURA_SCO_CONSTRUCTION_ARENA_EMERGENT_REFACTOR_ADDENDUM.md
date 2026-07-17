@@ -143,9 +143,9 @@ CodeRabbit was unavailable within the phase window, so an equivalent manual revi
 
 ```yaml
 py_compile: PASS
-focused_adversarial_tests: 30_passed
+focused_adversarial_tests: 33_passed
 automated_review_findings_repaired: 5
-additional_manual_findings_repaired: 14
+additional_manual_findings_repaired: 16
 ```
 
 ## Generated topology policy
