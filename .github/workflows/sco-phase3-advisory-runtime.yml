@@ -27,6 +27,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 128
           persist-credentials: false
+          show-progress: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /*
