@@ -8,6 +8,7 @@ physical authority, or adding a second Construction truth store.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import re
 from typing import Any, Iterable
 
 from aura_construction_adapter import (
@@ -32,6 +33,7 @@ _ALLOWED_HANDOFF_ARENAS = frozenset(
         "construction_arena",
     }
 )
+_CHECKPOINT_ID = re.compile(r"^CHK-[0-9a-f]{40}$")
 
 
 def _text(value: Any, name: str, *, allow_empty: bool = False) -> str:
@@ -41,6 +43,13 @@ def _text(value: Any, name: str, *, allow_empty: bool = False) -> str:
     if not normalized and not allow_empty:
         raise ValueError(f"{name} must not be empty")
     return normalized
+
+
+def _checkpoint_id(value: Any) -> str:
+    text = _text(value, "checkpoint_id", allow_empty=True)
+    if text and not _CHECKPOINT_ID.fullmatch(text):
+        raise ValueError("checkpoint_id must be CHK- followed by 40 lowercase hex characters")
+    return text
 
 
 def _strings(values: Iterable[Any], name: str) -> tuple[str, ...]:
@@ -169,12 +178,14 @@ class ConstructionHumanAgentProfile:
         for field_name in (
             "recommended_candidate_id",
             "next_authority_route",
-            "checkpoint_id",
         ):
             if getattr(self, field_name) != _text(
                 getattr(self, field_name), field_name, allow_empty=True
             ):
                 raise ValueError(f"{field_name} must be canonical text")
+        _checkpoint_id(self.checkpoint_id)
+        if type(self.synthetic) is not bool:
+            raise ValueError("synthetic must be boolean")
         if type(self.evaluated_at) is not float:
             raise ValueError("evaluated_at must be a canonical float")
         if type(self.candidates) is not tuple or not all(
@@ -231,7 +242,7 @@ class ConstructionHumanAgentProfile:
         value["option_candidate_ids"] = list(self.option_candidate_ids)
         value["candidates"] = [item.to_dict() for item in self.candidates]
         value["allowed_human_actions"] = [
-            "inspect proposal evidence references",
+            "inspect the bounded proposal record",
             "request missing or fresher evidence",
             "prepare a review-gated checkpoint",
             "prepare a payload-free cross-arena handoff",
@@ -312,6 +323,8 @@ class ConstructionHumanAgentProfile:
             "human_review_required": True,
             "physical_work_authorized": False,
             "payment_released": False,
+            "access_controlled": False,
+            "professional_certification_authorized": False,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }
@@ -339,6 +352,8 @@ def build_construction_human_agent_profile(
         type(item) is ConstructionCoordinationCandidate for item in candidate_items
     ):
         raise ValueError("candidates must contain exact Construction candidates")
+    for item in candidate_items:
+        item.__post_init__()
     candidate_by_id = {item.candidate_id: item for item in candidate_items}
     if len(candidate_by_id) != len(candidate_items):
         raise ValueError("candidate IDs must be unique")
@@ -386,7 +401,7 @@ def build_construction_human_agent_profile(
         "option_candidate_ids": tuple(evaluation.option_candidate_ids),
         "next_authority_route": evaluation.next_authority_route,
         "candidates": tuple(views),
-        "checkpoint_id": _text(checkpoint_id, "checkpoint_id", allow_empty=True),
+        "checkpoint_id": _checkpoint_id(checkpoint_id),
         "version": CONSTRUCTION_HUMAN_AGENT_VERSION,
         "synthetic": bool(synthetic),
         "read_only": True,
@@ -512,6 +527,8 @@ class ConstructionHumanAgentProfileService:
             "human_review_required": True,
             "physical_work_authorized": False,
             "payment_released": False,
+            "access_controlled": False,
+            "professional_certification_authorized": False,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
         }

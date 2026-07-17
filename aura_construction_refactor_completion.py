@@ -212,6 +212,25 @@ def validate_construction_refactor_completion(
     release_status = (
         "READY_FOR_PINNED_MERGE" if runtime_complete else "IMPLEMENTATION_INCOMPLETE"
     )
+    node_status = {node.node_id: node.status for node in nodes}
+    human_surface_failures = [
+        item
+        for item in marker_failures
+        if any(
+            owner in item
+            for owner in (
+                "aura_human_agent_arena_server.py",
+                "aura_human_agent_arena/index.html",
+                "aura_human_agent_arena/construction.js",
+            )
+        )
+    ]
+    observatory_failures = [
+        item for item in human_surface_failures if "observatory" in item
+    ]
+    construction_human_agent_integrated = (
+        node_status.get("E9") == "INTEGRATED" and not human_surface_failures
+    )
     payload = {
         "version": CONSTRUCTION_REFACTOR_COMPLETION_VERSION,
         "runtime_nodes": [node.to_dict() for node in nodes],
@@ -220,12 +239,9 @@ def validate_construction_refactor_completion(
         "unresolved": unresolved,
         "policy_deferrals": list(_POLICY_DEFERRALS),
         "policy_deferrals_are_incomplete_work": False,
-        "construction_human_agent_integrated": any(
-            node.node_id == "E9" and node.status == "INTEGRATED" for node in nodes
-        ),
-        "observatory_read_only": not any(
-            item.startswith("missing_marker:aura_human_agent_arena")
-            for item in marker_failures
+        "construction_human_agent_integrated": construction_human_agent_integrated,
+        "observatory_read_only": (
+            construction_human_agent_integrated and not observatory_failures
         ),
         "handoff_validation_enforced": any(
             node.node_id == "E13" and node.status == "INTEGRATED" for node in nodes

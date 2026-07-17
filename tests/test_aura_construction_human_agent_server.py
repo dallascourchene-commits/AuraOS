@@ -137,3 +137,56 @@ def test_main_state_and_browser_surface_advertise_bounded_construction_profile(t
     assert 'src="construction.js"' in index
     assert "/api/human-agent/construction/observatory" in script
     assert "authorize physical work" not in script
+
+def test_checkpoint_endpoint_rejects_head_that_disagrees_with_local_git(tmp_path: Path):
+    import subprocess
+
+    state = HumanAgentArenaServerState(tmp_path, demo=True)
+    try:
+        subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+        subprocess.run(
+            ["git", "config", "user.email", "tests@example.invalid"],
+            cwd=tmp_path,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "config", "user.name", "AuraOS Tests"],
+            cwd=tmp_path,
+            check=True,
+        )
+        marker = tmp_path / "tracked.txt"
+        marker.write_text("exact head\n", encoding="utf-8")
+        subprocess.run(["git", "add", "tracked.txt"], cwd=tmp_path, check=True)
+        subprocess.run(
+            ["git", "commit", "-m", "seed exact head"],
+            cwd=tmp_path,
+            check=True,
+            capture_output=True,
+        )
+        actual_head = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=tmp_path,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+
+        status, mismatch = dispatch_api_request(
+            state,
+            "POST",
+            "/api/human-agent/construction/checkpoint",
+            {"repo_head": "b" * 40},
+        )
+        assert status == 409
+        assert mismatch["error"] == "repo_head does not match current repository HEAD"
+
+        status, stored = dispatch_api_request(
+            state,
+            "POST",
+            "/api/human-agent/construction/checkpoint",
+            {"repo_head": actual_head},
+        )
+        assert status == 200
+        assert stored["checkpoint"]["repo_head"] == actual_head
+    finally:
+        state.close()

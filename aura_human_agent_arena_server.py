@@ -23,6 +23,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import mimetypes
 from pathlib import Path
+import subprocess
 import time
 from typing import Any, Iterable
 from urllib.parse import parse_qs, urlparse
@@ -70,6 +71,25 @@ class HumanAgentArenaServerState:
     def close(self) -> None:
         self.workflow.close()
         self.coding_workbench.close()
+
+
+def _current_repo_head(repo_root: Path) -> str:
+    """Return the exact local Git HEAD when repository metadata is available."""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (FileNotFoundError, OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return ""
+    head = result.stdout.strip()
+    if not 7 <= len(head) <= 64 or any(ch not in "0123456789abcdef" for ch in head):
+        return ""
+    return head
 
 
 def _error(message: str, code: int = 400) -> tuple[int, dict[str, Any]]:
@@ -571,6 +591,9 @@ def dispatch_api_request(
         repo_head = str(body.get("repo_head") or "").strip()
         if not repo_head:
             return _error("repo_head is required")
+        current_repo_head = _current_repo_head(state.repo_root)
+        if current_repo_head and repo_head != current_repo_head:
+            return _error("repo_head does not match current repository HEAD", 409)
         try:
             result = state.persistence.checkpoint_construction(
                 construction_state,

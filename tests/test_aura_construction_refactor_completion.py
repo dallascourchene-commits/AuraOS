@@ -88,3 +88,22 @@ def test_repository_completion_audit_is_ready_after_final_wiring():
     assert result["observatory_read_only"] is True
     assert result["handoff_validation_enforced"] is True
     assert result["e14_release_status"] == "READY_FOR_PINNED_MERGE"
+
+def test_observatory_status_requires_e9_owner_not_only_surface_markers(tmp_path: Path, monkeypatch):
+    (tmp_path / "owner.py").write_text("def other():\n    return True\n", encoding="utf-8")
+    (tmp_path / "surface.txt").write_text("observatory", encoding="utf-8")
+    monkeypatch.setattr(
+        completion,
+        "_REQUIRED_SYMBOLS",
+        {"E9": {"owner.py": ("required_profile",)}},
+    )
+    monkeypatch.setattr(
+        completion,
+        "_REQUIRED_MARKERS",
+        {"surface.txt": ("observatory",)},
+    )
+
+    result = completion.validate_construction_refactor_completion(tmp_path)
+
+    assert result["construction_human_agent_integrated"] is False
+    assert result["observatory_read_only"] is False

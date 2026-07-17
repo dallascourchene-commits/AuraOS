@@ -175,3 +175,26 @@ def test_non_demo_service_fails_closed_until_exact_state_is_loaded():
         service.get_profile()
     with pytest.raises(KeyError, match="profile is unavailable"):
         service.get_observatory_projection()
+
+def test_profile_revalidates_source_candidate_identity_and_checkpoint_format():
+    fixture, evaluation = _profile_inputs()
+    tampered = fixture.candidates[0]
+    object.__setattr__(tampered, "summary", "tampered after identity creation")
+
+    with pytest.raises(ValueError, match="candidate digest"):
+        build_construction_human_agent_profile(
+            fixture.state,
+            evaluation,
+            candidates=fixture.candidates,
+            synthetic=True,
+        )
+
+    fixture, evaluation = _profile_inputs()
+    with pytest.raises(ValueError, match="checkpoint_id must be CHK-"):
+        build_construction_human_agent_profile(
+            fixture.state,
+            evaluation,
+            candidates=fixture.candidates,
+            checkpoint_id="CHK-not-an-exact-checkpoint",
+            synthetic=True,
+        )
