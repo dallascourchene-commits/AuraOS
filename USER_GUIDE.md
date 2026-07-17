@@ -2,7 +2,7 @@
 
 > Operator guide for the Arena-based AuraOS architecture
 
-**Documentation audit:** through merged PR #133 and the canonical Human Agent, Observatory, and Crucible documentation sync.  
+**Documentation audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148 and the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon documentation sync.  
 **CODEMAP rule:** regenerate with `python3 aura_codebase_navigator.py` after architecture or source changes; require non-zero indexes and `compiled_deep_topology`.
 
 AuraOS is local-first. Many routing, grounding, topology, storage, verification, and governance functions run without a hosted model. External models are optional workers operating through controlled egress and Arena boundaries.
@@ -193,6 +193,47 @@ interface/dependency/invariant failure → Council replan
 ```
 
 Scope and tests are universal Council lanes. Other critic lanes are admitted only when plan structure and risk justify them.
+
+## SCO Construction advisory runtime
+
+Run the deterministic fixture benchmark:
+
+```bash
+python3 aura_construction_benchmark.py --iterations 250 --seed 1337 --json
+```
+
+Run the governed synthetic learning projection:
+
+```bash
+python3 aura_construction_learning.py \
+  --repo-root . \
+  --output-dir Aura_Staging/sco_construction_phase3_learning \
+  --experience-count 15 \
+  --iterations-per-experience 25 \
+  --seed-base 1337
+```
+
+Run the native Council–Surgeon verification harness:
+
+```bash
+python3 aura_construction_architect_refactor.py \
+  --base-sha 7edd80484629378af0658bfca0d7d4e351361831 \
+  --output-dir Aura_Staging/sco_construction_phase3_architect
+```
+
+Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
+
+- exact Python 3.11 compile, fatal Ruff selection, and diff checks passed;
+- `81/81` focused Phase 3 tests passed in `22.45s`;
+- focused adapter/fixture/benchmark coverage was `88%`, with learning coverage at `82%`;
+- `241/241` Construction and canonical-owner regressions passed in `10.53s`;
+- the zero-model benchmark completed `250` candidate-order permutations;
+- native Selective Council V3 selected the bounded Surgeon plan at score `0.99`;
+- Architect verification recorded `16` checks, `0` failures, four exact-file leases, and Judge `promote_hotswap`;
+- the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
+- Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
+
+Interpret these as fictional deterministic and synthetic pipeline gates only. A `CRYSTALLIZATION_PROPOSED` result requires verifier and human review and does not change active grammar. All real physical-work, payment, access, safety, engineering, legal, and regulatory decisions remain with authorized humans and institutions.
 
 ## 10. Cost and benchmark interpretation
 

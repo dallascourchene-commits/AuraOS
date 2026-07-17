@@ -1,145 +1,77 @@
-# SCO Construction Arena — Phase 3 E7–E8 Execution Plan
+# SCO Construction Arena — Phase 3 E7–E11 Verification Record
 
 ```yaml
-document_status: EXECUTING_BOUNDED_VERTICAL_SLICE
-document_version: 1.1.2
+document_status: VERIFIED_PENDING_PINNED_FINAL_CI
+document_version: 2.0.0
 date: 2026-07-17
 baseline_main: 7edd80484629378af0658bfca0d7d4e351361831
+verified_source_head: 15b3c26a3228a95174a845c75a178cf772cf5e81
 branch: refactor/sco-construction-e7-e8
-finalizer_trigger: pull_request_synchronize
+pull_request: 148
 phase_scope:
   - E7_ADVISORY_LANES
   - E8_SYNTHETIC_SHADOW_ADAPTER
+  - E10_EXPERIENCE_CRUCIBLE_PROJECTION
   - E11_ZERO_MODEL_BENCHMARK_ARM
-coderabbit_policy: TRIGGER_ONCE_AT_FINAL_REVIEW_GATE
-coderabbit_triggered: false
+coderabbit_invocations: 1
+coderabbit_result: REVIEW_FINISHED_WITH_NO_SUBMITTED_REVIEW_OR_INLINE_THREADS
 production_connectors: FORBIDDEN_IN_THIS_PHASE
 private_project_data: FORBIDDEN_IN_THIS_PHASE
 physical_work_authority: false
 payment_release_authority: false
 access_control_authority: false
+professional_certification_authority: false
 ```
 
-## Council determination
-
-The current main branch already has canonical owners for immutable Construction claims and evidence, append-only state replay, supersession, conflict preservation, evidence readiness, relational governance, and chained receipt continuity. This phase does not redesign those owners.
-
-The exact missing wire is a narrow Construction `BaseArenaAdapter` that composes:
+## Final architecture
 
 ```text
 ConstructionProjectState
-  -> deterministic claim readiness
-  -> hard candidate filtering
-  -> advisory probabilistic signal
-  -> deterministic state-local ranking
-  -> Liquid Planning ActionCapsule / BoundaryContract / ArenaLease
-  -> proposal-only coordination packet
-  -> authorized human review
+  → deterministic readiness
+  → hard filtering
+  → advisory ranking
+  → role-preserving options
+  → capsules, boundaries, and leases
+  → WFST evidence/verifier guards
+  → human proposal decision
+  → ArenaExperience V3
+  → TRAIN / VALIDATION / SHADOW
+  → CRYSTALLIZATION_PROPOSED
+  → verifier and human review
 ```
 
-## Capability reuse decisions
+Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 
-| Capability | Canonical owner | Phase 3 decision |
-|---|---|---|
-| Construction truth and event chain | `aura_construction_contracts.py`, `aura_construction_state.py` | `REUSE`; no duplicate store |
-| Human authority and receipt continuity | `aura_construction_authority.py`, `aura_relational_authority.py` | `REUSE`; no physical release |
-| Capsules, boundaries, leases | `aura_liquid_planning_arena.py` | `ADD_NARROW_ADAPTER` |
-| Hard filtering and rank-vector pattern | `aura_arena_wfst_runtime.py`, `aura_arena_wfst_types.py` | `REUSE_PATTERN`; hard blockers precede ranking |
-| Probabilistic progress/ranking signal | no Construction owner | `TRUE_ADVISORY_GAP`; proposal-only record |
-| Synthetic demo state and scenarios | no Construction fixture owner | `TRUE_TEST_GAP`; fictional deterministic fixture |
-| Executable benchmark | standard Aura evidence hierarchy | `ADD_DOMAIN_BENCHMARK`; zero-model only initially |
+- exact Python 3.11 compile, fatal Ruff selection, and diff checks passed;
+- `81/81` focused Phase 3 tests passed in `22.45s`;
+- focused adapter/fixture/benchmark coverage was `88%`, with learning coverage at `82%`;
+- `241/241` Construction and canonical-owner regressions passed in `10.53s`;
+- the zero-model benchmark completed `250` candidate-order permutations;
+- native Selective Council V3 selected the bounded Surgeon plan at score `0.99`;
+- Architect verification recorded `16` checks, `0` failures, four exact-file leases, and Judge `promote_hotswap`;
+- the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
+- Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
 
-## Surgeon capsules
+## Incorporated hardening
 
-### E7.1 — Coordination contracts and ranking
+The final sweep repaired scalar collection and unknown-field deserialization attacks, malformed runtime values, option-role ordering loss, cross-project scope mismatch, probabilistic override attempts, missing WFST evidence and verifier guards, benchmark tampering, wall-clock identity drift, unsafe Architect base/path/test boundaries, and the Python 3.11 `RefactorSkeleton` identity expression. Focused and owner regression tests cover these changes.
 
-Targets:
-- `aura_construction_adapter.py`
-- `tests/test_aura_construction_adapter.py`
+## Claim boundaries
 
-Acceptance:
-- exact Construction state is revalidated;
-- missing, expired, conflicting, sensor-only, or explicitly blocked routes are removed before ranking;
-- probabilistic signals cannot rescue blocked candidates;
-- no packet can authorize work, payment, access, safety, engineering, or legal status.
-
-### E8.1 — Synthetic runtime fixture
-
-Targets:
-- `aura_construction_fixtures.py`
-- `tests/test_aura_construction_fixtures.py`
-
-Acceptance:
-- deterministic fictional data only;
-- no real SCO, PCL, worker, owner, building, or bid data;
-- one deliberately high-scoring unsafe route remains blocked;
-- at least three materially different admissible alternatives remain visible.
-
-### E11.1 — Zero-model benchmark
-
-Targets:
-- `aura_construction_benchmark.py`
-- `tests/test_aura_construction_benchmark.py`
-
-Acceptance:
-- 250 candidate-order permutations produce one exact evaluation digest and recommendation;
-- unsafe high-score route is blocked in every run;
-- non-executed comparison arms remain `NOT_MEASURED`;
-- provider tokens, provider cost, real-project savings, and production readiness are not invented.
-
-## Aura architecture benchmark ledger
-
-These measurements describe the refactoring method and synthetic software fixture, not a real construction project.
-
-```yaml
-baseline_repository_files: 1032
-initial_bounded_changed_files_before_generated_topology: 8
-structural_file_scope_reduction: 99.22_percent
-measurement_class: STRUCTURAL_CONTEXT_PROXY
-canonical_reuse_rows: 7
-parallel_truth_stores_added: 0
-production_connectors_added: 0
-initial_py_compile: PASS
-initial_fatal_ruff: PASS
-initial_focused_tests_collected: 40
-initial_focused_tests_passed: 39
-initial_focused_tests_failed: 1
-manual_council_surgeon_findings:
-  - distinct-option backfill missing after role deduplication
-  - next-authority route over-escalated from unrelated alternatives
-manual_findings_repaired: 2
-coderabbit_invocations: 0
-provider_tokens: NOT_MEASURED
-provider_cost: NOT_MEASURED
-real_project_savings: NOT_MEASURED
-production_readiness: NOT_CLAIMED
-```
-
-The first failing test was valuable architectural evidence: cheapest, fastest, balanced, and safest selectors can collapse onto the same candidate. The repair preserves role-based choices first, then backfills distinct admissible routes to keep the decision surface materially plural. The manual Council/Surgeon sweep separately found that the next-authority field must follow the recommended candidate, while each alternative retains its own authority route.
+The benchmark is zero-model and synthetic. Provider usage, provider cost, real-project savings, and production readiness are not measured. The 15 episodes are independent seeded executions of one fictional scenario, not 15 field projects. The Crucible distinct-objective threshold remains unmet and is preserved as a warning. Active grammar, hard guards, capabilities, source code, and authority are unchanged.
 
 ## Deferred by design
 
-- Human Agent server/API and UI wiring (E9)
-- Observatory projection (E9/E12)
-- ArenaExperience and Crucible eligibility (E10)
-- real owner/contractor integrations
-- production sensor, location, access, payment, payroll, or safety systems
-- external model calls and multi-provider Council benchmark arms
-- commercial claims based on synthetic savings
+Human Agent API/UI wiring, Observatory projection, real owner/contractor/payment/access/sensor/safety integrations, external-model comparisons, and commercial field claims remain deferred.
 
-## Final gate sequence
+## Final sequence
 
 ```text
-manual syntax/lint/logic sweep
-  -> branch CI and focused coverage
-  -> deterministic benchmark and prior-owner regressions
-  -> exact topology regeneration
-  -> manual CodeRabbit-equivalent diff audit
-  -> one CodeRabbit invocation
-  -> bounded repairs, if any
-  -> README / ARCHITECTURE / USER_GUIDE / handoff / evidence sync
-  -> regenerated CODEMAP
-  -> pinned-head final CI
-  -> merge
-  -> post-merge verification
+verified source gates
+  → synchronized README / ARCHITECTURE / USER_GUIDE / evidence
+  → regenerated CODEMAP and topology
+  → pinned-head final CI
+  → mark PR ready
+  → merge
+  → post-merge verification
 ```

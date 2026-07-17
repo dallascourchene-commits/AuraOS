@@ -119,6 +119,37 @@ Evidence classes must not be collapsed into one score. Executable gates outrank 
 | Emergent scan | `708` Python files, `10,815` nodes, `20,764` edges, `15` probes, `0` failures | Discovery evidence only |
 | Grounded projections | `7` probes, `0` failures; all remained `NEEDS_GROUNDING` | Projection, not implementation proof |
 
+## SCO Construction advisory runtime
+
+PR #148 adds the bounded Phase 3 E7–E11 Construction Arena vertical slice:
+
+```text
+ConstructionProjectState
+  → exact evidence readiness
+  → hard blockers before ranking
+  → advisory probabilistic signal
+  → cheapest / fastest / recommended / safest options
+  → ActionCapsule + BoundaryContract + ArenaLease
+  → verifier-backed proposal
+  → human review
+  → ArenaExperience V3
+  → proposal-only Crucible
+```
+
+Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
+
+- exact Python 3.11 compile, fatal Ruff selection, and diff checks passed;
+- `81/81` focused Phase 3 tests passed in `22.45s`;
+- focused adapter/fixture/benchmark coverage was `88%`, with learning coverage at `82%`;
+- `241/241` Construction and canonical-owner regressions passed in `10.53s`;
+- the zero-model benchmark completed `250` candidate-order permutations;
+- native Selective Council V3 selected the bounded Surgeon plan at score `0.99`;
+- Architect verification recorded `16` checks, `0` failures, four exact-file leases, and Judge `promote_hotswap`;
+- the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
+- Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
+
+This is synthetic/shadow software evidence, not a real-project or production-readiness claim. Provider tokens, provider cost, and real-project savings remain `NOT_MEASURED`. The runtime cannot authorize physical work, release payment, control access, certify safety or engineering, mutate authoritative records, or automatically promote grammar. See [`docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json`](docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json).
+
 ## Truth and authority
 
 Source-of-truth order:

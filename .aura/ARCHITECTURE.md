@@ -2,7 +2,7 @@
 
 > Canonical compact architecture anchor for humans and AI agents
 
-**Architecture audit:** through merged PR #133 and the canonical Human Agent, Observatory, and Crucible documentation sync.  
+**Architecture audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148 and the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon boundaries.  
 **CODEMAP rule:** regenerate from the current tree with `python3 aura_codebase_navigator.py` after source or architecture changes.  
 **Topology source:** `compiled_deep_topology`.
 
@@ -257,6 +257,48 @@ Primary contracts:
 - `schemas/aura_refactor_output_record.schema.json`
 
 `AURA_REFACTOR_OUTPUT_RECORD_V1` preserves prompt and patch identity, estimated and provider-reported usage separately, exact tests and gates, failed gates, working status, disposition, and measurement completeness.
+
+## SCO Construction advisory runtime
+
+The Construction Arena is a narrow adapter over canonical Construction, Liquid Planning, WFST, Experience, Crucible, and Architect owners. It does not create a second project truth store.
+
+```text
+immutable Construction events and claims
+  → ConstructionProjectState replay
+  → exact readiness and conflict checks
+  → hard candidate filtering
+  → advisory probabilistic signal
+  → deterministic role-preserving option surface
+  → Liquid Planning capsule, boundary, and lease
+  → WFST evidence and verifier guards
+  → proposal-only human decision packet
+```
+
+Architectural invariants:
+
+- exact readiness, expiry, conflict, sensor-only, project-scope, and authority blockers run before probabilistic ranking;
+- a high probabilistic score cannot rescue a blocked route;
+- cheapest, fastest, recommended, and safest roles retain semantic ordering while exposing distinct admissible alternatives;
+- runtime packets are read-only proposals and cannot mutate the Construction event chain;
+- every route transition requires benchmark evidence and a passing verifier packet;
+- Experience identity excludes wall-clock timing and replay is idempotent;
+- the 15 episodes are one synthetic scenario and one objective, so no field generalization is claimed;
+- Crucible may propose only `soft_weight_profile.empirical_uncertainty` and cannot promote active grammar;
+- physical work, payment, access, professional certification, source mutation, commit, push, and merge remain outside runtime authority.
+
+Primary files: `.aura/arena_routes/construction.v1.json`, `aura_construction_adapter.py`, `aura_construction_fixtures.py`, `aura_construction_benchmark.py`, `aura_construction_learning.py`, and `aura_construction_architect_refactor.py`.
+
+Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
+
+- exact Python 3.11 compile, fatal Ruff selection, and diff checks passed;
+- `81/81` focused Phase 3 tests passed in `22.45s`;
+- focused adapter/fixture/benchmark coverage was `88%`, with learning coverage at `82%`;
+- `241/241` Construction and canonical-owner regressions passed in `10.53s`;
+- the zero-model benchmark completed `250` candidate-order permutations;
+- native Selective Council V3 selected the bounded Surgeon plan at score `0.99`;
+- Architect verification recorded `16` checks, `0` failures, four exact-file leases, and Judge `promote_hotswap`;
+- the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
+- Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
 
 ## 7. Benchmark evidence hierarchy
 

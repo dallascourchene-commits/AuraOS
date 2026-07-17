@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1050
-- **total_bytes**: 51456761
-- **text_tokens_est**: 3524365
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 27, 'knowledge_artifact': 140, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 732, 'schema_or_lexicon': 105, 'support_file': 31}
+- **file_count**: 1062
+- **total_bytes**: 53425005
+- **text_tokens_est**: 3857286
+- **role_counts**: {'binary_artifact': 4, 'interface_surface': 27, 'knowledge_artifact': 140, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 731, 'schema_or_lexicon': 114, 'support_file': 33}
 - **topology_nodes**: 8647
 - **topology_edges**: 19084
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 16964.01
+- **elapsed_ms**: 19592.94
 
 ## Coverage
 
-- **included_file_count**: 1050
+- **included_file_count**: 1062
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=65, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=31, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=1, `__pycache__`=112
 
 ## Command Index
 
@@ -246,6 +246,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.github/workflows/model-cognome-adaptive-router.yml`
 - `.github/workflows/model-cognome-governed-routing.yml`
 - `AURA_ROUTER.md`
+- `Aura_Staging/sco_construction_phase3_architect/architect_ledger.jsonl`
 - `FRACTAL_LEDGER_IMPLEMENTATION.md`
 - `LIQUID_INTERNET_IMPLEMENTATION.md`
 - `aura_adaptive_model_router.py`
@@ -253,8 +254,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_anthropic_router.py`
 - `aura_arena_experience_ledger.py`
 - `aura_blockchain/__init__.py`
-- `aura_blockchain/block.py`
-- ... 40 more; query CODEMAP.json for exact file cards
+- ... 41 more; query CODEMAP.json for exact file cards
 
 ### topology_and_navigation
 - `.aura/topology_baseline.json`
@@ -299,7 +299,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 879 more; query CODEMAP.json for exact file cards
+- ... 890 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
