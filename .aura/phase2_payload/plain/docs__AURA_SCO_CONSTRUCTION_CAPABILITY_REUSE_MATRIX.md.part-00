@@ -1,0 +1,57 @@
+# SCO Construction Arena — Capability Reuse Matrix
+
+```yaml
+document_status: PHASE_TWO_E4_E6_VERIFIED_INVENTORY
+document_version: 1.2.0
+date: 2026-07-17
+baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
+branch: refactor/sco-construction-e4-e6
+coderabbit_triggered: false
+pull_request_opened: false
+merged: false
+```
+
+## Decision rule
+
+```text
+existing canonical owner
+  | narrow domain adapter
+  | exact capability gap
+  | defer
+```
+
+| Capability | Canonical owner | Decision | Construction disposition |
+|---|---|---|---|
+| Event identity and measurement | `aura_event_contracts.py` | `REUSE` | Construction records project to `AuraEventEnvelope` |
+| Civic immutable-contract patterns | `aura_civic_planning_types.py` | `REUSE_PATTERN` | Strict normalized immutable domain records |
+| Capsules, contracts, leases, adapter lifecycle | `aura_liquid_planning_arena.py` | `DEFER_ADAPTER` | E4–E6 do not create another planner |
+| Grants, attestations, quorum, decisions | `aura_relational_authority.py` | `REUSE` | Construction binds exact action/project/evidence context |
+| Chained receipts and checkpoints | `aura_relational_authority.py` | `REUSE` | Continuity/content only; authenticity remains external |
+| Construction claims/evidence/events | `aura_construction_contracts.py` | `TRUE_DOMAIN_GAP` | Minimal E4 owner |
+| Construction replay/conflict/query | `aura_construction_state.py` | `TRUE_DOMAIN_GAP` | Minimal E5 owner; `ZERO_MODEL` |
+| Construction authority binding | `aura_construction_authority.py` | `ADD_NARROW_ADAPTER` | Minimal E6 adapter |
+| Human Agent emergent workspace | `aura_emergent_refactor_workspace.py` | `DEFER_ADAPTER` | No second evidence store |
+| Observatory | existing Observatory owners | `DEFER` | Read-only projection later |
+| Experience/Crucible | existing owners | `DEFER` | Requires verified synthetic/shadow episodes |
+
+## Gap proof
+
+E4 owns only Construction-specific scope, claim/evidence separation, evidence classes, privacy/consent/freshness, and project event semantics. E5 owns only deterministic Construction replay, structural conflicts, supersession, and queries. E6 owns only exact binding between Construction records and Aura's existing relational-governance/receipt objects.
+
+## Evidence
+
+```yaml
+focused_adversarial_tests: 128_passed
+focused_statement_coverage: 90_percent
+manual_fatal_lint: PASS
+manual_findings_repaired: 40
+context_proxy:
+  repository_files: 1022
+  principal_owner_files: 4
+  file_selection_reduction: 99.61_percent
+provider_tokens_and_cost: NOT_MEASURED
+```
+
+## Deferred capability gate
+
+No later Construction module proceeds without an exact owner/reuse decision, integration disposition, authority/privacy boundary, focused tests, handoff entry, and regenerated topology.
