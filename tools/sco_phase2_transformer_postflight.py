@@ -48,13 +48,18 @@ def main() -> None:
 
     text = replace_once(
         text,
-        '''            evaluated_at=data.get("evaluated_at"),
-            expires_at=data.get("expires_at"),
+        '''        if any(item.state_digest != self.state_digest for item in self.readiness_reports):
+            raise ValueError("authority result mixes readiness reports from another state")
+        if any(item.evaluated_at != self.evaluated_at for item in self.readiness_reports):
+            raise ValueError("authority result mixes readiness reports from another evaluation")
 ''',
-        '''            evaluated_at=_timestamp(data.get("evaluated_at"), "evaluated_at"),
-            expires_at=_timestamp(data.get("expires_at"), "expires_at"),
+        '''        if any(item.state_digest != self.state_digest for item in self.readiness_reports):
+            raise ValueError("authority result mixes readiness reports from another state")
+        _require_canonical_float(self.evaluated_at, "result.evaluated_at")
+        if any(item.evaluated_at != self.evaluated_at for item in self.readiness_reports):
+            raise ValueError("authority result mixes readiness reports from another evaluation")
 ''',
-        "authority result timestamp validation block",
+        "canonical authority timestamp validation order",
     )
 
     test_repair = '''    replace_exact(
