@@ -2,8 +2,7 @@ name: SCO Phase 3 Refactor Skeleton PR Bridge
 
 on:
   pull_request:
-    branches:
-      - refactor/sco-construction-e7-e8
+    branches: [refactor/sco-construction-e7-e8]
 
 permissions:
   contents: write
@@ -28,19 +27,15 @@ jobs:
           git config http.https://github.com/.extraheader "${AUTH_HEADER}"
           git config core.sparseCheckout true
           git config core.sparseCheckoutCone false
-          cat > .git/info/sparse-checkout <<'EOF'
-          /*
-          !/Aura_Memory/
-          !/Aura_Sandbox/
-          EOF
+          printf '/*\n!/Aura_Memory/\n!/Aura_Sandbox/\n' > .git/info/sparse-checkout
           git -c protocol.version=2 fetch --no-tags --filter=blob:none --depth=128 origin "${TARGET_SHA}"
           git checkout --quiet --detach "${TARGET_SHA}"
           test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install compact verifier environment
-        run: python -m pip install pytest==8.4.1
+      - name: Install Aura verifier environment
+        run: python -m pip install -q -r requirements.txt pytest==8.4.1
       - name: Run Aura Council and exact Surgeon patch
         run: |
           set -o pipefail
@@ -59,101 +54,69 @@ jobs:
 
           root = Path('.').resolve()
           target = root / 'aura_refactor_skeleton.py'
-          objective = (
-              'Repair the Python 3.11 syntax defect in RefactorSkeleton canonical '
-              'identity validation without changing its identity payload.'
-          )
+          objective = 'Repair RefactorSkeleton Python 3.11 identity syntax exactly.'
           required = [
-              'syntax_integrity',
-              'canonical_identity_equivalence',
-              'bounded_patch_scope',
-              'direct_skeleton_tests',
-              'construction_plan_regression',
-              'rollback',
+              'syntax_integrity', 'canonical_identity_equivalence',
+              'bounded_patch_scope', 'direct_skeleton_tests',
+              'construction_plan_regression', 'rollback',
           ]
-          broad = {
-              'candidate_id': 'BROAD_REWRITE',
-              'arm_family': 'BROAD_IMPLEMENTER',
-              'provenance': {'generation': 'frozen_local_plan', 'model_calls': 0},
-              'token_usage': {'provider_reported': None, 'measurement_class': 'NOT_MEASURED'},
-              'plan': {
-                  'architecture_decision': 'Rewrite skeleton validation broadly.',
-                  'act_tasks': [{
-                      'task_id': 'BROAD-1',
-                      'objective': 'Rewrite validation.',
-                      'target_file': 'aura_refactor_skeleton.py',
-                      'target_symbol': 'RefactorSkeleton',
-                      'acceptance': 'Tests pass.',
-                      'expected_output': 'UNIFIED_DIFF',
-                      'size': 'L',
-                  }],
-                  'acceptance_criteria': ['Tests pass.'],
-                  'rollback_conditions': ['Revert file.'],
-                  'risk_map': ['Broad identity rewrite.'],
-                  'constraints': ['No production mutation.'],
-                  'coverage_tags': ['syntax_integrity'],
-                  'architecture_reuse': False,
-              },
-          }
-          exact = {
-              'candidate_id': 'EXACT_IDENTITY_SYNTAX_SURGEON',
-              'arm_family': 'SELECTIVE_COUNCIL_V3_PLUS_SURGEON',
-              'provenance': {'generation': 'frozen_local_plan', 'model_calls': 0},
-              'token_usage': {'provider_reported': None, 'measurement_class': 'NOT_MEASURED'},
-              'plan': {
-                  'architecture_decision': (
-                      'Preserve the identity payload and replace only the Python 3.11 '
-                      'incompatible multiline f-string expression.'
-                  ),
-                  'act_tasks': [{
-                      'task_id': 'SKELETON-ID-EXPRESSION',
-                      'objective': 'Repair the exact canonical ID expression.',
-                      'target_file': 'aura_refactor_skeleton.py',
-                      'target_symbol': 'RefactorSkeleton.__post_init__',
-                      'acceptance': 'Compile and direct plus Construction tests pass.',
-                      'expected_output': 'UNIFIED_DIFF',
-                      'allowed_scope': 'one canonical identity expression',
-                      'size': 'S',
-                  }],
-                  'acceptance_criteria': [
-                      'Python 3.11 compile passes.',
-                      'Direct skeleton tests pass.',
-                      'Construction plan regression passes.',
-                      'Identity arguments are unchanged.',
-                  ],
-                  'rollback_conditions': ['Any failure blocks commit.'],
-                  'risk_map': ['Identity semantics must remain equivalent.'],
-                  'constraints': [
-                      'One source file only.',
-                      'No public API or authority changes.',
-                      'Human review required.',
-                  ],
-                  'coverage_tags': required,
-                  'architecture_reuse': True,
-                  'existing_modules': [
-                      'aura_architect_control.py',
-                      'aura_arena_architect_connector.py',
-                      'aura_refactor_skeleton.py',
-                  ],
-              },
-          }
+
+          def candidate(candidate_id, family, coverage, reuse, size):
+              return {
+                  'candidate_id': candidate_id,
+                  'arm_family': family,
+                  'provenance': {'generation': 'frozen_local_plan', 'model_calls': 0},
+                  'token_usage': {'provider_reported': None, 'measurement_class': 'NOT_MEASURED'},
+                  'plan': {
+                      'architecture_decision': (
+                          'Preserve canonical identity and replace one incompatible expression.'
+                          if reuse else 'Rewrite validation broadly.'
+                      ),
+                      'act_tasks': [{
+                          'task_id': 'SKELETON-ID-EXPRESSION',
+                          'objective': objective,
+                          'target_file': 'aura_refactor_skeleton.py',
+                          'target_symbol': 'RefactorSkeleton.__post_init__',
+                          'acceptance': 'Compile and direct regressions pass.',
+                          'expected_output': 'UNIFIED_DIFF',
+                          'allowed_scope': 'one identity expression',
+                          'size': size,
+                      }],
+                      'acceptance_criteria': [
+                          'Python 3.11 compile passes.',
+                          'Direct skeleton tests pass.',
+                          'Construction plan tests pass.',
+                      ],
+                      'rollback_conditions': ['Any failure blocks commit.'],
+                      'risk_map': ['Identity semantics must remain equivalent.'],
+                      'constraints': ['No API or authority changes.'],
+                      'coverage_tags': coverage,
+                      'architecture_reuse': reuse,
+                      'existing_modules': (
+                          ['aura_architect_control.py', 'aura_arena_architect_connector.py',
+                           'aura_refactor_skeleton.py'] if reuse else []
+                      ),
+                  },
+              }
+
+          exact = candidate(
+              'EXACT_IDENTITY_SYNTAX_SURGEON',
+              'SELECTIVE_COUNCIL_V3_PLUS_SURGEON', required, True, 'S'
+          )
+          broad = candidate('BROAD_REWRITE', 'BROAD_IMPLEMENTER', ['syntax_integrity'], False, 'L')
           comparison = AuraArenaArchitectConnector(root, bridge=object()).compare_plans(
               objective=objective,
               candidates=[broad, exact],
               required_capabilities=required,
               control=normalize_control_profile({
-                  'surface': 'native',
-                  'council_mode': 'SELECTIVE_V3',
+                  'surface': 'native', 'council_mode': 'SELECTIVE_V3',
                   'council_call_budget': 4,
                   'critic_lanes': ['scope', 'tests', 'rollback', 'cost'],
                   'surgeon_mode': 'STAGE_AND_VERIFY',
-                  'surgeon_max_turns': 4,
-                  'surgeon_max_local_repairs': 1,
+                  'surgeon_max_turns': 4, 'surgeon_max_local_repairs': 1,
                   'record_outputs': False,
               }),
-              surface='native',
-              record=False,
-              benchmark=False,
+              surface='native', record=False, benchmark=False,
           )
           print(json.dumps({
               'selected_candidate_id': comparison['selected_candidate_id'],
@@ -197,14 +160,10 @@ jobs:
               started = time.perf_counter()
               completed = subprocess.run(
                   [sys.executable, '-m', 'pytest', '-q', test_path],
-                  text=True,
-                  capture_output=True,
-                  timeout=240,
-                  check=False,
+                  text=True, capture_output=True, timeout=240, check=False,
               )
               row = {
-                  'test': test_path,
-                  'ok': completed.returncode == 0,
+                  'test': test_path, 'ok': completed.returncode == 0,
                   'returncode': completed.returncode,
                   'elapsed_ms': round((time.perf_counter() - started) * 1000.0, 3),
                   'stdout_tail': completed.stdout[-2000:],
@@ -254,7 +213,7 @@ jobs:
           path: /tmp/sco-skeleton-repair.log
           if-no-files-found: warn
           retention-days: 7
-      - name: Commit repair to the isolated head branch
+      - name: Commit repair to isolated head
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
