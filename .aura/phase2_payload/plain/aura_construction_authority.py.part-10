@@ -1,0 +1,80 @@
+    """Evaluate exact Construction evidence and Aura relational authority.
+
+    The evaluator is intentionally not injectable. This prevents a caller from
+    supplying a self-consistent but unearned GovernanceDecision.
+    """
+    request.__post_init__()
+    state.__post_init__()
+    current = _timestamp(now, "now")
+    if request.scope.project_id != state.project_id:
+        raise ValueError("construction action request and project state do not match")
+    if current < request.created_at:
+        raise ValueError("construction action request is not active yet")
+    if current >= request.expires_at:
+        raise ValueError("construction action request is expired")
+    quorum_policy.validate()
+    if quorum_policy.risk_class != request.risk_class:
+        raise ValueError("construction action risk class and quorum policy disagree")
+
+    authority_refs = _trusted_refs(
+        verified_authority_refs,
+        "verified_authority_refs",
+    )
+    attestation_refs = _trusted_refs(
+        verified_attestation_refs,
+        "verified_attestation_refs",
+    )
+    decision = evaluate_governance(
+        action_id=request.action_id,
+        action_payload_digest=request.action_digest,
+        policy_scope=request.policy_scope,
+        capability_scope=request.capability_scope,
+        grants=tuple(grants),
+        attestations=tuple(attestations),
+        quorum_policy=quorum_policy,
+        verified_authority_refs=authority_refs,
+        verified_attestation_refs=attestation_refs,
+        proposer_principal_id=proposer_principal_id,
+        normal_policy=normal_policy,
+        emergency_reason=emergency_reason,
+        now=current,
+    )
+    if type(decision) is not GovernanceDecision:
+        raise ValueError("Aura governance evaluator returned an invalid decision type")
+    _validate_decision_binding(decision, request, now=current)
+    result = ConstructionAuthorityResult.create(
+        request=request,
+        state=state,
+        governance_decision=decision,
+        evaluated_at=current,
+        _evaluation_token=_EVALUATION_TOKEN,
+    )
+    return result, decision
+
+
+@dataclass(frozen=True)
+class ConstructionReceiptBinding:
+    binding_id: str
+    binding_digest: str
+    project_id: str
+    request_id: str
+    request_digest: str
+    state_digest: str
+    governance_decision_id: str
+    governance_decision_digest: str
+    authority_result_id: str
+    authority_result_digest: str
+    chain_receipt_id: str
+    chain_digest: str
+    externally_verified_receipt_ref: str
+    created_at: float
+    version: str = CONSTRUCTION_AUTHORITY_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    human_release_required: bool = True
+    physical_work_authorized: bool = False
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        _text(self.project_id, "binding.project_id")
+        _text(self.request_id, "binding.request_id")
