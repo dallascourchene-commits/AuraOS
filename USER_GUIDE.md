@@ -2,7 +2,7 @@
 
 > Operator guide for the Arena-based AuraOS architecture
 
-**Documentation audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148 and the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon documentation sync.  
+**Documentation audit:** through SCO Construction E0–E14 final Human Agent/Observatory integration and the canonical Human Agent, Agent Bridge, persistence, Experience, Crucible, Council, and Surgeon documentation sync.
 **CODEMAP rule:** regenerate with `python3 aura_codebase_navigator.py` after architecture or source changes; require non-zero indexes and `compiled_deep_topology`.
 
 AuraOS is local-first. Many routing, grounding, topology, storage, verification, and governance functions run without a hosted model. External models are optional workers operating through controlled egress and Arena boundaries.
@@ -235,7 +235,56 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 
 Interpret these as fictional deterministic and synthetic pipeline gates only. A `CRYSTALLIZATION_PROPOSED` result requires verifier and human review and does not change active grammar. All real physical-work, payment, access, safety, engineering, legal, and regulatory decisions remain with authorized humans and institutions.
 
-## 10. Temporal persistence and cross-Arena handoff
+## 10. Construction review surface
+
+Launch the Human Agent Arena with the deterministic fictional Construction profile:
+
+```bash
+python3 aura_human_agent_arena_server.py --repo-root . --demo
+```
+
+Open the **Construction** tab. The surface shows:
+
+- the exact project, state, event-chain, evaluation, and profile identities;
+- admissible and blocked proposal candidates;
+- hard blockers that cannot be overridden by model or sensor scores;
+- projected time/cost/idle deltas labeled as proposal data;
+- the next external human/professional/owner/legal authority route;
+- a stricter read-only Observatory projection;
+- a payload-free cross-Arena baton.
+
+Construction endpoints:
+
+```text
+GET  /api/human-agent/construction/status
+GET  /api/human-agent/construction/profile
+GET  /api/human-agent/construction/observatory
+GET  /api/human-agent/construction/candidates/{candidate_id}
+POST /api/human-agent/construction/handoff
+POST /api/human-agent/construction/checkpoint
+```
+
+The checkpoint endpoint requires the exact current repository HEAD:
+
+```json
+{
+  "repo_head": "<git rev-parse HEAD>",
+  "parent_checkpoint_id": "",
+  "branch_name": ""
+}
+```
+
+The profile and browser surface contain no raw Construction records and cannot authorize or execute work. Without `--demo`, the profile remains unavailable until an exact reviewed Construction state is loaded; Aura never invents one.
+
+Validate the completed refactor:
+
+```bash
+python3 -m aura_construction_refactor_completion --repo-root .
+```
+
+The pre-merge result must contain `runtime_complete: true` and `e14_release_status: READY_FOR_PINNED_MERGE`.
+
+## 11. Temporal persistence and cross-Arena handoff
 
 Verify the registry:
 
@@ -286,7 +335,7 @@ The Coding Workbench exposes `checkpoint_state()`, `assess_checkpoint()`, `resto
 
 A handoff packet is a payload-free digital baton. It identifies the source checkpoint, target Arena, payload digest, and required restoration gate; it does not mutate the target Arena. `TEMP:STALE` and `TEMP:BRANCH_OFFSET` force refresh/re-verification. Checkpoints are operational continuity records, not automatic authority or legal certification.
 
-## 11. Cost and benchmark interpretation
+## 12. Cost and benchmark interpretation
 
 Keep evidence classes separate and read them in this order:
 
@@ -308,7 +357,7 @@ Keep evidence classes separate and read them in this order:
 
 Token proxies are comparative unless provider usage is explicitly recorded. Never present them as invoices. Tier 3 and Tier 4 evidence must not be promoted into Tier 1 claims without governed execution, comparable quality evidence, and verifier review.
 
-## 12. Testing
+## 13. Testing
 
 Focused PR #133 tests:
 
@@ -328,24 +377,24 @@ python3 aura_codebase_navigator.py
 
 Then verify that CODEMAP indexes and compiled topology remain healthy.
 
-## 13. Troubleshooting
+## 14. Troubleshooting
 
-**The UI shows no research evidence after a server error**  
+**The UI shows no research evidence after a server error**
 Inspect the API response. Successful evidence loading requires `ok: true`; non-network HTTP errors are surfaced through the UI error boundary.
 
-**Research makes the interface feel blocked**  
+**Research makes the interface feel blocked**
 Confirm the threaded server and bounded total research deadlines are active. Do not remove result and sidecar limits.
 
-**A refactor packet is empty or partial**  
+**A refactor packet is empty or partial**
 Verify every selected finding and research evidence ID exists. Missing selections must fail closed.
 
-**A denied action changed workflow evidence**  
+**A denied action changed workflow evidence**
 Treat this as a governance regression. Context must be built without mutation and committed only after guarded admission succeeds.
 
-**CODEMAP reports zero metadata for a changed interface file**  
+**CODEMAP reports zero metadata for a changed interface file**
 Regenerate CODEMAP from the current tree and verify the exact file entry.
 
-## 14. Safety rules
+## 15. Safety rules
 
 - External workers are tools, not authorities.
 - Semantic similarity and VSA are not patch authority.

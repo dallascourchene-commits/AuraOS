@@ -2,8 +2,8 @@
 
 > Canonical compact architecture anchor for humans and AI agents
 
-**Architecture audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148 and the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon boundaries.  
-**CODEMAP rule:** regenerate from the current tree with `python3 aura_codebase_navigator.py` after source or architecture changes.  
+**Architecture audit:** through SCO Construction E0–E14 final Human Agent/Observatory integration and the canonical Human Agent, Agent Bridge, persistence, Experience, Crucible, Council, and Surgeon boundaries.
+**CODEMAP rule:** regenerate from the current tree with `python3 aura_codebase_navigator.py` after source or architecture changes.
 **Topology source:** `compiled_deep_topology`.
 
 ## 1. Architectural identity
@@ -300,7 +300,36 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 - the Experience Ledger stored `15` unique seeded episodes from one fictional scenario and one objective;
 - Crucible produced one `CRYSTALLIZATION_PROPOSED` candidate and did not mutate active grammar.
 
-## 7. Temporal persistence plane
+## 7. Construction Human Agent and Observatory
+
+The Construction Human Agent profile is a narrow projection over exact canonical owners:
+
+```text
+ConstructionProjectState
+  + ConstructionCoordinationEvaluation
+  → purpose-limited Human Agent profile
+  → read-only Observatory projection
+  → checkpoint or payload-free baton when requested
+```
+
+The Human Agent profile may expose candidate title, summary, proposal deltas, hard blockers, deterministic score, and the next external authority route. It does not copy raw claims, evidence, source references, actors, or payloads into the profile.
+
+The Observatory projection is stricter: it exposes only project/profile/evaluation identifiers and digests, candidate admissibility/recommendation/blocker counts, option IDs, checkpoint reference, and authority flags. Candidate narratives, amounts, raw records, and execution methods are omitted.
+
+Architectural invariants:
+
+- `ConstructionProjectState` remains the only Construction truth owner;
+- evaluation state digest must exactly match the projected state;
+- all evaluation candidate IDs must match exact supplied candidates;
+- blocked candidates remain visible but cannot be recommended;
+- the browser has no approve or execute operation;
+- cross-Arena handoff is a payload-free digital baton and cannot mutate the target Arena;
+- checkpoint creation remains review-gated temporal persistence;
+- physical work, payment, access, equipment, safety, engineering, legal, regulatory, commit, push, PR, and merge authority remain false.
+
+The E0–E14 completion state is machine checked by `aura_construction_refactor_completion.py`; explicit policy deferrals are not misclassified as unfinished implementation.
+
+## 8. Temporal persistence plane
 
 Aura's continuity architecture is layered:
 
@@ -335,7 +364,7 @@ Architectural invariants:
 
 Primary implementations: `aura_temporal_persistence.py`, `aura_arena_persistence_adapters.py`, `aura_wfst_temporal_adapter.py`, `aura_agent_arena_persistence_bridge.py`, and `aura_persistence_cli.py`.
 
-## 8. Benchmark evidence hierarchy
+## 9. Benchmark evidence hierarchy
 
 Aura keeps unlike evidence separate so projections cannot be mistaken for executable proof.
 

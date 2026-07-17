@@ -150,6 +150,35 @@ Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
 
 This is synthetic/shadow software evidence, not a real-project or production-readiness claim. Provider tokens, provider cost, and real-project savings remain `NOT_MEASURED`. The runtime cannot authorize physical work, release payment, control access, certify safety or engineering, mutate authoritative records, or automatically promote grammar. See [`docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json`](docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json).
 
+## Construction Human Agent profile
+
+The final SCO Construction wiring adds a purpose-limited review surface without creating another project truth store:
+
+```text
+ConstructionProjectState + verified evaluation
+  → ConstructionHumanAgentProfile
+  → bounded candidate summaries and visible hard blockers
+  → read-only Observatory IDs/digests/statuses
+  → optional review-gated checkpoint or payload-free handoff
+  → external authorized human decision
+```
+
+Primary files:
+
+- `aura_construction_human_agent.py`
+- `aura_construction_refactor_completion.py`
+- `aura_human_agent_arena_server.py`
+- `aura_human_agent_arena/construction.js`
+- `aura_human_agent_arena/construction.css`
+
+The browser surface cannot approve work. It exports no raw Construction evidence and provides no execution methods. Real connectors, physical control, payment release, access control, professional certification, and automatic merge remain explicit policy deferrals.
+
+Run the completion gate with:
+
+```bash
+python3 -m aura_construction_refactor_completion --repo-root .
+```
+
 ## Temporal persistence across arenas
 
 Aura now separates three continuity layers:

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="arena.css">
   <link rel="stylesheet" href="jarvis.css">
   <link rel="stylesheet" href="emergent.css">
+  <link rel="stylesheet" href="construction.css">
 </head>
 <body>
   <header class="aura-topbar">
@@ -21,6 +22,7 @@
       <button class="surface-tab is-active" data-surface="coding-surface" type="button">Coding Arena</button>
       <button class="surface-tab" data-surface="emergent-workspace" type="button">Emergent Lab</button>
       <button class="surface-tab" data-surface="civic-workspace" type="button">Civic Arena</button>
+      <button class="surface-tab" data-surface="construction-workspace" type="button">Construction</button>
     </nav>
     <div class="authority-chip">
       <span class="authority-light"></span>
@@ -217,6 +219,44 @@
     </div>
   </section>
 
+  <section id="construction-workspace" class="surface construction-surface" aria-label="SCO Construction Human Agent review surface">
+    <div class="construction-shell">
+      <section class="construction-hero">
+        <div>
+          <p class="eyebrow">SCO Construction Human Agent profile</p>
+          <h1>Review exact blockers and proposal-only options.</h1>
+          <p>This surface projects a deterministic synthetic Construction state into bounded candidate summaries. Raw records stay with the canonical Construction owners, and every consequential decision remains external.</p>
+        </div>
+        <div id="construction-authority" class="construction-authority">
+          <strong>Human decision required</strong>
+          <span>No physical, payment, access, safety, engineering, legal, or regulatory authority.</span>
+        </div>
+      </section>
+      <div class="construction-toolbar">
+        <span id="construction-status" class="status-pill">Open the surface to load the profile.</span>
+        <button id="construction-refresh" type="button">Refresh exact profile</button>
+        <select id="construction-handoff-target" aria-label="Handoff target">
+          <option value="agent_bridge_arena">Agent Bridge Arena</option>
+          <option value="coding_arena">Coding Arena</option>
+          <option value="human_agent_arena">Human Agent Arena</option>
+        </select>
+        <button id="construction-handoff" type="button">Prepare digital baton</button>
+      </div>
+      <section id="construction-summary" class="construction-summary"></section>
+      <div class="construction-grid">
+        <section>
+          <div class="section-heading"><div><p class="eyebrow">Human review queue</p><h2>Admissible and blocked candidates</h2></div></div>
+          <div id="construction-candidates" class="construction-candidates"><p class="placeholder">No profile loaded.</p></div>
+        </section>
+        <aside class="construction-side">
+          <section class="construction-panel"><h2>Bounded candidate record</h2><div id="construction-inspector"><p class="placeholder">Inspect a candidate. Raw evidence is never included.</p></div></section>
+          <section class="construction-panel"><h2>Read-only Observatory</h2><div id="construction-observatory"><p class="placeholder">IDs, digests, status counts, and gates only.</p></div></section>
+          <section class="construction-panel"><h2>Cross-Arena baton</h2><div id="construction-handoff-result"><p class="placeholder">A baton contains references only and never mutates the target Arena.</p></div></section>
+        </aside>
+      </div>
+    </div>
+  </section>
+
   <section id="civic-workspace" class="surface civic-map-surface" aria-label="Civic Commons Arena">
     <div class="civic-map-shell">
       <section class="civic-map-stage">
@@ -273,6 +313,7 @@
 
   <script src="jarvis.js"></script>
   <script src="emergent.js"></script>
+  <script src="construction.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
