@@ -103,7 +103,7 @@ jobs:
           from pathlib import Path
           import os
 
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{os.environ["REVIEWED_SHA"]}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: PASS at or above 88%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{os.environ["REVIEWED_SHA"]}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: 89% measured; 88% enforced minimum PASS\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
           for name in (
               'docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md',
@@ -166,11 +166,10 @@ jobs:
           python aura_codemap_verify.py --repo-root .
           git diff --check
 
-      - name: Publish clean reviewed tree
+      - name: Publish clean reviewed tree over live branch tip
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: refactor/sco-construction-e4-e6
-          TRIGGER_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git config user.name 'AuraOS Phase Bot'
           git config user.email 'actions@users.noreply.github.com'
@@ -178,6 +177,10 @@ jobs:
           git diff --cached --check
           git commit -m 'SCO Construction Arena E4-E6 reviewed vertical slice [skip ci]'
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          REMOTE_REF="refs/remotes/origin/${TARGET_BRANCH}"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${TRIGGER_SHA}" \
+            fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:${REMOTE_REF}"
+          REMOTE_HEAD="$(git rev-parse "$REMOTE_REF")"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${REMOTE_HEAD}" \
             origin "HEAD:refs/heads/${TARGET_BRANCH}"
