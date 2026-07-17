@@ -1,5 +1,5 @@
 name: SCO Phase 2 E4-E6 Finalize
-# Reusable exact-head finalization with lease-guarded publication.
+# Exact-head retry after explicit consent_refs disambiguation.
 
 on:
   workflow_call:
@@ -57,6 +57,7 @@ jobs:
             tools/sco_phase2_materialize.py \
             tools/sco_phase2_apply_review_fixes.py \
             tools/sco_phase2_transformer_preflight.py \
+            tools/sco_phase2_transformer_postflight.py \
             tools/sco_phase2_randomized_probe.py
 
       - name: Materialize exact reviewed Phase 2 payload
@@ -160,6 +161,7 @@ jobs:
           rm -f tools/sco_phase2_randomized_probe.py
           rm -f tools/sco_phase2_apply_review_fixes.py
           rm -f tools/sco_phase2_transformer_preflight.py
+          rm -f tools/sco_phase2_transformer_postflight.py
           git fetch origin main:refs/remotes/origin/main
           git checkout origin/main -- .github/workflows/sync-analysis-codemap.yml
 
