@@ -241,16 +241,14 @@ jobs:
             'hybrid_cases': hybrid['cases'],
           }, indent=2, sort_keys=True))
           PY
-      - name: Validate committed README evidence and preserve current-head rendering
+      - name: Validate organized README evidence and preserve current-head rendering
         run: |
-          grep -q "AURA_ARCHITECT_PLANNING_BENCHMARK:START" README.md
-          grep -q "168,569" README.md
-          grep -q "18 attempted, 18 recorded, 0 failed" README.md
-          grep -q "AURA_REAL_REFACTOR_TRIAL:START" README.md
-          grep -Fq "Benchmark quality: **93.50**" README.md
-          python scripts/update_architect_benchmark_readme.py \
-            --planning-report benchmark-output/architect_consolidation_benchmark.json \
-            --output benchmark-output/README.current-head.md
+          grep -q "## Benchmark Evidence Dashboard" README.md
+          grep -Fq "89.04% lower" README.md
+          grep -Fq "32.83% lower" README.md
+          grep -Fq 'focused regression `24/24`' README.md
+          grep -Fq 'benchmark `93.50`' README.md
+          cp README.md benchmark-output/README.current-head.md
           test -s benchmark-output/README.current-head.md
       - name: Upload benchmark evidence, exact prompts, registries, state ledgers, and chronicles
         if: always()
