@@ -43,13 +43,15 @@ def test_benchmark_does_not_invent_provider_cost_or_real_savings():
     assert report["provider_tokens"] == "NOT_MEASURED"
     assert report["provider_cost"] == "NOT_MEASURED"
     assert report["real_project_savings"] == "NOT_MEASURED"
+    assert report["production_readiness"] == "NOT_CLAIMED"
     assert boundaries["real_project_savings"] == "NOT_MEASURED"
     assert boundaries["production_readiness"] == "NOT_CLAIMED"
 
 
 def test_benchmark_rejects_invalid_iterations_and_seed():
-    with pytest.raises(ValueError, match="positive integer"):
-        run_construction_phase3_benchmark(iterations=0)
+    for iterations in (0, 10_001):
+        with pytest.raises(ValueError, match="positive bounded integer"):
+            run_construction_phase3_benchmark(iterations=iterations)
     with pytest.raises(ValueError, match="seed must be an integer"):
         run_construction_phase3_benchmark(iterations=1, seed=1.5)
 
@@ -102,3 +104,7 @@ def test_benchmark_report_rejects_tampered_evidence_claims():
         replace(report, unsafe_high_score_candidate_blocked=False)
     with pytest.raises(ValueError, match="may not invent"):
         replace(report, provider_cost="1.00")
+    with pytest.raises(ValueError, match="production readiness"):
+        replace(report, production_readiness="READY")
+    with pytest.raises(ValueError, match="measurement_class"):
+        replace(report, measurement_class="MODEL_ESTIMATED")
