@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 128
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -118,10 +118,7 @@ jobs:
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          BASE_SHA="${PR_BASE_SHA}"
-          if [ -z "${BASE_SHA}" ]; then
-            BASE_SHA="$(git rev-parse origin/main)"
-          fi
+          BASE_SHA="${PR_BASE_SHA:-7edd80484629378af0658bfca0d7d4e351361831}"
           python aura_construction_architect_refactor.py \
             --base-sha "${BASE_SHA}" \
             --output-dir Aura_Staging/sco_construction_phase3_architect
@@ -158,3 +155,7 @@ jobs:
           python aura_codebase_navigator.py
           python aura_codemap_verify.py --repo-root .
           git diff --check
+          git diff --exit-code -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json
