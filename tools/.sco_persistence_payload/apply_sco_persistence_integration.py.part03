@@ -1,0 +1,112 @@
+tence/checkpoints/{checkpoint_id}
+POST /api/human-agent/persistence/checkpoint
+POST /api/human-agent/persistence/assess
+POST /api/human-agent/persistence/restoration-packet
+POST /api/human-agent/persistence/handoff
+```
+
+Agent Bridge MCP tools:
+
+```text
+aura_checkpoint_session
+aura_list_checkpoints
+aura_restore_checkpoint
+aura_fork_checkpoint
+aura_handoff_checkpoint
+```
+
+The Coding Workbench exposes `checkpoint_state()`, `assess_checkpoint()`, `restoration_packet()`, and `list_checkpoints()` on its guarded session object.
+
+A handoff packet is a payload-free digital baton. It identifies the source checkpoint, target Arena, payload digest, and required restoration gate; it does not mutate the target Arena. `TEMP:STALE` and `TEMP:BRANCH_OFFSET` force refresh/re-verification. Checkpoints are operational continuity records, not automatic authority or legal certification.
+
+"""
+    insert_before(
+        path,
+        "## 10. Cost and benchmark interpretation\n",
+        section,
+        "## 10. Temporal persistence and cross-Arena handoff",
+    )
+    replace_once(path, "## 10. Cost and benchmark interpretation\n", "## 11. Cost and benchmark interpretation\n")
+    replace_once(path, "## 11. Testing\n", "## 12. Testing\n")
+    replace_once(path, "## 12. Troubleshooting\n", "## 13. Troubleshooting\n")
+    replace_once(path, "## 13. Safety rules\n", "## 14. Safety rules\n")
+
+
+def patch_agent_bridge_doc() -> None:
+    path = "docs/AURA_AGENT_ARENA_BRIDGE.md"
+    replace_once(
+        path,
+        "| `aura_export_icm` | Export arena transaction into ICM audit workspace |\n",
+        "| `aura_export_icm` | Export arena transaction into ICM audit workspace |\n"
+        "| `aura_checkpoint_session` | Persist the prepared bridge session as a verifier-bound checkpoint |\n"
+        "| `aura_list_checkpoints` | List checkpoint metadata without payloads |\n"
+        "| `aura_restore_checkpoint` | Assess restore against current HEAD and invariants; never auto-apply |\n"
+        "| `aura_fork_checkpoint` | Create a named what-if child checkpoint |\n"
+        "| `aura_handoff_checkpoint` | Create a payload-free digital baton for another Arena |\n",
+    )
+    section = """## Temporal Persistence Tools
+
+The MCP server uses `PersistentAuraAgentArenaBridge`, which extends the existing bridge without changing patch authority.
+
+```text
+prepare / stage / verify
+  → aura_checkpoint_session
+  → optional aura_fork_checkpoint
+  → aura_restore_checkpoint
+  → existing verifier and human review
+```
+
+A restore result is an assessment packet only. It cannot apply a patch, promote a hotswap, commit, push, open a PR, merge, or authorize a physical action. Cross-Arena handoff excludes the checkpoint payload by default.
+
+"""
+    insert_before(
+        path,
+        "## Example Codex CLI Workflow\n",
+        section,
+        "## Temporal Persistence Tools",
+    )
+
+
+def patch_handoff_log() -> None:
+    path = "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md"
+    section = """
+
+## Phase 4 temporal-persistence handoff
+
+```yaml
+baseline_main: c77e6d6558b2ee4f4c7f7c9160eff16e8ec0e4c5
+active_branch: refactor/sco-construction-persistence-e9-e12
+current_phase: E9_E12_TEMPORAL_PERSISTENCE
+current_status: IMPLEMENTING
+coderabbit_policy: TRIGGER_ONCE_AFTER_FINAL_MANUAL_AND_EXECUTABLE_GATES
+```
+
+| Capability | Canonical owner | Disposition |
+|---|---|---|
+| Content-addressed checkpoint and registry | `aura_temporal_persistence.py` | `NEW_GENERIC_OWNER` |
+| Temporal stale/branch guard | `aura_wfst_temporal_adapter.py` | `NEW_NARROW_ADAPTER`; no active grammar mutation |
+| Coding/Human/Bridge/Construction projections | `aura_arena_persistence_adapters.py` | `INTEGRATED` |
+| Agent Bridge persistence MCP | `aura_agent_arena_persistence_bridge.py`, `aura_agent_arena_mcp.py` | `INTEGRATED` |
+| Human Agent persistence API | `aura_human_agent_arena_server.py` | `INTEGRATED` |
+| Automatic restore or hotswap | none | `FORBIDDEN` |
+| Legal immutability/court admissibility | none | `NOT_CLAIMED` |
+"""
+    text = read(path)
+    if "## Phase 4 temporal-persistence handoff" not in text:
+        write(path, text.rstrip() + section + "\n")
+
+
+def main() -> None:
+    patch_state_ledger_facade()
+    patch_coding_workbench()
+    patch_human_agent_server()
+    patch_agent_mcp()
+    patch_readme()
+    patch_architecture()
+    patch_user_guide()
+    patch_agent_bridge_doc()
+    patch_handoff_log()
+
+
+if __name__ == "__main__":
+    main()
