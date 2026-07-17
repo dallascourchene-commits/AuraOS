@@ -3,101 +3,118 @@
 > Editable continuity record. Git source, tests, schemas, and CODEMAP remain authoritative.
 
 ```yaml
-document_version: 1.1.2
-created_date: 2026-07-16
+document_version: 1.3.0
+updated_date: 2026-07-17
 repository: dallascourchene-commits/AuraOS
-baseline_main: 52f07f3b8bc5f932b6a1c950f0c3081500f189db
-active_branch: refactor/sco-construction-arena
-current_phase: E0_E3
-current_status: PHASE_ONE_VERIFIED_READY_TO_MERGE
-next_phase: E4_E6_AFTER_MERGE_AND_REGROUNDING
+baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
+active_branch: refactor/sco-construction-e4-e6
+current_phase: E4_E6
+current_status: IMPLEMENTED_AND_MANUALLY_VERIFIED_AWAITING_USER_DIRECTION
+coderabbit_triggered: false
+pull_request_opened: false
+merged: false
 ```
 
-## Current capabilities
+## Capability registry
 
-| Capability | Canonical owner | Status |
+| Capability | Canonical owner | Disposition |
 |---|---|---|
-| Revisioned refactor skeleton | `aura_refactor_skeleton.py` | `INTEGRATED` with Human Agent planning and Coding capsule preparation |
-| Construction refactor adapter | `aura_construction_refactor_plan.py` | `INTEGRATED` for E0-E3 only |
-| Construction runtime | not approved | `DEFERRED` pending E4-E6 |
+| Revisioned refactor skeleton | `aura_refactor_skeleton.py` | `INTEGRATED` |
+| Construction refactor adapter | `aura_construction_refactor_plan.py` | `INTEGRATED` |
+| Construction contracts | `aura_construction_contracts.py` | `INTENTIONALLY_LOCAL`; projects to canonical Aura events |
+| Construction replay and queries | `aura_construction_state.py` | `INTENTIONALLY_LOCAL`; deterministic `ZERO_MODEL` |
+| Construction authority binding | `aura_construction_authority.py` | `INTEGRATED` with relational authority; no physical release |
+| Construction `BaseArenaAdapter` | not implemented | `ADAPTER_REQUIRED` |
+| Human Agent Construction profile | not implemented | `ADAPTER_REQUIRED` |
+| Observatory projection | not implemented | `DEFERRED` |
+| Experience/Crucible projection | not implemented | `DEFERRED` |
+| Payment and hazard lanes | not implemented | `DEFERRED` |
 
-The skeleton includes immutable digest-covered mappings and sequences, normalized-key collision rejection, exact SHA-256 and source-span verification, revision-chain preservation, and proposal-only authority.
+## Implemented path
+
+```text
+Construction records
+  -> deterministic append-only replay
+  -> explicit supersession and preserved conflicts
+  -> evidence-readiness query
+  -> exact relational-governance replay
+  -> digitally-ready proposal and chained receipt
+  -> HUMAN PHYSICAL RELEASE STILL REQUIRED
+```
 
 ## Open wiring debts
 
-| Debt | Missing wire | Status | Next exact grounding step |
+| Debt | Missing wire | Status | Retirement criterion |
 |---|---|---|---|
-| `WIRE-SCO-001` | Construction `BaseArenaAdapter` | `ADAPTER_REQUIRED` | Inspect current Liquid and Civic adapter APIs |
-| `WIRE-SCO-002` | Construction packets in Human Agent Emergent | `ADAPTER_REQUIRED` | Ground preview, guarded commit, API, and denial seams |
-| `WIRE-SCO-003` | Construction Experience projection | `DEFERRED` | Ground eligibility and redaction after a verified synthetic episode |
-| `WIRE-SCO-004` | Observatory projection | `DEFERRED` | Define read-only route, context, gate, and cost records |
-| `WIRE-SCO-005` | Handoff-log validation gate | `DEFERRED` | Add a lightweight schema or CI validator |
-| `WIRE-SCO-006` | E4 minimal domain contracts | `BLOCKED` | Reground exact event and civic owners after merge |
-| `WIRE-SCO-007` | E5 deterministic state and queries | `BLOCKED` | Ground reducers, supersession, and conflict contracts |
-| `WIRE-SCO-008` | E6 authority, attestation, and receipt adapter | `BLOCKED` | Ground signature and verifier protocols |
+| `WIRE-SCO-001` | Construction `BaseArenaAdapter` | `ADAPTER_REQUIRED` | Synthetic adapter parity passes |
+| `WIRE-SCO-002` | Human Agent Emergent Construction packets | `ADAPTER_REQUIRED` | Denied operations remain non-mutating |
+| `WIRE-SCO-003` | Construction Experience projection | `DEFERRED` | Verified synthetic episode passes eligibility/redaction |
+| `WIRE-SCO-004` | Observatory projection | `DEFERRED` | Read-only records expose no execution methods |
+| `WIRE-SCO-005` | Handoff-log validation gate | `DEFERRED` | Missing dispositions fail validation |
+| `WIRE-SCO-006` | E4 contracts | `INTEGRATED` | Contract regressions remain green |
+| `WIRE-SCO-007` | E5 state/query engine | `INTEGRATED` | Replay/query regressions remain green |
+| `WIRE-SCO-008` | E6 authority/receipt adapter | `INTEGRATED` | No unbound result or receipt is accepted |
+| `WIRE-SCO-009` | Payment readiness | `DEFERRED` | No fund-transfer capability |
+| `WIRE-SCO-010` | Hazard/location advisory | `DEFERRED` | Sensor/location evidence remains non-dispositive |
 
-## Phase 1 evidence
+## Phase evidence
 
 ```yaml
 source_files:
-  - aura_refactor_skeleton.py
-  - aura_construction_refactor_plan.py
+  - aura_construction_contracts.py
+  - aura_construction_state.py
+  - aura_construction_authority.py
 test_files:
-  - tests/test_aura_refactor_skeleton.py
-  - tests/test_aura_construction_refactor_plan.py
-documentation:
-  - docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md
-  - docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md
-  - docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md
-  - docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md
-generated_files:
-  - .aura/CODEMAP.json
-  - .aura/CODEMAP.md
-  - topology_map.json
+  - tests/test_aura_construction_contracts.py
+  - tests/test_aura_construction_state.py
+  - tests/test_aura_construction_authority.py
 validation:
+  focused_adversarial_tests: 128_passed
+  focused_statement_coverage: 90_percent
   py_compile: PASS
   compileall: PASS
-  focused_adversarial_tests: 33_passed
-  equivalent_manual_review: COMPLETE
-  review_threads_resolved: 5_of_5
-  github_actions: ACTION_REQUIRED_NO_JOBS_EXECUTED
-  topology_policy: REGENERATE_NEVER_HAND_MERGE
+  manual_fatal_lint: PASS
+  randomized_replay_histories: 250
+  manual_findings_repaired: 40
+  coderabbit: NOT_TRIGGERED
+  pr: NOT_OPENED
+  merge: NOT_PERFORMED
+context_efficiency:
+  broad_repository_files: 1022
+  selected_principal_owner_files: 4
+  structural_file_selection_reduction: 99.61_percent
+  measurement_class: STRUCTURAL_CONTEXT_PROXY
+  provider_tokens_and_cost: NOT_MEASURED
 ```
-
-GitHub Actions did not report a test failure; it required approval and created zero jobs. The user-authorized fallback was the equivalent manual review recorded in `docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md`.
-
-## Integration dispositions
-
-Every relevant structure must be classified as `INTEGRATED`, `INTENTIONALLY_LOCAL`, `ADAPTER_REQUIRED`, `DEFERRED`, `BLOCKED`, `NOT_APPLICABLE`, `DEPRECATED`, or `SUPERSEDED`.
 
 ## Future-AI continuation rule
 
-1. Read this log and the three SCO Phase 1 documents.
-2. Verify current Git, tests, schemas, and CODEMAP before acting.
-3. Run Capability Connectome and Resolver before creating a module.
-4. Record every missing adapter or intentionally local capability here.
-5. Reground current `main` before E4-E6.
+1. Verify current Git, source, tests, schemas, and generated topology.
+2. Do not redesign E4–E6 without a failing gate, changed dependency, or exact new evidence.
+3. Run Capability Connectome/Resolver before adding a module.
+4. Keep `EVIDENCE_READY`, `GOVERNANCE_AUTHORIZED`, and `PHYSICAL_RELEASED` separate.
+5. Treat `verify_construction_receipts()` as continuity/content verification, not actor authenticity.
+6. Use `ConstructionReceiptBinding.validate_against()` for full governance-lineage validation.
+7. Do not trigger CodeRabbit unless the user explicitly requests it.
+8. Do not open a PR or merge without user direction.
 
-## Required future entry fields
+## CodeRabbit and manual adversarial review continuation
 
-```yaml
-change_id:
-date:
-objective:
-canonical_owner:
-branch:
-pr:
-commit:
-status:
-files:
-symbols:
-tests:
-docs:
-truth_boundary:
-authority_boundary:
-privacy_boundary:
-integration_dispositions:
-known_missing_wires:
-next_grounding_step:
-rollback_or_supersession:
-```
+- CodeRabbit review: 15 actionable threads examined individually.
+- Confirmed repairs: canonical materialization, strict collection containers,
+  canonical policy scopes, evidence-freshness expiry, exact canonical authority
+  types, deterministic result revalidation, verified receipt predecessors,
+  non-ready receipt rejection, state-query indexing, and fail-closed event order.
+- Staging payloads and one-time tools are removed only after exact-branch tests.
+- Construction remains proposal-only and never authorizes physical work.
+
+## Exact-branch CodeRabbit/manual repair validation
+
+- reviewed_trigger_sha: `91fde5f4626fd87cc0f1b6a8f1e7cf756027aa7e`
+- CodeRabbit actionable threads examined: 15
+- focused Construction tests: at least 138 PASS
+- focused Construction statement coverage: 89% measured; 88% enforced minimum PASS
+- canonical owner regressions: PASS
+- deterministic randomized histories: 250 PASS
+- staging payloads and one-run tooling: removed before final topology
+- authority boundary: proposal-only; human physical release remains mandatory
