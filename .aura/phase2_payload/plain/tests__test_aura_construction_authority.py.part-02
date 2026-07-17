@@ -1,0 +1,92 @@
+    with pytest.raises(ValueError):
+        ConstructionActionRequest.create(
+            scope=request.scope,
+            action_kind="x",
+            policy_scope="construction/P1",
+            capability_scope="construction.release",
+            risk_class=RiskClass.HIGH,
+            required_claim_ids=(),
+            created_at=1,
+            expires_at=2,
+        )
+
+
+def test_authorized_governance_plus_ready_evidence_is_digitally_ready():
+    state, request, _ = fixtures()
+    result, decision = evaluate_ready(state, request)
+    assert decision.authorized
+    assert result.evidence_ready
+    assert result.governance_authorized
+    assert result.digitally_ready
+    assert result.human_release_required
+    assert not result.physical_work_authorized
+
+
+def test_unauthorized_governance_fails_closed():
+    state, request, _ = fixtures()
+    result, decision = evaluate_construction_authority(
+        request=request,
+        state=state,
+        grants=(),
+        attestations=(),
+        quorum_policy=quorum_policy(),
+        verified_authority_refs=("authority-ref",),
+        verified_attestation_refs=("attestation-ref",),
+        now=10,
+    )
+    assert not decision.authorized
+    assert result.evidence_ready
+    assert not result.governance_authorized
+    assert not result.digitally_ready
+    assert "governance_not_authorized" in result.missing_reasons
+
+
+def test_rejection_attestation_blocks_authorization():
+    state, request, _ = fixtures()
+    grants, attestations, policy = authority_material(request, decision=AttestationDecision.REJECT)
+    result, decision = evaluate_construction_authority(
+        request=request,
+        state=state,
+        grants=grants,
+        attestations=attestations,
+        quorum_policy=policy,
+        verified_authority_refs=("authority-ref",),
+        verified_attestation_refs=("attestation-ref",),
+        now=10,
+    )
+    assert not decision.authorized
+    assert not result.digitally_ready
+
+
+def test_project_mismatch_rejected():
+    state, request, _ = fixtures()
+    bad = ConstructionActionRequest.create(
+        scope=ConstructionScope("P2"),
+        action_kind="x",
+        policy_scope="construction/P2",
+        capability_scope="construction.release",
+        risk_class=RiskClass.HIGH,
+        required_claim_ids=request.required_claim_ids,
+        created_at=5,
+        expires_at=40,
+    )
+    with pytest.raises(ValueError):
+        evaluate_construction_authority(
+            request=bad,
+            state=state,
+            grants=(),
+            attestations=(),
+            quorum_policy=quorum_policy(),
+            verified_authority_refs=("authority-ref",),
+            verified_attestation_refs=("attestation-ref",),
+            now=10,
+        )
+
+
+def test_expired_request_rejected():
+    state, request, _ = fixtures()
+    with pytest.raises(ValueError):
+        evaluate_construction_authority(
+            request=request,
+            state=state,
+            grants=(),
