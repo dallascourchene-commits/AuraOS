@@ -320,6 +320,30 @@ Primary owners include:
 - `aura_agent_arena_mcp.py`;
 - external-LLM slice-session and refactor-evidence modules.
 
+<!-- AURA_FORGE_V1:START -->
+#### Aura Forge verified engineering surface
+
+Aura Forge is a product façade over the canonical Coding Arena, Agent Bridge, frozen
+Architect plan, Controlled Refactor Session, safe external-LLM slice leasing, staging,
+verification, output-vault, and human-review owners.
+
+```text
+FRAME → GROUND → PLAN
+  → Arena Evidence Contract
+  → ACT through bounded Surgeon turns
+  → PROVE through canonical verifiers
+  → DECIDE through a human review packet
+  → DISSOLVE or enter a separately authorized promotion workflow
+```
+
+`AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1` preserves exact repository/CODEMAP identity,
+plan-phase identity, Act Capsules, source line ranges, dependencies, tests, route evidence,
+allowed files, required gates, model budgets, and non-promotion authority invariants.
+
+Forge cannot commit, push, open a pull request, merge, mutate production, or convert
+hotswap readiness into promotion authority.
+<!-- AURA_FORGE_V1:END -->
+
 ### Plane 8 — Observatory and glass-box explanation
 
 The Observatory is separate from the Human Agent and Learning Arena.

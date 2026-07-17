@@ -75,6 +75,7 @@ Keep these outside the repository:
 |---|---|---|
 | **Native Cockpit** | Objective ingestion, capability resolution, topology paths, and bounded handoff preparation | `python3 -m aura_native_cockpit_server` |
 | **Agent Arena CLI** | Repository health, localization, prepared coding tasks, staging, verification, cost, and domain commands | `python3 -m aura_agent_arena_cli` |
+| **Aura Forge API** | Frozen-plan verified engineering runs with an exact Arena Evidence Contract and bounded worker sessions | `from aura_forge import AuraForgeRuntime` |
 | **Coding Arena** | Visual code topology, exact source regions, route simulation, and capsule review | `python3 aura_coding_arena_server.py --demo` |
 | **Human Agent Arena** | Human/Aura/agent workflows, gate dialogue, attempts, emergent evidence, Construction profile, persistence, and tools | `python3 aura_human_agent_arena_server.py --repo-root . --demo` |
 | **Aura Showcase** | Guided four-surface Civic, Human Agent, Observatory, and Crucible demonstration | `python3 aura_showcase_server.py --demo-project winnipeg_pathways` |
@@ -282,6 +283,43 @@ objective
   → patch evaluator / Judge
   → human maintainer decision
 ```
+
+### Aura Forge V1
+
+Use Forge when a coding task needs a stable product-level contract around the existing
+Coding Arena workflow.
+
+```python
+from aura_forge import AuraForgeRuntime
+
+forge = AuraForgeRuntime(repo_root=".")
+opened = forge.start({
+    "objective": "Refactor failure routing while preserving public APIs",
+    "target_file": "pkg/router.py",
+    "target_symbol": "route_failure",
+    "acceptance_criteria": ["visible, hidden, and regression tests pass"],
+    "risk_map": ["interface drift", "scope expansion"],
+    "provider": "external",
+    "model": "provider-model",
+})
+```
+
+Inspect `opened["contract"]` before sending the leased turn to a worker. The contract
+includes exact task evidence, allowed files, required gates, budgets, and authority limits.
+Submit only the worker's bounded unified diff through `forge.submit(...)`.
+
+A completed run stops at `READY_FOR_HUMAN_REVIEW`. `human_review_packet` may expose
+verifier and hotswap-readiness evidence, but it never performs promotion, commit, push,
+pull-request creation, merge, or production mutation.
+
+Focused validation:
+
+```bash
+python -m py_compile aura_forge.py tests/test_aura_forge.py
+python -m pytest -q tests/test_aura_forge.py
+```
+
+See `docs/AURA_FORGE.md` for the complete contract and failure boundaries.
 
 ### Grounded phase capsules
 
