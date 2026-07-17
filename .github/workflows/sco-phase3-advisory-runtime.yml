@@ -49,6 +49,7 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
+            tests/test_aura_construction_grammar.py \
             tests/test_aura_construction_architect_refactor.py
           ruff check --select E9,F63,F7,F82,F401,F811,B006 \
             aura_construction_adapter.py \
@@ -61,6 +62,7 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
+            tests/test_aura_construction_grammar.py \
             tests/test_aura_construction_architect_refactor.py
           git diff --check
       - name: Run focused Phase 3 coverage gate
@@ -72,10 +74,11 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
+            tests/test_aura_construction_grammar.py \
             tests/test_aura_construction_architect_refactor.py \
             2>&1 | tee /tmp/sco-phase3-collect.txt
           COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase3-collect.txt | tail -1 | awk '{print $1}')"
-          test "${COLLECTED:-0}" -ge 60
+          test "${COLLECTED:-0}" -ge 70
           python -m coverage erase
           python -m coverage run -m pytest -q \
             tests/test_aura_construction_adapter.py \
@@ -83,6 +86,7 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             tests/test_aura_construction_learning.py \
+            tests/test_aura_construction_grammar.py \
             tests/test_aura_construction_architect_refactor.py \
             2>&1 | tee /tmp/sco-phase3-tests.txt
           python -m coverage report -m \
