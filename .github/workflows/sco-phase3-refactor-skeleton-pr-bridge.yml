@@ -39,7 +39,7 @@ jobs:
       - name: Run exact Aura repair capsule
         run: |
           set -o pipefail
-          python tools/sco_phase3_refactor_skeleton_repair.py \
+          PYTHONPATH=. python tools/sco_phase3_refactor_skeleton_repair.py \
             2>&1 | tee /tmp/sco-skeleton-repair.log
           rm -f \
             tools/sco_phase3_refactor_skeleton_repair.py \
