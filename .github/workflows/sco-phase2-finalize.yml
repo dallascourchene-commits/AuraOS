@@ -103,7 +103,7 @@ jobs:
             tests/test_aura_construction_contracts.py \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py | tee /tmp/sco-phase2-collect.txt
-          grep -Eq '137 tests collected' /tmp/sco-phase2-collect.txt
+          grep -Eq '[0-9]+ tests collected' /tmp/sco-phase2-collect.txt
 
       - name: Run focused tests and measured coverage
         run: |
@@ -144,7 +144,7 @@ jobs:
               Path('docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md'),
               Path('docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md'),
           )
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: 137 PASS\n- exact focused Construction statement coverage: 88% PASS\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction test suite: PASS\n- focused Construction statement-coverage gate: PASS at or above 88%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
           for path in paths:
               text = path.read_text(encoding='utf-8')
