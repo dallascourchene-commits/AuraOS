@@ -1,0 +1,205 @@
+            self.authority_class, ConstructionAuthorityClass, "authority_class"
+        )
+        privacy = _require_canonical_enum(
+            self.privacy_class, ConstructionPrivacyClass, "privacy_class"
+        )
+        _tuple_strings(self.consent_refs, "evidence.consent_refs")
+        _require_canonical_float(self.observed_at, "evidence.observed_at")
+        _require_canonical_float(
+            self.expires_at, "evidence.expires_at", allow_none=True
+        )
+        observed = _timestamp(self.observed_at, "evidence.observed_at")
+        if self.expires_at is not None and _timestamp(self.expires_at, "evidence.expires_at") <= observed:
+            raise ValueError("evidence expires_at must be later than observed_at")
+        if privacy == ConstructionPrivacyClass.SENSITIVE.value and not self.consent_refs:
+            raise ValueError("sensitive evidence requires consent references")
+        if (
+            evidence_class
+            in {
+                ConstructionEvidenceClass.SENSOR.value,
+                ConstructionEvidenceClass.LOCATION.value,
+            }
+            and authority not in {
+            ConstructionAuthorityClass.NONE.value,
+                ConstructionAuthorityClass.INFORMATIVE.value,
+            }
+        ):
+            raise ValueError(
+                "sensor and location evidence cannot carry dispositive authority"
+            )
+        _validate_boundaries(
+            proposal_only=self.proposal_only,
+            patch_authority=self.patch_authority,
+            vsa_patch_authority=self.vsa_patch_authority,
+        )
+        payload = self._identity_payload()
+        if self.evidence_digest != stable_digest(payload):
+            raise ValueError("evidence digest does not match its content")
+        if self.evidence_id != stable_id("construction-evidence", payload):
+            raise ValueError("evidence ID does not match its content")
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionEvidence":
+        data = dict(value)
+        return cls(
+            evidence_id=data.get("evidence_id"),
+            evidence_digest=data.get("evidence_digest"),
+            scope=ConstructionScope.from_dict(dict(data.get("scope") or {})),
+            subject_id=data.get("subject_id"),
+            evidence_class=data.get("evidence_class"),
+            source_ref=data.get("source_ref"),
+            payload_digest=data.get("payload_digest"),
+            measurement_class=data.get("measurement_class"),
+            confidence=(
+                data.get("confidence")
+            ),
+            authority_class=data.get("authority_class"),
+            privacy_class=data.get("privacy_class"),
+            consent_refs=tuple(data.get("consent_refs", ())),
+            observed_at=data.get("observed_at"),
+            expires_at=(
+                data.get("expires_at")
+            ),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        scope: ConstructionScope,
+        subject_id: str,
+        evidence_class: str | ConstructionEvidenceClass,
+        source_ref: str,
+        payload_digest: str,
+        measurement_class: str | MeasurementClass,
+        confidence: float | None,
+        authority_class: str | ConstructionAuthorityClass,
+        privacy_class: str | ConstructionPrivacyClass,
+        consent_refs: Iterable[str] = (),
+        observed_at: float,
+        expires_at: float | None = None,
+    ) -> "ConstructionEvidence":
+        if type(scope) is not ConstructionScope:
+            raise ValueError("scope must be an exact ConstructionScope")
+        values = {
+            "scope": scope,
+            "subject_id": _normalized_text_input(subject_id, "subject_id"),
+            "evidence_class": _enum_value(evidence_class, ConstructionEvidenceClass, "evidence_class"),
+            "source_ref": _normalized_text_input(source_ref, "source_ref"),
+            "payload_digest": _digest(payload_digest, "payload_digest"),
+            "measurement_class": _enum_value(measurement_class, MeasurementClass, "measurement_class"),
+            "confidence": _probability(confidence, "confidence"),
+            "authority_class": _enum_value(authority_class, ConstructionAuthorityClass, "authority_class"),
+            "privacy_class": _enum_value(privacy_class, ConstructionPrivacyClass, "privacy_class"),
+            "consent_refs": _normalized_unique(consent_refs, "consent_refs"),
+            "observed_at": _timestamp(observed_at, "observed_at"),
+            "expires_at": None if expires_at is None else _timestamp(expires_at, "expires_at"),
+            "version": CONSTRUCTION_CONTRACTS_VERSION,
+            "proposal_only": PROPOSAL_ONLY,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = cls._payload_from_values(values)
+        return cls(
+            evidence_id=stable_id("construction-evidence", payload),
+            evidence_digest=stable_digest(payload),
+            **values,
+        )
+
+    @staticmethod
+    def _payload_from_values(values: dict[str, Any]) -> dict[str, Any]:
+        return {
+            **values,
+            "scope": values["scope"].to_dict(),
+            "consent_refs": list(values["consent_refs"]),
+        }
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("evidence_id")
+        data.pop("evidence_digest")
+        return data
+
+    @property
+    def state_key(self) -> str:
+        return stable_id(
+            "construction-evidence-state",
+            {
+                "scope": self.scope.to_dict(),
+                "subject_id": self.subject_id,
+                "evidence_class": self.evidence_class,
+                "source_ref": self.source_ref,
+            },
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ConstructionClaim:
+    claim_id: str
+    claim_digest: str
+    scope: ConstructionScope
+    subject_id: str
+    predicate: str
+    value_digest: str
+    claimant_id: str
+    evidence_refs: tuple[str, ...]
+    measurement_class: str
+    confidence: float | None
+    authority_class: str
+    privacy_class: str
+    consent_refs: tuple[str, ...]
+    created_at: float
+    expires_at: float | None
+    version: str = CONSTRUCTION_CONTRACTS_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_CONTRACTS_VERSION:
+            raise ValueError("unsupported construction claim version")
+        if type(self.scope) is not ConstructionScope:
+            raise ValueError("claim scope must be a ConstructionScope")
+        _text(self.subject_id, "claim.subject_id")
+        _text(self.predicate, "claim.predicate")
+        _digest(self.value_digest, "claim.value_digest")
+        _text(self.claimant_id, "claim.claimant_id")
+        _tuple_strings(self.evidence_refs, "claim.evidence_refs")
+        _require_canonical_enum(
+            self.measurement_class, MeasurementClass, "measurement_class"
+        )
+        _require_canonical_float(self.confidence, "claim.confidence", allow_none=True)
+        _probability(self.confidence, "claim.confidence")
+        authority = _require_canonical_enum(
+            self.authority_class, ConstructionAuthorityClass, "authority_class"
+        )
+        privacy = _require_canonical_enum(
+            self.privacy_class, ConstructionPrivacyClass, "privacy_class"
+        )
+        _tuple_strings(self.consent_refs, "claim.consent_refs")
+        _require_canonical_float(self.created_at, "claim.created_at")
+        _require_canonical_float(self.expires_at, "claim.expires_at", allow_none=True)
+        created = _timestamp(self.created_at, "claim.created_at")
+        if self.expires_at is not None and _timestamp(self.expires_at, "claim.expires_at") <= created:
+            raise ValueError("claim expires_at must be later than created_at")
+        if privacy == ConstructionPrivacyClass.SENSITIVE.value and not self.consent_refs:
+            raise ValueError("sensitive claims require consent references")
+        if authority in {
+            ConstructionAuthorityClass.PROFESSIONAL.value,
+            ConstructionAuthorityClass.REGULATORY.value,
+            ConstructionAuthorityClass.LEGAL.value,
+        } and not self.evidence_refs:
+            raise ValueError("high-authority claims require exact evidence references")
+        _validate_boundaries(
+            proposal_only=self.proposal_only,
+            patch_authority=self.patch_authority,
+            vsa_patch_authority=self.vsa_patch_authority,
+        )
+        payload = self._identity_payload()
