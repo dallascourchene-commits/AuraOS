@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_review_contract.schema.json",
+  "title": "Aura Review Contract V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "contract_id",
+    "request_digest",
+    "repository_head",
+    "diff_digest",
+    "changed_files",
+    "changed_symbols",
+    "impact_slice",
+    "focus_directives",
+    "invariants",
+    "risk_map",
+    "routing_frame",
+    "guideline_files",
+    "profile",
+    "authority",
+    "lifecycle"
+  ],
+  "properties": {
+    "version": {"const": "AURA_REVIEW_CONTRACT_V1"},
+    "contract_id": {"type": "string", "minLength": 16},
+    "request_digest": {"type": "string", "minLength": 16},
+    "repository_head": {"type": "string", "minLength": 1},
+    "diff_digest": {"type": "string", "minLength": 16},
+    "changed_files": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/repositoryPath"}
+    },
+    "changed_symbols": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/changedSymbol"}
+    },
+    "impact_slice": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/impactNode"}
+    },
+    "focus_directives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/focusDirective"}
+    },
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "risk_map": {"type": "array", "items": {"type": "string"}},
+    "routing_frame": {"type": "object"},
+    "guideline_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "digest", "scope"],
+        "properties": {
+          "file": {"$ref": "#/$defs/repositoryPath"},
+          "digest": {"type": "string"},
+          "scope": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "profile": {"enum": ["precision", "balanced", "exhaustive"]},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aura_computes_diff_and_graph",
+        "agent_supplies_hypotheses",
+        "agent_may_not_self_confirm",
+        "planning_proposes",
+        "verification_proves",
+        "human_authorizes",
+        "patch_authority",
+        "vsa_patch_authority",
+        "production_mutation",
+        "automatic_fix",
+        "automatic_commit",
+        "automatic_push",
+        "automatic_pull_request",
+        "automatic_merge"
+      ],
+      "properties": {
+        "aura_computes_diff_and_graph": {"const": true},
+        "agent_supplies_hypotheses": {"const": true},
+        "agent_may_not_self_confirm": {"const": true},
+        "planning_proposes": {"const": true},
+        "verification_proves": {"const": true},
+        "human_authorizes": {"const": true},
+        "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+        "vsa_patch_authority": {"const": false},
+        "production_mutation": {"const": false},
+        "automatic_fix": {"const": false},
+        "automatic_commit": {"const": false},
+        "automatic_push": {"const": false},
+        "automatic_pull_request": {"const": false},
+        "automatic_merge": {"const": false}
+      }
+    },
+    "lifecycle": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "FRAME"},
+        {"const": "DIFF"},
+        {"const": "SLICE"},
+        {"const": "SCAN"},
+        {"const": "INVESTIGATE"},
+        {"const": "CORROBORATE"},
+        {"const": "RANK"},
+        {"const": "DECIDE"},
+        {"const": "REPAIR_HANDOFF"},
+        {"const": "DISSOLVE"}
+      ],
+      "items": false,
+      "minItems": 10,
+      "maxItems": 10
+    }
+  },
+  "$defs": {
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "changedSymbol": {
+      "type": "object",
+      "required": ["file", "symbol", "kind", "line_start", "line_end", "signature", "source_digest"],
+      "properties": {
+        "file": {"$ref": "#/$defs/repositoryPath"},
+        "symbol": {"type": "string"},
+        "kind": {"type": "string"},
+        "line_start": {"type": "integer", "minimum": 1},
+        "line_end": {"type": "integer", "minimum": 1},
+        "signature": {"type": "string"},
+        "source_digest": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "impactNode": {
+      "type": "object",
+      "required": ["node_id", "file", "symbol", "kind", "line", "direction", "depth", "edge_kind", "parent_node", "authority"],
+      "properties": {
+        "node_id": {"type": "string"},
+        "file": {"type": "string"},
+        "symbol": {"type": "string"},
+        "kind": {"type": "string"},
+        "line": {"type": "integer", "minimum": 0},
+        "direction": {"type": "string"},
+        "depth": {"type": "integer", "minimum": 0},
+        "edge_kind": {"type": "string"},
+        "parent_node": {"type": "string"},
+        "authority": {"const": "advisory_navigation_exact_source_required"}
+      },
+      "additionalProperties": false
+    },
+    "focusDirective": {
+      "type": "object",
+      "required": ["directive_id", "name", "question", "risk", "direction", "target_patterns", "required_evidence", "suggested_tools", "max_depth", "max_nodes", "origin"],
+      "properties": {
+        "directive_id": {"type": "string"},
+        "name": {"type": "string"},
+        "question": {"type": "string"},
+        "risk": {"type": "string"},
+        "direction": {"enum": ["callers", "callees", "both", "shared_resources"]},
+        "target_patterns": {"type": "array", "items": {"type": "string"}},
+        "required_evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "suggested_tools": {"type": "array", "items": {"type": "string"}},
+        "max_depth": {"type": "integer", "minimum": 0, "maximum": 4},
+        "max_nodes": {"type": "integer", "minimum": 1, "maximum": 250},
+        "origin": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
