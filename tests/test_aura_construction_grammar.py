@@ -48,6 +48,11 @@ def test_construction_route_blocks_exact_match_without_required_evidence():
     assert route["abstention_reason"] == "exact_transition_blocked"
     blocked = {item["transition_id"]: item for item in route["blocked"]}
     assert "CONSTRUCTION.ADVANCE_ELECTRICAL" in blocked
+    assert blocked["CONSTRUCTION.ADVANCE_ELECTRICAL"]["fail_closed"] is True
+    assert set(blocked["CONSTRUCTION.ADVANCE_ELECTRICAL"]["missing_evidence"]) == {
+        "benchmark_report",
+        "verification_packet",
+    }
 
 
 def test_construction_route_blocks_failed_verifier_packet():
@@ -69,7 +74,7 @@ def test_construction_route_blocks_failed_verifier_packet():
     )
     assert any(
         result["guard_id"] == "GUARD.VERIFIER_PASS" and result["passed"] is False
-        for result in blocked["guard_results"]
+        for result in blocked["failed_guards"]
     )
 
 
