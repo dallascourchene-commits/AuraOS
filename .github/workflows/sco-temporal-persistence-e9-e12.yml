@@ -74,6 +74,8 @@ jobs:
 
       - name: Compile and run fatal static checks
         run: |
+          set -o pipefail
+          {
           python -m py_compile \
             aura_temporal_persistence.py \
             aura_persistence_registry.py \
@@ -107,6 +109,7 @@ jobs:
             tests/test_aura_arena_persistence_adapters.py \
             tests/test_aura_persistence_integrations.py
           git diff --check
+          } 2>&1 | tee /tmp/sco-persistence-static.txt
 
       - name: Run focused persistence coverage gate
         run: |
@@ -165,6 +168,7 @@ jobs:
         with:
           name: sco-temporal-persistence-${{ github.sha }}
           path: |
+            /tmp/sco-persistence-static.txt
             /tmp/sco-persistence-focused.txt
             /tmp/sco-persistence-coverage.txt
             /tmp/sco-persistence-regressions.txt
