@@ -89,18 +89,35 @@ Executable work can emit `AURA_REFACTOR_OUTPUT_RECORD_V1`, preserving estimated 
 
 ## Benchmark evidence
 
-Evidence classes must not be collapsed into one score.
+Evidence classes must not be collapsed into one score. Executable gates outrank deterministic token proxies; deterministic proxies outrank estimated structural projections; discovery scans identify candidates but do not prove implementation quality.
 
-| Evidence | Result | Boundary |
+### Tier 1 — Executable gate evidence
+
+| Benchmark | Result | Boundary |
+|---|---|---|
+| Executable fixture | visible `3/3`, hidden `3/3`, regression `2/2`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `97.50` | Required API, scope, security, compilation, and static-analysis gates passed |
+| Real AuraOS refactor | visible/property `32/32`, review-derived adversarial `35/35`, focused regression `24/24`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50` | Exact-head branch evidence; planning arms were frozen assisted artifacts rather than blinded independent-provider generations |
+
+### Tier 2 — Deterministic comparative proxies
+
+| Benchmark | Result | Boundary |
 |---|---|---|
 | Context localization | `131,655 → 14,431` total-token proxy; **89.04% lower**; quality `+0.0057` | Deterministic fixture proxy, not provider billing |
 | Selective Council V3 | `18 → 12` calls and `158,545 → 106,494` total proxy; **32.83% lower** with the same accepted plan, patch, and quality | Controlled executable fixture |
-| Executable fixture | visible `3/3`, hidden `3/3`, regression `2/2`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `97.50` | Required API, scope, security, compilation, and static-analysis gates passed |
-| Real AuraOS refactor | `32/32`, `35/35`, `21/21`; observed `100.00`, benchmark `93.50` | Real branch trial with frozen assisted planning artifacts |
 | State Ledger | step 7: `234` vs `6,140` proxy tokens; **96.19% less context**, preservation `1.0000`, drift `0.0000` | Synthetic continuity test |
+
+### Tier 3 — Estimated structural projection
+
+| Benchmark | Result | Boundary |
+|---|---|---|
+| Shared grounding evidence | `2,004 → 938` proxy; `1,066` avoided; **53.1936% projected savings** | `ESTIMATED` / `PROJECTED_STRUCTURAL_TOKEN_PROXY`; proposed PR #138 evidence, not provider billing or merged-main proof |
+
+### Tier 4 — Discovery and capacity projections
+
+| Benchmark | Result | Boundary |
+|---|---|---|
 | Emergent scan | `708` Python files, `10,815` nodes, `20,764` edges, `15` probes, `0` failures | Discovery evidence only |
 | Grounded projections | `7` probes, `0` failures; all remained `NEEDS_GROUNDING` | Projection, not implementation proof |
-| Shared grounding projection | `2,004 → 938` proxy; **53.1936% projected savings** | `ESTIMATED`; proposed PR #138 evidence, not provider billing or merged-main proof |
 
 ## Truth and authority
 
