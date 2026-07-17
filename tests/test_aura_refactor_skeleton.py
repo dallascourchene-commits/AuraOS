@@ -236,7 +236,6 @@ def test_persisted_authority_tampering_is_rejected(tmp_path, field, value):
     path = Path(stored["path"])
     payload = json.loads(path.read_text(encoding="utf-8"))
     payload["skeleton"][field] = value
-    # Recompute envelope to prove skeleton authority validation is independent.
     payload["envelope_digest"] = store._envelope_digest(payload["skeleton"])
     path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError, match="authority fields"):
@@ -309,7 +308,7 @@ def test_broken_prior_digest_chain_is_rejected_on_load(tmp_path):
     first = skeleton_for(node_for(tmp_path))
     second = first.revise_node("E1", status="REPAIR_REQUIRED")
     store = RefactorSkeletonStore(tmp_path)
-    one = Path(store.store(first)["path"])
+    store.store(first)
     two = Path(store.store(second)["path"])
     payload = json.loads(two.read_text(encoding="utf-8"))
     payload["skeleton"]["prior_revision_digest"] = "0" * 64
@@ -318,3 +317,41 @@ def test_broken_prior_digest_chain_is_rejected_on_load(tmp_path):
     two.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError):
         store.load_latest(first.skeleton_id)
+
+
+def test_direct_constructor_rejects_mutable_sequence_fields(tmp_path):
+    node = node_for(tmp_path)
+    with pytest.raises(ValueError, match="target_files must be an immutable tuple"):
+        replace(node, target_files=["module.py"])
+
+    skeleton = skeleton_for(node)
+    with pytest.raises(ValueError, match="nodes must be an immutable tuple"):
+        replace(skeleton, nodes=[node])
+
+
+def test_mapping_key_normalization_collision_fails_closed():
+    with pytest.raises(ValueError, match="mapping keys collide"):
+        RefactorSkeletonNode.create(
+            node_id="E1",
+            objective="test",
+            canonical_owner="owner",
+            reuse_decision="REUSE",
+            metadata={1: "integer", "1": "string"},
+        )
+
+
+def test_source_hash_path_normalization_collision_fails_closed(tmp_path):
+    source = write_source(tmp_path)
+    digest = sha256_file(source)
+    with pytest.raises(ValueError, match="source hash keys collide"):
+        RefactorSkeletonNode.create(
+            node_id="E1",
+            objective="test",
+            canonical_owner="owner",
+            reuse_decision="REUSE",
+            target_files=("module.py",),
+            exact_source_hashes={Path("module.py"): digest, "module.py": digest},
+            exact_source_spans=(SourceSpan.create("module.py", 1, 1),),
+            required_tests=("tests/test.py",),
+            status="READY_FOR_ACT",
+        )
