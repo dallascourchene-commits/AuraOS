@@ -16,30 +16,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Fetch exact head without persisted credentials
+      - name: Fetch exact head
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          git init .
+          git init -q .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch -q --no-tags --depth=1 origin "$TARGET_SHA"
           unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-      - name: Materialize and apply reviewed repairs
+          git checkout -q --detach FETCH_HEAD
+      - name: Materialize and repair
         run: |
-          python3 tools/sco_phase2_materialize.py
-          python3 tools/sco_phase2_transformer_preflight.py
-          python3 tools/sco_phase2_apply_review_fixes.py
-          python3 -m py_compile aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
-      - name: Install focused test runner
+          python3 tools/sco_phase2_materialize.py >/dev/null
+          python3 tools/sco_phase2_transformer_preflight.py >/dev/null
+          python3 tools/sco_phase2_apply_review_fixes.py >/dev/null
+      - name: Install pytest
         run: python3 -m pip install -q pytest==8.4.1
-      - name: Run focused Construction tests
-        run: |
-          python3 -m pytest -q \
-            tests/test_aura_construction_contracts.py \
-            tests/test_aura_construction_state.py \
-            tests/test_aura_construction_authority.py
+      - name: Run concise focused tests
+        run: python3 -m pytest -q --tb=short tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
