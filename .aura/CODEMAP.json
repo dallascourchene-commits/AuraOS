@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784272796,
+  "generated_at_unix": 1784279437,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1081,
+    "included_file_count": 1082,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 60,
+      ".git": 61,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
       "__pycache__": 8
@@ -1084,6 +1084,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tools/sco_phase2_apply_review_fixes.py",
       "tools/sco_phase2_fatal_lint.py",
       "tools/sco_phase2_materialize.py",
       "tools/sco_phase2_randomized_probe.py",
@@ -1103,23 +1104,23 @@
     ]
   },
   "summary": {
-    "file_count": 1081,
-    "total_bytes": 51247480,
-    "text_tokens_est": 3414840,
+    "file_count": 1082,
+    "total_bytes": 51291766,
+    "text_tokens_est": 3425912,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 27,
       "knowledge_artifact": 138,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 716,
+      "python_module": 717,
       "schema_or_lexicon": 102,
       "support_file": 83
     },
     "topology_nodes": 8402,
     "topology_edges": 18428,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 22340.99
+    "elapsed_ms": 22052.24
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2205,6 +2206,7 @@
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tools/sco_phase2_apply_review_fixes.py",
       "tools/sco_phase2_fatal_lint.py",
       "tools/sco_phase2_materialize.py",
       "tools/sco_phase2_randomized_probe.py",
@@ -2821,6 +2823,7 @@
       "aura_workflow_gates.py:676",
       "debug_att.py:15",
       "tests/test_aura_qdkt_inventory.py:124",
+      "tools/sco_phase2_apply_review_fixes.py:14",
       "travel_price_sidecar.py:64"
     ],
     "!rail": [
@@ -44372,6 +44375,16 @@
         "signature_hash": "27286f4b648bb5a0"
       }
     ],
+    "append_once": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 34,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:append_once:cef726a96ae64646",
+        "signature_hash": "a112acc03b0d9053"
+      }
+    ],
     "append_record": [
       {
         "file": "async_palace.py",
@@ -59760,6 +59773,14 @@
         "signature_hash": "c3265d7d89056dc5"
       },
       {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 1156,
+        "end_line": 1162,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:main:f74e9fce4e3ceae5",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/sco_phase2_materialize.py",
         "kind": "function",
         "line": 30,
@@ -61344,6 +61365,56 @@
         "end_line": 386,
         "semantic_id": "aura_substrate_contracts.py#method:VerificationReport.passed:362dd6d4692f47dd",
         "signature_hash": "3f0260e8dc67f313"
+      }
+    ],
+    "patch_authority": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 388,
+        "end_line": 892,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:patch_authority:39e81e3ab6db054d",
+        "signature_hash": "ebe942d56a28c950"
+      }
+    ],
+    "patch_contracts": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 158,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:patch_contracts:b8cb4c6c6d0674d0",
+        "signature_hash": "69ce56333eee6dd9"
+      }
+    ],
+    "patch_docs": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 1136,
+        "end_line": 1153,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:patch_docs:856d2a1bff6e36d4",
+        "signature_hash": "d2177d0e1b3b759e"
+      }
+    ],
+    "patch_state": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 385,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:patch_state:a9274b771860b277",
+        "signature_hash": "02606c2e7ba300f2"
+      }
+    ],
+    "patch_tests": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 895,
+        "end_line": 1133,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:patch_tests:d2164ca072761686",
+        "signature_hash": "27f4e0f95d6235e0"
       }
     ],
     "pause": [
@@ -64486,6 +64557,26 @@
         "end_line": 210,
         "semantic_id": "aura_patch_repair.py#async_function:repair_patch_format:e0e21d2d5c1bdf7d",
         "signature_hash": "77304a68cda00ca8"
+      }
+    ],
+    "replace_between": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 26,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:replace_between:5f2ca51dbb5de77a",
+        "signature_hash": "f675edd8f0bb6e32"
+      }
+    ],
+    "replace_exact": [
+      {
+        "file": "tools/sco_phase2_apply_review_fixes.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 16,
+        "semantic_id": "tools/sco_phase2_apply_review_fixes.py#function:replace_exact:8b4df85d8b96ba84",
+        "signature_hash": "fe3ce89cb3f6f3af"
       }
     ],
     "replace_or_insert": [
@@ -163499,6 +163590,58 @@
         0.123319,
         0.18674,
         0.109225
+      ]
+    },
+    {
+      "path": "tools/sco_phase2_apply_review_fixes.py",
+      "role": "python_module",
+      "bytes": 44286,
+      "lines": 1167,
+      "tokens_est": 11072,
+      "symbol_count": 9,
+      "commands": [
+        "!r"
+      ],
+      "command_lines": {
+        "!r": [
+          14
+        ]
+      },
+      "topology": {},
+      "digest8": "acf78566aabfaf16",
+      "vector": [
+        -0.24935,
+        0.289152,
+        -0.202523,
+        -0.17911,
+        0.10653,
+        0.134625,
+        0.057362,
+        -0.158038,
+        0.085458,
+        -0.23296,
+        -0.289152,
+        -0.235302,
+        -0.062045,
+        0.151015,
+        0.223595,
+        0.031608,
+        0.059703,
+        0.139308,
+        0.296176,
+        0.235302,
+        0.183793,
+        0.038632,
+        -0.270421,
+        -0.188475,
+        -0.153356,
+        0.272763,
+        0.132284,
+        0.047997,
+        -0.078434,
+        0.085458,
+        0.050338,
+        -0.038632
       ]
     },
     {
