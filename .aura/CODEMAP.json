@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784259543,
+  "generated_at_unix": 1784260176,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1016,
+    "included_file_count": 1022,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -673,6 +673,7 @@
       "docs/AURA_CODING_ARENA_PLANNING_BOARD_P7.md",
       "docs/AURA_CODING_WORKBENCH_ORCHESTRATOR.md",
       "docs/AURA_COGNITIVE_SUBSTRATE_P9.md",
+      "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md",
       "docs/AURA_EMPIRICAL_COST_OBSERVATORY.md",
       "docs/AURA_EPHEMERAL_ORGAN_RUNTIME.md",
       "docs/AURA_EPHEMERAL_SECURITY_MODEL.md",
@@ -708,6 +709,9 @@
       "docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md",
       "docs/AURA_RESEARCH_COCKPIT_LANE.md",
       "docs/AURA_RESEARCH_EVIDENCE_LANE.md",
+      "docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md",
+      "docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md",
+      "docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md",
       "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md",
       "docs/AURA_SHOWCASE_INTENT_ROUTING_DEMO.md",
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
@@ -922,6 +926,7 @@
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
+      "tests/test_aura_construction_refactor_plan.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
@@ -988,6 +993,7 @@
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_refactor_chronicle_and_length.py",
       "tests/test_aura_refactor_output_quality.py",
+      "tests/test_aura_refactor_skeleton.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
       "tests/test_aura_shadow_model_router.py",
@@ -1038,23 +1044,23 @@
     ]
   },
   "summary": {
-    "file_count": 1016,
-    "total_bytes": 50945259,
-    "text_tokens_est": 3396529,
+    "file_count": 1022,
+    "total_bytes": 50984758,
+    "text_tokens_est": 3406397,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 27,
-      "knowledge_artifact": 133,
+      "knowledge_artifact": 137,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 711,
+      "python_module": 713,
       "schema_or_lexicon": 100,
       "support_file": 30
     },
     "topology_nodes": 8401,
     "topology_edges": 18425,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 22739.63
+    "elapsed_ms": 20367.65
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1790,6 +1796,7 @@
       "docs/AURA_CODE_REGION_RANKING.md",
       "docs/AURA_CODING_ARENA_PLANNING_BOARD_P7.md",
       "docs/AURA_CODING_WORKBENCH_ORCHESTRATOR.md",
+      "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md",
       "docs/AURA_EMPIRICAL_COST_OBSERVATORY.md",
       "docs/AURA_EPHEMERAL_ORGAN_RUNTIME.md",
       "docs/AURA_EXECUTABLE_REFACTOR_BENCHMARK.md",
@@ -1821,6 +1828,9 @@
       "docs/AURA_REFACTOR_CODE_QUALITY_STANDARD.md",
       "docs/AURA_RESEARCH_COCKPIT_LANE.md",
       "docs/AURA_RESEARCH_EVIDENCE_LANE.md",
+      "docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md",
+      "docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md",
+      "docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md",
       "docs/AURA_SHOWCASE_BUTTON_WALKTHROUGH.md",
       "docs/AURA_SHOWCASE_SPATIAL_INTEGRATION.md",
       "docs/AURA_ST3GG_ARENA_SHADOW_P5_2.md",
@@ -1990,6 +2000,7 @@
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
+      "tests/test_aura_construction_refactor_plan.py",
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
@@ -2053,6 +2064,7 @@
       "tests/test_aura_refactor_candidate.py",
       "tests/test_aura_refactor_chronicle_and_length.py",
       "tests/test_aura_refactor_output_quality.py",
+      "tests/test_aura_refactor_skeleton.py",
       "tests/test_aura_relational_authority.py",
       "tests/test_aura_research_cockpit_adapter.py",
       "tests/test_aura_shadow_tool_observability.py",
@@ -6868,6 +6880,16 @@
         "end_line": 71,
         "semantic_id": "tests/test_aura_human_agent_workflow.py#class:FakeBridge:abb2214496f3f3db",
         "signature_hash": "c2b682b337060da2"
+      }
+    ],
+    "FakeCapsule": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "class",
+        "line": 139,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#class:FakeCapsule:dd31db25cbee46e7",
+        "signature_hash": "d2d03d85b2c24553"
       }
     ],
     "FakeSavingsDB": [
@@ -53468,6 +53490,26 @@
         "signature_hash": "f7d4a596ca8e59d5"
       }
     ],
+    "fake_capsule_factory": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:fake_capsule_factory:0e7cdcfd3e72a07d",
+        "signature_hash": "91e25f69c7236e5a"
+      }
+    ],
+    "fake_resolver": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:fake_resolver:79702a7f92ea205d",
+        "signature_hash": "c80394128739408c"
+      }
+    ],
     "fast_path": [
       {
         "file": "aura_qdkt.py",
@@ -57138,6 +57180,24 @@
         "signature_hash": "9136b0c233a7fbbf"
       }
     ],
+    "integrations": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 158,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:integrations:97f914f0304c4b7b",
+        "signature_hash": "4ce7659d0f7f5f0d"
+      },
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 27,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:integrations:287e9428884f540a",
+        "signature_hash": "4ce7659d0f7f5f0d"
+      }
+    ],
     "integrity_complete": [
       {
         "file": "aura_planning_projector.py",
@@ -60184,6 +60244,16 @@
         "signature_hash": "cbf354dd343c3130"
       }
     ],
+    "node_for": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:node_for:acfc9d4ecaa2a511",
+        "signature_hash": "4a9a1457cf3277aa"
+      }
+    ],
     "node_id_for": [
       {
         "file": "aura_graphify_schema.py",
@@ -62800,6 +62870,16 @@
         "end_line": 102,
         "semantic_id": "generate_ai_router.py#function:read_lexicon_states:6db0e7c17038e57c",
         "signature_hash": "ade352854a6beedb"
+      }
+    ],
+    "ready_skeleton": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 188,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:ready_skeleton:7e02166ae53667a7",
+        "signature_hash": "12f02fe15d0143df"
       }
     ],
     "reap_expired": [
@@ -67104,6 +67184,16 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "skeleton_for": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:skeleton_for:e65fb40c019aac23",
+        "signature_hash": "2f7ac669f07b1da2"
+      }
+    ],
     "skills": [
       {
         "file": "aura_skillweaver.py",
@@ -70462,6 +70552,16 @@
         "signature_hash": "1d3d86b44817b1b5"
       }
     ],
+    "test_broken_prior_digest_chain_is_rejected_on_load": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 308,
+        "end_line": 320,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_broken_prior_digest_chain_is_rejected_on_load:3ee520098df41a4f",
+        "signature_hash": "408ad4a710348752"
+      }
+    ],
     "test_browser_archive_exposes_inspect_and_copy_controls": [
       {
         "file": "tests/test_aura_showcase_attempt_archive.py",
@@ -73800,6 +73900,16 @@
         "signature_hash": "bc7976d7697e89e5"
       }
     ],
+    "test_digest_covered_mappings_are_deeply_immutable": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_digest_covered_mappings_are_deeply_immutable:ca8c01282db89aed",
+        "signature_hash": "a5c20fe12cde1974"
+      }
+    ],
     "test_digest_finalized_after_enrichment": [
       {
         "file": "tests/test_aura_ephemeral_phase0_hardening.py",
@@ -73858,6 +73968,16 @@
         "end_line": 177,
         "semantic_id": "tests/test_aura_adaptive_execution.py#function:test_direct_execution_is_authorized_linked_and_single_use:6ef298b595ad9682",
         "signature_hash": "f28924860f4ec922"
+      }
+    ],
+    "test_direct_replace_cannot_bypass_digest": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 184,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_direct_replace_cannot_bypass_digest:0272236ce71c6b0d",
+        "signature_hash": "d687b68aeabc9647"
       }
     ],
     "test_direct_report_projection_rejects_non_v1_compact_tuple": [
@@ -74318,6 +74438,16 @@
         "signature_hash": "99d173233c161441"
       }
     ],
+    "test_duplicate_integrations_fail_closed": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_duplicate_integrations_fail_closed:08f3dd7aee5a6277",
+        "signature_hash": "ba05797ae36dfe6a"
+      }
+    ],
     "test_duplicate_parent_and_evidence_refs_fail_before_append": [
       {
         "file": "tests/test_aura_planning_events.py",
@@ -74748,6 +74878,16 @@
         "signature_hash": "8e63953add22f35c"
       }
     ],
+    "test_envelope_tampering_is_rejected": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 246,
+        "end_line": 255,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_envelope_tampering_is_rejected:0664a2b905ae1e2b",
+        "signature_hash": "d5514595d650bfa0"
+      }
+    ],
     "test_ephemeral_test_evidence_can_unlock_verifier_and_hotswap": [
       {
         "file": "tests/test_aura_human_agent_workflow.py",
@@ -75096,6 +75236,26 @@
         "end_line": 30,
         "semantic_id": "test_fst_lexc.py#function:test_exact_six_slot_packet_validates_and_wrong_order_fails:2e6b512e81110709",
         "signature_hash": "2875f7d74245fe3b"
+      }
+    ],
+    "test_exact_source_hashes_are_immutable": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_exact_source_hashes_are_immutable:e3528349baa27a6a",
+        "signature_hash": "7e92b8de72fe4bb2"
+      }
+    ],
+    "test_exact_span_must_fit_observed_file": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 171,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_exact_span_must_fit_observed_file:2306d67a2435fc0e",
+        "signature_hash": "d6720574e1f65c76"
       }
     ],
     "test_exact_type": [
@@ -75912,6 +76072,16 @@
         "end_line": 153,
         "semantic_id": "tests/test_aura_st3gg_codec.py#function:test_fidelity_score_decreases_when_exact_spans_are_omitted:eddd3d5c031445ab",
         "signature_hash": "b544f42be5d74d82"
+      }
+    ],
+    "test_file_placeholder_and_generic_path_do_not_ground": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_file_placeholder_and_generic_path_do_not_ground:6a243661dea2cffc",
+        "signature_hash": "2677b5dfd801d0b0"
       }
     ],
     "test_finalize_record_can_report_working_but_security_gate_failed": [
@@ -77590,6 +77760,16 @@
         "end_line": 100,
         "semantic_id": "tests/test_aura_qdkt_observations.py#function:test_identity_and_authority_forgery_is_rejected:7b66ccabd9a634a8",
         "signature_hash": "3f92355de5273c5e"
+      }
+    ],
+    "test_identity_stable_and_storage_time_excluded": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_identity_stable_and_storage_time_excluded:858dba10455bac87",
+        "signature_hash": "5d82b5ea4549abd3"
       }
     ],
     "test_illegal_transition": [
@@ -82110,6 +82290,16 @@
         "signature_hash": "e5bef6c972267034"
       }
     ],
+    "test_out_of_range_span_fails_before_capsule_creation": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 246,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_out_of_range_span_fails_before_capsule_creation:ea656fd54572806d",
+        "signature_hash": "d857623b52cb6238"
+      }
+    ],
     "test_outbox_is_idempotent_and_can_be_marked_synced": [
       {
         "file": "tests/test_aura_model_cognome_store.py",
@@ -82768,6 +82958,16 @@
         "end_line": 81,
         "semantic_id": "test_aura_ojibwe_tutor.py#method:TestLanguageSourceRegistry.test_permission_ref_required:49e052363a6ce578",
         "signature_hash": "3ccd75a1eb5d71a5"
+      }
+    ],
+    "test_persisted_authority_tampering_is_rejected": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 232,
+        "end_line": 243,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_persisted_authority_tampering_is_rejected:456c5deef014113d",
+        "signature_hash": "01f88cba0491a213"
       }
     ],
     "test_persistence_links_cognome_and_empirical_ledger": [
@@ -84070,6 +84270,16 @@
         "signature_hash": "b23c02f1eaefe7ad"
       }
     ],
+    "test_ready_capsule_includes_verified_exact_spans": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 222,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_ready_capsule_includes_verified_exact_spans:4b95b5dd2a62b0c2",
+        "signature_hash": "5c975e625504cf91"
+      }
+    ],
     "test_ready_for_handoff_when_grounded_tested": [
       {
         "file": "tests/test_aura_coding_tensor_adapter.py",
@@ -84088,6 +84298,26 @@
         "end_line": 131,
         "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#function:test_ready_for_incubator_must_match_shadow_grounding_and_routes:504dfb5dbc3e869c",
         "signature_hash": "edd5cead4b8a653a"
+      }
+    ],
+    "test_ready_requires_sha256_for_every_target_and_span": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_ready_requires_sha256_for_every_target_and_span:b08d447e5335f5c2",
+        "signature_hash": "aa9eac73e9603992"
+      }
+    ],
+    "test_ready_source_hash_is_verified_against_file_bytes": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 160,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_ready_source_hash_is_verified_against_file_bytes:9d52f2ea17d1f67a",
+        "signature_hash": "78bafd5956bc9cbc"
       }
     ],
     "test_real_guided_project_records_project_into_blocked_shadow": [
@@ -85666,6 +85896,16 @@
         "signature_hash": "55c463356493030d"
       }
     ],
+    "test_reuse_matrix_uses_exact_requested_symbols": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_reuse_matrix_uses_exact_requested_symbols:4f1794f1561cef9c",
+        "signature_hash": "8e99410b9b6393f2"
+      }
+    ],
     "test_revalidation_blocks_quarantined_endpoint": [
       {
         "file": "tests/test_aura_adaptive_execution.py",
@@ -85694,6 +85934,26 @@
         "end_line": 316,
         "semantic_id": "test_aura_ojibwe_tutor.py#method:TestLanguageReviewQueue.test_reviewer_decision_recorded:c0613997c00e993c",
         "signature_hash": "34c24ae598b8b010"
+      }
+    ],
+    "test_revision_chain_is_preserved": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 258,
+        "end_line": 270,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_revision_chain_is_preserved:d58177432156cc19",
+        "signature_hash": "642f5d6cb586baab"
+      }
+    ],
+    "test_revision_gap_is_rejected": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 273,
+        "end_line": 288,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_revision_gap_is_rejected:d3c40ccd116955a6",
+        "signature_hash": "35ebc9ee6bfff81f"
       }
     ],
     "test_revocation": [
@@ -86144,6 +86404,16 @@
         "end_line": 247,
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:test_same_principal_role_cannot_submit_multiple_counted_approvals:682779ade9e99c1d",
         "signature_hash": "0a003b2435e2b256"
+      }
+    ],
+    "test_same_revision_fork_is_rejected": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 291,
+        "end_line": 305,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_same_revision_fork_is_rejected:98de64c5cc222a6b",
+        "signature_hash": "054ca73751ba8071"
       }
     ],
     "test_same_snapshot_conflict_without_caller_snapshot_fails_closed": [
@@ -87174,6 +87444,16 @@
         "signature_hash": "d8d5eb930a7b3683"
       }
     ],
+    "test_skeleton_foundation_and_deferred_runtime": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_skeleton_foundation_and_deferred_runtime:27c6243c36e7e495",
+        "signature_hash": "a5fa8634ac019478"
+      }
+    ],
     "test_skill_routing": [
       {
         "file": "tests/test_aura_cockpit_capability_router.py",
@@ -87382,6 +87662,16 @@
         "end_line": 34,
         "semantic_id": "tests/test_aura_civic_planning_diagnostics.py#function:test_source_change_diagnostic_is_true:fc40188c4cc5fe5d",
         "signature_hash": "94291075ab96a11b"
+      }
+    ],
+    "test_source_path_cannot_escape_repo_root": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 178,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_source_path_cannot_escape_repo_root:e51068f913725724",
+        "signature_hash": "5154d6fc12af1e3b"
       }
     ],
     "test_source_spans_and_tests_can_be_future_patchable": [
@@ -87942,6 +88232,16 @@
         "end_line": 173,
         "semantic_id": "tests/test_aura_model_connectome_bridge.py#function:test_stale_graph_digest_denies_candidate_resolution:125843cab5da2f80",
         "signature_hash": "187f1bc4ea647fd2"
+      }
+    ],
+    "test_stale_hash_fails_before_capsule_creation": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 234,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_stale_hash_fails_before_capsule_creation:8288dd1044c55789",
+        "signature_hash": "0668b047db87747d"
       }
     ],
     "test_stale_or_future_dated_evidence_is_mismatched": [
@@ -89668,6 +89968,16 @@
         "signature_hash": "d9e840f4bd8b405b"
       }
     ],
+    "test_unknown_dependencies_fail_closed": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 220,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_unknown_dependencies_fail_closed:863ed2b177804174",
+        "signature_hash": "0d760bfab2dde33c"
+      }
+    ],
     "test_unknown_event_type_rejected": [
       {
         "file": "tests/test_aura_empirical_cost_observatory.py",
@@ -89736,6 +90046,16 @@
         "end_line": 127,
         "semantic_id": "tests/test_aura_empirical_cost_observatory.py#method:TestPricingRegistry.test_unknown_model:1745b469912d42a0",
         "signature_hash": "5e1ba115739bdf29"
+      }
+    ],
+    "test_unknown_node_id_fails_closed": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 249,
+        "end_line": 258,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_unknown_node_id_fails_closed:28d7970bb025a935",
+        "signature_hash": "c51e5f1377dc6eb9"
       }
     ],
     "test_unknown_project_returns_structured_failure": [
@@ -89828,6 +90148,16 @@
         "signature_hash": "b9a189816cfa866d"
       }
     ],
+    "test_unready_capsule_fails_closed": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 191,
+        "end_line": 203,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_unready_capsule_fails_closed:95e30007ad1fd8e7",
+        "signature_hash": "a8314d66c2699057"
+      }
+    ],
     "test_unregistered_adapter_rejected": [
       {
         "file": "tests/test_aura_ephemeral_phase0_hardening.py",
@@ -89866,6 +90196,26 @@
         "end_line": 156,
         "semantic_id": "tests/test_aura_qdkt_compatibility.py#function:test_unrelated_historical_observations_do_not_invalidate_exact_match:bd4a85f131c8c055",
         "signature_hash": "9c608c794ea3a794"
+      }
+    ],
+    "test_unrelated_symbol_in_candidate_file_does_not_ground": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 76,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_unrelated_symbol_in_candidate_file_does_not_ground:f1fdff2fb542d8d5",
+        "signature_hash": "2a4324d06185d120"
+      }
+    ],
+    "test_unresolved_matrix_keeps_e1_closed": [
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 135,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#function:test_unresolved_matrix_keeps_e1_closed:baf81829c8c29c2f",
+        "signature_hash": "d6f5d4973623a3c9"
       }
     ],
     "test_unsafe_missing_malformed_and_noncanonical_sidecars_fail_closed": [
@@ -90166,6 +90516,16 @@
         "end_line": 45,
         "semantic_id": "tests/test_aura_ephemeral_runtime.py#method:TestPlanAndValidate.test_validate_nonexistent_organ:1e208dc879b6ffb0",
         "signature_hash": "bdf97fbf3ec6416a"
+      }
+    ],
+    "test_validate_recomputes_node_and_skeleton_digests": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 194,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:test_validate_recomputes_node_and_skeleton_digests:48be4f100e5a9987",
+        "signature_hash": "d24cd25494d2ba1b"
       }
     ],
     "test_validate_truth_class": [
@@ -93722,6 +94082,14 @@
         "end_line": 164,
         "semantic_id": "tests/test_aura_coding_arena_planning_integrity.py#method:_BrokenRecord.to_dict:f777727943ee615b",
         "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "tests/test_aura_construction_refactor_plan.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_construction_refactor_plan.py#method:FakeCapsule.to_dict:b35a2e92c0a75665",
+        "signature_hash": "5c1a69a9659e2089"
       }
     ],
     "to_dict_safe": [
@@ -96210,6 +96578,16 @@
         "end_line": 425,
         "semantic_id": "aura_node.py#method:ZeroCopyMemoryOrchestrator.write_simd_frame:6272dc501e7bed8a",
         "signature_hash": "2bca46363edb6c75"
+      }
+    ],
+    "write_source": [
+      {
+        "file": "tests/test_aura_refactor_skeleton.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_refactor_skeleton.py#function:write_source:3fb758b8fd230ca8",
+        "signature_hash": "7ba06d9c8ca96728"
       }
     ],
     "yaml_frontmatter": [
@@ -149037,6 +149415,52 @@
       ]
     },
     {
+      "path": "docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md",
+      "role": "knowledge_artifact",
+      "bytes": 5634,
+      "lines": 140,
+      "tokens_est": 1408,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bf511bde6b3d7f17",
+      "vector": [
+        -0.122913,
+        -0.278528,
+        -0.210869,
+        -0.068786,
+        0.199593,
+        -0.251464,
+        0.025936,
+        0.271762,
+        0.098105,
+        0.271762,
+        0.021425,
+        0.125168,
+        -0.147721,
+        0.233422,
+        0.059765,
+        0.082318,
+        0.145466,
+        0.158998,
+        0.264996,
+        -0.183806,
+        0.255975,
+        -0.034957,
+        -0.201848,
+        0.039468,
+        0.1387,
+        -0.136445,
+        0.034957,
+        0.213125,
+        0.25372,
+        0.125168,
+        0.140955,
+        0.224401
+      ]
+    },
+    {
       "path": "docs/AURA_EMPIRICAL_COST_OBSERVATORY.md",
       "role": "knowledge_artifact",
       "bytes": 3264,
@@ -150650,6 +151074,144 @@
         0.110476,
         0.060132,
         0.085304
+      ]
+    },
+    {
+      "path": "docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md",
+      "role": "knowledge_artifact",
+      "bytes": 6731,
+      "lines": 176,
+      "tokens_est": 1679,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d31a4a58200e42b2",
+      "vector": [
+        0.293682,
+        0.104448,
+        -0.146227,
+        0.151142,
+        -0.079872,
+        -0.168345,
+        -0.165887,
+        0.045465,
+        0.200293,
+        0.298597,
+        0.30597,
+        -0.192921,
+        -0.001229,
+        -0.133939,
+        0.065126,
+        0.249445,
+        0.138854,
+        -0.274021,
+        -0.158514,
+        0.188006,
+        0.17326,
+        0.16343,
+        -0.006144,
+        0.256818,
+        0.156057,
+        -0.249445,
+        0.089702,
+        0.015974,
+        0.028262,
+        -0.043008,
+        -0.239615,
+        0.131481
+      ]
+    },
+    {
+      "path": "docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md",
+      "role": "knowledge_artifact",
+      "bytes": 4506,
+      "lines": 115,
+      "tokens_est": 1126,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "565fda6506b3ba26",
+      "vector": [
+        0.02863,
+        -0.134971,
+        -0.238585,
+        -0.006817,
+        0.257672,
+        -0.312206,
+        -0.124064,
+        -0.184052,
+        0.061351,
+        -0.083164,
+        0.091344,
+        -0.148605,
+        -0.023177,
+        -0.107704,
+        -0.115884,
+        0.271306,
+        -0.301299,
+        0.323113,
+        -0.342199,
+        0.047717,
+        0.173145,
+        0.148605,
+        0.074984,
+        0.069531,
+        0.042264,
+        0.252219,
+        0.077711,
+        -0.00409,
+        0.072257,
+        -0.039537,
+        -0.274032,
+        -0.200412
+      ]
+    },
+    {
+      "path": "docs/AURA_SCO_PHASE1_REVIEW_EVIDENCE.md",
+      "role": "knowledge_artifact",
+      "bytes": 3213,
+      "lines": 77,
+      "tokens_est": 801,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79e03308180d1618",
+      "vector": [
+        -0.003497,
+        -0.287883,
+        0.199303,
+        0.050117,
+        0.066434,
+        0.229607,
+        -0.229607,
+        0.21329,
+        0.066434,
+        -0.250586,
+        -0.148021,
+        0.092076,
+        0.127041,
+        -0.113055,
+        -0.222614,
+        -0.120048,
+        0.224945,
+        0.187648,
+        0.024476,
+        0.210959,
+        0.094407,
+        -0.208628,
+        0.262241,
+        -0.045455,
+        0.199303,
+        -0.075759,
+        0.194641,
+        -0.148021,
+        -0.283221,
+        -0.199303,
+        -0.0338,
+        0.220283
       ]
     },
     {
@@ -155305,6 +155867,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_construction_refactor_plan.py",
+      "role": "python_module",
+      "bytes": 8415,
+      "lines": 259,
+      "tokens_est": 2104,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f68cb9daa80f6cfe",
+      "vector": [
+        -0.270345,
+        0.200031,
+        -0.280043,
+        0.202455,
+        -0.212154,
+        -0.265495,
+        -0.018185,
+        0.212154,
+        0.153963,
+        -0.095772,
+        -0.260646,
+        0.238825,
+        -0.175785,
+        -0.0788,
+        -0.277618,
+        -0.233975,
+        0.136991,
+        -0.263071,
+        0.088498,
+        0.052129,
+        -0.209729,
+        0.056978,
+        0.217003,
+        0.20488,
+        0.020609,
+        0.01576,
+        -0.037582,
+        -0.01576,
+        -0.013335,
+        0.066677,
+        0.073951,
+        -0.180634
+      ]
+    },
+    {
       "path": "tests/test_aura_continuity_packet.py",
       "role": "python_module",
       "bytes": 13693,
@@ -158352,6 +158960,52 @@
         0.124743,
         -0.19236,
         0.10609
+      ]
+    },
+    {
+      "path": "tests/test_aura_refactor_skeleton.py",
+      "role": "python_module",
+      "bytes": 11000,
+      "lines": 321,
+      "tokens_est": 2750,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "71ca8560e80dbdbf",
+      "vector": [
+        0.250938,
+        -0.22156,
+        -0.003672,
+        -0.101599,
+        0.069773,
+        0.11384,
+        -0.135874,
+        -0.040395,
+        -0.216663,
+        0.096703,
+        -0.233801,
+        -0.182389,
+        0.250938,
+        0.162804,
+        -0.05998,
+        0.045291,
+        0.045291,
+        0.304798,
+        0.108944,
+        0.184837,
+        0.148114,
+        0.258282,
+        0.172596,
+        -0.216663,
+        0.285212,
+        0.074669,
+        0.214215,
+        0.030602,
+        -0.243593,
+        -0.297453,
+        0.111392,
+        -0.001224
       ]
     },
     {
