@@ -23,7 +23,7 @@ from aura_construction_benchmark import run_construction_phase3_benchmark
 from aura_construction_fixtures import build_sco_construction_demo_fixture
 from aura_event_contracts import stable_digest
 
-CONSTRUCTION_LEARNING_VERSION = "AURA_SCO_CONSTRUCTION_PHASE3_LEARNING_V3"
+CONSTRUCTION_LEARNING_VERSION = "AURA_SCO_CONSTRUCTION_PHASE3_LEARNING_V4"
 ARENA_ID = "sco_construction"
 ARENA_VERSION = "AURA_SCO_CONSTRUCTION_ARENA_V1"
 GRAMMAR_VERSION = "sco-construction-wfst-v1"
@@ -66,6 +66,18 @@ def _validated_benchmark(*, iterations: int, seed: int) -> dict[str, Any]:
             f"construction benchmark verifier conditions failed for seed {seed}"
         )
     return benchmark
+
+
+def _deterministic_benchmark_observation(
+    benchmark: dict[str, Any],
+) -> dict[str, Any]:
+    """Remove run-local timing before content-addressed experience storage."""
+    observation = json.loads(json.dumps(benchmark, sort_keys=True, default=str))
+    report = dict(observation.get("report") or {})
+    report.pop("elapsed_ms", None)
+    observation["report"] = report
+    observation["timing_evidence"] = "RECORDED_IN_RUN_REPORT_ONLY"
+    return observation
 
 
 def _registered_transition(*, recommendation: str) -> tuple[str, str]:
@@ -174,6 +186,7 @@ def run_construction_phase3_learning(
                 iterations=iterations_per_experience,
                 seed=seed,
             )
+            deterministic_benchmark = _deterministic_benchmark_observation(benchmark)
             report = dict(benchmark["report"])
             recommendation = str(report.get("recommended_candidate_id") or "")
             evaluation_digest = str(report.get("stable_evaluation_digest") or "")
@@ -196,7 +209,7 @@ def run_construction_phase3_learning(
                 current_state="DECIDE",
                 input_text=input_text,
                 evidence={
-                    "benchmark_report": report,
+                    "benchmark_report": deterministic_benchmark["report"],
                     "verification_packet": {"verification_ok": True},
                     "episode_seed": seed,
                 },
@@ -255,7 +268,7 @@ def run_construction_phase3_learning(
                 outcome_vector=vector,
                 payload={
                     "route": route,
-                    "benchmark": benchmark,
+                    "benchmark": deterministic_benchmark,
                     "episode_seed": seed,
                     "episode_digest": episode_digest,
                     "scenario_id": "SCO_SYNTHETIC_SCENARIO_1",
@@ -294,6 +307,7 @@ def run_construction_phase3_learning(
                 {
                     "experience_id": experience.experience_id,
                     "experience_digest": stored["experience_digest"],
+                    "idempotent_replay": bool(stored.get("idempotent_replay")),
                     "episode_digest": episode_digest,
                     "seed": seed,
                     "execution_class": "SYNTHETIC_PERMUTATION",
@@ -368,6 +382,7 @@ def run_construction_phase3_learning(
             "source_episode_cloning": False,
             "generalization_claimed": False,
             "all_proposal_thresholds_expected": False,
+            "content_addressed_payload_excludes_wall_clock_timing": True,
             "crucible_dataset_split": "INTERNAL_TEMPORAL_TRAIN_VALIDATION_SHADOW",
             "provider_tokens_and_cost": NOT_MEASURED,
             "real_project_savings": NOT_MEASURED,
