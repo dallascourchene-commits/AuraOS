@@ -1,0 +1,208 @@
+        if self.claim_digest != stable_digest(payload):
+            raise ValueError("claim digest does not match its content")
+        if self.claim_id != stable_id("construction-claim", payload):
+            raise ValueError("claim ID does not match its content")
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionClaim":
+        data = dict(value)
+        return cls(
+            claim_id=data.get("claim_id"),
+            claim_digest=data.get("claim_digest"),
+            scope=ConstructionScope.from_dict(dict(data.get("scope") or {})),
+            subject_id=data.get("subject_id"),
+            predicate=data.get("predicate"),
+            value_digest=data.get("value_digest"),
+            claimant_id=data.get("claimant_id"),
+            evidence_refs=tuple(data.get("evidence_refs", ())),
+            measurement_class=data.get("measurement_class"),
+            confidence=(
+                data.get("confidence")
+            ),
+            authority_class=data.get("authority_class"),
+            privacy_class=data.get("privacy_class"),
+            consent_refs=tuple(data.get("consent_refs", ())),
+            created_at=data.get("created_at"),
+            expires_at=(
+                data.get("expires_at")
+            ),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        scope: ConstructionScope,
+        subject_id: str,
+        predicate: str,
+        value_digest: str,
+        claimant_id: str,
+        evidence_refs: Iterable[str],
+        measurement_class: str | MeasurementClass,
+        confidence: float | None,
+        authority_class: str | ConstructionAuthorityClass,
+        privacy_class: str | ConstructionPrivacyClass,
+        consent_refs: Iterable[str] = (),
+        created_at: float,
+        expires_at: float | None = None,
+    ) -> "ConstructionClaim":
+        if type(scope) is not ConstructionScope:
+            raise ValueError("scope must be an exact ConstructionScope")
+        values = {
+            "scope": scope,
+            "subject_id": _normalized_text_input(subject_id, "subject_id"),
+            "predicate": _normalized_text_input(predicate, "predicate"),
+            "value_digest": _digest(value_digest, "value_digest"),
+            "claimant_id": _normalized_text_input(claimant_id, "claimant_id"),
+            "evidence_refs": _normalized_unique(evidence_refs, "evidence_refs"),
+            "measurement_class": _enum_value(measurement_class, MeasurementClass, "measurement_class"),
+            "confidence": _probability(confidence, "confidence"),
+            "authority_class": _enum_value(authority_class, ConstructionAuthorityClass, "authority_class"),
+            "privacy_class": _enum_value(privacy_class, ConstructionPrivacyClass, "privacy_class"),
+            "consent_refs": _normalized_unique(consent_refs, "consent_refs"),
+            "created_at": _timestamp(created_at, "created_at"),
+            "expires_at": None if expires_at is None else _timestamp(expires_at, "expires_at"),
+            "version": CONSTRUCTION_CONTRACTS_VERSION,
+            "proposal_only": PROPOSAL_ONLY,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = cls._payload_from_values(values)
+        return cls(
+            claim_id=stable_id("construction-claim", payload),
+            claim_digest=stable_digest(payload),
+            **values,
+        )
+
+    @staticmethod
+    def _payload_from_values(values: dict[str, Any]) -> dict[str, Any]:
+        return {
+            **values,
+            "scope": values["scope"].to_dict(),
+            "evidence_refs": list(values["evidence_refs"]),
+            "consent_refs": list(values["consent_refs"]),
+        }
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("claim_id")
+        data.pop("claim_digest")
+        return data
+
+    @property
+    def state_key(self) -> str:
+        return stable_id(
+            "construction-claim-state",
+            {
+                "scope": self.scope.to_dict(),
+                "subject_id": self.subject_id,
+                "predicate": self.predicate,
+            },
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+ConstructionRecord = ConstructionClaim | ConstructionEvidence
+
+
+@dataclass(frozen=True)
+class ConstructionEvent:
+    event_id: str
+    event_digest: str
+    chain_digest: str
+    ledger_id: str
+    sequence_number: int
+    previous_chain_digest: str
+    trace_id: str
+    record_kind: str
+    record: ConstructionRecord
+    actor_id: str
+    actor_type: str
+    parent_event_ids: tuple[str, ...]
+    supersedes_event_ids: tuple[str, ...]
+    created_at: float
+    version: str = CONSTRUCTION_CONTRACTS_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_CONTRACTS_VERSION:
+            raise ValueError("unsupported construction event version")
+        _text(self.ledger_id, "event.ledger_id")
+        expected_ledger = f"construction/{self.record.scope.project_id}"
+        if self.ledger_id != expected_ledger:
+            raise ValueError(f"construction event ledger must be {expected_ledger}")
+        if type(self.sequence_number) is not int or self.sequence_number < 1:
+            raise ValueError("event sequence_number must be a positive integer")
+        expected_previous = _chain_reference(
+            self.previous_chain_digest,
+            "event.previous_chain_digest",
+            genesis_allowed=self.sequence_number == 1,
+        )
+        if self.previous_chain_digest != expected_previous:
+            raise ValueError("event.previous_chain_digest is not canonical")
+        if (
+            self.sequence_number == 1
+            and self.previous_chain_digest != GENESIS_CHAIN_DIGEST
+        ):
+            raise ValueError("first construction event must use the genesis digest")
+        if (
+            self.sequence_number > 1
+            and self.previous_chain_digest == GENESIS_CHAIN_DIGEST
+        ):
+            raise ValueError("non-genesis construction event cannot use genesis digest")
+        _text(self.trace_id, "event.trace_id")
+        kind = _require_canonical_enum(
+            self.record_kind, ConstructionRecordKind, "record_kind"
+        )
+        if kind == ConstructionRecordKind.CLAIM.value and type(self.record) is not ConstructionClaim:
+            raise ValueError("CLAIM event requires a ConstructionClaim")
+        if kind == ConstructionRecordKind.EVIDENCE.value and type(self.record) is not ConstructionEvidence:
+            raise ValueError("EVIDENCE event requires ConstructionEvidence")
+        _text(self.actor_id, "event.actor_id")
+        _require_canonical_enum(self.actor_type, ActorType, "actor_type")
+        _tuple_strings(self.parent_event_ids, "event.parent_event_ids")
+        _tuple_strings(self.supersedes_event_ids, "event.supersedes_event_ids")
+        if set(self.parent_event_ids) & set(self.supersedes_event_ids):
+            raise ValueError("parent and supersession references must be disjoint")
+        _require_canonical_float(self.created_at, "event.created_at")
+        event_time = _timestamp(self.created_at, "event.created_at")
+        record_time = (
+            self.record.created_at
+            if type(self.record) is ConstructionClaim
+            else self.record.observed_at
+        )
+        if event_time < record_time:
+            raise ValueError("construction event cannot predate its record")
+        _validate_boundaries(
+            proposal_only=self.proposal_only,
+            patch_authority=self.patch_authority,
+            vsa_patch_authority=self.vsa_patch_authority,
+        )
+        payload = self._event_payload()
+        if self.event_digest != stable_digest(payload):
+            raise ValueError("event digest does not match its content")
+        chain_payload = {
+            "ledger_id": self.ledger_id,
+            "sequence_number": self.sequence_number,
+            "previous_chain_digest": self.previous_chain_digest,
+            "event_digest": self.event_digest,
+        }
+        if self.chain_digest != stable_digest(chain_payload):
+            raise ValueError("event chain digest does not match")
+        identity = {**chain_payload, "chain_digest": self.chain_digest}
+        if self.event_id != stable_id("construction-event", identity):
+            raise ValueError("event ID does not match its content")
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any]) -> "ConstructionEvent":
+        data = dict(value)
+        kind = data.get("record_kind")
+        raw_record = dict(data.get("record") or {})
