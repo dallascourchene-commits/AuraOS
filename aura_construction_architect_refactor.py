@@ -1,11 +1,12 @@
-"""Native Aura Architect/Surgeon verification for the SCO Construction refactor.
+"""Run SCO Construction changes through Aura's native refactor architecture.
 
-This module makes the Construction refactor itself pass through Aura's existing
-refactor architecture: controlled Selective Council V3 plan comparison, Work
-Splitter Act shards, CODEMAP grounding, Shadow preflight, Liquid Planning file
-leases, Surgeon patch staging, Verifier tests, Judge, hot-swap, rollback, and an
-append-only ledger. It verifies a branch diff; it never mutates production or
-promotes a branch without human review.
+The current branch diff is treated as four bounded Act Capsules: coordination,
+synthetic fixtures, deterministic benchmarking, and governed learning. Selective
+Council V3 compares frozen plans; Work Splitter, CODEMAP grounding, Shadow,
+Liquid Planning leases, Surgeon staging, Verifier, Judge, rollback, hot-swap,
+and the append-only Architect ledger remain the canonical execution owners.
+Nothing in this module grants production, VSA, merge, deployment, physical-work,
+payment, access, professional, legal, or regulatory authority.
 """
 from __future__ import annotations
 
@@ -23,7 +24,9 @@ from aura_architect_loop import ArchitectFusionLoop, judge_refactor_arena
 from aura_arena_architect_connector import AuraArenaArchitectConnector
 from aura_work_splitter import split_by_file, work_split_to_act_capsules
 
-CONSTRUCTION_ARCHITECT_REFACTOR_VERSION = "AURA_SCO_CONSTRUCTION_ARCHITECT_REFACTOR_V1"
+CONSTRUCTION_ARCHITECT_REFACTOR_VERSION = (
+    "AURA_SCO_CONSTRUCTION_ARCHITECT_REFACTOR_V2"
+)
 NOT_MEASURED = "NOT_MEASURED"
 SELECTED_PLAN_ID = "SELECTIVE_COUNCIL_V3_SURGEON"
 
@@ -37,10 +40,10 @@ SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
         "target_file": "aura_construction_adapter.py",
         "target_symbol": "evaluate_construction_candidates",
         "acceptance": (
-            "Hard blockers precede ranking; authority remains human-governed; "
+            "Hard blockers precede ranking, authority remains human-governed, and "
             "tests/test_aura_construction_adapter.py passes."
         ),
-        "tests": ["tests/test_aura_construction_adapter.py"],
+        "tests": ("tests/test_aura_construction_adapter.py",),
         "allowed_scope": "single Construction adapter module",
         "expected_output": "UNIFIED_DIFF",
         "size": "M",
@@ -48,16 +51,16 @@ SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
     {
         "task_id": "SCO-E8-FIXTURE",
         "objective": (
-            "Harden deterministic fictional SCO demo fixtures without introducing "
-            "private project data or production connectors."
+            "Harden deterministic fictional SCO fixtures without private project data "
+            "or production connectors."
         ),
         "target_file": "aura_construction_fixtures.py",
         "target_symbol": "build_sco_construction_demo_fixture",
         "acceptance": (
-            "Fixture replay remains deterministic and the unsafe high-score route "
-            "remains blocked; tests/test_aura_construction_fixtures.py passes."
+            "Replay stays deterministic, the unsafe high-score route remains blocked, "
+            "and tests/test_aura_construction_fixtures.py passes."
         ),
-        "tests": ["tests/test_aura_construction_fixtures.py"],
+        "tests": ("tests/test_aura_construction_fixtures.py",),
         "allowed_scope": "single synthetic fixture module",
         "expected_output": "UNIFIED_DIFF",
         "size": "S",
@@ -65,19 +68,36 @@ SOURCE_SHARDS: tuple[dict[str, Any], ...] = (
     {
         "task_id": "SCO-E11-BENCHMARK",
         "objective": (
-            "Harden the zero-model Construction benchmark and its evidence boundaries "
-            "without inventing provider usage or real-project savings."
+            "Harden the zero-model benchmark and its truth-class boundaries without "
+            "inventing provider usage or real-project savings."
         ),
         "target_file": "aura_construction_benchmark.py",
         "target_symbol": "run_construction_phase3_benchmark",
         "acceptance": (
-            "The 250-permutation gate remains deterministic and benchmark claims stay "
-            "truth-classed; tests/test_aura_construction_benchmark.py passes."
+            "The 250-permutation gate stays deterministic and "
+            "tests/test_aura_construction_benchmark.py passes."
         ),
-        "tests": ["tests/test_aura_construction_benchmark.py"],
+        "tests": ("tests/test_aura_construction_benchmark.py",),
         "allowed_scope": "single executable benchmark module",
         "expected_output": "UNIFIED_DIFF",
         "size": "S",
+    },
+    {
+        "task_id": "SCO-E10-LEARNING",
+        "objective": (
+            "Project only distinct verified synthetic executions into the existing "
+            "Experience Ledger and proposal-only Crucible owners."
+        ),
+        "target_file": "aura_construction_learning.py",
+        "target_symbol": "run_construction_phase3_learning",
+        "acceptance": (
+            "No cloned episode counts as independent evidence, Crucible remains "
+            "proposal-only, and tests/test_aura_construction_learning.py passes."
+        ),
+        "tests": ("tests/test_aura_construction_learning.py",),
+        "allowed_scope": "single governed learning projection module",
+        "expected_output": "UNIFIED_DIFF",
+        "size": "M",
     },
 )
 
@@ -87,6 +107,7 @@ REQUIRED_CAPABILITIES: tuple[str, ...] = (
     "proposal_only_authority",
     "synthetic_fixture_boundary",
     "deterministic_benchmark",
+    "experience_crucible_evidence_integrity",
     "bounded_patch_leases",
     "rollback_and_human_review",
 )
@@ -97,6 +118,9 @@ EXISTING_MODULES: tuple[str, ...] = (
     "aura_construction_authority.py",
     "aura_liquid_planning_arena.py",
     "aura_arena_wfst_runtime.py",
+    "aura_arena_experience.py",
+    "aura_arena_experience_ledger.py",
+    "aura_arena_crucible.py",
     "aura_architect_loop.py",
     "aura_architect_control.py",
     "aura_arena_architect_connector.py",
@@ -105,180 +129,170 @@ EXISTING_MODULES: tuple[str, ...] = (
 
 
 def _canonical_digest(value: Any) -> str:
-    text = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
-    return hashlib.blake2b(text.encode("utf-8"), digest_size=16).hexdigest()
+    body = json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.blake2b(body.encode("utf-8"), digest_size=16).hexdigest()
+
+
+def _task_without_tests(value: Mapping[str, Any]) -> dict[str, Any]:
+    return {key: item for key, item in value.items() if key != "tests"}
 
 
 def _base_plan(
     *,
     architecture_decision: str,
-    act_tasks: list[Mapping[str, Any]],
+    tasks: list[Mapping[str, Any]],
     coverage_tags: list[str],
     architecture_reuse: bool,
-    acceptance_criteria: list[str],
-    rollback_conditions: list[str],
-    risk_map: list[str],
+    acceptance: list[str],
+    rollback: list[str],
+    risks: list[str],
     constraints: list[str],
 ) -> dict[str, Any]:
     return {
         "architecture_decision": architecture_decision,
-        "act_tasks": [dict(item) for item in act_tasks],
-        "acceptance_criteria": list(acceptance_criteria),
-        "rollback_conditions": list(rollback_conditions),
-        "risk_map": list(risk_map),
+        "act_tasks": [dict(item) for item in tasks],
+        "acceptance_criteria": list(acceptance),
+        "rollback_conditions": list(rollback),
+        "risk_map": list(risks),
         "constraints": list(constraints),
         "coverage_tags": list(coverage_tags),
         "architecture_reuse": architecture_reuse,
         "existing_modules": list(EXISTING_MODULES) if architecture_reuse else [],
-        "domains": ["construction", "code", "verification"],
+        "domains": ["construction", "code", "verification", "learning"],
         "dependency_edges": [
             ["SCO-E7-ADAPTER", "SCO-E8-FIXTURE"],
             ["SCO-E8-FIXTURE", "SCO-E11-BENCHMARK"],
+            ["SCO-E11-BENCHMARK", "SCO-E10-LEARNING"],
         ],
     }
 
 
 def build_refactor_plan_candidates() -> list[dict[str, Any]]:
-    """Return frozen plans for Aura's controlled Council comparison."""
+    """Build frozen, locally measured alternatives for Selective Council V3."""
+    source_tasks = [_task_without_tests(item) for item in SOURCE_SHARDS]
+    selective_tasks = [
+        {
+            **item,
+            "escalate_if": [
+                "target symbol is absent from CODEMAP",
+                "patch crosses its leased file",
+                "paired focused test fails",
+                "authority or evidence boundary changes",
+            ],
+        }
+        for item in source_tasks
+    ]
     broad_task = {
         "task_id": "BROAD-1",
-        "objective": "Rewrite the Construction advisory subsystem in one pass.",
+        "objective": "Rewrite the complete Construction intelligence subsystem.",
         "target_file": "aura_construction_adapter.py",
         "target_symbol": "evaluate_construction_candidates",
         "acceptance": "Construction tests pass.",
         "expected_output": "UNIFIED_DIFF",
         "size": "XL",
     }
-    minimal_tasks = [
-        {
-            **SOURCE_SHARDS[0],
-            "task_id": "MINIMAL-1",
-            "acceptance": "The adapter imports and one focused test passes.",
-        }
-    ]
-    surgeon_tasks = [
-        {key: value for key, value in item.items() if key != "tests"}
-        for item in SOURCE_SHARDS
-    ]
-    selective_tasks = [
-        {
-            **{key: value for key, value in item.items() if key != "tests"},
-            "escalate_if": [
-                "target symbol is absent from CODEMAP",
-                "patch crosses the leased file",
-                "paired focused test fails",
-                "authority boundary changes",
-            ],
-        }
-        for item in SOURCE_SHARDS
-    ]
-    return [
+    candidates = [
         {
             "candidate_id": "BROAD_IMPLEMENTER",
             "arm_family": "BROAD_IMPLEMENTER",
-            "provenance": {"generation": "frozen_local_plan", "model_calls": 0},
-            "token_usage": {"provider_reported": None, "measurement_class": NOT_MEASURED},
             "plan": _base_plan(
-                architecture_decision="Use one broad rewrite task.",
-                act_tasks=[broad_task],
+                architecture_decision="Use one broad cross-concern rewrite.",
+                tasks=[broad_task],
                 coverage_tags=["deterministic_benchmark"],
                 architecture_reuse=False,
-                acceptance_criteria=["Focused tests pass."],
-                rollback_conditions=["Revert the broad patch if tests fail."],
-                risk_map=["Large cross-concern patch."],
-                constraints=["Do not mutate production."],
+                acceptance=["Focused tests pass."],
+                rollback=["Revert the broad patch on failure."],
+                risks=["Large patch mixes truth, runtime, benchmark, and learning."],
+                constraints=["No production mutation."],
             ),
         },
         {
             "candidate_id": "ZERO_MODEL_MINIMAL",
             "arm_family": "ZERO_MODEL_MINIMAL",
-            "provenance": {"generation": "frozen_local_plan", "model_calls": 0},
-            "token_usage": {"provider_reported": None, "measurement_class": NOT_MEASURED},
             "plan": _base_plan(
-                architecture_decision="Use the smallest local patch and defer the rest.",
-                act_tasks=minimal_tasks,
+                architecture_decision="Patch only the adapter and defer other surfaces.",
+                tasks=[{**source_tasks[0], "task_id": "MINIMAL-1"}],
                 coverage_tags=[
                     "hard_filter_before_ranking",
                     "proposal_only_authority",
                 ],
                 architecture_reuse=True,
-                acceptance_criteria=["Adapter test passes."],
-                rollback_conditions=["Revert the adapter file on failure."],
-                risk_map=["Fixture and benchmark remain unreviewed."],
+                acceptance=["Adapter tests pass."],
+                rollback=["Revert the adapter patch."],
+                risks=["Fixture, benchmark, and learning remain unreviewed."],
                 constraints=["No production mutation."],
             ),
         },
         {
             "candidate_id": "SLICED_SURGEON",
             "arm_family": "SLICED_SURGEON",
-            "provenance": {"generation": "frozen_local_plan", "model_calls": 0},
-            "token_usage": {"provider_reported": None, "measurement_class": NOT_MEASURED},
             "plan": _base_plan(
-                architecture_decision="Use three bounded Surgeon shards.",
-                act_tasks=surgeon_tasks,
+                architecture_decision="Use four bounded Surgeon shards.",
+                tasks=source_tasks,
                 coverage_tags=list(REQUIRED_CAPABILITIES[:-1]),
                 architecture_reuse=True,
-                acceptance_criteria=[
-                    "All three focused suites pass.",
+                acceptance=[
+                    "All four focused suites pass.",
                     "No source shard crosses its file boundary.",
                 ],
-                rollback_conditions=["Discard any failed shard by phase hash."],
-                risk_map=["Cross-shard sequencing requires explicit verification."],
+                rollback=["Discard any failed shard by phase hash."],
+                risks=["Cross-shard ordering needs explicit verification."],
                 constraints=[
                     "Reuse canonical owners.",
-                    "No production mutation.",
-                    "No physical or payment authority.",
+                    "No production, physical-work, payment, or learning authority.",
                 ],
             ),
         },
         {
             "candidate_id": SELECTED_PLAN_ID,
             "arm_family": "SELECTIVE_COUNCIL_V3_PLUS_SURGEON",
-            "provenance": {
-                "generation": "frozen_local_plan",
-                "model_calls": 0,
-                "council_mode": "SELECTIVE_V3",
-            },
-            "token_usage": {"provider_reported": None, "measurement_class": NOT_MEASURED},
             "plan": _base_plan(
                 architecture_decision=(
-                    "Reuse Construction truth and authority owners, route ambiguity through "
-                    "Selective Council V3, and execute three exact Surgeon shards inside "
-                    "Liquid Planning leases with Verifier/Judge promotion gates."
+                    "Reuse Construction, Liquid Planning, WFST, Experience, Crucible, "
+                    "and Architect owners; route ambiguity through Selective Council V3; "
+                    "execute four exact Surgeon shards under leases and Verifier/Judge gates."
                 ),
-                act_tasks=selective_tasks,
+                tasks=selective_tasks,
                 coverage_tags=list(REQUIRED_CAPABILITIES),
                 architecture_reuse=True,
-                acceptance_criteria=[
+                acceptance=[
                     "All Act Capsules are CODEMAP-grounded.",
                     "Shadow reports no blockers.",
-                    "Every staged diff stays inside one file lease.",
-                    "All paired focused tests pass under Verifier.",
-                    "Judge returns promote_hotswap while human review remains required.",
-                    "Benchmark evidence never invents provider usage or real savings.",
+                    "Every staged diff remains inside one file lease.",
+                    "All paired tests pass under Verifier.",
+                    "Judge returns promote_hotswap with human review still required.",
+                    "Benchmark and learning evidence never invent usage or savings.",
                 ],
-                rollback_conditions=[
-                    "Any Shadow blocker prevents Builder staging.",
-                    "Any lease, test, authority, or deterministic replay failure blocks hot-swap.",
-                    "Rollback capsule must retain exact file digests.",
+                rollback=[
+                    "Any Shadow, lease, test, authority, or replay failure blocks hot-swap.",
+                    "Rollback retains exact phase and file digests.",
                 ],
-                risk_map=[
-                    "Construction authority may not expand beyond proposal-only advice.",
+                risks=[
                     "Probabilistic scores may not override exact readiness blockers.",
-                    "Synthetic fixture values may not be represented as real project facts.",
-                    "Benchmark timings are environment-specific and not provider cost evidence.",
+                    "Synthetic fixture or learning values are not real project facts.",
+                    "Repeated seeded executions are not independent field outcomes.",
+                    "Crucible output remains an unpromoted proposal.",
                 ],
                 constraints=[
-                    "PATCH_AUTHORITY remains exact source spans and hashes only.",
+                    "Patch authority is exact source spans and hashes only.",
                     "VSA patch authority remains false.",
-                    "Reuse existing state, authority, Liquid Planning, WFST, and Architect owners.",
-                    "No physical work, payment, access, safety, engineering, legal, or regulatory authority.",
-                    "No production connectors or private project data in this phase.",
+                    "No production connectors or private project data.",
+                    "No physical, payment, access, professional, legal, or regulatory authority.",
                     "Human review remains mandatory before merge or deployment.",
                 ],
             ),
         },
     ]
+    for candidate in candidates:
+        candidate["provenance"] = {
+            "generation": "frozen_local_plan",
+            "model_calls": 0,
+        }
+        candidate["token_usage"] = {
+            "provider_reported": None,
+            "measurement_class": NOT_MEASURED,
+        }
+    return candidates
 
 
 def _git_diff_for_file(repo_root: Path, base_sha: str, path: str) -> str:
@@ -304,15 +318,14 @@ def _pytest_runner(repo_root: Path, test_name: str) -> dict[str, Any]:
         cwd=repo_root,
         text=True,
         capture_output=True,
-        timeout=180,
+        timeout=240,
         check=False,
     )
-    elapsed_ms = (time.perf_counter() - started) * 1000.0
     return {
         "ok": completed.returncode == 0,
         "returncode": completed.returncode,
         "test": test_name,
-        "elapsed_ms": round(elapsed_ms, 3),
+        "elapsed_ms": round((time.perf_counter() - started) * 1000.0, 3),
         "stdout_tail": completed.stdout[-2000:],
         "stderr_tail": completed.stderr[-2000:],
     }
@@ -342,9 +355,9 @@ def run_construction_architect_refactor(
     base_sha: str,
     output_dir: str | Path = "Aura_Staging/sco_construction_phase3_architect",
 ) -> dict[str, Any]:
-    """Run Aura's native governed refactor loop over the current source diff."""
+    """Verify the exact branch diff through Aura's governed refactor loop."""
     root = Path(repo_root).resolve()
-    if not base_sha.strip():
+    if type(base_sha) is not str or not base_sha.strip():
         raise ValueError("base_sha is required")
     output = Path(output_dir)
     if output.is_absolute():
@@ -356,10 +369,10 @@ def run_construction_architect_refactor(
         {
             "surface": "native",
             "council_mode": "SELECTIVE_V3",
-            "council_call_budget": 6,
+            "council_call_budget": 8,
             "critic_lanes": ["scope", "tests", "sequence", "rollback", "cost"],
             "surgeon_mode": "STAGE_AND_VERIFY",
-            "surgeon_max_turns": 12,
+            "surgeon_max_turns": 16,
             "surgeon_max_local_repairs": 2,
             "record_outputs": True,
             "output_root": output.as_posix(),
@@ -368,15 +381,13 @@ def run_construction_architect_refactor(
     )
     candidates = build_refactor_plan_candidates()
     objective = (
-        "Refactor and verify the SCO Construction E7-E8 advisory runtime by reusing "
-        "Aura's canonical architecture, preserving authority boundaries, and recording "
-        "executable evidence for the Construction demo and the refactor process."
+        "Verify the SCO Construction E7-E11 refactor by reusing Aura's canonical "
+        "architecture, preserving authority and evidence boundaries, and recording "
+        "executable refactor and learning benchmarks."
     )
-    run_id = f"SCO-P3-{hashlib.blake2b(base_sha.encode('utf-8'), digest_size=8).hexdigest()}"
-    connector = AuraArenaArchitectConnector(root, bridge=object())
-
+    run_id = f"SCO-P3-{hashlib.blake2b(base_sha.encode(), digest_size=8).hexdigest()}"
     started = time.perf_counter()
-    comparison = connector.compare_plans(
+    comparison = AuraArenaArchitectConnector(root, bridge=object()).compare_plans(
         objective=objective,
         candidates=candidates,
         required_capabilities=REQUIRED_CAPABILITIES,
@@ -398,11 +409,10 @@ def run_construction_architect_refactor(
         repo_root=root,
     )
     split_capsules = work_split_to_act_capsules(split_packet, repo_root=root)
-
-    patch_submissions = []
     tests_by_task = {
         str(item["task_id"]): list(item["tests"]) for item in SOURCE_SHARDS
     }
+    patch_submissions = []
     for task in selected_plan["act_tasks"]:
         task_id = str(task["task_id"])
         target_file = str(task["target_file"])
@@ -428,39 +438,37 @@ def run_construction_architect_refactor(
         rollback_conditions=list(selected_plan["rollback_conditions"]),
         risk_map=list(selected_plan["risk_map"]),
         constraints=list(selected_plan["constraints"]),
-        context_pressure=0.91,
+        context_pressure=0.92,
         runner=lambda test_name: _pytest_runner(root, test_name),
         ledger_path=output_path / "architect_ledger.jsonl",
     )
     judge = judge_refactor_arena(execution.verification)
     elapsed_ms = (time.perf_counter() - started) * 1000.0
-
     if not all(item.ok for item in execution.stage_results):
-        raise RuntimeError("Aura Surgeon rejected one or more Construction source shards")
+        raise RuntimeError("Aura Surgeon rejected a Construction source shard")
     if not execution.verification.hotswap_ready:
         raise RuntimeError(
             "Aura Verifier blocked the Construction refactor: "
             f"{execution.verification.failures}"
         )
     if judge["decision"] != "promote_hotswap":
-        raise RuntimeError(f"Aura Judge did not promote the verified refactor: {judge}")
+        raise RuntimeError(f"Aura Judge blocked the verified refactor: {judge}")
 
     codemap = _codemap_metrics(root)
     repo_files = codemap["repository_file_count"]
-    source_file_count = len(SOURCE_SHARDS)
-    structural_scope_reduction = (
-        round(1.0 - source_file_count / float(repo_files), 6)
+    repo_tokens = codemap["repository_text_tokens_est"]
+    source_count = len(SOURCE_SHARDS)
+    selected_tokens = comparison["selected_assessment"]["token_proxy"]
+    file_scope_reduction = (
+        round(1.0 - source_count / float(repo_files), 6)
         if isinstance(repo_files, int) and repo_files > 0
         else NOT_MEASURED
     )
-    selected_token_proxy = comparison["selected_assessment"]["token_proxy"]
-    repo_token_proxy = codemap["repository_text_tokens_est"]
-    planning_context_reduction = (
-        round(1.0 - selected_token_proxy / float(repo_token_proxy), 6)
-        if isinstance(repo_token_proxy, int) and repo_token_proxy > 0
+    context_proxy_reduction = (
+        round(1.0 - selected_tokens / float(repo_tokens), 6)
+        if isinstance(repo_tokens, int) and repo_tokens > 0
         else NOT_MEASURED
     )
-
     report = {
         "ok": True,
         "version": CONSTRUCTION_ARCHITECT_REFACTOR_VERSION,
@@ -486,7 +494,7 @@ def run_construction_architect_refactor(
             "elapsed_ms": round(elapsed_ms, 3),
             "plan_candidate_count": len(candidates),
             "selected_plan_id": comparison["selected_candidate_id"],
-            "selected_plan_token_proxy": selected_token_proxy,
+            "selected_plan_token_proxy": selected_tokens,
             "actual_model_calls": comparison["actual_model_calls"],
             "selected_critic_lanes": comparison["selected_assessment"][
                 "selected_critic_lanes"
@@ -512,10 +520,10 @@ def run_construction_architect_refactor(
             "parallel_truth_stores_added": 0,
             "production_connectors_added": 0,
             "repository_file_count": repo_files,
-            "source_file_scope_count": source_file_count,
-            "structural_file_scope_reduction": structural_scope_reduction,
-            "repository_text_tokens_est": repo_token_proxy,
-            "planning_context_proxy_reduction": planning_context_reduction,
+            "source_file_scope_count": source_count,
+            "structural_file_scope_reduction": file_scope_reduction,
+            "repository_text_tokens_est": repo_tokens,
+            "planning_context_proxy_reduction": context_proxy_reduction,
             "measurement_classes": {
                 "elapsed_ms": "EXECUTABLE_CI_WALL_CLOCK",
                 "test_results": "EXECUTABLE_PYTEST",
@@ -533,6 +541,7 @@ def run_construction_architect_refactor(
             "production_mutation": False,
             "physical_work_authorized": False,
             "payment_released": False,
+            "active_grammar_mutated": False,
             "provider_tokens": NOT_MEASURED,
             "provider_cost": NOT_MEASURED,
             "real_project_savings": NOT_MEASURED,
