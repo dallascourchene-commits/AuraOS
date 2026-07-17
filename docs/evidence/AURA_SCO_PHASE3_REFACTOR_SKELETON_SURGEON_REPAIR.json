@@ -1,0 +1,313 @@
+{
+  "actual_model_calls": 0,
+  "claim_boundaries": {
+    "human_review_required": true,
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "production_mutation": false,
+    "provider_cost": "NOT_MEASURED",
+    "provider_tokens": "NOT_MEASURED",
+    "vsa_patch_authority": false
+  },
+  "council_comparison": {
+    "actual_model_calls": 0,
+    "assessments": [
+      {
+        "actual_model_calls": 0,
+        "architecture_reuse": true,
+        "candidate_id": "EXACT_IDENTITY_SYNTAX_SURGEON",
+        "council_mode": "SELECTIVE_V3",
+        "coverage_fraction": 1.0,
+        "exact_task_fraction": 1.0,
+        "governance_fraction": 1.0,
+        "length_profile": {
+          "council_recommended": false,
+          "dependency_edge_count": 0,
+          "distinct_file_count": 1,
+          "estimated_max_model_turns": 3,
+          "estimated_min_model_turns": 1,
+          "large_task_count": 0,
+          "length_class": "SHORT",
+          "reasons": [],
+          "sequential_depth_estimate": 1,
+          "task_count": 1
+        },
+        "plan_digest": "efdde3e269574fbc9e7766735c16f6d0",
+        "planned_critic_calls": 4,
+        "planned_critic_lane_count": 4,
+        "reasons": [
+          "covers_all_required_capabilities",
+          "all_act_capsules_are_exact",
+          "complete_governance_contract",
+          "reuses_existing_aura_architecture",
+          "controlled_test_critic"
+        ],
+        "score": 0.98,
+        "selected_critic_lanes": [
+          "scope",
+          "tests",
+          "rollback",
+          "cost"
+        ],
+        "testability_fraction": 1.0,
+        "token_proxy": 256
+      },
+      {
+        "actual_model_calls": 0,
+        "architecture_reuse": false,
+        "candidate_id": "BROAD_REWRITE",
+        "council_mode": "SELECTIVE_V3",
+        "coverage_fraction": 0.1667,
+        "exact_task_fraction": 1.0,
+        "governance_fraction": 1.0,
+        "length_profile": {
+          "council_recommended": false,
+          "dependency_edge_count": 0,
+          "distinct_file_count": 1,
+          "estimated_max_model_turns": 3,
+          "estimated_min_model_turns": 1,
+          "large_task_count": 1,
+          "length_class": "SHORT",
+          "reasons": [
+            "large_or_xl_capsules"
+          ],
+          "sequential_depth_estimate": 1,
+          "task_count": 1
+        },
+        "plan_digest": "850615b9cd8ac220ab8c373df190efe4",
+        "planned_critic_calls": 4,
+        "planned_critic_lane_count": 4,
+        "reasons": [
+          "all_act_capsules_are_exact",
+          "complete_governance_contract",
+          "controlled_test_critic"
+        ],
+        "score": 0.5967,
+        "selected_critic_lanes": [
+          "scope",
+          "tests",
+          "rollback",
+          "cost"
+        ],
+        "testability_fraction": 1.0,
+        "token_proxy": 193
+      }
+    ],
+    "candidate_provenance": {
+      "BROAD_REWRITE": {
+        "arm_family": "BROAD_IMPLEMENTER",
+        "prompt_digest": "",
+        "provenance": {
+          "generation": "frozen_local_plan",
+          "model_calls": 0
+        },
+        "response_digest": "850615b9cd8ac220ab8c373df190efe4",
+        "token_usage": {
+          "measurement_class": "NOT_MEASURED",
+          "provider_reported": null
+        }
+      },
+      "EXACT_IDENTITY_SYNTAX_SURGEON": {
+        "arm_family": "SELECTIVE_COUNCIL_V3_PLUS_SURGEON",
+        "prompt_digest": "",
+        "provenance": {
+          "generation": "frozen_local_plan",
+          "model_calls": 0
+        },
+        "response_digest": "efdde3e269574fbc9e7766735c16f6d0",
+        "token_usage": {
+          "measurement_class": "NOT_MEASURED",
+          "provider_reported": null
+        }
+      }
+    },
+    "cognitive_labor_route": {
+      "confidence": 0.88,
+      "council_runs": 0,
+      "escalation_required": false,
+      "execution_role": "SINGLE_SLICED_PLANNER",
+      "local_repair_allowed": true,
+      "patch_authority": "exact_source_spans_and_hashes_only",
+      "production_mutation": false,
+      "reasons": [
+        "localized_bounded_implementation"
+      ],
+      "route": "SURGEON_ONLY",
+      "strategic_role": "NONE",
+      "version": "AURA_COGNITIVE_LABOR_ROUTER_V3",
+      "vsa_patch_authority": false
+    },
+    "control_profile": {
+      "control_digest": "f04302c948f46634a059599185579ef4",
+      "council_call_budget": 4,
+      "council_mode": "SELECTIVE_V3",
+      "council_replan_allowed": true,
+      "critic_lanes": [
+        "scope",
+        "tests",
+        "rollback",
+        "cost"
+      ],
+      "human_review_required": true,
+      "output_root": "Aura_Staging/refactor_output_vault",
+      "patch_authority": "exact_source_spans_and_hashes_only",
+      "production_mutation": false,
+      "record_outputs": false,
+      "surface": "native",
+      "surgeon_context_tokens": 2200,
+      "surgeon_max_local_repairs": 1,
+      "surgeon_max_turns": 4,
+      "surgeon_mode": "STAGE_AND_VERIFY",
+      "surgeon_output_tokens": 2400,
+      "version": "AURA_ARCHITECT_CONTROL_V1",
+      "vsa_patch_authority": false
+    },
+    "human_review_required": true,
+    "objective": "Repair RefactorSkeleton Python 3.11 identity syntax exactly.",
+    "ok": true,
+    "output_vault": {
+      "enabled": false
+    },
+    "patch_authority": "exact_source_spans_and_hashes_only",
+    "production_mutation": false,
+    "proposal_only": true,
+    "required_capabilities": [
+      "syntax_integrity",
+      "canonical_identity_equivalence",
+      "bounded_patch_scope",
+      "direct_skeleton_tests",
+      "construction_plan_regression",
+      "rollback"
+    ],
+    "selected_assessment": {
+      "actual_model_calls": 0,
+      "architecture_reuse": true,
+      "candidate_id": "EXACT_IDENTITY_SYNTAX_SURGEON",
+      "council_mode": "SELECTIVE_V3",
+      "coverage_fraction": 1.0,
+      "exact_task_fraction": 1.0,
+      "governance_fraction": 1.0,
+      "length_profile": {
+        "council_recommended": false,
+        "dependency_edge_count": 0,
+        "distinct_file_count": 1,
+        "estimated_max_model_turns": 3,
+        "estimated_min_model_turns": 1,
+        "large_task_count": 0,
+        "length_class": "SHORT",
+        "reasons": [],
+        "sequential_depth_estimate": 1,
+        "task_count": 1
+      },
+      "plan_digest": "efdde3e269574fbc9e7766735c16f6d0",
+      "planned_critic_calls": 4,
+      "planned_critic_lane_count": 4,
+      "reasons": [
+        "covers_all_required_capabilities",
+        "all_act_capsules_are_exact",
+        "complete_governance_contract",
+        "reuses_existing_aura_architecture",
+        "controlled_test_critic"
+      ],
+      "score": 0.98,
+      "selected_critic_lanes": [
+        "scope",
+        "tests",
+        "rollback",
+        "cost"
+      ],
+      "testability_fraction": 1.0,
+      "token_proxy": 256
+    },
+    "selected_candidate_id": "EXACT_IDENTITY_SYNTAX_SURGEON",
+    "selected_plan": {
+      "acceptance_criteria": [
+        "Python 3.11 compile passes.",
+        "Direct skeleton tests pass.",
+        "Construction plan tests pass."
+      ],
+      "act_tasks": [
+        {
+          "acceptance": "Compile and direct regressions pass.",
+          "allowed_scope": "one identity expression",
+          "expected_output": "UNIFIED_DIFF",
+          "objective": "Repair RefactorSkeleton Python 3.11 identity syntax exactly.",
+          "size": "S",
+          "target_file": "aura_refactor_skeleton.py",
+          "target_symbol": "RefactorSkeleton.__post_init__",
+          "task_id": "SKELETON-ID-EXPRESSION"
+        }
+      ],
+      "architecture_decision": "Preserve canonical identity and replace one incompatible expression.",
+      "architecture_reuse": true,
+      "constraints": [
+        "No API or authority changes."
+      ],
+      "coverage_tags": [
+        "syntax_integrity",
+        "canonical_identity_equivalence",
+        "bounded_patch_scope",
+        "direct_skeleton_tests",
+        "construction_plan_regression",
+        "rollback"
+      ],
+      "existing_modules": [
+        "aura_architect_control.py",
+        "aura_arena_architect_connector.py",
+        "aura_refactor_skeleton.py"
+      ],
+      "risk_map": [
+        "Identity semantics must remain equivalent."
+      ],
+      "rollback_conditions": [
+        "Any failure blocks commit."
+      ]
+    },
+    "selected_provenance": {
+      "arm_family": "SELECTIVE_COUNCIL_V3_PLUS_SURGEON",
+      "prompt_digest": "",
+      "provenance": {
+        "generation": "frozen_local_plan",
+        "model_calls": 0
+      },
+      "response_digest": "efdde3e269574fbc9e7766735c16f6d0",
+      "token_usage": {
+        "measurement_class": "NOT_MEASURED",
+        "provider_reported": null
+      }
+    },
+    "selection_digest": "5fd2311b658d1aa66b7901b0d8a9b4c1",
+    "selection_method": "CONTROLLED_DETERMINISTIC_COUNCIL_PROFILE_RUBRIC",
+    "version": "AURA_ARENA_ARCHITECT_CONNECTOR_V3",
+    "vsa_patch_authority": false
+  },
+  "objective": "Repair RefactorSkeleton Python 3.11 identity syntax exactly.",
+  "selected_plan_id": "EXACT_IDENTITY_SYNTAX_SURGEON",
+  "source": {
+    "added_line_count": 10,
+    "after_sha256": "c7a0a3a352295cad1d937026170926418c0a89f6239295c451a03c046f0fd9b6",
+    "before_sha256": "e321fd6e133c21fc0c4c9308f828c45188e9b6d90858a6846799c79afe52b10a",
+    "identity_arguments_changed": false,
+    "path": "aura_refactor_skeleton.py",
+    "removed_line_count": 7,
+    "start_line": 522
+  },
+  "tests": [
+    {
+      "elapsed_ms": 636.481,
+      "ok": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": ".......................                                                  [100%]\n23 passed in 0.15s\n",
+      "test": "tests/test_aura_refactor_skeleton.py"
+    },
+    {
+      "elapsed_ms": 392.678,
+      "ok": true,
+      "returncode": 0,
+      "stderr_tail": "",
+      "stdout_tail": "..........                                                               [100%]\n10 passed in 0.11s\n",
+      "test": "tests/test_aura_construction_refactor_plan.py"
+    }
+  ],
+  "version": "AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR_V2"
+}
