@@ -1,0 +1,184 @@
+       "human_review_required",
+            "automatic_resume",
+        }
+        unknown = sorted(set(data).difference(allowed))
+        if unknown:
+            raise ValueError(f"unknown temporal checkpoint fields: {unknown}")
+        return cls(
+            checkpoint_id=data.get("checkpoint_id"),
+            arena_id=data.get("arena_id"),
+            session_id=data.get("session_id"),
+            parent_checkpoint_id=data.get("parent_checkpoint_id", ""),
+            branch_name=data.get("branch_name", ""),
+            sequence_number=data.get("sequence_number"),
+            repo_head=data.get("repo_head"),
+            payload=_mapping(data.get("payload"), "payload"),
+            payload_digest=data.get("payload_digest"),
+            invariant_digests={
+                str(key): str(item)
+                for key, item in _mapping(data.get("invariant_digests", {}), "invariant_digests").items()
+            },
+            source_kind=data.get("source_kind"),
+            created_at=data.get("created_at"),
+            record_digest=data.get("record_digest"),
+            version=data.get("version"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+            human_review_required=data.get("human_review_required"),
+            automatic_resume=data.get("automatic_resume"),
+        )
+
+
+@dataclass(frozen=True)
+class RestorationAssessment:
+    checkpoint_id: str
+    status: str
+    can_direct_resume: bool
+    mismatches: tuple[str, ...]
+    repo_head_matches: bool
+    invariant_matches: bool
+    mitosis_required: bool
+    remaining_context_tokens: int
+    surgeon_context_limit: int
+    next_gate: str
+    human_review_required: bool = True
+    automatic_resume: bool = False
+    version: str = RESTORATION_ASSESSMENT_VERSION
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = False
+
+    def to_dict(self) -> dict[str, Any]:
+        value = asdict(self)
+        value["mismatches"] = list(self.mismatches)
+        return value
+
+
+class TemporalCheckpointRegistry:
+    """Append-only checkpoint registry with content-addressed checkpoint files."""
+
+    def __init__(
+        self,
+        repo_root: str | Path = ".",
+        *,
+        memory_root: str | Path = "Aura_Memory/checkpoints",
+    ) -> None:
+        self.repo_root = Path(repo_root).resolve()
+        raw_root = Path(memory_root)
+        if raw_root.is_absolute():
+            raise ValueError("memory_root must be repository-relative")
+        self.root = (self.repo_root / raw_root).resolve()
+        try:
+            self.root.relative_to(self.repo_root)
+        except ValueError as exc:
+            raise ValueError("memory_root escaped repo_root") from exc
+        self.registry_path = self.root / "registry.jsonl"
+        self.lock_path = self.root / ".registry.lock"
+
+    @contextmanager
+    def _lock(self, *, create: bool = True) -> Iterator[None]:
+        if not self.root.exists() and not create:
+            yield
+            return
+        self.root.mkdir(parents=True, exist_ok=True)
+        handle = self.lock_path.open("a+", encoding="utf-8")
+        try:
+            try:
+                import fcntl  # type: ignore
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            except (ImportError, OSError):
+                pass
+            yield
+        finally:
+            try:
+                import fcntl  # type: ignore
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            except (ImportError, OSError):
+                pass
+            handle.close()
+
+    def _checkpoint_path(self, checkpoint: TemporalCheckpoint) -> Path:
+        path = (
+            self.root
+            / checkpoint.arena_id
+            / checkpoint.session_id
+            / f"{checkpoint.checkpoint_id}.json"
+        ).resolve()
+        try:
+            path.relative_to(self.root)
+        except ValueError as exc:
+            raise ValueError("checkpoint path escaped persistence root") from exc
+        return path
+
+    def _atomic_json(self, path: Path, value: Mapping[str, Any]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        encoded = json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ) + "\n"
+        fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_name, path)
+        finally:
+            if os.path.exists(temp_name):
+                os.unlink(temp_name)
+
+    def _registry_entries_unlocked(self) -> list[dict[str, Any]]:
+        if not self.registry_path.exists():
+            return []
+        entries: list[dict[str, Any]] = []
+        previous = ""
+        with self.registry_path.open("r", encoding="utf-8") as handle:
+            for line_number, raw in enumerate(handle, start=1):
+                if not raw.strip():
+                    continue
+                try:
+                    entry = json.loads(raw)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"registry line {line_number} is not valid JSON") from exc
+                if not isinstance(entry, dict):
+                    raise ValueError(f"registry line {line_number} is not an object")
+                body = {key: item for key, item in entry.items() if key != "entry_digest"}
+                if body.get("registry_version") != TEMPORAL_REGISTRY_VERSION:
+                    raise ValueError(f"registry line {line_number} has unsupported version")
+                if body.get("previous_entry_digest", "") != previous:
+                    raise ValueError(f"registry chain mismatch at line {line_number}")
+                expected = digest(body, size=20)
+                if entry.get("entry_digest") != expected:
+                    raise ValueError(f"registry digest mismatch at line {line_number}")
+                previous = expected
+                entries.append(entry)
+        return entries
+
+    def verify_registry(self) -> dict[str, Any]:
+        with self._lock(create=False):
+            entries = self._registry_entries_unlocked()
+        return {
+            "ok": True,
+            "version": TEMPORAL_REGISTRY_VERSION,
+            "entry_count": len(entries),
+            "last_entry_digest": entries[-1]["entry_digest"] if entries else "",
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def _entry_index_unlocked(self) -> dict[str, dict[str, Any]]:
+        return {
+            str(entry["checkpoint_id"]): entry
+            for entry in self._registry_entries_unlocked()
+        }
+
+    def write_checkpoint(
+        self,
+        *,
+        arena_id: str,
+        session_id: str,
+        repo_head:
