@@ -382,3 +382,122 @@ def build_sco_construction_demo_fixture() -> ConstructionDemoFixture:
         projected_idle_delta_hours=-24.0,
         safety_risk=0.08,
         deadline_risk=0.24,
+        evidence_quality=0.94,
+        reversibility=0.80,
+    )
+    crane_and_temp = ConstructionCoordinationCandidate.create(
+        scope=focus,
+        lane=ConstructionAdvisoryLane.ALTERNATIVE_WORK,
+        title="Use the crane window and temporary labour on Floor 5 logistics",
+        summary=(
+            "Use the synthetic crane reservation and released Floor 5 package to advance "
+            "material flow at a higher declared mock cost."
+        ),
+        required_claim_ids=(crane_ready.claim_id, floor5_ready.claim_id),
+        authority_route=ConstructionAuthorityRoute.OWNER_REVIEW_REQUIRED,
+        projected_time_delta_hours=-14.0,
+        projected_cost_delta_cad=9000.0,
+        projected_idle_delta_hours=-48.0,
+        safety_risk=0.20,
+        deadline_risk=0.12,
+        evidence_quality=0.87,
+        reversibility=0.65,
+    )
+    candidates = tuple(
+        sorted(
+            (
+                continue_drilling,
+                shift_to_floor5,
+                electrical_resequence,
+                crane_and_temp,
+            ),
+            key=lambda item: item.candidate_id,
+        )
+    )
+
+    signals = tuple(
+        sorted(
+            (
+                _signal(
+                    continue_drilling,
+                    specification=0.99,
+                    evidence=0.97,
+                    schedule=0.99,
+                    safety=0.99,
+                    variance=0.0025,
+                    score_margin=0.30,
+                    progress_score=0.90,
+                    progress_slope=0.08,
+                ),
+                _signal(
+                    shift_to_floor5,
+                    specification=0.90,
+                    evidence=0.91,
+                    schedule=0.89,
+                    safety=0.94,
+                    variance=0.0100,
+                    score_margin=0.12,
+                    progress_score=0.72,
+                    progress_slope=0.05,
+                ),
+                _signal(
+                    electrical_resequence,
+                    specification=0.88,
+                    evidence=0.95,
+                    schedule=0.80,
+                    safety=0.96,
+                    variance=0.0081,
+                    score_margin=0.08,
+                    progress_score=0.68,
+                    progress_slope=0.04,
+                ),
+                _signal(
+                    crane_and_temp,
+                    specification=0.86,
+                    evidence=0.88,
+                    schedule=0.96,
+                    safety=0.84,
+                    variance=0.0144,
+                    score_margin=0.05,
+                    progress_score=0.64,
+                    progress_slope=0.03,
+                ),
+            ),
+            key=lambda item: item.candidate_id,
+        )
+    )
+    return ConstructionDemoFixture(
+        state=state,
+        focus_scope=focus,
+        claims=tuple(sorted((clearance, floor5_ready, electrical_ready, crane_ready), key=lambda item: item.claim_id)),
+        candidates=candidates,
+        probabilistic_signals=signals,
+        blocked_clearance_claim_id=clearance.claim_id,
+    )
+
+
+def build_sco_construction_demo_runtime_packet() -> dict[str, Any]:
+    fixture = build_sco_construction_demo_fixture()
+    return ConstructionArenaAdapter().build_runtime_packet(
+        objective=(
+            "Protect the schedule without crossing the Floor 6 asbestos evidence and "
+            "professional-authority boundary."
+        ),
+        state=fixture.state,
+        scope=fixture.focus_scope,
+        candidates=fixture.candidates,
+        now=30.0,
+        mode=ConstructionArenaMode.SYNTHETIC,
+        lane=ConstructionAdvisoryLane.ALTERNATIVE_WORK,
+        probabilistic_signals=fixture.probabilistic_signals,
+    )
+
+
+__all__ = [
+    "CONSTRUCTION_FIXTURE_VERSION",
+    "PROJECT_ID",
+    "LEDGER_ID",
+    "ConstructionDemoFixture",
+    "build_sco_construction_demo_fixture",
+    "build_sco_construction_demo_runtime_packet",
+]
