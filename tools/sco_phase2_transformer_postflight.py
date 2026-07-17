@@ -5,6 +5,9 @@ from pathlib import Path
 SELF = Path(__file__).resolve()
 TARGET = SELF.with_name("sco_phase2_apply_review_fixes.py")
 
+# Persisted authority timestamps must fail canonical-float validation before
+# nested readiness-report equality checks can mask the malformed field.
+
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
