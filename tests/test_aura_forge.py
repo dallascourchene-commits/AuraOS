@@ -144,6 +144,8 @@ def request() -> dict[str, Any]:
             "ticket": "ENG-42",
             "api_key": "must-not-leak",
             "forge_contract_id": "spoofed-lineage",
+            "github_token": "must-not-leak",
+            "input_tokens": 321,
         },
     }
 
@@ -164,6 +166,7 @@ def test_prepare_compiles_exact_evidence_contract(tmp_path: Path) -> None:
     assert contract["metadata"] == {
         "ticket": "ENG-42",
         "forge_contract_id": "spoofed-lineage",
+        "input_tokens": 321,
     }
     assert validate_forge_contract(contract) == []
     assert bridge.context_calls[0]["max_tokens_est"] == 800
@@ -271,6 +274,20 @@ def test_request_rejects_unsafe_paths_and_invalid_budgets() -> None:
         assert "unsupported required_gates" in str(exc)
     else:
         raise AssertionError("unsupported gate was accepted")
+
+
+def test_malformed_request_collections_fail_closed(tmp_path: Path) -> None:
+    runtime, _bridge, _manager = build_runtime(tmp_path)
+
+    criteria = runtime.prepare({"objective": "x", "acceptance_criteria": 7})
+    metadata = runtime.prepare({"objective": "x", "metadata": ["not", "an", "object"]})
+
+    assert criteria["ok"] is False
+    assert criteria["stage"] == "REQUEST"
+    assert criteria["error"] == "expected an array of strings"
+    assert metadata["ok"] is False
+    assert metadata["stage"] == "REQUEST"
+    assert metadata["error"] == "metadata must be an object"
 
 
 def test_dot_prefixed_repository_paths_are_preserved() -> None:

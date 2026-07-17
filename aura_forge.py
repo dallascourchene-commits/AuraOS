@@ -54,6 +54,15 @@ _SECRET_KEYS = frozenset({
     "signing_key",
 })
 _SECRET_SUFFIXES = ("_api_key", "_password", "_private_key", "_secret", "_credential")
+_TOKEN_USAGE_KEYS = frozenset({
+    "input_tokens",
+    "output_tokens",
+    "total_tokens",
+    "prompt_tokens",
+    "completion_tokens",
+    "cached_tokens",
+    "reasoning_tokens",
+})
 
 
 def _digest(value: Any, *, size: int = 16) -> str:
@@ -64,7 +73,7 @@ def _digest(value: Any, *, size: int = 16) -> str:
 def _clean_strings(values: Sequence[Any] | None) -> tuple[str, ...]:
     if values is None:
         return ()
-    if isinstance(values, (str, bytes)):
+    if isinstance(values, (str, bytes)) or not isinstance(values, (list, tuple)):
         raise ValueError("expected an array of strings")
     cleaned: list[str] = []
     for value in values:
@@ -96,7 +105,15 @@ def _sanitize(value: Any) -> Any:
         for key, item in value.items():
             key_text = str(key)
             lowered = key_text.lower()
-            if lowered in _SECRET_KEYS or lowered.endswith(_SECRET_SUFFIXES):
+            is_secret_token = (
+                (lowered == "token" or lowered.endswith("_token"))
+                and lowered not in _TOKEN_USAGE_KEYS
+            )
+            if (
+                lowered in _SECRET_KEYS
+                or lowered.endswith(_SECRET_SUFFIXES)
+                or is_secret_token
+            ):
                 continue
             result[key_text] = _sanitize(item)
         return result
@@ -181,6 +198,14 @@ class ForgeRunRequest:
         if unsupported:
             raise ValueError(f"unsupported required_gates: {unsupported}")
 
+        metadata_value = raw.get("metadata")
+        if metadata_value is None:
+            metadata: dict[str, Any] = {}
+        elif isinstance(metadata_value, Mapping):
+            metadata = _sanitize(dict(metadata_value))
+        else:
+            raise ValueError("metadata must be an object")
+
         return cls(
             objective=objective,
             target_file=_safe_repo_path(raw.get("target_file"), field_name="target_file"),
@@ -197,7 +222,7 @@ class ForgeRunRequest:
             max_turns=bounded("max_turns", 12, 1, 40),
             max_local_repairs=bounded("max_local_repairs", 2, 0, 8),
             required_gates=gates,
-            metadata=_sanitize(dict(raw.get("metadata") or {})),
+            metadata=metadata,
         )
 
     def to_dict(self) -> dict[str, Any]:
