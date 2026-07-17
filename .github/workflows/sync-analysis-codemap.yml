@@ -8,7 +8,7 @@ permissions:
 
 concurrency:
   group: sco-phase2-coverage-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   diagnose:
