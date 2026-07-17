@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784302065,
+  "generated_at_unix": 1784304531,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1050,
+    "included_file_count": 1048,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -53,7 +53,6 @@
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/route_capsules/coding_localize.v1.json",
-      ".aura/sco_phase3_refactor_skeleton_repair.trigger",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -104,8 +103,6 @@
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
-      ".github/workflows/sco-phase3-refactor-skeleton-pr-bridge.yml",
-      ".github/workflows/sco-phase3-refactor-skeleton-repair.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".gitignore",
       ".mempalace/aura_thought.txt",
@@ -757,6 +754,7 @@
       "docs/aura_substrate_manifest.phases.05.json",
       "docs/aura_substrate_manifest.v1.json",
       "docs/aura_substrate_release_index.v1.json",
+      "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
       "docs/fragments/ARCHITECTURE_REFACTOR_CODE_QUALITY.md",
       "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
       "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
@@ -1072,9 +1070,9 @@
     ]
   },
   "summary": {
-    "file_count": 1050,
-    "total_bytes": 51446894,
-    "text_tokens_est": 3521920,
+    "file_count": 1048,
+    "total_bytes": 51442267,
+    "text_tokens_est": 3520778,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 27,
@@ -1082,13 +1080,13 @@
       "native_accelerator": 8,
       "operator_script": 5,
       "python_module": 731,
-      "schema_or_lexicon": 106,
-      "support_file": 31
+      "schema_or_lexicon": 105,
+      "support_file": 30
     },
     "topology_nodes": 8647,
     "topology_edges": 19084,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 20889.73
+    "elapsed_ms": 22163.57
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1299,7 +1297,6 @@
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/route_capsules/coding_localize.v1.json",
-      ".aura/sco_phase3_refactor_skeleton_repair.trigger",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/understand_graph.json",
       ".aura/understand_graph_diff.json",
@@ -1346,8 +1343,6 @@
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-phase2-finalize.yml",
       ".github/workflows/sco-phase3-advisory-runtime.yml",
-      ".github/workflows/sco-phase3-refactor-skeleton-pr-bridge.yml",
-      ".github/workflows/sco-phase3-refactor-skeleton-repair.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".gitignore",
       ".termux/colors.properties",
@@ -1887,6 +1882,7 @@
       "docs/AURA_TOKEN_ECONOMY_STACK.md",
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
+      "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
       "docs/fragments/ARCHITECTURE_REFACTOR_CODE_QUALITY.md",
       "docs/fragments/README_REFACTOR_CODE_QUALITY.md",
       "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md",
@@ -9885,7 +9881,7 @@
         "file": "aura_refactor_skeleton.py",
         "kind": "class",
         "line": 482,
-        "end_line": 729,
+        "end_line": 732,
         "semantic_id": "aura_refactor_skeleton.py#class:RefactorSkeleton:4a5d142d3a08e702",
         "signature_hash": "2c782d5622deebf0"
       }
@@ -9904,8 +9900,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "class",
-        "line": 732,
-        "end_line": 872,
+        "line": 735,
+        "end_line": 875,
         "semantic_id": "aura_refactor_skeleton.py#class:RefactorSkeletonStore:92e1214885fe6ee0",
         "signature_hash": "9d4a83c7c04c1ba3"
       }
@@ -16586,8 +16582,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 735,
-        "end_line": 747,
+        "line": 738,
+        "end_line": 750,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore.__init__:c7984570ad94891c",
         "signature_hash": "a6364ad33513f4c9"
       },
@@ -18539,7 +18535,7 @@
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
         "line": 502,
-        "end_line": 544,
+        "end_line": 547,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.__post_init__:563bdd0992685e19",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -25874,8 +25870,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 750,
-        "end_line": 754,
+        "line": 753,
+        "end_line": 757,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore._envelope_digest:9b9eec82dfd13e34",
         "signature_hash": "51b7ca0287acee26"
       }
@@ -31348,8 +31344,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 774,
-        "end_line": 800,
+        "line": 777,
+        "end_line": 803,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore._load_chain:f1c7eb15c2d43c2c",
         "signature_hash": "67be28f904548541"
       }
@@ -36106,8 +36102,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 756,
-        "end_line": 772,
+        "line": 759,
+        "end_line": 775,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore._read_path:d4432e3a2fc9023a",
         "signature_hash": "d4fc65393f7793ce"
       }
@@ -37916,8 +37912,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 850,
-        "end_line": 863,
+        "line": 853,
+        "end_line": 866,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore._result:0686119fdabf0aaa",
         "signature_hash": "4610554f8570116e"
       }
@@ -52194,8 +52190,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 547,
-        "end_line": 593,
+        "line": 550,
+        "end_line": 596,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.create:b953cb77cc0a82c4",
         "signature_hash": "3ee161fb8e856cbf"
       },
@@ -56152,8 +56148,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 596,
-        "end_line": 618,
+        "line": 599,
+        "end_line": 621,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.from_dict:91a249d10ebca8c8",
         "signature_hash": "e8824d1702c73cba"
       },
@@ -60426,8 +60422,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 865,
-        "end_line": 872,
+        "line": 868,
+        "end_line": 875,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore.load_latest:92d9fc11b1886ec2",
         "signature_hash": "2cea534fea71c8f9"
       }
@@ -62262,8 +62258,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 623,
-        "end_line": 627,
+        "line": 626,
+        "end_line": 630,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.node:6125bd055fb7ce8f",
         "signature_hash": "cbf354dd343c3130"
       }
@@ -67100,8 +67096,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 629,
-        "end_line": 692,
+        "line": 632,
+        "end_line": 695,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.revise_node:60bfdff4c13ae66e",
         "signature_hash": "be1a3d29f73ee603"
       }
@@ -70230,8 +70226,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 802,
-        "end_line": 847,
+        "line": 805,
+        "end_line": 850,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeletonStore.store:2966eb190d63f931",
         "signature_hash": "80af3e1ecc013e03"
       },
@@ -98184,8 +98180,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 620,
-        "end_line": 621,
+        "line": 623,
+        "end_line": 624,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.to_dict:160f5eb83d6f702d",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -99558,8 +99554,8 @@
       {
         "file": "aura_refactor_skeleton.py",
         "kind": "method",
-        "line": 694,
-        "end_line": 729,
+        "line": 697,
+        "end_line": 732,
         "semantic_id": "aura_refactor_skeleton.py#method:RefactorSkeleton.validate:b4ef156ff2406f32",
         "signature_hash": "c7722de387748ad1"
       },
@@ -130965,9 +130961,9 @@
     {
       "path": "aura_refactor_skeleton.py",
       "role": "python_module",
-      "bytes": 36858,
-      "lines": 873,
-      "tokens_est": 9215,
+      "bytes": 36946,
+      "lines": 876,
+      "tokens_est": 9237,
       "symbol_count": 45,
       "commands": [
         "!r"
@@ -131017,40 +131013,40 @@
           "import_module": 1
         }
       },
-      "digest8": "a8e4af48d27872d1",
+      "digest8": "194611e03b035609",
       "vector": [
-        0.120765,
-        -0.011968,
-        -0.08595,
-        0.01632,
-        0.231739,
-        0.225211,
-        -0.022847,
-        -0.25785,
-        -0.162108,
-        -0.260026,
-        0.181692,
-        -0.242618,
-        0.133821,
-        -0.08595,
-        -0.205627,
-        0.236091,
-        -0.168636,
-        -0.146877,
-        0.266554,
-        -0.072894,
-        -0.033727,
-        -0.275258,
-        0.01632,
-        -0.227387,
-        0.172988,
-        -0.114237,
-        -0.196923,
-        0.240442,
-        -0.046783,
-        0.170812,
-        -0.081598,
-        -0.253498
+        -0.223639,
+        -0.112437,
+        -0.050659,
+        -0.22611,
+        -0.112437,
+        -0.147033,
+        0.070428,
+        -0.191514,
+        0.025947,
+        0.206341,
+        -0.196456,
+        0.134678,
+        0.243408,
+        0.159389,
+        0.077841,
+        -0.223639,
+        0.151976,
+        -0.085255,
+        -0.11738,
+        0.070428,
+        -0.20387,
+        -0.297773,
+        0.255764,
+        0.3126,
+        0.208812,
+        -0.025947,
+        -0.058072,
+        0.310129,
+        -0.001236,
+        -0.228581,
+        0.159389,
+        -0.055601
       ]
     },
     {
@@ -147517,52 +147513,6 @@
       ]
     },
     {
-      "path": ".aura/sco_phase3_refactor_skeleton_repair.trigger",
-      "role": "support_file",
-      "bytes": 60,
-      "lines": 0,
-      "tokens_est": 0,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "b1049f05e76381cf",
-      "vector": [
-        -0.222959,
-        -0.170644,
-        -0.310149,
-        -0.056051,
-        0.287729,
-        0.108365,
-        -0.14075,
-        -0.031139,
-        -0.01121,
-        -0.108365,
-        0.165662,
-        -0.292711,
-        -0.100892,
-        0.305167,
-        -0.031139,
-        -0.1831,
-        -0.100892,
-        0.001246,
-        0.130786,
-        -0.041104,
-        -0.008719,
-        0.242888,
-        0.20552,
-        -0.09591,
-        0.066016,
-        0.272782,
-        -0.173135,
-        -0.217976,
-        0.070998,
-        -0.29022,
-        0.215485,
-        -0.110856
-      ]
-    },
-    {
       "path": ".aura/topology_baseline.json",
       "role": "schema_or_lexicon",
       "bytes": 475,
@@ -150780,98 +150730,6 @@
         0.027859,
         0.158672,
         0.059351
-      ]
-    },
-    {
-      "path": ".github/workflows/sco-phase3-refactor-skeleton-pr-bridge.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 2784,
-      "lines": 68,
-      "tokens_est": 696,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "1ddc0fcda8250f27",
-      "vector": [
-        0.24032,
-        -0.064005,
-        0.184769,
-        0.06159,
-        0.19926,
-        0.235489,
-        -0.085742,
-        0.15337,
-        -0.039852,
-        0.044683,
-        0.059174,
-        -0.105064,
-        0.163031,
-        -0.225828,
-        -0.158201,
-        0.076081,
-        0.175107,
-        -0.208921,
-        -0.288625,
-        0.24515,
-        -0.233074,
-        -0.300702,
-        -0.230659,
-        0.163031,
-        0.092988,
-        -0.295871,
-        0.148539,
-        -0.131633,
-        -0.008453,
-        -0.252396,
-        -0.073666,
-        0.02536
-      ]
-    },
-    {
-      "path": ".github/workflows/sco-phase3-refactor-skeleton-repair.yml",
-      "role": "schema_or_lexicon",
-      "bytes": 11943,
-      "lines": 278,
-      "tokens_est": 2986,
-      "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
-      "topology": {},
-      "digest8": "85dec8e53b24aed4",
-      "vector": [
-        0.301145,
-        0.180203,
-        0.284213,
-        0.037492,
-        0.201973,
-        -0.081031,
-        -0.049586,
-        -0.088287,
-        -0.107638,
-        0.129408,
-        0.081031,
-        0.037492,
-        -0.2697,
-        0.090706,
-        -0.281794,
-        -0.100382,
-        -0.267281,
-        -0.260025,
-        0.052005,
-        -0.035073,
-        -0.068937,
-        0.047167,
-        0.298726,
-        -0.037492,
-        0.025398,
-        0.226161,
-        0.117313,
-        -0.126989,
-        -0.250349,
-        -0.16569,
-        -0.199554,
-        -0.279375
       ]
     },
     {
@@ -158257,6 +158115,52 @@
         -0.260782,
         0.200344,
         -0.166766
+      ]
+    },
+    {
+      "path": "docs/evidence/AURA_SCO_PHASE3_REFACTOR_SKELETON_SURGEON_REPAIR.json",
+      "role": "schema_or_lexicon",
+      "bytes": 10072,
+      "lines": 314,
+      "tokens_est": 2518,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "73bbb9c8114a3a18",
+      "vector": [
+        0.268138,
+        0.098666,
+        0.24028,
+        0.261173,
+        0.233315,
+        0.193849,
+        0.010447,
+        0.295997,
+        -0.221707,
+        0.214743,
+        -0.25653,
+        -0.008125,
+        0.140453,
+        -0.047592,
+        -0.068485,
+        -0.265817,
+        0.035984,
+        0.012768,
+        -0.27046,
+        0.087058,
+        -0.029019,
+        -0.059199,
+        -0.124202,
+        -0.124202,
+        0.131167,
+        0.103309,
+        0.265817,
+        -0.17992,
+        0.13581,
+        -0.149739,
+        -0.121881,
+        -0.224029
       ]
     },
     {
