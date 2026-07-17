@@ -1,0 +1,298 @@
+    projected_idle_delta_hours: float
+    safety_risk: float
+    deadline_risk: float
+    evidence_quality: float
+    reversibility: float
+    measurement_class: str
+    version: str = CONSTRUCTION_ADAPTER_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    physical_work_authorized: bool = False
+    payment_released: bool = False
+    access_controlled: bool = False
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_ADAPTER_VERSION:
+            raise ValueError("unsupported Construction candidate version")
+        if type(self.scope) is not ConstructionScope:
+            raise ValueError("candidate scope must be an exact ConstructionScope")
+        _enum_value(self.lane, ConstructionAdvisoryLane, "candidate.lane")
+        if self.title != _text(self.title, "candidate.title"):
+            raise ValueError("candidate title must be canonical normalized text")
+        if self.summary != _text(self.summary, "candidate.summary"):
+            raise ValueError("candidate summary must be canonical normalized text")
+        _strings(self.required_claim_ids, "candidate.required_claim_ids")
+        _strings(self.declared_hard_blockers, "candidate.declared_hard_blockers")
+        _strings(self.assumptions, "candidate.assumptions")
+        _enum_value(
+            self.authority_route,
+            ConstructionAuthorityRoute,
+            "candidate.authority_route",
+        )
+        for name, value in (
+            ("projected_time_delta_hours", self.projected_time_delta_hours),
+            ("projected_cost_delta_cad", self.projected_cost_delta_cad),
+            ("projected_idle_delta_hours", self.projected_idle_delta_hours),
+        ):
+            if type(value) is not float:
+                raise ValueError(f"{name} must be a canonical float")
+            _finite(value, name)
+        for name, value in (
+            ("safety_risk", self.safety_risk),
+            ("deadline_risk", self.deadline_risk),
+            ("evidence_quality", self.evidence_quality),
+            ("reversibility", self.reversibility),
+        ):
+            if type(value) is not float:
+                raise ValueError(f"{name} must be a canonical float")
+            _bounded(value, name)
+        if self.measurement_class != _measurement(
+            self.measurement_class, "candidate.measurement_class"
+        ):
+            raise ValueError("candidate measurement_class must be canonical")
+        if (
+            self.proposal_only is not True
+            or self.physical_work_authorized is not False
+            or self.payment_released is not False
+            or self.access_controlled is not False
+            or self.patch_authority != PATCH_AUTHORITY
+            or self.vsa_patch_authority is not False
+        ):
+            raise ValueError("Construction candidate crossed its authority boundary")
+        payload = self._identity_payload()
+        if self.candidate_digest != stable_digest(payload):
+            raise ValueError("candidate digest does not match its content")
+        if self.candidate_id != stable_id("construction-candidate", payload):
+            raise ValueError("candidate ID does not match its content")
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        scope: ConstructionScope,
+        lane: str | ConstructionAdvisoryLane,
+        title: str,
+        summary: str,
+        required_claim_ids: Iterable[str] = (),
+        declared_hard_blockers: Iterable[str] = (),
+        assumptions: Iterable[str] = (),
+        authority_route: str | ConstructionAuthorityRoute,
+        projected_time_delta_hours: float,
+        projected_cost_delta_cad: float,
+        projected_idle_delta_hours: float,
+        safety_risk: float,
+        deadline_risk: float,
+        evidence_quality: float,
+        reversibility: float,
+        measurement_class: str | MeasurementClass = MeasurementClass.DERIVED,
+    ) -> "ConstructionCoordinationCandidate":
+        if type(scope) is not ConstructionScope:
+            raise ValueError("scope must be an exact ConstructionScope")
+        values = {
+            "scope": scope,
+            "lane": _enum_value(lane, ConstructionAdvisoryLane, "lane"),
+            "title": _text(title, "title"),
+            "summary": _text(summary, "summary"),
+            "required_claim_ids": _strings(required_claim_ids, "required_claim_ids"),
+            "declared_hard_blockers": _strings(
+                declared_hard_blockers, "declared_hard_blockers"
+            ),
+            "assumptions": _strings(assumptions, "assumptions"),
+            "authority_route": _enum_value(
+                authority_route, ConstructionAuthorityRoute, "authority_route"
+            ),
+            "projected_time_delta_hours": _finite(
+                projected_time_delta_hours, "projected_time_delta_hours"
+            ),
+            "projected_cost_delta_cad": _finite(
+                projected_cost_delta_cad, "projected_cost_delta_cad"
+            ),
+            "projected_idle_delta_hours": _finite(
+                projected_idle_delta_hours, "projected_idle_delta_hours"
+            ),
+            "safety_risk": _bounded(safety_risk, "safety_risk"),
+            "deadline_risk": _bounded(deadline_risk, "deadline_risk"),
+            "evidence_quality": _bounded(evidence_quality, "evidence_quality"),
+            "reversibility": _bounded(reversibility, "reversibility"),
+            "measurement_class": _measurement(measurement_class, "measurement_class"),
+            "version": CONSTRUCTION_ADAPTER_VERSION,
+            "proposal_only": PROPOSAL_ONLY,
+            "physical_work_authorized": False,
+            "payment_released": False,
+            "access_controlled": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = cls._payload_from_values(values)
+        return cls(
+            candidate_id=stable_id("construction-candidate", payload),
+            candidate_digest=stable_digest(payload),
+            **values,
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidate":
+        data = dict(value)
+        return cls(
+            candidate_id=data.get("candidate_id"),
+            candidate_digest=data.get("candidate_digest"),
+            scope=ConstructionScope.from_dict(dict(data.get("scope") or {})),
+            lane=data.get("lane"),
+            title=data.get("title"),
+            summary=data.get("summary"),
+            required_claim_ids=tuple(data.get("required_claim_ids", ())),
+            declared_hard_blockers=tuple(data.get("declared_hard_blockers", ())),
+            assumptions=tuple(data.get("assumptions", ())),
+            authority_route=data.get("authority_route"),
+            projected_time_delta_hours=data.get("projected_time_delta_hours"),
+            projected_cost_delta_cad=data.get("projected_cost_delta_cad"),
+            projected_idle_delta_hours=data.get("projected_idle_delta_hours"),
+            safety_risk=data.get("safety_risk"),
+            deadline_risk=data.get("deadline_risk"),
+            evidence_quality=data.get("evidence_quality"),
+            reversibility=data.get("reversibility"),
+            measurement_class=data.get("measurement_class"),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            physical_work_authorized=data.get("physical_work_authorized"),
+            payment_released=data.get("payment_released"),
+            access_controlled=data.get("access_controlled"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    @staticmethod
+    def _payload_from_values(values: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            **dict(values),
+            "scope": values["scope"].to_dict(),
+            "required_claim_ids": list(values["required_claim_ids"]),
+            "declared_hard_blockers": list(values["declared_hard_blockers"]),
+            "assumptions": list(values["assumptions"]),
+        }
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("candidate_id")
+        data.pop("candidate_digest")
+        return data
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ConstructionCandidateAssessment:
+    candidate_id: str
+    admissible: bool
+    blockers: tuple[str, ...]
+    readiness_reports: tuple[ConstructionReadinessReport, ...]
+    balanced_score: float
+    rank_vector: tuple[float | str, ...]
+    probabilistic_signal_id: str
+    probabilistic_score: float | None
+    uncertainty: float
+
+    def __post_init__(self) -> None:
+        _text(self.candidate_id, "assessment.candidate_id")
+        if type(self.admissible) is not bool:
+            raise ValueError("assessment admissible flag must be boolean")
+        _strings(self.blockers, "assessment.blockers")
+        if type(self.readiness_reports) is not tuple or not all(
+            type(item) is ConstructionReadinessReport for item in self.readiness_reports
+        ):
+            raise ValueError("assessment readiness reports must be exact reports")
+        if self.admissible == bool(self.blockers):
+            raise ValueError("assessment admissibility and blockers disagree")
+        if type(self.balanced_score) is not float:
+            raise ValueError("balanced_score must be a canonical float")
+        _bounded(self.balanced_score, "balanced_score")
+        if type(self.rank_vector) is not tuple or not self.rank_vector:
+            raise ValueError("rank_vector must be a non-empty tuple")
+        if type(self.probabilistic_signal_id) is not str:
+            raise ValueError("probabilistic_signal_id must be a string")
+        if self.probabilistic_score is not None:
+            if type(self.probabilistic_score) is not float:
+                raise ValueError("probabilistic_score must be a canonical float")
+            _bounded(self.probabilistic_score, "probabilistic_score")
+        if type(self.uncertainty) is not float:
+            raise ValueError("uncertainty must be a canonical float")
+        _bounded(self.uncertainty, "uncertainty")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            **asdict(self),
+            "readiness_reports": [item.to_dict() for item in self.readiness_reports],
+            "rank_vector": list(self.rank_vector),
+        }
+
+
+@dataclass(frozen=True)
+class ConstructionCoordinationEvaluation:
+    evaluation_id: str
+    evaluation_digest: str
+    mode: str
+    lane: str
+    route_class: str
+    state_digest: str
+    evaluated_at: float
+    assessments: tuple[ConstructionCandidateAssessment, ...]
+    recommended_candidate_id: str
+    option_candidate_ids: tuple[str, ...]
+    next_authority_route: str
+    version: str = CONSTRUCTION_EVALUATION_VERSION
+    proposal_only: bool = PROPOSAL_ONLY
+    human_release_required: bool = True
+    physical_work_authorized: bool = False
+    payment_released: bool = False
+    access_controlled: bool = False
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_EVALUATION_VERSION:
+            raise ValueError("unsupported Construction evaluation version")
+        _enum_value(self.mode, ConstructionArenaMode, "evaluation.mode")
+        _enum_value(self.lane, ConstructionAdvisoryLane, "evaluation.lane")
+        _enum_value(self.route_class, ConstructionRouteClass, "evaluation.route_class")
+        _text(self.state_digest, "evaluation.state_digest")
+        if type(self.evaluated_at) is not float:
+            raise ValueError("evaluated_at must be a canonical float")
+        _finite(self.evaluated_at, "evaluated_at")
+        if type(self.assessments) is not tuple or not all(
+            type(item) is ConstructionCandidateAssessment for item in self.assessments
+        ):
+            raise ValueError("evaluation assessments must be exact assessment values")
+        assessment_ids = tuple(item.candidate_id for item in self.assessments)
+        if assessment_ids != tuple(sorted(assessment_ids)):
+            raise ValueError("evaluation assessments must use canonical candidate order")
+        if len(assessment_ids) != len(set(assessment_ids)):
+            raise ValueError("evaluation assessments must not contain duplicate candidates")
+        if type(self.recommended_candidate_id) is not str:
+            raise ValueError("recommended_candidate_id must be a string")
+        admissible = {item.candidate_id for item in self.assessments if item.admissible}
+        if self.recommended_candidate_id and self.recommended_candidate_id not in admissible:
+            raise ValueError("recommended candidate must be admissible")
+        _strings(self.option_candidate_ids, "evaluation.option_candidate_ids")
+        if not set(self.option_candidate_ids).issubset(admissible):
+            raise ValueError("all displayed options must be admissible")
+        if len(self.option_candidate_ids) > 4:
+            raise ValueError("evaluation may expose at most four options")
+        if self.next_authority_route:
+            _enum_value(
+                self.next_authority_route,
+                ConstructionAuthorityRoute,
+                "evaluation.next_authority_route",
+            )
+        if (
+            self.proposal_only is not True
+            or self.human_release_required is not True
+            or self.physical_work_authorized is not False
+            or self.payment_released is not False
+            or self.access_controlled is not False
+            or self.patch_authority != PATCH_AUTHORITY
+            or self.vsa_patch_authority is not False
+        ):
+            raise ValueError("Construction evaluation crossed its authority boundary")
+        payload = self._identity_payload()

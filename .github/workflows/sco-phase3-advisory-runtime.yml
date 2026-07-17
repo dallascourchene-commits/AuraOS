@@ -1,0 +1,85 @@
+name: SCO Construction E7-E8 Advisory Runtime Audit
+
+on:
+  push:
+    branches:
+      - refactor/sco-construction-e7-e8
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sco-construction-e7-e8-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.ref == 'refactor/sco-construction-e7-e8'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install exact audit environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pytest==8.4.1 coverage==7.9.2 ruff==0.5.0
+      - name: Compile and run fatal static checks
+        run: |
+          python -m py_compile \
+            aura_construction_adapter.py \
+            aura_construction_fixtures.py \
+            aura_construction_benchmark.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_construction_benchmark.py
+          ruff check --select E9,F63,F7,F82,F401,F811,B006 \
+            aura_construction_adapter.py \
+            aura_construction_fixtures.py \
+            aura_construction_benchmark.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_construction_benchmark.py
+          git diff --check
+      - name: Run focused Phase 3 coverage gate
+        run: |
+          python -m pytest --collect-only -q \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_construction_benchmark.py | tee /tmp/sco-phase3-collect.txt
+          COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase3-collect.txt | tail -1 | awk '{print $1}')"
+          test "${COLLECTED:-0}" -ge 40
+          python -m coverage erase
+          python -m coverage run -m pytest -q \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_construction_benchmark.py
+          python -m coverage report \
+            --include='aura_construction_adapter.py,aura_construction_fixtures.py,aura_construction_benchmark.py' \
+            --fail-under=88
+      - name: Run prior Construction and canonical-owner regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_construction_refactor_plan.py \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py \
+            tests/test_aura_liquid_planning_arena.py \
+            tests/test_aura_arena_wfst_phase_a.py \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_relational_authority.py
+      - name: Run deterministic 250-permutation benchmark
+        run: python aura_construction_benchmark.py --iterations 250 --seed 1337 --json
+      - name: Regenerate and verify exact topology in audit workspace
+        run: |
+          python aura_codebase_navigator.py
+          python aura_codemap_verify.py --repo-root .
+          git diff --check

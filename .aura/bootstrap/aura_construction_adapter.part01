@@ -1,0 +1,357 @@
+"""Proposal-only SCO Construction coordination adapter for AuraOS.
+
+This module composes the existing Construction contracts/state engine with Aura's
+Liquid Planning contracts. It can query, hard-filter, rank, and explain digital
+coordination candidates. It never authorizes physical work, releases payment,
+controls access, certifies safety or engineering, or mutates authoritative
+project records.
+"""
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from enum import Enum
+import math
+from typing import Any, Iterable, Mapping
+
+from aura_construction_contracts import (
+    PATCH_AUTHORITY,
+    PROPOSAL_ONLY,
+    VSA_PATCH_AUTHORITY,
+    ConstructionScope,
+)
+from aura_construction_state import (
+    ConstructionProjectState,
+    ConstructionReadinessReport,
+    query_claim_readiness,
+)
+from aura_event_contracts import MeasurementClass, stable_digest, stable_id
+from aura_liquid_planning_arena import (
+    ActionCapsule,
+    ArenaLease,
+    BaseArenaAdapter,
+    BoundaryContract,
+)
+
+CONSTRUCTION_ADAPTER_VERSION = "AURA_CONSTRUCTION_COORDINATION_ADAPTER_V1"
+CONSTRUCTION_SIGNAL_VERSION = "AURA_CONSTRUCTION_PROBABILISTIC_SIGNAL_V1"
+CONSTRUCTION_EVALUATION_VERSION = "AURA_CONSTRUCTION_COORDINATION_EVALUATION_V1"
+
+
+class ConstructionArenaMode(str, Enum):
+    SYNTHETIC = "SYNTHETIC"
+    OWNER_READ_ONLY = "OWNER_READ_ONLY"
+    SHADOW = "SHADOW"
+
+
+class ConstructionAdvisoryLane(str, Enum):
+    DEPENDENCY_READINESS = "DEPENDENCY_READINESS"
+    ALTERNATIVE_WORK = "ALTERNATIVE_WORK"
+    PAYMENT_READINESS = "PAYMENT_READINESS"
+    HAZARD_LOCATION = "HAZARD_LOCATION"
+
+
+class ConstructionAuthorityRoute(str, Enum):
+    OWNER_REVIEW_REQUIRED = "OWNER_REVIEW_REQUIRED"
+    PROFESSIONAL_REVIEW_REQUIRED = "PROFESSIONAL_REVIEW_REQUIRED"
+    REGULATORY_OR_LEGAL_REVIEW_REQUIRED = "REGULATORY_OR_LEGAL_REVIEW_REQUIRED"
+
+
+class ConstructionRouteClass(str, Enum):
+    DETERMINISTIC_QUERY = "DETERMINISTIC_QUERY"
+    ADVISORY_EXPLANATION = "ADVISORY_EXPLANATION"
+    MULTI_LANE_COMPARISON = "MULTI_LANE_COMPARISON"
+    OWNER_REVIEW_REQUIRED = "OWNER_REVIEW_REQUIRED"
+
+
+def _text(value: Any, name: str) -> str:
+    if type(value) is not str:
+        raise ValueError(f"{name} must be a string")
+    normalized = " ".join(value.split())
+    if not normalized:
+        raise ValueError(f"{name} must not be empty")
+    return normalized
+
+
+def _enum_value(value: Any, enum_type: type[Enum], name: str) -> str:
+    raw = value.value if isinstance(value, enum_type) else value
+    if type(raw) is not str or raw not in {item.value for item in enum_type}:
+        raise ValueError(f"unknown {name}: {raw}")
+    return raw
+
+
+def _finite(value: Any, name: str) -> float:
+    if type(value) not in {int, float}:
+        raise ValueError(f"{name} must be numeric")
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(f"{name} must be finite")
+    return number
+
+
+def _bounded(value: Any, name: str) -> float:
+    number = _finite(value, name)
+    if not 0.0 <= number <= 1.0:
+        raise ValueError(f"{name} must be between zero and one")
+    return number
+
+
+def _optional_bounded(value: Any, name: str) -> float | None:
+    return None if value is None else _bounded(value, name)
+
+
+def _optional_finite(value: Any, name: str) -> float | None:
+    return None if value is None else _finite(value, name)
+
+
+def _strings(values: Iterable[Any], name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)):
+        raise ValueError(f"{name} must be an iterable of strings")
+    materialized = tuple(_text(item, f"{name}[]") for item in values)
+    if len(materialized) != len(set(materialized)):
+        raise ValueError(f"{name} must not contain duplicates")
+    result = tuple(sorted(materialized))
+    if not allow_empty and not result:
+        raise ValueError(f"{name} must not be empty")
+    return result
+
+
+def _measurement(value: Any, name: str) -> str:
+    raw = value.value if isinstance(value, MeasurementClass) else value
+    if type(raw) is not str or raw not in {item.value for item in MeasurementClass}:
+        raise ValueError(f"unknown {name}: {raw}")
+    return raw
+
+
+def _normalize(value: float, low: float, high: float) -> float:
+    if high <= low:
+        return 0.0
+    return (value - low) / (high - low)
+
+
+@dataclass(frozen=True)
+class ConstructionCriterionScore:
+    criterion: str
+    expected_score: float
+    variance: float
+    repetitions: int
+    measurement_class: str = MeasurementClass.MODEL_ESTIMATED.value
+
+    def __post_init__(self) -> None:
+        if self.criterion != _text(self.criterion, "criterion"):
+            raise ValueError("criterion must be canonical normalized text")
+        if type(self.expected_score) is not float:
+            raise ValueError("expected_score must be a canonical float")
+        _bounded(self.expected_score, "expected_score")
+        if type(self.variance) is not float:
+            raise ValueError("variance must be a canonical float")
+        _bounded(self.variance, "variance")
+        if type(self.repetitions) is not int or self.repetitions < 1:
+            raise ValueError("repetitions must be a positive integer")
+        if self.measurement_class != _measurement(
+            self.measurement_class, "criterion.measurement_class"
+        ):
+            raise ValueError("measurement_class must be canonical")
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        criterion: str,
+        expected_score: float,
+        variance: float,
+        repetitions: int,
+        measurement_class: str | MeasurementClass = MeasurementClass.MODEL_ESTIMATED,
+    ) -> "ConstructionCriterionScore":
+        return cls(
+            criterion=_text(criterion, "criterion"),
+            expected_score=_bounded(expected_score, "expected_score"),
+            variance=_bounded(variance, "variance"),
+            repetitions=repetitions,
+            measurement_class=_measurement(measurement_class, "measurement_class"),
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionCriterionScore":
+        data = dict(value)
+        return cls(
+            criterion=data.get("criterion"),
+            expected_score=data.get("expected_score"),
+            variance=data.get("variance"),
+            repetitions=data.get("repetitions"),
+            measurement_class=data.get("measurement_class"),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ConstructionProbabilisticSignal:
+    signal_id: str
+    signal_digest: str
+    candidate_id: str
+    criteria: tuple[ConstructionCriterionScore, ...]
+    aggregate_score: float
+    uncertainty: float
+    score_margin: float
+    progress_score: float | None
+    progress_slope: float | None
+    distance_from_peak: float | None
+    version: str = CONSTRUCTION_SIGNAL_VERSION
+    measurement_class: str = MeasurementClass.MODEL_ESTIMATED.value
+    proposal_only: bool = PROPOSAL_ONLY
+    runtime_authority: bool = False
+    patch_authority: str = PATCH_AUTHORITY
+    vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
+
+    def __post_init__(self) -> None:
+        if self.version != CONSTRUCTION_SIGNAL_VERSION:
+            raise ValueError("unsupported Construction probabilistic signal version")
+        _text(self.candidate_id, "signal.candidate_id")
+        if type(self.criteria) is not tuple or not self.criteria:
+            raise ValueError("signal criteria must be a non-empty tuple")
+        if not all(type(item) is ConstructionCriterionScore for item in self.criteria):
+            raise ValueError("signal criteria must contain exact criterion scores")
+        names = tuple(item.criterion for item in self.criteria)
+        if names != tuple(sorted(names)) or len(names) != len(set(names)):
+            raise ValueError("signal criteria must use unique canonical sorted order")
+        if type(self.aggregate_score) is not float:
+            raise ValueError("aggregate_score must be a canonical float")
+        _bounded(self.aggregate_score, "aggregate_score")
+        if type(self.uncertainty) is not float:
+            raise ValueError("uncertainty must be a canonical float")
+        _bounded(self.uncertainty, "uncertainty")
+        if type(self.score_margin) is not float:
+            raise ValueError("score_margin must be a canonical float")
+        _bounded(self.score_margin, "score_margin")
+        for name, value in (
+            ("progress_score", self.progress_score),
+            ("distance_from_peak", self.distance_from_peak),
+        ):
+            if value is not None:
+                if type(value) is not float:
+                    raise ValueError(f"{name} must be a canonical float")
+                _bounded(value, name)
+        if self.progress_slope is not None:
+            if type(self.progress_slope) is not float:
+                raise ValueError("progress_slope must be a canonical float")
+            _finite(self.progress_slope, "progress_slope")
+        if self.measurement_class != _measurement(
+            self.measurement_class, "signal.measurement_class"
+        ):
+            raise ValueError("signal measurement_class must be canonical")
+        if (
+            self.proposal_only is not True
+            or self.runtime_authority is not False
+            or self.patch_authority != PATCH_AUTHORITY
+            or self.vsa_patch_authority is not False
+        ):
+            raise ValueError("probabilistic signal crossed its authority boundary")
+        payload = self._identity_payload()
+        if self.signal_digest != stable_digest(payload):
+            raise ValueError("probabilistic signal digest does not match its content")
+        if self.signal_id != stable_id("construction-probabilistic-signal", payload):
+            raise ValueError("probabilistic signal ID does not match its content")
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        candidate_id: str,
+        criteria: Iterable[ConstructionCriterionScore],
+        score_margin: float = 0.0,
+        progress_score: float | None = None,
+        progress_slope: float | None = None,
+        distance_from_peak: float | None = None,
+        measurement_class: str | MeasurementClass = MeasurementClass.MODEL_ESTIMATED,
+    ) -> "ConstructionProbabilisticSignal":
+        items = tuple(sorted(tuple(criteria), key=lambda item: item.criterion))
+        if not items:
+            raise ValueError("criteria must not be empty")
+        if not all(type(item) is ConstructionCriterionScore for item in items):
+            raise ValueError("criteria must contain exact ConstructionCriterionScore values")
+        aggregate = sum(item.expected_score for item in items) / len(items)
+        uncertainty = math.sqrt(sum(item.variance for item in items) / len(items))
+        values = {
+            "candidate_id": _text(candidate_id, "candidate_id"),
+            "criteria": items,
+            "aggregate_score": float(aggregate),
+            "uncertainty": float(min(1.0, uncertainty)),
+            "score_margin": _bounded(score_margin, "score_margin"),
+            "progress_score": _optional_bounded(progress_score, "progress_score"),
+            "progress_slope": _optional_finite(progress_slope, "progress_slope"),
+            "distance_from_peak": _optional_bounded(
+                distance_from_peak, "distance_from_peak"
+            ),
+            "version": CONSTRUCTION_SIGNAL_VERSION,
+            "measurement_class": _measurement(
+                measurement_class, "measurement_class"
+            ),
+            "proposal_only": PROPOSAL_ONLY,
+            "runtime_authority": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        payload = cls._payload_from_values(values)
+        return cls(
+            signal_id=stable_id("construction-probabilistic-signal", payload),
+            signal_digest=stable_digest(payload),
+            **values,
+        )
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionProbabilisticSignal":
+        data = dict(value)
+        return cls(
+            signal_id=data.get("signal_id"),
+            signal_digest=data.get("signal_digest"),
+            candidate_id=data.get("candidate_id"),
+            criteria=tuple(
+                ConstructionCriterionScore.from_dict(item)
+                for item in data.get("criteria", ())
+            ),
+            aggregate_score=data.get("aggregate_score"),
+            uncertainty=data.get("uncertainty"),
+            score_margin=data.get("score_margin"),
+            progress_score=data.get("progress_score"),
+            progress_slope=data.get("progress_slope"),
+            distance_from_peak=data.get("distance_from_peak"),
+            version=data.get("version"),
+            measurement_class=data.get("measurement_class"),
+            proposal_only=data.get("proposal_only"),
+            runtime_authority=data.get("runtime_authority"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    @staticmethod
+    def _payload_from_values(values: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            **dict(values),
+            "criteria": [item.to_dict() for item in values["criteria"]],
+        }
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("signal_id")
+        data.pop("signal_digest")
+        return data
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ConstructionCoordinationCandidate:
+    candidate_id: str
+    candidate_digest: str
+    scope: ConstructionScope
+    lane: str
+    title: str
+    summary: str
+    required_claim_ids: tuple[str, ...]
+    declared_hard_blockers: tuple[str, ...]
+    assumptions: tuple[str, ...]
+    authority_route: str
+    projected_time_delta_hours: float
+    projected_cost_delta_cad: float
