@@ -2,7 +2,7 @@
 
 ```yaml
 document_status: EXECUTING_BOUNDED_VERTICAL_SLICE
-document_version: 1.0.0
+document_version: 1.1.0
 date: 2026-07-17
 baseline_main: 7edd80484629378af0658bfca0d7d4e351361831
 branch: refactor/sco-construction-e7-e8
@@ -11,6 +11,7 @@ phase_scope:
   - E8_SYNTHETIC_SHADOW_ADAPTER
   - E11_ZERO_MODEL_BENCHMARK_ARM
 coderabbit_policy: TRIGGER_ONCE_AT_FINAL_REVIEW_GATE
+coderabbit_triggered: false
 production_connectors: FORBIDDEN_IN_THIS_PHASE
 private_project_data: FORBIDDEN_IN_THIS_PHASE
 physical_work_authority: false
@@ -84,6 +85,36 @@ Acceptance:
 - unsafe high-score route is blocked in every run;
 - non-executed comparison arms remain `NOT_MEASURED`;
 - provider tokens, provider cost, real-project savings, and production readiness are not invented.
+
+## Aura architecture benchmark ledger
+
+These measurements describe the refactoring method and synthetic software fixture, not a real construction project.
+
+```yaml
+baseline_repository_files: 1032
+initial_bounded_changed_files_before_generated_topology: 8
+structural_file_scope_reduction: 99.22_percent
+measurement_class: STRUCTURAL_CONTEXT_PROXY
+canonical_reuse_rows: 7
+parallel_truth_stores_added: 0
+production_connectors_added: 0
+initial_py_compile: PASS
+initial_fatal_ruff: PASS
+initial_focused_tests_collected: 40
+initial_focused_tests_passed: 39
+initial_focused_tests_failed: 1
+manual_council_surgeon_findings:
+  - distinct-option backfill missing after role deduplication
+  - next-authority route over-escalated from unrelated alternatives
+manual_findings_repaired: 2
+coderabbit_invocations: 0
+provider_tokens: NOT_MEASURED
+provider_cost: NOT_MEASURED
+real_project_savings: NOT_MEASURED
+production_readiness: NOT_CLAIMED
+```
+
+The first failing test was valuable architectural evidence: cheapest, fastest, balanced, and safest selectors can collapse onto the same candidate. The repair preserves role-based choices first, then backfills distinct admissible routes to keep the decision surface materially plural. The manual Council/Surgeon sweep separately found that the next-authority field must follow the recommended candidate, while each alternative retains its own authority route.
 
 ## Deferred by design
 
