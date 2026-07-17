@@ -1,0 +1,69 @@
+    if patch_authority != PATCH_AUTHORITY or vsa_patch_authority is not False:
+        raise ValueError("construction patch-authority boundary was modified")
+
+
+@dataclass(frozen=True)
+class ConstructionGovernanceReplay:
+    grants: tuple[AuthorityGrant, ...]
+    attestations: tuple[ApprovalAttestation, ...]
+    quorum_policy: QuorumPolicy
+    verified_authority_refs: tuple[str, ...]
+    verified_attestation_refs: tuple[str, ...]
+    proposer_principal_id: str = ""
+    normal_policy: QuorumPolicy | None = None
+    emergency_reason: str = ""
+
+    def __post_init__(self) -> None:
+        if type(self.grants) is not tuple or not all(
+            type(item) is AuthorityGrant for item in self.grants
+        ):
+            raise ValueError("governance replay grants must be exact AuthorityGrant values")
+        if type(self.attestations) is not tuple or not all(
+            type(item) is ApprovalAttestation for item in self.attestations
+        ):
+            raise ValueError(
+                "governance replay attestations must be exact ApprovalAttestation values"
+            )
+        if type(self.quorum_policy) is not QuorumPolicy:
+            raise ValueError("governance replay requires an exact QuorumPolicy")
+        _tuple_strings(
+            self.verified_authority_refs,
+            "governance_replay.verified_authority_refs",
+            allow_empty=False,
+        )
+        _tuple_strings(
+            self.verified_attestation_refs,
+            "governance_replay.verified_attestation_refs",
+            allow_empty=False,
+        )
+        if type(self.proposer_principal_id) is not str:
+            raise ValueError("governance replay proposer_principal_id must be a string")
+        if self.normal_policy is not None and type(self.normal_policy) is not QuorumPolicy:
+            raise ValueError("governance replay normal_policy must be a QuorumPolicy")
+        if type(self.emergency_reason) is not str:
+            raise ValueError("governance replay emergency_reason must be a string")
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        grants: Iterable[AuthorityGrant],
+        attestations: Iterable[ApprovalAttestation],
+        quorum_policy: QuorumPolicy,
+        verified_authority_refs: Iterable[str],
+        verified_attestation_refs: Iterable[str],
+        proposer_principal_id: str = "",
+        normal_policy: QuorumPolicy | None = None,
+        emergency_reason: str = "",
+    ) -> "ConstructionGovernanceReplay":
+        return cls(
+            grants=tuple(grants),
+            attestations=tuple(attestations),
+            quorum_policy=quorum_policy,
+            verified_authority_refs=_trusted_refs(
+                verified_authority_refs, "verified_authority_refs"
+            ),
+            verified_attestation_refs=_trusted_refs(
+                verified_attestation_refs, "verified_attestation_refs"
+            ),
+            proposer_principal_id=_normalized_text_input(
