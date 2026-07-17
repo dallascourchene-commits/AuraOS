@@ -45,6 +45,7 @@ def test_learning_uses_distinct_single_scenario_permutation_episodes(
         item["execution_class"] == "SYNTHETIC_PERMUTATION" for item in records
     )
     assert all(item["eligible_for_generalization_claim"] is False for item in records)
+    assert all(item["idempotent_replay"] is False for item in records)
 
 
 def test_learning_preserves_crucible_and_authority_boundaries(
@@ -58,6 +59,7 @@ def test_learning_preserves_crucible_and_authority_boundaries(
     assert boundaries["independent_permutation_executions"] is True
     assert boundaries["generalization_claimed"] is False
     assert boundaries["all_proposal_thresholds_expected"] is False
+    assert boundaries["content_addressed_payload_excludes_wall_clock_timing"] is True
     assert boundaries["active_grammar_mutated"] is False
     assert boundaries["physical_work_authorized"] is False
     assert boundaries["payment_released"] is False
@@ -96,6 +98,26 @@ def test_learning_does_not_invent_human_provider_or_project_measurements(
         == "UNAVAILABLE"
         for row in rows
     )
+
+
+def test_learning_replays_idempotently_without_latency_digest_conflicts(
+    learning_result: tuple[Path, dict],
+):
+    output, first = learning_result
+    second = run_construction_phase3_learning(
+        repo_root=".",
+        output_dir=output,
+        experience_count=15,
+        iterations_per_experience=1,
+        seed_base=2000,
+    )
+    first_records = first["experience_ledger"]["records"]
+    second_records = second["experience_ledger"]["records"]
+    assert [item["experience_digest"] for item in second_records] == [
+        item["experience_digest"] for item in first_records
+    ]
+    assert all(item["idempotent_replay"] is True for item in second_records)
+    assert second["experience_ledger"]["status"]["record_count"] == 15
 
 
 def test_learning_rejects_invalid_execution_bounds(tmp_path: Path):
