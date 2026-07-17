@@ -51,20 +51,35 @@ jobs:
           git diff --check
       - name: Run focused Phase 3 coverage gate
         run: |
+          set -o pipefail
           python -m pytest --collect-only -q \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
-            tests/test_aura_construction_benchmark.py | tee /tmp/sco-phase3-collect.txt
+            tests/test_aura_construction_benchmark.py \
+            2>&1 | tee /tmp/sco-phase3-collect.txt
           COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase3-collect.txt | tail -1 | awk '{print $1}')"
           test "${COLLECTED:-0}" -ge 40
           python -m coverage erase
           python -m coverage run -m pytest -q \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
-            tests/test_aura_construction_benchmark.py
+            tests/test_aura_construction_benchmark.py \
+            2>&1 | tee /tmp/sco-phase3-tests.txt
           python -m coverage report \
             --include='aura_construction_adapter.py,aura_construction_fixtures.py,aura_construction_benchmark.py' \
-            --fail-under=88
+            --fail-under=88 \
+            2>&1 | tee /tmp/sco-phase3-coverage.txt
+      - name: Upload focused diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sco-phase3-focused-diagnostics-${{ github.sha }}
+          path: |
+            /tmp/sco-phase3-collect.txt
+            /tmp/sco-phase3-tests.txt
+            /tmp/sco-phase3-coverage.txt
+          if-no-files-found: warn
+          retention-days: 7
       - name: Run prior Construction and canonical-owner regressions
         run: |
           python -m pytest -q \
