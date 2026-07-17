@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+from dataclasses import replace
+import json
+
 import pytest
 
-from aura_construction_benchmark import run_construction_phase3_benchmark
+from aura_construction_benchmark import (
+    ConstructionBenchmarkReport,
+    main,
+    run_construction_phase3_benchmark,
+)
 
 
 def test_zero_model_benchmark_is_stable():
@@ -52,3 +59,46 @@ def test_benchmark_supports_full_250_permutation_gate():
     assert report["iterations"] == 250
     assert report["unique_evaluation_digests"] == 1
     assert report["displayed_option_count"] == 3
+
+
+def test_benchmark_cli_human_output(monkeypatch, capsys):
+    monkeypatch.setattr(
+        "sys.argv",
+        ["aura_construction_benchmark.py", "--iterations", "2", "--seed", "5"],
+    )
+    assert main() == 0
+    output = capsys.readouterr().out
+    assert "2 iterations" in output
+    assert "1 digest" in output
+    assert "1 blocked" in output
+    assert "3 admissible" in output
+
+
+def test_benchmark_cli_json_output(monkeypatch, capsys):
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "aura_construction_benchmark.py",
+            "--iterations",
+            "2",
+            "--seed",
+            "5",
+            "--json",
+        ],
+    )
+    assert main() == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["ok"] is True
+    assert payload["report"]["iterations"] == 2
+    assert payload["claim_boundaries"]["production_readiness"] == "NOT_CLAIMED"
+
+
+def test_benchmark_report_rejects_tampered_evidence_claims():
+    payload = run_construction_phase3_benchmark(iterations=2)["report"]
+    report = ConstructionBenchmarkReport(**payload)
+    with pytest.raises(ValueError, match="multiple evaluation digests"):
+        replace(report, unique_evaluation_digests=2)
+    with pytest.raises(ValueError, match="unsafe high-score candidate"):
+        replace(report, unsafe_high_score_candidate_blocked=False)
+    with pytest.raises(ValueError, match="may not invent"):
+        replace(report, provider_cost="1.00")
