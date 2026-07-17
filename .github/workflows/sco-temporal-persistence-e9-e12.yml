@@ -179,6 +179,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          ORIGINAL_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           rm -f .coverage
@@ -188,5 +189,19 @@ jobs:
           git add -A
           git commit -m "Implement cross-arena temporal persistence"
           AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="${AUTH_HEADER}" \
-            push origin HEAD:"${HEAD_REF}"
+          git -c http.https://github.com/.extraheader="${AUTH_HEADER}" fetch \
+            --no-tags origin "refs/heads/${HEAD_REF}:refs/remotes/origin/${HEAD_REF}"
+          REMOTE_SHA="$(git rev-parse "refs/remotes/origin/${HEAD_REF}")"
+          if [ "${REMOTE_SHA}" != "${ORIGINAL_SHA}" ]; then
+            mapfile -t CHANGED < <(git diff --name-only "${ORIGINAL_SHA}" "${REMOTE_SHA}")
+            test "${#CHANGED[@]}" -gt 0
+            for path in "${CHANGED[@]}"; do
+              case "${path}" in
+                .aura/CODEMAP.json|.aura/CODEMAP.md|topology_map.json) ;;
+                *) echo "unsafe concurrent source change: ${path}" >&2; exit 1 ;;
+              esac
+            done
+          fi
+          git -c http.https://github.com/.extraheader="${AUTH_HEADER}" push \
+            --force-with-lease="refs/heads/${HEAD_REF}:${REMOTE_SHA}" \
+            origin HEAD:"${HEAD_REF}"
