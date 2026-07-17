@@ -1,0 +1,176 @@
+name: SCO Phase 2 E4-E6 Finalize
+
+on:
+  push:
+    branches:
+      - refactor/sco-construction-e4-e6
+    paths:
+      - '.github/workflows/sco-phase2-finalize.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sco-phase2-finalize-refactor-sco-construction-e4-e6
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/sco-construction-e4-e6
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install focused verification tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest coverage ruff
+
+      - name: Materialize exact reviewed E4-E6 files
+        run: python tools/sco_phase2_materialize.py
+
+      - name: Verify expected focused test inventory
+        run: |
+          python -m pytest --collect-only -q \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py | tee /tmp/sco-phase2-collect.txt
+          grep -Eq '^128 tests collected' /tmp/sco-phase2-collect.txt
+
+      - name: Compile exact branch surfaces
+        run: |
+          python -m py_compile \
+            aura_event_contracts.py \
+            aura_relational_authority.py \
+            aura_construction_contracts.py \
+            aura_construction_state.py \
+            aura_construction_authority.py \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py
+          python -m compileall -q \
+            aura_construction_contracts.py \
+            aura_construction_state.py \
+            aura_construction_authority.py \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py
+
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82,F401,F811,B006 \
+            aura_construction_contracts.py \
+            aura_construction_state.py \
+            aura_construction_authority.py \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py
+          python tools/sco_phase2_fatal_lint.py
+          git diff --check
+
+      - name: Run exact-branch E4-E6 tests and coverage
+        run: |
+          python -m coverage erase
+          python -m coverage run -m pytest -q \
+            tests/test_aura_construction_contracts.py \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_authority.py
+          python -m coverage report \
+            --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' \
+            --fail-under=90
+
+      - name: Run canonical owner regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_event_contracts.py \
+            tests/test_aura_event_privacy_hardening.py \
+            tests/test_aura_relational_authority.py \
+            tests/test_aura_workflow_authority_bridge.py \
+            tests/test_aura_workflow_gates.py \
+            tests/test_p1_1_adversarial_review.py
+
+      - name: Run randomized deterministic replay
+        run: PYTHONPATH=. python tools/sco_phase2_randomized_probe.py
+
+      - name: Record exact-branch validation evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          review = Path('docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md')
+          text = review.read_text(encoding='utf-8')
+          text = text.replace(
+              'document_status: PHASE_IMPLEMENTED_AND_MANUALLY_VERIFIED_AWAITING_USER_DIRECTION',
+              'document_status: PHASE_EXACT_BRANCH_VERIFIED_AWAITING_USER_DIRECTION',
+          )
+          old = '''## Execution-environment limitation
+
+          The exact merged dependency source and signatures were inspected at baseline through GitHub. The local executable suite used exact-interface stubs for `aura_event_contracts.py` and `aura_relational_authority.py` because a complete repository checkout was unavailable in the execution container. Exact-branch CI against the full repository remains a future gate before merge. This limitation grants no authority and is not relabelled as full-repository test evidence.'''
+          new = '''## Exact-branch validation
+
+          The 128 focused tests, 90% focused coverage gate, fatal lint, canonical owner regressions, and 250-history randomized replay executed in a complete GitHub Actions checkout against Aura's repository-owned `aura_event_contracts.py` and `aura_relational_authority.py`. This is exact-branch E4–E6 evidence, not a claim that every repository test was executed.'''
+          if old not in text:
+              raise SystemExit('review evidence limitation block was not found')
+          review.write_text(text.replace(old, new), encoding='utf-8')
+
+          handoff = Path('docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md')
+          text = handoff.read_text(encoding='utf-8')
+          text = text.replace(
+              'current_status: IMPLEMENTED_AND_MANUALLY_VERIFIED_AWAITING_USER_DIRECTION',
+              'current_status: EXACT_BRANCH_VERIFIED_AWAITING_USER_DIRECTION',
+          )
+          marker = '  focused_adversarial_tests: 128_passed\n'
+          if marker not in text:
+              raise SystemExit('handoff validation marker was not found')
+          text = text.replace(
+              marker,
+              marker + '  exact_branch_dependency_execution: PASS\n  canonical_owner_regressions: PASS\n',
+              1,
+          )
+          handoff.write_text(text, encoding='utf-8')
+
+          addendum = Path('docs/AURA_SCO_CONSTRUCTION_ARENA_EMERGENT_REFACTOR_ADDENDUM.md')
+          text = addendum.read_text(encoding='utf-8').replace(
+              'document_status: PHASE_TWO_E4_E6_IMPLEMENTED_AND_MANUALLY_VERIFIED',
+              'document_status: PHASE_TWO_E4_E6_EXACT_BRANCH_VERIFIED',
+          )
+          addendum.write_text(text, encoding='utf-8')
+
+          matrix = Path('docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md')
+          text = matrix.read_text(encoding='utf-8').replace(
+              'document_status: PHASE_TWO_E4_E6_VERIFIED_INVENTORY',
+              'document_status: PHASE_TWO_E4_E6_EXACT_BRANCH_VERIFIED_INVENTORY',
+          )
+          matrix.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Remove all one-time finalization machinery
+        run: |
+          rm -rf .aura/phase2_payload
+          rm -f tools/sco_phase2_materialize.py
+          rm -f tools/sco_phase2_fatal_lint.py
+          rm -f tools/sco_phase2_randomized_probe.py
+          rm -f .github/workflows/sco-phase2-finalize.yml
+
+      - name: Regenerate and verify Aura topology from final tree
+        run: |
+          python aura_codebase_navigator.py
+          python aura_codemap_verify.py --repo-root .
+          git diff --check
+
+      - name: Commit verified phase branch
+        run: |
+          git config user.name 'AuraOS Phase Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'SCO Construction Arena E4-E6 verified vertical slice [skip ci]'
+          git push origin HEAD:refactor/sco-construction-e4-e6
