@@ -10,6 +10,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -135,8 +136,12 @@ class TemporalCheckpoint:
         _sequence(self.sequence_number)
         _repo_head(self.repo_head)
         _component(self.source_kind, "source_kind")
-        if type(self.created_at) not in {int, float}:
-            raise ValueError("created_at must be numeric")
+        if (
+            type(self.created_at) not in {int, float}
+            or not math.isfinite(float(self.created_at))
+            or float(self.created_at) < 0
+        ):
+            raise ValueError("created_at must be finite and non-negative")
         if self.version != TEMPORAL_CHECKPOINT_VERSION:
             raise ValueError("unsupported temporal checkpoint version")
         if self.patch_authority != PATCH_AUTHORITY or self.vsa_patch_authority is not False:
@@ -164,7 +169,11 @@ class TemporalCheckpoint:
         if self.checkpoint_id != expected_id:
             raise ValueError("checkpoint identity mismatch")
         expected_record = digest(
-            {"identity": expected_identity, "payload": payload},
+            {
+                "identity": expected_identity,
+                "payload": payload,
+                "created_at": float(self.created_at),
+            },
             size=20,
         )
         if self.record_digest != expected_record:
@@ -276,22 +285,45 @@ class TemporalCheckpointRegistry:
             return
         self.root.mkdir(parents=True, exist_ok=True)
         handle = self.lock_path.open("a+", encoding="utf-8")
+        backend = ""
+        lock_module: Any = None
         try:
             try:
                 import fcntl  # type: ignore
-
+            except ImportError:
+                fcntl = None  # type: ignore[assignment]
+            if fcntl is not None:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-            except (ImportError, OSError):
-                pass
+                backend = "fcntl"
+                lock_module = fcntl
+            else:
+                try:
+                    import msvcrt  # type: ignore
+                except ImportError as exc:
+                    raise RuntimeError("platform does not provide a supported file lock") from exc
+                handle.seek(0)
+                if not handle.read(1):
+                    handle.write("0")
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+                backend = "msvcrt"
+                lock_module = msvcrt
+        except OSError as exc:
+            handle.close()
+            raise RuntimeError("failed to acquire temporal registry lock") from exc
+        try:
             yield
         finally:
             try:
-                import fcntl  # type: ignore
-
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-            except (ImportError, OSError):
-                pass
-            handle.close()
+                if backend == "fcntl":
+                    lock_module.flock(handle.fileno(), lock_module.LOCK_UN)
+                elif backend == "msvcrt":
+                    handle.seek(0)
+                    lock_module.locking(handle.fileno(), lock_module.LK_UNLCK, 1)
+            finally:
+                handle.close()
 
     def _checkpoint_path(self, checkpoint: TemporalCheckpoint) -> Path:
         path = (
@@ -356,10 +388,13 @@ class TemporalCheckpointRegistry:
     def verify_registry(self) -> dict[str, Any]:
         with self._lock(create=False):
             entries = self._registry_entries_unlocked()
+            for entry in entries:
+                self._load_from_entry_unlocked(entry)
         return {
             "ok": True,
             "version": TEMPORAL_REGISTRY_VERSION,
             "entry_count": len(entries),
+            "verified_checkpoint_count": len(entries),
             "last_entry_digest": entries[-1]["entry_digest"] if entries else "",
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": VSA_PATCH_AUTHORITY,
@@ -408,8 +443,8 @@ class TemporalCheckpointRegistry:
                     raise ValueError("prehashed invariant digests must be 32 lowercase hex characters")
                 invariants[name] = item
         generated_at = float(time.time() if created_at is None else created_at)
-        if not generated_at >= 0:
-            raise ValueError("created_at must be non-negative")
+        if not math.isfinite(generated_at) or generated_at < 0:
+            raise ValueError("created_at must be finite and non-negative")
 
         with self._lock():
             index = self._entry_index_unlocked()
@@ -439,7 +474,11 @@ class TemporalCheckpointRegistry:
             )
             checkpoint_id = f"CHK-{digest(identity, size=20)}"
             record_digest = digest(
-                {"identity": identity, "payload": normalized_payload},
+                {
+                    "identity": identity,
+                    "payload": normalized_payload,
+                    "created_at": generated_at,
+                },
                 size=20,
             )
             checkpoint = TemporalCheckpoint(
@@ -518,10 +557,22 @@ class TemporalCheckpointRegistry:
         except (OSError, json.JSONDecodeError) as exc:
             raise ValueError(f"checkpoint file is missing or invalid: {raw_path}") from exc
         checkpoint = TemporalCheckpoint.from_dict(value)
-        if checkpoint.checkpoint_id != entry.get("checkpoint_id"):
-            raise ValueError("registry checkpoint ID does not match checkpoint file")
-        if checkpoint.record_digest != entry.get("record_digest"):
-            raise ValueError("registry record digest does not match checkpoint file")
+        expected_path = self._checkpoint_path(checkpoint).relative_to(self.repo_root).as_posix()
+        expected_entry = {
+            "checkpoint_id": checkpoint.checkpoint_id,
+            "arena_id": checkpoint.arena_id,
+            "session_id": checkpoint.session_id,
+            "parent_checkpoint_id": checkpoint.parent_checkpoint_id,
+            "branch_name": checkpoint.branch_name,
+            "sequence_number": checkpoint.sequence_number,
+            "repo_head": checkpoint.repo_head,
+            "created_at": checkpoint.created_at,
+            "checkpoint_path": expected_path,
+            "record_digest": checkpoint.record_digest,
+        }
+        for key, expected in expected_entry.items():
+            if entry.get(key) != expected:
+                raise ValueError(f"registry {key} does not match checkpoint file")
         return checkpoint
 
     def load_checkpoint(self, checkpoint_id: str) -> TemporalCheckpoint:
@@ -574,7 +625,7 @@ class TemporalCheckpointRegistry:
             arena_id=parent.arena_id,
             session_id=parent.session_id,
             repo_head=repo_head or parent.repo_head,
-            payload=payload or parent.payload,
+            payload=parent.payload if payload is None else payload,
             invariant_values=invariant_values,
             prehashed_invariant_digests=(
                 None if invariant_values is not None else parent.invariant_digests

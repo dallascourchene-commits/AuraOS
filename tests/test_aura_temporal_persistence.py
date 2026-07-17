@@ -203,3 +203,44 @@ def test_registry_rejects_escape_roots_and_unknown_checkpoint_fields(tmp_path: P
     value["unknown"] = True
     with pytest.raises(ValueError, match="unknown temporal checkpoint fields"):
         TemporalCheckpoint.from_dict(value)
+
+def test_registry_verification_checks_checkpoint_files_and_metadata(tmp_path: Path):
+    from aura_refactor_state_identity import digest
+
+    registry = _registry(tmp_path)
+    result = _write(registry)
+    entry = dict(result["registry_entry"])
+    path = tmp_path / entry["checkpoint_path"]
+    path.unlink()
+    with pytest.raises(ValueError, match="checkpoint file is missing or invalid"):
+        registry.verify_registry()
+
+    registry = TemporalCheckpointRegistry(tmp_path / "metadata")
+    result = _write(registry)
+    registry_path = registry.registry_path
+    entry = json.loads(registry_path.read_text(encoding="utf-8"))
+    body = {key: value for key, value in entry.items() if key != "entry_digest"}
+    body["arena_id"] = "human_agent_arena"
+    entry = {**body, "entry_digest": digest(body, size=20)}
+    registry_path.write_text(json.dumps(entry) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="registry arena_id does not match"):
+        registry.verify_registry()
+
+
+def test_fork_preserves_explicit_empty_payload(tmp_path: Path):
+    registry = _registry(tmp_path)
+    root = _write(registry)
+    forked = registry.fork_checkpoint(
+        root["checkpoint"]["checkpoint_id"],
+        branch_name="empty-scenario",
+        payload={},
+        created_at=11.0,
+    )
+    assert forked["checkpoint"]["payload"] == {}
+
+
+@pytest.mark.parametrize("created_at", [float("inf"), float("-inf"), float("nan")])
+def test_nonfinite_checkpoint_times_are_rejected(tmp_path: Path, created_at: float):
+    registry = _registry(tmp_path)
+    with pytest.raises(ValueError, match="created_at must be finite and non-negative"):
+        _write(registry, created_at=created_at)
