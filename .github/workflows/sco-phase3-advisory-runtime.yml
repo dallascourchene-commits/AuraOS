@@ -20,9 +20,11 @@ jobs:
       github.event_name != 'pull_request' ||
       github.event.pull_request.head.ref == 'refactor/sco-construction-e7-e8'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -38,16 +40,20 @@ jobs:
             aura_construction_adapter.py \
             aura_construction_fixtures.py \
             aura_construction_benchmark.py \
+            aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
-            tests/test_aura_construction_benchmark.py
+            tests/test_aura_construction_benchmark.py \
+            tests/test_aura_construction_architect_refactor.py
           ruff check --select E9,F63,F7,F82,F401,F811,B006 \
             aura_construction_adapter.py \
             aura_construction_fixtures.py \
             aura_construction_benchmark.py \
+            aura_construction_architect_refactor.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
-            tests/test_aura_construction_benchmark.py
+            tests/test_aura_construction_benchmark.py \
+            tests/test_aura_construction_architect_refactor.py
           git diff --check
       - name: Run focused Phase 3 coverage gate
         run: |
@@ -56,41 +62,61 @@ jobs:
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
+            tests/test_aura_construction_architect_refactor.py \
             2>&1 | tee /tmp/sco-phase3-collect.txt
           COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase3-collect.txt | tail -1 | awk '{print $1}')"
-          test "${COLLECTED:-0}" -ge 40
+          test "${COLLECTED:-0}" -ge 47
           python -m coverage erase
           python -m coverage run -m pytest -q \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
+            tests/test_aura_construction_architect_refactor.py \
             2>&1 | tee /tmp/sco-phase3-tests.txt
           python -m coverage report -m \
             --include='aura_construction_adapter.py,aura_construction_fixtures.py,aura_construction_benchmark.py' \
             --fail-under=88 \
             2>&1 | tee /tmp/sco-phase3-coverage.txt
-      - name: Upload focused diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sco-phase3-focused-diagnostics-${{ github.sha }}
-          path: |
-            /tmp/sco-phase3-collect.txt
-            /tmp/sco-phase3-tests.txt
-            /tmp/sco-phase3-coverage.txt
-          if-no-files-found: warn
-          retention-days: 7
       - name: Run prior Construction and canonical-owner regressions
         run: |
+          set -o pipefail
           python -m pytest -q \
             tests/test_aura_construction_refactor_plan.py \
             tests/test_aura_construction_contracts.py \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py \
-            tests/test_aura_liquid_planning_arena.py \
+            test_aura_liquid_planning_arena.py \
             tests/test_aura_arena_wfst_phase_a.py \
             tests/test_aura_event_contracts.py \
-            tests/test_aura_relational_authority.py
+            tests/test_aura_relational_authority.py \
+            test_aura_architect_loop.py \
+            tests/test_aura_architect_controls_vault_and_surfaces.py \
+            2>&1 | tee /tmp/sco-phase3-regressions.txt
+      - name: Run Aura native Architect Council and Surgeon gate
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          BASE_SHA="${PR_BASE_SHA}"
+          if [ -z "${BASE_SHA}" ]; then
+            BASE_SHA="$(git rev-parse origin/main)"
+          fi
+          python aura_construction_architect_refactor.py \
+            --base-sha "${BASE_SHA}" \
+            --output-dir Aura_Staging/sco_construction_phase3_architect
+          test -s Aura_Staging/sco_construction_phase3_architect/architect_refactor_report.json
+      - name: Upload focused and Architect diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sco-phase3-audit-evidence-${{ github.sha }}
+          path: |
+            /tmp/sco-phase3-collect.txt
+            /tmp/sco-phase3-tests.txt
+            /tmp/sco-phase3-coverage.txt
+            /tmp/sco-phase3-regressions.txt
+            Aura_Staging/sco_construction_phase3_architect
+          if-no-files-found: warn
+          retention-days: 14
       - name: Run deterministic 250-permutation benchmark
         run: python aura_construction_benchmark.py --iterations 250 --seed 1337 --json
       - name: Regenerate and verify exact topology in audit workspace
