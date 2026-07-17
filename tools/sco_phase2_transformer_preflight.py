@@ -18,6 +18,71 @@ def main() -> None:
     text = replace_once(
         text,
         '''    for old, new in (
+        ('consent_refs=tuple(data.get("consent_refs", ())),',
+         'consent_refs=_sequence_input(data.get("consent_refs", ()), "evidence.consent_refs"),'),
+        ('evidence_refs=tuple(data.get("evidence_refs", ())),',
+         'evidence_refs=_sequence_input(data.get("evidence_refs", ()), "claim.evidence_refs"),'),
+        ('consent_refs=tuple(data.get("consent_refs", ())),',
+         'consent_refs=_sequence_input(data.get("consent_refs", ()), "claim.consent_refs"),'),
+        ('parent_event_ids=tuple(data.get("parent_event_ids", ())),',
+         'parent_event_ids=_sequence_input(data.get("parent_event_ids", ()), "event.parent_event_ids"),'),
+        ('supersedes_event_ids=tuple(data.get("supersedes_event_ids", ())),',
+         'supersedes_event_ids=_sequence_input(data.get("supersedes_event_ids", ()), "event.supersedes_event_ids"),'),
+    ):
+        replace_exact(path, old, new)
+''',
+        '''    replace_exact(
+        path,
+        ''' + "'''" + '''            privacy_class=data.get("privacy_class"),
+            consent_refs=tuple(data.get("consent_refs", ())),
+            observed_at=data.get("observed_at"),
+''' + "'''" + ''',
+        ''' + "'''" + '''            privacy_class=data.get("privacy_class"),
+            consent_refs=_sequence_input(
+                data.get("consent_refs", ()), "evidence.consent_refs"
+            ),
+            observed_at=data.get("observed_at"),
+''' + "'''" + ''',
+    )
+    replace_exact(
+        path,
+        ''' + "'''" + '''            claimant_id=data.get("claimant_id"),
+            evidence_refs=tuple(data.get("evidence_refs", ())),
+            measurement_class=data.get("measurement_class"),
+''' + "'''" + ''',
+        ''' + "'''" + '''            claimant_id=data.get("claimant_id"),
+            evidence_refs=_sequence_input(
+                data.get("evidence_refs", ()), "claim.evidence_refs"
+            ),
+            measurement_class=data.get("measurement_class"),
+''' + "'''" + ''',
+    )
+    replace_exact(
+        path,
+        ''' + "'''" + '''            privacy_class=data.get("privacy_class"),
+            consent_refs=tuple(data.get("consent_refs", ())),
+            created_at=data.get("created_at"),
+''' + "'''" + ''',
+        ''' + "'''" + '''            privacy_class=data.get("privacy_class"),
+            consent_refs=_sequence_input(
+                data.get("consent_refs", ()), "claim.consent_refs"
+            ),
+            created_at=data.get("created_at"),
+''' + "'''" + ''',
+    )
+    for old, new in (
+        ('parent_event_ids=tuple(data.get("parent_event_ids", ())),',
+         'parent_event_ids=_sequence_input(data.get("parent_event_ids", ()), "event.parent_event_ids"),'),
+        ('supersedes_event_ids=tuple(data.get("supersedes_event_ids", ())),',
+         'supersedes_event_ids=_sequence_input(data.get("supersedes_event_ids", ()), "event.supersedes_event_ids"),'),
+    ):
+        replace_exact(path, old, new)
+''',
+    )
+
+    text = replace_once(
+        text,
+        '''    for old, new in (
         ('active_event_ids=tuple(data.get("active_event_ids", ())),',
          'active_event_ids=_sequence_input(data.get("active_event_ids", ()), "state.active_event_ids"),'),
         ('superseded_event_ids=tuple(data.get("superseded_event_ids", ())),',
