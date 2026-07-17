@@ -1,5 +1,5 @@
 name: SCO Phase 2 E4-E6 Finalize
-# Retriggered after pausing branch-local CODEMAP synchronization.
+# Lease-guarded finalization permits generated-map drift only.
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: sco-phase2-finalize-refactor-sco-construction-e4-e6
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   finalize:
@@ -204,15 +204,33 @@ jobs:
           python aura_codemap_verify.py --repo-root .
           git diff --check
 
-      - name: Commit exact verified final tree
+      - name: Commit and safely publish exact verified final tree
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_BRANCH: refactor/sco-construction-e4-e6
+          TRIGGER_SHA: ${{ github.sha }}
         run: |
           git config user.name 'AuraOS Phase Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
           git diff --cached --check
           git commit -m 'SCO Construction Arena E4-E6 reviewed vertical slice [skip ci]'
+
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          REMOTE_TRACKING="refs/remotes/origin/${TARGET_BRANCH}"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:refactor/sco-construction-e4-e6
+            fetch --no-tags origin "refs/heads/${TARGET_BRANCH}:${REMOTE_TRACKING}"
+          REMOTE_HEAD="$(git rev-parse "$REMOTE_TRACKING")"
+
+          if [ "$REMOTE_HEAD" != "$TRIGGER_SHA" ]; then
+            UNEXPECTED="$(git diff --name-only "$TRIGGER_SHA..$REMOTE_HEAD" | \
+              grep -Ev '^(\.aura/CODEMAP\.json|\.aura/CODEMAP\.md|topology_map\.json)$' || true)"
+            if [ -n "$UNEXPECTED" ]; then
+              printf 'Refusing to overwrite unexpected branch drift:\n%s\n' "$UNEXPECTED" >&2
+              exit 1
+            fi
+          fi
+
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push --force-with-lease="refs/heads/${TARGET_BRANCH}:${REMOTE_HEAD}" \
+            origin "HEAD:refs/heads/${TARGET_BRANCH}"
