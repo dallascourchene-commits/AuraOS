@@ -13,11 +13,26 @@ from aura_arena_experience_ledger import ArenaExperienceLedger
 from aura_arena_wfst_compiler import load_and_compile_arena_grammar
 from aura_arena_wfst_runtime import ArenaWFSTRuntime
 from aura_construction_benchmark import run_construction_phase3_benchmark
+from aura_construction_fixtures import build_sco_construction_demo_fixture
 
 CONSTRUCTION_LEARNING_VERSION = "AURA_SCO_CONSTRUCTION_PHASE3_LEARNING_V1"
 ARENA_ID = "sco_construction"
 ARENA_VERSION = "AURA_SCO_CONSTRUCTION_ARENA_V1"
 GRAMMAR_VERSION = "sco-construction-wfst-v1"
+_TITLE_TRANSITIONS = {
+    "Advance the Floor 4 electrical isolation package": (
+        "CONSTRUCTION.ADVANCE_ELECTRICAL",
+        "advance electrical package",
+    ),
+    "Shift the drilling crew to Floor 5 preparation": (
+        "CONSTRUCTION.SHIFT_FLOOR5",
+        "shift to floor 5 preparation",
+    ),
+    "Use the crane window and temporary labour on Floor 5 logistics": (
+        "CONSTRUCTION.USE_CRANE_LOGISTICS",
+        "use crane logistics window",
+    ),
+}
 
 
 def run_construction_phase3_learning(
@@ -46,6 +61,19 @@ def run_construction_phase3_learning(
     ):
         raise RuntimeError("construction benchmark verifier conditions failed")
 
+    fixture = build_sco_construction_demo_fixture()
+    recommendation = str(report.get("recommended_candidate_id") or "")
+    recommended_candidate = next(
+        (item for item in fixture.candidates if item.candidate_id == recommendation),
+        None,
+    )
+    if recommended_candidate is None:
+        raise RuntimeError("benchmark recommendation is not present in the fixture")
+    transition = _TITLE_TRANSITIONS.get(recommended_candidate.title)
+    if transition is None:
+        raise RuntimeError("recommended candidate has no registered WFST transition")
+    transition_id, input_text = transition
+
     manifest_path = root / ".aura" / "arena_routes" / "construction.v1.json"
     compiled = load_and_compile_arena_grammar(manifest_path)
     if not compiled.ok or compiled.grammar is None:
@@ -54,15 +82,15 @@ def run_construction_phase3_learning(
     runtime.register_grammar(compiled.grammar)
     route = runtime.route(
         arena_id=ARENA_ID,
-        current_state="PLAN",
-        input_text="rank construction alternatives",
+        current_state="DECIDE",
+        input_text=input_text,
         evidence={
             "benchmark_report": report,
             "verification_packet": {"verification_ok": True},
         },
     )
     selected = dict(route.get("selected") or {})
-    if selected.get("transition_id") != "CONSTRUCTION.RANK_ALTERNATIVES":
+    if selected.get("transition_id") != transition_id:
         raise RuntimeError("construction WFST did not admit the benchmark transition")
 
     experience_db = output / "arena_experience.db"
@@ -100,9 +128,9 @@ def run_construction_phase3_learning(
                 grammar_manifest_digest=compiled.manifest_digest,
                 runtime_version="AURA_ARENA_WFST_RUNTIME_V2",
                 compiler_version=CONSTRUCTION_LEARNING_VERSION,
-                state_before="PLAN",
-                state_after="PROVE",
-                selected_transition="CONSTRUCTION.RANK_ALTERNATIVES",
+                state_before="DECIDE",
+                state_after="DECIDE",
+                selected_transition=transition_id,
                 final_outcome="VERIFIED",
                 outcome_vector=vector,
                 payload={
