@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784297053,
+  "generated_at_unix": 1784297918,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1045,
+    "included_file_count": 1046,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -942,6 +942,7 @@
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
+      "tests/test_aura_construction_adapter_hardening.py",
       "tests/test_aura_construction_architect_refactor.py",
       "tests/test_aura_construction_authority.py",
       "tests/test_aura_construction_benchmark.py",
@@ -1067,23 +1068,23 @@
     ]
   },
   "summary": {
-    "file_count": 1045,
-    "total_bytes": 51405115,
-    "text_tokens_est": 3511489,
+    "file_count": 1046,
+    "total_bytes": 51415921,
+    "text_tokens_est": 3514191,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 27,
       "knowledge_artifact": 140,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 729,
+      "python_module": 730,
       "schema_or_lexicon": 104,
       "support_file": 30
     },
-    "topology_nodes": 8639,
-    "topology_edges": 19059,
+    "topology_nodes": 8642,
+    "topology_edges": 19072,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 17353.93
+    "elapsed_ms": 22692.94
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2039,6 +2040,7 @@
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
+      "tests/test_aura_construction_adapter_hardening.py",
       "tests/test_aura_construction_architect_refactor.py",
       "tests/test_aura_construction_authority.py",
       "tests/test_aura_construction_benchmark.py",
@@ -2237,6 +2239,13 @@
       "topology_degree": 300
     },
     {
+      "path": "aura_construction_adapter.py",
+      "role": "python_module",
+      "symbols": 50,
+      "tokens_est": 13331,
+      "topology_degree": 296
+    },
+    {
       "path": "aura_planning_board.py",
       "role": "python_module",
       "symbols": 51,
@@ -2270,13 +2279,6 @@
       "symbols": 40,
       "tokens_est": 6370,
       "topology_degree": 277
-    },
-    {
-      "path": "aura_construction_adapter.py",
-      "role": "python_module",
-      "symbols": 47,
-      "tokens_est": 12119,
-      "topology_degree": 270
     },
     {
       "path": "aura_understand_graph_bridge.py",
@@ -5906,8 +5908,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 867,
-        "end_line": 1145,
+        "line": 945,
+        "end_line": 1246,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionArenaAdapter:1cc40f79d263c998",
         "signature_hash": "d526006ce1b87514"
       }
@@ -5966,8 +5968,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 543,
-        "end_line": 585,
+        "line": 596,
+        "end_line": 642,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionCandidateAssessment:0000cb572f941b85",
         "signature_hash": "fdaf63e7fba95fc5"
       }
@@ -5996,8 +5998,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 345,
-        "end_line": 539,
+        "line": 381,
+        "end_line": 592,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionCoordinationCandidate:cef347bf8c2a49ee",
         "signature_hash": "9b930caa82665b31"
       }
@@ -6006,8 +6008,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 589,
-        "end_line": 671,
+        "line": 646,
+        "end_line": 739,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionCoordinationEvaluation:3da0a51e67d7a48a",
         "signature_hash": "da7ce46ae916153e"
       }
@@ -6016,8 +6018,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 132,
-        "end_line": 185,
+        "line": 158,
+        "end_line": 214,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionCriterionScore:16826424b0fccead",
         "signature_hash": "255628c83de62c78"
       }
@@ -6086,8 +6088,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "class",
-        "line": 189,
-        "end_line": 341,
+        "line": 218,
+        "end_line": 377,
         "semantic_id": "aura_construction_adapter.py#class:ConstructionProbabilisticSignal:48b5ecb8fe46cb08",
         "signature_hash": "b4f7cd8d139b6941"
       }
@@ -17704,40 +17706,40 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 139,
-        "end_line": 153,
+        "line": 165,
+        "end_line": 179,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCriterionScore.__post_init__:288abbb6233f3685",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 207,
-        "end_line": 254,
+        "line": 236,
+        "end_line": 284,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal.__post_init__:b405c87549413df3",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 372,
-        "end_line": 424,
+        "line": 408,
+        "end_line": 467,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate.__post_init__:bb77ca61ef3024eb",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 554,
-        "end_line": 578,
+        "line": 607,
+        "end_line": 635,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCandidateAssessment.__post_init__:0d2e238eaa36d78e",
         "signature_hash": "175e4972e4d2d582"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 610,
-        "end_line": 659,
+        "line": 667,
+        "end_line": 726,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationEvaluation.__post_init__:79876c2741108958",
         "signature_hash": "175e4972e4d2d582"
       },
@@ -26096,6 +26098,16 @@
         "signature_hash": "113b99c0439a4b8b"
       }
     ],
+    "_evaluation": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 30,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:_evaluation:b8f77e11703e7fb9",
+        "signature_hash": "5ec2908407d55d28"
+      }
+    ],
     "_event": [
       {
         "file": "aura_coding_workbench_wfst_adapter.py",
@@ -29456,24 +29468,24 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 334,
-        "end_line": 338,
+        "line": 370,
+        "end_line": 374,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal._identity_payload:30d9e0a9a3a620e3",
         "signature_hash": "3c76ba05abb60bb6"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 532,
-        "end_line": 536,
+        "line": 585,
+        "end_line": 589,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate._identity_payload:db4dddb11e58baf5",
         "signature_hash": "3c76ba05abb60bb6"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 661,
-        "end_line": 665,
+        "line": 728,
+        "end_line": 732,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationEvaluation._identity_payload:cb5fa3c5a7a3c1d7",
         "signature_hash": "3c76ba05abb60bb6"
       },
@@ -32288,8 +32300,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 122,
+        "line": 138,
+        "end_line": 142,
         "semantic_id": "aura_construction_adapter.py#function:_measurement:db757f41768fd2b1",
         "signature_hash": "e592913be73bc127"
       }
@@ -33298,8 +33310,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "function",
-        "line": 125,
-        "end_line": 128,
+        "line": 145,
+        "end_line": 148,
         "semantic_id": "aura_construction_adapter.py#function:_normalize:b98124239faf0961",
         "signature_hash": "f5fe0db8d64ec3fd"
       }
@@ -34584,16 +34596,16 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 328,
-        "end_line": 332,
+        "line": 364,
+        "end_line": 368,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal._payload_from_values:be62f17661bca89b",
         "signature_hash": "a22b5b67bf7a32db"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 523,
-        "end_line": 530,
+        "line": 576,
+        "end_line": 583,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate._payload_from_values:9456e6913a85a102",
         "signature_hash": "a22b5b67bf7a32db"
       },
@@ -36906,6 +36918,16 @@
         "signature_hash": "a2f9cc773d2e08d6"
       }
     ],
+    "_reject_unknown": [
+      {
+        "file": "aura_construction_adapter.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 154,
+        "semantic_id": "aura_construction_adapter.py#function:_reject_unknown:ed4142adc86e81f6",
+        "signature_hash": "9b4d9c8cc9cf6fe8"
+      }
+    ],
     "_rejected": [
       {
         "file": "aura_adaptive_model_router.py",
@@ -38076,8 +38098,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "function",
-        "line": 674,
-        "end_line": 681,
+        "line": 742,
+        "end_line": 749,
         "semantic_id": "aura_construction_adapter.py#function:_route_class:2f3a2a3e37444ff7",
         "signature_hash": "52726aab83c0d0ee"
       }
@@ -39788,6 +39810,26 @@
         "signature_hash": "c27ce8d248818df9"
       }
     ],
+    "_serialized_objects": [
+      {
+        "file": "aura_construction_adapter.py",
+        "kind": "function",
+        "line": 130,
+        "end_line": 135,
+        "semantic_id": "aura_construction_adapter.py#function:_serialized_objects:fd437f358a371c1d",
+        "signature_hash": "755f82f939455f75"
+      }
+    ],
+    "_serialized_strings": [
+      {
+        "file": "aura_construction_adapter.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 127,
+        "semantic_id": "aura_construction_adapter.py#function:_serialized_strings:1f33b188beea6378",
+        "signature_hash": "c5f5785cd358fa24"
+      }
+    ],
     "_session": [
       {
         "file": "tests/test_aura_benchmark_four.py",
@@ -41079,9 +41121,9 @@
         "file": "aura_construction_adapter.py",
         "kind": "function",
         "line": 106,
-        "end_line": 115,
-        "semantic_id": "aura_construction_adapter.py#function:_strings:af5e22fbbeaf0db9",
-        "signature_hash": "7632d44ce35a43a0"
+        "end_line": 121,
+        "semantic_id": "aura_construction_adapter.py#function:_strings:11b392081759be0c",
+        "signature_hash": "f53109b9d969b1a0"
       },
       {
         "file": "aura_continuity_packet.py",
@@ -44882,8 +44924,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 897,
-        "end_line": 976,
+        "line": 975,
+        "end_line": 1063,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionArenaAdapter.action_capsule_from_intent:57bed4b9a396a187",
         "signature_hash": "83e0ab04339e530d"
       },
@@ -47120,8 +47162,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 978,
-        "end_line": 1039,
+        "line": 1065,
+        "end_line": 1126,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionArenaAdapter.boundary_contract_for_scope:06939bdd698db392",
         "signature_hash": "da46a230a6d38c1b"
       }
@@ -48012,8 +48054,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 1073,
-        "end_line": 1145,
+        "line": 1160,
+        "end_line": 1246,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionArenaAdapter.build_runtime_packet:ee1e103ae93f4420",
         "signature_hash": "afaec675a07b9946"
       }
@@ -51838,24 +51880,24 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 156,
-        "end_line": 171,
+        "line": 182,
+        "end_line": 197,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCriterionScore.create:ece2305d0759cfa3",
         "signature_hash": "a561b028668a1f73"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 257,
-        "end_line": 300,
+        "line": 287,
+        "end_line": 332,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal.create:a0cb622455c62b7c",
         "signature_hash": "aeebbc1cc1752ac0"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 427,
-        "end_line": 489,
+        "line": 470,
+        "end_line": 532,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate.create:77badfbffd78abe2",
         "signature_hash": "a3a5a611fd2bb331"
       },
@@ -54116,8 +54158,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "function",
-        "line": 684,
-        "end_line": 864,
+        "line": 752,
+        "end_line": 942,
         "semantic_id": "aura_construction_adapter.py#function:evaluate_construction_candidates:972ff15c617f6b95",
         "signature_hash": "b7e1da6293fed029"
       }
@@ -55852,24 +55894,24 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 174,
-        "end_line": 182,
+        "line": 200,
+        "end_line": 211,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCriterionScore.from_dict:d16773b25d8dbb3c",
         "signature_hash": "e8824d1702c73cba"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 303,
-        "end_line": 325,
+        "line": 335,
+        "end_line": 361,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal.from_dict:3be1ea0ab1d56ee5",
         "signature_hash": "e8824d1702c73cba"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 492,
-        "end_line": 520,
+        "line": 535,
+        "end_line": 573,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate.from_dict:c21429613cb0f339",
         "signature_hash": "e8824d1702c73cba"
       },
@@ -59658,8 +59700,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 1041,
-        "end_line": 1071,
+        "line": 1128,
+        "end_line": 1158,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionArenaAdapter.lease_for_capsule:6ce007eab84d3ac3",
         "signature_hash": "9664cd0fe5628a5d"
       }
@@ -68418,8 +68460,8 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 883,
-        "end_line": 895,
+        "line": 961,
+        "end_line": 973,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionArenaAdapter.schema:89969a12ddf24fcb",
         "signature_hash": "07d6c0aa224edc34"
       },
@@ -73312,6 +73354,16 @@
         "signature_hash": "f67151830073d6c2"
       }
     ],
+    "test_candidate_deserialization_rejects_scalar_collection_attacks": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_candidate_deserialization_rejects_scalar_collection_attacks:0ce8d2005912f753",
+        "signature_hash": "73e7b469d5ed9a50"
+      }
+    ],
     "test_candidate_gate_is_task_and_graph_conditioned": [
       {
         "file": "tests/test_aura_model_cognome_store.py",
@@ -76192,6 +76244,16 @@
         "signature_hash": "5441f8a6ad5be3f6"
       }
     ],
+    "test_deserializers_reject_unknown_fields": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_deserializers_reject_unknown_fields:2eef71e6c4ef655c",
+        "signature_hash": "162bfdc803207534"
+      }
+    ],
     "test_destroy_sandbox": [
       {
         "file": "tests/test_aura_ephemeral_sandbox.py",
@@ -76488,6 +76550,16 @@
         "end_line": 112,
         "semantic_id": "tests/test_aura_model_cognome_replay_probes.py#function:test_direct_and_cascade_replay_use_recorded_outcomes_only:ef3f1bcdc813d179",
         "signature_hash": "afafe52a136ada54"
+      }
+    ],
+    "test_direct_candidate_requires_canonical_collection_order": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_direct_candidate_requires_canonical_collection_order:1521ea3f39630a7d",
+        "signature_hash": "eefc8f17424ce7d7"
       }
     ],
     "test_direct_capability_audit_query_returns_emergent_potential_shape": [
@@ -77606,6 +77678,16 @@
         "end_line": 352,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:test_evaluation_authority_boundary_is_explicit:2185fb7f5d8cc6f5",
         "signature_hash": "de84fa8a60563460"
+      }
+    ],
+    "test_evaluator_rejects_scalar_candidate_and_signal_inputs": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_evaluator_rejects_scalar_candidate_and_signal_inputs:5972a5dbbd674f30",
+        "signature_hash": "677013315b9d4f86"
       }
     ],
     "test_event_cannot_predate_its_record": [
@@ -85430,6 +85512,16 @@
         "signature_hash": "baf6d39a53ab53c6"
       }
     ],
+    "test_option_ids_preserve_cheapest_fastest_recommended_safest_roles": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_option_ids_preserve_cheapest_fastest_recommended_safest_roles:a864e2dbcde6d841",
+        "signature_hash": "ad8a06ba3fe9b919"
+      }
+    ],
     "test_organ_dissolves_and_has_receipt": [
       {
         "file": "tests/test_aura_civic_completion.py",
@@ -90166,6 +90258,26 @@
         "signature_hash": "a192b8353d4889e4"
       }
     ],
+    "test_runtime_packet_rejects_malformed_candidate_before_attribute_access": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_runtime_packet_rejects_malformed_candidate_before_attribute_access:c5ab3cdba8e994fa",
+        "signature_hash": "2018f1c0a8f7a73a"
+      }
+    ],
+    "test_runtime_packet_rejects_scope_state_project_mismatch": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 136,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_runtime_packet_rejects_scope_state_project_mismatch:2a8487887766e782",
+        "signature_hash": "a309b9b7d27dea7f"
+      }
+    ],
     "test_runtime_status_reports_python_fallback": [
       {
         "file": "test_aura_wasm_bridge.py",
@@ -91342,6 +91454,16 @@
         "end_line": 128,
         "semantic_id": "tests/test_aura_benchmark_four_hardening.py#function:test_sidecar_tampering_is_rejected:a205d156332c1b14",
         "signature_hash": "dd1b78c8411d900b"
+      }
+    ],
+    "test_signal_deserialization_rejects_scalar_criteria_attack": [
+      {
+        "file": "tests/test_aura_construction_adapter_hardening.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 52,
+        "semantic_id": "tests/test_aura_construction_adapter_hardening.py#function:test_signal_deserialization_rejects_scalar_criteria_attack:36e399d2a1593b63",
+        "signature_hash": "70400cd3ecce4c5f"
       }
     ],
     "test_signal_for_unknown_candidate_is_rejected": [
@@ -96564,40 +96686,40 @@
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 184,
-        "end_line": 185,
+        "line": 213,
+        "end_line": 214,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCriterionScore.to_dict:13905701aa748ed6",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 340,
-        "end_line": 341,
+        "line": 376,
+        "end_line": 377,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionProbabilisticSignal.to_dict:94edf156b1d04608",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 538,
-        "end_line": 539,
+        "line": 591,
+        "end_line": 592,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationCandidate.to_dict:169124b753fd4199",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 580,
-        "end_line": 585,
+        "line": 637,
+        "end_line": 642,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCandidateAssessment.to_dict:b524286db8942b10",
         "signature_hash": "5c1a69a9659e2089"
       },
       {
         "file": "aura_construction_adapter.py",
         "kind": "method",
-        "line": 667,
-        "end_line": 671,
+        "line": 734,
+        "end_line": 739,
         "semantic_id": "aura_construction_adapter.py#method:ConstructionCoordinationEvaluation.to_dict:1404120a5f4f7527",
         "signature_hash": "5c1a69a9659e2089"
       },
@@ -114487,17 +114609,17 @@
     {
       "path": "aura_construction_adapter.py",
       "role": "python_module",
-      "bytes": 48474,
-      "lines": 1164,
-      "tokens_est": 12119,
-      "symbol_count": 47,
+      "bytes": 53322,
+      "lines": 1265,
+      "tokens_est": 13331,
+      "symbol_count": 50,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 18,
-        "node_count": 48,
-        "edge_count": 270,
-        "degree": 270,
+        "hub_rank": 13,
+        "node_count": 51,
+        "edge_count": 296,
+        "degree": 296,
         "symbols": [
           "ConstructionAdvisoryLane",
           "ConstructionArenaAdapter",
@@ -114529,45 +114651,45 @@
           "aura_liquid_planning_arena.py"
         ],
         "edge_kinds": {
-          "call": 170,
-          "defines": 94,
+          "call": 190,
+          "defines": 100,
           "import_module": 6
         }
       },
-      "digest8": "877b916223ecfaf9",
+      "digest8": "5770f173d75d4284",
       "vector": [
-        0.164286,
-        -0.191461,
-        -0.258164,
-        0.191461,
-        0.008647,
-        0.149463,
-        -0.282869,
-        0.075349,
-        -0.179109,
-        0.082761,
-        -0.282869,
-        0.134641,
-        0.211225,
-        -0.055586,
-        0.139582,
-        -0.312514,
-        0.070408,
-        0.310044,
-        0.008647,
-        0.216166,
-        -0.127229,
-        0.072879,
-        -0.179109,
-        0.245812,
-        -0.048174,
-        0.058056,
-        0.097584,
-        0.035822,
-        -0.307573,
-        0.156875,
-        0.156875,
-        -0.02841
+        -0.182591,
+        0.100702,
+        0.237922,
+        -0.005533,
+        0.007746,
+        0.248988,
+        -0.032092,
+        0.211363,
+        -0.268907,
+        0.023239,
+        -0.089636,
+        0.251201,
+        0.094062,
+        0.242348,
+        0.255627,
+        -0.098488,
+        -0.047584,
+        0.122834,
+        0.282186,
+        -0.136113,
+        0.204723,
+        -0.001107,
+        0.260054,
+        -0.191444,
+        0.14054,
+        0.116194,
+        -0.056437,
+        -0.246774,
+        0.222429,
+        0.26448,
+        0.156032,
+        -0.052011
       ]
     },
     {
@@ -114807,7 +114929,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 15,
+        "hub_rank": 16,
         "node_count": 53,
         "edge_count": 285,
         "degree": 285,
@@ -118736,7 +118858,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 17,
+        "hub_rank": 18,
         "node_count": 41,
         "edge_count": 277,
         "degree": 277,
@@ -125340,7 +125462,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 14,
+        "hub_rank": 15,
         "node_count": 49,
         "edge_count": 290,
         "degree": 290,
@@ -128344,7 +128466,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 13,
+        "hub_rank": 14,
         "node_count": 52,
         "edge_count": 290,
         "degree": 290,
@@ -135966,7 +136088,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 16,
+        "hub_rank": 17,
         "node_count": 72,
         "edge_count": 279,
         "degree": 279,
@@ -150380,47 +150502,47 @@
     {
       "path": ".github/workflows/sco-phase3-advisory-runtime.yml",
       "role": "schema_or_lexicon",
-      "bytes": 7165,
-      "lines": 165,
-      "tokens_est": 1792,
+      "bytes": 6901,
+      "lines": 157,
+      "tokens_est": 1726,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a614649fd47c4670",
+      "digest8": "7f8a2a757e7b03a8",
       "vector": [
-        -0.256341,
-        0.207392,
-        -0.240883,
-        0.230578,
-        0.248612,
-        0.246036,
-        0.161018,
-        0.119798,
-        0.006441,
-        0.166171,
-        0.086306,
-        0.109492,
-        -0.127527,
-        -0.153289,
-        0.163595,
-        0.1739,
-        -0.137832,
-        -0.050238,
-        0.199663,
-        -0.086306,
-        0.300138,
-        0.119798,
-        0.039933,
-        0.225426,
-        -0.202239,
-        -0.307867,
-        0.037356,
-        0.021898,
-        0.119798,
-        0.070848,
-        -0.063119,
-        -0.294986
+        0.138745,
+        -0.0229,
+        0.079475,
+        0.305778,
+        0.117192,
+        -0.195321,
+        -0.16838,
+        0.198015,
+        -0.187238,
+        -0.198015,
+        0.200709,
+        -0.106416,
+        -0.009429,
+        -0.246508,
+        -0.246508,
+        0.006735,
+        -0.079475,
+        -0.111804,
+        -0.071393,
+        0.082169,
+        0.152215,
+        0.006735,
+        -0.044452,
+        -0.192627,
+        -0.324636,
+        -0.079475,
+        -0.278837,
+        0.074087,
+        0.028288,
+        0.257284,
+        0.281531,
+        -0.281531
       ]
     },
     {
@@ -161265,6 +161387,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_construction_adapter_hardening.py",
+      "role": "python_module",
+      "bytes": 6222,
+      "lines": 158,
+      "tokens_est": 1556,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2f34cb1f6c2475fb",
+      "vector": [
+        -0.205032,
+        -0.023327,
+        -0.050337,
+        -0.077347,
+        0.232042,
+        0.069981,
+        -0.131368,
+        0.09208,
+        0.067525,
+        0.212398,
+        -0.180477,
+        0.310617,
+        -0.227131,
+        -0.295884,
+        -0.295884,
+        -0.045426,
+        -0.114179,
+        -0.212398,
+        0.094536,
+        -0.01105,
+        -0.182932,
+        0.03806,
+        -0.251686,
+        -0.136279,
+        -0.155922,
+        0.298339,
+        0.283607,
+        -0.042971,
+        -0.013505,
+        0.148556,
+        -0.082258,
+        -0.219764
+      ]
+    },
+    {
       "path": "tests/test_aura_construction_architect_refactor.py",
       "role": "python_module",
       "bytes": 4594,
@@ -166527,7 +166695,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 3893,
+      "dead_end_count": 3892,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -166627,11 +166795,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 538,
-      "node_count": 8639,
-      "edge_count": 19059,
+      "node_count": 8642,
+      "edge_count": 19072,
       "spectral_layout": true,
-      "spectral_sparsity": 0.057073,
-      "global_health": 0.970639
+      "spectral_sparsity": 0.057054,
+      "global_health": 0.970649
     },
     "file_index": {
       "aura_node.py": {
@@ -167181,8 +167349,49 @@
           "import_module": 2
         }
       },
-      "aura_planning_board.py": {
+      "aura_construction_adapter.py": {
         "hub_rank": 13,
+        "node_count": 51,
+        "edge_count": 296,
+        "degree": 296,
+        "symbols": [
+          "ConstructionAdvisoryLane",
+          "ConstructionArenaAdapter",
+          "ConstructionArenaMode",
+          "ConstructionAuthorityRoute",
+          "ConstructionCandidateAssessment",
+          "ConstructionCoordinationCandidate",
+          "ConstructionCoordinationEvaluation",
+          "ConstructionCriterionScore",
+          "ConstructionProbabilisticSignal",
+          "ConstructionRouteClass",
+          "__post_init__",
+          "_bounded",
+          "_enum_value",
+          "_finite",
+          "_identity_payload",
+          "_measurement",
+          "_normalize",
+          "_optional_bounded",
+          "_optional_finite",
+          "_payload_from_values"
+        ],
+        "neighbor_files": [
+          "aura_construction_benchmark.py",
+          "aura_construction_contracts.py",
+          "aura_construction_fixtures.py",
+          "aura_construction_state.py",
+          "aura_event_contracts.py",
+          "aura_liquid_planning_arena.py"
+        ],
+        "edge_kinds": {
+          "call": 190,
+          "defines": 100,
+          "import_module": 6
+        }
+      },
+      "aura_planning_board.py": {
+        "hub_rank": 14,
         "node_count": 52,
         "edge_count": 290,
         "degree": 290,
@@ -167225,7 +167434,7 @@
         }
       },
       "aura_music_coding_arena.py": {
-        "hub_rank": 14,
+        "hub_rank": 15,
         "node_count": 49,
         "edge_count": 290,
         "degree": 290,
@@ -167264,7 +167473,7 @@
         }
       },
       "aura_construction_contracts.py": {
-        "hub_rank": 15,
+        "hub_rank": 16,
         "node_count": 53,
         "edge_count": 285,
         "degree": 285,
@@ -167304,7 +167513,7 @@
         }
       },
       "aura_topological_context_anchor.py": {
-        "hub_rank": 16,
+        "hub_rank": 17,
         "node_count": 72,
         "edge_count": 279,
         "degree": 279,
@@ -167345,7 +167554,7 @@
         }
       },
       "aura_event_contracts.py": {
-        "hub_rank": 17,
+        "hub_rank": 18,
         "node_count": 41,
         "edge_count": 277,
         "degree": 277,
@@ -167397,47 +167606,6 @@
           "call": 163,
           "defines": 80,
           "import_module": 34
-        }
-      },
-      "aura_construction_adapter.py": {
-        "hub_rank": 18,
-        "node_count": 48,
-        "edge_count": 270,
-        "degree": 270,
-        "symbols": [
-          "ConstructionAdvisoryLane",
-          "ConstructionArenaAdapter",
-          "ConstructionArenaMode",
-          "ConstructionAuthorityRoute",
-          "ConstructionCandidateAssessment",
-          "ConstructionCoordinationCandidate",
-          "ConstructionCoordinationEvaluation",
-          "ConstructionCriterionScore",
-          "ConstructionProbabilisticSignal",
-          "ConstructionRouteClass",
-          "__post_init__",
-          "_bounded",
-          "_enum_value",
-          "_finite",
-          "_identity_payload",
-          "_measurement",
-          "_normalize",
-          "_optional_bounded",
-          "_optional_finite",
-          "_payload_from_values"
-        ],
-        "neighbor_files": [
-          "aura_construction_benchmark.py",
-          "aura_construction_contracts.py",
-          "aura_construction_fixtures.py",
-          "aura_construction_state.py",
-          "aura_event_contracts.py",
-          "aura_liquid_planning_arena.py"
-        ],
-        "edge_kinds": {
-          "call": 170,
-          "defines": 94,
-          "import_module": 6
         }
       },
       "aura_understand_graph_bridge.py": {
@@ -183132,8 +183300,50 @@
         }
       },
       {
-        "file": "aura_planning_board.py",
+        "file": "aura_construction_adapter.py",
         "hub_rank": 13,
+        "node_count": 51,
+        "edge_count": 296,
+        "degree": 296,
+        "symbols": [
+          "ConstructionAdvisoryLane",
+          "ConstructionArenaAdapter",
+          "ConstructionArenaMode",
+          "ConstructionAuthorityRoute",
+          "ConstructionCandidateAssessment",
+          "ConstructionCoordinationCandidate",
+          "ConstructionCoordinationEvaluation",
+          "ConstructionCriterionScore",
+          "ConstructionProbabilisticSignal",
+          "ConstructionRouteClass",
+          "__post_init__",
+          "_bounded",
+          "_enum_value",
+          "_finite",
+          "_identity_payload",
+          "_measurement",
+          "_normalize",
+          "_optional_bounded",
+          "_optional_finite",
+          "_payload_from_values"
+        ],
+        "neighbor_files": [
+          "aura_construction_benchmark.py",
+          "aura_construction_contracts.py",
+          "aura_construction_fixtures.py",
+          "aura_construction_state.py",
+          "aura_event_contracts.py",
+          "aura_liquid_planning_arena.py"
+        ],
+        "edge_kinds": {
+          "call": 190,
+          "defines": 100,
+          "import_module": 6
+        }
+      },
+      {
+        "file": "aura_planning_board.py",
+        "hub_rank": 14,
         "node_count": 52,
         "edge_count": 290,
         "degree": 290,
@@ -183177,7 +183387,7 @@
       },
       {
         "file": "aura_music_coding_arena.py",
-        "hub_rank": 14,
+        "hub_rank": 15,
         "node_count": 49,
         "edge_count": 290,
         "degree": 290,
@@ -183217,7 +183427,7 @@
       },
       {
         "file": "aura_construction_contracts.py",
-        "hub_rank": 15,
+        "hub_rank": 16,
         "node_count": 53,
         "edge_count": 285,
         "degree": 285,
@@ -183258,7 +183468,7 @@
       },
       {
         "file": "aura_topological_context_anchor.py",
-        "hub_rank": 16,
+        "hub_rank": 17,
         "node_count": 72,
         "edge_count": 279,
         "degree": 279,
@@ -183300,7 +183510,7 @@
       },
       {
         "file": "aura_event_contracts.py",
-        "hub_rank": 17,
+        "hub_rank": 18,
         "node_count": 41,
         "edge_count": 277,
         "degree": 277,
@@ -183352,48 +183562,6 @@
           "call": 163,
           "defines": 80,
           "import_module": 34
-        }
-      },
-      {
-        "file": "aura_construction_adapter.py",
-        "hub_rank": 18,
-        "node_count": 48,
-        "edge_count": 270,
-        "degree": 270,
-        "symbols": [
-          "ConstructionAdvisoryLane",
-          "ConstructionArenaAdapter",
-          "ConstructionArenaMode",
-          "ConstructionAuthorityRoute",
-          "ConstructionCandidateAssessment",
-          "ConstructionCoordinationCandidate",
-          "ConstructionCoordinationEvaluation",
-          "ConstructionCriterionScore",
-          "ConstructionProbabilisticSignal",
-          "ConstructionRouteClass",
-          "__post_init__",
-          "_bounded",
-          "_enum_value",
-          "_finite",
-          "_identity_payload",
-          "_measurement",
-          "_normalize",
-          "_optional_bounded",
-          "_optional_finite",
-          "_payload_from_values"
-        ],
-        "neighbor_files": [
-          "aura_construction_benchmark.py",
-          "aura_construction_contracts.py",
-          "aura_construction_fixtures.py",
-          "aura_construction_state.py",
-          "aura_event_contracts.py",
-          "aura_liquid_planning_arena.py"
-        ],
-        "edge_kinds": {
-          "call": 170,
-          "defines": 94,
-          "import_module": 6
         }
       },
       {
