@@ -1,0 +1,77 @@
+            readiness_reports=tuple(
+                ConstructionReadinessReport.from_dict(dict(item))
+                for item in data.get("readiness_reports", ())
+            ),
+            missing_reasons=tuple(data.get("missing_reasons", ())),
+            evaluated_at=data.get("evaluated_at"),
+            expires_at=data.get("expires_at"),
+            version=data.get("version"),
+            proposal_only=data.get("proposal_only"),
+            human_release_required=data.get("human_release_required"),
+            physical_work_authorized=data.get("physical_work_authorized"),
+            patch_authority=data.get("patch_authority"),
+            vsa_patch_authority=data.get("vsa_patch_authority"),
+        )
+
+    @staticmethod
+    def _payload_from_values(values: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            **values,
+            "required_claim_ids": list(values["required_claim_ids"]),
+            "readiness_reports": [item.to_dict() for item in values["readiness_reports"]],
+            "missing_reasons": list(values["missing_reasons"]),
+        }
+
+    def _identity_payload(self) -> dict[str, Any]:
+        data = asdict(self)
+        data.pop("result_id")
+        data.pop("result_digest")
+        return data
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _validate_decision_binding(
+    decision: GovernanceDecision,
+    request: ConstructionActionRequest,
+    *,
+    now: float,
+) -> None:
+    decision.validate_integrity()
+    if decision.action_id != request.action_id:
+        raise ValueError("governance decision is bound to another action ID")
+    if decision.action_payload_digest != request.action_digest:
+        raise ValueError("governance decision is bound to another action digest")
+    if decision.policy_scope != request.policy_scope:
+        raise ValueError("governance decision policy scope does not match")
+    if decision.capability_scope != request.capability_scope:
+        raise ValueError("governance decision capability scope does not match")
+    if decision.authorized:
+        if now >= decision.expires_at:
+            raise ValueError("governance decision is expired")
+        decision.validate_for_action(
+            action_id=request.action_id,
+            action_payload_digest=request.action_digest,
+            policy_scope=request.policy_scope,
+            capability_scope=request.capability_scope,
+            now=now,
+        )
+
+
+def _validate_result_bindings(
+    result: ConstructionAuthorityResult,
+    *,
+    request: ConstructionActionRequest,
+    state: ConstructionProjectState,
+    governance_decision: GovernanceDecision,
+    now: float,
+) -> None:
+    result.__post_init__()
+    request.__post_init__()
+    state.__post_init__()
+    _validate_decision_binding(governance_decision, request, now=now)
+    expected = {
+        "project_id": request.scope.project_id,
+        "scope_key": request.scope.scope_key,
+        "request_id": request.action_id,
