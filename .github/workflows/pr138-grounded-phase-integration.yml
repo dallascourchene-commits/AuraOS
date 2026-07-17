@@ -15,6 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: refactor/grounded-phase-capsule-compiler
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -27,11 +28,44 @@ jobs:
           python -m pip install pytest==8.4.1 ruff==0.5.0
       - name: Compile and statically verify integration
         run: |
-          python -m py_compile             aura_cockpit_planner.py             aura_cost_experiment_runner.py             aura_empirical_cost_ledger.py             aura_showcase_observatory_handoff.py             tests/test_aura_cockpit_planner.py             tests/test_aura_empirical_cost_ledger_v2.py             tests/test_aura_showcase_observatory_crucible.py
-          ruff check --select E9,F63,F7,F82,F401,F811,B006             aura_cockpit_planner.py             aura_cost_experiment_runner.py             aura_empirical_cost_ledger.py             aura_showcase_observatory_handoff.py             tests/test_aura_cockpit_planner.py             tests/test_aura_empirical_cost_ledger_v2.py             tests/test_aura_showcase_observatory_crucible.py
+          python -m py_compile \
+            aura_cockpit_planner.py \
+            aura_cost_experiment_runner.py \
+            aura_empirical_cost_ledger.py \
+            aura_showcase_observatory_handoff.py \
+            tests/test_aura_cockpit_planner.py \
+            tests/test_aura_empirical_cost_ledger_v2.py \
+            tests/test_aura_showcase_observatory_crucible.py
+          ruff check --select E9,F63,F7,F82,F401,F811,B006 \
+            aura_cockpit_planner.py \
+            aura_cost_experiment_runner.py \
+            aura_empirical_cost_ledger.py \
+            aura_showcase_observatory_handoff.py \
+            tests/test_aura_cockpit_planner.py \
+            tests/test_aura_empirical_cost_ledger_v2.py \
+            tests/test_aura_showcase_observatory_crucible.py
           git diff --check
       - name: Run focused and canonical owner regressions
         run: |
-          python -m pytest -q             tests/test_aura_cockpit_planner.py             tests/test_aura_coding_arena_grounding.py             tests/test_aura_empirical_cost_ledger_v2.py             tests/test_aura_empirical_cost_observatory.py             tests/test_aura_showcase_observatory_crucible.py
-      - name: Verify generated topology
-        run: python aura_codemap_verify.py --repo-root .
+          python -m pytest -q \
+            tests/test_aura_cockpit_planner.py \
+            tests/test_aura_coding_arena_grounding.py \
+            tests/test_aura_empirical_cost_ledger_v2.py \
+            tests/test_aura_empirical_cost_observatory.py \
+            tests/test_aura_showcase_observatory_crucible.py
+      - name: Regenerate and verify exact topology
+        run: |
+          python aura_codebase_navigator.py
+          python aura_codemap_verify.py --repo-root .
+          git diff --check
+      - name: Export exact topology
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr138-final-topology-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            Aura_Memory/live_topology_ast.json
+            topology_map.json
+          if-no-files-found: error
+          retention-days: 7
