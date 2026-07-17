@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: sco-construction-e7-e8-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   audit:
@@ -65,7 +65,7 @@ jobs:
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_construction_benchmark.py \
             2>&1 | tee /tmp/sco-phase3-tests.txt
-          python -m coverage report \
+          python -m coverage report -m \
             --include='aura_construction_adapter.py,aura_construction_fixtures.py,aura_construction_benchmark.py' \
             --fail-under=88 \
             2>&1 | tee /tmp/sco-phase3-coverage.txt
