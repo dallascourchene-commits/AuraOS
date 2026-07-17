@@ -2,11 +2,11 @@
 
 ```yaml
 document_status: EXECUTING_BOUNDED_VERTICAL_SLICE
-document_version: 1.1.1
+document_version: 1.1.2
 date: 2026-07-17
 baseline_main: 7edd80484629378af0658bfca0d7d4e351361831
 branch: refactor/sco-construction-e7-e8
-finalizer_trigger: true
+finalizer_trigger: pull_request_synchronize
 phase_scope:
   - E7_ADVISORY_LANES
   - E8_SYNTHETIC_SHADOW_ADAPTER
