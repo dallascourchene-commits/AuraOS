@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import asdict, dataclass
 import json
+import math
 import random
 import time
 from typing import Any
@@ -16,7 +17,8 @@ from aura_construction_adapter import (
 from aura_construction_fixtures import build_sco_construction_demo_fixture
 from aura_event_contracts import stable_digest
 
-CONSTRUCTION_BENCHMARK_VERSION = "AURA_SCO_CONSTRUCTION_PHASE3_BENCHMARK_V1"
+CONSTRUCTION_BENCHMARK_VERSION = "AURA_SCO_CONSTRUCTION_PHASE3_BENCHMARK_V2"
+_MAX_ITERATIONS = 10_000
 
 
 @dataclass(frozen=True)
@@ -42,9 +44,24 @@ class ConstructionBenchmarkReport:
     def __post_init__(self) -> None:
         if self.version != CONSTRUCTION_BENCHMARK_VERSION:
             raise ValueError("unsupported Construction benchmark version")
-        if type(self.iterations) is not int or self.iterations < 1:
-            raise ValueError("iterations must be a positive integer")
-        if type(self.elapsed_ms) is not float or self.elapsed_ms < 0.0:
+        if type(self.iterations) is not int or not 1 <= self.iterations <= _MAX_ITERATIONS:
+            raise ValueError("iterations must be a positive bounded integer")
+        if type(self.stable_evaluation_digest) is not str or not self.stable_evaluation_digest:
+            raise ValueError("stable_evaluation_digest is required")
+        if type(self.recommended_candidate_id) is not str or not self.recommended_candidate_id:
+            raise ValueError("recommended_candidate_id is required")
+        for name, value in (
+            ("unique_evaluation_digests", self.unique_evaluation_digests),
+            ("unique_recommendations", self.unique_recommendations),
+            ("blocked_candidate_count", self.blocked_candidate_count),
+            ("admissible_candidate_count", self.admissible_candidate_count),
+            ("displayed_option_count", self.displayed_option_count),
+        ):
+            if type(value) is not int or value < 0:
+                raise ValueError(f"{name} must be a non-negative integer")
+        if self.displayed_option_count > 4:
+            raise ValueError("displayed_option_count may not exceed four")
+        if type(self.elapsed_ms) is not float or not math.isfinite(self.elapsed_ms) or self.elapsed_ms < 0.0:
             raise ValueError("elapsed_ms must be a non-negative canonical float")
         if self.unique_evaluation_digests != 1:
             raise ValueError("deterministic benchmark produced multiple evaluation digests")
@@ -54,6 +71,8 @@ class ConstructionBenchmarkReport:
             raise ValueError("unsafe high-score candidate escaped the hard filter")
         if self.candidate_order_invariant is not True:
             raise ValueError("candidate input order changed the evaluation")
+        if self.measurement_class != "EXECUTABLE_SYNTHETIC_FIXTURE":
+            raise ValueError("benchmark measurement_class was relabelled")
         if any(
             value != "NOT_MEASURED"
             for value in (
@@ -63,6 +82,8 @@ class ConstructionBenchmarkReport:
             )
         ):
             raise ValueError("benchmark may not invent provider or real-project measurements")
+        if self.production_readiness != "NOT_CLAIMED":
+            raise ValueError("benchmark may not claim production readiness")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -74,8 +95,8 @@ def run_construction_phase3_benchmark(
     seed: int = 1337,
 ) -> dict[str, Any]:
     """Run deterministic permutation/replay checks over the synthetic fixture."""
-    if type(iterations) is not int or iterations < 1:
-        raise ValueError("iterations must be a positive integer")
+    if type(iterations) is not int or not 1 <= iterations <= _MAX_ITERATIONS:
+        raise ValueError("iterations must be a positive bounded integer")
     if type(seed) is not int:
         raise ValueError("seed must be an integer")
 
