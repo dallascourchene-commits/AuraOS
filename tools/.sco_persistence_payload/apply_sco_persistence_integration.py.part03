@@ -93,7 +93,7 @@ coderabbit_policy: TRIGGER_ONCE_AFTER_FINAL_MANUAL_AND_EXECUTABLE_GATES
 """
     text = read(path)
     if "## Phase 4 temporal-persistence handoff" not in text:
-        write(path, text.rstrip() + section + "\n")
+        write(path, text.rstrip() + section.rstrip() + "\n")
 
 
 def main() -> None:
