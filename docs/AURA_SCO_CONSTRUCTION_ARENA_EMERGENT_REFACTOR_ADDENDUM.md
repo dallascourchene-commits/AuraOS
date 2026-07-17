@@ -1,18 +1,16 @@
 # AuraOS SCO Construction Arena — Emergent Refactor Addendum
 
 ```yaml
-document_status: PHASE_TWO_E4_E6_IMPLEMENTED_AND_MANUALLY_VERIFIED
-document_version: 1.3.0
+document_status: E0_E14_FINAL_COMPLETION_IN_PROGRESS
+document_version: 2.0.0
 prepared_date: 2026-07-17
 repository: dallascourchene-commits/AuraOS
-baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
-branch: refactor/sco-construction-e4-e6
-completed_phases: E0_E6
+baseline_main: 62b967be2fc1150c3d52e1624d4d2b6af234d05a
+branch: refactor/sco-construction-e9-e14-completion
+completed_runtime_phases: E0_E12
+active_completion_phases: E9_E13_E14
 patch_authority: exact_source_spans_and_hashes_only
 vsa_patch_authority: false
-coderabbit_triggered: false
-pull_request_opened: false
-merged: false
 ```
 
 ## Decision
@@ -21,12 +19,14 @@ The SCO Construction Arena remains a narrow domain layer over Aura's governed sp
 
 ```text
 Capability Resolver and CODEMAP
-  -> exact canonical owner
-  -> minimal domain gap
-  -> deterministic zero-model state
-  -> canonical relational governance
-  -> digest-bound proposal and receipt
-  -> authorized human physical decision
+  → exact canonical owner
+  → minimal domain gap
+  → deterministic Construction state
+  → hard blockers before advisory ranking
+  → bounded Human Agent review profile
+  → read-only Observatory projection
+  → optional checkpoint and payload-free handoff
+  → authorized external human decision
 ```
 
 ## Authority invariant
@@ -35,84 +35,83 @@ Capability Resolver and CODEMAP
 EVIDENCE_READY != GOVERNANCE_AUTHORIZED != PHYSICAL_RELEASED
 ```
 
-Aura may represent claims, evidence, conflicts, dependencies, missing approvals, and digital coordination readiness. It cannot authorize physical work; certify safety, engineering, inspection, legal, or regulatory conclusions; release funds; control access/equipment; or replace human, professional, contractual, community, or governmental authority.
+Aura may represent claims, evidence, conflicts, dependencies, missing approvals, proposal options, checkpoints, and digital coordination readiness. It cannot authorize physical work; certify safety, engineering, inspection, legal, or regulatory conclusions; release funds; control access/equipment; or replace human, professional, contractual, community, owner, contractor, or governmental authority.
 
-## Phase 1 — E0–E3
+## Implemented phases
 
-Merged foundation commit:
+### E0–E3 — Governed refactor foundation
 
-```text
-77e83f5686250530b00d40ef0d99e60f098681e5
-```
+Reuse grounding, exact source-hash/span capsule authority, revisioned refactor skeletons, Construction planning adapter, cross-Arena handoff, and generated topology.
 
-It introduced reuse grounding, exact source-hash/span capsule authority, revisioned refactor skeletons, the Construction planning adapter, cross-Arena handoff, and generated topology.
-
-## Phase 2 — E4–E6
+### E4–E6 — Construction truth and governance
 
 - `aura_construction_contracts.py`: immutable scopes, separate claims/evidence, privacy/consent/freshness, append-only project events, canonical Aura event projection.
 - `aura_construction_state.py`: deterministic replay, explicit supersession, structural conflict preservation, readiness/project queries, non-dispositive sensor/location treatment.
 - `aura_construction_authority.py`: exact request/state/decision/governance-lineage/result/receipt binding over Aura's existing relational-authority contracts.
 
-No custom cryptography, model route, live connector, physical control, payment authority, Experience activation, or Crucible activation was added.
+### E7–E8 — Proposal-only advisory runtime
+
+- dependency, alternative-work, payment-readiness, and hazard/location advisory lanes;
+- hard blockers before deterministic/advisory ranking;
+- synthetic, shadow, and owner-read-only `ConstructionArenaAdapter` lifecycle;
+- Action Capsules, Boundary Contracts, and leases from Liquid Planning.
+
+### E10–E11 — Verified learning and benchmark
+
+- deterministic zero-model candidate-order benchmark;
+- verified synthetic `ArenaExperience V3` projection;
+- proposal-only Crucible analysis with no active-grammar mutation.
+
+### E12 — Temporal persistence
+
+- content-addressed checkpoints and append-only parent/fork registry;
+- exact HEAD/invariant restoration assessment;
+- `DIRECT_RESUME_REVIEW_REQUIRED`, `MITOSIS_REQUIRED`, and `RESTORATION_COUNCIL_REQUIRED` routing;
+- payload-free cross-Arena handoff and read-only checkpoint projection.
+
+## Final bounded gap — E9/E13/E14
+
+The remaining software work is not another Construction state owner. It is:
+
+- `aura_construction_human_agent.py`: a purpose-limited Construction Human Agent review profile;
+- Human Agent API and browser surface;
+- a read-only Observatory projection containing IDs, digests, statuses, and gates only;
+- `aura_construction_refactor_completion.py`: a machine gate that rejects missing owner symbols, stale wiring markers, or incomplete E0–E13 implementation;
+- synchronized documentation, evidence, CODEMAP/topology, independent review, and pinned merge.
 
 ## Ten emergent properties applied
 
-| # | Property | E4–E6 application |
+| # | Property | Final E0–E14 application |
 |---:|---|---|
-| 1 | Grounded intent -> capsules | Exact canonical owners bounded the vertical slice |
-| 2 | Topology -> route | Deterministic `ZERO_MODEL`; human governance for consequence |
-| 3 | Localization | Four principal owners selected from 1,022 files |
-| 4 | Compact verified memory | State and chain digests replace broad history replay |
-| 5 | Persistent skeleton | Handoff records integrations and deferred wires |
-| 6 | Bounded repair | 40 review findings repaired with regressions |
-| 7 | Attempts -> procedures | Deferred until verified Construction experiences exist |
-| 8 | Findings -> ghost plan | Deferred integrations remain visible, non-authoritative debts |
-| 9 | Reuse before invention | Canonical events, planning, authority, and receipts reused |
-| 10 | Digest-bound promotion | Phase stops before PR, CodeRabbit, merge, or activation |
+| 1 | Grounded intent → capsules | Exact canonical owners bound every phase |
+| 2 | Topology → route | Deterministic paths first; human governance for consequence |
+| 3 | Localization | Small domain owners selected from the full repository |
+| 4 | Compact verified memory | State/chain/checkpoint digests replace broad replay context |
+| 5 | Persistent skeleton | Phase and cross-Arena status remain explicit and machine checked |
+| 6 | Bounded repair | Manual and external findings become focused regressions |
+| 7 | Attempts → procedures | Verified synthetic episodes reach proposal-only Crucible |
+| 8 | Findings → ghost plan | Deferred real connectors remain visible but non-authoritative |
+| 9 | Reuse before invention | Events, planning, authority, receipts, Experience, Crucible, and persistence are reused |
+| 10 | Digest-bound promotion | Final merge requires exact-head gates and independent review |
 
-## Review evidence
+## Tracker reconciliation
 
-```yaml
-focused_adversarial_tests: 128_passed
-focused_statement_coverage: 90_percent
-manual_fatal_lint: PASS
-randomized_replay_histories: 250
-manual_findings_repaired: 40
-runtime_model_calls: 0
-structural_context_proxy:
-  repository_files: 1022
-  principal_owner_files: 4
-  file_selection_reduction: 99.61_percent
-provider_tokens_and_cost: NOT_MEASURED
-```
+The open PR/Issues page does not contain an SCO Construction completion item:
 
-See `docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md` for boundaries and limitations.
+- draft PR #130 is an old read-only analysis scaffold and explicitly not intended for merge;
+- issue #126 is the Financial Arena parent epic whose F1.1 slice already merged;
+- issue #129 is the separate active Financial Planning Board projection slice.
 
-## Deferred
+Construction completion is therefore governed by the original E0–E14 skeleton, merged phase evidence, current source/tests, and `docs/AURA_CROSS_ARENA_CHANGE_HANDOFF_LOG.md`.
 
-Construction `BaseArenaAdapter`, Human Agent profile/API/UI, Observatory projection, Experience/Crucible projection, payment readiness, hazard/location advisory, live connectors, physical control, and professional certification remain deferred.
+## Policy deferrals
+
+Real owner/contractor/payment/access/sensor/safety integrations, physical control, professional certification, legal/regulatory conclusions, external account actions, automatic restoration/hotswap/commit/push/PR/merge, and commercial field claims remain intentionally deferred. They require separate authorization, privacy, security, contractual, regulatory, and operational programs.
 
 ## Future gate
 
-Any later module requires an updated reuse-matrix row, exact owner decision, cross-Arena disposition, authority/privacy boundary, focused tests, handoff entry, and regenerated topology.
+```bash
+python3 -m aura_construction_refactor_completion --repo-root .
+```
 
-## CodeRabbit and manual adversarial review continuation
-
-- CodeRabbit review: 15 actionable threads examined individually.
-- Confirmed repairs: canonical materialization, strict collection containers,
-  canonical policy scopes, evidence-freshness expiry, exact canonical authority
-  types, deterministic result revalidation, verified receipt predecessors,
-  non-ready receipt rejection, state-query indexing, and fail-closed event order.
-- Staging payloads and one-time tools are removed only after exact-branch tests.
-- Construction remains proposal-only and never authorizes physical work.
-
-## Exact-branch CodeRabbit/manual repair validation
-
-- reviewed_trigger_sha: `91fde5f4626fd87cc0f1b6a8f1e7cf756027aa7e`
-- CodeRabbit actionable threads examined: 15
-- focused Construction tests: at least 138 PASS
-- focused Construction statement coverage: 89% measured; 88% enforced minimum PASS
-- canonical owner regressions: PASS
-- deterministic randomized histories: 250 PASS
-- staging payloads and one-run tooling: removed before final topology
-- authority boundary: proposal-only; human physical release remains mandatory
+A final branch may proceed to review only when it returns `runtime_complete: true`, `e14_release_status: READY_FOR_PINNED_MERGE`, all focused and inherited tests pass, documentation/topology is synchronized, and authority boundaries remain false.
