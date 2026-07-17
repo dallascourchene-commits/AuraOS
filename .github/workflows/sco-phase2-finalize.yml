@@ -9,7 +9,7 @@ permissions:
 
 concurrency:
   group: sco-phase2-finalize-refactor-sco-construction-e4-e6
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   finalize:
@@ -98,7 +98,8 @@ jobs:
             tests/test_aura_construction_contracts.py \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_authority.py | tee /tmp/sco-phase2-collect.txt
-          grep -Eq '[0-9]+ tests collected' /tmp/sco-phase2-collect.txt
+          COLLECTED="$(grep -Eo '[0-9]+ tests collected' /tmp/sco-phase2-collect.txt | tail -1 | awk '{print $1}')"
+          test "${COLLECTED:-0}" -ge 138
 
       - name: Run focused tests and measured coverage
         run: |
@@ -109,7 +110,7 @@ jobs:
             tests/test_aura_construction_authority.py
           python -m coverage report \
             --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' \
-            --fail-under=88
+            --fail-under=90
 
       - name: Run canonical owner regressions
         run: |
@@ -139,7 +140,7 @@ jobs:
               Path('docs/AURA_SCO_CONSTRUCTION_CAPABILITY_REUSE_MATRIX.md'),
               Path('docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md'),
           )
-          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction test suite: PASS\n- focused Construction statement-coverage gate: PASS at or above 88%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
+          block = f'''\n## Exact-branch CodeRabbit/manual repair validation\n\n- reviewed_trigger_sha: `{sha}`\n- CodeRabbit actionable threads examined: 15\n- focused Construction tests: at least 138 PASS\n- focused Construction statement coverage: PASS at or above 90%\n- canonical owner regressions: PASS\n- deterministic randomized histories: 250 PASS\n- staging payloads and one-run tooling: removed before final topology\n- authority boundary: proposal-only; human physical release remains mandatory\n'''
           marker = '## Exact-branch CodeRabbit/manual repair validation'
           for path in paths:
               text = path.read_text(encoding='utf-8')
@@ -192,9 +193,11 @@ jobs:
                   run: |
                     python -m py_compile aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
                     ruff check --select E9,F63,F7,F82,F401,F811,B006 aura_construction_contracts.py aura_construction_state.py aura_construction_authority.py
-                - name: Run focused and owner regressions
+                - name: Run focused coverage and owner regressions
                   run: |
-                    python -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
+                    python -m coverage erase
+                    python -m coverage run -m pytest -q tests/test_aura_construction_contracts.py tests/test_aura_construction_state.py tests/test_aura_construction_authority.py
+                    python -m coverage report --include='aura_construction_contracts.py,aura_construction_state.py,aura_construction_authority.py' --fail-under=90
                     python -m pytest -q tests/test_aura_event_contracts.py tests/test_aura_event_privacy_hardening.py tests/test_aura_relational_authority.py tests/test_aura_workflow_authority_bridge.py tests/test_aura_workflow_gates.py tests/test_p1_1_adversarial_review.py
                 - name: Verify generated topology
                   run: python aura_codemap_verify.py --repo-root .
