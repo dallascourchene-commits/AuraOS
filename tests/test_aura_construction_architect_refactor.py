@@ -62,6 +62,11 @@ def test_selected_plan_uses_exact_bounded_source_shards():
     assert all(item["target_symbol"] for item in tasks)
     assert all(item["expected_output"] == "UNIFIED_DIFF" for item in tasks)
     assert all(item["allowed_scope"].startswith("single ") for item in tasks)
+    adapter = next(item for item in SOURCE_SHARDS if item["task_id"] == "SCO-E7-ADAPTER")
+    assert adapter["tests"] == (
+        "tests/test_aura_construction_adapter.py",
+        "tests/test_aura_construction_adapter_hardening.py",
+    )
 
 
 def test_native_control_cannot_gain_production_or_vsa_authority():
@@ -110,15 +115,33 @@ def test_plan_candidates_reuse_existing_owners_and_do_not_invent_usage():
     )
 
 
-def test_architect_refactor_rejects_missing_base_sha(tmp_path: Path):
-    with pytest.raises(ValueError, match="base_sha is required"):
-        run_construction_architect_refactor(repo_root=tmp_path, base_sha="")
+@pytest.mark.parametrize("base_sha", ["", "abc123", "not-a-sha", "g" * 40])
+def test_architect_refactor_rejects_invalid_base_sha(
+    tmp_path: Path, base_sha: str
+):
+    with pytest.raises(ValueError, match="hexadecimal commit SHA"):
+        run_construction_architect_refactor(repo_root=tmp_path, base_sha=base_sha)
 
 
 def test_architect_refactor_rejects_absolute_output_path(tmp_path: Path):
     with pytest.raises(ValueError, match="repository-relative"):
         run_construction_architect_refactor(
             repo_root=tmp_path,
-            base_sha="abc123",
+            base_sha="abcdef0",
             output_dir=tmp_path / "absolute-output",
+        )
+
+
+@pytest.mark.parametrize(
+    "output_dir",
+    ["../escape", "Aura_Staging/../../escape", ".", "Aura_Staging/./evidence"],
+)
+def test_architect_refactor_rejects_unsafe_relative_output_paths(
+    tmp_path: Path, output_dir: str
+):
+    with pytest.raises(ValueError, match="safe repository-relative path"):
+        run_construction_architect_refactor(
+            repo_root=tmp_path,
+            base_sha="abcdef0",
+            output_dir=output_dir,
         )
