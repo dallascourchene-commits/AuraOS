@@ -69,6 +69,11 @@ jobs:
             rm tools/apply_sco_completion_static_cleanup.py
             FINALIZE=1
           fi
+          if [ -f tools/apply_sco_completion_doc_cleanup.py ]; then
+            python tools/apply_sco_completion_doc_cleanup.py
+            rm tools/apply_sco_completion_doc_cleanup.py
+            FINALIZE=1
+          fi
           echo "COMPLETION_FINALIZE=${FINALIZE}" >> "${GITHUB_ENV}"
 
       - name: Compile and run fatal static checks
