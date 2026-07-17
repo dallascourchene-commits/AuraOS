@@ -2,7 +2,7 @@
   "schema_version": "AURA_ARENA_GRAMMAR_MANIFEST_V1",
   "arena_id": "sco_construction",
   "arena_version": "AURA_SCO_CONSTRUCTION_ARENA_V1",
-  "grammar_version": "sco-construction-wfst-v1",
+  "grammar_version": "sco-construction-wfst-v2",
   "start_state": "DECIDE",
   "states": [
     "DECIDE"
@@ -22,6 +22,21 @@
       ],
       "output_symbol": "PROPOSAL:advance_electrical",
       "next_state": "DECIDE",
+      "hard_guards": [
+        {
+          "id": "GUARD.EVIDENCE_ALL",
+          "args": {
+            "keys": [
+              "benchmark_report",
+              "verification_packet"
+            ]
+          }
+        }
+      ],
+      "required_evidence": [
+        "benchmark_report",
+        "verification_packet"
+      ],
       "produced_evidence": [
         "construction_coordination_proposal"
       ],
@@ -55,6 +70,21 @@
       ],
       "output_symbol": "PROPOSAL:shift_floor5",
       "next_state": "DECIDE",
+      "hard_guards": [
+        {
+          "id": "GUARD.EVIDENCE_ALL",
+          "args": {
+            "keys": [
+              "benchmark_report",
+              "verification_packet"
+            ]
+          }
+        }
+      ],
+      "required_evidence": [
+        "benchmark_report",
+        "verification_packet"
+      ],
       "produced_evidence": [
         "construction_coordination_proposal"
       ],
@@ -88,6 +118,21 @@
       ],
       "output_symbol": "PROPOSAL:use_crane_logistics",
       "next_state": "DECIDE",
+      "hard_guards": [
+        {
+          "id": "GUARD.EVIDENCE_ALL",
+          "args": {
+            "keys": [
+              "benchmark_report",
+              "verification_packet"
+            ]
+          }
+        }
+      ],
+      "required_evidence": [
+        "benchmark_report",
+        "verification_packet"
+      ],
       "produced_evidence": [
         "construction_coordination_proposal"
       ],
