@@ -1,28 +1,18 @@
-name: Synchronize CODEMAP on analysis and documentation branches
+name: SCO Phase 2 Transformer Diagnostic
 
 on:
   pull_request:
-  push:
-    branches:
-      - "analysis/**"
-      - "docs/**"
-    paths-ignore:
-      - ".aura/CODEMAP.json"
-      - ".aura/CODEMAP.md"
-      - "topology_map.json"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: sync-analysis-codemap-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  group: sco-phase2-transform-diagnostic-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
-  sco-phase2-transform-diagnostic:
+  diagnose:
     if: >-
-      github.event_name == 'pull_request' &&
-      github.actor != 'github-actions[bot]' &&
       github.event.pull_request.head.ref == 'refactor/sco-construction-e4-e6'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -54,80 +44,3 @@ jobs:
         run: python3 -m py_compile tools/sco_phase2_apply_review_fixes.py
       - name: Apply review transformer
         run: python3 tools/sco_phase2_apply_review_fixes.py
-
-  sco-phase2-finalize:
-    if: >-
-      github.event_name == 'pull_request' &&
-      github.actor != 'github-actions[bot]' &&
-      github.event.pull_request.head.ref == 'refactor/sco-construction-e4-e6'
-    uses: ./.github/workflows/sco-phase2-finalize.yml
-    secrets: inherit
-
-  sync-codemap:
-    if: >-
-      github.actor != 'github-actions[bot]' &&
-      github.event.pull_request.head.ref != 'refactor/sco-construction-e4-e6' &&
-      (github.event_name == 'push' ||
-       startsWith(github.event.pull_request.head.ref, 'analysis/') ||
-       startsWith(github.event.pull_request.head.ref, 'docs/'))
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - name: Fetch exact head without persisted credentials
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          git init .
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
-          unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-      - name: Install declared dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-      - name: Regenerate and validate CODEMAP
-        run: |
-          python aura_codebase_navigator.py
-          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          test -s .aura/CODEMAP.json
-          test -s .aura/CODEMAP.md
-          test -s topology_map.json
-      - name: Commit synchronized maps
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          git config user.name "AuraOS CODEMAP Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "docs: synchronize CODEMAP and topology"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          set -o pipefail
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:"${TARGET_BRANCH}" 2>&1 | tee codemap-push.log
-          unset AUTH_HEADER
-      - name: Upload synchronized maps and push diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            topology_map.json
-            codemap-push.log
-          if-no-files-found: error
-          retention-days: 14
