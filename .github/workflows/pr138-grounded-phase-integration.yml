@@ -128,8 +128,6 @@ jobs:
           python aura_codemap_verify.py --repo-root .
           git diff --check
       - name: Commit verified source tests and topology
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name 'AuraOS Integration Bot'
           git config user.email 'actions@users.noreply.github.com'
@@ -137,6 +135,10 @@ jobs:
           git reset .github/workflows/pr138-grounded-phase-integration.yml
           git diff --cached --check
           git commit -m 'Integrate grounded phase capsule compiler with governed lineage [skip ci]'
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:refs/heads/refactor/grounded-phase-capsule-compiler
+          REMOTE_REF='refs/remotes/origin/refactor/grounded-phase-capsule-compiler'
+          git fetch --no-tags origin \
+            refs/heads/refactor/grounded-phase-capsule-compiler:${REMOTE_REF}
+          REMOTE_HEAD="$(git rev-parse "${REMOTE_REF}")"
+          git push \
+            --force-with-lease="refs/heads/refactor/grounded-phase-capsule-compiler:${REMOTE_HEAD}" \
+            origin HEAD:refs/heads/refactor/grounded-phase-capsule-compiler
