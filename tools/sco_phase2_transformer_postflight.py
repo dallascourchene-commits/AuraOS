@@ -105,6 +105,7 @@ def main() -> None:
         r''' + "'''" + '''
 def test_review_hardening_validation_helpers_fail_closed():
     import aura_construction_authority as authority
+    import aura_construction_state as construction_state
 
     scope = ConstructionScope("P1", "Z1", "WP1")
     project_scope = ConstructionScope("P1")
@@ -174,6 +175,15 @@ def test_review_hardening_validation_helpers_fail_closed():
         lambda: authority.ConstructionGovernanceReplay(
             **{**replay_base, "emergency_reason": None}
         ),
+        lambda: construction_state._digest(None, "digest"),
+        lambda: construction_state._digest("A" * 32, "digest"),
+        lambda: construction_state._timestamp(float("inf"), "time"),
+        lambda: construction_state._sequence_input("scalar", "items"),
+        lambda: construction_state._tuple_strings([], "items"),
+        lambda: construction_state._tuple_strings((None,), "items"),
+        lambda: construction_state._tuple_strings((" a ",), "items"),
+        lambda: construction_state._tuple_strings(("a", "a"), "items"),
+        lambda: construction_state._tuple_strings(("b", "a"), "items"),
     )
     for call in invalid_calls:
         with pytest.raises(ValueError):
