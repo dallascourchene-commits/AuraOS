@@ -1,0 +1,102 @@
+name: Aura Review Arena V1 Integration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - aura_review_arena.py
+      - aura_review_arena_cli.py
+      - aura_agent_arena_persistence_bridge.py
+      - aura_agent_arena_mcp.py
+      - schemas/aura_review_contract.schema.json
+      - tests/test_aura_review_arena.py
+      - tests/test_aura_review_arena_mcp.py
+      - docs/AURA_REVIEW_ARENA.md
+      - .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
+      - scripts/apply_aura_review_arena_v1.py
+      - .github/workflows/aura-review-arena-v1-integration.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-review-arena-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install focused verification tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+
+      - name: Apply Review Arena integration
+        run: python scripts/apply_aura_review_arena_v1.py
+
+      - name: Compile and validate schemas
+        run: |
+          python -m py_compile \
+            aura_review_arena.py \
+            aura_review_arena_cli.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_review_arena.py \
+            tests/test_aura_review_arena_mcp.py
+          python -m json.tool schemas/aura_review_contract.schema.json >/dev/null
+
+      - name: Run Review Arena and canonical owner regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_review_arena.py \
+            tests/test_aura_review_arena_mcp.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_agent_arena_bridge.py \
+            tests/test_aura_forge.py \
+            tests/test_aura_external_llm_session.py \
+            tests/test_aura_architect_controls_vault_and_surfaces.py
+
+      - name: Static and security checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_review_arena.py \
+            aura_review_arena_cli.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_review_arena.py \
+            tests/test_aura_review_arena_mcp.py
+          bandit -q -ll aura_review_arena.py aura_review_arena_cli.py
+
+      - name: Remove one-shot integration machinery
+        run: |
+          rm scripts/apply_aura_review_arena_v1.py
+          rm .github/workflows/aura-review-arena-v1-integration.yml
+
+      - name: Regenerate and verify repository maps
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+
+      - name: Commit permanent reviewed head
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-review-arena' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Integrate Aura Review Arena V1"
+          git push origin HEAD:"$HEAD_REF"
