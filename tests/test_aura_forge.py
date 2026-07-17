@@ -104,7 +104,7 @@ class FakeManager:
             "ok": True,
             "status": self.status,
             "session": {"session_id": "ELLM-1", "status": self.status},
-            "verification": {"hotswap_ready": True, "tests": {"passed": 8, "total": 8}},
+            "verification": {"ok": True, "hotswap_ready": True, "failures": [], "tests": {"passed": 8, "total": 8}},
             "hotswap_status": {"hotswap_ready": True, "promotion_performed": False},
         }
 
@@ -171,7 +171,8 @@ def test_contract_identity_is_stable_for_same_grounded_evidence(tmp_path: Path) 
     second = runtime_b.prepare(request())
 
     assert first["contract"]["contract_id"] == second["contract"]["contract_id"]
-    assert first["run_id"] == second["run_id"]
+    assert first["run_id"].endswith("-0001")
+    assert second["run_id"].endswith("-0001")
 
 
 def test_start_freezes_prepared_plan_and_opens_controlled_session(tmp_path: Path) -> None:
@@ -201,6 +202,10 @@ def test_submit_stops_at_human_review_without_promotion(tmp_path: Path) -> None:
     packet = result["human_review_packet"]
     assert result["status"] == "READY_FOR_HUMAN_REVIEW"
     assert packet["decision_eligible"] is True
+    assert packet["required_gate_results"] == {
+        "canonical_arena_verifier": True,
+        "hotswap_readiness": True,
+    }
     assert packet["promotion_performed"] is False
     assert packet["automatic_commit"] is False
     assert packet["automatic_merge"] is False
@@ -235,6 +240,18 @@ def test_request_rejects_unsafe_paths_and_invalid_budgets() -> None:
         assert "max_turns" in str(exc)
     else:
         raise AssertionError("invalid max_turns was accepted")
+
+    try:
+        ForgeRunRequest.from_value({"objective": "x", "required_gates": ["hidden_tests"]})
+    except ValueError as exc:
+        assert "unsupported required_gates" in str(exc)
+    else:
+        raise AssertionError("unsupported gate was accepted")
+
+
+def test_dot_prefixed_repository_paths_are_preserved() -> None:
+    parsed = ForgeRunRequest.from_value({"objective": "x", "target_file": ".aura/ARCHITECTURE.md"})
+    assert parsed.target_file == ".aura/ARCHITECTURE.md"
 
 
 def test_export_delegates_to_safe_session_owner(tmp_path: Path) -> None:

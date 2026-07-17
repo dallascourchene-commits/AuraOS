@@ -22,15 +22,10 @@ VSA_PATCH_AUTHORITY = False
 REVIEW_READY_STATUS = "READY_FOR_HUMAN_REVIEW"
 
 DEFAULT_REQUIRED_GATES = (
-    "patch_apply",
-    "compile",
-    "visible_tests",
-    "hidden_tests",
-    "regression_tests",
-    "api_compatibility",
-    "scope",
-    "security",
+    "canonical_arena_verifier",
+    "hotswap_readiness",
 )
+SUPPORTED_REQUIRED_GATES = frozenset(DEFAULT_REQUIRED_GATES)
 
 _CANONICAL_CONSTRAINTS = (
     "codemap_and_exact_source_grounding_required",
@@ -42,14 +37,19 @@ _CANONICAL_CONSTRAINTS = (
     "human_review_required",
 )
 
-_SECRET_FRAGMENTS = (
+_SECRET_KEYS = frozenset({
     "api_key",
     "password",
     "private_key",
     "secret",
-    "token",
     "credential",
-)
+    "credentials",
+    "access_token",
+    "auth_token",
+    "bearer_token",
+    "refresh_token",
+})
+_SECRET_SUFFIXES = ("_api_key", "_password", "_private_key", "_secret", "_credential")
 
 
 def _digest(value: Any, *, size: int = 16) -> str:
@@ -77,7 +77,9 @@ def _safe_repo_path(value: Any, *, field_name: str) -> str | None:
     path = PurePosixPath(text)
     if path.is_absolute() or ".." in path.parts:
         raise ValueError(f"{field_name} must be a repository-relative path")
-    normalized = path.as_posix().lstrip("./")
+    normalized = path.as_posix()
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
     if not normalized:
         raise ValueError(f"{field_name} must not be empty")
     return normalized
@@ -90,7 +92,7 @@ def _sanitize(value: Any) -> Any:
         for key, item in value.items():
             key_text = str(key)
             lowered = key_text.lower()
-            if any(fragment in lowered for fragment in _SECRET_FRAGMENTS):
+            if lowered in _SECRET_KEYS or lowered.endswith(_SECRET_SUFFIXES):
                 continue
             result[key_text] = _sanitize(item)
         return result
@@ -171,6 +173,9 @@ class ForgeRunRequest:
         gates = _clean_strings(raw.get("required_gates") or DEFAULT_REQUIRED_GATES)
         if not gates:
             raise ValueError("required_gates must not be empty")
+        unsupported = sorted(set(gates) - SUPPORTED_REQUIRED_GATES)
+        if unsupported:
+            raise ValueError(f"unsupported required_gates: {unsupported}")
 
         return cls(
             objective=objective,
@@ -264,6 +269,7 @@ class AuraForgeRuntime:
         self.bridge = bridge
         self._session_manager_factory = session_manager_factory or self._default_session_manager
         self._runs: dict[str, dict[str, Any]] = {}
+        self._run_counter = 0
 
     @staticmethod
     def _default_session_manager(request: ForgeRunRequest, bridge: Any, repo_root: Path) -> Any:
@@ -374,7 +380,8 @@ class AuraForgeRuntime:
             )
 
         contract = self._compile_contract(request, repo_digest, prepared, act_capsules, task_evidence)
-        run_id = f"FORGE-{contract.contract_id[:20]}"
+        self._run_counter += 1
+        run_id = f"FORGE-{contract.contract_id[:16]}-{self._run_counter:04d}"
         self._runs[run_id] = {
             "request": request,
             "contract": contract,
@@ -474,9 +481,9 @@ class AuraForgeRuntime:
         session = dict(result.get("session") or {})
         state["status"] = str(result.get("status") or session.get("status") or state["status"])
         return {
+            **_sanitize(result),
             "version": FORGE_VERSION,
             "run_id": run_id,
-            **_sanitize(result),
             "human_review_packet": self.human_review_packet(run_id)
             if state["status"] == REVIEW_READY_STATUS
             else None,
@@ -535,8 +542,17 @@ class AuraForgeRuntime:
                 hotswap_status = {}
 
         ready = state["status"] == REVIEW_READY_STATUS
-        proof_ready = verification.get("hotswap_ready") is True or hotswap_status.get("hotswap_ready") is True
-        decision_eligible = bool(ready and proof_ready)
+        gate_results = {
+            "canonical_arena_verifier": bool(
+                verification.get("ok") is True and not list(verification.get("failures") or [])
+            ),
+            "hotswap_readiness": bool(
+                verification.get("hotswap_ready") is True
+                or hotswap_status.get("hotswap_ready") is True
+            ),
+        }
+        required = state["contract"].required_gates
+        decision_eligible = bool(ready and all(gate_results.get(name) is True for name in required))
         return {
             "ok": True,
             "version": FORGE_VERSION,
@@ -547,6 +563,7 @@ class AuraForgeRuntime:
             "session": _sanitize(session),
             "verification": _sanitize(verification),
             "hotswap_status": _sanitize(hotswap_status),
+            "required_gate_results": gate_results,
             "decision_eligible": decision_eligible,
             "decision_options": [
                 "ACCEPT_FOR_SEPARATE_PROMOTION_REVIEW",
@@ -573,10 +590,10 @@ class AuraForgeRuntime:
             return self._error("forge_run_not_started", stage="EXPORT")
         result = manager.export_session(state["session_id"], output_path)
         return {
+            **_sanitize(result),
             "version": FORGE_VERSION,
             "run_id": run_id,
             "contract_id": state["contract"].contract_id,
-            **_sanitize(result),
             "production_mutation": False,
             "human_review_required": True,
         }
@@ -719,6 +736,7 @@ __all__ = [
     "ForgeRunRequest",
     "PATCH_AUTHORITY",
     "REVIEW_READY_STATUS",
+    "SUPPORTED_REQUIRED_GATES",
     "VSA_PATCH_AUTHORITY",
     "validate_forge_contract",
 ]
