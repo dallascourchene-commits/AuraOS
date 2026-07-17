@@ -1,0 +1,97 @@
+# AuraOS SCO Construction Arena — Emergent Refactor Addendum
+
+```yaml
+document_status: PHASE_TWO_E4_E6_IMPLEMENTED_AND_MANUALLY_VERIFIED
+document_version: 1.3.0
+prepared_date: 2026-07-17
+repository: dallascourchene-commits/AuraOS
+baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
+branch: refactor/sco-construction-e4-e6
+completed_phases: E0_E6
+patch_authority: exact_source_spans_and_hashes_only
+vsa_patch_authority: false
+coderabbit_triggered: false
+pull_request_opened: false
+merged: false
+```
+
+## Decision
+
+The SCO Construction Arena remains a narrow domain layer over Aura's governed spine, not a parallel planner, evidence store, authority system, bridge, learning system, or autonomous construction controller.
+
+```text
+Capability Resolver and CODEMAP
+  -> exact canonical owner
+  -> minimal domain gap
+  -> deterministic zero-model state
+  -> canonical relational governance
+  -> digest-bound proposal and receipt
+  -> authorized human physical decision
+```
+
+## Authority invariant
+
+```text
+EVIDENCE_READY != GOVERNANCE_AUTHORIZED != PHYSICAL_RELEASED
+```
+
+Aura may represent claims, evidence, conflicts, dependencies, missing approvals, and digital coordination readiness. It cannot authorize physical work; certify safety, engineering, inspection, legal, or regulatory conclusions; release funds; control access/equipment; or replace human, professional, contractual, community, or governmental authority.
+
+## Phase 1 — E0–E3
+
+Merged foundation commit:
+
+```text
+77e83f5686250530b00d40ef0d99e60f098681e5
+```
+
+It introduced reuse grounding, exact source-hash/span capsule authority, revisioned refactor skeletons, the Construction planning adapter, cross-Arena handoff, and generated topology.
+
+## Phase 2 — E4–E6
+
+- `aura_construction_contracts.py`: immutable scopes, separate claims/evidence, privacy/consent/freshness, append-only project events, canonical Aura event projection.
+- `aura_construction_state.py`: deterministic replay, explicit supersession, structural conflict preservation, readiness/project queries, non-dispositive sensor/location treatment.
+- `aura_construction_authority.py`: exact request/state/decision/governance-lineage/result/receipt binding over Aura's existing relational-authority contracts.
+
+No custom cryptography, model route, live connector, physical control, payment authority, Experience activation, or Crucible activation was added.
+
+## Ten emergent properties applied
+
+| # | Property | E4–E6 application |
+|---:|---|---|
+| 1 | Grounded intent -> capsules | Exact canonical owners bounded the vertical slice |
+| 2 | Topology -> route | Deterministic `ZERO_MODEL`; human governance for consequence |
+| 3 | Localization | Four principal owners selected from 1,022 files |
+| 4 | Compact verified memory | State and chain digests replace broad history replay |
+| 5 | Persistent skeleton | Handoff records integrations and deferred wires |
+| 6 | Bounded repair | 40 review findings repaired with regressions |
+| 7 | Attempts -> procedures | Deferred until verified Construction experiences exist |
+| 8 | Findings -> ghost plan | Deferred integrations remain visible, non-authoritative debts |
+| 9 | Reuse before invention | Canonical events, planning, authority, and receipts reused |
+| 10 | Digest-bound promotion | Phase stops before PR, CodeRabbit, merge, or activation |
+
+## Review evidence
+
+```yaml
+focused_adversarial_tests: 128_passed
+focused_statement_coverage: 90_percent
+manual_fatal_lint: PASS
+randomized_replay_histories: 250
+manual_findings_repaired: 40
+runtime_model_calls: 0
+structural_context_proxy:
+  repository_files: 1022
+  principal_owner_files: 4
+  file_selection_reduction: 99.61_percent
+provider_tokens_and_cost: NOT_MEASURED
+```
+
+See `docs/AURA_SCO_PHASE2_E4_E6_REVIEW_EVIDENCE.md` for boundaries and limitations.
+
+## Deferred
+
+Construction `BaseArenaAdapter`, Human Agent profile/API/UI, Observatory projection, Experience/Crucible projection, payment readiness, hazard/location advisory, live connectors, physical control, and professional certification remain deferred.
+
+## Future gate
+
+Any later module requires an updated reuse-matrix row, exact owner decision, cross-Arena disposition, authority/privacy boundary, focused tests, handoff entry, and regenerated topology.
