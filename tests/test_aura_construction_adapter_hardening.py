@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import math
 
 import pytest
 
+import aura_construction_adapter as adapter_module
 from aura_construction_adapter import (
     ConstructionAdvisoryLane,
     ConstructionArenaAdapter,
@@ -49,6 +51,14 @@ def test_signal_deserialization_rejects_scalar_criteria_attack():
     payload = fixture.probabilistic_signals[0].to_dict()
     payload["criteria"] = "not-a-serialized-array"
     with pytest.raises(ValueError, match="serialized object array"):
+        ConstructionProbabilisticSignal.from_dict(payload)
+
+
+def test_signal_deserialization_rejects_non_object_criteria_items():
+    fixture = build_sco_construction_demo_fixture()
+    payload = fixture.probabilistic_signals[0].to_dict()
+    payload["criteria"] = ["not-an-object"]
+    with pytest.raises(ValueError, match="must contain objects"):
         ConstructionProbabilisticSignal.from_dict(payload)
 
 
@@ -154,4 +164,71 @@ def test_evaluator_rejects_scalar_candidate_and_signal_inputs():
             mode=ConstructionArenaMode.SYNTHETIC,
             lane=ConstructionAdvisoryLane.ALTERNATIVE_WORK,
             probabilistic_signals="signal",
+        )
+
+
+@pytest.mark.parametrize(
+    ("value", "message"),
+    [
+        (None, "must be a string"),
+        ("   ", "must not be empty"),
+    ],
+)
+def test_text_validation_fails_closed(value, message):
+    with pytest.raises(ValueError, match=message):
+        adapter_module._text(value, "field")
+
+
+def test_numeric_validation_rejects_wrong_nonfinite_and_unbounded_values():
+    with pytest.raises(ValueError, match="must be numeric"):
+        adapter_module._finite("1", "score")
+    with pytest.raises(ValueError, match="must be finite"):
+        adapter_module._finite(math.inf, "score")
+    with pytest.raises(ValueError, match="between zero and one"):
+        adapter_module._bounded(-0.01, "score")
+
+
+def test_string_collection_validation_rejects_scalars_duplicates_and_empty_required():
+    with pytest.raises(ValueError, match="iterable of strings"):
+        adapter_module._strings("abc", "items")
+    with pytest.raises(ValueError, match="must not contain duplicates"):
+        adapter_module._strings(("a", "a"), "items")
+    with pytest.raises(ValueError, match="must not be empty"):
+        adapter_module._strings((), "items", allow_empty=False)
+
+
+def test_serialized_object_and_measurement_validation_fail_closed():
+    with pytest.raises(ValueError, match="serialized object array"):
+        adapter_module._serialized_objects({}, "objects")
+    with pytest.raises(ValueError, match="must contain objects"):
+        adapter_module._serialized_objects([1], "objects")
+    with pytest.raises(ValueError, match="unknown measurement"):
+        adapter_module._measurement("INVENTED", "measurement")
+    assert adapter_module._normalize(7.0, 2.0, 2.0) == 0.0
+
+
+def test_criterion_contract_rejects_noncanonical_and_invalid_direct_values():
+    with pytest.raises(ValueError, match="criterion score must be an object"):
+        ConstructionCriterionScore.from_dict("not-an-object")
+    with pytest.raises(ValueError, match="variance must be a canonical float"):
+        ConstructionCriterionScore(
+            criterion="criterion",
+            expected_score=0.5,
+            variance=1,
+            repetitions=1,
+        )
+    with pytest.raises(ValueError, match="positive integer"):
+        ConstructionCriterionScore(
+            criterion="criterion",
+            expected_score=0.5,
+            variance=0.1,
+            repetitions=0,
+        )
+    with pytest.raises(ValueError, match="unknown criterion.measurement_class"):
+        ConstructionCriterionScore(
+            criterion="criterion",
+            expected_score=0.5,
+            variance=0.1,
+            repetitions=1,
+            measurement_class="INVENTED",
         )
