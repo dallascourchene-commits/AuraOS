@@ -64,23 +64,109 @@ jobs:
           python aura_codebase_navigator.py
           python aura_codemap_verify.py --repo-root .
           git diff --check
-      - name: Commit generated topology locally
+      - name: Publish exact generated topology
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name 'AuraOS Topology Audit Bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md \
-            Aura_Memory/live_topology_ast.json \
-            topology_map.json
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo 'TOPOLOGY_COMMIT_NEEDED=false' >> "$GITHUB_ENV"
-            exit 0
-          fi
-          git commit -m 'docs: synchronize PR138 grounded capsule topology [skip ci]'
-          echo 'TOPOLOGY_COMMIT_NEEDED=true' >> "$GITHUB_ENV"
-      - name: Publish generated topology
-        if: env.TOPOLOGY_COMMIT_NEEDED == 'true'
-        run: |
-          git push origin HEAD:refs/heads/refactor/grounded-phase-capsule-compiler
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          import time
+          import urllib.error
+          import urllib.request
+          from pathlib import Path
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          branch = "refactor/grounded-phase-capsule-compiler"
+          api_root = f"https://api.github.com/repos/{repository}"
+          paths = (
+              ".aura/CODEMAP.json",
+              ".aura/CODEMAP.md",
+              "Aura_Memory/live_topology_ast.json",
+              "topology_map.json",
+          )
+
+          class ApiError(RuntimeError):
+              def __init__(self, status: int, body: str) -> None:
+                  super().__init__(f"GitHub API {status}: {body[:500]}")
+                  self.status = status
+
+          def api(method: str, suffix: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              request = urllib.request.Request(
+                  f"{api_root}{suffix}",
+                  data=body,
+                  method=method,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {token}",
+                      "Content-Type": "application/json",
+                      "User-Agent": "AuraOS-PR138-Topology-Audit",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=120) as response:
+                      raw = response.read()
+              except urllib.error.HTTPError as exc:
+                  raise ApiError(exc.code, exc.read().decode("utf-8", "replace")) from exc
+              return {} if not raw else json.loads(raw.decode("utf-8"))
+
+          blob_shas: dict[str, str] = {}
+          for relative in paths:
+              encoded = base64.b64encode(Path(relative).read_bytes()).decode("ascii")
+              blob_shas[relative] = api(
+                  "POST",
+                  "/git/blobs",
+                  {"content": encoded, "encoding": "base64"},
+              )["sha"]
+
+          for attempt in range(1, 4):
+              ref = api("GET", f"/git/ref/heads/{branch}")
+              parent_sha = ref["object"]["sha"]
+              parent = api("GET", f"/git/commits/{parent_sha}")
+              tree = api(
+                  "POST",
+                  "/git/trees",
+                  {
+                      "base_tree": parent["tree"]["sha"],
+                      "tree": [
+                          {
+                              "path": relative,
+                              "mode": "100644",
+                              "type": "blob",
+                              "sha": blob_shas[relative],
+                          }
+                          for relative in paths
+                      ],
+                  },
+              )
+              commit = api(
+                  "POST",
+                  "/git/commits",
+                  {
+                      "message": "docs: synchronize PR138 grounded capsule topology [skip ci]",
+                      "tree": tree["sha"],
+                      "parents": [parent_sha],
+                  },
+              )
+              try:
+                  api(
+                      "PATCH",
+                      f"/git/refs/heads/{branch}",
+                      {"sha": commit["sha"], "force": False},
+                  )
+              except ApiError as exc:
+                  if exc.status == 422 and attempt < 3:
+                      time.sleep(attempt)
+                      continue
+                  raise
+              print(f"published topology commit {commit['sha']}")
+              break
+          else:
+              raise SystemExit("unable to publish topology after bounded retries")
+          PY
