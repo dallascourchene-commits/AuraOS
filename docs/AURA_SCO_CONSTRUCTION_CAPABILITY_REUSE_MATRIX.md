@@ -1,12 +1,15 @@
 # SCO Construction Arena — Capability Reuse Matrix
 
 ```yaml
-document_status: PHASE_ONE_GROUNDED_INVENTORY
-date: 2026-07-16
-baseline_main: 52f07f3b8bc5f932b6a1c950f0c3081500f189db
-branch: refactor/sco-construction-arena
+document_status: PHASE_TWO_E4_E6_GROUNDED_IMPLEMENTATION
+date: 2026-07-17
+baseline_main: 77e83f5686250530b00d40ef0d99e60f098681e5
+branch: refactor/sco-construction-e4-e6
 patch_authority: exact_source_spans_and_hashes_only
 vsa_patch_authority: false
+coderabbit_triggered: false
+pull_request_opened: false
+merged: false
 ```
 
 ## Decision rule
@@ -18,97 +21,80 @@ existing canonical owner
   | defer
 ```
 
-A filename supplied by the caller is not grounding. A generic capability path is not grounding. A function in the same file is not grounding unless it is one of the exact requested owner symbols. Current source, symbols, tests, hashes, and topology remain authoritative.
+A caller-supplied filename, generic capability path, or unrelated symbol is not grounding. Current source, exact symbols, tests, hashes, and CODEMAP topology remain authoritative.
 
-## Grounding inventory
+## Grounded owner decisions
 
-| Capability | Candidate canonical owner | Decision | Construction disposition |
+| Capability | Canonical owner | Decision | E4–E6 disposition |
 |---|---|---|---|
-| Append-only event and evidence semantics | `aura_event_contracts.py`, `aura_civic_planning_types.py` | `EXTEND_CANONICAL_OWNER` | Reuse core truth/measurement semantics; add only proven domain fields |
-| Action Capsules, Boundary Contracts, leases, deltas, adapter lifecycle | `aura_liquid_planning_arena.py` | `ADD_NARROW_ADAPTER` | Construction becomes a domain adapter, not another planner |
-| Capability discovery and reuse | `aura_capability_resolver_v2.py`, `aura_capability_resolver.py`, `aura_capability_connectome.py` | `REUSE` | Mandatory before any new module |
-| Human Agent emergent reports, findings, research, strict packets | `aura_emergent_refactor_workspace.py` | `EXTEND_CANONICAL_OWNER` | No second evidence store |
-| Revisioned refactor skeleton | `aura_refactor_skeleton.py` | `TRUE_NEW_CAPABILITY` | General owner; Construction is the first adapter |
-| Staging, verification, repair, rollback, hotswap proposal | `aura_architect_loop.py`, `aura_agent_arena_bridge.py` | `REUSE` | Bridge remains unchanged until an exact interface gap is proven |
-| Verified attempt experience | `aura_arena_experience.py`, `aura_arena_experience_ledger.py` | `REUSE` | Deferred until complete verified Construction episodes exist |
-| Executable refactor quality records | `aura_refactor_output_record.py` | `REUSE` | Construction results cannot inherit evidence from unrelated fixtures |
+| Canonical event envelope, measurement classes, stable IDs and digests | `aura_event_contracts.py` | `REUSE` | Construction events project into the existing envelope without schema mutation |
+| Civic privacy, consent, governance-blocker, and immutable-contract precedents | `aura_civic_planning_types.py` | `REUSE_PATTERN` | Construction adds only proven domain fields and stricter project scope |
+| Action Capsules, Boundary Contracts, leases, deltas, adapter lifecycle | `aura_liquid_planning_arena.py` | `DEFER_ADAPTER` | No `BaseArenaAdapter` is added in E4–E6; runtime adapter remains a later wire |
+| Relational authority grants, attestations, quorum, decisions, receipts, checkpoints | `aura_relational_authority.py` | `ADD_NARROW_ADAPTER` | Construction binds exact digital readiness to existing governance contracts |
+| Construction claim/evidence/event contracts | `aura_construction_contracts.py` | `TRUE_DOMAIN_GAP` | New narrow owner; proposal-only and no physical authority |
+| Construction replay, conflict, supersession, readiness queries | `aura_construction_state.py` | `TRUE_DOMAIN_GAP` | New deterministic zero-model owner |
+| Construction authority and receipt binding | `aura_construction_authority.py` | `ADD_NARROW_ADAPTER` | Reuses canonical authority; no custom crypto or injectable evaluator |
+| Human Agent emergent evidence workspace | `aura_emergent_refactor_workspace.py` | `DEFER_ADAPTER` | No second evidence store; runtime profile not added in this phase |
+| Experience and Crucible projection | existing Experience/Crucible owners | `DEFER` | Requires verified synthetic/shadow episodes first |
+| Observatory projection | existing Observatory owners | `DEFER` | Read-only route/context/gate records remain future work |
 
-## Implemented Phase 1 owner
+## E4 minimal gap proof
 
-`aura_refactor_skeleton.py` is the only approved new canonical owner in E0-E3. It exists because the repository had surrounding plan, capsule, evidence, staging, experience, and quality owners but lacked a general human-editable, digest-bound revision skeleton.
+Existing owners provide generic event identity, measurement classes, civic planning patterns, and proposal-only boundaries. They do not provide Construction-specific separation of:
 
-## Required owner-proof fields
+- claim versus evidence;
+- project/zone/work-package scope;
+- evidence class and non-dispositive sensor/location treatment;
+- Construction privacy and consent propagation;
+- record freshness and expiry;
+- Construction event supersession and chain identity.
 
-Every capability row compiled by `build_construction_capability_reuse_matrix()` records:
+The gap is therefore implemented as `aura_construction_contracts.py`, not by changing the canonical event schema.
 
-```yaml
-capability_id:
-objective:
-expected_owner:
-reuse_decision:
-candidate_files:
-candidate_symbols:
-exact_hits:
-capability_ids:
-capability_path:
-tests:
-truth_boundaries:
-risks:
-codemap_digest:
-capability_graph_digest:
-capability_path_digest:
-status:
-```
+## E5 minimal gap proof
 
-`GROUNDED_REUSE_CANDIDATE` requires:
+Existing planning and civic surfaces do not own a Construction-specific deterministic reducer that preserves contradictory active claims/evidence and explicit supersession. `aura_construction_state.py` owns only that domain projection and deterministic query layer.
 
-- a healthy resolver/topology response;
-- an exact requested symbol;
-- the symbol appearing in a declared candidate file;
-- an exact grounding class;
-- no file-only or unresolved placeholder.
+## E6 minimal gap proof
 
-## Explicitly deferred capabilities
+`aura_relational_authority.py` already owns grants, attestations, quorum, governance decisions, receipt chains, checkpoints, and trusted-reference boundaries. Construction therefore does not duplicate them. `aura_construction_authority.py` only binds those objects to exact Construction requests, evidence-readiness reports, project state, and receipt records.
 
-The following are not approved by Phase 1:
+## Deferred capabilities
 
-- Construction runtime contracts;
-- project-state reducer and query engine;
-- authority, attestation, and receipt runtime;
+- Construction `BaseArenaAdapter`;
+- Human Agent Construction profile/API/UI;
+- Observatory projection;
+- Experience and Crucible projection;
 - payment-readiness lane;
-- hazard or location lane;
-- live owner/contractor connectors;
-- physical access or equipment control;
-- Human Agent Construction UI/profile;
-- Observatory Construction projection;
-- Experience or Crucible projection;
+- hazard and location advisory lane;
+- live owner or contractor connectors;
+- physical access, equipment, or work control;
+- professional, safety, regulatory, or legal certification;
 - autonomous procedure activation.
 
-## Exact next grounding tasks
+## Phase evidence
 
-```text
-E4:
-  inspect current event and civic contracts
-  prove the minimal Construction-only schema gap
-  retain evidence, confidence, authority, privacy, consent, and supersession separation
-
-E5:
-  inspect current reducers and deterministic project queries
-  implement append-only replay, explicit supersession, and conflict preservation
-
-E6:
-  inspect existing verifier/signature/attestation protocols
-  add no custom cryptography
-  validate role, project, zone, scope, freshness, revocation, and human release
+```yaml
+focused_adversarial_tests: 89_passed
+focused_statement_coverage: 90_percent
+manual_fatal_lint: PASS
+randomized_replay_histories: 250
+runtime_model_calls: 0
+structural_context_proxy:
+  repository_files: 1022
+  principal_owner_files: 4
+  reduction: 99.61_percent
+provider_tokens_and_cost: NOT_MEASURED
 ```
 
-## Merge boundary
+## Future module gate
 
-No new Construction module may enter a later PR without:
+No later Construction module may proceed without:
 
-1. a row in this matrix or its successor;
+1. an updated row in this matrix;
 2. an exact canonical-owner decision;
-3. cross-Arena integration dispositions;
-4. source hashes and spans for executable capsules;
-5. focused tests and an explicit authority boundary;
-6. a handoff-log entry for any missing integration.
+3. a cross-Arena disposition;
+4. an authority and privacy boundary;
+5. focused adversarial tests;
+6. a handoff-log entry for every missing wire;
+7. regenerated topology after the final source tree is stable.
