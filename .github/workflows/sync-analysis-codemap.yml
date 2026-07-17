@@ -19,6 +19,42 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  sco-phase2-transform-diagnostic:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.head.ref == 'refactor/sco-construction-e4-e6'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+      - name: Compile repair helpers
+        run: |
+          python3 -m py_compile \
+            tools/sco_phase2_materialize.py \
+            tools/sco_phase2_apply_review_fixes.py \
+            tools/sco_phase2_transformer_preflight.py
+      - name: Materialize exact payload
+        run: python3 tools/sco_phase2_materialize.py
+      - name: Run transformer preflight
+        run: python3 tools/sco_phase2_transformer_preflight.py
+      - name: Compile transformed repair script
+        run: python3 -m py_compile tools/sco_phase2_apply_review_fixes.py
+      - name: Apply review transformer
+        run: python3 tools/sco_phase2_apply_review_fixes.py
+
   sco-phase2-finalize:
     if: >-
       github.event_name == 'pull_request' &&
