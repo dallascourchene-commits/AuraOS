@@ -1,0 +1,52 @@
+")
+        checkpoint = self.registry.load_checkpoint(checkpoint_id)
+        assessment = self.registry.assess_restore(
+            checkpoint_id,
+            current_repo_head=current_repo_head,
+            current_invariant_values=current_invariant_values,
+        )
+        return {
+            "ok": True,
+            "version": ARENA_PERSISTENCE_ADAPTER_VERSION,
+            "checkpoint_id": checkpoint.checkpoint_id,
+            "source_arena_id": checkpoint.arena_id,
+            "target_arena_id": target_arena_id,
+            "session_id": checkpoint.session_id,
+            "payload_digest": checkpoint.payload_digest,
+            "assessment": assessment.to_dict(),
+            "payload_included": False,
+            "digital_baton_only": True,
+            "target_arena_mutated": False,
+            "automatic_resume": False,
+            "human_review_required": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def list_checkpoints(
+        self,
+        *,
+        arena_id: str | None = None,
+        session_id: str | None = None,
+        limit: int = 100,
+    ) -> dict[str, Any]:
+        return self.registry.list_checkpoints(
+            arena_id=arena_id,
+            session_id=session_id,
+            limit=limit,
+        )
+
+    def observatory_projection(self, checkpoint_id: str) -> dict[str, Any]:
+        result = self.registry.observatory_projection(checkpoint_id)
+        result["adapter_version"] = ARENA_PERSISTENCE_ADAPTER_VERSION
+        return result
+
+    def verify_registry(self) -> dict[str, Any]:
+        return self.registry.verify_registry()
+
+
+__all__ = [
+    "ARENA_PERSISTENCE_ADAPTER_VERSION",
+    "SUPPORTED_ARENAS",
+    "ArenaPersistenceCoordinator",
+]
