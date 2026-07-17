@@ -1,0 +1,59 @@
+name: Aura Review Arena Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - aura_review_arena.py
+      - tests/test_aura_review_arena.py
+      - scripts/apply_aura_review_arena_v1.py
+      - .github/workflows/aura-review-arena-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test tools
+        run: python -m pip install "pytest>=8,<9"
+      - name: Apply integration patch
+        run: python scripts/apply_aura_review_arena_v1.py
+      - name: Unique IDs and graph slice
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_prepare_is_graph_guided_and_run_ids_are_unique -vv
+      - name: AST and signature defects
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_scan_finds_ast_and_cascading_signature_defects -vv
+      - name: Syntax confirmation
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_syntax_failure_is_confirmed_without_an_agent -vv
+      - name: Agent scope and exact evidence
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_agent_finding_requires_scope_and_exact_evidence -vv
+      - name: Advisory suppression
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_agent_finding_without_matching_excerpt_is_advisory_and_suppressed -vv
+      - name: Request and contract tampering
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_request_and_contract_tampering_fail_closed -vv
+      - name: Request round trip
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_request_dataclass_round_trip_preserves_agent_focus -vv
+      - name: Malformed findings collection
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena.py::test_invalid_findings_collection_returns_error -vv
+      - name: MCP integration
+        continue-on-error: true
+        run: python -m pytest -q tests/test_aura_review_arena_mcp.py -vv
