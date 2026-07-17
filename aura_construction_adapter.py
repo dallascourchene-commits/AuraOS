@@ -1,6 +1,6 @@
 """Proposal-only SCO Construction coordination adapter for AuraOS.
 
-This module composes the existing Construction contracts/state engine with Aura's
+This module composes the canonical Construction contracts/state engine with Aura's
 Liquid Planning contracts. It can query, hard-filter, rank, and explain digital
 coordination candidates. It never authorizes physical work, releases payment,
 controls access, certifies safety or engineering, or mutates authoritative
@@ -8,7 +8,7 @@ project records.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from enum import Enum
 import math
 from typing import Any, Iterable, Mapping
@@ -32,9 +32,9 @@ from aura_liquid_planning_arena import (
     BoundaryContract,
 )
 
-CONSTRUCTION_ADAPTER_VERSION = "AURA_CONSTRUCTION_COORDINATION_ADAPTER_V1"
-CONSTRUCTION_SIGNAL_VERSION = "AURA_CONSTRUCTION_PROBABILISTIC_SIGNAL_V1"
-CONSTRUCTION_EVALUATION_VERSION = "AURA_CONSTRUCTION_COORDINATION_EVALUATION_V1"
+CONSTRUCTION_ADAPTER_VERSION = "AURA_CONSTRUCTION_COORDINATION_ADAPTER_V2"
+CONSTRUCTION_SIGNAL_VERSION = "AURA_CONSTRUCTION_PROBABILISTIC_SIGNAL_V2"
+CONSTRUCTION_EVALUATION_VERSION = "AURA_CONSTRUCTION_COORDINATION_EVALUATION_V2"
 
 
 class ConstructionArenaMode(str, Enum):
@@ -103,16 +103,36 @@ def _optional_finite(value: Any, name: str) -> float | None:
     return None if value is None else _finite(value, name)
 
 
-def _strings(values: Iterable[Any], name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes)):
+def _strings(
+    values: Iterable[Any],
+    name: str,
+    *,
+    allow_empty: bool = True,
+    preserve_order: bool = False,
+) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes)) or not isinstance(values, Iterable):
         raise ValueError(f"{name} must be an iterable of strings")
     materialized = tuple(_text(item, f"{name}[]") for item in values)
     if len(materialized) != len(set(materialized)):
         raise ValueError(f"{name} must not contain duplicates")
-    result = tuple(sorted(materialized))
+    result = materialized if preserve_order else tuple(sorted(materialized))
     if not allow_empty and not result:
         raise ValueError(f"{name} must not be empty")
     return result
+
+
+def _serialized_strings(value: Any, name: str) -> tuple[str, ...]:
+    if type(value) not in {list, tuple}:
+        raise ValueError(f"{name} must be a serialized string array")
+    return _strings(value, name)
+
+
+def _serialized_objects(value: Any, name: str) -> tuple[Mapping[str, Any], ...]:
+    if type(value) not in {list, tuple}:
+        raise ValueError(f"{name} must be a serialized object array")
+    if not all(isinstance(item, Mapping) for item in value):
+        raise ValueError(f"{name} must contain objects")
+    return tuple(value)
 
 
 def _measurement(value: Any, name: str) -> str:
@@ -125,7 +145,13 @@ def _measurement(value: Any, name: str) -> str:
 def _normalize(value: float, low: float, high: float) -> float:
     if high <= low:
         return 0.0
-    return (value - low) / (high - low)
+    return max(0.0, min(1.0, (value - low) / (high - low)))
+
+
+def _reject_unknown(data: Mapping[str, Any], cls: type[Any], name: str) -> None:
+    unknown = sorted(set(data) - {item.name for item in fields(cls)})
+    if unknown:
+        raise ValueError(f"unknown {name} fields: {unknown}")
 
 
 @dataclass(frozen=True)
@@ -172,7 +198,10 @@ class ConstructionCriterionScore:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionCriterionScore":
+        if not isinstance(value, Mapping):
+            raise ValueError("criterion score must be an object")
         data = dict(value)
+        _reject_unknown(data, cls, "ConstructionCriterionScore")
         return cls(
             criterion=data.get("criterion"),
             expected_score=data.get("expected_score"),
@@ -207,7 +236,8 @@ class ConstructionProbabilisticSignal:
     def __post_init__(self) -> None:
         if self.version != CONSTRUCTION_SIGNAL_VERSION:
             raise ValueError("unsupported Construction probabilistic signal version")
-        _text(self.candidate_id, "signal.candidate_id")
+        if self.candidate_id != _text(self.candidate_id, "signal.candidate_id"):
+            raise ValueError("candidate_id must be canonical")
         if type(self.criteria) is not tuple or not self.criteria:
             raise ValueError("signal criteria must be a non-empty tuple")
         if not all(type(item) is ConstructionCriterionScore for item in self.criteria):
@@ -265,10 +295,12 @@ class ConstructionProbabilisticSignal:
         distance_from_peak: float | None = None,
         measurement_class: str | MeasurementClass = MeasurementClass.MODEL_ESTIMATED,
     ) -> "ConstructionProbabilisticSignal":
+        if isinstance(criteria, (str, bytes)):
+            raise ValueError("criteria must contain exact ConstructionCriterionScore values")
         items = tuple(sorted(tuple(criteria), key=lambda item: item.criterion))
-        if not items:
-            raise ValueError("criteria must not be empty")
-        if not all(type(item) is ConstructionCriterionScore for item in items):
+        if not items or not all(
+            type(item) is ConstructionCriterionScore for item in items
+        ):
             raise ValueError("criteria must contain exact ConstructionCriterionScore values")
         aggregate = sum(item.expected_score for item in items) / len(items)
         uncertainty = math.sqrt(sum(item.variance for item in items) / len(items))
@@ -301,15 +333,19 @@ class ConstructionProbabilisticSignal:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionProbabilisticSignal":
+        if not isinstance(value, Mapping):
+            raise ValueError("probabilistic signal must be an object")
         data = dict(value)
+        _reject_unknown(data, cls, "ConstructionProbabilisticSignal")
+        criteria = tuple(
+            ConstructionCriterionScore.from_dict(item)
+            for item in _serialized_objects(data.get("criteria"), "criteria")
+        )
         return cls(
             signal_id=data.get("signal_id"),
             signal_digest=data.get("signal_digest"),
             candidate_id=data.get("candidate_id"),
-            criteria=tuple(
-                ConstructionCriterionScore.from_dict(item)
-                for item in data.get("criteria", ())
-            ),
+            criteria=criteria,
             aggregate_score=data.get("aggregate_score"),
             uncertainty=data.get("uncertainty"),
             score_margin=data.get("score_margin"),
@@ -379,9 +415,16 @@ class ConstructionCoordinationCandidate:
             raise ValueError("candidate title must be canonical normalized text")
         if self.summary != _text(self.summary, "candidate.summary"):
             raise ValueError("candidate summary must be canonical normalized text")
-        _strings(self.required_claim_ids, "candidate.required_claim_ids")
-        _strings(self.declared_hard_blockers, "candidate.declared_hard_blockers")
-        _strings(self.assumptions, "candidate.assumptions")
+        if self.required_claim_ids != _strings(
+            self.required_claim_ids, "candidate.required_claim_ids"
+        ):
+            raise ValueError("candidate required_claim_ids must be canonical")
+        if self.declared_hard_blockers != _strings(
+            self.declared_hard_blockers, "candidate.declared_hard_blockers"
+        ):
+            raise ValueError("candidate declared_hard_blockers must be canonical")
+        if self.assumptions != _strings(self.assumptions, "candidate.assumptions"):
+            raise ValueError("candidate assumptions must be canonical")
         _enum_value(
             self.authority_route,
             ConstructionAuthorityRoute,
@@ -490,17 +533,27 @@ class ConstructionCoordinationCandidate:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "ConstructionCoordinationCandidate":
+        if not isinstance(value, Mapping):
+            raise ValueError("Construction candidate must be an object")
         data = dict(value)
+        _reject_unknown(data, cls, "ConstructionCoordinationCandidate")
+        scope_value = data.get("scope")
+        if not isinstance(scope_value, Mapping):
+            raise ValueError("candidate scope must be an object")
         return cls(
             candidate_id=data.get("candidate_id"),
             candidate_digest=data.get("candidate_digest"),
-            scope=ConstructionScope.from_dict(dict(data.get("scope") or {})),
+            scope=ConstructionScope.from_dict(dict(scope_value)),
             lane=data.get("lane"),
             title=data.get("title"),
             summary=data.get("summary"),
-            required_claim_ids=tuple(data.get("required_claim_ids", ())),
-            declared_hard_blockers=tuple(data.get("declared_hard_blockers", ())),
-            assumptions=tuple(data.get("assumptions", ())),
+            required_claim_ids=_serialized_strings(
+                data.get("required_claim_ids"), "required_claim_ids"
+            ),
+            declared_hard_blockers=_serialized_strings(
+                data.get("declared_hard_blockers"), "declared_hard_blockers"
+            ),
+            assumptions=_serialized_strings(data.get("assumptions"), "assumptions"),
             authority_route=data.get("authority_route"),
             projected_time_delta_hours=data.get("projected_time_delta_hours"),
             projected_cost_delta_cad=data.get("projected_cost_delta_cad"),
@@ -552,10 +605,12 @@ class ConstructionCandidateAssessment:
     uncertainty: float
 
     def __post_init__(self) -> None:
-        _text(self.candidate_id, "assessment.candidate_id")
+        if self.candidate_id != _text(self.candidate_id, "assessment.candidate_id"):
+            raise ValueError("assessment candidate_id must be canonical")
         if type(self.admissible) is not bool:
             raise ValueError("assessment admissible flag must be boolean")
-        _strings(self.blockers, "assessment.blockers")
+        if self.blockers != _strings(self.blockers, "assessment.blockers"):
+            raise ValueError("assessment blockers must be canonical")
         if type(self.readiness_reports) is not tuple or not all(
             type(item) is ConstructionReadinessReport for item in self.readiness_reports
         ):
@@ -569,6 +624,8 @@ class ConstructionCandidateAssessment:
             raise ValueError("rank_vector must be a non-empty tuple")
         if type(self.probabilistic_signal_id) is not str:
             raise ValueError("probabilistic_signal_id must be a string")
+        if self.probabilistic_signal_id:
+            _text(self.probabilistic_signal_id, "probabilistic_signal_id")
         if self.probabilistic_score is not None:
             if type(self.probabilistic_score) is not float:
                 raise ValueError("probabilistic_score must be a canonical float")
@@ -628,10 +685,18 @@ class ConstructionCoordinationEvaluation:
             raise ValueError("evaluation assessments must not contain duplicate candidates")
         if type(self.recommended_candidate_id) is not str:
             raise ValueError("recommended_candidate_id must be a string")
+        if self.recommended_candidate_id:
+            _text(self.recommended_candidate_id, "recommended_candidate_id")
         admissible = {item.candidate_id for item in self.assessments if item.admissible}
         if self.recommended_candidate_id and self.recommended_candidate_id not in admissible:
             raise ValueError("recommended candidate must be admissible")
-        _strings(self.option_candidate_ids, "evaluation.option_candidate_ids")
+        canonical_options = _strings(
+            self.option_candidate_ids,
+            "evaluation.option_candidate_ids",
+            preserve_order=True,
+        )
+        if self.option_candidate_ids != canonical_options:
+            raise ValueError("displayed options must use canonical role order")
         if not set(self.option_candidate_ids).issubset(admissible):
             raise ValueError("all displayed options must be admissible")
         if len(self.option_candidate_ids) > 4:
@@ -642,6 +707,8 @@ class ConstructionCoordinationEvaluation:
                 ConstructionAuthorityRoute,
                 "evaluation.next_authority_route",
             )
+        if bool(self.recommended_candidate_id) != bool(self.next_authority_route):
+            raise ValueError("recommendation and next authority route must be paired")
         if (
             self.proposal_only is not True
             or self.human_release_required is not True
@@ -668,6 +735,7 @@ class ConstructionCoordinationEvaluation:
         return {
             **asdict(self),
             "assessments": [item.to_dict() for item in self.assessments],
+            "option_candidate_ids": list(self.option_candidate_ids),
         }
 
 
@@ -698,15 +766,23 @@ def evaluate_construction_candidates(
     mode_value = _enum_value(mode, ConstructionArenaMode, "mode")
     lane_value = _enum_value(lane, ConstructionAdvisoryLane, "lane")
 
+    if isinstance(candidates, (str, bytes)):
+        raise ValueError(
+            "candidates must contain exact ConstructionCoordinationCandidate values"
+        )
     candidate_items = tuple(candidates)
     if not all(type(item) is ConstructionCoordinationCandidate for item in candidate_items):
-        raise ValueError("candidates must contain exact ConstructionCoordinationCandidate values")
+        raise ValueError(
+            "candidates must contain exact ConstructionCoordinationCandidate values"
+        )
     candidate_by_id = {item.candidate_id: item for item in candidate_items}
     if len(candidate_by_id) != len(candidate_items):
         raise ValueError("candidate IDs must be unique")
     if any(item.lane != lane_value for item in candidate_items):
         raise ValueError("all candidates must match the requested advisory lane")
 
+    if isinstance(probabilistic_signals, (str, bytes)):
+        raise ValueError("probabilistic_signals must contain exact signal values")
     signal_items = tuple(probabilistic_signals)
     if not all(type(item) is ConstructionProbabilisticSignal for item in signal_items):
         raise ValueError("probabilistic_signals must contain exact signal values")
@@ -720,7 +796,9 @@ def evaluate_construction_candidates(
             f"{sorted(unknown_signal_candidates)}"
         )
 
-    dynamic: dict[str, tuple[tuple[str, ...], tuple[ConstructionReadinessReport, ...]]] = {}
+    dynamic: dict[
+        str, tuple[tuple[str, ...], tuple[ConstructionReadinessReport, ...]]
+    ] = {}
     for candidate in candidate_items:
         blockers = list(candidate.declared_hard_blockers)
         if candidate.scope.project_id != state.project_id:
@@ -758,13 +836,9 @@ def evaluate_construction_candidates(
         probability = signal.aggregate_score if signal else None
         uncertainty = signal.uncertainty if signal else 1.0
         evidence_gap = float(sum(1 for report in reports if not report.ready))
-        normalized_time = _normalize(
-            candidate.projected_time_delta_hours, *time_bounds
-        )
+        normalized_time = _normalize(candidate.projected_time_delta_hours, *time_bounds)
         normalized_cost = _normalize(candidate.projected_cost_delta_cad, *cost_bounds)
-        normalized_idle = _normalize(
-            candidate.projected_idle_delta_hours, *idle_bounds
-        )
+        normalized_idle = _normalize(candidate.projected_idle_delta_hours, *idle_bounds)
         probability_penalty = 1.0 - (
             probability if probability is not None else candidate.evidence_quality
         )
@@ -818,7 +892,14 @@ def evaluate_construction_candidates(
             min(ranked, key=lambda item: (item.projected_cost_delta_cad, item.candidate_id)),
             min(ranked, key=lambda item: (item.projected_time_delta_hours, item.candidate_id)),
             ranked[0],
-            min(ranked, key=lambda item: (item.safety_risk, item.deadline_risk, item.candidate_id)),
+            min(
+                ranked,
+                key=lambda item: (
+                    item.safety_risk,
+                    item.deadline_risk,
+                    item.candidate_id,
+                ),
+            ),
         )
         for item in selectors:
             if item.candidate_id not in options:
@@ -829,10 +910,7 @@ def evaluate_construction_candidates(
             if len(options) >= 4:
                 break
 
-    next_authority = ""
-    if recommended_id:
-        next_authority = candidate_by_id[recommended_id].authority_route
-
+    next_authority = candidate_by_id[recommended_id].authority_route if recommended_id else ""
     values = {
         "mode": mode_value,
         "lane": lane_value,
@@ -841,7 +919,7 @@ def evaluate_construction_candidates(
         "evaluated_at": float(evaluated_at),
         "assessments": tuple(sorted(assessments, key=lambda item: item.candidate_id)),
         "recommended_candidate_id": recommended_id,
-        "option_candidate_ids": tuple(sorted(options)),
+        "option_candidate_ids": tuple(options),
         "next_authority_route": next_authority,
         "version": CONSTRUCTION_EVALUATION_VERSION,
         "proposal_only": PROPOSAL_ONLY,
@@ -902,6 +980,10 @@ class ConstructionArenaAdapter(BaseArenaAdapter):
         target: dict[str, Any] | None = None,
         constraints: list[str] | None = None,
     ) -> ActionCapsule:
+        if target is not None and type(target) is not dict:
+            raise ValueError("target must be an object")
+        if constraints is not None and type(constraints) is not list:
+            raise ValueError("constraints must be a list")
         target_value = dict(target or {})
         mode = _enum_value(
             target_value.get("mode", ConstructionArenaMode.SYNTHETIC.value),
@@ -932,7 +1014,12 @@ class ConstructionArenaAdapter(BaseArenaAdapter):
             domain=self.domain,
             role="construction_coordination_advisor",
             objective=_text(objective, "objective"),
-            target={**target_value, "mode": mode, "lane": lane, "project_id": project_id},
+            target={
+                **target_value,
+                "mode": mode,
+                "lane": lane,
+                "project_id": project_id,
+            },
             scope=scope,
             allowed_actions=[
                 "read exact Construction state and evidence projections",
@@ -1086,8 +1173,22 @@ class ConstructionArenaAdapter(BaseArenaAdapter):
             raise ValueError("state must be an exact ConstructionProjectState")
         if type(scope) is not ConstructionScope:
             raise ValueError("scope must be an exact ConstructionScope")
+        if scope.project_id != state.project_id:
+            raise ValueError("scope project must match Construction state project")
+        if isinstance(candidates, (str, bytes)):
+            raise ValueError(
+                "candidates must contain exact ConstructionCoordinationCandidate values"
+            )
         candidate_items = tuple(candidates)
+        if not all(type(item) is ConstructionCoordinationCandidate for item in candidate_items):
+            raise ValueError(
+                "candidates must contain exact ConstructionCoordinationCandidate values"
+            )
+        if isinstance(probabilistic_signals, (str, bytes)):
+            raise ValueError("probabilistic_signals must contain exact signal values")
         signal_items = tuple(probabilistic_signals)
+        if not all(type(item) is ConstructionProbabilisticSignal for item in signal_items):
+            raise ValueError("probabilistic_signals must contain exact signal values")
         mode_value = _enum_value(mode, ConstructionArenaMode, "mode")
         lane_value = _enum_value(lane, ConstructionAdvisoryLane, "lane")
         capsule_id = stable_id(
