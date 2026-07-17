@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-TARGET = Path(__file__).resolve().with_name("sco_phase2_apply_review_fixes.py")
+SELF = Path(__file__).resolve()
+TARGET = SELF.with_name("sco_phase2_apply_review_fixes.py")
 
 
 def main() -> None:
@@ -36,6 +37,7 @@ def main() -> None:
     if count != 1:
         raise SystemExit(f"postflight expected one governance repair block, found {count}")
     TARGET.write_text(text.replace(old, new), encoding="utf-8")
+    SELF.unlink()
     print("SCO_PHASE2_TRANSFORMER_POSTFLIGHT_PASS")
 
 
