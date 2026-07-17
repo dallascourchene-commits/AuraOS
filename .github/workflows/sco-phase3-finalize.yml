@@ -1,0 +1,436 @@
+name: SCO Phase 3 Final Documentation and Topology Sync
+
+on:
+  push:
+    branches:
+      - refactor/sco-construction-e7-e8
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sco-phase3-finalize
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact branch head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
+          git config http.https://github.com/.extraheader "${AUTH_HEADER}"
+          git config core.sparseCheckout true
+          git config core.sparseCheckoutCone false
+          printf '/*\n!/Aura_Memory/\n!/Aura_Sandbox/\n' > .git/info/sparse-checkout
+          git -c protocol.version=2 fetch --no-tags --filter=blob:none --depth=128 origin "${TARGET_SHA}"
+          git checkout --quiet --detach "${TARGET_SHA}"
+          git config --unset-all http.https://github.com/.extraheader
+          test "$(git rev-parse HEAD)" = "${TARGET_SHA}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install declared environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Synchronize verified documentation and evidence
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          from pathlib import Path
+
+          root = Path('.').resolve()
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = root / path
+              text = target.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'missing replacement marker in {path}: {old!r}')
+              target.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          def insert_before_once(path: str, marker: str, block: str, sentinel: str) -> None:
+              target = root / path
+              text = target.read_text(encoding='utf-8')
+              if sentinel in text:
+                  return
+              if marker not in text:
+                  raise SystemExit(f'missing insertion marker in {path}: {marker!r}')
+              target.write_text(text.replace(marker, block.rstrip() + '\n\n' + marker, 1), encoding='utf-8')
+
+          readme_block = '''## SCO Construction advisory runtime
+
+PR #148 adds the bounded Phase 3 E7–E11 Construction Arena vertical slice. It composes canonical Construction truth and readiness with Liquid Planning capsules, deterministic hard filtering, advisory probabilistic signals, a fictional replayable fixture, a zero-model benchmark, and proposal-only Experience/Crucible learning.
+
+```text
+ConstructionProjectState
+  → exact evidence readiness
+  → hard blockers before ranking
+  → advisory probabilistic signal
+  → cheapest / fastest / recommended / safest options
+  → ActionCapsule + BoundaryContract + ArenaLease
+  → verifier-backed proposal
+  → human review
+```
+
+Verified on source head `15b3c26a3228a95174a845c75a178cf772cf5e81`:
+
+| Gate | Result | Boundary |
+|---|---|---|
+| Focused Phase 3 suite | `81/81` passed in `22.45s` | Synthetic/shadow adapter, fixture, grammar, benchmark, learning, and Architect harness |
+| Focused domain coverage | `88%` total | Adapter `87%`, benchmark `90%`, fixtures `90%` |
+| Learning coverage | `82%` | Proposal-only synthetic Experience/Crucible path |
+| Canonical-owner regressions | `241/241` passed in `10.53s` | Construction, WFST, events, authority, Architect, and Crucible owners |
+| Zero-model benchmark | `250` permutations passed | No provider token, provider cost, real-project savings, or production-readiness claim |
+| Native Architect gate | Judge `promote_hotswap`; `16` checks, `0` failures | Four exact file leases; human review still required |
+| Learning projection | `15` unique seeded episodes; `1` synthetic scenario; `1` objective | One `CRYSTALLIZATION_PROPOSED`; active grammar unchanged |
+
+The runtime cannot authorize physical work, release payment, control access, certify safety or engineering, mutate authoritative records, or promote a grammar automatically. Full evidence is recorded in [`docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json`](docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json).'''
+          insert_before_once('README.md', '## Truth and authority', readme_block, '## SCO Construction advisory runtime')
+
+          replace_once(
+              '.aura/ARCHITECTURE.md',
+              '**Architecture audit:** through merged PR #133 and the canonical Human Agent, Observatory, and Crucible documentation sync.  ',
+              '**Architecture audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148, including the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon boundaries.  ',
+          )
+          replace_once('.aura/ARCHITECTURE.md', '## 7. Benchmark evidence hierarchy', '## 8. Benchmark evidence hierarchy')
+          architecture_block = '''## 7. SCO Construction advisory runtime
+
+The Construction Arena is a domain adapter over existing authoritative owners, not a second project truth system.
+
+```text
+immutable Construction events and claims
+  → ConstructionProjectState replay
+  → exact readiness and conflict checks
+  → hard candidate filter
+  → advisory probabilistic signal
+  → deterministic role-preserving option surface
+  → Liquid Planning capsule, boundary, and lease
+  → WFST evidence and verifier guards
+  → proposal-only human decision packet
+```
+
+Primary Phase 3 implementation:
+
+- `.aura/arena_routes/construction.v1.json`
+- `aura_construction_adapter.py`
+- `aura_construction_fixtures.py`
+- `aura_construction_benchmark.py`
+- `aura_construction_learning.py`
+- `aura_construction_architect_refactor.py`
+
+Architectural invariants:
+
+- exact readiness blockers are evaluated before probabilistic ranking;
+- a high model score cannot rescue an unsafe, expired, conflicting, sensor-only, or cross-project route;
+- cheapest, fastest, recommended, and safest roles preserve their semantic ordering while backfilling distinct admissible choices;
+- runtime packets are read-only proposals and do not mutate the Construction event chain;
+- every route transition requires benchmark evidence and a passing verifier packet;
+- Experience records are content-addressed without run-local wall-clock timing;
+- seeded episodes are explicitly one synthetic scenario and one objective, so no field generalization is claimed;
+- Crucible may propose only `soft_weight_profile.empirical_uncertainty` and cannot promote active grammar;
+- physical work, payment, access, professional certification, production mutation, commit, push, and merge remain outside runtime authority.
+
+Verification evidence on source head `15b3c26a3228a95174a845c75a178cf772cf5e81` includes `81/81` focused tests, `241/241` canonical-owner regressions, `88%` focused domain coverage, `82%` learning coverage, a successful 250-permutation zero-model gate, and a native Architect/Judge result of `promote_hotswap` with `16` checks and `0` failures. Human review remains mandatory.'''
+          insert_before_once('.aura/ARCHITECTURE.md', '## 8. Benchmark evidence hierarchy', architecture_block, '## 7. SCO Construction advisory runtime')
+
+          replace_once(
+              'USER_GUIDE.md',
+              '**Documentation audit:** through merged PR #133 and the canonical Human Agent, Observatory, and Crucible documentation sync.  ',
+              '**Documentation audit:** through SCO Construction Phase 3 E7–E11 verification in PR #148 and the canonical Human Agent, Observatory, Experience, Crucible, Council, and Surgeon documentation sync.  ',
+          )
+          for old, new in (
+              ('## 10. Cost and benchmark interpretation', '## 11. Cost and benchmark interpretation'),
+              ('## 11. Testing', '## 12. Testing'),
+              ('## 12. Troubleshooting', '## 13. Troubleshooting'),
+              ('## 13. Safety rules', '## 14. Safety rules'),
+          ):
+              replace_once('USER_GUIDE.md', old, new)
+          guide_block = '''## 10. SCO Construction advisory runtime
+
+Run the fictional deterministic fixture and zero-model benchmark locally:
+
+```bash
+python3 aura_construction_benchmark.py --iterations 250 --seed 1337 --json
+```
+
+Run the governed synthetic learning projection into a disposable staging directory:
+
+```bash
+python3 aura_construction_learning.py \
+  --repo-root . \
+  --output-dir Aura_Staging/sco_construction_phase3_learning \
+  --experience-count 15 \
+  --iterations-per-experience 25 \
+  --seed-base 1337
+```
+
+Run the native Council–Surgeon verification harness:
+
+```bash
+python3 aura_construction_architect_refactor.py \
+  --base-sha 7edd80484629378af0658bfca0d7d4e351361831 \
+  --output-dir Aura_Staging/sco_construction_phase3_architect
+```
+
+Interpretation rules:
+
+- the fixture is fictional and contains no production connector or private project data;
+- exact readiness and authority blockers always precede probabilistic ranking;
+- the four option roles are advisory decision aids, not approvals;
+- the 250-permutation result is an executable deterministic fixture gate, not provider billing or real-project savings;
+- the 15 learning episodes are independent seeded executions of one synthetic scenario and one objective, not 15 field projects;
+- a Crucible result of `CRYSTALLIZATION_PROPOSED` requires verifier and human review and does not mutate active grammar;
+- any physical-work, payment, access, safety, engineering, legal, or regulatory decision must remain with the authorized humans and institutions.
+
+The verified Phase 3 suite passed `81/81` focused tests, `241/241` owner regressions, `88%` focused domain coverage, and `82%` learning coverage. The Architect gate recorded `16` checks, `0` failures, four bounded leases, and a Judge decision of `promote_hotswap` while retaining mandatory human review.'''
+          insert_before_once('USER_GUIDE.md', '## 11. Cost and benchmark interpretation', guide_block, '## 10. SCO Construction advisory runtime')
+
+          plan = '''# SCO Construction Arena — Phase 3 E7–E11 Verification Record
+
+```yaml
+document_status: VERIFIED_PENDING_PINNED_FINAL_CI
+document_version: 2.0.0
+date: 2026-07-17
+baseline_main: 7edd80484629378af0658bfca0d7d4e351361831
+verified_source_head: 15b3c26a3228a95174a845c75a178cf772cf5e81
+branch: refactor/sco-construction-e7-e8
+pull_request: 148
+phase_scope:
+  - E7_ADVISORY_LANES
+  - E8_SYNTHETIC_SHADOW_ADAPTER
+  - E10_EXPERIENCE_CRUCIBLE_PROJECTION
+  - E11_ZERO_MODEL_BENCHMARK_ARM
+coderabbit_policy: EXACTLY_ONE_INVOCATION
+coderabbit_invocations: 1
+coderabbit_result: REVIEW_FINISHED_WITH_NO_SUBMITTED_REVIEW_OR_INLINE_THREADS
+production_connectors: FORBIDDEN_IN_THIS_PHASE
+private_project_data: FORBIDDEN_IN_THIS_PHASE
+physical_work_authority: false
+payment_release_authority: false
+access_control_authority: false
+professional_certification_authority: false
+```
+
+## Final architecture
+
+```text
+ConstructionProjectState
+  → deterministic claim readiness
+  → hard candidate filtering
+  → advisory probabilistic signal
+  → role-preserving deterministic options
+  → Liquid Planning ActionCapsule / BoundaryContract / ArenaLease
+  → WFST evidence-all and verifier-pass guards
+  → proposal-only coordination packet
+  → authorized human review
+  → verified ArenaExperience V3
+  → TRAIN / VALIDATION / SHADOW
+  → CRYSTALLIZATION_PROPOSED
+  → verifier and human review
+```
+
+Canonical owners remain the Construction contracts/state/authority modules, Liquid Planning contracts, WFST runtime/compiler, Experience Ledger, Crucible, Architect loop, Council V3, Work Splitter, Surgeon, Verifier, Judge, rollback, and leases. No parallel truth store or production controller was added.
+
+## Verified gates
+
+| Gate | Result |
+|---|---|
+| Exact-head Python 3.11 compile | PASS |
+| Fatal Ruff selection and `git diff --check` | PASS |
+| Focused Phase 3 collection | `81` tests |
+| Focused Phase 3 execution | `81/81` passed in `22.45s` |
+| Adapter/fixture/benchmark coverage | `88%` total |
+| Learning coverage | `82%` |
+| Prior Construction and canonical-owner regressions | `241/241` passed in `10.53s` |
+| Native Selective Council V3 + Surgeon | PASS |
+| Architect verification | `16` checks, `0` failures, `4` leases, `4` staged exact-file patches |
+| Judge | `promote_hotswap`; human review required |
+| Zero-model benchmark | `250` permutations passed |
+| Governed learning projection | `15` records, `15` unique episode digests, one synthetic scenario, one objective |
+| Crucible | one `CRYSTALLIZATION_PROPOSED`; active grammar unchanged |
+| RefactorSkeleton Python 3.11 dependency repair | PASS; identity arguments unchanged |
+
+## Manual and automated hardening incorporated
+
+- scalar collection and unknown-field deserialization attacks fail closed;
+- malformed runtime values are rejected before attribute access;
+- option-role ordering is preserved after deduplication;
+- cross-project scope mismatches are blocked;
+- hard readiness blockers cannot be overridden by probabilistic scores;
+- WFST transitions require both benchmark evidence and a passing verifier packet;
+- benchmark bounds and report labels are tamper-checked;
+- content-addressed Experience payloads exclude wall-clock timing;
+- replay is idempotent;
+- synthetic episodes do not claim human alignment, field diversity, provider usage, savings, or production readiness;
+- Architect base SHA, ancestry, output path, file scope, tests, leases, and rollback are bounded;
+- topology verification uses exact generated-file diffs.
+
+## Benchmark and learning boundaries
+
+The measured benchmark is a deterministic zero-model software fixture. Provider tokens, provider cost, real-project savings, and production readiness are `NOT_MEASURED` or `NOT_CLAIMED`.
+
+The learning run contains 15 independently executed seeded permutations of one fictional scenario and one objective. It creates 15 unique episode digests but one evaluation digest and one recommendation. This supports replay and pipeline verification only; it does not establish generalization across real projects.
+
+The Crucible proposal did not satisfy the distinct-objective threshold. That warning is preserved. The proposal remains `CRYSTALLIZATION_PROPOSED`, the allowed path is limited to `soft_weight_profile.empirical_uncertainty`, and active grammar, hard guards, capabilities, authority, source code, commit, push, and merge remain unchanged.
+
+## Deferred by design
+
+- Human Agent server/API and UI wiring (E9)
+- Observatory projection (E9/E12)
+- real owner, contractor, payroll, payment, access, sensor, or safety integrations
+- external-model and multi-provider comparative benchmark arms
+- commercial or field-performance claims
+
+## Final sequence
+
+```text
+verified source gates
+  → synchronized README / ARCHITECTURE / USER_GUIDE / evidence
+  → regenerated CODEMAP and topology
+  → pinned-head final CI
+  → mark PR ready
+  → merge
+  → post-merge verification
+```
+'''
+          (root / 'docs/AURA_SCO_PHASE3_E7_E8_EXECUTION_PLAN.md').write_text(plan, encoding='utf-8')
+
+          evidence = {
+              'version': 'AURA_SCO_PHASE3_E7_E11_VERIFICATION_V1',
+              'date': '2026-07-17',
+              'repository': 'dallascourchene-commits/AuraOS',
+              'pull_request': 148,
+              'baseline_main': '7edd80484629378af0658bfca0d7d4e351361831',
+              'verified_source_head': '15b3c26a3228a95174a845c75a178cf772cf5e81',
+              'audit_run_id': 29594790717,
+              'audit_artifact_id': 8412607621,
+              'coderabbit': {
+                  'invocations': 1,
+                  'finished': True,
+                  'submitted_review': False,
+                  'inline_threads': 0,
+                  'invoke_again': False,
+              },
+              'gates': {
+                  'python_3_11_compile': 'PASS',
+                  'fatal_ruff': 'PASS',
+                  'focused_tests_collected': 81,
+                  'focused_tests_passed': 81,
+                  'focused_elapsed_seconds': 22.45,
+                  'focused_domain_coverage_percent': 88,
+                  'adapter_coverage_percent': 87,
+                  'benchmark_coverage_percent': 90,
+                  'fixtures_coverage_percent': 90,
+                  'learning_coverage_percent': 82,
+                  'canonical_owner_regressions_passed': 241,
+                  'canonical_owner_regression_elapsed_seconds': 10.53,
+                  'benchmark_iterations': 250,
+                  'benchmark_status': 'PASS',
+                  'topology_regenerated_in_finalization': True,
+              },
+              'architect': {
+                  'version': 'AURA_SCO_CONSTRUCTION_ARCHITECT_REFACTOR_V3',
+                  'selected_plan_id': 'SELECTIVE_COUNCIL_V3_SURGEON',
+                  'selected_plan_score': 0.99,
+                  'actual_model_calls': 0,
+                  'critic_lanes': ['scope', 'tests', 'sequence', 'rollback', 'cost'],
+                  'source_act_capsules': 4,
+                  'lease_count': 4,
+                  'staged_patch_count': 4,
+                  'verification_check_count': 16,
+                  'verification_failure_count': 0,
+                  'hotswap_ready': True,
+                  'judge_decision': 'promote_hotswap',
+                  'human_review_required': True,
+                  'canonical_owner_modules_reused': 12,
+                  'parallel_truth_stores_added': 0,
+                  'production_connectors_added': 0,
+                  'structural_file_scope_reduction': 0.99619,
+                  'planning_context_proxy_reduction': 0.999663,
+                  'provider_tokens': 'NOT_MEASURED',
+                  'provider_cost': 'NOT_MEASURED',
+                  'real_project_savings': 'NOT_MEASURED',
+                  'production_readiness': 'NOT_CLAIMED',
+              },
+              'learning': {
+                  'version': 'AURA_SCO_CONSTRUCTION_PHASE3_LEARNING_V4',
+                  'episode_count': 15,
+                  'iterations_per_episode': 25,
+                  'scenario_count': 1,
+                  'objective_count': 1,
+                  'unique_episode_digests': 15,
+                  'unique_evaluation_digests': 1,
+                  'unique_recommendations': 1,
+                  'ledger_record_count': 15,
+                  'crucible_candidate_count': 1,
+                  'crucible_proposal_count': 1,
+                  'crucible_terminal_status': 'CRYSTALLIZATION_PROPOSED',
+                  'required_next_gate': 'VERIFIER_AND_HUMAN_REVIEW',
+                  'active_grammar_mutated': False,
+                  'all_proposal_thresholds_met': False,
+                  'distinct_objective_threshold_met': False,
+                  'generalization_claimed': False,
+              },
+              'dependency_repair': {
+                  'pull_request': 149,
+                  'merged': True,
+                  'repair': 'Python 3.11-compatible RefactorSkeleton identity digest expression',
+                  'identity_arguments_changed': False,
+                  'public_api_changed': False,
+                  'authority_boundary_changed': False,
+              },
+              'claim_boundaries': {
+                  'synthetic_only': True,
+                  'single_synthetic_scenario': True,
+                  'provider_tokens_and_cost': 'NOT_MEASURED',
+                  'real_project_savings': 'NOT_MEASURED',
+                  'production_readiness': 'NOT_CLAIMED',
+                  'physical_work_authorized': False,
+                  'payment_released': False,
+                  'access_control_authorized': False,
+                  'professional_certification_authorized': False,
+                  'active_grammar_mutated': False,
+                  'automatic_commit': False,
+                  'automatic_push': False,
+                  'automatic_merge': False,
+                  'patch_authority': 'exact_source_spans_and_hashes_only',
+                  'vsa_patch_authority': False,
+              },
+          }
+          evidence_path = root / 'docs/evidence/AURA_SCO_PHASE3_E7_E11_VERIFICATION.json'
+          evidence_path.parent.mkdir(parents=True, exist_ok=True)
+          evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+      - name: Remove finalizer and regenerate exact topology
+        run: |
+          set -euo pipefail
+          rm .github/workflows/sco-phase3-finalize.yml
+          python aura_codebase_navigator.py
+          python aura_codemap_verify.py --repo-root .
+          git diff --check
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+      - name: Commit synchronized final state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Phase 3 Finalizer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: finalize SCO Construction Phase 3 evidence and topology"
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "${GH_TOKEN}" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="${AUTH_HEADER}" push origin HEAD:refactor/sco-construction-e7-e8
