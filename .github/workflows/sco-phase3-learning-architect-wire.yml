@@ -1,0 +1,215 @@
+name: SCO Phase 3 Learning Architect Wire
+
+on:
+  push:
+    branches:
+      - refactor/sco-construction-e7-e8
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sco-phase3-learning-architect-wire
+  cancel-in-progress: false
+
+jobs:
+  wire:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refactor/sco-construction-e7-e8
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extend Aura Act Capsules to the learning surface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: Path, old: str, new: str, label: str) -> None:
+              text = path.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          harness = Path('aura_construction_architect_refactor.py')
+          benchmark_tail = '''    {
+              "task_id": "SCO-E11-BENCHMARK",
+              "objective": (
+                  "Harden the zero-model Construction benchmark and its evidence boundaries "
+                  "without inventing provider usage or real-project savings."
+              ),
+              "target_file": "aura_construction_benchmark.py",
+              "target_symbol": "run_construction_phase3_benchmark",
+              "acceptance": (
+                  "The 250-permutation gate remains deterministic and benchmark claims stay "
+                  "truth-classed; tests/test_aura_construction_benchmark.py passes."
+              ),
+              "tests": ["tests/test_aura_construction_benchmark.py"],
+              "allowed_scope": "single executable benchmark module",
+              "expected_output": "UNIFIED_DIFF",
+              "size": "S",
+          },
+          )
+          '''
+          expanded_tail = '''    {
+              "task_id": "SCO-E11-BENCHMARK",
+              "objective": (
+                  "Harden the zero-model Construction benchmark and its evidence boundaries "
+                  "without inventing provider usage or real-project savings."
+              ),
+              "target_file": "aura_construction_benchmark.py",
+              "target_symbol": "run_construction_phase3_benchmark",
+              "acceptance": (
+                  "The 250-permutation gate remains deterministic and benchmark claims stay "
+                  "truth-classed; tests/test_aura_construction_benchmark.py passes."
+              ),
+              "tests": ["tests/test_aura_construction_benchmark.py"],
+              "allowed_scope": "single executable benchmark module",
+              "expected_output": "UNIFIED_DIFF",
+              "size": "S",
+          },
+              {
+                  "task_id": "SCO-E10-LEARNING",
+                  "objective": (
+                      "Project only distinct verified synthetic benchmark episodes into the "
+                      "existing Experience Ledger and proposal-only Crucible owners."
+                  ),
+                  "target_file": "aura_construction_learning.py",
+                  "target_symbol": "run_construction_phase3_learning",
+                  "acceptance": (
+                      "No cloned episode is counted as independent evidence, Crucible remains "
+                      "proposal-only, and tests/test_aura_construction_learning.py passes."
+                  ),
+                  "tests": ["tests/test_aura_construction_learning.py"],
+                  "allowed_scope": "single governed learning projection module",
+                  "expected_output": "UNIFIED_DIFF",
+                  "size": "M",
+              },
+          )
+          '''
+          replace_once(harness, benchmark_tail, expanded_tail, 'learning source shard')
+          replace_once(
+              harness,
+              '''    "deterministic_benchmark",
+              "bounded_patch_leases",
+          ''',
+              '''    "deterministic_benchmark",
+              "experience_crucible_evidence_integrity",
+              "bounded_patch_leases",
+          ''',
+              'learning required capability',
+          )
+          replace_once(
+              harness,
+              '''    "aura_arena_wfst_runtime.py",
+              "aura_architect_loop.py",
+          ''',
+              '''    "aura_arena_wfst_runtime.py",
+              "aura_arena_experience.py",
+              "aura_arena_experience_ledger.py",
+              "aura_arena_crucible.py",
+              "aura_architect_loop.py",
+          ''',
+              'learning canonical owners',
+          )
+          replace_once(
+              harness,
+              '''            ["SCO-E8-FIXTURE", "SCO-E11-BENCHMARK"],
+                  ],
+          ''',
+              '''            ["SCO-E8-FIXTURE", "SCO-E11-BENCHMARK"],
+                      ["SCO-E11-BENCHMARK", "SCO-E10-LEARNING"],
+                  ],
+          ''',
+              'learning dependency edge',
+          )
+          replace_once(
+              harness,
+              'architecture_decision="Use three bounded Surgeon shards.",',
+              'architecture_decision="Use four bounded Surgeon shards.",',
+              'sliced plan count',
+          )
+          replace_once(
+              harness,
+              '"All three focused suites pass.",',
+              '"All four focused suites pass.",',
+              'sliced acceptance count',
+          )
+          replace_once(
+              harness,
+              '"Selective Council V3, and execute three exact Surgeon shards inside "',
+              '"Selective Council V3, and execute four exact Surgeon shards inside "',
+              'selected plan count',
+          )
+          replace_once(
+              harness,
+              '"Fixture and benchmark remain unreviewed.",',
+              '"Fixture, benchmark, and learning remain unreviewed.",',
+              'minimal-plan risk truth',
+          )
+          replace_once(
+              harness,
+              '"Benchmark evidence never invents provider usage or real savings.",',
+              '"Benchmark and learning evidence never invent provider usage or real savings.",',
+              'selected acceptance truth',
+          )
+          replace_once(
+              harness,
+              '"Synthetic fixture values may not be represented as real project facts.",',
+              '"Synthetic fixture or learning values may not be represented as real project facts.",',
+              'learning risk boundary',
+          )
+
+          tests = Path('tests/test_aura_construction_architect_refactor.py')
+          replace_once(
+              tests,
+              'assert len(tasks) == len(SOURCE_SHARDS) == 3',
+              'assert len(tasks) == len(SOURCE_SHARDS) == 4',
+              'test shard count',
+          )
+          replace_once(
+              tests,
+              '''        "aura_construction_benchmark.py",
+              }
+          ''',
+              '''        "aura_construction_benchmark.py",
+                      "aura_construction_learning.py",
+                  }
+          ''',
+              'test shard file set',
+          )
+          replace_once(
+              tests,
+              'assert len(split["child_tasks"]) == 3',
+              'assert len(split["child_tasks"]) == 4',
+              'work split child count',
+          )
+          replace_once(
+              tests,
+              'assert len(capsules["act_capsules"]) == 3',
+              'assert len(capsules["act_capsules"]) == 4',
+              'work split capsule count',
+          )
+          PY
+          python -m py_compile \
+            aura_construction_architect_refactor.py \
+            tests/test_aura_construction_architect_refactor.py
+          python -m pytest -q tests/test_aura_construction_architect_refactor.py
+      - name: Commit the governed four-capsule architecture
+        run: |
+          rm .github/workflows/sco-phase3-learning-architect-wire.yml
+          git config user.name "AuraOS Learning Surgeon"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_construction_architect_refactor.py \
+            tests/test_aura_construction_architect_refactor.py \
+            .github/workflows/sco-phase3-learning-architect-wire.yml
+          git commit -m "refactor: govern Construction learning with Aura Act Capsules"
+          git pull --rebase origin refactor/sco-construction-e7-e8
+          git push origin HEAD:refactor/sco-construction-e7-e8
