@@ -1,8 +1,8 @@
 # AuraOS SCO Construction Arena — Emergent Refactor Addendum
 
 ```yaml
-document_status: PHASE_ONE_IMPLEMENTED_PENDING_FINAL_GATES
-document_version: 1.1.0
+document_status: PHASE_ONE_VERIFIED_READY_TO_MERGE
+document_version: 1.1.1
 prepared_date: 2026-07-16
 repository: dallascourchene-commits/AuraOS
 baseline_main: 52f07f3b8bc5f932b6a1c950f0c3081500f189db
@@ -74,7 +74,8 @@ Aura may represent claims, evidence, conflicts, dependencies, missing approvals,
 The implementation preserves:
 
 - stable semantic identity;
-- recursive immutability of digest-covered content;
+- recursive immutability of digest-covered mappings, nested values, and sequence fields;
+- normalized-key collision rejection;
 - canonical node and skeleton digests;
 - exact source hashes and line spans;
 - revision and prior-digest chains;
@@ -143,10 +144,15 @@ CodeRabbit was unavailable within the phase window, so an equivalent manual revi
 
 ```yaml
 py_compile: PASS
+compileall: PASS
 focused_adversarial_tests: 33_passed
 automated_review_findings_repaired: 5
 additional_manual_findings_repaired: 16
+review_threads_resolved: 5_of_5
+github_actions: ACTION_REQUIRED_NO_JOBS_EXECUTED
 ```
+
+GitHub Actions required approval and created no jobs; this was not an executed test failure. The user-authorized fallback was the equivalent manual review above.
 
 ## Generated topology policy
 
