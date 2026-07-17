@@ -279,7 +279,9 @@ Arbitrary user Python requires real process isolation. If the requested sandbox 
 
 Primary owners include:
 
-- `aura_ephemeral_organ_runtime.py`;
+- `aura_ephemeral_runtime.py`;
+- `aura_ephemeral_sandbox.py`;
+- `aura_ephemeral_registry_store.py`;
 - `aura_capability_resolver.py` and `aura_capability_resolver_v2.py`;
 - `aura_arena_tool_runtime.py`;
 - Arena-specific adapters and route manifests.
