@@ -14,13 +14,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1074
-- **total_bytes**: 51673427
-- **text_tokens_est**: 3578504
+- **total_bytes**: 51706466
+- **text_tokens_est**: 3586719
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 143, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 747, 'schema_or_lexicon': 110, 'support_file': 30}
 - **topology_nodes**: 8769
 - **topology_edges**: 19357
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 26467.64
+- **elapsed_ms**: 23331.18
 
 ## Coverage
 
@@ -67,7 +67,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `aura_node.py:5655`
 - `!command` -> `aura_human_agent_arena/jarvis.js:122`, `aura_human_agent_arena/main.js:163`
-- `!commands` -> `USER_GUIDE.md:52`
+- `!commands` -> `USER_GUIDE.md:82`
 - `!comment` -> `aura_showcase/gate-dialogue.js:291`
 - `!content` -> `aura_human_agent_arena/main.js:856`
 - `!contingency_spawn` -> `aura_node.py:7006`
