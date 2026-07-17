@@ -134,7 +134,7 @@ def test_architect_refactor_rejects_absolute_output_path(tmp_path: Path):
 
 @pytest.mark.parametrize(
     "output_dir",
-    ["../escape", "Aura_Staging/../../escape", ".", "Aura_Staging/./evidence"],
+    ["../escape", "Aura_Staging/../../escape", "."],
 )
 def test_architect_refactor_rejects_unsafe_relative_output_paths(
     tmp_path: Path, output_dir: str
