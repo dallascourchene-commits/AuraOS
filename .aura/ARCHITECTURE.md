@@ -195,7 +195,9 @@ Primary owners include:
 - `topology_map.json`;
 - `aura_topological_context_anchor.py`;
 - `aura_capability_connectome.py`;
-- `aura_capability_genome.py` and associated resolver/runtime modules.
+- `aura_capability_resolver.py`;
+- `aura_capability_resolver_v2.py`;
+- associated stabilization and manifest modules.
 
 The resolver must search for canonical reusable owners before introducing a new module. CODEMAP vectors and topology edges help navigation; they are not patch authority.
 
@@ -278,7 +280,7 @@ Arbitrary user Python requires real process isolation. If the requested sandbox 
 Primary owners include:
 
 - `aura_ephemeral_organ_runtime.py`;
-- `aura_capability_resolver.py` and compatibility/stabilization owners;
+- `aura_capability_resolver.py` and `aura_capability_resolver_v2.py`;
 - `aura_arena_tool_runtime.py`;
 - Arena-specific adapters and route manifests.
 
@@ -310,7 +312,8 @@ Primary owners include:
 
 - `aura_human_agent_arena.py`;
 - `aura_human_agent_arena_server.py`;
-- `aura_coding_workbench.py` and orchestrator/adapter modules;
+- `aura_coding_workbench_capsule_adapter.py`;
+- `aura_coding_workbench_wfst_adapter.py`;
 - `aura_agent_arena_cli.py`;
 - `aura_agent_arena_mcp.py`;
 - external-LLM slice-session and refactor-evidence modules.
@@ -454,7 +457,7 @@ Primary owners include:
 - ST3GG contract/codec/compatibility modules;
 - JSpace codec and J2 continuity modules;
 - QDKT observation and compatibility modules;
-- `aura_symbolic_trace_memory.py` and trace-canvas owners;
+- symbolic-trace and trace-canvas modules;
 - `aura_refactor_state_ledger.py`;
 - `aura_temporal_persistence.py`;
 - `aura_arena_persistence_adapters.py`;
@@ -509,7 +512,7 @@ Primary owners include:
 |---|---|---|---|
 | Repository truth | Current Git tree, exact source/schemas/tests | CODEMAP, topology, summaries | Visual graph, VSA, research, model output |
 | Intent route | Intent contracts, semantic LEXC, machine WFST | UI route diagrams, JSpace/ST3GG packets | Worker interpretation |
-| Capability truth | Capability Connectome/Genome and manifests | Native Cockpit, Affordance Directory | New duplicate registries |
+| Capability truth | Capability Connectome, Genome Resolver, and manifests | Native Cockpit, Affordance Directory | New duplicate registries |
 | Planning truth | `aura_planning_board.py` and canonical planning contracts | Coding/Civic shadows, history projector | Arena UI state |
 | Event history | Canonical append-only event/sidecar contracts | Planning history, compatibility readers | Mutable summary JSON |
 | Authority | Relational authority, leases, consent, human/community decision | Gate dialogue and UI explanations | Planner, model, score, or Observatory |
