@@ -23,7 +23,7 @@ def test_selective_council_v3_selects_governed_surgeon_plan(tmp_path: Path):
         {
             "surface": "native",
             "council_mode": "SELECTIVE_V3",
-            "council_call_budget": 6,
+            "council_call_budget": 8,
             "critic_lanes": ["scope", "tests", "sequence", "rollback", "cost"],
             "surgeon_mode": "STAGE_AND_VERIFY",
             "record_outputs": False,
@@ -52,11 +52,12 @@ def test_selected_plan_uses_exact_bounded_source_shards():
         if item["candidate_id"] == SELECTED_PLAN_ID
     )
     tasks = candidate["plan"]["act_tasks"]
-    assert len(tasks) == len(SOURCE_SHARDS) == 3
+    assert len(tasks) == len(SOURCE_SHARDS) == 4
     assert {item["target_file"] for item in tasks} == {
         "aura_construction_adapter.py",
         "aura_construction_fixtures.py",
         "aura_construction_benchmark.py",
+        "aura_construction_learning.py",
     }
     assert all(item["target_symbol"] for item in tasks)
     assert all(item["expected_output"] == "UNIFIED_DIFF" for item in tasks)
@@ -82,17 +83,26 @@ def test_native_control_cannot_gain_production_or_vsa_authority():
 def test_work_splitter_emits_patch_authority_bounded_capsules():
     split = split_by_file([item["target_file"] for item in SOURCE_SHARDS])
     capsules = work_split_to_act_capsules(split)
-    assert len(split["child_tasks"]) == 3
-    assert len(capsules["act_capsules"]) == 3
-    assert all(item["patch_authority"] == "exact_source_spans_and_hashes_only" for item in capsules["act_capsules"])
-    assert all(item["vsa_patch_authority"] is False for item in capsules["act_capsules"])
+    assert len(split["child_tasks"]) == 4
+    assert len(capsules["act_capsules"]) == 4
+    assert all(
+        item["patch_authority"] == "exact_source_spans_and_hashes_only"
+        for item in capsules["act_capsules"]
+    )
+    assert all(
+        item["vsa_patch_authority"] is False
+        for item in capsules["act_capsules"]
+    )
 
 
 def test_plan_candidates_reuse_existing_owners_and_do_not_invent_usage():
     candidates = build_refactor_plan_candidates()
-    selected = next(item for item in candidates if item["candidate_id"] == SELECTED_PLAN_ID)
+    selected = next(
+        item for item in candidates if item["candidate_id"] == SELECTED_PLAN_ID
+    )
     assert set(EXISTING_MODULES).issubset(selected["plan"]["existing_modules"])
     assert selected["plan"]["architecture_reuse"] is True
+    assert "experience_crucible_evidence_integrity" in REQUIRED_CAPABILITIES
     assert all(
         item["token_usage"]["measurement_class"] == NOT_MEASURED
         and item["token_usage"]["provider_reported"] is None
