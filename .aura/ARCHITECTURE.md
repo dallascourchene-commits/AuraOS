@@ -258,73 +258,18 @@ Primary contracts:
 
 `AURA_REFACTOR_OUTPUT_RECORD_V1` preserves prompt and patch identity, estimated and provider-reported usage separately, exact tests and gates, failed gates, working status, disposition, and measurement completeness.
 
-## 7. Evidence and observability
+## 7. Benchmark evidence hierarchy
 
-Aura distinguishes:
+Aura keeps unlike evidence separate so projections cannot be mistaken for executable proof.
 
-1. executable gate evidence;
-2. deterministic comparative token proxies;
-3. estimated structural projections;
-4. discovery and capacity scans.
+| Tier | Evidence | Current result | Permitted claim |
+|---:|---|---|---|
+| 1 | Executable cross-module fixture | `3/3` visible, `3/3` hidden, `2/2` regression; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `97.50` | Working status for the exact evaluated artifact |
+| 1 | Exact-head real AuraOS refactor | `32/32` visible/property, `35/35` adversarial, `24/24` regression; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50` | Working status for the exact branch artifact and measured gates |
+| 2 | Context localization | `131,655 → 14,431`; **89.04% lower** total-token proxy; quality `+0.0057` | Deterministic comparative efficiency, not provider billing |
+| 2 | Selective Council V3 | `18 → 12` calls; `158,545 → 106,494`; **32.83% lower** total proxy with the same accepted plan, patch, and quality | Controlled comparative fixture evidence |
+| 2 | State Ledger | `6,140 → 234` at step 7; **96.19% less context**, preservation `1.0000`, drift `0.0000` | Synthetic continuity evidence |
+| 3 | Shared grounding evidence | `2,004 → 938`; `1,066` proxy tokens avoided; **53.1936% projected savings** | `ESTIMATED` structural projection only |
+| 4 | Emergent and grounded-capacity scans | `708` Python files, `10,815` nodes, `20,764` edges, `15` discovery probes and `7` grounded probes; all probe executions completed | Candidate discovery and projection only |
 
-Current evidence includes:
-
-- context localization: **89.04% lower** total-token proxy with quality `+0.0057`;
-- Selective Council V3: **32.83% lower** total proxy and **33.33% fewer calls** than Council V2 with the same accepted plan, patch, and quality;
-- executable fixture: visible `3/3`, hidden `3/3`, regression `2/2`, `WORKING`, `ACCEPTED`;
-- real AuraOS refactor trial: `32/32`, `35/35`, and `21/21` passing groups;
-- State Ledger continuity: **96.19% less** step-7 context with preservation `1.0000` and drift `0.0000`;
-- emergent scan: `708` Python files, `10,815` nodes, `20,764` edges, `15` probes, `0` failures;
-- grounded capacity projections: `7` probes, all still `NEEDS_GROUNDING`;
-- shared grounding projection: **53.1936% projected savings**, classified `ESTIMATED` and not provider billing.
-
-Unknown cost stays unknown. Estimated structural projections cannot be relabelled as measured provider savings. Discovery recurrence cannot be relabelled as implementation correctness.
-
-## 8. Source-of-truth order
-
-When sources conflict:
-
-1. exact source and schemas;
-2. tests and verifier artifacts;
-3. healthy current CODEMAP and compiled topology;
-4. exact snapshots, sidecars, and ledgers;
-5. manifests, leases, consent, and boundary contracts;
-6. current subsystem documentation;
-7. README and architecture summaries;
-8. historical reports and extracted text.
-
-## 9. Navigation protocol
-
-1. Read `README.md`.
-2. Read `.aura/ARCHITECTURE.md`.
-3. Read `.aura/CODEMAP.md`.
-4. Query only the relevant files and symbols.
-5. Open exact source slices plus immediate topology neighbours.
-6. Verify hashes, tests, and contracts before changing code.
-7. Regenerate CODEMAP after successful source or architecture changes.
-
-```bash
-python3 aura_codebase_navigator.py --query "human agent emergent research"
-python3 -m aura_agent_arena_cli read-slice \
-  --file aura_emergent_refactor_workspace.py \
-  --symbol EmergentRefactorWorkspace
-```
-
-Never load the entire repository or `aura_node.py` for ordinary agent work.
-
-## 10. Architectural invariants
-
-- Humans and communities retain consequential authority.
-- External models are workers, not governors.
-- Intent is a request, not permission.
-- Grammar and routes constrain work but do not create authority.
-- Semantic and VSA layers are advisory.
-- Patch authority requires exact spans and hashes.
-- Tools receive minimum capabilities through temporary leases.
-- Failed or denied actions do not mutate governed state.
-- Observatory output is review evidence, not execution authority.
-- Emergent findings are hypotheses until grounded and verified.
-- Crucible proposals never self-promote.
-- Cost classes and claim boundaries remain explicit.
-- Restricted cultural and personal data remain inside consent and governance boundaries.
-- Temporary organs and Arenas produce lifecycle and dissolution receipts.
+Tier 3 and Tier 4 evidence cannot be promoted into Tier 1 claims without governed execution, comparable quality evidence, and verifier review. Token proxies remain comparative unless exact provider usage is recorded.
