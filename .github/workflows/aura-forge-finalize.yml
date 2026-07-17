@@ -1,0 +1,222 @@
+name: Aura Forge V1 Finalize
+
+on:
+  push:
+    branches: [feature/aura-forge-verified-engineering-os]
+    paths: [.github/workflows/aura-forge-finalize.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-forge-v1-finalize
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-forge-verified-engineering-os
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install focused validation tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+
+      - name: Integrate Forge into canonical documentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def insert_before(path: str, anchor: str, block: str, marker: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if marker in text:
+                  return
+              if anchor not in text:
+                  raise SystemExit(f"missing anchor in {path}: {anchor}")
+              target.write_text(text.replace(anchor, block.rstrip() + "\n\n" + anchor, 1), encoding="utf-8")
+
+          def insert_after(path: str, anchor: str, block: str, marker: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if marker in text:
+                  return
+              if anchor not in text:
+                  raise SystemExit(f"missing anchor in {path}: {anchor}")
+              target.write_text(text.replace(anchor, anchor + "\n" + block.rstrip(), 1), encoding="utf-8")
+
+          readme_row_anchor = (
+              "| **Coding Workbench / Coding Arena** | Localizes code, ranks bounded regions, "
+              "builds change graphs, prepares capsules, and verifies candidate work | Exact source "
+              "spans and hashes remain patch authority |"
+          )
+          readme_row = (
+              "| **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, "
+              "then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human "
+              "review; no automatic commit, PR, merge, or production mutation |"
+          )
+          insert_after("README.md", readme_row_anchor, readme_row, "| **Aura Forge** |")
+
+          readme_block = '''<!-- AURA_FORGE_V1:START -->
+          ## Aura Forge — Verified Engineering OS
+
+          Aura Forge is the first commercial product surface over Aura's existing Coding Arena and
+          controlled refactor owners. It does not introduce a second planner, patch store, verifier,
+          or learning path.
+
+          ```text
+          engineering objective
+            → CODEMAP/topology grounding
+            → frozen Architect/Coding Arena plan
+            → AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1
+            → bounded source/test slice lease
+            → external worker unified diff
+            → canonical staging, verification, and repair
+            → READY_FOR_HUMAN_REVIEW
+            → separate authorized promotion decision
+          ```
+
+          `aura_forge.py` binds the objective, exact repository identity, plan phase, Act Capsules,
+          source/test references, allowed files, required gates, worker budgets, authority, and
+          lifecycle into one deterministic contract. External workers remain replaceable and receive
+          no ambient repository or release authority.
+
+          See [`docs/AURA_FORGE.md`](docs/AURA_FORGE.md).
+          <!-- AURA_FORGE_V1:END -->'''
+          insert_before("README.md", "## Canonical architecture", readme_block, "<!-- AURA_FORGE_V1:START -->")
+
+          architecture_block = '''<!-- AURA_FORGE_V1:START -->
+          #### Aura Forge verified engineering surface
+
+          Aura Forge is a product façade over the canonical Coding Arena, Agent Bridge, frozen
+          Architect plan, Controlled Refactor Session, safe external-LLM slice leasing, staging,
+          verification, output-vault, and human-review owners.
+
+          ```text
+          FRAME → GROUND → PLAN
+            → Arena Evidence Contract
+            → ACT through bounded Surgeon turns
+            → PROVE through canonical verifiers
+            → DECIDE through a human review packet
+            → DISSOLVE or enter a separately authorized promotion workflow
+          ```
+
+          `AURA_FORGE_ARENA_EVIDENCE_CONTRACT_V1` preserves exact repository/CODEMAP identity,
+          plan-phase identity, Act Capsules, source line ranges, dependencies, tests, route evidence,
+          allowed files, required gates, model budgets, and non-promotion authority invariants.
+
+          Forge cannot commit, push, open a pull request, merge, mutate production, or convert
+          hotswap readiness into promotion authority.
+          <!-- AURA_FORGE_V1:END -->'''
+          insert_before(
+              ".aura/ARCHITECTURE.md",
+              "### Plane 8 — Observatory and glass-box explanation",
+              architecture_block,
+              "<!-- AURA_FORGE_V1:START -->",
+          )
+
+          guide_row_anchor = (
+              "| **Agent Arena CLI** | Repository health, localization, prepared coding tasks, "
+              "staging, verification, cost, and domain commands | `python3 -m aura_agent_arena_cli` |"
+          )
+          guide_row = (
+              "| **Aura Forge API** | Frozen-plan verified engineering runs with an exact Arena "
+              "Evidence Contract and bounded worker sessions | `from aura_forge import AuraForgeRuntime` |"
+          )
+          insert_after("USER_GUIDE.md", guide_row_anchor, guide_row, "| **Aura Forge API** |")
+
+          guide_block = '''### Aura Forge V1
+
+          Use Forge when a coding task needs a stable product-level contract around the existing
+          Coding Arena workflow.
+
+          ```python
+          from aura_forge import AuraForgeRuntime
+
+          forge = AuraForgeRuntime(repo_root=".")
+          opened = forge.start({
+              "objective": "Refactor failure routing while preserving public APIs",
+              "target_file": "pkg/router.py",
+              "target_symbol": "route_failure",
+              "acceptance_criteria": ["visible, hidden, and regression tests pass"],
+              "risk_map": ["interface drift", "scope expansion"],
+              "provider": "external",
+              "model": "provider-model",
+          })
+          ```
+
+          Inspect `opened["contract"]` before sending the leased turn to a worker. The contract
+          includes exact task evidence, allowed files, required gates, budgets, and authority limits.
+          Submit only the worker's bounded unified diff through `forge.submit(...)`.
+
+          A completed run stops at `READY_FOR_HUMAN_REVIEW`. `human_review_packet` may expose
+          verifier and hotswap-readiness evidence, but it never performs promotion, commit, push,
+          pull-request creation, merge, or production mutation.
+
+          Focused validation:
+
+          ```bash
+          python -m py_compile aura_forge.py tests/test_aura_forge.py
+          python -m pytest -q tests/test_aura_forge.py
+          ```
+
+          See `docs/AURA_FORGE.md` for the complete contract and failure boundaries.
+          '''
+          insert_before("USER_GUIDE.md", "### Grounded phase capsules", guide_block, "### Aura Forge V1")
+          PY
+
+      - name: Remove one-shot workflow before topology generation
+        run: rm .github/workflows/aura-forge-finalize.yml
+
+      - name: Compile and run focused Forge gates
+        run: |
+          python -m py_compile aura_forge.py tests/test_aura_forge.py
+          python -m pytest -q \
+            tests/test_aura_forge.py \
+            tests/test_aura_external_llm_session.py \
+            tests/test_aura_architect_controls_vault_and_surfaces.py
+          ruff check --select E9,F63,F7,F82 aura_forge.py tests/test_aura_forge.py
+          bandit -q -ll aura_forge.py
+
+      - name: Regenerate and verify CODEMAP
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          codemap = json.loads(Path('.aura/CODEMAP.json').read_text(encoding='utf-8'))
+          paths = set(codemap.get('coverage', {}).get('all_included_paths_sorted', []))
+          required = {
+              'aura_forge.py',
+              'docs/AURA_FORGE.md',
+              'schemas/aura_forge_arena_evidence_contract.schema.json',
+              'tests/test_aura_forge.py',
+          }
+          missing = sorted(required - paths)
+          if missing:
+              raise SystemExit(f'Forge files missing from CODEMAP: {missing}')
+          PY
+
+      - name: Commit canonical docs and generated topology
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md USER_GUIDE.md .aura/ARCHITECTURE.md .aura/CODEMAP.md .aura/CODEMAP.json topology_map.json .github/workflows/aura-forge-finalize.yml
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "Docs: integrate Aura Forge and synchronize CODEMAP"
+          git push origin HEAD:feature/aura-forge-verified-engineering-os
