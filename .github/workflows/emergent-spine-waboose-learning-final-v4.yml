@@ -37,6 +37,7 @@ jobs:
       - name: Run consolidated permanent-tree gate
         run: |
           set -o pipefail
+          python scripts/prepare_waboose_final_gate_v2.py
           bash -x scripts/run_waboose_learning_final_gate.sh 2>&1 \
             | tee /tmp/waboose-learning-gate.log
       - name: Upload evidence and full gate transcript
