@@ -1,0 +1,188 @@
+    result = tuple(sorted(_required_text(item, f"{field_name}[]") for item in value))
+    if not allow_empty and not result:
+        raise ValueError(f"{field_name} must not be empty")
+    if len(result) != len(set(result)):
+        raise ValueError(f"{field_name} must not contain duplicates")
+    return result
+
+
+def _safe_repo_path(value: str) -> str:
+    text = _required_text(value, "repository path").replace("\\", "/")
+    while text.startswith("./"):
+        text = text[2:]
+    path = PurePosixPath(text)
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"repository path escapes workspace: {value}")
+    normalized = path.as_posix()
+    if normalized in {"", "."}:
+        raise ValueError("repository path must not be empty")
+    return normalized
+
+
+_VIRTUAL_ENV_DIR_RE = re.compile(r"^(?:\.?venv|\.?env)(?:[-_.].*)?$", re.IGNORECASE)
+_EPHEMERAL_SOURCE_DIRS = frozenset({"site-packages", ".tox", ".nox", ".direnv"})
+
+
+def _is_ephemeral_repository_path(path: str) -> bool:
+    parent_parts = PurePosixPath(path).parts[:-1]
+    return any(
+        part in _EPHEMERAL_SOURCE_DIRS or _VIRTUAL_ENV_DIR_RE.fullmatch(part)
+        for part in parent_parts
+    )
+
+
+def _canonical_python_sources(root: Path) -> dict[str, str]:
+    """Return Aura-scanned sources with local interpreter environments removed.
+
+    The Emergent Evidence Spine scanner remains the source collector. This
+    boundary only removes environment-local Python packages that can appear
+    under names such as ``.venv_phase2`` and would otherwise make the AOT index
+    depend on a developer's temporary virtual environment.
+    """
+    return {
+        path: source
+        for path, source in _repo_python_sources(root).items()
+        if not _is_ephemeral_repository_path(path)
+    }
+
+
+def _is_test_path(path: str) -> bool:
+    parts = str(path).replace("\\", "/").lower().split("/")
+    return any(
+        part == "tests" or part.startswith("test_") or part.endswith("_test.py")
+        for part in parts
+    )
+
+
+def _qualified_symbol(node: Any) -> str:
+    if node.kind == "module":
+        return "<module>"
+    return f"{node.parent_symbol}.{node.symbol}" if node.parent_symbol else node.symbol
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        value = json.load(handle)
+    if not isinstance(value, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return value
+
+
+def _digest_file(path: Path) -> str:
+    if not path.exists() or not path.is_file():
+        raise ValueError(f"required freshness artifact is missing: {path.as_posix()}")
+    return stable_digest(path.read_bytes().hex(), digest_size=20)
+
+
+def _git(root: Path, *args: str) -> str:
+    completed = subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    return completed.stdout.strip()
+
+
+def _repo_head(root: Path) -> str:
+    return _required_text(_git(root, "rev-parse", "HEAD"), "repo_head")
+
+
+def _working_tree_digest(root: Path) -> str:
+    """Digest tracked changes and relevant untracked files deterministically."""
+    tracked = subprocess.run(
+        ["git", "-C", str(root), "diff", "--binary", "HEAD", "--", "."],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    untracked_raw = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "ls-files",
+            "--others",
+            "--exclude-standard",
+            "-z",
+        ],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    untracked: list[dict[str, str]] = []
+    for raw_path in untracked_raw.split(b"\0"):
+        if not raw_path:
+            continue
+        relative = _safe_repo_path(raw_path.decode("utf-8", errors="surrogateescape"))
+        if relative in INDEX_GENERATED_PATHS or _is_ephemeral_repository_path(relative):
+            continue
+        path = root / relative
+        if path.is_file():
+            untracked.append(
+                {
+                    "path": relative,
+                    "digest": stable_digest(path.read_bytes().hex(), digest_size=20),
+                }
+            )
+    return stable_digest(
+        {
+            "tracked_diff_digest": stable_digest(tracked.hex(), digest_size=20),
+            "untracked": sorted(untracked, key=lambda item: item["path"]),
+        },
+        digest_size=20,
+    )
+
+
+def _topology_facts(path: Path) -> tuple[str, str, float | None]:
+    data = _read_json(path)
+    version = str(
+        data.get("version")
+        or data.get("schema_version")
+        or data.get("metadata", {}).get("version")
+        or "UNVERSIONED_TOPOLOGY"
+    )
+    health_value = (
+        data.get("global_health")
+        or data.get("health")
+        or data.get("metadata", {}).get("global_health")
+    )
+    health = float(health_value) if isinstance(health_value, (int, float)) else None
+    return _digest_file(path), version, health
+
+
+def _relation_ontology_digest() -> str:
+    return stable_digest(sorted(item.value for item in RelationType), digest_size=20)
+
+
+def _schema_digest(root: Path) -> str:
+    return _digest_file(root / "schemas" / "aura_relational_index.schema.json")
+
+
+class RelationalIndexProfile(str, Enum):
+    MINIMAL = "MINIMAL"
+    STANDARD = "STANDARD"
+    DEEP = "DEEP"
+
+    @property
+    def budgets(self) -> Mapping[str, int]:
+        return _PROFILE_BUDGETS[self.value]
+
+    @property
+    def digest(self) -> str:
+        return stable_digest(
+            {"name": self.value, "budgets": dict(self.budgets)}, digest_size=20
+        )
+
+
+@dataclass(frozen=True)
+class RelationalIndex:
+    """Canonical generated relational anatomy cache."""
+
+    index_id: str
+    repository_identity: Mapping[str, Any]
+    profile: Mapping[str, Any]
+    participants: tuple[RelationalParticipant, ...]
+    relations: tuple[TypedRelation, ...]
+    groups: tuple[RelationalGroup, ...]
