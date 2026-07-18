@@ -1,0 +1,19 @@
+idually, not relationally
++
++Exact relations were correctly labelled `EXACT_SOURCE`, and Connectome relations were correctly labelled advisory. Yet exact relation evidence still included a Connectome digest, and advisory implementations received an `exact_implementation` role. Waboose lacked a rule that checks whether exact and advisory evidence or vocabulary contaminate one another across a full construction path.
++
++### 2.6 Independent limits were tested independently
++
++Relation count and participant count were each bounded, but relation selection could force more mandatory endpoints than the participant budget. Waboose lacked a coupled-invariant detector that evaluates limits jointly rather than one field at a time.
++
++### 2.7 Reverse-index shape was validated, but behavior was not
++
++Every reverse-index ID was valid, sorted, and non-dangling. However, participant lookup returned only group IDs, not the participant or incident relations. Waboose checked structural validity but did not execute a behavioral round-trip for each advertised query surface.
++
++### 2.8 Platform and filesystem semantics were under-modelled
++
++`PurePosixPath` correctly rejected absolute and parent-traversal paths on POSIX, but it did not reject Windows drive-qualified paths, and lexical containment did not protect against symlinked parents. Waboose lacked cross-platform path and resolved-filesystem containment probes.
++
++## 3. PR #162 lesson matrix
++
++| External finding | Root defect family | W2 ca
