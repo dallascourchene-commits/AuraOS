@@ -133,7 +133,6 @@ _EDGE_RELATIONS = {
     "test": RelationType.TESTS,
     "tests": RelationType.TESTS,
 }
-_TEST_PATH_MARKERS = ("/test_", "/tests/", "test_")
 _INPUT_ROLE_PATTERNS = {
     "input_parser": ("from_value", "parse", "request"),
     "scope_normalizer": ("normalize", "_repo_paths", "target"),
@@ -205,8 +204,11 @@ def _enum(value: Any, enum_type: type[Enum], field_name: str) -> Any:
 
 
 def _is_test_path(path: str) -> bool:
-    normalized = f"/{path.lower().lstrip('/')}"
-    return any(marker in normalized for marker in _TEST_PATH_MARKERS)
+    parts = str(path).replace("\\", "/").lower().split("/")
+    return any(
+        part == "tests" or part.startswith("test_") or part.endswith("_test.py")
+        for part in parts
+    )
 
 
 def _identity_ref(file_path: str, qualified_symbol: str) -> str:
@@ -1260,9 +1262,9 @@ class RelationalSynthesisShadowCompiler:
         evidence_packet: Mapping[str, Any],
         *,
         intent_packet: PolysyntheticIntentPacket,
-        expected_repo_head: str | None = None,
-        expected_packet_digest: str | None = None,
-        expected_inventory_digest: str | None = None,
+        expected_repo_head: str,
+        expected_packet_digest: str,
+        expected_inventory_digest: str,
         active_arena: str | None = None,
     ) -> RelationalSynthesisCapsule:
         packet = _validate_evidence_packet(
@@ -1278,6 +1280,14 @@ class RelationalSynthesisShadowCompiler:
         source_slices = _source_slices(packet)
         selected = _selected_atomic_functions(packet)
         slice_by_node = {item["node_id"]: item for item in source_slices}
+        selected_node_ids = {
+            _required_text(item.get("node_id"), "selected node_id")
+            for item in selected
+        }
+        if set(slice_by_node) != selected_node_ids:
+            raise ValueError(
+                "source_slices must match selected atomic functions exactly"
+            )
 
         participants: dict[str, RelationalParticipant] = {}
         node_to_participant: dict[str, str] = {}
@@ -1307,7 +1317,14 @@ class RelationalSynthesisShadowCompiler:
             span = slice_by_node.get(node_id)
             if span is None:
                 raise ValueError(f"selected atomic function lacks exact source slice: {node_id}")
-            for field_name in ("file_path", "source_hash"):
+            for field_name in (
+                "file_path",
+                "symbol",
+                "kind",
+                "line_start",
+                "line_end",
+                "source_hash",
+            ):
                 if record.get(field_name) != span.get(field_name):
                     raise ValueError(
                         f"selected atomic identity disagrees with source slice: {node_id}"
@@ -1442,9 +1459,9 @@ def compile_relational_shadow_capsule(
     evidence_packet: Mapping[str, Any],
     *,
     intent_packet: PolysyntheticIntentPacket,
-    expected_repo_head: str | None = None,
-    expected_packet_digest: str | None = None,
-    expected_inventory_digest: str | None = None,
+    expected_repo_head: str,
+    expected_packet_digest: str,
+    expected_inventory_digest: str,
     active_arena: str | None = None,
 ) -> dict[str, Any]:
     """Public JSON surface for the Phase 1 read-only shadow compiler."""
@@ -1492,17 +1509,18 @@ def _validate_evidence_packet(
         packet.get("capability_connectome"), "capability_connectome"
     )
     _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")
-    if expected_repo_head is not None and packet["repo_head"] != expected_repo_head:
+    expected_repo_head = _required_text(expected_repo_head, "expected_repo_head")
+    expected_packet_digest = _required_text(
+        expected_packet_digest, "expected_packet_digest"
+    )
+    expected_inventory_digest = _required_text(
+        expected_inventory_digest, "expected_inventory_digest"
+    )
+    if packet["repo_head"] != expected_repo_head:
         raise ValueError("stale evidence packet repository HEAD")
-    if (
-        expected_packet_digest is not None
-        and packet["packet_digest"] != expected_packet_digest
-    ):
+    if packet["packet_digest"] != expected_packet_digest:
         raise ValueError("evidence packet digest mismatch")
-    if (
-        expected_inventory_digest is not None
-        and atomic_inventory["inventory_digest"] != expected_inventory_digest
-    ):
+    if atomic_inventory["inventory_digest"] != expected_inventory_digest:
         raise ValueError("atomic inventory digest mismatch")
     authority = {
         "safe_to_patch": False,
@@ -1641,7 +1659,7 @@ def _relations_from_packet(
             )
         key = (src_id, dst_id, edge_type)
         if key in seen_edges:
-            continue
+            raise ValueError("dependency_edges contain duplicate exact relations")
         seen_edges.add(key)
         relation_type = _EDGE_RELATIONS.get(edge_type)
         if relation_type is None:

@@ -250,17 +250,23 @@ def test_stale_repository_or_packet_digest_is_rejected() -> None:
             packet,
             intent_packet=_intent(),
             expected_repo_head="0" * 40,
+            expected_packet_digest=packet["packet_digest"],
+            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],
         )
     with pytest.raises(ValueError, match="packet digest mismatch"):
         compiler.compile(
             packet,
             intent_packet=_intent(),
+            expected_repo_head=packet["repo_head"],
             expected_packet_digest="0" * 40,
+            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],
         )
     with pytest.raises(ValueError, match="inventory digest mismatch"):
         compiler.compile(
             packet,
             intent_packet=_intent(),
+            expected_repo_head=packet["repo_head"],
+            expected_packet_digest=packet["packet_digest"],
             expected_inventory_digest="0" * 40,
         )
 
@@ -350,7 +356,65 @@ def test_objective_mismatch_rejects_unrelated_intent() -> None:
         objective="A different objective",
     )
     with pytest.raises(ValueError, match="does not bind"):
+        packet = _packet()
         RelationalSynthesisShadowCompiler().compile(
-            _packet(),
+            packet,
             intent_packet=other,
+            expected_repo_head=packet["repo_head"],
+            expected_packet_digest=packet["packet_digest"],
+            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],
+        )
+
+
+def test_test_path_detection_does_not_classify_latest_module_as_test() -> None:
+    packet = _packet()
+    packet["atomic_inventory"]["selected_atomic_functions"][3]["file_path"] = (
+        "latest_feature.py"
+    )
+    packet["source_slices"][3]["file_path"] = "latest_feature.py"
+    packet["source_slices"][3]["file_source_hash"] = "7" * 64
+    capsule = _compile(packet)
+    participant = next(
+        item
+        for item in capsule.participants
+        if item.qualified_symbol == "test_scope_is_bounded"
+    )
+    assert participant.truth_class is TruthClass.EXACT_SOURCE
+
+
+def test_selected_and_source_slice_identities_must_match_exactly() -> None:
+    packet = _packet()
+    packet["source_slices"][0]["line_end"] += 1
+    with pytest.raises(ValueError, match="identity disagrees"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["source_slices"].append(
+        {
+            **deepcopy(packet["source_slices"][0]),
+            "node_id": "extra.py#function:extra:9999999999999999",
+            "file_path": "extra.py",
+            "symbol": "extra",
+            "qualified_symbol": "extra",
+            "source_hash": "6" * 64,
+            "file_source_hash": "7" * 64,
+        }
+    )
+    with pytest.raises(ValueError, match="must match selected"):
+        _compile(packet)
+
+
+def test_duplicate_exact_dependency_edge_is_rejected() -> None:
+    packet = _packet()
+    packet["dependency_edges"].append(deepcopy(packet["dependency_edges"][0]))
+    with pytest.raises(ValueError, match="duplicate exact relations"):
+        _compile(packet)
+
+
+def test_expected_freshness_identities_are_required() -> None:
+    packet = _packet()
+    with pytest.raises(TypeError):
+        RelationalSynthesisShadowCompiler().compile(
+            packet,
+            intent_packet=_intent(),
         )
