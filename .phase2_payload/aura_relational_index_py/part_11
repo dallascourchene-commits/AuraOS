@@ -1,0 +1,159 @@
+    profile: RelationalIndexProfile | str = RelationalIndexProfile.STANDARD,
+    persist: bool = False,
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    builder = RelationalIndexBuilder(repo_root, profile=profile)
+    index = builder.build_full()
+    receipt = None
+    if persist:
+        elapsed = int((time.perf_counter() - started) * 1000)
+        receipt = RelationalIndexStore(repo_root).write(
+            index,
+            build_mode="full",
+            wall_time_ms=elapsed,
+            full_equivalence_verified=True,
+        ).to_dict()
+    return {
+        "ok": True,
+        "index": index.to_dict(),
+        "receipt": receipt,
+        "safe_to_patch": False,
+        "production_mutation": False,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+
+
+def refresh_relational_index(
+    changed_paths: Sequence[str],
+    repo_root: str | Path = ".",
+    *,
+    profile: RelationalIndexProfile | str = RelationalIndexProfile.STANDARD,
+    persist: bool = True,
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    builder = RelationalIndexBuilder(repo_root, profile=profile)
+    store = RelationalIndexStore(repo_root)
+    previous = store.load() if store.index_path.exists() else None
+    index = builder.build_incremental(previous, changed_paths=changed_paths)
+    full = builder.build_full()
+    equivalent = index.to_dict() == full.to_dict()
+    if not equivalent:
+        raise ValueError("incremental relational index differs from canonical full build")
+    receipt = None
+    if persist:
+        elapsed = int((time.perf_counter() - started) * 1000)
+        receipt = store.write(
+            index,
+            build_mode="incremental",
+            changed_paths=changed_paths,
+            wall_time_ms=elapsed,
+            full_equivalence_verified=equivalent,
+        ).to_dict()
+    return {
+        "ok": True,
+        "index": index.to_dict(),
+        "receipt": receipt,
+        "incremental_full_equivalence": equivalent,
+        "safe_to_patch": False,
+        "production_mutation": False,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+
+
+def query_relational_index(
+    index: RelationalIndex | Mapping[str, Any],
+    *,
+    participant_id: str | None = None,
+    node_id: str | None = None,
+    qualified_symbol: str | None = None,
+    file_path: str | None = None,
+    capability_id: str | None = None,
+    relation_type: str | None = None,
+) -> dict[str, Any]:
+    value = index if isinstance(index, RelationalIndex) else RelationalIndex.from_dict(index)
+    selectors = {
+        "by_participant": participant_id,
+        "by_node_id": node_id,
+        "by_qualified_symbol": qualified_symbol,
+        "by_file_path": _safe_repo_path(file_path) if file_path else None,
+        "by_capability": capability_id,
+        "by_relation_type": relation_type,
+    }
+    supplied = [(name, item) for name, item in selectors.items() if item]
+    if len(supplied) != 1:
+        raise ValueError("exactly one relational index query selector is required")
+    index_name, key = supplied[0]
+    ids = list(value.reverse_indexes[index_name].get(str(key), ()))
+    if index_name == "by_qualified_symbol" and not ids and "#" not in str(key):
+        ids = sorted(
+            {
+                item
+                for lookup_key, lookup_ids in value.reverse_indexes[index_name].items()
+                if str(lookup_key).endswith(f"#{key}")
+                for item in lookup_ids
+            }
+        )
+    participant_map = {item.participant_id: item.to_dict() for item in value.participants}
+    relation_map = {item.relation_id: item.to_dict() for item in value.relations}
+    group_map = {item.group_id: item.to_dict() for item in value.groups}
+    return {
+        "ok": True,
+        "index_id": value.index_id,
+        "selector": {"index": index_name, "key": key},
+        "ids": ids,
+        "participants": [participant_map[item] for item in ids if item in participant_map],
+        "relations": [relation_map[item] for item in ids if item in relation_map],
+        "groups": [group_map[item] for item in ids if item in group_map],
+        "safe_to_patch": False,
+        "production_mutation": False,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+
+
+def relational_index_status(repo_root: str | Path = ".") -> dict[str, Any]:
+    store = RelationalIndexStore(repo_root)
+    if not store.index_path.exists():
+        return {
+            "ok": False,
+            "status": "MISSING",
+            "path": store.index_path.relative_to(store.repo_root).as_posix(),
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+    try:
+        return store.validate_current()
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return {
+            "ok": False,
+            "status": "CORRUPT_OR_UNSUPPORTED",
+            "error_type": type(exc).__name__,
+            "error": str(exc),
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+
+def render_relational_index_markdown(
+    index: RelationalIndex,
+    receipt: RelationalIndexReceipt | None = None,
+) -> str:
+    facts = index.build_facts
+    lines = [
+        "# Aura Relational Anatomy Index",
+        "",
+        f"- Schema: `{RELATIONAL_INDEX_VERSION}`",
+        f"- Index ID: `{index.index_id}`",
+        f"- Repository HEAD: `{index.repository_identity['repo_head']}`",
+        f"- Profile: `{index.profile['name']}`",
+        f"- Participants: {len(index.participants)}",
+        f"- Relations: {len(index.relations)}",
+        f"- Groups: {len(index.groups)}",
+        f"- Atomic callables: {facts.get('atomic_callable_count', 0)}",
+        f"- Exact relations: {facts.get('exact_relation_count', 0)}",
