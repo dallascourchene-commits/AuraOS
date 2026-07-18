@@ -32,7 +32,7 @@ jobs:
       - name: Install focused test tooling
         run: |
           python -m pip install --upgrade pip --quiet
-          python -m pip install pytest ruff --quiet
+          python -m pip install pytest ruff numpy --quiet
       - name: Compile spatial contracts and tests
         run: |
           python -m py_compile \
