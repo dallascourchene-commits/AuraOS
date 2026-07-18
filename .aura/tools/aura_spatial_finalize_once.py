@@ -1,7 +1,8 @@
 """One-shot exact-source finalizer for Aura Spatial S0-S2.
 
-Every transformation is an exact single-match operation. The accompanying workflow
+Every transformation is an exact guarded operation. The accompanying workflow
 runs the focused spatial circuit and regenerates CODEMAP before committing results.
+The script is idempotent so queued repository-native runs cannot double-apply work.
 """
 from __future__ import annotations
 
@@ -13,6 +14,12 @@ ROOT = Path(__file__).resolve().parents[2]
 def replace_once(relative_path: str, old: str, new: str) -> None:
     path = ROOT / relative_path
     text = path.read_text(encoding="utf-8")
+    if old not in text:
+        if new in text:
+            return
+        raise RuntimeError(
+            f"{relative_path}: exact replacement target is absent and final state is unknown"
+        )
     count = text.count(old)
     if count != 1:
         raise RuntimeError(
@@ -93,6 +100,12 @@ replace_once(
     "docs/AURA_SPATIAL_COMPUTING.md",
     '''Every snapshot carries:\n''',
     '''Metadata is sanitized through Aura's canonical event sanitizer: secret-shaped fields are redacted and private-reasoning fields are rejected before scene hashing.\n\nEvery snapshot carries:\n''',
+)
+
+replace_once(
+    ".aura/ARCHITECTURE.md",
+    '''<!-- AURA_CODING_WABOOSE_V1:END -->\n\n### Plane 8 — Observatory and glass-box explanation''',
+    '''<!-- AURA_CODING_WABOOSE_V1:END -->\n\n<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:START -->\n#### Spatial Arena projection substrate\n\nAura's Spatial Arena is a representation-independent projection layer over retained\ndomain owners. It does not become a second CODEMAP, Coding Arena, Civic map,\nConstruction state, event store, renderer authority, or mutation path.\n\n```text\ncanonical domain truth\n  → bounded domain adapter\n  → immutable SpatialSceneSnapshot\n  → replaceable renderer/device adapter\n  → human or agent interaction\n  → six-slot review-only intent\n  → retained Arena / Forge / Gate / human decision\n```\n\nCanonical S0-S2 owners are:\n\n- `aura_spatial_contracts.py` for immutable frame, asset, entity, link, scene, and interaction contracts;\n- `aura_spatial_coordinate_frames.py` for rooted frame validation and deterministic transforms;\n- `aura_spatial_asset_registry.py` for content-addressed manifest validation without fetching, decoding, training, or rendering;\n- `aura_spatial_scene.py` for deterministic scene compilation and referential integrity;\n- `aura_spatial_projection.py` for bounded adapters that reuse `aura_coding_arena_3d.select_micro_arena()` rather than scanning a second topology;\n- `aura_spatial_interaction.py` and `aura_spatial_ws_guard.py` for six-slot review intents and fail-closed Forge handoff;\n- `aura_spatial_breadboard.py` for the proposal-only Council V3/Coding Circuit plan and BC0-BC5 evidence.\n\nSpatial coordinates, layouts, topology graph assets, Gaussian-splat manifests,\nrenderer hints, gestures, gaze, anchors, and visual selections are never patch or\nexecution authority. Every canonical scene retains exact-source-only patch authority,\n`vsa_patch_authority=false`, and `execution_authority=false`. The legacy AR bridge\nreturns `HOTSWAP_REVIEW_REQUIRED` to the requesting session and cannot report a\nqueued mutation, broadcast success, or refresh topology as though code changed.\n\nWebXR/OpenXR runtime, Gaussian-splat rendering/training, device sensors, and\nnon-Coding domain adapters remain separately review-gated S3-S7 programs.\n<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:END -->\n\n### Plane 8 — Observatory and glass-box explanation''',
 )
 
 append_once(
