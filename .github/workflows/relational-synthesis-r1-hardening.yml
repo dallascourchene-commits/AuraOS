@@ -50,6 +50,23 @@ jobs:
               for line in lines
           )
           exec(compile(script, 'relational-proof-hardening', 'exec'))
+
+          # The embedded function literals are stored inside a YAML run block.
+          # Lines whose intended indentation was >=10 spaces can lose the YAML
+          # base indent during extraction, producing a residue of 2 modulo 4.
+          # Valid Python indentation in these files is four-space aligned, so
+          # repair only that impossible residue and leave all other lines exact.
+          for target in (
+              Path('aura_relational_synthesis.py'),
+              Path('tests/test_aura_relational_synthesis.py'),
+          ):
+              repaired: list[str] = []
+              for line in target.read_text(encoding='utf-8').splitlines():
+                  indent = len(line) - len(line.lstrip(' '))
+                  if line.strip() and indent % 4 == 2:
+                      line = (' ' * 10) + line
+                  repaired.append(line)
+              target.write_text('\n'.join(repaired) + '\n', encoding='utf-8')
           PY
 
       - name: Compile hardened contracts
