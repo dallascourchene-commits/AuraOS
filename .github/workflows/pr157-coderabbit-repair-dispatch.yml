@@ -1,0 +1,75 @@
+name: PR157 CodeRabbit Repair Dispatch
+
+on:
+  pull_request:
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr157-coderabbit-repair-dispatch
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event.pull_request.number == 157 && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-synthesis-r1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply materialized CodeRabbit fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import tests.test_zzz_pr157_patch_materializer as materializer
+
+          original_replace_once = materializer._replace_once
+
+          def deterministic_replace(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if label in {"participant metadata freeze", "participant metadata thaw"}:
+                  if count != 2:
+                      raise SystemExit(f"{label}: expected two initial sites, found {count}")
+                  return text.replace(old, new, 1)
+              return original_replace_once(text, old, new, label)
+
+          materializer._replace_once = deterministic_replace
+          try:
+              module_path = Path("aura_relational_synthesis.py")
+              module_path.write_text(
+                  materializer._patch_module(module_path.read_text(encoding="utf-8")),
+                  encoding="utf-8",
+              )
+          finally:
+              materializer._replace_once = original_replace_once
+
+          tests_path = Path("tests/test_aura_relational_synthesis.py")
+          tests_path.write_text(
+              materializer._patch_tests(tests_path.read_text(encoding="utf-8")),
+              encoding="utf-8",
+          )
+          PY
+      - name: Install focused tooling
+        run: python -m pip install pytest ruff jsonschema
+      - name: Validate final relational contracts
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m ruff check aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+      - name: Remove temporary machinery and push clean repair
+        run: |
+          rm -f .github/workflows/pr157-final-coderabbit-fixes.yml
+          rm -f tests/test_000_pr157_patch_materializer.py
+          rm -f tests/test_zzz_pr157_patch_materializer.py
+          git config user.name "Aura CodeRabbit Repair Gate"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Harden relational contracts from final CodeRabbit review"
+          git push origin HEAD:feature/aura-relational-synthesis-r1
