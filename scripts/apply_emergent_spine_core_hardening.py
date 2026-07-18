@@ -27,8 +27,8 @@ def main() -> None:
     )
     text = replace_required(
         text,
-        '        value: Mapping[str, Any] | "EmergentEvidenceRequest",',
-        "        value: Mapping[str, Any] | EmergentEvidenceRequest,",
+        '    def from_value(cls, value: Mapping[str, Any] | "EmergentEvidenceRequest") -> "EmergentEvidenceRequest":',
+        "    def from_value(cls, value: Mapping[str, Any] | EmergentEvidenceRequest) -> EmergentEvidenceRequest:",
         "quoted request annotation",
     )
     text = replace_required(
