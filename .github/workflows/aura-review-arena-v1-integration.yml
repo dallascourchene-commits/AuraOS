@@ -21,6 +21,7 @@ on:
       - .aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md
       - scripts/apply_aura_review_arena_v1.py
       - scripts/apply_coding_waboose_v1.py
+      - scripts/apply_waboose_callsite_resolution_v2.py
       - .github/workflows/aura-review-arena-v1-integration.yml
       - .github/workflows/aura-review-arena-diagnostic.yml
       - .github/workflows/coding-waboose-internal-diagnostic.yml
@@ -59,6 +60,9 @@ jobs:
 
       - name: Apply Coding Waboose ownership and breadboard integration
         run: python scripts/apply_coding_waboose_v1.py
+
+      - name: Apply alias-safe callsite resolution
+        run: python scripts/apply_waboose_callsite_resolution_v2.py
 
       - name: Compile and validate contracts
         run: |
@@ -133,6 +137,7 @@ jobs:
           rm -f .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
           rm -f scripts/apply_aura_review_arena_v1.py
           rm -f scripts/apply_coding_waboose_v1.py
+          rm -f scripts/apply_waboose_callsite_resolution_v2.py
           rm -f .github/workflows/aura-review-arena-v1-integration.yml
           rm -f .github/workflows/aura-review-arena-diagnostic.yml
           rm -f .github/workflows/coding-waboose-internal-diagnostic.yml
