@@ -2,10 +2,30 @@ name: Aura Spatial S0-S2
 
 on:
   pull_request:
+    paths:
+      - "aura_spatial_*.py"
+      - "aura_topology_ws_bridge.py"
+      - "aura_showcase_spatial.py"
+      - "tests/test_aura_spatial_*.py"
+      - "tests/test_aura_showcase_spatial_integration.py"
+      - "schemas/aura_spatial_scene.schema.json"
+      - "docs/AURA_SPATIAL_COMPUTING.md"
+      - ".aura/research/AURA_SPATIAL_*"
+      - ".github/workflows/aura-spatial-s0-s2.yml"
   push:
     branches:
       - main
       - "feature/**"
+    paths:
+      - "aura_spatial_*.py"
+      - "aura_topology_ws_bridge.py"
+      - "aura_showcase_spatial.py"
+      - "tests/test_aura_spatial_*.py"
+      - "tests/test_aura_showcase_spatial_integration.py"
+      - "schemas/aura_spatial_scene.schema.json"
+      - "docs/AURA_SPATIAL_COMPUTING.md"
+      - ".aura/research/AURA_SPATIAL_*"
+      - ".github/workflows/aura-spatial-s0-s2.yml"
 
 permissions:
   contents: read
@@ -33,7 +53,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip --quiet
           python -m pip install pytest ruff numpy --quiet
-      - name: Compile spatial contracts and tests
+      - name: Compile spatial contracts, bridge, and tests
         run: |
           python -m py_compile \
             aura_spatial_contracts.py \
@@ -44,6 +64,7 @@ jobs:
             aura_spatial_interaction.py \
             aura_spatial_ws_guard.py \
             aura_spatial_breadboard.py \
+            aura_topology_ws_bridge.py \
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py
       - name: Fatal lint checks
@@ -57,6 +78,7 @@ jobs:
             aura_spatial_interaction.py \
             aura_spatial_ws_guard.py \
             aura_spatial_breadboard.py \
+            aura_topology_ws_bridge.py \
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py
       - name: Validate strict JSON schema syntax
