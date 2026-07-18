@@ -1,0 +1,130 @@
+        group_tuple = tuple(sorted(groups, key=lambda item: item.group_id))
+        identity = {
+            "repository_identity": dict(repository_identity),
+            "profile": dict(profile),
+            "participant_ids": [item.participant_id for item in participant_tuple],
+            "relation_ids": [item.relation_id for item in relation_tuple],
+            "group_ids": [item.group_id for item in group_tuple],
+            "reverse_indexes_digest": stable_digest(reverse_indexes, digest_size=20),
+            "boundary_digest": stable_digest(boundary, digest_size=20),
+        }
+        return cls(
+            index_id=stable_id("relindex", identity),
+            repository_identity=dict(repository_identity),
+            profile=dict(profile),
+            participants=participant_tuple,
+            relations=relation_tuple,
+            groups=group_tuple,
+            reverse_indexes=dict(reverse_indexes),
+            boundary=dict(boundary),
+            build_facts=dict(build_facts),
+        )
+
+    def expected_id(self) -> str:
+        return stable_id(
+            "relindex",
+            {
+                "repository_identity": _thaw_json(self.repository_identity),
+                "profile": _thaw_json(self.profile),
+                "participant_ids": [item.participant_id for item in self.participants],
+                "relation_ids": [item.relation_id for item in self.relations],
+                "group_ids": [item.group_id for item in self.groups],
+                "reverse_indexes_digest": stable_digest(
+                    _thaw_json(self.reverse_indexes), digest_size=20
+                ),
+                "boundary_digest": stable_digest(_thaw_json(self.boundary), digest_size=20),
+            },
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        body = {
+            "schema_version": RELATIONAL_INDEX_VERSION,
+            "index_id": self.index_id,
+            "repository_identity": _thaw_json(self.repository_identity),
+            "profile": _thaw_json(self.profile),
+            "participants": [item.to_dict() for item in self.participants],
+            "relations": [item.to_dict() for item in self.relations],
+            "groups": [item.to_dict() for item in self.groups],
+            "reverse_indexes": _thaw_json(self.reverse_indexes),
+            "boundary": _thaw_json(self.boundary),
+            "build_facts": _thaw_json(self.build_facts),
+            "generated_only": self.generated_only,
+            "safe_to_patch": self.safe_to_patch,
+            "production_mutation": self.production_mutation,
+            "automatic_fix": self.automatic_fix,
+            "automatic_commit": self.automatic_commit,
+            "automatic_push": self.automatic_push,
+            "automatic_pull_request": self.automatic_pull_request,
+            "automatic_merge": self.automatic_merge,
+            "human_review_required": self.human_review_required,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+        return {**body, "index_digest": stable_digest(body, digest_size=20)}
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> RelationalIndex:
+        if not isinstance(value, Mapping):
+            raise ValueError("relational index must be an object")
+        data = dict(value)
+        allowed = {
+            "schema_version",
+            "index_id",
+            "repository_identity",
+            "profile",
+            "participants",
+            "relations",
+            "groups",
+            "reverse_indexes",
+            "boundary",
+            "build_facts",
+            "generated_only",
+            "safe_to_patch",
+            "production_mutation",
+            "automatic_fix",
+            "automatic_commit",
+            "automatic_push",
+            "automatic_pull_request",
+            "automatic_merge",
+            "human_review_required",
+            "patch_authority",
+            "vsa_patch_authority",
+            "index_digest",
+        }
+        unknown = sorted(set(data) - allowed)
+        if unknown:
+            raise ValueError(f"unknown relational index fields: {', '.join(unknown)}")
+        if data.get("schema_version") != RELATIONAL_INDEX_VERSION:
+            raise ValueError("unsupported relational index schema_version")
+        if data.get("patch_authority") != PATCH_AUTHORITY:
+            raise ValueError("unsupported relational index patch_authority")
+        if data.get("vsa_patch_authority") is not False:
+            raise ValueError("relational index cannot grant VSA patch authority")
+        index = cls(
+            index_id=data.get("index_id"),
+            repository_identity=data.get("repository_identity", {}),
+            profile=data.get("profile", {}),
+            participants=tuple(
+                RelationalParticipant.from_dict(item)
+                for item in data.get("participants", [])
+            ),
+            relations=tuple(TypedRelation.from_dict(item) for item in data.get("relations", [])),
+            groups=tuple(RelationalGroup.from_dict(item) for item in data.get("groups", [])),
+            reverse_indexes=data.get("reverse_indexes", {}),
+            boundary=data.get("boundary", {}),
+            build_facts=data.get("build_facts", {}),
+            generated_only=data.get("generated_only"),
+            safe_to_patch=data.get("safe_to_patch"),
+            production_mutation=data.get("production_mutation"),
+            automatic_fix=data.get("automatic_fix"),
+            automatic_commit=data.get("automatic_commit"),
+            automatic_push=data.get("automatic_push"),
+            automatic_pull_request=data.get("automatic_pull_request"),
+            automatic_merge=data.get("automatic_merge"),
+            human_review_required=data.get("human_review_required"),
+        )
+        if data.get("index_digest") != index.to_dict()["index_digest"]:
+            raise ValueError("index_digest does not match canonical relational index")
+        return index
+
+
