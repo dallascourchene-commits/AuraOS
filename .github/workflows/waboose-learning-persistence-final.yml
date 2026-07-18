@@ -39,6 +39,29 @@ jobs:
           set -euo pipefail
           python scripts/apply_waboose_post_validation_cleanup.py
           git checkout origin/main -- .aura/CODEMAP.json .aura/CODEMAP.md
+      - name: Apply safe Ruff fixes
+        run: |
+          ruff check --fix \
+            aura_affordance_directory.py \
+            aura_agent_arena_mcp.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_coderabbit_learning_cli.py \
+            aura_coding_waboose.py \
+            aura_emergent_evidence_spine.py \
+            aura_review_arena.py \
+            aura_waboose_learning.py \
+            aura_waboose_semantic_rules.py \
+            tests/test_aura_emergent_evidence_spine.py \
+            tests/test_aura_emergent_evidence_spine_coderabbit.py \
+            tests/test_aura_waboose_semantic_rules.py \
+            tests/test_aura_waboose_semantic_rule_false_positives.py \
+            tests/test_aura_waboose_semantic_completeness.py \
+            tests/test_aura_waboose_learning.py \
+            tests/test_aura_coderabbit_learning_cli.py \
+            tests/test_aura_waboose_learning_mcp.py \
+            tests/test_aura_waboose_learning_workflows.py \
+            tests/test_aura_emergent_agent_bridge.py \
+            tests/test_aura_emergent_agent_bridge_mcp.py
       - name: Compile and run Waboose learning regressions
         run: |
           python -m py_compile \
@@ -74,6 +97,7 @@ jobs:
           python -m pytest -q tests/test_aura_qdkt_inventory.py
       - name: Enforce static and security checks
         run: |
+          set -o pipefail
           ruff check \
             aura_affordance_directory.py \
             aura_agent_arena_mcp.py \
@@ -94,7 +118,8 @@ jobs:
             tests/test_aura_waboose_learning_mcp.py \
             tests/test_aura_waboose_learning_workflows.py \
             tests/test_aura_emergent_agent_bridge.py \
-            tests/test_aura_emergent_agent_bridge_mcp.py
+            tests/test_aura_emergent_agent_bridge_mcp.py \
+            | tee /tmp/waboose-persistence-ruff.log
           bandit -q -ll \
             aura_affordance_directory.py \
             aura_agent_arena_mcp.py \
@@ -104,7 +129,8 @@ jobs:
             aura_emergent_evidence_spine.py \
             aura_review_arena.py \
             aura_waboose_learning.py \
-            aura_waboose_semantic_rules.py
+            aura_waboose_semantic_rules.py \
+            | tee /tmp/waboose-persistence-bandit.log
       - name: Remove temporary cleanup machinery
         run: |
           rm -f scripts/apply_waboose_post_validation_cleanup.py
@@ -183,5 +209,7 @@ jobs:
           path: |
             /tmp/waboose-persistence-result.json
             /tmp/waboose-persistence-state.json
+            /tmp/waboose-persistence-ruff.log
+            /tmp/waboose-persistence-bandit.log
           if-no-files-found: warn
           retention-days: 7
