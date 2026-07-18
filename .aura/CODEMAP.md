@@ -21,7 +21,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - **topology_edges**: 19660
 - **topology_source**: existing_topology_json
 - **elapsed_ms**: 20094.7
-- **last_incremental_refresh_unix**: 1784344346
+- **last_incremental_refresh_unix**: 1784345068
 
 ## Coverage
 

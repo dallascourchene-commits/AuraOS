@@ -572,7 +572,9 @@ def load_affordance_directory(repo_root: str | Path = ".") -> list[AuraAffordanc
                 for aff in extra["affordances"]:
                     if isinstance(aff, dict) and aff.get("id") not in existing_ids:
                         all_affords.append(aff)
-    except Exception:
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError):
+        # AFFORDANCE_MAP enrichment is optional, but only expected read/shape
+        # failures may fall back to the canonical seed directory.
         pass
 
     # Ground each affordance
