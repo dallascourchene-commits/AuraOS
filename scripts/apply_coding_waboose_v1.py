@@ -3,18 +3,28 @@ from __future__ import annotations
 from pathlib import Path
 
 
-def rewrite(path: str, transforms: list[tuple[str, str]]) -> None:
+def rewrite_required(path: str, transforms: list[tuple[str, str]]) -> None:
     target = Path(path)
     text = target.read_text(encoding="utf-8")
     for old, new in transforms:
         if old not in text:
-            raise SystemExit(f"missing Coding Waboose integration fragment in {path}: {old[:120]!r}")
+            raise SystemExit(
+                f"missing Coding Waboose integration fragment in {path}: {old[:120]!r}"
+            )
+        text = text.replace(old, new)
+    target.write_text(text, encoding="utf-8")
+
+
+def rewrite_optional(path: str, transforms: list[tuple[str, str]]) -> None:
+    target = Path(path)
+    text = target.read_text(encoding="utf-8")
+    for old, new in transforms:
         text = text.replace(old, new)
     target.write_text(text, encoding="utf-8")
 
 
 def patch_persistence_bridge() -> None:
-    rewrite(
+    rewrite_required(
         "aura_agent_arena_persistence_bridge.py",
         [
             (
@@ -32,6 +42,11 @@ def patch_persistence_bridge() -> None:
             ("aura_review_finalize", "aura_waboose_finalize"),
             ("aura_review_status", "aura_waboose_status"),
             ("self.review_arena.", "self.coding_waboose."),
+        ],
+    )
+    rewrite_optional(
+        "aura_agent_arena_persistence_bridge.py",
+        [
             ("graph-guided code-review contract", "Coding Waboose diagnostic contract"),
             ("prepared review", "prepared Coding Waboose run"),
             ("coding agent", "coding agent through Coding Waboose"),
@@ -40,7 +55,7 @@ def patch_persistence_bridge() -> None:
 
 
 def patch_mcp() -> None:
-    rewrite(
+    rewrite_required(
         "aura_agent_arena_mcp.py",
         [
             ("aura_review_prepare", "aura_waboose_prepare"),
@@ -55,6 +70,11 @@ def patch_mcp() -> None:
             ("_handle_review_submit_findings", "_handle_waboose_submit_findings"),
             ("_handle_review_finalize", "_handle_waboose_finalize"),
             ("_handle_review_status", "_handle_waboose_status"),
+        ],
+    )
+    rewrite_optional(
+        "aura_agent_arena_mcp.py",
+        [
             (
                 "Compile an evidence-bound review contract from a Git range, workspace, or explicit files.",
                 "Compile a Coding Waboose evidence contract and diagnostic breadboard from a Git range, workspace, or explicit files.",
@@ -84,7 +104,7 @@ def patch_mcp() -> None:
 
 
 def patch_mcp_tests() -> None:
-    rewrite(
+    rewrite_required(
         "tests/test_aura_review_arena_mcp.py",
         [
             ("FakeReviewBridge", "FakeWabooseBridge"),
@@ -97,30 +117,37 @@ def patch_mcp_tests() -> None:
             ("review_tools_are_advertised", "waboose_tools_are_advertised"),
             ("review_prepare_dispatches_complete_request", "waboose_prepare_dispatches_complete_request"),
             ("review_lifecycle_tools_dispatch", "waboose_lifecycle_tools_dispatch"),
-            ("plain_ok_false_review_result_sets_mcp_is_error", "plain_ok_false_waboose_result_sets_mcp_is_error"),
+            (
+                "plain_ok_false_review_result_sets_mcp_is_error",
+                "plain_ok_false_waboose_result_sets_mcp_is_error",
+            ),
         ],
     )
 
 
 def patch_docs() -> None:
     for path in ("README.md", "USER_GUIDE.md", ".aura/ARCHITECTURE.md"):
-        rewrite(
+        rewrite_optional(
             path,
             [
                 ("Aura Review Arena", "Coding Waboose"),
                 ("AURA_REVIEW_ARENA_V1", "AURA_CODING_WABOOSE_V1"),
                 ("docs/AURA_REVIEW_ARENA.md", "docs/AURA_CODING_WABOOSE.md"),
-                ("aura_review_arena.py", "aura_coding_waboose.py"),
                 ("aura_review_arena_cli.py", "aura_coding_waboose_cli.py"),
                 ("aura_review_contract.schema.json", "aura_coding_waboose_contract.schema.json"),
-                ("aura_review_", "aura_waboose_"),
+                ("aura_review_prepare", "aura_waboose_prepare"),
+                ("aura_review_scan", "aura_waboose_scan"),
+                ("aura_review_agent_packet", "aura_waboose_agent_packet"),
+                ("aura_review_submit_findings", "aura_waboose_submit_findings"),
+                ("aura_review_finalize", "aura_waboose_finalize"),
+                ("aura_review_status", "aura_waboose_status"),
                 ("Review Arena", "Coding Waboose"),
             ],
         )
 
 
 def patch_cli() -> None:
-    rewrite(
+    rewrite_required(
         "aura_review_arena_cli.py",
         [
             (
@@ -131,7 +158,10 @@ def patch_cli() -> None:
                 "from aura_review_arena import AuraReviewArena",
                 "from aura_coding_waboose import CodingWaboose",
             ),
-            ("Run Aura's graph-guided, evidence-bound code review Arena.", "Run Coding Waboose, Aura's graph-guided diagnostic code-review organ."),
+            (
+                "Run Aura's graph-guided, evidence-bound code review Arena.",
+                "Run Coding Waboose, Aura's graph-guided diagnostic code-review organ.",
+            ),
             ("arena = AuraReviewArena(args.repo_root)", "arena = CodingWaboose(args.repo_root)"),
             ('"version": "AURA_REVIEW_ARENA_V1"', '"version": "AURA_CODING_WABOOSE_V1"'),
         ],
