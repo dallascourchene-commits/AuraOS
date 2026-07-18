@@ -765,10 +765,20 @@ class RelationalGroup:
             isinstance(item, RoleBinding) for item in self.role_bindings
         ):
             raise ValueError("role_bindings must be a tuple of RoleBinding")
+        object.__setattr__(
+            self,
+            "role_bindings",
+            tuple(sorted(self.role_bindings, key=lambda item: (item.role, item.participant_id))),
+        )
         if type(self.relations) is not tuple or not all(
             isinstance(item, TypedRelation) for item in self.relations
         ):
             raise ValueError("relations must be a tuple of TypedRelation")
+        object.__setattr__(
+            self,
+            "relations",
+            tuple(sorted(self.relations, key=lambda item: item.relation_id)),
+        )
         if len({item.relation_id for item in self.relations}) != len(self.relations):
             raise ValueError("relations must not contain duplicate IDs")
         for name in ("predicates", "temporal_conditions", "authority_constraints"):
@@ -781,6 +791,11 @@ class RelationalGroup:
             isinstance(item, ProofObligation) for item in self.proof_obligations
         ):
             raise ValueError("proof_obligations must be a tuple of ProofObligation")
+        object.__setattr__(
+            self,
+            "proof_obligations",
+            tuple(sorted(self.proof_obligations, key=lambda item: item.obligation_id)),
+        )
         if len({item.obligation_id for item in self.proof_obligations}) != len(
             self.proof_obligations
         ):
@@ -980,6 +995,7 @@ class RelationalSynthesisCapsule:
             "repo_head",
             "atomic_inventory_digest",
             "capability_graph_digest",
+            "capability_path_digest",
             "evidence_packet_version",
         ):
             _required_text(self.repository_identity.get(key), f"repository_identity.{key}")
@@ -997,6 +1013,11 @@ class RelationalSynthesisCapsule:
             isinstance(item, RelationalParticipant) for item in self.participants
         ):
             raise ValueError("participants must be a tuple of RelationalParticipant")
+        object.__setattr__(
+            self,
+            "participants",
+            tuple(sorted(self.participants, key=lambda item: item.participant_id)),
+        )
         participant_ids = [item.participant_id for item in self.participants]
         if not participant_ids or len(participant_ids) != len(set(participant_ids)):
             raise ValueError("participants must be nonempty and contain unique IDs")
@@ -1004,6 +1025,11 @@ class RelationalSynthesisCapsule:
             isinstance(item, RelationalGroup) for item in self.groups
         ):
             raise ValueError("groups must be a tuple of RelationalGroup")
+        object.__setattr__(
+            self,
+            "groups",
+            tuple(sorted(self.groups, key=lambda item: item.group_id)),
+        )
         group_ids = [item.group_id for item in self.groups]
         if not group_ids or len(group_ids) != len(set(group_ids)):
             raise ValueError("groups must be nonempty and contain unique IDs")
@@ -1012,20 +1038,28 @@ class RelationalSynthesisCapsule:
             for binding in group.role_bindings:
                 if binding.participant_id not in participant_id_set:
                     raise ValueError("role binding references unknown participant")
+            group_boundary_ids = set(group.boundary.included_participant_ids)
             for relation in group.relations:
                 if (
                     relation.source_participant_id not in participant_id_set
                     or relation.target_participant_id not in participant_id_set
                 ):
                     raise ValueError("relation endpoint references unknown participant")
-            if not set(group.boundary.included_participant_ids).issubset(
-                participant_id_set
-            ):
+                if (
+                    relation.source_participant_id not in group_boundary_ids
+                    or relation.target_participant_id not in group_boundary_ids
+                ):
+                    raise ValueError("relation endpoint not in group boundary")
+            if not group_boundary_ids.issubset(participant_id_set):
                 raise ValueError("group boundary references unknown participant")
+            if group.boundary.all_relation_endpoints_present is not True:
+                raise ValueError("group boundary must declare all_relation_endpoints_present as True")
         if not set(self.boundary.included_participant_ids).issubset(
             participant_id_set
         ):
             raise ValueError("capsule boundary references unknown participant")
+        if self.boundary.all_relation_endpoints_present is not True:
+            raise ValueError("capsule boundary must declare all_relation_endpoints_present as True")
         normalized_slices: list[dict[str, Any]] = []
         seen_slice_ids: set[str] = set()
         for item in self.source_slices:
@@ -1034,6 +1068,22 @@ class RelationalSynthesisCapsule:
             if node_id in seen_slice_ids:
                 raise ValueError("source_slices must not contain duplicate node IDs")
             seen_slice_ids.add(node_id)
+            for field_name in (
+                "file_path",
+                "qualified_symbol",
+                "source_hash",
+                "file_source_hash",
+            ):
+                _required_text(data.get(field_name), f"source_slices[].{field_name}")
+            line_start = data.get("line_start")
+            line_end = data.get("line_end")
+            if (
+                type(line_start) is not int
+                or type(line_end) is not int
+                or line_start < 1
+                or line_end < line_start
+            ):
+                raise ValueError("source_slices[] line range is invalid")
             normalized_slices.append(data)
         object.__setattr__(
             self,
@@ -1220,6 +1270,8 @@ class RelationalSynthesisCapsule:
             raise ValueError("intent packet objective digest mismatch")
         if data.get("intent_packet_digest") != intent.digest():
             raise ValueError("intent_packet_digest mismatch")
+        if intent_data != intent.canonical_dict():
+            raise ValueError("intent_packet representation must match canonical_dict()")
         capsule = cls(
             capsule_id=data.get("capsule_id"),
             objective=data.get("objective"),
@@ -1489,6 +1541,8 @@ def _validate_evidence_packet(
         raise ValueError("evidence packet is not successful")
     if packet.get("grounding_ok") is not True:
         raise ValueError("evidence packet is not exactly grounded")
+    if packet.get("approximate_only") is not False:
+        raise ValueError("evidence packet must not be approximate_only")
     if packet.get("status") != "GROUNDED_ATOMIC_CLOSURE":
         raise ValueError("evidence packet must contain a grounded atomic closure")
     objective = _required_text(packet.get("objective"), "objective")
@@ -1920,9 +1974,15 @@ def _input_scope_authority_group(
             assignments[role] = sorted(matches, key=lambda item: item.participant_id)[0]
             name_derived_roles.add(role)
     if authority_participants:
-        assignments["authority_guard"] = sorted(
-            authority_participants, key=lambda item: item.participant_id
-        )[0]
+        authority_guard = next(
+            (item for item in authority_participants if item.role == "authority_guard"),
+            None
+        )
+        if authority_guard is None:
+            authority_guard = sorted(
+                authority_participants, key=lambda item: item.participant_id
+            )[0]
+        assignments["authority_guard"] = authority_guard
 
     unresolved_participants: list[RelationalParticipant] = []
     unresolved: list[str] = []

@@ -280,14 +280,19 @@ The capsule binds objective and digest, canonical six-slot intent packet/digest,
 
 ### Deliverables
 
+Committed PR artifacts:
 - `aura_relational_synthesis.py`;
 - `schemas/aura_relational_participant.schema.json`;
 - `schemas/aura_relational_group.schema.json`;
 - `schemas/aura_relational_synthesis_capsule.schema.json`;
 - `tests/test_aura_relational_synthesis.py`;
-- this upgraded plan;
+- this upgraded plan.
+
+External validation steps (not committed):
 - exact grounding receipt;
-- validation and Waboose evidence.
+- validation and Waboose evidence;
+- temporary workflow removal;
+- CODEMAP refresh for touched paths.
 
 ### Compiler input and limits
 
@@ -330,6 +335,7 @@ No changes are made to Waboose prepare/finalize, Forge handoff, Agent Bridge pac
 
 ### Exit gate
 
+Committed artifact gates:
 ```text
 exact qualified-symbol grounding
 → py_compile
@@ -337,11 +343,15 @@ exact qualified-symbol grounding
 → Ruff fatal rules
 → Bandit
 → schema checks
-→ Phase 1 Waboose review
 → manual relational audit
+→ keep PR open for human review
+```
+
+External validation steps (performed but not committed):
+```text
+Phase 1 Waboose review
 → remove temporary workflow
 → refresh touched CODEMAP paths
-→ keep PR open for human review
 ```
 
 ---

@@ -337,6 +337,23 @@ def test_schema_and_contract_round_trip() -> None:
     assert capsule_schema["properties"]["safe_to_patch"]["const"] is False
     assert capsule_schema["properties"]["automatic_merge"]["const"] is False
 
+    try:
+        import jsonschema
+        from jsonschema import Draft202012Validator
+
+        schema_store = {
+            participant_schema["$id"]: participant_schema,
+            group_schema["$id"]: group_schema,
+            capsule_schema["$id"]: capsule_schema,
+        }
+        resolver = jsonschema.RefResolver.from_schema(
+            capsule_schema, store=schema_store
+        )
+        validator = Draft202012Validator(capsule_schema, resolver=resolver)
+        validator.validate(data)
+    except ImportError:
+        pytest.skip("jsonschema not available for Draft 2020-12 validation")
+
 
 def test_strict_authority_and_boolean_fields_reject_truthy_values() -> None:
     packet = _packet()
