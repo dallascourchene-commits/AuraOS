@@ -1,0 +1,109 @@
+name: PR157 CodeRabbit Repair Dispatch
+
+on:
+  pull_request:
+    types: [synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr157-version-contract-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event.pull_request.number == 157 && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-synthesis-r1
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply exact version contract checks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              return text.replace(old, new, 1)
+
+          module_path = Path("aura_relational_synthesis.py")
+          text = module_path.read_text(encoding="utf-8")
+          text = replace_once(
+              text,
+              '''    for field_name in ("packet_id", "packet_digest", "repo_head", "version", "target_arena"):
+          _required_text(packet.get(field_name), field_name)
+      atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+      _required_text(
+          atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
+      )
+      capability = _mapping(
+          packet.get("capability_connectome"), "capability_connectome"
+      )
+      _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")''',
+              '''    for field_name in ("packet_id", "packet_digest", "repo_head", "version", "target_arena"):
+          _required_text(packet.get(field_name), field_name)
+      if packet["version"] != "AURA_EMERGENT_EVIDENCE_SPINE_V1":
+          raise ValueError("unsupported evidence packet version")
+      atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+      if atomic_inventory.get("version") != "AURA_ATOMIC_FUNCTION_INVENTORY_V1":
+          raise ValueError("unsupported atomic inventory version")
+      _required_text(
+          atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
+      )
+      capability = _mapping(
+          packet.get("capability_connectome"), "capability_connectome"
+      )
+      if capability.get("version") != "AURA_CAPABILITY_CONNECTOME_V2":
+          raise ValueError("unsupported capability connectome version")
+      _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")''',
+              "version validation",
+          )
+          module_path.write_text(text, encoding="utf-8")
+
+          tests_path = Path("tests/test_aura_relational_synthesis.py")
+          tests = tests_path.read_text(encoding="utf-8")
+          tests += '''
+
+
+def test_unsupported_evidence_contract_versions_fail_closed() -> None:
+    packet = _packet()
+    packet["version"] = "AURA_EMERGENT_EVIDENCE_SPINE_V999"
+    with pytest.raises(ValueError, match="unsupported evidence packet version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["atomic_inventory"]["version"] = "AURA_ATOMIC_FUNCTION_INVENTORY_V999"
+    with pytest.raises(ValueError, match="unsupported atomic inventory version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["capability_connectome"]["version"] = "AURA_CAPABILITY_CONNECTOME_V999"
+    with pytest.raises(ValueError, match="unsupported capability connectome version"):
+        _compile(packet)
+'''
+          tests_path.write_text(tests, encoding="utf-8")
+          PY
+      - name: Install focused dependencies
+        run: python -m pip install numpy pytest jsonschema ruff
+      - name: Validate exact version contracts
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m ruff check aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+      - name: Remove trigger and push clean repair
+        run: |
+          rm -f tests/test_000_pr157_version_trigger.py
+          git config user.name "Aura Version Contract Gate"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Require exact relational evidence contract versions"
+          git push origin HEAD:feature/aura-relational-synthesis-r1
