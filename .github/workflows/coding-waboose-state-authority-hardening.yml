@@ -1,0 +1,112 @@
+name: Coding Waboose State Authority Hardening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - aura_review_arena.py
+      - aura_coding_waboose_cli.py
+      - tests/test_aura_review_arena.py
+      - tests/test_aura_coding_waboose_cli.py
+      - scripts/apply_coding_waboose_state_authority_hardening.py
+      - .github/workflows/coding-waboose-state-authority-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coding-waboose-state-authority-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  harden:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install focused tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+
+      - name: Apply state-authority hardening
+        run: python scripts/apply_coding_waboose_state_authority_hardening.py
+
+      - name: Compile and check patch shape
+        run: |
+          python -m py_compile \
+            aura_review_arena.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_cli.py \
+            aura_coding_waboose_breadboard.py \
+            aura_agent_arena_mcp.py \
+            aura_agent_arena_persistence_bridge.py \
+            tests/test_aura_review_arena.py \
+            tests/test_aura_coding_waboose_cli.py
+          git diff --check
+
+      - name: Verify exact-head, deletion, and state authority
+        run: |
+          python -m pytest -q tests/test_aura_review_arena.py
+          python -m pytest -q tests/test_aura_coding_waboose_cli.py
+
+      - name: Verify Waboose and callsite owners
+        run: |
+          python -m pytest -q tests/test_aura_coding_waboose.py
+          python -m pytest -q tests/test_aura_coding_waboose_breadboard.py
+          python -m pytest -q tests/test_aura_waboose_callsite_resolution.py
+
+      - name: Verify MCP Bridge Forge and session owners
+        run: |
+          python -m pytest -q tests/test_aura_review_arena_mcp.py
+          python -m pytest -q tests/test_aura_agent_arena_mcp.py
+          python -m pytest -q tests/test_aura_agent_arena_bridge.py
+          python -m pytest -q tests/test_aura_forge.py
+          python -m pytest -q tests/test_aura_external_llm_session.py
+          python -m pytest -q tests/test_aura_architect_controls_vault_and_surfaces.py
+
+      - name: Static and security review
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_review_arena.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_cli.py \
+            aura_coding_waboose_breadboard.py \
+            tests/test_aura_review_arena.py \
+            tests/test_aura_coding_waboose_cli.py
+          bandit -q -ll \
+            aura_review_arena.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_cli.py \
+            aura_coding_waboose_breadboard.py
+
+      - name: Remove one-shot hardening machinery
+        run: |
+          rm -f scripts/apply_coding_waboose_state_authority_hardening.py
+          rm -f .github/workflows/coding-waboose-state-authority-hardening.yml
+
+      - name: Regenerate and verify repository maps
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+
+      - name: Commit permanent head
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-review-arena' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Harden Coding Waboose persisted evidence authority"
+          git push origin HEAD:"$HEAD_REF"
