@@ -10,6 +10,7 @@ workers and every completed run stops at human review.
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
+import ast
 import copy
 from dataclasses import asdict, dataclass, field
 import hashlib
@@ -370,10 +371,76 @@ class _FrozenEvidenceBridge:
         bridge: Any,
         prepared: Mapping[str, Any],
         micro_contexts: Mapping[str, Mapping[str, Any]],
+        *,
+        repo_root: Path,
+        expected_source_hashes: Mapping[str, Any],
     ) -> None:
         self._bridge = bridge
         self._prepared = copy.deepcopy(dict(prepared))
         self._micro_contexts = {str(task_id): copy.deepcopy(dict(packet)) for task_id, packet in micro_contexts.items()}
+        self._slice_grants = self._compile_slice_grants(self._micro_contexts)
+        self._source_snapshots = self._freeze_sources(repo_root, expected_source_hashes)
+
+    @staticmethod
+    def _compile_slice_grants(
+        micro_contexts: Mapping[str, Mapping[str, Any]],
+    ) -> dict[str, list[dict[str, Any]]]:
+        grants: dict[str, list[dict[str, Any]]] = {}
+
+        def grant(file: Any, *, symbol: Any = None, line_range: Any = None) -> None:
+            path = _safe_repo_path(file, field_name="source_slice")
+            if not path:
+                return
+            bounds = list(line_range or [])
+            descriptor = {
+                "symbol": str(symbol) if symbol else "",
+                "line_start": int(bounds[0]) if len(bounds) > 0 else None,
+                "line_end": int(bounds[1]) if len(bounds) > 1 else None,
+            }
+            if descriptor not in grants.setdefault(path, []):
+                grants[path].append(descriptor)
+
+        for micro in micro_contexts.values():
+            ranges = [item for item in list(micro.get("line_ranges") or []) if isinstance(item, Mapping)]
+            if ranges:
+                for item in ranges[:3]:
+                    grant(item.get("file"), symbol=item.get("symbol"), line_range=item.get("line_range"))
+            else:
+                grant(micro.get("target_file"), symbol=micro.get("target_symbol"))
+            for test_file in list(micro.get("tests") or [])[:2]:
+                grant(test_file)
+        return grants
+
+    @staticmethod
+    def _freeze_sources(
+        repo_root: Path,
+        expected_source_hashes: Mapping[str, Any],
+    ) -> dict[str, tuple[str, ...]]:
+        snapshots: dict[str, tuple[str, ...]] = {}
+        root = repo_root.resolve()
+        for raw_path, raw_digest in expected_source_hashes.items():
+            path = _safe_repo_path(raw_path, field_name="source_snapshot")
+            if not path:
+                continue
+            expected_digest = str(raw_digest or "")
+            candidate = (root / path).resolve()
+            try:
+                candidate.relative_to(root)
+            except ValueError as exc:
+                raise ValueError("source_snapshot_outside_repository") from exc
+            if expected_digest == "MISSING":
+                if candidate.exists():
+                    raise ValueError("source_snapshot_digest_mismatch")
+                continue
+            try:
+                payload = candidate.read_bytes()
+            except OSError as exc:
+                raise ValueError("source_snapshot_unavailable") from exc
+            actual_digest = f"{_FULL_DIGEST_PREFIX}{hashlib.blake2b(payload, digest_size=32).hexdigest()}"
+            if actual_digest != expected_digest:
+                raise ValueError("source_snapshot_digest_mismatch")
+            snapshots[path] = tuple(payload.decode("utf-8", errors="replace").splitlines())
+        return snapshots
 
     def aura_prepare_arena(self, **_kwargs: Any) -> dict[str, Any]:
         return copy.deepcopy(self._prepared)
@@ -384,8 +451,109 @@ class _FrozenEvidenceBridge:
             raise ValueError("unretained_forge_task_evidence")
         return copy.deepcopy(self._micro_contexts[task_id])
 
-    def __getattr__(self, name: str) -> Any:
-        return getattr(self._bridge, name)
+    def aura_read_slice(self, **kwargs: Any) -> dict[str, Any]:
+        """Serve only retained slice grants from immutable, contract-hashed bytes."""
+        try:
+            path = _safe_repo_path(kwargs.get("file"), field_name="source_slice")
+        except ValueError:
+            path = None
+        if not path or path not in self._slice_grants:
+            return {"ok": False, "error": "unretained_forge_source_slice"}
+        lines = self._source_snapshots.get(path)
+        if lines is None:
+            return {"ok": False, "error": "missing_grounding"}
+
+        symbol = str(kwargs.get("symbol") or "")
+        requested_start = kwargs.get("line_start")
+        requested_end = kwargs.get("line_end")
+        matching_grant = next(
+            (
+                grant
+                for grant in self._slice_grants[path]
+                if (symbol and grant["symbol"] == symbol)
+                or (
+                    not symbol
+                    and not grant["symbol"]
+                    and (
+                        grant["line_start"] is None
+                        or (
+                            requested_start == grant["line_start"]
+                            and requested_end == grant["line_end"]
+                        )
+                    )
+                )
+            ),
+            None,
+        )
+        if matching_grant is None:
+            return {"ok": False, "error": "unretained_forge_source_slice"}
+
+        max_lines = max(1, min(120, int(kwargs.get("max_lines") or 1)))
+        line_start = matching_grant["line_start"]
+        line_end = matching_grant["line_end"]
+        if symbol and (line_start is None or line_end is None):
+            try:
+                tree = ast.parse("\n".join(lines))
+            except SyntaxError:
+                return {"ok": False, "error": "target_symbol_unresolved"}
+            node = next(
+                (
+                    item
+                    for item in ast.walk(tree)
+                    if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                    and item.name == symbol
+                ),
+                None,
+            )
+            if node is None:
+                return {"ok": False, "error": "target_symbol_unresolved"}
+            line_start = node.lineno
+            line_end = getattr(node, "end_lineno", node.lineno) or node.lineno
+        if line_start is None:
+            line_start = 1
+        if line_end is None or line_end - line_start + 1 > max_lines:
+            line_end = line_start + max_lines - 1
+        end_index = min(len(lines), line_end)
+        raw_content = "\n".join(lines[max(0, line_start - 1) : end_index])
+        try:
+            from aura_tokenizer_guard import sanitize_tokenizer_channels
+
+            guard = sanitize_tokenizer_channels(raw_content)
+            safe_content = guard.sanitized_text
+            warnings = guard.warnings()
+        except Exception:  # noqa: BLE001
+            safe_content = raw_content
+            warnings = []
+        try:
+            from aura_agent_arena_bridge import _compress_text
+
+            safe_content = _compress_text(safe_content, max_tokens=max_lines * 4)
+        except Exception:  # noqa: BLE001
+            safe_content = safe_content[: max_lines * 16]
+        return {
+            "ok": True,
+            "file": path,
+            "symbol": symbol,
+            "line_start": line_start,
+            "line_end": end_index,
+            "total_lines": len(lines),
+            "content": safe_content,
+            "warnings": list(warnings or []),
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+        }
+
+    def aura_stage_patch(self, **kwargs: Any) -> dict[str, Any]:
+        return self._bridge.aura_stage_patch(**kwargs)
+
+    def aura_verify_arena(self, **kwargs: Any) -> dict[str, Any]:
+        return self._bridge.aura_verify_arena(**kwargs)
+
+    def aura_hotswap_status(self, **kwargs: Any) -> dict[str, Any]:
+        return self._bridge.aura_hotswap_status(**kwargs)
+
+    def aura_repair_packet(self, **kwargs: Any) -> dict[str, Any]:
+        return self._bridge.aura_repair_packet(**kwargs)
 
 
 class AuraForgeRuntime:
@@ -562,17 +730,27 @@ class AuraForgeRuntime:
             )
         contract_digest = forge_contract_digest(contract)
         run_id = f"FORGE-{contract.contract_id[:16]}-{uuid.uuid4().hex[:12]}"
+        try:
+            execution_bridge = _FrozenEvidenceBridge(
+                self.bridge,
+                prepared,
+                frozen_micro_contexts,
+                repo_root=self.repo_root,
+                expected_source_hashes=contract.repository["allowed_file_source_hashes"],
+            )
+        except (OSError, ValueError) as exc:
+            return self._error(
+                "source_evidence_freeze_error",
+                stage="GROUND",
+                details={"reason": str(exc)},
+            )
         with self._run_lock:
             self._runs[run_id] = {
                 "request": request,
                 "contract": contract,
                 "contract_digest": contract_digest,
                 "prepared": dict(prepared),
-                "execution_bridge": _FrozenEvidenceBridge(
-                    self.bridge,
-                    prepared,
-                    frozen_micro_contexts,
-                ),
+                "execution_bridge": execution_bridge,
                 "manager": None,
                 "session_id": "",
                 "last_result": {},

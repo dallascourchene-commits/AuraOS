@@ -288,6 +288,57 @@ def test_start_uses_retained_micro_context_after_bridge_drift(tmp_path: Path) ->
     assert len(bridge.context_calls) == 1
 
 
+def test_start_serves_only_contract_hashed_retained_source_slices(tmp_path: Path) -> None:
+    target = tmp_path / "pkg" / "router.py"
+    test_file = tmp_path / "tests" / "test_router.py"
+    target.parent.mkdir(parents=True)
+    test_file.parent.mkdir(parents=True)
+    target.write_text(
+        "def route_failure():\n    return 'retained'\n",
+        encoding="utf-8",
+    )
+    test_file.write_text("def test_route_failure():\n    assert True\n", encoding="utf-8")
+    runtime, _bridge, manager = build_runtime(tmp_path)
+    prepared = runtime.prepare(request())
+    observed: dict[str, Any] = {}
+
+    def factory(_request: ForgeRunRequest, actual_bridge: Any, _root: Path) -> FakeManager:
+        observed["retained"] = actual_bridge.aura_read_slice(
+            file="pkg/router.py",
+            symbol="route_failure",
+            max_lines=40,
+        )
+        observed["unretained"] = actual_bridge.aura_read_slice(
+            file="pkg/router.py",
+            line_start=1,
+            line_end=1,
+            max_lines=1,
+        )
+        observed["live_read_exposed"] = hasattr(actual_bridge, "aura_repo_digest")
+        target.write_text(
+            "def route_failure():\n    return 'changed after drift check'\n",
+            encoding="utf-8",
+        )
+        observed["after_change"] = actual_bridge.aura_read_slice(
+            file="pkg/router.py",
+            symbol="route_failure",
+            max_lines=40,
+        )
+        return manager
+
+    runtime._session_manager_factory = factory
+    started = runtime.start_prepared(prepared["run_id"])
+
+    assert started["ok"] is True
+    assert "return 'retained'" in observed["retained"]["content"]
+    assert observed["after_change"] == observed["retained"]
+    assert observed["unretained"] == {
+        "ok": False,
+        "error": "unretained_forge_source_slice",
+    }
+    assert observed["live_read_exposed"] is False
+
+
 def test_concurrent_submit_accepts_one_response_only(tmp_path: Path) -> None:
     runtime, _bridge, manager = build_runtime(tmp_path)
     started = runtime.start(request())
