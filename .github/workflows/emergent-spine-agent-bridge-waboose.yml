@@ -1,0 +1,202 @@
+name: Emergent Spine Agent Bridge Waboose
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - aura_emergent_evidence_spine.py
+      - aura_agent_arena_persistence_bridge.py
+      - aura_agent_arena_mcp.py
+      - tests/test_aura_emergent_agent_bridge.py
+      - tests/test_aura_emergent_agent_bridge_mcp.py
+      - scripts/apply_emergent_spine_agent_bridge.py
+      - .github/workflows/emergent-spine-agent-bridge-waboose.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emergent-spine-agent-bridge-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install focused verification tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+
+      - name: Apply Agent Bridge and MCP integration
+        run: python scripts/apply_emergent_spine_agent_bridge.py
+
+      - name: Compile capsule two
+        run: |
+          python -m py_compile \
+            aura_emergent_evidence_spine.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_emergent_agent_bridge.py \
+            tests/test_aura_emergent_agent_bridge_mcp.py
+
+      - name: Run emergent Agent Bridge tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_emergent_evidence_spine.py \
+            tests/test_aura_emergent_agent_bridge.py \
+            tests/test_aura_emergent_agent_bridge_mcp.py
+
+      - name: Run canonical owner regressions
+        run: |
+          python -m pytest -q tests/test_aura_agent_arena_mcp.py
+          python -m pytest -q tests/test_aura_agent_arena_bridge.py
+          python -m pytest -q tests/test_aura_forge.py
+          python -m pytest -q tests/test_aura_external_llm_session.py
+
+      - name: Static and security checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_emergent_evidence_spine.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            tests/test_aura_emergent_agent_bridge.py \
+            tests/test_aura_emergent_agent_bridge_mcp.py
+          bandit -q -ll \
+            aura_emergent_evidence_spine.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py
+
+      - name: Remove temporary capsule-two machinery
+        run: |
+          rm -f scripts/apply_emergent_spine_agent_bridge.py
+          rm -f .github/workflows/emergent-spine-agent-bridge-waboose.yml
+
+      - name: Commit exact permanent capsule locally
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Wire emergent evidence into Agent Bridge"
+
+      - name: Build capsule-two Coding Waboose request
+        run: |
+          cat > /tmp/emergent-bridge-waboose.json <<'JSON'
+          {
+            "objective": "Review the final Emergent Evidence Spine Agent Bridge and MCP integration for exact atomic inventory exposure, Connectome-grounded preparation, explicit-target preservation, fail-closed affinity behavior, bounded source disclosure, schema-handler parity, session isolation, and unchanged patch authority.",
+            "mode": "range",
+            "base_ref": "origin/main",
+            "head_ref": "HEAD",
+            "profile": "precision",
+            "focus_directives": [
+              {
+                "name": "explicit_target_precedence",
+                "question": "Can inferred emergent targets override an explicit file or symbol or bind mismatched target pairs?",
+                "risk": "correctness",
+                "direction": "both",
+                "target_patterns": ["_primary_emergent_target", "target_file", "target_symbol", "aura_prepare_arena"],
+                "required_evidence": ["exact_source", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 140
+              },
+              {
+                "name": "affinity_fail_closed",
+                "question": "Can an affinity-only or malformed emergent packet reach Architect preparation?",
+                "risk": "authority",
+                "direction": "callees",
+                "target_patterns": ["grounding_ok", "missing_grounding", "emergent_spine.run", "super().aura_prepare_arena"],
+                "required_evidence": ["contract_invariant", "malformed_packet", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 140
+              },
+              {
+                "name": "mcp_schema_handler_parity",
+                "question": "Do atomic inventory, emergent evidence, and opt-in prepare schemas exactly match their handlers and bridge methods?",
+                "risk": "contract",
+                "direction": "both",
+                "target_patterns": ["TOOL_DEFINITIONS", "aura_atomic_function_inventory", "aura_emergent_evidence", "use_emergent_evidence"],
+                "required_evidence": ["exact_source", "schema_runtime_parity", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 160
+              },
+              {
+                "name": "bridge_authority_isolation",
+                "question": "Can emergent evidence alter patch authority, mutate production, or contaminate unrelated sessions?",
+                "risk": "authority",
+                "direction": "both",
+                "target_patterns": ["emergent_evidence", "_sessions", "patch_authority", "production_mutation", "automatic_merge"],
+                "required_evidence": ["exact_source", "contract_invariant", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 140
+              }
+            ],
+            "invariants": [
+              "Emergent enrichment is opt-in and legacy preparation remains unchanged by default.",
+              "Explicit target fields always take precedence over inferred fields.",
+              "Affinity-only and malformed packets fail before Architect preparation.",
+              "The complete atomic inventory and emergent packet remain read-only.",
+              "MCP schemas, handlers, and bridge methods remain in parity.",
+              "Production mutation and automatic merge remain false."
+            ],
+            "risk_map": ["contract", "authority", "session_state", "source_disclosure", "target_binding", "dependency_graph"],
+            "graph_depth": 2,
+            "graph_node_budget": 200,
+            "run_tests": true,
+            "run_optional_tools": true,
+            "metadata": {"capsule": "agent_bridge", "feature": "emergent_evidence_spine"}
+          }
+          JSON
+
+      - name: Run Coding Waboose over capsule two
+        run: |
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/emergent-bridge-waboose-state.json \
+            run --request /tmp/emergent-bridge-waboose.json \
+            | tee /tmp/emergent-bridge-waboose-result.json
+
+      - name: Enforce clean Coding Waboose result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          packet = json.loads(Path('/tmp/emergent-bridge-waboose-result.json').read_text())
+          assert packet.get('ok') is True, packet
+          repairs = packet.get('forge_repair_requests') or []
+          if repairs:
+              raise SystemExit(f'Coding Waboose found repair-eligible defects: {repairs}')
+          assert packet.get('production_mutation') is False
+          assert packet.get('automatic_merge') is False
+          PY
+
+      - name: Push reviewed permanent capsule
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-emergent-evidence-spine' }}
+        run: git push origin HEAD:"$HEAD_REF"
+
+      - name: Upload capsule-two evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-spine-agent-bridge-waboose
+          path: |
+            /tmp/emergent-bridge-waboose-result.json
+            /tmp/emergent-bridge-waboose-state.json
+          if-no-files-found: warn
+          retention-days: 3
