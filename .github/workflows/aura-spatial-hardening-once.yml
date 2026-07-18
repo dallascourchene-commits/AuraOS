@@ -6,6 +6,7 @@ on:
       - feature/aura-spatial-s0-s2
     paths:
       - .aura/tools/aura_spatial_hardening_once.py
+      - .aura/tools/aura_spatial_hardening_stage2.py
 
 permissions:
   contents: write
@@ -27,7 +28,13 @@ jobs:
         with:
           python-version: "3.12"
       - name: Apply guarded exact-source transformations
-        run: python .aura/tools/aura_spatial_hardening_once.py
+        shell: bash
+        run: |
+          if [[ -f .aura/tools/aura_spatial_hardening_stage2.py ]]; then
+            python .aura/tools/aura_spatial_hardening_stage2.py
+          else
+            python .aura/tools/aura_spatial_hardening_once.py
+          fi
       - name: Verify transformed Python and patch hygiene
         run: |
           python -m py_compile \
@@ -57,5 +64,5 @@ jobs:
             echo "No hardening changes were required."
             exit 0
           fi
-          git commit -m "Spatial S2: harden serialization, selection, and hotswap boundary"
+          git commit -m "Spatial S2: repair canonical digest ownership"
           git push origin "HEAD:${GITHUB_REF_NAME}"
