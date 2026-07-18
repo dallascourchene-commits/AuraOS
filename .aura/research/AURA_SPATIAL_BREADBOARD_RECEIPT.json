@@ -1,0 +1,124 @@
+{
+  "authority": {
+    "automatic_commit": false,
+    "automatic_fix": false,
+    "automatic_merge": false,
+    "automatic_pull_request": false,
+    "automatic_push": false,
+    "class": "proposal_only_spatial_refactor_circuit",
+    "execution_authority": false,
+    "human_authorizes": true,
+    "patch_authority": false,
+    "planning_proposes": true,
+    "renderer_authority": false,
+    "verification_proves": true,
+    "vsa_patch_authority": false
+  },
+  "base_head": "f302811ec4c84f194f232e6f475cbd0e64bf94c8",
+  "branch": "feature/aura-spatial-s0-s2",
+  "council_route": {
+    "council_version": "AURA_ARCHITECT_COUNCIL_V3_SELECTIVE_CRITICS",
+    "lane_requirements": {
+      "continuity": [
+        "each task emits a bounded handoff artifact",
+        "all source and verifier references survive context boundaries"
+      ],
+      "cost": [
+        "stdlib-only core",
+        "bounded node/link projections",
+        "renderer and 3DGS work deferred to S3/S4"
+      ],
+      "rollback": [
+        "additive files can be reverted independently",
+        "bridge integration fails closed and is separately revertible"
+      ],
+      "scope": [
+        "new substrate remains projection-only",
+        "no existing planning tools are refactored",
+        "S0-S2 excludes renderer and device ownership"
+      ],
+      "sequence": [
+        "contracts before validators",
+        "validators before scene compiler",
+        "scene compiler before adapters and interactions",
+        "guard integration after interaction contract"
+      ],
+      "tests": [
+        "contract, adversarial, determinism, and compatibility tests",
+        "existing Coding Arena/showcase regressions remain green"
+      ]
+    },
+    "length_profile": {
+      "council_recommended": true,
+      "dependency_edge_count": 19,
+      "distinct_file_count": 22,
+      "estimated_max_model_turns": 30,
+      "estimated_min_model_turns": 10,
+      "large_task_count": 2,
+      "length_class": "LONG",
+      "reasons": [
+        "multiple_act_capsules",
+        "explicit_task_dependencies"
+      ],
+      "sequential_depth_estimate": 7,
+      "task_count": 10
+    },
+    "native_model_calls_claimed": false,
+    "routing_mode": "DETERMINISTIC_SELECTIVE_ROUTE_REPLAY",
+    "selected_lanes": [
+      "scope",
+      "tests",
+      "sequence",
+      "continuity",
+      "rollback",
+      "cost"
+    ],
+    "skipped_lanes": []
+  },
+  "date": "2026-07-19",
+  "deferred_explicit_mocks": [
+    {
+      "authority": false,
+      "grounded": false,
+      "mock_id": "mock:renderer:webxr_or_openxr_adapter",
+      "reason": "renderer selection is deferred to S3 and cannot block S0-S2 contracts"
+    },
+    {
+      "authority": false,
+      "grounded": false,
+      "mock_id": "mock:asset:gaussian_splat_runtime",
+      "reason": "3DGS import/render is deferred to S4; no training or runtime is claimed"
+    },
+    {
+      "authority": false,
+      "grounded": false,
+      "mock_id": "mock:device:anchors_gaze_gesture_sensors",
+      "reason": "device signals remain future adapters and never authority"
+    }
+  ],
+  "isolated_energized_circuit": {
+    "board_digest": "1a30e963d71ad7077c920dd9d31a3299",
+    "component_count": 10,
+    "continuity_complete": true,
+    "meaning": "Interface-compatible isolated harness only; repository-native verifier receipts remain required.",
+    "status": "VERIFIED_SPATIAL_S0_S2_CIRCUIT"
+  },
+  "local_evidence": {
+    "focused_tests": {
+      "environment": "production-compatible isolated stubs",
+      "failed": 0,
+      "passed": 12
+    },
+    "python_compile": "PASS"
+  },
+  "native_council_model_calls_claimed": false,
+  "plan_digest": "62fb0b6315e2dbb6b951fc485646b916f8270203d54c707e6ab73ca7fee7818e",
+  "planning_mode": "DETERMINISTIC_COUNCIL_V3_ROUTE_REPLAY_AND_CODING_CIRCUIT",
+  "unpowered_circuit": {
+    "board_digest": "1a30e963d71ad7077c920dd9d31a3299",
+    "component_count": 10,
+    "highest_contiguous_level": "BC4_AUTHORIZED",
+    "status": "GROUNDED_SPATIAL_S0_S2_CIRCUIT_UNPOWERED"
+  },
+  "version": "AURA_SPATIAL_S0_S2_IMPLEMENTATION_RECEIPT_V1"
+}
