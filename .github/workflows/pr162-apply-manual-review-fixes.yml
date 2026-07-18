@@ -1,0 +1,88 @@
+name: Apply PR162 Manual Review Fixes
+
+on:
+  pull_request:
+    types: [reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr162-manual-review-fixes
+  cancel-in-progress: false
+
+jobs:
+  apply-and-validate:
+    if: github.event.pull_request.number == 162 && github.head_ref == 'feature/aura-relational-index-r2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout draft branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-index-r2
+          fetch-depth: 0
+
+      - name: Reconstruct and verify exact manual patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .pr162_manual_fixes/part_* > /tmp/pr162_manual_fixes.patch
+          echo '13f52b5134f7ce71a0b46e4a8742cf8727049c47311eef71cee127d53558b574  /tmp/pr162_manual_fixes.patch' | sha256sum -c -
+          git apply --check /tmp/pr162_manual_fixes.patch
+          git apply /tmp/pr162_manual_fixes.patch
+
+      - name: Verify exact permanent file checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '6b673779539eee4de4e696c3cc51ac17b588f6d06713e3241e488843916f7cb9  aura_relational_index.py' | sha256sum -c -
+          echo '0c06eacf0680b926425b40fd75fa197087214579b08a7f77d47e13ad9309d959  schemas/aura_relational_index.schema.json' | sha256sum -c -
+          echo '51b0cd1e4b560c35513be7eb969ef5d13c5f9b0afc38b6b730df5e08531305a6  tests/test_aura_relational_index.py' | sha256sum -c -
+          echo 'b8471d0df2130dc878d7bb023f291a41fe43e614c0a2e8dbcba2b097700a5088  docs/AURA_RELATIONAL_INDEX.md' | sha256sum -c -
+          echo '800b89a6ef7237e335f3c78afd2c2feb317df665c68cc66819ec6647eebd75a0  docs/AURA_CODING_WABOOSE.md' | sha256sum -c -
+          echo '74b3db16870c62f25d27e109d07857e949d44566ffd91686420b30e31fe486ef  docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md' | sha256sum -c -
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install bounded validation dependencies
+        run: |
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet 'numpy>=1.26.4,<3.0' pytest jsonschema referencing pyyaml ruff
+
+      - name: Compile lint and run relational regressions
+        run: |
+          set -euo pipefail
+          python -m py_compile aura_relational_index.py tests/test_aura_relational_index.py
+          python -m ruff check aura_relational_index.py tests/test_aura_relational_index.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py tests/test_aura_relational_index.py
+
+      - name: Run Coding Waboose learning and semantic gates
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/test_aura_waboose_learning.py \
+            tests/test_aura_waboose_learning_mcp.py \
+            tests/test_aura_waboose_semantic_completeness.py \
+            tests/test_aura_waboose_semantic_rule_false_positives.py \
+            tests/test_aura_waboose_semantic_rules.py
+
+      - name: Remove all temporary transfer machinery
+        run: |
+          set -euo pipefail
+          rm -rf .pr162_manual_fixes
+          rm -f \
+            .github/workflows/pr162-export-reviewed-head.yml \
+            .github/workflows/pr162-apply-manual-review-fixes.yml
+
+      - name: Commit permanent manual hardening
+        run: |
+          set -euo pipefail
+          git config user.name 'Aura Manual Review Builder'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Relational Synthesis R2: manual review hardening and Waboose lessons'
+          git push origin HEAD:feature/aura-relational-index-r2
