@@ -2,7 +2,7 @@
 
 > Canonical architecture, ownership, data-flow, and authority anchor for humans and AI agents
 
-**Architecture audit:** reviewed through July 17, 2026 and the preceding three weeks of merged development, including guarded Arena WFSTs, capability resolution, Planning Board/event history, relational authority, ST3GG/J2/QDKT consolidation, Model Cognome, Human Agent/Observatory/Crucible separation, external-worker slice sessions, Civic Commons, Construction E0–E14, Financial exact state, temporal persistence, Tensor Evidence, empirical cost, benchmarks, and public deployment surfaces.
+**Architecture audit:** reviewed through July 18, 2026 and the preceding three weeks of merged development, including guarded Arena WFSTs, capability resolution, Planning Board/event history, relational authority, ST3GG/J2/QDKT consolidation, Model Cognome, Human Agent/Observatory/Crucible separation, external-worker slice sessions, Civic Commons, Construction E0–E14, Financial exact state, temporal persistence, Tensor Evidence, empirical cost, benchmarks, Gate, and public deployment surfaces.
 
 **Navigation rule:** read this file before subsystem documents. Regenerate CODEMAP/topology from the current tree after architecture or source changes.
 
@@ -747,6 +747,10 @@ Architectural boundaries:
 ## 10. SCO Construction Arena
 
 The completed E0–E14 Construction architecture is a narrow adapter over canonical Aura owners. It does not create duplicate Planning, governance, Experience, Crucible, persistence, Human Agent, or Observatory systems.
+
+### Construction Human Agent and Observatory
+
+The Construction Human Agent is a purpose-limited projection over canonical project state and an admitted planning capsule. The corresponding Observatory surface is read-only, payload-minimized, and cannot approve, execute, or mutate Construction state.
 
 ```text
 immutable Construction claims/evidence/events

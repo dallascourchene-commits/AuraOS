@@ -478,6 +478,12 @@ python3 -m pytest -q \
   tests/test_aura_gate_contract_artifacts.py
 ```
 
+Before merging a Gate change, regenerate CODEMAP from tracked repository content, verify
+compiled deep topology, run the focused contracts and repository CI, and inspect the PR
+with a code-review service. Address every valid actionable review thread, rerun the affected
+contracts after the final commit, and merge only when the authority envelope, documentation,
+generated navigation, and release checks describe the same artifact.
+
 The proof is Forge-specific OIDC/private single-node deployment. It does not claim
 SAML/SCIM, HA/Kubernetes, arbitrary-domain policy, vendor-certified SIEM integration, or
 automatic commit, push, PR, merge, release, or promotion. See `docs/AURA_GATE.md` for the

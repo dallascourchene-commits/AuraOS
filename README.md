@@ -278,6 +278,10 @@ All included demonstration stories and community overlays are explicitly labeled
 
 The completed E0–E14 Construction refactor reuses canonical Aura owners for planning, governance, receipts, WFST admission, Experience, Crucible, persistence, Human Agent, and Observatory.
 
+#### Construction Human Agent profile
+
+The Construction Human Agent profile is purpose-limited to the admitted planning capsule and keeps decision authority external; its paired Observatory projection is stricter and read-only.
+
 ```text
 immutable claims/evidence/events
   → ConstructionProjectState replay
