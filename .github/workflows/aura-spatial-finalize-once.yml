@@ -6,6 +6,7 @@ on:
       - feature/aura-spatial-s0-s2
     paths:
       - .aura/tools/aura_spatial_finalize_once.py
+      - .aura/tools/aura_spatial_finalize_trigger.py
 
 permissions:
   contents: write
@@ -77,6 +78,12 @@ jobs:
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py \
             tests/test_aura_showcase_spatial_integration.py
+      - name: Remove one-shot finalization machinery
+        run: |
+          rm -f \
+            .aura/tools/aura_spatial_finalize_once.py \
+            .aura/tools/aura_spatial_finalize_trigger.py \
+            .github/workflows/aura-spatial-finalize-once.yml
       - name: Regenerate canonical CODEMAP and topology
         run: |
           python aura_codebase_navigator.py
@@ -86,7 +93,7 @@ jobs:
         run: |
           git config user.name "AuraOS Spatial Circuit Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add \
+          git add -A \
             aura_spatial_contracts.py \
             aura_spatial_projection.py \
             aura_spatial_ws_guard.py \
@@ -95,7 +102,10 @@ jobs:
             .aura/ARCHITECTURE.md \
             .aura/CODEMAP.json \
             .aura/CODEMAP.md \
-            topology_map.json
+            topology_map.json \
+            .aura/tools/aura_spatial_finalize_once.py \
+            .aura/tools/aura_spatial_finalize_trigger.py \
+            .github/workflows/aura-spatial-finalize-once.yml
           if git diff --cached --quiet; then
             echo "Spatial source and CODEMAP are already finalized."
             exit 0
