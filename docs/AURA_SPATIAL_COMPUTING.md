@@ -110,6 +110,8 @@ The registry:
 
 Metadata is sanitized through Aura's canonical event sanitizer: secret-shaped fields are redacted and private-reasoning fields are rejected before scene hashing.
 
+Metadata is sanitized through Aura's canonical event sanitizer: secret-shaped fields are redacted and private-reasoning fields are rejected before scene hashing.
+
 Every snapshot carries:
 
 ```yaml
