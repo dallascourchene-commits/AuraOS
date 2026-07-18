@@ -1,0 +1,218 @@
+name: Emergent Spine CODEMAP Merge Final
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/emergent-spine-codemap-merge-final.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emergent-spine-codemap-merge-final-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-emergent-evidence-spine' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install navigator and verification dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' ruff bandit
+
+      - name: Regenerate full CODEMAP and deep topology
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py | tee /tmp/codemap-regeneration.log
+
+      - name: Validate regenerated navigation artifacts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          codemap_path = Path('.aura/CODEMAP.json')
+          markdown_path = Path('.aura/CODEMAP.md')
+          topology_path = Path('Aura_Memory/live_topology_ast.json')
+          assert codemap_path.is_file() and codemap_path.stat().st_size > 1000
+          assert markdown_path.is_file() and markdown_path.stat().st_size > 100
+          assert topology_path.is_file() and topology_path.stat().st_size > 1000
+
+          payload = json.loads(codemap_path.read_text(encoding='utf-8'))
+          assert payload.get('status') == 'AURA_CODEMAP_ACTIVE'
+          assert payload.get('generated_by') == 'aura_codebase_navigator'
+          summary = dict(payload.get('summary') or {})
+          assert int(summary.get('file_count') or 0) > 0
+          assert int(summary.get('topology_nodes') or 0) > 0
+          assert int(summary.get('topology_edges') or 0) > 0
+          assert summary.get('topology_source') == 'compiled_deep_topology', summary
+
+          cards = {str(item.get('path') or '') for item in payload.get('files') or []}
+          required_files = {
+              'aura_emergent_evidence_spine.py',
+              'aura_waboose_learning.py',
+              'aura_waboose_semantic_rules.py',
+              'aura_coderabbit_learning_cli.py',
+          }
+          missing_files = sorted(required_files - cards)
+          assert not missing_files, missing_files
+
+          symbols = dict(payload.get('symbol_index') or {})
+          required_symbols = {
+              'AuraEmergentEvidenceSpine',
+              'build_atomic_function_inventory',
+              'WabooseLearningStore',
+              'run_semantic_rule_packs',
+          }
+          missing_symbols = sorted(symbol for symbol in required_symbols if symbol not in symbols)
+          assert not missing_symbols, missing_symbols
+
+          markdown = markdown_path.read_text(encoding='utf-8')
+          assert 'Aura Compact Code Map' in markdown
+          assert 'compiled_deep_topology' in markdown
+          print(json.dumps({
+              'file_count': summary['file_count'],
+              'topology_nodes': summary['topology_nodes'],
+              'topology_edges': summary['topology_edges'],
+              'required_files': sorted(required_files),
+              'required_symbols': sorted(required_symbols),
+          }, indent=2))
+          PY
+
+      - name: Run focused permanent regressions
+        run: |
+          python -m py_compile \
+            aura_codebase_navigator.py \
+            aura_emergent_evidence_spine.py \
+            aura_waboose_learning.py \
+            aura_waboose_semantic_rules.py \
+            aura_coding_waboose.py \
+            aura_review_arena.py
+          python -m pytest -q \
+            tests/test_aura_emergent_evidence_spine.py \
+            tests/test_aura_emergent_evidence_spine_coderabbit.py \
+            tests/test_aura_waboose_semantic_rules.py \
+            tests/test_aura_waboose_semantic_rule_false_positives.py \
+            tests/test_aura_waboose_semantic_completeness.py \
+            tests/test_aura_waboose_learning.py \
+            tests/test_aura_waboose_learning_mcp.py \
+            tests/test_aura_waboose_learning_workflows.py \
+            tests/test_aura_emergent_agent_bridge.py \
+            tests/test_aura_emergent_agent_bridge_mcp.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_emergent_evidence_spine.py \
+            aura_waboose_learning.py \
+            aura_waboose_semantic_rules.py \
+            aura_coding_waboose.py \
+            aura_review_arena.py
+          bandit -q -ll \
+            aura_emergent_evidence_spine.py \
+            aura_waboose_learning.py \
+            aura_waboose_semantic_rules.py \
+            aura_coding_waboose.py \
+            aura_review_arena.py
+
+      - name: Remove temporary merge machinery
+        run: rm -f .github/workflows/emergent-spine-codemap-merge-final.yml
+
+      - name: Commit exact regenerated permanent tree locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'CODEMAP already matched the exact permanent tree.'
+          else
+            git commit -m 'Regenerate emergent evidence CODEMAP and topology'
+          fi
+
+      - name: Build final Coding Waboose request
+        run: |
+          python - <<'PY'
+          import json
+          request = {
+              'objective': 'Final exact-head review after canonical CODEMAP and deep topology regeneration for the Emergent Evidence Spine and CodeRabbit learning loop.',
+              'mode': 'range',
+              'base_ref': 'origin/main',
+              'head_ref': 'HEAD',
+              'profile': 'precision',
+              'graph_depth': 2,
+              'graph_node_budget': 260,
+              'run_tests': False,
+              'run_optional_tools': True,
+              'focus_directives': [
+                  {'name':'strict_boolean_options','question':'Are boolean options parsed with strict types rather than truthiness?','risk':'correctness','target_patterns':['boolean option','strict type'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'qualified_symbol_identity','question':'Are qualified symbols and same-named methods kept distinct at every target binding boundary?','risk':'dependency_impact','target_patterns':['qualified symbol','symbol identity'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'source_inventory_integrity','question':'Does source inventory fail closed on unreadable files and decoding errors?','risk':'correctness','target_patterns':['source inventory','decoding','unreadable file'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'bounded_closure_integrity','question':'Are closure edge endpoints always inside the bounded closure node set?','risk':'dependency_impact','target_patterns':['bounded closure','edge endpoint'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'test_evidence_preservation','question':'Are test callable nodes and test edges preserved in bounded audit evidence?','risk':'test_gap','target_patterns':['test callable','test edge'],'required_evidence':['semantic_rule','regression_test']}
+              ],
+              'invariants': [
+                  'The CODEMAP was generated by aura_codebase_navigator from this exact clean head.',
+                  'The new emergent and learning owners appear in CODEMAP files and symbol indexes.',
+                  'Topology is compiled from the exact reviewed head.',
+                  'CodeRabbit teacher signals, DREAM-lite, Connectome, and QDKT remain advisory.',
+                  'Production mutation and automatic merge remain false inside Waboose.'
+              ],
+              'risk_map': ['codemap_drift','topology_drift','semantic_completeness','teacher_authority','source_integrity','symbol_identity']
+          }
+          with open('/tmp/emergent-codemap-waboose-request.json','w',encoding='utf-8') as handle:
+              json.dump(request, handle)
+          PY
+
+      - name: Run and enforce final Coding Waboose review
+        run: |
+          set -o pipefail
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/emergent-codemap-waboose-state.json \
+            run --request /tmp/emergent-codemap-waboose-request.json \
+            | tee /tmp/emergent-codemap-waboose-result.json
+          python - <<'PY'
+          import json
+          with open('/tmp/emergent-codemap-waboose-result.json', encoding='utf-8') as handle:
+              packet = json.load(handle)
+          assert packet.get('ok') is True, packet
+          assert packet.get('semantic_review_complete') is True, packet
+          assert not packet.get('unverified_focus_directives'), packet
+          assert not packet.get('findings'), packet
+          assert not packet.get('forge_repair_requests'), packet
+          assert set(packet.get('semantic_rule_packs_executed') or []) == {
+              'strict_input_types', 'symbol_identity', 'source_integrity',
+              'bounded_graph_integrity', 'test_evidence_preservation'
+          }
+          assert packet.get('production_mutation') is False
+          assert packet.get('automatic_merge') is False
+          PY
+
+      - name: Push regenerated reviewed tree
+        run: git push origin HEAD:"$HEAD_REF"
+
+      - name: Upload final merge evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-spine-codemap-merge-final
+          path: |
+            /tmp/codemap-regeneration.log
+            /tmp/emergent-codemap-waboose-result.json
+            /tmp/emergent-codemap-waboose-state.json
+          if-no-files-found: warn
+          retention-days: 7
