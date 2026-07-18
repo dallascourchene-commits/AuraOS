@@ -24,21 +24,21 @@ def main() -> None:
     text = path.read_text(encoding="utf-8")
     text = replace_exact_count(
         text,
-        '''# Public request alias.
-''',
-        '''# Public request alias.  The underlying generic review request remains reusable.
-''',
+        "# Public request alias.\n",
+        (
+            "# Public request alias.  The underlying generic review request "
+            "remains reusable.\n"
+        ),
         expected=2,
         label="Waboose public-alias",
     )
     text = replace_exact_count(
         text,
-        '''    marker = '''\'''    def aura_waboose_prepare(
-'''\'''
-''',
-        '''    marker = '''\'''    def aura_waboose_prepare(self, request: Mapping[str, Any]) -> dict[str, Any]:
-'''\'''
-''',
+        "    marker = '''    def aura_waboose_prepare(\n'''\n",
+        (
+            "    marker = '''    def aura_waboose_prepare("
+            "self, request: Mapping[str, Any]) -> dict[str, Any]:\n'''\n"
+        ),
         expected=1,
         label="Agent Bridge learning method",
     )
