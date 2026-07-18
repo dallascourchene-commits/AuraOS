@@ -6,6 +6,7 @@ from typing import Any, Mapping
 from aura_agent_arena_bridge import AuraAgentArenaBridge
 from aura_arena_persistence_adapters import ArenaPersistenceCoordinator
 from aura_temporal_persistence import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
+from aura_coding_waboose import CodingWaboose
 
 AGENT_ARENA_PERSISTENCE_BRIDGE_VERSION = "AURA_AGENT_ARENA_PERSISTENCE_BRIDGE_V1"
 
@@ -16,6 +17,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
     def __init__(self, *, repo_root: str | None = None) -> None:
         super().__init__(repo_root=repo_root)
         self.persistence = ArenaPersistenceCoordinator(str(self.repo_root))
+        self.coding_waboose = CodingWaboose(self.repo_root)
 
     def aura_checkpoint_session(
         self,
@@ -92,6 +94,46 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             current_invariant_values=current_invariant_values,
         )
 
+    def aura_waboose_prepare(self, request: Mapping[str, Any]) -> dict[str, Any]:
+        return self.coding_waboose.prepare(request)
+
+    def aura_waboose_scan(self, review_id: str) -> dict[str, Any]:
+        return self.coding_waboose.scan(review_id)
+
+    def aura_waboose_agent_packet(
+        self,
+        review_id: str,
+        *,
+        include_source: bool = False,
+        max_files: int = 24,
+        max_lines_per_file: int = 120,
+    ) -> dict[str, Any]:
+        return self.coding_waboose.agent_packet(
+            review_id,
+            include_source=include_source,
+            max_files=max_files,
+            max_lines_per_file=max_lines_per_file,
+        )
+
+    def aura_waboose_submit_findings(
+        self,
+        review_id: str,
+        findings: list[Mapping[str, Any]],
+        *,
+        agent_name: str = "external_agent",
+    ) -> dict[str, Any]:
+        return self.coding_waboose.submit_findings(
+            review_id,
+            findings,
+            agent_name=agent_name,
+        )
+
+    def aura_waboose_finalize(self, review_id: str) -> dict[str, Any]:
+        return self.coding_waboose.finalize(review_id)
+
+    def aura_waboose_status(self, review_id: str) -> dict[str, Any]:
+        return self.coding_waboose.status(review_id)
+
     @staticmethod
     def list_tools() -> list[dict[str, Any]]:
         return [
@@ -120,6 +162,36 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 "name": "aura_handoff_checkpoint",
                 "description": "Create a payload-free digital baton for another Aura arena.",
                 "required_inputs": ["checkpoint_id", "target_arena_id", "current_repo_head"],
+            },
+            {
+                "name": "aura_waboose_prepare",
+                "description": "Compile an evidence-bound Coding Waboose diagnostic contract.",
+                "required_inputs": ["objective"],
+            },
+            {
+                "name": "aura_waboose_scan",
+                "description": "Run deterministic review scans for a prepared Coding Waboose run.",
+                "required_inputs": ["review_id"],
+            },
+            {
+                "name": "aura_waboose_agent_packet",
+                "description": "Return a bounded impact packet for a replaceable coding agent through Coding Waboose.",
+                "required_inputs": ["review_id"],
+            },
+            {
+                "name": "aura_waboose_submit_findings",
+                "description": "Submit structured agent findings for exact-source corroboration.",
+                "required_inputs": ["review_id", "findings"],
+            },
+            {
+                "name": "aura_waboose_finalize",
+                "description": "Rank review findings and compile Forge repair requests.",
+                "required_inputs": ["review_id"],
+            },
+            {
+                "name": "aura_waboose_status",
+                "description": "Return bounded in-process review status.",
+                "required_inputs": ["review_id"],
             },
         ]
 

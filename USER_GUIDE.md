@@ -76,6 +76,7 @@ Keep these outside the repository:
 | **Native Cockpit** | Objective ingestion, capability resolution, topology paths, and bounded handoff preparation | `python3 -m aura_native_cockpit_server` |
 | **Agent Arena CLI** | Repository health, localization, prepared coding tasks, staging, verification, cost, and domain commands | `python3 -m aura_agent_arena_cli` |
 | **Aura Forge API** | Frozen-plan verified engineering runs with an exact Arena Evidence Contract and bounded worker sessions | `from aura_forge import AuraForgeRuntime` |
+| **Coding Waboose** | Graph-guided diff review, deterministic scans, coding-agent focus, exact-source corroboration, and Forge repair handoff | `python3 aura_coding_waboose_cli.py run --request review_request.json` |
 | **Coding Arena** | Visual code topology, exact source regions, route simulation, and capsule review | `python3 aura_coding_arena_server.py --demo` |
 | **Human Agent Arena** | Human/Aura/agent workflows, gate dialogue, attempts, emergent evidence, Construction profile, persistence, and tools | `python3 aura_human_agent_arena_server.py --repo-root . --demo` |
 | **Aura Showcase** | Guided four-surface Civic, Human Agent, Observatory, and Crucible demonstration | `python3 aura_showcase_server.py --demo-project winnipeg_pathways` |
@@ -83,6 +84,31 @@ Keep these outside the repository:
 | **Legacy REPL** | Existing `!commands` and compatibility workflows | `python3 aura_node.py` |
 
 The browser surfaces are not authority. A button, chart, ranking, dialogue, or visual node does not approve a consequential action.
+
+### Review a coding run before repair
+
+Use Coding Waboose when the question is not only "does it compile?" but also
+"which typed diagnostic circuit should be energized, and what exact forward and backward
+proof path does it require?" Coding Waboose uses the Planning Board/Coding Breadboard when "what exact
+callers, callees, schemas, tests, state transitions, authority boundaries, or shared resources
+could this change affect?"
+
+```bash
+python3 aura_coding_waboose_cli.py run --request review_request.json
+```
+
+For Codex, Hermes, or another MCP client, keep the MCP server alive and call:
+
+```text
+aura_waboose_prepare
+→ aura_waboose_scan
+→ aura_waboose_agent_packet
+→ aura_waboose_submit_findings
+→ aura_waboose_finalize
+```
+
+A review finding is not patch authority. Select a generated Forge repair request only after
+examining the exact evidence, then let Forge stage and verify the separate repair.
 
 ## 4. Orient yourself before changing code
 
