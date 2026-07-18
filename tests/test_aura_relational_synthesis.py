@@ -274,10 +274,17 @@ def test_stale_repository_or_packet_digest_is_rejected() -> None:
 def test_test_filename_without_callable_is_explicitly_unresolved() -> None:
     capsule = _compile()
     group = next(item for item in capsule.groups if item.purpose == "test_proof_ownership")
-    assert group.boundary.omitted_relation_count == 1
-    assert group.boundary.omitted_reasons == {"unresolved_test_callable_owner": 1}
-    assert group.boundary.unresolved_relations == (
-        "test_callable_owner:tests/test_unresolved.py",
+    assert group.boundary.omitted_relation_count == 2
+    assert group.boundary.omitted_reasons == {
+        "unresolved_test_callable_owner": 1,
+        "unresolved_test_invariant": 1,
+    }
+    assert "test_callable_owner:tests/test_unresolved.py" in (
+        group.boundary.unresolved_relations
+    )
+    assert any(
+        item.startswith("proved_invariant:")
+        for item in group.boundary.unresolved_relations
     )
     unresolved = [
         item
@@ -418,3 +425,35 @@ def test_expected_freshness_identities_are_required() -> None:
             packet,
             intent_packet=_intent(),
         )
+
+
+def test_name_derived_roles_and_test_meaning_remain_open() -> None:
+    packet = _packet()
+    packet["tests"] = ["tests/test_packet.py"]
+    capsule = _compile(packet)
+
+    scope_group = next(
+        item for item in capsule.groups if item.purpose == "input_scope_authority"
+    )
+    binding_roles = {item.role for item in scope_group.role_bindings}
+    assert "candidate_input_parser" in binding_roles
+    assert "candidate_scope_normalizer" in binding_roles
+    assert "candidate_packet_assembler" in binding_roles
+    assert "authority_guard" in binding_roles
+    assert all(item.status.value == "OPEN" for item in scope_group.proof_obligations)
+    assert scope_group.boundary.omitted_reasons == {
+        "name_derived_role_requires_proof": 3
+    }
+    assert len(scope_group.boundary.unresolved_relations) == 3
+
+    test_group = next(
+        item for item in capsule.groups if item.purpose == "test_proof_ownership"
+    )
+    assert all(item.status.value == "OPEN" for item in test_group.proof_obligations)
+    assert test_group.boundary.omitted_reasons == {
+        "unresolved_test_invariant": 1
+    }
+    assert any(
+        item.startswith("proved_invariant:")
+        for item in test_group.boundary.unresolved_relations
+    )

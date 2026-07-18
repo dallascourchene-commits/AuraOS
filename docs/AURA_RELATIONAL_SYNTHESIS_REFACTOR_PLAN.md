@@ -309,7 +309,7 @@ Preserves exact test callables and exact `TESTS` relations when present. Filenam
 
 #### `input_scope_authority`
 
-Binds input parser, scope normalizer, packet assembler, and authority guard when exact evidence exists. Missing roles become explicit unresolved participants. Affinity fallback may never silently widen an explicit target.
+Binds an exact authority manifest directly. Function-name matches for input parser, scope normalizer, and packet assembler remain candidate role bindings with open proof obligations until structural, schema, manifest, or verifier evidence proves the role. Missing roles become explicit unresolved participants. Affinity fallback may never silently widen an explicit target.
 
 ### Phase 1 compatibility
 
