@@ -142,6 +142,18 @@ def patch_docs() -> None:
                 ("aura_review_finalize", "aura_waboose_finalize"),
                 ("aura_review_status", "aura_waboose_status"),
                 ("Review Arena", "Coding Waboose"),
+                (
+                    "  → run-specific focus directives\n  → bounded coding-agent investigation",
+                    "  → run-specific focus directives\n  → diagnostic Coding Breadboard\n  → bounded coding-agent investigation",
+                ),
+                (
+                    "Use Coding Waboose when the question is not only \"does it compile?\" but also",
+                    "Use Coding Waboose when the question is not only \"does it compile?\" but also\n\"which typed diagnostic circuit should be energized, and what exact forward and backward\nproof path does it require?\" Coding Waboose uses the Planning Board/Coding Breadboard when",
+                ),
+                (
+                    "- `aura_review_arena.py`;\n- `aura_coding_waboose_cli.py`;\n- `schemas/aura_coding_waboose_contract.schema.json`;\n- Coding Waboose tools on `aura_agent_arena_persistence_bridge.py` and `aura_agent_arena_mcp.py`;\n- `docs/AURA_CODING_WABOOSE.md`.",
+                    "- `aura_coding_waboose.py` — public Coding Waboose owner;\n- `aura_coding_waboose_breadboard.py` — proposal-only diagnostic circuit compiler;\n- `aura_review_arena.py` — internal reusable scan/corroboration engine;\n- `aura_coding_waboose_cli.py`;\n- `schemas/aura_coding_waboose_contract.schema.json` and the internal `schemas/aura_review_contract.schema.json`;\n- Coding Waboose tools on `aura_agent_arena_persistence_bridge.py` and `aura_agent_arena_mcp.py`;\n- `docs/AURA_CODING_WABOOSE.md`.",
+                ),
             ],
         )
 
