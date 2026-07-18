@@ -334,6 +334,11 @@ def _graph_semantic_findings(*, file: str, source: str, tree: ast.AST) -> list[d
     for node in ast.walk(tree):
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
+        if node.name.startswith("test_"):
+            # Regression fixtures often embed intentionally broken source strings.
+            # Analyze the embedded source when the test calls the public scanner,
+            # not the test function's surrounding text as production logic.
+            continue
         body = _function_text(lines, node)
         compact = " ".join(body.split())
         name = node.name.lower()
@@ -347,8 +352,14 @@ def _graph_semantic_findings(*, file: str, source: str, tree: ast.AST) -> list[d
             and "return visited, admitted_edges" in compact
         )
         endpoint_filter = (
-            "edge.src_id in selected" in compact
-            and "edge.dst_id in selected" in compact
+            (
+                "edge.src_id in selected" in compact
+                and "edge.dst_id in selected" in compact
+            )
+            or (
+                "edge.src_id not in selected" in compact
+                and "edge.dst_id not in selected" in compact
+            )
         )
         if closure_shape and not endpoint_filter:
             findings.append(
@@ -379,8 +390,15 @@ def _graph_semantic_findings(*, file: str, source: str, tree: ast.AST) -> list[d
             and "edge.dst_id in bounded.nodes" in compact
         )
         preserves_test_sources = (
-            'edge.edge_type == "test"' in compact
-            and "include_ids.add(edge.src_id)" in compact
+            (
+                'edge.edge_type == "test"' in compact
+                and "include_ids.add(edge.src_id)" in compact
+            )
+            or (
+                "node.file_path in tests" in compact
+                and "node.kind in ATOMIC_KINDS" in compact
+                and "include_ids.add(node.node_id)" in compact
+            )
         )
         if bounded_anchor_shape and not preserves_test_sources:
             findings.append(
@@ -448,8 +466,8 @@ def directive_semantic_rule_packs(value: Mapping[str, Any]) -> set[str]:
 
 
 __all__ = [
-    "SEMANTIC_RULE_PACKS",
     "SEMANTIC_RULES_VERSION",
+    "SEMANTIC_RULE_PACKS",
     "directive_semantic_rule_packs",
     "scan_semantic_review_rules",
 ]

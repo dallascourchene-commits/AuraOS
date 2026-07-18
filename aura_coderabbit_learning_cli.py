@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from aura_waboose_learning import CodeRabbitLearningStore, DEFAULT_LEARNING_ROOT
+from aura_waboose_learning import DEFAULT_LEARNING_ROOT, CodeRabbitLearningStore
 
 
 def _load_json(value: str) -> Any:

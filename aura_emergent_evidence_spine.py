@@ -24,6 +24,7 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import tokenize
 from typing import Any
 
 from aura_capability_connectome import build_capability_connectome
@@ -89,6 +90,14 @@ _STOPWORDS = frozenset(
 )
 
 
+def _boolean(value: Any, *, default: bool) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    raise ValueError("expected a boolean")
+
+
 @dataclass(frozen=True)
 class EmergentEvidenceRequest:
     objective: str
@@ -123,10 +132,14 @@ class EmergentEvidenceRequest:
             radius=max(0, min(3, int(value.get("radius", 1)))),
             max_atomic_nodes=max(1, min(200, int(value.get("max_atomic_nodes", 48)))),
             max_source_lines=max(8, min(300, int(value.get("max_source_lines", 120)))),
-            include_source=bool(value.get("include_source", True)),
-            include_future=bool(value.get("include_future", True)),
-            include_research_plan=bool(value.get("include_research_plan", True)),
-            include_offline_research=bool(value.get("include_offline_research", True)),
+            include_source=_boolean(value.get("include_source"), default=True),
+            include_future=_boolean(value.get("include_future"), default=True),
+            include_research_plan=_boolean(
+                value.get("include_research_plan"), default=True
+            ),
+            include_offline_research=_boolean(
+                value.get("include_offline_research"), default=True
+            ),
         )
 
 
@@ -232,7 +245,15 @@ class AuraEmergentEvidenceSpine:
                 approximate_only=approximate_only,
             )
             return packet
-        except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        except (
+            OSError,
+            TypeError,
+            ValueError,
+            UnicodeError,
+            SyntaxError,
+            LookupError,
+            json.JSONDecodeError,
+        ) as exc:
             return _error(type(exc).__name__, str(exc))
         except Exception as exc:
             return _error(type(exc).__name__, "emergent evidence spine failed closed")
@@ -266,12 +287,15 @@ def build_atomic_function_inventory(
             score = 0
             if record["file_path"] in normalized_files:
                 score += 100
-            if record["symbol"] in normalized_symbols:
+            if normalized_symbols.intersection(
+                {record["symbol"], record["qualified_symbol"]}
+            ):
                 score += 120
             searchable = " ".join(
                 [
                     record["file_path"],
                     record["symbol"],
+                    record["qualified_symbol"],
                     record.get("parent_symbol") or "",
                     " ".join(record.get("calls") or []),
                     " ".join(record.get("imports") or []),
@@ -302,16 +326,11 @@ def build_atomic_function_inventory(
 def _repo_python_sources(root: Path) -> dict[str, str]:
     files: dict[str, str] = {}
     for path in sorted(root.glob("**/*.py")):
-        try:
-            relative = path.relative_to(root)
-        except ValueError:
-            continue
+        relative = path.relative_to(root)
         if any(part in EXCLUDE_DIRS for part in relative.parts):
             continue
-        try:
-            files[relative.as_posix()] = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
+        with tokenize.open(path) as handle:
+            files[relative.as_posix()] = handle.read()
     return files
 
 
@@ -361,6 +380,14 @@ def _inventory_from_anchor(anchor: CodeTopoAnchor, *, include_source: bool) -> d
     }
 
 
+def _qualified_symbol(node: CodeTopoNode) -> str:
+    return f"{node.parent_symbol}.{node.symbol}" if node.parent_symbol else node.symbol
+
+
+def _matches_symbol(node: CodeTopoNode, symbol: str) -> bool:
+    return symbol in {node.symbol, _qualified_symbol(node)}
+
+
 def _select_seed_nodes(
     anchor: CodeTopoAnchor,
     request: EmergentEvidenceRequest,
@@ -392,7 +419,7 @@ def _select_seed_nodes(
             node
             for node in anchor.nodes.values()
             if node.kind in ATOMIC_KINDS
-            and node.symbol == symbol
+            and _matches_symbol(node, symbol)
             and (not target_files or node.file_path in target_files)
         ]
         for node in candidates:
@@ -419,7 +446,7 @@ def _select_seed_nodes(
         implemented = set(_repo_paths(detail.get("implemented_by") or ()))
         for symbol in _strings(detail.get("symbols") or ()):
             for node in anchor.nodes.values():
-                if node.kind not in ATOMIC_KINDS or node.symbol != symbol:
+                if node.kind not in ATOMIC_KINDS or not _matches_symbol(node, symbol):
                     continue
                 if implemented and node.file_path not in implemented:
                     continue
@@ -454,7 +481,7 @@ def _admit_match(
             continue
         if file_path and node.file_path != file_path:
             continue
-        if symbol and node.symbol != symbol:
+        if symbol and not _matches_symbol(node, symbol):
             continue
         admit(node, reason)
 
@@ -469,8 +496,7 @@ def _expand_atomic_closure(
     visited: list[str] = []
     seen: set[str] = set()
     queue: deque[tuple[str, int]] = deque((node_id, 0) for node_id in seed_ids)
-    admitted_edges: list[dict[str, Any]] = []
-    edge_keys: set[tuple[str, str, str]] = set()
+    queued: set[str] = set(seed_ids)
     while queue and len(visited) < max_nodes:
         node_id, distance = queue.popleft()
         node = anchor.nodes.get(node_id)
@@ -489,12 +515,27 @@ def _expand_atomic_closure(
             other_node = anchor.nodes.get(other)
             if other_node is None or other_node.kind not in ATOMIC_KINDS:
                 continue
-            key = (edge.src_id, edge.dst_id, edge.edge_type)
-            if key not in edge_keys:
-                edge_keys.add(key)
-                admitted_edges.append(edge.to_dict())
-            if other not in seen and len(visited) + len(queue) < max_nodes:
+            if (
+                other not in seen
+                and other not in queued
+                and len(visited) + len(queue) < max_nodes
+            ):
+                queued.add(other)
                 queue.append((other, distance + 1))
+    selected = set(visited)
+    admitted_edges: list[dict[str, Any]] = []
+    edge_keys: set[tuple[str, str, str]] = set()
+    for edge in sorted(
+        anchor.edges,
+        key=lambda item: (item.edge_type, item.src_id, item.dst_id, item.evidence),
+    ):
+        if edge.src_id not in selected or edge.dst_id not in selected:
+            continue
+        key = (edge.src_id, edge.dst_id, edge.edge_type)
+        if key in edge_keys:
+            continue
+        edge_keys.add(key)
+        admitted_edges.append(edge.to_dict())
     return visited, admitted_edges
 
 
@@ -510,6 +551,17 @@ def _bounded_anchor(
         if node_id in anchor.nodes
     }
     include_files.update(tests)
+    selected_module_ids = {
+        anchor.module_nodes.get(file_path) for file_path in include_files
+    }
+    selected_module_ids.discard(None)
+    for node in anchor.nodes.values():
+        if node.file_path in tests and node.kind in ATOMIC_KINDS:
+            include_ids.add(node.node_id)
+    test_targets = include_ids | selected_module_ids
+    for edge in anchor.edges:
+        if edge.edge_type == "test" and edge.dst_id in test_targets:
+            include_ids.add(edge.src_id)
     for node in anchor.nodes.values():
         if node.kind == "module" and node.file_path in include_files:
             include_ids.add(node.node_id)

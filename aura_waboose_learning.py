@@ -70,6 +70,14 @@ def _tokens(value: Any) -> set[str]:
     return {item.lower() for item in _TOKEN_RE.findall(str(value or ""))}
 
 
+def _strict_boolean(value: Any, *, default: bool, field_name: str) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    raise ValueError(f"{field_name} must be a boolean")
+
+
 def _safe_repo_path(value: Any) -> str:
     text = str(value or "").replace("\\", "/").strip()
     path = PurePosixPath(text)
@@ -232,7 +240,29 @@ class CodeRabbitLearningStore:
         self.episodes_path = self.learning_root / "coderabbit_episodes.jsonl"
         self.patterns_path = self.learning_root / "coderabbit_patterns.json"
         self.dream_ledger_path = self.learning_root / "dream_coderabbit_ledger.jsonl"
-        self.qdkt = qdkt or UnifiedQDKT()
+        self.qdkt = qdkt
+
+    def _qdkt(self) -> UnifiedQDKT:
+        if self.qdkt is None:
+            self.qdkt = UnifiedQDKT()
+        return self.qdkt
+
+    def _known_lesson_ids(self) -> set[str]:
+        if not self.episodes_path.exists():
+            return set()
+        result: set[str] = set()
+        with self.episodes_path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                lesson_id = str(row.get("lesson_id") or "")
+                if lesson_id:
+                    result.add(lesson_id)
+        return result
 
     def _load_patterns(self) -> dict[str, dict[str, Any]]:
         if not self.patterns_path.exists():
@@ -280,8 +310,13 @@ class CodeRabbitLearningStore:
                 "patch_authority": False,
             }
         path = dict(resolution.get("capability_connectome_path") or {})
+        path_ok = _strict_boolean(
+            path.get("ok"),
+            default=True,
+            field_name="capability_connectome_path.ok",
+        )
         return {
-            "ok": bool(path.get("ok", True)),
+            "ok": path_ok,
             "graph_digest": str(graph.get("graph_digest") or graph.get("digest") or ""),
             "path": list(path.get("path") or []),
             "path_details": list(path.get("path_details") or []),
@@ -334,7 +369,7 @@ class CodeRabbitLearningStore:
             arena_domain="coding_waboose",
             verifier_result=dict(verifier_result),
             ledger_path=self.dream_ledger_path,
-            qdkt=self.qdkt,
+            qdkt=self._qdkt(),
             top_k=1,
             record=True,
             metadata={"teacher": "coderabbit", "patch_authority": False},
@@ -381,6 +416,7 @@ class CodeRabbitLearningStore:
         patterns = self._load_patterns()
         learned: list[dict[str, Any]] = []
         rejected: list[dict[str, Any]] = []
+        known_lesson_ids = self._known_lesson_ids()
         for index, finding in enumerate(findings):
             try:
                 lesson = self._ground_lesson(
@@ -393,6 +429,10 @@ class CodeRabbitLearningStore:
             except (OSError, SyntaxError, UnicodeError, ValueError, LookupError) as exc:
                 rejected.append({"index": index, "reason": str(exc)[:500]})
                 continue
+            if lesson.lesson_id in known_lesson_ids:
+                rejected.append({"index": index, "reason": "duplicate_grounded_lesson"})
+                continue
+            known_lesson_ids.add(lesson.lesson_id)
             self._append_episode(lesson)
             pattern = self._update_pattern(patterns, lesson)
             learned.append(
@@ -407,7 +447,7 @@ class CodeRabbitLearningStore:
             )
         _atomic_write_json(self.patterns_path, patterns)
         return {
-            **self._result(bool(learned), "learned" if learned else "no_grounded_findings"),
+            **self._result(True, "learned" if learned else "no_new_grounded_findings"),
             "run_id": run_id,
             "repository_head": current_head,
             "learned_count": len(learned),
@@ -581,7 +621,11 @@ class CodeRabbitLearningStore:
             "files": sorted(set(existing.get("files") or []) | {lesson.file}),
             "capability_path": capability_nodes,
             "ast_signature": lesson.ast_signature,
-            "title_tokens": sorted(_tokens(f"{lesson.title} {lesson.message}"))[:160],
+            "title_tokens": sorted(
+                _tokens(
+                    f"{lesson.title} {lesson.message} {lesson.source_excerpt}"
+                )
+            )[:160],
             "last_repository_head": lesson.repository_head,
             "first_seen": float(existing.get("first_seen") or lesson.learned_at),
             "last_confirmed": lesson.learned_at,
@@ -600,7 +644,8 @@ class CodeRabbitLearningStore:
             "success": True,
             "patch_authority": False,
         }
-        self.qdkt.observe(
+        qdkt = self._qdkt()
+        qdkt.observe(
             "coderabbit_review_learning",
             event_payload,
             rationale=f"Grounded CodeRabbit finding: {lesson.title}",
@@ -608,8 +653,27 @@ class CodeRabbitLearningStore:
             confidence=confidence,
             subsystem="coding_waboose",
         )
+        qdkt.observe(
+            "causal_update",
+            {
+                "hypothesis": (
+                    f"Grounded CodeRabbit pattern {pattern_id} predicts a recurring "
+                    "Coding Waboose review defect"
+                ),
+                "success": True,
+                "error": max(0.0, 1.0 - confidence),
+                "pattern_id": pattern_id,
+                "file_path": lesson.file,
+                "source_grounded": True,
+                "patch_authority": False,
+            },
+            rationale="CodeRabbit confirmation updates the Waboose causal learning ledger.",
+            concept=f"coding_waboose_causal:{pattern_id}",
+            confidence=confidence,
+            subsystem="coding_waboose",
+        )
         if count >= _CRYSTAL_CONFIRMATIONS and confidence >= _CRYSTAL_CONFIDENCE:
-            self.qdkt.crystallize(
+            qdkt.crystallize(
                 f"coding_waboose:{pattern_id}",
                 lesson.suggested_fix,
                 confidence=confidence,
@@ -668,7 +732,7 @@ class CodeRabbitLearningStore:
             "code_review_pattern",
             arena_domain="coding_waboose",
             ledger_path=self.dream_ledger_path,
-            qdkt=self.qdkt,
+            qdkt=self._qdkt(),
             top_k=max(1, min(24, int(top_k))),
             record=False,
             metadata={"phase": "waboose_prepare", "patch_authority": False},
@@ -782,8 +846,8 @@ class CodeRabbitLearningStore:
 
 
 __all__ = [
-    "CodeRabbitLearningStore",
-    "CodeRabbitLesson",
     "DEFAULT_LEARNING_ROOT",
     "WABOOSE_LEARNING_VERSION",
+    "CodeRabbitLearningStore",
+    "CodeRabbitLesson",
 ]

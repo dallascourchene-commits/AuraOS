@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import ast
 from collections import defaultdict, deque
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
@@ -23,8 +24,13 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Callable, Iterable, Mapping, Sequence
+from typing import Any
 import uuid
+
+from aura_waboose_semantic_rules import (
+    SEMANTIC_RULE_PACKS,
+    scan_semantic_review_rules,
+)
 
 REVIEW_ARENA_VERSION = "AURA_REVIEW_ARENA_V1"
 REVIEW_CONTRACT_VERSION = "AURA_REVIEW_CONTRACT_V1"
@@ -156,6 +162,14 @@ def _safe_ref(value: Any, *, field_name: str) -> str:
     return text
 
 
+def _strict_boolean(value: Any, *, default: bool, field_name: str) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    raise ValueError(f"{field_name} must be a boolean")
+
+
 def _default_command_runner(
     command: Sequence[str], cwd: Path, timeout_seconds: int
 ) -> subprocess.CompletedProcess[str]:
@@ -214,7 +228,7 @@ class ReviewFocusDirective:
     origin: str = "agent"
 
     @classmethod
-    def from_value(cls, value: str | Mapping[str, Any], *, origin: str = "agent") -> "ReviewFocusDirective":
+    def from_value(cls, value: str | Mapping[str, Any], *, origin: str = "agent") -> ReviewFocusDirective:
         if isinstance(value, str):
             raw: Mapping[str, Any] = {"name": value[:80], "question": value}
         elif isinstance(value, Mapping):
@@ -291,7 +305,7 @@ class AuraReviewRequest:
     metadata: Mapping[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def from_value(cls, value: "AuraReviewRequest | Mapping[str, Any]") -> "AuraReviewRequest":
+    def from_value(cls, value: AuraReviewRequest | Mapping[str, Any]) -> AuraReviewRequest:
         if isinstance(value, cls):
             return value
         if not isinstance(value, Mapping):
@@ -347,8 +361,14 @@ class AuraReviewRequest:
             agent_name=str(value.get("agent_name") or "external_agent").strip()[:120] or "external_agent",
             graph_depth=graph_depth,
             graph_node_budget=graph_node_budget,
-            run_tests=bool(value.get("run_tests", True)),
-            run_optional_tools=bool(value.get("run_optional_tools", True)),
+            run_tests=_strict_boolean(
+                value.get("run_tests"), default=True, field_name="run_tests"
+            ),
+            run_optional_tools=_strict_boolean(
+                value.get("run_optional_tools"),
+                default=True,
+                field_name="run_optional_tools",
+            ),
             metadata=metadata,
         )
 
@@ -714,6 +734,7 @@ class AuraReviewArena:
             "agent_findings": [],
             "agent_finding_inputs": [],
             "tool_results": [],
+            "semantic_rule_packs": [],
             "status": "PREPARED",
             "created_at": time.time(),
         }
@@ -736,16 +757,26 @@ class AuraReviewArena:
         request: AuraReviewRequest = state["request"]
         contract: AuraReviewContract = state["contract"]
         findings: list[dict[str, Any]] = []
+        semantic_rule_packs: set[str] = set()
         deleted_files = set(state.get("deleted_files", ()))
         for file in contract.changed_files:
             if file.endswith(".py") and file not in deleted_files:
-                findings.extend(self._scan_python_file(file))
+                file_findings = self._scan_python_file(file)
+                findings.extend(file_findings)
+                fatal_rules = {
+                    str(item.get("rule") or "") for item in file_findings
+                }.intersection(
+                    {"changed-file-missing", "changed-file-unreadable", "python-syntax-error"}
+                )
+                if not fatal_rules:
+                    semantic_rule_packs.update(SEMANTIC_RULE_PACKS)
         findings.extend(self._scan_signature_impacts(state))
         tool_results, tool_findings = self._run_tools(state)
         findings.extend(tool_findings)
         normalized = self._normalize_findings(findings, origin_default="deterministic")
         state["deterministic_findings"] = normalized
         state["tool_results"] = tool_results
+        state["semantic_rule_packs"] = sorted(semantic_rule_packs)
         state["status"] = "WAITING_FOR_AGENT" if request.agent_name != "none" else "SCANNED"
         return {
             "ok": True,
@@ -754,6 +785,7 @@ class AuraReviewArena:
             "status": state["status"],
             "deterministic_findings": normalized,
             "tool_results": _sanitize(tool_results),
+            "semantic_rule_packs_executed": sorted(semantic_rule_packs),
             "agent_packet": self._agent_packet_from_state(review_id, include_source=False),
             "production_mutation": False,
             "automatic_fix": False,
@@ -1684,7 +1716,7 @@ class AuraReviewArena:
                 quality=quality,
                 cost="local_first",
             ).to_dict()
-        except Exception:  # noqa: BLE001
+        except Exception:
             return {
                 "intent": "verify",
                 "artifact": artifact,
@@ -1734,11 +1766,28 @@ class AuraReviewArena:
                 "evidence": [{"kind": "parser", "source": "ast.parse", "offset": exc.offset}],
                 "status": "confirmed",
             }]
-        except OSError:
-            return []
+        except OSError as exc:
+            return [{
+                "origin": "builtin_ast",
+                "rule": "changed-file-unreadable",
+                "category": "correctness",
+                "severity": "high",
+                "confidence": 1.0,
+                "title": "Changed file could not be read",
+                "message": f"{type(exc).__name__}: {exc}",
+                "file": file,
+                "line_start": 1,
+                "line_end": 1,
+                "suggested_fix": "Restore exact readable source before review.",
+                "evidence": [{"kind": "filesystem", "source": "review_head"}],
+                "status": "confirmed",
+            }]
         visitor = _ASTReviewVisitor(file=file)
         visitor.visit(tree)
-        return visitor.findings
+        return [
+            *visitor.findings,
+            *scan_semantic_review_rules(file=file, source=source, tree=tree),
+        ]
 
     def _scan_signature_impacts(self, state: Mapping[str, Any]) -> list[dict[str, Any]]:
         request: AuraReviewRequest = state["request"]
@@ -2691,14 +2740,14 @@ def validate_review_contract(value: Any) -> list[str]:
 
 
 __all__ = [
-    "AuraReviewArena",
-    "AuraReviewContract",
-    "AuraReviewRequest",
     "PATCH_AUTHORITY",
     "REVIEW_ARENA_VERSION",
     "REVIEW_CONTRACT_VERSION",
     "REVIEW_PACKET_VERSION",
-    "ReviewFocusDirective",
     "VSA_PATCH_AUTHORITY",
+    "AuraReviewArena",
+    "AuraReviewContract",
+    "AuraReviewRequest",
+    "ReviewFocusDirective",
     "validate_review_contract",
 ]
