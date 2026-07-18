@@ -16,12 +16,14 @@ on:
       - tests/test_aura_review_arena_mcp.py
       - tests/test_aura_coding_waboose.py
       - tests/test_aura_coding_waboose_breadboard.py
+      - tests/test_aura_waboose_callsite_resolution.py
       - docs/AURA_CODING_WABOOSE.md
       - .aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md
       - scripts/apply_aura_review_arena_v1.py
       - scripts/apply_coding_waboose_v1.py
       - .github/workflows/aura-review-arena-v1-integration.yml
       - .github/workflows/aura-review-arena-diagnostic.yml
+      - .github/workflows/coding-waboose-internal-diagnostic.yml
   workflow_dispatch:
 
 permissions:
@@ -70,12 +72,16 @@ jobs:
             tests/test_aura_review_arena.py \
             tests/test_aura_review_arena_mcp.py \
             tests/test_aura_coding_waboose.py \
-            tests/test_aura_coding_waboose_breadboard.py
+            tests/test_aura_coding_waboose_breadboard.py \
+            tests/test_aura_waboose_callsite_resolution.py
           python -m json.tool schemas/aura_review_contract.schema.json >/dev/null
           python -m json.tool schemas/aura_coding_waboose_contract.schema.json >/dev/null
 
       - name: Verify internal review engine
         run: python -m pytest -q tests/test_aura_review_arena.py
+
+      - name: Verify import-aware callsite resolution
+        run: python -m pytest -q tests/test_aura_waboose_callsite_resolution.py
 
       - name: Verify Coding Waboose breadboard
         run: python -m pytest -q tests/test_aura_coding_waboose_breadboard.py
@@ -113,7 +119,8 @@ jobs:
             tests/test_aura_review_arena.py \
             tests/test_aura_review_arena_mcp.py \
             tests/test_aura_coding_waboose.py \
-            tests/test_aura_coding_waboose_breadboard.py
+            tests/test_aura_coding_waboose_breadboard.py \
+            tests/test_aura_waboose_callsite_resolution.py
           bandit -q -ll \
             aura_review_arena.py \
             aura_coding_waboose.py \
@@ -122,12 +129,13 @@ jobs:
 
       - name: Remove superseded and one-shot integration machinery
         run: |
-          rm docs/AURA_REVIEW_ARENA.md
-          rm .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
-          rm scripts/apply_aura_review_arena_v1.py
-          rm scripts/apply_coding_waboose_v1.py
-          rm .github/workflows/aura-review-arena-v1-integration.yml
-          rm .github/workflows/aura-review-arena-diagnostic.yml
+          rm -f docs/AURA_REVIEW_ARENA.md
+          rm -f .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
+          rm -f scripts/apply_aura_review_arena_v1.py
+          rm -f scripts/apply_coding_waboose_v1.py
+          rm -f .github/workflows/aura-review-arena-v1-integration.yml
+          rm -f .github/workflows/aura-review-arena-diagnostic.yml
+          rm -f .github/workflows/coding-waboose-internal-diagnostic.yml
 
       - name: Regenerate and verify repository maps
         run: |
