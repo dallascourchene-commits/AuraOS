@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from typing import Any
+from typing import Any, Mapping
 
 from aura_agent_arena_bridge import BRIDGE_VERSION
 from aura_agent_arena_persistence_bridge import (
@@ -289,6 +289,86 @@ TOOL_DEFINITIONS = [
             "required": ["checkpoint_id", "target_arena_id", "current_repo_head"],
         },
     },
+    {
+        "name": "aura_waboose_prepare",
+        "description": "Compile a Coding Waboose evidence contract and diagnostic breadboard from a Git range, workspace, or explicit files.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string"},
+                "mode": {"type": "string", "enum": ["range", "workspace", "files"], "default": "range"},
+                "base_ref": {"type": "string", "default": "HEAD~1"},
+                "head_ref": {"type": "string", "default": "HEAD"},
+                "changed_files": {"type": "array", "items": {"type": "string"}},
+                "diff_text": {"type": "string"},
+                "profile": {"type": "string", "enum": ["precision", "balanced", "exhaustive"], "default": "precision"},
+                "focus_directives": {"type": "array", "items": {"type": ["string", "object"]}},
+                "invariants": {"type": "array", "items": {"type": "string"}},
+                "risk_map": {"type": "array", "items": {"type": "string"}},
+                "agent_name": {"type": "string", "default": "external_agent"},
+                "graph_depth": {"type": "integer", "minimum": 0, "maximum": 4, "default": 2},
+                "graph_node_budget": {"type": "integer", "minimum": 1, "maximum": 500, "default": 120},
+                "run_tests": {"type": "boolean", "default": True},
+                "run_optional_tools": {"type": "boolean", "default": True},
+                "metadata": {"type": "object"},
+            },
+            "required": ["objective"],
+        },
+    },
+    {
+        "name": "aura_waboose_scan",
+        "description": "Run Coding Waboose deterministic scans and energize the applicable diagnostic breadboard components.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"review_id": {"type": "string"}},
+            "required": ["review_id"],
+        },
+    },
+    {
+        "name": "aura_waboose_agent_packet",
+        "description": "Return Coding Waboose focus, diagnostic breadboard, topology, evidence, and optional exact-source slices for a coding agent.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "review_id": {"type": "string"},
+                "include_source": {"type": "boolean", "default": False},
+                "max_files": {"type": "integer", "minimum": 1, "maximum": 80, "default": 24},
+                "max_lines_per_file": {"type": "integer", "minimum": 8, "maximum": 240, "default": 120},
+            },
+            "required": ["review_id"],
+        },
+    },
+    {
+        "name": "aura_waboose_submit_findings",
+        "description": "Submit Coding Waboose findings for exact-source corroboration; agent confirmation claims are ignored.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "review_id": {"type": "string"},
+                "findings": {"type": "array", "items": {"type": "object"}},
+                "agent_name": {"type": "string", "default": "external_agent"},
+            },
+            "required": ["review_id", "findings"],
+        },
+    },
+    {
+        "name": "aura_waboose_finalize",
+        "description": "Deduplicate and rank Coding Waboose findings, then compile review-only Forge repair requests.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"review_id": {"type": "string"}},
+            "required": ["review_id"],
+        },
+    },
+    {
+        "name": "aura_waboose_status",
+        "description": "Return Coding Waboose status, breadboard continuity, and finding counts.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"review_id": {"type": "string"}},
+            "required": ["review_id"],
+        },
+    },
 ]
 
 
@@ -466,6 +546,65 @@ def _handle_handoff_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any
     )
 
 
+@_register_tool("aura_waboose_prepare")
+def _handle_waboose_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    request = {
+        "objective": str(args.get("objective", "")),
+        "mode": str(args.get("mode", "range")),
+        "base_ref": str(args.get("base_ref", "HEAD~1")),
+        "head_ref": str(args.get("head_ref", "HEAD")),
+        "changed_files": list(args.get("changed_files", []) or []),
+        "diff_text": str(args.get("diff_text", "")),
+        "profile": str(args.get("profile", "precision")),
+        "focus_directives": list(args.get("focus_directives", []) or []),
+        "invariants": list(args.get("invariants", []) or []),
+        "risk_map": list(args.get("risk_map", []) or []),
+        "agent_name": str(args.get("agent_name", "external_agent")),
+        "graph_depth": int(args.get("graph_depth", 2)),
+        "graph_node_budget": int(args.get("graph_node_budget", 120)),
+        "run_tests": bool(args.get("run_tests", True)),
+        "run_optional_tools": bool(args.get("run_optional_tools", True)),
+        "metadata": dict(args.get("metadata") or {}),
+    }
+    return bridge.aura_waboose_prepare(request)
+
+
+@_register_tool("aura_waboose_scan")
+def _handle_waboose_scan(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_waboose_scan(str(args.get("review_id", "")))
+
+
+@_register_tool("aura_waboose_agent_packet")
+def _handle_waboose_agent_packet(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_waboose_agent_packet(
+        str(args.get("review_id", "")),
+        include_source=bool(args.get("include_source", False)),
+        max_files=int(args.get("max_files", 24)),
+        max_lines_per_file=int(args.get("max_lines_per_file", 120)),
+    )
+
+
+@_register_tool("aura_waboose_submit_findings")
+def _handle_waboose_submit_findings(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    raw_findings = args.get("findings", []) or []
+    findings = [dict(item) for item in raw_findings if isinstance(item, Mapping)]
+    return bridge.aura_waboose_submit_findings(
+        str(args.get("review_id", "")),
+        findings,
+        agent_name=str(args.get("agent_name", "external_agent")),
+    )
+
+
+@_register_tool("aura_waboose_finalize")
+def _handle_waboose_finalize(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_waboose_finalize(str(args.get("review_id", "")))
+
+
+@_register_tool("aura_waboose_status")
+def _handle_waboose_status(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_waboose_status(str(args.get("review_id", "")))
+
+
 # ---------------------------------------------------------------------------
 # JSON-RPC server
 # ---------------------------------------------------------------------------
@@ -524,7 +663,8 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
                         "text": json.dumps(result, default=str, ensure_ascii=False),
                     }
                 ],
-                "isError": is_error_packet(result),
+                "isError": is_error_packet(result)
+                or (isinstance(result, Mapping) and result.get("ok") is False),
             })
         except Exception as exc:  # noqa: BLE001
             return _make_error_response(request_id, -32603, f"Tool execution error: {exc}")

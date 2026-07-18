@@ -181,6 +181,22 @@ def _truncate(text: str, limit: int = 12000) -> str:
     return value if len(value) <= limit else value[:limit] + "\n...[truncated]..."
 
 
+def _normalize_tool_path(value: Any, repo_root: Path) -> str:
+    text = str(value or "").replace("\\", "/").strip()
+    if not text:
+        return ""
+    path = Path(text)
+    if path.is_absolute():
+        try:
+            return path.resolve().relative_to(repo_root).as_posix()
+        except (OSError, ValueError):
+            return ""
+    try:
+        return _safe_repo_path(text, field_name="tool_file") or ""
+    except ValueError:
+        return ""
+
+
 @dataclass(frozen=True)
 class ReviewFocusDirective:
     """One agent- or Aura-selected investigative question."""
@@ -469,7 +485,15 @@ class _ASTReviewVisitor(ast.NodeVisitor):
         broad = node.type is None or (
             isinstance(node.type, ast.Name) and node.type.id in {"Exception", "BaseException"}
         )
-        swallowed = not node.body or all(isinstance(item, (ast.Pass, ast.Expr)) for item in node.body)
+        swallowed = not node.body or all(
+            isinstance(item, ast.Pass)
+            or (
+                isinstance(item, ast.Expr)
+                and isinstance(item.value, ast.Constant)
+                and isinstance(item.value.value, str)
+            )
+            for item in node.body
+        )
         if node.type is None:
             self._finding(
                 node,
@@ -1380,7 +1404,9 @@ class AuraReviewArena:
                 continue
             try:
                 current = current_path.read_text(encoding="utf-8", errors="replace")
-                base = self._git(["git", "show", f"{request.base_ref}:{changed}"], timeout=10)
+                base = self._git(
+                    ["git", "show", f"{request.base_ref}:{changed}"], timeout=10
+                )
             except (OSError, ValueError, subprocess.SubprocessError):
                 continue
             old_signatures = self._function_signatures(base)
@@ -1392,54 +1418,109 @@ class AuraReviewArena:
             for name in sorted(changed_names):
                 old = old_signatures.get(name)
                 new = new_signatures.get(name)
-                callsites = self._find_callsites(name, impact_files)
+                callsites = self._find_callsites(
+                    name,
+                    impact_files,
+                    target_file=changed,
+                )
                 if old and not new:
                     for callsite in callsites:
+                        resolved = bool(callsite.get("target_resolved"))
                         findings.append({
                             "origin": "signature_impact",
                             "rule": "removed-symbol-callsite",
                             "category": "compatibility",
                             "severity": "high",
-                            "confidence": 0.9,
-                            "title": f"Call site still references removed symbol {name}",
-                            "message": f"{name} is absent at the reviewed head but a graph-related file still calls it.",
+                            "confidence": 0.97 if resolved else 0.68,
+                            "title": (
+                                f"Resolved call site still references removed symbol {name}"
+                                if resolved
+                                else f"Same-named call may reference removed symbol {name}"
+                            ),
+                            "message": (
+                                f"The import-resolved call targets {changed}, where {name} "
+                                "is absent at the reviewed head."
+                                if resolved
+                                else f"A graph-related file calls {name}, but import resolution "
+                                f"could not prove that it targets {changed}."
+                            ),
                             "file": callsite["file"],
                             "line_start": callsite["line"],
                             "line_end": callsite["line"],
                             "related_files": [changed],
                             "related_symbols": [name],
-                            "suggested_fix": "Update or remove the call site, or restore a compatibility facade.",
+                            "suggested_fix": (
+                                "Update or remove the resolved call site, or restore a "
+                                "compatibility facade."
+                                if resolved
+                                else "Resolve the call target before changing code."
+                            ),
                             "evidence": [
-                                {"kind": "signature_diff", "source": changed, "old": old, "new": None},
+                                {
+                                    "kind": "signature_diff",
+                                    "source": changed,
+                                    "old": old,
+                                    "new": None,
+                                },
                                 {"kind": "callsite", **callsite},
                             ],
-                            "status": "corroborated",
+                            "status": "corroborated" if resolved else "probable",
                         })
-                elif old and new and int(new["required_positional"]) > int(old["required_positional"]):
+                elif (
+                    old
+                    and new
+                    and int(new["required_positional"])
+                    > int(old["required_positional"])
+                ):
                     for callsite in callsites:
                         if callsite["starred"]:
                             continue
-                        if int(callsite["positional_args"]) < int(new["required_positional"]):
-                            findings.append({
-                                "origin": "signature_impact",
-                                "rule": "callsite-arity-mismatch",
-                                "category": "compatibility",
-                                "severity": "high",
-                                "confidence": 0.88,
-                                "title": f"Call site may not satisfy the new {name} signature",
-                                "message": "The reviewed signature requires more positional arguments than this direct call supplies.",
-                                "file": callsite["file"],
-                                "line_start": callsite["line"],
-                                "line_end": callsite["line"],
-                                "related_files": [changed],
-                                "related_symbols": [name],
-                                "suggested_fix": "Update the call site or provide a backwards-compatible default.",
-                                "evidence": [
-                                    {"kind": "signature_diff", "source": changed, "old": old, "new": new},
-                                    {"kind": "callsite", **callsite},
-                                ],
-                                "status": "corroborated",
-                            })
+                        if int(callsite["positional_args"]) >= int(
+                            new["required_positional"]
+                        ):
+                            continue
+                        resolved = bool(callsite.get("target_resolved"))
+                        findings.append({
+                            "origin": "signature_impact",
+                            "rule": "callsite-arity-mismatch",
+                            "category": "compatibility",
+                            "severity": "high",
+                            "confidence": 0.97 if resolved else 0.72,
+                            "title": (
+                                f"Resolved call site does not satisfy the new {name} signature"
+                                if resolved
+                                else f"Same-named call may not satisfy the new {name} signature"
+                            ),
+                            "message": (
+                                "The import-resolved call targets the reviewed function and "
+                                "supplies fewer positional arguments than its new signature "
+                                "requires."
+                                if resolved
+                                else "The call has too few arguments for the reviewed signature, "
+                                "but the target remains ambiguous."
+                            ),
+                            "file": callsite["file"],
+                            "line_start": callsite["line"],
+                            "line_end": callsite["line"],
+                            "related_files": [changed],
+                            "related_symbols": [name],
+                            "suggested_fix": (
+                                "Update the resolved call site or provide a backwards-compatible "
+                                "default."
+                                if resolved
+                                else "Resolve the call target before proposing a repair."
+                            ),
+                            "evidence": [
+                                {
+                                    "kind": "signature_diff",
+                                    "source": changed,
+                                    "old": old,
+                                    "new": new,
+                                },
+                                {"kind": "callsite", **callsite},
+                            ],
+                            "status": "corroborated" if resolved else "probable",
+                        })
         return findings
 
     @staticmethod
@@ -1469,33 +1550,170 @@ class AuraReviewArena:
             }
         return result
 
-    def _find_callsites(self, symbol: str, files: Sequence[str]) -> list[dict[str, Any]]:
+    @staticmethod
+    def _module_candidates_for_file(file: str) -> set[str]:
+        path = PurePosixPath(file)
+        parts = list(path.with_suffix("").parts)
+        if parts and parts[-1] == "__init__":
+            parts.pop()
+        candidates: set[str] = set()
+        if parts:
+            candidates.add(".".join(parts))
+            if parts[0] in {"src", "lib"} and len(parts) > 1:
+                candidates.add(".".join(parts[1:]))
+        return {item for item in candidates if item}
+
+    @staticmethod
+    def _resolve_import_module(
+        caller_file: str,
+        module: str | None,
+        level: int,
+    ) -> str:
+        module_parts = [part for part in str(module or "").split(".") if part]
+        if level <= 0:
+            return ".".join(module_parts)
+        package_parts = list(PurePosixPath(caller_file).parent.parts)
+        trim = max(0, level - 1)
+        if trim:
+            package_parts = package_parts[: max(0, len(package_parts) - trim)]
+        return ".".join([*package_parts, *module_parts])
+
+    @staticmethod
+    def _dotted_name(node: ast.AST) -> str:
+        parts: list[str] = []
+        current: ast.AST | None = node
+        while isinstance(current, ast.Attribute):
+            parts.append(current.attr)
+            current = current.value
+        if isinstance(current, ast.Name):
+            parts.append(current.id)
+            return ".".join(reversed(parts))
+        return ""
+
+    def _find_callsites(
+        self,
+        symbol: str,
+        files: Sequence[str],
+        *,
+        target_file: str,
+    ) -> list[dict[str, Any]]:
+        target_modules = self._module_candidates_for_file(target_file)
         result: list[dict[str, Any]] = []
         for file in files:
             path = self._resolve_file(file)
             if path is None or not path.is_file():
                 continue
             try:
-                tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"), filename=file)
+                tree = ast.parse(
+                    path.read_text(encoding="utf-8", errors="replace"),
+                    filename=file,
+                )
             except (OSError, SyntaxError):
                 continue
+
+            direct_aliases: dict[str, tuple[str, str]] = {}
+            module_aliases: dict[str, str] = {}
+            imported_modules: set[str] = set()
+            for import_node in ast.walk(tree):
+                if isinstance(import_node, ast.Import):
+                    for alias in import_node.names:
+                        imported_modules.add(alias.name)
+                        local = alias.asname or alias.name.split(".", 1)[0]
+                        module_aliases[local] = (
+                            alias.name if alias.asname else alias.name.split(".", 1)[0]
+                        )
+                elif isinstance(import_node, ast.ImportFrom):
+                    resolved_module = self._resolve_import_module(
+                        file,
+                        import_node.module,
+                        import_node.level,
+                    )
+                    if resolved_module:
+                        imported_modules.add(resolved_module)
+                    for alias in import_node.names:
+                        if alias.name == "*":
+                            continue
+                        local = alias.asname or alias.name
+                        direct_aliases[local] = (resolved_module, alias.name)
+                        imported_child = ".".join(
+                            item for item in (resolved_module, alias.name) if item
+                        )
+                        if imported_child:
+                            module_aliases[local] = imported_child
+
             for node in ast.walk(tree):
                 if not isinstance(node, ast.Call):
                     continue
-                name = ""
+                resolution = ""
+                target_resolved = False
+                target_module = ""
+                call_name = ""
+                matches_symbol = False
+
                 if isinstance(node.func, ast.Name):
-                    name = node.func.id
+                    call_name = node.func.id
+                    imported = direct_aliases.get(call_name)
+                    if imported and imported[1] == symbol:
+                        matches_symbol = True
+                        if imported[0] in target_modules:
+                            target_resolved = True
+                            resolution = "from_import"
+                            target_module = imported[0]
+                        else:
+                            resolution = "imported_from_other_module"
+                    elif call_name == symbol:
+                        matches_symbol = True
+                        if file == target_file:
+                            target_resolved = True
+                            resolution = "same_file"
+                            target_module = next(iter(sorted(target_modules)), "")
+                        else:
+                            resolution = "ambiguous_name"
                 elif isinstance(node.func, ast.Attribute):
-                    name = node.func.attr
-                if name != symbol:
+                    dotted = self._dotted_name(node.func)
+                    if not dotted or node.func.attr != symbol:
+                        continue
+                    call_name = symbol
+                    matches_symbol = True
+                    prefix = dotted.rsplit(".", 1)[0]
+                    parts = prefix.split(".")
+                    root = parts[0]
+                    resolved_prefix = prefix
+                    if root in module_aliases:
+                        resolved_prefix = ".".join(
+                            [module_aliases[root], *parts[1:]]
+                        )
+                    if resolved_prefix in target_modules and (
+                        resolved_prefix in imported_modules
+                        or root in module_aliases
+                    ):
+                        target_resolved = True
+                        resolution = "module_attribute"
+                        target_module = resolved_prefix
+                    else:
+                        resolution = "ambiguous_attribute"
+                else:
+                    continue
+
+                if not matches_symbol:
                     continue
                 result.append({
                     "file": file,
                     "line": int(node.lineno),
+                    "local_call_name": call_name,
+                    "original_symbol": symbol,
                     "positional_args": len(node.args),
-                    "keyword_args": sorted(keyword.arg for keyword in node.keywords if keyword.arg),
-                    "starred": any(isinstance(arg, ast.Starred) for arg in node.args)
-                    or any(keyword.arg is None for keyword in node.keywords),
+                    "keyword_args": sorted(
+                        keyword.arg for keyword in node.keywords if keyword.arg
+                    ),
+                    "starred": any(
+                        isinstance(arg, ast.Starred) for arg in node.args
+                    ) or any(keyword.arg is None for keyword in node.keywords),
+                    "target_file": target_file,
+                    "target_modules": sorted(target_modules),
+                    "target_module": target_module,
+                    "target_resolved": target_resolved,
+                    "resolution": resolution,
                 })
         return result
 
@@ -1508,16 +1726,22 @@ class AuraReviewArena:
         plans: list[tuple[str, list[str], int]] = []
         if request.mode == "range":
             plans.append(("git_diff_check", ["git", "diff", "--check", request.base_ref, request.head_ref, "--"], 20))
-        if py_files:
-            plans.append(("py_compile", [sys.executable, "-m", "py_compile", *py_files[:80]], 40))
+        # Syntax is checked in-process with ast.parse so review does not write
+        # __pycache__ artifacts into the reviewed tree.
         if request.run_optional_tools and py_files and shutil.which("ruff"):
             plans.append(("ruff", ["ruff", "check", "--output-format", "json", *py_files[:80]], 60))
         if request.run_optional_tools and py_files and shutil.which("bandit"):
             plans.append(("bandit", ["bandit", "-q", "-f", "json", *py_files[:80]], 90))
         if request.run_tests and tests:
-            plans.append(("pytest", [sys.executable, "-m", "pytest", "-q", *tests[:16]], 180))
-        if request.profile == "exhaustive" and request.run_optional_tools and py_files and shutil.which("semgrep"):
-            plans.append(("semgrep", ["semgrep", "--json", "--config", "auto", *py_files[:60]], 180))
+            plans.append(
+                (
+                    "pytest",
+                    [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *tests[:16]],
+                    180,
+                )
+            )
+        # Semgrep/CodeQL/Joern adapters must be explicit local capabilities with
+        # pinned configuration. V1 never invokes network-backed auto rules.
         results: list[dict[str, Any]] = []
         findings: list[dict[str, Any]] = []
         for name, command, timeout in plans:
@@ -1579,7 +1803,7 @@ class AuraReviewArena:
                         "confidence": 0.98,
                         "title": str(item.get("message") or "Ruff finding"),
                         "message": str(item.get("message") or "Ruff reported a code-quality issue."),
-                        "file": str(item.get("filename") or ""),
+                        "file": _normalize_tool_path(item.get("filename"), self.repo_root),
                         "line_start": int(location.get("row") or 1),
                         "line_end": int(end_location.get("row") or location.get("row") or 1),
                         "suggested_fix": "Apply the Ruff rule's recommended correction and rerun the focused checks.",
@@ -1924,8 +2148,13 @@ class AuraReviewArena:
                     item["file"] = _safe_repo_path(file, field_name="finding_file") or ""
                 except ValueError:
                     continue
-            item["line_start"] = max(1, int(item.get("line_start") or 1))
-            item["line_end"] = max(item["line_start"], int(item.get("line_end") or item["line_start"]))
+            try:
+                item["line_start"] = max(1, int(item.get("line_start") or 1))
+                item["line_end"] = max(
+                    item["line_start"], int(item.get("line_end") or item["line_start"])
+                )
+            except (TypeError, ValueError, OverflowError):
+                continue
             fingerprint_payload = {
                 "file": item.get("file"),
                 "line": item.get("line_start"),

@@ -80,6 +80,7 @@ external_model_action_authority: false
 crystallization_patch_authority: false
 automatic_state_restoration: false
 automatic_grammar_promotion: false
+automatic_fix: false
 automatic_commit: false
 automatic_push: false
 automatic_pull_request: false
@@ -343,6 +344,38 @@ allowed files, required gates, model budgets, and non-promotion authority invari
 Forge cannot commit, push, open a pull request, merge, mutate production, or convert
 hotswap readiness into promotion authority.
 <!-- AURA_FORGE_V1:END -->
+
+<!-- AURA_CODING_WABOOSE_V1:START -->
+#### Coding Waboose
+
+Coding Waboose is the canonical pre-repair review surface over CODEMAP, compiled topology,
+exact source slices, deterministic tools, external-agent MCP handoffs, and Forge repair intake.
+It has a separate lifecycle:
+
+```text
+FRAME → DIFF → SLICE → SCAN → INVESTIGATE
+  → CORROBORATE → RANK → DECIDE → REPAIR_HANDOFF → DISSOLVE
+```
+
+Aura owns exact changed-file/symbol extraction, callers/callees/shared-resource impact,
+source anchors, deterministic findings, evidence status, deduplication, and ranking. A
+replaceable coding agent may propose focus directives and semantic findings. Agent-generated
+call graphs, confidence, or self-declared confirmation are not authority.
+
+The Coding Waboose cannot edit production files, apply a fix, commit, push, open a pull request,
+or merge. Confirmed findings can become bounded Aura Forge repair requests; Forge must still
+compile a separate evidence contract, stage the candidate, verify it, and stop for human review.
+
+Primary owners include:
+
+- `aura_coding_waboose.py` — public Coding Waboose owner;
+- `aura_coding_waboose_breadboard.py` — proposal-only diagnostic circuit compiler;
+- `aura_review_arena.py` — internal reusable scan/corroboration engine;
+- `aura_coding_waboose_cli.py`;
+- `schemas/aura_coding_waboose_contract.schema.json` and the internal `schemas/aura_review_contract.schema.json`;
+- Coding Waboose tools on `aura_agent_arena_persistence_bridge.py` and `aura_agent_arena_mcp.py`;
+- `docs/AURA_CODING_WABOOSE.md`.
+<!-- AURA_CODING_WABOOSE_V1:END -->
 
 ### Plane 8 — Observatory and glass-box explanation
 

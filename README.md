@@ -38,6 +38,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Human Agent Arena** | Runs `FRAME → GROUND → PLAN → ACT → PROVE → DECIDE` with exact evidence and human gates | Guarded execution and review; no automatic merge |
 | **Coding Workbench / Coding Arena** | Localizes code, ranks bounded regions, builds change graphs, prepares capsules, and verifies candidate work | Exact source spans and hashes remain patch authority |
 | **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human review; no automatic commit, PR, merge, or production mutation |
+| **Coding Waboose** | Computes exact diff/symbol/dependency impact, runs deterministic scans, and lets coding agents steer run-specific evidence review | Review only; agent findings cannot self-confirm or mutate, commit, push, open, or merge |
 | **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows and external-agent handoffs | External agents remain workers, not authorities |
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
 | **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
@@ -74,6 +75,31 @@ no ambient repository or release authority.
 
 See [`docs/AURA_FORGE.md`](docs/AURA_FORGE.md).
 <!-- AURA_FORGE_V1:END -->
+
+<!-- AURA_CODING_WABOOSE_V1:START -->
+## Coding Waboose — graph-guided code review
+
+Coding Waboose combines deterministic program analysis with replaceable coding-agent
+investigation. Aura computes changed symbols, callers, callees, tests, schemas, shared-resource
+neighbors, exact source anchors, and tool evidence. Codex, Hermes, or another MCP client may
+supply run-specific review questions and semantic findings, but cannot invent authoritative
+edges, mark its own findings proven, or apply a fix.
+
+```text
+change or workspace
+  → exact diff and changed symbols
+  → bidirectional dependency-impact slice
+  → syntax/static/test scans
+  → run-specific focus directives
+  → diagnostic Coding Breadboard
+  → bounded coding-agent investigation
+  → exact-source corroboration and precision-first ranking
+  → human review packet
+  → optional Aura Forge repair handoff
+```
+
+See [`docs/AURA_CODING_WABOOSE.md`](docs/AURA_CODING_WABOOSE.md).
+<!-- AURA_CODING_WABOOSE_V1:END -->
 
 ## Canonical architecture
 

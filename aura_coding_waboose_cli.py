@@ -1,4 +1,4 @@
-"""Command-line interface for Aura Review Arena V1."""
+"""Command-line interface for Coding Waboose V1."""
 from __future__ import annotations
 
 import argparse
@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from aura_review_arena import AuraReviewArena
+from aura_coding_waboose import CodingWaboose
 
 
 def _load_json(value: str) -> Any:
@@ -19,7 +19,7 @@ def _load_json(value: str) -> Any:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Run Aura's graph-guided, evidence-bound code review Arena."
+        description="Run Coding Waboose, Aura's graph-guided diagnostic code-review organ."
     )
     parser.add_argument("--repo-root", default=".")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -51,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    arena = AuraReviewArena(args.repo_root)
+    arena = CodingWaboose(args.repo_root)
 
     try:
         if args.command == "prepare":
@@ -78,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         result = {
             "ok": False,
-            "version": "AURA_REVIEW_ARENA_V1",
+            "version": "AURA_CODING_WABOOSE_V1",
             "error": str(exc),
             "production_mutation": False,
             "automatic_fix": False,
