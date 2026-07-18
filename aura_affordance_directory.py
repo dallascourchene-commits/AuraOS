@@ -363,6 +363,27 @@ SEED_AFFORDANCES: list[dict[str, Any]] = [
         "prompt_card": "Use QDKT Memory to observe and transfer knowledge across tasks.",
     },
     {
+        "id": "aura.coding_waboose.learning",
+        "name": "Coding Waboose External Review Learning",
+        "description": "Grounds successful CodeRabbit review findings against exact source, maps them through the Capability Connectome, reranks prior lessons with DREAM-lite, and records repeated confirmations in QDKT so Waboose can emulate recurring review patterns.",
+        "status": "active",
+        "tags": ["coding", "waboose", "review", "coderabbit", "dream", "qdkt", "connectome", "learning", "verification"],
+        "when_to_use": "After a successful CodeRabbit review or before a Coding Waboose scan that may benefit from prior grounded review lessons.",
+        "when_not_to_use": "Never use external review memory as patch, merge, or verification authority.",
+        "implemented_by": ["aura_waboose_learning.py", "aura_waboose_semantic_rules.py", "aura_coderabbit_learning_cli.py"],
+        "symbols": ["CodeRabbitLearningStore", "scan_semantic_review_rules", "directive_semantic_rule_packs"],
+        "tests": ["tests/test_aura_waboose_learning.py", "tests/test_aura_waboose_semantic_rules.py", "tests/test_aura_waboose_semantic_completeness.py"],
+        "docs": ["docs/AURA_CODING_WABOOSE.md"],
+        "commands": ["aura_coderabbit_learning_cli.py ingest", "aura_coderabbit_learning_cli.py summary"],
+        "requires": ["aura.dream.reranking", "aura.qdkt.memory", "aura.agent_arena.bridge"],
+        "outputs": ["grounded_review_lessons", "dream_ranked_patterns", "qdkt_crystals", "semantic_rule_directives"],
+        "related_affordances": ["aura.dream.reranking", "aura.qdkt.memory", "aura.agent_arena.bridge", "aura.emergent_potential.audit", "aura.patch_quality_gate"],
+        "safety": "CodeRabbit is a teacher signal only. Exact source grounding is required. DREAM/QDKT memory is advisory and never patch or merge authority.",
+        "patch_authority": False,
+        "vsa_patch_authority": False,
+        "prompt_card": "Use Waboose Learning to retrieve grounded external-review lessons, then re-prove any current finding against exact source and tests.",
+    },
+    {
         "id": "aura.llm_egress",
         "name": "LLM Egress",
         "description": "Manages LLM egress — pre-egress interception, token economics, and output formatting for external model calls.",
@@ -487,7 +508,7 @@ def _load_codemap(repo_root: Path) -> dict[str, Any]:
         if now - ts < _CODEMAP_TTL:
             return data
     try:
-        with open(path, "r", encoding="utf-8") as fh:
+        with open(path, encoding="utf-8") as fh:
             data = json.load(fh)
         _CODEMAP_CACHE[key] = (now, data)
         return data
@@ -544,14 +565,16 @@ def load_affordance_directory(repo_root: str | Path = ".") -> list[AuraAffordanc
     affordance_map_path = root / ".aura" / "AFFORDANCE_MAP.json"
     try:
         if affordance_map_path.exists():
-            with open(affordance_map_path, "r", encoding="utf-8") as fh:
+            with open(affordance_map_path, encoding="utf-8") as fh:
                 extra = json.load(fh)
             if isinstance(extra, dict) and "affordances" in extra:
                 existing_ids = {a.get("id") for a in all_affords}
                 for aff in extra["affordances"]:
                     if isinstance(aff, dict) and aff.get("id") not in existing_ids:
                         all_affords.append(aff)
-    except Exception:
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError):
+        # AFFORDANCE_MAP enrichment is optional, but only expected read/shape
+        # failures may fall back to the canonical seed directory.
         pass
 
     # Ground each affordance

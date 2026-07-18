@@ -13,17 +13,18 @@ Protocol:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 import json
 import logging
 import sys
-from typing import Any, Mapping
+from typing import Any
 
 from aura_agent_arena_bridge import BRIDGE_VERSION
+from aura_agent_arena_errors import is_error_packet
+from aura_agent_arena_fireworks import fireworks_patch_worker
 from aura_agent_arena_persistence_bridge import (
     PersistentAuraAgentArenaBridge as AuraAgentArenaBridge,
 )
-from aura_agent_arena_errors import is_error_packet
-from aura_agent_arena_fireworks import fireworks_patch_worker
 
 _LOG = logging.getLogger(__name__)
 
@@ -46,6 +47,20 @@ def _register_tool(name: str):
         _TOOL_HANDLERS[name] = func
         return func
     return decorator
+
+
+def _strict_bool_arg(
+    args: dict[str, Any],
+    key: str,
+    *,
+    default: bool,
+) -> bool:
+    value = args.get(key)
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    raise ValueError(f"{key} must be a boolean")
 
 
 # ---------------------------------------------------------------------------
@@ -76,6 +91,11 @@ TOOL_DEFINITIONS = [
                 "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
                 "risk_map": {"type": "array", "items": {"type": "string"}},
                 "constraints": {"type": "array", "items": {"type": "string"}},
+                "use_emergent_evidence": {"type": "boolean", "default": False},
+                "emergent_radius": {"type": "integer", "minimum": 0, "maximum": 3, "default": 1},
+                "emergent_max_atomic_nodes": {"type": "integer", "minimum": 1, "maximum": 200, "default": 48},
+                "emergent_include_source": {"type": "boolean", "default": False},
+                "emergent_include_research_plan": {"type": "boolean", "default": True},
             },
             "required": ["objective"],
         },
@@ -290,6 +310,57 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "aura_atomic_function_inventory",
+        "description": "Enumerate exact atomic functions, methods, async functions, and nested functions with spans and hashes.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "default": ""},
+                "target_files": {"type": "array", "items": {"type": "string"}},
+                "target_symbols": {"type": "array", "items": {"type": "string"}},
+                "limit": {"type": "integer", "minimum": 1, "maximum": 500},
+                "include_source": {"type": "boolean", "default": False},
+            },
+        },
+    },
+    {
+        "name": "aura_emergent_evidence",
+        "description": "Resolve the Capability Connectome, exact atomic dependency closure, source slices, emergent audit, and research gaps.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string"},
+                "target_files": {"type": "array", "items": {"type": "string"}},
+                "target_symbols": {"type": "array", "items": {"type": "string"}},
+                "target_arena": {"type": "string", "enum": ["coding_arena", "coding_waboose", "human_agent", "agent_bridge", "research"], "default": "agent_bridge"},
+                "radius": {"type": "integer", "minimum": 0, "maximum": 3, "default": 1},
+                "max_atomic_nodes": {"type": "integer", "minimum": 1, "maximum": 200, "default": 48},
+                "max_source_lines": {"type": "integer", "minimum": 8, "maximum": 300, "default": 120},
+                "include_source": {"type": "boolean", "default": True},
+                "include_future": {"type": "boolean", "default": True},
+                "include_research_plan": {"type": "boolean", "default": True},
+                "include_offline_research": {"type": "boolean", "default": True},
+            },
+            "required": ["objective"],
+        },
+    },
+    {
+        "name": "aura_waboose_learn_coderabbit",
+        "description": "Learn from a successful CodeRabbit review after exact head/source grounding.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "review_payload": {"type": "object"},
+            },
+            "required": ["review_payload"],
+        },
+    },
+    {
+        "name": "aura_waboose_learning_summary",
+        "description": "Show Coding Waboose external-review learning status.",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
         "name": "aura_waboose_prepare",
         "description": "Compile a Coding Waboose evidence contract and diagnostic breadboard from a Git range, workspace, or explicit files.",
         "inputSchema": {
@@ -379,7 +450,7 @@ TOOL_DEFINITIONS = [
 @_register_tool("aura_repo_digest")
 def _handle_repo_digest(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
     return bridge.aura_repo_digest(
-        include_hubs=bool(args.get("include_hubs", True)),
+        include_hubs=_strict_bool_arg(args, "include_hubs", default=True),
         max_lines=int(args.get("max_lines", 120)),
     )
 
@@ -393,6 +464,13 @@ def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) ->
         acceptance_criteria=args.get("acceptance_criteria"),
         risk_map=args.get("risk_map"),
         constraints=args.get("constraints"),
+        use_emergent_evidence=_strict_bool_arg(args, "use_emergent_evidence", default=False),
+        emergent_radius=int(args.get("emergent_radius", 1)),
+        emergent_max_atomic_nodes=int(args.get("emergent_max_atomic_nodes", 48)),
+        emergent_include_source=_strict_bool_arg(args, "emergent_include_source", default=False),
+        emergent_include_research_plan=_strict_bool_arg(
+            args, "emergent_include_research_plan", default=True
+        ),
     )
 
 
@@ -413,7 +491,7 @@ def _handle_search_code(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> d
         query=str(args.get("query", "")),
         search_kind=str(args.get("search_kind", "symbol")),
         max_results=int(args.get("max_results", 10)),
-        include_neighbors=bool(args.get("include_neighbors", True)),
+        include_neighbors=_strict_bool_arg(args, "include_neighbors", default=True),
     )
 
 
@@ -493,7 +571,7 @@ def _handle_find_affordances(bridge: AuraAgentArenaBridge, args: dict[str, Any])
         objective=str(args.get("objective", "")),
         target_files=args.get("target_files"),
         target_symbols=args.get("target_symbols"),
-        include_affordances=bool(args.get("include_affordances", True)),
+        include_affordances=_strict_bool_arg(args, "include_affordances", default=True),
         top_k=int(args.get("top_k", 7)),
     )
 
@@ -546,6 +624,64 @@ def _handle_handoff_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any
     )
 
 
+@_register_tool("aura_atomic_function_inventory")
+def _handle_atomic_function_inventory(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    limit = args.get("limit")
+    return bridge.aura_atomic_function_inventory(
+        query=str(args.get("query", "")),
+        target_files=list(args.get("target_files", []) or []),
+        target_symbols=list(args.get("target_symbols", []) or []),
+        limit=int(limit) if limit is not None else None,
+        include_source=_strict_bool_arg(args, "include_source", default=False),
+    )
+
+
+@_register_tool("aura_emergent_evidence")
+def _handle_emergent_evidence(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    request = {
+        "objective": str(args.get("objective", "")),
+        "target_files": list(args.get("target_files", []) or []),
+        "target_symbols": list(args.get("target_symbols", []) or []),
+        "target_arena": str(args.get("target_arena", "agent_bridge")),
+        "radius": int(args.get("radius", 1)),
+        "max_atomic_nodes": int(args.get("max_atomic_nodes", 48)),
+        "max_source_lines": int(args.get("max_source_lines", 120)),
+        "include_source": _strict_bool_arg(args, "include_source", default=True),
+        "include_future": _strict_bool_arg(args, "include_future", default=True),
+        "include_research_plan": _strict_bool_arg(args, "include_research_plan", default=True),
+        "include_offline_research": _strict_bool_arg(
+            args, "include_offline_research", default=True
+        ),
+    }
+    return bridge.aura_emergent_evidence(request)
+
+
+@_register_tool("aura_waboose_learn_coderabbit")
+def _handle_waboose_learn_coderabbit(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    review_payload = args.get("review_payload")
+    if not isinstance(review_payload, Mapping):
+        raise ValueError("review_payload must be an object")
+    return bridge.aura_waboose_learn_coderabbit(dict(review_payload))
+
+
+@_register_tool("aura_waboose_learning_summary")
+def _handle_waboose_learning_summary(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    del args
+    return bridge.aura_waboose_learning_summary()
+
+
 @_register_tool("aura_waboose_prepare")
 def _handle_waboose_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
     request = {
@@ -562,8 +698,8 @@ def _handle_waboose_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) 
         "agent_name": str(args.get("agent_name", "external_agent")),
         "graph_depth": int(args.get("graph_depth", 2)),
         "graph_node_budget": int(args.get("graph_node_budget", 120)),
-        "run_tests": bool(args.get("run_tests", True)),
-        "run_optional_tools": bool(args.get("run_optional_tools", True)),
+        "run_tests": _strict_bool_arg(args, "run_tests", default=True),
+        "run_optional_tools": _strict_bool_arg(args, "run_optional_tools", default=True),
         "metadata": dict(args.get("metadata") or {}),
     }
     return bridge.aura_waboose_prepare(request)
@@ -578,7 +714,7 @@ def _handle_waboose_scan(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> 
 def _handle_waboose_agent_packet(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
     return bridge.aura_waboose_agent_packet(
         str(args.get("review_id", "")),
-        include_source=bool(args.get("include_source", False)),
+        include_source=_strict_bool_arg(args, "include_source", default=False),
         max_files=int(args.get("max_files", 24)),
         max_lines_per_file=int(args.get("max_lines_per_file", 120)),
     )
@@ -666,7 +802,7 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
                 "isError": is_error_packet(result)
                 or (isinstance(result, Mapping) and result.get("ok") is False),
             })
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             return _make_error_response(request_id, -32603, f"Tool execution error: {exc}")
 
     return _make_error_response(request_id, -32601, f"Unknown method: {method}")
@@ -677,8 +813,8 @@ def serve_stdio(bridge: AuraAgentArenaBridge | None = None) -> None:
     if bridge is None:
         bridge = AuraAgentArenaBridge()
 
-    for line in sys.stdin:
-        line = line.strip()
+    for raw_line in sys.stdin:
+        line = raw_line.strip()
         if not line:
             continue
         try:
