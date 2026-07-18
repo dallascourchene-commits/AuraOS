@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_spatial_scene.schema.json",
+  "title": "Aura Spatial Scene Snapshot V1",
+  "type": "object",
+  "required": [
+    "scene_id",
+    "purpose_digest",
+    "root_frame_id",
+    "frames",
+    "assets",
+    "entities",
+    "links",
+    "truth_policy",
+    "patch_authority",
+    "vsa_patch_authority",
+    "execution_authority",
+    "version",
+    "schema_version",
+    "scene_digest"
+  ],
+  "properties": {
+    "scene_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 192
+    },
+    "purpose_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "root_frame_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 192
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/frame"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "renderer_hints": {
+      "type": "object"
+    },
+    "truth_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "patch_authority": {
+      "const": "exact_source_spans_and_hashes_only"
+    },
+    "vsa_patch_authority": {
+      "const": false
+    },
+    "execution_authority": {
+      "const": false
+    },
+    "version": {
+      "const": "AURA_SPATIAL_CONTRACTS_V1"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "scene_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "vec3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false
+    },
+    "quat": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false
+    },
+    "truthClass": {
+      "enum": [
+        "EXACT",
+        "DERIVED",
+        "PRESENTATION",
+        "HYPOTHESIS"
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "frame_id",
+        "parent_frame_id",
+        "handedness",
+        "up_axis",
+        "unit_scale_meters",
+        "translation",
+        "rotation_xyzw",
+        "scale",
+        "source_refs",
+        "truth_class",
+        "projection_only"
+      ],
+      "properties": {
+        "frame_id": {
+          "type": "string"
+        },
+        "parent_frame_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "handedness": {
+          "enum": [
+            "RIGHT_HANDED",
+            "LEFT_HANDED"
+          ]
+        },
+        "up_axis": {
+          "enum": [
+            "X_UP",
+            "Y_UP",
+            "Z_UP"
+          ]
+        },
+        "unit_scale_meters": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "translation": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation_xyzw": {
+          "$ref": "#/$defs/quat"
+        },
+        "scale": {
+          "$ref": "#/$defs/vec3"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "truth_class": {
+          "$ref": "#/$defs/truthClass"
+        },
+        "projection_only": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "asset": {
+      "type": "object",
+      "required": [
+        "asset_id",
+        "asset_type",
+        "uri",
+        "media_type",
+        "content_digest",
+        "byte_length",
+        "frame_id",
+        "bounds_min",
+        "bounds_max",
+        "source_refs",
+        "truth_class",
+        "immutable",
+        "metadata"
+      ],
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "asset_type": {
+          "enum": [
+            "TOPOLOGY_GRAPH",
+            "MESH",
+            "POINT_CLOUD",
+            "GAUSSIAN_SPLAT",
+            "VOXEL",
+            "SIGNED_DISTANCE_FIELD",
+            "PLANE",
+            "ANNOTATION"
+          ]
+        },
+        "uri": {
+          "type": "string"
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "content_digest": {
+          "type": "string",
+          "pattern": "^(sha256|blake2b-256):[0-9a-f]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "bounds_min": {
+          "$ref": "#/$defs/vec3"
+        },
+        "bounds_max": {
+          "$ref": "#/$defs/vec3"
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "truth_class": {
+          "$ref": "#/$defs/truthClass"
+        },
+        "immutable": {
+          "const": true
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "entity_id",
+        "entity_type",
+        "label",
+        "frame_id",
+        "asset_ids",
+        "source_refs",
+        "position",
+        "rotation_xyzw",
+        "scale",
+        "truth_class",
+        "selectable",
+        "projection_only",
+        "patch_authority",
+        "metadata"
+      ],
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "entity_type": {
+          "enum": [
+            "DOMAIN_NODE",
+            "DOMAIN_LINK",
+            "ASSET_INSTANCE",
+            "ANCHOR",
+            "REGION",
+            "LABEL",
+            "CONTROL"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "frame_id": {
+          "type": "string"
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "position": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation_xyzw": {
+          "$ref": "#/$defs/quat"
+        },
+        "scale": {
+          "$ref": "#/$defs/vec3"
+        },
+        "truth_class": {
+          "$ref": "#/$defs/truthClass"
+        },
+        "selectable": {
+          "type": "boolean"
+        },
+        "projection_only": {
+          "const": true
+        },
+        "patch_authority": {
+          "const": false
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "required": [
+        "link_id",
+        "source_entity_id",
+        "target_entity_id",
+        "relation",
+        "source_refs",
+        "truth_class",
+        "directed",
+        "projection_only",
+        "metadata"
+      ],
+      "properties": {
+        "link_id": {
+          "type": "string"
+        },
+        "source_entity_id": {
+          "type": "string"
+        },
+        "target_entity_id": {
+          "type": "string"
+        },
+        "relation": {
+          "type": "string"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "truth_class": {
+          "$ref": "#/$defs/truthClass"
+        },
+        "directed": {
+          "type": "boolean"
+        },
+        "projection_only": {
+          "const": true
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
