@@ -1,0 +1,137 @@
+        markdown_path: str | Path = DEFAULT_MARKDOWN_PATH,
+        lock_path: str | Path = DEFAULT_LOCK_PATH,
+    ) -> None:
+        self.repo_root = Path(repo_root).resolve()
+        self.index_path = self.repo_root / _safe_repo_path(str(index_path))
+        self.receipt_path = self.repo_root / _safe_repo_path(str(receipt_path))
+        self.markdown_path = self.repo_root / _safe_repo_path(str(markdown_path))
+        self.lock_path = self.repo_root / _safe_repo_path(str(lock_path))
+
+    def write(
+        self,
+        index: RelationalIndex,
+        *,
+        build_mode: str,
+        changed_paths: Sequence[str] = (),
+        wall_time_ms: int = 0,
+        full_equivalence_verified: bool = False,
+    ) -> RelationalIndexReceipt:
+        data = index.to_dict()
+        _assert_no_secret_shaped_content(data)
+        encoded = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+        receipt = RelationalIndexReceipt(
+            index_id=index.index_id,
+            index_digest=data["index_digest"],
+            build_mode=build_mode,
+            changed_paths=tuple(_safe_repo_path(path) for path in changed_paths),
+            wall_time_ms=max(0, int(wall_time_ms)),
+            index_bytes=len(encoded.encode("utf-8")),
+            participant_count=len(index.participants),
+            relation_count=len(index.relations),
+            group_count=len(index.groups),
+            unresolved_mapping_count=len(
+                index.boundary.get("advisory_only_mappings", ())
+            ),
+            full_equivalence_verified=full_equivalence_verified,
+            created_at_unix_ms=int(time.time() * 1000),
+        )
+        receipt_encoded = json.dumps(
+            receipt.to_dict(), indent=2, sort_keys=True, ensure_ascii=False
+        ) + "\n"
+        markdown = render_relational_index_markdown(index, receipt)
+        with _exclusive_store_lock(self.lock_path):
+            _atomic_write_text(self.index_path, encoded)
+            _atomic_write_text(self.receipt_path, receipt_encoded)
+            _atomic_write_text(self.markdown_path, markdown)
+        restored = self.load()
+        if restored.to_dict() != data:
+            raise ValueError("written relational index failed exact reload validation")
+        return receipt
+
+    def load(self) -> RelationalIndex:
+        return RelationalIndex.from_dict(_read_json(self.index_path))
+
+    def load_receipt(self) -> RelationalIndexReceipt:
+        return RelationalIndexReceipt.from_dict(_read_json(self.receipt_path))
+
+    def validate_current(
+        self,
+        *,
+        builder: RelationalIndexBuilder | None = None,
+    ) -> dict[str, Any]:
+        index = self.load()
+        receipt = self.load_receipt()
+        serialized = index.to_dict()
+        if receipt.index_id != index.index_id or receipt.index_digest != serialized["index_digest"]:
+            raise ValueError("relational index receipt is not linked to the stored index")
+        builder_value = builder or RelationalIndexBuilder(
+            self.repo_root, profile=index.profile["name"]
+        )
+        current = builder_value.build_full()
+        expected = index.repository_identity
+        actual = current.repository_identity
+        mismatches = {
+            name: {"stored": expected.get(name), "current": actual.get(name)}
+            for name in _REQUIRED_REPOSITORY_IDENTITY
+            if expected.get(name) != actual.get(name)
+        }
+        return {
+            "ok": not mismatches,
+            "status": "CURRENT" if not mismatches else "STALE",
+            "index_id": index.index_id,
+            "index_digest": serialized["index_digest"],
+            "mismatches": mismatches,
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+
+def _validate_connectome(connectome: Mapping[str, Any]) -> None:
+    if connectome.get("ok") is not True:
+        raise ValueError("Capability Connectome V2 is not valid")
+    if connectome.get("version") != CONNECTOME_ENRICHMENT_VERSION:
+        raise ValueError("unsupported Capability Connectome version")
+    _required_text(connectome.get("graph_digest"), "connectome.graph_digest")
+    if connectome.get("vsa_patch_authority") is not False:
+        raise ValueError("Connectome cannot grant VSA patch authority")
+
+
+def _source_participants(
+    anchor: CodeTopoAnchor,
+) -> tuple[list[RelationalParticipant], dict[str, str]]:
+    participants: list[RelationalParticipant] = []
+    node_to_participant: dict[str, str] = {}
+    for node in sorted(
+        anchor.nodes.values(),
+        key=lambda item: (item.file_path, item.start_line, item.kind, item.symbol),
+    ):
+        if node.file_path in INDEX_GENERATED_PATHS:
+            continue
+        qualified = _qualified_symbol(node)
+        truth = TruthClass.EXACT_TEST if _is_test_path(node.file_path) else TruthClass.EXACT_SOURCE
+        participant = RelationalParticipant.create(
+            participant_type=ParticipantType.ATOMIC_SYMBOL,
+            role="repository_topology_node",
+            truth_class=truth,
+            canonical_owner="CodeTopoAnchor",
+            canonical_ref=node.node_id,
+            digest=node.source_hash,
+            evidence_refs=(
+                f"codetopo:{node.node_id}",
+                f"source:{node.file_path}:{node.start_line}-{node.end_line}:{node.source_hash}",
+                f"file:{node.file_path}:{anchor.file_hashes.get(node.file_path, '')}",
+            ),
+            freshness=Freshness.CURRENT,
+            qualified_symbol=qualified,
+            metadata={
+                "node_id": node.node_id,
+                "file_path": node.file_path,
+                "kind": node.kind,
+                "line_start": node.start_line,
+                "line_end": node.end_line,
+                "file_source_hash": anchor.file_hashes.get(node.file_path, ""),
+            },
+        )
+        participants.append(participant)
