@@ -16,51 +16,14 @@ def replace_between(path: str, start_marker: str, end_marker: str, replacement: 
 
 
 def main() -> None:
+    # The first integration layer owns the three helper methods immediately
+    # above this function. This refinement replaces only the resolver body so
+    # the permanent class has one canonical helper definition for each owner.
     replace_between(
         "aura_review_arena.py",
         "    def _find_callsites(",
         "    def _run_tools(",
-        '''    @staticmethod
-    def _module_candidates_for_file(file: str) -> set[str]:
-        path = PurePosixPath(file)
-        parts = list(path.with_suffix("").parts)
-        if parts and parts[-1] == "__init__":
-            parts.pop()
-        candidates: set[str] = set()
-        if parts:
-            candidates.add(".".join(parts))
-            if parts[0] in {"src", "lib"} and len(parts) > 1:
-                candidates.add(".".join(parts[1:]))
-        return {item for item in candidates if item}
-
-    @staticmethod
-    def _resolve_import_module(
-        caller_file: str,
-        module: str | None,
-        level: int,
-    ) -> str:
-        module_parts = [part for part in str(module or "").split(".") if part]
-        if level <= 0:
-            return ".".join(module_parts)
-        package_parts = list(PurePosixPath(caller_file).parent.parts)
-        trim = max(0, level - 1)
-        if trim:
-            package_parts = package_parts[: max(0, len(package_parts) - trim)]
-        return ".".join([*package_parts, *module_parts])
-
-    @staticmethod
-    def _dotted_name(node: ast.AST) -> str:
-        parts: list[str] = []
-        current: ast.AST | None = node
-        while isinstance(current, ast.Attribute):
-            parts.append(current.attr)
-            current = current.value
-        if isinstance(current, ast.Name):
-            parts.append(current.id)
-            return ".".join(reversed(parts))
-        return ""
-
-    def _find_callsites(
+        '''    def _find_callsites(
         self,
         symbol: str,
         files: Sequence[str],
