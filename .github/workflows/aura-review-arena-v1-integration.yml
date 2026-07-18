@@ -1,4 +1,4 @@
-name: Aura Review Arena V1 Integration
+name: Coding Waboose V1 Integration
 
 on:
   pull_request:
@@ -6,29 +6,36 @@ on:
     paths:
       - aura_review_arena.py
       - aura_review_arena_cli.py
+      - aura_coding_waboose.py
+      - aura_coding_waboose_breadboard.py
       - aura_agent_arena_persistence_bridge.py
       - aura_agent_arena_mcp.py
       - schemas/aura_review_contract.schema.json
+      - schemas/aura_coding_waboose_contract.schema.json
       - tests/test_aura_review_arena.py
       - tests/test_aura_review_arena_mcp.py
-      - docs/AURA_REVIEW_ARENA.md
-      - .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
+      - tests/test_aura_coding_waboose.py
+      - tests/test_aura_coding_waboose_breadboard.py
+      - docs/AURA_CODING_WABOOSE.md
+      - .aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md
       - scripts/apply_aura_review_arena_v1.py
+      - scripts/apply_coding_waboose_v1.py
       - .github/workflows/aura-review-arena-v1-integration.yml
+      - .github/workflows/aura-review-arena-diagnostic.yml
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: aura-review-arena-v1-${{ github.event.pull_request.number || github.ref }}
+  group: coding-waboose-v1-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
   integrate:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,46 +52,82 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
 
-      - name: Apply Review Arena integration
+      - name: Apply internal review-engine integration
         run: python scripts/apply_aura_review_arena_v1.py
 
-      - name: Compile and validate schemas
+      - name: Apply Coding Waboose ownership and breadboard integration
+        run: python scripts/apply_coding_waboose_v1.py
+
+      - name: Compile and validate contracts
         run: |
           python -m py_compile \
             aura_review_arena.py \
-            aura_review_arena_cli.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_breadboard.py \
+            aura_coding_waboose_cli.py \
             aura_agent_arena_persistence_bridge.py \
             aura_agent_arena_mcp.py \
             tests/test_aura_review_arena.py \
-            tests/test_aura_review_arena_mcp.py
-          python -m json.tool schemas/aura_review_contract.schema.json >/dev/null
-
-      - name: Run Review Arena and canonical owner regressions
-        run: |
-          python -m pytest -q \
-            tests/test_aura_review_arena.py \
             tests/test_aura_review_arena_mcp.py \
-            tests/test_aura_agent_arena_mcp.py \
-            tests/test_aura_agent_arena_bridge.py \
-            tests/test_aura_forge.py \
-            tests/test_aura_external_llm_session.py \
-            tests/test_aura_architect_controls_vault_and_surfaces.py
+            tests/test_aura_coding_waboose.py \
+            tests/test_aura_coding_waboose_breadboard.py
+          python -m json.tool schemas/aura_review_contract.schema.json >/dev/null
+          python -m json.tool schemas/aura_coding_waboose_contract.schema.json >/dev/null
+
+      - name: Verify internal review engine
+        run: python -m pytest -q tests/test_aura_review_arena.py
+
+      - name: Verify Coding Waboose breadboard
+        run: python -m pytest -q tests/test_aura_coding_waboose_breadboard.py
+
+      - name: Verify Coding Waboose lifecycle
+        run: python -m pytest -q tests/test_aura_coding_waboose.py
+
+      - name: Verify Coding Waboose MCP surface
+        run: python -m pytest -q tests/test_aura_review_arena_mcp.py
+
+      - name: Verify canonical MCP owner
+        run: python -m pytest -q tests/test_aura_agent_arena_mcp.py
+
+      - name: Verify canonical Agent Bridge owner
+        run: python -m pytest -q tests/test_aura_agent_arena_bridge.py
+
+      - name: Verify Forge handoff owner
+        run: python -m pytest -q tests/test_aura_forge.py
+
+      - name: Verify bounded external-session owner
+        run: python -m pytest -q tests/test_aura_external_llm_session.py
+
+      - name: Verify Architect controls and vault owner
+        run: python -m pytest -q tests/test_aura_architect_controls_vault_and_surfaces.py
 
       - name: Static and security checks
         run: |
           ruff check --select E9,F63,F7,F82 \
             aura_review_arena.py \
-            aura_review_arena_cli.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_breadboard.py \
+            aura_coding_waboose_cli.py \
             aura_agent_arena_persistence_bridge.py \
             aura_agent_arena_mcp.py \
             tests/test_aura_review_arena.py \
-            tests/test_aura_review_arena_mcp.py
-          bandit -q -ll aura_review_arena.py aura_review_arena_cli.py
+            tests/test_aura_review_arena_mcp.py \
+            tests/test_aura_coding_waboose.py \
+            tests/test_aura_coding_waboose_breadboard.py
+          bandit -q -ll \
+            aura_review_arena.py \
+            aura_coding_waboose.py \
+            aura_coding_waboose_breadboard.py \
+            aura_coding_waboose_cli.py
 
-      - name: Remove one-shot integration machinery
+      - name: Remove superseded and one-shot integration machinery
         run: |
+          rm docs/AURA_REVIEW_ARENA.md
+          rm .aura/research/AURA_REVIEW_ARENA_RESEARCH_2026-07-17.md
           rm scripts/apply_aura_review_arena_v1.py
+          rm scripts/apply_coding_waboose_v1.py
           rm .github/workflows/aura-review-arena-v1-integration.yml
+          rm .github/workflows/aura-review-arena-diagnostic.yml
 
       - name: Regenerate and verify repository maps
         run: |
@@ -98,5 +141,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Integrate Aura Review Arena V1"
+          git commit -m "Integrate Coding Waboose V1"
           git push origin HEAD:"$HEAD_REF"
