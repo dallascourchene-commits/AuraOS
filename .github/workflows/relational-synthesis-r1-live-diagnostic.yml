@@ -1,0 +1,143 @@
+name: Relational Synthesis R1 Live Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/relational-synthesis-r1-live-diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Compile and capture live capsule
+        run: |
+          set -o pipefail
+          python - <<'PY' 2>&1 | tee /tmp/relational-r1-live-diagnostic.log
+          import json
+          import subprocess
+          from pathlib import Path
+
+          from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine
+          from aura_polysynthetic_intent import PolysyntheticIntentPacket
+          from aura_relational_synthesis import RelationalSynthesisShadowCompiler
+
+          objective = (
+              'Final Phase 1 review of the read-only relational synthesis compiler: exact qualified '
+              'participant identity, deterministic IDs and serialization, complete relation endpoints, '
+              'required current repository and packet digests, candidate-only name-derived roles, '
+              'callable-level test ownership with open invariant proof, strict authority confinement, '
+              'and no Waboose or Agent Bridge behavior change.'
+          )
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          evidence = AuraEmergentEvidenceSpine(Path('.')).run({
+              'objective': objective,
+              'target_symbols': [
+                  'RelationalSynthesisShadowCompiler.compile',
+                  'RelationalSynthesisCapsule.__post_init__',
+                  'RelationalSynthesisCapsule.to_dict',
+                  'RelationalSynthesisCapsule.from_dict',
+                  'RelationalParticipant.__post_init__',
+                  'RelationalGroup.__post_init__',
+                  '_relations_from_packet',
+                  '_test_group',
+                  '_input_scope_authority_group',
+                  'PolysyntheticIntentPacket.from_slots',
+                  'stable_digest',
+                  'stable_id',
+              ],
+              'target_arena': 'coding_arena',
+              'radius': 1,
+              'max_atomic_nodes': 180,
+              'max_source_lines': 320,
+              'include_source': True,
+              'include_future': False,
+              'include_research_plan': False,
+              'include_offline_research': False,
+          })
+          Path('/tmp/relational-r1-live-evidence.json').write_text(
+              json.dumps(evidence, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          print('EVIDENCE_STATUS', json.dumps({
+              'ok': evidence.get('ok'),
+              'grounding_ok': evidence.get('grounding_ok'),
+              'status': evidence.get('status'),
+              'repo_head': evidence.get('repo_head'),
+              'expected_head': head,
+              'selected_count': evidence.get('atomic_inventory', {}).get('selected_count'),
+              'test_count': len(evidence.get('tests', [])),
+              'dependency_edge_count': len(evidence.get('dependency_edges', [])),
+          }, sort_keys=True))
+          assert evidence.get('ok') is True, evidence
+          assert evidence.get('grounding_ok') is True, evidence
+          assert evidence.get('repo_head') == head, evidence
+          intent = PolysyntheticIntentPacket.from_slots(
+              {
+                  'DIR': 'IN',
+                  'ASP': 'GROUND',
+                  'CLASS': 'REVIEW',
+                  'SUBJ': 'REPOSITORY_RELATION',
+                  'VOICE': 'HUMAN_AGENT',
+                  'STEM': 'INSPECT',
+              },
+              adjuncts={'grounding': 'exact_current_source', 'risk': 'proposal_only'},
+              objective=objective,
+          )
+          capsule = RelationalSynthesisShadowCompiler().compile(
+              evidence,
+              intent_packet=intent,
+              expected_repo_head=head,
+              expected_packet_digest=evidence['packet_digest'],
+              expected_inventory_digest=evidence['atomic_inventory']['inventory_digest'],
+          )
+          payload = capsule.to_dict()
+          Path('/tmp/relational-r1-live-capsule.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          print('CAPSULE_SUMMARY', json.dumps({
+              'capsule_id': payload['capsule_id'],
+              'capsule_digest': payload['capsule_digest'],
+              'participant_count': len(payload['participants']),
+              'boundary': payload['boundary'],
+              'groups': [
+                  {
+                      'purpose': group['purpose'],
+                      'roles': [item['role'] for item in group['role_bindings']],
+                      'proof_statuses': [item['status'] for item in group['proof_obligations']],
+                      'boundary': group['boundary'],
+                  }
+                  for group in payload['groups']
+              ],
+          }, sort_keys=True))
+          PY
+
+      - name: Upload live capsule diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relational-synthesis-r1-live-diagnostic
+          path: |
+            /tmp/relational-r1-live-diagnostic.log
+            /tmp/relational-r1-live-evidence.json
+            /tmp/relational-r1-live-capsule.json
+          if-no-files-found: warn
+          retention-days: 7
