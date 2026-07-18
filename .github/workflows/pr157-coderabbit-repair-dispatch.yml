@@ -57,7 +57,7 @@ jobs:
           )
           PY
       - name: Install focused tooling
-        run: python -m pip install pytest jsonschema
+        run: python -m pip install numpy pytest jsonschema
       - name: Run final relational regressions
         id: focused_tests
         continue-on-error: true
