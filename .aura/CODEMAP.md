@@ -14,20 +14,20 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1144
-- **total_bytes**: 53753774
+- **total_bytes**: 53010052
 - **text_tokens_est**: 3912139
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 152, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 794, 'schema_or_lexicon': 123, 'support_file': 31}
 - **topology_nodes**: 9461
 - **topology_edges**: 21593
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 59075.7
+- **elapsed_ms**: 53346.98
 
 ## Coverage
 
 - **included_file_count**: 1144
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=75, `.pytest_cache`=5, `.ruff_cache`=4, `Aura_Memory`=39, `Aura_Sandbox`=1, `__pycache__`=488
+- **skipped_dir_file_counts**: `.git`=78, `Aura_Memory`=6, `Aura_Sandbox`=1
 
 ## Command Index
 
