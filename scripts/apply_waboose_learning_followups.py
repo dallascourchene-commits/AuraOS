@@ -9,7 +9,7 @@ def replace_required(text: str, old: str, new: str, label: str) -> str:
     return text.replace(old, new, 1)
 
 
-def main() -> None:
+def patch_learning() -> None:
     path = Path("aura_waboose_learning.py")
     text = path.read_text(encoding="utf-8")
     text = replace_required(
@@ -64,6 +64,32 @@ def _safe_repo_path''',
         "DREAM source excerpt features",
     )
     path.write_text(text, encoding="utf-8")
+
+
+def patch_emergent_test_evidence() -> None:
+    path = Path("aura_emergent_evidence_spine.py")
+    text = path.read_text(encoding="utf-8")
+    text = replace_required(
+        text,
+        '''    selected_module_ids.discard(None)
+    test_targets = include_ids | selected_module_ids
+    for edge in anchor.edges:
+''',
+        '''    selected_module_ids.discard(None)
+    for node in anchor.nodes.values():
+        if node.file_path in tests and node.kind in ATOMIC_KINDS:
+            include_ids.add(node.node_id)
+    test_targets = include_ids | selected_module_ids
+    for edge in anchor.edges:
+''',
+        "atomic test callable preservation",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def main() -> None:
+    patch_learning()
+    patch_emergent_test_evidence()
 
 
 if __name__ == "__main__":
