@@ -33,22 +33,37 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          path = Path('aura_affordance_directory.py')
-          text = path.read_text(encoding='utf-8')
-          if '"id": "aura.relational.index"' not in text:
+          index_path = Path('aura_relational_index.py')
+          index_text = index_path.read_text(encoding='utf-8')
+          old_import = '''from aura_codebase_navigator import (
+              DEFAULT_INDEX_PATH as CODEMAP_INDEX_PATH,
+              DEFAULT_TOPOLOGY_PATH as CODEMAP_TOPOLOGY_PATH,
+          )'''
+          new_import = '''from aura_codebase_navigator import (
+              DEFAULT_INDEX_PATH as CODEMAP_INDEX_PATH,
+          )
+          from aura_codebase_navigator import (
+              DEFAULT_TOPOLOGY_PATH as CODEMAP_TOPOLOGY_PATH,
+          )'''
+          if old_import not in index_text:
+              raise SystemExit('relational index import normalization marker is missing')
+          index_path.write_text(index_text.replace(old_import, new_import, 1), encoding='utf-8')
+
+          affordance_path = Path('aura_affordance_directory.py')
+          affordance_text = affordance_path.read_text(encoding='utf-8')
+          if '"id": "aura.relational.index"' not in affordance_text:
               marker = '    {\n        "id": "aura.research_arxiv_memory",'
               insertion = Path('.phase2_payload/affordance_insert.pyfrag').read_text(encoding='utf-8')
-              if marker not in text:
+              if marker not in affordance_text:
                   raise SystemExit('affordance insertion marker is missing')
-              text = text.replace(marker, insertion + marker, 1)
-              path.write_text(text, encoding='utf-8')
+              affordance_path.write_text(affordance_text.replace(marker, insertion + marker, 1), encoding='utf-8')
           PY
 
       - name: Verify exact source checksums
         shell: bash
         run: |
           set -euo pipefail
-          echo '0e59e5e3a214140fcf54ca8043394c5573d5befcd3a469b78c701d47c31ef9d3  aura_relational_index.py' | sha256sum -c -
+          echo 'b474ee08cb8c9c7952ed956c392f5f4e33248fe577229843272d8f4545a546a5  aura_relational_index.py' | sha256sum -c -
           echo '5c905d1e0dbe2368567575da2b873c53844d267497780cb3b833559cc569e17b  schemas/aura_relational_index.schema.json' | sha256sum -c -
           echo 'b523cbef9f551edd68eae60110e414cc3d5a97a1fc39560fb6910820584f09a8  tests/test_aura_relational_index.py' | sha256sum -c -
           echo '92a2d1b89d7c9dd32996daacedd57bed287e64b5d966fb4b7cb2eb692d15cad7  docs/AURA_RELATIONAL_INDEX.md' | sha256sum -c -
@@ -63,7 +78,7 @@ jobs:
           python -m venv .phase2-verify-venv
           . .phase2-verify-venv/bin/activate
           python -m pip install --quiet --upgrade pip
-          python -m pip install --quiet pytest jsonschema referencing pyyaml ruff
+          python -m pip install --quiet 'numpy>=1.26.4,<3.0' pytest jsonschema referencing pyyaml ruff
           python -m py_compile aura_relational_index.py tests/test_aura_relational_index.py
           python -m ruff check aura_relational_index.py tests/test_aura_relational_index.py
           python -m pytest -q tests/test_aura_relational_synthesis.py tests/test_aura_relational_index.py
@@ -73,6 +88,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/p2-1-apply-review-fixes.yml
           rm -rf .phase2_payload
           rm -f .github/workflows/phase2-materialize.yml
           git config user.name 'Aura Phase 2 Builder'
