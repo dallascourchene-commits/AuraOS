@@ -35,11 +35,27 @@ def _repo(tmp_path: Path) -> Path:
         json.dumps(
             {
                 "nodes": [
-                    {"id": "core.py::compute", "file": "core.py", "label": "compute", "kind": "function", "line": 1},
-                    {"id": "caller.py::use", "file": "caller.py", "label": "use", "kind": "function", "line": 3},
+                    {
+                        "id": "core.py::compute",
+                        "file": "core.py",
+                        "label": "compute",
+                        "kind": "function",
+                        "line": 1,
+                    },
+                    {
+                        "id": "caller.py::use",
+                        "file": "caller.py",
+                        "label": "use",
+                        "kind": "function",
+                        "line": 3,
+                    },
                 ],
                 "edges": [
-                    {"source": "caller.py::use", "target": "core.py::compute", "kind": "call"}
+                    {
+                        "source": "caller.py::use",
+                        "target": "core.py::compute",
+                        "kind": "call",
+                    }
                 ],
             }
         ),
@@ -52,7 +68,9 @@ def _repo(tmp_path: Path) -> Path:
     return repo
 
 
-def test_prepare_brands_public_owner_and_adds_unpowered_breadboard(tmp_path: Path) -> None:
+def test_prepare_brands_public_owner_and_adds_fail_closed_breadboard(
+    tmp_path: Path,
+) -> None:
     runtime = CodingWaboose(_repo(tmp_path))
     result = runtime.prepare(
         {
@@ -69,7 +87,11 @@ def test_prepare_brands_public_owner_and_adds_unpowered_breadboard(tmp_path: Pat
     assert result["product"] == "Coding Waboose"
     assert result["waboose_id"].startswith("WABOOSE-")
     assert result["diagnostic_breadboard"]["board"]["arena_id"] == "coding_waboose"
-    assert result["diagnostic_breadboard"]["circuit_status"] == "GROUNDED_DIAGNOSTIC_CIRCUIT_UNPOWERED"
+    assert (
+        result["diagnostic_breadboard"]["circuit_status"]
+        == "DIAGNOSTIC_CIRCUIT_WITH_EXPLICIT_MOCKS"
+    )
+    assert result["diagnostic_breadboard"]["repair_handoff_eligible"] is False
     assert result["contract"]["product"] == "Coding Waboose"
     assert result["automatic_merge"] is False
 
@@ -93,11 +115,17 @@ def test_scan_energizes_only_deterministic_components(tmp_path: Path) -> None:
     assert components["standard_correctness"]["energized"] is True
     assert components["dependency_impact"]["energized"] is True
     assert components["test_adequacy"]["energized"] is False
-    assert scanned["diagnostic_breadboard"]["circuit_status"] == "PARTIALLY_ENERGIZED_DIAGNOSTIC_CIRCUIT"
+    assert (
+        scanned["diagnostic_breadboard"]["circuit_status"]
+        == "PARTIALLY_ENERGIZED_WITH_EXPLICIT_MOCKS"
+    )
+    assert scanned["diagnostic_breadboard"]["repair_handoff_eligible"] is False
     assert scanned["agent_packet"]["packet_type"] == "AURA_CODING_WABOOSE_AGENT_PACKET_V1"
 
 
-def test_exact_agent_finding_can_energize_named_focus_without_self_confirmation(tmp_path: Path) -> None:
+def test_exact_agent_finding_can_energize_named_focus_without_self_confirmation(
+    tmp_path: Path,
+) -> None:
     runtime = CodingWaboose(_repo(tmp_path))
     prepared = runtime.prepare(
         {
@@ -149,6 +177,7 @@ def test_exact_agent_finding_can_energize_named_focus_without_self_confirmation(
         if item["directive_id"] == directive["directive_id"]
     )
     assert component["energized"] is True
+    assert component["mocked_input_refs"] == []
     assert submitted["automatic_fix"] is False
     final = runtime.finalize(prepared["review_id"])
     agent_finding = next(item for item in final["findings"] if item["origin"] == "agent")
@@ -169,6 +198,9 @@ def test_status_exposes_breadboard_without_granting_execution(tmp_path: Path) ->
     )
     status = runtime.status(prepared["review_id"])
     assert status["product"] == "Coding Waboose"
-    assert status["breadboard_status"] == "GROUNDED_DIAGNOSTIC_CIRCUIT_UNPOWERED"
+    assert (
+        status["breadboard_status"]
+        == "DIAGNOSTIC_CIRCUIT_WITH_EXPLICIT_MOCKS"
+    )
     assert status["production_mutation"] is False
     assert status["automatic_pull_request"] is False
