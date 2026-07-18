@@ -30,7 +30,6 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           affordance_path = Path('aura_affordance_directory.py')
           affordance = affordance_path.read_text(encoding='utf-8')
           marker = '    {\n        "id": "aura.research_arxiv_memory",'
@@ -59,9 +58,7 @@ jobs:
           if '"id": "aura.relational.index"' not in affordance:
               if marker not in affordance:
                   raise SystemExit('affordance insertion marker not found')
-              affordance = affordance.replace(marker, block + marker, 1)
-              affordance_path.write_text(affordance, encoding='utf-8')
-
+              affordance_path.write_text(affordance.replace(marker, block + marker, 1), encoding='utf-8')
           plan_path = Path('docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md')
           plan = plan_path.read_text(encoding='utf-8')
           old = '''## 9. Phase 2 — AOT relational index
