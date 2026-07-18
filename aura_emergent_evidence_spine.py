@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from collections import defaultdict, deque
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -38,7 +38,6 @@ from aura_repo_localizer import EXCLUDE_DIRS
 from aura_topological_context_anchor import (
     PATCH_AUTHORITY_POLICY,
     CodeTopoAnchor,
-    CodeTopoEdge,
     CodeTopoNode,
 )
 
@@ -105,7 +104,7 @@ class EmergentEvidenceRequest:
     include_offline_research: bool = True
 
     @classmethod
-    def from_value(cls, value: Mapping[str, Any] | "EmergentEvidenceRequest") -> "EmergentEvidenceRequest":
+    def from_value(cls, value: Mapping[str, Any] | EmergentEvidenceRequest) -> EmergentEvidenceRequest:
         if isinstance(value, cls):
             return value
         if not isinstance(value, Mapping):
@@ -235,7 +234,7 @@ class AuraEmergentEvidenceSpine:
             return packet
         except (OSError, TypeError, ValueError, json.JSONDecodeError) as exc:
             return _error(type(exc).__name__, str(exc))
-        except Exception as exc:  # noqa: BLE001 - sanitized fail-closed facade
+        except Exception as exc:
             return _error(type(exc).__name__, "emergent evidence spine failed closed")
 
 
@@ -607,24 +606,43 @@ def _tests_for_nodes(
     node_ids: Sequence[str],
     repo_root: Path,
 ) -> list[str]:
-    tests: list[str] = []
-    try:
-        tests.extend(anchor._tests_for_nodes(list(node_ids)))  # noqa: SLF001 - no public batch accessor
-    except Exception:
-        pass
-    for node_id in node_ids:
-        node = anchor.nodes.get(node_id)
-        if node is None:
+    target_files = {
+        anchor.nodes[node_id].file_path
+        for node_id in node_ids
+        if node_id in anchor.nodes
+    }
+    if not target_files:
+        return []
+    tests: set[str] = set()
+    target_module_ids = {
+        anchor.module_nodes.get(file_path)
+        for file_path in target_files
+    }
+    target_module_ids.discard(None)
+    for edge in anchor.edges:
+        if edge.edge_type != "test":
             continue
-        path = PurePosixPath(node.file_path)
+        targets_selected_module = edge.dst_id in target_module_ids
+        targets_selected_file = (
+            edge.dst_id in anchor.nodes
+            and anchor.nodes[edge.dst_id].file_path in target_files
+        )
+        if not (targets_selected_module or targets_selected_file):
+            continue
+        source = anchor.nodes.get(edge.src_id)
+        if source is not None:
+            tests.add(source.file_path)
+    for file_path in target_files:
+        path = PurePosixPath(file_path)
         candidates = (
             path.parent / f"test_{path.name}",
             PurePosixPath("tests") / f"test_{path.name}",
         )
         for candidate in candidates:
-            if (repo_root / candidate).is_file():
-                tests.append(candidate.as_posix())
-    return sorted(dict.fromkeys(tests))
+            candidate_text = candidate.as_posix()
+            if candidate_text in anchor.source_texts or (repo_root / candidate).is_file():
+                tests.add(candidate_text)
+    return sorted(tests)
 
 
 def _research_projection(
@@ -992,7 +1010,10 @@ def _research_gaps(
 def _repo_paths(values: Any) -> tuple[str, ...]:
     result: list[str] = []
     for value in _sequence(values):
+        raw = str(value or "").strip()
         normalized = _normalize_repo_path(value)
+        if raw and not normalized:
+            raise ValueError("repository paths must be relative and may not escape the repository")
         if normalized and normalized not in result:
             result.append(normalized)
     return tuple(result)
