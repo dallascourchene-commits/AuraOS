@@ -22,6 +22,11 @@ except ImportError:
     augment_topology_payload = None  # type: ignore[assignment]
     normalize_topology_payload = None  # type: ignore[assignment]
 
+try:
+    from aura_spatial_ws_guard import compile_ar_hotswap_handoff
+except ImportError:
+    compile_ar_hotswap_handoff = None  # type: ignore[assignment]
+
 # ── Fixed-frame chunking constants ──────────────────────────────────────────
 _FRAME_SIZE_BYTES = 4096       # 4 KB per chunk — fits in a single WebSocket frame
 _MAX_BROADCAST_QUEUE = 128     # backpressure ceiling: drop oldest if full
@@ -699,20 +704,41 @@ class AuraARWebSocketServer:
         _ar_logger.info("Added shape: %s", new_shape.shape_id)
 
     async def _handle_hotswap_request(self, session: _ARSession, data: dict) -> None:
-        target_id    = data.get("targetId")
+        target_id = data.get("targetId")
         new_function = data.get("newFunction")
         if not target_id or not new_function:
             raise ValueError("targetId and newFunction required")
 
-        # Forward to node hotswap if available (set via node reference)
-        result = {"status": "success", "targetId": target_id, "message": "Hotswap queued"}
-        await self._broadcast_message({
-            "type": "HOTSWAP_COMPLETE",
+        if compile_ar_hotswap_handoff is None:
+            result = {
+                "ok": False,
+                "status": "SPATIAL_GUARD_UNAVAILABLE",
+                "error": "spatial_hotswap_guard_unavailable",
+                "targetId": target_id,
+                "queued": False,
+                "success": False,
+                "production_mutation": False,
+                "automatic_commit": False,
+                "automatic_push": False,
+                "automatic_merge": False,
+            }
+        else:
+            result = compile_ar_hotswap_handoff(
+                target_id=str(target_id),
+                new_function=new_function,
+                shapes=self._shapes,
+                actor_ref=f"ar-session:{session.session_id}",
+            )
+
+        await session.websocket.send(_json_ar.dumps({
+            "type": "HOTSWAP_REVIEW_REQUIRED",
             "targetId": target_id,
             "result": result,
-        })
-        _ar_logger.info("Hotswap queued for %s", target_id)
-        await self._refresh_topology()
+        }))
+        _ar_logger.info(
+            "Hotswap review handoff compiled for %s; no mutation executed",
+            target_id,
+        )
 
     async def _handle_resonance_update(self, session: _ARSession, data: dict) -> None:
         """

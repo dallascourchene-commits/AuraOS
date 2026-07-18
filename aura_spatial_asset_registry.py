@@ -12,7 +12,7 @@ from aura_spatial_contracts import SpatialAssetManifest
 
 SPATIAL_ASSET_REGISTRY_VERSION = "AURA_SPATIAL_ASSET_REGISTRY_V1"
 _ALLOWED_REMOTE_SCHEMES = frozenset({"https"})
-_ALLOWED_LOCAL_SCHEMES = frozenset({"", "file", "aura"})
+_ALLOWED_LOCAL_SCHEMES = frozenset({"", "aura"})
 
 
 @dataclass(frozen=True)

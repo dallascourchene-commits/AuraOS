@@ -39,13 +39,35 @@ def project_coding_topology_to_scene(
     """Project one bounded Coding Arena neighborhood into an immutable scene."""
     if not isinstance(topology, dict):
         raise ValueError("topology must be an object")
+    requested = tuple(
+        dict.fromkeys(
+            str(item).strip()
+            for item in selected_node_ids
+            if str(item).strip()
+        )
+    )
+    if not requested:
+        raise ValueError("selected_node_ids must not be empty")
+    known_node_ids = {
+        str(item.get("id"))
+        for item in topology.get("nodes", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    missing = [item for item in requested if item not in known_node_ids]
+    if missing:
+        raise ValueError(f"unknown selected topology nodes: {missing}")
     micro = select_micro_arena(
         topology,
-        tuple(str(item) for item in selected_node_ids),
+        requested,
         depth=max(0, min(2, int(depth))),
         human_instruction=human_instruction,
         token_budget=max(1, int(token_budget)),
     )
+    returned_selected = tuple(micro.get("selected_node_ids", []))
+    if returned_selected != requested:
+        raise ValueError(
+            "Coding Arena projection changed the exact requested selection"
+        )
     raw_nodes = [
         item
         for item in micro.get("nodes", [])

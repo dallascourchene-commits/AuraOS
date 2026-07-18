@@ -151,7 +151,7 @@ success: false
 next_owner: aura_forge
 ```
 
-It never reports that a hotswap was queued merely because a WebSocket message was accepted. Bridge integration is a bounded S2 change: the bridge must call this guard using a current immutable scene and must stop before Forge preparation unless exact source evidence is available.
+It never reports that a hotswap was queued merely because a WebSocket message was accepted. The legacy AR bridge now calls the guard against its current bounded shape state, returns `HOTSWAP_REVIEW_REQUIRED` only to the requesting session, retains only a redacted proposal digest, and does not broadcast success or refresh topology as though a mutation occurred.
 
 ## Explicitly deferred work
 

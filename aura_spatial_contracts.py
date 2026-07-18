@@ -226,17 +226,30 @@ def _metadata(value: Any, field_name: str = "metadata") -> tuple[tuple[str, Any]
 class CanonicalSpatialRecord:
     def to_dict(self) -> dict[str, Any]:
         result: dict[str, Any] = {}
+        mapping_fields = {"metadata", "intent_slots", "renderer_hints"}
         for field in fields(self):
             value = getattr(self, field.name)
             if isinstance(value, Enum):
                 result[field.name] = value.value
-            elif isinstance(value, tuple):
-                result[field.name] = _thaw_json(value)
             elif isinstance(value, CanonicalSpatialRecord):
                 result[field.name] = value.to_dict()
+            elif isinstance(value, tuple) and field.name in mapping_fields:
+                result[field.name] = _thaw_json(value)
+            elif isinstance(value, tuple):
+                result[field.name] = [_record_value(item) for item in value]
             else:
                 result[field.name] = value
         return result
+
+
+def _record_value(value: Any) -> Any:
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, CanonicalSpatialRecord):
+        return value.to_dict()
+    if isinstance(value, tuple):
+        return [_record_value(item) for item in value]
+    return value
 
     @property
     def digest(self) -> str:

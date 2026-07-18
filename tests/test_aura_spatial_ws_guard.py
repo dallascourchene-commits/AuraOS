@@ -1,6 +1,7 @@
 """Regression tests for the legacy AR bridge spatial handoff guard."""
 from __future__ import annotations
 
+import inspect
 from types import SimpleNamespace
 
 import pytest
@@ -80,3 +81,13 @@ def test_ar_hotswap_handoff_does_not_invent_source_anchor():
     assert packet["source_anchor_present"] is False
     assert packet["success"] is False
     assert packet["next_owner"] == "aura_forge"
+
+def test_legacy_bridge_handler_uses_private_spatial_guard():
+    from aura_topology_ws_bridge import AuraARWebSocketServer
+
+    source = inspect.getsource(AuraARWebSocketServer._handle_hotswap_request)
+    assert "compile_ar_hotswap_handoff" in source
+    assert "HOTSWAP_REVIEW_REQUIRED" in source
+    assert "_broadcast_message" not in source
+    assert "_refresh_topology" not in source
+    assert "Hotswap queued" not in source

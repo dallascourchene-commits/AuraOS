@@ -376,3 +376,39 @@ def test_link_rejects_self_reference():
             target_entity_id="entity:one",
             relation="related",
         )
+
+def test_empty_sequence_contract_fields_serialize_as_arrays():
+    frame = CoordinateFrame(frame_id="root")
+    entity = SpatialEntity(
+        entity_id="entity:empty",
+        entity_type=SpatialEntityType.DOMAIN_NODE,
+        label="Empty",
+        frame_id="root",
+    )
+    assert frame.to_dict()["source_refs"] == []
+    assert entity.to_dict()["asset_ids"] == []
+    assert entity.to_dict()["source_refs"] == []
+    assert entity.to_dict()["metadata"] == {}
+
+
+def test_unknown_coding_selection_fails_closed():
+    with pytest.raises(ValueError, match="unknown selected topology nodes"):
+        project_coding_topology_to_scene(
+            _topology(),
+            ("missing:node",),
+        )
+
+
+def test_file_asset_uri_is_not_admitted():
+    manifest = _asset()
+    file_uri = SpatialAssetManifest(
+        **{
+            **manifest.to_dict(),
+            "asset_id": "asset:file-uri",
+            "uri": "file:///tmp/scene.glb",
+            "metadata": {},
+        }
+    )
+    report = validate_asset_manifest(file_uri)
+    assert report.ok is False
+    assert report.findings[0]["code"] == "UNSUPPORTED_ASSET_URI_SCHEME"
