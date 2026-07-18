@@ -1,0 +1,190 @@
+from __future__ import annotations
+
+from copy import deepcopy
+import json
+from pathlib import Path
+import subprocess
+
+import pytest
+
+from aura_relational_index import (
+    INDEX_GENERATED_PATHS,
+    RelationalIndex,
+    RelationalIndexBuilder,
+    RelationalIndexProfile,
+    RelationalIndexStore,
+    TruthClass,
+    _canonical_python_sources,
+    _working_tree_digest,
+    query_relational_index,
+)
+from aura_relational_synthesis import RelationalParticipant, RelationType
+from aura_topological_context_anchor import CodeTopoAnchor
+
+
+def _files() -> dict[str, str]:
+    return {
+        "service.py": (
+            "class Alpha:\n"
+            "    def run(self):\n"
+            "        return helper()\n\n"
+            "class Beta:\n"
+            "    def run(self):\n"
+            "        return 2\n\n"
+            "def helper():\n"
+            "    return 1\n"
+        ),
+        "tests/test_service.py": (
+            "from service import Alpha\n\n"
+            "def test_alpha_run():\n"
+            "    assert Alpha().run() == 1\n"
+        ),
+        ".aura/RELATIONAL_INDEX.json": "{}\n",
+    }
+
+
+def _connectome(*, reverse: bool = False, ambiguous: bool = False) -> dict:
+    nodes = [
+        {
+            "id": "aura.coding_arena.topology",
+            "node_digest": "1" * 32,
+            "name": "Coding topology",
+            "purpose": "Exact topology orientation",
+            "implemented_by": ["service.py"],
+            "symbols": ["run" if ambiguous else "Alpha.run", "helper"],
+            "tests": ["tests/test_service.py"],
+            "docs": [],
+            "truth_boundary": "advisory",
+            "grounding": "grounded",
+        },
+        {
+            "id": "aura.patch_quality_gate",
+            "node_digest": "2" * 32,
+            "name": "Quality gate",
+            "purpose": "Verification",
+            "implemented_by": ["tests/test_service.py"],
+            "symbols": ["test_alpha_run"],
+            "tests": ["tests/test_service.py"],
+            "docs": [],
+            "truth_boundary": "exact_source",
+            "grounding": "grounded",
+        },
+    ]
+    if reverse:
+        nodes.reverse()
+    return {
+        "ok": True,
+        "version": "AURA_CAPABILITY_CONNECTOME_V2",
+        "graph_digest": "a" * 32,
+        "nodes": nodes,
+        "edges": [],
+        "vsa_patch_authority": False,
+    }
+
+
+def _identity(builder: RelationalIndexBuilder) -> dict[str, object]:
+    return {
+        "repo_head": "b" * 40,
+        "working_tree_digest": "c" * 40,
+        "codemap_digest": "d" * 40,
+        "topology_digest": "e" * 40,
+        "topology_version": "FIXTURE_TOPOLOGY_V1",
+        "topology_health": 1.0,
+        "connectome_graph_digest": "a" * 32,
+        "connectome_version": "AURA_CAPABILITY_CONNECTOME_V2",
+        "atomic_inventory_digest": "f" * 40,
+        "atomic_inventory_version": "AURA_ATOMIC_FUNCTION_INVENTORY_V1",
+        "relation_ontology_digest": "1" * 40,
+        "profile_digest": builder.profile.digest,
+        "schema_digest": "2" * 40,
+    }
+
+
+def _build(*, reverse: bool = False, ambiguous: bool = False) -> RelationalIndex:
+    files = _files()
+    if reverse:
+        files = dict(reversed(list(files.items())))
+    anchor = CodeTopoAnchor.build_from_files(files)
+    builder = RelationalIndexBuilder(".", profile="STANDARD")
+    return builder.build_full(
+        anchor=anchor,
+        connectome=_connectome(reverse=reverse, ambiguous=ambiguous),
+        repository_identity=_identity(builder),
+    )
+
+
+def test_full_index_is_deterministic_under_input_reordering() -> None:
+    assert _build().to_dict() == _build(reverse=True).to_dict()
+
+
+def test_exact_and_advisory_relations_remain_separate() -> None:
+    index = _build()
+    structural = [
+        item
+        for item in index.relations
+        if item.relation_type in {RelationType.CALLS, RelationType.IMPORTS, RelationType.TESTS}
+    ]
+    implementations = [
+        item
+        for item in index.relations
+        if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY
+    ]
+    assert structural
+    assert implementations
+    assert all(
+        item.truth_class in {TruthClass.EXACT_SOURCE, TruthClass.EXACT_TEST}
+        for item in structural
+    )
+    assert all(
+        item.truth_class is TruthClass.ADVISORY_CONNECTOME
+        for item in implementations
+    )
+
+
+def test_same_named_methods_keep_qualified_identity() -> None:
+    index = _build()
+    qualified = {
+        item.qualified_symbol
+        for item in index.participants
+        if item.qualified_symbol in {"Alpha.run", "Beta.run"}
+    }
+    assert qualified == {"Alpha.run", "Beta.run"}
+    refs = {
+        item.canonical_ref
+        for item in index.participants
+        if item.qualified_symbol in qualified
+    }
+    assert len(refs) == 2
+    assert all(ref.startswith("service.py#method:") for ref in refs)
+
+
+def test_ambiguous_unqualified_capability_mapping_stays_unresolved() -> None:
+    index = _build(ambiguous=True)
+    unresolved = index.boundary["advisory_only_mappings"]
+    assert any(
+        item == "capability_symbol:aura.coding_arena.topology:run:ambiguous"
+        for item in unresolved
+    )
+    mapped = [
+        item
+        for item in index.relations
+        if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY
+        and item.metadata.get("capability_id") == "aura.coding_arena.topology"
+    ]
+    mapped_symbols = {
+        next(
+            participant.qualified_symbol
+            for participant in index.participants
+            if participant.participant_id == relation.source_participant_id
+        )
+        for relation in mapped
+    }
+    assert "Alpha.run" not in mapped_symbols
+    assert "Beta.run" not in mapped_symbols
+    assert "helper" in mapped_symbols
+
+
+def test_all_relation_endpoints_and_reverse_ids_are_inspectable() -> None:
+    index = _build()
+    participant_ids = {item.participant_id for item in index.participants}
+    relation_ids = {item.relation_id for item in index.relations}
