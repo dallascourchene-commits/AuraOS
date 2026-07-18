@@ -120,7 +120,7 @@ STANDARD
 DEEP
 ```
 
-Profiles bound group materialization only. Relation endpoints are mandatory and are never removed to satisfy a budget. Optional role-only participants may be omitted with explicit boundary counts.
+Profiles bound group materialization only. Relations are selected jointly under relation and participant limits; a relation is omitted when its mandatory endpoints would exceed the participant budget. Selected endpoints are never dropped, and omission counts remain in relation units with the causal budget recorded explicitly.
 
 ## Macro domains and surgical bundles
 
@@ -142,11 +142,11 @@ The V1 index provides deterministic lookup by:
 - test path;
 - schema, authority family, and Arena when exact supported evidence exists.
 
-Every reverse-index value must resolve to a participant, relation, or group in the same index.
+Every reverse-index value must resolve to a participant, relation, or group in the same index. Participant lookup returns the participant itself, all incident relations, and any groups that include it, including for participants that belong to no materialized group.
 
 ## Persistence
 
-Writes use a thread and cross-process lock, sibling temporary file, flush, `fsync`, atomic `os.replace`, and reload validation. The empirical receipt is separate from deterministic index identity so timestamps and wall time cannot make equal repository states produce different indexes.
+Writes use a thread and cross-process lock, sibling temporary file, flush, `fsync`, atomic `os.replace`, and reload validation. Post-write reload and linked index/receipt reads remain under the same store lock. Store targets reject absolute, parent-traversal, Windows drive-qualified, and resolved symlink-escape paths. The empirical receipt is separate from deterministic index identity so timestamps and wall time cannot make equal repository states produce different indexes.
 
 The initial incremental builder intentionally performs a conservative canonical full rebuild after validating changed paths. This proves incremental/full equivalence without introducing a fragile partial AST engine. Later optimization may replace affected groups while preserving byte-equivalent canonical output.
 
@@ -164,12 +164,14 @@ python -m aura_relational_index query --relation CALLS
 
 The CLI writes only generated index artifacts and never patches, commits, pushes, opens pull requests, or merges.
 
+`build` and `refresh` print bounded summaries rather than serializing the full generated index to stdout. `status` and `validate` load the stored profile, release the expanded stored graph before current-state work, and compute only the current repository identity instead of constructing a second full relational index.
+
 
 ## Final validation
 
 The permanent implementation was validated in the canonical excluded `.venv` with:
 
-- 39 focused Phase 1/Phase 2 contract tests;
+- 48 focused Phase 1/Phase 2 contract tests after manual CodeRabbit/Codex review hardening;
 - 38 Affordance Directory and Capability Connectome tests;
 - 16 Evidence Spine and CodeTopoAnchor tests;
 - module compilation;
@@ -177,6 +179,15 @@ The permanent implementation was validated in the canonical excluded `.venv` wit
 - Draft 2020-12 schema validation with local references;
 - atomic write, exact reload, and receipt linkage;
 - current/stale freshness comparison;
+- zero-valued topology-health preservation and comparison;
+- runtime/schema exact-key and canonical-profile parity;
+- Windows-drive and symlink-parent containment;
+- lock-scoped post-write and linked-state verification;
+- exact/advisory evidence separation;
+- coupled relation/participant budget enforcement;
+- participant self and incident-relation reverse lookup;
+- stored-profile identity-only validation;
+- bounded CLI result serialization;
 - conservative incremental/full equivalence;
 - exact query lookup over the generated reverse indexes.
 

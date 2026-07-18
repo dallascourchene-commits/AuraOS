@@ -14,11 +14,23 @@ from aura_relational_index import (
     RelationalIndexProfile,
     RelationalIndexStore,
     TruthClass,
+    _build_groups,
     _canonical_python_sources,
+    _safe_repo_path,
+    _topology_facts,
     _working_tree_digest,
+    main,
     query_relational_index,
 )
-from aura_relational_synthesis import RelationalParticipant, RelationType
+from aura_relational_synthesis import (
+    GroupKind,
+    RelationalParticipant,
+    RelationType,
+    TypedRelation,
+)
+from aura_relational_synthesis import (
+    TruthClass as SynthesisTruthClass,
+)
 from aura_topological_context_anchor import CodeTopoAnchor
 
 
@@ -124,36 +136,22 @@ def test_exact_and_advisory_relations_remain_separate() -> None:
         for item in index.relations
         if item.relation_type in {RelationType.CALLS, RelationType.IMPORTS, RelationType.TESTS}
     ]
-    implementations = [
-        item
-        for item in index.relations
-        if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY
-    ]
+    implementations = [item for item in index.relations if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY]
     assert structural
     assert implementations
-    assert all(
-        item.truth_class in {TruthClass.EXACT_SOURCE, TruthClass.EXACT_TEST}
-        for item in structural
-    )
-    assert all(
-        item.truth_class is TruthClass.ADVISORY_CONNECTOME
-        for item in implementations
-    )
+    assert all(item.truth_class in {TruthClass.EXACT_SOURCE, TruthClass.EXACT_TEST} for item in structural)
+    assert all(item.truth_class is TruthClass.ADVISORY_CONNECTOME for item in implementations)
+    assert all(not any(ref.startswith("connectome-context:") for ref in item.evidence_refs) for item in structural)
+    assert all(binding.role != "exact_implementation" for group in index.groups for binding in group.role_bindings)
 
 
 def test_same_named_methods_keep_qualified_identity() -> None:
     index = _build()
     qualified = {
-        item.qualified_symbol
-        for item in index.participants
-        if item.qualified_symbol in {"Alpha.run", "Beta.run"}
+        item.qualified_symbol for item in index.participants if item.qualified_symbol in {"Alpha.run", "Beta.run"}
     }
     assert qualified == {"Alpha.run", "Beta.run"}
-    refs = {
-        item.canonical_ref
-        for item in index.participants
-        if item.qualified_symbol in qualified
-    }
+    refs = {item.canonical_ref for item in index.participants if item.qualified_symbol in qualified}
     assert len(refs) == 2
     assert all(ref.startswith("service.py#method:") for ref in refs)
 
@@ -404,8 +402,8 @@ def test_validate_current_reports_current_and_stale_identity(tmp_path: Path) -> 
         def __init__(self, value: RelationalIndex) -> None:
             self.value = value
 
-        def build_full(self) -> RelationalIndex:
-            return self.value
+        def repository_identity_snapshot(self) -> dict[str, object]:
+            return dict(self.value.repository_identity)
 
     current = store.validate_current(builder=StubBuilder(index))
     assert current["ok"] is True
@@ -486,3 +484,273 @@ def test_affordance_directory_exposes_relational_index() -> None:
     node = next(item for item in graph["nodes"] if item["id"] == "aura.relational.index")
     assert node["truth_boundary"] == "advisory"
     assert node["node_digest"]
+
+
+def test_topology_health_preserves_zero_and_participates_in_freshness(
+    tmp_path: Path,
+) -> None:
+    topology_path = tmp_path / "topology.json"
+    topology_path.write_text(
+        json.dumps(
+            {
+                "version": "TOPOLOGY_V1",
+                "global_health": 0.0,
+                "health": 0.8,
+            }
+        ),
+        encoding="utf-8",
+    )
+    _, _, health = _topology_facts(topology_path)
+    assert health == 0.0
+
+    index = _build()
+    store = RelationalIndexStore(
+        tmp_path,
+        index_path="generated/index.json",
+        receipt_path="generated/receipt.json",
+        markdown_path="generated/index.md",
+        lock_path="generated/index.lock",
+    )
+    store.write(index, build_mode="full", full_equivalence_verified=True)
+
+    class StubBuilder:
+        def repository_identity_snapshot(self) -> dict[str, object]:
+            value = dict(index.repository_identity)
+            value["topology_health"] = 0.0
+            return value
+
+    status = store.validate_current(builder=StubBuilder())
+    assert status["status"] == "STALE"
+    assert status["mismatches"] == {"topology_health": {"stored": 1.0, "current": 0.0}}
+
+
+def test_nested_contracts_reject_unknown_keys_and_noncanonical_budgets() -> None:
+    data = _build().to_dict()
+    for field in ("repository_identity", "profile", "boundary", "build_facts"):
+        forged = deepcopy(data)
+        forged[field]["unexpected"] = True
+        with pytest.raises(ValueError, match="keys do not match"):
+            RelationalIndex.from_dict(forged)
+
+    forged_budget = deepcopy(data)
+    forged_budget["profile"]["budgets"]["max_group_relations"] = 1499
+    with pytest.raises(ValueError, match="budgets do not match"):
+        RelationalIndex.from_dict(forged_budget)
+
+
+def test_schema_rejects_noncanonical_profile_budget() -> None:
+    pytest.importorskip("jsonschema")
+    pytest.importorskip("referencing")
+    from jsonschema import Draft202012Validator
+    from referencing import Registry, Resource
+
+    root = Path("schemas")
+    resources = []
+    for name in (
+        "aura_relational_participant.schema.json",
+        "aura_relational_group.schema.json",
+        "aura_relational_index.schema.json",
+    ):
+        value = json.loads((root / name).read_text(encoding="utf-8"))
+        resources.append((value["$id"], Resource.from_contents(value)))
+    index_schema = json.loads((root / "aura_relational_index.schema.json").read_text(encoding="utf-8"))
+    registry = Registry().with_resources(resources)
+    forged = _build().to_dict()
+    forged["profile"]["budgets"]["max_group_participants"] = 1499
+    errors = list(Draft202012Validator(index_schema, registry=registry).iter_errors(forged))
+    assert errors
+
+
+def test_store_rejects_windows_drives_and_symlinked_parents(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="escapes workspace"):
+        _safe_repo_path("C:/outside/index.json")
+    with pytest.raises(ValueError, match="escapes workspace"):
+        RelationalIndexStore(tmp_path, index_path="C:/outside/index.json")
+
+    outside = tmp_path.parent / f"{tmp_path.name}-outside"
+    outside.mkdir()
+    (tmp_path / "generated").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="parent escapes workspace"):
+        RelationalIndexStore(
+            tmp_path,
+            index_path="generated/index.json",
+            receipt_path="receipts/receipt.json",
+            markdown_path="receipts/index.md",
+            lock_path="receipts/index.lock",
+        )
+
+
+def test_store_verification_and_linked_reads_are_locked(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    index = _build()
+    store = RelationalIndexStore(
+        tmp_path,
+        index_path="generated/index.json",
+        receipt_path="generated/receipt.json",
+        markdown_path="generated/index.md",
+        lock_path="generated/index.lock",
+    )
+    state = {"locked": False, "load_under_lock": False, "receipt_under_lock": False}
+
+    from contextlib import contextmanager
+
+    @contextmanager
+    def tracked_lock(path: Path):
+        del path
+        assert state["locked"] is False
+        state["locked"] = True
+        try:
+            yield
+        finally:
+            state["locked"] = False
+
+    original_load = store.load
+    original_receipt = store.load_receipt
+
+    def tracked_load() -> RelationalIndex:
+        state["load_under_lock"] = state["load_under_lock"] or state["locked"]
+        return original_load()
+
+    def tracked_receipt():
+        state["receipt_under_lock"] = state["receipt_under_lock"] or state["locked"]
+        return original_receipt()
+
+    monkeypatch.setattr("aura_relational_index._exclusive_store_lock", tracked_lock)
+    monkeypatch.setattr(store, "load", tracked_load)
+    monkeypatch.setattr(store, "load_receipt", tracked_receipt)
+    store.write(index, build_mode="full", full_equivalence_verified=True)
+    assert state["load_under_lock"] is True
+
+    class StubBuilder:
+        def repository_identity_snapshot(self) -> dict[str, object]:
+            return dict(index.repository_identity)
+
+    store.validate_current(builder=StubBuilder())
+    assert state["receipt_under_lock"] is True
+
+
+def test_group_selection_respects_relation_and_participant_budgets() -> None:
+    capability = "capability-participant"
+    source_one = "source-one"
+    source_two = "source-two"
+    relations = [
+        TypedRelation.create(
+            relation_type=RelationType.IMPLEMENTS_CAPABILITY,
+            source_participant_id=source_one,
+            target_participant_id=capability,
+            truth_class=SynthesisTruthClass.ADVISORY_CONNECTOME,
+            evidence_refs=("connectome:a",),
+            metadata={"capability_id": "aura.coding_arena.topology"},
+        ),
+        TypedRelation.create(
+            relation_type=RelationType.IMPLEMENTS_CAPABILITY,
+            source_participant_id=source_two,
+            target_participant_id=capability,
+            truth_class=SynthesisTruthClass.ADVISORY_CONNECTOME,
+            evidence_refs=("connectome:b",),
+            metadata={"capability_id": "aura.coding_arena.topology"},
+        ),
+    ]
+
+    class TinyProfile:
+        def __init__(self) -> None:
+            self.value = "TINY"
+            self.budgets = {
+                "max_group_relations": 2,
+                "max_group_participants": 2,
+            }
+
+    groups = _build_groups(
+        relations=relations,
+        connectome={},
+        capability_to_participant={"aura.coding_arena.topology": capability},
+        unresolved_mappings=(),
+        profile=TinyProfile(),
+    )
+    group = next(
+        item
+        for item in groups
+        if item.group_kind is GroupKind.MACRO_DOMAIN and item.purpose == "codemap_topology_grounding"
+    )
+    assert len(group.relations) == 1
+    assert len(group.boundary.included_participant_ids) == 2
+    assert group.boundary.omitted_relation_count == 1
+    assert group.boundary.omitted_reasons == {"profile_participant_budget": 1}
+
+
+def test_participant_reverse_lookup_returns_self_and_incident_relations() -> None:
+    index = _build()
+    helper = next(item for item in index.participants if item.qualified_symbol == "helper")
+    incident = {
+        relation.relation_id
+        for relation in index.relations
+        if helper.participant_id in {relation.source_participant_id, relation.target_participant_id}
+    }
+    result = query_relational_index(index, participant_id=helper.participant_id)
+    assert [item["participant_id"] for item in result["participants"]] == [helper.participant_id]
+    assert {item["relation_id"] for item in result["relations"]} == incident
+
+
+def test_validate_uses_stored_profile_and_identity_only(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    original = _build()
+    minimal = RelationalIndexProfile.MINIMAL
+    identity = dict(original.repository_identity)
+    identity["profile_digest"] = minimal.digest
+    index = RelationalIndex.create(
+        repository_identity=identity,
+        profile={
+            "name": minimal.value,
+            "budgets": dict(minimal.budgets),
+            "profile_digest": minimal.digest,
+        },
+        participants=original.participants,
+        relations=original.relations,
+        groups=original.groups,
+        reverse_indexes=original.reverse_indexes,
+        boundary=original.boundary,
+        build_facts=original.build_facts,
+    )
+    store = RelationalIndexStore(
+        tmp_path,
+        index_path="generated/index.json",
+        receipt_path="generated/receipt.json",
+        markdown_path="generated/index.md",
+        lock_path="generated/index.lock",
+    )
+    store.write(index, build_mode="full", full_equivalence_verified=True)
+    seen: list[str] = []
+
+    def snapshot(self: RelationalIndexBuilder) -> dict[str, object]:
+        seen.append(self.profile.value)
+        return dict(index.repository_identity)
+
+    def forbidden_full(self: RelationalIndexBuilder):
+        raise AssertionError("validate_current must not build a second full index")
+
+    monkeypatch.setattr(RelationalIndexBuilder, "repository_identity_snapshot", snapshot)
+    monkeypatch.setattr(RelationalIndexBuilder, "build_full", forbidden_full)
+    status = store.validate_current()
+    assert status["status"] == "CURRENT"
+    assert seen == ["MINIMAL"]
+
+
+def test_cli_build_requests_bounded_summary(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def fake_build(repo_root, *, profile, persist, include_index):
+        assert repo_root == "."
+        assert profile is RelationalIndexProfile.STANDARD
+        assert persist is True
+        assert include_index is False
+        return {
+            "ok": True,
+            "index_id": "relindex-test",
+            "participant_count": 1,
+            "relation_count": 0,
+            "group_count": 0,
+        }
+
+    monkeypatch.setattr("aura_relational_index.build_relational_index", fake_build)
+    assert main(["build"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["index_id"] == "relindex-test"
+    assert "index" not in payload

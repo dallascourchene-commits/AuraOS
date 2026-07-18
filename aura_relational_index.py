@@ -14,17 +14,20 @@ or merge authority. Every exact relationship remains pinned to current source
 and every capability relationship remains advisory unless a different canonical
 owner supplies exact evidence in a later phase.
 """
+
 from __future__ import annotations
 
 import argparse
 from collections import defaultdict
 from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
+import gc
 import json
+import math
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import subprocess
 import tempfile
@@ -91,7 +94,7 @@ INDEX_GENERATED_PATHS = frozenset(
     }
 )
 
-_REQUIRED_REPOSITORY_IDENTITY = (
+_REQUIRED_REPOSITORY_TEXT_IDENTITIES = (
     "repo_head",
     "working_tree_digest",
     "codemap_digest",
@@ -104,6 +107,33 @@ _REQUIRED_REPOSITORY_IDENTITY = (
     "relation_ontology_digest",
     "profile_digest",
     "schema_digest",
+)
+_REPOSITORY_IDENTITY_KEYS = frozenset((*_REQUIRED_REPOSITORY_TEXT_IDENTITIES, "topology_health"))
+_PROFILE_KEYS = frozenset({"name", "budgets", "profile_digest"})
+_PROFILE_BUDGET_KEYS = frozenset({"max_group_relations", "max_group_participants"})
+_BOUNDARY_KEYS = frozenset(
+    {
+        "unsupported_languages",
+        "unresolved_dynamic_calls",
+        "advisory_only_mappings",
+        "excluded_generated_paths",
+        "warnings",
+        "all_relation_endpoints_present",
+    }
+)
+_BUILD_FACT_KEYS = frozenset(
+    {
+        "anchor_version",
+        "source_file_count",
+        "topology_node_count",
+        "topology_edge_count",
+        "atomic_callable_count",
+        "participant_count",
+        "exact_relation_count",
+        "advisory_relation_count",
+        "group_count",
+        "unresolved_mapping_count",
+    }
 )
 
 _EXACT_EDGE_RELATIONS = {
@@ -368,6 +398,31 @@ def _immutable_mapping(value: Any, field_name: str) -> Mapping[str, Any]:
     return frozen
 
 
+def _require_exact_keys(value: Mapping[str, Any], expected: frozenset[str], field_name: str) -> None:
+    actual = set(value)
+    if actual == expected:
+        return
+    missing = sorted(expected - actual)
+    extra = sorted(actual - expected)
+    details: list[str] = []
+    if missing:
+        details.append(f"missing={missing}")
+    if extra:
+        details.append(f"extra={extra}")
+    raise ValueError(f"{field_name} keys do not match the V1 contract: {'; '.join(details)}")
+
+
+def _topology_health(value: Any, field_name: str) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{field_name} must be a finite number or null")
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError(f"{field_name} must be a finite number or null")
+    return result
+
+
 def _string_tuple(value: Any, field_name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
     if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
         raise ValueError(f"{field_name} must be an ordered sequence")
@@ -384,12 +439,30 @@ def _safe_repo_path(value: str) -> str:
     while text.startswith("./"):
         text = text[2:]
     path = PurePosixPath(text)
-    if path.is_absolute() or ".." in path.parts:
+    windows_path = PureWindowsPath(text)
+    if path.is_absolute() or windows_path.drive or ".." in path.parts:
         raise ValueError(f"repository path escapes workspace: {value}")
     normalized = path.as_posix()
     if normalized in {"", "."}:
         raise ValueError("repository path must not be empty")
     return normalized
+
+
+def _contained_repo_target(repo_root: Path, value: str | Path) -> Path:
+    root = repo_root.resolve()
+    relative = _safe_repo_path(str(value))
+    target = root / relative
+    resolved_parent = target.parent.resolve(strict=False)
+    try:
+        resolved_parent.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(f"repository path parent escapes workspace: {value}") from exc
+    if target.exists() or target.is_symlink():
+        try:
+            target.resolve(strict=False).relative_to(root)
+        except ValueError as exc:
+            raise ValueError(f"repository path target escapes workspace: {value}") from exc
+    return target
 
 
 _VIRTUAL_ENV_DIR_RE = re.compile(r"^(?:\.?venv|\.?env)(?:[-_.].*)?$", re.IGNORECASE)
@@ -398,10 +471,7 @@ _EPHEMERAL_SOURCE_DIRS = frozenset({"site-packages", ".tox", ".nox", ".direnv"})
 
 def _is_ephemeral_repository_path(path: str) -> bool:
     parent_parts = PurePosixPath(path).parts[:-1]
-    return any(
-        part in _EPHEMERAL_SOURCE_DIRS or _VIRTUAL_ENV_DIR_RE.fullmatch(part)
-        for part in parent_parts
-    )
+    return any(part in _EPHEMERAL_SOURCE_DIRS or _VIRTUAL_ENV_DIR_RE.fullmatch(part) for part in parent_parts)
 
 
 def _canonical_python_sources(root: Path) -> dict[str, str]:
@@ -516,12 +586,13 @@ def _topology_facts(path: Path) -> tuple[str, str, float | None]:
         or data.get("metadata", {}).get("version")
         or "UNVERSIONED_TOPOLOGY"
     )
-    health_value = (
-        data.get("global_health")
-        or data.get("health")
-        or data.get("metadata", {}).get("global_health")
+    candidates = (
+        data.get("global_health"),
+        data.get("health"),
+        data.get("metadata", {}).get("global_health"),
     )
-    health = float(health_value) if isinstance(health_value, (int, float)) else None
+    health_value = next((item for item in candidates if item is not None), None)
+    health = _topology_health(health_value, "topology health")
     return _digest_file(path), version, health
 
 
@@ -571,27 +642,57 @@ class RelationalIndex:
     automatic_pull_request: bool = False
     automatic_merge: bool = False
     human_review_required: bool = True
+    _validated_index_digest: str = field(default="", init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
-        repository_identity = _immutable_mapping(
-            self.repository_identity, "repository_identity"
+        repository_identity = _immutable_mapping(self.repository_identity, "repository_identity")
+        _require_exact_keys(
+            repository_identity,
+            _REPOSITORY_IDENTITY_KEYS,
+            "repository_identity",
         )
-        for name in _REQUIRED_REPOSITORY_IDENTITY:
+        for name in _REQUIRED_REPOSITORY_TEXT_IDENTITIES:
             _required_text(repository_identity.get(name), f"repository_identity.{name}")
+        topology_health = _topology_health(
+            repository_identity.get("topology_health"),
+            "repository_identity.topology_health",
+        )
+        repository_identity = MappingProxyType({**dict(repository_identity), "topology_health": topology_health})
         object.__setattr__(self, "repository_identity", repository_identity)
 
         profile = _immutable_mapping(self.profile, "profile")
+        _require_exact_keys(profile, _PROFILE_KEYS, "profile")
         name = _required_text(profile.get("name"), "profile.name")
         try:
             profile_enum = RelationalIndexProfile(name)
         except ValueError as exc:
             raise ValueError(f"unsupported relational index profile: {name}") from exc
+        budgets = _immutable_mapping(profile.get("budgets"), "profile.budgets")
+        _require_exact_keys(budgets, _PROFILE_BUDGET_KEYS, "profile.budgets")
+        supplied_budgets = {
+            key: int(budgets[key])
+            for key in sorted(_PROFILE_BUDGET_KEYS)
+            if isinstance(budgets.get(key), int) and not isinstance(budgets.get(key), bool)
+        }
+        if len(supplied_budgets) != len(_PROFILE_BUDGET_KEYS):
+            raise ValueError("profile budgets must be integers")
+        if supplied_budgets != dict(profile_enum.budgets):
+            raise ValueError("profile budgets do not match canonical profile")
         if profile.get("profile_digest") != profile_enum.digest:
             raise ValueError("profile_digest does not match canonical profile")
+        profile = MappingProxyType(
+            {
+                "name": name,
+                "budgets": MappingProxyType(supplied_budgets),
+                "profile_digest": profile_enum.digest,
+            }
+        )
         object.__setattr__(self, "profile", profile)
 
-        if type(self.participants) is not tuple or not self.participants or not all(
-            isinstance(item, RelationalParticipant) for item in self.participants
+        if (
+            type(self.participants) is not tuple
+            or not self.participants
+            or not all(isinstance(item, RelationalParticipant) for item in self.participants)
         ):
             raise ValueError("participants must be a non-empty tuple of RelationalParticipant")
         participants = tuple(sorted(self.participants, key=lambda item: item.participant_id))
@@ -643,10 +744,13 @@ class RelationalIndex:
         object.__setattr__(self, "reverse_indexes", reverse_indexes)
 
         boundary = _immutable_mapping(self.boundary, "boundary")
+        _require_exact_keys(boundary, _BOUNDARY_KEYS, "boundary")
         if boundary.get("all_relation_endpoints_present") is not True:
             raise ValueError("index boundary must declare all relation endpoints present")
         object.__setattr__(self, "boundary", boundary)
-        object.__setattr__(self, "build_facts", _immutable_mapping(self.build_facts, "build_facts"))
+        build_facts = _immutable_mapping(self.build_facts, "build_facts")
+        _require_exact_keys(build_facts, _BUILD_FACT_KEYS, "build_facts")
+        object.__setattr__(self, "build_facts", build_facts)
 
         for name, expected in (
             ("generated_only", True),
@@ -805,9 +909,17 @@ class RelationalIndex:
             automatic_merge=data.get("automatic_merge"),
             human_review_required=data.get("human_review_required"),
         )
-        if data.get("index_digest") != index.to_dict()["index_digest"]:
+        calculated_digest = index.to_dict()["index_digest"]
+        if data.get("index_digest") != calculated_digest:
             raise ValueError("index_digest does not match canonical relational index")
+        object.__setattr__(index, "_validated_index_digest", calculated_digest)
         return index
+
+    @property
+    def index_digest(self) -> str:
+        """Return the validated persisted digest without rebuilding the body."""
+
+        return self._validated_index_digest or str(self.to_dict()["index_digest"])
 
 
 @dataclass(frozen=True)
@@ -975,15 +1087,12 @@ class RelationalIndexBuilder:
         identity["profile_digest"] = self.profile.digest
 
         participants, node_to_participant = _source_participants(anchor_value)
-        capability_participants, capability_to_participant = _capability_participants(
-            connectome_value
-        )
+        capability_participants, capability_to_participant = _capability_participants(connectome_value)
         participants.extend(capability_participants)
 
         relations = _structural_relations(
             anchor_value,
             node_to_participant=node_to_participant,
-            connectome_digest=connectome_value["graph_digest"],
         )
         implementation_relations, unresolved = _implementation_relations(
             anchor_value,
@@ -1068,6 +1177,18 @@ class RelationalIndexBuilder:
             _safe_repo_path(path)
         return self.build_full()
 
+    def repository_identity_snapshot(self) -> dict[str, Any]:
+        """Compute current freshness identity without materializing relational payloads."""
+
+        anchor = CodeTopoAnchor.build_from_files(_canonical_python_sources(self.repo_root))
+        inventory = _inventory_from_anchor(anchor, include_source=False)
+        connectome = enrich_connectome(build_capability_connectome(self.repo_root))
+        _validate_connectome(connectome)
+        return self._repository_identity(
+            inventory_digest=inventory["inventory_digest"],
+            connectome=connectome,
+        )
+
     def _repository_identity(
         self,
         *,
@@ -1114,10 +1235,14 @@ class RelationalIndexStore:
         lock_path: str | Path = DEFAULT_LOCK_PATH,
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
-        self.index_path = self.repo_root / _safe_repo_path(str(index_path))
-        self.receipt_path = self.repo_root / _safe_repo_path(str(receipt_path))
-        self.markdown_path = self.repo_root / _safe_repo_path(str(markdown_path))
-        self.lock_path = self.repo_root / _safe_repo_path(str(lock_path))
+        self.index_path = _contained_repo_target(self.repo_root, index_path)
+        self.receipt_path = _contained_repo_target(self.repo_root, receipt_path)
+        self.markdown_path = _contained_repo_target(self.repo_root, markdown_path)
+        self.lock_path = _contained_repo_target(self.repo_root, lock_path)
+
+    def _validated_path(self, path: Path) -> Path:
+        relative = path.relative_to(self.repo_root)
+        return _contained_repo_target(self.repo_root, relative)
 
     def write(
         self,
@@ -1141,57 +1266,56 @@ class RelationalIndexStore:
             participant_count=len(index.participants),
             relation_count=len(index.relations),
             group_count=len(index.groups),
-            unresolved_mapping_count=len(
-                index.boundary.get("advisory_only_mappings", ())
-            ),
+            unresolved_mapping_count=len(index.boundary.get("advisory_only_mappings", ())),
             full_equivalence_verified=full_equivalence_verified,
             created_at_unix_ms=int(time.time() * 1000),
         )
-        receipt_encoded = json.dumps(
-            receipt.to_dict(), indent=2, sort_keys=True, ensure_ascii=False
-        ) + "\n"
+        receipt_encoded = json.dumps(receipt.to_dict(), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
         markdown = render_relational_index_markdown(index, receipt)
-        with _exclusive_store_lock(self.lock_path):
-            _atomic_write_text(self.index_path, encoded)
-            _atomic_write_text(self.receipt_path, receipt_encoded)
-            _atomic_write_text(self.markdown_path, markdown)
-        restored = self.load()
-        if restored.to_dict() != data:
-            raise ValueError("written relational index failed exact reload validation")
+        lock_path = self._validated_path(self.lock_path)
+        with _exclusive_store_lock(lock_path):
+            _atomic_write_text(self._validated_path(self.index_path), encoded)
+            _atomic_write_text(self._validated_path(self.receipt_path), receipt_encoded)
+            _atomic_write_text(self._validated_path(self.markdown_path), markdown)
+            restored = self.load()
+            if restored.to_dict() != data:
+                raise ValueError("written relational index failed exact reload validation")
         return receipt
 
     def load(self) -> RelationalIndex:
-        return RelationalIndex.from_dict(_read_json(self.index_path))
+        return RelationalIndex.from_dict(_read_json(self._validated_path(self.index_path)))
 
     def load_receipt(self) -> RelationalIndexReceipt:
-        return RelationalIndexReceipt.from_dict(_read_json(self.receipt_path))
+        return RelationalIndexReceipt.from_dict(_read_json(self._validated_path(self.receipt_path)))
 
     def validate_current(
         self,
         *,
         builder: RelationalIndexBuilder | None = None,
     ) -> dict[str, Any]:
-        index = self.load()
-        receipt = self.load_receipt()
-        serialized = index.to_dict()
-        if receipt.index_id != index.index_id or receipt.index_digest != serialized["index_digest"]:
-            raise ValueError("relational index receipt is not linked to the stored index")
-        builder_value = builder or RelationalIndexBuilder(
-            self.repo_root, profile=index.profile["name"]
-        )
-        current = builder_value.build_full()
-        expected = index.repository_identity
-        actual = current.repository_identity
+        with _exclusive_store_lock(self._validated_path(self.lock_path)):
+            index = self.load()
+            receipt = self.load_receipt()
+            if receipt.index_id != index.index_id or receipt.index_digest != index.index_digest:
+                raise ValueError("relational index receipt is not linked to the stored index")
+            expected = dict(index.repository_identity)
+            stored_profile = str(index.profile["name"])
+            index_id = index.index_id
+            index_digest = index.index_digest
+        del index, receipt
+        gc.collect()
+        builder_value = builder or RelationalIndexBuilder(self.repo_root, profile=stored_profile)
+        actual = builder_value.repository_identity_snapshot()
         mismatches = {
             name: {"stored": expected.get(name), "current": actual.get(name)}
-            for name in _REQUIRED_REPOSITORY_IDENTITY
+            for name in sorted(_REPOSITORY_IDENTITY_KEYS)
             if expected.get(name) != actual.get(name)
         }
         return {
             "ok": not mismatches,
             "status": "CURRENT" if not mismatches else "STALE",
-            "index_id": index.index_id,
-            "index_digest": serialized["index_digest"],
+            "index_id": index_id,
+            "index_digest": index_digest,
             "mismatches": mismatches,
             "safe_to_patch": False,
             "production_mutation": False,
@@ -1292,7 +1416,6 @@ def _structural_relations(
     anchor: CodeTopoAnchor,
     *,
     node_to_participant: Mapping[str, str],
-    connectome_digest: str,
 ) -> list[TypedRelation]:
     relations: list[TypedRelation] = []
     for edge in sorted(
@@ -1311,10 +1434,7 @@ def _structural_relations(
                 source_participant_id=node_to_participant[edge.src_id],
                 target_participant_id=node_to_participant[edge.dst_id],
                 truth_class=truth,
-                evidence_refs=(
-                    f"codetopo-edge:{edge.evidence}",
-                    f"connectome-context:{connectome_digest}",
-                ),
+                evidence_refs=(f"codetopo-edge:{edge.evidence}",),
                 metadata={
                     "edge_type": edge.edge_type,
                     "confidence": edge.confidence,
@@ -1426,7 +1546,8 @@ def _build_groups(
     )
     for group_kind, registry in registries:
         for purpose, capability_ids in registry.items():
-            participant_ids: set[str] = set()
+            required_participant_ids: set[str] = set()
+            candidate_participant_ids: set[str] = set()
             group_relations: list[TypedRelation] = []
             unresolved: list[str] = []
             bindings: list[RoleBinding] = []
@@ -1435,55 +1556,61 @@ def _build_groups(
                 if capability_participant_id is None:
                     unresolved.append(f"required_capability:{capability_id}")
                     continue
-                participant_ids.add(capability_participant_id)
+                required_participant_ids.add(capability_participant_id)
+                candidate_participant_ids.add(capability_participant_id)
                 bindings.append(RoleBinding(capability_participant_id, "capability", True))
                 for relation in relation_by_capability.get(capability_id, ()):
                     group_relations.append(relation)
-                    participant_ids.add(relation.source_participant_id)
-                    participant_ids.add(relation.target_participant_id)
+                    candidate_participant_ids.add(relation.source_participant_id)
+                    candidate_participant_ids.add(relation.target_participant_id)
                     bindings.append(
-                        RoleBinding(relation.source_participant_id, "exact_implementation", True)
+                        RoleBinding(
+                            relation.source_participant_id,
+                            "advisory_implementation",
+                            True,
+                        )
                     )
-                unresolved.extend(
-                    item
-                    for item in unresolved_mappings
-                    if f":{capability_id}:" in item
-                )
+                unresolved.extend(item for item in unresolved_mappings if f":{capability_id}:" in item)
 
             structural = [
                 relation
                 for relation in relations
                 if relation.relation_type is not RelationType.IMPLEMENTS_CAPABILITY
-                and relation.source_participant_id in participant_ids
-                and relation.target_participant_id in participant_ids
+                and relation.source_participant_id in candidate_participant_ids
+                and relation.target_participant_id in candidate_participant_ids
             ]
             group_relations.extend(structural)
-            group_relations = _dedupe_relations(group_relations)
+            candidate_relations = _dedupe_relations(group_relations)
             max_relations = int(profile.budgets["max_group_relations"])
             max_participants = int(profile.budgets["max_group_participants"])
+            if len(required_participant_ids) > max_participants:
+                raise ValueError(f"profile {profile.value} cannot contain required participants for {purpose}")
+            participant_ids = set(required_participant_ids)
+            group_relations = []
             budget_truncated = False
             omitted_reasons: dict[str, int] = {}
-            if len(group_relations) > max_relations:
-                omitted_reasons["profile_relation_budget"] = len(group_relations) - max_relations
-                group_relations = group_relations[:max_relations]
-                budget_truncated = True
-            relation_endpoints = {
-                endpoint
-                for relation in group_relations
-                for endpoint in (relation.source_participant_id, relation.target_participant_id)
-            }
-            participant_ids |= relation_endpoints
-            if len(participant_ids) > max_participants:
-                # Mandatory relation endpoints are never removed. Only role-only participants
-                # may be omitted, and their omission is explicit.
-                optional = sorted(participant_ids - relation_endpoints)
-                allowed_optional = max(0, max_participants - len(relation_endpoints))
-                omitted = optional[allowed_optional:]
-                participant_ids -= set(omitted)
-                if omitted:
-                    omitted_reasons["profile_participant_budget"] = len(omitted)
+            for relation in candidate_relations:
+                endpoints = {
+                    relation.source_participant_id,
+                    relation.target_participant_id,
+                }
+                if len(group_relations) >= max_relations:
+                    omitted_reasons["profile_relation_budget"] = omitted_reasons.get("profile_relation_budget", 0) + 1
                     budget_truncated = True
-                    bindings = [item for item in bindings if item.participant_id in participant_ids]
+                    continue
+                if len(participant_ids | endpoints) > max_participants:
+                    # The count records relations omitted because their mandatory
+                    # endpoints would exceed the participant budget. This keeps
+                    # omitted_relation_count in relation units while preserving
+                    # the participant-budget cause in omitted_reasons.
+                    omitted_reasons["profile_participant_budget"] = (
+                        omitted_reasons.get("profile_participant_budget", 0) + 1
+                    )
+                    budget_truncated = True
+                    continue
+                group_relations.append(relation)
+                participant_ids |= endpoints
+            bindings = [item for item in bindings if item.participant_id in participant_ids]
             bindings = sorted(
                 {(item.participant_id, item.role, item.required): item for item in bindings}.values(),
                 key=lambda item: (item.role, item.participant_id),
@@ -1545,15 +1672,14 @@ def _build_reverse_indexes(
     by_test_path: dict[str, set[str]] = defaultdict(set)
 
     for participant in participants:
+        by_participant[participant.participant_id].add(participant.participant_id)
         metadata = participant.metadata
         node_id = str(metadata.get("node_id", ""))
         file_path = str(metadata.get("file_path", ""))
         if node_id:
             by_node_id[node_id].add(participant.participant_id)
         if participant.qualified_symbol and file_path:
-            by_qualified_symbol[f"{file_path}#{participant.qualified_symbol}"].add(
-                participant.participant_id
-            )
+            by_qualified_symbol[f"{file_path}#{participant.qualified_symbol}"].add(participant.participant_id)
         if file_path:
             by_file_path[file_path].add(participant.participant_id)
         if participant.participant_type is ParticipantType.CAPABILITY:
@@ -1562,6 +1688,8 @@ def _build_reverse_indexes(
             by_test_path[file_path].add(participant.participant_id)
 
     for relation in relations:
+        by_participant[relation.source_participant_id].add(relation.relation_id)
+        by_participant[relation.target_participant_id].add(relation.relation_id)
         by_relation_type[relation.relation_type.value].add(relation.relation_id)
         capability_id = str(relation.metadata.get("capability_id", ""))
         if capability_id:
@@ -1653,6 +1781,7 @@ def build_relational_index(
     *,
     profile: RelationalIndexProfile | str = RelationalIndexProfile.STANDARD,
     persist: bool = False,
+    include_index: bool = True,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     builder = RelationalIndexBuilder(repo_root, profile=profile)
@@ -1665,16 +1794,23 @@ def build_relational_index(
             build_mode="full",
             wall_time_ms=elapsed,
             full_equivalence_verified=True,
-        ).to_dict()
-    return {
+        )
+    result = {
         "ok": True,
-        "index": index.to_dict(),
-        "receipt": receipt,
+        "index_id": index.index_id,
+        "profile": index.profile["name"],
+        "participant_count": len(index.participants),
+        "relation_count": len(index.relations),
+        "group_count": len(index.groups),
+        "receipt": receipt.to_dict() if receipt is not None else None,
         "safe_to_patch": False,
         "production_mutation": False,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": False,
     }
+    if include_index:
+        result["index"] = index.to_dict()
+    return result
 
 
 def refresh_relational_index(
@@ -1683,6 +1819,7 @@ def refresh_relational_index(
     *,
     profile: RelationalIndexProfile | str = RelationalIndexProfile.STANDARD,
     persist: bool = True,
+    include_index: bool = True,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     builder = RelationalIndexBuilder(repo_root, profile=profile)
@@ -1702,17 +1839,24 @@ def refresh_relational_index(
             changed_paths=changed_paths,
             wall_time_ms=elapsed,
             full_equivalence_verified=equivalent,
-        ).to_dict()
-    return {
+        )
+    result = {
         "ok": True,
-        "index": index.to_dict(),
-        "receipt": receipt,
+        "index_id": index.index_id,
+        "profile": index.profile["name"],
+        "participant_count": len(index.participants),
+        "relation_count": len(index.relations),
+        "group_count": len(index.groups),
+        "receipt": receipt.to_dict() if receipt is not None else None,
         "incremental_full_equivalence": equivalent,
         "safe_to_patch": False,
         "production_mutation": False,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": False,
     }
+    if include_index:
+        result["index"] = index.to_dict()
+    return result
 
 
 def query_relational_index(
@@ -1928,17 +2072,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _cli_parser().parse_args(argv)
     profile = RelationalIndexProfile(args.profile.upper())
     if args.command == "build":
-        result = build_relational_index(args.repo_root, profile=profile, persist=True)
+        result = build_relational_index(
+            args.repo_root,
+            profile=profile,
+            persist=True,
+            include_index=False,
+        )
     elif args.command == "refresh":
         result = refresh_relational_index(
-            args.changed, args.repo_root, profile=profile, persist=True
+            args.changed,
+            args.repo_root,
+            profile=profile,
+            persist=True,
+            include_index=False,
         )
     elif args.command == "status":
         result = relational_index_status(args.repo_root)
     elif args.command == "validate":
-        result = RelationalIndexStore(args.repo_root).validate_current(
-            builder=RelationalIndexBuilder(args.repo_root, profile=profile)
-        )
+        result = RelationalIndexStore(args.repo_root).validate_current()
     else:
         index = RelationalIndexStore(args.repo_root).load()
         result = query_relational_index(

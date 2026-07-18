@@ -217,7 +217,87 @@
         "profile_digest": {
           "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "MINIMAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "budgets": {
+                "properties": {
+                  "max_group_relations": {
+                    "const": 300
+                  },
+                  "max_group_participants": {
+                    "const": 300
+                  }
+                }
+              },
+              "profile_digest": {
+                "const": "71a2127322ef7f08c811c9a4d44893f69b0acd66"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "STANDARD"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "budgets": {
+                "properties": {
+                  "max_group_relations": {
+                    "const": 1500
+                  },
+                  "max_group_participants": {
+                    "const": 1500
+                  }
+                }
+              },
+              "profile_digest": {
+                "const": "fbd07346436bc718fdee1fe51dfc4134e90c7950"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "DEEP"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "budgets": {
+                "properties": {
+                  "max_group_relations": {
+                    "const": 10000
+                  },
+                  "max_group_participants": {
+                    "const": 10000
+                  }
+                }
+              },
+              "profile_digest": {
+                "const": "ed1ca2e91606c90af0e6f4dd31642dd7d91ab09d"
+              }
+            }
+          }
+        }
+      ]
     },
     "idArray": {
       "type": "array",

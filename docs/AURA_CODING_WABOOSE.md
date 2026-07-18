@@ -440,3 +440,13 @@ The design basis and source survey are recorded in:
 ```
 
 Planned extensions include polyglot tree-sitter/ast-grep analysis, local SARIF/RDFormat ingestion, CodeQL/Joern code-property-graph tools, dynamic and causal slicing, specialist Waboose Council roles, an independent false-positive judge, mutation-seeded hidden defects, AACR-Bench-compatible precision/recall/token-cost evaluation, and governed promotion of repeatedly grounded learned patterns into new deterministic rule packs.
+
+## Future W2 continual-review refactor
+
+The Relational Synthesis R2 review exposed deterministic review classes that V1.1 does not yet own: runtime/schema parity, scale-aware CLI behavior, persistence interleavings, resolved path containment, truth-class contamination, compound profile identity, coupled budgets, and behavioral reverse-index completeness.
+
+The grounded future plan is:
+
+- [`CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md`](CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md)
+
+The plan treats CodeRabbit and Codex as exact-head teacher signals, not authority. It defines candidate/probation/verified/retired rule lifecycles, false-positive gates, relational cause-chain signatures, and the deterministic packs required before a future Waboose run may claim semantic completeness for these defect families.
