@@ -1,0 +1,174 @@
+name: Emergent Spine Core Hardening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - aura_emergent_evidence_spine.py
+      - tests/test_aura_emergent_evidence_spine.py
+      - scripts/apply_emergent_spine_core_hardening.py
+      - .github/workflows/emergent-spine-core-waboose.yml
+      - .github/workflows/emergent-spine-core-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emergent-spine-core-hardening-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install focused verification tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+
+      - name: Apply fail-closed core hardening
+        run: python scripts/apply_emergent_spine_core_hardening.py
+
+      - name: Compile hardened core
+        run: |
+          python -m py_compile \
+            aura_emergent_evidence_spine.py \
+            tests/test_aura_emergent_evidence_spine.py
+
+      - name: Run hardened adversarial tests
+        run: |
+          set -o pipefail
+          python -m pytest -q tests/test_aura_emergent_evidence_spine.py -vv --tb=long \
+            | tee /tmp/emergent-core-pytest.log
+
+      - name: Static and security checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_emergent_evidence_spine.py \
+            tests/test_aura_emergent_evidence_spine.py
+          bandit -q -ll aura_emergent_evidence_spine.py
+
+      - name: Remove temporary core review machinery
+        run: |
+          rm -f scripts/apply_emergent_spine_core_hardening.py
+          rm -f .github/workflows/emergent-spine-core-waboose.yml
+          rm -f .github/workflows/emergent-spine-core-hardening.yml
+
+      - name: Commit exact permanent core capsule locally
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Harden emergent evidence spine core"
+
+      - name: Build exact-range Coding Waboose request
+        run: |
+          cat > /tmp/emergent-core-waboose.json <<'JSON'
+          {
+            "objective": "Review the final permanent Connectome-grounded Emergent Evidence Spine core for complete atomic-function enumeration, exact code-block slicing, bounded caller/callee dependency closure, advisory-only emergent reasoning, research truth separation, and fail-closed authority boundaries.",
+            "mode": "range",
+            "base_ref": "origin/main",
+            "head_ref": "HEAD",
+            "profile": "precision",
+            "focus_directives": [
+              {
+                "name": "connectome_atomic_binding",
+                "question": "Does every selected Connectome capability bind to exact atomic functions without invented files or symbols?",
+                "risk": "architecture",
+                "direction": "both",
+                "target_patterns": ["resolve_capabilities", "build_capability_connectome", "build_atomic_function_inventory", "CodeTopoAnchor"],
+                "required_evidence": ["exact_source", "symbol_identity", "source_hash"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 120
+              },
+              {
+                "name": "atomic_closure_precision",
+                "question": "Can unrelated functions enter the selected source slices or can required callers and callees be omitted?",
+                "risk": "correctness",
+                "direction": "both",
+                "target_patterns": ["_select_seed_nodes", "_expand_atomic_closure", "_source_slice", "_bounded_anchor"],
+                "required_evidence": ["exact_source", "call_graph", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 160
+              },
+              {
+                "name": "emergent_research_non_authority",
+                "question": "Can affinity, emergent findings, or external research become patch or merge authority?",
+                "risk": "authority",
+                "direction": "both",
+                "target_patterns": ["grounding_ok", "approximate_only", "safe_to_patch", "patch_authority", "automatic_merge", "advisory_only"],
+                "required_evidence": ["contract_invariant", "exact_source", "regression_test"],
+                "suggested_tools": ["pytest"],
+                "max_depth": 2,
+                "max_nodes": 120
+              }
+            ],
+            "invariants": [
+              "The complete atomic callable inventory is computed before bounded emission.",
+              "Invalid or escaping repository paths fail closed.",
+              "Only exact source spans and hashes can establish grounding.",
+              "Affinity-only selection remains advisory and cannot claim grounding.",
+              "Emergent findings and research evidence never grant patch authority.",
+              "Production mutation, automatic fix, commit, push, pull request, and merge remain false."
+            ],
+            "risk_map": ["architecture", "correctness", "dependency_graph", "research_truth", "authority", "path_boundary"],
+            "graph_depth": 2,
+            "graph_node_budget": 180,
+            "run_tests": true,
+            "run_optional_tools": true,
+            "metadata": {"capsule": "core_hardened", "feature": "emergent_evidence_spine"}
+          }
+          JSON
+
+      - name: Run Coding Waboose over permanent core capsule
+        run: |
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/emergent-core-waboose-state.json \
+            run --request /tmp/emergent-core-waboose.json \
+            | tee /tmp/emergent-core-waboose-result.json
+
+      - name: Enforce clean Coding Waboose result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          packet = json.loads(Path('/tmp/emergent-core-waboose-result.json').read_text())
+          assert packet.get('ok') is True, packet
+          repairs = packet.get('forge_repair_requests') or []
+          if repairs:
+              raise SystemExit(f'Coding Waboose found repair-eligible defects: {repairs}')
+          assert packet.get('production_mutation') is False
+          assert packet.get('automatic_merge') is False
+          PY
+
+      - name: Push reviewed permanent core capsule
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-emergent-evidence-spine' }}
+        run: git push origin HEAD:"$HEAD_REF"
+
+      - name: Upload core evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-spine-core-hardening
+          path: |
+            /tmp/emergent-core-pytest.log
+            /tmp/emergent-core-waboose-result.json
+            /tmp/emergent-core-waboose-state.json
+          if-no-files-found: warn
+          retention-days: 3
