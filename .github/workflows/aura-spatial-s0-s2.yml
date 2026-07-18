@@ -42,8 +42,10 @@ jobs:
             aura_spatial_scene.py \
             aura_spatial_projection.py \
             aura_spatial_interaction.py \
+            aura_spatial_ws_guard.py \
             aura_spatial_breadboard.py \
-            tests/test_aura_spatial_substrate.py
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -53,8 +55,10 @@ jobs:
             aura_spatial_scene.py \
             aura_spatial_projection.py \
             aura_spatial_interaction.py \
+            aura_spatial_ws_guard.py \
             aura_spatial_breadboard.py \
-            tests/test_aura_spatial_substrate.py
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py
       - name: Validate strict JSON schema syntax
         run: |
           python -m json.tool schemas/aura_spatial_scene.schema.json >/dev/null
@@ -65,6 +69,7 @@ jobs:
           set +e
           python -m pytest -q --tb=short \
             tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py \
             tests/test_aura_showcase_spatial_integration.py \
             > spatial-test-output-${{ matrix.python-version }}.txt 2>&1
           status=$?
