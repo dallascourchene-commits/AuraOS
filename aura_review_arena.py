@@ -622,6 +622,7 @@ class AuraReviewArena:
     def prepare(self, value: AuraReviewRequest | Mapping[str, Any]) -> dict[str, Any]:
         try:
             request = AuraReviewRequest.from_value(value)
+            repository_head = self._materialized_review_head(request)
             diff_text, changed_files = self._resolve_diff(request)
         except (ValueError, OSError, subprocess.SubprocessError) as exc:
             return self._error(str(exc), stage="DIFF")
@@ -629,7 +630,17 @@ class AuraReviewArena:
             return self._error("review_has_no_changed_files", stage="DIFF")
 
         changed_ranges = self._parse_diff_ranges(diff_text)
+        deleted_files = self._deleted_files_from_diff(diff_text)
         changed_symbols = self._changed_symbols(changed_files, changed_ranges)
+        changed_symbols.extend(self._deleted_symbols(request, deleted_files))
+        changed_symbols = sorted(
+            changed_symbols,
+            key=lambda item: (
+                str(item.get("file") or ""),
+                int(item.get("line_start") or 0),
+                str(item.get("symbol") or ""),
+            ),
+        )
         topology = self._load_topology()
         impact_slice = self._impact_slice(
             changed_files,
@@ -638,11 +649,17 @@ class AuraReviewArena:
             max_depth=request.graph_depth,
             max_nodes=request.graph_node_budget,
         )
+        impact_slice = self._augment_deleted_impacts(
+            request,
+            deleted_files,
+            changed_symbols,
+            impact_slice,
+            max_nodes=request.graph_node_budget,
+        )
         inferred = self._infer_focus_directives(request, diff_text, changed_files, changed_symbols)
         directives = self._dedupe_directives([*request.focus_directives, *inferred])
         guidelines = self._guidelines_for_files(changed_files)
         routing_frame = self._routing_frame(request, changed_files, guidelines)
-        repository_head = self._git_head()
         diff_digest = _digest(diff_text)
         request_digest = _digest(request.identity_dict())
         identity = {
@@ -691,6 +708,7 @@ class AuraReviewArena:
             "contract": contract,
             "diff_text": diff_text,
             "changed_ranges": changed_ranges,
+            "deleted_files": tuple(deleted_files),
             "topology": topology,
             "deterministic_findings": [],
             "agent_findings": [],
@@ -717,8 +735,9 @@ class AuraReviewArena:
         request: AuraReviewRequest = state["request"]
         contract: AuraReviewContract = state["contract"]
         findings: list[dict[str, Any]] = []
+        deleted_files = set(state.get("deleted_files", ()))
         for file in contract.changed_files:
-            if file.endswith(".py"):
+            if file.endswith(".py") and file not in deleted_files:
                 findings.extend(self._scan_python_file(file))
         findings.extend(self._scan_signature_impacts(state))
         tool_results, tool_findings = self._run_tools(state)
@@ -905,6 +924,136 @@ class AuraReviewArena:
             return scanned
         return self.finalize(review_id)
 
+    @staticmethod
+    def _request_state_payload(request: AuraReviewRequest) -> dict[str, Any]:
+        return {
+            "objective": request.objective,
+            "mode": request.mode,
+            "base_ref": request.base_ref,
+            "head_ref": request.head_ref,
+            "changed_files": list(request.changed_files),
+            "diff_text": request.diff_text,
+            "profile": request.profile,
+            "focus_directives": [item.to_dict() for item in request.focus_directives],
+            "invariants": list(request.invariants),
+            "risk_map": list(request.risk_map),
+            "agent_name": request.agent_name,
+            "graph_depth": request.graph_depth,
+            "graph_node_budget": request.graph_node_budget,
+            "run_tests": request.run_tests,
+            "run_optional_tools": request.run_optional_tools,
+            "metadata": _sanitize(request.metadata),
+        }
+
+    def export_review_state(self, review_id: str) -> dict[str, Any]:
+        state = self._reviews.get(str(review_id))
+        if state is None:
+            return self._error("review_not_found", stage="STATE_EXPORT")
+        contract: AuraReviewContract = state["contract"]
+        energized = state.get("waboose_energized_focus_ids", set())
+        if not isinstance(energized, (set, list, tuple)):
+            energized = ()
+        return {
+            "ok": True,
+            "version": REVIEW_ARENA_VERSION,
+            "review_id": str(review_id),
+            "contract_id": contract.contract_id,
+            "request": self._request_state_payload(state["request"]),
+            "status": str(state.get("status") or "PREPARED"),
+            "created_at": float(state.get("created_at") or time.time()),
+            "deterministic_findings": _sanitize(state.get("deterministic_findings", [])),
+            "agent_findings": _sanitize(state.get("agent_findings", [])),
+            "tool_results": _sanitize(state.get("tool_results", [])),
+            "waboose_energized_focus_ids": sorted(str(item) for item in energized),
+            "production_mutation": False,
+            "automatic_fix": False,
+            "human_review_required": True,
+        }
+
+    def import_review_state(self, value: Mapping[str, Any]) -> dict[str, Any]:
+        if not isinstance(value, Mapping):
+            return self._error("review_state_must_be_object", stage="STATE_IMPORT")
+        review_id = str(value.get("review_id") or "").strip()
+        contract_id = str(value.get("contract_id") or "").strip()
+        request_payload = value.get("request")
+        if not review_id or not contract_id or not isinstance(request_payload, Mapping):
+            return self._error(
+                "review_state_requires_review_id_contract_id_and_request",
+                stage="STATE_IMPORT",
+            )
+        prepared = self.prepare(request_payload)
+        if not prepared.get("ok"):
+            return self._error(
+                "review_state_revalidation_failed",
+                stage="STATE_IMPORT",
+                details=prepared,
+            )
+        generated_id = str(prepared["review_id"])
+        state = self._reviews.pop(generated_id)
+        generated_contract: AuraReviewContract = state["contract"]
+        if generated_contract.contract_id != contract_id:
+            return self._error(
+                "review_state_contract_mismatch",
+                stage="STATE_IMPORT",
+                details={
+                    "expected_contract_id": contract_id,
+                    "current_contract_id": generated_contract.contract_id,
+                },
+            )
+
+        def _finding_rows(name: str) -> list[Mapping[str, Any]]:
+            raw = value.get(name, [])
+            if isinstance(raw, (str, bytes)) or not isinstance(raw, (list, tuple)):
+                return []
+            return [dict(item) for item in raw if isinstance(item, Mapping)]
+
+        state["deterministic_findings"] = self._normalize_findings(
+            _finding_rows("deterministic_findings"),
+            origin_default="deterministic",
+        )
+        state["agent_findings"] = self._normalize_findings(
+            _finding_rows("agent_findings"),
+            origin_default="agent",
+        )
+        raw_tools = value.get("tool_results", [])
+        state["tool_results"] = (
+            [dict(item) for item in raw_tools if isinstance(item, Mapping)]
+            if isinstance(raw_tools, (list, tuple))
+            else []
+        )
+        allowed_statuses = {
+            "PREPARED",
+            "WAITING_FOR_AGENT",
+            "SCANNED",
+            "AGENT_FINDINGS_RECEIVED",
+            "READY_FOR_HUMAN_REVIEW",
+        }
+        status = str(value.get("status") or "PREPARED")
+        state["status"] = status if status in allowed_statuses else "PREPARED"
+        try:
+            state["created_at"] = float(value.get("created_at") or time.time())
+        except (TypeError, ValueError, OverflowError):
+            state["created_at"] = time.time()
+        raw_energized = value.get("waboose_energized_focus_ids", [])
+        state["waboose_energized_focus_ids"] = {
+            str(item)
+            for item in raw_energized
+            if str(item).strip()
+        } if isinstance(raw_energized, (list, tuple, set)) else set()
+        state.pop("waboose_breadboard", None)
+        state.pop("final_packet", None)
+        self._reviews[review_id] = state
+        return {
+            "ok": True,
+            "version": REVIEW_ARENA_VERSION,
+            "review_id": review_id,
+            "contract_id": contract_id,
+            "status": state["status"],
+            "production_mutation": False,
+            "automatic_fix": False,
+            "human_review_required": True,
+        }
+
     def _resolve_diff(self, request: AuraReviewRequest) -> tuple[str, list[str]]:
         if request.diff_text:
             diff = request.diff_text
@@ -949,14 +1098,61 @@ class AuraReviewArena:
         except (ValueError, OSError, subprocess.SubprocessError):
             return "UNAVAILABLE"
 
+    def _materialized_review_head(self, request: AuraReviewRequest) -> str:
+        current = self._git_head()
+        if request.mode != "range":
+            return current
+        requested = self._git(
+            ["git", "rev-parse", "--verify", f"{request.head_ref}^{{commit}}"],
+            timeout=8,
+        ).strip()
+        if not requested or current == "UNAVAILABLE" or requested != current:
+            raise ValueError("range_head_ref_not_checked_out")
+        tracked_status = self._git(
+            ["git", "status", "--porcelain=v1", "--untracked-files=no"],
+            timeout=10,
+        )
+        if tracked_status.strip():
+            raise ValueError("range_review_requires_clean_tracked_worktree")
+        return requested
+
     @staticmethod
     def _files_from_diff(diff_text: str) -> list[str]:
         result: list[str] = []
+        old_path = ""
         for line in diff_text.splitlines():
+            if line.startswith("--- a/"):
+                old_path = str(
+                    _safe_repo_path(line[6:], field_name="diff_file") or ""
+                )
+                continue
             if line.startswith("+++ b/"):
                 path = _safe_repo_path(line[6:], field_name="diff_file")
-                if path and path != "/dev/null" and path not in result:
+                if path and path not in result:
                     result.append(path)
+                old_path = ""
+                continue
+            if line == "+++ /dev/null":
+                if old_path and old_path not in result:
+                    result.append(old_path)
+                old_path = ""
+        return result
+
+    @staticmethod
+    def _deleted_files_from_diff(diff_text: str) -> list[str]:
+        result: list[str] = []
+        old_path = ""
+        for line in diff_text.splitlines():
+            if line.startswith("--- a/"):
+                old_path = str(
+                    _safe_repo_path(line[6:], field_name="diff_file") or ""
+                )
+            elif line == "+++ /dev/null":
+                if old_path and old_path not in result:
+                    result.append(old_path)
+                old_path = ""
+            elif line.startswith("+++ b/"):
+                old_path = ""
         return result
 
     @staticmethod
@@ -1012,6 +1208,43 @@ class AuraReviewArena:
                     "source_digest": _digest(ast.get_source_segment(source, node) or ""),
                 })
         return sorted(result, key=lambda item: (item["file"], item["line_start"], item["symbol"]))
+
+    def _deleted_symbols(
+        self,
+        request: AuraReviewRequest,
+        deleted_files: Sequence[str],
+    ) -> list[dict[str, Any]]:
+        if request.mode != "range":
+            return []
+        result: list[dict[str, Any]] = []
+        for file in deleted_files:
+            if not file.endswith(".py"):
+                continue
+            try:
+                source = self._git(
+                    ["git", "show", f"{request.base_ref}:{file}"],
+                    timeout=10,
+                )
+                tree = ast.parse(source, filename=file)
+            except (ValueError, OSError, SyntaxError, subprocess.SubprocessError):
+                continue
+            for node in ast.walk(tree):
+                if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    continue
+                start = int(node.lineno)
+                end = int(getattr(node, "end_lineno", start) or start)
+                result.append({
+                    "file": file,
+                    "symbol": node.name,
+                    "kind": type(node).__name__,
+                    "line_start": start,
+                    "line_end": end,
+                    "signature": self._node_signature(node),
+                    "source_digest": _digest(ast.get_source_segment(source, node) or ""),
+                    "change_kind": "deleted",
+                    "source_ref": request.base_ref,
+                })
+        return result
 
     @staticmethod
     def _node_signature(node: ast.AST) -> str:
@@ -1120,6 +1353,84 @@ class AuraReviewArena:
                 queue.append((target, depth + 1, "callee_or_dependency", kind, node_id))
             for source, kind in incoming.get(node_id, []):
                 queue.append((source, depth + 1, "caller_or_dependent", kind, node_id))
+        return records
+
+    def _augment_deleted_impacts(
+        self,
+        request: AuraReviewRequest,
+        deleted_files: Sequence[str],
+        changed_symbols: Sequence[Mapping[str, Any]],
+        impact_slice: Sequence[Mapping[str, Any]],
+        *,
+        max_nodes: int,
+    ) -> list[dict[str, Any]]:
+        records = [dict(item) for item in impact_slice]
+        seen = {
+            (
+                str(item.get("file") or ""),
+                str(item.get("symbol") or ""),
+                int(item.get("line") or 0),
+                str(item.get("direction") or ""),
+            )
+            for item in records
+        }
+        deleted = set(deleted_files)
+        for item in changed_symbols:
+            file = str(item.get("file") or "")
+            symbol = str(item.get("symbol") or "")
+            if file not in deleted or not symbol:
+                continue
+            changed_key = (file, symbol, int(item.get("line_start") or 1), "changed")
+            if changed_key not in seen and len(records) < max_nodes:
+                records.append({
+                    "node_id": f"{file}::{symbol}",
+                    "file": file,
+                    "symbol": symbol,
+                    "kind": str(item.get("kind") or "deleted_symbol"),
+                    "line": int(item.get("line_start") or 1),
+                    "direction": "changed",
+                    "depth": 0,
+                    "edge_kind": "deleted",
+                    "parent_node": "",
+                    "change_kind": "deleted",
+                    "authority": "exact_base_source_deleted_at_review_head",
+                })
+                seen.add(changed_key)
+            candidate_files = self._candidate_callsite_files(
+                request,
+                symbol,
+                [str(row.get("file") or "") for row in records],
+            )
+            for callsite in self._find_callsites(
+                symbol,
+                candidate_files,
+                target_file=file,
+            ):
+                if not callsite.get("target_resolved"):
+                    continue
+                key = (
+                    str(callsite["file"]),
+                    symbol,
+                    int(callsite["line"]),
+                    "caller_or_dependent",
+                )
+                if key in seen:
+                    continue
+                records.append({
+                    "node_id": f"{callsite['file']}::line:{callsite['line']}",
+                    "file": callsite["file"],
+                    "symbol": symbol,
+                    "kind": "resolved_callsite",
+                    "line": int(callsite["line"]),
+                    "direction": "caller_or_dependent",
+                    "depth": 1,
+                    "edge_kind": "deleted_symbol_call",
+                    "parent_node": f"{file}::{symbol}",
+                    "authority": "exact_import_resolution_and_head_source",
+                })
+                seen.add(key)
+                if len(records) >= max_nodes:
+                    return records
         return records
 
     def _infer_focus_directives(
@@ -1392,27 +1703,34 @@ class AuraReviewArena:
             return []
         contract: AuraReviewContract = state["contract"]
         impact_files = sorted({
-            str(item.get("file") or "") for item in contract.impact_slice
+            str(item.get("file") or "")
+            for item in contract.impact_slice
             if str(item.get("file") or "").endswith(".py")
-        })[:80]
+        })[:160]
         findings: list[dict[str, Any]] = []
         for changed in contract.changed_files:
             if not changed.endswith(".py"):
                 continue
             current_path = self._resolve_file(changed)
-            if current_path is None or not current_path.exists():
-                continue
             try:
-                current = current_path.read_text(encoding="utf-8", errors="replace")
+                current = (
+                    current_path.read_text(encoding="utf-8", errors="replace")
+                    if current_path is not None and current_path.is_file()
+                    else ""
+                )
                 base = self._git(
-                    ["git", "show", f"{request.base_ref}:{changed}"], timeout=10
+                    ["git", "show", f"{request.base_ref}:{changed}"],
+                    timeout=10,
                 )
             except (OSError, ValueError, subprocess.SubprocessError):
+                base = ""
+            if not current and not base:
                 continue
             old_signatures = self._function_signatures(base)
             new_signatures = self._function_signatures(current)
             changed_names = {
-                name for name in set(old_signatures) | set(new_signatures)
+                name
+                for name in set(old_signatures) | set(new_signatures)
                 if old_signatures.get(name) != new_signatures.get(name)
             }
             for name in sorted(changed_names):
@@ -1420,7 +1738,7 @@ class AuraReviewArena:
                 new = new_signatures.get(name)
                 callsites = self._find_callsites(
                     name,
-                    impact_files,
+                    self._candidate_callsite_files(request, name, impact_files),
                     target_file=changed,
                 )
                 if old and not new:
@@ -1475,9 +1793,7 @@ class AuraReviewArena:
                     for callsite in callsites:
                         if callsite["starred"]:
                             continue
-                        if int(callsite["positional_args"]) >= int(
-                            new["required_positional"]
-                        ):
+                        if int(callsite["positional_args"]) >= int(new["required_positional"]):
                             continue
                         resolved = bool(callsite.get("target_resolved"))
                         findings.append({
@@ -1493,8 +1809,7 @@ class AuraReviewArena:
                             ),
                             "message": (
                                 "The import-resolved call targets the reviewed function and "
-                                "supplies fewer positional arguments than its new signature "
-                                "requires."
+                                "supplies fewer positional arguments than its new signature requires."
                                 if resolved
                                 else "The call has too few arguments for the reviewed signature, "
                                 "but the target remains ambiguous."
@@ -1505,8 +1820,7 @@ class AuraReviewArena:
                             "related_files": [changed],
                             "related_symbols": [name],
                             "suggested_fix": (
-                                "Update the resolved call site or provide a backwards-compatible "
-                                "default."
+                                "Update the resolved call site or provide a backwards-compatible default."
                                 if resolved
                                 else "Resolve the call target before proposing a repair."
                             ),
@@ -1522,6 +1836,37 @@ class AuraReviewArena:
                             "status": "corroborated" if resolved else "probable",
                         })
         return findings
+
+    def _candidate_callsite_files(
+        self,
+        request: AuraReviewRequest,
+        symbol: str,
+        impact_files: Sequence[str],
+    ) -> list[str]:
+        result: list[str] = []
+        for file in impact_files:
+            try:
+                safe = _safe_repo_path(file, field_name="impact_file")
+            except ValueError:
+                continue
+            if safe and safe.endswith(".py") and safe not in result:
+                result.append(safe)
+        completed = self._run_command_impl(
+            ["git", "grep", "-l", "--fixed-strings", "-e", symbol, "--", "*.py"],
+            self.repo_root,
+            20,
+        )
+        if completed.returncode in {0, 1}:
+            for line in str(completed.stdout or "").splitlines():
+                try:
+                    safe = _safe_repo_path(line, field_name="grep_file")
+                except ValueError:
+                    continue
+                if safe and safe.endswith(".py") and safe not in result:
+                    result.append(safe)
+                if len(result) >= 200:
+                    break
+        return result
 
     @staticmethod
     def _function_signatures(source: str) -> dict[str, dict[str, Any]]:
@@ -1978,9 +2323,14 @@ class AuraReviewArena:
             symbols_by_file[str(item.get("file") or "")].append(dict(item))
         for file in files[:max_files]:
             path = self._resolve_file(file)
+            deleted_files = set(state.get("deleted_files", ()))
             entry: dict[str, Any] = {
                 "file": file,
                 "exists": bool(path and path.is_file()),
+                "exists_at_review_head": bool(path and path.is_file()),
+                "change_kind": "deleted" if file in deleted_files else (
+                    "changed" if file in contract.changed_files else "impact"
+                ),
                 "digest": _file_digest(path) if path else "UNAVAILABLE",
                 "changed_ranges": [list(item) for item in ranges.get(file, [])],
                 "changed_symbols": symbols_by_file.get(file, []),

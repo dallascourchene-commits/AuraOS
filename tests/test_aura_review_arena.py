@@ -367,3 +367,133 @@ def test_invalid_findings_collection_returns_error(tmp_path: Path) -> None:
     assert result["ok"] is False
     assert result["stage"] == "CORROBORATE"
     assert result["automatic_fix"] is False
+
+
+
+def test_range_review_requires_requested_head_to_be_checked_out_and_clean(
+    tmp_path: Path,
+) -> None:
+    repo = build_review_repo(tmp_path)
+    reviewed_head = _git(repo, "rev-parse", "HEAD")
+    base = _git(repo, "rev-parse", "HEAD~1")
+    _git(repo, "checkout", "--detach", base)
+
+    wrong_head = AuraReviewArena(repo).prepare(
+        {
+            "objective": "Review an exact branch head",
+            "base_ref": base,
+            "head_ref": reviewed_head,
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert wrong_head["ok"] is False
+    assert wrong_head["error"] == "range_head_ref_not_checked_out"
+
+    _git(repo, "checkout", "main")
+    _write(repo, "core.py", (repo / "core.py").read_text(encoding="utf-8") + "\n# dirty\n")
+    dirty = AuraReviewArena(repo).prepare(
+        {
+            "objective": "Review an exact clean head",
+            "base_ref": base,
+            "head_ref": reviewed_head,
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert dirty["ok"] is False
+    assert dirty["error"] == "range_review_requires_clean_tracked_worktree"
+
+    _git(repo, "checkout", "--", "core.py")
+    prepared = AuraReviewArena(repo).prepare(
+        {
+            "objective": "Review materialized head source",
+            "base_ref": base,
+            "head_ref": reviewed_head,
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert prepared["ok"] is True
+    assert prepared["contract"]["repository_head"] == reviewed_head
+    compute = next(
+        item
+        for item in prepared["contract"]["changed_symbols"]
+        if item["symbol"] == "compute"
+    )
+    assert "increment" in compute["signature"]
+
+
+def test_deletion_only_range_tracks_removed_symbols_and_surviving_callers(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "deletion-review"
+    repo.mkdir()
+    _git(repo, "init", "-b", "main")
+    _git(repo, "config", "user.email", "review@example.test")
+    _git(repo, "config", "user.name", "Aura Review Test")
+    _write(repo, "core.py", "def compute(value):\n    return value + 1\n")
+    _write(
+        repo,
+        "caller.py",
+        "from core import compute\n\ndef use():\n    return compute(1)\n",
+    )
+    _write(
+        repo,
+        "Aura_Memory/live_topology_ast.json",
+        json.dumps(
+            {
+                "nodes": [
+                    {
+                        "id": "caller.py::use",
+                        "file": "caller.py",
+                        "label": "use",
+                        "kind": "function",
+                        "line": 3,
+                    }
+                ],
+                "edges": [],
+            }
+        ),
+    )
+    _commit(repo, "base")
+    (repo / "core.py").unlink()
+    _commit(repo, "delete core")
+
+    arena = AuraReviewArena(repo)
+    prepared = arena.prepare(
+        {
+            "objective": "Review deleted API callers",
+            "base_ref": "HEAD~1",
+            "head_ref": "HEAD",
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert prepared["ok"] is True
+    assert prepared["contract"]["changed_files"] == ["core.py"]
+    removed = next(
+        item
+        for item in prepared["contract"]["changed_symbols"]
+        if item["symbol"] == "compute"
+    )
+    assert removed["change_kind"] == "deleted"
+    assert any(
+        item["file"] == "caller.py"
+        and item["edge_kind"] == "deleted_symbol_call"
+        for item in prepared["contract"]["impact_slice"]
+    )
+
+    scanned = arena.scan(prepared["review_id"])
+    finding = next(
+        item
+        for item in scanned["deterministic_findings"]
+        if item["rule"] == "removed-symbol-callsite"
+    )
+    assert finding["file"] == "caller.py"
+    assert finding["status"] == "corroborated"
+    final = arena.finalize(prepared["review_id"])
+    assert any(
+        item["target_file"] == "caller.py"
+        for item in final["forge_repair_requests"]
+    )
