@@ -1,0 +1,49 @@
+name: Emergent Spine Waboose Learning Final V3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/emergent-spine-waboose-learning-final-v3.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: emergent-spine-waboose-learning-final-v3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      AURA_WABOOSE_LEARNING_ROOT: /tmp/aura-waboose-learning
+      HEAD_REF: ${{ github.event.pull_request.head.ref || 'feature/aura-emergent-evidence-spine' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install verification tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
+      - name: Run consolidated permanent-tree gate
+        run: bash scripts/run_waboose_learning_final_gate.sh
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-spine-waboose-learning-final-v3
+          path: |
+            /tmp/waboose-learning-result.json
+            /tmp/waboose-learning-state.json
+            /tmp/aura-waboose-learning
+          if-no-files-found: warn
+          retention-days: 7
