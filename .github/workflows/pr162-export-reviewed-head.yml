@@ -1,0 +1,29 @@
+name: Export PR162 Reviewed Head
+
+on:
+  pull_request:
+    types: [reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.event.pull_request.number == 162 && github.head_ref == 'feature/aura-relational-index-r2'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-index-r2
+      - name: Export exact reviewed files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr162-reviewed-head
+          path: |
+            aura_relational_index.py
+            schemas/aura_relational_index.schema.json
+            tests/test_aura_relational_index.py
+            docs/AURA_RELATIONAL_INDEX.md
+            docs/AURA_CODING_WABOOSE.md
+          if-no-files-found: error
+          retention-days: 1
