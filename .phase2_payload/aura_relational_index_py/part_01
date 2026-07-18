@@ -1,0 +1,182 @@
+            "aura.fst.intent_routing",
+            "aura.coding_arena.capsule_compiler",
+        ),
+        "crucible_verifier_receipts_arena_experience": (
+            "aura.qdkt.memory",
+            "aura.patch_quality_gate",
+        ),
+        "codemap_connectome_emergent_auditor_research_lane": (
+            "aura.coding_arena.topology",
+            "aura.concept_workspace",
+            "aura.emergent_potential.audit",
+            "aura.research_arxiv_memory",
+        ),
+    }
+)
+
+_PROFILE_BUDGETS: Mapping[str, Mapping[str, int]] = MappingProxyType(
+    {
+        "MINIMAL": MappingProxyType(
+            {"max_group_relations": 300, "max_group_participants": 300}
+        ),
+        "STANDARD": MappingProxyType(
+            {"max_group_relations": 1500, "max_group_participants": 1500}
+        ),
+        "DEEP": MappingProxyType(
+            {"max_group_relations": 10000, "max_group_participants": 10000}
+        ),
+    }
+)
+
+_THREAD_LOCKS: dict[str, threading.Lock] = {}
+_THREAD_LOCKS_GUARD = threading.Lock()
+
+_SECRET_FIELD_NAMES = frozenset(
+    {
+        "api_key",
+        "apikey",
+        "access_token",
+        "auth_token",
+        "authorization",
+        "password",
+        "private_key",
+        "secret",
+        "token",
+    }
+)
+_SECRET_FIELD_SUFFIXES = (
+    "_api_key",
+    "_access_token",
+    "_auth_token",
+    "_token",
+    "_password",
+    "_private_key",
+    "_secret",
+)
+_PRIVATE_REASONING_FIELD_NAMES = frozenset(
+    {
+        "chain_of_thought",
+        "cot",
+        "hidden_reasoning",
+        "private_reasoning",
+        "inner_thought",
+        "innerthought",
+        "scratchpad",
+        "scratch_pad",
+    }
+)
+_FIELD_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
+_HIGH_CONFIDENCE_SECRET_PATTERNS = (
+    re.compile(r"\bsk-[A-Za-z0-9._~+/=%-]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=%-]{12,}"),
+    re.compile(r"(?i)\bbasic\s+[A-Za-z0-9+/=]{12,}"),
+    re.compile(
+        r"(?is)-----BEGIN [^-\r\n]*PRIVATE KEY-----.*?"
+        r"-----END [^-\r\n]*PRIVATE KEY-----"
+    ),
+)
+
+
+def _normalized_field_name(value: str) -> str:
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", value.strip())
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+
+
+def _assert_no_secret_shaped_content(
+    value: Any,
+    *,
+    path: str = "$",
+    inspect_mapping_keys: bool = True,
+) -> None:
+    """Reject actual secrets without misclassifying source-identity lookup keys.
+
+    Reverse-index lookup keys are repository paths, qualified symbols, capability
+    IDs, and relation names. They are data, not payload field names, so their keys
+    are exempt from field-name policy while their values are still scanned.
+    """
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            key_text = str(key)
+            if inspect_mapping_keys and _FIELD_NAME_RE.fullmatch(key_text):
+                normalized = _normalized_field_name(key_text)
+                if normalized in _PRIVATE_REASONING_FIELD_NAMES:
+                    raise ValueError(
+                        f"private reasoning field is prohibited: {path}.{key_text}"
+                    )
+                if normalized in _SECRET_FIELD_NAMES or normalized.endswith(
+                    _SECRET_FIELD_SUFFIXES
+                ):
+                    raise ValueError(f"secret-shaped field is prohibited: {path}.{key_text}")
+            child_inspect = not (
+                path == "$.reverse_indexes" and key_text.startswith("by_")
+            )
+            _assert_no_secret_shaped_content(
+                item,
+                path=f"{path}.{key_text}",
+                inspect_mapping_keys=child_inspect,
+            )
+        return
+    if isinstance(value, (list, tuple)):
+        for index, item in enumerate(value):
+            _assert_no_secret_shaped_content(
+                item,
+                path=f"{path}[{index}]",
+                inspect_mapping_keys=inspect_mapping_keys,
+            )
+        return
+    if isinstance(value, str) and any(
+        pattern.search(value) for pattern in _HIGH_CONFIDENCE_SECRET_PATTERNS
+    ):
+        raise ValueError(f"secret-shaped value is prohibited: {path}")
+
+
+def _required_text(value: Any, field_name: str) -> str:
+    if type(value) is not str or not value.strip():
+        raise ValueError(f"{field_name} must be a non-empty string")
+    return value.strip()
+
+
+def _strict_bool(value: Any, field_name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{field_name} must be a boolean")
+    return value
+
+
+def _nonnegative_int(value: Any, field_name: str) -> int:
+    if type(value) is not int or value < 0:
+        raise ValueError(f"{field_name} must be a non-negative integer")
+    return value
+
+
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {str(key): _freeze_json(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _immutable_mapping(value: Any, field_name: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{field_name} must be an object")
+    canonical_json(value)
+    frozen = _freeze_json(value)
+    if not isinstance(frozen, Mapping):
+        raise ValueError(f"{field_name} must be an object")
+    return frozen
+
+
+def _string_tuple(value: Any, field_name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"{field_name} must be an ordered sequence")
