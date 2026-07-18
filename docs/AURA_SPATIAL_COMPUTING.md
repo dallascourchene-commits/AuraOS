@@ -76,6 +76,7 @@ A truth class does not grant authority. Even an `EXACT` source reference inside 
 Validation fails closed on:
 
 - duplicate frame IDs;
+- any attempt to set `projection_only=false`;
 - missing parents;
 - cycles;
 - roots with parents;
@@ -107,6 +108,8 @@ The registry:
 - duplicate identifiers;
 - fixed authority fields.
 
+Metadata is sanitized through Aura's canonical event sanitizer: secret-shaped fields are redacted and private-reasoning fields are rejected before scene hashing.
+
 Every snapshot carries:
 
 ```yaml
@@ -125,8 +128,9 @@ The adapter:
 - preserves exact topology/source references in entity metadata;
 - converts coordinates into presentation-only frame state;
 - creates a content-addressed topology-graph asset manifest;
+- prioritizes exact selected nodes before applying the bounded node cap;
 - preserves only links whose endpoints remain inside the bounded node closure;
-- marks every entity `patch_authority=false`;
+- marks every entity `projection_only=true` and `patch_authority=false`;
 - requires a 2D accessible fallback through renderer hints.
 
 `project_showcase_workspace_to_scene()` is a compatibility adapter over successful `aura_showcase_spatial` workspace packets.

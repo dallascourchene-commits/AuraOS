@@ -76,8 +76,17 @@ def project_coding_topology_to_scene(
     raw_links = [
         item for item in micro.get("links", []) if isinstance(item, dict)
     ]
+    selected_set = set(returned_selected)
+    raw_nodes.sort(
+        key=lambda item: (
+            0 if str(item.get("id")) in selected_set else 1,
+            str(item.get("id") or ""),
+        )
+    )
     raw_nodes = raw_nodes[:MAX_SPATIAL_NODES]
     allowed_node_ids = {str(item["id"]) for item in raw_nodes}
+    if not selected_set.issubset(allowed_node_ids):
+        raise ValueError("selected topology nodes exceeded the spatial node cap")
     raw_links = [
         item
         for item in raw_links
@@ -110,7 +119,6 @@ def project_coding_topology_to_scene(
     node_to_entity: dict[str, str] = {}
     entities: list[SpatialEntity] = []
     positions: list[tuple[float, float, float]] = []
-    selected_set = set(micro.get("selected_node_ids", []))
     for index, node in enumerate(raw_nodes):
         node_id = str(node["id"])
         entity_id = _stable_identifier("coding-node", node_id)

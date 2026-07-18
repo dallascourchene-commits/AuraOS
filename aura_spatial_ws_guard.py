@@ -35,12 +35,12 @@ def compile_ar_hotswap_handoff(
     target = str(target_id or "").strip()
     if not target:
         raise ValueError("target_id is required")
+    if not isinstance(shapes, Mapping):
+        raise ValueError("shapes must be a mapping")
     if target not in shapes:
         raise KeyError(f"shape {target!r} not found")
     if new_function is None or new_function == "":
         raise ValueError("new_function is required")
-    if not isinstance(shapes, Mapping):
-        raise ValueError("shapes must be a mapping")
 
     shape = shapes[target]
     metadata = _shape_mapping(shape, "metadata")

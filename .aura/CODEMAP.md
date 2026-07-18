@@ -13,21 +13,21 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1144
-- **total_bytes**: 53010052
-- **text_tokens_est**: 3912139
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 152, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 794, 'schema_or_lexicon': 123, 'support_file': 31}
-- **topology_nodes**: 9461
-- **topology_edges**: 21593
+- **file_count**: 1161
+- **total_bytes**: 53190140
+- **text_tokens_est**: 3957126
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 154, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 805, 'schema_or_lexicon': 127, 'support_file': 31}
+- **topology_nodes**: 9561
+- **topology_edges**: 21788
 - **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 53346.98
+- **elapsed_ms**: 25815.6
 
 ## Coverage
 
-- **included_file_count**: 1144
+- **included_file_count**: 1161
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=78, `Aura_Memory`=6, `Aura_Sandbox`=1
+- **skipped_dir_file_counts**: `.git`=80, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=88
 
 ## Command Index
 
@@ -146,7 +146,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!qdkt` -> `aura_affordance_directory.py:356`
 - `!query` -> `aura_human_agent_arena/emergent.js:68`
 - `!queryInput` -> `aura_human_agent_arena/emergent.js:139`
-- `!r` -> `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`, `aura_arena_wfst_compiler.py:181`, `aura_capsule_trial_types.py:50`
+- `!r` -> `.aura/tools/aura_spatial_finalize_once.py:83`, `aura_architect_consolidation_benchmark.py:193`, `aura_architect_consolidation_benchmark_v2.py:55`, `aura_arena_wfst_compiler.py:181`
 - `!rail` -> `aura_showcase/app.js:270`
 - `!reason` -> `AURA_FINAL_REPORT.md:154`, `aura_node.py:7492`
 - `!rect` -> `aura_showcase/civic.js:174`, `aura_showcase/intent.js:271`
@@ -225,7 +225,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `docs/AURA_COGNITIVE_SUBSTRATE_P9.md`
 - `docs/AURA_SUBSTRATE_INTEGRATION_P9.md`
 - `docs/AURA_SUBSTRATE_PHASE_DISPOSITIONS_P9.md`
-- ... 20 more; query CODEMAP.json for exact file cards
+- ... 21 more; query CODEMAP.json for exact file cards
 
 ### cognition_and_memory
 - `.aura/memory_apertures/coding_localize.v1.json`
@@ -284,8 +284,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `aura_heal.py`
 - `aura_metaharness_audit.py`
 - `aura_ojibwe_translation_guard.py`
-- `aura_tokenizer_guard.py`
-- ... 13 more; query CODEMAP.json for exact file cards
+- `aura_spatial_ws_guard.py`
+- ... 15 more; query CODEMAP.json for exact file cards
 
 ### interfaces_and_docs
 - `.aura/AFFORDANCE_MAP.json`
@@ -300,7 +300,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 971 more; query CODEMAP.json for exact file cards
+- ... 985 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
@@ -320,8 +320,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Topology Integration
 
 - **source**: compiled_deep_topology
-- **nodes**: 9461
-- **edges**: 21593
+- **nodes**: 9561
+- **edges**: 21788
 - **top_files_by_degree**:
   - `aura_node.py` degree=881 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
@@ -410,7 +410,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AudioConsentRecord` -> `aura_ojibwe_audio_consent_registry.py:48`
 - `AudioConsentRegistry` -> `aura_ojibwe_audio_consent_registry.py:87`
 - `AudioLevel` -> `aura_ojibwe_audio_consent_registry.py:35`
-- `AuraARWebSocketServer` -> `aura_topology_ws_bridge.py:360`
+- `AuraARWebSocketServer` -> `aura_topology_ws_bridge.py:365`
 - `AuraAffordance` -> `aura_affordance_directory.py:37`
 - `AuraAgentArenaBridge` -> `aura_agent_arena_bridge.py:182`
 - `AuraArchReasoner` -> `aura_arch_reasoner.py:31`

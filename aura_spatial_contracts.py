@@ -13,7 +13,7 @@ import math
 import re
 from typing import Any
 
-from aura_event_contracts import canonical_json, stable_digest
+from aura_event_contracts import canonical_json, sanitize_payload, stable_digest
 
 SPATIAL_CONTRACTS_VERSION = "AURA_SPATIAL_CONTRACTS_V1"
 SPATIAL_SCENE_SCHEMA_VERSION = "1.0"
@@ -218,6 +218,7 @@ def _metadata(value: Any, field_name: str = "metadata") -> tuple[tuple[str, Any]
         value = {key: item for key, item in value}
     if not isinstance(value, Mapping):
         raise ValueError(f"{field_name} must be an object")
+    value = sanitize_payload(value)
     frozen = _freeze_json(value, field_name)
     assert isinstance(frozen, tuple)
     return frozen
@@ -325,6 +326,8 @@ class CoordinateFrame(CanonicalSpatialRecord):
             "projection_only",
             _strict_bool(self.projection_only, "frame.projection_only"),
         )
+        if not self.projection_only:
+            raise ValueError("coordinate frames must remain projection-only")
 
 
 @dataclass(frozen=True)
@@ -476,6 +479,8 @@ class SpatialEntity(CanonicalSpatialRecord):
             "projection_only",
             _strict_bool(self.projection_only, "entity.projection_only"),
         )
+        if not self.projection_only:
+            raise ValueError("spatial entities must remain projection-only")
         object.__setattr__(
             self,
             "patch_authority",
@@ -543,6 +548,8 @@ class SpatialLink(CanonicalSpatialRecord):
             "projection_only",
             _strict_bool(self.projection_only, "link.projection_only"),
         )
+        if not self.projection_only:
+            raise ValueError("spatial links must remain projection-only")
         object.__setattr__(
             self,
             "metadata",

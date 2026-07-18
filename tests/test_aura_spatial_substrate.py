@@ -412,3 +412,76 @@ def test_file_asset_uri_is_not_admitted():
     report = validate_asset_manifest(file_uri)
     assert report.ok is False
     assert report.findings[0]["code"] == "UNSUPPORTED_ASSET_URI_SCHEME"
+
+def test_projection_only_contracts_fail_closed():
+    with pytest.raises(ValueError, match="projection-only"):
+        CoordinateFrame(frame_id="frame:not-projection", projection_only=False)
+    with pytest.raises(ValueError, match="projection-only"):
+        SpatialEntity(
+            entity_id="entity:not-projection",
+            entity_type=SpatialEntityType.DOMAIN_NODE,
+            label="Not projection",
+            frame_id="root",
+            projection_only=False,
+        )
+    with pytest.raises(ValueError, match="projection-only"):
+        SpatialLink(
+            link_id="link:not-projection",
+            source_entity_id="entity:one",
+            target_entity_id="entity:two",
+            relation="related",
+            projection_only=False,
+        )
+
+
+def test_selected_node_survives_spatial_node_cap():
+    selected_id = "node:129"
+    nodes = [
+        {
+            "id": f"node:{index}",
+            "label": f"Node {index}",
+            "node_type": "function",
+            "file_path": f"pkg/module_{index}.py",
+            "symbol": f"function_{index}",
+            "line_range": [1, 2],
+            "metadata": {},
+        }
+        for index in range(130)
+    ]
+    links = [
+        {
+            "source": selected_id,
+            "target": f"node:{index}",
+            "type": "calls",
+        }
+        for index in range(129)
+    ]
+    scene = project_coding_topology_to_scene(
+        {"nodes": nodes, "links": links},
+        (selected_id,),
+        depth=1,
+    )
+    assert len(scene.entities) == 128
+    assert any(
+        f"topology:{selected_id}" in entity.source_refs
+        for entity in scene.entities
+    )
+
+
+def test_spatial_metadata_redacts_secrets_and_rejects_private_reasoning():
+    entity = SpatialEntity(
+        entity_id="entity:sanitized",
+        entity_type=SpatialEntityType.DOMAIN_NODE,
+        label="Sanitized",
+        frame_id="root",
+        metadata={"api_key": "sk-secret-value-12345678901234567890"},
+    )
+    assert entity.to_dict()["metadata"]["api_key"] == "[REDACTED]"
+    with pytest.raises(ValueError, match="private reasoning field"):
+        SpatialEntity(
+            entity_id="entity:private-reasoning",
+            entity_type=SpatialEntityType.DOMAIN_NODE,
+            label="Private reasoning",
+            frame_id="root",
+            metadata={"chain_of_thought": "not allowed"},
+        )
