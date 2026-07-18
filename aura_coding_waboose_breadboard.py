@@ -1,10 +1,14 @@
 """Proposal-only diagnostic breadboard for Coding Waboose.
 
 The breadboard turns a Waboose review contract into typed Planning Board
-components.  It lets Aura and a replaceable coding agent assemble review
+components. It lets Aura and a replaceable coding agent assemble review
 hypotheses out of order, mock unavailable inputs explicitly, trace forward
-consequences and backward proof requirements, and energize only the components
+consequences and backward proof requirements, and energize only components
 that have bound inspection receipts.
+
+A mock is never silently upgraded into grounding. A component may be explored
+with an explicit mock, but it cannot reach grounded or verified continuity until
+the missing exact dependency evidence is resolved.
 
 It never executes code, grants a capability lease, creates patch authority,
 mutates a repository, or promotes a repair.
@@ -116,7 +120,9 @@ def _matched_impact_refs(
     directive: Mapping[str, Any],
     impact_rows: Sequence[Mapping[str, Any]],
 ) -> tuple[str, ...]:
-    patterns = tuple(pattern.lower() for pattern in _strings(directive.get("target_patterns")))
+    patterns = tuple(
+        pattern.lower() for pattern in _strings(directive.get("target_patterns"))
+    )
     result: list[str] = []
     for item in impact_rows:
         node_id = str(item.get("node_id") or "").strip()
@@ -124,7 +130,14 @@ def _matched_impact_refs(
             continue
         corpus = " ".join(
             str(item.get(key) or "")
-            for key in ("node_id", "file", "symbol", "kind", "edge_kind", "direction")
+            for key in (
+                "node_id",
+                "file",
+                "symbol",
+                "kind",
+                "edge_kind",
+                "direction",
+            )
         ).lower()
         if not patterns or any(pattern in corpus for pattern in patterns):
             ref = f"topology:{node_id}"
@@ -155,10 +168,6 @@ def _component_action(
     impact_refs: tuple[str, ...],
 ) -> tuple[ActionSpec, tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
     directive_id = _required(directive.get("directive_id"), "directive_id")
-    question = _required(directive.get("question"), "question")
-    risk = str(directive.get("risk") or "correctness").strip().lower()
-    direction = str(directive.get("direction") or "both").strip().lower()
-    required_evidence = _strings(directive.get("required_evidence")) or ("exact_source",)
     suggested_tools = _strings(directive.get("suggested_tools"))
 
     connected_refs = tuple(dict.fromkeys((*source_refs, *impact_refs)))
@@ -175,7 +184,12 @@ def _component_action(
         f"waboose:{directive_id}:focus_executed",
         f"waboose:{directive_id}:exact_source_checked",
     )
-    action_id = f"waboose_action_{stable_digest({'contract': contract_id, 'directive': directive_id}, digest_size=12)}"
+    action_id = (
+        "waboose_action_"
+        + stable_digest(
+            {"contract": contract_id, "directive": directive_id}, digest_size=12
+        )
+    )
 
     input_ports = [
         PortSpec("change_slice", "WabooseChangeSliceV1", PortDirection.INPUT),
@@ -208,7 +222,11 @@ def _component_action(
         ),
         input_ports=tuple(input_ports),
         output_ports=(
-            PortSpec("evidence_bundle", "WabooseEvidenceBundleV1", PortDirection.OUTPUT),
+            PortSpec(
+                "evidence_bundle",
+                "WabooseEvidenceBundleV1",
+                PortDirection.OUTPUT,
+            ),
             PortSpec(
                 "finding_candidates",
                 "WabooseFindingCandidateListV1",
@@ -218,11 +236,18 @@ def _component_action(
         ),
         constraints=(
             ConstraintSpec(
-                constraint_id=f"waboose_constraint_{stable_digest({'contract': contract_id, 'directive': directive_id}, digest_size=12)}",
+                constraint_id=(
+                    "waboose_constraint_"
+                    + stable_digest(
+                        {"contract": contract_id, "directive": directive_id},
+                        digest_size=12,
+                    )
+                ),
                 kind=ConstraintKind.SAFETY,
                 description=(
-                    "Review is proposal-only. The circuit may inspect and simulate but may not "
-                    "edit, commit, push, open a pull request, merge, or promote a repair."
+                    "Review is proposal-only. The circuit may inspect and "
+                    "simulate but may not edit, commit, push, open a pull "
+                    "request, merge, or promote a repair."
                 ),
                 evidence_refs=(constraint_ref,),
                 blocking=True,
@@ -236,7 +261,10 @@ def _component_action(
         resource_demand=ResourceDemand(),
         reversibility=ReversibilityClass.REVERSIBLE,
         idempotency_key=f"waboose:{contract_id}:{directive_id}",
-        evidence_refs=connected_refs,
+        # Mock references are declared as required evidence but are deliberately
+        # not included in grounded_evidence_refs below. This makes BC3 fail
+        # closed until exact dependency evidence replaces the mock.
+        evidence_refs=tuple((*connected_refs, *mocked_refs)),
         proposal_only=True,
     )
     return action, connected_refs, mocked_refs, output_refs
@@ -251,22 +279,34 @@ def compile_waboose_breadboard(
     """Compile a proposal-only diagnostic circuit from a Waboose contract.
 
     ``energized_directive_ids`` means an external review stage produced bound
-    inspection receipts for those focus directives.  It does not mean a defect
+    inspection receipts for those focus directives. It does not mean a defect
     exists, a finding is correct, or a repair is authorized.
     """
 
     if not isinstance(contract, Mapping):
         raise ValueError("contract must be an object")
     contract_id = _required(contract.get("contract_id"), "contract.contract_id")
-    objective = _required(contract.get("objective") or contract.get("request_digest"), "objective")
-    purpose_digest = _required(contract.get("request_digest"), "contract.request_digest")
+    objective = _required(
+        contract.get("objective") or contract.get("request_digest"), "objective"
+    )
+    purpose_digest = _required(
+        contract.get("request_digest"), "contract.request_digest"
+    )
     directives = _directive_rows(contract)
     impact_rows = _impact_rows(contract)
     source_refs = _source_refs(contract)
     energized = set(_strings(energized_directive_ids))
 
     actions: list[ActionSpec] = []
-    component_rows: list[tuple[Mapping[str, Any], ActionSpec, tuple[str, ...], tuple[str, ...], tuple[str, ...]]] = []
+    component_rows: list[
+        tuple[
+            Mapping[str, Any],
+            ActionSpec,
+            tuple[str, ...],
+            tuple[str, ...],
+            tuple[str, ...],
+        ]
+    ] = []
     evidence_rows: list[ActionContinuityEvidence] = []
     constraint_ref = f"constraint:{contract_id}:review_only_non_mutating"
 
@@ -285,7 +325,18 @@ def compile_waboose_breadboard(
             receipts = tuple(
                 VerifierReceiptEvidence(
                     verifier_id=verifier_id,
-                    receipt_id=f"receipt_{stable_digest({'contract': contract_id, 'directive': directive_id, 'verifier': verifier_id, 'phase': phase}, digest_size=12)}",
+                    receipt_id=(
+                        "receipt_"
+                        + stable_digest(
+                            {
+                                "contract": contract_id,
+                                "directive": directive_id,
+                                "verifier": verifier_id,
+                                "phase": phase,
+                            },
+                            digest_size=12,
+                        )
+                    ),
                 )
                 for verifier_id in action.verifier_ids
             )
@@ -293,22 +344,39 @@ def compile_waboose_breadboard(
             ActionContinuityEvidence(
                 action_id=action.action_id,
                 constrained_evidence_refs=(constraint_ref,),
-                grounded_evidence_refs=action.evidence_refs,
-                authority_decision_ids=(f"policy:{contract_id}:review_only_no_execution_authority",),
+                # Exact connected inputs are grounded. Explicit mocks are not.
+                grounded_evidence_refs=connected,
+                authority_decision_ids=(
+                    f"policy:{contract_id}:review_only_no_execution_authority",
+                ),
                 verifier_receipts=receipts,
             )
         )
         component_rows.append((directive, action, connected, mocked, outputs))
 
     goal = GoalSpec(
-        goal_id=f"waboose_goal_{stable_digest({'contract': contract_id, 'objective': objective}, digest_size=12)}",
-        objective=f"Produce an evidence-bound Coding Waboose review packet for: {objective}",
+        goal_id=(
+            "waboose_goal_"
+            + stable_digest(
+                {"contract": contract_id, "objective": objective}, digest_size=12
+            )
+        ),
+        objective=(
+            "Produce an evidence-bound Coding Waboose review packet for: "
+            f"{objective}"
+        ),
         desired_state=(PredicateSpec("waboose.review.packet_ready", True),),
         constraints=(
             ConstraintSpec(
-                constraint_id=f"waboose_goal_constraint_{stable_digest(contract_id, digest_size=12)}",
+                constraint_id=(
+                    "waboose_goal_constraint_"
+                    + stable_digest(contract_id, digest_size=12)
+                ),
                 kind=ConstraintKind.SAFETY,
-                description="No diagnostic circuit output is patch, merge, or promotion authority.",
+                description=(
+                    "No diagnostic circuit output is patch, merge, or "
+                    "promotion authority."
+                ),
                 evidence_refs=(constraint_ref,),
                 blocking=True,
             ),
@@ -316,33 +384,45 @@ def compile_waboose_breadboard(
         evidence_refs=(f"review_contract:{contract_id}",),
     )
     board = PlanningBoard(
-        board_id=f"waboose_board_{stable_digest({'contract': contract_id, 'actions': [item.action_id for item in actions]}, digest_size=12)}",
+        board_id=(
+            "waboose_board_"
+            + stable_digest(
+                {
+                    "contract": contract_id,
+                    "actions": [item.action_id for item in actions],
+                },
+                digest_size=12,
+            )
+        ),
         arena_id="coding_waboose",
         purpose_digest=purpose_digest,
         goal=goal,
         actions=tuple(actions),
-        current_state_refs=(
-            f"review_contract:{contract_id}",
-            *source_refs,
-        ),
+        current_state_refs=(f"review_contract:{contract_id}", *source_refs),
     )
     continuity = verify_board_continuity(board, evidence=tuple(evidence_rows))
 
     finding_by_action: dict[str, list[dict[str, Any]]] = {}
     for finding in continuity.findings:
-        finding_by_action.setdefault(finding.subject_id, []).append(finding.to_dict())
+        finding_by_action.setdefault(finding.subject_id, []).append(
+            finding.to_dict()
+        )
 
     components: list[WabooseBreadboardComponent] = []
     for directive, action, connected, mocked, outputs in component_rows:
         directive_id = str(directive["directive_id"])
         is_energized = directive_id in energized
         blocking = finding_by_action.get(action.action_id, [])
-        if is_energized and not blocking:
+        if mocked:
+            status = (
+                "ENERGIZED_WITH_EXPLICIT_MOCKS"
+                if is_energized
+                else "MOCKED_LOCALLY_VALID_UNPOWERED"
+            )
+            level = BoardContinuityLevel.BC2_CONSTRAINED.value
+        elif is_energized and not blocking:
             status = "VERIFIED_DIAGNOSTIC_COMPONENT"
             level = BoardContinuityLevel.BC5_VERIFIED.value
-        elif mocked:
-            status = "MOCKED_GROUNDED_UNPOWERED"
-            level = BoardContinuityLevel.BC4_AUTHORIZED.value
         else:
             status = "CONNECTED_GROUNDED_UNPOWERED"
             level = BoardContinuityLevel.BC4_AUTHORIZED.value
@@ -365,13 +445,17 @@ def compile_waboose_breadboard(
 
     all_energized = all(component.energized for component in components)
     any_energized = any(component.energized for component in components)
-    circuit_status = (
-        "VERIFIED_DIAGNOSTIC_CIRCUIT"
-        if all_energized and continuity.continuity_complete
-        else "PARTIALLY_ENERGIZED_DIAGNOSTIC_CIRCUIT"
-        if any_energized
-        else "GROUNDED_DIAGNOSTIC_CIRCUIT_UNPOWERED"
-    )
+    has_mocks = any(component.mocked_input_refs for component in components)
+    if all_energized and continuity.continuity_complete and not has_mocks:
+        circuit_status = "VERIFIED_DIAGNOSTIC_CIRCUIT"
+    elif has_mocks and any_energized:
+        circuit_status = "PARTIALLY_ENERGIZED_WITH_EXPLICIT_MOCKS"
+    elif has_mocks:
+        circuit_status = "DIAGNOSTIC_CIRCUIT_WITH_EXPLICIT_MOCKS"
+    elif any_energized:
+        circuit_status = "PARTIALLY_ENERGIZED_DIAGNOSTIC_CIRCUIT"
+    else:
+        circuit_status = "GROUNDED_DIAGNOSTIC_CIRCUIT_UNPOWERED"
 
     return {
         "ok": True,
@@ -379,6 +463,10 @@ def compile_waboose_breadboard(
         "contract_id": contract_id,
         "phase": str(phase),
         "circuit_status": circuit_status,
+        "has_explicit_mocks": has_mocks,
+        "repair_handoff_eligible": (
+            circuit_status == "VERIFIED_DIAGNOSTIC_CIRCUIT"
+        ),
         "board": board.to_dict(),
         "board_digest": board.digest,
         "continuity": continuity.to_dict(),
@@ -391,7 +479,10 @@ def compile_waboose_breadboard(
                     *component.mocked_input_refs,
                     f"action:{component.action_id}",
                     *component.output_refs,
-                    f"decision:{component.directive_id}:repair_handoff_or_no_defect",
+                    (
+                        f"decision:{component.directive_id}:"
+                        "repair_handoff_or_no_defect"
+                    ),
                 ],
             }
             for component in components
@@ -401,7 +492,7 @@ def compile_waboose_breadboard(
                 "directive_id": component.directive_id,
                 "required_for_repair_handoff": [
                     "exact_source_anchor",
-                    "impact_or_control_flow_evidence",
+                    "resolved_non_mocked_impact_or_control_flow_evidence",
                     "focus_execution_receipt",
                     "exact_source_check_receipt",
                     "human_review_decision",
