@@ -19,16 +19,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - **role_counts**: {'binary_artifact': 2, 'interface_surface': 29, 'knowledge_artifact': 146, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 759, 'schema_or_lexicon': 113, 'support_file': 30}
 - **topology_nodes**: 8915
 - **topology_edges**: 19660
-- **topology_source**: existing_topology_json
+- **topology_source**: compiled_deep_topology
 - **elapsed_ms**: 20094.7
-- **last_incremental_refresh_unix**: 1784345068
 
 ## Coverage
 
 - **included_file_count**: 1092
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=70, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=10, `Aura_Sandbox`=1, `__pycache__`=84
+- **skipped_dir_file_counts**: `.git`=69, `.pytest_cache`=4, `.ruff_cache`=4, `Aura_Memory`=10, `Aura_Sandbox`=1, `__pycache__`=123
 
 ## Command Index
 
@@ -305,9 +304,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Hubs
 
-- `aura_node.py` (python_module): 80 symbols, degree 879, ~104110 tokens
-- `aura_agent_arena_cli.py` (python_module): 80 symbols, degree 575, ~17235 tokens
-- `test_scientific_memory.py` (python_module): 80 symbols, degree 517, ~13607 tokens
+- `aura_node.py` (python_module): 194 symbols, degree 879, ~104110 tokens
+- `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
+- `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
 - `aura_live_architect.py` (python_module): 74 symbols, degree 508, ~30294 tokens
 - `aura_fst_routing.py` (python_module): 35 symbols, degree 507, ~8991 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 477, ~19006 tokens
@@ -320,7 +319,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Topology Integration
 
-- **source**: existing_topology_json
+- **source**: compiled_deep_topology
 - **nodes**: 8915
 - **edges**: 19660
 - **top_files_by_degree**:
