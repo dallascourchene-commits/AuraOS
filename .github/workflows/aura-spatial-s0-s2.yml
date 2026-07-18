@@ -1,0 +1,87 @@
+name: Aura Spatial S0-S2
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feature/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-spatial-s0-s2-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-spatial-substrate:
+    name: Spatial substrate (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install focused test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest ruff
+      - name: Compile spatial contracts and tests
+        run: |
+          python -m py_compile \
+            aura_spatial_contracts.py \
+            aura_spatial_coordinate_frames.py \
+            aura_spatial_asset_registry.py \
+            aura_spatial_scene.py \
+            aura_spatial_projection.py \
+            aura_spatial_interaction.py \
+            aura_spatial_breadboard.py \
+            tests/test_aura_spatial_substrate.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_spatial_contracts.py \
+            aura_spatial_coordinate_frames.py \
+            aura_spatial_asset_registry.py \
+            aura_spatial_scene.py \
+            aura_spatial_projection.py \
+            aura_spatial_interaction.py \
+            aura_spatial_breadboard.py \
+            tests/test_aura_spatial_substrate.py
+      - name: Validate strict JSON schema syntax
+        run: |
+          python -m json.tool schemas/aura_spatial_scene.schema.json >/dev/null
+      - name: Run spatial substrate and showcase compatibility regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_showcase_spatial_integration.py
+      - name: Assert non-authority invariants
+        run: |
+          python - <<'PY'
+          from aura_spatial_breadboard import compile_spatial_breadboard
+          from aura_spatial_contracts import SpatialSceneSnapshot
+
+          packet = compile_spatial_breadboard()
+          authority = packet["authority"]
+          forbidden = (
+              "execution_authority",
+              "patch_authority",
+              "renderer_authority",
+              "vsa_patch_authority",
+              "automatic_fix",
+              "automatic_commit",
+              "automatic_push",
+              "automatic_pull_request",
+              "automatic_merge",
+          )
+          assert all(authority[key] is False for key in forbidden)
+          assert SpatialSceneSnapshot.__dataclass_fields__["execution_authority"].default is False
+          PY
