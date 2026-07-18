@@ -696,6 +696,8 @@ class RelationalBoundary:
                 "all_relation_endpoints_present",
             ),
         )
+        if not self.all_relation_endpoints_present:
+            raise ValueError("all_relation_endpoints_present must be True")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -802,6 +804,12 @@ class RelationalGroup:
             raise ValueError("proof obligations must not contain duplicate IDs")
         if not isinstance(self.boundary, RelationalBoundary):
             raise ValueError("boundary must be a RelationalBoundary")
+        boundary_participant_ids = set(self.boundary.included_participant_ids)
+        for relation in self.relations:
+            if relation.source_participant_id not in boundary_participant_ids:
+                raise ValueError("group relation endpoint not in group boundary")
+            if relation.target_participant_id not in boundary_participant_ids:
+                raise ValueError("group relation endpoint not in group boundary")
         object.__setattr__(
             self,
             "canonical_owner_refs",
@@ -1872,12 +1880,14 @@ def _test_group(
         for relation in relations
         if relation.relation_type is RelationType.TESTS
     )
+    relation_endpoints = {r.source_participant_id for r in test_relations} | {
+        r.target_participant_id for r in test_relations
+    }
     group_participants = tuple(
         sorted(
-            [
-                *(item.participant_id for item in exact_tests),
-                *(item.participant_id for item in unresolved_participants),
-            ]
+            {item.participant_id for item in exact_tests}
+            | {item.participant_id for item in unresolved_participants}
+            | relation_endpoints
         )
     )
     if not proof_obligations:
