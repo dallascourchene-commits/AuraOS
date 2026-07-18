@@ -1,0 +1,25 @@
+name: Relational Synthesis R1 Proof Dispatch
+
+on:
+  push:
+    branches:
+      - feature/aura-relational-synthesis-r1
+    paths:
+      - .github/workflows/relational-synthesis-r1-proof-dispatch.yml
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch corrected hardening workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run relational-synthesis-r1-hardening.yml \
+            --repo "${{ github.repository }}" \
+            --ref feature/aura-relational-synthesis-r1
