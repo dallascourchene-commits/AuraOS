@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_relational_index.schema.json",
+  "title": "Aura Relational Anatomy Index V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "index_id",
+    "repository_identity",
+    "profile",
+    "participants",
+    "relations",
+    "groups",
+    "reverse_indexes",
+    "boundary",
+    "build_facts",
+    "generated_only",
+    "safe_to_patch",
+    "production_mutation",
+    "automatic_fix",
+    "automatic_commit",
+    "automatic_push",
+    "automatic_pull_request",
+    "automatic_merge",
+    "human_review_required",
+    "patch_authority",
+    "vsa_patch_authority",
+    "index_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "AURA_RELATIONAL_INDEX_V1"
+    },
+    "index_id": {
+      "type": "string",
+      "pattern": "^relindex_[0-9a-f]{24}$"
+    },
+    "repository_identity": {
+      "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/repositoryIdentity"
+    },
+    "profile": {
+      "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/profile"
+    },
+    "participants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "https://aura.local/schemas/aura_relational_participant.schema.json"
+      },
+      "description": "Canonical Python validation enforces unique deterministic IDs in linear time."
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "https://aura.local/schemas/aura_relational_group.schema.json#/$defs/relation"
+      },
+      "description": "Canonical Python validation enforces unique deterministic IDs in linear time."
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "https://aura.local/schemas/aura_relational_group.schema.json"
+      },
+      "description": "Canonical Python validation enforces unique deterministic IDs in linear time."
+    },
+    "reverse_indexes": {
+      "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/reverseIndexes"
+    },
+    "boundary": {
+      "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/boundary"
+    },
+    "build_facts": {
+      "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/buildFacts"
+    },
+    "generated_only": {
+      "const": true
+    },
+    "safe_to_patch": {
+      "const": false
+    },
+    "production_mutation": {
+      "const": false
+    },
+    "automatic_fix": {
+      "const": false
+    },
+    "automatic_commit": {
+      "const": false
+    },
+    "automatic_push": {
+      "const": false
+    },
+    "automatic_pull_request": {
+      "const": false
+    },
+    "automatic_merge": {
+      "const": false
+    },
+    "human_review_required": {
+      "const": true
+    },
+    "patch_authority": {
+      "const": "exact_source_spans_and_hashes_only"
+    },
+    "vsa_patch_authority": {
+      "const": false
+    },
+    "index_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repositoryIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repo_head",
+        "working_tree_digest",
+        "codemap_digest",
+        "topology_digest",
+        "topology_version",
+        "topology_health",
+        "connectome_graph_digest",
+        "connectome_version",
+        "atomic_inventory_digest",
+        "atomic_inventory_version",
+        "relation_ontology_digest",
+        "profile_digest",
+        "schema_digest"
+      ],
+      "properties": {
+        "repo_head": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "working_tree_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "codemap_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "topology_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "topology_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "topology_health": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "connectome_graph_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "connectome_version": {
+          "const": "AURA_CAPABILITY_CONNECTOME_V2"
+        },
+        "atomic_inventory_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "atomic_inventory_version": {
+          "const": "AURA_ATOMIC_FUNCTION_INVENTORY_V1"
+        },
+        "relation_ontology_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "profile_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        },
+        "schema_digest": {
+          "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "budgets",
+        "profile_digest"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "MINIMAL",
+            "STANDARD",
+            "DEEP"
+          ]
+        },
+        "budgets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_group_relations",
+            "max_group_participants"
+          ],
+          "properties": {
+            "max_group_relations": {
+              "type": "integer",
+              "minimum": 1
+            },
