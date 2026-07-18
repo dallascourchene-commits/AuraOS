@@ -1,0 +1,15 @@
+ndidate rule |
++|---|---|---|
++| CLI build duplicated the full index in JSON output | Operational scale / bounded output | `cli_operational_boundedness` |
++| Status/validate retained stored and rebuilt full indexes | Resource lifetime / identity-only validation | `scale_resource_safety` |
++| Participant lookup omitted self and incident relations | Behavioral reverse-index incompleteness | `reverse_index_completeness` |
++| `topology_health` omitted from runtime freshness and `0.0` lost | Runtime/schema parity and falsy-value preservation | `runtime_schema_parity` |
++| Windows drives and symlink parents could escape | Resolved workspace containment | `workspace_path_containment` |
++| Nested extra keys accepted despite schema prohibition | Runtime/schema parity | `runtime_schema_parity` |
++| Profile name, budgets, and digest could disagree | Compound identity contract | `profile_identity_integrity` |
++| Post-write and linked reads escaped the lock window | Persistence interleaving | `persistence_atomicity` |
++| Exact evidence included advisory Connectome context; advisory role said exact | Truth-class contamination | `truth_class_integrity` |
++| Relation selection violated participant budget | Coupled limits and accounting | `coupled_budget_integrity` |
++| CLI validate forced STANDARD instead of stored profile | Persisted-state/profile mismatch | `profile_identity_integrity` |
++
++The two participant-lookup comments from Codex and CodeRabbit are one shared lesson, not two separat
