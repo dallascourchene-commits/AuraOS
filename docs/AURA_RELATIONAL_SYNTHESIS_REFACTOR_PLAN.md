@@ -358,7 +358,18 @@ Phase 1 Waboose review
 
 ## 9. Phase 2 — AOT relational index
 
-Create `aura_relational_index.py` only after Phase 1 contracts stabilize. Deliver full-body sweep, macro groups, surgical bundles, reverse indexes, build receipt, atomic writes, full/incremental builders, status CLI, and optional CODEMAP refresh hook.
+**Implementation status:** implemented on `feature/aura-relational-index-r2` after Phase 1 stabilization.
+
+Canonical deliverables:
+
+```text
+aura_relational_index.py
+schemas/aura_relational_index.schema.json
+tests/test_aura_relational_index.py
+docs/AURA_RELATIONAL_INDEX.md
+```
+
+The implementation delivers the full-body sweep, macro groups, explicit surgical bundles, reverse indexes, build receipt, atomic writes, conservative full-equivalent incremental refresh, status/validation/query CLI, and a Connectome-visible affordance. The optional CODEMAP refresh hook remains deliberately deferred until operational benchmarks justify automatic coupling.
 
 Initial macro domains:
 
