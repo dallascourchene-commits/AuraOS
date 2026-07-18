@@ -1,0 +1,117 @@
+name: Relational Synthesis R1 Hardening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/relational-synthesis-r1-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' bandit
+
+      - name: Apply fail-closed hardening
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('aura_relational_synthesis.py')
+          source = source_path.read_text(encoding='utf-8')
+
+          def replace_once(old: str, new: str) -> None:
+              global source
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected one source seam, found {count}: {old[:80]!r}')
+              source = source.replace(old, new, 1)
+
+          replace_once('_TEST_PATH_MARKERS = ("/test_", "/tests/", "test_")\n', '')
+          replace_once(
+              '''def _is_test_path(path: str) -> bool:\n    normalized = f"/{path.lower().lstrip('/')}"\n    return any(marker in normalized for marker in _TEST_PATH_MARKERS)\n''',
+              '''def _is_test_path(path: str) -> bool:\n    parts = str(path).replace("\\\\", "/").lower().split("/")\n    return any(\n        part == "tests" or part.startswith("test_") or part.endswith("_test.py")\n        for part in parts\n    )\n''',
+          )
+          replace_once(
+              '''        expected_repo_head: str | None = None,\n        expected_packet_digest: str | None = None,\n        expected_inventory_digest: str | None = None,\n''',
+              '''        expected_repo_head: str,\n        expected_packet_digest: str,\n        expected_inventory_digest: str,\n''',
+          )
+          replace_once(
+              '''    expected_repo_head: str | None = None,\n    expected_packet_digest: str | None = None,\n    expected_inventory_digest: str | None = None,\n''',
+              '''    expected_repo_head: str,\n    expected_packet_digest: str,\n    expected_inventory_digest: str,\n''',
+          )
+          replace_once(
+              '''        slice_by_node = {item["node_id"]: item for item in source_slices}\n\n        participants: dict[str, RelationalParticipant] = {}\n''',
+              '''        slice_by_node = {item["node_id"]: item for item in source_slices}\n        selected_node_ids = {\n            _required_text(item.get("node_id"), "selected node_id")\n            for item in selected\n        }\n        if set(slice_by_node) != selected_node_ids:\n            raise ValueError(\n                "source_slices must match selected atomic functions exactly"\n            )\n\n        participants: dict[str, RelationalParticipant] = {}\n''',
+          )
+          replace_once(
+              '''            for field_name in ("file_path", "source_hash"):\n                if record.get(field_name) != span.get(field_name):\n                    raise ValueError(\n                        f"selected atomic identity disagrees with source slice: {node_id}"\n                    )\n''',
+              '''            for field_name in (\n                "file_path",\n                "symbol",\n                "kind",\n                "line_start",\n                "line_end",\n                "source_hash",\n            ):\n                if record.get(field_name) != span.get(field_name):\n                    raise ValueError(\n                        f"selected atomic identity disagrees with source slice: {node_id}"\n                    )\n''',
+          )
+          replace_once(
+              '''    if expected_repo_head is not None and packet["repo_head"] != expected_repo_head:\n        raise ValueError("stale evidence packet repository HEAD")\n    if (\n        expected_packet_digest is not None\n        and packet["packet_digest"] != expected_packet_digest\n    ):\n        raise ValueError("evidence packet digest mismatch")\n    if (\n        expected_inventory_digest is not None\n        and atomic_inventory["inventory_digest"] != expected_inventory_digest\n    ):\n        raise ValueError("atomic inventory digest mismatch")\n''',
+              '''    expected_repo_head = _required_text(expected_repo_head, "expected_repo_head")\n    expected_packet_digest = _required_text(\n        expected_packet_digest, "expected_packet_digest"\n    )\n    expected_inventory_digest = _required_text(\n        expected_inventory_digest, "expected_inventory_digest"\n    )\n    if packet["repo_head"] != expected_repo_head:\n        raise ValueError("stale evidence packet repository HEAD")\n    if packet["packet_digest"] != expected_packet_digest:\n        raise ValueError("evidence packet digest mismatch")\n    if atomic_inventory["inventory_digest"] != expected_inventory_digest:\n        raise ValueError("atomic inventory digest mismatch")\n''',
+          )
+          replace_once(
+              '''        if key in seen_edges:\n            continue\n        seen_edges.add(key)\n''',
+              '''        if key in seen_edges:\n            raise ValueError("dependency_edges contain duplicate exact relations")\n        seen_edges.add(key)\n''',
+          )
+          source_path.write_text(source, encoding='utf-8')
+
+          test_path = Path('tests/test_aura_relational_synthesis.py')
+          tests = test_path.read_text(encoding='utf-8')
+          tests = tests.replace(
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_repo_head="0" * 40,\n        )\n''',
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_repo_head="0" * 40,\n            expected_packet_digest=packet["packet_digest"],\n            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],\n        )\n''',
+          )
+          tests = tests.replace(
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_packet_digest="0" * 40,\n        )\n''',
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_repo_head=packet["repo_head"],\n            expected_packet_digest="0" * 40,\n            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],\n        )\n''',
+          )
+          tests = tests.replace(
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_inventory_digest="0" * 40,\n        )\n''',
+              '''        compiler.compile(\n            packet,\n            intent_packet=_intent(),\n            expected_repo_head=packet["repo_head"],\n            expected_packet_digest=packet["packet_digest"],\n            expected_inventory_digest="0" * 40,\n        )\n''',
+          )
+          tests = tests.replace(
+              '''        RelationalSynthesisShadowCompiler().compile(\n            _packet(),\n            intent_packet=other,\n        )\n''',
+              '''        packet = _packet()\n        RelationalSynthesisShadowCompiler().compile(\n            packet,\n            intent_packet=other,\n            expected_repo_head=packet["repo_head"],\n            expected_packet_digest=packet["packet_digest"],\n            expected_inventory_digest=packet["atomic_inventory"]["inventory_digest"],\n        )\n''',
+          )
+          marker = 'def test_test_path_detection_does_not_classify_latest_module_as_test()'
+          if marker not in tests:
+              tests += '''\n\ndef test_test_path_detection_does_not_classify_latest_module_as_test() -> None:\n    packet = _packet()\n    packet["atomic_inventory"]["selected_atomic_functions"][3]["file_path"] = (\n        "latest_feature.py"\n    )\n    packet["source_slices"][3]["file_path"] = "latest_feature.py"\n    packet["source_slices"][3]["file_source_hash"] = "7" * 64\n    capsule = _compile(packet)\n    participant = next(\n        item\n        for item in capsule.participants\n        if item.qualified_symbol == "test_scope_is_bounded"\n    )\n    assert participant.truth_class is TruthClass.EXACT_SOURCE\n\n\ndef test_selected_and_source_slice_identities_must_match_exactly() -> None:\n    packet = _packet()\n    packet["source_slices"][0]["line_end"] += 1\n    with pytest.raises(ValueError, match="identity disagrees"):\n        _compile(packet)\n\n    packet = _packet()\n    packet["source_slices"].append(\n        {\n            **deepcopy(packet["source_slices"][0]),\n            "node_id": "extra.py#function:extra:9999999999999999",\n            "file_path": "extra.py",\n            "symbol": "extra",\n            "qualified_symbol": "extra",\n            "source_hash": "6" * 64,\n            "file_source_hash": "7" * 64,\n        }\n    )\n    with pytest.raises(ValueError, match="must match selected"):\n        _compile(packet)\n\n\ndef test_duplicate_exact_dependency_edge_is_rejected() -> None:\n    packet = _packet()\n    packet["dependency_edges"].append(deepcopy(packet["dependency_edges"][0]))\n    with pytest.raises(ValueError, match="duplicate exact relations"):\n        _compile(packet)\n\n\ndef test_expected_freshness_identities_are_required() -> None:\n    packet = _packet()\n    with pytest.raises(TypeError):\n        RelationalSynthesisShadowCompiler().compile(\n            packet,\n            intent_packet=_intent(),\n        )\n'''
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
+      - name: Validate hardening
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+          ruff check --select E9,F63,F7,F82 aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          bandit -q -ll aura_relational_synthesis.py
+
+      - name: Commit and push hardened permanent files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          git diff --cached --check
+          git commit -m 'Harden relational synthesis exact identity boundaries'
+          git push origin HEAD:feature/aura-relational-synthesis-r1
