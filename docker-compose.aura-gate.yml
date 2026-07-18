@@ -1,0 +1,88 @@
+services:
+  aura-gate:
+    build:
+      context: "${AURA_GATE_REPO_ROOT:?set AURA_GATE_REPO_ROOT to the AuraOS checkout}"
+      dockerfile: Dockerfile.aura-gate
+      args:
+        AURA_GATE_BASE_IMAGE: "${AURA_GATE_BASE_IMAGE:?set an immutable image reference containing @sha256:<64hex>}"
+    network_mode: host
+    user: "65532:65532"
+    working_dir: /opt/aura/repo
+    environment:
+      AURA_GATE_REPO_ROOT: /opt/aura/repo
+      AURA_GATE_POLICY_FILE: /run/aura-gate/policy.json
+      AURA_GATE_OIDC_FILE: /run/aura-gate/oidc.json
+      AURA_GATE_JWKS_FILE: /run/aura-gate/jwks.json
+      AURA_GATE_ACTOR_SALT_FILE: /run/aura-gate/actor-salt
+      AURA_GATE_STATE_ROOT: /var/lib/aura-gate/state
+      AURA_GATE_AUDIT_ROOT: /var/lib/aura-gate/audit
+      AURA_GATE_SIEM_ROOT: /var/lib/aura-gate/siem
+      AURA_GATE_POLICY_ID: "${AURA_GATE_POLICY_ID:?set the exact content-addressed policy ID}"
+      AURA_GATE_HOST: "127.0.0.1"
+      AURA_GATE_PORT: "${AURA_GATE_PORT:?set the loopback Aura Gate port}"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - type: bind
+        source: "${AURA_GATE_REPO_ROOT:?set AURA_GATE_REPO_ROOT to the AuraOS checkout}"
+        target: /opt/aura/repo
+        read_only: true
+      - type: bind
+        source: "${AURA_GATE_POLICY_FILE:?set AURA_GATE_POLICY_FILE to the policy JSON}"
+        target: /run/aura-gate/policy.json
+        read_only: true
+      - type: bind
+        source: "${AURA_GATE_OIDC_FILE:?set AURA_GATE_OIDC_FILE to the OIDC JSON}"
+        target: /run/aura-gate/oidc.json
+        read_only: true
+      - type: bind
+        source: "${AURA_GATE_JWKS_FILE:?set AURA_GATE_JWKS_FILE to the pinned public JWKS JSON}"
+        target: /run/aura-gate/jwks.json
+        read_only: true
+      - type: bind
+        source: "${AURA_GATE_ACTOR_SALT_FILE:?set AURA_GATE_ACTOR_SALT_FILE to the local salt secret}"
+        target: /run/aura-gate/actor-salt
+        read_only: true
+      - type: bind
+        source: "${AURA_GATE_STAGING_ROOT:?set the dedicated writable Aura_Staging directory}"
+        target: /opt/aura/repo/Aura_Staging
+      - type: volume
+        source: aura_gate_state
+        target: /var/lib/aura-gate/state
+      - type: volume
+        source: aura_gate_audit
+        target: /var/lib/aura-gate/audit
+      - type: volume
+        source: aura_gate_siem
+        target: /var/lib/aura-gate/siem
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    pids_limit: 128
+    mem_limit: "${AURA_GATE_MEMORY_LIMIT:?set a Docker memory limit such as 1g}"
+    memswap_limit: "${AURA_GATE_MEMORY_LIMIT:?set a Docker memory limit such as 1g}"
+    cpus: "${AURA_GATE_CPU_LIMIT:?set a Docker CPU limit such as 1.0}"
+    restart: "no"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ['AURA_GATE_PORT'] + '/health', timeout=2).read()"
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  aura_gate_state:
+    name: "${AURA_GATE_STATE_VOLUME:?set a dedicated durable state volume name}"
+  aura_gate_audit:
+    name: "${AURA_GATE_AUDIT_VOLUME:?set a separate durable audit volume name}"
+  aura_gate_siem:
+    name: "${AURA_GATE_SIEM_VOLUME:?set a separate SIEM export volume name}"

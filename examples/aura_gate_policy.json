@@ -1,0 +1,87 @@
+{
+  "policy_id": "GATE-POLICY-sha256:669a9506f108c6d51f7f0d131d83eccc55f71643b8036083ac9b27c93231dcb1",
+  "name": "forge-private-review-example",
+  "allowed_purpose_digests": [
+    "sha256:42fd85e3cb328573b39b84974b69cf0b6becbdd222dac342df5ee2468b0a3422"
+  ],
+  "allowed_capabilities": [
+    "FORGE_REVOKE",
+    "FORGE_START",
+    "FORGE_STATUS",
+    "FORGE_SUBMIT",
+    "PROPOSE.PATCH",
+    "READ.REPOSITORY",
+    "RUN.TESTS"
+  ],
+  "allowed_files": [
+    "aura_forge.py",
+    "tests/test_aura_forge.py"
+  ],
+  "allowed_destinations": [
+    "local-private-runtime"
+  ],
+  "allowed_providers": [
+    "operator-configured-private-provider"
+  ],
+  "allowed_models": [
+    "operator-configured-model"
+  ],
+  "allowed_data_classes": [
+    "BOUNDED_SOURCE_CONTEXT",
+    "OBJECTIVE"
+  ],
+  "allowed_egress_fields": [
+    "act_capsule",
+    "allowed_files",
+    "compressed_context",
+    "context_token_estimate",
+    "created_at",
+    "do_not_touch",
+    "failure_packet",
+    "gate",
+    "instruction",
+    "max_output_tokens",
+    "objective",
+    "output_contract",
+    "patch_authority",
+    "production_mutation",
+    "role",
+    "session_id",
+    "source_slices",
+    "task_id",
+    "test_slices",
+    "turn_id",
+    "turn_index",
+    "version",
+    "vsa_patch_authority"
+  ],
+  "allowed_retention_classes": [
+    "ephemeral-no-training"
+  ],
+  "allowed_protocols": [
+    "A2A",
+    "MCP",
+    "NATIVE"
+  ],
+  "required_verifiers": [
+    "canonical_arena_verifier",
+    "hotswap_readiness"
+  ],
+  "required_roles": [
+    "aura-forge-operator"
+  ],
+  "required_groups": [],
+  "max_lease_ttl_seconds": 900.0,
+  "max_payload_bytes": 64000,
+  "max_token_estimate": 16000,
+  "max_context_tokens": 2200,
+  "max_output_tokens": 2400,
+  "max_turns": 12,
+  "max_local_repairs": 2,
+  "max_provider_calls": 12,
+  "private_only": true,
+  "human_review_required": true,
+  "production_mutation": false,
+  "automatic_promotion": false,
+  "version": "AURA_GATE_POLICY_V1"
+}

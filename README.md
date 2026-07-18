@@ -38,6 +38,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Human Agent Arena** | Runs `FRAME → GROUND → PLAN → ACT → PROVE → DECIDE` with exact evidence and human gates | Guarded execution and review; no automatic merge |
 | **Coding Workbench / Coding Arena** | Localizes code, ranks bounded regions, builds change graphs, prepares capsules, and verifies candidate work | Exact source spans and hashes remain patch authority |
 | **Aura Forge** | Compiles a frozen Coding Arena plan and Arena Evidence Contract, then runs bounded Council–Surgeon slice sessions | Stops at verifier-backed human review; no automatic commit, PR, merge, or production mutation |
+| **Aura Gate** | Wraps an exact Forge contract with verified OIDC identity, static policy, expiring leases, governed egress, MCP/A2A adapters, comparisons, and append-only audit evidence | Private Forge-specific proof; no identity-in-body trust, automatic promotion, or release authority |
 | **Coding Waboose** | Computes exact diff/symbol/dependency impact, runs deterministic scans, and lets coding agents steer run-specific evidence review | Review only; agent findings cannot self-confirm or mutate, commit, push, open, or merge |
 | **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows and external-agent handoffs | External agents remain workers, not authorities |
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
@@ -75,6 +76,34 @@ no ambient repository or release authority.
 
 See [`docs/AURA_FORGE.md`](docs/AURA_FORGE.md).
 <!-- AURA_FORGE_V1:END -->
+
+<!-- AURA_GATE_PHASE2:START -->
+## Aura Gate — Sovereign Agent Governance Gateway
+
+Aura Gate Phase 2 wraps the retained Forge prepare/start boundary with an exact authority
+envelope. It verifies OIDC identity offline against an operator-pinned RS256 JWKS, derives
+a deployment-local pseudonymous actor reference, admits only content-addressed static
+policy, issues a bounded Arena lease, and starts only the frozen Forge contract ID and
+digest. Forge actions, egress releases, and lease transitions carry append-only pre-action
+evidence, and every worker payload passes through a purpose-, destination-, data-,
+retention-, and budget-bound egress capsule.
+
+```text
+verified identity + exact purpose + static policy
+  → Forge prepare
+  → Gate authority envelope + expiring lease
+  → exact Forge start
+  → governed MCP/A2A turns
+  → verifier-backed human-review packet
+  → dissolution or explicit revocation
+```
+
+The current proof is Forge-specific OIDC/private single-node deployment. SAML/SCIM,
+HA/Kubernetes, arbitrary-domain policy, and vendor-certified SIEM integration are deferred.
+It never commits, pushes, creates a pull request, merges, releases, or promotes policy.
+
+See [`docs/AURA_GATE.md`](docs/AURA_GATE.md).
+<!-- AURA_GATE_PHASE2:END -->
 
 <!-- AURA_CODING_WABOOSE_V1:START -->
 ## Coding Waboose — graph-guided code review
@@ -289,6 +318,10 @@ Representative current evidence includes:
 - exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, `24/24` regression;
 - context-localization proxy: `89.04%` lower total proxy with quality `+0.0057`;
 - Selective Council V3: `32.83%` lower total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
+- Aura Gate Phase 2 instrumented Agent Bridge + Council V3 scope: `37,907` input,
+  `1,852` output, and `39,759` total token proxy, with `51,987` estimated saved
+  (`56.66%`) against the documented counterfactual; full Codex-session provider totals
+  were unavailable, so this is not billing evidence;
 - State Ledger synthetic continuity: `96.19%` less step-7 context, preservation `1.0000`, drift `0.0000`;
 - shared grounding evidence: `53.1936%` projected structural savings, explicitly `ESTIMATED` rather than provider billing.
 
@@ -369,6 +402,8 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`USER_GUIDE.md`](USER_GUIDE.md) — installation, operating workflows, commands, APIs, testing, and troubleshooting
 - [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) — canonical ownership, planes, data flows, contracts, and authority model
 - [`.aura/CODEMAP.md`](.aura/CODEMAP.md) — current compact repository navigation
+- [`docs/AURA_GATE.md`](docs/AURA_GATE.md) — Phase 2 authority flow, identity, policy, protocols, deployment, audit, and proof limits
+- [`docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md`](docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md) — operation-DAG, parallel-wave, quality, speed, and token-efficiency recommendations for Council V3.1
 - [`docs/AURA_HUMAN_AGENT_ARENA.md`](docs/AURA_HUMAN_AGENT_ARENA.md)
 - [`docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md`](docs/AURA_OBSERVATORY_CRUCIBLE_HANDOFF.md)
 - [`docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md`](docs/AURA_EXTERNAL_LLM_SLICE_SESSIONS.md)

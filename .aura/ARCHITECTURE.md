@@ -345,6 +345,58 @@ Forge cannot commit, push, open a pull request, merge, mutate production, or con
 hotswap readiness into promotion authority.
 <!-- AURA_FORGE_V1:END -->
 
+<!-- AURA_GATE_PHASE2:START -->
+#### Aura Gate authority envelope
+
+Aura Gate is the Phase 2 governance wrapper around the retained Forge contract and
+canonical Arena lease. It does not become a second planner, Forge runtime, event store,
+identity provider, egress transport, verifier, or promotion path.
+
+```text
+private OIDC boundary
+  → offline pinned-RS256 identity verification
+  → exact purpose + content-addressed static policy
+  → Forge prepare
+  → GateAuthorityEnvelope(exact Forge contract ID + digest)
+  → append PRE_ACTION event + issue expiring Arena lease
+  → reauthorize identity/policy/audit/lease
+  → Forge start_prepared(exact retained contract)
+  → purpose-limited canonical egress bytes + capsule
+  → verifier-backed READY_FOR_HUMAN_REVIEW
+  → dissolution, expiry, or explicit revocation
+```
+
+Canonical owners are deliberately separated:
+
+- `aura_gate.py` owns Forge-specific policy admission, authority envelopes, and durable
+  lease transitions, including one-use actor/policy/request-nonce indexing and outbound
+  Gate-release budgets;
+- `aura_gate_oidc.py` owns offline OIDC verification and pseudonymous actor references;
+- `aura_gate_egress.py` owns exact admitted bytes and content-addressed egress capsules;
+- `aura_gate_audit.py` adapts Gate events to the canonical append-only event/payload
+  owners and chained authority receipts;
+- `aura_gate_comparison.py` owns shadow and one-use-authorized paired-live evidence;
+- `aura_gate_adapters.py` owns the Gate-only MCP 2025-06-18 and A2A v1.0 projections;
+- `aura_gate_server.py` owns the fixed-route private HTTP/OIDC boundary;
+- `aura_forge.py` retains preparation, staging, verification, and human-review ownership.
+
+`VerifiedGateIdentity` is an injected trust-boundary value, not a self-authenticating
+credential. The HTTP boundary constructs it only through the pinned verifier. Direct
+Python callers must do the same; protocol-body actor, identity, claims, or authorization
+fields are never authority. Raw bearer tokens and raw OIDC claim documents cannot enter
+Gate audit/SIEM evidence.
+
+The MCP owner is a message-level projection, not a complete authenticated transport. The
+cleartext A2A server is restricted to numeric loopback and is not the HTTPS transport
+required for an A2A production deployment. Persisted Gate authority does not imply
+resumable in-memory Forge sessions after process restart.
+
+The current proof is Forge-specific OIDC/private single-node deployment. SAML/SCIM,
+HA/Kubernetes, arbitrary-domain policy, and vendor-certified SIEM connectors remain
+separate, review-gated programs. Gate cannot commit, push, open a pull request, merge,
+release, activate policy, or promote production state.
+<!-- AURA_GATE_PHASE2:END -->
+
 <!-- AURA_CODING_WABOOSE_V1:START -->
 #### Coding Waboose
 
@@ -575,6 +627,10 @@ Primary owners include:
 | Planning truth | `aura_planning_board.py` and canonical planning contracts | Coding/Civic shadows, history projector | Arena UI state |
 | Event history | Canonical append-only event/sidecar contracts | Planning history, compatibility readers | Mutable summary JSON |
 | Authority | Relational authority, leases, consent, human/community decision | Gate dialogue and UI explanations | Planner, model, score, or Observatory |
+| Forge-specific gateway authority | `aura_gate.py` over exact Forge contract, OIDC identity, static policy, and canonical Arena lease | MCP/A2A Task/tool projections and private HTTP responses | Protocol body, worker, agent card, SIEM export, or comparison preference |
+| Gate identity | `aura_gate_oidc.py` with operator-pinned public JWKS and secret local actor salt | Pseudonymous bounded authority metadata and digests | Raw token/claims document, request body, model output, or mutable session profile |
+| Gate egress | `aura_gate_egress.py` exact canonical bytes and capsule | Protocol response/transport projection | Provider call, destination, or worker claim |
+| Gate audit history | Canonical append-only event/payload owners through `aura_gate_audit.py` plus chained receipts | Deterministic SIEM JSONL projection | SQLite lease status, log stream, or SIEM index |
 | Arena lifecycle | Arena runtime, route, manifest, lease, receipt | Browser/CLI status | Worker process |
 | Code patch evidence | Exact source spans/hashes, staged diff, tests/verifiers | CODEMAP localization, Council plan | VSA/topology/JSpace/ST3GG |
 | Human Agent workflow | Human Agent state and guarded runtime | Showcase/Human browser projections | Observatory or Attempt Archive |
@@ -843,6 +899,12 @@ Evidence must preserve:
 
 No Tier 3 or Tier 4 result becomes Tier 1 without governed execution and verifier evidence.
 
+The Aura Gate Phase 2 Agent Bridge/Council V3 record reports a scoped proxy of `37,907`
+input, `1,852` output, and `39,759` total tokens, with `51,987` (`56.66%`) estimated saved
+against its explicit counterfactual. Full Codex-session provider totals were unavailable.
+This `DERIVED_COUNTERFACTUAL_WITH_CHAR4_TOKEN_PROXY` record is engineering evidence, not
+billing and not a whole-session token total.
+
 ## 15. Deployment and presentation surfaces
 
 Aura supports several deployment/presentation layers:
@@ -855,6 +917,7 @@ Aura supports several deployment/presentation layers:
 - containerized showcase/Render path;
 - Hugging Face public demo path;
 - MCP Agent Bridge;
+- Aura Gate private HTTP/A2A server and Gate-only MCP adapter;
 - Hermes/local-model and optional provider workers;
 - guided Winnipeg Civic demonstration;
 - AR/spatial and broader application-fabric prototypes.
