@@ -1,0 +1,117 @@
+name: PR157 targeted review fixes
+
+on:
+  push:
+    branches:
+      - feature/aura-relational-synthesis-r1
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-and-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-synthesis-r1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply verified review fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          module_path = Path("aura_relational_synthesis.py")
+          module = module_path.read_text(encoding="utf-8")
+
+          old_import = "from aura_event_contracts import canonical_json, stable_digest, stable_id\n"
+          new_import = (
+              "from aura_emergent_evidence_spine import (\n"
+              "    ATOMIC_INVENTORY_VERSION,\n"
+              "    EMERGENT_EVIDENCE_SPINE_VERSION,\n"
+              ")\n"
+              + old_import
+          )
+          if old_import not in module:
+              raise SystemExit("expected event-contract import was not found")
+          module = module.replace(old_import, new_import, 1)
+
+          old_packet_status = '''    if packet.get("status") != "GROUNDED_ATOMIC_CLOSURE":
+              raise ValueError("evidence packet must contain a grounded atomic closure")
+          objective = _required_text(packet.get("objective"), "objective")
+          '''
+          new_packet_status = '''    if packet.get("status") != "GROUNDED_ATOMIC_CLOSURE":
+              raise ValueError("evidence packet must contain a grounded atomic closure")
+          if packet.get("version") != EMERGENT_EVIDENCE_SPINE_VERSION:
+              raise ValueError("unsupported evidence packet version")
+          objective = _required_text(packet.get("objective"), "objective")
+          '''
+          if old_packet_status not in module:
+              raise SystemExit("expected evidence status validation block was not found")
+          module = module.replace(old_packet_status, new_packet_status, 1)
+
+          old_inventory = '''    atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+          _required_text(
+              atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
+          )
+          '''
+          new_inventory = '''    atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+          if atomic_inventory.get("version") != ATOMIC_INVENTORY_VERSION:
+              raise ValueError("unsupported atomic inventory version")
+          _required_text(
+              atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
+          )
+          '''
+          if old_inventory not in module:
+              raise SystemExit("expected atomic inventory validation block was not found")
+          module = module.replace(old_inventory, new_inventory, 1)
+          module_path.write_text(module, encoding="utf-8")
+
+          tests_path = Path("tests/test_aura_relational_synthesis.py")
+          tests = tests_path.read_text(encoding="utf-8")
+          marker = "\ndef test_capability_path_freshness_identity_is_not_fabricated() -> None:\n"
+          regression = '''
+          def test_unsupported_evidence_contract_versions_are_rejected() -> None:
+              packet = _packet()
+              packet["version"] = "AURA_EMERGENT_EVIDENCE_SPINE_V2"
+              with pytest.raises(ValueError, match="unsupported evidence packet version"):
+                  _compile(packet)
+
+              packet = _packet()
+              packet["atomic_inventory"]["version"] = "AURA_ATOMIC_FUNCTION_INVENTORY_V2"
+              with pytest.raises(ValueError, match="unsupported atomic inventory version"):
+                  _compile(packet)
+
+
+          def test_capability_path_freshness_identity_is_not_fabricated() -> None:
+          '''
+          if marker not in tests:
+              raise SystemExit("expected capability-path regression marker was not found")
+          tests = tests.replace(marker, "\n" + regression, 1)
+          tests_path.write_text(tests, encoding="utf-8")
+          PY
+
+      - name: Install focused test dependencies
+        run: python -m pip install --disable-pip-version-check pytest jsonschema
+
+      - name: Run relational synthesis tests
+        run: python -m pytest -q tests/test_aura_relational_synthesis.py
+
+      - name: Compile changed Python files
+        run: python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+
+      - name: Commit fixes and remove temporary workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/pr157-targeted-review-fixes.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py .github/workflows/pr157-targeted-review-fixes.yml
+          git commit -m "fix: enforce relational evidence contract versions"
+          git push origin HEAD:feature/aura-relational-synthesis-r1
