@@ -15,6 +15,20 @@ def replace_between(path: str, start_marker: str, end_marker: str, replacement: 
     target.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
 
 
+def normalize_mcp_python_literals() -> None:
+    path = Path("aura_agent_arena_mcp.py")
+    text = path.read_text(encoding="utf-8")
+    required = {
+        '"default": true': '"default": True',
+        '"default": false': '"default": False',
+    }
+    for old, new in required.items():
+        if old not in text:
+            raise SystemExit(f"missing generated MCP literal: {old}")
+        text = text.replace(old, new)
+    path.write_text(text, encoding="utf-8")
+
+
 def main() -> None:
     # The first integration layer owns the three helper methods immediately
     # above this function. This refinement replaces only the resolver body so
@@ -152,6 +166,7 @@ def main() -> None:
 
 ''',
     )
+    normalize_mcp_python_literals()
 
 
 if __name__ == "__main__":
