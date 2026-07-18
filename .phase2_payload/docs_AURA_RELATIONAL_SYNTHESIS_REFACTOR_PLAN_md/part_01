@@ -1,0 +1,145 @@
+Broad file-only seeding is valid for inventory browsing, but must not be the primary precision path for an evidence-complete relational capsule.
+
+The refined grounding receipt binds exact slices for:
+
+- `AuraEmergentEvidenceSpine.run`;
+- `build_atomic_function_inventory`;
+- `_assemble_packet`;
+- `_source_slice`;
+- `PolysyntheticIntentPacket.from_slots`;
+- `PolysyntheticIntentPacket.canonical_dict`;
+- `PolysyntheticIntentPacket.digest`;
+- `ExecutableRouteCapsule.from_dict`;
+- `ExecutableRouteCapsule.canonical_dict`;
+- `ExecutableRouteCapsule.digest`;
+- `CodingArenaCompatibilityReport.__post_init__`;
+- `CodingArenaCompatibilityReport.to_dict`;
+- `CodeTopoNode.to_dict`;
+- `CodeTopoEdge.to_dict`;
+- `canonical_json`;
+- `stable_digest`;
+- `stable_id`.
+
+### 4.1 Test proof correction
+
+An Evidence Spine packet may contain an exact test filename without exposing the exact callable that owns a test edge or the invariant it proves.
+
+```text
+test filename ≠ exact test callable proof
+```
+
+Phase 1 must preserve exact test callables when present, mark filename-only ownership `UNRESOLVED`, emit a proof obligation rather than fabricating a callable relation, and carry the gap into the omitted-boundary record.
+
+---
+
+## 5. Architecture containers
+
+| Container | Canonical owner and phase | Role |
+|---|---|---|
+| C0 Exact Self-Model | CODEMAP, topology, CodeTopoAnchor | exact IDs, spans, hashes, calls, imports, tests |
+| C1 Capability Anatomy | Connectome V1/V2, Resolver V2, Affordance Directory | reuse and advisory capability paths |
+| C2 Materialized Relational Anatomy | future `aura_relational_index.py`, Phase 2 | generated AOT cache and reverse indexes |
+| C3 Objective Relational Synthesis | `aura_relational_synthesis.py`, Phase 1+ | digest-pinned objective view |
+| C4 Coding Diagnostic Circuit | Waboose, Review Arena, Breadboard, Phase 4 | relational review circuits |
+| C5 External Worker Lease | Agent Bridge, MCP, persistence, Phase 5 | bounded worker projection |
+| C6 Evidence and Verification | tests, verifiers, receipts | proof, not authorization |
+| C7 Governed Relational Learning | Waboose Learning, DREAM-lite, QDKT, Crucible, Phase 7 | verified motif learning |
+| C8 Observatory/Human Projection | Observatory and Human Agent, Phase 8 | explanation only |
+
+---
+
+## 6. Canonical authority invariants
+
+```yaml
+atomic_source_identity_is_exact: true
+relational_capsule_is_compiled_view: true
+relational_capsule_is_patch_authority: false
+connectome_is_advisory: true
+emergent_motifs_are_advisory_until_reproved: true
+tensor_projection_is_advisory: true
+agent_proposed_relations_are_not_exact: true
+planning_proposes: true
+verification_proves: true
+human_authorizes: true
+safe_to_patch: false
+production_mutation: false
+automatic_fix: false
+automatic_commit: false
+automatic_push: false
+automatic_pull_request: false
+automatic_merge: false
+human_review_required: true
+patch_authority: exact_source_spans_and_hashes_only
+vsa_patch_authority: false
+```
+
+---
+
+## 7. Core V1 contracts
+
+### 7.1 Truth classes
+
+```text
+EXACT_SOURCE
+EXACT_SCHEMA
+EXACT_TEST
+EXACT_MANIFEST
+EXACT_RUNTIME
+ADVISORY_CONNECTOME
+ADVISORY_AFFINITY
+INFERRED_MOTIF
+UNRESOLVED
+```
+
+Exact classes require current digests and evidence references. Unresolved participants must not carry exactness.
+
+### 7.2 Relational participant
+
+A participant binds deterministic ID, participant type, role, truth class, canonical owner/ref, current digest when exact, evidence refs, freshness, qualified symbol, and bounded metadata. Identity is based on canonical identity—not current role—so one participant may hold different roles without becoming duplicate truth.
+
+### 7.3 Typed relation
+
+A relation binds deterministic ID, relation type, source/target participant IDs, truth class, evidence refs, and metadata. Every emitted endpoint must be present; exact relations require evidence.
+
+### 7.4 Relational group
+
+A group is an n-ary role-labelled configuration containing role bindings, typed relations, predicates, temporal conditions, authority constraints, proof obligations, boundary, canonical owner refs, and deterministic ID/digest. V1 uses immutable serializable data; no hypergraph dependency is required.
+
+### 7.5 Proof obligation and boundary
+
+Proof status is `OPEN`, `SATISFIED`, `CONTRADICTED`, or `DEFERRED`. A satisfied obligation must carry evidence.
+
+Every group and capsule records included IDs, omitted relation count, omitted counts by reason, unresolved relations, budget truncation, and endpoint completeness. Omitted counts must balance exactly.
+
+### 7.6 Relational Synthesis Capsule
+
+The capsule binds objective and digest, canonical six-slot intent packet/digest, repository HEAD, inventory and Connectome digests, source Evidence Spine packet identity, participants, groups, source slices, tests, active Arena, boundary, explicit false authority fields, and deterministic capsule ID/digest.
+
+---
+
+## 8. Phase 1 — Contracts and shadow compiler
+
+### Deliverables
+
+Committed PR artifacts:
+- `aura_relational_synthesis.py`;
+- `schemas/aura_relational_participant.schema.json`;
+- `schemas/aura_relational_group.schema.json`;
+- `schemas/aura_relational_synthesis_capsule.schema.json`;
+- `tests/test_aura_relational_synthesis.py`;
+- this upgraded plan.
+
+External validation steps (not committed):
+- exact grounding receipt;
+- validation and Waboose evidence;
+- temporary workflow removal;
+- CODEMAP refresh for touched paths.
+
+### Compiler input and limits
+
+The compiler accepts a supplied, successful, exactly grounded `AuraEmergentEvidenceSpine` packet plus a canonical `PolysyntheticIntentPacket`.
+
+It must not crawl the repository independently, create a second source inventory, execute a model, mutate Waboose or Agent Bridge, write an AOT index, or authorize repair.
+
+It fails closed on mismatched repository HEAD, packet digest, inventory digest, objective/intent binding, source identity, qualified symbol, source hash, relation endpoint, duplicate ID, or authority field.
+
