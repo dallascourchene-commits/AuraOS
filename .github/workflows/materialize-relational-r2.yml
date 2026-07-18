@@ -1,0 +1,104 @@
+name: Materialize Relational Synthesis R2
+
+on:
+  pull_request:
+    types: [reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.ref == 'feature/aura-relational-index-r2'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-index-r2
+          fetch-depth: 0
+
+      - name: Assemble and verify canonical module
+        shell: bash
+        run: |
+          cat .phase2_src/index.part* > aura_relational_index.py
+          echo '0e59e5e3a214140fcf54ca8043394c5573d5befcd3a469b78c701d47c31ef9d3  aura_relational_index.py' | sha256sum -c -
+          python -m py_compile aura_relational_index.py tests/test_aura_relational_index.py
+
+      - name: Apply bounded registry and plan edits
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          affordance_path = Path('aura_affordance_directory.py')
+          affordance = affordance_path.read_text(encoding='utf-8')
+          marker = '    {\n        "id": "aura.research_arxiv_memory",'
+          block = '''    {
+              "id": "aura.relational.index",
+              "name": "Relational Anatomy Index",
+              "description": "Builds and queries the deterministic generated Phase 2 AOT relational anatomy index over exact CodeTopo participants and advisory Capability Connectome declarations.",
+              "status": "active",
+              "tags": ["relational", "index", "aot", "anatomy", "connectome", "codetopo", "reverse_index", "freshness"],
+              "when_to_use": "When a coding or Agent Bridge run needs fast, freshness-pinned lookup of exact structural relations, capability implementations, macro domains, or explicit cross-domain bundles before JIT objective synthesis.",
+              "when_not_to_use": "When current source is stale, when an objective-specific capsule is required, or when asking for patch/route authority. Rebuild or use exact CodeTopo and Relational Synthesis instead.",
+              "implemented_by": ["aura_relational_index.py"],
+              "symbols": ["RelationalIndex", "RelationalIndexBuilder", "RelationalIndexStore", "build_relational_index", "refresh_relational_index", "query_relational_index", "relational_index_status"],
+              "tests": ["tests/test_aura_relational_index.py"],
+              "docs": ["docs/AURA_RELATIONAL_INDEX.md", "docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md"],
+              "commands": ["python -m aura_relational_index build", "python -m aura_relational_index status", "python -m aura_relational_index query"],
+              "requires": [".aura/CODEMAP.json", "Aura_Memory/live_topology_ast.json", "Capability Connectome V2", "atomic function inventory"],
+              "outputs": ["relational_index", "relational_index_receipt", "macro_groups", "surgical_bundles", "reverse_indexes", "freshness_status"],
+              "related_affordances": ["aura.coding_arena.topology", "aura.concept_workspace", "aura.agent_arena.bridge", "aura.emergent_potential.audit", "aura.coding_waboose.learning"],
+              "safety": "Generated navigation/cache only. Exact relations require CodeTopo evidence; Connectome relations remain advisory. No patch, route, model, verifier, learning, commit, PR, or merge authority.",
+              "patch_authority": False,
+              "vsa_patch_authority": False,
+              "prompt_card": "Use Relational Anatomy Index for freshness-pinned AOT relationship lookup, then revalidate exact source before JIT relational synthesis.",
+          },
+          '''
+          if '"id": "aura.relational.index"' not in affordance:
+              if marker not in affordance:
+                  raise SystemExit('affordance insertion marker not found')
+              affordance = affordance.replace(marker, block + marker, 1)
+              affordance_path.write_text(affordance, encoding='utf-8')
+
+          plan_path = Path('docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md')
+          plan = plan_path.read_text(encoding='utf-8')
+          old = '''## 9. Phase 2 — AOT relational index
+
+          Create `aura_relational_index.py` only after Phase 1 contracts stabilize. Deliver full-body sweep, macro groups, surgical bundles, reverse indexes, build receipt, atomic writes, full/incremental builders, status CLI, and optional CODEMAP refresh hook.
+
+          Initial macro domains:
+          '''
+          new = '''## 9. Phase 2 — AOT relational index
+
+          **Implementation status:** implemented on `feature/aura-relational-index-r2` after Phase 1 stabilization.
+
+          Canonical deliverables:
+
+          ```text
+          aura_relational_index.py
+          schemas/aura_relational_index.schema.json
+          tests/test_aura_relational_index.py
+          docs/AURA_RELATIONAL_INDEX.md
+          ```
+
+          The implementation delivers the full-body sweep, macro groups, explicit surgical bundles, reverse indexes, build receipt, atomic writes, conservative full-equivalent incremental refresh, status/validation/query CLI, and a Connectome-visible affordance. The optional CODEMAP refresh hook remains deliberately deferred until operational benchmarks justify automatic coupling.
+
+          Initial macro domains:
+          '''
+          if old not in plan:
+              raise SystemExit('Phase 2 plan replacement marker not found')
+          plan_path.write_text(plan.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Remove staging and commit permanent implementation
+        shell: bash
+        run: |
+          rm -rf .phase2_src
+          rm -f .github/workflows/materialize-relational-r2.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Relational Synthesis R2: materialize deterministic AOT index'
+          git push origin HEAD:feature/aura-relational-index-r2
