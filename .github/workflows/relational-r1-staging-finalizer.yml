@@ -1,0 +1,390 @@
+name: Relational R1 Staging Finalizer
+
+on:
+  pull_request:
+    branches:
+      - staging/relational-r1-finalize
+    paths:
+      - .aura/triggers/relational-r1-finalize
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out exact Phase 1 branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-synthesis-r1
+          fetch-depth: 0
+          path: target
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: target/requirements.txt
+
+      - name: Verify expected Phase 1 head
+        working-directory: target
+        run: |
+          test "$(git rev-parse HEAD)" = "79dfa03e1d2959466814e6e00cdcdf13b9f68ae2"
+          test -z "$(git status --porcelain)"
+
+      - name: Install validation dependencies
+        working-directory: target
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' bandit
+
+      - name: Make missing role bindings explicitly unresolved
+        working-directory: target
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('aura_relational_synthesis.py')
+          source = source_path.read_text(encoding='utf-8')
+          old = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            f"candidate_{role}" if role in name_derived_roles else role,
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          new = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            (
+                f"candidate_{role}"
+                if role in name_derived_roles
+                else (
+                    f"unresolved_{role}"
+                    if item.truth_class is TruthClass.UNRESOLVED
+                    else role
+                )
+            ),
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          if source.count(old) != 1:
+              raise SystemExit('expected one role binding seam')
+          source_path.write_text(source.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('tests/test_aura_relational_synthesis.py')
+          tests = test_path.read_text(encoding='utf-8')
+          marker = 'def test_missing_role_binding_is_explicitly_unresolved()'
+          if marker not in tests:
+              tests += '''
+
+def test_missing_role_binding_is_explicitly_unresolved() -> None:
+    packet = _packet()
+    for record in packet["atomic_inventory"]["selected_atomic_functions"]:
+        if record["symbol"] == "from_value":
+            record["symbol"] = "receive"
+    for span in packet["source_slices"]:
+        if span["qualified_symbol"] == "Request.from_value":
+            span["symbol"] = "receive"
+            span["qualified_symbol"] = "Request.receive"
+
+    capsule = _compile(packet)
+    scope_group = next(
+        item for item in capsule.groups if item.purpose == "input_scope_authority"
+    )
+    binding_roles = {item.role for item in scope_group.role_bindings}
+    assert "unresolved_input_parser" in binding_roles
+    assert "input_parser" not in binding_roles
+    assert "candidate_input_parser" not in binding_roles
+    assert "required_role:input_parser" in scope_group.boundary.unresolved_relations
+'''
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
+      - name: Run permanent Phase 1 gates
+        working-directory: target
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+          ruff check --select E9,F63,F7,F82 aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          bandit -q -ll aura_relational_synthesis.py
+
+      - name: Commit validated semantic refinement locally
+        working-directory: target
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          git diff --cached --check
+          git commit -m 'Make unresolved relational role bindings explicit'
+
+      - name: Compile live exact-head relational evidence
+        working-directory: target
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine
+          from aura_polysynthetic_intent import PolysyntheticIntentPacket
+          from aura_relational_synthesis import (
+              RelationalSynthesisCapsule,
+              RelationalSynthesisShadowCompiler,
+          )
+
+          objective = (
+              'Final Phase 1 review of the read-only relational synthesis compiler: exact qualified '
+              'participant identity, deterministic IDs and serialization, complete relation endpoints, '
+              'required current repository and packet digests, candidate-only name-derived roles, '
+              'explicit unresolved role bindings, callable-level test ownership with open invariant proof, '
+              'strict authority confinement, and no Waboose or Agent Bridge behavior change.'
+          )
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          evidence = AuraEmergentEvidenceSpine(Path('.')).run({
+              'objective': objective,
+              'target_symbols': [
+                  'RelationalSynthesisShadowCompiler.compile',
+                  'RelationalSynthesisCapsule.__post_init__',
+                  'RelationalSynthesisCapsule.to_dict',
+                  'RelationalSynthesisCapsule.from_dict',
+                  'RelationalParticipant.__post_init__',
+                  'RelationalGroup.__post_init__',
+                  '_relations_from_packet',
+                  '_test_group',
+                  '_input_scope_authority_group',
+                  'PolysyntheticIntentPacket.from_slots',
+                  'stable_digest',
+                  'stable_id',
+              ],
+              'target_arena': 'coding_arena',
+              'radius': 1,
+              'max_atomic_nodes': 180,
+              'max_source_lines': 320,
+              'include_source': True,
+              'include_future': False,
+              'include_research_plan': False,
+              'include_offline_research': False,
+          })
+          assert evidence.get('ok') is True, evidence
+          assert evidence.get('grounding_ok') is True, evidence
+          assert evidence.get('repo_head') == head, evidence
+          intent = PolysyntheticIntentPacket.from_slots(
+              {
+                  'DIR': 'IN',
+                  'ASP': 'GROUND',
+                  'CLASS': 'REVIEW',
+                  'SUBJ': 'REPOSITORY_RELATION',
+                  'VOICE': 'HUMAN_AGENT',
+                  'STEM': 'INSPECT',
+              },
+              adjuncts={'grounding': 'exact_current_source', 'risk': 'proposal_only'},
+              objective=objective,
+          )
+          capsule = RelationalSynthesisShadowCompiler().compile(
+              evidence,
+              intent_packet=intent,
+              expected_repo_head=head,
+              expected_packet_digest=evidence['packet_digest'],
+              expected_inventory_digest=evidence['atomic_inventory']['inventory_digest'],
+          )
+          payload = capsule.to_dict()
+          assert RelationalSynthesisCapsule.from_dict(payload).to_dict() == payload
+          groups = {item['purpose']: item for item in payload['groups']}
+          assert set(groups) == {
+              'closure_packet_integrity',
+              'test_proof_ownership',
+              'input_scope_authority',
+          }
+          assert payload['boundary']['all_relation_endpoints_present'] is True
+          assert all(
+              obligation['status'] == 'OPEN'
+              for obligation in groups['test_proof_ownership']['proof_obligations']
+          )
+          scope_roles = {
+              binding['role']
+              for binding in groups['input_scope_authority']['role_bindings']
+          }
+          assert not {'input_parser', 'scope_normalizer', 'packet_assembler'}.intersection(scope_roles)
+          assert any(role.startswith('unresolved_') for role in scope_roles)
+          assert all(
+              obligation['status'] == 'OPEN'
+              for obligation in groups['input_scope_authority']['proof_obligations']
+          )
+          for field, expected in {
+              'shadow_mode': True,
+              'safe_to_patch': False,
+              'production_mutation': False,
+              'automatic_fix': False,
+              'automatic_commit': False,
+              'automatic_push': False,
+              'automatic_pull_request': False,
+              'automatic_merge': False,
+              'human_review_required': True,
+              'vsa_patch_authority': False,
+          }.items():
+              assert payload[field] is expected, (field, payload[field])
+          Path('/tmp/relational-r1-final-capsule.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          print(json.dumps({
+              'repo_head': head,
+              'capsule_id': payload['capsule_id'],
+              'capsule_digest': payload['capsule_digest'],
+              'participant_count': len(payload['participants']),
+              'group_count': len(payload['groups']),
+              'open_proof_obligation_count': sum(
+                  obligation['status'] == 'OPEN'
+                  for group in payload['groups']
+                  for obligation in group['proof_obligations']
+              ),
+          }, indent=2))
+          PY
+
+      - name: Remove temporary Phase 1 machinery
+        working-directory: target
+        run: |
+          rm -f \
+            .github/workflows/relational-synthesis-r1-grounding.yml \
+            .github/workflows/relational-synthesis-r1-validation.yml \
+            .github/workflows/relational-synthesis-r1-hardening.yml \
+            .github/workflows/relational-synthesis-r1-proof-hardening.yml \
+            .github/workflows/relational-synthesis-r1-proof-dispatch.yml \
+            .github/workflows/relational-synthesis-r1-proof-apply.yml \
+            .github/workflows/relational-synthesis-r1-live-diagnostic.yml \
+            .github/workflows/relational-synthesis-r1-unresolved-role-hardening.yml \
+            .github/workflows/relational-synthesis-r1-finalize.yml
+
+      - name: Regenerate permanent CODEMAP and deep topology
+        working-directory: target
+        run: |
+          python aura_codebase_navigator.py | tee /tmp/relational-r1-codemap.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('.aura/CODEMAP.json').read_text(encoding='utf-8'))
+          cards = {str(item.get('path') or '') for item in payload.get('files') or []}
+          symbols = dict(payload.get('symbol_index') or {})
+          required_files = {
+              'aura_relational_synthesis.py',
+              'schemas/aura_relational_participant.schema.json',
+              'schemas/aura_relational_group.schema.json',
+              'schemas/aura_relational_synthesis_capsule.schema.json',
+              'tests/test_aura_relational_synthesis.py',
+              'docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md',
+          }
+          required_symbols = {
+              'RelationalParticipant',
+              'TypedRelation',
+              'RelationalGroup',
+              'RelationalSynthesisCapsule',
+              'RelationalSynthesisShadowCompiler',
+              'compile_relational_shadow_capsule',
+          }
+          assert not (required_files - cards), sorted(required_files - cards)
+          assert not (required_symbols - set(symbols)), sorted(required_symbols - set(symbols))
+          assert payload['summary']['topology_source'] == 'compiled_deep_topology'
+          assert int(payload['summary']['topology_nodes']) > 0
+          assert int(payload['summary']['topology_edges']) > 0
+          print(json.dumps({
+              'file_count': payload['summary']['file_count'],
+              'topology_nodes': payload['summary']['topology_nodes'],
+              'topology_edges': payload['summary']['topology_edges'],
+          }, indent=2))
+          PY
+
+      - name: Commit exact permanent Phase 1 tree locally
+        working-directory: target
+        run: |
+          git add -A
+          git diff --cached --check
+          git commit -m 'Finalize relational synthesis Phase 1 contracts'
+
+      - name: Build final Coding Waboose request
+        working-directory: target
+        run: |
+          python - <<'PY'
+          import json
+          request = {
+              'objective': (
+                  'Final exact-head review of Aura Relational Synthesis Phase 1 contracts and '
+                  'read-only shadow compiler after permanent CODEMAP and topology regeneration.'
+              ),
+              'mode': 'range',
+              'base_ref': 'origin/main',
+              'head_ref': 'HEAD',
+              'profile': 'precision',
+              'graph_depth': 2,
+              'graph_node_budget': 220,
+              'run_tests': False,
+              'run_optional_tools': True,
+              'focus_directives': [
+                  {'name':'strict_boolean_authority','question':'Are Boolean options and authority fields parsed with strict types?','risk':'correctness','target_patterns':['boolean option','strict type'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'qualified_relational_identity','question':'Are qualified symbols preserved at every exact identity boundary?','risk':'dependency_impact','target_patterns':['qualified symbol','symbol identity'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'source_inventory_exactness','question':'Does exact source inventory reject unreadable or mismatched source?','risk':'correctness','target_patterns':['source inventory','decoding','source digest'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'closure_endpoint_integrity','question':'Are all bounded closure edge endpoints present and inspectable?','risk':'dependency_impact','target_patterns':['bounded closure','edge endpoint'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'test_callable_proof','question':'Are test callable and test edge evidence preserved without inventing proved invariants?','risk':'test_gap','target_patterns':['test callable','test edge','test evidence'],'required_evidence':['semantic_rule','regression_test']},
+              ],
+              'invariants': [
+                  'Relational Synthesis is a compiled read-only view over canonical owners.',
+                  'Expected repository, packet, and inventory identities are mandatory.',
+                  'Name-derived role matches remain candidate-only until nonlexical proof.',
+                  'Missing required roles are explicitly labelled unresolved.',
+                  'Exact test callable ownership does not self-prove an invariant.',
+                  'All relation endpoints are present in the capsule participant set.',
+                  'Production mutation, automatic repair, commit, push, PR, and merge remain false.',
+              ],
+              'risk_map': [
+                  'duplicate_truth_owner','stale_relational_identity','qualified_symbol_collapse',
+                  'missing_relation_endpoint','name_affinity_authority_escalation',
+                  'test_evidence_overclaim','serialization_drift',
+              ],
+          }
+          with open('/tmp/relational-r1-waboose-request.json', 'w', encoding='utf-8') as handle:
+              json.dump(request, handle)
+          PY
+
+      - name: Run and enforce final Coding Waboose review
+        working-directory: target
+        run: |
+          set -o pipefail
+          python aura_coding_waboose_cli.py \
+            --repo-root . \
+            --state-file /tmp/relational-r1-waboose-state.json \
+            run --request /tmp/relational-r1-waboose-request.json \
+            | tee /tmp/relational-r1-waboose-result.json
+          python - <<'PY'
+          import json
+          with open('/tmp/relational-r1-waboose-result.json', encoding='utf-8') as handle:
+              packet = json.load(handle)
+          assert packet.get('ok') is True, packet
+          assert packet.get('semantic_review_complete') is True, packet
+          assert not packet.get('unverified_focus_directives'), packet
+          assert not packet.get('findings'), packet
+          assert not packet.get('forge_repair_requests'), packet
+          assert packet.get('production_mutation') is False
+          assert packet.get('automatic_merge') is False
+          PY
+
+      - name: Push reviewed permanent Phase 1 tree
+        working-directory: target
+        run: git push origin HEAD:feature/aura-relational-synthesis-r1
+
+      - name: Upload Phase 1 final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relational-synthesis-r1-final-evidence
+          path: |
+            /tmp/relational-r1-final-capsule.json
+            /tmp/relational-r1-codemap.log
+            /tmp/relational-r1-waboose-request.json
+            /tmp/relational-r1-waboose-result.json
+            /tmp/relational-r1-waboose-state.json
+          if-no-files-found: warn
+          retention-days: 7
