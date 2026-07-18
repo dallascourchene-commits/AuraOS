@@ -241,6 +241,10 @@ class CanonicalSpatialRecord:
                 result[field.name] = value
         return result
 
+    @property
+    def digest(self) -> str:
+        return stable_digest(self.to_dict(), digest_size=32)
+
 
 def _record_value(value: Any) -> Any:
     if isinstance(value, Enum):
@@ -250,10 +254,6 @@ def _record_value(value: Any) -> Any:
     if isinstance(value, tuple):
         return [_record_value(item) for item in value]
     return value
-
-    @property
-    def digest(self) -> str:
-        return stable_digest(self.to_dict(), digest_size=32)
 
 
 @dataclass(frozen=True)
