@@ -23,11 +23,26 @@ jobs:
           ref: feature/aura-relational-index-r2
           fetch-depth: 0
 
-      - name: Reconstruct and verify exact manual patch
+      - name: Reconstruct exact manual patch
         shell: bash
         run: |
           set -euo pipefail
           cat .pr162_manual_fixes/part_* > /tmp/pr162_manual_fixes.patch
+          sha256sum /tmp/pr162_manual_fixes.patch
+          wc -c /tmp/pr162_manual_fixes.patch
+
+      - name: Export reconstructed patch diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr162-reconstructed-manual-patch
+          path: /tmp/pr162_manual_fixes.patch
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Verify and apply exact manual patch
+        shell: bash
+        run: |
+          set -euo pipefail
           echo '13f52b5134f7ce71a0b46e4a8742cf8727049c47311eef71cee127d53558b574  /tmp/pr162_manual_fixes.patch' | sha256sum -c -
           git apply --check /tmp/pr162_manual_fixes.patch
           git apply /tmp/pr162_manual_fixes.patch
