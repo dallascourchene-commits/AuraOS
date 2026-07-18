@@ -1,0 +1,117 @@
+name: Relational Synthesis R1 Grounding
+
+on:
+  push:
+    branches:
+      - feature/aura-relational-synthesis-r1
+    paths:
+      - .github/workflows/relational-synthesis-r1-grounding.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ground:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Aura dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Query canonical CODEMAP
+        run: |
+          python aura_codebase_navigator.py \
+            --query "relational synthesis deterministic contract serialization exact evidence packet qualified symbol relation endpoint stale digest omitted boundary six slot intent" \
+            --limit 20 > /tmp/relational-codemap-query.json
+          cat /tmp/relational-codemap-query.json
+
+      - name: Compile exact Phase 1 source slices
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine
+
+          request = {
+              "objective": (
+                  "Implement Phase 1 Aura Relational Synthesis contracts and a read-only shadow compiler over exact "
+                  "Emergent Evidence Spine packets. Preserve qualified symbol identity, deterministic IDs and canonical "
+                  "serialization, strict truth-class and field validation, complete relation endpoints, stale packet/digest "
+                  "rejection, six-slot intent bindings, explicit omitted-boundary accounting, and no Waboose or Agent Bridge "
+                  "behavior change. Seed exact closure_packet_integrity, test_proof_ownership, and input_scope_authority groups."
+              ),
+              "target_files": [
+                  "aura_emergent_evidence_spine.py",
+                  "aura_topological_context_anchor.py",
+                  "aura_coding_waboose.py",
+                  "aura_review_arena.py",
+                  "aura_waboose_learning.py",
+                  "aura_codebase_navigator.py",
+              ],
+              "target_arena": "coding_arena",
+              "radius": 1,
+              "max_atomic_nodes": 160,
+              "max_source_lines": 260,
+              "include_source": True,
+              "include_future": False,
+              "include_research_plan": False,
+              "include_offline_research": False,
+          }
+          packet = AuraEmergentEvidenceSpine(Path('.')).run(request)
+          assert packet.get("ok") is True, packet
+          assert packet.get("grounding_ok") is True, packet
+          assert packet.get("status") == "GROUNDED_ATOMIC_CLOSURE", packet
+          assert packet.get("repo_head"), packet
+          assert packet.get("atomic_inventory", {}).get("inventory_digest"), packet
+          assert packet.get("source_slices"), packet
+          Path('/tmp/relational-phase1-evidence.json').write_text(
+              json.dumps(packet, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          summary = {
+              "packet_id": packet.get("packet_id"),
+              "packet_digest": packet.get("packet_digest"),
+              "repo_head": packet.get("repo_head"),
+              "inventory_digest": packet.get("atomic_inventory", {}).get("inventory_digest"),
+              "selected_count": packet.get("atomic_inventory", {}).get("selected_count"),
+              "source_slices": [
+                  {
+                      "file_path": item.get("file_path"),
+                      "qualified_symbol": item.get("qualified_symbol"),
+                      "line_start": item.get("line_start"),
+                      "line_end": item.get("line_end"),
+                      "source_hash": item.get("source_hash"),
+                  }
+                  for item in packet.get("source_slices", [])
+              ],
+              "tests": packet.get("tests", []),
+              "dependency_edge_count": len(packet.get("dependency_edges", [])),
+              "capability_path": packet.get("capability_connectome", {}).get("path", {}),
+          }
+          Path('/tmp/relational-phase1-slice-summary.json').write_text(
+              json.dumps(summary, indent=2, sort_keys=True), encoding='utf-8'
+          )
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload exact grounding evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: relational-synthesis-r1-grounding
+          path: |
+            /tmp/relational-codemap-query.json
+            /tmp/relational-phase1-evidence.json
+            /tmp/relational-phase1-slice-summary.json
+          if-no-files-found: error
+          retention-days: 7
