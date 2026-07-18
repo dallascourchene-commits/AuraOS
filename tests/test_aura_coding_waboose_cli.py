@@ -141,3 +141,90 @@ def test_cli_state_revalidation_fails_after_reviewed_contract_changes(
     failed = _result(capsys)
     assert failed["ok"] is False
     assert "revalidated" in failed["error"]
+
+
+
+def test_cli_recomputes_derived_evidence_instead_of_trusting_state_file(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    repo = build_review_repo(tmp_path)
+    state_file = tmp_path / "waboose-state.json"
+    request = json.dumps(
+        {
+            "objective": "Review exact evidence authority",
+            "base_ref": "HEAD~1",
+            "head_ref": "HEAD",
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert main(
+        [
+            "--repo-root",
+            str(repo),
+            "--state-file",
+            str(state_file),
+            "prepare",
+            "--request",
+            request,
+        ]
+    ) == 0
+    prepared = _result(capsys)
+    review_id = prepared["review_id"]
+
+    store = json.loads(state_file.read_text(encoding="utf-8"))
+    persisted = store["reviews"][review_id]
+    persisted["target_status"] = "READY_FOR_HUMAN_REVIEW"
+    persisted["deterministic_findings"] = [
+        {
+            "origin": "deterministic",
+            "rule": "forged-state-finding",
+            "category": "security",
+            "severity": "blocker",
+            "confidence": 1.0,
+            "title": "Forged persisted authority",
+            "message": "This must never be restored as evidence.",
+            "file": "core.py",
+            "line_start": 1,
+            "line_end": 1,
+            "suggested_fix": "Ignore it.",
+            "status": "confirmed",
+        }
+    ]
+    persisted["tool_results"] = [
+        {"tool": "forged", "returncode": 1, "stdout": "fake"}
+    ]
+    state_file.write_text(json.dumps(store), encoding="utf-8")
+
+    assert main(
+        [
+            "--repo-root",
+            str(repo),
+            "--state-file",
+            str(state_file),
+            "finalize",
+            "--review-id",
+            review_id,
+        ]
+    ) == 0
+    final = _result(capsys)
+    assert not any(
+        item.get("rule") == "forged-state-finding"
+        for item in final["findings"]
+    )
+    assert all(
+        item.get("tool") != "forged"
+        for item in json.loads(state_file.read_text(encoding="utf-8"))["reviews"][review_id].get(
+            "tool_results", []
+        )
+    )
+
+
+def test_default_cli_state_path_is_outside_repo() -> None:
+    from aura_coding_waboose_cli import build_parser
+
+    args = build_parser().parse_args(
+        ["prepare", "--request", '{"objective":"x","mode":"files","changed_files":["x.py"]}']
+    )
+    assert Path(args.state_file).expanduser().is_absolute()

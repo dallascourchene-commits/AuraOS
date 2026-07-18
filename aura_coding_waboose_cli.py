@@ -79,8 +79,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-root", default=".")
     parser.add_argument(
         "--state-file",
-        default=".aura/waboose_cli_state.json",
-        help="Persistent review-state file used across separate CLI invocations",
+        default=str(Path.home() / ".aura" / "waboose_cli_state.json"),
+        help=(
+            "Persistent review-state file used across separate CLI invocations; "
+            "defaults outside the reviewed repository"
+        ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

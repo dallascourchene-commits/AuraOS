@@ -402,9 +402,23 @@ def test_range_review_requires_requested_head_to_be_checked_out_and_clean(
         }
     )
     assert dirty["ok"] is False
-    assert dirty["error"] == "range_review_requires_clean_tracked_worktree"
+    assert dirty["error"] == "range_review_requires_clean_worktree"
 
     _git(repo, "checkout", "--", "core.py")
+    _write(repo, "untracked_influence.py", "VALUE = 'not in reviewed head'\n")
+    untracked = AuraReviewArena(repo).prepare(
+        {
+            "objective": "Reject untracked range-review influence",
+            "base_ref": base,
+            "head_ref": reviewed_head,
+            "run_tests": False,
+            "run_optional_tools": False,
+        }
+    )
+    assert untracked["ok"] is False
+    assert untracked["error"] == "range_review_requires_clean_worktree"
+    (repo / "untracked_influence.py").unlink()
+
     prepared = AuraReviewArena(repo).prepare(
         {
             "objective": "Review materialized head source",

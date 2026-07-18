@@ -712,6 +712,7 @@ class AuraReviewArena:
             "topology": topology,
             "deterministic_findings": [],
             "agent_findings": [],
+            "agent_finding_inputs": [],
             "tool_results": [],
             "status": "PREPARED",
             "created_at": time.time(),
@@ -793,6 +794,7 @@ class AuraReviewArena:
         if isinstance(findings, (str, bytes)) or not isinstance(findings, (list, tuple)):
             return self._error("findings must be an array of objects", stage="CORROBORATE")
         accepted: list[dict[str, Any]] = []
+        accepted_inputs: list[dict[str, Any]] = []
         rejected: list[dict[str, Any]] = []
         scope = self._review_scope_files(state["contract"])
         for index, raw in enumerate(findings):
@@ -805,6 +807,14 @@ class AuraReviewArena:
                 rejected.append({"index": index, "reason": str(exc)})
                 continue
             accepted.append(finding)
+            accepted_inputs.append({
+                "agent_name": str(agent_name or "external_agent")[:120],
+                "finding": _sanitize(dict(raw)),
+            })
+        state["agent_finding_inputs"] = [
+            *state.get("agent_finding_inputs", []),
+            *accepted_inputs,
+        ]
         state["agent_findings"] = self._normalize_findings(
             [*state.get("agent_findings", []), *accepted], origin_default="agent"
         )
@@ -950,21 +960,21 @@ class AuraReviewArena:
         if state is None:
             return self._error("review_not_found", stage="STATE_EXPORT")
         contract: AuraReviewContract = state["contract"]
-        energized = state.get("waboose_energized_focus_ids", set())
-        if not isinstance(energized, (set, list, tuple)):
-            energized = ()
         return {
             "ok": True,
             "version": REVIEW_ARENA_VERSION,
             "review_id": str(review_id),
             "contract_id": contract.contract_id,
             "request": self._request_state_payload(state["request"]),
-            "status": str(state.get("status") or "PREPARED"),
+            "target_status": str(state.get("status") or "PREPARED"),
             "created_at": float(state.get("created_at") or time.time()),
-            "deterministic_findings": _sanitize(state.get("deterministic_findings", [])),
-            "agent_findings": _sanitize(state.get("agent_findings", [])),
-            "tool_results": _sanitize(state.get("tool_results", [])),
-            "waboose_energized_focus_ids": sorted(str(item) for item in energized),
+            # Persist only the agent's original bounded claims. Deterministic
+            # findings, evidence status, tool results, Waboose receipts, and
+            # repair eligibility are recomputed from the exact reviewed head.
+            "agent_finding_inputs": _sanitize(
+                state.get("agent_finding_inputs", [])
+            ),
+            "derived_evidence_persisted_as_authority": False,
             "production_mutation": False,
             "automatic_fix": False,
             "human_review_required": True,
@@ -981,6 +991,8 @@ class AuraReviewArena:
                 "review_state_requires_review_id_contract_id_and_request",
                 stage="STATE_IMPORT",
             )
+        if review_id in self._reviews:
+            return self._error("review_state_already_loaded", stage="STATE_IMPORT")
         prepared = self.prepare(request_payload)
         if not prepared.get("ok"):
             return self._error(
@@ -1000,55 +1012,86 @@ class AuraReviewArena:
                     "current_contract_id": generated_contract.contract_id,
                 },
             )
+        try:
+            state["created_at"] = float(value.get("created_at") or time.time())
+        except (TypeError, ValueError, OverflowError):
+            state["created_at"] = time.time()
+        self._reviews[review_id] = state
 
-        def _finding_rows(name: str) -> list[Mapping[str, Any]]:
-            raw = value.get(name, [])
-            if isinstance(raw, (str, bytes)) or not isinstance(raw, (list, tuple)):
-                return []
-            return [dict(item) for item in raw if isinstance(item, Mapping)]
-
-        state["deterministic_findings"] = self._normalize_findings(
-            _finding_rows("deterministic_findings"),
-            origin_default="deterministic",
-        )
-        state["agent_findings"] = self._normalize_findings(
-            _finding_rows("agent_findings"),
-            origin_default="agent",
-        )
-        raw_tools = value.get("tool_results", [])
-        state["tool_results"] = (
-            [dict(item) for item in raw_tools if isinstance(item, Mapping)]
-            if isinstance(raw_tools, (list, tuple))
-            else []
-        )
-        allowed_statuses = {
+        allowed_targets = {
             "PREPARED",
             "WAITING_FOR_AGENT",
             "SCANNED",
             "AGENT_FINDINGS_RECEIVED",
             "READY_FOR_HUMAN_REVIEW",
         }
-        status = str(value.get("status") or "PREPARED")
-        state["status"] = status if status in allowed_statuses else "PREPARED"
-        try:
-            state["created_at"] = float(value.get("created_at") or time.time())
-        except (TypeError, ValueError, OverflowError):
-            state["created_at"] = time.time()
-        raw_energized = value.get("waboose_energized_focus_ids", [])
-        state["waboose_energized_focus_ids"] = {
-            str(item)
-            for item in raw_energized
-            if str(item).strip()
-        } if isinstance(raw_energized, (list, tuple, set)) else set()
-        state.pop("waboose_breadboard", None)
-        state.pop("final_packet", None)
-        self._reviews[review_id] = state
+        target_status = str(
+            value.get("target_status") or value.get("status") or "PREPARED"
+        )
+        if target_status not in allowed_targets:
+            self._reviews.pop(review_id, None)
+            return self._error("invalid_review_state_target_status", stage="STATE_IMPORT")
+
+        if target_status != "PREPARED":
+            scanned = self.scan(review_id)
+            if not scanned.get("ok"):
+                self._reviews.pop(review_id, None)
+                return self._error(
+                    "review_state_scan_replay_failed",
+                    stage="STATE_IMPORT",
+                    details=scanned,
+                )
+
+        raw_inputs = value.get("agent_finding_inputs", [])
+        if isinstance(raw_inputs, (str, bytes)) or not isinstance(raw_inputs, (list, tuple)):
+            self._reviews.pop(review_id, None)
+            return self._error(
+                "agent_finding_inputs_must_be_an_array",
+                stage="STATE_IMPORT",
+            )
+        for index, item in enumerate(raw_inputs):
+            if not isinstance(item, Mapping) or not isinstance(item.get("finding"), Mapping):
+                self._reviews.pop(review_id, None)
+                return self._error(
+                    "invalid_persisted_agent_finding_input",
+                    stage="STATE_IMPORT",
+                    details={"index": index},
+                )
+            replayed = self.submit_findings(
+                review_id,
+                [dict(item["finding"])],
+                agent_name=str(item.get("agent_name") or "external_agent"),
+            )
+            if (
+                not replayed.get("ok")
+                or int(replayed.get("accepted_count") or 0) != 1
+                or replayed.get("rejected")
+            ):
+                self._reviews.pop(review_id, None)
+                return self._error(
+                    "persisted_agent_finding_revalidation_failed",
+                    stage="STATE_IMPORT",
+                    details={"index": index, "result": replayed},
+                )
+
+        if target_status == "READY_FOR_HUMAN_REVIEW":
+            finalized = self.finalize(review_id)
+            if not finalized.get("ok"):
+                self._reviews.pop(review_id, None)
+                return self._error(
+                    "review_state_finalize_replay_failed",
+                    stage="STATE_IMPORT",
+                    details=finalized,
+                )
+
+        loaded = self._reviews[review_id]
         return {
             "ok": True,
             "version": REVIEW_ARENA_VERSION,
             "review_id": review_id,
             "contract_id": contract_id,
-            "status": state["status"],
+            "status": loaded["status"],
+            "derived_evidence_recomputed": True,
             "production_mutation": False,
             "automatic_fix": False,
             "human_review_required": True,
@@ -1108,12 +1151,12 @@ class AuraReviewArena:
         ).strip()
         if not requested or current == "UNAVAILABLE" or requested != current:
             raise ValueError("range_head_ref_not_checked_out")
-        tracked_status = self._git(
-            ["git", "status", "--porcelain=v1", "--untracked-files=no"],
+        worktree_status = self._git(
+            ["git", "status", "--porcelain=v1", "--untracked-files=all"],
             timeout=10,
         )
-        if tracked_status.strip():
-            raise ValueError("range_review_requires_clean_tracked_worktree")
+        if worktree_status.strip():
+            raise ValueError("range_review_requires_clean_worktree")
         return requested
 
     @staticmethod
