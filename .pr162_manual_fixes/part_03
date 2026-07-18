@@ -1,0 +1,282 @@
+       result = query_relational_index(
+diff --git a/schemas/aura_relational_index.schema.json b/schemas/aura_relational_index.schema.json
+index 36dc7da..dab4531 100644
+--- a/schemas/aura_relational_index.schema.json
++++ b/schemas/aura_relational_index.schema.json
+@@ -217,7 +217,87 @@
+         "profile_digest": {
+           "$ref": "https://aura.local/schemas/aura_relational_index.schema.json#/$defs/digest"
+         }
+-      }
++      },
++      "allOf": [
++        {
++          "if": {
++            "properties": {
++              "name": {
++                "const": "MINIMAL"
++              }
++            }
++          },
++          "then": {
++            "properties": {
++              "budgets": {
++                "properties": {
++                  "max_group_relations": {
++                    "const": 300
++                  },
++                  "max_group_participants": {
++                    "const": 300
++                  }
++                }
++              },
++              "profile_digest": {
++                "const": "71a2127322ef7f08c811c9a4d44893f69b0acd66"
++              }
++            }
++          }
++        },
++        {
++          "if": {
++            "properties": {
++              "name": {
++                "const": "STANDARD"
++              }
++            }
++          },
++          "then": {
++            "properties": {
++              "budgets": {
++                "properties": {
++                  "max_group_relations": {
++                    "const": 1500
++                  },
++                  "max_group_participants": {
++                    "const": 1500
++                  }
++                }
++              },
++              "profile_digest": {
++                "const": "fbd07346436bc718fdee1fe51dfc4134e90c7950"
++              }
++            }
++          }
++        },
++        {
++          "if": {
++            "properties": {
++              "name": {
++                "const": "DEEP"
++              }
++            }
++          },
++          "then": {
++            "properties": {
++              "budgets": {
++                "properties": {
++                  "max_group_relations": {
++                    "const": 10000
++                  },
++                  "max_group_participants": {
++                    "const": 10000
++                  }
++                }
++              },
++              "profile_digest": {
++                "const": "ed1ca2e91606c90af0e6f4dd31642dd7d91ab09d"
++              }
++            }
++          }
++        }
++      ]
+     },
+     "idArray": {
+       "type": "array",
+diff --git a/tests/test_aura_relational_index.py b/tests/test_aura_relational_index.py
+index 815d615..c054d75 100644
+--- a/tests/test_aura_relational_index.py
++++ b/tests/test_aura_relational_index.py
+@@ -14,11 +14,23 @@ from aura_relational_index import (
+     RelationalIndexProfile,
+     RelationalIndexStore,
+     TruthClass,
++    _build_groups,
+     _canonical_python_sources,
++    _safe_repo_path,
++    _topology_facts,
+     _working_tree_digest,
++    main,
+     query_relational_index,
+ )
+-from aura_relational_synthesis import RelationalParticipant, RelationType
++from aura_relational_synthesis import (
++    GroupKind,
++    RelationalParticipant,
++    RelationType,
++    TypedRelation,
++)
++from aura_relational_synthesis import (
++    TruthClass as SynthesisTruthClass,
++)
+ from aura_topological_context_anchor import CodeTopoAnchor
+ 
+ 
+@@ -124,36 +134,22 @@ def test_exact_and_advisory_relations_remain_separate() -> None:
+         for item in index.relations
+         if item.relation_type in {RelationType.CALLS, RelationType.IMPORTS, RelationType.TESTS}
+     ]
+-    implementations = [
+-        item
+-        for item in index.relations
+-        if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY
+-    ]
++    implementations = [item for item in index.relations if item.relation_type is RelationType.IMPLEMENTS_CAPABILITY]
+     assert structural
+     assert implementations
+-    assert all(
+-        item.truth_class in {TruthClass.EXACT_SOURCE, TruthClass.EXACT_TEST}
+-        for item in structural
+-    )
+-    assert all(
+-        item.truth_class is TruthClass.ADVISORY_CONNECTOME
+-        for item in implementations
+-    )
++    assert all(item.truth_class in {TruthClass.EXACT_SOURCE, TruthClass.EXACT_TEST} for item in structural)
++    assert all(item.truth_class is TruthClass.ADVISORY_CONNECTOME for item in implementations)
++    assert all(not any(ref.startswith("connectome-context:") for ref in item.evidence_refs) for item in structural)
++    assert all(binding.role != "exact_implementation" for group in index.groups for binding in group.role_bindings)
+ 
+ 
+ def test_same_named_methods_keep_qualified_identity() -> None:
+     index = _build()
+     qualified = {
+-        item.qualified_symbol
+-        for item in index.participants
+-        if item.qualified_symbol in {"Alpha.run", "Beta.run"}
++        item.qualified_symbol for item in index.participants if item.qualified_symbol in {"Alpha.run", "Beta.run"}
+     }
+     assert qualified == {"Alpha.run", "Beta.run"}
+-    refs = {
+-        item.canonical_ref
+-        for item in index.participants
+-        if item.qualified_symbol in qualified
+-    }
++    refs = {item.canonical_ref for item in index.participants if item.qualified_symbol in qualified}
+     assert len(refs) == 2
+     assert all(ref.startswith("service.py#method:") for ref in refs)
+ 
+@@ -404,8 +379,8 @@ def test_validate_current_reports_current_and_stale_identity(tmp_path: Path) ->
+         def __init__(self, value: RelationalIndex) -> None:
+             self.value = value
+ 
+-        def build_full(self) -> RelationalIndex:
+-            return self.value
++        def repository_identity_snapshot(self) -> dict[str, object]:
++            return dict(self.value.repository_identity)
+ 
+     current = store.validate_current(builder=StubBuilder(index))
+     assert current["ok"] is True
+@@ -486,3 +459,273 @@ def test_affordance_directory_exposes_relational_index() -> None:
+     node = next(item for item in graph["nodes"] if item["id"] == "aura.relational.index")
+     assert node["truth_boundary"] == "advisory"
+     assert node["node_digest"]
++
++
++def test_topology_health_preserves_zero_and_participates_in_freshness(
++    tmp_path: Path,
++) -> None:
++    topology_path = tmp_path / "topology.json"
++    topology_path.write_text(
++        json.dumps(
++            {
++                "version": "TOPOLOGY_V1",
++                "global_health": 0.0,
++                "health": 0.8,
++            }
++        ),
++        encoding="utf-8",
++    )
++    _, _, health = _topology_facts(topology_path)
++    assert health == 0.0
++
++    index = _build()
++    store = RelationalIndexStore(
++        tmp_path,
++        index_path="generated/index.json",
++        receipt_path="generated/receipt.json",
++        markdown_path="generated/index.md",
++        lock_path="generated/index.lock",
++    )
++    store.write(index, build_mode="full", full_equivalence_verified=True)
++
++    class StubBuilder:
++        def repository_identity_snapshot(self) -> dict[str, object]:
++            value = dict(index.repository_identity)
++            value["topology_health"] = 0.0
++            return value
++
++    status = store.validate_current(builder=StubBuilder())
++    assert status["status"] == "STALE"
++    assert status["mismatches"] == {"topology_health": {"stored": 1.0, "current": 0.0}}
++
++
++def test_nested_contracts_reject_unknown_keys_and_noncanonical_budgets() -> None:
++    data = _build().to_dict()
++    for field in ("repository_identity", "profile", "boundary", "build_facts"):
++        forged = deepcopy(data)
++        forged[field]["unexpected"] = True
++        with pytest.raises(ValueError, match="keys do not match"):
++            RelationalIndex.from_dict(forged)
++
++    forged_budget = deepcopy(data)
++    forged_budget["profile"]["budgets"]["max_group_relations"] = 1499
++    with pytest.raises(ValueError, match="budgets do not match"):
++        RelationalIndex.from_dict(forged_budget)
++
++
++def test_schema_rejects_noncanonical_profile_budget() -> None:
++    pytest.importorskip("jsonschema")
++    pytest.importorskip("referencing")
++    from jsonschema import Draft202012Validator
++    from referencing import Registry, Resource
++
++    root = Path("schemas")
++    resources = []
++    for name in (
++        "aura_relational_participant.schema.json",
++        "aura_relational_group.schema.json",
++        "aura_relational_index.schema.json",
++    ):
++        value = json.loads((root / name).read_text(encoding="utf-8"))
++        resources.append((value["$id"], Resource.from_contents(value)))
++    index_schema = json.loads((root / "aura_relational_index.schema.json").read_text(encoding="utf-8"))
++    registry = Registry().with_resources(resources)
++    forged = _build().to_dict()
++    forged["profile"]["budgets"]["max_group_participants"] = 1499
++    errors = list(Draft202012Validator(index_schema, registry=registry).iter_errors(forged))
++    assert errors
++
++
++def test_store_rejects_windows_drives_and_symlinked_parents(tmp_path: Path) -> None:
++    with pytest.raises(ValueError, match="escapes workspace"):
++        _safe_repo_path("C:/outside/index.json")
++    with pytest.raises(ValueError, match="escapes workspace"):
++        RelationalIndexStore(tmp_path, index_path="C:/outside/index.json")
++
++    outside = tmp_path.parent / f"{tmp_path.name}-outside"
++    outside.mkdir()
++    (tmp_path / "generated").symlink_to(outside, target_is_directory=True)
++    with pytest.raises(ValueError, match="parent escapes workspace"):
++        RelationalIndexStore(
++            tmp_path,
++            index_path="generated/index.json",
++            receipt_path="receipts/receipt.json",
++            markdown_path="receipts/index.md",
++            lock_path="receipts/index.lock",
++        )
++
++
++def test_store_verification_and_linked_reads_are_locked(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
++    index = _build()
++    store = RelationalIndexStore(
++        
