@@ -9,6 +9,7 @@ on:
       - tests/test_aura_review_arena.py
       - tests/test_aura_coding_waboose_cli.py
       - scripts/apply_coding_waboose_state_authority_hardening.py
+      - scripts/repair_coding_waboose_state_authority_hardening.py
       - .github/workflows/coding-waboose-state-authority-hardening.yml
   workflow_dispatch:
 
@@ -40,8 +41,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pytest>=8,<9" ruff bandit
 
-      - name: Apply state-authority hardening
-        run: python scripts/apply_coding_waboose_state_authority_hardening.py
+      - name: Repair and apply state-authority hardening
+        run: |
+          python scripts/repair_coding_waboose_state_authority_hardening.py
+          python scripts/apply_coding_waboose_state_authority_hardening.py
 
       - name: Compile and check patch shape
         run: |
@@ -94,6 +97,7 @@ jobs:
       - name: Remove one-shot hardening machinery
         run: |
           rm -f scripts/apply_coding_waboose_state_authority_hardening.py
+          rm -f scripts/repair_coding_waboose_state_authority_hardening.py
           rm -f .github/workflows/coding-waboose-state-authority-hardening.yml
 
       - name: Regenerate and verify repository maps
