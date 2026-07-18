@@ -552,3 +552,21 @@ def test_frozen_contract_mappings_are_deeply_immutable() -> None:
     )
     with pytest.raises(TypeError):
         boundary.omitted_reasons["new_reason"] = 1
+
+
+
+def test_unsupported_upstream_contract_versions_fail_closed() -> None:
+    packet = _packet()
+    packet["version"] = "AURA_EMERGENT_EVIDENCE_SPINE_V999"
+    with pytest.raises(ValueError, match="unsupported evidence packet version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["atomic_inventory"]["version"] = "AURA_ATOMIC_FUNCTION_INVENTORY_V999"
+    with pytest.raises(ValueError, match="unsupported atomic inventory version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["capability_connectome"]["version"] = "AURA_CAPABILITY_CONNECTOME_V999"
+    with pytest.raises(ValueError, match="unsupported capability connectome version"):
+        _compile(packet)

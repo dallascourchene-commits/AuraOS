@@ -1618,13 +1618,19 @@ def _validate_evidence_packet(
         raise ValueError("intent packet does not bind the evidence objective")
     for field_name in ("packet_id", "packet_digest", "repo_head", "version", "target_arena"):
         _required_text(packet.get(field_name), field_name)
+    if packet["version"] != "AURA_EMERGENT_EVIDENCE_SPINE_V1":
+        raise ValueError("unsupported evidence packet version")
     atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+    if atomic_inventory.get("version") != "AURA_ATOMIC_FUNCTION_INVENTORY_V1":
+        raise ValueError("unsupported atomic inventory version")
     _required_text(
         atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
     )
     capability = _mapping(
         packet.get("capability_connectome"), "capability_connectome"
     )
+    if capability.get("version") != "AURA_CAPABILITY_CONNECTOME_V2":
+        raise ValueError("unsupported capability connectome version")
     _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")
     capability_path = _mapping(
         capability.get("path"), "capability_connectome.path"
