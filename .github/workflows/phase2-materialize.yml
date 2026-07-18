@@ -1,0 +1,82 @@
+name: Materialize Relational Synthesis Phase 2
+
+on:
+  pull_request:
+    types: [reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event.pull_request.number == 162 && github.head_ref == 'feature/aura-relational-index-r2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Phase 2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-index-r2
+          fetch-depth: 0
+
+      - name: Reconstruct validated permanent sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p schemas tests docs
+          cat .phase2_payload/aura_relational_index_py/part_* > aura_relational_index.py
+          cat .phase2_payload/schemas_aura_relational_index_schema_json/part_* > schemas/aura_relational_index.schema.json
+          cat .phase2_payload/tests_test_aura_relational_index_py/part_* > tests/test_aura_relational_index.py
+          cat .phase2_payload/docs_AURA_RELATIONAL_INDEX_md/part_* > docs/AURA_RELATIONAL_INDEX.md
+          cat .phase2_payload/_gitignore/part_* > .gitignore
+          cat .phase2_payload/docs_AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN_md/part_* > docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('aura_affordance_directory.py')
+          text = path.read_text(encoding='utf-8')
+          if '"id": "aura.relational.index"' not in text:
+              marker = '    {\n        "id": "aura.research_arxiv_memory",'
+              insertion = Path('.phase2_payload/affordance_insert.pyfrag').read_text(encoding='utf-8')
+              if marker not in text:
+                  raise SystemExit('affordance insertion marker is missing')
+              text = text.replace(marker, insertion + marker, 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify exact source checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '0e59e5e3a214140fcf54ca8043394c5573d5befcd3a469b78c701d47c31ef9d3  aura_relational_index.py' | sha256sum -c -
+          echo '5c905d1e0dbe2368567575da2b873c53844d267497780cb3b833559cc569e17b  schemas/aura_relational_index.schema.json' | sha256sum -c -
+          echo 'b523cbef9f551edd68eae60110e414cc3d5a97a1fc39560fb6910820584f09a8  tests/test_aura_relational_index.py' | sha256sum -c -
+          echo '92a2d1b89d7c9dd32996daacedd57bed287e64b5d966fb4b7cb2eb692d15cad7  docs/AURA_RELATIONAL_INDEX.md' | sha256sum -c -
+          echo '9d41f32d21ff405925c7a1e9d7d31ff1bfd5facb8139d72afdf53d140c4cb090  aura_affordance_directory.py' | sha256sum -c -
+          echo '0ab531be095585ebd1e56499626e5fcb4b64797f14c923bb24186e7041c628b4  .gitignore' | sha256sum -c -
+          echo '2df1554ccff8416da7f87e284dcbbf08c362c18e137e9299ba36d26090343c6c  docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md' | sha256sum -c -
+
+      - name: Validate reconstructed implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv .phase2-verify-venv
+          . .phase2-verify-venv/bin/activate
+          python -m pip install --quiet --upgrade pip
+          python -m pip install --quiet pytest jsonschema referencing pyyaml ruff
+          python -m py_compile aura_relational_index.py tests/test_aura_relational_index.py
+          python -m ruff check aura_relational_index.py tests/test_aura_relational_index.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py tests/test_aura_relational_index.py
+          rm -rf .phase2-verify-venv
+
+      - name: Commit only permanent Phase 2 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .phase2_payload
+          rm -f .github/workflows/phase2-materialize.yml
+          git config user.name 'Aura Phase 2 Builder'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Relational Synthesis R2: generated AOT anatomy index'
+          git push origin HEAD:feature/aura-relational-index-r2
