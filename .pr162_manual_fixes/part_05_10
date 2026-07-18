@@ -1,0 +1,53 @@
+se stored profile and freshness-only computation;
++- exit code remains meaningful after artifacts are written;
++- command documentation and implementation remain synchronized.
++
++## 5. Rule lifecycle
++
++Every new rule moves through:
++
++```text
++candidate → probation → verified → retired
++```
++
++### Candidate
++
++Created from one or more exact-head-grounded external findings. It may produce advisory diagnostics only.
++
++### Probation
++
++Requires:
++
++- at least one positive fixture;
++- at least two false-positive fixtures;
++- exact source-span grounding;
++- deterministic output;
++- no new authority.
++
++### Verified
++
++Requires repeated confirmation across independent PRs or an approved architecture invariant plus regression coverage. Only verified deterministic packs may satisfy a matching Waboose focus directive.
++
++### Retired
++
++Used when the architecture removes the defect class, the detector becomes noisy, or a stronger canonical rule supersedes it. Historical teacher episodes remain append-only.
++
++## 6. Teacher-signal ingestion
++
++The existing CodeRabbit learning path should remain:
++
++```text
++successful CodeRabbit review
++  → exact reviewed HEAD
++  → exact source span and digest
++  → Capability Resolver / Connectome path
++  → AST and relational signature
++  → DREAM-lite similarity
++  → QDKT observation
++  → candidate rule family
++  → probation fixtures
++  → repeated confirmation
++  → verified deterministic pack
++```
++
++For PR #162, the learning
