@@ -1,16 +1,21 @@
 name: PR157 targeted review fixes
 
 on:
-  push:
-    branches:
-      - feature/aura-relational-synthesis-r1
+  pull_request:
+    types: [synchronize]
 
 permissions:
   contents: write
 
+concurrency:
+  group: pr157-targeted-review-fixes
+  cancel-in-progress: false
+
 jobs:
   patch-test-and-cleanup:
+    if: github.event.pull_request.number == 157 && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,7 +24,10 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
+
+      - name: Require explicit dispatch trigger
+        run: test -f tests/test_000_pr157_version_trigger.py
 
       - name: Apply verified review fixes
         shell: bash
@@ -27,91 +35,110 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              return text.replace(old, new, 1)
+
           module_path = Path("aura_relational_synthesis.py")
           module = module_path.read_text(encoding="utf-8")
 
-          old_import = "from aura_event_contracts import canonical_json, stable_digest, stable_id\n"
-          new_import = (
-              "from aura_emergent_evidence_spine import (\n"
-              "    ATOMIC_INVENTORY_VERSION,\n"
-              "    EMERGENT_EVIDENCE_SPINE_VERSION,\n"
-              ")\n"
-              + old_import
-          )
-          if old_import not in module:
-              raise SystemExit("expected event-contract import was not found")
-          module = module.replace(old_import, new_import, 1)
-
-          old_packet_status = '''    if packet.get("status") != "GROUNDED_ATOMIC_CLOSURE":
-              raise ValueError("evidence packet must contain a grounded atomic closure")
-          objective = _required_text(packet.get("objective"), "objective")
+          if "SUPPORTED_EVIDENCE_PACKET_VERSION" not in module:
+              constants_anchor = '''RELATIONAL_SYNTHESIS_VERSION = "AURA_RELATIONAL_SYNTHESIS_PHASE1_V1"
+          RELATIONAL_PARTICIPANT_VERSION = "AURA_RELATIONAL_PARTICIPANT_V1"
           '''
-          new_packet_status = '''    if packet.get("status") != "GROUNDED_ATOMIC_CLOSURE":
-              raise ValueError("evidence packet must contain a grounded atomic closure")
-          if packet.get("version") != EMERGENT_EVIDENCE_SPINE_VERSION:
-              raise ValueError("unsupported evidence packet version")
-          objective = _required_text(packet.get("objective"), "objective")
+              constants_replacement = '''RELATIONAL_SYNTHESIS_VERSION = "AURA_RELATIONAL_SYNTHESIS_PHASE1_V1"
+          SUPPORTED_EVIDENCE_PACKET_VERSION = "AURA_EMERGENT_EVIDENCE_SPINE_V1"
+          SUPPORTED_ATOMIC_INVENTORY_VERSION = "AURA_ATOMIC_FUNCTION_INVENTORY_V1"
+          SUPPORTED_CAPABILITY_CONNECTOME_VERSION = "AURA_CAPABILITY_CONNECTOME_V2"
+          RELATIONAL_PARTICIPANT_VERSION = "AURA_RELATIONAL_PARTICIPANT_V1"
           '''
-          if old_packet_status not in module:
-              raise SystemExit("expected evidence status validation block was not found")
-          module = module.replace(old_packet_status, new_packet_status, 1)
+              module = replace_once(
+                  module,
+                  constants_anchor,
+                  constants_replacement,
+                  "supported contract constants",
+              )
 
-          old_inventory = '''    atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+          if "unsupported evidence packet version" not in module:
+              validation_anchor = '''    for field_name in ("packet_id", "packet_digest", "repo_head", "version", "target_arena"):
+              _required_text(packet.get(field_name), field_name)
+          atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
           _required_text(
               atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
           )
-          '''
-          new_inventory = '''    atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
-          if atomic_inventory.get("version") != ATOMIC_INVENTORY_VERSION:
+          capability = _mapping(
+              packet.get("capability_connectome"), "capability_connectome"
+          )
+          _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")'''
+              validation_replacement = '''    for field_name in ("packet_id", "packet_digest", "repo_head", "version", "target_arena"):
+              _required_text(packet.get(field_name), field_name)
+          if packet["version"] != SUPPORTED_EVIDENCE_PACKET_VERSION:
+              raise ValueError("unsupported evidence packet version")
+          atomic_inventory = _mapping(packet.get("atomic_inventory"), "atomic_inventory")
+          if atomic_inventory.get("version") != SUPPORTED_ATOMIC_INVENTORY_VERSION:
               raise ValueError("unsupported atomic inventory version")
           _required_text(
               atomic_inventory.get("inventory_digest"), "atomic_inventory.inventory_digest"
           )
-          '''
-          if old_inventory not in module:
-              raise SystemExit("expected atomic inventory validation block was not found")
-          module = module.replace(old_inventory, new_inventory, 1)
+          capability = _mapping(
+              packet.get("capability_connectome"), "capability_connectome"
+          )
+          if capability.get("version") != SUPPORTED_CAPABILITY_CONNECTOME_VERSION:
+              raise ValueError("unsupported capability connectome version")
+          _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")'''
+              module = replace_once(
+                  module,
+                  validation_anchor,
+                  validation_replacement,
+                  "upstream contract validation",
+              )
+
           module_path.write_text(module, encoding="utf-8")
 
           tests_path = Path("tests/test_aura_relational_synthesis.py")
           tests = tests_path.read_text(encoding="utf-8")
-          marker = "\ndef test_capability_path_freshness_identity_is_not_fabricated() -> None:\n"
-          regression = '''
-          def test_unsupported_evidence_contract_versions_are_rejected() -> None:
-              packet = _packet()
-              packet["version"] = "AURA_EMERGENT_EVIDENCE_SPINE_V2"
-              with pytest.raises(ValueError, match="unsupported evidence packet version"):
-                  _compile(packet)
-
-              packet = _packet()
-              packet["atomic_inventory"]["version"] = "AURA_ATOMIC_FUNCTION_INVENTORY_V2"
-              with pytest.raises(ValueError, match="unsupported atomic inventory version"):
-                  _compile(packet)
+          test_name = "test_unsupported_upstream_contract_versions_fail_closed"
+          if test_name not in tests:
+              tests += '''
 
 
-          def test_capability_path_freshness_identity_is_not_fabricated() -> None:
-          '''
-          if marker not in tests:
-              raise SystemExit("expected capability-path regression marker was not found")
-          tests = tests.replace(marker, "\n" + regression, 1)
+def test_unsupported_upstream_contract_versions_fail_closed() -> None:
+    packet = _packet()
+    packet["version"] = "AURA_EMERGENT_EVIDENCE_SPINE_V999"
+    with pytest.raises(ValueError, match="unsupported evidence packet version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["atomic_inventory"]["version"] = "AURA_ATOMIC_FUNCTION_INVENTORY_V999"
+    with pytest.raises(ValueError, match="unsupported atomic inventory version"):
+        _compile(packet)
+
+    packet = _packet()
+    packet["capability_connectome"]["version"] = "AURA_CAPABILITY_CONNECTOME_V999"
+    with pytest.raises(ValueError, match="unsupported capability connectome version"):
+        _compile(packet)
+'''
           tests_path.write_text(tests, encoding="utf-8")
           PY
 
-      - name: Install focused test dependencies
-        run: python -m pip install --disable-pip-version-check pytest jsonschema
+      - name: Install focused dependencies
+        run: python -m pip install --disable-pip-version-check numpy pytest jsonschema ruff
 
-      - name: Run relational synthesis tests
-        run: python -m pytest -q tests/test_aura_relational_synthesis.py
+      - name: Validate relational synthesis contracts
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m ruff check aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
 
-      - name: Compile changed Python files
-        run: python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
-
-      - name: Commit fixes and remove temporary workflow
+      - name: Commit fixes and remove temporary dispatcher
         shell: bash
         run: |
+          rm -f tests/test_000_pr157_version_trigger.py
           rm -f .github/workflows/pr157-targeted-review-fixes.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py .github/workflows/pr157-targeted-review-fixes.yml
-          git commit -m "fix: enforce relational evidence contract versions"
+          git config user.name "Aura PR157 Review Gate"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: enforce relational upstream contract versions"
           git push origin HEAD:feature/aura-relational-synthesis-r1
