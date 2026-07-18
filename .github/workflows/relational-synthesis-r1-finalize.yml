@@ -32,12 +32,84 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt 'pytest>=8,<9' bandit
 
+      - name: Make missing role bindings explicitly unresolved
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('aura_relational_synthesis.py')
+          source = source_path.read_text(encoding='utf-8')
+          old = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            f"candidate_{role}" if role in name_derived_roles else role,
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          new = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            (
+                f"candidate_{role}"
+                if role in name_derived_roles
+                else (
+                    f"unresolved_{role}"
+                    if item.truth_class is TruthClass.UNRESOLVED
+                    else role
+                )
+            ),
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          if source.count(old) != 1:
+              raise SystemExit('expected one role binding seam')
+          source_path.write_text(source.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('tests/test_aura_relational_synthesis.py')
+          tests = test_path.read_text(encoding='utf-8')
+          marker = 'def test_missing_role_binding_is_explicitly_unresolved()'
+          if marker not in tests:
+              tests += '''
+
+def test_missing_role_binding_is_explicitly_unresolved() -> None:
+    packet = _packet()
+    for record in packet["atomic_inventory"]["selected_atomic_functions"]:
+        if record["symbol"] == "from_value":
+            record["symbol"] = "receive"
+    for span in packet["source_slices"]:
+        if span["qualified_symbol"] == "Request.from_value":
+            span["symbol"] = "receive"
+            span["qualified_symbol"] = "Request.receive"
+
+    capsule = _compile(packet)
+    scope_group = next(
+        item for item in capsule.groups if item.purpose == "input_scope_authority"
+    )
+    binding_roles = {item.role for item in scope_group.role_bindings}
+    assert "unresolved_input_parser" in binding_roles
+    assert "input_parser" not in binding_roles
+    assert "candidate_input_parser" not in binding_roles
+    assert "required_role:input_parser" in scope_group.boundary.unresolved_relations
+'''
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
       - name: Run permanent Phase 1 gates
         run: |
           python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
           python -m pytest -q tests/test_aura_relational_synthesis.py
           ruff check --select E9,F63,F7,F82 aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
           bandit -q -ll aura_relational_synthesis.py
+
+      - name: Commit validated semantic refinement locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          git diff --cached --check
+          git commit -m 'Make unresolved relational role bindings explicit'
 
       - name: Compile live exact-head relational evidence
         run: |
@@ -57,8 +129,8 @@ jobs:
               'Final Phase 1 review of the read-only relational synthesis compiler: exact qualified '
               'participant identity, deterministic IDs and serialization, complete relation endpoints, '
               'required current repository and packet digests, candidate-only name-derived roles, '
-              'callable-level test ownership with open invariant proof, strict authority confinement, '
-              'and no Waboose or Agent Bridge behavior change.'
+              'explicit unresolved role bindings, callable-level test ownership with open invariant proof, '
+              'strict authority confinement, and no Waboose or Agent Bridge behavior change.'
           )
           head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
           evidence = AuraEmergentEvidenceSpine(Path('.')).run({
@@ -98,10 +170,7 @@ jobs:
                   'VOICE': 'HUMAN_AGENT',
                   'STEM': 'INSPECT',
               },
-              adjuncts={
-                  'grounding': 'exact_current_source',
-                  'risk': 'proposal_only',
-              },
+              adjuncts={'grounding': 'exact_current_source', 'risk': 'proposal_only'},
               objective=objective,
           )
           capsule = RelationalSynthesisShadowCompiler().compile(
@@ -128,9 +197,8 @@ jobs:
               binding['role']
               for binding in groups['input_scope_authority']['role_bindings']
           }
-          assert not {
-              'input_parser', 'scope_normalizer', 'packet_assembler'
-          }.intersection(scope_roles)
+          assert not {'input_parser', 'scope_normalizer', 'packet_assembler'}.intersection(scope_roles)
+          assert any(role.startswith('unresolved_') for role in scope_roles)
           assert all(
               obligation['status'] == 'OPEN'
               for obligation in groups['input_scope_authority']['proof_obligations']
@@ -174,6 +242,8 @@ jobs:
             .github/workflows/relational-synthesis-r1-proof-hardening.yml \
             .github/workflows/relational-synthesis-r1-proof-dispatch.yml \
             .github/workflows/relational-synthesis-r1-proof-apply.yml \
+            .github/workflows/relational-synthesis-r1-live-diagnostic.yml \
+            .github/workflows/relational-synthesis-r1-unresolved-role-hardening.yml \
             .github/workflows/relational-synthesis-r1-finalize.yml
 
       - name: Regenerate permanent CODEMAP and deep topology
@@ -211,15 +281,11 @@ jobs:
               'file_count': payload['summary']['file_count'],
               'topology_nodes': payload['summary']['topology_nodes'],
               'topology_edges': payload['summary']['topology_edges'],
-              'required_files': sorted(required_files),
-              'required_symbols': sorted(required_symbols),
           }, indent=2))
           PY
 
       - name: Commit exact permanent Phase 1 tree locally
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git diff --cached --check
           git commit -m 'Finalize relational synthesis Phase 1 contracts'
@@ -242,58 +308,25 @@ jobs:
               'run_tests': False,
               'run_optional_tools': True,
               'focus_directives': [
-                  {
-                      'name': 'strict_boolean_authority',
-                      'question': 'Are Boolean options and authority fields parsed with strict types?',
-                      'risk': 'correctness',
-                      'target_patterns': ['boolean option', 'strict type'],
-                      'required_evidence': ['semantic_rule', 'regression_test'],
-                  },
-                  {
-                      'name': 'qualified_relational_identity',
-                      'question': 'Are qualified symbols preserved at every exact identity boundary?',
-                      'risk': 'dependency_impact',
-                      'target_patterns': ['qualified symbol', 'symbol identity'],
-                      'required_evidence': ['semantic_rule', 'regression_test'],
-                  },
-                  {
-                      'name': 'source_inventory_exactness',
-                      'question': 'Does exact source inventory reject unreadable or mismatched source?',
-                      'risk': 'correctness',
-                      'target_patterns': ['source inventory', 'decoding', 'source digest'],
-                      'required_evidence': ['semantic_rule', 'regression_test'],
-                  },
-                  {
-                      'name': 'closure_endpoint_integrity',
-                      'question': 'Are all bounded closure edge endpoints present and inspectable?',
-                      'risk': 'dependency_impact',
-                      'target_patterns': ['bounded closure', 'edge endpoint'],
-                      'required_evidence': ['semantic_rule', 'regression_test'],
-                  },
-                  {
-                      'name': 'test_callable_proof',
-                      'question': 'Are test callable and test edge evidence preserved without inventing proved invariants?',
-                      'risk': 'test_gap',
-                      'target_patterns': ['test callable', 'test edge', 'test evidence'],
-                      'required_evidence': ['semantic_rule', 'regression_test'],
-                  },
+                  {'name':'strict_boolean_authority','question':'Are Boolean options and authority fields parsed with strict types?','risk':'correctness','target_patterns':['boolean option','strict type'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'qualified_relational_identity','question':'Are qualified symbols preserved at every exact identity boundary?','risk':'dependency_impact','target_patterns':['qualified symbol','symbol identity'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'source_inventory_exactness','question':'Does exact source inventory reject unreadable or mismatched source?','risk':'correctness','target_patterns':['source inventory','decoding','source digest'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'closure_endpoint_integrity','question':'Are all bounded closure edge endpoints present and inspectable?','risk':'dependency_impact','target_patterns':['bounded closure','edge endpoint'],'required_evidence':['semantic_rule','regression_test']},
+                  {'name':'test_callable_proof','question':'Are test callable and test edge evidence preserved without inventing proved invariants?','risk':'test_gap','target_patterns':['test callable','test edge','test evidence'],'required_evidence':['semantic_rule','regression_test']},
               ],
               'invariants': [
                   'Relational Synthesis is a compiled read-only view over canonical owners.',
                   'Expected repository, packet, and inventory identities are mandatory.',
                   'Name-derived role matches remain candidate-only until nonlexical proof.',
+                  'Missing required roles are explicitly labelled unresolved.',
                   'Exact test callable ownership does not self-prove an invariant.',
                   'All relation endpoints are present in the capsule participant set.',
                   'Production mutation, automatic repair, commit, push, PR, and merge remain false.',
               ],
               'risk_map': [
-                  'duplicate_truth_owner',
-                  'stale_relational_identity',
-                  'qualified_symbol_collapse',
-                  'missing_relation_endpoint',
-                  'name_affinity_authority_escalation',
-                  'test_evidence_overclaim',
-                  'serialization_drift',
+                  'duplicate_truth_owner','stale_relational_identity','qualified_symbol_collapse',
+                  'missing_relation_endpoint','name_affinity_authority_escalation',
+                  'test_evidence_overclaim','serialization_drift',
               ],
           }
           with open('/tmp/relational-r1-waboose-request.json', 'w', encoding='utf-8') as handle:
