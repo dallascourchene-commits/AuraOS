@@ -1,0 +1,286 @@
+e(value, str) and any(
+        pattern.search(value) for pattern in _HIGH_CONFIDENCE_SECRET_PATTERNS
+    ):
+        raise ValueError(f"secret-shaped value is prohibited: {path}")
+
+
+def _required_text(value: Any, field_name: str) -> str:
+    if type(value) is not str or not value.strip():
+        raise ValueError(f"{field_name} must be a non-empty string")
+    return value.strip()
+
+
+def _strict_bool(value: Any, field_name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"{field_name} must be a boolean")
+    return value
+
+
+def _nonnegative_int(value: Any, field_name: str) -> int:
+    if type(value) is not int or value < 0:
+        raise ValueError(f"{field_name} must be a non-negative integer")
+    return value
+
+
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {str(key): _freeze_json(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _immutable_mapping(value: Any, field_name: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{field_name} must be an object")
+    canonical_json(value)
+    frozen = _freeze_json(value)
+    if not isinstance(frozen, Mapping):
+        raise ValueError(f"{field_name} must be an object")
+    return frozen
+
+
+def _string_tuple(value: Any, field_name: str, *, allow_empty: bool = True) -> tuple[str, ...]:
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"{field_name} must be an ordered sequence")
+    result = tuple(sorted(_required_text(item, f"{field_name}[]") for item in value))
+    if not allow_empty and not result:
+        raise ValueError(f"{field_name} must not be empty")
+    if len(result) != len(set(result)):
+        raise ValueError(f"{field_name} must not contain duplicates")
+    return result
+
+
+def _safe_repo_path(value: str) -> str:
+    text = _required_text(value, "repository path").replace("\\", "/")
+    while text.startswith("./"):
+        text = text[2:]
+    path = PurePosixPath(text)
+    if path.is_absolute() or ".." in path.parts:
+        raise ValueError(f"repository path escapes workspace: {value}")
+    normalized = path.as_posix()
+    if normalized in {"", "."}:
+        raise ValueError("repository path must not be empty")
+    return normalized
+
+
+_VIRTUAL_ENV_DIR_RE = re.compile(r"^(?:\.?venv|\.?env)(?:[-_.].*)?$", re.IGNORECASE)
+_EPHEMERAL_SOURCE_DIRS = frozenset({"site-packages", ".tox", ".nox", ".direnv"})
+
+
+def _is_ephemeral_repository_path(path: str) -> bool:
+    parent_parts = PurePosixPath(path).parts[:-1]
+    return any(
+        part in _EPHEMERAL_SOURCE_DIRS or _VIRTUAL_ENV_DIR_RE.fullmatch(part)
+        for part in parent_parts
+    )
+
+
+def _canonical_python_sources(root: Path) -> dict[str, str]:
+    """Return Aura-scanned sources with local interpreter environments removed.
+
+    The Emergent Evidence Spine scanner remains the source collector. This
+    boundary only removes environment-local Python packages that can appear
+    under names such as ``.venv_phase2`` and would otherwise make the AOT index
+    depend on a developer's temporary virtual environment.
+    """
+    return {
+        path: source
+        for path, source in _repo_python_sources(root).items()
+        if not _is_ephemeral_repository_path(path)
+    }
+
+
+def _is_test_path(path: str) -> bool:
+    parts = str(path).replace("\\", "/").lower().split("/")
+    return any(
+        part == "tests" or part.startswith("test_") or part.endswith("_test.py")
+        for part in parts
+    )
+
+
+def _qualified_symbol(node: Any) -> str:
+    if node.kind == "module":
+        return "<module>"
+    return f"{node.parent_symbol}.{node.symbol}" if node.parent_symbol else node.symbol
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        value = json.load(handle)
+    if not isinstance(value, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return value
+
+
+def _digest_file(path: Path) -> str:
+    if not path.exists() or not path.is_file():
+        raise ValueError(f"required freshness artifact is missing: {path.as_posix()}")
+    return stable_digest(path.read_bytes().hex(), digest_size=20)
+
+
+def _git(root: Path, *args: str) -> str:
+    completed = subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    return completed.stdout.strip()
+
+
+def _repo_head(root: Path) -> str:
+    return _required_text(_git(root, "rev-parse", "HEAD"), "repo_head")
+
+
+def _working_tree_digest(root: Path) -> str:
+    """Digest tracked changes and relevant untracked files deterministically."""
+    tracked = subprocess.run(
+        ["git", "-C", str(root), "diff", "--binary", "HEAD", "--", "."],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    untracked_raw = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "ls-files",
+            "--others",
+            "--exclude-standard",
+            "-z",
+        ],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    ).stdout
+    untracked: list[dict[str, str]] = []
+    for raw_path in untracked_raw.split(b"\0"):
+        if not raw_path:
+            continue
+        relative = _safe_repo_path(raw_path.decode("utf-8", errors="surrogateescape"))
+        if relative in INDEX_GENERATED_PATHS or _is_ephemeral_repository_path(relative):
+            continue
+        path = root / relative
+        if path.is_file():
+            untracked.append(
+                {
+                    "path": relative,
+                    "digest": stable_digest(path.read_bytes().hex(), digest_size=20),
+                }
+            )
+    return stable_digest(
+        {
+            "tracked_diff_digest": stable_digest(tracked.hex(), digest_size=20),
+            "untracked": sorted(untracked, key=lambda item: item["path"]),
+        },
+        digest_size=20,
+    )
+
+
+def _topology_facts(path: Path) -> tuple[str, str, float | None]:
+    data = _read_json(path)
+    version = str(
+        data.get("version")
+        or data.get("schema_version")
+        or data.get("metadata", {}).get("version")
+        or "UNVERSIONED_TOPOLOGY"
+    )
+    health_value = (
+        data.get("global_health")
+        or data.get("health")
+        or data.get("metadata", {}).get("global_health")
+    )
+    health = float(health_value) if isinstance(health_value, (int, float)) else None
+    return _digest_file(path), version, health
+
+
+def _relation_ontology_digest() -> str:
+    return stable_digest(sorted(item.value for item in RelationType), digest_size=20)
+
+
+def _schema_digest(root: Path) -> str:
+    return _digest_file(root / "schemas" / "aura_relational_index.schema.json")
+
+
+class RelationalIndexProfile(str, Enum):
+    MINIMAL = "MINIMAL"
+    STANDARD = "STANDARD"
+    DEEP = "DEEP"
+
+    @property
+    def budgets(self) -> Mapping[str, int]:
+        return _PROFILE_BUDGETS[self.value]
+
+    @property
+    def digest(self) -> str:
+        return stable_digest(
+            {"name": self.value, "budgets": dict(self.budgets)}, digest_size=20
+        )
+
+
+@dataclass(frozen=True)
+class RelationalIndex:
+    """Canonical generated relational anatomy cache."""
+
+    index_id: str
+    repository_identity: Mapping[str, Any]
+    profile: Mapping[str, Any]
+    participants: tuple[RelationalParticipant, ...]
+    relations: tuple[TypedRelation, ...]
+    groups: tuple[RelationalGroup, ...]
+    reverse_indexes: Mapping[str, Any]
+    boundary: Mapping[str, Any]
+    build_facts: Mapping[str, Any]
+    generated_only: bool = True
+    safe_to_patch: bool = False
+    production_mutation: bool = False
+    automatic_fix: bool = False
+    automatic_commit: bool = False
+    automatic_push: bool = False
+    automatic_pull_request: bool = False
+    automatic_merge: bool = False
+    human_review_required: bool = True
+
+    def __post_init__(self) -> None:
+        repository_identity = _immutable_mapping(
+            self.repository_identity, "repository_identity"
+        )
+        for name in _REQUIRED_REPOSITORY_IDENTITY:
+            _required_text(repository_identity.get(name), f"repository_identity.{name}")
+        object.__setattr__(self, "repository_identity", repository_identity)
+
+        profile = _immutable_mapping(self.profile, "profile")
+        name = _required_text(profile.get("name"), "profile.name")
+        try:
+            profile_enum = RelationalIndexProfile(name)
+        except ValueError as exc:
+            raise ValueError(f"unsupported relational index profile: {name}") from exc
+        if profile.get("profile_digest") != profile_enum.digest:
+            raise ValueError("profile_digest does not match canonical profile")
+        object.__setattr__(self, "profile", profile)
+
+        if type(self.participants) is not tuple or not self.participants or not all(
+            isinstance(item, RelationalParticipant) for item in self.participants
+        ):
+            raise ValueError("participants must be a non-empty tuple of RelationalParticipant")
+        participants = tuple(sorted(self.participants, key=lambda item: item.participant_id))
+        participant_ids = [item.participant_id for item in participants]
+        if len(participant_ids) != len(set(participant_ids)):
+            raise ValueError("participants contain duplicate IDs")
+        object.__setattr__(self, "participants", participants)
+        participant_id_set = set(participant_ids)
+
+        if type(self.relations) is not tuple or n
