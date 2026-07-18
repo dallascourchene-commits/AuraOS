@@ -1,0 +1,124 @@
+name: CodeRabbit to Coding Waboose Learning
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  LEARNING_ROOT: ~/.aura/coding_waboose_learning
+
+jobs:
+  learn:
+    if: contains(github.actor, 'coderabbit')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout trusted Aura learning runtime
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          path: aura-runtime
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Restore Waboose DREAM/QDKT memory
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.aura/coding_waboose_learning
+          key: waboose-learning-${{ github.repository_id }}-${{ github.run_id }}
+          restore-keys: |
+            waboose-learning-${{ github.repository_id }}-
+
+      - name: Materialize exact reviewed head without executing it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')"
+          git -C aura-runtime fetch --no-tags origin "$HEAD_SHA"
+          git -C aura-runtime worktree add --detach /tmp/aura-reviewed "$HEAD_SHA"
+          printf '%s' "$HEAD_SHA" > /tmp/coderabbit-head-sha
+
+      - name: Build grounded CodeRabbit review payload
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_ID: ${{ github.event.review.id }}
+        run: |
+          set -euo pipefail
+          gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/comments?per_page=100" \
+            > /tmp/coderabbit-comment-pages.json
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          pages = json.loads(Path('/tmp/coderabbit-comment-pages.json').read_text())
+          comments = [item for page in pages for item in page]
+          head_sha = Path('/tmp/coderabbit-head-sha').read_text().strip()
+          threads = []
+          for item in comments:
+              login = str((item.get('user') or {}).get('login') or '')
+              commit_id = str(item.get('commit_id') or '')
+              if 'coderabbit' not in login.lower() or commit_id != head_sha:
+                  continue
+              threads.append({
+                  'path': item.get('path'),
+                  'line': item.get('line') or item.get('original_line') or 1,
+                  'comments': [{
+                      'author': {'login': login},
+                      'body': item.get('body') or '',
+                  }],
+              })
+          payload = {
+              'success': True,
+              'status': 'completed',
+              'run_id': f"github-review-{os.environ['REVIEW_ID']}",
+              'pr_number': int(os.environ['PR_NUMBER']),
+              'head_sha': head_sha,
+              'review_threads': threads,
+              'source': 'github_pull_request_review',
+          }
+          Path('/tmp/coderabbit-review.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True),
+              encoding='utf-8',
+          )
+          PY
+
+      - name: Learn through Connectome, DREAM-lite, and QDKT
+        run: |
+          set -o pipefail
+          PYTHONPATH="$PWD/aura-runtime" \
+          python aura-runtime/aura_coderabbit_learning_cli.py \
+            --repo-root /tmp/aura-reviewed \
+            --learning-root "$LEARNING_ROOT" \
+            ingest --review /tmp/coderabbit-review.json \
+            | tee /tmp/coderabbit-learning-result.json
+
+      - name: Save updated Waboose learning memory
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.aura/coding_waboose_learning
+          key: waboose-learning-${{ github.repository_id }}-${{ github.run_id }}
+
+      - name: Upload non-authoritative learning receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coderabbit-waboose-learning-${{ github.event.pull_request.number }}
+          path: |
+            /tmp/coderabbit-review.json
+            /tmp/coderabbit-learning-result.json
+          if-no-files-found: warn
+          retention-days: 14
