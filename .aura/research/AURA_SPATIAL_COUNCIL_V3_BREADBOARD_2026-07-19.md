@@ -59,7 +59,7 @@ skipped_lanes: []
 
 - Require contract and adversarial tests before bridge integration.
 - Test authority fields directly, not only output shape.
-- Test missing references, cycles, non-finite transforms, digest mismatches, unsafe paths, and self-links.
+- Test missing references, cycles, non-finite transforms, digest mismatches, unsafe paths, self-links, projection-only enforcement, selected-node cap survival, and metadata sanitization.
 - Test deterministic Council routing and BC4/BC5 circuit states.
 - Preserve existing Coding Arena and showcase tests.
 
@@ -74,10 +74,11 @@ contracts
   → hotswap guard
   → bridge integration
   → docs/schema/tests
+  → architecture anchor
   → CODEMAP regeneration
 ```
 
-Bridge mutation is intentionally after the interaction contract so it cannot invent its own authority semantics.
+Bridge integration is intentionally after the interaction contract so it cannot invent its own authority semantics.
 
 ### Continuity
 
@@ -97,7 +98,7 @@ Context handoffs can be reconstructed from the Planning Board and do not depend 
 
 - Additive contract modules can be reverted independently.
 - Bridge integration is a separate, narrow change.
-- Any second topology scanner, renderer authority, unstable digest, or false hotswap success triggers rollback.
+- Any second topology scanner, renderer authority, unstable digest, selected-node truncation, or false hotswap success triggers rollback.
 - Generated maps are refreshed only after tests pass, preventing generated evidence from masking a broken source state.
 
 ### Cost
@@ -158,13 +159,28 @@ automatic_pull_request: false
 automatic_merge: false
 ```
 
-## Local implementation evidence
+## Repository-native implementation evidence
 
-An isolated test harness using production-compatible interfaces produced:
+The source circuit at commit `670e7cdb9e52290b88f6a427307be2924be97249` completed the self-cleaning repository-native finalization workflow:
 
 ```yaml
 python_compile: pass
-focused_tests: 12/12 pass
+fatal_lint: pass
+json_schema_syntax: pass
+focused_and_compatibility_tests:
+  python: "3.12"
+  passed: 27
+  failed: 0
+authority_invariants: pass
+codemap_regeneration_and_compare: pass
+canonical_codemap:
+  file_count: 1159
+  topology_nodes: 9561
+  topology_edges: 21788
+  topology_source: compiled_deep_topology
+temporary_finalization_machinery_removed: true
 ```
 
-This verifies the new module logic in isolation. Repository-native CI remains required after the files are committed because the isolated harness does not substitute for Aura's full dependency graph or existing regression suite.
+Before the final three adversarial cases were added, the same repository-native focused circuit passed 24 tests on both Python 3.10 and Python 3.12. The final source is being rechecked by the permanent matrix workflow after this receipt-only update.
+
+This evidence verifies the bounded S0–S2 source, bridge, schema, architecture anchor, and generated navigation artifacts. It does not grant merge, execution, renderer, or production-mutation authority.
