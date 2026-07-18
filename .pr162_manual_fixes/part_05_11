@@ -1,0 +1,41 @@
+ episode should record the following higher-order signatures in addition to the AST signature:
++
++- schema path + runtime validator path;
++- lock acquisition/release + linked read/write path;
++- truth-class owner + evidence-reference owner;
++- profile discriminant + budget mapping + digest;
++- reverse-index producer + query consumer;
++- documented CLI command + returned payload size class;
++- relation selector + mandatory endpoint cardinality.
++
++These are relational cause chains, not merely lexical token patterns.
++
++## 7. Waboose review pipeline changes
++
++Proposed review order:
++
++```text
++exact changed-file and range identity
++  → canonical source decoding
++  → schema/runtime parity
++  → construction-path and truth-flow analysis
++  → reverse-index behavioral probes
++  → persistence interleaving probes
++  → bounded scale/CLI probes
++  → focused tests and linters
++  → learned teacher-signal retrieval
++  → current-source reproof
++  → advisory findings
++```
++
++Hard guards precede learned ranking. A DREAM/QDKT similarity score cannot rescue a detector that lacks current evidence.
++
++## 8. Workflows
++
++Recommended workflows:
++
++- `waboose-pr-review.yml` — bounded deterministic PR review;
++- `waboose-daily-observatory.yml` — daily code-health proposals, maximum ten new findings and minimum zero;
++- `waboose-weekly-deep-scan.yml` — scale and cross-contract probes;
++- `waboose-rule-probation.yml` — positive/false-positive fixture gate;
++- `coderabbit-wa
