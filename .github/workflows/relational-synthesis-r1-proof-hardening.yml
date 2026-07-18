@@ -1,0 +1,120 @@
+name: Relational Synthesis R1 Proof Hardening
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/relational-synthesis-r1-proof-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' bandit
+
+      - name: Keep inferred roles and test meaning proof-bound
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('aura_relational_synthesis.py')
+          source = source_path.read_text(encoding='utf-8')
+
+          def replace_once(old: str, new: str) -> None:
+              global source
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected one source seam, found {count}: {old[:100]!r}')
+              source = source.replace(old, new, 1)
+
+          replace_once(
+              '''    unresolved_participants: list[RelationalParticipant] = []\n    unresolved: list[str] = []\n    proof_obligations: list[ProofObligation] = []\n    for path in sorted(set(packet.get("tests", []))):\n''',
+              '''    unresolved_participants: list[RelationalParticipant] = []\n    unresolved: list[str] = []\n    proof_obligations: list[ProofObligation] = []\n    for participant in exact_tests:\n        unresolved_key = f"proved_invariant:{participant.participant_id}"\n        unresolved.append(unresolved_key)\n        proof_obligations.append(\n            ProofObligation.create(\n                claim=(\n                    "Bind exact test callable "\n                    f"{participant.qualified_symbol or participant.canonical_ref} "\n                    "to the specific invariant it proves."\n                ),\n                status=ProofStatus.OPEN,\n                required_evidence=(\n                    "exact_test_callable",\n                    "test_edge",\n                    "proved_invariant",\n                ),\n                evidence_refs=participant.evidence_refs,\n                verifier_ids=("relational_test_proof_integrity",),\n            )\n        )\n    for path in sorted(set(packet.get("tests", []))):\n''',
+          )
+          replace_once(
+              '''    if not proof_obligations:\n        proof_obligations.append(\n            ProofObligation.create(\n                claim="Every selected test relation names an exact callable owner and proved invariant.",\n                status=ProofStatus.SATISFIED,\n                required_evidence=("exact_test_callable", "test_edge"),\n                evidence_refs=(packet_ref,),\n                verifier_ids=("relational_test_proof_integrity",),\n            )\n        )\n''',
+              '''    if not proof_obligations:\n        unresolved.append("exact_test_callable:missing")\n        proof_obligations.append(\n            ProofObligation.create(\n                claim=(\n                    "Resolve an exact test callable, exact test edge, and the "\n                    "specific invariant proved for this objective."\n                ),\n                status=ProofStatus.OPEN,\n                required_evidence=(\n                    "exact_test_callable",\n                    "test_edge",\n                    "proved_invariant",\n                ),\n                verifier_ids=("relational_test_proof_integrity",),\n            )\n        )\n''',
+          )
+          replace_once(
+              '''    omitted = (\n        {"unresolved_test_callable_owner": len(unresolved)}\n        if unresolved\n        else {}\n    )\n''',
+              '''    omitted: dict[str, int] = {}\n    filename_gaps = sum(\n        item.startswith("test_callable_owner:") for item in unresolved\n    )\n    invariant_gaps = sum(\n        item.startswith("proved_invariant:") for item in unresolved\n    )\n    missing_test_gaps = sum(\n        item == "exact_test_callable:missing" for item in unresolved\n    )\n    if filename_gaps:\n        omitted["unresolved_test_callable_owner"] = filename_gaps\n    if invariant_gaps:\n        omitted["unresolved_test_invariant"] = invariant_gaps\n    if missing_test_gaps:\n        omitted["missing_exact_test_evidence"] = missing_test_gaps\n''',
+          )
+          replace_once(
+              '''    assignments: dict[str, RelationalParticipant] = {}\n    for role, patterns in _INPUT_ROLE_PATTERNS.items():\n''',
+              '''    assignments: dict[str, RelationalParticipant] = {}\n    name_derived_roles: set[str] = set()\n    for role, patterns in _INPUT_ROLE_PATTERNS.items():\n        if role == "authority_guard":\n            continue\n''',
+          )
+          replace_once(
+              '''        if matches:\n            assignments[role] = sorted(matches, key=lambda item: item.participant_id)[0]\n''',
+              '''        if matches:\n            assignments[role] = sorted(matches, key=lambda item: item.participant_id)[0]\n            name_derived_roles.add(role)\n''',
+          )
+          replace_once(
+              '''    exact_assignment_ids = {\n        item.participant_id for item in assignments.values()\n    }\n''',
+              '''    for role in sorted(name_derived_roles):\n        participant = assignments[role]\n        unresolved_key = f"candidate_role:{role}:{participant.participant_id}"\n        unresolved.append(unresolved_key)\n        proof_obligations.append(\n            ProofObligation.create(\n                claim=(\n                    f"Prove role {role} for exact participant "\n                    f"{participant.qualified_symbol or participant.canonical_ref} "\n                    "through structural, schema, manifest, or verifier evidence; "\n                    "the function name is ranking evidence only."\n                ),\n                status=ProofStatus.OPEN,\n                required_evidence=(\n                    "nonlexical_role_evidence",\n                    "current_digest",\n                ),\n                evidence_refs=participant.evidence_refs,\n                verifier_ids=("relational_identity_consistency",),\n            )\n        )\n    exact_assignment_ids = {\n        item.participant_id for item in assignments.values()\n    }\n''',
+          )
+          replace_once(
+              '''    role_bindings = tuple(\n        RoleBinding(item.participant_id, role)\n        for role, item in sorted(assignments.items())\n    )\n''',
+              '''    role_bindings = tuple(\n        RoleBinding(\n            item.participant_id,\n            f"candidate_{role}" if role in name_derived_roles else role,\n        )\n        for role, item in sorted(assignments.items())\n    )\n''',
+          )
+          replace_once(
+              '''    if not proof_obligations:\n        proof_obligations.append(\n            ProofObligation.create(\n                claim="Input parsing, scope normalization, packet assembly, and authority guards are all exact and current.",\n                status=ProofStatus.SATISFIED,\n                required_evidence=("exact_source", "authority_manifest"),\n                evidence_refs=(packet_ref,),\n                verifier_ids=("relational_authority_path_integrity",),\n            )\n        )\n''',
+              '''    if not proof_obligations:\n        proof_obligations.append(\n            ProofObligation.create(\n                claim=(\n                    "Reprove the complete input-to-scope-to-authority path from "\n                    "nonlexical current evidence."\n                ),\n                status=ProofStatus.OPEN,\n                required_evidence=(\n                    "exact_source",\n                    "authority_manifest",\n                    "nonlexical_role_evidence",\n                ),\n                verifier_ids=("relational_authority_path_integrity",),\n            )\n        )\n        unresolved.append("input_scope_authority_path:unproved")\n''',
+          )
+          replace_once(
+              '''    omitted = (\n        {"unresolved_input_scope_authority_role": len(unresolved)}\n        if unresolved\n        else {}\n    )\n''',
+              '''    omitted: dict[str, int] = {}\n    missing_roles = sum(\n        item.startswith("required_role:") for item in unresolved\n    )\n    candidate_roles = sum(\n        item.startswith("candidate_role:") for item in unresolved\n    )\n    unproved_paths = sum(\n        item == "input_scope_authority_path:unproved" for item in unresolved\n    )\n    if missing_roles:\n        omitted["unresolved_input_scope_authority_role"] = missing_roles\n    if candidate_roles:\n        omitted["name_derived_role_requires_proof"] = candidate_roles\n    if unproved_paths:\n        omitted["unproved_input_scope_authority_path"] = unproved_paths\n''',
+          )
+          source_path.write_text(source, encoding='utf-8')
+
+          test_path = Path('tests/test_aura_relational_synthesis.py')
+          tests = test_path.read_text(encoding='utf-8')
+          tests = tests.replace(
+              '''    assert group.boundary.omitted_relation_count == 1\n    assert group.boundary.omitted_reasons == {"unresolved_test_callable_owner": 1}\n    assert group.boundary.unresolved_relations == (\n        "test_callable_owner:tests/test_unresolved.py",\n    )\n''',
+              '''    assert group.boundary.omitted_relation_count == 2\n    assert group.boundary.omitted_reasons == {\n        "unresolved_test_callable_owner": 1,\n        "unresolved_test_invariant": 1,\n    }\n    assert "test_callable_owner:tests/test_unresolved.py" in (\n        group.boundary.unresolved_relations\n    )\n    assert any(\n        item.startswith("proved_invariant:")\n        for item in group.boundary.unresolved_relations\n    )\n''',
+          )
+          marker = 'def test_name_derived_roles_and_test_meaning_remain_open()'
+          if marker not in tests:
+              tests += '''\n\ndef test_name_derived_roles_and_test_meaning_remain_open() -> None:\n    packet = _packet()\n    packet["tests"] = ["tests/test_packet.py"]\n    capsule = _compile(packet)\n\n    scope_group = next(\n        item for item in capsule.groups if item.purpose == "input_scope_authority"\n    )\n    binding_roles = {item.role for item in scope_group.role_bindings}\n    assert "candidate_input_parser" in binding_roles\n    assert "candidate_scope_normalizer" in binding_roles\n    assert "candidate_packet_assembler" in binding_roles\n    assert "authority_guard" in binding_roles\n    assert all(\n        item.status.value == "OPEN" for item in scope_group.proof_obligations\n    )\n    assert scope_group.boundary.omitted_reasons == {\n        "name_derived_role_requires_proof": 3\n    }\n    assert len(scope_group.boundary.unresolved_relations) == 3\n\n    test_group = next(\n        item for item in capsule.groups if item.purpose == "test_proof_ownership"\n    )\n    assert all(\n        item.status.value == "OPEN" for item in test_group.proof_obligations\n    )\n    assert test_group.boundary.omitted_reasons == {\n        "unresolved_test_invariant": 1\n    }\n    assert any(\n        item.startswith("proved_invariant:")\n        for item in test_group.boundary.unresolved_relations\n    )\n'''
+          test_path.write_text(tests, encoding='utf-8')
+
+          plan_path = Path('docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md')
+          plan = plan_path.read_text(encoding='utf-8')
+          old = (\n              'Binds input parser, scope normalizer, packet assembler, and authority guard when exact evidence exists. '\n              'Missing roles become explicit unresolved participants. Affinity fallback may never silently widen an explicit target.'\n          )
+          new = (\n              'Binds an exact authority manifest directly. Function-name matches for input parser, scope normalizer, and packet '\n              'assembler remain candidate role bindings with open proof obligations until structural, schema, manifest, or verifier '\n              'evidence proves the role. Missing roles become explicit unresolved participants. Affinity fallback may never silently '\n              'widen an explicit target.'\n          )
+          if plan.count(old) != 1:
+              raise SystemExit('expected one plan seam')
+          plan_path.write_text(plan.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Validate proof hardening
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+          ruff check --select E9,F63,F7,F82 aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          bandit -q -ll aura_relational_synthesis.py
+
+      - name: Commit and push permanent proof boundaries
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py docs/AURA_RELATIONAL_SYNTHESIS_REFACTOR_PLAN.md
+          git diff --cached --check
+          git commit -m 'Keep relational role inference proof-bound'
+          git push origin HEAD:feature/aura-relational-synthesis-r1
