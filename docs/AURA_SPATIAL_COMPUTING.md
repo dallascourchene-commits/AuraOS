@@ -129,7 +129,8 @@ The adapter:
 - keeps the existing bounded depth and token budget;
 - preserves exact topology/source references in entity metadata;
 - converts coordinates into presentation-only frame state;
-- creates a content-addressed topology-graph asset manifest;
+- creates a content-addressed topology-graph asset manifest from the same bounded node/link projection, never the unbounded pre-truncation neighborhood;
+- records pre-bound source counts and explicit truncation without serializing discarded topology into the asset evidence;
 - prioritizes exact selected nodes before applying the bounded node cap;
 - preserves only links whose endpoints remain inside the bounded node closure;
 - marks every entity `projection_only=true` and `patch_authority=false`;

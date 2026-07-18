@@ -485,3 +485,42 @@ def test_spatial_metadata_redacts_secrets_and_rejects_private_reasoning():
             frame_id="root",
             metadata={"chain_of_thought": "not allowed"},
         )
+
+def test_topology_asset_evidence_excludes_discarded_large_nodes():
+    selected_id = "node:129"
+    nodes = [
+        {
+            "id": f"node:{index:03d}",
+            "label": f"Node {index}",
+            "node_type": "function",
+            "file_path": f"pkg/module_{index}.py",
+            "symbol": f"function_{index}",
+            "line_range": [1, 2],
+            "metadata": (
+                {"discarded_blob": "x" * 2_000_000}
+                if index == 128
+                else {}
+            ),
+        }
+        for index in range(130)
+    ]
+    links = [
+        {
+            "source": selected_id,
+            "target": f"node:{index:03d}",
+            "type": "calls",
+        }
+        for index in range(129)
+    ]
+    scene = project_coding_topology_to_scene(
+        {"nodes": nodes, "links": links},
+        (selected_id,),
+        depth=1,
+    )
+    asset = scene.assets[0]
+    metadata = asset.to_dict()["metadata"]
+    assert metadata["truncated"] is True
+    assert metadata["source_node_count"] == 130
+    assert metadata["source_link_count"] == 129
+    assert metadata["node_count"] == 128
+    assert asset.byte_length < 250_000

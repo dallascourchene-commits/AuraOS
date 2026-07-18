@@ -98,6 +98,17 @@ def project_coding_topology_to_scene(
             "coding topology projection requires at least one grounded node"
         )
 
+    bounded_micro = {
+        "version": micro.get("version"),
+        "selected_node_ids": list(returned_selected),
+        "nodes": raw_nodes,
+        "links": raw_links,
+        "depth": micro.get("depth"),
+        "human_instruction": micro.get("human_instruction"),
+        "token_cost": micro.get("token_cost"),
+    }
+    bounded_micro_digest = stable_digest(bounded_micro, digest_size=32)
+
     root_frame = CoordinateFrame(
         frame_id="aura-coding-root",
         parent_frame_id=None,
@@ -110,7 +121,7 @@ def project_coding_topology_to_scene(
         parent_frame_id=root_frame.frame_id,
         source_refs=(
             "owner:aura_coding_arena_3d.select_micro_arena",
-            f"micro_arena:{stable_digest(micro, digest_size=16)}",
+            f"bounded_micro_arena:{bounded_micro_digest}",
         ),
         truth_class=SpatialTruthClass.PRESENTATION,
         projection_only=True,
@@ -220,14 +231,14 @@ def project_coding_topology_to_scene(
             )
         )
 
-    micro_bytes = canonical_json(micro).encode("utf-8")
+    micro_bytes = canonical_json(bounded_micro).encode("utf-8")
     bounds_min, bounds_max = _bounds(positions)
     graph_asset = SpatialAssetManifest(
-        asset_id=_stable_identifier("coding-graph-asset", micro),
+        asset_id=_stable_identifier("coding-graph-asset", bounded_micro),
         asset_type=SpatialAssetType.TOPOLOGY_GRAPH,
         uri=(
             "aura://coding/micro-arena/"
-            f"{stable_digest(micro, digest_size=16)}"
+            f"{bounded_micro_digest[:32]}"
         ),
         media_type="application/vnd.aura.coding-topology+json",
         content_digest="sha256:" + hashlib.sha256(micro_bytes).hexdigest(),
@@ -237,7 +248,7 @@ def project_coding_topology_to_scene(
         bounds_max=bounds_max,
         source_refs=(
             "owner:aura_coding_arena_3d.select_micro_arena",
-            f"micro_arena:{stable_digest(micro, digest_size=32)}",
+            f"bounded_micro_arena:{bounded_micro_digest}",
         ),
         truth_class=SpatialTruthClass.DERIVED,
         immutable=True,
@@ -245,6 +256,8 @@ def project_coding_topology_to_scene(
             "embedded_payload": False,
             "node_count": len(raw_nodes),
             "link_count": len(links),
+            "source_node_count": len(micro.get("nodes", [])),
+            "source_link_count": len(micro.get("links", [])),
             "truncated": (
                 len(micro.get("nodes", [])) > len(raw_nodes)
                 or len(micro.get("links", [])) > len(raw_links)
@@ -258,7 +271,7 @@ def project_coding_topology_to_scene(
             "selected_node_ids": list(
                 micro.get("selected_node_ids", [])
             ),
-            "micro_digest": stable_digest(micro, digest_size=32),
+            "bounded_micro_digest": bounded_micro_digest,
         },
         digest_size=32,
     )
