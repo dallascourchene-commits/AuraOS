@@ -2,7 +2,7 @@
 
 > Operator guide for the current sovereign, local-first, Arena-based AuraOS architecture
 
-**Audit window:** architecture and merged work reviewed through July 17, 2026, including the preceding three weeks of Planning Board, event history, relational authority, J2/ST3GG/QDKT, Model Cognome, Human Agent, external-worker, Civic Commons, Construction, Financial, persistence, evidence, benchmark, and public-showcase development.
+**Audit window:** architecture and work reviewed through July 18, 2026, including the preceding three weeks of Planning Board, event history, relational authority, J2/ST3GG/QDKT, Model Cognome, Human Agent, external-worker, Civic Commons, Construction, Financial, persistence, evidence, benchmark, public-showcase, Forge, and Gate development.
 
 **CODEMAP rule:** regenerate navigation after architecture or source changes. Do not trust historical line numbers when the current tree can be inspected directly.
 
@@ -76,6 +76,7 @@ Keep these outside the repository:
 | **Native Cockpit** | Objective ingestion, capability resolution, topology paths, and bounded handoff preparation | `python3 -m aura_native_cockpit_server` |
 | **Agent Arena CLI** | Repository health, localization, prepared coding tasks, staging, verification, cost, and domain commands | `python3 -m aura_agent_arena_cli` |
 | **Aura Forge API** | Frozen-plan verified engineering runs with an exact Arena Evidence Contract and bounded worker sessions | `from aura_forge import AuraForgeRuntime` |
+| **Aura Gate** | Forge-specific OIDC identity, static policy, expiring leases, governed egress, MCP/A2A translation, audit, and private serving | `python3 -m aura_gate_server` |
 | **Coding Waboose** | Graph-guided diff review, deterministic scans, coding-agent focus, exact-source corroboration, and Forge repair handoff | `python3 aura_coding_waboose_cli.py run --request review_request.json` |
 | **Coding Arena** | Visual code topology, exact source regions, route simulation, and capsule review | `python3 aura_coding_arena_server.py --demo` |
 | **Human Agent Arena** | Human/Aura/agent workflows, gate dialogue, attempts, emergent evidence, Construction profile, persistence, and tools | `python3 aura_human_agent_arena_server.py --repo-root . --demo` |
@@ -346,6 +347,148 @@ python -m pytest -q tests/test_aura_forge.py
 ```
 
 See `docs/AURA_FORGE.md` for the complete contract and failure boundaries.
+
+### Aura Gate Phase 2
+
+Use Gate when a Forge run must cross an authenticated, purpose-limited enterprise-style
+boundary. Gate first calls `AuraForgeRuntime.prepare`, then binds the exact retained contract ID and
+digest into a content-addressed authority envelope and canonical Arena lease. `start`
+calls only `AuraForgeRuntime.start_prepared` for that frozen contract. It does not prepare a second
+plan or expose an ungoverned Forge method.
+
+```text
+OIDC verify → policy admit → Forge prepare → Gate lease
+  → audit pre-action → exact Forge start → governed egress
+  → bounded submit/status/revoke → human review → dissolution
+```
+
+Prepare these operator-controlled inputs outside source control:
+
+- an exact policy derived through `GatePolicyManifest.create(...)`;
+- OIDC issuer/audience configuration;
+- a pinned public RS256 JWKS;
+- a secret actor-salt file with at least 32 nontrivial bytes;
+- separate writable state, audit, and SIEM-export directories;
+- a pre-created writable `Aura_Staging` directory inside the selected worktree.
+
+Required process configuration is:
+
+```text
+AURA_GATE_REPO_ROOT
+AURA_GATE_POLICY_FILE
+AURA_GATE_OIDC_FILE
+AURA_GATE_JWKS_FILE
+AURA_GATE_ACTOR_SALT_FILE
+AURA_GATE_STATE_ROOT
+AURA_GATE_AUDIT_ROOT
+AURA_GATE_SIEM_ROOT
+AURA_GATE_HOST
+AURA_GATE_PORT
+```
+
+Use `AURA_GATE_POLICY_ID` when a policy file contains multiple manifests. The current
+cleartext server accepts numeric loopback addresses only, and the container proof pins
+`127.0.0.1`. The server performs no OIDC discovery or remote JWKS fetch.
+
+```bash
+python3 -m aura_gate_server
+```
+
+For the container proof, provide an immutable
+`AURA_GATE_BASE_IMAGE=<image>@sha256:<64-lowercase-hex>`, exact policy ID and port,
+CPU/memory ceilings, distinct state/audit/SIEM volume names, a writable staging path, and
+all required host paths. The digest-pinned base must already contain Git, pytest, and the
+complete Aura runtime/test dependency closure. Ensure UID/GID `65532:65532` can read the
+actor-salt bind and write staging, state, audit, and SIEM paths. Then
+validate interpolation before building:
+
+```bash
+docker compose -f docker-compose.aura-gate.yml config
+docker compose -f docker-compose.aura-gate.yml up --build
+```
+
+This Compose profile uses `network_mode: host`, fixes the service to `127.0.0.1`, and has
+no `ports:` publication. Use Docker Engine on Linux, or Docker Desktop 4.34+ after enabling
+the host-networking opt-in. Host networking removes container network-namespace isolation;
+retain OS firewall, provider allowlist, DNS, and enterprise egress controls. The read-only
+root, dropped capabilities, and Gate egress capsule are not substitutes for those controls.
+Do not add a public bind or unreviewed reverse proxy to this cleartext single-node proof.
+
+The anonymous route is only `GET /health`. Authenticated A2A routes require a bearer
+token and `A2A-Version: 1.0`; `POST /message:send` also requires
+`Content-Type: application/a2a+json` plus explicit
+`configuration.returnImmediately=true`. HTTP success wraps the Task as `{"task": ...}`;
+task polling and cancellation use `GET /tasks/{id}?historyLength=0` and
+`POST /tasks/{id}:cancel`. The Gate-only MCP adapter exposes exactly:
+
+```text
+aura_gate_prepare
+aura_gate_start
+aura_gate_submit
+aura_gate_status
+aura_gate_revoke
+```
+
+The A2A adapter supports `message/send`, `tasks/get`, and `tasks/cancel`; cancellation is
+an explicit lease revocation. Identity always comes from the verified transport boundary,
+never from MCP arguments or A2A message parts.
+
+The MCP adapter is a message-level projection, not the MCP HTTP authorization profile or
+a complete MCP network transport. A host must provide and test connection lifecycle,
+OAuth/protected-resource discovery, TLS/Origin controls, and inject only
+the verified identity. Likewise, A2A v1.0 requires HTTPS for production; this cleartext
+HTTP profile is a loopback-only proof.
+
+`VerifiedGateIdentity` is not self-authenticating when constructed directly in Python.
+Only inject instances returned by `OIDCIdentityVerifier` or a separately reviewed trusted
+identity boundary. Never deserialize an actor, identity, claims, or authorization object
+from request JSON into this type.
+
+Gate audit evidence contains pseudonymous actor and content digests, not raw bearer tokens,
+raw OIDC claim documents, worker prompts/responses, or credentials. SIEM export requires
+the verified `aura-gate-auditor` role and writes an exclusive, non-overwriting JSONL
+projection only within the configured SIEM root. The shipped server has no SIEM HTTP route
+or scheduler; invoke the trusted Python API or a separately reviewed offline operator job.
+
+Each actor/policy/request nonce is one-use and indexed durably before lease issuance.
+Distinct egress-capsule operations consume the persisted Gate egress-release allowance
+used as a provider-call proxy; that counter limits Gate releases, not retries made by an
+external network client. Reported token usage is validated when present. Lease/audit
+evidence survives restart, but every nonterminal Forge run is process-local; drain before
+restart or status will revoke it when Forge state is unavailable.
+
+Paired-live comparisons are a trusted in-process proof, not currently Gate policy/OIDC/
+audit/server operations. They verify observable provider/start counter deltas after each opaque
+arm returns. Counter mismatch invalidates the evidence, but only a separately enforced
+provider broker or network policy can prevent extra calls inside an injected executor.
+
+Focused validation:
+
+```bash
+python3 -m pytest -q \
+  tests/test_aura_forge.py \
+  tests/test_aura_gate.py \
+  tests/test_aura_gate_oidc.py \
+  tests/test_aura_gate_egress.py \
+  tests/test_aura_gate_audit.py \
+  tests/test_aura_gate_comparison.py \
+  tests/test_aura_gate_adapters.py \
+  tests/test_aura_gate_server.py \
+  tests/test_aura_gate_deployment.py \
+  tests/test_aura_gate_contract_artifacts.py
+```
+
+Before merging a Gate change, regenerate CODEMAP from tracked repository content, verify
+compiled deep topology, run the focused contracts and repository CI, and inspect the PR
+with a code-review service. Address every valid actionable review thread, rerun the affected
+contracts after the final commit, and merge only when the authority envelope, documentation,
+generated navigation, and release checks describe the same artifact.
+
+The proof is Forge-specific OIDC/private single-node deployment. It does not claim
+SAML/SCIM, HA/Kubernetes, arbitrary-domain policy, vendor-certified SIEM integration, or
+automatic commit, push, PR, merge, release, or promotion. See `docs/AURA_GATE.md` for the
+authority flow, deployment contract, standards links, schema/example, benchmark evidence,
+and exact limitations.
 
 ### Grounded phase capsules
 
@@ -768,6 +911,12 @@ Keep these fields separate:
 - exact test and verifier evidence.
 
 Never convert unknown usage into zero. Never present a proxy as an invoice. Do not promote Tier 3 or Tier 4 evidence into Tier 1 without governed execution and comparable quality evidence.
+
+The Aura Gate Phase 2 record is scoped to instrumented Agent Bridge retrieval and
+Selective Council V3 planning: `37,907` input, `1,852` output, and `39,759` total token
+proxy, with `51,987` (`56.66%`) estimated saved against its documented counterfactual.
+Full Codex-session provider totals were unavailable. Treat this as
+`DERIVED_COUNTERFACTUAL_WITH_CHAR4_TOKEN_PROXY`, not billing or a whole-session total.
 
 ## 22. Testing and documentation maintenance
 

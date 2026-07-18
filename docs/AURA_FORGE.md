@@ -96,6 +96,42 @@ Forge may return another worker or repair turn. Completion stops at
 `READY_FOR_HUMAN_REVIEW`. The review packet never commits, pushes, opens a pull
 request, merges, or mutates production.
 
+## Aura Gate Phase 2 binding
+
+Aura Gate wraps Forge without becoming a second planner, staging store, verifier, or
+worker runtime. The integration seam is deliberately two-step:
+
+```text
+AuraGateRuntime.prepare
+  → AuraForgeRuntime.prepare
+  → retain contract ID + full contract digest
+  → issue exact Gate authority envelope and Arena lease
+
+AuraGateRuntime.start
+  → reauthorize identity, policy, audit, lease, capability, and expiry
+  → append PRE_ACTION evidence
+  → AuraForgeRuntime.start_prepared(
+       run_id,
+       expected_contract_id=...,
+       expected_contract_digest=...,
+     )
+```
+
+`start_prepared` is one-shot and revalidates the retained internal contract, repository
+HEAD, CODEMAP digest, and allowed-file source hashes before the controlled worker session
+opens. The Gate wrapper then compiles any outbound turn into exact canonical bytes under
+the envelope's purpose, destination, model, data, retention, field, payload, and token
+limits.
+
+OIDC verification, static Gate policy, operational lease state, governed egress, MCP/A2A
+translation, comparisons, audit receipts, SIEM projection, and private serving remain
+owned by the `aura_gate*.py` modules. Forge retains preparation, bounded worker execution,
+staging, verification, repair, and `READY_FOR_HUMAN_REVIEW` ownership.
+
+The Gate envelope never upgrades a Forge review packet into commit, push, pull-request,
+merge, release, policy-promotion, or production authority. See
+[`docs/AURA_GATE.md`](AURA_GATE.md).
+
 ## Fail-closed conditions
 
 Forge refuses to start when:
@@ -134,7 +170,8 @@ claim:
 - independent multi-provider superiority;
 - production deployment readiness;
 - automatic release management;
-- enterprise identity or policy integration;
+- enterprise identity or policy integration inside Forge itself (the separate Gate Phase
+  2 proof supplies a narrow OIDC/static-policy wrapper);
 - a hosted control plane;
 - broad language/ecosystem coverage.
 
