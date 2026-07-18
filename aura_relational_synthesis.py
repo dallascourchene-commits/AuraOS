@@ -12,6 +12,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from enum import Enum
+from types import MappingProxyType
 from typing import Any
 
 from aura_event_contracts import canonical_json, stable_digest, stable_id
@@ -192,6 +193,39 @@ def _mapping(value: Any, field_name: str) -> dict[str, Any]:
     return result
 
 
+def _freeze_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {str(key): _freeze_json(item) for key, item in value.items()}
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_json(item) for item in value)
+    return value
+
+
+def _thaw_json(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {str(key): _thaw_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_thaw_json(item) for item in value]
+    return value
+
+
+def _immutable_mapping(value: Any, field_name: str) -> Mapping[str, Any]:
+    mutable = _mapping(value, field_name)
+    frozen = _freeze_json(mutable)
+    if not isinstance(frozen, Mapping):
+        raise ValueError(f"{field_name} must be an object")
+    return frozen
+
+
+def _mutable_mapping(value: Mapping[str, Any]) -> dict[str, Any]:
+    mutable = _thaw_json(value)
+    if not isinstance(mutable, dict):
+        raise ValueError("expected immutable mapping")
+    return mutable
+
+
 def _enum(value: Any, enum_type: type[Enum], field_name: str) -> Any:
     if isinstance(value, enum_type):
         return value
@@ -227,7 +261,7 @@ class RelationalParticipant:
     evidence_refs: tuple[str, ...]
     freshness: Freshness
     qualified_symbol: str | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: Mapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -259,7 +293,9 @@ class RelationalParticipant:
             "qualified_symbol",
             _optional_text(self.qualified_symbol, "qualified_symbol"),
         )
-        object.__setattr__(self, "metadata", _mapping(self.metadata, "metadata"))
+        object.__setattr__(
+            self, "metadata", _immutable_mapping(self.metadata, "metadata")
+        )
         expected = self.expected_id()
         if self.participant_id != expected:
             raise ValueError("participant_id does not match canonical participant identity")
@@ -339,7 +375,7 @@ class RelationalParticipant:
             "evidence_refs": list(self.evidence_refs),
             "freshness": self.freshness.value,
             "qualified_symbol": self.qualified_symbol,
-            "metadata": dict(sorted(self.metadata.items())),
+            "metadata": dict(sorted(_mutable_mapping(self.metadata).items())),
         }
 
     @classmethod
@@ -387,7 +423,7 @@ class TypedRelation:
     target_participant_id: str
     truth_class: TruthClass
     evidence_refs: tuple[str, ...]
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: Mapping[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -411,7 +447,9 @@ class TypedRelation:
             "evidence_refs",
             _string_tuple(self.evidence_refs, "evidence_refs"),
         )
-        object.__setattr__(self, "metadata", _mapping(self.metadata, "metadata"))
+        object.__setattr__(
+            self, "metadata", _immutable_mapping(self.metadata, "metadata")
+        )
         if self.relation_id != self.expected_id():
             raise ValueError("relation_id does not match canonical relation identity")
         if self.truth_class in _EXACT_TRUTH_CLASSES and not self.evidence_refs:
@@ -471,7 +509,7 @@ class TypedRelation:
             "target_participant_id": self.target_participant_id,
             "truth_class": self.truth_class.value,
             "evidence_refs": list(self.evidence_refs),
-            "metadata": dict(sorted(self.metadata.items())),
+            "metadata": dict(sorted(_mutable_mapping(self.metadata).items())),
         }
 
     @classmethod
@@ -644,7 +682,7 @@ class ProofObligation:
 class RelationalBoundary:
     included_participant_ids: tuple[str, ...]
     omitted_relation_count: int
-    omitted_reasons: dict[str, int]
+    omitted_reasons: Mapping[str, int]
     unresolved_relations: tuple[str, ...]
     budget_truncated: bool
     all_relation_endpoints_present: bool
@@ -676,7 +714,12 @@ class RelationalBoundary:
         if sum(normalized_reasons.values()) != self.omitted_relation_count:
             raise ValueError("omitted reason counts must equal omitted_relation_count")
         object.__setattr__(
-            self, "omitted_reasons", dict(sorted(normalized_reasons.items()))
+            self,
+            "omitted_reasons",
+            _immutable_mapping(
+                dict(sorted(normalized_reasons.items())),
+                "omitted_reasons",
+            ),
         )
         object.__setattr__(
             self,
@@ -704,7 +747,7 @@ class RelationalBoundary:
             "schema_version": RELATIONAL_BOUNDARY_VERSION,
             "included_participant_ids": list(self.included_participant_ids),
             "omitted_relation_count": self.omitted_relation_count,
-            "omitted_reasons": dict(self.omitted_reasons),
+            "omitted_reasons": _mutable_mapping(self.omitted_reasons),
             "unresolved_relations": list(self.unresolved_relations),
             "budget_truncated": self.budget_truncated,
             "all_relation_endpoints_present": self.all_relation_endpoints_present,
@@ -967,12 +1010,12 @@ class RelationalSynthesisCapsule:
     objective: str
     objective_digest: str
     intent_packet: PolysyntheticIntentPacket
-    repository_identity: dict[str, Any]
+    repository_identity: Mapping[str, Any]
     source_packet_id: str
     source_packet_digest: str
     participants: tuple[RelationalParticipant, ...]
     groups: tuple[RelationalGroup, ...]
-    source_slices: tuple[dict[str, Any], ...]
+    source_slices: tuple[Mapping[str, Any], ...]
     tests: tuple[str, ...]
     active_arena: str
     boundary: RelationalBoundary
@@ -994,10 +1037,17 @@ class RelationalSynthesisCapsule:
             raise ValueError("intent_packet must be a PolysyntheticIntentPacket")
         if self.intent_packet.objective_digest != self.objective_digest:
             raise ValueError("intent packet objective digest does not match capsule")
+        rebound_intent = PolysyntheticIntentPacket.from_slots(
+            {name: filler for name, filler in self.intent_packet.slot_items()},
+            adjuncts=self.intent_packet.adjuncts,
+            objective=self.objective,
+        )
+        if rebound_intent.objective_digest != self.objective_digest:
+            raise ValueError("intent packet does not bind the capsule objective")
         object.__setattr__(
             self,
             "repository_identity",
-            _mapping(self.repository_identity, "repository_identity"),
+            _immutable_mapping(self.repository_identity, "repository_identity"),
         )
         for key in (
             "repo_head",
@@ -1039,8 +1089,8 @@ class RelationalSynthesisCapsule:
             tuple(sorted(self.groups, key=lambda item: item.group_id)),
         )
         group_ids = [item.group_id for item in self.groups]
-        if not group_ids or len(group_ids) != len(set(group_ids)):
-            raise ValueError("groups must be nonempty and contain unique IDs")
+        if len(group_ids) < 3 or len(group_ids) != len(set(group_ids)):
+            raise ValueError("groups must contain at least three unique IDs")
         participant_id_set = set(participant_ids)
         for group in self.groups:
             for binding in group.role_bindings:
@@ -1068,10 +1118,10 @@ class RelationalSynthesisCapsule:
             raise ValueError("capsule boundary references unknown participant")
         if self.boundary.all_relation_endpoints_present is not True:
             raise ValueError("capsule boundary must declare all_relation_endpoints_present as True")
-        normalized_slices: list[dict[str, Any]] = []
+        normalized_slices: list[Mapping[str, Any]] = []
         seen_slice_ids: set[str] = set()
         for item in self.source_slices:
-            data = _mapping(item, "source_slices[]")
+            data = _immutable_mapping(item, "source_slices[]")
             node_id = _required_text(data.get("node_id"), "source_slices[].node_id")
             if node_id in seen_slice_ids:
                 raise ValueError("source_slices must not contain duplicate node IDs")
@@ -1093,6 +1143,8 @@ class RelationalSynthesisCapsule:
             ):
                 raise ValueError("source_slices[] line range is invalid")
             normalized_slices.append(data)
+        if not normalized_slices:
+            raise ValueError("source_slices must not be empty")
         object.__setattr__(
             self,
             "source_slices",
@@ -1176,7 +1228,7 @@ class RelationalSynthesisCapsule:
             {
                 "objective_digest": self.objective_digest,
                 "intent_packet_digest": self.intent_packet.digest(),
-                "repository_identity": self.repository_identity,
+                "repository_identity": _mutable_mapping(self.repository_identity),
                 "source_packet_id": self.source_packet_id,
                 "source_packet_digest": self.source_packet_digest,
                 "participant_ids": [
@@ -1194,12 +1246,16 @@ class RelationalSynthesisCapsule:
             "objective_digest": self.objective_digest,
             "intent_packet": self.intent_packet.canonical_dict(),
             "intent_packet_digest": self.intent_packet.digest(),
-            "repository_identity": dict(sorted(self.repository_identity.items())),
+            "repository_identity": dict(
+                sorted(_mutable_mapping(self.repository_identity).items())
+            ),
             "source_packet_id": self.source_packet_id,
             "source_packet_digest": self.source_packet_digest,
             "participants": [item.to_dict() for item in self.participants],
             "groups": [item.to_dict() for item in self.groups],
-            "source_slices": [dict(item) for item in self.source_slices],
+            "source_slices": [
+                _mutable_mapping(item) for item in self.source_slices
+            ],
             "tests": list(self.tests),
             "active_arena": self.active_arena,
             "boundary": self.boundary.to_dict(),
@@ -1483,23 +1539,22 @@ class RelationalSynthesisShadowCompiler:
             ),
             all_relation_endpoints_present=True,
         )
+        capability_path = _mapping(
+            packet["capability_connectome"].get("path"),
+            "capability_connectome.path",
+        )
+        capability_path_digest = _required_text(
+            capability_path.get("capability_path_digest")
+            or capability_path.get("path_digest"),
+            "capability_connectome.path.capability_path_digest",
+        )
         repository_identity = {
             "repo_head": packet["repo_head"],
             "atomic_inventory_digest": packet["atomic_inventory"]["inventory_digest"],
             "capability_graph_digest": packet["capability_connectome"]["graph_digest"],
-            "capability_path_digest": str(
-                packet["capability_connectome"].get("path", {}).get(
-                    "capability_path_digest"
-                )
-                or packet["capability_connectome"].get("path", {}).get("path_digest")
-                or ""
-            ),
+            "capability_path_digest": capability_path_digest,
             "evidence_packet_version": packet["version"],
         }
-        if not repository_identity["capability_path_digest"]:
-            repository_identity["capability_path_digest"] = stable_digest(
-                packet["capability_connectome"].get("path", {}), digest_size=20
-            )
         return RelationalSynthesisCapsule.create(
             objective=packet["objective"],
             intent_packet=intent_packet,
@@ -1571,6 +1626,14 @@ def _validate_evidence_packet(
         packet.get("capability_connectome"), "capability_connectome"
     )
     _required_text(capability.get("graph_digest"), "capability_connectome.graph_digest")
+    capability_path = _mapping(
+        capability.get("path"), "capability_connectome.path"
+    )
+    _required_text(
+        capability_path.get("capability_path_digest")
+        or capability_path.get("path_digest"),
+        "capability_connectome.path.capability_path_digest",
+    )
     expected_repo_head = _required_text(expected_repo_head, "expected_repo_head")
     expected_packet_digest = _required_text(
         expected_packet_digest, "expected_packet_digest"

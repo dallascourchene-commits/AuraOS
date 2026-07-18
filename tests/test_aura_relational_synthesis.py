@@ -457,6 +457,16 @@ def test_name_derived_roles_and_test_meaning_remain_open() -> None:
     assert "candidate_scope_normalizer" in binding_roles
     assert "candidate_packet_assembler" in binding_roles
     assert "authority_guard" in binding_roles
+    authority_binding = next(
+        item for item in scope_group.role_bindings
+        if item.role == "authority_guard"
+    )
+    authority_participant = next(
+        item for item in capsule.participants
+        if item.participant_id == authority_binding.participant_id
+    )
+    assert authority_participant.role == "authority_guard"
+    assert authority_participant.canonical_ref == "packet.authority.patch_authority"
     assert all(item.status.value == "OPEN" for item in scope_group.proof_obligations)
     assert scope_group.boundary.omitted_reasons == {
         "name_derived_role_requires_proof": 3
@@ -474,3 +484,71 @@ def test_name_derived_roles_and_test_meaning_remain_open() -> None:
         item.startswith("proved_invariant:")
         for item in test_group.boundary.unresolved_relations
     )
+
+
+
+def test_capability_path_freshness_identity_is_not_fabricated() -> None:
+    packet = _packet()
+    packet["capability_connectome"]["path"] = {}
+    with pytest.raises(ValueError, match="capability_path_digest"):
+        _compile(packet)
+
+
+def test_capsule_create_binds_objective_to_intent() -> None:
+    capsule = _compile()
+    with pytest.raises(ValueError, match="does not bind the capsule objective"):
+        RelationalSynthesisCapsule.create(
+            objective="A different objective.",
+            intent_packet=_intent(),
+            repository_identity=capsule.repository_identity,
+            source_packet_id=capsule.source_packet_id,
+            source_packet_digest=capsule.source_packet_digest,
+            participants=capsule.participants,
+            groups=capsule.groups,
+            source_slices=capsule.source_slices,
+            tests=capsule.tests,
+            active_arena=capsule.active_arena,
+            boundary=capsule.boundary,
+        )
+
+
+def test_capsule_schema_cardinalities_are_enforced_in_python() -> None:
+    too_few_groups = _compile().to_dict()
+    too_few_groups["groups"] = too_few_groups["groups"][:2]
+    with pytest.raises(ValueError, match="at least three"):
+        RelationalSynthesisCapsule.from_dict(too_few_groups)
+
+    no_source_slices = _compile().to_dict()
+    no_source_slices["source_slices"] = []
+    with pytest.raises(ValueError, match="source_slices must not be empty"):
+        RelationalSynthesisCapsule.from_dict(no_source_slices)
+
+
+def test_frozen_contract_mappings_are_deeply_immutable() -> None:
+    capsule = _compile()
+    with pytest.raises(TypeError):
+        capsule.repository_identity["repo_head"] = "0" * 40
+    with pytest.raises(TypeError):
+        capsule.source_slices[0]["file_path"] = "mutated.py"
+
+    participant = RelationalParticipant.create(
+        participant_type=ParticipantType.STATE,
+        role="immutable_fixture",
+        truth_class=TruthClass.UNRESOLVED,
+        canonical_owner="fixture",
+        canonical_ref="fixture:immutable",
+        digest=None,
+        evidence_refs=("fixture",),
+        freshness=Freshness.UNRESOLVED,
+        metadata={"nested": {"items": ["a", "b"]}},
+    )
+    with pytest.raises(TypeError):
+        participant.metadata["nested"]["new"] = "value"
+    with pytest.raises(TypeError):
+        participant.metadata["nested"]["items"][0] = "mutated"
+
+    boundary = next(
+        group.boundary for group in capsule.groups if group.boundary.omitted_reasons
+    )
+    with pytest.raises(TypeError):
+        boundary.omitted_reasons["new_reason"] = 1
