@@ -1,0 +1,111 @@
+name: Relational Synthesis R1 Unresolved Role Push
+
+on:
+  push:
+    branches:
+      - automation/relational-r1-unresolved-role
+    paths:
+      - .aura/triggers/relational-r1-unresolved-role
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/aura-relational-synthesis-r1
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt 'pytest>=8,<9' bandit
+
+      - name: Make missing role bindings explicitly unresolved
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('aura_relational_synthesis.py')
+          source = source_path.read_text(encoding='utf-8')
+          old = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            f"candidate_{role}" if role in name_derived_roles else role,
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          new = '''    role_bindings = tuple(
+        RoleBinding(
+            item.participant_id,
+            (
+                f"candidate_{role}"
+                if role in name_derived_roles
+                else (
+                    f"unresolved_{role}"
+                    if item.truth_class is TruthClass.UNRESOLVED
+                    else role
+                )
+            ),
+        )
+        for role, item in sorted(assignments.items())
+    )
+'''
+          if source.count(old) != 1:
+              raise SystemExit('expected one role binding seam')
+          source_path.write_text(source.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('tests/test_aura_relational_synthesis.py')
+          tests = test_path.read_text(encoding='utf-8')
+          marker = 'def test_missing_role_binding_is_explicitly_unresolved()'
+          if marker not in tests:
+              tests += '''
+
+def test_missing_role_binding_is_explicitly_unresolved() -> None:
+    packet = _packet()
+    for record in packet["atomic_inventory"]["selected_atomic_functions"]:
+        if record["symbol"] == "from_value":
+            record["symbol"] = "receive"
+    for span in packet["source_slices"]:
+        if span["qualified_symbol"] == "Request.from_value":
+            span["symbol"] = "receive"
+            span["qualified_symbol"] = "Request.receive"
+
+    capsule = _compile(packet)
+    scope_group = next(
+        item for item in capsule.groups if item.purpose == "input_scope_authority"
+    )
+    binding_roles = {item.role for item in scope_group.role_bindings}
+    assert "unresolved_input_parser" in binding_roles
+    assert "input_parser" not in binding_roles
+    assert "candidate_input_parser" not in binding_roles
+    assert "required_role:input_parser" in scope_group.boundary.unresolved_relations
+'''
+          test_path.write_text(tests, encoding='utf-8')
+          PY
+
+      - name: Validate explicit unresolved roles
+        run: |
+          python -m py_compile aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          python -m pytest -q tests/test_aura_relational_synthesis.py
+          ruff check --select E9,F63,F7,F82 aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          bandit -q -ll aura_relational_synthesis.py
+
+      - name: Commit and push validated permanent files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aura_relational_synthesis.py tests/test_aura_relational_synthesis.py
+          git diff --cached --check
+          git commit -m 'Make unresolved relational role bindings explicit'
+          git push origin HEAD:feature/aura-relational-synthesis-r1
