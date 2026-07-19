@@ -1,8 +1,9 @@
 """Immutable scene compilation and verification for Aura's spatial substrate."""
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Iterable, Mapping
+from collections.abc import Iterable, Mapping
+from dataclasses import dataclass, replace
+from typing import Any
 
 from aura_event_contracts import stable_digest
 from aura_spatial_asset_registry import SpatialAssetRegistry
@@ -16,6 +17,28 @@ from aura_spatial_contracts import (
 from aura_spatial_coordinate_frames import validate_coordinate_frames
 
 SPATIAL_SCENE_COMPILER_VERSION = "AURA_SPATIAL_SCENE_COMPILER_V1"
+_AUTHORITY_KEYS = frozenset(
+    {
+        "approval",
+        "authorization",
+        "authority_decision",
+        "automatic_commit",
+        "automatic_merge",
+        "automatic_pull_request",
+        "automatic_push",
+        "capability_lease",
+        "execution_authority",
+        "lease",
+        "lease_id",
+        "merge",
+        "patch_authority",
+        "production_mutation",
+        "promotion",
+        "renderer_authority",
+        "verifier_receipt",
+        "vsa_patch_authority",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -53,11 +76,67 @@ def compile_spatial_scene(
     source_refs: Iterable[str] = (),
     renderer_hints: Mapping[str, Any] | None = None,
 ) -> SpatialSceneSnapshot:
-    """Compile a canonical snapshot after sorting all records by stable identity."""
-    frame_tuple = tuple(sorted(tuple(frames), key=lambda item: item.frame_id))
-    asset_tuple = tuple(sorted(tuple(assets), key=lambda item: item.asset_id))
-    entity_tuple = tuple(sorted(tuple(entities), key=lambda item: item.entity_id))
-    link_tuple = tuple(sorted(tuple(links), key=lambda item: item.link_id))
+    """Compile a canonical snapshot after sorting all set-like records."""
+    if renderer_hints is not None and not isinstance(renderer_hints, Mapping):
+        raise ValueError("renderer_hints must be an object")
+    frame_tuple = tuple(
+        sorted(
+            (
+                replace(
+                    item,
+                    source_refs=tuple(sorted(set(item.source_refs))),
+                )
+                for item in frames
+            ),
+            key=lambda item: item.frame_id,
+        )
+    )
+    asset_tuple = tuple(
+        sorted(
+            (
+                replace(
+                    item,
+                    source_refs=tuple(sorted(set(item.source_refs))),
+                )
+                for item in assets
+            ),
+            key=lambda item: item.asset_id,
+        )
+    )
+    entity_tuple = tuple(
+        sorted(
+            (
+                replace(
+                    item,
+                    asset_ids=tuple(sorted(set(item.asset_ids))),
+                    source_refs=tuple(sorted(set(item.source_refs))),
+                )
+                for item in entities
+            ),
+            key=lambda item: item.entity_id,
+        )
+    )
+    link_tuple = tuple(
+        sorted(
+            (
+                replace(
+                    item,
+                    source_refs=tuple(sorted(set(item.source_refs))),
+                )
+                for item in links
+            ),
+            key=lambda item: item.link_id,
+        )
+    )
+    refs = tuple(
+        sorted(
+            {
+                str(item).strip()
+                for item in source_refs
+                if str(item).strip()
+            }
+        )
+    )
     scene = SpatialSceneSnapshot(
         scene_id=scene_id,
         purpose_digest=purpose_digest,
@@ -66,14 +145,8 @@ def compile_spatial_scene(
         assets=asset_tuple,
         entities=entity_tuple,
         links=link_tuple,
-        source_refs=tuple(
-            dict.fromkeys(
-                str(item).strip()
-                for item in source_refs
-                if str(item).strip()
-            )
-        ),
-        renderer_hints=renderer_hints or {},
+        source_refs=refs,
+        renderer_hints=dict(renderer_hints or {}),
     )
     report = verify_spatial_scene(scene)
     if not report.ok:
@@ -107,8 +180,7 @@ def verify_spatial_scene(
                 str(exc),
             )
         )
-        asset_registry = SpatialAssetRegistry()
-        asset_registry_digest = asset_registry.registry_digest
+        asset_registry_digest = SpatialAssetRegistry().registry_digest
     asset_ids = {asset.asset_id for asset in scene.assets}
 
     entity_ids: set[str] = set()
@@ -139,6 +211,11 @@ def verify_spatial_scene(
                         f"entity references missing asset {asset_id!r}",
                     )
                 )
+        _collect_authority_findings(
+            entity.to_dict().get("metadata", {}),
+            f"entity:{entity.entity_id}.metadata",
+            findings,
+        )
 
     for asset in scene.assets:
         if asset.frame_id not in frame_ids:
@@ -149,6 +226,11 @@ def verify_spatial_scene(
                     f"asset references missing frame {asset.frame_id!r}",
                 )
             )
+        _collect_authority_findings(
+            asset.to_dict().get("metadata", {}),
+            f"asset:{asset.asset_id}.metadata",
+            findings,
+        )
 
     link_ids: set[str] = set()
     for link in scene.links:
@@ -177,7 +259,18 @@ def verify_spatial_scene(
                     f"target entity {link.target_entity_id!r} is absent",
                 )
             )
+        _collect_authority_findings(
+            link.to_dict().get("metadata", {}),
+            f"link:{link.link_id}.metadata",
+            findings,
+        )
 
+    _collect_authority_findings(
+        scene.to_dict().get("renderer_hints", {}),
+        "scene.renderer_hints",
+        findings,
+    )
+    findings = _dedupe_findings(findings)
     return SpatialSceneVerificationReport(
         ok=not findings,
         scene_id=scene.scene_id,
@@ -203,12 +296,59 @@ def scene_summary(scene: SpatialSceneSnapshot) -> dict[str, Any]:
         "vsa_patch_authority": scene.vsa_patch_authority,
         "execution_authority": scene.execution_authority,
         "source_digest": stable_digest(
-            list(scene.source_refs),
+            sorted(scene.source_refs),
             digest_size=32,
         ),
         "verification": report.to_dict(),
         "version": SPATIAL_SCENE_COMPILER_VERSION,
     }
+
+
+def _collect_authority_findings(
+    value: Any,
+    path: str,
+    findings: list[dict[str, Any]],
+) -> None:
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            normalized = str(key).strip().lower()
+            child = f"{path}.{key}"
+            if (
+                normalized in _AUTHORITY_KEYS
+                and item not in (False, None, "", 0)
+            ):
+                findings.append(
+                    _finding(
+                        "AUTHORITY_METADATA_REJECTED",
+                        child,
+                        (
+                            "spatial metadata cannot carry an affirmative "
+                            "authority claim"
+                        ),
+                    )
+                )
+            _collect_authority_findings(item, child, findings)
+    elif isinstance(value, (list, tuple, set, frozenset)):
+        for index, item in enumerate(value):
+            _collect_authority_findings(
+                item,
+                f"{path}[{index}]",
+                findings,
+            )
+
+
+def _dedupe_findings(
+    findings: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    unique: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for finding in findings:
+        key = (
+            str(finding.get("code")),
+            str(finding.get("subject_id")),
+            str(finding.get("message")),
+        )
+        unique[key] = finding
+    return [unique[key] for key in sorted(unique)]
 
 
 def _finding(
