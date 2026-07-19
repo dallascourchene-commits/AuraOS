@@ -33,7 +33,8 @@ jobs:
           size="$(wc -c < aura-spatial-s3a-exact-head.tar.gz)"
           test "$size" -gt 0
           test "$size" -le 268435456
-          tar -tzf aura-spatial-s3a-exact-head.tar.gz | grep -q '/aura_spatial_contracts.py$'
+          tar -tzf aura-spatial-s3a-exact-head.tar.gz > archive-files.txt
+          grep -q '/aura_spatial_contracts.py$' archive-files.txt
           printf '%s\n' "$EXACT_HEAD" > EXACT_HEAD.txt
 
       - name: Upload exact-head repository archive
