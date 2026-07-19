@@ -1,13 +1,11 @@
-"""Domain adapters that project canonical Aura records into spatial scene snapshots.
-
-This module reuses the Coding Arena micro-arena selector. It does not scan the
-repository, create a second topology, infer patch authority, or mutate code.
-"""
+"""Bounded projection adapters for Aura's canonical Coding Arena topology."""
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping, Sequence
 import hashlib
+import math
 import re
-from typing import Any, Iterable
+from typing import Any
 
 from aura_coding_arena_3d import select_micro_arena
 from aura_event_contracts import canonical_json, stable_digest
@@ -18,6 +16,7 @@ from aura_spatial_contracts import (
     SpatialEntity,
     SpatialEntityType,
     SpatialLink,
+    SpatialSceneSnapshot,
     SpatialTruthClass,
 )
 from aura_spatial_scene import compile_spatial_scene
@@ -35,252 +34,242 @@ def project_coding_topology_to_scene(
     depth: int = 1,
     scene_id: str = "coding-topology-scene",
     token_budget: int = 8192,
-):
-    """Project one bounded Coding Arena neighborhood into an immutable scene."""
-    if not isinstance(topology, dict):
-        raise ValueError("topology must be an object")
+) -> SpatialSceneSnapshot:
+    nodes_input = _array(topology, "nodes")
+    _array(topology, "links")
     requested = tuple(
         dict.fromkeys(
-            str(item).strip()
+            _text(item, 512)
             for item in selected_node_ids
             if str(item).strip()
         )
     )
-    if not requested:
-        raise ValueError("selected_node_ids must not be empty")
-    known_node_ids = {
+    if not requested or len(requested) > MAX_SPATIAL_NODES:
+        raise ValueError("selected_node_ids must contain 1-128 identifiers")
+    known = {
         str(item.get("id"))
-        for item in topology.get("nodes", [])
-        if isinstance(item, dict) and item.get("id")
+        for item in nodes_input
+        if isinstance(item, Mapping) and item.get("id")
     }
-    missing = [item for item in requested if item not in known_node_ids]
+    missing = [item for item in requested if item not in known]
     if missing:
         raise ValueError(f"unknown selected topology nodes: {missing}")
+    instruction = _text(human_instruction, 4096)
+    if not instruction:
+        raise ValueError("human_instruction must not be empty")
+    try:
+        bounded_depth = max(0, min(2, int(depth)))
+        bounded_budget = max(1, min(131_072, int(token_budget)))
+    except (TypeError, ValueError) as exc:
+        raise ValueError("depth and token_budget must be integers") from exc
+
     micro = select_micro_arena(
         topology,
         requested,
-        depth=max(0, min(2, int(depth))),
-        human_instruction=human_instruction,
-        token_budget=max(1, int(token_budget)),
+        depth=bounded_depth,
+        human_instruction=instruction,
+        token_budget=bounded_budget,
     )
-    returned_selected = tuple(micro.get("selected_node_ids", []))
-    if returned_selected != requested:
+    if not isinstance(micro, Mapping):
+        raise ValueError("Coding Arena returned an invalid micro-arena")
+    selected = tuple(
+        str(item) for item in micro.get("selected_node_ids", [])
+    )
+    if selected != requested:
         raise ValueError(
             "Coding Arena projection changed the exact requested selection"
         )
-    raw_nodes = [
-        item
+
+    nodes = [
+        dict(item)
         for item in micro.get("nodes", [])
-        if isinstance(item, dict) and item.get("id")
+        if isinstance(item, Mapping) and item.get("id")
     ]
-    raw_links = [
-        item for item in micro.get("links", []) if isinstance(item, dict)
-    ]
-    selected_set = set(returned_selected)
-    raw_nodes.sort(
+    selected_set = set(selected)
+    nodes.sort(
         key=lambda item: (
-            0 if str(item.get("id")) in selected_set else 1,
-            str(item.get("id") or ""),
+            str(item.get("id")) not in selected_set,
+            str(item.get("id")),
         )
     )
-    raw_nodes = raw_nodes[:MAX_SPATIAL_NODES]
-    allowed_node_ids = {str(item["id"]) for item in raw_nodes}
-    if not selected_set.issubset(allowed_node_ids):
+    nodes = nodes[:MAX_SPATIAL_NODES]
+    allowed = {str(item["id"]) for item in nodes}
+    if not selected_set.issubset(allowed):
         raise ValueError("selected topology nodes exceeded the spatial node cap")
-    raw_links = [
-        item
-        for item in raw_links
-        if str(item.get("source")) in allowed_node_ids
-        and str(item.get("target")) in allowed_node_ids
-    ][:MAX_SPATIAL_LINKS]
-    if not raw_nodes:
-        raise ValueError(
-            "coding topology projection requires at least one grounded node"
-        )
 
-    bounded_micro = {
+    source_links = [
+        dict(item)
+        for item in micro.get("links", [])
+        if isinstance(item, Mapping)
+    ]
+    links_raw = [
+        item
+        for item in source_links
+        if str(item.get("source")) in allowed
+        and str(item.get("target")) in allowed
+        and str(item.get("source")) != str(item.get("target"))
+    ]
+    links_raw.sort(
+        key=lambda item: (
+            str(item.get("source")),
+            str(item.get("target")),
+            str(item.get("type") or item.get("link_type") or ""),
+            canonical_json(item),
+        )
+    )
+    links_raw = links_raw[:MAX_SPATIAL_LINKS]
+
+    bounded = {
         "version": micro.get("version"),
-        "selected_node_ids": list(returned_selected),
-        "nodes": raw_nodes,
-        "links": raw_links,
+        "selected_node_ids": list(selected),
+        "nodes": nodes,
+        "links": links_raw,
         "depth": micro.get("depth"),
         "human_instruction": micro.get("human_instruction"),
         "token_cost": micro.get("token_cost"),
     }
-    bounded_micro_digest = stable_digest(bounded_micro, digest_size=32)
-
-    root_frame = CoordinateFrame(
+    bounded_digest = stable_digest(bounded, digest_size=32)
+    root = CoordinateFrame(
         frame_id="aura-coding-root",
-        parent_frame_id=None,
         source_refs=("owner:aura_coding_arena_3d.select_micro_arena",),
         truth_class=SpatialTruthClass.DERIVED,
-        projection_only=True,
     )
-    scene_frame = CoordinateFrame(
+    frame = CoordinateFrame(
         frame_id="coding-micro-arena",
-        parent_frame_id=root_frame.frame_id,
-        source_refs=(
-            "owner:aura_coding_arena_3d.select_micro_arena",
-            f"bounded_micro_arena:{bounded_micro_digest}",
-        ),
+        parent_frame_id=root.frame_id,
+        source_refs=(f"bounded_micro_arena:{bounded_digest}",),
         truth_class=SpatialTruthClass.PRESENTATION,
-        projection_only=True,
     )
 
-    node_to_entity: dict[str, str] = {}
+    entity_ids: dict[str, str] = {}
     entities: list[SpatialEntity] = []
     positions: list[tuple[float, float, float]] = []
-    for index, node in enumerate(raw_nodes):
+    for index, node in enumerate(nodes):
         node_id = str(node["id"])
-        entity_id = _stable_identifier("coding-node", node_id)
-        node_to_entity[node_id] = entity_id
-        position = _node_position(node, index=index)
+        entity_id = _id("coding-node", node_id)
+        entity_ids[node_id] = entity_id
+        position = _position(node, index)
         positions.append(position)
-        file_path = str(node.get("file_path") or "").strip()
-        symbol = str(node.get("symbol") or "").strip()
-        line_range = (
-            node.get("line_range")
-            if isinstance(node.get("line_range"), list)
-            else []
-        )
-        source_refs = [f"topology:{node_id}"]
-        if file_path:
-            source_ref = f"source:{file_path}"
+        path = _text(node.get("file_path"), 1024)
+        symbol = _text(node.get("symbol"), 512)
+        line_range = _line_range(node.get("line_range"))
+        refs = [f"topology:{node_id}"]
+        if path:
+            anchor = f"source:{path}"
             if line_range:
-                source_ref += "#L" + "-L".join(
-                    str(value) for value in line_range[:2]
-                )
+                anchor += "#L" + "-L".join(map(str, line_range))
             if symbol:
-                source_ref += f"::{symbol}"
-            source_refs.append(source_ref)
-        metadata = {
-            "domain_owner": "aura_coding_arena_3d",
-            "domain_node_id": node_id,
-            "node_type": str(
-                node.get("node_type")
-                or node.get("type")
-                or node.get("kind")
-                or "unknown"
-            ),
-            "file_path": file_path,
-            "symbol": symbol,
-            "line_range": line_range,
-            "selected": node_id in selected_set,
-            "projection_truth": (
-                "CODEMAP_PROJECTED"
-                if bool(
-                    (node.get("metadata") or {}).get(
-                        "visual_projection_only"
-                    )
-                )
-                else "EXACT_TOPOLOGY"
-            ),
-            "original_color": str(node.get("color") or ""),
-            "status": str(node.get("status") or "normal"),
-            "tokens_est": int(node.get("tokens_est") or 0),
-        }
+                anchor += f"::{symbol}"
+            refs.append(anchor)
+        node_meta = (
+            node.get("metadata")
+            if isinstance(node.get("metadata"), Mapping)
+            else {}
+        )
         entities.append(
             SpatialEntity(
                 entity_id=entity_id,
                 entity_type=SpatialEntityType.DOMAIN_NODE,
-                label=str(node.get("label") or node.get("name") or node_id),
-                frame_id=scene_frame.frame_id,
-                source_refs=tuple(source_refs),
+                label=_text(
+                    node.get("label") or node.get("name") or node_id,
+                    512,
+                ),
+                frame_id=frame.frame_id,
+                source_refs=tuple(sorted(refs)),
                 position=position,
                 truth_class=SpatialTruthClass.DERIVED,
-                selectable=True,
-                projection_only=True,
-                patch_authority=False,
-                metadata=metadata,
-            )
-        )
-
-    links: list[SpatialLink] = []
-    for index, link in enumerate(raw_links):
-        source_id = str(link.get("source"))
-        target_id = str(link.get("target"))
-        if source_id == target_id:
-            continue
-        relation = _relation(
-            link.get("type") or link.get("link_type") or "related"
-        )
-        links.append(
-            SpatialLink(
-                link_id=_stable_identifier(
-                    "coding-link",
-                    {
-                        "index": index,
-                        "source": source_id,
-                        "target": target_id,
-                        "relation": relation,
-                    },
-                ),
-                source_entity_id=node_to_entity[source_id],
-                target_entity_id=node_to_entity[target_id],
-                relation=relation,
-                source_refs=(
-                    f"topology-edge:{source_id}->{target_id}:{relation}",
-                ),
-                truth_class=SpatialTruthClass.DERIVED,
-                directed=True,
-                projection_only=True,
                 metadata={
                     "domain_owner": "aura_coding_arena_3d",
-                    "domain_edge": dict(link),
+                    "domain_node_id": node_id,
+                    "file_path": path,
+                    "symbol": symbol,
+                    "line_range": list(line_range),
+                    "selected": node_id in selected_set,
+                    "projection_truth": (
+                        "CODEMAP_PROJECTED"
+                        if node_meta.get("visual_projection_only")
+                        else "EXACT_TOPOLOGY"
+                    ),
+                    "tokens_est": _nonnegative_int(
+                        node.get("tokens_est")
+                    ),
                 },
             )
         )
 
-    micro_bytes = canonical_json(bounded_micro).encode("utf-8")
+    links: list[SpatialLink] = []
+    for index, edge in enumerate(links_raw):
+        source = str(edge.get("source"))
+        target = str(edge.get("target"))
+        relation = _relation(
+            edge.get("type") or edge.get("link_type")
+        )
+        links.append(
+            SpatialLink(
+                link_id=_id(
+                    "coding-link",
+                    {
+                        "index": index,
+                        "source": source,
+                        "target": target,
+                        "relation": relation,
+                    },
+                ),
+                source_entity_id=entity_ids[source],
+                target_entity_id=entity_ids[target],
+                relation=relation,
+                source_refs=(
+                    f"topology-edge:{source}->{target}:{relation}",
+                ),
+                truth_class=SpatialTruthClass.DERIVED,
+                metadata={
+                    "domain_owner": "aura_coding_arena_3d",
+                    "source_node_id": source,
+                    "target_node_id": target,
+                },
+            )
+        )
+
+    encoded = canonical_json(bounded).encode("utf-8")
     bounds_min, bounds_max = _bounds(positions)
-    graph_asset = SpatialAssetManifest(
-        asset_id=_stable_identifier("coding-graph-asset", bounded_micro),
+    asset = SpatialAssetManifest(
+        asset_id=_id("coding-graph-asset", bounded),
         asset_type=SpatialAssetType.TOPOLOGY_GRAPH,
-        uri=(
-            "aura://coding/micro-arena/"
-            f"{bounded_micro_digest[:32]}"
-        ),
+        uri=f"aura://coding/micro-arena/{bounded_digest[:32]}",
         media_type="application/vnd.aura.coding-topology+json",
-        content_digest="sha256:" + hashlib.sha256(micro_bytes).hexdigest(),
-        byte_length=len(micro_bytes),
-        frame_id=scene_frame.frame_id,
+        content_digest=(
+            "sha256:" + hashlib.sha256(encoded).hexdigest()
+        ),
+        byte_length=len(encoded),
+        frame_id=frame.frame_id,
         bounds_min=bounds_min,
         bounds_max=bounds_max,
-        source_refs=(
-            "owner:aura_coding_arena_3d.select_micro_arena",
-            f"bounded_micro_arena:{bounded_micro_digest}",
-        ),
-        truth_class=SpatialTruthClass.DERIVED,
-        immutable=True,
+        source_refs=(f"bounded_micro_arena:{bounded_digest}",),
         metadata={
             "embedded_payload": False,
-            "node_count": len(raw_nodes),
+            "node_count": len(nodes),
             "link_count": len(links),
             "source_node_count": len(micro.get("nodes", [])),
-            "source_link_count": len(micro.get("links", [])),
+            "source_link_count": len(source_links),
             "truncated": (
-                len(micro.get("nodes", [])) > len(raw_nodes)
-                or len(micro.get("links", [])) > len(raw_links)
+                len(micro.get("nodes", [])) > len(nodes)
+                or len(source_links) > len(links)
             ),
         },
-    )
-
-    purpose_digest = stable_digest(
-        {
-            "instruction": human_instruction,
-            "selected_node_ids": list(
-                micro.get("selected_node_ids", [])
-            ),
-            "bounded_micro_digest": bounded_micro_digest,
-        },
-        digest_size=32,
     )
     return compile_spatial_scene(
-        scene_id=_stable_identifier("scene", scene_id),
-        purpose_digest=purpose_digest,
-        root_frame_id=root_frame.frame_id,
-        frames=(root_frame, scene_frame),
-        assets=(graph_asset,),
+        scene_id=_id("scene", scene_id),
+        purpose_digest=stable_digest(
+            {
+                "instruction": instruction,
+                "selected": list(selected),
+                "bounded": bounded_digest,
+            },
+            digest_size=32,
+        ),
+        root_frame_id=root.frame_id,
+        frames=(root, frame),
+        assets=(asset,),
         entities=entities,
         links=links,
         source_refs=(
@@ -304,8 +293,7 @@ def project_showcase_workspace_to_scene(
     workspace_packet: dict[str, Any],
     *,
     scene_id: str = "showcase-spatial-workspace",
-):
-    """Compatibility adapter for ``aura_showcase_spatial`` workspace packets."""
+) -> SpatialSceneSnapshot:
     if (
         not isinstance(workspace_packet, dict)
         or workspace_packet.get("ok") is not True
@@ -318,9 +306,8 @@ def project_showcase_workspace_to_scene(
         raise ValueError("workspace_packet.workspace must be an object")
     return project_coding_topology_to_scene(
         {
-            "nodes": list(workspace.get("nodes", [])),
-            "links": list(workspace.get("links", [])),
-            "meta": {"source": "aura_showcase_spatial"},
+            "nodes": _array(workspace, "nodes"),
+            "links": _array(workspace, "links"),
         },
         workspace.get("selected_node_ids", []),
         human_instruction=str(
@@ -333,62 +320,109 @@ def project_showcase_workspace_to_scene(
     )
 
 
-def _stable_identifier(prefix: str, value: Any) -> str:
+def _array(value: Mapping[str, Any], key: str) -> Sequence[Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError("topology must be an object")
+    result = value.get(key, [])
+    if (
+        not isinstance(result, Sequence)
+        or isinstance(result, (str, bytes, bytearray))
+    ):
+        raise ValueError(f"{key} must be an array")
+    return result
+
+
+def _text(value: Any, limit: int) -> str:
+    text = str(value or "").strip()
+    if any(ord(char) < 32 for char in text):
+        raise ValueError("topology text contains control characters")
+    return text[:limit]
+
+
+def _line_range(value: Any) -> tuple[int, ...]:
+    if not isinstance(value, (list, tuple)):
+        return ()
+    result = tuple(
+        item
+        for item in value[:2]
+        if type(item) is int and item > 0
+    )
+    if len(result) == 2 and result[0] > result[1]:
+        return ()
+    return result
+
+
+def _nonnegative_int(value: Any) -> int:
+    try:
+        return max(0, min(int(value or 0), 2_147_483_647))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _relation(value: Any) -> str:
+    return (
+        re.sub(
+            r"[^A-Za-z0-9._:/-]+",
+            "_",
+            str(value or "related"),
+        ).strip("_.")[:96]
+        or "related"
+    )
+
+
+def _id(prefix: str, value: Any) -> str:
     clean = (
-        re.sub(r"[^A-Za-z0-9._:/-]+", "-", str(prefix)).strip("-.")
+        re.sub(r"[^A-Za-z0-9._:/-]+", "-", prefix).strip("-.")
         or "spatial"
     )
     return f"{clean}:{stable_digest(value, digest_size=12)}"
 
 
-def _relation(value: Any) -> str:
-    clean = re.sub(
-        r"[^A-Za-z0-9._:/-]+",
-        "_",
-        str(value or "related"),
-    ).strip("_.")
-    return clean[:96] or "related"
-
-
-def _node_position(
-    node: dict[str, Any],
-    *,
+def _position(
+    node: Mapping[str, Any],
     index: int,
 ) -> tuple[float, float, float]:
-    raw = (node.get("x"), node.get("y"), node.get("z"))
     try:
-        position = tuple(float(item) for item in raw)
-        if all(
-            item == item and abs(item) != float("inf")
-            for item in position
-        ):
-            return (position[0], position[1], position[2])
+        result = tuple(
+            float(node.get(axis)) for axis in ("x", "y", "z")
+        )
+        if all(math.isfinite(item) for item in result):
+            return (result[0], result[1], result[2])
     except (TypeError, ValueError):
         pass
-    digest = bytes.fromhex(
+    raw = bytes.fromhex(
         stable_digest(
             {"node": node.get("id"), "index": index},
             digest_size=12,
         )
     )
     result = tuple(
-        (int.from_bytes(digest[offset : offset + 4], "big") / 2**32 - 0.5)
-        * 20.0
+        (
+            int.from_bytes(raw[offset : offset + 4], "big")
+            / 2**32
+            - 0.5
+        )
+        * 20
         for offset in (0, 4, 8)
     )
     return (result[0], result[1], result[2])
 
 
 def _bounds(
-    positions: list[tuple[float, float, float]],
-) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
-    if not positions:
+    values: list[tuple[float, float, float]],
+) -> tuple[
+    tuple[float, float, float],
+    tuple[float, float, float],
+]:
+    if not values:
         return (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)
     minimum = tuple(
-        min(item[index] for item in positions) for index in range(3)
+        min(item[index] for item in values)
+        for index in range(3)
     )
     maximum = tuple(
-        max(item[index] for item in positions) for index in range(3)
+        max(item[index] for item in values)
+        for index in range(3)
     )
     return (
         (minimum[0], minimum[1], minimum[2]),
