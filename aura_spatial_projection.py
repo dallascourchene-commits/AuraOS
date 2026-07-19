@@ -24,6 +24,7 @@ from aura_spatial_scene import compile_spatial_scene
 SPATIAL_PROJECTION_VERSION = "AURA_SPATIAL_PROJECTION_V1"
 MAX_SPATIAL_NODES = 128
 MAX_SPATIAL_LINKS = 320
+MAX_PROJECTION_BYTES = 1_048_576
 
 
 def project_coding_topology_to_scene(
@@ -39,7 +40,7 @@ def project_coding_topology_to_scene(
     _array(topology, "links")
     requested = tuple(
         dict.fromkeys(
-            _text(item, 512)
+            _selected_id(item)
             for item in selected_node_ids
             if str(item).strip()
         )
@@ -80,16 +81,17 @@ def project_coding_topology_to_scene(
             "Coding Arena projection changed the exact requested selection"
         )
 
+    source_nodes = _records(micro.get("nodes", []), "micro.nodes")
     nodes = [
-        dict(item)
-        for item in micro.get("nodes", [])
-        if isinstance(item, Mapping) and item.get("id")
+        _bounded_node(item)
+        for item in source_nodes
+        if item.get("id")
     ]
     selected_set = set(selected)
     nodes.sort(
         key=lambda item: (
-            str(item.get("id")) not in selected_set,
-            str(item.get("id")),
+            str(item["id"]) not in selected_set,
+            str(item["id"]),
         )
     )
     nodes = nodes[:MAX_SPATIAL_NODES]
@@ -97,14 +99,11 @@ def project_coding_topology_to_scene(
     if not selected_set.issubset(allowed):
         raise ValueError("selected topology nodes exceeded the spatial node cap")
 
-    source_links = [
-        dict(item)
-        for item in micro.get("links", [])
-        if isinstance(item, Mapping)
-    ]
+    source_links = _records(micro.get("links", []), "micro.links")
+    normalized_links = [_bounded_link(item) for item in source_links]
     links_raw = [
         item
-        for item in source_links
+        for item in normalized_links
         if str(item.get("source")) in allowed
         and str(item.get("target")) in allowed
         and str(item.get("source")) != str(item.get("target"))
@@ -120,15 +119,24 @@ def project_coding_topology_to_scene(
     links_raw = links_raw[:MAX_SPATIAL_LINKS]
 
     bounded = {
-        "version": micro.get("version"),
+        "version": _text(micro.get("version"), 128),
         "selected_node_ids": list(selected),
         "nodes": nodes,
         "links": links_raw,
-        "depth": micro.get("depth"),
-        "human_instruction": micro.get("human_instruction"),
-        "token_cost": micro.get("token_cost"),
+        "depth": _nonnegative_int(micro.get("depth")),
+        "human_instruction": _text(
+            micro.get("human_instruction") or instruction,
+            4096,
+        ),
+        "token_cost": _nonnegative_int(micro.get("token_cost")),
     }
+    encoded = canonical_json(bounded).encode("utf-8")
+    if len(encoded) > MAX_PROJECTION_BYTES:
+        raise ValueError(
+            "bounded micro-arena exceeds the spatial byte budget"
+        )
     bounded_digest = stable_digest(bounded, digest_size=32)
+
     root = CoordinateFrame(
         frame_id="aura-coding-root",
         source_refs=("owner:aura_coding_arena_3d.select_micro_arena",),
@@ -150,9 +158,9 @@ def project_coding_topology_to_scene(
         entity_ids[node_id] = entity_id
         position = _position(node, index)
         positions.append(position)
-        path = _text(node.get("file_path"), 1024)
-        symbol = _text(node.get("symbol"), 512)
-        line_range = _line_range(node.get("line_range"))
+        path = str(node.get("file_path") or "")
+        symbol = str(node.get("symbol") or "")
+        line_range = tuple(node.get("line_range", []))
         refs = [f"topology:{node_id}"]
         if path:
             anchor = f"source:{path}"
@@ -161,18 +169,14 @@ def project_coding_topology_to_scene(
             if symbol:
                 anchor += f"::{symbol}"
             refs.append(anchor)
-        node_meta = (
-            node.get("metadata")
-            if isinstance(node.get("metadata"), Mapping)
-            else {}
-        )
         entities.append(
             SpatialEntity(
                 entity_id=entity_id,
                 entity_type=SpatialEntityType.DOMAIN_NODE,
-                label=_text(
-                    node.get("label") or node.get("name") or node_id,
-                    512,
+                label=str(
+                    node.get("label")
+                    or node.get("name")
+                    or node_id
                 ),
                 frame_id=frame.frame_id,
                 source_refs=tuple(sorted(refs)),
@@ -185,22 +189,16 @@ def project_coding_topology_to_scene(
                     "symbol": symbol,
                     "line_range": list(line_range),
                     "selected": node_id in selected_set,
-                    "projection_truth": (
-                        "CODEMAP_PROJECTED"
-                        if node_meta.get("visual_projection_only")
-                        else "EXACT_TOPOLOGY"
-                    ),
-                    "tokens_est": _nonnegative_int(
-                        node.get("tokens_est")
-                    ),
+                    "projection_truth": node["projection_truth"],
+                    "tokens_est": node["tokens_est"],
                 },
             )
         )
 
     links: list[SpatialLink] = []
     for index, edge in enumerate(links_raw):
-        source = str(edge.get("source"))
-        target = str(edge.get("target"))
+        source = str(edge["source"])
+        target = str(edge["target"])
         relation = _relation(
             edge.get("type") or edge.get("link_type")
         )
@@ -226,11 +224,11 @@ def project_coding_topology_to_scene(
                     "domain_owner": "aura_coding_arena_3d",
                     "source_node_id": source,
                     "target_node_id": target,
+                    "source_edge_id": edge.get("id", ""),
                 },
             )
         )
 
-    encoded = canonical_json(bounded).encode("utf-8")
     bounds_min, bounds_max = _bounds(positions)
     asset = SpatialAssetManifest(
         asset_id=_id("coding-graph-asset", bounded),
@@ -249,10 +247,12 @@ def project_coding_topology_to_scene(
             "embedded_payload": False,
             "node_count": len(nodes),
             "link_count": len(links),
-            "source_node_count": len(micro.get("nodes", [])),
+            "source_node_count": len(source_nodes),
             "source_link_count": len(source_links),
+            "serialized_byte_length": len(encoded),
+            "serialized_byte_limit": MAX_PROJECTION_BYTES,
             "truncated": (
-                len(micro.get("nodes", [])) > len(nodes)
+                len(source_nodes) > len(nodes)
                 or len(source_links) > len(links)
             ),
         },
@@ -332,6 +332,67 @@ def _array(value: Mapping[str, Any], key: str) -> Sequence[Any]:
     return result
 
 
+def _records(value: Any, field_name: str) -> list[dict[str, Any]]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, (str, bytes, bytearray))
+    ):
+        raise ValueError(f"{field_name} must be an array")
+    return [dict(item) for item in value if isinstance(item, Mapping)]
+
+
+def _bounded_node(node: Mapping[str, Any]) -> dict[str, Any]:
+    metadata = (
+        node.get("metadata")
+        if isinstance(node.get("metadata"), Mapping)
+        else {}
+    )
+    return {
+        "id": _selected_id(node.get("id")),
+        "label": _text(node.get("label"), 512),
+        "name": _text(node.get("name"), 512),
+        "node_type": _text(
+            node.get("node_type")
+            or node.get("type")
+            or node.get("kind"),
+            128,
+        ),
+        "file_path": _text(node.get("file_path"), 1024),
+        "symbol": _text(node.get("symbol"), 512),
+        "line_range": list(_line_range(node.get("line_range"))),
+        "x": _finite_or_none(node.get("x")),
+        "y": _finite_or_none(node.get("y")),
+        "z": _finite_or_none(node.get("z")),
+        "tokens_est": _nonnegative_int(node.get("tokens_est")),
+        "projection_truth": (
+            "CODEMAP_PROJECTED"
+            if metadata.get("visual_projection_only")
+            else "EXACT_TOPOLOGY"
+        ),
+    }
+
+
+def _bounded_link(link: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "id": _text(link.get("id"), 256),
+        "source": _selected_id(link.get("source")),
+        "target": _selected_id(link.get("target")),
+        "type": _text(link.get("type"), 128),
+        "link_type": _text(link.get("link_type"), 128),
+    }
+
+
+def _selected_id(value: Any) -> str:
+    text = str(value or "").strip()
+    if (
+        not text
+        or len(text) > 512
+        or any(ord(char) < 32 for char in text)
+    ):
+        raise ValueError("topology identifier is invalid")
+    return text
+
+
 def _text(value: Any, limit: int) -> str:
     text = str(value or "").strip()
     if any(ord(char) < 32 for char in text):
@@ -347,9 +408,11 @@ def _line_range(value: Any) -> tuple[int, ...]:
         for item in value[:2]
         if type(item) is int and item > 0
     )
-    if len(result) == 2 and result[0] > result[1]:
-        return ()
-    return result
+    return (
+        ()
+        if len(result) == 2 and result[0] > result[1]
+        else result
+    )
 
 
 def _nonnegative_int(value: Any) -> int:
@@ -357,6 +420,14 @@ def _nonnegative_int(value: Any) -> int:
         return max(0, min(int(value or 0), 2_147_483_647))
     except (TypeError, ValueError):
         return 0
+
+
+def _finite_or_none(value: Any) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if math.isfinite(number) else None
 
 
 def _relation(value: Any) -> str:
@@ -382,14 +453,13 @@ def _position(
     node: Mapping[str, Any],
     index: int,
 ) -> tuple[float, float, float]:
-    try:
-        result = tuple(
-            float(node.get(axis)) for axis in ("x", "y", "z")
-        )
-        if all(math.isfinite(item) for item in result):
-            return (result[0], result[1], result[2])
-    except (TypeError, ValueError):
-        pass
+    values = tuple(node.get(axis) for axis in ("x", "y", "z"))
+    if all(
+        isinstance(item, (int, float))
+        and math.isfinite(float(item))
+        for item in values
+    ):
+        return (float(values[0]), float(values[1]), float(values[2]))
     raw = bytes.fromhex(
         stable_digest(
             {"node": node.get("id"), "index": index},
@@ -431,6 +501,7 @@ def _bounds(
 
 
 __all__ = [
+    "MAX_PROJECTION_BYTES",
     "MAX_SPATIAL_LINKS",
     "MAX_SPATIAL_NODES",
     "SPATIAL_PROJECTION_VERSION",
