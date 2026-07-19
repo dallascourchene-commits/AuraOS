@@ -152,7 +152,9 @@ jobs:
             tests/test_aura_spatial_s4b_harness.py
 
       - name: Run exact-head Aura architecture, Waboose, and Crucible harness
+        id: architecture-harness
         if: matrix.python-version == '3.12'
+        continue-on-error: true
         working-directory: repo
         env:
           AURA_BASE_REF: origin/${{ env.AURA_SPATIAL_BASE_REF }}
@@ -167,13 +169,16 @@ jobs:
             --output Aura_Staging/spatial_s4b_harness/architect_receipt.json
 
       - name: Assert exact-head architecture receipt
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == '3.12' && always()
         working-directory: repo
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
-          receipt = json.loads(Path("Aura_Staging/spatial_s4b_harness/architect_receipt.json").read_text(encoding="utf-8"))
+          receipt_path = Path("Aura_Staging/spatial_s4b_harness/architect_receipt.json")
+          assert receipt_path.is_file(), "architecture harness did not produce a receipt"
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          print(json.dumps({"status": receipt.get("status"), "checks": receipt.get("checks")}, sort_keys=True))
           assert receipt["status"] == "PASSED", receipt["checks"]
           assert receipt["repository_head"] == os.environ["AURA_SPATIAL_HEAD_SHA"]
           assert receipt["checks"]["crucible_passed"] is True
@@ -187,7 +192,7 @@ jobs:
           PY
 
       - name: Upload exact-head S4-B receipt
-        if: matrix.python-version == '3.12'
+        if: matrix.python-version == '3.12' && always()
         uses: actions/upload-artifact@v4
         with:
           name: aura-spatial-s4b-receipt-${{ env.AURA_SPATIAL_HEAD_SHA }}
