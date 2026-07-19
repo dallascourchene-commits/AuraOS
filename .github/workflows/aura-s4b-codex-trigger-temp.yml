@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Codex Repair Publisher
+name: Aura Temporary S4-B Codex Repair Export
 
 on:
   pull_request:
@@ -7,106 +7,48 @@ on:
       - ".github/workflows/aura-s4b-codex-trigger-temp.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: aura-s4b-codex-repair-publisher
+  group: aura-s4b-codex-repair-export
   cancel-in-progress: false
 
 jobs:
-  repair-verify-publish:
+  export-verified-repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: feature/spatial-s4b-gaussian-security
-          fetch-depth: 0
+          fetch-depth: 1
           submodules: false
-          persist-credentials: true
 
-      - name: Apply exact Codex repairs
-        run: |
-          set +e
-          (
-            python scripts/aura_s4b_codex_repair_temp.py
-            git diff --check
-            python -m py_compile \
-              aura_spatial_importers/gaussian_gltf.py \
-              tests/test_aura_spatial_gaussian_gltf.py
-            node --check aura_spatial_web/gaussian_renderer.js
-            node --check tests/js/spatial-gaussian.test.mjs
-          ) > /tmp/aura-s4b-repair.log 2>&1
-          status=$?
-          set -e
-          cat /tmp/aura-s4b-repair.log
-          if [ "$status" -ne 0 ]; then
-            cp /tmp/aura-s4b-repair.log .github/aura-s4b-repair-diagnostic-temp.txt
-            git config user.name "Aura Spatial Review"
-            git config user.email "aura-spatial-review@users.noreply.github.com"
-            git add .github/aura-s4b-repair-diagnostic-temp.txt
-            git commit -m "chore: capture S4-B repair diagnostic"
-            git push origin HEAD:feature/spatial-s4b-gaussian-security
-            exit "$status"
-          fi
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Verify focused and retained S4-B tests
-        run: |
-          set +e
-          (
-            python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
-            python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-            ruff check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
-            ruff format --check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
-            python -m pytest -q --tb=short \
-              tests/test_aura_spatial_gaussian_gltf.py \
-              tests/test_aura_spatial_mixed_scene.py \
-              tests/test_aura_spatial_asset_security.py \
-              tests/test_aura_spatial_spz.py
-            node --test tests/js/spatial-gaussian.test.mjs tests/js/spatial-mixed-scene.test.mjs
-            npm run test:spatial
-          ) > /tmp/aura-s4b-test.log 2>&1
-          status=$?
-          set -e
-          cat /tmp/aura-s4b-test.log
-          if [ "$status" -ne 0 ]; then
-            cp /tmp/aura-s4b-test.log .github/aura-s4b-test-diagnostic-temp.txt
-            git config user.name "Aura Spatial Review"
-            git config user.email "aura-spatial-review@users.noreply.github.com"
-            git add .github/aura-s4b-test-diagnostic-temp.txt
-            git commit -m "chore: capture S4-B test diagnostic"
-            git push origin HEAD:feature/spatial-s4b-gaussian-security
-            exit "$status"
-          fi
-
-      - name: Commit permanent repair and remove temporary carriers
+      - name: Apply deterministic Codex repair
         run: |
           set -euo pipefail
-          branch="feature/spatial-s4b-gaussian-security"
-          git config user.name "Aura Spatial Review"
-          git config user.email "aura-spatial-review@users.noreply.github.com"
-          git rm -f \
-            .github/workflows/aura-s4b-codex-trigger-temp.yml \
-            .github/workflows/aura-s4b-codex-round-temp.yml \
-            scripts/aura_s4b_codex_repair_temp.py
-          git rm -f --ignore-unmatch \
-            .github/aura-s4b-repair-diagnostic-temp.txt \
-            .github/aura-s4b-test-diagnostic-temp.txt
-          git add \
+          python scripts/aura_s4b_codex_repair_temp.py
+          git diff --check
+          python -m py_compile \
             aura_spatial_importers/gaussian_gltf.py \
-            aura_spatial_web/gaussian_renderer.js \
-            tests/test_aura_spatial_gaussian_gltf.py \
-            tests/js/spatial-gaussian.test.mjs
-          git diff --cached --check
-          git commit -m "fix: complete S4-B Codex preflight and cleanup hardening"
-          git fetch --no-tags origin "$branch"
-          git rebase "origin/$branch"
-          git push origin "HEAD:$branch"
+            tests/test_aura_spatial_gaussian_gltf.py
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check tests/js/spatial-gaussian.test.mjs
+
+      - name: Package verified repaired files
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/s4b-repair/aura_spatial_importers
+          mkdir -p /tmp/s4b-repair/aura_spatial_web
+          mkdir -p /tmp/s4b-repair/tests/js
+          cp aura_spatial_importers/gaussian_gltf.py /tmp/s4b-repair/aura_spatial_importers/
+          cp aura_spatial_web/gaussian_renderer.js /tmp/s4b-repair/aura_spatial_web/
+          cp tests/test_aura_spatial_gaussian_gltf.py /tmp/s4b-repair/tests/
+          cp tests/js/spatial-gaussian.test.mjs /tmp/s4b-repair/tests/js/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: s4b-codex-repair-files
+          path: /tmp/s4b-repair
+          if-no-files-found: error
+          retention-days: 1
