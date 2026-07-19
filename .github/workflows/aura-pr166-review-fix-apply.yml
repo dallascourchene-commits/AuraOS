@@ -99,38 +99,25 @@ jobs:
         run: |
           set -euo pipefail
           git clean -fdx
-          cat > /tmp/expected-paths <<'EOF'
-          .aura/staging/pr166-review-fixes/READY
-          .aura/staging/pr166-review-fixes/patch-00.diff
-          .aura/staging/pr166-review-fixes/patch-01.diff
-          .aura/staging/pr166-review-fixes/patch-02.diff
-          .aura/staging/pr166-review-fixes/patch-03.diff
-          .aura/staging/pr166-review-fixes/patch-04.diff
-          .aura/staging/pr166-review-fixes/patch-05.diff
-          .aura/staging/pr166-review-fixes/patch-06.diff
-          .aura/staging/pr166-review-fixes/patch-07.diff
-          .aura/staging/pr166-review-fixes/patch-08.diff
-          .aura/staging/pr166-review-fixes/patch-09.diff
-          .aura/staging/pr166-review-fixes/patch-10.diff
-          .aura/staging/pr166-review-fixes/patch-11.diff
-          .aura/staging/pr166-review-fixes/patch-12.diff
-          .aura/staging/pr166-review-fixes/patch-13.diff
-          .github/workflows/aura-pr166-review-fix-apply.yml
-          .github/workflows/aura-review-learning.yml
-          .github/workflows/aura-spatial-s3a-materialize.yml
-          aura_node.py
-          aura_review_lessons_engine.py
-          aura_review_lessons_replay.py
-          aura_source_integrity.py
-          tests/test_aura_agent_arena_review_learning.py
-          tests/test_aura_coding_waboose_review_learning.py
-          tests/test_aura_coding_waboose_review_lessons.py
-          tests/test_aura_review_lessons_codex_regressions.py
-          tests/test_aura_source_integrity.py
-          EOF
-          git status --porcelain=v1 --untracked-files=all | sed -E 's/^...//' | sort -u > /tmp/actual-paths
-          sort -u /tmp/expected-paths -o /tmp/expected-paths
-          diff -u /tmp/expected-paths /tmp/actual-paths
+          for generated in \
+            .aura/CODEMAP.md \
+            .aura/CODEMAP.json \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json; do
+            git restore --source=HEAD --worktree --staged -- "$generated" 2>/dev/null || true
+          done
+          unexpected=0
+          while IFS= read -r path; do
+            case "$path" in
+              .aura/staging/pr166-review-fixes/*|.github/workflows/aura-pr166-review-fix-apply.yml|.github/workflows/aura-review-learning.yml|.github/workflows/aura-spatial-s3a-materialize.yml|aura_node.py|aura_review_lessons_engine.py|aura_review_lessons_replay.py|aura_source_integrity.py|tests/test_aura_agent_arena_review_learning.py|tests/test_aura_coding_waboose_review_learning.py|tests/test_aura_coding_waboose_review_lessons.py|tests/test_aura_review_lessons_codex_regressions.py|tests/test_aura_source_integrity.py)
+                ;;
+              *)
+                echo "Unexpected tracked change: $path"
+                unexpected=1
+                ;;
+            esac
+          done < <(git status --porcelain=v1 --untracked-files=all | sed -E 's/^...//')
+          test "$unexpected" -eq 0
           remote_head="$(git ls-remote origin "refs/heads/$HEAD_BRANCH" | awk '{print $1}')"
           test "$remote_head" = "$EXACT_STAGING_HEAD"
           git config user.name "Aura Review Repair"
