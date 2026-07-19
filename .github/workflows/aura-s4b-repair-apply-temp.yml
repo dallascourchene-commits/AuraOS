@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Repair Apply
+name: Aura Temporary S4-B Repair Reconciler
 
 on:
   push:
@@ -6,29 +6,28 @@ on:
       - feature/spatial-s4b-gaussian-security
     paths:
       - ".github/workflows/aura-s4b-repair-apply-temp.yml"
-      - ".aura_temp/s4b_repair_*"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: aura-s4b-repair-apply
+  group: aura-s4b-repair-reconciler
   cancel-in-progress: false
 
 jobs:
-  apply-reviewed-repair:
+  reconcile-reviewed-repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - name: Check out exact S4-B branch
+      - name: Check out S4-B branch with full history
         uses: actions/checkout@v4
         with:
           ref: feature/spatial-s4b-gaussian-security
           fetch-depth: 0
           submodules: false
 
-      - name: Reconstruct and verify reviewed payload
+      - name: Reconstruct and verify immutable reviewed payload
         run: |
           set -euo pipefail
           cat \
@@ -45,30 +44,55 @@ jobs:
             | sha256sum --check --strict
           tar -tzf /tmp/s4b_repair.tar.gz
 
-      - name: Apply permanent repair and remove all transport surfaces
+      - name: Reconcile latest remote head and push permanent tree
         run: |
           set -euo pipefail
-          tar -xzf /tmp/s4b_repair.tar.gz
-          rm -rf .aura_temp scripts/.s4b_fix
-          git rm --ignore-unmatch \
-            .github/workflows/aura-s4b-codex-fix-temp.yml \
-            .github/workflows/aura-s4b-repair-apply-temp.yml
-          git diff --check
-          python -m py_compile \
-            aura_spatial_asset_registry.py \
-            aura_spatial_render_plan.py \
-            aura_spatial_importers/*.py \
-            scripts/aura_spatial_s4b_architect_harness.py
-          node --test \
-            tests/js/spatial-gaussian.test.mjs \
-            tests/js/spatial-mixed-scene.test.mjs
-
-      - name: Commit exact permanent Codex repair
-        run: |
-          set -euo pipefail
+          branch="feature/spatial-s4b-gaussian-security"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "fix: harden S4-B after Codex review"
-          test -z "$(git status --porcelain)"
-          git push origin HEAD:feature/spatial-s4b-gaussian-security
+
+          for attempt in 1 2 3 4 5; do
+            echo "Reconciliation attempt ${attempt}"
+            git fetch --no-tags origin "${branch}"
+            git reset --hard "origin/${branch}"
+
+            tar -xzf /tmp/s4b_repair.tar.gz
+            rm -rf \
+              .aura_temp \
+              scripts/.s4b_fix \
+              scripts/.s4b_round2 \
+              scripts/.s4b_round3
+            rm -f \
+              .github/workflows/aura-s4b-codex-fix-temp.yml \
+              .github/workflows/aura-s4b-repair-apply-temp.yml \
+              .github/workflows/aura-s4b-round2-apply-temp.yml \
+              .github/workflows/aura-s4b-round3-apply-temp.yml
+
+            git add -A
+            git diff --cached --check
+            python -m py_compile \
+              aura_spatial_asset_registry.py \
+              aura_spatial_render_plan.py \
+              aura_spatial_importers/*.py \
+              scripts/aura_spatial_s4b_architect_harness.py
+            node --test \
+              tests/js/spatial-gaussian.test.mjs \
+              tests/js/spatial-mixed-scene.test.mjs
+
+            if git diff --cached --quiet; then
+              echo "Remote branch is already reconciled."
+              exit 0
+            fi
+
+            git commit -m "fix: harden S4-B after Codex review"
+            if git push origin "HEAD:${branch}"; then
+              test -z "$(git status --porcelain)"
+              exit 0
+            fi
+
+            echo "Remote advanced during reconciliation; retrying from its new head."
+            sleep 2
+          done
+
+          echo "Unable to reconcile S4-B branch after five exact-head attempts." >&2
+          exit 1
