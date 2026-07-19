@@ -43,7 +43,7 @@
       "items": { "$ref": "#/$defs/link" }
     },
     "source_refs": { "$ref": "#/$defs/stringSet" },
-    "renderer_hints": { "type": "object" },
+    "renderer_hints": { "$ref": "#/$defs/safeMetadata" },
     "truth_policy": { "$ref": "#/$defs/nonBlankString" },
     "patch_authority": { "const": "exact_source_spans_and_hashes_only" },
     "vsa_patch_authority": { "const": false },
@@ -114,6 +114,25 @@
     },
     "truthClass": {
       "enum": ["EXACT", "DERIVED", "PRESENTATION", "HYPOTHESIS"]
+    },
+    "safeMetadata": {
+      "type": "object",
+      "propertyNames": {
+        "not": {
+          "pattern": "^(?:[aA][pP][pP][rR][oO][vV][aA][lL]|[aA][uU][tT][hH][oO][rR][iI][zZ][aA][tT][iI][oO][nN]|[aA][uU][tT][hH][oO][rR][iI][tT][yY][^A-Za-z0-9]*[dD][eE][cC][iI][sS][iI][oO][nN]|[aA][uU][tT][oO][mM][aA][tT][iI][cC][^A-Za-z0-9]*[cC][oO][mM][mM][iI][tT]|[aA][uU][tT][oO][mM][aA][tT][iI][cC][^A-Za-z0-9]*[fF][iI][xX]|[aA][uU][tT][oO][mM][aA][tT][iI][cC][^A-Za-z0-9]*[mM][eE][rR][gG][eE]|[aA][uU][tT][oO][mM][aA][tT][iI][cC][^A-Za-z0-9]*[pP][uU][lL][lL][^A-Za-z0-9]*[rR][eE][qQ][uU][eE][sS][tT]|[aA][uU][tT][oO][mM][aA][tT][iI][cC][^A-Za-z0-9]*[pP][uU][sS][hH]|[cC][aA][pP][aA][bB][iI][lL][iI][tT][yY][^A-Za-z0-9]*[lL][eE][aA][sS][eE]|[eE][xX][eE][cC][uU][tT][iI][oO][nN][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY]|[lL][eE][aA][sS][eE]|[lL][eE][aA][sS][eE][^A-Za-z0-9]*[iI][dD]|[mM][eE][rR][gG][eE]|[pP][aA][tT][cC][hH][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY]|[pP][rR][oO][dD][uU][cC][tT][iI][oO][nN][^A-Za-z0-9]*[mM][uU][tT][aA][tT][iI][oO][nN]|[pP][rR][oO][mM][oO][tT][iI][oO][nN]|[rR][eE][nN][dD][eE][rR][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY]|[rR][eE][nN][dD][eE][rR][eE][rR][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY]|[rR][eE][nN][dD][eE][rR][eE][rR][^A-Za-z0-9]*[iI][nN][pP][uU][tT][^A-Za-z0-9]*[iI][sS][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY]|[vV][eE][rR][iI][fF][iI][eE][rR][^A-Za-z0-9]*[rR][eE][cC][eE][iI][pP][tT]|[vV][sS][aA][^A-Za-z0-9]*[pP][aA][tT][cC][hH][^A-Za-z0-9]*[aA][uU][tT][hH][oO][rR][iI][tT][yY])$"
+        }
+      },
+      "additionalProperties": { "$ref": "#/$defs/safeValue" }
+    },
+    "safeValue": {
+      "oneOf": [
+        { "type": ["null", "boolean", "number", "string"] },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/safeValue" }
+        },
+        { "$ref": "#/$defs/safeMetadata" }
+      ]
     },
     "frame": {
       "type": "object",
@@ -202,7 +221,7 @@
         },
         "truth_class": { "$ref": "#/$defs/truthClass" },
         "immutable": { "const": true },
-        "metadata": { "type": "object" }
+        "metadata": { "$ref": "#/$defs/safeMetadata" }
       },
       "additionalProperties": false
     },
@@ -248,7 +267,7 @@
         "selectable": { "type": "boolean" },
         "projection_only": { "const": true },
         "patch_authority": { "const": false },
-        "metadata": { "type": "object" }
+        "metadata": { "$ref": "#/$defs/safeMetadata" }
       },
       "additionalProperties": false
     },
@@ -274,7 +293,7 @@
         "truth_class": { "$ref": "#/$defs/truthClass" },
         "directed": { "type": "boolean" },
         "projection_only": { "const": true },
-        "metadata": { "type": "object" }
+        "metadata": { "$ref": "#/$defs/safeMetadata" }
       },
       "additionalProperties": false
     }
