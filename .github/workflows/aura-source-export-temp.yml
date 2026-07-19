@@ -1,4 +1,4 @@
-name: Aura Temporary Exact Source Export
+name: Aura Temporary Exact Tree Export
 
 on:
   pull_request:
@@ -10,27 +10,25 @@ permissions:
   contents: read
 
 jobs:
-  export-source:
+  export-tree:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - name: Check out exact pull-request head
+      - name: Check out exact reviewed head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ce70f458ce52ed009246eb7b34bb87a55011602e
           fetch-depth: 1
           submodules: false
-      - name: Verify and archive source
-        env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Record exact reviewed tree
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          tar --exclude=.git -czf /tmp/aura-exact-source.tar.gz .
-      - name: Upload exact source
+          test "$(git rev-parse HEAD)" = "ce70f458ce52ed009246eb7b34bb87a55011602e"
+          git rev-parse 'HEAD^{tree}' > /tmp/reviewed-tree.txt
+      - name: Upload exact reviewed tree
         uses: actions/upload-artifact@v4
         with:
-          name: aura-exact-source-${{ github.event.pull_request.head.sha || github.sha }}
-          path: /tmp/aura-exact-source.tar.gz
+          name: aura-pr168-reviewed-tree
+          path: /tmp/reviewed-tree.txt
           if-no-files-found: error
           retention-days: 1
