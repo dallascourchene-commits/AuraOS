@@ -163,9 +163,8 @@ def _validate_registry_freshness(
     evidence: Mapping[str, str],
 ) -> None:
     current_head = str(evidence["repository_head"])
-    source_head = str(registry["repository_head"])
     merge_commit = str(registry["merge_commit"])
-    if current_head in {source_head, merge_commit}:
+    if current_head == merge_commit:
         return
     if not _registry_merge_is_ancestor(
         repository_root,
