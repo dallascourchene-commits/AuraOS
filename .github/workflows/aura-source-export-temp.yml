@@ -27,12 +27,12 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          tar --exclude=.git --exclude=aura-source-export.tar.gz -czf aura-source-export.tar.gz .
+          tar --exclude=.git -czf /tmp/aura-source-export.tar.gz .
 
       - name: Upload source archive
         uses: actions/upload-artifact@v4
         with:
           name: aura-source-export-${{ github.event.pull_request.head.sha || github.sha }}
-          path: aura-source-export.tar.gz
+          path: /tmp/aura-source-export.tar.gz
           if-no-files-found: error
           retention-days: 1
