@@ -88,12 +88,8 @@ class ReviewLessonEngine:
         current_head: str = "",
     ) -> dict[str, Any]:
         observed_head = _git_head(self.repo_root)
-        if (
-            current_head
-            and observed_head != "UNAVAILABLE"
-            and current_head != observed_head
-        ):
-            raise ReviewLessonError("current_head does not match the repository HEAD")
+        # A repository-observed HEAD always wins. The optional argument remains only
+        # for isolated, non-git fixtures and cannot override a real checkout.
         head = observed_head if observed_head != "UNAVAILABLE" else current_head
         return normalize_external_review(payload, current_head=head)
 
