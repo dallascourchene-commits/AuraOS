@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Atomic Repair Publisher
+name: Aura Temporary S4-B Artifact Publisher
 
 on:
   pull_request:
@@ -8,31 +8,22 @@ on:
 
 permissions:
   contents: write
-  actions: write
+  actions: read
 
 jobs:
   publish-repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-          submodules: false
+          name: s4b-codex-repair-files
+          path: repaired
+          github-token: ${{ github.token }}
+          repository: dallascourchene-commits/AuraOS
+          run-id: 29708520523
 
-      - name: Apply and verify deterministic Codex repair
-        run: |
-          set -euo pipefail
-          python scripts/aura_s4b_codex_repair_temp.py
-          git diff --check
-          python -m py_compile \
-            aura_spatial_importers/gaussian_gltf.py \
-            tests/test_aura_spatial_gaussian_gltf.py
-          node --check aura_spatial_web/gaussian_renderer.js
-          node --check tests/js/spatial-gaussian.test.mjs
-
-      - name: Publish one atomic Git commit through GitHub API
+      - name: Publish verified artifact as one atomic Git commit
         env:
           GITHUB_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -65,7 +56,7 @@ jobs:
                       "Accept": "application/vnd.github+json",
                       "Authorization": f"Bearer {token}",
                       "X-GitHub-Api-Version": "2022-11-28",
-                      "User-Agent": "Aura-S4B-Atomic-Publisher",
+                      "User-Agent": "Aura-S4B-Artifact-Publisher",
                       "Content-Type": "application/json",
                   },
               )
@@ -93,7 +84,10 @@ jobs:
           ]
           tree_entries = []
           for path in repaired_paths:
-              encoded = base64.b64encode(Path(path).read_bytes()).decode("ascii")
+              local_path = Path("repaired") / path
+              if not local_path.is_file():
+                  raise RuntimeError(f"verified artifact is missing {path}")
+              encoded = base64.b64encode(local_path.read_bytes()).decode("ascii")
               blob = request("POST", "/git/blobs", {"content": encoded, "encoding": "base64"})
               tree_entries.append(
                   {"path": path, "mode": "100644", "type": "blob", "sha": blob["sha"]}
@@ -103,8 +97,6 @@ jobs:
               ".github/workflows/aura-s4b-codex-trigger-temp.yml",
               ".github/workflows/aura-s4b-codex-round-temp.yml",
               "scripts/aura_s4b_codex_repair_temp.py",
-              ".github/aura-s4b-repair-diagnostic-temp.txt",
-              ".github/aura-s4b-test-diagnostic-temp.txt",
           ]:
               tree_entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
 
