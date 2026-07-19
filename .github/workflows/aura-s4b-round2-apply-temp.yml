@@ -36,8 +36,8 @@ jobs:
           echo "681714af97fc4d708551cfd2429e15bcb26b11be598cbcf2abb011c979599bdc  /tmp/s4b-repair.patch.gz" | sha256sum --check --strict
           gzip -dc /tmp/s4b-repair.patch.gz > /tmp/s4b-repair.patch
           echo "53dbcf911223bbb8673ef66b31d1ca61677a50a709c268f323f90f6c0d01084c  /tmp/s4b-repair.patch" | sha256sum --check --strict
-          git apply --check /tmp/s4b-repair.patch
-          git apply /tmp/s4b-repair.patch
+          git apply --check --exclude=.github/workflows/aura-spatial-s4.yml /tmp/s4b-repair.patch
+          git apply --exclude=.github/workflows/aura-spatial-s4.yml /tmp/s4b-repair.patch
           git diff --check
 
       - name: Set up Python 3.12 and Node 22
