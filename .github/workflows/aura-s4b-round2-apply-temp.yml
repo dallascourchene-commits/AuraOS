@@ -1,4 +1,3 @@
-# Final isolated hash-verified S4-B apply. All competing branch writers were removed.
 name: Aura Temporary S4-B Verified Patch Apply
 
 on:
@@ -137,12 +136,15 @@ jobs:
           test ! -e .aura_temp
           test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
 
-      - name: Commit and push verified source repair
+      - name: Commit, rebase, and push verified source repair
         run: |
           set -euo pipefail
+          branch="feature/spatial-s4b-gaussian-security"
           git add -A
           test ! -e .aura_temp
           test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
           git -c user.name='Aura Spatial Review' -c user.email='aura-spatial-review@users.noreply.github.com' \
             commit -m 'fix: resolve Codex S4-B safety findings'
-          git push origin HEAD:feature/spatial-s4b-gaussian-security
+          git fetch --no-tags origin "$branch"
+          git rebase "origin/$branch"
+          git push origin "HEAD:$branch"
