@@ -21,6 +21,11 @@ jobs:
           fetch-depth: 1
           submodules: false
 
+      - name: Install exact verification environment
+        run: |
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
+          python -m pip install --disable-pip-version-check pytest
+
       - name: Reconstruct and verify reviewed patch
         run: |
           set -euo pipefail
