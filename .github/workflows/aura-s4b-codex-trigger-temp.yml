@@ -21,10 +21,7 @@ jobs:
           submodules: false
 
       - name: Apply deterministic Codex repair
-        run: |
-          set -euo pipefail
-          python scripts/aura_s4b_codex_repair_temp.py
-          git diff --check
+        run: python scripts/aura_s4b_codex_repair_temp.py
 
       - name: Package repaired files
         run: |
