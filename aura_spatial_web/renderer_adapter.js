@@ -212,6 +212,47 @@ function normalizeRefs(value, label) {
   return Object.freeze(refs);
 }
 
+const MAX_METADATA_DEPTH = 8;
+const MAX_METADATA_ITEMS = 512;
+const MAX_METADATA_BYTES = 65_536;
+
+function normalizeMetadata(value, label, depth = 0, counter = { items: 0 }) {
+  if (depth > MAX_METADATA_DEPTH) throw new RangeError(`${label} nesting ceiling exceeded`);
+  counter.items += 1;
+  if (counter.items > MAX_METADATA_ITEMS) throw new RangeError(`${label} item ceiling exceeded`);
+  if (value === null || typeof value === "boolean" || typeof value === "string") return value;
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) throw new TypeError(`${label} numbers must be finite`);
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return Object.freeze(value.map((item) => normalizeMetadata(item, label, depth + 1, counter)));
+  }
+  if (!value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) {
+    throw new TypeError(`${label} must be bounded JSON-compatible metadata`);
+  }
+  const output = {};
+  for (const key of Object.keys(value).sort()) {
+    boundedText(key, `${label} key`, 256);
+    output[key] = normalizeMetadata(value[key], label, depth + 1, counter);
+  }
+  return Object.freeze(output);
+}
+
+function boundedMetadata(value, label) {
+  const normalized = normalizeMetadata(value, label);
+  let serialized;
+  try {
+    serialized = JSON.stringify(normalized);
+  } catch (error) {
+    throw new TypeError(`${label} must be JSON-compatible`, { cause: error });
+  }
+  if (new TextEncoder().encode(serialized).length > MAX_METADATA_BYTES) {
+    throw new RangeError(`${label} byte ceiling exceeded`);
+  }
+  return normalized;
+}
+
 export function assertFiniteVector(value, length, label, { positive = false } = {}) {
   if (
     !Array.isArray(value) ||
@@ -336,6 +377,7 @@ export function validateSceneProjection(
         bounds_min: boundsMin,
         bounds_max: boundsMax,
         source_refs: normalizeRefs(asset.source_refs, `asset ${assetId} source_refs`),
+        metadata: boundedMetadata(asset.metadata, `asset ${assetId} metadata`),
       });
     })
     .sort((a, b) => a.asset_id.localeCompare(b.asset_id));

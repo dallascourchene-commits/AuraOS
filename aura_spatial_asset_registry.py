@@ -143,15 +143,17 @@ def build_imported_asset_manifest(
         "fallback_available": bool(result.colors_rgba),
         "element_count": result.receipt.element_count,
         "decoded_bytes": result.receipt.decoded_bytes,
+        "estimated_runtime_allocation_bytes": result.metadata.get(
+            "estimated_runtime_allocation_bytes", result.receipt.decoded_bytes
+        ),
+        "representation_digest": result.metadata.get("representation_digest"),
+        "representation_digest_version": result.metadata.get("representation_digest_version"),
+        "representation_bytes_per_splat": result.metadata.get("representation_bytes_per_splat"),
+        "sh_degree": result.metadata.get("sh_degree"),
+        "gaussian_sh_degree": result.metadata.get("gaussian_sh_degree", result.metadata.get("sh_degree")),
+        "gaussian_color_space": result.metadata.get("gaussian_color_space"),
         "representation_role": "DERIVED_PROJECTION_ASSET",
     }
-    if result.gaussian_splats is not None:
-        metadata.update(
-            {
-                "gaussian_sh_degree": result.gaussian_splats.sh_degree,
-                "gaussian_color_space": result.metadata.get("gaussian_color_space"),
-            }
-        )
     manifest = SpatialAssetManifest(
         asset_id=asset_id,
         asset_type=asset_type,

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import struct
 
+import pytest
 import zstandard
 
 from aura_spatial_asset_registry import SpatialAssetRegistry, build_imported_asset_manifest
@@ -214,3 +215,49 @@ def test_gaussian_manifest_and_budget_account_for_high_order_spherical_harmonics
     assert budget["max_bytes_per_splat"] == 348
     assert budget["declared_gpu_bytes"] == 348
     assert budget["max_gpu_bytes"] >= 348
+
+
+def test_gaussian_budget_rejects_aggregate_decoded_and_runtime_bytes_against_plan() -> None:
+    from dataclasses import replace
+
+    scene, *_ = _mixed_scene()
+    device = compile_spatial_device_profile(
+        profile_id="device:mixed-tight",
+        supported_renderers=("WEBGL2", "ACCESSIBLE_2D", "HEADLESS"),
+        budget=SpatialRenderBudget(
+            max_entities=32,
+            max_links=32,
+            max_assets=16,
+            max_asset_bytes=2_048,
+            max_cpu_ms_per_frame=50,
+            max_gpu_bytes=16 * 1024 * 1024,
+            max_network_bytes=0,
+        ),
+        source_refs=("fixture:mixed",),
+    )
+    plan = negotiate_spatial_render_plan(scene, device, preferred_renderers=("WEBGL2",))
+    with pytest.raises(ValueError, match="runtime allocation"):
+        compile_gaussian_representation_budget(scene, plan)
+
+    assets = []
+    for asset in scene.assets:
+        if asset.asset_id != "asset:splats":
+            assets.append(asset)
+            continue
+        metadata = dict(asset.metadata)
+        metadata["decoded_bytes"] = 3_000
+        metadata["estimated_runtime_allocation_bytes"] = 3_000
+        assets.append(replace(asset, metadata=metadata))
+    decoded_scene = compile_spatial_scene(
+        scene_id=scene.scene_id,
+        purpose_digest=scene.purpose_digest,
+        root_frame_id=scene.root_frame_id,
+        frames=scene.frames,
+        assets=tuple(assets),
+        entities=scene.entities,
+        links=scene.links,
+        source_refs=scene.source_refs,
+    )
+    decoded_plan = negotiate_spatial_render_plan(decoded_scene, device, preferred_renderers=("WEBGL2",))
+    with pytest.raises(ValueError, match="decoded bytes"):
+        compile_gaussian_representation_budget(decoded_scene, decoded_plan)

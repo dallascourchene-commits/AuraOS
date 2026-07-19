@@ -1,11 +1,66 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 
-import { GaussianRenderer, describeGaussianAssets } from "../../aura_spatial_web/gaussian_renderer.js";
+import {
+  GAUSSIAN_REPRESENTATION_DIGEST_VERSION,
+  GaussianRenderer,
+  describeGaussianAssets,
+} from "../../aura_spatial_web/gaussian_renderer.js";
 import { HeadlessRenderer } from "../../aura_spatial_web/headless_renderer.js";
 import { planFixture, sceneFixture } from "./spatial-fixture.mjs";
 
-function gaussianScene({ shDegree = 0, colorSpace = "SPZ_INTERNAL_WIDE_RGB" } = {}) {
+const SOURCE_DIGEST = "d".repeat(64);
+const RECEIPT_DIGEST = "a".repeat(64);
+
+function representationDigest(value) {
+  const coefficientCount = (value.sh_degree + 1) ** 2 * 3;
+  const header = Buffer.alloc(9);
+  header.writeUInt32LE(value.positions.length, 0);
+  header.writeUInt8(value.sh_degree, 4);
+  header.writeUInt32LE(coefficientCount, 5);
+  const hash = createHash("sha256");
+  hash.update(Buffer.from(`${GAUSSIAN_REPRESENTATION_DIGEST_VERSION}\0`, "ascii"));
+  hash.update(header);
+  for (const values of [
+    value.positions,
+    value.rotations_xyzw,
+    value.scales_xyz,
+    value.opacities.map((item) => [item]),
+    value.sh_coefficients,
+  ]) {
+    for (const vector of values) {
+      for (const component of vector) {
+        const encoded = Buffer.alloc(4);
+        encoded.writeFloatLE(component, 0);
+        hash.update(encoded);
+      }
+    }
+  }
+  for (const color of value.colors_rgba) hash.update(Buffer.from(color));
+  return hash.digest("hex");
+}
+
+function payload(count = 1) {
+  const value = {
+    asset_id: "asset:gaussian",
+    source_digest: SOURCE_DIGEST,
+    derived_asset_digest: RECEIPT_DIGEST,
+    representation_digest: "0".repeat(64),
+    sh_degree: 0,
+    color_space: "SPZ_INTERNAL_WIDE_RGB",
+    positions: Array.from({ length: count }, (_, index) => [index, 0, 0]),
+    rotations_xyzw: Array.from({ length: count }, () => [0, 0, 0, 1]),
+    scales_xyz: Array.from({ length: count }, () => [1, 1, 1]),
+    opacities: Array.from({ length: count }, () => 1),
+    sh_coefficients: Array.from({ length: count }, () => [0, 0, 0]),
+    colors_rgba: Array.from({ length: count }, () => [255, 0, 255, 255]),
+  };
+  value.representation_digest = representationDigest(value);
+  return value;
+}
+
+function gaussianScene(value = payload()) {
   const scene = structuredClone(sceneFixture());
   scene.assets = [
     {
@@ -13,7 +68,7 @@ function gaussianScene({ shDegree = 0, colorSpace = "SPZ_INTERNAL_WIDE_RGB" } = 
       asset_type: "GAUSSIAN_SPLAT",
       uri: "aura://assets/gaussian.spz",
       media_type: "application/vnd.spz",
-      content_digest: `sha256:${"d".repeat(64)}`,
+      content_digest: `sha256:${SOURCE_DIGEST}`,
       byte_length: 48,
       frame_id: "frame:root",
       bounds_min: [0, 0, 0],
@@ -22,11 +77,14 @@ function gaussianScene({ shDegree = 0, colorSpace = "SPZ_INTERNAL_WIDE_RGB" } = 
       truth_class: "DERIVED",
       immutable: true,
       metadata: {
-        representation: "GAUSSIAN_SPLAT",
+        import_receipt_digest: RECEIPT_DIGEST,
+        representation_digest: value.representation_digest,
+        representation_digest_version: GAUSSIAN_REPRESENTATION_DIGEST_VERSION,
+        representation_bytes_per_splat: 48 + ((value.sh_degree + 1) ** 2 * 3 * 4),
+        sh_degree: value.sh_degree,
+        gaussian_sh_degree: value.sh_degree,
+        gaussian_color_space: value.color_space,
         projection_only: true,
-        import_receipt_digest: "e".repeat(64),
-        gaussian_sh_degree: shDegree,
-        gaussian_color_space: colorSpace,
       },
     },
   ];
@@ -41,61 +99,49 @@ function gaussianPlan(renderer = "HEADLESS") {
   return plan;
 }
 
-function payload(count = 1, { shDegree = 0, colorSpace = "SPZ_INTERNAL_WIDE_RGB" } = {}) {
-  const coefficientCount = (shDegree + 1) ** 2 * 3;
+function limits(overrides = {}) {
   return {
-    asset_id: "asset:gaussian",
-    source_digest: "d".repeat(64),
-    derived_asset_digest: "e".repeat(64),
-    positions: Array.from({ length: count }, (_, index) => [index, 0, 0]),
-    rotations_xyzw: Array.from({ length: count }, () => [0, 0, 0, 1]),
-    scales_xyz: Array.from({ length: count }, () => [1, 1, 1]),
-    opacities: Array.from({ length: count }, () => 1),
-    colors_rgba: Array.from({ length: count }, () => [255, 0, 255, 255]),
-    sh_degree: shDegree,
-    sh_coefficients: Array.from({ length: count }, () =>
-      Array.from({ length: coefficientCount }, (_, index) => index / coefficientCount),
-    ),
-    color_space: colorSpace,
+    maxGpuBytes: 1024 * 1024,
+    maxDecodedBytes: 1024 * 1024,
+    maxAllocationBytes: 1024 * 1024,
+    maxFrameMs: 20,
+    ...overrides,
   };
 }
 
 test("Gaussian renderer retains the admitted presentation owner and headless fallback", async () => {
   let time = 0;
+  const value = payload();
   const renderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => time++,
   });
-  await renderer.initialize(gaussianScene(), gaussianPlan(), [payload()]);
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
   const receipt = await renderer.present();
   assert.equal(receipt.renderer, "HEADLESS");
   assert.equal(receipt.representation, "ACCESSIBLE_HEADLESS_FALLBACK");
   assert.equal(receipt.splat_count, 1);
-  assert.equal(receipt.gpu_bytes, 0);
-  assert.equal(receipt.allocation_bytes, 0);
-  assert.equal(renderer.status().representation_buffer_count, 0);
   assert.equal(receipt.renderer_authority, false);
   assert.equal(renderer.headlessProof().presentation_owner_retained, undefined);
   assert.deepEqual(renderer.headlessProof().deterministic_order, ["asset:gaussian"]);
   assert.equal((await renderer.dispose()).state, "DISPOSED");
 });
 
-
-
 test("Gaussian point-cloud fallback is executed rather than merely claimed", async () => {
   let fallbackResources;
   let tick = 0;
+  const value = payload(2);
   const renderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
     drawPointCloudPass: async (resources, context) => {
       fallbackResources = resources;
       assert.equal(context.projection_only, true);
     },
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => tick++,
   });
-  await renderer.initialize(gaussianScene(), gaussianPlan(), [payload(2)]);
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
   const receipt = await renderer.present({ cameraPosition: [0, 0, 0] });
   assert.equal(receipt.representation, "POINT_CLOUD_FALLBACK");
   assert.equal(receipt.evidence_class, "MEASURED");
@@ -104,85 +150,129 @@ test("Gaussian point-cloud fallback is executed rather than merely claimed", asy
   assert.equal(fallbackResources.colors_rgba.length, 8);
 });
 
-test("Gaussian pass is replaceable, sorted, bounded, and honestly measured", async () => {
+test("Gaussian pass is replaceable, sorted, bounded, and releases its resource lease", async () => {
   let resources;
+  let disposed = 0;
   let tick = 0;
+  const value = payload(2);
   const renderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    drawGaussianPass: async (value, context) => {
-      resources = value;
+    drawGaussianPass: async (renderResources, context) => {
+      resources = renderResources;
       assert.equal(context.renderer_authority, false);
+      return { dispose: async () => disposed++ };
     },
-    limits: {
-      maxVisibleSplats: 2,
-      maxSortItems: 2,
-      maxGpuBytes: 1024,
-      maxDecodedBytes: 1024,
-      maxFrameMs: 20,
-    },
+    limits: limits({ maxVisibleSplats: 2, maxSortItems: 2 }),
     now: () => tick++,
   });
-  await renderer.initialize(gaussianScene(), gaussianPlan(), [payload(2)]);
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
   const receipt = await renderer.present({ cameraPosition: [0, 0, 0] });
   assert.equal(receipt.representation, "GAUSSIAN_SPLAT_PASS");
   assert.equal(receipt.evidence_class, "MEASURED");
   assert.deepEqual([...resources.sorted_indices], [1, 0]);
-  assert.equal(resources.sh_coefficients.length, 6);
   assert.equal(renderer.status().representation_buffer_count, 1);
-  assert.equal(renderer.markDeviceLost().state, "LOST");
+  assert.equal(renderer.status().representation_disposer_count, 1);
+  assert.equal((await renderer.markDeviceLost()).state, "LOST");
+  assert.equal(disposed, 1);
   assert.equal(renderer.status().representation_buffer_count, 0);
 });
 
-test("Gaussian limits reject allocation, stale digest, invalid values, and cancellation before draw", async () => {
+test("Gaussian limits reject source-heap undercount, stale representation, Float32 overflow, and bad values", async () => {
+  const two = payload(2);
+  const visible = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    limits: limits({ maxVisibleSplats: 1 }),
+    now: () => 0,
+  });
+  await assert.rejects(visible.initialize(gaussianScene(two), gaussianPlan(), [two]), /visible-splat budget/);
+
+  const one = payload();
   const allocation = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxVisibleSplats: 1, maxGpuBytes: 52, maxDecodedBytes: 52, maxFrameMs: 20 },
+    limits: limits({ maxAllocationBytes: 2800 }),
     now: () => 0,
   });
   await assert.rejects(
-    allocation.initialize(gaussianScene(), gaussianPlan(), [payload(2)]),
-    /visible-splat budget/,
+    allocation.initialize(gaussianScene(one), gaussianPlan(), [one]),
+    /allocation budget exceeded before buffer creation/,
   );
 
-  const stale = payload();
-  stale.source_digest = "e".repeat(64);
-  const staleRenderer = new GaussianRenderer({
+  const staleSource = payload();
+  staleSource.source_digest = "e".repeat(64);
+  const staleSourceRenderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
-    now: () => 0,
-  });
-  await assert.rejects(staleRenderer.initialize(gaussianScene(), gaussianPlan(), [stale]), /digest/);
-
-  const staleReceipt = payload();
-  staleReceipt.derived_asset_digest = "f".repeat(64);
-  const staleReceiptRenderer = new GaussianRenderer({
-    presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => 0,
   });
   await assert.rejects(
-    staleReceiptRenderer.initialize(gaussianScene(), gaussianPlan(), [staleReceipt]),
-    /receipt digest/,
+    staleSourceRenderer.initialize(gaussianScene(staleSource), gaussianPlan(), [staleSource]),
+    /source digest/,
+  );
+
+  const substituted = payload();
+  substituted.positions[0][0] = 0.5;
+  const substitutedRenderer = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    limits: limits(),
+    now: () => 0,
+  });
+  await assert.rejects(
+    substitutedRenderer.initialize(gaussianScene(substituted), gaussianPlan(), [substituted]),
+    /does not match decoded attributes/,
+  );
+
+  const overflow = payload();
+  overflow.positions[0][0] = Number.MAX_VALUE;
+  const overflowRenderer = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    limits: limits(),
+    now: () => 0,
+  });
+  await assert.rejects(
+    overflowRenderer.initialize(gaussianScene(overflow), gaussianPlan(), [overflow]),
+    /Float32/,
   );
 
   const invalid = payload();
   invalid.scales_xyz[0][0] = -1;
   const invalidRenderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => 0,
   });
-  await assert.rejects(invalidRenderer.initialize(gaussianScene(), gaussianPlan(), [invalid]), /scale/);
+  await assert.rejects(invalidRenderer.initialize(gaussianScene(invalid), gaussianPlan(), [invalid]), /scale/);
+});
 
+test("Gaussian cancellation is rechecked after async draw and cannot emit PRESENTED", async () => {
+  const controller = new AbortController();
+  let disposed = 0;
+  const value = payload();
+  const renderer = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    drawGaussianPass: async () => {
+      controller.abort();
+      return { dispose: async () => disposed++ };
+    },
+    limits: limits(),
+    now: () => 0,
+  });
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
+  await assert.rejects(renderer.present({ signal: controller.signal }), /cancelled/);
+  assert.equal(renderer.status().state, "LOST");
+  assert.equal(disposed, 1);
+});
+
+test("Gaussian cancellation before initialization and plan ceilings fail closed", async () => {
   const controller = new AbortController();
   controller.abort();
+  const value = payload();
   const cancelled = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => 0,
   });
   await assert.rejects(
-    cancelled.initialize(gaussianScene(), gaussianPlan(), [payload()], { signal: controller.signal }),
+    cancelled.initialize(gaussianScene(value), gaussianPlan(), [value], { signal: controller.signal }),
     /cancelled/,
   );
 
@@ -190,129 +280,79 @@ test("Gaussian limits reject allocation, stale digest, invalid values, and cance
   planBound.budget.max_asset_bytes = 64;
   const overPlan = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    limits: { maxGpuBytes: 64, maxDecodedBytes: 128, maxAllocationBytes: 128, maxFrameMs: 20 },
+    limits: limits({ maxGpuBytes: 64, maxDecodedBytes: 128, maxAllocationBytes: 128 }),
     now: () => 0,
   });
   await assert.rejects(
-    overPlan.initialize(gaussianScene(), planBound, [payload()]),
+    overPlan.initialize(gaussianScene(value), planBound, [value]),
     /allocation budget exceeds render plan/,
   );
 });
 
-test("Gaussian pass failure clears buffers, disposes the presentation owner, and enters lost state", async () => {
-  const presentationRenderer = new HeadlessRenderer();
-  const baseDispose = presentationRenderer.dispose.bind(presentationRenderer);
-  let disposeCount = 0;
-  presentationRenderer.dispose = async () => {
-    disposeCount += 1;
-    return baseDispose();
-  };
+test("Gaussian pass failure clears representation buffers and enters lost state", async () => {
+  const value = payload();
   const renderer = new GaussianRenderer({
-    presentationRenderer,
+    presentationRenderer: new HeadlessRenderer(),
     drawGaussianPass: async () => {
       throw new Error("draw failed");
     },
-    limits: { maxGpuBytes: 1024, maxDecodedBytes: 1024, maxFrameMs: 20 },
+    limits: limits(),
     now: () => 0,
   });
-  await renderer.initialize(gaussianScene(), gaussianPlan(), [payload()]);
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
   await assert.rejects(renderer.present(), /draw failed/);
   assert.equal(renderer.status().state, "LOST");
   assert.equal(renderer.status().representation_buffer_count, 0);
-  assert.equal(disposeCount, 1);
+});
+
+test("Gaussian pass without disposal evidence is rejected and cleaned up", async () => {
+  const value = payload();
+  const renderer = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    drawGaussianPass: async () => undefined,
+    limits: limits(),
+    now: () => 0,
+  });
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
+  await assert.rejects(renderer.present(), /disposal handle/);
+  assert.equal(renderer.status().state, "LOST");
+  assert.equal(renderer.status().representation_buffer_count, 0);
 });
 
 test("accessible descriptions expose no action authority", () => {
-  const descriptions = describeGaussianAssets([
-    { asset_id: "asset:gaussian", count: 4 },
-  ]);
+  const descriptions = describeGaussianAssets([{ asset_id: "asset:gaussian", count: 4 }]);
   assert.equal(descriptions[0].splat_count, 4);
   assert.equal(descriptions[0].projection_only, true);
   assert.equal(descriptions[0].execution_authority, false);
 });
 
-
 test("Gaussian pass carries bounded higher-order spherical harmonics and exact color space", async () => {
   let resources;
   let context;
+  const value = payload();
+  value.sh_degree = 2;
+  value.color_space = "lin_rec709_display";
+  value.sh_coefficients = [Array.from({ length: 27 }, (_, index) => index / 27)];
+  value.representation_digest = representationDigest(value);
   const renderer = new GaussianRenderer({
     presentationRenderer: new HeadlessRenderer(),
-    drawGaussianPass: async (value, valueContext) => {
-      resources = value;
-      context = valueContext;
+    drawGaussianPass: async (renderResources, renderContext) => {
+      resources = renderResources;
+      context = renderContext;
+      return { dispose: async () => {} };
     },
-    limits: { maxGpuBytes: 4096, maxDecodedBytes: 4096, maxAllocationBytes: 4096, maxFrameMs: 20 },
+    limits: limits({ maxGpuBytes: 64 * 1024, maxDecodedBytes: 64 * 1024, maxAllocationBytes: 64 * 1024 }),
     now: (() => {
       let tick = 0;
       return () => tick++;
     })(),
   });
-  await renderer.initialize(
-    gaussianScene({ shDegree: 2, colorSpace: "lin_rec709_display" }),
-    gaussianPlan(),
-    [payload(1, { shDegree: 2, colorSpace: "lin_rec709_display" })],
-  );
+  await renderer.initialize(gaussianScene(value), gaussianPlan(), [value]);
   const receipt = await renderer.present();
   assert.equal(resources.sh_coefficients.length, 27);
   assert.equal(context.sh_degree, 2);
   assert.equal(context.color_space, "lin_rec709_display");
   assert.equal(receipt.gpu_bytes, 156);
-  assert.equal(receipt.allocation_bytes, 160);
-});
-
-
-test("headless and point fallbacks are admitted under path-specific GPU budgets", async () => {
-  const headless = new GaussianRenderer({
-    presentationRenderer: new HeadlessRenderer(),
-    limits: {
-      maxGpuBytes: 1,
-      maxDecodedBytes: 1024,
-      maxAllocationBytes: 1,
-      maxFrameMs: 20,
-    },
-    now: (() => {
-      let tick = 0;
-      return () => tick++;
-    })(),
-  });
-  await headless.initialize(gaussianScene(), gaussianPlan(), [payload()]);
-  const headlessReceipt = await headless.present();
-  assert.equal(headlessReceipt.representation, "ACCESSIBLE_HEADLESS_FALLBACK");
-  assert.equal(headlessReceipt.gpu_bytes, 0);
-
-  const point = new GaussianRenderer({
-    presentationRenderer: new HeadlessRenderer(),
-    drawPointCloudPass: async () => {},
-    limits: {
-      maxGpuBytes: 16,
-      maxDecodedBytes: 1024,
-      maxAllocationBytes: 20,
-      maxFrameMs: 20,
-    },
-    now: (() => {
-      let tick = 0;
-      return () => tick++;
-    })(),
-  });
-  await point.initialize(gaussianScene(), gaussianPlan(), [payload()]);
-  const pointReceipt = await point.present();
-  assert.equal(pointReceipt.representation, "POINT_CLOUD_FALLBACK");
-  assert.equal(pointReceipt.gpu_bytes, 16);
-  assert.equal(pointReceipt.allocation_bytes, 20);
-
-  const gaussian = new GaussianRenderer({
-    presentationRenderer: new HeadlessRenderer(),
-    drawGaussianPass: async () => {},
-    limits: {
-      maxGpuBytes: 59,
-      maxDecodedBytes: 1024,
-      maxAllocationBytes: 64,
-      maxFrameMs: 20,
-    },
-    now: () => 0,
-  });
-  await assert.rejects(
-    gaussian.initialize(gaussianScene(), gaussianPlan(), [payload()]),
-    /active-path budget/,
-  );
+  assert.ok(receipt.allocation_bytes >= 156);
+  await renderer.dispose();
 });

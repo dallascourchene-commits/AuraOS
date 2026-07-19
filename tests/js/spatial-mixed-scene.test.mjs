@@ -54,7 +54,11 @@ function mixedFixture() {
       truth_class: "DERIVED",
       immutable: true,
       metadata: {
-        import_receipt_digest: "4".repeat(64),
+        import_receipt_digest: "a".repeat(64),
+        representation_digest: "9dc87e33a5190c866adbbc940603bbcde292ad3d1728d3cdae54f7adaa56c599",
+        representation_digest_version: "AURA_GAUSSIAN_REPRESENTATION_V1",
+        representation_bytes_per_splat: 60,
+        sh_degree: 0,
         gaussian_sh_degree: 0,
         gaussian_color_space: "SPZ_INTERNAL_WIDE_RGB",
       },
@@ -100,15 +104,16 @@ test("mixed scene Gaussian layer uses point/headless fallback without changing p
     {
       asset_id: "asset:splats",
       source_digest: "3".repeat(64),
-      derived_asset_digest: "4".repeat(64),
+      derived_asset_digest: "a".repeat(64),
+      representation_digest: "9dc87e33a5190c866adbbc940603bbcde292ad3d1728d3cdae54f7adaa56c599",
+      sh_degree: 0,
+      color_space: "SPZ_INTERNAL_WIDE_RGB",
       positions: [[0, 0, 0]],
       rotations_xyzw: [[0, 0, 0, 1]],
       scales_xyz: [[1, 1, 1]],
       opacities: [1],
+      sh_coefficients: [[0, 0, 0]],
       colors_rgba: [[255, 0, 255, 255]],
-      sh_degree: 0,
-      sh_coefficients: [[1, 0, 1]],
-      color_space: "SPZ_INTERNAL_WIDE_RGB",
     },
   ]);
   const receipt = await renderer.present();

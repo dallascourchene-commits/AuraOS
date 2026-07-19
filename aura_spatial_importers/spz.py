@@ -82,7 +82,7 @@ def _estimated_runtime_allocation_bytes(header: SpzHeader) -> int:
     decoded_bytes = sum(_expected_stream_sizes(header))
     # Positions, rotations, scales, opacity, fallback RGBA, tuple/list overhead,
     # and each Python float are deliberately overestimated.
-    per_splat = 384 + coefficient_count * 40
+    per_splat = 2_304 + coefficient_count * 96
     return decoded_bytes + header.point_count * per_splat
 
 

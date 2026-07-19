@@ -10,11 +10,13 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
+import hashlib
 import math
 import os
 from pathlib import Path
 import re
 import stat
+import struct
 from types import MappingProxyType
 from typing import Any
 
@@ -24,6 +26,7 @@ from aura_spatial_coordinate_frames import compile_coordinate_conversion_matrix
 
 SPATIAL_IMPORT_CONTRACTS_VERSION = "AURA_SPATIAL_IMPORT_CONTRACTS_V1"
 SPATIAL_IMPORT_RECEIPT_SCHEMA_VERSION = "AURA_SPATIAL_IMPORT_RECEIPT_SCHEMA_V1"
+GAUSSIAN_REPRESENTATION_DIGEST_VERSION = "AURA_GAUSSIAN_REPRESENTATION_V1"
 MAX_IMPORT_PRIMITIVES = 4096
 MAX_IMPORT_SOURCE_REFS = 256
 MAX_IMPORT_SOURCE_REF_BYTES = 2_048
@@ -395,6 +398,57 @@ class GaussianSplatData:
         }
 
 
+def _float32_bytes(value: float, field_name: str) -> bytes:
+    try:
+        packed = struct.pack("<f", float(value))
+    except (OverflowError, struct.error) as exc:
+        raise ValueError(f"{field_name} exceeds finite Float32 representation") from exc
+    if not math.isfinite(struct.unpack("<f", packed)[0]):
+        raise ValueError(f"{field_name} exceeds finite Float32 representation")
+    return packed
+
+
+def gaussian_representation_digest(
+    positions: Sequence[Sequence[Any]],
+    colors_rgba: Sequence[Sequence[Any]],
+    gaussian_splats: GaussianSplatData,
+) -> str:
+    """Hash the exact bounded Float32/RGBA8 representation consumed by renderers."""
+
+    if not isinstance(gaussian_splats, GaussianSplatData):
+        raise ValueError("gaussian_splats must be GaussianSplatData")
+    count = gaussian_splats.count
+    if len(positions) != count or len(colors_rgba) != count:
+        raise ValueError("Gaussian digest inputs must have identical counts")
+    coefficient_count = (gaussian_splats.sh_degree + 1) ** 2 * 3
+    digest = hashlib.sha256()
+    digest.update(GAUSSIAN_REPRESENTATION_DIGEST_VERSION.encode("ascii") + b"\x00")
+    digest.update(struct.pack("<IBI", count, gaussian_splats.sh_degree, coefficient_count))
+    for label, values, width in (
+        ("position", positions, 3),
+        ("rotation", gaussian_splats.rotations_xyzw, 4),
+        ("scale", gaussian_splats.scales_xyz, 3),
+    ):
+        for vector in values:
+            if len(vector) != width:
+                raise ValueError(f"Gaussian {label} width is invalid")
+            for component in vector:
+                digest.update(_float32_bytes(float(component), f"Gaussian {label}"))
+    for opacity in gaussian_splats.opacities:
+        digest.update(_float32_bytes(opacity, "Gaussian opacity"))
+    for coefficients in gaussian_splats.sh_coefficients:
+        if len(coefficients) != coefficient_count:
+            raise ValueError("Gaussian coefficient width is invalid")
+        for component in coefficients:
+            digest.update(_float32_bytes(component, "Gaussian spherical harmonic"))
+    for color in colors_rgba:
+        channels = tuple(int(item) for item in color)
+        if len(channels) != 4 or any(item < 0 or item > 255 for item in channels):
+            raise ValueError("Gaussian digest colors must be RGBA8")
+        digest.update(bytes(channels))
+    return digest.hexdigest()
+
+
 @dataclass(frozen=True)
 class SpatialImportResult:
     receipt: SpatialImportReceipt
@@ -428,9 +482,21 @@ class SpatialImportResult:
             raise ValueError("non-Gaussian imports cannot carry GaussianSplatData")
         if not isinstance(self.metadata, Mapping):
             raise ValueError("import metadata must be an object")
-        if len(self.metadata) > 64:
+        metadata = dict(self.metadata)
+        if self.gaussian_splats is not None:
+            representation_digest = gaussian_representation_digest(positions, colors, self.gaussian_splats)
+            supplied_digest = metadata.get("representation_digest")
+            if supplied_digest is not None and supplied_digest != representation_digest:
+                raise ValueError("Gaussian representation digest does not match decoded attributes")
+            coefficient_count = (self.gaussian_splats.sh_degree + 1) ** 2 * 3
+            metadata["representation_digest"] = representation_digest
+            metadata["representation_digest_version"] = GAUSSIAN_REPRESENTATION_DIGEST_VERSION
+            metadata["representation_bytes_per_splat"] = 48 + coefficient_count * 4
+            metadata["sh_degree"] = self.gaussian_splats.sh_degree
+            metadata["gaussian_sh_degree"] = self.gaussian_splats.sh_degree
+        if len(metadata) > 64:
             raise ValueError("import metadata exceeds key ceiling")
-        frozen_metadata = _freeze_import_metadata(self.metadata)
+        frozen_metadata = _freeze_import_metadata(metadata)
         thawed_metadata = _thaw_import_metadata(frozen_metadata)
         if len(canonical_json(thawed_metadata).encode("utf-8")) > MAX_IMPORT_METADATA_BYTES:
             raise ValueError("import metadata exceeds byte ceiling")

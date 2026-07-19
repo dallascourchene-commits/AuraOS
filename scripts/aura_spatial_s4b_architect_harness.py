@@ -45,6 +45,7 @@ _TARGET_FILES = [
     "aura_spatial_importers/spz.py",
     "aura_spatial_importers/gaussian_gltf.py",
     "aura_spatial_web/gaussian_renderer.js",
+    "aura_spatial_web/renderer_adapter.js",
     "requirements-spatial-s4b.txt",
     "schemas/aura_spatial_import_receipt.schema.json",
     "tests/test_aura_spatial_spz.py",
@@ -188,6 +189,11 @@ def _run_s4b_architecture(
                 "decompression and count overflow",
                 "fallback claims without execution evidence",
                 "renderer or imported representation authority escalation",
+                "decoded representation not bound to its import receipt",
+                "runtime object graph omitted from allocation estimates",
+                "numeric narrowing creates non-finite renderer buffers",
+                "cancellation is not rechecked after asynchronous work",
+                "replaceable resource owners lack disposal evidence",
             ],
             "invariants": [
                 "projection_only",
@@ -200,6 +206,10 @@ def _run_s4b_architecture(
                 "GPU memory pressure",
                 "recursive metadata",
                 "coordinate basis drift",
+                "JavaScript and Python object graph expansion",
+                "Float32 narrowing overflow",
+                "post-await cancellation race",
+                "resource lease cleanup",
             ],
             "agent_name": "none",
             "graph_depth": 0,
@@ -492,7 +502,15 @@ def run(
         "spz_v4_decoded": spz.receipt.source_format.value == "SPZ_V4",
         "khr_profile_exact": gaussian_gltf.metadata["extension_profile"] == KHR_GAUSSIAN_PROFILE,
         "mixed_scene_bound": len(scene.assets) == 4 and plan.scene_digest == scene.scene_digest,
-        "gaussian_budget_bound": gaussian_budget["declared_splats"] == 2,
+        "gaussian_budget_bound": (
+            gaussian_budget["declared_splats"] == 2
+            and gaussian_budget["representation_bytes_per_splat"] >= 60
+            and gaussian_budget["declared_runtime_allocation_bytes"] >= gaussian_budget["declared_decoded_bytes"]
+        ),
+        "representation_digests_bound": all(
+            len(str(item.metadata["representation_digest"])) == 64 and len(str(item.receipt.derived_asset_digest)) == 64
+            for item in (spz, gaussian_gltf)
+        ),
         "fallbacks_present": accessible_fallback and point_cloud_fallback and headless_fallback,
         "no_network": all(not item.receipt.network_fetch_performed for item in (gltf, ply, spz, gaussian_gltf)),
         "no_training": all(not item.receipt.training_invoked for item in (gltf, ply, spz, gaussian_gltf)),

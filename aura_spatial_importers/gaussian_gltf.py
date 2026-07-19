@@ -305,7 +305,7 @@ def import_gaussian_gltf_bytes(
         ):
             raise ValueError("Gaussian glTF splat count exceeds bounds")
         coefficient_count = (degree + 1) ** 2 * 3
-        estimated_runtime_allocation += declared_count * (384 + coefficient_count * 40)
+        estimated_runtime_allocation += declared_count * (4_096 + coefficient_count * 192)
         if estimated_runtime_allocation > MAX_GAUSSIAN_GLTF_RUNTIME_ALLOCATION_BYTES:
             raise ValueError("Gaussian glTF runtime allocation ceiling exceeded before accessor expansion")
         raw_positions = _read_attribute(document, buffers, attributes, "POSITION", "VEC3", {5126})

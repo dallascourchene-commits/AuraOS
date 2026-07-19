@@ -100,6 +100,8 @@ def test_gaussian_gltf_release_candidate_profile_and_declared_point_fallback() -
     assert result.metadata["extension_profile"] == KHR_GAUSSIAN_PROFILE
     assert result.metadata["fallback_modes"] == ("DECLARED_COLOR_0",)
     assert result.metadata["gaussian_color_space"] == "lin_rec709_display"
+    assert len(result.metadata["representation_digest"]) == 64
+    assert result.metadata["representation_bytes_per_splat"] == 60
     assert result.metadata["sh_degree"] == 0
     assert result.receipt.training_invoked is False
 
@@ -140,7 +142,7 @@ def test_gaussian_gltf_rejects_unnegotiated_or_invalid_semantics(kwargs, message
 def test_gaussian_gltf_rejects_runtime_expansion_before_accessor_read() -> None:
     document = json.loads(gaussian_gltf())
     for accessor in document["accessors"]:
-        accessor["count"] = 600_000
+        accessor["count"] = 60_000
     with pytest.raises(ValueError, match="runtime allocation"):
         import_gaussian_gltf_bytes(
             json.dumps(document, separators=(",", ":")).encode(),

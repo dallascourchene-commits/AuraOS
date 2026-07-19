@@ -92,7 +92,7 @@ def test_gltf_accepts_adjacent_non_overlapping_buffer_view_boundary() -> None:
 
 def test_spz_rejects_bomb_geometry_overflow_and_provenance_gap_before_decode() -> None:
     # One byte cannot expand to the exact declared position stream under Aura's ratio ceiling.
-    point_count = 500_000
+    point_count = 50_000
     expected = [point_count * 9, point_count, point_count * 3, point_count * 3, point_count * 4]
     header = _HEADER.pack(0x5053474E, 4, point_count, 0, 12, 0, 5, 32, b"\x00" * 12)
     toc = b"".join(_TOC.pack(1, size) for size in expected)

@@ -66,6 +66,8 @@ def test_import_spz_v4_decodes_bounded_gaussian_and_point_fallback(tmp_path: Pat
     assert result.gaussian_splats.opacities == (1.0,)
     assert result.metadata["fallback"] == "POINT_CLOUD_RGBA8"
     assert result.metadata["gaussian_color_space"] == "SPZ_INTERNAL_WIDE_RGB"
+    assert len(result.metadata["representation_digest"]) == 64
+    assert result.metadata["representation_bytes_per_splat"] == 60
     assert result.metadata["sh_degree"] == 0
 
     target = tmp_path / "sample.spz"
