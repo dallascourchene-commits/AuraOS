@@ -1,0 +1,103 @@
+name: Aura Temporary S4-B Codex Trigger
+
+on:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - ".github/workflows/aura-s4b-codex-trigger-temp.yml"
+      - ".github/workflows/aura-s4b-codex-round-temp.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-s4b-codex-source-publish
+  cancel-in-progress: false
+
+jobs:
+  publish-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/spatial-s4b-gaussian-security
+          fetch-depth: 0
+          submodules: false
+          persist-credentials: true
+
+      - name: Extract and apply registered hash-verified repair
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/aura-s4b-codex-round-temp.yml').read_text(encoding='utf-8')
+          marker = "cat > /tmp/repair.gz.b64 <<'EOF'\n"
+          start = text.index(marker) + len(marker)
+          end = text.index('\nEOF', start)
+          Path('/tmp/repair.gz.b64').write_text(text[start:end] + '\n', encoding='ascii')
+          PY
+          base64 --decode /tmp/repair.gz.b64 > /tmp/repair.gz
+          echo "62f33bf85db583dc892ea75366573ec615c1e3526bc50c9b280a50ab9438d7ab  /tmp/repair.gz" | sha256sum --check --strict
+          gzip -dc /tmp/repair.gz > /tmp/repair.patch
+          echo "61947e88cff804c21acb45f85fa5a95696e98a0538eed181699abd15aabba3e9  /tmp/repair.patch" | sha256sum --check --strict
+          git apply --check /tmp/repair.patch
+          git apply /tmp/repair.patch
+          git diff --check
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify focused and retained S4-B corpus
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
+          python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
+          python -m py_compile aura_spatial_importers/gaussian_gltf.py
+          ruff check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
+          ruff format --check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_spz.py
+          node --test tests/js/spatial-gaussian.test.mjs tests/js/spatial-mixed-scene.test.mjs
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py \
+            tests/test_aura_spatial_final_review.py \
+            tests/test_aura_showcase_spatial_integration.py \
+            tests/test_aura_spatial_render_plan.py \
+            tests/test_aura_spatial_session.py \
+            tests/test_aura_spatial_server.py \
+            tests/test_aura_spatial_continuation_harness.py \
+            tests/test_aura_spatial_browser_interaction.py \
+            tests/test_aura_spatial_telemetry.py \
+            tests/test_aura_spatial_gltf.py \
+            tests/test_aura_spatial_ply.py \
+            tests/test_aura_spatial_spz.py \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_s4b_harness.py
+          npm run test:spatial
+
+      - name: Commit exact four-file repair
+        run: |
+          set -euo pipefail
+          branch="feature/spatial-s4b-gaussian-security"
+          git config user.name "Aura Spatial Review"
+          git config user.email "aura-spatial-review@users.noreply.github.com"
+          git add aura_spatial_importers/gaussian_gltf.py aura_spatial_web/gaussian_renderer.js tests/test_aura_spatial_gaussian_gltf.py tests/js/spatial-gaussian.test.mjs
+          git diff --cached --check
+          git commit -m "fix: complete S4-B Codex preflight and cleanup hardening"
+          git fetch --no-tags origin "$branch"
+          git rebase "origin/$branch"
+          git push origin "HEAD:$branch"
