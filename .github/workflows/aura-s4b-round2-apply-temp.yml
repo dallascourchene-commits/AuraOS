@@ -22,10 +22,10 @@ jobs:
           submodules: false
           persist-credentials: true
 
-      - name: Prove permanent source still matches Codex round-two head
+      - name: Prove permanent source still matches reviewed exact head
         run: |
           set -euo pipefail
-          git diff --exit-code 39412dfec4c004f87e82e345f239a2c7e0e50ba7 -- \
+          git diff --exit-code 2d348700a55f8adb879017ff10ce6cce5c6b4d80 -- \
             aura_spatial_web/gaussian_renderer.js \
             tests/js/spatial-gaussian.test.mjs \
             aura_spatial_importers/contracts.py \
@@ -104,6 +104,8 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf scripts/.s4b_round2 scripts/.s4b_fix scripts/.s4b_stage
+          rm -f .aura_temp/s4b_repair_* .aura_temp/s4b_codex_reconciled_*
+          rmdir .aura_temp 2>/dev/null || true
           rm -f .github/workflows/aura-s4b-round2-apply-temp.yml
           rm -f .github/workflows/aura-s4b-codex-fix-temp.yml
           rm -f .github/workflows/aura-source-export-temp.yml
@@ -111,12 +113,14 @@ jobs:
           git diff --check
           test ! -e scripts/.s4b_round2
           test ! -e .github/workflows/aura-s4b-round2-apply-temp.yml
+          test ! -e .github/workflows/aura-s4b-codex-fix-temp.yml
+          ! git status --short | grep -E '(^.. \.aura_temp/|^.. scripts/\.s4b_|aura-.*-temp\.yml$)'
 
       - name: Commit and push clean exact-head repair
         run: |
           set -euo pipefail
           git add -A
-          ! git diff --cached --name-only | grep -E '(^scripts/\.s4b_|aura-.*-temp\.yml$)'
+          ! git diff --cached --name-only | grep -E '(^\.aura_temp/|^scripts/\.s4b_|aura-.*-temp\.yml$)'
           git -c user.name='Aura Spatial Review' -c user.email='aura-spatial-review@users.noreply.github.com' \
             commit -m 'fix: enforce Gaussian budgets before materialization'
           git push origin HEAD:feature/spatial-s4b-gaussian-security
