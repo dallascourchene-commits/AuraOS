@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
 import re
-from typing import Any
+from typing import Any, TypeVar
 
 from aura_event_contracts import stable_digest
 from aura_spatial_asset_registry import SpatialAssetRegistry
@@ -24,6 +24,7 @@ _AUTHORITY_KEYS = frozenset(
         "authorization",
         "authority_decision",
         "automatic_commit",
+        "automatic_fix",
         "automatic_merge",
         "automatic_pull_request",
         "automatic_push",
@@ -35,11 +36,14 @@ _AUTHORITY_KEYS = frozenset(
         "patch_authority",
         "production_mutation",
         "promotion",
+        "render_authority",
         "renderer_authority",
+        "renderer_input_is_authority",
         "verifier_receipt",
         "vsa_patch_authority",
     }
 )
+_RecordT = TypeVar("_RecordT")
 
 
 @dataclass(frozen=True)
@@ -80,6 +84,12 @@ def compile_spatial_scene(
     """Compile a canonical snapshot after sorting all set-like records."""
     if renderer_hints is not None and not isinstance(renderer_hints, Mapping):
         raise ValueError("renderer_hints must be an object")
+
+    frame_records = _typed_records(frames, CoordinateFrame, "frames")
+    asset_records = _typed_records(assets, SpatialAssetManifest, "assets")
+    entity_records = _typed_records(entities, SpatialEntity, "entities")
+    link_records = _typed_records(links, SpatialLink, "links")
+
     frame_tuple = tuple(
         sorted(
             (
@@ -87,7 +97,7 @@ def compile_spatial_scene(
                     item,
                     source_refs=tuple(sorted(set(item.source_refs))),
                 )
-                for item in frames
+                for item in frame_records
             ),
             key=lambda item: item.frame_id,
         )
@@ -99,7 +109,7 @@ def compile_spatial_scene(
                     item,
                     source_refs=tuple(sorted(set(item.source_refs))),
                 )
-                for item in assets
+                for item in asset_records
             ),
             key=lambda item: item.asset_id,
         )
@@ -112,7 +122,7 @@ def compile_spatial_scene(
                     asset_ids=tuple(sorted(set(item.asset_ids))),
                     source_refs=tuple(sorted(set(item.source_refs))),
                 )
-                for item in entities
+                for item in entity_records
             ),
             key=lambda item: item.entity_id,
         )
@@ -124,7 +134,7 @@ def compile_spatial_scene(
                     item,
                     source_refs=tuple(sorted(set(item.source_refs))),
                 )
-                for item in links
+                for item in link_records
             ),
             key=lambda item: item.link_id,
         )
@@ -303,6 +313,24 @@ def scene_summary(scene: SpatialSceneSnapshot) -> dict[str, Any]:
         "verification": report.to_dict(),
         "version": SPATIAL_SCENE_COMPILER_VERSION,
     }
+
+
+def _typed_records(
+    values: Iterable[_RecordT],
+    expected_type: type[_RecordT],
+    field_name: str,
+) -> tuple[_RecordT, ...]:
+    if isinstance(values, (str, bytes, bytearray, Mapping)):
+        raise ValueError(f"{field_name} must be an iterable of records")
+    try:
+        records = tuple(values)
+    except TypeError as exc:
+        raise ValueError(f"{field_name} must be an iterable of records") from exc
+    if not all(isinstance(item, expected_type) for item in records):
+        raise ValueError(
+            f"{field_name} must contain only {expected_type.__name__} records"
+        )
+    return records
 
 
 def _normalize_metadata_key(value: Any) -> str:
