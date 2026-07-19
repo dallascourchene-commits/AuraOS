@@ -1,0 +1,92 @@
+name: Aura Spatial S3A Bootstrap
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-spatial-s3a-bootstrap.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-spatial-s3a-bootstrap-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  source-slice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Build bounded source slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p s3a-source
+          files=(
+            aura_event_contracts.py
+            aura_spatial_contracts.py
+            aura_spatial_coordinate_frames.py
+            aura_spatial_asset_registry.py
+            aura_spatial_scene.py
+            aura_spatial_projection.py
+            aura_spatial_interaction.py
+            aura_spatial_ws_guard.py
+            aura_spatial_breadboard.py
+            aura_topology_ws_bridge.py
+            aura_showcase_spatial.py
+            aura_showcase_server.py
+            aura_architect_control.py
+            aura_architect_council_v2.py
+            aura_architect_council_v3.py
+            aura_planning_board.py
+            aura_agent_arena_review_learning_bridge.py
+            aura_coding_waboose_review_learning.py
+            aura_coding_waboose_review_lessons.py
+            scripts/aura_review_learning_architect_harness.py
+            schemas/aura_spatial_scene.schema.json
+            schemas/aura_review_lesson.schema.json
+            .aura/review_lessons/pr164_spatial_review_lessons.json
+            .github/workflows/aura-spatial-s0-s2.yml
+            .github/workflows/aura-review-learning.yml
+            docs/AURA_SPATIAL_COMPUTING.md
+            docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md
+            tests/test_aura_spatial_substrate.py
+            tests/test_aura_spatial_ws_guard.py
+            tests/test_aura_spatial_manual_review.py
+            tests/test_aura_spatial_projection_bounds.py
+            tests/test_aura_spatial_codex_followup.py
+            tests/test_aura_spatial_final_review.py
+            tests/test_aura_showcase_spatial_integration.py
+            tests/test_aura_coding_waboose_review_lessons.py
+            tests/test_aura_coding_waboose_review_learning.py
+            tests/test_aura_agent_arena_review_learning.py
+          )
+          for file in "${files[@]}"; do
+            test -f "$file"
+            mkdir -p "s3a-source/$(dirname "$file")"
+            cp "$file" "s3a-source/$file"
+          done
+          printf '%s\n' "${{ github.event.pull_request.head.sha }}" > s3a-source/EXACT_HEAD.txt
+          tar -C s3a-source -czf aura-spatial-s3a-source.tar.gz .
+          test "$(wc -c < aura-spatial-s3a-source.tar.gz)" -le 5242880
+
+      - name: Upload bounded exact-head source slice
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-s3a-source-${{ github.event.pull_request.head.sha }}
+          path: aura-spatial-s3a-source.tar.gz
+          if-no-files-found: error
+          retention-days: 1
