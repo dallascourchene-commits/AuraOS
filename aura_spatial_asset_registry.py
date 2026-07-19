@@ -3,16 +3,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+import hmac
 from pathlib import PurePosixPath
+import re
 from typing import Any, Iterable
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 from aura_event_contracts import stable_digest
 from aura_spatial_contracts import SpatialAssetManifest
 
 SPATIAL_ASSET_REGISTRY_VERSION = "AURA_SPATIAL_ASSET_REGISTRY_V1"
 _ALLOWED_REMOTE_SCHEMES = frozenset({"https"})
-_ALLOWED_LOCAL_SCHEMES = frozenset({"", "aura"})
+_SAFE_AUTHORITY = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
 @dataclass(frozen=True)
@@ -35,9 +37,16 @@ class SpatialAssetValidationReport:
 
 
 class SpatialAssetRegistry:
-    """Immutable-manifest registry. It never fetches, decodes, trains, or renders assets."""
+    """Immutable manifests only; this class never fetches or decodes assets."""
 
-    def __init__(self, manifests: Iterable[SpatialAssetManifest] = ()) -> None:
+    def __init__(
+        self,
+        manifests: Iterable[SpatialAssetManifest] = (),
+        *,
+        allow_remote: bool = False,
+    ) -> None:
+        if type(allow_remote) is not bool:
+            raise ValueError("allow_remote must be a boolean")
         by_id: dict[str, SpatialAssetManifest] = {}
         for manifest in manifests:
             if not isinstance(manifest, SpatialAssetManifest):
@@ -48,9 +57,14 @@ class SpatialAssetRegistry:
                 raise ValueError(
                     f"duplicate spatial asset id: {manifest.asset_id}"
                 )
-            report = validate_asset_manifest(manifest)
+            report = validate_asset_manifest(
+                manifest,
+                allow_remote=allow_remote,
+            )
             if not report.ok:
-                codes = ", ".join(item["code"] for item in report.findings)
+                codes = ", ".join(
+                    str(item["code"]) for item in report.findings
+                )
                 raise ValueError(
                     f"invalid spatial asset {manifest.asset_id}: {codes}"
                 )
@@ -98,36 +112,15 @@ def validate_asset_manifest(
 ) -> SpatialAssetValidationReport:
     if not isinstance(manifest, SpatialAssetManifest):
         raise ValueError("manifest must be a SpatialAssetManifest")
+    if type(allow_remote) is not bool:
+        raise ValueError("allow_remote must be a boolean")
+
     findings: list[dict[str, Any]] = []
-    parsed = urlparse(manifest.uri)
-    scheme = parsed.scheme.lower()
-    if scheme in _ALLOWED_LOCAL_SCHEMES:
-        if scheme == "":
-            path = PurePosixPath(manifest.uri)
-            if manifest.uri.startswith("/") or any(
-                part in {"", ".", ".."} for part in path.parts
-            ):
-                findings.append(
-                    _finding(
-                        "UNSAFE_ASSET_PATH",
-                        "relative asset paths must be normalized and traversal-free",
-                    )
-                )
-    elif scheme in _ALLOWED_REMOTE_SCHEMES:
-        if not allow_remote:
-            findings.append(
-                _finding(
-                    "REMOTE_ASSET_NOT_ADMITTED",
-                    "remote asset URI requires an explicit fetch policy",
-                )
-            )
-    else:
-        findings.append(
-            _finding(
-                "UNSUPPORTED_ASSET_URI_SCHEME",
-                f"unsupported asset URI scheme: {scheme or '<none>'}",
-            )
-        )
+    _validate_uri(
+        manifest.uri,
+        allow_remote=allow_remote,
+        findings=findings,
+    )
 
     verified_content = False
     if content is not None:
@@ -156,7 +149,7 @@ def validate_asset_manifest(
                     f"unsupported digest: {expected_algorithm}",
                 )
             )
-        if observed and observed != expected_hex:
+        if observed and not hmac.compare_digest(observed, expected_hex):
             findings.append(
                 _finding(
                     "ASSET_DIGEST_MISMATCH",
@@ -173,6 +166,9 @@ def validate_asset_manifest(
             for item in findings
         )
 
+    findings.sort(
+        key=lambda item: (str(item["code"]), str(item["message"]))
+    )
     return SpatialAssetValidationReport(
         ok=not findings,
         asset_id=manifest.asset_id,
@@ -180,6 +176,136 @@ def validate_asset_manifest(
         verified_content=verified_content,
         manifest_digest=manifest.digest,
     )
+
+
+def _validate_uri(
+    uri: str,
+    *,
+    allow_remote: bool,
+    findings: list[dict[str, Any]],
+) -> None:
+    if any(ord(char) < 32 for char in uri) or "\\" in uri:
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_PATH",
+                "asset URI contains control characters or backslashes",
+            )
+        )
+        return
+    parsed = urlparse(uri)
+    scheme = parsed.scheme.lower()
+    if (
+        parsed.username
+        or parsed.password
+        or parsed.query
+        or parsed.fragment
+        or parsed.params
+    ):
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_URI_COMPONENTS",
+                (
+                    "asset URI must not contain credentials, parameters, "
+                    "query, or fragment"
+                ),
+            )
+        )
+
+    if scheme == "":
+        _validate_relative_path(uri, findings)
+        return
+
+    if scheme == "aura":
+        if not parsed.netloc or not _SAFE_AUTHORITY.fullmatch(parsed.netloc):
+            findings.append(
+                _finding(
+                    "UNSAFE_ASSET_AUTHORITY",
+                    "aura URI requires a canonical authority",
+                )
+            )
+        _validate_uri_path(parsed.path, findings)
+        return
+
+    if scheme in _ALLOWED_REMOTE_SCHEMES:
+        if not parsed.hostname:
+            findings.append(
+                _finding(
+                    "REMOTE_ASSET_HOST_MISSING",
+                    "https asset URI requires a host",
+                )
+            )
+        _validate_uri_path(parsed.path, findings, allow_empty=True)
+        if not allow_remote:
+            findings.append(
+                _finding(
+                    "REMOTE_ASSET_NOT_ADMITTED",
+                    "remote asset URI requires an explicit fetch policy",
+                )
+            )
+        return
+
+    findings.append(
+        _finding(
+            "UNSUPPORTED_ASSET_URI_SCHEME",
+            f"unsupported asset URI scheme: {scheme or '<none>'}",
+        )
+    )
+
+
+def _validate_relative_path(
+    value: str,
+    findings: list[dict[str, Any]],
+) -> None:
+    if not value or value.startswith("/"):
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_PATH",
+                "relative asset path must be non-empty and relative",
+            )
+        )
+        return
+    decoded = unquote(value)
+    path = PurePosixPath(decoded)
+    if (
+        any(part in {"", ".", ".."} for part in path.parts)
+        or path.as_posix() != decoded
+    ):
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_PATH",
+                "relative asset paths must be normalized and traversal-free",
+            )
+        )
+
+
+def _validate_uri_path(
+    value: str,
+    findings: list[dict[str, Any]],
+    *,
+    allow_empty: bool = False,
+) -> None:
+    decoded = unquote(value)
+    stripped = decoded.lstrip("/")
+    if not stripped:
+        if not allow_empty:
+            findings.append(
+                _finding(
+                    "UNSAFE_ASSET_PATH",
+                    "asset URI path must not be empty",
+                )
+            )
+        return
+    path = PurePosixPath(stripped)
+    if (
+        any(part in {"", ".", ".."} for part in path.parts)
+        or path.as_posix() != stripped
+    ):
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_PATH",
+                "asset URI path must be normalized and traversal-free",
+            )
+        )
 
 
 def _finding(code: str, message: str) -> dict[str, Any]:
