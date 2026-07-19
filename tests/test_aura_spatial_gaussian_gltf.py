@@ -183,3 +183,17 @@ def test_gaussian_gltf_rejects_mixed_primitive_color_spaces() -> None:
     document["meshes"][0]["primitives"].append(second)
     with pytest.raises(ValueError, match="common colorSpace"):
         import_gaussian_gltf_bytes(json.dumps(document).encode(), provenance_refs=("fixture",))
+
+
+def test_gaussian_gltf_rejects_accessor_count_mismatch_before_expansion() -> None:
+    document = json.loads(gaussian_gltf())
+    rotation_accessor = document["meshes"][0]["primitives"][0]["attributes"][
+        "KHR_gaussian_splatting:ROTATION"
+    ]
+    document["accessors"][rotation_accessor]["count"] = 2
+    with pytest.raises(ValueError, match="before accessor expansion"):
+        import_gaussian_gltf_bytes(
+            json.dumps(document, separators=(",", ":")).encode(),
+            provenance_refs=("fixture",),
+        )
+

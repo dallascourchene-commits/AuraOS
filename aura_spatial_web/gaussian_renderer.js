@@ -216,7 +216,7 @@ async function sha256Hex(bytes) {
   return [...digest].map((value) => value.toString(16).padStart(2, "0")).join("");
 }
 
-async function validateGaussianAsset(payload, sceneAsset, limits) {
+function preflightGaussianAsset(payload, sceneAsset, limits) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new TypeError("Gaussian asset payload must be an object");
   }
@@ -318,6 +318,19 @@ async function validateGaussianAsset(payload, sceneAsset, limits) {
     throw new RangeError("Gaussian allocation budget exceeded before buffer creation");
   }
 
+  return Object.freeze({
+    count,
+    coefficient_count: coefficientCount,
+    representation_bytes: representationBytes,
+    allocation_bytes: allocationBytes,
+  });
+}
+
+async function materializeGaussianAsset(payload, preflight) {
+  const count = preflight.count;
+  const coefficientCount = preflight.coefficient_count;
+  const representationBytes = preflight.representation_bytes;
+  const allocationBytes = preflight.allocation_bytes;
   const positions = allocateFloat32Vectors(payload.positions, 3, "Gaussian position");
   const rotations = allocateFloat32Vectors(payload.rotations_xyzw, 4, "Gaussian rotation");
   assertNormalizedRotations(rotations);
@@ -460,33 +473,67 @@ export class GaussianRenderer {
       throw new TypeError("Gaussian payloads must exactly cover scene Gaussian manifests");
     }
     const seen = new Set();
-    const assets = [];
+    const admitted = [];
     for (const payload of gaussianPayloads) {
       if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
       if (seen.has(payload?.asset_id)) throw new TypeError("Gaussian asset payload is duplicated");
       seen.add(payload?.asset_id);
       const manifest = manifests.get(payload?.asset_id);
       if (!manifest) throw new TypeError("Gaussian payload is not admitted by the scene");
-      assets.push(await validateGaussianAsset(payload, manifest, this.limits));
+      admitted.push(
+        Object.freeze({
+          payload,
+          preflight: preflightGaussianAsset(payload, manifest, this.limits),
+        }),
+      );
     }
-    const totalGpuBytes = assets.reduce((total, asset) => total + asset.gpu_bytes, 0);
-    const totalAllocationBytes = assets.reduce(
-      (total, asset) => total + asset.allocation_bytes,
+    const totalGpuBytes = admitted.reduce(
+      (total, item) => total + item.preflight.representation_bytes,
       0,
     );
-    const totalSplats = assets.reduce((total, asset) => total + asset.count, 0);
+    const totalAllocationBytes = admitted.reduce(
+      (total, item) => total + item.preflight.allocation_bytes,
+      0,
+    );
+    const totalSplats = admitted.reduce((total, item) => total + item.preflight.count, 0);
     if (
       totalGpuBytes > this.limits.maxDecodedBytes ||
       totalGpuBytes > this.limits.maxGpuBytes ||
       totalAllocationBytes > this.limits.maxAllocationBytes ||
       totalSplats > this.limits.maxVisibleSplats
     ) {
-      throw new RangeError("Gaussian aggregate allocation budget exceeded");
+      throw new RangeError("Gaussian aggregate allocation budget exceeded before materialization");
     }
-    await this.presentationRenderer.initialize(scenePayload, planPayload);
-    if (signal?.aborted) {
-      await this.presentationRenderer.dispose();
-      throw new Error("Gaussian initialization cancelled");
+
+    const assets = [];
+    for (const item of admitted) {
+      if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
+      assets.push(await materializeGaussianAsset(item.payload, item.preflight));
+    }
+
+    try {
+      await this.presentationRenderer.initialize(scenePayload, planPayload);
+      if (signal?.aborted) throw new Error("Gaussian initialization cancelled");
+    } catch (error) {
+      let cleanupError = null;
+      try {
+        await this.presentationRenderer.dispose();
+      } catch (cleanup) {
+        cleanupError = cleanup;
+      }
+      this.assets = Object.freeze([]);
+      this.scene = null;
+      this.plan = null;
+      this.limits = null;
+      this.cancelled = true;
+      this.state = RENDERER_STATES.LOST;
+      if (cleanupError) {
+        throw new AggregateError(
+          [error, cleanupError],
+          "Gaussian initialization and cleanup failed",
+        );
+      }
+      throw error;
     }
     this.assets = Object.freeze([...assets].sort((a, b) => a.asset_id.localeCompare(b.asset_id)));
     this.state = RENDERER_STATES.INITIALIZED;

@@ -356,3 +356,69 @@ test("Gaussian pass carries bounded higher-order spherical harmonics and exact c
   assert.ok(receipt.allocation_bytes >= 156);
   await renderer.dispose();
 });
+
+test("Gaussian aggregate preflight rejects before nested reads and typed-array materialization", async () => {
+  const first = payload();
+  const second = payload();
+  second.asset_id = "asset:gaussian:second";
+  let nestedReads = 0;
+  for (const value of [first, second]) {
+    const original = value.positions[0][0];
+    Object.defineProperty(value.positions[0], 0, {
+      configurable: true,
+      enumerable: true,
+      get() {
+        nestedReads += 1;
+        return original;
+      },
+    });
+  }
+
+  const scene = gaussianScene(first);
+  scene.assets.push({ ...structuredClone(scene.assets[0]), asset_id: second.asset_id });
+  scene.entities[0].asset_ids = [first.asset_id, second.asset_id];
+  const plan = gaussianPlan();
+  plan.scene_asset_count = 2;
+  plan.scene_asset_bytes = 96;
+  const renderer = new GaussianRenderer({
+    presentationRenderer: new HeadlessRenderer(),
+    limits: limits({ maxAllocationBytes: 5_000 }),
+    now: () => 0,
+  });
+
+  await assert.rejects(
+    renderer.initialize(scene, plan, [first, second]),
+    /aggregate allocation budget exceeded before materialization/,
+  );
+  assert.equal(nestedReads, 0);
+});
+
+test("Gaussian initialization rejection disposes partial presentation resources and enters LOST", async () => {
+  const value = payload();
+  let disposed = 0;
+  const presentationRenderer = {
+    kind: "PARTIAL_TEST",
+    async initialize() {
+      throw new Error("partial initialization failed");
+    },
+    async present() {
+      throw new Error("not reachable");
+    },
+    async dispose() {
+      disposed += 1;
+    },
+  };
+  const renderer = new GaussianRenderer({
+    presentationRenderer,
+    limits: limits(),
+    now: () => 0,
+  });
+
+  await assert.rejects(
+    renderer.initialize(gaussianScene(value), gaussianPlan(), [value]),
+    /partial initialization failed/,
+  );
+  assert.equal(disposed, 1);
+  assert.equal(renderer.status().state, "LOST");
+});
+

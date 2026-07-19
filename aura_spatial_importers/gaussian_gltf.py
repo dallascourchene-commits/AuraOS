@@ -304,6 +304,16 @@ def import_gaussian_gltf_bytes(
             or len(all_positions) + declared_count > MAX_GAUSSIAN_GLTF_SPLATS
         ):
             raise ValueError("Gaussian glTF splat count exceeds bounds")
+        for semantic, accessor_index in attributes.items():
+            accessor_count = _accessor(document, accessor_index).get("count")
+            if (
+                isinstance(accessor_count, bool)
+                or not isinstance(accessor_count, int)
+                or accessor_count != declared_count
+            ):
+                raise ValueError(
+                    f"Gaussian glTF {semantic} count does not match POSITION before accessor expansion"
+                )
         coefficient_count = (degree + 1) ** 2 * 3
         estimated_runtime_allocation += declared_count * (4_096 + coefficient_count * 192)
         if estimated_runtime_allocation > MAX_GAUSSIAN_GLTF_RUNTIME_ALLOCATION_BYTES:
