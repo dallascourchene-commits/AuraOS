@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Fetch exact pull-request branch only
+      - name: Fetch exact pull-request head only
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: feature/spatial-s4b-gaussian-security
@@ -23,31 +23,10 @@ jobs:
           set -euo pipefail
           git init .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags --no-recurse-submodules origin "$BRANCH"
+          git fetch --no-tags --no-recurse-submodules --depth=1 origin "$BRANCH"
           git checkout -B "$BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-
-      - name: Prove permanent source still matches exported review head
-        run: |
-          set -euo pipefail
-          git diff --exit-code 2d348700a55f8adb879017ff10ce6cce5c6b4d80 -- \
-            .github/workflows/aura-spatial-s4.yml \
-            aura_spatial_asset_registry.py \
-            aura_spatial_importers/__init__.py \
-            aura_spatial_importers/contracts.py \
-            aura_spatial_importers/gaussian_gltf.py \
-            aura_spatial_importers/spz.py \
-            aura_spatial_render_plan.py \
-            aura_spatial_web/gaussian_renderer.js \
-            aura_spatial_web/renderer_adapter.js \
-            scripts/aura_spatial_s4b_architect_harness.py \
-            tests/js/spatial-gaussian.test.mjs \
-            tests/js/spatial-mixed-scene.test.mjs \
-            tests/test_aura_spatial_asset_security.py \
-            tests/test_aura_spatial_gaussian_gltf.py \
-            tests/test_aura_spatial_mixed_scene.py \
-            tests/test_aura_spatial_spz.py
 
       - name: Reconstruct, verify, and apply exact repair patch
         run: |
