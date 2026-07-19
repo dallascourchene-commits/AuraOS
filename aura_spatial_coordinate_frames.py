@@ -220,15 +220,17 @@ def resolve_world_transform(
 
     translation = (0.0, 0.0, 0.0)
     rotation = (0.0, 0.0, 0.0, 1.0)
-    scale = (1.0, 1.0, 1.0)
+    geometric_scale = (1.0, 1.0, 1.0)
+    resolved_unit_scale = 1.0
     chain_ids: list[str] = []
     for frame in chain:
         chain_ids.append(frame.frame_id)
-        local_translation = tuple(
+        local_translation_meters = tuple(
             item * frame.unit_scale_meters for item in frame.translation
         )
         scaled_local = tuple(
-            local_translation[index] * scale[index] for index in range(3)
+            local_translation_meters[index] * geometric_scale[index]
+            for index in range(3)
         )
         rotated_local = _rotate_vector(rotation, scaled_local)
         translation = tuple(
@@ -237,11 +239,16 @@ def resolve_world_transform(
         rotation = _normalize_quaternion(
             _multiply_quaternion(rotation, frame.rotation_xyzw)
         )
-        local_scale = tuple(
-            frame.scale[index] * frame.unit_scale_meters for index in range(3)
+        geometric_scale = tuple(
+            geometric_scale[index] * frame.scale[index]
+            for index in range(3)
         )
-        scale = tuple(scale[index] * local_scale[index] for index in range(3))
+        resolved_unit_scale = frame.unit_scale_meters
 
+    scale = tuple(
+        geometric_scale[index] * resolved_unit_scale
+        for index in range(3)
+    )
     if not all(math.isfinite(item) for item in (*translation, *rotation, *scale)):
         raise ValueError("resolved world transform contains non-finite values")
     return ResolvedTransform(
