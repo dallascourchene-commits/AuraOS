@@ -1,0 +1,184 @@
+                "patch_authority": PATCH_AUTHORITY,
+                "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+            }
+        )
+        return result
+
+
+def normalize_external_review(
+    payload: Mapping[str, Any],
+    *,
+    current_head: str = "",
+) -> dict[str, Any]:
+    """Normalize top-level comments, inline threads, and review submissions.
+
+    Normalization does not claim that source was verified.  It records whether
+    evidence is current, historical, resolved, outdated, or duplicate.
+    """
+
+    if not isinstance(payload, Mapping):
+        raise ReviewLessonError("review payload must be an object")
+    _bounded_json(payload, maximum=_MAX_REVIEW_PAYLOAD_BYTES, label="review payload")
+    reviewed_head = str(payload.get("head_sha") or payload.get("commit_sha") or "")
+    current = current_head or str(payload.get("current_head") or "") or reviewed_head
+    pr_number = int(payload.get("pr_number") or payload.get("pull_request_number") or 0)
+    raw: list[dict[str, Any]] = []
+
+    comments = payload.get("comments") or payload.get("issue_comments") or []
+    if _is_sequence(comments):
+        for comment in comments[:_MAX_STORED_FINDINGS]:
+            if isinstance(comment, Mapping):
+                raw.append(
+                    _raw_review_row(
+                        comment,
+                        review_kind="top_level_pr_comment",
+                        reviewed_head=reviewed_head,
+                        current_head=current,
+                        pr_number=pr_number,
+                    )
+                )
+
+    threads = payload.get("review_threads") or payload.get("threads") or []
+    if _is_sequence(threads):
+        for thread in threads[:_MAX_STORED_FINDINGS]:
+            if not isinstance(thread, Mapping):
+                continue
+            thread_comments = thread.get("comments") or []
+            if not _is_sequence(thread_comments):
+                continue
+            for comment in thread_comments:
+                if not isinstance(comment, Mapping):
+                    continue
+                merged = dict(comment)
+                merged.setdefault("path", thread.get("path"))
+                merged.setdefault("line", thread.get("line") or thread.get("original_line"))
+                merged.setdefault("start_line", thread.get("start_line") or thread.get("original_start_line"))
+                merged["is_resolved"] = bool(thread.get("is_resolved"))
+                merged["is_outdated"] = bool(thread.get("is_outdated"))
+                raw.append(
+                    _raw_review_row(
+                        merged,
+                        review_kind="inline_review_thread",
+                        reviewed_head=reviewed_head,
+                        current_head=current,
+                        pr_number=pr_number,
+                    )
+                )
+
+    reviews = payload.get("reviews") or payload.get("review_submissions") or []
+    if _is_sequence(reviews):
+        for review in reviews[:_MAX_STORED_FINDINGS]:
+            if isinstance(review, Mapping):
+                raw.append(
+                    _raw_review_row(
+                        review,
+                        review_kind="review_submission",
+                        reviewed_head=reviewed_head,
+                        current_head=current,
+                        pr_number=pr_number,
+                    )
+                )
+
+    if not raw and _is_sequence(payload.get("findings")):
+        for finding in payload.get("findings") or []:
+            if isinstance(finding, Mapping):
+                raw.append(
+                    _raw_review_row(
+                        finding,
+                        review_kind=str(finding.get("review_kind") or "normalized_finding"),
+                        reviewed_head=reviewed_head,
+                        current_head=current,
+                        pr_number=pr_number,
+                    )
+                )
+
+    dedupe: dict[str, str] = {}
+    normalized: list[dict[str, Any]] = []
+    for row in raw[:_MAX_STORED_FINDINGS]:
+        identity = _digest(
+            {
+                "reviewer": row["reviewer"],
+                "path": row["path"],
+                "line": [row["line_start"], row["line_end"]],
+                "message": row["message"].casefold(),
+            },
+            size=12,
+        )
+        duplicate_of = dedupe.get(identity, "")
+        if not duplicate_of:
+            dedupe[identity] = row["finding_id"]
+        row["duplicate_of"] = duplicate_of
+        if duplicate_of:
+            row["disposition"] = "duplicate"
+        normalized.append(row)
+
+    packet = {
+        "version": REVIEW_LESSON_VERSION,
+        "status": "normalized",
+        "repository_head": reviewed_head,
+        "current_head": current,
+        "pr_number": pr_number,
+        "finding_count": len(normalized),
+        "findings": normalized,
+        "truth_boundary": "typed_external_review_evidence",
+        "source_grounding_required_before_learning": True,
+        "production_mutation": False,
+        "automatic_fix": False,
+        "automatic_commit": False,
+        "automatic_push": False,
+        "automatic_pull_request": False,
+        "automatic_merge": False,
+        "human_review_required": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+    packet["packet_digest"] = _digest(packet, size=16)
+    return packet
+
+
+def _raw_review_row(
+    value: Mapping[str, Any],
+    *,
+    review_kind: str,
+    reviewed_head: str,
+    current_head: str,
+    pr_number: int,
+) -> dict[str, Any]:
+    body = _safe_text(value.get("body") or value.get("message") or value.get("title") or "")
+    reviewer = _reviewer_name(value.get("author") or value.get("user") or value.get("source"))
+    path = _safe_repo_path(value.get("path") or value.get("file") or "")
+    line_start = int(value.get("start_line") or value.get("line_start") or value.get("line") or 0)
+    line_end = int(value.get("line_end") or value.get("line") or line_start)
+    if line_start < 0 or line_end < line_start:
+        raise ReviewLessonError("review line range is invalid")
+    resolved = bool(value.get("is_resolved") or value.get("resolved"))
+    outdated = bool(value.get("is_outdated") or value.get("outdated"))
+    message = _strip_markdown(body)
+    title = _safe_text(value.get("title") or _title_from_body(body), maximum_bytes=1024)
+    detector_id = str(value.get("detector_id") or _detector_from_text(f"{title} {message}"))
+    invariant = str(value.get("invariant") or "")
+    confidence = float(value.get("confidence") or (0.98 if reviewer in {"CodeRabbit", "Codex"} else 0.75))
+    provenance = {
+        "comment_id": str(value.get("id") or value.get("comment_id") or ""),
+        "url": str(value.get("url") or ""),
+        "created_at": str(value.get("created_at") or ""),
+        "updated_at": str(value.get("updated_at") or ""),
+    }
+    identity = {
+        "reviewer": reviewer,
+        "kind": review_kind,
+        "head": reviewed_head,
+        "path": path,
+        "line": [line_start, line_end],
+        "message": message,
+        "comment_id": provenance["comment_id"],
+    }
+    finding = NormalizedReviewFinding(
+        finding_id="XRF-" + _digest(identity, size=12),
+        reviewer=reviewer,
+        review_kind=review_kind,
+        repository_head=reviewed_head,
+        current_head=current_head,
+        pr_number=pr_number,
+        comment_id=provenance["comment_id"],
+        path=path,
