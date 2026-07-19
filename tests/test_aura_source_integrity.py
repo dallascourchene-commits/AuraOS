@@ -14,7 +14,9 @@ import pytest
 from aura_source_integrity import (
     SourceIntegrityError,
     read_utf8_source,
+    read_utf8_source_with_identity,
     scan_utf8_source_tree,
+    write_utf8_source_if_unchanged,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -218,20 +220,36 @@ def _load_auditor_source_slice() -> type:
         copy.deepcopy(item)
         for item in auditor_node.body
         if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
-        and item.name in {"__init__", "_scan_and_stamp_file"}
+        and item.name in {
+            "__init__",
+            "_scan_and_stamp_file",
+            "execute_unified_audit",
+        }
     ]
     reduced_class = copy.deepcopy(auditor_node)
     reduced_class.body = retained
     reduced_module = ast.Module(body=[reduced_class], type_ignores=[])
     ast.fix_missing_locations(reduced_module)
+    class StubQuantumMerkleDAG:
+        def __init__(self, _node: object) -> None:
+            pass
+
+        async def generate_epistemic_system_root(self) -> dict[str, str]:
+            return {"root": "test-root"}
+
     namespace = {
         "Any": Any,
         "Path": Path,
+        "QuantumMerkleDAG": StubQuantumMerkleDAG,
         "SourceIntegrityError": SourceIntegrityError,
+        "_auditor_should_stamp": lambda _filename: True,
         "ast": ast,
         "defaultdict": defaultdict,
         "os": __import__("os"),
-        "read_utf8_source": read_utf8_source,
+        "read_cpu_temp_c": lambda: 25.0,
+        "read_utf8_source_with_identity": read_utf8_source_with_identity,
+        "time": __import__("time"),
+        "write_utf8_source_if_unchanged": write_utf8_source_if_unchanged,
     }
     exec(compile(reduced_module, "aura_node.py", "exec"), namespace)
     return namespace["AuraEcosystemAuditor"]
@@ -248,6 +266,66 @@ def test_boot_auditor_records_corrupt_source_without_aborting(tmp_path: Path) ->
     assert result is False
     assert auditor.audit_failures[0]["code"] == "SOURCE_UTF8_INVALID"
     assert path.read_bytes() == b"value = '\xff'\n"
+
+
+def test_identity_bound_write_rejects_symlink_swap(tmp_path: Path) -> None:
+    path = tmp_path / "module.py"
+    external = tmp_path / "external.py"
+    path.write_text("value = 1\n", encoding="utf-8")
+    external.write_text("protected = True\n", encoding="utf-8")
+    source, identity = read_utf8_source_with_identity(path)
+    path.unlink()
+    try:
+        path.symlink_to(external)
+    except (OSError, NotImplementedError):
+        pytest.skip("symlink creation is unavailable")
+
+    with pytest.raises(SourceIntegrityError) as raised:
+        write_utf8_source_if_unchanged(
+            path,
+            "value = 2\n",
+            expected_source=source,
+            expected_identity=identity,
+        )
+
+    assert raised.value.failure.code == "SOURCE_SYMLINK_REJECTED"
+    assert external.read_text(encoding="utf-8") == "protected = True\n"
+
+
+def test_boot_auditor_continues_after_post_read_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    auditor_type = _load_auditor_source_slice()
+    (tmp_path / "a.py").write_text("a = 1\n", encoding="utf-8")
+    (tmp_path / "b.py").write_text("b = 2\n", encoding="utf-8")
+    node = SimpleNamespace(
+        friction_optimizer=None,
+        mitosis_engine=None,
+        runtime_metrics={},
+    )
+    auditor = auditor_type(node)
+
+    async def fake_scan(file_path: str, _q_root: str) -> bool:
+        if file_path == "a.py":
+            raise RuntimeError("cache backend unavailable")
+        return True
+
+    setattr(auditor, "_scan_and_stamp_file", fake_scan)
+    monkeypatch.chdir(tmp_path)
+    report = asyncio.run(auditor.execute_unified_audit())
+
+    assert "Stamped 1/2 eligible modules" in report
+    assert auditor.audit_failures == [
+        {
+            "path": "a.py",
+            "code": "SOURCE_AUDIT_PROCESSING_ERROR",
+            "message": "cache backend unavailable",
+            "byte_offset": 0,
+            "offending_bytes_hex": "",
+            "file_size": 0,
+        }
+    ]
 
 
 def test_repository_python_sources_are_strict_utf8() -> None:

@@ -42,6 +42,41 @@ class SourceIntegrityFailure:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class SourceFileIdentity:
+    """Identity and content metadata for the exact descriptor that was read."""
+
+    device: int
+    inode: int
+    size: int
+    mtime_ns: int
+    mtime: float
+
+    @classmethod
+    def from_stat(cls, metadata: os.stat_result) -> SourceFileIdentity:
+        return cls(
+            device=int(metadata.st_dev),
+            inode=int(metadata.st_ino),
+            size=int(metadata.st_size),
+            mtime_ns=int(metadata.st_mtime_ns),
+            mtime=float(metadata.st_mtime),
+        )
+
+    def matches(self, metadata: os.stat_result) -> bool:
+        other = type(self).from_stat(metadata)
+        return (
+            self.device,
+            self.inode,
+            self.size,
+            self.mtime_ns,
+        ) == (
+            other.device,
+            other.inode,
+            other.size,
+            other.mtime_ns,
+        )
+
+
 class SourceIntegrityError(ValueError):
     """Raised when a repository source file is not safe strict UTF-8 text."""
 
@@ -81,8 +116,8 @@ def _read_bounded_source_bytes(
     candidate: Path,
     *,
     maximum_bytes: int,
-) -> tuple[bytes, int]:
-    """Read at most ``maximum_bytes + 1`` bytes without following symlinks."""
+) -> tuple[bytes, int, SourceFileIdentity]:
+    """Read bounded bytes and return identity from the exact descriptor."""
 
     maximum_bytes = _validate_limit(maximum_bytes, name="maximum_bytes")
     try:
@@ -166,6 +201,17 @@ def _read_bounded_source_bytes(
             descriptor = None
             data = handle.read(maximum_bytes + 1)
             after = os.fstat(handle.fileno())
+            opened_identity = SourceFileIdentity.from_stat(opened)
+            after_identity = SourceFileIdentity.from_stat(after)
+            if opened_identity != after_identity:
+                raise _failure(
+                    candidate,
+                    code="SOURCE_CONTENT_CHANGED",
+                    message=f"source changed while being read: {candidate}",
+                    byte_offset=0,
+                    offending=b"",
+                    file_size=after.st_size,
+                )
     except SourceIntegrityError:
         raise
     except OSError as exc:
@@ -191,7 +237,7 @@ def _read_bounded_source_bytes(
             offending=b"",
             file_size=file_size,
         )
-    return data, file_size
+    return data, file_size, after_identity
 
 
 def _decode_source_bytes(candidate: Path, data: bytes, *, file_size: int) -> str:
@@ -226,6 +272,21 @@ def _decode_source_bytes(candidate: Path, data: bytes, *, file_size: int) -> str
         ) from exc
 
 
+def read_utf8_source_with_identity(
+    path: str | Path,
+    *,
+    maximum_bytes: int = MAX_SOURCE_FILE_BYTES,
+) -> tuple[str, SourceFileIdentity]:
+    """Read strict UTF-8 and bind it to the exact opened file identity."""
+
+    candidate = Path(path)
+    data, file_size, identity = _read_bounded_source_bytes(
+        candidate,
+        maximum_bytes=maximum_bytes,
+    )
+    return _decode_source_bytes(candidate, data, file_size=file_size), identity
+
+
 def read_utf8_source(
     path: str | Path,
     *,
@@ -233,12 +294,159 @@ def read_utf8_source(
 ) -> str:
     """Read one bounded regular source file as strict UTF-8."""
 
-    candidate = Path(path)
-    data, file_size = _read_bounded_source_bytes(
-        candidate,
+    source, _identity = read_utf8_source_with_identity(
+        path,
         maximum_bytes=maximum_bytes,
     )
-    return _decode_source_bytes(candidate, data, file_size=file_size)
+    return source
+
+
+def write_utf8_source_if_unchanged(
+    path: str | Path,
+    source: str,
+    *,
+    expected_source: str,
+    expected_identity: SourceFileIdentity,
+    maximum_bytes: int = MAX_SOURCE_FILE_BYTES,
+) -> SourceFileIdentity:
+    """Write through a no-follow descriptor only if identity and bytes match."""
+
+    candidate = Path(path)
+    maximum_bytes = _validate_limit(maximum_bytes, name="maximum_bytes")
+    expected_bytes = expected_source.encode("utf-8")
+    updated_bytes = source.encode("utf-8")
+    if len(updated_bytes) > maximum_bytes:
+        raise _failure(
+            candidate,
+            code="SOURCE_FILE_TOO_LARGE",
+            message=f"updated source exceeds {maximum_bytes} bytes: {candidate}",
+            byte_offset=maximum_bytes,
+            offending=b"",
+            file_size=len(updated_bytes),
+        )
+
+    try:
+        before = candidate.lstat()
+    except OSError as exc:
+        raise _failure(
+            candidate,
+            code="SOURCE_FILESYSTEM_ERROR",
+            message=f"unable to inspect source before write: {candidate} ({exc})",
+            byte_offset=0,
+            offending=b"",
+            file_size=0,
+        ) from exc
+    if stat.S_ISLNK(before.st_mode):
+        raise _failure(
+            candidate,
+            code="SOURCE_SYMLINK_REJECTED",
+            message=f"source symlinks are not allowed: {candidate}",
+            byte_offset=0,
+            offending=b"",
+            file_size=before.st_size,
+        )
+    if not stat.S_ISREG(before.st_mode):
+        raise _failure(
+            candidate,
+            code="SOURCE_NOT_REGULAR_FILE",
+            message=f"source path is not a regular file: {candidate}",
+            byte_offset=0,
+            offending=b"",
+            file_size=before.st_size,
+        )
+    if not expected_identity.matches(before):
+        raise _failure(
+            candidate,
+            code="SOURCE_PATH_CHANGED",
+            message=f"source identity changed before write: {candidate}",
+            byte_offset=0,
+            offending=b"",
+            file_size=before.st_size,
+        )
+
+    flags = os.O_RDWR
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+
+    descriptor: int | None = None
+    try:
+        descriptor = os.open(candidate, flags)
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode):
+            raise _failure(
+                candidate,
+                code="SOURCE_NOT_REGULAR_FILE",
+                message=f"opened source is not a regular file: {candidate}",
+                byte_offset=0,
+                offending=b"",
+                file_size=opened.st_size,
+            )
+        if not expected_identity.matches(opened):
+            raise _failure(
+                candidate,
+                code="SOURCE_PATH_CHANGED",
+                message=f"source identity changed while opening for write: {candidate}",
+                byte_offset=0,
+                offending=b"",
+                file_size=opened.st_size,
+            )
+        with os.fdopen(descriptor, "r+b", closefd=True) as handle:
+            descriptor = None
+            current_bytes = handle.read(maximum_bytes + 1)
+            if current_bytes != expected_bytes:
+                raise _failure(
+                    candidate,
+                    code="SOURCE_CONTENT_CHANGED",
+                    message=f"source bytes changed before write: {candidate}",
+                    byte_offset=0,
+                    offending=b"",
+                    file_size=len(current_bytes),
+                )
+            handle.seek(0)
+            handle.write(updated_bytes)
+            handle.truncate()
+            handle.flush()
+            os.fsync(handle.fileno())
+            written = os.fstat(handle.fileno())
+    except SourceIntegrityError:
+        raise
+    except OSError as exc:
+        raise _failure(
+            candidate,
+            code="SOURCE_FILESYSTEM_ERROR",
+            message=f"unable to write source safely: {candidate} ({exc})",
+            byte_offset=0,
+            offending=b"",
+            file_size=expected_identity.size,
+        ) from exc
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+    written_identity = SourceFileIdentity.from_stat(written)
+    try:
+        path_after = candidate.lstat()
+    except OSError as exc:
+        raise _failure(
+            candidate,
+            code="SOURCE_FILESYSTEM_ERROR",
+            message=f"unable to verify source after write: {candidate} ({exc})",
+            byte_offset=0,
+            offending=b"",
+            file_size=written_identity.size,
+        ) from exc
+    if stat.S_ISLNK(path_after.st_mode) or not written_identity.matches(path_after):
+        raise _failure(
+            candidate,
+            code="SOURCE_PATH_CHANGED",
+            message=f"source identity changed during write: {candidate}",
+            byte_offset=0,
+            offending=b"",
+            file_size=path_after.st_size,
+        )
+    return written_identity
 
 
 def _digest_record(hasher: Any, value: bytes) -> None:
@@ -515,7 +723,7 @@ def scan_utf8_source_tree(
                     )
                     limit_reached = True
                     break
-                data, file_size = _read_bounded_source_bytes(
+                data, file_size, _identity = _read_bounded_source_bytes(
                     candidate,
                     maximum_bytes=MAX_SOURCE_FILE_BYTES,
                 )
@@ -592,8 +800,11 @@ __all__ = [
     "MAX_SOURCE_TREE_FILES",
     "SOURCE_DIGEST_ALGORITHM",
     "SOURCE_INTEGRITY_VERSION",
+    "SourceFileIdentity",
     "SourceIntegrityError",
     "SourceIntegrityFailure",
     "read_utf8_source",
+    "read_utf8_source_with_identity",
     "scan_utf8_source_tree",
+    "write_utf8_source_if_unchanged",
 ]

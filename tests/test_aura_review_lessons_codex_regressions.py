@@ -239,3 +239,28 @@ def test_replay_rejects_vacuous_selected_scenario_set(
 
     with pytest.raises(ReviewLessonError, match="selected zero scenarios"):
         run_crucible_replay(payload, detector_ids=[detector_id])
+
+
+def test_default_replay_requires_scenario_coverage_for_every_lesson(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    detector_ids = sorted(
+        {str(item["detector_id"]) for item in payload["scenarios"]}
+    )
+    assert len(detector_ids) > 1
+    missing_detector_id = detector_ids[0]
+    payload["scenarios"] = [
+        item
+        for item in payload["scenarios"]
+        if item["detector_id"] != missing_detector_id
+    ]
+    unsigned = dict(payload)
+    unsigned.pop("registry_digest")
+    payload["registry_digest"] = _registry_digest(unsigned)
+
+    with pytest.raises(ReviewLessonError, match="missing scenario coverage"):
+        run_crucible_replay(payload)

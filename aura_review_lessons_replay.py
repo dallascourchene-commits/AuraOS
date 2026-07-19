@@ -258,6 +258,17 @@ def run_crucible_replay(
     receipts.sort(key=lambda item: str(item["scenario_id"]))
     if not receipts:
         raise ReviewLessonError("crucible replay selected zero scenarios")
+    required_detector_ids = selected_set or set(lessons)
+    exercised_detector_ids = {
+        str(item["detector_id"])
+        for item in receipts
+    }
+    missing_detector_ids = sorted(required_detector_ids - exercised_detector_ids)
+    if missing_detector_ids:
+        raise ReviewLessonError(
+            "crucible replay is missing scenario coverage for detectors: "
+            f"{missing_detector_ids}"
+        )
     passed_count = sum(1 for item in receipts if item["finding_produced"])
     failed_count = len(receipts) - passed_count
     packet = {
