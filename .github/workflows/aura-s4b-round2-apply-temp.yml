@@ -15,13 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out exact pull-request branch
-        uses: actions/checkout@v4
-        with:
-          ref: feature/spatial-s4b-gaussian-security
-          fetch-depth: 0
-          submodules: false
-          persist-credentials: false
+      - name: Fetch exact pull-request branch only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: feature/spatial-s4b-gaussian-security
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --no-recurse-submodules origin "$BRANCH"
+          git checkout -B "$BRANCH" FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Prove permanent source still matches exported review head
         run: |
