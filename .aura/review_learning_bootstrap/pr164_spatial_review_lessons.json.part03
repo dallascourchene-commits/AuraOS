@@ -1,0 +1,179 @@
+      "required_regression": "Exercise %2f, %5c, repeated separators, credentials, queries, fragments, and dot segments.",
+      "trigger": "A URI contains encoded separators, repeated separators, credentials, query, fragment, or backslash aliases."
+    }
+  ],
+  "merge_commit": "034a3de6410adb685b7096d2912822da36d46623",
+  "registry_digest": "04c19d5ade328a79baead92d86c20e3105cd429a",
+  "repository_head": "e0ee1c9ba742730a960206676842c97b1f826de0",
+  "scenarios": [
+    {
+      "candidate": {
+        "metadata": {
+          "automaticMerge": true,
+          "nested": {
+            "patch-authority": true
+          }
+        }
+      },
+      "code_slice": "metadata={'automaticMerge': True}",
+      "detector_id": "detect_authority_aliases",
+      "expected_finding_code": "AUTHORITY_ALIAS",
+      "scenario_id": "authority-alias-attack"
+    },
+    {
+      "candidate": {
+        "uris": [
+          "aura://coding/%2fetc",
+          "https://host//path"
+        ]
+      },
+      "code_slice": "aura://coding/%2fetc",
+      "detector_id": "detect_uri_alias_encoding",
+      "expected_finding_code": "NONCANONICAL_URI",
+      "scenario_id": "encoded-uri-separator"
+    },
+    {
+      "candidate": {
+        "child": {
+          "handedness": "LEFT",
+          "up_axis": "Z"
+        },
+        "explicit_conversion": false,
+        "parent": {
+          "handedness": "RIGHT",
+          "up_axis": "Y"
+        }
+      },
+      "code_slice": "parent RIGHT/Y -> child LEFT/Z",
+      "detector_id": "detect_implicit_coordinate_basis_change",
+      "expected_finding_code": "IMPLICIT_BASIS_CHANGE",
+      "scenario_id": "implicit-basis-change"
+    },
+    {
+      "candidate": {
+        "accumulated_scale_includes_unit": true,
+        "child_unit_scale": 0.01,
+        "parent_unit_scale": 0.01,
+        "translation_converted_to_meters": true
+      },
+      "code_slice": "translation_m *= unit; accumulated_scale *= unit",
+      "detector_id": "detect_nested_unit_double_application",
+      "expected_finding_code": "NESTED_UNIT_DOUBLE_APPLICATION",
+      "scenario_id": "nested-centimeters"
+    },
+    {
+      "candidate": {
+        "accepted": true,
+        "records": [
+          {
+            "id": "b"
+          },
+          {
+            "id": "a"
+          },
+          {
+            "id": "a"
+          }
+        ],
+        "set_like_values": [
+          "z",
+          "a",
+          "a"
+        ]
+      },
+      "code_slice": "validate(payload_with_reordered_entities_and_recomputed_digest)",
+      "detector_id": "detect_noncanonical_interchange_acceptance",
+      "expected_finding_code": "NONCANONICAL_INTERCHANGE_ACCEPTED",
+      "scenario_id": "noncanonical-scene-interchange"
+    },
+    {
+      "candidate": {
+        "paths": [
+          "./aura_spatial_scene.py",
+          "../../outside.py"
+        ]
+      },
+      "code_slice": "source:./aura_spatial_scene.py",
+      "detector_id": "detect_noncanonical_source_path",
+      "expected_finding_code": "NONCANONICAL_SOURCE_PATH",
+      "scenario_id": "noncanonical-source-anchor"
+    },
+    {
+      "candidate": {
+        "canonicalized_before_digest": false,
+        "collection_name": "links"
+      },
+      "code_slice": "scene_digest = digest(links)",
+      "detector_id": "detect_order_dependent_digesting",
+      "expected_finding_code": "ORDER_DEPENDENT_DIGEST",
+      "scenario_id": "order-dependent-digest"
+    },
+    {
+      "candidate": {
+        "test_path": "tests/test_aura_spatial_final_review.py",
+        "workflow": "python -m py_compile aura_spatial_scene.py\nruff check aura_spatial_scene.py\npytest tests/test_aura_spatial_substrate.py\n"
+      },
+      "code_slice": "pytest tests/test_aura_spatial_substrate.py",
+      "detector_id": "detect_unwired_regression",
+      "expected_finding_code": "UNWIRED_REGRESSION",
+      "scenario_id": "orphan-regression-omitted"
+    },
+    {
+      "candidate": {
+        "attacker_controlled": true,
+        "max_source_ref_count": 32
+      },
+      "code_slice": "source_refs = source_refs[:32]",
+      "detector_id": "detect_count_without_byte_budget",
+      "expected_finding_code": "COUNT_ONLY_BOUND",
+      "scenario_id": "oversized-retained-evidence"
+    },
+    {
+      "candidate": {
+        "metadata": {
+          "automatic_merge": true
+        }
+      },
+      "code_slice": "metadata={'automatic_merge': True}",
+      "detector_id": "detect_protected_metadata_overrides",
+      "expected_finding_code": "PROTECTED_AUTHORITY_OVERRIDE",
+      "scenario_id": "protected-metadata-override"
+    },
+    {
+      "candidate": {
+        "invariant": "positive scale",
+        "runtime_accepts": false,
+        "schema_accepts": true
+      },
+      "code_slice": "scale=[0,1,1]",
+      "detector_id": "detect_schema_runtime_drift",
+      "expected_finding_code": "SCHEMA_RUNTIME_DRIFT",
+      "scenario_id": "schema-runtime-mismatch"
+    },
+    {
+      "candidate": {
+        "claim": "current workflow passed",
+        "current_head": "def",
+        "evidence_head": "abc",
+        "evidence_status": "configured"
+      },
+      "code_slice": "workflow configured -> workflow passed",
+      "detector_id": "detect_stale_evidence_claim",
+      "expected_finding_code": "STALE_EVIDENCE_CLAIM",
+      "scenario_id": "stale-evidence-receipt"
+    },
+    {
+      "candidate": {
+        "collection": "links",
+        "truncated_before_sort": true
+      },
+      "code_slice": "bounded = links[:MAX_LINKS]",
+      "detector_id": "detect_truncate_before_sort",
+      "expected_finding_code": "TRUNCATE_BEFORE_SORT",
+      "scenario_id": "truncate-before-sort"
+    }
+  ],
+  "source_pr": 164,
+  "truth_boundary": "review_learning_only",
+  "version": "AURA_REVIEW_LESSON_REGISTRY_V1"
+}
