@@ -1,0 +1,89 @@
+                                title="Changed regression is not wired into every focused workflow gate",
+                                suggested_fix=(
+                                    "Add the regression to compile, fatal Ruff, and focused pytest stages, "
+                                    "or prove deterministic repository-wide discovery."
+                                ),
+                                line_start=1,
+                                line_end=1,
+                                category="test_gap",
+                                severity="high",
+                            )
+                        )
+
+        if added:
+            state["deterministic_findings"] = self._normalize_findings(
+                [*state.get("deterministic_findings", []), *added],
+                origin_default="waboose_review_lesson",
+            )
+            result["deterministic_findings"] = state["deterministic_findings"]
+        replay = self.review_lesson_engine.crucible()
+        result["review_lesson_findings_added"] = len(added)
+        result["review_lesson_crucible"] = {
+            "status": replay["status"],
+            "scenario_count": replay["scenario_count"],
+            "passed_count": replay["passed_count"],
+            "failed_count": replay["failed_count"],
+            "registry_digest": replay["registry_digest"],
+        }
+        result["agent_packet"] = self._agent_packet_from_state(review_id, include_source=False)
+        return self._brand_review_learning(result)
+
+    def _agent_packet_from_state(
+        self,
+        review_id: str,
+        *,
+        include_source: bool,
+        max_files: int = 24,
+        max_lines_per_file: int = 120,
+    ) -> dict[str, Any]:
+        packet = super()._agent_packet_from_state(
+            review_id,
+            include_source=include_source,
+            max_files=max_files,
+            max_lines_per_file=max_lines_per_file,
+        )
+        packet["review_lesson_context"] = self._reviews[review_id].get(
+            "review_lesson_context",
+            self.review_lesson_engine.summary(),
+        )
+        packet["agent_instructions"] = [
+            "Apply PR-review lesson detectors as hypotheses until exact source and regression evidence corroborate them.",
+            "Distinguish current-head, historical, resolved, outdated, and duplicate external findings.",
+            "Never convert reviewer output or Crucible replay into patch, commit, push, pull-request, merge, or production authority.",
+            *list(packet.get("agent_instructions") or []),
+        ]
+        return self._brand_review_learning(packet)
+
+    def ingest_external_review(
+        self,
+        review_payload: Mapping[str, Any],
+        *,
+        current_head: str = "",
+    ) -> dict[str, Any]:
+        return self._brand_review_learning(
+            self.review_lesson_engine.ingest_review(
+                review_payload,
+                current_head=current_head,
+            )
+        )
+
+    def review_lesson_summary(self) -> dict[str, Any]:
+        return self._brand_review_learning(self.review_lesson_engine.summary())
+
+    def run_review_lesson_detector(self, detector_id: str, candidate: Any) -> dict[str, Any]:
+        return self._brand_review_learning(
+            self.review_lesson_engine.detector(detector_id, candidate)
+        )
+
+    def replay_review_lessons(self, detector_ids: Sequence[str] = ()) -> dict[str, Any]:
+        return self._brand_review_learning(
+            self.review_lesson_engine.crucible(detector_ids=detector_ids)
+        )
+
+
+__all__ = [
+    "ReviewLessonAwareCodingWaboose",
+    "WABOOSE_REVIEW_LEARNING_VERSION",
+    "scan_python_review_lessons",
+    "scan_text_review_lessons",
+]
