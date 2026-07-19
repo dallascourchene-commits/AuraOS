@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Apply
+name: Aura Temporary S4-B Source Apply
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  apply-s4b:
+  apply-s4b-source:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: feature/spatial-s4b-gaussian-security
-          fetch-depth: 0
+          fetch-depth: 1
           submodules: false
 
       - name: Reconstruct and verify reviewed patch
@@ -33,12 +33,11 @@ jobs:
             | sha256sum --check --strict
           git apply --check /tmp/s4b.patch
 
-      - name: Apply permanent implementation and remove transport
+      - name: Apply and verify permanent source
         run: |
           set -euo pipefail
           git apply /tmp/s4b.patch
-          rm -rf .aura_temp
-          git rm .github/workflows/aura-source-export-temp.yml
+          rm .github/workflows/aura-spatial-s4.yml
           git diff --check
           python -m py_compile \
             aura_spatial_asset_registry.py \
@@ -49,12 +48,12 @@ jobs:
             tests/js/spatial-gaussian.test.mjs \
             tests/js/spatial-mixed-scene.test.mjs
 
-      - name: Commit exact permanent S4-B slice
+      - name: Commit and push permanent source
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add -A -- ':!.github/workflows/aura-source-export-temp.yml' ':!.aura_temp'
           git commit -m "feat: implement spatial S4-B Gaussian interoperability"
-          test -z "$(git status --porcelain)"
+          test -z "$(git diff --cached --name-only)"
           git push origin HEAD:feature/spatial-s4b-gaussian-security
