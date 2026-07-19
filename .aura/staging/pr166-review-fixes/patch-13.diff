@@ -1,0 +1,39 @@
++        check=True,
++    )
++    head = subprocess.run(
++        ["git", "-C", str(repo), "rev-parse", "HEAD"],
++        check=True,
++        capture_output=True,
++        text=True,
++    ).stdout.strip()
++    (repo / "ignored.py").write_text("hidden = True\n", encoding="utf-8")
++
++    packet = scan_utf8_source_tree(
++        repo,
++        expected_repository_head=head,
++        require_git_tree=True,
++    )
++
++    assert packet["status"] == "FAILED"
++    assert packet["git_tree_bound"] is False
++    assert "SOURCE_GIT_SOURCE_SET_MISMATCH" in {
++        item["code"] for item in packet["failures"]
++    }
++
++
++def test_boot_auditor_records_corrupt_source_without_aborting(tmp_path: Path) -> None:
++    from aura_node import AuraEcosystemAuditor
++
++    path = tmp_path / "corrupt.py"
++    path.write_bytes(b"value = '\xff'\n")
++    auditor = AuraEcosystemAuditor(SimpleNamespace())
++
++    result = asyncio.run(auditor._scan_and_stamp_file(str(path), "root"))
++
++    assert result is False
++    assert auditor.audit_failures[0]["code"] == "SOURCE_UTF8_INVALID"
++    assert path.read_bytes() == b"value = '\xff'\n"
++
+ 
+ def test_repository_python_sources_are_strict_utf8() -> None:
+     packet = scan_utf8_source_tree(ROOT)

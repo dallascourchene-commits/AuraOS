@@ -1,0 +1,98 @@
+index 8b071df38cf1b77d06a08537aa4d2327df77641a..6338eef186e505a22073f97284dfc26c52dfc0db 100644
+--- a/tests/test_aura_coding_waboose_review_learning.py
++++ b/tests/test_aura_coding_waboose_review_learning.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ import ast
++import hashlib
+ import json
+ from pathlib import Path
+ import subprocess
+@@ -29,6 +30,8 @@ def _repo(tmp_path: Path) -> Path:
+     _git(repo, "init", "-b", "main")
+     _git(repo, "config", "user.email", "review-lessons@example.test")
+     _git(repo, "config", "user.name", "Review Lessons")
++    _git(repo, "commit", "--allow-empty", "-m", "bootstrap")
++    registry_ancestor = _git(repo, "rev-parse", "HEAD")
+     (repo / ".aura" / "review_lessons").mkdir(parents=True)
+     source_registry = (
+         Path(__file__).resolve().parents[1]
+@@ -36,8 +39,25 @@ def _repo(tmp_path: Path) -> Path:
+         / "review_lessons"
+         / "pr164_spatial_review_lessons.json"
+     )
++    registry_payload = json.loads(source_registry.read_text(encoding="utf-8"))
++    registry_payload["repository_head"] = registry_ancestor
++    registry_payload["merge_commit"] = registry_ancestor
++    unsigned = dict(registry_payload)
++    unsigned.pop("registry_digest")
++    canonical = json.dumps(
++        unsigned,
++        sort_keys=True,
++        separators=(",", ":"),
++        ensure_ascii=True,
++        allow_nan=False,
++        default=str,
++    ).encode("utf-8")
++    registry_payload["registry_digest"] = hashlib.blake2b(
++        canonical,
++        digest_size=20,
++    ).hexdigest()
+     (repo / ".aura" / "review_lessons" / source_registry.name).write_text(
+-        source_registry.read_text(encoding="utf-8"),
++        json.dumps(registry_payload, indent=2, sort_keys=True) + "\n",
+         encoding="utf-8",
+     )
+     (repo / "module.py").write_text(
+diff --git a/tests/test_aura_coding_waboose_review_lessons.py b/tests/test_aura_coding_waboose_review_lessons.py
+index f1ab69bb1d4379f46143deb727230a3b4730a920..58af10a8655fb34b4113e7e900f225062ed4dc98 100644
+--- a/tests/test_aura_coding_waboose_review_lessons.py
++++ b/tests/test_aura_coding_waboose_review_lessons.py
+@@ -30,6 +30,7 @@ from aura_coding_waboose_review_lessons import (
+     run_crucible_replay,
+     validate_review_lesson_registry,
+ )
++import aura_review_lessons_replay as replay_module
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ REGISTRY = ROOT / ".aura" / "review_lessons" / "pr164_spatial_review_lessons.json"
+@@ -65,13 +66,30 @@ def test_registry_rejects_digest_tampering_and_duplicate_identities() -> None:
+         validate_review_lesson_registry(duplicate)
+ 
+ 
+-def test_crucible_replays_every_pr164_lesson_with_typed_receipts() -> None:
++def test_crucible_replays_every_pr164_lesson_with_typed_receipts(
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    monkeypatch.setattr(
++        replay_module,
++        "_repository_evidence",
++        lambda *_args, **_kwargs: {
++            "repository_head": "b" * 40,
++            "repository_tree": "c" * 40,
++        },
++    )
++    monkeypatch.setattr(
++        replay_module,
++        "_registry_merge_is_ancestor",
++        lambda *_args, **_kwargs: True,
++    )
+     result = run_crucible_replay(REGISTRY)
+ 
+     assert result["status"] == "PASSED"
+     assert result["scenario_count"] == 13
+     assert result["passed_count"] == 13
+     assert result["failed_count"] == 0
++    assert result["repository_head"] == "b" * 40
++    assert result["registry_ancestry_verified"] is True
+     assert all(item["finding_produced"] for item in result["receipts"])
+     assert all(item["invariant_violated"] for item in result["receipts"])
+     assert all(item["required_regression"] for item in result["receipts"])
+diff --git a/tests/test_aura_review_lessons_codex_regressions.py b/tests/test_aura_review_lessons_codex_regressions.py
+index 58b6408d5362eac8111aeb889517b1ec9556725b..661828eec933ca3535e37e35c90e7b9554311687 100644
+--- a/tests/test_aura_review_lessons_codex_regressions.py
++++ b/tests/test_aura_review_lessons_codex_regressions.py
+@@ -132,3 +132,78 @@ def test_persistent_review_store_stops_at_count_limit(tmp_path: Path) -> None:
+     )
+     assert overflow["stored_count"] == 0

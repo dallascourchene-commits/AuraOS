@@ -1,0 +1,108 @@
++        evidence["git_tree_bound"] = bool(clean and head_matches)
++        if evidence["git_tree_bound"]:
++            evidence["git_binding_reason"] = "clean_exact_head"
++        elif not source_set_matches:
++            evidence["git_binding_reason"] = "source_set_mismatch"
++        else:
++            evidence["git_binding_reason"] = "source_worktree_dirty"
++        if require_git_tree and not evidence["git_tree_bound"]:
++            failures.append(
++                _failure_dict(
++                    ".",
++                    code="SOURCE_GIT_TREE_UNBOUND",
++                    message="source evidence is not bound to a clean exact Git tree",
++                )
++            )
++    except (OSError, subprocess.SubprocessError, RuntimeError) as exc:
++        if require_git_tree or expected_repository_head is not None:
++            failures.append(
++                _failure_dict(
++                    ".",
++                    code="SOURCE_GIT_EVIDENCE_UNAVAILABLE",
++                    message=f"unable to establish exact Git source evidence: {exc}",
++                )
++            )
++    return evidence, failures
++
++
+ def scan_utf8_source_tree(
+     root: str | Path,
+     *,
+     suffixes: Iterable[str] = _DEFAULT_SUFFIXES,
+     excluded_parts: Iterable[str] = _DEFAULT_EXCLUDED_PARTS,
++    maximum_files: int = MAX_SOURCE_TREE_FILES,
++    maximum_total_bytes: int = MAX_SOURCE_TREE_BYTES,
++    expected_repository_head: str | None = None,
++    require_git_tree: bool = False,
+ ) -> dict[str, Any]:
+-    """Scan repository source files deterministically without mutating them."""
++    """Scan source deterministically without mutation and emit bounded evidence."""
+ 
+-    base = Path(root).resolve()
++    maximum_files = _validate_limit(maximum_files, name="maximum_files")
++    maximum_total_bytes = _validate_limit(
++        maximum_total_bytes,
++        name="maximum_total_bytes",
++    )
++    base = Path(root).resolve(strict=True)
+     suffix_set = frozenset(str(item).lower() for item in suffixes)
+     excluded = frozenset(str(item) for item in excluded_parts)
+-    paths = sorted(
+-        path
+-        for path in base.rglob("*")
+-        if path.is_file()
+-        and path.suffix.lower() in suffix_set
+-        and not (set(path.relative_to(base).parts) & excluded)
+-    )
+     failures: list[dict[str, Any]] = []
++    records: list[tuple[str, bytes]] = []
+     checked_bytes = 0
+-    for path in paths:
+-        checked_bytes += path.stat().st_size
++    checked_file_count = 0
++    candidate_file_count = 0
++    candidate_paths: set[str] = set()
++    limit_reached = False
++
++    def walk_error(exc: OSError) -> None:
++        filename = Path(exc.filename) if exc.filename else base
+         try:
+-            read_utf8_source(path)
+-        except SourceIntegrityError as exc:
+-            failure = exc.failure.to_dict()
+-            failure["path"] = path.relative_to(base).as_posix()
+-            failures.append(failure)
++            relative = filename.relative_to(base).as_posix()
++        except ValueError:
++            relative = filename.as_posix()
++        failures.append(
++            _failure_dict(
++                relative,
++                code="SOURCE_FILESYSTEM_ERROR",
++                message=f"unable to enumerate source path: {filename} ({exc})",
++            )
++        )
++
++    for current, directory_names, file_names in os.walk(
++        base,
++        topdown=True,
++        followlinks=False,
++        onerror=walk_error,
++    ):
++        current_path = Path(current)
++        kept_directories: list[str] = []
++        for name in sorted(directory_names):
++            directory = current_path / name
++            relative = directory.relative_to(base)
++            if set(relative.parts) & excluded:
++                continue
++            try:
++                metadata = directory.lstat()
++            except OSError as exc:
++                failures.append(
++                    _failure_dict(
++                        relative.as_posix(),
++                        code="SOURCE_FILESYSTEM_ERROR",
++                        message=f"unable to inspect source directory: {directory} ({exc})",
++                    )
++                )

@@ -1,0 +1,95 @@
+diff --git a/.github/workflows/aura-review-learning.yml b/.github/workflows/aura-review-learning.yml
+index c4bd9ddf19999a3a8ab5b3bb1a9ce4871469bc27..faa766d701eceb7da5d5dfcf13ebfe8dd1a3c750 100644
+--- a/.github/workflows/aura-review-learning.yml
++++ b/.github/workflows/aura-review-learning.yml
+@@ -12,6 +12,8 @@ on:
+       - "aura_review_lessons_registry.py"
+       - "aura_review_lessons_replay.py"
+       - "aura_review_lessons_source_scan.py"
++      - "aura_source_integrity.py"
++      - "aura_node.py"
+       - "aura_coding_waboose_review_learning.py"
+       - "aura_agent_arena_review_learning_bridge.py"
+       - "aura_agent_arena_review_learning_mcp.py"
+@@ -23,6 +25,7 @@ on:
+       - "tests/test_aura_coding_waboose_review_learning.py"
+       - "tests/test_aura_agent_arena_review_learning.py"
+       - "tests/test_aura_review_lessons_codex_regressions.py"
++      - "tests/test_aura_source_integrity.py"
+       - "tests/test_aura_review_learning_mcp_codex.py"
+       - "docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md"
+       - ".github/workflows/aura-review-learning.yml"
+@@ -47,7 +50,7 @@ jobs:
+         uses: actions/checkout@v4
+         with:
+           ref: ${{ env.AURA_REVIEW_HEAD_SHA }}
+-          fetch-depth: 1
++          fetch-depth: 0
+           persist-credentials: false
+ 
+       - name: Fetch exact base ref without retaining credentials
+@@ -76,6 +79,8 @@ jobs:
+             aura_review_lessons_registry.py \
+             aura_review_lessons_replay.py \
+             aura_review_lessons_source_scan.py \
++            aura_source_integrity.py \
++            aura_node.py \
+             aura_coding_waboose_review_learning.py \
+             aura_agent_arena_review_learning_bridge.py \
+             aura_agent_arena_review_learning_mcp.py \
+@@ -84,6 +89,7 @@ jobs:
+             tests/test_aura_coding_waboose_review_learning.py \
+             tests/test_aura_agent_arena_review_learning.py \
+             tests/test_aura_review_lessons_codex_regressions.py \
++            tests/test_aura_source_integrity.py \
+             tests/test_aura_review_learning_mcp_codex.py
+ 
+       - name: Run focused Ruff checks
+@@ -98,6 +104,7 @@ jobs:
+             aura_review_lessons_registry.py \
+             aura_review_lessons_replay.py \
+             aura_review_lessons_source_scan.py \
++            aura_source_integrity.py \
+             aura_coding_waboose_review_learning.py \
+             aura_agent_arena_review_learning_bridge.py \
+             aura_agent_arena_review_learning_mcp.py \
+@@ -106,6 +113,7 @@ jobs:
+             tests/test_aura_coding_waboose_review_learning.py \
+             tests/test_aura_agent_arena_review_learning.py \
+             tests/test_aura_review_lessons_codex_regressions.py \
++            tests/test_aura_source_integrity.py \
+             tests/test_aura_review_learning_mcp_codex.py
+ 
+       - name: Validate Draft 2020-12 schema and canonical lesson registry
+@@ -126,6 +134,25 @@ jobs:
+           assert validated["authority"]["automatic_merge"] is False
+           PY
+ 
++      - name: Verify exact-head source integrity evidence
++        run: |
++          python - <<'PY'
++          import os
++          from pathlib import Path
++          from aura_source_integrity import scan_utf8_source_tree
++
++          packet = scan_utf8_source_tree(
++              Path("."),
++              expected_repository_head=os.environ["AURA_REVIEW_HEAD_SHA"],
++              require_git_tree=True,
++          )
++          assert packet["status"] == "PASSED", packet["failures"]
++          assert packet["git_tree_bound"] is True
++          assert packet["repository_head"] == os.environ["AURA_REVIEW_HEAD_SHA"]
++          assert len(packet["repository_tree"]) == 40
++          assert len(packet["source_digest"]) == 64
++          PY
++
+       - name: Run focused tests
+         run: |
+           python -m pytest -q --tb=short \
+@@ -133,6 +160,7 @@ jobs:
+             tests/test_aura_coding_waboose_review_learning.py \
+             tests/test_aura_agent_arena_review_learning.py \
+             tests/test_aura_review_lessons_codex_regressions.py \
++            tests/test_aura_source_integrity.py \
+             tests/test_aura_review_learning_mcp_codex.py \

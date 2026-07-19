@@ -1,0 +1,124 @@
++        )
++    if not stat.S_ISREG(before.st_mode):
++        raise _failure(
++            candidate,
++            code="SOURCE_NOT_REGULAR_FILE",
++            message=f"source path is not a regular file: {candidate}",
++            byte_offset=0,
++            offending=b"",
++            file_size=before.st_size,
++        )
++    if before.st_size > maximum_bytes:
+         raise _failure(
+             candidate,
+             code="SOURCE_FILE_TOO_LARGE",
+             message=f"source file exceeds {maximum_bytes} bytes: {candidate}",
+             byte_offset=maximum_bytes,
+             offending=b"",
+-            file_size=len(data),
++            file_size=before.st_size,
+         )
++
++    flags = os.O_RDONLY
++    if hasattr(os, "O_CLOEXEC"):
++        flags |= os.O_CLOEXEC
++    if hasattr(os, "O_NOFOLLOW"):
++        flags |= os.O_NOFOLLOW
++
++    descriptor: int | None = None
++    try:
++        descriptor = os.open(candidate, flags)
++        opened = os.fstat(descriptor)
++        if not stat.S_ISREG(opened.st_mode):
++            raise _failure(
++                candidate,
++                code="SOURCE_NOT_REGULAR_FILE",
++                message=f"opened source is not a regular file: {candidate}",
++                byte_offset=0,
++                offending=b"",
++                file_size=opened.st_size,
++            )
++        if (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino):
++            raise _failure(
++                candidate,
++                code="SOURCE_PATH_CHANGED",
++                message=f"source path changed while being opened: {candidate}",
++                byte_offset=0,
++                offending=b"",
++                file_size=opened.st_size,
++            )
++        if opened.st_size > maximum_bytes:
++            raise _failure(
++                candidate,
++                code="SOURCE_FILE_TOO_LARGE",
++                message=f"source file exceeds {maximum_bytes} bytes: {candidate}",
++                byte_offset=maximum_bytes,
++                offending=b"",
++                file_size=opened.st_size,
++            )
++        with os.fdopen(descriptor, "rb", closefd=True) as handle:
++            descriptor = None
++            data = handle.read(maximum_bytes + 1)
++            after = os.fstat(handle.fileno())
++    except SourceIntegrityError:
++        raise
++    except OSError as exc:
++        raise _failure(
++            candidate,
++            code="SOURCE_FILESYSTEM_ERROR",
++            message=f"unable to read source file: {candidate} ({exc})",
++            byte_offset=0,
++            offending=b"",
++            file_size=before.st_size,
++        ) from exc
++    finally:
++        if descriptor is not None:
++            os.close(descriptor)
++
++    file_size = max(before.st_size, opened.st_size, after.st_size, len(data))
++    if len(data) > maximum_bytes or file_size > maximum_bytes:
++        raise _failure(
++            candidate,
++            code="SOURCE_FILE_TOO_LARGE",
++            message=f"source file exceeds {maximum_bytes} bytes: {candidate}",
++            byte_offset=maximum_bytes,
++            offending=b"",
++            file_size=file_size,
++        )
++    return data, file_size
++
++
++def _decode_source_bytes(candidate: Path, data: bytes, *, file_size: int) -> str:
+     nul_at = data.find(b"\x00")
+     if nul_at >= 0:
+         raise _failure(
+@@ -92,7 +206,7 @@ def read_utf8_source(
+             ),
+             byte_offset=nul_at,
+             offending=data[nul_at : nul_at + 1],
+-            file_size=len(data),
++            file_size=file_size,
+         )
+     try:
+         return data.decode("utf-8", errors="strict")
+@@ -108,45 +222,364 @@ def read_utf8_source(
+             ),
+             byte_offset=start,
+             offending=data[start:stop],
+-            file_size=len(data),
++            file_size=file_size,
+         ) from exc
+ 
+ 
++def read_utf8_source(
++    path: str | Path,
++    *,
++    maximum_bytes: int = MAX_SOURCE_FILE_BYTES,
++) -> str:
++    """Read one bounded regular source file as strict UTF-8."""
++
++    candidate = Path(path)
++    data, file_size = _read_bounded_source_bytes(
++        candidate,
++        maximum_bytes=maximum_bytes,
++    )

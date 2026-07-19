@@ -1,0 +1,95 @@
++                continue
++            if stat.S_ISLNK(metadata.st_mode):
++                failures.append(
++                    _failure_dict(
++                        relative.as_posix(),
++                        code="SOURCE_SYMLINK_REJECTED",
++                        message=f"source-tree symlink directory rejected: {relative}",
++                        file_size=metadata.st_size,
++                    )
++                )
++                continue
++            kept_directories.append(name)
++        directory_names[:] = kept_directories
++
++        for name in sorted(file_names):
++            candidate = current_path / name
++            relative = candidate.relative_to(base)
++            if candidate.suffix.lower() not in suffix_set:
++                continue
++            if set(relative.parts) & excluded:
++                continue
++            candidate_file_count += 1
++            normalized_path = relative.as_posix()
++            candidate_paths.add(normalized_path)
++            if candidate_file_count > maximum_files:
++                failures.append(
++                    _failure_dict(
++                        normalized_path,
++                        code="SOURCE_FILE_COUNT_LIMIT",
++                        message=f"source candidate count exceeds {maximum_files}",
++                    )
++                )
++                limit_reached = True
++                break
++            try:
++                metadata = candidate.lstat()
++                if stat.S_ISLNK(metadata.st_mode):
++                    raise _failure(
++                        candidate,
++                        code="SOURCE_SYMLINK_REJECTED",
++                        message=f"source symlinks are not allowed: {candidate}",
++                        byte_offset=0,
++                        offending=b"",
++                        file_size=metadata.st_size,
++                    )
++                resolved = candidate.resolve(strict=True)
++                try:
++                    resolved.relative_to(base)
++                except ValueError as exc:
++                    raise _failure(
++                        candidate,
++                        code="SOURCE_OUTSIDE_ROOT",
++                        message=f"source resolves outside repository root: {candidate}",
++                        byte_offset=0,
++                        offending=b"",
++                        file_size=metadata.st_size,
++                    ) from exc
++                if checked_bytes + metadata.st_size > maximum_total_bytes:
++                    failures.append(
++                        _failure_dict(
++                            normalized_path,
++                            code="SOURCE_TREE_BYTES_LIMIT",
++                            message=(
++                                "source tree exceeds aggregate byte ceiling "
++                                f"{maximum_total_bytes}"
++                            ),
++                            file_size=metadata.st_size,
++                        )
++                    )
++                    limit_reached = True
++                    break
++                data, file_size = _read_bounded_source_bytes(
++                    candidate,
++                    maximum_bytes=MAX_SOURCE_FILE_BYTES,
++                )
++                if checked_bytes + len(data) > maximum_total_bytes:
++                    failures.append(
++                        _failure_dict(
++                            normalized_path,
++                            code="SOURCE_TREE_BYTES_LIMIT",
++                            message=(
++                                "source tree exceeds aggregate byte ceiling "
++                                f"{maximum_total_bytes}"
++                            ),
++                            file_size=file_size,
++                        )
++                    )
++                    limit_reached = True
++                    break
++                records.append((normalized_path, data))
++                checked_file_count += 1
++                checked_bytes += len(data)
++                _decode_source_bytes(candidate, data, file_size=file_size)
++            except SourceIntegrityError as exc:
++                failure = exc.failure.to_dict()

@@ -1,0 +1,114 @@
++    return _decode_source_bytes(candidate, data, file_size=file_size)
++
++
++def _digest_record(hasher: Any, value: bytes) -> None:
++    hasher.update(len(value).to_bytes(8, byteorder="big", signed=False))
++    hasher.update(value)
++
++
++def _source_digest(records: list[tuple[str, bytes]]) -> str:
++    hasher = hashlib.sha256()
++    _digest_record(hasher, SOURCE_INTEGRITY_VERSION.encode("ascii"))
++    _digest_record(hasher, SOURCE_DIGEST_ALGORITHM.encode("ascii"))
++    for normalized_path, data in records:
++        _digest_record(hasher, normalized_path.encode("utf-8"))
++        _digest_record(hasher, data)
++    return hasher.hexdigest()
++
++
++def _failure_dict(
++    path: str,
++    *,
++    code: str,
++    message: str,
++    file_size: int = 0,
++) -> dict[str, Any]:
++    return SourceIntegrityFailure(
++        path=path,
++        code=code,
++        message=message,
++        byte_offset=0,
++        offending_bytes_hex="",
++        file_size=max(0, int(file_size)),
++    ).to_dict()
++
++
++def _git_source_binding(
++    base: Path,
++    *,
++    expected_repository_head: str | None,
++    require_git_tree: bool,
++    candidate_paths: set[str],
++    suffixes: frozenset[str],
++    excluded_parts: frozenset[str],
++) -> tuple[dict[str, Any], list[dict[str, Any]]]:
++    evidence: dict[str, Any] = {
++        "repository_head": None,
++        "repository_tree": None,
++        "git_tree_bound": False,
++        "git_binding_reason": "not_git_repository",
++    }
++    failures: list[dict[str, Any]] = []
++
++    def git(*arguments: str, check: bool = True) -> subprocess.CompletedProcess[str]:
++        return subprocess.run(
++            ["git", "-C", str(base), *arguments],
++            check=check,
++            capture_output=True,
++            text=True,
++            timeout=20,
++        )
++
++    try:
++        top_level = Path(git("rev-parse", "--show-toplevel").stdout.strip()).resolve()
++        if top_level != base:
++            evidence["git_binding_reason"] = "scan_root_is_not_repository_root"
++            raise RuntimeError(evidence["git_binding_reason"])
++        head = git("rev-parse", "HEAD").stdout.strip().lower()
++        tree = git("rev-parse", "HEAD^{tree}").stdout.strip().lower()
++        evidence["repository_head"] = head
++        evidence["repository_tree"] = tree
++
++        if expected_repository_head is not None:
++            expected = str(expected_repository_head).strip().lower()
++            if head != expected:
++                failures.append(
++                    _failure_dict(
++                        ".",
++                        code="SOURCE_HEAD_MISMATCH",
++                        message=(
++                            f"checked-out repository head {head} does not match "
++                            f"expected head {expected}"
++                        ),
++                    )
++                )
++
++        unstaged = git("diff", "--quiet", "HEAD", "--", check=False).returncode
++        staged = git("diff", "--cached", "--quiet", "HEAD", "--", check=False).returncode
++        tracked_output = git("ls-files", "-z").stdout
++        tracked_source_paths = {
++            item
++            for item in tracked_output.split("\0")
++            if item
++            and Path(item).suffix.lower() in suffixes
++            and not (set(Path(item).parts) & excluded_parts)
++        }
++        source_set_matches = candidate_paths == tracked_source_paths
++        if not source_set_matches:
++            extra = sorted(candidate_paths - tracked_source_paths)[:20]
++            missing = sorted(tracked_source_paths - candidate_paths)[:20]
++            failures.append(
++                _failure_dict(
++                    ".",
++                    code="SOURCE_GIT_SOURCE_SET_MISMATCH",
++                    message=(
++                        "working-tree source set differs from HEAD: "
++                        f"extra={extra}, missing={missing}"
++                    ),
++                )
++            )
++        clean = unstaged == 0 and staged == 0 and source_set_matches
++        head_matches = (
++            expected_repository_head is None
++            or head == str(expected_repository_head).strip().lower()
++        )
