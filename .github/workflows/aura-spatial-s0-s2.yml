@@ -52,7 +52,7 @@ jobs:
       - name: Install focused test tooling
         run: |
           python -m pip install --upgrade pip --quiet
-          python -m pip install pytest ruff numpy --quiet
+          python -m pip install pytest ruff numpy jsonschema --quiet
       - name: Compile spatial contracts, bridge, and tests
         run: |
           python -m py_compile \
@@ -66,7 +66,9 @@ jobs:
             aura_spatial_breadboard.py \
             aura_topology_ws_bridge.py \
             tests/test_aura_spatial_substrate.py \
-            tests/test_aura_spatial_ws_guard.py
+            tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -80,10 +82,45 @@ jobs:
             aura_spatial_breadboard.py \
             aura_topology_ws_bridge.py \
             tests/test_aura_spatial_substrate.py \
-            tests/test_aura_spatial_ws_guard.py
-      - name: Validate strict JSON schema syntax
+            tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py
+      - name: Validate Draft 2020-12 schema and contract compatibility
         run: |
-          python -m json.tool schemas/aura_spatial_scene.schema.json >/dev/null
+          python - <<'PY'
+          import json
+          from copy import deepcopy
+          from pathlib import Path
+
+          from jsonschema import Draft202012Validator
+
+          from aura_spatial_contracts import CoordinateFrame
+          from aura_spatial_scene import compile_spatial_scene
+
+          schema = json.loads(
+              Path("schemas/aura_spatial_scene.schema.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          Draft202012Validator.check_schema(schema)
+          validator = Draft202012Validator(schema)
+          scene = compile_spatial_scene(
+              scene_id="schema-compatibility-scene",
+              purpose_digest="purpose:schema-compatibility",
+              root_frame_id="root",
+              frames=(CoordinateFrame(frame_id="root"),),
+          ).to_dict()
+          validator.validate(scene)
+
+          invalid = deepcopy(scene)
+          invalid["execution_authority"] = True
+          errors = list(validator.iter_errors(invalid))
+          assert errors, "schema must reject execution authority"
+          assert any(
+              list(error.absolute_path) == ["execution_authority"]
+              for error in errors
+          )
+          PY
       - name: Run spatial substrate and showcase compatibility regressions
         id: spatial-tests
         shell: bash
@@ -92,6 +129,8 @@ jobs:
           python -m pytest -q --tb=short \
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py \
             tests/test_aura_showcase_spatial_integration.py \
             > spatial-test-output-${{ matrix.python-version }}.txt 2>&1
           status=$?
@@ -127,7 +166,12 @@ jobs:
               "automatic_merge",
           )
           assert all(authority[key] is False for key in forbidden)
-          assert SpatialSceneSnapshot.__dataclass_fields__["execution_authority"].default is False
+          assert (
+              SpatialSceneSnapshot.__dataclass_fields__[
+                  "execution_authority"
+              ].default
+              is False
+          )
           PY
       - name: Fail when focused regressions fail
         if: steps.spatial-tests.outputs.status != '0'
