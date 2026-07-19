@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from pathlib import PurePosixPath
 import re
 from typing import Any
 
@@ -176,16 +177,21 @@ def _source_anchor(ast_data: Mapping[str, Any]) -> str:
         or ast_data.get("file")
         or ast_data.get("path")
         or ""
-    ).strip().replace("\\", "/")
+    ).strip()
     if (
         not raw_path
         or len(raw_path) > 1024
         or raw_path.startswith("/")
-        or ".." in raw_path.split("/")
+        or "\\" in raw_path
         or "//" in raw_path
+        or not re.fullmatch(r"[A-Za-z0-9._/\-]+", raw_path)
     ):
         return ""
-    if not re.fullmatch(r"[A-Za-z0-9._/\-]+", raw_path):
+    path = PurePosixPath(raw_path)
+    if (
+        any(part in {"", ".", ".."} for part in path.parts)
+        or path.as_posix() != raw_path
+    ):
         return ""
     anchor = f"source:{raw_path}"
     line_range = ast_data.get("line_range")
