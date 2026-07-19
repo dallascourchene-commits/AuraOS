@@ -193,12 +193,11 @@ def compile_spatial_scene(
 def validate_spatial_scene_payload(
     payload: Mapping[str, Any],
 ) -> SpatialSceneSnapshot:
-    """Validate serialized interchange through the runtime contracts.
+    """Validate serialized interchange through the canonical runtime contracts.
 
-    JSON Schema handles structural validation. This path enforces cross-field
-    invariants that Draft 2020-12 cannot express, including asset min/max bounds,
-    rooted frame continuity, referential integrity, authority metadata, and the
-    canonical scene digest.
+    JSON Schema handles structural validation. This path additionally rejects
+    noncanonical ordering and duplicate set-like values before accepting a digest,
+    then enforces cross-field runtime invariants that Draft 2020-12 cannot express.
     """
     if not isinstance(payload, Mapping):
         raise ValueError("spatial scene payload must be an object")
@@ -209,6 +208,23 @@ def validate_spatial_scene_payload(
         raise ValueError(
             f"spatial scene payload keys mismatch: missing={missing}, extra={extra}"
         )
+
+    _require_unique_sorted_records(
+        payload["frames"], "frame_id", "frames"
+    )
+    _require_unique_sorted_records(
+        payload["assets"], "asset_id", "assets"
+    )
+    _require_unique_sorted_records(
+        payload["entities"], "entity_id", "entities"
+    )
+    _require_unique_sorted_records(
+        payload["links"], "link_id", "links"
+    )
+    _require_unique_sorted_strings(
+        payload["source_refs"], "scene.source_refs"
+    )
+    _require_nested_canonical_sets(payload)
 
     frames = _records_from_payload(
         payload["frames"],
@@ -230,18 +246,12 @@ def validate_spatial_scene_payload(
         SpatialLink,
         "links",
     )
-    source_refs = payload["source_refs"]
-    if (
-        not isinstance(source_refs, Sequence)
-        or isinstance(source_refs, (str, bytes, bytearray))
-    ):
-        raise ValueError("scene.source_refs must be an array")
     renderer_hints = payload["renderer_hints"]
     if not isinstance(renderer_hints, Mapping):
         raise ValueError("scene.renderer_hints must be an object")
 
     try:
-        scene = SpatialSceneSnapshot(
+        scene = compile_spatial_scene(
             scene_id=payload["scene_id"],
             purpose_digest=payload["purpose_digest"],
             root_frame_id=payload["root_frame_id"],
@@ -249,22 +259,19 @@ def validate_spatial_scene_payload(
             assets=assets,
             entities=entities,
             links=links,
-            source_refs=tuple(source_refs),
+            source_refs=tuple(payload["source_refs"]),
             renderer_hints=dict(renderer_hints),
-            truth_policy=payload["truth_policy"],
-            patch_authority=payload["patch_authority"],
-            vsa_patch_authority=payload["vsa_patch_authority"],
-            execution_authority=payload["execution_authority"],
-            version=payload["version"],
-            schema_version=payload["schema_version"],
         )
     except (TypeError, ValueError) as exc:
         raise ValueError(f"invalid spatial scene payload: {exc}") from exc
 
-    report = verify_spatial_scene(scene)
-    if not report.ok:
-        codes = ", ".join(str(item["code"]) for item in report.findings)
-        raise ValueError(f"invalid spatial scene payload: {codes}")
+    canonical_payload = scene.to_dict()
+    for key in sorted(_SCENE_PAYLOAD_KEYS - {"scene_digest"}):
+        if payload[key] != canonical_payload[key]:
+            raise ValueError(
+                f"spatial scene payload field {key!r} is not canonical"
+            )
+
     supplied_digest = str(payload["scene_digest"] or "").strip().lower()
     if supplied_digest != scene.scene_digest:
         raise ValueError("spatial scene payload digest mismatch")
@@ -459,6 +466,72 @@ def _records_from_payload(
                 f"invalid scene.{field_name}[{index}]: {exc}"
             ) from exc
     return tuple(records)
+
+
+def _require_unique_sorted_records(
+    value: Any,
+    identity_field: str,
+    field_name: str,
+) -> None:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, (str, bytes, bytearray))
+    ):
+        raise ValueError(f"scene.{field_name} must be an array")
+    identities: list[str] = []
+    for index, item in enumerate(value):
+        if not isinstance(item, Mapping):
+            raise ValueError(f"scene.{field_name}[{index}] must be an object")
+        identity = item.get(identity_field)
+        if not isinstance(identity, str):
+            continue
+        identities.append(identity)
+    if len(identities) == len(value) and (
+        identities != sorted(identities)
+        or len(identities) != len(set(identities))
+    ):
+        raise ValueError(
+            f"scene.{field_name} must be uniquely sorted by {identity_field}"
+        )
+
+
+def _require_unique_sorted_strings(value: Any, field_name: str) -> None:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, (str, bytes, bytearray))
+    ):
+        raise ValueError(f"{field_name} must be an array")
+    if not all(isinstance(item, str) for item in value):
+        return
+    values = list(value)
+    if (
+        any(not item or item != item.strip() for item in values)
+        or values != sorted(values)
+        or len(values) != len(set(values))
+    ):
+        raise ValueError(f"{field_name} must be uniquely sorted")
+
+
+def _require_nested_canonical_sets(payload: Mapping[str, Any]) -> None:
+    for field_name in ("frames", "assets", "entities", "links"):
+        records = payload[field_name]
+        if not isinstance(records, Sequence) or isinstance(
+            records, (str, bytes, bytearray)
+        ):
+            continue
+        for index, item in enumerate(records):
+            if not isinstance(item, Mapping):
+                continue
+            if "source_refs" in item:
+                _require_unique_sorted_strings(
+                    item["source_refs"],
+                    f"scene.{field_name}[{index}].source_refs",
+                )
+            if field_name == "entities" and "asset_ids" in item:
+                _require_unique_sorted_strings(
+                    item["asset_ids"],
+                    f"scene.entities[{index}].asset_ids",
+                )
 
 
 def _normalize_metadata_key(value: Any) -> str:
