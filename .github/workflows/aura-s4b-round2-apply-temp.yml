@@ -128,25 +128,20 @@ jobs:
             tests/test_aura_spatial_s4b_harness.py
           npm run test:spatial
 
-      - name: Remove every temporary transport surface
+      - name: Remove non-workflow transport surfaces
         run: |
           set -euo pipefail
           rm -rf .aura_temp scripts/.s4b_*
-          rm -f .github/workflows/aura-s4b-*-temp.yml
-          rm -f .github/workflows/aura-source-export-temp.yml
-          rm -f .github/workflows/aura-tree-sha-temp.yml
           git diff --check
           test ! -e .aura_temp
           test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
-          test -z "$(find .github/workflows -maxdepth 1 -name 'aura-s4b-*-temp.yml' -print -quit)"
 
-      - name: Commit and push clean exact-head repair
+      - name: Commit and push verified source repair
         run: |
           set -euo pipefail
           git add -A
           test ! -e .aura_temp
           test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
-          test -z "$(find .github/workflows -maxdepth 1 -name 'aura-s4b-*-temp.yml' -print -quit)"
           git -c user.name='Aura Spatial Review' -c user.email='aura-spatial-review@users.noreply.github.com' \
             commit -m 'fix: resolve Codex S4-B safety findings'
           git push origin HEAD:feature/spatial-s4b-gaussian-security
