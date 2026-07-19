@@ -1,0 +1,113 @@
+name: PR167 Final Review Fix
+
+on:
+  pull_request:
+    types: [reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr167-final-review-fix
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/aura-spatial-s3b-s4a'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install verification tools
+        run: python -m pip install --disable-pip-version-check --quiet pytest jsonschema ruff numpy
+      - name: Fetch exact branch and base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "+refs/heads/feature/aura-spatial-s3b-s4a:refs/remotes/origin/feature/aura-spatial-s3b-s4a" \
+            "+refs/heads/main:refs/remotes/origin/main"
+          git checkout -B feature/aura-spatial-s3b-s4a refs/remotes/origin/feature/aura-spatial-s3b-s4a
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Reconstruct and authenticate exact patch
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          cat scripts/.pr167_final_fix/bin_{00..03} > /tmp/pr167.patch.gz
+          for path in \
+            scripts/.pr167_final_fix/bridge_{00..13}.hex \
+            scripts/.pr167_final_fix/tail_00.hex \
+            scripts/.pr167_final_fix/tail_01_02.hex \
+            scripts/.pr167_final_fix/tail_03_04.hex \
+            scripts/.pr167_final_fix/tail_05_06.hex \
+            scripts/.pr167_final_fix/tail_07.hex \
+            scripts/.pr167_final_fix/tail_08.hex \
+            scripts/.pr167_final_fix/tail_09.hex \
+            scripts/.pr167_final_fix/tail_10.hex \
+            scripts/.pr167_final_fix/tail_11a.hex \
+            scripts/.pr167_final_fix/tail_11b.hex \
+            scripts/.pr167_final_fix/tail_{12..28}.hex; do
+            xxd -r -p "$path" >> /tmp/pr167.patch.gz
+          done
+          echo '15181b3e13c3ff721f1c349a1fe75f74b7dbad7d99148dc748711d9c10847d77  /tmp/pr167.patch.gz' | sha256sum -c -
+          gzip -dc /tmp/pr167.patch.gz > /tmp/pr167.patch
+          echo '9545bce789d1d134f11e2e0bce15bc66db15c620a5ad2cb3eaf45396a27ef2f3  /tmp/pr167.patch' | sha256sum -c -
+          git apply --check /tmp/pr167.patch
+          git apply --index /tmp/pr167.patch
+          git rm -r scripts/.pr167_final_fix
+          git rm .github/workflows/pr167-final-review-fix.yml
+          git diff --check
+      - name: Compile and lint
+        working-directory: repo
+        run: |
+          python -m py_compile aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+          ruff check aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+          ruff format --check aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+      - name: Run Python regressions
+        working-directory: repo
+        run: |
+          python -m pytest -q --tb=short tests/test_aura_spatial_substrate.py tests/test_aura_spatial_ws_guard.py tests/test_aura_spatial_manual_review.py tests/test_aura_spatial_projection_bounds.py tests/test_aura_spatial_codex_followup.py tests/test_aura_spatial_final_review.py tests/test_aura_showcase_spatial_integration.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_session.py tests/test_aura_spatial_server.py tests/test_aura_spatial_continuation_harness.py tests/test_aura_spatial_browser_interaction.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_gltf.py tests/test_aura_spatial_ply.py
+      - name: Run browser regressions
+        working-directory: repo
+        run: npm run test:spatial
+      - name: Commit reviewed source
+        working-directory: repo
+        run: |
+          git config user.name 'dallascourchene-commits'
+          git config user.email '281686929+dallascourchene-commits@users.noreply.github.com'
+          git add -A
+          git commit -m 'Address Codex and CodeRabbit spatial review findings'
+      - name: Run Aura real-history gate
+        working-directory: repo
+        run: |
+          head=$(git rev-parse HEAD)
+          python scripts/aura_spatial_continuation_architect_harness.py --repo-root . --base-ref origin/main --head-ref HEAD --observed-head "$head" --output /tmp/pr167-final-receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path('/tmp/pr167-final-receipt.json').read_text(encoding='utf-8'))
+          assert receipt['status'] == 'PASSED', receipt['checks']
+          assert receipt['architecture']['crucible']['failed_count'] == 0
+          assert receipt['production_mutation'] is False
+          assert receipt['automatic_merge'] is False
+          assert receipt['human_review_required'] is True
+          assert receipt['lifecycle_proof']['renderer_disposed'] is False
+          assert receipt['checks']['renderer_disposal_not_overclaimed'] is True
+          PY
+          test -z "$(git status --porcelain)"
+      - name: Publish clean reviewed source
+        working-directory: repo
+        run: git push origin HEAD:feature/aura-spatial-s3b-s4a
