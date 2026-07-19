@@ -60,7 +60,6 @@ def test_registry_rejects_digest_tampering_and_duplicate_identities() -> None:
         validate_review_lesson_registry(tampered)
 
     duplicate = copy.deepcopy(payload)
-    duplicate.pop("registry_digest")
     duplicate["lessons"][1]["lesson_id"] = duplicate["lessons"][0]["lesson_id"]
     with pytest.raises(ReviewLessonError, match="unique"):
         validate_review_lesson_registry(duplicate)
