@@ -21,6 +21,7 @@ _AUTHORITY_KEYS = frozenset(
         "authorization",
         "authority_decision",
         "automatic_commit",
+        "automatic_fix",
         "automatic_merge",
         "automatic_pull_request",
         "automatic_push",
@@ -32,8 +33,11 @@ _AUTHORITY_KEYS = frozenset(
         "patch_authority",
         "production_mutation",
         "promotion",
+        "render_authority",
+        "renderer_authority",
         "renderer_input_is_authority",
         "verifier_receipt",
+        "vsa_patch_authority",
     }
 )
 
@@ -136,6 +140,8 @@ def compile_spatial_interaction(
     if len(metadata_bytes) > MAX_INTERACTION_METADATA_BYTES:
         raise ValueError("interaction metadata exceeds the bounded payload limit")
 
+    if isinstance(target_entity_ids, (str, bytes, bytearray)):
+        raise ValueError("target_entity_ids must be an iterable of identifiers")
     targets = tuple(
         sorted(
             {
@@ -147,6 +153,8 @@ def compile_spatial_interaction(
     )
     if not targets:
         raise ValueError("target_entity_ids must not be empty")
+    if len(targets) > 128:
+        raise ValueError("target_entity_ids exceeds the spatial interaction cap")
     entity_by_id = {entity.entity_id: entity for entity in scene.entities}
     missing = [item for item in targets if item not in entity_by_id]
     if missing:
@@ -159,6 +167,8 @@ def compile_spatial_interaction(
     for target in targets:
         source_refs.update(entity_by_id[target].source_refs)
     ordered_refs = tuple(sorted(source_refs))
+    if len(ordered_refs) > 1024:
+        raise ValueError("interaction source references exceed the bounded evidence cap")
 
     requires_forge = action_value is SpatialInteractionAction.PREPARE_REPAIR_REQUEST
     protected_metadata = {
