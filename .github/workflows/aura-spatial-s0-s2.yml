@@ -87,9 +87,10 @@ jobs:
             tests/test_aura_spatial_manual_review.py \
             tests/test_aura_spatial_projection_bounds.py \
             tests/test_aura_spatial_codex_followup.py
-      - name: Validate Draft 2020-12 schema and contract compatibility
+      - name: Validate Draft 2020-12 schema and runtime interchange
         run: |
           python - <<'PY'
+          import hashlib
           import json
           from copy import deepcopy
           from pathlib import Path
@@ -98,10 +99,15 @@ jobs:
 
           from aura_spatial_contracts import (
               CoordinateFrame,
+              SpatialAssetManifest,
+              SpatialAssetType,
               SpatialEntity,
               SpatialEntityType,
           )
-          from aura_spatial_scene import compile_spatial_scene
+          from aura_spatial_scene import (
+              compile_spatial_scene,
+              validate_spatial_scene_payload,
+          )
 
           schema = json.loads(
               Path("schemas/aura_spatial_scene.schema.json").read_text(
@@ -125,6 +131,7 @@ jobs:
               ),
           ).to_dict()
           validator.validate(scene)
+          validate_spatial_scene_payload(scene)
 
           invalid_authority = deepcopy(scene)
           invalid_authority["execution_authority"] = True
@@ -132,7 +139,7 @@ jobs:
 
           invalid_nested_alias = deepcopy(scene)
           invalid_nested_alias["entities"][0]["metadata"] = {
-              "automaticMerge": False
+              "automaticmErge": False
           }
           assert list(validator.iter_errors(invalid_nested_alias))
 
@@ -148,6 +155,40 @@ jobs:
               0.0,
           ]
           assert list(validator.iter_errors(invalid_quaternion))
+
+          content = b"asset"
+          asset_scene = compile_spatial_scene(
+              scene_id="asset-bounds-scene",
+              purpose_digest="purpose:asset-bounds",
+              root_frame_id="root",
+              frames=(CoordinateFrame(frame_id="root"),),
+              assets=(
+                  SpatialAssetManifest(
+                      asset_id="asset:one",
+                      asset_type=SpatialAssetType.MESH,
+                      uri="assets/one.glb",
+                      media_type="model/gltf-binary",
+                      content_digest=(
+                          "sha256:" + hashlib.sha256(content).hexdigest()
+                      ),
+                      byte_length=len(content),
+                      frame_id="root",
+                      bounds_min=(0.0, 0.0, 0.0),
+                      bounds_max=(1.0, 1.0, 1.0),
+                      source_refs=("source:asset",),
+                  ),
+              ),
+          ).to_dict()
+          validator.validate(asset_scene)
+          invalid_bounds = deepcopy(asset_scene)
+          invalid_bounds["assets"][0]["bounds_min"] = [2.0, 0.0, 0.0]
+          invalid_bounds["assets"][0]["bounds_max"] = [1.0, 1.0, 1.0]
+          try:
+              validate_spatial_scene_payload(invalid_bounds)
+          except ValueError as exc:
+              assert "bounds_min" in str(exc)
+          else:
+              raise AssertionError("runtime interchange accepted inverted bounds")
           PY
       - name: Run spatial substrate and showcase compatibility regressions
         id: spatial-tests
