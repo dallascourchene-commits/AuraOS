@@ -25,19 +25,16 @@ jobs:
           submodules: false
           persist-credentials: true
 
-      - name: Apply exact Codex findings and regressions
-        shell: bash
+      - name: Apply exact Codex repairs
         run: |
           set -euo pipefail
-          cat > /tmp/repair.py.gz.b64 <<'EOF'
-          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
-          EOF
-          base64 --decode /tmp/repair.py.gz.b64 > /tmp/repair.py.gz
-          echo "aa773386214919fd3b9c46afdef4d78b4a153d4d7232f0f73cb2bbf241b01d16  /tmp/repair.py.gz" | sha256sum --check --strict
-          gzip -dc /tmp/repair.py.gz > /tmp/repair.py
-          echo "35e020ca3864e389a447a34a7c437e90d7ad821d0b5a73b0d404968a3e78225f  /tmp/repair.py" | sha256sum --check --strict
-          python /tmp/repair.py
+          python scripts/aura_s4b_codex_repair_temp.py
           git diff --check
+          python -m py_compile \
+            aura_spatial_importers/gaussian_gltf.py \
+            tests/test_aura_spatial_gaussian_gltf.py
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check tests/js/spatial-gaussian.test.mjs
 
       - uses: actions/setup-python@v5
         with:
@@ -47,13 +44,11 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Verify repaired S4-B source
-        shell: bash
+      - name: Verify focused and retained S4-B tests
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-          python -m py_compile aura_spatial_importers/gaussian_gltf.py
           ruff check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
           ruff format --check aura_spatial_importers/gaussian_gltf.py tests/test_aura_spatial_gaussian_gltf.py
           python -m pytest -q --tb=short \
@@ -65,7 +60,6 @@ jobs:
           npm run test:spatial
 
       - name: Commit permanent repair and remove temporary carriers
-        shell: bash
         run: |
           set -euo pipefail
           branch="feature/spatial-s4b-gaussian-security"
@@ -73,7 +67,8 @@ jobs:
           git config user.email "aura-spatial-review@users.noreply.github.com"
           git rm -f \
             .github/workflows/aura-s4b-codex-trigger-temp.yml \
-            .github/workflows/aura-s4b-codex-round-temp.yml
+            .github/workflows/aura-s4b-codex-round-temp.yml \
+            scripts/aura_s4b_codex_repair_temp.py
           git add \
             aura_spatial_importers/gaussian_gltf.py \
             aura_spatial_web/gaussian_renderer.js \
