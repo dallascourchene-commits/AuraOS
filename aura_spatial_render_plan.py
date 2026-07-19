@@ -237,7 +237,6 @@ def compile_gaussian_representation_budget(
     scene: SpatialSceneSnapshot,
     plan: SpatialRenderPlan,
     *,
-    bytes_per_splat: int = 52,
     maximum_visible_splats: int = 2_000_000,
 ) -> Mapping[str, Any]:
     """Derive an isolated Gaussian budget from an already-admitted render plan."""
@@ -246,25 +245,47 @@ def compile_gaussian_representation_budget(
         raise ValueError("scene and plan must be retained spatial contracts")
     if plan.scene_id != scene.scene_id or plan.scene_digest != scene.scene_digest:
         raise ValueError("Gaussian budget cannot use a stale scene or render plan")
-    if type(bytes_per_splat) is not int or not 1 <= bytes_per_splat <= 4096:
-        raise ValueError("bytes_per_splat exceeds bounds")
     if type(maximum_visible_splats) is not int or not 1 <= maximum_visible_splats <= 2_000_000:
         raise ValueError("maximum_visible_splats exceeds bounds")
     gaussian_assets = [item for item in scene.assets if item.asset_type.value == "GAUSSIAN_SPLAT"]
     declared_splats = 0
     declared_decoded_bytes = 0
+    declared_gpu_bytes = 0
+    maximum_bytes_per_splat = 0
     for asset in gaussian_assets:
         metadata = dict(asset.metadata)
         count = metadata.get("element_count")
         decoded = metadata.get("decoded_bytes")
+        sh_degree = metadata.get("gaussian_sh_degree")
+        color_space = metadata.get("gaussian_color_space")
+        receipt_digest = metadata.get("import_receipt_digest")
         if type(count) is not int or count < 1 or count > 2_000_000:
             raise ValueError(f"Gaussian asset {asset.asset_id} lacks a bounded element_count")
         if type(decoded) is not int or decoded < 0 or decoded > 4_294_967_296:
             raise ValueError(f"Gaussian asset {asset.asset_id} lacks bounded decoded_bytes")
+        if type(sh_degree) is not int or not 0 <= sh_degree <= 4:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks a bounded gaussian_sh_degree")
+        if color_space not in {"SPZ_INTERNAL_WIDE_RGB", "srgb_rec709_display", "lin_rec709_display"}:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks a supported gaussian_color_space")
+        if (
+            not isinstance(receipt_digest, str)
+            or len(receipt_digest) != 64
+            or any(character not in "0123456789abcdef" for character in receipt_digest)
+        ):
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks an import receipt digest")
+        bytes_per_splat = 48 + ((sh_degree + 1) ** 2 * 3 * 4)
         declared_splats += count
         declared_decoded_bytes += decoded
-    visible_by_gpu = plan.budget.max_gpu_bytes // bytes_per_splat
-    visible_by_allocation = plan.budget.max_asset_bytes // (bytes_per_splat + 4)
+        declared_gpu_bytes += count * bytes_per_splat
+        maximum_bytes_per_splat = max(maximum_bytes_per_splat, bytes_per_splat)
+    visible_by_gpu = (
+        plan.budget.max_gpu_bytes // maximum_bytes_per_splat if maximum_bytes_per_splat else maximum_visible_splats
+    )
+    visible_by_allocation = (
+        plan.budget.max_asset_bytes // (maximum_bytes_per_splat + 4)
+        if maximum_bytes_per_splat
+        else maximum_visible_splats
+    )
     visible = min(
         maximum_visible_splats,
         visible_by_gpu,
@@ -280,11 +301,13 @@ def compile_gaussian_representation_budget(
         "asset_count": len(gaussian_assets),
         "declared_splats": declared_splats,
         "declared_decoded_bytes": declared_decoded_bytes,
+        "declared_gpu_bytes": declared_gpu_bytes,
+        "max_bytes_per_splat": maximum_bytes_per_splat,
         "max_visible_splats": visible,
-        "max_gpu_bytes": min(plan.budget.max_gpu_bytes, visible * bytes_per_splat),
+        "max_gpu_bytes": min(plan.budget.max_gpu_bytes, visible * maximum_bytes_per_splat),
         "max_sort_items": visible,
         "max_sort_bytes": visible * 4,
-        "max_allocation_bytes": min(plan.budget.max_asset_bytes, visible * (bytes_per_splat + 4)),
+        "max_allocation_bytes": min(plan.budget.max_asset_bytes, visible * (maximum_bytes_per_splat + 4)),
         "max_frame_ms": plan.budget.max_cpu_ms_per_frame,
         "accessible_fallback_required": True,
         "point_cloud_fallback_required": True,

@@ -28,7 +28,7 @@ from aura_spatial_scene import compile_spatial_scene
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _spz() -> bytes:
+def _spz(*, sh_degree: int = 0) -> bytes:
     streams = [
         b"\x00" * 9,
         b"\xff",
@@ -36,8 +36,10 @@ def _spz() -> bytes:
         b"\xa0\xa0\xa0",
         b"\x00\x00\x00\xc0",
     ]
+    if sh_degree:
+        streams.append(b"\x80" * ((((sh_degree + 1) ** 2) - 1) * 3))
     compressed = [zstandard.ZstdCompressor(level=1).compress(item) for item in streams]
-    header = struct.pack("<IIIBBBBI12s", 0x5053474E, 4, 1, 0, 12, 0, 5, 32, b"\x00" * 12)
+    header = struct.pack("<IIIBBBBI12s", 0x5053474E, 4, 1, sh_degree, 12, 0, len(streams), 32, b"\x00" * 12)
     toc = b"".join(struct.pack("<QQ", len(blob), len(raw)) for blob, raw in zip(compressed, streams))
     return header + toc + b"".join(compressed)
 
@@ -156,3 +158,59 @@ def test_mixed_scene_digest_is_input_order_independent_and_json_stable() -> None
     )
     assert rebuilt.scene_digest == scene.scene_digest
     assert json.dumps(rebuilt.to_dict(), sort_keys=True) == json.dumps(scene.to_dict(), sort_keys=True)
+
+
+def test_gaussian_manifest_and_budget_account_for_high_order_spherical_harmonics() -> None:
+    splats = import_spz_bytes(_spz(sh_degree=4), provenance_refs=("fixture:high-sh",))
+    manifest = build_imported_asset_manifest(
+        splats,
+        asset_id="asset:high-sh",
+        uri="aura://assets/high-sh.spz",
+        media_type="application/vnd.spz",
+        frame_id="root",
+    )
+    metadata = dict(manifest.metadata)
+    assert metadata["gaussian_sh_degree"] == 4
+    assert metadata["gaussian_color_space"] == "SPZ_INTERNAL_WIDE_RGB"
+    assert metadata["import_receipt_digest"] == splats.receipt.derived_asset_digest
+
+    scene = compile_spatial_scene(
+        scene_id="scene:high-sh",
+        purpose_digest="purpose:high-sh-budget",
+        root_frame_id="root",
+        frames=(CoordinateFrame(frame_id="root", source_refs=("fixture",)),),
+        assets=(manifest,),
+        entities=(
+            SpatialEntity(
+                entity_id="entity:high-sh",
+                entity_type=SpatialEntityType.DOMAIN_NODE,
+                label="High SH Gaussian",
+                frame_id="root",
+                asset_ids=(manifest.asset_id,),
+                source_refs=("fixture:high-sh",),
+                truth_class=SpatialTruthClass.DERIVED,
+                projection_only=True,
+                patch_authority=False,
+            ),
+        ),
+        source_refs=("fixture:high-sh",),
+    )
+    device = compile_spatial_device_profile(
+        profile_id="device:high-sh",
+        supported_renderers=("WEBGL2", "ACCESSIBLE_2D", "HEADLESS"),
+        budget=SpatialRenderBudget(
+            max_entities=8,
+            max_links=8,
+            max_assets=4,
+            max_asset_bytes=1024 * 1024,
+            max_cpu_ms_per_frame=50,
+            max_gpu_bytes=1024 * 1024,
+            max_network_bytes=0,
+        ),
+        source_refs=("fixture:high-sh",),
+    )
+    plan = negotiate_spatial_render_plan(scene, device, preferred_renderers=("WEBGL2",))
+    budget = compile_gaussian_representation_budget(scene, plan)
+    assert budget["max_bytes_per_splat"] == 348
+    assert budget["declared_gpu_bytes"] == 348
+    assert budget["max_gpu_bytes"] >= 348

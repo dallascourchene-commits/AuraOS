@@ -29,6 +29,9 @@ MAX_IMPORT_SOURCE_REFS = 256
 MAX_IMPORT_SOURCE_REF_BYTES = 2_048
 MAX_IMPORT_SOURCE_REFS_BYTES = 65_536
 MAX_IMPORT_WARNINGS = 256
+MAX_IMPORT_METADATA_DEPTH = 12
+MAX_IMPORT_METADATA_ITEMS = 1024
+MAX_IMPORT_METADATA_BYTES = 65_536
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
 
@@ -69,6 +72,64 @@ def _finite_tuple(values: Sequence[Any], length: int, field_name: str) -> tuple[
     if not all(math.isfinite(item) for item in result):
         raise ValueError(f"{field_name} must contain finite numbers")
     return result
+
+
+def _freeze_import_metadata(
+    value: Any,
+    *,
+    depth: int = 0,
+    counter: list[int] | None = None,
+    active: set[int] | None = None,
+) -> Any:
+    """Freeze a bounded JSON tree while rejecting cycles and non-finite values."""
+
+    if counter is None:
+        counter = [0]
+    if active is None:
+        active = set()
+    counter[0] += 1
+    if counter[0] > MAX_IMPORT_METADATA_ITEMS or depth > MAX_IMPORT_METADATA_DEPTH:
+        raise ValueError("import metadata exceeds depth/item ceilings")
+    if isinstance(value, Mapping):
+        identity = id(value)
+        if identity in active:
+            raise ValueError("import metadata contains a recursive container")
+        active.add(identity)
+        try:
+            frozen: dict[str, Any] = {}
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0])):
+                if not isinstance(key, str) or not key or len(key.encode("utf-8")) > 256:
+                    raise ValueError("import metadata keys must be bounded non-empty strings")
+                frozen[key] = _freeze_import_metadata(item, depth=depth + 1, counter=counter, active=active)
+            return MappingProxyType(frozen)
+        finally:
+            active.remove(identity)
+    if isinstance(value, (list, tuple)):
+        identity = id(value)
+        if identity in active:
+            raise ValueError("import metadata contains a recursive container")
+        active.add(identity)
+        try:
+            return tuple(
+                _freeze_import_metadata(item, depth=depth + 1, counter=counter, active=active) for item in value
+            )
+        finally:
+            active.remove(identity)
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("import metadata contains a non-finite float")
+        return value
+    if value is None or isinstance(value, (bool, int, str)):
+        return value
+    raise ValueError(f"import metadata contains a non-JSON value: {type(value).__name__}")
+
+
+def _thaw_import_metadata(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {key: _thaw_import_metadata(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_import_metadata(item) for item in value]
+    return value
 
 
 @dataclass(frozen=True)
@@ -365,13 +426,15 @@ class SpatialImportResult:
                 raise ValueError("gaussian splat count must align with positions")
         elif self.gaussian_splats is not None:
             raise ValueError("non-Gaussian imports cannot carry GaussianSplatData")
-        metadata = dict(self.metadata)
-        if len(metadata) > 64:
+        if not isinstance(self.metadata, Mapping):
+            raise ValueError("import metadata must be an object")
+        if len(self.metadata) > 64:
             raise ValueError("import metadata exceeds key ceiling")
-        for key, value in metadata.items():
-            if len(str(key).encode("utf-8")) > 256 or len(repr(value).encode("utf-8")) > 65_536:
-                raise ValueError("import metadata exceeds byte ceiling")
-        object.__setattr__(self, "metadata", MappingProxyType(metadata))
+        frozen_metadata = _freeze_import_metadata(self.metadata)
+        thawed_metadata = _thaw_import_metadata(frozen_metadata)
+        if len(canonical_json(thawed_metadata).encode("utf-8")) > MAX_IMPORT_METADATA_BYTES:
+            raise ValueError("import metadata exceeds byte ceiling")
+        object.__setattr__(self, "metadata", frozen_metadata)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -380,7 +443,7 @@ class SpatialImportResult:
             "indices": list(self.indices),
             "colors_rgba": [list(item) for item in self.colors_rgba],
             "gaussian_splats": None if self.gaussian_splats is None else self.gaussian_splats.to_dict(),
-            "metadata": dict(self.metadata),
+            "metadata": _thaw_import_metadata(self.metadata),
         }
 
 

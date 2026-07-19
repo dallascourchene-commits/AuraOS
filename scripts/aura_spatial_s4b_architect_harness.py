@@ -36,17 +36,22 @@ from scripts.aura_spatial_continuation_architect_harness import run as run_retai
 
 HARNESS_VERSION = "AURA_SPATIAL_S4B_ARCHITECT_HARNESS_V1"
 _TARGET_FILES = [
+    ".github/workflows/aura-spatial-s4.yml",
     "aura_spatial_asset_registry.py",
     "aura_spatial_render_plan.py",
+    "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gltf.py",
     "aura_spatial_importers/spz.py",
     "aura_spatial_importers/gaussian_gltf.py",
     "aura_spatial_web/gaussian_renderer.js",
+    "requirements-spatial-s4b.txt",
+    "schemas/aura_spatial_import_receipt.schema.json",
     "tests/test_aura_spatial_spz.py",
     "tests/test_aura_spatial_gaussian_gltf.py",
     "tests/test_aura_spatial_mixed_scene.py",
     "tests/test_aura_spatial_asset_security.py",
+    "tests/test_aura_spatial_s4b_harness.py",
     "tests/js/spatial-gaussian.test.mjs",
     "tests/js/spatial-mixed-scene.test.mjs",
     "docs/AURA_SPATIAL_DEPENDENCY_DECISIONS.md",
@@ -167,7 +172,7 @@ def _run_s4b_architecture(
                 "automatic_merge": False,
                 "observed_head": observed_head,
             },
-            use_emergent_evidence=False,
+            use_emergent_evidence=True,
         ),
     )
     waboose_prepared = bridge.aura_waboose_prepare(
@@ -472,6 +477,15 @@ def run(
         preferred_renderers=("WEBGL2", "ACCESSIBLE_2D", "HEADLESS"),
     )
     gaussian_budget = compile_gaussian_representation_budget(scene, plan)
+    accessible_fallback = gaussian_budget["accessible_fallback_required"] is True and "ACCESSIBLE_2D" in {
+        item.value for item in plan.fallback_renderers
+    }
+    headless_fallback = gaussian_budget["headless_fallback_required"] is True and "HEADLESS" in {
+        item.value for item in plan.fallback_renderers
+    }
+    point_cloud_fallback = gaussian_budget["point_cloud_fallback_required"] is True and all(
+        len(item.colors_rgba) == len(item.positions) > 0 for item in (spz, gaussian_gltf)
+    )
     checks = {
         "retained_architecture_passed": retained["status"] == "PASSED",
         "exact_head_bound": retained["repository_head"] == observed_head,
@@ -479,11 +493,7 @@ def run(
         "khr_profile_exact": gaussian_gltf.metadata["extension_profile"] == KHR_GAUSSIAN_PROFILE,
         "mixed_scene_bound": len(scene.assets) == 4 and plan.scene_digest == scene.scene_digest,
         "gaussian_budget_bound": gaussian_budget["declared_splats"] == 2,
-        "fallbacks_present": (
-            gaussian_budget["accessible_fallback_required"] is True
-            and gaussian_budget["point_cloud_fallback_required"] is True
-            and gaussian_budget["headless_fallback_required"] is True
-        ),
+        "fallbacks_present": accessible_fallback and point_cloud_fallback and headless_fallback,
         "no_network": all(not item.receipt.network_fetch_performed for item in (gltf, ply, spz, gaussian_gltf)),
         "no_training": all(not item.receipt.training_invoked for item in (gltf, ply, spz, gaussian_gltf)),
         "no_authority": all(
@@ -515,9 +525,13 @@ def run(
             "spz_receipt_digest": spz.receipt.derived_asset_digest,
             "gaussian_gltf_receipt_digest": gaussian_gltf.receipt.derived_asset_digest,
             "gaussian_budget": gaussian_budget,
-            "accessible_fallback": True,
-            "headless_fallback": True,
-            "point_cloud_fallback": True,
+            "accessible_fallback": accessible_fallback,
+            "headless_fallback": headless_fallback,
+            "point_cloud_fallback": point_cloud_fallback,
+            "gaussian_color_spaces": sorted(
+                {spz.metadata["gaussian_color_space"], gaussian_gltf.metadata["gaussian_color_space"]}
+            ),
+            "gaussian_sh_degrees": sorted({spz.gaussian_splats.sh_degree, gaussian_gltf.gaussian_splats.sh_degree}),
             "capture_path": False,
             "training_path": False,
             "production_mutation": False,

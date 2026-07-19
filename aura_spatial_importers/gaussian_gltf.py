@@ -191,6 +191,8 @@ def import_gaussian_gltf_bytes(
     }
     if set(document) - allowed_keys:
         raise ValueError("Gaussian glTF contains unsupported scene surfaces")
+    if document.get("materials"):
+        raise ValueError("Gaussian glTF materials are outside the isolated fallback profile")
     used = document.get("extensionsUsed", [])
     required = document.get("extensionsRequired", [])
     if not isinstance(used, list) or not isinstance(required, list):
@@ -215,6 +217,8 @@ def import_gaussian_gltf_bytes(
     mesh = meshes[0]
     if not isinstance(mesh, Mapping) or set(mesh) - {"primitives", "name", "extensions", "extras"}:
         raise ValueError("Gaussian glTF mesh keys are invalid")
+    if mesh.get("extensions"):
+        raise ValueError("Gaussian glTF mesh-level extension semantics are not admitted")
     primitives_payload = mesh.get("primitives")
     if not isinstance(primitives_payload, list) or not 1 <= len(primitives_payload) <= MAX_GLTF_PRIMITIVES:
         raise ValueError("Gaussian glTF mesh requires bounded primitives")
@@ -230,6 +234,7 @@ def import_gaussian_gltf_bytes(
     highest_degree = 0
     fallback_modes: set[str] = set()
     estimated_runtime_allocation = sum(len(item) for item in buffers)
+    common_color_space: str | None = None
 
     for primitive_index, primitive in enumerate(primitives_payload):
         if not isinstance(primitive, Mapping) or set(primitive) - {
@@ -242,8 +247,8 @@ def import_gaussian_gltf_bytes(
             "extras",
         }:
             raise ValueError("Gaussian glTF primitive keys are invalid")
-        if primitive.get("mode") != 0 or primitive.get("targets") or "indices" in primitive:
-            raise ValueError("Gaussian glTF admits non-indexed POINTS primitives only")
+        if primitive.get("mode") != 0 or primitive.get("targets") or "indices" in primitive or "material" in primitive:
+            raise ValueError("Gaussian glTF admits unmaterialed, non-indexed POINTS primitives only")
         extensions = primitive.get("extensions")
         if not isinstance(extensions, Mapping) or set(extensions) != {KHR_GAUSSIAN_SPLATTING}:
             raise ValueError("Gaussian glTF primitive extension set is invalid")
@@ -261,8 +266,13 @@ def import_gaussian_gltf_bytes(
             raise ValueError("nested Gaussian glTF extension semantics are not admitted")
         if extension.get("kernel") != "ellipse":
             raise ValueError("Gaussian glTF kernel is unsupported")
-        if extension.get("colorSpace") not in {"srgb_rec709_display", "lin_rec709_display"}:
+        color_space = extension.get("colorSpace")
+        if color_space not in {"srgb_rec709_display", "lin_rec709_display"}:
             raise ValueError("Gaussian glTF colorSpace is unsupported")
+        if common_color_space is None:
+            common_color_space = color_space
+        elif color_space != common_color_space:
+            raise ValueError("Gaussian glTF primitives must use one common colorSpace")
         if extension.get("projection", "perspective") != "perspective":
             raise ValueError("Gaussian glTF non-perspective projection is undefined")
         if extension.get("sortingMethod", "cameraDistance") != "cameraDistance":
@@ -404,6 +414,8 @@ def import_gaussian_gltf_bytes(
             "extension_profile": KHR_GAUSSIAN_PROFILE,
             "extension_status": "RELEASE_CANDIDATE",
             "fallback_modes": tuple(sorted(fallback_modes)),
+            "gaussian_color_space": common_color_space,
+            "sh_degree": highest_degree,
             "estimated_runtime_allocation_bytes": estimated_runtime_allocation,
             "training_path": False,
         },

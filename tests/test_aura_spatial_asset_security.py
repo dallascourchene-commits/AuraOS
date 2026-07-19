@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
@@ -149,3 +150,37 @@ def test_valid_security_boundaries_do_not_false_positive() -> None:
     assert result.receipt.element_count == 1
     report = validate_asset_manifest(_manifest("asset:valid", "aura://assets/valid-1.0.spz"))
     assert report.ok is True
+
+
+def test_import_result_metadata_is_recursively_frozen_and_bounded() -> None:
+    base = import_spz_bytes(_minimal_spz(), provenance_refs=("fixture:metadata",))
+    result = replace(
+        base,
+        metadata={
+            "outer": {"items": [{"value": 1}, {"value": 2}]},
+            "flags": [True, False],
+        },
+    )
+    assert result.metadata["outer"]["items"][0]["value"] == 1
+    with pytest.raises(TypeError):
+        result.metadata["outer"]["items"][0]["value"] = 3
+    exported = result.to_dict()
+    exported["metadata"]["outer"]["items"][0]["value"] = 9
+    assert result.metadata["outer"]["items"][0]["value"] == 1
+
+    recursive: dict[str, object] = {}
+    recursive["self"] = recursive
+    with pytest.raises(ValueError, match="recursive"):
+        replace(base, metadata=recursive)
+
+    deep: dict[str, object] = {}
+    cursor = deep
+    for _ in range(14):
+        child: dict[str, object] = {}
+        cursor["child"] = child
+        cursor = child
+    with pytest.raises(ValueError, match="depth/item"):
+        replace(base, metadata=deep)
+
+    with pytest.raises(ValueError, match="non-finite"):
+        replace(base, metadata={"value": float("nan")})

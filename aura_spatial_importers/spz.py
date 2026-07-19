@@ -304,6 +304,8 @@ def import_spz_bytes(
             "zstandard_version": SPZ_ZSTANDARD_VERSION,
             "source_coordinate_system": "RUB",
             "source_forward_semantics": "+Z_BACK",
+            "gaussian_color_space": "SPZ_INTERNAL_WIDE_RGB",
+            "sh_degree": header.sh_degree,
             "estimated_runtime_allocation_bytes": _estimated_runtime_allocation_bytes(header),
             "antialiased": header.antialiased,
             "stream_count": header.stream_count,

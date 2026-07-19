@@ -99,6 +99,8 @@ def test_gaussian_gltf_release_candidate_profile_and_declared_point_fallback() -
     assert result.gaussian_splats.opacities == pytest.approx((128 / 255.0,))
     assert result.metadata["extension_profile"] == KHR_GAUSSIAN_PROFILE
     assert result.metadata["fallback_modes"] == ("DECLARED_COLOR_0",)
+    assert result.metadata["gaussian_color_space"] == "lin_rec709_display"
+    assert result.metadata["sh_degree"] == 0
     assert result.receipt.training_invoked is False
 
 
@@ -153,3 +155,29 @@ def test_gaussian_gltf_rejects_unknown_profile_before_decode() -> None:
             provenance_refs=("fixture",),
             extension_profile="future",
         )
+
+
+def test_gaussian_gltf_rejects_material_and_mesh_extension_semantics() -> None:
+    material_document = json.loads(gaussian_gltf())
+    material_document["materials"] = [{"name": "not-admitted"}]
+    with pytest.raises(ValueError, match="materials"):
+        import_gaussian_gltf_bytes(json.dumps(material_document).encode(), provenance_refs=("fixture",))
+
+    mesh_extension_document = json.loads(gaussian_gltf())
+    mesh_extension_document["meshes"][0]["extensions"] = {"EXT_unknown": {}}
+    with pytest.raises(ValueError, match="mesh-level"):
+        import_gaussian_gltf_bytes(json.dumps(mesh_extension_document).encode(), provenance_refs=("fixture",))
+
+    primitive_material_document = json.loads(gaussian_gltf())
+    primitive_material_document["meshes"][0]["primitives"][0]["material"] = 0
+    with pytest.raises(ValueError, match="unmaterialed"):
+        import_gaussian_gltf_bytes(json.dumps(primitive_material_document).encode(), provenance_refs=("fixture",))
+
+
+def test_gaussian_gltf_rejects_mixed_primitive_color_spaces() -> None:
+    document = json.loads(gaussian_gltf())
+    second = json.loads(json.dumps(document["meshes"][0]["primitives"][0]))
+    second["extensions"]["KHR_gaussian_splatting"]["colorSpace"] = "srgb_rec709_display"
+    document["meshes"][0]["primitives"].append(second)
+    with pytest.raises(ValueError, match="common colorSpace"):
+        import_gaussian_gltf_bytes(json.dumps(document).encode(), provenance_refs=("fixture",))

@@ -137,6 +137,21 @@ def build_imported_asset_manifest(
             }
         )
     )
+    metadata: dict[str, Any] = {
+        "import_receipt_digest": result.receipt.derived_asset_digest,
+        "source_format": result.receipt.source_format.value,
+        "fallback_available": bool(result.colors_rgba),
+        "element_count": result.receipt.element_count,
+        "decoded_bytes": result.receipt.decoded_bytes,
+        "representation_role": "DERIVED_PROJECTION_ASSET",
+    }
+    if result.gaussian_splats is not None:
+        metadata.update(
+            {
+                "gaussian_sh_degree": result.gaussian_splats.sh_degree,
+                "gaussian_color_space": result.metadata.get("gaussian_color_space"),
+            }
+        )
     manifest = SpatialAssetManifest(
         asset_id=asset_id,
         asset_type=asset_type,
@@ -148,14 +163,7 @@ def build_imported_asset_manifest(
         bounds_min=minimum,
         bounds_max=maximum,
         source_refs=refs,
-        metadata={
-            "import_receipt_digest": result.receipt.derived_asset_digest,
-            "source_format": result.receipt.source_format.value,
-            "fallback_available": bool(result.colors_rgba),
-            "element_count": result.receipt.element_count,
-            "decoded_bytes": result.receipt.decoded_bytes,
-            "representation_role": "DERIVED_PROJECTION_ASSET",
-        },
+        metadata=metadata,
     )
     report = validate_asset_manifest(manifest, allow_remote=False)
     if not report.ok:

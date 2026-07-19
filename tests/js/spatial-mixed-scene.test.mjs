@@ -53,7 +53,11 @@ function mixedFixture() {
       source_refs: ["fixture:splats"],
       truth_class: "DERIVED",
       immutable: true,
-      metadata: {},
+      metadata: {
+        import_receipt_digest: "4".repeat(64),
+        gaussian_sh_degree: 0,
+        gaussian_color_space: "SPZ_INTERNAL_WIDE_RGB",
+      },
     },
   ];
   scene.entities[0].asset_ids = ["asset:splats", "asset:mesh", "asset:points"];
@@ -96,11 +100,15 @@ test("mixed scene Gaussian layer uses point/headless fallback without changing p
     {
       asset_id: "asset:splats",
       source_digest: "3".repeat(64),
+      derived_asset_digest: "4".repeat(64),
       positions: [[0, 0, 0]],
       rotations_xyzw: [[0, 0, 0, 1]],
       scales_xyz: [[1, 1, 1]],
       opacities: [1],
       colors_rgba: [[255, 0, 255, 255]],
+      sh_degree: 0,
+      sh_coefficients: [[1, 0, 1]],
+      color_space: "SPZ_INTERNAL_WIDE_RGB",
     },
   ]);
   const receipt = await renderer.present();

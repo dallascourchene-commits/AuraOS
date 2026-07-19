@@ -1,7 +1,7 @@
 # Aura Spatial S4-B Dependency Decisions
 
-**Decision date:** 2026-07-19  
-**Scope:** Gaussian interchange and projection only  
+**Decision date:** 2026-07-19
+**Scope:** Gaussian interchange and projection only
 **Authority:** imported representations remain projection-only and cannot authorize execution, mutation, promotion, capture, or training.
 
 ## SPZ

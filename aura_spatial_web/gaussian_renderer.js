@@ -21,7 +21,7 @@ const DEFAULT_LIMITS = Object.freeze({
   maxAllocationBytes: 320 * 1024 * 1024,
   maxFrameMs: 50,
 });
-const GPU_BYTES_PER_SPLAT = 52;
+const BASE_GPU_BYTES_PER_SPLAT = 48;
 const SORT_BYTES_PER_SPLAT = 4;
 
 function finiteVector(value, length, label, { nonNegative = false } = {}) {
@@ -108,11 +108,15 @@ function validateGaussianAsset(payload, sceneAsset, limits) {
   const expected = new Set([
     "asset_id",
     "source_digest",
+    "derived_asset_digest",
     "positions",
     "rotations_xyzw",
     "scales_xyz",
     "opacities",
     "colors_rgba",
+    "sh_degree",
+    "sh_coefficients",
+    "color_space",
   ]);
   if (keys.size !== expected.size || [...keys].some((key) => !expected.has(key))) {
     throw new TypeError("Gaussian asset payload keys mismatch");
@@ -125,24 +129,45 @@ function validateGaussianAsset(payload, sceneAsset, limits) {
   if (payload.source_digest !== expectedDigest) {
     throw new TypeError("Gaussian asset digest is stale or ambiguous");
   }
+  if (!DIGEST.test(String(payload.derived_asset_digest || ""))) {
+    throw new TypeError("Gaussian derived_asset_digest must be lowercase sha256");
+  }
+  if (payload.derived_asset_digest !== sceneAsset.metadata?.import_receipt_digest) {
+    throw new TypeError("Gaussian import receipt digest is stale or ambiguous");
+  }
+  if (!Number.isInteger(payload.sh_degree) || payload.sh_degree < 0 || payload.sh_degree > 4) {
+    throw new RangeError("Gaussian sh_degree must be an integer in [0, 4]");
+  }
+  if (
+    !["SPZ_INTERNAL_WIDE_RGB", "srgb_rec709_display", "lin_rec709_display"].includes(
+      payload.color_space,
+    ) ||
+    payload.color_space !== sceneAsset.metadata?.gaussian_color_space ||
+    payload.sh_degree !== sceneAsset.metadata?.gaussian_sh_degree
+  ) {
+    throw new TypeError("Gaussian color-space or SH metadata is stale");
+  }
   const count = payload.positions?.length;
   if (!Number.isInteger(count) || count < 1 || count > limits.maxVisibleSplats) {
     throw new RangeError("Gaussian visible-splat budget exceeded");
   }
-  for (const name of ["rotations_xyzw", "scales_xyz", "opacities", "colors_rgba"]) {
+  for (const name of [
+    "rotations_xyzw",
+    "scales_xyz",
+    "opacities",
+    "colors_rgba",
+    "sh_coefficients",
+  ]) {
     if (!Array.isArray(payload[name]) || payload[name].length !== count) {
       throw new TypeError(`Gaussian ${name} count mismatch`);
     }
   }
-  const gpuBytes = count * GPU_BYTES_PER_SPLAT;
+  const coefficientCount = (payload.sh_degree + 1) ** 2 * 3;
+  const gpuBytes = count * (BASE_GPU_BYTES_PER_SPLAT + coefficientCount * 4);
   const sortBytes = count * SORT_BYTES_PER_SPLAT;
   const allocationBytes = gpuBytes + sortBytes;
-  if (
-    gpuBytes > limits.maxDecodedBytes ||
-    gpuBytes > limits.maxGpuBytes ||
-    allocationBytes > limits.maxAllocationBytes
-  ) {
-    throw new RangeError("Gaussian allocation budget exceeded before buffer creation");
+  if (gpuBytes > limits.maxDecodedBytes) {
+    throw new RangeError("Gaussian decoded-memory budget exceeded before buffer creation");
   }
   const positions = payload.positions.map((item, index) =>
     finiteVector(item, 3, `Gaussian position ${index}`),
@@ -162,6 +187,9 @@ function validateGaussianAsset(payload, sceneAsset, limits) {
     }
     return item;
   });
+  const coefficients = payload.sh_coefficients.map((item, index) =>
+    finiteVector(item, coefficientCount, `Gaussian SH coefficients ${index}`),
+  );
   const colors = payload.colors_rgba.map((item) => {
     if (
       !Array.isArray(item) ||
@@ -175,14 +203,22 @@ function validateGaussianAsset(payload, sceneAsset, limits) {
   return Object.freeze({
     asset_id: payload.asset_id,
     source_digest: payload.source_digest,
+    derived_asset_digest: payload.derived_asset_digest,
+    color_space: payload.color_space,
+    sh_degree: payload.sh_degree,
+    coefficient_count: coefficientCount,
     count,
+    decoded_bytes: gpuBytes,
     gpu_bytes: gpuBytes,
     allocation_bytes: allocationBytes,
+    point_gpu_bytes: count * (12 + 4),
+    point_allocation_bytes: count * (12 + 4 + SORT_BYTES_PER_SPLAT),
     positions: Object.freeze(positions),
     rotations_xyzw: Object.freeze(rotations),
     scales_xyz: Object.freeze(scales),
     opacities: Object.freeze(opacities),
     colors_rgba: Object.freeze(colors),
+    sh_coefficients: Object.freeze(coefficients),
   });
 }
 
@@ -218,6 +254,8 @@ export function describeGaussianAssets(assets) {
         asset_id: asset.asset_id,
         splat_count: asset.count,
         fallback: "POINT_CLOUD_RGBA8",
+        sh_degree: asset.sh_degree,
+        color_space: asset.color_space,
         description: `${asset.count} Gaussian splats; point-cloud, accessible, and headless fallbacks available`,
         ...AUTHORITY_ENVELOPE,
       }),
@@ -267,9 +305,14 @@ export class GaussianRenderer {
     this.plan = validateRenderPlan(planPayload, this.scene);
     this.limits = normalizeLimits(this.requestedLimits, this.plan);
     if (!Array.isArray(gaussianPayloads)) throw new TypeError("gaussianPayloads must be an array");
-    const manifests = new Map(
+    const admittedGaussianIds = new Set(
       this.scene.assets
         .filter((asset) => asset.asset_type === "GAUSSIAN_SPLAT")
+        .map((asset) => asset.asset_id),
+    );
+    const manifests = new Map(
+      scenePayload.assets
+        .filter((asset) => admittedGaussianIds.has(asset.asset_id))
         .map((asset) => [asset.asset_id, asset]),
     );
     if (gaussianPayloads.length !== manifests.size) {
@@ -283,19 +326,25 @@ export class GaussianRenderer {
       if (!manifest) throw new TypeError("Gaussian payload is not admitted by the scene");
       return validateGaussianAsset(payload, manifest, this.limits);
     });
-    const totalGpuBytes = assets.reduce((total, asset) => total + asset.gpu_bytes, 0);
-    const totalAllocationBytes = assets.reduce(
-      (total, asset) => total + asset.allocation_bytes,
-      0,
-    );
+    const totalDecodedBytes = assets.reduce((total, asset) => total + asset.decoded_bytes, 0);
+    const activeGpuBytes = this.drawGaussianPass
+      ? assets.reduce((total, asset) => total + asset.gpu_bytes, 0)
+      : this.drawPointCloudPass
+        ? assets.reduce((total, asset) => total + asset.point_gpu_bytes, 0)
+        : 0;
+    const activeAllocationBytes = this.drawGaussianPass
+      ? assets.reduce((total, asset) => total + asset.allocation_bytes, 0)
+      : this.drawPointCloudPass
+        ? assets.reduce((total, asset) => total + asset.point_allocation_bytes, 0)
+        : 0;
     const totalSplats = assets.reduce((total, asset) => total + asset.count, 0);
     if (
-      totalGpuBytes > this.limits.maxDecodedBytes ||
-      totalGpuBytes > this.limits.maxGpuBytes ||
-      totalAllocationBytes > this.limits.maxAllocationBytes ||
+      totalDecodedBytes > this.limits.maxDecodedBytes ||
+      activeGpuBytes > this.limits.maxGpuBytes ||
+      activeAllocationBytes > this.limits.maxAllocationBytes ||
       totalSplats > this.limits.maxVisibleSplats
     ) {
-      throw new RangeError("Gaussian aggregate allocation budget exceeded");
+      throw new RangeError("Gaussian aggregate active-path budget exceeded");
     }
     await this.presentationRenderer.initialize(scenePayload, planPayload);
     if (signal?.aborted) {
@@ -315,22 +364,18 @@ export class GaussianRenderer {
     let representation = "ACCESSIBLE_HEADLESS_FALLBACK";
     let evidenceClass = "CALCULATED";
     let drawn = 0;
+    let actualGpuBytes = 0;
+    let actualAllocationBytes = 0;
     try {
       baseReceipt = await this.presentationRenderer.present();
       for (const asset of this.assets) {
         if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");
-        const order = sortedIndices(asset, cameraPosition, this.limits.maxSortItems);
-        const resources = Object.freeze({
-          positions: flatten(asset.positions, 3),
-          rotations_xyzw: flatten(asset.rotations_xyzw, 4),
-          scales_xyz: flatten(asset.scales_xyz, 3),
-          opacities: Float32Array.from(asset.opacities),
-          colors_rgba: flatten(asset.colors_rgba, 4, Uint8Array),
-          sorted_indices: order,
-        });
-        this.buffers.add(resources);
         const context = {
           asset_id: asset.asset_id,
+          source_digest: asset.source_digest,
+          derived_asset_digest: asset.derived_asset_digest,
+          color_space: asset.color_space,
+          sh_degree: asset.sh_degree,
           splat_count: asset.count,
           scene_digest: this.scene.scene_digest,
           render_plan_digest: this.plan.render_plan_digest,
@@ -338,26 +383,46 @@ export class GaussianRenderer {
           ...AUTHORITY_ENVELOPE,
         };
         if (this.drawGaussianPass) {
+          const order = sortedIndices(asset, cameraPosition, this.limits.maxSortItems);
+          const resources = Object.freeze({
+            positions: flatten(asset.positions, 3),
+            rotations_xyzw: flatten(asset.rotations_xyzw, 4),
+            scales_xyz: flatten(asset.scales_xyz, 3),
+            opacities: Float32Array.from(asset.opacities),
+            colors_rgba: flatten(asset.colors_rgba, 4, Uint8Array),
+            sh_coefficients: flatten(asset.sh_coefficients, asset.coefficient_count),
+            sorted_indices: order,
+          });
+          this.buffers.add(resources);
           await this.drawGaussianPass(resources, context);
           representation = "GAUSSIAN_SPLAT_PASS";
           evidenceClass = "MEASURED";
+          actualGpuBytes += asset.gpu_bytes;
+          actualAllocationBytes += asset.allocation_bytes;
         } else if (this.drawPointCloudPass) {
-          await this.drawPointCloudPass(
-            Object.freeze({
-              positions: resources.positions,
-              colors_rgba: resources.colors_rgba,
-              sorted_indices: resources.sorted_indices,
-            }),
-            context,
-          );
+          const order = sortedIndices(asset, cameraPosition, this.limits.maxSortItems);
+          const resources = Object.freeze({
+            positions: flatten(asset.positions, 3),
+            colors_rgba: flatten(asset.colors_rgba, 4, Uint8Array),
+            sorted_indices: order,
+          });
+          this.buffers.add(resources);
+          await this.drawPointCloudPass(resources, context);
           representation = "POINT_CLOUD_FALLBACK";
           evidenceClass = "MEASURED";
+          actualGpuBytes += asset.point_gpu_bytes;
+          actualAllocationBytes += asset.point_allocation_bytes;
         }
         drawn += asset.count;
       }
     } catch (error) {
       this.buffers.clear();
       this.cancelled = true;
+      try {
+        await this.presentationRenderer.dispose();
+      } catch {
+        // Preserve the original presentation failure while still attempting cleanup.
+      }
       this.state = RENDERER_STATES.LOST;
       throw error;
     }
@@ -375,11 +440,8 @@ export class GaussianRenderer {
       scene_digest: this.scene.scene_digest,
       render_plan_digest: this.plan.render_plan_digest,
       splat_count: drawn,
-      gpu_bytes: this.assets.reduce((total, asset) => total + asset.gpu_bytes, 0),
-      allocation_bytes: this.assets.reduce(
-        (total, asset) => total + asset.allocation_bytes,
-        0,
-      ),
+      gpu_bytes: actualGpuBytes,
+      allocation_bytes: actualAllocationBytes,
       elapsed_ms: elapsed,
       base_receipt: baseReceipt,
       fallbacks: GAUSSIAN_FALLBACKS,
@@ -403,11 +465,15 @@ export class GaussianRenderer {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this.cancelled = true;
     this.buffers.clear();
+    if (typeof this.presentationRenderer.markDeviceLost === "function") {
+      this.presentationRenderer.markDeviceLost();
+    }
     this.state = RENDERER_STATES.LOST;
     return this.status();
   }
 
   async dispose() {
+    if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this.cancelled = true;
     this.buffers.clear();
     this.assets = Object.freeze([]);
