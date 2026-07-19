@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Execute Aura's native planning/review surfaces for the PR164 lesson refactor.
+
+The harness is read-only with respect to tracked source.  It uses the retained
+Agent Bridge, Architect preparation path, Selective Council V3 lane router,
+Surgeon control contract, Capability Connectome/Affordance Directory, Emergent
+Evidence Spine, and Coding Waboose.  It writes one bounded JSON receipt only to
+an explicitly supplied artifact path.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+from typing import Any
+
+from aura_agent_arena_review_learning_bridge import ReviewLearningAgentArenaBridge
+from aura_architect_control import normalize_control_profile
+from aura_architect_council_v2 import profile_refactor_length
+from aura_architect_council_v3 import ARCHITECT_COUNCIL_V3, select_critic_lanes
+from aura_coding_waboose_review_lessons import PATCH_AUTHORITY
+
+HARNESS_VERSION = "AURA_PR164_REVIEW_LEARNING_ARCHITECT_HARNESS_V1"
+_MAX_RECEIPT_BYTES = 1_048_576
+
+
+def _canonical(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+        default=str,
+    ).encode("utf-8")
+
+
+def _digest(value: Any) -> str:
+    return hashlib.blake2b(_canonical(value), digest_size=20).hexdigest()
+
+
+def _git(root: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if result.returncode != 0:
+        return "UNAVAILABLE"
+    return result.stdout.strip() or "UNAVAILABLE"
+
+
+def _summary(packet: Any, keys: tuple[str, ...]) -> dict[str, Any]:
+    if not isinstance(packet, dict):
+        return {"ok": False, "status": "invalid_packet"}
+    return {key: packet.get(key) for key in keys if key in packet}
+
+
+def _plan() -> dict[str, Any]:
+    tasks = [
+        {
+            "task_id": "RL1",
+            "title": "Typed lesson registry and runtime contract",
+            "target_file": "aura_coding_waboose_review_lessons.py",
+            "related_files": [
+                "schemas/aura_review_lesson.schema.json",
+                ".aura/review_lessons/pr164_spatial_review_lessons.json",
+            ],
+            "size": "L",
+            "depends_on": [],
+        },
+        {
+            "task_id": "RL2",
+            "title": "Deterministic PR164 detector pack",
+            "target_file": "aura_coding_waboose_review_lessons.py",
+            "related_files": ["tests/test_aura_coding_waboose_review_lessons.py"],
+            "size": "L",
+            "depends_on": ["RL1"],
+        },
+        {
+            "task_id": "RL3",
+            "title": "Crucible adversarial replay receipts",
+            "target_file": "aura_coding_waboose_review_lessons.py",
+            "related_files": ["tests/test_aura_coding_waboose_review_lessons.py"],
+            "size": "M",
+            "depends_on": ["RL2"],
+        },
+        {
+            "task_id": "RL4",
+            "title": "Coding Waboose source-scan integration",
+            "target_file": "aura_coding_waboose_review_learning.py",
+            "related_files": ["aura_coding_waboose.py"],
+            "size": "M",
+            "depends_on": ["RL1", "RL2"],
+        },
+        {
+            "task_id": "RL5",
+            "title": "Agent Bridge and MCP projections",
+            "target_file": "aura_agent_arena_review_learning_bridge.py",
+            "related_files": ["aura_agent_arena_review_learning_mcp.py"],
+            "size": "M",
+            "depends_on": ["RL4"],
+        },
+        {
+            "task_id": "RL6",
+            "title": "Connectome and affordance registration",
+            "target_file": ".aura/AFFORDANCE_MAP.json",
+            "related_files": ["aura_capability_connectome.py"],
+            "size": "S",
+            "depends_on": ["RL5"],
+        },
+        {
+            "task_id": "RL7",
+            "title": "Focused workflow and real Waboose harness",
+            "target_file": ".github/workflows/aura-review-learning.yml",
+            "related_files": ["scripts/aura_review_learning_architect_harness.py"],
+            "size": "M",
+            "depends_on": ["RL3", "RL4", "RL5", "RL6"],
+        },
+        {
+            "task_id": "RL8",
+            "title": "Documentation, review ingestion, and generated-map boundary",
+            "target_file": "docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md",
+            "related_files": [".aura/CODEMAP.md", ".aura/CODEMAP.json", "topology_map.json"],
+            "size": "S",
+            "depends_on": ["RL7"],
+        },
+    ]
+    return {
+        "architecture_decision": (
+            "Extend retained Coding Waboose and Agent Bridge through narrow typed "
+            "review-learning adapters; do not create a parallel review authority."
+        ),
+        "target_file": "aura_coding_waboose_review_lessons.py",
+        "target_symbol": "ReviewLessonEngine",
+        "act_tasks": tasks,
+        "acceptance_criteria": [
+            "All 13 PR164 lessons have deterministic replay fixtures.",
+            "CodeRabbit, Codex, and manual findings normalize into typed dispositions.",
+            "Coding Waboose invokes precision-first lesson detectors on changed source.",
+            "Agent Bridge exposes review-only lesson tools through a narrow adapter.",
+            "Focused Python 3.10/3.12 workflow executes schema, compile, Ruff, pytest, Waboose, and harness gates.",
+            "No patch, commit, push, pull-request, merge, or production authority expands.",
+        ],
+        "rollback_conditions": [
+            "Any detector produces unbounded evidence or bypasses exact-source corroboration.",
+            "Any adapter weakens existing Coding Waboose or Agent Bridge authority fields.",
+            "Schema/runtime outcomes diverge.",
+            "Focused workflow or Crucible replay fails.",
+        ],
+        "risk_map": [
+            "false-positive detector noise",
+            "reviewer payload ambiguity",
+            "stale or historical evidence mislabeling",
+            "unbounded comment or scenario payload",
+            "private-core integration drift",
+            "generated CODEMAP/topology reviewed before source stabilizes",
+        ],
+        "constraints": [
+            "external reviewer output is teacher signal only",
+            "exact source and regressions corroborate findings",
+            "generated maps are excluded from targeted reviewer scope",
+            "human review remains mandatory",
+        ],
+        "escalation_rules": [
+            "Council handles interface, dependency, sequence, continuity, rollback, or cost defects.",
+            "Surgeon receives one exact bounded file/symbol slice at a time.",
+            "Failed local verification returns a repair packet; it never promotes automatically.",
+        ],
+    }
+
+
+def run(repo_root: Path, *, base_ref: str, head_ref: str) -> dict[str, Any]:
+    objective = (
+        "Integrate PR164 CodeRabbit, Codex, and manual review lessons into Coding "
+        "Waboose through typed detectors, Crucible replay, Connectome registration, "
+        "and review-only Agent Bridge tools."
+    )
+    head = _git(repo_root, "rev-parse", "HEAD")
+    bridge = ReviewLearningAgentArenaBridge(
+        repo_root=str(repo_root),
+        review_learning_root=repo_root / "Aura_Staging" / "review_learning_harness",
+    )
+
