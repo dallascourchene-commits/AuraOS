@@ -17,24 +17,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact pull-request head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: Verify exact head
+      - name: Fetch exact pull-request head archive
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          curl --fail --location --retry 3 --retry-all-errors \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -o exact-head.tar.gz \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/tarball/${EXACT_HEAD}"
+          test "$(wc -c < exact-head.tar.gz)" -le 268435456
+          mkdir -p exact-head
+          tar -xzf exact-head.tar.gz -C exact-head --strip-components=1
+          test -f exact-head/aura_spatial_contracts.py
 
       - name: Build bounded source slice
         shell: bash
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          mkdir -p s3a-source
+          cd exact-head
+          mkdir -p ../s3a-source
           files=(
             aura_event_contracts.py
             aura_spatial_contracts.py
@@ -76,10 +84,11 @@ jobs:
           )
           for file in "${files[@]}"; do
             test -f "$file"
-            mkdir -p "s3a-source/$(dirname "$file")"
-            cp "$file" "s3a-source/$file"
+            mkdir -p "../s3a-source/$(dirname "$file")"
+            cp "$file" "../s3a-source/$file"
           done
-          printf '%s\n' "${{ github.event.pull_request.head.sha }}" > s3a-source/EXACT_HEAD.txt
+          printf '%s\n' "${EXACT_HEAD}" > ../s3a-source/EXACT_HEAD.txt
+          cd ..
           tar -C s3a-source -czf aura-spatial-s3a-source.tar.gz .
           test "$(wc -c < aura-spatial-s3a-source.tar.gz)" -le 5242880
 
