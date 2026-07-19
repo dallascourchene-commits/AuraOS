@@ -1,0 +1,189 @@
+name: PR167 Late Review Fix
+
+on:
+  pull_request:
+    types: [reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr167-late-review-fix
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'feature/aura-spatial-s3b-s4a'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install verification tools
+        run: python -m pip install --disable-pip-version-check --quiet pytest jsonschema ruff numpy
+      - name: Fetch exact branch and base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "+refs/heads/feature/aura-spatial-s3b-s4a:refs/remotes/origin/feature/aura-spatial-s3b-s4a" \
+            "+refs/heads/main:refs/remotes/origin/main"
+          git checkout -B feature/aura-spatial-s3b-s4a refs/remotes/origin/feature/aura-spatial-s3b-s4a
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Apply exact late review fixes
+        working-directory: repo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('aura_spatial_web/app.js')
+          text = app.read_text(encoding='utf-8')
+          old = '''const PRESENTATION_RENDERERS = new Set([
+            "WEBGL2",
+            "WEBGPU",
+            "ACCESSIBLE_2D",
+            "HEADLESS",
+          ]);'''
+          new = '''const PRESENTATION_RENDERERS = new Set([
+            "WEBGL2",
+            "ACCESSIBLE_2D",
+            "HEADLESS",
+          ]);'''
+          assert old in text
+          text = text.replace(old, new, 1)
+          old = '? ["WEBGL2", "WEBGPU", "ACCESSIBLE_2D", "HEADLESS"]'
+          new = '? ["WEBGL2", "ACCESSIBLE_2D", "HEADLESS"]'
+          assert old in text
+          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          server = Path('aura_spatial_server.py')
+          text = server.read_text(encoding='utf-8')
+          old = '''            packet = supplied.get("packet")
+                      if not isinstance(packet, Mapping):
+                          raise ValueError("packet must be an object")
+                      try:
+                          receipt, summary = state.sessions.record_browser_telemetry(
+                              session_id,
+                              packet,
+                          )'''
+          new = '''            packet = supplied.get("packet")
+                      if not isinstance(packet, Mapping):
+                          raise ValueError("packet must be an object")
+                      try:
+                          expected_fixture_digest = _spatial_web_fixture_digest()
+                      except (OSError, SourceIntegrityError, ValueError) as exc:
+                          return _error(503, "SPATIAL_WEB_UNAVAILABLE", str(exc))
+                      if packet.get("fixture_digest") != expected_fixture_digest:
+                          raise ValueError("telemetry fixture_digest does not match served browser assets")
+                      try:
+                          receipt, summary = state.sessions.record_browser_telemetry(
+                              session_id,
+                              packet,
+                          )'''
+          assert old in text
+          server.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          js_test = Path('tests/js/spatial-app.test.mjs')
+          text = js_test.read_text(encoding='utf-8')
+          anchor = 'test("WebXR plans fail closed without a presentation fallback", () => {'
+          addition = '''test("WebGPU shadow plans choose an admitted active presentation fallback", () => {
+            const plan = planFixture("WEBGPU");
+            assert.equal(selectBrowserPresentationRenderer(plan), "ACCESSIBLE_2D");
+          });
+
+          '''
+          assert addition not in text
+          assert anchor in text
+          js_test.write_text(text.replace(anchor, addition + anchor, 1), encoding='utf-8')
+
+          py_test = Path('tests/test_aura_spatial_server.py')
+          text = py_test.read_text(encoding='utf-8')
+          anchor = '\ndef test_server_rejects_interactions_after_session_cancellation():'
+          addition = '''
+          def test_server_rejects_telemetry_for_unserved_fixture_digest():
+              state = SpatialServerState()
+              scene = _scene()
+              state.register_scene(scene)
+              device = _profile()
+              plan = negotiate_spatial_render_plan(scene, device)
+              state.register_device(device)
+              state.register_plan(plan)
+              summary = state.sessions.create_session(scene, plan, device)
+
+              response = dispatch_spatial_request(
+                  state,
+                  "POST",
+                  "/api/spatial/telemetry",
+                  {
+                      "session_id": summary.session_id,
+                      "packet": _browser_telemetry_packet(
+                          plan.to_dict(),
+                          device,
+                          "0" * 64,
+                      ),
+                  },
+              )
+
+              assert response.status == 400
+              assert "fixture_digest" in response.json()["error"]
+
+          '''
+          addition = '\n'.join(line[10:] if line.startswith('          ') else line for line in addition.splitlines())
+          assert 'test_server_rejects_telemetry_for_unserved_fixture_digest' not in text
+          assert anchor in text
+          py_test.write_text(text.replace(anchor, '\n' + addition + anchor, 1), encoding='utf-8')
+          PY
+          ruff format tests/test_aura_spatial_server.py
+          git rm .github/workflows/pr167-late-review-fix.yml
+          git diff --check
+      - name: Compile and lint
+        working-directory: repo
+        run: |
+          python -m py_compile aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+          ruff check aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+          ruff format --check aura_spatial_contracts.py aura_spatial_coordinate_frames.py aura_spatial_receipts.py aura_spatial_server.py aura_spatial_session.py scripts/aura_spatial_continuation_architect_harness.py tests/test_aura_spatial_ply.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_server.py tests/test_aura_spatial_session.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_continuation_harness.py
+      - name: Run Python regressions
+        working-directory: repo
+        run: |
+          python -m pytest -q --tb=short tests/test_aura_spatial_substrate.py tests/test_aura_spatial_ws_guard.py tests/test_aura_spatial_manual_review.py tests/test_aura_spatial_projection_bounds.py tests/test_aura_spatial_codex_followup.py tests/test_aura_spatial_final_review.py tests/test_aura_showcase_spatial_integration.py tests/test_aura_spatial_render_plan.py tests/test_aura_spatial_session.py tests/test_aura_spatial_server.py tests/test_aura_spatial_continuation_harness.py tests/test_aura_spatial_browser_interaction.py tests/test_aura_spatial_telemetry.py tests/test_aura_spatial_gltf.py tests/test_aura_spatial_ply.py
+      - name: Run browser regressions
+        working-directory: repo
+        run: npm run test:spatial
+      - name: Commit late review fixes
+        working-directory: repo
+        run: |
+          git config user.name 'dallascourchene-commits'
+          git config user.email '281686929+dallascourchene-commits@users.noreply.github.com'
+          git add -A
+          git commit -m 'Fix WebGPU presentation and telemetry fixture binding'
+      - name: Run Aura real-history gate
+        working-directory: repo
+        run: |
+          head=$(git rev-parse HEAD)
+          python scripts/aura_spatial_continuation_architect_harness.py --repo-root . --base-ref origin/main --head-ref HEAD --observed-head "$head" --output /tmp/pr167-late-receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          receipt = json.loads(Path('/tmp/pr167-late-receipt.json').read_text(encoding='utf-8'))
+          assert receipt['status'] == 'PASSED', receipt['checks']
+          assert receipt['architecture']['crucible']['failed_count'] == 0
+          assert receipt['production_mutation'] is False
+          assert receipt['automatic_merge'] is False
+          assert receipt['human_review_required'] is True
+          PY
+          test -z "$(git status --porcelain)"
+      - name: Publish clean late fixes
+        working-directory: repo
+        run: git push origin HEAD:feature/aura-spatial-s3b-s4a
