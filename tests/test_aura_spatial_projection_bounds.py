@@ -66,7 +66,13 @@ def test_large_retained_node_metadata_is_omitted_from_evidence(monkeypatch):
     asset = scene.assets[0]
     assert asset.byte_length < 100_000
     assert asset.byte_length <= projection.MAX_PROJECTION_BYTES
-    entity_metadata = scene.entities[0].to_dict()["metadata"]
+    selected = next(
+        entity
+        for entity in scene.entities
+        if entity.to_dict()["metadata"]["domain_node_id"]
+        == "node:selected"
+    )
+    entity_metadata = selected.to_dict()["metadata"]
     assert "unbounded_blob" not in entity_metadata
     assert entity_metadata["projection_truth"] == "CODEMAP_PROJECTED"
 
