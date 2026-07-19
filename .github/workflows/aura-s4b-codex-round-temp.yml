@@ -1,0 +1,124 @@
+name: Aura Temporary S4-B Codex Round Apply
+
+on:
+  push:
+    branches:
+      - feature/spatial-s4b-gaussian-security
+    paths:
+      - ".github/workflows/aura-s4b-codex-round-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-s4b-codex-round-apply
+  cancel-in-progress: false
+
+jobs:
+  apply-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Check out exact S4-B branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/spatial-s4b-gaussian-security
+          fetch-depth: 0
+          submodules: false
+          persist-credentials: true
+
+      - name: Reconstruct and verify exact four-file repair
+        run: |
+          set -euo pipefail
+          cat > /tmp/s4b-codex-round2.patch.gz.b64 <<'EOF'
+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
+EOF
+          base64 --decode /tmp/s4b-codex-round2.patch.gz.b64 > /tmp/s4b-codex-round2.patch.gz
+          echo "62f33bf85db583dc892ea75366573ec615c1e3526bc50c9b280a50ab9438d7ab  /tmp/s4b-codex-round2.patch.gz" | sha256sum --check --strict
+          gzip -dc /tmp/s4b-codex-round2.patch.gz > /tmp/s4b-codex-round2.patch
+          echo "61947e88cff804c21acb45f85fa5a95696e98a0538eed181699abd15aabba3e9  /tmp/s4b-codex-round2.patch" | sha256sum --check --strict
+          git apply --check /tmp/s4b-codex-round2.patch
+          git apply /tmp/s4b-codex-round2.patch
+          git diff --check
+
+      - name: Set up Python 3.12 and Node 22
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install exact decoder and verification tools
+        run: |
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
+          python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
+
+      - name: Compile, lint, and format-check repaired source
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            aura_spatial_importers/gaussian_gltf.py \
+            aura_spatial_web/gaussian_renderer.js 2>/dev/null || true
+          ruff check \
+            aura_spatial_importers/gaussian_gltf.py \
+            tests/test_aura_spatial_gaussian_gltf.py
+          ruff format --check \
+            aura_spatial_importers/gaussian_gltf.py \
+            tests/test_aura_spatial_gaussian_gltf.py
+
+      - name: Run focused Codex regressions
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_spz.py
+          node --test \
+            tests/js/spatial-gaussian.test.mjs \
+            tests/js/spatial-mixed-scene.test.mjs
+
+      - name: Run complete retained S0-S4-B compatibility
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py \
+            tests/test_aura_spatial_final_review.py \
+            tests/test_aura_showcase_spatial_integration.py \
+            tests/test_aura_spatial_render_plan.py \
+            tests/test_aura_spatial_session.py \
+            tests/test_aura_spatial_server.py \
+            tests/test_aura_spatial_continuation_harness.py \
+            tests/test_aura_spatial_browser_interaction.py \
+            tests/test_aura_spatial_telemetry.py \
+            tests/test_aura_spatial_gltf.py \
+            tests/test_aura_spatial_ply.py \
+            tests/test_aura_spatial_spz.py \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_s4b_harness.py
+          npm run test:spatial
+
+      - name: Commit exact four-file Codex repair
+        run: |
+          set -euo pipefail
+          branch="feature/spatial-s4b-gaussian-security"
+          git config user.name "Aura Spatial Review"
+          git config user.email "aura-spatial-review@users.noreply.github.com"
+          git add \
+            aura_spatial_importers/gaussian_gltf.py \
+            aura_spatial_web/gaussian_renderer.js \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/js/spatial-gaussian.test.mjs
+          git diff --cached --check
+          git commit -m "fix: complete S4-B Codex preflight and cleanup hardening"
+          git fetch --no-tags origin "$branch"
+          git rebase "origin/$branch"
+          git push origin "HEAD:$branch"
