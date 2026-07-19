@@ -1,0 +1,194 @@
+"""Coding Waboose integration for typed external-review lessons and Crucible replay.
+
+This is a narrow extension of the retained :mod:`aura_coding_waboose` owner.  It
+adds deterministic review-lesson scans, typed CodeRabbit/Codex/manual review
+normalization, and adversarial Crucible replay without changing Coding Waboose's
+review-only authority boundary.
+"""
+from __future__ import annotations
+
+import ast
+from collections.abc import Mapping, Sequence
+from pathlib import Path
+import re
+import tokenize
+from typing import Any
+
+from aura_coding_waboose import CodingWaboose
+from aura_coding_waboose_review_lessons import (
+    DEFAULT_LEARNING_ROOT,
+    DEFAULT_REGISTRY_PATH,
+    PATCH_AUTHORITY,
+    REVIEW_LESSON_VERSION,
+    ReviewLessonEngine,
+    VSA_PATCH_AUTHORITY,
+    detect_authority_aliases,
+    detect_count_without_byte_budget,
+    detect_noncanonical_source_path,
+    detect_order_dependent_digesting,
+    detect_protected_metadata_overrides,
+    detect_stale_evidence_claim,
+    detect_truncate_before_sort,
+    detect_uri_alias_encoding,
+)
+
+WABOOSE_REVIEW_LEARNING_VERSION = "AURA_CODING_WABOOSE_REVIEW_LEARNING_V1"
+
+_COUNT_BUDGET_RE = re.compile(
+    r"(?m)^\s*(MAX_[A-Z0-9_]*(?:COUNT|ITEMS|NODES|EDGES|RECORDS|REFS))\s*="
+)
+_BYTE_BUDGET_RE = re.compile(
+    r"(?m)^\s*MAX_[A-Z0-9_]*(?:BYTE|BYTES|SIZE|PAYLOAD)\w*\s*="
+)
+_DIGEST_CALL_RE = re.compile(
+    r"\b(?:digest|sha256|blake2b|canonical_digest)\s*\((?P<body>[^)]{1,600})\)",
+    re.IGNORECASE | re.DOTALL,
+)
+_SET_LIKE_NAME_RE = re.compile(
+    r"(?:^|_)(?:assets|edges|entities|findings|frames|ids|links|nodes|paths|records|refs|relations|source_refs)(?:$|_)",
+    re.IGNORECASE,
+)
+
+
+def _call_name(node: ast.AST) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        parts: list[str] = []
+        current: ast.AST = node
+        while isinstance(current, ast.Attribute):
+            parts.append(current.attr)
+            current = current.value
+        if isinstance(current, ast.Name):
+            parts.append(current.id)
+        return ".".join(reversed(parts))
+    return ""
+
+
+def _literal_value(node: ast.AST) -> Any:
+    try:
+        return ast.literal_eval(node)
+    except (ValueError, TypeError, SyntaxError, MemoryError, RecursionError):
+        return "<dynamic>"
+
+
+def _line(node: ast.AST) -> tuple[int, int]:
+    start = int(getattr(node, "lineno", 1) or 1)
+    end = int(getattr(node, "end_lineno", start) or start)
+    return start, end
+
+
+def _review_finding(
+    *,
+    detector: Mapping[str, Any],
+    file: str,
+    title: str,
+    suggested_fix: str,
+    line_start: int = 1,
+    line_end: int = 1,
+    category: str = "correctness",
+    severity: str = "medium",
+    confidence: float | None = None,
+) -> dict[str, Any]:
+    return {
+        "origin": "waboose_review_lesson",
+        "rule": str(detector.get("detector_id") or detector.get("code") or "review_lesson"),
+        "category": category,
+        "severity": severity,
+        "confidence": float(confidence if confidence is not None else detector.get("confidence", 0.9)),
+        "title": title,
+        "message": str(detector.get("message") or title),
+        "file": file,
+        "line_start": max(1, int(line_start)),
+        "line_end": max(max(1, int(line_start)), int(line_end)),
+        "suggested_fix": suggested_fix,
+        "evidence": [
+            {
+                "kind": "review_lesson_detector",
+                "detector_id": detector.get("detector_id", ""),
+                "finding_id": detector.get("finding_id", ""),
+                "evidence": detector.get("evidence"),
+                "source": REVIEW_LESSON_VERSION,
+            }
+        ],
+        "status": "confirmed" if float(detector.get("confidence", 0.0)) >= 0.98 else "probable",
+        "repair_authority": False,
+        "production_mutation": False,
+        "automatic_fix": False,
+        "automatic_commit": False,
+        "automatic_push": False,
+        "automatic_pull_request": False,
+        "automatic_merge": False,
+        "human_review_required": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+
+
+def scan_python_review_lessons(*, file: str, source: str, tree: ast.AST) -> list[dict[str, Any]]:
+    """Run precision-first static lesson detectors over one Python source file."""
+
+    findings: list[dict[str, Any]] = []
+    sorted_assignments: dict[str, int] = {}
+
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Assign, ast.AnnAssign)):
+            value = node.value
+            targets: list[ast.AST]
+            if isinstance(node, ast.Assign):
+                targets = list(node.targets)
+            else:
+                targets = [node.target]
+            if isinstance(value, ast.Call) and _call_name(value.func).endswith("sorted"):
+                for target in targets:
+                    if isinstance(target, ast.Name):
+                        sorted_assignments[target.id] = int(getattr(node, "lineno", 0) or 0)
+
+        if isinstance(node, ast.Dict):
+            payload: dict[str, Any] = {}
+            key_nodes: dict[str, ast.AST] = {}
+            for key_node, value_node in zip(node.keys, node.values):
+                if not isinstance(key_node, ast.Constant) or not isinstance(key_node.value, str):
+                    continue
+                payload[key_node.value] = _literal_value(value_node)
+                key_nodes[key_node.value] = key_node
+            if payload:
+                for detector in detect_authority_aliases(payload):
+                    evidence = dict(detector.get("evidence") or {})
+                    key = str(evidence.get("key") or "")
+                    start, end = _line(key_nodes.get(key, node))
+                    findings.append(
+                        _review_finding(
+                            detector=detector,
+                            file=file,
+                            title="Authority metadata alias bypass",
+                            suggested_fix=(
+                                "Normalize security-sensitive metadata keys by case-folding and "
+                                "removing separators, then reject protected aliases recursively."
+                            ),
+                            line_start=start,
+                            line_end=end,
+                            category="authority",
+                            severity="high",
+                        )
+                    )
+                for detector in detect_protected_metadata_overrides(payload):
+                    evidence = dict(detector.get("evidence") or {})
+                    key = str(evidence.get("key") or "")
+                    start, end = _line(key_nodes.get(key, node))
+                    findings.append(
+                        _review_finding(
+                            detector=detector,
+                            file=file,
+                            title="Protected authority metadata can be contradicted",
+                            suggested_fix=(
+                                "Reject protected authority fields before metadata merge and "
+                                "reassert the immutable false authority envelope afterward."
+                            ),
+                            line_start=start,
+                            line_end=end,
+                            category="authority",
+                            severity="high",
+                        )
+                    )
+
