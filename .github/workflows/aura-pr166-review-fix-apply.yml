@@ -106,10 +106,14 @@ jobs:
             Aura_Memory/live_topology_ast.json; do
             git restore --source=HEAD --worktree --staged -- "$generated" 2>/dev/null || true
           done
+          git restore --source=HEAD --worktree --staged -- \
+            .github/workflows/aura-pr166-review-fix-apply.yml \
+            .github/workflows/aura-review-learning.yml \
+            .github/workflows/aura-spatial-s3a-materialize.yml
           unexpected=0
           while IFS= read -r path; do
             case "$path" in
-              .aura/staging/pr166-review-fixes/*|.github/workflows/aura-pr166-review-fix-apply.yml|.github/workflows/aura-review-learning.yml|.github/workflows/aura-spatial-s3a-materialize.yml|aura_node.py|aura_review_lessons_engine.py|aura_review_lessons_replay.py|aura_source_integrity.py|tests/test_aura_agent_arena_review_learning.py|tests/test_aura_coding_waboose_review_learning.py|tests/test_aura_coding_waboose_review_lessons.py|tests/test_aura_review_lessons_codex_regressions.py|tests/test_aura_source_integrity.py)
+              .aura/staging/pr166-review-fixes/*|aura_node.py|aura_review_lessons_engine.py|aura_review_lessons_replay.py|aura_source_integrity.py|tests/test_aura_agent_arena_review_learning.py|tests/test_aura_coding_waboose_review_learning.py|tests/test_aura_coding_waboose_review_lessons.py|tests/test_aura_review_lessons_codex_regressions.py|tests/test_aura_source_integrity.py)
                 ;;
               *)
                 echo "Unexpected tracked change: $path"
