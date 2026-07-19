@@ -1,3 +1,4 @@
++        ["git", "-C", str(repo), "commit", "-q", "-m", "baseline"],
 +        check=True,
 +    )
 +    head = subprocess.run(
@@ -21,12 +22,41 @@
 +    }
 +
 +
-+def test_boot_auditor_records_corrupt_source_without_aborting(tmp_path: Path) -> None:
-+    from aura_node import AuraEcosystemAuditor
++def _load_auditor_source_slice() -> type:
++    module = ast.parse((ROOT / "aura_node.py").read_text(encoding="utf-8"))
++    auditor_node = next(
++        item
++        for item in module.body
++        if isinstance(item, ast.ClassDef) and item.name == "AuraEcosystemAuditor"
++    )
++    retained = [
++        copy.deepcopy(item)
++        for item in auditor_node.body
++        if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
++        and item.name in {"__init__", "_scan_and_stamp_file"}
++    ]
++    reduced_class = copy.deepcopy(auditor_node)
++    reduced_class.body = retained
++    reduced_module = ast.Module(body=[reduced_class], type_ignores=[])
++    ast.fix_missing_locations(reduced_module)
++    namespace = {
++        "Any": Any,
++        "Path": Path,
++        "SourceIntegrityError": SourceIntegrityError,
++        "ast": ast,
++        "defaultdict": defaultdict,
++        "os": __import__("os"),
++        "read_utf8_source": read_utf8_source,
++    }
++    exec(compile(reduced_module, "aura_node.py", "exec"), namespace)
++    return namespace["AuraEcosystemAuditor"]
 +
++
++def test_boot_auditor_records_corrupt_source_without_aborting(tmp_path: Path) -> None:
++    auditor_type = _load_auditor_source_slice()
 +    path = tmp_path / "corrupt.py"
 +    path.write_bytes(b"value = '\xff'\n")
-+    auditor = AuraEcosystemAuditor(SimpleNamespace())
++    auditor = auditor_type(SimpleNamespace())
 +
 +    result = asyncio.run(auditor._scan_and_stamp_file(str(path), "root"))
 +

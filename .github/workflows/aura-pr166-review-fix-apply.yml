@@ -22,7 +22,7 @@ jobs:
     env:
       EXACT_STAGING_HEAD: ${{ github.event.pull_request.head.sha }}
       HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-      PATCH_SHA256: c987d32004148b87a569c21abf26dcdbc88ba071c4c554ad7d28b6dd3aff44d9
+      PATCH_SHA256: 566f570066dedcf18f77faece442d991e8a749fa51ef6fc401e92c76d3eb51a0
     steps:
       - name: Check out exact staging head
         uses: actions/checkout@v4

@@ -1,3 +1,5 @@
+     assert (tmp_path / "bad.py").read_bytes() == before
+ 
 +    (tmp_path / "ok.py").write_text("value = 2\n", encoding="utf-8")
 +    changed = scan_utf8_source_tree(tmp_path)
 +    assert changed["source_digest"] != first["source_digest"]
@@ -113,4 +115,3 @@
 +    )
 +    subprocess.run(["git", "-C", str(repo), "add", ".gitignore", "module.py"], check=True)
 +    subprocess.run(
-+        ["git", "-C", str(repo), "commit", "-q", "-m", "baseline"],

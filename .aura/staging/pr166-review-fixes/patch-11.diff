@@ -75,20 +75,24 @@
 +    with pytest.raises(ReviewLessonError, match="selected zero scenarios"):
 +        run_crucible_replay(payload, detector_ids=[detector_id])
 diff --git a/tests/test_aura_source_integrity.py b/tests/test_aura_source_integrity.py
-index dacfa18277e8ca26e1d1bca33f0aa2ed951aebff..525d9e162dfb927025c4c72b3a99072490234758 100644
+index dacfa18277e8ca26e1d1bca33f0aa2ed951aebff..01e310600b9b3ac66d77202cb36978a6a631cba1 100644
 --- a/tests/test_aura_source_integrity.py
 +++ b/tests/test_aura_source_integrity.py
-@@ -1,6 +1,9 @@
+@@ -1,6 +1,13 @@
  from __future__ import annotations
  
++import ast
 +import asyncio
++from collections import defaultdict
++import copy
  from pathlib import Path
 +import subprocess
 +from types import SimpleNamespace
++from typing import Any
  
  import pytest
  
-@@ -27,7 +30,22 @@ def test_read_utf8_source_reports_exact_invalid_byte(tmp_path: Path) -> None:
+@@ -27,7 +34,22 @@ def test_read_utf8_source_reports_exact_invalid_byte(tmp_path: Path) -> None:
      assert failure.file_size == path.stat().st_size
  
  
@@ -112,11 +116,9 @@ index dacfa18277e8ca26e1d1bca33f0aa2ed951aebff..525d9e162dfb927025c4c72b3a990724
      tmp_path: Path,
  ) -> None:
      (tmp_path / "ok.py").write_text("value = 1\n", encoding="utf-8")
-@@ -42,8 +60,162 @@ def test_source_tree_scan_is_deterministic_and_non_mutating(
+@@ -42,8 +64,191 @@ def test_source_tree_scan_is_deterministic_and_non_mutating(
      assert first["checked_file_count"] == 2
      assert first["failure_count"] == 1
      assert first["failures"][0]["path"] == "bad.py"
 +    assert len(first["source_digest"]) == 64
 +    assert first["source_digest_algorithm"].startswith("sha256-")
-     assert (tmp_path / "bad.py").read_bytes() == before
- 
