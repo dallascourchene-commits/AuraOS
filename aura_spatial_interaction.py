@@ -5,7 +5,7 @@ from collections.abc import Iterable, Mapping
 import re
 from typing import Any
 
-from aura_event_contracts import stable_digest
+from aura_event_contracts import canonical_json, sanitize_payload, stable_digest
 from aura_spatial_contracts import (
     SpatialInteractionAction,
     SpatialInteractionIntent,
@@ -13,6 +13,7 @@ from aura_spatial_contracts import (
 )
 
 SPATIAL_INTERACTION_VERSION = "AURA_SPATIAL_INTERACTION_V1"
+MAX_INTERACTION_METADATA_BYTES = 65_536
 _ACTOR_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _AUTHORITY_KEYS = frozenset(
     {
@@ -123,7 +124,17 @@ def compile_spatial_interaction(
     supplied_metadata = dict(metadata or {})
     authority_path = _find_authority_key(supplied_metadata)
     if authority_path is not None:
-        raise ValueError(f"interaction metadata cannot supply authority field: {authority_path}")
+        raise ValueError(
+            "interaction metadata cannot supply authority field: "
+            f"{authority_path}"
+        )
+    sanitized_metadata = sanitize_payload(supplied_metadata)
+    if not isinstance(sanitized_metadata, Mapping):
+        raise ValueError("sanitized interaction metadata must remain an object")
+    sanitized_metadata = dict(sanitized_metadata)
+    metadata_bytes = canonical_json(sanitized_metadata).encode("utf-8")
+    if len(metadata_bytes) > MAX_INTERACTION_METADATA_BYTES:
+        raise ValueError("interaction metadata exceeds the bounded payload limit")
 
     targets = tuple(
         sorted(
@@ -150,16 +161,8 @@ def compile_spatial_interaction(
     ordered_refs = tuple(sorted(source_refs))
 
     requires_forge = action_value is SpatialInteractionAction.PREPARE_REPAIR_REQUEST
-    body = {
-        "scene_id": scene.scene_id,
-        "scene_digest": scene.scene_digest,
-        "action": action_value.value,
-        "targets": list(targets),
-        "actor_ref": actor,
-        "source_refs": list(ordered_refs),
-    }
     protected_metadata = {
-        **supplied_metadata,
+        **sanitized_metadata,
         "actor_ref": actor,
         "renderer_input_is_authority": False,
         "automatic_commit": False,
@@ -167,6 +170,15 @@ def compile_spatial_interaction(
         "automatic_pull_request": False,
         "automatic_merge": False,
         "production_mutation": False,
+    }
+    body = {
+        "scene_id": scene.scene_id,
+        "scene_digest": scene.scene_digest,
+        "action": action_value.value,
+        "targets": list(targets),
+        "actor_ref": actor,
+        "source_refs": list(ordered_refs),
+        "metadata": protected_metadata,
     }
     return SpatialInteractionIntent(
         interaction_id=(
@@ -236,7 +248,11 @@ def compile_hotswap_request_guard(
 def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
     if isinstance(value, Mapping):
         for key, item in value.items():
-            normalized = str(key).strip().lower()
+            normalized = re.sub(
+                r"[^a-z0-9]+",
+                "_",
+                str(key).strip().lower(),
+            ).strip("_")
             child = f"{path}.{key}"
             if normalized in _AUTHORITY_KEYS:
                 return child
@@ -252,6 +268,7 @@ def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
 
 
 __all__ = [
+    "MAX_INTERACTION_METADATA_BYTES",
     "SPATIAL_INTERACTION_VERSION",
     "compile_hotswap_request_guard",
     "compile_spatial_interaction",
