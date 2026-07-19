@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
 import hashlib
+from pathlib import PurePosixPath
 import math
 import re
 from typing import Any
@@ -73,27 +74,14 @@ def project_coding_topology_to_scene(
     )
     if not isinstance(micro, Mapping):
         raise ValueError("Coding Arena returned an invalid micro-arena")
-    selected = tuple(
-        str(item) for item in micro.get("selected_node_ids", [])
-    )
+    selected = tuple(str(item) for item in micro.get("selected_node_ids", []))
     if selected != requested:
-        raise ValueError(
-            "Coding Arena projection changed the exact requested selection"
-        )
+        raise ValueError("Coding Arena projection changed the exact requested selection")
 
     source_nodes = _records(micro.get("nodes", []), "micro.nodes")
-    nodes = [
-        _bounded_node(item)
-        for item in source_nodes
-        if item.get("id")
-    ]
+    nodes = [_bounded_node(item) for item in source_nodes if item.get("id")]
     selected_set = set(selected)
-    nodes.sort(
-        key=lambda item: (
-            str(item["id"]) not in selected_set,
-            str(item["id"]),
-        )
-    )
+    nodes.sort(key=lambda item: (str(item["id"]) not in selected_set, str(item["id"])))
     nodes = nodes[:MAX_SPATIAL_NODES]
     allowed = {str(item["id"]) for item in nodes}
     if not selected_set.issubset(allowed):
@@ -132,9 +120,7 @@ def project_coding_topology_to_scene(
     }
     encoded = canonical_json(bounded).encode("utf-8")
     if len(encoded) > MAX_PROJECTION_BYTES:
-        raise ValueError(
-            "bounded micro-arena exceeds the spatial byte budget"
-        )
+        raise ValueError("bounded micro-arena exceeds the spatial byte budget")
     bounded_digest = stable_digest(bounded, digest_size=32)
 
     root = CoordinateFrame(
@@ -173,11 +159,7 @@ def project_coding_topology_to_scene(
             SpatialEntity(
                 entity_id=entity_id,
                 entity_type=SpatialEntityType.DOMAIN_NODE,
-                label=str(
-                    node.get("label")
-                    or node.get("name")
-                    or node_id
-                ),
+                label=str(node.get("label") or node.get("name") or node_id),
                 frame_id=frame.frame_id,
                 source_refs=tuple(sorted(refs)),
                 position=position,
@@ -199,9 +181,7 @@ def project_coding_topology_to_scene(
     for index, edge in enumerate(links_raw):
         source = str(edge["source"])
         target = str(edge["target"])
-        relation = _relation(
-            edge.get("type") or edge.get("link_type")
-        )
+        relation = _relation(edge.get("type") or edge.get("link_type"))
         links.append(
             SpatialLink(
                 link_id=_id(
@@ -216,9 +196,7 @@ def project_coding_topology_to_scene(
                 source_entity_id=entity_ids[source],
                 target_entity_id=entity_ids[target],
                 relation=relation,
-                source_refs=(
-                    f"topology-edge:{source}->{target}:{relation}",
-                ),
+                source_refs=(f"topology-edge:{source}->{target}:{relation}",),
                 truth_class=SpatialTruthClass.DERIVED,
                 metadata={
                     "domain_owner": "aura_coding_arena_3d",
@@ -235,9 +213,7 @@ def project_coding_topology_to_scene(
         asset_type=SpatialAssetType.TOPOLOGY_GRAPH,
         uri=f"aura://coding/micro-arena/{bounded_digest[:32]}",
         media_type="application/vnd.aura.coding-topology+json",
-        content_digest=(
-            "sha256:" + hashlib.sha256(encoded).hexdigest()
-        ),
+        content_digest="sha256:" + hashlib.sha256(encoded).hexdigest(),
         byte_length=len(encoded),
         frame_id=frame.frame_id,
         bounds_min=bounds_min,
@@ -251,10 +227,7 @@ def project_coding_topology_to_scene(
             "source_link_count": len(source_links),
             "serialized_byte_length": len(encoded),
             "serialized_byte_limit": MAX_PROJECTION_BYTES,
-            "truncated": (
-                len(source_nodes) > len(nodes)
-                or len(source_links) > len(links)
-            ),
+            "truncated": len(source_nodes) > len(nodes) or len(source_links) > len(links),
         },
     )
     return compile_spatial_scene(
@@ -274,10 +247,7 @@ def project_coding_topology_to_scene(
         links=links,
         source_refs=(
             "owner:aura_coding_arena_3d",
-            (
-                "projection:aura_spatial_projection."
-                "project_coding_topology_to_scene"
-            ),
+            "projection:aura_spatial_projection.project_coding_topology_to_scene",
         ),
         renderer_hints={
             "preferred_representation": "TOPOLOGY_GRAPH",
@@ -294,21 +264,13 @@ def project_showcase_workspace_to_scene(
     *,
     scene_id: str = "showcase-spatial-workspace",
 ) -> SpatialSceneSnapshot:
-    if (
-        not isinstance(workspace_packet, dict)
-        or workspace_packet.get("ok") is not True
-    ):
-        raise ValueError(
-            "workspace_packet must be a successful showcase workspace"
-        )
+    if not isinstance(workspace_packet, dict) or workspace_packet.get("ok") is not True:
+        raise ValueError("workspace_packet must be a successful showcase workspace")
     workspace = workspace_packet.get("workspace")
     if not isinstance(workspace, dict):
         raise ValueError("workspace_packet.workspace must be an object")
     return project_coding_topology_to_scene(
-        {
-            "nodes": _array(workspace, "nodes"),
-            "links": _array(workspace, "links"),
-        },
+        {"nodes": _array(workspace, "nodes"), "links": _array(workspace, "links")},
         workspace.get("selected_node_ids", []),
         human_instruction=str(
             ((workspace_packet.get("task") or {}).get("spatial_command"))
@@ -324,42 +286,33 @@ def _array(value: Mapping[str, Any], key: str) -> Sequence[Any]:
     if not isinstance(value, Mapping):
         raise ValueError("topology must be an object")
     result = value.get(key, [])
-    if (
-        not isinstance(result, Sequence)
-        or isinstance(result, (str, bytes, bytearray))
-    ):
+    if not isinstance(result, Sequence) or isinstance(result, (str, bytes, bytearray)):
         raise ValueError(f"{key} must be an array")
     return result
 
 
 def _records(value: Any, field_name: str) -> list[dict[str, Any]]:
-    if (
-        not isinstance(value, Sequence)
-        or isinstance(value, (str, bytes, bytearray))
-    ):
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
         raise ValueError(f"{field_name} must be an array")
     return [dict(item) for item in value if isinstance(item, Mapping)]
 
 
 def _bounded_node(node: Mapping[str, Any]) -> dict[str, Any]:
-    metadata = (
-        node.get("metadata")
-        if isinstance(node.get("metadata"), Mapping)
-        else {}
-    )
+    metadata = node.get("metadata") if isinstance(node.get("metadata"), Mapping) else {}
+    file_path = _source_path(node.get("file_path"))
+    symbol = _source_symbol(node.get("symbol")) if file_path else ""
+    line_range = _line_range(node.get("line_range")) if file_path else ()
     return {
         "id": _selected_id(node.get("id")),
         "label": _text(node.get("label"), 512),
         "name": _text(node.get("name"), 512),
         "node_type": _text(
-            node.get("node_type")
-            or node.get("type")
-            or node.get("kind"),
+            node.get("node_type") or node.get("type") or node.get("kind"),
             128,
         ),
-        "file_path": _text(node.get("file_path"), 1024),
-        "symbol": _text(node.get("symbol"), 512),
-        "line_range": list(_line_range(node.get("line_range"))),
+        "file_path": file_path,
+        "symbol": symbol,
+        "line_range": list(line_range),
         "x": _finite_or_none(node.get("x")),
         "y": _finite_or_none(node.get("y")),
         "z": _finite_or_none(node.get("z")),
@@ -384,11 +337,7 @@ def _bounded_link(link: Mapping[str, Any]) -> dict[str, Any]:
 
 def _selected_id(value: Any) -> str:
     text = str(value or "").strip()
-    if (
-        not text
-        or len(text) > 512
-        or any(ord(char) < 32 for char in text)
-    ):
+    if not text or len(text) > 512 or any(ord(char) < 32 for char in text):
         raise ValueError("topology identifier is invalid")
     return text
 
@@ -400,19 +349,36 @@ def _text(value: Any, limit: int) -> str:
     return text[:limit]
 
 
+def _source_path(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text or len(text) > 1024:
+        return ""
+    if any(ord(char) < 32 for char in text) or "\\" in text:
+        return ""
+    if text.startswith("/") or "//" in text or ":" in text:
+        return ""
+    path = PurePosixPath(text)
+    if (
+        any(part in {"", ".", ".."} for part in path.parts)
+        or path.as_posix() != text
+        or not re.fullmatch(r"[A-Za-z0-9._/-]+", text)
+    ):
+        return ""
+    return text
+
+
+def _source_symbol(value: Any) -> str:
+    text = str(value or "").strip()
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]{0,511}", text):
+        return ""
+    return text
+
+
 def _line_range(value: Any) -> tuple[int, ...]:
     if not isinstance(value, (list, tuple)):
         return ()
-    result = tuple(
-        item
-        for item in value[:2]
-        if type(item) is int and item > 0
-    )
-    return (
-        ()
-        if len(result) == 2 and result[0] > result[1]
-        else result
-    )
+    result = tuple(item for item in value[:2] if type(item) is int and item > 0)
+    return () if len(result) == 2 and result[0] > result[1] else result
 
 
 def _nonnegative_int(value: Any) -> int:
@@ -432,47 +398,29 @@ def _finite_or_none(value: Any) -> float | None:
 
 def _relation(value: Any) -> str:
     return (
-        re.sub(
-            r"[^A-Za-z0-9._:/-]+",
-            "_",
-            str(value or "related"),
-        ).strip("_.")[:96]
+        re.sub(r"[^A-Za-z0-9._:/-]+", "_", str(value or "related"))
+        .strip("_.")[:96]
         or "related"
     )
 
 
 def _id(prefix: str, value: Any) -> str:
-    clean = (
-        re.sub(r"[^A-Za-z0-9._:/-]+", "-", prefix).strip("-.")
-        or "spatial"
-    )
+    clean = re.sub(r"[^A-Za-z0-9._:/-]+", "-", prefix).strip("-.") or "spatial"
     return f"{clean}:{stable_digest(value, digest_size=12)}"
 
 
-def _position(
-    node: Mapping[str, Any],
-    index: int,
-) -> tuple[float, float, float]:
+def _position(node: Mapping[str, Any], index: int) -> tuple[float, float, float]:
     values = tuple(node.get(axis) for axis in ("x", "y", "z"))
     if all(
-        isinstance(item, (int, float))
-        and math.isfinite(float(item))
+        isinstance(item, (int, float)) and math.isfinite(float(item))
         for item in values
     ):
         return (float(values[0]), float(values[1]), float(values[2]))
     raw = bytes.fromhex(
-        stable_digest(
-            {"node": node.get("id"), "index": index},
-            digest_size=12,
-        )
+        stable_digest({"node": node.get("id"), "index": index}, digest_size=12)
     )
     result = tuple(
-        (
-            int.from_bytes(raw[offset : offset + 4], "big")
-            / 2**32
-            - 0.5
-        )
-        * 20
+        (int.from_bytes(raw[offset : offset + 4], "big") / 2**32 - 0.5) * 20
         for offset in (0, 4, 8)
     )
     return (result[0], result[1], result[2])
@@ -480,20 +428,11 @@ def _position(
 
 def _bounds(
     values: list[tuple[float, float, float]],
-) -> tuple[
-    tuple[float, float, float],
-    tuple[float, float, float],
-]:
+) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
     if not values:
         return (0.0, 0.0, 0.0), (0.0, 0.0, 0.0)
-    minimum = tuple(
-        min(item[index] for item in values)
-        for index in range(3)
-    )
-    maximum = tuple(
-        max(item[index] for item in values)
-        for index in range(3)
-    )
+    minimum = tuple(min(item[index] for item in values) for index in range(3))
+    maximum = tuple(max(item[index] for item in values) for index in range(3))
     return (
         (minimum[0], minimum[1], minimum[2]),
         (maximum[0], maximum[1], maximum[2]),
