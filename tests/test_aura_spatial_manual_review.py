@@ -19,7 +19,10 @@ from aura_spatial_coordinate_frames import (
     resolve_world_transform,
     validate_coordinate_frames,
 )
-from aura_spatial_interaction import compile_spatial_interaction
+from aura_spatial_interaction import (
+    compile_hotswap_request_guard,
+    compile_spatial_interaction,
+)
 from aura_spatial_scene import compile_spatial_scene
 from aura_spatial_ws_guard import (
     MAX_PROPOSAL_BYTES,
@@ -104,6 +107,24 @@ def test_interaction_metadata_cannot_override_authority_guards():
         )
 
 
+def test_hotswap_interaction_identity_binds_proposed_change_digest():
+    scene = _scene()
+    first = compile_hotswap_request_guard(
+        scene,
+        target_entity_ids=("entity:one",),
+        proposed_change_digest="a" * 64,
+    )
+    second = compile_hotswap_request_guard(
+        scene,
+        target_entity_ids=("entity:one",),
+        proposed_change_digest="b" * 64,
+    )
+    assert (
+        first["intent"]["interaction_id"]
+        != second["intent"]["interaction_id"]
+    )
+
+
 def test_scene_rejects_affirmative_authority_metadata():
     with pytest.raises(ValueError, match="AUTHORITY_METADATA_REJECTED"):
         _scene(metadata={"patch_authority": True})
@@ -136,6 +157,7 @@ def test_coordinate_resolution_applies_units_and_rejects_basis_change():
         frame_id="centimeters",
     )
     assert resolved.translation == pytest.approx((1.0, 0.0, 0.0))
+    assert resolved.scale == pytest.approx((0.01, 0.01, 0.01))
 
     mixed = (
         CoordinateFrame(frame_id="root"),
