@@ -131,9 +131,8 @@ jobs:
       - name: Remove every temporary transport surface
         run: |
           set -euo pipefail
-          rm -rf .aura_temp scripts/.s4b_round2 scripts/.s4b_fix scripts/.s4b_stage
-          rm -f .github/workflows/aura-s4b-round2-apply-temp.yml
-          rm -f .github/workflows/aura-s4b-codex-fix-temp.yml
+          rm -rf .aura_temp scripts/.s4b_*
+          rm -f .github/workflows/aura-s4b-*-temp.yml
           rm -f .github/workflows/aura-source-export-temp.yml
           rm -f .github/workflows/aura-tree-sha-temp.yml
           git diff --check
