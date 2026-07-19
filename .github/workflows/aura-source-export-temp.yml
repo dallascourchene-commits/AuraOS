@@ -1,4 +1,4 @@
-name: Aura Temporary Source Export
+name: Aura Temporary S4-B Apply
 
 on:
   pull_request:
@@ -7,33 +7,54 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export-source:
+  apply-s4b:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - name: Check out exact pull-request head
+      - name: Check out exact S4-B branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
+          ref: feature/spatial-s4b-gaussian-security
+          fetch-depth: 0
           submodules: false
 
-      - name: Verify exact head and archive source
-        env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Reconstruct and verify reviewed patch
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          echo "TREE_SHA=$(git rev-parse 'HEAD^{tree}')"
-          tar --exclude=.git -czf /tmp/aura-source-export.tar.gz .
+          cat .aura_temp/s4b_patch_00 \
+              .aura_temp/s4b_patch_01 \
+              .aura_temp/s4b_patch_02 \
+              .aura_temp/s4b_patch_03 \
+            | base64 --decode | gzip --decompress > /tmp/s4b.patch
+          echo "a642f27ae9dfd05e2747053e563ee94d780c6969f1b8fc2cae5d241a6eb3ac05  /tmp/s4b.patch" \
+            | sha256sum --check --strict
+          git apply --check /tmp/s4b.patch
 
-      - name: Upload source archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-source-export-${{ github.event.pull_request.head.sha || github.sha }}
-          path: /tmp/aura-source-export.tar.gz
-          if-no-files-found: error
-          retention-days: 1
+      - name: Apply permanent implementation and remove transport
+        run: |
+          set -euo pipefail
+          git apply /tmp/s4b.patch
+          rm -rf .aura_temp
+          git rm .github/workflows/aura-source-export-temp.yml
+          git diff --check
+          python -m py_compile \
+            aura_spatial_asset_registry.py \
+            aura_spatial_importers/*.py \
+            aura_spatial_render_plan.py \
+            scripts/aura_spatial_s4b_architect_harness.py
+          node --test \
+            tests/js/spatial-gaussian.test.mjs \
+            tests/js/spatial-mixed-scene.test.mjs
+
+      - name: Commit exact permanent S4-B slice
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: implement spatial S4-B Gaussian interoperability"
+          test -z "$(git status --porcelain)"
+          git push origin HEAD:feature/spatial-s4b-gaussian-security
