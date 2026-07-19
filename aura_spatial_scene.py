@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
+import re
 from typing import Any
 
 from aura_event_contracts import stable_digest
@@ -311,19 +312,20 @@ def _collect_authority_findings(
 ) -> None:
     if isinstance(value, Mapping):
         for key, item in value.items():
-            normalized = str(key).strip().lower()
+            normalized = re.sub(
+                r"[^a-z0-9]+",
+                "_",
+                str(key).strip().lower(),
+            ).strip("_")
             child = f"{path}.{key}"
-            if (
-                normalized in _AUTHORITY_KEYS
-                and item not in (False, None, "", 0)
-            ):
+            if normalized in _AUTHORITY_KEYS:
                 findings.append(
                     _finding(
                         "AUTHORITY_METADATA_REJECTED",
                         child,
                         (
-                            "spatial metadata cannot carry an affirmative "
-                            "authority claim"
+                            "spatial metadata cannot carry an authority "
+                            "field, including a false-valued alias"
                         ),
                     )
                 )
