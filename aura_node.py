@@ -6319,7 +6319,6 @@ async def main():
 
                 # Fallback to standard concept query search
                 concept = subcmd_args
-                import hashlib
                 from aura_qdkt import UnifiedQDKT
                 qdkt = UnifiedQDKT()
                 concept_hash = hashlib.sha256(concept.lower().strip().encode("utf-8")).hexdigest()[:12]
