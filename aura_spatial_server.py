@@ -321,6 +321,12 @@ def dispatch_spatial_request(
             if not isinstance(packet, Mapping):
                 raise ValueError("packet must be an object")
             try:
+                expected_fixture_digest = _spatial_web_fixture_digest()
+            except (OSError, SourceIntegrityError, ValueError) as exc:
+                return _error(503, "SPATIAL_WEB_UNAVAILABLE", str(exc))
+            if packet.get("fixture_digest") != expected_fixture_digest:
+                raise ValueError("telemetry fixture_digest does not match served browser assets")
+            try:
                 receipt, summary = state.sessions.record_browser_telemetry(
                     session_id,
                     packet,

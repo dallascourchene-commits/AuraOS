@@ -192,6 +192,34 @@ def test_server_end_to_end_is_bounded_review_only_and_dissolves():
     assert state.sessions.active_session_count == 0
 
 
+def test_server_rejects_telemetry_for_unserved_fixture_digest():
+    state = SpatialServerState()
+    scene = _scene()
+    state.register_scene(scene)
+    device = _profile()
+    plan = negotiate_spatial_render_plan(scene, device)
+    state.register_device(device)
+    state.register_plan(plan)
+    summary = state.sessions.create_session(scene, plan, device)
+
+    response = dispatch_spatial_request(
+        state,
+        "POST",
+        "/api/spatial/telemetry",
+        {
+            "session_id": summary.session_id,
+            "packet": _browser_telemetry_packet(
+                plan.to_dict(),
+                device,
+                "0" * 64,
+            ),
+        },
+    )
+
+    assert response.status == 400
+    assert "fixture_digest" in response.json()["error"]
+
+
 def test_server_rejects_interactions_after_session_cancellation():
     state = SpatialServerState()
     scene = _scene()

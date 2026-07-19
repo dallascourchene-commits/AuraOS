@@ -12,6 +12,11 @@ test("WebXR plans retain an admitted non-immersive presentation renderer", () =>
   assert.equal(selectBrowserPresentationRenderer(plan), "ACCESSIBLE_2D");
 });
 
+test("WebGPU shadow plans choose an admitted active presentation fallback", () => {
+  const plan = planFixture("WEBGPU");
+  assert.equal(selectBrowserPresentationRenderer(plan), "ACCESSIBLE_2D");
+});
+
 test("WebXR plans fail closed without a presentation fallback", () => {
   const plan = { ...planFixture("WEBXR"), fallback_renderers: ["WEBXR"] };
   assert.throws(() => selectBrowserPresentationRenderer(plan), /fallback/);

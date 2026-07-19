@@ -11,7 +11,6 @@ import { WebXRSessionAdapter } from "./webxr_session.js";
 
 const PRESENTATION_RENDERERS = new Set([
   "WEBGL2",
-  "WEBGPU",
   "ACCESSIBLE_2D",
   "HEADLESS",
 ]);
@@ -31,7 +30,7 @@ export function browserPresentationRendererCandidates(plan) {
   const admitted = [plan.selected_renderer, ...plan.fallback_renderers];
   const ordered =
     plan.selected_renderer === "WEBXR"
-      ? ["WEBGL2", "WEBGPU", "ACCESSIBLE_2D", "HEADLESS"]
+      ? ["WEBGL2", "ACCESSIBLE_2D", "HEADLESS"]
       : admitted;
   const candidates = [
     ...new Set(ordered.filter((renderer) => admitted.includes(renderer))),
