@@ -17,6 +17,7 @@ from aura_event_contracts import canonical_json, sanitize_payload, stable_digest
 
 SPATIAL_CONTRACTS_VERSION = "AURA_SPATIAL_CONTRACTS_V1"
 SPATIAL_SCENE_SCHEMA_VERSION = "1.0"
+MAX_SPATIAL_METADATA_BYTES = 65_536
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 SPATIAL_EXECUTION_AUTHORITY = False
@@ -135,7 +136,10 @@ def _vector(
     return result
 
 
-def _quaternion(value: Sequence[Any], field_name: str) -> tuple[float, float, float, float]:
+def _quaternion(
+    value: Sequence[Any],
+    field_name: str,
+) -> tuple[float, float, float, float]:
     result = _vector(value, 4, field_name)
     norm = math.sqrt(sum(item * item for item in result))
     if norm <= 1e-12:
@@ -219,6 +223,11 @@ def _metadata(value: Any, field_name: str = "metadata") -> tuple[tuple[str, Any]
     if not isinstance(value, Mapping):
         raise ValueError(f"{field_name} must be an object")
     value = sanitize_payload(value)
+    serialized = canonical_json(value).encode("utf-8")
+    if len(serialized) > MAX_SPATIAL_METADATA_BYTES:
+        raise ValueError(
+            f"{field_name} exceeds the {MAX_SPATIAL_METADATA_BYTES}-byte limit"
+        )
     frozen = _freeze_json(value, field_name)
     assert isinstance(frozen, tuple)
     return frozen
@@ -788,6 +797,7 @@ class SpatialInteractionIntent(CanonicalSpatialRecord):
 __all__ = [
     "CoordinateFrame",
     "Handedness",
+    "MAX_SPATIAL_METADATA_BYTES",
     "PATCH_AUTHORITY",
     "SPATIAL_CONTRACTS_VERSION",
     "SPATIAL_EXECUTION_AUTHORITY",
