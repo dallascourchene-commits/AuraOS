@@ -20,8 +20,8 @@ from aura_coding_waboose_review_lessons import (
     DEFAULT_REGISTRY_PATH,
     PATCH_AUTHORITY,
     REVIEW_LESSON_VERSION,
-    ReviewLessonEngine,
     VSA_PATCH_AUTHORITY,
+    ReviewLessonEngine,
     detect_authority_aliases,
     detect_count_without_byte_budget,
     detect_noncanonical_source_path,
@@ -100,7 +100,7 @@ def _review_finding(
         "message": str(detector.get("message") or title),
         "file": file,
         "line_start": max(1, int(line_start)),
-        "line_end": max(max(1, int(line_start)), int(line_end)),
+        "line_end": max(1, int(line_start), int(line_end)),
         "suggested_fix": suggested_fix,
         "evidence": [
             {
@@ -612,8 +612,8 @@ class ReviewLessonAwareCodingWaboose(CodingWaboose):
 
 
 __all__ = [
-    "ReviewLessonAwareCodingWaboose",
     "WABOOSE_REVIEW_LEARNING_VERSION",
+    "ReviewLessonAwareCodingWaboose",
     "scan_python_review_lessons",
     "scan_text_review_lessons",
 ]

@@ -4,8 +4,8 @@ import copy
 import json
 from pathlib import Path
 
-import pytest
 from jsonschema import Draft202012Validator
+import pytest
 
 from aura_coding_waboose_review_lessons import (
     DETECTORS,
