@@ -1,9 +1,9 @@
 name: Aura Temporary Tree SHA
 
 on:
-  push:
-    branches:
-      - feature/spatial-s4b-gaussian-security
+  pull_request:
+    paths:
+      - ".github/workflows/aura-tree-sha-temp.yml"
   workflow_dispatch:
 
 permissions:
