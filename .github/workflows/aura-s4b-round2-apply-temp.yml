@@ -1,3 +1,4 @@
+# Final isolated hash-verified S4-B apply. All competing branch writers were removed.
 name: Aura Temporary S4-B Verified Patch Apply
 
 on:
@@ -20,7 +21,7 @@ jobs:
           ref: feature/spatial-s4b-gaussian-security
           fetch-depth: 0
           submodules: false
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Prove permanent source still matches exported review head
         run: |
@@ -136,15 +137,88 @@ jobs:
           test ! -e .aura_temp
           test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
 
-      - name: Commit, rebase, and push verified source repair
+      - name: Publish verified repair through Git Data API
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: feature/spatial-s4b-gaussian-security
         run: |
           set -euo pipefail
-          branch="feature/spatial-s4b-gaussian-security"
           git add -A
-          test ! -e .aura_temp
-          test -z "$(find scripts -maxdepth 1 -name '.s4b_*' -print -quit)"
-          git -c user.name='Aura Spatial Review' -c user.email='aura-spatial-review@users.noreply.github.com' \
-            commit -m 'fix: resolve Codex S4-B safety findings'
-          git fetch --no-tags origin "$branch"
-          git rebase "origin/$branch"
-          git push origin "HEAD:$branch"
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          from urllib.error import HTTPError
+          from urllib.request import Request, urlopen
+
+          repository = os.environ["REPOSITORY"]
+          branch = os.environ["BRANCH"]
+          token = os.environ["GH_TOKEN"]
+          parent = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          base_tree = subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip()
+
+          def api(method: str, path: str, payload: dict | None = None) -> dict:
+              body = None if payload is None else json.dumps(payload).encode("utf-8")
+              request = Request(
+                  f"https://api.github.com/repos/{repository}{path}",
+                  data=body,
+                  method=method,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "aura-spatial-s4b-verifier",
+                  },
+              )
+              try:
+                  with urlopen(request, timeout=60) as response:
+                      return json.loads(response.read().decode("utf-8"))
+              except HTTPError as exc:
+                  detail = exc.read().decode("utf-8", errors="replace")
+                  raise RuntimeError(f"GitHub API {method} {path} failed: {exc.code} {detail}") from exc
+
+          ref = api("GET", f"/git/ref/heads/{branch}")
+          observed = ref["object"]["sha"]
+          if observed != parent:
+              raise RuntimeError(f"branch moved before publish: expected {parent}, observed {observed}")
+
+          raw_names = subprocess.check_output(["git", "diff", "--cached", "--name-only", "-z"]).split(b"\0")
+          changed = [item.decode("utf-8") for item in raw_names if item]
+          deleted_raw = subprocess.check_output(
+              ["git", "diff", "--cached", "--diff-filter=D", "--name-only", "-z"]
+          ).split(b"\0")
+          deleted = {item.decode("utf-8") for item in deleted_raw if item}
+          if not changed:
+              raise RuntimeError("verified repair produced no staged changes")
+
+          entries: list[dict] = []
+          for path in changed:
+              if path in deleted:
+                  entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
+                  continue
+              stage = subprocess.check_output(["git", "ls-files", "-s", "--", path], text=True).strip()
+              if not stage:
+                  raise RuntimeError(f"missing staged mode for {path}")
+              mode = stage.split()[0]
+              content = base64.b64encode(Path(path).read_bytes()).decode("ascii")
+              blob = api("POST", "/git/blobs", {"content": content, "encoding": "base64"})
+              entries.append({"path": path, "mode": mode, "type": "blob", "sha": blob["sha"]})
+
+          tree = api("POST", "/git/trees", {"base_tree": base_tree, "tree": entries})
+          commit = api(
+              "POST",
+              "/git/commits",
+              {
+                  "message": "fix: resolve Codex S4-B safety findings",
+                  "tree": tree["sha"],
+                  "parents": [parent],
+              },
+          )
+          api("PATCH", f"/git/refs/heads/{branch}", {"sha": commit["sha"], "force": False})
+          print(f"published verified exact head {commit['sha']}")
+          PY
