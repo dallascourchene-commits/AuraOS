@@ -1,7 +1,9 @@
 """Fail-closed compilation of spatial UI actions into six-slot Aura intents."""
 from __future__ import annotations
 
-from typing import Any, Iterable
+from collections.abc import Iterable, Mapping
+import re
+from typing import Any
 
 from aura_event_contracts import stable_digest
 from aura_spatial_contracts import (
@@ -11,6 +13,28 @@ from aura_spatial_contracts import (
 )
 
 SPATIAL_INTERACTION_VERSION = "AURA_SPATIAL_INTERACTION_V1"
+_ACTOR_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
+_AUTHORITY_KEYS = frozenset(
+    {
+        "approval",
+        "authorization",
+        "authority_decision",
+        "automatic_commit",
+        "automatic_merge",
+        "automatic_pull_request",
+        "automatic_push",
+        "capability_lease",
+        "execution_authority",
+        "lease",
+        "lease_id",
+        "merge",
+        "patch_authority",
+        "production_mutation",
+        "promotion",
+        "renderer_input_is_authority",
+        "verifier_receipt",
+    }
+)
 
 _ACTION_SLOTS: dict[SpatialInteractionAction, dict[str, str]] = {
     SpatialInteractionAction.SELECT: {
@@ -78,20 +102,36 @@ def compile_spatial_interaction(
     action: SpatialInteractionAction | str,
     target_entity_ids: Iterable[str],
     actor_ref: str = "human:local",
-    metadata: dict[str, Any] | None = None,
+    metadata: Mapping[str, Any] | None = None,
 ) -> SpatialInteractionIntent:
     if not isinstance(scene, SpatialSceneSnapshot):
         raise ValueError("scene must be a SpatialSceneSnapshot")
-    action_value = (
-        action
-        if isinstance(action, SpatialInteractionAction)
-        else SpatialInteractionAction(str(action))
-    )
+    try:
+        action_value = (
+            action
+            if isinstance(action, SpatialInteractionAction)
+            else SpatialInteractionAction(str(action))
+        )
+    except ValueError as exc:
+        raise ValueError(f"unsupported spatial interaction action: {action}") from exc
+
+    actor = str(actor_ref or "human:local").strip()
+    if not _ACTOR_REF.fullmatch(actor):
+        raise ValueError("actor_ref contains unsupported characters")
+    if metadata is not None and not isinstance(metadata, Mapping):
+        raise ValueError("metadata must be an object")
+    supplied_metadata = dict(metadata or {})
+    authority_path = _find_authority_key(supplied_metadata)
+    if authority_path is not None:
+        raise ValueError(f"interaction metadata cannot supply authority field: {authority_path}")
+
     targets = tuple(
-        dict.fromkeys(
-            str(item).strip()
-            for item in target_entity_ids
-            if str(item).strip()
+        sorted(
+            {
+                str(item).strip()
+                for item in target_entity_ids
+                if str(item).strip()
+            }
         )
     )
     if not targets:
@@ -101,48 +141,48 @@ def compile_spatial_interaction(
     if missing:
         raise ValueError(f"unknown scene entities: {missing}")
 
-    source_refs: list[str] = [
+    source_refs = {
         f"scene:{scene.scene_id}#{scene.scene_digest}",
-        f"actor:{str(actor_ref or 'human:local').strip()}",
-    ]
+        f"actor:{actor}",
+    }
     for target in targets:
-        source_refs.extend(entity_by_id[target].source_refs)
-    source_refs = list(dict.fromkeys(source_refs))
+        source_refs.update(entity_by_id[target].source_refs)
+    ordered_refs = tuple(sorted(source_refs))
 
-    requires_forge = (
-        action_value is SpatialInteractionAction.PREPARE_REPAIR_REQUEST
-    )
+    requires_forge = action_value is SpatialInteractionAction.PREPARE_REPAIR_REQUEST
     body = {
         "scene_id": scene.scene_id,
         "scene_digest": scene.scene_digest,
         "action": action_value.value,
         "targets": list(targets),
-        "actor_ref": str(actor_ref or "human:local").strip(),
-        "source_refs": source_refs,
+        "actor_ref": actor,
+        "source_refs": list(ordered_refs),
+    }
+    protected_metadata = {
+        **supplied_metadata,
+        "actor_ref": actor,
+        "renderer_input_is_authority": False,
+        "automatic_commit": False,
+        "automatic_push": False,
+        "automatic_pull_request": False,
+        "automatic_merge": False,
+        "production_mutation": False,
     }
     return SpatialInteractionIntent(
         interaction_id=(
-            "spatial-interaction:"
-            f"{stable_digest(body, digest_size=12)}"
+            "spatial-interaction:" + stable_digest(body, digest_size=12)
         ),
         scene_id=scene.scene_id,
         scene_digest=scene.scene_digest,
         action=action_value,
         target_entity_ids=targets,
         intent_slots=_ACTION_SLOTS[action_value],
-        source_refs=tuple(source_refs),
+        source_refs=ordered_refs,
         review_only=True,
         requires_forge=requires_forge,
         execution_authority=False,
         patch_authority=False,
-        metadata={
-            "actor_ref": str(actor_ref or "human:local").strip(),
-            "renderer_input_is_authority": False,
-            "automatic_commit": False,
-            "automatic_push": False,
-            "automatic_merge": False,
-            **(metadata or {}),
-        },
+        metadata=protected_metadata,
     )
 
 
@@ -153,11 +193,9 @@ def compile_hotswap_request_guard(
     proposed_change_digest: str,
     actor_ref: str = "human:local",
 ) -> dict[str, Any]:
-    """Replace unsafe queued-success semantics with a review-only Forge handoff intent."""
+    """Compile a review-only Forge handoff; never report execution success."""
     digest = str(proposed_change_digest or "").strip().lower()
-    if len(digest) != 64 or any(
-        ch not in "0123456789abcdef" for ch in digest
-    ):
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
         raise ValueError(
             "proposed_change_digest must be a 64-character lowercase hex digest"
         )
@@ -189,9 +227,28 @@ def compile_hotswap_request_guard(
         "production_mutation": False,
         "automatic_commit": False,
         "automatic_push": False,
+        "automatic_pull_request": False,
         "automatic_merge": False,
         "version": SPATIAL_INTERACTION_VERSION,
     }
+
+
+def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            normalized = str(key).strip().lower()
+            child = f"{path}.{key}"
+            if normalized in _AUTHORITY_KEYS:
+                return child
+            finding = _find_authority_key(item, child)
+            if finding is not None:
+                return finding
+    elif isinstance(value, (list, tuple, set, frozenset)):
+        for index, item in enumerate(value):
+            finding = _find_authority_key(item, f"{path}[{index}]")
+            if finding is not None:
+                return finding
+    return None
 
 
 __all__ = [
