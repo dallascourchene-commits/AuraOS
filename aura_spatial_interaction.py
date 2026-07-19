@@ -40,6 +40,10 @@ _AUTHORITY_KEYS = frozenset(
         "vsa_patch_authority",
     }
 )
+_AUTHORITY_KEY_TOKENS = frozenset(
+    re.sub(r"[^a-z0-9]+", "", key.lower())
+    for key in _AUTHORITY_KEYS
+)
 
 _ACTION_SLOTS: dict[SpatialInteractionAction, dict[str, str]] = {
     SpatialInteractionAction.SELECT: {
@@ -256,12 +260,7 @@ def compile_hotswap_request_guard(
 
 
 def _normalize_metadata_key(value: Any) -> str:
-    text = re.sub(
-        r"(?<=[a-z0-9])(?=[A-Z])",
-        "_",
-        str(value).strip(),
-    )
-    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+    return re.sub(r"[^a-z0-9]+", "", str(value).lower())
 
 
 def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
@@ -269,7 +268,7 @@ def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
         for key, item in value.items():
             normalized = _normalize_metadata_key(key)
             child = f"{path}.{key}"
-            if normalized in _AUTHORITY_KEYS:
+            if normalized in _AUTHORITY_KEY_TOKENS:
                 return child
             finding = _find_authority_key(item, child)
             if finding is not None:
