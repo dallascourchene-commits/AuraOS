@@ -1,0 +1,36 @@
+name: Aura Temporary Exact Source Export
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-source-export-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+          submodules: false
+      - name: Verify and archive source
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          tar --exclude=.git -czf /tmp/aura-exact-source.tar.gz .
+      - name: Upload exact source
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-exact-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/aura-exact-source.tar.gz
+          if-no-files-found: error
+          retention-days: 1
