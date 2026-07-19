@@ -84,7 +84,7 @@ def compile_coordinate_conversion_matrix(
     elif source_up_axis == "Z_UP":
         basis = ((1.0, 0.0, 0.0), (0.0, 0.0, 1.0), (0.0, -1.0, 0.0))
     else:
-        basis = ((0.0, 1.0, 0.0), (-1.0, 0.0, 0.0), (0.0, 0.0, 1.0))
+        basis = ((0.0, -1.0, 0.0), (1.0, 0.0, 0.0), (0.0, 0.0, 1.0))
     if source_handedness == "LEFT_HANDED":
         basis = tuple((-row[0], row[1], row[2]) for row in basis)
     return (

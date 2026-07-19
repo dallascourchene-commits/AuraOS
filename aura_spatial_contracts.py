@@ -27,6 +27,8 @@ SPATIAL_DISSOLUTION_RECEIPT_SCHEMA_VERSION = "1.0"
 MAX_SPATIAL_METADATA_BYTES = 65_536
 MAX_SPATIAL_METADATA_DEPTH = 32
 MAX_SPATIAL_METADATA_ITEMS = 8_192
+MAX_SPATIAL_PROJECTION_METADATA_DEPTH = 4
+MAX_SPATIAL_PROJECTION_CONTAINER_ITEMS = 128
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 SPATIAL_EXECUTION_AUTHORITY = False
@@ -315,6 +317,22 @@ def _find_protected_authority_path(value: Any, path: str = "metadata") -> str | 
     return None
 
 
+def _validate_projection_metadata_shape(value: Any, field_name: str) -> None:
+    stack: list[tuple[Any, int]] = [(value, 0)]
+    while stack:
+        current, depth = stack.pop()
+        if depth > MAX_SPATIAL_PROJECTION_METADATA_DEPTH:
+            raise ValueError(f"{field_name} exceeds its projection nesting ceiling")
+        if isinstance(current, Mapping):
+            if len(current) > MAX_SPATIAL_PROJECTION_CONTAINER_ITEMS:
+                raise ValueError(f"{field_name} contains an oversized object")
+            stack.extend((item, depth + 1) for item in current.values())
+        elif isinstance(current, (list, tuple)):
+            if len(current) > MAX_SPATIAL_PROJECTION_CONTAINER_ITEMS:
+                raise ValueError(f"{field_name} contains an oversized array")
+            stack.extend((item, depth + 1) for item in current)
+
+
 def _projection_metadata(
     value: Any,
     field_name: str,
@@ -329,6 +347,7 @@ def _projection_metadata(
         candidate = value
     if not isinstance(candidate, Mapping):
         raise ValueError(f"{field_name} must be an object")
+    _validate_projection_metadata_shape(candidate, field_name)
     protected = _find_protected_authority_path(candidate, field_name)
     if protected is not None:
         raise ValueError(f"{field_name} cannot contain protected authority field: {protected}")
@@ -1423,7 +1442,7 @@ class SpatialDissolutionReceipt(CanonicalSpatialRecord):
     render_receipt_ids: tuple[str, ...] = ()
     released_asset_ids: tuple[str, ...] = ()
     source_refs: tuple[str, ...] = ()
-    renderer_disposed: bool = True
+    renderer_disposed: bool = False
     leases_released: bool = True
     raw_sensor_data_retained: bool = False
     production_mutation: bool = False
@@ -1503,8 +1522,12 @@ class SpatialDissolutionReceipt(CanonicalSpatialRecord):
                 field_name,
                 _strict_bool(getattr(self, field_name), f"dissolution.{field_name}"),
             )
-        if not self.renderer_disposed or not self.leases_released:
-            raise ValueError("dissolution receipts require renderer and lease release")
+        if self.renderer_disposed:
+            raise ValueError(
+                "dissolution receipts cannot claim renderer disposal without a bound client acknowledgement"
+            )
+        if not self.leases_released:
+            raise ValueError("dissolution receipts require lease release")
         if (
             self.raw_sensor_data_retained
             or self.production_mutation

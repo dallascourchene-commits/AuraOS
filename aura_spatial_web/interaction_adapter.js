@@ -99,13 +99,17 @@ export function compileBrowserInteraction({
 }
 
 export function toServerInteractionRequest(packet) {
+  const {
+    renderer_input_is_authority: _browserAuthoritySentinel,
+    ...serverMetadata
+  } = packet.metadata;
   return Object.freeze({
     session_id: packet.session_id,
     action: packet.action,
     target_entity_ids: [...packet.target_entity_ids],
     actor_ref: packet.actor_ref,
     metadata: {
-      ...packet.metadata,
+      ...serverMetadata,
       browser_scene_id: packet.scene_id,
       browser_scene_digest: packet.scene_digest,
     },

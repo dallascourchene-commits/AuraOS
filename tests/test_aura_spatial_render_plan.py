@@ -214,3 +214,23 @@ def test_device_runtime_matches_accessibility_schema_and_canonicalizes_source_re
     noncanonical["source_refs"] = ["source:z", "source:a"]
     with pytest.raises(ValueError, match="not canonical"):
         validate_spatial_device_profile_payload(noncanonical)
+
+
+def test_public_s3a_metadata_schemas_bound_depth_and_container_width():
+    nested: object = "leaf"
+    for _ in range(5):
+        nested = [nested]
+    wide = list(range(129))
+    for filename in (
+        "aura_spatial_device_profile.schema.json",
+        "aura_spatial_render_receipt.schema.json",
+    ):
+        schema = json.loads((ROOT / "schemas" / filename).read_text(encoding="utf-8"))
+        safe_value = {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$ref": "#/$defs/safeValue4",
+            "$defs": schema["$defs"],
+        }
+        validator = Draft202012Validator(safe_value)
+        assert list(validator.iter_errors(nested))
+        assert list(validator.iter_errors(wide))

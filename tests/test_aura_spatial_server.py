@@ -7,7 +7,10 @@ from aura_spatial_contracts import (
     SpatialEntity,
     SpatialEntityType,
 )
-from aura_spatial_render_plan import compile_spatial_device_profile
+from aura_spatial_render_plan import (
+    compile_spatial_device_profile,
+    negotiate_spatial_render_plan,
+)
 from aura_spatial_scene import compile_spatial_scene
 from aura_spatial_server import (
     MAX_SPATIAL_HTTP_BODY_BYTES,
@@ -187,6 +190,33 @@ def test_server_end_to_end_is_bounded_review_only_and_dissolves():
     assert dissolved.status == 200
     assert dissolved.json()["session_active"] is False
     assert state.sessions.active_session_count == 0
+
+
+def test_server_rejects_interactions_after_session_cancellation():
+    state = SpatialServerState()
+    scene = _scene()
+    state.register_scene(scene)
+    device = _profile()
+    plan = negotiate_spatial_render_plan(scene, device)
+    state.register_device(device)
+    state.register_plan(plan)
+    summary = state.sessions.create_session(scene, plan, device)
+    state.sessions.cancel_session(summary.session_id)
+
+    response = dispatch_spatial_request(
+        state,
+        "POST",
+        "/api/spatial/interactions",
+        {
+            "session_id": summary.session_id,
+            "action": "SELECT",
+            "target_entity_ids": ["entity:one"],
+            "actor_ref": "human:local",
+        },
+    )
+
+    assert response.status == 409
+    assert response.json()["code"] == "SESSION_NOT_ACTIVE"
 
 
 def test_server_rejects_noncanonical_routes_and_oversized_bodies():

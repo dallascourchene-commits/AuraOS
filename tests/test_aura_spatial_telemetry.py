@@ -82,3 +82,12 @@ def test_browser_telemetry_rejects_stale_or_unsupported_claims():
     non_finite["metrics"]["frame_ms"]["value"] = float("nan")
     with pytest.raises(ValueError, match="finite"):
         compile_spatial_browser_telemetry_receipt(plan, device, non_finite, sequence=1)
+
+
+def test_browser_telemetry_accepts_large_finite_integer_without_float_overflow():
+    plan, device = _plan_device()
+    packet = _packet(plan, device)
+    value = 10**400
+    packet["metrics"]["frame_ms"]["value"] = value
+    receipt = compile_spatial_browser_telemetry_receipt(plan, device, packet, sequence=1)
+    assert receipt.to_dict()["metrics"]["browser_metrics"]["frame_ms"]["value"] == value

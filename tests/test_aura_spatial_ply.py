@@ -5,6 +5,7 @@ import struct
 
 import pytest
 
+from aura_spatial_coordinate_frames import apply_coordinate_conversion, compile_coordinate_conversion_matrix
 from aura_spatial_importers.contracts import CoordinateConversion
 from aura_spatial_importers.ply import import_ply_bytes, import_ply_file
 
@@ -55,3 +56,12 @@ def test_ply_rejects_non_uint8_color_properties():
             provenance_refs=("fixture",),
             coordinate_conversion=conversion,
         )
+
+
+def test_x_up_conversion_maps_source_up_to_positive_y():
+    matrix = compile_coordinate_conversion_matrix(
+        source_handedness="RIGHT_HANDED",
+        source_up_axis="X_UP",
+        source_meters_per_unit=1.0,
+    )
+    assert apply_coordinate_conversion((1.0, 0.0, 0.0), matrix) == (0.0, 1.0, 0.0)

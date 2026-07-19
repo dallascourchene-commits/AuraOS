@@ -209,7 +209,7 @@ def compile_spatial_dissolution_receipt(
         render_receipt_ids=summary.render_receipt_ids,
         released_asset_ids=tuple(released_asset_ids),
         source_refs=refs,
-        renderer_disposed=True,
+        renderer_disposed=False,
         leases_released=True,
         raw_sensor_data_retained=False,
         production_mutation=False,
@@ -240,7 +240,7 @@ def compile_spatial_dissolution_receipt(
         render_receipt_ids=provisional.render_receipt_ids,
         released_asset_ids=provisional.released_asset_ids,
         source_refs=provisional.source_refs,
-        renderer_disposed=True,
+        renderer_disposed=False,
         leases_released=True,
         raw_sensor_data_retained=False,
         production_mutation=False,
@@ -323,7 +323,9 @@ def compile_spatial_browser_telemetry_receipt(
         if evidence == "UNAVAILABLE":
             if value is not None:
                 raise ValueError("UNAVAILABLE telemetry values must be null")
-        elif isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        elif isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("telemetry values must be finite numeric values or unavailable")
+        elif isinstance(value, float) and not math.isfinite(value):
             raise ValueError("telemetry values must be finite numeric values or unavailable")
         unit = str(metric["unit"])
         method = str(metric["method"])

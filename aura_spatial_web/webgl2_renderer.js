@@ -262,8 +262,9 @@ function orthographicViewProjection(camera, aspect) {
 function projectOrtho(position, camera, width, height) {
   const [x, y] = rotatedRelative(position, camera);
   const scale = Math.max(1, camera.distance);
+  const aspect = width / Math.max(1, height);
   return [
-    width / 2 + (x * width) / (2 * scale),
+    width / 2 + (x * width) / (2 * scale * aspect),
     height / 2 - (y * height) / (2 * scale),
   ];
 }

@@ -346,9 +346,11 @@ def dispatch_spatial_request(
             )
             session_id = _required_id(supplied.get("session_id"), "session_id")
             try:
-                scene = state.sessions.get_scene(session_id)
+                scene = state.sessions.get_active_scene(session_id)
             except KeyError:
                 return _error(404, "SESSION_NOT_FOUND", "unknown or dissolved spatial session")
+            except ValueError:
+                return _error(409, "SESSION_NOT_ACTIVE", "spatial interaction requires an active session")
             targets = supplied.get("target_entity_ids", ())
             if isinstance(targets, (str, bytes, bytearray)) or not isinstance(targets, Sequence):
                 raise ValueError("target_entity_ids must be an array")

@@ -158,6 +158,15 @@ class SpatialProjectionSessionManager:
         with self._lock:
             return self._record(session_id).scene
 
+    def get_active_scene(self, session_id: str) -> SpatialSceneSnapshot:
+        """Return the scene only while its projection session is active."""
+
+        with self._lock:
+            record = self._record(session_id)
+            if record.summary.state is not SpatialSessionState.ACTIVE:
+                raise ValueError("spatial interaction requires an active session")
+            return record.scene
+
     def get_plan(self, session_id: str) -> SpatialRenderPlan:
         with self._lock:
             return self._record(session_id).plan

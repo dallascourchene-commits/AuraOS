@@ -189,7 +189,7 @@ The render plan is deterministic interchange evidence. Renderer order, fallback 
 
 `SpatialProjectionSessionManager` owns bounded in-memory session lifecycle state. A session is bound to one exact scene digest, one exact device-profile digest, and one exact render-plan digest. It is ephemeral, carries no raw sensor data, and cannot outlive explicit cancellation, failure, or dissolution.
 
-Render outcomes are recorded as immutable `SpatialRenderReceipt` packets with explicit evidence classes: measured, derived, estimated, or unavailable. A receipt may describe presentation evidence, but it cannot prove domain truth or authorize a mutation. `SpatialDissolutionReceipt` records terminal state, renderer disposal, lease release, and zero raw-sensor retention. Dissolution removes the active session.
+Render outcomes are recorded as immutable `SpatialRenderReceipt` packets with explicit evidence classes: measured, derived, estimated, or unavailable. A receipt may describe presentation evidence, but it cannot prove domain truth or authorize a mutation. `SpatialDissolutionReceipt` records terminal state, lease release, zero raw-sensor retention, and `renderer_disposed=false` until a future client-acknowledgement contract can bind renderer cleanup evidence to the session. Dissolution removes the active server session without overclaiming browser disposal.
 
 ### Bounded HTTP surface
 
@@ -231,19 +231,16 @@ The receipt binds the observed repository head and distinguishes current executi
 
 ### S3-A authority boundary
 
-Every public S3-A packet preserves the following boundary:
+Every public S3-A device profile, render plan, render receipt, and session summary preserves the following boundary:
 
 ```yaml
-production_mutation: false
-automatic_fix: false
-automatic_commit: false
-automatic_push: false
-automatic_pull_request: false
-automatic_merge: false
-human_review_required: true
-patch_authority: exact_source_spans_and_hashes_only
-vsa_patch_authority: false
+renderer_authority: false
+execution_authority: false
+patch_authority: false
 ```
+
+`SpatialDissolutionReceipt` additionally fixes `production_mutation: false` and `automatic_merge: false`. S4-A import receipts carry the broader review-only evidence envelope, including `human_review_required: true` and `patch_authority: exact_source_spans_and_hashes_only`.
+Device-profile metadata and render-receipt metrics are capped at four nested containers and 128 entries per container, matching their public schemas.
 
 Device capabilities, renderer selection, session state, visual selection, measured frame data, and dissolution receipts cannot become domain truth, patch authority, execution authority, merge authority, promotion authority, or production authority.
 

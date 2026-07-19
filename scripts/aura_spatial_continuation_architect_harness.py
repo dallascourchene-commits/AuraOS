@@ -461,7 +461,7 @@ def run(
         "surgeon_no_production_mutation": surgeon_control["production_mutation"] is False,
         "accessible_2d_fallback": "ACCESSIBLE_2D" in lifecycle["fallback_renderers"],
         "session_dissolved": lifecycle["active_sessions_after_dissolution"] == 0,
-        "renderer_disposed": lifecycle["renderer_disposed"] is True,
+        "renderer_disposal_not_overclaimed": lifecycle["renderer_disposed"] is False,
         "leases_released": lifecycle["leases_released"] is True,
         "no_raw_sensor_retention": lifecycle["raw_sensor_data_retained"] is False,
         "no_production_mutation": lifecycle["production_mutation"] is False,

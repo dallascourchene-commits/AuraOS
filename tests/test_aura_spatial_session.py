@@ -105,7 +105,7 @@ def test_session_binds_scene_plan_device_and_dissolves_without_retention():
 
     dissolution = manager.dissolve_session(summary.session_id)
     assert dissolution.terminal_state is SpatialSessionState.DISSOLVED
-    assert dissolution.renderer_disposed is True
+    assert dissolution.renderer_disposed is False
     assert dissolution.leases_released is True
     assert dissolution.raw_sensor_data_retained is False
     assert manager.active_session_count == 0
@@ -133,6 +133,16 @@ def test_cancel_then_dissolve_preserves_cancelled_terminal_evidence():
     assert dissolution.terminal_state is SpatialSessionState.CANCELLED
     assert dissolution.production_mutation is False
     assert dissolution.automatic_merge is False
+
+
+def test_terminal_session_rejects_active_scene_access():
+    scene, device, plan = _bound()
+    manager = SpatialProjectionSessionManager()
+    summary = manager.create_session(scene, plan, device)
+    assert manager.get_active_scene(summary.session_id) == scene
+    manager.cancel_session(summary.session_id)
+    with pytest.raises(ValueError, match="active session"):
+        manager.get_active_scene(summary.session_id)
 
 
 def test_stale_scene_or_device_binding_fails_closed():

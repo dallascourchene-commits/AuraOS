@@ -30,10 +30,10 @@ test("browser interaction compiles six-slot review-only intent", () => {
   ]);
   assert.deepEqual(result.target_entity_ids, ["entity:a", "entity:b"]);
   assert.equal(result.review_only, true);
-  assert.equal(
-    toServerInteractionRequest(result).metadata.renderer_input_is_authority,
-    false,
-  );
+  const serverRequest = toServerInteractionRequest(result);
+  assert.equal(result.metadata.renderer_input_is_authority, false);
+  assert.equal("renderer_input_is_authority" in serverRequest.metadata, false);
+  assert.equal(serverRequest.metadata.input_source, "MOUSE");
 });
 
 test("browser metadata cannot smuggle authority at any depth", () => {

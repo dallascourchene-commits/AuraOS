@@ -74,9 +74,19 @@
         "HEADLESS"
       ]
     },
-    "safeValue": {
+    "safeValue0": {
+      "maxLength": 65536,
+      "type": [
+        "null",
+        "boolean",
+        "number",
+        "string"
+      ]
+    },
+    "safeValue1": {
       "oneOf": [
         {
+          "maxLength": 65536,
           "type": [
             "null",
             "boolean",
@@ -86,13 +96,108 @@
         },
         {
           "items": {
-            "$ref": "#/$defs/safeValue"
+            "$ref": "#/$defs/safeValue0"
           },
+          "maxItems": 128,
           "type": "array"
         },
         {
           "additionalProperties": {
-            "$ref": "#/$defs/safeValue"
+            "$ref": "#/$defs/safeValue0"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue2": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue1"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue1"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue3": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue2"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue2"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue4": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue3"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue3"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
           },
           "type": "object"
         }
@@ -120,7 +225,11 @@
     },
     "metadata": {
       "additionalProperties": {
-        "$ref": "#/$defs/safeValue"
+        "$ref": "#/$defs/safeValue4"
+      },
+      "maxProperties": 128,
+      "propertyNames": {
+        "maxLength": 128
       },
       "type": "object"
     },

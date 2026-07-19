@@ -37,6 +37,8 @@ def test_structural_harness_proves_grounded_non_authoritative_lifecycle():
     assert receipt["breadboard"]["circuit_status"].endswith("UNPOWERED")
     assert receipt["lifecycle_proof"]["active_sessions_after_dissolution"] == 0
     assert receipt["lifecycle_proof"]["raw_sensor_data_retained"] is False
+    assert receipt["lifecycle_proof"]["renderer_disposed"] is False
+    assert receipt["checks"]["renderer_disposal_not_overclaimed"] is True
     assert receipt["browser_and_import_proof"]["patch_authority"] == module.PATCH_AUTHORITY
     assert receipt["production_mutation"] is False
     assert receipt["automatic_merge"] is False

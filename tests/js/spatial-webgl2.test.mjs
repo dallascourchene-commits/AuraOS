@@ -71,3 +71,12 @@ test("webgl2 renders topology, applies orbit, and cleans resources", () => {
   renderer.dispose();
   assert.ok(gl.calls.some((call) => call[0] === "lose"));
 });
+
+
+test("webgl2 picking uses the same aspect-correct projection as rendering", () => {
+  const renderer = new WebGL2Renderer({ gl: fakeGL() });
+  renderer.initialize(sceneFixture(), planFixture("WEBGL2"));
+  renderer.present({ width: 1600, height: 900 });
+  assert.equal(renderer.pick(762.5, 450, 5), "entity:a");
+  assert.equal(renderer.pick(733.333, 450, 5), null);
+});
