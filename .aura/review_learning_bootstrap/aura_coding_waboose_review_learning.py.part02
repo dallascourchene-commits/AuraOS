@@ -1,0 +1,160 @@
+        if isinstance(node, ast.Call):
+            name = _call_name(node.func).casefold()
+            if any(token in name for token in ("digest", "sha256", "blake2b")):
+                for argument in node.args:
+                    if not isinstance(argument, ast.Name):
+                        continue
+                    if not _SET_LIKE_NAME_RE.search(argument.id):
+                        continue
+                    prior_sort = sorted_assignments.get(argument.id, 0)
+                    line_start, line_end = _line(node)
+                    if prior_sort and prior_sort < line_start:
+                        continue
+                    detector_packet = detect_order_dependent_digesting(
+                        {
+                            "collection_name": argument.id,
+                            "canonicalized_before_digest": False,
+                        }
+                    )
+                    for detector in detector_packet:
+                        findings.append(
+                            _review_finding(
+                                detector=detector,
+                                file=file,
+                                title="Potential order-dependent digest identity",
+                                suggested_fix=(
+                                    "Canonicalize and deduplicate set-like values before assigning "
+                                    "IDs, hashing, caching, or interchange."
+                                ),
+                                line_start=line_start,
+                                line_end=line_end,
+                                category="correctness",
+                                severity="medium",
+                                confidence=0.88,
+                            )
+                        )
+
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name):
+            slice_node = node.slice
+            if not isinstance(slice_node, ast.Slice) or slice_node.lower is not None:
+                continue
+            if slice_node.upper is None:
+                continue
+            line_start, line_end = _line(node)
+            source_before = "\n".join(source.splitlines()[: max(0, line_start - 1)])
+            name = node.value.id
+            if not _SET_LIKE_NAME_RE.search(name):
+                continue
+            sorted_before = bool(
+                re.search(rf"(?:sorted\s*\(\s*{re.escape(name)}\b|{re.escape(name)}\.sort\s*\()", source_before)
+            )
+            if sorted_before:
+                continue
+            for detector in detect_truncate_before_sort(
+                {"truncated_before_sort": True, "collection": name}
+            ):
+                findings.append(
+                    _review_finding(
+                        detector=detector,
+                        file=file,
+                        title="Collection may be truncated before canonical sorting",
+                        suggested_fix="Normalize, stably sort, and deduplicate before applying the cap.",
+                        line_start=line_start,
+                        line_end=line_end,
+                        category="correctness",
+                        severity="medium",
+                        confidence=0.86,
+                    )
+                )
+
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            text = node.value
+            path_candidates: list[str] = []
+            if text.startswith("source:"):
+                path_candidates.append(text)
+            elif text.startswith(("./", "../", "/")) or "\\" in text:
+                if any(token in text.casefold() for token in (".py", ".json", ".md", "source")):
+                    path_candidates.append(text)
+            for candidate in path_candidates:
+                for detector in detect_noncanonical_source_path(candidate):
+                    start, end = _line(node)
+                    findings.append(
+                        _review_finding(
+                            detector=detector,
+                            file=file,
+                            title="Noncanonical source path is retained as evidence",
+                            suggested_fix="Require canonical repository-relative POSIX paths before constructing source anchors.",
+                            line_start=start,
+                            line_end=end,
+                            category="security",
+                            severity="high",
+                        )
+                    )
+            if "%2f" in text.casefold() or "%5c" in text.casefold() or "://" in text:
+                for detector in detect_uri_alias_encoding(text):
+                    start, end = _line(node)
+                    findings.append(
+                        _review_finding(
+                            detector=detector,
+                            file=file,
+                            title="Ambiguous encoded or repeated URI separator",
+                            suggested_fix="Reject decoded separator changes and ambiguous URI aliases fail closed.",
+                            line_start=start,
+                            line_end=end,
+                            category="security",
+                            severity="high",
+                        )
+                    )
+
+    count_constants = sorted(set(_COUNT_BUDGET_RE.findall(source)))
+    if count_constants and not _BYTE_BUDGET_RE.search(source):
+        variable_evidence_modules = (
+            "interaction",
+            "metadata",
+            "packet",
+            "review",
+            "scene",
+            "source",
+            "transport",
+            "websocket",
+            "ws_",
+        )
+        if any(token in file.casefold() for token in variable_evidence_modules):
+            for detector in detect_count_without_byte_budget(
+                {count_constants[0]: 1, "attacker_controlled": True}
+            ):
+                line_start = next(
+                    (
+                        index
+                        for index, line in enumerate(source.splitlines(), start=1)
+                        if count_constants[0] in line
+                    ),
+                    1,
+                )
+                findings.append(
+                    _review_finding(
+                        detector=detector,
+                        file=file,
+                        title="Count-bounded evidence has no module byte budget",
+                        suggested_fix="Add per-item and aggregate canonical byte ceilings and regression cases.",
+                        line_start=line_start,
+                        line_end=line_start,
+                        category="security",
+                        severity="medium",
+                        confidence=0.86,
+                    )
+                )
+
+    # A lexical fallback catches direct digest calls that AST cannot relate to a
+    # preceding canonicalization assignment.  It remains probable, not confirmed.
+    for match in _DIGEST_CALL_RE.finditer(source):
+        body = match.group("body")
+        names = re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", body)
+        for name in names[:4]:
+            if not _SET_LIKE_NAME_RE.search(name):
+                continue
+            if name in sorted_assignments or name in {"self", "str", "bytes", "value"}:
+                continue
+            prefix = source[: match.start()]
+            if re.search(rf"sorted\s*\(\s*{re.escape(name)}\b", prefix):
+                continue
