@@ -48,6 +48,14 @@ def test_runtime_registry_rejects_rehashed_authority_tampering() -> None:
         validate_review_lesson_registry(registry)
 
 
+def test_runtime_registry_requires_digest_to_match_schema() -> None:
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    registry.pop("registry_digest")
+
+    with pytest.raises(ReviewLessonError, match="keys mismatch"):
+        validate_review_lesson_registry(registry)
+
+
 def test_authority_detector_accepts_the_canonical_envelope() -> None:
     canonical = {
         "production_mutation": False,
@@ -85,9 +93,27 @@ def test_malformed_finding_does_not_abort_valid_neighbors() -> None:
         {
             "head_sha": "a" * 40,
             "findings": [
-                {"id": "good-1", "author": "Codex", "file": "a.py", "line": 1, "body": "good"},
-                {"id": "bad", "author": "Codex", "file": "../bad.py", "line": "nope", "body": "bad"},
-                {"id": "good-2", "author": "Codex", "file": "b.py", "line": 2, "body": "good"},
+                {
+                    "id": "good-1",
+                    "author": "Codex",
+                    "file": "a.py",
+                    "line": 1,
+                    "body": "good",
+                },
+                {
+                    "id": "bad",
+                    "author": "Codex",
+                    "file": "../bad.py",
+                    "line": "nope",
+                    "body": "bad",
+                },
+                {
+                    "id": "good-2",
+                    "author": "Codex",
+                    "file": "b.py",
+                    "line": 2,
+                    "body": "good",
+                },
             ],
         },
         current_head="a" * 40,
@@ -125,10 +151,116 @@ def test_persistent_review_store_stops_at_count_limit(tmp_path: Path) -> None:
         {
             "head_sha": "a" * 40,
             "findings": [
-                {"id": "overflow", "author": "Codex", "file": "module.py", "line": 999, "body": "overflow"}
+                {
+                    "id": "overflow",
+                    "author": "Codex",
+                    "file": "module.py",
+                    "line": 999,
+                    "body": "overflow",
+                }
             ],
         },
         current_head="a" * 40,
     )
     assert overflow["stored_count"] == 0
     assert overflow["rejected"][0]["reason"] == "storage_count_limit"
+
+
+def _bind_replay_to_current_head(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    ancestor: bool = True,
+) -> None:
+    import aura_review_lessons_replay as replay_module
+
+    monkeypatch.setattr(
+        replay_module,
+        "_repository_evidence",
+        lambda *_args, **_kwargs: {
+            "repository_head": "b" * 40,
+            "repository_tree": "c" * 40,
+        },
+    )
+    monkeypatch.setattr(
+        replay_module,
+        "_registry_merge_is_ancestor",
+        lambda *_args, **_kwargs: ancestor,
+    )
+
+
+def test_replay_rejects_registry_not_reachable_from_current_head(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch, ancestor=False)
+    with pytest.raises(ReviewLessonError, match="registry is stale"):
+        run_crucible_replay(REGISTRY)
+
+
+def test_replay_canonicalizes_equivalent_detector_sets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    detector_a = "detect_uri_alias_encoding"
+    detector_b = "detect_authority_aliases"
+    first = run_crucible_replay(
+        REGISTRY,
+        detector_ids=[detector_a, detector_b, detector_a],
+    )
+    second = run_crucible_replay(
+        REGISTRY,
+        detector_ids=[detector_b, detector_a],
+    )
+
+    assert first["selected_detector_ids"] == sorted({detector_a, detector_b})
+    assert first["receipts"] == second["receipts"]
+    assert first["packet_digest"] == second["packet_digest"]
+
+
+def test_replay_rejects_vacuous_selected_scenario_set(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    detector_id = str(payload["lessons"][0]["detector_id"])
+    payload["scenarios"] = [
+        item
+        for item in payload["scenarios"]
+        if item["detector_id"] != detector_id
+    ]
+    unsigned = dict(payload)
+    unsigned.pop("registry_digest")
+    payload["registry_digest"] = _registry_digest(unsigned)
+
+    with pytest.raises(ReviewLessonError, match="selected zero scenarios"):
+        run_crucible_replay(payload, detector_ids=[detector_id])
+
+
+def test_default_replay_requires_scenario_coverage_for_every_lesson(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    detector_ids = sorted(
+        {str(item["detector_id"]) for item in payload["scenarios"]}
+    )
+    assert len(detector_ids) > 1
+    missing_detector_id = detector_ids[0]
+    payload["scenarios"] = [
+        item
+        for item in payload["scenarios"]
+        if item["detector_id"] != missing_detector_id
+    ]
+    unsigned = dict(payload)
+    unsigned.pop("registry_digest")
+    payload["registry_digest"] = _registry_digest(unsigned)
+
+    with pytest.raises(ReviewLessonError, match="missing scenario coverage"):
+        run_crucible_replay(payload)

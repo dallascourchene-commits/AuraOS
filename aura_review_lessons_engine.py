@@ -192,6 +192,10 @@ class ReviewLessonEngine:
         return run_review_detector(detector_id, candidate)
 
     def crucible(self, *, detector_ids: Sequence[str] = ()) -> dict[str, Any]:
-        return run_crucible_replay(self.registry_path, detector_ids=detector_ids)
+        return run_crucible_replay(
+            self.registry_path,
+            detector_ids=detector_ids,
+            repository_root=self.repo_root,
+        )
 
 __all__ = ["ReviewLessonEngine"]
