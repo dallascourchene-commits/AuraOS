@@ -1,0 +1,26 @@
+name: Aura Temporary Tree SHA
+
+on:
+  push:
+    branches:
+      - feature/spatial-s4b-gaussian-security
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tree-sha:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: 6f77ae4e3f34054eb1ef0fd5aeeedc2ce7b2c3a3
+          fetch-depth: 1
+      - name: Print exact baseline tree
+        run: |
+          set -euo pipefail
+          echo "BASE_COMMIT=$(git rev-parse HEAD)"
+          echo "BASE_TREE=$(git rev-parse 'HEAD^{tree}')"
