@@ -18,51 +18,6 @@
   "branch": "feature/aura-spatial-s0-s2",
   "council_route": {
     "council_version": "AURA_ARCHITECT_COUNCIL_V3_SELECTIVE_CRITICS",
-    "lane_requirements": {
-      "continuity": [
-        "each task emits a bounded handoff artifact",
-        "all source and verifier references survive context boundaries"
-      ],
-      "cost": [
-        "stdlib-only core",
-        "bounded node/link projections",
-        "renderer and 3DGS work deferred to S3/S4"
-      ],
-      "rollback": [
-        "additive files can be reverted independently",
-        "bridge integration fails closed and is separately revertible"
-      ],
-      "scope": [
-        "new substrate remains projection-only",
-        "no existing planning tools are refactored",
-        "S0-S2 excludes renderer and device ownership"
-      ],
-      "sequence": [
-        "contracts before validators",
-        "validators before scene compiler",
-        "scene compiler before adapters and interactions",
-        "guard integration after interaction contract"
-      ],
-      "tests": [
-        "contract, adversarial, determinism, and compatibility tests",
-        "existing Coding Arena/showcase regressions remain green"
-      ]
-    },
-    "length_profile": {
-      "council_recommended": true,
-      "dependency_edge_count": 19,
-      "distinct_file_count": 22,
-      "estimated_max_model_turns": 30,
-      "estimated_min_model_turns": 10,
-      "large_task_count": 2,
-      "length_class": "LONG",
-      "reasons": [
-        "multiple_act_capsules",
-        "explicit_task_dependencies"
-      ],
-      "sequential_depth_estimate": 7,
-      "task_count": 10
-    },
     "native_model_calls_claimed": false,
     "routing_mode": "DETERMINISTIC_SELECTIVE_ROUTE_REPLAY",
     "selected_lanes": [
@@ -81,56 +36,67 @@
       "authority": false,
       "grounded": false,
       "mock_id": "mock:renderer:webxr_or_openxr_adapter",
-      "reason": "renderer selection is deferred to S3 and cannot block S0-S2 contracts"
+      "reason": "renderer selection is deferred to S3"
     },
     {
       "authority": false,
       "grounded": false,
       "mock_id": "mock:asset:gaussian_splat_runtime",
-      "reason": "3DGS import/render is deferred to S4; no training or runtime is claimed"
+      "reason": "3DGS import, rendering, capture, and training are deferred"
     },
     {
       "authority": false,
       "grounded": false,
       "mock_id": "mock:device:anchors_gaze_gesture_sensors",
-      "reason": "device signals remain future adapters and never authority"
+      "reason": "device signals remain future non-authoritative adapters"
     }
   ],
+  "historical_repository_native_evidence": {
+    "evidence_commit": "670e7cdb9e52290b88f6a427307be2924be97249",
+    "fatal_lint": "PASS",
+    "focused_tests": {
+      "failed": 0,
+      "passed": 27,
+      "python": "3.12"
+    },
+    "json_document_syntax": "PASS",
+    "python_compile": "PASS",
+    "scope": "Historical evidence only; it does not automatically verify later source changes."
+  },
   "implementation": {
     "bridge_hotswap_guard_integrated": true,
     "canonical_architecture_anchor_updated": true,
-    "codemap_regenerated": true,
-    "codemap_summary": {
-      "file_count": 1159,
-      "topology_edges": 21788,
-      "topology_nodes": 9561,
-      "topology_source": "compiled_deep_topology"
-    },
-    "temporary_finalization_machinery_removed": true,
-    "verified_source_commit": "670e7cdb9e52290b88f6a427307be2924be97249"
+    "codemap_regenerated_for_historical_source": true,
+    "manual_review_hardening": [
+      "authority metadata override rejection",
+      "asset URI and digest validation",
+      "canonical set-like scene inputs",
+      "coordinate unit application and explicit basis-change rejection",
+      "bounded and sanitized WebSocket proposal handoff",
+      "allowlisted topology evidence with an explicit byte ceiling",
+      "Draft 2020-12 schema and contract compatibility checks",
+      "retained-node and retained-edge oversized-payload regressions"
+    ],
+    "temporary_finalization_machinery_removed": true
   },
-  "repository_native_evidence": {
-    "finalization_workflow": {
-      "authority_invariants": "PASS",
-      "codemap_regeneration_and_compare": "PASS",
-      "fatal_lint": "PASS",
-      "focused_and_compatibility_tests": {
-        "failed": 0,
-        "passed": 27,
-        "python": "3.12"
-      },
-      "json_schema_syntax": "PASS",
-      "python_compile": "PASS"
-    },
-    "matrix_before_final_three_adversarial_cases": {
-      "failed": 0,
-      "passed": 24,
-      "python_versions": [
-        "3.10",
-        "3.12"
-      ]
-    },
-    "meaning": "Repository-native source, bridge, tests, schema, authority assertions, and regenerated navigation evidence passed. This is verification evidence, not merge or execution authority."
+  "manual_review": {
+    "automated_ci_rerun": false,
+    "automated_verification_status": "NOT_RUN_BY_USER_REQUEST",
+    "codex_command_posted": true,
+    "codex_response_observed": false,
+    "generated_navigation_reviewed": false,
+    "generated_navigation_scope": "EXCLUDED",
+    "local_fatal_ruff": "PASS_FOR_REWRITTEN_PYTHON_FILES",
+    "local_python_compile": "PASS_FOR_REWRITTEN_PYTHON_FILES",
+    "review_scope": [
+      "spatial Python modules",
+      "legacy bridge hotswap boundary",
+      "focused tests",
+      "Draft 2020-12 schema",
+      "workflow",
+      "architecture documentation",
+      "Council and breadboard receipts"
+    ]
   },
   "native_council_model_calls_claimed": false,
   "plan_digest": "62fb0b6315e2dbb6b951fc485646b916f8270203d54c707e6ab73ca7fee7818e",
@@ -141,11 +107,10 @@
     "highest_contiguous_level": "BC4_AUTHORIZED",
     "status": "GROUNDED_SPATIAL_S0_S2_CIRCUIT_UNPOWERED"
   },
-  "verified_circuit": {
-    "board_digest": "1a30e963d71ad7077c920dd9d31a3299",
-    "component_count": 10,
-    "continuity_complete": true,
-    "status": "VERIFIED_SPATIAL_S0_S2_CIRCUIT"
+  "verification_semantics": {
+    "bc5_meaning": "Circuit continuity representation only",
+    "external_evidence_required": true,
+    "repository_test_claims_require_exact_commit_outputs": true
   },
-  "version": "AURA_SPATIAL_S0_S2_IMPLEMENTATION_RECEIPT_V2"
+  "version": "AURA_SPATIAL_S0_S2_IMPLEMENTATION_RECEIPT_V3_MANUAL_REVIEW"
 }
