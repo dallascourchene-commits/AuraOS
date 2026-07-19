@@ -19,13 +19,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: feature/spatial-s4b-gaussian-security
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           git init .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git fetch --no-tags --no-recurse-submodules --depth=1 origin "$BRANCH"
           git checkout -B "$BRANCH" FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Reconstruct, verify, and apply exact repair patch
