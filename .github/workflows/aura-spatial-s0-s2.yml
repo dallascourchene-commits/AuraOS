@@ -68,7 +68,8 @@ jobs:
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py \
             tests/test_aura_spatial_manual_review.py \
-            tests/test_aura_spatial_projection_bounds.py
+            tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
@@ -84,7 +85,8 @@ jobs:
             tests/test_aura_spatial_substrate.py \
             tests/test_aura_spatial_ws_guard.py \
             tests/test_aura_spatial_manual_review.py \
-            tests/test_aura_spatial_projection_bounds.py
+            tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py
       - name: Validate Draft 2020-12 schema and contract compatibility
         run: |
           python - <<'PY'
@@ -94,7 +96,11 @@ jobs:
 
           from jsonschema import Draft202012Validator
 
-          from aura_spatial_contracts import CoordinateFrame
+          from aura_spatial_contracts import (
+              CoordinateFrame,
+              SpatialEntity,
+              SpatialEntityType,
+          )
           from aura_spatial_scene import compile_spatial_scene
 
           schema = json.loads(
@@ -109,17 +115,39 @@ jobs:
               purpose_digest="purpose:schema-compatibility",
               root_frame_id="root",
               frames=(CoordinateFrame(frame_id="root"),),
+              entities=(
+                  SpatialEntity(
+                      entity_id="entity:one",
+                      entity_type=SpatialEntityType.DOMAIN_NODE,
+                      label="One",
+                      frame_id="root",
+                  ),
+              ),
           ).to_dict()
           validator.validate(scene)
 
-          invalid = deepcopy(scene)
-          invalid["execution_authority"] = True
-          errors = list(validator.iter_errors(invalid))
-          assert errors, "schema must reject execution authority"
-          assert any(
-              list(error.absolute_path) == ["execution_authority"]
-              for error in errors
-          )
+          invalid_authority = deepcopy(scene)
+          invalid_authority["execution_authority"] = True
+          assert list(validator.iter_errors(invalid_authority))
+
+          invalid_nested_alias = deepcopy(scene)
+          invalid_nested_alias["entities"][0]["metadata"] = {
+              "automaticMerge": False
+          }
+          assert list(validator.iter_errors(invalid_nested_alias))
+
+          invalid_scale = deepcopy(scene)
+          invalid_scale["frames"][0]["scale"] = [0.0, 1.0, 1.0]
+          assert list(validator.iter_errors(invalid_scale))
+
+          invalid_quaternion = deepcopy(scene)
+          invalid_quaternion["frames"][0]["rotation_xyzw"] = [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+          ]
+          assert list(validator.iter_errors(invalid_quaternion))
           PY
       - name: Run spatial substrate and showcase compatibility regressions
         id: spatial-tests
@@ -131,6 +159,7 @@ jobs:
             tests/test_aura_spatial_ws_guard.py \
             tests/test_aura_spatial_manual_review.py \
             tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py \
             tests/test_aura_showcase_spatial_integration.py \
             > spatial-test-output-${{ matrix.python-version }}.txt 2>&1
           status=$?
