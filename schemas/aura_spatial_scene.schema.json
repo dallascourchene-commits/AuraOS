@@ -23,7 +23,7 @@
   ],
   "properties": {
     "scene_id": { "$ref": "#/$defs/identifier" },
-    "purpose_digest": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "purpose_digest": { "$ref": "#/$defs/nonBlankString" },
     "root_frame_id": { "$ref": "#/$defs/identifier" },
     "frames": {
       "type": "array",
@@ -44,7 +44,7 @@
     },
     "source_refs": { "$ref": "#/$defs/stringSet" },
     "renderer_hints": { "type": "object" },
-    "truth_policy": { "type": "string", "minLength": 1 },
+    "truth_policy": { "$ref": "#/$defs/nonBlankString" },
     "patch_authority": { "const": "exact_source_spans_and_hashes_only" },
     "vsa_patch_authority": { "const": false },
     "execution_authority": { "const": false },
@@ -57,6 +57,10 @@
   },
   "additionalProperties": false,
   "$defs": {
+    "nonBlankString": {
+      "type": "string",
+      "pattern": ".*\\S.*"
+    },
     "identifier": {
       "type": "string",
       "minLength": 1,
@@ -66,7 +70,7 @@
     "stringSet": {
       "type": "array",
       "uniqueItems": true,
-      "items": { "type": "string", "minLength": 1 }
+      "items": { "$ref": "#/$defs/nonBlankString" }
     },
     "identifierSet": {
       "type": "array",
@@ -105,7 +109,8 @@
         { "type": "number" },
         { "type": "number" }
       ],
-      "items": false
+      "items": false,
+      "not": { "const": [0, 0, 0, 0] }
     },
     "truthClass": {
       "enum": ["EXACT", "DERIVED", "PRESENTATION", "HYPOTHESIS"]
@@ -179,8 +184,8 @@
             "ANNOTATION"
           ]
         },
-        "uri": { "type": "string", "minLength": 1, "maxLength": 2048 },
-        "media_type": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "uri": { "$ref": "#/$defs/nonBlankString" },
+        "media_type": { "$ref": "#/$defs/nonBlankString" },
         "content_digest": {
           "type": "string",
           "pattern": "^(sha256|blake2b-256):[0-9a-f]{64}$"
@@ -232,7 +237,7 @@
             "CONTROL"
           ]
         },
-        "label": { "type": "string", "minLength": 1 },
+        "label": { "$ref": "#/$defs/nonBlankString" },
         "frame_id": { "$ref": "#/$defs/identifier" },
         "asset_ids": { "$ref": "#/$defs/identifierSet" },
         "source_refs": { "$ref": "#/$defs/stringSet" },
