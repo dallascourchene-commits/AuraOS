@@ -30,6 +30,7 @@ from aura_coding_waboose_review_lessons import (
     run_crucible_replay,
     validate_review_lesson_registry,
 )
+import aura_review_lessons_replay as replay_module
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / ".aura" / "review_lessons" / "pr164_spatial_review_lessons.json"
@@ -65,13 +66,30 @@ def test_registry_rejects_digest_tampering_and_duplicate_identities() -> None:
         validate_review_lesson_registry(duplicate)
 
 
-def test_crucible_replays_every_pr164_lesson_with_typed_receipts() -> None:
+def test_crucible_replays_every_pr164_lesson_with_typed_receipts(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        replay_module,
+        "_repository_evidence",
+        lambda *_args, **_kwargs: {
+            "repository_head": "b" * 40,
+            "repository_tree": "c" * 40,
+        },
+    )
+    monkeypatch.setattr(
+        replay_module,
+        "_registry_merge_is_ancestor",
+        lambda *_args, **_kwargs: True,
+    )
     result = run_crucible_replay(REGISTRY)
 
     assert result["status"] == "PASSED"
     assert result["scenario_count"] == 13
     assert result["passed_count"] == 13
     assert result["failed_count"] == 0
+    assert result["repository_head"] == "b" * 40
+    assert result["registry_ancestry_verified"] is True
     assert all(item["finding_produced"] for item in result["receipts"])
     assert all(item["invariant_violated"] for item in result["receipts"])
     assert all(item["required_regression"] for item in result["receipts"])

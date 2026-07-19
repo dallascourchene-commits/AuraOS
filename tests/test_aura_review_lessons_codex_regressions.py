@@ -132,3 +132,78 @@ def test_persistent_review_store_stops_at_count_limit(tmp_path: Path) -> None:
     )
     assert overflow["stored_count"] == 0
     assert overflow["rejected"][0]["reason"] == "storage_count_limit"
+
+
+def _bind_replay_to_current_head(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    ancestor: bool = True,
+) -> None:
+    import aura_review_lessons_replay as replay_module
+
+    monkeypatch.setattr(
+        replay_module,
+        "_repository_evidence",
+        lambda *_args, **_kwargs: {
+            "repository_head": "b" * 40,
+            "repository_tree": "c" * 40,
+        },
+    )
+    monkeypatch.setattr(
+        replay_module,
+        "_registry_merge_is_ancestor",
+        lambda *_args, **_kwargs: ancestor,
+    )
+
+
+def test_replay_rejects_registry_not_reachable_from_current_head(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch, ancestor=False)
+    with pytest.raises(ReviewLessonError, match="registry is stale"):
+        run_crucible_replay(REGISTRY)
+
+
+def test_replay_canonicalizes_equivalent_detector_sets(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    detector_a = "detect_uri_alias_encoding"
+    detector_b = "detect_authority_aliases"
+    first = run_crucible_replay(
+        REGISTRY,
+        detector_ids=[detector_a, detector_b, detector_a],
+    )
+    second = run_crucible_replay(
+        REGISTRY,
+        detector_ids=[detector_b, detector_a],
+    )
+
+    assert first["selected_detector_ids"] == sorted({detector_a, detector_b})
+    assert first["receipts"] == second["receipts"]
+    assert first["packet_digest"] == second["packet_digest"]
+
+
+def test_replay_rejects_vacuous_selected_scenario_set(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from aura_coding_waboose_review_lessons import run_crucible_replay
+
+    _bind_replay_to_current_head(monkeypatch)
+    payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    detector_id = str(payload["lessons"][0]["detector_id"])
+    payload["scenarios"] = [
+        item
+        for item in payload["scenarios"]
+        if item["detector_id"] != detector_id
+    ]
+    unsigned = dict(payload)
+    unsigned.pop("registry_digest")
+    payload["registry_digest"] = _registry_digest(unsigned)
+
+    with pytest.raises(ReviewLessonError, match="selected zero scenarios"):
+        run_crucible_replay(payload, detector_ids=[detector_id])

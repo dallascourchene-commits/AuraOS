@@ -224,6 +224,7 @@ from aura_gbnf_profiles import (
     grammar_stop_tokens,
 )
 from aura_pre_egress_interceptor import apply_pre_egress_profile
+from aura_source_integrity import SourceIntegrityError, read_utf8_source
 from aura_spvm import get_semantic_vector as _spvm_get_semantic_vector
 from llama_server_manager import LlamaServerManager
 from symbolic_shield import verify_structural_truth
@@ -2127,17 +2128,48 @@ class AuraEcosystemAuditor:
     def __init__(self, node_ref):
         self.node = node_ref
         self.function_calls = defaultdict(int)
-    async def _scan_and_stamp_file(self, file_path: str, q_root: str):
+        self.audit_failures: list[dict[str, Any]] = []
+
+    async def _scan_and_stamp_file(self, file_path: str, q_root: str) -> bool:
         if not os.path.exists(file_path):
-            return
-        with open(file_path, encoding='utf-8') as f:
-            source_code = f.read()
+            return False
+        try:
+            source_code = read_utf8_source(file_path)
+        except SourceIntegrityError as exc:
+            failure = exc.failure.to_dict()
+            failure["path"] = Path(file_path).as_posix()
+            self.audit_failures.append(failure)
+            print(f"[-] Source integrity failure in {file_path}: {exc}")
+            return False
+        except OSError as exc:
+            self.audit_failures.append(
+                {
+                    "path": Path(file_path).as_posix(),
+                    "code": "SOURCE_FILESYSTEM_ERROR",
+                    "message": str(exc),
+                    "byte_offset": 0,
+                    "offending_bytes_hex": "",
+                    "file_size": 0,
+                }
+            )
+            print(f"[-] Unable to read {file_path} during audit: {exc}")
+            return False
         # 1. Parse the AST for Friction & Architecture Mapping
         try:
             tree = ast.parse(source_code, filename=file_path)
         except SyntaxError as e:
+            self.audit_failures.append(
+                {
+                    "path": Path(file_path).as_posix(),
+                    "code": "SOURCE_SYNTAX_ERROR",
+                    "message": str(e),
+                    "byte_offset": 0,
+                    "offending_bytes_hex": "",
+                    "file_size": len(source_code.encode("utf-8")),
+                }
+            )
             print(f"[-] Syntax Error in {file_path}. Cannot audit: {e}")
-            return
+            return False
         dependencies = set()
         functions = []
         # Walk the branches to count calls and map architecture
@@ -2230,6 +2262,7 @@ class AuraEcosystemAuditor:
             # If the code matches perfectly but it wasn't recorded in the cache registry, log it now
             if not cached_synopsis:
                 await self.node.memory_palace.update_audit_cache(file_path, current_mtime, current_size, synopsis)
+        return True
 
     async def execute_unified_audit(self) -> str:
         """Executes the directory sweep, returning the friction point report."""
@@ -2239,14 +2272,16 @@ class AuraEcosystemAuditor:
         epistemic_layer = QuantumMerkleDAG(self.node)
         dag_state = await epistemic_layer.generate_epistemic_system_root()
         q_root = dag_state['root']
-        file_map = [
+        file_map = sorted(
             f for f in os.listdir('.')
             if f.endswith('.py') and _auditor_should_stamp(f)
-        ]
-        # 2. Ripple the Holographic Update
+        )
+        # 2. Ripple the Holographic Update without aborting on one corrupt file.
+        stamped_count = 0
         for file in file_map:
-            await self._scan_and_stamp_file(file, q_root)
-            print(f"[+] Master Key Calibrated & Stamped: {file}")
+            if await self._scan_and_stamp_file(file, q_root):
+                stamped_count += 1
+                print(f"[+] Master Key Calibrated & Stamped: {file}")
         # Synthesize Hebbian Suggestions based on the AST call counts
         sorted_calls = sorted(self.function_calls.items(), key=lambda x: x[1], reverse=True)
         friction_points = [f"{k} ({v} invocations)" for k,v in sorted_calls if v > 4]
@@ -2265,8 +2300,15 @@ class AuraEcosystemAuditor:
             metabolic_feedback = await self.node.mitosis_engine.execute_morphemic_mitosis(self.node.memory_palace.conn)
             metabolic_feedback = f"\n\n[🧬 L2 METABOLIC SHEDDING REPORT]:\n{metabolic_feedback}"
 
+        failure_summary = "\n".join(
+            f"- {item['path']}: {item['code']}"
+            for item in self.audit_failures[:20]
+        )
         report = (
-            "SYSTEM AUDIT COMPLETE.\nAll modules stamped with updated ST3GG Master Keys.\n\n"
+            "SYSTEM AUDIT COMPLETE.\n"
+            f"Stamped {stamped_count}/{len(file_map)} eligible modules; "
+            f"recorded {len(self.audit_failures)} non-fatal source failures.\n\n"
+            "SOURCE FAILURES:\n" + (failure_summary or "None") + "\n\n"
             "CRITICAL FRICTION POINTS DETECTED:\n" + "\n".join(friction_points[:10]) +
             optimization_feedback +
             metabolic_feedback

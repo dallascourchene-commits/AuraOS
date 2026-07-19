@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -29,6 +30,8 @@ def _repo(tmp_path: Path) -> Path:
     _git(repo, "init", "-b", "main")
     _git(repo, "config", "user.email", "review-lessons@example.test")
     _git(repo, "config", "user.name", "Review Lessons")
+    _git(repo, "commit", "--allow-empty", "-m", "bootstrap")
+    registry_ancestor = _git(repo, "rev-parse", "HEAD")
     (repo / ".aura" / "review_lessons").mkdir(parents=True)
     source_registry = (
         Path(__file__).resolve().parents[1]
@@ -36,8 +39,25 @@ def _repo(tmp_path: Path) -> Path:
         / "review_lessons"
         / "pr164_spatial_review_lessons.json"
     )
+    registry_payload = json.loads(source_registry.read_text(encoding="utf-8"))
+    registry_payload["repository_head"] = registry_ancestor
+    registry_payload["merge_commit"] = registry_ancestor
+    unsigned = dict(registry_payload)
+    unsigned.pop("registry_digest")
+    canonical = json.dumps(
+        unsigned,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+        default=str,
+    ).encode("utf-8")
+    registry_payload["registry_digest"] = hashlib.blake2b(
+        canonical,
+        digest_size=20,
+    ).hexdigest()
     (repo / ".aura" / "review_lessons" / source_registry.name).write_text(
-        source_registry.read_text(encoding="utf-8"),
+        json.dumps(registry_payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     (repo / "module.py").write_text(
