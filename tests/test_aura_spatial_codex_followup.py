@@ -18,8 +18,12 @@ from aura_spatial_contracts import (
     SpatialEntityType,
     SpatialInteractionAction,
 )
+from aura_spatial_coordinate_frames import resolve_world_transform
 from aura_spatial_interaction import compile_spatial_interaction
-from aura_spatial_scene import compile_spatial_scene
+from aura_spatial_scene import (
+    compile_spatial_scene,
+    validate_spatial_scene_payload,
+)
 
 
 def _scene(*, metadata=None):
@@ -59,9 +63,16 @@ def _asset(uri: str) -> SpatialAssetManifest:
     )
 
 
-def test_interaction_rejects_camel_and_hyphen_authority_aliases():
+def test_interaction_rejects_mixed_case_and_separator_authority_aliases():
     scene = _scene()
-    for key in ("automaticMerge", "patch-Authority"):
+    for key in (
+        "automaticMerge",
+        "automaticmErge",
+        "patch-Authority",
+        "pAtchAuthority",
+        "executionaUthority",
+        "authoritydEcIsion",
+    ):
         with pytest.raises(ValueError, match="authority field"):
             compile_spatial_interaction(
                 scene,
@@ -71,9 +82,15 @@ def test_interaction_rejects_camel_and_hyphen_authority_aliases():
             )
 
 
-def test_scene_rejects_camel_authority_alias_even_when_false():
-    with pytest.raises(ValueError, match="AUTHORITY_METADATA_REJECTED"):
-        _scene(metadata={"automaticMerge": False})
+def test_scene_rejects_mixed_case_authority_alias_even_when_false():
+    for key in (
+        "automaticMerge",
+        "automaticmErge",
+        "pAtchAuthority",
+        "authoritydEcIsion",
+    ):
+        with pytest.raises(ValueError, match="AUTHORITY_METADATA_REJECTED"):
+            _scene(metadata={key: False})
 
 
 def test_asset_uri_rejects_encoded_and_repeated_separators():
@@ -96,7 +113,29 @@ def test_asset_uri_rejects_encoded_and_repeated_separators():
         }
 
 
-def test_schema_rejects_nested_authority_alias_and_zero_scale():
+def test_nested_absolute_frame_units_do_not_double_scale():
+    frames = (
+        CoordinateFrame(
+            frame_id="root",
+            unit_scale_meters=0.01,
+        ),
+        CoordinateFrame(
+            frame_id="child",
+            parent_frame_id="root",
+            unit_scale_meters=0.01,
+            translation=(100.0, 0.0, 0.0),
+        ),
+    )
+    resolved = resolve_world_transform(
+        frames,
+        root_frame_id="root",
+        frame_id="child",
+    )
+    assert resolved.translation == pytest.approx((1.0, 0.0, 0.0))
+    assert resolved.scale == pytest.approx((0.01, 0.01, 0.01))
+
+
+def test_schema_and_runtime_interchange_reject_invalid_contracts():
     schema = json.loads(
         Path("schemas/aura_spatial_scene.schema.json").read_text(
             encoding="utf-8"
@@ -106,6 +145,7 @@ def test_schema_rejects_nested_authority_alias_and_zero_scale():
     validator = Draft202012Validator(schema)
     scene = _scene().to_dict()
     validator.validate(scene)
+    assert validate_spatial_scene_payload(scene).scene_digest == scene["scene_digest"]
 
     authority_alias = deepcopy(scene)
     authority_alias["entities"][0]["metadata"] = {
@@ -125,3 +165,17 @@ def test_schema_rejects_nested_authority_alias_and_zero_scale():
         0.0,
     ]
     assert list(validator.iter_errors(zero_quaternion))
+
+    root = CoordinateFrame(frame_id="root")
+    asset_scene = compile_spatial_scene(
+        scene_id="asset-bounds-scene",
+        purpose_digest="purpose:asset-bounds",
+        root_frame_id="root",
+        frames=(root,),
+        assets=(_asset("assets/one.glb"),),
+    ).to_dict()
+    invalid_bounds = deepcopy(asset_scene)
+    invalid_bounds["assets"][0]["bounds_min"] = [2.0, 0.0, 0.0]
+    invalid_bounds["assets"][0]["bounds_max"] = [1.0, 1.0, 1.0]
+    with pytest.raises(ValueError, match="bounds_min"):
+        validate_spatial_scene_payload(invalid_bounds)
