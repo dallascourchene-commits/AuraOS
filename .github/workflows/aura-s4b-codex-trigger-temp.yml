@@ -28,7 +28,15 @@ jobs:
       - name: Apply exact Codex repairs
         run: |
           set +e
-          python scripts/aura_s4b_codex_repair_temp.py > /tmp/aura-s4b-repair.log 2>&1
+          (
+            python scripts/aura_s4b_codex_repair_temp.py
+            git diff --check
+            python -m py_compile \
+              aura_spatial_importers/gaussian_gltf.py \
+              tests/test_aura_spatial_gaussian_gltf.py
+            node --check aura_spatial_web/gaussian_renderer.js
+            node --check tests/js/spatial-gaussian.test.mjs
+          ) > /tmp/aura-s4b-repair.log 2>&1
           status=$?
           set -e
           cat /tmp/aura-s4b-repair.log
@@ -41,12 +49,6 @@ jobs:
             git push origin HEAD:feature/spatial-s4b-gaussian-security
             exit "$status"
           fi
-          git diff --check
-          python -m py_compile \
-            aura_spatial_importers/gaussian_gltf.py \
-            tests/test_aura_spatial_gaussian_gltf.py
-          node --check aura_spatial_web/gaussian_renderer.js
-          node --check tests/js/spatial-gaussian.test.mjs
 
       - uses: actions/setup-python@v5
         with:
