@@ -429,6 +429,44 @@ Primary owners include:
 - `docs/AURA_CODING_WABOOSE.md`.
 <!-- AURA_CODING_WABOOSE_V1:END -->
 
+<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:START -->
+#### Spatial Arena projection substrate
+
+Aura's Spatial Arena is a representation-independent projection layer over retained
+domain owners. It does not become a second CODEMAP, Coding Arena, Civic map,
+Construction state, event store, renderer authority, or mutation path.
+
+```text
+canonical domain truth
+  → bounded domain adapter
+  → immutable SpatialSceneSnapshot
+  → replaceable renderer/device adapter
+  → human or agent interaction
+  → six-slot review-only intent
+  → retained Arena / Forge / Gate / human decision
+```
+
+Canonical S0-S2 owners are:
+
+- `aura_spatial_contracts.py` for immutable frame, asset, entity, link, scene, and interaction contracts;
+- `aura_spatial_coordinate_frames.py` for rooted frame validation and deterministic transforms;
+- `aura_spatial_asset_registry.py` for content-addressed manifest validation without fetching, decoding, training, or rendering;
+- `aura_spatial_scene.py` for deterministic scene compilation and referential integrity;
+- `aura_spatial_projection.py` for bounded adapters that reuse `aura_coding_arena_3d.select_micro_arena()` rather than scanning a second topology;
+- `aura_spatial_interaction.py` and `aura_spatial_ws_guard.py` for six-slot review intents and fail-closed Forge handoff;
+- `aura_spatial_breadboard.py` for the proposal-only Council V3/Coding Circuit plan and BC0-BC5 evidence.
+
+Spatial coordinates, layouts, topology graph assets, Gaussian-splat manifests,
+renderer hints, gestures, gaze, anchors, and visual selections are never patch or
+execution authority. Every canonical scene retains exact-source-only patch authority,
+`vsa_patch_authority=false`, and `execution_authority=false`. The legacy AR bridge
+returns `HOTSWAP_REVIEW_REQUIRED` to the requesting session and cannot report a
+queued mutation, broadcast success, or refresh topology as though code changed.
+
+WebXR/OpenXR runtime, Gaussian-splat rendering/training, device sensors, and
+non-Coding domain adapters remain separately review-gated S3-S7 programs.
+<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:END -->
+
 ### Plane 8 — Observatory and glass-box explanation
 
 The Observatory is separate from the Human Agent and Learning Arena.
