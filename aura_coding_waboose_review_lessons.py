@@ -871,15 +871,18 @@ def normalize_external_review(
     if _is_sequence(comments):
         for comment in comments[:_MAX_STORED_FINDINGS]:
             if isinstance(comment, Mapping):
-                raw.append(
-                    _raw_review_row(
-                        comment,
-                        review_kind="top_level_pr_comment",
-                        reviewed_head=reviewed_head,
-                        current_head=current,
-                        pr_number=pr_number,
+                try:
+                    raw.append(
+                        _raw_review_row(
+                            comment,
+                            review_kind="top_level_pr_comment",
+                            reviewed_head=reviewed_head,
+                            current_head=current,
+                            pr_number=pr_number,
+                        )
                     )
-                )
+                except (ReviewLessonError, ValueError):
+                    continue
 
     threads = payload.get("review_threads") or payload.get("threads") or []
     if _is_sequence(threads):
@@ -898,42 +901,51 @@ def normalize_external_review(
                 merged.setdefault("start_line", thread.get("start_line") or thread.get("original_start_line"))
                 merged["is_resolved"] = bool(thread.get("is_resolved"))
                 merged["is_outdated"] = bool(thread.get("is_outdated"))
-                raw.append(
-                    _raw_review_row(
-                        merged,
-                        review_kind="inline_review_thread",
-                        reviewed_head=reviewed_head,
-                        current_head=current,
-                        pr_number=pr_number,
+                try:
+                    raw.append(
+                        _raw_review_row(
+                            merged,
+                            review_kind="inline_review_thread",
+                            reviewed_head=reviewed_head,
+                            current_head=current,
+                            pr_number=pr_number,
+                        )
                     )
-                )
+                except (ReviewLessonError, ValueError):
+                    continue
 
     reviews = payload.get("reviews") or payload.get("review_submissions") or []
     if _is_sequence(reviews):
         for review in reviews[:_MAX_STORED_FINDINGS]:
             if isinstance(review, Mapping):
-                raw.append(
-                    _raw_review_row(
-                        review,
-                        review_kind="review_submission",
-                        reviewed_head=reviewed_head,
-                        current_head=current,
-                        pr_number=pr_number,
+                try:
+                    raw.append(
+                        _raw_review_row(
+                            review,
+                            review_kind="review_submission",
+                            reviewed_head=reviewed_head,
+                            current_head=current,
+                            pr_number=pr_number,
+                        )
                     )
-                )
+                except (ReviewLessonError, ValueError):
+                    continue
 
     if not raw and _is_sequence(payload.get("findings")):
         for finding in payload.get("findings") or []:
             if isinstance(finding, Mapping):
-                raw.append(
-                    _raw_review_row(
-                        finding,
-                        review_kind=str(finding.get("review_kind") or "normalized_finding"),
-                        reviewed_head=reviewed_head,
-                        current_head=current,
-                        pr_number=pr_number,
+                try:
+                    raw.append(
+                        _raw_review_row(
+                            finding,
+                            review_kind=str(finding.get("review_kind") or "normalized_finding"),
+                            reviewed_head=reviewed_head,
+                            current_head=current,
+                            pr_number=pr_number,
+                        )
                     )
-                )
+                except (ReviewLessonError, ValueError):
+                    continue
 
     dedupe: dict[str, str] = {}
     normalized: list[dict[str, Any]] = []
