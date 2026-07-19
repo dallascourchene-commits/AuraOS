@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Codex Repair Export
+name: Aura Temporary S4-B Atomic Repair Publisher
 
 on:
   pull_request:
@@ -7,36 +7,125 @@ on:
       - ".github/workflows/aura-s4b-codex-trigger-temp.yml"
 
 permissions:
-  contents: read
+  contents: write
+  actions: write
 
 jobs:
-  export-verified-repair:
+  publish-repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 4ed34d5810ac49019008b8b6f66a649256b5df70
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
           submodules: false
 
-      - name: Apply deterministic Codex repair
-        run: python scripts/aura_s4b_codex_repair_temp.py
-
-      - name: Package repaired files
+      - name: Apply and verify deterministic Codex repair
         run: |
           set -euo pipefail
-          mkdir -p /tmp/s4b-repair/aura_spatial_importers
-          mkdir -p /tmp/s4b-repair/aura_spatial_web
-          mkdir -p /tmp/s4b-repair/tests/js
-          cp aura_spatial_importers/gaussian_gltf.py /tmp/s4b-repair/aura_spatial_importers/
-          cp aura_spatial_web/gaussian_renderer.js /tmp/s4b-repair/aura_spatial_web/
-          cp tests/test_aura_spatial_gaussian_gltf.py /tmp/s4b-repair/tests/
-          cp tests/js/spatial-gaussian.test.mjs /tmp/s4b-repair/tests/js/
+          python scripts/aura_s4b_codex_repair_temp.py
+          git diff --check
+          python -m py_compile \
+            aura_spatial_importers/gaussian_gltf.py \
+            tests/test_aura_spatial_gaussian_gltf.py
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check tests/js/spatial-gaussian.test.mjs
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: s4b-codex-repair-files
-          path: /tmp/s4b-repair
-          if-no-files-found: error
-          retention-days: 1
+      - name: Publish one atomic Git commit through GitHub API
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BRANCH_NAME: feature/spatial-s4b-gaussian-security
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import json
+          import os
+          from pathlib import Path
+          import urllib.error
+          import urllib.request
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GITHUB_TOKEN"]
+          head_sha = os.environ["HEAD_SHA"]
+          branch_name = os.environ["BRANCH_NAME"]
+          api_root = f"https://api.github.com/repos/{repository}"
+
+          def request(method: str, path: str, payload: dict | None = None) -> dict:
+              data = None if payload is None else json.dumps(payload).encode("utf-8")
+              req = urllib.request.Request(
+                  f"{api_root}{path}",
+                  data=data,
+                  method=method,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {token}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "Aura-S4B-Atomic-Publisher",
+                      "Content-Type": "application/json",
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as response:
+                      body = response.read()
+              except urllib.error.HTTPError as exc:
+                  detail = exc.read().decode("utf-8", errors="replace")
+                  raise RuntimeError(f"GitHub API {method} {path} failed: {exc.code} {detail}") from exc
+              return json.loads(body) if body else {}
+
+          current_ref = request("GET", f"/git/ref/heads/{branch_name}")
+          if current_ref["object"]["sha"] != head_sha:
+              raise RuntimeError(
+                  f"branch drifted before atomic publish: expected {head_sha}, got {current_ref['object']['sha']}"
+              )
+
+          parent = request("GET", f"/git/commits/{head_sha}")
+          base_tree = parent["tree"]["sha"]
+          repaired_paths = [
+              "aura_spatial_importers/gaussian_gltf.py",
+              "aura_spatial_web/gaussian_renderer.js",
+              "tests/test_aura_spatial_gaussian_gltf.py",
+              "tests/js/spatial-gaussian.test.mjs",
+          ]
+          tree_entries = []
+          for path in repaired_paths:
+              encoded = base64.b64encode(Path(path).read_bytes()).decode("ascii")
+              blob = request("POST", "/git/blobs", {"content": encoded, "encoding": "base64"})
+              tree_entries.append(
+                  {"path": path, "mode": "100644", "type": "blob", "sha": blob["sha"]}
+              )
+
+          for path in [
+              ".github/workflows/aura-s4b-codex-trigger-temp.yml",
+              ".github/workflows/aura-s4b-codex-round-temp.yml",
+              "scripts/aura_s4b_codex_repair_temp.py",
+              ".github/aura-s4b-repair-diagnostic-temp.txt",
+              ".github/aura-s4b-test-diagnostic-temp.txt",
+          ]:
+              tree_entries.append({"path": path, "mode": "100644", "type": "blob", "sha": None})
+
+          tree = request(
+              "POST",
+              "/git/trees",
+              {"base_tree": base_tree, "tree": tree_entries},
+          )
+          commit = request(
+              "POST",
+              "/git/commits",
+              {
+                  "message": "fix: complete S4-B Codex preflight and cleanup hardening",
+                  "tree": tree["sha"],
+                  "parents": [head_sha],
+              },
+          )
+          request(
+              "PATCH",
+              f"/git/refs/heads/{branch_name}",
+              {"sha": commit["sha"], "force": False},
+          )
+          print(f"published_commit={commit['sha']}")
+          PY
