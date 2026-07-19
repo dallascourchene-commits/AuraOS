@@ -1,0 +1,271 @@
+name: Aura Spatial S3-B and S4-A
+
+on:
+  pull_request:
+    paths:
+      - "aura_spatial_*.py"
+      - "aura_spatial_importers/**"
+      - "aura_spatial_web/**"
+      - "aura_topology_ws_bridge.py"
+      - "aura_showcase_spatial.py"
+      - "scripts/aura_spatial_continuation_architect_harness.py"
+      - "schemas/aura_spatial_*.schema.json"
+      - "tests/test_aura_spatial_*.py"
+      - "tests/js/spatial-*.test.mjs"
+      - "tests/js/spatial-fixture.mjs"
+      - "tests/fixtures/spatial/**"
+      - "docs/AURA_SPATIAL_*.md"
+      - "package.json"
+      - ".github/workflows/aura-spatial-s3-s4a.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-spatial-s3-s4a-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  spatial-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      AURA_SPATIAL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      AURA_SPATIAL_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      AURA_SPATIAL_BASE_REF: ${{ github.base_ref || 'main' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - name: Fetch exact pull-request branch and base
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$AURA_SPATIAL_HEAD_REF"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$AURA_SPATIAL_HEAD_SHA"
+          git fetch --no-tags origin "$AURA_SPATIAL_BASE_REF:refs/remotes/origin/$AURA_SPATIAL_BASE_REF"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install focused verification tools
+        run: python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
+
+      - name: Compile spatial source
+        working-directory: repo
+        run: |
+          python -m py_compile \
+            aura_spatial_contracts.py \
+            aura_spatial_coordinate_frames.py \
+            aura_spatial_asset_registry.py \
+            aura_spatial_scene.py \
+            aura_spatial_projection.py \
+            aura_spatial_interaction.py \
+            aura_spatial_ws_guard.py \
+            aura_spatial_breadboard.py \
+            aura_spatial_render_plan.py \
+            aura_spatial_receipts.py \
+            aura_spatial_session.py \
+            aura_spatial_server.py \
+            aura_spatial_importers/*.py \
+            scripts/aura_spatial_continuation_architect_harness.py
+
+      - name: Run Ruff
+        working-directory: repo
+        run: |
+          ruff check \
+            aura_spatial_asset_registry.py \
+            aura_spatial_breadboard.py \
+            aura_spatial_contracts.py \
+            aura_spatial_coordinate_frames.py \
+            aura_spatial_interaction.py \
+            aura_spatial_ws_guard.py \
+            aura_spatial_render_plan.py \
+            aura_spatial_receipts.py \
+            aura_spatial_session.py \
+            aura_spatial_server.py \
+            aura_spatial_importers \
+            scripts/aura_spatial_continuation_architect_harness.py \
+            tests/test_aura_spatial_browser_interaction.py \
+            tests/test_aura_spatial_continuation_harness.py \
+            tests/test_aura_spatial_gltf.py \
+            tests/test_aura_spatial_ply.py \
+            tests/test_aura_spatial_render_plan.py \
+            tests/test_aura_spatial_server.py \
+            tests/test_aura_spatial_session.py \
+            tests/test_aura_spatial_telemetry.py
+          ruff format --check \
+            aura_spatial_asset_registry.py \
+            aura_spatial_breadboard.py \
+            aura_spatial_contracts.py \
+            aura_spatial_coordinate_frames.py \
+            aura_spatial_interaction.py \
+            aura_spatial_ws_guard.py \
+            aura_spatial_render_plan.py \
+            aura_spatial_receipts.py \
+            aura_spatial_session.py \
+            aura_spatial_server.py \
+            aura_spatial_importers \
+            scripts/aura_spatial_continuation_architect_harness.py \
+            tests/test_aura_spatial_browser_interaction.py \
+            tests/test_aura_spatial_continuation_harness.py \
+            tests/test_aura_spatial_gltf.py \
+            tests/test_aura_spatial_ply.py \
+            tests/test_aura_spatial_render_plan.py \
+            tests/test_aura_spatial_server.py \
+            tests/test_aura_spatial_session.py \
+            tests/test_aura_spatial_telemetry.py
+
+      - name: Validate schemas and runtime parity
+        working-directory: repo
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from aura_spatial_contracts import CoordinateFrame, SpatialEntity, SpatialEntityType
+          from aura_spatial_importers.contracts import CoordinateConversion, validate_spatial_import_receipt_payload
+          from aura_spatial_importers.gltf import import_gltf_file
+          from aura_spatial_importers.ply import import_ply_file
+          from aura_spatial_render_plan import compile_spatial_device_profile, negotiate_spatial_render_plan, validate_spatial_device_profile_payload, validate_spatial_render_plan_payload
+          from aura_spatial_scene import compile_spatial_scene
+          from aura_spatial_session import SpatialProjectionSessionManager, validate_spatial_projection_session_summary_payload
+          from aura_spatial_receipts import validate_spatial_dissolution_receipt_payload, validate_spatial_render_receipt_payload
+
+          schema_paths = sorted(Path("schemas").glob("aura_spatial_*.schema.json"))
+          schemas = {path.name: json.loads(path.read_text(encoding="utf-8")) for path in schema_paths}
+          for schema in schemas.values():
+              Draft202012Validator.check_schema(schema)
+
+          scene = compile_spatial_scene(
+              scene_id="ci:spatial-s3b-s4a",
+              purpose_digest="purpose:ci-spatial-s3b-s4a",
+              root_frame_id="root",
+              frames=(CoordinateFrame(frame_id="root"),),
+              entities=(SpatialEntity(entity_id="entity:ci", entity_type=SpatialEntityType.DOMAIN_NODE, label="CI", frame_id="root", source_refs=("source:ci",)),),
+          )
+          device = compile_spatial_device_profile(profile_id="device:ci", supported_renderers=("WEBGL2", "WEBGPU", "WEBXR", "ACCESSIBLE_2D", "HEADLESS"), xr_user_activation=True, source_refs=("source:ci",))
+          plan = negotiate_spatial_render_plan(scene, device, preferred_renderers=("WEBGL2",), allow_xr=False)
+          manager = SpatialProjectionSessionManager()
+          session = manager.create_session(scene, plan, device)
+          receipt, _ = manager.record_render(session.session_id, outcome="PRESENTED", evidence_class="DERIVED", metrics={})
+          assert validate_spatial_device_profile_payload(device.to_dict()) == device
+          assert validate_spatial_render_plan_payload(plan.to_dict()) == plan
+          assert validate_spatial_render_receipt_payload(receipt.to_dict()) == receipt
+          assert validate_spatial_projection_session_summary_payload(session.to_dict()) == session
+          dissolution = manager.dissolve_session(session.session_id)
+          assert validate_spatial_dissolution_receipt_payload(dissolution.to_dict()) == dissolution
+
+          import_schema = schemas["aura_spatial_import_receipt.schema.json"]
+          gltf = import_gltf_file(Path("tests/fixtures/spatial/gltf/triangle.gltf"), provenance_refs=("ci:gltf",), root=Path(".").resolve())
+          ply = import_ply_file(Path("tests/fixtures/spatial/ply/points_ascii.ply"), provenance_refs=("ci:ply",), coordinate_conversion=CoordinateConversion("RIGHT_HANDED", "Z_UP", 1.0), root=Path(".").resolve())
+          for result in (gltf, ply):
+              payload = result.receipt.to_dict()
+              Draft202012Validator(import_schema).validate(payload)
+              assert validate_spatial_import_receipt_payload(payload) == result.receipt
+          PY
+
+      - name: Run retained and new spatial regressions
+        working-directory: repo
+        run: |
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_substrate.py \
+            tests/test_aura_spatial_ws_guard.py \
+            tests/test_aura_spatial_manual_review.py \
+            tests/test_aura_spatial_projection_bounds.py \
+            tests/test_aura_spatial_codex_followup.py \
+            tests/test_aura_spatial_final_review.py \
+            tests/test_aura_showcase_spatial_integration.py \
+            tests/test_aura_spatial_render_plan.py \
+            tests/test_aura_spatial_session.py \
+            tests/test_aura_spatial_server.py \
+            tests/test_aura_spatial_continuation_harness.py \
+            tests/test_aura_spatial_browser_interaction.py \
+            tests/test_aura_spatial_telemetry.py \
+            tests/test_aura_spatial_gltf.py \
+            tests/test_aura_spatial_ply.py
+
+      - name: Run Aura-native exact-head continuation harness
+        if: matrix.python-version == '3.12'
+        working-directory: repo
+        env:
+          AURA_BASE_REF: origin/${{ env.AURA_SPATIAL_BASE_REF }}
+          AURA_HEAD_REF: HEAD
+          AURA_OBSERVED_HEAD_SHA: ${{ env.AURA_SPATIAL_HEAD_SHA }}
+        run: |
+          python scripts/aura_spatial_continuation_architect_harness.py \
+            --repo-root . \
+            --base-ref "$AURA_BASE_REF" \
+            --head-ref "$AURA_HEAD_REF" \
+            --observed-head "$AURA_OBSERVED_HEAD_SHA" \
+            --output Aura_Staging/spatial_s3b_s4a_harness/architect_receipt.json
+
+      - name: Assert exact-head harness receipt
+        if: matrix.python-version == '3.12'
+        working-directory: repo
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          receipt = json.loads(Path("Aura_Staging/spatial_s3b_s4a_harness/architect_receipt.json").read_text(encoding="utf-8"))
+          assert receipt["status"] == "PASSED", receipt["checks"]
+          assert receipt["repository_head"] == os.environ["AURA_SPATIAL_HEAD_SHA"]
+          assert receipt["browser_and_import_proof"]["webgl2_active"] is True
+          assert receipt["browser_and_import_proof"]["webgpu_shadow_only"] is True
+          assert receipt["browser_and_import_proof"]["webxr_explicit_activation"] is True
+          assert receipt["browser_and_import_proof"]["network_fetch_performed"] is False
+          assert receipt["browser_and_import_proof"]["patch_authority"] == "exact_source_spans_and_hashes_only"
+          assert receipt["production_mutation"] is False
+          assert receipt["automatic_merge"] is False
+          assert receipt["human_review_required"] is True
+          assert receipt["architecture"]["crucible"]["failed_count"] == 0
+          PY
+
+      - name: Upload exact-head harness receipt
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-s3b-s4a-receipt-${{ env.AURA_SPATIAL_HEAD_SHA }}
+          path: repo/Aura_Staging/spatial_s3b_s4a_harness/architect_receipt.json
+          if-no-files-found: error
+          retention-days: 14
+
+  spatial-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      AURA_SPATIAL_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      AURA_SPATIAL_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+    steps:
+      - name: Fetch exact pull-request branch without submodule handling
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "$AURA_SPATIAL_HEAD_REF"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$AURA_SPATIAL_HEAD_SHA"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run browser renderer tests
+        working-directory: repo
+        run: npm run test:spatial

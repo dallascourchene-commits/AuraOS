@@ -1,4 +1,5 @@
 """Fail-closed compilation of spatial UI actions into six-slot Aura intents."""
+
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
@@ -41,10 +42,7 @@ _AUTHORITY_KEYS = frozenset(
         "vsa_patch_authority",
     }
 )
-_AUTHORITY_KEY_TOKENS = frozenset(
-    re.sub(r"[^a-z0-9]+", "", key.lower())
-    for key in _AUTHORITY_KEYS
-)
+_AUTHORITY_KEY_TOKENS = frozenset(re.sub(r"[^a-z0-9]+", "", key.lower()) for key in _AUTHORITY_KEYS)
 
 _ACTION_SLOTS: dict[SpatialInteractionAction, dict[str, str]] = {
     SpatialInteractionAction.SELECT: {
@@ -117,11 +115,7 @@ def compile_spatial_interaction(
     if not isinstance(scene, SpatialSceneSnapshot):
         raise ValueError("scene must be a SpatialSceneSnapshot")
     try:
-        action_value = (
-            action
-            if isinstance(action, SpatialInteractionAction)
-            else SpatialInteractionAction(str(action))
-        )
+        action_value = action if isinstance(action, SpatialInteractionAction) else SpatialInteractionAction(str(action))
     except ValueError as exc:
         raise ValueError(f"unsupported spatial interaction action: {action}") from exc
 
@@ -133,10 +127,7 @@ def compile_spatial_interaction(
     supplied_metadata = dict(metadata or {})
     authority_path = _find_authority_key(supplied_metadata)
     if authority_path is not None:
-        raise ValueError(
-            "interaction metadata cannot supply authority field: "
-            f"{authority_path}"
-        )
+        raise ValueError(f"interaction metadata cannot supply authority field: {authority_path}")
     sanitized_metadata = sanitize_payload(supplied_metadata)
     if not isinstance(sanitized_metadata, Mapping):
         raise ValueError("sanitized interaction metadata must remain an object")
@@ -147,15 +138,7 @@ def compile_spatial_interaction(
 
     if isinstance(target_entity_ids, (str, bytes, bytearray)):
         raise ValueError("target_entity_ids must be an iterable of identifiers")
-    targets = tuple(
-        sorted(
-            {
-                str(item).strip()
-                for item in target_entity_ids
-                if str(item).strip()
-            }
-        )
-    )
+    targets = tuple(sorted({str(item).strip() for item in target_entity_ids if str(item).strip()}))
     if not targets:
         raise ValueError("target_entity_ids must not be empty")
     if len(targets) > 128:
@@ -204,9 +187,7 @@ def compile_spatial_interaction(
         "metadata": protected_metadata,
     }
     return SpatialInteractionIntent(
-        interaction_id=(
-            "spatial-interaction:" + stable_digest(body, digest_size=12)
-        ),
+        interaction_id=("spatial-interaction:" + stable_digest(body, digest_size=12)),
         scene_id=scene.scene_id,
         scene_digest=scene.scene_digest,
         action=action_value,
@@ -231,9 +212,7 @@ def compile_hotswap_request_guard(
     """Compile a review-only Forge handoff; never report execution success."""
     digest = str(proposed_change_digest or "").strip().lower()
     if not re.fullmatch(r"[0-9a-f]{64}", digest):
-        raise ValueError(
-            "proposed_change_digest must be a 64-character lowercase hex digest"
-        )
+        raise ValueError("proposed_change_digest must be a 64-character lowercase hex digest")
     intent = compile_spatial_interaction(
         scene,
         action=SpatialInteractionAction.PREPARE_REPAIR_REQUEST,
@@ -268,6 +247,89 @@ def compile_hotswap_request_guard(
     }
 
 
+_BROWSER_INTERACTION_KEYS = frozenset(
+    {
+        "version",
+        "session_id",
+        "scene_id",
+        "scene_digest",
+        "action",
+        "target_entity_ids",
+        "actor_ref",
+        "input_source",
+        "intent_slots",
+        "metadata",
+        "review_only",
+        "requires_forge",
+        "projection_only",
+        "renderer_authority",
+        "execution_authority",
+        "patch_authority",
+        "production_mutation",
+        "automatic_merge",
+        "human_review_required",
+    }
+)
+_BROWSER_INPUT_SOURCES = frozenset({"MOUSE", "TOUCH", "KEYBOARD", "RAY", "CONTROLLER"})
+
+
+def compile_browser_spatial_interaction(
+    scene: SpatialSceneSnapshot,
+    packet: Mapping[str, Any],
+) -> SpatialInteractionIntent:
+    """Validate a browser selection packet and compile the retained six-slot intent."""
+
+    if not isinstance(packet, Mapping):
+        raise ValueError("browser interaction packet must be an object")
+    supplied = set(packet)
+    if supplied != _BROWSER_INTERACTION_KEYS:
+        raise ValueError(
+            "browser interaction keys mismatch: "
+            f"missing={sorted(_BROWSER_INTERACTION_KEYS - supplied)}, "
+            f"extra={sorted(supplied - _BROWSER_INTERACTION_KEYS)}"
+        )
+    if packet["version"] != "AURA_SPATIAL_BROWSER_INTERACTION_V1":
+        raise ValueError("unsupported browser interaction version")
+    if packet["scene_id"] != scene.scene_id or packet["scene_digest"] != scene.scene_digest:
+        raise ValueError("browser interaction is stale for the supplied scene")
+    if packet["input_source"] not in _BROWSER_INPUT_SOURCES:
+        raise ValueError("unsupported browser input source")
+    for key, required in (
+        ("review_only", True),
+        ("projection_only", True),
+        ("human_review_required", True),
+        ("renderer_authority", False),
+        ("execution_authority", False),
+        ("patch_authority", False),
+        ("production_mutation", False),
+        ("automatic_merge", False),
+    ):
+        if packet[key] is not required:
+            raise ValueError(f"browser interaction {key} boundary is invalid")
+    metadata = packet["metadata"]
+    if not isinstance(metadata, Mapping):
+        raise ValueError("browser interaction metadata must be an object")
+    authority_path = _find_authority_key(metadata)
+    if authority_path is not None and authority_path != "metadata.renderer_input_is_authority":
+        raise ValueError(f"browser interaction metadata cannot supply authority field: {authority_path}")
+    expected_slots = _ACTION_SLOTS[SpatialInteractionAction(str(packet["action"]))]
+    if dict(packet["intent_slots"]) != expected_slots:
+        raise ValueError("browser interaction six-slot intent does not match action")
+    protected_metadata = {
+        **dict(metadata),
+        "input_source": packet["input_source"],
+        "browser_session_id": str(packet["session_id"]),
+    }
+    protected_metadata.pop("renderer_input_is_authority", None)
+    return compile_spatial_interaction(
+        scene,
+        action=packet["action"],
+        target_entity_ids=packet["target_entity_ids"],
+        actor_ref=packet["actor_ref"],
+        metadata=protected_metadata,
+    )
+
+
 def _normalize_metadata_key(value: Any) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value).lower())
 
@@ -294,6 +356,7 @@ __all__ = [
     "MAX_INTERACTION_EVIDENCE_BYTES",
     "MAX_INTERACTION_METADATA_BYTES",
     "SPATIAL_INTERACTION_VERSION",
+    "compile_browser_spatial_interaction",
     "compile_hotswap_request_guard",
     "compile_spatial_interaction",
 ]

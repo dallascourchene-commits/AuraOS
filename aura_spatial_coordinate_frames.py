@@ -1,9 +1,11 @@
 """Deterministic coordinate-frame validation and transform resolution."""
+
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 import math
-from typing import Any, Iterable
+from typing import Any
 
 from aura_event_contracts import stable_digest
 from aura_spatial_contracts import CoordinateFrame, SpatialSceneSnapshot
@@ -49,6 +51,78 @@ class CoordinateFrameValidationReport:
             "registry_digest": self.registry_digest,
             "version": COORDINATE_FRAME_VERSION,
         }
+
+
+def compile_coordinate_conversion_matrix(
+    *,
+    source_handedness: str,
+    source_up_axis: str,
+    source_meters_per_unit: float,
+    target_handedness: str = "RIGHT_HANDED",
+    target_up_axis: str = "Y_UP",
+    target_meters_per_unit: float = 1.0,
+) -> tuple[float, ...]:
+    """Return a deterministic row-major 4x4 basis/unit conversion matrix."""
+
+    if source_handedness not in {"RIGHT_HANDED", "LEFT_HANDED"}:
+        raise ValueError("unsupported source handedness")
+    if target_handedness != "RIGHT_HANDED":
+        raise ValueError("Aura import target handedness must remain RIGHT_HANDED")
+    if source_up_axis not in {"X_UP", "Y_UP", "Z_UP"}:
+        raise ValueError("unsupported source up axis")
+    if target_up_axis != "Y_UP":
+        raise ValueError("Aura import target up axis must remain Y_UP")
+    for value, label in (
+        (source_meters_per_unit, "source_meters_per_unit"),
+        (target_meters_per_unit, "target_meters_per_unit"),
+    ):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+            raise ValueError(f"{label} must be finite and positive")
+    unit = float(source_meters_per_unit) / float(target_meters_per_unit)
+    if source_up_axis == "Y_UP":
+        basis = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0))
+    elif source_up_axis == "Z_UP":
+        basis = ((1.0, 0.0, 0.0), (0.0, 0.0, 1.0), (0.0, -1.0, 0.0))
+    else:
+        basis = ((0.0, -1.0, 0.0), (1.0, 0.0, 0.0), (0.0, 0.0, 1.0))
+    if source_handedness == "LEFT_HANDED":
+        basis = tuple((-row[0], row[1], row[2]) for row in basis)
+    return (
+        basis[0][0] * unit,
+        basis[0][1] * unit,
+        basis[0][2] * unit,
+        0.0,
+        basis[1][0] * unit,
+        basis[1][1] * unit,
+        basis[1][2] * unit,
+        0.0,
+        basis[2][0] * unit,
+        basis[2][1] * unit,
+        basis[2][2] * unit,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+    )
+
+
+def apply_coordinate_conversion(
+    point: Iterable[float],
+    matrix: Iterable[float],
+) -> tuple[float, float, float]:
+    values = tuple(float(item) for item in point)
+    transform = tuple(float(item) for item in matrix)
+    if len(values) != 3 or len(transform) != 16:
+        raise ValueError("coordinate conversion requires a 3-vector and 4x4 matrix")
+    if not all(math.isfinite(item) for item in (*values, *transform)):
+        raise ValueError("coordinate conversion values must be finite")
+    x, y, z = values
+    return (
+        transform[0] * x + transform[1] * y + transform[2] * z + transform[3],
+        transform[4] * x + transform[5] * y + transform[6] * z + transform[7],
+        transform[8] * x + transform[9] * y + transform[10] * z + transform[11],
+    )
 
 
 def validate_coordinate_frames(
@@ -107,10 +181,7 @@ def validate_coordinate_frames(
                     _finding(
                         "FRAME_BASIS_CONVERSION_UNSUPPORTED",
                         frame.frame_id,
-                        (
-                            "mixed handedness or up-axis requires an explicit "
-                            "conversion transform"
-                        ),
+                        ("mixed handedness or up-axis requires an explicit conversion transform"),
                     )
                 )
 
@@ -225,30 +296,15 @@ def resolve_world_transform(
     chain_ids: list[str] = []
     for frame in chain:
         chain_ids.append(frame.frame_id)
-        local_translation_meters = tuple(
-            item * frame.unit_scale_meters for item in frame.translation
-        )
-        scaled_local = tuple(
-            local_translation_meters[index] * geometric_scale[index]
-            for index in range(3)
-        )
+        local_translation_meters = tuple(item * frame.unit_scale_meters for item in frame.translation)
+        scaled_local = tuple(local_translation_meters[index] * geometric_scale[index] for index in range(3))
         rotated_local = _rotate_vector(rotation, scaled_local)
-        translation = tuple(
-            translation[index] + rotated_local[index] for index in range(3)
-        )
-        rotation = _normalize_quaternion(
-            _multiply_quaternion(rotation, frame.rotation_xyzw)
-        )
-        geometric_scale = tuple(
-            geometric_scale[index] * frame.scale[index]
-            for index in range(3)
-        )
+        translation = tuple(translation[index] + rotated_local[index] for index in range(3))
+        rotation = _normalize_quaternion(_multiply_quaternion(rotation, frame.rotation_xyzw))
+        geometric_scale = tuple(geometric_scale[index] * frame.scale[index] for index in range(3))
         resolved_unit_scale = frame.unit_scale_meters
 
-    scale = tuple(
-        geometric_scale[index] * resolved_unit_scale
-        for index in range(3)
-    )
+    scale = tuple(geometric_scale[index] * resolved_unit_scale for index in range(3))
     if not all(math.isfinite(item) for item in (*translation, *rotation, *scale)):
         raise ValueError("resolved world transform contains non-finite values")
     return ResolvedTransform(

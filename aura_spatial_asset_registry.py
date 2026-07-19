@@ -1,12 +1,14 @@
 """Content-addressed, manifest-only asset registry for Aura spatial projections."""
+
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
 import hashlib
 import hmac
 from pathlib import PurePosixPath
 import re
-from typing import Any, Iterable
+from typing import Any
 from urllib.parse import unquote, urlparse
 
 from aura_event_contracts import stable_digest
@@ -50,24 +52,16 @@ class SpatialAssetRegistry:
         by_id: dict[str, SpatialAssetManifest] = {}
         for manifest in manifests:
             if not isinstance(manifest, SpatialAssetManifest):
-                raise ValueError(
-                    "manifests must contain SpatialAssetManifest records"
-                )
+                raise ValueError("manifests must contain SpatialAssetManifest records")
             if manifest.asset_id in by_id:
-                raise ValueError(
-                    f"duplicate spatial asset id: {manifest.asset_id}"
-                )
+                raise ValueError(f"duplicate spatial asset id: {manifest.asset_id}")
             report = validate_asset_manifest(
                 manifest,
                 allow_remote=allow_remote,
             )
             if not report.ok:
-                codes = ", ".join(
-                    str(item["code"]) for item in report.findings
-                )
-                raise ValueError(
-                    f"invalid spatial asset {manifest.asset_id}: {codes}"
-                )
+                codes = ", ".join(str(item["code"]) for item in report.findings)
+                raise ValueError(f"invalid spatial asset {manifest.asset_id}: {codes}")
             by_id[manifest.asset_id] = manifest
         self._by_id = by_id
         self._registry_digest = stable_digest(
@@ -130,10 +124,7 @@ def validate_asset_manifest(
             findings.append(
                 _finding(
                     "ASSET_LENGTH_MISMATCH",
-                    (
-                        f"manifest declares {manifest.byte_length} bytes "
-                        f"but received {len(content)}"
-                    ),
+                    (f"manifest declares {manifest.byte_length} bytes but received {len(content)}"),
                 )
             )
         expected_algorithm, expected_hex = manifest.content_digest.split(":", 1)
@@ -166,9 +157,7 @@ def validate_asset_manifest(
             for item in findings
         )
 
-    findings.sort(
-        key=lambda item: (str(item["code"]), str(item["message"]))
-    )
+    findings.sort(key=lambda item: (str(item["code"]), str(item["message"])))
     return SpatialAssetValidationReport(
         ok=not findings,
         asset_id=manifest.asset_id,
@@ -194,20 +183,11 @@ def _validate_uri(
         return
     parsed = urlparse(uri)
     scheme = parsed.scheme.lower()
-    if (
-        parsed.username
-        or parsed.password
-        or parsed.query
-        or parsed.fragment
-        or parsed.params
-    ):
+    if parsed.username or parsed.password or parsed.query or parsed.fragment or parsed.params:
         findings.append(
             _finding(
                 "UNSAFE_ASSET_URI_COMPONENTS",
-                (
-                    "asset URI must not contain credentials, parameters, "
-                    "query, or fragment"
-                ),
+                ("asset URI must not contain credentials, parameters, query, or fragment"),
             )
         )
 
@@ -283,12 +263,21 @@ def _validate_relative_path(
                 "relative asset path must not encode separators or aliases",
             )
         )
+        decoded_path = PurePosixPath(decoded)
+        if (
+            decoded.startswith("/")
+            or any(part in {"", ".", ".."} for part in decoded_path.parts)
+            or decoded_path.as_posix() != decoded
+        ):
+            findings.append(
+                _finding(
+                    "UNSAFE_ASSET_PATH",
+                    "decoded asset path must remain normalized and traversal-free",
+                )
+            )
         return
     path = PurePosixPath(value)
-    if (
-        any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != value
-    ):
+    if any(part in {"", ".", ".."} for part in path.parts) or path.as_posix() != value:
         findings.append(
             _finding(
                 "UNSAFE_ASSET_PATH",
@@ -340,10 +329,7 @@ def _validate_uri_path(
             )
         return
     path = PurePosixPath(relative)
-    if (
-        any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != relative
-    ):
+    if any(part in {"", ".", ".."} for part in path.parts) or path.as_posix() != relative:
         findings.append(
             _finding(
                 "UNSAFE_ASSET_PATH",

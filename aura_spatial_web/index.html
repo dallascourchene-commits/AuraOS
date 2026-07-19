@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'">
+  <title>Aura Spatial Projection</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header>
+    <h1>Aura Spatial Projection</h1>
+    <p>Projection-only. Consequential actions return to Aura's retained review path.</p>
+    <form id="session-form">
+      <label for="session-id">Active spatial session ID</label>
+      <input id="session-id" name="session" required pattern="[A-Za-z0-9][A-Za-z0-9._:-]{0,191}" autocomplete="off">
+      <button type="submit">Load projection</button>
+      <button id="enter-xr" type="button" hidden disabled>Enter WebXR</button>
+    </form>
+    <p id="spatial-status" role="status" aria-live="polite">Enter an active session ID.</p>
+  </header>
+  <main>
+    <section aria-label="Spatial canvas">
+      <canvas id="spatial-canvas" width="1280" height="720"></canvas>
+    </section>
+    <section id="accessible-scene" aria-live="polite">
+      <h2>Accessible scene inspector</h2>
+    </section>
+  </main>
+  <script type="module" src="./bootstrap.js"></script>
+</body>
+</html>

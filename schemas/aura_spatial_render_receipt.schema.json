@@ -1,0 +1,270 @@
+{
+  "$defs": {
+    "digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "nonBlank": {
+      "maxLength": 2048,
+      "pattern": ".*\\S.*",
+      "type": "string"
+    },
+    "renderer": {
+      "enum": [
+        "WEBXR",
+        "WEBGPU",
+        "WEBGL2",
+        "ACCESSIBLE_2D",
+        "HEADLESS"
+      ]
+    },
+    "safeValue0": {
+      "maxLength": 65536,
+      "type": [
+        "null",
+        "boolean",
+        "number",
+        "string"
+      ]
+    },
+    "safeValue1": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue0"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue0"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue2": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue1"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue1"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue3": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue2"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue2"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "safeValue4": {
+      "oneOf": [
+        {
+          "maxLength": 65536,
+          "type": [
+            "null",
+            "boolean",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/safeValue3"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/safeValue3"
+          },
+          "maxProperties": 128,
+          "propertyNames": {
+            "maxLength": 128
+          },
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "$id": "https://aura.local/schemas/aura_spatial_render_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "device_profile_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "evidence_class": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ]
+    },
+    "execution_authority": {
+      "const": false
+    },
+    "metrics": {
+      "additionalProperties": {
+        "$ref": "#/$defs/safeValue4"
+      },
+      "maxProperties": 128,
+      "propertyNames": {
+        "maxLength": 128
+      },
+      "type": "object"
+    },
+    "outcome": {
+      "enum": [
+        "PRESENTED",
+        "FAILED",
+        "CANCELLED",
+        "UNAVAILABLE"
+      ]
+    },
+    "patch_authority": {
+      "const": false
+    },
+    "plan_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "projection_only": {
+      "const": true
+    },
+    "receipt_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "render_plan_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "render_receipt_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "renderer": {
+      "$ref": "#/$defs/renderer"
+    },
+    "renderer_authority": {
+      "const": false
+    },
+    "renderer_disposed": {
+      "type": "boolean"
+    },
+    "scene_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "scene_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "sequence": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/nonBlank"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "version": {
+      "const": "AURA_SPATIAL_RENDER_CONTRACTS_V1"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "scene_id",
+    "scene_digest",
+    "plan_id",
+    "render_plan_digest",
+    "device_profile_digest",
+    "renderer",
+    "outcome",
+    "evidence_class",
+    "sequence",
+    "metrics",
+    "source_refs",
+    "renderer_disposed",
+    "projection_only",
+    "renderer_authority",
+    "execution_authority",
+    "patch_authority",
+    "version",
+    "schema_version",
+    "render_receipt_digest"
+  ],
+  "title": "Aura Spatial Render Receipt V1",
+  "type": "object"
+}
