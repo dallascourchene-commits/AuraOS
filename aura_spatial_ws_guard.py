@@ -1,17 +1,11 @@
-"""Fail-closed adapter from legacy AR shape requests to Aura spatial intents.
-
-The adapter hashes and redacts the proposed function payload, binds the request to
-one exact current topology shape, and produces a review-only Forge handoff packet.
-It never executes the proposal, refreshes topology as though it succeeded, or
-broadcasts the proposal to unrelated clients.
-"""
+"""Fail-closed adapter from legacy AR hotswap requests to spatial intents."""
 from __future__ import annotations
 
 from collections.abc import Mapping
 import re
 from typing import Any
 
-from aura_event_contracts import sanitize_payload, stable_digest
+from aura_event_contracts import canonical_json, sanitize_payload, stable_digest
 from aura_spatial_contracts import (
     CoordinateFrame,
     SpatialEntity,
@@ -22,6 +16,8 @@ from aura_spatial_interaction import compile_hotswap_request_guard
 from aura_spatial_scene import compile_spatial_scene
 
 SPATIAL_WS_GUARD_VERSION = "AURA_SPATIAL_WS_GUARD_V1"
+MAX_PROPOSAL_BYTES = 262_144
+MAX_TARGET_CHARS = 512
 
 
 def compile_ar_hotswap_handoff(
@@ -33,14 +29,25 @@ def compile_ar_hotswap_handoff(
 ) -> dict[str, Any]:
     """Compile one legacy hotswap request into a non-executing review packet."""
     target = str(target_id or "").strip()
-    if not target:
-        raise ValueError("target_id is required")
+    if (
+        not target
+        or len(target) > MAX_TARGET_CHARS
+        or any(ord(char) < 32 for char in target)
+    ):
+        raise ValueError("target_id is invalid")
     if not isinstance(shapes, Mapping):
         raise ValueError("shapes must be a mapping")
     if target not in shapes:
         raise KeyError(f"shape {target!r} not found")
     if new_function is None or new_function == "":
         raise ValueError("new_function is required")
+
+    proposal = sanitize_payload(new_function)
+    proposal_bytes = canonical_json(proposal).encode("utf-8")
+    if not proposal_bytes or len(proposal_bytes) > MAX_PROPOSAL_BYTES:
+        raise ValueError(
+            "new_function exceeds the bounded review payload limit"
+        )
 
     shape = shapes[target]
     metadata = _shape_mapping(shape, "metadata")
@@ -60,12 +67,17 @@ def compile_ar_hotswap_handoff(
         truth_class=SpatialTruthClass.DERIVED,
         projection_only=True,
     )
+    label = str(
+        getattr(shape, "label", None)
+        or ast_data.get("label")
+        or target
+    ).strip()[:512]
     entity = SpatialEntity(
         entity_id=entity_id,
         entity_type=SpatialEntityType.DOMAIN_NODE,
-        label=str(getattr(shape, "label", None) or ast_data.get("label") or target),
+        label=label or entity_id,
         frame_id=root_frame.frame_id,
-        source_refs=tuple(source_refs),
+        source_refs=tuple(sorted(set(source_refs))),
         position=_position(shape),
         truth_class=SpatialTruthClass.DERIVED,
         selectable=True,
@@ -73,17 +85,16 @@ def compile_ar_hotswap_handoff(
         patch_authority=False,
         metadata={
             "domain_owner": "aura_topology_ws_bridge",
-            "legacy_shape_id": target,
+            "legacy_shape_digest": stable_digest(target, digest_size=12),
             "node_type": str(
                 getattr(shape, "node_type", None)
                 or ast_data.get("node_type")
                 or ast_data.get("kind")
                 or "unknown"
-            ),
+            )[:128],
             "source_anchor_present": bool(source_anchor),
         },
     )
-    proposal = sanitize_payload(new_function)
     proposal_digest = stable_digest(
         {
             "target_id": target,
@@ -92,7 +103,9 @@ def compile_ar_hotswap_handoff(
         digest_size=32,
     )
     scene = compile_spatial_scene(
-        scene_id="ar-hotswap-review:" + stable_digest(target, digest_size=12),
+        scene_id=(
+            "ar-hotswap-review:" + stable_digest(target, digest_size=12)
+        ),
         purpose_digest=stable_digest(
             {
                 "op": "PREPARE_REPAIR_REQUEST",
@@ -123,6 +136,7 @@ def compile_ar_hotswap_handoff(
         "scene_id": scene.scene_id,
         "scene_digest": scene.scene_digest,
         "proposal_digest": proposal_digest,
+        "proposal_byte_length": len(proposal_bytes),
         "source_anchor_present": bool(source_anchor),
         "raw_proposal_retained": False,
         "requesting_client_only": True,
@@ -148,7 +162,10 @@ def _position(shape: Any) -> tuple[float, float, float]:
         result = tuple(float(item) for item in value)
     except (TypeError, ValueError):
         return (0.0, 0.0, 0.0)
-    if not all(item == item and abs(item) != float("inf") for item in result):
+    if not all(
+        item == item and abs(item) != float("inf")
+        for item in result
+    ):
         return (0.0, 0.0, 0.0)
     return (result[0], result[1], result[2])
 
@@ -160,26 +177,36 @@ def _source_anchor(ast_data: Mapping[str, Any]) -> str:
         or ast_data.get("path")
         or ""
     ).strip().replace("\\", "/")
-    if not raw_path or raw_path.startswith("/") or ".." in raw_path.split("/"):
+    if (
+        not raw_path
+        or len(raw_path) > 1024
+        or raw_path.startswith("/")
+        or ".." in raw_path.split("/")
+        or "//" in raw_path
+    ):
         return ""
     if not re.fullmatch(r"[A-Za-z0-9._/\-]+", raw_path):
         return ""
     anchor = f"source:{raw_path}"
     line_range = ast_data.get("line_range")
     if isinstance(line_range, (list, tuple)) and line_range:
-        values: list[int] = []
-        for item in line_range[:2]:
-            if type(item) is int and item > 0:
-                values.append(item)
+        values = [
+            item
+            for item in line_range[:2]
+            if type(item) is int and item > 0
+        ]
+        if len(values) == 2 and values[0] > values[1]:
+            values = []
         if values:
             anchor += "#L" + "-L".join(str(item) for item in values)
     symbol = str(ast_data.get("symbol") or "").strip()
     if symbol and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*", symbol):
-        anchor += f"::{symbol}"
+        anchor += f"::{symbol[:512]}"
     return anchor
 
 
 __all__ = [
+    "MAX_PROPOSAL_BYTES",
     "SPATIAL_WS_GUARD_VERSION",
     "compile_ar_hotswap_handoff",
 ]
