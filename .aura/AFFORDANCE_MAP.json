@@ -1,9 +1,76 @@
 {
   "version": "AURA_AFFORDANCE_MAP_V1",
   "generated_by": "aura_affordance_directory",
-  "mode": "generated_placeholder",
-  "source_of_truth": "aura_affordance_directory.SEED_AFFORDANCES",
-  "note": "Runtime affordances are seeded and grounded by aura_affordance_directory.py. This file is a cache/placeholder; the authoritative seed list lives in SEED_AFFORDANCES within the module.",
-  "description": "Aura Affordance Directory seed map. Each entry describes an internal Aura capability that agents should consider before inventing generic solutions. Grounded against CODEMAP at load time.",
-  "affordances": []
+  "mode": "seed_plus_repository_extensions",
+  "source_of_truth": "aura_affordance_directory.SEED_AFFORDANCES plus this file's non-duplicate extension records",
+  "note": "Runtime seed affordances remain canonical in aura_affordance_directory.py. This file contributes only explicit repository-native extensions whose IDs do not duplicate seed IDs.",
+  "description": "Aura Affordance Directory extension map grounded against CODEMAP at load time.",
+  "affordances": [
+    {
+      "id": "aura.coding_waboose.review_lessons",
+      "name": "Coding Waboose Typed Review Lessons",
+      "description": "Normalizes CodeRabbit, Codex, and manual review evidence into typed bounded findings; replays durable defect lessons through Crucible; and supplies conservative source-shape focus to Coding Waboose.",
+      "status": "active",
+      "tags": [
+        "coding_waboose", "review", "coderabbit", "codex", "crucible",
+        "learning", "detector", "regression", "connectome", "agent_bridge"
+      ],
+      "when_to_use": "When a coding run should reuse grounded defect classes from prior CodeRabbit, Codex, or manual reviews; normalize external PR findings; or replay adversarial review lessons before Forge handoff.",
+      "when_not_to_use": "Do not use review lessons as source truth, patch authority, proof that a defect exists, or permission to fix, commit, push, open a pull request, merge, or mutate production.",
+      "implemented_by": [
+        "aura_coding_waboose_review_lessons.py",
+        "aura_review_lessons_external.py",
+        "aura_review_lessons_determinism.py",
+        "aura_review_lessons_security.py",
+        "aura_review_lessons_contracts.py",
+        "aura_coding_waboose_review_learning.py",
+        "aura_agent_arena_review_learning_bridge.py",
+        "aura_agent_arena_review_learning_mcp.py"
+      ],
+      "symbols": [
+        "ReviewLessonEngine",
+        "ReviewLearningCodingWaboose",
+        "ReviewLearningAgentArenaBridge",
+        "normalize_external_review",
+        "run_crucible_replay",
+        "scan_source_for_review_lessons"
+      ],
+      "tests": [
+        "tests/test_aura_coding_waboose_review_lessons.py",
+        "tests/test_aura_coding_waboose_review_learning.py",
+        "tests/test_aura_agent_arena_review_learning.py"
+      ],
+      "docs": ["docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md"],
+      "commands": [
+        "python -m aura_coding_waboose_review_lessons_cli summary",
+        "python -m aura_coding_waboose_review_lessons_cli crucible",
+        "python -m aura_agent_arena_review_learning_mcp"
+      ],
+      "requires": [
+        ".aura/CODEMAP.json",
+        ".aura/review_lessons/pr164_spatial_review_lessons.json",
+        "Coding Waboose",
+        "Capability Connectome",
+        "Agent Bridge",
+        "Crucible"
+      ],
+      "outputs": [
+        "normalized_external_review",
+        "typed_review_lesson_summary",
+        "probable_source_shape_findings",
+        "crucible_replay_receipts"
+      ],
+      "related_affordances": [
+        "aura.agent_arena.bridge",
+        "aura.patch_quality_gate",
+        "aura.relational.index",
+        "aura.emergent_potential.audit",
+        "aura.coding_waboose.learning"
+      ],
+      "safety": "Review-learning and verification focus only. External reviewers are teacher signals, not authorities. All findings require exact-source corroboration, verifiers, and human review.",
+      "patch_authority": false,
+      "vsa_patch_authority": false,
+      "prompt_card": "Use typed Coding Waboose review lessons to replay known defect classes and focus exact-source investigation before requesting a separately authorized Forge repair."
+    }
+  ]
 }
