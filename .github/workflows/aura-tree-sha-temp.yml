@@ -19,8 +19,15 @@ jobs:
         with:
           ref: 6f77ae4e3f34054eb1ef0fd5aeeedc2ce7b2c3a3
           fetch-depth: 1
-      - name: Print exact baseline tree
+      - name: Record exact baseline tree
         run: |
           set -euo pipefail
-          echo "BASE_COMMIT=$(git rev-parse HEAD)"
-          echo "BASE_TREE=$(git rev-parse 'HEAD^{tree}')"
+          test "$(git rev-parse HEAD)" = "6f77ae4e3f34054eb1ef0fd5aeeedc2ce7b2c3a3"
+          git rev-parse 'HEAD^{tree}' > /tmp/base-tree.txt
+      - name: Upload baseline tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-main-base-tree
+          path: /tmp/base-tree.txt
+          if-no-files-found: error
+          retention-days: 1
