@@ -2,8 +2,8 @@
 name: Aura Temporary S4-B Codex Round Apply
 
 on:
-  push:
-    branches: [feature/spatial-s4b-gaussian-security]
+  pull_request:
+    types: [edited]
     paths: [.github/workflows/aura-s4b-codex-round-temp.yml]
   workflow_dispatch:
 
