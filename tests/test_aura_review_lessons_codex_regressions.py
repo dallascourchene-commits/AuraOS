@@ -48,6 +48,14 @@ def test_runtime_registry_rejects_rehashed_authority_tampering() -> None:
         validate_review_lesson_registry(registry)
 
 
+def test_runtime_registry_requires_digest_to_match_schema() -> None:
+    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    registry.pop("registry_digest")
+
+    with pytest.raises(ReviewLessonError, match="keys mismatch"):
+        validate_review_lesson_registry(registry)
+
+
 def test_authority_detector_accepts_the_canonical_envelope() -> None:
     canonical = {
         "production_mutation": False,
@@ -85,9 +93,27 @@ def test_malformed_finding_does_not_abort_valid_neighbors() -> None:
         {
             "head_sha": "a" * 40,
             "findings": [
-                {"id": "good-1", "author": "Codex", "file": "a.py", "line": 1, "body": "good"},
-                {"id": "bad", "author": "Codex", "file": "../bad.py", "line": "nope", "body": "bad"},
-                {"id": "good-2", "author": "Codex", "file": "b.py", "line": 2, "body": "good"},
+                {
+                    "id": "good-1",
+                    "author": "Codex",
+                    "file": "a.py",
+                    "line": 1,
+                    "body": "good",
+                },
+                {
+                    "id": "bad",
+                    "author": "Codex",
+                    "file": "../bad.py",
+                    "line": "nope",
+                    "body": "bad",
+                },
+                {
+                    "id": "good-2",
+                    "author": "Codex",
+                    "file": "b.py",
+                    "line": 2,
+                    "body": "good",
+                },
             ],
         },
         current_head="a" * 40,
@@ -125,7 +151,13 @@ def test_persistent_review_store_stops_at_count_limit(tmp_path: Path) -> None:
         {
             "head_sha": "a" * 40,
             "findings": [
-                {"id": "overflow", "author": "Codex", "file": "module.py", "line": 999, "body": "overflow"}
+                {
+                    "id": "overflow",
+                    "author": "Codex",
+                    "file": "module.py",
+                    "line": 999,
+                    "body": "overflow",
+                }
             ],
         },
         current_head="a" * 40,
