@@ -227,7 +227,18 @@ def _validate_uri(
         return
 
     if scheme in _ALLOWED_REMOTE_SCHEMES:
-        if not parsed.hostname:
+        try:
+            hostname = parsed.hostname
+            _ = parsed.port
+        except ValueError:
+            hostname = None
+            findings.append(
+                _finding(
+                    "REMOTE_ASSET_HOST_INVALID",
+                    "https asset URI contains an invalid host or port",
+                )
+            )
+        if not hostname:
             findings.append(
                 _finding(
                     "REMOTE_ASSET_HOST_MISSING",
@@ -265,10 +276,18 @@ def _validate_relative_path(
         )
         return
     decoded = unquote(value)
-    path = PurePosixPath(decoded)
+    if decoded != value or "//" in value:
+        findings.append(
+            _finding(
+                "NONCANONICAL_ASSET_ENCODING",
+                "relative asset path must not encode separators or aliases",
+            )
+        )
+        return
+    path = PurePosixPath(value)
     if (
         any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != decoded
+        or path.as_posix() != value
     ):
         findings.append(
             _finding(
@@ -284,9 +303,7 @@ def _validate_uri_path(
     *,
     allow_empty: bool = False,
 ) -> None:
-    decoded = unquote(value)
-    stripped = decoded.lstrip("/")
-    if not stripped:
+    if not value:
         if not allow_empty:
             findings.append(
                 _finding(
@@ -295,10 +312,37 @@ def _validate_uri_path(
                 )
             )
         return
-    path = PurePosixPath(stripped)
+    decoded = unquote(value)
+    if decoded != value:
+        findings.append(
+            _finding(
+                "NONCANONICAL_ASSET_ENCODING",
+                "asset URI path must not contain percent-encoded aliases",
+            )
+        )
+        return
+    if not value.startswith("/") or value.startswith("//") or "//" in value[1:]:
+        findings.append(
+            _finding(
+                "UNSAFE_ASSET_PATH",
+                "asset URI path must use exactly one canonical separator",
+            )
+        )
+        return
+    relative = value[1:]
+    if not relative:
+        if not allow_empty:
+            findings.append(
+                _finding(
+                    "UNSAFE_ASSET_PATH",
+                    "asset URI path must not be empty",
+                )
+            )
+        return
+    path = PurePosixPath(relative)
     if (
         any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != stripped
+        or path.as_posix() != relative
     ):
         findings.append(
             _finding(
