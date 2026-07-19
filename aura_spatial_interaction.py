@@ -14,6 +14,7 @@ from aura_spatial_contracts import (
 
 SPATIAL_INTERACTION_VERSION = "AURA_SPATIAL_INTERACTION_V1"
 MAX_INTERACTION_METADATA_BYTES = 65_536
+MAX_INTERACTION_EVIDENCE_BYTES = 262_144
 _ACTOR_REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _AUTHORITY_KEYS = frozenset(
     {
@@ -173,6 +174,14 @@ def compile_spatial_interaction(
     ordered_refs = tuple(sorted(source_refs))
     if len(ordered_refs) > 1024:
         raise ValueError("interaction source references exceed the bounded evidence cap")
+    evidence_bytes = canonical_json(
+        {
+            "target_entity_ids": list(targets),
+            "source_refs": list(ordered_refs),
+        }
+    ).encode("utf-8")
+    if len(evidence_bytes) > MAX_INTERACTION_EVIDENCE_BYTES:
+        raise ValueError("interaction evidence exceeds the bounded payload limit")
 
     requires_forge = action_value is SpatialInteractionAction.PREPARE_REPAIR_REQUEST
     protected_metadata = {
@@ -282,6 +291,7 @@ def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
 
 
 __all__ = [
+    "MAX_INTERACTION_EVIDENCE_BYTES",
     "MAX_INTERACTION_METADATA_BYTES",
     "SPATIAL_INTERACTION_VERSION",
     "compile_hotswap_request_guard",
