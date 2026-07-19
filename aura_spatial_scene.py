@@ -1,7 +1,7 @@
 """Immutable scene compilation and verification for Aura's spatial substrate."""
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
 import re
 from typing import Any, TypeVar
@@ -41,6 +41,30 @@ _AUTHORITY_KEYS = frozenset(
         "renderer_input_is_authority",
         "verifier_receipt",
         "vsa_patch_authority",
+    }
+)
+_AUTHORITY_KEY_TOKENS = frozenset(
+    re.sub(r"[^a-z0-9]+", "", key.lower())
+    for key in _AUTHORITY_KEYS
+)
+_SCENE_PAYLOAD_KEYS = frozenset(
+    {
+        "scene_id",
+        "purpose_digest",
+        "root_frame_id",
+        "frames",
+        "assets",
+        "entities",
+        "links",
+        "source_refs",
+        "renderer_hints",
+        "truth_policy",
+        "patch_authority",
+        "vsa_patch_authority",
+        "execution_authority",
+        "version",
+        "schema_version",
+        "scene_digest",
     }
 )
 _RecordT = TypeVar("_RecordT")
@@ -163,6 +187,87 @@ def compile_spatial_scene(
     if not report.ok:
         codes = ", ".join(str(item["code"]) for item in report.findings)
         raise ValueError(f"spatial scene verification failed: {codes}")
+    return scene
+
+
+def validate_spatial_scene_payload(
+    payload: Mapping[str, Any],
+) -> SpatialSceneSnapshot:
+    """Validate serialized interchange through the runtime contracts.
+
+    JSON Schema handles structural validation. This path enforces cross-field
+    invariants that Draft 2020-12 cannot express, including asset min/max bounds,
+    rooted frame continuity, referential integrity, authority metadata, and the
+    canonical scene digest.
+    """
+    if not isinstance(payload, Mapping):
+        raise ValueError("spatial scene payload must be an object")
+    keys = set(payload)
+    if keys != _SCENE_PAYLOAD_KEYS:
+        missing = sorted(_SCENE_PAYLOAD_KEYS - keys)
+        extra = sorted(keys - _SCENE_PAYLOAD_KEYS)
+        raise ValueError(
+            f"spatial scene payload keys mismatch: missing={missing}, extra={extra}"
+        )
+
+    frames = _records_from_payload(
+        payload["frames"],
+        CoordinateFrame,
+        "frames",
+    )
+    assets = _records_from_payload(
+        payload["assets"],
+        SpatialAssetManifest,
+        "assets",
+    )
+    entities = _records_from_payload(
+        payload["entities"],
+        SpatialEntity,
+        "entities",
+    )
+    links = _records_from_payload(
+        payload["links"],
+        SpatialLink,
+        "links",
+    )
+    source_refs = payload["source_refs"]
+    if (
+        not isinstance(source_refs, Sequence)
+        or isinstance(source_refs, (str, bytes, bytearray))
+    ):
+        raise ValueError("scene.source_refs must be an array")
+    renderer_hints = payload["renderer_hints"]
+    if not isinstance(renderer_hints, Mapping):
+        raise ValueError("scene.renderer_hints must be an object")
+
+    try:
+        scene = SpatialSceneSnapshot(
+            scene_id=payload["scene_id"],
+            purpose_digest=payload["purpose_digest"],
+            root_frame_id=payload["root_frame_id"],
+            frames=frames,
+            assets=assets,
+            entities=entities,
+            links=links,
+            source_refs=tuple(source_refs),
+            renderer_hints=dict(renderer_hints),
+            truth_policy=payload["truth_policy"],
+            patch_authority=payload["patch_authority"],
+            vsa_patch_authority=payload["vsa_patch_authority"],
+            execution_authority=payload["execution_authority"],
+            version=payload["version"],
+            schema_version=payload["schema_version"],
+        )
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"invalid spatial scene payload: {exc}") from exc
+
+    report = verify_spatial_scene(scene)
+    if not report.ok:
+        codes = ", ".join(str(item["code"]) for item in report.findings)
+        raise ValueError(f"invalid spatial scene payload: {codes}")
+    supplied_digest = str(payload["scene_digest"] or "").strip().lower()
+    if supplied_digest != scene.scene_digest:
+        raise ValueError("spatial scene payload digest mismatch")
     return scene
 
 
@@ -333,13 +438,31 @@ def _typed_records(
     return records
 
 
+def _records_from_payload(
+    value: Any,
+    record_type: type[_RecordT],
+    field_name: str,
+) -> tuple[_RecordT, ...]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, (str, bytes, bytearray))
+    ):
+        raise ValueError(f"scene.{field_name} must be an array")
+    records: list[_RecordT] = []
+    for index, item in enumerate(value):
+        if not isinstance(item, Mapping):
+            raise ValueError(f"scene.{field_name}[{index}] must be an object")
+        try:
+            records.append(record_type(**dict(item)))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"invalid scene.{field_name}[{index}]: {exc}"
+            ) from exc
+    return tuple(records)
+
+
 def _normalize_metadata_key(value: Any) -> str:
-    text = re.sub(
-        r"(?<=[a-z0-9])(?=[A-Z])",
-        "_",
-        str(value).strip(),
-    )
-    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+    return re.sub(r"[^a-z0-9]+", "", str(value).lower())
 
 
 def _collect_authority_findings(
@@ -351,7 +474,7 @@ def _collect_authority_findings(
         for key, item in value.items():
             normalized = _normalize_metadata_key(key)
             child = f"{path}.{key}"
-            if normalized in _AUTHORITY_KEYS:
+            if normalized in _AUTHORITY_KEY_TOKENS:
                 findings.append(
                     _finding(
                         "AUTHORITY_METADATA_REJECTED",
@@ -404,5 +527,6 @@ __all__ = [
     "SpatialSceneVerificationReport",
     "compile_spatial_scene",
     "scene_summary",
+    "validate_spatial_scene_payload",
     "verify_spatial_scene",
 ]
