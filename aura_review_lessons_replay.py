@@ -23,11 +23,150 @@ from aura_review_lessons_registry import (
 )
 
 
+def _authority_envelope() -> dict[str, Any]:
+    return {
+        "production_mutation": False,
+        "automatic_fix": False,
+        "automatic_commit": False,
+        "automatic_push": False,
+        "automatic_pull_request": False,
+        "automatic_merge": False,
+        "human_review_required": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": VSA_PATCH_AUTHORITY,
+    }
+
+
 def run_review_detector(detector_id: str, candidate: Any) -> dict[str, Any]:
+    """Run one bounded deterministic detector and return a review-only packet."""
+
     detector = DETECTORS.get(detector_id)
     if detector is None:
         raise ReviewLessonError(f"unknown review detector: {detector_id}")
-    _bounded_json(candidate, maximum=_MAX_SCENARIO_BYTES, label="review detector candidate")
+    _bounded_json(
+        candidate,
+        maximum=_MAX_SCENARIO_BYTES,
+        label="review detector candidate",
+    )
     findings = detector(candidate)
     packet = {
-        "version": REVIE]}1MM=9}YIM%=8°(€€€€€€€€‰‘•Ñ•Ñ½É}¥ˆè‘•Ñ•Ñ½É}¥°(€€€€€€€€‰™¥¹‘¥¹}½Õ¹Ðˆè±•¸¡™¥¹‘¥¹Ì¤°(€€€€€€€€‰™¥¹‘¥¹Ìˆè™¥¹‘¥¹Ì°(€€€€€€€€‰ÁÉ½‘ÕÑ¥½¹}µÕÑ…Ñ¥½¸ˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}™¥àˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}½µµ¥Ðˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕÍ ˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕ±±}É•ÅÕ•ÍÐˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}µ•É”ˆè…±Í”°(€€€€€€€€‰¡Õµ…¹}É•Ù¥•Ý}É•ÅÕ¥É•ˆèQÉÕ”°(€€€€€€€€‰Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèAQ!}UQ!=I%Qd°(€€€€€€€€‰ÙÍ…}Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèYM}AQ!}UQ!=I%Qd°(€€€ô(€€€Á…­•Ñl‰Á…­•Ñ}‘¥•ÍÐ‰t€ô}‘¥•ÍÐ¡Á…­•Ð°Í¥é”ôÄØ¤(€€€É•ÑÕÉ¸Á…­•Ð(()‘•˜ÉÕ¹}ÉÕ¥‰±•}É•Á±…ä (€€€É•¥ÍÑÉäè5…ÁÁ¥¹mÍÑÈ°¹åtðÍÑÈðA…Ñ €ôU1Q}I%MQIe}AQ °(€€€€¨°(€€€‘•Ñ•Ñ½É}¥‘ÌèM•ÅÕ•¹•mÍÑÉt€ô€ ¤°(¤€´ø‘¥ÑmÍÑÈ°¹åtè(€€€€ˆˆ‰I•Á±…äÑåÁ•…‘Ù•ÉÍ…É¥…°±•ÍÍ½¹Ì…¹•µ¥ÐÁÉ½½˜µ½É¥•¹Ñ•É••¥ÁÑÌ¸ˆˆˆ((€€€¥˜¥Í¥¹ÍÑ…¹”¡É•¥ÍÑÉä°€¡ÍÑÈ°A…Ñ ¤¤è(€€€€€€€±½…‘•€ô±½…‘}É•Ù¥•Ý}±•ÍÍ½¹}É•¥ÍÑÉä¡É•¥ÍÑÉä¤(€€€•±Í”è(€€€€€€€±½…‘•€ôÙ…±¥‘…Ñ•}É•Ù¥•Ý}±•ÍÍ½¹}É•¥ÍÑÉä¡É•¥ÍÑÉä¤(€€€Í•±•Ñ•€ôíÍÑÈ¡Ù…±Õ”¤™½ÈÙ…±Õ”¥¸‘•Ñ•Ñ½É}¥‘Ì¥˜ÍÑÈ¡Ù…±Õ”¥ô(€€€Õ¹­¹½Ý¸€ôÍ•±•Ñ•€´Í•Ð¡QQ=IL¤(€€€¥˜Õ¹­¹½Ý¸è(€€€€€€€É…¥Í”I•Ù¥•Ý1•ÍÍ½¹ÉÉ½È¡˜‰Õ¹­¹½Ý¸Í•±•Ñ•É•Ù¥•Ü‘•Ñ•Ñ½ÉÌèíÍ½ÉÑ•¡Õ¹­¹½Ý¸¥ôˆ¤(€€€±•ÍÍ½¹Ì€ôíÍÑÈ¡¥Ñ•µl‰‘•Ñ•Ñ½É}¥‰t¤è‘¥Ð¡¥Ñ•´¤™½È¥Ñ•´¥¸±½…‘•‘l‰±•ÍÍ½¹Ì‰uô(€€€É••¥ÁÑÌè±¥ÍÑm‘¥ÑmÍÑÈ°¹åut€ômt(€€€™½ÈÍ•¹…É¥¼¥¸±½…‘•‘l‰Í•¹…É¥½Ì‰tè(€€€€€€€‘•Ñ•Ñ½É}¥€ôÍÑÈ¡Í•¹…É¥½l‰‘•Ñ•Ñ½É}¥‰t¤(€€€€€€€¥˜Í•±•Ñ•…¹‘•Ñ•Ñ½É}¥¹½Ð¥¸Í•±•Ñ•è(€€€€€€€€€€€½¹Ñ¥¹Õ”(€€€€€€€±•ÍÍ½¸€ô±•ÍÍ½¹Ím‘•Ñ•Ñ½É}¥‘t(€€€€€€€É•ÍÕ±Ð€ôÉÕ¹}É•Ù¥•Ý}‘•Ñ•Ñ½È¡‘•Ñ•Ñ½É}¥°Í•¹…É¥¼¹•Ð ‰…¹‘¥‘…Ñ”ˆ¤¤(€€€€€€€•áÁ•Ñ•‘}½‘”€ôÍÑÈ¡Í•¹…É¥¼¹•Ð ‰•áÁ•Ñ•‘}™¥¹‘¥¹}½‘”ˆ¤½È€ˆˆ¤(€€€€€€€µ…Ñ¡¥¹œ€ôl(€€€€€€€€€€€™¥¹‘¥¹œ(€€€€€€€€€€€™½È™¥¹‘¥¹œ¥¸É•ÍÕ±Ñl‰™¥¹‘¥¹Ì‰t(€€€€€€€€€€€¥˜¹½Ð•áÁ•Ñ•‘}½‘”½È™¥¹‘¥¹œ¹•Ð ‰½‘”ˆ¤€ôô•áÁ•Ñ•‘}½‘”(€€€€€€€t(€€€€€€€É••¥ÁÐ€ôì(€€€€€€€€€€€€‰Ù•ÉÍ¥½¸ˆèIU%	1}IA1e}YIM%=8°(€€€€€€€€€€€€‰Í•¹…É¥½}¥ˆèÍ•¹…É¥½l‰Í•¹…É¥½}¥‰t°(€€€€€€€€€€€€‰±•ÍÍ½¹}¥¹Ù½­•ˆè±•ÍÍ½¹l‰±•ÍÍ½¹}¥‰t°(€€€€€€€€€€€€‰‘•Ñ•Ñ½É}¥ˆè‘•Ñ•Ñ½É}¥°(€€€€€€€€€€€€‰™¥¹‘¥¹}ÁÉ½‘Õ•ˆè‰½½°¡µ…Ñ¡¥¹œ¤°(€€€€€€€€€€€€‰™¥¹‘¥¹}¥‘ÌˆèmÍÑÈ¡¥Ñ•´¹•Ð ‰™¥¹‘¥¹}¥ˆ¤½È€ˆˆ¤™½È¥Ñ•´¥¸µ…Ñ¡¥¹t°(€€€€€€€€€€€€‰½‘•}Í±¥”ˆèÍ•¹…É¥¼¹•Ð ‰½‘•}Í±¥”ˆ¤½ÈÍ•¹…É¥¼¹•Ð ‰…¹‘¥‘…Ñ”ˆ¤°(€€€€€€€€€€€€‰¥¹Ù…É¥…¹Ñ}Ù¥½±…Ñ•ˆè±•ÍÍ½¹l‰¥¹Ù…É¥…¹Ð‰t°(€€€€€€€€€€€€‰ÍÕ•ÍÑ•‘}É•Á…¥Èˆè±•ÍÍ½¹l‰É•Á…¥É}Á…ÑÑ•É¸‰t°(€€€€€€€€€€€€‰É•ÅÕ¥É•‘}É•É•ÍÍ¥½¸ˆè±•ÍÍ½¹l‰É•ÅÕ¥É•‘}É•É•ÍÍ¥½¸‰t°(€€€€€€€€€€€€‰½¹™¥‘•¹”ˆè™±½…Ð¡±•ÍÍ½¹l‰½¹™¥‘•¹”‰t¤°(€€€€€€€€€€€€‰ÁÉ½Ù•¹…¹”ˆè±•ÍÍ½¹l‰ÁÉ½Ù•¹…¹”‰t°(€€€€€€€€€€€€‰•áÁ•Ñ•‘}™¥¹‘¥¹}½‘”ˆè•áÁ•Ñ•‘}½‘”°(€€€€€€€€€€€€‰ÁÉ½‘ÕÑ¥½¹}µÕÑ…Ñ¥½¸ˆè…±Í”°(€€€€€€€€€€€€‰…ÕÑ½µ…Ñ¥}™¥àˆè…±Í”°(€€€€€€€€€€€€‰…ÕÑ½µ…Ñ¥}½µµ¥Ðˆè…±Í”°(€€€€€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕÍ ˆè…±Í”°(€€€€€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕ±±}É•ÅÕ•ÍÐˆè…±Í”°(€€€€€€€€€€€€‰…ÕÑ½µ…Ñ¥}µ•É”ˆè…±Í”°(€€€€€€€€€€€€‰¡Õµ…¹}É•Ù¥•Ý}É•ÅÕ¥É•ˆèQÉÕ”°(€€€€€€€€€€€€‰Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèAQ!}UQ!=I%Qd°(€€€€€€€€€€€€‰ÙÍ…}Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèYM}AQ!}UQ!=I%Qd°(€€€€€€€ô(€€€€€€€É••¥ÁÑl‰É••¥ÁÑ}‘¥•ÍÐ‰t€ô}‘¥•ÍÐ¡É••¥ÁÐ°Í¥é”ôÄØ¤(€€€€€€€É••¥ÁÑÌ¹…ÁÁ•¹¡É••¥ÁÐ¤(€€€Á…­•Ð€ôì(€€€€€€€€‰Ù•ÉÍ¥½¸ˆèIU%	1}IA1e}YIM%=8°(€€€€€€€€‰É•¥ÍÑÉå}‘¥•ÍÐˆè±½…‘•‘l‰É•¥ÍÑÉå}‘¥•ÍÐ‰t°(€€€€€€€€‰Í•¹…É¥½}½Õ¹Ðˆè±•¸¡É••¥ÁÑÌ¤°(€€€€€€€€‰Á…ÍÍ•‘}½Õ¹ÐˆèÍÕ´ Ä™½È¥Ñ•´¥¸É••¥ÁÑÌ¥˜¥Ñ•µl‰™¥¹‘¥¹}ÁÉ½‘Õ•‰t¤°(€€€€€€€€‰™…¥±•‘}½Õ¹ÐˆèÍÕ´ Ä™½È¥Ñ•´¥¸É••¥ÁÑÌ¥˜¹½Ð¥Ñ•µl‰™¥¹‘¥¹}ÁÉ½‘Õ•‰t¤°(€€€€€€€€‰É••¥ÁÑÌˆèÉ••¥ÁÑÌ°(€€€€€€€€‰ÍÑ…ÑÕÌˆè€‰AMMˆ¥˜É••¥ÁÑÌ…¹…±°¡¥Ñ•µl‰™¥¹‘¥¹}ÁÉ½‘Õ•‰t™½È¥Ñ•´¥¸É••¥ÁÑÌ¤•±Í”€‰%1ˆ°(€€€€€€€€‰ÁÉ½‘ÕÑ¥½¹}µÕÑ…Ñ¥½¸ˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}™¥àˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}½µµ¥Ðˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕÍ ˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}ÁÕ±±}É•ÅÕ•ÍÐˆè…±Í”°(€€€€€€€€‰…ÕÑ½µ…Ñ¥}µ•É”ˆè…±Í”°(€€€€€€€€‰¡Õµ…¹}É•Ù¥•Ý}É•ÅÕ¥É•ˆèQÉÕ”°(€€€€€€€€‰Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèAQ!}UQ!=I%Qd°(€€€€€€€€‰ÙÍ…}Á…Ñ¡}…ÕÑ¡½É¥ÑäˆèYM}AQ!}UQ!=I%Qd°(€€€ô(€€€Á…­•Ñl‰Á…­•Ñ}‘¥•ÍÐ‰t€ô}‘¥•ÍÐ¡Á…­•Ð°Í¥é”ôÄØ¤(€€€É•ÑÕÉ¸Á…­•Ð(()}}…±±}|€ôl‰ÉÕ¹}ÉÕ¥‰±•}É•Á±…äˆ°€‰ÉÕ¹}É•Ù¥•Ý}‘•Ñ•Ñ½È‰t(
+        "version": REVIEW_LESSON_VERSION,
+        "detector_id": detector_id,
+        "finding_count": len(findings),
+        "findings": findings,
+        "truth_boundary": "review_hypothesis_only",
+        **_authority_envelope(),
+    }
+    packet["packet_digest"] = _digest(packet, size=16)
+    return packet
+
+
+def _registry(value: str | Path | Mapping[str, Any]) -> dict[str, Any]:
+    if isinstance(value, Mapping):
+        return validate_review_lesson_registry(value)
+    return load_review_lesson_registry(value)
+
+
+def _selected_detector_ids(
+    requested: Sequence[str],
+    *,
+    available: set[str],
+) -> tuple[str, ...]:
+    if isinstance(requested, (str, bytes, bytearray)):
+        raise ReviewLessonError("detector_ids must be a sequence of detector IDs")
+    selected = tuple(
+        dict.fromkeys(
+            str(item).strip() for item in requested if str(item).strip()
+        )
+    )
+    unknown = sorted(set(selected) - available)
+    if unknown:
+        raise ReviewLessonError(f"unknown selected review detectors: {unknown}")
+    return selected
+
+
+def run_crucible_replay(
+    registry_path: str | Path | Mapping[str, Any] = DEFAULT_REGISTRY_PATH,
+    *,
+    detector_ids: Sequence[str] = (),
+) -> dict[str, Any]:
+    """Replay registered adversarial scenarios and emit proof-oriented receipts."""
+
+    registry = _registry(registry_path)
+    lessons = {
+        str(item["detector_id"]): dict(item)
+        for item in registry["lessons"]
+        if isinstance(item, Mapping)
+    }
+    selected = _selected_detector_ids(detector_ids, available=set(lessons))
+    selected_set = set(selected)
+
+    receipts: list[dict[str, Any]] = []
+    for raw_scenario in registry["scenarios"]:
+        scenario = dict(raw_scenario)
+        detector_id = str(scenario["detector_id"])
+        if selected_set and detector_id not in selected_set:
+            continue
+        lesson = lessons.get(detector_id)
+        if lesson is None:
+            raise ReviewLessonError(
+                f"review scenario has no matching lesson: {detector_id}"
+            )
+        result = run_review_detector(detector_id, scenario["candidate"])
+        expected_code = str(scenario["expected_finding_code"])
+        matching = [
+            item
+            for item in result["findings"]
+            if isinstance(item, Mapping)
+            and str(item.get("code")) == expected_code
+        ]
+        finding_produced = bool(matching)
+        receipt = {
+            "version": CRUCIBLE_REPLAY_VERSION,
+            "scenario_id": str(scenario["scenario_id"]),
+            "detector_id": detector_id,
+            "expected_finding_code": expected_code,
+            "finding_produced": finding_produced,
+            "finding_count": int(result["finding_count"]),
+            "finding_ids": sorted(
+                str(item.get("finding_id") or "")
+                for item in matching
+                if str(item.get("finding_id") or "")
+            ),
+            "code_slice": str(scenario["code_slice"]),
+            "invariant_violated": (
+                str(lesson["invariant"]) if finding_produced else ""
+            ),
+            "suggested_repair": str(lesson["repair_pattern"]),
+            "required_regression": str(lesson["required_regression"]),
+            "confidence": float(lesson["confidence"]),
+            "provenance": dict(lesson["provenance"]),
+            **_authority_envelope(),
+        }
+        _bounded_json(
+            receipt,
+            maximum=_MAX_SCENARIO_BYTES,
+            label=f"review replay receipt {receipt['scenario_id']}",
+        )
+        receipt["receipt_digest"] = _digest(receipt, size=16)
+        receipts.append(receipt)
+
+    receipts.sort(key=lambda item: str(item["scenario_id"]))
+    passed_count = sum(1 for item in receipts if item["finding_produced"])
+    failed_count = len(receipts) - passed_count
+    packet = {
+        "version": CRUCIBLE_REPLAY_VERSION,
+        "registry_digest": str(registry["registry_digest"]),
+        "selected_detector_ids": list(selected),
+        "scenario_count": len(receipts),
+        "passed_count": passed_count,
+        "failed_count": failed_count,
+        "receipts": receipts,
+        "status": "PASSED" if failed_count == 0 else "FAILED",
+        **_authority_envelope(),
+    }
+    packet["packet_digest"] = _digest(packet, size=16)
+    return packet
+
+
+__all__ = ["run_crucible_replay", "run_review_detector"]
