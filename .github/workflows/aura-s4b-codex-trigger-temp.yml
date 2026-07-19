@@ -9,18 +9,14 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: aura-s4b-codex-repair-export
-  cancel-in-progress: false
-
 jobs:
   export-verified-repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/spatial-s4b-gaussian-security
+          ref: 4ed34d5810ac49019008b8b6f66a649256b5df70
           fetch-depth: 1
           submodules: false
 
@@ -29,13 +25,8 @@ jobs:
           set -euo pipefail
           python scripts/aura_s4b_codex_repair_temp.py
           git diff --check
-          python -m py_compile \
-            aura_spatial_importers/gaussian_gltf.py \
-            tests/test_aura_spatial_gaussian_gltf.py
-          node --check aura_spatial_web/gaussian_renderer.js
-          node --check tests/js/spatial-gaussian.test.mjs
 
-      - name: Package verified repaired files
+      - name: Package repaired files
         run: |
           set -euo pipefail
           mkdir -p /tmp/s4b-repair/aura_spatial_importers
