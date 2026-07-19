@@ -8,8 +8,6 @@ Native Council model calls claimed: **no**
 
 ## Evidence lineage
 
-This implementation uses the architecture introduced by the recent Planning Board and Coding Waboose work:
-
 ```text
 Planning Board IR
   → typed proposal-only actions
@@ -20,20 +18,11 @@ Planning Board IR
   → Aura Spatial S0–S2 Coding Circuit
 ```
 
-The important transfer is structural, not cosmetic. Spatial work is represented as components with typed ports, connected evidence, explicit mocks, forward paths, backward proof requirements, verifier receipts, rollback conditions, and separated authority.
+The transfer is structural: typed ports, connected evidence, explicit mocks, forward paths, backward proof requirements, rollback conditions, and separated authority.
 
 ## Council V3 routing
 
-The bounded implementation plan contains:
-
-- 10 ACT tasks;
-- explicit dependency edges;
-- a sequential chain deeper than three tasks;
-- 2 large tasks;
-- risk map and rollback conditions;
-- 30 estimated maximum model turns under the Council profile.
-
-Therefore the deterministic Council V3 selector admits:
+The bounded plan contains ten ACT tasks, explicit dependencies, two large tasks, a deep sequential chain, rollback conditions, and a risk map. The deterministic selector therefore applies all six lanes:
 
 ```yaml
 selected_lanes:
@@ -46,22 +35,18 @@ selected_lanes:
 skipped_lanes: []
 ```
 
-## Lane findings applied
-
 ### Scope
 
-- Create a new spatial substrate; do not refactor Council V3, Coding Waboose, Planning Board, Agent Bridge, or Coding Arena algorithms.
+- Add a spatial substrate without refactoring Council V3, Coding Waboose, Planning Board, Agent Bridge, or Coding Arena algorithms.
 - Reuse `select_micro_arena()` as the coding topology owner.
 - Keep S0–S2 representation-independent and renderer-free.
-- Treat existing AR/WebSocket surfaces as compatibility projections, not canonical state.
+- Treat AR/WebSocket surfaces as compatibility projections, not canonical state.
 
 ### Tests
 
-- Require contract and adversarial tests before bridge integration.
-- Test authority fields directly, not only output shape.
-- Test missing references, cycles, non-finite transforms, digest mismatches, unsafe paths, self-links, projection-only enforcement, selected-node cap survival, and metadata sanitization.
-- Test deterministic Council routing and BC4/BC5 circuit states.
-- Preserve existing Coding Arena and showcase tests.
+- Test authority fields directly.
+- Test missing references, cycles, non-finite transforms, unit conversion, implicit basis changes, digest mismatches, URI/path attacks, self-links, projection-only enforcement, selected-node survival, metadata sanitization, authority overrides, retained-payload bounds, and schema/code compatibility.
+- Preserve existing Coding Arena and showcase compatibility behavior.
 
 ### Sequence
 
@@ -75,42 +60,28 @@ contracts
   → bridge integration
   → docs/schema/tests
   → architecture anchor
-  → CODEMAP regeneration
+  → CODEMAP regeneration after source verification
 ```
-
-Bridge integration is intentionally after the interaction contract so it cannot invent its own authority semantics.
 
 ### Continuity
 
-Every component emits:
+Each component retains a stable output reference, exact source references, dependency references, verifier requirements, an idempotency key, and a reversible proposal-only action. Context handoffs must be reconstructible without private chain-of-thought.
 
-- a stable component output reference;
-- a verification packet reference;
-- exact source references;
-- dependency output references;
-- two verifier IDs;
-- an idempotency key;
-- a reversible proposal-only action.
-
-Context handoffs can be reconstructed from the Planning Board and do not depend on private chain-of-thought.
+A breadboard BC5 state represents continuity of the planned circuit. It is not independent evidence that repository commands ran. Repository-native verification must be tied to exact commands, outputs, and the exact commit tested.
 
 ### Rollback
 
-- Additive contract modules can be reverted independently.
-- Bridge integration is a separate, narrow change.
-- Any second topology scanner, renderer authority, unstable digest, selected-node truncation, or false hotswap success triggers rollback.
-- Generated maps are refreshed only after tests pass, preventing generated evidence from masking a broken source state.
+Rollback triggers include a second topology scanner, renderer authority, unstable digest, selected-node truncation, unbounded retained payloads, affirmative authority metadata, false hotswap success, or generated evidence that obscures an unverified source state.
 
 ### Cost
 
-- Core uses Python standard library plus existing Aura contracts.
-- Topology projection is bounded to 128 nodes and 320 links.
-- Network fetch, asset decoding, renderer runtime, OpenXR/WebXR, and Gaussian-splat execution are deferred.
-- No new runtime dependency is introduced in S0–S2.
+- Core runtime remains standard-library plus existing Aura contracts.
+- Projection is bounded to 128 nodes, 320 links, and 1 MiB of canonical retained evidence.
+- WebSocket proposal handoff is bounded to 256 KiB and retains no raw proposal.
+- Network fetch, decoding, renderer runtime, OpenXR/WebXR, and Gaussian-splat execution remain deferred.
+- `jsonschema` is focused verification tooling, not a runtime dependency.
 
 ## Coding Circuit
-
-Components:
 
 ```text
 S0_CONTRACTS
@@ -130,7 +101,7 @@ S0_CONTRACTS
       S2_REGENERATE_MAPS
 ```
 
-Each component begins as `CONNECTED_GROUNDED_UNPOWERED / BC4_AUTHORIZED`. It may reach `BC5_VERIFIED` only after its declared contract and authority verifier receipts are bound. BC5 is still not execution or merge authority.
+Components begin `CONNECTED_GROUNDED_UNPOWERED / BC4_AUTHORIZED`. BC5 still grants no execution, patch, commit, pull-request, merge, renderer, or production authority.
 
 ## Explicit mocks
 
@@ -140,7 +111,7 @@ Each component begins as `CONNECTED_GROUNDED_UNPOWERED / BC4_AUTHORIZED`. It may
 - mock:device:anchors_gaze_gesture_sensors
 ```
 
-Mocks are declared, ungrounded, and non-authoritative. They are excluded from the S0–S2 completion claim.
+Mocks remain ungrounded and non-authoritative. They are excluded from S0–S2 implementation claims.
 
 ## Authority receipt
 
@@ -159,28 +130,17 @@ automatic_pull_request: false
 automatic_merge: false
 ```
 
-## Repository-native implementation evidence
+## Evidence status
 
-The source circuit at commit `670e7cdb9e52290b88f6a427307be2924be97249` completed the self-cleaning repository-native finalization workflow:
+Historical repository-native evidence at commit `670e7cdb9e52290b88f6a427307be2924be97249` recorded Python compilation, fatal lint, 27 focused tests on Python 3.12, authority invariants, and CODEMAP regeneration/compare as passing. That evidence remains historical and does not automatically verify later source changes.
 
-```yaml
-python_compile: pass
-fatal_lint: pass
-json_schema_syntax: pass
-focused_and_compatibility_tests:
-  python: "3.12"
-  passed: 27
-  failed: 0
-authority_invariants: pass
-codemap_regeneration_and_compare: pass
-canonical_codemap:
-  file_count: 1159
-  topology_nodes: 9561
-  topology_edges: 21788
-  topology_source: compiled_deep_topology
-temporary_finalization_machinery_removed: true
-```
+The subsequent manual review:
 
-Before the final three adversarial cases were added, the same repository-native focused circuit passed 24 tests on both Python 3.10 and Python 3.12. The final source is being rechecked by the permanent matrix workflow after this receipt-only update.
+- posted `@codex review` on PR #164, but no Codex response had been observed when this receipt was updated;
+- reviewed the scoped source, bridge, tests, schema, workflow, documentation, and receipts while excluding generated CODEMAP/topology artifacts;
+- corrected authority metadata overrides, URI/path validation, scene canonicalization, coordinate units and basis handling, WebSocket payload bounds, retained topology payload bounds, deterministic link selection, and Draft 2020-12 schema verification;
+- added focused regression files for the manual findings;
+- performed local Python compilation and full Ruff analysis on the rewritten Python files;
+- did **not** trigger or rerun CI, by user instruction.
 
-This evidence verifies the bounded S0–S2 source, bridge, schema, architecture anchor, and generated navigation artifacts. It does not grant merge, execution, renderer, or production-mutation authority.
+Fresh repository-native execution evidence is therefore still required before the updated PR head may claim passing runtime tests. This receipt grants no merge or execution authority.
