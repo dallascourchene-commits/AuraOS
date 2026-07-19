@@ -1,4 +1,4 @@
-name: Aura Temporary S4-B Round-Two Apply
+name: Aura Temporary S4-B Verified Patch Apply
 
 on:
   pull_request:
@@ -10,9 +10,9 @@ permissions:
   contents: write
 
 jobs:
-  apply-and-verify:
+  apply-verify-clean:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - name: Check out exact pull-request branch
         uses: actions/checkout@v4
@@ -22,26 +22,36 @@ jobs:
           submodules: false
           persist-credentials: true
 
-      - name: Prove permanent source still matches reviewed exact head
+      - name: Prove permanent source still matches exported review head
         run: |
           set -euo pipefail
           git diff --exit-code 2d348700a55f8adb879017ff10ce6cce5c6b4d80 -- \
-            aura_spatial_web/gaussian_renderer.js \
-            tests/js/spatial-gaussian.test.mjs \
+            .github/workflows/aura-spatial-s4.yml \
+            aura_spatial_asset_registry.py \
+            aura_spatial_importers/__init__.py \
             aura_spatial_importers/contracts.py \
-            tests/test_aura_spatial_gaussian_gltf.py
+            aura_spatial_importers/gaussian_gltf.py \
+            aura_spatial_importers/spz.py \
+            aura_spatial_render_plan.py \
+            aura_spatial_web/gaussian_renderer.js \
+            aura_spatial_web/renderer_adapter.js \
+            scripts/aura_spatial_s4b_architect_harness.py \
+            tests/js/spatial-gaussian.test.mjs \
+            tests/js/spatial-mixed-scene.test.mjs \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_spz.py
 
-      - name: Apply manual pre-allocation and cross-runtime repairs
+      - name: Reconstruct, verify, and apply exact repair patch
         run: |
           set -euo pipefail
-          python scripts/.s4b_round2/apply_renderer.py
-          python scripts/.s4b_round2/apply_python_fixed.py
-          python scripts/.s4b_round2/append_js_tests.py
-          node --check aura_spatial_web/gaussian_renderer.js
-          node --check tests/js/spatial-gaussian.test.mjs
-          python -m py_compile \
-            aura_spatial_importers/contracts.py \
-            tests/test_aura_spatial_gaussian_gltf.py
+          cat .aura_temp/codex_reconciled_* | base64 --decode > /tmp/s4b-repair.patch.gz
+          echo "681714af97fc4d708551cfd2429e15bcb26b11be598cbcf2abb011c979599bdc  /tmp/s4b-repair.patch.gz" | sha256sum --check --strict
+          gzip -dc /tmp/s4b-repair.patch.gz > /tmp/s4b-repair.patch
+          echo "53dbcf911223bbb8673ef66b31d1ca61677a50a709c268f323f90f6c0d01084c  /tmp/s4b-repair.patch" | sha256sum --check --strict
+          git apply --check /tmp/s4b-repair.patch
+          git apply /tmp/s4b-repair.patch
           git diff --check
 
       - name: Set up Python 3.12 and Node 22
@@ -57,24 +67,42 @@ jobs:
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
 
-      - name: Run focused repair checks
+      - name: Compile, lint, format, and run focused regressions
         run: |
           set -euo pipefail
+          python -m py_compile \
+            aura_spatial_asset_registry.py \
+            aura_spatial_importers/*.py \
+            aura_spatial_render_plan.py \
+            scripts/aura_spatial_s4b_architect_harness.py
           ruff check \
-            aura_spatial_importers/contracts.py \
-            tests/test_aura_spatial_gaussian_gltf.py
+            aura_spatial_asset_registry.py \
+            aura_spatial_importers \
+            aura_spatial_render_plan.py \
+            scripts/aura_spatial_s4b_architect_harness.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_spz.py
           ruff format --check \
-            aura_spatial_importers/contracts.py \
-            tests/test_aura_spatial_gaussian_gltf.py
+            aura_spatial_asset_registry.py \
+            aura_spatial_importers \
+            aura_spatial_render_plan.py \
+            scripts/aura_spatial_s4b_architect_harness.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_gaussian_gltf.py \
+            tests/test_aura_spatial_mixed_scene.py \
+            tests/test_aura_spatial_spz.py
           python -m pytest -q --tb=short \
             tests/test_aura_spatial_gaussian_gltf.py \
             tests/test_aura_spatial_spz.py \
-            tests/test_aura_spatial_asset_security.py
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_mixed_scene.py
           node --test \
             tests/js/spatial-gaussian.test.mjs \
             tests/js/spatial-mixed-scene.test.mjs
 
-      - name: Run full retained S0-S4-B compatibility
+      - name: Run complete retained S0-S4-B compatibility
         run: |
           set -euo pipefail
           python -m pytest -q --tb=short \
@@ -103,17 +131,12 @@ jobs:
       - name: Remove every temporary transport surface
         run: |
           set -euo pipefail
-          rm -rf scripts/.s4b_round2 scripts/.s4b_fix scripts/.s4b_stage
-          rm -f .aura_temp/s4b_repair_* .aura_temp/s4b_codex_reconciled_*
-          rmdir .aura_temp 2>/dev/null || true
+          rm -rf .aura_temp scripts/.s4b_round2 scripts/.s4b_fix scripts/.s4b_stage
           rm -f .github/workflows/aura-s4b-round2-apply-temp.yml
           rm -f .github/workflows/aura-s4b-codex-fix-temp.yml
           rm -f .github/workflows/aura-source-export-temp.yml
           rm -f .github/workflows/aura-tree-sha-temp.yml
           git diff --check
-          test ! -e scripts/.s4b_round2
-          test ! -e .github/workflows/aura-s4b-round2-apply-temp.yml
-          test ! -e .github/workflows/aura-s4b-codex-fix-temp.yml
           ! git status --short | grep -E '(^.. \.aura_temp/|^.. scripts/\.s4b_|aura-.*-temp\.yml$)'
 
       - name: Commit and push clean exact-head repair
@@ -122,5 +145,5 @@ jobs:
           git add -A
           ! git diff --cached --name-only | grep -E '(^\.aura_temp/|^scripts/\.s4b_|aura-.*-temp\.yml$)'
           git -c user.name='Aura Spatial Review' -c user.email='aura-spatial-review@users.noreply.github.com' \
-            commit -m 'fix: enforce Gaussian budgets before materialization'
+            commit -m 'fix: resolve Codex S4-B safety findings'
           git push origin HEAD:feature/spatial-s4b-gaussian-security
