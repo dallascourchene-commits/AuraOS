@@ -140,8 +140,7 @@ def validate_review_lesson_registry(value: Mapping[str, Any]) -> dict[str, Any]:
     supplied_fields = set(value)
     missing = _TOP_LEVEL_FIELDS - supplied_fields
     unexpected = supplied_fields - _TOP_LEVEL_FIELDS
-    structural_missing = missing - {"registry_digest"}
-    if structural_missing or unexpected:
+    if missing or unexpected:
         raise ReviewLessonError(
             f"review lesson registry keys mismatch: missing={sorted(missing)} "
             f"unexpected={sorted(unexpected)}"
@@ -293,7 +292,7 @@ def validate_review_lesson_registry(value: Mapping[str, Any]) -> dict[str, Any]:
     result["scenarios"] = sorted(
         canonical_scenarios, key=lambda item: str(item["scenario_id"])
     )
-    supplied_digest = result.pop("registry_digest", None)
+    supplied_digest = result.pop("registry_digest")
     if not isinstance(supplied_digest, str) or not _SHA_RE.fullmatch(
         supplied_digest
     ):
