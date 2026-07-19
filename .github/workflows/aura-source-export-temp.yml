@@ -27,6 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          echo "TREE_SHA=$(git rev-parse 'HEAD^{tree}')"
           tar --exclude=.git -czf /tmp/aura-source-export.tar.gz .
 
       - name: Upload source archive
