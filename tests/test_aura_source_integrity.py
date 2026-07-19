@@ -4,6 +4,7 @@ import ast
 import asyncio
 from collections import defaultdict
 import copy
+import os
 from pathlib import Path
 import subprocess
 from types import SimpleNamespace
@@ -290,6 +291,37 @@ def test_identity_bound_write_rejects_symlink_swap(tmp_path: Path) -> None:
 
     assert raised.value.failure.code == "SOURCE_SYMLINK_REJECTED"
     assert external.read_text(encoding="utf-8") == "protected = True\n"
+
+
+def test_identity_bound_write_rechecks_identity_before_mutation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = tmp_path / "module.py"
+    path.write_text("value = 1\n", encoding="utf-8")
+    source, identity = read_utf8_source_with_identity(path)
+    real_fstat = os.fstat
+    fstat_calls = 0
+
+    def mutate_same_inode_before_final_check(descriptor: int) -> os.stat_result:
+        nonlocal fstat_calls
+        fstat_calls += 1
+        if fstat_calls == 2:
+            path.write_text("value = 9\n", encoding="utf-8")
+        return real_fstat(descriptor)
+
+    monkeypatch.setattr(os, "fstat", mutate_same_inode_before_final_check)
+
+    with pytest.raises(SourceIntegrityError) as raised:
+        write_utf8_source_if_unchanged(
+            path,
+            "value = 2\n",
+            expected_source=source,
+            expected_identity=identity,
+        )
+
+    assert raised.value.failure.code == "SOURCE_CONTENT_CHANGED"
+    assert path.read_text(encoding="utf-8") == "value = 9\n"
 
 
 def test_boot_auditor_continues_after_post_read_failure(

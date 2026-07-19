@@ -404,6 +404,19 @@ def write_utf8_source_if_unchanged(
                     offending=b"",
                     file_size=len(current_bytes),
                 )
+            verified = os.fstat(handle.fileno())
+            if not expected_identity.matches(verified):
+                raise _failure(
+                    candidate,
+                    code="SOURCE_CONTENT_CHANGED",
+                    message=(
+                        "source identity changed immediately before write: "
+                        f"{candidate}"
+                    ),
+                    byte_offset=0,
+                    offending=b"",
+                    file_size=verified.st_size,
+                )
             handle.seek(0)
             handle.write(updated_bytes)
             handle.truncate()
