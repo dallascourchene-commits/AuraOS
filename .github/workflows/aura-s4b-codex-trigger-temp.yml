@@ -27,14 +27,28 @@ jobs:
 
       - name: Apply exact Codex repairs
         run: |
-          set -euo pipefail
-          python scripts/aura_s4b_codex_repair_temp.py
-          git diff --check
-          python -m py_compile \
-            aura_spatial_importers/gaussian_gltf.py \
-            tests/test_aura_spatial_gaussian_gltf.py
-          node --check aura_spatial_web/gaussian_renderer.js
-          node --check tests/js/spatial-gaussian.test.mjs
+          set +e
+          (
+            python scripts/aura_s4b_codex_repair_temp.py
+            git diff --check
+            python -m py_compile \
+              aura_spatial_importers/gaussian_gltf.py \
+              tests/test_aura_spatial_gaussian_gltf.py
+            node --check aura_spatial_web/gaussian_renderer.js
+            node --check tests/js/spatial-gaussian.test.mjs
+          ) > /tmp/aura-s4b-repair.log 2>&1
+          status=$?
+          set -e
+          cat /tmp/aura-s4b-repair.log
+          if [ "$status" -ne 0 ]; then
+            cp /tmp/aura-s4b-repair.log .github/aura-s4b-repair-diagnostic-temp.txt
+            git config user.name "Aura Spatial Review"
+            git config user.email "aura-spatial-review@users.noreply.github.com"
+            git add .github/aura-s4b-repair-diagnostic-temp.txt
+            git commit -m "chore: capture S4-B repair diagnostic"
+            git push origin HEAD:feature/spatial-s4b-gaussian-security
+            exit "$status"
+          fi
 
       - uses: actions/setup-python@v5
         with:
