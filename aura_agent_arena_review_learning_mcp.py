@@ -1,6 +1,6 @@
 """MCP extension exposing typed Coding Waboose review-learning tools.
 
-Base Agent Bridge tools are delegated unchanged. Only four review-learning
+Base Agent Bridge tools are delegated unchanged.  Only four review-learning
 projections are added, each review-only and non-mutating.
 """
 from __future__ import annotations
@@ -20,6 +20,7 @@ from aura_agent_arena_mcp import (
 from aura_agent_arena_mcp import (
     handle_request as handle_base_request,
 )
+
 from aura_agent_arena_review_learning_bridge import ReviewLearningAgentArenaBridge
 
 MCP_REVIEW_LEARNING_VERSION = "AURA_AGENT_ARENA_REVIEW_LEARNING_MCP_V1"
@@ -33,7 +34,6 @@ REVIEW_LEARNING_TOOL_DEFINITIONS = [
             "additionalProperties": False,
             "properties": {
                 "review_payload": {"type": "object"},
-                "current_head": {"type": "string"},
             },
             "required": ["review_payload"],
         },
@@ -85,6 +85,8 @@ def handle_request(
     request_id = request.get("id")
     method = str(request.get("method") or "")
     params = request.get("params") or {}
+    if not isinstance(params, Mapping):
+        return _error(request_id, -32602, "params must be an object")
     if method == "initialize":
         return _response(
             request_id,
@@ -110,10 +112,9 @@ def handle_request(
             payload = arguments.get("review_payload")
             if not isinstance(payload, Mapping):
                 raise ValueError("review_payload must be an object")
-            result = bridge.aura_waboose_ingest_external_review(
-                dict(payload),
-                current_head=str(arguments.get("current_head") or ""),
-            )
+            if "current_head" in arguments:
+                raise ValueError("current_head is server-derived and must not be supplied")
+            result = bridge.aura_waboose_ingest_external_review(dict(payload))
         elif tool_name == "aura_waboose_review_lesson_summary":
             result = bridge.aura_waboose_review_lesson_summary()
         elif tool_name == "aura_waboose_run_review_detector":
@@ -132,7 +133,10 @@ def handle_request(
             request_id,
             {
                 "content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False, default=str)}],
-                "isError": isinstance(result, Mapping) and result.get("ok") is False,
+                "isError": (
+                    isinstance(result, Mapping)
+                    and (result.get("ok") is False or result.get("status") == "FAILED")
+                ),
             },
         )
     except Exception as exc:

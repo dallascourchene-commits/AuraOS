@@ -4,6 +4,14 @@ on:
   pull_request:
     paths:
       - "aura_coding_waboose_review_lessons.py"
+      - "aura_review_lessons_contracts.py"
+      - "aura_review_lessons_external.py"
+      - "aura_review_lessons_security.py"
+      - "aura_review_lessons_determinism.py"
+      - "aura_review_lessons_engine.py"
+      - "aura_review_lessons_registry.py"
+      - "aura_review_lessons_replay.py"
+      - "aura_review_lessons_source_scan.py"
       - "aura_coding_waboose_review_learning.py"
       - "aura_agent_arena_review_learning_bridge.py"
       - "aura_agent_arena_review_learning_mcp.py"
@@ -14,6 +22,8 @@ on:
       - "tests/test_aura_coding_waboose_review_lessons.py"
       - "tests/test_aura_coding_waboose_review_learning.py"
       - "tests/test_aura_agent_arena_review_learning.py"
+      - "tests/test_aura_review_lessons_codex_regressions.py"
+      - "tests/test_aura_review_learning_mcp_codex.py"
       - "docs/AURA_CODING_WABOOSE_REVIEW_LEARNING.md"
       - ".github/workflows/aura-review-learning.yml"
   workflow_dispatch:
@@ -24,6 +34,8 @@ permissions:
 jobs:
   focused-review-learning:
     runs-on: ubuntu-latest
+    env:
+      AURA_REVIEW_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -33,7 +45,9 @@ jobs:
       - name: Check out exact pull-request head
         uses: actions/checkout@v4
         with:
+          ref: ${{ env.AURA_REVIEW_HEAD_SHA }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -43,29 +57,52 @@ jobs:
       - name: Install focused verifier dependencies
         run: python -m pip install --disable-pip-version-check pytest jsonschema ruff
 
+      - name: Assert exact checked-out head
+        run: test "$(git rev-parse HEAD)" = "$AURA_REVIEW_HEAD_SHA"
+
       - name: Compile focused source and regressions
         run: |
           python -m py_compile \
             aura_coding_waboose_review_lessons.py \
+            aura_review_lessons_contracts.py \
+            aura_review_lessons_external.py \
+            aura_review_lessons_security.py \
+            aura_review_lessons_determinism.py \
+            aura_review_lessons_engine.py \
+            aura_review_lessons_registry.py \
+            aura_review_lessons_replay.py \
+            aura_review_lessons_source_scan.py \
             aura_coding_waboose_review_learning.py \
             aura_agent_arena_review_learning_bridge.py \
             aura_agent_arena_review_learning_mcp.py \
             scripts/aura_review_learning_architect_harness.py \
             tests/test_aura_coding_waboose_review_lessons.py \
             tests/test_aura_coding_waboose_review_learning.py \
-            tests/test_aura_agent_arena_review_learning.py
+            tests/test_aura_agent_arena_review_learning.py \
+            tests/test_aura_review_lessons_codex_regressions.py \
+            tests/test_aura_review_learning_mcp_codex.py
 
       - name: Run focused Ruff checks
         run: |
           ruff check \
             aura_coding_waboose_review_lessons.py \
+            aura_review_lessons_contracts.py \
+            aura_review_lessons_external.py \
+            aura_review_lessons_security.py \
+            aura_review_lessons_determinism.py \
+            aura_review_lessons_engine.py \
+            aura_review_lessons_registry.py \
+            aura_review_lessons_replay.py \
+            aura_review_lessons_source_scan.py \
             aura_coding_waboose_review_learning.py \
             aura_agent_arena_review_learning_bridge.py \
             aura_agent_arena_review_learning_mcp.py \
             scripts/aura_review_learning_architect_harness.py \
             tests/test_aura_coding_waboose_review_lessons.py \
             tests/test_aura_coding_waboose_review_learning.py \
-            tests/test_aura_agent_arena_review_learning.py
+            tests/test_aura_agent_arena_review_learning.py \
+            tests/test_aura_review_lessons_codex_regressions.py \
+            tests/test_aura_review_learning_mcp_codex.py
 
       - name: Validate Draft 2020-12 schema and canonical lesson registry
         run: |
@@ -91,6 +128,8 @@ jobs:
             tests/test_aura_coding_waboose_review_lessons.py \
             tests/test_aura_coding_waboose_review_learning.py \
             tests/test_aura_agent_arena_review_learning.py \
+            tests/test_aura_review_lessons_codex_regressions.py \
+            tests/test_aura_review_learning_mcp_codex.py \
             tests/test_aura_coding_waboose.py \
             tests/test_aura_waboose_learning.py
 
@@ -134,7 +173,7 @@ jobs:
         if: matrix.python-version == '3.12'
         uses: actions/upload-artifact@v4
         with:
-          name: aura-review-learning-receipt-${{ github.sha }}
+          name: aura-review-learning-receipt-${{ env.AURA_REVIEW_HEAD_SHA }}
           path: Aura_Staging/review_learning_harness/architect_receipt.json
           if-no-files-found: error
           retention-days: 14
