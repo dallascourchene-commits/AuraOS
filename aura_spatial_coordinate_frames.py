@@ -1,4 +1,4 @@
-"""Deterministic coordinate-frame validation and transform resolution for Aura spatial scenes."""
+"""Deterministic coordinate-frame validation and transform resolution."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -81,27 +81,41 @@ def validate_coordinate_frames(
                 "declared root frame is absent",
             )
         )
-    else:
-        root = by_id[root_frame_id]
-        if root.parent_frame_id is not None:
-            findings.append(
-                _finding(
-                    "ROOT_FRAME_HAS_PARENT",
-                    root_frame_id,
-                    "declared root frame must not have a parent",
-                )
+    elif by_id[root_frame_id].parent_frame_id is not None:
+        findings.append(
+            _finding(
+                "ROOT_FRAME_HAS_PARENT",
+                root_frame_id,
+                "declared root frame must not have a parent",
             )
+        )
 
     for frame in by_id.values():
-        parent = frame.parent_frame_id
-        if parent is not None and parent not in by_id:
+        parent_id = frame.parent_frame_id
+        if parent_id is not None and parent_id not in by_id:
             findings.append(
                 _finding(
                     "MISSING_PARENT_FRAME",
                     frame.frame_id,
-                    f"parent frame {parent!r} is absent",
+                    f"parent frame {parent_id!r} is absent",
                 )
             )
+        elif parent_id is not None:
+            parent = by_id[parent_id]
+            if (
+                frame.handedness != parent.handedness
+                or frame.up_axis != parent.up_axis
+            ):
+                findings.append(
+                    _finding(
+                        "FRAME_BASIS_CONVERSION_UNSUPPORTED",
+                        frame.frame_id,
+                        (
+                            "mixed handedness or up-axis requires an explicit "
+                            "conversion transform"
+                        ),
+                    )
+                )
 
     ordered: list[str] = []
     visiting: set[str] = set()
@@ -135,21 +149,21 @@ def validate_coordinate_frames(
     for frame_id in sorted(by_id):
         visit(frame_id, ())
 
-    root_reachable = set()
     if root_frame_id in by_id:
+        rooted: set[str] = set()
         for frame_id in by_id:
             cursor = frame_id
             seen: set[str] = set()
             while cursor in by_id and cursor not in seen:
                 seen.add(cursor)
                 if cursor == root_frame_id:
-                    root_reachable.add(frame_id)
+                    rooted.add(frame_id)
                     break
                 parent = by_id[cursor].parent_frame_id
                 if parent is None:
                     break
                 cursor = parent
-        for frame_id in sorted(set(by_id) - root_reachable):
+        for frame_id in sorted(set(by_id) - rooted):
             findings.append(
                 _finding(
                     "FRAME_NOT_ROOTED",
@@ -158,6 +172,7 @@ def validate_coordinate_frames(
                 )
             )
 
+    findings = _dedupe_findings(findings)
     digest = stable_digest(
         {
             "root_frame_id": root_frame_id,
@@ -180,7 +195,10 @@ def require_valid_coordinate_frames(
     *,
     root_frame_id: str,
 ) -> CoordinateFrameValidationReport:
-    report = validate_coordinate_frames(frames, root_frame_id=root_frame_id)
+    report = validate_coordinate_frames(
+        frames,
+        root_frame_id=root_frame_id,
+    )
     if not report.ok:
         codes = ", ".join(str(item["code"]) for item in report.findings)
         raise ValueError(f"invalid coordinate frame graph: {codes}")
@@ -194,7 +212,10 @@ def resolve_world_transform(
     frame_id: str,
 ) -> ResolvedTransform:
     frame_list = tuple(frames)
-    require_valid_coordinate_frames(frame_list, root_frame_id=root_frame_id)
+    require_valid_coordinate_frames(
+        frame_list,
+        root_frame_id=root_frame_id,
+    )
     by_id = {frame.frame_id: frame for frame in frame_list}
     if frame_id not in by_id:
         raise KeyError(f"unknown coordinate frame: {frame_id}")
@@ -203,7 +224,11 @@ def resolve_world_transform(
     cursor: CoordinateFrame | None = by_id[frame_id]
     while cursor is not None:
         chain.append(cursor)
-        cursor = by_id.get(cursor.parent_frame_id) if cursor.parent_frame_id else None
+        cursor = (
+            by_id.get(cursor.parent_frame_id)
+            if cursor.parent_frame_id
+            else None
+        )
     chain.reverse()
 
     translation = (0.0, 0.0, 0.0)
@@ -212,18 +237,32 @@ def resolve_world_transform(
     chain_ids: list[str] = []
     for frame in chain:
         chain_ids.append(frame.frame_id)
+        local_meters = tuple(
+            item * frame.unit_scale_meters
+            for item in frame.translation
+        )
         scaled_local = tuple(
-            frame.translation[index] * scale[index] for index in range(3)
+            local_meters[index] * scale[index]
+            for index in range(3)
         )
         rotated_local = _rotate_vector(rotation, scaled_local)
         translation = tuple(
-            translation[index] + rotated_local[index] for index in range(3)
+            translation[index] + rotated_local[index]
+            for index in range(3)
         )
         rotation = _normalize_quaternion(
             _multiply_quaternion(rotation, frame.rotation_xyzw)
         )
-        scale = tuple(scale[index] * frame.scale[index] for index in range(3))
+        scale = tuple(
+            scale[index] * frame.scale[index]
+            for index in range(3)
+        )
 
+    if not all(
+        math.isfinite(item)
+        for item in (*translation, *rotation, *scale)
+    ):
+        raise ValueError("resolved world transform contains non-finite values")
     return ResolvedTransform(
         frame_id=frame_id,
         translation=translation,
@@ -242,6 +281,20 @@ def validate_scene_coordinate_frames(
         scene.frames,
         root_frame_id=scene.root_frame_id,
     )
+
+
+def _dedupe_findings(
+    findings: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    unique: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for finding in findings:
+        key = (
+            str(finding["code"]),
+            str(finding["subject_id"]),
+            str(finding["message"]),
+        )
+        unique[key] = finding
+    return [unique[key] for key in sorted(unique)]
 
 
 def _finding(
