@@ -1,4 +1,5 @@
 """Fail-closed adapter from legacy AR hotswap requests to spatial intents."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -30,11 +31,7 @@ def compile_ar_hotswap_handoff(
 ) -> dict[str, Any]:
     """Compile one legacy hotswap request into a non-executing review packet."""
     target = str(target_id or "").strip()
-    if (
-        not target
-        or len(target) > MAX_TARGET_CHARS
-        or any(ord(char) < 32 for char in target)
-    ):
+    if not target or len(target) > MAX_TARGET_CHARS or any(ord(char) < 32 for char in target):
         raise ValueError("target_id is invalid")
     if not isinstance(shapes, Mapping):
         raise ValueError("shapes must be a mapping")
@@ -43,12 +40,17 @@ def compile_ar_hotswap_handoff(
     if new_function is None or new_function == "":
         raise ValueError("new_function is required")
 
+    try:
+        raw_proposal_bytes = canonical_json(new_function).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("new_function must be a bounded JSON-compatible value") from exc
+    if not raw_proposal_bytes or len(raw_proposal_bytes) > MAX_PROPOSAL_BYTES:
+        raise ValueError("new_function exceeds the bounded review payload limit")
+
     proposal = sanitize_payload(new_function)
     proposal_bytes = canonical_json(proposal).encode("utf-8")
     if not proposal_bytes or len(proposal_bytes) > MAX_PROPOSAL_BYTES:
-        raise ValueError(
-            "new_function exceeds the bounded review payload limit"
-        )
+        raise ValueError("sanitized new_function exceeds the bounded review payload limit")
 
     shape = shapes[target]
     metadata = _shape_mapping(shape, "metadata")
@@ -68,11 +70,7 @@ def compile_ar_hotswap_handoff(
         truth_class=SpatialTruthClass.DERIVED,
         projection_only=True,
     )
-    label = str(
-        getattr(shape, "label", None)
-        or ast_data.get("label")
-        or target
-    ).strip()[:512]
+    label = str(getattr(shape, "label", None) or ast_data.get("label") or target).strip()[:512]
     entity = SpatialEntity(
         entity_id=entity_id,
         entity_type=SpatialEntityType.DOMAIN_NODE,
@@ -88,10 +86,7 @@ def compile_ar_hotswap_handoff(
             "domain_owner": "aura_topology_ws_bridge",
             "legacy_shape_digest": stable_digest(target, digest_size=12),
             "node_type": str(
-                getattr(shape, "node_type", None)
-                or ast_data.get("node_type")
-                or ast_data.get("kind")
-                or "unknown"
+                getattr(shape, "node_type", None) or ast_data.get("node_type") or ast_data.get("kind") or "unknown"
             )[:128],
             "source_anchor_present": bool(source_anchor),
         },
@@ -104,9 +99,7 @@ def compile_ar_hotswap_handoff(
         digest_size=32,
     )
     scene = compile_spatial_scene(
-        scene_id=(
-            "ar-hotswap-review:" + stable_digest(target, digest_size=12)
-        ),
+        scene_id=("ar-hotswap-review:" + stable_digest(target, digest_size=12)),
         purpose_digest=stable_digest(
             {
                 "op": "PREPARE_REPAIR_REQUEST",
@@ -163,21 +156,13 @@ def _position(shape: Any) -> tuple[float, float, float]:
         result = tuple(float(item) for item in value)
     except (TypeError, ValueError):
         return (0.0, 0.0, 0.0)
-    if not all(
-        item == item and abs(item) != float("inf")
-        for item in result
-    ):
+    if not all(item == item and abs(item) != float("inf") for item in result):
         return (0.0, 0.0, 0.0)
     return (result[0], result[1], result[2])
 
 
 def _source_anchor(ast_data: Mapping[str, Any]) -> str:
-    raw_path = str(
-        ast_data.get("file_path")
-        or ast_data.get("file")
-        or ast_data.get("path")
-        or ""
-    ).strip()
+    raw_path = str(ast_data.get("file_path") or ast_data.get("file") or ast_data.get("path") or "").strip()
     if (
         not raw_path
         or len(raw_path) > 1024
@@ -188,19 +173,12 @@ def _source_anchor(ast_data: Mapping[str, Any]) -> str:
     ):
         return ""
     path = PurePosixPath(raw_path)
-    if (
-        any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != raw_path
-    ):
+    if any(part in {"", ".", ".."} for part in path.parts) or path.as_posix() != raw_path:
         return ""
     anchor = f"source:{raw_path}"
     line_range = ast_data.get("line_range")
     if isinstance(line_range, (list, tuple)) and line_range:
-        values = [
-            item
-            for item in line_range[:2]
-            if type(item) is int and item > 0
-        ]
+        values = [item for item in line_range[:2] if type(item) is int and item > 0]
         if len(values) == 2 and values[0] > values[1]:
             values = []
         if values:

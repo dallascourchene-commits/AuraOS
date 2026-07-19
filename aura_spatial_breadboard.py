@@ -5,6 +5,7 @@ planning: typed components, explicit evidence, forward consequences, backward
 proof requirements, BC0-BC5 continuity, and Council V3 selective critic routing.
 It never edits, commits, pushes, merges, grants a lease, or promotes a renderer.
 """
+
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -35,6 +36,7 @@ from aura_planning_board import (
     VerifierReceiptEvidence,
     verify_board_continuity,
 )
+from aura_spatial_contracts import PATCH_AUTHORITY
 
 SPATIAL_BREADBOARD_VERSION = "AURA_SPATIAL_BREADBOARD_V1"
 SPATIAL_BREADBOARD_AUTHORITY = "proposal_only_spatial_refactor_circuit"
@@ -128,10 +130,7 @@ def build_spatial_refactor_plan() -> dict[str, Any]:
         ),
         _task(
             "S2_HOTSWAP_GUARD",
-            (
-                "Replace queued-success hotswap semantics with a Forge "
-                "handoff guard"
-            ),
+            ("Replace queued-success hotswap semantics with a Forge handoff guard"),
             "aura_topology_ws_bridge.py",
             depends_on=[
                 "S2_INTERACTIONS",
@@ -199,53 +198,26 @@ def build_spatial_refactor_plan() -> dict[str, Any]:
                 "Scene, frame, asset, entity, link, and interaction records "
                 "are deterministic and immutable at the contract boundary."
             ),
-            (
-                "Coding topology projection calls the existing "
-                "select_micro_arena owner."
-            ),
-            (
-                "Every spatial entity and interaction has "
-                "execution_authority=false and patch_authority=false."
-            ),
+            ("Coding topology projection calls the existing select_micro_arena owner."),
+            ("Every spatial entity and interaction has execution_authority=false and patch_authority=false."),
             (
                 "Unknown frames, assets, entities, links, unsafe paths, "
                 "digest mismatches, cycles, and non-finite transforms fail closed."
             ),
-            (
-                "Legacy HOTSWAP_REQUEST cannot emit queued success without "
-                "a separate governed Forge contract."
-            ),
-            (
-                "Tests distinguish exact domain truth from derived or "
-                "presentation-only spatial state."
-            ),
+            ("Legacy HOTSWAP_REQUEST cannot emit queued success without a separate governed Forge contract."),
+            ("Tests distinguish exact domain truth from derived or presentation-only spatial state."),
             (
                 "No renderer, WebXR/OpenXR runtime, Gaussian-splat trainer, "
                 "or device sensor becomes a canonical owner in S0-S2."
             ),
         ],
         "rollback_conditions": [
-            (
-                "Any new module duplicates CODEMAP or Coding Arena "
-                "topology scanning."
-            ),
-            (
-                "Any spatial packet claims patch, execution, commit, push, "
-                "merge, or promotion authority."
-            ),
-            (
-                "Scene digests are order-dependent or unstable across "
-                "equivalent inputs."
-            ),
-            (
-                "Coordinate frames permit cycles, missing parents, "
-                "non-finite values, or unrooted islands."
-            ),
+            ("Any new module duplicates CODEMAP or Coding Arena topology scanning."),
+            ("Any spatial packet claims patch, execution, commit, push, merge, or promotion authority."),
+            ("Scene digests are order-dependent or unstable across equivalent inputs."),
+            ("Coordinate frames permit cycles, missing parents, non-finite values, or unrooted islands."),
             "Existing showcase or Coding Arena tests regress.",
-            (
-                "The WebSocket bridge continues reporting hotswap success "
-                "without a governed handoff."
-            ),
+            ("The WebSocket bridge continues reporting hotswap success without a governed handoff."),
         ],
         "risk_map": {
             "authority": "critical",
@@ -267,18 +239,9 @@ def build_spatial_refactor_plan() -> dict[str, Any]:
             "STOP_FOR_HUMAN_REVIEW",
         ],
         "escalation_rules": [
-            (
-                "Escalate to Council V3 when a canonical owner or "
-                "authority boundary changes."
-            ),
-            (
-                "Escalate if more than the declared S0-S2 files require "
-                "modification."
-            ),
-            (
-                "Escalate renderer or device integration into a separate "
-                "S3 program."
-            ),
+            ("Escalate to Council V3 when a canonical owner or authority boundary changes."),
+            ("Escalate if more than the declared S0-S2 files require modification."),
+            ("Escalate renderer or device integration into a separate S3 program."),
         ],
     }
 
@@ -318,14 +281,8 @@ def council_v3_route_spatial_plan() -> dict[str, Any]:
                 "S0-S2 excludes renderer and device ownership",
             ],
             "tests": [
-                (
-                    "contract, adversarial, determinism, and "
-                    "compatibility tests"
-                ),
-                (
-                    "existing Coding Arena/showcase regressions "
-                    "remain green"
-                ),
+                ("contract, adversarial, determinism, and compatibility tests"),
+                ("existing Coding Arena/showcase regressions remain green"),
             ],
             "sequence": [
                 "contracts before validators",
@@ -335,17 +292,11 @@ def council_v3_route_spatial_plan() -> dict[str, Any]:
             ],
             "continuity": [
                 "each task emits a bounded handoff artifact",
-                (
-                    "all source and verifier references survive "
-                    "context boundaries"
-                ),
+                ("all source and verifier references survive context boundaries"),
             ],
             "rollback": [
                 "additive files can be reverted independently",
-                (
-                    "bridge integration fails closed and is "
-                    "separately revertible"
-                ),
+                ("bridge integration fails closed and is separately revertible"),
             ],
             "cost": [
                 "stdlib-only core",
@@ -368,9 +319,7 @@ def compile_spatial_breadboard(
         {"plan": plan, "council_route": route},
         digest_size=32,
     )
-    constraint_ref = (
-        "constraint:spatial-s0-s2:projection-only-no-mutation"
-    )
+    constraint_ref = "constraint:spatial-s0-s2:projection-only-no-mutation"
     tasks = [dict(item) for item in plan["act_tasks"]]
     action_by_component: dict[str, ActionSpec] = {}
     evidence_rows: list[ActionContinuityEvidence] = []
@@ -382,14 +331,8 @@ def compile_spatial_breadboard(
             dict.fromkeys(
                 [
                     f"source:{task['target_file']}",
-                    *[
-                        f"source:{path}"
-                        for path in task.get("related_files", [])
-                    ],
-                    *[
-                        f"component:{dependency}:output"
-                        for dependency in task.get("depends_on", [])
-                    ],
+                    *[f"source:{path}" for path in task.get("related_files", [])],
+                    *[f"component:{dependency}:output" for dependency in task.get("depends_on", [])],
                 ]
             )
         )
@@ -397,16 +340,11 @@ def compile_spatial_breadboard(
             f"spatial:{component_id}:contract_check",
             f"spatial:{component_id}:authority_check",
         )
-        action_id = (
-            "spatial-action:"
-            + stable_digest(
-                {"task": task, "purpose": purpose_digest},
-                digest_size=12,
-            )
+        action_id = "spatial-action:" + stable_digest(
+            {"task": task, "purpose": purpose_digest},
+            digest_size=12,
         )
-        preconditions = [
-            PredicateSpec("spatial.refactor.admitted", True)
-        ]
+        preconditions = [PredicateSpec("spatial.refactor.admitted", True)]
         preconditions.extend(
             PredicateSpec(
                 f"spatial.component.{dependency}.complete",
@@ -455,10 +393,7 @@ def compile_spatial_breadboard(
             ),
             constraints=(
                 ConstraintSpec(
-                    constraint_id=(
-                        "spatial-constraint:"
-                        + stable_digest(component_id, digest_size=12)
-                    ),
+                    constraint_id=("spatial-constraint:" + stable_digest(component_id, digest_size=12)),
                     kind=ConstraintKind.SAFETY,
                     description=(
                         "Spatial implementation may add and verify "
@@ -509,21 +444,13 @@ def compile_spatial_breadboard(
                 action_id=action.action_id,
                 constrained_evidence_refs=(constraint_ref,),
                 grounded_evidence_refs=source_refs,
-                authority_decision_ids=(
-                    (
-                        "policy:spatial-s0-s2:proposal-only-"
-                        "no-execution-authority"
-                    ),
-                ),
+                authority_decision_ids=(("policy:spatial-s0-s2:proposal-only-no-execution-authority"),),
                 verifier_receipts=receipts,
             )
         )
 
     goal = GoalSpec(
-        goal_id=(
-            "spatial-goal:"
-            + stable_digest(plan["objective"], digest_size=12)
-        ),
+        goal_id=("spatial-goal:" + stable_digest(plan["objective"], digest_size=12)),
         objective=str(plan["objective"]),
         desired_state=(
             PredicateSpec(
@@ -535,10 +462,7 @@ def compile_spatial_breadboard(
             ConstraintSpec(
                 constraint_id="spatial-goal-constraint:no-mutation",
                 kind=ConstraintKind.SAFETY,
-                description=(
-                    "Planning and spatial projections cannot mutate or "
-                    "promote production state."
-                ),
+                description=("Planning and spatial projections cannot mutate or promote production state."),
                 evidence_refs=(constraint_ref,),
                 blocking=True,
             ),
@@ -556,10 +480,7 @@ def compile_spatial_breadboard(
         arena_id="spatial_arena_refactor",
         purpose_digest=purpose_digest,
         goal=goal,
-        actions=tuple(
-            action_by_component[str(task["task_id"])]
-            for task in tasks
-        ),
+        actions=tuple(action_by_component[str(task["task_id"])] for task in tasks),
         current_state_refs=(
             "git-head:f302811ec4c84f194f232e6f475cbd0e64bf94c8",
             "branch:feature/aura-spatial-s0-s2",
@@ -572,9 +493,7 @@ def compile_spatial_breadboard(
     )
     findings_by_action: dict[str, list[dict[str, Any]]] = {}
     for finding in continuity.findings:
-        findings_by_action.setdefault(finding.subject_id, []).append(
-            finding.to_dict()
-        )
+        findings_by_action.setdefault(finding.subject_id, []).append(finding.to_dict())
 
     for task in tasks:
         component_id = str(task["task_id"])
@@ -612,13 +531,9 @@ def compile_spatial_breadboard(
     if all_energized and continuity.continuity_complete:
         circuit_status = "VERIFIED_SPATIAL_S0_S2_CIRCUIT"
     elif any_energized:
-        circuit_status = (
-            "PARTIALLY_ENERGIZED_SPATIAL_S0_S2_CIRCUIT"
-        )
+        circuit_status = "PARTIALLY_ENERGIZED_SPATIAL_S0_S2_CIRCUIT"
     else:
-        circuit_status = (
-            "GROUNDED_SPATIAL_S0_S2_CIRCUIT_UNPOWERED"
-        )
+        circuit_status = "GROUNDED_SPATIAL_S0_S2_CIRCUIT_UNPOWERED"
 
     return {
         "ok": True,
@@ -660,29 +575,19 @@ def compile_spatial_breadboard(
         "deferred_explicit_mocks": [
             {
                 "mock_id": "mock:renderer:webxr_or_openxr_adapter",
-                "reason": (
-                    "renderer selection is deferred to S3 and cannot "
-                    "block S0-S2 contracts"
-                ),
+                "reason": ("renderer selection is deferred to S3 and cannot block S0-S2 contracts"),
                 "grounded": False,
                 "authority": False,
             },
             {
                 "mock_id": "mock:asset:gaussian_splat_runtime",
-                "reason": (
-                    "3DGS import/render is deferred to S4; no training "
-                    "or runtime is claimed"
-                ),
+                "reason": ("3DGS import/render is deferred to S4; no training or runtime is claimed"),
                 "grounded": False,
                 "authority": False,
             },
             {
-                "mock_id": (
-                    "mock:device:anchors_gaze_gesture_sensors"
-                ),
-                "reason": (
-                    "device signals remain future adapters and never authority"
-                ),
+                "mock_id": ("mock:device:anchors_gaze_gesture_sensors"),
+                "reason": ("device signals remain future adapters and never authority"),
                 "grounded": False,
                 "authority": False,
             },
@@ -693,7 +598,7 @@ def compile_spatial_breadboard(
             "verification_proves": True,
             "human_authorizes": True,
             "execution_authority": False,
-            "patch_authority": False,
+            "patch_authority": PATCH_AUTHORITY,
             "renderer_authority": False,
             "vsa_patch_authority": False,
             "automatic_fix": False,
@@ -701,6 +606,436 @@ def compile_spatial_breadboard(
             "automatic_push": False,
             "automatic_pull_request": False,
             "automatic_merge": False,
+        },
+    }
+
+
+def build_spatial_s3a_plan() -> dict[str, Any]:
+    """Return the bounded renderer-independent S3-A continuation circuit."""
+
+    tasks = [
+        _task(
+            "S3A_RENDER_CONTRACTS",
+            "Add immutable device, render-plan, receipt, and session contracts",
+            "aura_spatial_contracts.py",
+            related=[
+                "schemas/aura_spatial_device_profile.schema.json",
+                "schemas/aura_spatial_render_plan.schema.json",
+                "schemas/aura_spatial_render_receipt.schema.json",
+            ],
+            risk="schema_runtime_parity",
+            size="L",
+        ),
+        _task(
+            "S3A_NEGOTIATION",
+            "Negotiate deterministic renderer fallbacks and bounded budgets",
+            "aura_spatial_render_plan.py",
+            depends_on=["S3A_RENDER_CONTRACTS"],
+            related=["tests/test_aura_spatial_render_plan.py"],
+            risk="renderer_lock_in_and_budget_bypass",
+            size="L",
+        ),
+        _task(
+            "S3A_SESSION",
+            "Bind ephemeral projection sessions to exact scene and plan digests",
+            "aura_spatial_session.py",
+            depends_on=["S3A_RENDER_CONTRACTS", "S3A_NEGOTIATION"],
+            related=[
+                "aura_spatial_receipts.py",
+                "tests/test_aura_spatial_session.py",
+            ],
+            risk="stale_scene_or_resource_leak",
+            size="L",
+        ),
+        _task(
+            "S3A_SERVER",
+            "Expose bounded no-store scene, plan, session, interaction, and dissolve APIs",
+            "aura_spatial_server.py",
+            depends_on=["S3A_SESSION"],
+            related=["tests/test_aura_spatial_server.py"],
+            risk="transport_trust_boundary",
+            size="L",
+        ),
+        _task(
+            "S3A_HARNESS",
+            "Run Architect, Agent Bridge, Council V3, Surgeon, Connectome, Emergent, Waboose, and Crucible gates",
+            "scripts/aura_spatial_continuation_architect_harness.py",
+            depends_on=[
+                "S3A_RENDER_CONTRACTS",
+                "S3A_NEGOTIATION",
+                "S3A_SESSION",
+                "S3A_SERVER",
+            ],
+            related=[
+                ".github/workflows/aura-spatial-s3a.yml",
+                "docs/AURA_SPATIAL_COMPUTING.md",
+            ],
+            risk="evidence_claim_drift",
+            size="M",
+        ),
+    ]
+    return {
+        "plan_id": "AURA_SPATIAL_S3A",
+        "objective": (
+            "Establish renderer-independent render plans and ephemeral projection "
+            "sessions without implementing a browser renderer or expanding authority."
+        ),
+        "act_tasks": tasks,
+        "acceptance_criteria": [
+            "Every plan binds exact scene and device digests.",
+            "ACCESSIBLE_2D remains a mandatory fallback.",
+            "WEBXR selection requires explicit request and observed user activation.",
+            "Scene, asset, CPU, GPU, and network budgets fail closed.",
+            "Sessions are ephemeral, cancellable, digest-bound, and dissolved with receipts.",
+            "Server responses use no-store, restrictive CSP, and bounded bodies.",
+            "Renderer, execution, patch, merge, promotion, and production authority remain false.",
+        ],
+        "rollback_conditions": [
+            "Any renderer implementation enters S3-A.",
+            "Any session survives dissolution or retains raw sensor data.",
+            "Schema and runtime acceptance boundaries diverge.",
+            "Any fallback can omit accessible 2D presentation.",
+            "Any device or renderer packet gains authority.",
+        ],
+        "risk_map": {
+            "authority": "critical",
+            "transport": "high",
+            "budget_bypass": "high",
+            "stale_digest": "high",
+            "resource_cleanup": "high",
+            "schema_runtime_parity": "high",
+            "accessibility": "high",
+        },
+        "constraints": [
+            "NO_RENDERER_IMPLEMENTATION",
+            "NO_NEW_RUNTIME_DEPENDENCIES",
+            "ACCESSIBLE_2D_REQUIRED",
+            "XR_EXPLICIT_USER_ACTIVATION",
+            "NO_RAW_SENSOR_RETENTION",
+            "NO_AUTOMATIC_MUTATION",
+            "STOP_FOR_HUMAN_REVIEW",
+        ],
+    }
+
+
+def council_v3_route_spatial_s3a_plan() -> dict[str, Any]:
+    plan = build_spatial_s3a_plan()
+    candidate = {
+        "candidate_id": "spatial-s3a",
+        "score": 0.0,
+        "plan": plan,
+    }
+    lanes = select_critic_lanes(candidate)
+    return {
+        "council_version": ARCHITECT_COUNCIL_V3,
+        "routing_mode": "DETERMINISTIC_SELECTIVE_ROUTE_REPLAY",
+        "native_model_calls_claimed": False,
+        "selected_lanes": lanes,
+        "length_profile": profile_refactor_length(plan).to_dict(),
+        "supplemental_rubrics": [
+            "security_and_authority",
+            "protocol_and_interchange",
+            "performance_and_accessibility",
+            "review_evidence_freshness",
+        ],
+    }
+
+
+def compile_spatial_s3a_breadboard() -> dict[str, Any]:
+    """Compile a proposal-only S3-A circuit without claiming verifier power."""
+
+    plan = build_spatial_s3a_plan()
+    route = council_v3_route_spatial_s3a_plan()
+    components = []
+    for task in plan["act_tasks"]:
+        task_id = str(task["task_id"])
+        action_id = "spatial-s3a-action:" + stable_digest(task, digest_size=12)
+        components.append(
+            SpatialBreadboardComponent(
+                component_id=task_id,
+                action_id=action_id,
+                name=str(task["description"]),
+                phase="S3A",
+                risk=str(task["risk"]),
+                depends_on=tuple(task["depends_on"]),
+                connected_input_refs=tuple(
+                    [f"source:{task['target_file']}"]
+                    + [f"source:{item}" for item in task["related_files"]]
+                    + [f"component:{item}:output" for item in task["depends_on"]]
+                ),
+                output_refs=(
+                    f"component:{task_id}:output",
+                    f"component:{task_id}:verification_packet",
+                ),
+                verifier_ids=(
+                    f"spatial-s3a:{task_id}:contract",
+                    f"spatial-s3a:{task_id}:authority",
+                    f"spatial-s3a:{task_id}:regression",
+                ),
+                energized=False,
+                continuity=BoardContinuityLevel.BC4_AUTHORIZED.value,
+                status="CONNECTED_GROUNDED_UNPOWERED",
+            ).to_dict()
+        )
+    return {
+        "ok": True,
+        "version": SPATIAL_BREADBOARD_VERSION,
+        "plan": plan,
+        "council_v3_route": route,
+        "circuit_status": "GROUNDED_SPATIAL_S3A_CIRCUIT_UNPOWERED",
+        "components": components,
+        "backward_proof_requirements": [
+            {
+                "component_id": item["component_id"],
+                "required_for_completion": [
+                    "exact_head_binding",
+                    "contract_and_schema_receipts",
+                    "authority_tamper_regressions",
+                    "focused_test_evidence",
+                    "waboose_and_crucible_receipt",
+                    "codex_review_clear",
+                    "human_review_decision",
+                ],
+            }
+            for item in components
+        ],
+        "authority": {
+            "class": SPATIAL_BREADBOARD_AUTHORITY,
+            "execution_authority": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "renderer_authority": False,
+            "vsa_patch_authority": False,
+            "automatic_fix": False,
+            "automatic_commit": False,
+            "automatic_push": False,
+            "automatic_pull_request": False,
+            "automatic_merge": False,
+            "human_review_required": True,
+        },
+    }
+
+
+def build_spatial_s3b_s4a_plan() -> dict[str, Any]:
+    """Return the bounded S3-B browser and S4-A interchange program."""
+
+    tasks = [
+        _task(
+            "S3B_ADAPTER_INTERFACE",
+            "Define replaceable renderer and headless adapter contracts",
+            "aura_spatial_web/renderer_adapter.js",
+            related=["aura_spatial_web/headless_renderer.js"],
+            risk="renderer_becomes_owner",
+        ),
+        _task(
+            "S3B_ACCESSIBLE",
+            "Provide keyboard-first accessible scene parity",
+            "aura_spatial_web/accessibility.js",
+            depends_on=["S3B_ADAPTER_INTERFACE"],
+            related=["aura_spatial_web/index.html", "aura_spatial_web/styles.css"],
+            risk="accessibility_regression",
+            size="L",
+        ),
+        _task(
+            "S3B_WEBGL2",
+            "Render bounded topology primitives with deterministic cleanup",
+            "aura_spatial_web/webgl2_renderer.js",
+            depends_on=["S3B_ADAPTER_INTERFACE", "S3B_ACCESSIBLE"],
+            related=["aura_spatial_web/scene_decoder.js"],
+            risk="gpu_resource_and_input_correctness",
+            size="XL",
+        ),
+        _task(
+            "S3B_WEBGPU",
+            "Run WebGPU as a non-promoted shadow adapter",
+            "aura_spatial_web/webgpu_renderer.js",
+            depends_on=["S3B_WEBGL2"],
+            risk="capability_and_device_loss",
+            size="L",
+        ),
+        _task(
+            "S3B_WEBXR",
+            "Expose capability-only WebXR behind explicit user activation",
+            "aura_spatial_web/webxr_session.js",
+            depends_on=["S3B_WEBGL2", "S3B_ACCESSIBLE"],
+            related=["aura_spatial_web/app.js"],
+            risk="consent_and_activation",
+            size="L",
+        ),
+        _task(
+            "S3B_INTERACTION",
+            "Compile browser inputs into retained six-slot review-only intents",
+            "aura_spatial_web/interaction_adapter.js",
+            depends_on=["S3B_WEBGL2", "S3B_WEBXR"],
+            related=["aura_spatial_interaction.py"],
+            risk="interaction_authority",
+            size="L",
+        ),
+        _task(
+            "S3B_TELEMETRY",
+            "Bind evidence-classified browser telemetry to exact digests",
+            "aura_spatial_web/telemetry.js",
+            depends_on=["S3B_WEBGPU", "S3B_INTERACTION"],
+            related=["aura_spatial_receipts.py"],
+            risk="unsupported_performance_claims",
+        ),
+        _task(
+            "S4_IMPORT_CONTRACTS",
+            "Define strict provenance and coordinate-conversion import receipts",
+            "aura_spatial_importers/contracts.py",
+            depends_on=["S3B_TELEMETRY"],
+            related=["schemas/aura_spatial_import_receipt.schema.json"],
+            risk="interchange_truth_and_provenance",
+            size="L",
+        ),
+        _task(
+            "S4_GLTF",
+            "Import bounded local glTF/GLB meshes without executable or network paths",
+            "aura_spatial_importers/gltf.py",
+            depends_on=["S4_IMPORT_CONTRACTS"],
+            related=["aura_spatial_coordinate_frames.py"],
+            risk="binary_parser_and_coordinate_integrity",
+            size="XL",
+        ),
+        _task(
+            "S4_PLY",
+            "Import local-only bounded PLY point clouds with explicit basis",
+            "aura_spatial_importers/ply.py",
+            depends_on=["S4_IMPORT_CONTRACTS"],
+            related=["aura_spatial_coordinate_frames.py"],
+            risk="allocation_and_malformed_input",
+            size="L",
+        ),
+        _task(
+            "S3B_S4A_REVIEW",
+            "Run exact-head Python, Node, Waboose, Crucible, Codex, and CodeRabbit gates",
+            ".github/workflows/aura-spatial-s3-s4a.yml",
+            depends_on=["S4_GLTF", "S4_PLY"],
+            related=["docs/AURA_SPATIAL_COMPUTING.md"],
+            risk="review_and_claim_drift",
+        ),
+    ]
+    return {
+        "plan_id": "AURA_SPATIAL_S3B_S4A",
+        "objective": (
+            "Deliver an accessible replaceable browser projection and bounded "
+            "standards-based local interchange without granting renderer, importer, "
+            "provenance, execution, or patch authority."
+        ),
+        "act_tasks": tasks,
+        "acceptance_criteria": [
+            "Accessible 2D, WebGL2, and headless paths inspect the same exact scene.",
+            "WebGPU remains shadow-only until separate parity evidence exists.",
+            "WebXR requires explicit observed user activation and retains no raw sensor data.",
+            "Browser inputs compile into the retained six-slot review-only intent owner.",
+            "Telemetry labels metrics measured, calculated, estimated, or unavailable.",
+            "glTF/GLB and PLY enforce byte, count, allocation, basis, and provenance bounds.",
+            "No remote URI, script, shader, training, or automatic mutation path is admitted.",
+        ],
+        "rollback_conditions": [
+            "Any browser adapter becomes a scene or domain truth owner.",
+            "Any renderer or importer gains execution or patch authority.",
+            "Accessible parity is omitted by a renderer path.",
+            "WebGPU is promoted without separate parity and device-loss evidence.",
+            "An importer performs network fetch or executes embedded content.",
+            "Coordinate basis or units are inferred where the format does not define them.",
+        ],
+        "risk_map": {
+            "authority": "critical",
+            "untrusted_binary_input": "critical",
+            "coordinate_integrity": "high",
+            "gpu_cleanup": "high",
+            "accessibility": "high",
+            "consent": "high",
+            "performance_claims": "medium",
+        },
+        "constraints": [
+            "NO_NEW_RUNTIME_DEPENDENCIES",
+            "ACCESSIBLE_2D_REQUIRED",
+            "WEBGPU_SHADOW_ONLY",
+            "WEBXR_EXPLICIT_USER_ACTIVATION",
+            "LOCAL_ASSET_BYTES_ONLY",
+            "NO_EXECUTABLE_ASSET_CONTENT",
+            "NO_AUTOMATIC_MUTATION",
+            "STOP_FOR_HUMAN_REVIEW",
+        ],
+    }
+
+
+def council_v3_route_spatial_s3b_s4a_plan() -> dict[str, Any]:
+    plan = build_spatial_s3b_s4a_plan()
+    candidate = {"candidate_id": "spatial-s3b-s4a", "score": 0.0, "plan": plan}
+    return {
+        "council_version": ARCHITECT_COUNCIL_V3,
+        "routing_mode": "DETERMINISTIC_SELECTIVE_ROUTE_REPLAY",
+        "native_model_calls_claimed": False,
+        "selected_lanes": select_critic_lanes(candidate),
+        "length_profile": profile_refactor_length(plan).to_dict(),
+        "supplemental_rubrics": [
+            "security_and_authority",
+            "privacy_and_cultural_governance",
+            "protocol_and_interchange",
+            "performance_and_accessibility",
+            "review_evidence_freshness",
+        ],
+    }
+
+
+def compile_spatial_s3b_s4a_breadboard() -> dict[str, Any]:
+    """Compile the S3-B/S4-A circuit as grounded, unpowered review evidence."""
+
+    plan = build_spatial_s3b_s4a_plan()
+    route = council_v3_route_spatial_s3b_s4a_plan()
+    components = []
+    for task in plan["act_tasks"]:
+        task_id = str(task["task_id"])
+        components.append(
+            SpatialBreadboardComponent(
+                component_id=task_id,
+                action_id="spatial-s3b-s4a-action:" + stable_digest(task, digest_size=12),
+                name=str(task["description"]),
+                phase="S3B_S4A",
+                risk=str(task["risk"]),
+                depends_on=tuple(task["depends_on"]),
+                connected_input_refs=tuple(
+                    [f"source:{task['target_file']}"]
+                    + [f"source:{item}" for item in task["related_files"]]
+                    + [f"component:{item}:output" for item in task["depends_on"]]
+                ),
+                output_refs=(
+                    f"component:{task_id}:output",
+                    f"component:{task_id}:verification_packet",
+                ),
+                verifier_ids=(
+                    f"spatial-s3b-s4a:{task_id}:contract",
+                    f"spatial-s3b-s4a:{task_id}:authority",
+                    f"spatial-s3b-s4a:{task_id}:regression",
+                ),
+                energized=False,
+                continuity=BoardContinuityLevel.BC4_AUTHORIZED.value,
+                status="CONNECTED_GROUNDED_UNPOWERED",
+            ).to_dict()
+        )
+    return {
+        "ok": True,
+        "version": SPATIAL_BREADBOARD_VERSION,
+        "plan": plan,
+        "council_v3_route": route,
+        "circuit_status": "GROUNDED_SPATIAL_S3B_S4A_CIRCUIT_UNPOWERED",
+        "components": components,
+        "authority": {
+            "class": SPATIAL_BREADBOARD_AUTHORITY,
+            "execution_authority": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "renderer_authority": False,
+            "importer_authority": False,
+            "provenance_authority": False,
+            "vsa_patch_authority": False,
+            "automatic_fix": False,
+            "automatic_commit": False,
+            "automatic_push": False,
+            "automatic_pull_request": False,
+            "automatic_merge": False,
+            "human_review_required": True,
         },
     }
 
@@ -733,6 +1068,12 @@ __all__ = [
     "SPATIAL_BREADBOARD_VERSION",
     "SpatialBreadboardComponent",
     "build_spatial_refactor_plan",
+    "build_spatial_s3a_plan",
+    "build_spatial_s3b_s4a_plan",
     "compile_spatial_breadboard",
+    "compile_spatial_s3a_breadboard",
+    "compile_spatial_s3b_s4a_breadboard",
     "council_v3_route_spatial_plan",
+    "council_v3_route_spatial_s3a_plan",
+    "council_v3_route_spatial_s3b_s4a_plan",
 ]

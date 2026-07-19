@@ -1,0 +1,170 @@
+{
+  "$defs": {
+    "digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$",
+      "type": "string"
+    },
+    "nonBlank": {
+      "maxLength": 2048,
+      "pattern": ".*\\S.*",
+      "type": "string"
+    },
+    "renderer": {
+      "enum": [
+        "WEBXR",
+        "WEBGPU",
+        "WEBGL2",
+        "ACCESSIBLE_2D",
+        "HEADLESS"
+      ]
+    }
+  },
+  "$id": "https://aura.local/schemas/aura_spatial_session_summary.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "properties": {
+          "active": {
+            "const": false
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "state": {
+            "const": "ACTIVE"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "active": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "active": {
+      "type": "boolean"
+    },
+    "cancellation_reason": {
+      "maxLength": 2048,
+      "type": "string"
+    },
+    "created_sequence": {
+      "maximum": 2147483647,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "ephemeral": {
+      "const": true
+    },
+    "execution_authority": {
+      "const": false
+    },
+    "patch_authority": {
+      "const": false
+    },
+    "plan_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "raw_sensor_data_retained": {
+      "const": false
+    },
+    "render_plan_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "render_receipt_ids": {
+      "items": {
+        "$ref": "#/$defs/identifier"
+      },
+      "maxItems": 256,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "renderer": {
+      "$ref": "#/$defs/renderer"
+    },
+    "renderer_authority": {
+      "const": false
+    },
+    "scene_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "scene_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "session_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "session_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "source_refs": {
+      "items": {
+        "$ref": "#/$defs/nonBlank"
+      },
+      "maxItems": 256,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "state": {
+      "enum": [
+        "CREATED",
+        "ACTIVE",
+        "CANCELLED",
+        "FAILED",
+        "DISSOLVED"
+      ]
+    },
+    "updated_sequence": {
+      "maximum": 2147483647,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "version": {
+      "const": "AURA_SPATIAL_RENDER_CONTRACTS_V1"
+    }
+  },
+  "required": [
+    "session_id",
+    "scene_id",
+    "scene_digest",
+    "plan_id",
+    "render_plan_digest",
+    "renderer",
+    "state",
+    "created_sequence",
+    "updated_sequence",
+    "render_receipt_ids",
+    "cancellation_reason",
+    "source_refs",
+    "active",
+    "ephemeral",
+    "raw_sensor_data_retained",
+    "renderer_authority",
+    "execution_authority",
+    "patch_authority",
+    "version",
+    "schema_version",
+    "session_digest"
+  ],
+  "title": "Aura Spatial Projection Session Summary V1",
+  "type": "object"
+}

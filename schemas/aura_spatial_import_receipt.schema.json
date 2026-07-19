@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_spatial_import_receipt.schema.json",
+  "title": "Aura Spatial Import Receipt V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "source_format",
+    "source_digest",
+    "source_bytes",
+    "decoded_bytes",
+    "element_count",
+    "asset_type",
+    "coordinate_conversion",
+    "primitives",
+    "provenance_refs",
+    "warnings",
+    "status",
+    "local_only",
+    "scripts_executed",
+    "shaders_executed",
+    "network_fetch_performed",
+    "training_invoked",
+    "projection_only",
+    "provenance_authority",
+    "renderer_authority",
+    "execution_authority",
+    "patch_authority",
+    "production_mutation",
+    "automatic_merge",
+    "human_review_required",
+    "version",
+    "schema_version",
+    "derived_asset_digest"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"
+    },
+    "source_format": {
+      "enum": [
+        "GLTF",
+        "GLB",
+        "PLY_ASCII",
+        "PLY_BINARY_LE",
+        "PLY_BINARY_BE"
+      ]
+    },
+    "source_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1073741824
+    },
+    "decoded_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967296
+    },
+    "element_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 30000000
+    },
+    "asset_type": {
+      "enum": [
+        "MESH",
+        "POINT_CLOUD"
+      ]
+    },
+    "coordinate_conversion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_handedness",
+        "source_up_axis",
+        "source_meters_per_unit",
+        "target_handedness",
+        "target_up_axis",
+        "target_meters_per_unit",
+        "matrix"
+      ],
+      "properties": {
+        "source_handedness": {
+          "enum": [
+            "RIGHT_HANDED",
+            "LEFT_HANDED"
+          ]
+        },
+        "source_up_axis": {
+          "enum": [
+            "X_UP",
+            "Y_UP",
+            "Z_UP"
+          ]
+        },
+        "source_meters_per_unit": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "target_handedness": {
+          "const": "RIGHT_HANDED"
+        },
+        "target_up_axis": {
+          "const": "Y_UP"
+        },
+        "target_meters_per_unit": {
+          "const": 1.0
+        },
+        "matrix": {
+          "type": "array",
+          "minItems": 16,
+          "maxItems": 16,
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "primitives": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "primitive_id",
+          "topology",
+          "vertex_count",
+          "index_count",
+          "bounds_min",
+          "bounds_max",
+          "attributes",
+          "material_ref"
+        ],
+        "properties": {
+          "primitive_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"
+          },
+          "topology": {
+            "enum": [
+              "TRIANGLES",
+              "POINTS"
+            ]
+          },
+          "vertex_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "index_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30000000
+          },
+          "bounds_min": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          },
+          "bounds_max": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          },
+          "attributes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"
+            }
+          },
+          "material_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$"
+          }
+        }
+      }
+    },
+    "provenance_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2048
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "maxLength": 512
+      }
+    },
+    "status": {
+      "const": "IMPORTED"
+    },
+    "local_only": {
+      "const": true
+    },
+    "scripts_executed": {
+      "const": false
+    },
+    "shaders_executed": {
+      "const": false
+    },
+    "network_fetch_performed": {
+      "const": false
+    },
+    "training_invoked": {
+      "const": false
+    },
+    "projection_only": {
+      "const": true
+    },
+    "provenance_authority": {
+      "const": false
+    },
+    "renderer_authority": {
+      "const": false
+    },
+    "execution_authority": {
+      "const": false
+    },
+    "patch_authority": {
+      "const": "exact_source_spans_and_hashes_only"
+    },
+    "production_mutation": {
+      "const": false
+    },
+    "automatic_merge": {
+      "const": false
+    },
+    "human_review_required": {
+      "const": true
+    },
+    "version": {
+      "const": "AURA_SPATIAL_IMPORT_CONTRACTS_V1"
+    },
+    "schema_version": {
+      "const": "AURA_SPATIAL_IMPORT_RECEIPT_SCHEMA_V1"
+    },
+    "derived_asset_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
