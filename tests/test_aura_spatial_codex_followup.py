@@ -19,11 +19,15 @@ from aura_spatial_contracts import (
     SpatialInteractionAction,
 )
 from aura_spatial_coordinate_frames import resolve_world_transform
-from aura_spatial_interaction import compile_spatial_interaction
+from aura_spatial_interaction import (
+    MAX_INTERACTION_EVIDENCE_BYTES,
+    compile_spatial_interaction,
+)
 from aura_spatial_scene import (
     compile_spatial_scene,
     validate_spatial_scene_payload,
 )
+from aura_spatial_ws_guard import compile_ar_hotswap_handoff
 
 
 def _scene(*, metadata=None):
@@ -133,6 +137,56 @@ def test_nested_absolute_frame_units_do_not_double_scale():
     )
     assert resolved.translation == pytest.approx((1.0, 0.0, 0.0))
     assert resolved.scale == pytest.approx((0.01, 0.01, 0.01))
+
+
+def test_interaction_rejects_large_serialized_evidence():
+    root = CoordinateFrame(frame_id="root")
+    entity = SpatialEntity(
+        entity_id="entity:large",
+        entity_type=SpatialEntityType.DOMAIN_NODE,
+        label="Large",
+        frame_id="root",
+        source_refs=(
+            "source:" + "x" * MAX_INTERACTION_EVIDENCE_BYTES,
+        ),
+    )
+    scene = compile_spatial_scene(
+        scene_id="large-evidence-scene",
+        purpose_digest="purpose:large-evidence",
+        root_frame_id="root",
+        frames=(root,),
+        entities=(entity,),
+    )
+    with pytest.raises(ValueError, match="interaction evidence"):
+        compile_spatial_interaction(
+            scene,
+            action=SpatialInteractionAction.OPEN_SOURCE,
+            target_entity_ids=("entity:large",),
+        )
+
+
+def test_ws_guard_omits_dot_segment_source_anchors():
+    for path in ("./aura_topology_ws_bridge.py", "pkg/./module.py"):
+        packet = compile_ar_hotswap_handoff(
+            target_id="node:one",
+            new_function={"source": "return 1"},
+            shapes={
+                "node:one": {
+                    "metadata": {
+                        "ast_data": {
+                            "file_path": path,
+                            "line_range": [1, 2],
+                        }
+                    }
+                }
+            },
+            actor_ref="ar-session:test",
+        )
+        assert packet["source_anchor_present"] is False
+        assert all(
+            not ref.startswith("source:")
+            for ref in packet["intent"]["source_refs"]
+        )
 
 
 def test_schema_and_runtime_interchange_reject_invalid_contracts():
