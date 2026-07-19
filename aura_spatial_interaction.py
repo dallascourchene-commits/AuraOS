@@ -245,14 +245,19 @@ def compile_hotswap_request_guard(
     }
 
 
+def _normalize_metadata_key(value: Any) -> str:
+    text = re.sub(
+        r"(?<=[a-z0-9])(?=[A-Z])",
+        "_",
+        str(value).strip(),
+    )
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+
+
 def _find_authority_key(value: Any, path: str = "metadata") -> str | None:
     if isinstance(value, Mapping):
         for key, item in value.items():
-            normalized = re.sub(
-                r"[^a-z0-9]+",
-                "_",
-                str(key).strip().lower(),
-            ).strip("_")
+            normalized = _normalize_metadata_key(key)
             child = f"{path}.{key}"
             if normalized in _AUTHORITY_KEYS:
                 return child
