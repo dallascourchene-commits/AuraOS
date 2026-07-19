@@ -1,0 +1,88 @@
+name: Aura Review Learning Bootstrap
+
+on:
+  push:
+    branches:
+      - feature/coding-waboose-review-learning-pr164
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assemble transparent source chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p scripts .aura/review_lessons
+
+          cat \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part01 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part02 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part03 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part04 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part05 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part06 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_lessons.py.part07 \
+            > aura_coding_waboose_review_lessons.py
+
+          cat \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_learning.py.part01 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_learning.py.part02 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_learning.py.part03 \
+            .aura/review_learning_bootstrap/aura_coding_waboose_review_learning.py.part04 \
+            > aura_coding_waboose_review_learning.py
+
+          cat \
+            .aura/review_learning_bootstrap/scripts__aura_review_learning_architect_harness.py.part01 \
+            .aura/review_learning_bootstrap/scripts__aura_review_learning_architect_harness.py.part02 \
+            .aura/review_learning_bootstrap/scripts__aura_review_learning_architect_harness.py.part03 \
+            > scripts/aura_review_learning_architect_harness.py
+
+          cat \
+            .aura/review_learning_bootstrap/pr164_spatial_review_lessons.json.part01 \
+            .aura/review_learning_bootstrap/pr164_spatial_review_lessons.json.part02a \
+            .aura/review_learning_bootstrap/pr164_spatial_review_lessons.json.part02b \
+            .aura/review_learning_bootstrap/pr164_spatial_review_lessons.json.part03 \
+            > .aura/review_lessons/pr164_spatial_review_lessons.json
+
+          cat > /tmp/aura-review-learning.sha256 <<'EOF'
+          35ddf8685b96f2b95e803d19d0e4d1de248f249ed5ef3ca0ed264491efdb75bf  aura_coding_waboose_review_lessons.py
+          ae6257de5d8168587353a8ed971d5710a9a0cc1b401eacf332755d613023d97a  aura_coding_waboose_review_learning.py
+          23f0cef7a1974d15bc19e626c680b1abc94e10e4afdf1cbe7df89843bf6ecc2e  scripts/aura_review_learning_architect_harness.py
+          0d6c53b07007c8ec3a65759027f6701403e741a1d134b59e50223a9874c81c1b  .aura/review_lessons/pr164_spatial_review_lessons.json
+          EOF
+          sha256sum --check /tmp/aura-review-learning.sha256
+          python -m py_compile \
+            aura_coding_waboose_review_lessons.py \
+            aura_coding_waboose_review_learning.py \
+            scripts/aura_review_learning_architect_harness.py
+          python -m json.tool .aura/review_lessons/pr164_spatial_review_lessons.json >/dev/null
+
+      - name: Remove one-time bootstrap inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .aura/review_learning_bootstrap
+          rm -f .github/workflows/aura-review-learning-bootstrap.yml
+
+      - name: Commit assembled permanent files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No assembly changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: assemble typed Coding Waboose review learning"
+          git push origin HEAD:feature/coding-waboose-review-learning-pr164
