@@ -102,10 +102,7 @@ def validate_coordinate_frames(
             )
         elif parent_id is not None:
             parent = by_id[parent_id]
-            if (
-                frame.handedness != parent.handedness
-                or frame.up_axis != parent.up_axis
-            ):
+            if frame.handedness != parent.handedness or frame.up_axis != parent.up_axis:
                 findings.append(
                     _finding(
                         "FRAME_BASIS_CONVERSION_UNSUPPORTED",
@@ -195,10 +192,7 @@ def require_valid_coordinate_frames(
     *,
     root_frame_id: str,
 ) -> CoordinateFrameValidationReport:
-    report = validate_coordinate_frames(
-        frames,
-        root_frame_id=root_frame_id,
-    )
+    report = validate_coordinate_frames(frames, root_frame_id=root_frame_id)
     if not report.ok:
         codes = ", ".join(str(item["code"]) for item in report.findings)
         raise ValueError(f"invalid coordinate frame graph: {codes}")
@@ -212,10 +206,7 @@ def resolve_world_transform(
     frame_id: str,
 ) -> ResolvedTransform:
     frame_list = tuple(frames)
-    require_valid_coordinate_frames(
-        frame_list,
-        root_frame_id=root_frame_id,
-    )
+    require_valid_coordinate_frames(frame_list, root_frame_id=root_frame_id)
     by_id = {frame.frame_id: frame for frame in frame_list}
     if frame_id not in by_id:
         raise KeyError(f"unknown coordinate frame: {frame_id}")
@@ -224,11 +215,7 @@ def resolve_world_transform(
     cursor: CoordinateFrame | None = by_id[frame_id]
     while cursor is not None:
         chain.append(cursor)
-        cursor = (
-            by_id.get(cursor.parent_frame_id)
-            if cursor.parent_frame_id
-            else None
-        )
+        cursor = by_id.get(cursor.parent_frame_id) if cursor.parent_frame_id else None
     chain.reverse()
 
     translation = (0.0, 0.0, 0.0)
@@ -237,31 +224,25 @@ def resolve_world_transform(
     chain_ids: list[str] = []
     for frame in chain:
         chain_ids.append(frame.frame_id)
-        local_meters = tuple(
-            item * frame.unit_scale_meters
-            for item in frame.translation
+        local_translation = tuple(
+            item * frame.unit_scale_meters for item in frame.translation
         )
         scaled_local = tuple(
-            local_meters[index] * scale[index]
-            for index in range(3)
+            local_translation[index] * scale[index] for index in range(3)
         )
         rotated_local = _rotate_vector(rotation, scaled_local)
         translation = tuple(
-            translation[index] + rotated_local[index]
-            for index in range(3)
+            translation[index] + rotated_local[index] for index in range(3)
         )
         rotation = _normalize_quaternion(
             _multiply_quaternion(rotation, frame.rotation_xyzw)
         )
-        scale = tuple(
-            scale[index] * frame.scale[index]
-            for index in range(3)
+        local_scale = tuple(
+            frame.scale[index] * frame.unit_scale_meters for index in range(3)
         )
+        scale = tuple(scale[index] * local_scale[index] for index in range(3))
 
-    if not all(
-        math.isfinite(item)
-        for item in (*translation, *rotation, *scale)
-    ):
+    if not all(math.isfinite(item) for item in (*translation, *rotation, *scale)):
         raise ValueError("resolved world transform contains non-finite values")
     return ResolvedTransform(
         frame_id=frame_id,
@@ -277,15 +258,10 @@ def validate_scene_coordinate_frames(
 ) -> CoordinateFrameValidationReport:
     if not isinstance(scene, SpatialSceneSnapshot):
         raise ValueError("scene must be a SpatialSceneSnapshot")
-    return validate_coordinate_frames(
-        scene.frames,
-        root_frame_id=scene.root_frame_id,
-    )
+    return validate_coordinate_frames(scene.frames, root_frame_id=scene.root_frame_id)
 
 
-def _dedupe_findings(
-    findings: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
+def _dedupe_findings(findings: list[dict[str, Any]]) -> list[dict[str, Any]]:
     unique: dict[tuple[str, str, str], dict[str, Any]] = {}
     for finding in findings:
         key = (
