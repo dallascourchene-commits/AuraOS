@@ -76,6 +76,7 @@ def test_interaction_rejects_mixed_case_and_separator_authority_aliases():
         "pAtchAuthority",
         "executionaUthority",
         "authoritydEcIsion",
+        "a.p.p.r.o.v.a.l",
     ):
         with pytest.raises(ValueError, match="authority field"):
             compile_spatial_interaction(
@@ -92,6 +93,7 @@ def test_scene_rejects_mixed_case_authority_alias_even_when_false():
         "automaticmErge",
         "pAtchAuthority",
         "authoritydEcIsion",
+        "a.p.p.r.o.v.a.l",
     ):
         with pytest.raises(ValueError, match="AUTHORITY_METADATA_REJECTED"):
             _scene(metadata={key: False})
@@ -201,11 +203,10 @@ def test_schema_and_runtime_interchange_reject_invalid_contracts():
     validator.validate(scene)
     assert validate_spatial_scene_payload(scene).scene_digest == scene["scene_digest"]
 
-    authority_alias = deepcopy(scene)
-    authority_alias["entities"][0]["metadata"] = {
-        "automaticMerge": False
-    }
-    assert list(validator.iter_errors(authority_alias))
+    for key in ("automaticMerge", "a.p.p.r.o.v.a.l"):
+        authority_alias = deepcopy(scene)
+        authority_alias["entities"][0]["metadata"] = {key: False}
+        assert list(validator.iter_errors(authority_alias))
 
     zero_scale = deepcopy(scene)
     zero_scale["frames"][0]["scale"] = [0.0, 1.0, 1.0]
