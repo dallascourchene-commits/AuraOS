@@ -1,0 +1,133 @@
+name: Aura Spatial final docs scoped verification
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-spatial-final-docs-diagnostic-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-spatial-final-docs-scoped-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  finalize-docs-codemap-scoped:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install declared verification dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r requirements.txt
+          python -m pip install --disable-pip-version-check pytest ruff jsonschema numpy
+
+      - name: Execute staged Codex and documentation finalizer
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          source = Path('.github/workflows/aura-spatial-final-docs-temp.yml').read_text()
+          begin = "          python - <<'PY'\n"
+          end = "\n          PY\n\n      - name: Regenerate and validate final CODEMAP and topology"
+          if begin not in source or end not in source:
+              raise SystemExit('staged finalizer script markers missing')
+          block = source.split(begin, 1)[1].split(end, 1)[0]
+          code = textwrap.dedent(block)
+          exec(compile(code, '<aura-spatial-final-docs>', 'exec'), {'__name__': '__main__'})
+          Path('.github/workflows/aura-spatial-final-docs-diagnostic-temp.yml').unlink()
+          PY
+
+      - name: Regenerate and validate final CODEMAP and topology
+        run: |
+          set -euo pipefail
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+
+      - name: Compile permanent Spatial modules
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            aura_spatial_arena.py \
+            aura_spatial_construction.py \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            aura_spatial_cli.py \
+            aura_arena_persistence_adapters.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            scripts/aura_spatial_s5_s6_construction_architect_harness.py
+
+      - name: Run scoped Ruff gate
+        run: |
+          set -euo pipefail
+          python -m ruff check \
+            aura_spatial_arena.py \
+            aura_spatial_construction.py \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            aura_spatial_cli.py \
+            aura_arena_persistence_adapters.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+            tests/test_aura_spatial_s5_arena.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py \
+            tests/test_aura_spatial_cli.py \
+            tests/test_aura_spatial_s5_s6_harness.py
+          python -m ruff format --check \
+            aura_spatial_arena.py \
+            aura_spatial_construction.py \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            aura_spatial_cli.py \
+            aura_arena_persistence_adapters.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_arena_mcp.py \
+            scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+            tests/test_aura_spatial_s5_arena.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py \
+            tests/test_aura_spatial_cli.py \
+            tests/test_aura_spatial_s5_s6_harness.py
+
+      - name: Validate exact Spatial route
+        run: python aura_spatial_cli.py --repo-root . validate-route
+
+      - name: Run full retained Spatial regression suite
+        run: python -m pytest -q --tb=short tests/test_aura_spatial*.py
+
+      - name: Commit final docs and generated maps
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Final Documentation Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          test ! -e .github/workflows/aura-spatial-final-docs-temp.yml
+          test ! -e .github/workflows/aura-spatial-final-docs-diagnostic-temp.yml
+          git diff --cached --check
+          git commit -m "docs: finalize Spatial S5/S6 and regenerate CODEMAP"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin HEAD:"$TARGET_BRANCH"
+          unset AUTH_HEADER
