@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import base64
 import copy
+from io import BytesIO
 from typing import Any
+from urllib import error, request
 
 import pytest
 
@@ -9,27 +12,29 @@ from aura_agent_arena_github_bridge import (
     GITHUB_PUBLICATION_VERSION,
     GitHubPublicationError,
     GitHubPublishingAuraAgentArenaBridge,
+    GitHubRestTransport,
+    _MAX_BASE64_CHARS,
+    _MAX_UTF8_CHARS,
+    _NoRedirectHandler,
     compile_merge_connector_packet,
     compile_publication_contract,
     execute_publication_contract,
 )
 
 
+REPOSITORY = "dallascourchene-commits/AuraOS"
 BASE_SHA = "1" * 40
 PARENT_SHA = "2" * 40
-BASE_TREE_SHA = "3" * 40
-BLOB_A_SHA = "4" * 40
-BLOB_B_SHA = "5" * 40
-TREE_SHA = "6" * 40
 COMMIT_SHA = "7" * 40
+BRANCH = "feature/atomic-publication-test"
 
 
 def _request(**overrides: Any) -> dict[str, Any]:
     payload = {
-        "repository_full_name": "dallascourchene-commits/AuraOS",
+        "repository_full_name": REPOSITORY,
         "publication_mode": "create",
         "base_branch": "main",
-        "head_branch": "feature/atomic-publication-test",
+        "head_branch": BRANCH,
         "expected_base_sha": BASE_SHA,
         "expected_parent_sha": BASE_SHA,
         "commit_message": "feat: publish atomically",
@@ -40,24 +45,139 @@ def _request(**overrides: Any) -> dict[str, Any]:
         "changes": [
             {"path": "zeta.py", "content": "print('z')\n"},
             {"path": "alpha.py", "content": "print('a')\n"},
+            {"path": "obsolete.py", "operation": "delete"},
         ],
     }
     payload.update(overrides)
     return payload
 
 
+def _repo_mapping() -> dict[str, str]:
+    return {"full_name": REPOSITORY}
+
+
+def _pr_payload(
+    *,
+    number: int = 170,
+    head_repo: str = REPOSITORY,
+    head_sha: str = PARENT_SHA,
+) -> dict[str, Any]:
+    return {
+        "number": number,
+        "html_url": f"https://github.com/{REPOSITORY}/pull/{number}",
+        "state": "open",
+        "merged": False,
+        "head": {
+            "ref": BRANCH,
+            "sha": head_sha,
+            "repo": {"full_name": head_repo},
+        },
+        "base": {
+            "ref": "main",
+            "repo": _repo_mapping(),
+        },
+    }
+
+
+class FakeTransport:
+    def __init__(
+        self,
+        *,
+        mode: str = "create",
+        graphql_error: bool = False,
+        pr_error: bool = False,
+        head_repo: str = REPOSITORY,
+    ) -> None:
+        self.mode = mode
+        self.graphql_error = graphql_error
+        self.pr_error = pr_error
+        self.head_repo = head_repo
+        self.calls: list[tuple[str, str, dict[str, Any] | None, bool]] = []
+        self.graphql_calls: list[tuple[str, dict[str, Any]]] = []
+        self.branch_sha: str | None = None if mode == "create" else PARENT_SHA
+
+    def request(
+        self,
+        method: str,
+        path: str,
+        payload: dict[str, Any] | None = None,
+        *,
+        allow_404: bool = False,
+    ) -> Any:
+        self.calls.append((method, path, copy.deepcopy(payload), allow_404))
+        if method == "GET" and path.endswith("/git/ref/heads/main"):
+            return {"object": {"sha": BASE_SHA}}
+        if method == "GET" and path.endswith(f"/git/ref/heads/{BRANCH}"):
+            if self.branch_sha is None:
+                assert allow_404 is True
+                return None
+            return {"object": {"sha": self.branch_sha}}
+        if method == "GET" and "/pulls?" in path:
+            return []
+        if method == "GET" and path.endswith("/pulls/170"):
+            return _pr_payload(
+                head_repo=self.head_repo,
+                head_sha=self.branch_sha or PARENT_SHA,
+            )
+        if method == "POST" and path.endswith("/git/refs"):
+            assert payload == {
+                "ref": f"refs/heads/{BRANCH}",
+                "sha": BASE_SHA,
+            }
+            self.branch_sha = BASE_SHA
+            return {}
+        if method == "POST" and path.endswith("/pulls"):
+            if self.pr_error:
+                raise GitHubPublicationError("PR create rejected")
+            assert payload is not None
+            assert payload["head"] == BRANCH
+            assert payload["base"] == "main"
+            return _pr_payload(head_sha=COMMIT_SHA)
+        if method == "DELETE" and path.endswith(
+            f"/git/refs/heads/{BRANCH}"
+        ):
+            self.branch_sha = None
+            return {}
+        raise AssertionError(f"unexpected request: {method} {path} {payload}")
+
+    def graphql(
+        self,
+        query: str,
+        variables: dict[str, Any],
+    ) -> dict[str, Any]:
+        self.graphql_calls.append((query, copy.deepcopy(variables)))
+        if self.graphql_error:
+            raise GitHubPublicationError("expectedHeadOid mismatch")
+        expected = variables["input"]["expectedHeadOid"]
+        assert self.branch_sha == expected
+        self.branch_sha = COMMIT_SHA
+        return {
+            "createCommitOnBranch": {
+                "commit": {
+                    "oid": COMMIT_SHA,
+                    "url": f"https://github.com/{REPOSITORY}/commit/{COMMIT_SHA}",
+                }
+            }
+        }
+
+
 def test_contract_is_deterministic_and_sorts_changes() -> None:
     first = compile_publication_contract(_request())
     reversed_request = _request()
-    reversed_request["changes"] = list(reversed(reversed_request["changes"]))
+    reversed_request["changes"] = list(
+        reversed(reversed_request["changes"])
+    )
     second = compile_publication_contract(reversed_request)
 
     assert first["contract_id"] == second["contract_id"]
-    assert [item["path"] for item in first["changes"]] == ["alpha.py", "zeta.py"]
-    assert first["atomic_commit"] is True
-    assert first["temporary_workflow_transport"] is False
-    assert first["automatic_merge"] is False
-    assert first["execution_status"] == "AUTHORIZED"
+    assert [item["path"] for item in first["changes"]] == [
+        "alpha.py",
+        "obsolete.py",
+        "zeta.py",
+    ]
+    assert first["compare_and_swap"] is True
+    assert first["transport"] == "github_graphql_create_commit_on_branch"
+    assert first["merge_authority"] is False
 
 
 @pytest.mark.parametrize(
@@ -70,105 +190,55 @@ def test_contract_is_deterministic_and_sorts_changes() -> None:
         "/absolute.py",
     ],
 )
-def test_contract_rejects_temporary_or_unsafe_transport_paths(path: str) -> None:
-    request_payload = _request(changes=[{"path": path, "content": "x"}])
+def test_contract_rejects_temporary_or_unsafe_paths(path: str) -> None:
     with pytest.raises(GitHubPublicationError):
-        compile_publication_contract(request_payload)
+        compile_publication_contract(
+            _request(changes=[{"path": path, "content": "x"}])
+        )
 
 
-def test_contract_requires_fresh_exact_base_in_create_mode() -> None:
-    with pytest.raises(GitHubPublicationError):
-        compile_publication_contract(_request(expected_parent_sha=PARENT_SHA))
+def test_contract_rejects_unsupported_executable_mode() -> None:
+    with pytest.raises(GitHubPublicationError, match="100644 only"):
+        compile_publication_contract(
+            _request(
+                changes=[
+                    {
+                        "path": "tool.py",
+                        "mode": "100755",
+                        "content": "print('x')",
+                    }
+                ]
+            )
+        )
 
 
-def test_contract_rejects_unknown_keys_and_string_boolean() -> None:
-    with pytest.raises(GitHubPublicationError, match="unknown keys"):
-        compile_publication_contract(_request(api_root="https://evil.example"))
-    with pytest.raises(GitHubPublicationError, match="must be a boolean"):
-        compile_publication_contract(_request(allow_temporary_transport="false"))
+def test_bounds_apply_before_large_utf8_or_base64_conversion() -> None:
+    with pytest.raises(GitHubPublicationError, match="input characters"):
+        compile_publication_contract(
+            _request(
+                changes=[
+                    {
+                        "path": "huge.txt",
+                        "content": "x" * (_MAX_UTF8_CHARS + 1),
+                    }
+                ]
+            )
+        )
+    with pytest.raises(GitHubPublicationError, match="encoded characters"):
+        compile_publication_contract(
+            _request(
+                changes=[
+                    {
+                        "path": "huge.bin",
+                        "encoding": "base64",
+                        "content": "A" * (_MAX_BASE64_CHARS + 1),
+                    }
+                ]
+            )
+        )
 
 
-def test_update_mode_binds_pr_number_into_contract_identity() -> None:
-    request_payload = _request(
-        publication_mode="update",
-        expected_parent_sha=PARENT_SHA,
-        pr_number=170,
-    )
-    contract = compile_publication_contract(request_payload)
-    assert contract["pr_number"] == 170
-    assert contract["branch_policy"] == "exact_parent_fast_forward"
-
-    tampered = copy.deepcopy(contract)
-    tampered["pr_number"] = 171
-    transport = FakeTransport()
-    with pytest.raises(GitHubPublicationError, match="identity mismatch"):
-        execute_publication_contract(tampered, transport=transport)
-
-
-class FakeTransport:
-    def __init__(self, *, base_moves: bool = False) -> None:
-        self.calls: list[tuple[str, str, dict[str, Any] | None, bool]] = []
-        self.base_reads = 0
-        self.base_moves = base_moves
-        self.blobs = iter([BLOB_A_SHA, BLOB_B_SHA])
-
-    def request(
-        self,
-        method: str,
-        path: str,
-        payload: dict[str, Any] | None = None,
-        *,
-        allow_404: bool = False,
-    ) -> dict[str, Any] | None:
-        self.calls.append((method, path, copy.deepcopy(payload), allow_404))
-        if method == "GET" and path.endswith("/git/ref/heads/main"):
-            self.base_reads += 1
-            sha = PARENT_SHA if self.base_moves and self.base_reads > 1 else BASE_SHA
-            return {"object": {"sha": sha}}
-        if method == "GET" and path.endswith(
-            "/git/ref/heads/feature/atomic-publication-test"
-        ):
-            assert allow_404 is True
-            return None
-        if method == "GET" and "/pulls?" in path:
-            return []
-        if method == "GET" and path.endswith(f"/git/commits/{BASE_SHA}"):
-            return {"tree": {"sha": BASE_TREE_SHA}}
-        if method == "POST" and path.endswith("/git/blobs"):
-            return {"sha": next(self.blobs)}
-        if method == "POST" and path.endswith("/git/trees"):
-            assert payload is not None
-            assert payload["base_tree"] == BASE_TREE_SHA
-            assert [item["path"] for item in payload["tree"]] == [
-                "alpha.py",
-                "zeta.py",
-            ]
-            return {"sha": TREE_SHA}
-        if method == "POST" and path.endswith("/git/commits"):
-            assert payload == {
-                "message": "feat: publish atomically",
-                "tree": TREE_SHA,
-                "parents": [BASE_SHA],
-            }
-            return {"sha": COMMIT_SHA}
-        if method == "POST" and path.endswith("/git/refs"):
-            assert payload == {
-                "ref": "refs/heads/feature/atomic-publication-test",
-                "sha": COMMIT_SHA,
-            }
-            return {}
-        if method == "POST" and path.endswith("/pulls"):
-            assert payload is not None
-            assert payload["head"] == "feature/atomic-publication-test"
-            assert payload["base"] == "main"
-            return {
-                "number": 170,
-                "html_url": "https://github.com/dallascourchene-commits/AuraOS/pull/170",
-            }
-        raise AssertionError(f"unexpected request: {method} {path} {payload}")
-
-
-def test_execute_publication_uses_one_tree_and_one_commit() -> None:
+def test_create_uses_graphql_cas_refname_and_base64() -> None:
     contract = compile_publication_contract(_request())
     transport = FakeTransport()
 
@@ -176,95 +246,252 @@ def test_execute_publication_uses_one_tree_and_one_commit() -> None:
 
     assert receipt["ok"] is True
     assert receipt["commit_sha"] == COMMIT_SHA
-    assert receipt["tree_sha"] == TREE_SHA
-    assert receipt["pr_number"] == 170
-    assert receipt["atomic_commit"] is True
-    assert receipt["force_ref_update"] is False
-    assert receipt["automatic_merge"] is False
-    assert sum(
-        1
-        for method, path, _, _ in transport.calls
-        if method == "POST" and path.endswith("/git/trees")
-    ) == 1
-    assert sum(
-        1
-        for method, path, _, _ in transport.calls
-        if method == "POST" and path.endswith("/git/commits")
-    ) == 1
+    assert receipt["compare_and_swap"] is True
+    assert len(transport.graphql_calls) == 1
+    query, variables = transport.graphql_calls[0]
+    assert "createCommitOnBranch" in query
+    input_payload = variables["input"]
+    assert input_payload["branch"] == {
+        "repositoryNameWithOwner": REPOSITORY,
+        "refName": BRANCH,
+    }
+    assert input_payload["expectedHeadOid"] == BASE_SHA
+    additions = input_payload["fileChanges"]["additions"]
+    assert [item["path"] for item in additions] == [
+        "alpha.py",
+        "zeta.py",
+    ]
+    assert base64.b64decode(additions[0]["contents"]).decode() == "print('a')\n"
+    assert input_payload["fileChanges"]["deletions"] == [
+        {"path": "obsolete.py"}
+    ]
 
 
-def test_execute_fails_closed_if_base_moves_before_ref_creation() -> None:
+def test_caller_base64_is_retained_in_graphql_variables() -> None:
+    encoded = base64.b64encode(b"\x00\x01payload").decode("ascii")
+    contract = compile_publication_contract(
+        _request(
+            changes=[
+                {
+                    "path": "payload.bin",
+                    "encoding": "base64",
+                    "content": encoded,
+                }
+            ]
+        )
+    )
+    transport = FakeTransport()
+    execute_publication_contract(contract, transport=transport)
+    additions = transport.graphql_calls[0][1]["input"]["fileChanges"][
+        "additions"
+    ]
+    assert additions == [{"path": "payload.bin", "contents": encoded}]
+
+
+def test_create_cleans_fresh_branch_when_graphql_cas_fails() -> None:
     contract = compile_publication_contract(_request())
-    transport = FakeTransport(base_moves=True)
+    transport = FakeTransport(graphql_error=True)
 
-    with pytest.raises(GitHubPublicationError, match="base branch moved"):
+    with pytest.raises(
+        GitHubPublicationError,
+        match='"deleted":true',
+    ):
         execute_publication_contract(contract, transport=transport)
 
+    assert transport.branch_sha is None
+
+
+def test_create_cleans_commit_branch_when_pr_creation_fails() -> None:
+    contract = compile_publication_contract(_request())
+    transport = FakeTransport(pr_error=True)
+
+    with pytest.raises(
+        GitHubPublicationError,
+        match='"deleted":true',
+    ):
+        execute_publication_contract(contract, transport=transport)
+
+    assert transport.branch_sha is None
+
+
+def test_update_rejects_fork_pr_before_graphql() -> None:
+    contract = compile_publication_contract(
+        _request(
+            publication_mode="update",
+            expected_parent_sha=PARENT_SHA,
+            pr_number=170,
+        )
+    )
+    transport = FakeTransport(
+        mode="update",
+        head_repo="someone/AuraOS-fork",
+    )
+
+    with pytest.raises(GitHubPublicationError, match="same-repository"):
+        execute_publication_contract(contract, transport=transport)
+
+    assert transport.graphql_calls == []
+
+
+def test_update_uses_cas_and_never_patches_pr_metadata() -> None:
+    contract = compile_publication_contract(
+        _request(
+            publication_mode="update",
+            expected_parent_sha=PARENT_SHA,
+            pr_number=170,
+        )
+    )
+    transport = FakeTransport(mode="update")
+
+    receipt = execute_publication_contract(contract, transport=transport)
+
+    assert receipt["pr_number"] == 170
+    assert transport.graphql_calls[0][1]["input"][
+        "expectedHeadOid"
+    ] == PARENT_SHA
     assert not any(
-        method == "POST" and path.endswith("/git/refs")
+        method == "PATCH" and "/pulls/" in path
         for method, path, _, _ in transport.calls
     )
     assert not any(
-        method == "POST" and path.endswith("/pulls")
+        method == "PATCH" and "/git/refs/" in path
         for method, path, _, _ in transport.calls
     )
 
 
-def test_merge_packet_requires_every_explicit_gate() -> None:
-    blocked = compile_merge_connector_packet(
-        repository_full_name="dallascourchene-commits/AuraOS",
-        pr_number=170,
-        expected_head_sha=COMMIT_SHA,
-        human_merge_authorized=True,
-        checks_passed=True,
-        review_threads_resolved=False,
-        codemap_regenerated=True,
+def test_update_cas_rejection_does_not_move_branch() -> None:
+    contract = compile_publication_contract(
+        _request(
+            publication_mode="update",
+            expected_parent_sha=PARENT_SHA,
+            pr_number=170,
+        )
     )
-    assert blocked["status"] == "BLOCKED"
-    assert blocked["connector_arguments"] is None
+    transport = FakeTransport(mode="update", graphql_error=True)
 
-    ready = compile_merge_connector_packet(
-        repository_full_name="dallascourchene-commits/AuraOS",
+    with pytest.raises(GitHubPublicationError, match="expectedHeadOid"):
+        execute_publication_contract(contract, transport=transport)
+
+    assert transport.branch_sha == PARENT_SHA
+
+
+def test_contract_tampering_is_rejected() -> None:
+    contract = compile_publication_contract(_request())
+    tampered = copy.deepcopy(contract)
+    tampered["pr_title"] = "Changed"
+    with pytest.raises(GitHubPublicationError, match="identity mismatch"):
+        execute_publication_contract(tampered, transport=FakeTransport())
+
+
+def test_no_redirect_handler_refuses_redirects() -> None:
+    handler = _NoRedirectHandler()
+    req = request.Request(
+        "https://api.github.com/graphql",
+        headers={"Authorization": "Bearer secret"},
+    )
+    assert handler.redirect_request(
+        req,
+        None,
+        302,
+        "Found",
+        {},
+        "https://attacker.example/token",
+    ) is None
+
+
+class _RedirectingOpener:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def open(self, req: request.Request, timeout: int) -> Any:
+        del timeout
+        self.calls += 1
+        raise error.HTTPError(
+            req.full_url,
+            302,
+            "Found",
+            {"Location": "https://attacker.example/token"},
+            BytesIO(b"redirect refused"),
+        )
+
+
+def test_transport_does_not_follow_redirect() -> None:
+    opener = _RedirectingOpener()
+    transport = GitHubRestTransport(token="secret", opener=opener)
+    with pytest.raises(GitHubPublicationError, match="HTTP 302"):
+        transport.graphql("query { viewer { login } }", {})
+    assert opener.calls == 1
+
+
+def test_merge_packet_is_evidence_only() -> None:
+    packet = compile_merge_connector_packet(
+        repository_full_name=REPOSITORY,
         pr_number=170,
         expected_head_sha=COMMIT_SHA,
-        human_merge_authorized=True,
         checks_passed=True,
         review_threads_resolved=True,
         codemap_regenerated=True,
     )
-    assert ready["status"] == "READY_FOR_EXPLICIT_MERGE"
-    assert ready["connector_arguments"]["expected_head_sha"] == COMMIT_SHA
-    assert ready["connector_tool"] == "GitHub.merge_pull_request"
+    assert packet["status"] == "READY_FOR_TRUSTED_HUMAN_AUTHORIZATION"
+    assert packet["merge_authority"] is False
+    assert packet["connector_tool"] is None
+    assert packet["connector_arguments"] is None
+
+
+def test_merge_runtime_rejects_caller_human_authority_key() -> None:
+    bridge = object.__new__(GitHubPublishingAuraAgentArenaBridge)
+    bridge._sessions = {}
+    result = bridge.aura_github_prepare_merge(
+        {
+            "repository_full_name": REPOSITORY,
+            "pr_number": 170,
+            "expected_head_sha": COMMIT_SHA,
+            "human_merge_authorized": True,
+        }
+    )
+    assert result["ok"] is False
+    assert "unknown keys" in str(result)
 
 
 def test_bridge_hides_private_file_content_and_stores_contract() -> None:
     bridge = object.__new__(GitHubPublishingAuraAgentArenaBridge)
     bridge._sessions = {}
-
     result = bridge.aura_github_prepare_publication(_request())
-
     assert result["ok"] is True
     assert result["version"] == GITHUB_PUBLICATION_VERSION
     assert "_private" not in result
-    contract_id = result["contract_id"]
-    stored = bridge._sessions["github_publications"][contract_id]
+    stored = bridge._sessions["github_publications"][
+        result["contract_id"]
+    ]
     assert stored["_private"]["changes"][0].content is not None
 
 
-def test_github_mcp_installs_tools_idempotently() -> None:
+def test_mcp_schema_matches_upsert_delete_runtime_and_installs_once() -> None:
     import aura_agent_arena_github_mcp as github_mcp
 
     github_mcp.install_github_tools()
     github_mcp.install_github_tools()
-
     names = [
         item["name"]
         for item in github_mcp._base_mcp.TOOL_DEFINITIONS
         if item["name"].startswith("aura_github_")
     ]
-    assert sorted(names) == [
-        "aura_github_execute_publication",
-        "aura_github_prepare_merge",
-        "aura_github_prepare_publication",
-    ]
     assert all(names.count(name) == 1 for name in names)
+
+    prepare = next(
+        item
+        for item in github_mcp._GITHUB_TOOL_DEFINITIONS
+        if item["name"] == "aura_github_prepare_publication"
+    )
+    variants = prepare["inputSchema"]["properties"]["changes"][
+        "items"
+    ]["oneOf"]
+    assert variants[0]["required"] == ["path", "content"]
+    assert variants[1]["properties"]["operation"]["const"] == "delete"
+
+    merge = next(
+        item
+        for item in github_mcp._GITHUB_TOOL_DEFINITIONS
+        if item["name"] == "aura_github_prepare_merge"
+    )
+    assert "human_merge_authorized" not in merge["inputSchema"]["properties"]
