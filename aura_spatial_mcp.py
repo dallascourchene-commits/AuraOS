@@ -84,9 +84,12 @@ class SpatialArenaMCPTools:
                 current_repo_head=str(args["current_repo_head"]),
             )
         if tool_name == "spatial.dissolve":
+            receipt = args.get("renderer_cleanup_receipt")
+            if not isinstance(receipt, Mapping):
+                raise ValueError("renderer_cleanup_receipt must be an object")
             return self.bridge.dissolve(
                 str(args["run_id"]),
-                renderer_cleanup_receipt=dict(args["renderer_cleanup_receipt"]),
+                renderer_cleanup_receipt=dict(receipt),
                 reason_code=str(args.get("reason_code") or "SPATIAL_ARENA_COMPLETE"),
             )
         raise ValueError(f"unknown Spatial MCP tool: {tool_name}")

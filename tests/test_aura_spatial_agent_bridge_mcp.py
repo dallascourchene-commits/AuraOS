@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+from unittest.mock import Mock
+
+import pytest
+from tests.test_aura_spatial_s5_arena import _construction_packet, _repo
 
 from aura_agent_arena_mcp import TOOL_DEFINITIONS, handle_request
 from aura_agent_arena_persistence_bridge import PersistentAuraAgentArenaBridge
-from tests.test_aura_spatial_s5_arena import _construction_packet, _repo
+from aura_spatial_mcp import SpatialArenaMCPTools
 
 
 def test_persistent_agent_bridge_exposes_typed_spatial_construction_lifecycle(tmp_path: Path) -> None:
@@ -46,3 +50,14 @@ def test_mcp_lists_only_post_prepare_spatial_tools() -> None:
         "aura_spatial_dissolve",
     }.issubset(names)
     assert "aura_spatial_prepare_construction" not in names
+
+
+def test_spatial_dissolve_rejects_non_object_renderer_cleanup_receipt() -> None:
+    stub_bridge = Mock()
+    tools = SpatialArenaMCPTools(bridge=stub_bridge)
+    with pytest.raises(ValueError, match="renderer_cleanup_receipt must be an object"):
+        tools.call("spatial.dissolve", {"run_id": "test", "renderer_cleanup_receipt": None})
+    with pytest.raises(ValueError, match="renderer_cleanup_receipt must be an object"):
+        tools.call("spatial.dissolve", {"run_id": "test", "renderer_cleanup_receipt": "not-an-object"})
+    with pytest.raises(ValueError, match="renderer_cleanup_receipt must be an object"):
+        tools.call("spatial.dissolve", {"run_id": "test", "renderer_cleanup_receipt": []})

@@ -1,1 +1,0 @@
-Verified local reference before branch materialization: Python compile PASS; Ruff check PASS; Ruff format check PASS; route validation PASS; 411 focused/retained tests PASS; structural architecture receipt 22/22 PASS. This is evidence only, not authority. Compare materialized branch behavior against these gates. Delete this temporary file after permanent implementation is stable.

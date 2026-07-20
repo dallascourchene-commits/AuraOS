@@ -1,1 +1,0 @@
-Final sequence: materialize permanent implementation; clean temporary files; exact-head tests; manual review; Codex review/repair rounds; one final CodeRabbit findings-only review; manual repairs; final exact-head verification; regenerate CODEMAP as the last pre-merge operation; await Dallas's explicit merge instruction.
