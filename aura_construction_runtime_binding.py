@@ -59,8 +59,7 @@ def require_canonical_construction_runtime_packet(
         issued_state = _ISSUED_PACKETS.get(packet_digest)
     if issued_state != state:
         raise ValueError(
-            "Construction runtime packet was not issued by the canonical Construction adapter "
-            "for the supplied state"
+            "Construction runtime packet was not issued by the canonical Construction adapter for the supplied state"
         )
     return packet_digest
 
