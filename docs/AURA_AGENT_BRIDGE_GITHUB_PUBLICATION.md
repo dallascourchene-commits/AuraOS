@@ -58,10 +58,11 @@ The contract binds:
 - commit and PR metadata;
 - explicit publication authorization.
 
-All additions are sent to GraphQL as RFC 4648 Base64. UTF-8 input is bounded
-before encoding. Caller Base64 is bounded before ASCII conversion or decoding
-and is retained only after strict validation. Limits remain 4 MiB per decoded
-file and 32 MiB per publication.
+All additions are sent to GraphQL as RFC 4648 Base64. UTF-8 byte length is
+counted incrementally before allocating the encoded payload, including
+multibyte code points. Caller Base64 is bounded before ASCII conversion or
+decoding and is retained only after strict validation. Limits remain 4 MiB per
+decoded file and 32 MiB per publication.
 
 `createCommitOnBranch` does not expose executable-bit mutation, so this lane
 accepts regular files (`100644`) only. Executable-mode changes must use a
@@ -77,8 +78,10 @@ separately reviewed publication mechanism.
 5. Run `createCommitOnBranch` on that feature ref with
    `expectedHeadOid=expected_base_sha`.
 6. Create the PR.
-7. If the mutation or PR creation fails, delete the fresh ref only when it still
-   points to the expected cleanup SHA and report the cleanup result.
+7. If the mutation or PR creation fails, do not issue an automatic ref DELETE.
+   GitHub deletion has no expected-OID compare-and-swap, so a GET-then-DELETE
+   could remove a newer writer's commit. Return durable recovery evidence with
+   the expected and observed SHA for a trusted operator to revalidate.
 
 The base branch may advance after the snapshot is taken. The guarantee is exact
 provenance from `expected_base_sha`, not a false claim that mutable `main`
@@ -102,6 +105,8 @@ remains locked.
 - token is never accepted through MCP arguments;
 - REST and GraphQL are pinned to `https://api.github.com`;
 - urllib redirects are disabled before the bearer token is sent;
+- redirect-capable opener injection is not supported;
+- malformed UTF-8 response bodies become fail-closed publication errors;
 - responses are bounded to 8 MiB;
 - no shell execution is used.
 
@@ -152,6 +157,8 @@ python3 -m pytest -q tests/test_aura_agent_arena_github_bridge.py
 
 The focused suite covers deterministic contracts, schema/runtime parity,
 pre-encoding and pre-decoding bounds, GraphQL `refName` variable shape,
-same-repository PR binding, CAS rejection, create-mode cleanup, no update-mode
-PR PATCH, redirect rejection, private/public payload integrity, evidence-only
-merge output, and idempotent MCP registration.
+same-repository PR binding, CAS rejection, create-mode recovery evidence,
+no update-mode PR PATCH, redirect rejection, malformed UTF-8 response handling,
+strict delete payload parity, private/public payload integrity, evidence-only
+merge output, and idempotent MCP registration. The current focused suite passes
+**30 tests**.
