@@ -1,9 +1,7 @@
 name: Aura Temporary S5-S6 Construction Bootstrap
 
 on:
-  push:
-    branches:
-      - feature/spatial-s4b-gaussian-security
+  pull_request:
     paths:
       - ".github/workflows/aura-spatial-s5-s6-bootstrap-temp.yml"
   workflow_dispatch:
