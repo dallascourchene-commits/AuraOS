@@ -727,3 +727,165 @@ def test_atlas_boundary_includes_generated_paths(temp_repo: Path) -> None:
     assert ".aura/RELATIONSHIP_ATLAS_RECEIPT.json" in excluded
     assert ".aura/RELATIONSHIP_ATLAS.md" in excluded
 
+
+# ---------------------------------------------------------------------------
+# Review-fix tests: CodeRabbit + Codex review findings
+# ---------------------------------------------------------------------------
+
+
+def test_profile_digest_differs_between_minimal_and_standard(temp_repo: Path) -> None:
+    """MINIMAL and STANDARD builds from the same index should produce different digests."""
+    snap_min = build_relationship_atlas(repo_root=temp_repo, profile="MINIMAL")
+    snap_std = build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")
+    assert snap_min.snapshot_digest != snap_std.snapshot_digest, \
+        "Different profiles should produce different snapshot digests"
+
+
+def test_stale_index_missing_digest_fails_closed(temp_repo: Path) -> None:
+    """Index with missing index_digest should fail closed."""
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    with idx_file.open("r") as f:
+        data = json.load(f)
+    del data["index_digest"]
+    with idx_file.open("w") as f:
+        json.dump(data, f)
+
+    with pytest.raises(ValueError, match="missing index_digest"):
+        build_relationship_atlas(repo_root=temp_repo)
+
+
+def test_stale_participant_freshness_fails_closed(temp_repo: Path) -> None:
+    """Index with STALE participant freshness should fail closed."""
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    with idx_file.open("r") as f:
+        data = json.load(f)
+    data["participants"][0]["freshness"] = "STALE"
+    with idx_file.open("w") as f:
+        json.dump(data, f)
+
+    with pytest.raises(ValueError, match="STALE participants"):
+        build_relationship_atlas(repo_root=temp_repo)
+
+
+def test_symbol_name_extraction_uses_double_colon(temp_repo: Path) -> None:
+    """Overlap detection should extract symbol after '::' not after '.'."""
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    with idx_file.open("r") as f:
+        data = json.load(f)
+
+    # Set canonical_ref with :: delimiter so symbol is 'parse_intent'
+    # Make participant 3 share the word 'parse' with participant 1
+    data["participants"][2]["canonical_ref"] = "aura_ephemeral_verifier.py::parse_verification"
+    with idx_file.open("w") as f:
+        json.dump(data, f)
+
+    snapshot = build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")
+    overlaps = find_overlapping_unwired(snapshot)
+    # Should detect overlap because 'parse' is shared between parse_intent and parse_verification
+    assert len(overlaps) >= 1, "Should detect overlap via :: symbol extraction"
+
+
+def test_delta_receipt_classifies_non_exact_additions(temp_repo: Path) -> None:
+    """Delta receipt should classify added assessments by type, not lump all into exact."""
+    snapshot1 = build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")
+
+    # Add an overlap-producing participant change + a new exact relation
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    with idx_file.open("r") as f:
+        data = json.load(f)
+
+    data["participants"][2]["canonical_ref"] = "aura_intent_ingestion.py::verify_intent_structure"
+    data["relations"].append({
+        "schema_version": "AURA_TYPED_RELATION_V1",
+        "relation_id": "rel_delta_classify_test",
+        "relation_type": "TESTS",
+        "source_participant_id": "relp_000000000000000000000003",
+        "target_participant_id": "relp_000000000000000000000001",
+        "truth_class": "EXACT_TEST",
+        "evidence_refs": ["delta_classify_ev"],
+        "metadata": {}
+    })
+    with idx_file.open("w") as f:
+        json.dump(data, f)
+
+    snapshot2 = build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")
+    delta = diff_relationship_atlases(snapshot1, snapshot2)
+
+    # The new TESTS relation is EXACT_TEST → should be in added_exact_relations
+    assert len(delta.added_exact_relations) >= 1, \
+        "Exact relations should be classified into added_exact_relations"
+
+    # New overlap assessments should NOT be in added_exact_relations
+    for aid in delta.added_exact_relations:
+        assess = next((a for a in snapshot2.assessments if a.assessment_id == aid), None)
+        if assess:
+            assert assess.structural_status == StructuralStatus.EXACTLY_WIRED, \
+                f"Non-exact assessment {aid} mislabeled as exact in delta"
+
+
+def test_cross_arena_prohibition_triggers(temp_repo: Path) -> None:
+    """Cross-arena coupling prohibition should trigger when two distinct arena participants have CALLS."""
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    with idx_file.open("r") as f:
+        data = json.load(f)
+
+    # Add two arena-type participants
+    data["participants"].append({
+        "participant_id": "relp_arena_000000000000000000001",
+        "participant_type": "arena",
+        "role": "civic_arena",
+        "truth_class": "EXACT_SOURCE",
+        "canonical_owner": "aura_civic_arena.py",
+        "canonical_ref": "aura_civic_arena.py::civic_arena",
+        "digest": "arena1_digest",
+        "evidence_refs": ["arena1_ev"],
+        "freshness": "CURRENT",
+        "qualified_symbol": "civic_arena",
+        "metadata": {}
+    })
+    data["participants"].append({
+        "participant_id": "relp_arena_000000000000000000002",
+        "participant_type": "arena",
+        "role": "construction_arena",
+        "truth_class": "EXACT_SOURCE",
+        "canonical_owner": "aura_construction_arena.py",
+        "canonical_ref": "aura_construction_arena.py::construction_arena",
+        "digest": "arena2_digest",
+        "evidence_refs": ["arena2_ev"],
+        "freshness": "CURRENT",
+        "qualified_symbol": "construction_arena",
+        "metadata": {}
+    })
+    data["relations"].append({
+        "schema_version": "AURA_TYPED_RELATION_V1",
+        "relation_id": "rel_cross_arena_calls_test",
+        "relation_type": "CALLS",
+        "source_participant_id": "relp_arena_000000000000000000001",
+        "target_participant_id": "relp_arena_000000000000000000002",
+        "truth_class": "EXACT_SOURCE",
+        "evidence_refs": ["cross_arena_ev"],
+        "metadata": {}
+    })
+    with idx_file.open("w") as f:
+        json.dump(data, f)
+
+    snapshot = build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")
+    prohibited = [a for a in snapshot.assessments if a.wiring_disposition == WiringDisposition.PROHIBITED]
+    cross_arena = [a for a in prohibited if "CALLS" in a.relation_types
+                   and any(p.participant_type == "arena" for p in a.participant_refs)]
+    assert len(cross_arena) >= 1, \
+        "Cross-arena CALLS between two distinct arena participants should be prohibited"
+
+
+def test_md5_used_for_security_false() -> None:
+    """All hashlib.md5 calls should pass usedforsecurity=False."""
+    import aura_relationship_atlas
+    import inspect
+    import re
+    source = inspect.getsource(aura_relationship_atlas)
+    # Find all hashlib.md5 calls (they span multiple parens, so match the full call line)
+    md5_lines = [line.strip() for line in source.split('\n') if 'hashlib.md5(' in line]
+    for line in md5_lines:
+        assert "usedforsecurity=False" in line, \
+            f"hashlib.md5 call missing usedforsecurity=False: {line}"
+

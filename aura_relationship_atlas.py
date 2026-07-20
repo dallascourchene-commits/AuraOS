@@ -193,6 +193,7 @@ class AtlasParticipantRef:
     freshness: str = "CURRENT"
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the participant reference to a canonical dict."""
         return asdict(self)
 
 
@@ -228,12 +229,14 @@ class AtlasRelationshipAssessment:
     vsa_patch_authority: bool = VSA_PATCH_AUTHORITY
 
     def __post_init__(self) -> None:
+        """Validate canonical owner refs and compute the assessment digest."""
         if not self.canonical_owner_refs:
             raise ValueError("Every Atlas assessment must reference at least one canonical owner.")
         if not self.assessment_digest:
             self.assessment_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
+        """Compute a SHA-256 content-addressed digest for this assessment."""
         data = {
             "participant_ids": [p.participant_id for p in self.participant_refs],
             "role_bindings": self.role_bindings,
@@ -252,6 +255,7 @@ class AtlasRelationshipAssessment:
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the assessment to a canonical dict with enum values as strings."""
         d = asdict(self)
         d["structural_status"] = self.structural_status.value
         d["semantic_relationship"] = self.semantic_relationship.value
@@ -282,6 +286,7 @@ class MissingRelationalConfiguration:
     truth_class: str = "INFERRED_MOTIF"
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the missing configuration to a canonical dict."""
         return asdict(self)
 
 
@@ -299,6 +304,7 @@ class RelationshipProhibition:
     current_reproof_required: bool = True
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the prohibition record to a canonical dict."""
         return asdict(self)
 
 
@@ -324,10 +330,12 @@ class AtlasSnapshot:
     snapshot_digest: str = ""
 
     def __post_init__(self) -> None:
+        """Compute the snapshot digest if not already set."""
         if not self.snapshot_digest:
             self.snapshot_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
+        """Compute a SHA-256 content-addressed digest including profile and assessments."""
         data = {
             "version": self.snapshot_version,
             "repository_head": self.repository_head,
@@ -335,6 +343,7 @@ class AtlasSnapshot:
             "codemap_digest": self.codemap_digest,
             "topology_digest": self.topology_digest,
             "relational_index_digest": self.relational_index_digest,
+            "operational_profile": self.boundary.get("operational_profile", ""),
             "assessment_digests": sorted([a.assessment_digest for a in self.assessments]),
             "prohibition_ids": sorted([p.prohibition_id for p in self.prohibitions]),
         }
@@ -342,6 +351,7 @@ class AtlasSnapshot:
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the full snapshot to a canonical dict for persistence."""
         return {
             "snapshot_version": self.snapshot_version,
             "repository_head": self.repository_head,
@@ -381,6 +391,7 @@ class AtlasDeltaReceipt:
     verification_refs: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the delta receipt to a canonical dict."""
         return asdict(self)
 
 
@@ -545,6 +556,24 @@ def build_relationship_atlas(
     with idx_path.open("r", encoding="utf-8") as f:
         rel_index = json.load(f)
 
+    # Validate index freshness — fail closed on stale or missing identity
+    index_digest = rel_index.get("index_digest", "")
+    if not index_digest:
+        raise ValueError(
+            f"Relational index at {idx_path} is missing index_digest. "
+            "The index may be corrupted or built by an incompatible version. "
+            "Please run 'python aura_relational_index.py build' first."
+        )
+    # Check that participants carry freshness metadata
+    participants_early = rel_index.get("participants", [])
+    stale_participants = [p.get("participant_id", "?") for p in participants_early
+                          if p.get("freshness", "CURRENT") == "STALE"]
+    if stale_participants:
+        raise ValueError(
+            f"Relational index at {idx_path} contains STALE participants: {stale_participants[:5]}. "
+            "Please rebuild the relational index from the current repository head."
+        )
+
     # Validate index identity metadata — use real digests from the index
     rep_identity = rel_index.get("repository_identity", {})
     repo_head = rep_identity.get("repo_head", "unknown_head")
@@ -608,7 +637,7 @@ def build_relationship_atlas(
             proof_stat = ProofStatus.SATISFIED if truth_cls.startswith("EXACT") else ProofStatus.OPEN
 
             # Create assessment referencing the canonical relational index relation ID
-            assessment_id = f"atlas_{hashlib.md5(r['relation_id'].encode()).hexdigest()[:24]}"
+            assessment_id = f"atlas_{hashlib.md5(r['relation_id'].encode(), usedforsecurity=False).hexdigest()[:24]}"
             assessments.append(
                 AtlasRelationshipAssessment(
                     assessment_id=assessment_id,
@@ -659,8 +688,8 @@ def build_relationship_atlas(
                 # (b) shared canonical owner module
                 # (c) shared role
                 # (d) shared truth class beyond exact
-                name_a = ref_a.canonical_ref.split("/")[-1].split(".")[-1].lower() if "." in ref_a.canonical_ref else ref_a.canonical_ref.lower()
-                name_b = ref_b.canonical_ref.split("/")[-1].split(".")[-1].lower() if "." in ref_b.canonical_ref else ref_b.canonical_ref.lower()
+                name_a = ref_a.canonical_ref.split("::")[-1].lower() if "::" in ref_a.canonical_ref else ref_a.canonical_ref.split("/")[-1].lower()
+                name_b = ref_b.canonical_ref.split("::")[-1].lower() if "::" in ref_b.canonical_ref else ref_b.canonical_ref.split("/")[-1].lower()
 
                 overlap_words = set(name_a.split("_")) & set(name_b.split("_")) - {"aura", "test", "helper", "mock", "py", "module"}
                 shared_owner = ref_a.canonical_owner and ref_a.canonical_owner == ref_b.canonical_owner
@@ -679,7 +708,7 @@ def build_relationship_atlas(
                     if shared_truth:
                         overlap_reasons.append(f"shared_truth_class:{meta_a.get('truth_class')}")
 
-                    assess_id = f"atlas_{hashlib.md5(f'{pid_a}_{pid_b}_overlap'.encode()).hexdigest()[:24]}"
+                    assess_id = f"atlas_{hashlib.md5(f'{pid_a}_{pid_b}_overlap'.encode(), usedforsecurity=False).hexdigest()[:24]}"
                     unwired_assessments.append(
                         AtlasRelationshipAssessment(
                             assessment_id=assess_id,
@@ -754,7 +783,7 @@ def build_relationship_atlas(
 
                 if is_aux or is_adjacent:
                     aux_type = "auxiliary" if is_aux else "adjacent"
-                    assess_id = f"atlas_{hashlib.md5(f'{pid_a}_{pid_b}_{aux_type}'.encode()).hexdigest()[:24]}"
+                    assess_id = f"atlas_{hashlib.md5(f'{pid_a}_{pid_b}_{aux_type}'.encode(), usedforsecurity=False).hexdigest()[:24]}"
                     auxiliary_assessments.append(
                         AtlasRelationshipAssessment(
                             assessment_id=assess_id,
@@ -859,9 +888,9 @@ def build_relationship_atlas(
                 elif pattern == "cross_arena_coupling_block":
                     # Direct un-adapted coupling between isolated Arenas
                     if ("CALLS" in a.relation_types or "WRITES_STATE" in a.relation_types):
-                        arena_types = {pr.participant_type for pr in a.participant_refs
-                                       if pr.participant_type == "arena"}
-                        if len(arena_types) >= 2:
+                        arena_ids = {pr.participant_id for pr in a.participant_refs
+                                     if pr.participant_type == "arena"}
+                        if len(arena_ids) >= 2:
                             should_prohibit = True
 
                 if should_prohibit:
@@ -900,7 +929,7 @@ def build_relationship_atlas(
             # Only report if at least one role is bound (partially complete motif)
             if missing and len(bound) > 0:
                 ratio = len(bound) / len(spec["required_roles"])
-                cfg_id = f"config_{hashlib.md5(motif_id.encode()).hexdigest()[:24]}"
+                cfg_id = f"config_{hashlib.md5(motif_id.encode(), usedforsecurity=False).hexdigest()[:24]}"
                 missing_configs.append(
                     MissingRelationalConfiguration(
                         configuration_id=cfg_id,
@@ -1155,30 +1184,73 @@ def diff_relationship_atlases(
     prev_ids = {a.assessment_id: a for a in previous.assessments}
     curr_ids = {a.assessment_id: a for a in current.assessments}
 
-    added = []
-    removed = []
-    reclassified = []
+    added_exact: list[str] = []
+    removed_exact: list[str] = []
+    reclassified: list[str] = []
+    new_candidates: list[str] = []
+    new_prohibitions: list[str] = []
+    resolved_candidates: list[str] = []
+    new_missing_roles: list[str] = []
+    resolved_missing_roles: list[str] = []
+    stale_assessments: list[str] = []
 
     for aid, a in curr_ids.items():
         if aid not in prev_ids:
-            added.append(aid)
+            # Classify the added assessment by its disposition/status
+            if a.structural_status == StructuralStatus.EXACTLY_WIRED:
+                added_exact.append(aid)
+            elif a.wiring_disposition == WiringDisposition.PROHIBITED:
+                new_prohibitions.append(aid)
+            elif a.wiring_disposition == WiringDisposition.CANDIDATE:
+                new_candidates.append(aid)
+            # Overlaps, auxiliary, and other non-exact additions are tracked
+            # implicitly via the assessment set difference
         else:
             prev_a = prev_ids[aid]
             if (prev_a.structural_status != a.structural_status or
                     prev_a.semantic_relationship != a.semantic_relationship or
                     prev_a.wiring_disposition != a.wiring_disposition):
                 reclassified.append(aid)
+            # Detect stale: was current, now stale freshness
+            if prev_a.freshness == "CURRENT" and a.freshness == "STALE":
+                stale_assessments.append(aid)
+            # Detect resolved candidates: was CANDIDATE, now not
+            if (prev_a.wiring_disposition == WiringDisposition.CANDIDATE and
+                    a.wiring_disposition != WiringDisposition.CANDIDATE):
+                resolved_candidates.append(aid)
 
     for aid in prev_ids:
         if aid not in curr_ids:
-            removed.append(aid)
+            prev_a = prev_ids[aid]
+            if prev_a.structural_status == StructuralStatus.EXACTLY_WIRED:
+                removed_exact.append(aid)
+            elif prev_a.wiring_disposition == WiringDisposition.CANDIDATE:
+                resolved_candidates.append(aid)
+
+    # Track missing roles changes
+    prev_missing = {m.configuration_id: m for m in previous.missing_configurations}
+    curr_missing = {m.configuration_id: m for m in current.missing_configurations}
+    for mid in curr_missing:
+        if mid not in prev_missing:
+            new_missing_roles.append(mid)
+    for mid in prev_missing:
+        if mid not in curr_missing:
+            resolved_missing_roles.append(mid)
 
     return AtlasDeltaReceipt(
         previous_snapshot_digest=previous.snapshot_digest,
         current_snapshot_digest=current.snapshot_digest,
-        added_exact_relations=added,
-        removed_exact_relations=removed,
-        reclassified_relationships=reclassified
+        changed_participants=[],
+        added_exact_relations=added_exact,
+        removed_exact_relations=removed_exact,
+        reclassified_relationships=reclassified,
+        new_candidates=new_candidates,
+        resolved_candidates=resolved_candidates,
+        new_prohibitions=new_prohibitions,
+        resolved_missing_roles=resolved_missing_roles,
+        new_missing_roles=new_missing_roles,
+        stale_assessments=stale_assessments,
+        verification_refs=[],
     )
 
 
@@ -1274,6 +1346,7 @@ def render_relationship_atlas_markdown(snapshot: AtlasSnapshot, output_path: Pat
 # CLI Command Setup
 # ---------------------------------------------------------------------------
 def _cli_parser() -> argparse.ArgumentParser:
+    """Build the argparse CLI with all Atlas subcommands."""
     parser = argparse.ArgumentParser(description="Aura Architecture Relationship Atlas CLI")
     parser.add_argument("--repo-root", default=".")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1309,6 +1382,7 @@ def _cli_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """CLI entry point — dispatches build, status, validate, query, and other Atlas commands."""
     args = _cli_parser().parse_args(argv)
     repo = Path(args.repo_root)
 
