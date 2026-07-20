@@ -121,23 +121,27 @@ jobs:
           npm run test:spatial
 
       - name: Run structural architecture proof
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/aura-spatial-s5-s6-receipts
           python scripts/aura_spatial_s5_s6_construction_architect_harness.py \
             --repo-root . \
-            --base-ref "origin/${{ github.base_ref || 'main' }}" \
+            --base-ref "origin/$BASE_REF" \
             --head-ref HEAD \
             --observed-head "$(git rev-parse HEAD)" \
             --receipt /tmp/aura-spatial-s5-s6-receipts/structural.json \
             --structural-only
 
       - name: Run full Aura architecture proof
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
         run: |
           set -euo pipefail
           python scripts/aura_spatial_s5_s6_construction_architect_harness.py \
             --repo-root . \
-            --base-ref "origin/${{ github.base_ref || 'main' }}" \
+            --base-ref "origin/$BASE_REF" \
             --head-ref HEAD \
             --observed-head "$(git rev-parse HEAD)" \
             --receipt /tmp/aura-spatial-s5-s6-receipts/full.json
