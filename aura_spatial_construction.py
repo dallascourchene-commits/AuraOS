@@ -59,7 +59,6 @@ def project_construction_state_to_scene(
         raise ValueError("runtime_packet must be a mapping")
     packet = dict(runtime_packet)
     _validate_runtime_packet(packet, state)
-    require_canonical_construction_runtime_packet(packet, state_digest=state.state_digest)
     privacy = (
         privacy_class if isinstance(privacy_class, SpatialPrivacyClass) else SpatialPrivacyClass(str(privacy_class))
     )
@@ -90,6 +89,7 @@ def project_construction_state_to_scene(
         _assessment_summary(item, privacy)
         for item in sorted(assessments, key=lambda item: str(item.get("candidate_id") or ""))
     ]
+    require_canonical_construction_runtime_packet(packet, state_digest=state.state_digest)
     projection_payload = {
         "version": SPATIAL_CONSTRUCTION_VERSION,
         "project_ref": _project_ref(state.project_id, privacy),
