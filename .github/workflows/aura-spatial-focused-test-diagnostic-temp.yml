@@ -59,6 +59,11 @@ jobs:
               '        "file://remote-host/tmp/floor.glb",\n        "file:///tmp/aura/floor.glb",\n        "https://example.test/floor.glb",\n',
               1,
           )
+          text = text.replace(
+              'match=r"(?:URI|local or Aura-addressed|remote host)"',
+              'match=r"(?:URI|Aura-addressed|remote host)"',
+              1,
+          )
           start = text.index("def test_construction_projection_accepts_canonical_aura_and_local_file_uris()")
           replacement = '''def test_construction_projection_accepts_canonical_aura_uri() -> None:
               fixture, packet = _fixture_packet()
