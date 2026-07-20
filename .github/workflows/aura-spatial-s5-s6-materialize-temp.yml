@@ -1,21 +1,195 @@
-name: Aura Temporary S5-S6 Materialization Gate
+name: Aura Temporary S5-S6 Review-Fix Materializer
 
 on:
   pull_request:
     paths:
-      - "docs/AURA_SPATIAL_S5_S6_IMPLEMENTATION_CONTRACT_TEMP.md"
       - ".github/workflows/aura-spatial-s5-s6-materialize-temp.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  contract-visible:
+  materialize-review-fixes:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - run: |
-          test -s docs/AURA_SPATIAL_S5_S6_IMPLEMENTATION_CONTRACT_TEMP.md
-          echo "Bounded implementation contract is available for materialization."
+      - name: Check out the PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/spatial-s4b-gaussian-security
+          fetch-depth: 0
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install focused verification dependencies
+        run: python -m pip install --disable-pip-version-check pytest ruff jsonschema numpy
+
+      - name: Materialize verified permanent source and apply review repairs
+        run: |
+          set -euo pipefail
+          cat \
+            .aura/tmp/s5s6-payload/chunk-000 \
+            .aura/tmp/s5s6-payload/chunk-001 \
+            .aura/tmp/s5s6-payload/part-000 \
+            | tr -d '\r\n' \
+            | base64 --decode > /tmp/aura-spatial-s5-s6.tar.gz
+          echo "752aab15d35df78e89da3fa6e2c0e74758c66a8a29d7563b7a8142cdcb58d948  /tmp/aura-spatial-s5-s6.tar.gz" | sha256sum --check --strict
+          tar -xzf /tmp/aura-spatial-s5-s6.tar.gz -C .
+
+          python - <<'PY'
+          from pathlib import Path
+
+          mcp = Path("aura_spatial_mcp.py")
+          text = mcp.read_text()
+          old = '''        if tool_name == "spatial.dissolve":
+                      return self.bridge.dissolve(
+                          str(args["run_id"]),
+                          renderer_cleanup_receipt=dict(args["renderer_cleanup_receipt"]),
+                          reason_code=str(args.get("reason_code") or "SPATIAL_ARENA_COMPLETE"),
+                      )
+          '''
+          new = '''        if tool_name == "spatial.dissolve":
+                      receipt = args.get("renderer_cleanup_receipt")
+                      if not isinstance(receipt, Mapping):
+                          raise ValueError("renderer_cleanup_receipt must be an object")
+                      return self.bridge.dissolve(
+                          str(args["run_id"]),
+                          renderer_cleanup_receipt=dict(receipt),
+                          reason_code=str(args.get("reason_code") or "SPATIAL_ARENA_COMPLETE"),
+                      )
+          '''
+          if old not in text:
+              raise SystemExit("expected spatial.dissolve block not found")
+          mcp.write_text(text.replace(old, new))
+
+          workflow = Path(".github/workflows/aura-spatial-s5-s6-construction.yml")
+          text = workflow.read_text()
+          text = text.replace(
+              '''      - name: Run structural architecture proof
+                  run: |
+          ''',
+              '''      - name: Run structural architecture proof
+                  env:
+                    BASE_REF: ${{ github.base_ref || 'main' }}
+                  run: |
+          ''',
+          )
+          text = text.replace(
+              '''            --base-ref "origin/${{ github.base_ref || 'main' }}" \\
+          ''',
+              '''            --base-ref "origin/$BASE_REF" \\
+          ''',
+          )
+          text = text.replace(
+              '''      - name: Run full Aura architecture proof
+                  run: |
+          ''',
+              '''      - name: Run full Aura architecture proof
+                  env:
+                    BASE_REF: ${{ github.base_ref || 'main' }}
+                  run: |
+          ''',
+          )
+          if text.count('BASE_REF: ${{ github.base_ref || \'main\' }}') != 2:
+              raise SystemExit("expected two BASE_REF environment bindings")
+          if '${{ github.base_ref' in '\n'.join(
+              line for line in text.splitlines() if line.lstrip().startswith('--base-ref')
+          ):
+              raise SystemExit("unsafe base_ref interpolation remains in run script")
+          workflow.write_text(text)
+
+          tests = Path("tests/test_aura_spatial_agent_bridge_mcp.py")
+          text = tests.read_text()
+          marker = "def test_spatial_mcp_requires_cleanup_receipt_object()"
+          if marker not in text:
+              text += '''
+
+
+          class _DissolveBridge:
+              def dissolve(self, run_id: str, **kwargs: object) -> dict[str, object]:
+                  return {"run_id": run_id, **kwargs}
+
+
+          def test_spatial_mcp_requires_cleanup_receipt_object() -> None:
+              import pytest
+
+              from aura_spatial_mcp import SpatialArenaMCPTools
+
+              tools = SpatialArenaMCPTools(bridge=_DissolveBridge())
+              for invalid in (None, "receipt", ["receipt"]):
+                  with pytest.raises(ValueError, match="renderer_cleanup_receipt must be an object"):
+                      tools.call(
+                          "spatial.dissolve",
+                          {"run_id": "spatial-run:test", "renderer_cleanup_receipt": invalid},
+                      )
+          '''
+          tests.write_text(text)
+          PY
+
+          python -m ruff check --fix \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py
+          python -m ruff format \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py
+
+          rm -rf \
+            .aura/tmp/s5s6-payload \
+            .aura/tmp/s5s6-source-patch \
+            .aura/tmp/s5s6-review-fixed
+          rm -f \
+            .github/workflows/aura-spatial-s5-s6-bootstrap-temp.yml \
+            .github/workflows/aura-spatial-s5-s6-materialize-temp.yml \
+            docs/AURA_SPATIAL_S5_S6_CLEANUP_MANIFEST_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_FINAL_SEQUENCE_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_IMPLEMENTATION_CONTRACT_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_LOCAL_REFERENCE_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_MATERIALIZATION_REQUEST_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_NO_AUTOFIX_TEMP.md \
+            docs/AURA_SPATIAL_S5_S6_SCOPE_LOCK_TEMP.md
+
+      - name: Verify the bounded repair
+        run: |
+          set -euo pipefail
+          test -s aura_spatial_arena.py
+          test -s aura_spatial_construction.py
+          test -s scripts/aura_spatial_s5_s6_construction_architect_harness.py
+          python -m py_compile \
+            aura_spatial_arena.py \
+            aura_spatial_construction.py \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py
+          python -m ruff check \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py
+          python -m ruff format --check \
+            aura_spatial_agent_bridge.py \
+            aura_spatial_mcp.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py
+          python aura_spatial_cli.py --repo-root . validate-route
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_agent_bridge_mcp.py \
+            tests/test_aura_spatial_cli.py \
+            tests/test_aura_spatial_s5_arena.py \
+            tests/test_aura_spatial_s6_construction.py
+          test -z "$(find .aura/tmp -path '*s5s6*' -print 2>/dev/null)"
+          test -z "$(find docs -name '*_TEMP.md' -print)"
+          ! git status --short | grep -E 'CODEMAP|codemap'
+
+      - name: Commit the permanent review-fixed implementation
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          ! git diff --cached --name-only | grep -E 'CODEMAP|codemap'
+          git commit -m "fix(spatial): materialize S5/S6 review repairs"
+          git push origin HEAD:feature/spatial-s4b-gaussian-security
