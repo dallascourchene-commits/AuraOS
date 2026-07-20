@@ -9,14 +9,57 @@ import aura_agent_arena_mcp as _base_mcp
 from aura_agent_arena_github_bridge import GitHubPublishingAuraAgentArenaBridge
 
 
-GITHUB_MCP_VERSION = "AURA_AGENT_BRIDGE_GITHUB_MCP_V1"
+GITHUB_MCP_VERSION = "AURA_AGENT_BRIDGE_GITHUB_MCP_V2"
+
+_CHANGE_SCHEMA = {
+    "oneOf": [
+        {
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "operation": {
+                    "type": "string",
+                    "const": "upsert",
+                    "default": "upsert",
+                },
+                "mode": {
+                    "type": "string",
+                    "const": "100644",
+                    "default": "100644",
+                },
+                "encoding": {
+                    "type": "string",
+                    "enum": ["utf-8", "base64"],
+                    "default": "utf-8",
+                },
+                "content": {"type": "string"},
+            },
+            "required": ["path", "content"],
+            "additionalProperties": False,
+        },
+        {
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "operation": {"type": "string", "const": "delete"},
+                "mode": {
+                    "type": "string",
+                    "const": "100644",
+                    "default": "100644",
+                },
+            },
+            "required": ["path", "operation"],
+            "additionalProperties": False,
+        },
+    ]
+}
 
 _GITHUB_TOOL_DEFINITIONS = [
     {
         "name": "aura_github_prepare_publication",
         "description": (
-            "Compile an exact-head atomic GitHub publication contract. "
-            "Rejects temporary materializer workflows by default."
+            "Compile an exact-head GraphQL createCommitOnBranch publication "
+            "contract. Rejects temporary materializer workflows by default."
         ),
         "inputSchema": {
             "type": "object",
@@ -36,7 +79,10 @@ _GITHUB_TOOL_DEFINITIONS = [
                 "pr_body": {"type": "string"},
                 "pr_number": {"type": "integer", "minimum": 1},
                 "draft": {"type": "boolean", "default": True},
-                "publish_authorized": {"type": "boolean", "default": False},
+                "publish_authorized": {
+                    "type": "boolean",
+                    "default": False,
+                },
                 "allow_temporary_transport": {
                     "type": "boolean",
                     "default": False,
@@ -45,30 +91,7 @@ _GITHUB_TOOL_DEFINITIONS = [
                     "type": "array",
                     "minItems": 1,
                     "maxItems": 512,
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "path": {"type": "string"},
-                            "operation": {
-                                "type": "string",
-                                "enum": ["upsert", "delete"],
-                                "default": "upsert",
-                            },
-                            "mode": {
-                                "type": "string",
-                                "enum": ["100644", "100755"],
-                                "default": "100644",
-                            },
-                            "encoding": {
-                                "type": "string",
-                                "enum": ["utf-8", "base64"],
-                                "default": "utf-8",
-                            },
-                            "content": {"type": "string"},
-                        },
-                        "required": ["path"],
-                        "additionalProperties": False,
-                    },
+                    "items": _CHANGE_SCHEMA,
                 },
             },
             "required": [
@@ -85,8 +108,9 @@ _GITHUB_TOOL_DEFINITIONS = [
     {
         "name": "aura_github_execute_publication",
         "description": (
-            "Execute one stored, explicitly authorized publication contract "
-            "using AURA_GITHUB_TOKEN. Creates/advances a branch and PR; never merges."
+            "Execute one stored, explicitly authorized GraphQL-CAS publication "
+            "contract using AURA_GITHUB_TOKEN. Creates/advances a branch and "
+            "PR; never merges."
         ),
         "inputSchema": {
             "type": "object",
@@ -100,8 +124,8 @@ _GITHUB_TOOL_DEFINITIONS = [
     {
         "name": "aura_github_prepare_merge",
         "description": (
-            "Prepare a separate exact-head GitHub connector merge packet. "
-            "Every human, check, review-thread, and CODEMAP gate must pass."
+            "Prepare non-authoritative exact-head merge evidence. This tool "
+            "never returns executable connector arguments or merge authority."
         ),
         "inputSchema": {
             "type": "object",
@@ -114,11 +138,10 @@ _GITHUB_TOOL_DEFINITIONS = [
                     "enum": ["merge", "squash", "rebase"],
                     "default": "squash",
                 },
-                "human_merge_authorized": {
+                "checks_passed": {
                     "type": "boolean",
                     "default": False,
                 },
-                "checks_passed": {"type": "boolean", "default": False},
                 "review_threads_resolved": {
                     "type": "boolean",
                     "default": False,
@@ -163,7 +186,7 @@ def _merge_handler(
 
 
 def install_github_tools() -> None:
-    """Install the GitHub publication tools into the retained Agent Bridge MCP."""
+    """Install GitHub publication tools into the retained Agent Bridge MCP."""
 
     existing = {
         str(item.get("name") or "")
@@ -194,7 +217,9 @@ def serve_stdio(
     bridge: GitHubPublishingAuraAgentArenaBridge | None = None,
 ) -> None:
     install_github_tools()
-    _base_mcp.serve_stdio(bridge or GitHubPublishingAuraAgentArenaBridge())
+    _base_mcp.serve_stdio(
+        bridge or GitHubPublishingAuraAgentArenaBridge()
+    )
 
 
 def main() -> None:
