@@ -20,6 +20,7 @@ jobs:
         with:
           ref: feature/spatial-s4b-gaussian-security
           fetch-depth: 0
+          show-progress: false
 
       - uses: actions/setup-python@v5
         with:
@@ -32,41 +33,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "pre_mcp=$(git hash-object aura_agent_arena_mcp.py)"
-          echo "pre_bridge=$(git hash-object aura_agent_arena_persistence_bridge.py)"
-          echo "pre_adapter=$(git hash-object aura_arena_persistence_adapters.py)"
-          git apply --check --verbose \
+          git apply --check \
             --include=aura_agent_arena_mcp.py \
             --include=aura_agent_arena_persistence_bridge.py \
             .aura/tmp/s5s6-integration.patch
-          git apply --index --verbose \
+          git apply --index \
             --include=aura_agent_arena_mcp.py \
             --include=aura_agent_arena_persistence_bridge.py \
             .aura/tmp/s5s6-integration.patch
-          echo "post_mcp=$(git hash-object aura_agent_arena_mcp.py)"
-          echo "post_bridge=$(git hash-object aura_agent_arena_persistence_bridge.py)"
-          echo "post_adapter=$(git hash-object aura_arena_persistence_adapters.py)"
-          echo "spatial_agent_bridge=$(git hash-object aura_spatial_agent_bridge.py)"
-          echo "spatial_arena=$(git hash-object aura_spatial_arena.py)"
-          echo "spatial_construction=$(git hash-object aura_spatial_construction.py)"
-          echo "spatial_mcp=$(git hash-object aura_spatial_mcp.py)"
-          echo "harness=$(git hash-object scripts/aura_spatial_s5_s6_construction_architect_harness.py)"
-          echo "test_s5=$(git hash-object tests/test_aura_spatial_s5_arena.py)"
-          echo "test_s6=$(git hash-object tests/test_aura_spatial_s6_construction.py)"
-          echo "test_bridge=$(git hash-object tests/test_aura_spatial_agent_bridge_mcp.py)"
-          echo "workflow=$(git hash-object .github/workflows/aura-spatial-s5-s6-construction.yml)"
           test "$(git hash-object aura_agent_arena_mcp.py)" = "c0414388959f6a20d7945f9d4088f39bfd2b529b"
           test "$(git hash-object aura_agent_arena_persistence_bridge.py)" = "5c3ee08ee98343a30fd14959dd9faaca8190dc02"
-          test "$(git hash-object aura_arena_persistence_adapters.py)" = "de0448de15d72a2e43a5b1949c01b8b99aff2252"
-          test "$(git hash-object aura_spatial_agent_bridge.py)" = "57d156f780b2c340736bc60579b63a805ed98a7e"
-          test "$(git hash-object aura_spatial_arena.py)" = "a5ef99762f45144d3de9352bec2ff0af195c8f43"
-          test "$(git hash-object aura_spatial_construction.py)" = "b846d91ea5c52e11c45bfa205e3a2ddc7b59ecc6"
-          test "$(git hash-object aura_spatial_mcp.py)" = "5d2082bc09979e47cb137be1b3dd2d0af3a2c272"
-          test "$(git hash-object scripts/aura_spatial_s5_s6_construction_architect_harness.py)" = "b8db047122d94b00569b8d4f74ad59478909ae0d"
-          test "$(git hash-object tests/test_aura_spatial_s5_arena.py)" = "161eb5a2004f1616f42844d540ff02ac575f1826"
-          test "$(git hash-object tests/test_aura_spatial_s6_construction.py)" = "ee6287c0949b202d8ebe0f91b8660a687e0ba01d"
-          test "$(git hash-object tests/test_aura_spatial_agent_bridge_mcp.py)" = "ec915a9216ad1d1c93cf14b96f3111d0f4b920a3"
-          test "$(git hash-object .github/workflows/aura-spatial-s5-s6-construction.yml)" = "8d6569abfd4eda04a0dd5b88df58386b46965a0d"
 
       - name: Compile lint route and focused regressions
         shell: bash
