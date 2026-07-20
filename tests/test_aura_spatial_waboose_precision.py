@@ -51,7 +51,7 @@ def test_review_lesson_authority_detector_accepts_typed_spatial_no_authority_env
 )
 def test_construction_projection_rejects_noncanonical_floor_asset_uris(uri: str) -> None:
     fixture, packet = _fixture_packet()
-    with pytest.raises(ValueError, match="URI|local or Aura-addressed|remote host"):
+    with pytest.raises(ValueError, match=r"(?:URI|local or Aura-addressed|remote host)"):
         project_construction_state_to_scene(
             fixture.state,
             packet,
