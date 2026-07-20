@@ -6,6 +6,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from aura_construction_runtime_binding import require_canonical_construction_runtime_packet
 from aura_construction_state import ConstructionProjectState
 from aura_spatial_arena import SpatialArena, SpatialEgressPolicy, SpatialPrivacyClass
 from aura_spatial_construction import project_construction_state_to_scene
@@ -47,6 +48,10 @@ class AuraSpatialAgentBridge:
     ) -> dict[str, Any]:
         privacy = (
             privacy_class if isinstance(privacy_class, SpatialPrivacyClass) else SpatialPrivacyClass(str(privacy_class))
+        )
+        require_canonical_construction_runtime_packet(
+            construction_runtime_packet,
+            state_digest=state.state_digest,
         )
         run_id = ""
         try:
