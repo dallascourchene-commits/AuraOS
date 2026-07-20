@@ -12,6 +12,7 @@ import pytest
 from aura_agent_arena_mcp import serve_stdio
 from aura_event_contracts import stable_digest, stable_id
 from aura_spatial_agent_bridge import AuraSpatialAgentBridge
+from aura_spatial_construction import project_construction_state_to_scene
 from tests.test_aura_spatial_s5_arena import _construction_packet, _prepared, _repo
 
 
@@ -110,22 +111,7 @@ def _redigest_evaluation(packet: dict[str, object]) -> None:
     packet["evaluation"] = evaluation
 
 
-def test_construction_prepare_accepts_exact_canonical_json_copy(tmp_path: Path) -> None:
-    fixture, packet = _construction_packet()
-    bridge = AuraSpatialAgentBridge(_repo(tmp_path))
-    try:
-        prepared = bridge.prepare_construction_projection(
-            objective="review canonical Construction packet",
-            state=fixture.state,
-            construction_runtime_packet=json.loads(json.dumps(packet)),
-        )
-        assert prepared["status"]["phase"] == "PRESENT"
-    finally:
-        bridge.close()
-
-
-def test_construction_prepare_rejects_recomputed_noncanonical_substitutions(tmp_path: Path) -> None:
-    fixture, packet = _construction_packet()
+def _forged_construction_packets(packet: dict[str, object]) -> list[dict[str, object]]:
     mutations: list[dict[str, object]] = []
 
     assessment = deepcopy(packet)
@@ -159,10 +145,49 @@ def test_construction_prepare_rejects_recomputed_noncanonical_substitutions(tmp_
     release = deepcopy(packet)
     release["patch_authority"] = "full_repository"
     mutations.append(release)
+    return mutations
 
+
+def test_construction_projector_accepts_exact_canonical_json_copy() -> None:
+    fixture, packet = _construction_packet()
+    scene = project_construction_state_to_scene(
+        fixture.state,
+        json.loads(json.dumps(packet)),
+        purpose_digest="c" * 64,
+    )
+    assert scene.scene_digest
+
+
+def test_construction_projector_rejects_recomputed_noncanonical_substitutions() -> None:
+    fixture, packet = _construction_packet()
+    for mutated in _forged_construction_packets(packet):
+        with pytest.raises(ValueError, match="canonical Construction adapter"):
+            project_construction_state_to_scene(
+                fixture.state,
+                mutated,
+                purpose_digest="d" * 64,
+            )
+
+
+def test_construction_prepare_accepts_exact_canonical_json_copy(tmp_path: Path) -> None:
+    fixture, packet = _construction_packet()
     bridge = AuraSpatialAgentBridge(_repo(tmp_path))
     try:
-        for mutated in mutations:
+        prepared = bridge.prepare_construction_projection(
+            objective="review canonical Construction packet",
+            state=fixture.state,
+            construction_runtime_packet=json.loads(json.dumps(packet)),
+        )
+        assert prepared["status"]["phase"] == "PRESENT"
+    finally:
+        bridge.close()
+
+
+def test_construction_prepare_rejects_recomputed_noncanonical_substitutions(tmp_path: Path) -> None:
+    fixture, packet = _construction_packet()
+    bridge = AuraSpatialAgentBridge(_repo(tmp_path))
+    try:
+        for mutated in _forged_construction_packets(packet):
             with pytest.raises(ValueError, match="canonical Construction adapter"):
                 bridge.prepare_construction_projection(
                     objective="reject forged Construction packet",
