@@ -32,7 +32,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git apply --index .aura/tmp/s5s6-integration.patch
+          git apply --index \
+            --include=aura_agent_arena_mcp.py \
+            --include=aura_agent_arena_persistence_bridge.py \
+            .aura/tmp/s5s6-integration.patch
           test "$(git hash-object aura_agent_arena_mcp.py)" = "c04143871b784e72da0a053b67cff40143551a50"
           test "$(git hash-object aura_agent_arena_persistence_bridge.py)" = "5c3ee0869aec3144af586469b7f417a7351c13a1"
           test "$(git hash-object aura_arena_persistence_adapters.py)" = "de0448de15d72a2e43a5b1949c01b8b99aff2252"
