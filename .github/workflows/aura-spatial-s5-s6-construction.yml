@@ -114,6 +114,96 @@ jobs:
           mkdir -p /tmp/aura-spatial-s5-s6-receipts
           python scripts/aura_spatial_s5_s6_construction_architect_harness.py             --repo-root .             --base-ref "origin/$BASE_REF"             --head-ref HEAD             --observed-head "$(git rev-parse HEAD)"             --receipt /tmp/aura-spatial-s5-s6-receipts/structural.json             --structural-only
 
+      - name: Capture exact Waboose findings
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/aura-spatial-s5-s6-receipts
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from aura_agent_arena_review_learning_bridge import ReviewLearningAgentArenaBridge
+          from aura_architect_council_v3 import ARCHITECT_COUNCIL_V3
+          from scripts.aura_spatial_s5_s6_construction_architect_harness import HARNESS_VERSION, _TARGET_FILES
+
+          objective = (
+              "Implement governed Spatial S5 lifecycle and Construction-only S6 projection "
+              "without duplicating domain ownership or introducing authority"
+          )
+          bridge = ReviewLearningAgentArenaBridge(
+              repo_root=".",
+              review_learning_root=Path("Aura_Staging") / "spatial_s5_s6_waboose_diagnostic",
+          )
+          prepared = bridge.aura_waboose_prepare(
+              {
+                  "objective": objective,
+                  "mode": "files",
+                  "base_ref": "origin/main",
+                  "head_ref": "HEAD",
+                  "changed_files": _TARGET_FILES,
+                  "profile": "precision",
+                  "focus_directives": [
+                      "authority boundary",
+                      "privacy minimization",
+                      "exact-head lifecycle cleanup",
+                      "restore assessment only",
+                  ],
+                  "invariants": [
+                      "no domain mutation",
+                      "no renderer authority",
+                      "no automatic resume",
+                      "no person-level Construction projection",
+                      "dissolution releases resources and leases",
+                  ],
+                  "risk_map": [
+                      "stale state/scene/plan digest",
+                      "unadmitted egress",
+                      "private geometry leakage",
+                      "duplicate canonical owner",
+                  ],
+                  "agent_name": "none",
+                  "graph_depth": 0,
+                  "graph_node_budget": 40,
+                  "run_tests": False,
+                  "run_optional_tools": False,
+                  "metadata": {
+                      "harness_version": HARNESS_VERSION,
+                      "observed_head": "HEAD",
+                      "council_version": ARCHITECT_COUNCIL_V3,
+                      "surgeon_mode": "PROPOSE",
+                  },
+              }
+          )
+          scan = (
+              bridge.aura_waboose_scan(prepared["review_id"])
+              if prepared.get("ok")
+              else {"ok": False, "status": "prepare_failed"}
+          )
+          finalized = (
+              bridge.aura_waboose_finalize(prepared["review_id"])
+              if scan.get("ok")
+              else {"ok": False, "status": "scan_failed"}
+          )
+          packet = {"prepare": prepared, "scan": scan, "finalize": finalized}
+          output = Path("/tmp/aura-spatial-s5-s6-receipts/waboose-findings.json")
+          output.write_text(json.dumps(packet, indent=2, sort_keys=True, default=str), encoding="utf-8")
+          print(
+              json.dumps(
+                  {
+                      "deterministic_findings": scan.get("deterministic_findings", []),
+                      "review_lesson_findings_added": scan.get("review_lesson_findings_added", 0),
+                      "unverified_focus_directives": finalized.get("unverified_focus_directives", []),
+                      "summary": finalized.get("summary", {}),
+                  },
+                  indent=2,
+                  sort_keys=True,
+                  default=str,
+              )
+          )
+          PY
+
       - name: Run full Aura architecture proof
         env:
           BASE_REF: ${{ github.base_ref || 'main' }}
