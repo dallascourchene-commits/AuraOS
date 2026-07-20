@@ -1,8 +1,8 @@
-"""Guarded atomic GitHub publication for Aura's Agent Bridge.
+"""Guarded GitHub publication for Aura's Agent Bridge.
 
-The code snapshot is published with GitHub's Git Data API as one tree and one
-commit. Pull-request merge is deliberately separate and remains an explicit,
-exact-head, human-authorized connector action.
+Publication uses GitHub GraphQL ``createCommitOnBranch`` so commit creation and
+branch advancement are one server-side compare-and-swap operation. Pull-request
+merge remains outside MCP and requires a separately authenticated human action.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ from aura_agent_arena_errors import make_error_packet
 from aura_agent_arena_persistence_bridge import PersistentAuraAgentArenaBridge
 
 
-GITHUB_PUBLICATION_VERSION = "AURA_AGENT_BRIDGE_GITHUB_PUBLICATION_V1"
+GITHUB_PUBLICATION_VERSION = "AURA_AGENT_BRIDGE_GITHUB_PUBLICATION_V2"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -29,13 +29,14 @@ _MAX_FILES = 512
 _MAX_FILE_BYTES = 4 * 1024 * 1024
 _MAX_TOTAL_BYTES = 32 * 1024 * 1024
 _MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+_MAX_UTF8_CHARS = _MAX_FILE_BYTES
+_MAX_BASE64_CHARS = ((_MAX_FILE_BYTES + 2) // 3) * 4
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _REPO_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 _BRANCH_RE = re.compile(
     r"^(?!/)(?!.*//)(?!.*\.\.)(?!.*[~^:?*\[\\])"
     r"[^\x00-\x20\x7f]+(?<!/)$"
 )
-_MODES = frozenset({"100644", "100755"})
 _REQUEST_KEYS = frozenset(
     {
         "repository_full_name",
@@ -55,6 +56,17 @@ _REQUEST_KEYS = frozenset(
     }
 )
 _CHANGE_KEYS = frozenset({"path", "operation", "mode", "encoding", "content"})
+_MERGE_REQUEST_KEYS = frozenset(
+    {
+        "repository_full_name",
+        "pr_number",
+        "expected_head_sha",
+        "merge_method",
+        "checks_passed",
+        "review_threads_resolved",
+        "codemap_regenerated",
+    }
+)
 _IDENTITY_KEYS = (
     "version",
     "repository_full_name",
@@ -73,6 +85,17 @@ _IDENTITY_KEYS = (
     "publish_authorized",
 )
 
+_CREATE_COMMIT_MUTATION = """
+mutation AuraCreateCommitOnBranch($input: CreateCommitOnBranchInput!) {
+  createCommitOnBranch(input: $input) {
+    commit {
+      oid
+      url
+    }
+  }
+}
+""".strip()
+
 
 class GitHubPublicationError(ValueError):
     """Fail-closed publication-contract or transport error."""
@@ -85,6 +108,7 @@ class PublicationChange:
     mode: str
     encoding: str
     content: str | None
+    graphql_contents: str | None
     content_sha256: str
     byte_count: int
 
@@ -132,7 +156,7 @@ def _branch(value: Any, field: str) -> str:
     text = str(value or "").strip()
     if (
         not text
-        or len(text.encode("utf-8")) > 240
+        or len(text) > 240
         or not _BRANCH_RE.fullmatch(text)
         or text.startswith("-")
         or text.endswith(".lock")
@@ -150,7 +174,7 @@ def _path(value: Any) -> str:
         not text
         or text.startswith("/")
         or text.endswith("/")
-        or len(text.encode("utf-8")) > 1024
+        or len(text) > 1024
         or "\x00" in text
         or any(part in {"", ".", ".."} for part in parts)
         or parts[0] == ".git"
@@ -182,19 +206,42 @@ def _temporary_transport(path: str) -> bool:
     )
 
 
-def _decode_content(content: Any, encoding: str) -> tuple[str, bytes]:
+def _decode_content(
+    content: Any,
+    encoding: str,
+) -> tuple[str, str, bytes]:
     if not isinstance(content, str):
         raise GitHubPublicationError(f"{encoding} content must be a string")
+
     if encoding == "utf-8":
-        return content, content.encode("utf-8")
-    if encoding == "base64":
-        try:
-            return content, base64.b64decode(
-                content.encode("ascii"),
-                validate=True,
+        if len(content) > _MAX_UTF8_CHARS:
+            raise GitHubPublicationError(
+                f"utf-8 content exceeds {_MAX_UTF8_CHARS} input characters"
             )
+        decoded = content.encode("utf-8")
+        if len(decoded) > _MAX_FILE_BYTES:
+            raise GitHubPublicationError(
+                f"utf-8 content exceeds {_MAX_FILE_BYTES} decoded bytes"
+            )
+        encoded = base64.b64encode(decoded).decode("ascii")
+        return content, encoded, decoded
+
+    if encoding == "base64":
+        if len(content) > _MAX_BASE64_CHARS:
+            raise GitHubPublicationError(
+                f"base64 content exceeds {_MAX_BASE64_CHARS} encoded characters"
+            )
+        try:
+            ascii_content = content.encode("ascii")
+            decoded = base64.b64decode(ascii_content, validate=True)
         except (UnicodeEncodeError, ValueError) as exc:
-            raise GitHubPublicationError("invalid base64 content") from exc
+            raise GitHubPublicationError("invalid RFC 4648 base64 content") from exc
+        if len(decoded) > _MAX_FILE_BYTES:
+            raise GitHubPublicationError(
+                f"base64 content exceeds {_MAX_FILE_BYTES} decoded bytes"
+            )
+        return content, content, decoded
+
     raise GitHubPublicationError("encoding must be utf-8 or base64")
 
 
@@ -238,8 +285,10 @@ def _changes(
         mode = str(item.get("mode", "100644")).strip()
         if operation not in {"upsert", "delete"}:
             raise GitHubPublicationError("operation must be upsert or delete")
-        if mode not in _MODES:
-            raise GitHubPublicationError(f"unsupported Git mode: {mode}")
+        if mode != "100644":
+            raise GitHubPublicationError(
+                "GraphQL createCommitOnBranch supports regular-file mode 100644 only"
+            )
 
         if operation == "delete":
             if item.get("content") not in (None, ""):
@@ -253,6 +302,7 @@ def _changes(
                     mode=mode,
                     encoding="utf-8",
                     content=None,
+                    graphql_contents=None,
                     content_sha256=hashlib.sha256(b"").hexdigest(),
                     byte_count=0,
                 )
@@ -260,11 +310,10 @@ def _changes(
             continue
 
         encoding = str(item.get("encoding", "utf-8")).strip().lower()
-        content, decoded = _decode_content(item.get("content"), encoding)
-        if len(decoded) > _MAX_FILE_BYTES:
-            raise GitHubPublicationError(
-                f"{path} exceeds {_MAX_FILE_BYTES} decoded bytes"
-            )
+        content, graphql_contents, decoded = _decode_content(
+            item.get("content"),
+            encoding,
+        )
         total += len(decoded)
         if total > _MAX_TOTAL_BYTES:
             raise GitHubPublicationError(
@@ -277,6 +326,7 @@ def _changes(
                 mode=mode,
                 encoding=encoding,
                 content=content,
+                graphql_contents=graphql_contents,
                 content_sha256=hashlib.sha256(decoded).hexdigest(),
                 byte_count=len(decoded),
             )
@@ -327,12 +377,13 @@ def _private_changes(contract: Mapping[str, Any]) -> list[PublicationChange]:
                 f"private/public change {index} differs"
             )
         if private_item.operation == "upsert":
-            _, decoded = _decode_content(
+            _, graphql_contents, decoded = _decode_content(
                 private_item.content,
                 private_item.encoding,
             )
             if (
-                len(decoded) != private_item.byte_count
+                graphql_contents != private_item.graphql_contents
+                or len(decoded) != private_item.byte_count
                 or hashlib.sha256(decoded).hexdigest()
                 != private_item.content_sha256
             ):
@@ -357,10 +408,10 @@ def compile_publication_contract(
         )
 
     repository = _repo(request_payload.get("repository_full_name"))
-    mode = str(
+    publication_mode = str(
         request_payload.get("publication_mode", "create")
     ).strip().lower()
-    if mode not in {"create", "update"}:
+    if publication_mode not in {"create", "update"}:
         raise GitHubPublicationError(
             "publication_mode must be create or update"
         )
@@ -385,13 +436,13 @@ def compile_publication_contract(
         request_payload.get("expected_parent_sha", base_sha),
         "expected_parent_sha",
     )
-    if mode == "create" and parent_sha != base_sha:
+    if publication_mode == "create" and parent_sha != base_sha:
         raise GitHubPublicationError(
             "create mode requires expected_parent_sha == expected_base_sha"
         )
 
     raw_pr_number = request_payload.get("pr_number")
-    if mode == "update":
+    if publication_mode == "update":
         if (
             not isinstance(raw_pr_number, int)
             or isinstance(raw_pr_number, bool)
@@ -415,16 +466,24 @@ def compile_publication_contract(
     pr_body = str(request_payload.get("pr_body") or "")
     if (
         not commit_message
+        or len(commit_message) > 4096
         or len(commit_message.encode("utf-8")) > 4096
     ):
         raise GitHubPublicationError(
             "commit_message is required and must be <= 4096 bytes"
         )
-    if not pr_title or len(pr_title.encode("utf-8")) > 512:
+    if (
+        not pr_title
+        or len(pr_title) > 512
+        or len(pr_title.encode("utf-8")) > 512
+    ):
         raise GitHubPublicationError(
             "pr_title is required and must be <= 512 bytes"
         )
-    if len(pr_body.encode("utf-8")) > 256 * 1024:
+    if (
+        len(pr_body) > 256 * 1024
+        or len(pr_body.encode("utf-8")) > 256 * 1024
+    ):
         raise GitHubPublicationError("pr_body exceeds 256 KiB")
 
     draft = request_payload.get("draft", True)
@@ -446,7 +505,7 @@ def compile_publication_contract(
     public = {
         "version": GITHUB_PUBLICATION_VERSION,
         "repository_full_name": repository,
-        "publication_mode": mode,
+        "publication_mode": publication_mode,
         "base_branch": base_branch,
         "head_branch": head_branch,
         "expected_base_sha": base_sha,
@@ -473,12 +532,13 @@ def compile_publication_contract(
             item.byte_count for item in normalized_changes
         ),
         "branch_policy": (
-            "fresh_exact_base"
-            if mode == "create"
-            else "exact_parent_fast_forward"
+            "fresh_snapshot_then_graphql_cas"
+            if publication_mode == "create"
+            else "exact_pr_head_graphql_cas"
         ),
-        "transport": "github_git_data_api",
+        "transport": "github_graphql_create_commit_on_branch",
         "atomic_commit": True,
+        "compare_and_swap": True,
         "force_ref_update": False,
         "temporary_workflow_transport": False,
         "automatic_merge": False,
@@ -498,14 +558,31 @@ def compile_publication_contract(
     }
 
 
+class _NoRedirectHandler(request.HTTPRedirectHandler):
+    """Reject redirects before urllib can replay Authorization headers."""
+
+    def redirect_request(
+        self,
+        req: request.Request,
+        fp: Any,
+        code: int,
+        msg: str,
+        headers: Mapping[str, Any],
+        newurl: str,
+    ) -> None:
+        del req, fp, code, msg, headers, newurl
+        return None
+
+
 class GitHubRestTransport:
-    """Minimal REST transport pinned to public GitHub."""
+    """Pinned GitHub REST/GraphQL transport with redirects disabled."""
 
     def __init__(
         self,
         *,
         token: str,
         timeout_seconds: int = 30,
+        opener: Any | None = None,
     ) -> None:
         token_text = str(token or "").strip()
         if not token_text:
@@ -517,15 +594,26 @@ class GitHubRestTransport:
             1,
             min(int(timeout_seconds), 120),
         )
+        self._opener = opener or request.build_opener(_NoRedirectHandler())
 
-    def request(
+    def _send(
         self,
-        method: str,
-        path: str,
-        payload: Mapping[str, Any] | None = None,
         *,
+        method: str,
+        url: str,
+        payload: Mapping[str, Any] | None,
         allow_404: bool = False,
     ) -> Any:
+        parsed_url = parse.urlparse(url)
+        if (
+            parsed_url.scheme != "https"
+            or parsed_url.hostname != "api.github.com"
+            or parsed_url.port not in (None, 443)
+        ):
+            raise GitHubPublicationError(
+                "GitHub request escaped the pinned API host"
+            )
+
         data = None
         headers = {
             "Accept": "application/vnd.github+json",
@@ -537,17 +625,22 @@ class GitHubRestTransport:
             data = _canonical_json(payload).encode("utf-8")
             headers["Content-Type"] = "application/json"
         req = request.Request(
-            f"https://api.github.com{path}",
+            url,
             method=method,
             data=data,
             headers=headers,
         )
         try:
-            with request.urlopen(
+            with self._opener.open(
                 req,
                 timeout=self.timeout_seconds,
             ) as response:
-                if parse.urlparse(response.geturl()).hostname != "api.github.com":
+                final_url = parse.urlparse(response.geturl())
+                if (
+                    final_url.scheme != "https"
+                    or final_url.hostname != "api.github.com"
+                    or final_url.port not in (None, 443)
+                ):
                     raise GitHubPublicationError(
                         "GitHub response escaped the pinned API host"
                     )
@@ -570,7 +663,7 @@ class GitHubRestTransport:
                 errors="replace",
             )
             raise GitHubPublicationError(
-                f"GitHub API {method} {path} failed with "
+                f"GitHub API {method} {parsed_url.path} failed with "
                 f"HTTP {exc.code}: {detail[:2000]}"
             ) from exc
         except (
@@ -579,8 +672,52 @@ class GitHubRestTransport:
             json.JSONDecodeError,
         ) as exc:
             raise GitHubPublicationError(
-                f"GitHub API {method} {path} failed: {exc}"
+                f"GitHub API {method} {parsed_url.path} failed: {exc}"
             ) from exc
+
+    def request(
+        self,
+        method: str,
+        path: str,
+        payload: Mapping[str, Any] | None = None,
+        *,
+        allow_404: bool = False,
+    ) -> Any:
+        if not path.startswith("/") or path.startswith("//"):
+            raise GitHubPublicationError("GitHub REST path must be absolute")
+        return self._send(
+            method=method,
+            url=f"https://api.github.com{path}",
+            payload=payload,
+            allow_404=allow_404,
+        )
+
+    def graphql(
+        self,
+        query: str,
+        variables: Mapping[str, Any],
+    ) -> Mapping[str, Any]:
+        response = self._send(
+            method="POST",
+            url="https://api.github.com/graphql",
+            payload={"query": query, "variables": dict(variables)},
+        )
+        if not isinstance(response, Mapping):
+            raise GitHubPublicationError(
+                "GitHub GraphQL response must be an object"
+            )
+        errors = response.get("errors")
+        if errors:
+            raise GitHubPublicationError(
+                f"GitHub GraphQL mutation failed: "
+                f"{_canonical_json(errors)[:2000]}"
+            )
+        data = response.get("data")
+        if not isinstance(data, Mapping):
+            raise GitHubPublicationError(
+                "GitHub GraphQL response omitted data"
+            )
+        return data
 
 
 def _repo_path(repository: str) -> str:
@@ -621,6 +758,13 @@ def _get_ref(
     )
 
 
+def _repository_name(payload: Mapping[str, Any] | None) -> str | None:
+    if not isinstance(payload, Mapping):
+        return None
+    value = payload.get("full_name")
+    return str(value) if isinstance(value, str) else None
+
+
 def _assert_update_pr(
     transport: GitHubRestTransport,
     *,
@@ -629,7 +773,7 @@ def _assert_update_pr(
     base_branch: str,
     head_branch: str,
     expected_head_sha: str,
-) -> None:
+) -> Mapping[str, Any]:
     pr = transport.request(
         "GET",
         f"{_repo_path(repository)}/pulls/{pr_number}",
@@ -646,12 +790,127 @@ def _assert_update_pr(
         or head.get("ref") != head_branch
         or base.get("ref") != base_branch
         or head.get("sha") != expected_head_sha
+        or _repository_name(head.get("repo")) != repository
+        or _repository_name(base.get("repo")) != repository
         or pr.get("state") != "open"
         or pr.get("merged") is True
     ):
         raise GitHubPublicationError(
-            "update PR no longer matches the exact open head/base contract"
+            "update PR no longer matches the exact same-repository open "
+            "head/base contract"
         )
+    return pr
+
+
+def _commit_message_payload(message: str) -> dict[str, str]:
+    headline, separator, body = message.partition("\n")
+    result = {"headline": headline.strip()}
+    if separator and body.strip():
+        result["body"] = body.strip()
+    return result
+
+
+def _graphql_file_changes(
+    changes: Sequence[PublicationChange],
+) -> dict[str, list[dict[str, str]]]:
+    additions = [
+        {
+            "path": change.path,
+            "contents": str(change.graphql_contents),
+        }
+        for change in changes
+        if change.operation == "upsert"
+    ]
+    deletions = [
+        {"path": change.path}
+        for change in changes
+        if change.operation == "delete"
+    ]
+    return {
+        "additions": additions,
+        "deletions": deletions,
+    }
+
+
+def _create_commit_on_branch(
+    transport: GitHubRestTransport,
+    *,
+    repository: str,
+    branch: str,
+    expected_head_sha: str,
+    commit_message: str,
+    changes: Sequence[PublicationChange],
+) -> tuple[str, str]:
+    variables = {
+        "input": {
+            "branch": {
+                "repositoryNameWithOwner": repository,
+                "refName": branch,
+            },
+            "message": _commit_message_payload(commit_message),
+            "expectedHeadOid": expected_head_sha,
+            "fileChanges": _graphql_file_changes(changes),
+        }
+    }
+    data = transport.graphql(_CREATE_COMMIT_MUTATION, variables)
+    mutation = data.get("createCommitOnBranch")
+    commit = mutation.get("commit") if isinstance(mutation, Mapping) else None
+    if not isinstance(commit, Mapping):
+        raise GitHubPublicationError(
+            "createCommitOnBranch response omitted commit"
+        )
+    return (
+        _sha(commit.get("oid"), "commit_oid"),
+        str(commit.get("url") or ""),
+    )
+
+
+def _cleanup_fresh_branch(
+    transport: GitHubRestTransport,
+    *,
+    repository: str,
+    branch: str,
+    expected_sha: str,
+) -> dict[str, Any]:
+    try:
+        current = _get_ref(
+            transport,
+            repository,
+            branch,
+            allow_404=True,
+        )
+        if current is None:
+            return {"attempted": True, "deleted": True, "detail": "already_absent"}
+        if (
+            not isinstance(current, Mapping)
+            or _ref_sha(current, "cleanup_ref") != expected_sha
+        ):
+            return {
+                "attempted": True,
+                "deleted": False,
+                "detail": "ref_moved_cleanup_refused",
+            }
+        transport.request(
+            "DELETE",
+            _ref_path(repository, branch, plural=True),
+        )
+        return {"attempted": True, "deleted": True, "detail": "deleted"}
+    except GitHubPublicationError as exc:
+        return {
+            "attempted": True,
+            "deleted": False,
+            "detail": f"cleanup_failed:{exc}",
+        }
+
+
+def _raise_partial_failure(
+    stage: str,
+    primary: Exception,
+    cleanup: Mapping[str, Any],
+) -> None:
+    raise GitHubPublicationError(
+        f"{stage} failed: {primary}; cleanup={_canonical_json(cleanup)}"
+    ) from primary
 
 
 def execute_publication_contract(
@@ -659,17 +918,18 @@ def execute_publication_contract(
     *,
     transport: GitHubRestTransport,
 ) -> dict[str, Any]:
-    """Publish one authorized code snapshot; never merge."""
+    """Publish one authorized GraphQL-CAS snapshot; never merge."""
 
     if contract.get("version") != GITHUB_PUBLICATION_VERSION:
         raise GitHubPublicationError(
             "unsupported publication contract version"
         )
     if contract.get("publish_authorized") is not True:
-        raise GitHubPublicationError(
-            "publication is proposal-only"
-        )
-    if contract.get("automatic_merge") is not False:
+        raise GitHubPublicationError("publication is proposal-only")
+    if (
+        contract.get("automatic_merge") is not False
+        or contract.get("merge_authority") is not False
+    ):
         raise GitHubPublicationError(
             "publication contract cannot contain merge authority"
         )
@@ -680,15 +940,9 @@ def execute_publication_contract(
         )
 
     repository = _repo(contract.get("repository_full_name"))
-    mode = str(contract.get("publication_mode") or "")
-    base_branch = _branch(
-        contract.get("base_branch"),
-        "base_branch",
-    )
-    head_branch = _branch(
-        contract.get("head_branch"),
-        "head_branch",
-    )
+    publication_mode = str(contract.get("publication_mode") or "")
+    base_branch = _branch(contract.get("base_branch"), "base_branch")
+    head_branch = _branch(contract.get("head_branch"), "head_branch")
     base_sha = _sha(
         contract.get("expected_base_sha"),
         "expected_base_sha",
@@ -712,17 +966,13 @@ def execute_publication_contract(
         )
     changes = _private_changes(contract)
 
-    base_ref = _get_ref(
-        transport,
-        repository,
-        base_branch,
-    )
+    base_ref = _get_ref(transport, repository, base_branch)
     if (
         not isinstance(base_ref, Mapping)
         or _ref_sha(base_ref, "base_ref") != base_sha
     ):
         raise GitHubPublicationError(
-            "base branch moved before publication"
+            "base branch does not match expected_base_sha"
         )
     head_ref = _get_ref(
         transport,
@@ -732,7 +982,10 @@ def execute_publication_contract(
     )
 
     update_pr_number: int | None = None
-    if mode == "create":
+    existing_pr: Mapping[str, Any] | None = None
+    fresh_branch_created = False
+
+    if publication_mode == "create":
         if head_ref is not None:
             raise GitHubPublicationError(
                 "create mode requires a nonexistent head branch"
@@ -757,14 +1010,22 @@ def execute_publication_contract(
             raise GitHubPublicationError(
                 "branch name was used by a historical pull request"
             )
-        observed_parent = base_sha
-    elif mode == "update":
+        transport.request(
+            "POST",
+            f"{_repo_path(repository)}/git/refs",
+            {
+                "ref": f"refs/heads/{head_branch}",
+                "sha": base_sha,
+            },
+        )
+        fresh_branch_created = True
+        mutation_parent = base_sha
+    elif publication_mode == "update":
         if not isinstance(head_ref, Mapping):
             raise GitHubPublicationError(
                 "update mode requires an existing head branch"
             )
-        observed_parent = _ref_sha(head_ref, "head_ref")
-        if observed_parent != parent_sha:
+        if _ref_sha(head_ref, "head_ref") != parent_sha:
             raise GitHubPublicationError(
                 "head branch moved before publication"
             )
@@ -772,12 +1033,13 @@ def execute_publication_contract(
         if (
             not isinstance(raw_pr_number, int)
             or isinstance(raw_pr_number, bool)
+            or raw_pr_number <= 0
         ):
             raise GitHubPublicationError(
                 "update contract omitted pr_number"
             )
         update_pr_number = raw_pr_number
-        _assert_update_pr(
+        existing_pr = _assert_update_pr(
             transport,
             repository=repository,
             pr_number=update_pr_number,
@@ -785,180 +1047,90 @@ def execute_publication_contract(
             head_branch=head_branch,
             expected_head_sha=parent_sha,
         )
+        mutation_parent = parent_sha
     else:
-        raise GitHubPublicationError(
-            "unsupported publication mode"
-        )
+        raise GitHubPublicationError("unsupported publication mode")
 
-    commit_data = transport.request(
-        "GET",
-        f"{_repo_path(repository)}/git/commits/{observed_parent}",
-    )
-    if (
-        not isinstance(commit_data, Mapping)
-        or not isinstance(commit_data.get("tree"), Mapping)
-    ):
-        raise GitHubPublicationError(
-            "parent commit omitted tree evidence"
-        )
-    base_tree_sha = _sha(
-        commit_data["tree"].get("sha"),
-        "base_tree_sha",
-    )
-
-    tree_entries: list[dict[str, Any]] = []
-    for change in changes:
-        if change.operation == "delete":
-            tree_entries.append(
-                {
-                    "path": change.path,
-                    "mode": change.mode,
-                    "type": "blob",
-                    "sha": None,
-                }
-            )
-            continue
-        blob = transport.request(
-            "POST",
-            f"{_repo_path(repository)}/git/blobs",
-            {
-                "content": change.content,
-                "encoding": change.encoding,
-            },
-        )
-        if not isinstance(blob, Mapping):
-            raise GitHubPublicationError(
-                f"blob response missing for {change.path}"
-            )
-        tree_entries.append(
-            {
-                "path": change.path,
-                "mode": change.mode,
-                "type": "blob",
-                "sha": _sha(
-                    blob.get("sha"),
-                    f"blob_sha[{change.path}]",
-                ),
-            }
-        )
-
-    tree = transport.request(
-        "POST",
-        f"{_repo_path(repository)}/git/trees",
-        {
-            "base_tree": base_tree_sha,
-            "tree": tree_entries,
-        },
-    )
-    if not isinstance(tree, Mapping):
-        raise GitHubPublicationError(
-            "tree response missing"
-        )
-    tree_sha = _sha(tree.get("sha"), "tree_sha")
-    commit = transport.request(
-        "POST",
-        f"{_repo_path(repository)}/git/commits",
-        {
-            "message": str(contract.get("commit_message") or ""),
-            "tree": tree_sha,
-            "parents": [observed_parent],
-        },
-    )
-    if not isinstance(commit, Mapping):
-        raise GitHubPublicationError(
-            "commit response missing"
-        )
-    commit_sha = _sha(commit.get("sha"), "commit_sha")
-
-    base_before_ref = _get_ref(
-        transport,
-        repository,
-        base_branch,
-    )
-    if (
-        not isinstance(base_before_ref, Mapping)
-        or _ref_sha(base_before_ref, "base_before_ref")
-        != base_sha
-    ):
-        raise GitHubPublicationError(
-            "base branch moved while blobs/tree/commit were prepared"
-        )
-    if mode == "update":
-        _assert_update_pr(
+    try:
+        commit_sha, commit_url = _create_commit_on_branch(
             transport,
             repository=repository,
-            pr_number=update_pr_number or 0,
-            base_branch=base_branch,
-            head_branch=head_branch,
-            expected_head_sha=parent_sha,
+            branch=head_branch,
+            expected_head_sha=mutation_parent,
+            commit_message=str(contract.get("commit_message") or ""),
+            changes=changes,
         )
+    except GitHubPublicationError as exc:
+        if fresh_branch_created:
+            cleanup = _cleanup_fresh_branch(
+                transport,
+                repository=repository,
+                branch=head_branch,
+                expected_sha=base_sha,
+            )
+            _raise_partial_failure("createCommitOnBranch", exc, cleanup)
+        raise
 
-    if mode == "create":
-        transport.request(
-            "POST",
-            f"{_repo_path(repository)}/git/refs",
-            {
-                "ref": f"refs/heads/{head_branch}",
-                "sha": commit_sha,
-            },
-        )
+    if publication_mode == "create":
+        pr_payload = {
+            "title": str(contract.get("pr_title") or ""),
+            "body": pr_body,
+            "base": base_branch,
+            "head": head_branch,
+            "draft": contract.get("draft") is True,
+        }
+        try:
+            pr = transport.request(
+                "POST",
+                f"{_repo_path(repository)}/pulls",
+                pr_payload,
+            )
+        except GitHubPublicationError as exc:
+            cleanup = _cleanup_fresh_branch(
+                transport,
+                repository=repository,
+                branch=head_branch,
+                expected_sha=commit_sha,
+            )
+            _raise_partial_failure("pull request creation", exc, cleanup)
+        if not isinstance(pr, Mapping):
+            cleanup = _cleanup_fresh_branch(
+                transport,
+                repository=repository,
+                branch=head_branch,
+                expected_sha=commit_sha,
+            )
+            _raise_partial_failure(
+                "pull request creation",
+                GitHubPublicationError("pull request response missing"),
+                cleanup,
+            )
     else:
-        transport.request(
-            "PATCH",
-            _ref_path(
-                repository,
-                head_branch,
-                plural=True,
-            ),
-            {"sha": commit_sha, "force": False},
-        )
-
-    pr_payload = {
-        "title": str(contract.get("pr_title") or ""),
-        "body": pr_body,
-        "base": base_branch,
-        "maintainer_can_modify": True,
-    }
-    if mode == "create":
-        pr_payload.update(
-            {
-                "head": head_branch,
-                "draft": bool(contract.get("draft", True)),
-            }
-        )
-        pr = transport.request(
-            "POST",
-            f"{_repo_path(repository)}/pulls",
-            pr_payload,
-        )
-    else:
-        pr = transport.request(
-            "PATCH",
-            f"{_repo_path(repository)}/pulls/"
-            f"{update_pr_number}",
-            pr_payload,
-        )
-    if not isinstance(pr, Mapping):
-        raise GitHubPublicationError(
-            "pull request response missing"
-        )
+        pr = existing_pr
+        if not isinstance(pr, Mapping):
+            raise GitHubPublicationError(
+                "bound update PR evidence is unavailable"
+            )
 
     core = {
         "version": GITHUB_PUBLICATION_VERSION,
         "contract_id": contract["contract_id"],
         "repository_full_name": repository,
-        "publication_mode": mode,
+        "publication_mode": publication_mode,
         "base_branch": base_branch,
         "base_sha": base_sha,
-        "parent_sha": observed_parent,
+        "parent_sha": mutation_parent,
         "head_branch": head_branch,
         "commit_sha": commit_sha,
-        "tree_sha": tree_sha,
-        "pr_number": int(pr.get("number") or 0),
+        "commit_url": commit_url,
+        "pr_number": int(pr.get("number") or update_pr_number or 0),
         "pr_url": str(pr.get("html_url") or ""),
+        "transport": "github_graphql_create_commit_on_branch",
+        "compare_and_swap": True,
         "force_ref_update": False,
         "atomic_commit": True,
         "automatic_merge": False,
+        "merge_authority": False,
         "human_review_required": True,
     }
     return {
@@ -976,18 +1148,14 @@ def compile_merge_connector_packet(
     pr_number: int,
     expected_head_sha: str,
     merge_method: str = "squash",
-    human_merge_authorized: bool = False,
     checks_passed: bool = False,
     review_threads_resolved: bool = False,
     codemap_regenerated: bool = False,
 ) -> dict[str, Any]:
-    """Prepare, but do not execute, the exact merge connector call."""
+    """Prepare non-authoritative merge evidence for a trusted human boundary."""
 
     repository = _repo(repository_full_name)
-    expected = _sha(
-        expected_head_sha,
-        "expected_head_sha",
-    )
+    expected = _sha(expected_head_sha, "expected_head_sha")
     if (
         not isinstance(pr_number, int)
         or isinstance(pr_number, bool)
@@ -1002,16 +1170,11 @@ def compile_merge_connector_packet(
         )
 
     gates = {
-        "human_merge_authorized": (
-            human_merge_authorized is True
-        ),
         "checks_passed": checks_passed is True,
-        "review_threads_resolved": (
-            review_threads_resolved is True
-        ),
+        "review_threads_resolved": review_threads_resolved is True,
         "codemap_regenerated": codemap_regenerated is True,
     }
-    ready = all(gates.values())
+    ready_for_human = all(gates.values())
     core = {
         "version": GITHUB_PUBLICATION_VERSION,
         "repository_full_name": repository,
@@ -1019,27 +1182,19 @@ def compile_merge_connector_packet(
         "expected_head_sha": expected,
         "merge_method": merge_method,
         "gates": gates,
-        "ready": ready,
+        "ready_for_trusted_human_authorization": ready_for_human,
         "automatic_merge": False,
+        "merge_authority": False,
         "human_review_required": True,
     }
     return {
         **core,
         "packet_id": f"GHMERGE-{_digest(core)[:24]}",
-        "connector_tool": "GitHub.merge_pull_request",
-        "connector_arguments": (
-            {
-                "repository_full_name": repository,
-                "pr_number": pr_number,
-                "merge_method": merge_method,
-                "expected_head_sha": expected,
-            }
-            if ready
-            else None
-        ),
+        "connector_tool": None,
+        "connector_arguments": None,
         "status": (
-            "READY_FOR_EXPLICIT_MERGE"
-            if ready
+            "READY_FOR_TRUSTED_HUMAN_AUTHORIZATION"
+            if ready_for_human
             else "BLOCKED"
         ),
         "patch_authority": PATCH_AUTHORITY,
@@ -1050,23 +1205,19 @@ def compile_merge_connector_packet(
 class GitHubPublishingAuraAgentArenaBridge(
     PersistentAuraAgentArenaBridge
 ):
-    """Persistent Agent Bridge with atomic GitHub publication tools."""
+    """Persistent Agent Bridge with guarded GitHub publication tools."""
 
     def aura_github_prepare_publication(
         self,
         request_payload: Mapping[str, Any],
     ) -> dict[str, Any]:
         try:
-            contract = compile_publication_contract(
-                request_payload
-            )
+            contract = compile_publication_contract(request_payload)
         except GitHubPublicationError as exc:
             return make_error_packet(
                 "patch_outside_arena",
                 str(exc),
-                repair_hint=(
-                    "Repair the exact GitHub publication request."
-                ),
+                repair_hint="Repair the exact GitHub publication request.",
             )
         self._sessions.setdefault(
             "github_publications",
@@ -1103,10 +1254,7 @@ class GitHubPublishingAuraAgentArenaBridge(
             return execute_publication_contract(
                 contract,
                 transport=GitHubRestTransport(
-                    token=os.environ.get(
-                        "AURA_GITHUB_TOKEN",
-                        "",
-                    )
+                    token=os.environ.get("AURA_GITHUB_TOKEN", "")
                 ),
             )
         except GitHubPublicationError as exc:
@@ -1123,49 +1271,35 @@ class GitHubPublishingAuraAgentArenaBridge(
         request_payload: Mapping[str, Any],
     ) -> dict[str, Any]:
         try:
+            if not isinstance(request_payload, Mapping):
+                raise GitHubPublicationError(
+                    "merge evidence request must be an object"
+                )
+            unknown = sorted(set(request_payload) - _MERGE_REQUEST_KEYS)
+            if unknown:
+                raise GitHubPublicationError(
+                    f"merge evidence request contains unknown keys: "
+                    f"{', '.join(unknown)}"
+                )
             packet = compile_merge_connector_packet(
                 repository_full_name=str(
-                    request_payload.get(
-                        "repository_full_name"
-                    )
-                    or ""
+                    request_payload.get("repository_full_name") or ""
                 ),
-                pr_number=int(
-                    request_payload.get("pr_number") or 0
-                ),
+                pr_number=int(request_payload.get("pr_number") or 0),
                 expected_head_sha=str(
-                    request_payload.get(
-                        "expected_head_sha"
-                    )
-                    or ""
+                    request_payload.get("expected_head_sha") or ""
                 ),
                 merge_method=str(
-                    request_payload.get(
-                        "merge_method",
-                        "squash",
-                    )
-                ),
-                human_merge_authorized=(
-                    request_payload.get(
-                        "human_merge_authorized"
-                    )
-                    is True
+                    request_payload.get("merge_method", "squash")
                 ),
                 checks_passed=(
-                    request_payload.get("checks_passed")
-                    is True
+                    request_payload.get("checks_passed") is True
                 ),
                 review_threads_resolved=(
-                    request_payload.get(
-                        "review_threads_resolved"
-                    )
-                    is True
+                    request_payload.get("review_threads_resolved") is True
                 ),
                 codemap_regenerated=(
-                    request_payload.get(
-                        "codemap_regenerated"
-                    )
-                    is True
+                    request_payload.get("codemap_regenerated") is True
                 ),
             )
             return {"ok": True, **packet}
@@ -1178,7 +1312,8 @@ class GitHubPublishingAuraAgentArenaBridge(
                 "test_failed",
                 str(exc),
                 repair_hint=(
-                    "Satisfy every exact-head merge gate."
+                    "Supply exact-head evidence; human merge authority "
+                    "remains outside MCP."
                 ),
             )
 
@@ -1189,7 +1324,7 @@ class GitHubPublishingAuraAgentArenaBridge(
             {
                 "name": "aura_github_prepare_publication",
                 "description": (
-                    "Compile an exact-head atomic branch/commit/PR contract."
+                    "Compile an exact-head GraphQL-CAS branch/commit/PR contract."
                 ),
                 "required_inputs": [
                     "repository_full_name",
@@ -1203,14 +1338,15 @@ class GitHubPublishingAuraAgentArenaBridge(
             {
                 "name": "aura_github_execute_publication",
                 "description": (
-                    "Execute one authorized Git Data API contract; never merge."
+                    "Execute one authorized createCommitOnBranch contract; "
+                    "never merge."
                 ),
                 "required_inputs": ["contract_id"],
             },
             {
                 "name": "aura_github_prepare_merge",
                 "description": (
-                    "Prepare a separate exact-head connector merge packet."
+                    "Prepare non-authoritative exact-head merge evidence."
                 ),
                 "required_inputs": [
                     "repository_full_name",
@@ -1225,10 +1361,12 @@ def github_publication_status() -> dict[str, Any]:
     return {
         "ok": True,
         "version": GITHUB_PUBLICATION_VERSION,
-        "transport": "github_git_data_api",
+        "transport": "github_graphql_create_commit_on_branch",
         "atomic_commit": True,
+        "compare_and_swap": True,
         "temporary_workflow_transport": False,
         "automatic_merge": False,
+        "merge_authority": False,
         "human_review_required": True,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
