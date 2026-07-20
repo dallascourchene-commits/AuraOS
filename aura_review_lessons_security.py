@@ -274,7 +274,9 @@ def detect_unpinned_workflow_dependencies(candidate: Any) -> list[dict[str, Any]
             )
     for value in run_values:
         lowered = value.casefold()
-        if ("pip install" in lowered or "npm install" in lowered or "npm i " in lowered) and "--require-hashes" not in lowered:
+        if (
+            "pip install" in lowered or "npm install" in lowered or "npm i " in lowered
+        ) and "--require-hashes" not in lowered:
             findings.append(
                 _finding(
                     detector="detect_unpinned_workflow_dependencies",
@@ -310,7 +312,11 @@ def detect_secret_persistence(candidate: Any) -> list[dict[str, Any]]:
                     detector="detect_secret_persistence",
                     severity="critical",
                     title="Secret-like content enters a durable payload",
-                    evidence={"path": path, "key": key, "redaction_marker_present": bool(_REDACTION_TOKEN_RE.search(value_text))},
+                    evidence={
+                        "path": path,
+                        "key": key,
+                        "redaction_marker_present": bool(_REDACTION_TOKEN_RE.search(value_text)),
+                    },
                     repair="Redact or omit the secret before persistence and retain only a stable non-secret reference.",
                 )
             )
