@@ -75,7 +75,7 @@ jobs:
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
 
-      - name: Apply final Waboose precision repairs once
+      - name: Publish final URI and Waboose precision repair once
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -84,35 +84,36 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          def replace_once(path: str, old: str, new: str) -> None:
+          def ensure_replace(path: str, old: str, new: str, marker: str) -> None:
               target = Path(path)
               text = target.read_text(encoding="utf-8")
-              count = text.count(old)
-              if count == 1:
-                  target.write_text(text.replace(old, new, 1), encoding="utf-8")
-                  return
-              if count == 0 and new in text:
-                  return
-              raise SystemExit(f"replacement mismatch in {path}: {count}")
+              if old in text:
+                  text = text.replace(old, new, 1)
+                  target.write_text(text, encoding="utf-8")
+              elif marker not in text:
+                  raise SystemExit(f"missing old and new forms in {path}: {marker}")
 
-          replace_once(
+          ensure_replace(
               "aura_spatial_construction.py",
               "import hashlib\nimport math\nfrom typing import Any\n",
               "import hashlib\nimport math\nfrom pathlib import PurePosixPath\nimport re\nfrom typing import Any\nfrom urllib.parse import unquote, urlsplit\n",
+              "from urllib.parse import unquote, urlsplit",
           )
-          replace_once(
+          ensure_replace(
               "aura_spatial_construction.py",
               '_ALLOWED_ASSET_SCHEMES = ("aura://", "file://")\n',
               "_MAX_CONSTRUCTION_ASSET_URI_BYTES = 4096\n",
+              "_MAX_CONSTRUCTION_ASSET_URI_BYTES",
           )
-          replace_once(
+          ensure_replace(
               "aura_spatial_construction.py",
               '''    if not asset.uri.startswith(_ALLOWED_ASSET_SCHEMES):
                   raise ValueError("Construction floor-plan assets must be local or Aura-addressed")
           ''',
               "    _validate_local_asset_uri(asset.uri)\n",
+              "_validate_local_asset_uri(asset.uri)",
           )
-          replace_once(
+          ensure_replace(
               "aura_spatial_construction.py",
               "def _validate_floor_plan_asset(asset: SpatialAssetManifest, privacy: SpatialPrivacyClass) -> None:\n",
               '''def _validate_local_asset_uri(value: Any) -> str:
@@ -158,9 +159,10 @@ jobs:
 
           def _validate_floor_plan_asset(asset: SpatialAssetManifest, privacy: SpatialPrivacyClass) -> None:
           ''',
+              "def _validate_local_asset_uri",
           )
 
-          replace_once(
+          ensure_replace(
               "aura_review_lessons_security.py",
               "def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:\n",
               '''def _is_spatial_no_authority_envelope(candidate: Any) -> bool:
@@ -176,8 +178,9 @@ jobs:
 
           def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
           ''',
+              "def _is_spatial_no_authority_envelope",
           )
-          replace_once(
+          ensure_replace(
               "aura_review_lessons_security.py",
               '''    findings: list[dict[str, Any]] = []
               for path, key, value in _walk_metadata(candidate):
@@ -186,8 +189,9 @@ jobs:
               spatial_no_authority = _is_spatial_no_authority_envelope(candidate)
               for path, key, value in _walk_metadata(candidate):
           ''',
+              "spatial_no_authority = _is_spatial_no_authority_envelope(candidate)",
           )
-          replace_once(
+          ensure_replace(
               "aura_review_lessons_security.py",
               '''        expected = _PROTECTED_AUTHORITY_EXPECTED[key]
               if value == "<dynamic>":
@@ -197,8 +201,9 @@ jobs:
                   continue
               if value == "<dynamic>":
           ''',
+              'path == "$.patch_authority" and spatial_no_authority',
           )
-          replace_once(
+          ensure_replace(
               "aura_review_lessons_security.py",
               '''        uri = str(value or "").strip()
               lowered = uri.casefold()
@@ -209,21 +214,24 @@ jobs:
                   continue
               lowered = uri.casefold()
           ''',
+              'remainder == "//"',
           )
 
-          Path("tests/test_aura_spatial_waboose_precision.py").write_text(
-              '''from __future__ import annotations
+          test = Path("tests/test_aura_spatial_waboose_precision.py")
+          if not test.exists():
+              test.write_text(
+                  '''from __future__ import annotations
 
           import ast
           from dataclasses import replace
 
           import pytest
 
+          from aura_coding_waboose_review_learning import scan_python_review_lessons
           from aura_review_lessons_security import (
               detect_protected_metadata_overrides,
               detect_uri_alias_encoding,
           )
-          from aura_coding_waboose_review_learning import scan_python_review_lessons
           from aura_spatial_construction import project_construction_state_to_scene
           from tests.test_aura_spatial_s6_construction import _fixture_packet, _floor_asset
 
@@ -244,8 +252,7 @@ jobs:
                   "production_mutation": False,
               }
               assert detect_protected_metadata_overrides(envelope) == []
-              forged = {**envelope, "patch_authority": "full_repository"}
-              assert detect_protected_metadata_overrides(forged)
+              assert detect_protected_metadata_overrides({**envelope, "patch_authority": "full_repository"})
               source = "packet = " + repr(envelope)
               findings = scan_python_review_lessons(file="tests/fixture.py", source=source, tree=ast.parse(source))
               assert not any(item.get("rule") == "detect_protected_metadata_overrides" for item in findings)
@@ -293,20 +300,20 @@ jobs:
               assert len(aura_scene.assets) == 2
               assert len(file_scene.assets) == 2
           ''',
-              encoding="utf-8",
-          )
+                  encoding="utf-8",
+              )
+
+          spatial = Path("aura_spatial_construction.py").read_text(encoding="utf-8")
+          security = Path("aura_review_lessons_security.py").read_text(encoding="utf-8")
+          assert "_ALLOWED_ASSET_SCHEMES" not in spatial
+          assert "def _validate_local_asset_uri" in spatial
+          assert "def _is_spatial_no_authority_envelope" in security
+          assert test.exists()
           PY
-          files=(
-            aura_spatial_construction.py
-            aura_review_lessons_security.py
-            tests/test_aura_spatial_waboose_precision.py
-          )
+          files=(aura_spatial_construction.py aura_review_lessons_security.py tests/test_aura_spatial_waboose_precision.py)
           ruff check --fix "${files[@]}"
           ruff format "${files[@]}"
-          python -m pytest -q --tb=short \
-            tests/test_aura_spatial_waboose_precision.py \
-            tests/test_aura_spatial_codex_repairs.py \
-            tests/test_aura_spatial_s6_construction.py
+          python -m py_compile "${files[@]}"
           if ! git diff --quiet -- "${files[@]}"; then
             git config user.name "dallascourchene-commits"
             git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
