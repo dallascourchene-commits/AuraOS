@@ -1,0 +1,288 @@
+name: Reconcile Recent AuraOS Architecture Docs
+
+on:
+  push:
+    branches:
+      - docs/reconcile-july20-architecture
+    paths:
+      - .github/workflows/docs-reconcile-july20-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Clone documentation branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --depth=1 --branch "$BRANCH" "https://github.com/${GITHUB_REPOSITORY}.git" .
+
+      - name: Reconcile README, USER_GUIDE, and ARCHITECTURE
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: Path, old: str, new: str) -> None:
+              text = path.read_text(encoding="utf-8")
+              if old not in text:
+                  raise SystemExit(f"missing replacement anchor in {path}: {old[:80]!r}")
+              path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          def insert_before(path: Path, marker: str, block: str, identity: str) -> None:
+              text = path.read_text(encoding="utf-8")
+              if identity in text:
+                  return
+              if marker not in text:
+                  raise SystemExit(f"missing insertion anchor in {path}: {marker!r}")
+              path.write_text(text.replace(marker, block + "\n\n" + marker, 1), encoding="utf-8")
+
+          readme = Path("README.md")
+          guide = Path("USER_GUIDE.md")
+          architecture = Path(".aura/ARCHITECTURE.md")
+
+          replace_once(
+              readme,
+              "| **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows and external-agent handoffs | External agents remain workers, not authorities |",
+              "| **Agent Arena Bridge** | Exposes bounded CLI/MCP workflows, external-agent handoffs, and exact GitHub publication contracts using server-side compare-and-swap | External agents may prepare or explicitly publish bounded changes; merge authority remains separate and human-controlled |",
+          )
+
+          readme_block = '''<!-- AURA_JULY20_MERGED_ARCHITECTURE:START -->
+          ## Merged architecture through July 20, 2026
+
+          The current tree includes the architecture merged in PRs #164–#170. These changes complete Aura Spatial S0–S5 plus the Construction-only S6 projection, harden review learning and source integrity, and replace temporary workflow-based GitHub materialization with a bounded atomic publication lane.
+
+          ### Spatial S0–S6
+
+          ```text
+          canonical domain or repository evidence
+            → immutable frames, assets, entities, links, scenes, and interactions
+            → deterministic transforms and content-addressed asset admission
+            → bounded device profile and render-plan negotiation
+            → replaceable browser/headless/accessibility renderer
+            → bounded glTF/GLB, PLY, SPZ v4, and KHR_gaussian_splatting import
+            → governed Spatial Arena lifecycle
+            → privacy-minimized proof and assessment-only persistence
+            → human/domain decision packet
+            → renderer-bound cleanup, lease release, and dissolution
+          ```
+
+          The Spatial stack now includes:
+
+          - **S0–S2 canonical substrate:** representation-independent contracts, rooted coordinate frames, deterministic scene compilation, content-addressed manifests, Coding/Showcase projections, six-slot review interactions, and fail-closed Forge handoff;
+          - **S3-A/S3-B:** immutable device profiles, deterministic render-plan negotiation, bounded presentation sessions, active WebGL2, shadow-only WebGPU, explicit WebXR activation, accessible 2D, headless parity, picking, cancellation, telemetry, and dissolution receipts;
+          - **S4-A:** bounded glTF/GLB and PLY interchange with explicit units, coordinate conversion, provenance receipts, and no external resource or executable-content authority;
+          - **S4-B:** local-only SPZ v4 and Khronos `KHR_gaussian_splatting` Release Candidate import, deterministic point-cloud fallback, decoded-representation digest binding, Python/JavaScript parity, aggregate memory/GPU/frame budgets, and adversarial asset-security checks;
+          - **S5:** `FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT → INTERACT → PROVE → DECIDE → DISSOLVE`, with canonical cleanup bindings, bounded proof metrics, Attempt Archive evidence, assessment-only checkpoints, and no automatic resume;
+          - **Construction S6:** projection of canonical `ConstructionProjectState` and canonically issued runtime packets into privacy-minimized review scenes without creating a second Construction truth owner.
+
+          Spatial scenes, imported assets, Gaussian representations, interactions, telemetry, render receipts, and checkpoints remain non-authoritative. They cannot mutate domain state, authorize physical work, release payment, operate equipment, grant access, commit code, or merge branches.
+
+          See [`docs/AURA_SPATIAL_COMPUTING_S0_S2.md`](docs/AURA_SPATIAL_COMPUTING_S0_S2.md), [`docs/AURA_SPATIAL_S3_S4.md`](docs/AURA_SPATIAL_S3_S4.md), and [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md).
+
+          ### Review learning and source-integrity replay
+
+          Coding Waboose can now normalize bounded Codex, CodeRabbit, and manual review evidence into typed lessons, run deterministic detector classes, and replay those lessons through Crucible against exact repository ancestry. Source-integrity scanning is bounded by UTF-8, file-count, aggregate-byte, symlink, filesystem, digest, Git-head/tree, registry-signature, and merge-ancestry checks. Review lessons remain teacher signals: they may focus investigation and propose repairs but cannot self-confirm, mutate files, commit, push, open a PR, or merge.
+
+          Primary owners include `aura_coding_waboose_review_lessons.py`, `aura_coding_waboose_review_learning.py`, `aura_review_lessons_security.py`, `aura_agent_arena_review_learning_bridge.py`, and `aura_agent_arena_review_learning_mcp.py`.
+
+          ### Atomic Agent Bridge GitHub publication
+
+          The Agent Bridge publication lane replaces temporary payload files and materializer workflows with GitHub GraphQL `createCommitOnBranch(expectedHeadOid)`.
+
+          ```text
+          exact base/head/PR evidence
+            → bounded canonical additions and deletions
+            → fresh snapshot ref in create mode
+            → server-side commit + branch compare-and-swap
+            → existing or newly created pull request
+            → separate trusted-human merge action
+          ```
+
+          `aura_github_prepare_publication` and `aura_github_execute_publication` support exact create/update publication with UTF-8 and Base64 bounds, same-repository PR binding, no redirect-capable bearer-token transport, no force update, no automatic branch deletion, and blanket rejection of caller-supplied `.github/workflows/` paths. `aura_github_prepare_merge` is evidence-only and always returns `merge_authority=false`, `connector_tool=null`, and `automatic_merge=false`.
+
+          See [`docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md`](docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md).
+          <!-- AURA_JULY20_MERGED_ARCHITECTURE:END -->'''
+          insert_before(readme, "## Canonical architecture", readme_block, "AURA_JULY20_MERGED_ARCHITECTURE:START")
+
+          replace_once(
+              guide,
+              "**Audit window:** architecture and work reviewed through July 18, 2026, including the preceding three weeks of Planning Board, event history, relational authority, J2/ST3GG/QDKT, Model Cognome, Human Agent, external-worker, Civic Commons, Construction, Financial, persistence, evidence, benchmark, public-showcase, Forge, and Gate development.",
+              "**Audit window:** architecture and work reviewed through July 20, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.",
+          )
+          replace_once(
+              guide,
+              "| **Agent Arena MCP** | Bounded MCP-compatible external-agent tools | `python3 -m aura_agent_arena_mcp` |",
+              "| **Agent Arena MCP** | Bounded MCP-compatible external-agent tools, including persistent Spatial review operations | `python3 -m aura_agent_arena_mcp` |\n| **Spatial CLI** | Validate the Spatial WFST and run a synthetic, private-data-free Construction lifecycle | `python3 aura_spatial_cli.py --repo-root . validate-route` |\n| **Agent Bridge GitHub publication** | Prepare and atomically publish bounded file changes with exact-head compare-and-swap; prepare merge evidence without merge authority | `aura_github_prepare_publication → aura_github_execute_publication → aura_github_prepare_merge` |",
+          )
+
+          guide_block = '''<!-- AURA_JULY20_OPERATOR_UPDATE:START -->
+          ### Run the governed Spatial lifecycle
+
+          Validate the Spatial route:
+
+          ```bash
+          python3 aura_spatial_cli.py --repo-root . validate-route
+          ```
+
+          Run the non-persistent synthetic Construction demonstration:
+
+          ```bash
+          python3 aura_spatial_cli.py --repo-root . synthetic-construction-demo
+          ```
+
+          The demonstration uses fixture data, writes no persistent demo state, allocates no renderer, and ends with a human-review decision packet plus a dissolution receipt. For real integrations, the operator must provide a canonically issued Construction runtime packet; reconstructing an equivalent dictionary is rejected.
+
+          The lifecycle is:
+
+          ```text
+          FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
+                → INTERACT → PROVE → DECIDE → DISSOLVE
+          ```
+
+          Operator rules:
+
+          - admit only canonical `aura://` asset identifiers accepted by the scene registry;
+          - keep raw sensor payloads, nested telemetry, data URLs, credentials, and person-level data outside proof metrics;
+          - treat browser renderer and cleanup evidence according to its declared evidence class;
+          - never interpret a render receipt, checkpoint, interaction, or decision packet as domain mutation authority;
+          - dissolve the session and release its lease even after failed preparation or presentation.
+
+          ### Publish GitHub changes atomically
+
+          The permanent publication tools are:
+
+          ```text
+          aura_github_prepare_publication
+          → aura_github_execute_publication
+          → review and verification
+          → aura_github_prepare_merge
+          → separate trusted-human merge action
+          ```
+
+          Create mode requires an immutable base snapshot and a branch name that does not exist and has never been used by a historical PR. Update mode requires the exact open, unmerged, same-repository PR number and exact current head SHA. Publication fails closed when the branch moved, the PR does not match, an operation/type/encoding is noncanonical, bounds are exceeded, or any caller-supplied path enters `.github/workflows/`.
+
+          Set `AURA_GITHUB_TOKEN` only in the operator environment. Never pass it through MCP arguments. The merge-preparation tool provides evidence but cannot invoke a connector or claim merge authority.
+
+          ### Use learned review lessons safely
+
+          Typed review lessons and Crucible replay help Coding Waboose look for previously observed defect classes, including authority aliases, protected metadata overrides, count-only bounds, unsafe source paths, URI aliases, schema/runtime drift, unwired regressions, and stale evidence claims. Treat detector output as a review lead until exact current source and tests corroborate it. A clean replay is evidence for the exact reviewed head, not a permanent guarantee about future commits.
+          <!-- AURA_JULY20_OPERATOR_UPDATE:END -->'''
+          insert_before(guide, "## 4. Orient yourself before changing code", guide_block, "AURA_JULY20_OPERATOR_UPDATE:START")
+
+          replace_once(
+              architecture,
+              "**Architecture audit:** reviewed through July 18, 2026 and the preceding three weeks of merged development, including guarded Arena WFSTs, capability resolution, Planning Board/event history, relational authority, ST3GG/J2/QDKT consolidation, Model Cognome, Human Agent/Observatory/Crucible separation, external-worker slice sessions, Civic Commons, Construction E0–E14, Financial exact state, temporal persistence, Tensor Evidence, empirical cost, benchmarks, Gate, and public deployment surfaces.",
+              "**Architecture audit:** reviewed through July 20, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.",
+          )
+
+          architecture_block = '''<!-- AURA_JULY20_ARCHITECTURE_RECONCILIATION:START -->
+          ## 4A. July 19–20 merged architecture reconciliation
+
+          ### Spatial representation and governed presentation plane
+
+          Aura Spatial is one layered projection system over canonical owners, not a parallel topology or domain truth store.
+
+          ```text
+          exact canonical owner
+            → representation-independent Spatial contracts
+            → rooted transforms + manifest-only asset registry
+            → deterministic scene compilation
+            → bounded interchange and representation decoding
+            → device/render-plan negotiation
+            → ephemeral presentation session
+            → review-only interaction and minimized proof
+            → assessment-only persistence
+            → external human/domain decision
+            → renderer-bound cleanup + lease dissolution
+          ```
+
+          The merged stack is cumulative:
+
+          1. **S0–S2:** immutable frames/assets/entities/links/scenes/interactions, deterministic transforms, canonicalization, referential integrity, bounded Coding/Showcase adapters, six-slot interaction compilation, and fail-closed Forge handoff;
+          2. **S3-A/S3-B:** immutable device profiles, deterministic render planning, bounded session/server contracts, active WebGL2, shadow-only WebGPU, explicitly activated WebXR, accessible 2D, headless parity, deterministic camera/picking, cancellation, telemetry, and cleanup receipts;
+          3. **S4-A:** bounded glTF/GLB and PLY import with explicit units, coordinate conversion, provenance, metadata limits, and no external resource or executable-content authority;
+          4. **S4-B:** local-only SPZ v4 and `KHR_gaussian_splatting` RC import, deterministic fallback, immutable Gaussian payloads, decoded digest binding, Python/JavaScript parity, no-copy preflight, aggregate allocation/GPU/frame budgets, cancellation, disposal, and adversarial corpus validation;
+          5. **S5:** governed Spatial WFST lifecycle with exact scene/render-plan/session bindings, persistent Agent Bridge/MCP access, bounded proof metrics, Attempt Archive evidence, assessment-only checkpoints, Observatory projection, decision packets, and dissolution;
+          6. **Construction S6:** privacy-minimized projection of `ConstructionProjectState` and a canonically issued Construction runtime packet. The binding registry prevents fabricated or independently re-digested packet dictionaries from entering the adapter.
+
+          Primary current owners include `aura_spatial_arena.py`, `aura_spatial_session.py`, `aura_spatial_construction.py`, `aura_construction_runtime_binding.py`, `aura_spatial_agent_bridge.py`, `aura_spatial_mcp.py`, `aura_spatial_cli.py`, the browser renderer modules, representation importers, `.aura/arena_routes/spatial.v1.json`, and their schemas/tests.
+
+          Spatial authority remains:
+
+          ```yaml
+          projection_only: true
+          renderer_authority: false
+          execution_authority: false
+          production_mutation: false
+          automatic_resume: false
+          automatic_merge: false
+          human_or_domain_decision_required: true
+          ```
+
+          ### Review-learning and source-integrity plane
+
+          Coding Waboose review learning extends the existing review owner with bounded external-review normalization, typed lesson contracts, deterministic security/boundedness/schema/workflow/evidence detectors, exact-head scans, and Crucible replay receipts. Source integrity binds review evidence to canonical UTF-8 content, source digests, exact Git head/tree state, registry digests, merge ancestry, and non-vacuous scenarios. It rejects unsafe symlinks, malformed files, exceeded file/byte budgets, stale ancestry, unsigned/tampered registries, and unsupported semantic-completion claims.
+
+          Primary owners include `aura_coding_waboose_review_lessons.py`, `aura_coding_waboose_review_learning.py`, `aura_review_lessons_security.py`, `aura_agent_arena_review_learning_bridge.py`, `aura_agent_arena_review_learning_mcp.py`, `.aura/review_lessons/`, and the review-learning schemas/harness/tests.
+
+          Detector findings and replay results remain review evidence only. They cannot write source, confirm their own finding, promote a rule, commit, push, create a PR, or merge.
+
+          ### Atomic GitHub publication plane
+
+          The Agent Bridge now has a permanent publication owner that removes the need for temporary source payloads and workflow materializers.
+
+          ```text
+          exact repository snapshot + bounded change manifest
+            → prepare publication contract
+            → create mode: fresh snapshot ref
+               or update mode: exact open same-repository PR
+            → GraphQL createCommitOnBranch(expectedHeadOid)
+            → server-side commit and ref CAS
+            → publication/recovery evidence
+            → evidence-only merge preparation
+            → separately authenticated trusted-human merge
+          ```
+
+          `aura_agent_arena_github_bridge.py` owns validation, canonical contracts, transport, compare-and-swap publication, recovery evidence, and merge preparation. `aura_agent_arena_github_mcp.py` exposes `aura_github_prepare_publication`, `aura_github_execute_publication`, and `aura_github_prepare_merge` without accepting bearer tokens as arguments.
+
+          Constitutional boundaries:
+
+          ```yaml
+          publication_requires_explicit_authorization: true
+          graphql_compare_and_swap: true
+          caller_workflow_paths_allowed: false
+          automatic_branch_delete: false
+          force_ref_update: false
+          merge_authority_in_mcp: false
+          automatic_merge: false
+          human_review_required: true
+          ```
+
+          Ambiguous publication failures return expected/observed ref evidence and do not automatically delete a ref, because GitHub ref deletion lacks an expected-OID compare-and-swap guard.
+          <!-- AURA_JULY20_ARCHITECTURE_RECONCILIATION:END -->'''
+          insert_before(architecture, "## 5. Architectural planes", architecture_block, "AURA_JULY20_ARCHITECTURE_RECONCILIATION:START")
+
+          for path in (readme, guide, architecture):
+              text = path.read_text(encoding="utf-8")
+              if "July 20, 2026" not in text or len(text) < 1000:
+                  raise SystemExit(f"documentation reconciliation incomplete: {path}")
+          PY
+
+      - name: Commit documentation only and remove transport workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/docs-reconcile-july20-temp.yml
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add README.md USER_GUIDE.md .aura/ARCHITECTURE.md
+          git commit -m "docs: reconcile recent merged AuraOS architecture [skip ci]"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/${BRANCH}"
