@@ -1,7 +1,8 @@
 """Temporal-persistence extension for Aura's Agent Arena Bridge."""
+
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
 from aura_agent_arena_bridge import AuraAgentArenaBridge
@@ -30,37 +31,24 @@ def _primary_emergent_target(
     target_file: str | None,
     target_symbol: str | None,
 ) -> tuple[str | None, str | None]:
-    selected = list(
-        dict(packet.get("atomic_inventory") or {}).get("selected_atomic_functions")
-        or []
-    )
+    selected = list(dict(packet.get("atomic_inventory") or {}).get("selected_atomic_functions") or [])
     final_file = target_file
     final_symbol = target_symbol
     if final_file and not final_symbol:
         match = next(
-            (
-                item
-                for item in selected
-                if isinstance(item, Mapping) and item.get("file_path") == final_file
-            ),
+            (item for item in selected if isinstance(item, Mapping) and item.get("file_path") == final_file),
             None,
         )
         if isinstance(match, Mapping):
             final_symbol = str(match.get("symbol") or "") or None
     if final_symbol and not final_file:
         match = next(
-            (
-                item
-                for item in selected
-                if isinstance(item, Mapping) and item.get("symbol") == final_symbol
-            ),
+            (item for item in selected if isinstance(item, Mapping) and item.get("symbol") == final_symbol),
             None,
         )
         if isinstance(match, Mapping):
             final_file = str(match.get("file_path") or "") or None
-    bridge_projection = dict(
-        dict(packet.get("projections") or {}).get("agent_bridge") or {}
-    )
+    bridge_projection = dict(dict(packet.get("projections") or {}).get("agent_bridge") or {})
     final_file = final_file or str(bridge_projection.get("target_file") or "") or None
     final_symbol = final_symbol or str(bridge_projection.get("target_symbol") or "") or None
     return final_file, final_symbol
@@ -74,6 +62,140 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         self.persistence = ArenaPersistenceCoordinator(str(self.repo_root))
         self.coding_waboose = CodingWaboose(self.repo_root)
         self.emergent_spine = AuraEmergentEvidenceSpine(self.repo_root)
+        self._spatial_agent_bridge: Any | None = None
+
+    def _spatial_bridge(self) -> Any:
+        if self._spatial_agent_bridge is None:
+            from aura_spatial_agent_bridge import AuraSpatialAgentBridge
+
+            self._spatial_agent_bridge = AuraSpatialAgentBridge(self.repo_root)
+        return self._spatial_agent_bridge
+
+    def aura_spatial_prepare_construction(
+        self,
+        *,
+        objective: str,
+        state: Any,
+        construction_runtime_packet: Mapping[str, Any],
+        privacy_class: Any = "PROJECT",
+        actor_ref: str = "human:local",
+        supported_renderers: Sequence[Any] = ("ACCESSIBLE_2D", "HEADLESS"),
+        floor_plan_assets: Iterable[Any] = (),
+    ) -> dict[str, Any]:
+        """Typed Python-only Construction preparation; intentionally not MCP-exposed."""
+
+        from aura_construction_state import ConstructionProjectState
+
+        if type(state) is not ConstructionProjectState:
+            raise ValueError("Spatial Construction preparation requires exact ConstructionProjectState")
+        return self._spatial_bridge().prepare_construction_projection(
+            objective=objective,
+            state=state,
+            construction_runtime_packet=construction_runtime_packet,
+            privacy_class=privacy_class,
+            actor_ref=actor_ref,
+            supported_renderers=supported_renderers,
+            floor_plan_assets=floor_plan_assets,
+        )
+
+    def aura_spatial_status(self, run_id: str) -> dict[str, Any]:
+        return self._spatial_bridge().status(run_id)
+
+    def aura_spatial_interact(
+        self,
+        run_id: str,
+        *,
+        action: Any,
+        target_entity_ids: Iterable[str],
+        metadata: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().interact(
+            run_id,
+            action=action,
+            target_entity_ids=target_entity_ids,
+            metadata=metadata,
+        )
+
+    def aura_spatial_prove(
+        self,
+        run_id: str,
+        *,
+        repo_head: str,
+        outcome: Any = "PRESENTED",
+        evidence_class: Any = "DERIVED",
+        metrics: Mapping[str, Any] | None = None,
+        branch_name: str = "",
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().prove(
+            run_id,
+            repo_head=repo_head,
+            outcome=outcome,
+            evidence_class=evidence_class,
+            metrics=metrics,
+            branch_name=branch_name,
+        )
+
+    def aura_spatial_prove_browser_telemetry(
+        self,
+        run_id: str,
+        *,
+        telemetry_packet: Mapping[str, Any],
+        repo_head: str,
+        branch_name: str = "",
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().prove_browser_telemetry(
+            run_id,
+            telemetry_packet=telemetry_packet,
+            repo_head=repo_head,
+            branch_name=branch_name,
+        )
+
+    def aura_spatial_decide(
+        self,
+        run_id: str,
+        *,
+        decision: str,
+        decision_ref: str = "human:pending",
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().decide(
+            run_id,
+            decision=decision,
+            decision_ref=decision_ref,
+        )
+
+    def aura_spatial_observatory(self, run_id: str) -> dict[str, Any]:
+        return self._spatial_bridge().observatory(run_id)
+
+    def aura_spatial_restore_assessment(
+        self,
+        run_id: str,
+        *,
+        current_repo_head: str,
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().restore_assessment(
+            run_id,
+            current_repo_head=current_repo_head,
+        )
+
+    def aura_spatial_dissolve(
+        self,
+        run_id: str,
+        *,
+        renderer_cleanup_receipt: Mapping[str, Any],
+        reason_code: str = "SPATIAL_ARENA_COMPLETE",
+    ) -> dict[str, Any]:
+        return self._spatial_bridge().dissolve(
+            run_id,
+            renderer_cleanup_receipt=renderer_cleanup_receipt,
+            reason_code=reason_code,
+        )
+
+    def aura_spatial_close(self) -> tuple[dict[str, Any], ...]:
+        if self._spatial_agent_bridge is None:
+            return ()
+        receipts = self._spatial_agent_bridge.close()
+        self._spatial_agent_bridge = None
+        return receipts
 
     def aura_atomic_function_inventory(
         self,
@@ -147,9 +269,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 "Emergent evidence is affinity-only or has no exact atomic closure.",
                 repair_hint="Provide an exact target file/symbol or repair CODEMAP/topology grounding.",
             )
-        projection = dict(
-            dict(packet.get("projections") or {}).get("coding_arena") or {}
-        )
+        projection = dict(dict(packet.get("projections") or {}).get("coding_arena") or {})
         final_file, final_symbol = _primary_emergent_target(
             packet,
             target_file=target_file,
@@ -185,14 +305,10 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             "atomic_inventory_total": int(atomic.get("total_count") or 0),
             "selected_atomic_count": int(atomic.get("selected_count") or 0),
             "tests": list(packet.get("tests") or []),
-            "waboose_focus_directives": list(
-                packet.get("waboose_focus_directives") or []
-            ),
+            "waboose_focus_directives": list(packet.get("waboose_focus_directives") or []),
             "safe_to_patch": False,
             "production_mutation": False,
-            "patch_authority": packet.get(
-                "patch_authority", "exact_source_spans_and_hashes_only"
-            ),
+            "patch_authority": packet.get("patch_authority", "exact_source_spans_and_hashes_only"),
             "vsa_patch_authority": False,
         }
         result["emergent_evidence"] = summary
@@ -354,6 +470,46 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 "name": "aura_handoff_checkpoint",
                 "description": "Create a payload-free digital baton for another Aura arena.",
                 "required_inputs": ["checkpoint_id", "target_arena_id", "current_repo_head"],
+            },
+            {
+                "name": "aura_spatial_status",
+                "description": "Return one governed Spatial Arena run status without payloads.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_spatial_interact",
+                "description": "Compile a review-only interaction for an existing Spatial Arena run.",
+                "required_inputs": ["run_id", "action", "target_entity_ids"],
+            },
+            {
+                "name": "aura_spatial_prove",
+                "description": "Record bounded render evidence and an assessment-only checkpoint.",
+                "required_inputs": ["run_id", "repo_head"],
+            },
+            {
+                "name": "aura_spatial_prove_browser_telemetry",
+                "description": "Validate exact browser telemetry and record empirical Spatial proof.",
+                "required_inputs": ["run_id", "telemetry_packet", "repo_head"],
+            },
+            {
+                "name": "aura_spatial_decide",
+                "description": "Compile a human/domain decision packet without applying the decision.",
+                "required_inputs": ["run_id", "decision"],
+            },
+            {
+                "name": "aura_spatial_observatory",
+                "description": "Return a read-only Spatial Arena evidence and cost projection.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_spatial_restore_assessment",
+                "description": "Assess a Spatial checkpoint without automatic resume.",
+                "required_inputs": ["run_id", "current_repo_head"],
+            },
+            {
+                "name": "aura_spatial_dissolve",
+                "description": "Dissolve a Spatial run only with exact renderer cleanup evidence.",
+                "required_inputs": ["run_id", "renderer_cleanup_receipt"],
             },
             {
                 "name": "aura_atomic_function_inventory",
