@@ -81,6 +81,30 @@ def test_contract_requires_fresh_exact_base_in_create_mode() -> None:
         compile_publication_contract(_request(expected_parent_sha=PARENT_SHA))
 
 
+def test_contract_rejects_unknown_keys_and_string_boolean() -> None:
+    with pytest.raises(GitHubPublicationError, match="unknown keys"):
+        compile_publication_contract(_request(api_root="https://evil.example"))
+    with pytest.raises(GitHubPublicationError, match="must be a boolean"):
+        compile_publication_contract(_request(allow_temporary_transport="false"))
+
+
+def test_update_mode_binds_pr_number_into_contract_identity() -> None:
+    request_payload = _request(
+        publication_mode="update",
+        expected_parent_sha=PARENT_SHA,
+        pr_number=170,
+    )
+    contract = compile_publication_contract(request_payload)
+    assert contract["pr_number"] == 170
+    assert contract["branch_policy"] == "exact_parent_fast_forward"
+
+    tampered = copy.deepcopy(contract)
+    tampered["pr_number"] = 171
+    transport = FakeTransport()
+    with pytest.raises(GitHubPublicationError, match="identity mismatch"):
+        execute_publication_contract(tampered, transport=transport)
+
+
 class FakeTransport:
     def __init__(self, *, base_moves: bool = False) -> None:
         self.calls: list[tuple[str, str, dict[str, Any] | None, bool]] = []
@@ -106,6 +130,8 @@ class FakeTransport:
         ):
             assert allow_404 is True
             return None
+        if method == "GET" and "/pulls?" in path:
+            return []
         if method == "GET" and path.endswith(f"/git/commits/{BASE_SHA}"):
             return {"tree": {"sha": BASE_TREE_SHA}}
         if method == "POST" and path.endswith("/git/blobs"):
