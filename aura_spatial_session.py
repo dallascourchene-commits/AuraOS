@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
+import math
+import re
 import threading
 from typing import Any
 
@@ -30,6 +32,45 @@ SPATIAL_SESSION_VERSION = "AURA_SPATIAL_SESSION_V1"
 MAX_ACTIVE_SPATIAL_SESSIONS = 64
 MAX_SESSION_RENDER_RECEIPTS = 256
 MAX_DISSOLUTION_RECEIPTS = 256
+
+_GENERIC_RENDER_METRIC_SCHEMA = {
+    "fixture": "identifier",
+    "frame_ms": "number",
+    "rendered_entities": "count",
+    "renderer_allocated": "boolean",
+    "renderer_allocated_count": "count",
+}
+_GENERIC_RENDER_METRIC_IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
+
+
+def _sanitize_generic_render_metrics(metrics: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Admit only bounded scalar non-sensor metrics for generic proof receipts."""
+
+    if metrics is None:
+        return {}
+    if not isinstance(metrics, Mapping):
+        raise ValueError("generic Spatial proof metrics must be an object")
+    unknown = sorted(set(metrics) - set(_GENERIC_RENDER_METRIC_SCHEMA))
+    if unknown:
+        raise ValueError(f"generic Spatial proof metrics contain unsupported keys: {unknown}")
+    normalized: dict[str, Any] = {}
+    for name in sorted(metrics):
+        value = metrics[name]
+        kind = _GENERIC_RENDER_METRIC_SCHEMA[name]
+        if kind == "identifier":
+            if type(value) is not str or not _GENERIC_RENDER_METRIC_IDENTIFIER.fullmatch(value):
+                raise ValueError(f"generic Spatial proof metric {name} must be a bounded identifier")
+        elif kind == "boolean":
+            if type(value) is not bool:
+                raise ValueError(f"generic Spatial proof metric {name} must be a boolean")
+        elif kind == "count":
+            if type(value) is not int or value < 0:
+                raise ValueError(f"generic Spatial proof metric {name} must be a non-negative integer")
+        elif type(value) not in {int, float} or not math.isfinite(float(value)) or float(value) < 0.0:
+            raise ValueError(f"generic Spatial proof metric {name} must be a finite non-negative number")
+        normalized[name] = value
+    return normalized
+
 
 _SESSION_SUMMARY_KEYS = frozenset(
     {
@@ -188,6 +229,7 @@ class SpatialProjectionSessionManager:
         metrics: dict[str, Any] | None = None,
         renderer_disposed: bool = False,
     ) -> tuple[SpatialRenderReceipt, SpatialProjectionSessionSummary]:
+        safe_metrics = _sanitize_generic_render_metrics(metrics)
         with self._lock:
             record = self._record(session_id)
             if record.summary.state is not SpatialSessionState.ACTIVE:
@@ -201,7 +243,7 @@ class SpatialProjectionSessionManager:
                 outcome=outcome,
                 evidence_class=evidence_class,
                 sequence=sequence,
-                metrics=metrics,
+                metrics=safe_metrics,
                 renderer_disposed=renderer_disposed,
                 source_refs=(f"session:{record.summary.session_id}#{record.summary.session_digest}",),
             )
