@@ -1,0 +1,1 @@
+CodeRabbit Autofix is forbidden. Codex may materialize the bounded implementation contract, but every review finding will be verified and repaired manually.
