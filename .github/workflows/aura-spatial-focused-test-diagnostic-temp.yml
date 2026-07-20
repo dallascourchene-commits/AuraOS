@@ -1,4 +1,4 @@
-name: Aura Spatial Focused Repair Diagnostic Temp
+name: Aura Spatial Focused Repair Temp
 
 on:
   pull_request:
@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  repair:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -27,9 +27,12 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-      - name: Capture proposed repair tests
+      - name: Align Construction URI admission with scene registry
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          mkdir -p /tmp/aura-focused-repair-diagnostic
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
 
@@ -45,6 +48,8 @@ jobs:
               '    if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():\n        raise ValueError("Aura asset URI requires a canonical lowercase authority")\n',
               1,
           )
+          if 'parsed.scheme not in {"aura", "file"}' in text or 'file asset URI cannot name a remote host' in text:
+              raise SystemExit("Construction URI replacement incomplete")
           spatial.write_text(text, encoding="utf-8")
 
           test = Path("tests/test_aura_spatial_waboose_precision.py")
@@ -72,21 +77,31 @@ jobs:
           '''
           text = text.replace("from dataclasses import replace\n\n", "")
           test.write_text(text, encoding="utf-8")
+
+          retained = Path("tests/test_aura_spatial_s6_construction.py")
+          text = retained.read_text(encoding="utf-8")
+          text = text.replace(
+              'with pytest.raises(ValueError, match="local or Aura-addressed"):',
+              'with pytest.raises(ValueError, match="Aura-addressed"):',
+              1,
+          )
+          retained.write_text(text, encoding="utf-8")
           PY
-          files=(aura_spatial_construction.py tests/test_aura_spatial_waboose_precision.py)
+          files=(
+            aura_spatial_construction.py
+            tests/test_aura_spatial_waboose_precision.py
+            tests/test_aura_spatial_s6_construction.py
+          )
           ruff check --fix "${files[@]}"
           ruff format "${files[@]}"
-          git diff -- "${files[@]}" > /tmp/aura-focused-repair-diagnostic/diff.patch
-          set +e
-          python -m pytest -vv --tb=long \
+          python -m pytest -q --tb=short \
             tests/test_aura_spatial_codex_repairs.py \
             tests/test_aura_spatial_waboose_precision.py \
-            tests/test_aura_spatial_s6_construction.py \
-            2>&1 | tee /tmp/aura-focused-repair-diagnostic/pytest.log
-          echo "${PIPESTATUS[0]}" > /tmp/aura-focused-repair-diagnostic/status.txt
-          exit 0
-      - uses: actions/upload-artifact@v4
-        with:
-          name: aura-spatial-focused-repair-diagnostic-${{ github.sha }}
-          path: /tmp/aura-focused-repair-diagnostic
-          retention-days: 1
+            tests/test_aura_spatial_s6_construction.py
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add "${files[@]}"
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(spatial): align Construction asset URIs with registry"
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
+          fi
