@@ -39,19 +39,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
           persist-credentials: false
-          fetch-depth: 0
+          fetch-depth: 1
           submodules: false
 
       - name: Verify exact pull-request head
-        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           observed="$(git rev-parse HEAD)"
-          expected="${{ github.event.pull_request.head.sha }}"
-          test "$observed" = "$expected"
+          test "$observed" = "$EXPECTED_HEAD"
           echo "$observed" > /tmp/spatial_s5_s6_exact_head.txt
+
+      - name: Fetch bounded base reference
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
 
       - uses: actions/setup-python@v5
         with:
