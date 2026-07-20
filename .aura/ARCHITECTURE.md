@@ -429,43 +429,69 @@ Primary owners include:
 - `docs/AURA_CODING_WABOOSE.md`.
 <!-- AURA_CODING_WABOOSE_V1:END -->
 
-<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:START -->
-#### Spatial Arena projection substrate
+<!-- AURA_SPATIAL_SUBSTRATE_S0_S6:START -->
+#### Spatial Arena projection and governed presentation substrate
 
-Aura's Spatial Arena is a representation-independent projection layer over retained
-domain owners. It does not become a second CODEMAP, Coding Arena, Civic map,
-Construction state, event store, renderer authority, or mutation path.
+Aura's Spatial architecture is a representation-independent projection layer over retained domain owners. It does not become a second CODEMAP, Coding Arena, Civic map, Construction state, event store, renderer authority, checkpoint owner, or mutation path.
 
 ```text
 canonical domain truth
-  → bounded domain adapter
+  → bounded privacy-aware domain adapter
   → immutable SpatialSceneSnapshot
-  → replaceable renderer/device adapter
-  → human or agent interaction
-  → six-slot review-only intent
-  → retained Arena / Forge / Gate / human decision
+  → deterministic device profile and render plan
+  → ephemeral presentation session
+  → review-only interaction
+  → exact render evidence and assessment-only continuity
+  → human/domain decision packet
+  → client-bound cleanup evidence
+  → lease/session dissolution
 ```
 
-Canonical S0-S2 owners are:
+The governed S5 route is finite:
 
-- `aura_spatial_contracts.py` for immutable frame, asset, entity, link, scene, and interaction contracts;
-- `aura_spatial_coordinate_frames.py` for rooted frame validation and deterministic transforms;
-- `aura_spatial_asset_registry.py` for content-addressed manifest validation without fetching, decoding, training, or rendering;
-- `aura_spatial_scene.py` for deterministic scene compilation and referential integrity;
-- `aura_spatial_projection.py` for bounded adapters that reuse `aura_coding_arena_3d.select_micro_arena()` rather than scanning a second topology;
-- `aura_spatial_interaction.py` and `aura_spatial_ws_guard.py` for six-slot review intents and fail-closed Forge handoff;
-- `aura_spatial_breadboard.py` for the proposal-only Council V3/Coding Circuit plan and BC0-BC5 evidence.
+```text
+FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
+      → INTERACT → PROVE → DECIDE → DISSOLVE
+```
 
-Spatial coordinates, layouts, topology graph assets, Gaussian-splat manifests,
-renderer hints, gestures, gaze, anchors, and visual selections are never patch or
-execution authority. Every canonical scene retains exact-source-only patch authority,
-`vsa_patch_authority=false`, and `execution_authority=false`. The legacy AR bridge
-returns `HOTSWAP_REVIEW_REQUIRED` to the requesting session and cannot report a
-queued mutation, broadcast success, or refresh topology as though code changed.
+Canonical ownership is split deliberately:
 
-WebXR/OpenXR runtime, Gaussian-splat rendering/training, device sensors, and
-non-Coding domain adapters remain separately review-gated S3-S7 programs.
-<!-- AURA_SPATIAL_SUBSTRATE_S0_S2:END -->
+- `aura_spatial_contracts.py` owns immutable frame, asset, entity, link, scene, interaction, device, render-plan, receipt, and dissolution contracts;
+- `aura_spatial_coordinate_frames.py` validates rooted frames and deterministic transforms;
+- `aura_spatial_asset_registry.py` validates content-addressed manifests without fetching, decoding, training, or rendering;
+- `aura_spatial_scene.py` compiles immutable scenes and enforces referential integrity;
+- `aura_spatial_projection.py` provides bounded domain projections and reuses retained topology/Coding owners;
+- `aura_spatial_render_plan.py` owns deterministic device compilation and renderer negotiation;
+- `aura_spatial_session.py` owns ephemeral projection sessions and immutable render/dissolution receipts;
+- browser adapters provide bounded accessible, headless, WebGL2, shadow WebGPU, explicit-gesture WebXR, interaction, and telemetry surfaces;
+- S4-A importers admit bounded local glTF/GLB and PLY interchange as derived projection assets;
+- S4-B Gaussian interchange follows the pinned `KHR_gaussian_splatting` release-candidate profile, retains deterministic point-cloud/accessibility/headless fallbacks, and enforces pre-allocation/resource/disposal ceilings;
+- `aura_spatial_arena.py` owns the S5 lifecycle and binds purpose, privacy, domain state, scene, render plan, session, read-only capsule/boundary/lease, evidence, checkpoint, archive, cost, decision, and dissolution identities;
+- `aura_spatial_construction.py` is the Construction-only S6 projector over exact `ConstructionProjectState` and a validated Construction runtime packet;
+- `aura_spatial_agent_bridge.py`, `aura_agent_arena_persistence_bridge.py`, `aura_agent_arena_mcp.py`, and `aura_spatial_mcp.py` expose typed preparation and bounded post-prepare review tools;
+- `aura_arena_persistence_adapters.py` owns payload-minimized, assessment-only Spatial checkpoint projection;
+- `.aura/arena_routes/spatial.v1.json` is the finite route grammar.
+
+`FRAME` binds the normalized objective, purpose digest, privacy class, egress policy, actor, and source references. `GROUND` binds one canonical external domain owner and exact state/evidence digests. `COMPILE_SCENE` admits one immutable scene. `PLAN_RENDER` deterministically intersects scene requirements, device capability, preference, and resource ceilings. `PRESENT` creates only an ephemeral session. `INTERACT` remains review-only. `PROVE` records render evidence, Attempt Archive evidence, calculated cost, and a parent-linked assessment-only checkpoint. `DECIDE` compiles a packet for an authorized human or domain owner but cannot apply it. `DISSOLVE` releases the lease/session only after a cleanup receipt is bound to the exact session, scene, and render plan.
+
+Evidence classes remain explicit. Generic Agent/MCP proof defaults to `DERIVED`. Browser evidence may be `MEASURED` only through the exact scene/render-plan/device/fixture-bound telemetry validator. Client-reported renderer cleanup remains `CLIENT_REPORTED`; Aura never upgrades it to independently verified disposal. Allocated renderers report `DISPOSED`; headless/synthetic paths report `NOT_ALLOCATED`. Emergency close never fabricates cleanup and records unobserved/unreleased boundaries honestly.
+
+Spatial privacy classes are `PUBLIC`, `PROJECT`, `RESTRICTED`, and `SENSITIVE`; egress is `LOCAL_ONLY` or `ADMITTED_RENDER_WORKER`. Restricted and sensitive runs are local-only. External render work requires allowlisted workers, pre-admitted capability digests, a network-enabled device profile, and a positive byte budget. The admission baton contains only bounded worker/capability/manifest identities and exact scene/plan/domain/lease digests—never asset URIs, scene payloads, raw domain state, raw sensor data, or person-level data.
+
+The Construction S6 projector verifies the nested Action Capsule, Boundary Contract, Arena Lease, evaluation digest, candidate identities, proposal boundaries, and human-release boundaries before projection. It emits abstract project/scope/proposal state, aggregate counts, uncertainty/evaluation identities, and privacy-compatible local non-survey floor-plan manifests. It excludes event/evidence payloads, actor/claimant/worker/person identity, consent records, raw sensors, survey-authoritative coordinates, and every physical-work/payment/access/equipment/professional/legal/engineering/regulatory authority. Public identifiers are hashed; restricted/sensitive projections are abstract and reject floor-plan geometry.
+
+All scene coordinates, layouts, topology assets, meshes, point clouds, Gaussian manifests, renderer hints, gestures, gaze, anchors, visual selections, device profiles, telemetry, checkpoints, and decision packets retain:
+
+```yaml
+patch_authority: exact_source_spans_and_hashes_only
+renderer_authority: false
+execution_authority: false
+automatic_resume: false
+automatic_merge: false
+```
+
+Production OpenXR deployments, capture/reconstruction/training pipelines, remote asset delivery, unrestricted sensor ingestion, additional S6 domain adapters, and consequential S7 promotion remain separately governed programs.
+<!-- AURA_SPATIAL_SUBSTRATE_S0_S6:END -->
 
 ### Plane 8 — Observatory and glass-box explanation
 
@@ -670,6 +696,8 @@ Primary owners include:
 | Gate egress | `aura_gate_egress.py` exact canonical bytes and capsule | Protocol response/transport projection | Provider call, destination, or worker claim |
 | Gate audit history | Canonical append-only event/payload owners through `aura_gate_audit.py` plus chained receipts | Deterministic SIEM JSONL projection | SQLite lease status, log stream, or SIEM index |
 | Arena lifecycle | Arena runtime, route, manifest, lease, receipt | Browser/CLI status | Worker process |
+| Spatial scene truth | Canonical domain owner plus immutable `SpatialSceneSnapshot` | Renderer, browser, accessibility, Observatory, and decision projections | Visual state, renderer cache, telemetry, or checkpoint |
+| Spatial presentation lifecycle | `aura_spatial_arena.py`, route grammar, exact session/render receipts, and read-only lease | Agent Bridge, MCP, CLI, browser adapters | Domain truth, Construction ledger, renderer authority, or automatic resume |
 | Code patch evidence | Exact source spans/hashes, staged diff, tests/verifiers | CODEMAP localization, Council plan | VSA/topology/JSpace/ST3GG |
 | Human Agent workflow | Human Agent state and guarded runtime | Showcase/Human browser projections | Observatory or Attempt Archive |
 | Experience | `ArenaExperience V3` and Experience Ledger | Crucible datasets and reports | Raw trace, prompt, or research result |
@@ -1019,7 +1047,7 @@ Architecture-supported but separately gated product directions include:
 - disaster coordination and institutional deployments;
 - real owner/contractor/payment/access/sensor Construction connectors;
 - Financial indicators, scenarios, connectors, recommendations, and LifeOS presentation;
-- AR and spatial experiences beyond current prototypes;
+- production WebXR/OpenXR deployments, capture/reconstruction/training, remote rendering, and additional governed Spatial domain adapters;
 - module marketplaces and commercial packaging;
 - autonomous production promotion.
 
