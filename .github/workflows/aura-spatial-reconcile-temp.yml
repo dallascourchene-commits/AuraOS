@@ -48,12 +48,13 @@ jobs:
 
           path = Path('.github/workflows/aura-spatial-s5-s6-construction.yml')
           text = path.read_text(encoding='utf-8')
+          checkout_ref = '$' + '{{ github.event.pull_request.head.sha || github.sha }}'
           anchor = (
-              '          ref: ${{ github.event.pull_request.head.sha || github.sha }}\n'
+              f'          ref: {checkout_ref}\n'
               '          fetch-depth: 0\n'
           )
           replacement = (
-              '          ref: ${{ github.event.pull_request.head.sha || github.sha }}\n'
+              f'          ref: {checkout_ref}\n'
               '          persist-credentials: false\n'
               '          fetch-depth: 0\n'
           )
