@@ -1,0 +1,21 @@
+name: Aura Temporary S5-S6 Materialization Gate
+
+on:
+  pull_request:
+    paths:
+      - "docs/AURA_SPATIAL_S5_S6_IMPLEMENTATION_CONTRACT_TEMP.md"
+      - ".github/workflows/aura-spatial-s5-s6-materialize-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-visible:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          test -s docs/AURA_SPATIAL_S5_S6_IMPLEMENTATION_CONTRACT_TEMP.md
+          echo "Bounded implementation contract is available for materialization."
