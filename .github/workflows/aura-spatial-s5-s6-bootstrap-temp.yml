@@ -1,0 +1,38 @@
+name: Aura Temporary S5-S6 Construction Bootstrap
+
+on:
+  push:
+    branches:
+      - feature/spatial-s4b-gaussian-security
+    paths:
+      - ".github/workflows/aura-spatial-s5-s6-bootstrap-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
+      - name: Record exact baseline
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > /tmp/aura_spatial_s5_s6_baseline_sha.txt
+          git status --short
+      - name: Upload exact repository snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-s5-s6-baseline-${{ github.sha }}
+          path: |
+            .
+            !.git/**
+            !Aura_Staging/**
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 2
