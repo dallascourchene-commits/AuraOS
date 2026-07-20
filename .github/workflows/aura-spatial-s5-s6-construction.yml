@@ -23,7 +23,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: aura-spatial-s5-s6-construction-${{ github.event.pull_request.number || github.ref }}
@@ -74,28 +74,6 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-
-      - name: Normalize final touched files once
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          set -euo pipefail
-          files=(
-            aura_spatial_construction.py
-            aura_review_lessons_security.py
-            tests/test_aura_spatial_waboose_precision.py
-          )
-          ruff check --fix "${files[@]}"
-          ruff format "${files[@]}"
-          python -m py_compile "${files[@]}"
-          if ! git diff --quiet -- "${files[@]}"; then
-            git config user.name "dallascourchene-commits"
-            git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
-            git add "${files[@]}"
-            git commit -m "style(spatial): normalize final reviewed files"
-            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
-          fi
 
       - name: Compile, lint, and validate route
         run: |
