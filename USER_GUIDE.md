@@ -834,7 +834,70 @@ python3 -m aura_construction_refactor_completion --repo-root .
 
 `ConstructionProjectState` remains the only Construction truth owner. The profile contains no raw project evidence and cannot authorize physical work, payment, access, equipment control, inspection, safety, engineering, law, regulation, source changes, or merge.
 
-## 19. Use the Financial exact-state layer
+
+## 19. Run the governed Spatial Arena and Construction projection
+
+Use the Spatial Arena when a canonical domain owner needs a bounded visual or spatial projection without transferring truth or authority into the renderer. The Construction adapter is the implemented S6 domain slice. It accepts an exact `ConstructionProjectState` and validated Construction runtime packet; untyped JSON cannot prepare a Construction projection.
+
+Validate the finite route first:
+
+```bash
+python aura_spatial_cli.py --repo-root . validate-route
+```
+
+Run the synthetic demonstration:
+
+```bash
+python aura_spatial_cli.py --repo-root . synthetic-construction-demo
+```
+
+The demo uses a temporary state root, synthetic fixtures, no private data, no production connector, and no persistent demonstration state. Its output includes exact scene/render-plan/proof/checkpoint/decision/dissolution identities and keeps physical work, payment, access control, and automatic merge false.
+
+The lifecycle is exact:
+
+```text
+FRAME
+→ GROUND
+→ COMPILE_SCENE
+→ PLAN_RENDER
+→ PRESENT
+→ INTERACT
+→ PROVE
+→ DECIDE
+→ DISSOLVE
+```
+
+Operator rules:
+
+- `FRAME` binds objective, actor reference, privacy class, egress policy, and purpose digest.
+- `GROUND` binds one canonical domain owner and exact state/evidence digests.
+- `COMPILE_SCENE` admits one immutable, referentially valid scene.
+- `PLAN_RENDER` deterministically intersects the scene, device profile, preferred renderers, and budgets.
+- `PRESENT` allocates only the bounded ephemeral projection session.
+- `INTERACT` compiles review-only selection/navigation intent; it cannot mutate domain state.
+- `PROVE` records render evidence, Attempt Archive evidence, and an assessment-only checkpoint. Generic agent/MCP proof is `DERIVED`; measured browser evidence must pass the exact telemetry validator.
+- `DECIDE` creates a human/domain packet only. It does not apply a decision.
+- `DISSOLVE` requires a cleanup receipt bound to the exact session, scene, and render plan. Allocated renderers report `DISPOSED`; headless/synthetic paths report `NOT_ALLOCATED`.
+
+Privacy classes are `PUBLIC`, `PROJECT`, `RESTRICTED`, and `SENSITIVE`. Restricted and sensitive runs are local-only. Public Construction projections hash project, scope, and candidate identifiers. Restricted/sensitive projections reject floor-plan geometry. Project-level floor plans must be local or Aura-addressed, privacy-compatible, explicitly `survey_authority=false`, and explicitly `person_level_data_included=false`.
+
+Python-typed preparation is available through `aura_spatial_prepare_construction`. JSON MCP intentionally exposes only post-preparation tools:
+
+```text
+aura_spatial_status
+aura_spatial_interact
+aura_spatial_prove
+aura_spatial_decide
+aura_spatial_observatory
+aura_spatial_restore_assessment
+aura_spatial_dissolve
+```
+
+Restore is assessment-only and never resumes automatically. Emergency close does not claim renderer cleanup; absent client evidence remains unobserved and unreleased. No Spatial packet can authorize Construction work, payment, access, equipment, inspection, safety, engineering, law, regulation, survey truth, source mutation, commit, push, pull request, or merge.
+
+See `docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md` for the canonical ownership and evidence contract.
+
+## 20. Use the Financial exact-state layer
 
 The first Financial Arena stage is a local exact-state ledger, not an adviser.
 
@@ -863,7 +926,7 @@ The exact-state layer does not provide financial, tax, legal, investment, credit
 
 Planning Board indicators, scenarios, recommendations, LifeOS quests, and external connectors are separate future or separately governed stages.
 
-## 20. Use the Ephemeral Organ Runtime
+## 21. Use the Ephemeral Organ Runtime
 
 An ephemeral organ is a temporary capability system, not merely an imported function.
 
@@ -884,7 +947,7 @@ Arbitrary user-supplied Python requires a real sandbox. When no required isolati
 
 The Capability Genome Resolver should prefer reusable owners and explicit compatibility before proposing a new component.
 
-## 21. Read benchmark and cost evidence correctly
+## 22. Read benchmark and cost evidence correctly
 
 Evidence classes are ordered:
 
@@ -918,7 +981,7 @@ proxy, with `51,987` (`56.66%`) estimated saved against its documented counterfa
 Full Codex-session provider totals were unavailable. Treat this as
 `DERIVED_COUNTERFACTUAL_WITH_CHAR4_TOKEN_PROXY`, not billing or a whole-session total.
 
-## 22. Testing and documentation maintenance
+## 23. Testing and documentation maintenance
 
 For a changed module:
 
@@ -952,7 +1015,7 @@ Documentation should state:
 - intentional policy deferrals;
 - commands and tests that actually exist.
 
-## 23. Troubleshooting
+## 24. Troubleshooting
 
 ### CODEMAP contains stale paths or zero metadata
 
@@ -990,7 +1053,7 @@ Keep it `UNAVAILABLE` or the exact lower claim class. Do not invent provider usa
 
 Stop and inspect the surface. These interfaces must remain proposal/review only. Any executable approval affordance is an authority regression.
 
-## 24. Non-negotiable safety and authority rules
+## 25. Non-negotiable safety and authority rules
 
 ```yaml
 external_workers_are_tools: true

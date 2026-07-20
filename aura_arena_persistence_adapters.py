@@ -4,9 +4,11 @@ The adapters preserve each arena's existing authority model. They checkpoint
 reviewable state, emit restoration/handoff packets, and never mutate live arena
 objects during restore assessment.
 """
+
 from __future__ import annotations
 
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from aura_refactor_state_identity import digest, normalize
 from aura_temporal_persistence import (
@@ -24,6 +26,7 @@ SUPPORTED_ARENAS = frozenset(
         "human_agent_arena",
         "agent_bridge_arena",
         "construction_arena",
+        "spatial_arena",
     }
 )
 
@@ -39,9 +42,7 @@ def _mapping_state(value: Any, name: str) -> dict[str, Any]:
 
 def _session_identifier(value: Any, prefix: str) -> str:
     text = str(value or "").strip()
-    if text and len(text) <= 128 and text[0].isalnum() and all(
-        ch.isalnum() or ch in "_.:-" for ch in text
-    ):
+    if text and len(text) <= 128 and text[0].isalnum() and all(ch.isalnum() or ch in "_.:-" for ch in text):
         return text
     return f"{prefix}-{digest(text or prefix, size=12)}"
 
@@ -58,7 +59,7 @@ def _checkpoint_invariants(state: Mapping[str, Any], *keys: str) -> dict[str, An
 
 
 class ArenaPersistenceCoordinator:
-    """Canonical persistence facade shared by Coding, Human, Bridge, and Construction."""
+    """Canonical persistence facade shared by Coding, Human, Bridge, Construction, and Spatial."""
 
     def __init__(
         self,
@@ -162,9 +163,7 @@ class ArenaPersistenceCoordinator:
         return self.checkpoint_mapping(
             arena_id="human_agent_arena",
             session_id=_session_identifier(
-                state.get("workflow_id")
-                or state.get("session_id")
-                or getattr(workflow, "workflow_id", ""),
+                state.get("workflow_id") or state.get("session_id") or getattr(workflow, "workflow_id", ""),
                 "HUMAN",
             ),
             repo_head=repo_head,
@@ -227,21 +226,15 @@ class ArenaPersistenceCoordinator:
             "present": verification is not None,
             "ok": bool(getattr(verification, "ok", False)) if verification is not None else False,
             "stage": str(getattr(verification, "stage", "") or "") if verification is not None else "",
-            "hotswap_ready": bool(getattr(verification, "hotswap_ready", False))
-            if verification is not None
-            else False,
-            "failure_count": len(list(getattr(verification, "failures", []) or []))
-            if verification is not None
-            else 0,
+            "hotswap_ready": bool(getattr(verification, "hotswap_ready", False)) if verification is not None else False,
+            "failure_count": len(list(getattr(verification, "failures", []) or [])) if verification is not None else 0,
         }
         state = {
             "version": ARENA_PERSISTENCE_ADAPTER_VERSION,
             "plan_phase_hash": str(plan_phase_hash),
             "act_capsules": act_capsules,
             "affected_files": list(getattr(arena, "affected_files", []) or []),
-            "routing_decisions": normalize(
-                list(getattr(arena, "routing_decisions", []) or [])
-            ),
+            "routing_decisions": normalize(list(getattr(arena, "routing_decisions", []) or [])),
             "stage_results": stage_results,
             "verification": verification_summary,
             "hotswap_capsule_present": bool(session.get("hotswap_capsule")),
@@ -306,6 +299,47 @@ class ArenaPersistenceCoordinator:
             parent_checkpoint_id=parent_checkpoint_id,
             branch_name=branch_name,
             source_kind="CONSTRUCTION_PROJECT_STATE",
+            created_at=created_at,
+        )
+
+    def checkpoint_spatial(
+        self,
+        state: Mapping[str, Any],
+        *,
+        repo_head: str,
+        parent_checkpoint_id: str = "",
+        branch_name: str = "",
+        created_at: float | None = None,
+    ) -> dict[str, Any]:
+        payload = _mapping_state(state, "spatial state")
+        if payload.get("raw_domain_state_included") is not False:
+            raise ValueError("spatial checkpoints cannot include raw domain state")
+        if payload.get("raw_sensor_data_retained") is not False:
+            raise ValueError("spatial checkpoints cannot retain raw sensor data")
+        if payload.get("restore_mode") != "ASSESSMENT_ONLY":
+            raise ValueError("spatial checkpoints must remain assessment-only")
+        if payload.get("automatic_resume") is not False:
+            raise ValueError("spatial checkpoints cannot resume automatically")
+        return self.checkpoint_mapping(
+            arena_id="spatial_arena",
+            session_id=_session_identifier(payload.get("run_id"), "SPATIAL"),
+            repo_head=repo_head,
+            state=payload,
+            invariant_values=_checkpoint_invariants(
+                payload,
+                "run_id",
+                "phase",
+                "purpose_digest",
+                "domain_owner",
+                "domain_state_digest",
+                "scene_digest",
+                "render_plan_digest",
+                "raw_sensor_data_retained",
+                "restore_mode",
+            ),
+            parent_checkpoint_id=parent_checkpoint_id,
+            branch_name=branch_name,
+            source_kind="SPATIAL_ARENA_PROJECTION",
             created_at=created_at,
         )
 

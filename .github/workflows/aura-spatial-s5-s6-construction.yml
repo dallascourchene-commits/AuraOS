@@ -1,0 +1,130 @@
+name: Aura Spatial S5 and S6 Construction
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-spatial-s5-s6-construction.yml"
+      - ".aura/arena_routes/spatial.v1.json"
+      - "aura_spatial_*.py"
+      - "aura_construction_runtime_binding.py"
+      - "aura_review_lessons_security.py"
+      - "aura_arena_persistence_adapters.py"
+      - "aura_agent_arena_persistence_bridge.py"
+      - "aura_agent_arena_mcp.py"
+      - "scripts/aura_spatial_s5_s6_construction_architect_harness.py"
+      - "tests/test_aura_spatial*.py"
+      - "tests/test_aura_construction*.py"
+      - "tests/test_aura_arena_persistence_adapters.py"
+      - "tests/test_aura_agent_arena_mcp.py"
+      - "README.md"
+      - "USER_GUIDE.md"
+      - ".aura/ARCHITECTURE.md"
+      - "docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-spatial-s5-s6-construction-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-s5-s6-construction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      PYTHONHASHSEED: "0"
+      AURA_S5_S6_ARCHITECT_TIMEOUT_SECONDS: "300"
+      AURA_S5_S6_ARCHITECT_TOTAL_TIMEOUT_SECONDS: "900"
+    steps:
+      - name: Clone bounded pull-request history
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --single-branch --depth=256 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+
+      - name: Verify exact pull-request head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          observed="$(git rev-parse HEAD)"
+          test "$observed" = "$EXPECTED_HEAD"
+          echo "$observed" > /tmp/spatial_s5_s6_exact_head.txt
+
+      - name: Fetch bounded base reference
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
+          python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
+
+      - name: Compile, lint, and validate route
+        run: |
+          set -euo pipefail
+          python -m py_compile             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py
+          ruff check             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py             tests/test_aura_spatial_s5_arena.py             tests/test_aura_spatial_s6_construction.py             tests/test_aura_spatial_codex_repairs.py             tests/test_aura_spatial_waboose_precision.py             tests/test_aura_spatial_agent_bridge_mcp.py             tests/test_aura_spatial_cli.py             tests/test_aura_spatial_s5_s6_harness.py
+          ruff format --check             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py             tests/test_aura_spatial_s5_arena.py             tests/test_aura_spatial_s6_construction.py             tests/test_aura_spatial_codex_repairs.py             tests/test_aura_spatial_waboose_precision.py             tests/test_aura_spatial_agent_bridge_mcp.py             tests/test_aura_spatial_cli.py             tests/test_aura_spatial_s5_s6_harness.py
+          python aura_spatial_cli.py --repo-root . validate-route
+
+      - name: Run Codex and Waboose trust-boundary regressions
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short \
+            tests/test_aura_spatial_codex_repairs.py \
+            tests/test_aura_spatial_waboose_precision.py
+
+      - name: Run retained Spatial and Construction regressions
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short tests/test_aura_spatial*.py
+          python -m pytest -q --tb=short tests/test_aura_construction*.py
+          python -m pytest -q --tb=short             tests/test_aura_arena_persistence_adapters.py             tests/test_aura_agent_arena_mcp.py             tests/test_aura_spatial_agent_bridge_mcp.py
+          npm run test:spatial
+
+      - name: Run structural architecture proof
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/aura-spatial-s5-s6-receipts
+          python scripts/aura_spatial_s5_s6_construction_architect_harness.py             --repo-root .             --base-ref "origin/$BASE_REF"             --head-ref HEAD             --observed-head "$(git rev-parse HEAD)"             --receipt /tmp/aura-spatial-s5-s6-receipts/structural.json             --structural-only
+
+      - name: Run full Aura architecture proof
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          set -euo pipefail
+          python scripts/aura_spatial_s5_s6_construction_architect_harness.py             --repo-root .             --base-ref "origin/$BASE_REF"             --head-ref HEAD             --observed-head "$(git rev-parse HEAD)"             --receipt /tmp/aura-spatial-s5-s6-receipts/full.json
+
+      - name: Verify architecture analysis did not mutate tracked source
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- . ':!Aura_Staging/**'
+          git diff --cached --exit-code
+
+      - name: Upload S5/S6 architecture receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-s5-s6-construction-receipts-${{ github.sha }}
+          path: /tmp/aura-spatial-s5-s6-receipts
+          if-no-files-found: warn
+          retention-days: 14

@@ -43,9 +43,11 @@ _TOOL_HANDLERS: dict[str, Any] = {}
 
 def _register_tool(name: str):
     """Decorator to register a tool handler."""
+
     def decorator(func):
         _TOOL_HANDLERS[name] = func
         return func
+
     return decorator
 
 
@@ -310,6 +312,106 @@ TOOL_DEFINITIONS = [
         },
     },
     {
+        "name": "aura_spatial_status",
+        "description": "Return one governed Spatial Arena run status without raw payloads.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+        },
+    },
+    {
+        "name": "aura_spatial_interact",
+        "description": "Compile a review-only interaction for an existing Spatial Arena run.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "action": {"type": "string"},
+                "target_entity_ids": {"type": "array", "items": {"type": "string"}},
+                "metadata": {"type": "object"},
+            },
+            "required": ["run_id", "action", "target_entity_ids"],
+        },
+    },
+    {
+        "name": "aura_spatial_prove",
+        "description": "Record bounded render evidence and an assessment-only checkpoint.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "repo_head": {"type": "string"},
+                "outcome": {"type": "string", "default": "PRESENTED"},
+                "evidence_class": {"type": "string", "default": "DERIVED"},
+                "metrics": {"type": "object"},
+                "branch_name": {"type": "string"},
+            },
+            "required": ["run_id", "repo_head"],
+        },
+    },
+    {
+        "name": "aura_spatial_prove_browser_telemetry",
+        "description": "Validate exact browser telemetry and record empirical Spatial proof.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "telemetry_packet": {"type": "object"},
+                "repo_head": {"type": "string"},
+                "branch_name": {"type": "string"},
+            },
+            "required": ["run_id", "telemetry_packet", "repo_head"],
+        },
+    },
+    {
+        "name": "aura_spatial_decide",
+        "description": "Compile a human/domain decision packet without applying it.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "decision": {"type": "string"},
+                "decision_ref": {"type": "string"},
+            },
+            "required": ["run_id", "decision"],
+        },
+    },
+    {
+        "name": "aura_spatial_observatory",
+        "description": "Return a read-only Spatial Arena evidence and cost projection.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"run_id": {"type": "string"}},
+            "required": ["run_id"],
+        },
+    },
+    {
+        "name": "aura_spatial_restore_assessment",
+        "description": "Assess a Spatial checkpoint without automatic resume.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "current_repo_head": {"type": "string"},
+            },
+            "required": ["run_id", "current_repo_head"],
+        },
+    },
+    {
+        "name": "aura_spatial_dissolve",
+        "description": "Dissolve a Spatial run only with exact renderer cleanup evidence.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "run_id": {"type": "string"},
+                "renderer_cleanup_receipt": {"type": "object"},
+                "reason_code": {"type": "string"},
+            },
+            "required": ["run_id", "renderer_cleanup_receipt"],
+        },
+    },
+    {
         "name": "aura_atomic_function_inventory",
         "description": "Enumerate exact atomic functions, methods, async functions, and nested functions with spans and hashes.",
         "inputSchema": {
@@ -332,7 +434,11 @@ TOOL_DEFINITIONS = [
                 "objective": {"type": "string"},
                 "target_files": {"type": "array", "items": {"type": "string"}},
                 "target_symbols": {"type": "array", "items": {"type": "string"}},
-                "target_arena": {"type": "string", "enum": ["coding_arena", "coding_waboose", "human_agent", "agent_bridge", "research"], "default": "agent_bridge"},
+                "target_arena": {
+                    "type": "string",
+                    "enum": ["coding_arena", "coding_waboose", "human_agent", "agent_bridge", "research"],
+                    "default": "agent_bridge",
+                },
                 "radius": {"type": "integer", "minimum": 0, "maximum": 3, "default": 1},
                 "max_atomic_nodes": {"type": "integer", "minimum": 1, "maximum": 200, "default": 48},
                 "max_source_lines": {"type": "integer", "minimum": 8, "maximum": 300, "default": 120},
@@ -447,6 +553,7 @@ TOOL_DEFINITIONS = [
 # Tool handlers
 # ---------------------------------------------------------------------------
 
+
 @_register_tool("aura_repo_digest")
 def _handle_repo_digest(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
     return bridge.aura_repo_digest(
@@ -468,9 +575,7 @@ def _handle_prepare_arena(bridge: AuraAgentArenaBridge, args: dict[str, Any]) ->
         emergent_radius=int(args.get("emergent_radius", 1)),
         emergent_max_atomic_nodes=int(args.get("emergent_max_atomic_nodes", 48)),
         emergent_include_source=_strict_bool_arg(args, "emergent_include_source", default=False),
-        emergent_include_research_plan=_strict_bool_arg(
-            args, "emergent_include_research_plan", default=True
-        ),
+        emergent_include_research_plan=_strict_bool_arg(args, "emergent_include_research_plan", default=True),
     )
 
 
@@ -624,6 +729,86 @@ def _handle_handoff_checkpoint(bridge: AuraAgentArenaBridge, args: dict[str, Any
     )
 
 
+@_register_tool("aura_spatial_status")
+def _handle_spatial_status(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_spatial_status(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_spatial_interact")
+def _handle_spatial_interact(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_spatial_interact(
+        str(args.get("run_id", "")),
+        action=str(args.get("action", "")),
+        target_entity_ids=tuple(args.get("target_entity_ids", []) or []),
+        metadata=dict(args.get("metadata") or {}),
+    )
+
+
+@_register_tool("aura_spatial_prove")
+def _handle_spatial_prove(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_spatial_prove(
+        str(args.get("run_id", "")),
+        repo_head=str(args.get("repo_head", "")),
+        outcome=str(args.get("outcome", "PRESENTED")),
+        evidence_class=str(args.get("evidence_class", "DERIVED")),
+        metrics=dict(args.get("metrics") or {}),
+        branch_name=str(args.get("branch_name", "")),
+    )
+
+
+@_register_tool("aura_spatial_prove_browser_telemetry")
+def _handle_spatial_prove_browser_telemetry(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    telemetry = args.get("telemetry_packet")
+    if not isinstance(telemetry, Mapping):
+        raise ValueError("telemetry_packet must be an object")
+    return bridge.aura_spatial_prove_browser_telemetry(
+        str(args.get("run_id", "")),
+        telemetry_packet=dict(telemetry),
+        repo_head=str(args.get("repo_head", "")),
+        branch_name=str(args.get("branch_name", "")),
+    )
+
+
+@_register_tool("aura_spatial_decide")
+def _handle_spatial_decide(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_spatial_decide(
+        str(args.get("run_id", "")),
+        decision=str(args.get("decision", "")),
+        decision_ref=str(args.get("decision_ref", "human:pending")),
+    )
+
+
+@_register_tool("aura_spatial_observatory")
+def _handle_spatial_observatory(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_spatial_observatory(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_spatial_restore_assessment")
+def _handle_spatial_restore_assessment(
+    bridge: AuraAgentArenaBridge,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    return bridge.aura_spatial_restore_assessment(
+        str(args.get("run_id", "")),
+        current_repo_head=str(args.get("current_repo_head", "")),
+    )
+
+
+@_register_tool("aura_spatial_dissolve")
+def _handle_spatial_dissolve(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    receipt = args.get("renderer_cleanup_receipt")
+    if not isinstance(receipt, Mapping):
+        raise ValueError("renderer_cleanup_receipt must be an object")
+    return bridge.aura_spatial_dissolve(
+        str(args.get("run_id", "")),
+        renderer_cleanup_receipt=dict(receipt),
+        reason_code=str(args.get("reason_code", "SPATIAL_ARENA_COMPLETE")),
+    )
+
+
 @_register_tool("aura_atomic_function_inventory")
 def _handle_atomic_function_inventory(
     bridge: AuraAgentArenaBridge,
@@ -655,9 +840,7 @@ def _handle_emergent_evidence(
         "include_source": _strict_bool_arg(args, "include_source", default=True),
         "include_future": _strict_bool_arg(args, "include_future", default=True),
         "include_research_plan": _strict_bool_arg(args, "include_research_plan", default=True),
-        "include_offline_research": _strict_bool_arg(
-            args, "include_offline_research", default=True
-        ),
+        "include_offline_research": _strict_bool_arg(args, "include_offline_research", default=True),
     }
     return bridge.aura_emergent_evidence(request)
 
@@ -745,6 +928,7 @@ def _handle_waboose_status(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -
 # JSON-RPC server
 # ---------------------------------------------------------------------------
 
+
 def _make_response(request_id: Any, result: Any) -> dict[str, Any]:
     return {
         "jsonrpc": "2.0",
@@ -768,11 +952,14 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
     params = request.get("params", {}) or {}
 
     if method == "initialize":
-        return _make_response(request_id, {
-            "protocolVersion": PROTOCOL_VERSION,
-            "capabilities": {"tools": {}},
-            "serverInfo": SERVER_INFO,
-        })
+        return _make_response(
+            request_id,
+            {
+                "protocolVersion": PROTOCOL_VERSION,
+                "capabilities": {"tools": {}},
+                "serverInfo": SERVER_INFO,
+            },
+        )
 
     if method == "initialized":
         # Notification — no response needed.
@@ -792,16 +979,18 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
         try:
             result = handler(bridge, arguments)
             # Error packets are still valid results (ok=False).
-            return _make_response(request_id, {
-                "content": [
-                    {
-                        "type": "text",
-                        "text": json.dumps(result, default=str, ensure_ascii=False),
-                    }
-                ],
-                "isError": is_error_packet(result)
-                or (isinstance(result, Mapping) and result.get("ok") is False),
-            })
+            return _make_response(
+                request_id,
+                {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": json.dumps(result, default=str, ensure_ascii=False),
+                        }
+                    ],
+                    "isError": is_error_packet(result) or (isinstance(result, Mapping) and result.get("ok") is False),
+                },
+            )
         except Exception as exc:
             return _make_error_response(request_id, -32603, f"Tool execution error: {exc}")
 

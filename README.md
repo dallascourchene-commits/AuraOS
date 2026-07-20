@@ -44,6 +44,7 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Planning Board** | Represents proposal-only goals, actions, predicates, constraints, backward regression, forward replay, and continuity stages | Cannot execute or authorize actions |
 | **Civic Commons Arena** | Coordinates governed civic objectives, evidence, needs, resources, scenarios, consent, dissent, and reversible pilots | Non-binding; no funding, voting, legal approval, or person-level targeting |
 | **Construction Arena** | Replays exact project state, evaluates blocked/admissible proposals, and projects bounded Human Agent and Observatory views | No physical work, payment, access, equipment, or professional authority |
+| **Spatial Arena** | Projects canonical domain state into immutable scenes and runs a governed `FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT → INTERACT → PROVE → DECIDE → DISSOLVE` lifecycle | Presentation and proposal only; no domain mutation, renderer authority, raw-sensor retention, automatic resume, or merge |
 | **Financial Arena** | Stores immutable Decimal-based exact-state financial records and explicit truth classes | No advice, prediction, transaction, connector, or account-mutation authority |
 | **Learning Arena / Crucible** | Mines verified `ArenaExperience` records across TRAIN, VALIDATION, and SHADOW | Emits `CRYSTALLIZATION_PROPOSED`; never auto-promotes code, grammar, or policy |
 | **Ephemeral Organ Runtime** | Compiles temporary capability systems with manifests, leases, sandbox policy, verification, dissolution, and receipts | No ambient authority; arbitrary components fail closed without a real sandbox |
@@ -295,6 +296,45 @@ immutable claims/evidence/events
 
 `ConstructionProjectState` is the only Construction truth owner. Probabilistic or sensor scores cannot rescue a blocked route. Real connectors, physical/equipment control, payment release, access control, safety/engineering/legal certification, and commercial field claims remain separate future programs.
 
+
+<!-- AURA_SPATIAL_S5_S6:START -->
+### Spatial Arena and Construction projection
+
+Spatial S5 completes Aura's governed presentation lifecycle, while the Construction-only S6 adapter projects exact `ConstructionProjectState` and its validated runtime packet without creating another Construction ledger.
+
+```text
+canonical domain truth
+  → privacy-minimized adapter
+  → immutable SpatialSceneSnapshot
+  → deterministic device/render plan
+  → ephemeral presentation session
+  → review-only interaction
+  → render evidence + Attempt Archive + assessment-only checkpoint
+  → read-only Observatory projection
+  → human/domain decision packet
+  → exact renderer-boundary receipt
+  → lease and session dissolution
+```
+
+The canonical lifecycle is:
+
+```text
+FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
+      → INTERACT → PROVE → DECIDE → DISSOLVE
+```
+
+`DECIDE` emits a review packet; it does not apply a decision. `DISSOLVE` preserves the client's evidence class and requires exact session, scene, and render-plan bindings. Emergency close never fabricates renderer cleanup. Public Construction identifiers are hashed, restricted/sensitive projections remain local and abstract, and floor-plan manifests are admitted only when they are local, privacy-compatible, explicitly non-survey, and contain no person-level data.
+
+Validate the route and run the synthetic, non-persistent demonstration:
+
+```bash
+python aura_spatial_cli.py --repo-root . validate-route
+python aura_spatial_cli.py --repo-root . synthetic-construction-demo
+```
+
+See [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md).
+<!-- AURA_SPATIAL_S5_S6:END -->
+
 ### Financial exact state
 
 The first Financial Arena slice provides immutable Decimal-backed records for accounts, balances, transactions, cash flows, debts, asset values, fees, tax assumptions, provenance, freshness, currencies, and units. It distinguishes:
@@ -397,7 +437,7 @@ Unknown, stale, ungrounded, malformed, expired, ambiguous, or unauthorized work 
 
 ## Implemented architecture versus product direction
 
-Implemented repository capabilities are documented as implemented. Broader directions—including intent-compiled consumer application fabrics, sovereign Arena federations, disaster coordination, institutional deployments, AR experiences, public information networks, module marketplaces, and real-world Construction/Financial connectors—remain architecture-supported product directions until separately built, reviewed, measured, and authorized.
+Implemented repository capabilities are documented as implemented. Broader directions—including intent-compiled consumer application fabrics, sovereign Arena federations, disaster coordination, institutional deployments, production spatial/XR deployments, public information networks, module marketplaces, and real-world Construction/Financial connectors—remain architecture-supported product directions until separately built, reviewed, measured, and authorized.
 
 AuraOS evidence does not establish consciousness, unrestricted autonomy, universal model superiority, legal certification, court admissibility, or production readiness beyond the exact measured gates.
 
@@ -406,6 +446,7 @@ AuraOS evidence does not establish consciousness, unrestricted autonomy, univers
 - [`USER_GUIDE.md`](USER_GUIDE.md) — installation, operating workflows, commands, APIs, testing, and troubleshooting
 - [`.aura/ARCHITECTURE.md`](.aura/ARCHITECTURE.md) — canonical ownership, planes, data flows, contracts, and authority model
 - [`.aura/CODEMAP.md`](.aura/CODEMAP.md) — current compact repository navigation
+- [`docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md`](docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md) — governed Spatial lifecycle, Construction projection, privacy, evidence, checkpoints, Agent Bridge/MCP/CLI, and dissolution boundaries
 - [`docs/AURA_GATE.md`](docs/AURA_GATE.md) — Phase 2 authority flow, identity, policy, protocols, deployment, audit, and proof limits
 - [`docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md`](docs/AURA_COUNCIL_V3_EFFICIENCY_AND_SCALE_ENHANCEMENT_PROPOSAL.md) — operation-DAG, parallel-wave, quality, speed, and token-efficiency recommendations for Council V3.1
 - [`docs/AURA_HUMAN_AGENT_ARENA.md`](docs/AURA_HUMAN_AGENT_ARENA.md)

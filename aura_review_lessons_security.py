@@ -1,4 +1,5 @@
 """Security, boundedness, schema, workflow, and evidence review detectors."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -34,8 +35,7 @@ def detect_authority_aliases(candidate: Any) -> list[dict[str, Any]]:
                 detector_id="detect_authority_aliases",
                 code="AUTHORITY_ALIAS",
                 message=(
-                    f"Metadata key {key!r} aliases protected authority key "
-                    f"{canonical!r}; aliases must fail closed."
+                    f"Metadata key {key!r} aliases protected authority key {canonical!r}; aliases must fail closed."
                 ),
                 evidence={"metadata_path": path, "key": key, "canonical_key": canonical, "value": value},
                 confidence=1.0,
@@ -44,14 +44,28 @@ def detect_authority_aliases(candidate: Any) -> list[dict[str, Any]]:
     return findings
 
 
+def _is_spatial_no_authority_envelope(candidate: Any) -> bool:
+    return bool(
+        isinstance(candidate, Mapping)
+        and candidate.get("projection_only") is True
+        and candidate.get("renderer_authority") is False
+        and candidate.get("execution_authority") is False
+        and candidate.get("patch_authority") is False
+        and candidate.get("production_mutation") is False
+    )
+
+
 def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
     """Detect affirmative or contradictory canonical authority metadata."""
 
     findings: list[dict[str, Any]] = []
+    spatial_no_authority = _is_spatial_no_authority_envelope(candidate)
     for path, key, value in _walk_metadata(candidate):
         if key not in _CANONICAL_AUTHORITY_KEYS:
             continue
         expected = _PROTECTED_AUTHORITY_EXPECTED[key]
+        if key == "patch_authority" and path == "$.patch_authority" and spatial_no_authority:
+            continue
         if value == "<dynamic>":
             # The source scanner resolves known authority constants before this
             # detector. Unknown dynamic values are not promoted to a confirmed
@@ -63,10 +77,7 @@ def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
             _finding(
                 detector_id="detect_protected_metadata_overrides",
                 code="PROTECTED_AUTHORITY_OVERRIDE",
-                message=(
-                    f"Protected authority field {key!r} must remain exactly "
-                    f"{expected!r}."
-                ),
+                message=(f"Protected authority field {key!r} must remain exactly {expected!r}."),
                 evidence={
                     "metadata_path": path,
                     "key": key,
@@ -77,6 +88,8 @@ def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
             )
         )
     return findings
+
+
 def detect_count_without_byte_budget(candidate: Any) -> list[dict[str, Any]]:
     """Detect attacker-controlled evidence that has count caps but no byte caps."""
 
@@ -91,8 +104,7 @@ def detect_count_without_byte_budget(candidate: Any) -> list[dict[str, Any]]:
     byte_keys = {
         key
         for key in candidate
-        if any(term in str(key).casefold() for term in ("byte", "bytes", "size"))
-        and "max" in str(key).casefold()
+        if any(term in str(key).casefold() for term in ("byte", "bytes", "size")) and "max" in str(key).casefold()
     }
     attacker_controlled = candidate.get("attacker_controlled", True) is not False
     if count_keys and not byte_keys and attacker_controlled:
@@ -158,6 +170,9 @@ def detect_uri_alias_encoding(candidate: Any) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
     for value in values:
         uri = str(value or "").strip()
+        scheme, separator, remainder = uri.partition(":")
+        if separator == ":" and remainder == "//" and re.fullmatch(r"[A-Za-z][A-Za-z0-9+.-]*", scheme):
+            continue
         lowered = uri.casefold()
         decoded = unquote(uri)
         unsafe = False
@@ -270,10 +285,13 @@ def detect_stale_evidence_claim(candidate: Any) -> list[dict[str, Any]]:
     evidence_status = str(candidate.get("evidence_status") or "").casefold()
     evidence_head = str(candidate.get("evidence_head") or "")
     current_head = str(candidate.get("current_head") or "")
-    bad_upgrade = (
-        any(term in claim for term in ("passed", "verified", "green"))
-        and evidence_status in {"configured", "not_executed", "queued", "in_progress", "historical"}
-    )
+    bad_upgrade = any(term in claim for term in ("passed", "verified", "green")) and evidence_status in {
+        "configured",
+        "not_executed",
+        "queued",
+        "in_progress",
+        "historical",
+    }
     head_mismatch = bool(
         evidence_head
         and current_head
@@ -296,9 +314,14 @@ def detect_stale_evidence_claim(candidate: Any) -> list[dict[str, Any]]:
         ]
     return []
 
+
 __all__ = [
-    "detect_authority_aliases", "detect_count_without_byte_budget",
-    "detect_noncanonical_source_path", "detect_protected_metadata_overrides",
-    "detect_schema_runtime_drift", "detect_stale_evidence_claim",
-    "detect_unwired_regression", "detect_uri_alias_encoding",
+    "detect_authority_aliases",
+    "detect_count_without_byte_budget",
+    "detect_noncanonical_source_path",
+    "detect_protected_metadata_overrides",
+    "detect_schema_runtime_drift",
+    "detect_stale_evidence_claim",
+    "detect_unwired_regression",
+    "detect_uri_alias_encoding",
 ]
