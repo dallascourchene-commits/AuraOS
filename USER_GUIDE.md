@@ -2,7 +2,7 @@
 
 > Operator guide for the current sovereign, local-first, Arena-based AuraOS architecture
 
-**Audit window:** architecture and work reviewed through July 18, 2026, including the preceding three weeks of Planning Board, event history, relational authority, J2/ST3GG/QDKT, Model Cognome, Human Agent, external-worker, Civic Commons, Construction, Financial, persistence, evidence, benchmark, public-showcase, Forge, and Gate development.
+**Audit window:** architecture and work reviewed through July 20, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.
 
 **CODEMAP rule:** regenerate navigation after architecture or source changes. Do not trust historical line numbers when the current tree can be inspected directly.
 
@@ -81,7 +81,9 @@ Keep these outside the repository:
 | **Coding Arena** | Visual code topology, exact source regions, route simulation, and capsule review | `python3 aura_coding_arena_server.py --demo` |
 | **Human Agent Arena** | Human/Aura/agent workflows, gate dialogue, attempts, emergent evidence, Construction profile, persistence, and tools | `python3 aura_human_agent_arena_server.py --repo-root . --demo` |
 | **Aura Showcase** | Guided four-surface Civic, Human Agent, Observatory, and Crucible demonstration | `python3 aura_showcase_server.py --demo-project winnipeg_pathways` |
-| **Agent Arena MCP** | Bounded MCP-compatible external-agent tools | `python3 -m aura_agent_arena_mcp` |
+| **Agent Arena MCP** | Bounded MCP-compatible external-agent tools, including persistent Spatial review operations | `python3 -m aura_agent_arena_mcp` |
+| **Spatial CLI** | Validate the Spatial WFST and run a synthetic, private-data-free Construction lifecycle | `python3 aura_spatial_cli.py --repo-root . validate-route` |
+| **Agent Bridge GitHub publication** | Prepare and atomically publish bounded file changes with exact-head compare-and-swap; prepare merge evidence without merge authority | `aura_github_prepare_publication → aura_github_execute_publication → aura_github_prepare_merge` |
 | **Legacy REPL** | Existing `!commands` and compatibility workflows | `python3 aura_node.py` |
 
 The browser surfaces are not authority. A button, chart, ranking, dialogue, or visual node does not approve a consequential action.
@@ -110,6 +112,59 @@ aura_waboose_prepare
 
 A review finding is not patch authority. Select a generated Forge repair request only after
 examining the exact evidence, then let Forge stage and verify the separate repair.
+
+<!-- AURA_JULY20_OPERATOR_UPDATE:START -->
+### Run the governed Spatial lifecycle
+
+Validate the Spatial route:
+
+```bash
+python3 aura_spatial_cli.py --repo-root . validate-route
+```
+
+Run the non-persistent synthetic Construction demonstration:
+
+```bash
+python3 aura_spatial_cli.py --repo-root . synthetic-construction-demo
+```
+
+The demonstration uses fixture data, writes no persistent demo state, allocates no renderer, and ends with a human-review decision packet plus a dissolution receipt. For real integrations, the operator must provide a canonically issued Construction runtime packet; reconstructing an equivalent dictionary is rejected.
+
+The lifecycle is:
+
+```text
+FRAME → GROUND → COMPILE_SCENE → PLAN_RENDER → PRESENT
+      → INTERACT → PROVE → DECIDE → DISSOLVE
+```
+
+Operator rules:
+
+- admit only canonical `aura://` asset identifiers accepted by the scene registry;
+- keep raw sensor payloads, nested telemetry, data URLs, credentials, and person-level data outside proof metrics;
+- treat browser renderer and cleanup evidence according to its declared evidence class;
+- never interpret a render receipt, checkpoint, interaction, or decision packet as domain mutation authority;
+- dissolve the session and release its lease even after failed preparation or presentation.
+
+### Publish GitHub changes atomically
+
+The permanent publication tools are:
+
+```text
+aura_github_prepare_publication
+→ aura_github_execute_publication
+→ review and verification
+→ aura_github_prepare_merge
+→ separate trusted-human merge action
+```
+
+Create mode requires an immutable base snapshot and a branch name that does not exist and has never been used by a historical PR. Update mode requires the exact open, unmerged, same-repository PR number and exact current head SHA. Publication fails closed when the branch moved, the PR does not match, an operation/type/encoding is noncanonical, bounds are exceeded, or any caller-supplied path enters `.github/workflows/`.
+
+Set `AURA_GITHUB_TOKEN` only in the operator environment. Never pass it through MCP arguments. The merge-preparation tool provides evidence but cannot invoke a connector or claim merge authority.
+
+### Use learned review lessons safely
+
+Typed review lessons and Crucible replay help Coding Waboose look for previously observed defect classes, including authority aliases, protected metadata overrides, count-only bounds, unsafe source paths, URI aliases, schema/runtime drift, unwired regressions, and stale evidence claims. Treat detector output as a review lead until exact current source and tests corroborate it. A clean replay is evidence for the exact reviewed head, not a permanent guarantee about future commits.
+<!-- AURA_JULY20_OPERATOR_UPDATE:END -->
 
 ## 4. Orient yourself before changing code
 
