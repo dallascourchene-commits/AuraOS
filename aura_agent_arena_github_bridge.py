@@ -194,13 +194,7 @@ def _temporary_transport(path: str) -> bool:
                 "_temp.yaml",
             )
         )
-        or (
-            lower.startswith(".github/workflows/")
-            and any(
-                marker in lower
-                for marker in ("materialize", "bootstrap", "publisher", "trigger")
-            )
-        )
+        or lower.startswith(".github/workflows/")
     )
 
 
@@ -300,14 +294,22 @@ def _changes(raw: Any) -> list[PublicationChange]:
                 f"temporary workflow/transport artifact rejected: {path}"
             )
 
-        operation = str(item.get("operation", "upsert")).strip().lower()
-        mode = str(item.get("mode", "100644")).strip()
-        if operation not in {"upsert", "delete"}:
-            raise GitHubPublicationError("operation must be upsert or delete")
-        if mode != "100644":
+        raw_operation = item.get("operation", "upsert")
+        if (
+            not isinstance(raw_operation, str)
+            or raw_operation not in {"upsert", "delete"}
+        ):
             raise GitHubPublicationError(
-                "GraphQL createCommitOnBranch supports regular-file mode 100644 only"
+                "operation must be the exact string upsert or delete"
             )
+        operation = raw_operation
+
+        raw_mode = item.get("mode", "100644")
+        if not isinstance(raw_mode, str) or raw_mode != "100644":
+            raise GitHubPublicationError(
+                "mode must be the exact string 100644"
+            )
+        mode = raw_mode
 
         if operation == "delete":
             forbidden_delete_keys = sorted(
@@ -332,7 +334,15 @@ def _changes(raw: Any) -> list[PublicationChange]:
             )
             continue
 
-        encoding = str(item.get("encoding", "utf-8")).strip().lower()
+        raw_encoding = item.get("encoding", "utf-8")
+        if (
+            not isinstance(raw_encoding, str)
+            or raw_encoding not in {"utf-8", "base64"}
+        ):
+            raise GitHubPublicationError(
+                "encoding must be the exact string utf-8 or base64"
+            )
+        encoding = raw_encoding
         content, graphql_contents, decoded = _decode_content(
             item.get("content"),
             encoding,
@@ -858,7 +868,7 @@ def _create_commit_on_branch(
         "input": {
             "branch": {
                 "repositoryNameWithOwner": repository,
-                "refName": branch,
+                "branchName": branch,
             },
             "message": _commit_message_payload(commit_message),
             "expectedHeadOid": expected_head_sha,

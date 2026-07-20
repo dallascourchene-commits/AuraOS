@@ -165,6 +165,7 @@ def test_contract_is_deterministic_and_sorted() -> None:
     [
         ".aura/tmp/payload.bin",
         ".github/workflows/materialize-temp.yml",
+        ".github/workflows/ci.yml",
         "docs/IMPLEMENTATION_TEMP.md",
         "../escape.py",
         "/absolute.py",
@@ -198,6 +199,21 @@ def test_delete_rejects_schema_forbidden_keys(forbidden: dict[str, str]) -> None
                 ]
             )
         )
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("operation", "UPSERT"),
+        ("encoding", "UTF-8"),
+        ("mode", 100644),
+    ],
+)
+def test_change_literals_are_not_coerced(field: str, value: Any) -> None:
+    change: dict[str, Any] = {"path": "strict.txt", "content": "x"}
+    change[field] = value
+    with pytest.raises(GitHubPublicationError):
+        compile_publication_contract(_request(changes=[change]))
 
 
 def test_temporary_transport_escape_hatch_is_removed() -> None:
@@ -242,7 +258,7 @@ def test_utf8_byte_counter_rejects_surrogates() -> None:
         _utf8_byte_count("\ud800")
 
 
-def test_create_uses_graphql_cas_refname_and_base64() -> None:
+def test_create_uses_graphql_cas_branchname_and_base64() -> None:
     transport = FakeTransport()
     receipt = execute_publication_contract(
         compile_publication_contract(_request()),
@@ -254,7 +270,7 @@ def test_create_uses_graphql_cas_refname_and_base64() -> None:
     input_payload = variables["input"]
     assert input_payload["branch"] == {
         "repositoryNameWithOwner": REPOSITORY,
-        "refName": BRANCH,
+        "branchName": BRANCH,
     }
     assert input_payload["expectedHeadOid"] == BASE_SHA
     additions = input_payload["fileChanges"]["additions"]

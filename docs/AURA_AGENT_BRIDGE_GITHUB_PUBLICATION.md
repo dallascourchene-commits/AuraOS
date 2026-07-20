@@ -4,7 +4,9 @@
 
 This lane replaces temporary GitHub Actions materializer/bootstrap/publisher
 workflows with a bounded GitHub API path whose commit and branch update are a
-single server-side compare-and-swap operation.
+single server-side compare-and-swap operation. The GraphQL
+`CommittableBranch` input uses the exact `branchName` field with an unqualified
+branch name.
 
 ```text
 exact base/head/PR evidence
@@ -35,7 +37,9 @@ server-side compare-and-swap operation. A concurrent branch change causes the
 mutation to fail rather than publishing from a stale parent.
 
 No local `git add`, staging directory, shell push, encoded archive, or temporary
-workflow is required.
+workflow is required. This lane rejects every caller-supplied path under
+`.github/workflows/`, regardless of filename, and accepts only exact schema
+literals and types for change operation, encoding, and mode.
 
 ## Agent Bridge tools
 
@@ -156,9 +160,9 @@ python3 -m pytest -q tests/test_aura_agent_arena_github_bridge.py
 ```
 
 The focused suite covers deterministic contracts, schema/runtime parity,
-pre-encoding and pre-decoding bounds, GraphQL `refName` variable shape,
+pre-encoding and pre-decoding bounds, GraphQL `branchName` variable shape,
 same-repository PR binding, CAS rejection, create-mode recovery evidence,
 no update-mode PR PATCH, redirect rejection, malformed UTF-8 response handling,
 strict delete payload parity, private/public payload integrity, evidence-only
 merge output, and idempotent MCP registration. The current focused suite passes
-**30 tests**.
+**33 tests**.
