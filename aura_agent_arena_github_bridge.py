@@ -51,7 +51,6 @@ _REQUEST_KEYS = frozenset(
         "pr_number",
         "draft",
         "publish_authorized",
-        "allow_temporary_transport",
         "changes",
     }
 )
@@ -81,7 +80,6 @@ _IDENTITY_KEYS = (
     "pr_number",
     "draft",
     "changes",
-    "allow_temporary_transport",
     "publish_authorized",
 )
 
@@ -206,6 +204,29 @@ def _temporary_transport(path: str) -> bool:
     )
 
 
+def _utf8_byte_count(content: str) -> int:
+    """Count UTF-8 bytes without allocating the encoded payload."""
+
+    total = 0
+    for character in content:
+        codepoint = ord(character)
+        if codepoint <= 0x7F:
+            total += 1
+        elif codepoint <= 0x7FF:
+            total += 2
+        elif 0xD800 <= codepoint <= 0xDFFF:
+            raise GitHubPublicationError("utf-8 content contains a surrogate")
+        elif codepoint <= 0xFFFF:
+            total += 3
+        else:
+            total += 4
+        if total > _MAX_FILE_BYTES:
+            raise GitHubPublicationError(
+                f"utf-8 content exceeds {_MAX_FILE_BYTES} decoded bytes"
+            )
+    return total
+
+
 def _decode_content(
     content: Any,
     encoding: str,
@@ -218,11 +239,13 @@ def _decode_content(
             raise GitHubPublicationError(
                 f"utf-8 content exceeds {_MAX_UTF8_CHARS} input characters"
             )
-        decoded = content.encode("utf-8")
-        if len(decoded) > _MAX_FILE_BYTES:
-            raise GitHubPublicationError(
-                f"utf-8 content exceeds {_MAX_FILE_BYTES} decoded bytes"
-            )
+        expected_bytes = _utf8_byte_count(content)
+        try:
+            decoded = content.encode("utf-8")
+        except UnicodeEncodeError as exc:
+            raise GitHubPublicationError("invalid utf-8 content") from exc
+        if len(decoded) != expected_bytes:
+            raise GitHubPublicationError("utf-8 byte-count validation failed")
         encoded = base64.b64encode(decoded).decode("ascii")
         return content, encoded, decoded
 
@@ -245,11 +268,7 @@ def _decode_content(
     raise GitHubPublicationError("encoding must be utf-8 or base64")
 
 
-def _changes(
-    raw: Any,
-    *,
-    allow_temporary_transport: bool,
-) -> list[PublicationChange]:
+def _changes(raw: Any) -> list[PublicationChange]:
     if not isinstance(raw, Sequence) or isinstance(
         raw,
         (str, bytes, bytearray),
@@ -276,7 +295,7 @@ def _changes(
         if path in seen:
             raise GitHubPublicationError(f"duplicate publication path: {path}")
         seen.add(path)
-        if _temporary_transport(path) and not allow_temporary_transport:
+        if _temporary_transport(path):
             raise GitHubPublicationError(
                 f"temporary workflow/transport artifact rejected: {path}"
             )
@@ -291,9 +310,13 @@ def _changes(
             )
 
         if operation == "delete":
-            if item.get("content") not in (None, ""):
+            forbidden_delete_keys = sorted(
+                key for key in ("content", "encoding") if key in item
+            )
+            if forbidden_delete_keys:
                 raise GitHubPublicationError(
-                    f"delete entry must not include content: {path}"
+                    f"delete entry contains forbidden keys for {path}: "
+                    f"{', '.join(forbidden_delete_keys)}"
                 )
             result.append(
                 PublicationChange(
@@ -487,20 +510,9 @@ def compile_publication_contract(
         raise GitHubPublicationError("pr_body exceeds 256 KiB")
 
     draft = request_payload.get("draft", True)
-    allow_temp = request_payload.get(
-        "allow_temporary_transport",
-        False,
-    )
     if not isinstance(draft, bool):
         raise GitHubPublicationError("draft must be a boolean")
-    if not isinstance(allow_temp, bool):
-        raise GitHubPublicationError(
-            "allow_temporary_transport must be a boolean"
-        )
-    normalized_changes = _changes(
-        request_payload.get("changes"),
-        allow_temporary_transport=allow_temp,
-    )
+    normalized_changes = _changes(request_payload.get("changes"))
 
     public = {
         "version": GITHUB_PUBLICATION_VERSION,
@@ -518,7 +530,6 @@ def compile_publication_contract(
         "pr_number": pr_number,
         "draft": draft,
         "changes": [item.public_dict() for item in normalized_changes],
-        "allow_temporary_transport": allow_temp,
         "publish_authorized": (
             request_payload.get("publish_authorized") is True
         ),
@@ -582,7 +593,6 @@ class GitHubRestTransport:
         *,
         token: str,
         timeout_seconds: int = 30,
-        opener: Any | None = None,
     ) -> None:
         token_text = str(token or "").strip()
         if not token_text:
@@ -594,7 +604,9 @@ class GitHubRestTransport:
             1,
             min(int(timeout_seconds), 120),
         )
-        self._opener = opener or request.build_opener(_NoRedirectHandler())
+        # Never accept an injected opener: an opener with a default redirect
+        # handler could replay the bearer token before the final-host check.
+        self._opener = request.build_opener(_NoRedirectHandler())
 
     def _send(
         self,
@@ -669,6 +681,7 @@ class GitHubRestTransport:
         except (
             error.URLError,
             TimeoutError,
+            UnicodeDecodeError,
             json.JSONDecodeError,
         ) as exc:
             raise GitHubPublicationError(
@@ -865,13 +878,21 @@ def _create_commit_on_branch(
     )
 
 
-def _cleanup_fresh_branch(
+def _fresh_branch_recovery_evidence(
     transport: GitHubRestTransport,
     *,
     repository: str,
     branch: str,
     expected_sha: str,
 ) -> dict[str, Any]:
+    """Inspect a partial create without performing a racy ref deletion.
+
+    GitHub's REST/GraphQL ref-deletion operations do not accept an expected OID.
+    A GET followed by DELETE would therefore be a TOCTOU race that could remove a
+    newer writer's commit. Return durable recovery evidence for a trusted operator
+    instead of claiming that automatic cleanup is compare-and-swap guarded.
+    """
+
     try:
         current = _get_ref(
             transport,
@@ -880,26 +901,37 @@ def _cleanup_fresh_branch(
             allow_404=True,
         )
         if current is None:
-            return {"attempted": True, "deleted": True, "detail": "already_absent"}
-        if (
-            not isinstance(current, Mapping)
-            or _ref_sha(current, "cleanup_ref") != expected_sha
-        ):
             return {
-                "attempted": True,
-                "deleted": False,
-                "detail": "ref_moved_cleanup_refused",
+                "automatic_delete_attempted": False,
+                "recovery_required": False,
+                "detail": "already_absent",
             }
-        transport.request(
-            "DELETE",
-            _ref_path(repository, branch, plural=True),
-        )
-        return {"attempted": True, "deleted": True, "detail": "deleted"}
+        if not isinstance(current, Mapping):
+            return {
+                "automatic_delete_attempted": False,
+                "recovery_required": True,
+                "safe_manual_delete": False,
+                "detail": "invalid_ref_evidence",
+            }
+        observed_sha = _ref_sha(current, "recovery_ref")
+        return {
+            "automatic_delete_attempted": False,
+            "recovery_required": True,
+            "safe_manual_delete": observed_sha == expected_sha,
+            "expected_sha": expected_sha,
+            "observed_sha": observed_sha,
+            "detail": (
+                "manual_cleanup_required_no_cas_delete"
+                if observed_sha == expected_sha
+                else "ref_moved_manual_investigation_required"
+            ),
+        }
     except GitHubPublicationError as exc:
         return {
-            "attempted": True,
-            "deleted": False,
-            "detail": f"cleanup_failed:{exc}",
+            "automatic_delete_attempted": False,
+            "recovery_required": True,
+            "safe_manual_delete": False,
+            "detail": f"recovery_inspection_failed:{exc}",
         }
 
 
@@ -1062,13 +1094,17 @@ def execute_publication_contract(
         )
     except GitHubPublicationError as exc:
         if fresh_branch_created:
-            cleanup = _cleanup_fresh_branch(
+            cleanup = _fresh_branch_recovery_evidence(
                 transport,
                 repository=repository,
                 branch=head_branch,
                 expected_sha=base_sha,
             )
-            _raise_partial_failure("createCommitOnBranch", exc, cleanup)
+            _raise_partial_failure(
+                "createCommitOnBranch outcome ambiguous",
+                exc,
+                cleanup,
+            )
         raise
 
     if publication_mode == "create":
@@ -1086,7 +1122,7 @@ def execute_publication_contract(
                 pr_payload,
             )
         except GitHubPublicationError as exc:
-            cleanup = _cleanup_fresh_branch(
+            cleanup = _fresh_branch_recovery_evidence(
                 transport,
                 repository=repository,
                 branch=head_branch,
@@ -1094,7 +1130,7 @@ def execute_publication_contract(
             )
             _raise_partial_failure("pull request creation", exc, cleanup)
         if not isinstance(pr, Mapping):
-            cleanup = _cleanup_fresh_branch(
+            cleanup = _fresh_branch_recovery_evidence(
                 transport,
                 repository=repository,
                 branch=head_branch,
