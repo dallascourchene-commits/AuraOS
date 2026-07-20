@@ -39,8 +39,26 @@ _GENERIC_RENDER_METRIC_SCHEMA = {
     "rendered_entities": "count",
     "renderer_allocated": "boolean",
     "renderer_allocated_count": "count",
+    "source": "identifier",
 }
 _GENERIC_RENDER_METRIC_IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
+_PROTECTED_GENERIC_RENDER_METRIC_KEYS = frozenset(
+    {
+        "accesscontrolled",
+        "automaticexecution",
+        "automaticmerge",
+        "executionauthority",
+        "patchauthority",
+        "paymentreleased",
+        "physicalworkauthorized",
+        "productionmutation",
+        "rendererauthority",
+    }
+)
+
+
+def _metric_key_token(value: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", value.casefold())
 
 
 def _sanitize_generic_render_metrics(metrics: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -50,11 +68,19 @@ def _sanitize_generic_render_metrics(metrics: Mapping[str, Any] | None) -> dict[
         return {}
     if not isinstance(metrics, Mapping):
         raise ValueError("generic Spatial proof metrics must be an object")
-    unknown = sorted(set(metrics) - set(_GENERIC_RENDER_METRIC_SCHEMA))
+    names = tuple(metrics)
+    if not all(type(name) is str for name in names):
+        raise ValueError("generic Spatial proof metric keys must be strings")
+    protected = sorted(
+        name for name in names if _metric_key_token(name) in _PROTECTED_GENERIC_RENDER_METRIC_KEYS
+    )
+    if protected:
+        raise ValueError(f"generic Spatial proof metrics contain protected authority fields: {protected}")
+    unknown = sorted(set(names) - set(_GENERIC_RENDER_METRIC_SCHEMA))
     if unknown:
         raise ValueError(f"generic Spatial proof metrics contain unsupported keys: {unknown}")
     normalized: dict[str, Any] = {}
-    for name in sorted(metrics):
+    for name in sorted(names):
         value = metrics[name]
         kind = _GENERIC_RENDER_METRIC_SCHEMA[name]
         if kind == "identifier":
