@@ -71,9 +71,7 @@ def _sanitize_generic_render_metrics(metrics: Mapping[str, Any] | None) -> dict[
     names = tuple(metrics)
     if not all(type(name) is str for name in names):
         raise ValueError("generic Spatial proof metric keys must be strings")
-    protected = sorted(
-        name for name in names if _metric_key_token(name) in _PROTECTED_GENERIC_RENDER_METRIC_KEYS
-    )
+    protected = sorted(name for name in names if _metric_key_token(name) in _PROTECTED_GENERIC_RENDER_METRIC_KEYS)
     if protected:
         raise ValueError(f"generic Spatial proof metrics contain protected authority fields: {protected}")
     unknown = sorted(set(names) - set(_GENERIC_RENDER_METRIC_SCHEMA))
