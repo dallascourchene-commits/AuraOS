@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: aura-spatial-s5-s6-construction-${{ github.event.pull_request.number || github.ref }}
@@ -37,12 +37,12 @@ jobs:
       AURA_S5_S6_ARCHITECT_TIMEOUT_SECONDS: "300"
       AURA_S5_S6_ARCHITECT_TOTAL_TIMEOUT_SECONDS: "900"
     steps:
-      - name: Shallow-clone exact pull-request branch
+      - name: Clone bounded pull-request history
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           set -euo pipefail
-          git clone --no-tags --depth=1 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+          git clone --no-tags --single-branch --depth=256 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
 
       - name: Verify exact pull-request head
         env:
@@ -73,29 +73,6 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-
-      - name: Normalize only Codex repair files
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          set -euo pipefail
-          files=(
-            aura_spatial_session.py
-            aura_spatial_construction.py
-            aura_construction_runtime_binding.py
-            aura_spatial_agent_bridge.py
-            tests/test_aura_spatial_codex_repairs.py
-          )
-          ruff check --fix "${files[@]}"
-          ruff format "${files[@]}"
-          if ! git diff --quiet -- "${files[@]}"; then
-            git config user.name "dallascourchene-commits"
-            git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
-            git add "${files[@]}"
-            git commit -m "style(spatial): normalize Codex repair files"
-            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
-          fi
 
       - name: Compile, lint, and validate route
         run: |
