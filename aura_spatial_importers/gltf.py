@@ -177,6 +177,38 @@ def _array(document: Mapping[str, Any], key: str, maximum: int) -> list[Any]:
     return value
 
 
+def _validate_non_overlapping_buffer_views(document: Mapping[str, Any], buffers: Sequence[bytes]) -> None:
+    """Reject aliased view ranges before accessor expansion."""
+
+    views = _array(document, "bufferViews", MAX_GLTF_BUFFER_VIEWS)
+    ranges: dict[int, list[tuple[int, int]]] = {}
+    for view in views:
+        if not isinstance(view, Mapping):
+            raise ValueError("glTF bufferView must be an object")
+        buffer_index = view.get("buffer")
+        offset = view.get("byteOffset", 0)
+        length = view.get("byteLength")
+        if (
+            isinstance(buffer_index, bool)
+            or not isinstance(buffer_index, int)
+            or not 0 <= buffer_index < len(buffers)
+            or isinstance(offset, bool)
+            or not isinstance(offset, int)
+            or offset < 0
+            or isinstance(length, bool)
+            or not isinstance(length, int)
+            or length < 0
+        ):
+            raise ValueError("glTF bufferView range is invalid")
+        end = offset + length
+        if end < offset or end > len(buffers[buffer_index]):
+            raise ValueError("glTF bufferView range exceeds its buffer")
+        for existing_start, existing_end in ranges.setdefault(buffer_index, []):
+            if offset < existing_end and existing_start < end:
+                raise ValueError("glTF bufferViews must not overlap or alias")
+        ranges[buffer_index].append((offset, end))
+
+
 def _read_accessor(
     document: Mapping[str, Any],
     buffers: Sequence[bytes],
@@ -185,6 +217,7 @@ def _read_accessor(
     expected_type: str,
     allowed_components: set[int],
     maximum_count: int,
+    allow_normalized: bool = False,
 ) -> list[tuple[Any, ...]]:
     accessors = _array(document, "accessors", MAX_GLTF_ACCESSORS)
     views = _array(document, "bufferViews", MAX_GLTF_BUFFER_VIEWS)
@@ -210,8 +243,9 @@ def _read_accessor(
         "extras",
     }:
         raise ValueError("glTF accessor keys are invalid")
-    if "sparse" in accessor or accessor.get("normalized", False):
-        raise ValueError("sparse/normalized glTF accessors are not admitted")
+    normalized = accessor.get("normalized", False)
+    if "sparse" in accessor or type(normalized) is not bool or (normalized and not allow_normalized):
+        raise ValueError("sparse/normalized glTF accessor is not admitted")
     if accessor.get("extensions"):
         raise ValueError("glTF accessor extensions are not admitted in S4-A")
     if accessor.get("type") != expected_type or accessor.get("componentType") not in allowed_components:
@@ -273,7 +307,18 @@ def _read_accessor(
         raise ValueError("glTF accessor range exceeds its bufferView")
     unpack = struct.Struct("<" + fmt * components)
     data = buffers[buffer_index]
-    return [unpack.unpack_from(data, start + index * stride) for index in range(count)]
+    values = [unpack.unpack_from(data, start + index * stride) for index in range(count)]
+    if not normalized:
+        return values
+    if component_type == 5120:
+        return [tuple(max(-1.0, item / 127.0) for item in value) for value in values]
+    if component_type == 5121:
+        return [tuple(item / 255.0 for item in value) for value in values]
+    if component_type == 5122:
+        return [tuple(max(-1.0, item / 32767.0) for item in value) for value in values]
+    if component_type == 5123:
+        return [tuple(item / 65535.0 for item in value) for value in values]
+    raise ValueError("normalized glTF accessor component type is unsupported")
 
 
 def import_gltf_bytes(source: bytes, *, provenance_refs: Sequence[str]) -> SpatialImportResult:
@@ -302,6 +347,7 @@ def import_gltf_bytes(source: bytes, *, provenance_refs: Sequence[str]) -> Spati
         if document.get(prohibited):
             raise ValueError(f"glTF {prohibited} are outside the S4-A mesh boundary")
     buffers = _load_buffers(document, bin_chunk)
+    _validate_non_overlapping_buffer_views(document, buffers)
     meshes = _array(document, "meshes", MAX_GLTF_MESHES)
     if not meshes:
         raise ValueError("glTF contains no meshes")

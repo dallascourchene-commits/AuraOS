@@ -10,11 +10,13 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import Enum
+import hashlib
 import math
 import os
 from pathlib import Path
 import re
 import stat
+import struct
 from types import MappingProxyType
 from typing import Any
 
@@ -24,11 +26,15 @@ from aura_spatial_coordinate_frames import compile_coordinate_conversion_matrix
 
 SPATIAL_IMPORT_CONTRACTS_VERSION = "AURA_SPATIAL_IMPORT_CONTRACTS_V1"
 SPATIAL_IMPORT_RECEIPT_SCHEMA_VERSION = "AURA_SPATIAL_IMPORT_RECEIPT_SCHEMA_V1"
+GAUSSIAN_REPRESENTATION_DIGEST_VERSION = "AURA_GAUSSIAN_REPRESENTATION_V1"
 MAX_IMPORT_PRIMITIVES = 4096
 MAX_IMPORT_SOURCE_REFS = 256
 MAX_IMPORT_SOURCE_REF_BYTES = 2_048
 MAX_IMPORT_SOURCE_REFS_BYTES = 65_536
 MAX_IMPORT_WARNINGS = 256
+MAX_IMPORT_METADATA_DEPTH = 12
+MAX_IMPORT_METADATA_ITEMS = 1024
+MAX_IMPORT_METADATA_BYTES = 65_536
 _ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,191}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
 
@@ -39,6 +45,7 @@ class SpatialSourceFormat(str, Enum):
     PLY_ASCII = "PLY_ASCII"
     PLY_BINARY_LE = "PLY_BINARY_LE"
     PLY_BINARY_BE = "PLY_BINARY_BE"
+    SPZ_V4 = "SPZ_V4"
 
 
 def _identifier(value: Any, field_name: str) -> str:
@@ -68,6 +75,64 @@ def _finite_tuple(values: Sequence[Any], length: int, field_name: str) -> tuple[
     if not all(math.isfinite(item) for item in result):
         raise ValueError(f"{field_name} must contain finite numbers")
     return result
+
+
+def _freeze_import_metadata(
+    value: Any,
+    *,
+    depth: int = 0,
+    counter: list[int] | None = None,
+    active: set[int] | None = None,
+) -> Any:
+    """Freeze a bounded JSON tree while rejecting cycles and non-finite values."""
+
+    if counter is None:
+        counter = [0]
+    if active is None:
+        active = set()
+    counter[0] += 1
+    if counter[0] > MAX_IMPORT_METADATA_ITEMS or depth > MAX_IMPORT_METADATA_DEPTH:
+        raise ValueError("import metadata exceeds depth/item ceilings")
+    if isinstance(value, Mapping):
+        identity = id(value)
+        if identity in active:
+            raise ValueError("import metadata contains a recursive container")
+        active.add(identity)
+        try:
+            frozen: dict[str, Any] = {}
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0])):
+                if not isinstance(key, str) or not key or len(key.encode("utf-8")) > 256:
+                    raise ValueError("import metadata keys must be bounded non-empty strings")
+                frozen[key] = _freeze_import_metadata(item, depth=depth + 1, counter=counter, active=active)
+            return MappingProxyType(frozen)
+        finally:
+            active.remove(identity)
+    if isinstance(value, (list, tuple)):
+        identity = id(value)
+        if identity in active:
+            raise ValueError("import metadata contains a recursive container")
+        active.add(identity)
+        try:
+            return tuple(
+                _freeze_import_metadata(item, depth=depth + 1, counter=counter, active=active) for item in value
+            )
+        finally:
+            active.remove(identity)
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError("import metadata contains a non-finite float")
+        return value
+    if value is None or isinstance(value, (bool, int, str)):
+        return value
+    raise ValueError(f"import metadata contains a non-JSON value: {type(value).__name__}")
+
+
+def _thaw_import_metadata(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {key: _thaw_import_metadata(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_thaw_import_metadata(item) for item in value]
+    return value
 
 
 @dataclass(frozen=True)
@@ -192,7 +257,7 @@ class SpatialImportReceipt:
         object.__setattr__(self, "source_bytes", _positive_int(self.source_bytes, "source_bytes", 1_073_741_824))
         object.__setattr__(self, "decoded_bytes", _positive_int(self.decoded_bytes, "decoded_bytes", 4_294_967_296))
         object.__setattr__(self, "element_count", _positive_int(self.element_count, "element_count", 30_000_000))
-        if self.asset_type not in {"MESH", "POINT_CLOUD"}:
+        if self.asset_type not in {"MESH", "POINT_CLOUD", "GAUSSIAN_SPLATS"}:
             raise ValueError("unsupported imported asset type")
         if not isinstance(self.coordinate_conversion, CoordinateConversion):
             raise ValueError("coordinate_conversion must be a CoordinateConversion")
@@ -282,11 +347,115 @@ class SpatialImportReceipt:
 
 
 @dataclass(frozen=True)
+class GaussianSplatData:
+    """Explicit, bounded Gaussian attributes detached from scene authority."""
+
+    rotations_xyzw: tuple[tuple[float, float, float, float], ...]
+    scales_xyz: tuple[tuple[float, float, float], ...]
+    opacities: tuple[float, ...]
+    sh_degree: int
+    sh_coefficients: tuple[tuple[float, ...], ...]
+
+    def __post_init__(self) -> None:
+        rotations = tuple(_finite_tuple(item, 4, "gaussian rotation") for item in self.rotations_xyzw)
+        scales = tuple(_finite_tuple(item, 3, "gaussian scale") for item in self.scales_xyz)
+        opacities = tuple(float(item) for item in self.opacities)
+        if not all(math.isfinite(item) and 0.0 <= item <= 1.0 for item in opacities):
+            raise ValueError("gaussian opacities must be finite values in [0, 1]")
+        if isinstance(self.sh_degree, bool) or not isinstance(self.sh_degree, int) or not 0 <= self.sh_degree <= 4:
+            raise ValueError("gaussian sh_degree must be in [0, 4]")
+        coefficient_count = (self.sh_degree + 1) ** 2 * 3
+        coefficients = tuple(
+            _finite_tuple(item, coefficient_count, "gaussian spherical harmonics") for item in self.sh_coefficients
+        )
+        count = len(rotations)
+        if count < 1 or count > 2_000_000:
+            raise ValueError("gaussian splat count exceeds bounds")
+        if len(scales) != count or len(opacities) != count or len(coefficients) != count:
+            raise ValueError("gaussian attributes must have identical counts")
+        for rotation in rotations:
+            norm = math.sqrt(sum(component * component for component in rotation))
+            if not 0.999 <= norm <= 1.001:
+                raise ValueError("gaussian rotations must be normalized quaternions")
+        if any(component < 0.0 for scale in scales for component in scale):
+            raise ValueError("gaussian scales must be non-negative")
+        object.__setattr__(self, "rotations_xyzw", rotations)
+        object.__setattr__(self, "scales_xyz", scales)
+        object.__setattr__(self, "opacities", opacities)
+        object.__setattr__(self, "sh_coefficients", coefficients)
+
+    @property
+    def count(self) -> int:
+        return len(self.rotations_xyzw)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "rotations_xyzw": [list(item) for item in self.rotations_xyzw],
+            "scales_xyz": [list(item) for item in self.scales_xyz],
+            "opacities": list(self.opacities),
+            "sh_degree": self.sh_degree,
+            "sh_coefficients": [list(item) for item in self.sh_coefficients],
+        }
+
+
+def _float32_bytes(value: float, field_name: str) -> bytes:
+    try:
+        packed = struct.pack("<f", float(value))
+    except (OverflowError, struct.error) as exc:
+        raise ValueError(f"{field_name} exceeds finite Float32 representation") from exc
+    if not math.isfinite(struct.unpack("<f", packed)[0]):
+        raise ValueError(f"{field_name} exceeds finite Float32 representation")
+    return packed
+
+
+def gaussian_representation_digest(
+    positions: Sequence[Sequence[Any]],
+    colors_rgba: Sequence[Sequence[Any]],
+    gaussian_splats: GaussianSplatData,
+) -> str:
+    """Hash the exact bounded Float32/RGBA8 representation consumed by renderers."""
+
+    if not isinstance(gaussian_splats, GaussianSplatData):
+        raise ValueError("gaussian_splats must be GaussianSplatData")
+    count = gaussian_splats.count
+    if len(positions) != count or len(colors_rgba) != count:
+        raise ValueError("Gaussian digest inputs must have identical counts")
+    coefficient_count = (gaussian_splats.sh_degree + 1) ** 2 * 3
+    digest = hashlib.sha256()
+    digest.update(GAUSSIAN_REPRESENTATION_DIGEST_VERSION.encode("ascii") + b"\x00")
+    digest.update(struct.pack("<IBI", count, gaussian_splats.sh_degree, coefficient_count))
+    for label, values, width in (
+        ("position", positions, 3),
+        ("rotation", gaussian_splats.rotations_xyzw, 4),
+        ("scale", gaussian_splats.scales_xyz, 3),
+    ):
+        for vector in values:
+            if len(vector) != width:
+                raise ValueError(f"Gaussian {label} width is invalid")
+            for component in vector:
+                digest.update(_float32_bytes(float(component), f"Gaussian {label}"))
+    for opacity in gaussian_splats.opacities:
+        digest.update(_float32_bytes(opacity, "Gaussian opacity"))
+    for coefficients in gaussian_splats.sh_coefficients:
+        if len(coefficients) != coefficient_count:
+            raise ValueError("Gaussian coefficient width is invalid")
+        for component in coefficients:
+            digest.update(_float32_bytes(component, "Gaussian spherical harmonic"))
+    for color in colors_rgba:
+        channels = tuple(int(item) for item in color)
+        if len(channels) != 4 or any(item < 0 or item > 255 for item in channels):
+            raise ValueError("Gaussian digest colors must be RGBA8")
+        digest.update(bytes(channels))
+    return digest.hexdigest()
+
+
+@dataclass(frozen=True)
 class SpatialImportResult:
     receipt: SpatialImportReceipt
     positions: tuple[tuple[float, float, float], ...]
     indices: tuple[int, ...] = ()
     colors_rgba: tuple[tuple[int, int, int, int], ...] = ()
+    gaussian_splats: GaussianSplatData | None = None
     metadata: Mapping[str, Any] = MappingProxyType({})
 
     def __post_init__(self) -> None:
@@ -304,7 +473,34 @@ class SpatialImportResult:
         ):
             raise ValueError("colors_rgba must align with positions")
         object.__setattr__(self, "colors_rgba", colors)
-        object.__setattr__(self, "metadata", MappingProxyType(dict(self.metadata)))
+        if self.receipt.asset_type == "GAUSSIAN_SPLATS":
+            if not isinstance(self.gaussian_splats, GaussianSplatData):
+                raise ValueError("Gaussian imports require explicit GaussianSplatData")
+            if self.gaussian_splats.count != len(positions):
+                raise ValueError("gaussian splat count must align with positions")
+        elif self.gaussian_splats is not None:
+            raise ValueError("non-Gaussian imports cannot carry GaussianSplatData")
+        if not isinstance(self.metadata, Mapping):
+            raise ValueError("import metadata must be an object")
+        metadata = dict(self.metadata)
+        if self.gaussian_splats is not None:
+            representation_digest = gaussian_representation_digest(positions, colors, self.gaussian_splats)
+            supplied_digest = metadata.get("representation_digest")
+            if supplied_digest is not None and supplied_digest != representation_digest:
+                raise ValueError("Gaussian representation digest does not match decoded attributes")
+            coefficient_count = (self.gaussian_splats.sh_degree + 1) ** 2 * 3
+            metadata["representation_digest"] = representation_digest
+            metadata["representation_digest_version"] = GAUSSIAN_REPRESENTATION_DIGEST_VERSION
+            metadata["representation_bytes_per_splat"] = 48 + coefficient_count * 4
+            metadata["sh_degree"] = self.gaussian_splats.sh_degree
+            metadata["gaussian_sh_degree"] = self.gaussian_splats.sh_degree
+        if len(metadata) > 64:
+            raise ValueError("import metadata exceeds key ceiling")
+        frozen_metadata = _freeze_import_metadata(metadata)
+        thawed_metadata = _thaw_import_metadata(frozen_metadata)
+        if len(canonical_json(thawed_metadata).encode("utf-8")) > MAX_IMPORT_METADATA_BYTES:
+            raise ValueError("import metadata exceeds byte ceiling")
+        object.__setattr__(self, "metadata", frozen_metadata)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -312,7 +508,8 @@ class SpatialImportResult:
             "positions": [list(item) for item in self.positions],
             "indices": list(self.indices),
             "colors_rgba": [list(item) for item in self.colors_rgba],
-            "metadata": dict(self.metadata),
+            "gaussian_splats": None if self.gaussian_splats is None else self.gaussian_splats.to_dict(),
+            "metadata": _thaw_import_metadata(self.metadata),
         }
 
 

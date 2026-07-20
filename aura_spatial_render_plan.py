@@ -233,6 +233,110 @@ def negotiate_spatial_render_plan(
     )
 
 
+def compile_gaussian_representation_budget(
+    scene: SpatialSceneSnapshot,
+    plan: SpatialRenderPlan,
+    *,
+    bytes_per_splat: int = 52,
+    maximum_visible_splats: int = 2_000_000,
+) -> Mapping[str, Any]:
+    """Derive an isolated Gaussian budget from an already-admitted render plan."""
+
+    if not isinstance(scene, SpatialSceneSnapshot) or not isinstance(plan, SpatialRenderPlan):
+        raise ValueError("scene and plan must be retained spatial contracts")
+    if plan.scene_id != scene.scene_id or plan.scene_digest != scene.scene_digest:
+        raise ValueError("Gaussian budget cannot use a stale scene or render plan")
+    if type(bytes_per_splat) is not int or not 1 <= bytes_per_splat <= 4096:
+        raise ValueError("bytes_per_splat exceeds bounds")
+    if type(maximum_visible_splats) is not int or not 1 <= maximum_visible_splats <= 2_000_000:
+        raise ValueError("maximum_visible_splats exceeds bounds")
+    gaussian_assets = [item for item in scene.assets if item.asset_type.value == "GAUSSIAN_SPLAT"]
+    declared_splats = 0
+    declared_decoded_bytes = 0
+    declared_runtime_allocation_bytes = 0
+    effective_bytes_per_splat = bytes_per_splat
+    for asset in gaussian_assets:
+        metadata = dict(asset.metadata)
+        count = metadata.get("element_count")
+        decoded = metadata.get("decoded_bytes")
+        runtime_allocation = metadata.get("estimated_runtime_allocation_bytes")
+        representation_bytes = metadata.get("representation_bytes_per_splat")
+        representation_digest = metadata.get("representation_digest")
+        receipt_digest = metadata.get("import_receipt_digest")
+        sh_degree = metadata.get("gaussian_sh_degree", metadata.get("sh_degree"))
+        color_space = metadata.get("gaussian_color_space")
+        if type(count) is not int or count < 1 or count > 2_000_000:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks a bounded element_count")
+        if type(decoded) is not int or decoded < 0 or decoded > 4_294_967_296:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks bounded decoded_bytes")
+        if type(runtime_allocation) is not int or runtime_allocation < decoded or runtime_allocation > 4_294_967_296:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks bounded runtime allocation evidence")
+        if type(representation_bytes) is not int or not 60 <= representation_bytes <= 348:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks bounded representation byte geometry")
+        if type(sh_degree) is not int or not 0 <= sh_degree <= 4:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks bounded spherical-harmonic degree")
+        if color_space not in {"SPZ_INTERNAL_WIDE_RGB", "srgb_rec709_display", "lin_rec709_display"}:
+            raise ValueError(f"Gaussian asset {asset.asset_id} lacks a supported gaussian_color_space")
+        expected_representation_bytes = 48 + ((sh_degree + 1) ** 2 * 3 * 4)
+        if representation_bytes != expected_representation_bytes:
+            raise ValueError(f"Gaussian asset {asset.asset_id} representation byte geometry is inconsistent")
+        for digest_name, digest_value in (
+            ("import receipt", receipt_digest),
+            ("representation", representation_digest),
+        ):
+            if (
+                not isinstance(digest_value, str)
+                or len(digest_value) != 64
+                or any(character not in "0123456789abcdef" for character in digest_value)
+            ):
+                raise ValueError(f"Gaussian asset {asset.asset_id} lacks a canonical {digest_name} digest")
+        declared_splats += count
+        declared_decoded_bytes += decoded
+        declared_runtime_allocation_bytes += runtime_allocation
+        effective_bytes_per_splat = max(effective_bytes_per_splat, representation_bytes)
+        if declared_splats > 2_000_000:
+            raise ValueError("Gaussian aggregate splat count exceeds bounds")
+        if declared_decoded_bytes > plan.budget.max_asset_bytes:
+            raise ValueError("Gaussian aggregate decoded bytes exceed the render plan")
+        if declared_runtime_allocation_bytes > plan.budget.max_asset_bytes:
+            raise ValueError("Gaussian aggregate runtime allocation exceeds the render plan")
+    visible_by_gpu = plan.budget.max_gpu_bytes // effective_bytes_per_splat
+    visible_by_allocation = plan.budget.max_asset_bytes // (effective_bytes_per_splat + 4)
+    visible = min(
+        maximum_visible_splats,
+        visible_by_gpu,
+        visible_by_allocation,
+        declared_splats or maximum_visible_splats,
+    )
+    if gaussian_assets and visible < 1:
+        raise ValueError("render plan cannot allocate one Gaussian splat")
+    return {
+        "scene_id": scene.scene_id,
+        "scene_digest": scene.scene_digest,
+        "render_plan_digest": plan.render_plan_digest,
+        "asset_count": len(gaussian_assets),
+        "declared_splats": declared_splats,
+        "declared_decoded_bytes": declared_decoded_bytes,
+        "declared_runtime_allocation_bytes": declared_runtime_allocation_bytes,
+        "representation_bytes_per_splat": effective_bytes_per_splat,
+        "max_bytes_per_splat": effective_bytes_per_splat,
+        "declared_gpu_bytes": declared_splats * effective_bytes_per_splat,
+        "max_visible_splats": visible,
+        "max_gpu_bytes": min(plan.budget.max_gpu_bytes, visible * effective_bytes_per_splat),
+        "max_sort_items": visible,
+        "max_sort_bytes": visible * 4,
+        "max_allocation_bytes": min(plan.budget.max_asset_bytes, visible * (effective_bytes_per_splat + 4)),
+        "max_frame_ms": plan.budget.max_cpu_ms_per_frame,
+        "accessible_fallback_required": True,
+        "point_cloud_fallback_required": True,
+        "headless_fallback_required": True,
+        "projection_only": True,
+        "renderer_authority": False,
+        "execution_authority": False,
+        "patch_authority": False,
+    }
+
+
 def validate_spatial_device_profile_payload(
     payload: Mapping[str, Any],
 ) -> SpatialDeviceProfile:

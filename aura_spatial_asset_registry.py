@@ -9,10 +9,12 @@ import hmac
 from pathlib import PurePosixPath
 import re
 from typing import Any
+import unicodedata
 from urllib.parse import unquote, urlparse
 
 from aura_event_contracts import stable_digest
-from aura_spatial_contracts import SpatialAssetManifest
+from aura_spatial_contracts import SpatialAssetManifest, SpatialAssetType
+from aura_spatial_importers.contracts import SpatialImportResult
 
 SPATIAL_ASSET_REGISTRY_VERSION = "AURA_SPATIAL_ASSET_REGISTRY_V1"
 _ALLOWED_REMOTE_SCHEMES = frozenset({"https"})
@@ -50,11 +52,18 @@ class SpatialAssetRegistry:
         if type(allow_remote) is not bool:
             raise ValueError("allow_remote must be a boolean")
         by_id: dict[str, SpatialAssetManifest] = {}
+        by_uri: dict[str, str] = {}
         for manifest in manifests:
             if not isinstance(manifest, SpatialAssetManifest):
                 raise ValueError("manifests must contain SpatialAssetManifest records")
             if manifest.asset_id in by_id:
                 raise ValueError(f"duplicate spatial asset id: {manifest.asset_id}")
+            uri_key = unicodedata.normalize("NFC", manifest.uri).casefold()
+            prior_asset = by_uri.get(uri_key)
+            if prior_asset is not None:
+                raise ValueError(
+                    f"duplicate or aliased spatial asset URI: {manifest.asset_id} conflicts with {prior_asset}"
+                )
             report = validate_asset_manifest(
                 manifest,
                 allow_remote=allow_remote,
@@ -63,6 +72,7 @@ class SpatialAssetRegistry:
                 codes = ", ".join(str(item["code"]) for item in report.findings)
                 raise ValueError(f"invalid spatial asset {manifest.asset_id}: {codes}")
             by_id[manifest.asset_id] = manifest
+            by_uri[uri_key] = manifest.asset_id
         self._by_id = by_id
         self._registry_digest = stable_digest(
             [by_id[key].to_dict() for key in sorted(by_id)],
@@ -96,6 +106,71 @@ class SpatialAssetRegistry:
             "render_authority": False,
             "patch_authority": False,
         }
+
+
+def build_imported_asset_manifest(
+    result: SpatialImportResult,
+    *,
+    asset_id: str,
+    uri: str,
+    media_type: str,
+    frame_id: str,
+    source_refs: Iterable[str] = (),
+) -> SpatialAssetManifest:
+    """Project one verified import result into an immutable content-addressed manifest."""
+
+    if not isinstance(result, SpatialImportResult):
+        raise ValueError("result must be a SpatialImportResult")
+    minimum = tuple(min(item.bounds_min[axis] for item in result.receipt.primitives) for axis in range(3))
+    maximum = tuple(max(item.bounds_max[axis] for item in result.receipt.primitives) for axis in range(3))
+    asset_type = {
+        "MESH": SpatialAssetType.MESH,
+        "POINT_CLOUD": SpatialAssetType.POINT_CLOUD,
+        "GAUSSIAN_SPLATS": SpatialAssetType.GAUSSIAN_SPLAT,
+    }[result.receipt.asset_type]
+    refs = tuple(
+        sorted(
+            {
+                *result.receipt.provenance_refs,
+                *tuple(source_refs),
+                f"import-receipt:{result.receipt.receipt_id}#{result.receipt.derived_asset_digest}",
+            }
+        )
+    )
+    metadata: dict[str, Any] = {
+        "import_receipt_digest": result.receipt.derived_asset_digest,
+        "source_format": result.receipt.source_format.value,
+        "fallback_available": bool(result.colors_rgba),
+        "element_count": result.receipt.element_count,
+        "decoded_bytes": result.receipt.decoded_bytes,
+        "estimated_runtime_allocation_bytes": result.metadata.get(
+            "estimated_runtime_allocation_bytes", result.receipt.decoded_bytes
+        ),
+        "representation_digest": result.metadata.get("representation_digest"),
+        "representation_digest_version": result.metadata.get("representation_digest_version"),
+        "representation_bytes_per_splat": result.metadata.get("representation_bytes_per_splat"),
+        "sh_degree": result.metadata.get("sh_degree"),
+        "gaussian_sh_degree": result.metadata.get("gaussian_sh_degree", result.metadata.get("sh_degree")),
+        "gaussian_color_space": result.metadata.get("gaussian_color_space"),
+        "representation_role": "DERIVED_PROJECTION_ASSET",
+    }
+    manifest = SpatialAssetManifest(
+        asset_id=asset_id,
+        asset_type=asset_type,
+        uri=uri,
+        media_type=media_type,
+        content_digest=f"sha256:{result.receipt.source_digest}",
+        byte_length=result.receipt.source_bytes,
+        frame_id=frame_id,
+        bounds_min=minimum,
+        bounds_max=maximum,
+        source_refs=refs,
+        metadata=metadata,
+    )
+    report = validate_asset_manifest(manifest, allow_remote=False)
+    if not report.ok:
+        raise ValueError("imported asset manifest failed canonical URI validation")
+    return manifest
 
 
 def validate_asset_manifest(
@@ -173,6 +248,13 @@ def _validate_uri(
     allow_remote: bool,
     findings: list[dict[str, Any]],
 ) -> None:
+    if unicodedata.normalize("NFC", uri) != uri:
+        findings.append(
+            _finding(
+                "NONCANONICAL_ASSET_UNICODE",
+                "asset URI must use canonical NFC Unicode normalization",
+            )
+        )
     if any(ord(char) < 32 for char in uri) or "\\" in uri:
         findings.append(
             _finding(
