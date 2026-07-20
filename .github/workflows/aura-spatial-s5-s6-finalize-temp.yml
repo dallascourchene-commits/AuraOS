@@ -32,10 +32,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git apply --index \
+          echo "pre_mcp=$(git hash-object aura_agent_arena_mcp.py)"
+          echo "pre_bridge=$(git hash-object aura_agent_arena_persistence_bridge.py)"
+          echo "pre_adapter=$(git hash-object aura_arena_persistence_adapters.py)"
+          git apply --check --verbose \
             --include=aura_agent_arena_mcp.py \
             --include=aura_agent_arena_persistence_bridge.py \
             .aura/tmp/s5s6-integration.patch
+          git apply --index --verbose \
+            --include=aura_agent_arena_mcp.py \
+            --include=aura_agent_arena_persistence_bridge.py \
+            .aura/tmp/s5s6-integration.patch
+          echo "post_mcp=$(git hash-object aura_agent_arena_mcp.py)"
+          echo "post_bridge=$(git hash-object aura_agent_arena_persistence_bridge.py)"
+          echo "post_adapter=$(git hash-object aura_arena_persistence_adapters.py)"
+          echo "spatial_agent_bridge=$(git hash-object aura_spatial_agent_bridge.py)"
+          echo "spatial_arena=$(git hash-object aura_spatial_arena.py)"
+          echo "spatial_construction=$(git hash-object aura_spatial_construction.py)"
+          echo "spatial_mcp=$(git hash-object aura_spatial_mcp.py)"
+          echo "harness=$(git hash-object scripts/aura_spatial_s5_s6_construction_architect_harness.py)"
+          echo "test_s5=$(git hash-object tests/test_aura_spatial_s5_arena.py)"
+          echo "test_s6=$(git hash-object tests/test_aura_spatial_s6_construction.py)"
+          echo "test_bridge=$(git hash-object tests/test_aura_spatial_agent_bridge_mcp.py)"
+          echo "workflow=$(git hash-object .github/workflows/aura-spatial-s5-s6-construction.yml)"
           test "$(git hash-object aura_agent_arena_mcp.py)" = "c0414388959f6a20d7945f9d4088f39bfd2b529b"
           test "$(git hash-object aura_agent_arena_persistence_bridge.py)" = "5c3ee08ee98343a30fd14959dd9faaca8190dc02"
           test "$(git hash-object aura_arena_persistence_adapters.py)" = "de0448de15d72a2e43a5b1949c01b8b99aff2252"
