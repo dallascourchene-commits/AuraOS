@@ -58,8 +58,8 @@ def project_construction_state_to_scene(
     if not isinstance(runtime_packet, Mapping):
         raise ValueError("runtime_packet must be a mapping")
     packet = dict(runtime_packet)
-    require_canonical_construction_runtime_packet(packet, state_digest=state.state_digest)
     _validate_runtime_packet(packet, state)
+    require_canonical_construction_runtime_packet(packet, state_digest=state.state_digest)
     privacy = (
         privacy_class if isinstance(privacy_class, SpatialPrivacyClass) else SpatialPrivacyClass(str(privacy_class))
     )
