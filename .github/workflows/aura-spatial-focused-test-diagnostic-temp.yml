@@ -1,20 +1,16 @@
-name: Aura Spatial Focused Test Diagnostic Temp
+name: Aura Spatial Focused Repair Temp
 
 on:
   pull_request:
     paths:
       - ".github/workflows/aura-spatial-focused-test-diagnostic-temp.yml"
-      - "aura_spatial_*.py"
-      - "aura_review_lessons_security.py"
-      - "tests/test_aura_spatial_codex_repairs.py"
-      - "tests/test_aura_spatial_waboose_precision.py"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  repair:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -30,19 +26,65 @@ jobs:
       - name: Install focused dependencies
         run: |
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
-          python -m pip install --disable-pip-version-check pytest jsonschema numpy
-      - name: Capture focused tests
+          python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
+      - name: Align Construction URI admission with scene registry
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          mkdir -p /tmp/aura-focused-test-diagnostic
-          set +e
-          python -m pytest -vv --tb=long \
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          spatial = Path("aura_spatial_construction.py")
+          text = spatial.read_text(encoding="utf-8")
+          text = text.replace(
+              '    if parsed.scheme not in {"aura", "file"}:\n        raise ValueError("Construction floor-plan assets must be local or Aura-addressed")\n',
+              '    if parsed.scheme != "aura":\n        raise ValueError("Construction floor-plan assets must be Aura-addressed")\n',
+              1,
+          )
+          text = text.replace(
+              '    if parsed.scheme == "aura":\n        if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():\n            raise ValueError("Aura asset URI requires a canonical lowercase authority")\n    elif parsed.netloc not in {"", "localhost"}:\n        raise ValueError("file asset URI cannot name a remote host")\n',
+              '    if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():\n        raise ValueError("Aura asset URI requires a canonical lowercase authority")\n',
+              1,
+          )
+          if 'parsed.scheme not in {"aura", "file"}' in text or 'file asset URI cannot name a remote host' in text:
+              raise SystemExit("Construction URI replacement incomplete")
+          spatial.write_text(text, encoding="utf-8")
+
+          test = Path("tests/test_aura_spatial_waboose_precision.py")
+          text = test.read_text(encoding="utf-8")
+          text = text.replace(
+              '        "file://remote-host/tmp/floor.glb",\n        "https://example.test/floor.glb",\n',
+              '        "file://remote-host/tmp/floor.glb",\n        "file:///tmp/aura/floor.glb",\n        "https://example.test/floor.glb",\n',
+              1,
+          )
+          start = text.index("def test_construction_projection_accepts_canonical_aura_and_local_file_uris()")
+          replacement = '''def test_construction_projection_accepts_canonical_aura_uri() -> None:
+              fixture, packet = _fixture_packet()
+              scene = project_construction_state_to_scene(
+                  fixture.state,
+                  packet,
+                  purpose_digest="7" * 64,
+                  floor_plan_assets=(_floor_asset(),),
+              )
+              assert len(scene.assets) == 2
+          '''
+          text = text[:start] + replacement
+          text = text.replace("from dataclasses import replace\n\n", "")
+          test.write_text(text, encoding="utf-8")
+          PY
+          files=(aura_spatial_construction.py tests/test_aura_spatial_waboose_precision.py)
+          ruff check --fix "${files[@]}"
+          ruff format "${files[@]}"
+          python -m pytest -q --tb=short \
             tests/test_aura_spatial_codex_repairs.py \
             tests/test_aura_spatial_waboose_precision.py \
-            2>&1 | tee /tmp/aura-focused-test-diagnostic/pytest.log
-          echo "${PIPESTATUS[0]}" > /tmp/aura-focused-test-diagnostic/status.txt
-          exit 0
-      - uses: actions/upload-artifact@v4
-        with:
-          name: aura-spatial-focused-test-diagnostic-${{ github.sha }}
-          path: /tmp/aura-focused-test-diagnostic
-          retention-days: 1
+            tests/test_aura_spatial_s6_construction.py
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add "${files[@]}"
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(spatial): align Construction asset URIs with registry"
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
+          fi
