@@ -1,4 +1,4 @@
-name: Aura Temporary S5-S6 Construction Bootstrap
+name: Aura Temporary S5-S6 Construction Publisher
 
 on:
   pull_request:
@@ -7,30 +7,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export-baseline:
+  publish-verified-implementation:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: false
-      - name: Record exact baseline
+      - name: Await verified implementation payload
         run: |
-          set -euo pipefail
-          git rev-parse HEAD > /tmp/aura_spatial_s5_s6_baseline_sha.txt
-          git status --short
-      - name: Upload exact repository snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-spatial-s5-s6-baseline-${{ github.sha }}
-          path: |
-            .
-            !.git/**
-            !Aura_Staging/**
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 2
+          echo "Publisher staged. Payload commit follows atomically."
