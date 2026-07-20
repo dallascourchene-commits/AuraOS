@@ -1,0 +1,49 @@
+name: Aura Spatial Focused Test Diagnostic Temp
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-spatial-focused-test-diagnostic-temp.yml"
+      - "aura_spatial_*.py"
+      - "aura_review_lessons_security.py"
+      - "tests/test_aura_spatial_codex_repairs.py"
+      - "tests/test_aura_spatial_waboose_precision.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Clone exact PR branch
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --depth=1 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install focused dependencies
+        run: |
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
+          python -m pip install --disable-pip-version-check pytest jsonschema numpy
+      - name: Capture focused test failure
+        run: |
+          mkdir -p /tmp/aura-focused-test-diagnostic
+          set +e
+          python -m pytest -vv --tb=long \
+            tests/test_aura_spatial_codex_repairs.py \
+            tests/test_aura_spatial_waboose_precision.py \
+            2>&1 | tee /tmp/aura-focused-test-diagnostic/pytest.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > /tmp/aura-focused-test-diagnostic/status.txt
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-focused-test-diagnostic-${{ github.sha }}
+          path: /tmp/aura-focused-test-diagnostic
+          retention-days: 1
