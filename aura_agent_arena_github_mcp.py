@@ -83,10 +83,6 @@ _GITHUB_TOOL_DEFINITIONS = [
                     "type": "boolean",
                     "default": False,
                 },
-                "allow_temporary_transport": {
-                    "type": "boolean",
-                    "default": False,
-                },
                 "changes": {
                     "type": "array",
                     "minItems": 1,
