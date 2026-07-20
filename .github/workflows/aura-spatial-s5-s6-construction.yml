@@ -37,12 +37,12 @@ jobs:
       AURA_S5_S6_ARCHITECT_TIMEOUT_SECONDS: "300"
       AURA_S5_S6_ARCHITECT_TOTAL_TIMEOUT_SECONDS: "900"
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
-          persist-credentials: false
-          fetch-depth: 1
-          submodules: false
+      - name: Shallow-clone exact pull-request branch
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --depth=1 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
 
       - name: Verify exact pull-request head
         env:
