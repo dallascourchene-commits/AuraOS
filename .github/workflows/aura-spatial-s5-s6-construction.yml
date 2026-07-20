@@ -110,13 +110,24 @@ jobs:
           set -euo pipefail
           python -m pytest -q --tb=short tests/test_aura_spatial_codex_repairs.py
 
-      - name: Run S5/S6 and retained Spatial/Construction regressions
+      - name: Run retained Spatial and Construction regressions with evidence
         run: |
           set -euo pipefail
-          python -m pytest -q --tb=short tests/test_aura_spatial*.py
-          python -m pytest -q --tb=short tests/test_aura_construction*.py
-          python -m pytest -q --tb=short             tests/test_aura_arena_persistence_adapters.py             tests/test_aura_agent_arena_mcp.py             tests/test_aura_spatial_agent_bridge_mcp.py
-          npm run test:spatial
+          mkdir -p /tmp/aura-spatial-s5-s6-receipts
+          log=/tmp/aura-spatial-s5-s6-receipts/retained-regressions.log
+          : > "$log"
+          for test_file in tests/test_aura_spatial*.py; do
+            echo "=== $test_file ===" | tee -a "$log"
+            python -m pytest -q --tb=short "$test_file" 2>&1 | tee -a "$log"
+          done
+          for test_file in tests/test_aura_construction*.py; do
+            echo "=== $test_file ===" | tee -a "$log"
+            python -m pytest -q --tb=short "$test_file" 2>&1 | tee -a "$log"
+          done
+          echo "=== persistence and MCP retained set ===" | tee -a "$log"
+          python -m pytest -q --tb=short             tests/test_aura_arena_persistence_adapters.py             tests/test_aura_agent_arena_mcp.py             tests/test_aura_spatial_agent_bridge_mcp.py 2>&1 | tee -a "$log"
+          echo "=== npm spatial ===" | tee -a "$log"
+          npm run test:spatial 2>&1 | tee -a "$log"
 
       - name: Run structural architecture proof
         env:
