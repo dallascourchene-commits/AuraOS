@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_relationship_assessment.schema.json",
+  "title": "Aura Architecture Relationship Atlas — Relationship Assessment V1",
+  "description": "A multidimensional assessment of one architectural relationship. Every claim references a canonical owner. This record is advisory — never patch authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assessment_id",
+    "assessment_version",
+    "participant_refs",
+    "role_bindings",
+    "relation_types",
+    "structural_status",
+    "semantic_relationship",
+    "wiring_disposition",
+    "readiness",
+    "lifecycle",
+    "truth_class",
+    "proof_status",
+    "canonical_owner_refs",
+    "evidence_refs",
+    "missing_roles",
+    "required_adapters",
+    "authority_constraints",
+    "temporal_conditions",
+    "expected_benefits",
+    "risks",
+    "prohibited_effects",
+    "relationships_to_preserve",
+    "confidence",
+    "freshness",
+    "boundary",
+    "assessment_digest",
+    "patch_authority",
+    "vsa_patch_authority"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^atlas_[0-9a-f]{24}$"
+    },
+    "assessment_version": {
+      "const": "AURA_RELATIONSHIP_ASSESSMENT_V1"
+    },
+    "participant_refs": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/participantRef" }
+    },
+    "role_bindings": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "relation_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "structural_status": {
+      "enum": [
+        "EXACTLY_WIRED",
+        "DECLARED_WIRED",
+        "UNWIRED",
+        "PARTIALLY_WIRED",
+        "TEMPORARILY_WIRED",
+        "STALE_WIRING",
+        "UNRESOLVED"
+      ]
+    },
+    "semantic_relationship": {
+      "enum": [
+        "DIRECTLY_RELATED",
+        "OVERLAPPING",
+        "COMPLEMENTARY",
+        "AUXILIARY",
+        "ADJACENT",
+        "REDUNDANT",
+        "COMPETING",
+        "UNRELATED",
+        "CONTRADICTED"
+      ]
+    },
+    "wiring_disposition": {
+      "enum": [
+        "REQUIRED",
+        "RECOMMENDED",
+        "OPTIONAL",
+        "CANDIDATE",
+        "DEFERRED",
+        "NOT_NEEDED",
+        "PROHIBITED"
+      ]
+    },
+    "readiness": {
+      "enum": [
+        "READY",
+        "NEEDS_GROUNDING",
+        "NEEDS_MISSING_ROLE",
+        "NEEDS_SCHEMA",
+        "NEEDS_TEST",
+        "NEEDS_VERIFIER",
+        "NEEDS_AUTHORITY",
+        "NEEDS_CONSENT",
+        "NEEDS_LEASE",
+        "NEEDS_RESEARCH",
+        "TOO_RISKY",
+        "DREAM_ONLY"
+      ]
+    },
+    "lifecycle": {
+      "enum": [
+        "PERSISTENT",
+        "OBJECTIVE_SCOPED",
+        "LEASED",
+        "EPHEMERAL",
+        "DORMANT",
+        "DEPRECATED",
+        "DISSOLVED"
+      ]
+    },
+    "truth_class": {
+      "type": "string",
+      "enum": [
+        "EXACT_SOURCE",
+        "EXACT_SCHEMA",
+        "EXACT_TEST",
+        "EXACT_MANIFEST",
+        "EXACT_RUNTIME",
+        "ADVISORY_CONNECTOME",
+        "ADVISORY_AFFINITY",
+        "INFERRED_MOTIF",
+        "UNRESOLVED"
+      ]
+    },
+    "proof_status": {
+      "enum": [
+        "OPEN",
+        "SATISFIED",
+        "CONTRADICTED",
+        "DEFERRED"
+      ]
+    },
+    "canonical_owner_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Every Atlas assessment must reference at least one canonical owner. Empty list is prohibited."
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "missing_roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_adapters": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "authority_constraints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "temporal_conditions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "expected_benefits": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "risks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "prohibited_effects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "relationships_to_preserve": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "freshness": {
+      "enum": ["CURRENT", "STALE", "UNRESOLVED"]
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "assessment_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 hex digest of the assessment content excluding this field."
+    },
+    "patch_authority": {
+      "const": "exact_source_spans_and_hashes_only"
+    },
+    "vsa_patch_authority": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "participantRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participant_id",
+        "participant_digest",
+        "participant_type",
+        "canonical_owner",
+        "canonical_ref",
+        "freshness"
+      ],
+      "properties": {
+        "participant_id": { "type": "string", "minLength": 1 },
+        "participant_digest": { "type": "string", "minLength": 1 },
+        "participant_type": {
+          "enum": [
+            "atomic_symbol",
+            "capability",
+            "test",
+            "schema",
+            "state",
+            "verifier",
+            "authority",
+            "arena",
+            "document",
+            "external_effect",
+            "packet",
+            "agent",
+            "human_role",
+            "lease",
+            "checkpoint",
+            "research_artifact"
+          ]
+        },
+        "canonical_owner": { "type": "string", "minLength": 1 },
+        "canonical_ref": { "type": "string", "minLength": 1 },
+        "freshness": { "enum": ["CURRENT", "STALE", "UNRESOLVED"] }
+      }
+    }
+  }
+}

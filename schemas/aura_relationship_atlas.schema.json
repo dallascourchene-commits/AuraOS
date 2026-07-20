@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_relationship_atlas.schema.json",
+  "title": "Aura Architecture Relationship Atlas — Snapshot V1",
+  "description": "Top-level compiled snapshot of the Aura Architecture Relationship Atlas.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_version",
+    "repository_head",
+    "working_tree_digest",
+    "codemap_digest",
+    "topology_digest",
+    "connectome_digest",
+    "atomic_inventory_digest",
+    "relational_index_digest",
+    "atlas_ontology_digest",
+    "prohibition_registry_digest",
+    "motif_registry_digest",
+    "profile_digest",
+    "assessments",
+    "missing_configurations",
+    "prohibitions",
+    "reverse_indexes",
+    "boundary",
+    "snapshot_digest"
+  ],
+  "properties": {
+    "snapshot_version": {
+      "const": "AURA_ARCHITECTURE_RELATIONSHIP_ATLAS_V1"
+    },
+    "repository_head": {
+      "type": "string",
+      "minLength": 1
+    },
+    "working_tree_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "codemap_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topology_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "connectome_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "atomic_inventory_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "relational_index_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "atlas_ontology_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prohibition_registry_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "motif_registry_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assessments": {
+      "type": "array",
+      "items": {
+        "$ref": "aura_relationship_assessment.schema.json"
+      }
+    },
+    "missing_configurations": {
+      "type": "array",
+      "items": {
+        "$ref": "aura_missing_relational_configuration.schema.json"
+      }
+    },
+    "prohibitions": {
+      "type": "array",
+      "items": {
+        "$ref": "aura_relationship_prohibition.schema.json"
+      }
+    },
+    "reverse_indexes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "snapshot_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_missing_relational_configuration.schema.json",
+  "title": "Aura Architecture Relationship Atlas — Missing Relational Configuration V1",
+  "description": "Schema for representing a higher-order relational configuration that is incomplete due to missing roles or relations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "configuration_id",
+    "motif_type",
+    "objective_family",
+    "bound_roles",
+    "missing_roles",
+    "existing_relations",
+    "missing_relations",
+    "completion_ratio",
+    "candidate_participants_by_role",
+    "hard_blockers",
+    "required_evidence",
+    "required_verifiers",
+    "required_authority",
+    "expected_capability",
+    "risk_class",
+    "truth_class"
+  ],
+  "properties": {
+    "configuration_id": {
+      "type": "string",
+      "pattern": "^config_[0-9a-f]{24}$"
+    },
+    "motif_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objective_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bound_roles": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "missing_roles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "existing_relations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "missing_relations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "completion_ratio": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "candidate_participants_by_role": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 }
+      }
+    },
+    "hard_blockers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_verifiers": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_authority": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "expected_capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "truth_class": {
+      "const": "INFERRED_MOTIF"
+    }
+  }
+}
