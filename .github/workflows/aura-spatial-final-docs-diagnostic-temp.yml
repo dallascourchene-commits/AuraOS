@@ -119,7 +119,6 @@ jobs:
 
       - name: Commit final docs and generated maps
         env:
-          GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           set -euo pipefail
@@ -131,6 +130,4 @@ jobs:
           test ! -e .github/workflows/aura-spatial-pytest-diagnostic-temp.yml
           git diff --cached --check
           git commit -m "docs: finalize Spatial S5/S6 and regenerate CODEMAP"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" push origin HEAD:"$TARGET_BRANCH"
-          unset AUTH_HEADER
+          git push origin HEAD:"$TARGET_BRANCH"
