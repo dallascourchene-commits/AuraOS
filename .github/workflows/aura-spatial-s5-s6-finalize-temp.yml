@@ -36,8 +36,8 @@ jobs:
             --include=aura_agent_arena_mcp.py \
             --include=aura_agent_arena_persistence_bridge.py \
             .aura/tmp/s5s6-integration.patch
-          test "$(git hash-object aura_agent_arena_mcp.py)" = "c04143871b784e72da0a053b67cff40143551a50"
-          test "$(git hash-object aura_agent_arena_persistence_bridge.py)" = "5c3ee0869aec3144af586469b7f417a7351c13a1"
+          test "$(git hash-object aura_agent_arena_mcp.py)" = "c0414388959f6a20d7945f9d4088f39bfd2b529b"
+          test "$(git hash-object aura_agent_arena_persistence_bridge.py)" = "5c3ee08ee98343a30fd14959dd9faaca8190dc02"
           test "$(git hash-object aura_arena_persistence_adapters.py)" = "de0448de15d72a2e43a5b1949c01b8b99aff2252"
           test "$(git hash-object aura_spatial_agent_bridge.py)" = "57d156f780b2c340736bc60579b63a805ed98a7e"
           test "$(git hash-object aura_spatial_arena.py)" = "a5ef99762f45144d3de9352bec2ff0af195c8f43"
