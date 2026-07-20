@@ -1,124 +1,88 @@
-name: Finalize combined Spatial S5/S6 artifacts
+name: Synchronize CODEMAP on analysis and documentation branches
 
 on:
   pull_request:
+  push:
+    branches:
+      - "analysis/**"
+      - "docs/**"
+    paths-ignore:
+      - ".aura/CODEMAP.json"
+      - ".aura/CODEMAP.md"
+      - "topology_map.json"
 
 permissions:
   contents: write
 
 concurrency:
-  group: finalize-spatial-s5-s6-${{ github.event.pull_request.number }}
+  group: sync-analysis-codemap-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
-  finalize-combined-spatial-tree:
+  sync-codemap:
     if: >-
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref == 'feature/spatial-s4b-gaussian-security'
+      github.actor != 'github-actions[bot]' &&
+      (github.event_name == 'push' ||
+       startsWith(github.event.pull_request.head.ref, 'analysis/') ||
+       startsWith(github.event.pull_request.head.ref, 'docs/'))
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-          submodules: false
-
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install verification dependencies
+          cache: pip
+      - name: Install declared dependencies
         run: |
-          set -euo pipefail
-          python -m pip install --disable-pip-version-check -r requirements.txt
-          python -m pip install --disable-pip-version-check pytest ruff jsonschema numpy
-
-      - name: Restore permanent workflows and remove staging material
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Regenerate and validate CODEMAP
         run: |
-          set -euo pipefail
-          cp .aura/tmp/final-spatial-workflow.yml .github/workflows/aura-spatial-s5-s6-construction.yml
-          cp .aura/tmp/final-sync-analysis-codemap.yml .github/workflows/sync-analysis-codemap.yml
-          rm .aura/tmp/final-spatial-workflow.yml
-          rm .aura/tmp/final-sync-analysis-codemap.yml
-          rm -f .github/workflows/aura-spatial-reconcile-temp.yml
-
-      - name: Regenerate and verify CODEMAP and topology
-        run: |
-          set -euo pipefail
           python aura_codebase_navigator.py
           python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
           test -s topology_map.json
-
-      - name: Compile and lint combined permanent surface
-        run: |
-          set -euo pipefail
-          python -m py_compile \
-            aura_spatial_arena.py \
-            aura_spatial_construction.py \
-            aura_spatial_agent_bridge.py \
-            aura_spatial_mcp.py \
-            aura_spatial_cli.py \
-            aura_arena_persistence_adapters.py \
-            aura_agent_arena_persistence_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_agent_arena_github_bridge.py \
-            aura_agent_arena_github_mcp.py \
-            scripts/aura_spatial_s5_s6_construction_architect_harness.py
-          python -m ruff check \
-            aura_spatial_arena.py \
-            aura_spatial_construction.py \
-            aura_spatial_agent_bridge.py \
-            aura_spatial_mcp.py \
-            aura_spatial_cli.py \
-            aura_arena_persistence_adapters.py \
-            aura_agent_arena_persistence_bridge.py \
-            aura_agent_arena_mcp.py \
-            aura_agent_arena_github_bridge.py \
-            aura_agent_arena_github_mcp.py \
-            scripts/aura_spatial_s5_s6_construction_architect_harness.py \
-            tests/test_aura_spatial*.py \
-            tests/test_aura_agent_arena_github_bridge.py
-          python -m ruff format --check \
-            aura_spatial_arena.py \
-            aura_spatial_construction.py \
-            aura_spatial_agent_bridge.py \
-            aura_spatial_mcp.py \
-            aura_spatial_cli.py \
-            aura_agent_arena_github_bridge.py \
-            aura_agent_arena_github_mcp.py \
-            tests/test_aura_spatial*.py \
-            tests/test_aura_agent_arena_github_bridge.py
-
-      - name: Validate route and retained regressions
-        run: |
-          set -euo pipefail
-          python aura_spatial_cli.py --repo-root . validate-route
-          python -m pytest -q --tb=short tests/test_aura_spatial*.py
-          python -m pytest -q --tb=short tests/test_aura_construction*.py
-          python -m pytest -q --tb=short \
-            tests/test_aura_arena_persistence_adapters.py \
-            tests/test_aura_agent_arena_mcp.py \
-            tests/test_aura_agent_arena_github_bridge.py
-          npm run test:spatial
-
-      - name: Commit clean verified combined tree
+      - name: Commit synchronized maps
         env:
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          set -euo pipefail
-          git config user.name "AuraOS Finalization Bot"
+          git config user.name "AuraOS CODEMAP Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A
-          test ! -e .aura/tmp/final-spatial-workflow.yml
-          test ! -e .aura/tmp/final-sync-analysis-codemap.yml
-          test ! -e .github/workflows/aura-spatial-reconcile-temp.yml
-          git diff --cached --check
-          git commit -m "chore: finalize combined Spatial S5/S6 artifacts"
-          git push origin HEAD:"$TARGET_BRANCH"
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "docs: synchronize CODEMAP and topology"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          set -o pipefail
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"${TARGET_BRANCH}" 2>&1 | tee codemap-push.log
+          unset AUTH_HEADER
+      - name: Upload synchronized maps and push diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .aura/CODEMAP.json
+            .aura/CODEMAP.md
+            topology_map.json
+            codemap-push.log
+          if-no-files-found: error
+          retention-days: 14
