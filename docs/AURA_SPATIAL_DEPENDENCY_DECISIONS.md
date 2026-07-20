@@ -37,14 +37,14 @@ KHR_gaussian_splatting:release-candidate:2026-07-19
 The admitted profile requires:
 
 - non-indexed `POINTS` primitives;
-- `POSITION`, `_ROTATION`, `_SCALE`, `_OPACITY`, and `_SH_0`;
+- `POSITION`, `KHR_gaussian_splatting:ROTATION`, `KHR_gaussian_splatting:SCALE`, `KHR_gaussian_splatting:OPACITY`, and `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0`;
 - exact `ellipse` kernel;
 - `srgb_rec709_display` or `lin_rec709_display` color space;
 - `perspective` projection and `cameraDistance` sorting;
 - complete contiguous SH bands and bounded normalized component encodings;
 - no unknown required or used extensions, nested extension semantics, arbitrary URI loading, images, animation, skinning, scripts, shaders, or executable content.
 
-A valid Gaussian primitive always retains a deterministic point-cloud representation. When `COLOR_0` is absent, Aura derives a bounded placeholder color from `_SH_0` and labels that fallback honestly. Unknown future mandatory semantics are rejected; upgrading the Khronos profile requires a new primary-source review, compatibility fixtures, rollback decision, and exact-head review cycle.
+A valid Gaussian primitive always retains a deterministic point-cloud representation. When `COLOR_0` is absent, Aura derives a bounded placeholder color from `KHR_gaussian_splatting:SH_DEGREE_0_COEF_0` and labels that fallback honestly. Unknown future mandatory semantics are rejected; upgrading the Khronos profile requires a new primary-source review, compatibility fixtures, rollback decision, and exact-head review cycle.
 
 ## Renderer decision
 
