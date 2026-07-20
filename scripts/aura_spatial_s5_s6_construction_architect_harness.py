@@ -380,12 +380,10 @@ def _architecture_inner(
                 "head_ref": head_ref,
                 "changed_files": _TARGET_FILES,
                 "profile": "precision",
-                "focus_directives": [
-                    "authority boundary",
-                    "privacy minimization",
-                    "exact-head lifecycle cleanup",
-                    "restore assessment only",
-                ],
+                # This harness invokes deterministic Waboose analysis without an
+                # external semantic agent. Agent-origin focus directives would require
+                # submit_findings() evidence and must not be claimed as completed here;
+                # the same boundaries remain mandatory in invariants and risk_map.
                 "invariants": [
                     "no domain mutation",
                     "no renderer authority",
