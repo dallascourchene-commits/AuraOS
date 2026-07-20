@@ -53,33 +53,34 @@ Compiles a deterministic publication contract. The request binds:
 - base and head branches;
 - exact expected base SHA;
 - exact expected parent SHA;
-- canonical bounded file changes;
+- exact PR number in update mode;
+- canonical bounded file changes and content digests;
 - commit and PR metadata;
 - explicit publication authorization.
 
-Create mode requires a fresh branch and requires `expected_parent_sha == expected_base_sha`. Update mode requires the current feature ref to equal `expected_parent_sha`.
+Create mode requires `expected_parent_sha == expected_base_sha`, a nonexistent branch ref, and no historical pull request that used the proposed branch name. Update mode requires the current feature ref and the named open PR to match the exact parent SHA, head branch, and base branch.
 
-The contract sorts paths, rejects duplicates, hashes every decoded file payload, caps file/aggregate bytes, disallows path escapes, and rejects temporary transport artifacts by default.
+The contract sorts paths, rejects duplicate or unknown fields, hashes every decoded file payload, caps file and aggregate bytes, disallows path escapes, and rejects temporary transport artifacts by default. Before execution, Aura recomputes the contract identity and verifies that the retained private bytes still match every public path, size, and digest.
 
 ### `aura_github_execute_publication`
 
-Execution reads only the operator-controlled `AURA_GITHUB_TOKEN` environment variable. The token is never accepted through MCP arguments, persisted, logged, or returned.
+Execution reads only the operator-controlled `AURA_GITHUB_TOKEN` environment variable. The token is never accepted through MCP arguments, persisted, logged, or returned. Egress is pinned to `https://api.github.com`, with bounded responses and no shell execution.
 
 The publisher:
 
 1. resolves the exact base ref;
 2. verifies the base SHA;
-3. verifies that create mode uses a nonexistent branch, or update mode uses the exact expected parent;
+3. verifies a fresh, never-used branch in create mode, or the exact open PR/head parent in update mode;
 4. resolves the exact parent tree;
 5. creates bounded blobs;
 6. creates one tree;
 7. creates one commit;
-8. rechecks the base ref before publishing;
+8. rechecks the base and update-PR identity before publishing;
 9. creates the fresh ref or advances it with `force=false`;
-10. creates or updates the PR;
+10. creates or updates the bound PR;
 11. returns a content-addressed publication receipt.
 
-If the base moves during preparation, the branch and PR are not created. The orphaned Git objects are unreachable and GitHub may later collect them.
+If the base or PR head moves during preparation, the branch/PR update is not performed. Any newly created Git objects remain unreachable and GitHub may later collect them.
 
 ### `aura_github_prepare_merge`
 
@@ -134,13 +135,13 @@ Normal permanent workflows remain allowed.
 
 ```text
 1. Read main and resolve its exact SHA.
-2. Choose a new feature branch for a new PR.
+2. Choose a new feature branch never used by another PR.
 3. Prepare and verify the local Arena change.
 4. Compile the GitHub publication contract.
 5. Execute one atomic publication.
 6. Trigger Codex repeatedly as needed.
 7. Trigger CodeRabbit once after the source stabilizes.
-8. Apply accepted findings through update-mode atomic commits.
+8. Apply accepted findings through update-mode atomic commits bound to the exact PR.
 9. Regenerate and verify CODEMAP on the final source head.
 10. Prepare the exact-head merge packet.
 11. Merge only after explicit human instruction.
@@ -159,4 +160,4 @@ python3 -m py_compile \
 python3 -m pytest -q tests/test_aura_agent_arena_github_bridge.py
 ```
 
-The focused tests cover deterministic contracts, sorted tree entries, single-tree/single-commit publication, exact-base races, temporary workflow rejection, explicit merge gates, private payload suppression, and idempotent MCP registration.
+The current focused suite contains **14 passing tests** covering deterministic contracts, sorted tree entries, single-tree/single-commit publication, exact-base races, historical branch-name rejection, exact update-PR binding, contract-tamper rejection, temporary workflow rejection, explicit merge gates, private payload suppression, strict request types, and idempotent MCP registration.
