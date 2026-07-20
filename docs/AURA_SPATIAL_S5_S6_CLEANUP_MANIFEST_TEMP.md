@@ -1,0 +1,1 @@
+Delete before review: `.aura/tmp/s5s6-payload/**`, `.aura/tmp/s5s6-source-patch/**`, `.github/workflows/aura-spatial-s5-s6-bootstrap-temp.yml`, `.github/workflows/aura-spatial-s5-s6-materialize-temp.yml`, and all `docs/AURA_SPATIAL_S5_S6_*_TEMP.md` files. Permanent `docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md` must remain.
