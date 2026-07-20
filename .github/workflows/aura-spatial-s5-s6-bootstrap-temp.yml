@@ -1,4 +1,4 @@
-name: Aura Temporary S5-S6 Construction Publisher
+name: Aura Temporary S5-S6 Materialization Trigger
 
 on:
   pull_request:
@@ -7,13 +7,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  publish-verified-implementation:
+  trigger-materializer:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
     steps:
-      - name: Await verified implementation payload
-        run: |
-          echo "Publisher staged. Payload commit follows atomically."
+      - run: echo "Triggering exact Spatial S5/S6 materialization from the verified archive."
