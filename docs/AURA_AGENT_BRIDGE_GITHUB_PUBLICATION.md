@@ -165,4 +165,4 @@ same-repository PR binding, CAS rejection, create-mode recovery evidence,
 no update-mode PR PATCH, redirect rejection, malformed UTF-8 response handling,
 strict delete payload parity, private/public payload integrity, evidence-only
 merge output, and idempotent MCP registration. The current focused suite passes
-**33 tests**.
+**34 tests**.
