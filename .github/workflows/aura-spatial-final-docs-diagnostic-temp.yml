@@ -31,6 +31,7 @@ jobs:
       - name: Install declared verification dependencies
         run: |
           set -euo pipefail
+          python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check -r requirements.txt
           python -m pip install --disable-pip-version-check pytest ruff jsonschema numpy
 
@@ -50,6 +51,7 @@ jobs:
           code = textwrap.dedent(block)
           exec(compile(code, '<aura-spatial-final-docs>', 'exec'), {'__name__': '__main__'})
           Path('.github/workflows/aura-spatial-final-docs-diagnostic-temp.yml').unlink()
+          Path('.github/workflows/aura-spatial-pytest-diagnostic-temp.yml').unlink(missing_ok=True)
           PY
 
       - name: Regenerate and validate final CODEMAP and topology
@@ -126,6 +128,7 @@ jobs:
           git add -A
           test ! -e .github/workflows/aura-spatial-final-docs-temp.yml
           test ! -e .github/workflows/aura-spatial-final-docs-diagnostic-temp.yml
+          test ! -e .github/workflows/aura-spatial-pytest-diagnostic-temp.yml
           git diff --cached --check
           git commit -m "docs: finalize Spatial S5/S6 and regenerate CODEMAP"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
