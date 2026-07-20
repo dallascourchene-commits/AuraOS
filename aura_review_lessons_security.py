@@ -35,8 +35,7 @@ def detect_authority_aliases(candidate: Any) -> list[dict[str, Any]]:
                 detector_id="detect_authority_aliases",
                 code="AUTHORITY_ALIAS",
                 message=(
-                    f"Metadata key {key!r} aliases protected authority key "
-                    f"{canonical!r}; aliases must fail closed."
+                    f"Metadata key {key!r} aliases protected authority key {canonical!r}; aliases must fail closed."
                 ),
                 evidence={"metadata_path": path, "key": key, "canonical_key": canonical, "value": value},
                 confidence=1.0,
@@ -78,10 +77,7 @@ def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
             _finding(
                 detector_id="detect_protected_metadata_overrides",
                 code="PROTECTED_AUTHORITY_OVERRIDE",
-                message=(
-                    f"Protected authority field {key!r} must remain exactly "
-                    f"{expected!r}."
-                ),
+                message=(f"Protected authority field {key!r} must remain exactly {expected!r}."),
                 evidence={
                     "metadata_path": path,
                     "key": key,
@@ -108,8 +104,7 @@ def detect_count_without_byte_budget(candidate: Any) -> list[dict[str, Any]]:
     byte_keys = {
         key
         for key in candidate
-        if any(term in str(key).casefold() for term in ("byte", "bytes", "size"))
-        and "max" in str(key).casefold()
+        if any(term in str(key).casefold() for term in ("byte", "bytes", "size")) and "max" in str(key).casefold()
     }
     attacker_controlled = candidate.get("attacker_controlled", True) is not False
     if count_keys and not byte_keys and attacker_controlled:
@@ -290,10 +285,13 @@ def detect_stale_evidence_claim(candidate: Any) -> list[dict[str, Any]]:
     evidence_status = str(candidate.get("evidence_status") or "").casefold()
     evidence_head = str(candidate.get("evidence_head") or "")
     current_head = str(candidate.get("current_head") or "")
-    bad_upgrade = (
-        any(term in claim for term in ("passed", "verified", "green"))
-        and evidence_status in {"configured", "not_executed", "queued", "in_progress", "historical"}
-    )
+    bad_upgrade = any(term in claim for term in ("passed", "verified", "green")) and evidence_status in {
+        "configured",
+        "not_executed",
+        "queued",
+        "in_progress",
+        "historical",
+    }
     head_mismatch = bool(
         evidence_head
         and current_head
