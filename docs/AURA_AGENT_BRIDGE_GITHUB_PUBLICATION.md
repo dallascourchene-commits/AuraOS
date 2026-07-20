@@ -2,18 +2,18 @@
 
 ## Purpose
 
-This lane replaces temporary GitHub Actions materializer/bootstrap/publisher workflows with a direct, bounded Git Data API transaction.
+This lane replaces temporary GitHub Actions materializer/bootstrap/publisher
+workflows with a bounded GitHub API path whose commit and branch update are a
+single server-side compare-and-swap operation.
 
 ```text
-exact base/head evidence
+exact base/head/PR evidence
   → bounded canonical change manifest
-  → one blob per upsert
-  → one tree over the exact parent tree
-  → one commit with the exact expected parent
-  → fresh ref creation or non-forced fast-forward
-  → one pull request
+  → fresh snapshot branch (create mode only)
+  → GraphQL createCommitOnBranch(expectedHeadOid)
+  → existing or newly created pull request
   → review and verification
-  → separate human-authorized merge call bound to expected_head_sha
+  → separately authenticated human merge action
 ```
 
 The implementation is in:
@@ -24,19 +24,20 @@ The implementation is in:
 
 ## Why this is better
 
-The former workaround encoded source or patches into temporary repository files, committed a workflow trigger, waited for GitHub Actions to materialize the payload, then deleted the transport artifacts. That introduced extra commits, temporary workflow authority, stale-head races, cleanup obligations, review noise, and branch reuse mistakes.
+The former workaround encoded source or patches into temporary files, committed
+a workflow trigger, waited for Actions to materialize the payload, and then
+deleted the transport artifacts. It introduced extra commits, temporary
+workflow authority, stale-head races, cleanup obligations, and review noise.
 
-The Git Data API already provides the correct primitive. Aura now prepares all intended file mutations as one deterministic contract and publishes them as a single tree and commit. No local `git add`, staging directory, shell push, encoded payload archive, or temporary workflow is required.
+The retained lane now uses GitHub GraphQL `createCommitOnBranch`. Its
+`expectedHeadOid` input makes commit creation and branch advancement one
+server-side compare-and-swap operation. A concurrent branch change causes the
+mutation to fail rather than publishing from a stale parent.
+
+No local `git add`, staging directory, shell push, encoded archive, or temporary
+workflow is required.
 
 ## Agent Bridge tools
-
-Launch the augmented MCP entrypoint:
-
-```bash
-python3 -m aura_agent_arena_github_mcp
-```
-
-It retains the existing Agent Bridge tools and adds:
 
 ```text
 aura_github_prepare_publication
@@ -46,65 +47,84 @@ aura_github_prepare_merge
 
 ### `aura_github_prepare_publication`
 
-Compiles a deterministic publication contract. The request binds:
+The contract binds:
 
-- repository;
-- create/update mode;
-- base and head branches;
-- exact expected base SHA;
-- exact expected parent SHA;
+- repository and create/update mode;
+- base and feature branches;
+- exact base snapshot SHA;
+- exact expected feature-branch parent SHA;
 - exact PR number in update mode;
-- canonical bounded file changes and content digests;
+- bounded canonical additions and deletions;
 - commit and PR metadata;
 - explicit publication authorization.
 
-Create mode requires `expected_parent_sha == expected_base_sha`, a nonexistent branch ref, and no historical pull request that used the proposed branch name. Update mode requires the current feature ref and the named open PR to match the exact parent SHA, head branch, and base branch.
+All additions are sent to GraphQL as RFC 4648 Base64. UTF-8 input is bounded
+before encoding. Caller Base64 is bounded before ASCII conversion or decoding
+and is retained only after strict validation. Limits remain 4 MiB per decoded
+file and 32 MiB per publication.
 
-The contract sorts paths, rejects duplicate or unknown fields, hashes every decoded file payload, caps file and aggregate bytes, disallows path escapes, and rejects temporary transport artifacts by default. Before execution, Aura recomputes the contract identity and verifies that the retained private bytes still match every public path, size, and digest.
+`createCommitOnBranch` does not expose executable-bit mutation, so this lane
+accepts regular files (`100644`) only. Executable-mode changes must use a
+separately reviewed publication mechanism.
 
-### `aura_github_execute_publication`
+### Create mode
 
-Execution reads only the operator-controlled `AURA_GITHUB_TOKEN` environment variable. The token is never accepted through MCP arguments, persisted, logged, or returned. Egress is pinned to `https://api.github.com`, with bounded responses and no shell execution.
+1. Confirm `expected_parent_sha == expected_base_sha`.
+2. Confirm the proposed feature ref does not exist.
+3. Confirm no historical PR used that branch name.
+4. Create the fresh feature ref at the immutable provenance snapshot
+   `expected_base_sha`.
+5. Run `createCommitOnBranch` on that feature ref with
+   `expectedHeadOid=expected_base_sha`.
+6. Create the PR.
+7. If the mutation or PR creation fails, delete the fresh ref only when it still
+   points to the expected cleanup SHA and report the cleanup result.
 
-The publisher:
+The base branch may advance after the snapshot is taken. The guarantee is exact
+provenance from `expected_base_sha`, not a false claim that mutable `main`
+remains locked.
 
-1. resolves the exact base ref;
-2. verifies the base SHA;
-3. verifies a fresh, never-used branch in create mode, or the exact open PR/head parent in update mode;
-4. resolves the exact parent tree;
-5. creates bounded blobs;
-6. creates one tree;
-7. creates one commit;
-8. rechecks the base and update-PR identity before publishing;
-9. creates the fresh ref or advances it with `force=false`;
-10. creates or updates the bound PR;
-11. returns a content-addressed publication receipt.
+### Update mode
 
-If the base or PR head moves during preparation, the branch/PR update is not performed. Any newly created Git objects remain unreachable and GitHub may later collect them.
+1. Require the exact existing PR number.
+2. Verify the PR is open and unmerged.
+3. Verify exact base/head refs and exact `expected_parent_sha`.
+4. Verify both PR head and base repositories equal `repository_full_name`;
+   fork publication is unsupported and fails closed.
+5. Run `createCommitOnBranch` with
+   `expectedHeadOid=expected_parent_sha`.
+6. Do not PATCH PR metadata after publication. The existing PR follows its
+   feature ref automatically.
 
-### `aura_github_prepare_merge`
+## Transport security
 
-The publisher never merges. Merge is a second, explicit connector operation and remains blocked until all gates are true:
+- token source: operator-controlled `AURA_GITHUB_TOKEN` only;
+- token is never accepted through MCP arguments;
+- REST and GraphQL are pinned to `https://api.github.com`;
+- urllib redirects are disabled before the bearer token is sent;
+- responses are bounded to 8 MiB;
+- no shell execution is used.
+
+## Merge boundary
+
+`aura_github_prepare_merge` is evidence-only. MCP callers cannot assert human
+merge authority. The tool may return:
 
 ```text
-human_merge_authorized
-checks_passed
-review_threads_resolved
-codemap_regenerated
+READY_FOR_TRUSTED_HUMAN_AUTHORIZATION
 ```
 
-When all gates pass, Aura emits only this bounded call shape:
+after checks, review threads, and CODEMAP evidence pass, but it always returns:
 
-```text
-GitHub.merge_pull_request(
-  repository_full_name,
-  pr_number,
-  merge_method,
-  expected_head_sha,
-)
+```yaml
+merge_authority: false
+connector_tool: null
+connector_arguments: null
+automatic_merge: false
 ```
 
-`expected_head_sha` makes GitHub reject a merge if the PR changed after review.
+The actual `GitHub.merge_pull_request` call remains a separate trusted action
+initiated by Dallas and bound to the reviewed `expected_head_sha`.
 
 ## Authority boundaries
 
@@ -112,42 +132,12 @@ GitHub.merge_pull_request(
 patch_authority: exact_source_spans_and_hashes_only
 vsa_patch_authority: false
 publication_requires_explicit_authorization: true
+graphql_compare_and_swap: true
 automatic_merge: false
+merge_authority_in_mcp: false
 force_ref_update: false
 human_review_required: true
 ```
-
-A valid publication contract is not proof that tests passed and is not merge authority. Reviewers, CI, Waboose, Codex, CodeRabbit, CODEMAP verification, and the human maintainer remain separate gates.
-
-## Temporary transport rejection
-
-Unless an operator deliberately sets `allow_temporary_transport=true`, the contract rejects:
-
-- `.aura/tmp/**`;
-- `scripts/.tmp/**`;
-- `*_TEMP.md`;
-- workflow names containing `materialize`, `bootstrap`, `publisher`, or `trigger`;
-- `*-temp.yml`, `*_temp.yml`, and YAML equivalents.
-
-Normal permanent workflows remain allowed.
-
-## Recommended external-agent workflow
-
-```text
-1. Read main and resolve its exact SHA.
-2. Choose a new feature branch never used by another PR.
-3. Prepare and verify the local Arena change.
-4. Compile the GitHub publication contract.
-5. Execute one atomic publication.
-6. Trigger Codex repeatedly as needed.
-7. Trigger CodeRabbit once after the source stabilizes.
-8. Apply accepted findings through update-mode atomic commits bound to the exact PR.
-9. Regenerate and verify CODEMAP on the final source head.
-10. Prepare the exact-head merge packet.
-11. Merge only after explicit human instruction.
-```
-
-Do not reuse a branch whose previous PR has already merged. Do not use a temporary workflow as a shell surrogate when direct publication is available.
 
 ## Focused validation
 
@@ -160,4 +150,8 @@ python3 -m py_compile \
 python3 -m pytest -q tests/test_aura_agent_arena_github_bridge.py
 ```
 
-The current focused suite contains **14 passing tests** covering deterministic contracts, sorted tree entries, single-tree/single-commit publication, exact-base races, historical branch-name rejection, exact update-PR binding, contract-tamper rejection, temporary workflow rejection, explicit merge gates, private payload suppression, strict request types, and idempotent MCP registration.
+The focused suite covers deterministic contracts, schema/runtime parity,
+pre-encoding and pre-decoding bounds, GraphQL `refName` variable shape,
+same-repository PR binding, CAS rejection, create-mode cleanup, no update-mode
+PR PATCH, redirect rejection, private/public payload integrity, evidence-only
+merge output, and idempotent MCP registration.
