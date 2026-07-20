@@ -1,4 +1,4 @@
-name: Aura Spatial Harness Semantic Diagnostic Temp
+name: Aura Spatial Harness Semantic Fix Temp
 
 on:
   pull_request:
@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  repair:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -27,46 +27,53 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-      - name: Capture semantic repair proof
+      - name: Apply proven semantic harness correction
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/aura-spatial-harness-semantic-diagnostic
           python - <<'PY'
           from pathlib import Path
 
           path = Path("scripts/aura_spatial_s5_s6_construction_architect_harness.py")
           text = path.read_text(encoding="utf-8")
-          start = text.index('                "focus_directives": [')
-          end = text.index('                "invariants": [', start)
-          replacement = '''                # This harness invokes deterministic Waboose analysis without an
+          marker = "Agent-origin focus directives would require"
+          if marker not in text:
+              start = text.index('                "focus_directives": [')
+              end = text.index('                "invariants": [', start)
+              replacement = '''                # This harness invokes deterministic Waboose analysis without an
                   # external semantic agent. Agent-origin focus directives would require
                   # submit_findings() evidence and must not be claimed as completed here;
                   # the same boundaries remain mandatory in invariants and risk_map.
           '''
-          path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
+              path.write_text(text[:start] + replacement + text[end:], encoding="utf-8")
           PY
-          ruff check --fix scripts/aura_spatial_s5_s6_construction_architect_harness.py tests/test_aura_spatial_s5_s6_harness.py
-          ruff format scripts/aura_spatial_s5_s6_construction_architect_harness.py tests/test_aura_spatial_s5_s6_harness.py
-          git diff -- scripts/aura_spatial_s5_s6_construction_architect_harness.py tests/test_aura_spatial_s5_s6_harness.py \
-            > /tmp/aura-spatial-harness-semantic-diagnostic/diff.patch
+          files=(scripts/aura_spatial_s5_s6_construction_architect_harness.py tests/test_aura_spatial_s5_s6_harness.py)
+          ruff check --fix "${files[@]}"
+          ruff format "${files[@]}"
           python -m py_compile scripts/aura_spatial_s5_s6_construction_architect_harness.py
-          set +e
-          python -m pytest -vv --tb=long tests/test_aura_spatial_s5_s6_harness.py \
-            2>&1 | tee /tmp/aura-spatial-harness-semantic-diagnostic/pytest.log
-          test_status=${PIPESTATUS[0]}
+          python -m pytest -q --tb=short tests/test_aura_spatial_s5_s6_harness.py
+          mkdir -p /tmp/aura-spatial-harness-fix
           python scripts/aura_spatial_s5_s6_construction_architect_harness.py \
             --repo-root . \
             --base-ref origin/main \
             --head-ref HEAD \
             --observed-head "$(git rev-parse HEAD)" \
-            --receipt /tmp/aura-spatial-harness-semantic-diagnostic/full.json \
-            2>&1 | tee /tmp/aura-spatial-harness-semantic-diagnostic/harness.log
-          harness_status=${PIPESTATUS[0]}
-          printf '%s\n' "$test_status" > /tmp/aura-spatial-harness-semantic-diagnostic/test-status.txt
-          printf '%s\n' "$harness_status" > /tmp/aura-spatial-harness-semantic-diagnostic/harness-status.txt
-          exit 0
-      - uses: actions/upload-artifact@v4
-        with:
-          name: aura-spatial-harness-semantic-diagnostic-${{ github.sha }}
-          path: /tmp/aura-spatial-harness-semantic-diagnostic
-          retention-days: 1
+            --receipt /tmp/aura-spatial-harness-fix/full.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          packet = json.loads(Path("/tmp/aura-spatial-harness-fix/full.json").read_text())
+          assert packet["ok"] is True, packet
+          assert packet["checks"]["waboose_finalize_ok"] is True
+          assert packet["checks"]["waboose_no_visible_findings"] is True
+          PY
+          git config user.name "dallascourchene-commits"
+          git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
+          git add "${files[@]}"
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(spatial): align Waboose harness with deterministic review"
+            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
+          fi
