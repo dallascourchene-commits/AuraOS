@@ -125,7 +125,7 @@ def test_project_floor_plan_asset_requires_local_uri_privacy_and_non_survey_boun
         floor_plan_assets=(_floor_asset(),),
     )
     assert len(scene.assets) == 2
-    with pytest.raises(ValueError, match="local or Aura-addressed"):
+    with pytest.raises(ValueError, match="Aura-addressed"):
         project_construction_state_to_scene(
             fixture.state,
             packet,

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import ast
-from dataclasses import replace
 
 import pytest
 
@@ -46,12 +45,13 @@ def test_review_lesson_authority_detector_accepts_typed_spatial_no_authority_env
         "aura://user@construction/floor-plan",
         "aura://construction/floor-plan?token=secret",
         "file://remote-host/tmp/floor.glb",
+        "file:///tmp/aura/floor.glb",
         "https://example.test/floor.glb",
     ],
 )
 def test_construction_projection_rejects_noncanonical_floor_asset_uris(uri: str) -> None:
     fixture, packet = _fixture_packet()
-    with pytest.raises(ValueError, match=r"(?:URI|local or Aura-addressed|remote host)"):
+    with pytest.raises(ValueError, match=r"(?:URI|Aura-addressed|remote host)"):
         project_construction_state_to_scene(
             fixture.state,
             packet,
@@ -60,20 +60,12 @@ def test_construction_projection_rejects_noncanonical_floor_asset_uris(uri: str)
         )
 
 
-def test_construction_projection_accepts_canonical_aura_and_local_file_uris() -> None:
+def test_construction_projection_accepts_canonical_aura_uri() -> None:
     fixture, packet = _fixture_packet()
-    aura_scene = project_construction_state_to_scene(
+    scene = project_construction_state_to_scene(
         fixture.state,
         packet,
         purpose_digest="7" * 64,
         floor_plan_assets=(_floor_asset(),),
     )
-    file_asset = replace(_floor_asset(), uri="file:///tmp/aura/floor.glb")
-    file_scene = project_construction_state_to_scene(
-        fixture.state,
-        packet,
-        purpose_digest="8" * 64,
-        floor_plan_assets=(file_asset,),
-    )
-    assert len(aura_scene.assets) == 2
-    assert len(file_scene.assets) == 2
+    assert len(scene.assets) == 2

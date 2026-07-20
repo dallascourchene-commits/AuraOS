@@ -389,8 +389,8 @@ def _validate_local_asset_uri(value: Any) -> str:
     if decoded.count("/") != uri.count("/") or decoded.count("\\") != uri.count("\\"):
         raise ValueError("Construction floor-plan asset URI changes separators when decoded")
     parsed = urlsplit(uri)
-    if parsed.scheme not in {"aura", "file"}:
-        raise ValueError("Construction floor-plan assets must be local or Aura-addressed")
+    if parsed.scheme != "aura":
+        raise ValueError("Construction floor-plan assets must be Aura-addressed")
     scheme, separator, remainder = uri.partition(":")
     if separator != ":" or scheme != parsed.scheme or not remainder.startswith("//"):
         raise ValueError("Construction floor-plan asset URI must use a canonical hierarchical scheme")
@@ -402,11 +402,8 @@ def _validate_local_asset_uri(value: Any) -> str:
         raise ValueError("Construction floor-plan asset URI contains a malformed authority") from exc
     if port is not None:
         raise ValueError("Construction floor-plan asset URI cannot contain a port")
-    if parsed.scheme == "aura":
-        if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():
-            raise ValueError("Aura asset URI requires a canonical lowercase authority")
-    elif parsed.netloc not in {"", "localhost"}:
-        raise ValueError("file asset URI cannot name a remote host")
+    if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():
+        raise ValueError("Aura asset URI requires a canonical lowercase authority")
     path = parsed.path
     if not path.startswith("/") or "//" in path or (len(path) > 1 and path.endswith("/")):
         raise ValueError("Construction floor-plan asset URI path is not canonical")
