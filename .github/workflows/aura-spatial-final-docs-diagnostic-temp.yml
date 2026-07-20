@@ -117,9 +117,7 @@ jobs:
       - name: Run full retained Spatial regression suite
         run: python -m pytest -q --tb=short tests/test_aura_spatial*.py
 
-      - name: Commit final docs and generated maps
-        env:
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - name: Commit verified final tree to transfer branch
         run: |
           set -euo pipefail
           git config user.name "AuraOS Final Documentation Bot"
@@ -130,4 +128,4 @@ jobs:
           test ! -e .github/workflows/aura-spatial-pytest-diagnostic-temp.yml
           git diff --cached --check
           git commit -m "docs: finalize Spatial S5/S6 and regenerate CODEMAP"
-          git push origin HEAD:"$TARGET_BRANCH"
+          git push --force origin HEAD:refs/heads/automation/spatial-pr169-final-docs
