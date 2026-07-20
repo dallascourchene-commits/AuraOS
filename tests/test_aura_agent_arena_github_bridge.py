@@ -16,6 +16,8 @@ from aura_agent_arena_github_bridge import (
     _MAX_BASE64_CHARS,
     _MAX_UTF8_CHARS,
     _NoRedirectHandler,
+    _fresh_branch_recovery_evidence,
+    _utf8_byte_count,
     compile_merge_connector_packet,
     compile_publication_contract,
     execute_publication_contract,
@@ -85,11 +87,13 @@ class FakeTransport:
         *,
         mode: str = "create",
         graphql_error: bool = False,
+        graphql_advance_then_error: bool = False,
         pr_error: bool = False,
         head_repo: str = REPOSITORY,
     ) -> None:
         self.mode = mode
         self.graphql_error = graphql_error
+        self.graphql_advance_then_error = graphql_advance_then_error
         self.pr_error = pr_error
         self.head_repo = head_repo
         self.calls: list[tuple[str, str, dict[str, Any] | None, bool]] = []
@@ -148,6 +152,9 @@ class FakeTransport:
         self.graphql_calls.append((query, copy.deepcopy(variables)))
         if self.graphql_error:
             raise GitHubPublicationError("expectedHeadOid mismatch")
+        if self.graphql_advance_then_error:
+            self.branch_sha = COMMIT_SHA
+            raise GitHubPublicationError("response lost after mutation")
         expected = variables["input"]["expectedHeadOid"]
         assert self.branch_sha == expected
         self.branch_sha = COMMIT_SHA
@@ -212,6 +219,26 @@ def test_contract_rejects_unsupported_executable_mode() -> None:
         )
 
 
+def test_delete_rejects_schema_forbidden_content_and_encoding() -> None:
+    for forbidden in (
+        {"content": ""},
+        {"encoding": "utf-8"},
+        {"content": "", "encoding": "base64"},
+    ):
+        with pytest.raises(GitHubPublicationError, match="forbidden keys"):
+            compile_publication_contract(
+                _request(
+                    changes=[
+                        {
+                            "path": "obsolete.py",
+                            "operation": "delete",
+                            **forbidden,
+                        }
+                    ]
+                )
+            )
+
+
 def test_bounds_apply_before_large_utf8_or_base64_conversion() -> None:
     with pytest.raises(GitHubPublicationError, match="input characters"):
         compile_publication_contract(
@@ -234,6 +261,35 @@ def test_bounds_apply_before_large_utf8_or_base64_conversion() -> None:
                         "content": "A" * (_MAX_BASE64_CHARS + 1),
                     }
                 ]
+            )
+        )
+
+
+def test_multibyte_utf8_is_bounded_before_encoding() -> None:
+    content = "😀" * ((_MAX_UTF8_CHARS // 4) + 1)
+    assert len(content) < _MAX_UTF8_CHARS
+    with pytest.raises(GitHubPublicationError, match="decoded bytes"):
+        compile_publication_contract(
+            _request(changes=[{"path": "emoji.txt", "content": content}])
+        )
+
+
+def test_utf8_byte_counter_rejects_surrogates() -> None:
+    with pytest.raises(GitHubPublicationError, match="surrogate"):
+        _utf8_byte_count("\ud800")
+
+
+def test_temporary_transport_escape_hatch_is_rejected() -> None:
+    with pytest.raises(GitHubPublicationError, match="unknown keys"):
+        compile_publication_contract(
+            _request(
+                allow_temporary_transport=True,
+                changes=[
+                    {
+                        "path": ".github/workflows/materialize-temp.yml",
+                        "content": "name: forbidden\n",
+                    }
+                ],
             )
         )
 
@@ -288,30 +344,65 @@ def test_caller_base64_is_retained_in_graphql_variables() -> None:
     assert additions == [{"path": "payload.bin", "contents": encoded}]
 
 
-def test_create_cleans_fresh_branch_when_graphql_cas_fails() -> None:
+def test_create_returns_recovery_evidence_when_graphql_cas_fails() -> None:
     contract = compile_publication_contract(_request())
     transport = FakeTransport(graphql_error=True)
 
     with pytest.raises(
         GitHubPublicationError,
-        match='"deleted":true',
+        match='manual_cleanup_required_no_cas_delete',
     ):
         execute_publication_contract(contract, transport=transport)
 
-    assert transport.branch_sha is None
+    assert transport.branch_sha == BASE_SHA
+    assert not any(method == "DELETE" for method, *_ in transport.calls)
 
 
-def test_create_cleans_commit_branch_when_pr_creation_fails() -> None:
+def test_graphql_advanced_then_failed_reports_observed_commit() -> None:
+    contract = compile_publication_contract(_request())
+    transport = FakeTransport(graphql_advance_then_error=True)
+
+    with pytest.raises(GitHubPublicationError) as error_info:
+        execute_publication_contract(contract, transport=transport)
+
+    message = str(error_info.value)
+    assert "outcome ambiguous" in message
+    assert COMMIT_SHA in message
+    assert "ref_moved_manual_investigation_required" in message
+    assert transport.branch_sha == COMMIT_SHA
+    assert not any(method == "DELETE"" for method, *_ in transport.calls)
+
+
+def test_create_returns_recovery_evidence_when_pr_creation_fails() -> None:
     contract = compile_publication_contract(_request())
     transport = FakeTransport(pr_error=True)
 
     with pytest.raises(
         GitHubPublicationError,
-        match='"deleted":true',
+        match='manual_cleanup_required_no_cas_delete',
     ):
         execute_publication_contract(contract, transport=transport)
 
-    assert transport.branch_sha is None
+    assert transport.branch_sha == COMMIT_SHA
+    assert not any(method == "DELETE" for method, *_ in transport.calls)
+
+
+def test_recovery_never_deletes_a_moved_branch() -> None:
+    transport = FakeTransport()
+    transport.branch_sha = COMMIT_SHA
+
+    evidence = _fresh_branch_recovery_evidence(
+        transport,
+        repository=REPOSITORY,
+        branch=BRANCH,
+        expected_sha=BASE_SHA,
+    )
+
+    assert evidence["recovery_required"] is True
+    assert evidence["safe_manual_delete"] is False
+    assert evidence["observed_sha"] == COMMIT_SHA
+    assert evidence["detail"] == "ref_moved_manual_investigation_required"
+    assert not any(method == "DELETE" for method, *_ in transport.calls)
 
 
 def test_update_rejects_fork_pr_before_graphql() -> None:
@@ -415,12 +506,63 @@ class _RedirectingOpener:
         )
 
 
-def test_transport_does_not_follow_redirect() -> None:
+def test_transport_rejects_injected_opener_argument() -> None:
+    with pytest.raises(TypeError, match="opener"):
+        GitHubRestTransport(  # type: ignore[call-arg]
+            token="secret",
+            opener=_RedirectingOpener(),
+        )
+
+
+def test_transport_does_not_follow_redirect(monkeypatch: pytest.MonkeyPatch) -> None:
     opener = _RedirectingOpener()
-    transport = GitHubRestTransport(token="secret", opener=opener)
+    handlers: list[tuple[Any, ...]] = []
+
+    def fake_build_opener(*args: Any) -> _RedirectingOpener:
+        handlers.append(args)
+        return opener
+
+    monkeypatch.setattr(request, "build_opener", fake_build_opener)
+    transport = GitHubRestTransport(token="secret")
+    assert len(handlers) == 1
+    assert any(isinstance(item, _NoRedirectHandler) for item in handlers[0])
     with pytest.raises(GitHubPublicationError, match="HTTP 302"):
         transport.graphql("query { viewer { login } }", {})
     assert opener.calls == 1
+
+
+class _BinaryResponse:
+    def __enter__(self) -> "_BinaryResponse":
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        return None
+
+    def geturl(self) -> str:
+        return "https://api.github.com/graphql"
+
+    def read(self, limit: int) -> bytes:
+        del limit
+        return b"\xff\xfe"
+
+
+class _BinaryOpener:
+    def open(self, req: request.Request, timeout: int) -> _BinaryResponse:
+        del req, timeout
+        return _BinaryResponse()
+
+
+def test_transport_converts_non_utf8_response_to_publication_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        request,
+        "build_opener",
+        lambda *handlers: _BinaryOpener(),
+    )
+    transport = GitHubRestTransport(token="secret")
+    with pytest.raises(GitHubPublicationError, match="failed"):
+        transport.graphql("query { viewer { login } }", {})
 
 
 def test_merge_packet_is_evidence_only() -> None:
@@ -495,3 +637,7 @@ def test_mcp_schema_matches_upsert_delete_runtime_and_installs_once() -> None:
         if item["name"] == "aura_github_prepare_merge"
     )
     assert "human_merge_authorized" not in merge["inputSchema"]["properties"]
+    assert (
+        "allow_temporary_transport"
+        not in prepare["inputSchema"]["properties"]
+    )
