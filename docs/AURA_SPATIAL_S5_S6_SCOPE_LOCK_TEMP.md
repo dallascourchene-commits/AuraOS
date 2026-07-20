@@ -1,0 +1,1 @@
+Scope lock: only Phase S5 and the Construction adapter portion of S6. Keep PR #169 draft. CODEMAP regeneration is forbidden until the final pre-merge operation. No merge without Dallas's explicit instruction.
