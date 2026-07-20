@@ -9,7 +9,10 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 import hashlib
 import math
+from pathlib import PurePosixPath
+import re
 from typing import Any
+from urllib.parse import unquote, urlsplit
 
 from aura_construction_runtime_binding import require_canonical_construction_runtime_packet
 from aura_construction_state import ConstructionProjectState
@@ -33,7 +36,7 @@ MAX_CONSTRUCTION_FLOOR_PLAN_ASSETS = 32
 MAX_CONSTRUCTION_PROJECTION_BYTES = 262_144
 MAX_CONSTRUCTION_BLOCKERS_PER_CANDIDATE = 256
 MAX_CONSTRUCTION_PUBLIC_IDENTIFIER_BYTES = 256
-_ALLOWED_ASSET_SCHEMES = ("aura://", "file://")
+_MAX_CONSTRUCTION_ASSET_URI_BYTES = 4096
 _PRIVACY_RANK = {"PUBLIC": 0, "PROJECT": 1, "RESTRICTED": 2, "SENSITIVE": 3}
 
 
@@ -371,6 +374,47 @@ def _bounded_floor_plan_assets(values: Iterable[SpatialAssetManifest]) -> tuple[
     return tuple(result)
 
 
+def _validate_local_asset_uri(value: Any) -> str:
+    if type(value) is not str:
+        raise ValueError("Construction floor-plan asset URI must be a string")
+    uri = value.strip()
+    if uri != value or not uri or len(uri.encode("utf-8")) > _MAX_CONSTRUCTION_ASSET_URI_BYTES:
+        raise ValueError("Construction floor-plan asset URI is empty, padded, or oversized")
+    if any(ord(char) < 32 or ord(char) == 127 for char in uri):
+        raise ValueError("Construction floor-plan asset URI contains control characters")
+    lowered = uri.casefold()
+    if "\\" in uri or re.search(r"%(?:2f|5c)", lowered):
+        raise ValueError("Construction floor-plan asset URI contains an encoded or aliased separator")
+    decoded = unquote(uri)
+    if decoded.count("/") != uri.count("/") or decoded.count("\\") != uri.count("\\"):
+        raise ValueError("Construction floor-plan asset URI changes separators when decoded")
+    parsed = urlsplit(uri)
+    if parsed.scheme not in {"aura", "file"}:
+        raise ValueError("Construction floor-plan assets must be local or Aura-addressed")
+    scheme, separator, remainder = uri.partition(":")
+    if separator != ":" or scheme != parsed.scheme or not remainder.startswith("//"):
+        raise ValueError("Construction floor-plan asset URI must use a canonical hierarchical scheme")
+    if parsed.username is not None or parsed.password is not None or parsed.query or parsed.fragment:
+        raise ValueError("Construction floor-plan asset URI cannot contain credentials, query, or fragment")
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise ValueError("Construction floor-plan asset URI contains a malformed authority") from exc
+    if port is not None:
+        raise ValueError("Construction floor-plan asset URI cannot contain a port")
+    if parsed.scheme == "aura":
+        if not parsed.netloc or parsed.netloc != parsed.netloc.casefold():
+            raise ValueError("Aura asset URI requires a canonical lowercase authority")
+    elif parsed.netloc not in {"", "localhost"}:
+        raise ValueError("file asset URI cannot name a remote host")
+    path = parsed.path
+    if not path.startswith("/") or "//" in path or (len(path) > 1 and path.endswith("/")):
+        raise ValueError("Construction floor-plan asset URI path is not canonical")
+    if any(part in {".", ".."} for part in PurePosixPath(path).parts):
+        raise ValueError("Construction floor-plan asset URI path contains a dot segment")
+    return uri
+
+
 def _validate_floor_plan_asset(asset: SpatialAssetManifest, privacy: SpatialPrivacyClass) -> None:
     if asset.asset_type not in {
         SpatialAssetType.MESH,
@@ -380,8 +424,7 @@ def _validate_floor_plan_asset(asset: SpatialAssetManifest, privacy: SpatialPriv
         SpatialAssetType.ANNOTATION,
     }:
         raise ValueError("unsupported Construction floor-plan asset type")
-    if not asset.uri.startswith(_ALLOWED_ASSET_SCHEMES):
-        raise ValueError("Construction floor-plan assets must be local or Aura-addressed")
+    _validate_local_asset_uri(asset.uri)
     metadata = dict(asset.metadata)
     asset_privacy = str(metadata.get("spatial_privacy_class") or "PROJECT")
     if asset_privacy not in _PRIVACY_RANK:
