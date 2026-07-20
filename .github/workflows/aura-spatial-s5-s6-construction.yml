@@ -23,7 +23,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: aura-spatial-s5-s6-construction-${{ github.event.pull_request.number || github.ref }}
@@ -74,107 +74,6 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check --only-binary=:all: --require-hashes -r requirements-spatial-s4b.txt
           python -m pip install --disable-pip-version-check pytest jsonschema ruff numpy
-
-      - name: Restore complete review detector module and apply precision delta once
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          set -euo pipefail
-          git show origin/main:aura_review_lessons_security.py > aura_review_lessons_security.py
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path("aura_review_lessons_security.py")
-          text = path.read_text(encoding="utf-8")
-
-          anchor = "def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:\n"
-          helper = '''def _is_spatial_no_authority_envelope(candidate: Any) -> bool:
-              return bool(
-                  isinstance(candidate, Mapping)
-                  and candidate.get("projection_only") is True
-                  and candidate.get("renderer_authority") is False
-                  and candidate.get("execution_authority") is False
-                  and candidate.get("patch_authority") is False
-                  and candidate.get("production_mutation") is False
-              )
-
-
-          def detect_protected_metadata_overrides(candidate: Any) -> list[dict[str, Any]]:
-          '''
-          if "def _is_spatial_no_authority_envelope" not in text:
-              if text.count(anchor) != 1:
-                  raise SystemExit("protected metadata detector anchor mismatch")
-              text = text.replace(anchor, helper, 1)
-
-          old_loop = '''    findings: list[dict[str, Any]] = []
-              for path, key, value in _walk_metadata(candidate):
-                  if key not in _CANONICAL_AUTHORITY_KEYS:
-                      continue
-                  expected = _PROTECTED_AUTHORITY_EXPECTED[key]
-                  if value == "<dynamic>":
-          '''
-          new_loop = '''    findings: list[dict[str, Any]] = []
-              spatial_no_authority = _is_spatial_no_authority_envelope(candidate)
-              for path, key, value in _walk_metadata(candidate):
-                  if key not in _CANONICAL_AUTHORITY_KEYS:
-                      continue
-                  expected = _PROTECTED_AUTHORITY_EXPECTED[key]
-                  if key == "patch_authority" and path == "$.patch_authority" and spatial_no_authority:
-                      continue
-                  if value == "<dynamic>":
-          '''
-          if "spatial_no_authority = _is_spatial_no_authority_envelope(candidate)" not in text:
-              if text.count(old_loop) != 1:
-                  raise SystemExit("protected metadata loop mismatch")
-              text = text.replace(old_loop, new_loop, 1)
-
-          old_uri = '''        uri = str(item or "").strip()
-                  lowered = uri.casefold()
-          '''
-          new_uri = '''        uri = str(item or "").strip()
-                  scheme, separator, remainder = uri.partition(":")
-                  if separator == ":" and remainder == "//" and re.fullmatch(r"[A-Za-z][A-Za-z0-9+.-]*", scheme):
-                      continue
-                  lowered = uri.casefold()
-          '''
-          if 'remainder == "//"' not in text:
-              if text.count(old_uri) != 1:
-                  raise SystemExit("URI detector anchor mismatch")
-              text = text.replace(old_uri, new_uri, 1)
-
-          path.write_text(text, encoding="utf-8")
-          PY
-          files=(
-            aura_spatial_construction.py
-            aura_review_lessons_security.py
-            tests/test_aura_spatial_waboose_precision.py
-          )
-          ruff check --fix "${files[@]}"
-          ruff format "${files[@]}"
-          python -m py_compile "${files[@]}"
-          python - <<'PY'
-          import aura_review_lessons_security as security
-
-          required = {
-              "detect_count_without_byte_budget",
-              "detect_protected_metadata_overrides",
-              "detect_uri_alias_encoding",
-          }
-          missing = sorted(name for name in required if not hasattr(security, name))
-          if missing:
-              raise SystemExit(f"restored detector module is incomplete: {missing}")
-          PY
-          python -m pytest -q --tb=short \
-            tests/test_aura_spatial_codex_repairs.py \
-            tests/test_aura_spatial_waboose_precision.py
-          if ! git diff --quiet -- "${files[@]}"; then
-            git config user.name "dallascourchene-commits"
-            git config user.email "281686929+dallascourchene-commits@users.noreply.github.com"
-            git add "${files[@]}"
-            git commit -m "fix(spatial): restore complete review detectors and precision guards"
-            git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$HEAD_REF"
-          fi
 
       - name: Compile, lint, and validate route
         run: |
