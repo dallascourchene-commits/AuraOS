@@ -9,7 +9,8 @@ import sys
 
 import pytest
 
-from aura_agent_arena_mcp import serve_stdio
+from aura_agent_arena_mcp import AuraAgentArenaBridge, serve_stdio
+from aura_agent_arena_persistence_bridge import PersistentAuraAgentArenaBridge
 from aura_event_contracts import stable_digest, stable_id
 from aura_spatial_agent_bridge import AuraSpatialAgentBridge
 from aura_spatial_construction import project_construction_state_to_scene
@@ -73,6 +74,10 @@ def test_generic_spatial_proof_metrics_are_scalar_sorted_and_archived(tmp_path: 
         assert json.loads(raw)["receipt"]["metrics"] == expected
     finally:
         bridge.close()
+
+
+def test_default_mcp_constructor_is_persistent_bridge() -> None:
+    assert AuraAgentArenaBridge is PersistentAuraAgentArenaBridge
 
 
 def test_default_stdio_server_uses_persistent_bridge_for_spatial_tools(
