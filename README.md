@@ -414,9 +414,9 @@ AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establ
 | **Paper V — FST routing and self-refactoring** | FST routing core, 3D topology resonance, and bounded self-refactoring incubator | N18–N20 | [Zenodo 20681601](https://zenodo.org/records/20681601) | — |
 | **Paper VI — Enhanced FST and topology** | FST lexicon, resonance topology, and FST impact analysis | N21–N23 | [Zenodo 20682051](https://zenodo.org/records/20682051) | — |
 | **Paper VII — Protocol-layer innovations** | Hyperdimensional integrity, micro-module crystallization, resonant tests, thermal-cost API arbitration, deterministic compression, local VSA mesh, and bounded self-healing | N24–N30 | [Zenodo 20695562](https://zenodo.org/records/20695562) | — |
-| **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, and atomic publication | **N31–N50** | [Zenodo 21464058](https://zenodo.org/records/21464058) | [LaTeX source](AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.tex) |
+| **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, and atomic publication | **N31–N50** | [Zenodo 21465329](https://zenodo.org/records/21465329) | [PDF](papers/AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.pdf) |
 
-The two earlier N31–N41 manuscripts were never released and are superseded. They are not part of the canonical claim sequence. Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
+Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
 
 ## Evidence and benchmark hierarchy
 
