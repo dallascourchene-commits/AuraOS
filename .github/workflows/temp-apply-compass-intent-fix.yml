@@ -1,0 +1,100 @@
+name: Temporary Apply Compass Intent Fix
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-verify:
+    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PYTHONHASHSEED: "0"
+    steps:
+      - name: Fetch exact feature head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Apply scoped intent repair
+        run: |
+          set -euo pipefail
+          git apply --index .aura/compass_intent_fix.patch
+          git rm .aura/compass_intent_fix.patch
+          git rm .github/workflows/temp-apply-compass-intent-fix.yml
+          git diff --cached --check
+      - name: Install Aura runtime and focused test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "pytest>=8,<9" jsonschema
+      - name: Compile repaired surfaces
+        run: |
+          python -m py_compile \
+            aura_coding_relationship_compass.py \
+            tests/test_aura_coding_relationship_compass.py
+      - name: Run focused architecture regressions
+        run: |
+          python -m pytest -q \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_affordance_directory.py \
+            tests/test_aura_capability_connectome.py \
+            tests/test_aura_capability_connectome_v2.py \
+            tests/test_aura_relational_index.py \
+            tests/test_aura_relational_synthesis.py \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_emergent_potential_repl.py \
+            test_aura_live_architect.py
+      - name: Assert generic Architect objectives preserve legacy routing
+        run: |
+          python - <<'PY'
+          from aura_coding_relationship_compass import is_coding_relationship_compass_intent
+
+          generic = (
+              "Scan the AuraOS repository and produce a grounded, staged refactor skeleton "
+              "that consolidates memory, skill, capability, and agentic functions."
+          )
+          exact = (
+              "architect: make a new function that combines the properties of Connectome, "
+              "Relational Synthesis, and Atlas to code better"
+          )
+          assert is_coding_relationship_compass_intent(generic) is False
+          assert is_coding_relationship_compass_intent(exact) is True
+          PY
+      - name: Regenerate and verify Aura navigation
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+      - name: Commit verified intent repair atomically
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "fix: scope Coding Relationship Compass admission"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:work/coding-relationship-compass
+          unset AUTH_HEADER
