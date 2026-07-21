@@ -251,3 +251,21 @@ def test_six_slot_contract_keeps_cultural_claim_boundary() -> None:
     module_text = (aura_polysynthetic_intent.__doc__ or "").casefold()
     assert "engineering contract" in module_text
     assert "not asserted as a universal linguistic model" in module_text
+
+
+def test_sequence_fields_reject_mapping_payloads() -> None:
+    contract_payload = _relationship_contract().to_dict()
+    contract_payload["policy_scope"] = {"coding_arena": True}
+    with pytest.raises(TypeError, match="non-text.*sequence"):
+        RelationshipContract.from_dict(contract_payload)
+
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-digest",
+        seed_participant_ids=("seed",),
+        seed_source_refs=(),
+        allowed_relation_types=("CALLS",),
+    )
+    request_payload = request.to_dict()
+    request_payload["seed_participant_ids"] = {"seed": True}
+    with pytest.raises(TypeError, match="non-text.*sequence"):
+        RelationalNeighborhoodRequest.from_dict(request_payload)

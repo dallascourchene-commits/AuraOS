@@ -11,7 +11,7 @@ from enum import Enum
 import hashlib
 import json
 from pathlib import PurePosixPath
-from typing import Any, Iterable, Mapping, Sequence, TypeVar
+from typing import Any, Mapping, Sequence, TypeVar
 
 RELATIONSHIP_CONTRACT_VERSION = "AURA_RELATIONSHIP_CONTRACT_V1"
 RELATIONSHIP_COMPATIBILITY_VERSION = "AURA_RELATIONSHIP_COMPATIBILITY_V1"
@@ -86,9 +86,9 @@ def _canonical_text(value: Any) -> str:
     return " ".join(str(value or "").strip().split())
 
 
-def _ordered_unique(values: Iterable[Any]) -> tuple[str, ...]:
-    if isinstance(values, (str, bytes, bytearray)) or not isinstance(values, Iterable):
-        raise TypeError("sequence value must be a non-text iterable")
+def _ordered_unique(values: Sequence[Any]) -> tuple[str, ...]:
+    if isinstance(values, (str, bytes, bytearray, Mapping)) or not isinstance(values, Sequence):
+        raise TypeError("sequence value must be a non-text iterable sequence")
     return tuple(dict.fromkeys(_canonical_text(value) for value in values if _canonical_text(value)))
 
 

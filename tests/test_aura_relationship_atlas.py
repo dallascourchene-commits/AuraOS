@@ -25,6 +25,7 @@ from aura_relationship_atlas import (
     AtlasSnapshot,
     AtlasDeltaReceipt,
     build_relationship_atlas,
+    load_relationship_atlas,
     validate_relationship_atlas,
     relationship_assessment,
     relationships_for_participant,
@@ -248,6 +249,42 @@ def test_validate_relationship_atlas(temp_repo: Path) -> None:
     report = validate_relationship_atlas(snapshot)
     assert report["ok"] is True
     assert report["assessments_count"] == len(snapshot.assessments)
+
+
+def test_load_relationship_atlas_rejects_tampered_snapshot_digest(temp_repo: Path) -> None:
+    """Removing a prohibition while retaining the old digest must fail closed."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    data["prohibitions"].pop()
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_assessment_digest(temp_repo: Path) -> None:
+    """Changing assessment content while retaining its digest must fail closed."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    data["assessments"][0]["relation_types"].append("TAMPERED_RELATION")
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Assessment .* digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_requires_stored_snapshot_digest(temp_repo: Path) -> None:
+    """A validating load must not silently manufacture a missing stored digest."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    del data["snapshot_digest"]
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="missing a valid stored snapshot_digest"):
+        load_relationship_atlas(atlas_path)
 
 
 def test_relationship_assessment_lookup(temp_repo: Path) -> None:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 from pathlib import Path
 
@@ -45,7 +46,7 @@ def _minimal_relational_index() -> dict:
     return {
         "index_digest": "index-digest",
         "repository_identity": {
-            "repo_head": "head-sha",
+            "repo_head": "a" * 40,
             "working_tree_digest": "worktree-digest",
             "codemap_digest": "codemap-digest",
             "topology_digest": "topology-digest",
@@ -141,9 +142,11 @@ def test_compass_intent_and_grounding_projection() -> None:
 
 
 def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
-    (tmp_path / "aura_coding_relationship_compass.py").write_text(
-        "def compile_coding_relationship_compass():\n    return None\n", encoding="utf-8"
-    )
+    source_text = "def compile_coding_relationship_compass():\n    return None\n"
+    (tmp_path / "aura_coding_relationship_compass.py").write_text(source_text, encoding="utf-8")
+    file_hash = hashlib.sha256(source_text.encode("utf-8")).hexdigest()
+    source_hash = hashlib.sha256(source_text.rstrip("\n").encode("utf-8")).hexdigest()
+    monkeypatch.setattr(compass, "_repository_head", lambda root: "a" * 40)
     monkeypatch.setattr(
         compass,
         "build_capability_connectome",
@@ -181,7 +184,7 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
         "grounding_ok": True,
         "packet_id": "packet-id",
         "packet_digest": "packet-digest",
-        "repo_head": "head-sha",
+        "repo_head": "a" * 40,
         "status": "GROUNDED_ATOMIC_CLOSURE",
         "atomic_inventory": {
             "inventory_digest": "atomic-digest",
@@ -191,7 +194,10 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
                     "file_path": "aura_coding_relationship_compass.py",
                     "symbol": "compile_coding_relationship_compass",
                     "qualified_symbol": "compile_coding_relationship_compass",
-                    "source_hash": "source-hash",
+                    "line_start": 1,
+                    "line_end": 2,
+                    "source_hash": source_hash,
+                    "file_source_hash": file_hash,
                 }
             ],
         },
@@ -202,8 +208,8 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
                 "qualified_symbol": "compile_coding_relationship_compass",
                 "line_start": 1,
                 "line_end": 2,
-                "source_hash": "source-hash",
-                "file_source_hash": "file-hash",
+                "source_hash": source_hash,
+                "file_source_hash": file_hash,
                 "node_id": "node-id",
             }
         ],
@@ -247,6 +253,39 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["atlas"]["snapshot_digest"] == atlas.snapshot_digest
     assert packet["prohibitions"]
     assert packet["safe_to_patch"] is False
+
+
+def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path) -> None:
+    source_text = "def target():\n    return 1\n"
+    (tmp_path / "target.py").write_text(source_text, encoding="utf-8")
+    monkeypatch.setattr(compass, "_repository_head", lambda root: "b" * 40)
+    packet = {
+        "repo_head": "b" * 40,
+        "atomic_inventory": {
+            "selected_atomic_functions": [{
+                "file_path": "target.py", "line_start": 1, "line_end": 2,
+                "source_hash": hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest(),
+                "file_source_hash": "0" * 64,
+            }]
+        },
+        "source_slices": [],
+    }
+    try:
+        compass._validate_injected_evidence_packet(tmp_path, packet)
+    except ValueError as exc:
+        assert "file hash mismatch" in str(exc)
+    else:
+        raise AssertionError("forged injected evidence must fail closed")
+
+
+def test_injected_evidence_rejects_stale_head(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(compass, "_repository_head", lambda root: "c" * 40)
+    try:
+        compass._validate_injected_evidence_packet(tmp_path, {"repo_head": "d" * 40})
+    except ValueError as exc:
+        assert "current repository HEAD" in str(exc)
+    else:
+        raise AssertionError("stale injected evidence must fail closed")
 
 
 def test_architect_uses_compass_before_filename_fallback(monkeypatch, tmp_path: Path) -> None:

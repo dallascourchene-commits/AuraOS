@@ -18,6 +18,8 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
+import tokenize
 from typing import Any, Mapping, Sequence
 
 from aura_capability_connectome import build_capability_connectome, find_capability_path
@@ -234,6 +236,78 @@ def _selected_atomic_functions(evidence_packet: Mapping[str, Any]) -> list[dict[
     if not isinstance(inventory, Mapping):
         return []
     return [dict(item) for item in inventory.get("selected_atomic_functions", []) or [] if isinstance(item, Mapping)]
+
+
+def _repository_head(repo_root: Path) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (FileNotFoundError, OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return ""
+    head = result.stdout.strip().lower()
+    return head if re.fullmatch(r"[0-9a-f]{40}", head) else ""
+
+
+def _source_text(path: Path) -> str:
+    try:
+        with tokenize.open(path) as handle:
+            return handle.read()
+    except (OSError, SyntaxError, UnicodeError) as exc:
+        raise ValueError(f"unable to read injected evidence source: {path}") from exc
+
+
+def _validate_injected_evidence_packet(repo_root: Path, evidence: Mapping[str, Any]) -> dict[str, Any]:
+    packet = dict(evidence)
+    actual_head = _repository_head(repo_root)
+    if not actual_head or str(packet.get("repo_head") or "").lower() != actual_head:
+        raise ValueError("injected evidence is not bound to the current repository HEAD")
+
+    records: list[Mapping[str, Any]] = []
+    inventory = packet.get("atomic_inventory") or {}
+    if isinstance(inventory, Mapping):
+        records.extend(
+            item for item in inventory.get("selected_atomic_functions", []) or []
+            if isinstance(item, Mapping)
+        )
+    records.extend(
+        item for item in packet.get("source_slices", []) or []
+        if isinstance(item, Mapping)
+    )
+    if not records:
+        raise ValueError("injected evidence has no exact source records")
+
+    for record in records:
+        file_path = str(record.get("file_path") or "")
+        relative = Path(file_path)
+        if not file_path or relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("injected evidence contains a non-canonical source path")
+        source_path = repo_root / relative
+        if not source_path.is_file():
+            raise ValueError(f"injected evidence source is missing: {file_path}")
+        source_text = _source_text(source_path)
+        actual_file_hash = hashlib.sha256(source_text.encode("utf-8", errors="replace")).hexdigest()
+        if str(record.get("file_source_hash") or "") != actual_file_hash:
+            raise ValueError(f"injected evidence file hash mismatch: {file_path}")
+
+        line_start = int(record.get("line_start") or record.get("start_line") or 0)
+        line_end = int(record.get("line_end") or record.get("end_line") or 0)
+        if line_start <= 0 or line_end < line_start:
+            raise ValueError(f"injected evidence has an invalid source span: {file_path}")
+        lines = source_text.splitlines()
+        if line_end > len(lines):
+            raise ValueError(f"injected evidence source span is outside the file: {file_path}")
+        actual_source_hash = hashlib.sha256(
+            "\n".join(lines[line_start - 1:line_end]).encode("utf-8", errors="replace")
+        ).hexdigest()
+        if str(record.get("source_hash") or "") != actual_source_hash:
+            raise ValueError(f"injected evidence source hash mismatch: {file_path}")
+    return packet
 
 
 def _select_focal_participants(
@@ -483,7 +557,7 @@ def compile_coding_relationship_compass(
             )
         )
     else:
-        evidence = dict(evidence_packet)
+        evidence = _validate_injected_evidence_packet(root, evidence_packet)
     if not evidence.get("ok") or not evidence.get("grounding_ok"):
         raise ValueError("Emergent Evidence Spine did not produce an exact grounded packet")
 

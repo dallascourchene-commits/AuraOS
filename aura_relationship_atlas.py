@@ -15,6 +15,7 @@ import argparse
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 import hashlib
+import hmac
 import json
 import os
 from pathlib import Path
@@ -1039,6 +1040,14 @@ def load_relationship_atlas(
         data = json.load(handle)
     if not isinstance(data, dict):
         raise ValueError("Relationship Atlas snapshot must be a JSON object")
+    if validate:
+        stored_snapshot_digest = data.get("snapshot_digest")
+        if not isinstance(stored_snapshot_digest, str) or not re.fullmatch(
+            r"[0-9a-f]{64}", stored_snapshot_digest
+        ):
+            raise ValueError(
+                "Relationship Atlas snapshot is missing a valid stored snapshot_digest"
+            )
     snapshot = _snapshot_from_dict(data)
     if validate:
         report = validate_relationship_atlas(snapshot)
@@ -1092,13 +1101,28 @@ def _snapshot_from_dict(data: dict[str, Any]) -> AtlasSnapshot:
 
 
 def validate_relationship_atlas(snapshot: AtlasSnapshot) -> dict[str, Any]:
-    """Validates Relationship Atlas invariants and structural constraints."""
+    """Validates Relationship Atlas invariants and content-addressed integrity."""
     issues = []
     for a in snapshot.assessments:
         if not a.canonical_owner_refs:
             issues.append(f"Assessment {a.assessment_id} lacks canonical owner references.")
         if a.wiring_disposition == WiringDisposition.PROHIBITED and not a.prohibited_effects:
             issues.append(f"Prohibited assessment {a.assessment_id} lacks prohibition evidence.")
+        expected_assessment_digest = a.compute_digest()
+        if not isinstance(a.assessment_digest, str) or not hmac.compare_digest(
+            a.assessment_digest, expected_assessment_digest
+        ):
+            issues.append(
+                f"Assessment {a.assessment_id} digest mismatch: serialized content was modified."
+            )
+
+    expected_snapshot_digest = snapshot.compute_digest()
+    if not isinstance(snapshot.snapshot_digest, str) or not hmac.compare_digest(
+        snapshot.snapshot_digest, expected_snapshot_digest
+    ):
+        issues.append(
+            "Relationship Atlas snapshot digest mismatch: serialized content was modified."
+        )
 
     return {
         "ok": len(issues) == 0,
