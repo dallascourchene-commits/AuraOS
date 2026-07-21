@@ -13,17 +13,17 @@ import subprocess
 import zipfile
 
 
-def _export_repository_snapshot() -> None:
+def _export_repository_snapshot() -> bool:
     if os.environ.get("GITHUB_ACTIONS", "").lower() != "true":
-        return
+        return False
 
     workspace_raw = os.environ.get("GITHUB_WORKSPACE", "")
     if not workspace_raw:
-        return
+        return False
     repo_root = Path(workspace_raw).resolve()
     marker = repo_root / ".aura" / "EXPORT_FULL_REPO_SNAPSHOT"
     if not marker.is_file():
-        return
+        return False
 
     output_dir = repo_root / "benchmark-output" / "real-refactor-trial"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -32,7 +32,7 @@ def _export_repository_snapshot() -> None:
     digest_path = output_dir / "AuraOS-full-repository.zip.sha256"
     error_path = output_dir / "AuraOS-full-repository.export-error.txt"
     if archive_path.is_file() and manifest_path.is_file() and digest_path.is_file():
-        return
+        return True
 
     temporary_helpers = {
         ".aura/EXPORT_FULL_REPO_SNAPSHOT",
@@ -105,8 +105,11 @@ def _export_repository_snapshot() -> None:
         digest_path.write_text(f"{digest}  {archive_path.name}\n", encoding="utf-8")
         if error_path.exists():
             error_path.unlink()
-    except Exception as exc:  # Export must never alter the workflow's authority or result.
+        return True
+    except Exception as exc:  # Export must never corrupt or partially replace an archive.
         error_path.write_text(f"{type(exc).__name__}: {exc}\n", encoding="utf-8")
+        return False
 
 
-_export_repository_snapshot()
+if _export_repository_snapshot():
+    raise SystemExit("Temporary full-repository export complete; publish artifact and stop.")
