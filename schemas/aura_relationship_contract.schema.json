@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_relationship_contract.schema.json",
+  "title": "Aura Relationship Contract V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "objective_digest",
+    "intent_packet_digest",
+    "source_repository",
+    "domain",
+    "slots",
+    "truth_class",
+    "authority_posture",
+    "proof_status",
+    "policy_scope",
+    "resource_budget",
+    "source_refs",
+    "prohibition_ids",
+    "safe_to_patch",
+    "production_mutation",
+    "human_review_required",
+    "patch_authority",
+    "vsa_patch_authority"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "AURA_RELATIONSHIP_CONTRACT_V1"
+    },
+    "contract_id": {
+      "type": "string",
+      "minLength": 48,
+      "maxLength": 48
+    },
+    "objective_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_packet_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repo_head",
+        "working_tree_digest",
+        "relational_index_digest",
+        "atlas_digest"
+      ],
+      "properties": {
+        "repo_head": {
+          "type": "string",
+          "minLength": 1
+        },
+        "working_tree_digest": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relational_index_digest": {
+          "type": "string",
+          "minLength": 1
+        },
+        "atlas_digest": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "domain": {
+      "enum": [
+        "CODE",
+        "MEMORY",
+        "GOVERNANCE",
+        "SPATIAL",
+        "NETWORK",
+        "OTHER"
+      ]
+    },
+    "slots": {
+      "$ref": "#/$defs/six_slots"
+    },
+    "truth_class": {
+      "enum": [
+        "EXACT_SOURCE",
+        "EXACT_DECLARED",
+        "EXACT_RUNTIME",
+        "DERIVED",
+        "ADVISORY",
+        "UNKNOWN"
+      ]
+    },
+    "authority_posture": {
+      "enum": [
+        "PROPOSAL_ONLY",
+        "REVIEW_ONLY",
+        "OBSERVATION_ONLY"
+      ]
+    },
+    "proof_status": {
+      "enum": [
+        "UNVERIFIED",
+        "GROUNDED",
+        "TEST_REQUIRED",
+        "VERIFIED",
+        "REJECTED"
+      ]
+    },
+    "policy_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "resource_budget": {
+      "$ref": "#/$defs/resource_budget"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source_ref"
+      },
+      "minItems": 1
+    },
+    "prohibition_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "safe_to_patch": {
+      "const": false
+    },
+    "production_mutation": {
+      "const": false
+    },
+    "human_review_required": {
+      "const": true
+    },
+    "patch_authority": {
+      "const": "exact_source_spans_and_hashes_only"
+    },
+    "vsa_patch_authority": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "six_slots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "DIR",
+        "ASP",
+        "CLASS",
+        "SUBJ",
+        "VOICE",
+        "STEM"
+      ],
+      "properties": {
+        "DIR": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ASP": {
+          "type": "string",
+          "minLength": 1
+        },
+        "CLASS": {
+          "type": "string",
+          "minLength": 1
+        },
+        "SUBJ": {
+          "type": "string",
+          "minLength": 1
+        },
+        "VOICE": {
+          "type": "string",
+          "minLength": 1
+        },
+        "STEM": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "resource_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_hops",
+        "max_nodes",
+        "max_edges",
+        "max_candidate_pairs",
+        "max_output_bytes",
+        "max_elapsed_ms"
+      ],
+      "properties": {
+        "max_hops": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "max_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "max_edges": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "max_candidate_pairs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32640
+        },
+        "max_output_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_elapsed_ms": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "symbol",
+        "line_start",
+        "line_end",
+        "source_hash",
+        "file_source_hash"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?/)(?!.*//)(?!.*\\\\).+$"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file_source_hash": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -21,6 +21,8 @@ import venv
 
 VERSION = "AURA_ARCHITECTURE_HARNESS_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
+MAX_REFERENCE_FILES = 8
+MAX_REFERENCE_BYTES = 2_000_000
 DEFAULT_OBJECTIVE = (
     "make a new function that combines the properties of Connectome, "
     "Relational Synthesis, and Atlas to code better"
@@ -49,6 +51,31 @@ def _write(path: Path, value: Any) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(value, indent=2, sort_keys=True, default=str) + "\n")
     tmp.replace(path)
+
+
+def _reference_manifest(values: Iterable[str | Path]) -> list[dict[str, Any]]:
+    paths = [Path(value).expanduser().resolve() for value in values]
+    if len(paths) > MAX_REFERENCE_FILES:
+        raise ValueError(f"at most {MAX_REFERENCE_FILES} reference files are allowed")
+    manifest: list[dict[str, Any]] = []
+    for path in paths:
+        if not path.is_file():
+            raise FileNotFoundError(f"reference file is missing: {path}")
+        size = path.stat().st_size
+        if size > MAX_REFERENCE_BYTES:
+            raise ValueError(
+                f"reference file exceeds {MAX_REFERENCE_BYTES} bytes: {path}"
+            )
+        body = path.read_bytes()
+        manifest.append(
+            {
+                "name": path.name,
+                "path": str(path),
+                "size_bytes": size,
+                "sha256": hashlib.sha256(body).hexdigest(),
+            }
+        )
+    return manifest
 
 
 def _run(cmd: list[str], root: Path, *, check: bool = True, timeout: int = 300,
@@ -177,8 +204,9 @@ def doctor(root: Path, python: Path | None) -> dict[str, Any]:
 
 def run_architecture(root: Path, *, objective: str, combine_with: list[str],
                      profile: str, top: int, pair_limit: int,
-                     allow_expansive: bool, output_dir: Path,
-                     resume: bool, enforce_clean: bool) -> dict[str, Any]:
+                     allow_expansive: bool, output_dir: str | Path,
+                     resume: bool, enforce_clean: bool,
+                     reference_files: list[str] | None = None) -> dict[str, Any]:
     sys.path.insert(0, str(root))
     from aura_architect_loop import ArchitectFusionLoop
     from aura_capability_connectome import build_capability_connectome
@@ -188,12 +216,15 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
     from aura_relationship_atlas import build_relationship_atlas
 
     started = time.time()
+    output_dir = Path(output_dir).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
+    reference_manifest = _reference_manifest(reference_files or [])
     request = {
         "version": VERSION, "repo_identity": _git_info(root),
         "objective": objective, "combine_with": combine_with,
         "atlas_profile": profile.upper(), "top": top,
         "pair_limit": pair_limit, "allow_expansive": allow_expansive,
+        "reference_files": reference_manifest,
     }
     request["digest"] = _digest(request)
     request_path = output_dir / "harness_request.json"
@@ -239,11 +270,25 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
         atlas = json.loads(atlas_path.read_text())
     else:
         snapshot = build_relationship_atlas(
-            repo_root=root, relational_index_path=index_path,
-            output_path=atlas_path, receipt_path=receipt_path, profile=profile,
+            repo_root=root,
+            profile=profile,
+            relational_index_data=index_data,
+            persist=False,
         )
         atlas = snapshot.to_dict()
         _write(atlas_path, atlas)
+        _write(
+            receipt_path,
+            {
+                "snapshot_digest": snapshot.snapshot_digest,
+                "assessments_count": len(snapshot.assessments),
+                "prohibitions_count": len(snapshot.prohibitions),
+                "missing_configurations_count": len(snapshot.missing_configurations),
+                "operational_profile": profile,
+                "freshness": "CURRENT",
+                "persistence": "external_harness_artifact_only",
+            },
+        )
 
     emergent_path = output_dir / "emergent_properties.json"
     if resume and emergent_path.exists():
@@ -289,6 +334,7 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
             rollback_conditions=["stale identity", "prohibited coupling", "unbounded scope"],
             constraints=["no production mutation", "no VSA patch authority",
                          "human review required", "independent verification required"],
+            refresh_codemap=False,
         )
         architect = prepared.to_dict()
         _write(architect_path, architect)
@@ -296,6 +342,7 @@ def run_architecture(root: Path, *, objective: str, combine_with: list[str],
     output = {
         "ok": True, "version": VERSION, "objective": objective,
         "repo_identity": _git_info(root), "request_digest": request["digest"],
+        "reference_files": reference_manifest,
         "resumed": resume,
         "connectome": {
             "node_count": connectome.get("node_count"),
@@ -361,6 +408,12 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--allow-expansive-atlas", action="store_true")
     run.add_argument("--allow-dirty", action="store_true")
     run.add_argument("--output-dir")
+    run.add_argument(
+        "--reference-file",
+        action="append",
+        default=[],
+        help="Bind an external specification or evidence file by name, size, and SHA-256.",
+    )
     run.add_argument("--resume", action="store_true")
     return parser
 
@@ -398,6 +451,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                 "allow_expansive": args.allow_expansive_atlas,
                 "output_dir": str(output_dir), "resume": args.resume,
                 "enforce_clean": not args.allow_dirty,
+                "reference_files": args.reference_file,
             }
             code = (
                 "import json,sys;from pathlib import Path;"

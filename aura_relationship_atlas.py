@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa9e7-[Q-SYS:RELATIONSHIP_ATLAS]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Architecture Relationship Atlas Plane)
 DEPENDENCIES: __future__, dataclasses, enum, hashlib, json, os, pathlib, re, time, typing
-FUNCTIONS: build_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
+FUNCTIONS: build_relationship_atlas, load_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
 SYNOPSIS: Compiles, classifies, and projects the architectural relationship status plane of AuraOS.
 [/AURA_MASTER_KEY]
 """
@@ -15,12 +15,13 @@ import argparse
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 import hashlib
+import hmac
 import json
 import os
 from pathlib import Path
 import re
 import time
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 # ---------------------------------------------------------------------------
 # Constants and Versions
@@ -236,22 +237,12 @@ class AtlasRelationshipAssessment:
             self.assessment_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
-        """Compute a SHA-256 content-addressed digest for this assessment."""
-        data = {
-            "participant_ids": [p.participant_id for p in self.participant_refs],
-            "role_bindings": self.role_bindings,
-            "relation_types": self.relation_types,
-            "structural_status": self.structural_status.value,
-            "semantic_relationship": self.semantic_relationship.value,
-            "wiring_disposition": self.wiring_disposition.value,
-            "readiness": self.readiness.value,
-            "lifecycle": self.lifecycle.value,
-            "truth_class": self.truth_class,
-            "proof_status": self.proof_status.value,
-            "canonical_owner_refs": sorted(self.canonical_owner_refs),
-            "evidence_refs": sorted(self.evidence_refs),
-        }
-        serialized = json.dumps(data, sort_keys=True)
+        """Hash every serialized assessment field except the digest itself."""
+        data = self.to_dict()
+        data.pop("assessment_digest", None)
+        serialized = json.dumps(
+            data, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -335,19 +326,12 @@ class AtlasSnapshot:
             self.snapshot_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
-        """Compute a SHA-256 content-addressed digest including profile and assessments."""
-        data = {
-            "version": self.snapshot_version,
-            "repository_head": self.repository_head,
-            "working_tree_digest": self.working_tree_digest,
-            "codemap_digest": self.codemap_digest,
-            "topology_digest": self.topology_digest,
-            "relational_index_digest": self.relational_index_digest,
-            "operational_profile": self.boundary.get("operational_profile", ""),
-            "assessment_digests": sorted([a.assessment_digest for a in self.assessments]),
-            "prohibition_ids": sorted([p.prohibition_id for p in self.prohibitions]),
-        }
-        serialized = json.dumps(data, sort_keys=True)
+        """Hash the complete serialized Atlas snapshot except the digest itself."""
+        data = self.to_dict()
+        data.pop("snapshot_digest", None)
+        serialized = json.dumps(
+            data, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -518,6 +502,50 @@ BUILTIN_MOTIFS: dict[str, dict[str, Any]] = {
 
 
 # ---------------------------------------------------------------------------
+# Relational Index Freshness Validation
+# ---------------------------------------------------------------------------
+def _current_relational_index_identity(
+    repo_root: Path,
+    relational_index: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Recompute the canonical repository identity for an in-memory index."""
+    from aura_relational_index import RelationalIndexBuilder
+
+    profile = relational_index.get("profile") or {}
+    profile_name = str(profile.get("name") or "MINIMAL") if isinstance(profile, Mapping) else "MINIMAL"
+    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot()
+
+
+def _validate_relational_index_freshness(
+    repo_root: Path,
+    relational_index: Mapping[str, Any],
+    *,
+    index_label: Path,
+) -> None:
+    """Fail closed unless the index identity exactly matches the checkout."""
+    from aura_relational_index import _REPOSITORY_IDENTITY_KEYS
+
+    stored = relational_index.get("repository_identity")
+    if not isinstance(stored, Mapping):
+        raise ValueError(
+            f"Relational index at {index_label} is missing repository_identity. "
+            "Please rebuild it from the current repository head."
+        )
+    current = _current_relational_index_identity(repo_root, relational_index)
+    mismatches = {
+        name: {"stored": stored.get(name), "current": current.get(name)}
+        for name in sorted(_REPOSITORY_IDENTITY_KEYS)
+        if stored.get(name) != current.get(name)
+    }
+    if mismatches:
+        names = ", ".join(mismatches)
+        raise ValueError(
+            f"Relational index at {index_label} is STALE for the current repository "
+            f"identity ({names}). Please rebuild the relational index."
+        )
+
+
+# ---------------------------------------------------------------------------
 # Core Public API Functions
 # ---------------------------------------------------------------------------
 def build_relationship_atlas(
@@ -526,6 +554,9 @@ def build_relationship_atlas(
     output_path: Path | None = None,
     receipt_path: Path | None = None,
     profile: str | OperationalProfile = "STANDARD",
+    *,
+    relational_index_data: Mapping[str, Any] | None = None,
+    persist: bool = True,
 ) -> AtlasSnapshot:
     """Ahead-of-Time relationship classification compile pass.
 
@@ -546,17 +577,28 @@ def build_relationship_atlas(
         op_profile = profile
     prof_cfg = PROFILE_CONFIG[op_profile]
 
-    # 1. Fail closed on stale or missing index
-    if not idx_path.exists():
-        raise FileNotFoundError(
-            f"Relational index is stale or missing at {idx_path}. "
-            "Please run 'python aura_relational_index.py build' first."
-        )
+    # 1. Fail closed on stale or missing index. Callers that already hold the
+    # exact generated index may supply it directly for a read-only in-memory
+    # compile; the canonical persisted workflow remains the default.
+    if relational_index_data is None:
+        if not idx_path.exists():
+            raise FileNotFoundError(
+                f"Relational index is stale or missing at {idx_path}. "
+                "Please run 'python aura_relational_index.py build' first."
+            )
+        with idx_path.open("r", encoding="utf-8") as f:
+            rel_index = json.load(f)
+    else:
+        rel_index = dict(relational_index_data)
 
-    with idx_path.open("r", encoding="utf-8") as f:
-        rel_index = json.load(f)
-
-    # Validate index freshness — fail closed on stale or missing identity
+    # Validate index freshness — fail closed on stale or missing identity.
+    # This recomputes the checkout identity rather than trusting CURRENT flags
+    # or caller-supplied digest metadata.
+    _validate_relational_index_freshness(
+        repo_root.resolve(),
+        rel_index,
+        index_label=idx_path,
+    )
     index_digest = rel_index.get("index_digest", "")
     if not index_digest:
         raise ValueError(
@@ -979,47 +1021,77 @@ def build_relationship_atlas(
         }
     )
 
-    # Write files atomically
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    if persist:
+        # Generated artifacts are caches/navigation outputs. Persist only when
+        # explicitly requested by the canonical build workflow.
+        out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Generate delta receipt if a previous snapshot exists
-    delta_receipt: AtlasDeltaReceipt | None = None
-    delta_path = repo_root / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json"
-    if out_path.exists():
-        try:
-            with out_path.open("r", encoding="utf-8") as f:
-                prev_data = json.load(f)
-            prev_snap = _snapshot_from_dict(prev_data)
-            delta_receipt = diff_relationship_atlases(prev_snap, snapshot)
-        except (json.JSONDecodeError, KeyError, ValueError):
-            # If previous snapshot is corrupted, skip delta but don't fail the build
-            pass
+        delta_receipt: AtlasDeltaReceipt | None = None
+        delta_path = repo_root / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json"
+        if out_path.exists():
+            try:
+                with out_path.open("r", encoding="utf-8") as f:
+                    prev_data = json.load(f)
+                prev_snap = _snapshot_from_dict(prev_data)
+                delta_receipt = diff_relationship_atlases(prev_snap, snapshot)
+            except (json.JSONDecodeError, KeyError, ValueError):
+                pass
 
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(snapshot.to_dict(), f, indent=2, sort_keys=True)
+        with out_path.open("w", encoding="utf-8") as f:
+            json.dump(snapshot.to_dict(), f, indent=2, sort_keys=True)
 
-    # Write build receipt
-    receipt = {
-        "snapshot_digest": snapshot.snapshot_digest,
-        "built_at": int(time.time()),
-        "assessments_count": len(final_assessments),
-        "prohibitions_count": len(prohibitions),
-        "missing_configurations_count": len(missing_configs),
-        "operational_profile": op_profile.value,
-        "freshness": "CURRENT"
-    }
-    with rec_path.open("w", encoding="utf-8") as f:
-        json.dump(receipt, f, indent=2)
+        receipt = {
+            "snapshot_digest": snapshot.snapshot_digest,
+            "built_at": int(time.time()),
+            "assessments_count": len(final_assessments),
+            "prohibitions_count": len(prohibitions),
+            "missing_configurations_count": len(missing_configs),
+            "operational_profile": op_profile.value,
+            "freshness": "CURRENT",
+        }
+        with rec_path.open("w", encoding="utf-8") as f:
+            json.dump(receipt, f, indent=2)
 
-    # Write delta receipt if computed
-    if delta_receipt is not None:
-        with delta_path.open("w", encoding="utf-8") as f:
-            json.dump(delta_receipt.to_dict(), f, indent=2)
+        if delta_receipt is not None:
+            with delta_path.open("w", encoding="utf-8") as f:
+                json.dump(delta_receipt.to_dict(), f, indent=2)
 
-    # Re-render markdown index
-    render_relationship_atlas_markdown(snapshot, repo_root / DEFAULT_MARKDOWN_PATH)
+        render_relationship_atlas_markdown(snapshot, repo_root / DEFAULT_MARKDOWN_PATH)
 
     return snapshot
+
+
+def load_relationship_atlas(
+    path: str | Path = DEFAULT_ATLAS_PATH,
+    *,
+    validate: bool = True,
+) -> AtlasSnapshot:
+    """Load a serialized Atlas snapshot and fail closed on invalid content."""
+    snapshot_path = Path(path)
+    if not snapshot_path.is_file():
+        raise FileNotFoundError(f"Relationship Atlas snapshot is missing at {snapshot_path}")
+    with snapshot_path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError("Relationship Atlas snapshot must be a JSON object")
+    if validate:
+        stored_snapshot_digest = data.get("snapshot_digest")
+        if not isinstance(stored_snapshot_digest, str) or not re.fullmatch(
+            r"[0-9a-f]{64}", stored_snapshot_digest
+        ):
+            raise ValueError(
+                "Relationship Atlas snapshot is missing a valid stored snapshot_digest"
+            )
+    snapshot = _snapshot_from_dict(data)
+    if validate:
+        report = validate_relationship_atlas(snapshot)
+        if not report.get("ok"):
+            raise ValueError(
+                "Relationship Atlas snapshot failed validation: "
+                + "; ".join(str(item) for item in report.get("issues", [])[:5])
+            )
+    return snapshot
+
 
 
 def _snapshot_from_dict(data: dict[str, Any]) -> AtlasSnapshot:
@@ -1063,13 +1135,28 @@ def _snapshot_from_dict(data: dict[str, Any]) -> AtlasSnapshot:
 
 
 def validate_relationship_atlas(snapshot: AtlasSnapshot) -> dict[str, Any]:
-    """Validates Relationship Atlas invariants and structural constraints."""
+    """Validates Relationship Atlas invariants and content-addressed integrity."""
     issues = []
     for a in snapshot.assessments:
         if not a.canonical_owner_refs:
             issues.append(f"Assessment {a.assessment_id} lacks canonical owner references.")
         if a.wiring_disposition == WiringDisposition.PROHIBITED and not a.prohibited_effects:
             issues.append(f"Prohibited assessment {a.assessment_id} lacks prohibition evidence.")
+        expected_assessment_digest = a.compute_digest()
+        if not isinstance(a.assessment_digest, str) or not hmac.compare_digest(
+            a.assessment_digest, expected_assessment_digest
+        ):
+            issues.append(
+                f"Assessment {a.assessment_id} digest mismatch: serialized content was modified."
+            )
+
+    expected_snapshot_digest = snapshot.compute_digest()
+    if not isinstance(snapshot.snapshot_digest, str) or not hmac.compare_digest(
+        snapshot.snapshot_digest, expected_snapshot_digest
+    ):
+        issues.append(
+            "Relationship Atlas snapshot digest mismatch: serialized content was modified."
+        )
 
     return {
         "ok": len(issues) == 0,

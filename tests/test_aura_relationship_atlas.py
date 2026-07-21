@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import pytest
 
+import aura_relationship_atlas as atlas_module
 from aura_relationship_atlas import (
     BUILTIN_PROHIBITIONS,
     BUILTIN_MOTIFS,
@@ -25,6 +26,7 @@ from aura_relationship_atlas import (
     AtlasSnapshot,
     AtlasDeltaReceipt,
     build_relationship_atlas,
+    load_relationship_atlas,
     validate_relationship_atlas,
     relationship_assessment,
     relationships_for_participant,
@@ -39,6 +41,17 @@ from aura_relationship_atlas import (
     compile_atlas_projection,
     _snapshot_from_dict,
 )
+
+
+@pytest.fixture(autouse=True)
+def _bind_index_identity_to_fixture(monkeypatch) -> None:
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(
+            relational_index.get("repository_identity") or {}
+        ),
+    )
 
 
 @pytest.fixture
@@ -168,6 +181,28 @@ def test_atlas_builds_from_index(temp_repo: Path) -> None:
     assert len(snapshot.assessments) > 0
 
 
+
+
+def test_read_only_atlas_build_uses_in_memory_index_without_artifacts(
+    temp_repo: Path,
+) -> None:
+    index_path = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    index_data = json.loads(index_path.read_text(encoding="utf-8"))
+
+    snapshot = build_relationship_atlas(
+        repo_root=temp_repo,
+        profile="MINIMAL",
+        relational_index_data=index_data,
+        persist=False,
+    )
+
+    assert snapshot.snapshot_digest
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS_BUILD_RECEIPT.json").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS.md").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json").exists()
+
+
 def test_atlas_classification_explicitly_wired(temp_repo: Path) -> None:
     snapshot = build_relationship_atlas(repo_root=temp_repo)
     
@@ -221,11 +256,121 @@ def test_prohibition_blocks_affinity_mutation(temp_repo: Path) -> None:
     assert prohibited[0].readiness == Readiness.TOO_RISKY
 
 
+def test_build_relationship_atlas_rejects_stale_repository_identity(
+    temp_repo: Path, monkeypatch
+) -> None:
+    data = json.loads(
+        (temp_repo / ".aura" / "RELATIONAL_INDEX.json").read_text(encoding="utf-8")
+    )
+    current = dict(data["repository_identity"])
+    current["repo_head"] = "new-current-head"
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: current,
+    )
+
+    with pytest.raises(ValueError, match="STALE.*repo_head"):
+        build_relationship_atlas(
+            repo_root=temp_repo,
+            relational_index_data=data,
+            persist=False,
+        )
+
+
 def test_validate_relationship_atlas(temp_repo: Path) -> None:
     snapshot = build_relationship_atlas(repo_root=temp_repo)
     report = validate_relationship_atlas(snapshot)
     assert report["ok"] is True
     assert report["assessments_count"] == len(snapshot.assessments)
+
+
+def test_load_relationship_atlas_rejects_tampered_snapshot_digest(temp_repo: Path) -> None:
+    """Removing a prohibition while retaining the old digest must fail closed."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    data["prohibitions"].pop()
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_assessment_digest(temp_repo: Path) -> None:
+    """Changing assessment content while retaining its digest must fail closed."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    data["assessments"][0]["relation_types"].append("TAMPERED_RELATION")
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Assessment .* digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_requires_stored_snapshot_digest(temp_repo: Path) -> None:
+    """A validating load must not silently manufacture a missing stored digest."""
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    del data["snapshot_digest"]
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="missing a valid stored snapshot_digest"):
+        load_relationship_atlas(atlas_path)
+
+
+def _tamper_serialized_atlas(temp_repo: Path, mutator) -> Path:
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    mutator(data)
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return atlas_path
+
+
+def test_load_relationship_atlas_rejects_tampered_prohibition_content(temp_repo: Path) -> None:
+    """Changing policy fields without changing the prohibition ID must fail closed."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["prohibitions"][0].__setitem__("reason", "tampered reason")
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_unhashed_assessment_field(temp_repo: Path) -> None:
+    """Changing an assessment field formerly omitted from its digest must fail closed."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["assessments"][0]["risks"].append("tampered risk")
+    )
+
+    with pytest.raises(ValueError, match="Assessment .* digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_missing_configuration(temp_repo: Path) -> None:
+    """Missing-configuration content is part of the snapshot digest."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo,
+        lambda data: data["missing_configurations"][0].__setitem__(
+            "expected_capability", "tampered capability"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_projection_content(temp_repo: Path) -> None:
+    """Reverse indexes and boundary projection metadata are digest-covered."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["reverse_indexes"].__setitem__("tampered", ["assessment"])
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
 
 
 def test_relationship_assessment_lookup(temp_repo: Path) -> None:
