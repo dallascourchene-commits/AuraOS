@@ -16,15 +16,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout exact main snapshot
-        uses: actions/checkout@v4
-        with:
-          ref: 0c55838a952a617122f3975f41f676906aab8cdc
-          fetch-depth: 1
-          persist-credentials: false
+      - name: Fetch exact main snapshot without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: 0c55838a952a617122f3975f41f676906aab8cdc
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - name: Archive every Git-tracked file
         run: |
-          test "$(git rev-parse HEAD)" = "0c55838a952a617122f3975f41f676906aab8cdc"
           git archive \
             --format=zip \
             --prefix=AuraOS/ \
