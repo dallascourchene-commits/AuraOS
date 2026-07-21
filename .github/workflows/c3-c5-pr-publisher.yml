@@ -46,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
-          git apply --index --whitespace=error-all /tmp/c3-c5.patch
+          git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch
           git diff --cached --check
       - name: Install focused dependencies
         run: python -m pip install --quiet pytest jsonschema
