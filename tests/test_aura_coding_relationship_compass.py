@@ -99,6 +99,13 @@ def test_compass_intent_and_grounding_projection() -> None:
         "Make a function combining Connectome, Relational Synthesis, and Atlas to code better"
     )
     assert not compass.is_coding_relationship_compass_intent("Explain the weather")
+    assert not compass.is_coding_relationship_compass_intent(
+        "Scan the repository and consolidate memory, skill, capability, and agentic "
+        "functions to improve the Human Agent Arena."
+    )
+    assert compass.is_coding_relationship_compass_intent(
+        "Use the Atlas to ground this coding refactor"
+    )
 
     grounding = compass.relationship_compass_grounding(
         {

@@ -154,17 +154,23 @@ def _tokens(value: str) -> set[str]:
 
 
 def is_coding_relationship_compass_intent(objective: str) -> bool:
-    """Return whether a broad coding objective benefits from relational localization."""
+    """Return whether a coding objective explicitly requests relational-plane grounding.
+
+    Generic architecture, capability, or refactor language must not divert established
+    Architect workflows into the Compass.  Admission requires a named Compass plane or
+    an explicit relational-combination request.
+    """
     lowered = " ".join(str(objective or "").lower().split())
     if not lowered:
         return False
+    if "coding relationship compass" in lowered or "relationship compass" in lowered:
+        return True
+
     tokens = _tokens(lowered)
-    architecture_hits = tokens & {
-        "architecture",
-        "atlas",
-        "capability",
+    coding_hits = tokens & {"architect", "code", "coding", "function", "refactor", "surgeon"}
+    named_plane_hits = tokens & {"atlas", "connectome"}
+    relational_hits = tokens & {
         "combine",
-        "connectome",
         "emergent",
         "relation",
         "relational",
@@ -173,8 +179,10 @@ def is_coding_relationship_compass_intent(objective: str) -> bool:
         "wire",
         "wiring",
     }
-    coding_hits = tokens & {"architect", "code", "coding", "function", "refactor", "surgeon"}
-    return bool(architecture_hits) and bool(coding_hits or len(architecture_hits) >= 2)
+
+    if named_plane_hits and coding_hits:
+        return True
+    return bool(coding_hits) and len(relational_hits) >= 2
 
 
 def _component_targets(
