@@ -1,0 +1,75 @@
+name: Codex Round 4 Repair
+
+on:
+  pull_request:
+    types: [synchronize]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: codex-round4-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c0-c2-20260721'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/coding-relationship-compass-c0-c2-20260721
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply verified Codex round 4 patch
+        env:
+          PATCH_B64: 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
+        run: |
+          test "$(git log -1 --format=%s)" = "chore: trigger Codex round 4 repair"
+          STAGING_SHA="${{ github.event.pull_request.head.sha }}"
+          printf '%s' "$PATCH_B64" | base64 -d | gzip -d > /tmp/codex-round4.patch
+          git reset --hard ae18de23a23aa44a60c30cf28503cca284eaef6b
+          git apply --check /tmp/codex-round4.patch
+          git apply /tmp/codex-round4.patch
+          printf '%s\n' "$STAGING_SHA" > /tmp/staging-sha
+
+      - name: Verify trust-boundary repairs
+        run: |
+          python -m pip install --disable-pip-version-check pytest pytest-asyncio
+          python -m py_compile \
+            aura_relationship_atlas.py \
+            aura_coding_relationship_compass.py \
+            aura_live_architect.py \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_coding_relationship_compass.py
+          python -m pytest -q \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relationship_contracts.py \
+            tests/test_aura_architecture_harness.py \
+            test_aura_architect_loop.py
+
+      - name: Publish clean five-file fix
+        env:
+          TARGET_BRANCH: work/coding-relationship-compass-c0-c2-20260721
+        run: |
+          EXPECTED_STAGING_SHA="$(cat /tmp/staging-sha)"
+          git add \
+            aura_relationship_atlas.py \
+            aura_coding_relationship_compass.py \
+            aura_live_architect.py \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_coding_relationship_compass.py
+          git config user.name 'AuraOS Review Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'fix: fail closed across Compass trust boundaries'
+          test "$(git diff --name-only HEAD^ HEAD | wc -l)" -eq 5
+          git push \
+            --force-with-lease="refs/heads/${TARGET_BRANCH}:${EXPECTED_STAGING_SHA}" \
+            origin HEAD:"${TARGET_BRANCH}"
