@@ -43,6 +43,8 @@ jobs:
             | base64 -d \
             | gzip -d > /tmp/coding-relationship-compass.patch
           git apply --index /tmp/coding-relationship-compass.patch
+          sed -i 's/[[:space:]]\+$//' docs/AURA_CODING_RELATIONSHIP_COMPASS.md
+          git add docs/AURA_CODING_RELATIONSHIP_COMPASS.md
           git rm -r .aura/coding_relationship_compass_patch
           git rm .github/workflows/temp-apply-coding-relationship-compass.yml
           git diff --cached --check
