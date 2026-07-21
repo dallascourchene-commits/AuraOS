@@ -403,7 +403,7 @@ It rejects silent floats, implicit rounding, inferred ownership, implicit curren
 
 ## Prior art
 
-AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establish the original conceptual lineage and claims N1–N30. **Paper VIII is the canonical continuation**, replacing the two unreleased interim N31–N41 manuscripts and establishing claims N31–N50 for evidence-ordered relational Arenas, compiled relationship intelligence, verified engineering, governed spatial projection, exact-state continuity, and atomic publication.
+AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establish the original conceptual lineage and claims N1–N30. **Paper VIII is the canonical continuation**, establishing claims N31–N50 for evidence-ordered relational Arenas, compiled relationship intelligence, verified engineering, governed spatial projection, exact-state continuity, and atomic publication.
 
 | Paper | Main claim family | Claims | Publication | Repository copy |
 |---|---|---:|---|---|
