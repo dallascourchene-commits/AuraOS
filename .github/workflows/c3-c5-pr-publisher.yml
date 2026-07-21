@@ -8,65 +8,9 @@ permissions:
   contents: write
   pull-requests: read
 
-concurrency:
-  group: c3-c5-pr-publisher
-  cancel-in-progress: false
-
 jobs:
   publish:
-    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c3-c5-20260721' && github.actor != 'github-actions[bot]'
+    if: false
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Quiet checkout and exact patch apply
-        run: |
-          set -euo pipefail
-          git init -q .
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --quiet --depth=1 origin work/coding-relationship-compass-c3-c5-20260721
-          git checkout -q -B work/coding-relationship-compass-c3-c5-20260721 FETCH_HEAD
-          sed -n 's/^          PATCH_B64: //p' .github/workflows/c3-c5-guarded-publish.yml > /tmp/c3-c5.patch.gz.b64
-          test -s /tmp/c3-c5.patch.gz.b64
-          base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
-          git fetch --quiet --depth=50 origin main
-          BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
-          git reset --hard "$BASE_SHA"
-          git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch
-          git diff --cached --check
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install focused dependencies
-        run: python -m pip install --quiet pytest jsonschema
-      - name: Verify C3-C5
-        run: |
-          set -euo pipefail
-          python -m py_compile \
-            aura_coding_relationship_compass.py \
-            aura_coding_waboose_breadboard.py \
-            aura_planning_board.py \
-            aura_relational_index.py \
-            aura_relationship_atlas.py \
-            aura_relationship_contracts.py
-          PYTHONPATH=. pytest -q \
-            tests/test_aura_planning_board.py \
-            tests/test_aura_coding_arena_planning.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_coding_waboose_breadboard.py \
-            tests/test_aura_relational_index.py \
-            tests/test_aura_relationship_atlas.py \
-            tests/test_aura_relationship_contracts.py \
-            test_aura_architect_loop.py \
-            tests/test_aura_architecture_harness.py
-      - name: Publish clean C3-C5 commit
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "feat: implement Coding Relationship Compass C3-C5"
-          NEW_HEAD=$(git rev-parse HEAD)
-          git push --force-with-lease=refs/heads/work/coding-relationship-compass-c3-c5-20260721:$EXPECTED_HEAD \
-            origin "$NEW_HEAD":refs/heads/work/coding-relationship-compass-c3-c5-20260721
+      - run: echo "Temporarily disabled while chunked payload is staged."
