@@ -19,20 +19,20 @@ jobs:
     timeout-minutes: 35
     env:
       EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: work/coding-relationship-compass-c3-c5-20260721
-          fetch-depth: 1
-          show-progress: false
-      - name: Extract, reset, and diagnose exact patch
+      - name: Quiet checkout and exact patch apply
         run: |
           set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --quiet --depth=1 origin work/coding-relationship-compass-c3-c5-20260721
+          git checkout -q -B work/coding-relationship-compass-c3-c5-20260721 FETCH_HEAD
           sed -n 's/^          PATCH_B64: //p' .github/workflows/c3-c5-guarded-publish.yml > /tmp/c3-c5.patch.gz.b64
           test -s /tmp/c3-c5.patch.gz.b64
           base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
+          git fetch --quiet --depth=50 origin main
           BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
-          git fetch --quiet --depth=1 origin "$BASE_SHA"
           git reset --hard "$BASE_SHA"
           git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch
           git diff --cached --check
