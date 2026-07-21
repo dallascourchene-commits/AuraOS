@@ -1482,6 +1482,11 @@ def build_objective_relationship_atlas(
     if not hmac.compare_digest(neighborhood_digest, expected_neighborhood_digest):
         raise ValueError("relational neighborhood_digest does not match canonical neighborhood content")
     local_index = _objective_index_from_neighborhood(relational_index, neighborhood)
+    _validate_relational_index_freshness(
+        root,
+        local_index.to_dict(),
+        index_label=root / "<objective-relational-index>",
+    )
     key = (
         str(local_index.repository_identity.get("repo_head") or ""),
         local_index.index_digest,

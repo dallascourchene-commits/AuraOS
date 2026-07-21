@@ -1974,21 +1974,11 @@ _REQUEST_TRUTH_CLASSES: Mapping[str, frozenset[str]] = MappingProxyType(
         "EXACT_DECLARED": frozenset(
             {
                 TruthClass.EXACT_SOURCE.value,
-                TruthClass.EXACT_TEST.value,
                 TruthClass.EXACT_SCHEMA.value,
                 TruthClass.EXACT_MANIFEST.value,
-                TruthClass.EXACT_RUNTIME.value,
             }
         ),
-        "EXACT_RUNTIME": frozenset(
-            {
-                TruthClass.EXACT_SOURCE.value,
-                TruthClass.EXACT_TEST.value,
-                TruthClass.EXACT_SCHEMA.value,
-                TruthClass.EXACT_MANIFEST.value,
-                TruthClass.EXACT_RUNTIME.value,
-            }
-        ),
+        "EXACT_RUNTIME": frozenset({TruthClass.EXACT_RUNTIME.value}),
         "DERIVED": frozenset(
             {
                 TruthClass.EXACT_SOURCE.value,

@@ -956,6 +956,53 @@ def test_extract_relational_neighborhood_applies_minimum_truth_class() -> None:
     assert any(item["truth_class"].startswith("ADVISORY_") for item in advisory["relations"])
 
 
+def test_extract_relational_neighborhood_exact_runtime_requires_runtime_evidence() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    target = next(item.participant_id for item in index.participants if item.participant_id != seed)
+    runtime_relation = TypedRelation.create(
+        relation_type=RelationType.PRODUCES_EVIDENCE,
+        source_participant_id=seed,
+        target_participant_id=target,
+        truth_class=SynthesisTruthClass.EXACT_RUNTIME,
+        evidence_refs=("runtime://session/exact-observation",),
+        metadata={"runtime_grounded": True},
+    )
+    relations = tuple((*index.relations, runtime_relation))
+    runtime_index = RelationalIndex.create(
+        repository_identity=index.repository_identity,
+        profile=index.profile,
+        participants=index.participants,
+        relations=relations,
+        groups=index.groups,
+        reverse_indexes=_build_reverse_indexes(
+            participants=index.participants,
+            relations=relations,
+            groups=index.groups,
+            connectome={"nodes": ()},
+        ),
+        boundary=index.boundary,
+        build_facts=index.build_facts,
+    )
+    packet = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-runtime-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=1,
+            max_nodes=8,
+            max_edges=16,
+            max_candidate_pairs=28,
+            minimum_truth_class=ContractTruthClass.EXACT_RUNTIME,
+            include_auxiliary=True,
+        ),
+        runtime_index,
+    )
+    assert packet["relations"]
+    assert {item["truth_class"] for item in packet["relations"]} == {"EXACT_RUNTIME"}
+    assert runtime_relation.relation_id in {item["relation_id"] for item in packet["relations"]}
+
+
 def test_objective_atlas_rejects_tampered_neighborhood_digest() -> None:
     index = _build()
     seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
@@ -981,6 +1028,47 @@ def test_objective_atlas_rejects_tampered_neighborhood_digest() -> None:
             profile="OBJECTIVE_STANDARD",
         )
 
+
+
+def test_objective_atlas_cache_revalidates_current_checkout_identity(monkeypatch) -> None:
+    import aura_relationship_atlas as atlas_module
+
+    index = _build()
+    current_identity = dict(index.repository_identity)
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(current_identity),
+    )
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    neighborhood = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-cache-freshness",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=6,
+            max_edges=12,
+            max_candidate_pairs=15,
+        ),
+        index,
+    )
+    clear_objective_atlas_cache()
+    build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=neighborhood,
+        profile="OBJECTIVE_STANDARD",
+    )
+    current_identity["working_tree_digest"] = "0" * 40
+    with pytest.raises(ValueError, match="STALE"):
+        build_objective_relationship_atlas(
+            repo_root=".",
+            relational_index=index.to_dict(),
+            neighborhood=neighborhood,
+            profile="OBJECTIVE_STANDARD",
+        )
+    clear_objective_atlas_cache()
 
 
 def test_objective_atlas_compiles_from_bounded_neighborhood_and_cache_is_semantic_noop(monkeypatch) -> None:
