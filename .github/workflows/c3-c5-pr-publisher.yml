@@ -46,13 +46,23 @@ jobs:
       - name: Apply exact C3-C5 patch
         run: |
           set -euo pipefail
+          BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
           base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
           set +e
           git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch > /tmp/apply.log 2>&1
           rc=$?
           set -e
-          cat /tmp/apply.log
-          test "$rc" -eq 0
+          if [ "$rc" -ne 0 ]; then
+            git reset --hard "$BASE_SHA"
+            git checkout -B analysis/c3-c5-apply-diagnostic
+            cp /tmp/apply.log C3_C5_APPLY_ERROR.txt
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add C3_C5_APPLY_ERROR.txt
+            git commit -m "diagnostic: capture C3-C5 patch apply failure"
+            git push --force origin HEAD:refs/heads/analysis/c3-c5-apply-diagnostic
+            exit "$rc"
+          fi
           git diff --cached --check
       - name: Install focused dependencies
         run: python -m pip install --quiet pytest jsonschema
