@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           git init -q .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --quiet --depth=5 origin work/coding-relationship-compass-c6-c9-20260721
+          git fetch --quiet --depth=6 origin work/coding-relationship-compass-c6-c9-20260721
           git checkout -q -B work/coding-relationship-compass-c6-c9-20260721 FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           BASE_HEAD=8e514af2241b5c0b6cd62aae32bbb6c3e165e613
