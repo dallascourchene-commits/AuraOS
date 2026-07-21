@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+import hmac
 import json
 from pathlib import Path
 import re
@@ -25,6 +26,7 @@ from typing import Any, Mapping, Sequence
 from aura_capability_connectome import build_capability_connectome, find_capability_path
 from aura_capability_connectome_v2 import enrich_connectome, enrich_path
 from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine, EmergentEvidenceRequest
+from aura_event_contracts import stable_digest
 from aura_polysynthetic_intent import PolysyntheticIntentPacket
 from aura_relational_index import build_relational_index
 from aura_relational_synthesis import compile_relational_shadow_capsule
@@ -311,6 +313,22 @@ def _validate_injected_evidence_packet(repo_root: Path, evidence: Mapping[str, A
     return packet
 
 
+def _validated_relational_index_digest(relational_index: Mapping[str, Any]) -> str:
+    """Recompute and verify the canonical digest of a supplied Relational Index."""
+    if not isinstance(relational_index, Mapping):
+        raise ValueError("active relational index must be an object")
+    body = dict(relational_index)
+    supplied_digest = body.pop("index_digest", None)
+    if not isinstance(supplied_digest, str) or not supplied_digest:
+        raise ValueError("active relational index is missing index_digest")
+    calculated_digest = stable_digest(body, digest_size=20)
+    if not hmac.compare_digest(supplied_digest, calculated_digest):
+        raise ValueError(
+            "active relational index digest mismatch: supplied content was modified"
+        )
+    return calculated_digest
+
+
 def _validate_supplied_atlas_snapshot(
     atlas: AtlasSnapshot,
     *,
@@ -319,6 +337,7 @@ def _validate_supplied_atlas_snapshot(
     connectome: Mapping[str, Any],
 ) -> AtlasSnapshot:
     """Bind a caller-supplied Atlas to current exact evidence and index identity."""
+    validated_index_digest = _validated_relational_index_digest(relational_index)
     report = validate_relationship_atlas(atlas)
     if report.get("ok") is not True:
         issues = "; ".join(str(item) for item in report.get("issues", []) or [])
@@ -337,7 +356,7 @@ def _validate_supplied_atlas_snapshot(
         "topology_digest": str(identity.get("topology_digest") or ""),
         "connectome_digest": str(connectome.get("graph_digest") or identity.get("connectome_graph_digest") or ""),
         "atomic_inventory_digest": str(inventory.get("inventory_digest") or identity.get("atomic_inventory_digest") or ""),
-        "relational_index_digest": str(relational_index.get("index_digest") or ""),
+        "relational_index_digest": validated_index_digest,
         "profile_digest": str(identity.get("profile_digest") or ""),
     }
     mismatches = {

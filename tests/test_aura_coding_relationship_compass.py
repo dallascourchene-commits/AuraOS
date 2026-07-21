@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 import aura_coding_relationship_compass as compass
+from aura_event_contracts import stable_digest
 import aura_live_architect as live_architect
 import aura_relationship_atlas as atlas_module
 from aura_live_architect import ArchitectFusionCouncil, ArchitectModelRouter
@@ -58,8 +59,7 @@ def _minimal_relational_index() -> dict:
             "metadata": {"file_path": "aura_example.py", "line_start": 4},
         },
     ]
-    return {
-        "index_digest": "index-digest",
+    body = {
         "repository_identity": {
             "repo_head": "a" * 40,
             "working_tree_digest": "worktree-digest",
@@ -90,6 +90,13 @@ def _minimal_relational_index() -> dict:
             },
         },
     }
+    return {**body, "index_digest": stable_digest(body, digest_size=20)}
+
+
+def _rebind_index_digest(index: dict) -> None:
+    body = dict(index)
+    body.pop("index_digest", None)
+    index["index_digest"] = stable_digest(body, digest_size=20)
 
 
 def test_atlas_supports_validated_nonpersistent_compile_and_loader(tmp_path: Path) -> None:
@@ -247,6 +254,7 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     index = _minimal_relational_index()
     index["participants"][0]["metadata"]["file_path"] = "aura_coding_relationship_compass.py"
     index["participants"][0]["qualified_symbol"] = "compile_coding_relationship_compass"
+    _rebind_index_digest(index)
     atlas = build_relationship_atlas(
         repo_root=tmp_path,
         relational_index_data=index,
@@ -280,7 +288,7 @@ def test_supplied_atlas_rejects_stale_source_identity(tmp_path: Path) -> None:
     )
     current_index = json.loads(json.dumps(index))
     current_index["repository_identity"]["repo_head"] = "b" * 40
-    current_index["index_digest"] = "current-index-digest"
+    _rebind_index_digest(current_index)
 
     with pytest.raises(ValueError, match="stale or belongs to different evidence"):
         compass._validate_supplied_atlas_snapshot(
@@ -290,6 +298,29 @@ def test_supplied_atlas_rejects_stale_source_identity(tmp_path: Path) -> None:
                 "atomic_inventory": {"inventory_digest": "atomic-digest"},
             },
             relational_index=current_index,
+            connectome={"graph_digest": "graph-digest"},
+        )
+
+
+def test_supplied_atlas_rejects_tampered_relational_index_content(tmp_path: Path) -> None:
+    index = _minimal_relational_index()
+    atlas = build_relationship_atlas(
+        repo_root=tmp_path,
+        relational_index_data=index,
+        profile="MINIMAL",
+        persist=False,
+    )
+    tampered_index = json.loads(json.dumps(index))
+    tampered_index["participants"][0]["role"] = "tampered_role"
+
+    with pytest.raises(ValueError, match="relational index digest mismatch"):
+        compass._validate_supplied_atlas_snapshot(
+            atlas,
+            evidence={
+                "repo_head": "a" * 40,
+                "atomic_inventory": {"inventory_digest": "atomic-digest"},
+            },
+            relational_index=tampered_index,
             connectome={"graph_digest": "graph-digest"},
         )
 
