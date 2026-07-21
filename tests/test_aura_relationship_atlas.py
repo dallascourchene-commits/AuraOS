@@ -168,6 +168,28 @@ def test_atlas_builds_from_index(temp_repo: Path) -> None:
     assert len(snapshot.assessments) > 0
 
 
+
+
+def test_read_only_atlas_build_uses_in_memory_index_without_artifacts(
+    temp_repo: Path,
+) -> None:
+    index_path = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    index_data = json.loads(index_path.read_text(encoding="utf-8"))
+
+    snapshot = build_relationship_atlas(
+        repo_root=temp_repo,
+        profile="MINIMAL",
+        relational_index_data=index_data,
+        persist=False,
+    )
+
+    assert snapshot.snapshot_digest
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS_BUILD_RECEIPT.json").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS.md").exists()
+    assert not (temp_repo / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json").exists()
+
+
 def test_atlas_classification_explicitly_wired(temp_repo: Path) -> None:
     snapshot = build_relationship_atlas(repo_root=temp_repo)
     

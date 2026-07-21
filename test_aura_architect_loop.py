@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pytest
 
+import aura_architect_loop as architect_loop
+
 from aura_architect_loop import (
     ARCHITECT_LOOP_VERSION,
     PLAN_CAPSULE_VERSION,
@@ -70,6 +72,39 @@ def test_architect_loop_builds_grounded_plan_act_arena():
         "invent behavior across a boundary without a BoundaryContract",
     } <= forbidden_actions
     assert result.intensity == 1
+
+
+
+
+def test_grounder_can_use_checked_in_codemap_without_refresh(monkeypatch):
+    refresh_calls: list[tuple] = []
+    monkeypatch.setattr(
+        architect_loop,
+        "_refresh_plan_codemap_targets",
+        lambda *args, **kwargs: refresh_calls.append((args, kwargs)),
+    )
+    plan = build_fractal_plan_capsule(
+        "Read-only Architect grounding",
+        architecture_decision="Consume checked-in CODEMAP without rewriting it.",
+        repo_root=REPO_ROOT,
+        act_tasks=[
+            {
+                "task_id": "A-READ-ONLY",
+                "objective": "Inspect the Architect loop.",
+                "target_file": "aura_architect_loop.py",
+                "target_symbol": "ground_plan_capsule",
+            }
+        ],
+    )
+
+    grounding = ground_plan_capsule(
+        plan,
+        repo_root=REPO_ROOT,
+        refresh_codemap=False,
+    )
+
+    assert grounding[0].codemap_file_hit is True
+    assert refresh_calls == []
 
 
 def test_shadow_report_blocks_fake_file_and_symbol():
