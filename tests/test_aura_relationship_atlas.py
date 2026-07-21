@@ -287,6 +287,58 @@ def test_load_relationship_atlas_requires_stored_snapshot_digest(temp_repo: Path
         load_relationship_atlas(atlas_path)
 
 
+def _tamper_serialized_atlas(temp_repo: Path, mutator) -> Path:
+    build_relationship_atlas(repo_root=temp_repo)
+    atlas_path = temp_repo / ".aura" / "RELATIONSHIP_ATLAS.json"
+    data = json.loads(atlas_path.read_text(encoding="utf-8"))
+    mutator(data)
+    atlas_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return atlas_path
+
+
+def test_load_relationship_atlas_rejects_tampered_prohibition_content(temp_repo: Path) -> None:
+    """Changing policy fields without changing the prohibition ID must fail closed."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["prohibitions"][0].__setitem__("reason", "tampered reason")
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_unhashed_assessment_field(temp_repo: Path) -> None:
+    """Changing an assessment field formerly omitted from its digest must fail closed."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["assessments"][0]["risks"].append("tampered risk")
+    )
+
+    with pytest.raises(ValueError, match="Assessment .* digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_missing_configuration(temp_repo: Path) -> None:
+    """Missing-configuration content is part of the snapshot digest."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo,
+        lambda data: data["missing_configurations"][0].__setitem__(
+            "expected_capability", "tampered capability"
+        ),
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
+def test_load_relationship_atlas_rejects_tampered_projection_content(temp_repo: Path) -> None:
+    """Reverse indexes and boundary projection metadata are digest-covered."""
+    atlas_path = _tamper_serialized_atlas(
+        temp_repo, lambda data: data["reverse_indexes"].__setitem__("tampered", ["assessment"])
+    )
+
+    with pytest.raises(ValueError, match="snapshot digest mismatch"):
+        load_relationship_atlas(atlas_path)
+
+
 def test_relationship_assessment_lookup(temp_repo: Path) -> None:
     snapshot = build_relationship_atlas(repo_root=temp_repo)
     p_ids = ["relp_000000000000000000000001", "relp_000000000000000000000002"]

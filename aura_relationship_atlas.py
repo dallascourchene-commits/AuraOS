@@ -237,22 +237,12 @@ class AtlasRelationshipAssessment:
             self.assessment_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
-        """Compute a SHA-256 content-addressed digest for this assessment."""
-        data = {
-            "participant_ids": [p.participant_id for p in self.participant_refs],
-            "role_bindings": self.role_bindings,
-            "relation_types": self.relation_types,
-            "structural_status": self.structural_status.value,
-            "semantic_relationship": self.semantic_relationship.value,
-            "wiring_disposition": self.wiring_disposition.value,
-            "readiness": self.readiness.value,
-            "lifecycle": self.lifecycle.value,
-            "truth_class": self.truth_class,
-            "proof_status": self.proof_status.value,
-            "canonical_owner_refs": sorted(self.canonical_owner_refs),
-            "evidence_refs": sorted(self.evidence_refs),
-        }
-        serialized = json.dumps(data, sort_keys=True)
+        """Hash every serialized assessment field except the digest itself."""
+        data = self.to_dict()
+        data.pop("assessment_digest", None)
+        serialized = json.dumps(
+            data, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
@@ -336,19 +326,12 @@ class AtlasSnapshot:
             self.snapshot_digest = self.compute_digest()
 
     def compute_digest(self) -> str:
-        """Compute a SHA-256 content-addressed digest including profile and assessments."""
-        data = {
-            "version": self.snapshot_version,
-            "repository_head": self.repository_head,
-            "working_tree_digest": self.working_tree_digest,
-            "codemap_digest": self.codemap_digest,
-            "topology_digest": self.topology_digest,
-            "relational_index_digest": self.relational_index_digest,
-            "operational_profile": self.boundary.get("operational_profile", ""),
-            "assessment_digests": sorted([a.assessment_digest for a in self.assessments]),
-            "prohibition_ids": sorted([p.prohibition_id for p in self.prohibitions]),
-        }
-        serialized = json.dumps(data, sort_keys=True)
+        """Hash the complete serialized Atlas snapshot except the digest itself."""
+        data = self.to_dict()
+        data.pop("snapshot_digest", None)
+        serialized = json.dumps(
+            data, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        )
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
     def to_dict(self) -> dict[str, Any]:
