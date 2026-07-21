@@ -763,6 +763,23 @@ Aura_Memory/emergent_results/seed_runs/2026-07-16/
 
 Research metadata is an evidence input. It does not become patch evidence until exact local grounding and verification occur.
 
+### Compile a Coding Relationship Compass packet
+
+Use the Compass when an architecture or refactor objective spans several Aura systems and does not yet name an exact source target:
+
+```python
+from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+packet = compile_coding_relationship_compass(
+    "combine Connectome, Relational Synthesis, and Atlas to code better",
+    repo_root=".",
+)
+```
+
+The packet binds Connectome capability routing, exact atomic source/test grounding, one JIT Relational Synthesis capsule, and a bounded MINIMAL Atlas projection. Inspect `recommended_targets`, `required_tests`, `relationships_to_preserve`, `missing_roles`, `required_adapters`, and `prohibitions`. The packet is proposal-only and cannot authorize a patch. Architect uses this route before filename fallback for matching broad objectives.
+
+See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
+
 ## 16. Run the Learning Arena / Crucible
 
 Crucible eligibility requires:
