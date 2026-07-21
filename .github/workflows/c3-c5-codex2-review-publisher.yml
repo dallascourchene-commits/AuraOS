@@ -1,0 +1,74 @@
+name: C3-C5 Codex Round 2 Publisher
+
+on:
+  pull_request:
+    types: [synchronize]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: c3-c5-codex2-review-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c3-c5-20260721' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Reconstruct, verify, and apply exact Codex patch
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --quiet --depth=2 origin work/coding-relationship-compass-c3-c5-20260721
+          git checkout -q -B work/coding-relationship-compass-c3-c5-20260721 FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          BASE_HEAD=e31dcfd6221736603166eee5f5325b3939531374
+          test "$(git rev-parse HEAD^)" = "$BASE_HEAD"
+          test "$(wc -c < .github/c3-c5-codex2-fixes.patch.gz.b64)" -eq 2312
+          echo 'fd6a9ac0ea12a108337cdad3166e552ccce87f472502a0b36bc3d665ac5721e0  .github/c3-c5-codex2-fixes.patch.gz.b64' | sha256sum -c -
+          base64 -d .github/c3-c5-codex2-fixes.patch.gz.b64 | gzip -d > /tmp/c3-c5-codex2-fixes.patch
+          echo '475f0ec8026fd465ef6d0df899db99cc8fa8436117b82b0eb6acd5621c70bae6  /tmp/c3-c5-codex2-fixes.patch' | sha256sum -c -
+          git reset --hard "$BASE_HEAD"
+          git apply --index --whitespace=error-all /tmp/c3-c5-codex2-fixes.patch
+          git diff --cached --check
+          printf '%s\n' \
+            aura_relational_index.py \
+            aura_relationship_atlas.py \
+            tests/test_aura_relational_index.py \
+            > /tmp/expected-files
+          git diff --cached --name-only | sort > /tmp/actual-files
+          sort -o /tmp/expected-files /tmp/expected-files
+          diff -u /tmp/expected-files /tmp/actual-files
+      - name: Verify Codex round 2 fixes
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/c3-c5-codex2-venv
+          . /tmp/c3-c5-codex2-venv/bin/activate
+          python -m pip install --quiet pytest==9.0.2 jsonschema==4.26.0 numpy==2.3.5
+          python -m py_compile aura_relational_index.py aura_relationship_atlas.py
+          PYTHONPATH=. pytest -q \
+            tests/test_aura_planning_board.py \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_coding_waboose_breadboard.py \
+            tests/test_aura_relational_index.py \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_relationship_contracts.py \
+            test_aura_architect_loop.py \
+            tests/test_aura_architecture_harness.py
+      - name: Publish clean Codex round 2 fix commit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: preserve objective cache and runtime truth boundaries"
+          NEW_HEAD=$(git rev-parse HEAD)
+          git push --force-with-lease=refs/heads/work/coding-relationship-compass-c3-c5-20260721:$EXPECTED_HEAD \
+            origin "$NEW_HEAD":refs/heads/work/coding-relationship-compass-c3-c5-20260721
