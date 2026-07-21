@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa9e7-[Q-SYS:RELATIONSHIP_ATLAS]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Architecture Relationship Atlas Plane)
 DEPENDENCIES: __future__, dataclasses, enum, hashlib, json, os, pathlib, re, time, typing
-FUNCTIONS: build_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
+FUNCTIONS: build_relationship_atlas, load_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
 SYNOPSIS: Compiles, classifies, and projects the architectural relationship status plane of AuraOS.
 [/AURA_MASTER_KEY]
 """
@@ -20,7 +20,7 @@ import os
 from pathlib import Path
 import re
 import time
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 # ---------------------------------------------------------------------------
 # Constants and Versions
@@ -526,6 +526,9 @@ def build_relationship_atlas(
     output_path: Path | None = None,
     receipt_path: Path | None = None,
     profile: str | OperationalProfile = "STANDARD",
+    *,
+    relational_index_data: Mapping[str, Any] | None = None,
+    persist: bool = True,
 ) -> AtlasSnapshot:
     """Ahead-of-Time relationship classification compile pass.
 
@@ -546,15 +549,19 @@ def build_relationship_atlas(
         op_profile = profile
     prof_cfg = PROFILE_CONFIG[op_profile]
 
-    # 1. Fail closed on stale or missing index
-    if not idx_path.exists():
-        raise FileNotFoundError(
-            f"Relational index is stale or missing at {idx_path}. "
-            "Please run 'python aura_relational_index.py build' first."
-        )
-
-    with idx_path.open("r", encoding="utf-8") as f:
-        rel_index = json.load(f)
+    # 1. Fail closed on stale or missing index. Callers that already hold the
+    # exact generated index may supply it directly for a read-only in-memory
+    # compile; the canonical persisted workflow remains the default.
+    if relational_index_data is None:
+        if not idx_path.exists():
+            raise FileNotFoundError(
+                f"Relational index is stale or missing at {idx_path}. "
+                "Please run 'python aura_relational_index.py build' first."
+            )
+        with idx_path.open("r", encoding="utf-8") as f:
+            rel_index = json.load(f)
+    else:
+        rel_index = dict(relational_index_data)
 
     # Validate index freshness — fail closed on stale or missing identity
     index_digest = rel_index.get("index_digest", "")
@@ -979,46 +986,67 @@ def build_relationship_atlas(
         }
     )
 
-    # Write files atomically
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    if persist:
+        # Generated artifacts are caches/navigation outputs. Persist only when
+        # explicitly requested by the canonical build workflow.
+        out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Generate delta receipt if a previous snapshot exists
-    delta_receipt: AtlasDeltaReceipt | None = None
-    delta_path = repo_root / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json"
-    if out_path.exists():
-        try:
-            with out_path.open("r", encoding="utf-8") as f:
-                prev_data = json.load(f)
-            prev_snap = _snapshot_from_dict(prev_data)
-            delta_receipt = diff_relationship_atlases(prev_snap, snapshot)
-        except (json.JSONDecodeError, KeyError, ValueError):
-            # If previous snapshot is corrupted, skip delta but don't fail the build
-            pass
+        delta_receipt: AtlasDeltaReceipt | None = None
+        delta_path = repo_root / ".aura" / "RELATIONSHIP_ATLAS_DELTA.json"
+        if out_path.exists():
+            try:
+                with out_path.open("r", encoding="utf-8") as f:
+                    prev_data = json.load(f)
+                prev_snap = _snapshot_from_dict(prev_data)
+                delta_receipt = diff_relationship_atlases(prev_snap, snapshot)
+            except (json.JSONDecodeError, KeyError, ValueError):
+                pass
 
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(snapshot.to_dict(), f, indent=2, sort_keys=True)
+        with out_path.open("w", encoding="utf-8") as f:
+            json.dump(snapshot.to_dict(), f, indent=2, sort_keys=True)
 
-    # Write build receipt
-    receipt = {
-        "snapshot_digest": snapshot.snapshot_digest,
-        "built_at": int(time.time()),
-        "assessments_count": len(final_assessments),
-        "prohibitions_count": len(prohibitions),
-        "missing_configurations_count": len(missing_configs),
-        "operational_profile": op_profile.value,
-        "freshness": "CURRENT"
-    }
-    with rec_path.open("w", encoding="utf-8") as f:
-        json.dump(receipt, f, indent=2)
+        receipt = {
+            "snapshot_digest": snapshot.snapshot_digest,
+            "built_at": int(time.time()),
+            "assessments_count": len(final_assessments),
+            "prohibitions_count": len(prohibitions),
+            "missing_configurations_count": len(missing_configs),
+            "operational_profile": op_profile.value,
+            "freshness": "CURRENT",
+        }
+        with rec_path.open("w", encoding="utf-8") as f:
+            json.dump(receipt, f, indent=2)
 
-    # Write delta receipt if computed
-    if delta_receipt is not None:
-        with delta_path.open("w", encoding="utf-8") as f:
-            json.dump(delta_receipt.to_dict(), f, indent=2)
+        if delta_receipt is not None:
+            with delta_path.open("w", encoding="utf-8") as f:
+                json.dump(delta_receipt.to_dict(), f, indent=2)
 
-    # Re-render markdown index
-    render_relationship_atlas_markdown(snapshot, repo_root / DEFAULT_MARKDOWN_PATH)
+        render_relationship_atlas_markdown(snapshot, repo_root / DEFAULT_MARKDOWN_PATH)
 
+    return snapshot
+
+
+def load_relationship_atlas(
+    path: str | Path = DEFAULT_ATLAS_PATH,
+    *,
+    validate: bool = True,
+) -> AtlasSnapshot:
+    """Load a serialized Atlas snapshot and fail closed on invalid content."""
+    snapshot_path = Path(path)
+    if not snapshot_path.is_file():
+        raise FileNotFoundError(f"Relationship Atlas snapshot is missing at {snapshot_path}")
+    with snapshot_path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError("Relationship Atlas snapshot must be a JSON object")
+    snapshot = _snapshot_from_dict(data)
+    if validate:
+        report = validate_relationship_atlas(snapshot)
+        if not report.get("ok"):
+            raise ValueError(
+                "Relationship Atlas snapshot failed validation: "
+                + "; ".join(str(item) for item in report.get("issues", [])[:5])
+            )
     return snapshot
 
 

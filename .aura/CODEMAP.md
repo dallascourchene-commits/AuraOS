@@ -13,27 +13,28 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1270
-- **total_bytes**: 54341328
-- **text_tokens_est**: 4235701
-- **role_counts**: {'binary_artifact': 2, 'interface_surface': 43, 'knowledge_artifact': 159, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 868, 'schema_or_lexicon': 140, 'support_file': 45}
-- **topology_nodes**: 9971
-- **topology_edges**: 22883
-- **topology_source**: compiled_deep_topology
-- **elapsed_ms**: 27146.48
+- **file_count**: 1296
+- **total_bytes**: 55061273
+- **text_tokens_est**: 4326547
+- **role_counts**: {'binary_artifact': 2, 'interface_surface': 43, 'knowledge_artifact': 164, 'native_accelerator': 8, 'operator_script': 5, 'python_module': 879, 'schema_or_lexicon': 150, 'support_file': 45}
+- **topology_nodes**: 10089
+- **topology_edges**: 23188
+- **topology_source**: existing_topology_json
+- **elapsed_ms**: 23314.22
+- **last_incremental_refresh_unix**: 1784643850
 
 ## Coverage
 
-- **included_file_count**: 1270
+- **included_file_count**: 1296
 - **policy**: all files under root except skipped runtime/cache dirs and generated CODEMAP outputs
 - **excluded_generated_map_files**: `.aura/CODEMAP.json`, `.aura/CODEMAP.md`, `topology_map.json`
-- **skipped_dir_file_counts**: `.git`=25, `Aura_Memory`=6, `Aura_Sandbox`=2, `__pycache__`=8
+- **skipped_dir_file_counts**: `.git`=126, `.pytest_cache`=4, `Aura_Memory`=6, `Aura_Sandbox`=1, `__pycache__`=65
 
 ## Command Index
 
 - `!Array` -> `aura_human_agent_arena/jarvis.js:295`, `aura_showcase/civic.js:55`, `aura_spatial_web/gaussian_renderer.js:59`, `aura_spatial_web/interaction_adapter.js:68`
 - `!Aura_Sandbox` -> `.gitignore:46`
-- `!Aura_Staging` -> `.github/workflows/aura-spatial-s5-s6-construction.yml:104`
+- `!Aura_Staging` -> `.github/workflows/aura-spatial-s5-s6-construction.yml:120`
 - `!CLASSES` -> `aura_spatial_web/telemetry.js:37`
 - `!CONTENT_DIGEST` -> `aura_spatial_web/renderer_adapter.js:357`
 - `!CORE_AXIOM_VALID` -> `aura_nesy_sat_reasoner.py:280`
@@ -84,7 +85,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!codeExts` -> `CODEMAP_TOOL_INTEGRATION_GUIDE.md:506`
 - `!cognitive_search` -> `aura_node.py:5728`
 - `!command` -> `aura_human_agent_arena/jarvis.js:122`, `aura_human_agent_arena/main.js:163`
-- `!commands` -> `USER_GUIDE.md:85`
+- `!commands` -> `USER_GUIDE.md:87`
 - `!comment` -> `aura_showcase/gate-dialogue.js:291`
 - `!container` -> `aura_spatial_web/accessibility.js:40`
 - `!content` -> `aura_human_agent_arena/main.js:856`
@@ -112,7 +113,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!fallback` -> `aura_spatial_web/renderer_adapter.js:487`
 - `!fast_path` -> `AURA_FINAL_REPORT.md:173`, `aura_node.py:7463`, `test_aura_functions.py:927`
 - `!features` -> `aura_human_agent_arena/jarvis.js:332`
-- `!forage` -> `aura_affordance_directory.py:503`, `aura_capability_lane_registry.py:120`, `aura_node.py:6263`, `refactored-auraos-upgrades.md:2573`
+- `!forage` -> `aura_affordance_directory.py:566`, `aura_capability_lane_registry.py:120`, `aura_node.py:6263`, `refactored-auraos-upgrades.md:2573`
 - `!forage_off` -> `aura_node.py:6654`
 - `!forage_on` -> `aura_node.py:6648`
 - `!forager_off` -> `aura_node.py:6654`
@@ -186,7 +187,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!rendererFactories` -> `aura_spatial_web/app.js:67`
 - `!repair_db` -> `aura_node.py:7051`
 - `!res` -> `aura_coding_arena/main.js:48`, `aura_human_agent_arena/main.js:75`
-- `!research` -> `AURA_FINAL_REPORT.md:142`, `aura_affordance_directory.py:503`, `aura_capability_lane_registry.py:120`, `aura_coding_arena_workflow.py:743`
+- `!research` -> `AURA_FINAL_REPORT.md:142`, `aura_affordance_directory.py:566`, `aura_capability_lane_registry.py:120`, `aura_coding_arena_workflow.py:743`
 - `!response` -> `aura_human_agent_arena/construction.js:18`, `aura_spatial_web/bootstrap.js:26`
 - `!result` -> `aura_human_agent_arena/emergent.js:131`, `aura_human_agent_arena/jarvis.js:246`, `aura_showcase/app.js:67`, `aura_showcase/attempt-archive.js:142`
 - `!review` -> `aura_node.py:6781`, `mistral_gate.py:93`
@@ -212,9 +213,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `!something` -> `aura_node.py:5042`
 - `!source` -> `aura_coding_arena/main.js:143`, `aura_human_agent_arena/main.js:441`, `aura_showcase/intent.js:301`, `aura_showcase/topology.js:196`
 - `!srcPos` -> `index.html:122`
-- `!stage` -> `AURA_FINAL_REPORT.md:149`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2159`, `aura_node.py:5548`
+- `!stage` -> `AURA_FINAL_REPORT.md:149`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2196`, `aura_node.py:5548`
 - `!stageComplete` -> `aura_showcase/human.js:312`
-- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2160`, `aura_node.py:6846`
+- `!stage_merge` -> `AURA_FINAL_REPORT.md:150`, `aura_capability_lane_registry.py:229`, `aura_live_architect.py:2197`, `aura_node.py:6846`
 - `!stage_purge` -> `aura_capability_lane_registry.py:229`, `aura_node.py:6846`
 - `!stage_review` -> `aura_capability_lane_registry.py:229`, `aura_node.py:6781`
 - `!state` -> `aura_showcase/gate-dialogue.js:270`
@@ -337,40 +338,40 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `.aura/arena_routes/coding.v1.json`
 - `.aura/arena_routes/construction.v1.json`
 - `.aura/arena_routes/human_agent.v1.json`
-- ... 1092 more; query CODEMAP.json for exact file cards
+- ... 1118 more; query CODEMAP.json for exact file cards
 
 ## Hubs
 
-- `aura_node.py` (python_module): 194 symbols, degree 887, ~104798 tokens
+- `aura_node.py` (python_module): 80 symbols, degree 887, ~104798 tokens
 - `aura_gate.py` (python_module): 68 symbols, degree 756, ~20345 tokens
-- `aura_agent_arena_cli.py` (python_module): 100 symbols, degree 575, ~17235 tokens
-- `aura_fst_routing.py` (python_module): 35 symbols, degree 542, ~8991 tokens
-- `test_scientific_memory.py` (python_module): 111 symbols, degree 517, ~13607 tokens
-- `aura_live_architect.py` (python_module): 74 symbols, degree 508, ~30294 tokens
+- `aura_agent_arena_cli.py` (python_module): 80 symbols, degree 575, ~17235 tokens
+- `aura_fst_routing.py` (python_module): 35 symbols, degree 546, ~8991 tokens
+- `test_scientific_memory.py` (python_module): 80 symbols, degree 517, ~13607 tokens
+- `aura_live_architect.py` (python_module): 74 symbols, degree 511, ~30756 tokens
 - `aura_spatial_contracts.py` (python_module): 74 symbols, degree 508, ~16200 tokens
 - `aura_relational_authority.py` (python_module): 58 symbols, degree 481, ~19006 tokens
-- `aura_architect_loop.py` (python_module): 70 symbols, degree 455, ~18332 tokens
-- `aura_relational_synthesis.py` (python_module): 69 symbols, degree 453, ~21816 tokens
-- `aura_relational_index.py` (python_module): 73 symbols, degree 427, ~21070 tokens
+- `aura_architect_loop.py` (python_module): 70 symbols, degree 458, ~18418 tokens
+- `aura_relational_synthesis.py` (python_module): 69 symbols, degree 455, ~21816 tokens
+- `aura_relational_index.py` (python_module): 73 symbols, degree 428, ~21070 tokens
 - `aura_gate_adapters.py` (python_module): 40 symbols, degree 395, ~9513 tokens
 
 ## Topology Integration
 
-- **source**: compiled_deep_topology
-- **nodes**: 9971
-- **edges**: 22883
+- **source**: existing_topology_json
+- **nodes**: 10089
+- **edges**: 23188
 - **top_files_by_degree**:
   - `aura_node.py` degree=887 nodes=221 neighbors=`arxiv_forager.py`, `async_palace.py`, `aura_ai_router.py`, `aura_api_rotator.py`
   - `aura_gate.py` degree=756 nodes=69 neighbors=`aura_event_contracts.py`, `aura_forge.py`, `aura_fst_routing.py`, `aura_gate_adapters.py`
   - `aura_agent_arena_cli.py` degree=575 nodes=101 neighbors=`aura_agent_arena_bridge.py`, `aura_agent_arena_fireworks.py`
-  - `aura_fst_routing.py` degree=542 nodes=36 neighbors=`aura_architect_loop.py`, `aura_external_llm_session.py`, `aura_fusion.py`, `aura_gate.py`
+  - `aura_fst_routing.py` degree=546 nodes=36 neighbors=`aura_architect_loop.py`, `aura_external_llm_session.py`, `aura_fusion.py`, `aura_gate.py`
   - `test_scientific_memory.py` degree=517 nodes=120 neighbors=`arxiv_forager.py`, `aura_paper_memory.py`, `aura_scientific_memory.py`, `travel_price_sidecar.py`
-  - `aura_live_architect.py` degree=508 nodes=85 neighbors=`aura_architect_council_calling_benchmark.py`, `aura_architect_council_v2.py`, `aura_architect_council_v3.py`, `aura_architect_loop.py`
+  - `aura_live_architect.py` degree=511 nodes=85 neighbors=`aura_architect_council_calling_benchmark.py`, `aura_architect_council_v2.py`, `aura_architect_council_v3.py`, `aura_architect_loop.py`
   - `aura_spatial_contracts.py` degree=508 nodes=75 neighbors=`aura_event_contracts.py`, `aura_llm_egress.py`, `aura_spatial_agent_bridge.py`, `aura_spatial_arena.py`
   - `aura_relational_authority.py` degree=481 nodes=59 neighbors=`aura_civic_planning.py`, `aura_construction_authority.py`, `aura_gate.py`, `aura_gate_audit.py`
-  - `aura_architect_loop.py` degree=455 nodes=73 neighbors=`aura_arena_architect_connector.py`, `aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_construction_architect_refactor.py`
-  - `aura_relational_synthesis.py` degree=453 nodes=70 neighbors=`aura_event_contracts.py`, `aura_polysynthetic_intent.py`, `aura_relational_index.py`, `aura_topological_context_anchor.py`
-  - `aura_relational_index.py` degree=427 nodes=75 neighbors=`aura_capability_connectome.py`, `aura_capability_connectome_v2.py`, `aura_codebase_navigator.py`, `aura_emergent_evidence_spine.py`
+  - `aura_architect_loop.py` degree=458 nodes=73 neighbors=`aura_arena_architect_connector.py`, `aura_arena_st3gg_codec.py`, `aura_codebase_navigator.py`, `aura_construction_architect_refactor.py`
+  - `aura_relational_synthesis.py` degree=455 nodes=70 neighbors=`aura_coding_relationship_compass.py`, `aura_event_contracts.py`, `aura_polysynthetic_intent.py`, `aura_relational_index.py`
+  - `aura_relational_index.py` degree=428 nodes=75 neighbors=`aura_capability_connectome.py`, `aura_capability_connectome_v2.py`, `aura_codebase_navigator.py`, `aura_coding_relationship_compass.py`
   - `aura_gate_adapters.py` degree=395 nodes=42 neighbors=`aura_gate.py`, `aura_gate_oidc.py`, `aura_gate_server.py`
 
 ## High-Value Symbols
@@ -396,16 +397,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AppendOnlyEventStore` -> `aura_event_contracts.py:634`
 - `ApprovalAttestation` -> `aura_relational_authority.py:451`
 - `ArXivForager` -> `arxiv_forager.py:84`
-- `ArchitectBuilderBridge` -> `aura_live_architect.py:1370`
+- `ArchitectBuilderBridge` -> `aura_live_architect.py:1407`
 - `ArchitectControlProfile` -> `aura_architect_control.py:87`
 - `ArchitectCouncilDecision` -> `aura_live_architect.py:140`
 - `ArchitectExecutionResult` -> `aura_architect_loop.py:287`
 - `ArchitectFusionCouncil` -> `aura_live_architect.py:996`
-- `ArchitectFusionLoop` -> `aura_architect_loop.py:1746`
+- `ArchitectFusionLoop` -> `aura_architect_loop.py:1752`
 - `ArchitectLedgerRecord` -> `aura_architect_loop.py:254`
 - `ArchitectLoopResult` -> `aura_architect_loop.py:269`
 - `ArchitectModelProfile` -> `aura_live_architect.py:115`
 - `ArchitectModelRouter` -> `aura_live_architect.py:672`
+- `ArchitectureComponent` -> `aura_coding_relationship_compass.py:48`
 - `ArenaArchitectRuntime` -> `aura_arena_architect_runtime.py:20`
 - `ArenaAttemptArchive` -> `aura_arena_attempt_archive.py:217`
 - `ArenaBridgeError` -> `aura_agent_arena_errors.py:93`
@@ -439,6 +441,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AsyncExpertQuantizationEngine` -> `aura_timestep_svd_quantizer.py:337`
 - `AsyncMemoryPalace` -> `async_palace.py:380`, `aura_attention_palace.py:43`
 - `AthabaskanPositionalParser` -> `aura_positional_parser.py:20`
+- `AtlasDeltaReceipt` -> `aura_relationship_atlas.py:378`
+- `AtlasParticipantRef` -> `aura_relationship_atlas.py:187`
+- `AtlasRelationshipAssessment` -> `aura_relationship_atlas.py:201`
+- `AtlasSnapshot` -> `aura_relationship_atlas.py:312`
 - `AttentionConfig` -> `aura_dynamic_attention.py:36`
 - `AttentionResult` -> `aura_dynamic_attention.py:46`
 - `AttestationDecision` -> `aura_relational_authority.py:35`
@@ -450,8 +456,3 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 - `AuraARWebSocketServer` -> `aura_topology_ws_bridge.py:365`
 - `AuraAffordance` -> `aura_affordance_directory.py:37`
 - `AuraAgentArenaBridge` -> `aura_agent_arena_bridge.py:182`
-- `AuraArchReasoner` -> `aura_arch_reasoner.py:31`
-- `AuraArenaArchitectConnector` -> `aura_arena_architect_connector.py:146`
-- `AuraAssociativeCore` -> `aura_associative_core.py:30`
-- `AuraCodingArenaRouter` -> `aura_fst_routing.py:399`
-- `AuraCognitiveSynthesizer` -> `aura_cognitive_synthesizer.py:24`

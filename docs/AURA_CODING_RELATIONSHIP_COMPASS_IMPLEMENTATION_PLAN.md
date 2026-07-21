@@ -1,6 +1,6 @@
 # Aura Coding Relationship Compass — Comprehensive Implementation Plan
 
-> **Program status:** implementation plan, proposal-only  
+> **Program status:** active implementation; C0–C2 implemented on the draft branch, pending review  
 > **Canonical name:** Aura Coding Relationship Compass  
 > **Reference architecture:** ENG-ATLAS v2.4, reconciled with current AuraOS  
 > **Repository baseline:** `dallascourchene-commits/AuraOS` main source SHA `4865e013c2deb0695b86591c899fb278aff08ac5`  
@@ -411,6 +411,14 @@ No emergent candidate can self-promote.
 ## 7. Phased implementation program
 
 Each phase is independently reviewable and reversible. Do not combine the program into one giant implementation PR.
+
+### Current implementation checkpoint
+
+- **C0 complete:** the harness is reference-bound, resumable, and read-only across Atlas and Architect grounding.
+- **C1 complete:** immutable relationship, compatibility, neighborhood-request, and objective contracts are schema-locked and tamper-evident.
+- **C2 complete:** explicit Compass intents compile a bounded objective contract and classified Connectome selection before exact grounding and Atlas projection.
+- **Authority remains unchanged:** all outputs are proposal-only; exact current source spans and hashes remain patch authority; human review is required.
+- **Next batch:** C3–C5, covering bounded neighborhood extraction, objective-scoped Atlas profiles, and typed Breadboard compatibility.
 
 ### C0 — Harness and provenance hardening
 

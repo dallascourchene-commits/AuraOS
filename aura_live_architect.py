@@ -1136,11 +1136,43 @@ class ArchitectFusionCouncil:
         target_symbol: str | None = None,
     ) -> ArchitectCouncilDecision:
         hints = self.router.ledger_hints()
-        topological_grounding = ground_coding_arena_intent(
-            intent,
-            self.router.repo_root,
-            target_symbol=target_symbol,
-        )
+        topological_grounding: dict[str, Any] = {}
+        planning_source = "deterministic_codemap_plan"
+        compass_error = ""
+        if target_file is None:
+            try:
+                from aura_coding_relationship_compass import (
+                    compile_coding_relationship_compass,
+                    is_coding_relationship_compass_intent,
+                    relationship_compass_grounding,
+                )
+
+                if is_coding_relationship_compass_intent(intent):
+                    compass_packet = compile_coding_relationship_compass(
+                        intent,
+                        self.router.repo_root,
+                        target_symbols=(target_symbol,) if target_symbol else (),
+                        max_atomic_nodes=32,
+                        max_atlas_participants=24,
+                        max_atlas_assessments=64,
+                        include_source=False,
+                    )
+                    topological_grounding = relationship_compass_grounding(compass_packet)
+                    planning_source = "deterministic_relationship_compass_plan"
+            except (FileNotFoundError, ImportError, OSError, TypeError, ValueError) as exc:
+                compass_error = f"{type(exc).__name__}: {exc}"
+        if not topological_grounding:
+            topological_grounding = ground_coding_arena_intent(
+                intent,
+                self.router.repo_root,
+                target_symbol=target_symbol,
+            )
+            if compass_error:
+                topological_grounding = {
+                    **topological_grounding,
+                    "relationship_compass_status": "FAIL_CLOSED",
+                    "relationship_compass_error": compass_error,
+                }
         trace_task_id = _trace_task_key("council", intent, target_file, target_symbol)
         inferred_file = target_file or topological_grounding.get("target_file") or self.router.infer_target_file(intent)
         budget_route = self.router.budget_route(hints, target_file=inferred_file)
@@ -1149,7 +1181,7 @@ class ArchitectFusionCouncil:
             target_file=inferred_file,
             target_symbol=target_symbol or topological_grounding.get("target_symbol"),
             topological_grounding=topological_grounding,
-            source="deterministic_codemap_plan",
+            source=planning_source,
         )
         local_plan = _attach_grounding_to_plan(local_plan, topological_grounding)
         candidates = [self._candidate("local_free", local_plan, cost_tier="free", source=local_plan.get("source", "deterministic_codemap_plan"))]
@@ -1206,7 +1238,12 @@ class ArchitectFusionCouncil:
                 candidates.append(self._candidate(candidate_id, plan, cost_tier="premium", source=plan["source"]))
 
         music_mitosis: dict[str, Any] = {"status": "disabled", "reason": "music_coding_arena_unavailable"}
-        if fuse_music_council_plan is not None:
+        if planning_source == "deterministic_relationship_compass_plan":
+            music_mitosis = {
+                "status": "disabled",
+                "reason": "relationship_compass_already_contains_bounded_emergent_and_relational_evidence",
+            }
+        elif fuse_music_council_plan is not None:
             try:
                 music_mitosis = fuse_music_council_plan(
                     intent,

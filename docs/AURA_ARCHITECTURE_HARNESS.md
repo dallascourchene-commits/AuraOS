@@ -90,10 +90,15 @@ python scripts/aura_architecture_harness.py \
   --venv ./.AuraOS-architecture-harness-venv \
   --objective "make a new function that combines the properties of Connectome, Relational Synthesis, and Atlas to code better" \
   --combine-with Connectome "Relational Synthesis" Atlas \
+  --reference-file ../ARCHITECTURAL_REFERENCE_SPECIFICATION.txt \
   --atlas-profile MINIMAL
 ```
 
 Outputs are written beside the repository under `AuraOS-architecture-harness-runs/<UTC timestamp>/` unless `--output-dir` is supplied. This avoids dirtying the source checkout.
+
+`--reference-file` may be repeated for bounded external specifications or evidence. The harness records each file's resolved path, basename, byte size, and SHA-256 in the request and summary. It does not copy the content into AuraOS or treat the reference as source or patch authority. At most eight files of two megabytes each are accepted.
+
+The Atlas compile uses an in-memory Relational Index and `persist=False`. Architect grounding uses the checked-in CODEMAP with refresh disabled. A successful clean run therefore leaves tracked repository content unchanged; any mutation fails the final clean-tree gate.
 
 For execution surfaces that impose a short command window, reuse one explicit output directory. If a run is interrupted after the Connectome, Relational Index, or Atlas completes, rerun the same command with `--resume`; the harness validates the request digest and continues from the retained artifacts instead of rebuilding them.
 
@@ -129,6 +134,8 @@ Each run records:
 - `emergent_properties.json`
 - `architect_preparation.json`
 - `harness_summary.json`
+
+When reference files are supplied, their provenance manifest is embedded in `harness_request.json` and `harness_summary.json`.
 
 Canonical source ownership remains unchanged. Generated snapshots are navigation and analysis artifacts, never patch authority.
 

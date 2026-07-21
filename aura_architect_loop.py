@@ -943,11 +943,17 @@ def ground_plan_capsule(
     plan: FractalPlanCapsule,
     *,
     repo_root: str | Path = REPO_ROOT,
+    refresh_codemap: bool = True,
 ) -> list[GroundingEvidence]:
-    """Map every Act Capsule to actual CODEMAP files, symbols, and nearby tests."""
+    """Map every Act Capsule to actual CODEMAP files, symbols, and nearby tests.
+
+    ``refresh_codemap=False`` is reserved for read-only analysis callers that
+    must consume the exact checked-in navigation snapshot without rewriting it.
+    """
     root = Path(repo_root)
     resolved_root = root.resolve()
-    _refresh_plan_codemap_targets(plan, root)
+    if refresh_codemap:
+        _refresh_plan_codemap_targets(plan, root)
     try:
         codemap = _load_codemap(root)
     except CodemapLoadError as exc:
@@ -1763,6 +1769,7 @@ class ArchitectFusionLoop:
         constraints: list[str] | None = None,
         escalation_rules: list[str] | None = None,
         context_pressure: float = 0.0,
+        refresh_codemap: bool = True,
     ) -> ArchitectLoopResult:
         plan = build_fractal_plan_capsule(
             objective,
@@ -1778,7 +1785,11 @@ class ArchitectFusionLoop:
             repo_root=self.repo_root,
             context_pressure=context_pressure,
         )
-        grounding = ground_plan_capsule(plan, repo_root=self.repo_root)
+        grounding = ground_plan_capsule(
+            plan,
+            repo_root=self.repo_root,
+            refresh_codemap=refresh_codemap,
+        )
         shadow_report = shadow_plan_capsule(plan, grounding)
         arena = build_refactor_arena(plan, grounding, shadow_report)
         return ArchitectLoopResult(
