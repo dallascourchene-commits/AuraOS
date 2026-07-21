@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import pytest
 
+import aura_relationship_atlas as atlas_module
 from aura_relationship_atlas import (
     BUILTIN_PROHIBITIONS,
     BUILTIN_MOTIFS,
@@ -40,6 +41,17 @@ from aura_relationship_atlas import (
     compile_atlas_projection,
     _snapshot_from_dict,
 )
+
+
+@pytest.fixture(autouse=True)
+def _bind_index_identity_to_fixture(monkeypatch) -> None:
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(
+            relational_index.get("repository_identity") or {}
+        ),
+    )
 
 
 @pytest.fixture
@@ -242,6 +254,28 @@ def test_prohibition_blocks_affinity_mutation(temp_repo: Path) -> None:
     prohibited = [a for a in snapshot.assessments if a.wiring_disposition == WiringDisposition.PROHIBITED]
     assert len(prohibited) >= 1
     assert prohibited[0].readiness == Readiness.TOO_RISKY
+
+
+def test_build_relationship_atlas_rejects_stale_repository_identity(
+    temp_repo: Path, monkeypatch
+) -> None:
+    data = json.loads(
+        (temp_repo / ".aura" / "RELATIONAL_INDEX.json").read_text(encoding="utf-8")
+    )
+    current = dict(data["repository_identity"])
+    current["repo_head"] = "new-current-head"
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: current,
+    )
+
+    with pytest.raises(ValueError, match="STALE.*repo_head"):
+        build_relationship_atlas(
+            repo_root=temp_repo,
+            relational_index_data=data,
+            persist=False,
+        )
 
 
 def test_validate_relationship_atlas(temp_repo: Path) -> None:

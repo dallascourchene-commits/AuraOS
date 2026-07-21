@@ -39,6 +39,7 @@ from aura_relationship_atlas import (
     build_relationship_atlas,
     compile_atlas_projection,
     relationships_for_participant,
+    validate_relationship_atlas,
 )
 
 COMPASS_VERSION = "AURA_CODING_RELATIONSHIP_COMPASS_V1"
@@ -308,6 +309,49 @@ def _validate_injected_evidence_packet(repo_root: Path, evidence: Mapping[str, A
         if str(record.get("source_hash") or "") != actual_source_hash:
             raise ValueError(f"injected evidence source hash mismatch: {file_path}")
     return packet
+
+
+def _validate_supplied_atlas_snapshot(
+    atlas: AtlasSnapshot,
+    *,
+    evidence: Mapping[str, Any],
+    relational_index: Mapping[str, Any],
+    connectome: Mapping[str, Any],
+) -> AtlasSnapshot:
+    """Bind a caller-supplied Atlas to current exact evidence and index identity."""
+    report = validate_relationship_atlas(atlas)
+    if report.get("ok") is not True:
+        issues = "; ".join(str(item) for item in report.get("issues", []) or [])
+        raise ValueError(f"supplied Atlas snapshot failed integrity validation: {issues}")
+
+    identity = relational_index.get("repository_identity") or {}
+    if not isinstance(identity, Mapping):
+        raise ValueError("active relational index is missing repository_identity")
+    inventory = evidence.get("atomic_inventory") or {}
+    if not isinstance(inventory, Mapping):
+        inventory = {}
+    expected = {
+        "repository_head": str(evidence.get("repo_head") or identity.get("repo_head") or ""),
+        "working_tree_digest": str(identity.get("working_tree_digest") or ""),
+        "codemap_digest": str(identity.get("codemap_digest") or ""),
+        "topology_digest": str(identity.get("topology_digest") or ""),
+        "connectome_digest": str(connectome.get("graph_digest") or identity.get("connectome_graph_digest") or ""),
+        "atomic_inventory_digest": str(inventory.get("inventory_digest") or identity.get("atomic_inventory_digest") or ""),
+        "relational_index_digest": str(relational_index.get("index_digest") or ""),
+        "profile_digest": str(identity.get("profile_digest") or ""),
+    }
+    mismatches = {
+        name: {"snapshot": getattr(atlas, name), "current": value}
+        for name, value in expected.items()
+        if not value or getattr(atlas, name) != value
+    }
+    if mismatches:
+        names = ", ".join(sorted(mismatches))
+        raise ValueError(
+            "supplied Atlas snapshot is stale or belongs to different evidence "
+            f"({names})"
+        )
+    return atlas
 
 
 def _select_focal_participants(
@@ -633,7 +677,12 @@ def compile_coding_relationship_compass(
                 persist=False,
             )
         else:
-            atlas = atlas_snapshot
+            atlas = _validate_supplied_atlas_snapshot(
+                atlas_snapshot,
+                evidence=evidence,
+                relational_index=relational_index,
+                connectome=graph,
+            )
         if relational_index_data is None and atlas_snapshot is None:
             if len(_RELATIONAL_PLANE_CACHE) >= _RELATIONAL_PLANE_CACHE_LIMIT:
                 _RELATIONAL_PLANE_CACHE.pop(next(iter(_RELATIONAL_PLANE_CACHE)))

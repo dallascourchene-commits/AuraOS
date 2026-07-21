@@ -5,13 +5,28 @@ import hashlib
 import json
 from pathlib import Path
 
+import pytest
+
 import aura_coding_relationship_compass as compass
+import aura_live_architect as live_architect
+import aura_relationship_atlas as atlas_module
 from aura_live_architect import ArchitectFusionCouncil, ArchitectModelRouter
 from aura_relationship_atlas import (
     build_relationship_atlas,
     load_relationship_atlas,
     validate_relationship_atlas,
 )
+
+
+@pytest.fixture(autouse=True)
+def _bind_index_identity_to_fixture(monkeypatch) -> None:
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(
+            relational_index.get("repository_identity") or {}
+        ),
+    )
 
 
 def _minimal_relational_index() -> dict:
@@ -50,7 +65,7 @@ def _minimal_relational_index() -> dict:
             "working_tree_digest": "worktree-digest",
             "codemap_digest": "codemap-digest",
             "topology_digest": "topology-digest",
-            "connectome_graph_digest": "connectome-digest",
+            "connectome_graph_digest": "graph-digest",
             "atomic_inventory_digest": "atomic-digest",
             "profile_digest": "profile-digest",
         },
@@ -253,6 +268,84 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["atlas"]["snapshot_digest"] == atlas.snapshot_digest
     assert packet["prohibitions"]
     assert packet["safe_to_patch"] is False
+
+
+def test_supplied_atlas_rejects_stale_source_identity(tmp_path: Path) -> None:
+    index = _minimal_relational_index()
+    atlas = build_relationship_atlas(
+        repo_root=tmp_path,
+        relational_index_data=index,
+        profile="MINIMAL",
+        persist=False,
+    )
+    current_index = json.loads(json.dumps(index))
+    current_index["repository_identity"]["repo_head"] = "b" * 40
+    current_index["index_digest"] = "current-index-digest"
+
+    with pytest.raises(ValueError, match="stale or belongs to different evidence"):
+        compass._validate_supplied_atlas_snapshot(
+            atlas,
+            evidence={
+                "repo_head": "b" * 40,
+                "atomic_inventory": {"inventory_digest": "atomic-digest"},
+            },
+            relational_index=current_index,
+            connectome={"graph_digest": "graph-digest"},
+        )
+
+
+def test_supplied_atlas_rejects_post_construction_tampering(tmp_path: Path) -> None:
+    index = _minimal_relational_index()
+    atlas = build_relationship_atlas(
+        repo_root=tmp_path,
+        relational_index_data=index,
+        profile="MINIMAL",
+        persist=False,
+    )
+    atlas.boundary["tampered"] = True
+
+    with pytest.raises(ValueError, match="failed integrity validation"):
+        compass._validate_supplied_atlas_snapshot(
+            atlas,
+            evidence={
+                "repo_head": "a" * 40,
+                "atomic_inventory": {"inventory_digest": "atomic-digest"},
+            },
+            relational_index=index,
+            connectome={"graph_digest": "graph-digest"},
+        )
+
+
+def test_architect_refuses_when_admitted_compass_grounding_fails(
+    monkeypatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(compass, "is_coding_relationship_compass_intent", lambda intent: True)
+
+    def fail_compile(*args, **kwargs):
+        raise ValueError("stale exact evidence")
+
+    monkeypatch.setattr(compass, "compile_coding_relationship_compass", fail_compile)
+
+    def forbidden_fallback(*args, **kwargs):
+        raise AssertionError("legacy grounding fallback must not run")
+
+    monkeypatch.setattr(live_architect, "ground_coding_arena_intent", forbidden_fallback)
+    router = ArchitectModelRouter(
+        repo_root=tmp_path,
+        model_caller=None,
+        ledger_path=tmp_path / "ledger.jsonl",
+    )
+    decision = asyncio.run(
+        ArchitectFusionCouncil(router).select_plan(
+            "architect: combine Connectome, Relational Synthesis, and Atlas to code better"
+        )
+    )
+
+    assert decision.judge_decision["approved"] is False
+    assert decision.selected_plan["status"] == "BLOCKED"
+    assert decision.selected_plan["act_tasks"] == []
+    assert decision.selected_plan["safe_to_patch"] is False
+    assert decision.topological_grounding["relationship_compass_status"] == "FAIL_CLOSED"
 
 
 def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path) -> None:

@@ -502,6 +502,50 @@ BUILTIN_MOTIFS: dict[str, dict[str, Any]] = {
 
 
 # ---------------------------------------------------------------------------
+# Relational Index Freshness Validation
+# ---------------------------------------------------------------------------
+def _current_relational_index_identity(
+    repo_root: Path,
+    relational_index: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Recompute the canonical repository identity for an in-memory index."""
+    from aura_relational_index import RelationalIndexBuilder
+
+    profile = relational_index.get("profile") or {}
+    profile_name = str(profile.get("name") or "MINIMAL") if isinstance(profile, Mapping) else "MINIMAL"
+    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot()
+
+
+def _validate_relational_index_freshness(
+    repo_root: Path,
+    relational_index: Mapping[str, Any],
+    *,
+    index_label: Path,
+) -> None:
+    """Fail closed unless the index identity exactly matches the checkout."""
+    from aura_relational_index import _REPOSITORY_IDENTITY_KEYS
+
+    stored = relational_index.get("repository_identity")
+    if not isinstance(stored, Mapping):
+        raise ValueError(
+            f"Relational index at {index_label} is missing repository_identity. "
+            "Please rebuild it from the current repository head."
+        )
+    current = _current_relational_index_identity(repo_root, relational_index)
+    mismatches = {
+        name: {"stored": stored.get(name), "current": current.get(name)}
+        for name in sorted(_REPOSITORY_IDENTITY_KEYS)
+        if stored.get(name) != current.get(name)
+    }
+    if mismatches:
+        names = ", ".join(mismatches)
+        raise ValueError(
+            f"Relational index at {index_label} is STALE for the current repository "
+            f"identity ({names}). Please rebuild the relational index."
+        )
+
+
+# ---------------------------------------------------------------------------
 # Core Public API Functions
 # ---------------------------------------------------------------------------
 def build_relationship_atlas(
@@ -547,7 +591,14 @@ def build_relationship_atlas(
     else:
         rel_index = dict(relational_index_data)
 
-    # Validate index freshness — fail closed on stale or missing identity
+    # Validate index freshness — fail closed on stale or missing identity.
+    # This recomputes the checkout identity rather than trusting CURRENT flags
+    # or caller-supplied digest metadata.
+    _validate_relational_index_freshness(
+        repo_root.resolve(),
+        rel_index,
+        index_label=idx_path,
+    )
     index_digest = rel_index.get("index_digest", "")
     if not index_digest:
         raise ValueError(
