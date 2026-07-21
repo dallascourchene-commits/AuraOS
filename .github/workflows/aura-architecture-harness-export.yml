@@ -16,15 +16,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Check out exact requested branch snapshot
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Archive all Git-tracked files and provenance
+      - name: Fetch exact request commit without submodule interpretation
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "${GITHUB_SHA}"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
           SOURCE_SHA="$(git rev-parse HEAD)"
           echo "SOURCE_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - name: Archive all Git-tracked files and provenance
+        run: |
           git archive --format=zip --prefix=AuraOS/ --output=AuraOS-full-repository.zip HEAD
           sha256sum AuraOS-full-repository.zip > AuraOS-full-repository.zip.sha256
           git ls-files -z | tr -cd '\0' | wc -c > AuraOS-full-repository.tracked-file-count.txt
