@@ -1,0 +1,41 @@
+name: Temporary Full Repository Export
+
+on:
+  push:
+    branches:
+      - analysis/full-repo-export-20260720
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: 0c55838a952a617122f3975f41f676906aab8cdc
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Archive every Git-tracked file
+        run: |
+          test "$(git rev-parse HEAD)" = "0c55838a952a617122f3975f41f676906aab8cdc"
+          git archive \
+            --format=zip \
+            --prefix=AuraOS/ \
+            --output=AuraOS-full-repository.zip \
+            HEAD
+          sha256sum AuraOS-full-repository.zip > AuraOS-full-repository.zip.sha256
+          git ls-files -z | tr -cd '\0' | wc -c > AuraOS-full-repository.tracked-file-count.txt
+      - name: Upload exact repository snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuraOS-full-repository-0c55838a
+          path: |
+            AuraOS-full-repository.zip
+            AuraOS-full-repository.zip.sha256
+            AuraOS-full-repository.tracked-file-count.txt
+          if-no-files-found: error
+          retention-days: 7
