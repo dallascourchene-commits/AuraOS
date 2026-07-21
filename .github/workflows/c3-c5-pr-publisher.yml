@@ -23,49 +23,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: work/coding-relationship-compass-c3-c5-20260721
-          fetch-depth: 10
+          fetch-depth: 1
           show-progress: false
+      - name: Extract, reset, and diagnose exact patch
+        run: |
+          set -euo pipefail
+          sed -n 's/^          PATCH_B64: //p' .github/workflows/c3-c5-guarded-publish.yml > /tmp/c3-c5.patch.gz.b64
+          test -s /tmp/c3-c5.patch.gz.b64
+          base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
+          BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
+          git fetch --quiet --depth=1 origin "$BASE_SHA"
+          git reset --hard "$BASE_SHA"
+          git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch
+          git diff --cached --check
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Extract staged patch and reset baseline
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          path = Path('.github/workflows/c3-c5-guarded-publish.yml')
-          for line in path.read_text(encoding='utf-8').splitlines():
-              marker = '          PATCH_B64: '
-              if line.startswith(marker):
-                  Path('/tmp/c3-c5.patch.gz.b64').write_text(line[len(marker):] + '\n', encoding='utf-8')
-                  break
-          else:
-              raise SystemExit('staged PATCH_B64 not found')
-          PY
-          BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
-          git merge-base --is-ancestor "$BASE_SHA" HEAD
-          git reset --hard "$BASE_SHA"
-      - name: Apply exact C3-C5 patch
-        run: |
-          set -euo pipefail
-          base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
-          set +e
-          git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch > /tmp/apply.log 2>&1
-          rc=$?
-          set -e
-          if [ "$rc" -ne 0 ]; then
-            git reset --hard "$EXPECTED_HEAD"
-            cp /tmp/apply.log C3_C5_APPLY_ERROR.txt
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add C3_C5_APPLY_ERROR.txt
-            git commit -m "diagnostic: capture C3-C5 patch apply failure"
-            DIAG_HEAD=$(git rev-parse HEAD)
-            git push --force-with-lease=refs/heads/work/coding-relationship-compass-c3-c5-20260721:$EXPECTED_HEAD \
-              origin "$DIAG_HEAD":refs/heads/work/coding-relationship-compass-c3-c5-20260721
-            exit "$rc"
-          fi
-          git diff --cached --check
       - name: Install focused dependencies
         run: python -m pip install --quiet pytest jsonschema
       - name: Verify C3-C5
