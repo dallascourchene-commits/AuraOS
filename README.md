@@ -353,7 +353,6 @@ immutable claims/evidence/events
 
 `ConstructionProjectState` is the only Construction truth owner. Probabilistic or sensor scores cannot rescue a blocked route. Real connectors, physical/equipment control, payment release, access control, safety/engineering/legal certification, and commercial field claims remain separate future programs.
 
-
 <!-- AURA_SPATIAL_S5_S6:START -->
 ### Spatial Arena and Construction projection
 
@@ -401,6 +400,23 @@ USER_RECORDED | IMPORTED_EXACT | DERIVED_ARITHMETIC | ASSUMPTION | UNAVAILABLE
 ```
 
 It rejects silent floats, implicit rounding, inferred ownership, implicit currency conversion, future/lifecycle contradictions, duplicate identities, and model-estimated values presented as exact state. Planning Board indicators and scenarios remain separately bounded stages.
+
+## Prior art
+
+AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establish the original conceptual lineage and claims N1–N30. **Paper VIII is the canonical continuation**, replacing the two unreleased interim N31–N41 manuscripts and establishing claims N31–N50 for evidence-ordered relational Arenas, compiled relationship intelligence, verified engineering, governed spatial projection, exact-state continuity, and atomic publication.
+
+| Paper | Main claim family | Claims | Publication | Repository copy |
+|---|---|---:|---|---|
+| **Paper I — Foundation** | Polysynthetic LLM egress, dual linguistic cortex, sparse sweeps, QDKT, visual topology, atomic hot-swap, and sovereign edge design | N1–N8 | [Zenodo 20635424](https://zenodo.org/records/20635424) | [PDF](AuraOS__A_Polysynthetic_Cognitive_Substrate_for_High-Dimensional_Edge_Orchestration_and_Visual_Code_Topology.pdf) |
+| **Paper II — Holographic swarm systems** | Holographic headers, fractal ledger, swarm learning, VSA-addressed rendering, and FST narrative | N9–N13 | [Zenodo 20657391](https://zenodo.org/records/20657391) | [PDF](Second_Paper.pdf) |
+| **Paper III — Liquid Internet** | VSA-addressed routing and naming | N14 | [Zenodo 20659314](https://zenodo.org/records/20659314) | [PDF](Third_Paper.pdf) |
+| **Paper IV — Memristive and rendering upgrades** | Memristive hyper-epochs, timestep-aware SVD quantization, and Gaussian/VSA rendering dynamics | N15–N17 | [Zenodo 20673206](https://zenodo.org/records/20673206) | — |
+| **Paper V — FST routing and self-refactoring** | FST routing core, 3D topology resonance, and bounded self-refactoring incubator | N18–N20 | [Zenodo 20681601](https://zenodo.org/records/20681601) | — |
+| **Paper VI — Enhanced FST and topology** | FST lexicon, resonance topology, and FST impact analysis | N21–N23 | [Zenodo 20682051](https://zenodo.org/records/20682051) | — |
+| **Paper VII — Protocol-layer innovations** | Hyperdimensional integrity, micro-module crystallization, resonant tests, thermal-cost API arbitration, deterministic compression, local VSA mesh, and bounded self-healing | N24–N30 | [Zenodo 20695562](https://zenodo.org/records/20695562) | — |
+| **Paper VIII — Evidence-Ordered Relational Arenas for Governed Cognitive Systems** | Relationship intelligence, Emergent Evidence Spine, governed Arenas, verified engineering, Waboose/Gate, spatial projection, continuity, and atomic publication | **N31–N50** | [Zenodo 21464058](https://zenodo.org/records/21464058) | [LaTeX source](AuraOS_Paper_VIII_Evidence_Ordered_Relational_Arenas.tex) |
+
+The two earlier N31–N41 manuscripts were never released and are superseded. They are not part of the canonical claim sequence. Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
 
 ## Evidence and benchmark hierarchy
 
