@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c3-c5-20260721'
+    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c3-c5-20260721' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -46,21 +46,21 @@ jobs:
       - name: Apply exact C3-C5 patch
         run: |
           set -euo pipefail
-          BASE_SHA=9cd461ad7e7cea189f1e2d1e9e652705c563a430
           base64 -d /tmp/c3-c5.patch.gz.b64 | gzip -d > /tmp/c3-c5.patch
           set +e
           git apply --index --3way --whitespace=fix --verbose /tmp/c3-c5.patch > /tmp/apply.log 2>&1
           rc=$?
           set -e
           if [ "$rc" -ne 0 ]; then
-            git reset --hard "$BASE_SHA"
-            git checkout -B analysis/c3-c5-apply-diagnostic
+            git reset --hard "$GITHUB_SHA"
             cp /tmp/apply.log C3_C5_APPLY_ERROR.txt
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add C3_C5_APPLY_ERROR.txt
             git commit -m "diagnostic: capture C3-C5 patch apply failure"
-            git push --force origin HEAD:refs/heads/analysis/c3-c5-apply-diagnostic
+            DIAG_HEAD=$(git rev-parse HEAD)
+            git push --force-with-lease=refs/heads/work/coding-relationship-compass-c3-c5-20260721:$GITHUB_SHA \
+              origin "$DIAG_HEAD":refs/heads/work/coding-relationship-compass-c3-c5-20260721
             exit "$rc"
           fi
           git diff --cached --check
