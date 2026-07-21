@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784605143,
+  "generated_at_unix": 1784605312,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1284,
+    "included_file_count": 1285,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -750,6 +750,7 @@
       "codebase_header.bin",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "conftest.py",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -1306,23 +1307,23 @@
     ]
   },
   "summary": {
-    "file_count": 1284,
-    "total_bytes": 54875886,
-    "text_tokens_est": 4280286,
+    "file_count": 1285,
+    "total_bytes": 54880039,
+    "text_tokens_est": 4281325,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 43,
       "knowledge_artifact": 161,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 874,
+      "python_module": 875,
       "schema_or_lexicon": 145,
       "support_file": 46
     },
-    "topology_nodes": 10025,
-    "topology_edges": 22984,
+    "topology_nodes": 10027,
+    "topology_edges": 22986,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 25492.01
+    "elapsed_ms": 27434.78
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -2143,6 +2144,7 @@
       "build_aura.sh",
       "bus_init.cpp",
       "codebase_header.bin",
+      "conftest.py",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -2656,7 +2658,7 @@
       "role": "python_module",
       "symbols": 35,
       "tokens_est": 8991,
-      "topology_degree": 546
+      "topology_degree": 547
     },
     {
       "path": "test_scientific_memory.py",
@@ -78579,6 +78581,16 @@
         "signature_hash": "7c657589020ccf3b"
       }
     ],
+    "pytest_sessionstart": [
+      {
+        "file": "conftest.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 112,
+        "semantic_id": "conftest.py#function:pytest_sessionstart:c96385b13fffefbe",
+        "signature_hash": "a1d1cb505caff335"
+      }
+    ],
     "qdkt_ownership_recommendation": [
       {
         "file": "aura_qdkt_compatibility.py",
@@ -132826,7 +132838,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 589,
+        "hub_rank": 590,
         "node_count": 1,
         "edge_count": 3,
         "degree": 3,
@@ -134410,7 +134422,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 588,
+        "hub_rank": 589,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -141432,7 +141444,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 591,
+        "hub_rank": 592,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -143646,8 +143658,8 @@
       "topology": {
         "hub_rank": 4,
         "node_count": 36,
-        "edge_count": 546,
-        "degree": 546,
+        "edge_count": 547,
+        "degree": 547,
         "symbols": [
           "AuraCodingArenaRouter",
           "FSTLexiconRoutingCore",
@@ -143693,7 +143705,7 @@
           "aura_hybrid_refactor_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 472,
+          "call": 473,
           "defines": 70,
           "import_module": 4
         }
@@ -146409,7 +146421,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 590,
+        "hub_rank": 591,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -152604,7 +152616,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 593,
+        "hub_rank": 594,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -165423,6 +165435,67 @@
       ]
     },
     {
+      "path": "conftest.py",
+      "role": "python_module",
+      "bytes": 4153,
+      "lines": 113,
+      "tokens_est": 1039,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {
+        "hub_rank": 588,
+        "node_count": 2,
+        "edge_count": 3,
+        "degree": 3,
+        "symbols": [
+          "pytest_sessionstart"
+        ],
+        "neighbor_files": [
+          "aura_fst_routing.py"
+        ],
+        "edge_kinds": {
+          "defines": 2,
+          "call": 1
+        }
+      },
+      "digest8": "e431d17dd2a6b0d6",
+      "vector": [
+        -0.086368,
+        0.266013,
+        -0.171584,
+        0.286742,
+        -0.008061,
+        -0.143947,
+        0.120915,
+        -0.282135,
+        -0.215344,
+        0.22686,
+        0.284438,
+        0.231466,
+        0.077155,
+        0.213041,
+        0.116309,
+        -0.173887,
+        -0.090974,
+        0.13934,
+        0.100187,
+        0.067943,
+        -0.252194,
+        -0.038002,
+        0.008061,
+        -0.291348,
+        -0.06564,
+        0.107096,
+        0.017274,
+        0.081762,
+        0.261407,
+        -0.061033,
+        -0.254498,
+        0.125521
+      ]
+    },
+    {
       "path": "dag_executor.py",
       "role": "python_module",
       "bytes": 2769,
@@ -165552,7 +165625,7 @@
         ]
       },
       "topology": {
-        "hub_rank": 600,
+        "hub_rank": 601,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -165790,7 +165863,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 599,
+        "hub_rank": 600,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -165844,7 +165917,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 598,
+        "hub_rank": 599,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -165944,7 +166017,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 597,
+        "hub_rank": 598,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -166063,7 +166136,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 596,
+        "hub_rank": 597,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -172176,7 +172249,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 592,
+        "hub_rank": 593,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -172845,7 +172918,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 595,
+        "hub_rank": 596,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -174003,7 +174076,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 594,
+        "hub_rank": 595,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -190141,7 +190214,22 @@
       "symbol_count": 3,
       "commands": [],
       "command_lines": {},
-      "topology": {},
+      "topology": {
+        "hub_rank": 588,
+        "node_count": 2,
+        "edge_count": 3,
+        "degree": 3,
+        "symbols": [
+          "pytest_sessionstart"
+        ],
+        "neighbor_files": [
+          "aura_fst_routing.py"
+        ],
+        "edge_kinds": {
+          "defines": 2,
+          "call": 1
+        }
+      },
       "digest8": "b51e3d5325626bab",
       "vector": [
         -0.280535,
@@ -202352,7 +202440,7 @@
       "top_hubs": [
         {
           "id": "aura_fst_routing.py::Path",
-          "degree": 363
+          "degree": 364
         },
         {
           "id": "aura_node.py::main",
@@ -202446,12 +202534,12 @@
     "meta": {
       "generated_by": "aura_topology_manager",
       "root": ".",
-      "module_count": 600,
-      "node_count": 10025,
-      "edge_count": 22984,
+      "module_count": 601,
+      "node_count": 10027,
+      "edge_count": 22986,
       "spectral_layout": true,
-      "spectral_sparsity": 0.055567,
-      "global_health": 0.970386
+      "spectral_sparsity": 0.055655,
+      "global_health": 0.970347
     },
     "file_index": {
       "aura_node.py": {
@@ -202594,8 +202682,8 @@
       "aura_fst_routing.py": {
         "hub_rank": 4,
         "node_count": 36,
-        "edge_count": 546,
-        "degree": 546,
+        "edge_count": 547,
+        "degree": 547,
         "symbols": [
           "AuraCodingArenaRouter",
           "FSTLexiconRoutingCore",
@@ -202641,7 +202729,7 @@
           "aura_hybrid_refactor_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 472,
+          "call": 473,
           "defines": 70,
           "import_module": 4
         }
@@ -220345,8 +220433,24 @@
           "import_module": 1
         }
       },
-      "aura_civic_result_projector.py": {
+      "conftest.py": {
         "hub_rank": 588,
+        "node_count": 2,
+        "edge_count": 3,
+        "degree": 3,
+        "symbols": [
+          "pytest_sessionstart"
+        ],
+        "neighbor_files": [
+          "aura_fst_routing.py"
+        ],
+        "edge_kinds": {
+          "defines": 2,
+          "call": 1
+        }
+      },
+      "aura_civic_result_projector.py": {
+        "hub_rank": 589,
         "node_count": 2,
         "edge_count": 3,
         "degree": 3,
@@ -220362,7 +220466,7 @@
         }
       },
       "aura_civic_authority.py": {
-        "hub_rank": 589,
+        "hub_rank": 590,
         "node_count": 1,
         "edge_count": 3,
         "degree": 3,
@@ -220377,7 +220481,7 @@
         }
       },
       "aura_incubator.py": {
-        "hub_rank": 590,
+        "hub_rank": 591,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -220390,7 +220494,7 @@
         }
       },
       "aura_english_compiler.py": {
-        "hub_rank": 591,
+        "hub_rank": 592,
         "node_count": 2,
         "edge_count": 2,
         "degree": 2,
@@ -220403,7 +220507,7 @@
         }
       },
       "test_fst_quick.py": {
-        "hub_rank": 592,
+        "hub_rank": 593,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -220416,7 +220520,7 @@
         }
       },
       "aura_persistence_registry.py": {
-        "hub_rank": 593,
+        "hub_rank": 594,
         "node_count": 1,
         "edge_count": 1,
         "degree": 1,
@@ -220429,15 +220533,6 @@
         }
       },
       "verify_os.py": {
-        "hub_rank": 594,
-        "node_count": 1,
-        "edge_count": 0,
-        "degree": 0,
-        "symbols": [],
-        "neighbor_files": [],
-        "edge_kinds": {}
-      },
-      "test_syntax_fixes.py": {
         "hub_rank": 595,
         "node_count": 1,
         "edge_count": 0,
@@ -220446,7 +220541,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "fix_db.py": {
+      "test_syntax_fixes.py": {
         "hub_rank": 596,
         "node_count": 1,
         "edge_count": 0,
@@ -220455,7 +220550,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "extract_new_papers.py": {
+      "fix_db.py": {
         "hub_rank": 597,
         "node_count": 1,
         "edge_count": 0,
@@ -220464,7 +220559,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_zenodo_papers.py": {
+      "extract_new_papers.py": {
         "hub_rank": 598,
         "node_count": 1,
         "edge_count": 0,
@@ -220473,7 +220568,7 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "download_papers.py": {
+      "download_zenodo_papers.py": {
         "hub_rank": 599,
         "node_count": 1,
         "edge_count": 0,
@@ -220482,8 +220577,17 @@
         "neighbor_files": [],
         "edge_kinds": {}
       },
-      "debug_att.py": {
+      "download_papers.py": {
         "hub_rank": 600,
+        "node_count": 1,
+        "edge_count": 0,
+        "degree": 0,
+        "symbols": [],
+        "neighbor_files": [],
+        "edge_kinds": {}
+      },
+      "debug_att.py": {
+        "hub_rank": 601,
         "node_count": 1,
         "edge_count": 0,
         "degree": 0,
@@ -220637,8 +220741,8 @@
         "file": "aura_fst_routing.py",
         "hub_rank": 4,
         "node_count": 36,
-        "edge_count": 546,
-        "degree": 546,
+        "edge_count": 547,
+        "degree": 547,
         "symbols": [
           "AuraCodingArenaRouter",
           "FSTLexiconRoutingCore",
@@ -220684,7 +220788,7 @@
           "aura_hybrid_refactor_benchmark.py"
         ],
         "edge_kinds": {
-          "call": 472,
+          "call": 473,
           "defines": 70,
           "import_module": 4
         }
