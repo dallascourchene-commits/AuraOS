@@ -4,7 +4,7 @@ ST3GG_BASE: 0xa9e7-[Q-SYS:RELATIONSHIP_ATLAS]
 DIKWP_TIER: WISDOM
 PWFST_ALIGNMENT: GWAYAKWAADIZIWIN (Architecture Relationship Atlas Plane)
 DEPENDENCIES: __future__, dataclasses, enum, hashlib, json, os, pathlib, re, time, typing
-FUNCTIONS: build_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
+FUNCTIONS: build_relationship_atlas, load_relationship_atlas, validate_relationship_atlas, relationship_assessment, relationships_for_participant, relationships_for_objective, find_overlapping_unwired, find_auxiliary_adjacent, find_missing_configurations, find_candidate_wirings, find_prohibited_wirings, explain_relationship, diff_relationship_atlases, compile_atlas_projection
 SYNOPSIS: Compiles, classifies, and projects the architectural relationship status plane of AuraOS.
 [/AURA_MASTER_KEY]
 """
@@ -1024,6 +1024,31 @@ def build_relationship_atlas(
         render_relationship_atlas_markdown(snapshot, repo_root / DEFAULT_MARKDOWN_PATH)
 
     return snapshot
+
+
+def load_relationship_atlas(
+    path: str | Path = DEFAULT_ATLAS_PATH,
+    *,
+    validate: bool = True,
+) -> AtlasSnapshot:
+    """Load a serialized Atlas snapshot and fail closed on invalid content."""
+    snapshot_path = Path(path)
+    if not snapshot_path.is_file():
+        raise FileNotFoundError(f"Relationship Atlas snapshot is missing at {snapshot_path}")
+    with snapshot_path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError("Relationship Atlas snapshot must be a JSON object")
+    snapshot = _snapshot_from_dict(data)
+    if validate:
+        report = validate_relationship_atlas(snapshot)
+        if not report.get("ok"):
+            raise ValueError(
+                "Relationship Atlas snapshot failed validation: "
+                + "; ".join(str(item) for item in report.get("issues", [])[:5])
+            )
+    return snapshot
+
 
 
 def _snapshot_from_dict(data: dict[str, Any]) -> AtlasSnapshot:
