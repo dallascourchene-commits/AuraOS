@@ -290,7 +290,7 @@ Primary owners include:
 - `aura_coding_relationship_compass.py`;
 - associated stabilization and manifest modules.
 
-For broad architecture/refactor objectives, the Coding Relationship Compass is the objective-scoped orchestration layer over these owners. It selects a Connectome capability path, grounds exact atomic source and tests, compiles a shadow Relational Synthesis capsule, and projects only the relevant MINIMAL Atlas neighborhood. It is not a new truth owner and cannot authorize a patch. Architect may use its bounded packet before legacy filename inference; failure falls back to existing Coding Arena grounding.
+For broad architecture/refactor objectives, the Coding Relationship Compass is the objective-scoped orchestration layer over these owners. It selects a Connectome capability path, grounds exact atomic source and tests, loads or builds a validated Relational Index, extracts a deterministic budget-bounded neighborhood, compiles an `OBJECTIVE_STANDARD` or `OBJECTIVE_DEEP` Atlas, evaluates typed compatibility, and emits a proposal-only Planning Board/Coding Breadboard receipt. It is not a new truth owner and cannot authorize mutation. Architect uses its bounded packet before legacy filename inference; an admitted Compass route fails closed rather than bypassing hard guards.
 
 The resolver must search for canonical reusable owners before introducing a new module. CODEMAP vectors, Connectome paths, Atlas assessments, and topology edges help navigation; they are not patch authority.
 

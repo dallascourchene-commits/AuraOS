@@ -1034,3 +1034,21 @@ def test_md5_used_for_security_false() -> None:
         assert "usedforsecurity=False" in line, \
             f"hashlib.md5 call missing usedforsecurity=False: {line}"
 
+
+
+
+def test_global_standard_refuses_above_pair_limit(temp_repo: Path) -> None:
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    data = json.loads(idx_file.read_text(encoding="utf-8"))
+    template = dict(data["participants"][0])
+    data["participants"] = []
+    for index in range(257):
+        participant = dict(template)
+        participant["participant_id"] = f"relp_dense_{index:04d}"
+        participant["canonical_ref"] = f"dense.py::symbol_{index:04d}"
+        participant["qualified_symbol"] = f"symbol_{index:04d}"
+        data["participants"].append(participant)
+    data["relations"] = []
+    idx_file.write_text(json.dumps(data), encoding="utf-8")
+    with pytest.raises(ValueError, match="global STANDARD/DEEP Atlas scan refused"):
+        build_relationship_atlas(repo_root=temp_repo, profile="STANDARD")

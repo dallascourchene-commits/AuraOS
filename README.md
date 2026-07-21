@@ -226,7 +226,7 @@ The resolver searches existing owners before new code is proposed. Generated top
 
 Primary resolver owners include `aura_capability_resolver.py` and the graph-pinned `aura_capability_resolver_v2.py` facade over Capability Connectome evidence.
 
-For broad cross-system coding objectives, `aura_coding_relationship_compass.py` now combines the Connectome path, exact Emergent Evidence Spine closure, a JIT Relational Synthesis capsule, and an objective-bounded Relationship Atlas projection. Architect uses this packet before filename fallback so exact targets, tests, preservation relations, missing roles, and prohibitions travel together without becoming patch authority. See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
+For broad cross-system coding objectives, `aura_coding_relationship_compass.py` combines the Connectome path, exact Emergent Evidence Spine closure, a JIT Relational Synthesis capsule, a deterministic budget-bounded Relational Index neighborhood, an objective-scoped Relationship Atlas, typed compatibility hard guards, and a proposal-only Planning Board/Coding Breadboard receipt. Architect uses this packet before legacy filename inference so exact targets, tests, preservation relations, missing roles, adapters, circuit breakers, and prohibitions travel together without becoming patch or execution authority. See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
 
 The current synchronized map indexes more than one thousand repository files and a deep graph of thousands of nodes and edges. Regenerate it after architecture or source changes rather than relying on historical line numbers.
 

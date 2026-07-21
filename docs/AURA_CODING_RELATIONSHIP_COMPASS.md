@@ -30,9 +30,11 @@ objective
   → exact Emergent Evidence Spine closure
   → six-slot intent packet
   → Relational Synthesis shadow capsule
-  → current in-memory Relational Index
-  → MINIMAL Atlas exact/prohibition plane
-  → objective-bounded participant and assessment projection
+  → validated current Relational Index (persisted, cached, or rebuilt)
+  → deterministic bounded relational neighborhood
+  → OBJECTIVE_STANDARD / OBJECTIVE_DEEP Atlas over that neighborhood
+  → typed relationship compatibility hard guards
+  → proposal-only Planning Board and Coding Breadboard receipt
   → Architect-compatible grounding packet
 ```
 
@@ -61,7 +63,10 @@ The packet includes:
 - Connectome graph/path digests and execution classes;
 - exact Emergent Evidence Spine packet and atomic inventory identity;
 - a JIT Relational Synthesis capsule;
-- bounded Atlas assessments and projection;
+- a content-addressed relational neighborhood with inclusion reasons and truncation receipt;
+- bounded objective-scoped Atlas assessments and projection;
+- typed interface compatibility, exact hard-guard reasons, and required adapters;
+- a proposal-only Planning Board plus human/machine Coding Breadboard receipt;
 - relationships to preserve;
 - required adapters, missing roles, and authority constraints;
 - all active Atlas prohibitions;
@@ -81,18 +86,9 @@ When the Compass cannot ground the objective, Architect fails closed to the exis
 
 ## Atlas improvements used by the Compass
 
-`build_relationship_atlas` now supports:
+The Compass first calls `extract_relational_neighborhood(...)` with explicit hop, node, edge, candidate-pair, byte, and elapsed-time budgets. It then calls `build_objective_relationship_atlas(...)` with `OBJECTIVE_STANDARD` or `OBJECTIVE_DEEP`. Global `STANDARD`/`DEEP` scans fail closed above the configured participant-pair limit. Objective snapshots are nonpersistent and cached only in a byte-bounded LRU whose removal does not change semantics.
 
-```python
-snapshot = build_relationship_atlas(
-    repo_root=Path("."),
-    relational_index_data=current_index,
-    profile="MINIMAL",
-    persist=False,
-)
-```
-
-This compiles a current Atlas in memory without writing generated artifacts. The canonical persisted build remains the default. `load_relationship_atlas` provides a public validated loader for stored snapshots.
+Typed C5 preflight projects exact intent/evidence into two `RelationshipContract` records, checks direction, cardinality, lifecycle, actor, boundary, resource/data class, operation, policy, proof, prohibition, and budgets, then emits a proposal-only Planning Board and Coding Breadboard receipt.
 
 ## Safety and authority
 

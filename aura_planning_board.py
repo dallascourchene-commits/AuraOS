@@ -14,6 +14,14 @@ import math
 from typing import Any
 
 from aura_event_contracts import MeasurementClass, canonical_json, stable_digest
+from aura_relationship_contracts import (
+    CompatibilityOutcome,
+    InterfacePortCardinality,
+    InterfacePortDirection,
+    RelationshipCompatibilityAssessment,
+    RelationshipContract,
+    RelationshipInterfaceSpec,
+)
 
 PLANNING_BOARD_VERSION = "AURA_PLANNING_BOARD_V1"
 SCHEMA_VERSION = "1.0"
@@ -605,6 +613,142 @@ def planning_board_from_goal_plan(
         current_state_refs=tuple(current_state_refs),
     )
 
+
+
+def project_relationship_preflight_board(
+    *,
+    objective: str,
+    left_contract: RelationshipContract,
+    right_contract: RelationshipContract,
+    left_interface: RelationshipInterfaceSpec,
+    right_interface: RelationshipInterfaceSpec,
+    assessment: RelationshipCompatibilityAssessment,
+) -> PlanningBoard:
+    """Project typed relationship preflight into a proposal-only Planning Board."""
+    objective_text = _required(objective, "relationship_preflight.objective")
+    evidence_refs = tuple(
+        dict.fromkeys(
+            [
+                *(item.source_hash for item in left_contract.source_refs),
+                *(item.source_hash for item in right_contract.source_refs),
+                assessment.assessment_id,
+            ]
+        )
+    )
+    failed = tuple(item for item in assessment.hard_guard_results if not item.passed)
+    constraints = tuple(
+        ConstraintSpec(
+            constraint_id=f"relationship_guard:{item.code.value.lower()}",
+            kind=(
+                ConstraintKind.RESOURCE
+                if item.code.value == "RESOURCE_BUDGET"
+                else ConstraintKind.SAFETY
+                if item.code.value in {"ACTOR_AUTHORITY", "PROHIBITED_RELATIONSHIP"}
+                else ConstraintKind.POLICY
+            ),
+            description=item.reason,
+            evidence_refs=(assessment.assessment_id,),
+            blocking=True,
+        )
+        for item in failed
+    )
+
+    def port(spec: RelationshipInterfaceSpec, *, input_port: bool) -> PortSpec:
+        direction = PortDirection.INPUT if input_port else PortDirection.OUTPUT
+        cardinality = PortCardinality(spec.cardinality.value)
+        return PortSpec(
+            name=f"{spec.port_name}_{'input' if input_port else 'output'}",
+            data_type=f"{spec.resource_class.value}:{spec.data_class.value}",
+            direction=direction,
+            cardinality=cardinality,
+            required=cardinality is not PortCardinality.OPTIONAL,
+        )
+
+    action = ActionSpec(
+        action_id=f"relationship_preflight_{assessment.assessment_id[:16]}",
+        name="typed_relationship_preflight",
+        domain="coding_relationship_compass",
+        preconditions=tuple(
+            PredicateSpec(
+                fact=f"relationship.guard.{item.code.value.lower()}",
+                expected=True,
+            )
+            for item in assessment.hard_guard_results
+        ),
+        effects=(
+            EffectSpec(
+                fact="relationship.preflight.outcome",
+                value=assessment.outcome.value,
+            ),
+            EffectSpec(
+                fact="relationship.preflight.ready_for_human_review",
+                value=assessment.outcome
+                not in {CompatibilityOutcome.PROHIBITED, CompatibilityOutcome.INSUFFICIENT_EVIDENCE},
+            ),
+        ),
+        input_ports=(port(right_interface, input_port=True),),
+        output_ports=(port(left_interface, input_port=False),),
+        constraints=constraints,
+        required_capabilities=tuple(
+            dict.fromkeys((*left_contract.policy_scope, *right_contract.policy_scope))
+        ),
+        verifier_ids=assessment.required_verifiers,
+        authority_requirement=AuthorityRequirement.NONE,
+        resource_demand=ResourceDemand(
+            memory_bytes=max(
+                left_contract.resource_budget.max_output_bytes,
+                right_contract.resource_budget.max_output_bytes,
+            ),
+            expected_latency_ms=max(
+                left_contract.resource_budget.max_elapsed_ms,
+                right_contract.resource_budget.max_elapsed_ms,
+            ),
+            measurement_class=MeasurementClass.HEURISTIC,
+        ),
+        reversibility=ReversibilityClass.REVERSIBLE,
+        idempotency_key=assessment.assessment_id,
+        retry_policy=RetryPolicy(max_attempts=1),
+        evidence_refs=evidence_refs,
+        proposal_only=True,
+    )
+    goal = GoalSpec(
+        goal_id=f"relationship_goal_{assessment.assessment_id[:16]}",
+        objective=objective_text,
+        desired_state=(
+            PredicateSpec(
+                fact="relationship.preflight.outcome",
+                expected=(
+                    CompatibilityOutcome.COMPATIBLE.value,
+                    CompatibilityOutcome.ADAPTER_REQUIRED.value,
+                    CompatibilityOutcome.AUXILIARY_ONLY.value,
+                ),
+                operator=PredicateOperator.IN,
+            ),
+        ),
+        constraints=constraints,
+        evidence_refs=evidence_refs,
+    )
+    return PlanningBoard(
+        board_id=f"relationship_board_{assessment.assessment_id[:16]}",
+        arena_id="coding_relationship_compass",
+        purpose_digest=stable_digest(
+            {
+                "objective": objective_text,
+                "left_contract": left_contract.contract_id,
+                "right_contract": right_contract.contract_id,
+                "assessment": assessment.assessment_id,
+            }
+        ),
+        goal=goal,
+        actions=(action,),
+        current_state_refs=tuple(dict.fromkeys((
+            left_contract.contract_id,
+            right_contract.contract_id,
+            left_interface.interface_id,
+            right_interface.interface_id,
+            assessment.assessment_id,
+        ))),
+    )
 
 def _finding(
     findings: list[ContinuityFinding],

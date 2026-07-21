@@ -15,6 +15,7 @@ from typing import Any, Mapping, Sequence, TypeVar
 
 RELATIONSHIP_CONTRACT_VERSION = "AURA_RELATIONSHIP_CONTRACT_V1"
 RELATIONSHIP_COMPATIBILITY_VERSION = "AURA_RELATIONSHIP_COMPATIBILITY_V1"
+RELATIONSHIP_INTERFACE_VERSION = "AURA_RELATIONSHIP_INTERFACE_V1"
 RELATIONAL_NEIGHBORHOOD_REQUEST_VERSION = "AURA_RELATIONAL_NEIGHBORHOOD_REQUEST_V1"
 COMPASS_OBJECTIVE_CONTRACT_VERSION = "AURA_CODING_RELATIONSHIP_COMPASS_OBJECTIVE_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
@@ -79,6 +80,138 @@ class CapabilitySelectionStatus(str, Enum):
     PROHIBITED = "PROHIBITED"
 
 
+class InterfacePortDirection(str, Enum):
+    INPUT = "INPUT"
+    OUTPUT = "OUTPUT"
+    BIDIRECTIONAL = "BIDIRECTIONAL"
+
+
+class InterfacePortCardinality(str, Enum):
+    ONE = "ONE"
+    OPTIONAL = "OPTIONAL"
+    MANY = "MANY"
+
+
+class InterfaceLifecycle(str, Enum):
+    EPHEMERAL = "EPHEMERAL"
+    SESSION = "SESSION"
+    PERSISTENT = "PERSISTENT"
+
+
+class InterfaceActor(str, Enum):
+    HUMAN = "HUMAN"
+    AGENT = "AGENT"
+    SYSTEM = "SYSTEM"
+    EXTERNAL = "EXTERNAL"
+
+
+class InterfaceBoundary(str, Enum):
+    SAME_ARENA = "SAME_ARENA"
+    CROSS_ARENA = "CROSS_ARENA"
+    EXTERNAL = "EXTERNAL"
+
+
+class InterfaceResourceClass(str, Enum):
+    CODE = "CODE"
+    MEMORY = "MEMORY"
+    STATE = "STATE"
+    NETWORK = "NETWORK"
+    FILESYSTEM = "FILESYSTEM"
+    GENERIC = "GENERIC"
+
+
+class InterfaceDataClass(str, Enum):
+    SOURCE = "SOURCE"
+    EVIDENCE = "EVIDENCE"
+    CONTRACT = "CONTRACT"
+    PLAN = "PLAN"
+    STATE = "STATE"
+    GENERIC = "GENERIC"
+
+
+class InterfaceOperation(str, Enum):
+    READ = "READ"
+    TRANSFORM = "TRANSFORM"
+    VALIDATE = "VALIDATE"
+    PLAN = "PLAN"
+    WRITE = "WRITE"
+    EXECUTE = "EXECUTE"
+
+
+@dataclass(frozen=True)
+class RelationshipInterfaceSpec:
+    port_name: str
+    direction: InterfacePortDirection
+    cardinality: InterfacePortCardinality
+    lifecycle: InterfaceLifecycle
+    actor: InterfaceActor
+    boundary: InterfaceBoundary
+    resource_class: InterfaceResourceClass
+    data_class: InterfaceDataClass
+    operation: InterfaceOperation
+    interface_id: str = ""
+
+    def __post_init__(self) -> None:
+        if not _canonical_text(self.port_name):
+            raise ValueError("relationship interface port_name is required")
+
+    @classmethod
+    def create(cls, **kwargs: Any) -> "RelationshipInterfaceSpec":
+        normalized = {
+            "port_name": _canonical_text(kwargs["port_name"]),
+            "direction": _enum(InterfacePortDirection, kwargs["direction"], "direction"),
+            "cardinality": _enum(InterfacePortCardinality, kwargs["cardinality"], "cardinality"),
+            "lifecycle": _enum(InterfaceLifecycle, kwargs["lifecycle"], "lifecycle"),
+            "actor": _enum(InterfaceActor, kwargs["actor"], "actor"),
+            "boundary": _enum(InterfaceBoundary, kwargs["boundary"], "boundary"),
+            "resource_class": _enum(InterfaceResourceClass, kwargs["resource_class"], "resource_class"),
+            "data_class": _enum(InterfaceDataClass, kwargs["data_class"], "data_class"),
+            "operation": _enum(InterfaceOperation, kwargs["operation"], "operation"),
+        }
+        interface = cls(**normalized)
+        return cls(**normalized, interface_id=content_digest(interface.to_dict(include_id=False)))
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "RelationshipInterfaceSpec":
+        data = _mapping(value, "relationship_interface")
+        _strict_keys(data, required={
+            "schema_version", "interface_id", "port_name", "direction", "cardinality", "lifecycle",
+            "actor", "boundary", "resource_class", "data_class", "operation",
+        })
+        if data["schema_version"] != RELATIONSHIP_INTERFACE_VERSION:
+            raise ValueError("unsupported relationship interface schema version")
+        interface = cls(
+            port_name=_canonical_text(data["port_name"]),
+            direction=_enum(InterfacePortDirection, data["direction"], "direction"),
+            cardinality=_enum(InterfacePortCardinality, data["cardinality"], "cardinality"),
+            lifecycle=_enum(InterfaceLifecycle, data["lifecycle"], "lifecycle"),
+            actor=_enum(InterfaceActor, data["actor"], "actor"),
+            boundary=_enum(InterfaceBoundary, data["boundary"], "boundary"),
+            resource_class=_enum(InterfaceResourceClass, data["resource_class"], "resource_class"),
+            data_class=_enum(InterfaceDataClass, data["data_class"], "data_class"),
+            operation=_enum(InterfaceOperation, data["operation"], "operation"),
+            interface_id=_canonical_text(data["interface_id"]),
+        )
+        if interface.interface_id != content_digest(interface.to_dict(include_id=False)):
+            raise ValueError("relationship interface digest mismatch")
+        return interface
+
+    def to_dict(self, *, include_id: bool = True) -> dict[str, Any]:
+        body = {
+            "schema_version": RELATIONSHIP_INTERFACE_VERSION,
+            "port_name": self.port_name,
+            "direction": self.direction.value,
+            "cardinality": self.cardinality.value,
+            "lifecycle": self.lifecycle.value,
+            "actor": self.actor.value,
+            "boundary": self.boundary.value,
+            "resource_class": self.resource_class.value,
+            "data_class": self.data_class.value,
+            "operation": self.operation.value,
+        }
+        return {"interface_id": self.interface_id, **body} if include_id else body
+
+
 T = TypeVar("T")
 
 
@@ -141,8 +274,9 @@ def _strict_keys(value: Mapping[str, Any], *, required: set[str], optional: set[
 
 
 def _enum(enum_type: type[T], value: Any, name: str) -> T:
+    raw = value.value if isinstance(value, Enum) else str(value)
     try:
-        return enum_type(str(value))  # type: ignore[call-arg]
+        return enum_type(raw)  # type: ignore[call-arg]
     except ValueError as exc:
         allowed = ", ".join(item.value for item in enum_type)  # type: ignore[attr-defined]
         raise ValueError(f"{name} must be one of: {allowed}") from exc
@@ -804,6 +938,225 @@ def evaluate_relationship_compatibility(
     )
 
 
+
+def project_relationship_contract(
+    *,
+    objective_digest: str,
+    intent_packet: Mapping[str, Any],
+    source_repository: RepositoryIdentity | Mapping[str, Any],
+    source_refs: Sequence[SourceReference | Mapping[str, Any]],
+    policy_scope: Sequence[str],
+    resource_budget: ResourceBudget | Mapping[str, Any],
+    domain: RelationshipDomain | str = RelationshipDomain.CODE,
+    truth_class: TruthClass | str = TruthClass.EXACT_SOURCE,
+    authority_posture: AuthorityPosture | str = AuthorityPosture.PROPOSAL_ONLY,
+    proof_status: ProofStatus | str = ProofStatus.GROUNDED,
+    prohibition_ids: Sequence[str] = (),
+) -> RelationshipContract:
+    """Project exact intent/evidence into the immutable V1 relationship contract."""
+    repository = (
+        source_repository
+        if isinstance(source_repository, RepositoryIdentity)
+        else RepositoryIdentity.from_dict(source_repository)
+    )
+    refs = tuple(
+        item if isinstance(item, SourceReference) else SourceReference.from_dict(item)
+        for item in source_refs
+    )
+    budget = (
+        resource_budget
+        if isinstance(resource_budget, ResourceBudget)
+        else ResourceBudget.from_dict(resource_budget)
+    )
+    slots_raw = intent_packet.get("slots") if isinstance(intent_packet, Mapping) else None
+    slots = SixSlotProjection.from_mapping(slots_raw or intent_packet)
+    return RelationshipContract.create(
+        objective_digest=_canonical_text(objective_digest),
+        intent_packet_digest=content_digest(intent_packet),
+        source_repository=repository,
+        domain=_enum(RelationshipDomain, domain, "domain"),
+        slots=slots,
+        truth_class=_enum(TruthClass, truth_class, "truth_class"),
+        authority_posture=_enum(AuthorityPosture, authority_posture, "authority_posture"),
+        proof_status=_enum(ProofStatus, proof_status, "proof_status"),
+        policy_scope=_ordered_unique(policy_scope),
+        resource_budget=budget,
+        source_refs=refs,
+        prohibition_ids=_ordered_unique(prohibition_ids),
+    )
+
+
+def evaluate_typed_relationship_compatibility(
+    left: RelationshipContract,
+    right: RelationshipContract,
+    *,
+    left_interface: RelationshipInterfaceSpec,
+    right_interface: RelationshipInterfaceSpec,
+) -> RelationshipCompatibilityAssessment:
+    """Run typed C5 preflight while preserving the canonical seven hard guards."""
+    guards: list[HardGuardResult] = []
+    adapters: list[str] = []
+    risks: list[str] = []
+
+    same_repository = left.source_repository.repo_head == right.source_repository.repo_head
+    guards.append(HardGuardResult(
+        HardGuardCode.REPOSITORY_IDENTITY,
+        same_repository,
+        "exact repo heads match" if same_repository else "repo heads differ",
+    ))
+
+    fresh = (
+        bool(left.source_refs and right.source_refs)
+        and left.truth_class is not TruthClass.UNKNOWN
+        and right.truth_class is not TruthClass.UNKNOWN
+    )
+    guards.append(HardGuardResult(
+        HardGuardCode.SOURCE_FRESHNESS,
+        fresh,
+        "exact source refs present" if fresh else "stale-proof or exact source evidence is missing",
+    ))
+
+    shared_scope = bool(set(left.policy_scope) & set(right.policy_scope))
+    data_compatible = (
+        left_interface.data_class == right_interface.data_class
+        or InterfaceDataClass.GENERIC in {left_interface.data_class, right_interface.data_class}
+    )
+    resource_compatible = (
+        left_interface.resource_class == right_interface.resource_class
+        or InterfaceResourceClass.GENERIC in {left_interface.resource_class, right_interface.resource_class}
+    )
+    policy_passed = shared_scope and data_compatible and resource_compatible
+    policy_reason_parts = []
+    if not shared_scope:
+        policy_reason_parts.append("policy scopes do not overlap")
+    if not data_compatible:
+        policy_reason_parts.append("data classes differ")
+        adapters.append("data_class_adapter")
+    if not resource_compatible:
+        policy_reason_parts.append("resource classes differ")
+        adapters.append("resource_boundary_adapter")
+    guards.append(HardGuardResult(
+        HardGuardCode.CAPABILITY_POLICY_SCOPE,
+        policy_passed,
+        "policy, data, and resource classes are compatible" if policy_passed else "; ".join(policy_reason_parts),
+    ))
+
+    mutating_operation = any(
+        item.operation in {InterfaceOperation.WRITE, InterfaceOperation.EXECUTE}
+        for item in (left_interface, right_interface)
+    )
+    external_actor = any(
+        item.actor is InterfaceActor.EXTERNAL
+        for item in (left_interface, right_interface)
+    )
+    actor_passed = not mutating_operation and not external_actor
+    actor_reason = (
+        "proposal-only actor and operation remain non-mutating"
+        if actor_passed
+        else (
+            "proposal-only route cannot carry WRITE/EXECUTE operation"
+            if mutating_operation
+            else "external actor lacks a governed lease/authority binding"
+        )
+    )
+    guards.append(HardGuardResult(HardGuardCode.ACTOR_AUTHORITY, actor_passed, actor_reason))
+
+    prohibited = bool(set(left.prohibition_ids) | set(right.prohibition_ids))
+    guards.append(HardGuardResult(
+        HardGuardCode.PROHIBITED_RELATIONSHIP,
+        not prohibited,
+        "no prohibition bound" if not prohibited else "a prohibition is bound to the candidate",
+    ))
+
+    direction_compatible = (
+        left_interface.direction is InterfacePortDirection.OUTPUT
+        and right_interface.direction is InterfacePortDirection.INPUT
+    ) or InterfacePortDirection.BIDIRECTIONAL in {
+        left_interface.direction,
+        right_interface.direction,
+    }
+    cardinality_compatible = not (
+        left_interface.cardinality is InterfacePortCardinality.MANY
+        and right_interface.cardinality is InterfacePortCardinality.ONE
+    )
+    lifecycle_compatible = not (
+        left_interface.lifecycle is InterfaceLifecycle.PERSISTENT
+        and right_interface.lifecycle is InterfaceLifecycle.EPHEMERAL
+    )
+    boundary_compatible = left_interface.boundary is right_interface.boundary
+    if not direction_compatible:
+        adapters.append("port_direction_adapter")
+        risks.append(
+            f"incompatible port directions: {left_interface.direction.value}->{right_interface.direction.value}"
+        )
+    if not cardinality_compatible:
+        adapters.append("cardinality_adapter")
+        risks.append("MANY output cannot bind directly to ONE input")
+    if not lifecycle_compatible:
+        adapters.append("lifecycle_adapter")
+        risks.append("persistent producer cannot bind directly to ephemeral consumer")
+    if not boundary_compatible:
+        adapters.append("boundary_adapter")
+        risks.append(
+            f"boundary mismatch: {left_interface.boundary.value}->{right_interface.boundary.value}"
+        )
+    budget_fit = (
+        left.resource_budget.max_nodes <= 256
+        and right.resource_budget.max_nodes <= 256
+        and left.resource_budget.max_edges <= 1024
+        and right.resource_budget.max_edges <= 1024
+        and direction_compatible
+        and cardinality_compatible
+        and lifecycle_compatible
+        and boundary_compatible
+    )
+    guards.append(HardGuardResult(
+        HardGuardCode.RESOURCE_BUDGET,
+        budget_fit,
+        "ports, lifecycle, boundary, and budgets fit"
+        if budget_fit
+        else "; ".join(risks) or "resource budget exceeds hard limit",
+    ))
+
+    proof_ready = (
+        left.proof_status not in {ProofStatus.UNVERIFIED, ProofStatus.REJECTED}
+        and right.proof_status not in {ProofStatus.UNVERIFIED, ProofStatus.REJECTED}
+    )
+    guards.append(HardGuardResult(
+        HardGuardCode.PROOF_READINESS,
+        proof_ready,
+        "proof states admit preflight" if proof_ready else "stale-proof or rejected proof blocks preflight",
+    ))
+
+    failed = {item.code for item in guards if not item.passed}
+    if HardGuardCode.PROHIBITED_RELATIONSHIP in failed or HardGuardCode.REPOSITORY_IDENTITY in failed or HardGuardCode.ACTOR_AUTHORITY in failed:
+        outcome = CompatibilityOutcome.PROHIBITED
+    elif HardGuardCode.SOURCE_FRESHNESS in failed or HardGuardCode.PROOF_READINESS in failed:
+        outcome = CompatibilityOutcome.INSUFFICIENT_EVIDENCE
+    elif not shared_scope and left.authority_posture is AuthorityPosture.OBSERVATION_ONLY and right.authority_posture is AuthorityPosture.OBSERVATION_ONLY:
+        outcome = CompatibilityOutcome.AUXILIARY_ONLY
+    elif adapters or HardGuardCode.CAPABILITY_POLICY_SCOPE in failed or HardGuardCode.RESOURCE_BUDGET in failed:
+        outcome = CompatibilityOutcome.ADAPTER_REQUIRED
+    else:
+        outcome = CompatibilityOutcome.COMPATIBLE
+
+    failed_reasons = [item.reason for item in guards if not item.passed]
+    return RelationshipCompatibilityAssessment.create(
+        left_contract_digest=left.contract_id,
+        right_contract_digest=right.contract_id,
+        outcome=outcome,
+        hard_guard_results=tuple(guards),
+        required_adapters=tuple(sorted(set(adapters))),
+        missing_evidence=tuple(
+            item.code.value
+            for item in guards
+            if not item.passed and item.code in {HardGuardCode.SOURCE_FRESHNESS, HardGuardCode.PROOF_READINESS}
+        ),
+        risks=tuple(dict.fromkeys([*failed_reasons, *risks])),
+        required_verifiers=("exact_source_freshness", "typed_port_matrix", "focused_tests"),
+        advisory_score=1.0 if all(item.passed for item in guards) else None,
+    )
+
 @dataclass(frozen=True)
 class RelationalNeighborhoodRequest:
     objective_digest: str
@@ -913,10 +1266,20 @@ __all__ = [
     "CompassObjectiveContract",
     "HardGuardCode",
     "HardGuardResult",
+    "InterfaceActor",
+    "InterfaceBoundary",
+    "InterfaceDataClass",
+    "InterfaceLifecycle",
+    "InterfaceOperation",
+    "InterfacePortCardinality",
+    "InterfacePortDirection",
+    "InterfaceResourceClass",
+    "RelationshipInterfaceSpec",
     "PATCH_AUTHORITY",
     "ProofStatus",
     "RELATIONAL_NEIGHBORHOOD_REQUEST_VERSION",
     "RELATIONSHIP_COMPATIBILITY_VERSION",
+    "RELATIONSHIP_INTERFACE_VERSION",
     "RELATIONSHIP_CONTRACT_VERSION",
     "RelationalNeighborhoodRequest",
     "RelationshipCompatibilityAssessment",
@@ -933,4 +1296,6 @@ __all__ = [
     "capability_selections_from_path",
     "content_digest",
     "evaluate_relationship_compatibility",
+    "evaluate_typed_relationship_compatibility",
+    "project_relationship_contract",
 ]

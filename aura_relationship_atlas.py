@@ -12,6 +12,7 @@ SYNOPSIS: Compiles, classifies, and projects the architectural relationship stat
 from __future__ import annotations
 
 import argparse
+from collections import OrderedDict
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 import hashlib
@@ -134,10 +135,13 @@ class ProofStatus(str, Enum):
 
 
 class OperationalProfile(str, Enum):
-    """Atlas scan profile controlling discovery depth and candidate generation."""
+    """Atlas scan profile controlling global coverage versus objective-local depth."""
     MINIMAL = "MINIMAL"
     STANDARD = "STANDARD"
     DEEP = "DEEP"
+    MINIMAL_GLOBAL = "MINIMAL_GLOBAL"
+    OBJECTIVE_STANDARD = "OBJECTIVE_STANDARD"
+    OBJECTIVE_DEEP = "OBJECTIVE_DEEP"
 
 
 # Profile configuration: which scan features are enabled at each level
@@ -179,6 +183,15 @@ PROFILE_CONFIG: dict[OperationalProfile, dict[str, bool]] = {
         "cross_arena_candidates": True,
     },
 }
+PROFILE_CONFIG[OperationalProfile.MINIMAL_GLOBAL] = dict(PROFILE_CONFIG[OperationalProfile.MINIMAL])
+PROFILE_CONFIG[OperationalProfile.OBJECTIVE_STANDARD] = dict(PROFILE_CONFIG[OperationalProfile.STANDARD])
+PROFILE_CONFIG[OperationalProfile.OBJECTIVE_DEEP] = dict(PROFILE_CONFIG[OperationalProfile.DEEP])
+
+GLOBAL_ATLAS_PAIR_LIMIT = 32_640
+OBJECTIVE_ATLAS_MAX_PARTICIPANTS = 256
+OBJECTIVE_ATLAS_CACHE_MAX_BYTES = 8_000_000
+_OBJECTIVE_ATLAS_CACHE: "OrderedDict[tuple[str, str, str, str], tuple[dict[str, Any], int]]" = OrderedDict()
+_OBJECTIVE_ATLAS_CACHE_BYTES = 0
 
 
 # ---------------------------------------------------------------------------
@@ -576,6 +589,10 @@ def build_relationship_atlas(
     else:
         op_profile = profile
     prof_cfg = PROFILE_CONFIG[op_profile]
+    objective_scoped = op_profile in {
+        OperationalProfile.OBJECTIVE_STANDARD,
+        OperationalProfile.OBJECTIVE_DEEP,
+    }
 
     # 1. Fail closed on stale or missing index. Callers that already hold the
     # exact generated index may supply it directly for a read-only in-memory
@@ -630,6 +647,17 @@ def build_relationship_atlas(
     participants_raw = rel_index.get("participants", [])
     relations_raw = rel_index.get("relations", [])
     groups_raw = rel_index.get("groups", [])
+    participant_pair_count = len(participants_raw) * (len(participants_raw) - 1) // 2
+    if objective_scoped and len(participants_raw) > OBJECTIVE_ATLAS_MAX_PARTICIPANTS:
+        raise ValueError("objective-scoped Atlas exceeds the bounded participant limit")
+    if (
+        op_profile in {OperationalProfile.STANDARD, OperationalProfile.DEEP}
+        and participant_pair_count > GLOBAL_ATLAS_PAIR_LIMIT
+    ):
+        raise ValueError(
+            "global STANDARD/DEEP Atlas scan refused above pair limit; "
+            "extract a bounded relational neighborhood and use OBJECTIVE_STANDARD/OBJECTIVE_DEEP"
+        )
 
     # Load participants into Python objects with role and truth_class metadata
     participants: dict[str, AtlasParticipantRef] = {}
@@ -1010,7 +1038,13 @@ def build_relationship_atlas(
         atlas_ontology_digest=hashlib.sha256(json.dumps(BUILTIN_MOTIFS, sort_keys=True).encode()).hexdigest(),
         prohibition_registry_digest=hashlib.sha256(json.dumps([p.to_dict() for p in prohibitions], sort_keys=True).encode()).hexdigest(),
         motif_registry_digest=hashlib.sha256(json.dumps(BUILTIN_MOTIFS, sort_keys=True).encode()).hexdigest(),
-        profile_digest=profile_digest,
+        profile_digest=hashlib.sha256(
+            json.dumps(
+                {"profile": op_profile.value, "config": prof_cfg},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest(),
         assessments=final_assessments,
         missing_configurations=missing_configs,
         prohibitions=prohibitions,
@@ -1018,6 +1052,8 @@ def build_relationship_atlas(
         boundary={
             "excluded_generated_paths": list(ATLAS_GENERATED_PATHS),
             "operational_profile": op_profile.value,
+            "objective_scoped": objective_scoped,
+            "participant_pair_count": participant_pair_count,
         }
     )
 
@@ -1340,6 +1376,140 @@ def diff_relationship_atlases(
         verification_refs=[],
     )
 
+
+
+def _objective_index_from_neighborhood(
+    relational_index: Mapping[str, Any],
+    neighborhood: Mapping[str, Any],
+):
+    """Create a canonical reduced RelationalIndex from a validated neighborhood."""
+    from aura_relational_index import RelationalIndex, _build_reverse_indexes
+    from aura_relational_synthesis import RelationalGroup, RelationalParticipant, TypedRelation
+
+    full = RelationalIndex.from_dict(relational_index)
+    if neighborhood.get("index_digest") != full.index_digest:
+        raise ValueError("relational neighborhood is not bound to the supplied index digest")
+    participant_ids = {
+        str(item.get("participant_id"))
+        for item in neighborhood.get("participants", ())
+        if isinstance(item, Mapping)
+    }
+    relation_ids = {
+        str(item.get("relation_id"))
+        for item in neighborhood.get("relations", ())
+        if isinstance(item, Mapping)
+    }
+    if not participant_ids:
+        raise ValueError("objective Atlas requires a non-empty bounded neighborhood")
+    if len(participant_ids) > OBJECTIVE_ATLAS_MAX_PARTICIPANTS:
+        raise ValueError("objective Atlas neighborhood exceeds participant limit")
+    participant_map = {item.participant_id: item for item in full.participants}
+    relation_map = {item.relation_id: item for item in full.relations}
+    missing_participants = sorted(participant_ids - set(participant_map))
+    missing_relations = sorted(relation_ids - set(relation_map))
+    if missing_participants or missing_relations:
+        raise ValueError("objective Atlas neighborhood references IDs absent from the current index")
+    participants = tuple(participant_map[item] for item in sorted(participant_ids))
+    relations = tuple(relation_map[item] for item in sorted(relation_ids))
+    if any(
+        relation.source_participant_id not in participant_ids
+        or relation.target_participant_id not in participant_ids
+        for relation in relations
+    ):
+        raise ValueError("objective Atlas neighborhood omitted a selected relation endpoint")
+    groups = tuple(
+        group
+        for group in full.groups
+        if group.boundary.included_participant_ids
+        and set(group.boundary.included_participant_ids).issubset(participant_ids)
+        and {item.relation_id for item in group.relations}.issubset(relation_ids)
+    )
+    reverse_indexes = _build_reverse_indexes(
+        participants=participants,
+        relations=relations,
+        groups=groups,
+        connectome={"nodes": ()},
+    )
+    exact_count = sum(1 for item in relations if item.truth_class.value.startswith("EXACT"))
+    advisory_count = len(relations) - exact_count
+    boundary = {
+        **dict(full.boundary),
+        "warnings": sorted(set((*full.boundary.get("warnings", ()), "objective_scoped_subset"))),
+        "all_relation_endpoints_present": True,
+    }
+    build_facts = {
+        **dict(full.build_facts),
+        "participant_count": len(participants),
+        "exact_relation_count": exact_count,
+        "advisory_relation_count": advisory_count,
+        "group_count": len(groups),
+    }
+    return RelationalIndex.create(
+        repository_identity=dict(full.repository_identity),
+        profile=dict(full.profile),
+        participants=participants,
+        relations=relations,
+        groups=groups,
+        reverse_indexes=reverse_indexes,
+        boundary=boundary,
+        build_facts=build_facts,
+    )
+
+
+def build_objective_relationship_atlas(
+    *,
+    repo_root: str | Path,
+    relational_index: Mapping[str, Any],
+    neighborhood: Mapping[str, Any],
+    profile: str | OperationalProfile = OperationalProfile.OBJECTIVE_STANDARD,
+    use_cache: bool = True,
+) -> AtlasSnapshot:
+    """Compile STANDARD/DEEP Atlas intelligence over a bounded local subgraph."""
+    global _OBJECTIVE_ATLAS_CACHE_BYTES
+    root = Path(repo_root).resolve()
+    op_profile = OperationalProfile(profile.upper()) if isinstance(profile, str) else profile
+    if op_profile not in {OperationalProfile.OBJECTIVE_STANDARD, OperationalProfile.OBJECTIVE_DEEP}:
+        raise ValueError("objective Atlas profile must be OBJECTIVE_STANDARD or OBJECTIVE_DEEP")
+    neighborhood_digest = str(neighborhood.get("neighborhood_digest") or "")
+    if not neighborhood_digest:
+        raise ValueError("objective Atlas requires a content-addressed neighborhood")
+    local_index = _objective_index_from_neighborhood(relational_index, neighborhood)
+    key = (
+        str(local_index.repository_identity.get("repo_head") or ""),
+        local_index.index_digest,
+        neighborhood_digest,
+        op_profile.value,
+    )
+    if use_cache and key in _OBJECTIVE_ATLAS_CACHE:
+        payload, size = _OBJECTIVE_ATLAS_CACHE.pop(key)
+        _OBJECTIVE_ATLAS_CACHE[key] = (payload, size)
+        return _snapshot_from_dict(json.loads(json.dumps(payload)))
+
+    snapshot = build_relationship_atlas(
+        repo_root=root,
+        profile=op_profile,
+        relational_index_data=local_index.to_dict(),
+        persist=False,
+    )
+    snapshot.boundary["neighborhood_digest"] = neighborhood_digest
+    snapshot.boundary["source_relational_index_digest"] = str(neighborhood.get("index_digest") or "")
+    snapshot.snapshot_digest = snapshot.compute_digest()
+    payload = snapshot.to_dict()
+    payload_size = len(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    if use_cache and payload_size <= OBJECTIVE_ATLAS_CACHE_MAX_BYTES:
+        while _OBJECTIVE_ATLAS_CACHE and _OBJECTIVE_ATLAS_CACHE_BYTES + payload_size > OBJECTIVE_ATLAS_CACHE_MAX_BYTES:
+            _, (_, evicted_size) = _OBJECTIVE_ATLAS_CACHE.popitem(last=False)
+            _OBJECTIVE_ATLAS_CACHE_BYTES -= evicted_size
+        _OBJECTIVE_ATLAS_CACHE[key] = (json.loads(json.dumps(payload)), payload_size)
+        _OBJECTIVE_ATLAS_CACHE_BYTES += payload_size
+    return snapshot
+
+
+def clear_objective_atlas_cache() -> None:
+    """Clear the non-semantic objective Atlas cache."""
+    global _OBJECTIVE_ATLAS_CACHE_BYTES
+    _OBJECTIVE_ATLAS_CACHE.clear()
+    _OBJECTIVE_ATLAS_CACHE_BYTES = 0
 
 def compile_atlas_projection(
     focal_participant_ids: list[str],
