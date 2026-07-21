@@ -274,6 +274,11 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["connectome"]["graph_digest"] == "graph-digest"
     assert packet["relational_synthesis"]["capsule_digest"] == "capsule-digest"
     assert packet["atlas"]["snapshot_digest"] == atlas.snapshot_digest
+    assert packet["relational_neighborhood"]["neighborhood_digest"]
+    assert packet["relational_neighborhood"]["compatibility_projection"] is True
+    assert packet["typed_compatibility"]["outcome"] in {"COMPATIBLE", "ADAPTER_REQUIRED"}
+    assert packet["coding_breadboard"]["receipt_digest"]
+    assert packet["coding_breadboard"]["authority"]["execution_authority"] is False
     assert packet["prohibitions"]
     assert packet["safe_to_patch"] is False
 

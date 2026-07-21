@@ -2,7 +2,14 @@ from __future__ import annotations
 
 from copy import deepcopy
 
-from aura_coding_waboose_breadboard import compile_waboose_breadboard
+from aura_coding_waboose_breadboard import compile_waboose_breadboard, compile_relationship_breadboard
+from aura_relationship_contracts import (
+    AuthorityPosture, CompatibilityOutcome, InterfaceActor, InterfaceBoundary,
+    InterfaceDataClass, InterfaceLifecycle, InterfaceOperation, InterfacePortCardinality,
+    InterfacePortDirection, InterfaceResourceClass, ProofStatus, RelationshipDomain,
+    RelationshipInterfaceSpec, RepositoryIdentity, ResourceBudget, SixSlotProjection,
+    SourceReference, TruthClass, RelationshipContract, evaluate_typed_relationship_compatibility,
+)
 
 
 def _contract() -> dict:
@@ -158,3 +165,76 @@ def test_forward_and_backward_paths_preserve_circuit_semantics() -> None:
     assert any(item.startswith("action:waboose_action_") for item in forward)
     assert "resolved_non_mocked_impact_or_control_flow_evidence" in backward
     assert "human_review_decision" in backward
+
+
+
+def _relationship_contract_fixture() -> RelationshipContract:
+    return RelationshipContract.create(
+        objective_digest="objective-digest",
+        intent_packet_digest="intent-digest",
+        source_repository=RepositoryIdentity(
+            repo_head="head-sha",
+            working_tree_digest="tree-digest",
+            relational_index_digest="index-digest",
+            atlas_digest="atlas-digest",
+        ),
+        domain=RelationshipDomain.CODE,
+        slots=SixSlotProjection.from_mapping(
+            {"DIR": "IN", "ASP": "GROUND", "CLASS": "REVIEW", "SUBJ": "RELATION", "VOICE": "HUMAN_AGENT", "STEM": "INSPECT"}
+        ),
+        truth_class=TruthClass.EXACT_SOURCE,
+        authority_posture=AuthorityPosture.PROPOSAL_ONLY,
+        proof_status=ProofStatus.GROUNDED,
+        policy_scope=("coding_arena",),
+        resource_budget=ResourceBudget(),
+        source_refs=(
+            SourceReference(
+                file_path="aura_example.py",
+                symbol="compile",
+                line_start=1,
+                line_end=2,
+                source_hash="a" * 64,
+                file_source_hash="b" * 64,
+            ),
+        ),
+    )
+
+
+def _relationship_interface(direction: InterfacePortDirection) -> RelationshipInterfaceSpec:
+    return RelationshipInterfaceSpec.create(
+        port_name="relationship_packet",
+        direction=direction,
+        cardinality=InterfacePortCardinality.ONE,
+        lifecycle=InterfaceLifecycle.SESSION,
+        actor=InterfaceActor.SYSTEM,
+        boundary=InterfaceBoundary.SAME_ARENA,
+        resource_class=InterfaceResourceClass.CODE,
+        data_class=InterfaceDataClass.CONTRACT,
+        operation=InterfaceOperation.VALIDATE,
+    )
+
+
+def test_relationship_breadboard_projects_typed_preflight_without_authority() -> None:
+    left = _relationship_contract_fixture()
+    right = _relationship_contract_fixture()
+    left_interface = _relationship_interface(InterfacePortDirection.OUTPUT)
+    right_interface = _relationship_interface(InterfacePortDirection.INPUT)
+    assessment = evaluate_typed_relationship_compatibility(
+        left,
+        right,
+        left_interface=left_interface,
+        right_interface=right_interface,
+    )
+    packet = compile_relationship_breadboard(
+        objective="Validate relationship compatibility",
+        left_contract=left,
+        right_contract=right,
+        left_interface=left_interface,
+        right_interface=right_interface,
+        assessment=assessment,
+    )
+    assert packet["compatibility"]["outcome"] == CompatibilityOutcome.COMPATIBLE.value
+    assert packet["machine_status"]["preflight_ready"] is True
+    assert packet["planning_board"]["actions"][0]["proposal_only"] is True
+    assert packet["authority"]["execution_authority"] is False
+    assert packet["authority"]["automatic_merge"] is False

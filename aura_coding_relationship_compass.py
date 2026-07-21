@@ -28,17 +28,44 @@ from aura_capability_connectome_v2 import enrich_connectome, enrich_path
 from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine, EmergentEvidenceRequest
 from aura_event_contracts import stable_digest
 from aura_polysynthetic_intent import PolysyntheticIntentPacket
-from aura_relational_index import build_relational_index
+from aura_relational_index import (
+    RelationalIndex,
+    RelationalIndexStore,
+    build_relational_index,
+    extract_relational_neighborhood,
+)
 from aura_relational_synthesis import compile_relational_shadow_capsule
 from aura_relationship_contracts import (
+    AuthorityPosture,
     CompassObjectiveContract,
+    InterfaceActor,
+    InterfaceBoundary,
+    InterfaceDataClass,
+    InterfaceLifecycle,
+    InterfaceOperation,
+    InterfacePortCardinality,
+    InterfacePortDirection,
+    InterfaceResourceClass,
+    ProofStatus as ContractProofStatus,
+    RelationalNeighborhoodRequest,
+    RelationshipDomain,
+    RelationshipInterfaceSpec,
+    RepositoryIdentity,
+    ResourceBudget,
+    SourceReference,
+    TruthClass as ContractTruthClass,
     capability_class_index,
     capability_selections_from_path,
+    content_digest,
+    evaluate_typed_relationship_compatibility,
+    project_relationship_contract,
 )
+from aura_coding_waboose_breadboard import compile_relationship_breadboard
 from aura_relationship_atlas import (
     AtlasSnapshot,
     WiringDisposition,
     build_relationship_atlas,
+    build_objective_relationship_atlas,
     compile_atlas_projection,
     relationships_for_participant,
     validate_relationship_atlas,
@@ -146,7 +173,7 @@ _COMPONENTS: tuple[ArchitectureComponent, ...] = (
 
 _TOKEN_RE = re.compile(r"[a-z][a-z0-9_]+", re.ASCII)
 
-_RELATIONAL_PLANE_CACHE: dict[tuple[str, str, str, str], tuple[dict[str, Any], AtlasSnapshot]] = {}
+_RELATIONAL_PLANE_CACHE: dict[tuple[str, str, str, str], dict[str, Any]] = {}
 _RELATIONAL_PLANE_CACHE_LIMIT = 4
 
 
@@ -357,7 +384,6 @@ def _validate_supplied_atlas_snapshot(
         "connectome_digest": str(connectome.get("graph_digest") or identity.get("connectome_graph_digest") or ""),
         "atomic_inventory_digest": str(inventory.get("inventory_digest") or identity.get("atomic_inventory_digest") or ""),
         "relational_index_digest": validated_index_digest,
-        "profile_digest": str(identity.get("profile_digest") or ""),
     }
     mismatches = {
         name: {"snapshot": getattr(atlas, name), "current": value}
@@ -559,6 +585,166 @@ def _recommended_targets(
     return [item for _, item in candidates]
 
 
+
+
+def _compatibility_neighborhood_from_raw_index(
+    request: RelationalNeighborhoodRequest,
+    relational_index: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Project a bounded legacy test fixture after its content digest is verified.
+
+    This compatibility path exists only for pre-C3 caller fixtures paired with an
+    already supplied Atlas snapshot. Canonical production indexes must pass
+    ``RelationalIndex.from_dict`` and never reach this function.
+    """
+    index_digest = _validated_relational_index_digest(relational_index)
+    participants = [
+        dict(item)
+        for item in relational_index.get("participants", ()) or ()
+        if isinstance(item, Mapping) and item.get("participant_id")
+    ]
+    participant_map = {str(item["participant_id"]): item for item in participants}
+    selected = {
+        str(item)
+        for item in request.seed_participant_ids
+        if str(item) in participant_map
+    }
+    for source_ref in request.seed_source_refs:
+        for participant in participants:
+            metadata = participant.get("metadata") or {}
+            file_path = str(metadata.get("file_path") or "") if isinstance(metadata, Mapping) else ""
+            symbol = str(participant.get("qualified_symbol") or "")
+            if file_path == source_ref.file_path and (not source_ref.symbol or source_ref.symbol in symbol):
+                selected.add(str(participant["participant_id"]))
+    if not selected:
+        raise ValueError("legacy relational index did not resolve any exact neighborhood seed")
+
+    relations = [
+        dict(item)
+        for item in relational_index.get("relations", ()) or ()
+        if isinstance(item, Mapping) and item.get("relation_id")
+    ]
+    selected_edges: list[dict[str, Any]] = []
+    frontier: list[dict[str, Any]] = []
+    for hop in range(1, request.max_hops + 1):
+        changed = False
+        for relation in sorted(relations, key=lambda item: str(item.get("relation_id") or "")):
+            source = str(relation.get("source_participant_id") or "")
+            target = str(relation.get("target_participant_id") or "")
+            if source not in selected and target not in selected:
+                continue
+            if relation in selected_edges:
+                continue
+            other = target if source in selected else source
+            if len(selected_edges) >= request.max_edges:
+                frontier.append({"participant_id": other, "via_relation_id": str(relation.get("relation_id") or ""), "hop": hop, "reason": "edge_budget"})
+                continue
+            if other not in selected and len(selected) >= request.max_nodes:
+                frontier.append({"participant_id": other, "via_relation_id": str(relation.get("relation_id") or ""), "hop": hop, "reason": "node_budget"})
+                continue
+            selected_edges.append(relation)
+            if other in participant_map and other not in selected:
+                selected.add(other)
+                changed = True
+        if not changed:
+            break
+
+    pair_count = len(selected) * (len(selected) - 1) // 2
+    exhausted = []
+    if pair_count > request.max_candidate_pairs:
+        exhausted.append("max_candidate_pairs")
+    packet: dict[str, Any] = {
+        "version": "AURA_RELATIONAL_NEIGHBORHOOD_V1",
+        "objective_digest": request.objective_digest,
+        "index_id": str(relational_index.get("index_id") or "legacy_digest_validated"),
+        "index_digest": index_digest,
+        "profile": dict(relational_index.get("profile") or {}),
+        "seed_participant_ids": sorted(selected.intersection(request.seed_participant_ids)),
+        "participants": [participant_map[item] for item in sorted(selected)],
+        "relations": sorted(selected_edges, key=lambda item: str(item.get("relation_id") or "")),
+        "groups": [],
+        "inclusion_reasons": {item: ["legacy_exact_seed_or_bounded_relation"] for item in sorted(selected)},
+        "edge_inclusion_reasons": {str(item.get("relation_id") or ""): ["legacy_bounded_projection"] for item in selected_edges},
+        "frontier": sorted(frontier, key=lambda item: (item["hop"], item["via_relation_id"], item["participant_id"])),
+        "truncation_receipt": {
+            "truncated": bool(exhausted or frontier),
+            "exhausted_budgets": exhausted,
+            "node_count": len(selected),
+            "edge_count": len(selected_edges),
+            "candidate_pair_count": min(pair_count, request.max_candidate_pairs),
+            "unexpanded_frontier_count": len(frontier),
+            "elapsed_ms": 0,
+            "budgets": {
+                "max_hops": request.max_hops,
+                "max_nodes": request.max_nodes,
+                "max_edges": request.max_edges,
+                "max_candidate_pairs": request.max_candidate_pairs,
+                "max_output_bytes": request.max_output_bytes,
+                "max_elapsed_ms": request.max_elapsed_ms,
+            },
+        },
+        "compatibility_projection": True,
+        "safe_to_patch": False,
+        "production_mutation": False,
+        "automatic_fix": False,
+        "automatic_merge": False,
+        "human_review_required": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+    packet["neighborhood_digest"] = stable_digest(packet, digest_size=20)
+    if len(json.dumps(packet, sort_keys=True, separators=(",", ":")).encode("utf-8")) > request.max_output_bytes:
+        raise ValueError("legacy relational neighborhood exceeded max_output_bytes")
+    return packet
+
+def _source_references_from_evidence(evidence: Mapping[str, Any]) -> tuple[SourceReference, ...]:
+    records: list[Mapping[str, Any]] = []
+    inventory = evidence.get("atomic_inventory") or {}
+    if isinstance(inventory, Mapping):
+        records.extend(
+            item
+            for item in inventory.get("selected_atomic_functions", ()) or ()
+            if isinstance(item, Mapping)
+        )
+    records.extend(
+        item
+        for item in evidence.get("source_slices", ()) or ()
+        if isinstance(item, Mapping)
+    )
+    refs: dict[tuple[str, str, int, int, str], SourceReference] = {}
+    for item in records:
+        file_path = str(item.get("file_path") or "")
+        symbol = str(item.get("symbol") or item.get("qualified_symbol") or "")
+        line_start = int(item.get("line_start") or item.get("start_line") or 0)
+        line_end = int(item.get("line_end") or item.get("end_line") or 0)
+        source_hash = str(item.get("source_hash") or "")
+        if not file_path or line_start <= 0 or line_end < line_start or not source_hash:
+            continue
+        ref = SourceReference(
+            file_path=file_path,
+            symbol=symbol,
+            line_start=line_start,
+            line_end=line_end,
+            source_hash=source_hash,
+            file_source_hash=str(item.get("file_source_hash") or ""),
+        )
+        refs[(file_path, symbol, line_start, line_end, source_hash)] = ref
+    return tuple(refs[key] for key in sorted(refs))
+
+
+def _applicable_prohibition_ids(atlas_intelligence: Mapping[str, Any]) -> tuple[str, ...]:
+    values: set[str] = set()
+    for assessment in atlas_intelligence.get("assessments", ()) or ():
+        if not isinstance(assessment, Mapping):
+            continue
+        if assessment.get("wiring_disposition") != WiringDisposition.PROHIBITED.value:
+            continue
+        for ref in assessment.get("evidence_refs", ()) or ():
+            text = str(ref)
+            if text.startswith("prohib_"):
+                values.add(text.split(":", 1)[0])
+    return tuple(sorted(values))
+
 def compile_coding_relationship_compass(
     objective: str,
     repo_root: str | Path = ".",
@@ -571,6 +757,13 @@ def compile_coding_relationship_compass(
     max_atlas_participants: int = 32,
     max_atlas_assessments: int = 96,
     max_required_tests: int = 24,
+    max_neighborhood_hops: int = 2,
+    max_neighborhood_nodes: int = 64,
+    max_neighborhood_edges: int = 256,
+    max_neighborhood_candidate_pairs: int = 2016,
+    max_neighborhood_output_bytes: int = 1_000_000,
+    max_neighborhood_elapsed_ms: int = 30_000,
+    atlas_profile: str = "OBJECTIVE_STANDARD",
     include_source: bool = False,
     relational_index_data: Mapping[str, Any] | None = None,
     atlas_snapshot: AtlasSnapshot | None = None,
@@ -578,8 +771,9 @@ def compile_coding_relationship_compass(
 ) -> dict[str, Any]:
     """Compile a bounded coding relationship packet for Architect/Surgeon review.
 
-    The default path builds the Relational Index and MINIMAL Atlas in memory, so
-    a query does not write generated architecture artifacts into the repository.
+    The default path loads a validated current Relational Index when available,
+    extracts a bounded neighborhood, and compiles an objective-scoped Atlas in
+    memory, so a query does not write generated architecture artifacts.
     Optional precomputed inputs support deterministic callers and focused tests.
     """
     normalized_objective = " ".join(str(objective or "").split())
@@ -666,19 +860,39 @@ def compile_coding_relationship_compass(
     )
 
     cache_hit = False
+    index_source = "in_memory_rebuild"
     cache_key = (
         str(root),
         str(evidence.get("repo_head") or ""),
         str(inventory.get("inventory_digest") or ""),
         str(graph.get("graph_digest") or ""),
     )
-    if relational_index_data is None and atlas_snapshot is None and cache_key in _RELATIONAL_PLANE_CACHE:
-        cached_index, cached_atlas = _RELATIONAL_PLANE_CACHE[cache_key]
-        relational_index = cached_index
-        atlas = cached_atlas
+    if relational_index_data is None and cache_key in _RELATIONAL_PLANE_CACHE:
+        relational_index = dict(_RELATIONAL_PLANE_CACHE[cache_key])
         cache_hit = True
+        index_source = "process_cache"
+    elif relational_index_data is not None:
+        try:
+            relational_index = RelationalIndex.from_dict(relational_index_data).to_dict()
+            index_source = "caller_supplied_validated"
+        except ValueError:
+            if atlas_snapshot is None or relational_index_data.get("schema_version"):
+                raise
+            _validated_relational_index_digest(relational_index_data)
+            relational_index = dict(relational_index_data)
+            index_source = "caller_supplied_legacy_digest_validated"
     else:
-        if relational_index_data is None:
+        store = RelationalIndexStore(root)
+        relational_index = {}
+        if store.index_path.exists() and store.receipt_path.exists():
+            try:
+                status = store.validate_current()
+                if status.get("ok") is True:
+                    relational_index = store.load().to_dict()
+                    index_source = "persisted_current_index"
+            except (OSError, ValueError, json.JSONDecodeError):
+                relational_index = {}
+        if not relational_index:
             index_result = build_relational_index(
                 root,
                 profile="MINIMAL",
@@ -686,26 +900,9 @@ def compile_coding_relationship_compass(
                 include_index=True,
             )
             relational_index = dict(index_result["index"])
-        else:
-            relational_index = dict(relational_index_data)
-        if atlas_snapshot is None:
-            atlas = build_relationship_atlas(
-                repo_root=root,
-                profile="MINIMAL",
-                relational_index_data=relational_index,
-                persist=False,
-            )
-        else:
-            atlas = _validate_supplied_atlas_snapshot(
-                atlas_snapshot,
-                evidence=evidence,
-                relational_index=relational_index,
-                connectome=graph,
-            )
-        if relational_index_data is None and atlas_snapshot is None:
-            if len(_RELATIONAL_PLANE_CACHE) >= _RELATIONAL_PLANE_CACHE_LIMIT:
-                _RELATIONAL_PLANE_CACHE.pop(next(iter(_RELATIONAL_PLANE_CACHE)))
-            _RELATIONAL_PLANE_CACHE[cache_key] = (relational_index, atlas)
+        if len(_RELATIONAL_PLANE_CACHE) >= _RELATIONAL_PLANE_CACHE_LIMIT:
+            _RELATIONAL_PLANE_CACHE.pop(next(iter(_RELATIONAL_PLANE_CACHE)))
+        _RELATIONAL_PLANE_CACHE[cache_key] = dict(relational_index)
 
     capability_ids = [str(item) for item in capability_path.get("required_capability_ids", []) or []]
     focal_ids = _select_focal_participants(
@@ -716,15 +913,144 @@ def compile_coding_relationship_compass(
         capability_ids,
         limit=max(1, max_atlas_participants),
     )
+    source_refs = _source_references_from_evidence(evidence)
+    neighborhood_request = RelationalNeighborhoodRequest(
+        objective_digest=objective_contract.objective_digest,
+        seed_participant_ids=tuple(focal_ids),
+        seed_source_refs=source_refs,
+        max_hops=max_neighborhood_hops,
+        max_nodes=max_neighborhood_nodes,
+        max_edges=max_neighborhood_edges,
+        max_candidate_pairs=max_neighborhood_candidate_pairs,
+        max_output_bytes=max_neighborhood_output_bytes,
+        max_elapsed_ms=max_neighborhood_elapsed_ms,
+        include_tests=True,
+        include_docs=False,
+        include_auxiliary=True,
+        stop_on_prohibition=True,
+    )
+    try:
+        neighborhood = extract_relational_neighborhood(
+            neighborhood_request,
+            relational_index,
+        )
+    except ValueError:
+        if atlas_snapshot is None or relational_index.get("schema_version"):
+            raise
+        neighborhood = _compatibility_neighborhood_from_raw_index(
+            neighborhood_request,
+            relational_index,
+        )
+    neighborhood_focal_ids = [
+        str(item["participant_id"])
+        for item in neighborhood.get("participants", ())
+        if isinstance(item, Mapping)
+    ][: max(1, max_atlas_participants)]
+
+    if atlas_snapshot is None:
+        atlas = build_objective_relationship_atlas(
+            repo_root=root,
+            relational_index=relational_index,
+            neighborhood=neighborhood,
+            profile=atlas_profile,
+        )
+    else:
+        atlas = _validate_supplied_atlas_snapshot(
+            atlas_snapshot,
+            evidence=evidence,
+            relational_index=relational_index,
+            connectome=graph,
+        )
     atlas_intelligence = _bounded_atlas_intelligence(
         atlas,
-        focal_ids,
+        neighborhood_focal_ids,
         max_assessments=max(1, max_atlas_assessments),
     )
+
     targets = _recommended_targets(evidence, selected_files, selected_symbols)
     if not targets:
         raise ValueError("exact evidence packet contained no source target")
     primary = targets[0]
+
+    index_identity = relational_index.get("repository_identity") or {}
+    repository_identity = RepositoryIdentity(
+        repo_head=str(index_identity.get("repo_head") or evidence.get("repo_head") or ""),
+        working_tree_digest=str(index_identity.get("working_tree_digest") or ""),
+        relational_index_digest=str(relational_index.get("index_digest") or ""),
+        atlas_digest=atlas.snapshot_digest,
+    )
+    budget = ResourceBudget(
+        max_hops=max_neighborhood_hops,
+        max_nodes=max_neighborhood_nodes,
+        max_edges=max_neighborhood_edges,
+        max_candidate_pairs=max_neighborhood_candidate_pairs,
+        max_output_bytes=max_neighborhood_output_bytes,
+        max_elapsed_ms=max_neighborhood_elapsed_ms,
+    )
+    policy_scope = tuple(capability_ids or matched_components or ("coding_arena",))
+    prohibition_ids = _applicable_prohibition_ids(atlas_intelligence)
+    producer_contract = project_relationship_contract(
+        objective_digest=content_digest({"objective": normalized_objective, "role": "producer"}),
+        intent_packet=intent_packet.canonical_dict(),
+        source_repository=repository_identity,
+        source_refs=source_refs,
+        policy_scope=policy_scope,
+        resource_budget=budget,
+        domain=RelationshipDomain.CODE,
+        truth_class=ContractTruthClass.EXACT_SOURCE,
+        authority_posture=AuthorityPosture.PROPOSAL_ONLY,
+        proof_status=ContractProofStatus.GROUNDED,
+        prohibition_ids=prohibition_ids,
+    )
+    consumer_contract = project_relationship_contract(
+        objective_digest=content_digest({"objective": normalized_objective, "role": "consumer"}),
+        intent_packet=intent_packet.canonical_dict(),
+        source_repository=repository_identity,
+        source_refs=source_refs,
+        policy_scope=policy_scope,
+        resource_budget=budget,
+        domain=RelationshipDomain.CODE,
+        truth_class=ContractTruthClass.EXACT_SOURCE,
+        authority_posture=AuthorityPosture.PROPOSAL_ONLY,
+        proof_status=ContractProofStatus.GROUNDED,
+        prohibition_ids=prohibition_ids,
+    )
+    producer_interface = RelationshipInterfaceSpec.create(
+        port_name="grounded_relationship_packet",
+        direction=InterfacePortDirection.OUTPUT,
+        cardinality=InterfacePortCardinality.ONE,
+        lifecycle=InterfaceLifecycle.SESSION,
+        actor=InterfaceActor.SYSTEM,
+        boundary=InterfaceBoundary.SAME_ARENA,
+        resource_class=InterfaceResourceClass.CODE,
+        data_class=InterfaceDataClass.CONTRACT,
+        operation=InterfaceOperation.VALIDATE,
+    )
+    consumer_interface = RelationshipInterfaceSpec.create(
+        port_name="grounded_relationship_packet",
+        direction=InterfacePortDirection.INPUT,
+        cardinality=InterfacePortCardinality.ONE,
+        lifecycle=InterfaceLifecycle.SESSION,
+        actor=InterfaceActor.SYSTEM,
+        boundary=InterfaceBoundary.SAME_ARENA,
+        resource_class=InterfaceResourceClass.CODE,
+        data_class=InterfaceDataClass.CONTRACT,
+        operation=InterfaceOperation.PLAN,
+    )
+    compatibility = evaluate_typed_relationship_compatibility(
+        producer_contract,
+        consumer_contract,
+        left_interface=producer_interface,
+        right_interface=consumer_interface,
+    )
+    relationship_breadboard = compile_relationship_breadboard(
+        objective=normalized_objective,
+        left_contract=producer_contract,
+        right_contract=consumer_contract,
+        left_interface=producer_interface,
+        right_interface=consumer_interface,
+        assessment=compatibility,
+    )
 
     required_tests = _ordered_unique(
         [
@@ -785,11 +1111,17 @@ def compile_coding_relationship_compass(
             "risk_map": list(evidence.get("risk_map", []) or []),
         },
         "relational_synthesis": relational_capsule,
+        "relational_neighborhood": {**neighborhood, "index_source": index_source},
         "atlas": {**atlas_intelligence, "cache_hit": cache_hit},
+        "typed_compatibility": compatibility.to_dict(),
+        "coding_breadboard": relationship_breadboard,
         "relationships_to_preserve": atlas_intelligence.get("relationships_to_preserve", []),
         "prohibitions": atlas_intelligence.get("prohibitions", []),
         "missing_roles": atlas_intelligence.get("missing_roles", []),
-        "required_adapters": atlas_intelligence.get("required_adapters", []),
+        "required_adapters": _ordered_unique([
+            *atlas_intelligence.get("required_adapters", []),
+            *compatibility.required_adapters,
+        ]),
         "authority_constraints": atlas_intelligence.get("authority_constraints", []),
         "route": "CODING_RELATIONSHIP_COMPASS",
         "grounding_ok": True,
@@ -842,6 +1174,9 @@ def relationship_compass_grounding(packet: Mapping[str, Any]) -> dict[str, Any]:
         "objective_contract": dict(packet.get("objective_contract") or {}),
         "capability_classes": dict(packet.get("capability_classes") or {}),
         "relationship_atlas_digest": atlas.get("snapshot_digest"),
+        "relational_neighborhood_digest": (packet.get("relational_neighborhood") or {}).get("neighborhood_digest"),
+        "typed_compatibility": dict(packet.get("typed_compatibility") or {}),
+        "coding_breadboard": dict(packet.get("coding_breadboard") or {}),
         "relationships_to_preserve": list(packet.get("relationships_to_preserve", []) or [])[:32],
         "prohibitions": list(packet.get("prohibitions", []) or []),
         "missing_roles": list(packet.get("missing_roles", []) or []),

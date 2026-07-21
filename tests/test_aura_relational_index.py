@@ -15,15 +15,24 @@ from aura_relational_index import (
     RelationalIndexStore,
     TruthClass,
     _build_groups,
+    _build_reverse_indexes,
     _canonical_python_sources,
     _safe_repo_path,
     _topology_facts,
     _working_tree_digest,
     main,
     query_relational_index,
+    extract_relational_neighborhood,
 )
+from aura_relationship_contracts import (
+    RelationalNeighborhoodRequest,
+    SourceReference,
+    TruthClass as ContractTruthClass,
+)
+from aura_relationship_atlas import build_objective_relationship_atlas, clear_objective_atlas_cache
 from aura_relational_synthesis import (
     GroupKind,
+    ParticipantType,
     RelationalParticipant,
     RelationType,
     TypedRelation,
@@ -445,6 +454,35 @@ def test_query_returns_bounded_exact_objects() -> None:
     assert result["safe_to_patch"] is False
 
 
+
+def test_reverse_lookup_supports_test_schema_and_canonical_owner() -> None:
+    index = _build()
+    test_result = query_relational_index(index, test_path="tests/test_service.py")
+    assert test_result["ids"]
+
+    owner_result = query_relational_index(index, canonical_owner="CodeTopoAnchor")
+    assert owner_result["participants"]
+    assert all(item["canonical_owner"] == "CodeTopoAnchor" for item in owner_result["participants"])
+
+    schema = RelationalParticipant.create(
+        participant_type=ParticipantType.SCHEMA,
+        role="machine_contract",
+        truth_class=SynthesisTruthClass.EXACT_SCHEMA,
+        canonical_owner="RelationshipContracts",
+        canonical_ref="schemas/example.schema.json",
+        digest="9" * 64,
+        evidence_refs=("schema:schemas/example.schema.json",),
+        metadata={"file_path": "schemas/example.schema.json"},
+    )
+    reverse = _build_reverse_indexes(
+        participants=(schema,),
+        relations=(),
+        groups=(),
+        connectome={"nodes": []},
+    )
+    assert reverse["by_schema"]["schemas/example.schema.json"] == [schema.participant_id]
+    assert reverse["by_authority_family"]["RelationshipContracts"] == [schema.participant_id]
+
 def test_incremental_path_is_validated_and_uses_canonical_full_build(monkeypatch: pytest.MonkeyPatch) -> None:
     index = _build()
     builder = RelationalIndexBuilder(".", profile=RelationalIndexProfile.STANDARD)
@@ -754,3 +792,377 @@ def test_cli_build_requests_bounded_summary(
     payload = json.loads(capsys.readouterr().out)
     assert payload["index_id"] == "relindex-test"
     assert "index" not in payload
+
+
+
+def test_extract_relational_neighborhood_is_deterministic_and_bounded() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-neighborhood",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=2,
+        max_nodes=4,
+        max_edges=5,
+        max_candidate_pairs=6,
+        max_output_bytes=100_000,
+        max_elapsed_ms=5_000,
+    )
+    first = extract_relational_neighborhood(request, index)
+    second = extract_relational_neighborhood(request, index.to_dict())
+    assert first == second
+    assert first["seed_participant_ids"] == [seed]
+    assert len(first["participants"]) <= 4
+    assert len(first["relations"]) <= 5
+    assert first["truncation_receipt"]["candidate_pair_count"] <= 6
+    assert first["safe_to_patch"] is False
+
+
+def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
+    index = _build()
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-source-ref",
+        seed_participant_ids=(),
+        seed_source_refs=(
+            SourceReference(
+                file_path="service.py",
+                symbol="Alpha.run",
+                line_start=1,
+                line_end=3,
+                source_hash="source-hash",
+            ),
+        ),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+    packet = extract_relational_neighborhood(request, index)
+    assert packet["seed_participant_ids"]
+    assert any(
+        item["qualified_symbol"] == "Alpha.run" for item in packet["participants"]
+    )
+    assert any(
+        reason.startswith("exact_source_ref:service.py#Alpha.run")
+        for reasons in packet["inclusion_reasons"].values()
+        for reason in reasons
+    )
+
+
+def test_extract_relational_neighborhood_retains_seed_under_dense_budget() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-dense",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=3,
+        max_nodes=1,
+        max_edges=1,
+        max_candidate_pairs=0,
+        max_output_bytes=50_000,
+        max_elapsed_ms=5_000,
+    )
+    packet = extract_relational_neighborhood(request, index)
+    assert [item["participant_id"] for item in packet["participants"]] == [seed]
+    assert packet["truncation_receipt"]["truncated"] is True
+    assert "max_nodes" in packet["truncation_receipt"]["exhausted_budgets"]
+
+
+def test_extract_relational_neighborhood_rejects_tampered_index_digest() -> None:
+    data = _build().to_dict()
+    data["relations"][0]["metadata"]["tampered"] = True
+    seed = data["participants"][0]["participant_id"]
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-tampered",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+    )
+    with pytest.raises(ValueError, match="index_digest"):
+        extract_relational_neighborhood(request, data)
+
+
+def test_extract_relational_neighborhood_enforces_candidate_pair_budget() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-pair-budget",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=3,
+        max_nodes=8,
+        max_edges=32,
+        max_candidate_pairs=1,
+        minimum_truth_class=ContractTruthClass.ADVISORY,
+    )
+    packet = extract_relational_neighborhood(request, index)
+    node_count = len(packet["participants"])
+    actual_pair_count = node_count * (node_count - 1) // 2
+    assert node_count <= 2
+    assert packet["truncation_receipt"]["candidate_pair_count"] == actual_pair_count
+    assert actual_pair_count <= request.max_candidate_pairs
+    assert "max_candidate_pairs" in packet["truncation_receipt"]["exhausted_budgets"]
+    assert any(item["reason"] == "candidate_pair_budget" for item in packet["frontier"])
+
+
+def test_extract_relational_neighborhood_rejects_seed_set_above_pair_budget() -> None:
+    index = _build()
+    seeds = tuple(item.participant_id for item in index.participants[:3])
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-seed-pair-budget",
+        seed_participant_ids=seeds,
+        seed_source_refs=(),
+        max_nodes=8,
+        max_candidate_pairs=1,
+    )
+    with pytest.raises(ValueError, match="seeds exceed max_candidate_pairs"):
+        extract_relational_neighborhood(request, index)
+
+
+def test_extract_relational_neighborhood_applies_minimum_truth_class() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    exact = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-exact-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=16,
+            max_edges=32,
+            max_candidate_pairs=120,
+            minimum_truth_class=ContractTruthClass.EXACT_SOURCE,
+            include_auxiliary=True,
+        ),
+        index,
+    )
+    assert exact["relations"]
+    assert all(item["truth_class"].startswith("EXACT_") for item in exact["relations"])
+
+    advisory = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-advisory-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=16,
+            max_edges=32,
+            max_candidate_pairs=120,
+            minimum_truth_class=ContractTruthClass.ADVISORY,
+            include_auxiliary=True,
+        ),
+        index,
+    )
+    assert any(item["truth_class"].startswith("ADVISORY_") for item in advisory["relations"])
+
+
+def test_extract_relational_neighborhood_exact_runtime_requires_runtime_evidence() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    target = next(item.participant_id for item in index.participants if item.participant_id != seed)
+    runtime_relation = TypedRelation.create(
+        relation_type=RelationType.PRODUCES_EVIDENCE,
+        source_participant_id=seed,
+        target_participant_id=target,
+        truth_class=SynthesisTruthClass.EXACT_RUNTIME,
+        evidence_refs=("runtime://session/exact-observation",),
+        metadata={"runtime_grounded": True},
+    )
+    relations = tuple((*index.relations, runtime_relation))
+    runtime_index = RelationalIndex.create(
+        repository_identity=index.repository_identity,
+        profile=index.profile,
+        participants=index.participants,
+        relations=relations,
+        groups=index.groups,
+        reverse_indexes=_build_reverse_indexes(
+            participants=index.participants,
+            relations=relations,
+            groups=index.groups,
+            connectome={"nodes": ()},
+        ),
+        boundary=index.boundary,
+        build_facts=index.build_facts,
+    )
+    packet = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-runtime-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=1,
+            max_nodes=8,
+            max_edges=16,
+            max_candidate_pairs=28,
+            minimum_truth_class=ContractTruthClass.EXACT_RUNTIME,
+            include_auxiliary=True,
+        ),
+        runtime_index,
+    )
+    assert packet["relations"]
+    assert {item["truth_class"] for item in packet["relations"]} == {"EXACT_RUNTIME"}
+    assert runtime_relation.relation_id in {item["relation_id"] for item in packet["relations"]}
+
+
+def test_objective_atlas_rejects_tampered_neighborhood_digest() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    neighborhood = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-neighborhood-digest",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=8,
+            max_edges=16,
+            max_candidate_pairs=28,
+        ),
+        index,
+    )
+    tampered = deepcopy(neighborhood)
+    tampered["inclusion_reasons"][seed].append("tampered_reason")
+    with pytest.raises(ValueError, match="neighborhood_digest"):
+        build_objective_relationship_atlas(
+            repo_root=".",
+            relational_index=index.to_dict(),
+            neighborhood=tampered,
+            profile="OBJECTIVE_STANDARD",
+        )
+
+
+
+def test_objective_atlas_cache_revalidates_current_checkout_identity(monkeypatch) -> None:
+    import aura_relationship_atlas as atlas_module
+
+    index = _build()
+    current_identity = dict(index.repository_identity)
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(current_identity),
+    )
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    neighborhood = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-cache-freshness",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=6,
+            max_edges=12,
+            max_candidate_pairs=15,
+        ),
+        index,
+    )
+    clear_objective_atlas_cache()
+    build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=neighborhood,
+        profile="OBJECTIVE_STANDARD",
+    )
+    current_identity["working_tree_digest"] = "0" * 40
+    with pytest.raises(ValueError, match="STALE"):
+        build_objective_relationship_atlas(
+            repo_root=".",
+            relational_index=index.to_dict(),
+            neighborhood=neighborhood,
+            profile="OBJECTIVE_STANDARD",
+        )
+    clear_objective_atlas_cache()
+
+
+def test_objective_atlas_compiles_from_bounded_neighborhood_and_cache_is_semantic_noop(monkeypatch) -> None:
+    import aura_relationship_atlas as atlas_module
+
+    index = _build()
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(relational_index["repository_identity"]),
+    )
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-atlas",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=2,
+        max_nodes=6,
+        max_edges=12,
+        max_candidate_pairs=15,
+    )
+    neighborhood = extract_relational_neighborhood(request, index)
+    clear_objective_atlas_cache()
+    first = build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=neighborhood,
+        profile="OBJECTIVE_DEEP",
+    )
+    second = build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=neighborhood,
+        profile="OBJECTIVE_DEEP",
+    )
+    clear_objective_atlas_cache()
+    third = build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=neighborhood,
+        profile="OBJECTIVE_DEEP",
+    )
+    assert first.to_dict() == second.to_dict() == third.to_dict()
+    assert first.boundary["objective_scoped"] is True
+    assert first.boundary["operational_profile"] == "OBJECTIVE_DEEP"
+    assert first.boundary["neighborhood_digest"] == neighborhood["neighborhood_digest"]
+    assert atlas_module.validate_relationship_atlas(first)["ok"] is True
+
+
+def test_objective_atlas_cache_evicts_oldest_by_byte_budget(monkeypatch) -> None:
+    import aura_relationship_atlas as atlas_module
+
+    index = _build()
+    monkeypatch.setattr(
+        atlas_module,
+        "_current_relational_index_identity",
+        lambda repo_root, relational_index: dict(relational_index["repository_identity"]),
+    )
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    first_request = RelationalNeighborhoodRequest(
+        objective_digest="cache-objective-1",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=1,
+        max_nodes=4,
+        max_edges=8,
+    )
+    second_request = RelationalNeighborhoodRequest(
+        objective_digest="cache-objective-2",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=1,
+        max_nodes=4,
+        max_edges=8,
+    )
+    first_neighborhood = extract_relational_neighborhood(first_request, index)
+    second_neighborhood = extract_relational_neighborhood(second_request, index)
+    probe = build_objective_relationship_atlas(
+        repo_root=".",
+        relational_index=index.to_dict(),
+        neighborhood=first_neighborhood,
+        profile="OBJECTIVE_STANDARD",
+        use_cache=False,
+    )
+    payload_size = len(json.dumps(probe.to_dict(), sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    monkeypatch.setattr(atlas_module, "OBJECTIVE_ATLAS_CACHE_MAX_BYTES", payload_size + 128)
+    clear_objective_atlas_cache()
+    build_objective_relationship_atlas(
+        repo_root=".", relational_index=index.to_dict(), neighborhood=first_neighborhood, profile="OBJECTIVE_STANDARD"
+    )
+    build_objective_relationship_atlas(
+        repo_root=".", relational_index=index.to_dict(), neighborhood=second_neighborhood, profile="OBJECTIVE_STANDARD"
+    )
+    assert len(atlas_module._OBJECTIVE_ATLAS_CACHE) == 1
+    only_key = next(iter(atlas_module._OBJECTIVE_ATLAS_CACHE))
+    assert only_key[2] == second_neighborhood["neighborhood_digest"]
+    assert atlas_module._OBJECTIVE_ATLAS_CACHE_BYTES <= atlas_module.OBJECTIVE_ATLAS_CACHE_MAX_BYTES

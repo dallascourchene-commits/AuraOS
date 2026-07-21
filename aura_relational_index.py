@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+import heapq
 from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -58,6 +59,7 @@ from aura_emergent_evidence_spine import (
     _repo_python_sources,
 )
 from aura_event_contracts import canonical_json, stable_digest, stable_id
+from aura_relationship_contracts import RelationalNeighborhoodRequest
 from aura_relational_synthesis import (
     Freshness,
     GroupKind,
@@ -1670,6 +1672,8 @@ def _build_reverse_indexes(
     by_group_kind: dict[str, set[str]] = defaultdict(set)
     by_relation_type: dict[str, set[str]] = defaultdict(set)
     by_test_path: dict[str, set[str]] = defaultdict(set)
+    by_schema: dict[str, set[str]] = defaultdict(set)
+    by_authority_family: dict[str, set[str]] = defaultdict(set)
 
     for participant in participants:
         by_participant[participant.participant_id].add(participant.participant_id)
@@ -1686,6 +1690,11 @@ def _build_reverse_indexes(
             by_capability[participant.canonical_ref].add(participant.participant_id)
         if file_path and _is_test_path(file_path):
             by_test_path[file_path].add(participant.participant_id)
+        if participant.participant_type is ParticipantType.SCHEMA or file_path.endswith(".schema.json"):
+            by_schema[participant.canonical_ref].add(participant.participant_id)
+            if file_path:
+                by_schema[file_path].add(participant.participant_id)
+        by_authority_family[participant.canonical_owner].add(participant.participant_id)
 
     for relation in relations:
         by_participant[relation.source_participant_id].add(relation.relation_id)
@@ -1730,8 +1739,8 @@ def _build_reverse_indexes(
         "by_group_kind": finish(by_group_kind),
         "by_relation_type": finish(by_relation_type),
         "by_test_path": finish(by_test_path),
-        "by_schema": {},
-        "by_authority_family": {},
+        "by_schema": finish(by_schema),
+        "by_authority_family": finish(by_authority_family),
         "by_arena": {},
     }
 
@@ -1867,6 +1876,9 @@ def query_relational_index(
     qualified_symbol: str | None = None,
     file_path: str | None = None,
     capability_id: str | None = None,
+    test_path: str | None = None,
+    schema_ref: str | None = None,
+    canonical_owner: str | None = None,
     relation_type: str | None = None,
 ) -> dict[str, Any]:
     value = index if isinstance(index, RelationalIndex) else RelationalIndex.from_dict(index)
@@ -1876,6 +1888,9 @@ def query_relational_index(
         "by_qualified_symbol": qualified_symbol,
         "by_file_path": _safe_repo_path(file_path) if file_path else None,
         "by_capability": capability_id,
+        "by_test_path": _safe_repo_path(test_path) if test_path else None,
+        "by_schema": _safe_repo_path(schema_ref) if schema_ref and ("/" in schema_ref or schema_ref.endswith(".json")) else schema_ref,
+        "by_authority_family": canonical_owner,
         "by_relation_type": relation_type,
     }
     supplied = [(name, item) for name, item in selectors.items() if item]
@@ -1909,6 +1924,343 @@ def query_relational_index(
         "vsa_patch_authority": False,
     }
 
+
+
+RELATIONAL_NEIGHBORHOOD_VERSION = "AURA_RELATIONAL_NEIGHBORHOOD_V1"
+
+_RELATION_CLASS_PRIORITY: Mapping[str, int] = MappingProxyType(
+    {
+        RelationType.CALLS.value: 0,
+        RelationType.CALLED_BY.value: 0,
+        RelationType.IMPORTS.value: 1,
+        RelationType.IMPORTED_BY.value: 1,
+        RelationType.TESTS.value: 2,
+        RelationType.TESTED_BY.value: 2,
+        RelationType.DECLARES.value: 3,
+        RelationType.DEFINED_IN.value: 3,
+        RelationType.IMPLEMENTS_CAPABILITY.value: 4,
+        RelationType.REQUIRES_CAPABILITY.value: 5,
+        RelationType.REQUIRES_VERIFIER.value: 5,
+        RelationType.PRODUCES_EVIDENCE.value: 5,
+    }
+)
+
+_TRUTH_PRIORITY: Mapping[str, int] = MappingProxyType(
+    {
+        TruthClass.EXACT_SOURCE.value: 0,
+        TruthClass.EXACT_TEST.value: 0,
+        TruthClass.EXACT_SCHEMA.value: 0,
+        TruthClass.EXACT_MANIFEST.value: 0,
+        TruthClass.EXACT_RUNTIME.value: 0,
+        TruthClass.ADVISORY_CONNECTOME.value: 2,
+        TruthClass.ADVISORY_AFFINITY.value: 3,
+        TruthClass.INFERRED_MOTIF.value: 4,
+        TruthClass.UNRESOLVED.value: 5,
+    }
+)
+
+
+_REQUEST_TRUTH_CLASSES: Mapping[str, frozenset[str]] = MappingProxyType(
+    {
+        "EXACT_SOURCE": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+            }
+        ),
+        "EXACT_DECLARED": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+            }
+        ),
+        "EXACT_RUNTIME": frozenset({TruthClass.EXACT_RUNTIME.value}),
+        "DERIVED": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+                TruthClass.INFERRED_MOTIF.value,
+            }
+        ),
+        "ADVISORY": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+                TruthClass.INFERRED_MOTIF.value,
+                TruthClass.ADVISORY_CONNECTOME.value,
+                TruthClass.ADVISORY_AFFINITY.value,
+            }
+        ),
+        "UNKNOWN": frozenset(item.value for item in TruthClass),
+    }
+)
+
+
+def _resolve_neighborhood_seeds(
+    request: RelationalNeighborhoodRequest,
+    index: RelationalIndex,
+) -> tuple[list[str], dict[str, list[str]]]:
+    participant_ids = {item.participant_id for item in index.participants}
+    reasons: dict[str, list[str]] = defaultdict(list)
+    missing = sorted(set(request.seed_participant_ids) - participant_ids)
+    if missing:
+        raise ValueError(f"relational neighborhood seed participants are missing: {missing[:5]}")
+    for participant_id in request.seed_participant_ids:
+        reasons[participant_id].append("exact_seed_participant_id")
+
+    for source_ref in request.seed_source_refs:
+        lookup_keys = []
+        if source_ref.symbol:
+            lookup_keys.append(("by_qualified_symbol", f"{source_ref.file_path}#{source_ref.symbol}"))
+        lookup_keys.append(("by_file_path", source_ref.file_path))
+        if request.include_tests:
+            lookup_keys.append(("by_test_path", source_ref.file_path))
+        resolved: set[str] = set()
+        for reverse_name, key in lookup_keys:
+            reverse = index.reverse_indexes.get(reverse_name, {})
+            if not isinstance(reverse, Mapping):
+                continue
+            resolved.update(
+                item for item in reverse.get(key, ()) if item in participant_ids
+            )
+            if reverse_name == "by_qualified_symbol" and not resolved and source_ref.symbol:
+                resolved.update(
+                    item
+                    for lookup_key, values in reverse.items()
+                    if str(lookup_key).endswith(f"#{source_ref.symbol}")
+                    for item in values
+                    if item in participant_ids
+                )
+        for participant_id in sorted(resolved):
+            reasons[participant_id].append(
+                f"exact_source_ref:{source_ref.file_path}#{source_ref.symbol or '*'}"
+            )
+    seeds = sorted(reasons)
+    if not seeds:
+        raise ValueError("relational neighborhood exact seeds did not resolve in the current index")
+    if len(seeds) > request.max_nodes:
+        raise ValueError("exact relational neighborhood seeds exceed max_nodes")
+    return seeds, {key: sorted(set(value)) for key, value in sorted(reasons.items())}
+
+
+def extract_relational_neighborhood(
+    request: RelationalNeighborhoodRequest | Mapping[str, Any],
+    index: RelationalIndex | Mapping[str, Any],
+) -> dict[str, Any]:
+    """Extract a deterministic, exact-seeded, resource-bounded index subgraph."""
+    started = time.perf_counter()
+    req = request if isinstance(request, RelationalNeighborhoodRequest) else RelationalNeighborhoodRequest.from_dict(request)
+    value = index if isinstance(index, RelationalIndex) else RelationalIndex.from_dict(index)
+    seeds, inclusion_reasons = _resolve_neighborhood_seeds(req, value)
+
+    participant_map = {item.participant_id: item for item in value.participants}
+    relation_map = {item.relation_id: item for item in value.relations}
+    adjacency: dict[str, list[str]] = defaultdict(list)
+    for relation in value.relations:
+        adjacency[relation.source_participant_id].append(relation.relation_id)
+        adjacency[relation.target_participant_id].append(relation.relation_id)
+    for relation_ids in adjacency.values():
+        relation_ids.sort()
+
+    allowed = set(req.allowed_relation_types)
+    selected_nodes: set[str] = set(seeds)
+    seed_pair_count = len(selected_nodes) * (len(selected_nodes) - 1) // 2
+    if seed_pair_count > req.max_candidate_pairs:
+        raise ValueError("exact relational neighborhood seeds exceed max_candidate_pairs")
+    selected_edges: set[str] = set()
+    node_hops: dict[str, int] = {item: 0 for item in seeds}
+    edge_reasons: dict[str, list[str]] = defaultdict(list)
+    frontier: list[dict[str, Any]] = []
+    exhausted: set[str] = set()
+    queue: list[tuple[int, int, int, str, str, str]] = []
+
+    seed_tokens = {
+        token.casefold()
+        for source_ref in req.seed_source_refs
+        for token in (source_ref.file_path, source_ref.symbol, source_ref.source_hash)
+        if token
+    }
+
+    minimum_truth_classes = _REQUEST_TRUTH_CLASSES[req.minimum_truth_class.value]
+
+    def eligible(relation: TypedRelation) -> bool:
+        if allowed and relation.relation_type.value not in allowed:
+            return False
+        if relation.truth_class.value not in minimum_truth_classes:
+            return False
+        if not req.include_auxiliary and _TRUTH_PRIORITY.get(relation.truth_class.value, 9) > 0:
+            return False
+        if not req.include_tests and relation.relation_type in {RelationType.TESTS, RelationType.TESTED_BY}:
+            return False
+        if not req.include_docs and relation.relation_type is RelationType.DOCUMENTED_BY:
+            return False
+        return True
+
+    def push_from(participant_id: str, hop: int) -> None:
+        if hop > req.max_hops:
+            return
+        for relation_id in adjacency.get(participant_id, ()):
+            relation = relation_map[relation_id]
+            if not eligible(relation):
+                continue
+            other = (
+                relation.target_participant_id
+                if relation.source_participant_id == participant_id
+                else relation.source_participant_id
+            )
+            evidence_text = " ".join(relation.evidence_refs).casefold()
+            objective_rank = 0 if any(token in evidence_text for token in seed_tokens) else 1
+            heapq.heappush(
+                queue,
+                (
+                    hop,
+                    _TRUTH_PRIORITY.get(relation.truth_class.value, 9) * 10
+                    + _RELATION_CLASS_PRIORITY.get(relation.relation_type.value, 8),
+                    objective_rank,
+                    relation_id,
+                    participant_id,
+                    other,
+                ),
+            )
+
+    for seed in seeds:
+        push_from(seed, 1)
+
+    while queue:
+        elapsed_ms = int((time.perf_counter() - started) * 1000)
+        if elapsed_ms >= req.max_elapsed_ms:
+            exhausted.add("max_elapsed_ms")
+            break
+        hop, _, _, relation_id, source_id, other_id = heapq.heappop(queue)
+        if relation_id in selected_edges:
+            continue
+        if len(selected_edges) >= req.max_edges:
+            exhausted.add("max_edges")
+            frontier.append({"participant_id": other_id, "via_relation_id": relation_id, "hop": hop, "reason": "edge_budget"})
+            continue
+        if other_id not in selected_nodes and len(selected_nodes) >= req.max_nodes:
+            exhausted.add("max_nodes")
+            frontier.append({"participant_id": other_id, "via_relation_id": relation_id, "hop": hop, "reason": "node_budget"})
+            continue
+        if other_id not in selected_nodes:
+            next_node_count = len(selected_nodes) + 1
+            next_pair_count = next_node_count * (next_node_count - 1) // 2
+            if next_pair_count > req.max_candidate_pairs:
+                exhausted.add("max_candidate_pairs")
+                frontier.append(
+                    {
+                        "participant_id": other_id,
+                        "via_relation_id": relation_id,
+                        "hop": hop,
+                        "reason": "candidate_pair_budget",
+                    }
+                )
+                continue
+        selected_edges.add(relation_id)
+        edge_reasons[relation_id].append(
+            f"priority_expansion:hop={hop}:from={source_id}"
+        )
+        if other_id not in selected_nodes:
+            selected_nodes.add(other_id)
+            node_hops[other_id] = hop
+            relation = relation_map[relation_id]
+            inclusion_reasons.setdefault(other_id, []).append(
+                f"related_by:{relation.relation_type.value}:{relation_id}"
+            )
+            if hop < req.max_hops:
+                push_from(other_id, hop + 1)
+
+    def build_packet() -> dict[str, Any]:
+        candidate_pair_count = len(selected_nodes) * (len(selected_nodes) - 1) // 2
+        groups = [
+            group.to_dict()
+            for group in value.groups
+            if (group.boundary.included_participant_ids or group.relations)
+            and set(group.boundary.included_participant_ids).issubset(selected_nodes)
+            and {item.relation_id for item in group.relations}.issubset(selected_edges)
+        ]
+        packet = {
+            "version": RELATIONAL_NEIGHBORHOOD_VERSION,
+            "objective_digest": req.objective_digest,
+            "index_id": value.index_id,
+            "index_digest": value.index_digest,
+            "profile": _thaw_json(value.profile),
+            "seed_participant_ids": seeds,
+            "participants": [participant_map[item].to_dict() for item in sorted(selected_nodes)],
+            "relations": [relation_map[item].to_dict() for item in sorted(selected_edges)],
+            "groups": groups,
+            "inclusion_reasons": {
+                item: sorted(set(inclusion_reasons.get(item, ())))
+                for item in sorted(selected_nodes)
+            },
+            "edge_inclusion_reasons": {
+                item: sorted(set(edge_reasons.get(item, ())))
+                for item in sorted(selected_edges)
+            },
+            "frontier": sorted(frontier, key=lambda item: (item["hop"], item["via_relation_id"], item["participant_id"])),
+            "truncation_receipt": {
+                "truncated": bool(exhausted or frontier),
+                "exhausted_budgets": sorted(exhausted),
+                "node_count": len(selected_nodes),
+                "edge_count": len(selected_edges),
+                "candidate_pair_count": candidate_pair_count,
+                "unexpanded_frontier_count": len(frontier),
+                "elapsed_ms": 0,
+                "budgets": {
+                    "max_hops": req.max_hops,
+                    "max_nodes": req.max_nodes,
+                    "max_edges": req.max_edges,
+                    "max_candidate_pairs": req.max_candidate_pairs,
+                    "max_output_bytes": req.max_output_bytes,
+                    "max_elapsed_ms": req.max_elapsed_ms,
+                },
+            },
+            "safe_to_patch": False,
+            "production_mutation": False,
+            "automatic_fix": False,
+            "automatic_merge": False,
+            "human_review_required": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        packet["neighborhood_digest"] = stable_digest(packet, digest_size=20)
+        return packet
+
+    packet = build_packet()
+    while len(canonical_json(packet).encode("utf-8")) > req.max_output_bytes:
+        removable = sorted(selected_nodes - set(seeds), key=lambda item: (node_hops.get(item, 0), item), reverse=True)
+        if not removable:
+            raise ValueError("max_output_bytes is too small to retain exact neighborhood seeds")
+        removed = removable[0]
+        selected_nodes.remove(removed)
+        exhausted.add("max_output_bytes")
+        for relation_id in list(selected_edges):
+            relation = relation_map[relation_id]
+            if removed in {relation.source_participant_id, relation.target_participant_id}:
+                selected_edges.remove(relation_id)
+                edge_reasons.pop(relation_id, None)
+        inclusion_reasons.pop(removed, None)
+        frontier.append({"participant_id": removed, "via_relation_id": "output_byte_trim", "hop": node_hops.get(removed, req.max_hops), "reason": "output_byte_budget"})
+        packet = build_packet()
+
+    packet["truncation_receipt"]["output_bytes"] = len(canonical_json(packet).encode("utf-8"))
+    packet["neighborhood_digest"] = stable_digest(
+        {key: value for key, value in packet.items() if key != "neighborhood_digest"},
+        digest_size=20,
+    )
+    if len(canonical_json(packet).encode("utf-8")) > req.max_output_bytes:
+        raise ValueError("relational neighborhood exceeded max_output_bytes after canonicalization")
+    return packet
 
 def relational_index_status(repo_root: str | Path = ".") -> dict[str, Any]:
     store = RelationalIndexStore(repo_root)

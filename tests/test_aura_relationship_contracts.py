@@ -27,6 +27,16 @@ from aura_relationship_contracts import (
     capability_selections_from_path,
     canonical_json,
     evaluate_relationship_compatibility,
+    evaluate_typed_relationship_compatibility,
+    InterfaceActor,
+    InterfaceBoundary,
+    InterfaceDataClass,
+    InterfaceLifecycle,
+    InterfaceOperation,
+    InterfacePortCardinality,
+    InterfacePortDirection,
+    InterfaceResourceClass,
+    RelationshipInterfaceSpec,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -63,11 +73,17 @@ def _source_ref(symbol: str = "compile") -> SourceReference:
     )
 
 
-def _relationship_contract(*, prohibition_ids: tuple[str, ...] = ()) -> RelationshipContract:
+def _relationship_contract(
+    *,
+    prohibition_ids: tuple[str, ...] = (),
+    proof_status: ProofStatus = ProofStatus.GROUNDED,
+    truth_class: TruthClass = TruthClass.EXACT_SOURCE,
+    source_repository: RepositoryIdentity | None = None,
+) -> RelationshipContract:
     return RelationshipContract.create(
         objective_digest="objective-digest",
         intent_packet_digest="intent-digest",
-        source_repository=RepositoryIdentity(
+        source_repository=source_repository or RepositoryIdentity(
             repo_head="head-sha",
             working_tree_digest="tree-digest",
             relational_index_digest="index-digest",
@@ -75,9 +91,9 @@ def _relationship_contract(*, prohibition_ids: tuple[str, ...] = ()) -> Relation
         ),
         domain=RelationshipDomain.CODE,
         slots=_slots(),
-        truth_class=TruthClass.EXACT_SOURCE,
+        truth_class=truth_class,
         authority_posture=AuthorityPosture.PROPOSAL_ONLY,
-        proof_status=ProofStatus.GROUNDED,
+        proof_status=proof_status,
         policy_scope=("coding_arena",),
         resource_budget=ResourceBudget(),
         source_refs=(_source_ref(),),
@@ -269,3 +285,139 @@ def test_sequence_fields_reject_mapping_payloads() -> None:
     request_payload["seed_participant_ids"] = {"seed": True}
     with pytest.raises(TypeError, match="non-text.*sequence"):
         RelationalNeighborhoodRequest.from_dict(request_payload)
+
+
+
+def _interface(
+    *,
+    direction: InterfacePortDirection,
+    cardinality: InterfacePortCardinality = InterfacePortCardinality.ONE,
+    lifecycle: InterfaceLifecycle = InterfaceLifecycle.SESSION,
+    actor: InterfaceActor = InterfaceActor.SYSTEM,
+    boundary: InterfaceBoundary = InterfaceBoundary.SAME_ARENA,
+    operation: InterfaceOperation = InterfaceOperation.VALIDATE,
+) -> RelationshipInterfaceSpec:
+    return RelationshipInterfaceSpec.create(
+        port_name="relationship_packet",
+        direction=direction,
+        cardinality=cardinality,
+        lifecycle=lifecycle,
+        actor=actor,
+        boundary=boundary,
+        resource_class=InterfaceResourceClass.CODE,
+        data_class=InterfaceDataClass.CONTRACT,
+        operation=operation,
+    )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "field_value"),
+    (
+        ("repo_head", "different-head"),
+        ("working_tree_digest", "different-tree"),
+        ("relational_index_digest", "different-index"),
+        ("atlas_digest", "different-atlas"),
+    ),
+)
+def test_typed_compatibility_requires_complete_repository_identity(
+    field_name: str, field_value: str
+) -> None:
+    identity = {
+        "repo_head": "head-sha",
+        "working_tree_digest": "tree-digest",
+        "relational_index_digest": "index-digest",
+        "atlas_digest": "atlas-digest",
+    }
+    identity[field_name] = field_value
+    assessment = evaluate_typed_relationship_compatibility(
+        _relationship_contract(),
+        _relationship_contract(source_repository=RepositoryIdentity(**identity)),
+        left_interface=_interface(direction=InterfacePortDirection.OUTPUT),
+        right_interface=_interface(direction=InterfacePortDirection.INPUT),
+    )
+    repository_guard = next(
+        item for item in assessment.hard_guard_results
+        if item.code.value == "REPOSITORY_IDENTITY"
+    )
+    assert repository_guard.passed is False
+    assert assessment.outcome is CompatibilityOutcome.PROHIBITED
+    assert assessment.advisory_score is None
+
+
+def test_typed_compatibility_accepts_output_to_input_and_roundtrips_interface() -> None:
+    left = _relationship_contract()
+    right = _relationship_contract()
+    left_interface = _interface(direction=InterfacePortDirection.OUTPUT)
+    right_interface = _interface(direction=InterfacePortDirection.INPUT)
+    assessment = evaluate_typed_relationship_compatibility(
+        left,
+        right,
+        left_interface=left_interface,
+        right_interface=right_interface,
+    )
+    assert assessment.outcome is CompatibilityOutcome.COMPATIBLE
+    assert assessment.advisory_score == 1.0
+    payload = left_interface.to_dict()
+    jsonschema.Draft202012Validator(_schema("aura_relationship_interface.schema.json")).validate(payload)
+    assert RelationshipInterfaceSpec.from_dict(payload) == left_interface
+
+
+def test_typed_compatibility_requires_adapter_for_output_output_and_cardinality() -> None:
+    left = _relationship_contract()
+    right = _relationship_contract()
+    assessment = evaluate_typed_relationship_compatibility(
+        left,
+        right,
+        left_interface=_interface(
+            direction=InterfacePortDirection.OUTPUT,
+            cardinality=InterfacePortCardinality.MANY,
+        ),
+        right_interface=_interface(
+            direction=InterfacePortDirection.OUTPUT,
+            cardinality=InterfacePortCardinality.ONE,
+        ),
+    )
+    assert assessment.outcome is CompatibilityOutcome.ADAPTER_REQUIRED
+    assert "port_direction_adapter" in assessment.required_adapters
+    assert "cardinality_adapter" in assessment.required_adapters
+    assert any("incompatible port directions" in risk for risk in assessment.risks)
+
+
+def test_typed_compatibility_circuit_breaks_actor_and_mutating_operation() -> None:
+    assessment = evaluate_typed_relationship_compatibility(
+        _relationship_contract(),
+        _relationship_contract(),
+        left_interface=_interface(direction=InterfacePortDirection.OUTPUT),
+        right_interface=_interface(
+            direction=InterfacePortDirection.INPUT,
+            actor=InterfaceActor.EXTERNAL,
+            operation=InterfaceOperation.EXECUTE,
+        ),
+    )
+    assert assessment.outcome is CompatibilityOutcome.PROHIBITED
+    actor_guard = next(
+        item for item in assessment.hard_guard_results if item.code.value == "ACTOR_AUTHORITY"
+    )
+    assert actor_guard.passed is False
+    assert "WRITE/EXECUTE" in actor_guard.reason
+
+
+def test_typed_compatibility_prohibition_and_stale_proof_circuit_breakers() -> None:
+    prohibited = evaluate_typed_relationship_compatibility(
+        _relationship_contract(prohibition_ids=("no_direct_wire",)),
+        _relationship_contract(),
+        left_interface=_interface(direction=InterfacePortDirection.OUTPUT),
+        right_interface=_interface(direction=InterfacePortDirection.INPUT),
+    )
+    assert prohibited.outcome is CompatibilityOutcome.PROHIBITED
+    assert prohibited.advisory_score is None
+
+    stale = evaluate_typed_relationship_compatibility(
+        _relationship_contract(proof_status=ProofStatus.UNVERIFIED),
+        _relationship_contract(),
+        left_interface=_interface(direction=InterfacePortDirection.OUTPUT),
+        right_interface=_interface(direction=InterfacePortDirection.INPUT),
+    )
+    assert stale.outcome is CompatibilityOutcome.INSUFFICIENT_EVIDENCE
+    assert stale.advisory_score is None
+    assert "PROOF_READINESS" in stale.missing_evidence

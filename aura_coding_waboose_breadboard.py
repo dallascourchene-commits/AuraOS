@@ -20,6 +20,12 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 from aura_event_contracts import stable_digest
+from aura_relationship_contracts import (
+    CompatibilityOutcome,
+    RelationshipCompatibilityAssessment,
+    RelationshipContract,
+    RelationshipInterfaceSpec,
+)
 from aura_planning_board import (
     ActionContinuityEvidence,
     ActionSpec,
@@ -38,6 +44,7 @@ from aura_planning_board import (
     ReversibilityClass,
     VerifierReceiptEvidence,
     verify_board_continuity,
+    project_relationship_preflight_board,
 )
 
 CODING_WABOOSE_BREADBOARD_VERSION = "AURA_CODING_WABOOSE_BREADBOARD_V1"
@@ -517,9 +524,97 @@ def compile_waboose_breadboard(
     }
 
 
+RELATIONSHIP_BREADBOARD_VERSION = "AURA_CODING_RELATIONSHIP_BREADBOARD_V1"
+
+
+def compile_relationship_breadboard(
+    *,
+    objective: str,
+    left_contract: RelationshipContract,
+    right_contract: RelationshipContract,
+    left_interface: RelationshipInterfaceSpec,
+    right_interface: RelationshipInterfaceSpec,
+    assessment: RelationshipCompatibilityAssessment,
+) -> dict[str, Any]:
+    """Compile C5 typed compatibility into human and machine preflight receipts."""
+    board = project_relationship_preflight_board(
+        objective=objective,
+        left_contract=left_contract,
+        right_contract=right_contract,
+        left_interface=left_interface,
+        right_interface=right_interface,
+        assessment=assessment,
+    )
+    failed_guards = [
+        item.to_dict() for item in assessment.hard_guard_results if not item.passed
+    ]
+    circuit_breakers = {
+        "prohibited": assessment.outcome is CompatibilityOutcome.PROHIBITED,
+        "insufficient_evidence": assessment.outcome is CompatibilityOutcome.INSUFFICIENT_EVIDENCE,
+        "adapter_required": assessment.outcome is CompatibilityOutcome.ADAPTER_REQUIRED,
+        "auxiliary_only": assessment.outcome is CompatibilityOutcome.AUXILIARY_ONLY,
+        "hard_guard_failures": failed_guards,
+    }
+    human_lines = [
+        f"Relationship preflight outcome: {assessment.outcome.value}.",
+        (
+            "All hard guards passed; the circuit is ready for human review."
+            if not failed_guards
+            else f"{len(failed_guards)} hard guard(s) block direct compatibility."
+        ),
+    ]
+    if assessment.required_adapters:
+        human_lines.append(
+            "Required adapters: " + ", ".join(assessment.required_adapters) + "."
+        )
+    if assessment.missing_evidence:
+        human_lines.append(
+            "Missing evidence: " + ", ".join(assessment.missing_evidence) + "."
+        )
+    receipt = {
+        "version": RELATIONSHIP_BREADBOARD_VERSION,
+        "objective": " ".join(str(objective or "").split()),
+        "left_contract": left_contract.to_dict(),
+        "right_contract": right_contract.to_dict(),
+        "left_interface": left_interface.to_dict(),
+        "right_interface": right_interface.to_dict(),
+        "compatibility": assessment.to_dict(),
+        "planning_board": board.to_dict(),
+        "planning_board_digest": board.digest,
+        "circuit_breakers": circuit_breakers,
+        "human_summary": " ".join(human_lines),
+        "machine_status": {
+            "preflight_ready": assessment.outcome
+            in {
+                CompatibilityOutcome.COMPATIBLE,
+                CompatibilityOutcome.ADAPTER_REQUIRED,
+                CompatibilityOutcome.AUXILIARY_ONLY,
+            },
+            "directly_compatible": assessment.outcome is CompatibilityOutcome.COMPATIBLE,
+            "requires_human_review": True,
+        },
+        "authority": {
+            "class": BREADBOARD_AUTHORITY,
+            "execution_authority": False,
+            "patch_authority": False,
+            "production_mutation": False,
+            "automatic_fix": False,
+            "automatic_commit": False,
+            "automatic_push": False,
+            "automatic_pull_request": False,
+            "automatic_merge": False,
+            "human_authorizes": True,
+        },
+    }
+    receipt["receipt_digest"] = stable_digest(receipt)
+    return receipt
+
+
 __all__ = [
     "BREADBOARD_AUTHORITY",
     "CODING_WABOOSE_BREADBOARD_VERSION",
     "WabooseBreadboardComponent",
     "compile_waboose_breadboard",
+    "compile_relationship_breadboard",
+    "RELATIONSHIP_BREADBOARD_VERSION",
 ]

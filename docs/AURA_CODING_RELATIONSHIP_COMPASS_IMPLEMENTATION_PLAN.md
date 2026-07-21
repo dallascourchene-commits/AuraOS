@@ -1,6 +1,6 @@
 # Aura Coding Relationship Compass — Comprehensive Implementation Plan
 
-> **Program status:** implementation in progress — C0, C1, and C2 implemented; C3–C9 pending  
+> **Program status:** implementation in progress — C0 through C5 implemented; C6–C9 pending
 > **Canonical name:** Aura Coding Relationship Compass  
 > **Reference architecture:** ENG-ATLAS v2.4, reconciled with current AuraOS  
 > **Repository baseline:** `dallascourchene-commits/AuraOS` main source SHA `4865e013c2deb0695b86591c899fb278aff08ac5`  
@@ -511,6 +511,9 @@ Each phase is independently reviewable and reversible. Do not combine the progra
 
 ### C3 — Exact bounded relational neighborhood
 
+**Implementation status:** complete in the current implementation branch with canonical digest validation, deterministic exact-seed expansion, six independent budgets, reverse-index selectors, and explicit frontier/truncation receipts.
+
+
 **Purpose:** prevent full-index construction from being the first operation for every Compass request.
 
 **Primary files:**
@@ -536,6 +539,9 @@ Each phase is independently reviewable and reversible. Do not combine the progra
 
 ### C4 — Objective-scoped Atlas reasoning
 
+**Implementation status:** complete in the current implementation branch with `MINIMAL_GLOBAL`, `OBJECTIVE_STANDARD`, and `OBJECTIVE_DEEP` profiles, bounded local compilation, global pair guards, and a byte-bounded semantic-no-op LRU cache.
+
+
 **Purpose:** separate global relationship coverage from local deeper intelligence.
 
 **Primary files:**
@@ -560,6 +566,9 @@ Each phase is independently reviewable and reversible. Do not combine the progra
 **Rollback:** use current MINIMAL Atlas projection only.
 
 ### C5 — Typed compatibility and Coding Breadboard
+
+**Implementation status:** complete in the current implementation branch with typed interfaces, seven ordered hard guards, proposal-only Planning Board projection, circuit breakers, and human/machine Breadboard receipts.
+
 
 **Purpose:** convert relationship meaning into deterministic preflight without granting authority.
 
@@ -879,6 +888,6 @@ The Compass program is complete only when all of the following are true:
 
 ## 13. Immediate next implementation action
 
-Review and merge the **C0–C2 implementation batch** after branch CI and exact-head verification. The next implementation batch should complete **C3 and C4 together**: deterministic bounded-neighborhood extraction followed by objective-scoped Atlas reasoning over that neighborhood.
+Review the **C3–C5 implementation batch** after branch CI and exact-head verification. The next implementation batch should begin **C6**: bounded Emergent discovery and verification experiments over the C3 neighborhood, C4 objective Atlas, and C5 compatibility/Breadboard receipts.
 
-Do not begin C5 compatibility/Breadboard activation until C3–C4 prove that every expansion stops at hop, node, edge, candidate-pair, byte, and elapsed-time bounds and emits a deterministic truncation frontier.
+Do not allow C6 discovery to bypass C5 hard guards, expand beyond C3 budgets, or promote advisory findings into exact truth without current source and verifier evidence.

@@ -776,7 +776,7 @@ packet = compile_coding_relationship_compass(
 )
 ```
 
-The packet binds Connectome capability routing, exact atomic source/test grounding, one JIT Relational Synthesis capsule, and a bounded MINIMAL Atlas projection. Inspect `recommended_targets`, `required_tests`, `relationships_to_preserve`, `missing_roles`, `required_adapters`, and `prohibitions`. The packet is proposal-only and cannot authorize a patch. Architect uses this route before filename fallback for matching broad objectives.
+The packet binds Connectome capability routing, exact atomic source/test grounding, one JIT Relational Synthesis capsule, a deterministic bounded relational neighborhood, an `OBJECTIVE_STANDARD`/`OBJECTIVE_DEEP` Atlas, typed compatibility hard guards, and a proposal-only Coding Breadboard receipt. Inspect `relational_neighborhood`, `typed_compatibility`, `coding_breadboard`, `recommended_targets`, `required_tests`, `relationships_to_preserve`, `missing_roles`, `required_adapters`, and `prohibitions`. The packet cannot authorize a patch, execution, commit, push, pull request, or merge. Architect uses this route before legacy filename inference for matching broad objectives and fails closed when Compass grounding fails.
 
 See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
 
