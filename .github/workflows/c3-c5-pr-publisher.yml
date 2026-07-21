@@ -51,7 +51,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install focused dependencies
-        run: python -m pip install --quiet pytest jsonschema
+        run: python -m pip install --quiet pytest jsonschema numpy
       - name: Verify C3-C5
         run: |
           set -euo pipefail
