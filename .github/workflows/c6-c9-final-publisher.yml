@@ -1,12 +1,12 @@
 name: C6-C9 Final Publisher
 
 on:
-  pull_request_target:
-    types: [opened, reopened, synchronize]
+  push:
+    branches: [main]
+    paths: [.github/workflows/c6-c9-final-publisher.yml]
 
 permissions:
   contents: write
-  pull-requests: read
 
 concurrency:
   group: c6-c9-final-publisher
@@ -14,11 +14,11 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event.pull_request.head.ref == 'work/coding-relationship-compass-c6-c9-20260721' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      EXPECTED_HEAD: 8a8e9e7283715bf47f70234860668b27019bd0ad
+      TARGET_BRANCH: work/coding-relationship-compass-c6-c9-20260721
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Reconstruct and verify exact C6-C9 patch
@@ -26,8 +26,8 @@ jobs:
           set -euo pipefail
           git init -q .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --quiet origin work/coding-relationship-compass-c6-c9-20260721
-          git checkout -q -B work/coding-relationship-compass-c6-c9-20260721 FETCH_HEAD
+          git fetch --quiet origin "$TARGET_BRANCH"
+          git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           BASE_HEAD=8e514af2241b5c0b6cd62aae32bbb6c3e165e613
           test "$(wc -c < .github/c6-c9-final.patch.gz.b64)" -eq 47148
@@ -121,5 +121,5 @@ EOF
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "feat: complete Coding Relationship Compass C6-C9"
           NEW_HEAD=$(git rev-parse HEAD)
-          git push --force-with-lease=refs/heads/work/coding-relationship-compass-c6-c9-20260721:$EXPECTED_HEAD \
-            origin "$NEW_HEAD":refs/heads/work/coding-relationship-compass-c6-c9-20260721
+          git push --force-with-lease=refs/heads/${TARGET_BRANCH}:$EXPECTED_HEAD \
+            origin "$NEW_HEAD":refs/heads/${TARGET_BRANCH}
