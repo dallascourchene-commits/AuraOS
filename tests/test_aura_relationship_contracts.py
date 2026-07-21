@@ -78,11 +78,12 @@ def _relationship_contract(
     prohibition_ids: tuple[str, ...] = (),
     proof_status: ProofStatus = ProofStatus.GROUNDED,
     truth_class: TruthClass = TruthClass.EXACT_SOURCE,
+    source_repository: RepositoryIdentity | None = None,
 ) -> RelationshipContract:
     return RelationshipContract.create(
         objective_digest="objective-digest",
         intent_packet_digest="intent-digest",
-        source_repository=RepositoryIdentity(
+        source_repository=source_repository or RepositoryIdentity(
             repo_head="head-sha",
             working_tree_digest="tree-digest",
             relational_index_digest="index-digest",
@@ -307,6 +308,40 @@ def _interface(
         data_class=InterfaceDataClass.CONTRACT,
         operation=operation,
     )
+
+
+@pytest.mark.parametrize(
+    ("field_name", "field_value"),
+    (
+        ("repo_head", "different-head"),
+        ("working_tree_digest", "different-tree"),
+        ("relational_index_digest", "different-index"),
+        ("atlas_digest", "different-atlas"),
+    ),
+)
+def test_typed_compatibility_requires_complete_repository_identity(
+    field_name: str, field_value: str
+) -> None:
+    identity = {
+        "repo_head": "head-sha",
+        "working_tree_digest": "tree-digest",
+        "relational_index_digest": "index-digest",
+        "atlas_digest": "atlas-digest",
+    }
+    identity[field_name] = field_value
+    assessment = evaluate_typed_relationship_compatibility(
+        _relationship_contract(),
+        _relationship_contract(source_repository=RepositoryIdentity(**identity)),
+        left_interface=_interface(direction=InterfacePortDirection.OUTPUT),
+        right_interface=_interface(direction=InterfacePortDirection.INPUT),
+    )
+    repository_guard = next(
+        item for item in assessment.hard_guard_results
+        if item.code.value == "REPOSITORY_IDENTITY"
+    )
+    assert repository_guard.passed is False
+    assert assessment.outcome is CompatibilityOutcome.PROHIBITED
+    assert assessment.advisory_score is None
 
 
 def test_typed_compatibility_accepts_output_to_input_and_roundtrips_interface() -> None:

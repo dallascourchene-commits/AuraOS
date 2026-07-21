@@ -1960,6 +1960,62 @@ _TRUTH_PRIORITY: Mapping[str, int] = MappingProxyType(
 )
 
 
+_REQUEST_TRUTH_CLASSES: Mapping[str, frozenset[str]] = MappingProxyType(
+    {
+        "EXACT_SOURCE": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+            }
+        ),
+        "EXACT_DECLARED": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+            }
+        ),
+        "EXACT_RUNTIME": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+            }
+        ),
+        "DERIVED": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+                TruthClass.INFERRED_MOTIF.value,
+            }
+        ),
+        "ADVISORY": frozenset(
+            {
+                TruthClass.EXACT_SOURCE.value,
+                TruthClass.EXACT_TEST.value,
+                TruthClass.EXACT_SCHEMA.value,
+                TruthClass.EXACT_MANIFEST.value,
+                TruthClass.EXACT_RUNTIME.value,
+                TruthClass.INFERRED_MOTIF.value,
+                TruthClass.ADVISORY_CONNECTOME.value,
+                TruthClass.ADVISORY_AFFINITY.value,
+            }
+        ),
+        "UNKNOWN": frozenset(item.value for item in TruthClass),
+    }
+)
+
+
 def _resolve_neighborhood_seeds(
     request: RelationalNeighborhoodRequest,
     index: RelationalIndex,
@@ -2028,6 +2084,9 @@ def extract_relational_neighborhood(
 
     allowed = set(req.allowed_relation_types)
     selected_nodes: set[str] = set(seeds)
+    seed_pair_count = len(selected_nodes) * (len(selected_nodes) - 1) // 2
+    if seed_pair_count > req.max_candidate_pairs:
+        raise ValueError("exact relational neighborhood seeds exceed max_candidate_pairs")
     selected_edges: set[str] = set()
     node_hops: dict[str, int] = {item: 0 for item in seeds}
     edge_reasons: dict[str, list[str]] = defaultdict(list)
@@ -2042,8 +2101,12 @@ def extract_relational_neighborhood(
         if token
     }
 
+    minimum_truth_classes = _REQUEST_TRUTH_CLASSES[req.minimum_truth_class.value]
+
     def eligible(relation: TypedRelation) -> bool:
         if allowed and relation.relation_type.value not in allowed:
+            return False
+        if relation.truth_class.value not in minimum_truth_classes:
             return False
         if not req.include_auxiliary and _TRUTH_PRIORITY.get(relation.truth_class.value, 9) > 0:
             return False
@@ -2099,6 +2162,20 @@ def extract_relational_neighborhood(
             exhausted.add("max_nodes")
             frontier.append({"participant_id": other_id, "via_relation_id": relation_id, "hop": hop, "reason": "node_budget"})
             continue
+        if other_id not in selected_nodes:
+            next_node_count = len(selected_nodes) + 1
+            next_pair_count = next_node_count * (next_node_count - 1) // 2
+            if next_pair_count > req.max_candidate_pairs:
+                exhausted.add("max_candidate_pairs")
+                frontier.append(
+                    {
+                        "participant_id": other_id,
+                        "via_relation_id": relation_id,
+                        "hop": hop,
+                        "reason": "candidate_pair_budget",
+                    }
+                )
+                continue
         selected_edges.add(relation_id)
         edge_reasons[relation_id].append(
             f"priority_expansion:hop={hop}:from={source_id}"
@@ -2113,12 +2190,8 @@ def extract_relational_neighborhood(
             if hop < req.max_hops:
                 push_from(other_id, hop + 1)
 
-    pair_count = len(selected_nodes) * (len(selected_nodes) - 1) // 2
-    if pair_count > req.max_candidate_pairs:
-        exhausted.add("max_candidate_pairs")
-    candidate_pair_count = min(pair_count, req.max_candidate_pairs)
-
     def build_packet() -> dict[str, Any]:
+        candidate_pair_count = len(selected_nodes) * (len(selected_nodes) - 1) // 2
         groups = [
             group.to_dict()
             for group in value.groups

@@ -998,11 +998,15 @@ def evaluate_typed_relationship_compatibility(
     adapters: list[str] = []
     risks: list[str] = []
 
-    same_repository = left.source_repository.repo_head == right.source_repository.repo_head
+    same_repository = left.source_repository == right.source_repository
     guards.append(HardGuardResult(
         HardGuardCode.REPOSITORY_IDENTITY,
         same_repository,
-        "exact repo heads match" if same_repository else "repo heads differ",
+        (
+            "complete repository identities match"
+            if same_repository
+            else "repository HEAD, working tree, Relational Index, or Atlas identity differs"
+        ),
     ))
 
     fresh = (

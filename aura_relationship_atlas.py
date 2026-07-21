@@ -24,6 +24,8 @@ import re
 import time
 from typing import Any, Mapping, Sequence
 
+from aura_event_contracts import stable_digest
+
 # ---------------------------------------------------------------------------
 # Constants and Versions
 # ---------------------------------------------------------------------------
@@ -1473,6 +1475,12 @@ def build_objective_relationship_atlas(
     neighborhood_digest = str(neighborhood.get("neighborhood_digest") or "")
     if not neighborhood_digest:
         raise ValueError("objective Atlas requires a content-addressed neighborhood")
+    expected_neighborhood_digest = stable_digest(
+        {key: value for key, value in neighborhood.items() if key != "neighborhood_digest"},
+        digest_size=20,
+    )
+    if not hmac.compare_digest(neighborhood_digest, expected_neighborhood_digest):
+        raise ValueError("relational neighborhood_digest does not match canonical neighborhood content")
     local_index = _objective_index_from_neighborhood(relational_index, neighborhood)
     key = (
         str(local_index.repository_identity.get("repo_head") or ""),

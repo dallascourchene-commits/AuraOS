@@ -24,7 +24,11 @@ from aura_relational_index import (
     query_relational_index,
     extract_relational_neighborhood,
 )
-from aura_relationship_contracts import RelationalNeighborhoodRequest, SourceReference
+from aura_relationship_contracts import (
+    RelationalNeighborhoodRequest,
+    SourceReference,
+    TruthClass as ContractTruthClass,
+)
 from aura_relationship_atlas import build_objective_relationship_atlas, clear_objective_atlas_cache
 from aura_relational_synthesis import (
     GroupKind,
@@ -847,7 +851,7 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
 
 def test_extract_relational_neighborhood_retains_seed_under_dense_budget() -> None:
     index = _build()
-    seed = index.participants[0].participant_id
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
     request = RelationalNeighborhoodRequest(
         objective_digest="objective-dense",
         seed_participant_ids=(seed,),
@@ -876,6 +880,106 @@ def test_extract_relational_neighborhood_rejects_tampered_index_digest() -> None
     )
     with pytest.raises(ValueError, match="index_digest"):
         extract_relational_neighborhood(request, data)
+
+
+def test_extract_relational_neighborhood_enforces_candidate_pair_budget() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-pair-budget",
+        seed_participant_ids=(seed,),
+        seed_source_refs=(),
+        max_hops=3,
+        max_nodes=8,
+        max_edges=32,
+        max_candidate_pairs=1,
+        minimum_truth_class=ContractTruthClass.ADVISORY,
+    )
+    packet = extract_relational_neighborhood(request, index)
+    node_count = len(packet["participants"])
+    actual_pair_count = node_count * (node_count - 1) // 2
+    assert node_count <= 2
+    assert packet["truncation_receipt"]["candidate_pair_count"] == actual_pair_count
+    assert actual_pair_count <= request.max_candidate_pairs
+    assert "max_candidate_pairs" in packet["truncation_receipt"]["exhausted_budgets"]
+    assert any(item["reason"] == "candidate_pair_budget" for item in packet["frontier"])
+
+
+def test_extract_relational_neighborhood_rejects_seed_set_above_pair_budget() -> None:
+    index = _build()
+    seeds = tuple(item.participant_id for item in index.participants[:3])
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-seed-pair-budget",
+        seed_participant_ids=seeds,
+        seed_source_refs=(),
+        max_nodes=8,
+        max_candidate_pairs=1,
+    )
+    with pytest.raises(ValueError, match="seeds exceed max_candidate_pairs"):
+        extract_relational_neighborhood(request, index)
+
+
+def test_extract_relational_neighborhood_applies_minimum_truth_class() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    exact = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-exact-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=16,
+            max_edges=32,
+            max_candidate_pairs=120,
+            minimum_truth_class=ContractTruthClass.EXACT_SOURCE,
+            include_auxiliary=True,
+        ),
+        index,
+    )
+    assert exact["relations"]
+    assert all(item["truth_class"].startswith("EXACT_") for item in exact["relations"])
+
+    advisory = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-advisory-truth",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=16,
+            max_edges=32,
+            max_candidate_pairs=120,
+            minimum_truth_class=ContractTruthClass.ADVISORY,
+            include_auxiliary=True,
+        ),
+        index,
+    )
+    assert any(item["truth_class"].startswith("ADVISORY_") for item in advisory["relations"])
+
+
+def test_objective_atlas_rejects_tampered_neighborhood_digest() -> None:
+    index = _build()
+    seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")
+    neighborhood = extract_relational_neighborhood(
+        RelationalNeighborhoodRequest(
+            objective_digest="objective-neighborhood-digest",
+            seed_participant_ids=(seed,),
+            seed_source_refs=(),
+            max_hops=2,
+            max_nodes=8,
+            max_edges=16,
+            max_candidate_pairs=28,
+        ),
+        index,
+    )
+    tampered = deepcopy(neighborhood)
+    tampered["inclusion_reasons"][seed].append("tampered_reason")
+    with pytest.raises(ValueError, match="neighborhood_digest"):
+        build_objective_relationship_atlas(
+            repo_root=".",
+            relational_index=index.to_dict(),
+            neighborhood=tampered,
+            profile="OBJECTIVE_STANDARD",
+        )
 
 
 
