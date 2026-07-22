@@ -1,0 +1,128 @@
+diff --git a/aura_coding_relationship_compass.py b/aura_coding_relationship_compass.py
+index 0d60c60..e1c56f4 100644
+--- a/aura_coding_relationship_compass.py
++++ b/aura_coding_relationship_compass.py
+@@ -822,6 +822,12 @@ def _compatibility_neighborhood_from_raw_index(
+                 and (
+                     not source_ref.symbol
+                     or str(participant.get("qualified_symbol") or "") == source_ref.symbol
++                    or (
++                        "." not in source_ref.symbol
++                        and str(participant.get("qualified_symbol") or "").endswith(
++                            f".{source_ref.symbol}"
++                        )
++                    )
+                 )
+                 and int(metadata.get("line_start") or 0) == source_ref.line_start
+                 and int(metadata.get("line_end") or 0) == source_ref.line_end
+diff --git a/aura_relational_index.py b/aura_relational_index.py
+index 6686eae..2329127 100644
+--- a/aura_relational_index.py
++++ b/aura_relational_index.py
+@@ -2037,7 +2037,14 @@ def _resolve_neighborhood_seeds(
+         metadata = participant.metadata
+         return (
+             str(metadata.get("file_path") or "") == source_ref.file_path
+-            and (not source_ref.symbol or participant.qualified_symbol == source_ref.symbol)
++            and (
++                not source_ref.symbol
++                or participant.qualified_symbol == source_ref.symbol
++                or (
++                    "." not in source_ref.symbol
++                    and participant.qualified_symbol.endswith(f".{source_ref.symbol}")
++                )
++            )
+             and int(metadata.get("line_start") or 0) == source_ref.line_start
+             and int(metadata.get("line_end") or 0) == source_ref.line_end
+             and str(participant.digest or "") == source_ref.source_hash
+diff --git a/tests/test_aura_coding_relationship_compass.py b/tests/test_aura_coding_relationship_compass.py
+index d081f0f..57345e6 100644
+--- a/tests/test_aura_coding_relationship_compass.py
++++ b/tests/test_aura_coding_relationship_compass.py
+@@ -258,6 +258,46 @@ def test_legacy_neighborhood_disambiguates_source_refs_by_span_and_hash() -> Non
+         )
+ 
+ 
++def test_legacy_neighborhood_resolves_unqualified_method_source_ref() -> None:
++    legacy = _minimal_relational_index()
++    legacy["participants"] = [
++        {
++            "participant_id": "alpha_run",
++            "digest": "1" * 64,
++            "qualified_symbol": "Alpha.run",
++            "metadata": {
++                "file_path": "service.py",
++                "line_start": 2,
++                "line_end": 3,
++                "file_source_hash": "f" * 64,
++            },
++        }
++    ]
++    legacy["relations"] = []
++    _rebind_index_digest(legacy)
++    request = RelationalNeighborhoodRequest(
++        objective_digest="legacy-unqualified-method",
++        seed_participant_ids=(),
++        seed_source_refs=(
++            SourceReference(
++                file_path="service.py",
++                symbol="run",
++                line_start=2,
++                line_end=3,
++                source_hash="1" * 64,
++                file_source_hash="f" * 64,
++            ),
++        ),
++        max_hops=1,
++        max_nodes=8,
++        max_edges=16,
++    )
++
++    packet = compass._compatibility_neighborhood_from_raw_index(request, legacy)
++
++    assert packet["seed_participant_ids"] == ["alpha_run"]
++
++
+ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
+     source_text = "def compile_coding_relationship_compass():\n    return None\n"
+     (tmp_path / "aura_coding_relationship_compass.py").write_text(source_text, encoding="utf-8")
+diff --git a/tests/test_aura_relational_index.py b/tests/test_aura_relational_index.py
+index 3fdfc5d..2aa21b4 100644
+--- a/tests/test_aura_relational_index.py
++++ b/tests/test_aura_relational_index.py
+@@ -888,6 +888,35 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
+     )
+ 
+ 
++def test_extract_relational_neighborhood_resolves_unqualified_method_source_ref() -> None:
++    index = _build()
++    alpha_run = next(
++        item for item in index.participants if item.qualified_symbol == "Alpha.run"
++    )
++    source_ref = _source_ref_for_participant(alpha_run)
++    request = RelationalNeighborhoodRequest(
++        objective_digest="objective-unqualified-method-source-ref",
++        seed_participant_ids=(),
++        seed_source_refs=(
++            SourceReference(
++                **{**source_ref.to_dict(), "symbol": "run"}
++            ),
++        ),
++        max_hops=1,
++        max_nodes=8,
++        max_edges=16,
++    )
++
++    packet = extract_relational_neighborhood(request, index)
++
++    assert packet["seed_participant_ids"] == [alpha_run.participant_id]
++    assert any(
++        reason.startswith("exact_source_ref:service.py#run")
++        for reasons in packet["inclusion_reasons"].values()
++        for reason in reasons
++    )
++
++
+ def test_extract_relational_neighborhood_prefers_requested_file_before_global_symbol() -> None:
+     original = _build()
+     reverse_indexes = original.to_dict()["reverse_indexes"]
