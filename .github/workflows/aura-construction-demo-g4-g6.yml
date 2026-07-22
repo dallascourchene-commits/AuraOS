@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - ".github/workflows/aura-construction-demo-g4-g6.yml"
-      - ".github/workflows/aura-construction-g4-exact-ruff-repair.yml"
       - "aura_construction_demo_fixture.py"
       - "aura_construction_demo_fixture_builder.py"
       - "aura_construction_demo_projection.py"
@@ -18,7 +17,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: aura-construction-demo-g4-g6-${{ github.event.pull_request.number || github.ref }}
@@ -27,7 +26,7 @@ concurrency:
 jobs:
   verify-g4-g6:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       PYTHONHASHSEED: "0"
     steps:
@@ -44,6 +43,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          mkdir -p /tmp/aura_g4_g6_status /tmp/aura_g4_g6_logs
+          git rev-parse HEAD > /tmp/aura_g4_g6_exact_head.txt
 
       - uses: actions/setup-python@v5
         with:
@@ -58,80 +59,25 @@ jobs:
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check pytest ruff
 
-      - name: Commit canonical static repairs
-        if: github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-          git config user.name "Aura Architecture Harness"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          repair_owner() {
-            file="$1"
-            message="$2"
-            ruff check --fix "$file"
-            ruff format "$file"
-            ruff check "$file"
-            ruff format --check "$file"
-            if ! git diff --quiet -- "$file"; then
-              changed="$(git diff --name-only)"
-              test "$changed" = "$file"
-              git add "$file"
-              git commit -m "$message"
-            fi
-          }
-
-          repair_owner aura_construction_demo_fixture.py \
-            "style(construction): canonicalize G4 fixture contracts"
-          repair_owner aura_construction_demo_fixture_builder.py \
-            "style(construction): canonicalize G4 fixture builder"
-          repair_owner aura_construction_demo_projection.py \
-            "style(spatial): canonicalize G5 Construction projection"
-          repair_owner tests/test_aura_construction_demo_fixture.py \
-            "style(construction): canonicalize G4 fixture tests"
-          repair_owner tests/test_aura_construction_demo_projection.py \
-            "style(spatial): canonicalize G5 projection tests"
-
-          ruff check \
-            aura_construction_demo_fixture.py \
-            aura_construction_demo_fixture_builder.py \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py
-          ruff format --check \
-            aura_construction_demo_fixture.py \
-            aura_construction_demo_fixture_builder.py \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py
-          test -z "$(git status --short)"
-
-          if test "$(git rev-parse HEAD)" != "$EVENT_HEAD"; then
-            git fetch --no-tags origin "$HEAD_REF"
-            test "$(git rev-parse FETCH_HEAD)" = "$EVENT_HEAD"
-            git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git push origin "HEAD:${HEAD_REF}"
-          fi
-          git rev-parse HEAD > /tmp/aura_g4_g6_repaired_head.txt
-
       - name: Compile G4-G6 Python owners
         run: |
-          set -euo pipefail
+          set +e
           python -m py_compile \
             aura_construction_demo_fixture.py \
             aura_construction_demo_fixture_builder.py \
             aura_construction_demo_projection.py \
             tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py
+            tests/test_aura_construction_demo_projection.py \
+            > /tmp/aura_g4_g6_logs/python-compile.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/python-compile.status
+          cat /tmp/aura_g4_g6_logs/python-compile.txt
+          exit 0
 
       - name: Run Aura-native Connectome Atlas and Council scan
-        continue-on-error: true
         run: |
-          set -euo pipefail
-          python - <<'PY'
+          set +e
+          python - <<'PY' > /tmp/aura_g4_g6_logs/aura-architecture.txt 2>&1
           import json
           from pathlib import Path
 
@@ -215,100 +161,119 @@ jobs:
                   "full_packet": packet,
               }
           except Exception as exc:
-              receipt.update(
-                  {
-                      "error_type": type(exc).__name__,
-                      "error": str(exc)[:4096],
-                  }
-              )
-          output.write_text(
-              json.dumps(receipt, sort_keys=True, indent=2, default=str),
-              encoding="utf-8",
-          )
-          print(
-              json.dumps(
-                  {
-                      key: receipt.get(key)
-                      for key in (
-                          "status",
-                          "repository_head",
-                          "compass_digest",
-                          "grounding_digest",
-                          "error_type",
-                          "error",
-                          "council_v3",
-                          "safe_to_patch",
-                          "production_mutation",
-                          "automatic_merge",
-                      )
-                  },
-                  sort_keys=True,
-              )
-          )
+              receipt.update({"error_type": type(exc).__name__, "error": str(exc)[:4096]})
+          output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
+          print(json.dumps(receipt, sort_keys=True, default=str))
           PY
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/aura-architecture.status
+          cat /tmp/aura_g4_g6_logs/aura-architecture.txt
+          exit 0
 
-      - name: Lint G4 fixture contracts
+      - name: Collect Ruff diagnostics
         run: |
-          set -o pipefail
-          ruff check --output-format=concise aura_construction_demo_fixture.py 2>&1 | tee /tmp/g4_fixture_ruff.txt
-
-      - name: Lint G4 fixture builder
-        run: ruff check --output-format=concise aura_construction_demo_fixture_builder.py
-
-      - name: Lint G5 projection
-        run: ruff check --output-format=concise aura_construction_demo_projection.py
-
-      - name: Lint G4 fixture tests
-        run: ruff check --output-format=concise tests/test_aura_construction_demo_fixture.py
-
-      - name: Lint G5 projection tests
-        run: ruff check --output-format=concise tests/test_aura_construction_demo_projection.py
-
-      - name: Check G4-G6 Python formatting
-        run: |
-          set -euo pipefail
-          ruff format --check \
+          set +e
+          for file in \
             aura_construction_demo_fixture.py \
             aura_construction_demo_fixture_builder.py \
             aura_construction_demo_projection.py \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py
+          do
+            key="$(printf '%s' "$file" | tr '/.' '--')"
+            ruff check --output-format=concise "$file" \
+              > "/tmp/aura_g4_g6_logs/ruff-${key}.txt" 2>&1
+            status=$?
+            echo "$status" > "/tmp/aura_g4_g6_status/ruff-${key}.status"
+            echo "=== $file ==="
+            cat "/tmp/aura_g4_g6_logs/ruff-${key}.txt"
+          done
+          exit 0
+
+      - name: Collect formatting diagnostics
+        run: |
+          set +e
+          ruff format --check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py \
+            > /tmp/aura_g4_g6_logs/ruff-format.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/ruff-format.status
+          cat /tmp/aura_g4_g6_logs/ruff-format.txt
+          exit 0
 
       - name: Run focused Python verification
         run: |
-          set -euo pipefail
+          set +e
           python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py
+            tests/test_aura_construction_demo_projection.py \
+            > /tmp/aura_g4_g6_logs/python-focused.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/python-focused.status
+          cat /tmp/aura_g4_g6_logs/python-focused.txt
+          exit 0
 
-      - name: Run retained Construction and Spatial projection regressions
+      - name: Run retained Construction and Spatial regressions
         run: |
-          set -euo pipefail
+          set +e
           python -m pytest -q --tb=short \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_spatial_s6_construction.py \
-            tests/test_aura_spatial_mixed_scene.py
+            tests/test_aura_spatial_mixed_scene.py \
+            > /tmp/aura_g4_g6_logs/python-retained.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/python-retained.status
+          cat /tmp/aura_g4_g6_logs/python-retained.txt
+          exit 0
 
       - name: Run focused browser renderer verification
         run: |
-          set -euo pipefail
-          node --test tests/js/spatial-construction-demo.test.mjs
+          set +e
+          node --test tests/js/spatial-construction-demo.test.mjs \
+            > /tmp/aura_g4_g6_logs/browser-focused.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/browser-focused.status
+          cat /tmp/aura_g4_g6_logs/browser-focused.txt
+          exit 0
 
       - name: Run retained browser Spatial regressions
         run: |
-          set -euo pipefail
-          npm run test:spatial
+          set +e
+          npm run test:spatial > /tmp/aura_g4_g6_logs/browser-retained.txt 2>&1
+          status=$?
+          echo "$status" > /tmp/aura_g4_g6_status/browser-retained.status
+          cat /tmp/aura_g4_g6_logs/browser-retained.txt
+          exit 0
 
-      - name: Upload Aura G4-G6 diagnostics
+      - name: Upload complete G4-G6 diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aura-construction-g4-g6-diagnostics
           path: |
             /tmp/aura_g4_g6_architecture.json
-            /tmp/aura_g4_g6_repaired_head.txt
-            /tmp/g4_fixture_ruff.txt
-          if-no-files-found: ignore
+            /tmp/aura_g4_g6_exact_head.txt
+            /tmp/aura_g4_g6_logs
+            /tmp/aura_g4_g6_status
+          if-no-files-found: error
           retention-days: 7
+
+      - name: Evaluate focused gate
+        if: always()
+        run: |
+          set -euo pipefail
+          failed=0
+          for status_file in /tmp/aura_g4_g6_status/*.status; do
+            status="$(cat "$status_file")"
+            printf '%s=%s\n' "$(basename "$status_file")" "$status"
+            if test "$status" != "0"; then
+              failed=1
+            fi
+          done
+          exit "$failed"
