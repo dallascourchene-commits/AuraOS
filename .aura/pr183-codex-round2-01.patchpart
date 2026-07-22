@@ -1,0 +1,82 @@
+ None:
++    candidate = value.strip()
++    if len(candidate) < 2 or not candidate.startswith("#"):
++        raise ValueError("SVG contains an external or executable reference")
+ 
+ 
+ def _validate_css(css: str) -> None:
+     if _CSS_IMPORT.search(css):
+         raise ValueError("SVG contains an external or executable reference")
+     for match in _CSS_URL.finditer(css):
+-        if _is_external_reference(match.group(2)):
+-            raise ValueError("SVG contains an external or executable reference")
++        _validate_resource_reference(match.group(2))
+ 
+ 
+-def _secure_atomic_write(path: Path, payload: bytes) -> None:
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    if path.exists() and path.is_symlink():
++def _secure_atomic_write(path: Path, payload: bytes, *, root: Path) -> None:
++    root_resolved = root.expanduser().resolve(strict=True)
++    candidate = path.expanduser()
++    if not candidate.is_absolute():
++        candidate = root_resolved / candidate
++    candidate.parent.mkdir(parents=True, exist_ok=True)
++    parent = candidate.parent.resolve(strict=True)
++    try:
++        parent.relative_to(root_resolved)
++    except ValueError as exc:
++        raise ValueError("atomic write target escapes its allowed root") from exc
++    target = parent / candidate.name
++    if target.exists() and target.is_symlink():
+         raise ValueError("atomic write target must not be a symlink")
+-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
++    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=parent)
+     temporary = Path(temporary_name)
+     try:
+         with os.fdopen(descriptor, "wb") as handle:
+             handle.write(payload)
+             handle.flush()
+             os.fsync(handle.fileno())
+-        os.replace(temporary, path)
++        os.replace(temporary, target)
+         try:
+-            directory_fd = os.open(path.parent, os.O_RDONLY)
++            directory_fd = os.open(parent, os.O_RDONLY)
+         except OSError:
+             directory_fd = -1
+         if directory_fd >= 0:
+@@ -400,15 +429,15 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
+             local_name = name.rsplit("}", 1)[-1].lower()
+             if local_name.startswith("on"):
+                 raise ValueError("SVG contains an event handler")
+-            if local_name in {"href", "src"} and _is_external_reference(value):
+-                raise ValueError("SVG contains an external or executable reference")
++            if local_name in {"href", "src"}:
++                _validate_resource_reference(value)
+             if local_name == "style":
+                 _validate_css(value)
+     _canonicalize_xml(root_element)
+     serialized = ET.tostring(root_element, encoding="utf-8", xml_declaration=True)
+     if not serialized or len(serialized) > MAX_SVG_BYTES:
+         raise ValueError("sanitized SVG violates its byte budget")
+-    _secure_atomic_write(asset, serialized)
++    _secure_atomic_write(asset, serialized, root=root)
+     payload = {
+         "version": ASSET_VERIFIER_VERSION,
+         "kind": "SVG",
+@@ -422,6 +451,6 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
+     return {**payload, "verification_digest": stable_digest(payload)}
+ 
+ 
+-def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
++def atomic_json(path: Path, value: Mapping[str, Any], *, root: Path) -> None:
+     payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+-    _secure_atomic_write(path, payload)
++    _secure_atomic_write(path, payload, root=root)
+diff --git a/scripts/aura_prepare_construction_demo_assets.py b/scripts/aura_prepare_construction_demo_assets.py
+index 2006511..8503305 100644
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -35,6 +35,7 @@ from scripts.aura_verify_construction_demo_assets import (
+ ASSET_PREPARATION_VERSION = "AU
