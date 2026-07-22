@@ -45,10 +45,19 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        continue-on-error: true
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
+      - name: Validate exact checked-out worktree
+        run: |
+          test -f aura_construction_demo_contracts.py
+          test -f scripts/aura_prepare_construction_demo_assets.py
+          test -f scripts/aura_verify_construction_demo_assets.py
+          test -f scripts/aura_mesh_to_gaussian.py
+          test -f tests/test_aura_mesh_to_gaussian.py
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
       - name: Export exact review worktree
         uses: actions/upload-artifact@v4
         with:
