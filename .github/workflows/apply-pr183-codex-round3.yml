@@ -1,7 +1,9 @@
 name: Apply PR183 Codex Round 3 Fixes
 
 on:
-  pull_request:
+  push:
+    branches:
+      - work/construction-arena-bim-gaussian-demo-20260722
     paths:
       - ".aura/apply-pr183-codex-round3"
 
@@ -9,18 +11,17 @@ permissions:
   contents: write
 
 concurrency:
-  group: apply-pr183-codex-round3-${{ github.event.pull_request.number }}
+  group: apply-pr183-codex-round3
   cancel-in-progress: false
 
 jobs:
   apply:
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: work/construction-arena-bim-gaussian-demo-20260722
           fetch-depth: 0
       - name: Apply manually verified fixes
         run: |
@@ -658,7 +659,7 @@ def test_compile_mesh_rejects_zero_target_count(tmp_path: Path) -> None:
             tests/test_aura_relational_index.py
       - name: Commit and publish manual fixes
         env:
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          HEAD_BRANCH: work/construction-arena-bim-gaussian-demo-20260722
         run: |
           set -euo pipefail
           git config user.name "AuraOS Review Fixer"
