@@ -1,0 +1,62 @@
+name: Materialize AI-Safe Harness Patch
+
+on:
+  push:
+    branches:
+      - "work/ai-safe-harness-20260722"
+    paths:
+      - ".aura/AI_SAFE_HARNESS_PATCH.b64"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact publication branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply pinned patch and remove publication scaffolding
+        env:
+          EXPECTED_XZ_SHA256: "4161ffb3f0e8feed3cc640a8c31524f6a410084c74f8012d887d08a46029eeca"
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "work/ai-safe-harness-20260722"
+          base64 --decode .aura/AI_SAFE_HARNESS_PATCH.b64 > /tmp/ai-safe-harness.patch.xz
+          echo "${EXPECTED_XZ_SHA256}  /tmp/ai-safe-harness.patch.xz" | sha256sum --check --strict
+          xz --decompress --stdout /tmp/ai-safe-harness.patch.xz > /tmp/ai-safe-harness.patch
+          git apply --check /tmp/ai-safe-harness.patch
+          git apply /tmp/ai-safe-harness.patch
+          rm .aura/AI_SAFE_HARNESS_PATCH.b64
+          rm .github/workflows/ai-safe-harness-materialize.yml
+      - name: Verify focused implementation
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/aura_architecture_harness.py tests/test_aura_architecture_harness.py
+          pytest -q tests/test_aura_architecture_harness.py
+          git diff --check -- \
+            scripts/aura_architecture_harness.py \
+            tests/test_aura_architecture_harness.py \
+            .github/workflows/aura-architecture-harness-export.yml \
+            README.md USER_GUIDE.md .aura/ARCHITECTURE.md \
+            docs/AURA_ARCHITECTURE_HARNESS.md
+      - name: Commit exact verified patch
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness Publisher"
+          git config user.email "aura-harness@users.noreply.github.com"
+          git add -- \
+            scripts/aura_architecture_harness.py \
+            tests/test_aura_architecture_harness.py \
+            .github/workflows/aura-architecture-harness-export.yml \
+            README.md USER_GUIDE.md .aura/ARCHITECTURE.md \
+            docs/AURA_ARCHITECTURE_HARNESS.md \
+            .aura/AI_SAFE_HARNESS_PATCH.b64 \
+            .github/workflows/ai-safe-harness-materialize.yml
+          git commit -m "feat: add AI-safe architecture harness handoff"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
