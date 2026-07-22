@@ -523,12 +523,55 @@ def _current_relational_index_identity(
     repo_root: Path,
     relational_index: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Recompute the canonical repository identity for an in-memory index."""
-    from aura_relational_index import RelationalIndexBuilder
+    """Recompute checkout identity without rebuilding a redundant AST inventory.
 
+    The exact HEAD and working-tree digest bind every tracked change and every
+    relevant untracked file. Atomic-inventory identity is therefore transitive
+    across an unchanged checkout and inventory schema version; rebuilding the
+    complete AST inventory here would duplicate the Relational Index build and
+    can dominate bounded objective-Atlas requests. Connectome, CODEMAP, topology,
+    ontology, profile, and schema identities remain independently recomputed.
+    """
+    from aura_capability_connectome import build_capability_connectome
+    from aura_capability_connectome_v2 import enrich_connectome
+    from aura_relational_index import (
+        ATOMIC_INVENTORY_VERSION,
+        CODEMAP_INDEX_PATH,
+        CODEMAP_TOPOLOGY_PATH,
+        RelationalIndexBuilder,
+        _digest_file,
+        _relation_ontology_digest,
+        _repo_head,
+        _schema_digest,
+        _topology_facts,
+        _working_tree_digest,
+    )
+
+    stored = relational_index.get("repository_identity") or {}
+    if not isinstance(stored, Mapping):
+        stored = {}
     profile = relational_index.get("profile") or {}
     profile_name = str(profile.get("name") or "MINIMAL") if isinstance(profile, Mapping) else "MINIMAL"
-    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot()
+    builder = RelationalIndexBuilder(repo_root, profile=profile_name)
+    connectome = enrich_connectome(build_capability_connectome(repo_root))
+    topology_digest, topology_version, topology_health = _topology_facts(
+        repo_root / CODEMAP_TOPOLOGY_PATH
+    )
+    return {
+        "repo_head": _repo_head(repo_root),
+        "working_tree_digest": _working_tree_digest(repo_root),
+        "codemap_digest": _digest_file(repo_root / CODEMAP_INDEX_PATH),
+        "topology_digest": topology_digest,
+        "topology_version": topology_version,
+        "topology_health": topology_health,
+        "connectome_graph_digest": str(connectome.get("graph_digest") or ""),
+        "connectome_version": str(connectome.get("version") or ""),
+        "atomic_inventory_digest": str(stored.get("atomic_inventory_digest") or ""),
+        "atomic_inventory_version": ATOMIC_INVENTORY_VERSION,
+        "relation_ontology_digest": _relation_ontology_digest(),
+        "profile_digest": builder.profile.digest,
+        "schema_digest": _schema_digest(repo_root),
+    }
 
 
 def _validate_relational_index_freshness(
@@ -572,6 +615,7 @@ def build_relationship_atlas(
     *,
     relational_index_data: Mapping[str, Any] | None = None,
     persist: bool = True,
+    _freshness_validated: bool = False,
 ) -> AtlasSnapshot:
     """Ahead-of-Time relationship classification compile pass.
 
@@ -613,11 +657,12 @@ def build_relationship_atlas(
     # Validate index freshness — fail closed on stale or missing identity.
     # This recomputes the checkout identity rather than trusting CURRENT flags
     # or caller-supplied digest metadata.
-    _validate_relational_index_freshness(
-        repo_root.resolve(),
-        rel_index,
-        index_label=idx_path,
-    )
+    if not _freshness_validated:
+        _validate_relational_index_freshness(
+            repo_root.resolve(),
+            rel_index,
+            index_label=idx_path,
+        )
     index_digest = rel_index.get("index_digest", "")
     if not index_digest:
         raise ValueError(
@@ -889,6 +934,15 @@ def build_relationship_atlas(
 
     # 4. Filter Candidate Wirings & Evaluate Prohibitions
     prohibitions = BUILTIN_PROHIBITIONS
+    authority_pair_counts: dict[tuple[str, ...], int] = {}
+    for assessment in assessments:
+        if "REQUIRES_AUTHORITY" not in assessment.relation_types:
+            continue
+        pair_ids = tuple(
+            participant.participant_id for participant in assessment.participant_refs
+        )
+        authority_pair_counts[pair_ids] = authority_pair_counts.get(pair_ids, 0) + 1
+
     final_assessments: list[AtlasRelationshipAssessment] = []
     for a in assessments:
         is_prohibited = False
@@ -930,19 +984,17 @@ def build_relationship_atlas(
                         should_prohibit = True
 
                 elif pattern == "circular_authorization_block":
-                    # Circular authority: A requires authority from B, B requires from A
-                    # Detected when both directions have REQUIRES_AUTHORITY
-                    # (simplified: same pair, both have REQUIRES_AUTHORITY)
+                    # Circular authority requires opposing directed relationships.
+                    # Repeated A -> B assessments are duplicates, not an A <-> B cycle.
                     if "REQUIRES_AUTHORITY" in a.relation_types:
-                        # Check if reverse relation exists among assessments
-                        pair_ids = {pr.participant_id for pr in a.participant_refs}
-                        for other in assessments:
-                            if other.assessment_id == a.assessment_id:
-                                continue
-                            other_ids = {pr.participant_id for pr in other.participant_refs}
-                            if other_ids == pair_ids and "REQUIRES_AUTHORITY" in other.relation_types:
-                                should_prohibit = True
-                                break
+                        pair_ids = tuple(
+                            participant.participant_id for participant in a.participant_refs
+                        )
+                        reverse_pair_ids = tuple(reversed(pair_ids))
+                        should_prohibit = (
+                            pair_ids != reverse_pair_ids
+                            and authority_pair_counts.get(reverse_pair_ids, 0) > 0
+                        )
 
                 elif pattern == "ephemeral_lease_leak_block":
                     # Ephemeral leases must not persist beyond TTL
@@ -1481,12 +1533,12 @@ def build_objective_relationship_atlas(
     )
     if not hmac.compare_digest(neighborhood_digest, expected_neighborhood_digest):
         raise ValueError("relational neighborhood_digest does not match canonical neighborhood content")
-    local_index = _objective_index_from_neighborhood(relational_index, neighborhood)
     _validate_relational_index_freshness(
         root,
-        local_index.to_dict(),
+        relational_index,
         index_label=root / "<objective-relational-index>",
     )
+    local_index = _objective_index_from_neighborhood(relational_index, neighborhood)
     key = (
         str(local_index.repository_identity.get("repo_head") or ""),
         local_index.index_digest,
@@ -1503,6 +1555,7 @@ def build_objective_relationship_atlas(
         profile=op_profile,
         relational_index_data=local_index.to_dict(),
         persist=False,
+        _freshness_validated=True,
     )
     snapshot.boundary["neighborhood_digest"] = neighborhood_digest
     snapshot.boundary["source_relational_index_digest"] = str(neighborhood.get("index_digest") or "")

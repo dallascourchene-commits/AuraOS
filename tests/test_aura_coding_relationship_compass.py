@@ -7,11 +7,13 @@ from pathlib import Path
 
 import pytest
 
+import aura_change_graph as change_graph
 import aura_coding_relationship_compass as compass
 from aura_event_contracts import stable_digest
 import aura_live_architect as live_architect
 import aura_relationship_atlas as atlas_module
 from aura_live_architect import ArchitectFusionCouncil, ArchitectModelRouter
+from aura_relationship_contracts import RelationalNeighborhoodRequest, SourceReference
 from aura_relationship_atlas import (
     build_relationship_atlas,
     load_relationship_atlas,
@@ -163,6 +165,99 @@ def test_compass_intent_and_grounding_projection() -> None:
     assert grounding["human_review_required"] is True
 
 
+def test_compass_preserves_qualified_method_symbols_across_source_bindings() -> None:
+    method = {
+        "file_path": "service.py",
+        "symbol": "run",
+        "qualified_symbol": "Alpha.run",
+        "line_start": 4,
+        "line_end": 6,
+        "source_hash": "source-hash",
+        "file_source_hash": "file-hash",
+    }
+    evidence = {
+        "atomic_inventory": {"selected_atomic_functions": [method]},
+        "source_slices": [method],
+    }
+
+    refs = compass._source_references_from_evidence(evidence)
+
+    assert len(refs) == 1
+    assert refs[0].symbol == "Alpha.run"
+    assert compass._canonical_grounding_binding(method)["symbol"] == "Alpha.run"
+    assert change_graph._canonical_target_binding(method)["symbol"] == "Alpha.run"
+
+
+def test_legacy_neighborhood_disambiguates_source_refs_by_span_and_hash() -> None:
+    legacy = _minimal_relational_index()
+    legacy["participants"] = [
+        {
+            "participant_id": "first_run",
+            "digest": "1" * 64,
+            "qualified_symbol": "Alpha.run",
+            "metadata": {
+                "file_path": "service.py",
+                "line_start": 2,
+                "line_end": 3,
+                "file_source_hash": "f" * 64,
+            },
+        },
+        {
+            "participant_id": "second_run",
+            "digest": "2" * 64,
+            "qualified_symbol": "Alpha.run",
+            "metadata": {
+                "file_path": "service.py",
+                "line_start": 5,
+                "line_end": 6,
+                "file_source_hash": "f" * 64,
+            },
+        },
+    ]
+    legacy["relations"] = []
+    _rebind_index_digest(legacy)
+    source_ref = SourceReference(
+        file_path="service.py",
+        symbol="Alpha.run",
+        line_start=2,
+        line_end=3,
+        source_hash="1" * 64,
+        file_source_hash="f" * 64,
+    )
+    request = RelationalNeighborhoodRequest(
+        objective_digest="legacy-redefined-method",
+        seed_participant_ids=(),
+        seed_source_refs=(source_ref,),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+
+    packet = compass._compatibility_neighborhood_from_raw_index(request, legacy)
+
+    assert packet["seed_participant_ids"] == ["first_run"]
+    assert [item["participant_id"] for item in packet["participants"]] == ["first_run"]
+    with pytest.raises(
+        ValueError,
+        match="legacy relational neighborhood source ref must resolve to exactly one",
+    ):
+        compass._compatibility_neighborhood_from_raw_index(
+            RelationalNeighborhoodRequest(
+                objective_digest="legacy-redefined-method-drift",
+                seed_participant_ids=(),
+                seed_source_refs=(
+                    SourceReference(
+                        **{**source_ref.to_dict(), "source_hash": "0" * 64}
+                    ),
+                ),
+                max_hops=1,
+                max_nodes=8,
+                max_edges=16,
+            ),
+            legacy,
+        )
+
+
 def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
     source_text = "def compile_coding_relationship_compass():\n    return None\n"
     (tmp_path / "aura_coding_relationship_compass.py").write_text(source_text, encoding="utf-8")
@@ -253,7 +348,11 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     )
     index = _minimal_relational_index()
     index["participants"][0]["metadata"]["file_path"] = "aura_coding_relationship_compass.py"
+    index["participants"][0]["metadata"]["line_start"] = 1
+    index["participants"][0]["metadata"]["line_end"] = 2
+    index["participants"][0]["metadata"]["file_source_hash"] = file_hash
     index["participants"][0]["qualified_symbol"] = "compile_coding_relationship_compass"
+    index["participants"][0]["digest"] = source_hash
     _rebind_index_digest(index)
     atlas = build_relationship_atlas(
         repo_root=tmp_path,
@@ -279,8 +378,33 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["typed_compatibility"]["outcome"] in {"COMPATIBLE", "ADAPTER_REQUIRED"}
     assert packet["coding_breadboard"]["receipt_digest"]
     assert packet["coding_breadboard"]["authority"]["execution_authority"] is False
+    assert packet["bounded_emergent_discovery"]["discovery_digest"]
+    assert packet["bounded_emergent_verification"]["verification_digest"]
+    assert packet["change_graph"]["graph_digest"]
+    assert packet["phase_capsules"]
+    assert packet["act_capsules"]["ok"] is True
+    assert packet["agent_ir"]["ok"] is True
+    assert packet["rollout"]["mode"] == "SHADOW"
+    assert packet["experience_projection_template"]["eligibility_gate_closed_by_default"] is True
     assert packet["prohibitions"]
     assert packet["safe_to_patch"] is False
+
+
+def test_invalid_paired_live_rollout_fails_before_grounding(monkeypatch, tmp_path: Path) -> None:
+    def unexpected_grounding(*args, **kwargs):
+        raise AssertionError("grounding must not run before rollout admission")
+
+    monkeypatch.setattr(compass, "build_capability_connectome", unexpected_grounding)
+
+    with pytest.raises(
+        ValueError,
+        match="PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref",
+    ):
+        compass.compile_coding_relationship_compass(
+            "combine Connectome and Atlas",
+            tmp_path,
+            rollout_mode="PAIRED_LIVE",
+        )
 
 
 def test_supplied_atlas_rejects_stale_source_identity(tmp_path: Path) -> None:
@@ -390,14 +514,12 @@ def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path)
     monkeypatch.setattr(compass, "_repository_head", lambda root: "b" * 40)
     packet = {
         "repo_head": "b" * 40,
-        "atomic_inventory": {
-            "selected_atomic_functions": [{
-                "file_path": "target.py", "line_start": 1, "line_end": 2,
-                "source_hash": hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest(),
-                "file_source_hash": "0" * 64,
-            }]
-        },
-        "source_slices": [],
+        "atomic_inventory": {"selected_atomic_functions": []},
+        "source_slices": [{
+            "file_path": "target.py", "line_start": 1, "line_end": 2,
+            "source_hash": hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest(),
+            "file_source_hash": "0" * 64,
+        }],
     }
     try:
         compass._validate_injected_evidence_packet(tmp_path, packet)
@@ -406,6 +528,44 @@ def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path)
     else:
         raise AssertionError("forged injected evidence must fail closed")
 
+
+
+def test_injected_evidence_accepts_approximate_inventory_with_exact_source_slice(
+    monkeypatch, tmp_path: Path
+) -> None:
+    source_text = "def target():\n    return 1\n"
+    (tmp_path / "target.py").write_text(source_text, encoding="utf-8")
+    monkeypatch.setattr(compass, "_repository_head", lambda root: "e" * 40)
+    file_hash = hashlib.sha256(source_text.encode()).hexdigest()
+    source_hash = hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest()
+    packet = {
+        "repo_head": "e" * 40,
+        "atomic_inventory": {
+            "selected_atomic_functions": [{
+                "file_path": "target.py",
+                "symbol": "target",
+                "qualified_symbol": "target",
+            }]
+        },
+        "source_slices": [{
+            "file_path": "target.py",
+            "line_start": 1,
+            "line_end": 2,
+            "source_hash": source_hash,
+            "file_source_hash": file_hash,
+        }],
+    }
+
+    validated = compass._validate_injected_evidence_packet(tmp_path, packet)
+
+    assert validated["atomic_inventory"]["selected_atomic_functions"][0]["symbol"] == "target"
+    assert validated["source_slices"][0] == {
+        "file_path": "target.py",
+        "line_start": 1,
+        "line_end": 2,
+        "source_hash": source_hash,
+        "file_source_hash": file_hash,
+    }
 
 def test_injected_evidence_rejects_stale_head(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(compass, "_repository_head", lambda root: "c" * 40)

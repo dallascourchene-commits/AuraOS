@@ -16,6 +16,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 import json
 import logging
+import math
 import sys
 from typing import Any
 
@@ -41,6 +42,10 @@ SERVER_INFO = {
 _TOOL_HANDLERS: dict[str, Any] = {}
 
 
+class MCPArgumentError(ValueError):
+    """A caller-controlled tools/call argument failed server-side validation."""
+
+
 def _register_tool(name: str):
     """Decorator to register a tool handler."""
 
@@ -63,6 +68,82 @@ def _strict_bool_arg(
     if isinstance(value, bool):
         return value
     raise ValueError(f"{key} must be a boolean")
+
+
+def _bounded_text_arg(
+    args: Mapping[str, Any],
+    key: str,
+    *,
+    maximum: int,
+    required: bool = False,
+    default: str = "",
+) -> str:
+    value = args.get(key, default)
+    if not isinstance(value, str):
+        raise MCPArgumentError(f"{key} must be a string")
+    if required and not value:
+        raise MCPArgumentError(f"{key} is required")
+    if len(value) > maximum:
+        raise MCPArgumentError(f"{key} exceeds maxLength {maximum}")
+    return value
+
+
+def _bounded_text_array_arg(
+    args: Mapping[str, Any],
+    key: str,
+    *,
+    max_items: int,
+    max_item_length: int,
+) -> tuple[str, ...]:
+    value = args.get(key, [])
+    if not isinstance(value, list):
+        raise MCPArgumentError(f"{key} must be an array")
+    if len(value) > max_items:
+        raise MCPArgumentError(f"{key} exceeds maxItems {max_items}")
+    result: list[str] = []
+    for index, item in enumerate(value):
+        if not isinstance(item, str):
+            raise MCPArgumentError(f"{key}[{index}] must be a string")
+        if len(item) > max_item_length:
+            raise MCPArgumentError(f"{key}[{index}] exceeds maxLength {max_item_length}")
+        result.append(item)
+    return tuple(result)
+
+
+def _compass_rollout_budget_arg(args: Mapping[str, Any]) -> dict[str, int | float]:
+    value = args.get("rollout_budget", {})
+    if not isinstance(value, Mapping):
+        raise MCPArgumentError("rollout_budget must be an object")
+    allowed = {"max_tokens", "max_cost_usd", "max_seconds", "max_calls"}
+    if len(value) > len(allowed):
+        raise MCPArgumentError("rollout_budget has too many fields")
+    unknown = sorted(set(value) - allowed)
+    if unknown:
+        raise MCPArgumentError(f"unknown rollout_budget fields: {', '.join(unknown)}")
+    result: dict[str, int | float] = {}
+    for key, raw in value.items():
+        if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+            raise MCPArgumentError(f"rollout_budget.{key} must be a finite number")
+        if isinstance(raw, float) and not math.isfinite(raw):
+            raise MCPArgumentError(f"rollout_budget.{key} must be a finite number")
+        if raw <= 0:
+            raise MCPArgumentError(f"rollout_budget.{key} must be greater than zero")
+        if key in {"max_tokens", "max_calls"}:
+            if not isinstance(raw, int):
+                raise MCPArgumentError(f"rollout_budget.{key} must be an integer")
+            result[key] = raw
+        else:
+            result[key] = raw
+    maxima = {
+        "max_tokens": 10_000_000,
+        "max_cost_usd": 1_000_000,
+        "max_seconds": 86_400,
+        "max_calls": 10_000,
+    }
+    for key, maximum in maxima.items():
+        if key in result and result[key] > maximum:
+            raise MCPArgumentError(f"rollout_budget.{key} exceeds maximum {maximum}")
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -449,6 +530,60 @@ TOOL_DEFINITIONS = [
             },
             "required": ["objective"],
         },
+    },
+
+    {
+        "name": "aura_compass_prepare",
+        "description": "Prepare an exact-head Coding Relationship Compass run in SHADOW, LIMITED, or explicitly authorized PAIRED_LIVE mode.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string", "minLength": 1, "maxLength": 4000},
+                "target_files": {"type": "array", "maxItems": 16, "items": {"type": "string", "maxLength": 240}},
+                "target_symbols": {"type": "array", "maxItems": 32, "items": {"type": "string", "maxLength": 240}},
+                "rollout_mode": {"type": "string", "enum": ["SHADOW", "LIMITED", "PAIRED_LIVE"], "default": "SHADOW"},
+                "rollout_provider": {"type": "string", "maxLength": 120},
+                "rollout_budget": {
+                    "type": "object",
+                    "properties": {
+                        "max_tokens": {"type": "integer", "minimum": 1, "maximum": 10_000_000},
+                        "max_cost_usd": {"type": "number", "exclusiveMinimum": 0, "maximum": 1_000_000},
+                        "max_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 86_400},
+                        "max_calls": {"type": "integer", "minimum": 1, "maximum": 10_000},
+                    },
+                    "additionalProperties": False,
+                },
+                "rollout_nonce": {"type": "string", "maxLength": 240},
+                "rollout_verifier_ref": {"type": "string", "maxLength": 240},
+            },
+            "required": ["objective"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "name": "aura_compass_neighborhood",
+        "description": "Return the bounded relational neighborhood for a prepared Compass run.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_classify",
+        "description": "Return objective Atlas, prohibitions, adapters, and bounded emergent classifications.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_breadboard",
+        "description": "Return typed compatibility and Coding Waboose Breadboard receipts.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_plan",
+        "description": "Return the proposal-only Change Graph, phase capsules, and Council V3 route.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_compile_capsules",
+        "description": "Compile proposal-only Act Capsules and SPEC-floor Agent IR; never grants patch authority.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
     },
     {
         "name": "aura_waboose_learn_coderabbit",
@@ -845,6 +980,71 @@ def _handle_emergent_evidence(
     return bridge.aura_emergent_evidence(request)
 
 
+
+@_register_tool("aura_compass_prepare")
+def _handle_compass_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    allowed = {
+        "objective",
+        "target_files",
+        "target_symbols",
+        "rollout_mode",
+        "rollout_provider",
+        "rollout_budget",
+        "rollout_nonce",
+        "rollout_verifier_ref",
+    }
+    if len(args) > len(allowed):
+        raise MCPArgumentError("aura_compass_prepare has too many fields")
+    unknown = sorted(set(args) - allowed)
+    if unknown:
+        raise MCPArgumentError(f"unknown aura_compass_prepare fields: {', '.join(unknown)}")
+    objective = _bounded_text_arg(args, "objective", maximum=4000, required=True)
+    target_files = _bounded_text_array_arg(
+        args, "target_files", max_items=16, max_item_length=240
+    )
+    target_symbols = _bounded_text_array_arg(
+        args, "target_symbols", max_items=32, max_item_length=240
+    )
+    rollout_mode = _bounded_text_arg(args, "rollout_mode", maximum=11, default="SHADOW")
+    if rollout_mode not in {"SHADOW", "LIMITED", "PAIRED_LIVE"}:
+        raise MCPArgumentError("rollout_mode must be SHADOW, LIMITED, or PAIRED_LIVE")
+    return bridge.aura_compass_prepare(
+        objective=objective,
+        target_files=target_files,
+        target_symbols=target_symbols,
+        rollout_mode=rollout_mode,
+        rollout_provider=_bounded_text_arg(args, "rollout_provider", maximum=120),
+        rollout_budget=_compass_rollout_budget_arg(args),
+        rollout_nonce=_bounded_text_arg(args, "rollout_nonce", maximum=240),
+        rollout_verifier_ref=_bounded_text_arg(args, "rollout_verifier_ref", maximum=240),
+    )
+
+
+@_register_tool("aura_compass_neighborhood")
+def _handle_compass_neighborhood(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_neighborhood(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_classify")
+def _handle_compass_classify(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_classify(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_breadboard")
+def _handle_compass_breadboard(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_breadboard(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_plan")
+def _handle_compass_plan(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_plan(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_compile_capsules")
+def _handle_compass_compile_capsules(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_compile_capsules(str(args.get("run_id", "")))
+
+
 @_register_tool("aura_waboose_learn_coderabbit")
 def _handle_waboose_learn_coderabbit(
     bridge: AuraAgentArenaBridge,
@@ -969,6 +1169,8 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
         return _make_response(request_id, {"tools": TOOL_DEFINITIONS})
 
     if method == "tools/call":
+        if not isinstance(params, Mapping):
+            return _make_error_response(request_id, -32602, "Invalid tools/call params")
         tool_name = str(params.get("name", ""))
         arguments = params.get("arguments", {}) or {}
 
@@ -976,6 +1178,8 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
         if handler is None:
             return _make_error_response(request_id, -32601, f"Unknown tool: {tool_name}")
 
+        if not isinstance(arguments, Mapping):
+            return _make_error_response(request_id, -32602, "Tool arguments must be an object")
         try:
             result = handler(bridge, arguments)
             # Error packets are still valid results (ok=False).
@@ -991,6 +1195,8 @@ def handle_request(bridge: AuraAgentArenaBridge, request: dict[str, Any]) -> dic
                     "isError": is_error_packet(result) or (isinstance(result, Mapping) and result.get("ok") is False),
                 },
             )
+        except MCPArgumentError as exc:
+            return _make_error_response(request_id, -32602, f"Invalid tool arguments: {exc}")
         except Exception as exc:
             return _make_error_response(request_id, -32603, f"Tool execution error: {exc}")
 

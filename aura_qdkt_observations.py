@@ -517,3 +517,44 @@ __all__ = [
     "capture_legacy_qdkt_observation",
     "record_qdkt_observation",
 ]
+
+
+# ---------------------------------------------------------------------------
+# C8 — relationship experience advisory projection
+# ---------------------------------------------------------------------------
+
+RELATIONSHIP_EXPERIENCE_QDKT_VERSION = "AURA_RELATIONSHIP_EXPERIENCE_QDKT_V1"
+
+
+def project_relationship_experience_advisory(observation: Any) -> dict[str, Any]:
+    """Project one governed relationship experience into QDKT advisory memory.
+
+    This is deliberately not a QDKT truth promotion. It carries receipt pointers and
+    outcome labels only; canonical relationship validity remains owned by current
+    Relational Index/Atlas evidence.
+    """
+    from aura_relationship_experience import RelationshipExperienceObservation
+
+    item = (
+        observation
+        if isinstance(observation, RelationshipExperienceObservation)
+        else RelationshipExperienceObservation.from_dict(observation)
+    )
+    payload = {
+        "version": RELATIONSHIP_EXPERIENCE_QDKT_VERSION,
+        "observation_id": item.observation_id,
+        "relationship_id": item.relationship_id,
+        "relationship_digest": item.relationship_digest,
+        "repository_head": item.repository_head,
+        "outcome": item.outcome.value,
+        "human_disposition": item.human_disposition.value,
+        "verifier_evidence_refs": list(item.verifier_evidence_refs),
+        "receipt_refs": list(item.receipt_refs),
+        "truth_class": "DERIVED_EXPERIENCE_ADVISORY",
+        "canonical_relation_validity": False,
+        "proposal_only": True,
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+    payload["projection_digest"] = stable_digest(payload)
+    return payload

@@ -256,6 +256,62 @@ def test_prohibition_blocks_affinity_mutation(temp_repo: Path) -> None:
     assert prohibited[0].readiness == Readiness.TOO_RISKY
 
 
+def test_circular_authorization_preserves_relation_direction(temp_repo: Path) -> None:
+    idx_file = temp_repo / ".aura" / "RELATIONAL_INDEX.json"
+    data = json.loads(idx_file.read_text(encoding="utf-8"))
+    participant_a = "relp_000000000000000000000001"
+    participant_b = "relp_000000000000000000000002"
+    data["participants"][0]["participant_type"] = "authority"
+    data["participants"][1]["participant_type"] = "authority"
+
+    def authority_relation(relation_id: str, source: str, target: str) -> dict:
+        return {
+            "schema_version": "AURA_TYPED_RELATION_V1",
+            "relation_id": relation_id,
+            "relation_type": "REQUIRES_AUTHORITY",
+            "source_participant_id": source,
+            "target_participant_id": target,
+            "truth_class": "EXACT_SOURCE",
+            "evidence_refs": [f"{relation_id}_evidence"],
+            "metadata": {},
+        }
+
+    data["relations"] = [
+        authority_relation("rel_authority_ab_one", participant_a, participant_b),
+        authority_relation("rel_authority_ab_two", participant_a, participant_b),
+    ]
+    idx_file.write_text(json.dumps(data), encoding="utf-8")
+
+    same_direction = build_relationship_atlas(repo_root=temp_repo)
+    same_direction_authority = [
+        assessment
+        for assessment in same_direction.assessments
+        if "REQUIRES_AUTHORITY" in assessment.relation_types
+    ]
+    assert len(same_direction_authority) == 2
+    assert all(
+        assessment.wiring_disposition != WiringDisposition.PROHIBITED
+        for assessment in same_direction_authority
+    )
+
+    data["relations"][1] = authority_relation(
+        "rel_authority_ba", participant_b, participant_a
+    )
+    idx_file.write_text(json.dumps(data), encoding="utf-8")
+
+    circular = build_relationship_atlas(repo_root=temp_repo)
+    circular_authority = [
+        assessment
+        for assessment in circular.assessments
+        if "REQUIRES_AUTHORITY" in assessment.relation_types
+    ]
+    assert len(circular_authority) == 2
+    assert all(
+        assessment.wiring_disposition == WiringDisposition.PROHIBITED
+        for assessment in circular_authority
+    )
+
+
 def test_build_relationship_atlas_rejects_stale_repository_identity(
     temp_repo: Path, monkeypatch
 ) -> None:

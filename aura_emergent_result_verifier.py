@@ -26,9 +26,12 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import hashlib
+import hmac
 import json
 import re
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
+
+from aura_event_contracts import stable_digest
 
 # ---------------------------------------------------------------------------
 # Version / safety constants
@@ -46,6 +49,7 @@ READ_ONLY_CONSTRAINTS = (
 AUDIT_ROUTE = "EMERGENT_CAPABILITY_AUDIT"
 STATUS_FUTURE_PATCHABLE = "FUTURE_PATCHABLE"
 STATUS_NEEDS_GROUNDING = "NEEDS_GROUNDING"
+STATUS_TOO_RISKY = "TOO_RISKY"
 
 # ---------------------------------------------------------------------------
 # Focus scoring: generic stop terms removed before any token overlap scoring
@@ -1413,3 +1417,266 @@ def _coerce_cluster(d: dict[str, Any]) -> dict[str, Any]:
                 else:
                     out[fname] = None
     return out
+
+
+# ---------------------------------------------------------------------------
+# C6 — verifier for bounded Compass emergent candidates
+# ---------------------------------------------------------------------------
+
+BOUNDED_EMERGENT_VERSION = "AURA_BOUNDED_EMERGENT_DISCOVERY_V1"
+BOUNDED_VERIFIER_VERSION = "AURA_BOUNDED_EMERGENT_VERIFIER_V1"
+
+
+def _validated_canonical_index(index: Any) -> tuple[dict[str, Any], str]:
+    value = index.to_dict() if hasattr(index, "to_dict") else dict(index or {})
+    supplied_digest = str(value.get("index_digest") or "")
+    if not supplied_digest or not re.fullmatch(r"[0-9a-f]+", supplied_digest) or len(supplied_digest) % 2:
+        raise ValueError("canonical relational index digest is missing or malformed")
+    body = dict(value)
+    body.pop("index_digest", None)
+    expected = stable_digest(body, digest_size=len(supplied_digest) // 2)
+    if not hmac.compare_digest(supplied_digest, expected):
+        raise ValueError("canonical relational index digest mismatch")
+    return value, supplied_digest
+
+
+def _trusted_neighborhood_body(
+    neighborhood: Any,
+    relational_index: Any,
+) -> tuple[dict[str, Any], str]:
+    trusted = dict(neighborhood or {})
+    trusted_digest = str(trusted.pop("neighborhood_digest", "") or "")
+    if not trusted_digest or not re.fullmatch(r"[0-9a-f]+", trusted_digest) or len(trusted_digest) % 2:
+        raise ValueError("trusted relational neighborhood digest is missing or malformed")
+    if stable_digest(trusted, digest_size=len(trusted_digest) // 2) != trusted_digest:
+        raise ValueError("trusted relational neighborhood digest mismatch")
+    canonical_index, index_digest = _validated_canonical_index(relational_index)
+    if not hmac.compare_digest(str(trusted.get("index_digest") or ""), index_digest):
+        raise ValueError("relational neighborhood is not bound to the canonical index")
+    neighborhood_index_id = str(trusted.get("index_id") or "")
+    canonical_index_id = str(canonical_index.get("index_id") or "")
+    if canonical_index_id and neighborhood_index_id != canonical_index_id:
+        raise ValueError("relational neighborhood index_id differs from the canonical index")
+
+    for collection, identity_key in (("participants", "participant_id"), ("relations", "relation_id")):
+        canonical_items = canonical_index.get(collection, ()) or ()
+        neighborhood_items = trusted.get(collection, ()) or ()
+        if (
+            not isinstance(canonical_items, Sequence)
+            or isinstance(canonical_items, (str, bytes))
+            or not isinstance(neighborhood_items, Sequence)
+            or isinstance(neighborhood_items, (str, bytes))
+        ):
+            raise ValueError(f"canonical {collection} must be arrays")
+        canonical_by_id: dict[str, dict[str, Any]] = {}
+        for item in canonical_items:
+            if not isinstance(item, Mapping) or not str(item.get(identity_key) or ""):
+                raise ValueError(f"canonical {collection} contain an invalid identity")
+            identity = str(item[identity_key])
+            if identity in canonical_by_id:
+                raise ValueError(f"canonical {collection} contain duplicate identities")
+            canonical_by_id[identity] = dict(item)
+        seen: set[str] = set()
+        for item in neighborhood_items:
+            if not isinstance(item, Mapping) or not str(item.get(identity_key) or ""):
+                raise ValueError(f"relational neighborhood {collection} contain an invalid identity")
+            identity = str(item[identity_key])
+            if identity in seen or canonical_by_id.get(identity) != dict(item):
+                raise ValueError(f"relational neighborhood {collection} differ from the canonical index")
+            seen.add(identity)
+    return trusted, trusted_digest
+
+
+def _trusted_endpoint_evidence(participant: Mapping[str, Any]) -> tuple[list[str], list[str], list[str]]:
+    metadata = participant.get("metadata") if isinstance(participant.get("metadata"), Mapping) else {}
+    refs: list[str] = []
+    hashes: list[str] = []
+    tests: list[str] = []
+    for value in (
+        participant.get("canonical_ref"),
+        metadata.get("canonical_ref"),
+        metadata.get("source_ref"),
+    ):
+        text = str(value or "").strip()
+        if text and text not in refs:
+            refs.append(text)
+    for value in (
+        participant.get("source_hash"),
+        metadata.get("source_hash"),
+        metadata.get("file_source_hash"),
+    ):
+        text = str(value or "").strip()
+        if text and text not in hashes:
+            hashes.append(text)
+    raw_tests = participant.get("tests", ()) or metadata.get("tests", ()) or ()
+    for value in raw_tests:
+        text = str(value or "").strip()
+        if text and text not in tests:
+            tests.append(text)
+    return refs, hashes, tests
+
+
+def verify_bounded_emergent_discovery(
+    discovery: Any,
+    *,
+    neighborhood: Any,
+    relational_index: Any,
+    max_clusters: int = 8,
+) -> dict[str, Any]:
+    """Verify a discovery against trusted canonical neighborhood endpoint evidence."""
+
+    payload = discovery.to_dict() if hasattr(discovery, "to_dict") else dict(discovery or {})
+    supplied_digest = str(payload.get("discovery_digest") or "")
+    digest_body = dict(payload)
+    digest_body.pop("discovery_digest", None)
+    expected_digest = stable_digest(digest_body)
+    if not supplied_digest or not hmac.compare_digest(supplied_digest, expected_digest):
+        raise ValueError("bounded emergent discovery digest mismatch")
+    if (
+        payload.get("version") != BOUNDED_EMERGENT_VERSION
+        or not payload.get("proposal_only")
+        or payload.get("safe_to_patch")
+        or payload.get("patch_authority") != PATCH_AUTHORITY_POLICY
+        or payload.get("vsa_patch_authority")
+    ):
+        raise ValueError("bounded emergent discovery authority boundary changed")
+    if not payload.get("no_generic_repository_scan"):
+        raise ValueError("bounded emergent verifier refuses generic repository scans")
+    trusted, trusted_digest = _trusted_neighborhood_body(neighborhood, relational_index)
+    if not hmac.compare_digest(str(payload.get("neighborhood_digest") or ""), trusted_digest):
+        raise ValueError("bounded emergent discovery is not bound to the trusted neighborhood")
+    participants = {
+        str(item.get("participant_id") or ""): item
+        for item in trusted.get("participants", ()) or ()
+        if isinstance(item, Mapping) and item.get("participant_id")
+    }
+    candidates = [dict(item) for item in payload.get("candidates", ()) or () if isinstance(item, dict)]
+    accepted: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = [dict(item) for item in payload.get("suppressed_receipts", ()) or ()]
+    seen_clusters: set[str] = set()
+
+    for candidate in sorted(
+        candidates,
+        key=lambda item: (-float(item.get("score", 0.0)), str(item.get("cluster_key", "")), str(item.get("candidate_id", ""))),
+    ):
+        missing = [
+            key
+            for key in (
+                "candidate_id",
+                "mechanism",
+                "benefit",
+                "risk",
+                "failure_conditions",
+                "smallest_experiment",
+                "status",
+                "cluster_key",
+            )
+            if not candidate.get(key)
+        ]
+        status = str(candidate.get("status") or "")
+        evidence_refs = list(candidate.get("evidence_refs") or [])
+        source_hashes = list(candidate.get("source_hashes") or [])
+        source_evidence_refs = list(candidate.get("source_evidence_refs") or [])
+        target_evidence_refs = list(candidate.get("target_evidence_refs") or [])
+        source_source_hashes = list(candidate.get("source_source_hashes") or [])
+        target_source_hashes = list(candidate.get("target_source_hashes") or [])
+        tests = list(candidate.get("required_tests") or [])
+        reasons: list[str] = []
+        source_id = str(candidate.get("source_participant_id") or "")
+        target_id = str(candidate.get("target_participant_id") or "")
+        source_participant = participants.get(source_id)
+        target_participant = participants.get(target_id)
+        if source_participant is None:
+            reasons.append("UNKNOWN_SOURCE_PARTICIPANT")
+        if target_participant is None:
+            reasons.append("UNKNOWN_TARGET_PARTICIPANT")
+        if source_id and source_id == target_id:
+            reasons.append("SELF_PAIR")
+        if source_participant is not None and target_participant is not None:
+            trusted_source_refs, trusted_source_hashes, trusted_source_tests = _trusted_endpoint_evidence(source_participant)
+            trusted_target_refs, trusted_target_hashes, trusted_target_tests = _trusted_endpoint_evidence(target_participant)
+            if set(source_evidence_refs) != set(trusted_source_refs):
+                reasons.append("SOURCE_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(target_evidence_refs) != set(trusted_target_refs):
+                reasons.append("TARGET_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(source_source_hashes) != set(trusted_source_hashes):
+                reasons.append("SOURCE_ENDPOINT_HASH_MISMATCH")
+            if set(target_source_hashes) != set(trusted_target_hashes):
+                reasons.append("TARGET_ENDPOINT_HASH_MISMATCH")
+            if set(evidence_refs) != set([*trusted_source_refs, *trusted_target_refs]):
+                reasons.append("COMBINED_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(source_hashes) != set([*trusted_source_hashes, *trusted_target_hashes]):
+                reasons.append("COMBINED_ENDPOINT_HASH_MISMATCH")
+            if not set([*trusted_source_tests, *trusted_target_tests]).issubset(set(tests)):
+                reasons.append("ENDPOINT_VERIFIER_MISMATCH")
+        if missing:
+            reasons.append(f"MISSING_FIELDS:{','.join(sorted(missing))}")
+        if status == STATUS_TOO_RISKY:
+            reasons.append("TOO_RISKY_PRESERVED")
+        elif status == STATUS_NEEDS_GROUNDING:
+            reasons.append("NEEDS_GROUNDING_PRESERVED")
+        elif status != STATUS_FUTURE_PATCHABLE:
+            reasons.append("UNSUPPORTED_STATUS")
+        if status == STATUS_FUTURE_PATCHABLE and (
+            not evidence_refs
+            or len(source_hashes) < 2
+            or not source_evidence_refs
+            or not target_evidence_refs
+            or not source_source_hashes
+            or not target_source_hashes
+        ):
+            reasons.append("EXACT_EVIDENCE_INCOMPLETE")
+        if status == STATUS_FUTURE_PATCHABLE and not tests:
+            reasons.append("VERIFIER_MISSING")
+        if (
+            candidate.get("safe_to_patch")
+            or not candidate.get("proposal_only", True)
+            or candidate.get("patch_authority") != PATCH_AUTHORITY_POLICY
+            or candidate.get("vsa_patch_authority")
+        ):
+            reasons.append("AUTHORITY_BOUNDARY_VIOLATION")
+
+        if reasons:
+            rejected.append(
+                {
+                    "candidate_id": str(candidate.get("candidate_id") or ""),
+                    "status": status or "UNKNOWN",
+                    "reasons": reasons,
+                    "preserved": True,
+                }
+            )
+            continue
+
+        cluster = str(candidate.get("cluster_key") or "")
+        if cluster in seen_clusters:
+            suppressed.append({"candidate_id": candidate["candidate_id"], "reason": "VERIFIER_CLUSTER_DIVERSITY"})
+            continue
+        if len(seen_clusters) >= max(1, min(int(max_clusters), 32)):
+            suppressed.append({"candidate_id": candidate["candidate_id"], "reason": "VERIFIER_MAX_CLUSTERS"})
+            continue
+        seen_clusters.add(cluster)
+        accepted.append(candidate)
+
+    result = {
+        "version": BOUNDED_VERIFIER_VERSION,
+        "discovery_digest": str(payload.get("discovery_digest") or ""),
+        "neighborhood_digest": trusted_digest,
+        "trusted_neighborhood_verified": True,
+        "accepted_candidates": accepted,
+        "rejected_candidates": sorted(rejected, key=lambda item: (item["status"], item["candidate_id"])),
+        "suppressed_candidates": sorted(suppressed, key=lambda item: (str(item.get("reason", "")), str(item.get("candidate_id", "")))),
+        "summary": {
+            "candidate_count": len(candidates),
+            "accepted_count": len(accepted),
+            "rejected_count": len(rejected),
+            "suppressed_count": len(suppressed),
+            "no_generic_repository_scan": True,
+        },
+        "proposal_only": True,
+        "safe_to_patch": False,
+        "patch_authority": PATCH_AUTHORITY_POLICY,
+        "vsa_patch_authority": False,
+    }
+    result["verification_digest"] = stable_digest(result)
+    return result

@@ -7,6 +7,11 @@ import sqlite3
 import time
 from typing import Any
 
+from aura_relationship_experience import (
+    RelationshipExperienceObservation,
+    project_relationship_timeline,
+)
+
 from aura_arena_experience import (
     ARENA_EXPERIENCE_VERSION,
     ArenaExperience,
@@ -15,10 +20,10 @@ from aura_arena_experience import (
     sanitize_experience_payload,
 )
 
-ARENA_EXPERIENCE_LEDGER_VERSION = "AURA_ARENA_EXPERIENCE_LEDGER_V3"
+ARENA_EXPERIENCE_LEDGER_VERSION = "AURA_ARENA_EXPERIENCE_LEDGER_V4"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
-_SCHEMA_VERSION = 3
+_SCHEMA_VERSION = 4
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS arena_experiences (
@@ -42,6 +47,14 @@ CREATE INDEX IF NOT EXISTS idx_experience_task ON arena_experiences(task_id);
 CREATE INDEX IF NOT EXISTS idx_experience_correlation ON arena_experiences(correlation_id);
 CREATE INDEX IF NOT EXISTS idx_experience_commit ON arena_experiences(repository_commit_sha);
 CREATE INDEX IF NOT EXISTS idx_experience_outcome ON arena_experiences(final_outcome);
+CREATE TABLE IF NOT EXISTS relationship_experiences (
+ observation_id TEXT PRIMARY KEY, relationship_id TEXT NOT NULL, relationship_digest TEXT NOT NULL,
+ repository_head TEXT NOT NULL, working_tree_digest TEXT NOT NULL, valid_from_head TEXT NOT NULL,
+ valid_to_head TEXT NOT NULL DEFAULT '', transaction_time REAL NOT NULL, outcome TEXT NOT NULL,
+ human_disposition TEXT NOT NULL, privacy_class TEXT NOT NULL, observation_digest TEXT NOT NULL,
+ payload_json TEXT NOT NULL, created_at REAL NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_relationship_experience_identity ON relationship_experiences(relationship_id,transaction_time);
+CREATE INDEX IF NOT EXISTS idx_relationship_experience_head ON relationship_experiences(repository_head);
 CREATE TABLE IF NOT EXISTS arena_experience_migrations(version INTEGER PRIMARY KEY,applied_at REAL NOT NULL);
 """
 
@@ -220,6 +233,164 @@ class ArenaExperienceLedger:
             "vsa_patch_authority": False,
         }
 
+
+    def record_relationship_observation(
+        self,
+        observation: RelationshipExperienceObservation | dict[str, Any],
+    ) -> dict[str, Any]:
+        """Append one canonical relationship receipt projection to the derived ledger."""
+        try:
+            item = (
+                observation
+                if isinstance(observation, RelationshipExperienceObservation)
+                else RelationshipExperienceObservation.from_dict(observation)
+            )
+        except (TypeError, ValueError) as exc:
+            if str(exc) == "private relationship observation requires redaction":
+                observation_id = (
+                    str(observation.get("observation_id") or "")
+                    if isinstance(observation, dict)
+                    else ""
+                )
+                return _deny(
+                    "private_relationship_observation_requires_redaction",
+                    observation_id=observation_id,
+                )
+            return _deny(f"invalid_relationship_observation:{type(exc).__name__}")
+        if item.privacy_class == "PRIVATE_REDACTED":
+            private_refs = [*item.verifier_evidence_refs, *item.receipt_refs, *item.source_refs]
+            if (
+                any(not str(value).startswith("redacted:") for value in private_refs)
+                or item.reason not in {"", "[REDACTED]"}
+            ):
+                return _deny(
+                    "private_relationship_observation_requires_redaction",
+                    observation_id=item.observation_id,
+                )
+        payload = item.to_dict()
+        digest = str(payload["observation_digest"])
+        prior = self._conn.execute(
+            "SELECT observation_digest FROM relationship_experiences WHERE observation_id=?",
+            (item.observation_id,),
+        ).fetchone()
+        if prior:
+            if str(prior["observation_digest"]) == digest:
+                return {
+                    "ok": True,
+                    "observation_id": item.observation_id,
+                    "observation_digest": digest,
+                    "idempotent_replay": True,
+                    "patch_authority": PATCH_AUTHORITY,
+                    "vsa_patch_authority": False,
+                }
+            return _deny(
+                "relationship_observation_id_digest_conflict",
+                observation_id=item.observation_id,
+            )
+        try:
+            self._conn.execute(
+                "INSERT INTO relationship_experiences("
+                "observation_id,relationship_id,relationship_digest,repository_head,working_tree_digest,"
+                "valid_from_head,valid_to_head,transaction_time,outcome,human_disposition,privacy_class,"
+                "observation_digest,payload_json,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    item.observation_id,
+                    item.relationship_id,
+                    item.relationship_digest,
+                    item.repository_head,
+                    item.working_tree_digest,
+                    item.valid_from_head,
+                    item.valid_to_head,
+                    item.transaction_time,
+                    item.outcome.value,
+                    item.human_disposition.value,
+                    item.privacy_class,
+                    digest,
+                    _json(payload),
+                    time.time(),
+                ),
+            )
+            self._conn.commit()
+        except sqlite3.DatabaseError as exc:
+            self._conn.rollback()
+            return _deny(f"relationship_database_write_failed:{type(exc).__name__}")
+        return {
+            "ok": True,
+            "observation_id": item.observation_id,
+            "observation_digest": digest,
+            "idempotent_replay": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def relationship_history(
+        self,
+        *,
+        relationship_id: str = "",
+        repository_head: str = "",
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        clauses: list[str] = []
+        params: list[Any] = []
+        if relationship_id:
+            clauses.append("relationship_id=?")
+            params.append(str(relationship_id))
+        if repository_head:
+            clauses.append("repository_head=?")
+            params.append(str(repository_head))
+        params.append(max(1, min(int(limit), 10000)))
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        rows = self._conn.execute(
+            f"SELECT payload_json FROM relationship_experiences {where} ORDER BY transaction_time ASC LIMIT ?",
+            params,
+        ).fetchall()
+        result: list[dict[str, Any]] = []
+        for row in rows:
+            try:
+                result.append(json.loads(str(row["payload_json"])))
+            except json.JSONDecodeError:
+                continue
+        return result
+
+    def relationship_timeline(
+        self,
+        *,
+        current_repository_head: str,
+        relationship_id: str = "",
+        now: float | None = None,
+        limit: int = 100,
+    ) -> dict[str, Any]:
+        return project_relationship_timeline(
+            self.relationship_history(relationship_id=relationship_id, limit=limit),
+            current_repository_head=current_repository_head,
+            now=now,
+        )
+
+    def rebuild_relationship_projection(
+        self,
+        receipts: list[RelationshipExperienceObservation | dict[str, Any]],
+    ) -> dict[str, Any]:
+        """Replay canonical receipts into an empty or recovered derived projection."""
+        recorded = 0
+        idempotent = 0
+        rejected: list[dict[str, Any]] = []
+        for receipt in receipts:
+            result = self.record_relationship_observation(receipt)
+            if result.get("ok"):
+                recorded += 1
+                idempotent += int(bool(result.get("idempotent_replay")))
+            else:
+                rejected.append(result)
+        return {
+            "ok": not rejected,
+            "recorded": recorded,
+            "idempotent": idempotent,
+            "rejected": rejected,
+            "recoverable_from_canonical_receipts": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
     def get(self, experience_id: str) -> dict[str, Any] | None:
         row = self._conn.execute(
             "SELECT * FROM arena_experiences WHERE experience_id=?", (str(experience_id),)
@@ -281,6 +452,9 @@ class ArenaExperienceLedger:
         capsule_records = int(self._conn.execute(
             "SELECT COUNT(*) FROM arena_experiences WHERE route_capsule_digest!=''"
         ).fetchone()[0])
+        relationship_records = int(self._conn.execute(
+            "SELECT COUNT(*) FROM relationship_experiences"
+        ).fetchone()[0])
         return {
             "ok": True,
             "version": ARENA_EXPERIENCE_LEDGER_VERSION,
@@ -291,6 +465,7 @@ class ArenaExperienceLedger:
             "v2_complete_record_count": complete,
             "v3_complete_record_count": complete,
             "capsule_record_count": capsule_records,
+            "relationship_experience_count": relationship_records,
             "legacy_record_count": count - complete,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": False,
@@ -346,13 +521,23 @@ def _present(value: Any) -> bool:
     return bool(value) if isinstance(value, dict) else bool(str(value or "").strip())
 
 
-def _deny(reason: str, *, missing: list[str] | None = None, experience_id: str = "") -> dict[str, Any]:
-    return {
+def _deny(
+    reason: str,
+    *,
+    missing: list[str] | None = None,
+    experience_id: str = "",
+    observation_id: str = "",
+) -> dict[str, Any]:
+    result: dict[str, Any] = {
         "ok": False,
         "reason": reason,
         "missing": list(missing or []),
-        "experience_id": experience_id,
         "fail_closed": True,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": False,
     }
+    if experience_id:
+        result["experience_id"] = experience_id
+    if observation_id:
+        result["observation_id"] = observation_id
+    return result

@@ -245,6 +245,10 @@ Planning Board proposal
 
 The Planning Board provides typed goals/actions, BC0–BC5 continuity, bounded backward regression, forward symbolic replay, and compatibility shadows over existing systems. Planning artifacts can be projected into canonical append-only events and independently reconstructed without becoming execution authority.
 
+The Coding Relationship Compass now implements C0–C9. After bounded Relational Index and objective Atlas grounding, it evaluates typed interfaces, discovers only local unwired candidates, compiles proposal-only Change Graph/Act Capsule/Agent IR work, records Council-versus-Surgeon routing, and projects append-only bi-temporal relationship experience. Six strict Agent Arena/MCP tools expose preparation, neighborhood, classification, Breadboard, planning, and capsule compilation. `SHADOW` remains the default rollout; no Compass artifact grants provider execution, patch, commit, PR, or merge authority.
+
+C8 receipt ingestion is fail-closed across every construction path. `create()` sanitizes reason text before computing identity; direct construction and `from_dict()` accept only already-sanitized reasons and canonical digests. `PRIVATE_REDACTED` references must be approved kind-specific placeholders (`redacted:verifier`, `redacted:receipt`, or `redacted:source`) or opaque lowercase-hex digest tokens, never raw data with a `redacted:` label. Scalar, reference-list, aggregate-payload, and timestamp limits are enforced before projection or persistence.
+
 Relational authority binds approvals to an exact action ID, action digest, capability/policy scope, validity window, role, quorum, delegation chain, and risk class. Emergency authority remains narrower, temporary, reason-bearing, and review-producing.
 
 ### 4. Human Agent, external workers, and Council–Surgeon engineering
@@ -420,7 +424,7 @@ AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establ
 
 Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
 
-## Evidence and benchmark hierarchy
+## Benchmark evidence
 
 Aura does not collapse unlike evidence into one score.
 
@@ -434,9 +438,9 @@ Aura does not collapse unlike evidence into one score.
 Representative current evidence includes:
 
 - executable fixture: `3/3` visible, `3/3` hidden, `2/2` regression, `WORKING`, `ACCEPTED`;
-- exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, `24/24` regression;
-- context-localization proxy: `89.04%` lower total proxy with quality `+0.0057`;
-- Selective Council V3: `32.83%` lower total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
+- exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, focused regression `24/24`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50`;
+- context-localization proxy: `89.04% lower` total proxy with quality `+0.0057`;
+- Selective Council V3: `32.83% lower` total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
 - Aura Gate Phase 2 instrumented Agent Bridge + Council V3 scope: `37,907` input,
   `1,852` output, and `39,759` total token proxy, with `51,987` estimated saved
   (`56.66%`) against the documented counterfactual; full Codex-session provider totals

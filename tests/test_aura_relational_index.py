@@ -138,6 +138,44 @@ def test_full_index_is_deterministic_under_input_reordering() -> None:
     assert _build().to_dict() == _build(reverse=True).to_dict()
 
 
+def test_identity_snapshot_reuses_precomputed_planes(monkeypatch, tmp_path: Path) -> None:
+    builder = RelationalIndexBuilder(tmp_path, profile="MINIMAL")
+    observed: dict = {}
+
+    def unexpected_rebuild(*args, **kwargs):
+        raise AssertionError("precomputed identity planes must not be rebuilt")
+
+    def capture_identity(**kwargs):
+        observed.update(kwargs)
+        return {"repo_head": kwargs["repo_head"]}
+
+    monkeypatch.setattr(CodeTopoAnchor, "build_from_files", unexpected_rebuild)
+    monkeypatch.setattr("aura_relational_index.build_capability_connectome", unexpected_rebuild)
+    monkeypatch.setattr(builder, "_repository_identity", capture_identity)
+
+    identity = builder.repository_identity_snapshot(
+        repo_head="b" * 40,
+        inventory_digest="f" * 40,
+        connectome=_connectome(),
+    )
+    assert identity == {"repo_head": "b" * 40}
+    assert observed["repo_head"] == "b" * 40
+    assert observed["inventory_digest"] == "f" * 40
+    assert observed["connectome"]["graph_digest"] == "a" * 32
+
+
+def _source_ref_for_participant(participant: RelationalParticipant) -> SourceReference:
+    metadata = participant.metadata
+    return SourceReference(
+        file_path=str(metadata["file_path"]),
+        symbol=str(participant.qualified_symbol or ""),
+        line_start=int(metadata["line_start"]),
+        line_end=int(metadata["line_end"]),
+        source_hash=str(participant.digest or ""),
+        file_source_hash=str(metadata.get("file_source_hash") or ""),
+    )
+
+
 def test_exact_and_advisory_relations_remain_separate() -> None:
     index = _build()
     structural = [
@@ -821,24 +859,25 @@ def test_extract_relational_neighborhood_is_deterministic_and_bounded() -> None:
 
 def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
     index = _build()
+    alpha_run = next(
+        item for item in index.participants if item.qualified_symbol == "Alpha.run"
+    )
     request = RelationalNeighborhoodRequest(
         objective_digest="objective-source-ref",
         seed_participant_ids=(),
-        seed_source_refs=(
-            SourceReference(
-                file_path="service.py",
-                symbol="Alpha.run",
-                line_start=1,
-                line_end=3,
-                source_hash="source-hash",
-            ),
-        ),
+        seed_source_refs=(_source_ref_for_participant(alpha_run),),
         max_hops=1,
         max_nodes=8,
         max_edges=16,
     )
     packet = extract_relational_neighborhood(request, index)
     assert packet["seed_participant_ids"]
+    seeded = {
+        item["qualified_symbol"]
+        for item in packet["participants"]
+        if item["participant_id"] in packet["seed_participant_ids"]
+    }
+    assert seeded == {"Alpha.run"}
     assert any(
         item["qualified_symbol"] == "Alpha.run" for item in packet["participants"]
     )
@@ -847,6 +886,96 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
         for reasons in packet["inclusion_reasons"].values()
         for reason in reasons
     )
+
+
+def test_extract_relational_neighborhood_prefers_requested_file_before_global_symbol() -> None:
+    original = _build()
+    reverse_indexes = original.to_dict()["reverse_indexes"]
+    intended_participant = next(
+        item for item in original.participants if item.qualified_symbol == "Beta.run"
+    )
+    intended = intended_participant.participant_id
+    unrelated = next(
+        item.participant_id
+        for item in original.participants
+        if item.participant_id not in reverse_indexes["by_file_path"]["service.py"]
+    )
+    reverse_indexes["by_qualified_symbol"].pop("service.py#Beta.run")
+    reverse_indexes["by_qualified_symbol"]["other.py#Beta.run"] = [unrelated]
+    index = RelationalIndex.create(
+        repository_identity=original.repository_identity,
+        profile=original.profile,
+        participants=original.participants,
+        relations=original.relations,
+        groups=original.groups,
+        reverse_indexes=reverse_indexes,
+        boundary=original.boundary,
+        build_facts=original.build_facts,
+    )
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-source-file-precedence",
+        seed_participant_ids=(),
+        seed_source_refs=(_source_ref_for_participant(intended_participant),),
+        max_hops=1,
+        max_nodes=32,
+        max_edges=32,
+    )
+
+    packet = extract_relational_neighborhood(request, index)
+    assert intended in packet["seed_participant_ids"]
+    assert unrelated not in packet["seed_participant_ids"]
+
+
+def test_extract_relational_neighborhood_disambiguates_redefined_method_by_span_and_hash() -> None:
+    files = _files()
+    files["service.py"] = (
+        "class Alpha:\n"
+        "    def run(self):\n"
+        "        return 1\n\n"
+        "    def run(self):\n"
+        "        return 2\n"
+    )
+    anchor = CodeTopoAnchor.build_from_files(files)
+    builder = RelationalIndexBuilder(".", profile="STANDARD")
+    index = builder.build_full(
+        anchor=anchor,
+        connectome=_connectome(),
+        repository_identity=_identity(builder),
+    )
+    redefinitions = [
+        item for item in index.participants if item.qualified_symbol == "Alpha.run"
+    ]
+    assert len(redefinitions) == 2
+    selected = redefinitions[0]
+    source_ref = _source_ref_for_participant(selected)
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-redefined-method",
+        seed_participant_ids=(),
+        seed_source_refs=(source_ref,),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+
+    packet = extract_relational_neighborhood(request, index)
+
+    assert packet["seed_participant_ids"] == [selected.participant_id]
+    with pytest.raises(ValueError, match="must resolve to exactly one current source participant"):
+        extract_relational_neighborhood(
+            RelationalNeighborhoodRequest(
+                objective_digest="objective-redefined-method-drift",
+                seed_participant_ids=(),
+                seed_source_refs=(
+                    SourceReference(
+                        **{**source_ref.to_dict(), "source_hash": "0" * 64}
+                    ),
+                ),
+                max_hops=1,
+                max_nodes=8,
+                max_edges=16,
+            ),
+            index,
+        )
 
 
 def test_extract_relational_neighborhood_retains_seed_under_dense_budget() -> None:

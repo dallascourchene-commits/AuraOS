@@ -209,7 +209,7 @@ def _classify_token_savings_role(aff: Any) -> str:
             return role
 
     # Check tags
-    for tag in tags_lower:
+    for tag in sorted(tags_lower):
         for keyword, role in _TOKEN_SAVINGS_ROLE_MAP.items():
             if keyword in tag:
                 return role

@@ -35,7 +35,11 @@ objective
   → OBJECTIVE_STANDARD / OBJECTIVE_DEEP Atlas over that neighborhood
   → typed relationship compatibility hard guards
   → proposal-only Planning Board and Coding Breadboard receipt
-  → Architect-compatible grounding packet
+  → bounded Emergent candidate discovery and verification
+  → Change Graph, phase capsules, proposal-only Act Capsules, and Agent IR
+  → Council V3 / Surgeon failure-class routing
+  → governed bi-temporal experience projection template
+  → Architect-compatible grounding packet and read-only bridge tools
 ```
 
 The first compile is grounded against the current repository. In-process repeats are cached by repository root, repository head, atomic-inventory digest, and Connectome graph digest.
@@ -67,6 +71,9 @@ The packet includes:
 - bounded objective-scoped Atlas assessments and projection;
 - typed interface compatibility, exact hard-guard reasons, and required adapters;
 - a proposal-only Planning Board plus human/machine Coding Breadboard receipt;
+- bounded Emergent candidates with mechanism, benefit, risk, failure conditions, smallest experiment, and rejection/suppression receipts;
+- a validated Change Graph, continuity-bound phase capsules, proposal-only Act Capsules, Agent IR, and Council/Surgeon routing;
+- a governed relationship-experience projection template and explicit rollout receipt;
 - relationships to preserve;
 - required adapters, missing roles, and authority constraints;
 - all active Atlas prohibitions;
@@ -89,6 +96,12 @@ When the Compass cannot ground the objective, Architect fails closed to the exis
 The Compass first calls `extract_relational_neighborhood(...)` with explicit hop, node, edge, candidate-pair, byte, and elapsed-time budgets. It then calls `build_objective_relationship_atlas(...)` with `OBJECTIVE_STANDARD` or `OBJECTIVE_DEEP`. Global `STANDARD`/`DEEP` scans fail closed above the configured participant-pair limit. Objective snapshots are nonpersistent and cached only in a byte-bounded LRU whose removal does not change semantics.
 
 Typed C5 preflight projects exact intent/evidence into two `RelationshipContract` records, checks direction, cardinality, lifecycle, actor, boundary, resource/data class, operation, policy, proof, prohibition, and budgets, then emits a proposal-only Planning Board and Coding Breadboard receipt.
+
+## C6–C9 finalization
+
+C6 runs only over the bounded C3 neighborhood and C5 compatibility result. It excludes exact, redundant, and prohibited pairs; preserves rejected and suppressed receipts; and never launches a generic repository scan. C7 converts accepted local evidence into a validated Change Graph, continuity checkpoints, proposal-only Act Capsules, SPEC-floor Agent IR, and explicit Council V3 versus Surgeon routing. C8 stores append-only, bi-temporal relationship experience derived from canonical receipts; decay changes advisory retrieval rank only and never canonical validity. C9 exposes six strict read-only/proposal-only bridge and MCP tools: `aura_compass_prepare`, `aura_compass_neighborhood`, `aura_compass_classify`, `aura_compass_breadboard`, `aura_compass_plan`, and `aura_compass_compile_capsules`.
+
+Rollout defaults to `SHADOW`. `LIMITED` requires an explicit quality/verifier receipt. `PAIRED_LIVE` is rejected unless provider, bounded numeric budget, nonce, and verifier authorization are all supplied, and even an admitted paired-live receipt does not grant provider execution, patch, commit, PR, or merge authority.
 
 ## Safety and authority
 
@@ -124,5 +137,6 @@ python -m pytest -q \
   tests/test_aura_relational_synthesis.py \
   tests/test_aura_relationship_atlas.py \
   tests/test_aura_emergent_potential_repl.py \
+  tests/test_aura_relationship_compass_finalization.py \
   test_aura_live_architect.py
 ```

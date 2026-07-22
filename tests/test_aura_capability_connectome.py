@@ -129,3 +129,17 @@ class TestGraphPacket:
     def test_invariants(self):
         result = capability_graph_packet(repo_root=REPO_ROOT)
         assert result["patch_authority"] == PATCH_AUTHORITY
+
+
+def test_token_savings_role_is_independent_of_tag_order() -> None:
+    from aura_capability_connectome import _classify_token_savings_role
+
+    first = {
+        "id": "aura.example",
+        "name": "Example",
+        "tags": ["review", "context", "grounding"],
+    }
+    second = {**first, "tags": list(reversed(first["tags"]))}
+
+    assert _classify_token_savings_role(first) == "compression"
+    assert _classify_token_savings_role(second) == "compression"

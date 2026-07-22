@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
+import hashlib
+import json
 from typing import Any
 
 from aura_agent_arena_bridge import AuraAgentArenaBridge
@@ -13,6 +15,82 @@ from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine
 from aura_temporal_persistence import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
 
 AGENT_ARENA_PERSISTENCE_BRIDGE_VERSION = "AURA_AGENT_ARENA_PERSISTENCE_BRIDGE_V1"
+_COMPASS_INTERFACE_ITEM_LIMIT = 64
+_COMPASS_INTERFACE_ITEM_BYTES = 192
+_COMPASS_INTERFACE_SECTION_BYTES = 32_768
+_COMPASS_INTERFACE_METADATA_BYTES = 8_192
+_COMPASS_INTERFACE_MAX_RESPONSE_BYTES = 131_072
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        default=str,
+    ).encode("utf-8")
+
+
+def _bounded_interface_value(value: Any, *, max_bytes: int = _COMPASS_INTERFACE_ITEM_BYTES) -> tuple[Any, bool]:
+    raw = _canonical_json_bytes(value)
+    if len(raw) <= max_bytes:
+        return value, False
+    digest = hashlib.sha256(raw).hexdigest()
+    if isinstance(value, str):
+        return f"[TRUNCATED sha256:{digest} bytes:{len(raw)}]", True
+    return {
+        "truncated": True,
+        "sha256": digest,
+        "original_bytes": len(raw),
+        "original_type": type(value).__name__,
+    }, True
+
+
+def _bounded_interface_collection(
+    values: Any,
+    *,
+    max_items: int = _COMPASS_INTERFACE_ITEM_LIMIT,
+    max_item_bytes: int = _COMPASS_INTERFACE_ITEM_BYTES,
+) -> tuple[list[Any], int, int]:
+    source = list(values or [])
+    selected = source[:max(0, int(max_items))]
+    projected: list[Any] = []
+    replacements = 0
+    for item in selected:
+        bounded, replaced = _bounded_interface_value(item, max_bytes=max_item_bytes)
+        projected.append(bounded)
+        replacements += int(replaced)
+    return projected, max(0, len(source) - len(selected)), replacements
+
+
+def _finalize_compass_response(
+    response: dict[str, Any],
+    truncation: dict[str, Any],
+) -> dict[str, Any]:
+    """Attach a deterministic receipt and fail closed above the shared byte ceiling."""
+    truncation.setdefault("max_items_per_collection", _COMPASS_INTERFACE_ITEM_LIMIT)
+    truncation.setdefault("max_item_bytes", _COMPASS_INTERFACE_ITEM_BYTES)
+    truncation.setdefault("max_section_bytes", _COMPASS_INTERFACE_SECTION_BYTES)
+    truncation.setdefault("max_response_bytes", _COMPASS_INTERFACE_MAX_RESPONSE_BYTES)
+    for field, value in list(response.items()):
+        if field == "interface_truncation" or isinstance(value, (Mapping, list, tuple)):
+            continue
+        bounded, replaced = _bounded_interface_value(value)
+        response[field] = bounded
+        if replaced:
+            truncation[f"{field}_oversize_replaced"] = 1
+    response["interface_truncation"] = truncation
+    for _ in range(8):
+        response_bytes = len(_canonical_json_bytes(response))
+        if truncation.get("response_bytes") == response_bytes:
+            break
+        truncation["response_bytes"] = response_bytes
+    if truncation.get("response_bytes") != len(_canonical_json_bytes(response)):
+        raise ValueError("Compass interface projection byte receipt did not stabilize")
+    if int(truncation["response_bytes"]) > _COMPASS_INTERFACE_MAX_RESPONSE_BYTES:
+        raise ValueError("Compass interface projection exceeded its byte budget")
+    return response
 
 
 def _unique_strings(*groups: list[str] | None) -> list[str]:
@@ -63,6 +141,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         self.coding_waboose = CodingWaboose(self.repo_root)
         self.emergent_spine = AuraEmergentEvidenceSpine(self.repo_root)
         self._spatial_agent_bridge: Any | None = None
+        self._compass_runs: dict[str, dict[str, Any]] = {}
 
     def _spatial_bridge(self) -> Any:
         if self._spatial_agent_bridge is None:
@@ -393,6 +472,272 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             current_invariant_values=current_invariant_values,
         )
 
+
+
+    def aura_compass_prepare(
+        self,
+        *,
+        objective: str,
+        target_files: Sequence[str] = (),
+        target_symbols: Sequence[str] = (),
+        rollout_mode: str = "SHADOW",
+        rollout_provider: str = "",
+        rollout_budget: Mapping[str, Any] | None = None,
+        rollout_nonce: str = "",
+        rollout_verifier_ref: str = "",
+    ) -> dict[str, Any]:
+        """Prepare and retain one bounded Compass packet; return a compact receipt."""
+        from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+        packet = compile_coding_relationship_compass(
+            objective,
+            self.repo_root,
+            target_files=tuple(target_files or ()),
+            target_symbols=tuple(target_symbols or ()),
+            rollout_mode=rollout_mode,
+            rollout_provider=rollout_provider,
+            rollout_budget=rollout_budget,
+            rollout_nonce=rollout_nonce,
+            rollout_verifier_ref=rollout_verifier_ref,
+        )
+        run_id = str(packet.get("compass_digest") or "")
+        if not run_id:
+            raise ValueError("Compass preparation did not produce a digest")
+        self._compass_runs[run_id] = packet
+        if len(self._compass_runs) > 8:
+            oldest = next(iter(self._compass_runs))
+            if oldest != run_id:
+                self._compass_runs.pop(oldest, None)
+        rollout, rollout_replaced = _bounded_interface_value(
+            dict(packet.get("rollout") or {}),
+            max_bytes=_COMPASS_INTERFACE_METADATA_BYTES,
+        )
+        response = {
+            "ok": True,
+            "run_id": run_id,
+            "route": packet.get("route"),
+            "target_file": packet.get("target_file"),
+            "target_symbol": packet.get("target_symbol"),
+            "grounding_digest": packet.get("grounding_digest"),
+            "neighborhood_digest": (packet.get("relational_neighborhood") or {}).get("neighborhood_digest"),
+            "atlas_digest": (packet.get("atlas") or {}).get("snapshot_digest"),
+            "rollout": rollout,
+            "counts": {
+                "targets": len(packet.get("recommended_targets", ()) or ()),
+                "emergent_candidates": len((packet.get("bounded_emergent_discovery") or {}).get("candidates", ()) or ()),
+                "act_capsules": len((packet.get("act_capsules") or {}).get("act_capsules", ()) or ()),
+            },
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(
+            response,
+            {"rollout_oversize_replaced": int(rollout_replaced)},
+        )
+
+    def _compass_packet(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_runs.get(str(run_id or ""))
+        if packet is None:
+            raise ValueError("unknown Compass run_id")
+        return packet
+
+    def aura_compass_neighborhood(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        neighborhood = dict(packet.get("relational_neighborhood") or {})
+        participants = list(neighborhood.get("participants", []) or [])
+        relations = list(neighborhood.get("relations", []) or [])
+        truncation_reasons = list(neighborhood.get("truncation_reasons", []) or [])
+        projected_participants, participants_omitted, participants_replaced = (
+            _bounded_interface_collection(participants, max_items=64)
+        )
+        projected_relations, relations_omitted, relations_replaced = _bounded_interface_collection(
+            relations,
+            max_items=256,
+        )
+        projected_reasons, reasons_omitted, reasons_replaced = _bounded_interface_collection(
+            truncation_reasons,
+            max_items=64,
+        )
+        metrics, metrics_replaced = _bounded_interface_value(
+            dict(neighborhood.get("metrics") or {}),
+            max_bytes=_COMPASS_INTERFACE_METADATA_BYTES,
+        )
+        response = {
+            "ok": True,
+            "run_id": run_id,
+            "neighborhood_digest": neighborhood.get("neighborhood_digest"),
+            "participants": projected_participants,
+            "relations": projected_relations,
+            "metrics": metrics,
+            "truncation_reasons": projected_reasons,
+            "proposal_only": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(
+            response,
+            {
+                "participants_omitted": participants_omitted,
+                "participants_oversize_replaced": participants_replaced,
+                "relations_omitted": relations_omitted,
+                "relations_oversize_replaced": relations_replaced,
+                "metrics_oversize_replaced": int(metrics_replaced),
+                "truncation_reasons_omitted": reasons_omitted,
+                "truncation_reasons_oversize_replaced": reasons_replaced,
+            },
+        )
+
+    def aura_compass_classify(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        atlas = dict(packet.get("atlas") or {})
+        bounded = dict(packet.get("bounded_emergent_verification") or {})
+        field_sources = {
+            "assessments": atlas.get("assessments", []) or [],
+            "prohibitions": packet.get("prohibitions", []) or [],
+            "missing_roles": packet.get("missing_roles", []) or [],
+            "required_adapters": packet.get("required_adapters", []) or [],
+            "accepted_candidates": bounded.get("accepted_candidates", []) or [],
+            "rejected_candidates": bounded.get("rejected_candidates", []) or [],
+            "suppressed_candidates": bounded.get("suppressed_candidates", []) or [],
+        }
+        projected: dict[str, list[Any]] = {}
+        truncation: dict[str, Any] = {}
+        for field, values in field_sources.items():
+            items, omitted, replacements = _bounded_interface_collection(values)
+            projected[field] = items
+            truncation[f"{field}_omitted"] = omitted
+            truncation[f"{field}_oversize_replaced"] = replacements
+
+        summary, summary_replaced = _bounded_interface_value(bounded.get("summary") or {})
+        truncation["bounded_emergent_summary_oversize_replaced"] = int(summary_replaced)
+        response: dict[str, Any] = {
+            "ok": True,
+            "run_id": run_id,
+            "atlas_digest": atlas.get("snapshot_digest"),
+            "profile": atlas.get("profile"),
+            "assessments": projected["assessments"],
+            "prohibitions": projected["prohibitions"],
+            "missing_roles": projected["missing_roles"],
+            "required_adapters": projected["required_adapters"],
+            "bounded_emergent": {
+                "version": bounded.get("version"),
+                "verification_digest": bounded.get("verification_digest"),
+                "neighborhood_digest": bounded.get("neighborhood_digest"),
+                "trusted_neighborhood_verified": bounded.get("trusted_neighborhood_verified"),
+                "accepted_candidates": projected["accepted_candidates"],
+                "rejected_candidates": projected["rejected_candidates"],
+                "suppressed_candidates": projected["suppressed_candidates"],
+                "summary": summary,
+            },
+            "proposal_only": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(response, truncation)
+
+    def aura_compass_breadboard(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        typed_compatibility, typed_replaced = _bounded_interface_value(
+            dict(packet.get("typed_compatibility") or {}),
+            max_bytes=_COMPASS_INTERFACE_SECTION_BYTES,
+        )
+        coding_breadboard, breadboard_replaced = _bounded_interface_value(
+            dict(packet.get("coding_breadboard") or {}),
+            max_bytes=_COMPASS_INTERFACE_SECTION_BYTES,
+        )
+        response = {
+            "ok": True,
+            "run_id": run_id,
+            "typed_compatibility": typed_compatibility,
+            "coding_breadboard": coding_breadboard,
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(
+            response,
+            {
+                "typed_compatibility_oversize_replaced": int(typed_replaced),
+                "coding_breadboard_oversize_replaced": int(breadboard_replaced),
+            },
+        )
+
+    def aura_compass_plan(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        graph = dict(packet.get("change_graph") or {})
+        nodes = list(graph.get("nodes", []) or [])
+        phase_capsules = list(packet.get("phase_capsules", []) or [])
+        projected_nodes, nodes_omitted, nodes_replaced = _bounded_interface_collection(
+            nodes,
+            max_items=256,
+        )
+        projected_phases, phases_omitted, phases_replaced = _bounded_interface_collection(
+            phase_capsules,
+            max_items=64,
+        )
+        council_route, council_replaced = _bounded_interface_value(
+            dict(packet.get("council_route") or {}),
+            max_bytes=_COMPASS_INTERFACE_SECTION_BYTES,
+        )
+        response = {
+            "ok": True,
+            "run_id": run_id,
+            "graph_digest": graph.get("graph_digest"),
+            "nodes": projected_nodes,
+            "phase_capsules": projected_phases,
+            "council_route": council_route,
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(
+            response,
+            {
+                "nodes_omitted": nodes_omitted,
+                "nodes_oversize_replaced": nodes_replaced,
+                "phase_capsules_omitted": phases_omitted,
+                "phase_capsules_oversize_replaced": phases_replaced,
+                "council_route_oversize_replaced": int(council_replaced),
+            },
+        )
+
+    def aura_compass_compile_capsules(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        act_capsules, capsules_replaced = _bounded_interface_value(
+            dict(packet.get("act_capsules") or {}),
+            max_bytes=_COMPASS_INTERFACE_SECTION_BYTES,
+        )
+        agent_ir, agent_ir_replaced = _bounded_interface_value(
+            dict(packet.get("agent_ir") or {}),
+            max_bytes=_COMPASS_INTERFACE_SECTION_BYTES,
+        )
+        response = {
+            "ok": bool((packet.get("act_capsules") or {}).get("ok")),
+            "run_id": run_id,
+            "act_capsules": act_capsules,
+            "agent_ir": agent_ir,
+            "surgeon_handoff_required": True,
+            "provider_execution_authorized": False,
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "automatic_commit": False,
+            "automatic_pull_request": False,
+            "automatic_merge": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+        return _finalize_compass_response(
+            response,
+            {
+                "act_capsules_oversize_replaced": int(capsules_replaced),
+                "agent_ir_oversize_replaced": int(agent_ir_replaced),
+            },
+        )
+
     def aura_waboose_learn_coderabbit(
         self,
         review_payload: Mapping[str, Any],
@@ -520,6 +865,36 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 "name": "aura_emergent_evidence",
                 "description": "Build a Connectome-guided exact atomic dependency and source-slice packet.",
                 "required_inputs": ["objective"],
+            },
+            {
+                "name": "aura_compass_prepare",
+                "description": "Prepare an exact-head Coding Relationship Compass run.",
+                "required_inputs": ["objective"],
+            },
+            {
+                "name": "aura_compass_neighborhood",
+                "description": "Return the bounded relational neighborhood for a prepared Compass run.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_classify",
+                "description": "Return objective Atlas and bounded emergent classifications.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_breadboard",
+                "description": "Return C5 typed compatibility and Breadboard receipts.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_plan",
+                "description": "Return the proposal-only Change Graph and Council route.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_compile_capsules",
+                "description": "Compile proposal-only Act Capsules and SPEC-floor Agent IR.",
+                "required_inputs": ["run_id"],
             },
             {
                 "name": "aura_waboose_learn_coderabbit",

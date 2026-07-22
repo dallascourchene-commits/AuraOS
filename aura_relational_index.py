@@ -59,7 +59,7 @@ from aura_emergent_evidence_spine import (
     _repo_python_sources,
 )
 from aura_event_contracts import canonical_json, stable_digest, stable_id
-from aura_relationship_contracts import RelationalNeighborhoodRequest
+from aura_relationship_contracts import RelationalNeighborhoodRequest, SourceReference
 from aura_relational_synthesis import (
     Freshness,
     GroupKind,
@@ -1179,16 +1179,26 @@ class RelationalIndexBuilder:
             _safe_repo_path(path)
         return self.build_full()
 
-    def repository_identity_snapshot(self) -> dict[str, Any]:
-        """Compute current freshness identity without materializing relational payloads."""
+    def repository_identity_snapshot(
+        self,
+        *,
+        repo_head: str | None = None,
+        inventory_digest: str | None = None,
+        connectome: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Compute freshness identity, reusing caller-grounded planes when supplied."""
 
-        anchor = CodeTopoAnchor.build_from_files(_canonical_python_sources(self.repo_root))
-        inventory = _inventory_from_anchor(anchor, include_source=False)
-        connectome = enrich_connectome(build_capability_connectome(self.repo_root))
-        _validate_connectome(connectome)
+        if inventory_digest is None:
+            anchor = CodeTopoAnchor.build_from_files(_canonical_python_sources(self.repo_root))
+            inventory_digest = _inventory_from_anchor(anchor, include_source=False)["inventory_digest"]
+        connectome_value = dict(
+            connectome or enrich_connectome(build_capability_connectome(self.repo_root))
+        )
+        _validate_connectome(connectome_value)
         return self._repository_identity(
-            inventory_digest=inventory["inventory_digest"],
-            connectome=connectome,
+            inventory_digest=inventory_digest,
+            connectome=connectome_value,
+            repo_head=repo_head,
         )
 
     def _repository_identity(
@@ -1196,12 +1206,13 @@ class RelationalIndexBuilder:
         *,
         inventory_digest: str,
         connectome: Mapping[str, Any],
+        repo_head: str | None = None,
     ) -> dict[str, Any]:
         codemap_path = self.repo_root / CODEMAP_INDEX_PATH
         topology_path = self.repo_root / CODEMAP_TOPOLOGY_PATH
         topology_digest, topology_version, topology_health = _topology_facts(topology_path)
         identity = {
-            "repo_head": _repo_head(self.repo_root),
+            "repo_head": _required_text(repo_head, "repo_head") if repo_head is not None else _repo_head(self.repo_root),
             "working_tree_digest": _working_tree_digest(self.repo_root),
             "codemap_digest": _digest_file(codemap_path),
             "topology_digest": topology_digest,
@@ -2010,7 +2021,8 @@ def _resolve_neighborhood_seeds(
     request: RelationalNeighborhoodRequest,
     index: RelationalIndex,
 ) -> tuple[list[str], dict[str, list[str]]]:
-    participant_ids = {item.participant_id for item in index.participants}
+    participant_by_id = {item.participant_id: item for item in index.participants}
+    participant_ids = set(participant_by_id)
     reasons: dict[str, list[str]] = defaultdict(list)
     missing = sorted(set(request.seed_participant_ids) - participant_ids)
     if missing:
@@ -2018,29 +2030,88 @@ def _resolve_neighborhood_seeds(
     for participant_id in request.seed_participant_ids:
         reasons[participant_id].append("exact_seed_participant_id")
 
-    for source_ref in request.seed_source_refs:
-        lookup_keys = []
-        if source_ref.symbol:
-            lookup_keys.append(("by_qualified_symbol", f"{source_ref.file_path}#{source_ref.symbol}"))
-        lookup_keys.append(("by_file_path", source_ref.file_path))
-        if request.include_tests:
-            lookup_keys.append(("by_test_path", source_ref.file_path))
-        resolved: set[str] = set()
-        for reverse_name, key in lookup_keys:
-            reverse = index.reverse_indexes.get(reverse_name, {})
-            if not isinstance(reverse, Mapping):
-                continue
-            resolved.update(
-                item for item in reverse.get(key, ()) if item in participant_ids
+    def matches_source_ref(participant_id: str, source_ref: SourceReference) -> bool:
+        participant = participant_by_id.get(participant_id)
+        if participant is None:
+            return False
+        metadata = participant.metadata
+        return (
+            str(metadata.get("file_path") or "") == source_ref.file_path
+            and (not source_ref.symbol or participant.qualified_symbol == source_ref.symbol)
+            and int(metadata.get("line_start") or 0) == source_ref.line_start
+            and int(metadata.get("line_end") or 0) == source_ref.line_end
+            and str(participant.digest or "") == source_ref.source_hash
+            and (
+                not source_ref.file_source_hash
+                or str(metadata.get("file_source_hash") or "") == source_ref.file_source_hash
             )
-            if reverse_name == "by_qualified_symbol" and not resolved and source_ref.symbol:
+        )
+
+    for source_ref in request.seed_source_refs:
+        resolved: set[str] = set()
+        if source_ref.symbol:
+            reverse = index.reverse_indexes.get("by_qualified_symbol", {})
+            if isinstance(reverse, Mapping):
+                exact_key = f"{source_ref.file_path}#{source_ref.symbol}"
                 resolved.update(
                     item
-                    for lookup_key, values in reverse.items()
-                    if str(lookup_key).endswith(f"#{source_ref.symbol}")
-                    for item in values
-                    if item in participant_ids
+                    for item in reverse.get(exact_key, ())
+                    if matches_source_ref(str(item), source_ref)
                 )
+            if not resolved:
+                file_candidates: set[str] = set()
+                reverse = index.reverse_indexes.get("by_file_path", {})
+                if isinstance(reverse, Mapping):
+                    file_candidates.update(
+                        item
+                        for item in reverse.get(source_ref.file_path, ())
+                        if item in participant_ids
+                    )
+                if request.include_tests:
+                    reverse = index.reverse_indexes.get("by_test_path", {})
+                    if isinstance(reverse, Mapping):
+                        file_candidates.update(
+                            item
+                            for item in reverse.get(source_ref.file_path, ())
+                            if item in participant_ids
+                        )
+                resolved.update(
+                    participant_id
+                    for participant_id in file_candidates
+                    if matches_source_ref(participant_id, source_ref)
+                )
+            if not resolved:
+                reverse = index.reverse_indexes.get("by_qualified_symbol", {})
+                if isinstance(reverse, Mapping):
+                    resolved.update(
+                        item
+                        for lookup_key, values in reverse.items()
+                        if str(lookup_key).endswith(f"#{source_ref.symbol}")
+                        for item in values
+                        if matches_source_ref(str(item), source_ref)
+                    )
+        else:
+            reverse = index.reverse_indexes.get("by_file_path", {})
+            if isinstance(reverse, Mapping):
+                resolved.update(
+                    item
+                    for item in reverse.get(source_ref.file_path, ())
+                    if matches_source_ref(str(item), source_ref)
+                )
+            if request.include_tests:
+                reverse = index.reverse_indexes.get("by_test_path", {})
+                if isinstance(reverse, Mapping):
+                    resolved.update(
+                        item
+                        for item in reverse.get(source_ref.file_path, ())
+                        if matches_source_ref(str(item), source_ref)
+                    )
+        if len(resolved) != 1:
+            raise ValueError(
+                "relational neighborhood source ref must resolve to exactly one current source "
+                f"participant: {source_ref.file_path}#{source_ref.symbol or '*'} "
+                f"at {source_ref.line_start}-{source_ref.line_end} resolved {len(resolved)}"
+            )
         for participant_id in sorted(resolved):
             reasons[participant_id].append(
                 f"exact_source_ref:{source_ref.file_path}#{source_ref.symbol or '*'}"

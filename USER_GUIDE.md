@@ -776,7 +776,20 @@ packet = compile_coding_relationship_compass(
 )
 ```
 
-The packet binds Connectome capability routing, exact atomic source/test grounding, one JIT Relational Synthesis capsule, a deterministic bounded relational neighborhood, an `OBJECTIVE_STANDARD`/`OBJECTIVE_DEEP` Atlas, typed compatibility hard guards, and a proposal-only Coding Breadboard receipt. Inspect `relational_neighborhood`, `typed_compatibility`, `coding_breadboard`, `recommended_targets`, `required_tests`, `relationships_to_preserve`, `missing_roles`, `required_adapters`, and `prohibitions`. The packet cannot authorize a patch, execution, commit, push, pull request, or merge. Architect uses this route before legacy filename inference for matching broad objectives and fails closed when Compass grounding fails.
+The packet binds Connectome capability routing, exact atomic source/test grounding, one JIT Relational Synthesis capsule, a deterministic bounded relational neighborhood, an `OBJECTIVE_STANDARD`/`OBJECTIVE_DEEP` Atlas, typed compatibility hard guards, and a proposal-only Coding Breadboard receipt. C6–C9 add bounded Emergent candidates, rejection/suppression receipts, a validated Change Graph, continuity-bound phase capsules, proposal-only Act Capsules, SPEC-floor Agent IR, Council/Surgeon failure routing, and a governed relationship-experience projection template. Inspect `relational_neighborhood`, `typed_compatibility`, `coding_breadboard`, `bounded_emergent_verification`, `change_graph`, `phase_capsules`, `act_capsules`, `agent_ir`, `council_route`, `rollout`, `recommended_targets`, `required_tests`, `relationships_to_preserve`, `missing_roles`, `required_adapters`, and `prohibitions`. The packet cannot authorize provider execution, a patch, commit, push, pull request, or merge. Architect uses this route before legacy filename inference for matching broad objectives and fails closed when Compass grounding fails.
+
+The Agent Arena bridge and MCP server expose six bounded tools: `aura_compass_prepare`, `aura_compass_neighborhood`, `aura_compass_classify`, `aura_compass_breadboard`, `aura_compass_plan`, and `aura_compass_compile_capsules`. Default rollout is `SHADOW`; `PAIRED_LIVE` requires explicit provider, budget, nonce, and verifier fields but still grants no execution or mutation authority.
+
+When creating relationship-experience receipts, use `RelationshipExperienceObservation.create()` for new observations and `to_dict()` for canonical serialization. The factory sanitizes secret-shaped reason text before identity is computed. Treat `from_dict()` as authenticated ingestion: it requires the full canonical field set, a valid matching `observation_digest`, and reason text that is already sanitized. Direct dataclass construction has the same invariant.
+
+For `PRIVATE_REDACTED`, use only the placeholder matching the reference list (`redacted:verifier`, `redacted:receipt`, or `redacted:source`) or an opaque `redacted:` token containing 32–64 lowercase hexadecimal characters. Do not attach a raw path, symbol, credential, receipt label, or explanation after the prefix. Invalid privacy, size, timestamp, authority, or digest fields fail before timeline/QDKT projection and before Arena ledger persistence.
+
+Before merging Compass changes, run the focused C6–C9 matrix and regenerate the navigation artifacts from the final tree:
+
+```bash
+python3 aura_codebase_navigator.py
+python3 -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+```
 
 See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
 
