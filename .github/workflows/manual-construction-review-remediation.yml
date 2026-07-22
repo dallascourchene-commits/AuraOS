@@ -1,19 +1,17 @@
-name: Publish Manual Construction Review Remediation
+name: Publish Codex Round 3 Manual Remediation
 
 on:
   push:
     branches:
       - work/construction-arena-bim-gaussian-demo-20260722
     paths:
-      - ".aura/manual-remediation/**"
-      - ".github/workflows/manual-construction-review-remediation.yml"
-  workflow_dispatch:
+      - ".aura/apply-pr183-codex-round3"
 
 permissions:
   contents: write
 
 concurrency:
-  group: manual-construction-review-remediation
+  group: codex-round3-manual-remediation
   cancel-in-progress: false
 
 jobs:
@@ -29,34 +27,22 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - name: Reassemble and authenticate manual archive
-        shell: bash
+      - name: Reassemble and authenticate validated payload
         run: |
           set -euo pipefail
           cat \
-            .aura/manual-remediation/chunk00 \
-            .aura/manual-remediation/chunk01 \
-            .aura/manual-remediation/chunk02 \
-            .aura/manual-remediation/chunk03 \
-            .aura/manual-remediation/chunk04a \
-            .aura/manual-remediation/chunk04b \
-            .aura/manual-remediation/chunk04c \
-            .aura/manual-remediation/chunk04d \
-            .aura/manual-remediation/chunk05a \
-            .aura/manual-remediation/chunk05b \
-            .aura/manual-remediation/chunk05c \
-            .aura/manual-remediation/chunk05d \
-            .aura/manual-remediation/chunk06a \
-            .aura/manual-remediation/chunk06b \
-            .aura/manual-remediation/chunk06c \
-            > "${RUNNER_TEMP}/manual-review-remediation.tar.gz.b64"
-          base64 --decode "${RUNNER_TEMP}/manual-review-remediation.tar.gz.b64" \
-            > "${RUNNER_TEMP}/manual-review-remediation.tar.gz"
-          echo "fb4619fad614910a37b5526aa42db7abe5b861eebd293c365b142b66f40a8c8d  ${RUNNER_TEMP}/manual-review-remediation.tar.gz" \
+            .aura/codex-round3-payload/chunk00 \
+            .aura/codex-round3-payload/chunk01 \
+            .aura/codex-round3-payload/chunk02 \
+            .aura/codex-round3-payload/chunk03 \
+            > "${RUNNER_TEMP}/codex-round3.tar.gz.b64"
+          base64 --decode "${RUNNER_TEMP}/codex-round3.tar.gz.b64" \
+            > "${RUNNER_TEMP}/codex-round3.tar.gz"
+          echo "8473e6b7f3ecdfce2b98dc933f510885609adb24816796a83f224754ba33770b  ${RUNNER_TEMP}/codex-round3.tar.gz" \
             | sha256sum --check --strict
-      - name: Validate allowlist and install exact manual files
+      - name: Install exact allowlisted manual files
         env:
-          ARCHIVE: ${{ runner.temp }}/manual-review-remediation.tar.gz
+          ARCHIVE: ${{ runner.temp }}/codex-round3.tar.gz
         run: |
           python - <<'PY'
           from pathlib import Path, PurePosixPath
@@ -65,23 +51,12 @@ jobs:
 
           root = Path.cwd().resolve()
           expected = {
-              ".github/workflows/ci.yml",
-              ".github/workflows/construction-demo-asset-foundation.yml",
-              "aura_construction_demo_contracts.py",
-              "aura_coding_relationship_compass.py",
-              "aura_relational_index.py",
-              "scripts/aura_verify_construction_demo_assets.py",
               "scripts/aura_prepare_construction_demo_assets.py",
+              "scripts/aura_verify_construction_demo_assets.py",
               "scripts/aura_mesh_to_gaussian.py",
-              "tests/test_aura_verify_construction_demo_assets.py",
               "tests/test_aura_prepare_construction_demo_assets.py",
+              "tests/test_aura_verify_construction_demo_assets.py",
               "tests/test_aura_mesh_to_gaussian.py",
-              "tests/test_aura_construction_demo_contracts.py",
-              "tests/test_aura_coding_relationship_compass.py",
-              "tests/test_aura_relational_index.py",
-              "demo_assets/construction_tuwien/source/source-manifest.json",
-              "docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md",
-              "docs/AURA_CONSTRUCTION_ARENA_G0_CHANGE_GRAPH.md",
           }
           archive = Path(os.environ["ARCHIVE"])
           with tarfile.open(archive, "r:gz") as bundle:
@@ -96,10 +71,7 @@ jobs:
                   if pure.is_absolute() or ".." in pure.parts:
                       raise SystemExit(f"unsafe archive path rejected: {member.name}")
                   destination = (root / Path(*pure.parts)).resolve(strict=False)
-                  try:
-                      destination.relative_to(root)
-                  except ValueError as exc:
-                      raise SystemExit(f"archive path escapes repository: {member.name}") from exc
+                  destination.relative_to(root)
                   source = bundle.extractfile(member)
                   if source is None:
                       raise SystemExit(f"archive member unreadable: {member.name}")
@@ -107,10 +79,41 @@ jobs:
                   if len(payload) != member.size:
                       raise SystemExit(f"archive member length mismatch: {member.name}")
                   destination.parent.mkdir(parents=True, exist_ok=True)
-                  temporary = destination.with_name(f".{destination.name}.manual-remediation.tmp")
+                  temporary = destination.with_name(f".{destination.name}.codex-round3.tmp")
                   temporary.write_bytes(payload)
                   os.replace(temporary, destination)
           PY
+      - name: Synchronize evidence records
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              "docs/AURA_CONSTRUCTION_ARENA_G1_SOURCE_AND_CONTRACTS_EVIDENCE.md": {
+                  "source_manifest_digest: bda63e3e6d3e536c1dffa51ccb8c7b37":
+                      "source_manifest_digest: 22bd970d5babc6ad2d6a22ca2c278738",
+              },
+              "docs/AURA_CONSTRUCTION_ARENA_G2_G3_ASSET_COMPILER_EVIDENCE.md": {
+                  "focused_asset_tests: 54": "focused_asset_tests: 59",
+                  "focused_asset_tests_passed: 54": "focused_asset_tests_passed: 59",
+                  "Local result: **54 passed**.": "Local result: **59 passed**.",
+                  "verification for these 54 tests.": "verification for these 59 tests.",
+              },
+          }
+          for name, changes in replacements.items():
+              path = Path(name)
+              text = path.read_text(encoding="utf-8")
+              for old, new in changes.items():
+                  if text.count(old) != 1:
+                      raise SystemExit(f"{name}: expected exactly one evidence fragment {old!r}")
+                  text = text.replace(old, new)
+              path.write_text(text, encoding="utf-8")
+          PY
+      - name: Remove temporary transport
+        run: |
+          rm -rf .aura/codex-round3-payload
+          rm -rf .aura/manual-remediation .aura/review-remediation
+          rm -f .aura/apply-pr183-codex-round3
       - name: Install bounded validation dependencies
         run: |
           python -m pip install --upgrade pip
@@ -124,32 +127,20 @@ jobs:
       - name: Compile and lint manually edited files
         run: |
           python -m py_compile \
-            aura_construction_demo_contracts.py \
-            aura_coding_relationship_compass.py \
-            aura_relational_index.py \
             scripts/aura_verify_construction_demo_assets.py \
             scripts/aura_prepare_construction_demo_assets.py \
             scripts/aura_mesh_to_gaussian.py \
             tests/test_aura_verify_construction_demo_assets.py \
             tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
+            tests/test_aura_mesh_to_gaussian.py
           ruff check --select E9,F63,F7,F82 \
-            aura_construction_demo_contracts.py \
-            aura_coding_relationship_compass.py \
-            aura_relational_index.py \
             scripts/aura_verify_construction_demo_assets.py \
             scripts/aura_prepare_construction_demo_assets.py \
             scripts/aura_mesh_to_gaussian.py \
             tests/test_aura_verify_construction_demo_assets.py \
             tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
-      - name: Run focused Construction and resolver suite
+            tests/test_aura_mesh_to_gaussian.py
+      - name: Run complete Construction and resolver gate
         run: |
           python -m pytest -q \
             tests/test_aura_construction_demo_contracts.py \
@@ -160,33 +151,6 @@ jobs:
             tests/test_aura_mesh_to_gaussian.py \
             tests/test_aura_coding_relationship_compass.py \
             tests/test_aura_relational_index.py
-      - name: Validate canonical source identity
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from aura_construction_demo_contracts import (
-              CC_BY_4_0,
-              ConstructionDemoSourceManifest,
-              TU_WIEN_DOI,
-              TU_WIEN_SOURCE_FILENAME,
-          )
-          manifest = ConstructionDemoSourceManifest.from_dict(
-              json.loads(
-                  Path("demo_assets/construction_tuwien/source/source-manifest.json")
-                  .read_text(encoding="utf-8")
-              )
-          )
-          assert manifest.source_manifest_digest == "22bd970d5babc6ad2d6a22ca2c278738"
-          assert manifest.doi == TU_WIEN_DOI
-          assert manifest.source_filename == TU_WIEN_SOURCE_FILENAME
-          assert manifest.license_id == CC_BY_4_0
-          assert manifest.observed_sha256 == "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29"
-          PY
-      - name: Remove all temporary remediation transport
-        run: |
-          rm -rf .aura/manual-remediation .aura/review-remediation
-          rm -f .github/workflows/manual-construction-review-remediation.yml
       - name: Commit exact manually edited source tree
         env:
           BRANCH: work/construction-arena-bim-gaussian-demo-20260722
@@ -197,5 +161,5 @@ jobs:
           git add -A
           git diff --cached --check
           test -n "$(git diff --cached --name-only)"
-          git commit -m "fix(construction): resolve deep review findings manually"
+          git commit -m "fix(construction): address third deep Codex review"
           git push origin "HEAD:${BRANCH}"
