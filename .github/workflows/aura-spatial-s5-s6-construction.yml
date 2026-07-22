@@ -6,14 +6,18 @@ on:
       - ".github/workflows/aura-spatial-s5-s6-construction.yml"
       - ".aura/arena_routes/spatial.v1.json"
       - "aura_spatial_*.py"
+      - "aura_construction_demo_*.py"
       - "aura_construction_runtime_binding.py"
       - "aura_review_lessons_security.py"
       - "aura_arena_persistence_adapters.py"
       - "aura_agent_arena_persistence_bridge.py"
       - "aura_agent_arena_mcp.py"
+      - "aura_spatial_web/construction_*.js"
+      - "aura_spatial_web/webgl2_gaussian_pass.js"
       - "scripts/aura_spatial_s5_s6_construction_architect_harness.py"
       - "tests/test_aura_spatial*.py"
       - "tests/test_aura_construction*.py"
+      - "tests/js/construction-*.test.mjs"
       - "tests/test_aura_arena_persistence_adapters.py"
       - "tests/test_aura_agent_arena_mcp.py"
       - "README.md"
@@ -78,10 +82,88 @@ jobs:
       - name: Compile, lint, and validate route
         run: |
           set -euo pipefail
-          python -m py_compile             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py
-          ruff check             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py             tests/test_aura_spatial_s5_arena.py             tests/test_aura_spatial_s6_construction.py             tests/test_aura_spatial_codex_repairs.py             tests/test_aura_spatial_waboose_precision.py             tests/test_aura_spatial_agent_bridge_mcp.py             tests/test_aura_spatial_cli.py             tests/test_aura_spatial_s5_s6_harness.py
-          ruff format --check             aura_spatial_arena.py             aura_spatial_construction.py             aura_spatial_session.py             aura_construction_runtime_binding.py             aura_review_lessons_security.py             aura_spatial_agent_bridge.py             aura_spatial_mcp.py             aura_spatial_cli.py             aura_arena_persistence_adapters.py             aura_agent_arena_persistence_bridge.py             aura_agent_arena_mcp.py             scripts/aura_spatial_s5_s6_construction_architect_harness.py             tests/test_aura_spatial_s5_arena.py             tests/test_aura_spatial_s6_construction.py             tests/test_aura_spatial_codex_repairs.py             tests/test_aura_spatial_waboose_precision.py             tests/test_aura_spatial_agent_bridge_mcp.py             tests/test_aura_spatial_cli.py             tests/test_aura_spatial_s5_s6_harness.py
-          python aura_spatial_cli.py --repo-root . validate-route
+          mkdir -p /tmp/aura-spatial-s5-s6-receipts
+          {
+            python -m py_compile \
+              aura_spatial_arena.py \
+              aura_spatial_construction.py \
+              aura_spatial_session.py \
+              aura_construction_runtime_binding.py \
+              aura_construction_demo_fixture.py \
+              aura_construction_demo_fixture_builder.py \
+              aura_construction_demo_runtime.py \
+              aura_construction_demo_spatial_assets.py \
+              aura_construction_demo_spatial_overlays.py \
+              aura_construction_demo_projection.py \
+              aura_review_lessons_security.py \
+              aura_spatial_agent_bridge.py \
+              aura_spatial_mcp.py \
+              aura_spatial_cli.py \
+              aura_arena_persistence_adapters.py \
+              aura_agent_arena_persistence_bridge.py \
+              aura_agent_arena_mcp.py \
+              scripts/aura_spatial_s5_s6_construction_architect_harness.py
+            ruff check \
+              aura_spatial_arena.py \
+              aura_spatial_construction.py \
+              aura_spatial_session.py \
+              aura_construction_runtime_binding.py \
+              aura_construction_demo_fixture.py \
+              aura_construction_demo_fixture_builder.py \
+              aura_construction_demo_runtime.py \
+              aura_construction_demo_spatial_assets.py \
+              aura_construction_demo_spatial_overlays.py \
+              aura_construction_demo_projection.py \
+              aura_review_lessons_security.py \
+              aura_spatial_agent_bridge.py \
+              aura_spatial_mcp.py \
+              aura_spatial_cli.py \
+              aura_arena_persistence_adapters.py \
+              aura_agent_arena_persistence_bridge.py \
+              aura_agent_arena_mcp.py \
+              scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+              tests/test_aura_construction_demo_fixture.py \
+              tests/test_aura_spatial_s5_arena.py \
+              tests/test_aura_spatial_s6_construction.py \
+              tests/test_aura_spatial_codex_repairs.py \
+              tests/test_aura_spatial_waboose_precision.py \
+              tests/test_aura_spatial_agent_bridge_mcp.py \
+              tests/test_aura_spatial_cli.py \
+              tests/test_aura_spatial_s5_s6_harness.py
+            ruff format --check \
+              aura_spatial_arena.py \
+              aura_spatial_construction.py \
+              aura_spatial_session.py \
+              aura_construction_runtime_binding.py \
+              aura_construction_demo_fixture.py \
+              aura_construction_demo_fixture_builder.py \
+              aura_construction_demo_runtime.py \
+              aura_construction_demo_spatial_assets.py \
+              aura_construction_demo_spatial_overlays.py \
+              aura_construction_demo_projection.py \
+              aura_review_lessons_security.py \
+              aura_spatial_agent_bridge.py \
+              aura_spatial_mcp.py \
+              aura_spatial_cli.py \
+              aura_arena_persistence_adapters.py \
+              aura_agent_arena_persistence_bridge.py \
+              aura_agent_arena_mcp.py \
+              scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+              tests/test_aura_construction_demo_fixture.py \
+              tests/test_aura_spatial_s5_arena.py \
+              tests/test_aura_spatial_s6_construction.py \
+              tests/test_aura_spatial_codex_repairs.py \
+              tests/test_aura_spatial_waboose_precision.py \
+              tests/test_aura_spatial_agent_bridge_mcp.py \
+              tests/test_aura_spatial_cli.py \
+              tests/test_aura_spatial_s5_s6_harness.py
+            node --check aura_spatial_web/construction_mesh_pass.js
+            node --check aura_spatial_web/webgl2_gaussian_pass.js
+            node --check aura_spatial_web/construction_overlay_pass.js
+            node --check aura_spatial_web/construction_scene_renderer.js
+            node --check tests/js/construction-scene-renderer.test.mjs
+            python aura_spatial_cli.py --repo-root . validate-route
+          } 2>&1 | tee /tmp/aura-spatial-s5-s6-receipts/compile-lint-route.log
 
       - name: Run Codex and Waboose trust-boundary regressions
         run: |
@@ -95,7 +177,10 @@ jobs:
           set -euo pipefail
           python -m pytest -q --tb=short tests/test_aura_spatial*.py
           python -m pytest -q --tb=short tests/test_aura_construction*.py
-          python -m pytest -q --tb=short             tests/test_aura_arena_persistence_adapters.py             tests/test_aura_agent_arena_mcp.py             tests/test_aura_spatial_agent_bridge_mcp.py
+          python -m pytest -q --tb=short \
+            tests/test_aura_arena_persistence_adapters.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_spatial_agent_bridge_mcp.py
           npm run test:spatial
 
       - name: Run structural architecture proof
@@ -104,14 +189,25 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/aura-spatial-s5-s6-receipts
-          python scripts/aura_spatial_s5_s6_construction_architect_harness.py             --repo-root .             --base-ref "origin/$BASE_REF"             --head-ref HEAD             --observed-head "$(git rev-parse HEAD)"             --receipt /tmp/aura-spatial-s5-s6-receipts/structural.json             --structural-only
+          python scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+            --repo-root . \
+            --base-ref "origin/$BASE_REF" \
+            --head-ref HEAD \
+            --observed-head "$(git rev-parse HEAD)" \
+            --receipt /tmp/aura-spatial-s5-s6-receipts/structural.json \
+            --structural-only
 
       - name: Run full Aura architecture proof
         env:
           BASE_REF: ${{ github.base_ref || 'main' }}
         run: |
           set -euo pipefail
-          python scripts/aura_spatial_s5_s6_construction_architect_harness.py             --repo-root .             --base-ref "origin/$BASE_REF"             --head-ref HEAD             --observed-head "$(git rev-parse HEAD)"             --receipt /tmp/aura-spatial-s5-s6-receipts/full.json
+          python scripts/aura_spatial_s5_s6_construction_architect_harness.py \
+            --repo-root . \
+            --base-ref "origin/$BASE_REF" \
+            --head-ref HEAD \
+            --observed-head "$(git rev-parse HEAD)" \
+            --receipt /tmp/aura-spatial-s5-s6-receipts/full.json
 
       - name: Verify architecture analysis did not mutate tracked source
         if: always()
