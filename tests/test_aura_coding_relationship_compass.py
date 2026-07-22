@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import aura_change_graph as change_graph
 import aura_coding_relationship_compass as compass
 from aura_event_contracts import stable_digest
 import aura_live_architect as live_architect
@@ -161,6 +162,29 @@ def test_compass_intent_and_grounding_projection() -> None:
     assert grounding["target_symbol"] == "compile_coding_relationship_compass"
     assert grounding["safe_to_patch"] is False
     assert grounding["human_review_required"] is True
+
+
+def test_compass_preserves_qualified_method_symbols_across_source_bindings() -> None:
+    method = {
+        "file_path": "service.py",
+        "symbol": "run",
+        "qualified_symbol": "Alpha.run",
+        "line_start": 4,
+        "line_end": 6,
+        "source_hash": "source-hash",
+        "file_source_hash": "file-hash",
+    }
+    evidence = {
+        "atomic_inventory": {"selected_atomic_functions": [method]},
+        "source_slices": [method],
+    }
+
+    refs = compass._source_references_from_evidence(evidence)
+
+    assert len(refs) == 1
+    assert refs[0].symbol == "Alpha.run"
+    assert compass._canonical_grounding_binding(method)["symbol"] == "Alpha.run"
+    assert change_graph._canonical_target_binding(method)["symbol"] == "Alpha.run"
 
 
 def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:

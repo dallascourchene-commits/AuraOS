@@ -280,7 +280,7 @@ def _compass_digest_payload(value: Mapping[str, Any]) -> dict[str, Any]:
 def _canonical_grounding_binding(value: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "file_path": str(value.get("file_path") or ""),
-        "symbol": str(value.get("symbol") or value.get("qualified_symbol") or ""),
+        "symbol": str(value.get("qualified_symbol") or value.get("symbol") or ""),
         "line_start": int(value.get("line_start") or value.get("start_line") or 0),
         "line_end": int(value.get("line_end") or value.get("end_line") or 0),
         "source_hash": str(value.get("source_hash") or ""),
@@ -913,7 +913,7 @@ def _source_references_from_evidence(evidence: Mapping[str, Any]) -> tuple[Sourc
     refs: dict[tuple[str, str, int, int, str], SourceReference] = {}
     for item in records:
         file_path = str(item.get("file_path") or "")
-        symbol = str(item.get("symbol") or item.get("qualified_symbol") or "")
+        symbol = str(item.get("qualified_symbol") or item.get("symbol") or "")
         line_start = int(item.get("line_start") or item.get("start_line") or 0)
         line_end = int(item.get("line_end") or item.get("end_line") or 0)
         source_hash = str(item.get("source_hash") or "")

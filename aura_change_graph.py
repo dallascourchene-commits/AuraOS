@@ -4,7 +4,6 @@ Dependencies: stdlib only. All Aura imports are lazy.
 """
 from __future__ import annotations
 import hashlib
-import json
 import re
 from pathlib import Path
 import tokenize
@@ -120,7 +119,7 @@ def _node(node_type: str, payload: Mapping[str, Any], *, depends_on: Sequence[st
 def _canonical_target_binding(value: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "file_path": str(value.get("file_path") or ""),
-        "symbol": str(value.get("symbol") or value.get("qualified_symbol") or ""),
+        "symbol": str(value.get("qualified_symbol") or value.get("symbol") or ""),
         "line_start": int(value.get("line_start") or value.get("start_line") or 0),
         "line_end": int(value.get("line_end") or value.get("end_line") or 0),
         "source_hash": str(value.get("source_hash") or ""),
