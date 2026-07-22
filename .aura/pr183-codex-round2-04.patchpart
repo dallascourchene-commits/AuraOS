@@ -1,0 +1,115 @@
+uence[str] | None = None) -> int:
+         source_digest=args.source_digest,
+         target_count=args.target_count,
+     )
+-    atomic_json(args.receipt, result)
++    atomic_json(args.receipt, result, root=repository)
+     print(
+         json.dumps(
+             {"receipt_digest": result["receipt_digest"], "splat_count": result["splat_count"]},
+diff --git a/tests/test_aura_verify_construction_demo_assets.py b/tests/test_aura_verify_construction_demo_assets.py
+index 2945284..164e38f 100644
+--- a/tests/test_aura_verify_construction_demo_assets.py
++++ b/tests/test_aura_verify_construction_demo_assets.py
+@@ -9,6 +9,7 @@ import sys
+ import pytest
+ 
+ from scripts.aura_verify_construction_demo_assets import (
++    CommandReceipt,
+     MAX_COMMAND_OUTPUT_BYTES,
+     atomic_json,
+     run_bounded_command,
+@@ -213,6 +214,93 @@ def test_run_bounded_command_times_out_and_terminates_process_group(tmp_path: Pa
+         assert not marker.exists()
+ 
+ 
++
++def test_command_receipt_digest_excludes_volatile_duration() -> None:
++    first = CommandReceipt(
++        command=("tool", "--version"),
++        returncode=0,
++        duration_seconds=0.1,
++        stdout="tool 1.0\n",
++        stderr="",
++        stdout_truncated=False,
++        stderr_truncated=False,
++        timed_out=False,
++    )
++    second = CommandReceipt(
++        command=("tool", "--version"),
++        returncode=0,
++        duration_seconds=9.9,
++        stdout="tool 1.0\n",
++        stderr="",
++        stdout_truncated=False,
++        stderr_truncated=False,
++        timed_out=False,
++    )
++
++    assert first.receipt_digest == second.receipt_digest
++    assert first.to_content_dict() == second.to_content_dict()
++    assert first.to_dict()["duration_seconds"] != second.to_dict()["duration_seconds"]
++
++
++def test_run_bounded_command_terminates_descendants_after_parent_success(tmp_path: Path) -> None:
++    if os.name == "nt":
++        pytest.skip("POSIX process-group semantics required")
++    marker = tmp_path / "orphan-finished"
++    child_code = (
++        "import time,pathlib; "
++        "time.sleep(0.4); "
++        f"pathlib.Path(r'{marker}').write_text('bad')"
++    )
++    code = (
++        "import subprocess,sys; "
++        f"subprocess.Popen([sys.executable, '-c', {child_code!r}]); "
++        "print('parent-done')"
++    )
++
++    receipt = run_bounded_command(
++        [sys.executable, "-c", code], cwd=tmp_path, timeout_seconds=5
++    )
++    assert receipt.returncode == 0
++    import time
++
++    time.sleep(0.6)
++    assert not marker.exists()
++
++
++def test_sanitize_svg_rejects_relative_resource_references(tmp_path: Path) -> None:
++    relative_href = tmp_path / "relative-href.svg"
++    relative_href.write_text(
++        '<svg xmlns="http://www.w3.org/2000/svg"><image href="other.svg" /></svg>',
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="external"):
++        sanitize_svg(relative_href, root=tmp_path)
++
++    relative_css = tmp_path / "relative-css.svg"
++    relative_css.write_text(
++        '<svg xmlns="http://www.w3.org/2000/svg"><path style="fill:url(other.svg)" /></svg>',
++        encoding="utf-8",
++    )
++    with pytest.raises(ValueError, match="external"):
++        sanitize_svg(relative_css, root=tmp_path)
++
++
++def test_atomic_json_rejects_symlinked_parent_outside_root(tmp_path: Path) -> None:
++    generated = tmp_path / "generated"
++    generated.mkdir()
++    outside = tmp_path / "outside"
++    outside.mkdir()
++    receipts = generated / "receipts"
++    try:
++        receipts.symlink_to(outside, target_is_directory=True)
++    except OSError:
++        pytest.skip("symlinks unavailable")
++
++    with pytest.raises(ValueError, match="allowed root"):
++        atomic_json(receipts / "escape.json", {"ok": False}, root=generated)
++    assert not (outside / "escape.json").exists()
++
++
+ def test_atomic_json_replaces_complete_document_without_predictable_temp(tmp_path: Path) -> None:
+     path = tmp_path / "receipt.json"
+     legacy_temp = pa
