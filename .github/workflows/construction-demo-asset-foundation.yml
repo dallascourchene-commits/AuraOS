@@ -25,45 +25,76 @@ jobs:
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
           test -f .aura/manual-remediation/chunk00
           test -f .aura/manual-remediation/chunk06c
-      - name: Verify every manually staged segment
-        shell: bash
+      - name: Build integrity report
+        env:
+          EXPECTED_ARCHIVE_SHA256: fb4619fad614910a37b5526aa42db7abe5b861eebd293c365b142b66f40a8c8d
         run: |
-          set -euo pipefail
-          cat > "${RUNNER_TEMP}/expected.sha256" <<'EOF'
-          f6099a0ab985a99ded3f39a5dc18ec1dd5ad77acad3913fa0444d2cde9230fc4  .aura/manual-remediation/chunk00
-          ce1661faedc8f13a59888afd6630469ae09d82672b7bafa2971afc766335b89a  .aura/manual-remediation/chunk01
-          2eab4af5b553281e600cc095a76ee9dba23be6e79aac8baf6395fabb4792a64e  .aura/manual-remediation/chunk02
-          97deb77301ee9189d547d87274a5bf3d160ad62134dd3838e64be286e32ed528  .aura/manual-remediation/chunk03
-          50df2568af7f9b49e15483c464713ab9abadf1f83b495c5195d4eaaa975a1556  .aura/manual-remediation/chunk04a
-          de7ee0ed038c9ca5fa67f70179adb42e26195b59bca624bb541042d631d53d50  .aura/manual-remediation/chunk04b
-          31f030b2a899b58bc441ed6244657ac85d5a84b5b67f65c176c24eaab53115d4  .aura/manual-remediation/chunk04c
-          16a35496e49ed57de78ff4e3e96a4d01b98a0cdeeb8470f76a6d86214def6bda  .aura/manual-remediation/chunk04d
-          caad09c2c8dc4d98466aef52be988bb917e5fc1cabce0c652a28b04a420b0544  .aura/manual-remediation/chunk05a
-          c27abed206356a4f44d749e72223b28138cc885cbbf99daada44246ad4036093  .aura/manual-remediation/chunk05b
-          ca0243e4fd810c83f10ef0314b3e87afd5567ab8bd45cdcc6cd851f272b0eb28  .aura/manual-remediation/chunk05c
-          0916fb18e73ede953a62c14178ee09763cdb25d94c1afdee2195dfb57dd7893b  .aura/manual-remediation/chunk05d
-          22d2c4638de618de09391d6d356afcbb5bc71b60554090048fdb92315d2b11b1  .aura/manual-remediation/chunk06a
-          8e34ec7749dd7b86db78bbbc72e7029ab9c118d5aa04be7589590752ed45e960  .aura/manual-remediation/chunk06b
-          7337e2164e16b19397487b79d257c083726e0a9a04605c5f7c6cb6fe915e8fc2  .aura/manual-remediation/chunk06c
-          EOF
-          sha256sum --check --strict "${RUNNER_TEMP}/expected.sha256"
-          cat \
-            .aura/manual-remediation/chunk00 \
-            .aura/manual-remediation/chunk01 \
-            .aura/manual-remediation/chunk02 \
-            .aura/manual-remediation/chunk03 \
-            .aura/manual-remediation/chunk04a \
-            .aura/manual-remediation/chunk04b \
-            .aura/manual-remediation/chunk04c \
-            .aura/manual-remediation/chunk04d \
-            .aura/manual-remediation/chunk05a \
-            .aura/manual-remediation/chunk05b \
-            .aura/manual-remediation/chunk05c \
-            .aura/manual-remediation/chunk05d \
-            .aura/manual-remediation/chunk06a \
-            .aura/manual-remediation/chunk06b \
-            .aura/manual-remediation/chunk06c \
-            > "${RUNNER_TEMP}/archive.b64"
-          base64 --decode "${RUNNER_TEMP}/archive.b64" > "${RUNNER_TEMP}/archive.tar.gz"
-          sha256sum "${RUNNER_TEMP}/archive.tar.gz"
-          echo "fb4619fad614910a37b5526aa42db7abe5b861eebd293c365b142b66f40a8c8d  ${RUNNER_TEMP}/archive.tar.gz" | sha256sum --check --strict
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+          import json
+          import os
+
+          expected = {
+              "chunk00": "f6099a0ab985a99ded3f39a5dc18ec1dd5ad77acad3913fa0444d2cde9230fc4",
+              "chunk01": "ce1661faedc8f13a59888afd6630469ae09d82672b7bafa2971afc766335b89a",
+              "chunk02": "2eab4af5b553281e600cc095a76ee9dba23be6e79aac8baf6395fabb4792a64e",
+              "chunk03": "97deb77301ee9189d547d87274a5bf3d160ad62134dd3838e64be286e32ed528",
+              "chunk04a": "50df2568af7f9b49e15483c464713ab9abadf1f83b495c5195d4eaaa975a1556",
+              "chunk04b": "de7ee0ed038c9ca5fa67f70179adb42e26195b59bca624bb541042d631d53d50",
+              "chunk04c": "31f030b2a899b58bc441ed6244657ac85d5a84b5b67f65c176c24eaab53115d4",
+              "chunk04d": "16a35496e49ed57de78ff4e3e96a4d01b98a0cdeeb8470f76a6d86214def6bda",
+              "chunk05a": "caad09c2c8dc4d98466aef52be988bb917e5fc1cabce0c652a28b04a420b0544",
+              "chunk05b": "c27abed206356a4f44d749e72223b28138cc885cbbf99daada44246ad4036093",
+              "chunk05c": "ca0243e4fd810c83f10ef0314b3e87afd5567ab8bd45cdcc6cd851f272b0eb28",
+              "chunk05d": "0916fb18e73ede953a62c14178ee09763cdb25d94c1afdee2195dfb57dd7893b",
+              "chunk06a": "22d2c4638de618de09391d6d356afcbb5bc71b60554090048fdb92315d2b11b1",
+              "chunk06b": "8e34ec7749dd7b86db78bbbc72e7029ab9c118d5aa04be7589590752ed45e960",
+              "chunk06c": "7337e2164e16b19397487b79d257c083726e0a9a04605c5f7c6cb6fe915e8fc2",
+          }
+          root = Path(".aura/manual-remediation")
+          rows = []
+          encoded_parts = []
+          for name, expected_sha in expected.items():
+              payload = (root / name).read_bytes()
+              actual_sha = hashlib.sha256(payload).hexdigest()
+              rows.append({
+                  "name": name,
+                  "byte_length": len(payload),
+                  "expected_sha256": expected_sha,
+                  "actual_sha256": actual_sha,
+                  "matches": actual_sha == expected_sha,
+              })
+              encoded_parts.append(payload)
+          encoded = b"".join(encoded_parts)
+          try:
+              archive = base64.b64decode(encoded, validate=True)
+              decode_error = None
+          except Exception as exc:
+              archive = b""
+              decode_error = f"{type(exc).__name__}: {exc}"
+          archive_sha = hashlib.sha256(archive).hexdigest() if archive else None
+          report = {
+              "segments": rows,
+              "all_segments_match": all(row["matches"] for row in rows),
+              "encoded_byte_length": len(encoded),
+              "decoded_byte_length": len(archive),
+              "decode_error": decode_error,
+              "expected_archive_sha256": os.environ["EXPECTED_ARCHIVE_SHA256"],
+              "actual_archive_sha256": archive_sha,
+              "archive_matches": archive_sha == os.environ["EXPECTED_ARCHIVE_SHA256"],
+          }
+          Path("manual-archive-integrity.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+      - name: Upload integrity report
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-archive-integrity-${{ github.event.pull_request.head.sha || github.sha }}
+          path: manual-archive-integrity.json
+          retention-days: 1
+          if-no-files-found: error
