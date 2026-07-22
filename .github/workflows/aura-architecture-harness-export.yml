@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Fetch exact current main without persisted credentials
+      - name: Fetch exact current main and request harness without persisted credentials
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -24,11 +24,23 @@ jobs:
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin refs/heads/main
+            fetch --no-tags --depth=1 origin \
+            refs/heads/main:refs/remotes/origin/main
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin \
+            "refs/heads/${GITHUB_REF_NAME}:refs/remotes/origin/harness-request"
           unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
+
+          REQUEST_SHA="$(git rev-parse refs/remotes/origin/harness-request)"
+          test "$REQUEST_SHA" = "$GITHUB_SHA"
+          git show "$REQUEST_SHA:scripts/aura_architecture_harness.py" \
+            > "${RUNNER_TEMP}/aura_architecture_harness.py"
+          python -m py_compile "${RUNNER_TEMP}/aura_architecture_harness.py"
+
+          git checkout --detach refs/remotes/origin/main
           SOURCE_SHA="$(git rev-parse HEAD)"
           echo "SOURCE_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
+          echo "REQUEST_HARNESS_SHA=$REQUEST_SHA" >> "$GITHUB_ENV"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - name: Archive all Git-tracked files and provenance
         run: |
@@ -47,6 +59,7 @@ jobs:
               "repository": os.environ["GITHUB_REPOSITORY"],
               "source_main_sha": os.environ["SOURCE_SHA"],
               "request_commit_sha": os.environ["GITHUB_SHA"],
+              "request_harness_sha": os.environ["REQUEST_HARNESS_SHA"],
               "workflow_run_id": os.environ["GITHUB_RUN_ID"],
               "archive": "AuraOS-full-repository.zip",
               "authority": "read_only_export",
@@ -56,12 +69,23 @@ jobs:
               encoding="utf-8",
           )
           PY
+      - name: Upload exact repository snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuraOS-architecture-harness-${{ env.SOURCE_SHA }}
+          path: |
+            AuraOS-full-repository.zip
+            AuraOS-full-repository.zip.sha256
+            AuraOS-full-repository.tracked-file-count.txt
+            AuraOS-harness-export-manifest.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Build AI-first bounded review handoff
         env:
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
           AI_HANDOFF_DIR="${RUNNER_TEMP}/AuraOS-ai-handoff"
-          python scripts/aura_architecture_harness.py \
+          python "${RUNNER_TEMP}/aura_architecture_harness.py" \
             --repo-root . \
             handoff \
             --output-dir "$AI_HANDOFF_DIR"
@@ -76,17 +100,6 @@ jobs:
             ${{ runner.temp }}/AuraOS-ai-handoff/ai_handoff_manifest.json
             ${{ runner.temp }}/AuraOS-ai-handoff/ai_review_files.txt
             ${{ runner.temp }}/AuraOS-ai-handoff/ai_source_review.zip
-          if-no-files-found: error
-          retention-days: 7
-      - name: Upload exact repository snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: AuraOS-architecture-harness-${{ env.SOURCE_SHA }}
-          path: |
-            AuraOS-full-repository.zip
-            AuraOS-full-repository.zip.sha256
-            AuraOS-full-repository.tracked-file-count.txt
-            AuraOS-harness-export-manifest.json
           if-no-files-found: error
           retention-days: 7
       - name: Publish discoverable run status
