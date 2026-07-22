@@ -1,0 +1,112 @@
+name: Construction Demo Authoritative IFC Proof
+
+on:
+  pull_request:
+    paths:
+      - ".aura/run-construction-ifc-proof"
+      - ".github/workflows/construction-demo-ifc-proof.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construction-demo-ifc-proof-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  prove-ifc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout public branch without credentials
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/dallascourchene-commits/AuraOS.git
+          git -c protocol.version=2 fetch --depth=1 origin \
+            work/construction-arena-real-asset-pack-g4-20260722
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact IFC toolchain packages
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install "ifcopenshell==0.8.5" "ifcpatch==0.8.5"
+          python - <<'PY'
+          import json
+          import ifcopenshell
+          import ifcpatch
+          print(json.dumps({
+              "ifcopenshell_version": str(ifcopenshell.version),
+              "ifcopenshell_module": ifcopenshell.__file__,
+              "ifcpatch_module": ifcpatch.__file__,
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Acquire pinned IFC and build authoritative hierarchy
+        run: |
+          set -euo pipefail
+          mkdir -p build/construction-source build/construction-proof
+          python scripts/aura_fetch_construction_demo_source.py \
+            --repo-root . \
+            --output-dir build/construction-source \
+            --record-doi 10.48436/a185k-86v39 \
+            --accept-network-download
+          python scripts/aura_ifc_storey_index.py index \
+            --source build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --source-sha256 29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29 \
+            --source-ref demo_assets/construction_tuwien/source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --output build/construction-proof/ifc-hierarchy.json
+
+      - name: Validate canonical source and hierarchy invariants
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          from aura_event_contracts import stable_digest
+
+          source = Path("build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc")
+          hierarchy_path = Path("build/construction-proof/ifc-hierarchy.json")
+          hierarchy = json.loads(hierarchy_path.read_text(encoding="utf-8"))
+          source_sha256 = hashlib.sha256(source.read_bytes()).hexdigest()
+          if source_sha256 != "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29":
+              raise SystemExit("pinned source SHA-256 mismatch")
+          if source.stat().st_size != 7_404_420:
+              raise SystemExit("pinned source byte length mismatch")
+          body = dict(hierarchy)
+          digest = body.pop("hierarchy_digest", None)
+          if digest != stable_digest(body):
+              raise SystemExit("hierarchy digest mismatch")
+          if hierarchy.get("source_sha256") != source_sha256:
+              raise SystemExit("hierarchy source mismatch")
+          if hierarchy.get("ifcopenshell_validated") is not True:
+              raise SystemExit("hierarchy is not IfcOpenShell validated")
+          counts = hierarchy.get("counts", {})
+          if counts.get("storeys") != 5:
+              raise SystemExit(f"expected five storeys, observed {counts.get('storeys')}")
+          if hierarchy.get("survey_authority") is not False:
+              raise SystemExit("survey authority boundary changed")
+          print(json.dumps({
+              "source_sha256": source_sha256,
+              "source_byte_length": source.stat().st_size,
+              "hierarchy_digest": digest,
+              "counts": counts,
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload authoritative proof-only artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-authoritative-ifc-proof-${{ github.event.pull_request.head.sha }}
+          path: |
+            build/construction-proof/ifc-hierarchy.json
+            build/construction-source/source-manifest.json
+          retention-days: 7
+          if-no-files-found: error
