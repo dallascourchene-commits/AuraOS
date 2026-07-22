@@ -23,7 +23,10 @@ from aura_construction_demo_fixture import (
     CONSTRUCTION_DEMO_WORK_STATES,
 )
 from aura_construction_demo_fixture_builder import build_construction_demo_project_fixture
+from aura_construction_demo_projection import project_construction_demo_to_scene
 from aura_construction_demo_runtime import build_construction_demo_runtime_packet
+from aura_spatial_arena import SpatialPrivacyClass
+from aura_spatial_scene import verify_spatial_scene
 
 
 def _manifest() -> ConstructionDemoSourceManifest:
@@ -116,6 +119,19 @@ def _pack(storey_count: int = 5) -> ConstructionDemoAssetPack:
     )
 
 
+def _metadata_keys(value: object) -> set[str]:
+    keys: set[str] = set()
+    stack = [value]
+    while stack:
+        current = stack.pop()
+        if isinstance(current, dict):
+            keys.update(str(key) for key in current)
+            stack.extend(current.values())
+        elif isinstance(current, list):
+            stack.extend(current)
+    return keys
+
+
 def test_g4_fixture_is_deterministic_storey_bound_and_canonical() -> None:
     pack = _pack()
     first = build_construction_demo_project_fixture(pack)
@@ -160,6 +176,61 @@ def test_g4_runtime_packet_preserves_hard_blockers_and_authority() -> None:
     assert evaluation["recommended_candidate_id"] in {
         item.candidate_id for item in fixture.candidates
     }
+
+
+def test_g5_scene_is_complete_deterministic_and_privacy_minimized() -> None:
+    fixture = build_construction_demo_project_fixture(_pack())
+    first = project_construction_demo_to_scene(fixture)
+    second = project_construction_demo_to_scene(fixture)
+    report = verify_spatial_scene(first)
+    payload = first.to_dict()
+
+    assert report.ok is True
+    assert first.scene_digest == second.scene_digest
+    assert first.execution_authority is False
+    assert first.vsa_patch_authority is False
+    assert {item.frame_id for item in fixture.asset_pack.storeys}.issubset(
+        {item.frame_id for item in first.frames}
+    )
+    assert {item.asset_id for item in fixture.asset_pack.assets}.issubset(
+        {item.asset_id for item in first.assets}
+    )
+    assert {item.source_entity_id for item in first.links}.issubset(
+        {item.entity_id for item in first.entities}
+    )
+    assert {item.target_entity_id for item in first.links}.issubset(
+        {item.entity_id for item in first.entities}
+    )
+    metadata_keys = _metadata_keys(payload)
+    assert "actor_id" not in metadata_keys
+    assert "claimant_id" not in metadata_keys
+    assert "consent_ref" not in metadata_keys
+    assert "sensor_value" not in metadata_keys
+    assert "raw_event_payload" not in metadata_keys
+    package_metadata = [
+        item["metadata"]
+        for item in payload["entities"]
+        if "package_ref" in item["metadata"]
+    ]
+    assert package_metadata
+    assert all(item["status_overlay"] is True for item in package_metadata)
+    assert all(item["base_geometry_mutated"] is False for item in package_metadata)
+    assert all(item["physical_work_authorized"] is False for item in package_metadata)
+    assert payload["renderer_hints"]["supported_modes"] == [
+        "MESH_ONLY",
+        "SPLATS_ONLY",
+        "HYBRID",
+    ]
+    assert payload["renderer_hints"]["runtime_external_fetch"] is False
+
+
+def test_g5_scene_rejects_restricted_geometry_projection() -> None:
+    fixture = build_construction_demo_project_fixture(_pack())
+    with pytest.raises(ValueError, match="cannot expose demo geometry"):
+        project_construction_demo_to_scene(
+            fixture,
+            privacy_class=SpatialPrivacyClass.RESTRICTED,
+        )
 
 
 def test_g4_fixture_rejects_insufficient_storeys() -> None:
