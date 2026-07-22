@@ -1,0 +1,200 @@
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -130,46 +175,72 @@
+             if type(key) is not str or type(value) is not str or "\x00" in key + value:
+                 raise ValueError("command environment must contain bounded strings")
+             merged_env[key] = value
++
+     started = time.monotonic()
+-    try:
+-        completed = subprocess.run(
+-            list(command),
+-            cwd=workdir,
+-            env=merged_env,
+-            stdout=subprocess.PIPE,
+-            stderr=subprocess.PIPE,
+-            check=False,
+-            timeout=timeout_seconds,
+-        )
+-        duration = round(time.monotonic() - started, 6)
+-        stdout, stdout_truncated = _bounded_text(completed.stdout)
+-        stderr, stderr_truncated = _bounded_text(completed.stderr)
+-        receipt = CommandReceipt(
+-            command=tuple(command),
+-            returncode=completed.returncode,
+-            duration_seconds=duration,
+-            stdout=stdout,
+-            stderr=stderr,
+-            stdout_truncated=stdout_truncated,
+-            stderr_truncated=stderr_truncated,
+-            timed_out=False,
+-        )
+-    except subprocess.TimeoutExpired as exc:
+-        duration = round(time.monotonic() - started, 6)
+-        stdout, stdout_truncated = _bounded_text(exc.stdout or b"")
+-        stderr, stderr_truncated = _bounded_text(exc.stderr or b"")
+-        receipt = CommandReceipt(
+-            command=tuple(command),
+-            returncode=-1,
+-            duration_seconds=duration,
+-            stdout=stdout,
+-            stderr=stderr,
+-            stdout_truncated=stdout_truncated,
+-            stderr_truncated=stderr_truncated,
+-            timed_out=True,
+-        )
+-        raise RuntimeError(json.dumps(receipt.to_dict(), sort_keys=True)) from exc
+-    if receipt.returncode != 0:
++    process = subprocess.Popen(
++        list(command),
++        cwd=workdir,
++        env=merged_env,
++        stdout=subprocess.PIPE,
++        stderr=subprocess.PIPE,
++        start_new_session=(os.name != "nt"),
++        creationflags=(subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0),
++    )
++    assert process.stdout is not None and process.stderr is not None
++    stdout_buffer = bytearray()
++    stderr_buffer = bytearray()
++    overflow = threading.Event()
++    readers = (
++        threading.Thread(
++            target=_read_capped,
++            args=(process.stdout, stdout_buffer, overflow, MAX_COMMAND_OUTPUT_BYTES),
++            daemon=True,
++        ),
++        threading.Thread(
++            target=_read_capped,
++            args=(process.stderr, stderr_buffer, overflow, MAX_COMMAND_OUTPUT_BYTES),
++            daemon=True,
++        ),
++    )
++    for reader in readers:
++        reader.start()
++
++    timed_out = False
++    output_limit_exceeded = False
++    deadline = started + timeout_seconds
++    while process.poll() is None:
++        if overflow.is_set():
++            output_limit_exceeded = True
++            _terminate_process_group(process)
++            break
++        if time.monotonic() >= deadline:
++            timed_out = True
++            _terminate_process_group(process)
++            break
++        time.sleep(0.01)
++    try:
++        process.wait(timeout=1.0)
++    except subprocess.TimeoutExpired:
++        _terminate_process_group(process)
++    for reader in readers:
++        reader.join(timeout=1.0)
++
++    duration = round(time.monotonic() - started, 6)
++    stdout, stdout_truncated = _bounded_text(bytes(stdout_buffer))
++    stderr, stderr_truncated = _bounded_text(bytes(stderr_buffer))
++    returncode = -1 if timed_out else (-2 if output_limit_exceeded else int(process.returncode or 0))
++    receipt = CommandReceipt(
++        command=tuple(command),
++        returncode=returncode,
++        duration_seconds=duration,
++        stdout=stdout,
++        stderr=stderr,
++        stdout_truncated=stdout_truncated or output_limit_exceeded,
++        stderr_truncated=stderr_truncated or output_limit_exceeded,
++        timed_out=timed_out,
++        output_limit_exceeded=output_limit_exceeded,
++    )
++    if timed_out or output_limit_exceeded or receipt.returncode != 0:
+         raise RuntimeError(json.dumps(receipt.to_dict(), sort_keys=True))
+     return receipt
+ 
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -185,6 +256,40 @@
+             _walk_numbers(item)
+ 
+ 
++def _parse_glb_chunks(data: bytes) -> tuple[dict[str, Any], int]:
++    offset = 12
++    chunk_index = 0
++    document: dict[str, Any] | None = None
++    while offset < len(data):
++        if len(data) - offset < 8:
++            raise ValueError("GLB contains an incomplete trailing chunk header")
++        chunk_length, chunk_type = struct.unpack_from("<II", data, offset)
++        if chunk_length % 4 != 0:
++            raise ValueError("GLB chunk length must be 4-byte aligned")
++        payload_start = offset + 8
++        payload_end = payload_start + chunk_length
++        if payload_end < payload_start or payload_end > len(data):
++            raise ValueError("GLB chunk range exceeds the declared file length")
++        payload = data[payload_start:payload_end]
++        if chunk_index == 0:
++            if chunk_type != GLB_JSON_CHUNK or chunk_length <= 0:
++                raise ValueError("GLB first chunk must be a non-empty JSON chunk")
++            try:
++                parsed = json.loads(payload.rstrip(b" \x00").decode("utf-8"))
++            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
++                raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
++            if not isinstance(parsed, dict):
++                raise ValueError("GLB JSON document must be an object")
++            document = parsed
++        elif chunk_type == GLB_JSON_CHUNK:
++            raise ValueError("GLB must contain exactly one JSON chunk")
++        offset = payload_end
++        chunk_index += 1
++    if offset != len(data) or document is None:
++        raise ValueError("GLB chunk layout is incomplete")
++    return document, chunk_index
++
++
+ def verify_glb(path: Path, *, root: Path) -> dict[str, Any]:
+     asset = require_local_regular_file(path, root=root, maximum_bytes=MAX_GLB_BYTES)
+     data = asset.read_bytes()
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -193,18 +298,19 @@
+     magic, version, declared_length = struct.unpack_from("<4sII", data, 0)
+     if magic != GLB_MAGIC or version != GLB_VERSION or declared_length != len(data):
+         raise ValueError("GLB header, version, or declared length is invalid")
+-    json_length, json_type = struct.unpack_from("<II", data, 12)
+-    if json_type != GLB_JSON_CHUNK or json_length <= 0 or 20 + json_length > len(data):
+-        raise ValueError("GLB JSON chunk is invalid")
+-    try:
+-        document = json.loads(data[20 : 20 + json_length].rstrip(b" \x00").decode("utf-8"))
+-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+-        raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
+-    if not isinstance(document, dict):
+-        raise ValueError("GLB JSON document must be an object")
++    document, chunk_count = _parse_glb_chunks(data)
++    asset_metadata = document.get("asset")
++    if not isinstance(asset_metadata, dict):
++        raise ValueError("GLB JSON must contain glTF asset metadata")
++    asset_version = asset_metadata.get("version")
++    if type(asset_version) is not str or asset_version.split(".", 1)[0] != "2":
++        raise ValueError("GLB glTF asset.version must be compatible with version 2")
+     _walk_numbers(document)
+     for collection in ("buffers", "images"):
+-        for item in document.get(collection, ()):
++        items = document.get(collection, [])
++        if not isinstance(items, list):
++            raise ValueError(f"GLB {collection} must be an array")
++        for item in items:
+             if isinstance(item, dict) and "uri" in item:
+                 raise ValueError("GLB must not reference external or data URI resources")
+     payload = {
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -214,6 +320,8 @@
+         "byte_length": len(data),
+         "sha256": sha256_file(asset),
+         "glb_version": version,
++        "gltf_asset_version": asset_version,
++        "chunk_count": chunk_count,
+         "scene_count": len(document.get("scenes", ())),
+         "node_count": len(document.get("nodes", ())),
+         "mesh_count": len(document.get("meshes", ())),
