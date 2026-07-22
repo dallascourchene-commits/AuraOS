@@ -103,52 +103,65 @@ jobs:
               "mesh Gaussian hybrid rendering, storey isolation, presentation-only exploded view, "
               "cancellation, device-loss disposal, authority boundaries, and exact focused tests"
           )
-          packet = compile_coding_relationship_compass(
-              objective,
-              Path.cwd(),
-              target_files=target_files,
-              target_symbols=target_symbols,
-              max_target_files=16,
-              max_target_symbols=24,
-              max_atomic_nodes=48,
-              max_atlas_participants=48,
-              max_atlas_assessments=128,
-              max_required_tests=32,
-              max_neighborhood_nodes=96,
-              max_neighborhood_edges=384,
-              max_neighborhood_candidate_pairs=4096,
-              include_source=False,
-          )
+          output = Path("/tmp/aura_g4_g6_architecture.json")
           council = route_compass_failure_classes(
               ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
           )
-          receipt = {
-              "objective": objective,
-              "repository_head": packet.get("repository_head"),
-              "compass_digest": packet.get("compass_digest"),
-              "grounding_digest": packet.get("grounding_digest"),
-              "recommended_targets": packet.get("recommended_targets"),
-              "required_tests": packet.get("required_tests"),
-              "relationships_to_preserve": (packet.get("atlas") or {}).get("relationships_to_preserve"),
-              "required_adapters": (packet.get("atlas") or {}).get("required_adapters"),
-              "authority_constraints": (packet.get("atlas") or {}).get("authority_constraints"),
-              "missing_roles": (packet.get("atlas") or {}).get("missing_roles"),
-              "missing_configurations": (packet.get("atlas") or {}).get("missing_configurations"),
-              "prohibitions": (packet.get("atlas") or {}).get("prohibitions"),
-              "emergent_candidates": packet.get("emergent_candidates"),
-              "change_graph": packet.get("change_graph"),
-              "act_capsules": packet.get("act_capsules"),
-              "council_v3": council,
-              "safe_to_patch": packet.get("safe_to_patch", False),
-              "production_mutation": packet.get("production_mutation", False),
-              "automatic_merge": packet.get("automatic_merge", False),
-              "full_packet": packet,
-          }
-          output = Path("/tmp/aura_g4_g6_architecture.json")
+          try:
+              packet = compile_coding_relationship_compass(
+                  objective,
+                  Path.cwd(),
+                  target_files=target_files,
+                  target_symbols=target_symbols,
+                  max_target_files=16,
+                  max_target_symbols=24,
+                  max_atomic_nodes=48,
+                  max_atlas_participants=48,
+                  max_atlas_assessments=128,
+                  max_required_tests=32,
+                  max_neighborhood_nodes=96,
+                  max_neighborhood_edges=384,
+                  max_neighborhood_candidate_pairs=4096,
+                  include_source=False,
+              )
+              receipt = {
+                  "status": "COMPILED",
+                  "objective": objective,
+                  "repository_head": packet.get("repository_head"),
+                  "compass_digest": packet.get("compass_digest"),
+                  "grounding_digest": packet.get("grounding_digest"),
+                  "recommended_targets": packet.get("recommended_targets"),
+                  "required_tests": packet.get("required_tests"),
+                  "relationships_to_preserve": (packet.get("atlas") or {}).get("relationships_to_preserve"),
+                  "required_adapters": (packet.get("atlas") or {}).get("required_adapters"),
+                  "authority_constraints": (packet.get("atlas") or {}).get("authority_constraints"),
+                  "missing_roles": (packet.get("atlas") or {}).get("missing_roles"),
+                  "missing_configurations": (packet.get("atlas") or {}).get("missing_configurations"),
+                  "prohibitions": (packet.get("atlas") or {}).get("prohibitions"),
+                  "emergent_candidates": packet.get("emergent_candidates"),
+                  "change_graph": packet.get("change_graph"),
+                  "act_capsules": packet.get("act_capsules"),
+                  "council_v3": council,
+                  "safe_to_patch": packet.get("safe_to_patch", False),
+                  "production_mutation": packet.get("production_mutation", False),
+                  "automatic_merge": packet.get("automatic_merge", False),
+                  "full_packet": packet,
+              }
+          except Exception as exc:
+              receipt = {
+                  "status": "FAILED_CLOSED",
+                  "objective": objective,
+                  "error_type": type(exc).__name__,
+                  "error": str(exc)[:4096],
+                  "council_v3": council,
+                  "safe_to_patch": False,
+                  "production_mutation": False,
+                  "automatic_merge": False,
+              }
           output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
-          print(json.dumps({key: receipt[key] for key in (
-              "repository_head", "compass_digest", "grounding_digest", "council_v3",
-              "safe_to_patch", "production_mutation", "automatic_merge"
+          print(json.dumps({key: receipt.get(key) for key in (
+              "status", "repository_head", "compass_digest", "grounding_digest", "error_type",
+              "error", "council_v3", "safe_to_patch", "production_mutation", "automatic_merge"
           )}, sort_keys=True))
           PY
 
