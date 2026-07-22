@@ -2,7 +2,7 @@
 
 > Canonical architecture, ownership, data-flow, and authority anchor for humans and AI agents
 
-**Architecture audit:** reviewed through July 20, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.
+**Architecture audit:** reviewed through July 22, 2026 and the preceding merged development, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity and Crucible ancestry hardening, bounded browser/interchange/Gaussian representation support, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.
 
 **Navigation rule:** read this file before subsystem documents. Regenerate CODEMAP/topology from the current tree after architecture or source changes.
 
@@ -291,6 +291,8 @@ Primary owners include:
 - associated stabilization and manifest modules.
 
 For broad architecture/refactor objectives, the Coding Relationship Compass is the objective-scoped orchestration layer over these owners. It selects a Connectome capability path, grounds exact atomic source and tests, loads or builds a validated Relational Index, extracts a deterministic budget-bounded neighborhood, compiles an `OBJECTIVE_STANDARD` or `OBJECTIVE_DEEP` Atlas, evaluates typed compatibility, and emits a proposal-only Planning Board/Coding Breadboard receipt. Its final C6–C9 layer performs bounded Emergent discovery, compiles validated Change Graph/phase/Act Capsule/Agent IR artifacts, routes local versus structural failures to Surgeon or Council V3, projects append-only bi-temporal relationship experience, and exposes six strict bridge/MCP tools. It is not a new truth owner and cannot authorize provider execution or mutation. Architect uses its bounded packet before legacy filename inference; an admitted Compass route fails closed rather than bypassing hard guards.
+
+Relationship-experience receipts are authenticated, bounded inputs rather than trusted prose. Their shared constructor boundary enforces canonical identity, digest, finite timestamp, exact authority flags, list/item/aggregate byte limits, and pre-sanitized reason text. `PRIVATE_REDACTED` references admit only kind-specific opaque placeholders or lowercase-hex digest tokens; prefixing private source text with `redacted:` is invalid. These invariants run before QDKT/timeline projection and Arena ledger persistence, so no alternate loader can bypass them.
 
 The resolver must search for canonical reusable owners before introducing a new module. CODEMAP vectors, Connectome paths, Atlas assessments, and topology edges help navigation; they are not patch authority.
 

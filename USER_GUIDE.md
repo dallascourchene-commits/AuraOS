@@ -780,6 +780,17 @@ The packet binds Connectome capability routing, exact atomic source/test groundi
 
 The Agent Arena bridge and MCP server expose six bounded tools: `aura_compass_prepare`, `aura_compass_neighborhood`, `aura_compass_classify`, `aura_compass_breadboard`, `aura_compass_plan`, and `aura_compass_compile_capsules`. Default rollout is `SHADOW`; `PAIRED_LIVE` requires explicit provider, budget, nonce, and verifier fields but still grants no execution or mutation authority.
 
+When creating relationship-experience receipts, use `RelationshipExperienceObservation.create()` for new observations and `to_dict()` for canonical serialization. The factory sanitizes secret-shaped reason text before identity is computed. Treat `from_dict()` as authenticated ingestion: it requires the full canonical field set, a valid matching `observation_digest`, and reason text that is already sanitized. Direct dataclass construction has the same invariant.
+
+For `PRIVATE_REDACTED`, use only the placeholder matching the reference list (`redacted:verifier`, `redacted:receipt`, or `redacted:source`) or an opaque `redacted:` token containing 32–64 lowercase hexadecimal characters. Do not attach a raw path, symbol, credential, receipt label, or explanation after the prefix. Invalid privacy, size, timestamp, authority, or digest fields fail before timeline/QDKT projection and before Arena ledger persistence.
+
+Before merging Compass changes, run the focused C6–C9 matrix and regenerate the navigation artifacts from the final tree:
+
+```bash
+python3 aura_codebase_navigator.py
+python3 -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+```
+
 See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
 
 ## 16. Run the Learning Arena / Crucible

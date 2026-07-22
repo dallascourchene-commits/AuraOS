@@ -247,6 +247,8 @@ The Planning Board provides typed goals/actions, BC0–BC5 continuity, bounded b
 
 The Coding Relationship Compass now implements C0–C9. After bounded Relational Index and objective Atlas grounding, it evaluates typed interfaces, discovers only local unwired candidates, compiles proposal-only Change Graph/Act Capsule/Agent IR work, records Council-versus-Surgeon routing, and projects append-only bi-temporal relationship experience. Six strict Agent Arena/MCP tools expose preparation, neighborhood, classification, Breadboard, planning, and capsule compilation. `SHADOW` remains the default rollout; no Compass artifact grants provider execution, patch, commit, PR, or merge authority.
 
+C8 receipt ingestion is fail-closed across every construction path. `create()` sanitizes reason text before computing identity; direct construction and `from_dict()` accept only already-sanitized reasons and canonical digests. `PRIVATE_REDACTED` references must be approved kind-specific placeholders (`redacted:verifier`, `redacted:receipt`, or `redacted:source`) or opaque lowercase-hex digest tokens, never raw data with a `redacted:` label. Scalar, reference-list, aggregate-payload, and timestamp limits are enforced before projection or persistence.
+
 Relational authority binds approvals to an exact action ID, action digest, capability/policy scope, validity window, role, quorum, delegation chain, and risk class. Emergency authority remains narrower, temporary, reason-bearing, and review-producing.
 
 ### 4. Human Agent, external workers, and Council–Surgeon engineering
