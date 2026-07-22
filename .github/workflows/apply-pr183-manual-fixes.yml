@@ -5,7 +5,7 @@ on:
     branches:
       - work/construction-arena-bim-gaussian-demo-20260722
     paths:
-      - ".aura/pr183-payload-3.txt"
+      - ".aura/pr183-small-15.txt"
 
 permissions:
   contents: write
@@ -39,8 +39,8 @@ jobs:
 
           repo = Path.cwd().resolve()
           payload = "".join(
-              (repo / ".aura" / f"pr183-payload-{index}.txt").read_text(encoding="utf-8")
-              for index in range(4)
+              (repo / ".aura" / f"pr183-small-{index:02d}.txt").read_text(encoding="utf-8")
+              for index in range(16)
           )
           raw = zlib.decompress(base64.b85decode(payload.encode("ascii")))
           with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as archive:
@@ -64,8 +64,8 @@ jobs:
 
           shutil.rmtree(repo / ".aura" / "review-remediation", ignore_errors=True)
           (repo / "docs" / "patches" / "AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch").unlink(missing_ok=True)
-          for index in range(4):
-              (repo / ".aura" / f"pr183-payload-{index}.txt").unlink(missing_ok=True)
+          for index in range(16):
+              (repo / ".aura" / f"pr183-small-{index:02d}.txt").unlink(missing_ok=True)
           (repo / ".github" / "workflows" / "apply-pr183-manual-fixes.yml").unlink(missing_ok=True)
           PY
       - name: Install bounded validation dependencies
