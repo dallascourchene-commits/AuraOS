@@ -11,6 +11,7 @@ import trimesh
 
 from scripts.aura_mesh_to_gaussian import (
     _mesh_arrays,
+    PROFILE_LIMITS,
     compile_mesh,
     sample_mesh_arrays,
     save_spz_v4,
@@ -221,6 +222,12 @@ def test_spz_header_mismatch_fails_closed_and_removes_temporary(tmp_path: Path) 
     assert not output.with_suffix(".spz.tmp").exists()
 
 
+def test_density_profiles_distinguish_storey_and_building_limits() -> None:
+    assert PROFILE_LIMITS["LOW"] == {"STOREY": 50_000, "BUILDING": 150_000}
+    assert PROFILE_LIMITS["STANDARD"] == {"STOREY": 150_000, "BUILDING": 500_000}
+    assert PROFILE_LIMITS["VIDEO"] == {"STOREY": 300_000, "BUILDING": 1_000_000}
+
+
 def test_compile_mesh_validates_source_digest_and_emits_ply(tmp_path: Path) -> None:
     mesh = trimesh.Trimesh(
         vertices=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
@@ -237,6 +244,7 @@ def test_compile_mesh_validates_source_digest_and_emits_ply(tmp_path: Path) -> N
         output_ply=Path("generated/source.ply"),
         output_spz=None,
         profile="LOW",
+        scope="STOREY",
         source_digest=source_digest,
         target_count=32,
     )
@@ -255,6 +263,7 @@ def test_compile_mesh_validates_source_digest_and_emits_ply(tmp_path: Path) -> N
             output_ply=Path("generated/other.ply"),
             output_spz=None,
             profile="LOW",
+            scope="STOREY",
             source_digest="0" * 64,
             target_count=8,
         )
@@ -277,6 +286,7 @@ def test_compile_mesh_rejects_output_escape(tmp_path: Path) -> None:
             output_ply=tmp_path.parent / "outside.ply",
             output_spz=None,
             profile="LOW",
+            scope="STOREY",
             source_digest=digest,
             target_count=8,
         )
