@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784699513,
-  "root": "C:\\Users\\pjtra\\Documents\\Codex\\2026-07-21\\hre\\work\\AuraOS",
+  "generated_at_unix": 1784713183,
+  "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1301,
+    "included_file_count": 1303,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,7 +13,7 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 28,
+      ".git": 25,
       "Aura_Memory": 6,
       "Aura_Sandbox": 1,
       "__pycache__": 8
@@ -23,6 +23,7 @@
       ".aura/ARCHITECTURE.md",
       ".aura/AURA.md",
       ".aura/CONVERSE.md",
+      ".aura/HARNESS_EXPORT_REQUEST",
       ".aura/HERMES_AURA_RULES.md",
       ".aura/OUTPUT_FORMATS.md",
       ".aura/RESEARCH_MANIFEST.json",
@@ -1075,6 +1076,7 @@
       "tests/test_aura_architect_council_v2_contracts.py",
       "tests/test_aura_architect_council_v3.py",
       "tests/test_aura_architecture_harness.py",
+      "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -1323,23 +1325,23 @@
     ]
   },
   "summary": {
-    "file_count": 1301,
-    "total_bytes": 55405850,
-    "text_tokens_est": 4412681,
+    "file_count": 1303,
+    "total_bytes": 55487518,
+    "text_tokens_est": 4433094,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 43,
       "knowledge_artifact": 164,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 881,
+      "python_module": 882,
       "schema_or_lexicon": 153,
-      "support_file": 45
+      "support_file": 46
     },
     "topology_nodes": 10217,
     "topology_edges": 23639,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 35239.8
+    "elapsed_ms": 30081.15
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1530,6 +1532,7 @@
       ".aura/ARCHITECTURE.md",
       ".aura/AURA.md",
       ".aura/CONVERSE.md",
+      ".aura/HARNESS_EXPORT_REQUEST",
       ".aura/HERMES_AURA_RULES.md",
       ".aura/OUTPUT_FORMATS.md",
       ".aura/RESEARCH_MANIFEST.json",
@@ -2436,6 +2439,7 @@
       "tests/test_aura_architect_council_v2_contracts.py",
       "tests/test_aura_architect_council_v3.py",
       "tests/test_aura_architecture_harness.py",
+      "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_live_cli.py",
       "tests/test_aura_arena_persistence_adapters.py",
@@ -3011,7 +3015,7 @@
       "aura_human_agent_arena/main.js:163"
     ],
     "!commands": [
-      "USER_GUIDE.md:87"
+      "USER_GUIDE.md:114"
     ],
     "!comment": [
       "aura_showcase/gate-dialogue.js:291"
@@ -3376,7 +3380,7 @@
       "aura_waboose_semantic_rules.py:189",
       "aura_workflow_gates.py:676",
       "debug_att.py:15",
-      "scripts/aura_architecture_harness.py:141",
+      "scripts/aura_architecture_harness.py:696",
       "tests/test_aura_qdkt_inventory.py:124",
       "travel_price_sidecar.py:64"
     ],
@@ -17204,6 +17208,16 @@
         "signature_hash": "7c189d91ce25f0bc"
       }
     ],
+    "_BoundedExcerpt": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "class",
+        "line": 169,
+        "end_line": 175,
+        "semantic_id": "scripts/aura_architecture_harness.py#class:_BoundedExcerpt:2d71f791b1febb0c",
+        "signature_hash": "9f8937bf59488032"
+      }
+    ],
     "_Bridge": [
       {
         "file": "tests/test_aura_arena_persistence_adapters.py",
@@ -17260,6 +17274,16 @@
         "end_line": 295,
         "semantic_id": "aura_planning_projector.py#class:_Collector:570f47c320c054d9",
         "signature_hash": "4f8732686467bca8"
+      }
+    ],
+    "_CommandResult": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "class",
+        "line": 179,
+        "end_line": 185,
+        "semantic_id": "scripts/aura_architecture_harness.py#class:_CommandResult:73e27e2c6b6f760b",
+        "signature_hash": "99f470e708dedbf6"
       }
     ],
     "_DissolveBridge": [
@@ -17698,6 +17722,16 @@
         "end_line": 91,
         "semantic_id": "tests/test_aura_arena_persistence_adapters.py#class:_Verification:27fb3f5dd4601c51",
         "signature_hash": "818e3c048f5b7584"
+      }
+    ],
+    "_WatchdogCommandResult": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "class",
+        "line": 189,
+        "end_line": 193,
+        "semantic_id": "scripts/aura_architecture_harness.py#class:_WatchdogCommandResult:e804c1d0fff4de60",
+        "signature_hash": "ccbfc1677dadfce7"
       }
     ],
     "_Workflow": [
@@ -23036,6 +23070,16 @@
         "signature_hash": "db7d9e397e358d0e"
       }
     ],
+    "_ai_handoff_summary": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 920,
+        "end_line": 935,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_ai_handoff_summary:6cc8441ea12030b2",
+        "signature_hash": "e575b31ff8ae3dbc"
+      }
+    ],
     "_all_arena_hashes": [
       {
         "file": "aura_topology_sync.py",
@@ -23264,6 +23308,16 @@
         "end_line": 231,
         "semantic_id": "aura_hv_cache.py#method:ChangeLogStore._append_hv_row:a76c4be1b4bf8088",
         "signature_hash": "51d634fc64e840e8"
+      }
+    ],
+    "_append_json_line": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 200,
+        "end_line": 205,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_append_json_line:4f6a82ca244263fc",
+        "signature_hash": "e83ea7aa973ccfc2"
       }
     ],
     "_append_jsonl": [
@@ -23858,6 +23912,16 @@
         "end_line": 266,
         "semantic_id": "aura_node_inspector.py#function:_assess_tests:977349fb2267c83f",
         "signature_hash": "a04a351c9a582cfb"
+      }
+    ],
+    "_assess_watchdog_progress": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 348,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_assess_watchdog_progress:198ec74518abe288",
+        "signature_hash": "4eece3a9084c9ba7"
       }
     ],
     "_assess_winner": [
@@ -24558,6 +24622,26 @@
         "signature_hash": "b3acaf4e564e4c08"
       }
     ],
+    "_binary_bytes": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 757,
+        "end_line": 764,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_binary_bytes:5b02bb8b76b94f8d",
+        "signature_hash": "914ded9ed37a4f59"
+      }
+    ],
+    "_binary_probe": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 767,
+        "end_line": 770,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_binary_probe:5e95ea154a65f42f",
+        "signature_hash": "d94adf3e81830cad"
+      }
+    ],
     "_bind": [
       {
         "file": "aura_liquid_internet.py",
@@ -25064,6 +25148,16 @@
         "end_line": 1507,
         "semantic_id": "aura_emergent_potential_repl.py#function:_bounded_evidence:fcb082a68fab29d3",
         "signature_hash": "9f8c6035675b072b"
+      }
+    ],
+    "_bounded_excerpt": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 508,
+        "end_line": 549,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_bounded_excerpt:8ea4463d09f55abb",
+        "signature_hash": "e5ed34f06f4e13dd"
       }
     ],
     "_bounded_floor_plan_assets": [
@@ -26594,6 +26688,16 @@
         "signature_hash": "000bb5c45f8d394f"
       }
     ],
+    "_canonical_source_commit": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 938,
+        "end_line": 948,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_canonical_source_commit:c599fa65462df2d2",
+        "signature_hash": "5e9494e40ac521d0"
+      }
+    ],
     "_canonical_strings": [
       {
         "file": "aura_cockpit_planner.py",
@@ -27280,6 +27384,16 @@
         "end_line": 222,
         "semantic_id": "aura_capability_connectome.py#function:_classify_token_savings_role:5b34921288bb4fed",
         "signature_hash": "5632bf66483588df"
+      }
+    ],
+    "_classify_tracked_file": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 817,
+        "end_line": 836,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_classify_tracked_file:73d8a954cab9e6ae",
+        "signature_hash": "6a5fef52f4b7fe0c"
       }
     ],
     "_classify_truth_boundary": [
@@ -29940,8 +30054,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 385,
-        "end_line": 386,
+        "line": 1520,
+        "end_line": 1521,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_default_venv:8b16572c95c24dae",
         "signature_hash": "d4081661d5a94351"
       }
@@ -30802,8 +30916,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 44,
-        "end_line": 46,
+        "line": 116,
+        "end_line": 118,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_digest:a0cbbeabc6447067",
         "signature_hash": "514f786724465716"
       },
@@ -34878,6 +34992,14 @@
         "signature_hash": "032ce387caf308fe"
       },
       {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:_git:3e15d4c4187f8a0a",
+        "signature_hash": "9ae5c935d78798ce"
+      },
+      {
         "file": "tests/test_aura_coding_waboose.py",
         "kind": "function",
         "line": 10,
@@ -34960,6 +35082,16 @@
         "end_line": 39,
         "semantic_id": "aura_substrate_verifier.py#function:_git_blob_sha1:be0874b3a9378a15",
         "signature_hash": "08a525eae260ae61"
+      }
+    ],
+    "_git_blob_sha256": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 773,
+        "end_line": 796,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_git_blob_sha256:608982ac8a36aece",
+        "signature_hash": "8ce20eafe41c380b"
       }
     ],
     "_git_branch": [
@@ -35068,10 +35200,20 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 101,
-        "end_line": 114,
+        "line": 1139,
+        "end_line": 1154,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_git_info:60240ef3421f2379",
         "signature_hash": "a6586ad9c0c5ebd3"
+      }
+    ],
+    "_git_nul_records": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 641,
+        "end_line": 675,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_git_nul_records:34ce834e57e459e9",
+        "signature_hash": "d1720a0a8c44eab3"
       }
     ],
     "_git_output": [
@@ -35112,6 +35254,26 @@
         "signature_hash": "1c7ecf97ffe404b0"
       }
     ],
+    "_git_status": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 678,
+        "end_line": 687,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_git_status:4f5264606467ae0a",
+        "signature_hash": "9231b5868e3cbb96"
+      }
+    ],
+    "_git_tree_entries": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 708,
+        "end_line": 733,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_git_tree_entries:f033d6c9e61944a6",
+        "signature_hash": "15dba035b616cddb"
+      }
+    ],
     "_git_value": [
       {
         "file": "aura_coding_workbench_wfst_adapter.py",
@@ -35128,6 +35290,14 @@
         "end_line": 406,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_git_value:0e22b5fe34ad82ba",
         "signature_hash": "f993307cccd51516"
+      },
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 690,
+        "end_line": 691,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_git_value:a97e55ceeaae379b",
+        "signature_hash": "6b08571da1ef0afb"
       }
     ],
     "_github_json": [
@@ -37264,8 +37434,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 117,
-        "end_line": 135,
+        "line": 1157,
+        "end_line": 1175,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_init_git:93d997c5fbb0a779",
         "signature_hash": "7a065baa5d7b24c9"
       }
@@ -37278,6 +37448,16 @@
         "end_line": 296,
         "semantic_id": "aura_st3gg_recall.py#function:_init_hash_table:8bc078c8c0584663",
         "signature_hash": "af5bec5048739502"
+      }
+    ],
+    "_init_repo": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:_init_repo:5de04d56dca21a1c",
+        "signature_hash": "9c1101095b0a4739"
       }
     ],
     "_init_schema": [
@@ -37624,6 +37804,16 @@
         "signature_hash": "36f97cbe38be2287"
       }
     ],
+    "_is_generated_reproducible": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 799,
+        "end_line": 803,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_is_generated_reproducible:602d33a8eda4d1e8",
+        "signature_hash": "d240996f66930330"
+      }
+    ],
     "_is_generator_call": [
       {
         "file": "aura_qdkt_inventory.py",
@@ -37752,6 +37942,16 @@
         "end_line": 232,
         "semantic_id": "aura_api_rotator.py#function:_is_retryable:4935416756705987",
         "signature_hash": "a47b5efac6a38b98"
+      }
+    ],
+    "_is_sensitive_or_runtime": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 806,
+        "end_line": 814,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_is_sensitive_or_runtime:08a1a7dd71c3d25b",
+        "signature_hash": "44162117ad0d9059"
       }
     ],
     "_is_sequence": [
@@ -37948,6 +38148,16 @@
         "end_line": 705,
         "semantic_id": "aura_emergent_refactor_workspace.py#method:EmergentResultsStore._iter_findings_with_raw:6642bd7f8dddeaba",
         "signature_hash": "e625c808b88b35ef"
+      }
+    ],
+    "_iter_nul_records": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 620,
+        "end_line": 638,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_iter_nul_records:dd814c8c2ba7db48",
+        "signature_hash": "e0ffe493c4f23b2b"
       }
     ],
     "_iter_repo_files": [
@@ -39851,6 +40061,14 @@
       }
     ],
     "_manifest": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:_manifest:bfa62334d5d2ebe8",
+        "signature_hash": "d35db236d22c00ce"
+      },
       {
         "file": "tests/test_aura_arena_wfst_phase_a.py",
         "kind": "function",
@@ -42838,8 +43056,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 389,
-        "end_line": 418,
+        "line": 1565,
+        "end_line": 1613,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_parser:52f7e0b140a8973c",
         "signature_hash": "cee2a7bb613f105d"
       },
@@ -44016,8 +44234,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 138,
-        "end_line": 154,
+        "line": 1177,
+        "end_line": 1193,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_probe:97c4dff94c58a0ee",
         "signature_hash": "76587fe44e85b1d6"
       }
@@ -44916,6 +45134,16 @@
         "signature_hash": "ef946d6ca98d5b6d"
       }
     ],
+    "_read_git_blob": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 736,
+        "end_line": 754,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_read_git_blob:635f2b7c0a3e870f",
+        "signature_hash": "ccff70e9870a2958"
+      }
+    ],
     "_read_hash_header": [
       {
         "file": "aura_st3gg_recall.py",
@@ -45050,6 +45278,16 @@
         "end_line": 829,
         "semantic_id": "aura_mesh.py#method:AuraMeshSwarm._read_thermal_nonblocking:3e7aafc78ed3cbaf",
         "signature_hash": "7a4b506e3133ddb2"
+      }
+    ],
+    "_read_watchdog_progress": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 272,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_read_watchdog_progress:786b5e7c62eca3cf",
+        "signature_hash": "49484e1f05ae509d"
       }
     ],
     "_readiness_indexes": [
@@ -45820,8 +46058,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 78,
+        "line": 144,
+        "end_line": 165,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_reference_manifest:142447cfa6a3cb15",
         "signature_hash": "04f2df6732fe9a23"
       }
@@ -45912,6 +46150,16 @@
         "end_line": 148,
         "semantic_id": "aura_patcher.py#method:AuraSovereignPatcher._regenerate_holographic_manifest:aed7da35346b1d90",
         "signature_hash": "7fc926f6a48398f8"
+      }
+    ],
+    "_regeneration_policy": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 889,
+        "end_line": 917,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_regeneration_policy:8bc991152657b1ca",
+        "signature_hash": "0b8c889a6f740afa"
       }
     ],
     "_regions": [
@@ -47928,8 +48176,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 89,
-        "end_line": 94,
+        "line": 612,
+        "end_line": 617,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_root:139ef5c87876d259",
         "signature_hash": "359c484fcebcc325"
       }
@@ -48448,10 +48696,10 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 81,
-        "end_line": 86,
-        "semantic_id": "scripts/aura_architecture_harness.py#function:_run:c6324f62ff1618f3",
-        "signature_hash": "9d300d724936f89d"
+        "line": 562,
+        "end_line": 609,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_run:a06ddc44590320f0",
+        "signature_hash": "5a84d35cf57e548d"
       },
       {
         "file": "tests/test_aura_spatial_cli.py",
@@ -48588,6 +48836,16 @@
         "signature_hash": "e6b5d32f98c1fbfe"
       }
     ],
+    "_run_resume_command": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 1524,
+        "end_line": 1562,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_run_resume_command:fedb2299b5230a98",
+        "signature_hash": "b5b14c371d34ec5c"
+      }
+    ],
     "_run_s4b_architecture": [
       {
         "file": "scripts/aura_spatial_s4b_architect_harness.py",
@@ -48642,6 +48900,16 @@
         "end_line": 2217,
         "semantic_id": "aura_review_arena.py#method:AuraReviewArena._run_tools:c1d4a9fb67603d4a",
         "signature_hash": "d8d3e78a56e17c51"
+      }
+    ],
+    "_run_with_watchdog": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 367,
+        "end_line": 505,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_run_with_watchdog:9fcf311f6c0f4d7c",
+        "signature_hash": "d07152a7a2570bca"
       }
     ],
     "_runner_status": [
@@ -48914,6 +49182,16 @@
         "end_line": 415,
         "semantic_id": "aura_arena_st3gg_codec.py#function:_safe_namespace:136cbfcb34cc715e",
         "signature_hash": "58fc76bf0c4d74b7"
+      }
+    ],
+    "_safe_output_dir": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 864,
+        "end_line": 877,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_safe_output_dir:5e7c645d1ad412f6",
+        "signature_hash": "d58933523026abff"
       }
     ],
     "_safe_output_root": [
@@ -51676,6 +51954,26 @@
         "signature_hash": "35f08feb7c467960"
       }
     ],
+    "_stream_json_integer_metadata": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 1232,
+        "end_line": 1261,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_stream_json_integer_metadata:583aa469cd0cfd0b",
+        "signature_hash": "13e1da259ba547fc"
+      }
+    ],
+    "_stream_sha256": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 137,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_stream_sha256:d5f3b39a7afaaa3b",
+        "signature_hash": "8de1c06f2a921385"
+      }
+    ],
     "_strict_allowlist": [
       {
         "file": "aura_gate_egress.py",
@@ -52548,6 +52846,16 @@
         "signature_hash": "b31424e4139f6aab"
       }
     ],
+    "_symlink_sha256": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_symlink_sha256:a0e4a576675e5bfd",
+        "signature_hash": "7e72ee53171dbbc2"
+      }
+    ],
     "_sync_runtime_overrides": [
       {
         "file": "aura_architect_consolidation_benchmark_refined.py",
@@ -52740,6 +53048,16 @@
         "end_line": 93,
         "semantic_id": "aura_router_adaptive_compat.py#function:_task_verifier:59ac81f2d3507706",
         "signature_hash": "d2f05a6d4347cb67"
+      }
+    ],
+    "_task_watchdog_policy": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 208,
+        "end_line": 237,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_task_watchdog_policy:ff66eeba361588b4",
+        "signature_hash": "c4b3cad3c8e27fd3"
       }
     ],
     "_task_without_tests": [
@@ -54570,6 +54888,16 @@
         "signature_hash": "ee91a94050b16e40"
       }
     ],
+    "_truncation_dict": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 552,
+        "end_line": 559,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_truncation_dict:9d5242de85b85d14",
+        "signature_hash": "8fc2939ee4389443"
+      }
+    ],
     "_trusted_endpoint_evidence": [
       {
         "file": "aura_emergent_result_verifier.py",
@@ -55258,6 +55586,16 @@
         "signature_hash": "0854d8b3d4afe61c"
       }
     ],
+    "_utc_timestamp": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 197,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_utc_timestamp:64e0c71eb89dac1b",
+        "signature_hash": "d3a3c071ab5fe2dd"
+      }
+    ],
     "_utf8_byte_count": [
       {
         "file": "aura_agent_arena_github_bridge.py",
@@ -55852,6 +56190,16 @@
         "signature_hash": "164afe24c9b86853"
       }
     ],
+    "_validate_repo_path": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 694,
+        "end_line": 705,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_validate_repo_path:26fa5b2c48cefc7a",
+        "signature_hash": "702dd27bb7148850"
+      }
+    ],
     "_validate_repo_relative_path": [
       {
         "file": "aura_hermes_arena_mode.py",
@@ -56066,8 +56414,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 97,
-        "end_line": 98,
+        "line": 1135,
+        "end_line": 1136,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_venv_python:c954637d030ff87c",
         "signature_hash": "ac31786ed5f342d3"
       }
@@ -56408,6 +56756,36 @@
         "signature_hash": "56368fa8ce8e2159"
       }
     ],
+    "_watchdog_artifact_inventory": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 259,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_watchdog_artifact_inventory:23df4b0aa971854b",
+        "signature_hash": "86aaf91f4af44fce"
+      }
+    ],
+    "_watchdog_progress_token": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 351,
+        "end_line": 364,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_watchdog_progress_token:4972762b667c7399",
+        "signature_hash": "a0c3d98558902810"
+      }
+    ],
+    "_watchdog_resume_command": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 240,
+        "end_line": 247,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_watchdog_resume_command:bd88d2556d631e0d",
+        "signature_hash": "8bc16b2bd50c7ce2"
+      }
+    ],
     "_wfst_instance": [
       {
         "file": "aura_human_agent_workflow.py",
@@ -56508,6 +56886,16 @@
         "signature_hash": "c40f3940f1ccb5e7"
       }
     ],
+    "_workflow_text": [
+      {
+        "file": "tests/test_aura_architecture_harness_export_workflow.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:_workflow_text:45a218479e5847b1",
+        "signature_hash": "7461bd9275f656d2"
+      }
+    ],
     "_working_tree_digest": [
       {
         "file": "aura_coding_workbench_wfst_adapter.py",
@@ -56534,6 +56922,16 @@
         "signature_hash": "189e2ab2a9c0a09a"
       }
     ],
+    "_working_tree_metadata": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 839,
+        "end_line": 861,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_working_tree_metadata:e1bfaaee219ae8ca",
+        "signature_hash": "294e3744b2065770"
+      }
+    ],
     "_workspace_packet": [
       {
         "file": "aura_showcase_spatial.py",
@@ -56558,8 +56956,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 49,
-        "end_line": 53,
+        "line": 121,
+        "end_line": 125,
         "semantic_id": "scripts/aura_architecture_harness.py#function:_write:f1fa2fd5cf78a783",
         "signature_hash": "bf504f9b32628871"
       },
@@ -56866,6 +57264,16 @@
         "signature_hash": "3d112f85671eb9a3"
       }
     ],
+    "_write_watchdog_progress": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 275,
+        "end_line": 306,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_write_watchdog_progress:21a07c6c31192737",
+        "signature_hash": "444b23ef4f31d418"
+      }
+    ],
     "_write_workspace_event": [
       {
         "file": "aura_qdkt.py",
@@ -56884,6 +57292,16 @@
         "end_line": 91,
         "semantic_id": "aura_obsidian_graph_bridge.py#function:_yaml_escape:217219779dd8903e",
         "signature_hash": "6445e42ea4a924b6"
+      }
+    ],
+    "_zip_info": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 880,
+        "end_line": 886,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:_zip_info:06943690ccd0e3b3",
+        "signature_hash": "ba146d5bdae6f543"
       }
     ],
     "a2a_message": [
@@ -65928,6 +66346,16 @@
         "signature_hash": "8c46609ee4c6058e"
       }
     ],
+    "create_ai_handoff": [
+      {
+        "file": "scripts/aura_architecture_harness.py",
+        "kind": "function",
+        "line": 951,
+        "end_line": 1133,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:create_ai_handoff:cfe1b96e0a97da5e",
+        "signature_hash": "16e4e32af1eb917a"
+      }
+    ],
     "create_civic_boundary_contract": [
       {
         "file": "aura_liquid_planning_arena.py",
@@ -67600,8 +68028,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 186,
-        "end_line": 202,
+        "line": 1264,
+        "end_line": 1280,
         "semantic_id": "scripts/aura_architecture_harness.py#function:doctor:8f75f631d6213249",
         "signature_hash": "e9cf9efccf8e31d2"
       }
@@ -77170,8 +77598,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 421,
-        "end_line": 476,
+        "line": 1616,
+        "end_line": 1715,
         "semantic_id": "scripts/aura_architecture_harness.py#function:main:cae612e3c003f5a0",
         "signature_hash": "d5857061120d68cd"
       },
@@ -79654,8 +80082,8 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 157,
-        "end_line": 183,
+        "line": 1196,
+        "end_line": 1229,
         "semantic_id": "scripts/aura_architecture_harness.py#function:prepare:b58aec6bbcf1fd8d",
         "signature_hash": "593033c248b07c9e"
       },
@@ -84242,10 +84670,10 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 205,
-        "end_line": 382,
-        "semantic_id": "scripts/aura_architecture_harness.py#function:run_architecture:d98ec59028ced53d",
-        "signature_hash": "be3c498a2c0e7456"
+        "line": 1282,
+        "end_line": 1517,
+        "semantic_id": "scripts/aura_architecture_harness.py#function:run_architecture:84384d9a1bbf320f",
+        "signature_hash": "92ae9e4f675d829a"
       }
     ],
     "run_arm": [
@@ -90290,6 +90718,16 @@
         "signature_hash": "284138c95740f85a"
       }
     ],
+    "test_binary_and_oversized_files_are_digest_only": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 337,
+        "end_line": 351,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_binary_and_oversized_files_are_digest_only:85746a9b3cb22122",
+        "signature_hash": "57a8fd7e5f313803"
+      }
+    ],
     "test_binary_credentials_are_redacted_before_hex_encoding": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -90308,6 +90746,16 @@
         "end_line": 35,
         "semantic_id": "tests/test_aura_spatial_ply.py#function:test_binary_little_endian_ply_is_bounded_and_deterministic:25c834082a1430bf",
         "signature_hash": "18c8ef045426bade"
+      }
+    ],
+    "test_binary_probe_reads_only_bounded_prefix": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 307,
+        "end_line": 312,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_binary_probe_reads_only_bounded_prefix:0074f2138312fa0d",
+        "signature_hash": "9b544ef5e466c10d"
       }
     ],
     "test_bind_invertible": [
@@ -90726,6 +91174,16 @@
         "end_line": 119,
         "semantic_id": "tests/test_aura_emergent_evidence_spine_coderabbit.py#function:test_bounded_closure_never_emits_edges_to_unselected_nodes:b118e705f109849f",
         "signature_hash": "477f82ba5bef31e9"
+      }
+    ],
+    "test_bounded_subprocess_output_reports_omissions": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 462,
+        "end_line": 480,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_bounded_subprocess_output_reports_omissions:0afa84eb5d761bfd",
+        "signature_hash": "869a317be0738b22"
       }
     ],
     "test_bounded_workstreams": [
@@ -94720,6 +95178,16 @@
         "signature_hash": "e93e043d8ad750eb"
       }
     ],
+    "test_crlf_worktree_cannot_masquerade_as_git_blob": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 400,
+        "end_line": 410,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_crlf_worktree_cannot_masquerade_as_git_blob:9738e2c8a5047dca",
+        "signature_hash": "5cf631f70d8a8fc4"
+      }
+    ],
     "test_cross_arena_handoff_is_payload_free_and_review_gated": [
       {
         "file": "tests/test_aura_arena_persistence_adapters.py",
@@ -95262,8 +95730,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 15,
-        "end_line": 19,
+        "line": 52,
+        "end_line": 56,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_default_venv_is_outside_repository:de030754bf1f0673",
         "signature_hash": "0f7cf5e23d5bde44"
       }
@@ -95860,8 +96328,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 11,
-        "end_line": 12,
+        "line": 48,
+        "end_line": 49,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_digest_is_order_stable:ba3ad12f30260c18",
         "signature_hash": "03865d99a7e849da"
       }
@@ -96056,6 +96524,26 @@
         "signature_hash": "0958450fe165aabe"
       }
     ],
+    "test_dirty_repository_fails_closed_and_can_be_marked": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 365,
+        "end_line": 376,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_dirty_repository_fails_closed_and_can_be_marked:e79c57b68c30ea1c",
+        "signature_hash": "86eec8ac9e31581b"
+      }
+    ],
+    "test_dirty_status_is_compact_and_does_not_leak_path": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 387,
+        "end_line": 397,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_dirty_status_is_compact_and_does_not_leak_path:b0f18a3e108151c8",
+        "signature_hash": "354324e724370f08"
+      }
+    ],
     "test_discover": [
       {
         "file": "tests/test_aura_skill_cockpit_adapter.py",
@@ -96182,6 +96670,16 @@
         "end_line": 47,
         "semantic_id": "tests/test_aura_capability_resolver.py#method:TestCapabilityResolver.test_do_not_reinvent:452ec0d81c2a0e1a",
         "signature_hash": "81d78d8caf803ea1"
+      }
+    ],
+    "test_doctor_metadata_is_streamed_without_deserializing_body": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 483,
+        "end_line": 492,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_doctor_metadata_is_streamed_without_deserializing_body:ab398e9523b5e353",
+        "signature_hash": "f423e462bb201939"
       }
     ],
     "test_document_and_query_share_retrieval_space": [
@@ -98240,6 +98738,26 @@
         "signature_hash": "7c1587a4e1301cfd"
       }
     ],
+    "test_export_includes_exact_request_harness_and_digest": [
+      {
+        "file": "tests/test_aura_architecture_harness_export_workflow.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:test_export_includes_exact_request_harness_and_digest:8f920d9fa1971e16",
+        "signature_hash": "7a91f5a8fda2b6f7"
+      }
+    ],
+    "test_export_keeps_generated_artifacts_outside_checkout": [
+      {
+        "file": "tests/test_aura_architecture_harness_export_workflow.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:test_export_keeps_generated_artifacts_outside_checkout:795f4f3edde60adb",
+        "signature_hash": "8a3adeca498947d7"
+      }
+    ],
     "test_export_numbering_increments": [
       {
         "file": "test_aura_icm_workspace.py",
@@ -98288,6 +98806,16 @@
         "end_line": 335,
         "semantic_id": "test_aura_metaharness.py#method:TestAuraFederation.test_export_redacts_private_fields:5ef64d30bc58463d",
         "signature_hash": "67b55dbae193b7c5"
+      }
+    ],
+    "test_export_uses_request_harness_against_exact_main": [
+      {
+        "file": "tests/test_aura_architecture_harness_export_workflow.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 20,
+        "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:test_export_uses_request_harness_against_exact_main:6928787c2b9206a3",
+        "signature_hash": "d18454beb3c6f41a"
       }
     ],
     "test_export_vault_function": [
@@ -98800,6 +99328,16 @@
         "signature_hash": "07af4bf14d8bfe25"
       }
     ],
+    "test_file_list_manifest_and_archive_are_deterministic": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 354,
+        "end_line": 362,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_file_list_manifest_and_archive_are_deterministic:ef577e7f38359a4d",
+        "signature_hash": "ff4842706907e2ec"
+      }
+    ],
     "test_file_placeholder_and_generic_path_do_not_ground": [
       {
         "file": "tests/test_aura_construction_refactor_plan.py",
@@ -99076,6 +99614,16 @@
         "end_line": 139,
         "semantic_id": "tests/test_aura_adaptive_planner.py#function:test_forced_model_cannot_bypass_hard_admission:df9480a9a583661b",
         "signature_hash": "f2ce644a00ebb5e7"
+      }
+    ],
+    "test_forensic_snapshot_upload_precedes_ai_handoff": [
+      {
+        "file": "tests/test_aura_architecture_harness_export_workflow.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:test_forensic_snapshot_upload_precedes_ai_handoff:fdeb873f842b286c",
+        "signature_hash": "2b80c646b2821f69"
       }
     ],
     "test_forge_new_root_is_deterministic_and_audited": [
@@ -99656,6 +100204,16 @@
         "end_line": 32,
         "semantic_id": "test_aura_module_manifest.py#function:test_generate_module_manifest_finds_module_and_excludes_runtime_dirs:85fd01b1be6b2990",
         "signature_hash": "f550dcc1abf09cd8"
+      }
+    ],
+    "test_generated_body_never_appears_in_manifest_or_archive": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 334,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_generated_body_never_appears_in_manifest_or_archive:0f7eb81edb21cb12",
+        "signature_hash": "d375846a35df00ff"
       }
     ],
     "test_generated_index_is_excluded_from_source_participants": [
@@ -100416,6 +100974,16 @@
         "signature_hash": "6f2afb8834dffd0d"
       }
     ],
+    "test_handoff_parser_defaults_are_bounded": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_handoff_parser_defaults_are_bounded:54409733b1f9a718",
+        "signature_hash": "32b180d4c72dcc42"
+      }
+    ],
     "test_hard_blocker_wins_without_probabilistic_signals": [
       {
         "file": "tests/test_aura_construction_adapter.py",
@@ -100470,8 +101038,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 61,
-        "end_line": 62,
+        "line": 115,
+        "end_line": 128,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_harness_is_proposal_only:e27c213c83cc6f7a",
         "signature_hash": "67ea6479088a2523"
       }
@@ -101544,6 +102112,16 @@
         "end_line": 22,
         "semantic_id": "tests/test_aura_review_learning_mcp_codex.py#function:test_ingest_tool_schema_does_not_accept_current_head:3d6b7f911e477ad6",
         "signature_hash": "159b8be3f2e7f626"
+      }
+    ],
+    "test_init_git_force_adds_ignored_archive_files": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 495,
+        "end_line": 502,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_init_git_force_adds_ignored_archive_files:bbf494aa95177771",
+        "signature_hash": "9da33aa6270b573d"
       }
     ],
     "test_initialize_returns_server_info": [
@@ -102864,6 +103442,16 @@
         "end_line": 188,
         "semantic_id": "tests/test_aura_gate_oidc.py#function:test_jwk_metadata_mismatch_fails_closed:1a7bc356d00a4f3c",
         "signature_hash": "ba731c4a416786e6"
+      }
+    ],
+    "test_known_generated_paths_are_regenerate_even_when_small": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 285,
+        "end_line": 294,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_known_generated_paths_are_regenerate_even_when_small:cdc16b75ca525025",
+        "signature_hash": "94ba079154762e92"
       }
     ],
     "test_known_limitations_present": [
@@ -107036,6 +107624,16 @@
         "signature_hash": "1854926bace93150"
       }
     ],
+    "test_output_directory_inside_repository_is_rejected": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 438,
+        "end_line": 441,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_output_directory_inside_repository_is_rejected:d09a56ceb2bc8551",
+        "signature_hash": "8430a94ee212f0d2"
+      }
+    ],
     "test_ownership_contract_rejects_owner_substitution": [
       {
         "file": "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -107490,8 +108088,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 22,
-        "end_line": 28,
+        "line": 59,
+        "end_line": 68,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_parser_defaults_to_bounded_minimal_atlas:de87377fdc159109",
         "signature_hash": "24111f0885018f6c"
       }
@@ -107704,6 +108302,16 @@
         "end_line": 129,
         "semantic_id": "tests/test_aura_coding_waboose_review_lessons.py#function:test_path_and_uri_detectors_reject_aliases_but_allow_canonical_values:0594eae5fddd3dd1",
         "signature_hash": "a5d4d4acc3c79404"
+      }
+    ],
+    "test_path_traversal_and_windows_paths_are_rejected": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 433,
+        "end_line": 435,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_path_traversal_and_windows_paths_are_rejected:a149177792d49425",
+        "signature_hash": "f7e1c52d57ae016d"
       }
     ],
     "test_path_traversal_blocked": [
@@ -110410,8 +111018,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 31,
-        "end_line": 44,
+        "line": 78,
+        "end_line": 91,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_reference_manifest_binds_external_specification:484197a7f452c3aa",
         "signature_hash": "d7fc6542a2d342a7"
       }
@@ -110420,8 +111028,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 47,
-        "end_line": 49,
+        "line": 94,
+        "end_line": 96,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_reference_manifest_rejects_missing_file:e600932be6263da4",
         "signature_hash": "2bbb51db3b3e472a"
       }
@@ -111598,8 +112206,8 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 52,
-        "end_line": 58,
+        "line": 106,
+        "end_line": 112,
         "semantic_id": "tests/test_aura_architecture_harness.py#function:test_required_surfaces_cover_requested_architecture:16303d1b419ac931",
         "signature_hash": "66b25af355c0ea67"
       }
@@ -112666,10 +113274,10 @@
       {
         "file": "tests/test_aura_architecture_harness.py",
         "kind": "function",
-        "line": 65,
-        "end_line": 159,
-        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_run_architecture_accepts_serialized_output_dir:bc2f22aa17ded725",
-        "signature_hash": "2183dd317ba3b67f"
+        "line": 517,
+        "end_line": 621,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_run_architecture_accepts_serialized_output_dir:9f31e95086ae5177",
+        "signature_hash": "2ae18d842f55d80c"
       }
     ],
     "test_run_from_drafted_rejected": [
@@ -112700,6 +113308,16 @@
         "end_line": 133,
         "semantic_id": "test_resonant_oracle.py#method:TestSuiteAggregation.test_run_resonant_suite:404ec34273dbe6a8",
         "signature_hash": "2733af512b8b871c"
+      }
+    ],
+    "test_run_resume_command_preserves_runtime_contract": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 688,
+        "end_line": 718,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_run_resume_command_preserves_runtime_contract:07d74edaba4eab53",
+        "signature_hash": "f8d2fd6ca0915659"
       }
     ],
     "test_runbook_explicitly_says_no_git_add_dot": [
@@ -116236,6 +116854,16 @@
         "signature_hash": "8ce996feb333becf"
       }
     ],
+    "test_streaming_sha256_matches_hashlib": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_streaming_sha256_matches_hashlib:6771d167850d2880",
+        "signature_hash": "c6ace52be4e88ade"
+      }
+    ],
     "test_strict_authority_and_boolean_fields_reject_truthy_values": [
       {
         "file": "tests/test_aura_relational_synthesis.py",
@@ -116656,6 +117284,16 @@
         "signature_hash": "88cc99a76afcc66f"
       }
     ],
+    "test_symlink_escape_is_digest_only_and_not_archived": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 413,
+        "end_line": 429,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_symlink_escape_is_digest_only_and_not_archived:33c0da1c9da5eaa3",
+        "signature_hash": "7a58fc4fdae64817"
+      }
+    ],
     "test_symlink_escape_rejected": [
       {
         "file": "tests/test_aura_ephemeral_phase0_hardening.py",
@@ -116774,6 +117412,16 @@
         "end_line": 295,
         "semantic_id": "tests/test_aura_human_agent_concepts.py#function:test_synthetic_nodes_are_visual_only:766061c1852092ba",
         "signature_hash": "c52e6faff600cd4b"
+      }
+    ],
+    "test_synthetic_repository_requires_exact_source_sha": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 384,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_synthetic_repository_requires_exact_source_sha:bc5b4996bf310533",
+        "signature_hash": "c1d695e9c3d6f1b1"
       }
     ],
     "test_systemic_context_id_is_stable_and_does_not_mutate_input": [
@@ -116934,6 +117582,36 @@
         "end_line": 318,
         "semantic_id": "tests/test_aura_gate_server.py#function:test_task_status_and_cancel_use_a2a_v1_http_routes:a856f280178a0cfe",
         "signature_hash": "73fa070ede9bf6e9"
+      }
+    ],
+    "test_task_watchdog_emits_checkins_and_hard_pause": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 230,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_task_watchdog_emits_checkins_and_hard_pause:7801b0ea79086402",
+        "signature_hash": "96024fa8180f4d15"
+      }
+    ],
+    "test_task_watchdog_marks_missing_progress_as_possible_stall": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 248,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_task_watchdog_marks_missing_progress_as_possible_stall:5dc7969a4a24173c",
+        "signature_hash": "22e2fb1b7d673306"
+      }
+    ],
+    "test_task_watchdog_policy_checks_then_pauses": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 179,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_task_watchdog_policy_checks_then_pauses:140b3196cc8f3b5f",
+        "signature_hash": "3e326f909e55b8b2"
       }
     ],
     "test_task_workspace_reuses_existing_micro_arena_and_stays_bounded": [
@@ -118404,6 +119082,16 @@
         "signature_hash": "d74cf072125e5f84"
       }
     ],
+    "test_unknown_text_above_threshold_is_digest_only": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 304,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_unknown_text_above_threshold_is_digest_only:cc62570ba60093ff",
+        "signature_hash": "51b0df1fa36b0323"
+      }
+    ],
     "test_unknown_ui_component_rejected": [
       {
         "file": "tests/test_aura_ephemeral_sandbox.py",
@@ -119534,6 +120222,46 @@
         "signature_hash": "a00b0989bf22939b"
       }
     ],
+    "test_watchdog_assesses_unknown_progress_without_status": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 624,
+        "end_line": 637,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_watchdog_assesses_unknown_progress_without_status:9e346029a09bc15b",
+        "signature_hash": "23c7e3cc127bd713"
+      }
+    ],
+    "test_watchdog_checks_in_then_pauses_with_resume_receipt": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 658,
+        "end_line": 685,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_watchdog_checks_in_then_pauses_with_resume_receipt:479b411a183ebac7",
+        "signature_hash": "fb8a195607787fb4"
+      }
+    ],
+    "test_watchdog_event_log_rejects_symlink_escape": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 245,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_watchdog_event_log_rejects_symlink_escape:2ad35a431061517f",
+        "signature_hash": "327802792d7efef0"
+      }
+    ],
+    "test_watchdog_rejects_invalid_thresholds": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 639,
+        "end_line": 655,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_watchdog_rejects_invalid_thresholds:484ce7ccf024633c",
+        "signature_hash": "767bde5b3a6240ad"
+      }
+    ],
     "test_waterfall_markdown": [
       {
         "file": "tests/test_aura_empirical_cost_observatory.py",
@@ -119784,6 +120512,16 @@
         "signature_hash": "722090dacdd6d86d"
       }
     ],
+    "test_workflow_publishes_full_and_ai_first_artifacts": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 505,
+        "end_line": 514,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_workflow_publishes_full_and_ai_first_artifacts:7d6a8aba081813e0",
+        "signature_hash": "b1371a0faff0e4f9"
+      }
+    ],
     "test_working_patch_keeps_all_quality_evidence_when_scope_gate_fails": [
       {
         "file": "tests/test_aura_refactor_output_quality.py",
@@ -119842,6 +120580,16 @@
         "end_line": 124,
         "semantic_id": "tests/test_aura_coding_workbench_wfst_equivalence.py#function:test_workspace_meta_and_alias_are_routed_before_objective_fallback:48846bc346435933",
         "signature_hash": "ef11b213a0d30a8f"
+      }
+    ],
+    "test_worktree_change_during_handoff_fails": [
+      {
+        "file": "tests/test_aura_architecture_harness.py",
+        "kind": "function",
+        "line": 444,
+        "end_line": 459,
+        "semantic_id": "tests/test_aura_architecture_harness.py#function:test_worktree_change_during_handoff_fails:b918c9b9df6e6e8f",
+        "signature_hash": "b8a01896e55d6567"
       }
     ],
     "test_world_state_delta_tracks_added_removed_changed_and_stable_objects": [
@@ -128242,47 +128990,47 @@
     {
       "path": "README.md",
       "role": "knowledge_artifact",
-      "bytes": 34521,
-      "lines": 539,
-      "tokens_est": 8543,
+      "bytes": 35527,
+      "lines": 552,
+      "tokens_est": 8794,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "1fb36188e451f46f",
+      "digest8": "62502227927f7a6c",
       "vector": [
-        0.227537,
-        -0.129204,
-        0.236684,
-        0.280133,
-        0.273273,
-        0.213816,
-        0.0606,
-        0.083468,
-        0.062887,
-        0.083468,
-        -0.154359,
-        0.090329,
-        -0.245831,
-        0.277847,
-        -0.035445,
-        0.042306,
-        -0.074321,
-        0.280133,
-        -0.005717,
-        0.049166,
-        0.195522,
-        -0.202382,
-        0.142925,
-        0.152072,
-        0.179514,
-        0.236684,
-        0.243545,
-        0.149786,
-        -0.05374,
-        -0.220677,
-        0.21839,
-        -0.062887
+        0.10887,
+        -0.149515,
+        0.10016,
+        -0.007258,
+        -0.312094,
+        -0.015968,
+        0.013064,
+        0.300481,
+        -0.082741,
+        0.143708,
+        0.059516,
+        -0.274352,
+        0.149515,
+        0.02758,
+        0.306288,
+        -0.149515,
+        0.361449,
+        -0.166934,
+        0.050806,
+        0.161128,
+        -0.088548,
+        0.242417,
+        0.059516,
+        -0.013064,
+        -0.187256,
+        -0.015968,
+        0.184353,
+        -0.004355,
+        -0.140805,
+        0.222095,
+        -0.152418,
+        0.320804
       ]
     },
     {
@@ -128584,53 +129332,53 @@
     {
       "path": "USER_GUIDE.md",
       "role": "knowledge_artifact",
-      "bytes": 47052,
-      "lines": 1161,
-      "tokens_est": 11710,
+      "bytes": 49016,
+      "lines": 1188,
+      "tokens_est": 12201,
       "symbol_count": 0,
       "commands": [
         "!commands"
       ],
       "command_lines": {
         "!commands": [
-          87
+          114
         ]
       },
       "topology": {},
-      "digest8": "c2e7beb164ccbc8a",
+      "digest8": "8414f98ca277dc5a",
       "vector": [
-        0.118805,
-        0.09954,
-        -0.024617,
-        -0.215134,
-        0.257947,
-        -0.061008,
-        -0.204431,
-        0.264369,
-        0.217275,
-        0.206571,
-        -0.27079,
-        -0.221556,
-        0.155196,
-        -0.093118,
-        0.146634,
-        -0.063149,
-        0.255806,
-        0.073852,
-        0.193728,
-        0.253665,
-        0.215134,
-        -0.251525,
-        -0.073852,
-        0.148774,
-        0.232259,
-        0.210853,
-        -0.088836,
-        0.095258,
-        0.016055,
-        0.022477,
-        0.144493,
-        -0.172321
+        -0.133638,
+        -0.300379,
+        0.224364,
+        0.145898,
+        0.12383,
+        -0.199844,
+        -0.263598,
+        0.241529,
+        0.312639,
+        0.072336,
+        -0.14835,
+        0.224364,
+        -0.155706,
+        -0.096857,
+        0.057624,
+        -0.013486,
+        0.243981,
+        0.145898,
+        -0.013486,
+        -0.05272,
+        0.187583,
+        -0.126282,
+        -0.145898,
+        0.055172,
+        0.040459,
+        -0.226817,
+        0.160611,
+        -0.231721,
+        -0.187583,
+        -0.270954,
+        0.055172,
+        -0.145898
       ]
     },
     {
@@ -177426,47 +178174,47 @@
     {
       "path": ".aura/ARCHITECTURE.md",
       "role": "knowledge_artifact",
-      "bytes": 54342,
-      "lines": 1168,
-      "tokens_est": 13501,
+      "bytes": 55821,
+      "lines": 1180,
+      "tokens_est": 13870,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "73ad52b7c10cc881",
+      "digest8": "9b46e12ee3b2c849",
       "vector": [
-        -0.10026,
-        0.013287,
-        -0.295947,
-        -0.032615,
-        0.163073,
-        -0.208975,
-        0.208975,
-        -0.03503,
-        -0.233134,
-        -0.175152,
-        0.107507,
-        -0.042278,
-        -0.254877,
-        -0.300779,
-        -0.12925,
-        -0.020535,
-        -0.233134,
-        0.216223,
-        0.095428,
-        -0.022951,
-        0.155825,
-        -0.1824,
-        -0.025367,
-        0.218639,
-        0.291115,
-        -0.080933,
-        0.252461,
-        0.003624,
-        0.102676,
-        -0.172737,
-        -0.184816,
-        0.262125
+        -0.104687,
+        0.156467,
+        0.147462,
+        0.230761,
+        0.019136,
+        -0.113692,
+        0.183483,
+        -0.048404,
+        0.100184,
+        -0.16097,
+        0.046152,
+        -0.147462,
+        -0.131703,
+        0.217253,
+        -0.154216,
+        -0.221756,
+        -0.260028,
+        0.266782,
+        -0.145211,
+        -0.122697,
+        -0.260028,
+        -0.005628,
+        -0.21275,
+        -0.22851,
+        -0.05966,
+        -0.176729,
+        -0.224007,
+        0.255526,
+        -0.154216,
+        0.19474,
+        -0.185735,
+        0.237515
       ]
     },
     {
@@ -177559,6 +178307,52 @@
         0.186626,
         0.143118,
         -0.200366
+      ]
+    },
+    {
+      "path": ".aura/HARNESS_EXPORT_REQUEST",
+      "role": "support_file",
+      "bytes": 211,
+      "lines": 7,
+      "tokens_est": 53,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "726b1f859bf5a73a",
+      "vector": [
+        0.155952,
+        0.289625,
+        -0.158297,
+        -0.160642,
+        0.043385,
+        -0.132501,
+        0.266174,
+        0.001173,
+        0.059801,
+        0.097323,
+        0.254448,
+        0.219271,
+        -0.266174,
+        -0.106704,
+        -0.11374,
+        -0.233342,
+        -0.172368,
+        0.078562,
+        0.151262,
+        -0.266174,
+        0.188784,
+        -0.256793,
+        -0.188784,
+        -0.188784,
+        0.048075,
+        -0.076217,
+        -0.132501,
+        0.214581,
+        -0.083253,
+        0.233342,
+        0.080907,
+        -0.181749
       ]
     },
     {
@@ -179818,47 +180612,47 @@
     {
       "path": ".github/workflows/aura-architecture-harness-export.yml",
       "role": "schema_or_lexicon",
-      "bytes": 3171,
-      "lines": 84,
-      "tokens_est": 793,
+      "bytes": 6081,
+      "lines": 138,
+      "tokens_est": 1521,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6788925961ce8c8a",
+      "digest8": "a67092d8eb5e6413",
       "vector": [
-        -0.107587,
-        -0.259342,
-        -0.261607,
-        0.193657,
-        -0.130237,
-        0.152887,
-        0.225367,
-        0.182332,
-        -0.220837,
-        0.159682,
-        0.150622,
-        -0.109852,
-        0.060022,
-        -0.275197,
-        -0.173272,
-        -0.277462,
-        0.087202,
-        -0.189127,
-        0.200452,
-        0.243487,
-        -0.261607,
-        0.005662,
-        -0.010192,
-        -0.044167,
-        -0.021517,
-        -0.016987,
-        -0.118912,
-        -0.218572,
-        0.216307,
-        0.114382,
-        -0.200452,
-        -0.139297
+        0.014085,
+        -0.003841,
+        -0.252243,
+        0.252243,
+        0.067862,
+        -0.111396,
+        -0.193343,
+        -0.075545,
+        0.211269,
+        0.185661,
+        -0.218952,
+        -0.142127,
+        -0.247121,
+        0.203587,
+        -0.1831,
+        -0.026889,
+        -0.172857,
+        -0.308581,
+        0.019206,
+        0.070423,
+        0.311142,
+        -0.201026,
+        -0.124201,
+        -0.157492,
+        0.049936,
+        0.229195,
+        -0.293216,
+        0.011524,
+        -0.103714,
+        0.131883,
+        -0.057619,
+        -0.218952
       ]
     },
     {
@@ -186568,47 +187362,47 @@
     {
       "path": "docs/AURA_ARCHITECTURE_HARNESS.md",
       "role": "knowledge_artifact",
-      "bytes": 6873,
-      "lines": 157,
-      "tokens_est": 1716,
+      "bytes": 12495,
+      "lines": 229,
+      "tokens_est": 3117,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d6d6d2c53f367c16",
+      "digest8": "2148f0b2dfdee93d",
       "vector": [
-        0.114926,
-        -0.061697,
-        -0.134281,
-        0.18993,
-        -0.226222,
-        0.027824,
-        -0.13912,
-        0.100409,
-        0.228641,
-        -0.206866,
-        0.097989,
-        -0.277031,
-        0.274612,
-        0.035083,
-        0.165735,
-        -0.146379,
-        0.170574,
-        -0.010888,
-        0.257675,
-        -0.100409,
-        -0.269773,
-        0.119765,
-        -0.206866,
-        -0.185091,
-        0.030244,
-        0.04476,
-        -0.039922,
-        0.18751,
-        0.078633,
-        0.293967,
-        0.245578,
-        0.279451
+        -0.229653,
+        0.21834,
+        -0.057696,
+        0.093898,
+        0.27038,
+        -0.154988,
+        0.055434,
+        -0.003394,
+        0.02602,
+        0.240966,
+        0.259067,
+        0.229653,
+        -0.21834,
+        -0.243229,
+        -0.256804,
+        0.123311,
+        0.021495,
+        0.073534,
+        -0.238704,
+        0.023757,
+        0.150463,
+        -0.159513,
+        0.229653,
+        -0.177614,
+        0.204765,
+        0.001131,
+        0.032808,
+        -0.055434,
+        -0.274905,
+        0.21834,
+        -0.127837,
+        0.197977
       ]
     },
     {
@@ -193474,53 +194268,57 @@
     {
       "path": "scripts/aura_architecture_harness.py",
       "role": "python_module",
-      "bytes": 21339,
-      "lines": 481,
-      "tokens_est": 5335,
-      "symbol_count": 15,
+      "bytes": 66578,
+      "lines": 1720,
+      "tokens_est": 16645,
+      "symbol_count": 54,
       "commands": [
         "!r"
       ],
       "command_lines": {
         "!r": [
-          141
+          696,
+          698,
+          701,
+          704,
+          1180
         ]
       },
       "topology": {},
-      "digest8": "848c7a57346be9bc",
+      "digest8": "351571f6633c4ec4",
       "vector": [
-        -0.178477,
-        -0.11709,
-        0.135279,
-        -0.17393,
-        -0.228496,
-        -0.012505,
-        -0.221676,
-        -0.087533,
-        -0.239864,
-        -0.196666,
-        0.267148,
-        -0.187572,
-        0.148921,
-        -0.151194,
-        0.228496,
-        -0.273968,
-        0.208034,
-        -0.089807,
-        -0.103449,
-        0.155741,
-        -0.223949,
-        -0.010231,
-        0.208034,
-        -0.237591,
-        0.180751,
-        0.155741,
-        -0.237591,
-        -0.019326,
-        0.187572,
-        0.114817,
-        -0.130732,
-        -0.078439
+        -0.045994,
+        0.070856,
+        -0.279693,
+        -0.036049,
+        0.001243,
+        0.090745,
+        -0.182733,
+        0.110634,
+        0.282179,
+        -0.108148,
+        -0.289638,
+        -0.018646,
+        -0.220025,
+        -0.202622,
+        0.312013,
+        0.147927,
+        -0.023619,
+        -0.11312,
+        -0.3145,
+        -0.252346,
+        -0.185219,
+        0.060911,
+        -0.170302,
+        -0.135496,
+        -0.220025,
+        -0.108148,
+        0.26229,
+        -0.078314,
+        -0.232456,
+        -0.095717,
+        -0.053452,
+        -0.11312
       ]
     },
     {
@@ -194676,47 +195474,93 @@
     {
       "path": "tests/test_aura_architecture_harness.py",
       "role": "python_module",
-      "bytes": 5031,
-      "lines": 160,
-      "tokens_est": 1258,
-      "symbol_count": 8,
+      "bytes": 26429,
+      "lines": 719,
+      "tokens_est": 6608,
+      "symbol_count": 39,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "72e98275431be187",
+      "digest8": "d6b88e912f8557c6",
       "vector": [
-        -0.22651,
-        0.241124,
-        -0.069936,
-        -0.19102,
-        0.199371,
-        -0.130478,
-        0.199371,
-        0.157618,
-        -0.02192,
-        -0.163881,
-        0.130478,
-        0.222335,
-        0.147179,
-        0.207721,
-        0.241124,
-        0.019833,
-        0.072024,
-        0.193108,
-        -0.203546,
-        0.264088,
-        0.040709,
-        -0.245299,
-        0.042797,
-        -0.262,
-        -0.224422,
-        0.011482,
-        -0.19102,
-        -0.074112,
-        -0.009394,
-        0.255737,
-        -0.180582,
-        0.184757
+        -0.017241,
+        0.210875,
+        0.197612,
+        0.025199,
+        0.240052,
+        -0.107427,
+        -0.176392,
+        0.078249,
+        0.120689,
+        0.271882,
+        -0.046419,
+        -0.29045,
+        -0.046419,
+        0.062334,
+        -0.001326,
+        -0.30106,
+        0.171087,
+        0.078249,
+        -0.213527,
+        0.27984,
+        -0.240052,
+        -0.266577,
+        0.035809,
+        0.176392,
+        -0.144562,
+        -0.102122,
+        0.160477,
+        -0.051724,
+        0.25862,
+        -0.287797,
+        -0.070292,
+        -0.051724
+      ]
+    },
+    {
+      "path": "tests/test_aura_architecture_harness_export_workflow.py",
+      "role": "python_module",
+      "bytes": 1839,
+      "lines": 47,
+      "tokens_est": 460,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7bcc2385bcd5f4a2",
+      "vector": [
+        -0.030565,
+        0.177277,
+        -0.294647,
+        -0.152825,
+        -0.003668,
+        0.27753,
+        -0.023229,
+        -0.025675,
+        0.152825,
+        -0.213955,
+        -0.15527,
+        -0.074579,
+        -0.228626,
+        0.045236,
+        0.169941,
+        -0.133263,
+        0.006113,
+        -0.167496,
+        -0.018339,
+        -0.299537,
+        -0.143044,
+        0.265304,
+        -0.199284,
+        0.057462,
+        0.162606,
+        0.309318,
+        0.165051,
+        -0.035455,
+        0.030565,
+        0.103921,
+        -0.284866,
+        0.289756
       ]
     },
     {
