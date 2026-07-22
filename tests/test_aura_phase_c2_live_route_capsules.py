@@ -218,7 +218,7 @@ def test_experience_and_ledger_capture_capsule_provenance(tmp_path):
         assert row["route_capsule_digest"] == experience.route_capsule_digest
         assert row["actual_tool_calls"] == ["aura_code_region_ranker.rank_code_regions"]
         status = ledger.status()
-        assert status["schema_version"] == 3
+        assert status["schema_version"] == 4
         assert status["v2_complete_record_count"] == 1
         assert status["v3_complete_record_count"] == 1
         assert status["capsule_record_count"] == 1
