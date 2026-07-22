@@ -1,83 +1,83 @@
-name: Aura Architecture Harness Export
+name: Aura AI-safe Harness Publisher (temporary)
 
 on:
   push:
     branches:
-      - "analysis/aura-harness-export/**"
-    paths:
-      - ".aura/HARNESS_EXPORT_REQUEST"
+      - "work/ai-safe-architecture-harness-20260722"
 
 permissions:
-  contents: read
-  statuses: write
+  contents: write
 
 jobs:
-  export:
+  publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Fetch exact current main without persisted credentials
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          git init .
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin refs/heads/main
-          unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
-          SOURCE_SHA="$(git rev-parse HEAD)"
-          echo "SOURCE_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-      - name: Archive all Git-tracked files and provenance
-        run: |
-          git archive \
-            --format=zip \
-            --prefix=AuraOS/ \
-            --output=AuraOS-full-repository.zip \
-            HEAD
-          sha256sum AuraOS-full-repository.zip > AuraOS-full-repository.zip.sha256
-          git ls-files -z | tr -cd '\0' | wc -c > AuraOS-full-repository.tracked-file-count.txt
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          payload = {
-              "repository": os.environ["GITHUB_REPOSITORY"],
-              "source_main_sha": os.environ["SOURCE_SHA"],
-              "request_commit_sha": os.environ["GITHUB_SHA"],
-              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
-              "archive": "AuraOS-full-repository.zip",
-              "authority": "read_only_export",
-          }
-          Path("AuraOS-harness-export-manifest.json").write_text(
-              json.dumps(payload, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          PY
-      - name: Upload exact repository snapshot
-        uses: actions/upload-artifact@v4
+      - name: Checkout staging branch
+        uses: actions/checkout@v4
         with:
-          name: AuraOS-architecture-harness-${{ env.SOURCE_SHA }}
-          path: |
-            AuraOS-full-repository.zip
-            AuraOS-full-repository.zip.sha256
-            AuraOS-full-repository.tracked-file-count.txt
-            AuraOS-harness-export-manifest.json
-          if-no-files-found: error
-          retention-days: 7
-      - name: Publish discoverable run status
-        if: always()
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Materialize verified single-commit patch
         env:
-          GH_TOKEN: ${{ github.token }}
+          EXPECTED_BASE: 489baef6fc9c0363d5b71c4080efcb7c234e5a39
+          EXPECTED_BUNDLE_SHA256: aa081372235e63303691cc076b29b560f52d6d7497097b788811829d1abdcf7a
+        shell: bash
         run: |
-          STATE="success"
-          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
-          gh api \
-            --method POST \
-            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-            -f state="$STATE" \
-            -f context="aura-architecture-harness-export" \
-            -f description="Run ${GITHUB_RUN_ID}; main ${SOURCE_SHA:-unavailable}" \
-            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          set -euo pipefail
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$EXPECTED_BASE" HEAD
+          cat .aura/ai-safe-publish/chunk-*.b64 > /tmp/aura-ai-safe-publish.tar.xz.b64
+          base64 --decode /tmp/aura-ai-safe-publish.tar.xz.b64 > /tmp/aura-ai-safe-publish.tar.xz
+          echo "$EXPECTED_BUNDLE_SHA256  /tmp/aura-ai-safe-publish.tar.xz" | sha256sum --check -
+          python - <<'PY'
+          import pathlib
+          import subprocess
+
+          allowed = {
+              ".aura/ARCHITECTURE.md",
+              ".github/workflows/aura-architecture-harness-export.yml",
+              "README.md",
+              "USER_GUIDE.md",
+              "docs/AURA_ARCHITECTURE_HARNESS.md",
+              "scripts/aura_architecture_harness.py",
+              "tests/test_aura_architecture_harness.py",
+          }
+          names = subprocess.check_output(
+              ["tar", "-tJf", "/tmp/aura-ai-safe-publish.tar.xz"],
+              text=True,
+          ).splitlines()
+          normalized = {pathlib.PurePosixPath(name).as_posix() for name in names}
+          assert normalized == allowed, (normalized, allowed)
+          for name in normalized:
+              path = pathlib.PurePosixPath(name)
+              assert not path.is_absolute()
+              assert ".." not in path.parts
+          PY
+          git checkout -B "$GITHUB_REF_NAME" "$EXPECTED_BASE"
+          tar -xJf /tmp/aura-ai-safe-publish.tar.xz
+          PYTHONDONTWRITEBYTECODE=1 python -m py_compile \
+            scripts/aura_architecture_harness.py \
+            tests/test_aura_architecture_harness.py
+          PYTHONDONTWRITEBYTECODE=1 pytest -q tests/test_aura_architecture_harness.py
+          git diff --check -- \
+            scripts/aura_architecture_harness.py \
+            tests/test_aura_architecture_harness.py \
+            .github/workflows/aura-architecture-harness-export.yml \
+            README.md USER_GUIDE.md \
+            docs/AURA_ARCHITECTURE_HARNESS.md \
+            .aura/ARCHITECTURE.md
+          git config user.name "Aura AI-safe Harness Publisher"
+          git config user.email "aura-harness@users.noreply.github.com"
+          git add -- \
+            scripts/aura_architecture_harness.py \
+            tests/test_aura_architecture_harness.py \
+            .github/workflows/aura-architecture-harness-export.yml \
+            README.md USER_GUIDE.md \
+            docs/AURA_ARCHITECTURE_HARNESS.md \
+            .aura/ARCHITECTURE.md
+          git commit -m "feat: add AI-safe architecture harness handoff"
+          git push \
+            --force-with-lease="refs/heads/$GITHUB_REF_NAME:$GITHUB_SHA" \
+            origin "HEAD:refs/heads/$GITHUB_REF_NAME"
