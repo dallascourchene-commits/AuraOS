@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   prove-ifc:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -37,16 +38,6 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           python -m pip install "ifcopenshell==0.8.5" "ifcpatch==0.8.5"
-          python - <<'PY'
-          import json
-          import ifcopenshell
-          import ifcpatch
-          print(json.dumps({
-              "ifcopenshell_version": str(ifcopenshell.version),
-              "ifcopenshell_module": ifcopenshell.__file__,
-              "ifcpatch_module": ifcpatch.__file__,
-          }, indent=2, sort_keys=True))
-          PY
 
       - name: Acquire pinned IFC and build authoritative hierarchy
         run: |
@@ -63,42 +54,67 @@ jobs:
             --source-ref demo_assets/construction_tuwien/source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
             --output build/construction-proof/ifc-hierarchy.json
 
-      - name: Validate canonical source and hierarchy invariants
+      - name: Validate and receipt canonical source and hierarchy
         run: |
           set -euo pipefail
           python - <<'PY'
           import hashlib
+          import importlib.metadata
           import json
           from pathlib import Path
+          import ifcopenshell
           from aura_event_contracts import stable_digest
 
           source = Path("build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc")
+          manifest_path = Path("build/construction-source/source-manifest.json")
           hierarchy_path = Path("build/construction-proof/ifc-hierarchy.json")
           hierarchy = json.loads(hierarchy_path.read_text(encoding="utf-8"))
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
           source_sha256 = hashlib.sha256(source.read_bytes()).hexdigest()
           if source_sha256 != "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29":
               raise SystemExit("pinned source SHA-256 mismatch")
           if source.stat().st_size != 7_404_420:
               raise SystemExit("pinned source byte length mismatch")
           body = dict(hierarchy)
-          digest = body.pop("hierarchy_digest", None)
-          if digest != stable_digest(body):
+          hierarchy_digest = body.pop("hierarchy_digest", None)
+          if hierarchy_digest != stable_digest(body):
               raise SystemExit("hierarchy digest mismatch")
           if hierarchy.get("source_sha256") != source_sha256:
               raise SystemExit("hierarchy source mismatch")
           if hierarchy.get("ifcopenshell_validated") is not True:
               raise SystemExit("hierarchy is not IfcOpenShell validated")
           counts = hierarchy.get("counts", {})
-          if counts.get("storeys") != 5:
-              raise SystemExit(f"expected five storeys, observed {counts.get('storeys')}")
+          if counts != {"elements": 336, "spaces": 109, "storeys": 5}:
+              raise SystemExit(f"unexpected IFC hierarchy counts: {counts}")
           if hierarchy.get("survey_authority") is not False:
               raise SystemExit("survey authority boundary changed")
-          print(json.dumps({
+          if manifest.get("source_manifest_digest") != "22bd970d5babc6ad2d6a22ca2c278738":
+              raise SystemExit("source manifest digest mismatch")
+
+          receipt_body = {
+              "version": "AURA_CONSTRUCTION_AUTHORITATIVE_IFC_PROOF_V1",
+              "ifcopenshell_version": str(ifcopenshell.version),
+              "ifcpatch_version": importlib.metadata.version("ifcpatch"),
               "source_sha256": source_sha256,
               "source_byte_length": source.stat().st_size,
-              "hierarchy_digest": digest,
+              "source_manifest_digest": manifest["source_manifest_digest"],
+              "hierarchy_digest": hierarchy_digest,
               "counts": counts,
-          }, indent=2, sort_keys=True))
+              "project": hierarchy["project"],
+              "building": hierarchy["building"],
+              "ifcopenshell_validated": True,
+              "survey_authority": False,
+              "production_mutation": False,
+              "human_review_required": True,
+          }
+          receipt = {
+              **receipt_body,
+              "proof_digest": stable_digest(receipt_body),
+          }
+          Path("build/construction-proof/ifc-proof.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2, sort_keys=True))
           PY
 
       - name: Upload authoritative proof-only artifacts
@@ -107,6 +123,105 @@ jobs:
           name: construction-authoritative-ifc-proof-${{ github.event.pull_request.head.sha }}
           path: |
             build/construction-proof/ifc-hierarchy.json
+            build/construction-proof/ifc-proof.json
             build/construction-source/source-manifest.json
           retention-days: 7
           if-no-files-found: error
+
+  publish-ifc-proof:
+    if: github.actor != 'github-actions[bot]'
+    needs: prove-ifc
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/construction-arena-real-asset-pack-g4-20260722
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: construction-authoritative-ifc-proof-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/ifc-proof
+
+      - name: Authenticate and publish durable IFC proof
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+          PROOF_ROOT: ${{ runner.temp }}/ifc-proof
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "${SOURCE_SHA}" HEAD
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from aura_event_contracts import stable_digest
+
+          proof_root = Path(os.environ["PROOF_ROOT"])
+          hierarchy_path = next(proof_root.rglob("ifc-hierarchy.json"))
+          proof_path = next(proof_root.rglob("ifc-proof.json"))
+          manifest_path = next(proof_root.rglob("source-manifest.json"))
+          hierarchy = json.loads(hierarchy_path.read_text(encoding="utf-8"))
+          proof = json.loads(proof_path.read_text(encoding="utf-8"))
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+          proof_body = dict(proof)
+          proof_digest = proof_body.pop("proof_digest", None)
+          if proof_digest != stable_digest(proof_body):
+              raise SystemExit("IFC proof digest mismatch")
+          hierarchy_body = dict(hierarchy)
+          hierarchy_digest = hierarchy_body.pop("hierarchy_digest", None)
+          if hierarchy_digest != stable_digest(hierarchy_body):
+              raise SystemExit("hierarchy digest mismatch")
+          if hierarchy_digest != proof.get("hierarchy_digest"):
+              raise SystemExit("proof/hierarchy lineage mismatch")
+          if manifest.get("source_manifest_digest") != proof.get("source_manifest_digest"):
+              raise SystemExit("proof/source manifest lineage mismatch")
+          if proof.get("counts") != {"elements": 336, "spaces": 109, "storeys": 5}:
+              raise SystemExit("IFC proof counts drifted")
+          if proof.get("survey_authority") is not False:
+              raise SystemExit("survey authority boundary changed")
+
+          target = Path("demo_assets/construction_tuwien/toolchain")
+          target.mkdir(parents=True, exist_ok=True)
+          (target / "ifc-hierarchy.json").write_text(
+              json.dumps(hierarchy, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          lock = {
+              "version": "AURA_CONSTRUCTION_IFC_TOOLCHAIN_LOCK_V1",
+              "ifcopenshell_version": proof["ifcopenshell_version"],
+              "ifcpatch_version": proof["ifcpatch_version"],
+              "source_sha256": proof["source_sha256"],
+              "source_byte_length": proof["source_byte_length"],
+              "source_manifest_digest": proof["source_manifest_digest"],
+              "hierarchy_digest": proof["hierarchy_digest"],
+              "counts": proof["counts"],
+              "proof_digest": proof["proof_digest"],
+              "survey_authority": False,
+              "production_mutation": False,
+              "human_review_required": True,
+          }
+          lock_body = dict(lock)
+          lock["toolchain_lock_digest"] = stable_digest(lock_body)
+          (target / "ifc-toolchain-lock.json").write_text(
+              json.dumps(lock, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          evidence = f"""# Aura Construction Arena — Authoritative IFC Proof\n\n```yaml\nstatus: AUTHORITATIVE_IFC_PROOF_COMPLETE\nifcopenshell_version: {proof['ifcopenshell_version']}\nifcpatch_version: {proof['ifcpatch_version']}\nsource_sha256: {proof['source_sha256']}\nsource_byte_length: {proof['source_byte_length']}\nsource_manifest_digest: {proof['source_manifest_digest']}\nhierarchy_digest: {proof['hierarchy_digest']}\nstoreys: {proof['counts']['storeys']}\nspaces: {proof['counts']['spaces']}\nelements: {proof['counts']['elements']}\nproject_name: {proof['project']['name']}\nbuilding_name: {proof['building']['name']}\nproof_digest: {proof['proof_digest']}\ntoolchain_lock_digest: {lock['toolchain_lock_digest']}\nsurvey_authority: false\nproduction_mutation: false\nhuman_review_required: true\n```\n\nThe pinned TU Wien IFC bytes were acquired and verified, and IfcOpenShell 0.8.5 produced the committed five-storey hierarchy. This proof does not claim GLB, SVG, PLY, SPZ, asset-pack, or G4 fixture completion.\n"""
+          Path("docs/AURA_CONSTRUCTION_ARENA_AUTHORITATIVE_IFC_PROOF.md").write_text(
+              evidence, encoding="utf-8"
+          )
+          PY
+          rm -f .aura/run-construction-ifc-proof
+          git config user.name "AuraOS Construction IFC Proof"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            demo_assets/construction_tuwien/toolchain/ifc-hierarchy.json \
+            demo_assets/construction_tuwien/toolchain/ifc-toolchain-lock.json \
+            docs/AURA_CONSTRUCTION_ARENA_AUTHORITATIVE_IFC_PROOF.md \
+            .aura/run-construction-ifc-proof
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          git commit -m "build(construction): publish authoritative IFC proof"
+          git push origin HEAD:work/construction-arena-real-asset-pack-g4-20260722
