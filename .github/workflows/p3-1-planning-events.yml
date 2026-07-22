@@ -169,3 +169,5 @@ jobs:
           NEW_HEAD=$(git rev-parse HEAD)
           git push --force-with-lease=refs/heads/${TARGET_BRANCH}:$EXPECTED_HEAD \
             origin "$NEW_HEAD":refs/heads/${TARGET_BRANCH}
+
+# synchronize against decoded-patch base workflow
