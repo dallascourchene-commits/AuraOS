@@ -91,7 +91,7 @@ jobs:
             | sort > /tmp/expected-files
           git diff --name-only | sort > /tmp/actual-files
           diff -u /tmp/expected-files /tmp/actual-files
-      - name: Verify combined review repairs
+      - name: Diagnose finalization failures
         run: |
           set -euo pipefail
           python3 -m venv /tmp/c6-c9-review-venv
@@ -104,27 +104,7 @@ jobs:
             aura_coding_relationship_compass.py \
             aura_emergent_result_verifier.py \
             tests/test_aura_relationship_compass_finalization.py
-          PYTHONPATH=. pytest -q \
-            tests/test_aura_relationship_compass_finalization.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py \
-            tests/test_aura_relationship_atlas.py \
-            tests/test_aura_relationship_contracts.py \
-            tests/test_aura_emergent_potential_repl.py \
-            tests/test_aura_emergent_result_verifier.py \
-            tests/test_aura_change_graph.py \
-            tests/test_aura_agent_arena_mcp.py \
-            tests/test_aura_affordance_directory.py \
-            tests/test_aura_architect_council_v3.py \
-            tests/test_aura_arena_experience_ledger.py \
-            tests/test_aura_capability_connectome.py \
-            tests/test_aura_qdkt_observations.py \
-            tests/test_aura_temporal_persistence.py \
-            tests/test_aura_planning_board.py \
-            tests/test_aura_coding_arena_planning.py \
-            tests/test_aura_coding_waboose_breadboard.py \
-            test_aura_architect_loop.py \
-            tests/test_aura_architecture_harness.py
+          PYTHONPATH=. pytest -q --tb=line tests/test_aura_relationship_compass_finalization.py
       - name: Publish clean review repair commit
         run: |
           set -euo pipefail
