@@ -179,12 +179,13 @@ class ConstructionDemoSourceManifest:
         _strict_bool(self.external_fetch_required_at_runtime, "external_fetch_required_at_runtime", False)
         if self.version != CONSTRUCTION_DEMO_SOURCE_MANIFEST_VERSION:
             raise ValueError("unsupported source manifest version")
-        digest = _digest_body(self._body())
+        digest = _digest_body(self._identity_body())
         if self.source_manifest_digest and self.source_manifest_digest != digest:
             raise ValueError("source_manifest_digest does not match manifest body")
         object.__setattr__(self, "source_manifest_digest", digest)
 
-    def _body(self) -> dict[str, Any]:
+    def _identity_body(self) -> dict[str, Any]:
+        """Return stable source identity without acquisition-time receipt metadata."""
         return {
             "version": self.version,
             "source_id": self.source_id,
@@ -198,12 +199,14 @@ class ConstructionDemoSourceManifest:
             "observed_sha256": self.observed_sha256,
             "license_id": self.license_id,
             "license_url": self.license_url,
-            "downloaded_at": self.downloaded_at,
             "fictional_source": self.fictional_source,
             "survey_authority": self.survey_authority,
             "person_level_data_included": self.person_level_data_included,
             "external_fetch_required_at_runtime": self.external_fetch_required_at_runtime,
         }
+
+    def _body(self) -> dict[str, Any]:
+        return {**self._identity_body(), "downloaded_at": self.downloaded_at}
 
     def to_dict(self) -> dict[str, Any]:
         return {**self._body(), "source_manifest_digest": self.source_manifest_digest}
@@ -439,17 +442,16 @@ class ConstructionDemoAssetPack:
         for asset in self.assets:
             if asset.storey_id not in storey_id_set:
                 raise ValueError("asset references an unknown storey")
-        required_representations = {
-            ConstructionDemoRepresentation.MESH_GLB.value,
-            ConstructionDemoRepresentation.FLOOR_PLAN_SVG.value,
-            ConstructionDemoRepresentation.GAUSSIAN_SPZ.value,
-        }
         for storey in self.storeys:
             expected = {storey.mesh_asset_id, storey.floor_plan_asset_id, storey.gaussian_asset_id}
             if not expected.issubset(assets_by_id):
                 raise ValueError("storey references an unknown required asset")
-            actual = {assets_by_id[item].representation for item in expected}
-            if actual != required_representations:
+            role_bindings = (
+                (storey.mesh_asset_id, ConstructionDemoRepresentation.MESH_GLB.value),
+                (storey.floor_plan_asset_id, ConstructionDemoRepresentation.FLOOR_PLAN_SVG.value),
+                (storey.gaussian_asset_id, ConstructionDemoRepresentation.GAUSSIAN_SPZ.value),
+            )
+            if any(assets_by_id[asset_id].representation != representation for asset_id, representation in role_bindings):
                 raise ValueError("storey GLB/SVG/SPZ asset roles do not match their bindings")
             if any(assets_by_id[item].storey_id != storey.storey_id for item in expected):
                 raise ValueError("storey asset binding references a different storey")

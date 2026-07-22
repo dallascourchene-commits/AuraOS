@@ -11,6 +11,10 @@ import trimesh
 
 from scripts.aura_mesh_to_gaussian import (
     _mesh_arrays,
+    _quaternions_from_normals,
+    MAX_IMPORTABLE_SH0_SPLATS,
+    MAX_SPLATS,
+    SPZ_SH0_RUNTIME_BYTES_PER_SPLAT,
     PROFILE_LIMITS,
     compile_mesh,
     sample_mesh_arrays,
@@ -222,10 +226,51 @@ def test_spz_header_mismatch_fails_closed_and_removes_temporary(tmp_path: Path) 
     assert not output.with_suffix(".spz.tmp").exists()
 
 
-def test_density_profiles_distinguish_storey_and_building_limits() -> None:
-    assert PROFILE_LIMITS["LOW"] == {"STOREY": 50_000, "BUILDING": 150_000}
-    assert PROFILE_LIMITS["STANDARD"] == {"STOREY": 150_000, "BUILDING": 500_000}
-    assert PROFILE_LIMITS["VIDEO"] == {"STOREY": 300_000, "BUILDING": 1_000_000}
+def test_density_profiles_fit_spz_importer_admission_budget() -> None:
+    assert SPZ_SH0_RUNTIME_BYTES_PER_SPLAT == 2_612
+    assert MAX_IMPORTABLE_SH0_SPLATS == 102_770
+    assert MAX_SPLATS == MAX_IMPORTABLE_SH0_SPLATS
+    assert PROFILE_LIMITS["LOW"] == {"STOREY": 40_000, "BUILDING": 75_000}
+    assert PROFILE_LIMITS["STANDARD"] == {"STOREY": 75_000, "BUILDING": 100_000}
+    assert PROFILE_LIMITS["VIDEO"] == {
+        "STOREY": 100_000,
+        "BUILDING": MAX_IMPORTABLE_SH0_SPLATS,
+    }
+    assert all(
+        1 <= limit <= MAX_IMPORTABLE_SH0_SPLATS
+        for profile in PROFILE_LIMITS.values()
+        for limit in profile.values()
+    )
+
+
+def test_vectorized_normal_quaternions_match_scalar_formula_and_degenerate_case() -> None:
+    normals = np.array(
+        [
+            [0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, -1.0],
+            [0.5, 0.5, math.sqrt(0.5)],
+        ],
+        dtype=np.float64,
+    )
+    normals /= np.linalg.norm(normals, axis=1)[:, None]
+
+    actual = _quaternions_from_normals(normals)
+    expected = []
+    for normal in normals:
+        if normal[2] < -0.999999:
+            quaternion = np.array([1.0, 0.0, 0.0, 0.0])
+        else:
+            quaternion = np.array([-normal[1], normal[0], 0.0, 1.0 + normal[2]])
+            quaternion /= np.linalg.norm(quaternion)
+        expected.append(quaternion)
+
+    assert actual.dtype == np.float32
+    assert np.allclose(actual, np.asarray(expected), atol=1e-7)
+    assert np.allclose(np.linalg.norm(actual, axis=1), 1.0, atol=1e-7)
+    with pytest.raises(ValueError, match="finite Nx3"):
+        _quaternions_from_normals(np.array([[math.nan, 0.0, 1.0]]))
 
 
 def test_compile_mesh_validates_source_digest_and_emits_ply(tmp_path: Path) -> None:

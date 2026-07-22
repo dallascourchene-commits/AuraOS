@@ -11,6 +11,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import sys
 import tempfile
@@ -34,6 +35,181 @@ from scripts.aura_verify_construction_demo_assets import (
 ASSET_PREPARATION_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_PREPARATION_V1"
 MAX_WORKERS = 8
 DEFAULT_TIMEOUT_SECONDS = 300.0
+_STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
+
+
+def _canonical_storey_id(value: Any) -> str:
+    if type(value) is not str or _STOREY_ID.fullmatch(value) is None:
+        raise ValueError("storey_id must be a canonical bounded identifier")
+    return value
+
+
+def _validate_digest_record(record: Mapping[str, Any], digest_field: str = "receipt_digest") -> None:
+    body = dict(record)
+    digest = body.pop(digest_field, None)
+    if type(digest) is not str or digest != stable_digest(body):
+        raise ValueError(f"{digest_field} does not authenticate its record")
+
+
+def _validate_hierarchy(hierarchy: Mapping[str, Any]) -> None:
+    _validate_digest_record(hierarchy, "hierarchy_digest")
+    if hierarchy.get("ifcopenshell_validated") is not True:
+        raise ValueError("storey splitting requires an authoritative IfcOpenShell hierarchy")
+
+
+def _secure_copy_atomic(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists() and destination.is_symlink():
+        raise ValueError("copy destination must not be a symlink")
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with source.open("rb") as reader, os.fdopen(descriptor, "wb") as writer:
+            shutil.copyfileobj(reader, writer, length=1024 * 1024)
+            writer.flush()
+            os.fsync(writer.fileno())
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _validate_split_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    repository: Path,
+    output: Path,
+    source_sha256: str,
+    source_manifest_digest: str,
+    hierarchy_digest: str,
+) -> tuple[Mapping[str, Any], ...]:
+    _validate_digest_record(receipt)
+    if (
+        receipt.get("version") != ASSET_PREPARATION_VERSION
+        or receipt.get("phase") != "SPLIT_STOREYS"
+        or receipt.get("production_mutation") is not False
+        or receipt.get("construction_state_owner") is not False
+    ):
+        raise ValueError("split receipt is invalid")
+    if receipt.get("source_sha256") != source_sha256:
+        raise ValueError("split receipt source lineage does not match")
+    if receipt.get("source_manifest_digest") != source_manifest_digest:
+        raise ValueError("split receipt source-manifest lineage does not match")
+    if receipt.get("hierarchy_digest") != hierarchy_digest:
+        raise ValueError("split receipt hierarchy lineage does not match")
+    rows = receipt.get("outputs")
+    if not isinstance(rows, list) or receipt.get("output_count") != len(rows) or not rows:
+        raise ValueError("split receipt outputs are invalid")
+    storey_ids: set[str] = set()
+    global_ids: set[str] = set()
+    validated: list[Mapping[str, Any]] = []
+    for item in rows:
+        if not isinstance(item, Mapping):
+            raise ValueError("split receipt output must be an object")
+        storey_id = _canonical_storey_id(item.get("storey_id"))
+        global_id = item.get("ifc_global_id")
+        if type(global_id) is not str or not global_id:
+            raise ValueError("split receipt GlobalId is invalid")
+        if storey_id in storey_ids or global_id in global_ids:
+            raise ValueError("split receipt contains duplicate storey identity")
+        storey_ids.add(storey_id)
+        global_ids.add(global_id)
+        path = _resolve_inside(repository, Path(str(item.get("path"))))
+        expected = (output / "storeys" / storey_id / f"{storey_id}.ifc").resolve(strict=False)
+        if path != expected or not path.is_file() or path.is_symlink():
+            raise ValueError("split receipt output path is not canonical")
+        if item.get("byte_length") != path.stat().st_size or item.get("sha256") != sha256_file(path):
+            raise ValueError("split IFC digest drifted before conversion")
+        validated.append(item)
+    return tuple(validated)
+
+
+def _validate_command_receipt(value: Any) -> None:
+    if not isinstance(value, Mapping):
+        raise ValueError("command receipt is missing")
+    _validate_digest_record(value)
+    if (
+        value.get("returncode") != 0
+        or value.get("timed_out") is not False
+        or value.get("output_limit_exceeded", False) is not False
+    ):
+        raise ValueError("command receipt is not successful")
+
+
+def _validate_verification_receipt(value: Any, *, path: Path, repository: Path) -> None:
+    if not isinstance(value, Mapping):
+        raise ValueError("verification receipt is missing")
+    _validate_digest_record(value, "verification_digest")
+    if value.get("path") != path.relative_to(repository).as_posix():
+        raise ValueError("verification receipt path does not match output")
+    if value.get("sha256") != sha256_file(path) or value.get("byte_length") != path.stat().st_size:
+        raise ValueError("verification receipt does not match output bytes")
+
+
+def _validate_conversion_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    repository: Path,
+    output: Path,
+    source_sha256: str,
+    source_manifest_digest: str,
+    hierarchy_digest: str,
+    split_receipt_digest: str,
+) -> tuple[Mapping[str, Any], ...]:
+    _validate_digest_record(receipt)
+    if (
+        receipt.get("version") != ASSET_PREPARATION_VERSION
+        or receipt.get("phase") != "CONVERT_GLB_SVG"
+        or receipt.get("production_mutation") is not False
+        or receipt.get("external_resource_fetch") is not False
+        or receipt.get("survey_authority") is not False
+    ):
+        raise ValueError("conversion receipt is invalid")
+    expected_lineage = {
+        "source_sha256": source_sha256,
+        "source_manifest_digest": source_manifest_digest,
+        "hierarchy_digest": hierarchy_digest,
+        "split_receipt_digest": split_receipt_digest,
+    }
+    if any(receipt.get(key) != value for key, value in expected_lineage.items()):
+        raise ValueError("conversion receipt lineage does not match canonical inputs")
+    rows = receipt.get("outputs")
+    if not isinstance(rows, list) or receipt.get("output_count") != len(rows) or not rows:
+        raise ValueError("conversion receipt outputs are invalid")
+    job_ids: set[str] = set()
+    validated: list[Mapping[str, Any]] = []
+    for item in rows:
+        if not isinstance(item, Mapping):
+            raise ValueError("conversion job receipt must be an object")
+        _validate_digest_record(item)
+        job_id = item.get("job_id")
+        if type(job_id) is not str or not job_id or job_id in job_ids:
+            raise ValueError("conversion receipt contains duplicate or invalid jobs")
+        job_ids.add(job_id)
+        if item.get("split_receipt_digest") != split_receipt_digest:
+            raise ValueError("conversion job lineage does not match split receipt")
+        source = _resolve_inside(repository, Path(str(item.get("source"))))
+        target = _resolve_inside(repository, Path(str(item.get("output"))))
+        try:
+            target.relative_to(output)
+        except ValueError as exc:
+            raise ValueError("conversion output escapes its generated root") from exc
+        if not source.is_file() or source.is_symlink() or item.get("source_sha256") != sha256_file(source):
+            raise ValueError("conversion source receipt does not match bytes")
+        if not target.is_file() or target.is_symlink():
+            raise ValueError("conversion output is not a regular file")
+        if item.get("output_sha256") != sha256_file(target) or item.get("output_byte_length") != target.stat().st_size:
+            raise ValueError("validated conversion output digest drifted")
+        representation = item.get("representation")
+        if representation not in {"MESH_GLB", "FLOOR_PLAN_SVG"}:
+            raise ValueError("conversion representation is invalid")
+        _validate_command_receipt(item.get("command_receipt"))
+        _validate_verification_receipt(item.get("verification"), path=target, repository=repository)
+        validated.append(item)
+    if "building-full-glb" not in job_ids:
+        raise ValueError("conversion receipt is missing the full-building mesh")
+    return tuple(validated)
 
 
 def _resolve_inside(root: Path, path: Path, *, create: bool = False) -> Path:
@@ -78,15 +254,6 @@ def _load_modules(ifcopenshell_module: Any | None, ifcpatch_module: Any | None) 
     return ifcopenshell_module, ifcpatch_module
 
 
-def _copy_atomic(source: Path, destination: Path) -> None:
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary = destination.with_suffix(destination.suffix + ".tmp")
-    with source.open("rb") as reader, temporary.open("wb") as writer:
-        shutil.copyfileobj(reader, writer, length=1024 * 1024)
-        writer.flush()
-        os.fsync(writer.fileno())
-    temporary.replace(destination)
-
 
 def split_storeys(
     *,
@@ -94,6 +261,7 @@ def split_storeys(
     hierarchy: Mapping[str, Any],
     output_dir: Path,
     repo_root: Path,
+    source_manifest_digest: str,
     ifcopenshell_module: Any | None = None,
     ifcpatch_module: Any | None = None,
 ) -> dict[str, Any]:
@@ -102,16 +270,27 @@ def split_storeys(
     output = _resolve_inside(repository, output_dir, create=True)
     if source_path.is_symlink() or not source_path.is_file():
         raise ValueError("source IFC must be a regular non-symlink file")
+    _validate_hierarchy(hierarchy)
     if hierarchy.get("source_sha256") != sha256_file(source_path):
         raise ValueError("authoritative hierarchy does not match source IFC")
-    if hierarchy.get("ifcopenshell_validated") is not True:
-        raise ValueError("storey splitting requires an authoritative IfcOpenShell hierarchy")
+    if type(source_manifest_digest) is not str or not source_manifest_digest:
+        raise ValueError("source_manifest_digest is required")
     expected_rows = hierarchy.get("storeys")
     if not isinstance(expected_rows, list) or not expected_rows:
         raise ValueError("authoritative hierarchy contains no storeys")
-    expected = {str(item["ifc_global_id"]): str(item["storey_id"]) for item in expected_rows}
-    if len(expected) != len(expected_rows):
-        raise ValueError("authoritative hierarchy contains duplicate storey GlobalIds")
+    expected: dict[str, str] = {}
+    storey_ids: set[str] = set()
+    for item in expected_rows:
+        if not isinstance(item, Mapping):
+            raise ValueError("authoritative hierarchy storey must be an object")
+        global_id = item.get("ifc_global_id")
+        if type(global_id) is not str or not global_id or global_id in expected:
+            raise ValueError("authoritative hierarchy contains duplicate or invalid storey GlobalIds")
+        storey_id = _canonical_storey_id(item.get("storey_id"))
+        if storey_id in storey_ids:
+            raise ValueError("authoritative hierarchy contains duplicate storey ids")
+        expected[global_id] = storey_id
+        storey_ids.add(storey_id)
 
     ifcopenshell, ifcpatch = _load_modules(ifcopenshell_module, ifcpatch_module)
     model = ifcopenshell.open(str(source_path))
@@ -145,8 +324,15 @@ def split_storeys(
 
         outputs: list[dict[str, Any]] = []
         for global_id, storey_id in sorted(expected.items(), key=lambda item: item[1]):
-            destination = output / "storeys" / storey_id / f"{storey_id}.ifc"
-            _copy_atomic(observed[global_id], destination)
+            destination = _resolve_inside(
+                repository,
+                output / "storeys" / storey_id / f"{storey_id}.ifc",
+            )
+            try:
+                destination.relative_to(output)
+            except ValueError as exc:
+                raise ValueError("storey output escapes generated root") from exc
+            _secure_copy_atomic(observed[global_id], destination)
             outputs.append(
                 {
                     "storey_id": storey_id,
@@ -160,6 +346,7 @@ def split_storeys(
         "version": ASSET_PREPARATION_VERSION,
         "phase": "SPLIT_STOREYS",
         "source_sha256": hierarchy["source_sha256"],
+        "source_manifest_digest": source_manifest_digest,
         "hierarchy_digest": hierarchy["hierarchy_digest"],
         "outputs": outputs,
         "output_count": len(outputs),
@@ -212,6 +399,8 @@ def convert_ifc_assets(
     repo_root: Path,
     ifcconvert: Path,
     workers: int,
+    source_manifest_digest: str,
+    hierarchy_digest: str,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
 ) -> dict[str, Any]:
     repository = repo_root.expanduser().resolve(strict=True)
@@ -220,14 +409,21 @@ def convert_ifc_assets(
     executable = ifcconvert.expanduser().resolve(strict=True)
     if not executable.is_file() or executable.is_symlink() or not os.access(executable, os.X_OK):
         raise ValueError("IfcConvert must be an executable regular non-symlink file")
-    if split_receipt.get("phase") != "SPLIT_STOREYS" or split_receipt.get("production_mutation") is not False:
-        raise ValueError("split receipt is invalid")
+    source_sha256 = sha256_file(source_path)
+    split_rows = _validate_split_receipt(
+        split_receipt,
+        repository=repository,
+        output=output,
+        source_sha256=source_sha256,
+        source_manifest_digest=source_manifest_digest,
+        hierarchy_digest=hierarchy_digest,
+    )
 
     jobs: list[tuple[str, Path, Path, bool]] = [
         ("building-full-glb", source_path, output / "building-full.glb", False)
     ]
-    for item in split_receipt.get("outputs", ()):
-        storey_id = str(item["storey_id"])
+    for item in split_rows:
+        storey_id = _canonical_storey_id(item["storey_id"])
         split_path = _resolve_inside(repository, Path(str(item["path"])))
         if sha256_file(split_path) != item["sha256"]:
             raise ValueError("split IFC digest drifted before conversion")
@@ -242,8 +438,11 @@ def convert_ifc_assets(
     outputs: list[dict[str, Any]] = []
     for job_id, job_source, job_output, is_svg in jobs:
         job_output.parent.mkdir(parents=True, exist_ok=True)
-        temporary = job_output.with_suffix(job_output.suffix + ".partial")
-        temporary.unlink(missing_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{job_output.name}.", suffix=".partial", dir=job_output.parent
+        )
+        os.close(descriptor)
+        temporary = Path(temporary_name)
         command = _ifcconvert_command(
             executable,
             source=job_source,
@@ -259,7 +458,7 @@ def convert_ifc_assets(
             )
             if not temporary.is_file() or temporary.is_symlink() or temporary.stat().st_size == 0:
                 raise ValueError("IfcConvert did not produce a complete regular output file")
-            temporary.replace(job_output)
+            os.replace(temporary, job_output)
             verification = (
                 sanitize_svg(job_output, root=repository)
                 if is_svg
@@ -274,6 +473,9 @@ def convert_ifc_assets(
             "job_id": job_id,
             "source": job_source.relative_to(repository).as_posix(),
             "source_sha256": sha256_file(job_source),
+            "source_manifest_digest": source_manifest_digest,
+            "hierarchy_digest": hierarchy_digest,
+            "split_receipt_digest": split_receipt["receipt_digest"],
             "output": job_output.relative_to(repository).as_posix(),
             "output_sha256": sha256_file(job_output),
             "output_byte_length": job_output.stat().st_size,
@@ -292,6 +494,9 @@ def convert_ifc_assets(
     payload = {
         "version": ASSET_PREPARATION_VERSION,
         "phase": "CONVERT_GLB_SVG",
+        "source_sha256": source_sha256,
+        "source_manifest_digest": source_manifest_digest,
+        "hierarchy_digest": hierarchy_digest,
         "split_receipt_digest": split_receipt["receipt_digest"],
         "outputs": outputs,
         "output_count": len(outputs),
@@ -307,8 +512,12 @@ def convert_ifc_assets(
 def compile_gaussian_assets(
     *,
     conversion_receipt: Mapping[str, Any],
+    split_receipt: Mapping[str, Any],
     output_dir: Path,
     repo_root: Path,
+    source_sha256: str,
+    source_manifest_digest: str,
+    hierarchy_digest: str,
     profile: str,
     storey_target_count: int | None = None,
     building_target_count: int | None = None,
@@ -319,14 +528,25 @@ def compile_gaussian_assets(
     output = _resolve_inside(repository, output_dir, create=True)
     if profile not in PROFILE_LIMITS:
         raise ValueError("unsupported Gaussian density profile")
-    if conversion_receipt.get("phase") != "CONVERT_GLB_SVG":
-        raise ValueError("Gaussian compilation requires a GLB/SVG conversion receipt")
-    if conversion_receipt.get("production_mutation") is not False:
-        raise ValueError("conversion receipt violates the production-mutation boundary")
+    _validate_split_receipt(
+        split_receipt,
+        repository=repository,
+        output=output,
+        source_sha256=source_sha256,
+        source_manifest_digest=source_manifest_digest,
+        hierarchy_digest=hierarchy_digest,
+    )
+    conversion_rows = _validate_conversion_receipt(
+        conversion_receipt,
+        repository=repository,
+        output=output,
+        source_sha256=source_sha256,
+        source_manifest_digest=source_manifest_digest,
+        hierarchy_digest=hierarchy_digest,
+        split_receipt_digest=str(split_receipt["receipt_digest"]),
+    )
     source_rows = [
-        item
-        for item in conversion_receipt.get("outputs", ())
-        if item.get("representation") == "MESH_GLB"
+        item for item in conversion_rows if item.get("representation") == "MESH_GLB"
     ]
     if not source_rows:
         raise ValueError("conversion receipt contains no GLB meshes")
@@ -356,10 +576,25 @@ def compile_gaussian_assets(
             target_count=target_count,
             spz_module=spz_module,
         )
+        _validate_digest_record(result)
         if result.get("source_digest") != source_sha256 or result.get("scope") != scope:
             raise ValueError("Gaussian compiler receipt does not match its source or scope")
-        if not isinstance(result.get("ply"), Mapping) or not isinstance(result.get("spz"), Mapping):
+        ply_receipt = result.get("ply")
+        spz_receipt = result.get("spz")
+        if not isinstance(ply_receipt, Mapping) or not isinstance(spz_receipt, Mapping):
             raise ValueError("Gaussian compiler must emit both PLY and SPZ receipts")
+        for representation_receipt in (ply_receipt, spz_receipt):
+            _validate_digest_record(representation_receipt)
+            representation_path = _resolve_inside(
+                repository, Path(str(representation_receipt.get("path")))
+            )
+            if (
+                not representation_path.is_file()
+                or representation_path.is_symlink()
+                or representation_receipt.get("sha256") != sha256_file(representation_path)
+                or representation_receipt.get("byte_length") != representation_path.stat().st_size
+            ):
+                raise ValueError("Gaussian representation receipt does not match output bytes")
         compiled.append(
             {
                 "job_id": str(item["job_id"]),
@@ -372,6 +607,10 @@ def compile_gaussian_assets(
     payload = {
         "version": ASSET_PREPARATION_VERSION,
         "phase": "SAMPLE_GAUSSIANS_WRITE_SPZ",
+        "source_sha256": source_sha256,
+        "source_manifest_digest": source_manifest_digest,
+        "hierarchy_digest": hierarchy_digest,
+        "split_receipt_digest": split_receipt["receipt_digest"],
         "conversion_receipt_digest": conversion_receipt["receipt_digest"],
         "profile": profile,
         "profile_limits": PROFILE_LIMITS[profile],
@@ -427,6 +666,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             hierarchy=hierarchy,
             output_dir=output,
             repo_root=repository,
+            source_manifest_digest=manifest.source_manifest_digest,
         )
     else:
         split_receipt = _load_json(split_receipt_path)
@@ -442,6 +682,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             repo_root=repository,
             ifcconvert=args.ifcconvert,
             workers=args.workers,
+            source_manifest_digest=manifest.source_manifest_digest,
+            hierarchy_digest=str(hierarchy["hierarchy_digest"]),
             timeout_seconds=args.timeout_seconds,
         )
         result = conversion_receipt
@@ -452,8 +694,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             raise ValueError("Gaussian compilation requires a conversion receipt")
         result = compile_gaussian_assets(
             conversion_receipt=conversion_receipt,
+            split_receipt=split_receipt,
             output_dir=output,
             repo_root=repository,
+            source_sha256=manifest.observed_sha256,
+            source_manifest_digest=manifest.source_manifest_digest,
+            hierarchy_digest=str(hierarchy["hierarchy_digest"]),
             profile=args.profile,
             storey_target_count=args.storey_target_count,
             building_target_count=args.building_target_count,

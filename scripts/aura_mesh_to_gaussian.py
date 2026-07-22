@@ -20,18 +20,29 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from aura_event_contracts import stable_digest
-from aura_spatial_importers.spz import inspect_spz_v4_bytes
+from aura_spatial_importers.spz import (
+    MAX_SPZ_POINTS,
+    MAX_SPZ_RUNTIME_ALLOCATION_BYTES,
+    inspect_spz_v4_bytes,
+)
 from scripts.aura_verify_construction_demo_assets import atomic_json, sha256_file, verify_glb
 
 GAUSSIAN_COMPILER_VERSION = "AURA_CONSTRUCTION_DEMO_GAUSSIAN_COMPILER_V1"
 SH_C0 = 0.28209479177387814
 DEFAULT_OPACITY = 0.92
 MIN_THICKNESS = 0.001
-MAX_SPLATS = 1_000_000
+# Aura's SPZ v4 admission gate conservatively estimates degree-0 clouds as
+# 20 decoded stream bytes plus 2,304 object bytes and 3 coefficients * 96 bytes.
+SPZ_SH0_RUNTIME_BYTES_PER_SPLAT = 20 + 2_304 + 3 * 96
+MAX_IMPORTABLE_SH0_SPLATS = min(
+    MAX_SPZ_POINTS,
+    MAX_SPZ_RUNTIME_ALLOCATION_BYTES // SPZ_SH0_RUNTIME_BYTES_PER_SPLAT,
+)
+MAX_SPLATS = MAX_IMPORTABLE_SH0_SPLATS
 PROFILE_LIMITS = {
-    "LOW": {"STOREY": 50_000, "BUILDING": 150_000},
-    "STANDARD": {"STOREY": 150_000, "BUILDING": 500_000},
-    "VIDEO": {"STOREY": 300_000, "BUILDING": 1_000_000},
+    "LOW": {"STOREY": 40_000, "BUILDING": 75_000},
+    "STANDARD": {"STOREY": 75_000, "BUILDING": 100_000},
+    "VIDEO": {"STOREY": 100_000, "BUILDING": MAX_IMPORTABLE_SH0_SPLATS},
 }
 GAUSSIAN_SCOPES = ("STOREY", "BUILDING")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -68,19 +79,19 @@ def _seed(value: str) -> int:
 
 
 def _quaternions_from_normals(normals: np.ndarray) -> np.ndarray:
-    result = np.zeros((len(normals), 4), dtype=np.float32)
-    for index, normal in enumerate(normals):
-        dot = float(normal[2])
-        if dot < -0.999999:
-            quaternion = np.array([1.0, 0.0, 0.0, 0.0], dtype=np.float64)
-        else:
-            quaternion = np.array([-normal[1], normal[0], 0.0, 1.0 + dot], dtype=np.float64)
-            length = float(np.linalg.norm(quaternion))
-            if not math.isfinite(length) or length <= 0.0:
-                raise ValueError("normal-to-quaternion conversion failed")
-            quaternion /= length
-        result[index] = quaternion.astype(np.float32)
-    return result
+    values = np.asarray(normals, dtype=np.float64)
+    if values.ndim != 2 or values.shape[1] != 3 or not np.isfinite(values).all():
+        raise ValueError("normals must be finite Nx3 values")
+    result = np.column_stack(
+        (-values[:, 1], values[:, 0], np.zeros(len(values)), 1.0 + values[:, 2])
+    )
+    degenerate = values[:, 2] < -0.999999
+    result[degenerate] = (1.0, 0.0, 0.0, 0.0)
+    lengths = np.linalg.norm(result, axis=1)
+    if not np.isfinite(lengths).all() or np.any(lengths <= 0.0):
+        raise ValueError("normal-to-quaternion conversion failed")
+    result /= lengths[:, None]
+    return result.astype(np.float32)
 
 
 def _allocate_counts(areas: np.ndarray, target_count: int) -> np.ndarray:

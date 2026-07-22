@@ -216,3 +216,28 @@ def test_asset_pack_rejects_tampered_nested_manifest_digest() -> None:
     data["asset_pack_digest"] = ""
     with pytest.raises(ValueError, match="source_manifest_digest"):
         ConstructionDemoAssetPack.from_dict(data)
+
+
+def test_source_manifest_digest_excludes_acquisition_time() -> None:
+    first = _manifest()
+    data = first.to_dict()
+    data["downloaded_at"] = "2026-07-22T11:00:00Z"
+    second = ConstructionDemoSourceManifest.from_dict(data)
+
+    assert second.downloaded_at != first.downloaded_at
+    assert second.source_manifest_digest == first.source_manifest_digest
+    assert second.to_dict()["downloaded_at"] == "2026-07-22T11:00:00Z"
+
+
+def test_asset_pack_rejects_role_swapped_storey_bindings() -> None:
+    data = _pack().to_dict()
+    storey = data["storeys"][0]
+    storey["mesh_asset_id"], storey["gaussian_asset_id"] = (
+        storey["gaussian_asset_id"],
+        storey["mesh_asset_id"],
+    )
+    storey["storey_digest"] = ""
+    data["asset_pack_digest"] = ""
+
+    with pytest.raises(ValueError, match="asset roles"):
+        ConstructionDemoAssetPack.from_dict(data)

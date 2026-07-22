@@ -2037,7 +2037,14 @@ def _resolve_neighborhood_seeds(
         metadata = participant.metadata
         return (
             str(metadata.get("file_path") or "") == source_ref.file_path
-            and (not source_ref.symbol or participant.qualified_symbol == source_ref.symbol)
+            and (
+                not source_ref.symbol
+                or participant.qualified_symbol == source_ref.symbol
+                or (
+                    "." not in source_ref.symbol
+                    and participant.qualified_symbol.endswith(f".{source_ref.symbol}")
+                )
+            )
             and int(metadata.get("line_start") or 0) == source_ref.line_start
             and int(metadata.get("line_end") or 0) == source_ref.line_end
             and str(participant.digest or "") == source_ref.source_hash

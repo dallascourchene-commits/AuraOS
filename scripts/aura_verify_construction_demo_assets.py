@@ -8,11 +8,15 @@ import json
 import math
 import os
 from pathlib import Path
+import re
+import signal
 import struct
 import subprocess
 import sys
+import tempfile
+import threading
 import time
-from typing import Any, Mapping, Sequence
+from typing import Any, BinaryIO, Mapping, Sequence
 import xml.etree.ElementTree as ET
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -21,7 +25,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from aura_event_contracts import stable_digest
 
-ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V1"
+ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V2"
 MAX_COMMAND_OUTPUT_BYTES = 64 * 1024
 MAX_GLB_BYTES = 512 * 1024 * 1024
 MAX_SVG_BYTES = 32 * 1024 * 1024
@@ -29,6 +33,9 @@ GLB_MAGIC = b"glTF"
 GLB_VERSION = 2
 GLB_JSON_CHUNK = 0x4E4F534A
 FORBIDDEN_SVG_RAW = (b"<!DOCTYPE", b"<!ENTITY")
+_EXTERNAL_SCHEMES = ("http:", "https:", "//", "data:", "javascript:", "file:")
+_CSS_URL = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE | re.DOTALL)
+_CSS_IMPORT = re.compile(r"@import\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -41,6 +48,7 @@ class CommandReceipt:
     stdout_truncated: bool
     stderr_truncated: bool
     timed_out: bool
+    output_limit_exceeded: bool = False
     receipt_digest: str = ""
 
     def __post_init__(self) -> None:
@@ -61,6 +69,7 @@ class CommandReceipt:
             "stdout_truncated": self.stdout_truncated,
             "stderr_truncated": self.stderr_truncated,
             "timed_out": self.timed_out,
+            "output_limit_exceeded": self.output_limit_exceeded,
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -103,8 +112,44 @@ def require_local_regular_file(
 
 def _bounded_text(value: bytes, maximum_bytes: int = MAX_COMMAND_OUTPUT_BYTES) -> tuple[str, bool]:
     truncated = len(value) > maximum_bytes
-    body = value[:maximum_bytes]
-    return body.decode("utf-8", errors="replace"), truncated
+    return value[:maximum_bytes].decode("utf-8", errors="replace"), truncated
+
+
+def _terminate_process_group(process: subprocess.Popen[bytes]) -> None:
+    if process.poll() is not None:
+        return
+    try:
+        if os.name == "nt":
+            process.terminate()
+        else:
+            os.killpg(process.pid, signal.SIGTERM)
+        process.wait(timeout=0.5)
+    except (ProcessLookupError, subprocess.TimeoutExpired):
+        try:
+            if os.name == "nt":
+                process.kill()
+            else:
+                os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+
+def _read_capped(
+    stream: BinaryIO,
+    buffer: bytearray,
+    overflow: threading.Event,
+    maximum_bytes: int,
+) -> None:
+    try:
+        while chunk := stream.read(8192):
+            remaining = maximum_bytes + 1 - len(buffer)
+            if remaining > 0:
+                buffer.extend(chunk[:remaining])
+            if len(buffer) > maximum_bytes:
+                overflow.set()
+                return
+    finally:
+        stream.close()
 
 
 def run_bounded_command(
@@ -130,46 +175,72 @@ def run_bounded_command(
             if type(key) is not str or type(value) is not str or "\x00" in key + value:
                 raise ValueError("command environment must contain bounded strings")
             merged_env[key] = value
+
     started = time.monotonic()
+    process = subprocess.Popen(
+        list(command),
+        cwd=workdir,
+        env=merged_env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=(os.name != "nt"),
+        creationflags=(subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0),
+    )
+    assert process.stdout is not None and process.stderr is not None
+    stdout_buffer = bytearray()
+    stderr_buffer = bytearray()
+    overflow = threading.Event()
+    readers = (
+        threading.Thread(
+            target=_read_capped,
+            args=(process.stdout, stdout_buffer, overflow, MAX_COMMAND_OUTPUT_BYTES),
+            daemon=True,
+        ),
+        threading.Thread(
+            target=_read_capped,
+            args=(process.stderr, stderr_buffer, overflow, MAX_COMMAND_OUTPUT_BYTES),
+            daemon=True,
+        ),
+    )
+    for reader in readers:
+        reader.start()
+
+    timed_out = False
+    output_limit_exceeded = False
+    deadline = started + timeout_seconds
+    while process.poll() is None:
+        if overflow.is_set():
+            output_limit_exceeded = True
+            _terminate_process_group(process)
+            break
+        if time.monotonic() >= deadline:
+            timed_out = True
+            _terminate_process_group(process)
+            break
+        time.sleep(0.01)
     try:
-        completed = subprocess.run(
-            list(command),
-            cwd=workdir,
-            env=merged_env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-            timeout=timeout_seconds,
-        )
-        duration = round(time.monotonic() - started, 6)
-        stdout, stdout_truncated = _bounded_text(completed.stdout)
-        stderr, stderr_truncated = _bounded_text(completed.stderr)
-        receipt = CommandReceipt(
-            command=tuple(command),
-            returncode=completed.returncode,
-            duration_seconds=duration,
-            stdout=stdout,
-            stderr=stderr,
-            stdout_truncated=stdout_truncated,
-            stderr_truncated=stderr_truncated,
-            timed_out=False,
-        )
-    except subprocess.TimeoutExpired as exc:
-        duration = round(time.monotonic() - started, 6)
-        stdout, stdout_truncated = _bounded_text(exc.stdout or b"")
-        stderr, stderr_truncated = _bounded_text(exc.stderr or b"")
-        receipt = CommandReceipt(
-            command=tuple(command),
-            returncode=-1,
-            duration_seconds=duration,
-            stdout=stdout,
-            stderr=stderr,
-            stdout_truncated=stdout_truncated,
-            stderr_truncated=stderr_truncated,
-            timed_out=True,
-        )
-        raise RuntimeError(json.dumps(receipt.to_dict(), sort_keys=True)) from exc
-    if receipt.returncode != 0:
+        process.wait(timeout=1.0)
+    except subprocess.TimeoutExpired:
+        _terminate_process_group(process)
+    for reader in readers:
+        reader.join(timeout=1.0)
+
+    duration = round(time.monotonic() - started, 6)
+    stdout, stdout_truncated = _bounded_text(bytes(stdout_buffer))
+    stderr, stderr_truncated = _bounded_text(bytes(stderr_buffer))
+    returncode = -1 if timed_out else (-2 if output_limit_exceeded else int(process.returncode or 0))
+    receipt = CommandReceipt(
+        command=tuple(command),
+        returncode=returncode,
+        duration_seconds=duration,
+        stdout=stdout,
+        stderr=stderr,
+        stdout_truncated=stdout_truncated or output_limit_exceeded,
+        stderr_truncated=stderr_truncated or output_limit_exceeded,
+        timed_out=timed_out,
+        output_limit_exceeded=output_limit_exceeded,
+    )
+    if timed_out or output_limit_exceeded or receipt.returncode != 0:
         raise RuntimeError(json.dumps(receipt.to_dict(), sort_keys=True))
     return receipt
 
@@ -185,6 +256,40 @@ def _walk_numbers(value: Any) -> None:
             _walk_numbers(item)
 
 
+def _parse_glb_chunks(data: bytes) -> tuple[dict[str, Any], int]:
+    offset = 12
+    chunk_index = 0
+    document: dict[str, Any] | None = None
+    while offset < len(data):
+        if len(data) - offset < 8:
+            raise ValueError("GLB contains an incomplete trailing chunk header")
+        chunk_length, chunk_type = struct.unpack_from("<II", data, offset)
+        if chunk_length % 4 != 0:
+            raise ValueError("GLB chunk length must be 4-byte aligned")
+        payload_start = offset + 8
+        payload_end = payload_start + chunk_length
+        if payload_end < payload_start or payload_end > len(data):
+            raise ValueError("GLB chunk range exceeds the declared file length")
+        payload = data[payload_start:payload_end]
+        if chunk_index == 0:
+            if chunk_type != GLB_JSON_CHUNK or chunk_length <= 0:
+                raise ValueError("GLB first chunk must be a non-empty JSON chunk")
+            try:
+                parsed = json.loads(payload.rstrip(b" \x00").decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
+            if not isinstance(parsed, dict):
+                raise ValueError("GLB JSON document must be an object")
+            document = parsed
+        elif chunk_type == GLB_JSON_CHUNK:
+            raise ValueError("GLB must contain exactly one JSON chunk")
+        offset = payload_end
+        chunk_index += 1
+    if offset != len(data) or document is None:
+        raise ValueError("GLB chunk layout is incomplete")
+    return document, chunk_index
+
+
 def verify_glb(path: Path, *, root: Path) -> dict[str, Any]:
     asset = require_local_regular_file(path, root=root, maximum_bytes=MAX_GLB_BYTES)
     data = asset.read_bytes()
@@ -193,18 +298,19 @@ def verify_glb(path: Path, *, root: Path) -> dict[str, Any]:
     magic, version, declared_length = struct.unpack_from("<4sII", data, 0)
     if magic != GLB_MAGIC or version != GLB_VERSION or declared_length != len(data):
         raise ValueError("GLB header, version, or declared length is invalid")
-    json_length, json_type = struct.unpack_from("<II", data, 12)
-    if json_type != GLB_JSON_CHUNK or json_length <= 0 or 20 + json_length > len(data):
-        raise ValueError("GLB JSON chunk is invalid")
-    try:
-        document = json.loads(data[20 : 20 + json_length].rstrip(b" \x00").decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
-    if not isinstance(document, dict):
-        raise ValueError("GLB JSON document must be an object")
+    document, chunk_count = _parse_glb_chunks(data)
+    asset_metadata = document.get("asset")
+    if not isinstance(asset_metadata, dict):
+        raise ValueError("GLB JSON must contain glTF asset metadata")
+    asset_version = asset_metadata.get("version")
+    if type(asset_version) is not str or asset_version.split(".", 1)[0] != "2":
+        raise ValueError("GLB glTF asset.version must be compatible with version 2")
     _walk_numbers(document)
     for collection in ("buffers", "images"):
-        for item in document.get(collection, ()):
+        items = document.get(collection, [])
+        if not isinstance(items, list):
+            raise ValueError(f"GLB {collection} must be an array")
+        for item in items:
             if isinstance(item, dict) and "uri" in item:
                 raise ValueError("GLB must not reference external or data URI resources")
     payload = {
@@ -214,6 +320,8 @@ def verify_glb(path: Path, *, root: Path) -> dict[str, Any]:
         "byte_length": len(data),
         "sha256": sha256_file(asset),
         "glb_version": version,
+        "gltf_asset_version": asset_version,
+        "chunk_count": chunk_count,
         "scene_count": len(document.get("scenes", ())),
         "node_count": len(document.get("nodes", ())),
         "mesh_count": len(document.get("meshes", ())),
@@ -235,6 +343,43 @@ def _canonicalize_xml(element: ET.Element) -> None:
         _canonicalize_xml(child)
 
 
+def _is_external_reference(value: str) -> bool:
+    return value.strip().lower().startswith(_EXTERNAL_SCHEMES)
+
+
+def _validate_css(css: str) -> None:
+    if _CSS_IMPORT.search(css):
+        raise ValueError("SVG contains an external or executable reference")
+    for match in _CSS_URL.finditer(css):
+        if _is_external_reference(match.group(2)):
+            raise ValueError("SVG contains an external or executable reference")
+
+
+def _secure_atomic_write(path: Path, payload: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists() and path.is_symlink():
+        raise ValueError("atomic write target must not be a symlink")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        try:
+            directory_fd = os.open(path.parent, os.O_RDONLY)
+        except OSError:
+            directory_fd = -1
+        if directory_fd >= 0:
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
     asset = require_local_regular_file(path, root=root, maximum_bytes=MAX_SVG_BYTES)
     raw = asset.read_bytes()
@@ -242,29 +387,28 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
     if any(marker in upper for marker in FORBIDDEN_SVG_RAW):
         raise ValueError("SVG contains a forbidden document type or entity declaration")
     try:
-        tree = ET.parse(asset)
+        root_element = ET.fromstring(raw)
     except ET.ParseError as exc:
         raise ValueError("SVG is not well-formed XML") from exc
-    root_element = tree.getroot()
     for element in root_element.iter():
         local_tag = element.tag.rsplit("}", 1)[-1].lower()
         if local_tag in {"script", "foreignobject"}:
             raise ValueError("SVG contains executable or foreign content")
+        if local_tag == "style":
+            _validate_css(element.text or "")
         for name, value in element.attrib.items():
             local_name = name.rsplit("}", 1)[-1].lower()
             if local_name.startswith("on"):
                 raise ValueError("SVG contains an event handler")
-            if local_name in {"href", "src"}:
-                lowered = value.strip().lower()
-                if lowered.startswith(("http:", "https:", "//", "data:", "javascript:", "file:")):
-                    raise ValueError("SVG contains an external or executable reference")
+            if local_name in {"href", "src"} and _is_external_reference(value):
+                raise ValueError("SVG contains an external or executable reference")
+            if local_name == "style":
+                _validate_css(value)
     _canonicalize_xml(root_element)
-    temporary = asset.with_suffix(asset.suffix + ".sanitized.tmp")
-    tree.write(temporary, encoding="utf-8", xml_declaration=True)
-    if temporary.stat().st_size == 0 or temporary.stat().st_size > MAX_SVG_BYTES:
-        temporary.unlink(missing_ok=True)
+    serialized = ET.tostring(root_element, encoding="utf-8", xml_declaration=True)
+    if not serialized or len(serialized) > MAX_SVG_BYTES:
         raise ValueError("sanitized SVG violates its byte budget")
-    temporary.replace(asset)
+    _secure_atomic_write(asset, serialized)
     payload = {
         "version": ASSET_VERIFIER_VERSION,
         "kind": "SVG",
@@ -279,7 +423,5 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
 
 
 def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    _secure_atomic_write(path, payload)
