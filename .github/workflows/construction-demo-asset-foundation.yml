@@ -51,11 +51,18 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
-      - name: Validate exact checkout and emit base tree
+      - name: Validate exact checkout and capture base tree
         run: |
           test -f aura_construction_demo_contracts.py
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-          git rev-parse 'HEAD^{tree}'
+          git rev-parse 'HEAD^{tree}' | tee base-tree-sha.txt
+      - name: Upload base tree identity
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-base-tree-${{ github.event.pull_request.head.sha || github.sha }}
+          path: base-tree-sha.txt
+          retention-days: 1
+          if-no-files-found: error
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
