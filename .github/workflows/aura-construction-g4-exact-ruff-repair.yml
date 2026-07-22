@@ -1,4 +1,4 @@
-name: Aura Construction G4 Exact Ruff Repair
+name: Aura Construction G4-G5 Exact Ruff Repair
 
 on:
   push:
@@ -7,18 +7,22 @@ on:
     paths:
       - ".github/workflows/aura-construction-g4-exact-ruff-repair.yml"
       - "aura_construction_demo_fixture.py"
+      - "aura_construction_demo_fixture_builder.py"
+      - "aura_construction_demo_projection.py"
+      - "tests/test_aura_construction_demo_fixture.py"
+      - "tests/test_aura_construction_demo_projection.py"
 
 permissions:
   contents: write
 
 concurrency:
-  group: aura-construction-g4-exact-ruff-repair
+  group: aura-construction-g4-g5-exact-ruff-repair
   cancel-in-progress: true
 
 jobs:
   repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Clone exact branch
         env:
@@ -26,35 +30,62 @@ jobs:
           EXPECTED_HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
-          git clone --no-tags --single-branch --depth=8 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+          git clone --no-tags --single-branch --depth=16 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Apply exact Ruff repair
+      - name: Apply one safe Ruff repair commit per owner
         run: |
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check ruff
-          ruff check --fix --unsafe-fixes=false aura_construction_demo_fixture.py
-          ruff check aura_construction_demo_fixture.py
-          changed="$(git diff --name-only)"
-          test -z "$changed" || test "$changed" = "aura_construction_demo_fixture.py"
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit exact repair
+          repair_owner() {
+            file="$1"
+            message="$2"
+            ruff check --fix --unsafe-fixes=false "$file"
+            ruff check "$file"
+            if ! git diff --quiet -- "$file"; then
+              changed="$(git diff --name-only)"
+              test "$changed" = "$file"
+              git add "$file"
+              git commit -m "$message"
+            fi
+          }
+
+          repair_owner aura_construction_demo_fixture.py \
+            "style(construction): lint G4 fixture contracts"
+          repair_owner aura_construction_demo_fixture_builder.py \
+            "style(construction): lint G4 fixture builder"
+          repair_owner aura_construction_demo_projection.py \
+            "style(spatial): lint G5 Construction projection"
+          repair_owner tests/test_aura_construction_demo_fixture.py \
+            "style(construction): lint G4 fixture tests"
+          repair_owner tests/test_aura_construction_demo_projection.py \
+            "style(spatial): lint G5 projection tests"
+
+          ruff check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          test -z "$(git status --short)"
+
+      - name: Push exact repair commits
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_REF: ${{ github.ref_name }}
+          EXPECTED_HEAD: ${{ github.sha }}
         run: |
           set -euo pipefail
-          if git diff --quiet -- aura_construction_demo_fixture.py; then
+          if test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"; then
             echo "No repair required."
             exit 0
           fi
-          git config user.name "Aura Architecture Harness"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add aura_construction_demo_fixture.py
-          git commit -m "style(construction): sort G4 fixture exports"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push origin "HEAD:${HEAD_REF}"
