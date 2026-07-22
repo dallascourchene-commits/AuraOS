@@ -23,7 +23,11 @@ if str(_REPO_ROOT) not in sys.path:
 
 from aura_construction_demo_contracts import ConstructionDemoSourceManifest
 from aura_event_contracts import stable_digest
-from scripts.aura_mesh_to_gaussian import PROFILE_LIMITS, compile_mesh
+from scripts.aura_mesh_to_gaussian import (
+    PROFILE_LIMITS,
+    canonicalize_glb_for_aura,
+    compile_mesh,
+)
 from scripts.aura_verify_construction_demo_assets import (
     atomic_json,
     run_bounded_command,
@@ -296,6 +300,21 @@ def _validate_conversion_receipt(
             raise ValueError("conversion representation is invalid")
         _validate_command_receipt(item.get("command_receipt"))
         _validate_verification_receipt(item.get("verification"), path=target, repository=repository)
+        canonicalization = item.get("canonicalization")
+        runtime_digest = item.get("runtime_import_receipt_digest")
+        if representation == "MESH_GLB":
+            if not isinstance(canonicalization, Mapping):
+                raise ValueError("mesh conversion job lacks canonical GLB evidence")
+            _validate_digest_record(canonicalization)
+            if (
+                canonicalization.get("output") != item.get("output")
+                or canonicalization.get("output_sha256") != item.get("output_sha256")
+                or canonicalization.get("runtime_admitted") is not True
+                or canonicalization.get("import_receipt_digest") != runtime_digest
+            ):
+                raise ValueError("canonical GLB evidence does not match conversion output")
+        elif canonicalization is not None or runtime_digest is not None:
+            raise ValueError("SVG conversion must not claim GLB canonicalization")
         validated.append(item)
     if "building-full-glb" not in job_ids:
         raise ValueError("conversion receipt is missing the full-building mesh")
@@ -492,6 +511,7 @@ def convert_ifc_assets(
     source_manifest_digest: str,
     hierarchy_digest: str,
     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+    glb_canonicalizer: Callable[..., dict[str, Any]] = canonicalize_glb_for_aura,
 ) -> dict[str, Any]:
     repository = repo_root.expanduser().resolve(strict=True)
     source_path = _resolve_inside(repository, source)
@@ -534,7 +554,9 @@ def convert_ifc_assets(
     for job_id, job_source, job_output, is_svg in jobs:
         job_output.parent.mkdir(parents=True, exist_ok=True)
         descriptor, temporary_name = tempfile.mkstemp(
-            prefix=f".{job_output.name}.", suffix=".partial", dir=job_output.parent
+            prefix=f".{job_output.stem}.ifcconvert.",
+            suffix=job_output.suffix,
+            dir=job_output.parent,
         )
         os.close(descriptor)
         temporary = Path(temporary_name)
@@ -553,12 +575,18 @@ def convert_ifc_assets(
             )
             if not temporary.is_file() or temporary.is_symlink() or temporary.stat().st_size == 0:
                 raise ValueError("IfcConvert did not produce a complete regular output file")
-            os.replace(temporary, job_output)
-            verification = (
-                sanitize_svg(job_output, root=repository)
-                if is_svg
-                else verify_glb(job_output, root=repository)
-            )
+            canonicalization = None
+            if is_svg:
+                os.replace(temporary, job_output)
+                verification = sanitize_svg(job_output, root=repository)
+            else:
+                canonicalization = glb_canonicalizer(
+                    temporary, job_output, repo_root=repository
+                )
+                _validate_digest_record(canonicalization)
+                verification = canonicalization.get("verification")
+                if not isinstance(verification, Mapping):
+                    raise ValueError("canonical GLB receipt lacks verification evidence")
         except Exception:
             temporary.unlink(missing_ok=True)
             job_output.unlink(missing_ok=True)
@@ -580,6 +608,12 @@ def convert_ifc_assets(
             "command_receipt": command_receipt.to_content_dict(),
             "ifcconvert_identity_digest": ifcconvert_identity["identity_digest"],
             "verification": verification,
+            "canonicalization": canonicalization,
+            "runtime_import_receipt_digest": (
+                None
+                if canonicalization is None
+                else canonicalization["import_receipt_digest"]
+            ),
             "survey_authority": False,
             "production_mutation": False,
         }

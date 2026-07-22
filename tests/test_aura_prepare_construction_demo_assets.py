@@ -112,16 +112,36 @@ if sys.argv[-1] == '--version':
     raise SystemExit(0)
 out = Path(sys.argv[-1])
 out.parent.mkdir(parents=True, exist_ok=True)
-if '.svg.' in out.name:
+if out.suffix == '.svg':
     out.write_text('<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" /></svg>', encoding='utf-8')
 else:
-    doc = json.dumps(
-        {'asset': {'version': '2.0'}, 'scenes': [{}], 'nodes': [], 'meshes': []},
-        separators=(',', ':'),
-    ).encode()
-    doc += b' ' * ((4 - len(doc) % 4) % 4)
-    total = 20 + len(doc)
-    out.write_bytes(struct.pack('<4sII', b'glTF', 2, total) + struct.pack('<II', len(doc), 0x4E4F534A) + doc)
+    positions = struct.pack('<9f', 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+    indices = struct.pack('<3H', 0, 1, 2)
+    binary = positions + indices
+    document = {
+        'asset': {'version': '2.0'},
+        'buffers': [{'byteLength': len(binary)}],
+        'bufferViews': [
+            {'buffer': 0, 'byteOffset': 0, 'byteLength': len(positions), 'target': 34962},
+            {'buffer': 0, 'byteOffset': len(positions), 'byteLength': len(indices), 'target': 34963},
+        ],
+        'accessors': [
+            {'bufferView': 0, 'componentType': 5126, 'count': 3, 'type': 'VEC3'},
+            {'bufferView': 1, 'componentType': 5123, 'count': 3, 'type': 'SCALAR'},
+        ],
+        'meshes': [{'primitives': [{'attributes': {'POSITION': 0}, 'indices': 1, 'mode': 4}]}],
+        'nodes': [{'mesh': 0}],
+        'scenes': [{'nodes': [0]}],
+        'scene': 0,
+    }
+    encoded = json.dumps(document, separators=(',', ':')).encode()
+    encoded += b' ' * ((4 - len(encoded) % 4) % 4)
+    binary += b'\\x00' * ((4 - len(binary) % 4) % 4)
+    body = (
+        struct.pack('<II', len(encoded), 0x4E4F534A) + encoded
+        + struct.pack('<II', len(binary), 0x004E4942) + binary
+    )
+    out.write_bytes(struct.pack('<4sII', b'glTF', 2, 12 + len(body)) + body)
 """,
         encoding="utf-8",
     )
@@ -233,6 +253,13 @@ def test_convert_ifc_assets_writes_verified_outputs_and_authenticated_receipts(t
     assert all(item["split_receipt_digest"] == split["receipt_digest"] for item in receipt["outputs"])
     assert all(item["ifcconvert_identity_digest"] == identity["identity_digest"] for item in receipt["outputs"])
     assert all("duration_seconds" not in item["command_receipt"] for item in receipt["outputs"])
+    glb_rows = [item for item in receipt["outputs"] if item["representation"] == "MESH_GLB"]
+    assert all(item["canonicalization"]["runtime_admitted"] is True for item in glb_rows)
+    assert all(len(item["runtime_import_receipt_digest"]) == 64 for item in glb_rows)
+    assert all(item["canonicalization"]["output"] == item["output"] for item in glb_rows)
+    assert all(
+        item["canonicalization"]["source"].endswith(".glb") for item in glb_rows
+    )
     assert (tmp_path / "generated/building-full.glb").is_file()
     assert (tmp_path / "generated/storeys/storey-a/storey-a.svg").read_bytes().startswith(b"<?xml")
     assert (tmp_path / "generated/receipts/convert-glb-svg.json").is_file()
@@ -424,6 +451,37 @@ def test_compile_gaussian_assets_requires_every_storey_glb_job(tmp_path: Path) -
     with pytest.raises(ValueError, match="exact full-building and storey GLB jobs"):
         compile_gaussian_assets(
             conversion_receipt=incomplete,
+            split_receipt=split,
+            output_dir=Path("generated"),
+            repo_root=tmp_path,
+            source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
+            hierarchy_digest=HIERARCHY_DIGEST,
+            profile="LOW",
+            mesh_compiler=lambda **_kwargs: {},
+        )
+
+
+def test_compile_gaussian_assets_rejects_tampered_canonical_glb_evidence(tmp_path: Path) -> None:
+    source = tmp_path / "source.ifc"
+    source.write_text("source", encoding="utf-8")
+    split, conversion = _conversion(tmp_path, source)
+    tampered = copy.deepcopy(conversion)
+    glb = next(item for item in tampered["outputs"] if item["representation"] == "MESH_GLB")
+    glb["canonicalization"]["runtime_admitted"] = False
+    glb["canonicalization"]["receipt_digest"] = stable_digest(
+        {key: value for key, value in glb["canonicalization"].items() if key != "receipt_digest"}
+    )
+    glb["receipt_digest"] = stable_digest(
+        {key: value for key, value in glb.items() if key != "receipt_digest"}
+    )
+    tampered["receipt_digest"] = stable_digest(
+        {key: value for key, value in tampered.items() if key != "receipt_digest"}
+    )
+
+    with pytest.raises(ValueError, match="canonical GLB evidence"):
+        compile_gaussian_assets(
+            conversion_receipt=tampered,
             split_receipt=split,
             output_dir=Path("generated"),
             repo_root=tmp_path,

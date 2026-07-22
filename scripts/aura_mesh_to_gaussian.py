@@ -10,6 +10,8 @@ import math
 import os
 from pathlib import Path
 import re
+import struct
+import tempfile
 import sys
 from typing import Any, Callable, Sequence
 
@@ -20,6 +22,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from aura_event_contracts import stable_digest
+from aura_spatial_importers.gltf import import_gltf_file
 from aura_spatial_importers.spz import (
     MAX_SPZ_POINTS,
     MAX_SPZ_RUNTIME_ALLOCATION_BYTES,
@@ -254,6 +257,170 @@ def _mesh_arrays(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     if not vertices:
         raise ValueError("GLB contains no triangle geometry")
     return np.vstack(vertices), np.vstack(faces), np.vstack(colors)
+
+
+def _canonical_mesh_arrays(path: Path) -> tuple[np.ndarray, np.ndarray]:
+    """Flatten scene transforms and deterministically deduplicate mesh positions."""
+
+    vertices, faces, _colors = _mesh_arrays(path)
+    positions = np.asarray(vertices, dtype="<f4")
+    triangles = np.asarray(faces, dtype=np.int64)
+    if positions.ndim != 2 or positions.shape[1] != 3 or not np.isfinite(positions).all():
+        raise ValueError("canonical GLB positions must be finite Nx3 values")
+    if triangles.ndim != 2 or triangles.shape[1] != 3 or len(triangles) == 0:
+        raise ValueError("canonical GLB requires triangle faces")
+    unique_positions, inverse = np.unique(positions, axis=0, return_inverse=True)
+    canonical_faces = inverse[triangles]
+    nondegenerate = (
+        (canonical_faces[:, 0] != canonical_faces[:, 1])
+        & (canonical_faces[:, 1] != canonical_faces[:, 2])
+        & (canonical_faces[:, 0] != canonical_faces[:, 2])
+    )
+    canonical_faces = canonical_faces[nondegenerate]
+    if len(canonical_faces) == 0:
+        raise ValueError("canonical GLB contains no non-degenerate triangles")
+    order = np.lexsort(
+        (canonical_faces[:, 2], canonical_faces[:, 1], canonical_faces[:, 0])
+    )
+    canonical_faces = canonical_faces[order]
+    return np.ascontiguousarray(unique_positions), np.ascontiguousarray(canonical_faces)
+
+
+def _glb_chunk(chunk_type: int, payload: bytes, *, padding: bytes) -> bytes:
+    remainder = len(payload) % 4
+    if remainder:
+        payload += padding * (4 - remainder)
+    return struct.pack("<II", len(payload), chunk_type) + payload
+
+
+def canonicalize_glb_for_aura(
+    source_path: Path,
+    output_path: Path,
+    *,
+    repo_root: Path,
+) -> dict[str, Any]:
+    """Emit a deterministic flattened GLB admitted by Aura's strict S4-A importer."""
+
+    repository = repo_root.expanduser().resolve(strict=True)
+    source = _resolve_inside(repository, source_path)
+    output = _resolve_inside(repository, output_path, create_parent=True)
+    if source == output:
+        raise ValueError("canonical GLB source and output must differ")
+    source_verification = verify_glb(source, root=repository)
+    positions, faces = _canonical_mesh_arrays(source)
+    if len(positions) > 2_000_000 or faces.size > 6_000_000:
+        raise ValueError("canonical GLB exceeds Aura mesh importer element ceilings")
+
+    index_dtype = "<u2" if len(positions) <= 65_535 else "<u4"
+    component_type = 5123 if index_dtype == "<u2" else 5125
+    indices = np.ascontiguousarray(faces.reshape(-1), dtype=index_dtype)
+    position_bytes = positions.tobytes(order="C")
+    index_bytes = indices.tobytes(order="C")
+    binary_payload = position_bytes + index_bytes
+    document = {
+        "asset": {
+            "version": "2.0",
+            "generator": "AuraOS Construction canonical GLB V1",
+        },
+        "buffers": [{"byteLength": len(binary_payload)}],
+        "bufferViews": [
+            {
+                "buffer": 0,
+                "byteOffset": 0,
+                "byteLength": len(position_bytes),
+                "target": 34962,
+            },
+            {
+                "buffer": 0,
+                "byteOffset": len(position_bytes),
+                "byteLength": len(index_bytes),
+                "target": 34963,
+            },
+        ],
+        "accessors": [
+            {
+                "bufferView": 0,
+                "byteOffset": 0,
+                "componentType": 5126,
+                "count": len(positions),
+                "type": "VEC3",
+                "min": [float(item) for item in positions.min(axis=0)],
+                "max": [float(item) for item in positions.max(axis=0)],
+            },
+            {
+                "bufferView": 1,
+                "byteOffset": 0,
+                "componentType": component_type,
+                "count": len(indices),
+                "type": "SCALAR",
+            },
+        ],
+        "meshes": [
+            {
+                "primitives": [
+                    {
+                        "attributes": {"POSITION": 0},
+                        "indices": 1,
+                        "mode": 4,
+                    }
+                ]
+            }
+        ],
+    }
+    json_payload = json.dumps(
+        document, separators=(",", ":"), sort_keys=True, allow_nan=False
+    ).encode("utf-8")
+    body = _glb_chunk(0x4E4F534A, json_payload, padding=b" ") + _glb_chunk(
+        0x004E4942, binary_payload, padding=b"\x00"
+    )
+    encoded = struct.pack("<4sII", b"glTF", 2, 12 + len(body)) + body
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{output.name}.", suffix=".tmp", dir=output.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(encoded)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, output)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+    verification = verify_glb(output, root=repository)
+    imported = import_gltf_file(
+        output,
+        provenance_refs=(
+            f"source-glb-sha256:{source_verification['sha256']}",
+            f"canonical-glb-sha256:{verification['sha256']}",
+        ),
+        root=repository,
+    )
+    import_receipt = imported.receipt.to_dict()
+    payload = {
+        "version": "AURA_CONSTRUCTION_CANONICAL_GLB_V1",
+        "source": source.relative_to(repository).as_posix(),
+        "source_sha256": source_verification["sha256"],
+        "source_verification_digest": source_verification["verification_digest"],
+        "output": output.relative_to(repository).as_posix(),
+        "output_sha256": verification["sha256"],
+        "output_byte_length": output.stat().st_size,
+        "vertex_count": len(positions),
+        "triangle_count": len(faces),
+        "index_component_type": component_type,
+        "bounds_min": [float(item) for item in positions.min(axis=0)],
+        "bounds_max": [float(item) for item in positions.max(axis=0)],
+        "verification": verification,
+        "import_receipt": import_receipt,
+        "import_receipt_digest": imported.receipt.derived_asset_digest,
+        "scene_transforms_baked": True,
+        "runtime_admitted": True,
+        "survey_authority": False,
+        "projection_only": True,
+        "production_mutation": False,
+    }
+    return {**payload, "receipt_digest": stable_digest(payload)}
 
 
 def _resolve_inside(root: Path, path: Path, *, create_parent: bool = False) -> Path:

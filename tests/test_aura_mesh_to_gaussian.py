@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import math
+import struct
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -16,6 +18,7 @@ from scripts.aura_mesh_to_gaussian import (
     MAX_SPLATS,
     SPZ_SH0_RUNTIME_BYTES_PER_SPLAT,
     PROFILE_LIMITS,
+    canonicalize_glb_for_aura,
     compile_mesh,
     sample_mesh_arrays,
     save_spz_v4,
@@ -359,3 +362,61 @@ def test_compile_mesh_rejects_zero_target_count(tmp_path: Path) -> None:
             target_count=0,
         )
     assert not (tmp_path / "generated/zero.ply").exists()
+
+
+def _glb_document(path: Path) -> dict[str, object]:
+    source = path.read_bytes()
+    length, kind = struct.unpack_from("<II", source, 12)
+    assert kind == 0x4E4F534A
+    return json.loads(source[20 : 20 + length].rstrip(b" \x00").decode("utf-8"))
+
+
+def test_canonical_glb_flattens_scene_and_passes_runtime_import(tmp_path: Path) -> None:
+    mesh = trimesh.Trimesh(
+        vertices=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+        faces=[[0, 1, 2]],
+        process=False,
+    )
+    scene = trimesh.Scene()
+    scene.add_geometry(
+        mesh,
+        node_name="translated",
+        geom_name="triangle",
+        transform=trimesh.transformations.translation_matrix([10.0, 5.0, 2.0]),
+    )
+    raw = tmp_path / "raw.glb"
+    raw.write_bytes(scene.export(file_type="glb"))
+    first = tmp_path / "generated" / "canonical.glb"
+    second = tmp_path / "generated" / "canonical-repeat.glb"
+
+    receipt = canonicalize_glb_for_aura(raw, first, repo_root=tmp_path)
+    repeated = canonicalize_glb_for_aura(raw, second, repo_root=tmp_path)
+
+    assert first.read_bytes() == second.read_bytes()
+    document = _glb_document(first)
+    assert set(document) == {"accessors", "asset", "buffers", "bufferViews", "meshes"}
+    assert "nodes" not in document and "scenes" not in document
+    assert receipt["runtime_admitted"] is True
+    assert receipt["scene_transforms_baked"] is True
+    assert receipt["vertex_count"] == 3
+    assert receipt["triangle_count"] == 1
+    assert receipt["bounds_min"] == [10.0, 5.0, 2.0]
+    assert receipt["bounds_max"] == [11.0, 6.0, 2.0]
+    assert len(receipt["import_receipt_digest"]) == 64
+    assert receipt["output_sha256"] == repeated["output_sha256"]
+    assert first.stat().st_size < 16 * 1024 * 1024
+
+
+def test_canonical_glb_rejects_output_escape(tmp_path: Path) -> None:
+    mesh = trimesh.Trimesh(
+        vertices=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+        faces=[[0, 1, 2]],
+        process=False,
+    )
+    raw = tmp_path / "raw.glb"
+    raw.write_bytes(trimesh.Scene(mesh).export(file_type="glb"))
+
+    with pytest.raises(ValueError, match="escapes repository root"):
+        canonicalize_glb_for_aura(
+            raw, tmp_path.parent / "outside.glb", repo_root=tmp_path
+        )
