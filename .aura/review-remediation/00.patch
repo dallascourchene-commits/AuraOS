@@ -1,0 +1,231 @@
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -30,6 +30,8 @@
+         python-version: ["3.10", "3.12"]
+     steps:
+       - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
+       - uses: actions/setup-python@v5
+         with:
+           python-version: ${{ matrix.python-version }}
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -142,7 +144,10 @@
+             "beautifulsoup4>=4.12.0,<5.0" \
+             "httpx>=0.27.0,<1.0" \
+             "cryptography>=41.0.0,<45.0" \
+-            jsonschema pytest pytest-asyncio
++            "jsonschema>=4.23.0,<5.0" \
++            "trimesh>=4.7.1,<5.0" \
++            "pytest>=8.2.0,<9.0" \
++            "pytest-asyncio>=0.23.0,<1.0"
+       - name: Run all pytest-native tests
+         id: full_pytest
+         continue-on-error: true
+--- a/aura_construction_demo_contracts.py
++++ b/aura_construction_demo_contracts.py
+@@ -179,12 +179,13 @@
+         _strict_bool(self.external_fetch_required_at_runtime, "external_fetch_required_at_runtime", False)
+         if self.version != CONSTRUCTION_DEMO_SOURCE_MANIFEST_VERSION:
+             raise ValueError("unsupported source manifest version")
+-        digest = _digest_body(self._body())
++        digest = _digest_body(self._identity_body())
+         if self.source_manifest_digest and self.source_manifest_digest != digest:
+             raise ValueError("source_manifest_digest does not match manifest body")
+         object.__setattr__(self, "source_manifest_digest", digest)
+ 
+-    def _body(self) -> dict[str, Any]:
++    def _identity_body(self) -> dict[str, Any]:
++        """Return stable source identity without acquisition-time receipt metadata."""
+         return {
+             "version": self.version,
+             "source_id": self.source_id,
+--- a/aura_construction_demo_contracts.py
++++ b/aura_construction_demo_contracts.py
+@@ -198,12 +199,14 @@
+             "observed_sha256": self.observed_sha256,
+             "license_id": self.license_id,
+             "license_url": self.license_url,
+-            "downloaded_at": self.downloaded_at,
+             "fictional_source": self.fictional_source,
+             "survey_authority": self.survey_authority,
+             "person_level_data_included": self.person_level_data_included,
+             "external_fetch_required_at_runtime": self.external_fetch_required_at_runtime,
+         }
++
++    def _body(self) -> dict[str, Any]:
++        return {**self._identity_body(), "downloaded_at": self.downloaded_at}
+ 
+     def to_dict(self) -> dict[str, Any]:
+         return {**self._body(), "source_manifest_digest": self.source_manifest_digest}
+--- a/aura_construction_demo_contracts.py
++++ b/aura_construction_demo_contracts.py
+@@ -439,17 +442,16 @@
+         for asset in self.assets:
+             if asset.storey_id not in storey_id_set:
+                 raise ValueError("asset references an unknown storey")
+-        required_representations = {
+-            ConstructionDemoRepresentation.MESH_GLB.value,
+-            ConstructionDemoRepresentation.FLOOR_PLAN_SVG.value,
+-            ConstructionDemoRepresentation.GAUSSIAN_SPZ.value,
+-        }
+         for storey in self.storeys:
+             expected = {storey.mesh_asset_id, storey.floor_plan_asset_id, storey.gaussian_asset_id}
+             if not expected.issubset(assets_by_id):
+                 raise ValueError("storey references an unknown required asset")
+-            actual = {assets_by_id[item].representation for item in expected}
+-            if actual != required_representations:
++            role_bindings = (
++                (storey.mesh_asset_id, ConstructionDemoRepresentation.MESH_GLB.value),
++                (storey.floor_plan_asset_id, ConstructionDemoRepresentation.FLOOR_PLAN_SVG.value),
++                (storey.gaussian_asset_id, ConstructionDemoRepresentation.GAUSSIAN_SPZ.value),
++            )
++            if any(assets_by_id[asset_id].representation != representation for asset_id, representation in role_bindings):
+                 raise ValueError("storey GLB/SVG/SPZ asset roles do not match their bindings")
+             if any(assets_by_id[item].storey_id != storey.storey_id for item in expected):
+                 raise ValueError("storey asset binding references a different storey")
+--- a/aura_coding_relationship_compass.py
++++ b/aura_coding_relationship_compass.py
+@@ -822,6 +822,12 @@
+                 and (
+                     not source_ref.symbol
+                     or str(participant.get("qualified_symbol") or "") == source_ref.symbol
++                    or (
++                        "." not in source_ref.symbol
++                        and str(participant.get("qualified_symbol") or "").endswith(
++                            f".{source_ref.symbol}"
++                        )
++                    )
+                 )
+                 and int(metadata.get("line_start") or 0) == source_ref.line_start
+                 and int(metadata.get("line_end") or 0) == source_ref.line_end
+--- a/aura_relational_index.py
++++ b/aura_relational_index.py
+@@ -2037,7 +2037,14 @@
+         metadata = participant.metadata
+         return (
+             str(metadata.get("file_path") or "") == source_ref.file_path
+-            and (not source_ref.symbol or participant.qualified_symbol == source_ref.symbol)
++            and (
++                not source_ref.symbol
++                or participant.qualified_symbol == source_ref.symbol
++                or (
++                    "." not in source_ref.symbol
++                    and participant.qualified_symbol.endswith(f".{source_ref.symbol}")
++                )
++            )
+             and int(metadata.get("line_start") or 0) == source_ref.line_start
+             and int(metadata.get("line_end") or 0) == source_ref.line_end
+             and str(participant.digest or "") == source_ref.source_hash
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -8,11 +8,15 @@
+ import math
+ import os
+ from pathlib import Path
++import re
++import signal
+ import struct
+ import subprocess
+ import sys
++import tempfile
++import threading
+ import time
+-from typing import Any, Mapping, Sequence
++from typing import Any, BinaryIO, Mapping, Sequence
+ import xml.etree.ElementTree as ET
+ 
+ _REPO_ROOT = Path(__file__).resolve().parents[1]
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -21,7 +25,7 @@
+ 
+ from aura_event_contracts import stable_digest
+ 
+-ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V1"
++ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V2"
+ MAX_COMMAND_OUTPUT_BYTES = 64 * 1024
+ MAX_GLB_BYTES = 512 * 1024 * 1024
+ MAX_SVG_BYTES = 32 * 1024 * 1024
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -29,6 +33,9 @@
+ GLB_VERSION = 2
+ GLB_JSON_CHUNK = 0x4E4F534A
+ FORBIDDEN_SVG_RAW = (b"<!DOCTYPE", b"<!ENTITY")
++_EXTERNAL_SCHEMES = ("http:", "https:", "//", "data:", "javascript:", "file:")
++_CSS_URL = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.IGNORECASE | re.DOTALL)
++_CSS_IMPORT = re.compile(r"@import\b", re.IGNORECASE)
+ 
+ 
+ @dataclass(frozen=True)
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -41,6 +48,7 @@
+     stdout_truncated: bool
+     stderr_truncated: bool
+     timed_out: bool
++    output_limit_exceeded: bool = False
+     receipt_digest: str = ""
+ 
+     def __post_init__(self) -> None:
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -61,6 +69,7 @@
+             "stdout_truncated": self.stdout_truncated,
+             "stderr_truncated": self.stderr_truncated,
+             "timed_out": self.timed_out,
++            "output_limit_exceeded": self.output_limit_exceeded,
+         }
+ 
+     def to_dict(self) -> dict[str, Any]:
+--- a/scripts/aura_verify_construction_demo_assets.py
++++ b/scripts/aura_verify_construction_demo_assets.py
+@@ -103,8 +112,44 @@
+ 
+ def _bounded_text(value: bytes, maximum_bytes: int = MAX_COMMAND_OUTPUT_BYTES) -> tuple[str, bool]:
+     truncated = len(value) > maximum_bytes
+-    body = value[:maximum_bytes]
+-    return body.decode("utf-8", errors="replace"), truncated
++    return value[:maximum_bytes].decode("utf-8", errors="replace"), truncated
++
++
++def _terminate_process_group(process: subprocess.Popen[bytes]) -> None:
++    if process.poll() is not None:
++        return
++    try:
++        if os.name == "nt":
++            process.terminate()
++        else:
++            os.killpg(process.pid, signal.SIGTERM)
++        process.wait(timeout=0.5)
++    except (ProcessLookupError, subprocess.TimeoutExpired):
++        try:
++            if os.name == "nt":
++                process.kill()
++            else:
++                os.killpg(process.pid, signal.SIGKILL)
++        except ProcessLookupError:
++            pass
++
++
++def _read_capped(
++    stream: BinaryIO,
++    buffer: bytearray,
++    overflow: threading.Event,
++    maximum_bytes: int,
++) -> None:
++    try:
++        while chunk := stream.read(8192):
++            remaining = maximum_bytes + 1 - len(buffer)
++            if remaining > 0:
++                buffer.extend(chunk[:remaining])
++            if len(buffer) > maximum_bytes:
++                overflow.set()
++                return
++    finally:
++        stream.close()
+ 
+ 
+ def run_bounded_command(
