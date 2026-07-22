@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
+import hashlib
+import json
 from typing import Any
 
 from aura_agent_arena_bridge import AuraAgentArenaBridge
@@ -13,6 +15,46 @@ from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine
 from aura_temporal_persistence import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY
 
 AGENT_ARENA_PERSISTENCE_BRIDGE_VERSION = "AURA_AGENT_ARENA_PERSISTENCE_BRIDGE_V1"
+_COMPASS_CLASSIFY_ITEM_LIMIT = 64
+_COMPASS_CLASSIFY_ITEM_BYTES = 192
+_COMPASS_CLASSIFY_MAX_RESPONSE_BYTES = 131_072
+
+
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        default=str,
+    ).encode("utf-8")
+
+
+def _bounded_interface_value(value: Any, *, max_bytes: int = _COMPASS_CLASSIFY_ITEM_BYTES) -> tuple[Any, bool]:
+    raw = _canonical_json_bytes(value)
+    if len(raw) <= max_bytes:
+        return value, False
+    digest = hashlib.sha256(raw).hexdigest()
+    if isinstance(value, str):
+        return f"[TRUNCATED sha256:{digest} bytes:{len(raw)}]", True
+    return {
+        "truncated": True,
+        "sha256": digest,
+        "original_bytes": len(raw),
+        "original_type": type(value).__name__,
+    }, True
+
+
+def _bounded_interface_collection(values: Any) -> tuple[list[Any], int, int]:
+    source = list(values or [])
+    selected = source[:_COMPASS_CLASSIFY_ITEM_LIMIT]
+    projected: list[Any] = []
+    replacements = 0
+    for item in selected:
+        bounded, replaced = _bounded_interface_value(item)
+        projected.append(bounded)
+        replacements += int(replaced)
+    return projected, max(0, len(source) - len(selected)), replacements
 
 
 def _unique_strings(*groups: list[str] | None) -> list[str]:
@@ -482,22 +524,62 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
     def aura_compass_classify(self, run_id: str) -> dict[str, Any]:
         packet = self._compass_packet(run_id)
         atlas = dict(packet.get("atlas") or {})
-        assessments = list(atlas.get("assessments", []) or [])
-        return {
+        bounded = dict(packet.get("bounded_emergent_verification") or {})
+        field_sources = {
+            "assessments": atlas.get("assessments", []) or [],
+            "prohibitions": packet.get("prohibitions", []) or [],
+            "missing_roles": packet.get("missing_roles", []) or [],
+            "required_adapters": packet.get("required_adapters", []) or [],
+            "accepted_candidates": bounded.get("accepted_candidates", []) or [],
+            "rejected_candidates": bounded.get("rejected_candidates", []) or [],
+            "suppressed_candidates": bounded.get("suppressed_candidates", []) or [],
+        }
+        projected: dict[str, list[Any]] = {}
+        truncation: dict[str, Any] = {
+            "max_items_per_field": _COMPASS_CLASSIFY_ITEM_LIMIT,
+            "max_item_bytes": _COMPASS_CLASSIFY_ITEM_BYTES,
+            "max_response_bytes": _COMPASS_CLASSIFY_MAX_RESPONSE_BYTES,
+        }
+        for field, values in field_sources.items():
+            items, omitted, replacements = _bounded_interface_collection(values)
+            projected[field] = items
+            truncation[f"{field}_omitted"] = omitted
+            truncation[f"{field}_oversize_replaced"] = replacements
+
+        summary, summary_replaced = _bounded_interface_value(bounded.get("summary") or {})
+        truncation["bounded_emergent_summary_oversize_replaced"] = int(summary_replaced)
+        response: dict[str, Any] = {
             "ok": True,
             "run_id": run_id,
             "atlas_digest": atlas.get("snapshot_digest"),
             "profile": atlas.get("profile"),
-            "assessments": assessments[:128],
-            "interface_truncation": {"assessments_omitted": max(0, len(assessments) - 128)},
-            "prohibitions": list(packet.get("prohibitions", []) or []),
-            "missing_roles": list(packet.get("missing_roles", []) or []),
-            "required_adapters": list(packet.get("required_adapters", []) or []),
-            "bounded_emergent": dict(packet.get("bounded_emergent_verification") or {}),
+            "assessments": projected["assessments"],
+            "prohibitions": projected["prohibitions"],
+            "missing_roles": projected["missing_roles"],
+            "required_adapters": projected["required_adapters"],
+            "bounded_emergent": {
+                "version": bounded.get("version"),
+                "verification_digest": bounded.get("verification_digest"),
+                "neighborhood_digest": bounded.get("neighborhood_digest"),
+                "trusted_neighborhood_verified": bounded.get("trusted_neighborhood_verified"),
+                "accepted_candidates": projected["accepted_candidates"],
+                "rejected_candidates": projected["rejected_candidates"],
+                "suppressed_candidates": projected["suppressed_candidates"],
+                "summary": summary,
+            },
+            "interface_truncation": truncation,
             "proposal_only": True,
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": False,
         }
+        for _ in range(4):
+            response_bytes = len(_canonical_json_bytes(response))
+            truncation["response_bytes"] = response_bytes
+            if len(_canonical_json_bytes(response)) == response_bytes:
+                break
+        if truncation["response_bytes"] > _COMPASS_CLASSIFY_MAX_RESPONSE_BYTES:
+            raise ValueError("Compass classification projection exceeded its byte budget")
+        return response
 
     def aura_compass_breadboard(self, run_id: str) -> dict[str, Any]:
         packet = self._compass_packet(run_id)

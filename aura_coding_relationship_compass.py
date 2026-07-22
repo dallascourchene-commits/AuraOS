@@ -36,6 +36,7 @@ from aura_event_contracts import stable_digest
 from aura_polysynthetic_intent import PolysyntheticIntentPacket
 from aura_relational_index import (
     RelationalIndex,
+    RelationalIndexBuilder,
     RelationalIndexStore,
     build_relational_index,
     extract_relational_neighborhood,
@@ -78,6 +79,7 @@ from aura_relationship_atlas import (
 )
 
 COMPASS_VERSION = "AURA_CODING_RELATIONSHIP_COMPASS_V1"
+COMPASS_GROUNDING_RECEIPT_VERSION = "AURA_COMPASS_GROUNDING_RECEIPT_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
 
@@ -253,6 +255,84 @@ def _stable_digest(value: Any, *, digest_size: int = 24) -> str:
 
 def _ordered_unique(values: Sequence[str]) -> list[str]:
     return list(dict.fromkeys(str(value) for value in values if str(value)))
+
+
+def _compass_digest_payload(value: Mapping[str, Any]) -> dict[str, Any]:
+    payload = json.loads(json.dumps(dict(value), sort_keys=True, default=str))
+    payload.pop("compass_digest", None)
+    neighborhood = payload.get("relational_neighborhood")
+    if isinstance(neighborhood, dict):
+        neighborhood.pop("index_source", None)
+    atlas = payload.get("atlas")
+    if isinstance(atlas, dict):
+        atlas.pop("cache_hit", None)
+    return payload
+
+
+def _canonical_grounding_binding(value: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "file_path": str(value.get("file_path") or ""),
+        "symbol": str(value.get("symbol") or value.get("qualified_symbol") or ""),
+        "line_start": int(value.get("line_start") or value.get("start_line") or 0),
+        "line_end": int(value.get("line_end") or value.get("end_line") or 0),
+        "source_hash": str(value.get("source_hash") or ""),
+        "file_source_hash": str(value.get("file_source_hash") or ""),
+    }
+
+
+def _build_compass_grounding_receipt(
+    *,
+    packet: Mapping[str, Any],
+    evidence: Mapping[str, Any],
+    targets: Sequence[Mapping[str, Any]],
+    required_tests: Sequence[str],
+) -> dict[str, Any]:
+    bindings = [_canonical_grounding_binding(item) for item in targets]
+    receipt = {
+        "version": COMPASS_GROUNDING_RECEIPT_VERSION,
+        "grounding_digest": str(packet.get("grounding_digest") or ""),
+        "repository_head": str(evidence.get("repo_head") or ""),
+        "evidence_packet_digest": str(evidence.get("packet_digest") or ""),
+        "atomic_inventory_digest": str((evidence.get("atomic_inventory") or {}).get("inventory_digest") or ""),
+        "target_bindings": bindings,
+        "source_evidence_digest": stable_digest(bindings),
+        "required_tests": _ordered_unique(required_tests),
+        "patch_authority": PATCH_AUTHORITY,
+        "vsa_patch_authority": False,
+    }
+    return receipt
+
+
+def _live_repository_identity(repo_root: Path, cached_index: Mapping[str, Any]) -> dict[str, Any]:
+    profile = cached_index.get("profile") or {}
+    profile_name = str(profile.get("name") or "STANDARD") if isinstance(profile, Mapping) else "STANDARD"
+    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot()
+
+
+def _relational_cache_entry_is_current(repo_root: Path, cached_index: Mapping[str, Any]) -> bool:
+    cached_identity = cached_index.get("repository_identity") or {}
+    if not isinstance(cached_identity, Mapping) or not cached_identity:
+        return False
+    try:
+        live_identity = _live_repository_identity(repo_root, cached_index)
+    except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return False
+    identity_fields = (
+        "repo_head",
+        "working_tree_digest",
+        "codemap_digest",
+        "topology_digest",
+        "topology_version",
+        "topology_health",
+        "connectome_graph_digest",
+        "connectome_version",
+        "atomic_inventory_digest",
+        "atomic_inventory_version",
+        "relation_ontology_digest",
+        "profile_digest",
+        "schema_digest",
+    )
+    return all(cached_identity.get(key) == live_identity.get(key) for key in identity_fields)
 
 
 def _tokens(value: str) -> set[str]:
@@ -948,11 +1028,16 @@ def compile_coding_relationship_compass(
         str(inventory.get("inventory_digest") or ""),
         str(graph.get("graph_digest") or ""),
     )
+    relational_index: dict[str, Any] = {}
     if relational_index_data is None and cache_key in _RELATIONAL_PLANE_CACHE:
-        relational_index = dict(_RELATIONAL_PLANE_CACHE[cache_key])
-        cache_hit = True
-        index_source = "process_cache"
-    elif relational_index_data is not None:
+        cached_index = dict(_RELATIONAL_PLANE_CACHE[cache_key])
+        if _relational_cache_entry_is_current(root, cached_index):
+            relational_index = cached_index
+            cache_hit = True
+            index_source = "process_cache"
+        else:
+            _RELATIONAL_PLANE_CACHE.pop(cache_key, None)
+    if relational_index_data is not None:
         try:
             relational_index = RelationalIndex.from_dict(relational_index_data).to_dict()
             index_source = "caller_supplied_validated"
@@ -962,9 +1047,8 @@ def compile_coding_relationship_compass(
             _validated_relational_index_digest(relational_index_data)
             relational_index = dict(relational_index_data)
             index_source = "caller_supplied_legacy_digest_validated"
-    else:
+    elif not relational_index:
         store = RelationalIndexStore(root)
-        relational_index = {}
         if store.index_path.exists() and store.receipt_path.exists():
             try:
                 status = store.validate_current()
@@ -981,6 +1065,7 @@ def compile_coding_relationship_compass(
                 include_index=True,
             )
             relational_index = dict(index_result["index"])
+            index_source = "in_memory_rebuild"
         if len(_RELATIONAL_PLANE_CACHE) >= _RELATIONAL_PLANE_CACHE_LIMIT:
             _RELATIONAL_PLANE_CACHE.pop(next(iter(_RELATIONAL_PLANE_CACHE)))
         _RELATIONAL_PLANE_CACHE[cache_key] = dict(relational_index)
@@ -1229,11 +1314,19 @@ def compile_coding_relationship_compass(
             "PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref"
         )
     packet["rollout"] = rollout
-    packet["grounding_digest"] = _stable_digest(dict(packet))
+    packet["grounding_digest"] = _stable_digest(_compass_digest_payload(packet))
+    grounding_receipt = _build_compass_grounding_receipt(
+        packet=packet,
+        evidence=evidence,
+        targets=targets[:16],
+        required_tests=required_tests,
+    )
+    packet["grounding_receipt"] = grounding_receipt
+    packet["grounding_receipt_digest"] = stable_digest(grounding_receipt)
 
     discovery = discover_bounded_emergent_candidates(
         objective=normalized_objective,
-        neighborhood=packet["relational_neighborhood"],
+        neighborhood=neighborhood,
         compatibility=packet["typed_compatibility"],
         atlas=packet["atlas"],
         required_tests=required_tests,
@@ -1242,12 +1335,13 @@ def compile_coding_relationship_compass(
     )
     bounded_verification = verify_bounded_emergent_discovery(
         discovery,
+        neighborhood=neighborhood,
         max_clusters=max(1, min(max_emergent_candidates, 16)),
     )
     packet["bounded_emergent_discovery"] = discovery.to_dict()
     packet["bounded_emergent_verification"] = bounded_verification
 
-    change_graph = build_compass_change_graph(packet)
+    change_graph = build_compass_change_graph(packet, repo_root=root)
     capsule_packet = compile_compass_act_capsules(change_graph)
     agent_ir = (
         AgentIRCompiler.compile_compass_act_capsules(capsule_packet)
@@ -1287,8 +1381,7 @@ def compile_coding_relationship_compass(
         "proposal_only": True,
     }
 
-    digest_payload = dict(packet)
-    packet["compass_digest"] = _stable_digest(digest_payload)
+    packet["compass_digest"] = _stable_digest(_compass_digest_payload(packet))
     return packet
 
 

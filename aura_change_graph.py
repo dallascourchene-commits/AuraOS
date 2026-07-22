@@ -5,7 +5,9 @@ Dependencies: stdlib only. All Aura imports are lazy.
 from __future__ import annotations
 import hashlib
 import json
+import re
 from pathlib import Path
+import tokenize
 from typing import Any, Mapping, Sequence
 
 from aura_event_contracts import stable_digest
@@ -96,6 +98,7 @@ def change_graph_to_review_packet(graph: dict) -> dict[str, Any]:
 
 COMPASS_CHANGE_GRAPH_VERSION = "AURA_COMPASS_CHANGE_GRAPH_V1"
 COMPASS_ACT_CAPSULE_VERSION = "AURA_COMPASS_ACT_CAPSULE_V1"
+COMPASS_GROUNDING_RECEIPT_VERSION = "AURA_COMPASS_GROUNDING_RECEIPT_V1"
 
 
 def _ordered_unique(values: Sequence[Any]) -> list[str]:
@@ -114,17 +117,124 @@ def _node(node_type: str, payload: Mapping[str, Any], *, depends_on: Sequence[st
     return {"node_id": f"cgn_{stable_digest(body, digest_size=12)}", **body}
 
 
-def build_compass_change_graph(compass_packet: Mapping[str, Any]) -> dict[str, Any]:
-    """Compile grounded relationship intelligence into a proposal-only change graph."""
+def _canonical_target_binding(value: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "file_path": str(value.get("file_path") or ""),
+        "symbol": str(value.get("symbol") or value.get("qualified_symbol") or ""),
+        "line_start": int(value.get("line_start") or value.get("start_line") or 0),
+        "line_end": int(value.get("line_end") or value.get("end_line") or 0),
+        "source_hash": str(value.get("source_hash") or ""),
+        "file_source_hash": str(value.get("file_source_hash") or ""),
+    }
+
+
+def _digest_matches(value: Any, supplied: str) -> bool:
+    text = str(supplied or "")
+    if not re.fullmatch(r"[0-9a-f]+", text) or len(text) % 2 or not 2 <= len(text) <= 128:
+        return False
+    return stable_digest(value, digest_size=len(text) // 2) == text
+
+
+def _verify_target_source(repo_root: Path, binding: Mapping[str, Any]) -> None:
+    file_path = str(binding.get("file_path") or "")
+    relative = Path(file_path)
+    if not file_path or relative.is_absolute() or ".." in relative.parts:
+        raise ValueError("Compass grounding receipt contains a non-canonical target path")
+    source_path = repo_root / relative
+    if not source_path.is_file():
+        raise ValueError(f"Compass grounding target is missing: {file_path}")
+    try:
+        with tokenize.open(source_path) as handle:
+            source_text = handle.read()
+    except (OSError, SyntaxError, UnicodeError) as exc:
+        raise ValueError(f"Compass grounding target is unreadable: {file_path}") from exc
+    actual_file_hash = hashlib.sha256(source_text.encode("utf-8", errors="replace")).hexdigest()
+    if str(binding.get("file_source_hash") or "") != actual_file_hash:
+        raise ValueError(f"Compass grounding file_source_hash mismatch: {file_path}")
+    line_start = int(binding.get("line_start") or 0)
+    line_end = int(binding.get("line_end") or 0)
+    lines = source_text.splitlines()
+    if line_start <= 0 or line_end < line_start or line_end > len(lines):
+        raise ValueError(f"Compass grounding source span is invalid: {file_path}")
+    actual_source_hash = hashlib.sha256(
+        "\n".join(lines[line_start - 1 : line_end]).encode("utf-8", errors="replace")
+    ).hexdigest()
+    if str(binding.get("source_hash") or "") != actual_source_hash:
+        raise ValueError(f"Compass grounding source_hash mismatch: {file_path}")
+
+
+def _verify_grounding_receipt(
+    compass_packet: Mapping[str, Any],
+    *,
+    repo_root: str | Path,
+) -> tuple[list[dict[str, Any]], list[str], str]:
+    receipt = compass_packet.get("grounding_receipt") or {}
+    if not isinstance(receipt, Mapping):
+        raise ValueError("Compass Change Graph requires a trusted grounding receipt")
+    receipt_digest = str(compass_packet.get("grounding_receipt_digest") or "")
+    if not receipt_digest or not _digest_matches(dict(receipt), receipt_digest):
+        raise ValueError("Compass grounding receipt digest mismatch")
+    grounding_digest = str(compass_packet.get("grounding_digest") or "")
+    if (
+        receipt.get("version") != COMPASS_GROUNDING_RECEIPT_VERSION
+        or str(receipt.get("grounding_digest") or "") != grounding_digest
+        or receipt.get("patch_authority") != PATCH_AUTHORITY
+        or bool(receipt.get("vsa_patch_authority"))
+        or not grounding_digest
+    ):
+        raise ValueError("Compass grounding receipt authority or identity mismatch")
+
+    targets = [
+        _canonical_target_binding(item)
+        for item in compass_packet.get("recommended_targets", ()) or ()
+        if isinstance(item, Mapping)
+    ]
+    bindings = [
+        _canonical_target_binding(item)
+        for item in receipt.get("target_bindings", ()) or ()
+        if isinstance(item, Mapping)
+    ]
+    if len(targets) != len(list(compass_packet.get("recommended_targets", ()) or ())):
+        raise ValueError("Compass recommended targets are not canonical mappings")
+    if len(bindings) != len(list(receipt.get("target_bindings", ()) or ())):
+        raise ValueError("Compass grounding target bindings are not canonical mappings")
+    if targets != bindings:
+        raise ValueError("Compass targets are not bound to the trusted grounding receipt")
+    if not _digest_matches(bindings, str(receipt.get("source_evidence_digest") or "")):
+        raise ValueError("Compass grounding source evidence digest mismatch")
+    tests = _ordered_unique(compass_packet.get("required_tests", ()) or ())
+    if tests != _ordered_unique(receipt.get("required_tests", ()) or ()):
+        raise ValueError("Compass required tests are not bound to the grounding receipt")
+    for binding in bindings:
+        if not binding["file_path"]:
+            raise ValueError("Compass grounding receipt target file_path is required")
+        if binding["line_start"] <= 0 or binding["line_end"] < binding["line_start"]:
+            raise ValueError("Compass grounding receipt exact source span is invalid")
+        if not binding["source_hash"]:
+            raise ValueError("Compass grounding receipt source_hash is required")
+        if not binding["file_source_hash"]:
+            raise ValueError("Compass grounding receipt file_source_hash is required")
+        _verify_target_source(Path(repo_root).resolve(), binding)
+    return bindings, tests, receipt_digest
+
+
+def build_compass_change_graph(
+    compass_packet: Mapping[str, Any],
+    *,
+    repo_root: str | Path = ".",
+) -> dict[str, Any]:
+    """Compile exact grounded relationship intelligence into a proposal-only graph."""
 
     if not isinstance(compass_packet, Mapping) or not compass_packet.get("grounding_ok"):
         raise ValueError("Compass Change Graph requires grounded Compass evidence")
     objective = str(compass_packet.get("objective") or "").strip()
-    compass_digest = str(compass_packet.get("grounding_digest") or compass_packet.get("compass_digest") or "")
+    compass_digest = str(compass_packet.get("grounding_digest") or "")
     if not objective or not compass_digest:
         raise ValueError("Compass Change Graph requires objective and grounding digest")
-    targets = [dict(item) for item in compass_packet.get("recommended_targets", ()) or () if isinstance(item, Mapping)]
-    tests = _ordered_unique(compass_packet.get("required_tests", ()) or ())
+    targets, tests, grounding_receipt_digest = _verify_grounding_receipt(
+        compass_packet,
+        repo_root=repo_root,
+    )
     adapters = _ordered_unique(compass_packet.get("required_adapters", ()) or ())
     prohibitions = [dict(item) for item in compass_packet.get("prohibitions", ()) or () if isinstance(item, Mapping)]
     risks = [dict(item) if isinstance(item, Mapping) else {"risk": str(item)} for item in (compass_packet.get("emergent_evidence") or {}).get("risk_map", ()) or ()]
@@ -148,6 +258,7 @@ def build_compass_change_graph(compass_packet: Mapping[str, Any]) -> dict[str, A
             "effects": ["proposal or exact-span Surgeon request only"],
             "rollback": ["discard proposal and restore the exact pre-change source hash"],
             "human_decision_required": True,
+            "grounding_receipt_digest": grounding_receipt_digest,
         }
         item = _node("ACTION", payload)
         nodes.append(item)
@@ -200,6 +311,7 @@ def build_compass_change_graph(compass_packet: Mapping[str, Any]) -> dict[str, A
         target_slice = targets[phase_index : phase_index + 4]
         invariant_payload = {
             "compass_digest": compass_digest,
+            "grounding_receipt_digest": grounding_receipt_digest,
             "source_hashes": [str(item.get("source_hash") or "") for item in target_slice],
             "tests": tests,
             "patch_authority": PATCH_AUTHORITY,
@@ -225,6 +337,7 @@ def build_compass_change_graph(compass_packet: Mapping[str, Any]) -> dict[str, A
         "graph_type": "CODING_RELATIONSHIP_COMPASS",
         "objective": objective,
         "compass_digest": compass_digest,
+        "grounding_receipt_digest": grounding_receipt_digest,
         "nodes": nodes,
         "phase_capsules": phase_capsules,
         "required_tests": tests,
@@ -305,6 +418,8 @@ def compile_compass_act_capsules(graph: Mapping[str, Any]) -> dict[str, Any]:
             missing.append("exact_source_span")
         if not payload.get("tests"):
             missing.append("tests")
+        if not str(payload.get("grounding_receipt_digest") or ""):
+            missing.append("grounding_receipt_digest")
         if missing:
             failures.append({"node_id": node.get("node_id"), "missing": sorted(set(missing))})
             continue

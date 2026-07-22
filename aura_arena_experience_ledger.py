@@ -247,6 +247,16 @@ class ArenaExperienceLedger:
             )
         except (TypeError, ValueError) as exc:
             return _deny(f"invalid_relationship_observation:{type(exc).__name__}")
+        if item.privacy_class == "PRIVATE_REDACTED":
+            private_refs = [*item.verifier_evidence_refs, *item.receipt_refs, *item.source_refs]
+            if (
+                any(not str(value).startswith("redacted:") for value in private_refs)
+                or item.reason not in {"", "[REDACTED]"}
+            ):
+                return _deny(
+                    "private_relationship_observation_requires_redaction",
+                    observation_id=item.observation_id,
+                )
         payload = item.to_dict()
         digest = str(payload["observation_digest"])
         prior = self._conn.execute(
@@ -263,7 +273,10 @@ class ArenaExperienceLedger:
                     "patch_authority": PATCH_AUTHORITY,
                     "vsa_patch_authority": False,
                 }
-            return _deny("relationship_observation_id_digest_conflict", experience_id=item.observation_id)
+            return _deny(
+                "relationship_observation_id_digest_conflict",
+                observation_id=item.observation_id,
+            )
         try:
             self._conn.execute(
                 "INSERT INTO relationship_experiences("
@@ -498,13 +511,23 @@ def _present(value: Any) -> bool:
     return bool(value) if isinstance(value, dict) else bool(str(value or "").strip())
 
 
-def _deny(reason: str, *, missing: list[str] | None = None, experience_id: str = "") -> dict[str, Any]:
-    return {
+def _deny(
+    reason: str,
+    *,
+    missing: list[str] | None = None,
+    experience_id: str = "",
+    observation_id: str = "",
+) -> dict[str, Any]:
+    result: dict[str, Any] = {
         "ok": False,
         "reason": reason,
         "missing": list(missing or []),
-        "experience_id": experience_id,
         "fail_closed": True,
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": False,
     }
+    if experience_id:
+        result["experience_id"] = experience_id
+    if observation_id:
+        result["observation_id"] = observation_id
+    return result

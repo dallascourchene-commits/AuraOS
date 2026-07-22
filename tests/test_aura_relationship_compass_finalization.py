@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 import json
 from pathlib import Path
 
@@ -129,33 +130,53 @@ def test_c6_bounded_discovery_is_deterministic_and_preserves_rejections() -> Non
         if item.status == "FUTURE_PATCHABLE"
     )
 
-    verified = verify_bounded_emergent_discovery(one)
+    verified = verify_bounded_emergent_discovery(one, neighborhood=_neighborhood())
     tampered_discovery = one.to_dict()
     tampered_discovery["candidates"][0]["mechanism"] = "tampered"
     with pytest.raises(ValueError, match="discovery digest mismatch"):
-        verify_bounded_emergent_discovery(tampered_discovery)
+        verify_bounded_emergent_discovery(tampered_discovery, neighborhood=_neighborhood())
     forbidden_discovery = one.to_dict()
     forbidden_discovery["safe_to_patch"] = True
     forbidden_discovery["discovery_digest"] = stable_digest(
         {key: value for key, value in forbidden_discovery.items() if key != "discovery_digest"}
     )
     with pytest.raises(ValueError, match="authority boundary changed"):
-        verify_bounded_emergent_discovery(forbidden_discovery)
+        verify_bounded_emergent_discovery(forbidden_discovery, neighborhood=_neighborhood())
     assert verified["summary"]["no_generic_repository_scan"] is True
     assert verified["accepted_candidates"]
     assert any(item["status"] == "TOO_RISKY" for item in verified["rejected_candidates"])
     assert all(item["proposal_only"] for item in verified["accepted_candidates"])
 
 
+def test_c6_verifier_rejects_candidate_supplied_endpoint_hashes() -> None:
+    neighborhood = _neighborhood()
+    discovery = discover_bounded_emergent_candidates(
+        objective="Verify exact endpoint evidence",
+        neighborhood=neighborhood,
+        compatibility=_compatibility(),
+        required_tests=["tests/test_compass.py"],
+    ).to_dict()
+    future = next(item for item in discovery["candidates"] if item["status"] == "FUTURE_PATCHABLE")
+    future["source_source_hashes"] = ["f" * 64]
+    discovery["discovery_digest"] = stable_digest(
+        {key: value for key, value in discovery.items() if key != "discovery_digest"}
+    )
+    verified = verify_bounded_emergent_discovery(discovery, neighborhood=neighborhood)
+    rejection = next(item for item in verified["rejected_candidates"] if item["candidate_id"] == future["candidate_id"])
+    assert "SOURCE_ENDPOINT_HASH_MISMATCH" in rejection["reasons"]
+    assert verified["trusted_neighborhood_verified"] is True
+
+
 def test_c6_missing_source_evidence_remains_needs_grounding() -> None:
+    neighborhood = _neighborhood(grounded_c=False)
     discovery = discover_bounded_emergent_candidates(
         objective="Try a bounded adapter experiment",
-        neighborhood=_neighborhood(grounded_c=False),
+        neighborhood=neighborhood,
         compatibility=_compatibility(),
         required_tests=[],
     )
     assert any(item.status == "NEEDS_GROUNDING" for item in discovery.candidates)
-    verified = verify_bounded_emergent_discovery(discovery)
+    verified = verify_bounded_emergent_discovery(discovery, neighborhood=neighborhood)
     assert any(item["status"] == "NEEDS_GROUNDING" for item in verified["rejected_candidates"])
 
 
@@ -174,30 +195,55 @@ def test_c6_pair_budget_truncation_is_receipted() -> None:
     assert any(item["reason"] == "PAIR_BUDGET_TRUNCATED" for item in discovery.suppressed_receipts)
 
 
-def _compass_packet() -> dict:
+def _write_grounded_source(tmp_path: Path, name: str, prefix: str, line_count: int) -> tuple[str, list[str]]:
+    lines = [f"# {prefix} line {index}" for index in range(1, line_count + 1)]
+    text = "\n".join(lines) + "\n"
+    (tmp_path / name).write_text(text, encoding="utf-8")
+    return text, lines
+
+
+def _compass_packet(tmp_path: Path) -> dict:
+    alpha_text, alpha_lines = _write_grounded_source(tmp_path, "alpha.py", "alpha", 30)
+    beta_text, beta_lines = _write_grounded_source(tmp_path, "beta.py", "beta", 20)
+    targets = [
+        {
+            "file_path": "alpha.py",
+            "symbol": "Alpha.run",
+            "line_start": 10,
+            "line_end": 24,
+            "source_hash": hashlib.sha256("\n".join(alpha_lines[9:24]).encode("utf-8")).hexdigest(),
+            "file_source_hash": hashlib.sha256(alpha_text.encode("utf-8")).hexdigest(),
+        },
+        {
+            "file_path": "beta.py",
+            "symbol": "Beta.verify",
+            "line_start": 4,
+            "line_end": 12,
+            "source_hash": hashlib.sha256("\n".join(beta_lines[3:12]).encode("utf-8")).hexdigest(),
+            "file_source_hash": hashlib.sha256(beta_text.encode("utf-8")).hexdigest(),
+        },
+    ]
+    required_tests = ["tests/test_alpha.py", "tests/test_beta.py"]
+    grounding_receipt = {
+        "version": "AURA_COMPASS_GROUNDING_RECEIPT_V1",
+        "grounding_digest": "g" * 48,
+        "repository_head": "h" * 40,
+        "evidence_packet_digest": "evidence-packet",
+        "atomic_inventory_digest": "inventory-digest",
+        "target_bindings": deepcopy(targets),
+        "source_evidence_digest": stable_digest(targets),
+        "required_tests": required_tests,
+        "patch_authority": "exact_source_spans_and_hashes_only",
+        "vsa_patch_authority": False,
+    }
     return {
         "objective": "Compile final relationship work",
         "grounding_digest": "g" * 48,
         "grounding_ok": True,
-        "recommended_targets": [
-            {
-                "file_path": "alpha.py",
-                "symbol": "Alpha.run",
-                "line_start": 10,
-                "line_end": 24,
-                "source_hash": "a" * 64,
-                "file_source_hash": "b" * 64,
-            },
-            {
-                "file_path": "beta.py",
-                "symbol": "Beta.verify",
-                "line_start": 4,
-                "line_end": 12,
-                "source_hash": "c" * 64,
-                "file_source_hash": "d" * 64,
-            },
-        ],
-        "required_tests": ["tests/test_alpha.py", "tests/test_beta.py"],
+        "grounding_receipt": grounding_receipt,
+        "grounding_receipt_digest": stable_digest(grounding_receipt),
+        "recommended_targets": targets,
+        "required_tests": required_tests,
         "required_adapters": ["schema_adapter"],
         "prohibitions": [{"pattern": "self_verification_block"}],
         "emergent_evidence": {"risk_map": [{"risk": "cross-module regression"}]},
@@ -214,8 +260,16 @@ def _compass_packet() -> dict:
     }
 
 
-def test_c7_change_graph_capsules_and_agent_ir_are_proposal_only() -> None:
-    graph = build_compass_change_graph(_compass_packet())
+def _rebind_grounding_receipt(packet: dict) -> None:
+    receipt = packet["grounding_receipt"]
+    receipt["target_bindings"] = deepcopy(packet["recommended_targets"])
+    receipt["source_evidence_digest"] = stable_digest(receipt["target_bindings"])
+    receipt["required_tests"] = list(packet["required_tests"])
+    packet["grounding_receipt_digest"] = stable_digest(receipt)
+
+
+def test_c7_change_graph_capsules_and_agent_ir_are_proposal_only(tmp_path: Path) -> None:
+    graph = build_compass_change_graph(_compass_packet(tmp_path), repo_root=tmp_path)
     assert validate_compass_change_graph(graph)["ok"] is True
     types = {item["node_type"] for item in graph["nodes"]}
     assert {
@@ -251,29 +305,49 @@ def test_c7_change_graph_capsules_and_agent_ir_are_proposal_only() -> None:
     assert all(item["payload"]["proposal_only"] for item in agent_ir["nodes"])
 
 
-def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests() -> None:
-    packet = _compass_packet()
+def test_c7_change_graph_rejects_unbound_or_drifted_source_evidence(tmp_path: Path) -> None:
+    unbound = _compass_packet(tmp_path)
+    unbound["recommended_targets"][0]["line_start"] += 1
+    with pytest.raises(ValueError, match="not bound"):
+        build_compass_change_graph(unbound, repo_root=tmp_path)
+
+    drifted = _compass_packet(tmp_path)
+    (tmp_path / "alpha.py").write_text("# repository drift\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="file_source_hash mismatch"):
+        build_compass_change_graph(drifted, repo_root=tmp_path)
+
+
+def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests(tmp_path: Path) -> None:
+    packet = _compass_packet(tmp_path)
     packet["recommended_targets"][0]["source_hash"] = ""
-    graph = build_compass_change_graph(packet)
+    _rebind_grounding_receipt(packet)
+    with pytest.raises(ValueError, match="source_hash"):
+        build_compass_change_graph(packet, repo_root=tmp_path)
+
+    packet = _compass_packet(tmp_path)
+    packet["required_tests"] = []
+    _rebind_grounding_receipt(packet)
+    graph = build_compass_change_graph(packet, repo_root=tmp_path)
     result = compile_compass_act_capsules(graph)
     assert result["ok"] is False
     assert result["fail_closed"] is True
-    assert result["reason"] == "CAPSULE_EVIDENCE_INCOMPLETE"
+    assert result["reason"] == "MISSING_DECLARED_TESTS"
 
-    tampered = deepcopy(build_compass_change_graph(_compass_packet()))
+    tampered = deepcopy(build_compass_change_graph(_compass_packet(tmp_path), repo_root=tmp_path))
     tampered["nodes"][0]["payload"]["target_file"] = "tampered.py"
     with pytest.raises(ValueError, match="digest mismatch"):
         validate_compass_change_graph(tampered)
 
-    forbidden = deepcopy(build_compass_change_graph(_compass_packet()))
+    forbidden = deepcopy(build_compass_change_graph(_compass_packet(tmp_path), repo_root=tmp_path))
     forbidden["authority"]["merge_authority"] = True
     forbidden["graph_digest"] = stable_digest({key: value for key, value in forbidden.items() if key != "graph_digest"})
     with pytest.raises(ValueError, match="authority boundary changed"):
         validate_compass_change_graph(forbidden)
 
-    no_actions = _compass_packet()
+    no_actions = _compass_packet(tmp_path)
     no_actions["recommended_targets"] = []
-    empty_result = compile_compass_act_capsules(build_compass_change_graph(no_actions))
+    _rebind_grounding_receipt(no_actions)
+    empty_result = compile_compass_act_capsules(build_compass_change_graph(no_actions, repo_root=tmp_path))
     assert empty_result["reason"] == "NO_ACTION_NODES"
 
 
@@ -347,6 +421,85 @@ def test_c8_bitemporal_experience_is_append_only_rebuildable_and_advisory(tmp_pa
     assert replay["scenarios"][0]["proposal_only"] is True
 
 
+def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Path) -> None:
+    private = RelationshipExperienceObservation.create(
+        relationship_id="bem_private",
+        relationship_digest="d" * 40,
+        repository_head="h1",
+        working_tree_digest="w" * 40,
+        valid_from_head="h1",
+        outcome=RelationshipOutcome.DENIAL,
+        verifier_evidence_refs=["pytest:secret_test"],
+        receipt_refs=["compass:secret_receipt"],
+        source_refs=["private.py#secret"],
+        current_source_digest="s" * 40,
+        human_disposition=RelationshipHumanDisposition.DENIED,
+        privacy_class="PRIVATE_REDACTED",
+        transaction_time=1000.0,
+        reason="sensitive reason",
+    )
+    redacted = RelationshipExperienceObservation.create(
+        relationship_id="bem_private",
+        relationship_digest="d" * 40,
+        repository_head="h1",
+        working_tree_digest="w" * 40,
+        valid_from_head="h1",
+        outcome=RelationshipOutcome.DENIAL,
+        verifier_evidence_refs=["redacted:verifier"],
+        receipt_refs=["redacted:receipt"],
+        source_refs=["redacted:source"],
+        current_source_digest="s" * 40,
+        human_disposition=RelationshipHumanDisposition.DENIED,
+        privacy_class="PRIVATE_REDACTED",
+        transaction_time=1001.0,
+        reason="[REDACTED]",
+    )
+    with ArenaExperienceLedger(tmp_path) as ledger:
+        denied = ledger.record_relationship_observation(private)
+        assert denied["ok"] is False
+        assert denied["reason"] == "private_relationship_observation_requires_redaction"
+        assert denied["observation_id"] == private.observation_id
+        assert "experience_id" not in denied
+        accepted = ledger.record_relationship_observation(redacted)
+        assert accepted["ok"] is True
+        payload = ledger.relationship_history(relationship_id="bem_private")[0]
+        serialized = json.dumps(payload, sort_keys=True)
+        assert "secret_test" not in serialized
+        assert "secret_receipt" not in serialized
+        assert "private.py#secret" not in serialized
+        assert "sensitive reason" not in serialized
+
+
+def test_c9_classification_projection_bounds_all_collections_and_bytes(tmp_path: Path) -> None:
+    bridge = PersistentAuraAgentArenaBridge(repo_root=str(tmp_path))
+    huge = "x" * 5000
+    bridge._compass_runs["bounded"] = {
+        "atlas": {"snapshot_digest": "atlas", "profile": "OBJECTIVE_STANDARD", "assessments": [{"detail": huge}] * 200},
+        "prohibitions": [{"detail": huge}] * 100,
+        "missing_roles": [huge] * 100,
+        "required_adapters": [huge] * 100,
+        "bounded_emergent_verification": {
+            "version": "V1",
+            "verification_digest": "v" * 40,
+            "accepted_candidates": [{"detail": huge}] * 100,
+            "rejected_candidates": [{"detail": huge}] * 100,
+            "suppressed_candidates": [{"detail": huge}] * 100,
+            "summary": {"detail": huge},
+        },
+    }
+    projection = bridge.aura_compass_classify("bounded")
+    truncation = projection["interface_truncation"]
+    assert truncation["assessments_omitted"] == 136
+    assert truncation["prohibitions_omitted"] == 36
+    assert truncation["missing_roles_omitted"] == 36
+    assert truncation["required_adapters_omitted"] == 36
+    assert truncation["accepted_candidates_omitted"] == 36
+    assert truncation["rejected_candidates_omitted"] == 36
+    assert truncation["suppressed_candidates_omitted"] == 36
+    assert truncation["response_bytes"] <= truncation["max_response_bytes"]
+    assert truncation["bounded_emergent_summary_oversize_replaced"] == 1
+
+
 def test_c9_rollout_gate_requires_complete_paired_live_authorization() -> None:
     shadow = validate_compass_rollout(CompassRolloutMode.SHADOW)
     assert shadow["admitted"] is True
@@ -372,8 +525,9 @@ def test_c9_rollout_gate_requires_complete_paired_live_authorization() -> None:
     assert authorized["provider_execution_authorized"] is False
 
 
-def _fake_final_packet() -> dict:
-    graph = build_compass_change_graph(_compass_packet())
+def _fake_final_packet(tmp_path: Path) -> dict:
+    source_packet = _compass_packet(tmp_path)
+    graph = build_compass_change_graph(source_packet, repo_root=tmp_path)
     capsules = compile_compass_act_capsules(graph)
     return {
         "compass_digest": "run-final",
@@ -381,7 +535,7 @@ def _fake_final_packet() -> dict:
         "route": "CODING_RELATIONSHIP_COMPASS",
         "target_file": "alpha.py",
         "target_symbol": "Alpha.run",
-        "recommended_targets": _compass_packet()["recommended_targets"],
+        "recommended_targets": source_packet["recommended_targets"],
         "relational_neighborhood": {
             "neighborhood_digest": "neighborhood-final",
             "participants": _neighborhood()["participants"],
@@ -409,7 +563,7 @@ def _fake_final_packet() -> dict:
 def test_c9_bridge_and_mcp_expose_six_bounded_tools(monkeypatch, tmp_path: Path) -> None:
     import aura_coding_relationship_compass as compass_module
 
-    monkeypatch.setattr(compass_module, "compile_coding_relationship_compass", lambda *args, **kwargs: _fake_final_packet())
+    monkeypatch.setattr(compass_module, "compile_coding_relationship_compass", lambda *args, **kwargs: _fake_final_packet(tmp_path))
     bridge = PersistentAuraAgentArenaBridge(repo_root=str(tmp_path))
     try:
         prepared = bridge.aura_compass_prepare(objective="Use the Coding Relationship Compass")
@@ -455,3 +609,42 @@ def test_c9_bridge_and_mcp_expose_six_bounded_tools(monkeypatch, tmp_path: Path)
         "aura_compass_plan",
         "aura_compass_compile_capsules",
     }.issubset(names)
+
+
+def test_compass_digests_ignore_process_state_fields() -> None:
+    import aura_coding_relationship_compass as compass
+
+    one = {
+        "relational_neighborhood": {"neighborhood_digest": "n", "index_source": "in_memory_rebuild"},
+        "atlas": {"snapshot_digest": "a", "cache_hit": False},
+        "value": 1,
+    }
+    two = deepcopy(one)
+    two["relational_neighborhood"]["index_source"] = "process_cache"
+    two["atlas"]["cache_hit"] = True
+    assert compass._stable_digest(compass._compass_digest_payload(one)) == compass._stable_digest(
+        compass._compass_digest_payload(two)
+    )
+
+
+def test_compass_cache_identity_detects_repository_drift(monkeypatch, tmp_path: Path) -> None:
+    import aura_coding_relationship_compass as compass
+
+    identity = {
+        "repo_head": "h",
+        "working_tree_digest": "w1",
+        "codemap_digest": "c",
+        "topology_digest": "t",
+        "topology_version": "v",
+        "topology_health": "ok",
+        "connectome_graph_digest": "g",
+        "connectome_version": "cv",
+        "atomic_inventory_digest": "i",
+        "atomic_inventory_version": "iv",
+        "relation_ontology_digest": "o",
+        "profile_digest": "p",
+        "schema_digest": "s",
+    }
+    cached = {"profile": {"name": "MINIMAL"}, "repository_identity": identity}
+    monkeypatch.setattr(compass, "_live_repository_identity", lambda *_: {**identity, "working_tree_digest": "w2"})
+    assert compass._relational_cache_entry_is_current(tmp_path, cached) is False

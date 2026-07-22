@@ -29,7 +29,7 @@ import hashlib
 import hmac
 import json
 import re
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from aura_event_contracts import stable_digest
 
@@ -1427,12 +1427,52 @@ BOUNDED_EMERGENT_VERSION = "AURA_BOUNDED_EMERGENT_DISCOVERY_V1"
 BOUNDED_VERIFIER_VERSION = "AURA_BOUNDED_EMERGENT_VERIFIER_V1"
 
 
+def _trusted_neighborhood_body(neighborhood: Any) -> tuple[dict[str, Any], str]:
+    trusted = dict(neighborhood or {})
+    trusted_digest = str(trusted.pop("neighborhood_digest", "") or "")
+    if not trusted_digest or not re.fullmatch(r"[0-9a-f]+", trusted_digest) or len(trusted_digest) % 2:
+        raise ValueError("trusted relational neighborhood digest is missing or malformed")
+    if stable_digest(trusted, digest_size=len(trusted_digest) // 2) != trusted_digest:
+        raise ValueError("trusted relational neighborhood digest mismatch")
+    return trusted, trusted_digest
+
+
+def _trusted_endpoint_evidence(participant: Mapping[str, Any]) -> tuple[list[str], list[str], list[str]]:
+    metadata = participant.get("metadata") if isinstance(participant.get("metadata"), Mapping) else {}
+    refs: list[str] = []
+    hashes: list[str] = []
+    tests: list[str] = []
+    for value in (
+        participant.get("canonical_ref"),
+        metadata.get("canonical_ref"),
+        metadata.get("source_ref"),
+    ):
+        text = str(value or "").strip()
+        if text and text not in refs:
+            refs.append(text)
+    for value in (
+        participant.get("source_hash"),
+        metadata.get("source_hash"),
+        metadata.get("file_source_hash"),
+    ):
+        text = str(value or "").strip()
+        if text and text not in hashes:
+            hashes.append(text)
+    raw_tests = participant.get("tests", ()) or metadata.get("tests", ()) or ()
+    for value in raw_tests:
+        text = str(value or "").strip()
+        if text and text not in tests:
+            tests.append(text)
+    return refs, hashes, tests
+
+
 def verify_bounded_emergent_discovery(
     discovery: Any,
     *,
+    neighborhood: Any,
     max_clusters: int = 8,
 ) -> dict[str, Any]:
-    """Verify and diversify a bounded discovery receipt without rescanning the repo."""
+    """Verify a discovery against trusted canonical neighborhood endpoint evidence."""
 
     payload = discovery.to_dict() if hasattr(discovery, "to_dict") else dict(discovery or {})
     supplied_digest = str(payload.get("discovery_digest") or "")
@@ -1451,6 +1491,14 @@ def verify_bounded_emergent_discovery(
         raise ValueError("bounded emergent discovery authority boundary changed")
     if not payload.get("no_generic_repository_scan"):
         raise ValueError("bounded emergent verifier refuses generic repository scans")
+    trusted, trusted_digest = _trusted_neighborhood_body(neighborhood)
+    if not hmac.compare_digest(str(payload.get("neighborhood_digest") or ""), trusted_digest):
+        raise ValueError("bounded emergent discovery is not bound to the trusted neighborhood")
+    participants = {
+        str(item.get("participant_id") or ""): item
+        for item in trusted.get("participants", ()) or ()
+        if isinstance(item, Mapping) and item.get("participant_id")
+    }
     candidates = [dict(item) for item in payload.get("candidates", ()) or () if isinstance(item, dict)]
     accepted: list[dict[str, Any]] = []
     rejected: list[dict[str, Any]] = []
@@ -1484,6 +1532,33 @@ def verify_bounded_emergent_discovery(
         target_source_hashes = list(candidate.get("target_source_hashes") or [])
         tests = list(candidate.get("required_tests") or [])
         reasons: list[str] = []
+        source_id = str(candidate.get("source_participant_id") or "")
+        target_id = str(candidate.get("target_participant_id") or "")
+        source_participant = participants.get(source_id)
+        target_participant = participants.get(target_id)
+        if source_participant is None:
+            reasons.append("UNKNOWN_SOURCE_PARTICIPANT")
+        if target_participant is None:
+            reasons.append("UNKNOWN_TARGET_PARTICIPANT")
+        if source_id and source_id == target_id:
+            reasons.append("SELF_PAIR")
+        if source_participant is not None and target_participant is not None:
+            trusted_source_refs, trusted_source_hashes, trusted_source_tests = _trusted_endpoint_evidence(source_participant)
+            trusted_target_refs, trusted_target_hashes, trusted_target_tests = _trusted_endpoint_evidence(target_participant)
+            if set(source_evidence_refs) != set(trusted_source_refs):
+                reasons.append("SOURCE_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(target_evidence_refs) != set(trusted_target_refs):
+                reasons.append("TARGET_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(source_source_hashes) != set(trusted_source_hashes):
+                reasons.append("SOURCE_ENDPOINT_HASH_MISMATCH")
+            if set(target_source_hashes) != set(trusted_target_hashes):
+                reasons.append("TARGET_ENDPOINT_HASH_MISMATCH")
+            if set(evidence_refs) != set([*trusted_source_refs, *trusted_target_refs]):
+                reasons.append("COMBINED_ENDPOINT_EVIDENCE_MISMATCH")
+            if set(source_hashes) != set([*trusted_source_hashes, *trusted_target_hashes]):
+                reasons.append("COMBINED_ENDPOINT_HASH_MISMATCH")
+            if not set([*trusted_source_tests, *trusted_target_tests]).issubset(set(tests)):
+                reasons.append("ENDPOINT_VERIFIER_MISMATCH")
         if missing:
             reasons.append(f"MISSING_FIELDS:{','.join(sorted(missing))}")
         if status == STATUS_TOO_RISKY:
@@ -1535,7 +1610,8 @@ def verify_bounded_emergent_discovery(
     result = {
         "version": BOUNDED_VERIFIER_VERSION,
         "discovery_digest": str(payload.get("discovery_digest") or ""),
-        "neighborhood_digest": str(payload.get("neighborhood_digest") or ""),
+        "neighborhood_digest": trusted_digest,
+        "trusted_neighborhood_verified": True,
         "accepted_candidates": accepted,
         "rejected_candidates": sorted(rejected, key=lambda item: (item["status"], item["candidate_id"])),
         "suppressed_candidates": sorted(suppressed, key=lambda item: (str(item.get("reason", "")), str(item.get("candidate_id", "")))),
