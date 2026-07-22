@@ -31,11 +31,16 @@ jobs:
           cat .aura/AI_SAFE_FINAL_PATCH.part-*.b64 | base64 --decode > /tmp/ai-safe-final.patch.xz
           echo "${EXPECTED_PATCH_SHA256}  /tmp/ai-safe-final.patch.xz" | sha256sum --check --strict
           xz --decompress --stdout /tmp/ai-safe-final.patch.xz > /tmp/ai-safe-final.patch
-          git apply --check /tmp/ai-safe-final.patch
-          git apply /tmp/ai-safe-final.patch
+          git apply --check --exclude=.github/workflows/aura-architecture-harness-export.yml /tmp/ai-safe-final.patch
+          git apply --exclude=.github/workflows/aura-architecture-harness-export.yml /tmp/ai-safe-final.patch
           base64 --decode .aura/AI_SAFE_FINAL_WORKFLOW.b64 > /tmp/aura-architecture-harness-export.yml
           echo "${EXPECTED_WORKFLOW_SHA256}  /tmp/aura-architecture-harness-export.yml" | sha256sum --check --strict
           mv /tmp/aura-architecture-harness-export.yml .github/workflows/aura-architecture-harness-export.yml
+          git restore --source "${BASE_SHA}" -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json
           rm .aura/AI_SAFE_FINAL_PATCH.part-*.b64
           rm .aura/AI_SAFE_FINAL_WORKFLOW.b64
           rm .aura/HARNESS_EXPORT_REQUEST
@@ -61,6 +66,8 @@ jobs:
           git config user.email "aura-harness@users.noreply.github.com"
           git add -A -- \
             .aura \
+            Aura_Memory/live_topology_ast.json \
+            topology_map.json \
             scripts/aura_architecture_harness.py \
             tests/test_aura_architecture_harness.py \
             .github/workflows/aura-architecture-harness-export.yml \
