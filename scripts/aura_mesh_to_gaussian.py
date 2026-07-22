@@ -494,8 +494,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    repository = args.repo_root.expanduser().resolve(strict=True)
     result = compile_mesh(
-        repo_root=args.repo_root,
+        repo_root=repository,
         glb_path=args.glb,
         output_ply=args.output_ply,
         output_spz=args.output_spz,
@@ -504,7 +505,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         source_digest=args.source_digest,
         target_count=args.target_count,
     )
-    atomic_json(args.receipt, result)
+    atomic_json(args.receipt, result, root=repository)
     print(
         json.dumps(
             {"receipt_digest": result["receipt_digest"], "splat_count": result["splat_count"]},

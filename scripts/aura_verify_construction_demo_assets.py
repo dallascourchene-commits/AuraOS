@@ -25,7 +25,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from aura_event_contracts import stable_digest
 
-ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V2"
+ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V3"
 MAX_COMMAND_OUTPUT_BYTES = 64 * 1024
 MAX_GLB_BYTES = 512 * 1024 * 1024
 MAX_SVG_BYTES = 32 * 1024 * 1024
@@ -63,7 +63,6 @@ class CommandReceipt:
             "version": ASSET_VERIFIER_VERSION,
             "command": list(self.command),
             "returncode": self.returncode,
-            "duration_seconds": self.duration_seconds,
             "stdout": self.stdout,
             "stderr": self.stderr,
             "stdout_truncated": self.stdout_truncated,
@@ -72,8 +71,14 @@ class CommandReceipt:
             "output_limit_exceeded": self.output_limit_exceeded,
         }
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_content_dict(self) -> dict[str, Any]:
         return {**self._body(), "receipt_digest": self.receipt_digest}
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            **self.to_content_dict(),
+            "duration_seconds": self.duration_seconds,
+        }
 
 
 def sha256_file(path: Path) -> str:
@@ -116,22 +121,29 @@ def _bounded_text(value: bytes, maximum_bytes: int = MAX_COMMAND_OUTPUT_BYTES) -
 
 
 def _terminate_process_group(process: subprocess.Popen[bytes]) -> None:
-    if process.poll() is not None:
+    if os.name == "nt":
+        if process.poll() is not None:
+            return
+        try:
+            process.terminate()
+            process.wait(timeout=0.5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+        return
+
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
         return
     try:
-        if os.name == "nt":
-            process.terminate()
-        else:
-            os.killpg(process.pid, signal.SIGTERM)
         process.wait(timeout=0.5)
-    except (ProcessLookupError, subprocess.TimeoutExpired):
-        try:
-            if os.name == "nt":
-                process.kill()
-            else:
-                os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
+    except subprocess.TimeoutExpired:
+        pass
+    time.sleep(0.05)
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
 
 
 def _read_capped(
@@ -208,13 +220,16 @@ def run_bounded_command(
     timed_out = False
     output_limit_exceeded = False
     deadline = started + timeout_seconds
-    while process.poll() is None:
+    while True:
         if overflow.is_set():
             output_limit_exceeded = True
             _terminate_process_group(process)
             break
         if time.monotonic() >= deadline:
             timed_out = True
+            _terminate_process_group(process)
+            break
+        if process.poll() is not None:
             _terminate_process_group(process)
             break
         time.sleep(0.01)
@@ -224,6 +239,9 @@ def run_bounded_command(
         _terminate_process_group(process)
     for reader in readers:
         reader.join(timeout=1.0)
+    if overflow.is_set():
+        output_limit_exceeded = True
+        _terminate_process_group(process)
 
     duration = round(time.monotonic() - started, 6)
     stdout, stdout_truncated = _bounded_text(bytes(stdout_buffer))
@@ -343,32 +361,43 @@ def _canonicalize_xml(element: ET.Element) -> None:
         _canonicalize_xml(child)
 
 
-def _is_external_reference(value: str) -> bool:
-    return value.strip().lower().startswith(_EXTERNAL_SCHEMES)
+def _validate_resource_reference(value: str) ->  None:
+    candidate = value.strip()
+    if len(candidate) < 2 or not candidate.startswith("#"):
+        raise ValueError("SVG contains an external or executable reference")
 
 
 def _validate_css(css: str) -> None:
     if _CSS_IMPORT.search(css):
         raise ValueError("SVG contains an external or executable reference")
     for match in _CSS_URL.finditer(css):
-        if _is_external_reference(match.group(2)):
-            raise ValueError("SVG contains an external or executable reference")
+        _validate_resource_reference(match.group(2))
 
 
-def _secure_atomic_write(path: Path, payload: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists() and path.is_symlink():
+def _secure_atomic_write(path: Path, payload: bytes, *, root: Path) -> None:
+    root_resolved = root.expanduser().resolve(strict=True)
+    candidate = path.expanduser()
+    if not candidate.is_absolute():
+        candidate = root_resolved / candidate
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    parent = candidate.parent.resolve(strict=True)
+    try:
+        parent.relative_to(root_resolved)
+    except ValueError as exc:
+        raise ValueError("atomic write target escapes its allowed root") from exc
+    target = parent / candidate.name
+    if target.exists() and target.is_symlink():
         raise ValueError("atomic write target must not be a symlink")
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=parent)
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as handle:
             handle.write(payload)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        os.replace(temporary, target)
         try:
-            directory_fd = os.open(path.parent, os.O_RDONLY)
+            directory_fd = os.open(parent, os.O_RDONLY)
         except OSError:
             directory_fd = -1
         if directory_fd >= 0:
@@ -400,15 +429,15 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
             local_name = name.rsplit("}", 1)[-1].lower()
             if local_name.startswith("on"):
                 raise ValueError("SVG contains an event handler")
-            if local_name in {"href", "src"} and _is_external_reference(value):
-                raise ValueError("SVG contains an external or executable reference")
+            if local_name in {"href", "src"}:
+                _validate_resource_reference(value)
             if local_name == "style":
                 _validate_css(value)
     _canonicalize_xml(root_element)
     serialized = ET.tostring(root_element, encoding="utf-8", xml_declaration=True)
     if not serialized or len(serialized) > MAX_SVG_BYTES:
         raise ValueError("sanitized SVG violates its byte budget")
-    _secure_atomic_write(asset, serialized)
+    _secure_atomic_write(asset, serialized, root=root)
     payload = {
         "version": ASSET_VERIFIER_VERSION,
         "kind": "SVG",
@@ -422,6 +451,6 @@ def sanitize_svg(path: Path, *, root: Path) -> dict[str, Any]:
     return {**payload, "verification_digest": stable_digest(payload)}
 
 
-def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+def atomic_json(path: Path, value: Mapping[str, Any], *, root: Path) -> None:
     payload = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
-    _secure_atomic_write(path, payload)
+    _secure_atomic_write(path, payload, root=root)

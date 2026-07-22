@@ -35,6 +35,7 @@ from scripts.aura_verify_construction_demo_assets import (
 ASSET_PREPARATION_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_PREPARATION_V1"
 MAX_WORKERS = 8
 DEFAULT_TIMEOUT_SECONDS = 300.0
+IFCCONVERT_IDENTITY_VERSION = "AURA_IFCCONVERT_IDENTITY_V1"
 _STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
 
 
@@ -125,6 +126,53 @@ def _validate_split_receipt(
     return tuple(validated)
 
 
+
+
+def _validate_ifcconvert_identity(value: Any) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError("IfcConvert identity is missing")
+    _validate_digest_record(value, "identity_digest")
+    sha256 = value.get("sha256")
+    if (
+        value.get("version") != IFCCONVERT_IDENTITY_VERSION
+        or type(value.get("executable_name")) is not str
+        or not value.get("executable_name")
+        or type(value.get("byte_length")) is not int
+        or value.get("byte_length", 0) <= 0
+        or type(sha256) is not str
+        or len(sha256) != 64
+        or any(character not in "0123456789abcdef" for character in sha256)
+        or type(value.get("version_text")) is not str
+        or not value.get("version_text")
+    ):
+        raise ValueError("IfcConvert identity is invalid")
+    return value
+
+
+def _capture_ifcconvert_identity(
+    executable: Path,
+    *,
+    repository: Path,
+    timeout_seconds: float,
+) -> dict[str, Any]:
+    version_receipt = run_bounded_command(
+        [str(executable), "--version"],
+        cwd=repository,
+        timeout_seconds=min(timeout_seconds, 30.0),
+    )
+    version_text = (version_receipt.stdout.strip() or version_receipt.stderr.strip())
+    if not version_text or len(version_text.encode("utf-8")) > 4096:
+        raise ValueError("IfcConvert --version must emit bounded identity text")
+    body = {
+        "version": IFCCONVERT_IDENTITY_VERSION,
+        "executable_name": executable.name,
+        "byte_length": executable.stat().st_size,
+        "sha256": sha256_file(executable),
+        "version_text": version_text,
+    }
+    return {**body, "identity_digest": stable_digest(body)}
+
+
 def _validate_command_receipt(value: Any) -> None:
     if not isinstance(value, Mapping):
         raise ValueError("command receipt is missing")
@@ -166,6 +214,7 @@ def _validate_conversion_receipt(
         or receipt.get("survey_authority") is not False
     ):
         raise ValueError("conversion receipt is invalid")
+    identity = _validate_ifcconvert_identity(receipt.get("ifcconvert_identity"))
     expected_lineage = {
         "source_sha256": source_sha256,
         "source_manifest_digest": source_manifest_digest,
@@ -189,6 +238,8 @@ def _validate_conversion_receipt(
         job_ids.add(job_id)
         if item.get("split_receipt_digest") != split_receipt_digest:
             raise ValueError("conversion job lineage does not match split receipt")
+        if item.get("ifcconvert_identity_digest") != identity["identity_digest"]:
+            raise ValueError("conversion job does not match the recorded IfcConvert identity")
         source = _resolve_inside(repository, Path(str(item.get("source"))))
         target = _resolve_inside(repository, Path(str(item.get("output"))))
         try:
@@ -354,7 +405,7 @@ def split_storeys(
         "construction_state_owner": False,
     }
     receipt = {**payload, "receipt_digest": stable_digest(payload)}
-    atomic_json(output / "receipts" / "split-storeys.json", receipt)
+    atomic_json(output / "receipts" / "split-storeys.json", receipt, root=output)
     return receipt
 
 
@@ -410,6 +461,11 @@ def convert_ifc_assets(
     if not executable.is_file() or executable.is_symlink() or not os.access(executable, os.X_OK):
         raise ValueError("IfcConvert must be an executable regular non-symlink file")
     source_sha256 = sha256_file(source_path)
+    ifcconvert_identity = _capture_ifcconvert_identity(
+        executable,
+        repository=repository,
+        timeout_seconds=timeout_seconds,
+    )
     split_rows = _validate_split_receipt(
         split_receipt,
         repository=repository,
@@ -482,13 +538,14 @@ def convert_ifc_assets(
             "representation": "FLOOR_PLAN_SVG" if is_svg else "MESH_GLB",
             "coordinate_system": "RIGHT_HANDED_Y_UP_METERS",
             "unit_scale_meters": 1.0,
-            "command_receipt": command_receipt.to_dict(),
+            "command_receipt": command_receipt.to_content_dict(),
+            "ifcconvert_identity_digest": ifcconvert_identity["identity_digest"],
             "verification": verification,
             "survey_authority": False,
             "production_mutation": False,
         }
         job_receipt["receipt_digest"] = stable_digest(job_receipt)
-        atomic_json(output / "receipts" / f"{job_id}.json", job_receipt)
+        atomic_json(output / "receipts" / f"{job_id}.json", job_receipt, root=output)
         outputs.append(job_receipt)
 
     payload = {
@@ -498,6 +555,7 @@ def convert_ifc_assets(
         "source_manifest_digest": source_manifest_digest,
         "hierarchy_digest": hierarchy_digest,
         "split_receipt_digest": split_receipt["receipt_digest"],
+        "ifcconvert_identity": ifcconvert_identity,
         "outputs": outputs,
         "output_count": len(outputs),
         "external_resource_fetch": False,
@@ -505,7 +563,7 @@ def convert_ifc_assets(
         "production_mutation": False,
     }
     receipt = {**payload, "receipt_digest": stable_digest(payload)}
-    atomic_json(output / "receipts" / "convert-glb-svg.json", receipt)
+    atomic_json(output / "receipts" / "convert-glb-svg.json", receipt, root=output)
     return receipt
 
 
@@ -557,8 +615,8 @@ def compile_gaussian_assets(
     compiled: list[dict[str, Any]] = []
     for item in sorted(source_rows, key=lambda row: str(row["job_id"])):
         source = _resolve_inside(repository, Path(str(item["output"])))
-        source_sha256 = sha256_file(source)
-        if source_sha256 != item.get("output_sha256"):
+        glb_sha256 = sha256_file(source)
+        if glb_sha256 != item.get("output_sha256"):
             raise ValueError("validated GLB digest drifted before Gaussian compilation")
         scope = "BUILDING" if item["job_id"] == "building-full-glb" else "STOREY"
         target_count = building_target_count if scope == "BUILDING" else storey_target_count
@@ -572,12 +630,12 @@ def compile_gaussian_assets(
             output_spz=spz,
             profile=profile,
             scope=scope,
-            source_digest=source_sha256,
+            source_digest=glb_sha256,
             target_count=target_count,
             spz_module=spz_module,
         )
         _validate_digest_record(result)
-        if result.get("source_digest") != source_sha256 or result.get("scope") != scope:
+        if result.get("source_digest") != glb_sha256 or result.get("scope") != scope:
             raise ValueError("Gaussian compiler receipt does not match its source or scope")
         ply_receipt = result.get("ply")
         spz_receipt = result.get("spz")
@@ -625,7 +683,7 @@ def compile_gaussian_assets(
         "production_mutation": False,
     }
     receipt = {**payload, "receipt_digest": stable_digest(payload)}
-    atomic_json(output / "receipts" / "compile-gaussians.json", receipt)
+    atomic_json(output / "receipts" / "compile-gaussians.json", receipt, root=output)
     return receipt
 
 

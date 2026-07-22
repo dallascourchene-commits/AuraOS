@@ -6,8 +6,8 @@ source_main_sha: 489baef6fc9c0363d5b71c4080efcb7c234e5a39
 source_plan_sha256: 03f4cab34822b3cc24cf640b41702a23aeaae511e997231a0e2bc5e596703705
 source_ifc_sha256: 29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29
 source_preflight_digest: 02cfdd9469b1a05d21818d78afd00872
-focused_asset_tests: 43
-focused_asset_tests_passed: 43
+focused_asset_tests: 54
+focused_asset_tests_passed: 54
 authoritative_ifcopenshell_build_completed: false
 real_ifcconvert_outputs_completed: false
 real_spz_v4_outputs_completed: false
@@ -142,14 +142,14 @@ publication. Stored SPZ coordinates are recorded as canonical `RUB`.
 
 ```yaml
 LOW:
-  STOREY: 50000
-  BUILDING: 150000
+  STOREY: 40000
+  BUILDING: 75000
 STANDARD:
-  STOREY: 150000
-  BUILDING: 500000
+  STOREY: 75000
+  BUILDING: 100000
 VIDEO:
-  STOREY: 300000
-  BUILDING: 1000000
+  STOREY: 100000
+  BUILDING: importer-derived MAX_IMPORTABLE_SH0_SPLATS
 ```
 
 These are generation ceilings, not admission promises. Aura's existing SPZ importer, allocation
@@ -182,7 +182,7 @@ tests/test_aura_prepare_construction_demo_assets.py
 tests/test_aura_mesh_to_gaussian.py
 ```
 
-Local result: **43 passed**.
+Local result: **54 passed**.
 
 The tests prove:
 
@@ -206,7 +206,7 @@ GitHub's exact branch CI compiled and fatal-linted the governed source successfu
 and 3.12. The first broad-suite run stopped during collection because its workflow did not install
 `jsonschema`; the JUnit artifact contained one collection error and zero test failures. That CI
 dependency was corrected in an isolated commit. A dedicated Construction asset-foundation job is
-the required exact-branch verification for these 43 tests.
+the required exact-branch verification for these 54 tests.
 
 ## External toolchain boundary
 
