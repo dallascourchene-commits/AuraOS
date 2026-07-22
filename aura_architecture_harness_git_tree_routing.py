@@ -1,22 +1,26 @@
 """Proposal-only GitHub atomic Git-tree routing for Aura's architecture harness.
 
-The module records a deterministic publication plan for an external authorized
-GitHub connector. It performs no GitHub mutation and grants no merge, force,
-base-branch, production, or other consequential authority.
+Records emitted here are untrusted plans. The executing GitHub connector must
+independently re-fetch the live pull request and head commit before creating
+objects and again before moving a ref. This module performs no remote mutation
+and grants no merge, force, base-branch, production, or other consequential
+authority.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 from pathlib import PurePosixPath
 import re
 from typing import Any, Iterable, Mapping
+import unicodedata
 
-VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V4"
+VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V5"
 SHA1_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+_BINDING_FACTORY_TOKEN = object()
 
 AUTHORITY_CONTRACT = {
     "production_mutation": False,
@@ -71,6 +75,40 @@ def _canonical_repo_path(value: str) -> str:
     return normalized
 
 
+def _portable_path_key(value: str) -> tuple[str, ...]:
+    """Return a conservative cross-platform collision key for a repository path."""
+
+    canonical = _canonical_repo_path(value)
+    return tuple(
+        unicodedata.normalize("NFC", part).casefold()
+        for part in PurePosixPath(canonical).parts
+    )
+
+
+def _reject_portable_path_collisions(paths: Iterable[str]) -> None:
+    """Reject case/Unicode aliases and file-versus-descendant tree conflicts."""
+
+    originals: dict[tuple[str, ...], str] = {}
+    ordered = tuple(paths)
+    for value in ordered:
+        key = _portable_path_key(value)
+        previous = originals.get(key)
+        if previous is not None and previous != value:
+            raise GitTreeRoutingError(
+                f"repository paths collide on common filesystems: {previous!r}, {value!r}"
+            )
+        originals[key] = value
+    keys = set(originals)
+    for key, value in originals.items():
+        for length in range(1, len(key)):
+            ancestor = key[:length]
+            if ancestor in keys:
+                raise GitTreeRoutingError(
+                    "repository path cannot be both a file and an ancestor of another "
+                    f"path: {originals[ancestor]!r}, {value!r}"
+                )
+
+
 def _sha1(value: str, name: str) -> str:
     if type(value) is not str or SHA1_PATTERN.fullmatch(value) is None:
         raise GitTreeRoutingError(f"{name} must be a lowercase 40-character Git SHA-1")
@@ -83,40 +121,102 @@ def _sha256(value: str, name: str) -> str:
     return value
 
 
-@dataclass(frozen=True)
-class VerifiedHeadBinding:
-    """Commit/tree identity derived from one exact connector fetch-commit response."""
+@dataclass(frozen=True, init=False)
+class PullRequestRouteBinding:
+    """Opaque proposal identity derived from one PR response and one commit response.
 
-    commit_sha: str
+    This is not an authentication capability. Even a factory-created instance is
+    untrusted proposal data; the executing connector must independently re-fetch
+    and compare every field before creating blobs and before updating the ref.
+    """
+
+    repository_full_name: str
+    pull_request_number: int
+    state: str
+    merged: bool
+    head_branch: str
+    base_branch: str
+    head_sha: str
     tree_sha: str
-    verification_action: str = "fetch_commit"
-
-    def __post_init__(self) -> None:
-        _sha1(self.commit_sha, "commit_sha")
-        _sha1(self.tree_sha, "tree_sha")
-        if self.commit_sha == self.tree_sha:
-            raise GitTreeRoutingError("tree_sha must be a tree object, not the commit SHA")
-        if self.verification_action != "fetch_commit":
-            raise GitTreeRoutingError("verification_action must be fetch_commit")
+    metadata_sources: tuple[str, str]
+    _factory_token: object = field(repr=False, compare=False)
 
     @classmethod
-    def from_fetch_commit(
-        cls, *, expected_head_sha: str, commit_metadata: Mapping[str, Any]
-    ) -> "VerifiedHeadBinding":
-        """Derive a binding from one exact connector commit-metadata object."""
+    def from_connector_metadata(
+        cls,
+        *,
+        repository_full_name: str,
+        pull_request_metadata: Mapping[str, Any],
+        commit_metadata: Mapping[str, Any],
+    ) -> "PullRequestRouteBinding":
+        """Derive a proposal binding from normalized connector metadata."""
 
-        expected = _sha1(expected_head_sha, "expected_head_sha")
+        if (
+            type(repository_full_name) is not str
+            or REPOSITORY_PATTERN.fullmatch(repository_full_name) is None
+        ):
+            raise GitTreeRoutingError("repository_full_name must use owner/name form")
+        if not isinstance(pull_request_metadata, Mapping):
+            raise GitTreeRoutingError("pull_request_metadata must be a mapping")
         if not isinstance(commit_metadata, Mapping):
             raise GitTreeRoutingError("commit_metadata must be a mapping")
-        observed = commit_metadata.get("sha")
+
+        number = pull_request_metadata.get("number")
+        state = pull_request_metadata.get("state")
+        merged = pull_request_metadata.get("merged")
+        head_branch = pull_request_metadata.get("head")
+        base_branch = pull_request_metadata.get("base")
+        head_sha = pull_request_metadata.get("head_sha")
+        if type(number) is not int or number < 1:
+            raise GitTreeRoutingError("pull request number must be positive")
+        if state != "open" or merged is not False:
+            raise GitTreeRoutingError("pull request must be open and unmerged")
+        for name, value in (("head branch", head_branch), ("base branch", base_branch)):
+            if (
+                type(value) is not str
+                or not value
+                or value.startswith("refs/")
+                or "\x00" in value
+            ):
+                raise GitTreeRoutingError(f"{name} must be a plain non-empty branch")
+        if head_branch == base_branch:
+            raise GitTreeRoutingError("pull request head branch must differ from base branch")
+
+        expected_head = _sha1(head_sha, "pull_request_metadata.head_sha")
+        observed_head = _sha1(commit_metadata.get("sha"), "commit_metadata.sha")
         tree = commit_metadata.get("tree")
         tree_sha = tree.get("sha") if isinstance(tree, Mapping) else None
-        if observed != expected:
-            raise GitTreeRoutingError("commit metadata does not match expected_head_sha")
-        return cls(commit_sha=expected, tree_sha=_sha1(tree_sha, "commit_metadata.tree.sha"))
+        resolved_tree = _sha1(tree_sha, "commit_metadata.tree.sha")
+        if observed_head != expected_head:
+            raise GitTreeRoutingError(
+                "commit metadata does not match the pull request head SHA"
+            )
+        if resolved_tree == expected_head:
+            raise GitTreeRoutingError("tree SHA must be a tree object, not the commit SHA")
 
-    def to_dict(self) -> dict[str, str]:
-        return asdict(self)
+        instance = object.__new__(cls)
+        values = {
+            "repository_full_name": repository_full_name,
+            "pull_request_number": number,
+            "state": state,
+            "merged": merged,
+            "head_branch": head_branch,
+            "base_branch": base_branch,
+            "head_sha": expected_head,
+            "tree_sha": resolved_tree,
+            "metadata_sources": ("get_pr_info", "fetch_commit"),
+            "_factory_token": _BINDING_FACTORY_TOKEN,
+        }
+        for name, value in values.items():
+            object.__setattr__(instance, name, value)
+        return instance
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            key: value
+            for key, value in asdict(self).items()
+            if key != "_factory_token"
+        }
 
 
 @dataclass(frozen=True)
@@ -158,34 +258,22 @@ class GitTreeBlobIntent:
 
 def build_git_tree_routing_record(
     *,
-    repository_full_name: str,
-    pull_request_number: int,
-    branch: str,
-    head_binding: VerifiedHeadBinding,
-    blobs: Iterable[GitTreeBlobIntent],
+    binding: PullRequestRouteBinding,
+    blobs: Iterable[GitTreeBlobIntent] = (),
     deletions: Iterable[str] = (),
 ) -> dict[str, Any]:
-    """Build a deterministic proposal bound to one verified commit/tree pair."""
+    """Build an untrusted deterministic proposal for an atomic publication."""
 
     if (
-        type(repository_full_name) is not str
-        or REPOSITORY_PATTERN.fullmatch(repository_full_name) is None
+        type(binding) is not PullRequestRouteBinding
+        or getattr(binding, "_factory_token", None) is not _BINDING_FACTORY_TOKEN
     ):
-        raise GitTreeRoutingError("repository_full_name must use owner/name form")
-    if type(pull_request_number) is not int or pull_request_number < 1:
-        raise GitTreeRoutingError("pull_request_number must be positive")
-    if (
-        type(branch) is not str
-        or not branch
-        or branch.startswith("refs/")
-        or "\x00" in branch
-    ):
-        raise GitTreeRoutingError("branch must be a plain non-empty branch name")
-    if type(head_binding) is not VerifiedHeadBinding:
-        raise GitTreeRoutingError("head_binding must be a VerifiedHeadBinding")
+        raise GitTreeRoutingError(
+            "binding must be factory-created from connector metadata"
+        )
 
     blob_rows = tuple(sorted(tuple(blobs), key=lambda item: item.path))
-    if not blob_rows or not all(type(item) is GitTreeBlobIntent for item in blob_rows):
+    if not all(type(item) is GitTreeBlobIntent for item in blob_rows):
         raise GitTreeRoutingError("blobs must contain exact GitTreeBlobIntent values")
     blob_paths = tuple(item.path for item in blob_rows)
     if len(blob_paths) != len(set(blob_paths)):
@@ -194,19 +282,17 @@ def build_git_tree_routing_record(
     deletion_paths = tuple(sorted(_canonical_repo_path(item) for item in deletions))
     if len(deletion_paths) != len(set(deletion_paths)):
         raise GitTreeRoutingError("deletion paths must be unique")
+    if not blob_rows and not deletion_paths:
+        raise GitTreeRoutingError("route must add, replace, or delete at least one path")
     overlap = sorted(set(blob_paths) & set(deletion_paths))
     if overlap:
         raise GitTreeRoutingError(
             f"paths cannot be replaced and deleted together: {overlap}"
         )
+    _reject_portable_path_collisions((*blob_paths, *deletion_paths))
 
     identity = {
-        "repository_full_name": repository_full_name,
-        "pull_request_number": pull_request_number,
-        "branch": branch,
-        "head_binding": head_binding.to_dict(),
-        "expected_head_sha": head_binding.commit_sha,
-        "expected_head_tree_sha": head_binding.tree_sha,
+        "binding": binding.to_dict(),
         "blob_intents": [item.to_dict() for item in blob_rows],
         "deletions": list(deletion_paths),
     }
@@ -216,12 +302,15 @@ def build_git_tree_routing_record(
     ).hexdigest()
     return {
         "version": VERSION,
+        "record_kind": "UNTRUSTED_ATOMIC_PUBLICATION_PROPOSAL",
         "route_digest": route_digest,
         **identity,
+        "executor_must_independently_refetch": True,
         "preconditions": [
-            "the pull request is open and its head SHA equals head_binding.commit_sha",
-            "head_binding was derived from one exact fetch_commit response",
-            "the fetched commit tree equals head_binding.tree_sha",
+            "the executing connector independently re-fetches this exact repository and PR",
+            "the live PR is open, unmerged, and has the bound non-base head branch",
+            "the live PR head SHA equals binding.head_sha",
+            "a fresh fetch_commit(binding.head_sha) resolves exactly binding.tree_sha",
             "all file bytes already passed the requested validation gate",
             "the replacement and deletion allowlists are exact and human-reviewed",
         ],
@@ -229,48 +318,67 @@ def build_git_tree_routing_record(
             {
                 "order": 1,
                 "action": "get_pr_info",
-                "assertions": ["open PR", "expected branch", "exact head commit"],
+                "assertions": [
+                    "repository and PR number equal the binding",
+                    "open and unmerged",
+                    "head ref equals binding.head_branch",
+                    "base ref equals binding.base_branch",
+                    "head and base refs differ",
+                    "head SHA equals binding.head_sha",
+                ],
             },
             {
                 "order": 2,
                 "action": "fetch_commit",
-                "commit_sha": head_binding.commit_sha,
-                "expected_tree_sha": head_binding.tree_sha,
-                "assertions": [
-                    "commit remains the live PR head",
-                    "commit tree equals the bound tree SHA",
-                ],
+                "commit_sha": binding.head_sha,
+                "expected_tree_sha": binding.tree_sha,
+                "assertions": ["commit SHA and tree SHA equal the binding"],
             },
             {
                 "order": 3,
                 "action": "create_blob",
                 "per_file": True,
+                "skip_when_no_blob_intents": True,
                 "assertions": ["exact bytes", "local SHA-256", "regular-file mode only"],
             },
             {
                 "order": 4,
                 "action": "create_tree",
-                "base_tree_sha": head_binding.tree_sha,
+                "base_tree_sha": binding.tree_sha,
                 "assertions": [
-                    "base tree is the bound tree object",
+                    "base tree is the independently re-fetched tree object",
                     "tree contains the complete replacement/add/delete set",
                 ],
             },
             {
                 "order": 5,
                 "action": "create_commit",
-                "parent_sha": head_binding.commit_sha,
+                "parent_sha": binding.head_sha,
                 "assertions": ["one parent", "one atomic tree", "reviewable message"],
             },
             {
                 "order": 6,
-                "action": "update_ref",
-                "branch": branch,
-                "force": False,
-                "assertions": ["fast-forward only", "never update the base branch"],
+                "action": "get_pr_info",
+                "purpose": "stale-head and branch revalidation immediately before ref update",
+                "assertions": [
+                    "same repository and PR",
+                    "same non-base head branch",
+                    "head SHA still equals binding.head_sha",
+                ],
             },
             {
                 "order": 7,
+                "action": "update_ref",
+                "branch": binding.head_branch,
+                "force": False,
+                "assertions": [
+                    "fast-forward only",
+                    "target is the verified PR head branch",
+                    "target is not binding.base_branch",
+                ],
+            },
+            {
+                "order": 8,
                 "action": "verify",
                 "assertions": [
                     "PR head equals the created commit",
@@ -294,45 +402,49 @@ def build_git_tree_routing_record(
     }
 
 
-def proven_pr184_route_record() -> dict[str, Any]:
-    """Return the verified PR #184 manual-remediation publication case study."""
+def pr184_atomic_publication_case_study() -> dict[str, Any]:
+    """Return historical PR #184 facts, explicitly not a replayable route receipt."""
 
-    placeholder = GitTreeBlobIntent(
-        path="docs/AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING.md",
-        content_sha256="0" * 64,
-        byte_length=0,
-    )
-    binding = VerifiedHeadBinding.from_fetch_commit(
-        expected_head_sha="7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307",
-        commit_metadata={
-            "sha": "7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307",
-            "tree": {"sha": "359a19f26aa3f4066c51263965709c8b026eae6c"},
+    return {
+        "version": VERSION,
+        "record_kind": "HISTORICAL_NON_REPLAYABLE_CASE_STUDY",
+        "replayable_route": False,
+        "status": "PROPOSAL_ONLY_EXTERNAL_CONNECTOR_REQUIRED",
+        "workflow_discovery": dict(WORKFLOW_DISCOVERY),
+        "connector_sequence": [
+            "get_pr_info",
+            "fetch_commit",
+            "create_blob",
+            "create_tree",
+            "create_commit",
+            "get_pr_info",
+            "update_ref(force=false)",
+            "verify",
+        ],
+        "preconditions": [
+            "independently re-fetch live PR and commit metadata",
+            "bind repository, PR number, head ref, base ref, head SHA, and tree SHA",
+            "never target the base ref",
+        ],
+        "rollback": {
+            "before_update_ref": "discard unattached objects",
+            "after_update_ref": "reviewed revert only; never force rewind",
         },
-    )
-    record = build_git_tree_routing_record(
-        repository_full_name="dallascourchene-commits/AuraOS",
-        pull_request_number=184,
-        branch="work/construction-arena-real-asset-pack-g4-20260722",
-        head_binding=binding,
-        blobs=(placeholder,),
-        deletions=(
-            ".github/workflows/apply-pr184-g4-adapter.yml",
-            ".github/workflows/construction-demo-documentation-sync.yml",
-            ".github/workflows/construction-demo-ifc-proof.yml",
-            ".github/workflows/construction-demo-spz-build-diagnostics.yml",
-            ".github/workflows/construction-demo-toolchain-diagnostics.yml",
-            ".github/workflows/pr184-review-remediation.yml",
-        ),
-    )
-    record["case_study"] = {
-        "recorded_at": "2026-07-22",
-        "scope": "manual review remediation publication, not G4 payload cleanup",
-        "outcome": "atomic Git-tree publication succeeded on the live PR branch",
-        "resolved_head_tree_sha": binding.tree_sha,
-        "created_tree_sha": "beed4f512975dd304ff36aa7e2936bf2212cead1",
-        "created_commit_sha": "ea9675ada226bae31fbd74e10dced81797aac1a8",
-        "base_tree_is_commit_sha": False,
-        "confirmed_force_required": False,
-        "note": "The placeholder blob documents routing shape, not a publication request.",
+        "case_study": {
+            "recorded_at": "2026-07-22",
+            "scope": "manual review-remediation publication, not G4 payload cleanup",
+            "outcome": "atomic Git-tree publication succeeded on the live PR branch",
+            "parent_commit_sha": "7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307",
+            "resolved_parent_tree_sha": "359a19f26aa3f4066c51263965709c8b026eae6c",
+            "created_tree_sha": "beed4f512975dd304ff36aa7e2936bf2212cead1",
+            "created_commit_sha": "ea9675ada226bae31fbd74e10dced81797aac1a8",
+            "actual_blob_intents_recorded": False,
+            "route_digest_is_provenance_receipt": False,
+            "confirmed_force_required": False,
+            "note": (
+                "This record preserves independently checked historical object IDs only. "
+                "It intentionally contains no synthetic placeholder blob or route digest."
+            ),
+        },
+        "authority": dict(AUTHORITY_CONTRACT),
     }
-    return record

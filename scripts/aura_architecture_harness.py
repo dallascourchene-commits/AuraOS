@@ -28,7 +28,7 @@ from aura_architecture_harness_git_tree_routing import (
     AUTHORITY_CONTRACT as GITHUB_ROUTING_AUTHORITY_CONTRACT,
     VERSION as GITHUB_ROUTING_VERSION,
     WORKFLOW_DISCOVERY as GITHUB_WORKFLOW_DISCOVERY,
-    proven_pr184_route_record,
+    pr184_atomic_publication_case_study,
 )
 
 # Preserve every existing public and private symbol used by PR #182 callers/tests.
@@ -44,12 +44,13 @@ GITHUB_PUBLICATION_ROUTE_VERSION = GITHUB_ROUTING_VERSION
 
 
 def _github_publication_route_policy() -> dict[str, Any]:
-    """Return deterministic workflow discovery and atomic publication guidance."""
+    """Return untrusted routing guidance plus a non-replayable historical case study."""
 
-    case = proven_pr184_route_record()
+    case = pr184_atomic_publication_case_study()
     return {
         "version": GITHUB_ROUTING_VERSION,
         "status": "PROPOSAL_ONLY_EXTERNAL_CONNECTOR_REQUIRED",
+        "trust_model": "UNTRUSTED_PROPOSAL_EXECUTOR_MUST_REFETCH",
         "workflow_discovery": copy.deepcopy(GITHUB_WORKFLOW_DISCOVERY),
         "preferred_fallback": "atomic_git_object_route",
         "connector_sequence": copy.deepcopy(case["connector_sequence"]),

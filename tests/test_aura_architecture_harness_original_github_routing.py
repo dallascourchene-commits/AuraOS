@@ -11,12 +11,14 @@ def test_original_harness_exposes_workflow_discovery_policy() -> None:
     discovery = policy["workflow_discovery"]
 
     assert policy["version"] == harness.GITHUB_PUBLICATION_ROUTE_VERSION
+    assert policy["trust_model"] == "UNTRUSTED_PROPOSAL_EXECUTOR_MUST_REFETCH"
     assert discovery["pull_request_definition_source"] == "base_branch"
     assert discovery["branch_new_pull_request_workflow_jobs_reliable"] is False
     assert discovery["preferred_fallback"] == "atomic_git_object_route"
     assert policy["authority"]["automatic_ref_update"] is False
     assert policy["authority"]["force_ref_update"] is False
     assert policy["authority"]["automatic_merge"] is False
+    assert policy["case_study"]["route_digest_is_provenance_receipt"] is False
 
 
 def test_original_doctor_includes_atomic_route(monkeypatch) -> None:
@@ -53,9 +55,7 @@ def test_original_handoff_manifest_includes_atomic_route(tmp_path, monkeypatch) 
     assert result["github_publication_route"]["status"] == (
         "PROPOSAL_ONLY_EXTERNAL_CONNECTOR_REQUIRED"
     )
-    assert manifest["github_publication_route"]["connector_sequence"][-1][
-        "action"
-    ] == "verify"
+    assert manifest["github_publication_route"]["connector_sequence"][-1] == "verify"
 
 
 def test_original_run_summary_includes_atomic_route(tmp_path, monkeypatch) -> None:

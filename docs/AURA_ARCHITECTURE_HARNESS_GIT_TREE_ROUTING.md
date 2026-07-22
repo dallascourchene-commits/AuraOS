@@ -1,31 +1,64 @@
 # Aura Architecture Harness — Atomic Git-Tree Routing
 
-**Version:** `AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V4`  
+**Version:** `AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V5`  
 **Recorded:** July 22, 2026
 
-The route is proposal-only and must be executed by an external authorized connector after human review.
+This component emits **untrusted, proposal-only routing data**. The executing
+authorized GitHub connector must independently re-fetch the live pull request
+and exact head commit before object creation, and must re-fetch the pull request
+again immediately before a non-forced ref update.
 
 ```text
-get_pr_info(exact head commit)
-→ fetch_commit(derive and bind exact tree SHA from that commit response)
-→ create_blob(validated files)
-→ create_tree(base = bound tree SHA; exact replacements and deletions)
-→ create_commit(parent = bound head commit SHA)
-→ update_ref(PR branch, force = false)
-→ verify exact head, allowlist, deletions, tests, and unmerged state
+get_pr_info(bind repository, PR, head ref, base ref, head SHA)
+→ fetch_commit(bind exact tree SHA)
+→ create_blob(validated additions/replacements; optional for deletion-only route)
+→ create_tree(base = independently re-fetched tree SHA)
+→ create_commit(parent = independently re-fetched head SHA)
+→ get_pr_info(revalidate exact non-base head immediately before publication)
+→ update_ref(verified PR head branch, force = false)
+→ verify exact final head, allowlist, deletions, tests, maps, and unmerged state
 ```
 
-A commit SHA and tree SHA are never accepted as unrelated caller-supplied identities. `VerifiedHeadBinding.from_fetch_commit` derives both from one exact connector response and rejects commit drift or a commit-as-tree substitution.
+## Binding rules
 
-The recorded PR #184 case study is the manual remediation publication from parent `7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307` and bound tree `359a19f26aa3f4066c51263965709c8b026eae6c` to commit `ea9675ada226bae31fbd74e10dced81797aac1a8`. It documents atomic review remediation, not G4 payload cleanup.
+`PullRequestRouteBinding.from_connector_metadata` derives repository identity,
+PR number, open/unmerged state, head ref, base ref, head SHA, and tree SHA from
+one normalized PR response plus the matching commit response. The head and base
+refs must differ.
 
-Safety requirements:
+Factory construction reduces accidental fabrication, but the object is not an
+authentication capability. Serialized or in-process proposal data is never
+trusted by itself; the executing connector must independently re-fetch and
+compare all fields.
+
+## Path rules
 
 - canonical repository-relative POSIX paths only;
-- exact SHA-256 and byte-length binding per regular-file blob;
-- one verified commit/tree binding;
-- one-parent commit;
-- non-forced fast-forward of the PR branch only;
-- no base-branch update, automatic merge, or production authority;
-- every listed deletion must be absent in the final tree;
-- human review remains mandatory.
+- exact SHA-256 and byte length for each regular-file blob;
+- `100644` and `100755` modes only;
+- no exact replacement/deletion overlap;
+- no case-folded or NFC/NFD-equivalent aliases;
+- no file path that is also an ancestor of another proposed path;
+- deletion-only routes are supported;
+- a completely empty route is rejected.
+
+## Historical case study
+
+`pr184_atomic_publication_case_study()` records independently checked object
+identifiers from the July 22, 2026 manual review-remediation publication:
+
+- parent commit: `7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307`
+- resolved parent tree: `359a19f26aa3f4066c51263965709c8b026eae6c`
+- created tree: `beed4f512975dd304ff36aa7e2936bf2212cead1`
+- created commit: `ea9675ada226bae31fbd74e10dced81797aac1a8`
+
+The case study is explicitly **non-replayable**. It contains no synthetic
+placeholder blob, no route digest, and no claim that its digest proves the
+actual published bytes. Its scope is review remediation, not G4 payload cleanup.
+
+## Authority boundary
+
+The routing component performs no GitHub mutation itself. It grants no force
+update, base-branch update, automatic merge, production mutation, deployment,
+physical-work, payment, survey, professional, legal, or regulatory authority.
+Human review remains mandatory.
