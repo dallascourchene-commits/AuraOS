@@ -5,6 +5,8 @@ on:
     paths:
       - ".github/workflows/construction-demo-asset-foundation.yml"
       - "aura_construction_demo_contracts.py"
+      - "aura_coding_relationship_compass.py"
+      - "aura_relational_index.py"
       - "scripts/aura_fetch_construction_demo_source.py"
       - "scripts/aura_ifc_storey_index.py"
       - "scripts/aura_verify_construction_demo_assets.py"
@@ -16,7 +18,11 @@ on:
       - "tests/test_aura_verify_construction_demo_assets.py"
       - "tests/test_aura_prepare_construction_demo_assets.py"
       - "tests/test_aura_mesh_to_gaussian.py"
+      - "tests/test_aura_coding_relationship_compass.py"
+      - "tests/test_aura_relational_index.py"
       - "demo_assets/construction_tuwien/**"
+      - "docs/AURA_CONSTRUCTION_ARENA_*.md"
+      - "docs/patches/AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch"
       - "tools/construction_demo_assets/**"
   workflow_dispatch:
 
@@ -39,6 +45,39 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Export exact review worktree
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-pr-source-${{ github.sha }}
+          retention-days: 1
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .github/workflows/ci.yml
+            .github/workflows/construction-demo-asset-foundation.yml
+            aura_construction_demo_contracts.py
+            aura_coding_relationship_compass.py
+            aura_relational_index.py
+            scripts/aura_fetch_construction_demo_source.py
+            scripts/aura_ifc_storey_index.py
+            scripts/aura_verify_construction_demo_assets.py
+            scripts/aura_prepare_construction_demo_assets.py
+            scripts/aura_mesh_to_gaussian.py
+            tests/test_aura_construction_demo_contracts.py
+            tests/test_aura_fetch_construction_demo_source.py
+            tests/test_aura_ifc_storey_index.py
+            tests/test_aura_verify_construction_demo_assets.py
+            tests/test_aura_prepare_construction_demo_assets.py
+            tests/test_aura_mesh_to_gaussian.py
+            tests/test_aura_coding_relationship_compass.py
+            tests/test_aura_relational_index.py
+            demo_assets/construction_tuwien
+            docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md
+            docs/AURA_CONSTRUCTION_ARENA_G0_CHANGE_GRAPH.md
+            docs/patches/AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch
+            tools/construction_demo_assets
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -49,7 +88,8 @@ jobs:
           python -m pip install \
             "numpy>=1.26.4,<3.0" \
             "trimesh>=4.7.1,<5.0" \
-            pytest ruff
+            "pytest>=8.2,<9.0" \
+            "ruff>=0.12,<1.0"
       - name: Compile Construction asset foundation
         run: |
           python -m py_compile \
@@ -85,12 +125,21 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          from aura_construction_demo_contracts import ConstructionDemoSourceManifest
+          from aura_construction_demo_contracts import (
+              CC_BY_4_0,
+              ConstructionDemoSourceManifest,
+              TU_WIEN_DOI,
+              TU_WIEN_SOURCE_FILENAME,
+          )
 
           path = Path("demo_assets/construction_tuwien/source/source-manifest.json")
           manifest = ConstructionDemoSourceManifest.from_dict(
               json.loads(path.read_text(encoding="utf-8"))
           )
+          assert manifest.source_manifest_digest == "bda63e3e6d3e536c1dffa51ccb8c7b37"
+          assert manifest.doi == TU_WIEN_DOI
+          assert manifest.source_filename == TU_WIEN_SOURCE_FILENAME
+          assert manifest.license_id == CC_BY_4_0
           assert manifest.source_byte_length == 7_404_420
           assert manifest.observed_sha256 == (
               "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29"
