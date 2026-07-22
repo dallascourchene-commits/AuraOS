@@ -3,7 +3,9 @@ name: Aura AI-safe Harness Publisher (temporary)
 on:
   push:
     branches:
-      - "work/ai-safe-architecture-harness-20260722"
+      - "analysis/aura-harness-export/20260722-ai-safe-publisher"
+    paths:
+      - ".aura/HARNESS_EXPORT_REQUEST"
 
 permissions:
   contents: write
@@ -13,16 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout staging branch
+      - name: Checkout checksum-bound staging request
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Materialize verified single-commit patch
+      - name: Publish verified single-commit patch
         env:
           EXPECTED_BASE: 489baef6fc9c0363d5b71c4080efcb7c234e5a39
+          EXPECTED_TARGET_HEAD: d29abcfc192478b6f1450ac936bf35f36c0b132a
           EXPECTED_BUNDLE_SHA256: aa081372235e63303691cc076b29b560f52d6d7497097b788811829d1abdcf7a
+          TARGET_BRANCH: work/ai-safe-architecture-harness-20260722
         shell: bash
         run: |
           set -euo pipefail
@@ -55,7 +59,7 @@ jobs:
               assert not path.is_absolute()
               assert ".." not in path.parts
           PY
-          git checkout -B "$GITHUB_REF_NAME" "$EXPECTED_BASE"
+          git checkout --detach "$EXPECTED_BASE"
           tar -xJf /tmp/aura-ai-safe-publish.tar.xz
           PYTHONDONTWRITEBYTECODE=1 python -m py_compile \
             scripts/aura_architecture_harness.py \
@@ -79,5 +83,5 @@ jobs:
             .aura/ARCHITECTURE.md
           git commit -m "feat: add AI-safe architecture harness handoff"
           git push \
-            --force-with-lease="refs/heads/$GITHUB_REF_NAME:$GITHUB_SHA" \
-            origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+            --force-with-lease="refs/heads/$TARGET_BRANCH:$EXPECTED_TARGET_HEAD" \
+            origin "HEAD:refs/heads/$TARGET_BRANCH"
