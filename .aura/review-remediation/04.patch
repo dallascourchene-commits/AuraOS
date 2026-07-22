@@ -1,0 +1,180 @@
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -94,6 +261,7 @@
+     hierarchy: Mapping[str, Any],
+     output_dir: Path,
+     repo_root: Path,
++    source_manifest_digest: str,
+     ifcopenshell_module: Any | None = None,
+     ifcpatch_module: Any | None = None,
+ ) -> dict[str, Any]:
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -102,16 +270,27 @@
+     output = _resolve_inside(repository, output_dir, create=True)
+     if source_path.is_symlink() or not source_path.is_file():
+         raise ValueError("source IFC must be a regular non-symlink file")
++    _validate_hierarchy(hierarchy)
+     if hierarchy.get("source_sha256") != sha256_file(source_path):
+         raise ValueError("authoritative hierarchy does not match source IFC")
+-    if hierarchy.get("ifcopenshell_validated") is not True:
+-        raise ValueError("storey splitting requires an authoritative IfcOpenShell hierarchy")
++    if type(source_manifest_digest) is not str or not source_manifest_digest:
++        raise ValueError("source_manifest_digest is required")
+     expected_rows = hierarchy.get("storeys")
+     if not isinstance(expected_rows, list) or not expected_rows:
+         raise ValueError("authoritative hierarchy contains no storeys")
+-    expected = {str(item["ifc_global_id"]): str(item["storey_id"]) for item in expected_rows}
+-    if len(expected) != len(expected_rows):
+-        raise ValueError("authoritative hierarchy contains duplicate storey GlobalIds")
++    expected: dict[str, str] = {}
++    storey_ids: set[str] = set()
++    for item in expected_rows:
++        if not isinstance(item, Mapping):
++            raise ValueError("authoritative hierarchy storey must be an object")
++        global_id = item.get("ifc_global_id")
++        if type(global_id) is not str or not global_id or global_id in expected:
++            raise ValueError("authoritative hierarchy contains duplicate or invalid storey GlobalIds")
++        storey_id = _canonical_storey_id(item.get("storey_id"))
++        if storey_id in storey_ids:
++            raise ValueError("authoritative hierarchy contains duplicate storey ids")
++        expected[global_id] = storey_id
++        storey_ids.add(storey_id)
+ 
+     ifcopenshell, ifcpatch = _load_modules(ifcopenshell_module, ifcpatch_module)
+     model = ifcopenshell.open(str(source_path))
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -145,8 +324,15 @@
+ 
+         outputs: list[dict[str, Any]] = []
+         for global_id, storey_id in sorted(expected.items(), key=lambda item: item[1]):
+-            destination = output / "storeys" / storey_id / f"{storey_id}.ifc"
+-            _copy_atomic(observed[global_id], destination)
++            destination = _resolve_inside(
++                repository,
++                output / "storeys" / storey_id / f"{storey_id}.ifc",
++            )
++            try:
++                destination.relative_to(output)
++            except ValueError as exc:
++                raise ValueError("storey output escapes generated root") from exc
++            _secure_copy_atomic(observed[global_id], destination)
+             outputs.append(
+                 {
+                     "storey_id": storey_id,
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -160,6 +346,7 @@
+         "version": ASSET_PREPARATION_VERSION,
+         "phase": "SPLIT_STOREYS",
+         "source_sha256": hierarchy["source_sha256"],
++        "source_manifest_digest": source_manifest_digest,
+         "hierarchy_digest": hierarchy["hierarchy_digest"],
+         "outputs": outputs,
+         "output_count": len(outputs),
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -212,6 +399,8 @@
+     repo_root: Path,
+     ifcconvert: Path,
+     workers: int,
++    source_manifest_digest: str,
++    hierarchy_digest: str,
+     timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+ ) -> dict[str, Any]:
+     repository = repo_root.expanduser().resolve(strict=True)
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -220,14 +409,21 @@
+     executable = ifcconvert.expanduser().resolve(strict=True)
+     if not executable.is_file() or executable.is_symlink() or not os.access(executable, os.X_OK):
+         raise ValueError("IfcConvert must be an executable regular non-symlink file")
+-    if split_receipt.get("phase") != "SPLIT_STOREYS" or split_receipt.get("production_mutation") is not False:
+-        raise ValueError("split receipt is invalid")
++    source_sha256 = sha256_file(source_path)
++    split_rows = _validate_split_receipt(
++        split_receipt,
++        repository=repository,
++        output=output,
++        source_sha256=source_sha256,
++        source_manifest_digest=source_manifest_digest,
++        hierarchy_digest=hierarchy_digest,
++    )
+ 
+     jobs: list[tuple[str, Path, Path, bool]] = [
+         ("building-full-glb", source_path, output / "building-full.glb", False)
+     ]
+-    for item in split_receipt.get("outputs", ()):
+-        storey_id = str(item["storey_id"])
++    for item in split_rows:
++        storey_id = _canonical_storey_id(item["storey_id"])
+         split_path = _resolve_inside(repository, Path(str(item["path"])))
+         if sha256_file(split_path) != item["sha256"]:
+             raise ValueError("split IFC digest drifted before conversion")
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -242,8 +438,11 @@
+     outputs: list[dict[str, Any]] = []
+     for job_id, job_source, job_output, is_svg in jobs:
+         job_output.parent.mkdir(parents=True, exist_ok=True)
+-        temporary = job_output.with_suffix(job_output.suffix + ".partial")
+-        temporary.unlink(missing_ok=True)
++        descriptor, temporary_name = tempfile.mkstemp(
++            prefix=f".{job_output.name}.", suffix=".partial", dir=job_output.parent
++        )
++        os.close(descriptor)
++        temporary = Path(temporary_name)
+         command = _ifcconvert_command(
+             executable,
+             source=job_source,
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -259,7 +458,7 @@
+             )
+             if not temporary.is_file() or temporary.is_symlink() or temporary.stat().st_size == 0:
+                 raise ValueError("IfcConvert did not produce a complete regular output file")
+-            temporary.replace(job_output)
++            os.replace(temporary, job_output)
+             verification = (
+                 sanitize_svg(job_output, root=repository)
+                 if is_svg
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -274,6 +473,9 @@
+             "job_id": job_id,
+             "source": job_source.relative_to(repository).as_posix(),
+             "source_sha256": sha256_file(job_source),
++            "source_manifest_digest": source_manifest_digest,
++            "hierarchy_digest": hierarchy_digest,
++            "split_receipt_digest": split_receipt["receipt_digest"],
+             "output": job_output.relative_to(repository).as_posix(),
+             "output_sha256": sha256_file(job_output),
+             "output_byte_length": job_output.stat().st_size,
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -292,6 +494,9 @@
+     payload = {
+         "version": ASSET_PREPARATION_VERSION,
+         "phase": "CONVERT_GLB_SVG",
++        "source_sha256": source_sha256,
++        "source_manifest_digest": source_manifest_digest,
++        "hierarchy_digest": hierarchy_digest,
+         "split_receipt_digest": split_receipt["receipt_digest"],
+         "outputs": outputs,
+         "output_count": len(outputs),
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -307,8 +512,12 @@
+ def compile_gaussian_assets(
+     *,
+     conversion_receipt: Mapping[str, Any],
++    split_receipt: Mapping[str, Any],
+     output_dir: Path,
+     repo_root: Path,
++    source_sha256: str,
++    source_manifest_digest: str,
++    hierarchy_digest: str,
+     profile: str,
+     storey_target_count: int | None = None,
+     building_target_count: int | None = None,
