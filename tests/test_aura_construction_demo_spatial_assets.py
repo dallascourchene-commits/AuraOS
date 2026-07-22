@@ -5,7 +5,7 @@ from aura_construction_demo_spatial_assets import (
     project_construction_demo_asset_foundation,
 )
 from aura_spatial_contracts import SpatialTruthClass
-from tests.test_aura_construction_demo_fixture import _pack
+from test_aura_construction_demo_fixture import _pack
 
 
 def test_g5_asset_foundation_is_deterministic_and_storey_bound() -> None:
@@ -39,6 +39,12 @@ def test_g5_asset_foundation_keeps_status_separate_from_geometry() -> None:
     storey_entities = [entity for entity in entities if "storey_id" in entity.metadata]
 
     assert len(storey_entities) == len(pack.storeys)
-    assert all(entity.metadata["status_overlay_separate"] is True for entity in storey_entities)
-    assert all(entity.metadata["source_geometry_mutated"] is False for entity in storey_entities)
+    assert all(
+        entity.metadata["status_overlay_separate"] is True
+        for entity in storey_entities
+    )
+    assert all(
+        entity.metadata["source_geometry_mutated"] is False
+        for entity in storey_entities
+    )
     assert all("status" not in asset.metadata for asset in assets)
