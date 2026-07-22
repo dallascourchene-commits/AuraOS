@@ -5,10 +5,11 @@ on:
     branches:
       - "work/ai-safe-harness-20260722"
     paths:
-      - ".aura/AI_SAFE_HARNESS_PATCH.b64"
+      - ".aura/AI_SAFE_HARNESS_TRIGGER"
 
 permissions:
   contents: write
+  statuses: write
 
 jobs:
   materialize:
@@ -31,6 +32,7 @@ jobs:
           git apply --check /tmp/ai-safe-harness.patch
           git apply /tmp/ai-safe-harness.patch
           rm .aura/AI_SAFE_HARNESS_PATCH.b64
+          rm .aura/AI_SAFE_HARNESS_TRIGGER
           rm .github/workflows/ai-safe-harness-materialize.yml
       - name: Verify focused implementation
         env:
@@ -57,6 +59,21 @@ jobs:
             README.md USER_GUIDE.md .aura/ARCHITECTURE.md \
             docs/AURA_ARCHITECTURE_HARNESS.md \
             .aura/AI_SAFE_HARNESS_PATCH.b64 \
+            .aura/AI_SAFE_HARNESS_TRIGGER \
             .github/workflows/ai-safe-harness-materialize.yml
           git commit -m "feat: add AI-safe architecture harness handoff"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Publish materializer status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          STATE="success"
+          if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
+          gh api \
+            --method POST \
+            "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state="$STATE" \
+            -f context="ai-safe-harness-materialize" \
+            -f description="One-use AI-safe harness publication ${STATE}" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
