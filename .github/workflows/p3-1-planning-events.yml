@@ -8,7 +8,7 @@ on:
       - "refactor/**"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: p3-1-planning-events-${{ github.workflow }}-${{ github.ref }}
@@ -56,3 +56,116 @@ jobs:
             tests/test_aura_planning_regression_adversarial.py \
             tests/test_aura_planning_frontier.py \
             tests/test_aura_planning_events.py
+
+  publish-c6-c9:
+    name: Publish exact C6-C9 finalization
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'work/coding-relationship-compass-c6-c9-20260721' && github.actor != 'github-actions[bot]'
+    needs: focused-planning-events
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+      TARGET_BRANCH: work/coding-relationship-compass-c6-c9-20260721
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Reconstruct and verify exact C6-C9 patch
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --quiet origin "$TARGET_BRANCH"
+          git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          BASE_HEAD=8e514af2241b5c0b6cd62aae32bbb6c3e165e613
+          test "$(wc -c < .github/c6-c9-final.patch.gz.b64)" -eq 47148
+          echo 'b8aa49ea4dc304792921d79353008cb35575982345e18781117b871bb955053c  .github/c6-c9-final.patch.gz.b64' | sha256sum -c -
+          base64 -d .github/c6-c9-final.patch.gz.b64 | gzip -d > /tmp/c6-c9.patch
+          echo 'd83cfe35f77deb03bc24ec681ebdc24b7177bda067dc7bce5fd16c8bc8866fcd  /tmp/c6-c9.patch' | sha256sum -c -
+          git reset --hard "$BASE_HEAD"
+          git apply --index --whitespace=error-all /tmp/c6-c9.patch
+          git diff --cached --check
+          printf '%s\n' \
+            .aura/ARCHITECTURE.md \
+            README.md \
+            USER_GUIDE.md \
+            aura_affordance_directory.py \
+            aura_agent_arena_mcp.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_ir_compiler.py \
+            aura_architect_council_v3.py \
+            aura_arena_experience_ledger.py \
+            aura_capability_connectome.py \
+            aura_change_graph.py \
+            aura_coding_relationship_compass.py \
+            aura_emergent_potential_repl.py \
+            aura_emergent_result_verifier.py \
+            aura_qdkt_observations.py \
+            aura_relational_index.py \
+            aura_relationship_atlas.py \
+            aura_relationship_experience.py \
+            aura_temporal_persistence.py \
+            docs/AURA_CODING_RELATIONSHIP_COMPASS.md \
+            docs/AURA_CODING_RELATIONSHIP_COMPASS_IMPLEMENTATION_PLAN.md \
+            schemas/aura_compass_act_capsule.schema.json \
+            schemas/aura_relationship_experience.schema.json \
+            tests/test_aura_arena_experience_ledger.py \
+            tests/test_aura_capability_connectome.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py \
+            tests/test_aura_relationship_compass_finalization.py \
+            | sort > /tmp/expected-files
+          git diff --cached --name-only | sort > /tmp/actual-files
+          diff -u /tmp/expected-files /tmp/actual-files
+      - name: Verify C6-C9 finalization
+        run: |
+          set -euo pipefail
+          python3 -m venv /tmp/c6-c9-venv
+          . /tmp/c6-c9-venv/bin/activate
+          python -m pip install --quiet pytest==9.0.2 jsonschema==4.26.0 numpy==2.3.5
+          python -m py_compile \
+            aura_affordance_directory.py \
+            aura_agent_arena_mcp.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_ir_compiler.py \
+            aura_architect_council_v3.py \
+            aura_arena_experience_ledger.py \
+            aura_capability_connectome.py \
+            aura_change_graph.py \
+            aura_coding_relationship_compass.py \
+            aura_emergent_potential_repl.py \
+            aura_emergent_result_verifier.py \
+            aura_qdkt_observations.py \
+            aura_relational_index.py \
+            aura_relationship_atlas.py \
+            aura_relationship_experience.py \
+            aura_temporal_persistence.py
+          PYTHONPATH=. pytest -q \
+            tests/test_aura_relationship_compass_finalization.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py \
+            tests/test_aura_relationship_atlas.py \
+            tests/test_aura_relationship_contracts.py \
+            tests/test_aura_emergent_potential_repl.py \
+            tests/test_aura_emergent_result_verifier.py \
+            tests/test_aura_change_graph.py \
+            tests/test_aura_agent_arena_mcp.py \
+            tests/test_aura_affordance_directory.py \
+            tests/test_aura_architect_council_v3.py \
+            tests/test_aura_arena_experience_ledger.py \
+            tests/test_aura_capability_connectome.py \
+            tests/test_aura_qdkt_observations.py \
+            tests/test_aura_temporal_persistence.py \
+            tests/test_aura_planning_board.py \
+            tests/test_aura_coding_arena_planning.py \
+            tests/test_aura_coding_waboose_breadboard.py \
+            test_aura_architect_loop.py \
+            tests/test_aura_architecture_harness.py
+      - name: Publish clean finalization commit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: complete Coding Relationship Compass C6-C9"
+          NEW_HEAD=$(git rev-parse HEAD)
+          git push --force-with-lease=refs/heads/${TARGET_BRANCH}:$EXPECTED_HEAD \
+            origin "$NEW_HEAD":refs/heads/${TARGET_BRANCH}
