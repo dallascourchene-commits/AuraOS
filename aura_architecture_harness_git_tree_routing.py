@@ -1,9 +1,8 @@
-"""Proposal-only GitHub atomic Git-tree routing record for Aura's architecture harness.
+"""Proposal-only GitHub atomic Git-tree routing for Aura's architecture harness.
 
-This companion records how an external coding agent can publish an already validated,
-allowlisted multi-file change to an existing pull-request branch without producing a
-sequence of partial Contents-API commits.  It does not call GitHub, move refs, push,
-merge, or grant mutation authority by itself.
+This module records a deterministic publication plan for an external authorized
+GitHub connector. It never calls GitHub, creates objects, moves refs, opens or
+merges pull requests, or grants production mutation authority by itself.
 """
 from __future__ import annotations
 
@@ -14,7 +13,7 @@ from pathlib import PurePosixPath
 import re
 from typing import Any, Iterable
 
-VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V1"
+VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V2"
 SHA1_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -28,6 +27,7 @@ AUTHORITY_CONTRACT = {
     "force_ref_update": False,
     "automatic_pull_request": False,
     "automatic_merge": False,
+    "base_branch_update_authorized": False,
     "human_review_required": True,
     "execution_requires_external_authorized_connector": True,
 }
@@ -36,20 +36,25 @@ WORKFLOW_DISCOVERY = {
     "pull_request_definition_source": "base_branch",
     "branch_new_pull_request_workflow_jobs_reliable": False,
     "reason": (
-        "GitHub evaluates pull_request workflow definitions from the base branch, so "
-        "new or materially rewritten workflow jobs that exist only on the PR branch "
-        "may not execute for that PR."
+        "GitHub evaluates pull_request workflow definitions from the trusted base "
+        "branch. New or materially rewritten jobs that exist only on a PR branch "
+        "must not be relied on to publish that PR's source changes."
     ),
+    "commit_workflow_lookup_scope": "pull_request_triggered_first_page",
     "connector_visibility_limit": (
-        "The commit-workflow lookup used during PR #184 exposed pull-request-triggered "
-        "runs but did not reliably expose branch push runs."
+        "The connector workflow-run lookup used during PR #184 exposed "
+        "pull-request-triggered runs but did not reliably expose branch push runs."
+    ),
+    "contents_api_partial_state_risk": (
+        "Sequential Contents-API writes create one commit per path and can expose an "
+        "intermediate partial source state."
     ),
     "preferred_fallback": "atomic_git_object_route",
 }
 
 
 class GitTreeRoutingError(ValueError):
-    """Raised when a proposed atomic publication route is not canonical or safe."""
+    """Raised when an atomic publication proposal is non-canonical or unsafe."""
 
 
 def _canonical_repo_path(value: str) -> str:
@@ -68,7 +73,9 @@ def _canonical_repo_path(value: str) -> str:
 
 def _sha1(value: str, name: str) -> str:
     if type(value) is not str or SHA1_PATTERN.fullmatch(value) is None:
-        raise GitTreeRoutingError(f"{name} must be a lowercase 40-character Git SHA-1")
+        raise GitTreeRoutingError(
+            f"{name} must be a lowercase 40-character Git SHA-1"
+        )
     return value
 
 
@@ -80,7 +87,7 @@ def _sha256(value: str, name: str) -> str:
 
 @dataclass(frozen=True)
 class GitTreeBlobIntent:
-    """One exact file replacement/addition admitted to the atomic tree."""
+    """One exact regular-file addition or replacement admitted to an atomic tree."""
 
     path: str
     content_sha256: str
@@ -101,7 +108,9 @@ class GitTreeBlobIntent:
             raise GitTreeRoutingError("object_type must be blob")
 
     @classmethod
-    def from_bytes(cls, path: str, content: bytes, *, executable: bool = False) -> "GitTreeBlobIntent":
+    def from_bytes(
+        cls, path: str, content: bytes, *, executable: bool = False
+    ) -> "GitTreeBlobIntent":
         if type(content) is not bytes:
             raise GitTreeRoutingError("content must be exact bytes")
         return cls(
@@ -124,20 +133,23 @@ def build_git_tree_routing_record(
     blobs: Iterable[GitTreeBlobIntent],
     deletions: Iterable[str] = (),
 ) -> dict[str, Any]:
-    """Build a deterministic, proposal-only atomic publication receipt.
+    """Build a deterministic, proposal-only atomic publication receipt."""
 
-    The returned sequence mirrors the successfully proven route used on AuraOS PR #184:
-    resolve the exact PR head, create immutable blobs, create one tree rooted at that
-    head, create one single-parent commit, then fast-forward the PR branch with force
-    disabled and verify the resulting head and diff.
-    """
-
-    if type(repository_full_name) is not str or REPOSITORY_PATTERN.fullmatch(repository_full_name) is None:
+    if (
+        type(repository_full_name) is not str
+        or REPOSITORY_PATTERN.fullmatch(repository_full_name) is None
+    ):
         raise GitTreeRoutingError("repository_full_name must use owner/name form")
     if type(pull_request_number) is not int or pull_request_number < 1:
         raise GitTreeRoutingError("pull_request_number must be positive")
-    if type(branch) is not str or not branch or branch.startswith("refs/") or "\x00" in branch:
-        raise GitTreeRoutingError,"branch must be a plain non-empty branch name")
+    if (
+        type(branch) is not str
+        or not branch
+        or branch.startswith("refs/")
+        or "\x00" in branch
+    ):
+        raise GitTreeRoutingError("branch must be a plain non-empty branch name")
+
     head = _sha1(expected_head_sha, "expected_head_sha")
     blob_rows = tuple(sorted(tuple(blobs), key=lambda item: item.path))
     if not blob_rows or not all(type(item) is GitTreeBlobIntent for item in blob_rows):
@@ -145,12 +157,15 @@ def build_git_tree_routing_record(
     blob_paths = tuple(item.path for item in blob_rows)
     if len(blob_paths) != len(set(blob_paths)):
         raise GitTreeRoutingError("blob paths must be unique")
+
     deletion_paths = tuple(sorted(_canonical_repo_path(item) for item in deletions))
     if len(deletion_paths) != len(set(deletion_paths)):
         raise GitTreeRoutingError("deletion paths must be unique")
     overlap = sorted(set(blob_paths) & set(deletion_paths))
     if overlap:
-        raise GitTreeRoutingError(f"paths cannot be replaced and deleted together: {overlap}")
+        raise GitTreeRoutingError(
+            f"paths cannot be replaced and deleted together: {overlap}"
+        )
 
     identity = {
         "repository_full_name": repository_full_name,
@@ -170,8 +185,8 @@ def build_git_tree_routing_record(
         **identity,
         "preconditions": [
             "the pull request is open and its head SHA exactly equals expected_head_sha",
-            "all file bytes have already passed the requested validation gate",
-            "the path allowlist and deletion allowlist are exact and human-reviewed",
+            "all file bytes already passed the requested validation gate",
+            "the replacement and deletion allowlists are exact and human-reviewed",
             "generated navigation artifacts are regenerated from the final source tree",
         ],
         "connector_sequence": [
@@ -193,14 +208,14 @@ def build_git_tree_routing_record(
                 "assertions": [
                     "base tree is the exact current PR head",
                     "tree contains the complete replacement/add/delete set",
-                    "temporary payload and workflow cleanup is included in the same tree",
+                    "temporary transport cleanup is included in the same tree",
                 ],
             },
             {
                 "order": 4,
                 "action": "create_commit",
                 "parent_sha": head,
-                "assertions": ["one parent", "one atomic tree", "reviewable commit message"],
+                "assertions": ["one parent", "one atomic tree", "reviewable message"],
             },
             {
                 "order": 5,
@@ -223,13 +238,17 @@ def build_git_tree_routing_record(
         ],
         "workflow_discovery": dict(WORKFLOW_DISCOVERY),
         "why_atomic": (
-            "GitHub's Contents API creates one commit per file update; the Git-object route "
-            "creates all blobs first and exposes them only through one tree, one commit, and "
-            "one fast-forward ref update, preventing an observable partial source state."
+            "All immutable blobs are prepared before one tree and one commit become "
+            "reachable through a non-forced fast-forward, preventing an observable "
+            "partial multi-file source state."
         ),
         "rollback": {
-            "before_update_ref": "discard unattached blobs/tree/commit; the branch is unchanged",
-            "after_update_ref": "create a reviewed revert or a new corrective atomic commit; never force rewind",
+            "before_update_ref": (
+                "discard unattached blobs/tree/commit; the branch remains unchanged"
+            ),
+            "after_update_ref": (
+                "create a reviewed revert or corrective atomic commit; never force rewind"
+            ),
         },
         "authority": dict(AUTHORITY_CONTRACT),
     }
@@ -253,18 +272,12 @@ def proven_pr184_route_record() -> dict[str, Any]:
     )
     record["case_study"] = {
         "recorded_at": "2026-07-22",
-        "outcome": "atomic Git tree creation was confirmed against the live PR head",
+        "outcome": "atomic Git-tree publication succeeded on the live PR branch",
+        "created_tree_sha": "4e7b79b320252968ab350456975054e2384d32cf",
+        "created_commit_sha": "5c101780a7caeef859d4435bd8068f782def6aaf",
         "confirmed_base_tree_accepts_commit_sha": True,
         "confirmed_force_required": False,
-        "note": "The placeholder blob documents the routing shape, not a publication request.",
+        "normal_ci_restored_in_same_tree": True,
+        "note": "The placeholder blob documents routing shape, not a publication request.",
     }
     return record
-
-
-def main() -> int:
-    print(json.dumps(proven_pr184_route_record(), indent=2, sort_keys=True))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
