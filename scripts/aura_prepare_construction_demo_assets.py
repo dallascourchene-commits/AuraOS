@@ -14,7 +14,7 @@ from pathlib import Path
 import shutil
 import sys
 import tempfile
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
@@ -22,6 +22,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 from aura_construction_demo_contracts import ConstructionDemoSourceManifest
 from aura_event_contracts import stable_digest
+from scripts.aura_mesh_to_gaussian import PROFILE_LIMITS, compile_mesh
 from scripts.aura_verify_construction_demo_assets import (
     atomic_json,
     run_bounded_command,
@@ -259,7 +260,11 @@ def convert_ifc_assets(
             if not temporary.is_file() or temporary.is_symlink() or temporary.stat().st_size == 0:
                 raise ValueError("IfcConvert did not produce a complete regular output file")
             temporary.replace(job_output)
-            verification = sanitize_svg(job_output, root=repository) if is_svg else verify_glb(job_output, root=repository)
+            verification = (
+                sanitize_svg(job_output, root=repository)
+                if is_svg
+                else verify_glb(job_output, root=repository)
+            )
         except Exception:
             temporary.unlink(missing_ok=True)
             job_output.unlink(missing_ok=True)
@@ -299,6 +304,92 @@ def convert_ifc_assets(
     return receipt
 
 
+def compile_gaussian_assets(
+    *,
+    conversion_receipt: Mapping[str, Any],
+    output_dir: Path,
+    repo_root: Path,
+    profile: str,
+    storey_target_count: int | None = None,
+    building_target_count: int | None = None,
+    mesh_compiler: Callable[..., dict[str, Any]] = compile_mesh,
+    spz_module: Any | None = None,
+) -> dict[str, Any]:
+    repository = repo_root.expanduser().resolve(strict=True)
+    output = _resolve_inside(repository, output_dir, create=True)
+    if profile not in PROFILE_LIMITS:
+        raise ValueError("unsupported Gaussian density profile")
+    if conversion_receipt.get("phase") != "CONVERT_GLB_SVG":
+        raise ValueError("Gaussian compilation requires a GLB/SVG conversion receipt")
+    if conversion_receipt.get("production_mutation") is not False:
+        raise ValueError("conversion receipt violates the production-mutation boundary")
+    source_rows = [
+        item
+        for item in conversion_receipt.get("outputs", ())
+        if item.get("representation") == "MESH_GLB"
+    ]
+    if not source_rows:
+        raise ValueError("conversion receipt contains no GLB meshes")
+    job_ids = [str(item.get("job_id") or "") for item in source_rows]
+    if len(job_ids) != len(set(job_ids)) or "building-full-glb" not in job_ids:
+        raise ValueError("conversion receipt must contain unique mesh jobs and one full building")
+
+    compiled: list[dict[str, Any]] = []
+    for item in sorted(source_rows, key=lambda row: str(row["job_id"])):
+        source = _resolve_inside(repository, Path(str(item["output"])))
+        source_sha256 = sha256_file(source)
+        if source_sha256 != item.get("output_sha256"):
+            raise ValueError("validated GLB digest drifted before Gaussian compilation")
+        scope = "BUILDING" if item["job_id"] == "building-full-glb" else "STOREY"
+        target_count = building_target_count if scope == "BUILDING" else storey_target_count
+        base_name = source.stem
+        ply = source.with_name(f"{base_name}.gaussian.ply")
+        spz = source.with_name(f"{base_name}.spz")
+        result = mesh_compiler(
+            repo_root=repository,
+            glb_path=source,
+            output_ply=ply,
+            output_spz=spz,
+            profile=profile,
+            scope=scope,
+            source_digest=source_sha256,
+            target_count=target_count,
+            spz_module=spz_module,
+        )
+        if result.get("source_digest") != source_sha256 or result.get("scope") != scope:
+            raise ValueError("Gaussian compiler receipt does not match its source or scope")
+        if not isinstance(result.get("ply"), Mapping) or not isinstance(result.get("spz"), Mapping):
+            raise ValueError("Gaussian compiler must emit both PLY and SPZ receipts")
+        compiled.append(
+            {
+                "job_id": str(item["job_id"]),
+                "scope": scope,
+                "source_glb_receipt_digest": item["receipt_digest"],
+                "gaussian_receipt": result,
+            }
+        )
+
+    payload = {
+        "version": ASSET_PREPARATION_VERSION,
+        "phase": "SAMPLE_GAUSSIANS_WRITE_SPZ",
+        "conversion_receipt_digest": conversion_receipt["receipt_digest"],
+        "profile": profile,
+        "profile_limits": PROFILE_LIMITS[profile],
+        "storey_target_count": storey_target_count,
+        "building_target_count": building_target_count,
+        "outputs": compiled,
+        "output_count": len(compiled),
+        "source_coordinate_system": "LUF",
+        "stored_spz_coordinate_system": "RUB",
+        "survey_authority": False,
+        "projection_only": True,
+        "production_mutation": False,
+    }
+    receipt = {**payload, "receipt_digest": stable_digest(payload)}
+    atomic_json(output / "receipts" / "compile-gaussians.json", receipt)
+    return receipt
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path("."))
@@ -308,8 +399,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--ifcconvert", type=Path)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--profile", choices=tuple(PROFILE_LIMITS), default="STANDARD")
+    parser.add_argument("--storey-target-count", type=int)
+    parser.add_argument("--building-target-count", type=int)
     parser.add_argument("--timeout-seconds", type=float, default=DEFAULT_TIMEOUT_SECONDS)
-    parser.add_argument("--phase", choices=("split", "convert", "all"), default="all")
+    parser.add_argument(
+        "--phase",
+        choices=("split", "convert", "gaussian", "all"),
+        default="all",
+    )
     return parser
 
 
@@ -333,10 +431,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         split_receipt = _load_json(split_receipt_path)
     result: Mapping[str, Any] = split_receipt
+    conversion_receipt_path = output / "receipts" / "convert-glb-svg.json"
     if args.phase in {"convert", "all"}:
         if args.ifcconvert is None:
             raise ValueError("--ifcconvert is required for conversion")
-        result = convert_ifc_assets(
+        conversion_receipt = convert_ifc_assets(
             source=source,
             split_receipt=split_receipt,
             output_dir=output,
@@ -344,6 +443,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             ifcconvert=args.ifcconvert,
             workers=args.workers,
             timeout_seconds=args.timeout_seconds,
+        )
+        result = conversion_receipt
+    else:
+        conversion_receipt = _load_json(conversion_receipt_path) if args.phase == "gaussian" else None
+    if args.phase in {"gaussian", "all"}:
+        if conversion_receipt is None:
+            raise ValueError("Gaussian compilation requires a conversion receipt")
+        result = compile_gaussian_assets(
+            conversion_receipt=conversion_receipt,
+            output_dir=output,
+            repo_root=repository,
+            profile=args.profile,
+            storey_target_count=args.storey_target_count,
+            building_target_count=args.building_target_count,
         )
     print(json.dumps({"phase": result["phase"], "receipt_digest": result["receipt_digest"]}, sort_keys=True))
     return 0
