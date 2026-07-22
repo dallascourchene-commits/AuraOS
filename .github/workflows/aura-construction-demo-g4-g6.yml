@@ -55,7 +55,7 @@ jobs:
       - name: Install bounded verification dependencies
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check pytest ruff
+          python -m pip install -q --disable-pip-version-check pytest ruff
 
       - name: Compile G4-G6 Python owners
         run: |
@@ -68,19 +68,19 @@ jobs:
             tests/test_aura_construction_demo_projection.py
 
       - name: Lint G4 fixture contracts
-        run: ruff check aura_construction_demo_fixture.py
+        run: ruff check --output-format=concise aura_construction_demo_fixture.py
 
       - name: Lint G4 fixture builder
-        run: ruff check aura_construction_demo_fixture_builder.py
+        run: ruff check --output-format=concise aura_construction_demo_fixture_builder.py
 
       - name: Lint G5 projection
-        run: ruff check aura_construction_demo_projection.py
+        run: ruff check --output-format=concise aura_construction_demo_projection.py
 
       - name: Lint G4 fixture tests
-        run: ruff check tests/test_aura_construction_demo_fixture.py
+        run: ruff check --output-format=concise tests/test_aura_construction_demo_fixture.py
 
       - name: Lint G5 projection tests
-        run: ruff check tests/test_aura_construction_demo_projection.py
+        run: ruff check --output-format=concise tests/test_aura_construction_demo_projection.py
 
       - name: Check G4-G6 Python formatting
         run: |
