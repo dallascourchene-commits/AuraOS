@@ -16,9 +16,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        continue-on-error: true
         with:
-          ref: work/construction-arena-bim-gaussian-demo-20260722
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Validate exact checked-out tree
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          test -f .aura/manual-remediation/chunk00
+          test -f .aura/manual-remediation/chunk06c
       - name: Verify every manually staged segment
         shell: bash
         run: |
