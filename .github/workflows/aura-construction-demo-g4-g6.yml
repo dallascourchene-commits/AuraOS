@@ -67,8 +67,95 @@ jobs:
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py
 
+      - name: Run Aura-native Connectome Atlas and Council scan
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from aura_architect_council_v3 import route_compass_failure_classes
+          from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+          target_files = (
+              "aura_construction_demo_fixture.py",
+              "aura_construction_demo_fixture_builder.py",
+              "aura_construction_demo_projection.py",
+              "aura_spatial_web/construction_mesh_pass.js",
+              "aura_spatial_web/construction_overlay_pass.js",
+              "aura_spatial_web/construction_scene_renderer.js",
+              "aura_spatial_web/webgl2_gaussian_pass.js",
+              "tests/test_aura_construction_demo_fixture.py",
+              "tests/test_aura_construction_demo_projection.py",
+              "tests/js/spatial-construction-demo.test.mjs",
+          )
+          target_symbols = (
+              "ConstructionDemoProjectFixture",
+              "build_construction_demo_fixture",
+              "project_construction_demo_to_scene",
+              "ConstructionMeshPass",
+              "ConstructionOverlayPass",
+              "ConstructionSceneRenderer",
+              "createWebGL2GaussianPass",
+          )
+          objective = (
+              "Verify Construction Arena G4-G6 asset-bound fixture, privacy-minimized projection, "
+              "mesh Gaussian hybrid rendering, storey isolation, presentation-only exploded view, "
+              "cancellation, device-loss disposal, authority boundaries, and exact focused tests"
+          )
+          packet = compile_coding_relationship_compass(
+              objective,
+              Path.cwd(),
+              target_files=target_files,
+              target_symbols=target_symbols,
+              max_target_files=16,
+              max_target_symbols=24,
+              max_atomic_nodes=48,
+              max_atlas_participants=48,
+              max_atlas_assessments=128,
+              max_required_tests=32,
+              max_neighborhood_nodes=96,
+              max_neighborhood_edges=384,
+              max_neighborhood_candidate_pairs=4096,
+              include_source=False,
+          )
+          council = route_compass_failure_classes(
+              ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
+          )
+          receipt = {
+              "objective": objective,
+              "repository_head": packet.get("repository_head"),
+              "compass_digest": packet.get("compass_digest"),
+              "grounding_digest": packet.get("grounding_digest"),
+              "recommended_targets": packet.get("recommended_targets"),
+              "required_tests": packet.get("required_tests"),
+              "relationships_to_preserve": (packet.get("atlas") or {}).get("relationships_to_preserve"),
+              "required_adapters": (packet.get("atlas") or {}).get("required_adapters"),
+              "authority_constraints": (packet.get("atlas") or {}).get("authority_constraints"),
+              "missing_roles": (packet.get("atlas") or {}).get("missing_roles"),
+              "missing_configurations": (packet.get("atlas") or {}).get("missing_configurations"),
+              "prohibitions": (packet.get("atlas") or {}).get("prohibitions"),
+              "emergent_candidates": packet.get("emergent_candidates"),
+              "change_graph": packet.get("change_graph"),
+              "act_capsules": packet.get("act_capsules"),
+              "council_v3": council,
+              "safe_to_patch": packet.get("safe_to_patch", False),
+              "production_mutation": packet.get("production_mutation", False),
+              "automatic_merge": packet.get("automatic_merge", False),
+              "full_packet": packet,
+          }
+          output = Path("/tmp/aura_g4_g6_architecture.json")
+          output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
+          print(json.dumps({key: receipt[key] for key in (
+              "repository_head", "compass_digest", "grounding_digest", "council_v3",
+              "safe_to_patch", "production_mutation", "automatic_merge"
+          )}, sort_keys=True))
+          PY
+
       - name: Lint G4 fixture contracts
-        run: ruff check --output-format=concise aura_construction_demo_fixture.py
+        run: |
+          set -o pipefail
+          ruff check --output-format=concise aura_construction_demo_fixture.py 2>&1 | tee /tmp/g4_fixture_ruff.txt
 
       - name: Lint G4 fixture builder
         run: ruff check --output-format=concise aura_construction_demo_fixture_builder.py
@@ -118,3 +205,14 @@ jobs:
         run: |
           set -euo pipefail
           npm run test:spatial
+
+      - name: Upload Aura G4-G6 diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-construction-g4-g6-diagnostics
+          path: |
+            /tmp/aura_g4_g6_architecture.json
+            /tmp/g4_fixture_ruff.txt
+          if-no-files-found: ignore
+          retention-days: 7
