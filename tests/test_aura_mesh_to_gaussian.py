@@ -20,6 +20,7 @@ from scripts.aura_mesh_to_gaussian import (
     PROFILE_LIMITS,
     canonicalize_glb_for_aura,
     compile_mesh,
+    load_face_color_asset,
     sample_mesh_arrays,
     save_spz_v4,
     write_gaussian_ply,
@@ -404,6 +405,9 @@ def test_canonical_glb_flattens_scene_and_passes_runtime_import(tmp_path: Path) 
     assert receipt["bounds_max"] == [11.0, 6.0, 2.0]
     assert len(receipt["import_receipt_digest"]) == 64
     assert receipt["output_sha256"] == repeated["output_sha256"]
+    colors = load_face_color_asset(receipt["face_color_asset"], repo_root=tmp_path)
+    assert colors.shape == (1, 3)
+    assert receipt["face_colors_preserved"] is True
     assert first.stat().st_size < 16 * 1024 * 1024
 
 

@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784752315,
+  "generated_at_unix": 1784755882,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1339,
+    "included_file_count": 1343,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -13,10 +13,11 @@
       "topology_map.json"
     ],
     "skipped_dir_file_counts": {
-      ".git": 25,
+      ".git": 26,
+      ".pytest_cache": 4,
       "Aura_Memory": 6,
-      "Aura_Sandbox": 2,
-      "__pycache__": 8
+      "Aura_Sandbox": 1,
+      "__pycache__": 13
     },
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
@@ -53,6 +54,7 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
+      ".aura/pr184-final-remediation-failure.json",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
       ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
@@ -114,6 +116,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr184-final-remediation.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -948,6 +951,7 @@
       "quantum_dag.py",
       "quantum_tensor_sandbox.rs",
       "refactored-auraos-upgrades.md",
+      "remediation.log",
       "render.yaml",
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
@@ -997,6 +1001,7 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/pr184_final_remediation.py",
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
@@ -1361,23 +1366,23 @@
     ]
   },
   "summary": {
-    "file_count": 1339,
-    "total_bytes": 55902479,
-    "text_tokens_est": 4536815,
+    "file_count": 1343,
+    "total_bytes": 55943785,
+    "text_tokens_est": 4546460,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 43,
       "knowledge_artifact": 174,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 900,
-      "schema_or_lexicon": 158,
-      "support_file": 49
+      "python_module": 901,
+      "schema_or_lexicon": 160,
+      "support_file": 50
     },
     "topology_nodes": 10268,
     "topology_edges": 23807,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29896.64
+    "elapsed_ms": 30222.68
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1602,6 +1607,7 @@
       ".aura/model_policies/local_first.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
+      ".aura/pr184-final-remediation-failure.json",
       ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
       ".aura/research/AURA_SPATIAL_BREADBOARD_RECEIPT.json",
       ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
@@ -1659,6 +1665,7 @@
       ".github/workflows/phase-c2.yml",
       ".github/workflows/phase-c3.yml",
       ".github/workflows/pr138-grounded-phase-integration.yml",
+      ".github/workflows/pr184-final-remediation.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
       ".github/workflows/render-four-tab-demo.yml",
@@ -2367,6 +2374,7 @@
       "quantum_dag.py",
       "quantum_tensor_sandbox.rs",
       "refactored-auraos-upgrades.md",
+      "remediation.log",
       "render.yaml",
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
@@ -2415,6 +2423,7 @@
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
+      "scripts/pr184_final_remediation.py",
       "scripts/update_architect_benchmark_readme.py",
       "setup.sh",
       "setup_aura.sh",
@@ -8489,8 +8498,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "class",
-        "line": 165,
-        "end_line": 166,
+        "line": 166,
+        "end_line": 167,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#class:FakeCoordinateSystem:5a2e7613e6462d9f",
         "signature_hash": "66238016cfe9096f"
       }
@@ -8509,8 +8518,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "class",
-        "line": 155,
-        "end_line": 156,
+        "line": 156,
+        "end_line": 157,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#class:FakeGaussianCloud:1e3b95dfbdc34b1b",
         "signature_hash": "e6d03f88359f3df6"
       }
@@ -8537,8 +8546,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "class",
-        "line": 159,
-        "end_line": 162,
+        "line": 160,
+        "end_line": 163,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#class:FakePackOptions:1ccc60d3a8aade12",
         "signature_hash": "601229dd4a93d20d"
       }
@@ -8585,8 +8594,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "class",
-        "line": 169,
-        "end_line": 180,
+        "line": 170,
+        "end_line": 181,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#class:FakeSpz:8959e13186d64b05",
         "signature_hash": "9528084c0f03a9d0"
       }
@@ -9073,8 +9082,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "class",
-        "line": 55,
-        "end_line": 67,
+        "line": 56,
+        "end_line": 68,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#class:GaussianCloudArrays:7138db6310eefc0f",
         "signature_hash": "ee68e87681cfd0b1"
       }
@@ -21285,8 +21294,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "method",
-        "line": 160,
-        "end_line": 162,
+        "line": 161,
+        "end_line": 163,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#method:FakePackOptions.__init__:50adc3e014b07226",
         "signature_hash": "3d77650513b79756"
       },
@@ -23543,8 +23552,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 920,
-        "end_line": 935,
+        "line": 922,
+        "end_line": 937,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_ai_handoff_summary:d092e0ac104d0402",
         "signature_hash": "e575b31ff8ae3dbc"
       }
@@ -23653,8 +23662,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 100,
-        "end_line": 108,
+        "line": 101,
+        "end_line": 109,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_allocate_counts:cee639cc5b37925f",
         "signature_hash": "9aca647d22e835c3"
       }
@@ -24113,8 +24122,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 70,
-        "end_line": 77,
+        "line": 71,
+        "end_line": 78,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_arrays_digest:9fef467bf6ab64ef",
         "signature_hash": "40b2a9e61a9e7f75"
       }
@@ -25131,8 +25140,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 757,
-        "end_line": 764,
+        "line": 759,
+        "end_line": 766,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_binary_bytes:b9fbd56a5f2b6bcb",
         "signature_hash": "914ded9ed37a4f59"
       }
@@ -25141,8 +25150,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 767,
-        "end_line": 770,
+        "line": 769,
+        "end_line": 772,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_binary_probe:565ac3dcff1547e4",
         "signature_hash": "d94adf3e81830cad"
       }
@@ -27177,8 +27186,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 262,
-        "end_line": 286,
+        "line": 263,
+        "end_line": 298,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_canonical_mesh_arrays:3f57c69f19d0ecdc",
         "signature_hash": "2188fbd19a615395"
       }
@@ -27255,8 +27264,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 938,
-        "end_line": 948,
+        "line": 940,
+        "end_line": 950,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_canonical_source_commit:cacce4a1675c7a4a",
         "signature_hash": "5e9494e40ac521d0"
       }
@@ -27265,8 +27274,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 66,
-        "end_line": 69,
+        "line": 67,
+        "end_line": 70,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_canonical_storey_id:4f7f9e0d5967b060",
         "signature_hash": "161a70a36e7c15a0"
       }
@@ -27455,8 +27464,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 195,
-        "end_line": 216,
+        "line": 196,
+        "end_line": 217,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_capture_ifcconvert_identity:1ba76e7dd8e2df6e",
         "signature_hash": "1dbdec7bdf9770e7"
       }
@@ -28003,8 +28012,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 817,
-        "end_line": 836,
+        "line": 819,
+        "end_line": 838,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_classify_tracked_file:3692ab79f1f16d2f",
         "signature_hash": "6a5fef52f4b7fe0c"
       }
@@ -28159,8 +28168,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 45,
-        "end_line": 53,
+        "line": 46,
+        "end_line": 54,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:_cloud:06ef10841d2f419b",
         "signature_hash": "c7b030c3dfbb6205"
       }
@@ -30697,8 +30706,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1520,
-        "end_line": 1521,
+        "line": 1522,
+        "end_line": 1523,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_default_venv:70fa9a34abdd9815",
         "signature_hash": "d4081661d5a94351"
       }
@@ -34043,8 +34052,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 290,
-        "end_line": 320,
+        "line": 295,
+        "end_line": 325,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:_fake_gaussian_compiler:aefc955c6b4b944e",
         "signature_hash": "bf41c1682c508317"
       }
@@ -35813,8 +35822,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 773,
-        "end_line": 796,
+        "line": 775,
+        "end_line": 798,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_blob_sha256:49202408482d2e72",
         "signature_hash": "8ce20eafe41c380b"
       }
@@ -35925,8 +35934,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1139,
-        "end_line": 1154,
+        "line": 1141,
+        "end_line": 1156,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_git_info:4886eee02412f2b0",
         "signature_hash": "a6586ad9c0c5ebd3"
       }
@@ -36069,8 +36078,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 289,
-        "end_line": 293,
+        "line": 301,
+        "end_line": 305,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_glb_chunk:8525b16ee34e8d06",
         "signature_hash": "4a6908432ae5128c"
       }
@@ -36079,8 +36088,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 367,
-        "end_line": 371,
+        "line": 368,
+        "end_line": 372,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:_glb_document:7eb7446ce8fec8da",
         "signature_hash": "b30c96d9f9b4b6ca"
       }
@@ -37869,8 +37878,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 470,
-        "end_line": 500,
+        "line": 477,
+        "end_line": 507,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_ifcconvert_command:f1939c86fd7648f4",
         "signature_hash": "e7de4508ec4968bd"
       }
@@ -38265,8 +38274,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1157,
-        "end_line": 1175,
+        "line": 1159,
+        "end_line": 1177,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_init_git:3a0df48b52e55001",
         "signature_hash": "7a065baa5d7b24c9"
       }
@@ -38649,8 +38658,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 799,
-        "end_line": 803,
+        "line": 801,
+        "end_line": 805,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_is_generated_reproducible:1ebcaed6d9436244",
         "signature_hash": "d240996f66930330"
       }
@@ -38789,8 +38798,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 806,
-        "end_line": 814,
+        "line": 808,
+        "end_line": 816,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_is_sensitive_or_runtime:86b57608f59b600f",
         "signature_hash": "44162117ad0d9059"
       }
@@ -40397,8 +40406,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 341,
-        "end_line": 345,
+        "line": 348,
+        "end_line": 352,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_load_json:1fa13c8d696f29a9",
         "signature_hash": "e16edca9b4e963c1"
       }
@@ -40455,8 +40464,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 352,
-        "end_line": 363,
+        "line": 359,
+        "end_line": 370,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_load_modules:da0eae9de93e0427",
         "signature_hash": "4496a73c57a7b0d2"
       }
@@ -40553,8 +40562,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 348,
-        "end_line": 349,
+        "line": 355,
+        "end_line": 356,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_load_source_manifest:5c6d1c5485b95f01",
         "signature_hash": "5b7761400f430010"
       }
@@ -41511,8 +41520,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 213,
-        "end_line": 259,
+        "line": 214,
+        "end_line": 260,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_mesh_arrays:424a54738564354c",
         "signature_hash": "901d472f3748822c"
       }
@@ -44019,8 +44028,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1565,
-        "end_line": 1613,
+        "line": 1567,
+        "end_line": 1615,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_parser:a1f424774a700327",
         "signature_hash": "cee2a7bb613f105d"
       },
@@ -45217,8 +45226,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1177,
-        "end_line": 1193,
+        "line": 1179,
+        "end_line": 1195,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_probe:375ca6a5766359b0",
         "signature_hash": "76587fe44e85b1d6"
       }
@@ -45799,8 +45808,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 84,
-        "end_line": 97,
+        "line": 85,
+        "end_line": 98,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_quaternions_from_normals:559e87bdbe297094",
         "signature_hash": "95557319da6fc95f"
       }
@@ -46142,7 +46151,7 @@
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
         "line": 736,
-        "end_line": 754,
+        "end_line": 756,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_read_git_blob:818a72db7af36146",
         "signature_hash": "ccff70e9870a2958"
       }
@@ -46457,8 +46466,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 443,
-        "end_line": 447,
+        "line": 535,
+        "end_line": 539,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_receipt_path:99491a235f2b224d",
         "signature_hash": "163cbb2f8811d09f"
       }
@@ -47169,8 +47178,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 889,
-        "end_line": 917,
+        "line": 891,
+        "end_line": 919,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_regeneration_policy:c98627200d2a62ae",
         "signature_hash": "0b8c889a6f740afa"
       }
@@ -48711,16 +48720,16 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 426,
-        "end_line": 440,
+        "line": 518,
+        "end_line": 532,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_resolve_inside:83a28e347a09682d",
         "signature_hash": "51ece9759a0d5ea6"
       },
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 324,
-        "end_line": 338,
+        "line": 331,
+        "end_line": 345,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_resolve_inside:d9f039fef5e1ac41",
         "signature_hash": "cae89aa7e8c285bb"
       }
@@ -49909,8 +49918,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1524,
-        "end_line": 1562,
+        "line": 1526,
+        "end_line": 1564,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_run_resume_command:a74fbdac2b660283",
         "signature_hash": "b5b14c371d34ec5c"
       }
@@ -50257,8 +50266,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 864,
-        "end_line": 877,
+        "line": 866,
+        "end_line": 879,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_safe_output_dir:18a1a03399f0de94",
         "signature_hash": "d58933523026abff"
       }
@@ -51225,8 +51234,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 104,
-        "end_line": 119,
+        "line": 105,
+        "end_line": 120,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_secure_copy_atomic:8b0bc226551bb911",
         "signature_hash": "449fe0414fa3c24d"
       }
@@ -51235,8 +51244,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 80,
-        "end_line": 81,
+        "line": 81,
+        "end_line": 82,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_seed:3209958ea69154a4",
         "signature_hash": "e53cac442f318815"
       }
@@ -53123,8 +53132,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1232,
-        "end_line": 1261,
+        "line": 1234,
+        "end_line": 1263,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_stream_json_integer_metadata:3fe389c25f663927",
         "signature_hash": "13e1da259ba547fc"
       }
@@ -56079,8 +56088,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 29,
-        "end_line": 42,
+        "line": 30,
+        "end_line": 43,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:_triangle_inputs:7c98389a7d5d0af2",
         "signature_hash": "fe68619e4aed45cd"
       }
@@ -56993,8 +57002,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 219,
-        "end_line": 228,
+        "line": 220,
+        "end_line": 229,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_command_receipt:6365d6f2d67d7435",
         "signature_hash": "c00383c5dbb01f2a"
       }
@@ -57013,8 +57022,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 241,
-        "end_line": 321,
+        "line": 242,
+        "end_line": 328,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_conversion_receipt:246140442f93dca2",
         "signature_hash": "c9d64c675d1cb034"
       }
@@ -57053,8 +57062,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 91,
-        "end_line": 95,
+        "line": 92,
+        "end_line": 96,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_digest_record:6497e4ea017f7456",
         "signature_hash": "b99ef4765414b763"
       }
@@ -57223,8 +57232,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 98,
-        "end_line": 101,
+        "line": 99,
+        "end_line": 102,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_hierarchy:663a7af4dd272966",
         "signature_hash": "69b19161f1e00353"
       }
@@ -57269,8 +57278,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 174,
-        "end_line": 192,
+        "line": 175,
+        "end_line": 193,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_ifcconvert_identity:f32dd15dab7e934e",
         "signature_hash": "7ea802b98504a9ae"
       }
@@ -57389,8 +57398,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 88,
+        "line": 73,
+        "end_line": 89,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_pinned_source_manifest:8c96674d9fa614f2",
         "signature_hash": "b9913168f9e36417"
       }
@@ -57599,8 +57608,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 122,
-        "end_line": 169,
+        "line": 123,
+        "end_line": 170,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_split_receipt:ccc0aa15618892c5",
         "signature_hash": "4e82618fbd693296"
       }
@@ -57659,8 +57668,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 231,
-        "end_line": 238,
+        "line": 232,
+        "end_line": 239,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:_validate_verification_receipt:578d29254c9e1622",
         "signature_hash": "dba52b422db6c414"
       }
@@ -57759,8 +57768,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1135,
-        "end_line": 1136,
+        "line": 1137,
+        "end_line": 1138,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_venv_python:75833c592e8eaef6",
         "signature_hash": "ac31786ed5f342d3"
       }
@@ -58281,8 +58290,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 839,
-        "end_line": 861,
+        "line": 841,
+        "end_line": 863,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_working_tree_metadata:926643537bcb1f78",
         "signature_hash": "294e3744b2065770"
       }
@@ -58473,6 +58482,16 @@
         "signature_hash": "b95363fd945e20f6"
       }
     ],
+    "_write_face_color_asset": [
+      {
+        "file": "scripts/aura_mesh_to_gaussian.py",
+        "kind": "function",
+        "line": 308,
+        "end_line": 341,
+        "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:_write_face_color_asset:020326b6ceb6e3e2",
+        "signature_hash": "2e41f527c559bf57"
+      }
+    ],
     "_write_fixture": [
       {
         "file": "tests/test_aura_codemap_verify.py",
@@ -58653,8 +58672,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 880,
-        "end_line": 886,
+        "line": 882,
+        "end_line": 888,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:_zip_info:d790ba64a83d70e1",
         "signature_hash": "ba146d5bdae6f543"
       }
@@ -62731,16 +62750,16 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 648,
-        "end_line": 659,
+        "line": 758,
+        "end_line": 769,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:build_parser:8d24d1cc7db68c52",
         "signature_hash": "0b42d711d564d255"
       },
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 783,
-        "end_line": 801,
+        "line": 802,
+        "end_line": 820,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:build_parser:0656eecb15b15c2a",
         "signature_hash": "0b42d711d564d255"
       }
@@ -63735,8 +63754,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 296,
-        "end_line": 423,
+        "line": 379,
+        "end_line": 515,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:canonicalize_glb_for_aura:4521398de11fb110",
         "signature_hash": "75221c651b3f877a"
       }
@@ -66189,8 +66208,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 643,
-        "end_line": 780,
+        "line": 653,
+        "end_line": 799,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:compile_gaussian_assets:0d4b03ce52d15dde",
         "signature_hash": "ba2b92f681eb8e76"
       }
@@ -66299,10 +66318,10 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 577,
-        "end_line": 645,
-        "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:compile_mesh:c348457611bf0a59",
-        "signature_hash": "5b7f8aab88a649c3"
+        "line": 669,
+        "end_line": 755,
+        "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:compile_mesh:eb1ccbb0a6b358cb",
+        "signature_hash": "b6b84e91658e6986"
       }
     ],
     "compile_paper_memory_record": [
@@ -67198,15 +67217,15 @@
         "file": "scripts/aura_prepare_construction_demo_assets.py",
         "kind": "function",
         "line": 40,
-        "end_line": 62,
+        "end_line": 72,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets.py#function:convert_ifc_assets:f3af0aebd7dd8387",
         "signature_hash": "2053c93374ffda53"
       },
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 503,
-        "end_line": 640,
+        "line": 510,
+        "end_line": 650,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:convert_ifc_assets:c95f66a31830b49f",
         "signature_hash": "eed940dd6100c4a9"
       }
@@ -67431,8 +67450,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "method",
-        "line": 66,
-        "end_line": 67,
+        "line": 67,
+        "end_line": 68,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#method:GaussianCloudArrays.count:c9e00b51c6bbf693",
         "signature_hash": "e4a0c22aa2ac1b3c"
       }
@@ -67880,15 +67899,15 @@
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
         "line": 72,
-        "end_line": 95,
+        "end_line": 99,
         "semantic_id": "scripts/aura_architecture_harness.py#function:create_ai_handoff:cfe1b96e0a97da5e",
         "signature_hash": "16e4e32af1eb917a"
       },
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 951,
-        "end_line": 1133,
+        "line": 953,
+        "end_line": 1135,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:create_ai_handoff:7304bcb45d68cc59",
         "signature_hash": "16e4e32af1eb917a"
       }
@@ -69573,8 +69592,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1264,
-        "end_line": 1280,
+        "line": 1266,
+        "end_line": 1282,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:doctor:2d008f53fb87d888",
         "signature_hash": "e9cf9efccf8e31d2"
       }
@@ -77889,6 +77908,16 @@
         "signature_hash": "f3f043c10faa7a82"
       }
     ],
+    "load_face_color_asset": [
+      {
+        "file": "scripts/aura_mesh_to_gaussian.py",
+        "kind": "function",
+        "line": 344,
+        "end_line": 376,
+        "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:load_face_color_asset:2087543f8aedf745",
+        "signature_hash": "59266a0ec035fa80"
+      }
+    ],
     "load_fracture_report": [
       {
         "file": "aura_topology_manager.py",
@@ -79241,16 +79270,16 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 116,
-        "end_line": 117,
+        "line": 120,
+        "end_line": 121,
         "semantic_id": "scripts/aura_architecture_harness.py#function:main:cae612e3c003f5a0",
         "signature_hash": "d5857061120d68cd"
       },
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1616,
-        "end_line": 1715,
+        "line": 1618,
+        "end_line": 1717,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:main:2fe0d9fc046b2f33",
         "signature_hash": "d5857061120d68cd"
       },
@@ -79273,24 +79302,24 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 662,
-        "end_line": 682,
+        "line": 772,
+        "end_line": 792,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:main:c672a5da9249d752",
         "signature_hash": "0e430dbd1b01e915"
       },
       {
         "file": "scripts/aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 68,
-        "end_line": 69,
+        "line": 78,
+        "end_line": 79,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets.py#function:main:bf2be797b34c8cc9",
         "signature_hash": "39f0fc651c7951a3"
       },
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 804,
-        "end_line": 860,
+        "line": 823,
+        "end_line": 879,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:main:8bc80ef9c7def792",
         "signature_hash": "0e430dbd1b01e915"
       },
@@ -79348,6 +79377,14 @@
         "line": 90,
         "end_line": 92,
         "semantic_id": "scripts/install_refactor_quality_docs.py#function:main:2b43502f7de024eb",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "scripts/pr184_final_remediation.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 163,
+        "semantic_id": "scripts/pr184_final_remediation.py#function:main:9a8ba179c79bfbf2",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -81809,8 +81846,8 @@
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1196,
-        "end_line": 1229,
+        "line": 1198,
+        "end_line": 1231,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:prepare:fb9eb26c6137ab57",
         "signature_hash": "593033c248b07c9e"
       },
@@ -84975,6 +85012,16 @@
         "signature_hash": "77304a68cda00ca8"
       }
     ],
+    "replace_once": [
+      {
+        "file": "scripts/pr184_final_remediation.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 14,
+        "semantic_id": "scripts/pr184_final_remediation.py#function:replace_once:456b667c0ec630f8",
+        "signature_hash": "84542ee41d8a4689"
+      }
+    ],
     "replace_or_insert": [
       {
         "file": "scripts/install_refactor_quality_docs.py",
@@ -86423,16 +86470,16 @@
       {
         "file": "scripts/aura_architecture_harness.py",
         "kind": "function",
-        "line": 98,
-        "end_line": 107,
+        "line": 102,
+        "end_line": 111,
         "semantic_id": "scripts/aura_architecture_harness.py#function:run_architecture:cb2ae15fe72c73a9",
         "signature_hash": "25d9a167ea20dd21"
       },
       {
         "file": "scripts/aura_architecture_harness_core.py",
         "kind": "function",
-        "line": 1282,
-        "end_line": 1517,
+        "line": 1284,
+        "end_line": 1519,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:run_architecture:0b02f6821d2daefc",
         "signature_hash": "92ae9e4f675d829a"
       }
@@ -87089,8 +87136,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 111,
-        "end_line": 210,
+        "line": 112,
+        "end_line": 211,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:sample_mesh_arrays:8c05968ba70c0da0",
         "signature_hash": "f865d32979e4c59d"
       }
@@ -87305,8 +87352,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "method",
-        "line": 177,
-        "end_line": 180,
+        "line": 178,
+        "end_line": 181,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#method:FakeSpz.save_spz:fa371b23d252b079",
         "signature_hash": "fe9a01aa3cc6b16e"
       }
@@ -87315,8 +87362,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 519,
-        "end_line": 574,
+        "line": 611,
+        "end_line": 666,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:save_spz_v4:011d929b30f4e382",
         "signature_hash": "14c315e85af23a43"
       }
@@ -88767,8 +88814,8 @@
       {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
-        "line": 367,
-        "end_line": 467,
+        "line": 374,
+        "end_line": 474,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:split_storeys:4fc2c991b6ceef14",
         "signature_hash": "17df93d6c2271fff"
       }
@@ -94119,8 +94166,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 374,
-        "end_line": 407,
+        "line": 375,
+        "end_line": 411,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_canonical_glb_flattens_scene_and_passes_runtime_import:bf3f9b805af605c6",
         "signature_hash": "66415bf2e443a91a"
       }
@@ -94129,8 +94176,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 410,
-        "end_line": 422,
+        "line": 414,
+        "end_line": 426,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_canonical_glb_rejects_output_escape:0fc461b205038d39",
         "signature_hash": "6b1cbf54a9659537"
       }
@@ -95787,8 +95834,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 323,
-        "end_line": 354,
+        "line": 328,
+        "end_line": 361,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_compile_gaussian_assets_authenticates_resume_chain_and_profiles:37a2309f4f6bc4ea",
         "signature_hash": "3489c717de4efd1f"
       }
@@ -95797,8 +95844,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 465,
-        "end_line": 493,
+        "line": 472,
+        "end_line": 500,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_compile_gaussian_assets_rejects_tampered_canonical_glb_evidence:27207674f0f901b7",
         "signature_hash": "feab50958d5a7467"
       }
@@ -95807,8 +95854,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 357,
-        "end_line": 396,
+        "line": 364,
+        "end_line": 403,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_compile_gaussian_assets_rejects_tampered_conversion_job_and_lineage:06ac44ab04b907b3",
         "signature_hash": "ccde39fb9bd1620a"
       }
@@ -95817,8 +95864,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 438,
-        "end_line": 462,
+        "line": 445,
+        "end_line": 469,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_compile_gaussian_assets_requires_every_storey_glb_job:b12a19dd3dc2234f",
         "signature_hash": "aad80f15c0b7dc90"
       }
@@ -95867,8 +95914,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 320,
-        "end_line": 340,
+        "line": 321,
+        "end_line": 341,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_compile_mesh_rejects_output_escape:01a03a05b07a26b4",
         "signature_hash": "4490850a00ec62fc"
       }
@@ -95877,8 +95924,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 343,
-        "end_line": 364,
+        "line": 344,
+        "end_line": 365,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_compile_mesh_rejects_zero_target_count:adf535ab98882b18",
         "signature_hash": "c2b94215222ae2aa"
       }
@@ -95887,8 +95934,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 279,
-        "end_line": 317,
+        "line": 280,
+        "end_line": 318,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_compile_mesh_validates_source_digest_and_emits_ply:b7763778dcaa2904",
         "signature_hash": "55fcac227c04de0c"
       }
@@ -97001,8 +97048,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 268,
-        "end_line": 287,
+        "line": 273,
+        "end_line": 292,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_convert_ifc_assets_rejects_tampered_split_receipt_even_when_file_hash_matches:6691b200d6b2b8b6",
         "signature_hash": "a567ac1a5877d343"
       }
@@ -97012,7 +97059,7 @@
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
         "line": 240,
-        "end_line": 265,
+        "end_line": 270,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_convert_ifc_assets_writes_verified_outputs_and_authenticated_receipts:e144b6729c06ccd5",
         "signature_hash": "77c30bc74a37fed8"
       }
@@ -98039,8 +98086,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 232,
-        "end_line": 246,
+        "line": 233,
+        "end_line": 247,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_density_profiles_fit_spz_importer_admission_budget:e0af972c9470a821",
         "signature_hash": "5fdf3a5b4d7e3238"
       }
@@ -102369,8 +102416,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 137,
-        "end_line": 152,
+        "line": 138,
+        "end_line": 153,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_gaussian_ply_is_binary_deterministic_and_repo_relative:03d148dcd57b7808",
         "signature_hash": "7dfeaa8d9aca536d"
       }
@@ -107337,8 +107384,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 106,
-        "end_line": 134,
+        "line": 107,
+        "end_line": 135,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_mesh_loader_bakes_scene_transforms_in_stable_order:b8bdc7b3fdff01c6",
         "signature_hash": "f51c647f57991620"
       }
@@ -110907,8 +110954,8 @@
       {
         "file": "tests/test_aura_prepare_construction_demo_assets.py",
         "kind": "function",
-        "line": 399,
-        "end_line": 435,
+        "line": 406,
+        "end_line": 442,
         "semantic_id": "tests/test_aura_prepare_construction_demo_assets.py#function:test_pinned_source_manifest_rejects_self_consistent_substitution:da7e562569990412",
         "signature_hash": "95ebfa5bbb40a46d"
       }
@@ -116173,8 +116220,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 64,
+        "line": 57,
+        "end_line": 65,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_sampling_is_deterministic_and_seed_sensitive:27863c0531fa3f87",
         "signature_hash": "3233b778e2119ecf"
       }
@@ -116183,8 +116230,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 67,
-        "end_line": 81,
+        "line": 68,
+        "end_line": 82,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_sampling_outputs_are_finite_normalized_and_bounded:86da044fa9c216ae",
         "signature_hash": "6fd7f032515ac42c"
       }
@@ -116193,8 +116240,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 84,
-        "end_line": 103,
+        "line": 85,
+        "end_line": 104,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_sampling_rejects_nonfinite_and_fully_degenerate_meshes:4cf2ba3cb3270d07",
         "signature_hash": "e0b2e583ec9cb62b"
       }
@@ -118411,8 +118458,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 183,
-        "end_line": 213,
+        "line": 184,
+        "end_line": 214,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_spz_bridge_sets_degree_zero_arrays_and_explicit_coordinates:39d546552f9fcb83",
         "signature_hash": "d806d6ef781b872e"
       }
@@ -118421,8 +118468,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 216,
-        "end_line": 229,
+        "line": 217,
+        "end_line": 230,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_spz_header_mismatch_fails_closed_and_removes_temporary:2ab5ab5b2f685337",
         "signature_hash": "8cd98b6cc60e86fe"
       }
@@ -122395,8 +122442,8 @@
       {
         "file": "tests/test_aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 276,
+        "line": 250,
+        "end_line": 277,
         "semantic_id": "tests/test_aura_mesh_to_gaussian.py#function:test_vectorized_normal_quaternions_match_scalar_formula_and_degenerate_case:87ca874b1e4af1a0",
         "signature_hash": "d7d9e9fd8b7167fa"
       }
@@ -129633,8 +129680,8 @@
       {
         "file": "scripts/aura_mesh_to_gaussian.py",
         "kind": "function",
-        "line": 450,
-        "end_line": 516,
+        "line": 542,
+        "end_line": 608,
         "semantic_id": "scripts/aura_mesh_to_gaussian.py#function:write_gaussian_ply:dbc2e39b5244de24",
         "signature_hash": "0f15839fbbdaec62"
       }
@@ -175164,6 +175211,52 @@
       ]
     },
     {
+      "path": "remediation.log",
+      "role": "support_file",
+      "bytes": 2725,
+      "lines": 0,
+      "tokens_est": 0,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b0c80e20898f6f4b",
+      "vector": [
+        0.239645,
+        0.009848,
+        -0.025168,
+        0.033922,
+        -0.26153,
+        0.274661,
+        0.145538,
+        0.132406,
+        0.209005,
+        0.250587,
+        0.084259,
+        -0.173989,
+        -0.040488,
+        -0.226513,
+        -0.114898,
+        -0.233079,
+        -0.211194,
+        -0.14116,
+        0.08207,
+        0.033922,
+        0.108332,
+        0.206817,
+        0.248399,
+        0.15648,
+        0.226513,
+        0.051431,
+        -0.169611,
+        0.117087,
+        0.259341,
+        -0.272473,
+        -0.206817,
+        -0.001094
+      ]
+    },
+    {
       "path": "render.yaml",
       "role": "schema_or_lexicon",
       "bytes": 374,
@@ -181638,6 +181731,52 @@
       ]
     },
     {
+      "path": ".aura/pr184-final-remediation-failure.json",
+      "role": "schema_or_lexicon",
+      "bytes": 6391,
+      "lines": 8,
+      "tokens_est": 1598,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9416392cb9c8c8be",
+      "vector": [
+        0.15331,
+        0.163616,
+        -0.027055,
+        0.150733,
+        -0.003865,
+        -0.13785,
+        0.119814,
+        -0.307908,
+        -0.217726,
+        -0.158463,
+        -0.155886,
+        0.16104,
+        0.258952,
+        0.065704,
+        0.204842,
+        -0.261528,
+        0.217726,
+        0.191959,
+        0.104354,
+        0.112084,
+        -0.246069,
+        -0.302755,
+        -0.117237,
+        0.014171,
+        -0.228032,
+        -0.068281,
+        0.217726,
+        0.094047,
+        0.011595,
+        0.027055,
+        -0.320791,
+        0.055398
+      ]
+    },
+    {
       "path": ".aura/run-construction-spz-diagnostics",
       "role": "support_file",
       "bytes": 43,
@@ -185367,6 +185506,52 @@
         0.106887,
         -0.031437,
         -0.225092
+      ]
+    },
+    {
+      "path": ".github/workflows/pr184-final-remediation.yml",
+      "role": "schema_or_lexicon",
+      "bytes": 5320,
+      "lines": 127,
+      "tokens_est": 1330,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "998d1141a0413169",
+      "vector": [
+        0.285311,
+        -0.139457,
+        -0.062692,
+        0.167604,
+        -0.078045,
+        -0.193193,
+        0.310899,
+        0.241811,
+        -0.019191,
+        0.303223,
+        0.241811,
+        0.295546,
+        0.001279,
+        0.083162,
+        0.090839,
+        -0.144575,
+        -0.11131,
+        0.152251,
+        0.262281,
+        0.001279,
+        -0.22134,
+        0.080604,
+        0.067809,
+        0.190634,
+        -0.185516,
+        0.067809,
+        -0.070368,
+        0.316017,
+        0.121545,
+        -0.15481,
+        0.072927,
+        0.075486
       ]
     },
     {
@@ -197918,55 +198103,55 @@
     {
       "path": "scripts/aura_architecture_harness.py",
       "role": "python_module",
-      "bytes": 4408,
-      "lines": 122,
-      "tokens_est": 1102,
+      "bytes": 4634,
+      "lines": 126,
+      "tokens_est": 1159,
       "symbol_count": 5,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bcaf743442a52c70",
+      "digest8": "a2755a930835e766",
       "vector": [
-        -0.171332,
-        0.226263,
-        0.022234,
-        0.003924,
-        -0.02485,
-        0.309967,
-        -0.163485,
-        0.296889,
-        -0.04316,
-        -0.168716,
-        0.079781,
-        0.119017,
-        -0.278578,
-        0.158253,
-        0.166101,
-        -0.14779,
-        -0.12948,
-        -0.051007,
-        -0.045776,
-        -0.113785,
-        0.294273,
-        0.058855,
-        0.30212,
-        0.142559,
-        -0.315199,
-        0.210569,
-        0.176564,
-        -0.056239,
-        0.19749,
-        0.142559,
-        0.155638,
-        0.082396
+        -0.177637,
+        -0.237888,
+        0.175559,
+        0.142317,
+        -0.050902,
+        0.134007,
+        0.23581,
+        -0.256587,
+        0.001039,
+        -0.038436,
+        -0.179714,
+        -0.156861,
+        0.144395,
+        0.042591,
+        0.23581,
+        -0.212956,
+        0.229577,
+        -0.217112,
+        0.223345,
+        0.119463,
+        -0.188025,
+        0.117386,
+        0.200491,
+        -0.23581,
+        -0.196335,
+        0.102842,
+        -0.156861,
+        -0.092454,
+        0.258664,
+        -0.223345,
+        0.163093,
+        0.046747
       ]
     },
     {
       "path": "scripts/aura_architecture_harness_core.py",
       "role": "python_module",
-      "bytes": 66578,
-      "lines": 1720,
-      "tokens_est": 16645,
+      "bytes": 66624,
+      "lines": 1722,
+      "tokens_est": 16656,
       "symbol_count": 54,
       "commands": [
         "!r"
@@ -197977,44 +198162,44 @@
           698,
           701,
           704,
-          1180
+          1182
         ]
       },
       "topology": {},
-      "digest8": "351571f6633c4ec4",
+      "digest8": "357ecf67c1d7268c",
       "vector": [
-        -0.151473,
-        -0.196796,
-        -0.22065,
-        0.096609,
-        0.122848,
-        -0.10138,
-        -0.268358,
-        -0.301754,
-        -0.056057,
-        -0.201567,
-        0.056057,
-        -0.13239,
-        -0.22065,
-        -0.005964,
-        -0.022661,
-        -0.258816,
-        -0.1634,
-        0.120463,
-        0.082296,
-        0.151473,
-        -0.158629,
-        0.285056,
-        0.294598,
-        0.094224,
-        -0.10138,
-        -0.087067,
-        -0.2779,
-        0.304139,
-        0.084682,
-        -0.177713,
-        0.091838,
-        0.058442
+        -0.204279,
+        0.039422,
+        -0.223393,
+        -0.268788,
+        0.125435,
+        -0.072871,
+        0.285513,
+        0.194722,
+        -0.252064,
+        0.249674,
+        0.118267,
+        -0.003584,
+        0.113488,
+        0.149327,
+        -0.261621,
+        0.051368,
+        -0.194722,
+        0.185165,
+        -0.261621,
+        0.199501,
+        0.029865,
+        -0.209058,
+        -0.091985,
+        -0.120656,
+        -0.278345,
+        -0.01553,
+        -0.247285,
+        0.04659,
+        0.132602,
+        0.113488,
+        0.154105,
+        0.068093
       ]
     },
     {
@@ -198112,139 +198297,139 @@
     {
       "path": "scripts/aura_mesh_to_gaussian.py",
       "role": "python_module",
-      "bytes": 26794,
-      "lines": 687,
-      "tokens_est": 6699,
-      "symbol_count": 18,
+      "bytes": 31596,
+      "lines": 797,
+      "tokens_est": 7899,
+      "symbol_count": 20,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "931771bfdbc066a3",
+      "digest8": "7a3b3aa839ef8bed",
       "vector": [
-        0.152939,
-        0.249533,
-        -0.14604,
-        -0.123042,
-        0.106943,
-        0.088544,
-        -0.14834,
-        -0.134541,
-        -0.118442,
-        0.028748,
-        0.196636,
-        0.037947,
-        -0.081644,
-        0.247233,
-        -0.159839,
-        -0.155239,
-        -0.042547,
-        -0.226534,
-        0.182837,
-        -0.113842,
-        -0.226534,
-        -0.159839,
-        -0.28863,
-        0.00115,
-        0.224235,
-        -0.267932,
-        -0.261032,
-        -0.256432,
-        0.256432,
-        -0.233434,
-        0.074745,
-        -0.067845
+        -0.011358,
+        0.044168,
+        -0.049216,
+        -0.145124,
+        0.041644,
+        0.076979,
+        0.049216,
+        0.001262,
+        -0.162792,
+        0.291511,
+        0.084551,
+        0.283939,
+        0.074455,
+        -0.094646,
+        0.092122,
+        -0.266272,
+        -0.198126,
+        0.296558,
+        0.180459,
+        0.041644,
+        -0.082027,
+        -0.319273,
+        0.167839,
+        0.013881,
+        0.049216,
+        -0.059312,
+        -0.1426,
+        -0.180459,
+        -0.296558,
+        0.296558,
+        0.253652,
+        0.271319
       ]
     },
     {
       "path": "scripts/aura_prepare_construction_demo_assets.py",
       "role": "python_module",
-      "bytes": 2269,
-      "lines": 74,
-      "tokens_est": 568,
+      "bytes": 2675,
+      "lines": 84,
+      "tokens_est": 669,
       "symbol_count": 3,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "c3d6a2ba668b451d",
+      "digest8": "b5a7783eb7ca3b90",
       "vector": [
-        0.018762,
-        0.196379,
-        -0.086307,
-        0.156353,
-        0.078802,
-        0.246412,
-        0.048782,
-        0.063792,
-        -0.176366,
-        0.223897,
-        -0.153851,
-        0.141343,
-        0.216392,
-        -0.173864,
-        0.008756,
-        0.301448,
-        0.038775,
-        -0.181369,
-        -0.033772,
-        -0.298946,
-        -0.25892,
-        0.253917,
-        -0.203884,
-        -0.171362,
-        0.286438,
-        -0.011257,
-        0.066294,
-        -0.13634,
-        0.25892,
-        -0.038775,
-        0.24391,
-        -0.048782
+        -0.286977,
+        -0.159173,
+        0.003486,
+        -0.09411,
+        -0.033694,
+        0.286977,
+        0.277682,
+        0.052283,
+        0.015104,
+        -0.133613,
+        -0.196352,
+        -0.170792,
+        -0.166144,
+        0.26374,
+        -0.184734,
+        0.214942,
+        -0.161497,
+        0.293948,
+        0.173115,
+        -0.098757,
+        -0.070873,
+        0.117347,
+        0.115023,
+        0.045312,
+        -0.147555,
+        -0.291624,
+        -0.038341,
+        0.033694,
+        -0.26374,
+        -0.191705,
+        0.217266,
+        0.087139
       ]
     },
     {
       "path": "scripts/aura_prepare_construction_demo_assets_core.py",
       "role": "python_module",
-      "bytes": 37223,
-      "lines": 865,
-      "tokens_est": 9306,
+      "bytes": 38557,
+      "lines": 888,
+      "tokens_est": 9640,
       "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a24b53b67660e072",
+      "digest8": "04eb9061fa561f03",
       "vector": [
-        0.19643,
-        0.177382,
-        -0.094048,
-        0.127382,
-        0.163096,
-        -0.022619,
-        0.277383,
-        -0.175001,
-        -0.227382,
-        0.294049,
-        0.177382,
-        0.086905,
-        0.272621,
-        0.175001,
-        -0.165477,
-        0.065477,
-        -0.113096,
-        0.084524,
-        -0.277383,
-        -0.134525,
-        0.260716,
-        0.044048,
-        0.110715,
-        0.132144,
-        -0.158334,
-        0.220239,
-        -0.003571,
-        0.289287,
-        -0.125001,
-        -0.029762,
-        0.260716,
-        0.005952
+        0.241986,
+        -0.12265,
+        0.062983,
+        -0.275134,
+        0.264085,
+        0.215467,
+        -0.040883,
+        0.224306,
+        -0.078452,
+        0.082872,
+        0.071822,
+        -0.270714,
+        0.166848,
+        0.071822,
+        -0.226516,
+        0.204417,
+        -0.087292,
+        -0.005525,
+        0.180108,
+        0.164639,
+        -0.191158,
+        0.067402,
+        -0.040883,
+        0.195577,
+        0.211047,
+        0.005525,
+        0.253035,
+        -0.206627,
+        0.043093,
+        0.195577,
+        -0.222096,
+        -0.268505
       ]
     },
     {
@@ -198623,6 +198808,52 @@
         0.247687,
         0.042849,
         -0.138997
+      ]
+    },
+    {
+      "path": "scripts/pr184_final_remediation.py",
+      "role": "python_module",
+      "bytes": 19475,
+      "lines": 168,
+      "tokens_est": 4869,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "53916b17aea7d18d",
+      "vector": [
+        0.307183,
+        -0.129814,
+        -0.176084,
+        -0.20436,
+        0.29433,
+        0.132384,
+        0.073261,
+        -0.271195,
+        0.11182,
+        0.093826,
+        -0.147808,
+        -0.003856,
+        0.140096,
+        0.019279,
+        -0.25063,
+        0.212072,
+        0.119531,
+        -0.196648,
+        0.116961,
+        0.194078,
+        -0.073261,
+        0.206931,
+        -0.11182,
+        -0.170943,
+        0.304612,
+        0.152949,
+        0.086114,
+        0.173513,
+        -0.268624,
+        -0.147808,
+        -0.11439,
+        -0.083543
       ]
     },
     {
@@ -205174,47 +205405,47 @@
     {
       "path": "tests/test_aura_mesh_to_gaussian.py",
       "role": "python_module",
-      "bytes": 14358,
-      "lines": 423,
-      "tokens_est": 3590,
+      "bytes": 14555,
+      "lines": 427,
+      "tokens_est": 3639,
       "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ef415e60f88e8e75",
+      "digest8": "7e5a8e04c983b2df",
       "vector": [
-        0.009686,
-        0.147448,
-        0.003229,
-        -0.265837,
-        0.240006,
-        0.196956,
-        -0.011839,
-        0.069957,
-        0.188346,
-        0.257227,
-        0.130228,
-        -0.039822,
-        -0.235701,
-        0.257227,
-        0.248617,
-        0.08933,
-        -0.067805,
-        -0.134533,
-        -0.237854,
-        -0.074262,
-        0.100092,
-        -0.214176,
-        -0.263684,
-        -0.218481,
-        -0.203414,
-        0.113008,
-        -0.224939,
-        -0.194803,
-        0.199109,
-        -0.184041,
-        0.14099,
-        -0.018296
+        -0.243537,
+        -0.121118,
+        -0.048187,
+        0.089861,
+        0.009116,
+        0.220095,
+        0.303445,
+        -0.003907,
+        0.118513,
+        0.269584,
+        -0.225305,
+        0.178421,
+        -0.029954,
+        0.319073,
+        0.13935,
+        0.160188,
+        -0.196653,
+        -0.293026,
+        -0.037768,
+        0.02214,
+        0.233119,
+        -0.074233,
+        0.272189,
+        -0.165397,
+        0.056001,
+        0.058605,
+        0.069024,
+        0.181025,
+        0.10028,
+        0.108094,
+        0.277398,
+        -0.165397
       ]
     },
     {
@@ -206324,47 +206555,47 @@
     {
       "path": "tests/test_aura_prepare_construction_demo_assets.py",
       "role": "python_module",
-      "bytes": 19789,
-      "lines": 494,
-      "tokens_est": 4948,
+      "bytes": 20173,
+      "lines": 501,
+      "tokens_est": 5044,
       "symbol_count": 24,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "7fc11cd54138af70",
+      "digest8": "61ab24cfa98bdd02",
       "vector": [
-        0.281478,
-        0.242564,
-        0.084314,
-        -0.050588,
-        0.014268,
-        0.047994,
-        0.297043,
-        -0.286666,
-        -0.089502,
-        0.097285,
-        -0.294449,
-        0.076531,
-        -0.250346,
-        -0.076531,
-        0.001297,
-        0.169924,
-        0.037617,
-        0.273695,
-        -0.151764,
-        0.304826,
-        -0.221809,
-        -0.302232,
-        -0.190678,
-        0.154359,
-        -0.11285,
-        -0.073936,
-        0.003891,
-        0.18549,
-        -0.084314,
-        0.11285,
-        0.066154,
-        -0.0454
+        0.06174,
+        0.091981,
+        0.245702,
+        0.109621,
+        -0.220502,
+        -0.200342,
+        0.245702,
+        0.134821,
+        -0.00126,
+        0.240662,
+        0.094501,
+        -0.112141,
+        -0.197822,
+        0.250742,
+        -0.258302,
+        -0.066781,
+        -0.253262,
+        0.099541,
+        -0.210422,
+        0.207902,
+        0.02394,
+        -0.06174,
+        0.04914,
+        0.149941,
+        -0.127261,
+        0.301142,
+        0.278462,
+        0.102061,
+        -0.117181,
+        0.273422,
+        -0.144901,
+        -0.01638
       ]
     },
     {

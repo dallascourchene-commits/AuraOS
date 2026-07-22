@@ -27,6 +27,7 @@ from scripts.aura_mesh_to_gaussian import (
     PROFILE_LIMITS,
     canonicalize_glb_for_aura,
     compile_mesh,
+    load_face_color_asset,
 )
 from scripts.aura_verify_construction_demo_assets import (
     atomic_json,
@@ -311,8 +312,14 @@ def _validate_conversion_receipt(
                 or canonicalization.get("output_sha256") != item.get("output_sha256")
                 or canonicalization.get("runtime_admitted") is not True
                 or canonicalization.get("import_receipt_digest") != runtime_digest
+                or canonicalization.get("face_colors_preserved") is not True
             ):
                 raise ValueError("canonical GLB evidence does not match conversion output")
+            colors = load_face_color_asset(
+                canonicalization.get("face_color_asset"), repo_root=repository
+            )
+            if len(colors) != canonicalization.get("triangle_count"):
+                raise ValueError("face-color asset does not cover canonical triangles")
         elif canonicalization is not None or runtime_digest is not None:
             raise ValueError("SVG conversion must not claim GLB canonicalization")
         validated.append(item)
@@ -590,6 +597,9 @@ def convert_ifc_assets(
         except Exception:
             temporary.unlink(missing_ok=True)
             job_output.unlink(missing_ok=True)
+            job_output.with_name(f"{job_output.name}.face-colors.bin").unlink(
+                missing_ok=True
+            )
             raise
         job_receipt = {
             "version": ASSET_PREPARATION_VERSION,
@@ -716,6 +726,13 @@ def compile_gaussian_assets(
         base_name = source.stem
         ply = source.with_name(f"{base_name}.gaussian.ply")
         spz = source.with_name(f"{base_name}.spz")
+        canonicalization = item.get("canonicalization")
+        if not isinstance(canonicalization, Mapping):
+            raise ValueError("Gaussian compilation requires canonicalization evidence")
+        color_asset = canonicalization.get("face_color_asset")
+        if not isinstance(color_asset, Mapping):
+            raise ValueError("Gaussian compilation requires face-color evidence")
+        face_colors = load_face_color_asset(color_asset, repo_root=repository)
         result = mesh_compiler(
             repo_root=repository,
             glb_path=source,
@@ -725,6 +742,8 @@ def compile_gaussian_assets(
             scope=scope,
             source_digest=glb_sha256,
             target_count=target_count,
+            triangle_colors=face_colors,
+            triangle_color_digest=str(color_asset["sha256"]),
             spz_module=spz_module,
         )
         _validate_digest_record(result)
@@ -861,4 +880,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        from scripts.aura_prepare_construction_demo_assets import main as _cleanup_aware_main
+    except ModuleNotFoundError:
+        from aura_prepare_construction_demo_assets import main as _cleanup_aware_main
+    raise SystemExit(_cleanup_aware_main())

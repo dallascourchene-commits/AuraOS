@@ -79,6 +79,10 @@ def create_ai_handoff(
 ) -> dict[str, Any]:
     """Create the original handoff plus deterministic GitHub routing metadata."""
 
+    # Preserve the PR #182 compatibility seam: callers and tests may
+    # monkeypatch the wrapper helper while the original function resolves it
+    # from the core module's globals.
+    _core._read_git_blob = _read_git_blob
     result = _ORIGINAL_CREATE_AI_HANDOFF(
         root,
         output_dir=output_dir,

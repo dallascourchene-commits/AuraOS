@@ -742,6 +742,10 @@ def _read_git_blob(root: Path, oid: str, *, max_bytes: int) -> bytes:
     )
     assert process.stdout is not None
     payload = process.stdout.read(max_bytes + 1)
+    if len(payload) > max_bytes:
+        process.kill()
+        process.wait()
+        raise RuntimeError("Git blob exceeded its admitted source-review ceiling")
     stderr = process.stderr.read(COMMAND_OUTPUT_MAX_BYTES + 1) if process.stderr else b""
     returncode = process.wait()
     if returncode:
@@ -749,8 +753,6 @@ def _read_git_blob(root: Path, oid: str, *, max_bytes: int) -> bytes:
             "git cat-file failed: "
             + stderr[:COMMAND_OUTPUT_MAX_BYTES].decode("utf-8", errors="replace")
         )
-    if len(payload) > max_bytes:
-        raise RuntimeError("Git blob exceeded its admitted source-review ceiling")
     return payload
 
 

@@ -56,10 +56,20 @@ def convert_ifc_assets(*, output_dir: Path, repo_root: Path, **kwargs: Any) -> d
         except Exception as cleanup_error:
             if active_error is None:
                 raise
-            active_error.add_note(
+            message = (
                 "IfcConvert temporary cleanup also failed: "
                 f"{type(cleanup_error).__name__}: {cleanup_error}"
             )
+            add_note = getattr(active_error, "add_note", None)
+            if callable(add_note):
+                add_note(message)
+            else:
+                notes = list(getattr(active_error, "__notes__", ()))
+                notes.append(message)
+                try:
+                    setattr(active_error, "__notes__", notes)
+                except (AttributeError, TypeError):
+                    pass
 
 
 _core.convert_ifc_assets = convert_ifc_assets

@@ -13,7 +13,7 @@ import re
 import struct
 import tempfile
 import sys
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
@@ -22,7 +22,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from aura_event_contracts import stable_digest
-from aura_spatial_importers.gltf import import_gltf_file
+from aura_spatial_importers.gltf import MAX_GLTF_SOURCE_BYTES, import_gltf_file
 from aura_spatial_importers.spz import (
     MAX_SPZ_POINTS,
     MAX_SPZ_RUNTIME_ALLOCATION_BYTES,
@@ -49,6 +49,7 @@ PROFILE_LIMITS = {
 }
 GAUSSIAN_SCOPES = ("STOREY", "BUILDING")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+CANONICAL_FACE_COLOR_VERSION = "AURA_CONSTRUCTION_CANONICAL_FACE_COLORS_V1"
 
 
 @dataclass(frozen=True)
@@ -259,16 +260,21 @@ def _mesh_arrays(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return np.vstack(vertices), np.vstack(faces), np.vstack(colors)
 
 
-def _canonical_mesh_arrays(path: Path) -> tuple[np.ndarray, np.ndarray]:
-    """Flatten scene transforms and deterministically deduplicate mesh positions."""
+def _canonical_mesh_arrays(
+    path: Path,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Flatten transforms and preserve colors through deterministic face ordering."""
 
-    vertices, faces, _colors = _mesh_arrays(path)
+    vertices, faces, colors = _mesh_arrays(path)
     positions = np.asarray(vertices, dtype="<f4")
     triangles = np.asarray(faces, dtype=np.int64)
+    face_colors = np.asarray(colors, dtype="<f4")
     if positions.ndim != 2 or positions.shape[1] != 3 or not np.isfinite(positions).all():
         raise ValueError("canonical GLB positions must be finite Nx3 values")
     if triangles.ndim != 2 or triangles.shape[1] != 3 or len(triangles) == 0:
         raise ValueError("canonical GLB requires triangle faces")
+    if face_colors.shape != (len(triangles), 3) or not np.isfinite(face_colors).all():
+        raise ValueError("canonical GLB colors must be finite Mx3 values")
     unique_positions, inverse = np.unique(positions, axis=0, return_inverse=True)
     canonical_faces = inverse[triangles]
     nondegenerate = (
@@ -277,13 +283,19 @@ def _canonical_mesh_arrays(path: Path) -> tuple[np.ndarray, np.ndarray]:
         & (canonical_faces[:, 0] != canonical_faces[:, 2])
     )
     canonical_faces = canonical_faces[nondegenerate]
+    canonical_colors = np.clip(face_colors[nondegenerate], 0.0, 1.0)
     if len(canonical_faces) == 0:
         raise ValueError("canonical GLB contains no non-degenerate triangles")
     order = np.lexsort(
         (canonical_faces[:, 2], canonical_faces[:, 1], canonical_faces[:, 0])
     )
     canonical_faces = canonical_faces[order]
-    return np.ascontiguousarray(unique_positions), np.ascontiguousarray(canonical_faces)
+    canonical_colors = canonical_colors[order]
+    return (
+        np.ascontiguousarray(unique_positions),
+        np.ascontiguousarray(canonical_faces),
+        np.ascontiguousarray(canonical_colors, dtype="<f4"),
+    )
 
 
 def _glb_chunk(chunk_type: int, payload: bytes, *, padding: bytes) -> bytes:
@@ -291,6 +303,77 @@ def _glb_chunk(chunk_type: int, payload: bytes, *, padding: bytes) -> bytes:
     if remainder:
         payload += padding * (4 - remainder)
     return struct.pack("<II", len(payload), chunk_type) + payload
+
+
+def _write_face_color_asset(
+    output: Path, face_colors: np.ndarray, *, repo_root: Path
+) -> dict[str, Any]:
+    repository = repo_root.expanduser().resolve(strict=True)
+    colors = np.ascontiguousarray(face_colors, dtype="<f4")
+    if colors.ndim != 2 or colors.shape[1] != 3 or not np.isfinite(colors).all():
+        raise ValueError("canonical face colors must be finite Mx3 values")
+    path = _resolve_inside(
+        repository, output.with_name(f"{output.name}.face-colors.bin"), create_parent=True
+    )
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(colors.tobytes(order="C"))
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+    body = {
+        "version": CANONICAL_FACE_COLOR_VERSION,
+        "path": path.relative_to(repository).as_posix(),
+        "byte_length": path.stat().st_size,
+        "sha256": sha256_file(path),
+        "triangle_count": len(colors),
+        "components": 3,
+        "dtype": "float32-le",
+        "build_only": True,
+        "runtime_asset": False,
+    }
+    return {**body, "receipt_digest": stable_digest(body)}
+
+
+def load_face_color_asset(
+    asset: Mapping[str, Any], *, repo_root: Path
+) -> np.ndarray:
+    body = dict(asset)
+    digest = body.pop("receipt_digest", None)
+    if digest != stable_digest(body):
+        raise ValueError("face-color receipt does not authenticate its record")
+    count = body.get("triangle_count")
+    if (
+        body.get("version") != CANONICAL_FACE_COLOR_VERSION
+        or body.get("components") != 3
+        or body.get("dtype") != "float32-le"
+        or body.get("build_only") is not True
+        or body.get("runtime_asset") is not False
+        or type(count) is not int
+        or count < 1
+    ):
+        raise ValueError("face-color asset contract is invalid")
+    repository = repo_root.expanduser().resolve(strict=True)
+    path = _resolve_inside(repository, Path(str(body.get("path"))))
+    expected_bytes = count * 3 * 4
+    if (
+        not path.is_file()
+        or path.is_symlink()
+        or body.get("byte_length") != expected_bytes
+        or path.stat().st_size != expected_bytes
+        or body.get("sha256") != sha256_file(path)
+    ):
+        raise ValueError("face-color asset bytes do not match their receipt")
+    colors = np.frombuffer(path.read_bytes(), dtype="<f4").copy().reshape(count, 3)
+    if not np.isfinite(colors).all() or np.any(colors < 0.0) or np.any(colors > 1.0):
+        raise ValueError("face-color asset contains invalid values")
+    return colors
 
 
 def canonicalize_glb_for_aura(
@@ -307,7 +390,7 @@ def canonicalize_glb_for_aura(
     if source == output:
         raise ValueError("canonical GLB source and output must differ")
     source_verification = verify_glb(source, root=repository)
-    positions, faces = _canonical_mesh_arrays(source)
+    positions, faces, face_colors = _canonical_mesh_arrays(source)
     if len(positions) > 2_000_000 or faces.size > 6_000_000:
         raise ValueError("canonical GLB exceeds Aura mesh importer element ceilings")
 
@@ -317,6 +400,8 @@ def canonicalize_glb_for_aura(
     position_bytes = positions.tobytes(order="C")
     index_bytes = indices.tobytes(order="C")
     binary_payload = position_bytes + index_bytes
+    if 28 + len(binary_payload) > MAX_GLTF_SOURCE_BYTES:
+        raise ValueError("canonical GLB exceeds Aura mesh importer source-byte ceiling")
     document = {
         "asset": {
             "version": "2.0",
@@ -374,6 +459,8 @@ def canonicalize_glb_for_aura(
         0x004E4942, binary_payload, padding=b"\x00"
     )
     encoded = struct.pack("<4sII", b"glTF", 2, 12 + len(body)) + body
+    if len(encoded) > MAX_GLTF_SOURCE_BYTES:
+        raise ValueError("canonical GLB exceeds Aura mesh importer source-byte ceiling")
 
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{output.name}.", suffix=".tmp", dir=output.parent
@@ -398,6 +485,9 @@ def canonicalize_glb_for_aura(
         root=repository,
     )
     import_receipt = imported.receipt.to_dict()
+    face_color_asset = _write_face_color_asset(
+        output, face_colors, repo_root=repository
+    )
     payload = {
         "version": "AURA_CONSTRUCTION_CANONICAL_GLB_V1",
         "source": source.relative_to(repository).as_posix(),
@@ -409,6 +499,8 @@ def canonicalize_glb_for_aura(
         "vertex_count": len(positions),
         "triangle_count": len(faces),
         "index_component_type": component_type,
+        "face_color_asset": face_color_asset,
+        "face_colors_preserved": True,
         "bounds_min": [float(item) for item in positions.min(axis=0)],
         "bounds_max": [float(item) for item in positions.max(axis=0)],
         "verification": verification,
@@ -584,6 +676,8 @@ def compile_mesh(
     scope: str,
     source_digest: str,
     target_count: int | None = None,
+    triangle_colors: np.ndarray | None = None,
+    triangle_color_digest: str | None = None,
     spz_module: Any | None = None,
     envelope_validator: Callable[[bytes], Any] = inspect_spz_v4_bytes,
 ) -> dict[str, Any]:
@@ -604,13 +698,27 @@ def compile_mesh(
     count = profile_limit if target_count is None else target_count
     if type(count) is not int or count < 1 or count > profile_limit:
         raise ValueError("target_count exceeds the selected density profile")
-    vertices, faces, colors = _mesh_arrays(glb)
+    vertices, faces, embedded_colors = _mesh_arrays(glb)
+    if triangle_colors is None:
+        colors = embedded_colors
+        color_source = "GLB_VISUAL_OR_FALLBACK"
+        if triangle_color_digest is not None:
+            raise ValueError("triangle_color_digest requires explicit triangle_colors")
+    else:
+        colors = np.asarray(triangle_colors, dtype=np.float64)
+        if colors.shape != (len(faces), 3) or not np.isfinite(colors).all():
+            raise ValueError("triangle_colors must align with the validated GLB faces")
+        if type(triangle_color_digest) is not str or _SHA256.fullmatch(triangle_color_digest) is None:
+            raise ValueError("triangle_color_digest must authenticate explicit colors")
+        color_source = "CANONICAL_FACE_COLOR_ASSET"
     cloud = sample_mesh_arrays(
         vertices=vertices,
         faces=faces,
         triangle_colors=colors,
         target_count=count,
-        seed=_seed(f"{source_digest}:{profile}:{count}"),
+        seed=_seed(
+            f"{source_digest}:{triangle_color_digest or 'embedded'}:{profile}:{count}"
+        ),
     )
     ply_receipt = write_gaussian_ply(ply, cloud, repo_root=repository)
     spz_receipt = (
@@ -632,6 +740,8 @@ def compile_mesh(
         "source": glb.relative_to(repository).as_posix(),
         "source_digest": source_digest,
         "source_verification_digest": glb_receipt["verification_digest"],
+        "triangle_color_source": color_source,
+        "triangle_color_digest": triangle_color_digest,
         "splat_count": cloud.count,
         "representation_digest": cloud.representation_digest,
         "ply": ply_receipt,

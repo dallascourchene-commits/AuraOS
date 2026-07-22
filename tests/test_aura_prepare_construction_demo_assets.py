@@ -257,6 +257,11 @@ def test_convert_ifc_assets_writes_verified_outputs_and_authenticated_receipts(t
     assert all(item["canonicalization"]["runtime_admitted"] is True for item in glb_rows)
     assert all(len(item["runtime_import_receipt_digest"]) == 64 for item in glb_rows)
     assert all(item["canonicalization"]["output"] == item["output"] for item in glb_rows)
+    assert all(item["canonicalization"]["face_colors_preserved"] is True for item in glb_rows)
+    assert all(
+        (tmp_path / item["canonicalization"]["face_color_asset"]["path"]).is_file()
+        for item in glb_rows
+    )
     assert all(
         item["canonicalization"]["source"].endswith(".glb") for item in glb_rows
     )
@@ -344,6 +349,8 @@ def test_compile_gaussian_assets_authenticates_resume_chain_and_profiles(tmp_pat
     assert receipt["source_sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
     assert receipt["output_count"] == 3
     assert receipt["profile_limits"] == {"STOREY": 75_000, "BUILDING": 100_000}
+    assert all(call["triangle_colors"].shape == (1, 3) for call in calls)
+    assert all(len(str(call["triangle_color_digest"])) == 64 for call in calls)
     assert [(call["scope"], call["target_count"]) for call in calls] == [
         ("BUILDING", 40),
         ("STOREY", 20),
