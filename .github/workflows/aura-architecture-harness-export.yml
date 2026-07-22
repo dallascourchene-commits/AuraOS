@@ -22,12 +22,12 @@ jobs:
           fetch-depth: 0
       - name: Apply pinned implementation patch
         env:
-          EXPECTED_XZ_SHA256: "0fa5392695fc3799fb9d89ea47d4cc83058ff86143f19e1525906f0cb52c5ac2"
+          EXPECTED_XZ_SHA256: "04a80bcdaa37751045d3562749da6be3d5b9595fa4b534c36a46ec5cbab4d770"
           EXPECTED_WORKFLOW_SHA256: "11a35f5951268411d7ee6d818260c6896d672ba03296906b9d9bc6b6a6062cbf"
         run: |
           set -euo pipefail
           test "${GITHUB_REF_NAME}" = "analysis/aura-harness-export/20260722-ai-safe-final"
-          cat .aura/AI_SAFE_HARNESS_PATCH.part-*.b64 | base64 --decode > /tmp/ai-safe-harness.patch.xz
+          cat .aura/AI_SAFE_HARNESS_PATCH.v2.part-*.b64 | base64 --decode > /tmp/ai-safe-harness.patch.xz
           echo "${EXPECTED_XZ_SHA256}  /tmp/ai-safe-harness.patch.xz" | sha256sum --check --strict
           xz --decompress --stdout /tmp/ai-safe-harness.patch.xz > /tmp/ai-safe-harness.patch
           git apply --check /tmp/ai-safe-harness.patch
@@ -35,7 +35,7 @@ jobs:
           base64 --decode .aura/AI_SAFE_FINAL_WORKFLOW.b64 > /tmp/aura-architecture-harness-export.yml
           echo "${EXPECTED_WORKFLOW_SHA256}  /tmp/aura-architecture-harness-export.yml" | sha256sum --check --strict
           mv /tmp/aura-architecture-harness-export.yml .github/workflows/aura-architecture-harness-export.yml
-          rm .aura/AI_SAFE_HARNESS_PATCH.part-*.b64
+          rm .aura/AI_SAFE_HARNESS_PATCH*.b64
           rm .aura/AI_SAFE_FINAL_WORKFLOW.b64
           rm .aura/HARNESS_EXPORT_REQUEST
       - name: Verify focused implementation
