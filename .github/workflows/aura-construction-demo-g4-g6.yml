@@ -57,7 +57,7 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check pytest ruff
 
-      - name: Compile and lint G4-G6 owners
+      - name: Compile G4-G6 Python owners
         run: |
           set -euo pipefail
           python -m py_compile \
@@ -66,12 +66,20 @@ jobs:
             aura_construction_demo_projection.py \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py
+
+      - name: Lint G4-G6 Python owners
+        run: |
+          set -euo pipefail
           ruff check \
             aura_construction_demo_fixture.py \
             aura_construction_demo_fixture_builder.py \
             aura_construction_demo_projection.py \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py
+
+      - name: Check G4-G6 Python formatting
+        run: |
+          set -euo pipefail
           ruff format --check \
             aura_construction_demo_fixture.py \
             aura_construction_demo_fixture_builder.py \
