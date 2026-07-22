@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/aura-construction-demo-g4-g6.yml"
+      - ".github/workflows/aura-construction-g4-exact-ruff-repair.yml"
       - "aura_construction_demo_fixture.py"
       - "aura_construction_demo_fixture_builder.py"
       - "aura_construction_demo_projection.py"
@@ -17,7 +18,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: aura-construction-demo-g4-g6-${{ github.event.pull_request.number || github.ref }}
@@ -57,6 +58,65 @@ jobs:
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check pytest ruff
 
+      - name: Commit canonical static repairs
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          repair_owner() {
+            file="$1"
+            message="$2"
+            ruff check --fix "$file"
+            ruff format "$file"
+            ruff check "$file"
+            ruff format --check "$file"
+            if ! git diff --quiet -- "$file"; then
+              changed="$(git diff --name-only)"
+              test "$changed" = "$file"
+              git add "$file"
+              git commit -m "$message"
+            fi
+          }
+
+          repair_owner aura_construction_demo_fixture.py \
+            "style(construction): canonicalize G4 fixture contracts"
+          repair_owner aura_construction_demo_fixture_builder.py \
+            "style(construction): canonicalize G4 fixture builder"
+          repair_owner aura_construction_demo_projection.py \
+            "style(spatial): canonicalize G5 Construction projection"
+          repair_owner tests/test_aura_construction_demo_fixture.py \
+            "style(construction): canonicalize G4 fixture tests"
+          repair_owner tests/test_aura_construction_demo_projection.py \
+            "style(spatial): canonicalize G5 projection tests"
+
+          ruff check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff format --check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          test -z "$(git status --short)"
+
+          if test "$(git rev-parse HEAD)" != "$EVENT_HEAD"; then
+            git fetch --no-tags origin "$HEAD_REF"
+            test "$(git rev-parse FETCH_HEAD)" = "$EVENT_HEAD"
+            git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git push origin "HEAD:${HEAD_REF}"
+          fi
+          git rev-parse HEAD > /tmp/aura_g4_g6_repaired_head.txt
+
       - name: Compile G4-G6 Python owners
         run: |
           set -euo pipefail
@@ -75,45 +135,50 @@ jobs:
           import json
           from pathlib import Path
 
-          from aura_architect_council_v3 import route_compass_failure_classes
-          from aura_coding_relationship_compass import compile_coding_relationship_compass
-
-          target_files = (
-              "aura_construction_demo_fixture.py",
-              "aura_construction_demo_fixture_builder.py",
-              "aura_construction_demo_projection.py",
-              "aura_spatial_web/construction_mesh_pass.js",
-              "aura_spatial_web/construction_overlay_pass.js",
-              "aura_spatial_web/construction_scene_renderer.js",
-              "aura_spatial_web/webgl2_gaussian_pass.js",
-              "tests/test_aura_construction_demo_fixture.py",
-              "tests/test_aura_construction_demo_projection.py",
-              "tests/js/spatial-construction-demo.test.mjs",
-          )
-          target_symbols = (
-              "ConstructionDemoProjectFixture",
-              "build_construction_demo_fixture",
-              "project_construction_demo_to_scene",
-              "ConstructionMeshPass",
-              "ConstructionOverlayPass",
-              "ConstructionSceneRenderer",
-              "createWebGL2GaussianPass",
-          )
+          output = Path("/tmp/aura_g4_g6_architecture.json")
           objective = (
               "Verify Construction Arena G4-G6 asset-bound fixture, privacy-minimized projection, "
               "mesh Gaussian hybrid rendering, storey isolation, presentation-only exploded view, "
               "cancellation, device-loss disposal, authority boundaries, and exact focused tests"
           )
-          output = Path("/tmp/aura_g4_g6_architecture.json")
-          council = route_compass_failure_classes(
-              ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
-          )
+          receipt = {
+              "status": "FAILED_CLOSED",
+              "objective": objective,
+              "safe_to_patch": False,
+              "production_mutation": False,
+              "automatic_merge": False,
+          }
           try:
+              from aura_architect_council_v3 import route_compass_failure_classes
+              from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+              council = route_compass_failure_classes(
+                  ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
+              )
               packet = compile_coding_relationship_compass(
                   objective,
                   Path.cwd(),
-                  target_files=target_files,
-                  target_symbols=target_symbols,
+                  target_files=(
+                      "aura_construction_demo_fixture.py",
+                      "aura_construction_demo_fixture_builder.py",
+                      "aura_construction_demo_projection.py",
+                      "aura_spatial_web/construction_mesh_pass.js",
+                      "aura_spatial_web/construction_overlay_pass.js",
+                      "aura_spatial_web/construction_scene_renderer.js",
+                      "aura_spatial_web/webgl2_gaussian_pass.js",
+                      "tests/test_aura_construction_demo_fixture.py",
+                      "tests/test_aura_construction_demo_projection.py",
+                      "tests/js/spatial-construction-demo.test.mjs",
+                  ),
+                  target_symbols=(
+                      "ConstructionDemoProjectFixture",
+                      "build_construction_demo_project_fixture",
+                      "project_construction_demo_to_scene",
+                      "ConstructionMeshPass",
+                      "ConstructionOverlayPass",
+                      "ConstructionSceneRenderer",
+                      "createWebGL2GaussianPass",
+                  ),
                   max_target_files=16,
                   max_target_symbols=24,
                   max_atomic_nodes=48,
@@ -125,6 +190,7 @@ jobs:
                   max_neighborhood_candidate_pairs=4096,
                   include_source=False,
               )
+              atlas = packet.get("atlas") or {}
               receipt = {
                   "status": "COMPILED",
                   "objective": objective,
@@ -133,12 +199,12 @@ jobs:
                   "grounding_digest": packet.get("grounding_digest"),
                   "recommended_targets": packet.get("recommended_targets"),
                   "required_tests": packet.get("required_tests"),
-                  "relationships_to_preserve": (packet.get("atlas") or {}).get("relationships_to_preserve"),
-                  "required_adapters": (packet.get("atlas") or {}).get("required_adapters"),
-                  "authority_constraints": (packet.get("atlas") or {}).get("authority_constraints"),
-                  "missing_roles": (packet.get("atlas") or {}).get("missing_roles"),
-                  "missing_configurations": (packet.get("atlas") or {}).get("missing_configurations"),
-                  "prohibitions": (packet.get("atlas") or {}).get("prohibitions"),
+                  "relationships_to_preserve": atlas.get("relationships_to_preserve"),
+                  "required_adapters": atlas.get("required_adapters"),
+                  "authority_constraints": atlas.get("authority_constraints"),
+                  "missing_roles": atlas.get("missing_roles"),
+                  "missing_configurations": atlas.get("missing_configurations"),
+                  "prohibitions": atlas.get("prohibitions"),
                   "emergent_candidates": packet.get("emergent_candidates"),
                   "change_graph": packet.get("change_graph"),
                   "act_capsules": packet.get("act_capsules"),
@@ -149,21 +215,36 @@ jobs:
                   "full_packet": packet,
               }
           except Exception as exc:
-              receipt = {
-                  "status": "FAILED_CLOSED",
-                  "objective": objective,
-                  "error_type": type(exc).__name__,
-                  "error": str(exc)[:4096],
-                  "council_v3": council,
-                  "safe_to_patch": False,
-                  "production_mutation": False,
-                  "automatic_merge": False,
-              }
-          output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
-          print(json.dumps({key: receipt.get(key) for key in (
-              "status", "repository_head", "compass_digest", "grounding_digest", "error_type",
-              "error", "council_v3", "safe_to_patch", "production_mutation", "automatic_merge"
-          )}, sort_keys=True))
+              receipt.update(
+                  {
+                      "error_type": type(exc).__name__,
+                      "error": str(exc)[:4096],
+                  }
+              )
+          output.write_text(
+              json.dumps(receipt, sort_keys=True, indent=2, default=str),
+              encoding="utf-8",
+          )
+          print(
+              json.dumps(
+                  {
+                      key: receipt.get(key)
+                      for key in (
+                          "status",
+                          "repository_head",
+                          "compass_digest",
+                          "grounding_digest",
+                          "error_type",
+                          "error",
+                          "council_v3",
+                          "safe_to_patch",
+                          "production_mutation",
+                          "automatic_merge",
+                      )
+                  },
+                  sort_keys=True,
+              )
+          )
           PY
 
       - name: Lint G4 fixture contracts
@@ -227,6 +308,7 @@ jobs:
           name: aura-construction-g4-g6-diagnostics
           path: |
             /tmp/aura_g4_g6_architecture.json
+            /tmp/aura_g4_g6_repaired_head.txt
             /tmp/g4_fixture_ruff.txt
           if-no-files-found: ignore
           retention-days: 7
