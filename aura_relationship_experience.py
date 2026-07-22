@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass
 from enum import Enum
 import json
 import math
+import re
 import time
 from typing import Any, Mapping, Sequence
 
@@ -89,6 +90,23 @@ def _strings(values: Sequence[Any], name: str) -> tuple[str, ...]:
         )
     )
     return result
+
+
+def _require_private_redaction(
+    privacy_class: str,
+    verifier_evidence_refs: Sequence[str],
+    receipt_refs: Sequence[str],
+    source_refs: Sequence[str],
+    reason: str,
+) -> None:
+    if privacy_class != "PRIVATE_REDACTED":
+        return
+    private_refs = [*verifier_evidence_refs, *receipt_refs, *source_refs]
+    if (
+        any(not value.startswith("redacted:") for value in private_refs)
+        or reason not in {"", "[REDACTED]"}
+    ):
+        raise ValueError("private relationship observation requires redaction")
 
 
 def _payload_bytes(value: Mapping[str, Any]) -> int:
@@ -199,6 +217,13 @@ class RelationshipExperienceObservation:
         if privacy not in _ALLOWED_PRIVACY:
             raise ValueError("unsupported relationship experience privacy class")
         object.__setattr__(self, "privacy_class", privacy)
+        _require_private_redaction(
+            privacy,
+            self.verifier_evidence_refs,
+            self.receipt_refs,
+            self.source_refs,
+            self.reason,
+        )
         if (
             self.proposal_only is not True
             or self.canonical_truth_owner is not False
@@ -319,6 +344,13 @@ class RelationshipExperienceObservation:
             ),
             "reason": safe_reason,
         }
+        _require_private_redaction(
+            identity["privacy_class"],
+            identity["verifier_evidence_refs"],
+            identity["receipt_refs"],
+            identity["source_refs"],
+            identity["reason"],
+        )
         if _payload_bytes(identity) + 1_024 > RELATIONSHIP_EXPERIENCE_MAX_PAYLOAD_BYTES:
             raise ValueError("relationship experience payload exceeds aggregate byte limit")
         return cls(observation_id=f"rex_{stable_digest(identity)}", **identity)
@@ -328,11 +360,11 @@ class RelationshipExperienceObservation:
         if not isinstance(value, Mapping):
             raise ValueError("relationship experience payload must be a mapping")
         fields = set(cls.__dataclass_fields__)
-        if len(value) not in {len(fields), len(fields) + 1}:
+        if len(value) != len(fields) + 1 or "observation_digest" not in value:
             raise ValueError("relationship experience payload fields are not canonical")
         data = dict(value)
-        raw_digest = data.pop("observation_digest", "")
-        if not isinstance(raw_digest, str) or len(raw_digest.encode("utf-8")) > 128:
+        raw_digest = data.pop("observation_digest")
+        if not isinstance(raw_digest, str) or not re.fullmatch(r"[0-9a-f]{32}", raw_digest):
             raise ValueError("relationship experience observation_digest is malformed")
         supplied_digest = raw_digest
         if set(data) != fields:
@@ -344,7 +376,7 @@ class RelationshipExperienceObservation:
         item = cls(**data)
         canonical = item.to_dict()
         canonical_digest = str(canonical.pop("observation_digest"))
-        if supplied_digest and supplied_digest != canonical_digest:
+        if supplied_digest != canonical_digest:
             raise ValueError("relationship experience observation_digest mismatch")
         return item
 

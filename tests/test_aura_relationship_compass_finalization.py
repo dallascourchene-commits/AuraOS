@@ -524,22 +524,39 @@ def test_c8_bitemporal_experience_is_append_only_rebuildable_and_advisory(tmp_pa
 
 
 def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Path) -> None:
-    private = RelationshipExperienceObservation.create(
-        relationship_id="bem_private",
-        relationship_digest="d" * 40,
-        repository_head="h1",
-        working_tree_digest="w" * 40,
-        valid_from_head="h1",
-        outcome=RelationshipOutcome.DENIAL,
-        verifier_evidence_refs=["pytest:secret_test"],
-        receipt_refs=["compass:secret_receipt"],
-        source_refs=["private.py#secret"],
-        current_source_digest="s" * 40,
-        human_disposition=RelationshipHumanDisposition.DENIED,
-        privacy_class="PRIVATE_REDACTED",
-        transaction_time=1000.0,
-        reason="sensitive reason",
-    )
+    private_args = {
+        "relationship_id": "bem_private",
+        "relationship_digest": "d" * 40,
+        "repository_head": "h1",
+        "working_tree_digest": "w" * 40,
+        "valid_from_head": "h1",
+        "outcome": RelationshipOutcome.DENIAL,
+        "verifier_evidence_refs": ["pytest:secret_test"],
+        "receipt_refs": ["compass:secret_receipt"],
+        "source_refs": ["private.py#secret"],
+        "current_source_digest": "s" * 40,
+        "human_disposition": RelationshipHumanDisposition.DENIED,
+        "transaction_time": 1000.0,
+        "reason": "sensitive reason",
+    }
+    with pytest.raises(ValueError, match="requires redaction"):
+        RelationshipExperienceObservation.create(
+            **private_args,
+            privacy_class="PRIVATE_REDACTED",
+        )
+    unredacted_payload = RelationshipExperienceObservation.create(
+        **private_args,
+        privacy_class="PROJECT",
+    ).to_dict()
+    unredacted_payload["privacy_class"] = "PRIVATE_REDACTED"
+    with pytest.raises(ValueError, match="requires redaction"):
+        RelationshipExperienceObservation.from_dict(unredacted_payload)
+    with pytest.raises(ValueError, match="requires redaction"):
+        project_relationship_experience_advisory(unredacted_payload)
+    with pytest.raises(ValueError, match="requires redaction"):
+        project_relationship_timeline(
+            [unredacted_payload], current_repository_head="h1"
+        )
     redacted = RelationshipExperienceObservation.create(
         relationship_id="bem_private",
         relationship_digest="d" * 40,
@@ -557,10 +574,10 @@ def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Pa
         reason="[REDACTED]",
     )
     with ArenaExperienceLedger(tmp_path) as ledger:
-        denied = ledger.record_relationship_observation(private)
+        denied = ledger.record_relationship_observation(unredacted_payload)
         assert denied["ok"] is False
         assert denied["reason"] == "private_relationship_observation_requires_redaction"
-        assert denied["observation_id"] == private.observation_id
+        assert denied["observation_id"] == unredacted_payload["observation_id"]
         assert "experience_id" not in denied
         accepted = ledger.record_relationship_observation(redacted)
         assert accepted["ok"] is True
@@ -629,6 +646,24 @@ def test_c8_relationship_observation_rejects_unbounded_payloads_before_persisten
         denied = ledger.record_relationship_observation(oversized)
         assert denied["ok"] is False
         assert denied["reason"] == "invalid_relationship_observation:ValueError"
+        assert ledger.status()["relationship_experience_count"] == 0
+
+
+def test_c8_relationship_observation_ingestion_requires_canonical_digest(tmp_path: Path) -> None:
+    payload = _observation().to_dict()
+    missing = dict(payload)
+    missing.pop("observation_digest")
+    empty = {**payload, "observation_digest": ""}
+    malformed = {**payload, "observation_digest": "f" * 31}
+    for candidate in (missing, empty, malformed):
+        with pytest.raises(ValueError, match="fields are not canonical|digest is malformed"):
+            RelationshipExperienceObservation.from_dict(candidate)
+
+    with ArenaExperienceLedger(tmp_path) as ledger:
+        for candidate in (missing, empty, malformed):
+            denied = ledger.record_relationship_observation(candidate)
+            assert denied["ok"] is False
+            assert denied["reason"] == "invalid_relationship_observation:ValueError"
         assert ledger.status()["relationship_experience_count"] == 0
 
 

@@ -246,6 +246,16 @@ class ArenaExperienceLedger:
                 else RelationshipExperienceObservation.from_dict(observation)
             )
         except (TypeError, ValueError) as exc:
+            if str(exc) == "private relationship observation requires redaction":
+                observation_id = (
+                    str(observation.get("observation_id") or "")
+                    if isinstance(observation, dict)
+                    else ""
+                )
+                return _deny(
+                    "private_relationship_observation_requires_redaction",
+                    observation_id=observation_id,
+                )
             return _deny(f"invalid_relationship_observation:{type(exc).__name__}")
         if item.privacy_class == "PRIVATE_REDACTED":
             private_refs = [*item.verifier_evidence_refs, *item.receipt_refs, *item.source_refs]
