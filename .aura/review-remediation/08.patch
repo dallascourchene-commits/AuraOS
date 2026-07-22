@@ -1,0 +1,347 @@
+--- a/tests/test_aura_prepare_construction_demo_assets.py
++++ b/tests/test_aura_prepare_construction_demo_assets.py
+@@ -121,165 +123,236 @@
+     path.chmod(path.stat().st_mode | 0o111)
+ 
+ 
+-def test_convert_ifc_assets_writes_verified_outputs_and_receipts(tmp_path: Path) -> None:
+-    source = tmp_path / "source.ifc"
+-    source.write_text("source", encoding="utf-8")
+-    generated = tmp_path / "generated"
+-    split_outputs = []
+-    for storey_id in ("storey-a", "storey-b"):
+-        path = generated / "storeys" / storey_id / f"{storey_id}.ifc"
+-        path.parent.mkdir(parents=True, exist_ok=True)
+-        path.write_text(storey_id, encoding="utf-8")
+-        split_outputs.append(
+-            {
+-                "storey_id": storey_id,
+-                "path": path.relative_to(tmp_path).as_posix(),
+-                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+-            }
+-        )
+-    split_body = {
+-        "phase": "SPLIT_STOREYS",
+-        "outputs": split_outputs,
+-        "production_mutation": False,
+-    }
+-    split_body["receipt_digest"] = stable_digest(split_body)
++def _conversion(tmp_path: Path, source: Path) -> tuple[dict[str, object], dict[str, object]]:
++    split = _split_receipt(tmp_path, source)
+     executable = tmp_path / "IfcConvert"
+     _fake_ifcconvert(executable)
+-
+-    receipt = convert_ifc_assets(
++    conversion = convert_ifc_assets(
+         source=source,
+-        split_receipt=split_body,
++        split_receipt=split,
+         output_dir=Path("generated"),
+         repo_root=tmp_path,
+         ifcconvert=executable,
+         workers=2,
++        source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++        hierarchy_digest=HIERARCHY_DIGEST,
+         timeout_seconds=10,
+     )
++    return split, conversion
++
++
++def test_split_storeys_maps_random_outputs_to_canonical_ids(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    receipt = split_storeys(
++        source=source,
++        hierarchy=_hierarchy(source),
++        output_dir=Path("generated"),
++        repo_root=tmp_path,
++        source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++        ifcopenshell_module=IfcModule,
++        ifcpatch_module=IfcPatch,
++    )
++
++    assert receipt["phase"] == "SPLIT_STOREYS"
++    assert receipt["source_manifest_digest"] == SOURCE_MANIFEST_DIGEST
++    assert [item["storey_id"] for item in receipt["outputs"]] == ["storey-a", "storey-b"]
++    for item in receipt["outputs"]:
++        path = tmp_path / item["path"]
++        assert path.name == f"{item['storey_id']}.ifc"
++        assert hashlib.sha256(path.read_bytes()).hexdigest() == item["sha256"]
++    assert (tmp_path / "generated/receipts/split-storeys.json").is_file()
++
++
++def test_split_storeys_rejects_non_authoritative_or_tampered_hierarchy(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    hierarchy = _hierarchy(source)
++    hierarchy["ifcopenshell_validated"] = False
++    with pytest.raises(ValueError, match="hierarchy_digest"):
++        split_storeys(
++            source=source,
++            hierarchy=hierarchy,
++            output_dir=Path("generated"),
++            repo_root=tmp_path,
++            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++            ifcopenshell_module=IfcModule,
++            ifcpatch_module=IfcPatch,
++        )
++
++
++def test_split_storeys_rejects_traversal_absolute_and_duplicate_ids_before_writes(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    bad_rows = [
++        [
++            {"ifc_global_id": "AAAAAAAAAAAAAAAAAAAAAA", "storey_id": "../escape"},
++            {"ifc_global_id": "BBBBBBBBBBBBBBBBBBBBBB", "storey_id": "storey-b"},
++        ],
++        [
++            {"ifc_global_id": "AAAAAAAAAAAAAAAAAAAAAA", "storey_id": "/tmp/escape"},
++            {"ifc_global_id": "BBBBBBBBBBBBBBBBBBBBBB", "storey_id": "storey-b"},
++        ],
++        [
++            {"ifc_global_id": "AAAAAAAAAAAAAAAAAAAAAA", "storey_id": "same"},
++            {"ifc_global_id": "BBBBBBBBBBBBBBBBBBBBBB", "storey_id": "same"},
++        ],
++    ]
++    for rows in bad_rows:
++        with pytest.raises(ValueError, match="storey_id|duplicate storey ids"):
++            split_storeys(
++                source=source,
++                hierarchy=_hierarchy(source, storeys=rows),
++                output_dir=Path("generated"),
++                repo_root=tmp_path,
++                source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++                ifcopenshell_module=IfcModule,
++                ifcpatch_module=IfcPatch,
++            )
++    assert not (tmp_path.parent / "escape").exists()
++
++
++def test_convert_ifc_assets_writes_verified_outputs_and_authenticated_receipts(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    split, receipt = _conversion(tmp_path, source)
+ 
+     assert receipt["phase"] == "CONVERT_GLB_SVG"
++    assert receipt["split_receipt_digest"] == split["receipt_digest"]
+     assert receipt["output_count"] == 5
+     assert receipt["external_resource_fetch"] is False
+     assert {item["representation"] for item in receipt["outputs"]} == {"MESH_GLB", "FLOOR_PLAN_SVG"}
+-    assert (generated / "building-full.glb").is_file()
+-    assert (generated / "storeys/storey-a/storey-a.svg").read_bytes().startswith(b"<?xml")
+-    assert (generated / "receipts/convert-glb-svg.json").is_file()
+-
+-
+-def test_convert_ifc_assets_rejects_split_digest_drift(tmp_path: Path) -> None:
+-    source = tmp_path / "source.ifc"
+-    source.write_text("source", encoding="utf-8")
+-    split = tmp_path / "split.ifc"
+-    split.write_text("actual", encoding="utf-8")
++    assert all(item["split_receipt_digest"] == split["receipt_digest"] for item in receipt["outputs"])
++    assert (tmp_path / "generated/building-full.glb").is_file()
++    assert (tmp_path / "generated/storeys/storey-a/storey-a.svg").read_bytes().startswith(b"<?xml")
++    assert (tmp_path / "generated/receipts/convert-glb-svg.json").is_file()
++
++
++def test_convert_ifc_assets_rejects_tampered_split_receipt_even_when_file_hash_matches(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    split = _split_receipt(tmp_path, source)
++    split["source_manifest_digest"] = "c" * 32
++    split["receipt_digest"] = stable_digest({k: v for k, v in split.items() if k != "receipt_digest"})
+     executable = tmp_path / "IfcConvert"
+     _fake_ifcconvert(executable)
+-    receipt = {
+-        "phase": "SPLIT_STOREYS",
+-        "outputs": [{"storey_id": "storey-a", "path": "split.ifc", "sha256": "0" * 64}],
+-        "production_mutation": False,
+-        "receipt_digest": "f" * 32,
+-    }
+-    with pytest.raises(ValueError, match="digest drifted"):
++
++    with pytest.raises(ValueError, match="source-manifest lineage"):
+         convert_ifc_assets(
+             source=source,
+-            split_receipt=receipt,
++            split_receipt=split,
+             output_dir=Path("generated"),
+             repo_root=tmp_path,
+             ifcconvert=executable,
+             workers=1,
+-        )
+-
+-
+-def test_compile_gaussian_assets_distinguishes_building_and_storey_profiles(tmp_path: Path) -> None:
+-    generated = tmp_path / "generated"
+-    building = generated / "building-full.glb"
+-    storey = generated / "storeys/storey-a/storey-a.glb"
+-    svg = generated / "storeys/storey-a/storey-a.svg"
+-    for path, body in ((building, b"building"), (storey, b"storey"), (svg, b"svg")):
+-        path.parent.mkdir(parents=True, exist_ok=True)
+-        path.write_bytes(body)
+-
+-    outputs = []
+-    for job_id, path, representation in (
+-        ("building-full-glb", building, "MESH_GLB"),
+-        ("storey-a-glb", storey, "MESH_GLB"),
+-        ("storey-a-svg", svg, "FLOOR_PLAN_SVG"),
+-    ):
+-        row = {
+-            "job_id": job_id,
+-            "output": path.relative_to(tmp_path).as_posix(),
+-            "output_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+-            "representation": representation,
+-        }
+-        row["receipt_digest"] = stable_digest(row)
+-        outputs.append(row)
+-    conversion = {
+-        "phase": "CONVERT_GLB_SVG",
+-        "outputs": outputs,
+-        "production_mutation": False,
+-    }
+-    conversion["receipt_digest"] = stable_digest(conversion)
+-    calls = []
+-
++            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++            hierarchy_digest=HIERARCHY_DIGEST,
++        )
++
++
++def _fake_gaussian_compiler(tmp_path: Path, calls: list[dict[str, object]]):
+     def fake_compiler(**kwargs: object) -> dict[str, object]:
+-        calls.append(kwargs)
++        calls.append(dict(kwargs))
+         ply = Path(kwargs["output_ply"])
+         spz = Path(kwargs["output_spz"])
+         ply.write_bytes(b"ply")
+         spz.write_bytes(b"spz")
+         source_digest = str(kwargs["source_digest"])
+         scope = str(kwargs["scope"])
+-        return {
++
++        def representation(kind: str, path: Path) -> dict[str, object]:
++            body: dict[str, object] = {
++                "representation": kind,
++                "path": path.relative_to(tmp_path).as_posix(),
++                "byte_length": path.stat().st_size,
++                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
++            }
++            body["receipt_digest"] = stable_digest(body)
++            return body
++
++        body: dict[str, object] = {
+             "source_digest": source_digest,
+             "scope": scope,
+             "splat_count": kwargs["target_count"],
+-            "ply": {"path": ply.relative_to(tmp_path).as_posix()},
+-            "spz": {"path": spz.relative_to(tmp_path).as_posix()},
+-            "receipt_digest": stable_digest({"source": source_digest, "scope": scope}),
++            "ply": representation("GAUSSIAN_PLY", ply),
++            "spz": representation("GAUSSIAN_SPZ", spz),
+         }
++        body["receipt_digest"] = stable_digest(body)
++        return body
++
++    return fake_compiler
++
++
++def test_compile_gaussian_assets_authenticates_resume_chain_and_profiles(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    split, conversion = _conversion(tmp_path, source)
++    calls: list[dict[str, object]] = []
+ 
+     receipt = compile_gaussian_assets(
+         conversion_receipt=conversion,
++        split_receipt=split,
+         output_dir=Path("generated"),
+         repo_root=tmp_path,
++        source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
++        source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++        hierarchy_digest=HIERARCHY_DIGEST,
+         profile="STANDARD",
+         storey_target_count=20,
+         building_target_count=40,
+-        mesh_compiler=fake_compiler,
++        mesh_compiler=_fake_gaussian_compiler(tmp_path, calls),
+     )
+ 
+     assert receipt["phase"] == "SAMPLE_GAUSSIANS_WRITE_SPZ"
+-    assert receipt["output_count"] == 2
+-    assert receipt["profile_limits"] == {"STOREY": 150_000, "BUILDING": 500_000}
++    assert receipt["output_count"] == 3
++    assert receipt["profile_limits"] == {"STOREY": 75_000, "BUILDING": 100_000}
+     assert [(call["scope"], call["target_count"]) for call in calls] == [
+         ("BUILDING", 40),
+         ("STOREY", 20),
++        ("STOREY", 20),
+     ]
+-    assert (generated / "building-full.gaussian.ply").read_bytes() == b"ply"
+-    assert (generated / "building-full.spz").read_bytes() == b"spz"
+-    assert (generated / "receipts/compile-gaussians.json").is_file()
+-
+-
+-def test_compile_gaussian_assets_rejects_glb_digest_drift(tmp_path: Path) -> None:
+-    glb = tmp_path / "building.glb"
+-    glb.write_bytes(b"actual")
+-    row = {
+-        "job_id": "building-full-glb",
+-        "output": "building.glb",
+-        "output_sha256": "0" * 64,
+-        "representation": "MESH_GLB",
+-        "receipt_digest": "f" * 32,
+-    }
+-    conversion = {
+-        "phase": "CONVERT_GLB_SVG",
+-        "outputs": [row],
+-        "production_mutation": False,
+-        "receipt_digest": "e" * 32,
+-    }
+-    with pytest.raises(ValueError, match="digest drifted"):
++    assert (tmp_path / "generated/building-full.gaussian.ply").read_bytes() == b"ply"
++    assert (tmp_path / "generated/building-full.spz").read_bytes() == b"spz"
++    assert (tmp_path / "generated/receipts/compile-gaussians.json").is_file()
++
++
++def test_compile_gaussian_assets_rejects_tampered_conversion_job_and_lineage(tmp_path: Path) -> None:
++    source = tmp_path / "source.ifc"
++    source.write_text("source", encoding="utf-8")
++    split, conversion = _conversion(tmp_path, source)
++
++    nested_tamper = copy.deepcopy(conversion)
++    nested_tamper["outputs"][0]["representation"] = "FLOOR_PLAN_SVG"
++    nested_tamper["receipt_digest"] = stable_digest(
++        {k: v for k, v in nested_tamper.items() if k != "receipt_digest"}
++    )
++    with pytest.raises(ValueError, match="receipt_digest"):
+         compile_gaussian_assets(
+-            conversion_receipt=conversion,
++            conversion_receipt=nested_tamper,
++            split_receipt=split,
+             output_dir=Path("generated"),
+             repo_root=tmp_path,
++            source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
++            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++            hierarchy_digest=HIERARCHY_DIGEST,
+             profile="LOW",
+             mesh_compiler=lambda **_kwargs: {},
+         )
++
++    lineage_tamper = copy.deepcopy(conversion)
++    lineage_tamper["source_manifest_digest"] = "d" * 32
++    lineage_tamper["receipt_digest"] = stable_digest(
++        {k: v for k, v in lineage_tamper.items() if k != "receipt_digest"}
++    )
++    with pytest.raises(ValueError, match="lineage"):
++        compile_gaussian_assets(
++            conversion_receipt=lineage_tamper,
++            split_receipt=split,
++            output_dir=Path("generated"),
++            repo_root=tmp_path,
++            source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
++            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
++            hierarchy_digest=HIERARCHY_DIGEST,
++            profile="LOW",
++            mesh_compiler=lambda **_kwargs: {},
++        )
