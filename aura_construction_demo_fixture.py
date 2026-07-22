@@ -433,7 +433,7 @@ class ConstructionDemoProjectFixture:
             _strict_boundary(getattr(self, name), name, expected)
         if self.patch_authority != PATCH_AUTHORITY:
             raise ValueError("fixture patch-authority boundary was modified")
-        _digest(self.blocked_clearance_claim_id, "blocked_clearance_claim_id")
+        _identifier(self.blocked_clearance_claim_id, "blocked_clearance_claim_id")
         digest = stable_digest(self._body())
         if self.fixture_digest and self.fixture_digest != digest:
             raise ValueError("fixture_digest does not match fixture body")
