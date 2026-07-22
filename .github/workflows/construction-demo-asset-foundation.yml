@@ -46,11 +46,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
           persist-credentials: false
       - name: Export exact review worktree
         uses: actions/upload-artifact@v4
         with:
-          name: construction-pr-source-${{ github.sha }}
+          name: construction-pr-source-${{ github.event.pull_request.head.sha || github.sha }}
           retention-days: 1
           include-hidden-files: true
           if-no-files-found: error
