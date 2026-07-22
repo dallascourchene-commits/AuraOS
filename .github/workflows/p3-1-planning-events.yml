@@ -8,7 +8,7 @@ on:
       - "refactor/**"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: p3-1-planning-events-${{ github.workflow }}-${{ github.ref }}
@@ -56,88 +56,3 @@ jobs:
             tests/test_aura_planning_regression_adversarial.py \
             tests/test_aura_planning_frontier.py \
             tests/test_aura_planning_events.py
-
-  repair-c6-c9-review-findings:
-    name: Repair Codex and CodeRabbit findings
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'work/coding-relationship-compass-c6-c9-20260721' && github.actor != 'github-actions[bot]'
-    needs: focused-planning-events
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-      TARGET_BRANCH: work/coding-relationship-compass-c6-c9-20260721
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - name: Reconstruct and apply exact review repair
-        run: |
-          set -euo pipefail
-          git init -q .
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --quiet origin "$TARGET_BRANCH"
-          git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          tr -d '\r\n' < .github/c6-c9-review-fix.py.gz.b64 | base64 -d | gzip -d > /tmp/c6-c9-review-fix.py
-          echo '960f888a48ef63dfb289a0a0ac88c058a0dfa016a9995991782b2937410f6ccc  /tmp/c6-c9-review-fix.py' | sha256sum -c -
-          git reset --hard 4ffdb6f6cb9c3b189ed79b56ed2fe4b3ef448764
-          python /tmp/c6-c9-review-fix.py
-          git diff --check
-          printf '%s\n' \
-            aura_agent_arena_persistence_bridge.py \
-            aura_arena_experience_ledger.py \
-            aura_change_graph.py \
-            aura_coding_relationship_compass.py \
-            aura_emergent_result_verifier.py \
-            tests/test_aura_relationship_compass_finalization.py \
-            | sort > /tmp/expected-files
-          git diff --name-only | sort > /tmp/actual-files
-          diff -u /tmp/expected-files /tmp/actual-files
-      - name: Run complete C6-C9 curated regression matrix
-        run: |
-          set -euo pipefail
-          python3 -m venv /tmp/c6-c9-review-venv
-          . /tmp/c6-c9-review-venv/bin/activate
-          python -m pip install --quiet pytest==9.0.2 jsonschema==4.26.0 numpy==2.3.5
-          python -m py_compile \
-            aura_agent_arena_persistence_bridge.py \
-            aura_arena_experience_ledger.py \
-            aura_change_graph.py \
-            aura_coding_relationship_compass.py \
-            aura_emergent_result_verifier.py \
-            tests/test_aura_relationship_compass_finalization.py
-          PYTHONPATH=. pytest -q \
-            tests/test_aura_relationship_compass_finalization.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py \
-            tests/test_aura_relationship_atlas.py \
-            tests/test_aura_relationship_contracts.py \
-            tests/test_aura_emergent_potential_repl.py \
-            tests/test_aura_emergent_result_verifier.py \
-            tests/test_aura_change_graph.py \
-            tests/test_aura_agent_arena_mcp.py \
-            tests/test_aura_affordance_directory.py \
-            tests/test_aura_architect_council_v3.py \
-            tests/test_aura_arena_experience_ledger.py \
-            tests/test_aura_capability_connectome.py \
-            tests/test_aura_qdkt_observations.py \
-            tests/test_aura_temporal_persistence.py \
-            tests/test_aura_planning_board.py \
-            tests/test_aura_coding_arena_planning.py \
-            tests/test_aura_coding_waboose_breadboard.py \
-            test_aura_architect_loop.py \
-            tests/test_aura_architecture_harness.py
-      - name: Publish clean review repair commit
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            aura_agent_arena_persistence_bridge.py \
-            aura_arena_experience_ledger.py \
-            aura_change_graph.py \
-            aura_coding_relationship_compass.py \
-            aura_emergent_result_verifier.py \
-            tests/test_aura_relationship_compass_finalization.py
-          git commit -m "fix: resolve C6-C9 Codex and CodeRabbit findings"
-          NEW_HEAD=$(git rev-parse HEAD)
-          git push --force-with-lease=refs/heads/${TARGET_BRANCH}:$EXPECTED_HEAD \
-            origin "$NEW_HEAD":refs/heads/${TARGET_BRANCH}
