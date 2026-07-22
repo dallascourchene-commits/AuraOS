@@ -17,9 +17,9 @@ concurrency:
 jobs:
   remediate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
-      EXPECTED_SOURCE_SHA: 11f185522b3b05e93fd66cd5d2c6583c4d30f13c
+      EXPECTED_SOURCE_SHA: dc5c1c797a7cedd1b5b949b004bae14eedc9edb0
       TARGET_BRANCH: work/construction-arena-real-asset-pack-g4-20260722
       PYTHONPATH: ${{ github.workspace }}
     steps:
@@ -32,7 +32,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Apply, validate, and publish exact result
+      - name: Apply, validate, regenerate maps, and publish
         shell: bash
         run: |
           set -u
@@ -46,6 +46,7 @@ jobs:
           patch_rc=$?
           install_rc=99
           test_rc=99
+          map_rc=99
           if [ "$patch_rc" -eq 0 ]; then
             python -m pip install --upgrade pip >>remediation.log 2>&1
             python -m pip install "numpy>=1.26,<3" "trimesh>=4,<5" pytest >>remediation.log 2>&1
@@ -62,38 +63,54 @@ jobs:
               tests/test_aura_architecture_harness.py \
               tests/test_aura_architecture_harness_git_tree_routing.py \
               tests/test_aura_architecture_harness_original_github_routing.py \
+              tests/test_aura_prepare_construction_demo_assets.py \
               tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py \
               tests/test_aura_mesh_to_gaussian.py >>remediation.log 2>&1 && \
             git diff --check >>remediation.log 2>&1
             test_rc=$?
           fi
+          if [ "$patch_rc" -eq 0 ] && [ "$install_rc" -eq 0 ] && [ "$test_rc" -eq 0 ]; then
+            python aura_codebase_navigator.py >>remediation.log 2>&1 && \
+            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json >>remediation.log 2>&1
+            map_rc=$?
+          fi
 
           git config user.name "AuraOS Review Remediation"
           git config user.email "actions@users.noreply.github.com"
-          if [ "$patch_rc" -eq 0 ] && [ "$install_rc" -eq 0 ] && [ "$test_rc" -eq 0 ]; then
-            rm .github/workflows/pr184-final-remediation.yml scripts/pr184_final_remediation.py
+          if [ "$patch_rc" -eq 0 ] && [ "$install_rc" -eq 0 ] && [ "$test_rc" -eq 0 ] && [ "$map_rc" -eq 0 ]; then
+            rm -f \
+              .github/workflows/pr184-final-remediation.yml \
+              scripts/pr184_final_remediation.py \
+              .aura/pr184-final-remediation-failure.json
             git add \
               scripts/aura_architecture_harness.py \
               scripts/aura_architecture_harness_core.py \
               scripts/aura_mesh_to_gaussian.py \
               scripts/aura_prepare_construction_demo_assets.py \
               scripts/aura_prepare_construction_demo_assets_core.py \
+              tests/test_aura_mesh_to_gaussian.py \
+              tests/test_aura_prepare_construction_demo_assets.py \
+              .aura/CODEMAP.json \
+              .aura/CODEMAP.md \
+              topology_map.json \
               .github/workflows/pr184-final-remediation.yml \
-              scripts/pr184_final_remediation.py
+              scripts/pr184_final_remediation.py \
+              .aura/pr184-final-remediation-failure.json
             git commit -m "fix(review): apply final Codex remediation"
           else
             git reset --hard "$GITHUB_SHA"
             mkdir -p .aura
-            PATCH_RC="$patch_rc" INSTALL_RC="$install_rc" TEST_RC="$test_rc" python - <<'PY'
+            PATCH_RC="$patch_rc" INSTALL_RC="$install_rc" TEST_RC="$test_rc" MAP_RC="$map_rc" python - <<'PY'
           import json
           import os
           from pathlib import Path
-          log = Path("remediation.log").read_text(encoding="utf-8", errors="replace")[-6000:]
+          log = Path("remediation.log").read_text(encoding="utf-8", errors="replace")[-8000:]
           payload = {
-              "version": "PR184_FINAL_REMEDIATION_FAILURE_V1",
+              "version": "PR184_FINAL_REMEDIATION_FAILURE_V2",
               "patch_rc": int(os.environ["PATCH_RC"]),
               "install_rc": int(os.environ["INSTALL_RC"]),
               "test_rc": int(os.environ["TEST_RC"]),
+              "map_rc": int(os.environ["MAP_RC"]),
               "log_tail": log,
           }
           Path(".aura/pr184-final-remediation-failure.json").write_text(
@@ -101,7 +118,7 @@ jobs:
           )
           PY
             git add .aura/pr184-final-remediation-failure.json
-            git commit -m "chore(review): record PR184 remediation failure"
+            git commit -m "chore(review): record corrected PR184 remediation failure"
           fi
 
           remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
