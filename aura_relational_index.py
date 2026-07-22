@@ -59,7 +59,7 @@ from aura_emergent_evidence_spine import (
     _repo_python_sources,
 )
 from aura_event_contracts import canonical_json, stable_digest, stable_id
-from aura_relationship_contracts import RelationalNeighborhoodRequest
+from aura_relationship_contracts import RelationalNeighborhoodRequest, SourceReference
 from aura_relational_synthesis import (
     Freshness,
     GroupKind,
@@ -2030,13 +2030,34 @@ def _resolve_neighborhood_seeds(
     for participant_id in request.seed_participant_ids:
         reasons[participant_id].append("exact_seed_participant_id")
 
+    def matches_source_ref(participant_id: str, source_ref: SourceReference) -> bool:
+        participant = participant_by_id.get(participant_id)
+        if participant is None:
+            return False
+        metadata = participant.metadata
+        return (
+            str(metadata.get("file_path") or "") == source_ref.file_path
+            and (not source_ref.symbol or participant.qualified_symbol == source_ref.symbol)
+            and int(metadata.get("line_start") or 0) == source_ref.line_start
+            and int(metadata.get("line_end") or 0) == source_ref.line_end
+            and str(participant.digest or "") == source_ref.source_hash
+            and (
+                not source_ref.file_source_hash
+                or str(metadata.get("file_source_hash") or "") == source_ref.file_source_hash
+            )
+        )
+
     for source_ref in request.seed_source_refs:
         resolved: set[str] = set()
         if source_ref.symbol:
             reverse = index.reverse_indexes.get("by_qualified_symbol", {})
             if isinstance(reverse, Mapping):
                 exact_key = f"{source_ref.file_path}#{source_ref.symbol}"
-                resolved.update(item for item in reverse.get(exact_key, ()) if item in participant_ids)
+                resolved.update(
+                    item
+                    for item in reverse.get(exact_key, ())
+                    if matches_source_ref(str(item), source_ref)
+                )
             if not resolved:
                 file_candidates: set[str] = set()
                 reverse = index.reverse_indexes.get("by_file_path", {})
@@ -2057,7 +2078,7 @@ def _resolve_neighborhood_seeds(
                 resolved.update(
                     participant_id
                     for participant_id in file_candidates
-                    if participant_by_id[participant_id].qualified_symbol == source_ref.symbol
+                    if matches_source_ref(participant_id, source_ref)
                 )
             if not resolved:
                 reverse = index.reverse_indexes.get("by_qualified_symbol", {})
@@ -2067,20 +2088,30 @@ def _resolve_neighborhood_seeds(
                         for lookup_key, values in reverse.items()
                         if str(lookup_key).endswith(f"#{source_ref.symbol}")
                         for item in values
-                        if item in participant_ids
+                        if matches_source_ref(str(item), source_ref)
                     )
         else:
             reverse = index.reverse_indexes.get("by_file_path", {})
             if isinstance(reverse, Mapping):
                 resolved.update(
-                    item for item in reverse.get(source_ref.file_path, ()) if item in participant_ids
+                    item
+                    for item in reverse.get(source_ref.file_path, ())
+                    if matches_source_ref(str(item), source_ref)
                 )
             if request.include_tests:
                 reverse = index.reverse_indexes.get("by_test_path", {})
                 if isinstance(reverse, Mapping):
                     resolved.update(
-                        item for item in reverse.get(source_ref.file_path, ()) if item in participant_ids
+                        item
+                        for item in reverse.get(source_ref.file_path, ())
+                        if matches_source_ref(str(item), source_ref)
                     )
+        if len(resolved) != 1:
+            raise ValueError(
+                "relational neighborhood source ref must resolve to exactly one current source "
+                f"participant: {source_ref.file_path}#{source_ref.symbol or '*'} "
+                f"at {source_ref.line_start}-{source_ref.line_end} resolved {len(resolved)}"
+            )
         for participant_id in sorted(resolved):
             reasons[participant_id].append(
                 f"exact_source_ref:{source_ref.file_path}#{source_ref.symbol or '*'}"
