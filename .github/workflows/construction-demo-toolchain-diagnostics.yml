@@ -31,69 +31,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
 
-      - name: Diagnose IfcOpenShell Python distribution
+      - name: Build Niantic SPZ v3.0.0 Python binding
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install "ifcopenshell==0.8.5" "ifcpatch==0.8.5"
-          python - <<'PY'
-          import json
-          import sys
-          import ifcopenshell
-          import ifcpatch
-          print(json.dumps({
-              "python": sys.version,
-              "ifcopenshell_version": str(ifcopenshell.version),
-              "ifcopenshell_module": ifcopenshell.__file__,
-              "ifcpatch_module": ifcpatch.__file__,
-          }, indent=2, sort_keys=True))
-          PY
-
-      - name: Diagnose official IfcConvert release assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          import os
-          from urllib.request import Request, urlopen
-
-          request = Request(
-              "https://api.github.com/repos/IfcOpenShell/IfcOpenShell/releases/tags/ifcconvert-0.8.5",
-              headers={
-                  "Accept": "application/vnd.github+json",
-                  "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
-                  "X-GitHub-Api-Version": "2022-11-28",
-                  "User-Agent": "AuraOS-Construction-Toolchain-Diagnostics/1",
-              },
-          )
-          with urlopen(request, timeout=45) as response:
-              release = json.load(response)
-          print(json.dumps({
-              "id": release.get("id"),
-              "tag_name": release.get("tag_name"),
-              "target_commitish": release.get("target_commitish"),
-              "assets": [
-                  {
-                      "id": item.get("id"),
-                      "name": item.get("name"),
-                      "size": item.get("size"),
-                      "digest": item.get("digest"),
-                      "content_type": item.get("content_type"),
-                  }
-                  for item in release.get("assets", [])
-              ],
-          }, indent=2, sort_keys=True))
-          PY
-
-      - name: Diagnose Niantic SPZ v3.0.0 Python binding
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "nanobind>=2.7.0,<3.0" \
+            "scikit-build-core>=0.10.7,<1.0" \
+            "cmake>=3.30,<5.0" \
+            "ninja>=1.11,<2.0" \
+            "python_devtools"
           python - <<'PY'
           import json
           import os
@@ -107,7 +58,7 @@ jobs:
                       "Accept": "application/vnd.github+json",
                       "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
                       "X-GitHub-Api-Version": "2022-11-28",
-                      "User-Agent": "AuraOS-Construction-Toolchain-Diagnostics/1",
+                      "User-Agent": "AuraOS-Construction-Toolchain-Diagnostics/2",
                   },
               )
               with urlopen(request, timeout=45) as response:
@@ -123,25 +74,33 @@ jobs:
           print(json.dumps({"tag": "v3.0.0", "commit_sha": obj["sha"]}, indent=2))
           PY
           SPZ_COMMIT_SHA="$(cat "${RUNNER_TEMP}/spz-commit.txt")"
-          git clone --filter=blob:none --no-checkout https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
+          git clone --filter=blob:none --no-checkout \
+            https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
           git -C "${RUNNER_TEMP}/spz" checkout --detach "${SPZ_COMMIT_SHA}"
           git -C "${RUNNER_TEMP}/spz" submodule update --init --recursive --depth 1
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "nanobind>=2.7.0,<3.0" \
-            "scikit-build-core>=0.10.7,<1.0" \
-            "cmake>=3.30,<5.0" \
-            "ninja>=1.11,<2.0" \
-            "${RUNNER_TEMP}/spz"
+          test "$(git -C "${RUNNER_TEMP}/spz" rev-parse HEAD)" = "${SPZ_COMMIT_SHA}"
+          python -m pip install --verbose --no-build-isolation "${RUNNER_TEMP}/spz"
           python - <<'PY'
+          import json
           import spz
-          print("spz module:", spz.__file__)
+          print(json.dumps({"spz_module": spz.__file__}, indent=2, sort_keys=True))
           PY
 
-      - name: Diagnose authoritative IFC acquisition and indexing
+      - name: Validate IfcOpenShell, IfcPatch, and authoritative IFC hierarchy
         run: |
           set -euo pipefail
+          python -m pip install "ifcopenshell==0.8.5" "ifcpatch==0.8.5"
           mkdir -p build/construction-source build/construction-proof
+          python - <<'PY'
+          import json
+          import ifcopenshell
+          import ifcpatch
+          print(json.dumps({
+              "ifcopenshell_version": str(ifcopenshell.version),
+              "ifcopenshell_module": ifcopenshell.__file__,
+              "ifcpatch_module": ifcpatch.__file__,
+          }, indent=2, sort_keys=True))
+          PY
           python scripts/aura_fetch_construction_demo_source.py \
             --repo-root . \
             --output-dir build/construction-source \
