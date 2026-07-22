@@ -1,0 +1,552 @@
+name: Construction Demo Real Asset Build
+
+on:
+  push:
+    branches:
+      - work/construction-arena-real-asset-pack-g4-20260722
+    paths:
+      - ".aura/run-construction-real-asset-build"
+      - ".github/workflows/construction-demo-real-asset-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construction-demo-real-asset-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact public head without credentials
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git -c protocol.version=2 fetch --depth=1 origin "${{ github.sha }}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${{ github.sha }}"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install exact Python build and importer dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "ifcopenshell==0.8.5" \
+            "numpy>=1.26.4,<3.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "zstandard==0.25.0" \
+            "nanobind>=2.7.0,<3.0" \
+            "scikit-build-core>=0.10.7,<1.0" \
+            "cmake>=3.30,<5.0" \
+            "ninja>=1.11,<2.0" \
+            pytest
+          python - <<'PY'
+          import ifcopenshell
+          import ifcpatch
+          import zstandard
+          assert str(ifcopenshell.version) == "0.8.5"
+          assert zstandard.__version__ == "0.25.0"
+          print("ifcopenshell", ifcopenshell.version)
+          print("ifcpatch", ifcpatch.__file__)
+          print("zstandard", zstandard.__version__)
+          PY
+
+      - name: Resolve and authenticate IfcConvert 0.8.5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/ifcconvert"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import re
+          from urllib.request import Request, urlopen
+
+          request = Request(
+              "https://api.github.com/repos/IfcOpenShell/IfcOpenShell/releases/tags/ifcconvert-0.8.5",
+              headers={
+                  "Accept": "application/vnd.github+json",
+                  "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "User-Agent": "AuraOS-Construction-Real-Asset-Build/1",
+              },
+          )
+          with urlopen(request, timeout=45) as response:
+              release = json.load(response)
+          candidates = [
+              asset for asset in release.get("assets", [])
+              if re.search(r"linux.*(?:x86_64|x64|64)", asset.get("name", ""), re.I)
+              and asset.get("name", "").lower().endswith((".zip", ".tar.gz"))
+          ]
+          if len(candidates) != 1:
+              raise SystemExit(
+                  f"expected one Linux x64 IfcConvert asset, observed "
+                  f"{[item.get('name') for item in candidates]}"
+              )
+          asset = candidates[0]
+          digest = asset.get("digest")
+          if not isinstance(digest, str) or not digest.startswith("sha256:"):
+              raise SystemExit("IfcConvert release asset lacks a GitHub SHA-256 digest")
+          metadata = {
+              "release_id": release["id"],
+              "tag_name": release["tag_name"],
+              "target_commitish": release["target_commitish"],
+              "asset_id": asset["id"],
+              "asset_name": asset["name"],
+              "asset_size": asset["size"],
+              "asset_digest": digest,
+              "browser_download_url": asset["browser_download_url"],
+          }
+          Path(os.environ["RUNNER_TEMP"], "ifcconvert-release.json").write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as handle:
+              handle.write(f"IFCCONVERT_URL={asset['browser_download_url']}\n")
+              handle.write(f"IFCCONVERT_ARCHIVE_SHA256={digest.removeprefix('sha256:')}\n")
+              handle.write(f"IFCCONVERT_ASSET_NAME={asset['name']}\n")
+          PY
+          curl --fail --silent --show-error --location --retry 3 \
+            "${IFCCONVERT_URL}" -o "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}"
+          echo "${IFCCONVERT_ARCHIVE_SHA256}  ${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" \
+            | sha256sum --check --strict
+          case "${IFCCONVERT_ASSET_NAME}" in
+            *.zip) unzip -q "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" -d "${RUNNER_TEMP}/ifcconvert" ;;
+            *.tar.gz) tar -xzf "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" -C "${RUNNER_TEMP}/ifcconvert" ;;
+            *) exit 1 ;;
+          esac
+          IFCCONVERT_PATH="$(find "${RUNNER_TEMP}/ifcconvert" -type f -name IfcConvert -print -quit)"
+          test -n "${IFCCONVERT_PATH}"
+          chmod +x "${IFCCONVERT_PATH}"
+          echo "IFCCONVERT_PATH=${IFCCONVERT_PATH}" >> "${GITHUB_ENV}"
+          "${IFCCONVERT_PATH}" --version
+
+      - name: Resolve, patch, and authenticate Niantic SPZ v3.0.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          def fetch(url: str):
+              request = Request(
+                  url,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "AuraOS-Construction-Real-Asset-Build/1",
+                  },
+              )
+              with urlopen(request, timeout=45) as response:
+                  return json.load(response)
+
+          ref = fetch("https://api.github.com/repos/nianticlabs/spz/git/ref/tags/v3.0.0")
+          obj = ref["object"]
+          if obj["type"] == "tag":
+              obj = fetch(obj["url"])["object"]
+          if obj["type"] != "commit":
+              raise SystemExit(f"SPZ tag does not resolve to a commit: {obj}")
+          Path(os.environ["RUNNER_TEMP"], "spz-tag.json").write_text(
+              json.dumps({"tag": "v3.0.0", "commit_sha": obj["sha"]}, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as handle:
+              handle.write(f"SPZ_COMMIT_SHA={obj['sha']}\n")
+          PY
+          git clone --filter=blob:none --no-checkout \
+            https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
+          git -C "${RUNNER_TEMP}/spz" checkout --detach "${SPZ_COMMIT_SHA}"
+          test "$(git -C "${RUNNER_TEMP}/spz" rev-parse HEAD)" = "${SPZ_COMMIT_SHA}"
+          git -C "${RUNNER_TEMP}/spz" submodule update --init --recursive --depth 1
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"], "spz", "CMakeLists.txt")
+          before = path.read_text(encoding="utf-8")
+          old = """  if(TARGET zstd::libzstd_static)\n    add_library(zstd::zstd ALIAS zstd::libzstd_static)\n  elseif(NOT TARGET zstd::zstd)\n    add_library(zstd::zstd ALIAS zstd::libzstd_shared)\n  endif()"""
+          new = """  if(TARGET zstd::libzstd_shared)\n    add_library(zstd::zstd ALIAS zstd::libzstd_shared)\n  elseif(NOT TARGET zstd::zstd)\n    add_library(zstd::zstd ALIAS zstd::libzstd_static)\n  endif()"""
+          if before.count(old) != 1:
+              raise SystemExit("SPZ shared-zstd patch precondition failed")
+          after = before.replace(old, new, 1)
+          path.write_text(after, encoding="utf-8")
+          receipt = {
+              "version": "AURA_SPZ_SHARED_ZSTD_BUILD_PATCH_V1",
+              "reason": "avoid linking non-PIC Ubuntu libzstd.a into the Python shared extension",
+              "path": "CMakeLists.txt",
+              "source_commit_sha": os.environ["SPZ_COMMIT_SHA"],
+              "before_sha256": hashlib.sha256(before.encode("utf-8")).hexdigest(),
+              "after_sha256": hashlib.sha256(after.encode("utf-8")).hexdigest(),
+              "replacement_count": 1,
+              "runtime_patch": False,
+              "production_mutation": False,
+          }
+          encoded = json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
+          receipt["patch_digest"] = hashlib.blake2b(encoded, digest_size=16).hexdigest()
+          Path(os.environ["RUNNER_TEMP"], "spz-build-patch.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          PY
+          python -m pip install --verbose --no-build-isolation "${RUNNER_TEMP}/spz"
+          python - <<'PY'
+          import spz
+          print("spz", spz.__file__)
+          PY
+
+      - name: Run source and compiler regression gate
+        run: |
+          set -euo pipefail
+          python -m compileall -q \
+            scripts/aura_mesh_to_gaussian.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_ifc_storey_index.py \
+            aura_construction_demo_contracts.py
+          python -m pytest -q \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_spatial_asset_resolver.py
+
+      - name: Acquire pinned source and verify committed authoritative hierarchy
+        run: |
+          set -euo pipefail
+          mkdir -p build/construction-source build/construction-proof
+          python scripts/aura_fetch_construction_demo_source.py \
+            --repo-root . \
+            --output-dir build/construction-source \
+            --record-doi 10.48436/a185k-86v39 \
+            --accept-network-download
+          python scripts/aura_ifc_storey_index.py index \
+            --source build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --source-sha256 29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29 \
+            --source-ref demo_assets/construction_tuwien/source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --output build/construction-proof/ifc-hierarchy.json
+          cmp --silent \
+            build/construction-proof/ifc-hierarchy.json \
+            demo_assets/construction_tuwien/toolchain/ifc-hierarchy.json
+
+      - name: Compile real five-storey GLB SVG PLY and SPZ asset pack
+        run: |
+          set -euo pipefail
+          python scripts/aura_prepare_construction_demo_assets.py \
+            --repo-root . \
+            --source build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --source-manifest build/construction-source/source-manifest.json \
+            --hierarchy demo_assets/construction_tuwien/toolchain/ifc-hierarchy.json \
+            --output build/construction-assets \
+            --ifcconvert "${IFCCONVERT_PATH}" \
+            --workers 2 \
+            --profile LOW \
+            --timeout-seconds 600 \
+            --phase all
+
+      - name: Runtime-admit every generated GLB and SPZ and write proof
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import ifcopenshell
+          import spz
+
+          from aura_event_contracts import stable_digest
+          from aura_spatial_importers.gltf import import_gltf_file
+          from aura_spatial_importers.spz import import_spz_file
+
+          root = Path.cwd().resolve(strict=True)
+          output = root / "build" / "construction-assets"
+          hierarchy = json.loads(
+              (root / "demo_assets/construction_tuwien/toolchain/ifc-hierarchy.json").read_text(encoding="utf-8")
+          )
+          source_manifest = json.loads(
+              (root / "build/construction-source/source-manifest.json").read_text(encoding="utf-8")
+          )
+          conversion = json.loads((output / "receipts/convert-glb-svg.json").read_text(encoding="utf-8"))
+          gaussian = json.loads((output / "receipts/compile-gaussians.json").read_text(encoding="utf-8"))
+          ifcconvert_release = json.loads(Path(os.environ["RUNNER_TEMP"], "ifcconvert-release.json").read_text(encoding="utf-8"))
+          spz_tag = json.loads(Path(os.environ["RUNNER_TEMP"], "spz-tag.json").read_text(encoding="utf-8"))
+          spz_patch = json.loads(Path(os.environ["RUNNER_TEMP"], "spz-build-patch.json").read_text(encoding="utf-8"))
+          ifcconvert = Path(os.environ["IFCCONVERT_PATH"]).resolve(strict=True)
+
+          def sha256_file(path: Path) -> str:
+              digest = hashlib.sha256()
+              with path.open("rb") as handle:
+                  while chunk := handle.read(1024 * 1024):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          storey_ids = [item["storey_id"] for item in hierarchy["storeys"]]
+          expected_glbs = {"building-full.glb"} | {
+              f"storeys/{storey_id}/{storey_id}.glb" for storey_id in storey_ids
+          }
+          expected_spzs = {"building-full.spz"} | {
+              f"storeys/{storey_id}/{storey_id}.spz" for storey_id in storey_ids
+          }
+          expected_svgs = {
+              f"storeys/{storey_id}/{storey_id}.svg" for storey_id in storey_ids
+          }
+          observed_glbs = {path.relative_to(output).as_posix() for path in output.rglob("*.glb")}
+          observed_spzs = {path.relative_to(output).as_posix() for path in output.rglob("*.spz")}
+          observed_svgs = {path.relative_to(output).as_posix() for path in output.rglob("*.svg")}
+          if observed_glbs != expected_glbs or observed_spzs != expected_spzs or observed_svgs != expected_svgs:
+              raise SystemExit(
+                  f"asset coverage mismatch: glb={sorted(observed_glbs)}, "
+                  f"spz={sorted(observed_spzs)}, svg={sorted(observed_svgs)}"
+              )
+
+          admissions = []
+          for relative in sorted(expected_glbs):
+              path = output / relative
+              imported = import_gltf_file(
+                  path,
+                  provenance_refs=(
+                      f"source-sha256:{source_manifest['observed_sha256']}",
+                      f"hierarchy-digest:{hierarchy['hierarchy_digest']}",
+                  ),
+                  root=output,
+              )
+              admissions.append({
+                  "path": relative,
+                  "representation": "MESH_GLB",
+                  "sha256": sha256_file(path),
+                  "byte_length": path.stat().st_size,
+                  "import_receipt": imported.receipt.to_dict(),
+                  "bounds_min": [min(item[index] for item in imported.positions) for index in range(3)],
+                  "bounds_max": [max(item[index] for item in imported.positions) for index in range(3)],
+              })
+          for relative in sorted(expected_spzs):
+              path = output / relative
+              imported = import_spz_file(
+                  path,
+                  provenance_refs=(
+                      f"source-sha256:{source_manifest['observed_sha256']}",
+                      f"hierarchy-digest:{hierarchy['hierarchy_digest']}",
+                  ),
+                  root=output,
+              )
+              if imported.gaussian_splats is None:
+                  raise SystemExit("SPZ importer omitted Gaussian payload")
+              admissions.append({
+                  "path": relative,
+                  "representation": "GAUSSIAN_SPZ",
+                  "sha256": sha256_file(path),
+                  "byte_length": path.stat().st_size,
+                  "import_receipt": imported.receipt.to_dict(),
+                  "bounds_min": [min(item[index] for item in imported.positions) for index in range(3)],
+                  "bounds_max": [max(item[index] for item in imported.positions) for index in range(3)],
+                  "splat_count": imported.gaussian_splats.count,
+              })
+
+          final_files = []
+          for relative in sorted(expected_glbs | expected_spzs | expected_svgs):
+              path = output / relative
+              final_files.append({
+                  "path": relative,
+                  "sha256": sha256_file(path),
+                  "byte_length": path.stat().st_size,
+              })
+          for path in sorted((output / "receipts").glob("*.json")):
+              final_files.append({
+                  "path": path.relative_to(output).as_posix(),
+                  "sha256": sha256_file(path),
+                  "byte_length": path.stat().st_size,
+              })
+
+          version = subprocess.run(
+              [str(ifcconvert), "--version"],
+              check=True,
+              capture_output=True,
+              text=True,
+              timeout=30,
+          )
+          body = {
+              "version": "AURA_CONSTRUCTION_REAL_ASSET_PROOF_V1",
+              "source_sha256": source_manifest["observed_sha256"],
+              "source_manifest_digest": source_manifest["source_manifest_digest"],
+              "hierarchy_digest": hierarchy["hierarchy_digest"],
+              "counts": hierarchy["counts"],
+              "profile": gaussian["profile"],
+              "conversion_receipt_digest": conversion["receipt_digest"],
+              "gaussian_receipt_digest": gaussian["receipt_digest"],
+              "ifcopenshell_version": str(ifcopenshell.version),
+              "ifcconvert_release": ifcconvert_release,
+              "ifcconvert_binary_sha256": sha256_file(ifcconvert),
+              "ifcconvert_version_stdout": version.stdout.strip(),
+              "ifcconvert_version_stderr": version.stderr.strip(),
+              "spz_tag": spz_tag,
+              "spz_build_patch": spz_patch,
+              "spz_module_sha256": sha256_file(Path(spz.__file__).resolve(strict=True)),
+              "admissions": admissions,
+              "final_files": final_files,
+              "final_file_count": len(final_files),
+              "final_asset_bytes": sum(item["byte_length"] for item in final_files),
+              "runtime_admitted": True,
+              "survey_authority": False,
+              "production_mutation": False,
+              "human_review_required": True,
+          }
+          proof = {**body, "asset_proof_digest": stable_digest(body)}
+          proof_path = root / "build/construction-proof/asset-proof.json"
+          proof_path.write_text(json.dumps(proof, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+          publish_root = root / "build/construction-publish"
+          publish_root.mkdir(parents=True, exist_ok=True)
+          for item in final_files:
+              source = output / item["path"]
+              target = publish_root / item["path"]
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_bytes(source.read_bytes())
+          print(json.dumps({
+              "asset_proof_digest": proof["asset_proof_digest"],
+              "final_asset_bytes": proof["final_asset_bytes"],
+              "final_file_count": proof["final_file_count"],
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload real asset proof and measured final pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: construction-real-asset-pack-${{ github.sha }}
+          path: |
+            build/construction-proof/asset-proof.json
+            build/construction-publish/**
+            build/construction-source/source-manifest.json
+          retention-days: 14
+          if-no-files-found: error
+
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/construction-arena-real-asset-pack-g4-20260722
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: construction-real-asset-pack-${{ github.sha }}
+          path: build/real-asset-pack
+
+      - name: Authenticate proof and publish measured assets when repository-safe
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "${SOURCE_SHA}" HEAD
+          python - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+
+          from aura_event_contracts import stable_digest
+
+          artifact = Path("build/real-asset-pack")
+          proof_path = artifact / "construction-proof/asset-proof.json"
+          if not proof_path.is_file():
+              matches = list(artifact.rglob("asset-proof.json"))
+              if len(matches) != 1:
+                  raise SystemExit(f"expected one asset proof, observed {matches}")
+              proof_path = matches[0]
+          proof = json.loads(proof_path.read_text(encoding="utf-8"))
+          digest = proof.pop("asset_proof_digest")
+          if stable_digest(proof) != digest:
+              raise SystemExit("asset proof digest mismatch")
+          proof["asset_proof_digest"] = digest
+          if proof.get("runtime_admitted") is not True:
+              raise SystemExit("real asset pack did not pass runtime admission")
+          if proof.get("counts", {}).get("storeys") != 5:
+              raise SystemExit("real asset pack does not contain five authoritative storeys")
+
+          publish_candidates = list(artifact.rglob("construction-publish"))
+          if len(publish_candidates) != 1:
+              raise SystemExit(f"expected one publish root, observed {publish_candidates}")
+          source_root = publish_candidates[0]
+          total = int(proof["final_asset_bytes"])
+          maximum_file = max(int(item["byte_length"]) for item in proof["final_files"])
+          commit_assets = total <= 90 * 1024 * 1024 and maximum_file <= 90 * 1024 * 1024
+          target_root = Path("demo_assets/construction_tuwien/generated")
+          if commit_assets:
+              if target_root.exists():
+                  shutil.rmtree(target_root)
+              shutil.copytree(source_root, target_root)
+
+          proof_target = Path("demo_assets/construction_tuwien/toolchain/asset-proof.json")
+          proof_target.parent.mkdir(parents=True, exist_ok=True)
+          proof_target.write_text(json.dumps(proof, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          evidence = f"""# Aura Construction Arena — Real Asset-Pack Proof
+
+```yaml
+status: REAL_ASSET_PACK_RUNTIME_ADMITTED
+source_sha256: {proof['source_sha256']}
+hierarchy_digest: {proof['hierarchy_digest']}
+storeys: {proof['counts']['storeys']}
+spaces: {proof['counts']['spaces']}
+elements: {proof['counts']['elements']}
+profile: {proof['profile']}
+final_file_count: {proof['final_file_count']}
+final_asset_bytes: {proof['final_asset_bytes']}
+runtime_admitted: true
+repository_assets_committed: {str(commit_assets).lower()}
+asset_proof_digest: {proof['asset_proof_digest']}
+survey_authority: false
+production_mutation: false
+human_review_required: true
+```
+
+The pinned TU Wien IFC was authoritatively indexed with IfcOpenShell, split into five
+storeys, converted through the authenticated IfcConvert release, flattened into Aura's
+strict runtime GLB boundary, sampled into deterministic degree-0 Gaussian clouds, packed
+with authenticated Niantic SPZ v3.0.0 source, and decoded again through Aura's bounded
+GLB and SPZ importers. Generated assets remain presentation-only and carry no survey,
+professional, regulatory, payment, physical-work, or production-mutation authority.
+"""
+          Path("docs/AURA_CONSTRUCTION_ARENA_REAL_ASSET_PACK_EVIDENCE.md").write_text(
+              evidence, encoding="utf-8"
+          )
+          Path("build/commit-assets.flag").write_text("1\n" if commit_assets else "0\n")
+          PY
+          rm -f .aura/run-construction-real-asset-build
+          git config user.name "AuraOS Construction Asset Builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            demo_assets/construction_tuwien/toolchain/asset-proof.json \
+            docs/AURA_CONSTRUCTION_ARENA_REAL_ASSET_PACK_EVIDENCE.md \
+            .aura/run-construction-real-asset-build
+          if test "$(cat build/commit-assets.flag)" = "1"; then
+            git add demo_assets/construction_tuwien/generated
+          fi
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          git commit -m "build(construction): publish runtime-admitted real asset pack"
+          git push origin HEAD:work/construction-arena-real-asset-pack-g4-20260722
