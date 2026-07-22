@@ -108,13 +108,18 @@ jobs:
       - name: Enforce focused test success
         if: steps.focused_tests.outcome != 'success'
         run: exit 1
-      - name: Commit and publish manually applied fixes
+      - name: Commit and publish source, tests, and durable records
         env:
           HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
           git config user.name "AuraOS Review Fixer"
           git config user.email "actions@users.noreply.github.com"
+          git restore --source=HEAD -- \
+            .github/workflows/ci.yml \
+            .github/workflows/construction-demo-asset-foundation.yml \
+            .github/workflows/apply-pr183-manual-fixes.yml
+          rm -f pytest-pr183.log
           git add -A
           git commit -m "fix: address deep Construction review findings"
           for attempt in 1 2 3; do
