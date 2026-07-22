@@ -1,34 +1,135 @@
-name: Export PR183 Review Snapshot
+name: Apply PR183 Codex Round 2 Fixes
 
 on:
-  push:
-    branches:
-      - work/construction-arena-bim-gaussian-demo-20260722
+  pull_request:
     paths:
-      - ".github/workflows/export-pr183-review-snapshot.yml"
+      - ".aura/apply-pr183-codex-round2"
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: apply-pr183-codex-round2-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
 
 jobs:
-  export:
+  apply:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: work/construction-arena-bim-gaussian-demo-20260722
-          fetch-depth: 1
-          persist-credentials: false
-      - name: Archive exact tracked source tree
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Reconstruct and verify manual patch
         run: |
-          git archive --format=tar.gz --output="${RUNNER_TEMP}/pr183-review-snapshot.tar.gz" HEAD
-          git rev-parse HEAD > "${RUNNER_TEMP}/head-sha.txt"
-      - uses: actions/upload-artifact@v4
+          set -euo pipefail
+          cat .aura/pr183-codex-round2-*.patchpart > "${RUNNER_TEMP}/pr183-codex-round2.patch"
+          sed -i 's/^ diff --git /diff --git /' "${RUNNER_TEMP}/pr183-codex-round2.patch"
+          echo "59dc80fd502479fe7dae79c903c818608d9c791c276e1785aea3e2b80f3df260  ${RUNNER_TEMP}/pr183-codex-round2.patch" | sha256sum -c -
+          git apply --check "${RUNNER_TEMP}/pr183-codex-round2.patch"
+          git apply "${RUNNER_TEMP}/pr183-codex-round2.patch"
+      - name: Synchronize G2/G3 evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("docs/AURA_CONSTRUCTION_ARENA_G2_G3_ASSET_COMPILER_EVIDENCE.md")
+          text = path.read_text(encoding="utf-8")
+          replacements = {
+              "focused_asset_tests: 43\nfocused_asset_tests_passed: 43":
+                  "focused_asset_tests: 54\nfocused_asset_tests_passed: 54",
+              "LOW:\n  STOREY: 50000\n  BUILDING: 150000\nSTANDARD:\n  STOREY: 150000\n  BUILDING: 500000\nVIDEO:\n  STOREY: 300000\n  BUILDING: 1000000":
+                  "LOW:\n  STOREY: 40000\n  BUILDING: 75000\nSTANDARD:\n  STOREY: 75000\n  BUILDING: 100000\nVIDEO:\n  STOREY: 100000\n  BUILDING: importer-derived MAX_IMPORTABLE_SH0_SPLATS",
+              "Local result: **43 passed**.": "Local result: **54 passed**.",
+              "the required exact-branch verification for these 43 tests.":
+                  "the required exact-branch verification for these 54 tests.",
+          }
+          for old, new in replacements.items():
+              if text.count(old) != 1:
+                  raise SystemExit(f"expected exactly one evidence fragment: {old!r}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+          PY
+      - name: Remove staging artifacts
+        run: |
+          rm -f .aura/pr183-codex-round2-*.patchpart
+          rm -f .aura/apply-pr183-codex-round2
+      - uses: actions/setup-python@v5
         with:
-          name: pr183-review-snapshot-${{ github.sha }}
-          path: |
-            ${{ runner.temp }}/pr183-review-snapshot.tar.gz
-            ${{ runner.temp }}/head-sha.txt
-          retention-days: 1
-          if-no-files-found: error
+          python-version: "3.12"
+          cache: pip
+      - name: Install bounded validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "pytest>=8.2.0,<9.0" \
+            "ruff>=0.12.0,<1.0"
+      - name: Compile and lint edited implementation
+        run: |
+          python -m py_compile \
+            aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+      - name: Run complete Construction and resolver gate
+        run: |
+          python -m pytest -q \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+      - name: Commit and publish manual fixes
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Fixer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: address second deep Codex review"
+          for attempt in 1 2 3; do
+            git fetch origin "$HEAD_BRANCH"
+            git rebase "origin/$HEAD_BRANCH"
+            if git push origin HEAD:"$HEAD_BRANCH"; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
