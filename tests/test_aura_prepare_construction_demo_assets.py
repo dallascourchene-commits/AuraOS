@@ -8,8 +8,10 @@ from pathlib import Path
 
 import pytest
 
+from aura_construction_demo_contracts import ConstructionDemoSourceManifest
 from aura_event_contracts import stable_digest
 from scripts.aura_prepare_construction_demo_assets import (
+    _validate_pinned_source_manifest,
     compile_gaussian_assets,
     convert_ifc_assets,
     split_storeys,
@@ -356,6 +358,72 @@ def test_compile_gaussian_assets_rejects_tampered_conversion_job_and_lineage(tmp
     with pytest.raises(ValueError, match="lineage"):
         compile_gaussian_assets(
             conversion_receipt=lineage_tamper,
+            split_receipt=split,
+            output_dir=Path("generated"),
+            repo_root=tmp_path,
+            source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
+            hierarchy_digest=HIERARCHY_DIGEST,
+            profile="LOW",
+            mesh_compiler=lambda **_kwargs: {},
+        )
+
+
+def test_pinned_source_manifest_rejects_self_consistent_substitution() -> None:
+    value = {
+        "version": "AURA_CONSTRUCTION_DEMO_SOURCE_MANIFEST_V1",
+        "source_id": "tuwien-custom-escape-route-ifc-v2",
+        "title": "Custom Test Model for Escape Route Analysis in IFC format",
+        "creators": [
+            "Christian Schranz",
+            "Daniel Pfeiffer",
+            "Harald Urban",
+            "Sebastian Zdanowicz",
+            "Simon Fischer",
+        ],
+        "publisher": "TU Wien",
+        "doi": "10.48436/a185k-86v39",
+        "source_filename": "CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc",
+        "source_byte_length": 7_404_420,
+        "published_md5": "58a6e009b16bd3808cacd72b11fcf216",
+        "observed_sha256": "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29",
+        "license_id": "CC-BY-4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "downloaded_at": "2026-07-22T10:14:02Z",
+        "fictional_source": True,
+        "survey_authority": False,
+        "person_level_data_included": False,
+        "external_fetch_required_at_runtime": False,
+        "source_manifest_digest": "22bd970d5babc6ad2d6a22ca2c278738",
+    }
+    canonical = ConstructionDemoSourceManifest.from_dict(value)
+    _validate_pinned_source_manifest(canonical)
+
+    substituted = dict(value)
+    substituted["source_id"] = "replacement-source"
+    substituted.pop("source_manifest_digest")
+    with pytest.raises(ValueError, match="canonical TU Wien"):
+        _validate_pinned_source_manifest(
+            ConstructionDemoSourceManifest.from_dict(substituted)
+        )
+
+
+def test_compile_gaussian_assets_requires_every_storey_glb_job(tmp_path: Path) -> None:
+    source = tmp_path / "source.ifc"
+    source.write_text("source", encoding="utf-8")
+    split, conversion = _conversion(tmp_path, source)
+    incomplete = copy.deepcopy(conversion)
+    incomplete["outputs"] = [
+        item for item in incomplete["outputs"] if item["job_id"] != "storey-b-glb"
+    ]
+    incomplete["output_count"] = len(incomplete["outputs"])
+    incomplete["receipt_digest"] = stable_digest(
+        {key: value for key, value in incomplete.items() if key != "receipt_digest"}
+    )
+
+    with pytest.raises(ValueError, match="exact full-building and storey GLB jobs"):
+        compile_gaussian_assets(
+            conversion_receipt=incomplete,
             split_receipt=split,
             output_dir=Path("generated"),
             repo_root=tmp_path,

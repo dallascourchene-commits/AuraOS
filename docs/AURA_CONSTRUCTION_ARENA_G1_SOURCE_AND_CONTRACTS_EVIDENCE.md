@@ -9,7 +9,7 @@ source_filename: CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc
 source_byte_length: 7404420
 published_md5: 58a6e009b16bd3808cacd72b11fcf216
 observed_sha256: 29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29
-source_manifest_digest: bda63e3e6d3e536c1dffa51ccb8c7b37
+source_manifest_digest: 22bd970d5babc6ad2d6a22ca2c278738
 runtime_external_fetch: false
 survey_authority: false
 production_mutation: false

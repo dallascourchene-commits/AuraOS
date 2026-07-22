@@ -335,3 +335,27 @@ def test_compile_mesh_rejects_output_escape(tmp_path: Path) -> None:
             source_digest=digest,
             target_count=8,
         )
+
+
+def test_compile_mesh_rejects_zero_target_count(tmp_path: Path) -> None:
+    mesh = trimesh.Trimesh(
+        vertices=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+        faces=[[0, 1, 2]],
+        process=False,
+    )
+    glb = tmp_path / "source.glb"
+    glb.write_bytes(trimesh.Scene(mesh).export(file_type="glb"))
+    source_digest = hashlib.sha256(glb.read_bytes()).hexdigest()
+
+    with pytest.raises(ValueError, match="target_count"):
+        compile_mesh(
+            repo_root=tmp_path,
+            glb_path=Path("source.glb"),
+            output_ply=Path("generated/zero.ply"),
+            output_spz=None,
+            profile="LOW",
+            scope="STOREY",
+            source_digest=source_digest,
+            target_count=0,
+        )
+    assert not (tmp_path / "generated/zero.ply").exists()

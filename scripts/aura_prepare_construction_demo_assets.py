@@ -37,12 +37,51 @@ MAX_WORKERS = 8
 DEFAULT_TIMEOUT_SECONDS = 300.0
 IFCCONVERT_IDENTITY_VERSION = "AURA_IFCCONVERT_IDENTITY_V1"
 _STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
+PINNED_SOURCE_IDENTITY = {
+    "source_id": "tuwien-custom-escape-route-ifc-v2",
+    "title": "Custom Test Model for Escape Route Analysis in IFC format",
+    "creators": (
+        "Christian Schranz",
+        "Daniel Pfeiffer",
+        "Harald Urban",
+        "Sebastian Zdanowicz",
+        "Simon Fischer",
+    ),
+    "publisher": "TU Wien",
+    "doi": "10.48436/a185k-86v39",
+    "source_filename": "CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc",
+    "source_byte_length": 7_404_420,
+    "published_md5": "58a6e009b16bd3808cacd72b11fcf216",
+    "observed_sha256": "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29",
+    "license_id": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "source_manifest_digest": "22bd970d5babc6ad2d6a22ca2c278738",
+}
 
 
 def _canonical_storey_id(value: Any) -> str:
     if type(value) is not str or _STOREY_ID.fullmatch(value) is None:
         raise ValueError("storey_id must be a canonical bounded identifier")
     return value
+
+
+def _validate_pinned_source_manifest(manifest: ConstructionDemoSourceManifest) -> None:
+    observed = {
+        "source_id": manifest.source_id,
+        "title": manifest.title,
+        "creators": manifest.creators,
+        "publisher": manifest.publisher,
+        "doi": manifest.doi,
+        "source_filename": manifest.source_filename,
+        "source_byte_length": manifest.source_byte_length,
+        "published_md5": manifest.published_md5,
+        "observed_sha256": manifest.observed_sha256,
+        "license_id": manifest.license_id,
+        "license_url": manifest.license_url,
+        "source_manifest_digest": manifest.source_manifest_digest,
+    }
+    if observed != PINNED_SOURCE_IDENTITY:
+        raise ValueError("source manifest does not match the canonical TU Wien Construction demo pin")
 
 
 def _validate_digest_record(record: Mapping[str, Any], digest_field: str = "receipt_digest") -> None:
@@ -586,7 +625,7 @@ def compile_gaussian_assets(
     output = _resolve_inside(repository, output_dir, create=True)
     if profile not in PROFILE_LIMITS:
         raise ValueError("unsupported Gaussian density profile")
-    _validate_split_receipt(
+    split_rows = _validate_split_receipt(
         split_receipt,
         repository=repository,
         output=output,
@@ -609,8 +648,28 @@ def compile_gaussian_assets(
     if not source_rows:
         raise ValueError("conversion receipt contains no GLB meshes")
     job_ids = [str(item.get("job_id") or "") for item in source_rows]
-    if len(job_ids) != len(set(job_ids)) or "building-full-glb" not in job_ids:
-        raise ValueError("conversion receipt must contain unique mesh jobs and one full building")
+    expected_mesh_jobs = {"building-full-glb"} | {
+        f"{_canonical_storey_id(item.get('storey_id'))}-glb" for item in split_rows
+    }
+    if len(job_ids) != len(set(job_ids)) or set(job_ids) != expected_mesh_jobs:
+        raise ValueError("conversion receipt must contain the exact full-building and storey GLB jobs")
+    split_by_storey = {
+        _canonical_storey_id(item.get("storey_id")): item for item in split_rows
+    }
+    for item in source_rows:
+        job_id = str(item["job_id"])
+        if job_id == "building-full-glb":
+            expected_output = (output / "building-full.glb").relative_to(repository).as_posix()
+            if item.get("output") != expected_output or item.get("source_sha256") != source_sha256:
+                raise ValueError("full-building GLB job does not match canonical source and output")
+            continue
+        storey_id = job_id.removesuffix("-glb")
+        split_item = split_by_storey[storey_id]
+        expected_output = (
+            output / "storeys" / storey_id / f"{storey_id}.glb"
+        ).relative_to(repository).as_posix()
+        if item.get("source") != split_item.get("path") or item.get("output") != expected_output:
+            raise ValueError("storey GLB job does not match its canonical split source and output")
 
     compiled: list[dict[str, Any]] = []
     for item in sorted(source_rows, key=lambda row: str(row["job_id"])):
@@ -713,6 +772,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     repository = args.repo_root.expanduser().resolve(strict=True)
     source = _resolve_inside(repository, args.source)
     manifest = _load_source_manifest(_resolve_inside(repository, args.source_manifest))
+    _validate_pinned_source_manifest(manifest)
     if manifest.observed_sha256 != sha256_file(source):
         raise ValueError("source bytes do not match source manifest")
     hierarchy = _load_json(_resolve_inside(repository, args.hierarchy))

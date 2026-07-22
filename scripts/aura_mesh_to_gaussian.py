@@ -434,7 +434,7 @@ def compile_mesh(
     if glb_receipt["sha256"] != source_digest:
         raise ValueError("source_digest does not match the validated GLB")
     profile_limit = PROFILE_LIMITS[profile][scope]
-    count = target_count or profile_limit
+    count = profile_limit if target_count is None else target_count
     if type(count) is not int or count < 1 or count > profile_limit:
         raise ValueError("target_count exceeds the selected density profile")
     vertices, faces, colors = _mesh_arrays(glb)

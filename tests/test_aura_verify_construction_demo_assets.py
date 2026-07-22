@@ -37,7 +37,13 @@ def test_verify_glb_accepts_embedded_document(tmp_path: Path) -> None:
     path = tmp_path / "model.glb"
     path.write_bytes(
         _glb(
-            {"asset": {"version": "2.0"}, "scenes": [{}], "nodes": [], "meshes": []},
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "scenes": [{}],
+                "nodes": [],
+                "meshes": [],
+            },
             (0x004E4942, b"\x00\x00\x00\x00"),
         )
     )
@@ -317,3 +323,68 @@ def test_atomic_json_replaces_complete_document_without_predictable_temp(tmp_pat
     assert victim.read_text(encoding="utf-8") == "untouched"
     assert legacy_temp.is_symlink()
     assert not list(tmp_path.glob(".receipt.json.*.tmp"))
+
+
+def test_verify_glb_rejects_missing_bin_and_invalid_ranges(tmp_path: Path) -> None:
+    path = tmp_path / "ranges.glb"
+    path.write_bytes(
+        _glb({"asset": {"version": "2.0"}, "buffers": [{"byteLength": 4}]})
+    )
+    with pytest.raises(ValueError, match="BIN chunk"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteOffset": 2, "byteLength": 4}],
+            },
+            (0x004E4942, b"\x00\x00\x00\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="bufferView"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteLength": 4}],
+                "accessors": [
+                    {"bufferView": 0, "componentType": 5126, "count": 2, "type": "SCALAR"}
+                ],
+            },
+            (0x004E4942, b"\x00\x00\x00\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="accessor range"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteLength": 4}],
+                "accessors": [
+                    {"bufferView": 0, "componentType": 5126, "count": 1, "type": "SCALAR"}
+                ],
+                "meshes": [{"primitives": [{"attributes": {"POSITION": 1}}]}],
+            },
+            (0x004E4942, b"\x00\x00\x00\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="accessor index"):
+        verify_glb(path, root=tmp_path)
+
+
+def test_sanitize_svg_rejects_css_escaped_url_identifier(tmp_path: Path) -> None:
+    path = tmp_path / "escaped-url.svg"
+    path.write_text(
+        r'<svg xmlns="http://www.w3.org/2000/svg"><path style="fill:u\72l(https://example.invalid/a.svg)"/></svg>',
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="external"):
+        sanitize_svg(path, root=tmp_path)
