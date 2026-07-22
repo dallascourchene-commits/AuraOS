@@ -1,9 +1,10 @@
 name: C6-C9 Final Publisher
 
 on:
-  push:
-    branches: [main]
-    paths: [.github/workflows/c6-c9-final-publisher.yml]
+  workflow_run:
+    workflows: [P3.1 Planning event projection]
+    types: [completed]
+    branches: [work/coding-relationship-compass-c6-c9-20260721]
 
 permissions:
   contents: write
@@ -14,16 +15,21 @@ concurrency:
 
 jobs:
   publish:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPECTED_HEAD: 8a8e9e7283715bf47f70234860668b27019bd0ad
+      EXPECTED_HEAD: ${{ github.event.workflow_run.head_sha }}
       TARGET_BRANCH: work/coding-relationship-compass-c6-c9-20260721
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Reconstruct and verify exact C6-C9 patch
         run: |
           set -euo pipefail
+          test "$EXPECTED_HEAD" = "8a8e9e7283715bf47f70234860668b27019bd0ad" || {
+            echo "Unexpected carrier head: $EXPECTED_HEAD" >&2
+            exit 1
+          }
           git init -q .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git fetch --quiet origin "$TARGET_BRANCH"
