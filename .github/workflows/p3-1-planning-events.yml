@@ -76,7 +76,7 @@ jobs:
           git fetch --quiet origin "$TARGET_BRANCH"
           git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          cat .github/c6-c9-review-fix.parts/part* | tr -d '\r\n' | base64 -d | gzip -d > /tmp/c6-c9-review-fix.py
+          gzip -dc .github/c6-c9-review-fix.py.gz > /tmp/c6-c9-review-fix.py
           echo 'b1d9e5cb7d79e1fa180bb3ddef2d25dc78102a8fc9d7bea907b744ce1197dd72  /tmp/c6-c9-review-fix.py' | sha256sum -c -
           git reset --hard 4ffdb6f6cb9c3b189ed79b56ed2fe4b3ef448764
           python /tmp/c6-c9-review-fix.py
