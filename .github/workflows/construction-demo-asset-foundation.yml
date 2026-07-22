@@ -23,7 +23,6 @@ on:
       - "tests/test_aura_relational_index.py"
       - "demo_assets/construction_tuwien/**"
       - "docs/AURA_CONSTRUCTION_ARENA_*.md"
-      - "docs/patches/AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch"
       - "tools/construction_demo_assets/**"
   workflow_dispatch:
 
@@ -46,23 +45,18 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
-      - name: Validate exact checkout and capture base tree
+      - name: Validate exact checked-out worktree
         run: |
           test -f aura_construction_demo_contracts.py
+          test -f scripts/aura_prepare_construction_demo_assets.py
+          test -f scripts/aura_verify_construction_demo_assets.py
+          test -f scripts/aura_mesh_to_gaussian.py
+          test -f tests/test_aura_mesh_to_gaussian.py
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-          git rev-parse 'HEAD^{tree}' | tee base-tree-sha.txt
-      - name: Upload base tree identity
-        uses: actions/upload-artifact@v4
-        with:
-          name: construction-base-tree-${{ github.event.pull_request.head.sha || github.sha }}
-          path: base-tree-sha.txt
-          retention-days: 1
-          if-no-files-found: error
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
