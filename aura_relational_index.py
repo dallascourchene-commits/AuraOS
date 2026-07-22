@@ -1179,16 +1179,26 @@ class RelationalIndexBuilder:
             _safe_repo_path(path)
         return self.build_full()
 
-    def repository_identity_snapshot(self) -> dict[str, Any]:
-        """Compute current freshness identity without materializing relational payloads."""
+    def repository_identity_snapshot(
+        self,
+        *,
+        repo_head: str | None = None,
+        inventory_digest: str | None = None,
+        connectome: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Compute freshness identity, reusing caller-grounded planes when supplied."""
 
-        anchor = CodeTopoAnchor.build_from_files(_canonical_python_sources(self.repo_root))
-        inventory = _inventory_from_anchor(anchor, include_source=False)
-        connectome = enrich_connectome(build_capability_connectome(self.repo_root))
-        _validate_connectome(connectome)
+        if inventory_digest is None:
+            anchor = CodeTopoAnchor.build_from_files(_canonical_python_sources(self.repo_root))
+            inventory_digest = _inventory_from_anchor(anchor, include_source=False)["inventory_digest"]
+        connectome_value = dict(
+            connectome or enrich_connectome(build_capability_connectome(self.repo_root))
+        )
+        _validate_connectome(connectome_value)
         return self._repository_identity(
-            inventory_digest=inventory["inventory_digest"],
-            connectome=connectome,
+            inventory_digest=inventory_digest,
+            connectome=connectome_value,
+            repo_head=repo_head,
         )
 
     def _repository_identity(
@@ -1196,12 +1206,13 @@ class RelationalIndexBuilder:
         *,
         inventory_digest: str,
         connectome: Mapping[str, Any],
+        repo_head: str | None = None,
     ) -> dict[str, Any]:
         codemap_path = self.repo_root / CODEMAP_INDEX_PATH
         topology_path = self.repo_root / CODEMAP_TOPOLOGY_PATH
         topology_digest, topology_version, topology_health = _topology_facts(topology_path)
         identity = {
-            "repo_head": _repo_head(self.repo_root),
+            "repo_head": _required_text(repo_head, "repo_head") if repo_head is not None else _repo_head(self.repo_root),
             "working_tree_digest": _working_tree_digest(self.repo_root),
             "codemap_digest": _digest_file(codemap_path),
             "topology_digest": topology_digest,

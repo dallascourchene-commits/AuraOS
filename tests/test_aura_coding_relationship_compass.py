@@ -291,6 +291,23 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["safe_to_patch"] is False
 
 
+def test_invalid_paired_live_rollout_fails_before_grounding(monkeypatch, tmp_path: Path) -> None:
+    def unexpected_grounding(*args, **kwargs):
+        raise AssertionError("grounding must not run before rollout admission")
+
+    monkeypatch.setattr(compass, "build_capability_connectome", unexpected_grounding)
+
+    with pytest.raises(
+        ValueError,
+        match="PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref",
+    ):
+        compass.compile_coding_relationship_compass(
+            "combine Connectome and Atlas",
+            tmp_path,
+            rollout_mode="PAIRED_LIVE",
+        )
+
+
 def test_supplied_atlas_rejects_stale_source_identity(tmp_path: Path) -> None:
     index = _minimal_relational_index()
     atlas = build_relationship_atlas(

@@ -1627,5 +1627,5 @@ def verify_bounded_emergent_discovery(
         "patch_authority": PATCH_AUTHORITY_POLICY,
         "vsa_patch_authority": False,
     }
-    result["verification_digest"] = _hash_text(json.dumps(result, sort_keys=True, separators=(",", ":"), default=str))
+    result["verification_digest"] = stable_digest(result)
     return result

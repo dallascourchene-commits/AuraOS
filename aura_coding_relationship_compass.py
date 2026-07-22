@@ -303,30 +303,66 @@ def _build_compass_grounding_receipt(
     return receipt
 
 
-def _live_repository_identity(repo_root: Path, cached_index: Mapping[str, Any]) -> dict[str, Any]:
+def _live_repository_identity(
+    repo_root: Path,
+    cached_index: Mapping[str, Any],
+    *,
+    repo_head: str,
+    connectome_graph_digest: str,
+    connectome_version: str,
+    atomic_inventory_digest: str,
+) -> dict[str, Any]:
     profile = cached_index.get("profile") or {}
     profile_name = str(profile.get("name") or "STANDARD") if isinstance(profile, Mapping) else "STANDARD"
-    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot()
+    return RelationalIndexBuilder(repo_root, profile=profile_name).repository_identity_snapshot(
+        repo_head=repo_head,
+        inventory_digest=atomic_inventory_digest,
+        connectome={
+            "ok": True,
+            "graph_digest": connectome_graph_digest,
+            "version": connectome_version,
+            "vsa_patch_authority": False,
+        },
+    )
 
 
-def _relational_cache_entry_is_current(repo_root: Path, cached_index: Mapping[str, Any]) -> bool:
+def _relational_cache_entry_is_current(
+    repo_root: Path,
+    cached_index: Mapping[str, Any],
+    *,
+    repo_head: str,
+    connectome_graph_digest: str,
+    connectome_version: str,
+    atomic_inventory_digest: str,
+) -> bool:
     cached_identity = cached_index.get("repository_identity") or {}
     if not isinstance(cached_identity, Mapping) or not cached_identity:
         return False
+    grounded_identity = {
+        "repo_head": repo_head,
+        "connectome_graph_digest": connectome_graph_digest,
+        "connectome_version": connectome_version,
+        "atomic_inventory_digest": atomic_inventory_digest,
+    }
+    if any(cached_identity.get(key) != value for key, value in grounded_identity.items()):
+        return False
     try:
-        live_identity = _live_repository_identity(repo_root, cached_index)
+        live_identity = _live_repository_identity(
+            repo_root,
+            cached_index,
+            repo_head=repo_head,
+            connectome_graph_digest=connectome_graph_digest,
+            connectome_version=connectome_version,
+            atomic_inventory_digest=atomic_inventory_digest,
+        )
     except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
     identity_fields = (
-        "repo_head",
         "working_tree_digest",
         "codemap_digest",
         "topology_digest",
         "topology_version",
         "topology_health",
-        "connectome_graph_digest",
-        "connectome_version",
-        "atomic_inventory_digest",
         "atomic_inventory_version",
         "relation_ontology_digest",
         "profile_digest",
@@ -943,6 +979,17 @@ def compile_coding_relationship_compass(
     root = Path(repo_root).resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"repository root is missing: {root}")
+    rollout = validate_compass_rollout(
+        rollout_mode,
+        provider=rollout_provider,
+        budget=rollout_budget,
+        nonce=rollout_nonce,
+        verifier_ref=rollout_verifier_ref,
+    )
+    if rollout["mode"] == CompassRolloutMode.PAIRED_LIVE.value and not rollout["admitted"]:
+        raise ValueError(
+            "PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref"
+        )
 
     graph = enrich_connectome(build_capability_connectome(root))
     capability_path = enrich_path(find_capability_path(normalized_objective, root), graph)
@@ -1031,7 +1078,14 @@ def compile_coding_relationship_compass(
     relational_index: dict[str, Any] = {}
     if relational_index_data is None and cache_key in _RELATIONAL_PLANE_CACHE:
         cached_index = dict(_RELATIONAL_PLANE_CACHE[cache_key])
-        if _relational_cache_entry_is_current(root, cached_index):
+        if _relational_cache_entry_is_current(
+            root,
+            cached_index,
+            repo_head=str(evidence.get("repo_head") or ""),
+            connectome_graph_digest=str(graph.get("graph_digest") or ""),
+            connectome_version=str(graph.get("version") or ""),
+            atomic_inventory_digest=str(inventory.get("inventory_digest") or ""),
+        ):
             relational_index = cached_index
             cache_hit = True
             index_source = "process_cache"
@@ -1302,17 +1356,6 @@ def compile_coding_relationship_compass(
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
-    rollout = validate_compass_rollout(
-        rollout_mode,
-        provider=rollout_provider,
-        budget=rollout_budget,
-        nonce=rollout_nonce,
-        verifier_ref=rollout_verifier_ref,
-    )
-    if rollout["mode"] == CompassRolloutMode.PAIRED_LIVE.value and not rollout["admitted"]:
-        raise ValueError(
-            "PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref"
-        )
     packet["rollout"] = rollout
     packet["grounding_digest"] = _stable_digest(_compass_digest_payload(packet))
     grounding_receipt = _build_compass_grounding_receipt(

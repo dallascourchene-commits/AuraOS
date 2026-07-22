@@ -146,6 +146,9 @@ def test_c6_bounded_discovery_is_deterministic_and_preserves_rejections() -> Non
     assert verified["accepted_candidates"]
     assert any(item["status"] == "TOO_RISKY" for item in verified["rejected_candidates"])
     assert all(item["proposal_only"] for item in verified["accepted_candidates"])
+    verification_body = dict(verified)
+    verification_digest = verification_body.pop("verification_digest")
+    assert verification_digest == stable_digest(verification_body)
 
 
 def test_c6_verifier_rejects_candidate_supplied_endpoint_hashes() -> None:
@@ -646,5 +649,24 @@ def test_compass_cache_identity_detects_repository_drift(monkeypatch, tmp_path: 
         "schema_digest": "s",
     }
     cached = {"profile": {"name": "MINIMAL"}, "repository_identity": identity}
-    monkeypatch.setattr(compass, "_live_repository_identity", lambda *_: {**identity, "working_tree_digest": "w2"})
-    assert compass._relational_cache_entry_is_current(tmp_path, cached) is False
+    observed: dict = {}
+
+    def live_identity(*args, **kwargs):
+        observed.update(kwargs)
+        return {**identity, "working_tree_digest": "w2"}
+
+    monkeypatch.setattr(compass, "_live_repository_identity", live_identity)
+    assert compass._relational_cache_entry_is_current(
+        tmp_path,
+        cached,
+        repo_head="h",
+        connectome_graph_digest="g",
+        connectome_version="cv",
+        atomic_inventory_digest="i",
+    ) is False
+    assert observed == {
+        "repo_head": "h",
+        "connectome_graph_digest": "g",
+        "connectome_version": "cv",
+        "atomic_inventory_digest": "i",
+    }

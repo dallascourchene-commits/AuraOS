@@ -138,6 +138,33 @@ def test_full_index_is_deterministic_under_input_reordering() -> None:
     assert _build().to_dict() == _build(reverse=True).to_dict()
 
 
+def test_identity_snapshot_reuses_precomputed_planes(monkeypatch, tmp_path: Path) -> None:
+    builder = RelationalIndexBuilder(tmp_path, profile="MINIMAL")
+    observed: dict = {}
+
+    def unexpected_rebuild(*args, **kwargs):
+        raise AssertionError("precomputed identity planes must not be rebuilt")
+
+    def capture_identity(**kwargs):
+        observed.update(kwargs)
+        return {"repo_head": kwargs["repo_head"]}
+
+    monkeypatch.setattr(CodeTopoAnchor, "build_from_files", unexpected_rebuild)
+    monkeypatch.setattr("aura_relational_index.build_capability_connectome", unexpected_rebuild)
+    monkeypatch.setattr(builder, "_repository_identity", capture_identity)
+
+    identity = builder.repository_identity_snapshot(
+        repo_head="b" * 40,
+        inventory_digest="f" * 40,
+        connectome=_connectome(),
+    )
+
+    assert identity == {"repo_head": "b" * 40}
+    assert observed["repo_head"] == "b" * 40
+    assert observed["inventory_digest"] == "f" * 40
+    assert observed["connectome"]["graph_digest"] == "a" * 32
+
+
 def test_exact_and_advisory_relations_remain_separate() -> None:
     index = _build()
     structural = [
