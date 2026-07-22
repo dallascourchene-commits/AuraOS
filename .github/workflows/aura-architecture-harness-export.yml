@@ -56,6 +56,28 @@ jobs:
               encoding="utf-8",
           )
           PY
+      - name: Build AI-first bounded review handoff
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          AI_HANDOFF_DIR="${RUNNER_TEMP}/AuraOS-ai-handoff"
+          python scripts/aura_architecture_harness.py \
+            --repo-root . \
+            handoff \
+            --output-dir "$AI_HANDOFF_DIR"
+          test -f "$AI_HANDOFF_DIR/ai_handoff_manifest.json"
+          test -f "$AI_HANDOFF_DIR/ai_review_files.txt"
+          test -f "$AI_HANDOFF_DIR/ai_source_review.zip"
+      - name: Upload AI-first bounded review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AuraOS-ai-review-first-${{ env.SOURCE_SHA }}
+          path: |
+            ${{ runner.temp }}/AuraOS-ai-handoff/ai_handoff_manifest.json
+            ${{ runner.temp }}/AuraOS-ai-handoff/ai_review_files.txt
+            ${{ runner.temp }}/AuraOS-ai-handoff/ai_source_review.zip
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload exact repository snapshot
         uses: actions/upload-artifact@v4
         with:
