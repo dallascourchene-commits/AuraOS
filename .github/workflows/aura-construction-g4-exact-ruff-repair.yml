@@ -1,0 +1,60 @@
+name: Aura Construction G4 Exact Ruff Repair
+
+on:
+  push:
+    branches:
+      - work/construction-arena-g4-g6-continuation-20260722
+    paths:
+      - ".github/workflows/aura-construction-g4-exact-ruff-repair.yml"
+      - "aura_construction_demo_fixture.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g4-exact-ruff-repair
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Clone exact branch
+        env:
+          HEAD_REF: ${{ github.ref_name }}
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git clone --no-tags --single-branch --depth=8 --branch "$HEAD_REF" "https://github.com/${GITHUB_REPOSITORY}.git" .
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Apply exact Ruff repair
+        run: |
+          set -euo pipefail
+          python -m pip install -q --disable-pip-version-check ruff
+          ruff check --fix --unsafe-fixes=false aura_construction_demo_fixture.py
+          ruff check aura_construction_demo_fixture.py
+          changed="$(git diff --name-only)"
+          test -z "$changed" || test "$changed" = "aura_construction_demo_fixture.py"
+
+      - name: Commit exact repair
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- aura_construction_demo_fixture.py; then
+            echo "No repair required."
+            exit 0
+          fi
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aura_construction_demo_fixture.py
+          git commit -m "style(construction): sort G4 fixture exports"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${HEAD_REF}"
