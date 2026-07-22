@@ -1,0 +1,202 @@
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -34,6 +35,181 @@
+ ASSET_PREPARATION_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_PREPARATION_V1"
+ MAX_WORKERS = 8
+ DEFAULT_TIMEOUT_SECONDS = 300.0
++_STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
++
++
++def _canonical_storey_id(value: Any) -> str:
++    if type(value) is not str or _STOREY_ID.fullmatch(value) is None:
++        raise ValueError("storey_id must be a canonical bounded identifier")
++    return value
++
++
++def _validate_digest_record(record: Mapping[str, Any], digest_field: str = "receipt_digest") -> None:
++    body = dict(record)
++    digest = body.pop(digest_field, None)
++    if type(digest) is not str or digest != stable_digest(body):
++        raise ValueError(f"{digest_field} does not authenticate its record")
++
++
++def _validate_hierarchy(hierarchy: Mapping[str, Any]) -> None:
++    _validate_digest_record(hierarchy, "hierarchy_digest")
++    if hierarchy.get("ifcopenshell_validated") is not True:
++        raise ValueError("storey splitting requires an authoritative IfcOpenShell hierarchy")
++
++
++def _secure_copy_atomic(source: Path, destination: Path) -> None:
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    if destination.exists() and destination.is_symlink():
++        raise ValueError("copy destination must not be a symlink")
++    descriptor, temporary_name = tempfile.mkstemp(
++        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
++    )
++    temporary = Path(temporary_name)
++    try:
++        with source.open("rb") as reader, os.fdopen(descriptor, "wb") as writer:
++            shutil.copyfileobj(reader, writer, length=1024 * 1024)
++            writer.flush()
++            os.fsync(writer.fileno())
++        os.replace(temporary, destination)
++    finally:
++        temporary.unlink(missing_ok=True)
++
++
++def _validate_split_receipt(
++    receipt: Mapping[str, Any],
++    *,
++    repository: Path,
++    output: Path,
++    source_sha256: str,
++    source_manifest_digest: str,
++    hierarchy_digest: str,
++) -> tuple[Mapping[str, Any], ...]:
++    _validate_digest_record(receipt)
++    if (
++        receipt.get("version") != ASSET_PREPARATION_VERSION
++        or receipt.get("phase") != "SPLIT_STOREYS"
++        or receipt.get("production_mutation") is not False
++        or receipt.get("construction_state_owner") is not False
++    ):
++        raise ValueError("split receipt is invalid")
++    if receipt.get("source_sha256") != source_sha256:
++        raise ValueError("split receipt source lineage does not match")
++    if receipt.get("source_manifest_digest") != source_manifest_digest:
++        raise ValueError("split receipt source-manifest lineage does not match")
++    if receipt.get("hierarchy_digest") != hierarchy_digest:
++        raise ValueError("split receipt hierarchy lineage does not match")
++    rows = receipt.get("outputs")
++    if not isinstance(rows, list) or receipt.get("output_count") != len(rows) or not rows:
++        raise ValueError("split receipt outputs are invalid")
++    storey_ids: set[str] = set()
++    global_ids: set[str] = set()
++    validated: list[Mapping[str, Any]] = []
++    for item in rows:
++        if not isinstance(item, Mapping):
++            raise ValueError("split receipt output must be an object")
++        storey_id = _canonical_storey_id(item.get("storey_id"))
++        global_id = item.get("ifc_global_id")
++        if type(global_id) is not str or not global_id:
++            raise ValueError("split receipt GlobalId is invalid")
++        if storey_id in storey_ids or global_id in global_ids:
++            raise ValueError("split receipt contains duplicate storey identity")
++        storey_ids.add(storey_id)
++        global_ids.add(global_id)
++        path = _resolve_inside(repository, Path(str(item.get("path"))))
++        expected = (output / "storeys" / storey_id / f"{storey_id}.ifc").resolve(strict=False)
++        if path != expected or not path.is_file() or path.is_symlink():
++            raise ValueError("split receipt output path is not canonical")
++        if item.get("byte_length") != path.stat().st_size or item.get("sha256") != sha256_file(path):
++            raise ValueError("split IFC digest drifted before conversion")
++        validated.append(item)
++    return tuple(validated)
++
++
++def _validate_command_receipt(value: Any) -> None:
++    if not isinstance(value, Mapping):
++        raise ValueError("command receipt is missing")
++    _validate_digest_record(value)
++    if (
++        value.get("returncode") != 0
++        or value.get("timed_out") is not False
++        or value.get("output_limit_exceeded", False) is not False
++    ):
++        raise ValueError("command receipt is not successful")
++
++
++def _validate_verification_receipt(value: Any, *, path: Path, repository: Path) -> None:
++    if not isinstance(value, Mapping):
++        raise ValueError("verification receipt is missing")
++    _validate_digest_record(value, "verification_digest")
++    if value.get("path") != path.relative_to(repository).as_posix():
++        raise ValueError("verification receipt path does not match output")
++    if value.get("sha256") != sha256_file(path) or value.get("byte_length") != path.stat().st_size:
++        raise ValueError("verification receipt does not match output bytes")
++
++
++def _validate_conversion_receipt(
++    receipt: Mapping[str, Any],
++    *,
++    repository: Path,
++    output: Path,
++    source_sha256: str,
++    source_manifest_digest: str,
++    hierarchy_digest: str,
++    split_receipt_digest: str,
++) -> tuple[Mapping[str, Any], ...]:
++    _validate_digest_record(receipt)
++    if (
++        receipt.get("version") != ASSET_PREPARATION_VERSION
++        or receipt.get("phase") != "CONVERT_GLB_SVG"
++        or receipt.get("production_mutation") is not False
++        or receipt.get("external_resource_fetch") is not False
++        or receipt.get("survey_authority") is not False
++    ):
++        raise ValueError("conversion receipt is invalid")
++    expected_lineage = {
++        "source_sha256": source_sha256,
++        "source_manifest_digest": source_manifest_digest,
++        "hierarchy_digest": hierarchy_digest,
++        "split_receipt_digest": split_receipt_digest,
++    }
++    if any(receipt.get(key) != value for key, value in expected_lineage.items()):
++        raise ValueError("conversion receipt lineage does not match canonical inputs")
++    rows = receipt.get("outputs")
++    if not isinstance(rows, list) or receipt.get("output_count") != len(rows) or not rows:
++        raise ValueError("conversion receipt outputs are invalid")
++    job_ids: set[str] = set()
++    validated: list[Mapping[str, Any]] = []
++    for item in rows:
++        if not isinstance(item, Mapping):
++            raise ValueError("conversion job receipt must be an object")
++        _validate_digest_record(item)
++        job_id = item.get("job_id")
++        if type(job_id) is not str or not job_id or job_id in job_ids:
++            raise ValueError("conversion receipt contains duplicate or invalid jobs")
++        job_ids.add(job_id)
++        if item.get("split_receipt_digest") != split_receipt_digest:
++            raise ValueError("conversion job lineage does not match split receipt")
++        source = _resolve_inside(repository, Path(str(item.get("source"))))
++        target = _resolve_inside(repository, Path(str(item.get("output"))))
++        try:
++            target.relative_to(output)
++        except ValueError as exc:
++            raise ValueError("conversion output escapes its generated root") from exc
++        if not source.is_file() or source.is_symlink() or item.get("source_sha256") != sha256_file(source):
++            raise ValueError("conversion source receipt does not match bytes")
++        if not target.is_file() or target.is_symlink():
++            raise ValueError("conversion output is not a regular file")
++        if item.get("output_sha256") != sha256_file(target) or item.get("output_byte_length") != target.stat().st_size:
++            raise ValueError("validated conversion output digest drifted")
++        representation = item.get("representation")
++        if representation not in {"MESH_GLB", "FLOOR_PLAN_SVG"}:
++            raise ValueError("conversion representation is invalid")
++        _validate_command_receipt(item.get("command_receipt"))
++        _validate_verification_receipt(item.get("verification"), path=target, repository=repository)
++        validated.append(item)
++    if "building-full-glb" not in job_ids:
++        raise ValueError("conversion receipt is missing the full-building mesh")
++    return tuple(validated)
+ 
+ 
+ def _resolve_inside(root: Path, path: Path, *, create: bool = False) -> Path:
+--- a/scripts/aura_prepare_construction_demo_assets.py
++++ b/scripts/aura_prepare_construction_demo_assets.py
+@@ -78,15 +254,6 @@
+     return ifcopenshell_module, ifcpatch_module
+ 
+ 
+-def _copy_atomic(source: Path, destination: Path) -> None:
+-    destination.parent.mkdir(parents=True, exist_ok=True)
+-    temporary = destination.with_suffix(destination.suffix + ".tmp")
+-    with source.open("rb") as reader, temporary.open("wb") as writer:
+-        shutil.copyfileobj(reader, writer, length=1024 * 1024)
+-        writer.flush()
+-        os.fsync(writer.fileno())
+-    temporary.replace(destination)
+-
+ 
+ def split_storeys(
+     *,
