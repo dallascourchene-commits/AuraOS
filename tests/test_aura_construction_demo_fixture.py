@@ -71,8 +71,8 @@ def _asset(storey_id: str, suffix: str, representation: ConstructionDemoRepresen
         bounds_min=(-10.0, 0.0, -10.0),
         bounds_max=(10.0, 4.0, 10.0),
         source_refs=(f"ifc:storey:{storey_id}",),
-        import_receipt_digest=receipt_char * 32,
-        representation_digest=receipt_char * 32,
+        import_receipt_digest=receipt_char * 64,
+        representation_digest=receipt_char * 64,
         truth_class=ConstructionDemoTruthClass.DERIVED_PRESENTATION,
     )
 
@@ -216,6 +216,17 @@ def test_g5_scene_is_complete_deterministic_and_privacy_minimized() -> None:
     assert all(item["status_overlay"] is True for item in package_metadata)
     assert all(item["base_geometry_mutated"] is False for item in package_metadata)
     assert all(item["physical_work_authorized"] is False for item in package_metadata)
+    gaussian_metadata = [
+        item["metadata"]
+        for item in payload["assets"]
+        if item["asset_type"] == "GAUSSIAN_SPLAT"
+    ]
+    assert gaussian_metadata
+    assert all(item["gaussian_sh_degree"] == 0 for item in gaussian_metadata)
+    assert all(
+        item["representation_digest_version"] == "AURA_GAUSSIAN_REPRESENTATION_V1"
+        for item in gaussian_metadata
+    )
     assert payload["renderer_hints"]["supported_modes"] == [
         "MESH_ONLY",
         "SPLATS_ONLY",
