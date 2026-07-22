@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      EXPECTED_SOURCE_SHA: 3151c52cccf797b199110748314d803ba816977e
+      EXPECTED_SOURCE_SHA: a0c0e5d13ed907d29ecfbd9d56c34d457ed38a1f
       TARGET_BRANCH: work/construction-arena-real-asset-pack-g4-20260722
       PYTHONPATH: ${{ github.workspace }}
     steps:
@@ -95,7 +95,7 @@ jobs:
           replace_once(
               "scripts/aura_mesh_to_gaussian.py",
               '''    positions, faces = _canonical_mesh_arrays(source)\n    if len(positions) > 2_000_000 or faces.size > 6_000_000:\n        raise ValueError("canonical GLB exceeds Aura mesh importer element ceilings")\n\n    index_dtype = "<u2" if len(positions) <= 65_535 else "<u4"\n    component_type = 5123 if index_dtype == "<u2" else 5125\n    indices = np.ascontiguousarray(faces.reshape(-1), dtype=index_dtype)\n    position_bytes = positions.tobytes(order="C")\n    index_bytes = indices.tobytes(order="C")\n    binary_payload = position_bytes + index_bytes\n''',
-              '''    positions, faces, vertex_colors = _canonical_mesh_arrays(source)\n    if len(positions) > 2_000_000 or faces.size > 6_000_000:\n        raise ValueError("canonical GLB exceeds Aura mesh importer element ceilings")\n\n    index_dtype = "<u2" if len(positions) <= 65_535 else "<u4"\n    component_type = 5123 if index_dtype == "<u2" else 5125\n    indices = np.ascontiguousarray(faces.reshape(-1), dtype=index_dtype)\n    position_bytes = positions.tobytes(order="C")\n    color_bytes = vertex_colors.tobytes(order="C")\n    index_bytes = indices.tobytes(order="C")\n    # Even the smallest valid GLB envelope cannot fit if its binary streams alone\n    # consume the importer's complete source budget. The exact encoded size is\n    # checked again below after deterministic JSON construction.\n    if 28 + len(position_bytes) + len(color_bytes) + len(index_bytes) > MAX_GLTF_SOURCE_BYTES:\n        raise ValueError("canonical GLB exceeds Aura mesh importer source-byte ceiling")\n    binary_payload = position_bytes + color_bytes + index_bytes\n''',
+              '''    positions, faces, vertex_colors = _canonical_mesh_arrays(source)\n    if len(positions) > 2_000_000 or faces.size > 6_000_000:\n        raise ValueError("canonical GLB exceeds Aura mesh importer element ceilings")\n\n    index_dtype = "<u2" if len(positions) <= 65_535 else "<u4"\n    component_type = 5123 if index_dtype == "<u2" else 5125\n    indices = np.ascontiguousarray(faces.reshape(-1), dtype=index_dtype)\n    position_bytes = positions.tobytes(order="C")\n    color_bytes = vertex_colors.tobytes(order="C")\n    index_bytes = indices.tobytes(order="C")\n    if 28 + len(position_bytes) + len(color_bytes) + len(index_bytes) > MAX_GLTF_SOURCE_BYTES:\n        raise ValueError("canonical GLB exceeds Aura mesh importer source-byte ceiling")\n    binary_payload = position_bytes + color_bytes + index_bytes\n''',
           )
 
           replace_once(
@@ -160,13 +160,7 @@ jobs:
           git diff --check
           git config user.name "AuraOS Review Remediation"
           git config user.email "actions@users.noreply.github.com"
-          git add \
-            scripts/aura_architecture_harness.py \
-            scripts/aura_architecture_harness_core.py \
-            scripts/aura_mesh_to_gaussian.py \
-            scripts/aura_prepare_construction_demo_assets.py \
-            scripts/aura_prepare_construction_demo_assets_core.py \
-            .github/workflows/pr184-final-remediation.yml
+          git add scripts/aura_architecture_harness.py scripts/aura_architecture_harness_core.py scripts/aura_mesh_to_gaussian.py scripts/aura_prepare_construction_demo_assets.py scripts/aura_prepare_construction_demo_assets_core.py .github/workflows/pr184-final-remediation.yml
           git commit -m "fix(review): apply final Codex remediation"
           remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
           test "$remote_head" = "$GITHUB_SHA"
