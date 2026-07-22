@@ -83,8 +83,11 @@ jobs:
             tests/test_aura_coding_relationship_compass.py \
             tests/test_aura_relational_index.py
       - name: Run focused Construction and resolver tests
+        id: focused_tests
+        continue-on-error: true
         run: |
-          python -m pytest -q \
+          set -o pipefail
+          python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_contracts.py \
             tests/test_aura_fetch_construction_demo_source.py \
             tests/test_aura_ifc_storey_index.py \
@@ -92,7 +95,19 @@ jobs:
             tests/test_aura_prepare_construction_demo_assets.py \
             tests/test_aura_mesh_to_gaussian.py \
             tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
+            tests/test_aura_relational_index.py \
+            2>&1 | tee pytest-pr183.log
+      - name: Upload focused pytest log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr183-focused-pytest-${{ github.event.pull_request.head.sha }}
+          path: pytest-pr183.log
+          retention-days: 1
+          if-no-files-found: error
+      - name: Enforce focused test success
+        if: steps.focused_tests.outcome != 'success'
+        run: exit 1
       - name: Commit manually applied fixes
         env:
           HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
