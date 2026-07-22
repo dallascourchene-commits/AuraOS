@@ -1,0 +1,53 @@
+name: PR184 final map sync
+
+on:
+  push:
+    branches:
+      - work/construction-arena-real-asset-pack-g4-20260722
+    paths:
+      - .github/workflows/pr184-final-map-sync.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr184-final-map-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      EXPECTED_SOURCE_SHA: 7953a2595f49a13b8abbbabb29a41e2a129c83b7
+      TARGET_BRANCH: work/construction-arena-real-asset-pack-g4-20260722
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate maps from transport-free final tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_SOURCE_SHA"
+          test "${GITHUB_REF_NAME}" = "$TARGET_BRANCH"
+          remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$remote_head" = "$GITHUB_SHA"
+          rm .github/workflows/pr184-final-map-sync.yml
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          ! grep -q 'pr184-final-remediation' .aura/CODEMAP.json
+          ! grep -q 'pr184-final-map-sync' .aura/CODEMAP.json
+          ! grep -q 'remediation.log' .aura/CODEMAP.json
+          git diff --check
+          git config user.name "AuraOS CODEMAP Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json .github/workflows/pr184-final-map-sync.yml
+          git commit -m "docs: regenerate final PR184 maps"
+          remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$remote_head" = "$GITHUB_SHA"
+          git push origin "HEAD:${TARGET_BRANCH}"
