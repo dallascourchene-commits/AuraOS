@@ -47,7 +47,7 @@ jobs:
           repair_owner() {
             file="$1"
             message="$2"
-            ruff check --fix --unsafe-fixes=false "$file"
+            ruff check --fix "$file"
             ruff format "$file"
             ruff check "$file"
             ruff format --check "$file"
