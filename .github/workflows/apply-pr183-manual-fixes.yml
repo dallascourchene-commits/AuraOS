@@ -1,0 +1,132 @@
+name: Apply PR183 Manual Review Fixes
+
+on:
+  push:
+    branches:
+      - work/construction-arena-bim-gaussian-demo-20260722
+    paths:
+      - ".aura/pr183-payload-3.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-pr183-manual-fixes
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/construction-arena-bim-gaussian-demo-20260722
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Apply manually edited files
+        run: |
+          python - <<'PY'
+          import base64
+          import io
+          from pathlib import Path, PurePosixPath
+          import shutil
+          import tarfile
+          import zlib
+
+          repo = Path.cwd().resolve()
+          payload = "".join(
+              (repo / ".aura" / f"pr183-payload-{index}.txt").read_text(encoding="utf-8")
+              for index in range(4)
+          )
+          raw = zlib.decompress(base64.b85decode(payload.encode("ascii")))
+          with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as archive:
+              members = archive.getmembers()
+              for member in members:
+                  path = PurePosixPath(member.name)
+                  if member.isdir() or path.is_absolute() or any(
+                      part in {"", ".", ".."} for part in path.parts
+                  ):
+                      raise SystemExit(f"unsafe archive member: {member.name}")
+                  target = (repo / Path(*path.parts)).resolve()
+                  try:
+                      target.relative_to(repo)
+                  except ValueError as exc:
+                      raise SystemExit(
+                          f"archive member escapes repository: {member.name}"
+                      ) from exc
+                  if not member.isfile():
+                      raise SystemExit(f"unsupported archive member: {member.name}")
+              archive.extractall(repo, members=members, filter="data")
+
+          shutil.rmtree(repo / ".aura" / "review-remediation", ignore_errors=True)
+          (repo / "docs" / "patches" / "AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch").unlink(missing_ok=True)
+          for index in range(4):
+              (repo / ".aura" / f"pr183-payload-{index}.txt").unlink(missing_ok=True)
+          (repo / ".github" / "workflows" / "apply-pr183-manual-fixes.yml").unlink(missing_ok=True)
+          PY
+      - name: Install bounded validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "pytest>=8.2.0,<9.0" \
+            "ruff>=0.12.0,<1.0"
+      - name: Compile and lint edited files
+        run: |
+          python -m py_compile \
+            aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+          ruff check --select E9,F63,F7,F82 \
+            aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+      - name: Run focused Construction and resolver tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+      - name: Commit manually verified fixes
+        run: |
+          git config user.name "AuraOS Review Fixer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: address deep Construction review findings"
+          git push origin HEAD:work/construction-arena-bim-gaussian-demo-20260722
