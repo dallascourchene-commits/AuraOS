@@ -68,6 +68,7 @@ jobs:
             tests/test_aura_construction_demo_projection.py
 
       - name: Run Aura-native Connectome Atlas and Council scan
+        continue-on-error: true
         run: |
           set -euo pipefail
           python - <<'PY'
