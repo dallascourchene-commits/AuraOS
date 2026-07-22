@@ -1,0 +1,110 @@
+name: Construction Demo Asset Foundation
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/construction-demo-asset-foundation.yml"
+      - "aura_construction_demo_contracts.py"
+      - "scripts/aura_fetch_construction_demo_source.py"
+      - "scripts/aura_ifc_storey_index.py"
+      - "scripts/aura_verify_construction_demo_assets.py"
+      - "scripts/aura_prepare_construction_demo_assets.py"
+      - "scripts/aura_mesh_to_gaussian.py"
+      - "tests/test_aura_construction_demo_contracts.py"
+      - "tests/test_aura_fetch_construction_demo_source.py"
+      - "tests/test_aura_ifc_storey_index.py"
+      - "tests/test_aura_verify_construction_demo_assets.py"
+      - "tests/test_aura_prepare_construction_demo_assets.py"
+      - "tests/test_aura_mesh_to_gaussian.py"
+      - "demo_assets/construction_tuwien/**"
+      - "tools/construction_demo_assets/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construction-demo-assets-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  asset-foundation:
+    name: Verify deterministic asset foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install bounded test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "trimesh>=4.7.1,<5.0" \
+            pytest ruff
+      - name: Compile Construction asset foundation
+        run: |
+          python -m py_compile \
+            aura_construction_demo_contracts.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_construction_demo_contracts.py \
+            scripts/aura_fetch_construction_demo_source.py \
+            scripts/aura_ifc_storey_index.py \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py
+      - name: Validate pinned source manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from aura_construction_demo_contracts import ConstructionDemoSourceManifest
+
+          path = Path("demo_assets/construction_tuwien/source/source-manifest.json")
+          manifest = ConstructionDemoSourceManifest.from_dict(
+              json.loads(path.read_text(encoding="utf-8"))
+          )
+          assert manifest.source_byte_length == 7_404_420
+          assert manifest.observed_sha256 == (
+              "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29"
+          )
+          assert manifest.external_fetch_required_at_runtime is False
+          assert manifest.survey_authority is False
+          print(manifest.source_manifest_digest)
+          PY
+      - name: Run focused Construction asset tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py
