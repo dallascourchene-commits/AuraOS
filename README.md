@@ -51,6 +51,19 @@ AuraOS now contains a connected family of operating surfaces rather than one mon
 | **Model Cognome** | Records endpoint capability evidence, usage, cost, latency, drift, replay, shadow, and governed route proposals | Active routing changes require explicit authorization and verification |
 | **Empirical Cost Observatory** | Separates measured, calculated, estimated, and unavailable usage/cost evidence | Measurement cannot mutate production or upgrade a claim class |
 
+## AI-safe architecture handoff
+
+Use the architecture harness `handoff` operation before giving AuraOS to an AI reviewer:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  handoff \
+  --output-dir ../AuraOS-ai-handoff
+```
+
+The output contains a compact manifest, a sorted source-review file list, and a deterministic ZIP built from immutable `HEAD` Git blobs. Generated CODEMAP/topology/P9 artifacts, binaries, symlinks, sensitive/runtime paths, and oversized files are digest-only and never treated as ordinary source. Dirty trees fail closed by default. Long `run` operations emit a structured watchdog check-in every 10 minutes (`HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`) and pause safely at 20 minutes with completed-artifact inventory and an exact `--resume` receipt. The exact full Git archive remains available separately for forensic reconstruction. See [`docs/AURA_ARCHITECTURE_HARNESS.md`](docs/AURA_ARCHITECTURE_HARNESS.md).
+
 <!-- AURA_FORGE_V1:START -->
 ## Aura Forge — Verified Engineering OS
 

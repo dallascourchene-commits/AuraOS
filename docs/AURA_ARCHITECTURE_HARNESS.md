@@ -16,31 +16,16 @@ The harness does **not** apply patches, authorize execution, or treat advisory s
 
 A chat container and its virtual environment are temporary. The scripts and export workflow in AuraOS are persistent, so a later coding session can reconstruct the same environment from the latest `main` branch.
 
-## Recreate the complete repository in a network-isolated agent session
+## Export artifacts for an AI or network-isolated session
 
-The permanent workflow `.github/workflows/aura-architecture-harness-export.yml` is intentionally push-only. It avoids opening a pull request and avoids triggering Aura's broad PR review fan-out.
+The permanent workflow `.github/workflows/aura-architecture-harness-export.yml` is intentionally push-only. It fetches the exact current `main` commit with read-only contents permission and publishes two separate artifacts:
 
-1. Create a temporary branch from current `main` named like:
+1. **`AuraOS-ai-review-first-<main-sha>`** — the preferred AI input: `ai_handoff_manifest.json`, `ai_review_files.txt`, and `ai_source_review.zip`.
+2. **`AuraOS-architecture-harness-<main-sha>`** — the exact full Git archive and provenance files for forensic reconstruction.
 
-   ```text
-   analysis/aura-harness-export/20260721-120000
-   ```
+The lightweight artifact is a safe companion, not a substitute for the full snapshot. An AI should read the manifest first and should not open giant generated maps from the full archive as ordinary source.
 
-2. On that branch, create or update:
-
-   ```text
-   .aura/HARNESS_EXPORT_REQUEST
-   ```
-
-   The file may contain the requested main SHA and timestamp.
-
-3. Read the combined commit statuses for the request commit. The status context `aura-architecture-harness-export` links to the workflow run.
-
-4. Read that run's artifacts and download `AuraOS-architecture-harness-<main-sha>`.
-
-5. Unzip the outer Actions artifact, verify `AuraOS-full-repository.zip.sha256`, then extract `AuraOS-full-repository.zip`.
-
-The export is pinned to the current `main` commit discovered by the workflow, and its manifest records both the source main SHA and the request commit SHA.
+To request an export, create a temporary branch from `main` named `analysis/aura-harness-export/<timestamp>`, create or update `.aura/HARNESS_EXPORT_REQUEST`, and read the `aura-architecture-harness-export` commit status. The status links to the workflow run. Both artifacts are pinned to the `source_main_sha` recorded by the workflow.
 
 ## Prepare the environment
 
@@ -81,6 +66,27 @@ python scripts/aura_architecture_harness.py \
 
 The doctor checks repository completeness, Git identity, CODEMAP presence, and imports for the Connectome, Relational Index, Atlas, Relational Synthesis, Emergent Properties, and Architect Loop.
 
+## Create an AI-safe handoff locally
+
+Run from a clean Git checkout and write outside the repository:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  handoff \
+  --output-dir ../AuraOS-ai-handoff
+```
+
+Default output:
+
+- `ai_handoff_manifest.json` — versioned compact provenance, omission metadata, regeneration instructions, warnings, and the unchanged proposal-only authority contract;
+- `ai_review_files.txt` — deterministic newline-delimited list of reviewable tracked text files;
+- `ai_source_review.zip` — deterministic source-review archive built from immutable `HEAD` Git blob bytes.
+
+The default inline ceiling is 256 KiB and cannot be raised above the hard 1 MiB limit. `--no-archive` emits only the manifest/list. Dirty repositories fail closed; `--allow-dirty` must be explicit and never changes the archive source from `HEAD`. CRLF/LF or other working-tree differences are reported separately from Git blob OIDs and canonical blob SHA-256 values.
+
+The command rejects output inside the repository, non-empty or symlink output directories, unsafe archive paths, Windows drive prefixes, `..` traversal, and tracked symlinks as archive members. It checks that `HEAD` and repository status remain unchanged during generation.
+
 ## Run the architecture harness
 
 ```bash
@@ -111,6 +117,31 @@ python scripts/aura_architecture_harness.py \
   --resume
 ```
 
+## Runtime watchdog and reassessment
+
+Every architecture `run` is supervised by a parent watchdog. The defaults are intentionally simple:
+
+- at **600 seconds (10 minutes)**, write a check-in that records the current phase, completed artifacts, and progress age, then classifies the task as `HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS`;
+- at **1200 seconds (20 minutes)**, terminate the child process, preserve completed atomic artifacts, write `watchdog_pause_receipt.json`, and require an explicit resume.
+
+The run directory also contains `watchdog_status.json`, `watchdog_latest_checkin.json`, and append-only `watchdog_events.jsonl`. Phase writers use atomic JSON replacement; partially written phase outputs are not accepted as completed resume artifacts. `HEALTHY_CONTINUE` means a phase/status token changed since the preceding check-in; `SLOW_BUT_PROGRESSING` means the child remains in a known recent phase but needs more time; `STALLED_REASSESS` means no measurable phase progress remained fresh for the interval; and `UNKNOWN_REASSESS` means the bounded status receipt is missing or unreadable. Every check-in and hard-pause receipt inventories completed artifacts without inlining them.
+
+The pause receipt reconstructs the exact original objective, profile, references, limits, virtual environment, watchdog settings, and output directory in its resume command. It also records the terminated child return code plus bounded stdout/stderr truncation metadata. It recommends `review_then_resume_same_plan` after healthy/slow progress, or `reassess_scope_or_strategy_before_resume` after stalled/unknown progress. A watchdog pause exits with status `2`, distinguishing a safe reassessment checkpoint from success or failure.
+
+The thresholds can be overridden for tests or specialized operators:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root ./AuraOS \
+  run \
+  --venv ./.AuraOS-architecture-harness-venv \
+  --output-dir ./aura-harness-run \
+  --watchdog-checkin-seconds 600 \
+  --watchdog-pause-seconds 1200
+```
+
+The pause threshold must be at least the check-in interval. The watchdog does not authorize extra work, mutation, publication, or merge; it only makes long-running progress visible and prevents silent indefinite execution.
+
 ## Atlas scale guard
 
 The current repository can contain many thousands of Relational Index participants. A full pairwise Atlas scan grows quadratically:
@@ -123,28 +154,69 @@ The harness therefore defaults to `MINIMAL`, which compiles exact/declarative re
 
 This is a safety and efficiency guard, not a claim that deeper analysis is unnecessary. Deeper reasoning should be applied to an objective-bounded participant neighborhood.
 
-## Generated artifacts
+## Large/generated artifact policy
 
-Each run records:
+One policy in `scripts/aura_architecture_harness.py` assigns every tracked file one of three dispositions:
 
-- `connectome.json`
-- `relational_index.json`
-- `relational_index_summary.json`
-- `relationship_atlas.json`
-- `emergent_properties.json`
-- `architect_preparation.json`
-- `harness_summary.json`
+- `SOURCE_REVIEW` — bounded tracked UTF-8 source/configuration/documentation eligible for the lightweight archive;
+- `DIGEST_ONLY` — binaries, oversized files, symlinks, sensitive/runtime paths, and other non-inline content;
+- `REGENERATE_FROM_FINAL_TREE` — generated/reproducible content that is never ordinary patch authority.
 
-When reference files are supplied, their provenance manifest is embedded in `harness_request.json` and `harness_summary.json`.
+The following are always `REGENERATE_FROM_FINAL_TREE`, even when small:
 
-Canonical source ownership remains unchanged. Generated snapshots are navigation and analysis artifacts, never patch authority.
+```text
+.aura/CODEMAP.json
+.aura/CODEMAP.md
+topology_map.json
+Aura_Memory/live_topology_ast.json
+docs/aura_substrate_manifest.v1.json
+docs/aura_substrate_manifest.files.*.json
+docs/aura_substrate_manifest.phases.*.json
+docs/aura_substrate_release_index.v1.json
+```
+
+Each digest-only row records path, canonical Git blob size/OID/raw SHA-256, reason, disposition, and bounded working-tree identity when available. No raw file body appears in the manifest. File hashes stream in bounded chunks; binary detection inspects only a small canonical blob prefix; subprocess output is retained only as a bounded tail with explicit omitted-byte and omitted-line counts.
+
+Regenerate only after exact source and tests stabilize, in a canonical Linux/LF checkout:
+
+```bash
+python aura_codebase_navigator.py
+python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+
+python aura_substrate_release.py \
+  --root . \
+  --manifest-output-root <temporary-output-root> \
+  --output <temporary-output-root>/docs/aura_substrate_release_index.v1.json
+```
+
+Until final regeneration, exclude generated paths from ordinary review diffs:
+
+```bash
+git diff --stat -- \
+  . \
+  ':(exclude).aura/CODEMAP.json' \
+  ':(exclude).aura/CODEMAP.md' \
+  ':(exclude)topology_map.json' \
+  ':(exclude)Aura_Memory/live_topology_ast.json'
+```
+
+Normal architecture runs still write Connectome, Relational Index, Atlas, Emergent Properties, Architect preparation, request, and summary artifacts outside the checkout. These remain analysis/navigation outputs, never patch authority.
 
 ## Invariants
 
 ```yaml
-full_repository_required: true
+full_repository_required_for_forensic_reconstruction: true
+ai_first_review_companion_required: true
 exact_source_sha_recorded: true
+canonical_git_blob_identity_recorded: true
+working_tree_sha256_distinguished_from_git_oid: true
 synthetic_local_git_identity_disclosed: true
+generated_artifacts_inline: false
+generated_artifacts_regenerate_last: true
+bounded_subprocess_diagnostics: true
+watchdog_checkin_seconds: 600
+watchdog_hard_pause_seconds: 1200
+watchdog_pause_requires_explicit_resume: true
 connectome_is_advisory: true
 relationship_atlas_is_compiled_view: true
 relationship_atlas_is_patch_authority: false

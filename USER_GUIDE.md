@@ -2,7 +2,7 @@
 
 > Operator guide for the current sovereign, local-first, Arena-based AuraOS architecture
 
-**Audit window:** architecture and work reviewed through July 20, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, and the atomic Agent Bridge GitHub publication lane merged in PRs #162–#170.
+**Audit window:** architecture and work reviewed through July 22, 2026, including Relational Synthesis R2, Gate Phase 2, Spatial S0–S5 and Construction-only S6, Coding Relationship Compass C0–C9, typed Coding Waboose review learning, source-integrity/Crucible replay hardening, browser/interchange/Gaussian security, and the atomic Agent Bridge GitHub publication lane.
 
 **CODEMAP rule:** regenerate navigation after architecture or source changes. Do not trust historical line numbers when the current tree can be inspected directly.
 
@@ -69,7 +69,34 @@ Keep these outside the repository:
 - private memory and prompts containing secrets;
 - real Construction evidence unless an authorized storage policy exists.
 
-## 3. Choose the right interface
+## 3. Create an AI-safe review handoff
+
+Do not give an AI the full repository archive as its first review surface. Generate the bounded companion outside the checkout:
+
+```bash
+python scripts/aura_architecture_harness.py \
+  --repo-root . \
+  handoff \
+  --output-dir ../AuraOS-ai-handoff
+```
+
+Read `ai_handoff_manifest.json` first, then `ai_review_files.txt` or `ai_source_review.zip`. The archive contains only tracked UTF-8 source/configuration/documentation files at or below the 256 KiB default ceiling, sourced from immutable `HEAD` Git blobs. The manifest records generated, binary, symlink, sensitive/runtime, and oversized omissions with canonical blob identity and streaming SHA-256 evidence. A dirty checkout is rejected unless `--allow-dirty` is explicit; even then, archive bytes remain pinned to `HEAD` and working-tree differences are disclosed.
+
+Generated navigation and substrate artifacts are regenerate-last evidence, not patch authority. Run these only after source and tests stabilize, in a canonical Linux/LF checkout:
+
+```bash
+python aura_codebase_navigator.py
+python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+
+python aura_substrate_release.py \
+  --root . \
+  --manifest-output-root <temporary-output-root> \
+  --output <temporary-output-root>/docs/aura_substrate_release_index.v1.json
+```
+
+The workflow continues to publish the exact full Git archive separately for forensic reconstruction. Architecture `run` operations use a two-stage watchdog: at 10 minutes it emits `HEALTHY_CONTINUE`, `SLOW_BUT_PROGRESSING`, `STALLED_REASSESS`, or `UNKNOWN_REASSESS` with the current phase and completed-artifact inventory; at 20 minutes it emits `PAUSED_FOR_REASSESSMENT`, terminates the child at the retained artifact boundary, and records an exact resume command plus a scope/strategy recommendation. See `docs/AURA_ARCHITECTURE_HARNESS.md` for safe diff pathspecs, watchdog receipts, and the complete artifact policy.
+
+## 4. Choose the right interface
 
 | Interface | Use it for | Launch |
 |---|---|---|
@@ -166,7 +193,7 @@ Set `AURA_GITHUB_TOKEN` only in the operator environment. Never pass it through 
 Typed review lessons and Crucible replay help Coding Waboose look for previously observed defect classes, including authority aliases, protected metadata overrides, count-only bounds, unsafe source paths, URI aliases, schema/runtime drift, unwired regressions, and stale evidence claims. Treat detector output as a review lead until exact current source and tests corroborate it. A clean replay is evidence for the exact reviewed head, not a permanent guarantee about future commits.
 <!-- AURA_JULY20_OPERATOR_UPDATE:END -->
 
-## 4. Orient yourself before changing code
+## 5. Orient yourself before changing code
 
 Read in this order:
 
@@ -200,7 +227,7 @@ python3 -m aura_agent_arena_cli resolve-capabilities \
 
 Do not start by loading all of `aura_node.py`, opening the entire CODEMAP JSON, grepping the whole repository blindly, or giving an external model unrestricted write access.
 
-## 5. Understand the intent route
+## 6. Understand the intent route
 
 Aura can accept ordinary language while retaining a deterministic internal representation.
 
@@ -229,7 +256,7 @@ Guard evaluation order matters:
 
 A high semantic or probabilistic score cannot rescue a route that failed a hard guard.
 
-## 6. Run a governed Human Agent workflow
+## 7. Run a governed Human Agent workflow
 
 The Human Agent Arena follows:
 
@@ -263,7 +290,7 @@ A human, teacher, speaker, community, maintainer, professional, or other authori
 
 An operation may construct preview context before admission, but active workflow evidence must be committed only after the guarded operation succeeds. A denied action must not alter the active workflow.
 
-## 7. Use the Observatory correctly
+## 8. Use the Observatory correctly
 
 Aura Observatory is a glass-box explanation surface. It can display:
 
@@ -300,7 +327,7 @@ status: AWAITING_VERIFIED_EXPERIENCE
 eligible_for_crucible: false
 ```
 
-## 8. Use the Attempt Archive and gate dialogue
+## 9. Use the Attempt Archive and gate dialogue
 
 The guided Human Agent surfaces preserve successful, denied, and failed attempts.
 
@@ -318,7 +345,7 @@ Do not delete failed attempts merely because a later attempt passed. Failures ar
 
 Gate dialogue may explain a denial and propose what exact evidence is missing. It must not fabricate the missing evidence or bypass the gate.
 
-## 9. Use the Planning Board
+## 10. Use the Planning Board
 
 The Planning Board is proposal-only intermediate representation.
 
@@ -349,7 +376,7 @@ Planning action or event authorization should be bound to:
 
 Emergency authority must remain narrow, temporary, reason-bearing, and review-producing.
 
-## 10. Use guarded Coding Arena workflows
+## 11. Use guarded Coding Arena workflows
 
 A coding workflow should look like this:
 
@@ -587,7 +614,7 @@ vsa_patch_authority: false
 
 A VSA hit, JSpace link, topology edge, model suggestion, or research result can identify a candidate region. It cannot authorize the edit.
 
-## 11. Use external LLM slice sessions
+## 12. Use external LLM slice sessions
 
 External workers should receive compact, explicit leases rather than the full repository.
 
@@ -607,7 +634,7 @@ Preserve a session record containing worker identity, model/endpoint evidence, p
 
 The worker does not receive commit, push, PR, merge, production-write, cultural-profile, civic, Financial, or Construction authority unless a separate explicit governance contract grants the exact narrow action.
 
-## 12. Use Model Cognome routing
+## 13. Use Model Cognome routing
 
 Model Cognome records what an endpoint is known to do, under which evidence class and authorization.
 
@@ -643,7 +670,7 @@ Mechanistic evidence rules:
 - drift and promotion decisions remain review-gated;
 - local/quarantined/federated stores must preserve purpose and trust boundaries.
 
-## 13. Use ST3GG, JSpace, QDKT, and trace memory
+## 14. Use ST3GG, JSpace, QDKT, and trace memory
 
 These systems solve different problems.
 
@@ -667,7 +694,7 @@ Use canonical QDKT observation events for new writes. Legacy QDKT artifacts may 
 
 Keep raw trace references separate from compact atoms and consolidated canvases. A canvas is an interpretation over preserved trace references, not a replacement for them.
 
-## 14. Use temporal persistence and cross-Arena handoff
+## 15. Use temporal persistence and cross-Arena handoff
 
 Aura continuity has two distinct levels:
 
@@ -726,7 +753,7 @@ aura_handoff_checkpoint
 
 A handoff is a payload-free digital baton. It identifies the checkpoint, source/target Arena, payload digest, and required gate. It does not mutate the target. Temporal labels such as `TEMP:STALE` or `TEMP:BRANCH_OFFSET` force refresh and re-verification.
 
-## 15. Run the Emergent Refactor Workspace
+## 16. Run the Emergent Refactor Workspace
 
 The workspace stores and searches Aura's own emergent-property findings without treating them as proven implementations.
 
@@ -793,7 +820,7 @@ python3 -m aura_codemap_verify --compare-json .aura/CODEMAP.json
 
 See `docs/AURA_CODING_RELATIONSHIP_COMPASS.md`.
 
-## 16. Run the Learning Arena / Crucible
+## 17. Run the Learning Arena / Crucible
 
 Crucible eligibility requires:
 
@@ -829,7 +856,7 @@ Crucible cannot alter:
 
 A proposed crystallization needs independent verifier and human review.
 
-## 17. Run the Civic Commons showcase
+## 18. Run the Civic Commons showcase
 
 Launch:
 
@@ -870,7 +897,7 @@ All included Winnipeg records are synthetic demonstration data. The map is a ser
 
 Civic outputs are non-binding. No scenario ranking, what-if result, pilot packet, model broker output, or community-memory match can automatically approve funding, law, voting, procurement, surveillance, or service allocation.
 
-## 18. Run the SCO Construction review surface
+## 19. Run the SCO Construction review surface
 
 Launch the deterministic fictional profile:
 
@@ -920,7 +947,7 @@ python3 -m aura_construction_refactor_completion --repo-root .
 `ConstructionProjectState` remains the only Construction truth owner. The profile contains no raw project evidence and cannot authorize physical work, payment, access, equipment control, inspection, safety, engineering, law, regulation, source changes, or merge.
 
 
-## 19. Run the governed Spatial Arena and Construction projection
+## 20. Run the governed Spatial Arena and Construction projection
 
 Use the Spatial Arena when a canonical domain owner needs a bounded visual or spatial projection without transferring truth or authority into the renderer. The Construction adapter is the implemented S6 domain slice. It accepts an exact `ConstructionProjectState` and validated Construction runtime packet; untyped JSON cannot prepare a Construction projection.
 
@@ -982,7 +1009,7 @@ Restore is assessment-only and never resumes automatically. Emergency close does
 
 See `docs/AURA_SPATIAL_S5_S6_CONSTRUCTION.md` for the canonical ownership and evidence contract.
 
-## 20. Use the Financial exact-state layer
+## 21. Use the Financial exact-state layer
 
 The first Financial Arena stage is a local exact-state ledger, not an adviser.
 
@@ -1011,7 +1038,7 @@ The exact-state layer does not provide financial, tax, legal, investment, credit
 
 Planning Board indicators, scenarios, recommendations, LifeOS quests, and external connectors are separate future or separately governed stages.
 
-## 21. Use the Ephemeral Organ Runtime
+## 22. Use the Ephemeral Organ Runtime
 
 An ephemeral organ is a temporary capability system, not merely an imported function.
 
@@ -1032,7 +1059,7 @@ Arbitrary user-supplied Python requires a real sandbox. When no required isolati
 
 The Capability Genome Resolver should prefer reusable owners and explicit compatibility before proposing a new component.
 
-## 22. Read benchmark and cost evidence correctly
+## 23. Read benchmark and cost evidence correctly
 
 Evidence classes are ordered:
 
@@ -1066,7 +1093,7 @@ proxy, with `51,987` (`56.66%`) estimated saved against its documented counterfa
 Full Codex-session provider totals were unavailable. Treat this as
 `DERIVED_COUNTERFACTUAL_WITH_CHAR4_TOKEN_PROXY`, not billing or a whole-session total.
 
-## 23. Testing and documentation maintenance
+## 24. Testing and documentation maintenance
 
 For a changed module:
 
@@ -1100,7 +1127,7 @@ Documentation should state:
 - intentional policy deferrals;
 - commands and tests that actually exist.
 
-## 24. Troubleshooting
+## 25. Troubleshooting
 
 ### CODEMAP contains stale paths or zero metadata
 
@@ -1138,7 +1165,7 @@ Keep it `UNAVAILABLE` or the exact lower claim class. Do not invent provider usa
 
 Stop and inspect the surface. These interfaces must remain proposal/review only. Any executable approval affordance is an authority regression.
 
-## 25. Non-negotiable safety and authority rules
+## 26. Non-negotiable safety and authority rules
 
 ```yaml
 external_workers_are_tools: true
