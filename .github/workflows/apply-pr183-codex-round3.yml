@@ -1,0 +1,676 @@
+name: Apply PR183 Codex Round 3 Fixes
+
+on:
+  pull_request:
+    paths:
+      - ".aura/apply-pr183-codex-round3"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-pr183-codex-round3-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Apply manually verified fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if text.count(old) != 1:
+                  raise SystemExit(f"{path}: expected exactly one replacement target")
+              target.write_text(text.replace(old, new), encoding="utf-8")
+
+          def append_once(path: str, marker: str, payload: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              if marker in text:
+                  return
+              target.write_text(text.rstrip() + "\n\n\n" + payload.strip() + "\n", encoding="utf-8")
+
+          replace_once(
+              "scripts/aura_prepare_construction_demo_assets.py",
+              '''_STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
+
+
+def _canonical_storey_id''',
+              '''_STOREY_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,191}$")
+PINNED_SOURCE_IDENTITY = {
+    "source_id": "tuwien-custom-escape-route-ifc-v2",
+    "title": "Custom Test Model for Escape Route Analysis in IFC format",
+    "creators": (
+        "Christian Schranz",
+        "Daniel Pfeiffer",
+        "Harald Urban",
+        "Sebastian Zdanowicz",
+        "Simon Fischer",
+    ),
+    "publisher": "TU Wien",
+    "doi": "10.48436/a185k-86v39",
+    "source_filename": "CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc",
+    "source_byte_length": 7_404_420,
+    "published_md5": "58a6e009b16bd3808cacd72b11fcf216",
+    "observed_sha256": "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29",
+    "license_id": "CC-BY-4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "source_manifest_digest": "22bd970d5babc6ad2d6a22ca2c278738",
+}
+
+
+def _canonical_storey_id''',
+          )
+          replace_once(
+              "scripts/aura_prepare_construction_demo_assets.py",
+              '''def _canonical_storey_id(value: Any) -> str:
+    if type(value) is not str or _STOREY_ID.fullmatch(value) is None:
+        raise ValueError("storey_id must be a canonical bounded identifier")
+    return value
+
+
+def _validate_digest_record''',
+              '''def _canonical_storey_id(value: Any) -> str:
+    if type(value) is not str or _STOREY_ID.fullmatch(value) is None:
+        raise ValueError("storey_id must be a canonical bounded identifier")
+    return value
+
+
+def _validate_pinned_source_manifest(manifest: ConstructionDemoSourceManifest) -> None:
+    observed = {
+        "source_id": manifest.source_id,
+        "title": manifest.title,
+        "creators": manifest.creators,
+        "publisher": manifest.publisher,
+        "doi": manifest.doi,
+        "source_filename": manifest.source_filename,
+        "source_byte_length": manifest.source_byte_length,
+        "published_md5": manifest.published_md5,
+        "observed_sha256": manifest.observed_sha256,
+        "license_id": manifest.license_id,
+        "license_url": manifest.license_url,
+        "source_manifest_digest": manifest.source_manifest_digest,
+    }
+    if observed != PINNED_SOURCE_IDENTITY:
+        raise ValueError("source manifest does not match the canonical TU Wien Construction demo pin")
+
+
+def _validate_digest_record''',
+          )
+          replace_once(
+              "scripts/aura_prepare_construction_demo_assets.py",
+              '''    _validate_split_receipt(
+        split_receipt,
+        repository=repository,
+        output=output,
+        source_sha256=source_sha256,
+        source_manifest_digest=source_manifest_digest,
+        hierarchy_digest=hierarchy_digest,
+    )
+    conversion_rows = _validate_conversion_receipt(''',
+              '''    split_rows = _validate_split_receipt(
+        split_receipt,
+        repository=repository,
+        output=output,
+        source_sha256=source_sha256,
+        source_manifest_digest=source_manifest_digest,
+        hierarchy_digest=hierarchy_digest,
+    )
+    conversion_rows = _validate_conversion_receipt(''',
+          )
+          replace_once(
+              "scripts/aura_prepare_construction_demo_assets.py",
+              '''    if not source_rows:
+        raise ValueError("conversion receipt contains no GLB meshes")
+    job_ids = [str(item.get("job_id") or "") for item in source_rows]
+    if len(job_ids) != len(set(job_ids)) or "building-full-glb" not in job_ids:
+        raise ValueError("conversion receipt must contain unique mesh jobs and one full building")
+
+    compiled: list[dict[str, Any]] = []''',
+              '''    if not source_rows:
+        raise ValueError("conversion receipt contains no GLB meshes")
+    job_ids = [str(item.get("job_id") or "") for item in source_rows]
+    expected_mesh_jobs = {"building-full-glb"} | {
+        f"{_canonical_storey_id(item.get('storey_id'))}-glb" for item in split_rows
+    }
+    if len(job_ids) != len(set(job_ids)) or set(job_ids) != expected_mesh_jobs:
+        raise ValueError("conversion receipt must contain the exact full-building and storey GLB jobs")
+    split_by_storey = {
+        _canonical_storey_id(item.get("storey_id")): item for item in split_rows
+    }
+    for item in source_rows:
+        job_id = str(item["job_id"])
+        if job_id == "building-full-glb":
+            expected_output = (output / "building-full.glb").relative_to(repository).as_posix()
+            if item.get("output") != expected_output or item.get("source_sha256") != source_sha256:
+                raise ValueError("full-building GLB job does not match canonical source and output")
+            continue
+        storey_id = job_id.removesuffix("-glb")
+        split_item = split_by_storey[storey_id]
+        expected_output = (
+            output / "storeys" / storey_id / f"{storey_id}.glb"
+        ).relative_to(repository).as_posix()
+        if item.get("source") != split_item.get("path") or item.get("output") != expected_output:
+            raise ValueError("storey GLB job does not match its canonical split source and output")
+
+    compiled: list[dict[str, Any]] = []''',
+          )
+          replace_once(
+              "scripts/aura_prepare_construction_demo_assets.py",
+              '''    manifest = _load_source_manifest(_resolve_inside(repository, args.source_manifest))
+    if manifest.observed_sha256 != sha256_file(source):''',
+              '''    manifest = _load_source_manifest(_resolve_inside(repository, args.source_manifest))
+    _validate_pinned_source_manifest(manifest)
+    if manifest.observed_sha256 != sha256_file(source):''',
+          )
+
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V3"
+MAX_COMMAND_OUTPUT_BYTES''',
+              '''ASSET_VERIFIER_VERSION = "AURA_CONSTRUCTION_DEMO_ASSET_VERIFIER_V4"
+MAX_COMMAND_OUTPUT_BYTES''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''GLB_JSON_CHUNK = 0x4E4F534A
+FORBIDDEN_SVG_RAW''',
+              '''GLB_JSON_CHUNK = 0x4E4F534A
+GLB_BIN_CHUNK = 0x004E4942
+FORBIDDEN_SVG_RAW''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''def _parse_glb_chunks(data: bytes) -> tuple[dict[str, Any], int]:
+    offset = 12
+    chunk_index = 0
+    document: dict[str, Any] | None = None
+    while offset < len(data):
+        if len(data) - offset < 8:
+            raise ValueError("GLB contains an incomplete trailing chunk header")
+        chunk_length, chunk_type = struct.unpack_from("<II", data, offset)
+        if chunk_length % 4 != 0:
+            raise ValueError("GLB chunk length must be 4-byte aligned")
+        payload_start = offset + 8
+        payload_end = payload_start + chunk_length
+        if payload_end < payload_start or payload_end > len(data):
+            raise ValueError("GLB chunk range exceeds the declared file length")
+        payload = data[payload_start:payload_end]
+        if chunk_index == 0:
+            if chunk_type != GLB_JSON_CHUNK or chunk_length <= 0:
+                raise ValueError("GLB first chunk must be a non-empty JSON chunk")
+            try:
+                parsed = json.loads(payload.rstrip(b" \x00").decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
+            if not isinstance(parsed, dict):
+                raise ValueError("GLB JSON document must be an object")
+            document = parsed
+        elif chunk_type == GLB_JSON_CHUNK:
+            raise ValueError("GLB must contain exactly one JSON chunk")
+        offset = payload_end
+        chunk_index += 1
+    if offset != len(data) or document is None:
+        raise ValueError("GLB chunk layout is incomplete")
+    return document, chunk_index
+''',
+              '''def _parse_glb_chunks(data: bytes) -> tuple[dict[str, Any], int, bytes | None]:
+    offset = 12
+    chunk_index = 0
+    document: dict[str, Any] | None = None
+    binary_payload: bytes | None = None
+    while offset < len(data):
+        if len(data) - offset < 8:
+            raise ValueError("GLB contains an incomplete trailing chunk header")
+        chunk_length, chunk_type = struct.unpack_from("<II", data, offset)
+        if chunk_length % 4 != 0:
+            raise ValueError("GLB chunk length must be 4-byte aligned")
+        payload_start = offset + 8
+        payload_end = payload_start + chunk_length
+        if payload_end < payload_start or payload_end > len(data):
+            raise ValueError("GLB chunk range exceeds the declared file length")
+        payload = data[payload_start:payload_end]
+        if chunk_index == 0:
+            if chunk_type != GLB_JSON_CHUNK or chunk_length <= 0:
+                raise ValueError("GLB first chunk must be a non-empty JSON chunk")
+            try:
+                parsed = json.loads(payload.rstrip(b" \x00").decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError("GLB JSON chunk is not valid UTF-8 JSON") from exc
+            if not isinstance(parsed, dict):
+                raise ValueError("GLB JSON document must be an object")
+            document = parsed
+        elif chunk_index == 1 and chunk_type == GLB_BIN_CHUNK and binary_payload is None:
+            binary_payload = payload
+        elif chunk_type == GLB_JSON_CHUNK:
+            raise ValueError("GLB must contain exactly one JSON chunk")
+        else:
+            raise ValueError("GLB contains an unsupported or duplicate chunk")
+        offset = payload_end
+        chunk_index += 1
+    if offset != len(data) or document is None:
+        raise ValueError("GLB chunk layout is incomplete")
+    return document, chunk_index, binary_payload
+
+
+def _validate_glb_embedded_layout(
+    document: Mapping[str, Any], binary_payload: bytes | None
+) -> None:
+    buffers = document.get("buffers", [])
+    if not isinstance(buffers, list) or len(buffers) > 1:
+        raise ValueError("GLB buffers must contain at most one embedded buffer")
+    buffer_byte_length = 0
+    if buffers:
+        buffer = buffers[0]
+        if not isinstance(buffer, Mapping) or "uri" in buffer:
+            raise ValueError("GLB must not reference external or data URI resources")
+        buffer_byte_length = buffer.get("byteLength")
+        if type(buffer_byte_length) is not int or buffer_byte_length <= 0:
+            raise ValueError("GLB embedded buffer byteLength is invalid")
+        if (
+            binary_payload is None
+            or len(binary_payload) < buffer_byte_length
+            or len(binary_payload) > buffer_byte_length + 3
+        ):
+            raise ValueError("GLB BIN chunk does not match the declared embedded buffer")
+    buffer_views = document.get("bufferViews", [])
+    if not isinstance(buffer_views, list):
+        raise ValueError("GLB bufferViews must be an array")
+    validated_views: list[tuple[int, int, int | None]] = []
+    for view in buffer_views:
+        if not isinstance(view, Mapping) or view.get("buffer") != 0 or not buffers:
+            raise ValueError("GLB bufferView references an invalid embedded buffer")
+        byte_offset = view.get("byteOffset", 0)
+        byte_length = view.get("byteLength")
+        byte_stride = view.get("byteStride")
+        if (
+            type(byte_offset) is not int
+            or byte_offset < 0
+            or type(byte_length) is not int
+            or byte_length <= 0
+            or byte_offset + byte_length > buffer_byte_length
+            or (
+                byte_stride is not None
+                and (
+                    type(byte_stride) is not int
+                    or byte_stride < 4
+                    or byte_stride > 252
+                    or byte_stride % 4 != 0
+                )
+            )
+        ):
+            raise ValueError("GLB bufferView range or stride is invalid")
+        validated_views.append((byte_offset, byte_length, byte_stride))
+
+    component_bytes = {5120: 1, 5121: 1, 5122: 2, 5123: 2, 5125: 4, 5126: 4}
+    type_components = {
+        "SCALAR": 1,
+        "VEC2": 2,
+        "VEC3": 3,
+        "VEC4": 4,
+        "MAT2": 4,
+        "MAT3": 9,
+        "MAT4": 16,
+    }
+    accessors = document.get("accessors", [])
+    if not isinstance(accessors, list):
+        raise ValueError("GLB accessors must be an array")
+    for accessor in accessors:
+        if not isinstance(accessor, Mapping) or "sparse" in accessor:
+            raise ValueError("GLB accessor is invalid or uses unsupported sparse storage")
+        view_index = accessor.get("bufferView")
+        component_type = accessor.get("componentType")
+        accessor_type = accessor.get("type")
+        count = accessor.get("count")
+        byte_offset = accessor.get("byteOffset", 0)
+        if (
+            type(view_index) is not int
+            or view_index < 0
+            or view_index >= len(validated_views)
+            or component_type not in component_bytes
+            or accessor_type not in type_components
+            or type(count) is not int
+            or count <= 0
+            or type(byte_offset) is not int
+            or byte_offset < 0
+        ):
+            raise ValueError("GLB accessor metadata is invalid")
+        component_size = component_bytes[component_type]
+        element_size = component_size * type_components[accessor_type]
+        _, view_length, byte_stride = validated_views[view_index]
+        stride = byte_stride or element_size
+        required = byte_offset + (count - 1) * stride + element_size
+        if (
+            byte_offset % component_size != 0
+            or stride < element_size
+            or stride % component_size != 0
+            or required > view_length
+        ):
+            raise ValueError("GLB accessor range exceeds its bufferView")
+
+    images = document.get("images", [])
+    if not isinstance(images, list):
+        raise ValueError("GLB images must be an array")
+    for image in images:
+        if not isinstance(image, Mapping) or "uri" in image:
+            raise ValueError("GLB must not reference external or data URI resources")
+        view_index = image.get("bufferView")
+        if type(view_index) is not int or view_index < 0 or view_index >= len(validated_views):
+            raise ValueError("GLB embedded image bufferView is invalid")
+        if type(image.get("mimeType")) is not str or not image.get("mimeType"):
+            raise ValueError("GLB embedded image mimeType is invalid")
+
+    meshes = document.get("meshes", [])
+    if not isinstance(meshes, list):
+        raise ValueError("GLB meshes must be an array")
+    for mesh in meshes:
+        primitives = mesh.get("primitives") if isinstance(mesh, Mapping) else None
+        if not isinstance(primitives, list) or not primitives:
+            raise ValueError("GLB mesh primitives are invalid")
+        for primitive in primitives:
+            if not isinstance(primitive, Mapping):
+                raise ValueError("GLB mesh primitive must be an object")
+            attributes = primitive.get("attributes")
+            if not isinstance(attributes, Mapping):
+                raise ValueError("GLB mesh primitive attributes are invalid")
+            for accessor_index in attributes.values():
+                if (
+                    type(accessor_index) is not int
+                    or accessor_index < 0
+                    or accessor_index >= len(accessors)
+                ):
+                    raise ValueError("GLB mesh attribute accessor index is invalid")
+            if "indices" in primitive:
+                accessor_index = primitive["indices"]
+                if (
+                    type(accessor_index) is not int
+                    or accessor_index < 0
+                    or accessor_index >= len(accessors)
+                ):
+                    raise ValueError("GLB mesh index accessor is invalid")
+''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''    document, chunk_count = _parse_glb_chunks(data)''',
+              '''    document, chunk_count, binary_payload = _parse_glb_chunks(data)''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''    _walk_numbers(document)
+    for collection in ("buffers", "images"):
+        items = document.get(collection, [])
+        if not isinstance(items, list):
+            raise ValueError(f"GLB {collection} must be an array")
+        for item in items:
+            if isinstance(item, dict) and "uri" in item:
+                raise ValueError("GLB must not reference external or data URI resources")
+    payload = {''',
+              '''    _walk_numbers(document)
+    _validate_glb_embedded_layout(document, binary_payload)
+    payload = {''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''def _validate_resource_reference(value: str) ->  None:''',
+              '''def _validate_resource_reference(value: str) -> None:''',
+          )
+          replace_once(
+              "scripts/aura_verify_construction_demo_assets.py",
+              '''def _validate_css(css: str) -> None:
+    if _CSS_IMPORT.search(css):''',
+              '''def _validate_css(css: str) -> None:
+    if "\\" in css:
+        raise ValueError("SVG contains an external or executable reference")
+    if _CSS_IMPORT.search(css):''',
+          )
+
+          replace_once(
+              "scripts/aura_mesh_to_gaussian.py",
+              '''    count = target_count or profile_limit''',
+              '''    count = profile_limit if target_count is None else target_count''',
+          )
+
+          replace_once(
+              "docs/AURA_CONSTRUCTION_ARENA_G1_SOURCE_AND_CONTRACTS_EVIDENCE.md",
+              '''source_manifest_digest: bda63e3e6d3e536c1dffa51ccb8c7b37''',
+              '''source_manifest_digest: 22bd970d5babc6ad2d6a22ca2c278738''',
+          )
+          for old, new in (
+              ("focused_asset_tests: 54", "focused_asset_tests: 59"),
+              ("focused_asset_tests_passed: 54", "focused_asset_tests_passed: 59"),
+              ("Local result: **54 passed**.", "Local result: **59 passed**."),
+              ("verification for these 54 tests.", "verification for these 59 tests."),
+          ):
+              replace_once("docs/AURA_CONSTRUCTION_ARENA_G2_G3_ASSET_COMPILER_EVIDENCE.md", old, new)
+
+          replace_once(
+              "tests/test_aura_prepare_construction_demo_assets.py",
+              '''from aura_event_contracts import stable_digest
+from scripts.aura_prepare_construction_demo_assets import (
+    compile_gaussian_assets,''',
+              '''from aura_construction_demo_contracts import ConstructionDemoSourceManifest
+from aura_event_contracts import stable_digest
+from scripts.aura_prepare_construction_demo_assets import (
+    _validate_pinned_source_manifest,
+    compile_gaussian_assets,''',
+          )
+          append_once(
+              "tests/test_aura_prepare_construction_demo_assets.py",
+              "def test_pinned_source_manifest_rejects_self_consistent_substitution",
+              r'''
+def test_pinned_source_manifest_rejects_self_consistent_substitution() -> None:
+    repository = Path(__file__).resolve().parents[1]
+    value = json.loads(
+        (repository / "demo_assets/construction_tuwien/source/source-manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    canonical = ConstructionDemoSourceManifest.from_dict(value)
+    _validate_pinned_source_manifest(canonical)
+
+    substituted = dict(value)
+    substituted["source_id"] = "replacement-source"
+    substituted.pop("source_manifest_digest")
+    with pytest.raises(ValueError, match="canonical TU Wien"):
+        _validate_pinned_source_manifest(
+            ConstructionDemoSourceManifest.from_dict(substituted)
+        )
+
+
+def test_compile_gaussian_assets_requires_every_storey_glb_job(tmp_path: Path) -> None:
+    source = tmp_path / "source.ifc"
+    source.write_text("source", encoding="utf-8")
+    split, conversion = _conversion(tmp_path, source)
+    incomplete = copy.deepcopy(conversion)
+    incomplete["outputs"] = [
+        item for item in incomplete["outputs"] if item["job_id"] != "storey-b-glb"
+    ]
+    incomplete["output_count"] = len(incomplete["outputs"])
+    incomplete["receipt_digest"] = stable_digest(
+        {key: value for key, value in incomplete.items() if key != "receipt_digest"}
+    )
+
+    with pytest.raises(ValueError, match="exact full-building and storey GLB jobs"):
+        compile_gaussian_assets(
+            conversion_receipt=incomplete,
+            split_receipt=split,
+            output_dir=Path("generated"),
+            repo_root=tmp_path,
+            source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+            source_manifest_digest=SOURCE_MANIFEST_DIGEST,
+            hierarchy_digest=HIERARCHY_DIGEST,
+            profile="LOW",
+            mesh_compiler=lambda **_kwargs: {},
+        )
+''',
+          )
+          append_once(
+              "tests/test_aura_verify_construction_demo_assets.py",
+              "def test_verify_glb_rejects_missing_bin_and_invalid_ranges",
+              r'''
+def test_verify_glb_rejects_missing_bin_and_invalid_ranges(tmp_path: Path) -> None:
+    path = tmp_path / "ranges.glb"
+    path.write_bytes(
+        _glb({"asset": {"version": "2.0"}, "buffers": [{"byteLength": 4}]})
+    )
+    with pytest.raises(ValueError, match="BIN chunk"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteOffset": 2, "byteLength": 4}],
+            },
+            (0x004E4942, b"\\x00\\x00\\x00\\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="bufferView"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteLength": 4}],
+                "accessors": [
+                    {"bufferView": 0, "componentType": 5126, "count": 2, "type": "SCALAR"}
+                ],
+            },
+            (0x004E4942, b"\\x00\\x00\\x00\\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="accessor range"):
+        verify_glb(path, root=tmp_path)
+
+    path.write_bytes(
+        _glb(
+            {
+                "asset": {"version": "2.0"},
+                "buffers": [{"byteLength": 4}],
+                "bufferViews": [{"buffer": 0, "byteLength": 4}],
+                "accessors": [
+                    {"bufferView": 0, "componentType": 5126, "count": 1, "type": "SCALAR"}
+                ],
+                "meshes": [{"primitives": [{"attributes": {"POSITION": 1}}]}],
+            },
+            (0x004E4942, b"\\x00\\x00\\x00\\x00"),
+        )
+    )
+    with pytest.raises(ValueError, match="accessor index"):
+        verify_glb(path, root=tmp_path)
+
+
+def test_sanitize_svg_rejects_css_escaped_url_identifier(tmp_path: Path) -> None:
+    path = tmp_path / "escaped-url.svg"
+    path.write_text(
+        r'<svg xmlns="http://www.w3.org/2000/svg"><path style="fill:u\72l(https://example.invalid/a.svg)"/></svg>',
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="external"):
+        sanitize_svg(path, root=tmp_path)
+''',
+          )
+          append_once(
+              "tests/test_aura_mesh_to_gaussian.py",
+              "def test_compile_mesh_rejects_zero_target_count",
+              r'''
+def test_compile_mesh_rejects_zero_target_count(tmp_path: Path) -> None:
+    mesh = trimesh.Trimesh(
+        vertices=[[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+        faces=[[0, 1, 2]],
+        process=False,
+    )
+    glb = tmp_path / "source.glb"
+    glb.write_bytes(trimesh.Scene(mesh).export(file_type="glb"))
+    source_digest = hashlib.sha256(glb.read_bytes()).hexdigest()
+
+    with pytest.raises(ValueError, match="target_count"):
+        compile_mesh(
+            repo_root=tmp_path,
+            glb_path=Path("source.glb"),
+            output_ply=Path("generated/zero.ply"),
+            output_spz=None,
+            profile="LOW",
+            scope="STOREY",
+            source_digest=source_digest,
+            target_count=0,
+        )
+    assert not (tmp_path / "generated/zero.ply").exists()
+''',
+          )
+          PY
+      - name: Remove trigger
+        run: rm -f .aura/apply-pr183-codex-round3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install bounded validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "trimesh>=4.7.1,<5.0" \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2.0,<9.0" \
+            "ruff>=0.12.0,<1.0"
+      - name: Compile and lint edited implementation
+        run: |
+          python -m py_compile \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py
+          ruff check --select E9,F63,F7,F82 \
+            scripts/aura_verify_construction_demo_assets.py \
+            scripts/aura_prepare_construction_demo_assets.py \
+            scripts/aura_mesh_to_gaussian.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py
+      - name: Run complete Construction and resolver gate
+        run: |
+          python -m pytest -q \
+            tests/test_aura_construction_demo_contracts.py \
+            tests/test_aura_fetch_construction_demo_source.py \
+            tests/test_aura_ifc_storey_index.py \
+            tests/test_aura_verify_construction_demo_assets.py \
+            tests/test_aura_prepare_construction_demo_assets.py \
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
+      - name: Commit and publish manual fixes
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Fixer"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: address third deep Codex review"
+          for attempt in 1 2 3; do
+            git fetch origin "$HEAD_BRANCH"
+            git rebase "origin/$HEAD_BRANCH"
+            if git push origin HEAD:"$HEAD_BRANCH"; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
