@@ -2,140 +2,327 @@ name: AuraOS CI
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
+      - "feature/**"
+      - "refactor/**"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: aura-ci-pr184-g4-publisher
+  group: aura-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONPATH: ${{ github.workspace }}
+
 jobs:
-  publish-g4-adapter:
-    if: github.event.pull_request.head.ref == 'work/construction-arena-real-asset-pack-g4-20260722'
-    runs-on: ubuntu-24.04
+  focused-contracts:
+    name: Focused contracts (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          ref: work/construction-arena-real-asset-pack-g4-20260722
-          fetch-depth: 0
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install declared dependencies and test tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            pytest pytest-asyncio ruff
+      - name: Compile governed contract modules
+        run: |
+          python -m py_compile \
+            aura_arena_experience.py \
+            aura_arena_experience_ledger.py \
+            aura_arena_wfst_runtime.py \
+            aura_arena_crucible.py \
+            aura_crucible_types.py \
+            aura_crucible_miner.py \
+            aura_crucible_validation.py \
+            aura_crucible_store.py \
+            aura_crucible_cli.py \
+            aura_vsa_encoding_profile.py \
+            aura_polysynthetic_intent.py \
+            aura_route_capsule_types.py \
+            aura_route_capsule_registry.py \
+            aura_route_capsule_compiler.py \
+            aura_route_capsule_binding.py \
+            aura_codemap_verify.py \
+            aura_model_cognome.py \
+            aura_dikwp_router_pipeline.py \
+            aura_model_cognome_store.py \
+            aura_model_cognome_store_schema.py \
+            aura_model_cognome_store_records.py \
+            aura_model_cognome_store_io.py
+      - name: Fatal lint checks
+        run: |
+          ruff check --select E9,F63,F7,F82 \
+            aura_arena_experience.py \
+            aura_arena_experience_ledger.py \
+            aura_arena_wfst_runtime.py \
+            aura_arena_crucible.py \
+            aura_crucible_types.py \
+            aura_crucible_miner.py \
+            aura_crucible_validation.py \
+            aura_crucible_store.py \
+            aura_crucible_cli.py \
+            aura_vsa_encoding_profile.py \
+            aura_polysynthetic_intent.py \
+            aura_route_capsule_types.py \
+            aura_route_capsule_registry.py \
+            aura_route_capsule_compiler.py \
+            aura_route_capsule_binding.py \
+            aura_codemap_verify.py \
+            aura_model_cognome.py \
+            aura_dikwp_router_pipeline.py \
+            aura_model_cognome_store.py \
+            aura_model_cognome_store_schema.py \
+            aura_model_cognome_store_records.py \
+            aura_model_cognome_store_io.py \
+            tests/test_aura_arena_experience_ledger.py \
+            tests/test_aura_crucible_phase_b.py \
+            tests/test_aura_phase_c1_route_capsules.py \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_model_cognome.py \
+            tests/test_aura_dikwp_router_pipeline.py \
+            tests/test_aura_model_cognome_store.py
+      - name: Run focused governed contract tests
+        run: |
+          python -m pytest -q \
+            tests/test_aura_arena_experience_ledger.py \
+            tests/test_aura_crucible_phase_b.py \
+            tests/test_aura_phase_c1_route_capsules.py \
+            tests/test_aura_codemap_verify.py \
+            tests/test_aura_arena_live_cli.py \
+            tests/test_aura_coding_workbench_wfst_equivalence.py \
+            tests/test_aura_human_agent_wfst_live_integration.py \
+            tests/test_aura_model_cognome.py \
+            tests/test_aura_dikwp_router_pipeline.py \
+            tests/test_aura_model_cognome_store.py
 
+  full-pytest-suite:
+    name: Full pytest-native suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
-      - name: Authenticate and extract exact G4 payload
-        env:
-          EXPECTED_ARCHIVE_SHA256: 7757d0c3ed63f9e581e6502dc7fb213735384f5e1fc35ca58866f3c437ea9556
-        run: |
-          set -euo pipefail
-          root=.aura/pr184-g4-adapter
-          test -f "${root}/READY"
-          expected_names='chunk00
-chunk01
-chunk02
-chunk03
-READY'
-          test "$(find "${root}" -maxdepth 1 -type f -printf '%f\n' | sort)" = "$(printf '%s\n' "${expected_names}" | sort)"
-          echo 'd137f0addfd1737714af3dc3742d7b3a00aa36104305fa784ec5d335d0284bc3  .aura/pr184-g4-adapter/chunk00' | sha256sum --check --strict
-          echo 'b49cb1a06b6ff4b1342b12fe0fae0ac17c10999bfca3318db8f62f37e59c13e2  .aura/pr184-g4-adapter/chunk01' | sha256sum --check --strict
-          echo '8840b571f7b79df3e3e1b3012a2ca0ec7f3cefb4ffbe5c5b397e310e42696923  .aura/pr184-g4-adapter/chunk02' | sha256sum --check --strict
-          echo '7e7996673dc0db12b955aeb906812e10d9de76ea53428f7cb542c2b99efd1787  .aura/pr184-g4-adapter/chunk03' | sha256sum --check --strict
-          cat "${root}"/chunk0{0,1,2,3} | base64 --decode > "${RUNNER_TEMP}/pr184-g4-adapter.tar.gz"
-          echo "${EXPECTED_ARCHIVE_SHA256}  ${RUNNER_TEMP}/pr184-g4-adapter.tar.gz" | sha256sum --check --strict
-          python - <<'PY'
-          from pathlib import Path, PurePosixPath
-          import os
-          import tarfile
-
-          archive = Path(os.environ["RUNNER_TEMP"], "pr184-g4-adapter.tar.gz")
-          allowed = {
-              "aura_construction_demo_contracts.py",
-              "aura_construction_demo_asset_pack.py",
-              "tests/test_aura_construction_demo_contracts.py",
-              "tests/test_aura_construction_demo_asset_pack.py",
-          }
-          with tarfile.open(archive, "r:gz") as handle:
-              members = handle.getmembers()
-              names = {member.name for member in members}
-              if names != allowed:
-                  raise SystemExit(f"payload allowlist mismatch: {sorted(names)}")
-              for member in members:
-                  path = PurePosixPath(member.name)
-                  if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
-                      raise SystemExit(f"unsafe archive path: {member.name}")
-                  if not member.isfile() or member.issym() or member.islnk():
-                      raise SystemExit(f"non-regular payload member: {member.name}")
-              handle.extractall(".", filter="data")
-          PY
-
       - name: Install declared dependencies and test tooling
         run: |
-          set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install pytest "trimesh>=4.7.1,<5.0" "zstandard==0.25.0"
-
-      - name: Compile and run full Construction resolver gate
-        run: |
-          set -euo pipefail
-          python -m compileall -q \
-            aura_construction_demo_contracts.py \
-            aura_construction_demo_asset_pack.py \
-            scripts/aura_fetch_construction_demo_source.py \
-            scripts/aura_ifc_storey_index.py \
-            scripts/aura_prepare_construction_demo_assets.py \
-            scripts/aura_mesh_to_gaussian.py \
-            scripts/aura_verify_construction_demo_assets.py
-          tests=(
-            tests/test_aura_construction_demo_contracts.py
-            tests/test_aura_construction_demo_asset_pack.py
-            tests/test_aura_fetch_construction_demo_source.py
-            tests/test_aura_ifc_storey_index.py
-            tests/test_aura_verify_construction_demo_assets.py
-            tests/test_aura_mesh_to_gaussian.py
-            tests/test_aura_prepare_construction_demo_assets.py
-            tests/test_aura_spatial_asset_resolver.py
-            tests/test_aura_spatial_s6_construction.py
-            tests/test_aura_capability_resolver.py
-          )
-          existing=()
-          for path in "${tests[@]}"; do
-            test -f "${path}" && existing+=("${path}")
-          done
-          python -m pytest -q "${existing[@]}"
-
-      - name: Restore CI, remove transport, and commit validated source
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0" \
+            "jsonschema>=4.23,<5.0" \
+            "pytest>=8.2,<9.0" \
+            "pytest-asyncio>=0.23,<1.0" \
+            "trimesh>=4.7.1,<5.0"
+      - name: Run all pytest-native tests
+        id: full_pytest
+        continue-on-error: true
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PYTHONHASHSEED: "0"
         run: |
-          set -euo pipefail
-          git fetch --no-tags origin "${BASE_SHA}"
-          git show "${BASE_SHA}:.github/workflows/ci.yml" > .github/workflows/ci.yml
-          rm -rf .aura/pr184-g4-adapter
-          rm -f \
-            .aura/run-construction-spz-diagnostics \
-            .aura/run-construction-toolchain-diagnostics \
-            .github/workflows/apply-pr184-g4-adapter.yml \
-            .github/workflows/construction-demo-spz-build-diagnostics.yml \
-            .github/workflows/construction-demo-toolchain-diagnostics.yml
-          git config user.name "AuraOS Construction G4 Publisher"
+          python -m pytest -q --disable-warnings --maxfail=1 \
+            --ignore=test_aura_functions.py \
+            --ignore=test_synthesis_upgrades.py \
+            --ignore=test_syntax_fixes.py \
+            --ignore=test_codemap_hooks_simple.py \
+            --ignore=test_pvm_logic.py \
+            --ignore=test_aura_substrate.py \
+            --junitxml=full-pytest-junit.xml
+      - name: Upload pytest diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-pytest-junit-${{ github.run_id }}
+          path: full-pytest-junit.xml
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce pytest result
+        if: steps.full_pytest.outcome != 'success'
+        run: |
+          echo "The pytest-native suite failed. Inspect the uploaded JUnit artifact."
+          exit 1
+
+  legacy-validator:
+    name: Legacy validator (${{ matrix.script }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        script:
+          - test_aura_functions.py
+          - test_synthesis_upgrades.py
+          - test_syntax_fixes.py
+          - test_codemap_hooks_simple.py
+          - test_pvm_logic.py
+          - test_aura_substrate.py
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0"
+      - name: Run validator through its intended entry point
+        id: validator
+        continue-on-error: true
+        env:
+          PYTHONHASHSEED: "0"
+        run: |
+          mkdir -p legacy-validator-report
+          set +e
+          timeout 1200 python "${{ matrix.script }}" \
+            > legacy-validator-report/output.log 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "${code}" > legacy-validator-report/exit_code
+          printf '%s\n' "${{ matrix.script }}" > legacy-validator-report/script
+          exit "${code}"
+      - name: Upload validator diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-${{ matrix.script }}-${{ github.run_id }}
+          path: legacy-validator-report/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce validator result
+        if: steps.validator.outcome != 'success'
+        run: |
+          echo "${{ matrix.script }} failed. Inspect its uploaded report."
+          exit 1
+
+  topology:
+    name: Regenerate and verify CODEMAP topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # CODEMAP is a committed artifact of the source branch. Test jobs exercise
+          # GitHub's synthetic merge ref, while this job verifies the exact source
+          # tree that produced the committed navigation artifacts.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0"
+      - name: Preserve committed CODEMAP snapshot
+        run: cp .aura/CODEMAP.json "${RUNNER_TEMP}/CODEMAP.committed.json"
+      - name: Regenerate deep CODEMAP
+        run: python aura_codebase_navigator.py
+      - name: Upload regenerated CODEMAP artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-codemap-${{ github.run_id }}
+          path: |
+            .aura/CODEMAP.md
+            .aura/CODEMAP.json
+            topology_map.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Verify topology and stable committed structure
+        run: python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
+
+  sync-codemap:
+    name: Synchronize CODEMAP on refactor branches
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/refactor/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "websockets>=12.0,<17.0" \
+            "aiosqlite>=0.20.0,<1.0" \
+            "ddgs>=6.0,<10.0" \
+            "wasmtime>=20.0,<46.0" \
+            "aiohttp>=3.9.0,<4.0" \
+            "beautifulsoup4>=4.12.0,<5.0" \
+            "httpx>=0.27.0,<1.0" \
+            "cryptography>=41.0.0,<45.0"
+      - name: Regenerate and validate CODEMAP
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+      - name: Commit synchronized navigation artifacts
+        run: |
+          git config user.name "AuraOS CODEMAP Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A -- \
-            aura_construction_demo_contracts.py \
-            aura_construction_demo_asset_pack.py \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_construction_demo_asset_pack.py \
-            .aura/pr184-g4-adapter \
-            .aura/run-construction-spz-diagnostics \
-            .aura/run-construction-toolchain-diagnostics \
-            .github/workflows/apply-pr184-g4-adapter.yml \
-            .github/workflows/construction-demo-spz-build-diagnostics.yml \
-            .github/workflows/construction-demo-toolchain-diagnostics.yml \
-            .github/workflows/ci.yml
-          git diff --cached --check
-          test -n "$(git diff --cached --name-only)"
-          git commit -m "feat(construction): assemble runtime-admitted G4 asset pack"
-          git push origin HEAD:work/construction-arena-real-asset-pack-g4-20260722
+          git add .aura/CODEMAP.json .aura/CODEMAP.md topology_map.json
+          if git diff --cached --quiet; then
+            echo "CODEMAP is already synchronized."
+            exit 0
+          fi
+          git commit -m "chore: synchronize CODEMAP for P1.1 authority contracts"
+          git push origin HEAD:${{ github.ref_name }}
