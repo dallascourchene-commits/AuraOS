@@ -1,0 +1,34 @@
+name: Export PR183 Review Snapshot
+
+on:
+  push:
+    branches:
+      - work/construction-arena-bim-gaussian-demo-20260722
+    paths:
+      - ".github/workflows/export-pr183-review-snapshot.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/construction-arena-bim-gaussian-demo-20260722
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Archive exact tracked source tree
+        run: |
+          git archive --format=tar.gz --output="${RUNNER_TEMP}/pr183-review-snapshot.tar.gz" HEAD
+          git rev-parse HEAD > "${RUNNER_TEMP}/head-sha.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr183-review-snapshot-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/pr183-review-snapshot.tar.gz
+            ${{ runner.temp }}/head-sha.txt
+          retention-days: 1
+          if-no-files-found: error
