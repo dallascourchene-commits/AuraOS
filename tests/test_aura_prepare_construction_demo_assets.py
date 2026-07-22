@@ -9,6 +9,7 @@ import pytest
 
 from aura_event_contracts import stable_digest
 from scripts.aura_prepare_construction_demo_assets import (
+    compile_gaussian_assets,
     convert_ifc_assets,
     split_storeys,
 )
@@ -107,7 +108,10 @@ out.parent.mkdir(parents=True, exist_ok=True)
 if '.svg.' in out.name:
     out.write_text('<svg xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0 0\" /></svg>', encoding='utf-8')
 else:
-    doc = json.dumps({'asset': {'version': '2.0'}, 'scenes': [{}], 'nodes': [], 'meshes': []}, separators=(',', ':')).encode()
+    doc = json.dumps(
+        {'asset': {'version': '2.0'}, 'scenes': [{}], 'nodes': [], 'meshes': []},
+        separators=(',', ':'),
+    ).encode()
     doc += b' ' * ((4 - len(doc) % 4) % 4)
     total = 20 + len(doc)
     out.write_bytes(struct.pack('<4sII', b'glTF', 2, total) + struct.pack('<II', len(doc), 0x4E4F534A) + doc)
@@ -182,4 +186,100 @@ def test_convert_ifc_assets_rejects_split_digest_drift(tmp_path: Path) -> None:
             repo_root=tmp_path,
             ifcconvert=executable,
             workers=1,
+        )
+
+
+def test_compile_gaussian_assets_distinguishes_building_and_storey_profiles(tmp_path: Path) -> None:
+    generated = tmp_path / "generated"
+    building = generated / "building-full.glb"
+    storey = generated / "storeys/storey-a/storey-a.glb"
+    svg = generated / "storeys/storey-a/storey-a.svg"
+    for path, body in ((building, b"building"), (storey, b"storey"), (svg, b"svg")):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(body)
+
+    outputs = []
+    for job_id, path, representation in (
+        ("building-full-glb", building, "MESH_GLB"),
+        ("storey-a-glb", storey, "MESH_GLB"),
+        ("storey-a-svg", svg, "FLOOR_PLAN_SVG"),
+    ):
+        row = {
+            "job_id": job_id,
+            "output": path.relative_to(tmp_path).as_posix(),
+            "output_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "representation": representation,
+        }
+        row["receipt_digest"] = stable_digest(row)
+        outputs.append(row)
+    conversion = {
+        "phase": "CONVERT_GLB_SVG",
+        "outputs": outputs,
+        "production_mutation": False,
+    }
+    conversion["receipt_digest"] = stable_digest(conversion)
+    calls = []
+
+    def fake_compiler(**kwargs: object) -> dict[str, object]:
+        calls.append(kwargs)
+        ply = Path(kwargs["output_ply"])
+        spz = Path(kwargs["output_spz"])
+        ply.write_bytes(b"ply")
+        spz.write_bytes(b"spz")
+        source_digest = str(kwargs["source_digest"])
+        scope = str(kwargs["scope"])
+        return {
+            "source_digest": source_digest,
+            "scope": scope,
+            "splat_count": kwargs["target_count"],
+            "ply": {"path": ply.relative_to(tmp_path).as_posix()},
+            "spz": {"path": spz.relative_to(tmp_path).as_posix()},
+            "receipt_digest": stable_digest({"source": source_digest, "scope": scope}),
+        }
+
+    receipt = compile_gaussian_assets(
+        conversion_receipt=conversion,
+        output_dir=Path("generated"),
+        repo_root=tmp_path,
+        profile="STANDARD",
+        storey_target_count=20,
+        building_target_count=40,
+        mesh_compiler=fake_compiler,
+    )
+
+    assert receipt["phase"] == "SAMPLE_GAUSSIANS_WRITE_SPZ"
+    assert receipt["output_count"] == 2
+    assert receipt["profile_limits"] == {"STOREY": 150_000, "BUILDING": 500_000}
+    assert [(call["scope"], call["target_count"]) for call in calls] == [
+        ("BUILDING", 40),
+        ("STOREY", 20),
+    ]
+    assert (generated / "building-full.gaussian.ply").read_bytes() == b"ply"
+    assert (generated / "building-full.spz").read_bytes() == b"spz"
+    assert (generated / "receipts/compile-gaussians.json").is_file()
+
+
+def test_compile_gaussian_assets_rejects_glb_digest_drift(tmp_path: Path) -> None:
+    glb = tmp_path / "building.glb"
+    glb.write_bytes(b"actual")
+    row = {
+        "job_id": "building-full-glb",
+        "output": "building.glb",
+        "output_sha256": "0" * 64,
+        "representation": "MESH_GLB",
+        "receipt_digest": "f" * 32,
+    }
+    conversion = {
+        "phase": "CONVERT_GLB_SVG",
+        "outputs": [row],
+        "production_mutation": False,
+        "receipt_digest": "e" * 32,
+    }
+    with pytest.raises(ValueError, match="digest drifted"):
+        compile_gaussian_assets(
+            conversion_receipt=conversion,
+            output_dir=Path("generated"),
+            repo_root=tmp_path,
+            profile="LOW",
+            mesh_compiler=lambda **_kwargs: {},
         )
