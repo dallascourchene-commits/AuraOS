@@ -18,10 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: work/construction-arena-real-asset-pack-g4-20260722
-          persist-credentials: false
+      - name: Checkout public branch without credentials
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/dallascourchene-commits/AuraOS.git
+          git -c protocol.version=2 fetch --depth=1 origin \
+            work/construction-arena-real-asset-pack-g4-20260722
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
 
       - uses: actions/setup-python@v5
         with:
