@@ -23,6 +23,7 @@ jobs:
       - name: Apply pinned implementation patch
         env:
           EXPECTED_XZ_SHA256: "0fa5392695fc3799fb9d89ea47d4cc83058ff86143f19e1525906f0cb52c5ac2"
+          EXPECTED_WORKFLOW_SHA256: "11a35f5951268411d7ee6d818260c6896d672ba03296906b9d9bc6b6a6062cbf"
         run: |
           set -euo pipefail
           test "${GITHUB_REF_NAME}" = "analysis/aura-harness-export/20260722-ai-safe-final"
@@ -31,117 +32,11 @@ jobs:
           xz --decompress --stdout /tmp/ai-safe-harness.patch.xz > /tmp/ai-safe-harness.patch
           git apply --check /tmp/ai-safe-harness.patch
           git apply /tmp/ai-safe-harness.patch
-      - name: Restore final read-only export workflow
-        run: |
-          cat > .github/workflows/aura-architecture-harness-export.yml <<'FINAL_WORKFLOW'
-          name: Aura Architecture Harness Export
-
-          on:
-            push:
-              branches:
-                - "analysis/aura-harness-export/**"
-              paths:
-                - ".aura/HARNESS_EXPORT_REQUEST"
-
-          permissions:
-            contents: read
-            statuses: write
-
-          jobs:
-            export:
-              runs-on: ubuntu-latest
-              timeout-minutes: 15
-              steps:
-                - name: Fetch exact current main without persisted credentials
-                  env:
-                    GH_TOKEN: ${{ github.token }}
-                  run: |
-                    git init .
-                    git remote add origin "https://github.com/${{ github.repository }}.git"
-                    AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-                    git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-                      fetch --no-tags --depth=1 origin refs/heads/main
-                    unset AUTH_HEADER
-                    git checkout --detach FETCH_HEAD
-                    SOURCE_SHA="$(git rev-parse HEAD)"
-                    echo "SOURCE_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
-                    test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-                - name: Archive all Git-tracked files and provenance
-                  run: |
-                    git archive \
-                      --format=zip \
-                      --prefix=AuraOS/ \
-                      --output=AuraOS-full-repository.zip \
-                      HEAD
-                    sha256sum AuraOS-full-repository.zip > AuraOS-full-repository.zip.sha256
-                    git ls-files -z | tr -cd '\0' | wc -c > AuraOS-full-repository.tracked-file-count.txt
-                    python - <<'PY'
-                    import json
-                    import os
-                    from pathlib import Path
-                    payload = {
-                        "repository": os.environ["GITHUB_REPOSITORY"],
-                        "source_main_sha": os.environ["SOURCE_SHA"],
-                        "request_commit_sha": os.environ["GITHUB_SHA"],
-                        "workflow_run_id": os.environ["GITHUB_RUN_ID"],
-                        "archive": "AuraOS-full-repository.zip",
-                        "authority": "read_only_export",
-                    }
-                    Path("AuraOS-harness-export-manifest.json").write_text(
-                        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-                        encoding="utf-8",
-                    )
-                    PY
-                - name: Build AI-first bounded review handoff
-                  env:
-                    PYTHONDONTWRITEBYTECODE: "1"
-                  run: |
-                    AI_HANDOFF_DIR="${RUNNER_TEMP}/AuraOS-ai-handoff"
-                    python scripts/aura_architecture_harness.py \
-                      --repo-root . \
-                      handoff \
-                      --output-dir "$AI_HANDOFF_DIR"
-                    test -f "$AI_HANDOFF_DIR/ai_handoff_manifest.json"
-                    test -f "$AI_HANDOFF_DIR/ai_review_files.txt"
-                    test -f "$AI_HANDOFF_DIR/ai_source_review.zip"
-                - name: Upload AI-first bounded review artifact
-                  uses: actions/upload-artifact@v4
-                  with:
-                    name: AuraOS-ai-review-first-${{ env.SOURCE_SHA }}
-                    path: |
-                      ${{ runner.temp }}/AuraOS-ai-handoff/ai_handoff_manifest.json
-                      ${{ runner.temp }}/AuraOS-ai-handoff/ai_review_files.txt
-                      ${{ runner.temp }}/AuraOS-ai-handoff/ai_source_review.zip
-                    if-no-files-found: error
-                    retention-days: 7
-                - name: Upload exact repository snapshot
-                  uses: actions/upload-artifact@v4
-                  with:
-                    name: AuraOS-architecture-harness-${{ env.SOURCE_SHA }}
-                    path: |
-                      AuraOS-full-repository.zip
-                      AuraOS-full-repository.zip.sha256
-                      AuraOS-full-repository.tracked-file-count.txt
-                      AuraOS-harness-export-manifest.json
-                    if-no-files-found: error
-                    retention-days: 7
-                - name: Publish discoverable run status
-                  if: always()
-                  env:
-                    GH_TOKEN: ${{ github.token }}
-                  run: |
-                    STATE="success"
-                    if [ "${{ job.status }}" != "success" ]; then STATE="failure"; fi
-                    gh api \
-                      --method POST \
-                      "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-                      -f state="$STATE" \
-                      -f context="aura-architecture-harness-export" \
-                      -f description="Run ${GITHUB_RUN_ID}; main ${SOURCE_SHA:-unavailable}" \
-                      -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          FINAL_WORKFLOW
-          sed -i 's/^          //' .github/workflows/aura-architecture-harness-export.yml
+          base64 --decode .aura/AI_SAFE_FINAL_WORKFLOW.b64 > /tmp/aura-architecture-harness-export.yml
+          echo "${EXPECTED_WORKFLOW_SHA256}  /tmp/aura-architecture-harness-export.yml" | sha256sum --check --strict
+          mv /tmp/aura-architecture-harness-export.yml .github/workflows/aura-architecture-harness-export.yml
           rm .aura/AI_SAFE_HARNESS_PATCH.b64
+          rm .aura/AI_SAFE_FINAL_WORKFLOW.b64
           rm .aura/HARNESS_EXPORT_REQUEST
       - name: Verify focused implementation
         env:
@@ -168,6 +63,7 @@ jobs:
             README.md USER_GUIDE.md .aura/ARCHITECTURE.md \
             docs/AURA_ARCHITECTURE_HARNESS.md \
             .aura/AI_SAFE_HARNESS_PATCH.b64 \
+            .aura/AI_SAFE_FINAL_WORKFLOW.b64 \
             .aura/HARNESS_EXPORT_REQUEST
           git commit -m "feat: add AI-safe architecture harness handoff"
           git push origin "HEAD:${GITHUB_REF_NAME}"
