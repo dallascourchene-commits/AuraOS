@@ -279,6 +279,14 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     assert packet["typed_compatibility"]["outcome"] in {"COMPATIBLE", "ADAPTER_REQUIRED"}
     assert packet["coding_breadboard"]["receipt_digest"]
     assert packet["coding_breadboard"]["authority"]["execution_authority"] is False
+    assert packet["bounded_emergent_discovery"]["discovery_digest"]
+    assert packet["bounded_emergent_verification"]["verification_digest"]
+    assert packet["change_graph"]["graph_digest"]
+    assert packet["phase_capsules"]
+    assert packet["act_capsules"]["ok"] is True
+    assert packet["agent_ir"]["ok"] is True
+    assert packet["rollout"]["mode"] == "SHADOW"
+    assert packet["experience_projection_template"]["eligibility_gate_closed_by_default"] is True
     assert packet["prohibitions"]
     assert packet["safe_to_patch"] is False
 
@@ -390,14 +398,12 @@ def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path)
     monkeypatch.setattr(compass, "_repository_head", lambda root: "b" * 40)
     packet = {
         "repo_head": "b" * 40,
-        "atomic_inventory": {
-            "selected_atomic_functions": [{
-                "file_path": "target.py", "line_start": 1, "line_end": 2,
-                "source_hash": hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest(),
-                "file_source_hash": "0" * 64,
-            }]
-        },
-        "source_slices": [],
+        "atomic_inventory": {"selected_atomic_functions": []},
+        "source_slices": [{
+            "file_path": "target.py", "line_start": 1, "line_end": 2,
+            "source_hash": hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest(),
+            "file_source_hash": "0" * 64,
+        }],
     }
     try:
         compass._validate_injected_evidence_packet(tmp_path, packet)
@@ -406,6 +412,37 @@ def test_injected_evidence_rejects_forged_file_hash(monkeypatch, tmp_path: Path)
     else:
         raise AssertionError("forged injected evidence must fail closed")
 
+
+
+def test_injected_evidence_accepts_approximate_inventory_with_exact_source_slice(
+    monkeypatch, tmp_path: Path
+) -> None:
+    source_text = "def target():\n    return 1\n"
+    (tmp_path / "target.py").write_text(source_text, encoding="utf-8")
+    monkeypatch.setattr(compass, "_repository_head", lambda root: "e" * 40)
+    file_hash = hashlib.sha256(source_text.encode()).hexdigest()
+    source_hash = hashlib.sha256(source_text.rstrip("\n").encode()).hexdigest()
+    packet = {
+        "repo_head": "e" * 40,
+        "atomic_inventory": {
+            "selected_atomic_functions": [{
+                "file_path": "target.py",
+                "symbol": "target",
+                "qualified_symbol": "target",
+            }]
+        },
+        "source_slices": [{
+            "file_path": "target.py",
+            "line_start": 1,
+            "line_end": 2,
+            "source_hash": source_hash,
+            "file_source_hash": file_hash,
+        }],
+    }
+
+    validated = compass._validate_injected_evidence_packet(tmp_path, packet)
+
+    assert validated["atomic_inventory"]["selected_atomic_functions"][0]["symbol"] == "target"
 
 def test_injected_evidence_rejects_stale_head(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(compass, "_repository_head", lambda root: "c" * 40)

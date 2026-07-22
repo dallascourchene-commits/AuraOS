@@ -1,6 +1,6 @@
 # Aura Coding Relationship Compass — Comprehensive Implementation Plan
 
-> **Program status:** implementation in progress — C0 through C5 implemented; C6–C9 pending
+> **Program status:** C0 through C9 implemented in reviewable batches; final exact-head review and merge pending
 > **Canonical name:** Aura Coding Relationship Compass  
 > **Reference architecture:** ENG-ATLAS v2.4, reconciled with current AuraOS  
 > **Repository baseline:** `dallascourchene-commits/AuraOS` main source SHA `4865e013c2deb0695b86591c899fb278aff08ac5`  
@@ -815,10 +815,10 @@ Recommended sequence:
 3. **PR C — C2–C3 selection and bounded neighborhood.** Rebase and reuse safe PR #175 work.
 4. **PR D — C4 Atlas objective profiles.** No Breadboard or Architect activation yet.
 5. **PR E — C5 compatibility/Breadboard.** Shadow projection only.
-6. **PR F — C6 emergent experiments.** Still proposal-only.
-7. **PR G — C7 Architect/Council/capsule compilation.** Explicit intents only.
-8. **PR H — C8 governed experience projection.** Learning gate closed by default.
-9. **PR I — C9 tools, UI, rollout, benchmarks, and final documentation.**
+6. **PR F — C6 emergent experiments.** Implemented in the final C6–C9 batch; still proposal-only.
+7. **PR G — C7 Architect/Council/capsule compilation.** Implemented for explicit bounded intents.
+8. **PR H — C8 governed experience projection.** Implemented with the learning gate closed by default.
+9. **PR I — C9 tools, rollout, schemas, measured regressions, and final documentation.** Implemented in the final C6–C9 batch.
 
 PR #175 should not be merged unchanged. It is a valuable implementation seed, but it predates C0's harness fixes and does not yet provide true bounded-neighborhood construction, typed compatibility/Breadboard contracts, actual Change Graph/Agent IR compilation, governed bi-temporal learning, or complete performance budgets.
 
@@ -888,6 +888,6 @@ The Compass program is complete only when all of the following are true:
 
 ## 13. Immediate next implementation action
 
-Review the **C3–C5 implementation batch** after branch CI and exact-head verification. The next implementation batch should begin **C6**: bounded Emergent discovery and verification experiments over the C3 neighborhood, C4 objective Atlas, and C5 compatibility/Breadboard receipts.
+Review the **C6–C9 finalization batch** after branch CI and exact-head verification. Confirm that bounded Emergent discovery cannot bypass C5 hard guards, Change Graph and Act Capsule compilation refuses missing source/test evidence, relationship experience remains advisory and reconstructible, and all six bridge/MCP tools preserve proposal-only authority.
 
-Do not allow C6 discovery to bypass C5 hard guards, expand beyond C3 budgets, or promote advisory findings into exact truth without current source and verifier evidence.
+After review fixes, regenerate navigation artifacts if required, merge only with explicit human approval, and treat the merged C0–C9 artifact as the baseline for later benchmark expansion rather than widening authority.

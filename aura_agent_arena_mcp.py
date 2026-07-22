@@ -450,6 +450,60 @@ TOOL_DEFINITIONS = [
             "required": ["objective"],
         },
     },
+
+    {
+        "name": "aura_compass_prepare",
+        "description": "Prepare an exact-head Coding Relationship Compass run in SHADOW, LIMITED, or explicitly authorized PAIRED_LIVE mode.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "objective": {"type": "string", "minLength": 1, "maxLength": 4000},
+                "target_files": {"type": "array", "maxItems": 16, "items": {"type": "string", "maxLength": 240}},
+                "target_symbols": {"type": "array", "maxItems": 32, "items": {"type": "string", "maxLength": 240}},
+                "rollout_mode": {"type": "string", "enum": ["SHADOW", "LIMITED", "PAIRED_LIVE"], "default": "SHADOW"},
+                "rollout_provider": {"type": "string", "maxLength": 120},
+                "rollout_budget": {
+                    "type": "object",
+                    "properties": {
+                        "max_tokens": {"type": "integer", "minimum": 1},
+                        "max_cost_usd": {"type": "number", "exclusiveMinimum": 0},
+                        "max_seconds": {"type": "number", "exclusiveMinimum": 0},
+                        "max_calls": {"type": "integer", "minimum": 1},
+                    },
+                    "additionalProperties": False,
+                },
+                "rollout_nonce": {"type": "string", "maxLength": 240},
+                "rollout_verifier_ref": {"type": "string", "maxLength": 240},
+            },
+            "required": ["objective"],
+            "additionalProperties": False,
+        },
+    },
+    {
+        "name": "aura_compass_neighborhood",
+        "description": "Return the bounded relational neighborhood for a prepared Compass run.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_classify",
+        "description": "Return objective Atlas, prohibitions, adapters, and bounded emergent classifications.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_breadboard",
+        "description": "Return typed compatibility and Coding Waboose Breadboard receipts.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_plan",
+        "description": "Return the proposal-only Change Graph, phase capsules, and Council V3 route.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
+    {
+        "name": "aura_compass_compile_capsules",
+        "description": "Compile proposal-only Act Capsules and SPEC-floor Agent IR; never grants patch authority.",
+        "inputSchema": {"type": "object", "properties": {"run_id": {"type": "string"}}, "required": ["run_id"], "additionalProperties": False},
+    },
     {
         "name": "aura_waboose_learn_coderabbit",
         "description": "Learn from a successful CodeRabbit review after exact head/source grounding.",
@@ -843,6 +897,46 @@ def _handle_emergent_evidence(
         "include_offline_research": _strict_bool_arg(args, "include_offline_research", default=True),
     }
     return bridge.aura_emergent_evidence(request)
+
+
+
+@_register_tool("aura_compass_prepare")
+def _handle_compass_prepare(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_prepare(
+        objective=str(args.get("objective", "")),
+        target_files=tuple(args.get("target_files", []) or []),
+        target_symbols=tuple(args.get("target_symbols", []) or []),
+        rollout_mode=str(args.get("rollout_mode", "SHADOW")),
+        rollout_provider=str(args.get("rollout_provider", "")),
+        rollout_budget=dict(args.get("rollout_budget") or {}),
+        rollout_nonce=str(args.get("rollout_nonce", "")),
+        rollout_verifier_ref=str(args.get("rollout_verifier_ref", "")),
+    )
+
+
+@_register_tool("aura_compass_neighborhood")
+def _handle_compass_neighborhood(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_neighborhood(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_classify")
+def _handle_compass_classify(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_classify(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_breadboard")
+def _handle_compass_breadboard(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_breadboard(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_plan")
+def _handle_compass_plan(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_plan(str(args.get("run_id", "")))
+
+
+@_register_tool("aura_compass_compile_capsules")
+def _handle_compass_compile_capsules(bridge: AuraAgentArenaBridge, args: dict[str, Any]) -> dict[str, Any]:
+    return bridge.aura_compass_compile_capsules(str(args.get("run_id", "")))
 
 
 @_register_tool("aura_waboose_learn_coderabbit")

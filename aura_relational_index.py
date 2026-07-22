@@ -2019,28 +2019,32 @@ def _resolve_neighborhood_seeds(
         reasons[participant_id].append("exact_seed_participant_id")
 
     for source_ref in request.seed_source_refs:
-        lookup_keys = []
-        if source_ref.symbol:
-            lookup_keys.append(("by_qualified_symbol", f"{source_ref.file_path}#{source_ref.symbol}"))
-        lookup_keys.append(("by_file_path", source_ref.file_path))
-        if request.include_tests:
-            lookup_keys.append(("by_test_path", source_ref.file_path))
         resolved: set[str] = set()
-        for reverse_name, key in lookup_keys:
-            reverse = index.reverse_indexes.get(reverse_name, {})
-            if not isinstance(reverse, Mapping):
-                continue
-            resolved.update(
-                item for item in reverse.get(key, ()) if item in participant_ids
-            )
-            if reverse_name == "by_qualified_symbol" and not resolved and source_ref.symbol:
+        if source_ref.symbol:
+            reverse = index.reverse_indexes.get("by_qualified_symbol", {})
+            if isinstance(reverse, Mapping):
+                exact_key = f"{source_ref.file_path}#{source_ref.symbol}"
+                resolved.update(item for item in reverse.get(exact_key, ()) if item in participant_ids)
+                if not resolved:
+                    resolved.update(
+                        item
+                        for lookup_key, values in reverse.items()
+                        if str(lookup_key).endswith(f"#{source_ref.symbol}")
+                        for item in values
+                        if item in participant_ids
+                    )
+        if not resolved:
+            reverse = index.reverse_indexes.get("by_file_path", {})
+            if isinstance(reverse, Mapping):
                 resolved.update(
-                    item
-                    for lookup_key, values in reverse.items()
-                    if str(lookup_key).endswith(f"#{source_ref.symbol}")
-                    for item in values
-                    if item in participant_ids
+                    item for item in reverse.get(source_ref.file_path, ()) if item in participant_ids
                 )
+            if request.include_tests:
+                reverse = index.reverse_indexes.get("by_test_path", {})
+                if isinstance(reverse, Mapping):
+                    resolved.update(
+                        item for item in reverse.get(source_ref.file_path, ()) if item in participant_ids
+                    )
         for participant_id in sorted(resolved):
             reasons[participant_id].append(
                 f"exact_source_ref:{source_ref.file_path}#{source_ref.symbol or '*'}"

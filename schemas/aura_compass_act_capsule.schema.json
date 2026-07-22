@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aura.local/schemas/aura_compass_act_capsule.schema.json",
+  "title": "Aura Compass Act Capsule V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version", "task_id", "phase_id", "objective", "target_file", "target_symbol",
+    "source_span", "declared_tests", "preconditions", "effects", "rollback",
+    "surgeon_request", "proposal_only", "human_review_required", "automatic_commit",
+    "automatic_pull_request", "automatic_merge", "patch_authority", "vsa_patch_authority",
+    "capsule_digest"
+  ],
+  "properties": {
+    "version": {"const": "AURA_COMPASS_ACT_CAPSULE_V1"},
+    "task_id": {"type": "string", "minLength": 1},
+    "phase_id": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "target_file": {"type": "string", "minLength": 1},
+    "target_symbol": {"type": "string"},
+    "source_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["line_start", "line_end", "source_hash", "file_source_hash"],
+      "properties": {
+        "line_start": {"type": "integer", "minimum": 1},
+        "line_end": {"type": "integer", "minimum": 1},
+        "source_hash": {"type": "string", "minLength": 1},
+        "file_source_hash": {"type": "string"}
+      }
+    },
+    "declared_tests": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "preconditions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "effects": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "rollback": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "surgeon_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_file", "allowed_symbol", "allowed_line_start", "allowed_line_end", "expected_source_hash", "required_tests"],
+      "properties": {
+        "allowed_file": {"type": "string", "minLength": 1},
+        "allowed_symbol": {"type": "string"},
+        "allowed_line_start": {"type": "integer", "minimum": 1},
+        "allowed_line_end": {"type": "integer", "minimum": 1},
+        "expected_source_hash": {"type": "string", "minLength": 1},
+        "required_tests": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "proposal_only": {"const": true},
+    "human_review_required": {"const": true},
+    "automatic_commit": {"const": false},
+    "automatic_pull_request": {"const": false},
+    "automatic_merge": {"const": false},
+    "patch_authority": {"const": "exact_source_spans_and_hashes_only"},
+    "vsa_patch_authority": {"const": false},
+    "capsule_digest": {"type": "string", "pattern": "^[0-9a-f]{32}$"}
+  }
+}

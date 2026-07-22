@@ -26,9 +26,12 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import hashlib
+import hmac
 import json
 import re
 from typing import Any, Sequence
+
+from aura_event_contracts import stable_digest
 
 # ---------------------------------------------------------------------------
 # Version / safety constants
@@ -46,6 +49,7 @@ READ_ONLY_CONSTRAINTS = (
 AUDIT_ROUTE = "EMERGENT_CAPABILITY_AUDIT"
 STATUS_FUTURE_PATCHABLE = "FUTURE_PATCHABLE"
 STATUS_NEEDS_GROUNDING = "NEEDS_GROUNDING"
+STATUS_TOO_RISKY = "TOO_RISKY"
 
 # ---------------------------------------------------------------------------
 # Focus scoring: generic stop terms removed before any token overlap scoring
@@ -1413,3 +1417,139 @@ def _coerce_cluster(d: dict[str, Any]) -> dict[str, Any]:
                 else:
                     out[fname] = None
     return out
+
+
+# ---------------------------------------------------------------------------
+# C6 — verifier for bounded Compass emergent candidates
+# ---------------------------------------------------------------------------
+
+BOUNDED_EMERGENT_VERSION = "AURA_BOUNDED_EMERGENT_DISCOVERY_V1"
+BOUNDED_VERIFIER_VERSION = "AURA_BOUNDED_EMERGENT_VERIFIER_V1"
+
+
+def verify_bounded_emergent_discovery(
+    discovery: Any,
+    *,
+    max_clusters: int = 8,
+) -> dict[str, Any]:
+    """Verify and diversify a bounded discovery receipt without rescanning the repo."""
+
+    payload = discovery.to_dict() if hasattr(discovery, "to_dict") else dict(discovery or {})
+    supplied_digest = str(payload.get("discovery_digest") or "")
+    digest_body = dict(payload)
+    digest_body.pop("discovery_digest", None)
+    expected_digest = stable_digest(digest_body)
+    if not supplied_digest or not hmac.compare_digest(supplied_digest, expected_digest):
+        raise ValueError("bounded emergent discovery digest mismatch")
+    if (
+        payload.get("version") != BOUNDED_EMERGENT_VERSION
+        or not payload.get("proposal_only")
+        or payload.get("safe_to_patch")
+        or payload.get("patch_authority") != PATCH_AUTHORITY_POLICY
+        or payload.get("vsa_patch_authority")
+    ):
+        raise ValueError("bounded emergent discovery authority boundary changed")
+    if not payload.get("no_generic_repository_scan"):
+        raise ValueError("bounded emergent verifier refuses generic repository scans")
+    candidates = [dict(item) for item in payload.get("candidates", ()) or () if isinstance(item, dict)]
+    accepted: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    suppressed: list[dict[str, Any]] = [dict(item) for item in payload.get("suppressed_receipts", ()) or ()]
+    seen_clusters: set[str] = set()
+
+    for candidate in sorted(
+        candidates,
+        key=lambda item: (-float(item.get("score", 0.0)), str(item.get("cluster_key", "")), str(item.get("candidate_id", ""))),
+    ):
+        missing = [
+            key
+            for key in (
+                "candidate_id",
+                "mechanism",
+                "benefit",
+                "risk",
+                "failure_conditions",
+                "smallest_experiment",
+                "status",
+                "cluster_key",
+            )
+            if not candidate.get(key)
+        ]
+        status = str(candidate.get("status") or "")
+        evidence_refs = list(candidate.get("evidence_refs") or [])
+        source_hashes = list(candidate.get("source_hashes") or [])
+        source_evidence_refs = list(candidate.get("source_evidence_refs") or [])
+        target_evidence_refs = list(candidate.get("target_evidence_refs") or [])
+        source_source_hashes = list(candidate.get("source_source_hashes") or [])
+        target_source_hashes = list(candidate.get("target_source_hashes") or [])
+        tests = list(candidate.get("required_tests") or [])
+        reasons: list[str] = []
+        if missing:
+            reasons.append(f"MISSING_FIELDS:{','.join(sorted(missing))}")
+        if status == STATUS_TOO_RISKY:
+            reasons.append("TOO_RISKY_PRESERVED")
+        elif status == STATUS_NEEDS_GROUNDING:
+            reasons.append("NEEDS_GROUNDING_PRESERVED")
+        elif status != STATUS_FUTURE_PATCHABLE:
+            reasons.append("UNSUPPORTED_STATUS")
+        if status == STATUS_FUTURE_PATCHABLE and (
+            not evidence_refs
+            or len(source_hashes) < 2
+            or not source_evidence_refs
+            or not target_evidence_refs
+            or not source_source_hashes
+            or not target_source_hashes
+        ):
+            reasons.append("EXACT_EVIDENCE_INCOMPLETE")
+        if status == STATUS_FUTURE_PATCHABLE and not tests:
+            reasons.append("VERIFIER_MISSING")
+        if (
+            candidate.get("safe_to_patch")
+            or not candidate.get("proposal_only", True)
+            or candidate.get("patch_authority") != PATCH_AUTHORITY_POLICY
+            or candidate.get("vsa_patch_authority")
+        ):
+            reasons.append("AUTHORITY_BOUNDARY_VIOLATION")
+
+        if reasons:
+            rejected.append(
+                {
+                    "candidate_id": str(candidate.get("candidate_id") or ""),
+                    "status": status or "UNKNOWN",
+                    "reasons": reasons,
+                    "preserved": True,
+                }
+            )
+            continue
+
+        cluster = str(candidate.get("cluster_key") or "")
+        if cluster in seen_clusters:
+            suppressed.append({"candidate_id": candidate["candidate_id"], "reason": "VERIFIER_CLUSTER_DIVERSITY"})
+            continue
+        if len(seen_clusters) >= max(1, min(int(max_clusters), 32)):
+            suppressed.append({"candidate_id": candidate["candidate_id"], "reason": "VERIFIER_MAX_CLUSTERS"})
+            continue
+        seen_clusters.add(cluster)
+        accepted.append(candidate)
+
+    result = {
+        "version": BOUNDED_VERIFIER_VERSION,
+        "discovery_digest": str(payload.get("discovery_digest") or ""),
+        "neighborhood_digest": str(payload.get("neighborhood_digest") or ""),
+        "accepted_candidates": accepted,
+        "rejected_candidates": sorted(rejected, key=lambda item: (item["status"], item["candidate_id"])),
+        "suppressed_candidates": sorted(suppressed, key=lambda item: (str(item.get("reason", "")), str(item.get("candidate_id", "")))),
+        "summary": {
+            "candidate_count": len(candidates),
+            "accepted_count": len(accepted),
+            "rejected_count": len(rejected),
+            "suppressed_count": len(suppressed),
+            "no_generic_repository_scan": True,
+        },
+        "proposal_only": True,
+        "safe_to_patch": False,
+        "patch_authority": PATCH_AUTHORITY_POLICY,
+        "vsa_patch_authority": False,
+    }
+    result["verification_digest"] = _hash_text(json.dumps(result, sort_keys=True, separators=(",", ":"), default=str))
+    return result

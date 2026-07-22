@@ -180,4 +180,33 @@ __all__ = [
     "SelectiveArchitectFusionCouncil",
     "SelectiveArchitectModelRouter",
     "select_critic_lanes",
+    "route_compass_failure_classes",
 ]
+
+
+
+def route_compass_failure_classes(failure_classes: list[str] | tuple[str, ...]) -> dict[str, Any]:
+    """Route exact local assertion failures to Surgeon and structural failures to Council."""
+    normalized = list(dict.fromkeys(str(item).strip().upper() for item in failure_classes if str(item).strip()))
+    local = {"LOCAL_ASSERTION", "LOCAL_TEST", "EXACT_SPAN_PATCH", "SOURCE_ASSERTION"}
+    structural = {"INTERFACE", "DEPENDENCY", "INVARIANT", "SCOPE", "AUTHORITY", "PROHIBITION", "SEQUENCE"}
+    if normalized and set(normalized).issubset(local):
+        return {
+            "route": "SURGEON",
+            "critic_lanes": ["tests", "scope"],
+            "reason": "local_assertion_failure",
+            "failure_classes": normalized,
+            "proposal_only": True,
+        }
+    lanes = ["scope", "tests"]
+    if any(item in structural for item in normalized):
+        lanes.extend(["sequence", "rollback"])
+    if "INVARIANT" in normalized or "SCOPE" in normalized:
+        lanes.append("continuity")
+    return {
+        "route": "COUNCIL_V3",
+        "critic_lanes": list(dict.fromkeys(lanes)),
+        "reason": "structural_or_cross_boundary_failure" if normalized else "preflight_review",
+        "failure_classes": normalized,
+        "proposal_only": True,
+    }

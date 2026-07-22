@@ -839,6 +839,12 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
     )
     packet = extract_relational_neighborhood(request, index)
     assert packet["seed_participant_ids"]
+    seeded = {
+        item["qualified_symbol"]
+        for item in packet["participants"]
+        if item["participant_id"] in packet["seed_participant_ids"]
+    }
+    assert seeded == {"Alpha.run"}
     assert any(
         item["qualified_symbol"] == "Alpha.run" for item in packet["participants"]
     )

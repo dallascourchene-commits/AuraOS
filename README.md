@@ -245,6 +245,8 @@ Planning Board proposal
 
 The Planning Board provides typed goals/actions, BC0–BC5 continuity, bounded backward regression, forward symbolic replay, and compatibility shadows over existing systems. Planning artifacts can be projected into canonical append-only events and independently reconstructed without becoming execution authority.
 
+The Coding Relationship Compass now implements C0–C9. After bounded Relational Index and objective Atlas grounding, it evaluates typed interfaces, discovers only local unwired candidates, compiles proposal-only Change Graph/Act Capsule/Agent IR work, records Council-versus-Surgeon routing, and projects append-only bi-temporal relationship experience. Six strict Agent Arena/MCP tools expose preparation, neighborhood, classification, Breadboard, planning, and capsule compilation. `SHADOW` remains the default rollout; no Compass artifact grants provider execution, patch, commit, PR, or merge authority.
+
 Relational authority binds approvals to an exact action ID, action digest, capability/policy scope, validity window, role, quorum, delegation chain, and risk class. Emergency authority remains narrower, temporary, reason-bearing, and review-producing.
 
 ### 4. Human Agent, external workers, and Council–Surgeon engineering

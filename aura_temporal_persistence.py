@@ -823,3 +823,24 @@ __all__ = [
     "checkpoint_refactor_state",
     "verify_refactor_checkpoint",
 ]
+
+
+# ---------------------------------------------------------------------------
+# C8 — relationship experience timeline projection
+# ---------------------------------------------------------------------------
+
+
+def relationship_experience_timeline_projection(
+    observations: list[dict[str, Any]],
+    *,
+    current_repository_head: str,
+    now: float | None = None,
+) -> dict[str, Any]:
+    """Reconstruct valid/transaction-time order without altering historical facts."""
+    from aura_relationship_experience import project_relationship_timeline
+
+    return project_relationship_timeline(
+        observations,
+        current_repository_head=current_repository_head,
+        now=now,
+    )

@@ -63,6 +63,7 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
         self.coding_waboose = CodingWaboose(self.repo_root)
         self.emergent_spine = AuraEmergentEvidenceSpine(self.repo_root)
         self._spatial_agent_bridge: Any | None = None
+        self._compass_runs: dict[str, dict[str, Any]] = {}
 
     def _spatial_bridge(self) -> Any:
         if self._spatial_agent_bridge is None:
@@ -393,6 +394,160 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
             current_invariant_values=current_invariant_values,
         )
 
+
+
+    def aura_compass_prepare(
+        self,
+        *,
+        objective: str,
+        target_files: Sequence[str] = (),
+        target_symbols: Sequence[str] = (),
+        rollout_mode: str = "SHADOW",
+        rollout_provider: str = "",
+        rollout_budget: Mapping[str, Any] | None = None,
+        rollout_nonce: str = "",
+        rollout_verifier_ref: str = "",
+    ) -> dict[str, Any]:
+        """Prepare and retain one bounded Compass packet; return a compact receipt."""
+        from aura_coding_relationship_compass import compile_coding_relationship_compass
+
+        packet = compile_coding_relationship_compass(
+            objective,
+            self.repo_root,
+            target_files=tuple(target_files or ()),
+            target_symbols=tuple(target_symbols or ()),
+            rollout_mode=rollout_mode,
+            rollout_provider=rollout_provider,
+            rollout_budget=rollout_budget,
+            rollout_nonce=rollout_nonce,
+            rollout_verifier_ref=rollout_verifier_ref,
+        )
+        run_id = str(packet.get("compass_digest") or "")
+        if not run_id:
+            raise ValueError("Compass preparation did not produce a digest")
+        self._compass_runs[run_id] = packet
+        if len(self._compass_runs) > 8:
+            oldest = next(iter(self._compass_runs))
+            if oldest != run_id:
+                self._compass_runs.pop(oldest, None)
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "route": packet.get("route"),
+            "target_file": packet.get("target_file"),
+            "target_symbol": packet.get("target_symbol"),
+            "grounding_digest": packet.get("grounding_digest"),
+            "neighborhood_digest": (packet.get("relational_neighborhood") or {}).get("neighborhood_digest"),
+            "atlas_digest": (packet.get("atlas") or {}).get("snapshot_digest"),
+            "rollout": dict(packet.get("rollout") or {}),
+            "counts": {
+                "targets": len(packet.get("recommended_targets", ()) or ()),
+                "emergent_candidates": len((packet.get("bounded_emergent_discovery") or {}).get("candidates", ()) or ()),
+                "act_capsules": len((packet.get("act_capsules") or {}).get("act_capsules", ()) or ()),
+            },
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def _compass_packet(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_runs.get(str(run_id or ""))
+        if packet is None:
+            raise ValueError("unknown Compass run_id")
+        return packet
+
+    def aura_compass_neighborhood(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        neighborhood = dict(packet.get("relational_neighborhood") or {})
+        participants = list(neighborhood.get("participants", []) or [])
+        relations = list(neighborhood.get("relations", []) or [])
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "neighborhood_digest": neighborhood.get("neighborhood_digest"),
+            "participants": participants[:64],
+            "relations": relations[:256],
+            "interface_truncation": {
+                "participants_omitted": max(0, len(participants) - 64),
+                "relations_omitted": max(0, len(relations) - 256),
+            },
+            "metrics": dict(neighborhood.get("metrics") or {}),
+            "truncation_reasons": list(neighborhood.get("truncation_reasons", []) or []),
+            "proposal_only": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def aura_compass_classify(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        atlas = dict(packet.get("atlas") or {})
+        assessments = list(atlas.get("assessments", []) or [])
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "atlas_digest": atlas.get("snapshot_digest"),
+            "profile": atlas.get("profile"),
+            "assessments": assessments[:128],
+            "interface_truncation": {"assessments_omitted": max(0, len(assessments) - 128)},
+            "prohibitions": list(packet.get("prohibitions", []) or []),
+            "missing_roles": list(packet.get("missing_roles", []) or []),
+            "required_adapters": list(packet.get("required_adapters", []) or []),
+            "bounded_emergent": dict(packet.get("bounded_emergent_verification") or {}),
+            "proposal_only": True,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def aura_compass_breadboard(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "typed_compatibility": dict(packet.get("typed_compatibility") or {}),
+            "coding_breadboard": dict(packet.get("coding_breadboard") or {}),
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def aura_compass_plan(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        graph = dict(packet.get("change_graph") or {})
+        nodes = list(graph.get("nodes", []) or [])
+        return {
+            "ok": True,
+            "run_id": run_id,
+            "graph_digest": graph.get("graph_digest"),
+            "nodes": nodes[:256],
+            "interface_truncation": {"nodes_omitted": max(0, len(nodes) - 256)},
+            "phase_capsules": list(packet.get("phase_capsules", []) or []),
+            "council_route": dict(packet.get("council_route") or {}),
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
+    def aura_compass_compile_capsules(self, run_id: str) -> dict[str, Any]:
+        packet = self._compass_packet(run_id)
+        return {
+            "ok": bool((packet.get("act_capsules") or {}).get("ok")),
+            "run_id": run_id,
+            "act_capsules": dict(packet.get("act_capsules") or {}),
+            "agent_ir": dict(packet.get("agent_ir") or {}),
+            "surgeon_handoff_required": True,
+            "provider_execution_authorized": False,
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "automatic_commit": False,
+            "automatic_pull_request": False,
+            "automatic_merge": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+
     def aura_waboose_learn_coderabbit(
         self,
         review_payload: Mapping[str, Any],
@@ -520,6 +675,36 @@ class PersistentAuraAgentArenaBridge(AuraAgentArenaBridge):
                 "name": "aura_emergent_evidence",
                 "description": "Build a Connectome-guided exact atomic dependency and source-slice packet.",
                 "required_inputs": ["objective"],
+            },
+            {
+                "name": "aura_compass_prepare",
+                "description": "Prepare an exact-head Coding Relationship Compass run.",
+                "required_inputs": ["objective"],
+            },
+            {
+                "name": "aura_compass_neighborhood",
+                "description": "Return the bounded relational neighborhood for a prepared Compass run.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_classify",
+                "description": "Return objective Atlas and bounded emergent classifications.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_breadboard",
+                "description": "Return C5 typed compatibility and Breadboard receipts.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_plan",
+                "description": "Return the proposal-only Change Graph and Council route.",
+                "required_inputs": ["run_id"],
+            },
+            {
+                "name": "aura_compass_compile_capsules",
+                "description": "Compile proposal-only Act Capsules and SPEC-floor Agent IR.",
+                "required_inputs": ["run_id"],
             },
             {
                 "name": "aura_waboose_learn_coderabbit",

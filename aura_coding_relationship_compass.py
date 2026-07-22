@@ -14,6 +14,7 @@ execution, commit, push, pull-request, or merge authority.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 import hashlib
 import hmac
 import json
@@ -26,6 +27,11 @@ from typing import Any, Mapping, Sequence
 from aura_capability_connectome import build_capability_connectome, find_capability_path
 from aura_capability_connectome_v2 import enrich_connectome, enrich_path
 from aura_emergent_evidence_spine import AuraEmergentEvidenceSpine, EmergentEvidenceRequest
+from aura_emergent_potential_repl import discover_bounded_emergent_candidates
+from aura_emergent_result_verifier import verify_bounded_emergent_discovery
+from aura_change_graph import build_compass_change_graph, compile_compass_act_capsules
+from aura_agent_ir_compiler import AgentIRCompiler
+from aura_architect_council_v3 import route_compass_failure_classes
 from aura_event_contracts import stable_digest
 from aura_polysynthetic_intent import PolysyntheticIntentPacket
 from aura_relational_index import (
@@ -74,6 +80,69 @@ from aura_relationship_atlas import (
 COMPASS_VERSION = "AURA_CODING_RELATIONSHIP_COMPASS_V1"
 PATCH_AUTHORITY = "exact_source_spans_and_hashes_only"
 VSA_PATCH_AUTHORITY = False
+
+
+class CompassRolloutMode(str, Enum):
+    SHADOW = "SHADOW"
+    LIMITED = "LIMITED"
+    PAIRED_LIVE = "PAIRED_LIVE"
+
+
+def _normalize_compass_rollout_budget(budget: Mapping[str, Any] | None) -> dict[str, float | int]:
+    if budget is None:
+        return {}
+    if not isinstance(budget, Mapping):
+        raise ValueError("Compass rollout budget must be a mapping")
+    allowed = {"max_tokens", "max_cost_usd", "max_seconds", "max_calls"}
+    unknown = sorted(set(map(str, budget)) - allowed)
+    if unknown:
+        raise ValueError(f"unsupported Compass rollout budget fields: {unknown}")
+    normalized: dict[str, float | int] = {}
+    for key, value in budget.items():
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or float(value) <= 0:
+            raise ValueError(f"Compass rollout budget {key} must be positive")
+        normalized[str(key)] = int(value) if key in {"max_tokens", "max_calls"} else float(value)
+    return normalized
+
+
+def validate_compass_rollout(
+    mode: CompassRolloutMode | str,
+    *,
+    provider: str = "",
+    budget: Mapping[str, Any] | None = None,
+    nonce: str = "",
+    verifier_ref: str = "",
+) -> dict[str, Any]:
+    try:
+        rollout = mode if isinstance(mode, CompassRolloutMode) else CompassRolloutMode(str(mode).upper())
+    except ValueError as exc:
+        raise ValueError("unsupported Compass rollout mode") from exc
+    normalized_budget = _normalize_compass_rollout_budget(budget)
+    missing: list[str] = []
+    if rollout is CompassRolloutMode.LIMITED and not str(verifier_ref or "").strip():
+        missing.append("verifier_ref")
+    if rollout is CompassRolloutMode.PAIRED_LIVE:
+        if not str(provider or "").strip():
+            missing.append("provider")
+        if not normalized_budget:
+            missing.append("budget")
+        if not str(nonce or "").strip():
+            missing.append("nonce")
+        if not str(verifier_ref or "").strip():
+            missing.append("verifier_ref")
+    admitted = not missing
+    return {
+        "mode": rollout.value,
+        "admitted": admitted,
+        "missing": missing,
+        "provider": str(provider or ""),
+        "budget": normalized_budget,
+        "nonce_digest": _stable_digest(str(nonce or "")) if nonce else "",
+        "verifier_ref": str(verifier_ref or ""),
+        "provider_execution_authorized": False,
+        "production_mutation": False,
+        "human_review_required": True,
+    }
 
 
 @dataclass(frozen=True)
@@ -298,19 +367,25 @@ def _validate_injected_evidence_packet(repo_root: Path, evidence: Mapping[str, A
     if not actual_head or str(packet.get("repo_head") or "").lower() != actual_head:
         raise ValueError("injected evidence is not bound to the current repository HEAD")
 
-    records: list[Mapping[str, Any]] = []
+    source_records = [
+        item for item in packet.get("source_slices", []) or []
+        if isinstance(item, Mapping)
+    ]
+    if not source_records:
+        raise ValueError("injected evidence has no exact source slices")
+
+    records: list[Mapping[str, Any]] = list(source_records)
     inventory = packet.get("atomic_inventory") or {}
     if isinstance(inventory, Mapping):
         records.extend(
-            item for item in inventory.get("selected_atomic_functions", []) or []
+            item
+            for item in inventory.get("selected_atomic_functions", []) or []
             if isinstance(item, Mapping)
+            and item.get("file_source_hash")
+            and item.get("source_hash")
+            and (item.get("line_start") or item.get("start_line"))
+            and (item.get("line_end") or item.get("end_line"))
         )
-    records.extend(
-        item for item in packet.get("source_slices", []) or []
-        if isinstance(item, Mapping)
-    )
-    if not records:
-        raise ValueError("injected evidence has no exact source records")
 
     for record in records:
         file_path = str(record.get("file_path") or "")
@@ -768,6 +843,12 @@ def compile_coding_relationship_compass(
     relational_index_data: Mapping[str, Any] | None = None,
     atlas_snapshot: AtlasSnapshot | None = None,
     evidence_packet: Mapping[str, Any] | None = None,
+    rollout_mode: CompassRolloutMode | str = CompassRolloutMode.SHADOW,
+    rollout_provider: str = "",
+    rollout_budget: Mapping[str, Any] | None = None,
+    rollout_nonce: str = "",
+    rollout_verifier_ref: str = "",
+    max_emergent_candidates: int = 12,
 ) -> dict[str, Any]:
     """Compile a bounded coding relationship packet for Architect/Surgeon review.
 
@@ -1136,6 +1217,76 @@ def compile_coding_relationship_compass(
         "patch_authority": PATCH_AUTHORITY,
         "vsa_patch_authority": VSA_PATCH_AUTHORITY,
     }
+    rollout = validate_compass_rollout(
+        rollout_mode,
+        provider=rollout_provider,
+        budget=rollout_budget,
+        nonce=rollout_nonce,
+        verifier_ref=rollout_verifier_ref,
+    )
+    if rollout["mode"] == CompassRolloutMode.PAIRED_LIVE.value and not rollout["admitted"]:
+        raise ValueError(
+            "PAIRED_LIVE Compass rollout requires provider, budget, nonce, and verifier_ref"
+        )
+    packet["rollout"] = rollout
+    packet["grounding_digest"] = _stable_digest(dict(packet))
+
+    discovery = discover_bounded_emergent_candidates(
+        objective=normalized_objective,
+        neighborhood=packet["relational_neighborhood"],
+        compatibility=packet["typed_compatibility"],
+        atlas=packet["atlas"],
+        required_tests=required_tests,
+        max_candidates=max_emergent_candidates,
+        max_pairs_considered=max_neighborhood_candidate_pairs,
+    )
+    bounded_verification = verify_bounded_emergent_discovery(
+        discovery,
+        max_clusters=max(1, min(max_emergent_candidates, 16)),
+    )
+    packet["bounded_emergent_discovery"] = discovery.to_dict()
+    packet["bounded_emergent_verification"] = bounded_verification
+
+    change_graph = build_compass_change_graph(packet)
+    capsule_packet = compile_compass_act_capsules(change_graph)
+    agent_ir = (
+        AgentIRCompiler.compile_compass_act_capsules(capsule_packet)
+        if capsule_packet.get("ok")
+        else {
+            "ok": False,
+            "reason": capsule_packet.get("reason"),
+            "nodes": [],
+            "proposal_only": True,
+            "safe_to_patch": False,
+            "patch_authority": PATCH_AUTHORITY,
+            "vsa_patch_authority": False,
+        }
+    )
+    failure_classes: list[str] = []
+    if not capsule_packet.get("ok"):
+        failure_classes.append("INVARIANT")
+    if packet["typed_compatibility"].get("outcome") in {"PROHIBITED", "INCOMPATIBLE", "BLOCKED"}:
+        failure_classes.append("INTERFACE")
+    if packet.get("prohibitions"):
+        failure_classes.append("PROHIBITION")
+    packet["change_graph"] = change_graph
+    packet["phase_capsules"] = list(change_graph.get("phase_capsules", []) or [])
+    packet["act_capsules"] = capsule_packet
+    packet["agent_ir"] = agent_ir
+    packet["council_route"] = route_compass_failure_classes(failure_classes)
+    packet["experience_projection_template"] = {
+        "relationship_ids": [
+            str(item.get("candidate_id") or "")
+            for item in bounded_verification.get("accepted_candidates", [])
+            if item.get("candidate_id")
+        ],
+        "required_outcomes": ["SUCCESS", "FAILURE", "DENIAL", "ABANDONMENT", "ROLLBACK"],
+        "valid_time_bound_to_repository_head": True,
+        "transaction_time_bound_to_receipt_creation": True,
+        "eligibility_gate_closed_by_default": True,
+        "proposal_only": True,
+    }
+
     digest_payload = dict(packet)
     packet["compass_digest"] = _stable_digest(digest_payload)
     return packet
@@ -1182,6 +1333,13 @@ def relationship_compass_grounding(packet: Mapping[str, Any]) -> dict[str, Any]:
         "missing_roles": list(packet.get("missing_roles", []) or []),
         "required_adapters": list(packet.get("required_adapters", []) or []),
         "action_capsule_hints": list(packet.get("action_capsule_hints", []) or []),
+        "bounded_emergent_verification": dict(packet.get("bounded_emergent_verification") or {}),
+        "change_graph": dict(packet.get("change_graph") or {}),
+        "phase_capsules": list(packet.get("phase_capsules", []) or []),
+        "act_capsules": dict(packet.get("act_capsules") or {}),
+        "agent_ir": dict(packet.get("agent_ir") or {}),
+        "council_route": dict(packet.get("council_route") or {}),
+        "rollout": dict(packet.get("rollout") or {}),
         "grounding_ok": bool(packet.get("grounding_ok")),
         "safe_to_patch": False,
         "human_review_required": True,
@@ -1193,6 +1351,8 @@ def relationship_compass_grounding(packet: Mapping[str, Any]) -> dict[str, Any]:
 __all__ = [
     "COMPASS_VERSION",
     "ArchitectureComponent",
+    "CompassRolloutMode",
+    "validate_compass_rollout",
     "compile_coding_relationship_compass",
     "is_coding_relationship_compass_intent",
     "relationship_compass_grounding",

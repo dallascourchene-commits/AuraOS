@@ -538,15 +538,46 @@ SEED_AFFORDANCES: list[dict[str, Any]] = [
         "tags": ["coding", "relationship", "compass", "connectome", "relational", "synthesis", "atlas", "architect", "localization", "capsule"],
         "when_to_use": "When a broad architecture/refactor objective spans several Aura systems and Architect needs exact target files, symbols, tests, preservation relations, missing roles, and prohibitions before planning a patch.",
         "when_not_to_use": "When the exact target span is already known or when a direct mutation is requested. Use exact read-slice/staging workflows and retain human review.",
-        "implemented_by": ["aura_coding_relationship_compass.py", "aura_live_architect.py"],
-        "symbols": ["compile_coding_relationship_compass", "relationship_compass_grounding", "is_coding_relationship_compass_intent", "ArchitectFusionCouncil.select_plan"],
-        "tests": ["tests/test_aura_coding_relationship_compass.py"],
+        "implemented_by": [
+            "aura_coding_relationship_compass.py",
+            "aura_live_architect.py",
+            "aura_change_graph.py",
+            "aura_relationship_experience.py",
+            "aura_agent_arena_persistence_bridge.py",
+            "aura_agent_arena_mcp.py",
+        ],
+        "symbols": [
+            "compile_coding_relationship_compass",
+            "relationship_compass_grounding",
+            "discover_bounded_emergent_candidates",
+            "build_compass_change_graph",
+            "compile_compass_act_capsules",
+            "ArchitectFusionCouncil.select_plan",
+        ],
+        "tests": [
+            "tests/test_aura_coding_relationship_compass.py",
+            "tests/test_aura_relationship_compass_finalization.py",
+        ],
         "docs": ["docs/AURA_CODING_RELATIONSHIP_COMPASS.md"],
-        "commands": [],
+        "commands": [
+            "aura_compass_prepare",
+            "aura_compass_neighborhood",
+            "aura_compass_classify",
+            "aura_compass_breadboard",
+            "aura_compass_plan",
+            "aura_compass_compile_capsules",
+        ],
         "requires": ["aura.relational.index", "aura.relational.synthesis", "aura.relationship.atlas", "aura.emergent_potential.audit"],
-        "outputs": ["coding_relationship_compass", "recommended_targets", "required_tests", "relationships_to_preserve", "prohibitions", "action_capsule_hints"],
+        "outputs": [
+            "coding_relationship_compass",
+            "bounded_emergent_verification",
+            "change_graph",
+            "phase_capsules",
+            "proposal_only_act_capsules",
+            "relationship_experience_template",
+        ],
         "related_affordances": ["aura.architect_loop", "aura.coding_arena.topology", "aura.coding_arena.capsule_compiler", "aura.agent_arena.bridge"],
-        "safety": "Read-only planning evidence. Uses MINIMAL Atlas in memory by default and never grants patch, execution, commit, push, pull-request, or merge authority.",
+        "safety": "Read-only/proposal-only planning evidence. Uses bounded objective Atlas state and never grants provider execution, patch, commit, push, pull-request, or merge authority.",
         "patch_authority": False,
         "vsa_patch_authority": False,
         "prompt_card": "Use Coding Relationship Compass before Architect plans a cross-system refactor so exact targets, preservation relations, missing roles, and prohibitions travel together.",
@@ -581,6 +612,8 @@ SEED_AFFORDANCES: list[dict[str, Any]] = [
 
 _CODEMAP_CACHE: dict[str, tuple[float, dict[str, Any]]] = {}
 _CODEMAP_TTL = 120.0
+
+
 
 
 def _load_codemap(repo_root: Path) -> dict[str, Any]:
