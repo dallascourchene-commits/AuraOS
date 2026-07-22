@@ -60,7 +60,6 @@ jobs:
   publish-c6-c9:
     name: Publish exact C6-C9 finalization
     if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'work/coding-relationship-compass-c6-c9-20260721' && github.actor != 'github-actions[bot]'
-    needs: focused-planning-events
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -77,7 +76,16 @@ jobs:
           git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           BASE_HEAD=8e514af2241b5c0b6cd62aae32bbb6c3e165e613
-          tr -d '\r\n' < .github/c6-c9-final.patch.gz.b64 | base64 -d | gzip -d > /tmp/c6-c9.patch
+          cat \
+            .github/c6-c9-final.parts/part00 \
+            .github/c6-c9-final.parts/part01 \
+            .github/c6-c9-final.parts/part02 \
+            .github/c6-c9-final.parts/part03 \
+            .github/c6-c9-final.parts/part04 \
+            .github/c6-c9-final.parts/part05 \
+            .github/c6-c9-final.parts/part06 \
+            .github/c6-c9-final.parts/part07 \
+            | tr -d '\r\n' | base64 -d | gzip -d > /tmp/c6-c9.patch
           echo 'd83cfe35f77deb03bc24ec681ebdc24b7177bda067dc7bce5fd16c8bc8866fcd  /tmp/c6-c9.patch' | sha256sum -c -
           git reset --hard "$BASE_HEAD"
           git apply --index --whitespace=error-all /tmp/c6-c9.patch
