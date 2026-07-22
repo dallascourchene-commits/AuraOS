@@ -77,9 +77,7 @@ jobs:
           git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           BASE_HEAD=8e514af2241b5c0b6cd62aae32bbb6c3e165e613
-          test "$(wc -c < .github/c6-c9-final.patch.gz.b64)" -eq 47148
-          echo 'b8aa49ea4dc304792921d79353008cb35575982345e18781117b871bb955053c  .github/c6-c9-final.patch.gz.b64' | sha256sum -c -
-          base64 -d .github/c6-c9-final.patch.gz.b64 | gzip -d > /tmp/c6-c9.patch
+          tr -d '\r\n' < .github/c6-c9-final.patch.gz.b64 | base64 -d | gzip -d > /tmp/c6-c9.patch
           echo 'd83cfe35f77deb03bc24ec681ebdc24b7177bda067dc7bce5fd16c8bc8866fcd  /tmp/c6-c9.patch' | sha256sum -c -
           git reset --hard "$BASE_HEAD"
           git apply --index --whitespace=error-all /tmp/c6-c9.patch
