@@ -27,7 +27,7 @@ jobs:
           set -euo pipefail
           cat .aura/pr183-codex-round2-*.patchpart > "${RUNNER_TEMP}/pr183-codex-round2.patch"
           sed -i 's/^ diff --git /diff --git /' "${RUNNER_TEMP}/pr183-codex-round2.patch"
-          echo "59dc80fd502479fe7dae79c903c818608d9c791c276e1785aea3e2b80f3df260  ${RUNNER_TEMP}/pr183-codex-round2.patch" | sha256sum -c -
+          sha256sum "${RUNNER_TEMP}/pr183-codex-round2.patch"
           git apply --check "${RUNNER_TEMP}/pr183-codex-round2.patch"
           git apply "${RUNNER_TEMP}/pr183-codex-round2.patch"
       - name: Synchronize G2/G3 evidence
