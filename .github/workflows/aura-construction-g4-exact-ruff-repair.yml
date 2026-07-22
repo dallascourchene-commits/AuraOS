@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Apply one safe Ruff repair commit per owner
+      - name: Apply one canonical static repair commit per owner
         run: |
           set -euo pipefail
           python -m pip install -q --disable-pip-version-check ruff
@@ -48,7 +48,9 @@ jobs:
             file="$1"
             message="$2"
             ruff check --fix --unsafe-fixes=false "$file"
+            ruff format "$file"
             ruff check "$file"
+            ruff format --check "$file"
             if ! git diff --quiet -- "$file"; then
               changed="$(git diff --name-only)"
               test "$changed" = "$file"
@@ -58,17 +60,23 @@ jobs:
           }
 
           repair_owner aura_construction_demo_fixture.py \
-            "style(construction): lint G4 fixture contracts"
+            "style(construction): canonicalize G4 fixture contracts"
           repair_owner aura_construction_demo_fixture_builder.py \
-            "style(construction): lint G4 fixture builder"
+            "style(construction): canonicalize G4 fixture builder"
           repair_owner aura_construction_demo_projection.py \
-            "style(spatial): lint G5 Construction projection"
+            "style(spatial): canonicalize G5 Construction projection"
           repair_owner tests/test_aura_construction_demo_fixture.py \
-            "style(construction): lint G4 fixture tests"
+            "style(construction): canonicalize G4 fixture tests"
           repair_owner tests/test_aura_construction_demo_projection.py \
-            "style(spatial): lint G5 projection tests"
+            "style(spatial): canonicalize G5 projection tests"
 
           ruff check \
+            aura_construction_demo_fixture.py \
+            aura_construction_demo_fixture_builder.py \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff format --check \
             aura_construction_demo_fixture.py \
             aura_construction_demo_fixture_builder.py \
             aura_construction_demo_projection.py \
