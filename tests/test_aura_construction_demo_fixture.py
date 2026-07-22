@@ -23,6 +23,7 @@ from aura_construction_demo_fixture import (
     CONSTRUCTION_DEMO_WORK_STATES,
 )
 from aura_construction_demo_fixture_builder import build_construction_demo_project_fixture
+from aura_construction_demo_runtime import build_construction_demo_runtime_packet
 
 
 def _manifest() -> ConstructionDemoSourceManifest:
@@ -137,6 +138,28 @@ def test_g4_fixture_is_deterministic_storey_bound_and_canonical() -> None:
     assert first.renderer_authority is False
     assert first.production_mutation is False
     assert first.human_review_required is True
+
+
+def test_g4_runtime_packet_preserves_hard_blockers_and_authority() -> None:
+    fixture = build_construction_demo_project_fixture(_pack())
+    packet = build_construction_demo_runtime_packet(fixture)
+    evaluation = packet["evaluation"]
+    assessments = {
+        item["candidate_id"]: item for item in evaluation["assessments"]
+    }
+    unsafe = max(fixture.candidates, key=lambda item: item.safety_risk)
+
+    assert packet["state_digest"] == fixture.state.state_digest
+    assert packet["source_records_mutated"] is False
+    assert packet["proposal_only"] is True
+    assert packet["physical_work_authorized"] is False
+    assert packet["payment_released"] is False
+    assert packet["access_controlled"] is False
+    assert assessments[unsafe.candidate_id]["admissible"] is False
+    assert assessments[unsafe.candidate_id]["blockers"]
+    assert evaluation["recommended_candidate_id"] in {
+        item.candidate_id for item in fixture.candidates
+    }
 
 
 def test_g4_fixture_rejects_insufficient_storeys() -> None:
