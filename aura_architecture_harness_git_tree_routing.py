@@ -1,8 +1,8 @@
 """Proposal-only GitHub atomic Git-tree routing for Aura's architecture harness.
 
-This module records a deterministic publication plan for an external authorized
-GitHub connector. It never calls GitHub, creates objects, moves refs, opens or
-merges pull requests, or grants production mutation authority by itself.
+The module records a deterministic publication plan for an external authorized
+GitHub connector. It performs no GitHub mutation and grants no merge, force,
+base-branch, production, or other consequential authority.
 """
 from __future__ import annotations
 
@@ -11,9 +11,9 @@ import hashlib
 import json
 from pathlib import PurePosixPath
 import re
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
-VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V3"
+VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V4"
 SHA1_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -73,9 +73,7 @@ def _canonical_repo_path(value: str) -> str:
 
 def _sha1(value: str, name: str) -> str:
     if type(value) is not str or SHA1_PATTERN.fullmatch(value) is None:
-        raise GitTreeRoutingError(
-            f"{name} must be a lowercase 40-character Git SHA-1"
-        )
+        raise GitTreeRoutingError(f"{name} must be a lowercase 40-character Git SHA-1")
     return value
 
 
@@ -83,6 +81,42 @@ def _sha256(value: str, name: str) -> str:
     if type(value) is not str or SHA256_PATTERN.fullmatch(value) is None:
         raise GitTreeRoutingError(f"{name} must be a lowercase 64-character SHA-256")
     return value
+
+
+@dataclass(frozen=True)
+class VerifiedHeadBinding:
+    """Commit/tree identity derived from one exact connector fetch-commit response."""
+
+    commit_sha: str
+    tree_sha: str
+    verification_action: str = "fetch_commit"
+
+    def __post_init__(self) -> None:
+        _sha1(self.commit_sha, "commit_sha")
+        _sha1(self.tree_sha, "tree_sha")
+        if self.commit_sha == self.tree_sha:
+            raise GitTreeRoutingError("tree_sha must be a tree object, not the commit SHA")
+        if self.verification_action != "fetch_commit":
+            raise GitTreeRoutingError("verification_action must be fetch_commit")
+
+    @classmethod
+    def from_fetch_commit(
+        cls, *, expected_head_sha: str, commit_metadata: Mapping[str, Any]
+    ) -> "VerifiedHeadBinding":
+        """Derive a binding from one exact connector commit-metadata object."""
+
+        expected = _sha1(expected_head_sha, "expected_head_sha")
+        if not isinstance(commit_metadata, Mapping):
+            raise GitTreeRoutingError("commit_metadata must be a mapping")
+        observed = commit_metadata.get("sha")
+        tree = commit_metadata.get("tree")
+        tree_sha = tree.get("sha") if isinstance(tree, Mapping) else None
+        if observed != expected:
+            raise GitTreeRoutingError("commit metadata does not match expected_head_sha")
+        return cls(commit_sha=expected, tree_sha=_sha1(tree_sha, "commit_metadata.tree.sha"))
+
+    def to_dict(self) -> dict[str, str]:
+        return asdict(self)
 
 
 @dataclass(frozen=True)
@@ -96,10 +130,8 @@ class GitTreeBlobIntent:
     object_type: str = "blob"
 
     def __post_init__(self) -> None:
-        if self.path != _canonical_repo_path(self.path):
-            raise GitTreeRoutingError("path must be canonical")
-        if self.content_sha256 != _sha256(self.content_sha256, "content_sha256"):
-            raise GitTreeRoutingError("content_sha256 must be canonical")
+        _canonical_repo_path(self.path)
+        _sha256(self.content_sha256, "content_sha256")
         if type(self.byte_length) is not int or self.byte_length < 0:
             raise GitTreeRoutingError("byte_length must be a non-negative integer")
         if self.mode not in {"100644", "100755"}:
@@ -129,12 +161,11 @@ def build_git_tree_routing_record(
     repository_full_name: str,
     pull_request_number: int,
     branch: str,
-    expected_head_sha: str,
-    expected_head_tree_sha: str,
+    head_binding: VerifiedHeadBinding,
     blobs: Iterable[GitTreeBlobIntent],
     deletions: Iterable[str] = (),
 ) -> dict[str, Any]:
-    """Build a deterministic, proposal-only atomic publication receipt."""
+    """Build a deterministic proposal bound to one verified commit/tree pair."""
 
     if (
         type(repository_full_name) is not str
@@ -150,13 +181,9 @@ def build_git_tree_routing_record(
         or "\x00" in branch
     ):
         raise GitTreeRoutingError("branch must be a plain non-empty branch name")
+    if type(head_binding) is not VerifiedHeadBinding:
+        raise GitTreeRoutingError("head_binding must be a VerifiedHeadBinding")
 
-    head = _sha1(expected_head_sha, "expected_head_sha")
-    head_tree = _sha1(expected_head_tree_sha, "expected_head_tree_sha")
-    if head_tree == head:
-        raise GitTreeRoutingError(
-            "expected_head_tree_sha must be the resolved tree object, not the head commit"
-        )
     blob_rows = tuple(sorted(tuple(blobs), key=lambda item: item.path))
     if not blob_rows or not all(type(item) is GitTreeBlobIntent for item in blob_rows):
         raise GitTreeRoutingError("blobs must contain exact GitTreeBlobIntent values")
@@ -177,8 +204,9 @@ def build_git_tree_routing_record(
         "repository_full_name": repository_full_name,
         "pull_request_number": pull_request_number,
         "branch": branch,
-        "expected_head_sha": head,
-        "expected_head_tree_sha": head_tree,
+        "head_binding": head_binding.to_dict(),
+        "expected_head_sha": head_binding.commit_sha,
+        "expected_head_tree_sha": head_binding.tree_sha,
         "blob_intents": [item.to_dict() for item in blob_rows],
         "deletions": list(deletion_paths),
     }
@@ -191,27 +219,26 @@ def build_git_tree_routing_record(
         "route_digest": route_digest,
         **identity,
         "preconditions": [
-            "the pull request is open and its head SHA exactly equals expected_head_sha",
-            "expected_head_tree_sha was resolved from that exact head commit",
-            "the resolved tree SHA was independently verified before tree creation",
+            "the pull request is open and its head SHA equals head_binding.commit_sha",
+            "head_binding was derived from one exact fetch_commit response",
+            "the fetched commit tree equals head_binding.tree_sha",
             "all file bytes already passed the requested validation gate",
             "the replacement and deletion allowlists are exact and human-reviewed",
-            "generated navigation artifacts are regenerated from the final source tree",
         ],
         "connector_sequence": [
             {
                 "order": 1,
                 "action": "get_pr_info",
-                "assertions": ["open PR", "expected branch", "exact expected_head_sha"],
+                "assertions": ["open PR", "expected branch", "exact head commit"],
             },
             {
                 "order": 2,
                 "action": "fetch_commit",
-                "commit_sha": head,
-                "expected_tree_sha": head_tree,
+                "commit_sha": head_binding.commit_sha,
+                "expected_tree_sha": head_binding.tree_sha,
                 "assertions": [
                     "commit remains the live PR head",
-                    "commit tree exactly equals expected_head_tree_sha",
+                    "commit tree equals the bound tree SHA",
                 ],
             },
             {
@@ -223,18 +250,16 @@ def build_git_tree_routing_record(
             {
                 "order": 4,
                 "action": "create_tree",
-                "base_tree_sha": head_tree,
+                "base_tree_sha": head_binding.tree_sha,
                 "assertions": [
-                    "base tree is the exact tree resolved from the current PR head commit",
-                    "base_tree_sha is not the head commit SHA",
+                    "base tree is the bound tree object",
                     "tree contains the complete replacement/add/delete set",
-                    "temporary transport cleanup is included in the same tree",
                 ],
             },
             {
                 "order": 5,
                 "action": "create_commit",
-                "parent_sha": head,
+                "parent_sha": head_binding.commit_sha,
                 "assertions": ["one parent", "one atomic tree", "reviewable message"],
             },
             {
@@ -250,8 +275,8 @@ def build_git_tree_routing_record(
                 "assertions": [
                     "PR head equals the created commit",
                     "changed filenames equal the intended allowlist",
-                    "temporary transport files are absent",
-                    "tests and CODEMAP verification pass on the final tree",
+                    "every path listed in deletions is absent",
+                    "tests and generated-map verification pass on the final tree",
                     "PR remains unmerged unless separately authorized",
                 ],
             },
@@ -259,47 +284,55 @@ def build_git_tree_routing_record(
         "workflow_discovery": dict(WORKFLOW_DISCOVERY),
         "why_atomic": (
             "All immutable blobs are prepared before one tree and one commit become "
-            "reachable through a non-forced fast-forward, preventing an observable "
-            "partial multi-file source state."
+            "reachable through a non-forced fast-forward."
         ),
         "rollback": {
-            "before_update_ref": (
-                "discard unattached blobs/tree/commit; the branch remains unchanged"
-            ),
-            "after_update_ref": (
-                "create a reviewed revert or corrective atomic commit; never force rewind"
-            ),
+            "before_update_ref": "discard unattached objects; the branch remains unchanged",
+            "after_update_ref": "create a reviewed revert; never force rewind",
         },
         "authority": dict(AUTHORITY_CONTRACT),
     }
 
 
 def proven_pr184_route_record() -> dict[str, Any]:
-    """Return the reusable case-study record derived from AuraOS PR #184."""
+    """Return the verified PR #184 manual-remediation publication case study."""
 
     placeholder = GitTreeBlobIntent(
         path="docs/AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING.md",
         content_sha256="0" * 64,
         byte_length=0,
     )
+    binding = VerifiedHeadBinding.from_fetch_commit(
+        expected_head_sha="7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307",
+        commit_metadata={
+            "sha": "7207c2bf6ab179d6af41ca4ed6b9f5adcce1b307",
+            "tree": {"sha": "359a19f26aa3f4066c51263965709c8b026eae6c"},
+        },
+    )
     record = build_git_tree_routing_record(
         repository_full_name="dallascourchene-commits/AuraOS",
         pull_request_number=184,
         branch="work/construction-arena-real-asset-pack-g4-20260722",
-        expected_head_sha="e67d6bdf96e6ba909846295ff9f5fd50d87697e4",
-        expected_head_tree_sha="57205c4a7387ba717da3d27926960b0494ae08f4",
+        head_binding=binding,
         blobs=(placeholder,),
-        deletions=(".aura/pr184-g4-adapter/READY",),
+        deletions=(
+            ".github/workflows/apply-pr184-g4-adapter.yml",
+            ".github/workflows/construction-demo-documentation-sync.yml",
+            ".github/workflows/construction-demo-ifc-proof.yml",
+            ".github/workflows/construction-demo-spz-build-diagnostics.yml",
+            ".github/workflows/construction-demo-toolchain-diagnostics.yml",
+            ".github/workflows/pr184-review-remediation.yml",
+        ),
     )
     record["case_study"] = {
         "recorded_at": "2026-07-22",
+        "scope": "manual review remediation publication, not G4 payload cleanup",
         "outcome": "atomic Git-tree publication succeeded on the live PR branch",
-        "resolved_head_tree_sha": "57205c4a7387ba717da3d27926960b0494ae08f4",
-        "created_tree_sha": "4e7b79b320252968ab350456975054e2384d32cf",
-        "created_commit_sha": "5c101780a7caeef859d4435bd8068f782def6aaf",
+        "resolved_head_tree_sha": binding.tree_sha,
+        "created_tree_sha": "beed4f512975dd304ff36aa7e2936bf2212cead1",
+        "created_commit_sha": "ea9675ada226bae31fbd74e10dced81797aac1a8",
         "base_tree_is_commit_sha": False,
         "confirmed_force_required": False,
-        "normal_ci_restored_in_same_tree": True,
         "note": "The placeholder blob documents routing shape, not a publication request.",
     }
     return record

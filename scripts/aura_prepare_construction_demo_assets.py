@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Construction demo asset preparation with guaranteed IfcConvert temp cleanup.
-
-The reviewed implementation is preserved in
-``scripts.aura_prepare_construction_demo_assets_core``. This stable public
-entrypoint exports its complete compatibility surface and overrides only the
-conversion boundary so raw ``.ifcconvert.*.glb`` transport files cannot survive
-successful canonicalization or a later job failure.
-"""
+"""Construction demo asset preparation with guaranteed IfcConvert temp cleanup."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,7 +12,7 @@ if str(_REPO_ROOT) not in sys.path:
 
 try:
     from scripts import aura_prepare_construction_demo_assets_core as _core
-except ModuleNotFoundError:  # Direct execution from the scripts directory.
+except ModuleNotFoundError:
     import aura_prepare_construction_demo_assets_core as _core  # type: ignore[no-redef]
 
 for _name in dir(_core):
@@ -45,19 +38,30 @@ def _cleanup_ifcconvert_glb_temps(*, repo_root: Path, output_dir: Path) -> None:
 
 
 def convert_ifc_assets(*, output_dir: Path, repo_root: Path, **kwargs: Any) -> dict[str, Any]:
-    """Run canonical conversion and always remove raw IfcConvert GLB transports."""
+    """Run conversion, preserving its failure if cleanup independently fails."""
 
+    active_error: BaseException | None = None
     try:
         return _ORIGINAL_CONVERT_IFC_ASSETS(
             output_dir=output_dir,
             repo_root=repo_root,
             **kwargs,
         )
+    except BaseException as exc:
+        active_error = exc
+        raise
     finally:
-        _cleanup_ifcconvert_glb_temps(repo_root=repo_root, output_dir=output_dir)
+        try:
+            _cleanup_ifcconvert_glb_temps(repo_root=repo_root, output_dir=output_dir)
+        except Exception as cleanup_error:
+            if active_error is None:
+                raise
+            active_error.add_note(
+                "IfcConvert temporary cleanup also failed: "
+                f"{type(cleanup_error).__name__}: {cleanup_error}"
+            )
 
 
-# The core CLI resolves this function from its own module globals.
 _core.convert_ifc_assets = convert_ifc_assets
 
 

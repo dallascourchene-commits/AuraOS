@@ -7,7 +7,7 @@ import pytest
 from scripts import aura_prepare_construction_demo_assets as assets
 
 
-def test_cleanup_ifcconvert_glb_temps_is_recursive_and_root_confined(tmp_path: Path) -> None:
+def test_cleanup_is_recursive_and_root_confined(tmp_path: Path) -> None:
     output = tmp_path / "generated"
     storey = output / "storeys" / "storey-a"
     storey.mkdir(parents=True)
@@ -25,29 +25,30 @@ def test_cleanup_ifcconvert_glb_temps_is_recursive_and_root_confined(tmp_path: P
     assert not raw_storey.exists()
 
 
-def test_convert_ifc_assets_cleans_temps_after_success_and_failure(
+def test_preserves_conversion_failure_when_cleanup_also_fails(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    output = tmp_path / "generated"
-    output.mkdir()
-    success_temp = output / ".building-full.ifcconvert.success.glb"
-    failure_temp = output / ".building-full.ifcconvert.failure.glb"
+    def conversion(**kwargs):
+        raise RuntimeError("conversion failed")
 
-    def successful(**kwargs):
-        success_temp.write_bytes(b"raw")
-        return {"phase": "CONVERT_GLB_SVG"}
+    def cleanup(**kwargs):
+        raise PermissionError("cleanup denied")
 
-    monkeypatch.setattr(assets, "_ORIGINAL_CONVERT_IFC_ASSETS", successful)
-    assert assets.convert_ifc_assets(output_dir=output, repo_root=tmp_path) == {
-        "phase": "CONVERT_GLB_SVG"
-    }
-    assert not success_temp.exists()
+    monkeypatch.setattr(assets, "_ORIGINAL_CONVERT_IFC_ASSETS", conversion)
+    monkeypatch.setattr(assets, "_cleanup_ifcconvert_glb_temps", cleanup)
+    with pytest.raises(RuntimeError, match="conversion failed") as caught:
+        assets.convert_ifc_assets(output_dir=tmp_path, repo_root=tmp_path)
+    assert any("cleanup denied" in note for note in getattr(caught.value, "__notes__", ()))
 
-    def failing(**kwargs):
-        failure_temp.write_bytes(b"raw")
-        raise RuntimeError("later conversion failed")
 
-    monkeypatch.setattr(assets, "_ORIGINAL_CONVERT_IFC_ASSETS", failing)
-    with pytest.raises(RuntimeError, match="later conversion failed"):
-        assets.convert_ifc_assets(output_dir=output, repo_root=tmp_path)
-    assert not failure_temp.exists()
+def test_cleanup_failure_surfaces_after_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(assets, "_ORIGINAL_CONVERT_IFC_ASSETS", lambda **kwargs: {"ok": True})
+    monkeypatch.setattr(
+        assets,
+        "_cleanup_ifcconvert_glb_temps",
+        lambda **kwargs: (_ for _ in ()).throw(PermissionError("cleanup denied")),
+    )
+    with pytest.raises(PermissionError, match="cleanup denied"):
+        assets.convert_ifc_assets(output_dir=tmp_path, repo_root=tmp_path)
