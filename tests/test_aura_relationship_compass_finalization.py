@@ -58,31 +58,44 @@ def _participant(pid: str, symbol: str, role: str, *, grounded: bool = True) -> 
 
 
 def _neighborhood(*, grounded_c: bool = True) -> dict:
+    participants = [
+        _participant("relp_a", "Alpha", "planner"),
+        _participant("relp_b", "Beta", "verifier"),
+        _participant("relp_c", "Gamma", "adapter", grounded=grounded_c),
+    ]
+    relations = [
+        {
+            "relation_id": "rel_ab",
+            "source_participant_id": "relp_a",
+            "target_participant_id": "relp_b",
+            "relation_type": "CALLS",
+            "truth_class": "EXACT_SOURCE",
+            "evidence_refs": ["alpha.py#Alpha", "beta.py#Beta"],
+        }
+    ]
+    index_body = {"index_id": "relindex_test", "participants": participants, "relations": relations}
     body = {
-        "index_digest": "i" * 40,
+        "index_id": "relindex_test",
+        "index_digest": stable_digest(index_body, digest_size=20),
         "request_digest": "r" * 40,
         "seed_participant_ids": ["relp_a"],
-        "participants": [
-            _participant("relp_a", "Alpha", "planner"),
-            _participant("relp_b", "Beta", "verifier"),
-            _participant("relp_c", "Gamma", "adapter", grounded=grounded_c),
-        ],
-        "relations": [
-            {
-                "relation_id": "rel_ab",
-                "source_participant_id": "relp_a",
-                "target_participant_id": "relp_b",
-                "relation_type": "CALLS",
-                "truth_class": "EXACT_SOURCE",
-                "evidence_refs": ["alpha.py#Alpha", "beta.py#Beta"],
-            }
-        ],
+        "participants": participants,
+        "relations": relations,
         "metrics": {"participant_count": 3, "relation_count": 1, "candidate_pair_count": 3},
         "truncation_reasons": [],
         "proposal_only": True,
         "safe_to_patch": False,
     }
     return {**body, "neighborhood_digest": stable_digest(body)}
+
+
+def _canonical_index(neighborhood: dict) -> dict:
+    body = {
+        "index_id": neighborhood["index_id"],
+        "participants": deepcopy(neighborhood["participants"]),
+        "relations": deepcopy(neighborhood["relations"]),
+    }
+    return {**body, "index_digest": stable_digest(body, digest_size=20)}
 
 
 def _compatibility(outcome: str = "COMPATIBLE") -> dict:
@@ -130,18 +143,29 @@ def test_c6_bounded_discovery_is_deterministic_and_preserves_rejections() -> Non
         if item.status == "FUTURE_PATCHABLE"
     )
 
-    verified = verify_bounded_emergent_discovery(one, neighborhood=_neighborhood())
+    neighborhood = _neighborhood()
+    verified = verify_bounded_emergent_discovery(
+        one, neighborhood=neighborhood, relational_index=_canonical_index(neighborhood)
+    )
     tampered_discovery = one.to_dict()
     tampered_discovery["candidates"][0]["mechanism"] = "tampered"
     with pytest.raises(ValueError, match="discovery digest mismatch"):
-        verify_bounded_emergent_discovery(tampered_discovery, neighborhood=_neighborhood())
+        verify_bounded_emergent_discovery(
+            tampered_discovery,
+            neighborhood=neighborhood,
+            relational_index=_canonical_index(neighborhood),
+        )
     forbidden_discovery = one.to_dict()
     forbidden_discovery["safe_to_patch"] = True
     forbidden_discovery["discovery_digest"] = stable_digest(
         {key: value for key, value in forbidden_discovery.items() if key != "discovery_digest"}
     )
     with pytest.raises(ValueError, match="authority boundary changed"):
-        verify_bounded_emergent_discovery(forbidden_discovery, neighborhood=_neighborhood())
+        verify_bounded_emergent_discovery(
+            forbidden_discovery,
+            neighborhood=neighborhood,
+            relational_index=_canonical_index(neighborhood),
+        )
     assert verified["summary"]["no_generic_repository_scan"] is True
     assert verified["accepted_candidates"]
     assert any(item["status"] == "TOO_RISKY" for item in verified["rejected_candidates"])
@@ -164,10 +188,32 @@ def test_c6_verifier_rejects_candidate_supplied_endpoint_hashes() -> None:
     discovery["discovery_digest"] = stable_digest(
         {key: value for key, value in discovery.items() if key != "discovery_digest"}
     )
-    verified = verify_bounded_emergent_discovery(discovery, neighborhood=neighborhood)
+    verified = verify_bounded_emergent_discovery(
+        discovery, neighborhood=neighborhood, relational_index=_canonical_index(neighborhood)
+    )
     rejection = next(item for item in verified["rejected_candidates"] if item["candidate_id"] == future["candidate_id"])
     assert "SOURCE_ENDPOINT_HASH_MISMATCH" in rejection["reasons"]
     assert verified["trusted_neighborhood_verified"] is True
+
+
+def test_c6_verifier_rejects_self_digested_noncanonical_neighborhood() -> None:
+    neighborhood = _neighborhood()
+    canonical_index = _canonical_index(neighborhood)
+    discovery = discover_bounded_emergent_candidates(
+        objective="Verify canonical neighborhood provenance",
+        neighborhood=neighborhood,
+        compatibility=_compatibility(),
+        required_tests=["tests/test_compass.py"],
+    )
+    forged = deepcopy(neighborhood)
+    forged["participants"][0]["metadata"]["source_hash"] = "f" * 64
+    body = dict(forged)
+    body.pop("neighborhood_digest", None)
+    forged["neighborhood_digest"] = stable_digest(body)
+    with pytest.raises(ValueError, match="differ from the canonical index"):
+        verify_bounded_emergent_discovery(
+            discovery, neighborhood=forged, relational_index=canonical_index
+        )
 
 
 def test_c6_missing_source_evidence_remains_needs_grounding() -> None:
@@ -179,7 +225,9 @@ def test_c6_missing_source_evidence_remains_needs_grounding() -> None:
         required_tests=[],
     )
     assert any(item.status == "NEEDS_GROUNDING" for item in discovery.candidates)
-    verified = verify_bounded_emergent_discovery(discovery, neighborhood=neighborhood)
+    verified = verify_bounded_emergent_discovery(
+        discovery, neighborhood=neighborhood, relational_index=_canonical_index(neighborhood)
+    )
     assert any(item["status"] == "NEEDS_GROUNDING" for item in verified["rejected_candidates"])
 
 
@@ -196,6 +244,28 @@ def test_c6_pair_budget_truncation_is_receipted() -> None:
         max_pairs_considered=1,
     )
     assert any(item["reason"] == "PAIR_BUDGET_TRUNCATED" for item in discovery.suppressed_receipts)
+
+
+def test_c6_byte_and_work_budgets_fail_closed() -> None:
+    neighborhood = _neighborhood()
+    with pytest.raises(ValueError, match="max_input_bytes"):
+        discover_bounded_emergent_candidates(
+            objective="bounded input",
+            neighborhood=neighborhood,
+            compatibility={**_compatibility(), "padding": "x" * 20_000},
+            max_input_bytes=2_000,
+        )
+    discovery = discover_bounded_emergent_candidates(
+        objective="Bound retained candidate bytes",
+        neighborhood=neighborhood,
+        compatibility=_compatibility(),
+        max_work_bytes=1,
+    )
+    assert not discovery.candidates
+    assert any(
+        item["reason"] == "OUTPUT_BYTE_BUDGET_TRUNCATED"
+        for item in discovery.suppressed_receipts
+    )
 
 
 def _write_grounded_source(tmp_path: Path, name: str, prefix: str, line_count: int) -> tuple[str, list[str]]:
@@ -288,7 +358,7 @@ def test_c7_change_graph_capsules_and_agent_ir_are_proposal_only(tmp_path: Path)
     }.issubset(types)
     assert graph["phase_capsules"]
 
-    capsules = compile_compass_act_capsules(graph)
+    capsules = compile_compass_act_capsules(graph, repo_root=tmp_path)
     assert capsules["ok"] is True
     assert capsules["act_capsules"]
     assert all(item["proposal_only"] for item in capsules["act_capsules"])
@@ -331,7 +401,7 @@ def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests(tmp_path: Pat
     packet["required_tests"] = []
     _rebind_grounding_receipt(packet)
     graph = build_compass_change_graph(packet, repo_root=tmp_path)
-    result = compile_compass_act_capsules(graph)
+    result = compile_compass_act_capsules(graph, repo_root=tmp_path)
     assert result["ok"] is False
     assert result["fail_closed"] is True
     assert result["reason"] == "MISSING_DECLARED_TESTS"
@@ -340,6 +410,19 @@ def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests(tmp_path: Pat
     tampered["nodes"][0]["payload"]["target_file"] = "tampered.py"
     with pytest.raises(ValueError, match="digest mismatch"):
         validate_compass_change_graph(tampered)
+    tampered["graph_digest"] = stable_digest(
+        {key: value for key, value in tampered.items() if key != "graph_digest"}
+    )
+    with pytest.raises(ValueError, match="ACTION targets differ"):
+        compile_compass_act_capsules(tampered, repo_root=tmp_path)
+
+    tampered_tests = deepcopy(build_compass_change_graph(_compass_packet(tmp_path), repo_root=tmp_path))
+    tampered_tests["nodes"][0]["payload"]["tests"] = ["tests/test_unbound.py"]
+    tampered_tests["graph_digest"] = stable_digest(
+        {key: value for key, value in tampered_tests.items() if key != "graph_digest"}
+    )
+    with pytest.raises(ValueError, match="ACTION tests differ"):
+        compile_compass_act_capsules(tampered_tests, repo_root=tmp_path)
 
     forbidden = deepcopy(build_compass_change_graph(_compass_packet(tmp_path), repo_root=tmp_path))
     forbidden["authority"]["merge_authority"] = True
@@ -350,7 +433,9 @@ def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests(tmp_path: Pat
     no_actions = _compass_packet(tmp_path)
     no_actions["recommended_targets"] = []
     _rebind_grounding_receipt(no_actions)
-    empty_result = compile_compass_act_capsules(build_compass_change_graph(no_actions, repo_root=tmp_path))
+    empty_result = compile_compass_act_capsules(
+        build_compass_change_graph(no_actions, repo_root=tmp_path), repo_root=tmp_path
+    )
     assert empty_result["reason"] == "NO_ACTION_NODES"
 
 
@@ -537,7 +622,7 @@ def test_c9_rollout_gate_requires_complete_paired_live_authorization() -> None:
 def _fake_final_packet(tmp_path: Path) -> dict:
     source_packet = _compass_packet(tmp_path)
     graph = build_compass_change_graph(source_packet, repo_root=tmp_path)
-    capsules = compile_compass_act_capsules(graph)
+    capsules = compile_compass_act_capsules(graph, repo_root=tmp_path)
     return {
         "compass_digest": "run-final",
         "grounding_digest": "grounding-final",
@@ -618,6 +703,39 @@ def test_c9_bridge_and_mcp_expose_six_bounded_tools(monkeypatch, tmp_path: Path)
         "aura_compass_plan",
         "aura_compass_compile_capsules",
     }.issubset(names)
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        {"objective": "x", "target_files": ["a.py"] * 17},
+        {"objective": "x", "target_symbols": "not-an-array"},
+        {"objective": "x" * 4001},
+        {"objective": "x", "rollout_budget": {"max_calls": 0}},
+        {"objective": "x", "rollout_budget": {"max_calls": 10**1000}},
+        {"objective": "x", "unexpected": True},
+    ],
+)
+def test_c9_mcp_rejects_compass_prepare_arguments_before_bridge_call(arguments: dict) -> None:
+    class BridgeProbe:
+        called = False
+
+        def aura_compass_prepare(self, **kwargs):
+            self.called = True
+            return {"ok": True, **kwargs}
+
+    bridge = BridgeProbe()
+    response = handle_request(
+        bridge,
+        {
+            "jsonrpc": "2.0",
+            "id": 92,
+            "method": "tools/call",
+            "params": {"name": "aura_compass_prepare", "arguments": arguments},
+        },
+    )
+    assert response["error"]["code"] == -32602
+    assert bridge.called is False
 
 
 def test_c9_all_compass_projections_bound_adversarial_payloads(monkeypatch, tmp_path: Path) -> None:

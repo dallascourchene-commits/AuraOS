@@ -70,7 +70,7 @@ def add_command_risk_nodes(graph: dict, risks: list[dict]) -> dict:
 
 def change_graph_to_act_capsules(graph: dict, repo_root: str | Path = ".") -> dict[str, Any]:
     if graph.get("graph_type") == "CODING_RELATIONSHIP_COMPASS":
-        return compile_compass_act_capsules(graph)
+        return compile_compass_act_capsules(graph, repo_root=repo_root)
     capsules = []
     for i, fp in enumerate(graph.get("files", [])[:5]):
         capsules.append({"task_id": f"A{i+1}", "target_file": fp, "objective": graph.get("objective",""),
@@ -234,6 +234,7 @@ def build_compass_change_graph(
         compass_packet,
         repo_root=repo_root,
     )
+    grounding_receipt = dict(compass_packet["grounding_receipt"])
     adapters = _ordered_unique(compass_packet.get("required_adapters", ()) or ())
     prohibitions = [dict(item) for item in compass_packet.get("prohibitions", ()) or () if isinstance(item, Mapping)]
     risks = [dict(item) if isinstance(item, Mapping) else {"risk": str(item)} for item in (compass_packet.get("emergent_evidence") or {}).get("risk_map", ()) or ()]
@@ -337,6 +338,8 @@ def build_compass_change_graph(
         "objective": objective,
         "compass_digest": compass_digest,
         "grounding_receipt_digest": grounding_receipt_digest,
+        "grounding_receipt": grounding_receipt,
+        "target_bindings": targets,
         "nodes": nodes,
         "phase_capsules": phase_capsules,
         "required_tests": tests,
@@ -382,11 +385,87 @@ def validate_compass_change_graph(graph: Mapping[str, Any]) -> dict[str, Any]:
     return {"ok": True, "graph_digest": stored, "node_count": len(graph.get("nodes", ()) or ())}
 
 
-def compile_compass_act_capsules(graph: Mapping[str, Any]) -> dict[str, Any]:
+def _verify_graph_grounding(
+    graph: Mapping[str, Any],
+    *,
+    repo_root: str | Path,
+) -> tuple[list[dict[str, Any]], list[str], str]:
+    """Re-bind ACTION payloads to the preserved receipt and current source."""
+
+    receipt = graph.get("grounding_receipt") or {}
+    if not isinstance(receipt, Mapping):
+        raise ValueError("Compass Change Graph requires its canonical grounding receipt")
+    receipt_digest = str(graph.get("grounding_receipt_digest") or "")
+    if not receipt_digest or not _digest_matches(dict(receipt), receipt_digest):
+        raise ValueError("Compass Change Graph grounding receipt digest mismatch")
+    if (
+        receipt.get("version") != COMPASS_GROUNDING_RECEIPT_VERSION
+        or receipt.get("patch_authority") != PATCH_AUTHORITY
+        or bool(receipt.get("vsa_patch_authority"))
+        or str(receipt.get("grounding_digest") or "") != str(graph.get("compass_digest") or "")
+    ):
+        raise ValueError("Compass Change Graph grounding receipt authority or identity mismatch")
+
+    preserved = [
+        _canonical_target_binding(item)
+        for item in graph.get("target_bindings", ()) or ()
+        if isinstance(item, Mapping)
+    ]
+    receipt_bindings = [
+        _canonical_target_binding(item)
+        for item in receipt.get("target_bindings", ()) or ()
+        if isinstance(item, Mapping)
+    ]
+    if preserved != receipt_bindings or not _digest_matches(
+        receipt_bindings,
+        str(receipt.get("source_evidence_digest") or ""),
+    ):
+        raise ValueError("Compass Change Graph target bindings are not bound to its grounding receipt")
+
+    tests = _ordered_unique(graph.get("required_tests", ()) or ())
+    if tests != _ordered_unique(receipt.get("required_tests", ()) or ()):
+        raise ValueError("Compass Change Graph tests differ from its grounding receipt")
+    action_bindings: list[dict[str, Any]] = []
+    for node in graph.get("nodes", ()) or ():
+        if not isinstance(node, Mapping) or node.get("node_type") != "ACTION":
+            continue
+        payload = node.get("payload") or {}
+        if not isinstance(payload, Mapping):
+            raise ValueError("Compass Change Graph ACTION payload must be a mapping")
+        action_bindings.append(
+            _canonical_target_binding(
+                {
+                    "file_path": payload.get("target_file"),
+                    "symbol": payload.get("target_symbol"),
+                    "line_start": payload.get("line_start"),
+                    "line_end": payload.get("line_end"),
+                    "source_hash": payload.get("source_hash"),
+                    "file_source_hash": payload.get("file_source_hash"),
+                }
+            )
+        )
+        if str(payload.get("grounding_receipt_digest") or "") != receipt_digest:
+            raise ValueError("Compass Change Graph ACTION is not bound to its grounding receipt")
+        if _ordered_unique(payload.get("tests", ()) or ()) != tests:
+            raise ValueError("Compass Change Graph ACTION tests differ from its grounding receipt")
+    if action_bindings != preserved:
+        raise ValueError("Compass Change Graph ACTION targets differ from canonical target bindings")
+
+    root = Path(repo_root).resolve()
+    for binding in preserved:
+        _verify_target_source(root, binding)
+    return preserved, tests, receipt_digest
+
+
+def compile_compass_act_capsules(
+    graph: Mapping[str, Any],
+    *,
+    repo_root: str | Path = ".",
+) -> dict[str, Any]:
     """Compile actual proposal-only Act Capsules or fail closed on missing evidence."""
 
     validate_compass_change_graph(graph)
-    tests = _ordered_unique(graph.get("required_tests", ()) or ())
+    _, tests, _ = _verify_graph_grounding(graph, repo_root=repo_root)
     if not tests:
         return {
             "ok": False,

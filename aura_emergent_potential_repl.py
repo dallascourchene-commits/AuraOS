@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 import re
 import shlex
+import time
 from typing import Any, Iterable, Mapping, Sequence
 
 from aura_emergent_capability_auditor import (
@@ -55,6 +56,11 @@ VALID_STATUSES = {
     STATUS_TOO_RISKY,
     STATUS_DREAM_ONLY,
 }
+
+BOUNDED_EMERGENT_MAX_INPUT_BYTES = 512 * 1024
+BOUNDED_EMERGENT_MAX_WORK_BYTES = 512 * 1024
+BOUNDED_EMERGENT_MAX_RECEIPTS = 256
+BOUNDED_EMERGENT_MAX_ELAPSED_MS = 5_000
 
 COMMAND_ALIASES = {"emerge", "emergent", "future", "potential"}
 PATCH_TERMS = {
@@ -1543,6 +1549,10 @@ def discover_bounded_emergent_candidates(
     required_tests: Sequence[str] = (),
     max_candidates: int = 12,
     max_pairs_considered: int = 4096,
+    max_input_bytes: int = BOUNDED_EMERGENT_MAX_INPUT_BYTES,
+    max_work_bytes: int = BOUNDED_EMERGENT_MAX_WORK_BYTES,
+    max_output_bytes: int = BOUNDED_EMERGENT_MAX_WORK_BYTES,
+    max_elapsed_ms: int = 1_000,
 ) -> BoundedEmergentDiscovery:
     """Discover unwired combinations without invoking a repository-wide scan.
 
@@ -1551,8 +1561,42 @@ def discover_bounded_emergent_candidates(
     proposal-only; it creates no patch, provider call, or automatic wiring authority.
     """
 
-    if not isinstance(neighborhood, Mapping):
+    started = time.perf_counter()
+    if not isinstance(neighborhood, Mapping) or not isinstance(compatibility, Mapping):
         raise ValueError("neighborhood must be a mapping")
+    if atlas is not None and not isinstance(atlas, Mapping):
+        raise ValueError("atlas must be a mapping")
+    if not isinstance(objective, str) or len(objective) > 4_000:
+        raise ValueError("objective must be a string of at most 4000 characters")
+    if isinstance(required_tests, (str, bytes)) or not isinstance(required_tests, Sequence):
+        raise ValueError("required_tests must be a sequence of strings")
+    if not all(isinstance(item, str) for item in required_tests):
+        raise ValueError("required_tests must contain only strings")
+    if any(len(item) > 1_000 for item in required_tests):
+        raise ValueError("required_tests entries must not exceed 1000 characters")
+    input_limit = max(1, min(int(max_input_bytes), BOUNDED_EMERGENT_MAX_INPUT_BYTES))
+    work_limit = max(1, min(int(max_work_bytes), BOUNDED_EMERGENT_MAX_WORK_BYTES))
+    output_limit = max(1, min(int(max_output_bytes), BOUNDED_EMERGENT_MAX_WORK_BYTES))
+    elapsed_limit = max(1, min(int(max_elapsed_ms), BOUNDED_EMERGENT_MAX_ELAPSED_MS))
+    try:
+        input_bytes = len(
+            json.dumps(
+                {
+                    "objective": objective,
+                    "neighborhood": neighborhood,
+                    "compatibility": compatibility,
+                    "atlas": atlas,
+                    "required_tests": required_tests,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        )
+    except (TypeError, ValueError) as exc:
+        raise ValueError("bounded emergent input must be canonical JSON data") from exc
+    if input_bytes > input_limit:
+        raise ValueError("bounded emergent input exceeds max_input_bytes")
     neighborhood_digest = str(neighborhood.get("neighborhood_digest") or "")
     if not neighborhood_digest:
         raise ValueError("bounded emergent discovery requires neighborhood_digest")
@@ -1564,6 +1608,10 @@ def discover_bounded_emergent_candidates(
     by_id = {str(item.get("participant_id") or ""): item for item in participants}
     if "" in by_id:
         raise ValueError("bounded emergent participant identity is missing")
+    if len(by_id) != len(participants):
+        raise ValueError("bounded emergent participant identities must be unique")
+    if any(len(item) > 240 for item in by_id):
+        raise ValueError("bounded emergent participant identity exceeds 240 characters")
     exact_pairs = {
         tuple(sorted((str(item.get("source_participant_id") or ""), str(item.get("target_participant_id") or ""))))
         for item in relations
@@ -1580,94 +1628,118 @@ def discover_bounded_emergent_candidates(
     )
     global_hard_block = compatibility_outcome in {"PROHIBITED", "INCOMPATIBLE", "BLOCKED"}
 
-    pairs: list[tuple[str, str]] = []
     ids = sorted(by_id)
     pair_limit = max(1, min(int(max_pairs_considered), 4096))
     total_possible_pairs = len(ids) * (len(ids) - 1) // 2
-    for index, left in enumerate(ids):
-        for right in ids[index + 1 :]:
-            pairs.append((left, right))
-            if len(pairs) >= pair_limit:
-                break
-        if len(pairs) >= pair_limit:
-            break
 
     raw: list[BoundedEmergentCandidate] = []
     rejected: list[dict[str, Any]] = []
-    for left_id, right_id in pairs:
-        pair_key = (left_id, right_id)
-        if pair_key in exact_pairs:
-            rejected.append({"pair": list(pair_key), "reason": "EXACT_RELATION_ALREADY_PRESENT"})
-            continue
-        if pair_key in redundant_pairs:
-            rejected.append({"pair": list(pair_key), "reason": "REDUNDANT_RELATIONSHIP"})
-            continue
-        left = by_id[left_id]
-        right = by_id[right_id]
-        left_role = _bounded_participant_role(left)
-        right_role = _bounded_participant_role(right)
-        left_label = _bounded_participant_label(left)
-        right_label = _bounded_participant_label(right)
-        left_refs, left_hashes, left_tests = _bounded_evidence(left)
-        right_refs, right_hashes, right_tests = _bounded_evidence(right)
-        evidence_refs = tuple(dict.fromkeys([*left_refs, *right_refs]))
-        source_hashes = tuple(dict.fromkeys([*left_hashes, *right_hashes]))
-        tests = tuple(dict.fromkeys([*map(str, required_tests), *left_tests, *right_tests]))
-        cluster_key = f"{left_role}->{right_role}"
-        risk_reasons: list[str] = []
-        status = STATUS_FUTURE_PATCHABLE
-        if pair_key in prohibited_pairs or global_hard_block:
-            status = STATUS_TOO_RISKY
-            risk_reasons.append("prohibition_or_hard_guard")
-        if not left_refs or not right_refs or not left_hashes or not right_hashes:
-            if status != STATUS_TOO_RISKY:
-                status = STATUS_NEEDS_GROUNDING
-            risk_reasons.append("missing_exact_source_evidence")
-        if not tests:
-            if status != STATUS_TOO_RISKY:
-                status = STATUS_NEEDS_GROUNDING
-            risk_reasons.append("missing_verifier")
-        failure_conditions = tuple(
-            dict.fromkeys(
-                [
-                    "source hash or repository identity changes",
-                    "typed interface compatibility no longer passes",
-                    "declared verifier does not reproduce the benefit",
-                    *risk_reasons,
-                ]
+    rejected_omitted = 0
+    considered_pairs = 0
+    retained_work_bytes = 0
+    retained_receipt_bytes = 0
+    work_truncation_reason = ""
+    selected_limit = max(1, min(int(max_candidates), 64))
+    raw_limit = min(512, max(32, selected_limit * 8))
+
+    def record_rejection(pair_key: tuple[str, str], reason: str) -> None:
+        nonlocal rejected_omitted, retained_receipt_bytes
+        receipt = {"pair": list(pair_key), "reason": reason}
+        receipt_bytes = len(
+            json.dumps(receipt, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        )
+        if (
+            len(rejected) >= BOUNDED_EMERGENT_MAX_RECEIPTS
+            or retained_work_bytes + retained_receipt_bytes + receipt_bytes > work_limit
+        ):
+            rejected_omitted += 1
+            return
+        retained_receipt_bytes += receipt_bytes
+        rejected.append(receipt)
+
+    stop = False
+    for index, left_id in enumerate(ids):
+        for right_id in ids[index + 1 :]:
+            if considered_pairs >= pair_limit:
+                stop = True
+                break
+            if int((time.perf_counter() - started) * 1000) >= elapsed_limit:
+                work_truncation_reason = "ELAPSED_TIME_BUDGET_TRUNCATED"
+                stop = True
+                break
+            considered_pairs += 1
+            pair_key = (left_id, right_id)
+            if pair_key in exact_pairs:
+                record_rejection(pair_key, "EXACT_RELATION_ALREADY_PRESENT")
+                continue
+            if pair_key in redundant_pairs:
+                record_rejection(pair_key, "REDUNDANT_RELATIONSHIP")
+                continue
+            left = by_id[left_id]
+            right = by_id[right_id]
+            left_role = _bounded_participant_role(left)
+            right_role = _bounded_participant_role(right)
+            left_label = _bounded_participant_label(left)
+            right_label = _bounded_participant_label(right)
+            left_refs, left_hashes, left_tests = _bounded_evidence(left)
+            right_refs, right_hashes, right_tests = _bounded_evidence(right)
+            evidence_refs = tuple(dict.fromkeys([*left_refs, *right_refs]))
+            source_hashes = tuple(dict.fromkeys([*left_hashes, *right_hashes]))
+            tests = tuple(dict.fromkeys([*required_tests, *left_tests, *right_tests]))
+            cluster_key = f"{left_role}->{right_role}"
+            risk_reasons: list[str] = []
+            status = STATUS_FUTURE_PATCHABLE
+            if pair_key in prohibited_pairs or global_hard_block:
+                status = STATUS_TOO_RISKY
+                risk_reasons.append("prohibition_or_hard_guard")
+            if not left_refs or not right_refs or not left_hashes or not right_hashes:
+                if status != STATUS_TOO_RISKY:
+                    status = STATUS_NEEDS_GROUNDING
+                risk_reasons.append("missing_exact_source_evidence")
+            if not tests:
+                if status != STATUS_TOO_RISKY:
+                    status = STATUS_NEEDS_GROUNDING
+                risk_reasons.append("missing_verifier")
+            failure_conditions = tuple(
+                dict.fromkeys(
+                    [
+                        "source hash or repository identity changes",
+                        "typed interface compatibility no longer passes",
+                        "declared verifier does not reproduce the benefit",
+                        *risk_reasons,
+                    ]
+                )
             )
-        )
-        mechanism = (
-            f"Route the proposal-only output of {left_label} into {right_label} through "
-            "a typed adapter evaluated by the C5 circuit breakers."
-        )
-        benefit = (
-            f"Test whether the {left_role} and {right_role} roles remove duplicated context "
-            "or expose a missing local capability without expanding repository scope."
-        )
-        risk = (
-            "High: hard guard or prohibition present."
-            if status == STATUS_TOO_RISKY
-            else "Medium: local behavior may be semantically incompatible until the smallest experiment passes."
-        )
-        experiment_test = tests[0] if tests else "a new deterministic fixture"
-        smallest_experiment = (
-            f"Build a read-only fixture connecting {left_label} to {right_label}; run {experiment_test}; "
-            "record success, failure, or denial without changing production files."
-        )
-        evidence_mass = min(1.0, (len(evidence_refs) + len(source_hashes) + len(tests)) / 8.0)
-        role_diversity = 1.0 if left_role != right_role else 0.35
-        score = round(max(0.0, min(1.0, 0.55 * evidence_mass + 0.45 * role_diversity)), 6)
-        identity = {
-            "objective": str(objective),
-            "source": left_id,
-            "target": right_id,
-            "neighborhood_digest": neighborhood_digest,
-            "compatibility_digest": compatibility_digest,
-            "mechanism": mechanism,
-        }
-        raw.append(
-            BoundedEmergentCandidate(
+            mechanism = (
+                f"Route the proposal-only output of {left_label} into {right_label} through "
+                "a typed adapter evaluated by the C5 circuit breakers."
+            )
+            benefit = (
+                f"Test whether the {left_role} and {right_role} roles remove duplicated context "
+                "or expose a missing local capability without expanding repository scope."
+            )
+            risk = (
+                "High: hard guard or prohibition present."
+                if status == STATUS_TOO_RISKY
+                else "Medium: local behavior may be semantically incompatible until the smallest experiment passes."
+            )
+            experiment_test = tests[0] if tests else "a new deterministic fixture"
+            smallest_experiment = (
+                f"Build a read-only fixture connecting {left_label} to {right_label}; run {experiment_test}; "
+                "record success, failure, or denial without changing production files."
+            )
+            evidence_mass = min(1.0, (len(evidence_refs) + len(source_hashes) + len(tests)) / 8.0)
+            role_diversity = 1.0 if left_role != right_role else 0.35
+            score = round(max(0.0, min(1.0, 0.55 * evidence_mass + 0.45 * role_diversity)), 6)
+            identity = {
+                "objective": str(objective),
+                "source": left_id,
+                "target": right_id,
+                "neighborhood_digest": neighborhood_digest,
+                "compatibility_digest": compatibility_digest,
+                "mechanism": mechanism,
+            }
+            candidate = BoundedEmergentCandidate(
                 candidate_id=f"bem_{stable_digest(identity, digest_size=12)}",
                 source_participant_id=left_id,
                 target_participant_id=right_id,
@@ -1689,28 +1761,67 @@ def discover_bounded_emergent_candidates(
                 status=status,
                 score=score,
             )
-        )
+            candidate_bytes = len(
+                json.dumps(
+                    candidate.to_dict(),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            )
+            candidate_budget = min(work_limit, max(1, output_limit // 2))
+            if retained_work_bytes + retained_receipt_bytes + candidate_bytes > candidate_budget:
+                work_truncation_reason = "OUTPUT_BYTE_BUDGET_TRUNCATED"
+                stop = True
+                break
+            if len(raw) >= raw_limit:
+                work_truncation_reason = "CANDIDATE_WORK_BUDGET_TRUNCATED"
+                stop = True
+                break
+            retained_work_bytes += candidate_bytes
+            raw.append(candidate)
+        if stop:
+            break
 
     # Deterministic diversification: retain at most two representatives per role cluster.
     raw.sort(key=lambda item: (-item.score, item.cluster_key, item.candidate_id))
     selected: list[BoundedEmergentCandidate] = []
     cluster_counts: dict[str, int] = {}
     suppressed: list[dict[str, Any]] = []
-    if total_possible_pairs > len(pairs):
+    if total_possible_pairs > considered_pairs:
         suppressed.append(
             {
                 "candidate_id": "",
                 "reason": "PAIR_BUDGET_TRUNCATED",
-                "suppressed_pair_count": total_possible_pairs - len(pairs),
+                "suppressed_pair_count": total_possible_pairs - considered_pairs,
+            }
+        )
+    if work_truncation_reason:
+        suppressed.append(
+            {
+                "candidate_id": "",
+                "reason": work_truncation_reason,
+                "considered_pair_count": considered_pairs,
+                "retained_work_bytes": retained_work_bytes + retained_receipt_bytes,
+            }
+        )
+    if rejected_omitted:
+        rejected.append(
+            {
+                "pair": [],
+                "reason": "REJECTION_RECEIPT_BUDGET_TRUNCATED",
+                "omitted_receipt_count": rejected_omitted,
             }
         )
     for candidate in raw:
-        if len(selected) >= max(1, min(int(max_candidates), 64)):
-            suppressed.append({"candidate_id": candidate.candidate_id, "reason": "MAX_CANDIDATES"})
+        if len(selected) >= selected_limit:
+            if len(suppressed) < BOUNDED_EMERGENT_MAX_RECEIPTS:
+                suppressed.append({"candidate_id": candidate.candidate_id, "reason": "MAX_CANDIDATES"})
             continue
         count = cluster_counts.get(candidate.cluster_key, 0)
         if count >= 2:
-            suppressed.append({"candidate_id": candidate.candidate_id, "reason": "CLUSTER_DIVERSITY_LIMIT"})
+            if len(suppressed) < BOUNDED_EMERGENT_MAX_RECEIPTS:
+                suppressed.append({"candidate_id": candidate.candidate_id, "reason": "CLUSTER_DIVERSITY_LIMIT"})
             continue
         cluster_counts[candidate.cluster_key] = count + 1
         selected.append(candidate)
@@ -1725,4 +1836,15 @@ def discover_bounded_emergent_candidates(
     )
     body = discovery.to_dict()
     body.pop("discovery_digest", None)
-    return BoundedEmergentDiscovery(**{**discovery.__dict__, "discovery_digest": stable_digest(body)})
+    result = BoundedEmergentDiscovery(**{**discovery.__dict__, "discovery_digest": stable_digest(body)})
+    result_bytes = len(
+        json.dumps(
+            result.to_dict(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    )
+    if result_bytes > output_limit:
+        raise ValueError("bounded emergent result exceeds max_output_bytes")
+    return result

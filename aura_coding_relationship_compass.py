@@ -1413,13 +1413,14 @@ def compile_coding_relationship_compass(
     bounded_verification = verify_bounded_emergent_discovery(
         discovery,
         neighborhood=neighborhood,
+        relational_index=relational_index,
         max_clusters=max(1, min(max_emergent_candidates, 16)),
     )
     packet["bounded_emergent_discovery"] = discovery.to_dict()
     packet["bounded_emergent_verification"] = bounded_verification
 
     change_graph = build_compass_change_graph(packet, repo_root=root)
-    capsule_packet = compile_compass_act_capsules(change_graph)
+    capsule_packet = compile_compass_act_capsules(change_graph, repo_root=root)
     agent_ir = (
         AgentIRCompiler.compile_compass_act_capsules(capsule_packet)
         if capsule_packet.get("ok")

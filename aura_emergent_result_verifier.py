@@ -1427,13 +1427,63 @@ BOUNDED_EMERGENT_VERSION = "AURA_BOUNDED_EMERGENT_DISCOVERY_V1"
 BOUNDED_VERIFIER_VERSION = "AURA_BOUNDED_EMERGENT_VERIFIER_V1"
 
 
-def _trusted_neighborhood_body(neighborhood: Any) -> tuple[dict[str, Any], str]:
+def _validated_canonical_index(index: Any) -> tuple[dict[str, Any], str]:
+    value = index.to_dict() if hasattr(index, "to_dict") else dict(index or {})
+    supplied_digest = str(value.get("index_digest") or "")
+    if not supplied_digest or not re.fullmatch(r"[0-9a-f]+", supplied_digest) or len(supplied_digest) % 2:
+        raise ValueError("canonical relational index digest is missing or malformed")
+    body = dict(value)
+    body.pop("index_digest", None)
+    expected = stable_digest(body, digest_size=len(supplied_digest) // 2)
+    if not hmac.compare_digest(supplied_digest, expected):
+        raise ValueError("canonical relational index digest mismatch")
+    return value, supplied_digest
+
+
+def _trusted_neighborhood_body(
+    neighborhood: Any,
+    relational_index: Any,
+) -> tuple[dict[str, Any], str]:
     trusted = dict(neighborhood or {})
     trusted_digest = str(trusted.pop("neighborhood_digest", "") or "")
     if not trusted_digest or not re.fullmatch(r"[0-9a-f]+", trusted_digest) or len(trusted_digest) % 2:
         raise ValueError("trusted relational neighborhood digest is missing or malformed")
     if stable_digest(trusted, digest_size=len(trusted_digest) // 2) != trusted_digest:
         raise ValueError("trusted relational neighborhood digest mismatch")
+    canonical_index, index_digest = _validated_canonical_index(relational_index)
+    if not hmac.compare_digest(str(trusted.get("index_digest") or ""), index_digest):
+        raise ValueError("relational neighborhood is not bound to the canonical index")
+    neighborhood_index_id = str(trusted.get("index_id") or "")
+    canonical_index_id = str(canonical_index.get("index_id") or "")
+    if canonical_index_id and neighborhood_index_id != canonical_index_id:
+        raise ValueError("relational neighborhood index_id differs from the canonical index")
+
+    for collection, identity_key in (("participants", "participant_id"), ("relations", "relation_id")):
+        canonical_items = canonical_index.get(collection, ()) or ()
+        neighborhood_items = trusted.get(collection, ()) or ()
+        if (
+            not isinstance(canonical_items, Sequence)
+            or isinstance(canonical_items, (str, bytes))
+            or not isinstance(neighborhood_items, Sequence)
+            or isinstance(neighborhood_items, (str, bytes))
+        ):
+            raise ValueError(f"canonical {collection} must be arrays")
+        canonical_by_id: dict[str, dict[str, Any]] = {}
+        for item in canonical_items:
+            if not isinstance(item, Mapping) or not str(item.get(identity_key) or ""):
+                raise ValueError(f"canonical {collection} contain an invalid identity")
+            identity = str(item[identity_key])
+            if identity in canonical_by_id:
+                raise ValueError(f"canonical {collection} contain duplicate identities")
+            canonical_by_id[identity] = dict(item)
+        seen: set[str] = set()
+        for item in neighborhood_items:
+            if not isinstance(item, Mapping) or not str(item.get(identity_key) or ""):
+                raise ValueError(f"relational neighborhood {collection} contain an invalid identity")
+            identity = str(item[identity_key])
+            if identity in seen or canonical_by_id.get(identity) != dict(item):
+                raise ValueError(f"relational neighborhood {collection} differ from the canonical index")
+            seen.add(identity)
     return trusted, trusted_digest
 
 
@@ -1470,6 +1520,7 @@ def verify_bounded_emergent_discovery(
     discovery: Any,
     *,
     neighborhood: Any,
+    relational_index: Any,
     max_clusters: int = 8,
 ) -> dict[str, Any]:
     """Verify a discovery against trusted canonical neighborhood endpoint evidence."""
@@ -1491,7 +1542,7 @@ def verify_bounded_emergent_discovery(
         raise ValueError("bounded emergent discovery authority boundary changed")
     if not payload.get("no_generic_repository_scan"):
         raise ValueError("bounded emergent verifier refuses generic repository scans")
-    trusted, trusted_digest = _trusted_neighborhood_body(neighborhood)
+    trusted, trusted_digest = _trusted_neighborhood_body(neighborhood, relational_index)
     if not hmac.compare_digest(str(payload.get("neighborhood_digest") or ""), trusted_digest):
         raise ValueError("bounded emergent discovery is not bound to the trusted neighborhood")
     participants = {
