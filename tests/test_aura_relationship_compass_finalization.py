@@ -390,6 +390,20 @@ def test_c7_change_graph_rejects_unbound_or_drifted_source_evidence(tmp_path: Pa
         build_compass_change_graph(drifted, repo_root=tmp_path)
 
 
+def test_c7_change_graph_rejects_symlinked_source_escape(tmp_path: Path) -> None:
+    packet = _compass_packet(tmp_path)
+    source_path = tmp_path / "alpha.py"
+    outside = tmp_path.parent / f"{tmp_path.name}-outside.py"
+    outside.write_bytes(source_path.read_bytes())
+    source_path.unlink()
+    try:
+        source_path.symlink_to(outside)
+    except OSError:
+        pytest.skip("symlink creation is unavailable")
+    with pytest.raises(ValueError, match="symlink|escapes repository"):
+        build_compass_change_graph(packet, repo_root=tmp_path)
+
+
 def test_c7_capsule_compiler_fails_closed_on_missing_hash_or_tests(tmp_path: Path) -> None:
     packet = _compass_packet(tmp_path)
     packet["recommended_targets"][0]["source_hash"] = ""
@@ -556,6 +570,66 @@ def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Pa
         assert "secret_receipt" not in serialized
         assert "private.py#secret" not in serialized
         assert "sensitive reason" not in serialized
+
+
+def test_c8_relationship_observation_rejects_unbounded_payloads_before_persistence(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="64 items"):
+        RelationshipExperienceObservation.create(
+            relationship_id="bem_many_refs",
+            relationship_digest="d" * 40,
+            repository_head="h1",
+            working_tree_digest="w" * 40,
+            valid_from_head="h1",
+            outcome=RelationshipOutcome.FAILURE,
+            verifier_evidence_refs=[f"test:{index}" for index in range(65)],
+            receipt_refs=[],
+            source_refs=[],
+            current_source_digest="s" * 40,
+            human_disposition=RelationshipHumanDisposition.DENIED,
+            privacy_class="PROJECT",
+            transaction_time=1000.0,
+        )
+    with pytest.raises(ValueError, match="1024 UTF-8 bytes"):
+        RelationshipExperienceObservation.create(
+            relationship_id="bem_large_ref",
+            relationship_digest="d" * 40,
+            repository_head="h1",
+            working_tree_digest="w" * 40,
+            valid_from_head="h1",
+            outcome=RelationshipOutcome.FAILURE,
+            verifier_evidence_refs=["x" * 1025],
+            receipt_refs=[],
+            source_refs=[],
+            current_source_digest="s" * 40,
+            human_disposition=RelationshipHumanDisposition.DENIED,
+            privacy_class="PROJECT",
+            transaction_time=1000.0,
+        )
+    aggregate_refs = [f"{index:02d}:" + "x" * 1019 for index in range(64)]
+    with pytest.raises(ValueError, match="aggregate byte limit"):
+        RelationshipExperienceObservation.create(
+            relationship_id="bem_aggregate",
+            relationship_digest="d" * 40,
+            repository_head="h1",
+            working_tree_digest="w" * 40,
+            valid_from_head="h1",
+            outcome=RelationshipOutcome.FAILURE,
+            verifier_evidence_refs=aggregate_refs,
+            receipt_refs=[item.replace("x", "y") for item in aggregate_refs],
+            source_refs=[],
+            current_source_digest="s" * 40,
+            human_disposition=RelationshipHumanDisposition.DENIED,
+            privacy_class="PROJECT",
+            transaction_time=1000.0,
+        )
+
+    oversized = _observation().to_dict()
+    oversized["source_refs"] = [f"source:{index}" for index in range(65)]
+    with ArenaExperienceLedger(tmp_path) as ledger:
+        denied = ledger.record_relationship_observation(oversized)
+        assert denied["ok"] is False
+        assert denied["reason"] == "invalid_relationship_observation:ValueError"
+        assert ledger.status()["relationship_experience_count"] == 0
 
 
 def test_c9_classification_projection_bounds_all_collections_and_bytes(tmp_path: Path) -> None:

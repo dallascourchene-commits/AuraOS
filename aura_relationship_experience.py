@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from enum import Enum
+import json
 import math
 import time
 from typing import Any, Mapping, Sequence
@@ -15,6 +16,11 @@ from typing import Any, Mapping, Sequence
 from aura_event_contracts import PATCH_AUTHORITY, VSA_PATCH_AUTHORITY, sanitize_payload, stable_digest
 
 RELATIONSHIP_EXPERIENCE_VERSION = "AURA_RELATIONSHIP_EXPERIENCE_V1"
+RELATIONSHIP_EXPERIENCE_MAX_SCALAR_BYTES = 4_096
+RELATIONSHIP_EXPERIENCE_MAX_REASON_BYTES = 8_192
+RELATIONSHIP_EXPERIENCE_MAX_REF_ITEMS = 64
+RELATIONSHIP_EXPERIENCE_MAX_REF_BYTES = 1_024
+RELATIONSHIP_EXPERIENCE_MAX_PAYLOAD_BYTES = 64 * 1_024
 
 
 class RelationshipOutcome(str, Enum):
@@ -35,8 +41,30 @@ class RelationshipHumanDisposition(str, Enum):
 _ALLOWED_PRIVACY = {"PUBLIC", "PROJECT", "PRIVATE_REDACTED"}
 
 
+def _bounded_text(
+    value: Any,
+    name: str,
+    *,
+    maximum_bytes: int,
+    required: bool = False,
+) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"{name} must be a string")
+    text = value.strip() if required else value
+    if required and not text:
+        raise ValueError(f"{name} is required")
+    if len(text.encode("utf-8")) > maximum_bytes:
+        raise ValueError(f"{name} exceeds {maximum_bytes} UTF-8 bytes")
+    return text
+
+
 def _required(value: Any, name: str) -> str:
-    text = str(value or "").strip()
+    text = _bounded_text(
+        value,
+        name,
+        maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_SCALAR_BYTES,
+        required=True,
+    )
     if not text:
         raise ValueError(f"{name} is required")
     return text
@@ -45,14 +73,47 @@ def _required(value: Any, name: str) -> str:
 def _strings(values: Sequence[Any], name: str) -> tuple[str, ...]:
     if isinstance(values, (str, bytes, bytearray)):
         raise ValueError(f"{name} must be a sequence")
-    result = tuple(dict.fromkeys(_required(value, name) for value in values))
+    if not isinstance(values, Sequence):
+        raise ValueError(f"{name} must be a sequence")
+    if len(values) > RELATIONSHIP_EXPERIENCE_MAX_REF_ITEMS:
+        raise ValueError(f"{name} exceeds {RELATIONSHIP_EXPERIENCE_MAX_REF_ITEMS} items")
+    result = tuple(
+        dict.fromkeys(
+            _bounded_text(
+                value,
+                name,
+                maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_REF_BYTES,
+                required=True,
+            )
+            for value in values
+        )
+    )
     return result
 
 
+def _payload_bytes(value: Mapping[str, Any]) -> int:
+    try:
+        encoded = json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("relationship experience payload must be canonical JSON data") from exc
+    return len(encoded)
+
+
 def _finite_timestamp(value: Any, name: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{name} must be a finite timestamp")
-    return float(value)
+    try:
+        result = float(value)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(f"{name} must be a finite timestamp") from exc
+    if not math.isfinite(result) or abs(result) > 1_000_000_000_000_000:
+        raise ValueError(f"{name} must be a finite timestamp")
+    return result
 
 
 @dataclass(frozen=True)
@@ -93,7 +154,31 @@ class RelationshipExperienceObservation:
             "current_source_digest",
         ):
             _required(getattr(self, name), name)
+        for name in ("valid_to_head", "objective_digest"):
+            _bounded_text(
+                getattr(self, name),
+                name,
+                maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_SCALAR_BYTES,
+            )
+        _bounded_text(
+            self.reason,
+            "reason",
+            maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_REASON_BYTES,
+        )
         _finite_timestamp(self.transaction_time, "transaction_time")
+        if not isinstance(self.outcome, (RelationshipOutcome, str)) or not isinstance(
+            self.human_disposition, (RelationshipHumanDisposition, str)
+        ):
+            raise ValueError("relationship experience enums must be strings")
+        if isinstance(self.outcome, str):
+            _bounded_text(self.outcome, "outcome", maximum_bytes=64, required=True)
+        if isinstance(self.human_disposition, str):
+            _bounded_text(
+                self.human_disposition,
+                "human_disposition",
+                maximum_bytes=64,
+                required=True,
+            )
         try:
             outcome = self.outcome if isinstance(self.outcome, RelationshipOutcome) else RelationshipOutcome(str(self.outcome))
             disposition = (
@@ -108,21 +193,28 @@ class RelationshipExperienceObservation:
         object.__setattr__(self, "verifier_evidence_refs", _strings(self.verifier_evidence_refs, "verifier_evidence_refs"))
         object.__setattr__(self, "receipt_refs", _strings(self.receipt_refs, "receipt_refs"))
         object.__setattr__(self, "source_refs", _strings(self.source_refs, "source_refs"))
-        privacy = str(self.privacy_class or "").upper()
+        if not isinstance(self.privacy_class, str):
+            raise ValueError("relationship experience privacy class must be a string")
+        privacy = self.privacy_class.upper()
         if privacy not in _ALLOWED_PRIVACY:
             raise ValueError("unsupported relationship experience privacy class")
         object.__setattr__(self, "privacy_class", privacy)
         if (
-            not self.proposal_only
-            or self.canonical_truth_owner
+            self.proposal_only is not True
+            or self.canonical_truth_owner is not False
             or self.patch_authority != PATCH_AUTHORITY
-            or self.vsa_patch_authority
-            or self.learned_weight_patch_authority
-            or self.promotion_authority
+            or self.vsa_patch_authority is not False
+            or self.learned_weight_patch_authority is not False
+            or self.promotion_authority is not False
         ):
             raise ValueError("relationship experience authority boundary changed")
         if self.version != RELATIONSHIP_EXPERIENCE_VERSION:
             raise ValueError("unsupported relationship experience version")
+        canonical_payload = asdict(self)
+        canonical_payload["outcome"] = outcome.value
+        canonical_payload["human_disposition"] = disposition.value
+        if _payload_bytes(canonical_payload) + 128 > RELATIONSHIP_EXPERIENCE_MAX_PAYLOAD_BYTES:
+            raise ValueError("relationship experience payload exceeds aggregate byte limit")
         expected = stable_digest(self.identity_payload())
         if self.observation_id != f"rex_{expected}":
             raise ValueError("relationship experience observation_id mismatch")
@@ -173,50 +265,88 @@ class RelationshipExperienceObservation:
         reason: str = "",
     ) -> "RelationshipExperienceObservation":
         timestamp = time.time() if transaction_time is None else _finite_timestamp(transaction_time, "transaction_time")
-        safe_reason = sanitize_payload(str(reason or ""))
+        raw_reason = _bounded_text(
+            reason,
+            "reason",
+            maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_REASON_BYTES,
+        )
+        safe_reason = sanitize_payload(raw_reason)
         if not isinstance(safe_reason, str):
             safe_reason = ""
+        outcome_value = (
+            outcome.value
+            if isinstance(outcome, RelationshipOutcome)
+            else _bounded_text(outcome, "outcome", maximum_bytes=64, required=True)
+        )
+        disposition_value = (
+            human_disposition.value
+            if isinstance(human_disposition, RelationshipHumanDisposition)
+            else _bounded_text(
+                human_disposition,
+                "human_disposition",
+                maximum_bytes=64,
+                required=True,
+            )
+        )
         identity = {
             "relationship_id": _required(relationship_id, "relationship_id"),
             "relationship_digest": _required(relationship_digest, "relationship_digest"),
             "repository_head": _required(repository_head, "repository_head"),
             "working_tree_digest": _required(working_tree_digest, "working_tree_digest"),
             "valid_from_head": _required(valid_from_head, "valid_from_head"),
-            "valid_to_head": str(valid_to_head or "").strip(),
+            "valid_to_head": _bounded_text(
+                valid_to_head,
+                "valid_to_head",
+                maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_SCALAR_BYTES,
+            ).strip(),
             "transaction_time": timestamp,
-            "outcome": outcome.value if isinstance(outcome, RelationshipOutcome) else str(outcome),
+            "outcome": outcome_value,
             "verifier_evidence_refs": list(_strings(verifier_evidence_refs, "verifier_evidence_refs")),
             "receipt_refs": list(_strings(receipt_refs, "receipt_refs")),
             "source_refs": list(_strings(source_refs, "source_refs")),
             "current_source_digest": _required(current_source_digest, "current_source_digest"),
-            "human_disposition": (
-                human_disposition.value
-                if isinstance(human_disposition, RelationshipHumanDisposition)
-                else str(human_disposition)
+            "human_disposition": disposition_value,
+            "privacy_class": _bounded_text(
+                privacy_class,
+                "privacy_class",
+                maximum_bytes=64,
+                required=True,
+            ).upper(),
+            "objective_digest": _bounded_text(
+                objective_digest,
+                "objective_digest",
+                maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_SCALAR_BYTES,
             ),
-            "privacy_class": str(privacy_class or "").upper(),
-            "objective_digest": str(objective_digest or ""),
             "reason": safe_reason,
         }
+        if _payload_bytes(identity) + 1_024 > RELATIONSHIP_EXPERIENCE_MAX_PAYLOAD_BYTES:
+            raise ValueError("relationship experience payload exceeds aggregate byte limit")
         return cls(observation_id=f"rex_{stable_digest(identity)}", **identity)
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "RelationshipExperienceObservation":
         if not isinstance(value, Mapping):
             raise ValueError("relationship experience payload must be a mapping")
-        data = dict(value)
-        supplied_digest = str(data.pop("observation_digest", "") or "")
         fields = set(cls.__dataclass_fields__)
+        if len(value) not in {len(fields), len(fields) + 1}:
+            raise ValueError("relationship experience payload fields are not canonical")
+        data = dict(value)
+        raw_digest = data.pop("observation_digest", "")
+        if not isinstance(raw_digest, str) or len(raw_digest.encode("utf-8")) > 128:
+            raise ValueError("relationship experience observation_digest is malformed")
+        supplied_digest = raw_digest
         if set(data) != fields:
             raise ValueError("relationship experience payload fields are not canonical")
-        canonical_json = dict(data)
-        if supplied_digest and supplied_digest != stable_digest(canonical_json):
-            raise ValueError("relationship experience observation_digest mismatch")
         for key in ("verifier_evidence_refs", "receipt_refs", "source_refs"):
             if type(data[key]) is not list:
                 raise ValueError(f"{key} must be a canonical JSON array")
-            data[key] = tuple(data[key])
-        return cls(**data)
+            data[key] = _strings(data[key], key)
+        item = cls(**data)
+        canonical = item.to_dict()
+        canonical_digest = str(canonical.pop("observation_digest"))
+        if supplied_digest and supplied_digest != canonical_digest:
+            raise ValueError("relationship experience observation_digest mismatch")
+        return item
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)

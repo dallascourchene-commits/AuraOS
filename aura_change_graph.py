@@ -137,16 +137,37 @@ def _digest_matches(value: Any, supplied: str) -> bool:
 def _verify_target_source(repo_root: Path, binding: Mapping[str, Any]) -> None:
     file_path = str(binding.get("file_path") or "")
     relative = Path(file_path)
-    if not file_path or relative.is_absolute() or ".." in relative.parts:
+    if not file_path or relative.is_absolute() or relative.drive or ".." in relative.parts:
         raise ValueError("Compass grounding receipt contains a non-canonical target path")
-    source_path = repo_root / relative
-    if not source_path.is_file():
+    root = repo_root.resolve()
+    source_path = root / relative
+    if not source_path.exists() and not source_path.is_symlink():
         raise ValueError(f"Compass grounding target is missing: {file_path}")
     try:
-        with tokenize.open(source_path) as handle:
+        resolved_source = source_path.resolve(strict=True)
+        resolved_source.relative_to(root)
+    except (OSError, RuntimeError, ValueError) as exc:
+        raise ValueError(f"Compass grounding target escapes repository: {file_path}") from exc
+    cursor = source_path
+    while cursor != root:
+        if cursor.is_symlink():
+            raise ValueError(f"Compass grounding target contains a symlink: {file_path}")
+        parent = cursor.parent
+        if parent == cursor:
+            raise ValueError(f"Compass grounding target escapes repository: {file_path}")
+        cursor = parent
+    if not resolved_source.is_file():
+        raise ValueError(f"Compass grounding target is missing: {file_path}")
+    try:
+        with tokenize.open(resolved_source) as handle:
             source_text = handle.read()
     except (OSError, SyntaxError, UnicodeError) as exc:
         raise ValueError(f"Compass grounding target is unreadable: {file_path}") from exc
+    try:
+        if source_path.resolve(strict=True) != resolved_source:
+            raise ValueError(f"Compass grounding target changed during verification: {file_path}")
+    except OSError as exc:
+        raise ValueError(f"Compass grounding target changed during verification: {file_path}") from exc
     actual_file_hash = hashlib.sha256(source_text.encode("utf-8", errors="replace")).hexdigest()
     if str(binding.get("file_source_hash") or "") != actual_file_hash:
         raise ValueError(f"Compass grounding file_source_hash mismatch: {file_path}")
