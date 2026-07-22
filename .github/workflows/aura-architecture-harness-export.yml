@@ -16,18 +16,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Fetch exact current main without persisted credentials
+      - name: Fetch exact requested source without persisted credentials
         env:
           GH_TOKEN: ${{ github.token }}
+          SOURCE_REF: 4ffdb6f6cb9c3b189ed79b56ed2fe4b3ef448764
         run: |
           git init .
           git remote add origin "https://github.com/${{ github.repository }}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin refs/heads/main
+            fetch --no-tags --depth=1 origin "$SOURCE_REF"
           unset AUTH_HEADER
           git checkout --detach FETCH_HEAD
           SOURCE_SHA="$(git rev-parse HEAD)"
+          test "$SOURCE_SHA" = "$SOURCE_REF"
           echo "SOURCE_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
       - name: Archive all Git-tracked files and provenance
@@ -79,5 +81,5 @@ jobs:
             "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
             -f state="$STATE" \
             -f context="aura-architecture-harness-export" \
-            -f description="Run ${GITHUB_RUN_ID}; main ${SOURCE_SHA:-unavailable}" \
+            -f description="Run ${GITHUB_RUN_ID}; source ${SOURCE_SHA:-unavailable}" \
             -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
