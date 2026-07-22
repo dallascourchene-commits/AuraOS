@@ -175,6 +175,21 @@ def test_c6_bounded_discovery_is_deterministic_and_preserves_rejections() -> Non
     assert verification_digest == stable_digest(verification_body)
 
 
+def test_c6_bounded_discovery_reports_the_invalid_mapping() -> None:
+    with pytest.raises(ValueError, match="neighborhood must be a mapping"):
+        discover_bounded_emergent_candidates(
+            objective="Validate inputs",
+            neighborhood=[],
+            compatibility=_compatibility(),
+        )
+    with pytest.raises(ValueError, match="compatibility must be a mapping"):
+        discover_bounded_emergent_candidates(
+            objective="Validate inputs",
+            neighborhood=_neighborhood(),
+            compatibility=[],
+        )
+
+
 def test_c6_verifier_rejects_candidate_supplied_endpoint_hashes() -> None:
     neighborhood = _neighborhood()
     discovery = discover_bounded_emergent_candidates(
@@ -557,6 +572,13 @@ def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Pa
         project_relationship_timeline(
             [unredacted_payload], current_repository_head="h1"
         )
+    relabeled_payload = deepcopy(unredacted_payload)
+    relabeled_payload["verifier_evidence_refs"] = ["redacted:private.py#secret"]
+    relabeled_payload["receipt_refs"] = ["redacted:receipt"]
+    relabeled_payload["source_refs"] = ["redacted:source"]
+    relabeled_payload["reason"] = "[REDACTED]"
+    with pytest.raises(ValueError, match="requires redaction"):
+        RelationshipExperienceObservation.from_dict(relabeled_payload)
     redacted = RelationshipExperienceObservation.create(
         relationship_id="bem_private",
         relationship_digest="d" * 40,
@@ -587,6 +609,39 @@ def test_c8_private_relationship_observation_requires_pre_redaction(tmp_path: Pa
         assert "secret_receipt" not in serialized
         assert "private.py#secret" not in serialized
         assert "sensitive reason" not in serialized
+
+
+def test_c8_relationship_observation_rejects_unsanitized_reason_on_all_ingestion_paths() -> None:
+    payload = _observation().to_dict()
+    payload["reason"] = "api_key=supersecret"
+    with pytest.raises(ValueError, match="reason must be pre-sanitized"):
+        RelationshipExperienceObservation.from_dict(payload)
+    with pytest.raises(ValueError, match="reason must be pre-sanitized"):
+        RelationshipExperienceObservation(
+            **{
+                key: value
+                for key, value in payload.items()
+                if key != "observation_digest"
+            }
+        )
+
+    created = RelationshipExperienceObservation.create(
+        relationship_id="bem_sanitized",
+        relationship_digest="d" * 40,
+        repository_head="h1",
+        working_tree_digest="w" * 40,
+        valid_from_head="h1",
+        outcome=RelationshipOutcome.FAILURE,
+        verifier_evidence_refs=[],
+        receipt_refs=[],
+        source_refs=[],
+        current_source_digest="s" * 40,
+        human_disposition=RelationshipHumanDisposition.DENIED,
+        privacy_class="PROJECT",
+        transaction_time=1000.0,
+        reason="api_key=supersecret",
+    )
+    assert created.reason == "[REDACTED]"
 
 
 def test_c8_relationship_observation_rejects_unbounded_payloads_before_persistence(tmp_path: Path) -> None:

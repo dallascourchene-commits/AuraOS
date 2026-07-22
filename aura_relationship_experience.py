@@ -40,6 +40,7 @@ class RelationshipHumanDisposition(str, Enum):
 
 
 _ALLOWED_PRIVACY = {"PUBLIC", "PROJECT", "PRIVATE_REDACTED"}
+_OPAQUE_REDACTED_DIGEST = re.compile(r"redacted:[0-9a-f]{32,64}")
 
 
 def _bounded_text(
@@ -101,12 +102,23 @@ def _require_private_redaction(
 ) -> None:
     if privacy_class != "PRIVATE_REDACTED":
         return
-    private_refs = [*verifier_evidence_refs, *receipt_refs, *source_refs]
+
+    def opaque_ref(value: str, kind: str) -> bool:
+        return value == f"redacted:{kind}" or _OPAQUE_REDACTED_DIGEST.fullmatch(value) is not None
+
     if (
-        any(not value.startswith("redacted:") for value in private_refs)
+        any(not opaque_ref(value, "verifier") for value in verifier_evidence_refs)
+        or any(not opaque_ref(value, "receipt") for value in receipt_refs)
+        or any(not opaque_ref(value, "source") for value in source_refs)
         or reason not in {"", "[REDACTED]"}
     ):
         raise ValueError("private relationship observation requires redaction")
+
+
+def _require_sanitized_reason(reason: str) -> None:
+    sanitized = sanitize_payload(reason)
+    if not isinstance(sanitized, str) or sanitized != reason:
+        raise ValueError("relationship experience reason must be pre-sanitized")
 
 
 def _payload_bytes(value: Mapping[str, Any]) -> int:
@@ -183,6 +195,7 @@ class RelationshipExperienceObservation:
             "reason",
             maximum_bytes=RELATIONSHIP_EXPERIENCE_MAX_REASON_BYTES,
         )
+        _require_sanitized_reason(self.reason)
         _finite_timestamp(self.transaction_time, "transaction_time")
         if not isinstance(self.outcome, (RelationshipOutcome, str)) or not isinstance(
             self.human_disposition, (RelationshipHumanDisposition, str)

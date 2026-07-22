@@ -1562,8 +1562,10 @@ def discover_bounded_emergent_candidates(
     """
 
     started = time.perf_counter()
-    if not isinstance(neighborhood, Mapping) or not isinstance(compatibility, Mapping):
+    if not isinstance(neighborhood, Mapping):
         raise ValueError("neighborhood must be a mapping")
+    if not isinstance(compatibility, Mapping):
+        raise ValueError("compatibility must be a mapping")
     if atlas is not None and not isinstance(atlas, Mapping):
         raise ValueError("atlas must be a mapping")
     if not isinstance(objective, str) or len(objective) > 4_000:
