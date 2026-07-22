@@ -48,21 +48,27 @@ def _asset(storey_id: str, suffix: str, representation: ConstructionDemoRepresen
         ConstructionDemoRepresentation.FLOOR_PLAN_SVG: "image/svg+xml",
         ConstructionDemoRepresentation.GAUSSIAN_SPZ: "application/vnd.aura.spz",
     }
+    digest_chars = {
+        "glb": ("a", "b"),
+        "spz": ("c", "d"),
+        "svg": ("e", "f"),
+    }
+    content_char, receipt_char = digest_chars[suffix]
     return ConstructionDemoAssetBinding(
         asset_id=f"asset-{storey_id}-{suffix}",
         storey_id=storey_id,
         representation=representation,
         uri=f"demo_assets/construction_tuwien/generated/storeys/{storey_id}/{storey_id}.{suffix}",
         media_type=media_types[representation],
-        content_digest=(suffix[0] * 64),
+        content_digest=content_char * 64,
         byte_length=4096,
         coordinate_system="RIGHT_HANDED_Y_UP_METERS",
         unit_scale_meters=1.0,
         bounds_min=(-10.0, 0.0, -10.0),
         bounds_max=(10.0, 4.0, 10.0),
         source_refs=(f"ifc:storey:{storey_id}",),
-        import_receipt_digest=(suffix[-1] * 32),
-        representation_digest=(suffix[-1] * 32),
+        import_receipt_digest=receipt_char * 32,
+        representation_digest=receipt_char * 32,
         truth_class=ConstructionDemoTruthClass.DERIVED_PRESENTATION,
     )
 
