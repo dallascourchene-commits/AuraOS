@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/construction-demo-asset-foundation.yml"
+      - ".github/workflows/ci.yml"
       - "aura_construction_demo_contracts.py"
       - "aura_coding_relationship_compass.py"
       - "aura_relational_index.py"
@@ -45,50 +46,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        continue-on-error: true
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
           persist-credentials: false
-      - name: Validate exact checked-out worktree
-        run: |
-          test -f aura_construction_demo_contracts.py
-          test -f scripts/aura_prepare_construction_demo_assets.py
-          test -f scripts/aura_verify_construction_demo_assets.py
-          test -f scripts/aura_mesh_to_gaussian.py
-          test -f tests/test_aura_mesh_to_gaussian.py
-          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
-      - name: Export exact review worktree
-        uses: actions/upload-artifact@v4
-        with:
-          name: construction-pr-source-${{ github.event.pull_request.head.sha || github.sha }}
-          retention-days: 1
-          include-hidden-files: true
-          if-no-files-found: error
-          path: |
-            .github/workflows/ci.yml
-            .github/workflows/construction-demo-asset-foundation.yml
-            aura_construction_demo_contracts.py
-            aura_coding_relationship_compass.py
-            aura_relational_index.py
-            scripts/aura_fetch_construction_demo_source.py
-            scripts/aura_ifc_storey_index.py
-            scripts/aura_verify_construction_demo_assets.py
-            scripts/aura_prepare_construction_demo_assets.py
-            scripts/aura_mesh_to_gaussian.py
-            tests/test_aura_construction_demo_contracts.py
-            tests/test_aura_fetch_construction_demo_source.py
-            tests/test_aura_ifc_storey_index.py
-            tests/test_aura_verify_construction_demo_assets.py
-            tests/test_aura_prepare_construction_demo_assets.py
-            tests/test_aura_mesh_to_gaussian.py
-            tests/test_aura_coding_relationship_compass.py
-            tests/test_aura_relational_index.py
-            demo_assets/construction_tuwien
-            docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md
-            docs/AURA_CONSTRUCTION_ARENA_G0_CHANGE_GRAPH.md
-            docs/patches/AURA_CONSTRUCTION_G0_COMPASS_RESOLVER_FIX.patch
-            tools/construction_demo_assets
+      - name: Emit exact base tree
+        run: git rev-parse 'HEAD^{tree}'
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -99,12 +62,14 @@ jobs:
           python -m pip install \
             "numpy>=1.26.4,<3.0" \
             "trimesh>=4.7.1,<5.0" \
-            "pytest>=8.2,<9.0" \
-            "ruff>=0.12,<1.0"
+            "pytest>=8.2.0,<9.0" \
+            "ruff>=0.12.0,<1.0"
       - name: Compile Construction asset foundation
         run: |
           python -m py_compile \
             aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
             scripts/aura_fetch_construction_demo_source.py \
             scripts/aura_ifc_storey_index.py \
             scripts/aura_verify_construction_demo_assets.py \
@@ -115,11 +80,15 @@ jobs:
             tests/test_aura_ifc_storey_index.py \
             tests/test_aura_verify_construction_demo_assets.py \
             tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
       - name: Fatal lint checks
         run: |
           ruff check --select E9,F63,F7,F82 \
             aura_construction_demo_contracts.py \
+            aura_coding_relationship_compass.py \
+            aura_relational_index.py \
             scripts/aura_fetch_construction_demo_source.py \
             scripts/aura_ifc_storey_index.py \
             scripts/aura_verify_construction_demo_assets.py \
@@ -130,7 +99,9 @@ jobs:
             tests/test_aura_ifc_storey_index.py \
             tests/test_aura_verify_construction_demo_assets.py \
             tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
       - name: Validate pinned source manifest
         run: |
           python - <<'PY'
@@ -147,7 +118,7 @@ jobs:
           manifest = ConstructionDemoSourceManifest.from_dict(
               json.loads(path.read_text(encoding="utf-8"))
           )
-          assert manifest.source_manifest_digest == "bda63e3e6d3e536c1dffa51ccb8c7b37"
+          assert manifest.source_manifest_digest == "22bd970d5babc6ad2d6a22ca2c278738"
           assert manifest.doi == TU_WIEN_DOI
           assert manifest.source_filename == TU_WIEN_SOURCE_FILENAME
           assert manifest.license_id == CC_BY_4_0
@@ -159,7 +130,7 @@ jobs:
           assert manifest.survey_authority is False
           print(manifest.source_manifest_digest)
           PY
-      - name: Run focused Construction asset tests
+      - name: Run focused Construction and resolver tests
         run: |
           python -m pytest -q \
             tests/test_aura_construction_demo_contracts.py \
@@ -167,4 +138,6 @@ jobs:
             tests/test_aura_ifc_storey_index.py \
             tests/test_aura_verify_construction_demo_assets.py \
             tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py
+            tests/test_aura_mesh_to_gaussian.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py
