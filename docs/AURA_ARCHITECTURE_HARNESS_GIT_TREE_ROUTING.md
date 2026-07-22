@@ -1,6 +1,6 @@
 # Aura Architecture Harness — Atomic Git-Tree Routing
 
-**Version:** `AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V1`  
+**Version:** `AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V3`  
 **Recorded:** July 22, 2026  
 **Proven during:** AuraOS PR #184
 
@@ -26,14 +26,14 @@ The atomic Git-object route removed both problems.
 
 ## Exact route
 
-1. **Resolve the live PR identity.** Read the PR and require an open state, the expected
-   head branch, and an exact expected head SHA. Any head drift aborts the route.
+1. **Resolve the live PR identity and tree.** Read the PR and require an open state,
+   the expected head branch, and an exact expected head commit SHA. Resolve that commit's
+   exact tree SHA separately. Any commit or tree drift aborts the route.
 2. **Create immutable blobs.** Create one Git blob per already-validated file. Record the
    local SHA-256, byte length, mode, returned Git blob SHA, and exact path allowlist.
-3. **Create one tree.** Call `create_tree` with the exact PR head SHA as
-   `base_tree_sha`. Include every addition/replacement and every cleanup deletion in the
-   same tree. PR #184 confirmed that the connector accepts the commit SHA as the base
-   tree identity.
+3. **Create one tree.** Call `create_tree` with the exact tree SHA resolved from the
+   PR head commit as `base_tree_sha`. Never substitute the commit SHA for the tree SHA.
+   Include every addition/replacement and every cleanup deletion in the same tree.
 4. **Create one commit.** Point one new single-parent commit at that tree, with the exact
    prior PR head as its parent.
 5. **Fast-forward the PR branch.** Move only the PR branch ref to the new commit with
@@ -44,10 +44,11 @@ The atomic Git-object route removed both problems.
    authorized human-reviewed action.
 
 ```text
-get_pr_info(expected head)
+get_pr_info(expected head commit)
+  → fetch_commit(expected head commit; resolve exact tree SHA)
   → create_blob(file 1..N)
-  → create_tree(base_tree_sha = exact PR head; replacements + deletions)
-  → create_commit(parent = exact PR head)
+  → create_tree(base_tree_sha = resolved head tree; replacements + deletions)
+  → create_commit(parent = exact head commit)
   → update_ref(PR branch, force = false)
   → verify PR head, diff allowlist, tests, cleanup, CODEMAP
 ```
@@ -62,7 +63,7 @@ failure leaves the branch unchanged.
 
 ## Required safety gates
 
-- exact expected PR head SHA and branch;
+- exact expected PR head commit SHA, resolved tree SHA, and branch;
 - canonical repository-relative POSIX paths only;
 - explicit addition/replacement and deletion allowlists;
 - regular blobs only (`100644` or `100755`), never symlink blobs;

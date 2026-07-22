@@ -62,7 +62,7 @@ def test_original_run_summary_includes_atomic_route(tmp_path, monkeypatch) -> No
     monkeypatch.setattr(
         harness,
         "_ORIGINAL_RUN_ARCHITECTURE",
-        lambda root, **kwargs: {"ok": True, "version": "test"},
+        lambda root, **kwargs: {"ok": True, "version": "test", "run_digest": "stale"},
     )
     result = harness.run_architecture(Path("/tmp/repo"), output_dir=tmp_path)
     summary = json.loads((tmp_path / "harness_summary.json").read_text())
@@ -71,6 +71,10 @@ def test_original_run_summary_includes_atomic_route(tmp_path, monkeypatch) -> No
         "confirmed_force_required"
     ] is False
     assert summary["run_digest"] == result["run_digest"]
+    digest_free = dict(result)
+    digest = digest_free.pop("run_digest")
+    assert digest != "stale"
+    assert digest == harness._core._digest(digest_free)
     assert summary["github_publication_route"]["authority"][
         "base_branch_update_authorized"
     ] is False

@@ -14,6 +14,7 @@ from aura_architecture_harness_git_tree_routing import (
 
 
 HEAD = "e67d6bdf96e6ba909846295ff9f5fd50d87697e4"
+TREE = "57205c4a7387ba717da3d27926960b0494ae08f4"
 
 
 def _blob(path: str = "aura_example.py") -> GitTreeBlobIntent:
@@ -26,6 +27,7 @@ def test_builds_deterministic_atomic_route_with_no_force_or_merge_authority() ->
         pull_request_number=184,
         branch="work/construction-arena-real-asset-pack-g4-20260722",
         expected_head_sha=HEAD,
+        expected_head_tree_sha=TREE,
         blobs=(_blob("b.py"), _blob("a.py")),
         deletions=("tmp/z", "tmp/a"),
     )
@@ -34,6 +36,7 @@ def test_builds_deterministic_atomic_route_with_no_force_or_merge_authority() ->
         pull_request_number=184,
         branch="work/construction-arena-real-asset-pack-g4-20260722",
         expected_head_sha=HEAD,
+        expected_head_tree_sha=TREE,
         blobs=(_blob("a.py"), _blob("b.py")),
         deletions=("tmp/a", "tmp/z"),
     )
@@ -43,12 +46,18 @@ def test_builds_deterministic_atomic_route_with_no_force_or_merge_authority() ->
     assert first["deletions"] == ["tmp/a", "tmp/z"]
     assert [item["action"] for item in first["connector_sequence"]] == [
         "get_pr_info",
+        "fetch_commit",
         "create_blob",
         "create_tree",
         "create_commit",
         "update_ref",
         "verify",
     ]
+    tree_step = next(
+        item for item in first["connector_sequence"] if item["action"] == "create_tree"
+    )
+    assert tree_step["base_tree_sha"] == TREE
+    assert tree_step["base_tree_sha"] != HEAD
     assert next(item for item in first["connector_sequence"] if item["action"] == "update_ref")["force"] is False
     assert first["authority"] == AUTHORITY_CONTRACT
     assert first["authority"]["automatic_merge"] is False
@@ -62,7 +71,8 @@ def test_records_the_base_branch_pull_request_workflow_limitation() -> None:
     assert discovery["pull_request_definition_source"] == "base_branch"
     assert discovery["branch_new_pull_request_workflow_jobs_reliable"] is False
     assert discovery["preferred_fallback"] == "atomic_git_object_route"
-    assert record["case_study"]["confirmed_base_tree_accepts_commit_sha"] is True
+    assert record["case_study"]["base_tree_is_commit_sha"] is False
+    assert record["case_study"]["resolved_head_tree_sha"] == TREE
 
 
 def test_rejects_unsafe_paths_duplicate_paths_and_head_drift() -> None:
@@ -75,6 +85,18 @@ def test_rejects_unsafe_paths_duplicate_paths_and_head_drift() -> None:
             pull_request_number=184,
             branch="work/example",
             expected_head_sha="bad",
+            expected_head_tree_sha=TREE,
+            blobs=(_blob(),),
+        )
+
+
+    with pytest.raises(GitTreeRoutingError, match="resolved tree object"):
+        build_git_tree_routing_record(
+            repository_full_name="dallascourchene-commits/AuraOS",
+            pull_request_number=184,
+            branch="work/example",
+            expected_head_sha=HEAD,
+            expected_head_tree_sha=HEAD,
             blobs=(_blob(),),
         )
 
@@ -84,6 +106,7 @@ def test_rejects_unsafe_paths_duplicate_paths_and_head_drift() -> None:
             pull_request_number=184,
             branch="work/example",
             expected_head_sha=HEAD,
+        expected_head_tree_sha=TREE,
             blobs=(_blob(), _blob()),
         )
 
@@ -93,6 +116,7 @@ def test_rejects_unsafe_paths_duplicate_paths_and_head_drift() -> None:
             pull_request_number=184,
             branch="work/example",
             expected_head_sha=HEAD,
+        expected_head_tree_sha=TREE,
             blobs=(_blob(),),
             deletions=("aura_example.py",),
         )

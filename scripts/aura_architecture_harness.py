@@ -98,6 +98,7 @@ def run_architecture(root: Path, **kwargs: Any) -> dict[str, Any]:
     """Run the original architecture analysis and bind routing into its summary."""
 
     output = _ORIGINAL_RUN_ARCHITECTURE(root, **kwargs)
+    output.pop("run_digest", None)
     output["github_publication_route"] = _github_publication_route_policy()
     output["run_digest"] = _core._digest(output)
     output_dir = Path(kwargs["output_dir"]).expanduser().resolve()

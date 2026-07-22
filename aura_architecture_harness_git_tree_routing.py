@@ -13,7 +13,7 @@ from pathlib import PurePosixPath
 import re
 from typing import Any, Iterable
 
-VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V2"
+VERSION = "AURA_ARCHITECTURE_HARNESS_GIT_TREE_ROUTING_V3"
 SHA1_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -130,6 +130,7 @@ def build_git_tree_routing_record(
     pull_request_number: int,
     branch: str,
     expected_head_sha: str,
+    expected_head_tree_sha: str,
     blobs: Iterable[GitTreeBlobIntent],
     deletions: Iterable[str] = (),
 ) -> dict[str, Any]:
@@ -151,6 +152,11 @@ def build_git_tree_routing_record(
         raise GitTreeRoutingError("branch must be a plain non-empty branch name")
 
     head = _sha1(expected_head_sha, "expected_head_sha")
+    head_tree = _sha1(expected_head_tree_sha, "expected_head_tree_sha")
+    if head_tree == head:
+        raise GitTreeRoutingError(
+            "expected_head_tree_sha must be the resolved tree object, not the head commit"
+        )
     blob_rows = tuple(sorted(tuple(blobs), key=lambda item: item.path))
     if not blob_rows or not all(type(item) is GitTreeBlobIntent for item in blob_rows):
         raise GitTreeRoutingError("blobs must contain exact GitTreeBlobIntent values")
@@ -172,6 +178,7 @@ def build_git_tree_routing_record(
         "pull_request_number": pull_request_number,
         "branch": branch,
         "expected_head_sha": head,
+        "expected_head_tree_sha": head_tree,
         "blob_intents": [item.to_dict() for item in blob_rows],
         "deletions": list(deletion_paths),
     }
@@ -185,6 +192,8 @@ def build_git_tree_routing_record(
         **identity,
         "preconditions": [
             "the pull request is open and its head SHA exactly equals expected_head_sha",
+            "expected_head_tree_sha was resolved from that exact head commit",
+            "the resolved tree SHA was independently verified before tree creation",
             "all file bytes already passed the requested validation gate",
             "the replacement and deletion allowlists are exact and human-reviewed",
             "generated navigation artifacts are regenerated from the final source tree",
@@ -197,35 +206,46 @@ def build_git_tree_routing_record(
             },
             {
                 "order": 2,
+                "action": "fetch_commit",
+                "commit_sha": head,
+                "expected_tree_sha": head_tree,
+                "assertions": [
+                    "commit remains the live PR head",
+                    "commit tree exactly equals expected_head_tree_sha",
+                ],
+            },
+            {
+                "order": 3,
                 "action": "create_blob",
                 "per_file": True,
                 "assertions": ["exact bytes", "local SHA-256", "regular-file mode only"],
             },
             {
-                "order": 3,
+                "order": 4,
                 "action": "create_tree",
-                "base_tree_sha": head,
+                "base_tree_sha": head_tree,
                 "assertions": [
-                    "base tree is the exact current PR head",
+                    "base tree is the exact tree resolved from the current PR head commit",
+                    "base_tree_sha is not the head commit SHA",
                     "tree contains the complete replacement/add/delete set",
                     "temporary transport cleanup is included in the same tree",
                 ],
             },
             {
-                "order": 4,
+                "order": 5,
                 "action": "create_commit",
                 "parent_sha": head,
                 "assertions": ["one parent", "one atomic tree", "reviewable message"],
             },
             {
-                "order": 5,
+                "order": 6,
                 "action": "update_ref",
                 "branch": branch,
                 "force": False,
                 "assertions": ["fast-forward only", "never update the base branch"],
             },
             {
-                "order": 6,
+                "order": 7,
                 "action": "verify",
                 "assertions": [
                     "PR head equals the created commit",
@@ -267,15 +287,17 @@ def proven_pr184_route_record() -> dict[str, Any]:
         pull_request_number=184,
         branch="work/construction-arena-real-asset-pack-g4-20260722",
         expected_head_sha="e67d6bdf96e6ba909846295ff9f5fd50d87697e4",
+        expected_head_tree_sha="57205c4a7387ba717da3d27926960b0494ae08f4",
         blobs=(placeholder,),
         deletions=(".aura/pr184-g4-adapter/READY",),
     )
     record["case_study"] = {
         "recorded_at": "2026-07-22",
         "outcome": "atomic Git-tree publication succeeded on the live PR branch",
+        "resolved_head_tree_sha": "57205c4a7387ba717da3d27926960b0494ae08f4",
         "created_tree_sha": "4e7b79b320252968ab350456975054e2384d32cf",
         "created_commit_sha": "5c101780a7caeef859d4435bd8068f782def6aaf",
-        "confirmed_base_tree_accepts_commit_sha": True,
+        "base_tree_is_commit_sha": False,
         "confirmed_force_required": False,
         "normal_ci_restored_in_same_tree": True,
         "note": "The placeholder blob documents routing shape, not a publication request.",
