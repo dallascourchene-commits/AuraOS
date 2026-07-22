@@ -26,7 +26,7 @@ jobs:
       - name: Reconstruct and verify exact C6-C9 patch
         run: |
           set -euo pipefail
-          test "$EXPECTED_HEAD" = "8a8e9e7283715bf47f70234860668b27019bd0ad" || {
+          test "$EXPECTED_HEAD" = "120bc39461c0d7c23dea9c3856a83d1e657f9da2" || {
             echo "Unexpected carrier head: $EXPECTED_HEAD" >&2
             exit 1
           }
