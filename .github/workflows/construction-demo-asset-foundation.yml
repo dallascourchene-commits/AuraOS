@@ -1,4 +1,4 @@
-name: Construction Demo Manual Remediation Publisher
+name: Construction Demo Manual Archive Diagnostics
 
 on:
   pull_request:
@@ -8,30 +8,39 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: construction-demo-manual-remediation
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  publish:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+  diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: work/construction-arena-bim-gaussian-demo-20260722
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-      - name: Reassemble and authenticate manual archive
+          persist-credentials: false
+      - name: Verify every manually staged segment
         shell: bash
         run: |
           set -euo pipefail
+          cat > "${RUNNER_TEMP}/expected.sha256" <<'EOF'
+          f6099a0ab985a99ded3f39a5dc18ec1dd5ad77acad3913fa0444d2cde9230fc4  .aura/manual-remediation/chunk00
+          ce1661faedc8f13a59888afd6630469ae09d82672b7bafa2971afc766335b89a  .aura/manual-remediation/chunk01
+          2eab4af5b553281e600cc095a76ee9dba23be6e79aac8baf6395fabb4792a64e  .aura/manual-remediation/chunk02
+          97deb77301ee9189d547d87274a5bf3d160ad62134dd3838e64be286e32ed528  .aura/manual-remediation/chunk03
+          50df2568af7f9b49e15483c464713ab9abadf1f83b495c5195d4eaaa975a1556  .aura/manual-remediation/chunk04a
+          de7ee0ed038c9ca5fa67f70179adb42e26195b59bca624bb541042d631d53d50  .aura/manual-remediation/chunk04b
+          31f030b2a899b58bc441ed6244657ac85d5a84b5b67f65c176c24eaab53115d4  .aura/manual-remediation/chunk04c
+          16a35496e49ed57de78ff4e3e96a4d01b98a0cdeeb8470f76a6d86214def6bda  .aura/manual-remediation/chunk04d
+          caad09c2c8dc4d98466aef52be988bb917e5fc1cabce0c652a28b04a420b0544  .aura/manual-remediation/chunk05a
+          c27abed206356a4f44d749e72223b28138cc885cbbf99daada44246ad4036093  .aura/manual-remediation/chunk05b
+          ca0243e4fd810c83f10ef0314b3e87afd5567ab8bd45cdcc6cd851f272b0eb28  .aura/manual-remediation/chunk05c
+          0916fb18e73ede953a62c14178ee09763cdb25d94c1afdee2195dfb57dd7893b  .aura/manual-remediation/chunk05d
+          22d2c4638de618de09391d6d356afcbb5bc71b60554090048fdb92315d2b11b1  .aura/manual-remediation/chunk06a
+          8e34ec7749dd7b86db78bbbc72e7029ab9c118d5aa04be7589590752ed45e960  .aura/manual-remediation/chunk06b
+          7337e2164e16b19397487b79d257c083726e0a9a04605c5f7c6cb6fe915e8fc2  .aura/manual-remediation/chunk06c
+          EOF
+          sha256sum --check --strict "${RUNNER_TEMP}/expected.sha256"
           cat \
             .aura/manual-remediation/chunk00 \
             .aura/manual-remediation/chunk01 \
@@ -48,150 +57,7 @@ jobs:
             .aura/manual-remediation/chunk06a \
             .aura/manual-remediation/chunk06b \
             .aura/manual-remediation/chunk06c \
-            > "${RUNNER_TEMP}/manual-review-remediation.tar.gz.b64"
-          base64 --decode "${RUNNER_TEMP}/manual-review-remediation.tar.gz.b64" \
-            > "${RUNNER_TEMP}/manual-review-remediation.tar.gz"
-          echo "fb4619fad614910a37b5526aa42db7abe5b861eebd293c365b142b66f40a8c8d  ${RUNNER_TEMP}/manual-review-remediation.tar.gz" \
-            | sha256sum --check --strict
-      - name: Validate allowlist and install exact manual files
-        env:
-          ARCHIVE: ${{ runner.temp }}/manual-review-remediation.tar.gz
-        run: |
-          python - <<'PY'
-          from pathlib import Path, PurePosixPath
-          import os
-          import tarfile
-
-          root = Path.cwd().resolve()
-          expected = {
-              ".github/workflows/ci.yml",
-              ".github/workflows/construction-demo-asset-foundation.yml",
-              "aura_construction_demo_contracts.py",
-              "aura_coding_relationship_compass.py",
-              "aura_relational_index.py",
-              "scripts/aura_verify_construction_demo_assets.py",
-              "scripts/aura_prepare_construction_demo_assets.py",
-              "scripts/aura_mesh_to_gaussian.py",
-              "tests/test_aura_verify_construction_demo_assets.py",
-              "tests/test_aura_prepare_construction_demo_assets.py",
-              "tests/test_aura_mesh_to_gaussian.py",
-              "tests/test_aura_construction_demo_contracts.py",
-              "tests/test_aura_coding_relationship_compass.py",
-              "tests/test_aura_relational_index.py",
-              "demo_assets/construction_tuwien/source/source-manifest.json",
-              "docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md",
-              "docs/AURA_CONSTRUCTION_ARENA_G0_CHANGE_GRAPH.md",
-          }
-          archive = Path(os.environ["ARCHIVE"])
-          with tarfile.open(archive, "r:gz") as bundle:
-              members = bundle.getmembers()
-              names = [member.name for member in members]
-              if len(names) != len(set(names)) or set(names) != expected:
-                  raise SystemExit(f"archive allowlist mismatch: {sorted(set(names) ^ expected)}")
-              for member in members:
-                  if not member.isfile():
-                      raise SystemExit(f"non-regular archive member rejected: {member.name}")
-                  pure = PurePosixPath(member.name)
-                  if pure.is_absolute() or ".." in pure.parts:
-                      raise SystemExit(f"unsafe archive path rejected: {member.name}")
-                  destination = (root / Path(*pure.parts)).resolve(strict=False)
-                  try:
-                      destination.relative_to(root)
-                  except ValueError as exc:
-                      raise SystemExit(f"archive path escapes repository: {member.name}") from exc
-                  source = bundle.extractfile(member)
-                  if source is None:
-                      raise SystemExit(f"archive member unreadable: {member.name}")
-                  payload = source.read()
-                  if len(payload) != member.size:
-                      raise SystemExit(f"archive member length mismatch: {member.name}")
-                  destination.parent.mkdir(parents=True, exist_ok=True)
-                  temporary = destination.with_name(f".{destination.name}.manual-remediation.tmp")
-                  temporary.write_bytes(payload)
-                  os.replace(temporary, destination)
-          PY
-      - name: Install bounded validation dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install \
-            "numpy>=1.26.4,<3.0" \
-            "trimesh>=4.7.1,<5.0" \
-            "jsonschema>=4.23.0,<5.0" \
-            "pytest>=8.2.0,<9.0" \
-            "pytest-asyncio>=0.23.0,<1.0" \
-            "ruff>=0.12.0,<1.0"
-      - name: Compile and lint manually edited files
-        run: |
-          python -m py_compile \
-            aura_construction_demo_contracts.py \
-            aura_coding_relationship_compass.py \
-            aura_relational_index.py \
-            scripts/aura_verify_construction_demo_assets.py \
-            scripts/aura_prepare_construction_demo_assets.py \
-            scripts/aura_mesh_to_gaussian.py \
-            tests/test_aura_verify_construction_demo_assets.py \
-            tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
-          ruff check --select E9,F63,F7,F82 \
-            aura_construction_demo_contracts.py \
-            aura_coding_relationship_compass.py \
-            aura_relational_index.py \
-            scripts/aura_verify_construction_demo_assets.py \
-            scripts/aura_prepare_construction_demo_assets.py \
-            scripts/aura_mesh_to_gaussian.py \
-            tests/test_aura_verify_construction_demo_assets.py \
-            tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
-      - name: Run focused Construction and resolver suite
-        run: |
-          python -m pytest -q \
-            tests/test_aura_construction_demo_contracts.py \
-            tests/test_aura_fetch_construction_demo_source.py \
-            tests/test_aura_ifc_storey_index.py \
-            tests/test_aura_verify_construction_demo_assets.py \
-            tests/test_aura_prepare_construction_demo_assets.py \
-            tests/test_aura_mesh_to_gaussian.py \
-            tests/test_aura_coding_relationship_compass.py \
-            tests/test_aura_relational_index.py
-      - name: Validate canonical source identity
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from aura_construction_demo_contracts import (
-              CC_BY_4_0,
-              ConstructionDemoSourceManifest,
-              TU_WIEN_DOI,
-              TU_WIEN_SOURCE_FILENAME,
-          )
-          manifest = ConstructionDemoSourceManifest.from_dict(
-              json.loads(Path("demo_assets/construction_tuwien/source/source-manifest.json").read_text(encoding="utf-8"))
-          )
-          assert manifest.source_manifest_digest == "22bd970d5babc6ad2d6a22ca2c278738"
-          assert manifest.doi == TU_WIEN_DOI
-          assert manifest.source_filename == TU_WIEN_SOURCE_FILENAME
-          assert manifest.license_id == CC_BY_4_0
-          assert manifest.observed_sha256 == "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29"
-          PY
-      - name: Remove temporary remediation transport
-        run: |
-          rm -rf .aura/manual-remediation .aura/review-remediation
-          rm -f .github/workflows/manual-construction-review-remediation.yml
-      - name: Commit exact manually edited source tree
-        env:
-          BRANCH: work/construction-arena-bim-gaussian-demo-20260722
-        run: |
-          set -euo pipefail
-          git config user.name "AuraOS Manual Review Remediation"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          git diff --cached --check
-          test -n "$(git diff --cached --name-only)"
-          git commit -m "fix(construction): resolve deep review findings manually"
-          git push origin "HEAD:${BRANCH}"
+            > "${RUNNER_TEMP}/archive.b64"
+          base64 --decode "${RUNNER_TEMP}/archive.b64" > "${RUNNER_TEMP}/archive.tar.gz"
+          sha256sum "${RUNNER_TEMP}/archive.tar.gz"
+          echo "fb4619fad614910a37b5526aa42db7abe5b861eebd293c365b142b66f40a8c8d  ${RUNNER_TEMP}/archive.tar.gz" | sha256sum --check --strict
