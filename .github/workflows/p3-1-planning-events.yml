@@ -77,7 +77,7 @@ jobs:
           git checkout -q -B "$TARGET_BRANCH" FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           tr -d '\r\n' < .github/c6-c9-review-fix.py.gz.b64 | base64 -d | gzip -d > /tmp/c6-c9-review-fix.py
-          echo '73681cd2c979ca5c42a8e5912818a87c7c6c7059d12f5c92f915361ede24f702  /tmp/c6-c9-review-fix.py' | sha256sum -c -
+          echo 'b1d9e5cb7d79e1fa180bb3ddef2d25dc78102a8fc9d7bea907b744ce1197dd72  /tmp/c6-c9-review-fix.py' | sha256sum -c -
           git reset --hard 4ffdb6f6cb9c3b189ed79b56ed2fe4b3ef448764
           python /tmp/c6-c9-review-fix.py
           git diff --check
@@ -91,7 +91,7 @@ jobs:
             | sort > /tmp/expected-files
           git diff --name-only | sort > /tmp/actual-files
           diff -u /tmp/expected-files /tmp/actual-files
-      - name: Diagnose finalization failures
+      - name: Diagnose finalization and Compass compile
         run: |
           set -euo pipefail
           python3 -m venv /tmp/c6-c9-review-venv
@@ -104,7 +104,9 @@ jobs:
             aura_coding_relationship_compass.py \
             aura_emergent_result_verifier.py \
             tests/test_aura_relationship_compass_finalization.py
-          PYTHONPATH=. pytest -q --tb=line tests/test_aura_relationship_compass_finalization.py
+          PYTHONPATH=. pytest -q --tb=line \
+            tests/test_aura_relationship_compass_finalization.py \
+            tests/test_aura_coding_relationship_compass.py::test_compile_compass_combines_all_four_planes
       - name: Publish clean review repair commit
         run: |
           set -euo pipefail
