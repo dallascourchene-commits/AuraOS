@@ -84,38 +84,37 @@ jobs:
           git reset --hard "$BASE_HEAD"
           git apply --index --whitespace=error-all /tmp/c6-c9.patch
           git diff --cached --check
-          cat > /tmp/expected-files <<'EOF'
-.aura/ARCHITECTURE.md
-README.md
-USER_GUIDE.md
-aura_affordance_directory.py
-aura_agent_arena_mcp.py
-aura_agent_arena_persistence_bridge.py
-aura_agent_ir_compiler.py
-aura_architect_council_v3.py
-aura_arena_experience_ledger.py
-aura_capability_connectome.py
-aura_change_graph.py
-aura_coding_relationship_compass.py
-aura_emergent_potential_repl.py
-aura_emergent_result_verifier.py
-aura_qdkt_observations.py
-aura_relational_index.py
-aura_relationship_atlas.py
-aura_relationship_experience.py
-aura_temporal_persistence.py
-docs/AURA_CODING_RELATIONSHIP_COMPASS.md
-docs/AURA_CODING_RELATIONSHIP_COMPASS_IMPLEMENTATION_PLAN.md
-schemas/aura_compass_act_capsule.schema.json
-schemas/aura_relationship_experience.schema.json
-tests/test_aura_arena_experience_ledger.py
-tests/test_aura_capability_connectome.py
-tests/test_aura_coding_relationship_compass.py
-tests/test_aura_relational_index.py
-tests/test_aura_relationship_compass_finalization.py
-EOF
+          printf '%s\n' \
+            .aura/ARCHITECTURE.md \
+            README.md \
+            USER_GUIDE.md \
+            aura_affordance_directory.py \
+            aura_agent_arena_mcp.py \
+            aura_agent_arena_persistence_bridge.py \
+            aura_agent_ir_compiler.py \
+            aura_architect_council_v3.py \
+            aura_arena_experience_ledger.py \
+            aura_capability_connectome.py \
+            aura_change_graph.py \
+            aura_coding_relationship_compass.py \
+            aura_emergent_potential_repl.py \
+            aura_emergent_result_verifier.py \
+            aura_qdkt_observations.py \
+            aura_relational_index.py \
+            aura_relationship_atlas.py \
+            aura_relationship_experience.py \
+            aura_temporal_persistence.py \
+            docs/AURA_CODING_RELATIONSHIP_COMPASS.md \
+            docs/AURA_CODING_RELATIONSHIP_COMPASS_IMPLEMENTATION_PLAN.md \
+            schemas/aura_compass_act_capsule.schema.json \
+            schemas/aura_relationship_experience.schema.json \
+            tests/test_aura_arena_experience_ledger.py \
+            tests/test_aura_capability_connectome.py \
+            tests/test_aura_coding_relationship_compass.py \
+            tests/test_aura_relational_index.py \
+            tests/test_aura_relationship_compass_finalization.py \
+            | sort > /tmp/expected-files
           git diff --cached --name-only | sort > /tmp/actual-files
-          sort -o /tmp/expected-files /tmp/expected-files
           diff -u /tmp/expected-files /tmp/actual-files
       - name: Verify C6-C9 finalization
         run: |
