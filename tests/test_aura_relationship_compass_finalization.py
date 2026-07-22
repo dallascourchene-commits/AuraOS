@@ -517,6 +517,12 @@ def test_c9_rollout_gate_requires_complete_paired_live_authorization() -> None:
         validate_compass_rollout("SHADOW", budget={"arbitrary": 1})
     with pytest.raises(ValueError, match="must be positive"):
         validate_compass_rollout("SHADOW", budget={"max_tokens": True})
+    with pytest.raises(ValueError, match="must be a positive integer"):
+        validate_compass_rollout("SHADOW", budget={"max_calls": 0.1})
+    with pytest.raises(ValueError, match="must be a positive integer"):
+        validate_compass_rollout("SHADOW", budget={"max_tokens": 1.5})
+    with pytest.raises(ValueError, match="must be positive and finite"):
+        validate_compass_rollout("SHADOW", budget={"max_cost_usd": float("inf")})
     authorized = validate_compass_rollout(
         "PAIRED_LIVE",
         provider="fixture-provider",
@@ -612,6 +618,70 @@ def test_c9_bridge_and_mcp_expose_six_bounded_tools(monkeypatch, tmp_path: Path)
         "aura_compass_plan",
         "aura_compass_compile_capsules",
     }.issubset(names)
+
+
+def test_c9_all_compass_projections_bound_adversarial_payloads(monkeypatch, tmp_path: Path) -> None:
+    import aura_coding_relationship_compass as compass_module
+
+    huge = "x" * 200_000
+    packet = _fake_final_packet(tmp_path)
+    packet["rollout"] = {"detail": huge}
+    packet["relational_neighborhood"] = {
+        "neighborhood_digest": huge,
+        "participants": [{"detail": huge}] * 100,
+        "relations": [{"detail": huge}] * 300,
+        "metrics": {"detail": huge},
+        "truncation_reasons": [huge] * 100,
+    }
+    packet["typed_compatibility"] = {"detail": huge}
+    packet["coding_breadboard"] = {"detail": huge}
+    packet["change_graph"] = {
+        "graph_digest": huge,
+        "nodes": [{"detail": huge}] * 300,
+    }
+    packet["phase_capsules"] = [{"detail": huge}] * 100
+    packet["council_route"] = {"detail": huge}
+    packet["act_capsules"] = {"ok": True, "detail": huge}
+    packet["agent_ir"] = {"detail": huge}
+    monkeypatch.setattr(
+        compass_module,
+        "compile_coding_relationship_compass",
+        lambda *args, **kwargs: packet,
+    )
+
+    bridge = PersistentAuraAgentArenaBridge(repo_root=str(tmp_path))
+    prepared = bridge.aura_compass_prepare(objective="Exercise bounded projections")
+    projections = [
+        prepared,
+        bridge.aura_compass_neighborhood("run-final"),
+        bridge.aura_compass_classify("run-final"),
+        bridge.aura_compass_breadboard("run-final"),
+        bridge.aura_compass_plan("run-final"),
+        bridge.aura_compass_compile_capsules("run-final"),
+    ]
+    for projection in projections:
+        receipt = projection["interface_truncation"]
+        assert receipt["response_bytes"] <= receipt["max_response_bytes"]
+        assert receipt["response_bytes"] == len(
+            json.dumps(projection, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        )
+
+    assert prepared["interface_truncation"]["rollout_oversize_replaced"] == 1
+    neighborhood_receipt = projections[1]["interface_truncation"]
+    assert neighborhood_receipt["participants_oversize_replaced"] == 64
+    assert neighborhood_receipt["relations_oversize_replaced"] == 256
+    assert neighborhood_receipt["metrics_oversize_replaced"] == 1
+    assert neighborhood_receipt["truncation_reasons_oversize_replaced"] == 64
+    breadboard_receipt = projections[3]["interface_truncation"]
+    assert breadboard_receipt["typed_compatibility_oversize_replaced"] == 1
+    assert breadboard_receipt["coding_breadboard_oversize_replaced"] == 1
+    plan_receipt = projections[4]["interface_truncation"]
+    assert plan_receipt["nodes_oversize_replaced"] == 256
+    assert plan_receipt["phase_capsules_oversize_replaced"] == 64
+    assert plan_receipt["council_route_oversize_replaced"] == 1
+    compile_receipt = projections[5]["interface_truncation"]
+    assert compile_receipt["act_capsules_oversize_replaced"] == 1
+    assert compile_receipt["agent_ir_oversize_replaced"] == 1
 
 
 def test_compass_digests_ignore_process_state_fields() -> None:

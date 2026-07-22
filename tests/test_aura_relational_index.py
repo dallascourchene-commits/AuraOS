@@ -882,6 +882,51 @@ def test_extract_relational_neighborhood_resolves_exact_source_ref() -> None:
     )
 
 
+def test_extract_relational_neighborhood_prefers_requested_file_before_global_symbol() -> None:
+    original = _build()
+    reverse_indexes = original.to_dict()["reverse_indexes"]
+    intended = next(
+        item.participant_id for item in original.participants if item.qualified_symbol == "Beta.run"
+    )
+    unrelated = next(
+        item.participant_id
+        for item in original.participants
+        if item.participant_id not in reverse_indexes["by_file_path"]["service.py"]
+    )
+    reverse_indexes["by_qualified_symbol"].pop("service.py#Beta.run")
+    reverse_indexes["by_qualified_symbol"]["other.py#Beta.run"] = [unrelated]
+    index = RelationalIndex.create(
+        repository_identity=original.repository_identity,
+        profile=original.profile,
+        participants=original.participants,
+        relations=original.relations,
+        groups=original.groups,
+        reverse_indexes=reverse_indexes,
+        boundary=original.boundary,
+        build_facts=original.build_facts,
+    )
+    request = RelationalNeighborhoodRequest(
+        objective_digest="objective-source-file-precedence",
+        seed_participant_ids=(),
+        seed_source_refs=(
+            SourceReference(
+                file_path="service.py",
+                symbol="Beta.run",
+                line_start=1,
+                line_end=3,
+                source_hash="source-hash",
+            ),
+        ),
+        max_hops=1,
+        max_nodes=32,
+        max_edges=32,
+    )
+
+    packet = extract_relational_neighborhood(request, index)
+    assert intended in packet["seed_participant_ids"]
+    assert unrelated not in packet["seed_participant_ids"]
+
+
 def test_extract_relational_neighborhood_retains_seed_under_dense_budget() -> None:
     index = _build()
     seed = next(item.participant_id for item in index.participants if item.qualified_symbol == "Alpha.run")

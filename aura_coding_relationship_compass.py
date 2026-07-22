@@ -18,6 +18,7 @@ from enum import Enum
 import hashlib
 import hmac
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
@@ -71,7 +72,6 @@ from aura_coding_waboose_breadboard import compile_relationship_breadboard
 from aura_relationship_atlas import (
     AtlasSnapshot,
     WiringDisposition,
-    build_relationship_atlas,
     build_objective_relationship_atlas,
     compile_atlas_projection,
     relationships_for_participant,
@@ -101,9 +101,17 @@ def _normalize_compass_rollout_budget(budget: Mapping[str, Any] | None) -> dict[
         raise ValueError(f"unsupported Compass rollout budget fields: {unknown}")
     normalized: dict[str, float | int] = {}
     for key, value in budget.items():
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or float(value) <= 0:
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
             raise ValueError(f"Compass rollout budget {key} must be positive")
-        normalized[str(key)] = int(value) if key in {"max_tokens", "max_calls"} else float(value)
+        numeric = float(value)
+        if not math.isfinite(numeric) or numeric <= 0:
+            raise ValueError(f"Compass rollout budget {key} must be positive and finite")
+        if key in {"max_tokens", "max_calls"}:
+            if not numeric.is_integer():
+                raise ValueError(f"Compass rollout budget {key} must be a positive integer")
+            normalized[str(key)] = int(numeric)
+        else:
+            normalized[str(key)] = numeric
     return normalized
 
 

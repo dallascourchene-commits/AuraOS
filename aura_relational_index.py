@@ -2021,7 +2021,8 @@ def _resolve_neighborhood_seeds(
     request: RelationalNeighborhoodRequest,
     index: RelationalIndex,
 ) -> tuple[list[str], dict[str, list[str]]]:
-    participant_ids = {item.participant_id for item in index.participants}
+    participant_by_id = {item.participant_id: item for item in index.participants}
+    participant_ids = set(participant_by_id)
     reasons: dict[str, list[str]] = defaultdict(list)
     missing = sorted(set(request.seed_participant_ids) - participant_ids)
     if missing:
@@ -2036,7 +2037,31 @@ def _resolve_neighborhood_seeds(
             if isinstance(reverse, Mapping):
                 exact_key = f"{source_ref.file_path}#{source_ref.symbol}"
                 resolved.update(item for item in reverse.get(exact_key, ()) if item in participant_ids)
-                if not resolved:
+            if not resolved:
+                file_candidates: set[str] = set()
+                reverse = index.reverse_indexes.get("by_file_path", {})
+                if isinstance(reverse, Mapping):
+                    file_candidates.update(
+                        item
+                        for item in reverse.get(source_ref.file_path, ())
+                        if item in participant_ids
+                    )
+                if request.include_tests:
+                    reverse = index.reverse_indexes.get("by_test_path", {})
+                    if isinstance(reverse, Mapping):
+                        file_candidates.update(
+                            item
+                            for item in reverse.get(source_ref.file_path, ())
+                            if item in participant_ids
+                        )
+                resolved.update(
+                    participant_id
+                    for participant_id in file_candidates
+                    if participant_by_id[participant_id].qualified_symbol == source_ref.symbol
+                )
+            if not resolved:
+                reverse = index.reverse_indexes.get("by_qualified_symbol", {})
+                if isinstance(reverse, Mapping):
                     resolved.update(
                         item
                         for lookup_key, values in reverse.items()
@@ -2044,7 +2069,7 @@ def _resolve_neighborhood_seeds(
                         for item in values
                         if item in participant_ids
                     )
-        if not resolved:
+        else:
             reverse = index.reverse_indexes.get("by_file_path", {})
             if isinstance(reverse, Mapping):
                 resolved.update(
