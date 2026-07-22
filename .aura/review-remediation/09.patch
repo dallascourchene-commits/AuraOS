@@ -1,0 +1,211 @@
+--- a/tests/test_aura_mesh_to_gaussian.py
++++ b/tests/test_aura_mesh_to_gaussian.py
+@@ -11,6 +11,10 @@
+ 
+ from scripts.aura_mesh_to_gaussian import (
+     _mesh_arrays,
++    _quaternions_from_normals,
++    MAX_IMPORTABLE_SH0_SPLATS,
++    MAX_SPLATS,
++    SPZ_SH0_RUNTIME_BYTES_PER_SPLAT,
+     PROFILE_LIMITS,
+     compile_mesh,
+     sample_mesh_arrays,
+--- a/tests/test_aura_mesh_to_gaussian.py
++++ b/tests/test_aura_mesh_to_gaussian.py
+@@ -222,10 +226,51 @@
+     assert not output.with_suffix(".spz.tmp").exists()
+ 
+ 
+-def test_density_profiles_distinguish_storey_and_building_limits() -> None:
+-    assert PROFILE_LIMITS["LOW"] == {"STOREY": 50_000, "BUILDING": 150_000}
+-    assert PROFILE_LIMITS["STANDARD"] == {"STOREY": 150_000, "BUILDING": 500_000}
+-    assert PROFILE_LIMITS["VIDEO"] == {"STOREY": 300_000, "BUILDING": 1_000_000}
++def test_density_profiles_fit_spz_importer_admission_budget() -> None:
++    assert SPZ_SH0_RUNTIME_BYTES_PER_SPLAT == 2_612
++    assert MAX_IMPORTABLE_SH0_SPLATS == 102_770
++    assert MAX_SPLATS == MAX_IMPORTABLE_SH0_SPLATS
++    assert PROFILE_LIMITS["LOW"] == {"STOREY": 40_000, "BUILDING": 75_000}
++    assert PROFILE_LIMITS["STANDARD"] == {"STOREY": 75_000, "BUILDING": 100_000}
++    assert PROFILE_LIMITS["VIDEO"] == {
++        "STOREY": 100_000,
++        "BUILDING": MAX_IMPORTABLE_SH0_SPLATS,
++    }
++    assert all(
++        1 <= limit <= MAX_IMPORTABLE_SH0_SPLATS
++        for profile in PROFILE_LIMITS.values()
++        for limit in profile.values()
++    )
++
++
++def test_vectorized_normal_quaternions_match_scalar_formula_and_degenerate_case() -> None:
++    normals = np.array(
++        [
++            [0.0, 0.0, 1.0],
++            [1.0, 0.0, 0.0],
++            [0.0, 1.0, 0.0],
++            [0.0, 0.0, -1.0],
++            [0.5, 0.5, math.sqrt(0.5)],
++        ],
++        dtype=np.float64,
++    )
++    normals /= np.linalg.norm(normals, axis=1)[:, None]
++
++    actual = _quaternions_from_normals(normals)
++    expected = []
++    for normal in normals:
++        if normal[2] < -0.999999:
++            quaternion = np.array([1.0, 0.0, 0.0, 0.0])
++        else:
++            quaternion = np.array([-normal[1], normal[0], 0.0, 1.0 + normal[2]])
++            quaternion /= np.linalg.norm(quaternion)
++        expected.append(quaternion)
++
++    assert actual.dtype == np.float32
++    assert np.allclose(actual, np.asarray(expected), atol=1e-7)
++    assert np.allclose(np.linalg.norm(actual, axis=1), 1.0, atol=1e-7)
++    with pytest.raises(ValueError, match="finite Nx3"):
++        _quaternions_from_normals(np.array([[math.nan, 0.0, 1.0]]))
+ 
+ 
+ def test_compile_mesh_validates_source_digest_and_emits_ply(tmp_path: Path) -> None:
+--- a/tests/test_aura_construction_demo_contracts.py
++++ b/tests/test_aura_construction_demo_contracts.py
+@@ -216,3 +216,28 @@
+     data["asset_pack_digest"] = ""
+     with pytest.raises(ValueError, match="source_manifest_digest"):
+         ConstructionDemoAssetPack.from_dict(data)
++
++
++def test_source_manifest_digest_excludes_acquisition_time() -> None:
++    first = _manifest()
++    data = first.to_dict()
++    data["downloaded_at"] = "2026-07-22T11:00:00Z"
++    second = ConstructionDemoSourceManifest.from_dict(data)
++
++    assert second.downloaded_at != first.downloaded_at
++    assert second.source_manifest_digest == first.source_manifest_digest
++    assert second.to_dict()["downloaded_at"] == "2026-07-22T11:00:00Z"
++
++
++def test_asset_pack_rejects_role_swapped_storey_bindings() -> None:
++    data = _pack().to_dict()
++    storey = data["storeys"][0]
++    storey["mesh_asset_id"], storey["gaussian_asset_id"] = (
++        storey["gaussian_asset_id"],
++        storey["mesh_asset_id"],
++    )
++    storey["storey_digest"] = ""
++    data["asset_pack_digest"] = ""
++
++    with pytest.raises(ValueError, match="asset roles"):
++        ConstructionDemoAssetPack.from_dict(data)
+--- a/tests/test_aura_coding_relationship_compass.py
++++ b/tests/test_aura_coding_relationship_compass.py
+@@ -256,6 +256,46 @@
+             ),
+             legacy,
+         )
++
++
++def test_legacy_neighborhood_resolves_unqualified_method_source_ref() -> None:
++    legacy = _minimal_relational_index()
++    legacy["participants"] = [
++        {
++            "participant_id": "alpha_run",
++            "digest": "1" * 64,
++            "qualified_symbol": "Alpha.run",
++            "metadata": {
++                "file_path": "service.py",
++                "line_start": 2,
++                "line_end": 3,
++                "file_source_hash": "f" * 64,
++            },
++        }
++    ]
++    legacy["relations"] = []
++    _rebind_index_digest(legacy)
++    request = RelationalNeighborhoodRequest(
++        objective_digest="legacy-unqualified-method",
++        seed_participant_ids=(),
++        seed_source_refs=(
++            SourceReference(
++                file_path="service.py",
++                symbol="run",
++                line_start=2,
++                line_end=3,
++                source_hash="1" * 64,
++                file_source_hash="f" * 64,
++            ),
++        ),
++        max_hops=1,
++        max_nodes=8,
++        max_edges=16,
++    )
++
++    packet = compass._compatibility_neighborhood_from_raw_index(request, legacy)
++
++    assert packet["seed_participant_ids"] == ["alpha_run"]
+ 
+ 
+ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
+--- a/tests/test_aura_relational_index.py
++++ b/tests/test_aura_relational_index.py
+@@ -888,6 +888,35 @@
+     )
+ 
+ 
++def test_extract_relational_neighborhood_resolves_unqualified_method_source_ref() -> None:
++    index = _build()
++    alpha_run = next(
++        item for item in index.participants if item.qualified_symbol == "Alpha.run"
++    )
++    source_ref = _source_ref_for_participant(alpha_run)
++    request = RelationalNeighborhoodRequest(
++        objective_digest="objective-unqualified-method-source-ref",
++        seed_participant_ids=(),
++        seed_source_refs=(
++            SourceReference(
++                **{**source_ref.to_dict(), "symbol": "run"}
++            ),
++        ),
++        max_hops=1,
++        max_nodes=8,
++        max_edges=16,
++    )
++
++    packet = extract_relational_neighborhood(request, index)
++
++    assert packet["seed_participant_ids"] == [alpha_run.participant_id]
++    assert any(
++        reason.startswith("exact_source_ref:service.py#run")
++        for reasons in packet["inclusion_reasons"].values()
++        for reason in reasons
++    )
++
++
+ def test_extract_relational_neighborhood_prefers_requested_file_before_global_symbol() -> None:
+     original = _build()
+     reverse_indexes = original.to_dict()["reverse_indexes"]
+--- a/demo_assets/construction_tuwien/source/source-manifest.json
++++ b/demo_assets/construction_tuwien/source/source-manifest.json
+@@ -19,7 +19,7 @@
+   "source_byte_length": 7404420,
+   "source_filename": "CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc",
+   "source_id": "tuwien-custom-escape-route-ifc-v2",
+-  "source_manifest_digest": "bda63e3e6d3e536c1dffa51ccb8c7b37",
++  "source_manifest_digest": "22bd970d5babc6ad2d6a22ca2c278738",
+   "survey_authority": false,
+   "title": "Custom Test Model for Escape Route Analysis in IFC format",
+   "version": "AURA_CONSTRUCTION_DEMO_SOURCE_MANIFEST_V1"
+--- a/docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md
++++ b/docs/AURA_CONSTRUCTION_ARENA_BIM_GAUSSIAN_DEMO_IMPLEMENTATION_LEDGER.md
+@@ -1,7 +1,7 @@
+ # Aura Construction Arena BIM/Gaussian Demo — Implementation Ledger
+ 
+ ```yaml
+-document_status: ACTIVE_G0
++document_status: ACTIVE_G3_REVIEW_HARDENED
+ created_date: 2026-07-22
+ repository: dallascourchene-commits/AuraOS
+ working_branch: work/construction-arena-bim-gaussian-demo-20260722
