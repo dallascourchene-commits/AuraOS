@@ -6,8 +6,6 @@ authority.
 """
 from __future__ import annotations
 
-from typing import Iterable
-
 from aura_construction_demo_contracts import (
     ConstructionDemoAssetBinding,
     ConstructionDemoAssetPack,
@@ -26,6 +24,8 @@ from aura_spatial_contracts import (
 
 CONSTRUCTION_DEMO_SPATIAL_ASSETS_VERSION = "AURA_CONSTRUCTION_DEMO_SPATIAL_ASSETS_V1"
 CONSTRUCTION_SITE_ROOT_FRAME_ID = "construction-site-root"
+GAUSSIAN_REPRESENTATION_DIGEST_VERSION = "AURA_GAUSSIAN_REPRESENTATION_V1"
+DEGREE_ZERO_REPRESENTATION_BYTES_PER_SPLAT = 60
 
 _REPRESENTATION_TYPES = {
     ConstructionDemoRepresentation.MESH_GLB.value: SpatialAssetType.MESH,
@@ -47,9 +47,37 @@ def _spatial_asset(
 ) -> SpatialAssetManifest:
     if type(binding) is not ConstructionDemoAssetBinding:
         raise ValueError("binding must be an exact ConstructionDemoAssetBinding")
-    asset_type = _REPRESENTATION_TYPES.get(str(binding.representation))
+    representation = str(binding.representation)
+    asset_type = _REPRESENTATION_TYPES.get(representation)
     if asset_type is None:
         raise ValueError(f"unsupported Construction demo representation: {binding.representation}")
+    metadata = {
+        "construction_asset_id": binding.asset_id,
+        "construction_storey_id": binding.storey_id,
+        "representation": representation,
+        "representation_digest": binding.representation_digest,
+        "import_receipt_digest": binding.import_receipt_digest,
+        "coordinate_system": binding.coordinate_system,
+        "unit_scale_meters": binding.unit_scale_meters,
+        "survey_authority": False,
+        "person_level_data_included": False,
+        "projection_only": True,
+    }
+    if asset_type is SpatialAssetType.GAUSSIAN_SPLAT:
+        if len(binding.import_receipt_digest) != 64 or len(binding.representation_digest) != 64:
+            raise ValueError(
+                "SPZ assets require full renderer-grade receipt and representation digests"
+            )
+        metadata.update(
+            {
+                "representation_digest_version": GAUSSIAN_REPRESENTATION_DIGEST_VERSION,
+                "representation_bytes_per_splat": DEGREE_ZERO_REPRESENTATION_BYTES_PER_SPLAT,
+                "sh_degree": 0,
+                "gaussian_sh_degree": 0,
+                "gaussian_color_space": "SPZ_INTERNAL_WIDE_RGB",
+                "representation_role": "DERIVED_PROJECTION_ASSET",
+            }
+        )
     return SpatialAssetManifest(
         asset_id=binding.asset_id,
         asset_type=asset_type,
@@ -70,18 +98,7 @@ def _spatial_asset(
             )
         ),
         truth_class=SpatialTruthClass.PRESENTATION,
-        metadata={
-            "construction_asset_id": binding.asset_id,
-            "construction_storey_id": binding.storey_id,
-            "representation": str(binding.representation),
-            "representation_digest": binding.representation_digest,
-            "import_receipt_digest": binding.import_receipt_digest,
-            "coordinate_system": binding.coordinate_system,
-            "unit_scale_meters": binding.unit_scale_meters,
-            "survey_authority": False,
-            "person_level_data_included": False,
-            "projection_only": True,
-        },
+        metadata=metadata,
     )
 
 
@@ -221,5 +238,7 @@ def project_construction_demo_asset_foundation(
 __all__ = [
     "CONSTRUCTION_DEMO_SPATIAL_ASSETS_VERSION",
     "CONSTRUCTION_SITE_ROOT_FRAME_ID",
+    "DEGREE_ZERO_REPRESENTATION_BYTES_PER_SPLAT",
+    "GAUSSIAN_REPRESENTATION_DIGEST_VERSION",
     "project_construction_demo_asset_foundation",
 ]
