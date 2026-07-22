@@ -1,0 +1,150 @@
+name: Construction Demo Real Toolchain Diagnostics
+
+on:
+  pull_request:
+    paths:
+      - ".aura/run-construction-toolchain-diagnostics"
+      - ".github/workflows/construction-demo-toolchain-diagnostics.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construction-demo-toolchain-diagnostics-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Diagnose IfcOpenShell Python distribution
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install "ifcopenshell==0.8.5"
+          python - <<'PY'
+          import json
+          import sys
+          import ifcopenshell
+          import ifcpatch
+          print(json.dumps({
+              "python": sys.version,
+              "ifcopenshell_version": str(ifcopenshell.version),
+              "ifcopenshell_module": ifcopenshell.__file__,
+              "ifcpatch_module": ifcpatch.__file__,
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Diagnose official IfcConvert release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+
+          request = Request(
+              "https://api.github.com/repos/IfcOpenShell/IfcOpenShell/releases/tags/ifcconvert-0.8.5",
+              headers={
+                  "Accept": "application/vnd.github+json",
+                  "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "User-Agent": "AuraOS-Construction-Toolchain-Diagnostics/1",
+              },
+          )
+          with urlopen(request, timeout=45) as response:
+              release = json.load(response)
+          print(json.dumps({
+              "id": release.get("id"),
+              "tag_name": release.get("tag_name"),
+              "target_commitish": release.get("target_commitish"),
+              "assets": [
+                  {
+                      "id": item.get("id"),
+                      "name": item.get("name"),
+                      "size": item.get("size"),
+                      "digest": item.get("digest"),
+                      "content_type": item.get("content_type"),
+                  }
+                  for item in release.get("assets", [])
+              ],
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Diagnose Niantic SPZ v3.0.0 Python binding
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          def fetch(url: str):
+              request = Request(
+                  url,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                      "User-Agent": "AuraOS-Construction-Toolchain-Diagnostics/1",
+                  },
+              )
+              with urlopen(request, timeout=45) as response:
+                  return json.load(response)
+
+          ref = fetch("https://api.github.com/repos/nianticlabs/spz/git/ref/tags/v3.0.0")
+          obj = ref["object"]
+          if obj["type"] == "tag":
+              obj = fetch(obj["url"])["object"]
+          if obj["type"] != "commit":
+              raise SystemExit(f"SPZ tag did not resolve to commit: {obj}")
+          Path(os.environ["RUNNER_TEMP"], "spz-commit.txt").write_text(obj["sha"])
+          print(json.dumps({"tag": "v3.0.0", "commit_sha": obj["sha"]}, indent=2))
+          PY
+          SPZ_COMMIT_SHA="$(cat "${RUNNER_TEMP}/spz-commit.txt")"
+          git clone --filter=blob:none --no-checkout https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
+          git -C "${RUNNER_TEMP}/spz" checkout --detach "${SPZ_COMMIT_SHA}"
+          git -C "${RUNNER_TEMP}/spz" submodule update --init --recursive --depth 1
+          python -m pip install \
+            "numpy>=1.26.4,<3.0" \
+            "nanobind>=2.7.0,<3.0" \
+            "scikit-build-core>=0.10.7,<1.0" \
+            "cmake>=3.30,<5.0" \
+            "ninja>=1.11,<2.0" \
+            "${RUNNER_TEMP}/spz"
+          python - <<'PY'
+          import spz
+          print("spz module:", spz.__file__)
+          PY
+
+      - name: Diagnose authoritative IFC acquisition and indexing
+        run: |
+          set -euo pipefail
+          mkdir -p build/construction-source build/construction-proof
+          python scripts/aura_fetch_construction_demo_source.py \
+            --repo-root . \
+            --output-dir build/construction-source \
+            --record-doi 10.48436/a185k-86v39 \
+            --accept-network-download
+          python scripts/aura_ifc_storey_index.py index \
+            --source build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --source-sha256 29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29 \
+            --source-ref demo_assets/construction_tuwien/source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc \
+            --output build/construction-proof/ifc-hierarchy.json
+          cat build/construction-proof/ifc-hierarchy.json
