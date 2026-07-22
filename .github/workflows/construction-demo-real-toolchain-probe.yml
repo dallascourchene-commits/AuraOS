@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   probe:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -80,7 +81,10 @@ jobs:
               and asset.get("name", "").lower().endswith((".zip", ".tar.gz"))
           ]
           if len(candidates) != 1:
-              raise SystemExit(f"expected one Linux x64 IfcConvert asset, observed {[item.get('name') for item in candidates]}")
+              raise SystemExit(
+                  f"expected one Linux x64 IfcConvert asset, observed "
+                  f"{[item.get('name') for item in candidates]}"
+              )
           asset = candidates[0]
           digest = asset.get("digest")
           if not isinstance(digest, str) or not digest.startswith("sha256:"):
@@ -100,12 +104,15 @@ jobs:
           )
           with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as handle:
               handle.write(f"IFCCONVERT_URL={asset['browser_download_url']}\n")
-              handle.write(f"IFCCONVERT_ARCHIVE_SHA256={digest.removeprefix('sha256:')}\n")
+              handle.write(
+                  f"IFCCONVERT_ARCHIVE_SHA256={digest.removeprefix('sha256:')}\n"
+              )
               handle.write(f"IFCCONVERT_ASSET_NAME={asset['name']}\n")
           PY
           curl --fail --silent --show-error --location --retry 3 \
             "${IFCCONVERT_URL}" -o "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}"
-          echo "${IFCCONVERT_ARCHIVE_SHA256}  ${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" | sha256sum --check --strict
+          echo "${IFCCONVERT_ARCHIVE_SHA256}  ${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" \
+            | sha256sum --check --strict
           case "${IFCCONVERT_ASSET_NAME}" in
             *.zip) unzip -q "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" -d "${RUNNER_TEMP}/ifcconvert" ;;
             *.tar.gz) tar -xzf "${RUNNER_TEMP}/${IFCCONVERT_ASSET_NAME}" -C "${RUNNER_TEMP}/ifcconvert" ;;
@@ -148,13 +155,19 @@ jobs:
           if obj["type"] != "commit":
               raise SystemExit(f"SPZ tag does not resolve to a commit: {obj}")
           Path(os.environ["RUNNER_TEMP"], "spz-tag.json").write_text(
-              json.dumps({"tag": "v3.0.0", "commit_sha": obj["sha"]}, indent=2, sort_keys=True) + "\n",
+              json.dumps(
+                  {"tag": "v3.0.0", "commit_sha": obj["sha"]},
+                  indent=2,
+                  sort_keys=True,
+              )
+              + "\n",
               encoding="utf-8",
           )
           with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as handle:
               handle.write(f"SPZ_COMMIT_SHA={obj['sha']}\n")
           PY
-          git clone --filter=blob:none --no-checkout https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
+          git clone --filter=blob:none --no-checkout \
+            https://github.com/nianticlabs/spz.git "${RUNNER_TEMP}/spz"
           git -C "${RUNNER_TEMP}/spz" checkout --detach "${SPZ_COMMIT_SHA}"
           test "$(git -C "${RUNNER_TEMP}/spz" rev-parse HEAD)" = "${SPZ_COMMIT_SHA}"
           git -C "${RUNNER_TEMP}/spz" submodule update --init --recursive --depth 1
@@ -201,12 +214,26 @@ jobs:
 
           ifcconvert = Path(os.environ["IFCCONVERT_PATH"]).resolve(strict=True)
           version = subprocess.run(
-              [str(ifcconvert), "--version"], check=True, capture_output=True, text=True, timeout=30
+              [str(ifcconvert), "--version"],
+              check=True,
+              capture_output=True,
+              text=True,
+              timeout=30,
           )
-          release = json.loads(Path(os.environ["RUNNER_TEMP"], "ifcconvert-release.json").read_text(encoding="utf-8"))
-          spz_tag = json.loads(Path(os.environ["RUNNER_TEMP"], "spz-tag.json").read_text(encoding="utf-8"))
-          hierarchy = json.loads(Path("build/construction-proof/ifc-hierarchy.json").read_text(encoding="utf-8"))
-          source = Path("build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc")
+          release = json.loads(
+              Path(os.environ["RUNNER_TEMP"], "ifcconvert-release.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          spz_tag = json.loads(
+              Path(os.environ["RUNNER_TEMP"], "spz-tag.json").read_text(encoding="utf-8")
+          )
+          hierarchy = json.loads(
+              Path("build/construction-proof/ifc-hierarchy.json").read_text(encoding="utf-8")
+          )
+          source = Path(
+              "build/construction-source/CustomTestModel-EscapeRouteAnalysis-ZDB-v2.ifc"
+          )
           receipt = {
               "version": "AURA_CONSTRUCTION_REAL_TOOLCHAIN_PROBE_V1",
               "toolchain_ready": True,
@@ -227,7 +254,9 @@ jobs:
               "production_mutation": False,
               "human_review_required": True,
           }
-          encoded = json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
+          encoded = json.dumps(
+              receipt, sort_keys=True, separators=(",", ":")
+          ).encode("utf-8")
           receipt["probe_digest"] = hashlib.blake2b(encoded, digest_size=16).hexdigest()
           Path("build/construction-proof/toolchain-probe.json").write_text(
               json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -245,3 +274,132 @@ jobs:
             build/construction-source/source-manifest.json
           retention-days: 7
           if-no-files-found: error
+
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    needs: probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/construction-arena-real-asset-pack-g4-20260722
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: construction-real-toolchain-probe-${{ github.sha }}
+          path: build/construction-proof
+
+      - name: Validate and publish sanitized probe evidence
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "${SOURCE_SHA}" HEAD
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          proof = Path("build/construction-proof")
+          receipt_path = proof / "toolchain-probe.json"
+          hierarchy_path = proof / "ifc-hierarchy.json"
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          hierarchy = json.loads(hierarchy_path.read_text(encoding="utf-8"))
+          digest = receipt.pop("probe_digest")
+          encoded = json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode(
+              "utf-8"
+          )
+          if hashlib.blake2b(encoded, digest_size=16).hexdigest() != digest:
+              raise SystemExit("toolchain probe digest mismatch")
+          if receipt.get("toolchain_ready") is not True:
+              raise SystemExit("toolchain probe is not ready")
+          if receipt.get("source_sha256") != (
+              "29945f654c636d758a95b66eb0e107ec35afc7e1c7857a7ff652586e7728ba29"
+          ):
+              raise SystemExit("source identity mismatch")
+          if hierarchy.get("hierarchy_digest") != receipt.get("hierarchy_digest"):
+              raise SystemExit("hierarchy digest mismatch")
+          if hierarchy.get("ifcopenshell_validated") is not True:
+              raise SystemExit("hierarchy lacks IfcOpenShell authority")
+
+          lock_body = {
+              "version": "AURA_CONSTRUCTION_REAL_TOOLCHAIN_LOCK_V1",
+              "ifcopenshell_version": receipt["ifcopenshell_version"],
+              "ifcconvert_release": receipt["ifcconvert_release"],
+              "ifcconvert_binary_sha256": receipt["ifcconvert_binary_sha256"],
+              "ifcconvert_version_stdout": receipt["ifcconvert_version_stdout"],
+              "ifcconvert_version_stderr": receipt["ifcconvert_version_stderr"],
+              "spz_tag": receipt["spz_tag"],
+              "source_sha256": receipt["source_sha256"],
+              "source_byte_length": receipt["source_byte_length"],
+              "hierarchy_digest": receipt["hierarchy_digest"],
+              "counts": receipt["counts"],
+              "survey_authority": False,
+              "production_mutation": False,
+              "human_review_required": True,
+          }
+          lock_encoded = json.dumps(
+              lock_body, sort_keys=True, separators=(",", ":")
+          ).encode("utf-8")
+          lock = {
+              **lock_body,
+              "toolchain_lock_digest": hashlib.blake2b(
+                  lock_encoded, digest_size=16
+              ).hexdigest(),
+          }
+          target = Path("demo_assets/construction_tuwien/toolchain")
+          target.mkdir(parents=True, exist_ok=True)
+          (target / "toolchain-lock.json").write_text(
+              json.dumps(lock, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          (target / "ifc-hierarchy.json").write_text(
+              json.dumps(hierarchy, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+
+          counts = receipt["counts"]
+          evidence = f"""# Aura Construction Arena — Real Toolchain Probe Evidence
+
+```yaml
+status: REAL_TOOLCHAIN_PROBE_COMPLETE
+ifcopenshell_version: {receipt['ifcopenshell_version']}
+ifcconvert_asset: {receipt['ifcconvert_release']['asset_name']}
+ifcconvert_asset_digest: {receipt['ifcconvert_release']['asset_digest']}
+ifcconvert_binary_sha256: {receipt['ifcconvert_binary_sha256']}
+spz_tag: {receipt['spz_tag']['tag']}
+spz_commit_sha: {receipt['spz_tag']['commit_sha']}
+source_sha256: {receipt['source_sha256']}
+hierarchy_digest: {receipt['hierarchy_digest']}
+storeys: {counts['storeys']}
+spaces: {counts['spaces']}
+elements: {counts['elements']}
+toolchain_lock_digest: {lock['toolchain_lock_digest']}
+survey_authority: false
+production_mutation: false
+human_review_required: true
+```
+
+The official pinned toolchain imported successfully, the TU Wien IFC bytes matched the
+repository pin, and IfcOpenShell produced an authoritative hierarchy agreeing with the
+STEP preflight. No GLB, SVG, PLY, SPZ, importer receipt, or G4 fixture is claimed by this
+probe; those remain the next gated build.
+"""
+          Path("docs/AURA_CONSTRUCTION_ARENA_REAL_TOOLCHAIN_PROBE_EVIDENCE.md").write_text(
+              evidence, encoding="utf-8"
+          )
+          PY
+          rm -f .aura/run-construction-real-toolchain-probe
+          git config user.name "AuraOS Construction Toolchain Probe"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            demo_assets/construction_tuwien/toolchain/toolchain-lock.json \
+            demo_assets/construction_tuwien/toolchain/ifc-hierarchy.json \
+            docs/AURA_CONSTRUCTION_ARENA_REAL_TOOLCHAIN_PROBE_EVIDENCE.md \
+            .aura/run-construction-real-toolchain-probe
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          git commit -m "build(construction): lock verified real asset toolchain"
+          git push origin HEAD:work/construction-arena-real-asset-pack-g4-20260722
