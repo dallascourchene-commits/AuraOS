@@ -803,20 +803,46 @@ def _compatibility_neighborhood_from_raw_index(
         if isinstance(item, Mapping) and item.get("participant_id")
     ]
     participant_map = {str(item["participant_id"]): item for item in participants}
-    selected = {
-        str(item)
-        for item in request.seed_participant_ids
-        if str(item) in participant_map
-    }
+    missing_seed_ids = sorted(
+        str(item) for item in request.seed_participant_ids if str(item) not in participant_map
+    )
+    if missing_seed_ids:
+        raise ValueError(
+            f"legacy relational neighborhood seed participants are missing: {missing_seed_ids[:5]}"
+        )
+    exact_seeds = {str(item) for item in request.seed_participant_ids}
     for source_ref in request.seed_source_refs:
+        matches: set[str] = set()
         for participant in participants:
             metadata = participant.get("metadata") or {}
-            file_path = str(metadata.get("file_path") or "") if isinstance(metadata, Mapping) else ""
-            symbol = str(participant.get("qualified_symbol") or "")
-            if file_path == source_ref.file_path and (not source_ref.symbol or source_ref.symbol in symbol):
-                selected.add(str(participant["participant_id"]))
-    if not selected:
+            if not isinstance(metadata, Mapping):
+                continue
+            if (
+                str(metadata.get("file_path") or "") == source_ref.file_path
+                and (
+                    not source_ref.symbol
+                    or str(participant.get("qualified_symbol") or "") == source_ref.symbol
+                )
+                and int(metadata.get("line_start") or 0) == source_ref.line_start
+                and int(metadata.get("line_end") or 0) == source_ref.line_end
+                and str(participant.get("digest") or "") == source_ref.source_hash
+                and (
+                    not source_ref.file_source_hash
+                    or str(metadata.get("file_source_hash") or "")
+                    == source_ref.file_source_hash
+                )
+            ):
+                matches.add(str(participant["participant_id"]))
+        if len(matches) != 1:
+            raise ValueError(
+                "legacy relational neighborhood source ref must resolve to exactly one current "
+                f"source participant: {source_ref.file_path}#{source_ref.symbol or '*'} "
+                f"at {source_ref.line_start}-{source_ref.line_end} resolved {len(matches)}"
+            )
+        exact_seeds.update(matches)
+    if not exact_seeds:
         raise ValueError("legacy relational index did not resolve any exact neighborhood seed")
+    selected = set(exact_seeds)
 
     relations = [
         dict(item)
@@ -858,7 +884,7 @@ def _compatibility_neighborhood_from_raw_index(
         "index_id": str(relational_index.get("index_id") or "legacy_digest_validated"),
         "index_digest": index_digest,
         "profile": dict(relational_index.get("profile") or {}),
-        "seed_participant_ids": sorted(selected.intersection(request.seed_participant_ids)),
+        "seed_participant_ids": sorted(exact_seeds),
         "participants": [participant_map[item] for item in sorted(selected)],
         "relations": sorted(selected_edges, key=lambda item: str(item.get("relation_id") or "")),
         "groups": [],

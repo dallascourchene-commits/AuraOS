@@ -13,6 +13,7 @@ from aura_event_contracts import stable_digest
 import aura_live_architect as live_architect
 import aura_relationship_atlas as atlas_module
 from aura_live_architect import ArchitectFusionCouncil, ArchitectModelRouter
+from aura_relationship_contracts import RelationalNeighborhoodRequest, SourceReference
 from aura_relationship_atlas import (
     build_relationship_atlas,
     load_relationship_atlas,
@@ -187,6 +188,76 @@ def test_compass_preserves_qualified_method_symbols_across_source_bindings() -> 
     assert change_graph._canonical_target_binding(method)["symbol"] == "Alpha.run"
 
 
+def test_legacy_neighborhood_disambiguates_source_refs_by_span_and_hash() -> None:
+    legacy = _minimal_relational_index()
+    legacy["participants"] = [
+        {
+            "participant_id": "first_run",
+            "digest": "1" * 64,
+            "qualified_symbol": "Alpha.run",
+            "metadata": {
+                "file_path": "service.py",
+                "line_start": 2,
+                "line_end": 3,
+                "file_source_hash": "f" * 64,
+            },
+        },
+        {
+            "participant_id": "second_run",
+            "digest": "2" * 64,
+            "qualified_symbol": "Alpha.run",
+            "metadata": {
+                "file_path": "service.py",
+                "line_start": 5,
+                "line_end": 6,
+                "file_source_hash": "f" * 64,
+            },
+        },
+    ]
+    legacy["relations"] = []
+    _rebind_index_digest(legacy)
+    source_ref = SourceReference(
+        file_path="service.py",
+        symbol="Alpha.run",
+        line_start=2,
+        line_end=3,
+        source_hash="1" * 64,
+        file_source_hash="f" * 64,
+    )
+    request = RelationalNeighborhoodRequest(
+        objective_digest="legacy-redefined-method",
+        seed_participant_ids=(),
+        seed_source_refs=(source_ref,),
+        max_hops=1,
+        max_nodes=8,
+        max_edges=16,
+    )
+
+    packet = compass._compatibility_neighborhood_from_raw_index(request, legacy)
+
+    assert packet["seed_participant_ids"] == ["first_run"]
+    assert [item["participant_id"] for item in packet["participants"]] == ["first_run"]
+    with pytest.raises(
+        ValueError,
+        match="legacy relational neighborhood source ref must resolve to exactly one",
+    ):
+        compass._compatibility_neighborhood_from_raw_index(
+            RelationalNeighborhoodRequest(
+                objective_digest="legacy-redefined-method-drift",
+                seed_participant_ids=(),
+                seed_source_refs=(
+                    SourceReference(
+                        **{**source_ref.to_dict(), "source_hash": "0" * 64}
+                    ),
+                ),
+                max_hops=1,
+                max_nodes=8,
+                max_edges=16,
+            ),
+            legacy,
+        )
+
+
 def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -> None:
     source_text = "def compile_coding_relationship_compass():\n    return None\n"
     (tmp_path / "aura_coding_relationship_compass.py").write_text(source_text, encoding="utf-8")
@@ -277,7 +348,11 @@ def test_compile_compass_combines_all_four_planes(monkeypatch, tmp_path: Path) -
     )
     index = _minimal_relational_index()
     index["participants"][0]["metadata"]["file_path"] = "aura_coding_relationship_compass.py"
+    index["participants"][0]["metadata"]["line_start"] = 1
+    index["participants"][0]["metadata"]["line_end"] = 2
+    index["participants"][0]["metadata"]["file_source_hash"] = file_hash
     index["participants"][0]["qualified_symbol"] = "compile_coding_relationship_compass"
+    index["participants"][0]["digest"] = source_hash
     _rebind_index_digest(index)
     atlas = build_relationship_atlas(
         repo_root=tmp_path,
