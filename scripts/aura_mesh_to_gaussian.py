@@ -28,7 +28,12 @@ SH_C0 = 0.28209479177387814
 DEFAULT_OPACITY = 0.92
 MIN_THICKNESS = 0.001
 MAX_SPLATS = 1_000_000
-PROFILE_LIMITS = {"LOW": 50_000, "STANDARD": 150_000, "VIDEO": 300_000}
+PROFILE_LIMITS = {
+    "LOW": {"STOREY": 50_000, "BUILDING": 150_000},
+    "STANDARD": {"STOREY": 150_000, "BUILDING": 500_000},
+    "VIDEO": {"STOREY": 300_000, "BUILDING": 1_000_000},
+}
+GAUSSIAN_SCOPES = ("STOREY", "BUILDING")
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -398,6 +403,7 @@ def compile_mesh(
     output_ply: Path,
     output_spz: Path | None,
     profile: str,
+    scope: str,
     source_digest: str,
     target_count: int | None = None,
     spz_module: Any | None = None,
@@ -406,6 +412,8 @@ def compile_mesh(
     repository = repo_root.expanduser().resolve(strict=True)
     if profile not in PROFILE_LIMITS:
         raise ValueError("unsupported Gaussian density profile")
+    if scope not in GAUSSIAN_SCOPES:
+        raise ValueError("unsupported Gaussian asset scope")
     if type(source_digest) is not str or _SHA256.fullmatch(source_digest) is None:
         raise ValueError("source_digest must be a lowercase SHA-256 digest")
     glb = _resolve_inside(repository, glb_path)
@@ -414,8 +422,9 @@ def compile_mesh(
     glb_receipt = verify_glb(glb, root=repository)
     if glb_receipt["sha256"] != source_digest:
         raise ValueError("source_digest does not match the validated GLB")
-    count = target_count or PROFILE_LIMITS[profile]
-    if type(count) is not int or count < 1 or count > PROFILE_LIMITS[profile]:
+    profile_limit = PROFILE_LIMITS[profile][scope]
+    count = target_count or profile_limit
+    if type(count) is not int or count < 1 or count > profile_limit:
         raise ValueError("target_count exceeds the selected density profile")
     vertices, faces, colors = _mesh_arrays(glb)
     cloud = sample_mesh_arrays(
@@ -440,6 +449,8 @@ def compile_mesh(
     payload = {
         "version": GAUSSIAN_COMPILER_VERSION,
         "profile": profile,
+        "scope": scope,
+        "profile_limit": profile_limit,
         "source": glb.relative_to(repository).as_posix(),
         "source_digest": source_digest,
         "source_verification_digest": glb_receipt["verification_digest"],
@@ -463,6 +474,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-ply", type=Path, required=True)
     parser.add_argument("--output-spz", type=Path)
     parser.add_argument("--profile", choices=tuple(PROFILE_LIMITS), default="STANDARD")
+    parser.add_argument("--scope", choices=GAUSSIAN_SCOPES, default="STOREY")
     parser.add_argument("--source-digest", required=True)
     parser.add_argument("--target-count", type=int)
     parser.add_argument("--receipt", type=Path, required=True)
@@ -477,6 +489,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_ply=args.output_ply,
         output_spz=args.output_spz,
         profile=args.profile,
+        scope=args.scope,
         source_digest=args.source_digest,
         target_count=args.target_count,
     )
