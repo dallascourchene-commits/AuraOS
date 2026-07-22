@@ -443,6 +443,13 @@ def test_injected_evidence_accepts_approximate_inventory_with_exact_source_slice
     validated = compass._validate_injected_evidence_packet(tmp_path, packet)
 
     assert validated["atomic_inventory"]["selected_atomic_functions"][0]["symbol"] == "target"
+    assert validated["source_slices"][0] == {
+        "file_path": "target.py",
+        "line_start": 1,
+        "line_end": 2,
+        "source_hash": source_hash,
+        "file_source_hash": file_hash,
+    }
 
 def test_injected_evidence_rejects_stale_head(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(compass, "_repository_head", lambda root: "c" * 40)

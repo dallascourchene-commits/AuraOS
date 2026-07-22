@@ -460,7 +460,7 @@ def compile_compass_act_capsules(graph: Mapping[str, Any]) -> dict[str, Any]:
             "patch_authority": PATCH_AUTHORITY,
             "vsa_patch_authority": False,
         }
-        capsule["capsule_digest"] = stable_digest(capsule)
+        capsule["capsule_digest"] = stable_digest(capsule, digest_size=16)
         capsules.append(capsule)
     if not capsules and not failures:
         return {

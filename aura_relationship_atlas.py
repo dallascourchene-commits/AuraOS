@@ -934,11 +934,11 @@ def build_relationship_atlas(
 
     # 4. Filter Candidate Wirings & Evaluate Prohibitions
     prohibitions = BUILTIN_PROHIBITIONS
-    authority_pair_counts: dict[frozenset[str], int] = {}
+    authority_pair_counts: dict[tuple[str, ...], int] = {}
     for assessment in assessments:
         if "REQUIRES_AUTHORITY" not in assessment.relation_types:
             continue
-        pair_ids = frozenset(
+        pair_ids = tuple(
             participant.participant_id for participant in assessment.participant_refs
         )
         authority_pair_counts[pair_ids] = authority_pair_counts.get(pair_ids, 0) + 1
@@ -984,14 +984,17 @@ def build_relationship_atlas(
                         should_prohibit = True
 
                 elif pattern == "circular_authorization_block":
-                    # Circular authority: two authority requirements bind the same
-                    # participant pair. The pair index preserves the prior semantics
-                    # without rescanning the complete assessment set per assessment.
+                    # Circular authority requires opposing directed relationships.
+                    # Repeated A -> B assessments are duplicates, not an A <-> B cycle.
                     if "REQUIRES_AUTHORITY" in a.relation_types:
-                        pair_ids = frozenset(
+                        pair_ids = tuple(
                             participant.participant_id for participant in a.participant_refs
                         )
-                        should_prohibit = authority_pair_counts.get(pair_ids, 0) > 1
+                        reverse_pair_ids = tuple(reversed(pair_ids))
+                        should_prohibit = (
+                            pair_ids != reverse_pair_ids
+                            and authority_pair_counts.get(reverse_pair_ids, 0) > 0
+                        )
 
                 elif pattern == "ephemeral_lease_leak_block":
                     # Ephemeral leases must not persist beyond TTL
