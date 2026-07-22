@@ -424,7 +424,7 @@ AuraOS maintains an eight-paper defensive prior-art stack. Papers I–VII establ
 
 Prior-art papers remain reference material; current source, tests, exact evidence, licences, verifiers, and governance requirements determine implemented behavior.
 
-## Evidence and benchmark hierarchy
+## Benchmark evidence
 
 Aura does not collapse unlike evidence into one score.
 
@@ -438,9 +438,9 @@ Aura does not collapse unlike evidence into one score.
 Representative current evidence includes:
 
 - executable fixture: `3/3` visible, `3/3` hidden, `2/2` regression, `WORKING`, `ACCEPTED`;
-- exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, `24/24` regression;
-- context-localization proxy: `89.04%` lower total proxy with quality `+0.0057`;
-- Selective Council V3: `32.83%` lower total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
+- exact-head AuraOS refactor: `32/32` visible/property, `35/35` adversarial, focused regression `24/24`; `WORKING`, `ACCEPTED`; observed `100.00`, benchmark `93.50`;
+- context-localization proxy: `89.04% lower` total proxy with quality `+0.0057`;
+- Selective Council V3: `32.83% lower` total proxy than Council V2 on the controlled fixture with the same accepted patch and quality;
 - Aura Gate Phase 2 instrumented Agent Bridge + Council V3 scope: `37,907` input,
   `1,852` output, and `39,759` total token proxy, with `51,987` estimated saved
   (`56.66%`) against the documented counterfactual; full Codex-session provider totals
