@@ -51,9 +51,10 @@ READY'
           echo "${EXPECTED_ARCHIVE_SHA256}  ${RUNNER_TEMP}/pr184-g4-adapter.tar.gz" | sha256sum --check --strict
           python - <<'PY'
           from pathlib import Path, PurePosixPath
+          import os
           import tarfile
 
-          archive = Path("${RUNNER_TEMP}/pr184-g4-adapter.tar.gz")
+          archive = Path(os.environ["RUNNER_TEMP"], "pr184-g4-adapter.tar.gz")
           allowed = {
               "aura_construction_demo_contracts.py",
               "aura_construction_demo_asset_pack.py",
