@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1784841369,
+  "generated_at_unix": 1784842127,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "included_file_count": 1364,
+    "included_file_count": 1365,
     "included_policy": "all files under root except skipped runtime/cache dirs and generated CODEMAP outputs",
     "excluded_generated_map_files": [
       ".aura/CODEMAP.json",
@@ -1315,6 +1315,7 @@
       "tests/test_aura_spatial_asset_security.py",
       "tests/test_aura_spatial_browser_interaction.py",
       "tests/test_aura_spatial_cli.py",
+      "tests/test_aura_spatial_cli_construction_security.py",
       "tests/test_aura_spatial_codex_followup.py",
       "tests/test_aura_spatial_codex_repairs.py",
       "tests/test_aura_spatial_continuation_harness.py",
@@ -1386,23 +1387,23 @@
     ]
   },
   "summary": {
-    "file_count": 1364,
-    "total_bytes": 56228840,
-    "text_tokens_est": 4608366,
+    "file_count": 1365,
+    "total_bytes": 56230242,
+    "text_tokens_est": 4608716,
     "role_counts": {
       "binary_artifact": 2,
       "interface_surface": 50,
       "knowledge_artifact": 179,
       "native_accelerator": 8,
       "operator_script": 5,
-      "python_module": 907,
+      "python_module": 908,
       "schema_or_lexicon": 161,
       "support_file": 52
     },
-    "topology_nodes": 10351,
-    "topology_edges": 24158,
+    "topology_nodes": 10353,
+    "topology_edges": 24160,
     "topology_source": "compiled_deep_topology",
-    "elapsed_ms": 29059.83
+    "elapsed_ms": 28675.19
   },
   "navigation_protocol": [
     "Read .aura/CODEMAP.md first.",
@@ -1595,6 +1596,7 @@
       "tests/test_aura_emergent_capability_auditor.py",
       "tests/test_aura_gate_audit.py",
       "tests/test_aura_spatial_asset_security.py",
+      "tests/test_aura_spatial_cli_construction_security.py",
       "tests/test_aura_spatial_ws_guard.py"
     ],
     "interfaces_and_docs": [
@@ -30013,8 +30015,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 129,
-        "end_line": 156,
+        "line": 148,
+        "end_line": 175,
         "semantic_id": "aura_spatial_cli.py#function:_construction_video_demo:516f1d7ea7de9e46",
         "signature_hash": "695bc60f6a057243"
       }
@@ -37969,8 +37971,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 32,
-        "end_line": 42,
+        "line": 51,
+        "end_line": 61,
         "semantic_id": "aura_spatial_cli.py#function:_head:a21842d7487e50c1",
         "signature_hash": "a22d181fb69e61b6"
       }
@@ -41205,6 +41207,16 @@
         "end_line": 417,
         "semantic_id": "aura_st3gg_recall.py#function:_lookup_hash_recall:091674111f011b3e",
         "signature_hash": "258064c3cb493ea8"
+      }
+    ],
+    "_loopback_host": [
+      {
+        "file": "aura_spatial_cli.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 38,
+        "semantic_id": "aura_spatial_cli.py#function:_loopback_host:102f16662b84b5fe",
+        "signature_hash": "f8d0a9b8cbd6d71a"
       }
     ],
     "_loss_score": [
@@ -54687,8 +54699,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 126,
+        "line": 75,
+        "end_line": 145,
         "semantic_id": "aura_spatial_cli.py#function:_synthetic_construction_demo:81f07d8552e72a33",
         "signature_hash": "19ec66d22501b205"
       }
@@ -54865,6 +54877,16 @@
         "end_line": 143,
         "semantic_id": "aura_construction_architect_refactor.py#function:_task_without_tests:8f4690f26b856e6b",
         "signature_hash": "a4bda8c28df212f4"
+      }
+    ],
+    "_tcp_port": [
+      {
+        "file": "aura_spatial_cli.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 48,
+        "semantic_id": "aura_spatial_cli.py#function:_tcp_port:e887c254f69873f9",
+        "signature_hash": "a3821593838a8541"
       }
     ],
     "_telemetry": [
@@ -58231,8 +58253,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 45,
-        "end_line": 53,
+        "line": 64,
+        "end_line": 72,
         "semantic_id": "aura_spatial_cli.py#function:_validate_route:a9a7c72de5e1a6a6",
         "signature_hash": "cbfbd79fefa7282b"
       }
@@ -79857,8 +79879,8 @@
       {
         "file": "aura_spatial_cli.py",
         "kind": "function",
-        "line": 159,
-        "end_line": 183,
+        "line": 178,
+        "end_line": 202,
         "semantic_id": "aura_spatial_cli.py#function:main:f66465847d847701",
         "signature_hash": "c3265d7d89056dc5"
       },
@@ -97339,6 +97361,26 @@
         "end_line": 78,
         "semantic_id": "tests/test_aura_construction_grammar.py#function:test_construction_route_blocks_failed_verifier_packet:0f9ec2d8f0b4fe4f",
         "signature_hash": "c013cf699d91373f"
+      }
+    ],
+    "test_construction_video_demo_host_is_loopback_only": [
+      {
+        "file": "tests/test_aura_spatial_cli_construction_security.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_spatial_cli_construction_security.py#function:test_construction_video_demo_host_is_loopback_only:a27a64df96775b9b",
+        "signature_hash": "b6d8f9a1b2cb8999"
+      }
+    ],
+    "test_construction_video_demo_port_is_bounded": [
+      {
+        "file": "tests/test_aura_spatial_cli_construction_security.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_spatial_cli_construction_security.py#function:test_construction_video_demo_port_is_bounded:dcacd8126110b683",
+        "signature_hash": "d54f286168cfb547"
       }
     ],
     "test_constructor_rejects_non_gate_runtime_and_unsafe_endpoint": [
@@ -139518,7 +139560,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 344,
+        "hub_rank": 345,
         "node_count": 12,
         "edge_count": 36,
         "degree": 36,
@@ -143472,7 +143514,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 339,
+        "hub_rank": 340,
         "node_count": 13,
         "edge_count": 37,
         "degree": 37,
@@ -144817,7 +144859,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 342,
+        "hub_rank": 343,
         "node_count": 8,
         "edge_count": 37,
         "degree": 37,
@@ -149991,7 +150033,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 337,
+        "hub_rank": 338,
         "node_count": 16,
         "edge_count": 39,
         "degree": 39,
@@ -153864,7 +153906,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 346,
+        "hub_rank": 347,
         "node_count": 8,
         "edge_count": 36,
         "degree": 36,
@@ -157377,7 +157419,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 338,
+        "hub_rank": 339,
         "node_count": 16,
         "edge_count": 38,
         "degree": 38,
@@ -168120,21 +168162,23 @@
     {
       "path": "aura_spatial_cli.py",
       "role": "python_module",
-      "bytes": 7589,
-      "lines": 188,
-      "tokens_est": 1898,
-      "symbol_count": 5,
+      "bytes": 8207,
+      "lines": 207,
+      "tokens_est": 2052,
+      "symbol_count": 7,
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 347,
-        "node_count": 6,
-        "edge_count": 36,
-        "degree": 36,
+        "hub_rank": 337,
+        "node_count": 8,
+        "edge_count": 40,
+        "degree": 40,
         "symbols": [
           "_construction_video_demo",
           "_head",
+          "_loopback_host",
           "_synthetic_construction_demo",
+          "_tcp_port",
           "_validate_route",
           "main"
         ],
@@ -168148,44 +168192,44 @@
         ],
         "edge_kinds": {
           "call": 21,
-          "defines": 10,
+          "defines": 14,
           "import_module": 5
         }
       },
-      "digest8": "4ec27c1febb5b048",
+      "digest8": "b28b0b1392ca6f3c",
       "vector": [
-        -0.04989,
-        0.065241,
-        0.014072,
-        0.182931,
-        0.182931,
-        0.269919,
-        0.149671,
-        -0.236659,
-        -0.259685,
-        -0.021747,
-        -0.223866,
-        0.108735,
-        -0.226425,
-        0.019189,
-        -0.080592,
-        0.277594,
-        -0.118969,
-        0.154788,
-        -0.280153,
-        -0.088267,
-        -0.323647,
-        -0.072917,
-        -0.093384,
-        0.246893,
-        -0.006396,
-        -0.290387,
-        -0.126644,
-        0.039656,
-        0.185489,
-        0.057566,
-        0.04989,
-        0.25201
+        0.044727,
+        0.113735,
+        -0.123959,
+        -0.17252,
+        -0.008945,
+        -0.042171,
+        0.060062,
+        0.256863,
+        -0.116291,
+        0.2952,
+        -0.313091,
+        -0.075398,
+        0.215969,
+        -0.026836,
+        0.218525,
+        0.14185,
+        0.167408,
+        -0.177631,
+        -0.042171,
+        0.057507,
+        0.231304,
+        0.103512,
+        0.320759,
+        0.108624,
+        0.305424,
+        -0.190411,
+        -0.226193,
+        -0.026836,
+        -0.106068,
+        0.20319,
+        0.215969,
+        0.157185
       ]
     },
     {
@@ -169169,7 +169213,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 345,
+        "hub_rank": 346,
         "node_count": 11,
         "edge_count": 36,
         "degree": 36,
@@ -177633,7 +177677,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 343,
+        "hub_rank": 344,
         "node_count": 7,
         "edge_count": 37,
         "degree": 37,
@@ -181454,7 +181498,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 341,
+        "hub_rank": 342,
         "node_count": 9,
         "edge_count": 37,
         "degree": 37,
@@ -182048,7 +182092,7 @@
       "commands": [],
       "command_lines": {},
       "topology": {
-        "hub_rank": 340,
+        "hub_rank": 341,
         "node_count": 11,
         "edge_count": 37,
         "degree": 37,
@@ -210647,6 +210691,52 @@
       ]
     },
     {
+      "path": "tests/test_aura_spatial_cli_construction_security.py",
+      "role": "python_module",
+      "bytes": 784,
+      "lines": 25,
+      "tokens_est": 196,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b89c86e0150f647a",
+      "vector": [
+        -0.216432,
+        0.111418,
+        0.001281,
+        0.175451,
+        0.008965,
+        0.162644,
+        -0.206187,
+        0.275342,
+        0.298394,
+        -0.065314,
+        -0.234361,
+        0.024333,
+        -0.124224,
+        0.088366,
+        -0.190819,
+        -0.293272,
+        0.318885,
+        0.039701,
+        -0.080682,
+        -0.029455,
+        0.129347,
+        0.001281,
+        0.001281,
+        -0.229239,
+        -0.267659,
+        -0.239484,
+        0.039701,
+        0.283026,
+        -0.272781,
+        0.029455,
+        0.011526,
+        0.067875
+      ]
+    },
+    {
       "path": "tests/test_aura_spatial_codex_followup.py",
       "role": "python_module",
       "bytes": 7154,
@@ -214203,7 +214293,7 @@
     "source": "compiled_deep_topology",
     "diagnostics": {
       "isolated_node_count": 7,
-      "dead_end_count": 4573,
+      "dead_end_count": 4575,
       "dangling_edge_count": 0,
       "top_hubs": [
         {
@@ -214303,11 +214393,11 @@
       "generated_by": "aura_topology_manager",
       "root": ".",
       "module_count": 608,
-      "node_count": 10351,
-      "edge_count": 24158,
+      "node_count": 10353,
+      "edge_count": 24160,
       "spectral_layout": true,
-      "spectral_sparsity": 0.054783,
-      "global_health": 0.970844
+      "spectral_sparsity": 0.054772,
+      "global_health": 0.97085
     },
     "file_index": {
       "aura_node.py": {
@@ -226803,8 +226893,36 @@
           "import_module": 1
         }
       },
-      "aura_ephemeral_manifest.py": {
+      "aura_spatial_cli.py": {
         "hub_rank": 337,
+        "node_count": 8,
+        "edge_count": 40,
+        "degree": 40,
+        "symbols": [
+          "_construction_video_demo",
+          "_head",
+          "_loopback_host",
+          "_synthetic_construction_demo",
+          "_tcp_port",
+          "_validate_route",
+          "main"
+        ],
+        "neighbor_files": [
+          "aura_arena_wfst_compiler.py",
+          "aura_construction_adapter.py",
+          "aura_construction_demo_director.py",
+          "aura_construction_fixtures.py",
+          "aura_fst_routing.py",
+          "aura_spatial_agent_bridge.py"
+        ],
+        "edge_kinds": {
+          "call": 21,
+          "defines": 14,
+          "import_module": 5
+        }
+      },
+      "aura_ephemeral_manifest.py": {
+        "hub_rank": 338,
         "node_count": 16,
         "edge_count": 39,
         "degree": 39,
@@ -226829,7 +226947,7 @@
         }
       },
       "aura_model_cognome_store_records.py": {
-        "hub_rank": 338,
+        "hub_rank": 339,
         "node_count": 16,
         "edge_count": 38,
         "degree": 38,
@@ -226864,7 +226982,7 @@
         }
       },
       "aura_codemap_verify.py": {
-        "hub_rank": 339,
+        "hub_rank": 340,
         "node_count": 13,
         "edge_count": 37,
         "degree": 37,
@@ -226894,7 +227012,7 @@
         }
       },
       "travel_source_registry.py": {
-        "hub_rank": 340,
+        "hub_rank": 341,
         "node_count": 11,
         "edge_count": 37,
         "degree": 37,
@@ -226921,7 +227039,7 @@
         }
       },
       "test_universal_llm_logging.py": {
-        "hub_rank": 341,
+        "hub_rank": 342,
         "node_count": 9,
         "edge_count": 37,
         "degree": 37,
@@ -226948,7 +227066,7 @@
         }
       },
       "aura_coding_waboose_cli.py": {
-        "hub_rank": 342,
+        "hub_rank": 343,
         "node_count": 8,
         "edge_count": 37,
         "degree": 37,
@@ -226971,7 +227089,7 @@
         }
       },
       "test_aura_empirical_software_lab.py": {
-        "hub_rank": 343,
+        "hub_rank": 344,
         "node_count": 7,
         "edge_count": 37,
         "degree": 37,
@@ -226993,7 +227111,7 @@
         }
       },
       "aura_capability_binding.py": {
-        "hub_rank": 344,
+        "hub_rank": 345,
         "node_count": 12,
         "edge_count": 36,
         "degree": 36,
@@ -227022,7 +227140,7 @@
         }
       },
       "aura_spectral_memory.py": {
-        "hub_rank": 345,
+        "hub_rank": 346,
         "node_count": 11,
         "edge_count": 36,
         "degree": 36,
@@ -227048,7 +227166,7 @@
         }
       },
       "aura_human_agent_guidance.py": {
-        "hub_rank": 346,
+        "hub_rank": 347,
         "node_count": 8,
         "edge_count": 36,
         "degree": 36,
@@ -227069,32 +227187,6 @@
           "call": 20,
           "defines": 14,
           "import_module": 2
-        }
-      },
-      "aura_spatial_cli.py": {
-        "hub_rank": 347,
-        "node_count": 6,
-        "edge_count": 36,
-        "degree": 36,
-        "symbols": [
-          "_construction_video_demo",
-          "_head",
-          "_synthetic_construction_demo",
-          "_validate_route",
-          "main"
-        ],
-        "neighbor_files": [
-          "aura_arena_wfst_compiler.py",
-          "aura_construction_adapter.py",
-          "aura_construction_demo_director.py",
-          "aura_construction_fixtures.py",
-          "aura_fst_routing.py",
-          "aura_spatial_agent_bridge.py"
-        ],
-        "edge_kinds": {
-          "call": 21,
-          "defines": 10,
-          "import_module": 5
         }
       },
       "aura_route_capsule_materializer.py": {
