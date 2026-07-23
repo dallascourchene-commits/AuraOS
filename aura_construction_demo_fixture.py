@@ -4,6 +4,7 @@ This module extends Aura's existing canonical Construction owners.  It does not
 create a second project ledger, schedule authority, financial authority,
 regulatory authority, professional release path, or renderer authority.
 """
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
@@ -457,12 +458,16 @@ class ConstructionDemoProjectFixture:
             identities = tuple(getattr(item, identity_field) for item in values)
             if identities != tuple(sorted(set(identities))):
                 raise ValueError(f"{field_name} must use canonical unique identity order")
-        if type(self.candidates) is not tuple or not self.candidates or not all(
-            type(item) is ConstructionCoordinationCandidate for item in self.candidates
+        if (
+            type(self.candidates) is not tuple
+            or not self.candidates
+            or not all(type(item) is ConstructionCoordinationCandidate for item in self.candidates)
         ):
             raise ValueError("candidates must contain exact ConstructionCoordinationCandidate values")
-        if type(self.probabilistic_signals) is not tuple or not self.probabilistic_signals or not all(
-            type(item) is ConstructionProbabilisticSignal for item in self.probabilistic_signals
+        if (
+            type(self.probabilistic_signals) is not tuple
+            or not self.probabilistic_signals
+            or not all(type(item) is ConstructionProbabilisticSignal for item in self.probabilistic_signals)
         ):
             raise ValueError("probabilistic_signals must contain exact ConstructionProbabilisticSignal values")
         if {item.name for item in self.trades} != MINIMUM_TRADE_NAMES:
@@ -507,7 +512,9 @@ class ConstructionDemoProjectFixture:
             if item.work_package_id not in package_ids:
                 raise ValueError("fixture record references an unknown work package")
         for item in self.alternatives:
-            if item.source_work_package_id not in package_ids or not set(item.target_work_package_ids).issubset(package_ids):
+            if item.source_work_package_id not in package_ids or not set(item.target_work_package_ids).issubset(
+                package_ids
+            ):
                 raise ValueError("alternative references an unknown work package")
 
     def _body(self) -> dict[str, Any]:
@@ -555,15 +562,15 @@ class ConstructionDemoProjectFixture:
 __all__ = [
     "CONSTRUCTION_DEMO_FIXTURE_VERSION",
     "MINIMUM_TRADE_NAMES",
-    "ConstructionDemoWorkStatus",
-    "ConstructionDemoRecordTruth",
-    "ConstructionDemoTrade",
-    "ConstructionDemoWorkPackage",
-    "ConstructionDemoBudgetLine",
-    "ConstructionDemoRule",
-    "ConstructionDemoInspection",
-    "ConstructionDemoHazard",
     "ConstructionDemoActivity",
     "ConstructionDemoAlternative",
+    "ConstructionDemoBudgetLine",
+    "ConstructionDemoHazard",
+    "ConstructionDemoInspection",
     "ConstructionDemoProjectFixture",
+    "ConstructionDemoRecordTruth",
+    "ConstructionDemoRule",
+    "ConstructionDemoTrade",
+    "ConstructionDemoWorkPackage",
+    "ConstructionDemoWorkStatus",
 ]
