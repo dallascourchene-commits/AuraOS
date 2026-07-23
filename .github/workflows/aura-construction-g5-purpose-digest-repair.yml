@@ -44,11 +44,11 @@ jobs:
           new = '        purpose_digest="9" * 64,\n'
           count = text.count(old)
           if count:
-              if count != 4:
-                  raise SystemExit(f"expected four G5 purpose digest repair spans, found {count}")
+              if count != 2:
+                  raise SystemExit(f"expected two shared G5 purpose digest spans, found {count}")
               path.write_text(text.replace(old, new), encoding="utf-8")
-          elif text.count(new) != 4:
-              raise SystemExit("canonical G5 purpose digest spans are missing")
+          elif text.count(new) != 2:
+              raise SystemExit("canonical shared G5 purpose digest spans are missing")
           PY
           ruff check tests/test_aura_construction_demo_projection.py
           ruff format --check tests/test_aura_construction_demo_projection.py
