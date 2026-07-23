@@ -8,31 +8,46 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: aura-construction-third-codex-repair-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  diagnose-focused-repair-test:
+  repair-third-codex-findings:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 128
 
+      - name: Verify exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install focused dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
         run: python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
 
-      - name: Apply owner repairs without workflow reconstruction
+      - name: Apply third-round Codex owner repairs
         run: |
           python - <<'PY'
           from pathlib import Path
           from textwrap import dedent
+
           path = Path("scripts/aura_pr187_third_codex_repair.py")
           text = path.read_text(encoding="utf-8")
           old = 'exec(compile(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"), __file__, "exec"))'
@@ -42,6 +57,10 @@ jobs:
               "    restore_and_expand_workflow()\\n    Path(__file__).unlink()",
               "    Path(__file__).unlink()",
           )
+          _SOURCE = _SOURCE.replace(
+              'f"aura-public://construction/{public_asset_id}"',
+              'f"aura://public/{public_asset_id}"',
+          )
           exec(compile(_SOURCE, __file__, "exec"))
           ''')
           if text.count(old) != 1:
@@ -49,31 +68,66 @@ jobs:
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
           python scripts/aura_pr187_third_codex_repair.py
-          ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
 
-      - name: Capture focused pytest result
-        id: tests
-        continue-on-error: true
+      - name: Format and statically validate repaired owners
         run: |
-          mkdir -p /tmp/aura-focused-test
-          set +e
-          python -m pytest -q --tb=long \
+          set -euo pipefail
+          ruff format \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          ruff check \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+          node --check tests/js/spatial-construction-demo.test.mjs
+          node --check tests/js/spatial-construction-review-regressions.test.mjs
+          git diff --check
+
+      - name: Run focused Python verification
+        run: |
+          python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+
+      - name: Run retained Construction and Spatial regressions
+        run: |
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_mixed_scene.py
+
+      - name: Run focused browser regressions
+        run: |
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+
+      - name: Run retained Spatial browser suite
+        run: npm run test:spatial
+
+      - name: Commit and push exact verified repair
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            aura_construction_demo_projection.py \
+            aura_spatial_web/construction_scene_renderer.js \
+            aura_spatial_web/construction_overlay_pass.js \
+            aura_spatial_web/webgl2_gaussian_pass.js \
             tests/test_aura_construction_demo_projection.py \
-            > /tmp/aura-focused-test/pytest.log 2>&1
-          status=$?
-          echo "$status" > /tmp/aura-focused-test/pytest.status
-          exit "$status"
-
-      - name: Upload focused pytest diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-pr187-focused-pytest-diagnostic
-          path: /tmp/aura-focused-test
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Fail closed
-        if: always()
-        run: test "${{ steps.tests.outcome }}" = "success"
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
+            scripts/aura_pr187_third_codex_repair.py
+          git diff --cached --quiet && { echo "Expected a repair diff"; exit 1; }
+          git commit -m "fix(construction): resolve third deep Codex findings"
+          git fetch --no-tags origin "$HEAD_REF"
+          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
+          git push origin "HEAD:$HEAD_REF"
