@@ -1,4 +1,5 @@
 """Deterministic builder for the asset-pack-bound G4 Construction demo fixture."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -236,22 +237,51 @@ def build_construction_demo_project_fixture(
     )
 
     package_specs = (
-        ("wp-asbestos-abatement", blocked_storey, "abatement", "trade-asbestos", ConstructionDemoWorkStatus.AWAITING_PROFESSIONAL_RELEASE),
+        (
+            "wp-asbestos-abatement",
+            blocked_storey,
+            "abatement",
+            "trade-asbestos",
+            ConstructionDemoWorkStatus.AWAITING_PROFESSIONAL_RELEASE,
+        ),
         ("wp-crane-logistics", logistics_storey, "logistics", "trade-crane", ConstructionDemoWorkStatus.ACTIVE),
         ("wp-demolition", released_storey, "preparation", "trade-demolition", ConstructionDemoWorkStatus.COMPLETED),
-        ("wp-electrical-isolation", electrical_storey, "core", "trade-electrical", ConstructionDemoWorkStatus.READY_FOR_REVIEW),
+        (
+            "wp-electrical-isolation",
+            electrical_storey,
+            "core",
+            "trade-electrical",
+            ConstructionDemoWorkStatus.READY_FOR_REVIEW,
+        ),
         ("wp-fire-protection", service_storey, "life-safety", "trade-fire", ConstructionDemoWorkStatus.NOT_STARTED),
         ("wp-upper-drilling", blocked_storey, "drilling", "trade-general", ConstructionDemoWorkStatus.BLOCKED),
-        ("wp-inspection-release", electrical_storey, "inspection", "trade-inspection", ConstructionDemoWorkStatus.COMPLETED),
+        (
+            "wp-inspection-release",
+            electrical_storey,
+            "inspection",
+            "trade-inspection",
+            ConstructionDemoWorkStatus.COMPLETED,
+        ),
         ("wp-mechanical-roughin", service_storey, "mechanical", "trade-mechanical", ConstructionDemoWorkStatus.ACTIVE),
         ("wp-plumbing-riser", service_storey, "plumbing", "trade-plumbing", ConstructionDemoWorkStatus.DELAYED),
         ("wp-roofing-repair", blocked_storey, "roof", "trade-roofing", ConstructionDemoWorkStatus.REWORK_REQUIRED),
-        ("wp-structural-review", released_storey, "structure", "trade-structural", ConstructionDemoWorkStatus.AWAITING_INSPECTION),
-        ("wp-temporary-preparation", released_storey, "preparation", "trade-temp", ConstructionDemoWorkStatus.READY_FOR_REVIEW),
+        (
+            "wp-structural-review",
+            released_storey,
+            "structure",
+            "trade-structural",
+            ConstructionDemoWorkStatus.AWAITING_INSPECTION,
+        ),
+        (
+            "wp-temporary-preparation",
+            released_storey,
+            "preparation",
+            "trade-temp",
+            ConstructionDemoWorkStatus.READY_FOR_REVIEW,
+        ),
     )
     scopes = {
-        package_id: _scope(storey, role, package_id)
-        for package_id, storey, role, _trade, _status in package_specs
+        package_id: _scope(storey, role, package_id) for package_id, storey, role, _trade, _status in package_specs
     }
 
     asbestos_sensor = _evidence(
@@ -352,7 +382,7 @@ def build_construction_demo_project_fixture(
         title="Continue upper-floor drilling",
         summary="Continue drilling despite missing dispositive asbestos clearance evidence.",
         required_claim_ids=(asbestos_clearance.claim_id,),
-        declared_hard_blockers=("missing_dispositive_asbestos_clearance",),
+        hard_blockers=("missing_dispositive_asbestos_clearance",),
         authority_route=ConstructionAuthorityRoute.PROFESSIONAL_REVIEW_REQUIRED,
         time_delta=-16.0,
         cost_delta=-4000.0,
@@ -408,10 +438,30 @@ def build_construction_demo_project_fixture(
     signals = tuple(
         sorted(
             (
-                _signal(unsafe, specification=0.99, evidence=0.20, schedule=0.99, safety=0.02, variance=0.0025, margin=0.30),
-                _signal(shift, specification=0.90, evidence=0.91, schedule=0.89, safety=0.94, variance=0.0100, margin=0.12),
-                _signal(electrical, specification=0.88, evidence=0.95, schedule=0.80, safety=0.96, variance=0.0081, margin=0.08),
-                _signal(crane_temp, specification=0.86, evidence=0.88, schedule=0.96, safety=0.84, variance=0.0144, margin=0.05),
+                _signal(
+                    unsafe, specification=0.99, evidence=0.20, schedule=0.99, safety=0.02, variance=0.0025, margin=0.30
+                ),
+                _signal(
+                    shift, specification=0.90, evidence=0.91, schedule=0.89, safety=0.94, variance=0.0100, margin=0.12
+                ),
+                _signal(
+                    electrical,
+                    specification=0.88,
+                    evidence=0.95,
+                    schedule=0.80,
+                    safety=0.96,
+                    variance=0.0081,
+                    margin=0.08,
+                ),
+                _signal(
+                    crane_temp,
+                    specification=0.86,
+                    evidence=0.88,
+                    schedule=0.96,
+                    safety=0.84,
+                    variance=0.0144,
+                    margin=0.05,
+                ),
             ),
             key=lambda item: item.candidate_id,
         )
@@ -447,9 +497,23 @@ def build_construction_demo_project_fixture(
     inspections = tuple(
         sorted(
             (
-                ConstructionDemoInspection("inspection-electrical", "wp-electrical-isolation", "Electrical isolation review", "AWAITING_REVIEW", 12.0),
-                ConstructionDemoInspection("inspection-structural", "wp-structural-review", "Structural opening inspection", "SCHEDULED", 16.0),
-                ConstructionDemoInspection("inspection-workflow", "wp-inspection-release", "Completed mock coordination inspection", "PASSED", 8.0),
+                ConstructionDemoInspection(
+                    "inspection-electrical",
+                    "wp-electrical-isolation",
+                    "Electrical isolation review",
+                    "AWAITING_REVIEW",
+                    12.0,
+                ),
+                ConstructionDemoInspection(
+                    "inspection-structural", "wp-structural-review", "Structural opening inspection", "SCHEDULED", 16.0
+                ),
+                ConstructionDemoInspection(
+                    "inspection-workflow",
+                    "wp-inspection-release",
+                    "Completed mock coordination inspection",
+                    "PASSED",
+                    8.0,
+                ),
             ),
             key=lambda item: item.inspection_id,
         )
@@ -508,8 +572,7 @@ def build_construction_demo_project_fixture(
         "wp-roofing-repair": ("wp-structural-review",),
     }
     title_by_package = {
-        package_id: package_id.removeprefix("wp-").replace("-", " ").title()
-        for package_id, *_rest in package_specs
+        package_id: package_id.removeprefix("wp-").replace("-", " ").title() for package_id, *_rest in package_specs
     }
     work_packages = tuple(
         sorted(
@@ -529,8 +592,16 @@ def build_construction_demo_project_fixture(
                     inspection_ids=tuple(sorted(inspection_by_package.get(package_id, ()))),
                     hazard_ids=tuple(sorted(hazard_by_package.get(package_id, ()))),
                     rule_ids=tuple(sorted(rule_by_package.get(package_id, ()))),
-                    crane_window_id="crane-window-01" if package_id in {"wp-crane-logistics", "wp-temporary-preparation"} else None,
-                    professional_release_required=package_id in {"wp-asbestos-abatement", "wp-upper-drilling", "wp-electrical-isolation", "wp-structural-review"},
+                    crane_window_id="crane-window-01"
+                    if package_id in {"wp-crane-logistics", "wp-temporary-preparation"}
+                    else None,
+                    professional_release_required=package_id
+                    in {
+                        "wp-asbestos-abatement",
+                        "wp-upper-drilling",
+                        "wp-electrical-isolation",
+                        "wp-structural-review",
+                    },
                 )
                 for index, (package_id, storey, _role, trade_id, status) in enumerate(package_specs)
             ),
@@ -552,11 +623,46 @@ def build_construction_demo_project_fixture(
     history = tuple(
         sorted(
             (
-                ConstructionDemoActivity("activity-demolition-complete", "wp-demolition", "trade-demolition", 5.0, "COMPLETED", "Synthetic demolition package completed."),
-                ConstructionDemoActivity("activity-electrical-review", "wp-electrical-isolation", "trade-electrical", 8.0, "READY_FOR_REVIEW", "Synthetic electrical evidence assembled for review."),
-                ConstructionDemoActivity("activity-mechanical-active", "wp-mechanical-roughin", "trade-mechanical", 9.0, "ACTIVE", "Synthetic mechanical rough-in underway."),
-                ConstructionDemoActivity("activity-drilling-blocked", "wp-upper-drilling", "trade-general", 10.0, "BLOCKED", "Drilling remains blocked by missing dispositive asbestos evidence."),
-                ConstructionDemoActivity("activity-temp-ready", "wp-temporary-preparation", "trade-temp", 11.0, "READY_FOR_REVIEW", "Temporary labour option is prepared for human review."),
+                ConstructionDemoActivity(
+                    "activity-demolition-complete",
+                    "wp-demolition",
+                    "trade-demolition",
+                    5.0,
+                    "COMPLETED",
+                    "Synthetic demolition package completed.",
+                ),
+                ConstructionDemoActivity(
+                    "activity-electrical-review",
+                    "wp-electrical-isolation",
+                    "trade-electrical",
+                    8.0,
+                    "READY_FOR_REVIEW",
+                    "Synthetic electrical evidence assembled for review.",
+                ),
+                ConstructionDemoActivity(
+                    "activity-mechanical-active",
+                    "wp-mechanical-roughin",
+                    "trade-mechanical",
+                    9.0,
+                    "ACTIVE",
+                    "Synthetic mechanical rough-in underway.",
+                ),
+                ConstructionDemoActivity(
+                    "activity-drilling-blocked",
+                    "wp-upper-drilling",
+                    "trade-general",
+                    10.0,
+                    "BLOCKED",
+                    "Drilling remains blocked by missing dispositive asbestos evidence.",
+                ),
+                ConstructionDemoActivity(
+                    "activity-temp-ready",
+                    "wp-temporary-preparation",
+                    "trade-temp",
+                    11.0,
+                    "READY_FOR_REVIEW",
+                    "Temporary labour option is prepared for human review.",
+                ),
             ),
             key=lambda item: item.activity_id,
         )
@@ -652,8 +758,8 @@ def build_construction_demo_runtime_packet(
 
 
 __all__ = [
-    "PROJECT_ID",
     "LEDGER_ID",
+    "PROJECT_ID",
     "TRACE_ID",
     "build_construction_demo_project_fixture",
     "build_construction_demo_runtime_packet",
