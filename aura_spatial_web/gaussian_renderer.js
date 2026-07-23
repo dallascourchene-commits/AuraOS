@@ -451,9 +451,11 @@ export class GaussianRenderer {
     this.scene = null;
     this.plan = null;
     this.assets = Object.freeze([]);
+    this.visibleAssetIds = null;
     this.limits = null;
     this.buffers = new Set();
     this.passDisposers = new Set();
+    this.presentationDisposed = false;
     this.cancelled = false;
   }
 
@@ -517,7 +519,7 @@ export class GaussianRenderer {
     } catch (error) {
       let cleanupError = null;
       try {
-        await this.presentationRenderer.dispose();
+        await this._disposePresentationRenderer();
       } catch (cleanup) {
         cleanupError = cleanup;
       }
@@ -540,7 +542,32 @@ export class GaussianRenderer {
     return this.status();
   }
 
-  async _releaseRepresentationResources() {
+  setVisibleAssetIds(assetIds = null) {
+    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+      throw new Error("Gaussian renderer is not initialized");
+    }
+    if (assetIds === null) {
+      this.visibleAssetIds = null;
+      return this.status();
+    }
+    if (!Array.isArray(assetIds) || assetIds.some((item) => typeof item !== "string")) {
+      throw new TypeError("visible Gaussian asset IDs must be null or an array of strings");
+    }
+    const ids = [...new Set(assetIds)].sort();
+    const known = new Set(this.assets.map((asset) => asset.asset_id));
+    const unknown = ids.filter((assetId) => !known.has(assetId));
+    if (unknown.length) throw new RangeError(`unknown Gaussian asset IDs: ${unknown.join(", ")}`);
+    this.visibleAssetIds = new Set(ids);
+    return this.status();
+  }
+
+  async _disposePresentationRenderer() {
+    if (this.presentationDisposed) return;
+    this.presentationDisposed = true;
+    await this.presentationRenderer.dispose();
+  }
+
+  async _releaseDrawResources() {
     let firstError = null;
     for (const dispose of [...this.passDisposers].reverse()) {
       try {
@@ -551,13 +578,31 @@ export class GaussianRenderer {
     }
     this.passDisposers.clear();
     this.buffers.clear();
-    this.assets = Object.freeze([]);
     if (firstError) throw firstError;
   }
 
+  async _releaseRepresentationResources() {
+    let cleanupError = null;
+    try {
+      await this._releaseDrawResources();
+    } catch (error) {
+      cleanupError = error;
+    }
+    this.assets = Object.freeze([]);
+    this.visibleAssetIds = null;
+    if (cleanupError) throw cleanupError;
+  }
+
   async present({ cameraPosition = [0, 0, 0], signal } = {}) {
-    if (this.state !== RENDERER_STATES.INITIALIZED) throw new Error("Gaussian renderer is not initialized");
+    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {
+      throw new Error("Gaussian renderer is not initialized");
+    }
     if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");
+    await this._releaseDrawResources();
+    const visibleAssets =
+      this.visibleAssetIds === null
+        ? this.assets
+        : this.assets.filter((asset) => this.visibleAssetIds.has(asset.asset_id));
     const started = this.now();
     let baseReceipt;
     let representation = "ACCESSIBLE_HEADLESS_FALLBACK";
@@ -566,7 +611,7 @@ export class GaussianRenderer {
     try {
       baseReceipt = await this.presentationRenderer.present();
       if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");
-      for (const asset of this.assets) {
+      for (const asset of visibleAssets) {
         if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");
         const order = sortedIndices(asset, cameraPosition, this.limits.maxSortItems);
         const resources = Object.freeze({
@@ -640,8 +685,8 @@ export class GaussianRenderer {
       scene_digest: this.scene.scene_digest,
       render_plan_digest: this.plan.render_plan_digest,
       splat_count: drawn,
-      gpu_bytes: this.assets.reduce((total, asset) => total + asset.gpu_bytes, 0),
-      allocation_bytes: this.assets.reduce(
+      gpu_bytes: visibleAssets.reduce((total, asset) => total + asset.gpu_bytes, 0),
+      allocation_bytes: visibleAssets.reduce(
         (total, asset) => total + asset.allocation_bytes,
         0,
       ),
@@ -667,36 +712,54 @@ export class GaussianRenderer {
   async markDeviceLost() {
     if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this.cancelled = true;
+    const errors = [];
     try {
       await this._releaseRepresentationResources();
-    } finally {
-      this.state = RENDERER_STATES.LOST;
+    } catch (error) {
+      errors.push(error);
     }
+    try {
+      await this._disposePresentationRenderer();
+    } catch (error) {
+      errors.push(error);
+    }
+    this.scene = null;
+    this.plan = null;
+    this.limits = null;
+    this.visibleAssetIds = null;
+    this.state = RENDERER_STATES.LOST;
+    if (errors.length === 1) throw errors[0];
+    if (errors.length > 1) throw new AggregateError(errors, "Gaussian device-loss cleanup failed");
     return this.status();
   }
 
   async dispose() {
+    if (this.state === RENDERER_STATES.DISPOSED) return this.status();
     this.cancelled = true;
-    let cleanupError = null;
+    const errors = [];
     try {
       await this._releaseRepresentationResources();
     } catch (error) {
-      cleanupError = error;
+      errors.push(error);
     }
     this.scene = null;
     this.plan = null;
+    this.limits = null;
+    this.visibleAssetIds = null;
     try {
-      await this.presentationRenderer.dispose();
+      await this._disposePresentationRenderer();
     } catch (error) {
-      cleanupError ||= error;
+      errors.push(error);
     }
-    if (cleanupError) {
+    if (errors.length) {
       this.state = RENDERER_STATES.LOST;
-      throw cleanupError;
+      if (errors.length === 1) throw errors[0];
+      throw new AggregateError(errors, "Gaussian disposal failed");
     }
     this.state = RENDERER_STATES.DISPOSED;
     return this.status();
   }
+
 
   status() {
     return Object.freeze({
@@ -705,7 +768,9 @@ export class GaussianRenderer {
       state: this.state,
       representation_buffer_count: this.buffers.size,
       representation_disposer_count: this.passDisposers.size,
-      presentation_owner_retained: true,
+      presentation_owner_retained: !this.presentationDisposed,
+      visible_asset_filter_count:
+        this.visibleAssetIds === null ? null : this.visibleAssetIds.size,
       ...AUTHORITY_ENVELOPE,
     });
   }

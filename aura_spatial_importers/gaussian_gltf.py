@@ -311,9 +311,7 @@ def import_gaussian_gltf_bytes(
                 or not isinstance(accessor_count, int)
                 or accessor_count != declared_count
             ):
-                raise ValueError(
-                    f"Gaussian glTF {semantic} count does not match POSITION before accessor expansion"
-                )
+                raise ValueError(f"Gaussian glTF {semantic} count does not match POSITION before accessor expansion")
         coefficient_count = (degree + 1) ** 2 * 3
         estimated_runtime_allocation += declared_count * (4_096 + coefficient_count * 192)
         if estimated_runtime_allocation > MAX_GAUSSIAN_GLTF_RUNTIME_ALLOCATION_BYTES:
