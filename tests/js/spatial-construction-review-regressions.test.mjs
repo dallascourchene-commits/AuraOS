@@ -178,18 +178,26 @@ test("Construction renderer preserves storey elevations and aligns exploded over
   });
 
   assert.deepEqual(
-    renderer.getAssetPresentationTransform("asset:mesh:one").translation,
+    renderer.getAssetRenderTransform("asset:mesh:one").translation,
     [0, 4, 0],
   );
   assert.deepEqual(
-    renderer.getAssetPresentationTransform("asset:mesh:two").translation,
+    renderer.getAssetRenderTransform("asset:mesh:two").translation,
     [0, 8, 0],
+  );
+  assert.deepEqual(
+    renderer.getAssetPresentationTransform("asset:mesh:two").translation,
+    [0, 0, 0],
   );
 
   renderer.explodeStoreys(3);
   assert.deepEqual(
-    renderer.getAssetPresentationTransform("asset:mesh:two").translation,
+    renderer.getAssetRenderTransform("asset:mesh:two").translation,
     [0, 11, 0],
+  );
+  assert.deepEqual(
+    renderer.getAssetPresentationTransform("asset:mesh:two").translation,
+    [0, 3, 0],
   );
   const exploded = renderer.overlayPass.buildModel();
   assert.deepEqual(
@@ -200,7 +208,7 @@ test("Construction renderer preserves storey elevations and aligns exploded over
 
   renderer.collapseStoreys();
   assert.deepEqual(
-    renderer.getAssetPresentationTransform("asset:mesh:two").translation,
+    renderer.getAssetRenderTransform("asset:mesh:two").translation,
     [0, 8, 0],
   );
   assert.deepEqual(
