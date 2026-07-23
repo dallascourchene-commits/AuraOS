@@ -50,6 +50,31 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p /tmp/aura-review-repair
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/aura_construction_second_review_repair.py")
+          text = path.read_text(encoding="utf-8")
+          old = '''    frame_lookup = (
+              "                    next(item.frame_id for item in storeys if item.storey_id == package.storey_id),\\n"
+          )
+              if "                    package_frame_id,\\n" not in text:
+                  count = text.count(frame_lookup)
+                  if count != 2:
+                      raise RuntimeError(f"package frame lookup: expected two spans, found {count}")
+                  print("repairing: package frame consumers")
+                  text = text.replace(frame_lookup, "                    package_frame_id,\\n", 2)
+          '''
+          new = '''    frame_expression = "next(item.frame_id for item in storeys if item.storey_id == package.storey_id)"
+              if frame_expression in text:
+                  count = text.count(frame_expression)
+                  print(f"repairing: {count} remaining package frame consumers")
+                  text = text.replace(frame_expression, "package_frame_id")
+          '''
+          if old not in text:
+              raise SystemExit("temporary repair script frame span is missing")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
           set +e
           python scripts/aura_construction_second_review_repair.py \
             > /tmp/aura-review-repair/patch.log 2>&1
