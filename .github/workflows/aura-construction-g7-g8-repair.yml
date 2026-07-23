@@ -1,0 +1,272 @@
+name: Repair and finalize Construction G7-G8
+
+on:
+  push:
+    branches:
+      - "work/construction-arena-g7-g8-final-20260723"
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-repair.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-finalize
+  cancel-in-progress: true
+
+jobs:
+  repair-finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact repair head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared and formatting dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install ruff
+
+      - name: Apply exact diagnostic repairs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          director_path = Path("aura_construction_demo_director.py")
+          director = director_path.read_text(encoding="utf-8")
+          director = director.replace(
+              "from dataclasses import dataclass\n",
+              "from collections.abc import Mapping\nfrom dataclasses import dataclass\n",
+              1,
+          )
+          director = director.replace("from typing import Any, Mapping\n", "from typing import Any\n", 1)
+          director = director.replace(
+              "    purpose_digest = stable_digest(\n"
+              "        {\n"
+              "            \"objective\": \"record the governed synthetic Construction Arena demonstration\",\n"
+              "            \"tour\": tour,\n"
+              "            \"asset_pack_digest\": asset_pack.asset_pack_digest,\n"
+              "        }\n"
+              "    )\n",
+              "    purpose_digest = stable_digest(\n"
+              "        {\n"
+              "            \"objective\": \"record the governed synthetic Construction Arena demonstration\",\n"
+              "            \"tour\": tour,\n"
+              "            \"asset_pack_digest\": asset_pack.asset_pack_digest,\n"
+              "        },\n"
+              "        digest_size=32,\n"
+              "    )\n",
+              1,
+          )
+          director = director.replace(
+              "    def do_GET(self) -> None:  # noqa: N802 - stdlib callback name\n",
+              "    def do_GET(self) -> None:\n",
+              1,
+          )
+          director_path.write_text(director, encoding="utf-8")
+
+          gate_path = Path(".github/workflows/aura-construction-demo-g7-g8.yml")
+          gate = gate_path.read_text(encoding="utf-8")
+          gate = gate.replace(
+              "numpy pytest ruff zstandard",
+              "jsonschema numpy pytest ruff zstandard",
+              1,
+          )
+          replacements = {
+              "max_target_files=16": "max_target_files=8",
+              "max_target_symbols=24": "max_target_symbols=12",
+              "max_atomic_nodes=64": "max_atomic_nodes=24",
+              "max_atlas_participants=64": "max_atlas_participants=16",
+              "max_atlas_assessments=160": "max_atlas_assessments=40",
+              "max_required_tests=40": "max_required_tests=20",
+              "max_neighborhood_nodes=128": "max_neighborhood_nodes=32",
+              "max_neighborhood_edges=512": "max_neighborhood_edges=96",
+              "max_neighborhood_candidate_pairs=4096": "max_neighborhood_candidate_pairs=256",
+          }
+          for old, new in replacements.items():
+              gate = gate.replace(old, new, 1)
+          gate = gate.replace(
+              "                  max_neighborhood_candidate_pairs=256,\n"
+              "                  include_source=False,\n",
+              "                  max_neighborhood_candidate_pairs=256,\n"
+              "                  max_neighborhood_output_bytes=400_000,\n"
+              "                  max_neighborhood_elapsed_ms=30_000,\n"
+              "                  max_emergent_candidates=6,\n"
+              "                  include_source=False,\n",
+              1,
+          )
+          gate_path.write_text(gate, encoding="utf-8")
+
+          app_path = Path("aura_spatial_web/construction_demo_app.js")
+          app = app_path.read_text(encoding="utf-8")
+          app = app.replace(
+              "async function applyStep(step) {\n  if (state.disposed && step.action !== \"DISSOLVE\") return;\n",
+              "async function applyStep(step) {\n"
+              "  if (state.disposed && step.action !== \"DISSOLVE\") return;\n"
+              "  if ($(" + '"#evidence-dialog"' + ").open) $(" + '"#evidence-dialog"' + ").close();\n",
+              1,
+          )
+          app = app.replace(
+              "      document.querySelector(`input[data-layer=\"${step.target}\"]`)?.toggleAttribute(\"checked\", step.value !== \"off\");\n",
+              "      const layerInput = document.querySelector(`input[data-layer=\"${step.target}\"]`);\n"
+              "      if (layerInput) layerInput.checked = step.value !== \"off\";\n",
+              1,
+          )
+          app_path.write_text(app, encoding="utf-8")
+          PY
+
+      - name: Apply Ruff fixes and canonical formatting
+        run: |
+          ruff check --fix aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+          ruff format aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+
+      - name: Synchronize canonical documentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          sections = {
+              "README.md": '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+          ## Construction Arena G0–G8 — complete refactor
+
+          The complete Construction Arena chain is now implemented: open-source BIM acquisition and immutable asset contracts; deterministic IFC-to-storey GLB/SVG compilation; bounded degree-0 Gaussian PLY/SPZ compilation; a full synthetic Construction project fixture; Spatial Projection V2; local WebGL2 mesh/Gaussian/overlay composition; and a deterministic cinematic director surface.
+
+          Launch the local video-ready interface:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+          ```
+
+          Open `http://127.0.0.1:8767/demo/construction?tour=full`. The surface supports mesh, splats, hybrid mode, storey isolation, exploded floors, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline replay, picking, Observatory evidence, a human decision packet, and exact renderer dissolution.
+
+          The source BIM is fictional and attributed under CC BY 4.0. All project records, schedules, budgets, organizations, hazards, rules, and status are synthetic. The Arena cannot authorize physical work, payment, access, professional certification, legal/regulatory action, survey truth, production mutation, publication, or merge. Unsafe drilling remains hard-blocked and the safe alternative remains human-review-only.
+
+          See [`docs/AURA_CONSTRUCTION_ARENA_G7_G8.md`](docs/AURA_CONSTRUCTION_ARENA_G7_G8.md) for launch, controls, tours, verification, recording, and authority details.
+          ''',
+              "USER_GUIDE.md": '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+          ## 27. Run the cinematic Construction Arena demo
+
+          Compile the deterministic browser packet without starting a server:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --output /tmp/aura-construction-demo.packet.json
+          ```
+
+          Launch the local interface:
+
+          ```bash
+          python aura_spatial_cli.py --repo-root . construction-video-demo --tour full --serve
+          ```
+
+          Open `http://127.0.0.1:8767/demo/construction?tour=full`.
+
+          Supported tours are `full`, `blocked-work`, `alternatives`, and `timeline`. The full tour contains 18 deterministic steps: attribution; full hybrid building; orbit; exploded storeys; floor plans; timeline replay; blocked drilling; missing evidence; the hard-blocked unsafe option; safe alternate work; trade history; dependencies; synthetic rules and inspection gates; schedule/budget comparison; human-review recommendation; Observatory; decision packet; and dissolution.
+
+          Controls include orbit, zoom, storey isolation, show all, explode/collapse, mesh/splats/hybrid, floor plans, work status, trades, blockers, budgets, inspections, dependencies, synthetic rules, timeline scrub, picking, reset, play, pause, next step, and dissolve.
+
+          Supply `--asset-pack demo_assets/construction_tuwien/generated/asset-pack.manifest.json` when the generated pack exists. Without it, the director uses a deterministic five-storey local fallback for recording and testing. The fallback is presentation-only and is not survey geometry.
+
+          Every packet keeps physical work, payment, access control, professional certification, legal/regulatory authority, survey authority, renderer authority, automatic execution, publication, and merge false. The decision packet is for human review and cannot apply a Construction decision.
+          ''',
+              ".aura/ARCHITECTURE.md": '''<!-- AURA_CONSTRUCTION_G7_G8 -->
+          ## Construction Arena G7–G8 presentation and proof layer
+
+          Canonical Construction truth remains `ConstructionProjectState`; runtime filtering remains `ConstructionArenaAdapter`; asset identity remains `ConstructionDemoAssetPack`; the synthetic fixture remains the G4 owner; `project_construction_demo_to_scene` remains the G5 projection owner; and `ConstructionSceneRenderer` plus its mesh, overlay, and Gaussian passes remain the G6 renderer/disposal owners.
+
+          `aura_construction_demo_director.py` is a presentation-sequence owner only. It composes the admitted asset pack, canonical G4 fixture/runtime packet, G5 scene, negotiated render plan, and bounded tour steps into a local browser packet. `aura_spatial_web/construction_demo.html`, `.css`, and `_app.js` provide controls and the video surface without taking domain truth or authority.
+
+          ```text
+          ConstructionDemoAssetPack
+            → build_construction_demo_project_fixture
+            → build_construction_demo_runtime_packet
+            → project_construction_demo_to_scene
+            → negotiate_spatial_render_plan
+            → compile_construction_demo_packet
+            → ConstructionSceneRenderer
+            → deterministic presentation tour
+            → read-only Observatory / human decision packet
+            → exact renderer disposal
+          ```
+
+          Prohibited edges include director-to-ledger mutation, browser-to-work release, recommendation-to-automatic execution, renderer-to-payment/access/professional authority, fallback-to-survey truth, and review-bot-to-merge authority. The local server permits only static repository files plus the deterministic `/api/construction-demo` packet and requires no runtime external network.
+          ''',
+          }
+
+          for filename, section in sections.items():
+              path = Path(filename)
+              text = path.read_text(encoding="utf-8")
+              marker = "<!-- AURA_CONSTRUCTION_G7_G8 -->"
+              if marker in text:
+                  continue
+              normalized = "\n".join(
+                  line[10:] if line.startswith("          ") else line
+                  for line in section.splitlines()
+              )
+              path.write_text(text.rstrip() + "\n\n" + normalized.strip() + "\n", encoding="utf-8")
+          PY
+
+      - name: Remove temporary and redundant finalization artifacts
+        run: |
+          rm -f \
+            .github/pull_request_template_construction_g7_g8.md \
+            .github/workflows/aura-construction-g7-g8-finalize.yml \
+            .github/workflows/aura-construction-g7-g8-repair.yml \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_COMPLETION_ORDER.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_DEFINITION_OF_DONE.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_DOC_SYNC_REQUIREMENTS.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_EXACT_HEAD_POLICY.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_FINAL_HANDOFF.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_FINAL_REVIEW_PROMPT.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_MERGE_GATES.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_NO_NEW_AUTHORITY.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_OPERATOR_CHECKLIST.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_PROOF_MATRIX.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_RECOVERY_POINT.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_RELEASE_NOTES.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_SCOPE_LOCK.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_TEST_INVENTORY.md \
+            docs/AURA_CONSTRUCTION_ARENA_G7_G8_VERIFICATION_COMMANDS.md
+
+      - name: Regenerate and verify final navigation
+        run: |
+          python aura_codebase_navigator.py
+          python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+          test -s .aura/CODEMAP.json
+          test -s .aura/CODEMAP.md
+          test -s topology_map.json
+          test -s Aura_Memory/live_topology_ast.json
+
+      - name: Verify repaired focused surface
+        run: |
+          python -m py_compile aura_construction_demo_director.py aura_spatial_cli.py
+          ruff check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+          ruff format --check aura_construction_demo_director.py aura_spatial_cli.py tests/test_aura_construction_demo_director.py
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_construction_demo_fixture.py \
+            tests/test_aura_construction_demo_projection.py
+          python aura_spatial_cli.py --repo-root . construction-video-demo \
+            --tour full --output /tmp/aura-construction-demo.packet.json
+
+      - name: Commit exact repairs and finalization
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: work/construction-arena-g7-g8-final-20260723
+        run: |
+          git config user.name "AuraOS Finalization Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(g8): repair and finalize Construction refactor"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"$TARGET_BRANCH"
