@@ -39,33 +39,48 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-          python -m pip install pytest ruff bandit pyyaml
+          python -m pip install pytest ruff bandit
 
       - name: Extract reviewed finalizer commands
         run: |
           python - <<'PY'
           from pathlib import Path
-          import yaml
 
           source = Path("tools/construction_release/finalizer.yml")
-          payload = yaml.safe_load(source.read_text(encoding="utf-8"))
-          steps = payload["jobs"]["finalize"]["steps"]
+          lines = source.read_text(encoding="utf-8").splitlines()
           mapping = {
               "Apply fail-closed WebGL2 lifecycle and documentation finalization": "/tmp/apply.sh",
               "Verify source syntax and focused Python contracts": "/tmp/verify.sh",
               "Stress WebGL2 lifecycle and retained Construction rendering": "/tmp/stress.sh",
               "Run focused Coding Waboose review": "/tmp/waboose.sh",
           }
-          by_name = {step.get("name"): step for step in steps if isinstance(step, dict)}
-          missing = [name for name in mapping if name not in by_name]
-          if missing:
-              raise RuntimeError(f"finalizer steps missing: {missing}")
+
+          def extract(name: str) -> str:
+              marker = f"      - name: {name}"
+              try:
+                  start = lines.index(marker)
+              except ValueError as exc:
+                  raise RuntimeError(f"finalizer step missing: {name}") from exc
+              if start + 1 >= len(lines) or lines[start + 1] != "        run: |":
+                  raise RuntimeError(f"finalizer run block missing: {name}")
+              body = []
+              for line in lines[start + 2:]:
+                  if line.startswith("      - "):
+                      break
+                  if line and not line.startswith("          "):
+                      raise RuntimeError(f"unexpected finalizer indentation in {name}: {line!r}")
+                  body.append(line[10:] if line.startswith("          ") else "")
+              command = "\n".join(body).rstrip()
+              if not command:
+                  raise RuntimeError(f"finalizer command empty: {name}")
+              return command
+
           for name, destination in mapping.items():
-              command = by_name[name].get("run")
-              if not isinstance(command, str) or not command.strip():
-                  raise RuntimeError(f"finalizer step has no command: {name}")
               path = Path(destination)
-              path.write_text("#!/usr/bin/env bash\nset -euo pipefail\n" + command + "\n", encoding="utf-8")
+              path.write_text(
+                  "#!/usr/bin/env bash\nset -euo pipefail\n" + extract(name) + "\n",
+                  encoding="utf-8",
+              )
               path.chmod(0o700)
           PY
 
