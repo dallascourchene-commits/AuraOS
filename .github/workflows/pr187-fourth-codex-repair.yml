@@ -79,6 +79,31 @@ jobs:
           '''
           if text.count(old) != 1:
               raise SystemExit("storey frame repair bootstrap anchor mismatch")
+          text = text.replace(old, new, 1)
+
+          old = '''    raw_values.update(code for alternative in fixture.alternatives for code in alternative.blocker_codes)
+              serialized = str(first_payload)
+          '''
+          new = '''    raw_values.update(code for alternative in fixture.alternatives for code in alternative.blocker_codes)
+              raw_values.difference_update(
+                  {
+                      "Construction building",
+                      "Zone",
+                      "Evidence requirement",
+                      "Work package",
+                      "Trade",
+                      "Work activity",
+                      "Budget line",
+                      "Synthetic rule",
+                      "Inspection",
+                      "Hazard",
+                      "Review alternative",
+                  }
+              )
+              serialized = str(first_payload)
+          '''
+          if text.count(old) != 1:
+              raise SystemExit("public label collision bootstrap anchor mismatch")
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
           python scripts/aura_pr187_fourth_codex_repair.py
@@ -100,32 +125,11 @@ jobs:
           git diff --check
 
       - name: Run focused Python verification
-        id: focused
-        continue-on-error: true
         run: |
-          set +e
-          python -m pytest -q --tb=long \
+          set -euo pipefail
+          python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            > /tmp/aura-pr187-fourth-focused.log 2>&1
-          status=$?
-          cat /tmp/aura-pr187-fourth-focused.log
-          exit "$status"
-
-      - name: Upload focused fourth repair diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-pr187-fourth-focused-diagnostic
-          path: /tmp/aura-pr187-fourth-focused.log
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Fail closed when focused tests fail
-        if: steps.focused.outcome != 'success'
-        run: |
-          cat /tmp/aura-pr187-fourth-focused.log
-          exit 1
+            tests/test_aura_construction_demo_fixture.py
 
       - name: Run retained Construction, Spatial, and asset-security regressions
         run: |
