@@ -52,6 +52,37 @@ jobs:
         continue-on-error: true
         run: |
           set +e
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/aura_pr187_fourth_codex_repair.py")
+          text = path.read_text(encoding="utf-8")
+          old = '''    text = replace_count(
+                  text,
+                  "                frame_id=storey.frame_id,",
+                  "                frame_id=storey_frame_ids[storey.storey_id],",
+                  2,
+                  "storey frame references",
+              )
+          '''
+          new = '''    text = replace_count(
+                  text,
+                  "                frame_id=storey.frame_id,",
+                  "                frame_id=storey_frame_ids[storey.storey_id],",
+                  1,
+                  "storey frame record reference",
+              )
+              text = replace_once(
+                  text,
+                  "                storey.frame_id,",
+                  "                storey_frame_ids[storey.storey_id],",
+                  "storey entity frame reference",
+              )
+          '''
+          if text.count(old) != 1:
+              raise SystemExit("storey frame repair bootstrap anchor mismatch")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
           python scripts/aura_pr187_fourth_codex_repair.py > /tmp/aura-pr187-fourth-repair.log 2>&1
           status=$?
           cat /tmp/aura-pr187-fourth-repair.log
