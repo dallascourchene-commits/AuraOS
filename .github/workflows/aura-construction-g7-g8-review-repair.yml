@@ -1,0 +1,241 @@
+name: Publish Construction G7-G8 review repairs
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/aura-construction-g7-g8-review-repair.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aura-construction-g7-g8-review-repair-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Apply source-bound review repairs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              count = text.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{path}: expected one exact source span, observed {count}")
+              target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          def replace_regex(path: str, pattern: str, replacement: str) -> None:
+              target = Path(path)
+              text = target.read_text(encoding="utf-8")
+              updated, count = re.subn(pattern, replacement, text, count=1, flags=re.DOTALL)
+              if count != 1:
+                  raise RuntimeError(f"{path}: expected one regex source span, observed {count}")
+              target.write_text(updated, encoding="utf-8")
+
+          # Reject repeated URL decoding and symlink escapes before the stdlib handler sees a path.
+          replace_once(
+              "aura_construction_demo_director.py",
+              '''def _safe_construction_demo_static_path(raw_path: str) -> str | None:\n    decoded = unquote(urlparse(raw_path).path)\n    if "\\\\" in decoded or "\\x00" in decoded:\n        return None\n    candidate = PurePosixPath(decoded)\n    if ".." in candidate.parts:\n        return None\n    normalized = "/" + str(candidate).lstrip("/")\n    if not any(normalized.startswith(prefix) for prefix in _ALLOWED_STATIC_PREFIXES):\n        return None\n    return normalized\n''',
+              '''def _fully_decode_static_path(value: str, *, maximum_rounds: int = 4) -> str | None:\n    current = value\n    for _ in range(maximum_rounds):\n        decoded = unquote(current)\n        if decoded == current:\n            return decoded\n        current = decoded\n    return current if unquote(current) == current else None\n\n\ndef _safe_construction_demo_static_path(raw_path: str) -> str | None:\n    decoded = _fully_decode_static_path(urlparse(raw_path).path)\n    if decoded is None or "\\\\" in decoded or "\\x00" in decoded or "%" in decoded:\n        return None\n    if "?" in decoded or "#" in decoded:\n        return None\n    candidate = PurePosixPath(decoded)\n    if ".." in candidate.parts:\n        return None\n    normalized = "/" + str(candidate).lstrip("/")\n    if not any(normalized.startswith(prefix) for prefix in _ALLOWED_STATIC_PREFIXES):\n        return None\n    return normalized\n\n\ndef _safe_construction_demo_static_file(\n    root: Path, raw_path: str\n) -> tuple[str, Path] | None:\n    safe_path = _safe_construction_demo_static_path(raw_path)\n    if safe_path is None:\n        return None\n    repository = root.expanduser().resolve(strict=True)\n    candidate = (repository / safe_path.lstrip("/")).resolve(strict=False)\n    allowed_roots = tuple(\n        (repository / prefix.strip("/")).resolve(strict=False)\n        for prefix in _ALLOWED_STATIC_PREFIXES\n    )\n    if not any(candidate.is_relative_to(allowed) for allowed in allowed_roots):\n        return None\n    return safe_path, candidate\n''',
+          )
+          replace_once(
+              "aura_construction_demo_director.py",
+              '''        else:\n            safe_path = _safe_construction_demo_static_path(self.path)\n            if safe_path is None:\n                self.send_error(404)\n                return\n            self.path = safe_path\n''',
+              '''        else:\n            safe_file = _safe_construction_demo_static_file(\n                Path(self.directory), self.path\n            )\n            if safe_file is None:\n                self.send_error(404)\n                return\n            self.path, _ = safe_file\n''',
+          )
+
+          # Mesh pass: register a newly-created handle before checking cancellation and fail terminally.
+          replace_regex(
+              "aura_spatial_web/construction_mesh_pass.js",
+              r'''  async present\(\{ signal \} = \{\}\) \{.*?\n  \}\n\n  async releaseDrawResources\(\)''',
+              '''  async present({ signal } = {}) {\n    if (!this.initialized || this.disposed) {\n      throw new Error("Construction mesh pass is not initialized");\n    }\n    if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");\n    try {\n      await this.releaseDrawResources();\n      const visible = this.meshes.filter(\n        (mesh) => this.visibleFrameIds === null || this.visibleFrameIds.has(mesh.frame_id),\n      );\n      if (visible.length > this.limits.maxVisibleMeshes) {\n        throw new RangeError("Construction visible-mesh budget exceeded");\n      }\n      for (const mesh of visible) {\n        if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");\n        const disposer = requireDisposer(\n          await this.drawMeshPass(\n            mesh.resource,\n            Object.freeze({\n              asset_id: mesh.asset_id,\n              frame_id: mesh.frame_id,\n              source_digest: mesh.source_digest,\n              source_transform: mesh.source_transform,\n              presentation_transform: this.presentationTransforms.get(mesh.frame_id),\n              source_transform_immutable: true,\n              ...AUTHORITY_ENVELOPE,\n            }),\n          ),\n        );\n        this.disposers.add(disposer);\n        if (signal?.aborted) throw new Error("Construction mesh presentation cancelled");\n      }\n      return Object.freeze({\n        version: CONSTRUCTION_MESH_PASS_VERSION,\n        outcome: "PRESENTED",\n        visible_mesh_count: visible.length,\n        decoded_byte_length: visible.reduce(\n          (total, item) => total + item.decoded_byte_length,\n          0,\n        ),\n        source_transform_immutable: true,\n        ...AUTHORITY_ENVELOPE,\n      });\n    } catch (error) {\n      let cleanupError = null;\n      try {\n        await this.releaseDrawResources();\n      } catch (cleanup) {\n        cleanupError = cleanup;\n      }\n      this.initialized = false;\n      this.disposed = true;\n      if (cleanupError) {\n        throw new AggregateError(\n          [error, cleanupError],\n          "Construction mesh presentation and cleanup failed",\n        );\n      }\n      throw error;\n    }\n  }\n\n  async releaseDrawResources()''',
+          )
+
+          # Overlay pass: cleanup failures cannot leave a reusable-looking owner.
+          replace_regex(
+              "aura_spatial_web/construction_overlay_pass.js",
+              r'''  async present\(\{ signal \} = \{\}\) \{.*?\n  \}\n\n  async releaseDrawResources\(\)''',
+              '''  async present({ signal } = {}) {\n    if (!this.initialized || this.disposed) {\n      throw new Error("Construction overlay pass is not initialized");\n    }\n    if (signal?.aborted) throw new Error("Construction overlay presentation cancelled");\n    try {\n      await this.releaseDrawResources();\n      const model = this.buildModel();\n      if (this.drawOverlayPass) {\n        this.disposer = requireDisposer(\n          await this.drawOverlayPass(model, Object.freeze({ signal, ...AUTHORITY_ENVELOPE })),\n        );\n        if (signal?.aborted) throw new Error("Construction overlay presentation cancelled");\n      }\n      return Object.freeze({\n        version: CONSTRUCTION_OVERLAY_PASS_VERSION,\n        outcome: "PRESENTED",\n        model,\n        drawn: Boolean(this.drawOverlayPass),\n        source_geometry_mutated: false,\n        ...AUTHORITY_ENVELOPE,\n      });\n    } catch (error) {\n      let cleanupError = null;\n      try {\n        await this.releaseDrawResources();\n      } catch (cleanup) {\n        cleanupError = cleanup;\n      }\n      this.initialized = false;\n      this.disposed = true;\n      if (cleanupError) {\n        throw new AggregateError(\n          [error, cleanupError],\n          "Construction overlay presentation and cleanup failed",\n        );\n      }\n      throw error;\n    }\n  }\n\n  async releaseDrawResources()''',
+          )
+
+          # Gaussian owner: include prior-resource release and presentation renderer disposal in failure cleanup.
+          replace_regex(
+              "aura_spatial_web/gaussian_renderer.js",
+              r'''  async present\(\{ cameraPosition = \[0, 0, 0\], signal \} = \{\}\) \{.*?\n  \}\n\n  headlessProof\(\)''',
+              '''  async present({ cameraPosition = [0, 0, 0], signal } = {}) {\n    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {\n      throw new Error("Gaussian renderer is not initialized");\n    }\n    if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n    let visibleAssets = [];\n    let baseReceipt;\n    let representation = "ACCESSIBLE_HEADLESS_FALLBACK";\n    let evidenceClass = "CALCULATED";\n    let drawn = 0;\n    const started = this.now();\n    try {\n      await this._releaseDrawResources();\n      visibleAssets =\n        this.visibleAssetIds === null\n          ? this.assets\n          : this.assets.filter((asset) => this.visibleAssetIds.has(asset.asset_id));\n      baseReceipt = await this.presentationRenderer.present();\n      if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n      for (const asset of visibleAssets) {\n        if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n        const order = sortedIndices(asset, cameraPosition, this.limits.maxSortItems);\n        const resources = Object.freeze({\n          positions: asset.positions,\n          rotations_xyzw: asset.rotations_xyzw,\n          scales_xyz: asset.scales_xyz,\n          opacities: asset.opacities,\n          sh_degree: asset.sh_degree,\n          sh_coefficients: asset.sh_coefficients,\n          colors_rgba: asset.colors_rgba,\n          sorted_indices: order,\n        });\n        this.buffers.add(resources);\n        const context = {\n          asset_id: asset.asset_id,\n          source_digest: asset.source_digest,\n          derived_asset_digest: asset.derived_asset_digest,\n          color_space: asset.color_space,\n          sh_degree: asset.sh_degree,\n          splat_count: asset.count,\n          representation_digest: asset.representation_digest,\n          scene_digest: this.scene.scene_digest,\n          render_plan_digest: this.plan.render_plan_digest,\n          signal,\n          ...AUTHORITY_ENVELOPE,\n        };\n        if (this.drawGaussianPass) {\n          const disposer = requireDisposer(await this.drawGaussianPass(resources, context));\n          this.passDisposers.add(disposer);\n          if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n          representation = "GAUSSIAN_SPLAT_PASS";\n          evidenceClass = "MEASURED";\n        } else if (this.drawPointCloudPass) {\n          await this.drawPointCloudPass(\n            Object.freeze({\n              positions: resources.positions,\n              colors_rgba: resources.colors_rgba,\n              sorted_indices: resources.sorted_indices,\n            }),\n            context,\n          );\n          if (signal?.aborted || this.cancelled) throw new Error("Gaussian presentation cancelled");\n          representation = "POINT_CLOUD_FALLBACK";\n          evidenceClass = "MEASURED";\n        }\n        drawn += asset.count;\n      }\n    } catch (error) {\n      const errors = [error];\n      try {\n        await this._releaseRepresentationResources();\n      } catch (cleanup) {\n        errors.push(cleanup);\n      }\n      try {\n        await this._disposePresentationRenderer();\n      } catch (cleanup) {\n        errors.push(cleanup);\n      }\n      this.scene = null;\n      this.plan = null;\n      this.limits = null;\n      this.visibleAssetIds = null;\n      this.cancelled = true;\n      this.state = RENDERER_STATES.LOST;\n      if (errors.length > 1) {\n        throw new AggregateError(errors, "Gaussian presentation and cleanup failed");\n      }\n      throw error;\n    }\n    const elapsed = this.now() - started;\n    if (!Number.isFinite(elapsed) || elapsed < 0 || elapsed > this.limits.maxFrameMs) {\n      const budgetError = new RangeError("Gaussian frame-time budget exceeded");\n      try {\n        await this.dispose();\n      } catch (cleanup) {\n        throw new AggregateError(\n          [budgetError, cleanup],\n          "Gaussian frame-time failure and cleanup failed",\n        );\n      }\n      throw budgetError;\n    }\n    this.state = RENDERER_STATES.PRESENTED;\n    return Object.freeze({\n      renderer: this.presentationRenderer.kind,\n      representation,\n      outcome: "PRESENTED",\n      evidence_class: evidenceClass,\n      scene_digest: this.scene.scene_digest,\n      render_plan_digest: this.plan.render_plan_digest,\n      splat_count: drawn,\n      gpu_bytes: visibleAssets.reduce((total, asset) => total + asset.gpu_bytes, 0),\n      allocation_bytes: visibleAssets.reduce(\n        (total, asset) => total + asset.allocation_bytes,\n        0,\n      ),\n      elapsed_ms: elapsed,\n      base_receipt: baseReceipt,\n      fallbacks: GAUSSIAN_FALLBACKS,\n      ...AUTHORITY_ENVELOPE,\n    });\n  }\n\n  headlessProof()''',
+          )
+
+          # Composite renderer cleans exactly once and preserves cleanup evidence.
+          replace_regex(
+              "aura_spatial_web/construction_scene_renderer.js",
+              r'''  async present\(options = \{\}\) \{.*?\n  \}\n\n  _cameraPosition\(\)''',
+              '''  async present(options = {}) {\n    if (![RENDERER_STATES.INITIALIZED, RENDERER_STATES.PRESENTED].includes(this.state)) {\n      throw new Error("Construction scene renderer is not initialized");\n    }\n    const signal = options.signal;\n    if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");\n    try {\n      const baseReceipt =\n        this.mode === "MESH"\n          ? await this.presentationRenderer.present(options)\n          : await this.gaussianRenderer.present({\n              cameraPosition: this._cameraPosition(),\n              signal,\n            });\n      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");\n      const meshReceipt =\n        this.mode === "SPLATS" ? null : await this.meshPass.present({ signal });\n      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");\n      const overlayReceipt = await this.overlayPass.present({ signal });\n      if (signal?.aborted || this.cancelled) throw new Error("Construction presentation cancelled");\n      this.state = RENDERER_STATES.PRESENTED;\n      return Object.freeze({\n        version: CONSTRUCTION_SCENE_RENDERER_VERSION,\n        renderer: this.presentationRenderer.kind,\n        outcome: "PRESENTED",\n        representation_mode: this.mode,\n        scene_digest: this.scene.scene_digest,\n        render_plan_digest: this.plan.render_plan_digest,\n        selected_entity_id: this.selectedEntityId,\n        base_receipt: baseReceipt,\n        mesh_receipt: meshReceipt,\n        overlay_receipt: overlayReceipt,\n        source_asset_coordinates_immutable: true,\n        exploded_view_is_presentation_only: true,\n        ...AUTHORITY_ENVELOPE,\n      });\n    } catch (error) {\n      const cleanupError = await this._disposeOwnedResources();\n      this.state = RENDERER_STATES.LOST;\n      if (cleanupError) {\n        throw new AggregateError(\n          [error, cleanupError],\n          "Construction presentation and cleanup failed",\n        );\n      }\n      throw error;\n    }\n  }\n\n  _cameraPosition()''',
+          )
+
+          # WebGL partial-allocation cleanup and state restoration.
+          replace_once(
+              "aura_spatial_web/webgl2_gaussian_pass.js",
+              '''function createProgram(gl) {\n  const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX);\n  const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT);\n  const program = gl.createProgram();\n  if (!program) {\n    gl.deleteShader(vertex);\n    gl.deleteShader(fragment);\n    throw new Error("unable to allocate Gaussian program");\n  }\n  gl.attachShader(program, vertex);\n  gl.attachShader(program, fragment);\n  gl.linkProgram(program);\n  gl.deleteShader(vertex);\n  gl.deleteShader(fragment);\n  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {\n    const log = gl.getProgramInfoLog(program);\n    gl.deleteProgram(program);\n    throw new Error(`Gaussian program link failed: ${log}`);\n  }\n  return program;\n}\n''',
+              '''function createProgram(gl) {\n  const shaders = [];\n  let program = null;\n  try {\n    const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX);\n    shaders.push(vertex);\n    const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT);\n    shaders.push(fragment);\n    program = gl.createProgram();\n    if (!program) throw new Error("unable to allocate Gaussian program");\n    gl.attachShader(program, vertex);\n    gl.attachShader(program, fragment);\n    gl.linkProgram(program);\n    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {\n      const log = gl.getProgramInfoLog(program);\n      throw new Error(`Gaussian program link failed: ${log}`);\n    }\n    return program;\n  } catch (error) {\n    if (program) gl.deleteProgram(program);\n    throw error;\n  } finally {\n    for (const shader of shaders) gl.deleteShader(shader);\n  }\n}\n''',
+          )
+          replace_once(
+              "aura_spatial_web/webgl2_gaussian_pass.js",
+              '''      const corner = createBuffer(\n        gl,\n        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),\n      );\n      const position = createBuffer(gl, gathered.positions);\n      const rotation = createBuffer(gl, gathered.rotations);\n      const scaleBuffer = createBuffer(gl, gathered.scales);\n      const color = createBuffer(gl, gathered.colors);\n      buffers.push(corner, position, rotation, scaleBuffer, color);\n''',
+              '''      const corner = createBuffer(\n        gl,\n        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),\n      );\n      buffers.push(corner);\n      const position = createBuffer(gl, gathered.positions);\n      buffers.push(position);\n      const rotation = createBuffer(gl, gathered.rotations);\n      buffers.push(rotation);\n      const scaleBuffer = createBuffer(gl, gathered.scales);\n      buffers.push(scaleBuffer);\n      const color = createBuffer(gl, gathered.colors);\n      buffers.push(color);\n''',
+          )
+          replace_once(
+              "aura_spatial_web/webgl2_gaussian_pass.js",
+              '''    } catch (error) {\n      for (const buffer of buffers.reverse()) gl.deleteBuffer?.(buffer);\n      if (vao) gl.deleteVertexArray?.(vao);\n      if (program) gl.deleteProgram?.(program);\n      throw error;\n    }\n''',
+              '''    } catch (error) {\n      for (const buffer of buffers.reverse()) gl.deleteBuffer?.(buffer);\n      if (vao) gl.deleteVertexArray?.(vao);\n      if (program) gl.deleteProgram?.(program);\n      throw error;\n    } finally {\n      gl.depthMask?.(true);\n      gl.bindVertexArray?.(null);\n    }\n''',
+          )
+
+          # Tour state becomes single-flight and real packs cannot be replaced with fake geometry.
+          replace_once(
+              "aura_spatial_web/construction_demo_app.js",
+              '''  playing: false,\n  paused: false,\n  disposed: false,\n};\n''',
+              '''  playing: false,\n  paused: false,\n  stepInFlight: false,\n  dissolving: false,\n  disposed: false,\n};\n''',
+          )
+          replace_regex(
+              "aura_spatial_web/construction_demo_app.js",
+              r'''async function runNextStep\(\) \{.*?\n\}\n\nasync function playTour\(\) \{.*?\n\}\n\nasync function dissolve\(\) \{.*?\n\}\n''',
+              '''function reportUiError(error) {\n  console.error(error);\n  const message = error instanceof Error ? error.message : String(error);\n  $("#scene-state").textContent = "Failed closed";\n  $("#selected-card").textContent = message;\n  $("#tour-status").textContent = "Presentation stopped after a verified error";\n}\n\nasync function runNextStep() {\n  const steps = state.packet?.tour_steps || [];\n  if (\n    state.playing ||\n    state.stepInFlight ||\n    state.disposed ||\n    !steps.length ||\n    state.tourIndex >= steps.length\n  ) return;\n  const step = steps[state.tourIndex];\n  state.stepInFlight = true;\n  try {\n    await applyStep(step);\n    state.tourIndex += 1;\n  } catch (error) {\n    state.paused = true;\n    reportUiError(error);\n  } finally {\n    state.stepInFlight = false;\n  }\n}\n\nasync function playTour() {\n  if (state.playing || state.stepInFlight || state.disposed) return;\n  state.playing = true;\n  state.paused = false;\n  try {\n    while (state.tourIndex < state.packet.tour_steps.length && !state.paused && !state.disposed) {\n      const step = state.packet.tour_steps[state.tourIndex];\n      state.stepInFlight = true;\n      try {\n        await applyStep(step);\n        state.tourIndex += 1;\n      } finally {\n        state.stepInFlight = false;\n      }\n      if (!state.paused && !state.disposed) {\n        await sleep(Math.min(4000, Math.max(250, step.duration_ms)));\n      }\n    }\n  } catch (error) {\n    state.paused = true;\n    reportUiError(error);\n  } finally {\n    state.playing = false;\n    if (!state.disposed && state.tourIndex >= state.packet.tour_steps.length) {\n      $("#tour-status").textContent = "Tour complete";\n    }\n  }\n}\n\nasync function dissolve() {\n  if (!state.renderer || state.disposed || state.dissolving) return;\n  state.dissolving = true;\n  state.playing = false;\n  state.paused = true;\n  state.disposed = true;\n  document.querySelectorAll("button, input").forEach((control) => {\n    if (control.id !== "reset") control.disabled = true;\n  });\n  try {\n    await state.renderer.dispose();\n    $("#scene-state").textContent = "Dissolved";\n    $("#tour-status").textContent = "Renderer released · zero active presentation resources";\n    $("#intent-line").textContent = "Arena dissolved. Source geometry remained immutable.";\n  } catch (error) {\n    reportUiError(error);\n  } finally {\n    state.dissolving = false;\n  }\n}\n''',
+          )
+          replace_once(
+              "aura_spatial_web/construction_demo_app.js",
+              '''  state.packet = await response.json();\n  $("#attribution").textContent = state.packet.attribution;\n''',
+              '''  state.packet = await response.json();\n  if (state.packet.fallback_asset_pack !== true) {\n    throw new Error(\n      "Generated asset-pack browser decoding is not implemented; refusing synthetic geometry substitution",\n    );\n  }\n  $("#attribution").textContent = state.packet.attribution;\n''',
+          )
+          replace_once(
+              "aura_spatial_web/construction_demo_app.js",
+              '''  $("#play-tour").addEventListener("click", () => playTour());\n''',
+              '''  $("#play-tour").addEventListener("click", () => { void playTour(); });\n''',
+          )
+          replace_once(
+              "aura_spatial_web/construction_demo_app.js",
+              '''  $("#next-step").addEventListener("click", () => runNextStep());\n  $("#dissolve").addEventListener("click", () => dissolve());\n''',
+              '''  $("#next-step").addEventListener("click", () => { void runNextStep(); });\n  $("#dissolve").addEventListener("click", () => { void dissolve(); });\n''',
+          )
+          replace_once(
+              "aura_spatial_web/construction_demo_app.js",
+              '''    playTour();\n''',
+              '''    void playTour();\n''',
+          )
+
+          # Python security regressions.
+          replace_once(
+              "tests/test_aura_construction_demo_director.py",
+              '''    _safe_construction_demo_static_path,\n''',
+              '''    _safe_construction_demo_static_file,\n    _safe_construction_demo_static_path,\n''',
+          )
+          replace_once(
+              "tests/test_aura_construction_demo_director.py",
+              '''        "/%2e%2e/README.md",\n        "/aura_spatial_web/../README.md",\n''',
+              '''        "/%2e%2e/README.md",\n        "/aura_spatial_web/%252e%252e/README.md",\n        "/aura_spatial_web/%25252e%25252e/README.md",\n        "/aura_spatial_web/../README.md",\n''',
+          )
+          director_test = Path("tests/test_aura_construction_demo_director.py")
+          text = director_test.read_text(encoding="utf-8")
+          addition = '''\n\ndef test_g7_local_static_boundary_rejects_symlink_escape(tmp_path: Path) -> None:\n    spatial = tmp_path / "aura_spatial_web"\n    generated = tmp_path / "demo_assets" / "construction_tuwien" / "generated"\n    spatial.mkdir(parents=True)\n    generated.mkdir(parents=True)\n    outside = tmp_path / "private.txt"\n    outside.write_text("secret", encoding="utf-8")\n    link = spatial / "escape.txt"\n    try:\n        link.symlink_to(outside)\n    except (OSError, NotImplementedError):\n        pytest.skip("symlink creation is unavailable")\n    assert _safe_construction_demo_static_file(tmp_path, "/aura_spatial_web/escape.txt") is None\n'''
+          if "test_g7_local_static_boundary_rejects_symlink_escape" not in text:
+              director_test.write_text(text + addition, encoding="utf-8")
+
+          # Correct the prior regression that expected a leaked mesh handle.
+          replace_once(
+              "tests/js/spatial-construction-demo.test.mjs",
+              '''  assert.equal(meshDisposed, 0);\n''',
+              '''  assert.equal(meshDisposed, 1);\n''',
+          )
+          js_test = Path("tests/js/spatial-construction-demo.test.mjs")
+          text = js_test.read_text(encoding="utf-8")
+          additions = '''\n\ntest("Construction mesh cleanup failure is terminal and preserves both errors", async () => {\n  const { scene } = constructionFixture();\n  const pass = new ConstructionMeshPass({\n    drawMeshPass: async () => () => { throw new Error("forced mesh cleanup failure"); },\n  });\n  pass.initialize(scene, [{\n    asset_id: "asset:mesh",\n    source_digest: "1".repeat(64),\n    decoded_byte_length: 256,\n    resource: { local: true },\n  }]);\n  await pass.present();\n  await assert.rejects(\n    pass.present(),\n    (error) => error instanceof AggregateError && /cleanup/.test(error.message),\n  );\n  assert.equal(pass.status().disposed, true);\n  assert.equal(pass.status().initialized, false);\n});\n\ntest("WebGL2 Gaussian partial buffer allocation releases earlier resources", async () => {\n  const gl = fakeGl();\n  const originalCreateBuffer = gl.createBuffer;\n  let calls = 0;\n  gl.createBuffer = () => {\n    calls += 1;\n    return calls === 2 ? null : originalCreateBuffer();\n  };\n  const pass = createWebGL2GaussianPass({ gl, maxVisibleSplats: 1 });\n  await assert.rejects(\n    pass({\n      positions: new Float32Array([0, 0, 0]),\n      rotations_xyzw: new Float32Array([0, 0, 0, 1]),\n      scales_xyz: new Float32Array([1, 1, 1]),\n      opacities: new Float32Array([1]),\n      colors_rgba: new Uint8Array([255, 0, 255, 255]),\n      sorted_indices: new Uint32Array([0]),\n    }, { asset_id: "asset:splats", sh_degree: 0 }),\n    /allocate Gaussian buffer/,\n  );\n  assert.equal(gl.calls.deletedBuffers, 1);\n  assert.equal(gl.calls.deletedPrograms, 1);\n  assert.equal(gl.calls.deletedVaos, 1);\n});\n'''
+          if "Construction mesh cleanup failure is terminal" not in text:
+              js_test.write_text(text + additions, encoding="utf-8")
+
+          review_test = Path("tests/js/spatial-construction-review-regressions.test.mjs")
+          text = review_test.read_text(encoding="utf-8")
+          app_source_test = '''\n\ntest("Construction demo browser refuses real-pack synthetic substitution and serializes tour steps", async () => {\n  const { readFile } = await import("node:fs/promises");\n  const source = await readFile(\n    new URL("../../aura_spatial_web/construction_demo_app.js", import.meta.url),\n    "utf8",\n  );\n  assert.match(source, /fallback_asset_pack !== true/);\n  assert.match(source, /refusing synthetic geometry substitution/);\n  assert.match(source, /stepInFlight/);\n  assert.match(source, /state\.tourIndex \+= 1/);\n  assert.doesNotMatch(source, /state\.tourIndex\+\+/);\n});\n'''
+          if "refuses real-pack synthetic substitution" not in text:
+              review_test.write_text(text + app_source_test, encoding="utf-8")
+          PY
+
+      - name: Install focused verification dependencies
+        run: |
+          python -m pip install -q --disable-pip-version-check -r requirements.txt
+          python -m pip install -q --disable-pip-version-check pytest ruff
+
+      - name: Verify repaired Python boundaries
+        run: |
+          python -m py_compile aura_construction_demo_director.py aura_spatial_cli.py
+          ruff check aura_construction_demo_director.py aura_spatial_cli.py \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py
+
+      - name: Verify repaired renderer and browser boundaries
+        run: |
+          node --check aura_spatial_web/construction_demo_app.js
+          node --check aura_spatial_web/construction_mesh_pass.js
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check aura_spatial_web/gaussian_renderer.js
+          node --check aura_spatial_web/webgl2_gaussian_pass.js
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs \
+            tests/js/spatial-gaussian-covariance.test.mjs
+
+      - name: Publish verified review repairs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "AuraOS Review Repair Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            aura_construction_demo_director.py \
+            aura_spatial_cli.py \
+            aura_spatial_web/construction_demo_app.js \
+            aura_spatial_web/construction_mesh_pass.js \
+            aura_spatial_web/construction_overlay_pass.js \
+            aura_spatial_web/construction_scene_renderer.js \
+            aura_spatial_web/gaussian_renderer.js \
+            aura_spatial_web/webgl2_gaussian_pass.js \
+            tests/test_aura_construction_demo_director.py \
+            tests/test_aura_spatial_cli_construction_security.py \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(g8): resolve adversarial Construction review findings"
+          git fetch --no-tags origin "$TARGET_BRANCH"
+          if ! git merge-base --is-ancestor "$EXPECTED_HEAD" "origin/$TARGET_BRANCH"; then
+            echo "branch moved by a non-descendant change" >&2
+            exit 1
+          fi
+          git rebase "origin/$TARGET_BRANCH"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"$TARGET_BRANCH"
