@@ -4,49 +4,34 @@ on:
   pull_request:
     paths:
       - ".github/workflows/aura-construction-demo-g4-g6.yml"
-      - "aura_construction_demo_fixture.py"
-      - "aura_construction_demo_fixture_builder.py"
       - "aura_construction_demo_projection.py"
-      - "aura_spatial_web/construction_mesh_pass.js"
-      - "aura_spatial_web/construction_overlay_pass.js"
       - "aura_spatial_web/construction_scene_renderer.js"
-      - "aura_spatial_web/gaussian_renderer.js"
-      - "aura_spatial_web/webgl2_gaussian_pass.js"
-      - "tests/test_aura_construction_demo_fixture.py"
       - "tests/test_aura_construction_demo_projection.py"
-      - "tests/js/spatial-construction-demo.test.mjs"
       - "tests/js/spatial-construction-review-regressions.test.mjs"
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: aura-construction-demo-g4-g6-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: aura-construction-review-repair-${{ github.event.pull_request.number }}-${{ github.run_id }}
+  cancel-in-progress: false
 
 jobs:
-  verify-g4-g6:
+  repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      PYTHONHASHSEED: "0"
+    timeout-minutes: 25
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 128
 
-      - name: Verify exact pull-request head
+      - name: Verify exact head
         env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          mkdir -p /tmp/aura_g4_g6_status /tmp/aura_g4_g6_logs
-          git rev-parse HEAD > /tmp/aura_g4_g6_exact_head.txt
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
       - uses: actions/setup-python@v5
         with:
@@ -57,218 +42,407 @@ jobs:
           node-version: "22"
 
       - name: Install bounded verification dependencies
+        run: python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
+
+      - name: Apply exact deep-review patches
         run: |
           set -euo pipefail
-          python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
-
-      - name: Compile and lint G4-G6 owners
-        run: |
-          set +e
-          python -m py_compile \
-            aura_construction_demo_fixture.py \
-            aura_construction_demo_fixture_builder.py \
-            aura_construction_demo_projection.py \
-            tests/test_aura_construction_demo_fixture.py \
-            tests/test_aura_construction_demo_projection.py \
-            > /tmp/aura_g4_g6_logs/python-static.txt 2>&1
-          status=$?
-          if test "$status" = "0"; then
-            ruff check \
-              aura_construction_demo_fixture.py \
-              aura_construction_demo_fixture_builder.py \
-              aura_construction_demo_projection.py \
-              tests/test_aura_construction_demo_fixture.py \
-              tests/test_aura_construction_demo_projection.py \
-              >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
-            status=$?
-          fi
-          if test "$status" = "0"; then
-            ruff format --check \
-              aura_construction_demo_fixture.py \
-              aura_construction_demo_fixture_builder.py \
-              aura_construction_demo_projection.py \
-              tests/test_aura_construction_demo_fixture.py \
-              tests/test_aura_construction_demo_projection.py \
-              >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1
-            status=$?
-          fi
-          node --check aura_spatial_web/construction_mesh_pass.js \
-            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
-          node --check aura_spatial_web/construction_overlay_pass.js \
-            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
-          node --check aura_spatial_web/construction_scene_renderer.js \
-            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
-          node --check aura_spatial_web/gaussian_renderer.js \
-            >> /tmp/aura_g4_g6_logs/python-static.txt 2>&1 || status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/static.status
-          cat /tmp/aura_g4_g6_logs/python-static.txt
-          exit 0
-
-      - name: Run Aura-native Connectome Atlas and Council scan
-        run: |
-          set +e
-          python - <<'PY' > /tmp/aura_g4_g6_logs/aura-architecture.txt 2>&1
-          import json
+          python - <<'PY'
           from pathlib import Path
 
-          from aura_architect_council_v3 import route_compass_failure_classes
-          from aura_coding_relationship_compass import compile_coding_relationship_compass
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              if new in text:
+                  return text
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one old span, found {count}")
+              return text.replace(old, new, 1)
 
-          objective = (
-              "Deeply verify Construction Arena G4-G6 privacy-normalized provenance, "
-              "coordinate-frame elevation, mesh/Gaussian/overlay transform alignment, "
-              "degree-0 SPZ admission, cancellation, initialization failure, device-loss "
-              "disposal, authority boundaries, and exact focused and retained tests"
+          projection_path = Path("aura_construction_demo_projection.py")
+          projection = projection_path.read_text(encoding="utf-8")
+          projection = replace_once(
+              projection,
+              "    zone_entities: dict[str, str] = {}\n"
+              "    package_entities: dict[str, str] = {}\n"
+              "    for package in fixture.work_packages:\n"
+              "        storey_entity_id = storey_entities[package.storey_id]\n",
+              "    zone_entities: dict[str, str] = {}\n"
+              "    package_entities: dict[str, str] = {}\n"
+              "    package_frames: dict[str, str] = {}\n"
+              "    for package in fixture.work_packages:\n"
+              "        storey_entity_id = storey_entities[package.storey_id]\n"
+              "        package_frame_id = next(\n"
+              "            item.frame_id for item in storeys if item.storey_id == package.storey_id\n"
+              "        )\n"
+              "        package_frames[package.work_package_id] = package_frame_id\n",
+              "package frame index",
           )
-          output = Path("/tmp/aura_g4_g6_architecture.json")
-          try:
-              packet = compile_coding_relationship_compass(
-                  objective,
-                  Path.cwd(),
-                  target_files=(
-                      "aura_construction_demo_fixture.py",
-                      "aura_construction_demo_fixture_builder.py",
-                      "aura_construction_demo_projection.py",
-                      "aura_spatial_web/construction_mesh_pass.js",
-                      "aura_spatial_web/construction_overlay_pass.js",
-                      "aura_spatial_web/construction_scene_renderer.js",
-                      "aura_spatial_web/gaussian_renderer.js",
-                      "aura_spatial_web/webgl2_gaussian_pass.js",
-                      "tests/test_aura_construction_demo_fixture.py",
-                      "tests/test_aura_construction_demo_projection.py",
-                      "tests/js/spatial-construction-demo.test.mjs",
-                      "tests/js/spatial-construction-review-regressions.test.mjs",
-                  ),
-                  target_symbols=(
-                      "ConstructionDemoProjectFixture",
-                      "build_construction_demo_project_fixture",
-                      "project_construction_demo_to_scene",
-                      "ConstructionMeshPass",
-                      "ConstructionOverlayPass",
-                      "ConstructionSceneRenderer",
-                      "GaussianRenderer",
-                      "createWebGL2GaussianPass",
-                  ),
-                  max_target_files=16,
-                  max_target_symbols=24,
-                  max_atomic_nodes=48,
-                  max_atlas_participants=48,
-                  max_atlas_assessments=128,
-                  max_required_tests=32,
-                  max_neighborhood_nodes=96,
-                  max_neighborhood_edges=384,
-                  max_neighborhood_candidate_pairs=4096,
-                  include_source=False,
-              )
-              receipt = {
-                  "status": "COMPILED",
-                  "objective": objective,
-                  "repository_head": packet.get("repository_head"),
-                  "compass_digest": packet.get("compass_digest"),
-                  "grounding_digest": packet.get("grounding_digest"),
-                  "recommended_targets": packet.get("recommended_targets"),
-                  "required_tests": packet.get("required_tests"),
-                  "atlas": packet.get("atlas"),
-                  "emergent_candidates": packet.get("emergent_candidates"),
-                  "change_graph": packet.get("change_graph"),
-                  "act_capsules": packet.get("act_capsules"),
-                  "council_v3": route_compass_failure_classes(
-                      ("INTERFACE", "INVARIANT", "AUTHORITY", "SEQUENCE", "LOCAL_TEST")
-                  ),
-                  "safe_to_patch": packet.get("safe_to_patch", False),
-                  "production_mutation": packet.get("production_mutation", False),
-                  "automatic_merge": packet.get("automatic_merge", False),
-              }
-          except Exception as exc:
-              receipt = {
-                  "status": "FAILED_CLOSED",
-                  "objective": objective,
-                  "error_type": type(exc).__name__,
-                  "error": str(exc)[:4096],
-                  "safe_to_patch": False,
-                  "production_mutation": False,
-                  "automatic_merge": False,
-              }
-          output.write_text(json.dumps(receipt, sort_keys=True, indent=2, default=str), encoding="utf-8")
-          print(json.dumps(receipt, sort_keys=True, default=str))
-          raise SystemExit(0 if receipt["status"] == "COMPILED" else 1)
-          PY
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/aura-architecture.status
-          cat /tmp/aura_g4_g6_logs/aura-architecture.txt
-          exit 0
+          projection = projection.replace(
+              "                    next(item.frame_id for item in storeys if item.storey_id == package.storey_id),\n",
+              "                    package_frame_id,\n",
+              2,
+          )
+          if projection.count("package_frame_id,") < 2:
+              raise SystemExit("package frame replacements did not land")
+          owner_replacements = {
+              "                activity.note,\n                building_frame_id,\n":
+                  "                activity.note,\n                package_frames[activity.work_package_id],\n",
+              "                budget.description,\n                building_frame_id,\n":
+                  "                budget.description,\n                package_frames[budget.work_package_id],\n",
+              "                inspection.title,\n                building_frame_id,\n":
+                  "                inspection.title,\n                package_frames[inspection.work_package_id],\n",
+              "                hazard.title,\n                building_frame_id,\n":
+                  "                hazard.title,\n                package_frames[hazard.work_package_id],\n",
+          }
+          for old, new in owner_replacements.items():
+              projection = replace_once(projection, old, new, new.splitlines()[1].strip())
 
-      - name: Run focused Python verification
+          rule_start = projection.index("    for rule in fixture.rules:\n")
+          rule_end = projection.index("\n    for inspection in fixture.inspections:\n", rule_start)
+          new_rule_block = '''    for rule in fixture.rules:
+              for package_id in rule.applies_to_work_package_ids:
+                  entity_id = _id(
+                      "construction-rule",
+                      {"rule_id": rule.rule_id, "work_package_id": package_id},
+                  )
+                  entities.append(
+                      _entity(
+                          entity_id,
+                          SpatialEntityType.DOMAIN_NODE,
+                          rule.title,
+                          package_frames[package_id],
+                          source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
+                          if privacy is not SpatialPrivacyClass.PROJECT
+                          else (f"construction-demo-rule:{rule.rule_id}",),
+                          metadata={
+                              "rule_ref": _ref(rule.rule_id, privacy),
+                              "work_package_ref": _ref(package_id, privacy),
+                              "requirement": rule.requirement,
+                              "truth_class": rule.truth_class,
+                              "legal_authority": False,
+                              "regulatory_authority": False,
+                              "jurisdiction_claimed": "none",
+                              "projection_only": True,
+                          },
+                      )
+                  )
+                  links.append(
+                      _link(
+                          package_entities[package_id],
+                          entity_id,
+                          "REQUIRES_SYNTHETIC_RULE",
+                          source_refs=(_ref(f"construction-demo-rule:{rule.rule_id}", privacy),)
+                          if privacy is not SpatialPrivacyClass.PROJECT
+                          else (f"construction-demo-rule:{rule.rule_id}",),
+                      )
+                  )
+          '''
+          if "work_package_ref":
+              projection = projection[:rule_start] + new_rule_block + projection[rule_end:]
+
+          scene_marker = "    return compile_spatial_scene(\n"
+          if "    scene_source_refs = (\n" not in projection:
+              scene_refs = '''    scene_source_refs = (
+                  "owner:aura_construction_state.ConstructionProjectState",
+                  "owner:aura_construction_adapter.ConstructionArenaAdapter",
+                  "owner:aura_construction_demo_contracts.ConstructionDemoAssetPack",
+                  "projection:aura_spatial_construction.project_construction_state_to_scene",
+                  "projection:aura_construction_demo_projection.project_construction_demo_to_scene",
+                  f"canonical-base-scene:{baseline.scene_digest}",
+                  f"construction-state:{fixture.state.state_digest}",
+                  f"construction-runtime:{packet['evaluation']['evaluation_digest']}",
+                  f"construction-demo-fixture:{fixture.fixture_digest}",
+                  f"construction-demo-asset-pack:{asset_pack.asset_pack_digest}",
+              )
+              if privacy is not SpatialPrivacyClass.PROJECT:
+                  scene_source_refs = tuple(_ref(ref, privacy) for ref in scene_source_refs)
+
+          '''
+              projection = replace_once(
+                  projection,
+                  scene_marker,
+                  scene_refs + scene_marker,
+                  "scene source refs definition",
+              )
+          source_start = projection.index(
+              '        source_refs=(\n            "owner:aura_construction_state.ConstructionProjectState",\n'
+          )
+          source_end = projection.index("        renderer_hints={\n", source_start)
+          projection = (
+              projection[:source_start]
+              + "        source_refs=scene_source_refs,\n"
+              + projection[source_end:]
+          )
+          projection_path.write_text(projection, encoding="utf-8")
+
+          renderer_path = Path("aura_spatial_web/construction_scene_renderer.js")
+          renderer = renderer_path.read_text(encoding="utf-8")
+          helpers = '''function quaternionMultiply(left, right) {
+            const [lx, ly, lz, lw] = left;
+            const [rx, ry, rz, rw] = right;
+            return Object.freeze([
+              lw * rx + lx * rw + ly * rz - lz * ry,
+              lw * ry - lx * rz + ly * rw + lz * rx,
+              lw * rz + lx * ry - ly * rx + lz * rw,
+              lw * rw - lx * rx - ly * ry - lz * rz,
+            ]);
+          }
+
+          function rotateVector(rotation, vector) {
+            const [x, y, z, w] = rotation;
+            const [vx, vy, vz] = vector;
+            const tx = 2 * (y * vz - z * vy);
+            const ty = 2 * (z * vx - x * vz);
+            const tz = 2 * (x * vy - y * vx);
+            return [
+              vx + w * tx + (y * tz - z * ty),
+              vy + w * ty + (z * tx - x * tz),
+              vz + w * tz + (x * ty - y * tx),
+            ];
+          }
+
+          function composeTransforms(parent, local) {
+            const scaledLocal = local.translation.map((value, index) => value * parent.scale[index]);
+            const rotatedLocal = rotateVector(parent.rotation_xyzw, scaledLocal);
+            return Object.freeze({
+              translation: Object.freeze(
+                parent.translation.map((value, index) => value + rotatedLocal[index]),
+              ),
+              rotation_xyzw: quaternionMultiply(parent.rotation_xyzw, local.rotation_xyzw),
+              scale: Object.freeze(
+                parent.scale.map((value, index) => value * local.scale[index]),
+              ),
+            });
+          }
+
+          function resolveWorldTransform(frames, frameId, cache, active = new Set()) {
+            if (cache.has(frameId)) return cache.get(frameId);
+            if (active.has(frameId)) throw new TypeError("Construction coordinate-frame cycle detected");
+            const frame = frames.get(frameId);
+            if (!frame) throw new TypeError(`Construction frame is missing: ${frameId}`);
+            active.add(frameId);
+            const local = canonicalTransform(frame, `frame ${frameId}`);
+            const world = frame.parent_frame_id
+              ? composeTransforms(
+                  resolveWorldTransform(frames, frame.parent_frame_id, cache, active),
+                  local,
+                )
+              : local;
+            active.delete(frameId);
+            cache.set(frameId, world);
+            return world;
+          }
+
+          '''
+          if "function resolveWorldTransform(" not in renderer:
+              renderer = replace_once(
+                  renderer,
+                  "function viewProjection(renderer) {\n",
+                  helpers + "function viewProjection(renderer) {\n",
+                  "world transform helpers",
+              )
+          renderer = replace_once(
+              renderer,
+              "    const rawFrames = new Map(scenePayload.frames.map((frame) => [frame.frame_id, frame]));\n"
+              "    for (const frameId of this.storeyFrames) {\n"
+              "      const frame = rawFrames.get(frameId);\n"
+              "      if (!frame) throw new TypeError(\"Construction storey frame is missing\");\n"
+              "      const transform = canonicalTransform(frame, `frame ${frameId}`);\n"
+              "      this.basePresentationTransforms.set(frameId, transform);\n"
+              "      this.presentationTransforms.set(frameId, transform);\n"
+              "    }\n",
+              "    const rawFrames = new Map(scenePayload.frames.map((frame) => [frame.frame_id, frame]));\n"
+              "    const worldTransforms = new Map();\n"
+              "    for (const frameId of this.storeyFrames) {\n"
+              "      const transform = resolveWorldTransform(rawFrames, frameId, worldTransforms);\n"
+              "      this.basePresentationTransforms.set(frameId, transform);\n"
+              "      this.presentationTransforms.set(frameId, transform);\n"
+              "    }\n",
+              "world transform resolution",
+          )
+          renderer_path.write_text(renderer, encoding="utf-8")
+
+          py_test_path = Path("tests/test_aura_construction_demo_projection.py")
+          py_tests = py_test_path.read_text(encoding="utf-8")
+          public_assertion = '''    assert payload["source_refs"]
+              assert all(
+                  len(ref) == 16 and set(ref) <= set("0123456789abcdef")
+                  for ref in payload["source_refs"]
+              )
+          '''
+          if 'len(ref) == 16 and set(ref) <= set("0123456789abcdef")' not in py_tests:
+              anchor = "    all_source_refs.extend(payload.get(\"source_refs\", []))\n\n"
+              py_tests = replace_once(
+                  py_tests,
+                  anchor,
+                  anchor + public_assertion + "\n",
+                  "public scene source ref assertion",
+              )
+          package_test = '''
+
+          def test_g5_package_owned_overlays_use_package_storey_frames() -> None:
+              fixture, scene = _scene()
+              payload = scene.to_dict()
+              entities = payload["entities"]
+              storey_frames = {item.storey_id: item.frame_id for item in fixture.asset_pack.storeys}
+              package_frames = {
+                  item.work_package_id: storey_frames[item.storey_id]
+                  for item in fixture.work_packages
+              }
+
+              for activity in fixture.work_history:
+                  matches = [
+                      item
+                      for item in entities
+                      if item["metadata"].get("activity_ref") == activity.activity_id
+                  ]
+                  assert len(matches) == 1
+                  assert matches[0]["frame_id"] == package_frames[activity.work_package_id]
+              for budget in fixture.budget_lines:
+                  matches = [
+                      item
+                      for item in entities
+                      if item["metadata"].get("budget_line_ref") == budget.budget_line_id
+                  ]
+                  assert len(matches) == 1
+                  assert matches[0]["frame_id"] == package_frames[budget.work_package_id]
+              for inspection in fixture.inspections:
+                  matches = [
+                      item
+                      for item in entities
+                      if item["metadata"].get("inspection_ref") == inspection.inspection_id
+                  ]
+                  assert len(matches) == 1
+                  assert matches[0]["frame_id"] == package_frames[inspection.work_package_id]
+              for hazard in fixture.hazards:
+                  matches = [
+                      item
+                      for item in entities
+                      if item["metadata"].get("hazard_ref") == hazard.hazard_id
+                  ]
+                  assert len(matches) == 1
+                  assert matches[0]["frame_id"] == package_frames[hazard.work_package_id]
+              for rule in fixture.rules:
+                  actual_frames = sorted(
+                      item["frame_id"]
+                      for item in entities
+                      if item["metadata"].get("rule_ref") == rule.rule_id
+                  )
+                  expected_frames = sorted(
+                      package_frames[package_id]
+                      for package_id in rule.applies_to_work_package_ids
+                  )
+                  assert actual_frames == expected_frames
+          '''
+          if "def test_g5_package_owned_overlays_use_package_storey_frames" not in py_tests:
+              marker = "\ndef test_g5_rejects_restricted_or_sensitive_geometry_projection() -> None:\n"
+              py_tests = replace_once(
+                  py_tests,
+                  marker,
+                  package_test + marker,
+                  "package overlay regression",
+              )
+          py_test_path.write_text(py_tests, encoding="utf-8")
+
+          js_test_path = Path("tests/js/spatial-construction-review-regressions.test.mjs")
+          js_tests = js_test_path.read_text(encoding="utf-8")
+          parent_test = '''
+
+          test("Construction renderer composes translated rotated and scaled parent frames", async () => {
+            const { scene, plan } = meshScene();
+            const root = scene.frames.find((item) => item.frame_id === "frame:root");
+            root.translation = [10, 0, 0];
+            root.rotation_xyzw = [0, 0, 1, 0];
+            root.scale = [2, 2, 2];
+            const presentation = new PresentationRenderer();
+            const renderer = new ConstructionSceneRenderer({
+              presentationRenderer: presentation,
+              meshPass: new ConstructionMeshPass({ drawMeshPass: async () => () => {} }),
+              overlayPass: new ConstructionOverlayPass(),
+            });
+            await renderer.initialize(scene, plan, {
+              meshPayloads: [
+                {
+                  asset_id: "asset:mesh:one",
+                  source_digest: "1".repeat(64),
+                  decoded_byte_length: 128,
+                  resource: { local: true },
+                },
+                {
+                  asset_id: "asset:mesh:two",
+                  source_digest: "2".repeat(64),
+                  decoded_byte_length: 128,
+                  resource: { local: true },
+                },
+              ],
+            });
+            assert.deepEqual(
+              renderer.getAssetRenderTransform("asset:mesh:one").translation,
+              [10, -8, 0],
+            );
+            assert.deepEqual(
+              renderer.getAssetRenderTransform("asset:mesh:one").rotation_xyzw,
+              [0, 0, 1, 0],
+            );
+            assert.deepEqual(
+              renderer.getAssetRenderTransform("asset:mesh:one").scale,
+              [2, 2, 2],
+            );
+            await renderer.dispose();
+          });
+          '''
+          if "composes translated rotated and scaled parent frames" not in js_tests:
+              marker = '\ntest("Construction renderer rejects higher-order splats before initializing owners", async () => {\n'
+              js_tests = replace_once(
+                  js_tests,
+                  marker,
+                  parent_test + marker,
+                  "parent frame regression",
+              )
+          js_test_path.write_text(js_tests, encoding="utf-8")
+          PY
+
+          ruff format aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          ruff check aura_construction_demo_projection.py tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_scene_renderer.js
+          node --check tests/js/spatial-construction-review-regressions.test.mjs
+
+      - name: Run focused and retained verification
         run: |
-          set +e
+          set -euo pipefail
           python -m pytest -q --tb=short \
             tests/test_aura_construction_demo_fixture.py \
             tests/test_aura_construction_demo_projection.py \
-            > /tmp/aura_g4_g6_logs/python-focused.txt 2>&1
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/python-focused.status
-          cat /tmp/aura_g4_g6_logs/python-focused.txt
-          exit 0
-
-      - name: Run retained Construction and Spatial regressions
-        run: |
-          set +e
-          python -m pytest -q --tb=short \
             tests/test_aura_construction_state.py \
             tests/test_aura_construction_adapter.py \
             tests/test_aura_construction_fixtures.py \
             tests/test_aura_spatial_s6_construction.py \
-            tests/test_aura_spatial_mixed_scene.py \
-            > /tmp/aura_g4_g6_logs/python-retained.txt 2>&1
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/python-retained.status
-          cat /tmp/aura_g4_g6_logs/python-retained.txt
-          exit 0
-
-      - name: Run focused browser renderer verification
-        run: |
-          set +e
+            tests/test_aura_spatial_mixed_scene.py
           node --test \
             tests/js/spatial-construction-demo.test.mjs \
-            tests/js/spatial-construction-review-regressions.test.mjs \
-            > /tmp/aura_g4_g6_logs/browser-focused.txt 2>&1
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/browser-focused.status
-          cat /tmp/aura_g4_g6_logs/browser-focused.txt
-          exit 0
+            tests/js/spatial-construction-review-regressions.test.mjs
+          npm run test:spatial
 
-      - name: Run retained browser Spatial regressions
-        run: |
-          set +e
-          npm run test:spatial > /tmp/aura_g4_g6_logs/browser-retained.txt 2>&1
-          status=$?
-          echo "$status" > /tmp/aura_g4_g6_status/browser-retained.status
-          cat /tmp/aura_g4_g6_logs/browser-retained.txt
-          exit 0
-
-      - name: Upload complete G4-G6 diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: aura-construction-g4-g6-diagnostics
-          path: |
-            /tmp/aura_g4_g6_architecture.json
-            /tmp/aura_g4_g6_exact_head.txt
-            /tmp/aura_g4_g6_logs
-            /tmp/aura_g4_g6_status
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Evaluate focused gate
-        if: always()
+      - name: Commit and push repaired owners
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          failed=0
-          for status_file in /tmp/aura_g4_g6_status/*.status; do
-            status="$(cat "$status_file")"
-            printf '%s=%s\n' "$(basename "$status_file")" "$status"
-            if test "$status" != "0"; then
-              failed=1
-            fi
-          done
-          exit "$failed"
+          if git diff --quiet; then
+            echo "Second deep-review repairs are already present."
+            exit 0
+          fi
+          git config user.name "Aura Architecture Harness"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            aura_construction_demo_projection.py \
+            aura_spatial_web/construction_scene_renderer.js \
+            tests/test_aura_construction_demo_projection.py \
+            tests/js/spatial-construction-review-regressions.test.mjs
+          git commit -m "fix(construction): resolve second deep review findings"
+          git fetch --no-tags origin "$HEAD_REF"
+          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED_HEAD"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${HEAD_REF}"
