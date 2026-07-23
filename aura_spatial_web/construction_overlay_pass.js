@@ -62,7 +62,8 @@ export class ConstructionOverlayPass {
     if (this.initialized || this.disposed) {
       throw new Error("Construction overlay pass may initialize only once");
     }
-    this.scene = validateSceneProjection(scenePayload);
+    validateSceneProjection(scenePayload);
+    this.scene = deepFreeze(structuredClone(scenePayload));
     this.initialized = true;
     return this.status();
   }
