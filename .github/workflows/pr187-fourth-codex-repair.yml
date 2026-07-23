@@ -1,0 +1,118 @@
+name: PR187 Fourth Codex Repair
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/pr187-fourth-codex-repair.yml"
+      - "scripts/aura_pr187_fourth_codex_repair.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr187-fourth-codex-repair-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  repair-fourth-codex-findings:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 187
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 128
+
+      - name: Verify exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install bounded verification dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -q --disable-pip-version-check numpy pytest ruff zstandard
+
+      - name: Apply fourth-round Codex repairs
+        run: |
+          set -euo pipefail
+          python scripts/aura_pr187_fourth_codex_repair.py
+
+      - name: Format and statically validate repaired owners
+        run: |
+          set -euo pipefail
+          python -m ruff format \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          python -m ruff check \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          python -m py_compile \
+            aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_projection.py
+          node --check aura_spatial_web/construction_overlay_pass.js
+          node --check tests/js/spatial-construction-demo.test.mjs
+          git diff --check
+
+      - name: Run focused Python verification
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_demo_projection.py \
+            tests/test_aura_construction_demo_fixture.py
+
+      - name: Run retained Construction, Spatial, and asset-security regressions
+        run: |
+          set -euo pipefail
+          python -m pytest -q --tb=short \
+            tests/test_aura_construction_state.py \
+            tests/test_aura_construction_adapter.py \
+            tests/test_aura_construction_fixtures.py \
+            tests/test_aura_construction_runtime_binding.py \
+            tests/test_aura_spatial_coordinate_frames.py \
+            tests/test_aura_spatial_asset_security.py \
+            tests/test_aura_spatial_s6_construction.py \
+            tests/test_aura_spatial_mixed_scene.py
+
+      - name: Run focused browser verification
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/js/spatial-construction-demo.test.mjs \
+            tests/js/spatial-construction-review-regressions.test.mjs
+
+      - name: Run retained Spatial browser suite
+        run: |
+          set -euo pipefail
+          npm run test:spatial
+
+      - name: Commit and push exact verified repair
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          rm scripts/aura_pr187_fourth_codex_repair.py
+          rm .github/workflows/pr187-fourth-codex-repair.yml
+          git diff --check
+          git add -A
+          test -n "$(git status --porcelain)"
+          git config user.name "AuraOS Review Repair"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "fix(review): scope public graph and expose budget overlays"
+          git push origin "HEAD:${HEAD_REF}"
