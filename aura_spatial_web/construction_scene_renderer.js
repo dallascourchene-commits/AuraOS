@@ -296,6 +296,22 @@ export class ConstructionSceneRenderer {
 
   getAssetPresentationTransform(assetId) {
     const frameId = this.assetFrames.get(assetId);
+    const current = this.presentationTransforms.get(frameId);
+    const base = this.basePresentationTransforms.get(frameId);
+    if (!current || !base) return null;
+    return Object.freeze({
+      translation: Object.freeze(
+        current.translation.map((value, index) => value - base.translation[index]),
+      ),
+      rotation_xyzw: Object.freeze([0, 0, 0, 1]),
+      scale: Object.freeze(
+        current.scale.map((value, index) => value / base.scale[index]),
+      ),
+    });
+  }
+
+  getAssetRenderTransform(assetId) {
+    const frameId = this.assetFrames.get(assetId);
     return this.presentationTransforms.get(frameId) || null;
   }
 
@@ -518,7 +534,7 @@ export function createConstructionWebGL2SceneRenderer({
       innerGaussianPass = createWebGL2GaussianPass({
         gl: presentationRenderer.gl,
         getViewProjection: () => viewProjection(presentationRenderer),
-        getPresentationTransform: (assetId) => controller?.getAssetPresentationTransform(assetId),
+        getPresentationTransform: (assetId) => controller?.getAssetRenderTransform(assetId),
         isVisible: isGaussianVisible,
         maxVisibleSplats,
       });
