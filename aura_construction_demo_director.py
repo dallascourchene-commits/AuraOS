@@ -41,6 +41,9 @@ from aura_spatial_render_plan import compile_spatial_device_profile, negotiate_s
 
 CONSTRUCTION_DEMO_DIRECTOR_VERSION = "AURA_CONSTRUCTION_DEMO_DIRECTOR_V1"
 CONSTRUCTION_DEMO_TOURS = ("full", "blocked-work", "alternatives", "timeline")
+FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST = (
+    "5e4620fc5ea92315714eaf3bfe0247f4a18f6ed51997efb9c5c389d20536d7b7"
+)
 
 
 @dataclass(frozen=True)
@@ -93,6 +96,11 @@ def _fallback_asset(
         ConstructionDemoRepresentation.GAUSSIAN_SPZ: "application/vnd.aura.spz",
     }
     digest_character = suffix[0] if suffix[0] in "abcdef" else "b"
+    representation_digest = (
+        FALLBACK_GAUSSIAN_REPRESENTATION_DIGEST
+        if representation is ConstructionDemoRepresentation.GAUSSIAN_SPZ
+        else "d" * 64
+    )
     return ConstructionDemoAssetBinding(
         asset_id=f"asset-{storey_id}-{suffix}",
         storey_id=storey_id,
@@ -106,8 +114,8 @@ def _fallback_asset(
         bounds_min=(-10.0, 0.0, -10.0),
         bounds_max=(10.0, 4.0, 10.0),
         source_refs=(f"ifc:storey:{storey_id}",),
-        import_receipt_digest="c" * 32,
-        representation_digest="d" * 32,
+        import_receipt_digest="c" * 64,
+        representation_digest=representation_digest,
         truth_class=ConstructionDemoTruthClass.DERIVED_PRESENTATION,
     )
 
@@ -178,7 +186,7 @@ def _tour_steps(name: str) -> tuple[ConstructionDemoTourStep, ...]:
         ConstructionDemoTourStep("02-building", "Complete hybrid building", "SHOW_ALL", 2200),
         ConstructionDemoTourStep("03-orbit", "Orbit the building", "ORBIT", 2600, value=0.55),
         ConstructionDemoTourStep("04-explode", "Explode storeys", "EXPLODE", 2200, value=4.0),
-        ConstructionDemoTourStep("05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floor_plans", "on"),
+        ConstructionDemoTourStep("05-plans", "Reveal floor plans", "TOGGLE_LAYER", 1600, "floorPlans", "on"),
         ConstructionDemoTourStep("06-timeline", "Replay project progress", "TIMELINE", 3200, value=12.0),
         ConstructionDemoTourStep("07-blocked", "Find blocked drilling", "FOCUS_STATUS", 2400, "BLOCKED"),
         ConstructionDemoTourStep("08-evidence", "Show blocking evidence", "TOGGLE_LAYER", 1800, "blockers", "on"),
@@ -186,7 +194,7 @@ def _tour_steps(name: str) -> tuple[ConstructionDemoTourStep, ...]:
         ConstructionDemoTourStep("10-alternate", "Show safe alternate work", "FOCUS_RECOMMENDED_ALTERNATIVE", 2400),
         ConstructionDemoTourStep("11-trades", "Show subcontractor history", "TOGGLE_LAYER", 1800, "trades", "on"),
         ConstructionDemoTourStep("12-dependencies", "Show dependencies", "TOGGLE_LAYER", 1800, "dependencies", "on"),
-        ConstructionDemoTourStep("13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "synthetic_rules", "on"),
+        ConstructionDemoTourStep("13-rules", "Show synthetic rule gates", "TOGGLE_LAYER", 1800, "syntheticRules", "on"),
         ConstructionDemoTourStep("14-budget", "Compare schedule and budget", "TOGGLE_LAYER", 2200, "budgets", "on"),
         ConstructionDemoTourStep("15-review", "Select recommendation for human review", "FOCUS_RECOMMENDED_ALTERNATIVE", 2200),
         ConstructionDemoTourStep("16-observatory", "Open evidence summary", "SHOW_OBSERVATORY", 2200),
