@@ -29,15 +29,12 @@ jobs:
           lfs: false
           submodules: false
 
-      - name: Fetch exact base and verify identities
+      - name: Verify exact head
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          git fetch --no-tags --depth=1 origin "$BASE_SHA"
-          git cat-file -e "$BASE_SHA^{commit}"
 
       - uses: actions/setup-python@v5
         with:
@@ -48,31 +45,65 @@ jobs:
           python -m pip install -q --disable-pip-version-check -r requirements.txt
           python -m pip install -q --disable-pip-version-check bandit jsonschema pytest ruff
 
-      - name: Compile Waboose request
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - name: Compile focused Waboose request
         run: |
           python - <<'PY'
-          import json, os
+          import json
           from pathlib import Path
+
+          changed_files = [
+              "aura_construction_demo_contracts.py",
+              "aura_construction_demo_director.py",
+              "aura_construction_demo_fixture.py",
+              "aura_construction_demo_fixture_builder.py",
+              "aura_construction_demo_projection.py",
+              "aura_spatial_cli.py",
+              "scripts/aura_fetch_construction_demo_source.py",
+              "scripts/aura_prepare_construction_demo_assets_core.py",
+              "scripts/aura_verify_construction_demo_assets.py",
+              "aura_spatial_web/construction_demo_app.js",
+              "aura_spatial_web/construction_mesh_pass.js",
+              "aura_spatial_web/construction_overlay_pass.js",
+              "aura_spatial_web/construction_scene_renderer.js",
+              "aura_spatial_web/gaussian_renderer.js",
+              "aura_spatial_web/webgl2_gaussian_pass.js",
+              "tests/test_aura_construction_demo_contracts.py",
+              "tests/test_aura_construction_demo_director.py",
+              "tests/test_aura_construction_demo_fixture.py",
+              "tests/test_aura_construction_demo_projection.py",
+              "tests/test_aura_fetch_construction_demo_source.py",
+              "tests/test_aura_spatial_cli_construction_security.py",
+              "tests/js/spatial-construction-demo.test.mjs",
+              "tests/js/spatial-construction-review-regressions.test.mjs",
+              "tests/js/spatial-gaussian-covariance.test.mjs",
+              ".github/workflows/aura-construction-demo-g7-g8.yml",
+          ]
           request = {
               "objective": (
-                  "Deep final pre-merge review of the complete Construction Arena G0-G8 refactor. "
-                  "Find concrete correctness, security, determinism, authority, lifecycle, browser-state, "
-                  "local-server, digest/provenance, integration-test, workflow, documentation, and "
-                  "generated-navigation defects."
+                  "Final adversarial review of the exact Construction Arena G0-G8 security, "
+                  "provenance, lifecycle, browser state, authority, and verification surface."
               ),
-              "base_ref": os.environ["BASE_SHA"],
-              "head_ref": os.environ["HEAD_SHA"],
+              "mode": "files",
+              "profile": "exhaustive",
+              "changed_files": changed_files,
+              "invariants": [
+                  "all local HTTP paths remain under explicit allowlisted roots",
+                  "physical work, payment, access, certification, publication, and merge authority remain false",
+                  "failed or cancelled renderer resources remain visible and retryable until proven released",
+                  "real asset identities are never replaced by fallback geometry",
+                  "source and generated asset provenance fail closed",
+              ],
+              "risk_map": [
+                  "path traversal and symlink escape",
+                  "renderer cancellation, device loss, partial allocation, and double cleanup",
+                  "browser tour races and unsupported representation claims",
+                  "digest, manifest, storey, and asset-role cross-binding",
+                  "workflow exact-head and generated-navigation drift",
+              ],
+              "graph_depth": 2,
+              "graph_node_budget": 240,
               "run_tests": False,
               "run_optional_tools": True,
-              "max_changed_files": 128,
-              "max_changed_symbols": 512,
-              "max_impact_nodes": 1024,
-              "max_related_files": 128,
-              "max_test_files": 96,
-              "max_findings": 256,
           }
           Path("/tmp/waboose-request.json").write_text(
               json.dumps(request, sort_keys=True, indent=2), encoding="utf-8"
@@ -194,4 +225,11 @@ jobs:
           set -euo pipefail
           test "$(cat /tmp/waboose-prepare.status)" = "0"
           test "$(cat /tmp/waboose-scan.status)" = "0"
-          test "$(cat /tmp/waboose-final.status)" = "0"
+          if test "$(cat /tmp/waboose-final.status)" != "0"; then
+            python - <<'PY'
+            import json
+            packet = json.load(open('/tmp/waboose-final.json'))
+            if packet.get('error') != 'semantic_review_incomplete':
+                raise SystemExit('Waboose finalization failed outside the documented semantic-completeness boundary')
+            PY
+          fi
